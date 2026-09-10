@@ -61,7 +61,7 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
                 f"{base_perim.plain()}, what is the perimeter of triangle {b}?")
         mistakes = _wrong_powers(base_perim, k, 1)
         rationale = (f"Corresponding sides are in ratio {k}, so perimeters are too: "
-                     f"{base_perim.plain()} x {k} = {key.plain()}.")
+                     f"{base_perim.plain()} × {k} = {key.plain()}.")
         table = None
     elif presentation == "table":
         side_n = side or rng.randint(2, 20)
@@ -76,7 +76,7 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
         mistakes = _wrong_powers(side, k, 1) + [
             Mis("added the two perimeters to the given side", side + p1)]
         rationale = (f"The perimeters give ratio {p2.plain()}/{p1.plain()} = {k}, so "
-                     f"{b[0]}{b[1]} = {side.plain()} x {k} = {key.plain()}.")
+                     f"{b[0]}{b[1]} = {side.plain()} × {k} = {key.plain()}.")
     elif presentation == "rect_figure":
         # Two similar rectangles drawn to scale; k comes from the marked sides.
         sw = side or rng.randint(3, 9)                     # small rectangle's height
@@ -97,7 +97,7 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
                     Mis("scaled by the square of the ratio", E(sl) * kk * kk),
                     Mis("gave the marked side of the larger rectangle", bw)]
         rationale = (f"The marked sides give ratio {bw.plain()}/{sw} = {kk.plain()}, so "
-                     f"AD = {sl} x {kk.plain()} = {key.plain()}.")
+                     f"AD = {sl} × {kk.plain()} = {key.plain()}.")
         fig = two_rectangles(f"{bw.plain()} in", f"{sw} in", f"{sl} in")
         if fmt == "spr":
             return Item("GEO.similar.linear", "similar figures", "medium", seed, stem, "spr",
@@ -119,7 +119,7 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
         mistakes = _wrong_powers(perim, k, 1) + [
             Mis("multiplied the perimeter by the side length instead of the ratio", perim * s1)]
         rationale = (f"The ratio is {s2.plain()}/{s1.plain()} = {k}, so the perimeter of {b} "
-                     f"is {perim.plain()} x {k} = {key.plain()}.")
+                     f"is {perim.plain()} × {k} = {key.plain()}.")
 
     if fmt == "spr":
         return Item("GEO.similar.linear", "similar figures", "easy", seed, stem, "spr",
@@ -151,7 +151,7 @@ def similar_area(rng: random.Random, seed: int, *, direction=None, shape=None,
                 f"{shape} {a} is {area1.plain()} square centimeters. What is the area, in square "
                 f"centimeters, of {shape} {b}?")
         mistakes = _wrong_powers(area1, k, 2)
-        rationale = f"Areas scale by the square of the ratio: {area1.plain()} x {k}^2 = {key.plain()}."
+        rationale = f"Areas scale by the square of the ratio: {area1.plain()} x {k}² = {key.plain()}."
     elif direction == "ratio_from_sides":
         key = E(k ** 2)
         stem = (f"Square A has side lengths that are {k} times the side lengths of square B. "
@@ -160,7 +160,7 @@ def similar_area(rng: random.Random, seed: int, *, direction=None, shape=None,
                     Mis("doubled the length ratio", E(2 * k)),
                     Mis("halved the length ratio", E(Fraction(k, 2))),
                     Mis("cubed the ratio as if it were a volume", E(k ** 3))]
-        rationale = f"Area ratio is the square of the length ratio: {k}^2 = {key.plain()}."
+        rationale = f"Area ratio is the square of the length ratio: {k}² = {key.plain()}."
     else:  # side_from_areas -- k comes out of a square root
         k2 = k ** 2
         small = E(side) if side else E(rng.randint(2, 20))
@@ -208,7 +208,7 @@ def solid_scaling(rng: random.Random, seed: int, *, mode=None, fmt="mcq",
                     Mis("applied the height factor only", v * E(hf)),
                     Mis("cubed the radius factor", v * E(rf ** 3 * hf)),
                     Mis("left the volume unchanged", v)]
-        rationale = (f"Volume scales by (radius factor)^2 x (height factor) = {rf}^2 x {hf} = "
+        rationale = (f"Volume scales by (radius factor)² × (height factor) = {rf}² × {hf} = "
                      f"{factor}, so {v.plain()} x {factor} = {key.plain()}.")
         choices, latex, reasons, letter = assemble(key, mistakes, rng)
         return Item("GEO.scaling.cylinder", "solid scaling", "hard", seed, stem, "mcq", key,
@@ -229,7 +229,7 @@ def solid_scaling(rng: random.Random, seed: int, *, mode=None, fmt="mcq",
     choices, reasons, letter = assemble_text(key_text, mistakes, rng)
     return Item("GEO.scaling.which_pair", "solid scaling", "hard", seed, stem, "mcq",
                 E(mult), letter,
-                f"V = pi*R^2*H = pi*({a}r)^2*({b}h) = {mult}*pi*r^2*h.",
+                f"V = πR²H = π({a}r)²({b}h) = {mult}πr²h.",
                 choices, reasons, choices, figure=cylinder_rh())
 
 
@@ -259,7 +259,7 @@ def percent_change(rng: random.Random, seed: int, *, fmt=None, pct=None,
                 Mis("cubed the ratio as if it were a volume", area * E(ratio ** 3)),
                 Mis("left the area unchanged", area)]
     rationale = (f"Each dimension is multiplied by {ratio}, so the area is multiplied by "
-                 f"({ratio})^2 = {ratio**2}: {area.plain()} x {ratio**2} = {key.plain()}.")
+                 f"({ratio})² = {ratio**2}: {area.plain()} × {ratio**2} = {key.plain()}.")
     if fmt == "spr":
         return Item("GEO.scaling.percent", "area scaling", "hard", seed, stem, "spr", key,
                     key.gridin(), rationale)

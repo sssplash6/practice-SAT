@@ -115,7 +115,7 @@ def remaining_volume(rng: random.Random, seed: int, *, base=None, h=None, filled
                 Mis("added the base area to the poured volume", base + filled),
                 Mis("divided the base area by the height", base / h),
                 Mis("subtracted the base area instead of the poured volume", total - base)]
-    rationale = (f"The can holds {base.plain()} x {h.plain()} = {total.plain()} cm^3; the "
+    rationale = (f"The can holds {base.plain()} × {h.plain()} = {total.plain()} cm^3; the "
                  f"pieces take up {total.plain()} - {filled.plain()} = {key.plain()} cm^3.")
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.context.remaining_volume", "volume in context", "medium", seed, stem,
@@ -134,7 +134,7 @@ def combined_area(rng: random.Random, seed: int, *, tri_area=None, side=None) ->
                 Mis("halved the given area before adding", tri / E(2) + s ** 2),
                 Mis("added the perimeter of the square", tri + E(4) * s),
                 Mis("gave the area of the triangle only", tri)]
-    rationale = (f"The square has area {s.plain()}^2 = {(s**2).plain()}, so the total is "
+    rationale = (f"The square has area {s.plain()}² = {(s**2).plain()}, so the total is "
                  f"{tri.plain()} + {(s**2).plain()} = {key.plain()}.")
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.context.combined_area", "combined area", "easy", seed, stem, "mcq", key,
@@ -184,8 +184,8 @@ def container_percent(rng: random.Random, seed: int, *, rA=None, pct=None, h=Non
                 Mis("applied the percent increase twice", PI * (rB * E(ratio)) ** 2 * h),
                 Mis("used container A's radius", PI * rA ** 2 * h),
                 Mis("multiplied the two radii instead of squaring B's", PI * rA * rB * h)]
-    rationale = (f"r_B = {rA.plain()} x {ratio} = {rB.plain()}, so "
-                 f"V = pi({rB.plain()})^2({h.plain()}) = {key.plain()}.")
+    rationale = (f"r_B = {rA.plain()} × {ratio} = {rB.plain()}, so "
+                 f"V = π({rB.plain()})²({h.plain()}) = {key.plain()}.")
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.context.container_percent", "cylinder volume", "hard", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex)
@@ -209,7 +209,7 @@ def equal_area_square(rng: random.Random, seed: int, *, r=None) -> Item:
                 Mis("took the square root of pi*r rather than pi*r^2", (PI * r).sqrt()),
                 Mis("used pi*r, forgetting to square the radius or take the root", PI * r),
                 Mis("used the circumference", E(2) * PI * r)]
-    rationale = (f"The circle has area pi({r.plain()})^2 = {(PI*r**2).plain()}; a square of that "
+    rationale = (f"The circle has area π({r.plain()})² = {(PI*r**2).plain()}; a square of that "
                  f"area has side sqrt({(PI*r**2).plain()}) = {key.plain()}.")
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.circle.equal_area_square", "circle and square area", "hard", seed, stem,
@@ -258,7 +258,7 @@ def formula_solve(rng: random.Random, seed: int, *, a=None, b=None, volume=None)
     key = E(Fraction(round(exact * 100), 100))
     vessel = rng.choice(["glass", "vase", "tumbler", "beaker"])
     stem = (f"The {vessel} pictured above can hold a maximum volume of {volume} cubic "
-            f"centimeters. Its volume is given by Volume = {a}*pi*k^3/{b}, where k is the "
+            f"centimeters. Its volume is given by Volume = {a}πk³⁄{b}, where k is the "
             f"height in centimeters. What is the value of k, in centimeters?")
     def approx(x): return E(Fraction(round(x * 100), 100))
     mistakes = [Mis("ignored the coefficient and took the cube root of the volume alone",
@@ -267,7 +267,7 @@ def formula_solve(rng: random.Random, seed: int, *, a=None, b=None, volume=None)
                 Mis("inverted the coefficient", approx((a * volume / (b * math.pi)) ** (1 / 3))),
                 Mis("took a square root instead of a cube root",
                     approx((b * volume / (a * math.pi)) ** (1 / 2)))]
-    rationale = (f"{a}*pi*k^3/{b} = {volume} gives k^3 = {b}({volume})/({a}pi), so "
+    rationale = (f"{a}πk³/{b} = {volume} gives k³ = {b}({volume})/({a}π), so "
                  f"k ~= {key.plain()}.")
     choices, latex, reasons, letter = assemble(
         key, mistakes, rng, fmt_value=lambda v: f"{float(v):.2f}")

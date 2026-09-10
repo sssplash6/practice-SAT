@@ -19,8 +19,15 @@ _CSS = (".ax{stroke:currentColor;stroke-width:1.4;fill:none}"
 
 
 def coordinate_grid(xmin, xmax, ymin, ymax, points=(), segments=(),
-                    step=2, px=26, pad=26) -> str:
-    """An xy-plane with a unit grid, labelled axes and plotted points."""
+                    step=2, px=None, pad=26) -> str:
+    """An xy-plane with a unit grid, labelled axes and plotted points.
+
+    The unit size shrinks as the window grows so a wide plot stays about the
+    same physical size as a narrow one.
+    """
+    if px is None:
+        span = max(xmax - xmin, ymax - ymin, 1)
+        px = max(13, min(26, 400 // span))
     w, h = (xmax - xmin) * px + 2 * pad, (ymax - ymin) * px + 2 * pad
 
     def X(x): return pad + (x - xmin) * px

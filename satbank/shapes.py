@@ -145,7 +145,7 @@ _reg(_shape("hemisphere", "hemisphere", "solid",
 
 # A prism whose base area is given directly (the source's triangular prism).
 _reg(_shape("prism_base", "triangular prism", "solid",
-            [_d("B", "area of the base"), _d("h", "height")],
+            [_d("B", "base area", "the area of the base"), _d("h", "height")],
             {"volume": lambda p: p["B"] * p["h"]}))
 
 
@@ -157,7 +157,7 @@ def unit_noun(unit: Unit, measure: str, style: str = "words") -> str:
     if not unit.abbr:                       # bare "units"
         return {1: "units", 2: "square units", 3: "cubic units"}[power]
     if style == "abbr" and power > 1 and unit.abbr != "in":   # "in in^3" reads badly
-        return f"{unit.abbr}^{power}"
+        return f"{unit.abbr}{'²' if power == 2 else '³'}"
     word = {1: "", 2: "square ", 3: "cubic "}[power]
     return f"{word}{unit.many()}"
 

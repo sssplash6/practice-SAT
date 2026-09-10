@@ -278,7 +278,7 @@ def forward(rng: random.Random, seed: int, *, shape_key=None, measure=None,
                 + ("" if given_form == "direct" else f".{given_form}"))
     if ask_coefficient:
         stem = stem.rsplit("What is", 1)[0] + (
-            f"The {measure} of this {shape.short} is n*pi "
+            f"The {measure} of this {shape.short} is nπ "
             f"{unit_noun(unit, measure, 'abbr')}. What is the value of n?")
         template += ".coefficient"
     if approximate:
@@ -317,16 +317,16 @@ def _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis, te
 
 
 FORMULA_TEXT = {
-    ("square", "area"): "A = s^2", ("square", "perimeter"): "P = 4s",
+    ("square", "area"): "A = s²", ("square", "perimeter"): "P = 4s",
     ("rectangle", "area"): "A = lw", ("rectangle", "perimeter"): "P = 2(l + w)",
-    ("triangle", "area"): "A = (1/2)bh", ("parallelogram", "area"): "A = bh",
-    ("circle", "area"): "A = pi*r^2", ("circle", "circumference"): "C = 2*pi*r",
-    ("cube", "volume"): "V = e^3", ("cube", "surface_area"): "SA = 6e^2",
+    ("triangle", "area"): "A = ½bh", ("parallelogram", "area"): "A = bh",
+    ("circle", "area"): "A = πr²", ("circle", "circumference"): "C = 2πr",
+    ("cube", "volume"): "V = e³", ("cube", "surface_area"): "SA = 6e²",
     ("rect_prism", "volume"): "V = lwh", ("rect_prism", "surface_area"): "SA = 2(lw + lh + wh)",
-    ("square_prism", "volume"): "V = s^2*h", ("square_prism", "surface_area"): "SA = 2s^2 + 4sh",
-    ("cylinder", "volume"): "V = pi*r^2*h", ("cylinder", "surface_area"): "SA = 2*pi*r^2 + 2*pi*r*h",
-    ("cone", "volume"): "V = (1/3)pi*r^2*h", ("sphere", "volume"): "V = (4/3)pi*r^3",
-    ("sphere", "surface_area"): "SA = 4*pi*r^2", ("hemisphere", "volume"): "V = (2/3)pi*r^3",
+    ("square_prism", "volume"): "V = s²h", ("square_prism", "surface_area"): "SA = 2s² + 4sh",
+    ("cylinder", "volume"): "V = πr²h", ("cylinder", "surface_area"): "SA = 2πr² + 2πrh",
+    ("cone", "volume"): "V = ⅓πr²h", ("sphere", "volume"): "V = 4⁄3πr³",
+    ("sphere", "surface_area"): "SA = 4πr²", ("hemisphere", "volume"): "V = ⅔πr³",
     ("prism_base", "volume"): "V = Bh",
 }
 
@@ -405,7 +405,9 @@ def inverse(rng: random.Random, seed: int, *, shape_key=None, measure=None,
     else:
         key = dims[unknown]
         lbl = shape.dim(unknown).label
-        u = unit_noun(unit, "perimeter", style) if unit.abbr else "units"
+        # a base area is asked for in square units, not linear ones
+        pseudo = "area" if unknown == "B" else "perimeter"
+        u = unit_noun(unit, pseudo, style) if unit.abbr else unit_noun(unit, pseudo, style)
         find = f"What is the {lbl}, in {u}, of the {shape.short}?"
 
     given = [f"{_article(shape.dim(k).label)} {shape.dim(k).label} of "

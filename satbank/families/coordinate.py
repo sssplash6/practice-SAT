@@ -135,7 +135,7 @@ def square_on_axes(rng: random.Random, seed: int, *, fmt="mcq", a=None) -> Item:
         "area, in square units, of the square?",
     ])
     rationale = (f"Each diagonal has length {2*a}, and a square with diagonal d has area "
-                 f"d^2/2 = {2*a}^2/2 = {key.plain()}.")
+                 f"d²/2 = {2*a}²/2 = {key.plain()}.")
     mistakes = [Mis("used the half-diagonal as the side length", E(a * a)),
                 Mis("squared the full diagonal", E(4 * a * a)),
                 Mis("found the perimeter of the bounding square", E(4 * a)),
@@ -176,8 +176,8 @@ def leg_from_area(rng: random.Random, seed: int, *, fmt="mcq", dx=None, dy=None,
     stem = (f"The line segment shown in the xy-plane represents one of the legs of a right "
             f"triangle. The area of this triangle is {area.plain()} square units. What is the "
             f"length, in units, of the other leg of this triangle?")
-    rationale = (f"The drawn leg has length sqrt({dx}^2 + {dy}^2) = {leg1.plain()}. "
-                 f"From A = (1/2)(leg1)(leg2): leg2 = 2({area.plain()})/{leg1.plain()} "
+    rationale = (f"The drawn leg has length √({dx}² + {dy}²) = {leg1.plain()}. "
+                 f"From A = ½(leg₁)(leg₂): leg₂ = 2({area.plain()})/{leg1.plain()} "
                  f"= {key.plain()}.")
     mistakes = [Mis("divided the area by the leg without doubling", key / E(2)),
                 Mis("gave the length of the drawn leg", leg1),
