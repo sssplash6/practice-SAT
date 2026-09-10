@@ -52,6 +52,7 @@ def circle_from_points(rng: random.Random, seed: int, *, fmt=None, r=None,
     xmin, xmax, ymin, ymax = _window(pts)
     stem = rng.choice(CIRCLE_STEMS).format(measure=ask)
     fig = coordinate_grid(max(0, xmin), xmax, max(0, ymin), ymax, points=pts)
+    P = {"kind": "circle_3pt", "r": r, "ask": ask, "center": (cx, cy)}
     formula = "C = 2*pi*r" if ask == "circumference" else "A = pi*r^2"
     rationale = (f"The points lie on a circle centered at ({cx}, {cy}) with radius {r}, so "
                  f"{formula} gives k = {key.plain()}.")
@@ -64,10 +65,10 @@ def circle_from_points(rng: random.Random, seed: int, *, fmt=None, r=None,
                     E(2 * (r + 1)) if ask == "circumference" else E((r + 1) ** 2))]
     if fmt == "spr":
         return Item("GEO.coord.circle_3pt", "circles in the plane", "medium", seed, stem,
-                    "spr", key, key.gridin(), rationale, figure=fig)
+                    "spr", key, key.gridin(), rationale, figure=fig, params=P)
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.coord.circle_3pt", "circles in the plane", "medium", seed, stem, "mcq",
-                key, letter, rationale, choices, reasons, latex, figure=fig)
+                key, letter, rationale, choices, reasons, latex, figure=fig, params=P)
 
 
 # ------------------------------------------------------- triangle from points
@@ -91,6 +92,7 @@ def triangle_from_points(rng: random.Random, seed: int, *, fmt=None, pts=None) -
     else:
         raise ItemError("no non-degenerate triangle found")
 
+    P = {"kind": "triangle_area", "pts": [(x1, y1), (x2, y2), (x3, y3)]}
     key = E(Fraction(abs(cross), 2))
     box = E((max(x1, x2, x3) - min(x1, x2, x3)) * (max(y1, y2, y3) - min(y1, y2, y3)))
     xmin, xmax, ymin, ymax = _window(pts, pad=1)
@@ -111,10 +113,10 @@ def triangle_from_points(rng: random.Random, seed: int, *, fmt=None, pts=None) -
                 Mis("subtracted the bounding rectangle from the triangle", box - key)]
     if fmt == "spr":
         return Item("GEO.coord.triangle_area", "area in the plane", "hard", seed, stem, "spr",
-                    key, key.gridin(), rationale, figure=fig)
+                    key, key.gridin(), rationale, figure=fig, params=P)
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.coord.triangle_area", "area in the plane", "hard", seed, stem, "mcq", key,
-                letter, rationale, choices, reasons, latex, figure=fig)
+                letter, rationale, choices, reasons, latex, figure=fig, params=P)
 
 
 # --------------------------------------------------- square with axis diagonals
@@ -122,6 +124,7 @@ def triangle_from_points(rng: random.Random, seed: int, *, fmt=None, pts=None) -
 def square_on_axes(rng: random.Random, seed: int, *, fmt="mcq", a=None) -> Item:
     """Vertices at (+-a, 0) and (0, +-a): the diagonals are 2a, so the area is 2a^2."""
     a = a or rng.randint(2, 9)
+    P = {"kind": "square_diagonals", "a": a}
     key = E(2 * a * a)
     pts = [(a, 0), (-a, 0), (0, a), (0, -a)]
     segs = [((a, 0), (0, a)), ((0, a), (-a, 0)), ((-a, 0), (0, -a)), ((0, -a), (a, 0))]
@@ -142,7 +145,7 @@ def square_on_axes(rng: random.Random, seed: int, *, fmt="mcq", a=None) -> Item:
                 Mis("used the diagonal as the side length", E(2 * a))]
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.coord.square_diagonals", "area in the plane", "medium", seed, stem, "mcq",
-                key, letter, rationale, choices, reasons, latex, figure=fig)
+                key, letter, rationale, choices, reasons, latex, figure=fig, params=P)
 
 
 # ------------------------------------------------- right triangle leg from area
@@ -168,6 +171,8 @@ def leg_from_area(rng: random.Random, seed: int, *, fmt="mcq", dx=None, dy=None,
     else:
         raise ItemError("no tidy leg/area pair found")
 
+    P = {"kind": "leg_from_area", "dx": dx, "dy": dy, "other": float(other),
+         "area": float(area)}
     x1, y1 = rng.randint(-7, 0), rng.randint(2, 5)
     x2, y2 = x1 + dx, y1 + dy
     key = other
@@ -186,4 +191,4 @@ def leg_from_area(rng: random.Random, seed: int, *, fmt="mcq", dx=None, dy=None,
                 Mis("used the vertical rise as the drawn leg", E(2) * area / E(dy))]
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.coord.leg_from_area", "right triangles in the plane", "hard", seed, stem,
-                "mcq", key, letter, rationale, choices, reasons, latex, figure=fig)
+                "mcq", key, letter, rationale, choices, reasons, latex, figure=fig, params=P)

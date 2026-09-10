@@ -59,6 +59,7 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
                 f"and side {b[0]}{b[1]} are corresponding sides. If {b[0]}{b[1]} = "
                 f"{'' if k == 1 else k}{a[0]}{a[1]} and the perimeter of triangle {a} is "
                 f"{base_perim.plain()}, what is the perimeter of triangle {b}?")
+        P = {"kind": "similar_linear", "scaled": float(base_perim), "k": float(k)}
         mistakes = _wrong_powers(base_perim, k, 1)
         rationale = (f"Corresponding sides are in ratio {k}, so perimeters are too: "
                      f"{base_perim.plain()} × {k} = {key.plain()}.")
@@ -73,6 +74,7 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
                 f"{a[0]}{a[1]} corresponds to side {b[0]}{b[1]}. The length of {a[0]}{a[1]} is "
                 f"{side.plain()}. What is the length of {b[0]}{b[1]}?")
         table = [["", "Perimeter"], [f"Triangle {a}", p1.plain()], [f"Triangle {b}", p2.plain()]]
+        P = {"kind": "similar_linear", "scaled": float(side), "k": float(k)}
         mistakes = _wrong_powers(side, k, 1) + [
             Mis("added the two perimeters to the given side", side + p1)]
         rationale = (f"The perimeters give ratio {p2.plain()}/{p1.plain()} = {k}, so "
@@ -90,6 +92,7 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
                 f"to Q, R, S, and T, respectively. What is the length, in inches (in), of "
                 f"side AD?")
         table = None
+        P = {"kind": "similar_linear", "scaled": float(sl), "k": float(kk)}
         mistakes = [Mis("used the ratio upside down", E(sl) / kk),
                     Mis("added the difference of the marked sides instead of scaling",
                         E(sl) + bw - E(sw)),
@@ -101,10 +104,10 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
         fig = two_rectangles(f"{bw.plain()} in", f"{sw} in", f"{sl} in")
         if fmt == "spr":
             return Item("GEO.similar.linear", "similar figures", "medium", seed, stem, "spr",
-                        key, key.gridin(), rationale, figure=fig)
+                        key, key.gridin(), rationale, figure=fig, params=P)
         choices, latex, reasons, letter = assemble(key, mistakes, rng)
         return Item("GEO.similar.linear", "similar figures", "medium", seed, stem, "mcq", key,
-                    letter, rationale, choices, reasons, latex, figure=fig)
+                    letter, rationale, choices, reasons, latex, figure=fig, params=P)
     else:  # two_sides -- a corresponding pair fixes k, then scale the perimeter
         s1_n = side or rng.randint(3, 20)
         s1 = E(s1_n)
@@ -116,6 +119,7 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
                 f"{s1.plain()}, and the perimeter of triangle {a} is {perim.plain()}. The length "
                 f"of side {b[0]}{b[1]} is {s2.plain()}. What is the perimeter of triangle {b}?")
         table = None
+        P = {"kind": "similar_linear", "scaled": float(perim), "k": float(k)}
         mistakes = _wrong_powers(perim, k, 1) + [
             Mis("multiplied the perimeter by the side length instead of the ratio", perim * s1)]
         rationale = (f"The ratio is {s2.plain()}/{s1.plain()} = {k}, so the perimeter of {b} "
@@ -123,10 +127,10 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
 
     if fmt == "spr":
         return Item("GEO.similar.linear", "similar figures", "easy", seed, stem, "spr",
-                    key, key.gridin(), rationale, table=table)
+                    key, key.gridin(), rationale, table=table, params=P)
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.similar.linear", "similar figures", "easy", seed, stem, "mcq", key,
-                letter, rationale, choices, reasons, latex, table=table)
+                letter, rationale, choices, reasons, latex, table=table, params=P)
 
 
 # ------------------------------------------------------------------- areas
@@ -150,12 +154,15 @@ def similar_area(rng: random.Random, seed: int, *, direction=None, shape=None,
                 f"is {k} times the length of its corresponding side of {shape} {a}. The area of "
                 f"{shape} {a} is {area1.plain()} square centimeters. What is the area, in square "
                 f"centimeters, of {shape} {b}?")
+        P = {"kind": "similar_area", "mode": "area_from_ratio", "base": float(area1),
+             "k": float(k)}
         mistakes = _wrong_powers(area1, k, 2)
         rationale = f"Areas scale by the square of the ratio: {area1.plain()} x {k}² = {key.plain()}."
     elif direction == "ratio_from_sides":
         key = E(k ** 2)
         stem = (f"Square A has side lengths that are {k} times the side lengths of square B. "
                 f"The area of square A is m times the area of square B. What is the value of m?")
+        P = {"kind": "similar_area", "mode": "ratio_from_sides", "k": float(k)}
         mistakes = [Mis("gave the length ratio instead of the area ratio", E(k)),
                     Mis("doubled the length ratio", E(2 * k)),
                     Mis("halved the length ratio", E(Fraction(k, 2))),
@@ -173,6 +180,8 @@ def similar_area(rng: random.Random, seed: int, *, direction=None, shape=None,
                 f"{area_small.plain()} square inches. The length of the longest side of {shape} "
                 f"{a} is {big_side.plain()} inches. What is the length, in inches, of the longest "
                 f"side of {shape} {b}?")
+        P = {"kind": "similar_area", "mode": "side_from_areas", "big_side": float(big_side),
+             "k": float(k)}
         mistakes = [Mis("used the area ratio as the length ratio", big_side / E(k2)),
                     Mis("gave the area ratio itself", E(k2)),
                     Mis("left the length unchanged", big_side),
@@ -182,10 +191,10 @@ def similar_area(rng: random.Random, seed: int, *, direction=None, shape=None,
 
     if fmt == "spr":
         return Item("GEO.similar.area", "similar figures", "medium", seed, stem, "spr",
-                    key, key.gridin(), rationale)
+                    key, key.gridin(), rationale, params=P)
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.similar.area", "similar figures", "medium", seed, stem, "mcq", key,
-                letter, rationale, choices, reasons, latex)
+                letter, rationale, choices, reasons, latex, params=P)
 
 
 # ------------------------------------------------------- solids: k**3 and mixed
@@ -203,6 +212,8 @@ def solid_scaling(rng: random.Random, seed: int, *, mode=None, fmt="mcq",
         stem = (f"The volume of right circular cylinder A is {v.plain()} cubic centimeters. What "
                 f"is the volume, in cubic centimeters, of a right circular cylinder with "
                 f"{_times(rf)} the radius and {_times(hf)} the height of cylinder A?")
+        P = {"kind": "solid_scaling", "mode": "volume_multiple", "v": float(v),
+             "rf": float(rf), "hf": float(hf)}
         mistakes = [Mis("scaled the radius linearly instead of squaring it", v * E(rf * hf)),
                     Mis("applied the radius factor only", v * E(rf ** 2)),
                     Mis("applied the height factor only", v * E(hf)),
@@ -212,11 +223,12 @@ def solid_scaling(rng: random.Random, seed: int, *, mode=None, fmt="mcq",
                      f"{factor}, so {v.plain()} x {factor} = {key.plain()}.")
         choices, latex, reasons, letter = assemble(key, mistakes, rng)
         return Item("GEO.scaling.cylinder", "solid scaling", "hard", seed, stem, "mcq", key,
-                    letter, rationale, choices, reasons, latex)
+                    letter, rationale, choices, reasons, latex, params=P)
 
     # which_pair: give the volume multiple, ask which (R, H) produces it
     a, b = pair or rng.choice([(2, 3), (3, 2), (5, 2), (7, 8), (4, 5), (6, 3), (3, 7)])
     mult = a ** 2 * b
+    P = {"kind": "solid_scaling", "mode": "which_pair", "a": a, "b": b, "mult": mult}
     key_text = f"R = {a}r and H = {b}h"
     stem = (f"The figure shown is a right circular cylinder with a radius of r and a height of h. "
             f"A second right circular cylinder (not shown) has a volume that is {mult} times as "
@@ -230,7 +242,7 @@ def solid_scaling(rng: random.Random, seed: int, *, mode=None, fmt="mcq",
     return Item("GEO.scaling.which_pair", "solid scaling", "hard", seed, stem, "mcq",
                 E(mult), letter,
                 f"V = πR²H = π({a}r)²({b}h) = {mult}πr²h.",
-                choices, reasons, choices, figure=cylinder_rh())
+                choices, reasons, choices, figure=cylinder_rh(), params=P)
 
 
 def _times(f: Fraction) -> str:
@@ -249,6 +261,7 @@ def percent_change(rng: random.Random, seed: int, *, fmt=None, pct=None,
     ratio = Fraction(100 + pct, 100) if up else Fraction(100 - pct, 100)
     area = E(area) if area else E(rng.choice([120, 150, 180, 200, 240, 300, 360, 400, 480, 600]))
     key = area * E(ratio ** 2)
+    P = {"kind": "percent_change", "area": float(area), "ratio": float(ratio)}
     word = "increased" if up else "decreased"
     thing = rng.choice(["poster", "photograph", "rug", "banner", "tile", "canvas"])
     stem = (f"A rectangular {thing} has an area of {area.plain()} square inches. A copy of the "
@@ -262,7 +275,7 @@ def percent_change(rng: random.Random, seed: int, *, fmt=None, pct=None,
                  f"({ratio})² = {ratio**2}: {area.plain()} × {ratio**2} = {key.plain()}.")
     if fmt == "spr":
         return Item("GEO.scaling.percent", "area scaling", "hard", seed, stem, "spr", key,
-                    key.gridin(), rationale)
+                    key.gridin(), rationale, params=P)
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.scaling.percent", "area scaling", "hard", seed, stem, "mcq", key, letter,
-                rationale, choices, reasons, latex)
+                rationale, choices, reasons, latex, params=P)

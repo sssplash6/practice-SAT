@@ -60,9 +60,11 @@ def expression_measure(rng: random.Random, seed: int, *, shape=None, measure=Non
                 Mis("found the area", f"{l} * {w}"),
                 Mis("added the two given sides only", f"{l} + {w}"),
                 Mis("doubled the area", f"2({l} * {w})")]
+    P = {"kind": "expression_measure", "shape": shape, "measure": measure,
+         "s": locals().get("s"), "l": locals().get("l"), "w": locals().get("w")}
     choices, reasons, letter = assemble_text(key, wrong, rng)
     return Item("GEO.expression.measure", f"{shape} {measure}", "easy", seed, stem, "mcq",
-                E(0), letter, f"The correct expression is {key}.", choices, reasons, choices)
+                E(0), letter, f"The correct expression is {key}.", choices, reasons, choices, params=P)
 
 
 def symbolic_volume(rng: random.Random, seed: int, *, c=None, relation=None) -> Item:
@@ -88,9 +90,10 @@ def symbolic_volume(rng: random.Random, seed: int, *, c=None, relation=None) -> 
                  Mis("added the height instead of multiplying", f"V = pi*r^3 + {c}pi*r^2"),
                  Mis("applied the factor to the radius", f"V = pi({c}r)^3")]
         rationale = f"V = pi*r^2*h with h = {c}r gives {c}pi*r^3."
+    P = {"kind": "symbolic_volume", "c": c, "relation": relation}
     choices, reasons, letter = assemble_text(key, wrong, rng)
     return Item("GEO.expression.symbolic_volume", "cylinder volume", "hard", seed, stem, "mcq",
-                E(0), letter, rationale, choices, reasons, choices)
+                E(0), letter, rationale, choices, reasons, choices, params=P)
 
 
 # ---------------------------------------------------------------- CONTEXT
@@ -104,6 +107,8 @@ def remaining_volume(rng: random.Random, seed: int, *, base=None, h=None, filled
     hi = max(lo + 5, int(float(total) * 0.5))
     filled = E(filled or rng.randrange(lo, hi, 5))
     key = total - filled
+    P = {"kind": "remaining_volume", "base": float(base), "h": float(h),
+         "filled": float(filled)}
     contents = rng.choice([("fruit", "syrup"), ("olives", "brine"), ("beans", "sauce")])
     stem = (f"A cylindrical can containing pieces of {contents[0]} is filled to the top with "
             f"{contents[1]} before being sealed. The base of the can has an area of "
@@ -119,7 +124,7 @@ def remaining_volume(rng: random.Random, seed: int, *, base=None, h=None, filled
                  f"pieces take up {total.plain()} - {filled.plain()} = {key.plain()} cm^3.")
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.context.remaining_volume", "volume in context", "medium", seed, stem,
-                "mcq", key, letter, rationale, choices, reasons, latex)
+                "mcq", key, letter, rationale, choices, reasons, latex, params=P)
 
 
 def combined_area(rng: random.Random, seed: int, *, tri_area=None, side=None) -> Item:
@@ -127,6 +132,7 @@ def combined_area(rng: random.Random, seed: int, *, tri_area=None, side=None) ->
     tri = E(tri_area or rng.randrange(20, 140, 2))
     s = E(side or rng.randint(3, 14))
     key = tri + s ** 2
+    P = {"kind": "combined_area", "tri": float(tri), "s": float(s)}
     stem = (f"Triangle R has an area of {tri.plain()} square centimeters (cm^2). Square S has "
             f"side lengths of {s.plain()} cm. What is the total area of triangle R and square S, "
             f"in cm^2?")
@@ -138,7 +144,7 @@ def combined_area(rng: random.Random, seed: int, *, tri_area=None, side=None) ->
                  f"{tri.plain()} + {(s**2).plain()} = {key.plain()}.")
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.context.combined_area", "combined area", "easy", seed, stem, "mcq", key,
-                letter, rationale, choices, reasons, latex)
+                letter, rationale, choices, reasons, latex, params=P)
 
 
 def missing_side(rng: random.Random, seed: int, *, sides=None) -> Item:
@@ -153,6 +159,7 @@ def missing_side(rng: random.Random, seed: int, *, sides=None) -> Item:
         else:
             raise ItemError("no valid triangle")
     p = x + y + z
+    P = {"kind": "missing_side", "x": x, "y": y, "z": z, "perimeter": p}
     key = E(z)
     stem = (f"The triangle shown has a perimeter of {p} units. If x = {x} units and y = {y} "
             f"units, what is the value of z, in units?")
@@ -163,7 +170,7 @@ def missing_side(rng: random.Random, seed: int, *, sides=None) -> Item:
     rationale = f"z = {p} - {x} - {y} = {z}."
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.context.missing_side", "triangle perimeter", "easy", seed, stem, "mcq",
-                key, letter, rationale, choices, reasons, latex, figure=triangle_xyz())
+                key, letter, rationale, choices, reasons, latex, figure=triangle_xyz(), params=P)
 
 
 def container_percent(rng: random.Random, seed: int, *, rA=None, pct=None, h=None) -> Item:
@@ -175,6 +182,7 @@ def container_percent(rng: random.Random, seed: int, *, rA=None, pct=None, h=Non
     ratio = Fraction(100 + pct, 100)
     rB = rA * E(ratio)
     key = PI * rB ** 2 * h
+    P = {"kind": "container_percent", "rA": float(rA), "pct": pct, "h": float(h)}
     stem = (f"A manufacturing company produces two sizes of cylindrical containers that each have "
             f"a height of {h.plain()} centimeters. The radius of container A is {rA.plain()} "
             f"centimeters, and the radius of container B is {pct}% longer than the radius of "
@@ -188,7 +196,7 @@ def container_percent(rng: random.Random, seed: int, *, rA=None, pct=None, h=Non
                  f"V = π({rB.plain()})²({h.plain()}) = {key.plain()}.")
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.context.container_percent", "cylinder volume", "hard", seed, stem, "mcq",
-                key, letter, rationale, choices, reasons, latex)
+                key, letter, rationale, choices, reasons, latex, params=P)
 
 
 def equal_area_square(rng: random.Random, seed: int, *, r=None) -> Item:
@@ -197,6 +205,7 @@ def equal_area_square(rng: random.Random, seed: int, *, r=None) -> Item:
     key = (PI * r ** 2).sqrt()
     if key is None:
         raise ItemError("side is not expressible exactly")
+    P = {"kind": "equal_area_square", "r": float(r)}
     stem = rng.choice([
         f"What is the length of one side of a square that has the same area as a circle with "
         f"radius {r.plain()}?",
@@ -213,7 +222,7 @@ def equal_area_square(rng: random.Random, seed: int, *, r=None) -> Item:
                  f"area has side sqrt({(PI*r**2).plain()}) = {key.plain()}.")
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.circle.equal_area_square", "circle and square area", "hard", seed, stem,
-                "mcq", key, letter, rationale, choices, reasons, latex)
+                "mcq", key, letter, rationale, choices, reasons, latex, params=P)
 
 
 def circle_convert(rng: random.Random, seed: int, *, given=None, ask=None, r=None,
@@ -228,6 +237,7 @@ def circle_convert(rng: random.Random, seed: int, *, given=None, ask=None, r=Non
             "circumference": E(2) * PI * rr, "area": PI * rr ** 2}
     key = vals[ask]
     gv = vals[given]
+    P = {"kind": "circle_convert", "r": float(rr), "ask": ask, "given": given}
     stem = (f"A circle has {'an' if given == 'area' else 'a'} {given} of {gv.plain()} "
             f"{unit.many() if given in ('radius', 'diameter', 'circumference') else 'square ' + unit.many()}. "
             f"What is the {ask}, in {unit.many()}, of the circle?")
@@ -239,10 +249,10 @@ def circle_convert(rng: random.Random, seed: int, *, given=None, ask=None, r=Non
         if not key.is_rational:
             raise ItemError("grid-in must be numeric")
         return Item("GEO.circle.convert", "circle measures", "medium", seed, stem, "spr", key,
-                    key.gridin(), rationale)
+                    key.gridin(), rationale, params=P)
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("GEO.circle.convert", "circle measures", "medium", seed, stem, "mcq", key,
-                letter, rationale, choices, reasons, latex)
+                letter, rationale, choices, reasons, latex, params=P)
 
 
 def formula_solve(rng: random.Random, seed: int, *, a=None, b=None, volume=None) -> Item:
@@ -256,6 +266,7 @@ def formula_solve(rng: random.Random, seed: int, *, a=None, b=None, volume=None)
     volume = volume or rng.choice([236, 355, 473, 591, 710])
     exact = (b * volume / (a * math.pi)) ** (1 / 3)
     key = E(Fraction(round(exact * 100), 100))
+    P = {"kind": "formula_solve", "a": a, "b": b, "volume": volume}
     vessel = rng.choice(["glass", "vase", "tumbler", "beaker"])
     stem = (f"The {vessel} pictured above can hold a maximum volume of {volume} cubic "
             f"centimeters. Its volume is given by Volume = {a}πk³⁄{b}, where k is the "
@@ -272,4 +283,4 @@ def formula_solve(rng: random.Random, seed: int, *, a=None, b=None, volume=None)
     choices, latex, reasons, letter = assemble(
         key, mistakes, rng, fmt_value=lambda v: f"{float(v):.2f}")
     return Item("GEO.context.formula_solve", "solving a supplied formula", "hard", seed, stem,
-                "mcq", key, letter, rationale, choices, reasons, latex)
+                "mcq", key, letter, rationale, choices, reasons, latex, params=P)

@@ -291,6 +291,9 @@ def forward(rng: random.Random, seed: int, *, shape_key=None, measure=None,
 
 def _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis, template,
             ask_coefficient=False, approximate=False) -> Item:
+    P = {"kind": "measure_forward", "shape": shape.key, "measure": measure,
+         "dims": {k: float(v) for k, v in dims.items()},
+         "ask_coefficient": ask_coefficient, "approximate": approximate}
     post = (lambda v: v / PI) if ask_coefficient else (
         (lambda v: E(v.approx(3))) if approximate else None)
     detail = ", ".join(f"{k} = {v.plain()}" for k, v in dims.items())
@@ -305,7 +308,7 @@ def _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis, te
             raise ItemError("grid-in answers must be enterable as digits")
         return Item(template, f"{shape.short} {measure.replace('_', ' ')}",
                     _difficulty(shape, measure), seed, stem, "spr", key,
-                    key.gridin(), rationale)
+                    key.gridin(), rationale, params=P)
     mistakes = extra_mis + _forward_mistakes(shape.key, measure, dims)
     if post:
         mistakes = [Mis(m.reason, post(m.value)) for m in mistakes
@@ -313,7 +316,7 @@ def _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis, te
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item(template, f"{shape.short} {measure.replace('_', ' ')}",
                 _difficulty(shape, measure), seed, stem, "mcq", key, letter,
-                rationale, choices, reasons, latex)
+                rationale, choices, reasons, latex, params=P)
 
 
 FORMULA_TEXT = {
@@ -410,6 +413,9 @@ def inverse(rng: random.Random, seed: int, *, shape_key=None, measure=None,
         u = unit_noun(unit, pseudo, style) if unit.abbr else unit_noun(unit, pseudo, style)
         find = f"What is the {lbl}, in {u}, of the {shape.short}?"
 
+    P = {"kind": "measure_inverse", "shape": shape.key, "measure": measure,
+         "unknown": unknown, "then_measure": then_measure,
+         "dims": {k: float(v) for k, v in dims.items()}}
     given = [f"{_article(shape.dim(k).label)} {shape.dim(k).label} of "
              f"{_qty(v, unit, i == 0, style, 2 if k == 'B' else 1)}"
              for i, (k, v) in enumerate(known.items())]
@@ -463,7 +469,7 @@ def inverse(rng: random.Random, seed: int, *, shape_key=None, measure=None,
         if not key.is_rational:
             raise ItemError("grid-in answers must be enterable as digits")
         return Item(template, skill, _difficulty(shape, measure), seed, stem, "spr",
-                    key, key.gridin(), rationale)
+                    key, key.gridin(), rationale, params=P)
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item(template, skill, _difficulty(shape, measure), seed, stem, "mcq", key,
-                letter, rationale, choices, reasons, latex)
+                letter, rationale, choices, reasons, latex, params=P)

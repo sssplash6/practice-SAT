@@ -46,6 +46,7 @@ class Item:
     latex_choices: list[str] = field(default_factory=list)
     figure: str | None = None
     table: list[list[str]] | None = None
+    params: dict = field(default_factory=dict)   # what the audit re-derives from
     source_id: str | None = None   # official item this template was learned from
 
     def pretty(self, show_reasons: bool = True) -> str:

@@ -14,6 +14,7 @@ from .families import coordinate as C
 from .families import measure as M
 from .families import scaling as S
 from .families import special as X
+from .audit import audit
 from .item import Item, ItemError
 
 __all__ = ["TEMPLATES", "generate", "generate_many"]
@@ -41,14 +42,23 @@ TEMPLATES: dict[str, Callable] = {
 }
 
 
-def generate(name: str, seed: int, attempts: int = 60, **kw) -> Item:
-    """Deterministic in `seed`: the same seed always yields the same item."""
+def generate(name: str, seed: int, attempts: int = 60, verify: bool = True, **kw) -> Item:
+    """Deterministic in `seed`: the same seed always yields the same item.
+
+    Every item is re-derived by `audit` before it is returned. A failed audit
+    is a bug in a template, not an unlucky draw, so AuditError propagates
+    instead of being retried away -- nothing wrong should ever leave here
+    quietly. Pass verify=False only to measure the cost of the check.
+    """
     fn = TEMPLATES[name]
     for i in range(attempts):
         try:
-            return fn(random.Random(seed * 1_000_003 + i), seed, **kw)
+            item = fn(random.Random(seed * 1_000_003 + i), seed, **kw)
         except (ItemError, ValueError, ZeroDivisionError, KeyError, StopIteration):
             continue
+        if verify:
+            audit(item)
+        return item
     raise ItemError(f"{name}: no valid item after {attempts} attempts (seed {seed})")
 
 
