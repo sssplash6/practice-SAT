@@ -45,6 +45,7 @@ class Item:
     reasons: list[str] = field(default_factory=list)
     latex_choices: list[str] = field(default_factory=list)
     figure: str | None = None
+    table: list[list[str]] | None = None
     source_id: str | None = None   # official item this template was learned from
 
     def pretty(self, show_reasons: bool = True) -> str:
@@ -55,6 +56,10 @@ class Item:
         if self.figure:
             out.append("  <figure: %d bytes of SVG>" % len(self.figure))
         out.append(self.stem)
+        if self.table:
+            w = [max(len(r[i]) for r in self.table) for i in range(len(self.table[0]))]
+            for row in self.table:
+                out.append("      | " + " | ".join(c.ljust(w[i]) for i, c in enumerate(row)) + " |")
         if self.fmt == "spr":
             out.append(f"  [grid-in]  answer: {self.answer}")
         else:
@@ -83,7 +88,7 @@ def _fillers(key: Exact):
         yield Mis("near-miss arithmetic slip", key * E(f))
 
 
-def assemble(key: Exact, mistakes: list[Mis], rng: random.Random):
+def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None):
     """Choose three distractors, then order all four the way the SAT does.
 
     Two rules do most of the work:
@@ -122,8 +127,29 @@ def assemble(key: Exact, mistakes: list[Mis], rng: random.Random):
 
     options = [(key, "")] + [(m.value, m.reason) for m in picked]
     options.sort(key=lambda t: float(t[0]))            # SAT orders choices ascending
-    choices = [v.plain() for v, _ in options]
-    latex = [v.latex() for v, _ in options]
+    choices = [fmt_value(v) if fmt_value else v.plain() for v, _ in options]
+    latex = [fmt_value(v) if fmt_value else v.latex() for v, _ in options]
     reasons = [r for _, r in options]
     letter = LETTERS[next(i for i, (_, r) in enumerate(options) if r == "")]
     return choices, latex, reasons, letter
+
+
+def assemble_text(key: str, distractors: list[Mis], rng: random.Random):
+    """Assembly for options that are expressions or statements, not values.
+
+    No ascending order to hide behind, so the key's position is randomized.
+    """
+    picked, seen = [], {key}
+    for m in distractors:
+        if m.value is None or m.value in seen:
+            continue
+        seen.add(m.value)
+        picked.append(m)
+        if len(picked) == 3:
+            break
+    if len(picked) < 3:
+        raise ItemError("could not build three distinct expression distractors")
+    options = [(key, "")] + [(m.value, m.reason) for m in picked]
+    rng.shuffle(options)
+    letter = LETTERS[next(i for i, (_, r) in enumerate(options) if r == "")]
+    return [v for v, _ in options], [r for _, r in options], letter

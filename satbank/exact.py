@@ -162,7 +162,7 @@ class Exact:
         if self.coef.denominator == 1:
             return str(self.coef.numerator)
         as_float = float(self.coef)
-        if as_float == round(as_float, 4) and len(f"{as_float:g}") <= 6:
+        if as_float == round(as_float, 2):          # 518.4 and 24.5, but not 16.875
             return f"{as_float:g}"
         return f"{self.coef.numerator}/{self.coef.denominator}"
 

@@ -203,7 +203,8 @@ def _forward_mistakes(shape_key: str, measure: str, p: dict) -> list[Mis]:
 
 def forward(rng: random.Random, seed: int, *, shape_key=None, measure=None,
             unit=None, style=None, frame=None, given_form="direct",
-            fmt=None, relational=False) -> Item:
+            fmt=None, relational=False, dims=None, delta=None,
+            ask_coefficient=False, approximate=False) -> Item:
     shape = SHAPES[shape_key or rng.choice(list(SHAPES))]
     measure = measure or rng.choice(list(shape.measures))
     unit = unit or rng.choice(UNITS)
@@ -211,7 +212,7 @@ def forward(rng: random.Random, seed: int, *, shape_key=None, measure=None,
     fmt = fmt or ("spr" if rng.random() < 0.2 else "mcq")
     power = {"area": 2, "surface_area": 2, "volume": 3}.get(measure, 1)
 
-    dims = _pick_dims(rng, shape)
+    dims = {k: E(v) for k, v in dims.items()} if dims else _pick_dims(rng, shape)
     key = shape.measures[measure](dims)
     check(shape.key, measure, dims, key)          # independent numeric route
 
@@ -238,7 +239,7 @@ def forward(rng: random.Random, seed: int, *, shape_key=None, measure=None,
                 phrases.append(f"{_article(d.label)} {d.label} of {_qty(dims[d.key], unit, first, style)}")
                 first = False
     elif relational and shape.key == "rectangle":
-        delta = E(rng.randint(2, 40))
+        delta = E(delta) if delta else E(rng.randint(2, 40))
         dims["l"] = dims["w"] + delta
         key = shape.measures[measure](dims)
         check(shape.key, measure, dims, key)
@@ -273,14 +274,32 @@ def forward(rng: random.Random, seed: int, *, shape_key=None, measure=None,
         stem = (f"The {d0.label} of {shape.name()} is {_qty(dims[d0.key], unit, True, style)}. "
                 f"What is {measure_phrase(measure, unit, style)} of the {shape.short}?")
 
+    template = (f"GEO.{shape.key}.{measure}.forward"
+                + ("" if given_form == "direct" else f".{given_form}"))
+    if ask_coefficient:
+        stem = stem.rsplit("What is", 1)[0] + (
+            f"The {measure} of this {shape.short} is n*pi "
+            f"{unit_noun(unit, measure, 'abbr')}. What is the value of n?")
+        template += ".coefficient"
+    if approximate:
+        stem = stem.replace("What is the", "Which of the following is closest to the").replace(
+            ", of the", ", of the")
+        template += ".approx"
     return _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis,
-                   f"GEO.{shape.key}.{measure}.forward"
-                   + ("" if given_form == "direct" else f".{given_form}"))
+                   template, ask_coefficient=ask_coefficient, approximate=approximate)
 
 
-def _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis, template) -> Item:
+def _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis, template,
+            ask_coefficient=False, approximate=False) -> Item:
+    post = (lambda v: v / PI) if ask_coefficient else (
+        (lambda v: E(v.approx(3))) if approximate else None)
     detail = ", ".join(f"{k} = {v.plain()}" for k, v in dims.items())
-    rationale = f"{_formula_text(shape.key, measure)} with {detail} gives {key.plain()}."
+    exact_key = key
+    if post:
+        key = post(key)
+    rationale = (f"{_formula_text(shape.key, measure)} with {detail} gives "
+                 + (f"{exact_key.plain()}, so n = {key.plain()}." if ask_coefficient
+                    else f"{exact_key.plain()}" + (f" ~= {key.plain()}." if approximate else ".")))
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("grid-in answers must be enterable as digits")
@@ -288,6 +307,9 @@ def _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis, te
                     _difficulty(shape, measure), seed, stem, "spr", key,
                     key.gridin(), rationale)
     mistakes = extra_mis + _forward_mistakes(shape.key, measure, dims)
+    if post:
+        mistakes = [Mis(m.reason, post(m.value)) for m in mistakes
+                    if m.value is not None and (not ask_coefficient or m.value.pi_exp >= 1)]
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item(template, f"{shape.short} {measure.replace('_', ' ')}",
                 _difficulty(shape, measure), seed, stem, "mcq", key, letter,
@@ -356,14 +378,15 @@ def _nth_root(v: Exact, n: int) -> Exact | None:
 
 
 def inverse(rng: random.Random, seed: int, *, shape_key=None, measure=None,
-            unknown=None, unit=None, style=None, fmt=None, then_measure=None) -> Item:
+            unknown=None, unit=None, style=None, fmt=None, then_measure=None,
+            dims=None) -> Item:
     shape = SHAPES[shape_key or rng.choice(list(SHAPES))]
     measure = measure or rng.choice(list(shape.measures))
     unit = unit or rng.choice(UNITS)
     style = style or rng.choice(["words", "words", "abbr"])
     fmt = fmt or ("spr" if rng.random() < 0.25 else "mcq")
 
-    dims = _pick_dims(rng, shape)
+    dims = {k: E(v) for k, v in dims.items()} if dims else _pick_dims(rng, shape)
     unknown = unknown or rng.choice([d.key for d in shape.dims])
     p = _exponent_of(shape, measure, unknown, dims)
     if p is None:
@@ -395,17 +418,26 @@ def inverse(rng: random.Random, seed: int, *, shape_key=None, measure=None,
     stem = f"{shape.name(capital=True)} has {_join(given)}. {find}"
 
     # --- misconceptions specific to running a formula backwards -------------
+    def attempt(fn):
+        """Some wrong routes are not even expressible (45*pi minus 5 units).
+        A student cannot produce them, so they are not options."""
+        try:
+            return fn()
+        except (ValueError, ZeroDivisionError):
+            return None
+
+    first_known = next(iter(known.values())) if known else None
     mistakes: list[Mis] = []
     if not then_measure:
-        mistakes += [Mis("did not take the root after dividing", total / coeff),
-                     Mis("divided by only one of the known dimensions",
-                         total / next(iter(known.values())) if known else None),
-                     Mis("subtracted the known dimension instead of dividing",
-                         total - next(iter(known.values())) if known else None),
-                     Mis("reported a value that was given, not the one asked for",
-                         next(iter(known.values())) if known else None),
-                     Mis("divided by twice the known dimension",
-                         total / (E(2) * next(iter(known.values()))) if known else None)]
+        mistakes += [
+            Mis("did not take the root after dividing", attempt(lambda: total / coeff)),
+            Mis("divided by only one of the known dimensions",
+                attempt(lambda: total / first_known) if first_known else None),
+            Mis("subtracted the known dimension instead of dividing",
+                attempt(lambda: total - first_known) if first_known else None),
+            Mis("reported a value that was given, not the one asked for", first_known),
+            Mis("divided by twice the known dimension",
+                attempt(lambda: total / (E(2) * first_known)) if first_known else None)]
         if p == 2:
             mistakes.append(Mis("halved instead of taking the square root", key * E(2)))
         if p == 3:
@@ -413,7 +445,8 @@ def inverse(rng: random.Random, seed: int, *, shape_key=None, measure=None,
     else:
         mistakes += [Mis("stopped at the edge length instead of the requested measure", dims[unknown]),
                      Mis("used the given measure unchanged", total),
-                     Mis("divided the given measure by the number of faces", total / E(6))]
+                     Mis("divided the given measure by the number of faces",
+                         attempt(lambda: total / E(6)))]
     mistakes = [m for m in mistakes if m.value is not None]
     mistakes += _forward_mistakes(shape.key, then_measure or measure, dims)
 
