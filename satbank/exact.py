@@ -120,8 +120,13 @@ class Exact:
     @property
     def form(self) -> tuple:
         """Surface signature. Options that differ here are visually sortable
-        by a student who cannot do the math, so a key must never be alone."""
-        return (self.pi_exp != 0, self.rad != 1, self.coef.denominator != 1)
+        by a student who cannot do the math, so a key must never be alone.
+
+        The pi exponent is compared by value, not merely by presence: 2*pi and
+        2*sqrt(pi) look nothing alike on the page, and treating them as one
+        form let a lone integer key slip through as the odd one out.
+        """
+        return (self.pi_exp, self.rad != 1, self.coef.denominator != 1)
 
     def __float__(self) -> float:
         return float(self.coef) * (math.pi ** float(self.pi_exp)) * math.sqrt(self.rad)

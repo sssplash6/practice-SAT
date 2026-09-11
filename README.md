@@ -18,7 +18,7 @@ from 59 official items across three difficulty tiers.
 |---|---|
 | Templates | 19 |
 | Official answers reproduced | 59 / 59 |
-| Distinct items generated and independently audited | **116,763, 0 disagreements** |
+| Distinct items generated and independently audited | **171,950, 0 disagreements** |
 | Option sets matching College Board exactly | 13 / 45 multiple-choice items |
 | Individual official distractors recreated | 70% |
 | Structural validation (options, ordering, prose) | 7,600 items, 0 failures |
@@ -32,6 +32,7 @@ PYTHONPATH=. python3 -m satbank templates            # list the 19 templates
 PYTHONPATH=. python3 -m satbank generate --n 5       # print items with answer rationales
 PYTHONPATH=. python3 -m satbank generate --template measure.inverse --n 3
 PYTHONPATH=. python3 -m satbank export --n 500 --out pool.json
+PYTHONPATH=. python3 -m satbank capacity             # distinct items per template
 
 PYTHONPATH=. python3 tests/test_sources.py           # the 59 official items
 PYTHONPATH=. python3 tests/test_math.py 2000         # re-derive answers independently
@@ -95,18 +96,23 @@ you get by dropping the coefficient, i.e. the intended distractor.
 
 ## Known limits
 
-Nine of the nineteen templates have a bounded parameter space, four of them
-badly: `coord.square_diagonals` tops out at **24** distinct items,
-`circle.equal_area_square` at 57, `expression.symbolic_volume` at 120,
-`context.container_percent` at 240. Those constructions are rigid and need
-loosening before a student can drill them heavily.
+Fourteen of the nineteen templates had not saturated at 20,000 draws each;
+`measure.forward` alone has ~1.78 million parameterisations by direct count.
+Five are genuinely finite, and one is small enough to matter:
 
-The other ten had not saturated at 20,000 draws each. `measure.forward` alone
-has ~1.78 million parameterisations by direct count.
+| Template | Distinct items | |
+|---|---:|---|
+| `circle.equal_area_square` | 696 | one radius is its only real parameter |
+| `scaling.percent` | 1,440 | exhausted |
+| `circle.convert` | 1,823 | exhausted |
+| `expression.symbolic_volume` | 1,919 | exhausted |
+| `scaling.solid` | 1,324 | still growing |
 
-Sampling also collides: 30,000 random draws yielded 17,229 distinct items (57%
-unique). Serving students needs enumeration by seed plus per-student history,
-not random draws.
+Run `python3 -m satbank capacity` to re-measure after changing a template.
+
+Sampling also collides: random seeds re-hit the same parameters, so 30,000
+draws yield roughly 17,000 distinct items. Serving students needs enumeration
+by seed plus per-student history, not random draws.
 
 ## Adding a domain
 

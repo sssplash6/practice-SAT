@@ -121,30 +121,75 @@ def triangle_from_points(rng: random.Random, seed: int, *, fmt=None, pts=None) -
 
 # --------------------------------------------------- square with axis diagonals
 
-def square_on_axes(rng: random.Random, seed: int, *, fmt="mcq", a=None) -> Item:
-    """Vertices at (+-a, 0) and (0, +-a): the diagonals are 2a, so the area is 2a^2."""
+def square_on_axes(rng: random.Random, seed: int, *, fmt="mcq", a=None, b=None,
+                   ask=None, center=None) -> Item:
+    """A quadrilateral whose diagonals lie along (or parallel to) the axes.
+
+    Half-diagonals a and b give area 2ab and side sqrt(a^2 + b^2). Equal
+    half-diagonals make it a square, unequal ones a rhombus -- the same
+    construction, and the same mistakes, across both.
+    """
     a = a or rng.randint(2, 9)
-    P = {"kind": "square_diagonals", "a": a}
-    key = E(2 * a * a)
-    pts = [(a, 0), (-a, 0), (0, a), (0, -a)]
-    segs = [((a, 0), (0, a)), ((0, a), (-a, 0)), ((-a, 0), (0, -a)), ((0, -a), (a, 0))]
-    fig = coordinate_grid(-a - 2, a + 2, -a - 2, a + 2, segments=segs, step=1)
+    if b is None:
+        b = a if rng.random() < 0.45 else rng.choice([v for v in range(2, 10) if v != a])
+    cx, cy = center if center is not None else (
+        (0, 0) if rng.random() < 0.5 else (rng.randint(-3, 4), rng.randint(-3, 4)))
+    ask = ask or rng.choices(["area", "side", "perimeter"], weights=[6, 2, 2])[0]
+    square = (a == b)
+    noun = "square" if square else "rhombus"
+
+    side = E(1, 0, a * a + b * b)                     # sqrt(a^2 + b^2)
+    key = {"area": E(2 * a * b), "side": side, "perimeter": E(4) * side}[ask]
+    if fmt == "spr" and not key.is_rational:
+        raise ItemError("a radical answer cannot be entered in a grid-in")
+
+    verts = [(cx + a, cy), (cx, cy + b), (cx - a, cy), (cx, cy - b)]
+    segs = [(verts[i], verts[(i + 1) % 4]) for i in range(4)]
+    pad = 2
+    fig = coordinate_grid(min(0, cx - a) - pad, max(0, cx + a) + pad,
+                          min(0, cy - b) - pad, max(0, cy + b) + pad,
+                          segments=segs, step=1 if max(a, b) + abs(cx) + abs(cy) < 9 else 2)
+
+    where = ("has its diagonals on the x- and y-axes" if (cx, cy) == (0, 0)
+             else "has its diagonals parallel to the x- and y-axes")
+    asked = {"area": "the area, in square units,", "side": "the length, in units, of one side of",
+             "perimeter": "the perimeter, in units, of"}[ask]
     stem = rng.choice([
-        "In the xy-plane shown, square ABCD has its diagonals on the x- and y-axes. What is "
-        "the area, in square units, of the square?",
-        "The square shown in the xy-plane has its two diagonals lying along the coordinate "
-        "axes. What is the area, in square units, of the square?",
-        "In the xy-plane shown, the vertices of a square lie on the x- and y-axes. What is the "
-        "area, in square units, of the square?",
+        f"In the xy-plane shown, {noun} ABCD {where}. What is {asked} the {noun}?",
+        f"The {noun} shown in the xy-plane {where}. What is {asked} the {noun}?",
+        f"In the xy-plane shown, the vertices of a {noun} are the four points shown. "
+        f"What is {asked} the {noun}?",
     ])
-    rationale = (f"Each diagonal has length {2*a}, and a square with diagonal d has area "
-                 f"d²/2 = {2*a}²/2 = {key.plain()}.")
-    mistakes = [Mis("used the half-diagonal as the side length", E(a * a)),
-                Mis("squared the full diagonal", E(4 * a * a)),
-                Mis("found the perimeter of the bounding square", E(4 * a)),
-                Mis("used the diagonal as the side length", E(2 * a))]
+
+    if ask == "area":
+        mistakes = [Mis("used the half-diagonals as the side lengths", E(a * b)),
+                    Mis("multiplied the full diagonals without halving", E(4 * a * b)),
+                    Mis("added the diagonals instead of multiplying", E(2 * (a + b))),
+                    Mis("used one diagonal only", E(2 * max(a, b)))]
+        rationale = (f"The diagonals have lengths {2*a} and {2*b}, and a {noun} with diagonals "
+                     f"p and q has area pq/2 = {2*a}({2*b})/2 = {key.plain()}.")
+    elif ask == "side":
+        mistakes = [Mis("added the half-diagonals instead of using the Pythagorean theorem",
+                        E(a + b)),
+                    Mis("used a full diagonal as the side", E(2) * side),
+                    Mis("gave the area instead of a side", E(2 * a * b)),
+                    Mis("halved the side", side / E(2))]
+        rationale = (f"Half of each diagonal is {a} and {b}, so a side is "
+                     f"sqrt({a}^2 + {b}^2) = {side.plain()}.")
+    else:
+        mistakes = [Mis("gave one side instead of the perimeter", side),
+                    Mis("used two sides only", E(2) * side),
+                    Mis("added the four half-diagonals", E(2 * (a + b))),
+                    Mis("gave the area instead of the perimeter", E(2 * a * b))]
+        rationale = (f"Each side is sqrt({a}^2 + {b}^2) = {side.plain()}, so the perimeter is "
+                     f"4({side.plain()}) = {key.plain()}.")
+
+    P = {"kind": "square_diagonals", "a": a, "b": b, "ask": ask}
+    if fmt == "spr":
+        return Item("GEO.coord.quad_diagonals", "area in the plane", "medium", seed, stem,
+                    "spr", key, key.gridin(), rationale, figure=fig, params=P)
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
-    return Item("GEO.coord.square_diagonals", "area in the plane", "medium", seed, stem, "mcq",
+    return Item("GEO.coord.quad_diagonals", "area in the plane", "medium", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex, figure=fig, params=P)
 
 

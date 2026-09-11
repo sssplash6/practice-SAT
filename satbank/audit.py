@@ -114,8 +114,13 @@ def expected(p: dict, item: Item):
         return abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0
 
     if k == "square_diagonals":
-        d = 2.0 * p["a"]                       # a square of diagonal d has area d^2/2
-        return d * d / 2.0
+        # diagonals 2a and 2b: area is half their product, side by Pythagoras
+        da, db = 2.0 * p["a"], 2.0 * p.get("b", p["a"])
+        ask = p.get("ask", "area")
+        if ask == "area":
+            return da * db / 2.0
+        side = math.hypot(p["a"], p.get("b", p["a"]))
+        return side if ask == "side" else 4.0 * side
 
     if k == "leg_from_area":
         drawn = math.hypot(p["dx"], p["dy"])
@@ -131,9 +136,17 @@ def expected(p: dict, item: Item):
         return f"{l} * {w}" if p["measure"] == "area" else f"2({l} + {w})"
 
     if k == "symbolic_volume":
-        c = p["c"]
-        return (f"V = pi*r^3 + {c}pi*r^2" if p["relation"] == "longer"
-                else f"V = {c}pi*r^3")
+        # expand the stated height into the volume formula, independently
+        c, rel, solid = p["c"], p["relation"], p.get("solid", "cylinder")
+        if solid == "cylinder":
+            return {"longer": f"V = pi*r^3 + {c}pi*r^2",
+                    "times": f"V = {c}pi*r^3",
+                    "shorter": f"V = 2pi*r^3 - {c}pi*r^2",
+                    "twice_plus": f"V = 2pi*r^3 + {c}pi*r^2"}[rel]
+        return {"longer": f"V = s^3 + {c}s^2",
+                "times": f"V = {c}s^3",
+                "shorter": f"V = 2s^3 - {c}s^2",
+                "twice_plus": f"V = 2s^3 + {c}s^2"}[rel]
 
     if k == "remaining_volume":
         return p["base"] * p["h"] - p["filled"]
@@ -150,11 +163,18 @@ def expected(p: dict, item: Item):
         return float(p["perimeter"] - x - y)
 
     if k == "container_percent":
-        rb = p["rA"] * (100.0 + p["pct"]) / 100.0
-        return math.pi * rb * rb * p["h"]
+        f = (100.0 + p["pct"] if p.get("up", True) else 100.0 - p["pct"]) / 100.0
+        dim = p.get("dim", "radius")
+        rb = p["rA"] * (f if dim in ("radius", "both") else 1.0)
+        hb = p["h"] * (f if dim in ("height", "both") else 1.0)
+        vb = math.pi * rb * rb * hb
+        if p.get("ask", "volume") == "volume":
+            return vb
+        return vb / (math.pi * p["rA"] ** 2 * p["h"])
 
     if k == "equal_area_square":
-        return math.sqrt(math.pi * p["r"] ** 2)
+        side = math.sqrt(math.pi * p["r"] ** 2)
+        return side if p.get("ask", "side") == "side" else 4.0 * side
 
     if k == "circle_convert":
         r = p["r"]

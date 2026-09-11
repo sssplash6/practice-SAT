@@ -45,6 +45,21 @@ GIVEN_FORMS = {
 }
 CIRCULAR = {"cylinder", "cone", "sphere", "hemisphere", "circle"}
 
+# Everyday objects the SAT wraps a bare shape in.
+OBJECTS = {
+    "rectangle": ["sign", "rug", "patio", "window pane", "garden plot", "tabletop"],
+    "square": ["tile", "napkin", "photograph", "tarp", "paving stone"],
+    "triangle": ["sail", "pennant", "gable", "warning sign"],
+    "parallelogram": ["deck panel", "tile", "banner"],
+    "circle": ["mirror", "tabletop", "lid", "fountain"],
+    "rect_prism": ["shipping crate", "storage bin", "aquarium", "planter box"],
+    "cube": ["wooden block", "storage cube", "die", "packing box"],
+    "cylinder": ["water tank", "canister", "drum", "silo"],
+    "cone": ["paper cup", "funnel", "party hat"],
+    "sphere": ["ball bearing", "globe", "water balloon"],
+    "square_prism": ["pillar", "planter", "storage column"],
+}
+
 
 def _article(word: str) -> str:
     return "an" if word[0].lower() in "aeiou" else "a"
@@ -260,10 +275,30 @@ def forward(rng: random.Random, seed: int, *, shape_key=None, measure=None,
             first = False
 
     # --- sentence frame ----------------------------------------------------
-    frame = frame or rng.choice(["has", "with", "the_dim_is"])
+    options = ["has", "with", "the_dim_is", "object"]
+    if len(shape.dims) > 1 and given_form == "direct":
+        options.append("dimensions")
+    frame = frame or rng.choice(options)
     if frame == "the_dim_is" and len(phrases) > 1:
         frame = "has"
-    if frame == "has":
+    if frame == "dimensions" and (len(shape.dims) < 2 or given_form != "direct"):
+        frame = "has"
+    if frame == "object" and shape.key not in OBJECTS:
+        frame = "has"
+
+    if frame == "dimensions":
+        # "The dimensions of a right rectangular prism are 4 inches by 5 inches by 6 inches."
+        sizes = " by ".join(_qty(dims[d.key], unit, i == 0, style)
+                            for i, d in enumerate(shape.dims))
+        stem = (f"The dimensions of {shape.name()} are {sizes}. "
+                f"What is {measure_phrase(measure, unit, style)} of the {shape.short}?")
+    elif frame == "object":
+        obj = rng.choice(OBJECTS[shape.key])
+        shaped = "in the shape of" if shape.kind == "plane" else "shaped like"
+        stem = (f"{_article(obj).capitalize()} {obj} {shaped} {shape.name()} has "
+                f"{_join(phrases)}. What is {measure_phrase(measure, unit, style)} "
+                f"of the {obj}?")
+    elif frame == "has":
         stem = (f"{shape.name(capital=True)} has {_join(phrases)}. "
                 f"What is {measure_phrase(measure, unit, style)} of the {shape.short}?")
     elif frame == "with":
