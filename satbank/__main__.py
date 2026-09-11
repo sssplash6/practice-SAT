@@ -17,6 +17,35 @@ def item_json(it) -> dict:
             "distractor_reasons": it.reasons, "figure": it.figure, "table": it.table}
 
 
+def capacity(draws: int) -> int:
+    """How many distinct items each template can actually produce.
+
+    A template whose count is still climbing when sampling stops is reported
+    with a "+": that figure is a floor, not a total.
+    """
+    from .item import ItemError
+    everything = {}
+    print(f"{'template':<34}{'distinct':>10}   sampled {draws:,} times")
+    print("-" * 62)
+    for name in TEMPLATES:
+        seen, quarter = set(), None
+        for seed in range(draws):
+            try:
+                it = generate(name, seed)
+            except ItemError:
+                continue
+            sig = (it.stem, it.figure, it.answer)
+            seen.add(sig)
+            everything[hash(sig)] = True
+            if seed == draws // 4 - 1:
+                quarter = len(seen)
+        growing = bool(quarter and len(seen) > quarter * 1.15)
+        print(f"{name:<34}{len(seen):>10,}   {'still growing' if growing else 'exhausted'}")
+    print("-" * 62)
+    print(f"{'distinct overall':<34}{len(everything):>10,}")
+    return 0
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="satbank")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -30,12 +59,17 @@ def main(argv=None) -> int:
 
     sub.add_parser("templates", help="list template names")
 
+    c = sub.add_parser("capacity", help="count the distinct items each template can make")
+    c.add_argument("--draws", type=int, default=20000)
+
     e = sub.add_parser("export", help="write a pool of items as JSON")
     e.add_argument("--n", type=int, default=500)
     e.add_argument("--seed", type=int, default=0)
     e.add_argument("--out", required=True)
 
     a = ap.parse_args(argv)
+    if a.cmd == "capacity":
+        return capacity(a.draws)
     if a.cmd == "templates":
         for name in TEMPLATES:
             print(name)
