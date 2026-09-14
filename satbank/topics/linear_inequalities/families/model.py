@@ -40,9 +40,12 @@ TWO_VAR = {
              "{total} {adj} {thing}. Which inequality shows this relationship, "
              "where {u} is the total number of {thing} in the first container "
              "and {v} is the total number of {thing} in the second container?",
-        swap="attached each percentage to the other container"),
+        swap="attached each percentage to the other container",
+        why="{p1}% of the {u} {thing} in the first container are {adj}, which "
+            "is {au}, and {p2}% of the {v} in the second are {adj}, which is "
+            "{bv}; together those have to be {word} {total}"),
     "drive": dict(
-        style="rate",
+        style="rate", rates=(25, 30, 35, 40, 45, 50, 55, 60, 65, 70),
         stem="On a car trip, {a_name} and {b_name} each drove for part of the "
              "trip, and the total distance they drove was {word} {total} miles. "
              "{a_name} drove at an average speed of {p1} miles per hour (mph), "
@@ -50,14 +53,19 @@ TWO_VAR = {
              "following inequalities represents this situation, where {u} is "
              "the number of hours {a_name} drove and {v} is the number of hours "
              "{b_name} drove?",
-        swap="gave each driver the other driver's average speed"),
+        swap="gave each driver the other driver's average speed",
+        why="{a_name} covers {p1} miles in each of the {u} hours, which is "
+            "{au}, and {b_name} covers {p2} miles in each of the {v} hours, "
+            "which is {bv}; the distance altogether is {word} {total}"),
     "store": dict(
         style="price",
         stem="A clothing store is having a sale on {t1} and {t2}. During the "
              "sale, the cost of each {s1} is ${p1} and the cost of each {s2} is "
              "${p2}. {who} can spend {word} ${total} at the store. If {who} buys "
              "{u} {t1} and {v} {t2}, which of the following must be true?",
-        swap="attached each price to the other kind of item"),
+        swap="attached each price to the other kind of item",
+        why="{u} {t1} at ${p1} each cost {au}, and {v} {t2} at ${p2} each cost "
+            "{bv}; the two together have to come to {word} ${total}"),
 }
 TWO_VAR_NAMES = list(TWO_VAR)
 
@@ -85,10 +93,9 @@ def model_two_var(rng: random.Random, seed: int, *, scene=None, a=None, b=None,
         p2 = 10 * rng.randint(1, 9) if b is None else int(Q(b) * 100)
         ca, cb = Q(p1, 100), Q(p2, 100)
     else:
-        p1 = rng.choice([5, 8, 10, 12, 15, 20, 25, 30, 35, 40, 45, 50]) \
-            if a is None else a
-        p2 = rng.choice([5, 8, 10, 12, 15, 20, 25, 30, 35, 40, 45, 50]) \
-            if b is None else b
+        rates = d.get("rates", (5, 8, 10, 12, 15, 20, 25, 30, 35, 40, 45, 50))
+        p1 = rng.choice(rates) if a is None else a
+        p2 = rng.choice(rates) if b is None else b
         ca, cb = Q(p1), Q(p2)
     if ca == cb:
         raise ItemError("two equal rates make the swapped option the key")
@@ -123,10 +130,10 @@ def model_two_var(rng: random.Random, seed: int, *, scene=None, a=None, b=None,
     P = {"kind": "ineq_model_two", "style": d["style"], "op": op,
          "a": [ca.numerator, ca.denominator], "b": [cb.numerator, cb.denominator],
          "total": float(total), "u": u, "v": v}
-    rationale = (f"Each of the {u} counts {dec(ca) if decimal else num(ca)} toward "
-                 f"the total and each of the {v} counts "
-                 f"{dec(cb) if decimal else num(cb)}, and the total is "
-                 f"{WORD[op]} {num(total)}, so {key}.")
+    rationale = d["why"].format(
+        u=u, v=v, p1=p1, p2=p2, thing=thing, adj=adj, a_name=a_name,
+        b_name=b_name, t1=t1, t2=t2, total=num(total), word=WORD[op],
+        au=term(ca, u, decimal), bv=term(cb, v, decimal)) + f", so {key}."
     ch, why, letter = text_choices(key, wrong, rng)
     return Item("ineq.model_two_var", "modelling a constraint", "easy", seed,
                 stem, "mcq", E(0), letter, rationale, ch, why, list(ch), params=P)
@@ -165,8 +172,8 @@ def _perimeter(rng, var, kw):
     op = kw.get("op", "<=")
     unit = kw.get("unit", "inches")
     thing = kw.get("thing", "rectangle")
-    if total <= 2 * length:
-        raise ItemError("no positive width fits inside that perimeter")
+    if not 2 * length < total < 8 * length:
+        raise ItemError("the length and the perimeter are out of proportion")
     lhs = side([(2, var)], 2 * length)
     key = rel(lhs, op, num(total))
     half = side([(2, var)], length)
@@ -208,18 +215,18 @@ def _payback(rng, var, kw):
              Mis("used only the new annual cost as the yearly saving",
                  rel(num(install), "<", term(after, var)))]
     stem = (f"The average annual energy cost for a certain home is "
-            f"{num(before)} dollars. The homeowner plans to spend "
-            f"{num(install)} dollars to install {thing}. The homeowner "
-            f"estimates that the average annual energy cost will then be "
-            f"{num(after)} dollars. Which of the following inequalities can be "
+            f"${num(before)}. The homeowner plans to spend ${num(install)} to "
+            f"install {thing}. The homeowner estimates that the average annual "
+            f"energy cost will then be ${num(after)}. Which of the following "
+            f"inequalities can be "
             f"solved to find {var}, the number of years after installation at "
             f"which the total amount of energy cost savings will exceed the "
             f"installation cost?")
     P = {"before": float(before), "after": float(after),
          "install": float(install), "var": var}
-    rationale = (f"Each year saves {num(before)} {MINUS} {num(after)} dollars, so "
-                 f"{var} years save {saving}, and that has to pass the "
-                 f"{num(install)} dollars it cost to install, so {key}.")
+    rationale = (f"Each year saves {num(before)} {MINUS} {num(after)} dollars, "
+                 f"so {var} years save {saving}, and that has to pass the "
+                 f"${num(install)} it cost to install, so {key}.")
     return key, wrong, stem, P, rationale, "medium"
 
 
@@ -457,6 +464,7 @@ def _count_cost(rng, kw):
 RATIO_SCENES = {
     "bushes": dict(
         weights=False, ratio_op="<=",
+        cap_why="No more than {cap} bushes in all is {row1}",
         stem="A city employee will plant two types of bushes, {n1} and {n2}, in "
              "a park. There will be no more than {cap} total bushes planted, and "
              "the number of {n1} planted will be at most {k} times the number of "
@@ -468,6 +476,7 @@ RATIO_SCENES = {
                ("lilacs", "hydrangeas"), ("roses", "camellias")]),
     "laundry": dict(
         weights=True, ratio_op=">=",
+        cap_why="The shipment is capped at {cap} pounds, which is {row1}",
         stem="A laundry service is buying {n1} and {n2} from its supplier. The "
              "supplier will deliver no more than {cap} pounds in a shipment. "
              "Each container of {n1} weighs {w1} pounds, and each container of "
@@ -538,9 +547,9 @@ def _ratio(rng, kw):
     P = {"k": float(k), "cap": float(cap), "ratio_op": ratio_op,
          "w1": [w1.numerator, w1.denominator], "w2": [w2.numerator, w2.denominator],
          "u": u, "v": v, "weights": bool(d["weights"])}
-    rationale = (f"The shipment is capped, which is {row1}, and "
-                 f"{'at least' if ratio_op == '>=' else 'at most'} {KWORD[k]} as "
-                 f"many {n1} as {n2} is {row2}.")
+    rationale = (d["cap_why"].format(cap=num(cap), row1=row1) +
+                 f", and {'at least' if ratio_op == '>=' else 'at most'} "
+                 f"{KWORD[k]} as many {n1} as {n2} is {row2}.")
     return key, wrong, stem, P, rationale, "medium"
 
 
@@ -558,8 +567,14 @@ def _staffing(rng, kw):
     min2 = kw.get("min2") or rng.randint(1, 3)
     if pay1 >= pay2:
         raise ItemError("the senior role has to be the better paid one")
-    if budget <= staff * pay1:
-        raise ItemError("the budget cannot cover the smallest possible team")
+    # the cheapest team that meets every condition: as many of the cheaper role
+    # as the two floors allow. If the budget cannot even cover that, the keyed
+    # system has no solutions at all -- and an option that reads every floor as
+    # a cap is then empty too, which makes two options describe the same set.
+    cheap = max(min1, staff - min2)
+    cheapest = pay1 * cheap + pay2 * max(min2, staff - cheap)
+    if budget < cheapest * Q(11, 10):
+        raise ItemError("the budget leaves no team that meets every condition")
     r1, r2 = kw.get("roles") or rng.choice(ROLES)
     name = kw.get("name") or rng.choice(WHO)
     cost = side([(pay1, u), (pay2, v)])

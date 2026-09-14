@@ -21,7 +21,7 @@ from ....exact import E, Exact
 from ....expr import SYMBOL, fmt_ineq
 from ....item import ItemError, Mis, assemble, assemble_text, norm_text
 
-__all__ = ["Q", "E", "MINUS", "OPS", "FLIP", "TURN", "STRICT", "WORD",
+__all__ = ["Q", "E", "MINUS", "OPS", "FLIP", "TURN", "STRICT", "WORD", "LONG",
            "num", "dec", "term", "side", "rel", "band", "sent", "money",
            "griddable", "mixed", "text_choices", "value_choices", "signed_join",
            "plural", "VARS"]
@@ -37,6 +37,9 @@ TURN = {"<": ">", ">": "<", "<=": ">=", ">=": "<="}
 FLIP = {"<": ">", ">": "<", "<=": ">=", ">=": "<="}
 STRICT = {"<", ">"}
 WORD = {"<=": "at most", ">=": "at least", "<": "less than", ">": "greater than"}
+# the same relation spelled out, as an interpretation item prints it
+LONG = {"<=": "less than or equal to", ">=": "greater than or equal to",
+        "<": "less than", ">": "greater than"}
 
 VARS = ["x", "n", "t", "w", "p", "m", "h", "c", "k", "v"]
 
