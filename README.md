@@ -126,10 +126,6 @@ said cm^2 where the page says cm².
 
 ## Known limits
 
-**Sampling collides.** Random seeds re-hit the same parameters, so 30,000
-draws yield roughly 17,000 distinct items. Serving students needs enumeration
-by seed plus per-student history, not random draws.
-
 **Some templates are finite.** Most are still growing at 20,000 draws, but a
 few are genuinely bounded — `circle.equal_area_square` at 696 and
 `lin.from_table` at 592 are the smallest. `satbank capacity` re-measures after
@@ -139,6 +135,34 @@ any change.
 College Board's own options than circle or function items do, because their
 wrong answers are arithmetic slips rather than named misconceptions, and a
 slip has no single canonical value.
+
+## Before a student sees this
+
+Everything above measures whether an item is *right*. None of it measures
+whether the bank is usable as practice. Three gaps, measured rather than
+guessed, and all of them belong to a serving layer that does not exist yet:
+
+**Difficulty is an inherited label, not a measurement.** A template keeps the
+tier of the source item it was learned from, and nothing checks that a
+generated instance is as hard as its parent. Drawing evenly across templates
+therefore skews hard — Area and Volume generates 106 easy / 146 medium / 223
+hard from a source set that was 20 / 21 / 18, and Circles 50 / 170 / 180 from
+3 / 11 / 18. A student asking for easy practice cannot reliably get it.
+
+**Random draws repeat.** Seeds collide on the same parameters. Across 1,000
+items drawn in twenty-item sets, Circles, Percentages and Linear Equations
+repeated a stem zero times, but Area and Volume repeated 25 and One-Variable
+Data 22 — about one visible repeat every second set. Serving needs
+enumeration by seed plus per-student history, not `random()`.
+
+**There is no exam blueprint.** The real test weights its domains; nothing
+here knows that, so a practice set drawn from this bank has a distribution
+unlike the SAT's.
+
+And the one that cannot be coded: **real difficulty comes from real students.**
+Until items have been sat and there are p-values, easy/medium/hard is an
+informed guess, however well the engine is built. That is an argument for
+getting this in front of a class early, not for calibrating harder in private.
 
 ## Adding a topic
 
