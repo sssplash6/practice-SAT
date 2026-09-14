@@ -261,7 +261,12 @@ def _shape(opt: str) -> tuple:
             "/" in opt, "." in opt, opt.strip().startswith("-"))
 
 
-_PLACEHOLDER = re.compile(r"\{|\}|\bTODO\b|\bFIXME\b|\bNone\b|\bnan\b|\bundefined\b")
+# An unrendered placeholder, and nothing that is merely English. "None of
+# these squares shares a side" and "the slope of line l is undefined" are both
+# SAT prose; banning the words made an author reword a stem and drop an option
+# that the source actually prints.
+_PLACEHOLDER = re.compile(r"\{|\}|\bTODO\b|\bFIXME\b|\bnan\b"
+                          r"|(?<![A-Za-z])None(?=[,.\s]*$)|= *None\b")
 
 
 def _prose(item, name: str, seed: int) -> list[str]:
