@@ -42,11 +42,27 @@ class Result:
     detail: list[str]
 
 
+SUPERSCRIPT = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
+
+# a unit printed after the number: "8 cm²", "12 ft", "35 degrees"
+UNIT = re.compile(r"(cm|mm|km|inches|inch|feet|foot|yards|yard|units|unit|"
+                  r"degrees|degree|°|%|m|in|ft|yd)\d*$")
+
+
 def norm(s: str) -> str:
-    """Compare answers the way a marker would: 3,025 is 3025, pi is π."""
-    s = (str(s).replace(",", "").replace(" ", "").replace("−", "-")
-         .replace("·", "*").replace("×", "*").replace("π", "pi").replace("^", ""))
-    return s.lower().rstrip(".")
+    """Compare answers the way a marker would.
+
+    3,025 is 3025; π is pi; a printed superscript is the digit it stands for;
+    and a multiplication dot is a star. The star itself is dropped only inside
+    an expression -- 4πr³ and 4pi*r^3 are one answer written twice -- and kept
+    between bare numerals, where 3·39 and 339 are two different answers.
+    """
+    s = (str(s).translate(SUPERSCRIPT)
+         .replace(",", "").replace(" ", "").replace("−", "-")
+         .replace("·", "*").replace("×", "*").replace("π", "pi").replace("^", "")).lower()
+    if any(c.isalpha() for c in s.replace("pi", "")):
+        s = s.replace("*", "")
+    return s.rstrip(".")
 
 
 def _same(a: str, b: str) -> bool:
@@ -59,7 +75,9 @@ def _same(a: str, b: str) -> bool:
 
 
 def _num(s: str) -> float:
-    t = norm(s)
+    """The number an option carries, with any unit it is printed with removed:
+    the stem already says what the unit is."""
+    t = UNIT.sub("", norm(s))
     if "/" in t:
         p, q = t.split("/", 1)
         return float(p) / float(q)
