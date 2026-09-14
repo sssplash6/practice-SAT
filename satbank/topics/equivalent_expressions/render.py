@@ -16,13 +16,14 @@ import re
 from fractions import Fraction as Q
 
 __all__ = ["MINUS", "Q", "sup", "num", "dec", "power", "pow_of", "mono", "join",
-           "poly", "paren", "coef_paren", "sent", "frac", "root", "VARS", "PAIRS"]
+           "poly", "paren", "coef_paren", "sent", "frac", "root", "VARS", "PAIRS",
+           "pc", "terms", "show_terms"]
 
 MINUS = "−"                      # U+2212, the character the source prints
 _SUP = str.maketrans("0123456789-", "⁰¹²³⁴⁵⁶⁷⁸⁹⁻")
 
-VARS = ["x", "n", "p", "t", "w", "y", "m", "z", "d", "a", "r", "k"]
-PAIRS = [("x", "y"), ("a", "b"), ("y", "z"), ("m", "n"), ("p", "q"), ("s", "t"),
+VARS = ["x", "n", "p", "t", "w", "y", "z", "d", "a", "r", "k", "j"]
+PAIRS = [("x", "y"), ("a", "b"), ("y", "z"), ("p", "q"), ("s", "t"),
          ("c", "d"), ("u", "v")]
 
 
@@ -150,3 +151,42 @@ def sent(text: str) -> str:
     """One space between words, and a displayed expression keeps its own line."""
     text = re.sub(r"[ \t]+", " ", text)
     return re.sub(r" *\n *", "\n", text).strip()
+
+
+# ------------------------------------------------- values, before they print
+#
+# A template compares candidate answers as values and only then prints them,
+# so a "distractor" can never turn out to be the key in a different jacket.
+
+def pc(coeffs) -> tuple:
+    """A one-variable polynomial as a canonical tuple, lowest degree first."""
+    c = [Q(x) for x in coeffs]
+    while len(c) > 1 and c[-1] == 0:
+        c.pop()
+    return tuple(c)
+
+
+def terms(*pairs) -> tuple:
+    """A multivariable expression as a canonical bag of terms.
+
+    Each pair is (powers, coefficient) with powers a list of (variable,
+    exponent). Terms are collected, zeros dropped, and the bag is ordered the
+    way the source prints one: by the exponent of the first variable, then of
+    the second -- a² before abc before c², and x⁻²y³z¹⁰ before x⁻⁶y¹¹z⁻².
+    """
+    bag: dict = {}
+    for powers, c in pairs:
+        k = tuple(sorted((v, Q(e)) for v, e in powers if Q(e) != 0))
+        bag[k] = bag.get(k, Q(0)) + Q(c)
+    live = [(k, v) for k, v in bag.items() if v != 0]
+    names = sorted({v for k, _ in live for v, _ in k})
+
+    def order(kv):
+        d = dict(kv[0])
+        return tuple(-d.get(n, Q(0)) for n in names)
+
+    return tuple(sorted(live, key=order))
+
+
+def show_terms(t, decimal: bool = False) -> str:
+    return join([mono(c, list(powers), decimal) for powers, c in t]) if t else "0"
