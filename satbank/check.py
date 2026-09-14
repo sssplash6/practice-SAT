@@ -292,7 +292,7 @@ def _capacity(topic: Topic, draws: int) -> Result:
                 # throw is a bug is the audit's business, and the gate must
                 # report rather than crash
                 continue
-            seen.add((it.stem, it.figure, it.answer))
+            seen.add((it.stem, it.figure, it.answer, str(it.table)))
         counts[name] = len(seen)
         if len(seen) < floor:
             detail.append(f"{name}: only {len(seen)} distinct items in {draws:,} draws "

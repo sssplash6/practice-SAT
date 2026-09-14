@@ -18,12 +18,26 @@ from math import gcd, isqrt
 
 __all__ = ["Q", "num", "fmt_num", "fmt_frac", "Poly", "linear", "quadratic",
            "fmt_eq", "fmt_point", "fmt_ineq", "fmt_interval", "fn_of",
-           "line_through", "slope", "exp_model", "sign_join", "fmt_percent", "SYMBOL"]
+           "line_through", "slope", "exp_model", "sign_join", "fmt_percent", "SYMBOL",
+           "fmt_places", "fmt_money"]
 
 
 def num(x) -> Q:
-    """Anything numeric to an exact Fraction. Floats come in as decimals."""
-    return x if isinstance(x, Q) else Q(str(x)) if isinstance(x, float) else Q(x)
+    """Anything numeric to an exact Fraction. Floats come in as decimals.
+
+    An `Exact` is accepted when it is a plain rational, so a template may hand
+    a geometry value straight to the algebra renderers; one carrying a pi or a
+    radical is refused rather than silently flattened to a decimal.
+    """
+    if isinstance(x, Q):
+        return x
+    if isinstance(x, float):
+        return Q(str(x))
+    if hasattr(x, "coef") and hasattr(x, "pi_exp"):                 # an Exact
+        if not x.is_rational:
+            raise ValueError(f"{x!r} is not rational; it cannot be an exact Fraction")
+        return x.coef
+    return Q(x)
 
 
 def fmt_num(v, tex: bool = False, group: bool = True) -> str:
@@ -42,6 +56,24 @@ def fmt_frac(v, tex: bool = False) -> str:
     sign = "-" if v < 0 else ""
     n, d = abs(v.numerator), v.denominator
     return rf"{sign}\frac{{{n}}}{{{d}}}" if tex else f"{sign}{n}/{d}"
+
+
+def fmt_places(v, places: int = 2) -> str:
+    """A number at a fixed number of decimal places: 609/10 -> "60.90".
+
+    Rounds half away from zero, the way a till does, not the way floats do.
+    """
+    v = num(v)
+    scale = 10 ** places
+    n = (abs(v) * scale + Q(1, 2)).__floor__()
+    sign = "-" if v < 0 else ""
+    whole, frac = divmod(n, scale)
+    return f"{sign}{whole:,}" if places == 0 else f"{sign}{whole:,}.{frac:0{places}d}"
+
+
+def fmt_money(v, places: int = 2) -> str:
+    """$60.90. A money answer is computed exactly and only rounded to print."""
+    return "$" + fmt_places(v, places)
 
 
 def fmt_percent(v, places: int = 0) -> str:

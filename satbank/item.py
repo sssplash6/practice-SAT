@@ -44,7 +44,8 @@ def numeral(text: str) -> float | None:
     Only a known unit is stripped -- never a symbol that changes the value, so
     "12π" stays unreadable as a number and cannot be mistaken for 12.
     """
-    t = UNIT_SUFFIX.sub("", str(text).strip()).replace(",", "").replace(" ", "")
+    t = (UNIT_SUFFIX.sub("", str(text).strip())
+         .replace(",", "").replace(" ", "").lstrip("$"))
     try:
         if "/" in t:
             a, b = t.split("/", 1)
@@ -115,6 +116,26 @@ class Item:
         return "\n".join(out)
 
 
+def _share_the_key_s_sign(key: Exact, picked: list[Mis], pool: list[Mis],
+                          signed: bool) -> list[Mis]:
+    """Make sure at least one distractor has the key's sign.
+
+    Across the 147 official multiple-choice items with numeric options, the
+    key is never the only option of its sign -- not once. A lone negative
+    among three positives is the answer, and a student who notices that needs
+    no algebra. One same-signed option is all it takes, though: the source
+    sets are usually mixed, so demanding that every distractor match the key's
+    sign would throw away the wrong options College Board actually uses.
+    """
+    if not signed or any((float(m.value) < 0) == (float(key) < 0) for m in picked):
+        return picked
+    swap = next((m for m in pool if m not in picked
+                 and (float(m.value) < 0) == (float(key) < 0)), None)
+    if swap is None:
+        raise ItemError("key would be the only option of its sign")
+    return picked[:-1] + [swap]
+
+
 def _usable(v, key: Exact, signed: bool = False) -> bool:
     """A geometry measure is positive, so a negative option there is a freebie
     a student can cross out without doing any geometry. Algebra answers are
@@ -181,6 +202,7 @@ def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None
         raise ItemError("could not build three distinct distractors")
     if sum(1 for m in picked if m.value.form == key.form) == 0:
         raise ItemError("key would be the only option of its form")
+    picked = _share_the_key_s_sign(key, picked, same_form + other_form, signed)
 
     options = [(key, "")] + [(m.value, m.reason) for m in picked]
     options.sort(key=lambda t: float(t[0]))            # SAT orders choices ascending

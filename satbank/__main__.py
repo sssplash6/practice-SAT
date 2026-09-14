@@ -36,7 +36,7 @@ def capacity(draws: int, topics: list[str] | None = None) -> int:
                 it = generate(name, seed)
             except ItemError:
                 continue
-            sig = (it.stem, it.figure, it.answer)
+            sig = (it.stem, it.figure, it.answer, str(it.table))
             seen.add(sig)
             everything[hash(sig)] = True
             if seed == draws // 4 - 1:
