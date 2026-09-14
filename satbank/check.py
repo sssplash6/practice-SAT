@@ -42,6 +42,12 @@ class Result:
     detail: list[str]
 
 
+# "the table above", "the table shows" -- but not "the graph of the equation
+# above", which points at a line of the stem, and not "each of the following
+# tables", where the tables are the options themselves
+TABLE_REF = re.compile(r"\btables?\b[^.]{0,20}\b(above|below|shown|gives|lists)\b"
+                       r"|\b(above|below)\b[^.]{0,12}\btables?\b", re.I)
+
 # a unit printed after the number: "8 cm²", "12 ft", "35 degrees"
 UNIT = re.compile(r"(cm|mm|km|inches|inch|feet|foot|yards|yard|units|unit|"
                   r"degrees|degree|°|%|m|in|ft|yd)\d*$")
@@ -136,6 +142,10 @@ def _transcript(topic: Topic, key: dict, tr: dict) -> Result:
         elif rec.get("format") != "spr":
             detail.append(f"{it['id']} has a written-in answer but is transcribed as "
                           f"{rec.get('format')}")
+        # a stem that sends the reader to a table it does not carry is an item
+        # nobody can answer -- the commonest way a transcription goes wrong
+        if TABLE_REF.search(rec.get("stem", "")) and not rec.get("table"):
+            detail.append(f"{it['id']} points at a table that was not transcribed")
     return Result("transcript", not detail, f"{len(tr)}/{len(key['items'])} items", detail[:20])
 
 
