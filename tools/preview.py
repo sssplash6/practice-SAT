@@ -29,7 +29,7 @@ h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#6b6858;
 .item{background:#fff;border:1px solid #e3e0d4;border-radius:10px;padding:16px 18px;
       margin:0 0 14px;max-width:720px}
 .meta{font:11px ui-monospace,SFMono-Regular,monospace;color:#8a8672;margin-bottom:8px}
-.stem{margin:0 0 10px}
+.stem{margin:0 0 10px;white-space:pre-wrap}
 .fig{margin:6px 0 12px}
 table{border-collapse:collapse;margin:8px 0 12px;font-size:14px}
 td,th{border:1px solid #d8d4c4;padding:4px 10px;text-align:left}
