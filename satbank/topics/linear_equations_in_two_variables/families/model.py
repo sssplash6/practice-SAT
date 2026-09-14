@@ -15,7 +15,7 @@ import random
 from fractions import Fraction as Q
 
 from ....item import Item, ItemError, Mis
-from ..common import dec, numtext, pair, q, sig, std_text, text_item
+from ..common import coef_text, dec, numtext, pair, q, sig, std_text, text_item
 
 __all__ = ["model_standard", "model_percent", "material_table"]
 
@@ -32,7 +32,8 @@ def _round_to(v, places: int) -> Q:
 
 STANDARD = [
     # 0 -- two preparation times
-    dict(shape="per_unit", xv="x", yv="y", places=1, cplaces=1,
+    dict(shape="per_unit", xv="x", yv="y", places=1, cplaces=1, order=None,
+         wrongs=["swap", "count", "divide", "sub", "swapsub"],
          lo=Q(5, 10), hi=Q(99, 10), tlo=Q(200, 10), thi=Q(990, 10),
          stem="An employee at a restaurant prepares sandwiches and salads. It takes "
               "the employee {a} minutes to prepare a sandwich and {b} minutes to "
@@ -41,7 +42,8 @@ STANDARD = [
          why="Each sandwich takes {a} minutes, so x sandwiches take {ax} minutes, and "
              "y salads take {by} minutes; together they fill the {c} minutes."),
     # 1 -- two kinds of transit pass
-    dict(shape="per_unit", xv="g", yv="t", places=2, cplaces=0,
+    dict(shape="per_unit", xv="g", yv="t", places=2, cplaces=0, order="desc",
+         wrongs=["swap", "count", "sumrates", "sub", "swapsub"],
          lo=Q(50, 100), hi=Q(1999, 100), tlo=Q(40), thi=Q(300),
          stem="Tony spends ${c} per month on public transportation. A 10-ride pass "
               "costs ${a}, and a single-ride pass costs ${b}. If g represents the "
@@ -51,7 +53,8 @@ STANDARD = [
          why="Each 10-ride pass costs ${a}, so g of them cost ${ax}, and t single-ride "
              "passes cost ${by}; the two together are the ${c} Tony spends."),
     # 2 -- two supplies bought by the piece
-    dict(shape="per_unit", xv="x", yv="y", places=2, cplaces=2,
+    dict(shape="per_unit", xv="x", yv="y", places=2, cplaces=2, order="asc",
+         wrongs=["swapsub", "sub", "swap", "count"],
          lo=Q(2, 100), hi=Q(199, 100), tlo=Q(10000, 100), thi=Q(99999, 100),
          stem="A food truck buys forks for ${a} each and plates for ${b} each. The "
               "total cost of x forks and y plates is ${c}. Which equation represents "
@@ -59,17 +62,19 @@ STANDARD = [
          why="x forks at ${a} each cost ${ax} and y plates at ${b} each cost ${by}, "
              "so the two costs add to the ${c} total."),
     # 3 -- questions worth different numbers of points
-    dict(shape="per_unit", xv="x", yv="y", places=None, cplaces=None,
+    dict(shape="per_unit", xv="x", yv="y", places=None, cplaces=None, order="asc",
+         wrongs=["prod", "sumscale", "swap", "count"],
          lo=Q(1), hi=Q(9), tlo=Q(30), thi=Q(200), integer=True,
          stem="A teacher is creating an assignment worth {c} points. The assignment "
               "will consist of questions worth {a} {apt} and questions worth {b} "
               "{bpt}. Which equation represents this situation, where x represents "
               "the number of {a}-point questions and y represents the number of "
               "{b}-point questions?",
-         why="Each of the x questions is worth {a} {apt}, so they carry {ax} points, "
-             "and the y questions carry {by}; the assignment is worth {c} in all."),
+         why="Each of the x questions is worth {a} {apt}, so they carry {ax} points "
+             "between them, and the y questions carry {by}; the two add to {c}."),
     # 4 -- perimeters of two kinds of regular polygon
     dict(shape="grouped", xv="r", yv="t", places=None, cplaces=None,
+         wrongs=["sideswap", "counts", "countswap", "sides"],
          stem="A total of {n1} {p1} each have side length r. A total of {n2} {p2} each "
               "have side length t. None of these {p1} and {p2} shares a side. The sum "
               "of the perimeters of all these {p1} and {p2} is {c}. Which equation "
@@ -130,10 +135,18 @@ def model_standard(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, c
                 scale = 10 ** places
                 A = Q(rng.randint(int(d["lo"] * scale), int(d["hi"] * scale)), scale)
                 B = Q(rng.randint(int(d["lo"] * scale), int(d["hi"] * scale)), scale)
+            if d.get("order") == "desc" and A < B:
+                A, B = B, A
+            if d.get("order") == "asc" and A > B:
+                A, B = B, A
         else:
             A, B = q(a), q(b)
         if A == B:
             raise ItemError("the two rates must differ, or the item has no question")
+        if d.get("order") == "desc" and A < B:
+            raise ItemError("the first item must be the dearer of the two")
+        if d.get("order") == "asc" and A > B:
+            raise ItemError("the second item must be the dearer of the two")
         if c is None:
             if cplaces:
                 scale = 10 ** cplaces
@@ -153,50 +166,57 @@ def model_standard(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, c
     key = std_text(A, B, C, xv, yv, style, places, cplaces, rhs)
     ks = sig("std", A, B, C)
 
+    def std_opt(u, v, w=None):
+        w = C if w is None else w
+        return pair(std_text(u, v, w, xv, yv, style, places, cplaces), "std", u, v, w)
+
+    pool = {}
     if shape == "grouped":
-        cands = [("used the numbers of sides on the wrong shapes",
-                  (n1 * s2, n2 * s1)),
-                 ("used the numbers of polygons as the coefficients", (n1, n2)),
-                 ("used the numbers of polygons, and on the wrong shapes", (n2, n1)),
-                 ("used one side of each shape rather than the whole perimeter",
-                  (s1, s2))]
-        wrong = [Mis(r, pair(std_text(u, v, C, xv, yv, style, places, cplaces),
-                             "std", u, v, C))
-                 for r, (u, v) in cands if (u, v) != (A, B) and u > 0 and v != 0]
+        pool["sideswap"] = Mis("used the numbers of sides on the wrong shapes",
+                               std_opt(n1 * s2, n2 * s1))
+        pool["counts"] = Mis("used the numbers of polygons as the coefficients",
+                             std_opt(n1, n2))
+        pool["countswap"] = Mis("used the numbers of polygons, and on the wrong shapes",
+                                std_opt(n2, n1))
+        pool["sides"] = Mis("counted one side of each shape rather than the whole "
+                            "perimeter", std_opt(s1, s2))
     elif shape == "split_total":
-        wrong = [Mis("added the two parts instead of taking the departmental share "
-                     "out of the total",
-                     pair(std_text(1, 1, C, xv, yv), "std", 1, 1, C)),
-                 Mis("subtracted the total from the part instead of the other way "
-                     "round",
-                     (f"{yv} - {xv} = {numtext(C)}", sig("flip", C))),
-                 Mis("counted the whole budget twice",
-                     pair(std_text(2, -1, C, xv, yv), "std", 2, -1, C))]
+        pool["add"] = Mis("added the two parts instead of taking the departmental "
+                          "share out of the total", std_opt(1, 1))
+        pool["flip"] = Mis("subtracted the total from the part instead of the other "
+                           "way round",
+                           (f"{yv} - {xv} = {numtext(C)}", sig("flip", C)))
+        pool["twice"] = Mis("counted the whole budget twice", std_opt(2, -1))
     else:
-        cands = [("swapped the two rates", (B, A)),
-                 ("counted the items instead of what each one costs", (1, 1)),
-                 ("swapped the two rates and subtracted one amount from the other",
-                  (B, -A)),
-                 ("subtracted the second amount instead of adding it", (A, -B))]
-        wrong = [Mis(r, pair(std_text(u, v, C, xv, yv, style, places, cplaces),
-                             "std", u, v, C))
-                 for r, (u, v) in cands if (q(u), q(v)) != (A, B)]
-        if places is not None and A != 0 and B != 0:
+        pool["swap"] = Mis("swapped the two rates", std_opt(B, A))
+        pool["count"] = Mis("counted the items instead of what each one is worth",
+                            std_opt(1, 1))
+        pool["sub"] = Mis("subtracted the second amount instead of adding it",
+                          std_opt(A, -B))
+        pool["swapsub"] = Mis("swapped the two rates and subtracted one amount from "
+                              "the other", std_opt(B, -A))
+        if places is not None and max(C / A, C / B) <= 200:
             u, v = _round_to(C / A, places), _round_to(C / B, places)
-            if u != A and v != B:
-                wrong.insert(1, Mis(
-                    "divided the total by each rate, which counts the items one kind "
-                    "at a time rather than adding the two amounts",
-                    pair(std_text(u, v, C, xv, yv, style, places, cplaces),
-                         "std", u, v, C)))
+            pool["divide"] = Mis(
+                "divided the total by each rate, which is how many of one kind alone "
+                "would fill it rather than how the two shares add up", std_opt(u, v))
+        if cplaces is not None:
+            pool["sumrates"] = Mis(
+                "added the two prices on the right and counted the passes on the left",
+                (f"{xv} + {yv} = {numtext(B, style, places)} + "
+                 f"{numtext(A, style, places)}", sig("sumrates", B, A)))
         if d.get("integer"):
             k = A + B
-            wrong += [Mis("multiplied the two point values together and the two counts "
-                          "with them", (f"{numtext(k)}{xv}{yv} = {numtext(C)}",
-                                        sig("prod", k, C))),
-                      Mis("added the two point values and applied the sum to every "
-                          "question", (f"{numtext(k)}({xv} + {yv}) = {numtext(C)}",
-                                       sig("sumscale", k, C)))]
+            pool["prod"] = Mis("multiplied the two point values together and the two "
+                               "counts with them",
+                               (f"{numtext(k)}{xv}{yv} = {numtext(C)}",
+                                sig("prod", k, C)))
+            pool["sumscale"] = Mis("added the two point values and gave every question "
+                                   "the sum", (f"{numtext(k)}({xv} + {yv}) = "
+                                               f"{numtext(C)}", sig("sumscale", k, C)))
+    order = d.get("wrongs") or list(pool)
+    wrong = [pool[nm] for nm in order if nm in pool] + \
+            [m for nm, m in pool.items() if nm not in order]
 
     P = {"kind": "le2_model", "shape": shape, "a": [A.numerator, A.denominator],
          "b": [B.numerator, B.denominator], "c": [C.numerator, C.denominator]}
@@ -208,7 +228,8 @@ def model_standard(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, c
     elif shape == "split_total":
         why = d["why"].format(c=ct)
     else:
-        why = d["why"].format(a=at, b=bt, c=ct, ax=f"{at}{xv}", by=f"{bt}{yv}",
+        why = d["why"].format(a=at, b=bt, c=ct, ax=coef_text(A, xv, style, places),
+                              by=coef_text(B, yv, style, places),
                               apt=("point" if A == 1 else "points"))
     return text_item("le2.model_standard", "an equation for a situation", "easy", seed,
                      stem, key, ks, wrong, rng, P, why)
@@ -261,6 +282,9 @@ def model_percent(rng: random.Random, seed: int, *, ctx=None, pa=None, pb=None, 
     pb = int(pb if pb is not None else rng.randrange(2, 96, 2))
     if pa == pb:
         raise ItemError("the two percentages must differ")
+    if d["mode"] == "mixture" and pa > pb:
+        # the stem calls the first mixture the low-salt one
+        raise ItemError("the low-salt mixture cannot be the stronger of the two")
     da, db = Q(pa, 100), Q(pb, 100)
     if mode == "growth":
         da, db = 1 + da, 1 + db
@@ -272,8 +296,11 @@ def model_percent(rng: random.Random, seed: int, *, ctx=None, pa=None, pb=None, 
         stem = d["stem"].format(pa=pa, pb=pb, c=numtext(C))
     else:
         V = q(volume if volume is not None else rng.randint(8, 90))
-        pm = int(pm if pm is not None else rng.randrange(2, 96, 2))
-        if pm in (pa, pb) or not (min(pa, pb) < pm < max(pa, pb)):
+        lo, hi = min(pa, pb), max(pa, pb)
+        if hi - lo < 3:
+            raise ItemError("the two strengths must be far enough apart to blend")
+        pm = int(pm if pm is not None else rng.randint(lo + 1, hi - 1))
+        if not (lo < pm < hi):
             raise ItemError("the blended percentage must lie between the two given")
         if mode == "mixture":
             dm = Q(pm, 100)
@@ -341,7 +368,7 @@ def model_percent(rng: random.Random, seed: int, *, ctx=None, pa=None, pb=None, 
 
 ROCKS = [("Basalt", 180, 18), ("Granite", 165, 9), ("Limestone", 120, 3),
          ("Sandstone", 135, 22), ("Marble", 170, 27), ("Slate", 174, 15),
-         ("Shale", 160, 6), ("Quartzite", 165, 31), ("Gneiss", 175, 12),
+         ("Shale", 160, 6), ("Quartzite", 166, 31), ("Gneiss", 175, 12),
          ("Dolomite", 181, 8)]
 HEAD = ["Rock type", "Weight per volume (lb/ft³)", "Cost per pound"]
 LEAD = ("A city is planning to build a rock retaining wall, a monument, and a garden in "
@@ -387,15 +414,19 @@ def material_table(rng: random.Random, seed: int, *, ask=None, picks=None, xi=No
                      (f"The cost of the {names[xi]} and {names[yi]} needed for the "
                       f"project", sig("pairnamed", min(xi, yi), max(xi, yi)))),
                  Mis("named one of the rock types the equation already prices",
-                     (f"The cost of the {names[xi]} needed for the project",
-                      sig("onenamed", xi))),
+                     (f"The cost of the {names[yi]} needed for the project",
+                      sig("onenamed", yi))),
                  Mis("named only one of the two rock types the fixed amount covers",
                      (f"The cost of the {names[rest[1]]} needed for the project",
                       sig("onenamed", rest[1]))),
+                 Mis("named the other rock type the equation already prices",
+                     (f"The cost of the {names[xi]} needed for the project",
+                      sig("onenamed", xi))),
                  Mis("named only the first of the two rock types the fixed amount "
                      "covers", (f"The cost of the {names[rest[0]]} needed for the "
                                 f"project", sig("onenamed", rest[0])))]
-        P = {"kind": "le2_material", "ask": ask, "picks": list(picks), "xi": xi, "yi": yi}
+        P = {"kind": "le2_material", "ask": ask, "picks": list(picks), "xi": xi,
+             "yi": yi}
         why = (f"Every rock type is used, so the {dec(T, 2)} covers all four. Two of "
                f"them are already priced by the terms in w and z, which leaves "
                f"{dec(K, 2)} for the {names[rest[0]]} and the {names[rest[1]]}.")
@@ -433,14 +464,15 @@ def material_table(rng: random.Random, seed: int, *, ask=None, picks=None, xi=No
     cands = [("used the weighed-out rock's own weight per volume in place of one of "
               "the others", (d_known, dy, left)),
              ("used the weighed-out rock's weight per volume and kept the whole "
-              "garden's weight", (d_known, dy, T)),
+              "garden's weight", (d_known, dx, T)),
              ("kept the whole garden's weight instead of what is left after the "
               "weighed rock", (dx, dy, T)),
              ("swapped the two weights per volume", (dy, dx, left))]
     wrong = [Mis(r, pair(std_text(u, v, w, "x", "y"), "std", u, v, w))
              for r, (u, v, w) in cands if (q(u), q(v), q(w)) != (q(dx), q(dy), q(left))]
     P = {"kind": "le2_material", "ask": "equation", "picks": list(picks), "zi": zi,
-         "xi": xi2, "yi": yi2, "total": T, "known": W}
+         "xi": xi2, "yi": yi2, "total": T, "known": W, "dx": dx, "dy": dy,
+         "dz": d_known}
     why = (f"The {numtext(W)} pounds of {names[zi]} is already accounted for, so the "
            f"other two rock types weigh {numtext(left)} pounds between them, at "
            f"{numtext(dx)} and {numtext(dy)} pounds per cubic foot.")

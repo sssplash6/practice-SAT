@@ -16,6 +16,7 @@ import re
 from fractions import Fraction as Q
 
 from ...exact import E, Exact
+from ...expr import fmt_money, fmt_places
 from ...item import Item, ItemError, Mis, assemble, assemble_text
 
 __all__ = ["q", "ex", "numtext", "dec", "money", "coef_text", "lin_text", "std_text",
@@ -51,7 +52,11 @@ def ex(v) -> Exact:
 def dec(v, places: int | None = None) -> str:
     """'60.90' at two places, or the shortest exact decimal when places is off.
 
-    Rounds half away from zero, the way a price list does.
+    The rounding is the shared `expr.fmt_places` -- half away from zero, the way
+    a price list does it. What is added here is the second mode: several source
+    items print a coefficient at whatever length it actually has, so 5 stays 5
+    where 2.5 stays 2.5, and a fraction with no finite expansion is a bug rather
+    than something to round.
     """
     v = q(v)
     if places is None:
@@ -65,17 +70,11 @@ def dec(v, places: int | None = None) -> str:
         if d != 1:
             raise ValueError(f"{v} has no finite decimal expansion")
         places = max(twos, fives)
-    scale = 10 ** places
-    n = (abs(v) * scale + Q(1, 2)).__floor__()
-    whole, frac = divmod(n, scale)
-    body = f"{whole:,}" if whole >= GROUP_FROM else str(whole)
-    if places:
-        body = f"{body}.{frac:0{places}d}"
-    return ("-" if v < 0 else "") + body
+    return fmt_places(v, places)
 
 
 def money(v, places: int = 2) -> str:
-    return "$" + dec(v, places)
+    return fmt_money(v, places)
 
 
 def numtext(v, style: str = "frac", places: int | None = None) -> str:
@@ -98,7 +97,8 @@ def coef_text(m, var: str, style: str = "frac", places: int | None = None) -> st
     if m == -1:
         return f"-{var}"
     if m.denominator != 1 and style != "dec" and places is None:
-        return f"({numtext(m)}){var}"
+        # the sign sits outside the brackets, as the SAT prints it: -(1/4)x
+        return f"-({numtext(-m)}){var}" if m < 0 else f"({numtext(m)}){var}"
     return f"{numtext(m, style, places)}{var}"
 
 
