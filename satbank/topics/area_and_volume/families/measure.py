@@ -216,10 +216,21 @@ def _forward_mistakes(shape_key: str, measure: str, p: dict) -> list[Mis]:
 
 # ---------------------------------------------------------------- FORWARD
 
+def _with_unit(unit: Unit, measure: str, on: bool):
+    """Some source items print the unit on every option -- "8 cm²" -- and some
+    leave it in the stem alone. Which one an item does is the item's business,
+    so it is passed in rather than guessed.
+    """
+    if not on:
+        return None
+    suffix = unit_noun(unit, measure, "abbr")
+    return lambda v: f"{v.plain()} {suffix}"
+
+
 def forward(rng: random.Random, seed: int, *, shape_key=None, measure=None,
             unit=None, style=None, frame=None, given_form="direct",
             fmt=None, relational=False, dims=None, delta=None,
-            ask_coefficient=False, approximate=False) -> Item:
+            ask_coefficient=False, approximate=False, option_units=False) -> Item:
     shape = SHAPES[shape_key or rng.choice(list(SHAPES))]
     measure = measure or rng.choice(list(shape.measures))
     unit = unit or rng.choice(UNITS)
@@ -321,11 +332,12 @@ def forward(rng: random.Random, seed: int, *, shape_key=None, measure=None,
             ", of the", ", of the")
         template += ".approx"
     return _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis,
-                   template, ask_coefficient=ask_coefficient, approximate=approximate)
+                   template, ask_coefficient=ask_coefficient, approximate=approximate,
+                   option_units=option_units)
 
 
 def _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis, template,
-            ask_coefficient=False, approximate=False) -> Item:
+            ask_coefficient=False, approximate=False, option_units=False) -> Item:
     P = {"kind": "measure_forward", "shape": shape.key, "measure": measure,
          "dims": {k: float(v) for k, v in dims.items()},
          "ask_coefficient": ask_coefficient, "approximate": approximate}
@@ -348,7 +360,8 @@ def _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis, te
     if post:
         mistakes = [Mis(m.reason, post(m.value)) for m in mistakes
                     if m.value is not None and (not ask_coefficient or m.value.pi_exp >= 1)]
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    choices, latex, reasons, letter = assemble(key, mistakes, rng,
+                                               fmt_value=_with_unit(unit, measure, option_units))
     return Item(template, f"{shape.short} {measure.replace('_', ' ')}",
                 _difficulty(shape, measure), seed, stem, "mcq", key, letter,
                 rationale, choices, reasons, latex, params=P)

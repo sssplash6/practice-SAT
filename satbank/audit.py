@@ -16,7 +16,7 @@ from __future__ import annotations
 import math
 from typing import Callable
 
-from .item import Item
+from .item import Item, norm_text, numeral
 
 __all__ = ["audit", "AuditError", "close", "sig3", "solve_for", "solvers"]
 
@@ -88,7 +88,9 @@ def audit(item: Item) -> None:
 
     if isinstance(want, str):
         got = item.choices["ABCD".index(item.answer)] if item.fmt == "mcq" else item.answer
-        if got.replace(" ", "") != want.replace(" ", ""):
+        # through the normaliser, so a template is free to print πr³ where the
+        # solver derived pi*r^3 -- one answer, two spellings
+        if norm_text(got) != norm_text(want):
             raise AuditError(f"keyed option {got!r}, independently derived {want!r}")
         return
 
@@ -102,18 +104,19 @@ def audit(item: Item) -> None:
     if item.fmt == "mcq":
         keyed = item.choices["ABCD".index(item.answer)]
         if keyed != item.key.plain():
-            try:
-                shown = float(keyed.replace(",", ""))
-            except ValueError:
+            shown = numeral(keyed)
+            if shown is None:
                 raise AuditError(
-                    f"answer letter points at {keyed!r}, key is {item.key.plain()!r}") from None
+                    f"answer letter points at {keyed!r}, key is {item.key.plain()!r}")
             if not close(shown, want, 1e-6):
                 raise AuditError(f"keyed option reads {keyed!r} but the answer is {want!r}")
     elif item.fmt == "spr":
-        txt = item.answer
-        val = (float(txt.split("/")[0]) / float(txt.split("/")[1])) if "/" in txt else float(txt)
+        val = numeral(item.answer)
+        if val is None:
+            raise AuditError(f"grid-in answer {item.answer!r} is not a number")
         if not close(val, want, 1e-6):
-            raise AuditError(f"grid-in reads {txt!r}, independently derived {want!r}")
+            raise AuditError(f"grid-in reads {item.answer!r}, "
+                             f"independently derived {want!r}")
 
 
 def _structure(item: Item) -> None:

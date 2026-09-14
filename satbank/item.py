@@ -5,12 +5,53 @@ turning a key plus a list of misconceptions into four defensible options.
 from __future__ import annotations
 
 import random
+import re
 from dataclasses import dataclass, field
 from fractions import Fraction
 
 from .exact import E, Exact
 
-__all__ = ["Item", "Mis", "assemble", "ItemError"]
+__all__ = ["Item", "Mis", "assemble", "assemble_text", "ItemError", "numeral",
+           "norm_text"]
+
+SUPERSCRIPT = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
+
+# a unit printed after the number, as some source items print their options:
+# "8 cm²", "12 ft", "35 degrees". The stem has already said what the unit is.
+UNIT_SUFFIX = re.compile(r"\s*(cm|mm|km|inches|inch|feet|foot|yards|yard|units|unit|"
+                         r"degrees|degree|°|%|m|in|ft|yd)[²³]?[23]?$", re.I)
+
+
+def norm_text(s) -> str:
+    """One spelling for an answer written two ways.
+
+    3,025 is 3025; π is pi; a printed superscript is the digit it stands for;
+    a multiplication dot is a star. The star is dropped inside an expression --
+    4πr³ and 4pi*r^3 are one answer -- and kept between bare numerals, where
+    3·39 and 339 are two different answers.
+    """
+    t = (str(s).translate(SUPERSCRIPT)
+         .replace(",", "").replace(" ", "").replace("−", "-")
+         .replace("·", "*").replace("×", "*").replace("π", "pi").replace("^", "")).lower()
+    if any(c.isalpha() for c in t.replace("pi", "")):
+        t = t.replace("*", "")
+    return t.rstrip(".")
+
+
+def numeral(text: str) -> float | None:
+    """The number an option carries, or None when it is not a bare number.
+
+    Only a known unit is stripped -- never a symbol that changes the value, so
+    "12π" stays unreadable as a number and cannot be mistaken for 12.
+    """
+    t = UNIT_SUFFIX.sub("", str(text).strip()).replace(",", "").replace(" ", "")
+    try:
+        if "/" in t:
+            a, b = t.split("/", 1)
+            return float(a) / float(b)
+        return float(t)
+    except (ValueError, ZeroDivisionError):
+        return None
 
 LETTERS = "ABCD"
 

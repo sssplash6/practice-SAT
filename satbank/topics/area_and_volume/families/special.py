@@ -81,39 +81,39 @@ def symbolic_volume(rng: random.Random, seed: int, *, c=None, relation=None,
         else rng.choice(["containers", "canisters", "drums", "tubes"])
 
     if solid == "cylinder":
-        base, var, unit, word = "pi*r", "r", "cubic inches", "radius"
+        base, var, unit, word = "πr", "r", "cubic inches", "radius"
         forms = {
-            "longer":     (f"{c} inches longer than the radius", f"V = pi*r^3 + {c}pi*r^2"),
-            "times":      (f"{c} times the radius",              f"V = {c}pi*r^3"),
+            "longer":     (f"{c} inches longer than the radius", f"V = πr³ + {c}πr²"),
+            "times":      (f"{c} times the radius",              f"V = {c}πr³"),
             "shorter":    (f"{c} inches shorter than twice the radius",
-                           f"V = 2pi*r^3 - {c}pi*r^2"),
+                           f"V = 2πr³ - {c}πr²"),
             "twice_plus": (f"{c} inches more than twice the radius",
-                           f"V = 2pi*r^3 + {c}pi*r^2"),
+                           f"V = 2πr³ + {c}πr²"),
         }
         wrong_pool = [
-            (f"V = {c}pi*r^3", "multiplied instead of expanding the sum"),
-            (f"V = pi*r^2 + {c}pi*r", "did not square the radius in the second term"),
-            (f"V = pi(2r)^3", "doubled the radius instead of using the stated height"),
-            (f"V = pi*r^3 - {c}pi*r^2", "subtracted where the height was added"),
-            (f"V = pi*r^2 + {c}", "added the constant without the base area"),
+            (f"V = {c}πr³", "multiplied instead of expanding the sum"),
+            (f"V = πr² + {c}πr", "did not square the radius in the second term"),
+            (f"V = π(2r)³", "doubled the radius instead of using the stated height"),
+            (f"V = πr³ - {c}πr²", "subtracted where the height was added"),
+            (f"V = πr² + {c}", "added the constant without the base area"),
         ]
     else:
         var, unit, word = "s", "cubic centimeters", "base edge"
         forms = {
             "longer":     (f"{c} centimeters longer than an edge of the square base",
-                           f"V = s^3 + {c}s^2"),
-            "times":      (f"{c} times the length of an edge of the square base", f"V = {c}s^3"),
+                           f"V = s³ + {c}s²"),
+            "times":      (f"{c} times the length of an edge of the square base", f"V = {c}s³"),
             "shorter":    (f"{c} centimeters shorter than twice an edge of the square base",
-                           f"V = 2s^3 - {c}s^2"),
+                           f"V = 2s³ - {c}s²"),
             "twice_plus": (f"{c} centimeters more than twice an edge of the square base",
-                           f"V = 2s^3 + {c}s^2"),
+                           f"V = 2s³ + {c}s²"),
         }
         wrong_pool = [
-            (f"V = {c}s^3", "multiplied instead of expanding the sum"),
-            (f"V = s^2 + {c}s", "did not square the edge in the second term"),
-            (f"V = (s + {c})^3", "cubed the height instead of using it once"),
-            (f"V = s^3 - {c}s^2", "subtracted where the height was added"),
-            (f"V = 3s^2 + {c}s", "used the surface area rather than the volume"),
+            (f"V = {c}s³", "multiplied instead of expanding the sum"),
+            (f"V = s² + {c}s", "did not square the edge in the second term"),
+            (f"V = (s + {c})³", "cubed the height instead of using it once"),
+            (f"V = s³ - {c}s²", "subtracted where the height was added"),
+            (f"V = 3s² + {c}s", "used the surface area rather than the volume"),
         ]
 
     phrase, key = forms[relation]
@@ -147,17 +147,19 @@ def remaining_volume(rng: random.Random, seed: int, *, base=None, h=None, filled
     contents = rng.choice([("fruit", "syrup"), ("olives", "brine"), ("beans", "sauce")])
     stem = (f"A cylindrical can containing pieces of {contents[0]} is filled to the top with "
             f"{contents[1]} before being sealed. The base of the can has an area of "
-            f"{base.plain()} cm^2, and the height of the can is {h.plain()} cm. If "
-            f"{filled.plain()} cm^3 of {contents[1]} is needed to fill the can to the top, which "
+            f"{base.plain()} cm², and the height of the can is {h.plain()} cm. If "
+            f"{filled.plain()} cm³ of {contents[1]} is needed to fill the can to the top, which "
             f"of the following is closest to the total volume of the pieces of {contents[0]} in "
             f"the can?")
     mistakes = [Mis("gave the volume of the whole can", total),
                 Mis("added the base area to the poured volume", base + filled),
                 Mis("divided the base area by the height", base / h),
                 Mis("subtracted the base area instead of the poured volume", total - base)]
-    rationale = (f"The can holds {base.plain()} × {h.plain()} = {total.plain()} cm^3; the "
-                 f"pieces take up {total.plain()} - {filled.plain()} = {key.plain()} cm^3.")
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    rationale = (f"The can holds {base.plain()} × {h.plain()} = {total.plain()} cm³; the "
+                 f"pieces take up {total.plain()} - {filled.plain()} = {key.plain()} cm³.")
+    # the source item prints the unit on every option, and so does this
+    choices, latex, reasons, letter = assemble(key, mistakes, rng,
+                                               fmt_value=lambda v: f"{v.plain()} cm³")
     return Item("GEO.context.remaining_volume", "volume in context", "medium", seed, stem,
                 "mcq", key, letter, rationale, choices, reasons, latex, params=P)
 
@@ -174,9 +176,9 @@ def combined_area(rng: random.Random, seed: int, *, tri_area=None, side=None,
                      "square_triangle": ("Square R", "Square S")}[pair]
     key = tri + s ** 2
     P = {"kind": "combined_area", "tri": float(tri), "s": float(s)}
-    stem = (f"{first} has an area of {tri.plain()} square centimeters (cm^2). {second} has "
+    stem = (f"{first} has an area of {tri.plain()} square centimeters (cm²). {second} has "
             f"side lengths of {s.plain()} cm. What is the total area of {first.lower()} and "
-            f"{second.lower()}, in cm^2?")
+            f"{second.lower()}, in cm²?")
     mistakes = [Mis("added the side length instead of the area of the square", tri + s),
                 Mis("halved the given area before adding", tri / E(2) + s ** 2),
                 Mis("added the perimeter of the square", tri + E(4) * s),
@@ -317,8 +319,8 @@ def equal_area_square(rng: random.Random, seed: int, *, r=None, given=None,
     ])
 
     mistakes = [Mis("used the radius as the side length", r),
-                Mis("took the square root of pi*r rather than pi*r^2", (PI * r).sqrt()),
-                Mis("used pi*r, forgetting to square the radius or take the root", PI * r),
+                Mis("took the square root of πr rather than πr²", (PI * r).sqrt()),
+                Mis("used πr, forgetting to square the radius or take the root", PI * r),
                 Mis("used the circumference", E(2) * PI * r),
                 Mis("gave the perimeter instead of one side" if ask == "side"
                     else "gave one side instead of the perimeter",
