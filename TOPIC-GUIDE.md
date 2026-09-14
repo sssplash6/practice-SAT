@@ -110,6 +110,29 @@ Seven checks, all of which must pass:
 | prose | a placeholder, a doubled space, a stem that is not a sentence |
 | capacity | a template that cannot make 200 distinct items |
 
+## How an item should read on the page
+
+The SAT is typeset, so the engine is too. Write **π, ², ³, √, ≤, ≥, ×, ·, −**
+as they are printed — not `pi`, `^2`, `<=`, `sqrt`. Your audit may keep a
+plain-ASCII spelling of an expression, which is healthy: it has to be written
+from the mathematics rather than from the generator, and the shared
+normaliser (`item.norm_text`) knows that `V = πr³` and `V = pi*r^3` are one
+answer.
+
+Options carry a unit (`8 cm²`) only when the source item prints one — some do,
+most leave the unit in the stem. Pass `fmt_value=` to `assemble` for the ones
+that do, and set it per source item rather than guessing for the template.
+
+Look at your items before you report done:
+
+```bash
+PYTHONPATH=. python3 tools/preview.py <slug> --per 3 --out /tmp/<slug>.html
+```
+
+That renders every template's items with the figure, the table, the key
+marked and each distractor's misconception beside it. A page of items is the
+only way to see that a stem reads like an SAT stem.
+
 ## Rules
 
 1. **Do not edit anything outside `satbank/topics/<slug>/` and your transcript.**
