@@ -287,7 +287,10 @@ def _capacity(topic: Topic, draws: int) -> Result:
         for seed in range(draws):
             try:
                 it = generate(name, seed, verify=False)
-            except ItemError:
+            except Exception:                                       # noqa: BLE001
+                # a draw that throws is a draw that makes no item; whether the
+                # throw is a bug is the audit's business, and the gate must
+                # report rather than crash
                 continue
             seen.add((it.stem, it.figure, it.answer))
         counts[name] = len(seen)

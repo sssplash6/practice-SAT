@@ -210,7 +210,12 @@ def boxplot(lo, q1, med, q3, hi, xlabel="", **kw) -> str:
     return f.done()
 
 
-def line_graph(points, xlabel="", ylabel="", marks=True, **kw) -> str:
+def line_graph(points, xlabel="", ylabel="", marks=True, labels=None, **kw) -> str:
+    """`labels` names the points that carry a printed value, by index:
+    `{0: "(2003, 40)", 4: "10"}`. Source items often label two points on an
+    otherwise unlabelled line and then ask a question only those two can
+    answer, so a generated figure has to be able to say the same thing.
+    """
     xs = [float(p[0]) for p in points]
     ys = [float(p[1]) for p in points]
     f = _Frame(min(xs), max(xs), min(min(ys), 0), max(ys) * 1.1 or 1, **kw)
@@ -220,6 +225,13 @@ def line_graph(points, xlabel="", ylabel="", marks=True, **kw) -> str:
     if marks:
         for x, y in zip(xs, ys):
             f.out.append(f'<circle class="pt" cx="{f.X(x)}" cy="{f.Y(y)}" r="2.8"/>')
+    for i, text in (labels or {}).items():
+        x, y = xs[i], ys[i]
+        f.out.append(f'<circle class="pt" cx="{f.X(x)}" cy="{f.Y(y)}" r="3.6"/>')
+        # above the point, or below it when the point sits near the top edge
+        dy = 17 if f.Y(y) - f.t < 20 else -10
+        f.out.append(f'<text class="lb" x="{f.X(x)}" y="{f.Y(y) + dy}" '
+                     f'text-anchor="middle">{text}</text>')
     return f.done()
 
 

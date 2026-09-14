@@ -7,7 +7,7 @@ import json
 import random
 import sys
 
-from .registry import TEMPLATES, generate, generate_many, templates, topic_of
+from .registry import generate, generate_many, templates, topic_of
 from .topic import load_topics
 
 
@@ -18,7 +18,7 @@ def item_json(it) -> dict:
             "distractor_reasons": it.reasons, "figure": it.figure, "table": it.table}
 
 
-def capacity(draws: int) -> int:
+def capacity(draws: int, topics: list[str] | None = None) -> int:
     """How many distinct items each template can actually produce.
 
     A template whose count is still climbing when sampling stops is reported
@@ -26,9 +26,10 @@ def capacity(draws: int) -> int:
     """
     from .item import ItemError
     everything = {}
+    names = [n for n in templates() if not topics or topic_of(n) in topics]
     print(f"{'template':<34}{'distinct':>10}   sampled {draws:,} times")
     print("-" * 62)
-    for name in TEMPLATES:
+    for name in names:
         seen, quarter = set(), None
         for seed in range(draws):
             try:
@@ -74,6 +75,7 @@ def main(argv=None) -> int:
 
     c = sub.add_parser("capacity", help="count the distinct items each template can make")
     c.add_argument("--draws", type=int, default=20000)
+    c.add_argument("--topic", action="append")
 
     e = sub.add_parser("export", help="write a pool of items as JSON")
     e.add_argument("--n", type=int, default=500)
@@ -92,7 +94,7 @@ def main(argv=None) -> int:
             print(f"{t.name:<40}{len(t.templates):>10}{len(t.sources):>9}{n:>10}  {t.domain}")
         return 0
     if a.cmd == "capacity":
-        return capacity(a.draws)
+        return capacity(a.draws, a.topic)
     if a.cmd == "templates":
         for name in templates():
             if not a.topic or topic_of(name) in a.topic:

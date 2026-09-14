@@ -15,7 +15,7 @@ from .audit import audit
 from .item import Item, ItemError
 from .topic import Topic, load_topics
 
-__all__ = ["TEMPLATES", "templates", "topic_of", "generate", "generate_many"]
+__all__ = ["templates", "topic_of", "generate", "generate_many"]
 
 _TEMPLATES: dict[str, Callable] = {}
 _OWNER: dict[str, str] = {}
@@ -37,27 +37,6 @@ def templates() -> dict[str, Callable]:
 def topic_of(name: str) -> str:
     templates()
     return _OWNER[name]
-
-
-class _Templates(dict):
-    """A dict that fills itself on first use, so `from .registry import TEMPLATES`
-    keeps working without importing every topic at module-import time."""
-
-    def _load(self):
-        if not dict.__len__(self):
-            self.update(templates())
-        return self
-
-    def __getitem__(self, k): return dict.__getitem__(self._load(), k)
-    def __iter__(self): return iter(self._load().keys())
-    def __len__(self): return dict.__len__(self._load())
-    def __contains__(self, k): return dict.__contains__(self._load(), k)
-    def keys(self): return self._load().keys()
-    def items(self): return self._load().items()
-    def values(self): return self._load().values()
-
-
-TEMPLATES = _Templates()
 
 
 def generate(name: str, seed: int, attempts: int = 60, verify: bool = True, **kw) -> Item:
