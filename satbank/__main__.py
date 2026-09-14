@@ -91,7 +91,8 @@ def main(argv=None) -> int:
         print(f"{'topic':<40}{'templates':>10}{'sources':>9}{'official':>10}  domain")
         for slug, t in sorted(load_topics().items()):
             n = len(key_file(slug)["items"])
-            print(f"{t.name:<40}{len(t.templates):>10}{len(t.sources):>9}{n:>10}  {t.domain}")
+            name = t.name if len(t.name) <= 38 else t.name[:37] + "…"
+            print(f"{name:<40}{len(t.templates):>10}{len(t.sources):>9}{n:>10}  {t.domain}")
         return 0
     if a.cmd == "capacity":
         return capacity(a.draws, a.topic)

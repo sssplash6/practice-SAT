@@ -1,124 +1,137 @@
 # satbank
 
 An SAT Math item generator. Each question **type** is a template — a parameter
-space, a solver, a set of distractors derived from real student misconceptions,
-and a verifier — so one template yields unlimited items whose answers are
-computed, never guessed.
+space, a solver, a set of distractors derived from real student
+misconceptions, and a verifier — so one template yields unlimited items whose
+answers are computed, never guessed.
 
-No model runs at generation time. An LLM's job here is offline: turning a source
-question into a template. Generation itself is deterministic code, so an item is
-reproducible from its seed and provably correct before it ships.
+No model runs at generation time. An LLM's job here is offline: turning a
+source question into a template. Generation itself is deterministic code, so
+an item is reproducible from its seed and provably correct before it ships.
 
 ## Status
 
-One domain is complete: **Geometry and Trigonometry → Area and Volume**, built
-from 59 official items across three difficulty tiers.
+The engine is being built out across all nineteen SAT Math topics, from 1,039
+official College Board items. Five are finished:
 
-| | |
-|---|---|
-| Templates | 19 |
-| Official answers reproduced | 59 / 59 |
-| Distinct items generated and independently audited | **171,950, 0 disagreements** |
-| Option sets matching College Board exactly | 13 / 45 multiple-choice items |
-| Individual official distractors recreated | 70% |
-| Structural validation (options, ordering, prose) | 7,600 items, 0 failures |
-| Distractors traced to a named misconception | 99% |
-| Throughput, with the audit on | ~10,000 items/second |
+| topic | domain | templates | official items | option fidelity |
+|---|---|---:|---:|---:|
+| Area and Volume | Geometry and Trigonometry | 19 | 59 / 59 | 70% |
+| Circles | Geometry and Trigonometry | 16 | 32 / 32 | 92% |
+| Linear Equations in One Variable | Algebra | 18 | 65 / 65 | 86% |
+| Linear Functions | Algebra | 23 | 85 / 86 | 92% |
+| Percentages | Problem-Solving and Data Analysis | 18 | 51 / 52 | 82% |
+
+"Official items" is how many of that topic's source questions the engine
+reproduces the printed answer for, driven by the source item's own numbers.
+"Option fidelity" is how much of College Board's own distractor design the
+misconception library recreates — the measure of whether the wrong answers
+are modelled or merely invented.
+
+Two items are excluded across the five, each with its reason recorded in the
+topic's `sources.py`: one asks the student to match a drawn line against four
+pictures, and one turns on two values printed as labels on a line graph.
 
 ## Run it
 
 ```bash
-PYTHONPATH=. python3 -m satbank templates            # list the 19 templates
-PYTHONPATH=. python3 -m satbank generate --n 5       # print items with answer rationales
-PYTHONPATH=. python3 -m satbank generate --template measure.inverse --n 3
+PYTHONPATH=. python3 -m satbank topics                    # what is built
+PYTHONPATH=. python3 -m satbank templates --topic circles
+PYTHONPATH=. python3 -m satbank generate --n 5            # items with answer rationales
+PYTHONPATH=. python3 -m satbank generate --template circles.arc --n 3
+PYTHONPATH=. python3 -m satbank check --topic circles     # the quality gate
+PYTHONPATH=. python3 -m satbank capacity --topic circles  # distinct items per template
 PYTHONPATH=. python3 -m satbank export --n 500 --out pool.json
-PYTHONPATH=. python3 -m satbank capacity             # distinct items per template
 
-PYTHONPATH=. python3 tests/test_sources.py           # the 59 official items
-PYTHONPATH=. python3 tests/test_math.py 2000         # re-derive answers independently
-PYTHONPATH=. python3 tests/test_fuzz.py              # structural validation at volume
+PYTHONPATH=. python3 tools/preview.py circles --per 3     # a page to look at them on
 ```
 
 ## How it is put together
 
 ```
-satbank/exact.py       coef * pi^e * sqrt(rad) arithmetic -- every answer form in the
-                       source set: 192pi, 135/8, 36sqrt13, 2sqrt(pi), 19652pi/375
-satbank/shapes.py      13 shapes, 21 symbolic formulas, SAT phrasing conventions
-satbank/verify.py      the same 21 formulas written again, numerically and
-                       independently; a key ships only when both routes agree
-satbank/item.py        choice assembly: misconception-driven, ascending order, and
-                       the key is never the only option of its surface form
-satbank/figures.py     generated SVG -- coordinate grids, solids, similar rectangles
-satbank/families/      the 19 templates, grouped into 6 families
-satbank/sources.py     the 59 official items encoded as template parameters
-satbank/audit.py       an independent solver for all 19 templates; every item is
-                       re-derived here before release
-satbank/registry.py    every template by name, with retry on rejected parameters
+satbank/exact.py      coef * pi^e * sqrt(rad) arithmetic -- every answer form in the
+                      geometry source set: 192pi, 135/8, 36sqrt13, 2sqrt(pi)
+satbank/expr.py       exact polynomials, equations, points, intervals, money: how an
+                      algebra answer is written on the page
+satbank/item.py       choice assembly: misconception-driven, ascending order, the key
+                      never alone in its surface form or its sign
+satbank/figures.py    generated SVG -- coordinate grids, solids, similar rectangles
+satbank/plot.py       generated charts -- scatter, bar, histogram, dot, box, line, curve
+satbank/audit.py      the harness that re-derives every item before it ships
+satbank/check.py      the quality gate: seven checks a topic must pass
+satbank/topic.py      what a topic is, and how one is found
+satbank/topics/       one self-contained package per topic
+tools/extract_material.py   the College Board PDFs -> answer keys and question images
+tools/preview.py            generated items -> a page you can read
 ```
 
-### The families
+### A topic is a plug-in
 
-The 59 source items are not 59 templates. They collapse to six families crossed
-with the axes the source actually varies — which quantity is given (radius /
-diameter / base circumference / base area), how the sentence is framed, whether
-units are spelled out or abbreviated, and multiple-choice versus grid-in.
+Everything a topic needs lives in `satbank/topics/<slug>/`: its templates, an
+independently written solver for each of them, and the official items encoded
+as the parameters that reproduce them. Topics are discovered, not registered,
+so several can be written at once without two authors editing the same file,
+and one that will not import fails alone instead of taking the engine down
+with it.
 
-1. **Measurement** — dimensions to a measure, or a measure back to a dimension
-2. **Similarity and scaling** — lengths by *k*, areas by *k²*, volumes by *k³*
-3. **Coordinate geometry** — the figure is generated from the same parameters
-4. **Expression form** — the options are expressions, not values
-5. **Context** — partial fills, combined figures, percent resizing
-6. **Supplied formula** — substitute into a formula given in the item
+`TOPIC-GUIDE.md` is the contract.
 
 ### Why every answer is computed twice
 
 No item leaves `generate()` until a second, independently written solver has
-re-derived its answer and agreed. Two layers do this:
+re-derived its answer and agreed. That solver is written from the mathematics
+rather than from the generator, shares none of its helpers, and checks inverse
+items by root-finding rather than by any algebra the generator performed. A
+wrong answer therefore has to be produced twice, identically, by two
+separately written pieces of code, to escape.
 
-- `verify.py` re-implements all 21 geometry formulas numerically, written from
-  the geometry rather than from `shapes.py`. The measurement family checks
-  against it as it builds.
-- `audit.py` re-derives the answer of **every** template from the item's own
-  `params`, in plain floats, sharing no reasoning with the generators. Inverse
-  items are checked by numerically root-finding the unknown rather than by any
-  algebra the generator performs.
+### Why the answers come from the material
 
-A wrong answer therefore has to be produced twice, identically, by two
-separately written pieces of code, to escape. The check costs about 7% of
-throughput and is on by default; `generate(..., verify=False)` exists only to
-measure that cost.
+An author never writes an answer down. The official answer is extracted from
+the PDF's own text layer into `material/keys/<slug>.json`, the question images
+are cut out one per item, and the transcription of what is printed lives in
+`material/transcripts/<slug>.json`. `satbank check` drives each encoded
+template with its source item's own numbers and compares against that key, so
+a template whose mathematics is wrong cannot be made to pass by restating the
+answer — the answer is not the author's to state.
 
-That double-entry approach found an error in the source material: item 2.8
-(`37dde49f`) is keyed **C (7.79)**, but its own formula `V = 7πk³/48` with
-`V = 473` gives **10.11**, option D. 7.79 is the cube root of 473 — the answer
-you get by dropping the coefficient, i.e. the intended distractor.
+Seven checks, all of which must pass before a topic ships:
+
+| check | what fails it |
+|---|---|
+| coverage | an official item neither encoded nor excluded; a thin exclusion reason |
+| transcript | a missing stem, an answer that disagrees with the key table, a stem pointing at a table nobody recorded |
+| acceptance | the engine misses an official answer; under 40% of official options recreated |
+| audit | a generated item the independent solver disagrees with |
+| structure | options out of order, the key alone in its surface form or its sign, under 80% of distractors named |
+| prose | a placeholder, a doubled space, a stem that is not a sentence |
+| capacity | a template that cannot make 200 distinct items |
+
+The gate is necessary and not sufficient: it proves an item is right, not that
+it reads like an SAT item. Every topic here has also been read on a page
+(`tools/preview.py`), which is what caught `f (x)` printed with a space, a
+rationale that restated the answer instead of explaining it, and stems that
+said cm^2 where the page says cm².
 
 ## Known limits
 
-Fourteen of the nineteen templates had not saturated at 20,000 draws each;
-`measure.forward` alone has ~1.78 million parameterisations by direct count.
-Five are genuinely finite, and one is small enough to matter:
-
-| Template | Distinct items | |
-|---|---:|---|
-| `circle.equal_area_square` | 696 | one radius is its only real parameter |
-| `scaling.percent` | 1,440 | exhausted |
-| `circle.convert` | 1,823 | exhausted |
-| `expression.symbolic_volume` | 1,919 | exhausted |
-| `scaling.solid` | 1,324 | still growing |
-
-Run `python3 -m satbank capacity` to re-measure after changing a template.
-
-Sampling also collides: random seeds re-hit the same parameters, so 30,000
+**Sampling collides.** Random seeds re-hit the same parameters, so 30,000
 draws yield roughly 17,000 distinct items. Serving students needs enumeration
 by seed plus per-student history, not random draws.
 
-## Adding a domain
+**Some templates are finite.** Most are still growing at 20,000 draws, but a
+few are genuinely bounded — `circle.equal_area_square` at 696 and
+`lin.from_table` at 592 are the smallest. `satbank capacity` re-measures after
+any change.
 
-Add shapes or formulas to `shapes.py` **and** `verify.py`; write the template in
-`families/`, having it record the numbers that determine its answer in `P`; add
-an independent solver for it to `audit.py`; register it; encode the source items
-you learned it from in `sources.py`. The acceptance test then holds that template to the official
-answers permanently — it has already caught one regression that a wider
-parameter space introduced.
+**Fidelity is not uniform.** Geometry measurement items reproduce fewer of
+College Board's own options than circle or function items do, because their
+wrong answers are arithmetic slips rather than named misconceptions, and a
+slip has no single canonical value.
+
+## Adding a topic
+
+Read `TOPIC-GUIDE.md`. In short: transcribe every question image, group the
+items into families, write the templates and an independent solver for each of
+them, encode every official item in `sources.py`, and get `satbank check
+--topic <slug>` to print PASS.
