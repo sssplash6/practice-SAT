@@ -12,10 +12,10 @@ import math
 import random
 from fractions import Fraction
 
-from ..exact import E, PI, Exact
-from ..figures import triangle_xyz
-from ..item import Item, ItemError, Mis, assemble, assemble_text
-from ..shapes import SHAPES, UNITS, Unit, measure_phrase, unit_noun
+from ....exact import E, PI, Exact
+from ....figures import triangle_xyz
+from ....item import Item, ItemError, Mis, assemble, assemble_text
+from ....shapes import SHAPES, UNITS, Unit, measure_phrase, unit_noun
 
 __all__ = ["expression_measure", "symbolic_volume", "remaining_volume",
            "combined_area", "missing_side", "container_percent"]

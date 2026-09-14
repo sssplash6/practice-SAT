@@ -1,4 +1,4 @@
-"""CLI: satbank generate | verify | export"""
+"""CLI: satbank generate | templates | topics | check | capacity | export"""
 
 from __future__ import annotations
 
@@ -7,7 +7,8 @@ import json
 import random
 import sys
 
-from .registry import TEMPLATES, generate, generate_many
+from .registry import TEMPLATES, generate, generate_many, templates, topic_of
+from .topic import load_topics
 
 
 def item_json(it) -> dict:
@@ -53,11 +54,23 @@ def main(argv=None) -> int:
     g = sub.add_parser("generate", help="print generated items")
     g.add_argument("--n", type=int, default=5)
     g.add_argument("--seed", type=int, default=0)
-    g.add_argument("--template", action="append", choices=list(TEMPLATES))
+    g.add_argument("--template", action="append")
+    g.add_argument("--topic", action="append")
     g.add_argument("--json", action="store_true")
     g.add_argument("--hide-reasons", action="store_true")
 
-    sub.add_parser("templates", help="list template names")
+    t = sub.add_parser("templates", help="list template names")
+    t.add_argument("--topic", action="append")
+
+    sub.add_parser("topics", help="list topics, with what each one covers")
+
+    k = sub.add_parser("check", help="run the quality gate over a topic, or all of them")
+    k.add_argument("--topic", action="append")
+    k.add_argument("--per-template", type=int, default=300,
+                   help="items generated per template for the audit pass")
+    k.add_argument("--draws", type=int, default=1200, help="draws for the capacity floor")
+    k.add_argument("--quick", action="store_true", help="a fast pass while iterating")
+    k.add_argument("--quiet", action="store_true", help="print only what fails")
 
     c = sub.add_parser("capacity", help="count the distinct items each template can make")
     c.add_argument("--draws", type=int, default=20000)
@@ -68,14 +81,25 @@ def main(argv=None) -> int:
     e.add_argument("--out", required=True)
 
     a = ap.parse_args(argv)
+    if a.cmd == "check":
+        from .check import check_all
+        return check_all(a.topic, a.per_template, a.draws, a.quick, not a.quiet)
+    if a.cmd == "topics":
+        from .topic import key_file
+        print(f"{'topic':<40}{'templates':>10}{'sources':>9}{'official':>10}  domain")
+        for slug, t in sorted(load_topics().items()):
+            n = len(key_file(slug)["items"])
+            print(f"{t.name:<40}{len(t.templates):>10}{len(t.sources):>9}{n:>10}  {t.domain}")
+        return 0
     if a.cmd == "capacity":
         return capacity(a.draws)
     if a.cmd == "templates":
-        for name in TEMPLATES:
-            print(name)
+        for name in templates():
+            if not a.topic or topic_of(name) in a.topic:
+                print(f"{name:<34}{topic_of(name)}")
         return 0
     if a.cmd == "generate":
-        items = list(generate_many(a.n, a.seed, a.template))
+        items = list(generate_many(a.n, a.seed, a.template, a.topic))
         if a.json:
             print(json.dumps([item_json(i) for i in items], indent=2))
         else:

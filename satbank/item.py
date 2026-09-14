@@ -74,22 +74,34 @@ class Item:
         return "\n".join(out)
 
 
-def _usable(v, key: Exact) -> bool:
-    """Geometry measures are positive; a negative or zero option is a freebie."""
-    return isinstance(v, Exact) and float(v) > 0 and v != key
+def _usable(v, key: Exact, signed: bool = False) -> bool:
+    """A geometry measure is positive, so a negative option there is a freebie
+    a student can cross out without doing any geometry. Algebra answers are
+    signed, and `signed=True` says so.
+    """
+    if not isinstance(v, Exact) or v == key:
+        return False
+    return True if signed else float(v) > 0
 
 
-def _fillers(key: Exact):
+def _fillers(key: Exact, style: str = "scale"):
     """Neutral near-misses, used only when the misconception list runs short.
 
-    Multiplicative so the pi/radical form of the key is preserved.
+    "scale" multiplies, which preserves the pi or radical form of the key --
+    the right choice when the answer is a measure. "shift" adds, which is what
+    a near-miss looks like when the answer is a solution to an equation.
     """
+    if style == "shift":
+        for d in (1, -1, 2, -2, 3, -3, 4, 5, -5, 10):
+            yield Mis("near-miss arithmetic slip", key + E(d))
+        return
     for f in (Fraction(2), Fraction(1, 2), Fraction(3), Fraction(1, 3),
               Fraction(4), Fraction(3, 2), Fraction(10), Fraction(2, 3)):
         yield Mis("near-miss arithmetic slip", key * E(f))
 
 
-def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None):
+def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None,
+             signed: bool = False, fillers: str = "scale"):
     """Choose three distractors, then order all four the way the SAT does.
 
     Two rules do most of the work:
@@ -98,12 +110,15 @@ def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None
       * the key must never be the only option of its surface form -- a lone
         integer among radicals, or the only fraction, is guessable without
         doing any geometry.
+
+    `signed=True` allows negative and zero options, which an algebra answer
+    needs and a measure must not have.
     """
     seen = {key}
     same_form: list[Mis] = []
     other_form: list[Mis] = []
     for m in mistakes:
-        if not _usable(m.value, key) or m.value in seen:
+        if not _usable(m.value, key, signed) or m.value in seen:
             continue
         seen.add(m.value)
         (same_form if m.value.form == key.form else other_form).append(m)
@@ -113,10 +128,10 @@ def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None
         if len(picked) >= 3:
             break
         picked.append(m)
-    for m in _fillers(key):
+    for m in _fillers(key, fillers):
         if len(picked) >= 3:
             break
-        if not _usable(m.value, key) or m.value in seen or m.value.form != key.form:
+        if not _usable(m.value, key, signed) or m.value in seen or m.value.form != key.form:
             continue
         seen.add(m.value)
         picked.append(m)

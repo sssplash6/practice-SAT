@@ -14,10 +14,10 @@ from __future__ import annotations
 import random
 from fractions import Fraction
 
-from ..exact import E, PI, Exact
-from ..figures import cylinder_rh, two_rectangles
-from ..item import Item, ItemError, Mis, assemble, assemble_text
-from ..shapes import UNITS, Unit, unit_noun
+from ....exact import E, PI, Exact
+from ....figures import cylinder_rh, two_rectangles
+from ....item import Item, ItemError, Mis, assemble, assemble_text
+from ....shapes import UNITS, Unit, unit_noun
 
 __all__ = ["similar_linear", "similar_area", "solid_scaling", "percent_change"]
 

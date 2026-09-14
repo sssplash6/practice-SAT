@@ -10,10 +10,10 @@ import math
 import random
 from fractions import Fraction
 
-from ..exact import E, PI, Exact
-from ..figures import coordinate_grid
-from ..item import Item, ItemError, Mis, assemble
-from ..shapes import UNITS
+from ....exact import E, PI, Exact
+from ....figures import coordinate_grid
+from ....item import Item, ItemError, Mis, assemble
+from ....shapes import UNITS
 
 __all__ = ["circle_from_points", "triangle_from_points", "square_on_axes", "leg_from_area"]
 

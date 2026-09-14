@@ -2,3 +2,9 @@ __pycache__/
 *.pyc
 .playwright-mcp/
 *.png
+
+# The College Board source material: 74MB of PDFs and ~1,000 question images.
+# `tools/extract_material.py` rebuilds material/keys and material/items from
+# the PDFs; the keys and transcripts are tracked because the gate reads them.
+material/*.pdf
+material/items/

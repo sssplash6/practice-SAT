@@ -1,23 +1,24 @@
-"""Independent re-derivation of a generated item's answer.
+"""The audit harness: no item leaves the engine un-re-derived.
 
-This module is deliberately written from the geometry rather than from the
-generators: plain floats, no Exact, no shapes.py formulas except the ones in
-verify.py, which were themselves written independently. Inverse items are
-checked by numerically root-finding the unknown rather than by any algebra the
-generator performs, so the two routes share no reasoning.
+Every template records, in `item.params`, the numbers that determine its
+answer. A solver registered by the topic -- written from the mathematics, not
+from the generator, and sharing none of its reasoning -- recomputes the answer
+from those numbers alone. The item ships only if the two agree.
 
-An item passes only when this file, knowing nothing but the item's parameters,
-lands on the answer the item ships with.
+This file holds the part that is the same for every topic: the dispatch, the
+tolerance, the root-finder that checks inverse items without algebra, and the
+structural checks that catch a right answer attached to the wrong letter. The
+mathematics lives in `topics/<slug>/audit.py`.
 """
 
 from __future__ import annotations
 
 import math
+from typing import Callable
 
 from .item import Item
-from .verify import NUMERIC, ORDER
 
-__all__ = ["audit", "AuditError"]
+__all__ = ["audit", "AuditError", "close", "sig3", "solve_for", "solvers"]
 
 TOL = 1e-7
 
@@ -26,18 +27,24 @@ class AuditError(Exception):
     pass
 
 
-def _close(a: float, b: float, tol: float = TOL) -> bool:
+def close(a: float, b: float, tol: float = TOL) -> bool:
     return abs(a - b) <= tol * max(1.0, abs(a), abs(b))
 
 
-def _sig3(v: float) -> float:
+def sig3(v: float) -> float:
+    """Round to three significant figures, the way the source items do."""
     if v == 0:
         return 0.0
     return round(v, -int(math.floor(math.log10(abs(v)))) + 2)
 
 
-def _bisect(f, target: float, lo: float = 1e-9, hi: float = 1e7) -> float:
-    """Find x > 0 with f(x) = target, for the monotone-increasing formulas here."""
+def solve_for(f: Callable[[float], float], target: float,
+              lo: float = 1e-9, hi: float = 1e7) -> float:
+    """Find x > 0 with f(x) = target, for a monotone-increasing f.
+
+    Inverse items are checked this way -- by root-finding rather than by any
+    algebra the generator performed -- so the two routes stay independent.
+    """
     if f(lo) > target:
         raise AuditError("target below the formula's range")
     while f(hi) < target:
@@ -53,154 +60,40 @@ def _bisect(f, target: float, lo: float = 1e-9, hi: float = 1e7) -> float:
     return (lo + hi) / 2
 
 
-def _measure(shape: str, measure: str, dims: dict) -> float:
-    return NUMERIC[(shape, measure)](*[dims[k] for k in ORDER[shape]])
+_SOLVERS: dict[str, Callable] = {}
 
 
-# --------------------------------------------------------------- the answer
-
-def expected(p: dict, item: Item):
-    """Return the answer this item should carry: a float, or a string for
-    expression items. Raises AuditError if the parameters are unusable."""
-    k = p.get("kind")
-
-    if k == "measure_forward":
-        v = _measure(p["shape"], p["measure"], p["dims"])
-        if p.get("ask_coefficient"):
-            v /= math.pi
-        if p.get("approximate"):
-            v = _sig3(v)
-        return v
-
-    if k == "measure_inverse":
-        shape, measure, unknown, dims = p["shape"], p["measure"], p["unknown"], p["dims"]
-        total = _measure(shape, measure, dims)
-        # recover the unknown from the stated total without using any algebra
-        # the generator performed
-        found = _bisect(lambda x: _measure(shape, measure, {**dims, unknown: x}), total)
-        if not _close(found, dims[unknown], 1e-6):
-            raise AuditError(f"inverse does not invert: solved {found}, built {dims[unknown]}")
-        if p.get("then_measure"):
-            return _measure(shape, p["then_measure"], dims)
-        return dims[unknown]
-
-    if k == "similar_linear":
-        return p["scaled"] * p["k"]
-
-    if k == "similar_area":
-        m = p["mode"]
-        if m == "area_from_ratio":
-            return p["base"] * p["k"] ** 2
-        if m == "ratio_from_sides":
-            return p["k"] ** 2
-        return p["big_side"] / p["k"]
-
-    if k == "solid_scaling":
-        if p["mode"] == "volume_multiple":
-            return p["v"] * p["rf"] ** 2 * p["hf"]
-        if p["a"] ** 2 * p["b"] != p["mult"]:
-            raise AuditError(f"{p['a']}^2 x {p['b']} != {p['mult']}")
-        return f"R = {p['a']}r and H = {p['b']}h"
-
-    if k == "percent_change":
-        return p["area"] * p["ratio"] ** 2
-
-    if k == "circle_3pt":
-        r = p["r"]
-        return 2.0 * r if p["ask"] == "circumference" else r * r
-
-    if k == "triangle_area":
-        (x1, y1), (x2, y2), (x3, y3) = p["pts"]
-        return abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0
-
-    if k == "square_diagonals":
-        # diagonals 2a and 2b: area is half their product, side by Pythagoras
-        da, db = 2.0 * p["a"], 2.0 * p.get("b", p["a"])
-        ask = p.get("ask", "area")
-        if ask == "area":
-            return da * db / 2.0
-        side = math.hypot(p["a"], p.get("b", p["a"]))
-        return side if ask == "side" else 4.0 * side
-
-    if k == "leg_from_area":
-        drawn = math.hypot(p["dx"], p["dy"])
-        if not _close(0.5 * drawn * p["other"], p["area"], 1e-9):
-            raise AuditError("stated area disagrees with the two legs")
-        return 2.0 * p["area"] / drawn
-
-    if k == "expression_measure":
-        if p["shape"] == "square":
-            s = p["s"]
-            return f"{s} * {s}" if p["measure"] == "area" else f"4 * {s}"
-        l, w = p["l"], p["w"]
-        return f"{l} * {w}" if p["measure"] == "area" else f"2({l} + {w})"
-
-    if k == "symbolic_volume":
-        # expand the stated height into the volume formula, independently
-        c, rel, solid = p["c"], p["relation"], p.get("solid", "cylinder")
-        if solid == "cylinder":
-            return {"longer": f"V = pi*r^3 + {c}pi*r^2",
-                    "times": f"V = {c}pi*r^3",
-                    "shorter": f"V = 2pi*r^3 - {c}pi*r^2",
-                    "twice_plus": f"V = 2pi*r^3 + {c}pi*r^2"}[rel]
-        return {"longer": f"V = s^3 + {c}s^2",
-                "times": f"V = {c}s^3",
-                "shorter": f"V = 2s^3 - {c}s^2",
-                "twice_plus": f"V = 2s^3 + {c}s^2"}[rel]
-
-    if k == "remaining_volume":
-        return p["base"] * p["h"] - p["filled"]
-
-    if k == "combined_area":
-        return p["tri"] + p["s"] ** 2
-
-    if k == "missing_side":
-        x, y, z = p["x"], p["y"], p["z"]
-        if x + y + z != p["perimeter"]:
-            raise AuditError("sides do not sum to the stated perimeter")
-        if not (x + y > z and x + z > y and y + z > x):
-            raise AuditError(f"({x}, {y}, {z}) violates the triangle inequality")
-        return float(p["perimeter"] - x - y)
-
-    if k == "container_percent":
-        f = (100.0 + p["pct"] if p.get("up", True) else 100.0 - p["pct"]) / 100.0
-        dim = p.get("dim", "radius")
-        rb = p["rA"] * (f if dim in ("radius", "both") else 1.0)
-        hb = p["h"] * (f if dim in ("height", "both") else 1.0)
-        vb = math.pi * rb * rb * hb
-        if p.get("ask", "volume") == "volume":
-            return vb
-        return vb / (math.pi * p["rA"] ** 2 * p["h"])
-
-    if k == "equal_area_square":
-        side = math.sqrt(math.pi * p["r"] ** 2)
-        return side if p.get("ask", "side") == "side" else 4.0 * side
-
-    if k == "circle_convert":
-        r = p["r"]
-        return {"radius": r, "diameter": 2 * r, "circumference": math.tau * r,
-                "area": math.pi * r * r}[p["ask"]]
-
-    if k == "formula_solve":
-        return round((p["b"] * p["volume"] / (p["a"] * math.pi)) ** (1 / 3), 2)
-
-    raise AuditError(f"no independent solver for kind {k!r}")
+def solvers() -> dict[str, Callable]:
+    """Every registered solver, gathered the first time one is wanted."""
+    if not _SOLVERS:
+        from .topic import load_topics
+        for topic in load_topics().values():
+            for kind, fn in topic.audits.items():
+                if kind in _SOLVERS:
+                    raise RuntimeError(f"two topics both audit the kind {kind!r}")
+                _SOLVERS[kind] = fn
+    return _SOLVERS
 
 
 def audit(item: Item) -> None:
     """Raise AuditError unless the item's own answer survives re-derivation."""
     if not item.params:
         raise AuditError("item carries no parameters to audit")
-    want = expected(item.params, item)
+    kind = item.params.get("kind")
+    solver = solvers().get(kind)
+    if solver is None:
+        raise AuditError(f"no independent solver for kind {kind!r}")
+    want = solver(item.params)
+    _structure(item)
 
     if isinstance(want, str):
-        got = item.choices["ABCD".index(item.answer)]
+        got = item.choices["ABCD".index(item.answer)] if item.fmt == "mcq" else item.answer
         if got.replace(" ", "") != want.replace(" ", ""):
             raise AuditError(f"keyed option {got!r}, independently derived {want!r}")
         return
 
     got = float(item.key)
-    if not _close(got, want):
+    if not close(got, want):
         raise AuditError(f"item answers {item.key.plain()} ({got!r}), "
                          f"independently derived {want!r}")
 
@@ -214,12 +107,32 @@ def audit(item: Item) -> None:
             except ValueError:
                 raise AuditError(
                     f"answer letter points at {keyed!r}, key is {item.key.plain()!r}") from None
-            if not _close(shown, want, 1e-6):
+            if not close(shown, want, 1e-6):
                 raise AuditError(f"keyed option reads {keyed!r} but the answer is {want!r}")
-        if len(set(item.choices)) != len(item.choices):
-            raise AuditError(f"an option is repeated: {item.choices}")
     elif item.fmt == "spr":
         txt = item.answer
         val = (float(txt.split("/")[0]) / float(txt.split("/")[1])) if "/" in txt else float(txt)
-        if not _close(val, want, 1e-6):
+        if not close(val, want, 1e-6):
             raise AuditError(f"grid-in reads {txt!r}, independently derived {want!r}")
+
+
+def _structure(item: Item) -> None:
+    """The checks that need no mathematics: the shape of the item itself."""
+    if not item.stem.strip():
+        raise AuditError("empty stem")
+    if item.fmt == "mcq":
+        if len(item.choices) != 4:
+            raise AuditError(f"{len(item.choices)} options, not four")
+        if len(set(item.choices)) != len(item.choices):
+            raise AuditError(f"an option is repeated: {item.choices}")
+        if item.answer not in "ABCD":
+            raise AuditError(f"answer letter {item.answer!r}")
+        if len(item.reasons) != 4:
+            raise AuditError("every option needs a reason, blank only for the key")
+        if sum(1 for r in item.reasons if not r) != 1:
+            raise AuditError("exactly one option is the key")
+    elif item.fmt == "spr":
+        if not item.answer.strip():
+            raise AuditError("grid-in with no answer")
+    else:
+        raise AuditError(f"unknown format {item.fmt!r}")

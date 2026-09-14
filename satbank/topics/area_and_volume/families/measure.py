@@ -14,10 +14,10 @@ from __future__ import annotations
 import random
 from fractions import Fraction
 
-from ..exact import E, PI, Exact
-from ..item import Item, ItemError, Mis, assemble
-from ..shapes import SHAPES, UNITS, Shape, Unit, measure_phrase, unit_noun
-from ..verify import check
+from ....exact import E, PI, Exact
+from ....item import Item, ItemError, Mis, assemble
+from ....shapes import SHAPES, UNITS, Shape, Unit, measure_phrase, unit_noun
+from ....verify import check
 
 __all__ = ["forward", "inverse", "DIM_RANGE", "GIVEN_FORMS"]
 

@@ -1,8 +1,9 @@
 """Every generator, addressable by name, with retry on rejected parameters.
 
-Rejecting a draw is normal: a template refuses parameters that would produce
-a nested radical, a non-monomial inverse, a degenerate triangle or an answer
-that cannot be entered in a grid-in. The registry just draws again.
+Templates come from the topics; nothing is listed here by hand. Rejecting a
+draw is normal: a template refuses parameters that would produce a nested
+radical, a non-monomial inverse, a degenerate triangle or an answer that
+cannot be entered in a grid-in. The registry just draws again.
 """
 
 from __future__ import annotations
@@ -10,36 +11,53 @@ from __future__ import annotations
 import random
 from typing import Callable
 
-from .families import coordinate as C
-from .families import measure as M
-from .families import scaling as S
-from .families import special as X
 from .audit import audit
 from .item import Item, ItemError
+from .topic import Topic, load_topics
 
-__all__ = ["TEMPLATES", "generate", "generate_many"]
+__all__ = ["TEMPLATES", "templates", "topic_of", "generate", "generate_many"]
 
-TEMPLATES: dict[str, Callable] = {
-    "measure.forward": M.forward,
-    "measure.inverse": M.inverse,
-    "similar.linear": S.similar_linear,
-    "similar.area": S.similar_area,
-    "scaling.solid": S.solid_scaling,
-    "scaling.percent": S.percent_change,
-    "coord.circle_3pt": C.circle_from_points,
-    "coord.triangle_area": C.triangle_from_points,
-    "coord.square_diagonals": C.square_on_axes,
-    "coord.leg_from_area": C.leg_from_area,
-    "expression.measure": X.expression_measure,
-    "expression.symbolic_volume": X.symbolic_volume,
-    "context.remaining_volume": X.remaining_volume,
-    "context.combined_area": X.combined_area,
-    "context.missing_side": X.missing_side,
-    "context.container_percent": X.container_percent,
-    "circle.equal_area_square": X.equal_area_square,
-    "circle.convert": X.circle_convert,
-    "context.formula_solve": X.formula_solve,
-}
+_TEMPLATES: dict[str, Callable] = {}
+_OWNER: dict[str, str] = {}
+
+
+def templates() -> dict[str, Callable]:
+    """Name -> generator, across every topic. Names are unique engine-wide."""
+    if not _TEMPLATES:
+        for slug, topic in load_topics().items():
+            for name, fn in topic.templates.items():
+                if name in _TEMPLATES:
+                    raise RuntimeError(
+                        f"{slug} and {_OWNER[name]} both define the template {name!r}")
+                _TEMPLATES[name] = fn
+                _OWNER[name] = slug
+    return _TEMPLATES
+
+
+def topic_of(name: str) -> str:
+    templates()
+    return _OWNER[name]
+
+
+class _Templates(dict):
+    """A dict that fills itself on first use, so `from .registry import TEMPLATES`
+    keeps working without importing every topic at module-import time."""
+
+    def _load(self):
+        if not dict.__len__(self):
+            self.update(templates())
+        return self
+
+    def __getitem__(self, k): return dict.__getitem__(self._load(), k)
+    def __iter__(self): return iter(self._load().keys())
+    def __len__(self): return dict.__len__(self._load())
+    def __contains__(self, k): return dict.__contains__(self._load(), k)
+    def keys(self): return self._load().keys()
+    def items(self): return self._load().items()
+    def values(self): return self._load().values()
+
+
+TEMPLATES = _Templates()
 
 
 def generate(name: str, seed: int, attempts: int = 60, verify: bool = True, **kw) -> Item:
@@ -50,7 +68,7 @@ def generate(name: str, seed: int, attempts: int = 60, verify: bool = True, **kw
     instead of being retried away -- nothing wrong should ever leave here
     quietly. Pass verify=False only to measure the cost of the check.
     """
-    fn = TEMPLATES[name]
+    fn = templates()[name]
     for i in range(attempts):
         try:
             item = fn(random.Random(seed * 1_000_003 + i), seed, **kw)
@@ -62,7 +80,9 @@ def generate(name: str, seed: int, attempts: int = 60, verify: bool = True, **kw
     raise ItemError(f"{name}: no valid item after {attempts} attempts (seed {seed})")
 
 
-def generate_many(n: int, seed0: int = 0, names: list[str] | None = None):
-    names = names or list(TEMPLATES)
+def generate_many(n: int, seed0: int = 0, names: list[str] | None = None,
+                  topics: list[str] | None = None):
+    names = names or [n_ for n_ in templates()
+                      if not topics or topic_of(n_) in topics]
     for i in range(n):
         yield generate(names[i % len(names)], seed0 + i)
