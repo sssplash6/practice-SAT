@@ -60,15 +60,26 @@ class Topic:
 
 
 TOPICS: dict[str, Topic] = {}
+BROKEN: dict[str, Exception] = {}
 
 
 def load_topics() -> dict[str, Topic]:
-    """Import every module under `satbank.topics` and collect its TOPIC."""
-    if TOPICS:
+    """Import every module under `satbank.topics` and collect its TOPIC.
+
+    A topic that will not import is recorded in BROKEN and skipped rather than
+    taken down the engine with it: topics are written side by side, and one
+    author's half-finished file must not break everybody else's check run.
+    `check` reports it as a failure of that topic alone.
+    """
+    if TOPICS or BROKEN:
         return TOPICS
     from . import topics as pkg
     for mod in pkgutil.iter_modules(pkg.__path__):
-        m = importlib.import_module(f"{pkg.__name__}.{mod.name}")
+        try:
+            m = importlib.import_module(f"{pkg.__name__}.{mod.name}")
+        except Exception as exc:                                    # noqa: BLE001
+            BROKEN[mod.name] = exc
+            continue
         topic = getattr(m, "TOPIC", None)
         if topic is None:
             continue

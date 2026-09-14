@@ -23,7 +23,7 @@ from dataclasses import dataclass
 
 from .item import ItemError
 from .registry import generate
-from .topic import Topic, key_file, load_topics, transcript
+from .topic import BROKEN, Topic, key_file, load_topics, transcript
 
 __all__ = ["check_topic", "check_all", "Result"]
 
@@ -289,7 +289,13 @@ def _capacity(topic: Topic, draws: int) -> Result:
 
 def check_topic(slug: str, per_template: int = 300, draws: int = 1200,
                 quick: bool = False) -> list[Result]:
-    topic = load_topics()[slug]
+    topics = load_topics()
+    if slug not in topics:
+        exc = BROKEN.get(slug)
+        return [Result("import", False, "the topic does not load",
+                       [f"{type(exc).__name__}: {exc}" if exc else
+                        f"no topic under satbank/topics/ claims the slug {slug!r}"])]
+    topic = topics[slug]
     key = key_file(slug)
     tr = transcript(slug)
     results = [_coverage(topic, key), _transcript(topic, key, tr),
@@ -302,13 +308,15 @@ def check_topic(slug: str, per_template: int = 300, draws: int = 1200,
 
 def check_all(slugs: list[str] | None = None, per_template: int = 300,
               draws: int = 1200, quick: bool = False, verbose: bool = True) -> int:
-    slugs = slugs or sorted(load_topics())
+    loaded = load_topics()
+    slugs = slugs or sorted(set(loaded) | set(BROKEN))
     worst = 0
     for slug in slugs:
         results = check_topic(slug, per_template, draws, quick)
         ok = all(r.ok for r in results)
         worst |= 0 if ok else 1
-        print(f"\n{load_topics()[slug].name}  [{slug}]  {'PASS' if ok else 'FAIL'}")
+        name = loaded[slug].name if slug in loaded else slug
+        print(f"\n{name}  [{slug}]  {'PASS' if ok else 'FAIL'}")
         for r in results:
             mark = "  ok  " if r.ok else " FAIL "
             print(f"  {mark} {r.name:<11} {r.stat}")
