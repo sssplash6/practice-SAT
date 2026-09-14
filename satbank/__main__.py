@@ -100,6 +100,15 @@ def main(argv=None) -> int:
             if not a.topic or topic_of(name) in a.topic:
                 print(f"{name:<34}{topic_of(name)}")
         return 0
+    if a.cmd in ("generate", "export") and getattr(a, "template", None):
+        unknown = [t for t in a.template if t not in templates()]
+        if unknown:
+            near = [n for n in templates()
+                    if any(u.split(".")[-1] in n or n.split(".")[-1] in u for u in unknown)]
+            print(f"no such template: {', '.join(unknown)}"
+                  + (f"\ndid you mean: {', '.join(near[:5])}?" if near else
+                     "\nrun `satbank templates` to list them"), file=sys.stderr)
+            return 2
     if a.cmd == "generate":
         items = list(generate_many(a.n, a.seed, a.template, a.topic))
         if a.json:
