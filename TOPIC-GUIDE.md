@@ -133,6 +133,36 @@ That renders every template's items with the figure, the table, the key
 marked and each distractor's misconception beside it. A page of items is the
 only way to see that a stem reads like an SAT stem.
 
+## The check the gate cannot make
+
+The gate never reads a **wrong** option as mathematics. It only ever asks
+whether the key is right. So an item with **two correct options** passes all
+seven checks — coverage, transcript, acceptance, audit, structure, prose,
+capacity — and reaches a student as a question with no defensible answer.
+
+If your options are expressions, equations, inequalities, points, systems or
+statements, you must close that yourself. Write `option_check.py` in your
+topic directory that, over a few hundred **generated** draws per template,
+decides every option from its **printed text** and asserts that exactly one is
+correct and that it is the keyed one. Both halves matter: checking only the
+key is what the engine already does.
+
+`satbank/topics/systems_of_linear_equations/option_check.py` and its
+`OPTION-CHECK.md` are the model. Three things that note gets right and are
+worth copying:
+
+* **Read the printed string, not your own parameters.** The reader should
+  share as little as possible with the renderer — a rendering bug that drops a
+  minus sign is invisible to any check that goes back through the renderer.
+* **Check generated draws, not the source items.** The defect it found lived
+  in a stem variant no official item uses.
+* **Prove the check can fail.** Inject a known-bad option set and confirm it is
+  caught. A check nobody has seen fail is worth nothing.
+
+That topic's checker also reads its own SVG back — recovering the drawn lines
+from the figure's pixel geometry — so a figure that drifts from its answer is
+caught too. Do the same where a figure carries part of the question.
+
 ## Rules
 
 1. **Do not edit anything outside `satbank/topics/<slug>/` and your transcript.**
