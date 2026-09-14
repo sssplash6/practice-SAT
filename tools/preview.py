@@ -64,7 +64,8 @@ def render(slug: str, per: int, out: str) -> int:
             parts.append("<div class=item>")
             parts.append(f"<div class=meta>seed {it.seed} &middot; {it.difficulty} "
                          f"&middot; {it.fmt}</div>")
-            parts.append(f"<p class=stem>{html.escape(it.stem)}</p>")
+            # the figure goes above the question, the way the source prints it --
+            # stems say "the box plot above", and they have to be right
             if it.figure:
                 parts.append(f"<div class=fig>{it.figure}</div>")
             if it.table:
@@ -73,6 +74,7 @@ def render(slug: str, per: int, out: str) -> int:
                                      f"</{'th' if i == 0 else 'td'}>" for c in row) + "</tr>"
                     for i, row in enumerate(it.table))
                 parts.append(f"<table>{rows}</table>")
+            parts.append(f"<p class=stem>{html.escape(it.stem)}</p>")
             if it.fmt == "spr":
                 parts.append(f"<div class=spr>answer: {html.escape(it.answer)}</div>")
             else:

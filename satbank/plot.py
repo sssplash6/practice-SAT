@@ -13,9 +13,11 @@ from __future__ import annotations
 
 from fractions import Fraction
 
-__all__ = ["scatter", "bar", "histogram", "dotplot", "boxplot", "line_graph", "curve"]
+__all__ = ["scatter", "bar", "histogram", "dotplot", "boxplot", "line_graph", "curve",
+           "boxplots", "histograms"]
 
 _CSS = (".ax{stroke:currentColor;stroke-width:1.3;fill:none}"
+        ".bx{stroke:currentColor;stroke-width:1.3;fill:none}"
         ".gr{stroke:currentColor;stroke-width:.5;opacity:.22}"
         ".pt{fill:currentColor}"
         ".bar{fill:currentColor;opacity:.75}"
@@ -255,3 +257,148 @@ def curve(fn, x0, x1, xlabel="x", ylabel="y", points=(), steps=120, **kw) -> str
     for x, y in points:
         f.out.append(f'<circle class="pt" cx="{f.X(x)}" cy="{f.Y(y)}" r="3.4"/>')
     return f.done()
+
+
+# --------------------------------------------------------- several at a scale
+#
+# `boxplot` and `histogram` each fit their own axis to their own data. That is
+# right for one chart and wrong for two: an item asking which of two
+# distributions is more spread out is unanswerable -- worse, answerable
+# backwards -- if the pictures are drawn to different scales. These take every
+# series at once and draw one scale across all of them.
+
+
+def _round_steps(lo: float, hi: float, want: int = 7) -> list[float]:
+    """Tick positions on a round step, so the reader can count to a value."""
+    span = float(hi) - float(lo)
+    if span <= 0:
+        return [float(lo)]
+    raw = span / want
+    mag = 1.0
+    while mag * 10 <= raw:
+        mag *= 10
+    while mag > raw:
+        mag /= 10
+    step = next((s * mag for s in (1, 2, 2.5, 5, 10) if s * mag >= raw), raw)
+    start = step * int(float(lo) / step)
+    if start < float(lo) - 1e-9:
+        start += step
+    out, v = [], start
+    while v <= float(hi) + 1e-9:
+        out.append(round(v, 10))
+        v += step
+    return out or [float(lo), float(hi)]
+
+
+
+def boxplots(summaries, labels, xlabel="", width=430) -> str:
+    """One number line, one box plot per group, drawn to the same scale.
+
+    `summaries` is a list of (least, Q1, median, Q3, greatest).
+    """
+    if len(summaries) != len(labels):
+        raise ValueError("every box plot needs a label")
+    vals = [float(v) for s in summaries for v in s]
+    lo, hi = min(vals), max(vals)
+    span = (hi - lo) or 1
+    x0, x1 = lo - 0.22 * span, hi + 0.12 * span
+    left, right = 74, 16
+    row, top = 40, 16
+    axis_y = top + row * len(summaries) + 10
+    height = axis_y + 52
+
+    def X(v):
+        return round(left + (float(v) - x0) / (x1 - x0) * (width - left - right), 2)
+
+    out = [f'<svg viewBox="0 0 {width} {height}" width="{width}" height="{height}" '
+           f'role="img" xmlns="http://www.w3.org/2000/svg"><style>{_CSS}</style>']
+    for i, (s, lab) in enumerate(zip(summaries, labels)):
+        lo_i, q1, med, q3, hi_i = (float(v) for v in s)
+        cy = top + row * i + row / 2
+        half = 13
+        out.append(f'<text class="ti" x="{left - 10}" y="{cy + 4}" '
+                   f'text-anchor="end">{lab}</text>')
+        for v in (lo_i, hi_i):
+            out.append(f'<line class="bx" x1="{X(v)}" y1="{cy - 7}" '
+                       f'x2="{X(v)}" y2="{cy + 7}"/>')
+        out.append(f'<line class="bx" x1="{X(lo_i)}" y1="{cy}" x2="{X(q1)}" y2="{cy}"/>')
+        out.append(f'<line class="bx" x1="{X(q3)}" y1="{cy}" x2="{X(hi_i)}" y2="{cy}"/>')
+        out.append(f'<rect class="bx" x="{X(q1)}" y="{round(cy - half, 2)}" '
+                   f'width="{round(X(q3) - X(q1), 2)}" height="{2 * half}"/>')
+        out.append(f'<line class="bx" x1="{X(med)}" y1="{round(cy - half, 2)}" '
+                   f'x2="{X(med)}" y2="{round(cy + half, 2)}"/>')
+    out.append(f'<line class="ax" x1="{X(x0)}" y1="{axis_y}" '
+               f'x2="{X(x1)}" y2="{axis_y}"/>')
+    for t in _round_steps(lo, hi):
+        px = X(t)
+        out.append(f'<line class="ax" x1="{px}" y1="{axis_y - 4}" '
+                   f'x2="{px}" y2="{axis_y + 4}"/>')
+        out.append(f'<text class="lb" x="{px}" y="{axis_y + 19}" '
+                   f'text-anchor="middle">{_nice(t)}</text>')
+    if xlabel:
+        out.append(f'<text class="ti" x="{(left + width - right) / 2}" '
+                   f'y="{height - 8}" text-anchor="middle">{xlabel}</text>')
+    out.append("</svg>")
+    return "".join(out)
+
+
+def histograms(edges, series, labels, xlabel="", ylabel="Frequency",
+                     width=400) -> str:
+    """One panel per series, all on the same bins and the same frequency scale.
+
+    `edges` has one more entry than each series: the bin boundaries.
+    """
+    for counts in series:
+        if len(edges) != len(counts) + 1:
+            raise ValueError("a histogram needs one more edge than it has bars")
+    top_val = max(max(float(c) for c in counts) for counts in series)
+    top_val = top_val * 1.12 or 1
+    left, right = 46, 14
+    panel, gap, head = 130, 56, 20
+    height = (panel + gap) * len(series) + 26
+    ticks = _round_steps(0, top_val, want=5)
+    x0, x1 = float(edges[0]), float(edges[-1])
+
+    def X(v):
+        return round(left + (float(v) - x0) / (x1 - x0) * (width - left - right), 2)
+
+    out = [f'<svg viewBox="0 0 {width} {height}" width="{width}" height="{height}" '
+           f'role="img" xmlns="http://www.w3.org/2000/svg"><style>{_CSS}</style>']
+    for k, (counts, lab) in enumerate(zip(series, labels)):
+        base = (panel + gap) * k + head
+        floor = base + panel
+
+        def Y(v, floor=floor):
+            return round(floor - float(v) / top_val * panel, 2)
+
+        out.append(f'<text class="ti" x="{(left + width - right) / 2}" '
+                   f'y="{base - 6}" text-anchor="middle">{lab}</text>')
+        for t in ticks:
+            py = Y(t)
+            out.append(f'<line class="gr" x1="{left}" y1="{py}" '
+                       f'x2="{width - right}" y2="{py}"/>')
+            out.append(f'<text class="lb" x="{left - 7}" y="{py + 4}" '
+                       f'text-anchor="end">{_nice(t)}</text>')
+        for i, c in enumerate(counts):
+            if float(c) <= 0:
+                continue
+            xa, xb = X(edges[i]), X(edges[i + 1])
+            out.append(f'<rect class="bar" x="{xa}" y="{Y(c)}" '
+                       f'width="{round(xb - xa, 2)}" height="{round(Y(0) - Y(c), 2)}"/>')
+        out.append(f'<line class="ax" x1="{left}" y1="{floor}" '
+                   f'x2="{width - right}" y2="{floor}"/>')
+        out.append(f'<line class="ax" x1="{left}" y1="{floor}" '
+                   f'x2="{left}" y2="{base}"/>')
+        for e in edges:
+            px = X(e)
+            out.append(f'<line class="ax" x1="{px}" y1="{floor}" '
+                       f'x2="{px}" y2="{floor + 4}"/>')
+            out.append(f'<text class="lb" x="{px}" y="{floor + 17}" '
+                       f'text-anchor="middle">{_nice(e)}</text>')
+        cy = base + panel / 2
+        out.append(f'<text class="ti" x="12" y="{cy}" text-anchor="middle" '
+                   f'transform="rotate(-90 12 {cy})">{ylabel}</text>')
+        out.append(f'<text class="ti" x="{(left + width - right) / 2}" '
+                   f'y="{floor + 36}" text-anchor="middle">{xlabel}</text>')
+    out.append("</svg>")
+    return "".join(out)
