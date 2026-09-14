@@ -14,19 +14,30 @@ an item is reproducible from its seed and provably correct before it ships.
 The engine is being built out across all nineteen SAT Math topics, from 1,039
 official College Board items. Five are finished:
 
-| topic | domain | templates | official items | option fidelity |
+| topic | domain | templates | official items | distractor fidelity |
 |---|---|---:|---:|---:|
-| Area and Volume | Geometry and Trigonometry | 19 | 59 / 59 | 70% |
-| Circles | Geometry and Trigonometry | 16 | 32 / 32 | 92% |
-| Linear Equations in One Variable | Algebra | 18 | 65 / 65 | 86% |
-| Linear Functions | Algebra | 23 | 85 / 86 | 92% |
-| Percentages | Problem-Solving and Data Analysis | 18 | 51 / 52 | 82% |
+| Area and Volume | Geometry and Trigonometry | 19 | 59 / 59 | 60% |
+| Circles | Geometry and Trigonometry | 16 | 32 / 32 | 89% |
+| Linear Equations in One Variable | Algebra | 18 | 65 / 65 | 81% |
+| Linear Functions | Algebra | 23 | 85 / 86 | 89% |
+| Percentages | Problem-Solving and Data Analysis | 18 | 51 / 52 | 76% |
 
 "Official items" is how many of that topic's source questions the engine
 reproduces the printed answer for, driven by the source item's own numbers.
-"Option fidelity" is how much of College Board's own distractor design the
-misconception library recreates — the measure of whether the wrong answers
-are modelled or merely invented.
+
+"Distractor fidelity" is the only external check on the *wrong* answers:
+of the three wrong options College Board printed, how many the engine
+independently arrives at. Anyone can generate three numbers that are not the
+key; landing on the same three the test writers chose is evidence the
+misconception library models the errors students actually make. The key is
+excluded from the count — acceptance already requires it to match, so
+including it would put a free 25% under every figure.
+
+Area and Volume is the low one for a structural reason: measurement
+distractors are arithmetic slips — halved twice, forgot the ½ — and a slip
+has many plausible values, so matching the particular one College Board chose
+is partly luck. Circle and function misconceptions are named and finite, so
+they are hittable.
 
 Two items are excluded across the five, each with its reason recorded in the
 topic's `sources.py`: one asks the student to match a drawn line against four
@@ -101,7 +112,7 @@ Seven checks, all of which must pass before a topic ships:
 |---|---|
 | coverage | an official item neither encoded nor excluded; a thin exclusion reason |
 | transcript | a missing stem, an answer that disagrees with the key table, a stem pointing at a table nobody recorded |
-| acceptance | the engine misses an official answer; under 40% of official options recreated |
+| acceptance | the engine misses an official answer; under 40% of official distractors recreated |
 | audit | a generated item the independent solver disagrees with |
 | structure | options out of order, the key alone in its surface form or its sign, under 80% of distractors named |
 | prose | a placeholder, a doubled space, a stem that is not a sentence |

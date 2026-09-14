@@ -30,7 +30,7 @@ __all__ = ["check_topic", "check_all", "Result"]
 MIN_CAPACITY = 200          # distinct items a template must be able to make
 MAX_EXCLUDED = 0.15         # of a topic's official items
 MIN_NAMED_DISTRACTORS = 0.80
-MIN_OFFICIAL_OPTIONS = 0.40
+MIN_OFFICIAL_OPTIONS = 0.40    # of the official DISTRACTORS, key excluded
 FILLER = "near-miss arithmetic slip"
 
 
@@ -176,16 +176,21 @@ def _acceptance(topic: Topic, key: dict, tr: dict) -> Result:
             mcq += 1
             off = {norm(o) for o in rec["options"]}
             mine = {norm(c) for c in item.choices}
+            # the key is one of the four and acceptance already demands it
+            # match, so counting it would put a free 25% under the figure --
+            # what is being measured is the wrong answers
+            if want:
+                off -= {norm(want[0])}
             hit += len(off & mine)
             total += len(off)
-            exact += off == mine
+            exact += off <= mine
     share = hit / max(total, 1)
-    stat = (f"{ok}/{len(topic.sources)} answers, {share:.0%} of official options recreated"
-            f", {exact}/{max(mcq,1)} option sets exact")
+    stat = (f"{ok}/{len(topic.sources)} answers, {share:.0%} of official distractors "
+            f"recreated, {exact}/{max(mcq, 1)} option sets complete")
     if mcq and share < MIN_OFFICIAL_OPTIONS:
-        detail.append(f"only {share:.0%} of College Board's own options are reproduced; "
-                      f"the floor is {MIN_OFFICIAL_OPTIONS:.0%} -- the distractors are "
-                      "invented rather than modelled")
+        detail.append(f"only {share:.0%} of College Board's own distractors are "
+                      f"reproduced; the floor is {MIN_OFFICIAL_OPTIONS:.0%} -- the wrong "
+                      "answers are invented rather than modelled")
     return Result("acceptance", not detail and ok == len(topic.sources), stat, detail[:20])
 
 
