@@ -16,6 +16,7 @@ from ....exact import E, PI, Exact
 from ....figures import triangle_xyz
 from ....item import Item, ItemError, Mis, assemble, assemble_text
 from ....shapes import SHAPES, UNITS, Unit, measure_phrase, unit_noun
+from ..kit import decimal_text, pick
 
 __all__ = ["expression_measure", "symbolic_volume", "remaining_volume",
            "combined_area", "missing_side", "container_percent"]
@@ -24,7 +25,7 @@ __all__ = ["expression_measure", "symbolic_volume", "remaining_volume",
 # ------------------------------------------------------------- EXPRESSION
 
 def expression_measure(rng: random.Random, seed: int, *, shape=None, measure=None,
-                       dims=None, unit=None) -> Item:
+                       dims=None, unit=None, wrongs=None) -> Item:
     """'Which expression gives the area?' -- options are unevaluated products."""
     shape = shape or rng.choice(["rectangle", "square"])
     unit = unit or rng.choice(UNITS)
@@ -35,15 +36,19 @@ def expression_measure(rng: random.Random, seed: int, *, shape=None, measure=Non
                 f"{f' ({unit.abbr})' if unit.abbr else ''}. Which expression gives "
                 f"{measure_phrase(measure, unit, 'abbr')} of the square?")
         if measure == "area":
-            key, wrong = f"{s} * {s}", [
-                Mis("doubled the side instead of squaring it", f"2 * {s}"),
-                Mis("found the perimeter", f"4 * {s}"),
-                Mis("doubled the squared side", f"2 * {s} * {s}")]
+            key, key_val = f"{s} * {s}", s * s
+            wrong = {
+                "double_side": (Mis("doubled the side instead of squaring it",
+                                    f"2 * {s}"), 2 * s),
+                "perimeter": (Mis("found the perimeter", f"4 * {s}"), 4 * s),
+                "double_area": (Mis("doubled the squared side", f"2 * {s} * {s}"),
+                                2 * s * s)}
         else:
-            key, wrong = f"4 * {s}", [
-                Mis("squared the side, giving the area", f"{s} * {s}"),
-                Mis("used two sides only", f"2 * {s}"),
-                Mis("doubled the area", f"2 * {s} * {s}")]
+            key, key_val = f"4 * {s}", 4 * s
+            wrong = {
+                "area": (Mis("squared the side, giving the area", f"{s} * {s}"), s * s),
+                "two_sides": (Mis("used two sides only", f"2 * {s}"), 2 * s),
+                "double_area": (Mis("doubled the area", f"2 * {s} * {s}"), 2 * s * s)}
     else:
         l = (dims or {}).get("l") or rng.randint(2, 60)
         w = (dims or {}).get("w") or rng.randint(2, 60)
@@ -51,24 +56,33 @@ def expression_measure(rng: random.Random, seed: int, *, shape=None, measure=Non
                 f"width of {w} {unit.many() if unit.abbr else 'units'}. Which expression gives "
                 f"{measure_phrase(measure, unit, 'words')} of this rectangle?")
         if measure == "area":
-            key, wrong = f"{l} * {w}", [
-                Mis("found the perimeter", f"2({l} + {w})"),
-                Mis("doubled the area", f"2({l} * {w})"),
-                Mis("added the dimensions", f"{l} + {w}")]
+            key, key_val = f"{l} * {w}", l * w
+            wrong = {
+                "perimeter": (Mis("found the perimeter", f"2({l} + {w})"), 2 * (l + w)),
+                "double": (Mis("doubled the area", f"2({l} * {w})"), 2 * l * w),
+                "add": (Mis("added the dimensions", f"{l} + {w}"), l + w)}
         else:
-            key, wrong = f"2({l} + {w})", [
-                Mis("found the area", f"{l} * {w}"),
-                Mis("added the two given sides only", f"{l} + {w}"),
-                Mis("doubled the area", f"2({l} * {w})")]
+            key, key_val = f"2({l} + {w})", 2 * (l + w)
+            wrong = {
+                "area": (Mis("found the area", f"{l} * {w}"), l * w),
+                "add": (Mis("added the two given sides only", f"{l} + {w}"), l + w),
+                "double_area": (Mis("doubled the area", f"2({l} * {w})"), 2 * l * w)}
     P = {"kind": "expression_measure", "shape": shape, "measure": measure,
          "s": locals().get("s"), "l": locals().get("l"), "w": locals().get("w")}
-    choices, reasons, letter = assemble_text(key, wrong, rng)
+    # Two options that evaluate to the same number are two answers to "which
+    # expression gives the area", whatever they look like on the page: at
+    # l = w = 2, "2 + 2" and "2 * 2" are both the area.
+    values = [key_val] + [v for _, v in wrong.values()]
+    if len(set(values)) != len(values):
+        raise ItemError("two of these expressions have the same value")
+    wrong = {k: m for k, (m, _) in wrong.items()}
+    choices, reasons, letter = assemble_text(key, pick(wrong, wrongs), rng)
     return Item("GEO.expression.measure", f"{shape} {measure}", "easy", seed, stem, "mcq",
                 E(0), letter, f"The correct expression is {key}.", choices, reasons, choices, params=P)
 
 
 def symbolic_volume(rng: random.Random, seed: int, *, c=None, relation=None,
-                    solid=None) -> Item:
+                    solid=None, wrongs=None) -> Item:
     """A solid whose height is stated in terms of another dimension; expand V.
 
     The tested skill is translating a sentence into an expression and
@@ -81,59 +95,82 @@ def symbolic_volume(rng: random.Random, seed: int, *, c=None, relation=None,
         else rng.choice(["containers", "canisters", "drums", "tubes"])
 
     if solid == "cylinder":
-        base, var, unit, word = "πr", "r", "cubic inches", "radius"
+        var, unit, word = "r", "cubic inches", "radius"
         forms = {
-            "longer":     (f"{c} inches longer than the radius", f"V = πr³ + {c}πr²"),
-            "times":      (f"{c} times the radius",              f"V = {c}πr³"),
+            "longer":     (f"{c} inches longer than the radius", f"V = πr³ + {c}πr²",
+                           lambda r: math.pi * r * r * (r + c)),
+            "times":      (f"{c} times the radius", f"V = {c}πr³",
+                           lambda r: math.pi * r * r * (c * r)),
             "shorter":    (f"{c} inches shorter than twice the radius",
-                           f"V = 2πr³ - {c}πr²"),
+                           f"V = 2πr³ - {c}πr²", lambda r: math.pi * r * r * (2 * r - c)),
             "twice_plus": (f"{c} inches more than twice the radius",
-                           f"V = 2πr³ + {c}πr²"),
+                           f"V = 2πr³ + {c}πr²", lambda r: math.pi * r * r * (2 * r + c)),
         }
-        wrong_pool = [
-            (f"V = {c}πr³", "multiplied instead of expanding the sum"),
-            (f"V = πr² + {c}πr", "did not square the radius in the second term"),
-            (f"V = π(2r)³", "doubled the radius instead of using the stated height"),
-            (f"V = πr³ - {c}πr²", "subtracted where the height was added"),
-            (f"V = πr² + {c}", "added the constant without the base area"),
-        ]
+        wrong_pool = {
+            "times": (f"V = {c}πr³", "multiplied instead of expanding the sum",
+                      lambda r: c * math.pi * r ** 3),
+            "no_square": (f"V = πr² + {c}πr",
+                          "did not square the radius in the second term",
+                          lambda r: math.pi * r * r + c * math.pi * r),
+            "doubled": ("V = π(2r)³",
+                        "doubled the radius instead of using the stated height",
+                        lambda r: math.pi * (2 * r) ** 3),
+            "minus": (f"V = πr³ - {c}πr²", "subtracted where the height was added",
+                      lambda r: math.pi * r ** 3 - c * math.pi * r * r),
+            "const": (f"V = πr² + {c}", "added the constant without the base area",
+                      lambda r: math.pi * r * r + c),
+        }
     else:
         var, unit, word = "s", "cubic centimeters", "base edge"
         forms = {
             "longer":     (f"{c} centimeters longer than an edge of the square base",
-                           f"V = s³ + {c}s²"),
-            "times":      (f"{c} times the length of an edge of the square base", f"V = {c}s³"),
+                           f"V = s³ + {c}s²", lambda x: x * x * (x + c)),
+            "times":      (f"{c} times the length of an edge of the square base",
+                           f"V = {c}s³", lambda x: x * x * (c * x)),
             "shorter":    (f"{c} centimeters shorter than twice an edge of the square base",
-                           f"V = 2s³ - {c}s²"),
+                           f"V = 2s³ - {c}s²", lambda x: x * x * (2 * x - c)),
             "twice_plus": (f"{c} centimeters more than twice an edge of the square base",
-                           f"V = 2s³ + {c}s²"),
+                           f"V = 2s³ + {c}s²", lambda x: x * x * (2 * x + c)),
         }
-        wrong_pool = [
-            (f"V = {c}s³", "multiplied instead of expanding the sum"),
-            (f"V = s² + {c}s", "did not square the edge in the second term"),
-            (f"V = (s + {c})³", "cubed the height instead of using it once"),
-            (f"V = s³ - {c}s²", "subtracted where the height was added"),
-            (f"V = 3s² + {c}s", "used the surface area rather than the volume"),
-        ]
+        wrong_pool = {
+            "times": (f"V = {c}s³", "multiplied instead of expanding the sum",
+                      lambda x: c * x ** 3),
+            "no_square": (f"V = s² + {c}s", "did not square the edge in the second term",
+                          lambda x: x * x + c * x),
+            "cubed": (f"V = (s + {c})³", "cubed the height instead of using it once",
+                      lambda x: (x + c) ** 3),
+            "minus": (f"V = s³ - {c}s²", "subtracted where the height was added",
+                      lambda x: x ** 3 - c * x * x),
+            "surface": (f"V = 3s² + {c}s", "used the surface area rather than the volume",
+                        lambda x: 3 * x * x + c * x),
+        }
 
-    phrase, key = forms[relation]
+    phrase, key, key_fn = forms[relation]
     shape_name = ("right cylindrical" if solid == "cylinder" else "right square prism")
     stem = (f"A manufacturer determined that {shape_name} {trade} with a height that is "
             f"{phrase} offer the optimal number to be displayed on a shelf. Which of the "
             f"following expresses the volume V, in {unit}, of such {trade}, where {var} is the "
             f"{word}?")
-    wrong = [Mis(why, txt) for txt, why in wrong_pool if txt != key]
-    rng.shuffle(wrong)
+    # An option that is a different expression but the same function is a
+    # second right answer: π(2r)³ is 8πr³, which is exactly what the key says
+    # when the height is stated as 8 times the radius.
+    probe = (2.0, 3.0, 5.0, 7.0)
+    pool = {k: Mis(why, txt) for k, (txt, why, fn) in wrong_pool.items()
+            if any(abs(fn(x) - key_fn(x)) > 1e-12 * abs(key_fn(x)) for x in probe)}
+    order = list(pool) if wrongs is None else list(wrongs)
+    if wrongs is None:
+        rng.shuffle(order)
     rationale = f"Substituting the stated height into the volume formula and expanding gives {key}."
     P = {"kind": "symbolic_volume", "c": c, "relation": relation, "solid": solid}
-    choices, reasons, letter = assemble_text(key, wrong, rng)
+    choices, reasons, letter = assemble_text(key, pick(pool, order), rng)
     return Item("GEO.expression.symbolic_volume", f"{solid} volume", "hard", seed, stem, "mcq",
                 E(0), letter, rationale, choices, reasons, choices, params=P)
 
 
 # ---------------------------------------------------------------- CONTEXT
 
-def remaining_volume(rng: random.Random, seed: int, *, base=None, h=None, filled=None) -> Item:
+def remaining_volume(rng: random.Random, seed: int, *, base=None, h=None, filled=None,
+                     wrongs=None) -> Item:
     """A sealed can: total volume minus the poured liquid is the solid contents."""
     base = E(base or rng.choice([40, 50, 60, 75, 80, 90, 100]))
     h = E(h or rng.randint(6, 15))
@@ -151,21 +188,25 @@ def remaining_volume(rng: random.Random, seed: int, *, base=None, h=None, filled
             f"{filled.plain()} cm³ of {contents[1]} is needed to fill the can to the top, which "
             f"of the following is closest to the total volume of the pieces of {contents[0]} in "
             f"the can?")
-    mistakes = [Mis("gave the volume of the whole can", total),
-                Mis("added the base area to the poured volume", base + filled),
-                Mis("divided the base area by the height", base / h),
-                Mis("subtracted the base area instead of the poured volume", total - base)]
+    pool = {
+        "whole": Mis("gave the volume of the whole can", total),
+        "add_filled": Mis("added the base area to the poured volume", base + filled),
+        "base_over_h": Mis("divided the base area by the height instead of multiplying",
+                           base / h),
+        "minus_base": Mis("subtracted the base area instead of the poured volume",
+                          total - base),
+    }
     rationale = (f"The can holds {base.plain()} × {h.plain()} = {total.plain()} cm³; the "
                  f"pieces take up {total.plain()} - {filled.plain()} = {key.plain()} cm³.")
     # the source item prints the unit on every option, and so does this
-    choices, latex, reasons, letter = assemble(key, mistakes, rng,
-                                               fmt_value=lambda v: f"{v.plain()} cm³")
+    choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng,
+                                               fmt_value=lambda v: f"{decimal_text(v)} cm³")
     return Item("GEO.context.remaining_volume", "volume in context", "medium", seed, stem,
                 "mcq", key, letter, rationale, choices, reasons, latex, params=P)
 
 
 def combined_area(rng: random.Random, seed: int, *, tri_area=None, side=None,
-                  pair=None) -> Item:
+                  pair=None, wrongs=None) -> Item:
     """Two figures, one area given directly and one to be computed, then summed."""
     pair = pair or rng.choice(["triangle_square", "triangle_square",
                                "rectangle_square", "square_triangle"])
@@ -176,21 +217,30 @@ def combined_area(rng: random.Random, seed: int, *, tri_area=None, side=None,
                      "square_triangle": ("Square R", "Square S")}[pair]
     key = tri + s ** 2
     P = {"kind": "combined_area", "tri": float(tri), "s": float(s)}
+    lower = (lambda n: n[0].lower() + n[1:])          # "Triangle R" -> "triangle R"
+    noun = first.split()[0].lower()
     stem = (f"{first} has an area of {tri.plain()} square centimeters (cm²). {second} has "
-            f"side lengths of {s.plain()} cm. What is the total area of {first.lower()} and "
-            f"{second.lower()}, in cm²?")
-    mistakes = [Mis("added the side length instead of the area of the square", tri + s),
-                Mis("halved the given area before adding", tri / E(2) + s ** 2),
-                Mis("added the perimeter of the square", tri + E(4) * s),
-                Mis("gave the area of the triangle only", tri)]
+            f"side lengths of {s.plain()} cm. What is the total area of {lower(first)} and "
+            f"{lower(second)}, in cm²?")
+    pool = {
+        "plus_side": Mis("added the side length instead of the area of the square", tri + s),
+        "half_then_side": Mis("halved the given area and added the side length instead "
+                              "of its square", tri / E(2) + s),
+        "half_sum": Mis("halved both given measures before adding them",
+                        tri / E(2) + s / E(2)),
+        "half_area": Mis("halved the given area before adding", tri / E(2) + s ** 2),
+        "plus_perimeter": Mis("added the perimeter of the square", tri + E(4) * s),
+        "first_only": Mis(f"gave the area of the {noun} only", tri),
+    }
     rationale = (f"The square has area {s.plain()}² = {(s**2).plain()}, so the total is "
                  f"{tri.plain()} + {(s**2).plain()} = {key.plain()}.")
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.context.combined_area", "combined area", "easy", seed, stem, "mcq", key,
                 letter, rationale, choices, reasons, latex, params=P)
 
 
-def missing_side(rng: random.Random, seed: int, *, sides=None, style=None) -> Item:
+def missing_side(rng: random.Random, seed: int, *, sides=None, style=None,
+                 wrongs=None) -> Item:
     """Perimeter and two sides given; find the third. Must close as a triangle."""
     style = style or ("labelled" if sides else
                       rng.choices(["labelled", "isosceles"], weights=[3, 1])[0])
@@ -220,19 +270,21 @@ def missing_side(rng: random.Random, seed: int, *, sides=None, style=None) -> It
     else:
         stem = (f"The triangle shown has a perimeter of {p} units. If x = {x} units and y = {y} "
                 f"units, what is the value of z, in units?")
-    mistakes = [Mis("reported one of the given sides", E(y)),
-                Mis("reported the other given side", E(x)),
-                Mis("added the two given sides instead of subtracting", E(x + y)),
-                Mis("subtracted only one of the given sides", E(p - x))]
+    pool = {
+        "given_y": Mis("reported one of the given sides", E(y)),
+        "given_x": Mis("reported the other given side", E(x)),
+        "add": Mis("added the two given sides instead of subtracting", E(x + y)),
+        "minus_one": Mis("subtracted only one of the given sides", E(p - x)),
+    }
     rationale = f"The third side is {p} - {x} - {y} = {z}."
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     fig = None if style == "isosceles" else triangle_xyz()
     return Item("GEO.context.missing_side", "triangle perimeter", "easy", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex, figure=fig, params=P)
 
 
 def container_percent(rng: random.Random, seed: int, *, rA=None, pct=None, h=None,
-                      dim=None, up=None, ask=None) -> Item:
+                      dim=None, up=None, ask=None, wrongs=None) -> Item:
     """One container's dimension differs from another's by a percent.
 
     Which dimension moves matters: a percent on the radius is squared into the
@@ -262,35 +314,97 @@ def container_percent(rng: random.Random, seed: int, *, rA=None, pct=None, h=Non
              "height": f"each have a radius of {rA.plain()} centimeters",
              "both": f"are similar in shape"}[dim]
     lead = (f"A manufacturing company produces two sizes of cylindrical containers that "
-            f"{fixed}. The radius of container A is {rA.plain()} centimeters"
-            + (f" and its height is {h.plain()} centimeters" if dim != "radius" else "")
+            f"{fixed}. "
+            + (f"The radius of container A is {rA.plain()} centimeters"
+               if dim != "height" else
+               f"The height of container A is {h.plain()} centimeters")
+            + (f" and its height is {h.plain()} centimeters" if dim == "both" else "")
             + f", and {which} {pct}% {word} than that of container A.")
     stem = lead + (" What is the volume, in cubic centimeters, of container B?" if ask == "volume"
                    else " The volume of container B is k times the volume of container A. "
                         "What is the value of k?")
 
     if ask == "volume":
-        mistakes = [Mis("applied the percent to the volume rather than to the dimension",
-                        vA * E(ratio)),
-                    Mis("applied the percent increase twice", vA * E(ratio ** 2) * E(ratio)),
-                    Mis("used container A's dimensions", vA),
-                    Mis("scaled the radius linearly instead of squaring it", vA * E(ratio))]
+        r2 = rA * E(ratio ** 2) if dim in ("radius", "both") else rA
+        h2 = h * E(ratio ** 2) if dim in ("height", "both") else h
+        pool = {
+            "vol_percent": Mis("applied the percent to the volume rather than to the "
+                               "dimension", vA * E(ratio)),
+            "twice_volume": Mis(f"changed the volume by {pct}% as well as the {dim}",
+                                vA * E(ratio ** 2) * E(ratio)),
+            "twice_radius": Mis(f"applied the {pct}% change to the {dim} twice",
+                                PI * r2 ** 2 * h2),
+            "A_dims": Mis("used container A's dimensions", vA),
+        }
     else:
-        mistakes = [Mis("used the dimension ratio without squaring the radius", E(ratio)),
-                    Mis("squared the ratio when only the height changed", E(ratio ** 2)),
-                    Mis("cubed the ratio as if every dimension changed", E(ratio ** 3)),
-                    Mis("left the volume unchanged", E(1))]
+        pool = {
+            "linear": Mis("used the dimension ratio without squaring the radius", E(ratio)),
+            "square": Mis("squared the ratio when only the height changed", E(ratio ** 2)),
+            "cube": Mis("cubed the ratio as if every dimension changed", E(ratio ** 3)),
+            "unchanged": Mis("left the volume unchanged", E(1)),
+        }
     rationale = (f"Volume scales by {factor} here, so V_B = {vB.plain()}"
                  + (f" and k = {key.plain()}." if ask == "times" else "."))
     P = {"kind": "container_percent", "rA": float(rA), "pct": pct, "h": float(h),
          "dim": dim, "up": up, "ask": ask}
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.context.container_percent", "cylinder volume", "hard", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex, params=P)
 
 
+def _radical_pi(v: Exact) -> str:
+    """√(2π), the way the source prints it, rather than √2√π.
+
+    The two spell the same number; this is the only item in the topic whose
+    options put a whole product under one radical, so the rendering is the
+    item's, not the engine's.
+    """
+    if v.pi_exp == Fraction(1, 2) and v.rad != 1:
+        n, d = abs(v.coef.numerator), v.coef.denominator
+        body = ("" if n == 1 else f"{n:,}") + f"√({v.rad}π)"
+        sign = "-" if v.coef < 0 else ""
+        return f"{sign}{body}" if d == 1 else f"{sign}{body}/{d}"
+    return v.plain()
+
+
+def _look(text: str) -> tuple:
+    """What an option looks like at a glance, from the printed string alone."""
+    return ("π" in text, "√" in text, "/" in text, "." in text)
+
+
+def _assemble_radicals(key: Exact, mistakes: list[Mis], rng: random.Random):
+    """assemble(), but judging "the key is alone in its form" by what is printed.
+
+    `item.assemble` compares `Exact.form`, in which 2√π and √(2π) are different
+    shapes because their radicands differ. On the page they are the same shape,
+    and the source item -- 2, √(2π), 2√π, 2π -- offers no c√π distractor at all,
+    so the engine's proxy would throw away College Board's own option set. Every
+    other rule is `assemble`'s: distinct positive values, ascending order, and
+    the key never alone in the form a student can see.
+    """
+    seen, picked = {key}, []
+    for m in mistakes:
+        if m.value is None or m.value in seen or float(m.value) <= 0:
+            continue
+        seen.add(m.value)
+        picked.append(m)
+        if len(picked) == 3:
+            break
+    if len(picked) < 3:
+        raise ItemError("could not build three distinct distractors")
+    options = [(key, "")] + [(m.value, m.reason) for m in picked]
+    texts = [_radical_pi(v) for v, _ in options]
+    if len(set(texts)) != 4:
+        raise ItemError("two options render the same way")
+    if [_look(t) for t in texts].count(_look(texts[0])) == 1:
+        raise ItemError("the key would be the only option of its printed form")
+    order = sorted(range(4), key=lambda i: float(options[i][0]))
+    return ([texts[i] for i in order], [texts[i] for i in order],
+            [options[i][1] for i in order], "ABCD"[order.index(0)])
+
+
 def equal_area_square(rng: random.Random, seed: int, *, r=None, given=None,
-                      ask=None) -> Item:
+                      ask=None, wrongs=None) -> Item:
     """A square with the same area as a circle: the side is r*sqrt(pi).
 
     The circle can be handed over as its radius, diameter, area or
@@ -318,29 +432,35 @@ def equal_area_square(rng: random.Random, seed: int, *, r=None, given=None,
         f"area is equal to the area of this circle?",
     ])
 
-    mistakes = [Mis("used the radius as the side length", r),
-                Mis("took the square root of πr rather than πr²", (PI * r).sqrt()),
-                Mis("used πr, forgetting to square the radius or take the root", PI * r),
-                Mis("used the circumference", E(2) * PI * r),
-                Mis("gave the perimeter instead of one side" if ask == "side"
-                    else "gave one side instead of the perimeter",
-                    E(4) * side if ask == "side" else side)]
-    if ask == "side":                       # the classic wrong answers come first
-        mistakes = mistakes[:1] + mistakes[2:4] + [mistakes[1], mistakes[4]]
+    # Order matters for a free draw: `assemble` takes the first three that fit,
+    # and at least one of them has to carry a radical, or the key is the only
+    # option with a √ in it and the item is guessable.
+    pool = {
+        "radius_as_side": Mis("used the radius as the side length", r),
+        "sqrt_pi_r": Mis("found the area as πr, forgetting to square the radius, and "
+                         "then took the square root", (PI * r).sqrt()),
+        "pi_r": Mis("used πr, forgetting to square the radius or take the root", PI * r),
+        "other_measure": Mis("gave the perimeter instead of one side" if ask == "side"
+                             else "gave one side instead of the perimeter",
+                             E(4) * side if ask == "side" else side),
+        "circumference": Mis("used the circumference", E(2) * PI * r),
+    }
     if given == "diameter":
-        mistakes.insert(0, Mis("used the diameter as the radius",
-                               (E(4) if ask == "perimeter" else E(2)) * side))
+        # using the diameter as the radius doubles the side, and so doubles
+        # whichever of the side and the perimeter the item asks for
+        pool = {"diameter_as_radius": Mis("used the diameter as the radius",
+                                          E(2) * key), **pool}
     rationale = (f"The circle has area pi({r.plain()})^2 = {(PI*r**2).plain()}; a square of that "
                  f"area has side {side.plain()}"
                  + (f", so its perimeter is {key.plain()}." if ask == "perimeter" else "."))
     P = {"kind": "equal_area_square", "r": float(r), "ask": ask}
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    choices, latex, reasons, letter = _assemble_radicals(key, pick(pool, wrongs), rng)
     return Item("GEO.circle.equal_area_square", "circle and square area", "hard", seed, stem,
                 "mcq", key, letter, rationale, choices, reasons, latex, params=P)
 
 
 def circle_convert(rng: random.Random, seed: int, *, given=None, ask=None, r=None,
-                   unit=None, fmt=None) -> Item:
+                   unit=None, fmt=None, wrongs=None) -> Item:
     """Move between a circle's radius, diameter, circumference and area."""
     given = given or rng.choice(["circumference", "diameter", "area"])
     ask = ask or rng.choice([a for a in ("diameter", "radius", "circumference") if a != given])
@@ -355,21 +475,22 @@ def circle_convert(rng: random.Random, seed: int, *, given=None, ask=None, r=Non
     stem = (f"A circle has {'an' if given == 'area' else 'a'} {given} of {gv.plain()} "
             f"{unit.many() if given in ('radius', 'diameter', 'circumference') else 'square ' + unit.many()}. "
             f"What is the {ask}, in {unit.many()}, of the circle?")
-    mistakes = [Mis(f"gave the {k} instead", v) for k, v in vals.items() if k != ask]
-    mistakes += [Mis("halved when the value should have been doubled", key / E(4)),
-                 Mis("doubled when the value should have been halved", key * E(4))]
+    pool = {k: Mis(f"gave the {k} instead", v) for k, v in vals.items() if k != ask}
+    pool["quarter"] = Mis("halved when the value should have been doubled", key / E(4))
+    pool["quadruple"] = Mis("doubled when the value should have been halved", key * E(4))
     rationale = f"From {given} = {gv.plain()}, the radius is {rr.plain()}, so the {ask} is {key.plain()}."
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("grid-in must be numeric")
         return Item("GEO.circle.convert", "circle measures", "medium", seed, stem, "spr", key,
                     key.gridin(), rationale, params=P)
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.circle.convert", "circle measures", "medium", seed, stem, "mcq", key,
                 letter, rationale, choices, reasons, latex, params=P)
 
 
-def formula_solve(rng: random.Random, seed: int, *, a=None, b=None, volume=None) -> Item:
+def formula_solve(rng: random.Random, seed: int, *, a=None, b=None, volume=None,
+                  ounces=None, wrongs=None) -> Item:
     """A nonstandard volume formula is supplied; solve it for its variable.
 
     The tested skill is substituting into a given formula and taking a cube
@@ -383,18 +504,28 @@ def formula_solve(rng: random.Random, seed: int, *, a=None, b=None, volume=None)
     P = {"kind": "formula_solve", "a": a, "b": b, "volume": volume}
     vessel = rng.choice(["glass", "vase", "tumbler", "beaker"])
     stem = (f"The {vessel} pictured above can hold a maximum volume of {volume} cubic "
-            f"centimeters. Its volume is given by Volume = {a}πk³⁄{b}, where k is the "
+            f"centimeters"
+            + (f", which is approximately {ounces} fluid ounces" if ounces else "")
+            + f". Its volume is given by Volume = {a}πk³⁄{b}, where k is the "
             f"height in centimeters. What is the value of k, in centimeters?")
     def approx(x): return E(Fraction(round(x * 100), 100))
-    mistakes = [Mis("ignored the coefficient and took the cube root of the volume alone",
-                    approx(volume ** (1 / 3))),
-                Mis("left pi out of the calculation", approx((b * volume / a) ** (1 / 3))),
-                Mis("inverted the coefficient", approx((a * volume / (b * math.pi)) ** (1 / 3))),
-                Mis("took a square root instead of a cube root",
-                    approx((b * volume / (a * math.pi)) ** (1 / 2)))]
+    pool = {
+        "cube_root_only": Mis("ignored the coefficient and took the cube root of the "
+                              "volume alone", approx(volume ** (1 / 3))),
+        "no_pi": Mis("left pi out of the calculation", approx((b * volume / a) ** (1 / 3))),
+        "inverted": Mis("inverted the coefficient",
+                        approx((a * volume / (b * math.pi)) ** (1 / 3))),
+        "square_root": Mis("took a square root instead of a cube root",
+                           approx((b * volume / (a * math.pi)) ** (1 / 2))),
+        "cone": Mis("used the cone formula ⅓πk³ instead of the one printed",
+                    approx((3 * volume / math.pi) ** (1 / 3))),
+        "ounces_root": Mis("took the cube root of the volume in fluid ounces rather "
+                           "than in cubic centimeters",
+                           approx(ounces ** (1 / 3)) if ounces else None),
+    }
     rationale = (f"{a}πk³/{b} = {volume} gives k³ = {b}({volume})/({a}π), so "
-                 f"k ~= {key.plain()}.")
+                 f"k ~= {float(key):.2f}.")
     choices, latex, reasons, letter = assemble(
-        key, mistakes, rng, fmt_value=lambda v: f"{float(v):.2f}")
+        key, pick(pool, wrongs), rng, fmt_value=lambda v: f"{float(v):.2f}")
     return Item("GEO.context.formula_solve", "solving a supplied formula", "hard", seed, stem,
                 "mcq", key, letter, rationale, choices, reasons, latex, params=P)

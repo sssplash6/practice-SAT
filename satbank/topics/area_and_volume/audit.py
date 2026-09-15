@@ -26,8 +26,11 @@ def measure_forward(p: dict):
     v = _measure(p["shape"], p["measure"], p["dims"])
     if p.get("ask_coefficient"):
         v /= math.pi
-    if p.get("approximate"):
-        v = sig3(v)
+    near = p.get("approximate")
+    if near:
+        # True is three significant figures; a number is the unit the source
+        # rounds every option to -- 3.14 rounds to the nearest hundred
+        v = sig3(v) if near is True else round(v / near) * near
     return v
 
 

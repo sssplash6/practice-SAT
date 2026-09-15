@@ -18,6 +18,7 @@ from ....exact import E, PI, Exact
 from ....figures import cylinder_rh, two_rectangles
 from ....item import Item, ItemError, Mis, assemble, assemble_text
 from ....shapes import UNITS, Unit, unit_noun
+from ..kit import decimal_text, pick
 
 __all__ = ["similar_linear", "similar_area", "solid_scaling", "percent_change"]
 
@@ -25,18 +26,19 @@ TRIPLES = [("ABC", "DEF"), ("TUV", "XYZ"), ("JKL", "RST"), ("PQR", "LMN")]
 QUADS = [("ABCD", "PQRS"), ("ABCD", "EFGH"), ("JKLM", "WXYZ")]
 
 
-def _wrong_powers(base: Exact, k: Fraction, correct_power: int) -> list[Mis]:
-    """The core misconception set: right idea, wrong power of k."""
+def _wrong_powers(base: Exact, k: Fraction, correct_power: int) -> dict[str, Mis]:
+    """The core misconception pool: right idea, wrong power of k."""
     names = {1: "the length ratio", 2: "the square of the ratio", 3: "the cube of the ratio"}
-    out = []
+    keys = {1: "linear", 2: "square", 3: "cube"}
+    out: dict[str, Mis] = {}
     for p in (1, 2, 3):
         if p == correct_power:
             continue
-        out.append(Mis(f"scaled by {names[p]} instead of {names[correct_power]}",
-                       base * E(k ** p)))
-    out.append(Mis("scaled in the wrong direction (divided instead of multiplied)",
-                   base / E(k ** correct_power)))
-    out.append(Mis("left the value unchanged", base))
+        out[keys[p]] = Mis(f"scaled by {names[p]} instead of {names[correct_power]}",
+                           base * E(k ** p))
+    out["down"] = Mis("scaled in the wrong direction (divided instead of multiplied)",
+                      base / E(k ** correct_power))
+    out["unchanged"] = Mis("left the value unchanged", base)
     return out
 
 
@@ -44,7 +46,7 @@ def _wrong_powers(base: Exact, k: Fraction, correct_power: int) -> list[Mis]:
 
 def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None,
                    unit: Unit | None = None, fmt="mcq", k=None, base=None,
-                   side=None, p1=None, sl=None) -> Item:
+                   side=None, p1=None, sl=None, wrongs=None) -> Item:
     """Similar figures, linear ratio k, ask for a length or a perimeter."""
     presentation = presentation or rng.choice(["relation", "table", "two_sides", "rect_figure"])
     ask = ask or rng.choice(["perimeter", "side"])
@@ -60,7 +62,9 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
                 f"{'' if k == 1 else k}{a[0]}{a[1]} and the perimeter of triangle {a} is "
                 f"{base_perim.plain()}, what is the perimeter of triangle {b}?")
         P = {"kind": "similar_linear", "scaled": float(base_perim), "k": float(k)}
-        mistakes = _wrong_powers(base_perim, k, 1)
+        pool = _wrong_powers(base_perim, k, 1)
+        pool["three_sides"] = Mis("scaled the perimeter, then multiplied by 3 for the "
+                                  "three sides as well", base_perim * E(k) * E(3))
         rationale = (f"Corresponding sides are in ratio {k}, so perimeters are too: "
                      f"{base_perim.plain()} × {k} = {key.plain()}.")
         table = None
@@ -75,8 +79,9 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
                 f"{side.plain()}. What is the length of {b[0]}{b[1]}?")
         table = [["", "Perimeter"], [f"Triangle {a}", p1.plain()], [f"Triangle {b}", p2.plain()]]
         P = {"kind": "similar_linear", "scaled": float(side), "k": float(k)}
-        mistakes = _wrong_powers(side, k, 1) + [
-            Mis("added the two perimeters to the given side", side + p1)]
+        pool = _wrong_powers(side, k, 1)
+        pool["plus_perimeter"] = Mis("added the smaller triangle's perimeter to the "
+                                     "given side", side + p1)
         rationale = (f"The perimeters give ratio {p2.plain()}/{p1.plain()} = {k}, so "
                      f"{b[0]}{b[1]} = {side.plain()} × {k} = {key.plain()}.")
     elif presentation == "rect_figure":
@@ -93,19 +98,23 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
                 f"side AD?")
         table = None
         P = {"kind": "similar_linear", "scaled": float(sl), "k": float(kk)}
-        mistakes = [Mis("used the ratio upside down", E(sl) / kk),
-                    Mis("added the difference of the marked sides instead of scaling",
+        pool = {
+            "down": Mis("used the ratio upside down", E(sl) / kk),
+            "diff": Mis("added the difference of the marked sides instead of scaling",
                         E(sl) + bw - E(sw)),
-                    Mis("gave the corresponding side unchanged", E(sl)),
-                    Mis("scaled by the square of the ratio", E(sl) * kk * kk),
-                    Mis("gave the marked side of the larger rectangle", bw)]
+            "unchanged": Mis("gave the corresponding side unchanged", E(sl)),
+            "square": Mis("scaled by the square of the ratio", E(sl) * kk * kk),
+            "marked": Mis("gave the marked side of the larger rectangle", bw),
+            "product": Mis("multiplied the two marked sides instead of using their "
+                           "ratio", E(sw) * bw),
+        }
         rationale = (f"The marked sides give ratio {bw.plain()}/{sw} = {kk.plain()}, so "
                      f"AD = {sl} × {kk.plain()} = {key.plain()}.")
         fig = two_rectangles(f"{bw.plain()} in", f"{sw} in", f"{sl} in")
         if fmt == "spr":
             return Item("GEO.similar.linear", "similar figures", "medium", seed, stem, "spr",
                         key, key.gridin(), rationale, figure=fig, params=P)
-        choices, latex, reasons, letter = assemble(key, mistakes, rng)
+        choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
         return Item("GEO.similar.linear", "similar figures", "medium", seed, stem, "mcq", key,
                     letter, rationale, choices, reasons, latex, figure=fig, params=P)
     else:  # two_sides -- a corresponding pair fixes k, then scale the perimeter
@@ -120,15 +129,18 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
                 f"of side {b[0]}{b[1]} is {s2.plain()}. What is the perimeter of triangle {b}?")
         table = None
         P = {"kind": "similar_linear", "scaled": float(perim), "k": float(k)}
-        mistakes = _wrong_powers(perim, k, 1) + [
-            Mis("multiplied the perimeter by the side length instead of the ratio", perim * s1)]
+        pool = _wrong_powers(perim, k, 1)
+        pool["side_as_k"] = Mis("used the given side length as the scale factor",
+                                perim * s1)
+        pool["side_as_k_sq"] = Mis("used the given side length as the scale factor and "
+                                   "squared it", perim * s1 * s1)
         rationale = (f"The ratio is {s2.plain()}/{s1.plain()} = {k}, so the perimeter of {b} "
                      f"is {perim.plain()} × {k} = {key.plain()}.")
 
     if fmt == "spr":
         return Item("GEO.similar.linear", "similar figures", "easy", seed, stem, "spr",
                     key, key.gridin(), rationale, table=table, params=P)
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.similar.linear", "similar figures", "easy", seed, stem, "mcq", key,
                 letter, rationale, choices, reasons, latex, table=table, params=P)
 
@@ -136,7 +148,7 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
 # ------------------------------------------------------------------- areas
 
 def similar_area(rng: random.Random, seed: int, *, direction=None, shape=None,
-                 fmt="mcq", k=None, area=None, side=None) -> Item:
+                 fmt="mcq", k=None, area=None, side=None, wrongs=None) -> Item:
     """Areas scale by k**2 -- forwards, or backwards from an area ratio."""
     direction = direction or rng.choice(["area_from_ratio", "ratio_from_sides", "side_from_areas"])
     if direction == "side_from_areas":
@@ -156,17 +168,23 @@ def similar_area(rng: random.Random, seed: int, *, direction=None, shape=None,
                 f"centimeters, of {shape} {b}?")
         P = {"kind": "similar_area", "mode": "area_from_ratio", "base": float(area1),
              "k": float(k)}
-        mistakes = _wrong_powers(area1, k, 2)
+        pool = _wrong_powers(area1, k, 2)
+        pool["plus_ratio"] = Mis("added the scale factor to the area instead of "
+                                 "multiplying by its square", area1 + E(k))
+        pool["plus_area"] = Mis("added the original area to the scaled area",
+                                area1 + area1 * E(k ** 2))
         rationale = f"Areas scale by the square of the ratio: {area1.plain()} x {k}² = {key.plain()}."
     elif direction == "ratio_from_sides":
         key = E(k ** 2)
         stem = (f"Square A has side lengths that are {k} times the side lengths of square B. "
                 f"The area of square A is m times the area of square B. What is the value of m?")
         P = {"kind": "similar_area", "mode": "ratio_from_sides", "k": float(k)}
-        mistakes = [Mis("gave the length ratio instead of the area ratio", E(k)),
-                    Mis("doubled the length ratio", E(2 * k)),
-                    Mis("halved the length ratio", E(Fraction(k, 2))),
-                    Mis("cubed the ratio as if it were a volume", E(k ** 3))]
+        pool = {
+            "linear": Mis("gave the length ratio instead of the area ratio", E(k)),
+            "double": Mis("doubled the length ratio", E(2 * k)),
+            "half": Mis("halved the length ratio", E(Fraction(k, 2))),
+            "cube": Mis("cubed the ratio as if it were a volume", E(k ** 3)),
+        }
         rationale = f"Area ratio is the square of the length ratio: {k}² = {key.plain()}."
     else:  # side_from_areas -- k comes out of a square root
         k2 = k ** 2
@@ -182,17 +200,20 @@ def similar_area(rng: random.Random, seed: int, *, direction=None, shape=None,
                 f"side of {shape} {b}?")
         P = {"kind": "similar_area", "mode": "side_from_areas", "big_side": float(big_side),
              "k": float(k)}
-        mistakes = [Mis("used the area ratio as the length ratio", big_side / E(k2)),
-                    Mis("gave the area ratio itself", E(k2)),
-                    Mis("left the length unchanged", big_side),
-                    Mis("multiplied instead of divided", big_side * E(k))]
+        pool = {
+            "area_ratio_as_length": Mis("used the area ratio as the length ratio",
+                                        big_side / E(k2)),
+            "ratio_itself": Mis("gave the area ratio itself", E(k2)),
+            "unchanged": Mis("left the length unchanged", big_side),
+            "multiplied": Mis("multiplied instead of divided", big_side * E(k)),
+        }
         rationale = (f"Area ratio {area_big.plain()}/{area_small.plain()} = {k2}, so the length "
                      f"ratio is {k}, and {big_side.plain()}/{k} = {key.plain()}.")
 
     if fmt == "spr":
         return Item("GEO.similar.area", "similar figures", "medium", seed, stem, "spr",
                     key, key.gridin(), rationale, params=P)
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.similar.area", "similar figures", "medium", seed, stem, "mcq", key,
                 letter, rationale, choices, reasons, latex, params=P)
 
@@ -200,7 +221,7 @@ def similar_area(rng: random.Random, seed: int, *, direction=None, shape=None,
 # ------------------------------------------------------- solids: k**3 and mixed
 
 def solid_scaling(rng: random.Random, seed: int, *, mode=None, fmt="mcq",
-                  rf=None, hf=None, v=None, pair=None) -> Item:
+                  rf=None, hf=None, v=None, pair=None, wrongs=None) -> Item:
     """A cylinder whose radius and height scale by different factors."""
     mode = mode or rng.choice(["volume_multiple", "which_pair"])
     if mode == "volume_multiple":
@@ -214,14 +235,17 @@ def solid_scaling(rng: random.Random, seed: int, *, mode=None, fmt="mcq",
                 f"{_times(rf)} the radius and {_times(hf)} the height of cylinder A?")
         P = {"kind": "solid_scaling", "mode": "volume_multiple", "v": float(v),
              "rf": float(rf), "hf": float(hf)}
-        mistakes = [Mis("scaled the radius linearly instead of squaring it", v * E(rf * hf)),
-                    Mis("applied the radius factor only", v * E(rf ** 2)),
-                    Mis("applied the height factor only", v * E(hf)),
-                    Mis("cubed the radius factor", v * E(rf ** 3 * hf)),
-                    Mis("left the volume unchanged", v)]
+        pool = {
+            "linear_radius": Mis("scaled the radius linearly instead of squaring it",
+                                 v * E(rf * hf)),
+            "radius_only": Mis("applied the radius factor only", v * E(rf ** 2)),
+            "height_only": Mis("applied the height factor only", v * E(hf)),
+            "cube_radius": Mis("cubed the radius factor", v * E(rf ** 3 * hf)),
+            "unchanged": Mis("left the volume unchanged", v),
+        }
         rationale = (f"Volume scales by (radius factor)² × (height factor) = {rf}² × {hf} = "
                      f"{factor}, so {v.plain()} x {factor} = {key.plain()}.")
-        choices, latex, reasons, letter = assemble(key, mistakes, rng)
+        choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
         return Item("GEO.scaling.cylinder", "solid scaling", "hard", seed, stem, "mcq", key,
                     letter, rationale, choices, reasons, latex, params=P)
 
@@ -235,10 +259,15 @@ def solid_scaling(rng: random.Random, seed: int, *, mode=None, fmt="mcq",
             f"large as the volume of the cylinder shown. Which of the following could represent "
             f"the radius R, in terms of r, and the height H, in terms of h, of the second "
             f"cylinder?")
-    mistakes = [Mis(f"swapped the factors ({b}^2 x {a} = {b*b*a}, not {mult})", f"R = {b}r and H = {a}h"),
-                Mis(f"squared the height factor instead of the radius factor", f"R = {b}r and H = {a*a}h"),
-                Mis(f"put the squared factor on the radius as well", f"R = {a*a}r and H = {b}h")]
-    choices, reasons, letter = assemble_text(key_text, mistakes, rng)
+    pool = {
+        "swapped": Mis(f"swapped the factors ({b}^2 x {a} = {b*b*a}, not {mult})",
+                       f"R = {b}r and H = {a}h"),
+        "square_height": Mis("squared the height factor instead of the radius factor",
+                             f"R = {b}r and H = {a*a}h"),
+        "square_both": Mis("put the squared factor on the radius as well",
+                           f"R = {a*a}r and H = {b}h"),
+    }
+    choices, reasons, letter = assemble_text(key_text, pick(pool, wrongs), rng)
     return Item("GEO.scaling.which_pair", "solid scaling", "hard", seed, stem, "mcq",
                 E(mult), letter,
                 f"V = πR²H = π({a}r)²({b}h) = {mult}πr²h.",
@@ -253,7 +282,7 @@ def _times(f: Fraction) -> str:
 # ------------------------------------------------------------ percent change
 
 def percent_change(rng: random.Random, seed: int, *, fmt=None, pct=None,
-                   area=None, up=None) -> Item:
+                   area=None, up=None, wrongs=None) -> Item:
     """Both dimensions change by p%; the area changes by (1 + p/100)**2."""
     fmt = fmt or rng.choice(["spr", "mcq"])
     pct = pct or rng.choice([10, 20, 25, 30, 40, 50])
@@ -267,15 +296,21 @@ def percent_change(rng: random.Random, seed: int, *, fmt=None, pct=None,
     stem = (f"A rectangular {thing} has an area of {area.plain()} square inches. A copy of the "
             f"{thing} is made in which the length and width of the original {thing} are each "
             f"{word} by {pct}%. What is the area, in square inches, of the copy?")
-    mistakes = [Mis("applied the percent change once instead of to both dimensions", area * E(ratio)),
-                Mis(f"{word} the area by {pct}% twice, additively", area * E(1 + 2 * (ratio - 1))),
-                Mis("cubed the ratio as if it were a volume", area * E(ratio ** 3)),
-                Mis("left the area unchanged", area)]
+    pool = {
+        "once": Mis("applied the percent change once instead of to both dimensions",
+                    area * E(ratio)),
+        "additive": Mis(f"{word} the area by {pct}% twice, additively",
+                        area * E(1 + 2 * (ratio - 1))),
+        "cube": Mis("cubed the ratio as if it were a volume", area * E(ratio ** 3)),
+        "unchanged": Mis("left the area unchanged", area),
+    }
     rationale = (f"Each dimension is multiplied by {ratio}, so the area is multiplied by "
-                 f"({ratio})² = {ratio**2}: {area.plain()} × {ratio**2} = {key.plain()}.")
+                 f"({ratio})² = {ratio**2}: {area.plain()} × {ratio**2} = "
+                 f"{decimal_text(key)}.")
     if fmt == "spr":
         return Item("GEO.scaling.percent", "area scaling", "hard", seed, stem, "spr", key,
                     key.gridin(), rationale, params=P)
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng,
+                                               fmt_value=decimal_text)
     return Item("GEO.scaling.percent", "area scaling", "hard", seed, stem, "mcq", key, letter,
                 rationale, choices, reasons, latex, params=P)

@@ -13,6 +13,7 @@ from fractions import Fraction
 from ....exact import E, PI, Exact
 from ....figures import coordinate_grid
 from ....item import Item, ItemError, Mis, assemble
+from ..kit import decimal_text, pick
 from ....shapes import UNITS
 
 __all__ = ["circle_from_points", "triangle_from_points", "square_on_axes", "leg_from_area"]
@@ -36,7 +37,7 @@ CIRCLE_STEMS = [
 
 
 def circle_from_points(rng: random.Random, seed: int, *, fmt=None, r=None,
-                       center=None, ask=None) -> Item:
+                       center=None, ask=None, wrongs=None) -> Item:
     """Three points fix a circle; the answer is its circumference as k*pi.
 
     The source builds these the same way every time: two points are the ends of
@@ -57,23 +58,28 @@ def circle_from_points(rng: random.Random, seed: int, *, fmt=None, r=None,
     rationale = (f"The points lie on a circle centered at ({cx}, {cy}) with radius {r}, so "
                  f"{formula} gives k = {key.plain()}.")
     other = E(r * r) if ask == "circumference" else E(2 * r)
-    mistakes = [Mis("gave the radius instead", E(r)),
-                Mis(f"used the {'area' if ask == 'circumference' else 'circumference'} "
-                    f"coefficient instead", other),
-                Mis("doubled the correct value", key * E(2)),
-                Mis("miscounted the radius by one grid square",
-                    E(2 * (r + 1)) if ask == "circumference" else E((r + 1) ** 2))]
+    pool = {
+        "radius": Mis("gave the radius instead", E(r)),
+        "other_measure": Mis(f"used the {'area' if ask == 'circumference' else 'circumference'} "
+                             f"coefficient instead", other),
+        "centre_x": Mis("read the centre's x-coordinate off the grid instead of "
+                        "measuring the circle", E(cx)),
+        "doubled": Mis("doubled the correct value", key * E(2)),
+        "off_by_one": Mis("miscounted the radius by one grid square",
+                          E(2 * (r + 1)) if ask == "circumference" else E((r + 1) ** 2)),
+    }
     if fmt == "spr":
         return Item("GEO.coord.circle_3pt", "circles in the plane", "medium", seed, stem,
                     "spr", key, key.gridin(), rationale, figure=fig, params=P)
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.coord.circle_3pt", "circles in the plane", "medium", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex, figure=fig, params=P)
 
 
 # ------------------------------------------------------- triangle from points
 
-def triangle_from_points(rng: random.Random, seed: int, *, fmt=None, pts=None) -> Item:
+def triangle_from_points(rng: random.Random, seed: int, *, fmt=None, pts=None,
+                         wrongs=None) -> Item:
     fmt = fmt or rng.choice(["spr", "mcq"])
     given = pts
     for _ in range(200):
@@ -106,15 +112,24 @@ def triangle_from_points(rng: random.Random, seed: int, *, fmt=None, pts=None) -
     ])
     fig = coordinate_grid(xmin, xmax, ymin, ymax, points=pts, step=1 if xmax - xmin < 9 else 2)
     rationale = (f"With vertices ({x1}, {y1}), ({x2}, {y2}) and ({x3}, {y3}), the area is "
-                 f"|{cross}|/2 = {key.plain()}.")
-    mistakes = [Mis("omitted the one half", key * E(2)),
-                Mis("found the area of the bounding rectangle", box),
-                Mis("halved twice", key / E(2)),
-                Mis("subtracted the bounding rectangle from the triangle", box - key)]
+                 f"|{cross}|/2 = {decimal_text(key)}.")
+    wide = E(max(x1, x2, x3) - min(x1, x2, x3))
+    tall = E(max(y1, y2, y3) - min(y1, y2, y3))
+    pool = {
+        "no_half": Mis("omitted the one half", key * E(2)),
+        "box": Mis("found the area of the bounding rectangle", box),
+        "quarter": Mis("halved twice", key / E(2)),
+        "half_box": Mis("assumed the triangle was half the rectangle around it",
+                        box / E(2)),
+        "add_box": Mis("added the width and the height of the rectangle around the "
+                       "triangle instead of multiplying them", wide + tall),
+        "box_minus": Mis("subtracted the bounding rectangle from the triangle", box - key),
+    }
     if fmt == "spr":
         return Item("GEO.coord.triangle_area", "area in the plane", "hard", seed, stem, "spr",
                     key, key.gridin(), rationale, figure=fig, params=P)
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng,
+                                               fmt_value=decimal_text)
     return Item("GEO.coord.triangle_area", "area in the plane", "hard", seed, stem, "mcq", key,
                 letter, rationale, choices, reasons, latex, figure=fig, params=P)
 
@@ -122,7 +137,7 @@ def triangle_from_points(rng: random.Random, seed: int, *, fmt=None, pts=None) -
 # --------------------------------------------------- square with axis diagonals
 
 def square_on_axes(rng: random.Random, seed: int, *, fmt="mcq", a=None, b=None,
-                   ask=None, center=None) -> Item:
+                   ask=None, center=None, wrongs=None) -> Item:
     """A quadrilateral whose diagonals lie along (or parallel to) the axes.
 
     Half-diagonals a and b give area 2ab and side sqrt(a^2 + b^2). Equal
@@ -162,25 +177,33 @@ def square_on_axes(rng: random.Random, seed: int, *, fmt="mcq", a=None, b=None,
     ])
 
     if ask == "area":
-        mistakes = [Mis("used the half-diagonals as the side lengths", E(a * b)),
-                    Mis("multiplied the full diagonals without halving", E(4 * a * b)),
-                    Mis("added the diagonals instead of multiplying", E(2 * (a + b))),
-                    Mis("used one diagonal only", E(2 * max(a, b)))]
+        pool = {
+            "half_diagonals": Mis("used the half-diagonals as the side lengths", E(a * b)),
+            "no_halving": Mis("multiplied the full diagonals without halving",
+                              E(4 * a * b)),
+            "added": Mis("added the diagonals instead of multiplying", E(2 * (a + b))),
+            "one_diagonal": Mis("used one diagonal only", E(2 * max(a, b))),
+            "perimeter": Mis("gave the perimeter instead of the area", E(4) * side),
+        }
         rationale = (f"The diagonals have lengths {2*a} and {2*b}, and a {noun} with diagonals "
                      f"p and q has area pq/2 = {2*a}({2*b})/2 = {key.plain()}.")
     elif ask == "side":
-        mistakes = [Mis("added the half-diagonals instead of using the Pythagorean theorem",
-                        E(a + b)),
-                    Mis("used a full diagonal as the side", E(2) * side),
-                    Mis("gave the area instead of a side", E(2 * a * b)),
-                    Mis("halved the side", side / E(2))]
+        pool = {
+            "added": Mis("added the half-diagonals instead of using the Pythagorean "
+                         "theorem", E(a + b)),
+            "full_diagonal": Mis("used a full diagonal as the side", E(2) * side),
+            "area": Mis("gave the area instead of a side", E(2 * a * b)),
+            "halved": Mis("halved the side", side / E(2)),
+        }
         rationale = (f"Half of each diagonal is {a} and {b}, so a side is "
                      f"sqrt({a}^2 + {b}^2) = {side.plain()}.")
     else:
-        mistakes = [Mis("gave one side instead of the perimeter", side),
-                    Mis("used two sides only", E(2) * side),
-                    Mis("added the four half-diagonals", E(2 * (a + b))),
-                    Mis("gave the area instead of the perimeter", E(2 * a * b))]
+        pool = {
+            "one_side": Mis("gave one side instead of the perimeter", side),
+            "two_sides": Mis("used two sides only", E(2) * side),
+            "half_diagonals": Mis("added the four half-diagonals", E(2 * (a + b))),
+            "area": Mis("gave the area instead of the perimeter", E(2 * a * b)),
+        }
         rationale = (f"Each side is sqrt({a}^2 + {b}^2) = {side.plain()}, so the perimeter is "
                      f"4({side.plain()}) = {key.plain()}.")
 
@@ -188,7 +211,7 @@ def square_on_axes(rng: random.Random, seed: int, *, fmt="mcq", a=None, b=None,
     if fmt == "spr":
         return Item("GEO.coord.quad_diagonals", "area in the plane", "medium", seed, stem,
                     "spr", key, key.gridin(), rationale, figure=fig, params=P)
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.coord.quad_diagonals", "area in the plane", "medium", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex, figure=fig, params=P)
 
@@ -196,7 +219,7 @@ def square_on_axes(rng: random.Random, seed: int, *, fmt="mcq", a=None, b=None,
 # ------------------------------------------------- right triangle leg from area
 
 def leg_from_area(rng: random.Random, seed: int, *, fmt="mcq", dx=None, dy=None,
-                  other=None) -> Item:
+                  other=None, wrongs=None) -> Item:
     """A drawn segment is one leg; the area is given; find the other leg.
 
     The drawn leg is usually irrational, which is what makes the item hard --
@@ -229,11 +252,13 @@ def leg_from_area(rng: random.Random, seed: int, *, fmt="mcq", dx=None, dy=None,
     rationale = (f"The drawn leg has length √({dx}² + {dy}²) = {leg1.plain()}. "
                  f"From A = ½(leg₁)(leg₂): leg₂ = 2({area.plain()})/{leg1.plain()} "
                  f"= {key.plain()}.")
-    mistakes = [Mis("divided the area by the leg without doubling", key / E(2)),
-                Mis("gave the length of the drawn leg", leg1),
-                Mis("halved the area instead of doubling it", area / E(2)),
-                Mis("used the horizontal run as the drawn leg", E(2) * area / E(dx)),
-                Mis("used the vertical rise as the drawn leg", E(2) * area / E(dy))]
-    choices, latex, reasons, letter = assemble(key, mistakes, rng)
+    pool = {
+        "no_doubling": Mis("divided the area by the leg without doubling", key / E(2)),
+        "drawn_leg": Mis("gave the length of the drawn leg", leg1),
+        "half_area": Mis("halved the area instead of doubling it", area / E(2)),
+        "run": Mis("used the horizontal run as the drawn leg", E(2) * area / E(dx)),
+        "rise": Mis("used the vertical rise as the drawn leg", E(2) * area / E(dy)),
+    }
+    choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.coord.leg_from_area", "right triangles in the plane", "hard", seed, stem,
                 "mcq", key, letter, rationale, choices, reasons, latex, figure=fig, params=P)
