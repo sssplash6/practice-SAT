@@ -188,6 +188,29 @@ That topic's checker also reads its own SVG back — recovering the drawn lines
 from the figure's pixel geometry — so a figure that drifts from its answer is
 caught too. Do the same where a figure carries part of the question.
 
+## Anything that says "closest" or "nearest" needs a guard
+
+Three topics shipped items whose printed page cannot produce the key, and all
+three were green on every check:
+
+* a "closest to the difference" stem where the true value landed exactly on a
+  half-tenth and **both** neighbouring tenths were printed — one item in
+  thirty-four had no answer;
+* a wage over 9.5 paid hours landing on a half-cent, so the page read $206.62
+  where the key needs $206.625;
+* "to the nearest whole percent" landing on 92.5%, keyed 93, which is 92 under
+  round-half-to-even.
+
+The audit cannot see any of them: it re-derives from the parameters, never
+from the string the student reads. So a template whose stem says *closest*,
+*nearest*, *approximately*, or which prints money, must refuse a draw whose
+exact value sits halfway between two printable answers. `percentages` has the
+helper — `values.unambiguous(value, step)` — and `ratios` uses it verbatim.
+
+The same rule covers reading a chart: if two options are closer together than
+the chart's own gridline spacing, no reader can separate them. Linear
+Functions offered 24 against 25 on an axis gridlined every ten.
+
 ## Rules
 
 1. **Do not edit anything outside `satbank/topics/<slug>/` and your transcript.**
