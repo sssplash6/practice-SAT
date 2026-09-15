@@ -16,7 +16,9 @@ from __future__ import annotations
 import random
 
 from ....item import Item, ItemError
-from ..values import Q, dec, mcq, places_needed, q, snap, spr, text_mcq
+from ....plot import line_graph
+from ..values import (Q, dec, mcq, pick, places_needed, q, snap, spr,
+                      text_mcq, unambiguous)
 
 __all__ = ["table_share", "percent_table", "series_change", "conclusion"]
 
@@ -104,7 +106,7 @@ def _table(rows, cols, counts, corner="", totals_col=True):
 
 def table_share(rng: random.Random, seed: int, *, scenario=None, counts=None, ask=None,
                 row=None, col=None, rows_a=None, rows_b=None, fmt=None, places=None,
-                ctx=None) -> Item:
+                ctx=None, wrongs=None) -> Item:
     """A percent whose denominator the student has to pick out of the table."""
     ask = ask or rng.choices(["row_share", "ratio", "group_diff"], weights=[4, 3, 3])[0]
 
@@ -129,15 +131,17 @@ def table_share(rng: random.Random, seed: int, *, scenario=None, counts=None, as
             raise ItemError("this percent does not print in two decimals")
         if places is not None:
             key = snap(key, Q(1, 10) ** places)
-        mistakes = [
-            (f"divided the two counts the other way round", 100 * b / a),
-            ("subtracted the two counts and read the difference as the percent",
-             abs(a - b) if abs(a - b) <= 400 else None),
-            (f"compared {word.lower()} {labels[ib]} with the whole table instead of with "
-             f"{word.lower()} {labels[ia]}", 100 * a / total),
-            ("found the percent by which one count exceeds the other, not the percent it "
-             "is of it", 100 * abs(a - b) / b),
-        ]
+        pool = {
+            "inverted": ("divided the two counts the other way round", 100 * b / a),
+            "difference": ("subtracted the two counts and read the difference as the "
+                           "percent", abs(a - b) if abs(a - b) <= 400 else None),
+            "against_the_table": (f"compared {word.lower()} {labels[ib]} with the whole "
+                                  f"table instead of with {word.lower()} {labels[ia]}",
+                                  100 * a / total),
+            "excess": ("found the percent by which one count exceeds the other, not the "
+                       "percent it is of it", 100 * abs(a - b) / b),
+        }
+        order = ["inverted", "difference", "against_the_table", "excess"]
         rationale = (f"{dec(a, 0)}/{dec(b, 0)} = {dec(key / 100, places_needed(key / 100, 6))}, "
                      f"so p = {dec(key, places_needed(key, 4))}.")
         P = {"kind": "pct_table", "ask": "ratio", "a": float(a), "b": float(b),
@@ -161,20 +165,22 @@ def table_share(rng: random.Random, seed: int, *, scenario=None, counts=None, as
             i = row if row is not None else rng.randrange(len(rows))
             j = col if col is not None else rng.randrange(len(cols))
             places = 0 if places is None else places
-            key = snap(100 * q(counts[i][j]) / row_tot[i], 1)
+            key = unambiguous(100 * q(counts[i][j]) / row_tot[i], 1)
             who = sc["own"].format(row=rows[i])
             stem = (f"{lead} According to the table, to the nearest whole percent, what "
                     f"percent of {who} {sc['verb']} {sc['colref'][j]}?")
-            mistakes = [
-                ("divided by the total for the whole table instead of by the total for "
-                 f"{rows[i]}", 100 * q(counts[i][j]) / grand),
-                ("read the count in the cell as the percent",
-                 q(counts[i][j]) if counts[i][j] <= 150 else None),
-                (f"divided by the total for the {cols[j]} column instead of by the total "
-                 f"for {rows[i]}", 100 * q(counts[i][j]) / col_tot[j]),
-                (f"gave {rows[i]}'s share of the whole table rather than the share asked "
-                 "about", 100 * q(row_tot[i]) / grand),
-            ]
+            pool = {
+                "grand_total": ("divided by the total for the whole table instead of by "
+                                f"the total for {rows[i]}", 100 * q(counts[i][j]) / grand),
+                "cell_as_percent": ("read the count in the cell as the percent",
+                                    q(counts[i][j]) if counts[i][j] <= 150 else None),
+                "column_total": (f"divided by the total for the {cols[j]} column instead "
+                                 f"of by the total for {rows[i]}",
+                                 100 * q(counts[i][j]) / col_tot[j]),
+                "row_of_table": (f"gave {rows[i]}'s share of the whole table rather than "
+                                 "the share asked about", 100 * q(row_tot[i]) / grand),
+            }
+            order = ["grand_total", "cell_as_percent", "column_total", "row_of_table"]
             rationale = (f"{counts[i][j]:,} of {rows[i]}'s {row_tot[i]:,} {sc['unit']} is "
                          f"{dec(100 * q(counts[i][j]) / row_tot[i], 2)}%, which is "
                          f"{dec(key, 0)}% to the nearest whole percent.")
@@ -192,23 +198,27 @@ def table_share(rng: random.Random, seed: int, *, scenario=None, counts=None, as
             a_tot = sum(row_tot[i] for i in ga)
             b_tot = sum(row_tot[i] for i in gb)
             pa, pb = 100 * q(a_cell) / a_tot, 100 * q(b_cell) / b_tot
-            key = snap(abs(pa - pb), 1)
+            key = unambiguous(abs(pa - pb), 1)
             if key == 0:
                 raise ItemError("the two groups answer at the same rate")
             g1, g2 = sc["groups"]
             stem = (f"{lead} Which of the following is closest to the difference between "
                     f"the percentage of {g1} who responded with {sc['colref'][j]} and the "
                     f"percentage of {g2} who responded with {sc['colref'][j]}?")
-            mistakes = [
-                ("divided both counts by the total for the whole table instead of by each "
-                 "group's own total", snap(abs(100 * q(a_cell) / grand
-                                               - 100 * q(b_cell) / grand), 1)),
-                ("divided the difference in the counts by the column total",
-                 snap(100 * q(abs(a_cell - b_cell)) / col_tot[j], 1)),
-                ("gave the larger of the two percentages rather than the difference",
-                 snap(max(pa, pb), 1)),
-                ("added the two percentages instead of subtracting them", snap(pa + pb, 1)),
-            ]
+            pool = {
+                "both_over_grand": ("divided both counts by the total for the whole table "
+                                    "instead of by each group's own total",
+                                    snap(abs(100 * q(a_cell) / grand
+                                             - 100 * q(b_cell) / grand), 1)),
+                "diff_over_column": ("divided the difference in the counts by the column "
+                                     "total",
+                                     snap(100 * q(abs(a_cell - b_cell)) / col_tot[j], 1)),
+                "larger_share": ("gave the larger of the two percentages rather than the "
+                                 "difference", snap(max(pa, pb), 1)),
+                "shares_added": ("added the two percentages instead of subtracting them",
+                                 snap(pa + pb, 1)),
+            }
+            order = ["both_over_grand", "diff_over_column", "larger_share", "shares_added"]
             rationale = (f"{a_cell:,}/{a_tot:,} = {dec(pa, 2)}% and {b_cell:,}/{b_tot:,} = "
                          f"{dec(pb, 2)}%, a difference of {dec(abs(pa - pb), 2)}%.")
             P = {"kind": "pct_table", "ask": "group_diff", "a_cell": a_cell,
@@ -217,6 +227,7 @@ def table_share(rng: random.Random, seed: int, *, scenario=None, counts=None, as
             difficulty = "hard"
         style = "percent"
 
+    mistakes = pick(pool, order, wrongs)
     fmt = fmt or ("spr" if ask == "ratio" and rng.random() < 0.6 else "mcq")
     if fmt == "spr":
         return spr("pct.table_share", "a percent read from a table", difficulty, seed,
@@ -337,6 +348,24 @@ SERIES_CTX = [
      "period": "years", "mono": False},
 ]
 
+# The same series, drawn rather than tabulated. A line graph carries a value
+# per year for a dozen years and prints only the two the question turns on, so
+# the reader takes those two off the labels and the rest of the curve is
+# context. `places` is 0 throughout: a graph is read off gridlines.
+GRAPHED = [
+    {"what": "the total amount of snow, in inches, recorded each year in Washington, DC,",
+     "ylabel": "Annual snowfall (inches)", "noun": "annual snowfall", "places": 0},
+    {"what": "the number of rainy days recorded each year at a weather station",
+     "ylabel": "Rainy days", "noun": "number of rainy days", "places": 0},
+    {"what": "the number of nesting pairs counted each year on an island",
+     "ylabel": "Nesting pairs", "noun": "number of nesting pairs", "places": 0},
+    {"what": "the number of building permits issued each year in a county",
+     "ylabel": "Building permits issued", "noun": "number of building permits issued",
+     "places": 0},
+    {"what": "the number of manatees counted each year in a coastal survey",
+     "ylabel": "Manatees counted", "noun": "number of manatees counted", "places": 0},
+]
+
 SOLD = [("an online news service", "subscriptions", "the service"),
         ("a garden center", "rose bushes", "the center"),
         ("a bicycle shop", "touring bicycles", "the shop"),
@@ -345,7 +374,7 @@ SOLD = [("an online news service", "subscriptions", "the service"),
 
 def series_change(rng: random.Random, seed: int, *, values=None, start_year=None,
                   step=None, i=None, j=None, ask=None, fmt=None, places=None, ctx=None,
-                  multiple=None) -> Item:
+                  multiple=None, wrongs=None, show=None) -> Item:
     """A value per year, and the percent between two of the years."""
     ask = ask or rng.choices(["change", "project"], weights=[3, 2])[0]
 
@@ -369,15 +398,20 @@ def series_change(rng: random.Random, seed: int, *, values=None, start_year=None
                 f"{y0} to {y0 + 1} would be {word} the percent increase from {y0 + 1} to "
                 f"{y0 + 2}. How many {thing} did the manager expect would be sold in "
                 f"{y0 + 2}?")
-        mistakes = [
-            (f"added {'half' if multiple == 2 else 'a third'} of the previous rise in "
-             f"{thing} instead of {'half' if multiple == 2 else 'a third'} of the percent "
-             "increase", v1 + d / multiple),
-            (f"{word}d the percent increase instead of dividing it by {multiple}",
-             v1 * (1 + r * multiple)),
-            (f"added {multiple} times the previous rise in {thing}", v1 + multiple * d),
-            ("used the same percent increase again", v1 * (1 + r)),
-        ]
+        pool = {
+            "share_of_the_rise": (f"added {'half' if multiple == 2 else 'a third'} of the "
+                                  f"previous rise in {thing} instead of "
+                                  f"{'half' if multiple == 2 else 'a third'} of the "
+                                  "percent increase", v1 + d / multiple),
+            "multiplied_the_rate": (f"{word}d the percent increase instead of dividing it "
+                                    f"by {multiple}", v1 * (1 + r * multiple)),
+            "multiples_of_the_rise": (f"added {multiple} times the previous rise in "
+                                      f"{thing}", v1 + multiple * d),
+            "same_rate_again": ("used the same percent increase again", v1 * (1 + r)),
+        }
+        order = ["share_of_the_rise", "multiplied_the_rate", "multiples_of_the_rise",
+                 "same_rate_again"]
+        mistakes = pick(pool, order, wrongs)
         rationale = (f"The increase from {y0} to {y0 + 1} is "
                      f"{dec(100 * r, places_needed(100 * r, 4))}%, so the next increase is "
                      f"{dec(100 * r / multiple, places_needed(100 * r / multiple, 4))}%: "
@@ -389,17 +423,23 @@ def series_change(rng: random.Random, seed: int, *, values=None, start_year=None
         return _finish_series(rng, seed, stem, key, mistakes, rationale, P, table, fmt,
                               places, "plain", "hard")
 
-    sc = ctx if isinstance(ctx, dict) else rng.choice(SERIES_CTX)
-    step = step or rng.choice([1, 5, 10])
+    if isinstance(ctx, dict):                    # a source item names its own context
+        sc, graph = ctx, "ylabel" in ctx
+    else:
+        graph = (show or rng.choices(["table", "graph"], weights=[3, 1])[0]) == "graph"
+        sc = rng.choice(GRAPHED if graph else SERIES_CTX)
+    step = step or (1 if graph else rng.choice([1, 5, 10]))
     unit = Q(1) if sc["places"] == 0 else Q(1, 100)
     mono = sc.get("mono", False)
     if values is None:
         # the two years the question names are pinned to an exact ratio, so the
         # percent between them prints in two decimals; the other years wander,
         # except in a series that only ever rises
-        n = rng.choice([4, 5, 6, 6])
-        i = rng.randrange(n - 1) if i is None else i
-        j = i + 1 if j is None else j
+        n = rng.choice([9, 11, 13]) if graph else rng.choice([4, 5, 6, 6])
+        # on a graph the two printed labels have to stand clear of each other,
+        # so the years they name are several apart; a table can name any two
+        i = (rng.randrange(n - 4) if graph else rng.randrange(n - 1)) if i is None else i
+        j = (i + rng.choice([3, 4]) if graph else i + 1) if j is None else j
         choices = ([Q(21, 20), Q(11, 10), Q(5, 4), Q(3, 2), Q(8, 5), 2] if mono
                    else [Q(1, 2), Q(4, 5), Q(9, 10), Q(19, 20), Q(21, 20), Q(11, 10),
                          Q(5, 4), Q(3, 2), Q(8, 5), 2, Q(5, 2), 3])
@@ -409,15 +449,24 @@ def series_change(rng: random.Random, seed: int, *, values=None, start_year=None
         def drift():
             return q(rng.randrange(105, 145) if mono else rng.randrange(45, 230)) / 100
 
-        u = [rng.randrange(1, 21) * 20]
-        for _ in range(n - 1):
-            u.append(max(1, int(snap(u[-1] * drift(), 1))))
-        u[i] = -(-u[i] // den) * den                      # up to a multiple of den
-        u[j] = int(u[i] * ratio)
-        for k in range(j + 1, n):
-            u[k] = max(1, int(snap(u[k - 1] * drift(), 1)))
-        for k in range(i - 1, -1, -1):
-            u[k] = max(1, int(snap(u[k + 1] / drift(), 1)))
+        if graph:
+            # a dozen years of weather or wildlife counts: each year is its own
+            # draw around a base, the way an annual total actually behaves, and
+            # only the two the question names are pinned to each other
+            base = rng.randrange(2, 13) * 5
+            u = [rng.randrange(1, 2 * base + 1) for _ in range(n)]
+            u[i] = -(-u[i] // den) * den
+            u[j] = int(u[i] * ratio)
+        else:
+            u = [rng.randrange(1, 21) * 20]
+            for _ in range(n - 1):
+                u.append(max(1, int(snap(u[-1] * drift(), 1))))
+            u[i] = -(-u[i] // den) * den                  # up to a multiple of den
+            u[j] = int(u[i] * ratio)
+            for k in range(j + 1, n):
+                u[k] = max(1, int(snap(u[k - 1] * drift(), 1)))
+            for k in range(i - 1, -1, -1):
+                u[k] = max(1, int(snap(u[k + 1] / drift(), 1)))
         values = [x * unit for x in u]
         start_year = start_year or rng.randint(1960, 2020 - (n - 1) * step)
     else:
@@ -432,6 +481,8 @@ def series_change(rng: random.Random, seed: int, *, values=None, start_year=None
     a, b = values[i], values[j]
     if a <= 0 or b <= 0 or a == b:
         raise ItemError("the two years have to differ")
+    if graph and j - i < 3:
+        raise ItemError("two labels this close together would print on top of each other")
     key = 100 * abs(b - a) / a
     up = b > a
     if places is None and places_needed(key, 6) > 2:
@@ -439,37 +490,59 @@ def series_change(rng: random.Random, seed: int, *, values=None, start_year=None
     if places is not None:
         key = snap(key, Q(1, 10) ** places)
     years = [y0 + k * step for k in range(len(values))]
-    table = [list(sc["head"])] + [[str(years[k]), dec(values[k], sc["places"])]
-                                 for k in range(len(values))]
-    stem = (f"A table of {sc['what']} for {len(values)} different {sc['period']} is shown "
-            f"below. What was the percent {'increase' if up else 'decrease'} of the "
-            f"{sc['noun']} from {years[i]} to {years[j]}?")
-    mistakes = [
-        (f"found what the {years[i]} value is as a percent of the {years[j]} value",
-         100 * a / b),
-        (f"found what the {years[j]} value is as a percent of the {years[i]} value",
-         100 * b / a),
-        ("divided the change by the later value instead of by the earlier one",
-         100 * abs(b - a) / b),
-        ("halved the percent change", key / 2),
-    ]
+    if graph:
+        # only the two years the question names carry a printed value, exactly
+        # as the source item labels them; the rest of the curve is context
+        table, figure = None, line_graph(
+            [(years[k], float(values[k])) for k in range(len(values))],
+            xlabel="Year", ylabel=sc["ylabel"],
+            labels={i: f"({years[i]}, {dec(a, sc['places'], group=False)})",
+                    j: f"({years[j]}, {dec(b, sc['places'], group=False)})"})
+        stem = (f"The line graph shows {sc['what']} from {years[0]} to {years[-1]}. If p% "
+                f"is the percent {'increase' if up else 'decrease'} in the {sc['noun']} "
+                f"from {years[i]} to {years[j]}, what is the value of p ?")
+    else:
+        figure = None
+        table = [list(sc["head"])] + [[str(years[k]), dec(values[k], sc["places"])]
+                                      for k in range(len(values))]
+        stem = (f"A table of {sc['what']} for {len(values)} different {sc['period']} is "
+                f"shown below. What was the percent "
+                f"{'increase' if up else 'decrease'} of the {sc['noun']} from {years[i]} "
+                f"to {years[j]}?")
+    pool = {
+        "earlier_of_later": (f"found what the {years[i]} value is as a percent of the "
+                             f"{years[j]} value", 100 * a / b),
+        "later_of_earlier": (f"found what the {years[j]} value is as a percent of the "
+                             f"{years[i]} value", 100 * b / a),
+        "over_the_later": ("divided the change by the later value instead of by the "
+                           "earlier one", 100 * abs(b - a) / b),
+        "halved": ("halved the percent change", key / 2),
+        "doubled": ("doubled the percent change", key * 2),
+        "difference": ("subtracted the two values and read the difference as the percent",
+                       abs(b - a) if 0 < abs(b - a) <= 250 else None),
+    }
+    order = ["earlier_of_later", "later_of_earlier", "over_the_later", "halved", "doubled",
+             "difference"]
+    mistakes = pick(pool, order, wrongs)
     rationale = (f"The change is {dec(abs(b - a), sc['places'])}, and "
                  f"{dec(abs(b - a), sc['places'])}/{dec(a, sc['places'])} = "
                  f"{dec(key, places_needed(key, 4))}%.")
     P = {"kind": "pct_series", "ask": "change", "a": float(a), "b": float(b),
          "round": float(places) if places is not None else None}
     return _finish_series(rng, seed, stem, key, mistakes, rationale, P, table, fmt,
-                          places, "percent", "medium")
+                          places, "percent" if not graph else "plain",
+                          "hard" if graph else "medium", figure=figure)
 
 
 def _finish_series(rng, seed, stem, key, mistakes, rationale, P, table, fmt, places,
-                   style, difficulty) -> Item:
+                   style, difficulty, figure=None) -> Item:
     fmt = fmt or ("spr" if rng.random() < 0.3 else "mcq")
     if fmt == "spr":
         return spr("pct.series", "a percent across a series", difficulty, seed, stem, key,
-                   rationale, params=P, table=table)
+                   rationale, params=P, table=table, figure=figure)
     return mcq("pct.series", "a percent across a series", difficulty, seed, stem, key,
-               mistakes, rng, rationale, style=style, places=places, params=P, table=table)
+               mistakes, rng, rationale, style=style, places=places, params=P, table=table,
+               figure=figure)
 
 
 # -------------------------------------------------------------- CONCLUSION
@@ -493,7 +566,7 @@ VOTES = [
 
 
 def conclusion(rng: random.Random, seed: int, *, turnout=None, split=None, rate_a=None,
-               rate_b=None, ctx=None) -> Item:
+               rate_b=None, ctx=None, wrongs=None) -> Item:
     """Percentages of a vote, and the one statement they actually support."""
     c = ctx or rng.choice(VOTES)
     who, name = c["who"], c["name"]
@@ -514,21 +587,27 @@ def conclusion(rng: random.Random, seed: int, *, turnout=None, split=None, rate_
             f"information, which of the following is an accurate conclusion?")
     key = (f"{who.capitalize()} {c['phr_a']} were more likely to prefer {name} than were "
            f"{who} {c['phr_b']}.")
-    wrong = [
-        (f"extended a result about the {who} who voted to the {who} who did not vote",
-         f"If all {who} had voted, {name} would have won."),
-        (f"assumed the {dec(rate_a, 0)}% rate among one channel's voters would hold for "
-         f"everybody who voted",
-         f"If all {who} who voted had voted {c['use_a']} instead of {c['use_b']}, {name} "
-         f"would have won."),
-        ("invented a difference between the two groups that the survey collected no data "
-         "on",
-         f"{who.capitalize()} {c['phr_a']} were likely to be younger than {who} "
-         f"{c['phr_b']}."),
-        (f"read the two rates as shares of all the {who} rather than of the votes cast "
-         "through each channel",
-         f"More than half of all {who} preferred {name}."),
-    ]
+    pool = {
+        "all_had_voted": (f"extended a result about the {who} who voted to the {who} who "
+                          "did not vote",
+                          f"If all {who} had voted, {name} would have won."),
+        "one_channel_for_all": (f"assumed the {dec(rate_a, 0)}% rate among one channel's "
+                                "voters would hold for everybody who voted",
+                                f"If all {who} who voted had voted {c['use_a']} instead of "
+                                f"{c['use_b']}, {name} would have won."),
+        "younger": ("invented a difference between the two groups that the survey "
+                    "collected no data on",
+                    f"{who.capitalize()} {c['phr_a']} were likely to be younger than "
+                    f"{who} {c['phr_b']}."),
+        "half_of_everybody": (f"read the two rates as shares of all the {who} rather than "
+                              "of the votes cast through each channel",
+                              f"More than half of all {who} preferred {name}."),
+    }
+    # `assemble_text` prints the first three it is handed, so a fixed order would
+    # leave the fourth sentence in this file and never on a page
+    order = ["all_had_voted", "one_channel_for_all", "younger", "half_of_everybody"]
+    wrong = pick(pool, order if wrongs is not None else rng.sample(order, len(order)),
+                 wrongs)
     P = {"kind": "pct_conclusion", "who": who, "name": name, "phr_a": c["phr_a"],
          "phr_b": c["phr_b"], "rate_a": float(rate_a), "rate_b": float(rate_b),
          "split": float(split)}

@@ -23,7 +23,8 @@ from __future__ import annotations
 import random
 
 from ....item import Item, ItemError
-from ..values import Q, dec, mcq, places_needed, q, snap, spr, text_mcq
+from ..values import (Q, dec, mcq, pick, places_needed, q, snap, spr,
+                      text_mcq, unambiguous)
 
 __all__ = ["percent_of", "find_percent", "increase_decrease", "reverse",
            "change", "multiplier", "expression"]
@@ -81,7 +82,8 @@ def _article(word: str) -> str:
 # ------------------------------------------------------------- PERCENT OF
 
 def percent_of(rng: random.Random, seed: int, *, pct=None, n=None, frame=None,
-               fmt=None, round_to=None, cents=None, places=None, ctx=None) -> Item:
+               fmt=None, round_to=None, cents=None, places=None, ctx=None,
+               wrongs=None) -> Item:
     """`p`% of `n`. The part is missing and the whole and the percent are given."""
     frame = frame or rng.choices(
         ["bare", "inventory", "of_last_year", "tip_bill", "rate_closest",
@@ -167,7 +169,7 @@ def percent_of(rng: random.Random, seed: int, *, pct=None, n=None, frame=None,
     part = n * pct / 100
     key = part * 60 if frame == "workday" else part
     if round_to:
-        key = snap(key, round_to)
+        key = unambiguous(key, round_to)
     if frame in ("inventory", "of_last_year") and key.denominator != 1:
         raise ItemError("a count of people or objects has to come out whole")
     if frame == "workday" and key.denominator != 1:
@@ -213,14 +215,8 @@ def percent_of(rng: random.Random, seed: int, *, pct=None, n=None, frame=None,
         "minutes_remaining": ("gave the minutes left over rather than the minutes spent",
                               n * 60 - part * 60),
     }
-    mistakes = []
-    for name in order:
-        why, value = pool[name]
-        if value is None:
-            continue
-        if round_to:
-            value = snap(value, round_to)
-        mistakes.append((why, value))
+    mistakes = [(why, snap(value, round_to) if round_to else value)
+                for why, value in pick(pool, order, wrongs)]
 
     rationale = (f"{dec(pct, places_needed(pct, 5))}% of {dec(n, places_needed(n))} is "
                  f"{dec(pct, places_needed(pct, 5))}/100 x {dec(n, places_needed(n))} = "
@@ -239,7 +235,7 @@ def percent_of(rng: random.Random, seed: int, *, pct=None, n=None, frame=None,
 # ----------------------------------------------------------- FIND PERCENT
 
 def find_percent(rng: random.Random, seed: int, *, part=None, whole=None, frame=None,
-                 fmt=None, places=None, ctx=None) -> Item:
+                 fmt=None, places=None, ctx=None, wrongs=None) -> Item:
     """What percent of the whole the part is."""
     frame = frame or rng.choice(["what_percentage_of", "of_n_things",
                                  "is_p_percent_of", "nearest_whole"])
@@ -266,7 +262,7 @@ def find_percent(rng: random.Random, seed: int, *, part=None, whole=None, frame=
     else:                                                      # nearest_whole
         noun, holder, kind, adj = ctx or rng.choice(INVENTORY)
         places = 0 if places is None else places
-        key = snap(key, 1)
+        key = unambiguous(key, 1)
         stem = (f"A shipment contains {dec(whole, 0)} {noun}, of which {dec(part, 0)} "
                 f"are {kind}. To the nearest whole percent, what percent of the {noun} "
                 f"in the shipment are {kind}?")
@@ -275,21 +271,33 @@ def find_percent(rng: random.Random, seed: int, *, part=None, whole=None, frame=
     if places is None and places_needed(key, 6) > 2:
         raise ItemError("this percent does not print in two decimals")
     if places is not None:
-        key = snap(key, Q(1, 10) ** places)
+        key = unambiguous(key, Q(1, 10) ** places)
     P = {"kind": "pct_find", "part": float(part), "whole": float(whole),
          "round": float(places) if places is not None else None}
-    mistakes = [
-        ("found the percent that are not counted instead", 100 - key),
-        ("read the part itself as the percent", part if part <= 250 else None),
-        ("subtracted the part from the whole and read the difference as the percent",
-         whole - part if whole - part <= 250 else None),
-        ("divided the whole by the part instead of the part by the whole",
-         100 * whole / part if 100 * whole <= 500 * part else None),
-        ("moved the decimal point one place", key * 10),
-        ("moved the decimal point one place the other way", key / 10),
-        ("halved the percent", key / 2),
-        ("doubled the percent", key * 2),
-    ]
+    # a count in the thousands is read off the page in thousands -- a student
+    # who subtracts 828,000 from 900,000 and offers the answer as a percent
+    # writes 72, not 72,000, because 72 is the number in front of them
+    scaled = ((whole - part) / 1000 if whole % 1000 == 0 and part % 1000 == 0
+              and 0 < whole - part <= 250000 else None)
+    pool = {
+        "complement": ("found the percent that are not counted instead", 100 - key),
+        "part_as_percent": ("read the part itself as the percent",
+                            part if part <= 250 else None),
+        "difference": ("subtracted the part from the whole and read the difference as "
+                       "the percent", whole - part if whole - part <= 250 else None),
+        "difference_in_thousands": ("subtracted the part from the whole and read the "
+                                    "difference, in the thousands the counts are "
+                                    "written in, as the percent", scaled),
+        "inverted": ("divided the whole by the part instead of the part by the whole",
+                     100 * whole / part if 100 * whole <= 500 * part else None),
+        "ten_times": ("moved the decimal point one place", key * 10),
+        "tenth": ("moved the decimal point one place the other way", key / 10),
+        "halved": ("halved the percent", key / 2),
+        "doubled": ("doubled the percent", key * 2),
+    }
+    order = ["complement", "part_as_percent", "difference", "difference_in_thousands",
+             "inverted", "ten_times", "tenth", "halved", "doubled"]
+    mistakes = pick(pool, order, wrongs)
     exact = 100 * part / whole
     rationale = (f"{dec(part, places_needed(part))} out of {dec(whole, places_needed(whole))} is "
                  f"{dec(part, places_needed(part))}/{dec(whole, places_needed(whole))} = "
@@ -308,7 +316,7 @@ def find_percent(rng: random.Random, seed: int, *, part=None, whole=None, frame=
 
 def increase_decrease(rng: random.Random, seed: int, *, n=None, pct=None, up=None,
                       frame=None, fmt=None, round_to=None, cents=None, places=None,
-                      ctx=None) -> Item:
+                      ctx=None, wrongs=None) -> Item:
     """The whole after it has been moved by a percent of itself."""
     frame = frame or rng.choices(["bare", "sales_tax", "discount", "projection"],
                                  weights=[4, 3, 3, 3])[0]
@@ -358,7 +366,8 @@ def increase_decrease(rng: random.Random, seed: int, *, n=None, pct=None, up=Non
                 f"{dec(pct, places_needed(pct))}% from {y0} to {y0 + span}. Of the "
                 f"following, which is closest to the number of {counted} the report has "
                 f"projected for {town} in {y0 + span}?")
-        order = ["percent_decimal_slip", "change_only", "wrong_direction",
+        order = ["percent_as_count_thousands", "percent_as_count_hundreds",
+                 "percent_decimal_slip", "change_only", "wrong_direction",
                  "percent_as_count"]
         difficulty = "medium"
 
@@ -368,10 +377,11 @@ def increase_decrease(rng: random.Random, seed: int, *, n=None, pct=None, up=Non
         raise ItemError("a decrease of a hundred percent or more leaves nothing")
     key = n * ratio
     if round_to:
-        key = snap(key, round_to)
+        key = unambiguous(key, round_to)
     P = {"kind": "pct_shift", "n": float(n), "p": float(pct), "up": up,
          "round_to": float(round_to) if round_to else None}
     sign = 1 if up else -1
+    big = n >= 10000 and n % 1000 == 0          # a number the page writes in thousands
     pool = {
         "undo_the_change": ("worked backwards, treating the given number as the result "
                             "of the change rather than the start of it", n / ratio),
@@ -393,11 +403,20 @@ def increase_decrease(rng: random.Random, seed: int, *, n=None, pct=None, up=Non
         "percent_decimal_slip": (f"used {dec(pct / 10, places_needed(pct / 10, 3))}% "
                                  f"instead of {dec(pct, places_needed(pct))}%",
                                  n * (1 + sign * pct / 1000)),
+        # a population written as 113,000 is read as "113 thousand", and the
+        # percent gets added to it at whichever place value the reader is
+        # working in: 113 + 29 thousand, or 113,000 + 29 hundred
+        "percent_as_count_thousands": (
+            f"{'added the percent to' if up else 'subtracted the percent from'} the count "
+            f"of thousands, as though {dec(n, 0)} were just {dec(n / 1000, 0)}",
+            n + sign * pct * 1000 if big else None),
+        "percent_as_count_hundreds": (
+            f"{'added the percent to' if up else 'subtracted the percent from'} the count "
+            f"of hundreds, as though {dec(n, 0)} were just {dec(n / 100, 0)}",
+            n + sign * pct * 100 if big else None),
     }
-    mistakes = []
-    for name in order:
-        why, value = pool[name]
-        mistakes.append((why, snap(value, round_to) if round_to else value))
+    mistakes = [(why, snap(value, round_to) if round_to else value)
+                for why, value in pick(pool, order, wrongs)]
 
     rationale = (f"{dec(n, places_needed(n))} x "
                  f"{dec(ratio, places_needed(ratio, 4))} = "
@@ -414,7 +433,8 @@ def increase_decrease(rng: random.Random, seed: int, *, n=None, pct=None, up=Non
 # ----------------------------------------------------------------- REVERSE
 
 def reverse(rng: random.Random, seed: int, *, result=None, pct=None, frame=None,
-            fmt=None, ask="original", round_to=None, places=None, ctx=None) -> Item:
+            fmt=None, ask="original", round_to=None, places=None, ctx=None,
+            wrongs=None) -> Item:
     """The whole is missing: the item gives what is left of it, or all of it plus more."""
     frame = frame or rng.choice(["is_p_of", "is_p_of", "increased_to", "removed_remained"])
     pct = q(pct if pct is not None else rng.choice(PCTS))
@@ -445,8 +465,8 @@ def reverse(rng: random.Random, seed: int, *, result=None, pct=None, frame=None,
             raise ItemError("the number before the increase has to be a whole number")
         stem = (f"A number n is increased {dec(pct, places_needed(pct))}%. If the result "
                 f"is {dec(result, 0)}, what is the value of n ?")
-        order = ["increase_again", "decrease_instead", "result_less_percent",
-                 "result_over_percent"]
+        order = ["increase_again", "decrease_instead", "decimal_multiplier",
+                 "result_less_percent", "result_over_percent"]
     else:                                                      # removed_remained
         noun, holder, kind, adj = ctx or rng.choice(INVENTORY)
         pct = q(pct if pct is not None else rng.choice([10, 20, 25, 30, 40, 50, 60, 75, 80]))
@@ -491,6 +511,15 @@ def reverse(rng: random.Random, seed: int, *, result=None, pct=None, frame=None,
         "result_less_percent": ("subtracted the percent from the result as a count",
                                 result - pct),
         "result_over_percent": ("divided the result by the percent", result / pct),
+        # a one-digit percent written straight after the decimal point: 6% as
+        # 0.6 rather than 0.06, so the increase is undone by dividing by 1.6
+        "decimal_multiplier": (f"wrote {dec(pct, places_needed(pct))}% as "
+                               f"{dec(pct / 10, places_needed(pct / 10, 3))} instead of "
+                               f"{dec(pct / 100, places_needed(pct / 100, 3))}, dividing by "
+                               f"{dec(1 + pct / 10, places_needed(1 + pct / 10, 3))} rather "
+                               f"than by {dec(1 + pct / 100, places_needed(1 + pct / 100, 3))}",
+                               result / (1 + pct / 10)
+                               if frame == "increased_to" and pct < 10 else None),
         "the_original": ("gave the original number of items instead of the number "
                          "removed", original),
         "the_removed": (f"gave the number of {ctx[0] if ctx else 'items'} removed instead "
@@ -508,12 +537,8 @@ def reverse(rng: random.Random, seed: int, *, result=None, pct=None, frame=None,
         "percent_as_count": ("subtracted the percent from the remaining count as though "
                              "it were a count", result - pct),
     }
-    mistakes = []
-    for name in order:
-        why, value = pool[name]
-        if value is None or value < 0:
-            continue
-        mistakes.append((why, snap(value, round_to) if round_to else value))
+    mistakes = [(why, snap(value, round_to) if round_to else value)
+                for why, value in pick(pool, order, wrongs) if value >= 0]
 
     if frame == "removed_remained":
         rationale = (f"The {dec(result, 0)} that remained are "
@@ -540,7 +565,7 @@ def reverse(rng: random.Random, seed: int, *, result=None, pct=None, frame=None,
 # ------------------------------------------------------------------ CHANGE
 
 def change(rng: random.Random, seed: int, *, old=None, new=None, frame=None, fmt=None,
-           places=None, ctx=None) -> Item:
+           places=None, ctx=None, wrongs=None) -> Item:
     """Two values are given and the percent between them is missing."""
     frame = frame or rng.choice(["percent_increase", "bill", "p_greater", "p_less"])
     old = q(old) if old is not None else q(rng.randrange(4, 400, 2))
@@ -588,7 +613,8 @@ def change(rng: random.Random, seed: int, *, old=None, new=None, frame=None, fmt
     if places is None and places_needed(key, 6) > 2:
         raise ItemError("this percent does not print in two decimals")
     if places is not None:
-        key = snap(key, Q(1, 10) ** places) if key > 0 else -snap(-key, Q(1, 10) ** places)
+        key = (unambiguous(key, Q(1, 10) ** places) if key > 0
+               else -unambiguous(-key, Q(1, 10) ** places))
     P = {"kind": "pct_change", "old": float(old), "new": float(new),
          "round": float(places) if places is not None else None}
     pool = {
@@ -602,7 +628,7 @@ def change(rng: random.Random, seed: int, *, old=None, new=None, frame=None, fmt
         "over_the_new_value": ("divided the change by the new value instead of by the "
                                "original", 100 * abs(new - old) / new),
     }
-    mistakes = [pool[name] for name in order]
+    mistakes = pick(pool, order, wrongs)
     rationale = (f"The change is {dec(abs(new - old), places_needed(abs(new - old), 4))}, "
                  f"and {dec(abs(new - old), places_needed(abs(new - old), 4))}/"
                  f"{dec(old, places_needed(old, 4))} = "
@@ -619,7 +645,7 @@ def change(rng: random.Random, seed: int, *, old=None, new=None, frame=None, fmt
 # -------------------------------------------------------------- MULTIPLIER
 
 def multiplier(rng: random.Random, seed: int, *, n=None, pct=None, up=True, ask=None,
-               fmt=None, places=None) -> Item:
+               fmt=None, places=None, wrongs=None) -> Item:
     """The number you multiply by, and the percent it stands for, each from the other."""
     ask = ask or rng.choice(["factor", "percent"])
     pct = q(pct if pct is not None else rng.choice(PCTS))
@@ -633,14 +659,16 @@ def multiplier(rng: random.Random, seed: int, *, n=None, pct=None, up=True, ask=
         stem = (f"The number {letter} is {dec(pct, places_needed(pct))}% {word} than "
                 f"{dec(n, 0)}. If {letter} is the product of {dec(n, 0)} and r, what is "
                 f"the value of r ?")
-        mistakes = [
-            ("used the percent itself as the number to multiply by", pct),
-            ("moved the decimal point one place when converting the percent", pct / 10),
-            ("gave only the change as a decimal, leaving off the 1 for the original",
-             pct / 100),
-            (f"{'subtracted' if up else 'added'} the change instead of "
-             f"{'adding' if up else 'subtracting'} it", 1 - (ratio - 1)),
-        ]
+        pool = {
+            "percent_itself": ("used the percent itself as the number to multiply by", pct),
+            "decimal_slip": ("moved the decimal point one place when converting the "
+                             "percent", pct / 10),
+            "change_only": ("gave only the change as a decimal, leaving off the 1 for the "
+                            "original", pct / 100),
+            "wrong_direction": (f"{'subtracted' if up else 'added'} the change instead of "
+                                f"{'adding' if up else 'subtracting'} it", 1 - (ratio - 1)),
+        }
+        order = ["percent_itself", "decimal_slip", "change_only", "wrong_direction"]
         style = "plain"
     else:                                                      # percent
         if not up:
@@ -649,16 +677,21 @@ def multiplier(rng: random.Random, seed: int, *, n=None, pct=None, up=True, ask=
         stem = (f"The value of {letter} is {dec(ratio, places_needed(ratio, 4))} times "
                 f"{dec(n, 0)}. The value of {letter} is what percent {word} than "
                 f"{dec(n, 0)}?")
-        mistakes = [
-            ("moved the decimal point one place, reading the multiplier itself as the "
-             "percent", ratio * 10),
-            ("moved the decimal point one place in the answer", pct * 10),
-            ("added 100 to the whole multiplier instead of subtracting it",
-             100 + ratio * 100),
-            ("read the whole multiplier as the percent", ratio * 100),
-        ]
+        pool = {
+            "multiplier_ten_times": ("moved the decimal point one place, reading the "
+                                     "multiplier itself as the percent", ratio * 10),
+            "answer_ten_times": ("moved the decimal point one place in the answer",
+                                 pct * 10),
+            "added_the_hundred": ("added 100 to the whole multiplier instead of "
+                                  "subtracting it", 100 + ratio * 100),
+            "multiplier_as_percent": ("read the whole multiplier as the percent",
+                                      ratio * 100),
+        }
+        order = ["multiplier_ten_times", "answer_ten_times", "added_the_hundred",
+                 "multiplier_as_percent"]
         style = "plain"
 
+    mistakes = pick(pool, order, wrongs)
     P = {"kind": "pct_multiplier", "n": float(n), "p": float(pct), "up": up, "ask": ask}
     rationale = (f"{dec(pct, places_needed(pct))}% {word} than {dec(n, 0)} is "
                  f"{dec(ratio, places_needed(ratio, 4))} x {dec(n, 0)}, so "
@@ -679,7 +712,7 @@ def _coef(v) -> str:
 
 
 def expression(rng: random.Random, seed: int, *, pct=None, kind=None, var=None,
-               ctx=None) -> Item:
+               ctx=None, wrongs=None) -> Item:
     """The same one step, written as an expression rather than evaluated."""
     kind = kind or rng.choice(["of", "increase", "decrease"])
     pct = q(pct if pct is not None else rng.randrange(2, 99))
@@ -695,33 +728,53 @@ def expression(rng: random.Random, seed: int, *, pct=None, kind=None, var=None,
                 f"expression represents the length of the {part} of the {shape}, where "
                 f"{var} is the {whole} of the {shape}?")
         key = f"{_coef(r)}{var}"
-        wrong = [
-            ("wrote the percent as a whole number instead of converting it", f"{_coef(pct)}{var}"),
-            ("moved the decimal point one place too few", f"{_coef(pct / 10)}{var}"),
-            ("moved the decimal point one place too many", f"{_coef(pct / 1000)}{var}"),
-            ("added the percent instead of multiplying by it", f"{var} + {_coef(r)}"),
-        ]
+        pool = {
+            "whole_number": ("wrote the percent as a whole number instead of converting "
+                             "it", f"{_coef(pct)}{var}"),
+            "one_place_too_few": ("moved the decimal point one place too few",
+                                  f"{_coef(pct / 10)}{var}"),
+            "one_place_too_many": ("moved the decimal point one place too many",
+                                   f"{_coef(pct / 1000)}{var}"),
+            "added_instead": ("added the percent instead of multiplying by it",
+                              f"{var} + {_coef(r)}"),
+        }
+        order = ["whole_number", "one_place_too_few", "one_place_too_many", "added_instead"]
     elif kind == "increase":
         stem = (f"Which of the following represents the result of increasing the quantity "
                 f"{var} by {dec(pct, places_needed(pct))}%, where {var} > 0 ?")
         key = f"{_coef(1 + r)}{var}"
-        wrong = [
-            ("gave only the increase and not the quantity it is added to", f"{_coef(r)}{var}"),
-            ("added the percent as though it were a count", f"{var} + {dec(pct, places_needed(pct))}"),
-            ("added the decimal form instead of multiplying by it", f"{var} + {_coef(r)}"),
-            ("wrote the percent as a whole number instead of converting it", f"{_coef(pct)}{var}"),
-        ]
+        pool = {
+            "increase_only": ("gave only the increase and not the quantity it is added to",
+                              f"{_coef(r)}{var}"),
+            "percent_as_count": ("added the percent as though it were a count",
+                                 f"{var} + {dec(pct, places_needed(pct))}"),
+            "decimal_added": ("added the decimal form instead of multiplying by it",
+                              f"{var} + {_coef(r)}"),
+            "whole_number": ("wrote the percent as a whole number instead of converting "
+                             "it", f"{_coef(pct)}{var}"),
+        }
+        order = ["increase_only", "percent_as_count", "decimal_added", "whole_number"]
     else:                                                      # decrease
         stem = (f"Which of the following represents the result of decreasing the quantity "
                 f"{var} by {dec(pct, places_needed(pct))}%, where {var} > 0 ?")
         key = f"{_coef(1 - r)}{var}"
-        wrong = [
-            ("subtracted the percent as though it were a count", f"{var} - {dec(pct, places_needed(pct))}"),
-            ("gave the part taken away rather than what is left", f"{_coef(r)}{var}"),
-            ("subtracted the decimal form instead of multiplying by it", f"{var} - {_coef(r)}"),
-            ("added the change instead of subtracting it", f"{_coef(1 + r)}{var}"),
-        ]
+        pool = {
+            "percent_as_count": ("subtracted the percent as though it were a count",
+                                 f"{var} - {dec(pct, places_needed(pct))}"),
+            "the_part_taken": ("gave the part taken away rather than what is left",
+                               f"{_coef(r)}{var}"),
+            "decimal_subtracted": ("subtracted the decimal form instead of multiplying by "
+                                   "it", f"{var} - {_coef(r)}"),
+            "wrong_direction": ("added the change instead of subtracting it",
+                                f"{_coef(1 + r)}{var}"),
+        }
+        order = ["percent_as_count", "the_part_taken", "decimal_subtracted",
+                 "wrong_direction"]
 
+    # three of the four are printed, so a free draw shuffles rather than leaving
+    # the last one in this file for ever
+    wrong = pick(pool, order if wrongs is not None else rng.sample(order, len(order)),
+                 wrongs)
     P = {"kind": "pct_expression", "p": float(pct), "form": kind, "var": var}
     rationale = f"Converting the percent to a decimal gives {key}."
     return text_mcq("pct.expression", "a percent as an expression", "easy", seed, stem,

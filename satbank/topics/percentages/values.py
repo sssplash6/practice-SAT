@@ -23,7 +23,30 @@ from ...exact import Exact
 from ...item import Item, ItemError, Mis, assemble, assemble_text
 
 __all__ = ["Q", "q", "Num", "dec", "places_needed", "grid", "tidy", "snap",
-           "mcq", "spr", "text_mcq"]
+           "mcq", "spr", "text_mcq", "pick", "unambiguous"]
+
+
+def pick(pool: dict, order, wrongs=None) -> list:
+    """The misconceptions this draw offers, in the order it offers them.
+
+    Every template keeps its wrong answers in a named pool and a default order.
+    A free draw takes that order and lets `assemble` choose from it; a source
+    item passes `wrongs`, naming the ones the College Board item writer
+    actually reached for, so the engine offers those and no others.
+
+    An entry whose value is None does not apply to this draw -- the frame does
+    not admit the mistake, or the number it produces is not one a student would
+    write down -- and is skipped rather than offered.
+    """
+    names = list(order if wrongs is None else wrongs)
+    out = []
+    for name in names:
+        if name not in pool:
+            raise ItemError(f"no misconception named {name!r} in this pool")
+        why, value = pool[name]
+        if value is not None:
+            out.append((why, value))
+    return out
 
 
 def q(v) -> Q:
@@ -49,6 +72,24 @@ def snap(v, step) -> Q:
     if 2 * (k - n) >= 1:
         n += 1
     return n * step
+
+
+def unambiguous(v, step):
+    """`v` rounded to `step`, unless it sits exactly halfway.
+
+    An item that says "to the nearest whole percent" or "of the following,
+    which is closest to" has an answer only while one value is nearer than
+    every other. 37 out of 40 is 92.5%, and whether that is 92% or 93% is a
+    rounding convention the stem never states -- so the draw is thrown away
+    rather than shipped with an answer a carefully taught student gets wrong.
+    """
+    v, step = q(v), q(step)
+    k = v / step
+    if 2 * (k - k.numerator // k.denominator) == 1:
+        raise ItemError("this value sits exactly halfway between two answers, and "
+                        "which of them is nearest is a convention rather than "
+                        "mathematics")
+    return snap(v, step)
 
 
 def dec(v, places: int, group: bool = True) -> str:

@@ -20,7 +20,8 @@ from __future__ import annotations
 import random
 
 from ....item import Item, ItemError
-from ..values import Q, dec, mcq, places_needed, q, snap, spr, text_mcq
+from ..values import (Q, dec, mcq, pick, places_needed, q, snap, spr,
+                      text_mcq, unambiguous)
 
 __all__ = ["compound_share", "successive", "two_step", "markup_discount",
            "repeated_rate", "remainder_total", "per_serving_model"]
@@ -170,7 +171,7 @@ def compound_share(rng: random.Random, seed: int, *, pcts=None, base=None, ask=N
         style = "percent"
         base = None
         if places is not None:
-            key = snap(key, Q(1, 10) ** places)
+            key = unambiguous(key, Q(1, 10) ** places)
         exact = 100 - share if ask == "complement" else share
         rationale = (" x ".join(f"{dec(p, places_needed(p))}%" for p in pcts)
                      + f" of the whole is {dec(share, places_needed(share, 6))}%"
@@ -179,7 +180,7 @@ def compound_share(rng: random.Random, seed: int, *, pcts=None, base=None, ask=N
                         if ask == "complement" else "."))
 
     if places is not None:
-        key = snap(key, Q(1, 10) ** places)
+        key = unambiguous(key, Q(1, 10) ** places)
     P = {"kind": "pct_chain", "pcts": [float(p) for p in pcts],
          "base": float(base) if base is not None else None, "ask": ask,
          "round": float(places) if places is not None else None}
@@ -202,7 +203,7 @@ def _prefix(pcts, upto):
 
 def successive(rng: random.Random, seed: int, *, start=None, pcts=None, ups=None,
                years=None, ask=None, frame=None, fmt=None, places=None, cents=None,
-               ctx=None) -> Item:
+               ctx=None, wrongs=None) -> Item:
     """The same percent year after year, or one percent and then another."""
     frame = frame or rng.choice(["depreciation", "two_changes"])
     difficulty = "medium"
@@ -222,14 +223,25 @@ def successive(rng: random.Random, seed: int, *, start=None, pcts=None, ups=None
                 f"{dec(pct, places_needed(pct))}% of the previous year's estimated value. "
                 f"What is the estimated value of the {asset} exactly {years} years after "
                 f"{owner} {verb} it?")
-        mistakes = [
-            (f"took {dec(pct * years, places_needed(pct * years))}% off in a single step, "
-             "adding the years' percentages together", start * (1 - pct * years / 100)),
-            (f"depreciated for one year instead of {years}", start * ratio),
-            ("gave the value the asset has lost rather than the value it still has",
-             start - key),
-            (f"depreciated for {years + 1} years", start * ratio ** (years + 1)),
-        ]
+        pool = {
+            "years_added": (f"took {dec(pct * years, places_needed(pct * years))}% off in a "
+                            "single step, adding the years' percentages together",
+                            start * (1 - pct * years / 100)),
+            "one_year": (f"depreciated for one year instead of {years}", start * ratio),
+            "value_lost": ("gave the value the asset has lost rather than the value it "
+                           "still has", start - key),
+            "one_year_too_many": (f"depreciated for {years + 1} years",
+                                  start * ratio ** (years + 1)),
+            # "depreciates by 20%" read as "is divided by 1.20": the same figure
+            # used as a growth factor and then undone, rather than 0.80 applied
+            "divided_each_year": (f"divided by "
+                                  f"{dec(1 + pct / 100, places_needed(1 + pct / 100, 3))} "
+                                  f"each year instead of multiplying by "
+                                  f"{dec(ratio, places_needed(ratio, 3))}",
+                                  snap(start / (1 + pct / 100) ** years, 1)),
+        }
+        order = ["years_added", "one_year", "value_lost", "divided_each_year",
+                 "one_year_too_many"]
         rationale = (f"${dec(start, places_needed(start))} x "
                      f"{dec(ratio, places_needed(ratio, 4))}^{years} = "
                      f"${dec(key, places_needed(key, 4))}.")
@@ -256,7 +268,7 @@ def successive(rng: random.Random, seed: int, *, start=None, pcts=None, ups=None
         w2 = words[0] if ups[1] else words[1]
         if ask == "net_percent":
             places = 2 if places is None else places
-            key = snap(abs(net), Q(1, 10) ** places)
+            key = unambiguous(abs(net), Q(1, 10) ** places)
             stem = (f"The value of {art} {thing} {w1[0]} by {dec(pcts[0], places_needed(pcts[0]))}% "
                     f"from the end of {y0} to the end of {y0 + 1} and then {w2[0]} by "
                     f"{dec(pcts[1], places_needed(pcts[1]))}% from the end of {y0 + 1} to the "
@@ -264,16 +276,19 @@ def successive(rng: random.Random, seed: int, *, start=None, pcts=None, ups=None
                     f"{'increase' if net > 0 else 'decrease'} in the value of the {thing} "
                     f"from the end of {y0} to the end of {y0 + 2}?")
             style = "percent"
-            mistakes = [
-                ("subtracted the second percent from the first instead of compounding "
+            pool_pairs = [
+                ("percents_subtracted",
+                 "subtracted the second percent from the first instead of compounding "
                  "the two changes", abs(pcts[0] - pcts[1])),
-                (f"applied the {dec(pcts[1], places_needed(pcts[1]))}% to the percent "
+                ("second_on_the_percent",
+                 f"applied the {dec(pcts[1], places_needed(pcts[1]))}% to the percent "
                  "increase rather than to the value", abs(pcts[0] * f2)),
-                (f"{'increased' if not ups[1] else 'decreased'} by "
+                ("second_reversed",
+                 f"{'increased' if not ups[1] else 'decreased'} by "
                  f"{dec(pcts[1], places_needed(pcts[1]))}% in the second year instead of "
                  f"{'decreasing' if not ups[1] else 'increasing'}",
                  abs(100 * (f1 * (2 - f2) - 1))),
-                ("added the two percents", pcts[0] + pcts[1]),
+                ("percents_added", "added the two percents", pcts[0] + pcts[1]),
             ]
             start = None
         else:
@@ -286,15 +301,18 @@ def successive(rng: random.Random, seed: int, *, start=None, pcts=None, ups=None
                     f"end of {y0 + 2}. What was the value of the {thing} at the end of "
                     f"{y0 + 2}?")
             style = "money"
-            mistakes = [
-                ("added the two percents and applied them in one step",
+            pool_pairs = [
+                ("percents_added", "added the two percents and applied them in one step",
                  start * (1 + (pcts[0] if ups[0] else -pcts[0]) / 100
                           + (pcts[1] if ups[1] else -pcts[1]) / 100)),
-                ("applied the first change only", start * f1),
-                ("applied the second change only", start * f2),
-                (f"{'increased' if not ups[1] else 'decreased'} in the second year instead "
+                ("first_only", "applied the first change only", start * f1),
+                ("second_only", "applied the second change only", start * f2),
+                ("second_reversed",
+                 f"{'increased' if not ups[1] else 'decreased'} in the second year instead "
                  f"of {'decreasing' if not ups[1] else 'increasing'}", start * f1 * (2 - f2)),
             ]
+        pool = {name: (why, value) for name, why, value in pool_pairs}
+        order = [name for name, _, _ in pool_pairs]
         rationale = (f"{dec(f1, places_needed(f1, 4))} x {dec(f2, places_needed(f2, 4))} = "
                      f"{dec(f1 * f2, places_needed(f1 * f2, 6))}"
                      + (f", a net change of {dec(net, places_needed(net, 4))}%."
@@ -305,6 +323,7 @@ def successive(rng: random.Random, seed: int, *, start=None, pcts=None, ups=None
         difficulty = "hard"
         pcts_used = pcts
 
+    mistakes = pick(pool, order, wrongs)
     fmt = fmt or ("spr" if rng.random() < 0.2 else "mcq")
     if fmt == "spr":
         return spr("pct.successive", "two changes in a row", difficulty, seed, stem, key,
@@ -316,7 +335,8 @@ def successive(rng: random.Random, seed: int, *, start=None, pcts=None, ups=None
 # ----------------------------------------------------------------- TWO STEP
 
 def two_step(rng: random.Random, seed: int, *, pct1=None, up1=None, pct2=None, up2=None,
-             start=None, ask=None, fmt=None, places=None, letters=None) -> Item:
+             start=None, ask=None, fmt=None, places=None, letters=None,
+             wrongs=None) -> Item:
     """Three numbers in a chain: the first is a percent of the second, and so on."""
     ask = ask or rng.choice(["times", "value"])
     pct1 = q(pct1 if pct1 is not None else rng.choice(
@@ -339,16 +359,17 @@ def two_step(rng: random.Random, seed: int, *, pct1=None, up1=None, pct2=None, u
                 f"positive number {b}. The number {c} is "
                 f"{dec(pct2, places_needed(pct2))}% {w2} than {a}. The number {c} is how "
                 f"many times {b} ?")
-        mistakes = [
-            (f"read \"{dec(pct1, places_needed(pct1))}% {w1} than\" as "
-             f"\"{dec(pct1, places_needed(pct1))}% of\"", f2 * pct1 / 100),
-            (f"read \"{dec(pct2, places_needed(pct2))}% {w2} than\" as "
-             f"\"{dec(pct2, places_needed(pct2))}% of\"", f1 * pct2 / 100),
-            ("read both percents as shares rather than as changes",
-             pct1 * pct2 / 10000),
-            ("added the two changes instead of multiplying the two factors",
-             1 + (f1 - 1) + (f2 - 1)),
-        ]
+        pool = {
+            "first_as_share": (f"read \"{dec(pct1, places_needed(pct1))}% {w1} than\" as "
+                               f"\"{dec(pct1, places_needed(pct1))}% of\"", f2 * pct1 / 100),
+            "second_as_share": (f"read \"{dec(pct2, places_needed(pct2))}% {w2} than\" as "
+                                f"\"{dec(pct2, places_needed(pct2))}% of\"", f1 * pct2 / 100),
+            "both_as_shares": ("read both percents as shares rather than as changes",
+                               pct1 * pct2 / 10000),
+            "changes_added": ("added the two changes instead of multiplying the two "
+                              "factors", 1 + (f1 - 1) + (f2 - 1)),
+        }
+        order = ["first_as_share", "second_as_share", "both_as_shares", "changes_added"]
         style = "plain"
         start = None
     else:
@@ -358,18 +379,32 @@ def two_step(rng: random.Random, seed: int, *, pct1=None, up1=None, pct2=None, u
         stem = (f"The number {a} is {dec(pct1, places_needed(pct1))}% {w1} than the number "
                 f"{b}. The number {b} is {dec(pct2, places_needed(pct2))}% {w2} than "
                 f"{dec(start, places_needed(start))}. What is the value of {a} ?")
-        mistakes = [
-            (f"read \"{dec(pct1, places_needed(pct1))}% {w1} than\" as "
-             f"\"{dec(pct1, places_needed(pct1))}% of\"", start * f2 * pct1 / 100),
-            ("read both percents as shares rather than as changes",
-             start * pct1 * pct2 / 10000),
-            (f"read \"{dec(pct2, places_needed(pct2))}% {w2} than\" as "
-             f"\"{dec(pct2, places_needed(pct2))}% of\"", start * f1 * pct2 / 100),
-            ("worked the chain from the wrong end, dividing where the item multiplies",
-             start * f2 / f1),
-        ]
+        net = (pct1 if up1 else -pct1) + (pct2 if up2 else -pct2)
+        pool = {
+            "first_as_share": (f"read \"{dec(pct1, places_needed(pct1))}% {w1} than\" as "
+                               f"\"{dec(pct1, places_needed(pct1))}% of\"",
+                               start * f2 * pct1 / 100),
+            "both_as_shares": ("read both percents as shares rather than as changes",
+                               start * pct1 * pct2 / 10000),
+            "second_as_share": (f"read \"{dec(pct2, places_needed(pct2))}% {w2} than\" as "
+                                f"\"{dec(pct2, places_needed(pct2))}% of\"",
+                                start * f1 * pct2 / 100),
+            # percents do not add: the student folds the two changes into one
+            # percent and then takes that percent of the number the chain starts
+            # from, instead of applying each change in turn
+            "percents_netted": (f"added the two percents and took the "
+                                f"{dec(net, places_needed(net))}% total as a share of "
+                                f"{dec(start, places_needed(start))} instead of applying "
+                                "each change in turn",
+                                start * net / 100 if net > 0 else None),
+            "wrong_end": ("worked the chain from the wrong end, dividing where the item "
+                          "multiplies", start * f2 / f1),
+        }
+        order = ["first_as_share", "both_as_shares", "second_as_share", "percents_netted",
+                 "wrong_end"]
         style = "plain"
 
+    mistakes = pick(pool, order, wrongs)
     if places is None and places_needed(key, 6) > 2:
         raise ItemError("this chain does not land on two decimals")
     P = {"kind": "pct_two_step", "p1": float(pct1), "up1": up1, "p2": float(pct2),
@@ -563,7 +598,7 @@ def remainder_total(rng: random.Random, seed: int, *, pcts=None, left=None, ask=
 # -------------------------------------------------------- PER SERVING MODEL
 
 def per_serving_model(rng: random.Random, seed: int, *, per=None, amount=None,
-                      serving=None, ctx=None) -> Item:
+                      serving=None, ctx=None, wrongs=None) -> Item:
     """One serving is p% of a daily allowance; x servings is the model in x."""
     brand, food, nutrient, unit = ctx or rng.choice(CEREALS)
     per = q(per if per is not None else rng.choice([2, 4, 5, 6, 8, 15, 20, 25]))
@@ -582,21 +617,30 @@ def per_serving_model(rng: random.Random, seed: int, *, per=None, amount=None,
             f"servings of {brand} {food} per day, which of the following expresses p in "
             f"terms of x ?")
     key = f"p = {dec(per, places_needed(per))}x"
-    wrong = [
-        ("moved the decimal point one place when converting the percent",
-         f"p = {dec(per / 10, places_needed(per / 10, 3))}x"),
-        ("treated each extra serving as compounding, raising the decimal form to the "
-         "power of the number of servings",
-         f"p = ({dec(per / 100, places_needed(per / 100, 4))})^x"),
-        ("treated each extra serving as multiplying the percent again rather than adding "
-         "another serving's worth of it",
-         f"p = {dec(per, places_needed(per))}^x"),
-        ("treated each extra serving as a repeated percent increase rather than a "
-         "repeated amount",
-         f"p = ({dec(1 + per / 100, places_needed(1 + per / 100, 4))})^x"),
-        ("divided by the percent instead of multiplying by it",
-         f"p = x/{dec(per, places_needed(per))}"),
-    ]
+    pool = {
+        "decimal_slip": ("moved the decimal point one place when converting the percent",
+                         f"p = {dec(per / 10, places_needed(per / 10, 3))}x"),
+        "decimal_compounded": ("treated each extra serving as compounding, raising the "
+                               "decimal form to the power of the number of servings",
+                               f"p = ({dec(per / 100, places_needed(per / 100, 4))})^x"),
+        "percent_compounded": ("treated each extra serving as multiplying the percent "
+                               "again rather than adding another serving's worth of it",
+                               f"p = {dec(per, places_needed(per))}^x"),
+        "growth_factor": ("treated each extra serving as a repeated percent increase "
+                          "rather than a repeated amount",
+                          f"p = ({dec(1 + per / 100, places_needed(1 + per / 100, 4))})^x"),
+        "divided": ("divided by the percent instead of multiplying by it",
+                    f"p = x/{dec(per, places_needed(per))}"),
+    }
+    # three of the five are printed, so a free draw shuffles rather than leaving
+    # the last two in this file for ever -- but the compounded percent is always
+    # one of them, because `p = 5^x` is the only distractor printed in the key's
+    # own surface form, and a key alone in its form is guessable without reading
+    # the stem
+    rest = ["decimal_slip", "decimal_compounded", "growth_factor", "divided"]
+    order = (["decimal_slip"] + rest[1:] + ["percent_compounded"] if wrongs is not None
+             else ["percent_compounded"] + rng.sample(rest, len(rest)))
+    wrong = pick(pool, order, wrongs)
     P = {"kind": "pct_per_unit", "per": float(per)}
     rationale = (f"One serving is {dec(per, places_needed(per))}% of the allowance, so x "
                  f"servings is {dec(per, places_needed(per))}x percent of it.")
