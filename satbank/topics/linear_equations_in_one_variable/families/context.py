@@ -133,6 +133,11 @@ def _scene(rng: random.Random, scene: str, kw: dict) -> dict:
         wage = g("wage", Q(rng.randint(36, 96), 4))
         rate = g("rate", Q(3, 2))
         total = wage * (base + rate * (worked - base))
+        # The stem prints the total in dollars and cents, so a total that needs
+        # a third decimal place is rounded on the page, and the wage the page
+        # then implies is not the answer: $206.62 over 9.5 hours is not $21.75.
+        if (total * 100).denominator != 1:
+            raise ItemError("the total would not print exactly in cents")
         name = kw.get("name", rng.choice(["Megan", "Andre", "Priya", "Tomas", "Lucia"]))
         stem = (f"{name}'s regular wage at her job is p dollars per hour for the first "
                 f"{num(base)} hours of work in a day plus {dec(rate)} times her regular "
@@ -274,6 +279,14 @@ def model_count_mix(rng: random.Random, seed: int, *, scene=None, var="n", l1=No
         raise ItemError("the three lengths must differ and leave room for the rest")
     if (total - fixed) % (mult + 1):
         raise ItemError("the counts would not come out whole")
+    # Every option is an equation, and two equations that hold for the same n
+    # are one equation however differently they print. The pieces-times-lengths
+    # option is the one that collides: 9n + 7n + 4n = 60 and 8n + 36 = 60 both
+    # say n = 3.
+    n = Q(total - fixed, mult + 1)
+    for A, B in ((l1 * mult + l2, l3 * fixed), (l1 + l2 + l3, 0), (mult, fixed)):
+        if A * n + B == total:
+            raise ItemError("a wrong equation would be true for the same n")
 
     if scene == "polygon":
         thing = thing or "polygon"
@@ -335,6 +348,8 @@ def model_context(rng: random.Random, seed: int, *, shape=None, var=None, **kw) 
                 f"{num(mlt)}{var} = {num(tot)} + {num(add)}"),
             Mis("swapped the multiplier and the number added",
                 f"{num(add)}{var} + {num(mlt)} = {num(tot)}")]
+        root = (tot - add) / mlt
+        wrong = [tot / (add * mlt), (tot + add) / mlt, (tot - mlt) / add]
         P = {"mult": float(mlt), "add": float(add), "total": float(tot)}
 
     elif shape == "base_after":
@@ -359,6 +374,9 @@ def model_context(rng: random.Random, seed: int, *, shape=None, var=None, **kw) 
                 f"{num(base)}({num(hrs)}{var}) + {num(rate)}{var} = {num(tot)}"),
             Mis("multiplied the hours by the opening period inside the brackets",
                 f"{num(base)} + {num(rate)}({num(hrs)}{var}) = {num(tot)}")]
+        root = hrs + (tot - base) / rate
+        wrong = [(tot + base * hrs) / (base + rate), tot / (base * hrs + rate),
+                 (tot - base) / (rate * hrs)]
         P = {"base": float(base), "hrs": float(hrs), "rate": float(rate),
              "total": float(tot)}
 
@@ -385,6 +403,9 @@ def model_context(rng: random.Random, seed: int, *, shape=None, var=None, **kw) 
                 f"({num(cost)}/{num(mpg)}){var} = {num(miles - cut)}"),
             Mis("inverted the rate and used the miles left rather than the dollars saved",
                 f"({num(mpg)}/{num(cost)}){var} = {num(miles - cut)}")]
+        root = cut * mpg / cost
+        wrong = [cut * cost / mpg, (miles - cut) * mpg / cost,
+                 (miles - cut) * cost / mpg]
         P = {"miles": float(miles), "mpg": float(mpg), "cost": float(cost),
              "cut": float(cut)}
 
@@ -415,9 +436,21 @@ def model_context(rng: random.Random, seed: int, *, shape=None, var=None, **kw) 
                 f"{dec(1 - comm)}({num(price)}) - {num(make)}{var} = {num(tot)}"),
             Mis("added the commission to the cost instead of subtracting it from the "
                 "price", f"({dec(comm)}({num(price)}) + {num(make)}){var} = {num(tot)}")]
+        root = tot / unit_profit
+        wrong = [tot / ((price - make) * comm),
+                 ((1 - comm) * price - tot) / make,
+                 tot / (comm * price + make)]
         P = {"price": float(price), "make": float(make), "comm": float(comm),
              "total": float(tot)}
 
+    # Every option here is an equation, and two equations with the same solution
+    # are the same equation however differently they print. The commission
+    # distractor is the one that collides: at make = price(1 - 2c)/2 the price
+    # less the commission less the cost and the commission plus the cost are the
+    # same number, so (160(1 - 0.15) - 56)u and (0.15(160) + 56)u both give
+    # u = 234.
+    if any(w == root for w in wrong):
+        raise ItemError("a wrong equation would have the same solution as the key")
     P.update({"kind": "lin1_model_context", "shape": shape, "var": var})
     ch, why, letter = assemble_text(key, mistakes, rng)
     return Item("lin1.model_context", "modelling", "medium", seed, sent(stem), "mcq",
@@ -553,6 +586,14 @@ def interpret_coefficient(rng: random.Random, seed: int, *, scene=None, **kw) ->
         start = g("start", rng.randint(2, 20))
         years = g("years", rng.randint(2, 12))
         final = start + rate * years
+        # The three wrong readings are numbers too: the years to double the
+        # height, the height after one year, and the years to grow the final
+        # height. When one of them comes out at the rate itself -- start = rate^2
+        # or final = rate^2 -- that sentence is a true interpretation of the very
+        # number the stem asks about, and the item has two right answers.
+        for also in (start / rate, start + rate, final / rate):
+            if also == rate:
+                raise ItemError("a wrong interpretation would be true of this number")
         thing = kw.get("thing", rng.choice(["tree", "hedge", "sapling", "bamboo stalk"]))
         eq = f"{num(rate)}{var} + {num(start)} = {num(final)}"
         stem = (f"{eq} A {thing} had a height of {num(start)} feet when it was planted. "

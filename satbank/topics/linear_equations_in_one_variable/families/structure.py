@@ -448,6 +448,15 @@ def equivalent_equation(rng: random.Random, seed: int, *, var=None, a=None, b=No
         raise ItemError("the stated factor does not divide every term")
     if a == b or a / g == a:
         raise ItemError("the divided equation would look identical")
+    # Equivalent equations are the ones with the same solution set, so a wrong
+    # option is only wrong if it moves the solution. It does not when b = d:
+    # a*v + b = b and a*v + b/g = b/g both say v = 0, and so does the option
+    # that subtracts the factor from every term. Two right answers.
+    v0 = (d - b) / a
+    for A, B, D in ((a / g, b, d / g), (a, b / g, d / g), (a / g, b / g, d),
+                    (a - g, b - g, d - g)):
+        if A != 0 and (D - B) / A == v0:
+            raise ItemError("a wrong option would be equivalent to the equation too")
     eq = eq_of(side(a, b, var), num(d))
     key = eq_of(side(a / g, b / g, var), num(d / g))
     stem = sent(f"Which of the following is equivalent to {eq}?")
