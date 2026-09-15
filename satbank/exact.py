@@ -134,6 +134,15 @@ class Exact:
     def __lt__(self, other) -> bool:
         return float(self) < float(_coerce(other))
 
+    def __le__(self, other) -> bool:
+        return float(self) <= float(_coerce(other))
+
+    def __gt__(self, other) -> bool:
+        return float(self) > float(_coerce(other))
+
+    def __ge__(self, other) -> bool:
+        return float(self) >= float(_coerce(other))
+
     def __hash__(self):
         return hash((self.coef, self.pi_exp, self.rad))
 

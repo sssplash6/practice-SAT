@@ -19,7 +19,7 @@ from math import gcd, isqrt
 __all__ = ["Q", "num", "fmt_num", "fmt_frac", "Poly", "linear", "quadratic",
            "fmt_eq", "fmt_point", "fmt_ineq", "fmt_interval", "fn_of",
            "line_through", "slope", "exp_model", "sign_join", "fmt_percent", "SYMBOL",
-           "fmt_places", "fmt_money"]
+           "fmt_places", "fmt_money", "fmt_band", "fmt_mixed"]
 
 
 def num(x) -> Q:
@@ -40,12 +40,17 @@ def num(x) -> Q:
     return Q(x)
 
 
-def fmt_num(v, tex: bool = False, group: bool = True) -> str:
-    """A number the way an SAT option prints it: 3, -1/2, 2.5, 1,200."""
+def fmt_num(v, tex: bool = False, group: bool = True, group_from: int = 1_000) -> str:
+    """A number the way an SAT option prints it: 3, -1/2, 2.5, 1,200.
+
+    The source separates thousands from 1,000 up -- it prints 4,529 and 1,277
+    -- so that is the default. Two topics kept a private copy of this function
+    for exactly that reason before it was a parameter.
+    """
     v = num(v)
     if v.denominator == 1:
         n = v.numerator
-        return f"{n:,}" if group and abs(n) >= 10_000 else str(n)
+        return f"{n:,}" if group and abs(n) >= group_from else str(n)
     return fmt_frac(v, tex)
 
 
@@ -277,6 +282,21 @@ SYMBOL = {"<=": "≤", ">=": "≥", "<": "<", ">": ">", "!=": "≠", "=": "="}
 def fmt_ineq(lhs: str, op: str, rhs: str) -> str:
     """op is one of < <= > >= = !=, printed with the symbols the SAT uses."""
     return f"{lhs} {SYMBOL[op]} {rhs}"
+
+
+def fmt_band(lo, var: str, hi, ops=("<=", "<=")) -> str:
+    """A quantity caught between two bounds, as the page prints it: 3 ≤ x < 8."""
+    return f"{fmt_num(lo)} {SYMBOL[ops[0]]} {var} {SYMBOL[ops[1]]} {fmt_num(hi)}"
+
+
+def fmt_mixed(v) -> str:
+    """11 2/3, the way a measurement is written when it is not a decimal."""
+    v = num(v)
+    if v.denominator == 1:
+        return fmt_num(v)
+    sign = "-" if v < 0 else ""
+    whole, rest = divmod(abs(v.numerator), v.denominator)
+    return f"{sign}{whole} {rest}/{v.denominator}" if whole else f"{sign}{rest}/{v.denominator}"
 
 
 def fmt_interval(lo, hi, closed=(True, True)) -> str:

@@ -19,7 +19,7 @@ SUPERSCRIPT = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
 # a unit printed after the number, as some source items print their options:
 # "8 cm²", "12 ft", "35 degrees". The stem has already said what the unit is.
 UNIT_SUFFIX = re.compile(r"\s*(cm|mm|km|inches|inch|feet|foot|yards|yard|units|unit|"
-                         r"degrees|degree|°|%|m|in|ft|yd)[²³]?[23]?$", re.I)
+                         r"degrees|degree|°[FC]?|%|m|in|ft|yd)[²³]?[23]?$", re.I)
 
 
 def norm_text(s) -> str:
@@ -32,7 +32,8 @@ def norm_text(s) -> str:
     """
     t = (str(s).translate(SUPERSCRIPT)
          .replace(",", "").replace(" ", "").replace("−", "-")
-         .replace("·", "*").replace("×", "*").replace("π", "pi").replace("^", "")).lower()
+         .replace("·", "*").replace("×", "*").replace("π", "pi")
+         .replace("√", "sqrt").replace("^", "")).lower()
     if any(c.isalpha() for c in t.replace("pi", "")):
         t = t.replace("*", "")
     return t.rstrip(".")
@@ -44,8 +45,13 @@ def numeral(text: str) -> float | None:
     Only a known unit is stripped -- never a symbol that changes the value, so
     "12π" stays unreadable as a number and cannot be mistaken for 12.
     """
-    t = (UNIT_SUFFIX.sub("", str(text).strip())
-         .replace(",", "").replace(" ", "").lstrip("$"))
+    raw = str(text).strip()
+    # "6 m" is six metres; "6m" is six times m, and stripping the letter would
+    # read an algebra option as a number. A unit has to stand apart from its
+    # value, or be a symbol that cannot be a variable.
+    t = raw if (re.search(r"[A-Za-z]$", raw) and not re.search(r"[\s°%]", raw)) \
+        else UNIT_SUFFIX.sub("", raw)
+    t = t.replace(",", "").replace(" ", "").replace("−", "-").lstrip("$")
     try:
         if "/" in t:
             a, b = t.split("/", 1)
