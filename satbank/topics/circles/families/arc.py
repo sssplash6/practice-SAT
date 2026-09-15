@@ -98,9 +98,13 @@ def arc(rng: random.Random, seed: int, *, mode=None, given=None, theta=None,
             p1, p2 = _place(rng, theta)
             fig = circle_with_points({a: p1, b: p2}, radii=(a, b), angle=(a, b),
                                      angle_label=None if theta == 90 else f"{theta}°")
+            # the figure marks one central angle, and the arc it cuts is the
+            # answer -- but it is only the MINOR arc when it is under a half
+            # turn, so the word goes away when the marked angle is reflex
+            named = f"minor arc {a}{b}" if theta < 180 else f"arc {a}{b}"
             stem = rng.choice([
                 f"The circle above with center O has {stated}. "
-                f"What is {_in_units('length', unit)} of minor arc {a}{b}?",
+                f"What is {_in_units('length', unit)} of {named}?",
                 f"The circle shown has center O and {stated}. "
                 f"What is {_in_units('length', unit)} of arc {a}{b}?",
             ])
@@ -307,6 +311,11 @@ def arc_angle(rng: random.Random, seed: int, *, theta=None, ask=None, fmt=None,
     key = E(360 - theta) if ask == "major" else E(theta)
     if key.coef <= 0:
         raise ItemError("a major arc needs a minor arc to be left over")
+    if ask == "major" and theta >= 180:
+        # 360 - theta is the major arc only when theta is the minor one; a
+        # reflex angle already cuts off the major arc, and calling what it
+        # leaves "major" makes the distractor the right answer
+        raise ItemError("the angle given is not the minor arc, so what is left is not major")
     if ask == "angle":
         stem = rng.choice([
             f"Point O is the center of a circle. The measure of arc {a}{b} on this circle is "
@@ -323,7 +332,8 @@ def arc_angle(rng: random.Random, seed: int, *, theta=None, ask=None, fmt=None,
             f"The measure of angle {a}O{b} is {theta}°. What is the measure, in degrees, "
             f"of arc {a}{b}?",
             f"In a circle with center O, central angle {a}O{b} measures {theta}°. What "
-            f"is the measure, in degrees, of minor arc {a}{b}?",
+            f"is the measure, in degrees, of {'minor ' if theta < 180 else ''}arc "
+            f"{a}{b}?",
         ])
         rationale = (f"An arc has the same measure as its central angle, so arc {a}{b} "
                      f"measures {theta}°.")
@@ -337,14 +347,16 @@ def arc_angle(rng: random.Random, seed: int, *, theta=None, ask=None, fmt=None,
         ])
         rationale = (f"The two arcs make a full turn, so the major arc measures 360 - "
                      f"{theta} = {key.plain()} degrees.")
-    minor = E(360) - key if ask == "major" else key
+    given_arc = E(360) - key if ask == "major" else key
+    left_over = E(360) - key
+    bigger = "major" if float(left_over) > 180 else "minor"
     mistakes = [
-        Mis("gave the major arc instead of the minor one" if ask != "major"
-            else "gave the minor arc instead of the major one", E(360) - key),
+        Mis(f"gave the {bigger} arc instead of the "
+            f"{'minor' if bigger == 'major' else 'major'} one", left_over),
         Mis("halved the measure, as an inscribed angle would", key / E(2)),
         Mis("doubled the measure, as if the angle were inscribed", key * E(2)),
         Mis("subtracted from 180 degrees instead of 360", E(180) - key),
-        Mis("halved the arc that was given", minor / E(2)),
+        Mis("halved the arc that was given", given_arc / E(2)),
         Mis("took a quarter of the measure", key / E(4)),
     ]
     # nothing on a circle measures more than a full turn, and no source item
