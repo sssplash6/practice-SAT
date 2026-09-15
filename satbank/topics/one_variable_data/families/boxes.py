@@ -131,6 +131,29 @@ PAIR_BOX = [
 ]
 
 
+def _mean_band(s) -> tuple[F, F]:
+    """How low and how high the mean of a data set with this summary can go.
+
+    A quarter of the values sit in each of the four spans the plot draws, so
+    the mean is bounded by putting every quarter at the bottom of its span and
+    then at the top. Neither end is reached, so a mean can be anywhere strictly
+    between them.
+    """
+    return (s[0] + s[1] + s[2] + s[3]) / 4, (s[1] + s[2] + s[3] + s[4]) / 4
+
+
+def _means_overlap(A, B) -> bool:
+    """Whether the two pictures leave the comparison of the means open.
+
+    They must. The wrong answers here are the two that read a mean off a box
+    plot, and a mean is only unreadable while the two bands overlap: box plots
+    far enough apart force `mean A < mean B` as firmly as they force the
+    medians, and then the item has two defensible answers.
+    """
+    (la, ha), (lb, hb) = _mean_band(A), _mean_band(B)
+    return la < hb and lb < ha
+
+
 def box_compare(rng: random.Random, seed: int, *, first=None, second=None, context=None,
                 intro=None, ask_phrase=None) -> Item:
     """Two box plots on one scale. Only the medians can be compared."""
@@ -149,6 +172,8 @@ def box_compare(rng: random.Random, seed: int, *, first=None, second=None, conte
             raise ItemError("a box plot needs five values in increasing order")
     if A[2] == B[2]:
         raise ItemError("the two medians are equal, so no statement must be true")
+    if not _means_overlap(A, B):
+        raise ItemError("these two box plots order the means as well as the medians")
     g1, g2 = ctx["groups"]
     mw = ctx["measure"]
     # every option keeps the same subject, as the source items do: what varies

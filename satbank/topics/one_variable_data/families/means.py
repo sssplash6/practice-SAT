@@ -440,17 +440,38 @@ def reason_center(rng: random.Random, seed: int, *, mode=None, n=None, total=Non
     N = sum(counts)
     pos = (N + 1) // 2
     band = 0 if pos <= counts[0] else (1 if pos <= counts[0] + counts[1] else 2)
-    lo, hi = [(None, b1), (b1, b2), (b2, None)][band]
+
+    def could_be(v) -> bool:
+        """Whether the median could be this value, with the boundaries read as
+        the stem words them: below the first bound, from it up to the second,
+        or above the second."""
+        return [q(v) < b1, b1 <= q(v) <= b2, q(v) > b2][band]
+
     if options is None:
         inside = {0: b1 / 2, 1: (b1 + b2) / 2, 2: b2 + 2}[band]
-        outside = {0: [b1 + F(1, 2), (b1 + b2) / 2, b2 + 2],
-                   1: [b1 / 2, b2 + F(1, 2), b2 + 2],
-                   2: [b1 / 2, (b1 + b2) / 2, b2 - F(1, 2)]}[band]
+        # more impossible values than the three that are wanted: bounds one
+        # apart make several of them coincide, and three distinct ones are
+        # still needed. Coming up short is worse than it sounds -- `assemble`
+        # pads a short list with a multiple of the key, and half of a value
+        # inside the band is another value inside the band
+        pool = {0: [b1 + F(1, 2), (b1 + b2) / 2, b2 + 2, b2 + F(1, 2), b1, b2],
+                1: [b1 / 2, b2 + F(1, 2), b2 + 2, b1 - F(1, 2), b2 + 3],
+                2: [b1 / 2, (b1 + b2) / 2, b2 - F(1, 2), b1, b2]}[band]
+        outside = []
+        for v in pool:
+            if len(outside) == 3:
+                break
+            if not could_be(v) and v > 0 and v not in outside:
+                outside.append(v)
+        if len(outside) < 3:
+            raise ItemError("these bounds do not give three impossible values")
         options = [inside] + outside
     key = E(q(options[0]))
-    if (lo is not None and key.coef < lo) or (hi is not None and key.coef > hi):
+    if not could_be(key.coef):
         raise ItemError("the keyed value is not inside the band that holds the median")
-    others = list(options[1:]) or [b1 / 2, b2 + F(1, 2), b2 + 2]
+    others = list(options[1:])
+    if len(others) < 3 or any(could_be(v) for v in others):
+        raise ItemError("an option other than the key could also be the median")
     where = ctx["place"]
     mistakes = []
     for v in others:
