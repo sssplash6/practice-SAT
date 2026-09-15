@@ -1,89 +1,76 @@
-# Where this stopped
+# Where this stands, and what is next
 
-Paused deliberately on 2026-09-15. The tree is clean, everything is
-committed, and nothing is half-written.
+Last updated 2026-09-15. The tree is clean and every topic below passes
+`PYTHONPATH=. python3 -m satbank check --topic <slug>`.
 
-## Done: 11 of 19 topics, 852 of 1,039 official items
+## Done: 11 of 19 topics, 659 of 1,039 official items
 
-| topic | templates | official answers | distractor fidelity | option check |
-|---|---:|---|---:|---|
-| Area and Volume | 19 | 59/59 | 97% | yes |
-| Linear Inequalities | 18 | 46/46 | 98% | yes |
-| Systems of Linear Equations | 20 | 61/62 | 95% | yes |
-| One-Variable Data | 19 | 49/49 | 93% | **no** |
-| Equivalent Expressions | 21 | 70/70 | 93% | yes |
-| Circles | 16 | 32/32 | 89% | **no** |
-| Linear Functions | 23 | 85/86 | 89% | **no** |
-| Percentages | 18 | 52/52 | 87% | yes |
-| Ratios, Rates, Proportions, Units | 22 | 57/57 | 86% | **no** |
-| Linear Equations in Two Variables | 22 | 80/81 | 83% | yes |
-| Linear Equations in One Variable | 18 | 65/65 | 81% | **no** |
+656 encoded, 3 excluded with reasons recorded on their own `sources.py` rows.
 
-Every one passes `PYTHONPATH=. python3 -m satbank check --topic <slug>`.
+| topic | templates | official answers | distractor fidelity |
+|---|---:|---|---:|
+| Linear Inequalities | 18 | 46/46 | 98% |
+| Area and Volume | 19 | 59/59 | 97% |
+| Systems of Linear Equations | 20 | 61/62 | 95% |
+| One-Variable Data | 19 | 49/49 | 93% |
+| Equivalent Expressions | 21 | 70/70 | 93% |
+| Linear Functions | 23 | 85/86 | 90% |
+| Circles | 16 | 32/32 | 89% |
+| Percentages | 18 | 52/52 | 87% |
+| Ratios, Rates, Proportions, Units | 22 | 57/57 | 86% |
+| Linear Equations in Two Variables | 22 | 80/81 | 83% |
+| Linear Equations in One Variable | 18 | 65/65 | 82% |
 
-## Next, in this order
+All eleven have run their `option_check.py`. **All eleven had live defects**
+— 23 in total. See `TOPIC-GUIDE.md` and any topic's `OPTION-CHECK.md`.
 
-### 1. Five option checks, already briefed and interrupted
+## Next: wave 3, then wave 4
 
-The gate never reads a **wrong** option as mathematics — every check stops at
-the key — so an item with two correct options passes all seven and reaches a
-student with no defensible answer. Six topics have run the check and **six
-found a live defect**, including a keyed system of inequalities that was
-infeasible and a distractor that was the key in 57 draws of 6,000.
+Five topics, 315 items, the heaviest wave:
 
-The five marked "no" above have never run it, and all five use
-`assemble_text`. They were briefed and stopped before writing anything. One
-had already found something worth chasing:
+| topic | items | what makes it hard |
+|---|---:|---|
+| Nonlinear Functions | 110 | the largest in the set; parabolas, exponentials, reading graphs |
+| Nonlinear Equations and Systems | 85 | quadratics, radicals, a line meeting a curve |
+| Lines, Angles, and Triangles | 48 | the figure carries the question |
+| Two-Variable Data | 39 | scatterplots and lines of best fit |
+| Right Triangles and Trigonometry | 33 | figures, exact values |
 
-> **Ratios: a live defect in `rr.growth_table`** — found, not yet quantified
-> or fixed.
+Then wave 4, 65 items: Probability 36, Sample Statistics and Margin of Error
+18, Evaluating Statistical Claims 11.
 
-`satbank/topics/systems_of_linear_equations/option_check.py` and its
-`OPTION-CHECK.md` are the reference implementation; `TOPIC-GUIDE.md` carries
-the requirement and the three rules (read the printed string not your own
-parameters; check generated draws not source items; prove the check can fail).
+Then the serving layer — see "Before a student sees this" in the README.
+Correct items are not a usable bank.
 
-### 2. Promote an expression parser into the core
+## How to run a wave
 
-Equivalent Expressions ships **two** parsers of its own — a recursive-descent
-one in `audit.py` and a shunting-yard one in `option_check.py` — because the
-core has none. Nonlinear Functions and Nonlinear Equations, the two largest
-topics left, will both need one, and will otherwise write a third and a
-fourth. Lift one into `expr.parse(text) -> callable` with a numeric `agree()`.
+One agent per topic, in parallel, each given: `TOPIC-GUIDE.md` (the contract),
+the nearest finished sibling to read first, and its own topic's sharpest
+exposure. Then **re-run the gate yourself and read a page of items** —
+`tools/preview.py <slug> --per 3` — rather than trusting the report. That pass
+has caught something in every topic: `f (x)` printed with a space, a year
+printed as `1,960`, a rationale that restated the answer, a mass measured in
+millimetres.
 
-### 3. Put the `wrongs=` pattern in TOPIC-GUIDE.md
+The core is ready and should not need working around. `expr.parse` /
+`expr.agree` / `expr.parse_point` read printed mathematics back, which the two
+nonlinear topics will need for "which of the following is equivalent".
+`expr.fmt_money`, `fmt_places`, `fmt_band`, `fmt_mixed` print what the page
+prints. `plot.boxplots` / `histograms` draw two distributions to one scale.
+`assemble` enforces the sign rule centrally.
 
-Four topics independently hit `assemble` preferring distractors of the key's
-own surface form, which crowds out the option set College Board printed. All
-four solved it the same way: a per-source-item `wrongs=[...]` filter naming
-the three CB actually used (see `systems_of_linear_equations/sources.py`).
-That is better than any ordering heuristic the core could apply — it should be
-documented as the standard rather than fixed in `assemble`.
+## The things that cost us most, so they are not paid for twice
 
-### 4. Wave 3, then wave 4
-
-Wave 3: Nonlinear Functions (110 — the largest in the set), Nonlinear
-Equations and Systems (85), Lines Angles and Triangles (48), Right Triangles
-and Trigonometry (33), Two-Variable Data (39).
-
-Wave 4: Probability (36), Sample Statistics and Margin of Error (18),
-Evaluating Statistical Claims (11).
-
-### 5. Then the serving layer
-
-See "Before a student sees this" in the README. Correct items are not a usable
-bank: difficulty is an inherited label that skews hard, random draws repeat,
-and nothing weights selection to the exam blueprint.
-
-## What every author should be told, so it is not rediscovered
-
-- The SAT is typeset: π ² ³ √ ≤ ≥ − ·, never `pi` `^2` `<=`. An audit may keep
-  an ASCII spelling; `item.norm_text` knows they are one answer.
-- A displayed equation gets its own line in the stem.
-- A rationale explains which step produces the answer; it never restates it.
-- `assemble` enforces the sign rule centrally — pass `signed=True`,
-  `fillers="shift"`, and write no local workaround.
-- Money is exact and rounded only to print: `expr.fmt_money`, `fmt_places`.
-- Options carry a unit only where the source prints one, set per source item.
-- Anything asking for the "nearest" or "closest" value needs a guard against a
-  draw landing exactly halfway — see `percentages`' `values.unambiguous`.
+1. **The gate only ever checks the key.** Every topic needs `option_check.py`.
+   Eleven for eleven found defects.
+2. **Anything saying "closest", "nearest", "approximately", or printing money
+   needs a halfway guard.** Three topics shipped items whose printed page
+   cannot produce the key.
+3. **A distractor pool must be named and filtered per source item** (`wrongs=`)
+   or College Board's own option sets get crowded out. This alone was a third
+   of Area and Volume's rise from 60% to 97%.
+4. **Fidelity is only meaningful while it is honest.** Tell authors plainly:
+   an honest 85% with the unreachable ones named beats a fabricated 95%.
+   Curve-fitting to CB's digits would hollow the metric out entirely.
+5. **Read the items on a page.** Every prose defect found this week was found
+   by eye, never by a check.

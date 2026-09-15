@@ -12,15 +12,21 @@ an item is reproducible from its seed and provably correct before it ships.
 ## Status
 
 The engine is being built out across all nineteen SAT Math topics, from 1,039
-official College Board items. Five are finished:
+official College Board items. Eleven are finished, covering 659 of them:
 
 | topic | domain | templates | official items | distractor fidelity |
 |---|---|---:|---:|---:|
-| Area and Volume | Geometry and Trigonometry | 19 | 59 / 59 | 60% |
+| Linear Inequalities | Algebra | 18 | 46 / 46 | 98% |
+| Area and Volume | Geometry and Trigonometry | 19 | 59 / 59 | 97% |
+| Systems of Linear Equations | Algebra | 20 | 61 / 62 | 95% |
+| One-Variable Data | Problem-Solving and Data Analysis | 19 | 49 / 49 | 93% |
+| Equivalent Expressions | Advanced Math | 21 | 70 / 70 | 93% |
+| Linear Functions | Algebra | 23 | 85 / 86 | 90% |
 | Circles | Geometry and Trigonometry | 16 | 32 / 32 | 89% |
-| Linear Equations in One Variable | Algebra | 18 | 65 / 65 | 81% |
-| Linear Functions | Algebra | 23 | 85 / 86 | 89% |
-| Percentages | Problem-Solving and Data Analysis | 18 | 51 / 52 | 76% |
+| Percentages | Problem-Solving and Data Analysis | 18 | 52 / 52 | 87% |
+| Ratios, Rates, Proportions, Units | Problem-Solving and Data Analysis | 22 | 57 / 57 | 86% |
+| Linear Equations in Two Variables | Algebra | 22 | 80 / 81 | 83% |
+| Linear Equations in One Variable | Algebra | 18 | 65 / 65 | 82% |
 
 "Official items" is how many of that topic's source questions the engine
 reproduces the printed answer for, driven by the source item's own numbers.
@@ -39,9 +45,12 @@ has many plausible values, so matching the particular one College Board chose
 is partly luck. Circle and function misconceptions are named and finite, so
 they are hittable.
 
-Two items are excluded across the five, each with its reason recorded in the
-topic's `sources.py`: one asks the student to match a drawn line against four
-pictures, and one turns on two values printed as labels on a line graph.
+Three items are excluded across the eleven, each with its reason recorded in
+the topic's `sources.py`; all three offer four coordinate grids as options, so
+the answer lives in artwork rather than in anything a template can vary.
+
+Every topic has also run its own `option_check.py`, and **all eleven found a
+live defect the seven gate checks cannot see** — see the section below.
 
 ## Run it
 
@@ -117,6 +126,21 @@ Seven checks, all of which must pass before a topic ships:
 | structure | options out of order, the key alone in its surface form or its sign, under 80% of distractors named |
 | prose | a placeholder, a doubled space, a stem that is not a sentence |
 | capacity | a template that cannot make 200 distinct items |
+
+### The check the gate cannot make
+
+Every one of the seven checks stops at the key. Nothing in the engine reads a
+**wrong** option as mathematics, so an item with two correct options — or none
+— passes all seven and reaches a student as a question with no defensible
+answer. Each topic therefore carries an `option_check.py` that reads the four
+printed options back with a parser sharing nothing with the renderer, and
+asserts exactly one is correct *and* that it is the keyed one.
+
+Eleven topics, eleven with live defects, 23 in total: a minor arc keyed at
+316° with the true answer printed beside it as a distractor; box plots drawn
+far enough apart that they force their means; three equivalent equations in
+one option set; an item whose axes carried no labels at all under options
+reading "$41" and "$60".
 
 The gate is necessary and not sufficient: it proves an item is right, not that
 it reads like an SAT item. Every topic here has also been read on a page
