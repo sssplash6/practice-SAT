@@ -12,6 +12,8 @@ unless a template asks for it.
 
 from __future__ import annotations
 
+import math
+import re
 from dataclasses import dataclass
 from fractions import Fraction as Q
 from math import gcd, isqrt
@@ -19,7 +21,8 @@ from math import gcd, isqrt
 __all__ = ["Q", "num", "fmt_num", "fmt_frac", "Poly", "linear", "quadratic",
            "fmt_eq", "fmt_point", "fmt_ineq", "fmt_interval", "fn_of",
            "line_through", "slope", "exp_model", "sign_join", "fmt_percent", "SYMBOL",
-           "fmt_places", "fmt_money", "fmt_band", "fmt_mixed"]
+           "fmt_places", "fmt_money", "fmt_band", "fmt_mixed",
+           "parse", "agree", "parse_point", "ParseError"]
 
 
 def num(x) -> Q:
@@ -320,3 +323,225 @@ def exp_model(a, rate, var: str = "x", per: str = "") -> str:
 def _decimal(q: Q) -> str:
     s = f"{float(q):.10f}".rstrip("0").rstrip(".")
     return s
+
+
+# ---------------------------------------------------------------- reading back
+#
+# Equivalence is not a string comparison. "Which of the following is
+# equivalent" items, and any check that has to decide a WRONG option as
+# mathematics, need to read the printed page back and evaluate it -- and the
+# reader must share nothing with the printer, or a rendering bug that drops a
+# minus sign is invisible to it.
+#
+# Equivalent Expressions shipped two parsers of its own before this existed.
+
+_TOKEN = re.compile(r"""
+    (?P<num>\d+(?:\.\d+)?(?:,\d{3})*|\.\d+)   # 3, 2.5, 1,200
+  | (?P<name>[A-Za-z][A-Za-z_]*)              # x, pi, sqrt
+  | (?P<op>\*\*|[-+*/^()|,=<>≤≥])
+  | (?P<sym>[π√·×−⁰¹²³⁴⁵⁶⁷⁸⁹½⅓¼])
+  | (?P<space>\s+)
+""", re.X)
+
+_SUPER = {"⁰": 0, "¹": 1, "²": 2, "³": 3, "⁴": 4, "⁵": 5,
+          "⁶": 6, "⁷": 7, "⁸": 8, "⁹": 9}
+
+
+class ParseError(ValueError):
+    """The printed text is not an expression this reader understands."""
+
+
+def _lex(text: str) -> list:
+    out, i = [], 0
+    text = text.replace("−", "-").replace("×", "*").replace("·", "*")
+    while i < len(text):
+        m = _TOKEN.match(text, i)
+        if not m:
+            raise ParseError(f"cannot read {text[i:i + 12]!r} in {text!r}")
+        i = m.end()
+        if m.lastgroup == "space":
+            continue
+        if m.lastgroup == "num":
+            out.append(("num", Q(m.group().replace(",", ""))))
+        elif m.lastgroup == "sym":
+            s = m.group()
+            if s in _SUPER:
+                out.append(("sup", _SUPER[s]))
+            elif s == "π":
+                out.append(("name", "pi"))
+            elif s == "√":
+                out.append(("name", "sqrt"))
+            elif s == "½":
+                out.append(("num", Q(1, 2)))
+            elif s == "⅓":
+                out.append(("num", Q(1, 3)))
+            else:
+                out.append(("num", Q(1, 4)))
+        else:
+            out.append((m.lastgroup, m.group()))
+    return out
+
+
+def parse(text: str):
+    """Read printed mathematics back into a function of its variables.
+
+    Returns `f(**values) -> float`, so two printed expressions can be compared
+    by evaluating both rather than by matching their text: 40n and 160n/4 are
+    one expression, and no string comparison will say so.
+
+    Understands what the engine prints -- juxtaposition as multiplication
+    (3x, 2(x+1)), typeset superscripts (x²), π and √, a caret or ** for a
+    power, and thousands separators. Raises ParseError on anything else.
+    """
+    toks = _lex(str(text))
+    pos = 0
+
+    def peek():
+        return toks[pos] if pos < len(toks) else (None, None)
+
+    def eat(kind=None, val=None):
+        nonlocal pos
+        k, v = peek()
+        if k is None or (kind and k != kind) or (val and v != val):
+            raise ParseError(f"unexpected {v!r} in {text!r}")
+        pos += 1
+        return v
+
+    def atom(env):
+        k, v = peek()
+        if k == "num":
+            eat()
+            return float(v)
+        if k == "name":
+            eat()
+            if v == "sqrt":
+                return math.sqrt(factor(env))
+            if v in ("pi",):
+                return math.pi
+            if v not in env:
+                raise ParseError(f"no value given for {v!r}")
+            return float(env[v])
+        if (k, v) == ("op", "("):
+            eat()
+            inner = expression(env)
+            eat("op", ")")
+            return inner
+        if (k, v) == ("op", "|"):
+            eat()
+            inner = expression(env)
+            eat("op", "|")
+            return abs(inner)
+        if (k, v) == ("op", "-"):
+            eat()
+            return -factor(env)
+        if (k, v) == ("op", "+"):
+            eat()
+            return factor(env)
+        raise ParseError(f"unexpected {v!r} in {text!r}")
+
+    def factor(env):
+        base = atom(env)
+        while True:
+            k, v = peek()
+            if k == "sup":
+                base **= eat()
+            elif (k, v) in (("op", "^"), ("op", "**")):
+                eat()
+                base **= factor(env)
+            else:
+                return base
+
+    def term(env):
+        value = factor(env)
+        while True:
+            k, v = peek()
+            if (k, v) == ("op", "*"):
+                eat()
+                value *= factor(env)
+            elif (k, v) == ("op", "/"):
+                eat()
+                d = factor(env)
+                if d == 0:
+                    raise ZeroDivisionError
+                value /= d
+            elif k in ("num", "name") or (k, v) == ("op", "("):
+                value *= factor(env)          # juxtaposition: 3x, 2(x + 1)
+            else:
+                return value
+
+    def expression(env):
+        value = term(env)
+        while True:
+            k, v = peek()
+            if (k, v) == ("op", "+"):
+                eat()
+                value += term(env)
+            elif (k, v) == ("op", "-"):
+                eat()
+                value -= term(env)
+            else:
+                return value
+
+    def run(**values):
+        nonlocal pos
+        pos = 0
+        out = expression(values)
+        if pos != len(toks):
+            raise ParseError(f"trailing {toks[pos][1]!r} in {text!r}")
+        return out
+
+    return run
+
+
+def agree(a, b, variables=("x",), points=(Q(2), Q(3), Q(5, 2), Q(-3), Q(7), Q(-5, 3)),
+          tol: float = 1e-9) -> bool:
+    """Do two printed expressions mean the same thing?
+
+    Evaluated at several rational points rather than compared as text, which
+    is the only honest test: 40n and 160n/4 are one expression. A point where
+    either side is undefined is skipped, and two expressions that agree
+    nowhere defined are not equal.
+    """
+    fa = parse(a) if isinstance(a, str) else a
+    fb = parse(b) if isinstance(b, str) else b
+    seen = 0
+    for i, p in enumerate(points):
+        env = {v: p + Q(i * 3 + n, 7) for n, v in enumerate(variables)}
+        try:
+            va, vb = fa(**env), fb(**env)
+        except (ZeroDivisionError, ValueError, OverflowError, ParseError):
+            continue
+        if not (math.isfinite(va) and math.isfinite(vb)):
+            continue
+        seen += 1
+        if abs(va - vb) > tol * max(1.0, abs(va), abs(vb)):
+            return False
+    return seen >= 2
+
+
+def parse_point(text: str, variables=()) -> tuple:
+    """Read a printed ordered pair back: "(9, 5)" or "(-4r/11 + 29/11, r)".
+
+    Each coordinate is parsed as an expression, so a parameterised point
+    reads too. Returns a tuple of callables when `variables` is given, and a
+    tuple of floats when it is not.
+    """
+    t = str(text).strip()
+    if not (t.startswith("(") and t.endswith(")")):
+        raise ParseError(f"{text!r} is not an ordered pair")
+    depth, parts, cur = 0, [], ""
+    for ch in t[1:-1]:
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+        if ch == "," and depth == 0:
+            parts.append(cur)
+            cur = ""
+        else:
+            cur += ch
+    parts.append(cur)
+    if len(parts) != 2:
+        raise ParseError(f"{text!r} does not have two coordinates")
+    fs = tuple(parse(p) for p in parts)
+    return fs if variables else tuple(f() for f in fs)
