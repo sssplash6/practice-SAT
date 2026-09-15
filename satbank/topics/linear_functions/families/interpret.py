@@ -15,7 +15,8 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....item import Item, ItemError, Mis, assemble_text
-from ...linear_functions.common import dec, money, numtext, q
+from ....plot import line_graph
+from ...linear_functions.common import dec, money, numtext, q, year_text
 
 __all__ = ["interpret_slope", "interpret_constant", "interpret_x_intercept"]
 
@@ -113,7 +114,8 @@ SLOPE_CTX = [
              "intercept_as_rate": f"The video game system costs ${m}.",
              "rate_as_fixed": f"Each game costs ${b}."},
          order=["intercept", "intercept_as_rate", "rate_as_fixed"], mrange=(15, 60),
-         brange=(50, 250), scaled=True),
+         brange=(50, 250), scaled=True, xmax=10,
+         xlabel="Number of games", ylabel="Total cost (dollars)"),
     dict(kind="label",
          stem="The graph represents the total charge, in dollars, by an electrician for x "
               "hours of work. The electrician charges a onetime fee plus an hourly rate. "
@@ -162,7 +164,17 @@ def interpret_slope(rng: random.Random, seed: int, *, ctx=None, m=None, b=None) 
         raise ItemError("the rate and the constant must be told apart")
     roles = d["roles"](numtext(m), numtext(b))
     stem = d["stem"].format(m=numtext(m), b=numtext(b))
-    fig = _scaleless_line(m, b) if d["kind"] in ("graph", "label") else None
+    if d.get("scaled"):
+        # a scaleless picture is only honest when the options name no numbers.
+        # This context's options do -- "Each game costs $25" against "Each game
+        # costs $100" -- and bare axes leave a student no way to tell which
+        # number is the slope, so the graph has to carry a readable scale.
+        x1 = d["xmax"]
+        fig = line_graph([(0, b), (x1, m * x1 + b)], d["xlabel"], d["ylabel"])
+    elif d["kind"] in ("graph", "label"):
+        fig = _scaleless_line(m, b)
+    else:
+        fig = None
     P = {"kind": "lf_interpret_slope", "ask": "slope",
          "m": [m.numerator, m.denominator], "b": [b.numerator, b.denominator]}
     rationale = (f"The coefficient of the variable is the constant rate of change, so "
@@ -242,7 +254,7 @@ POINT_CTX = [
               "equation P({t}) = {v} ?",
          noun="snow leopard population in this area", brange=(150, 400), mrange=(5, 30),
          y0range=(1960, 1995), trange=(10, 40)),
-    dict(stem="N(t) = {b} + {m}t The number of registered bicycles in a certain town can "
+    dict(stem="N(t) = {b} + {m}t\nThe number of registered bicycles in a certain town can "
               "be modeled by the function N defined above, where N(t) is the number "
               "registered t years after {y0}. Of the following, which is the best "
               "interpretation of the equation N({t}) = {v} ?",
@@ -299,14 +311,14 @@ def interpret_constant(rng: random.Random, seed: int, *, mode=None, ctx=None, b=
         noun = d["noun"]
         roles = {
             "value_year": f"The {noun} is predicted to be {numtext(v)} in the year "
-                          f"{year}.",
+                          f"{year_text(year)}.",
             "value_wrong_year": f"The {noun} is predicted to be {numtext(v)} in the year "
                                 f"{wrong_year}.",
             "input_year": f"The {noun} is predicted to be {numtext(t)} in the year "
-                          f"{year}.",
+                          f"{year_text(year)}.",
             "input_wrong_year": f"The {noun} is predicted to be {numtext(t)} in the year "
                                 f"{wrong_year}."}
-        stem = d["stem"].format(b=numtext(b), m=numtext(m), y0=numtext(y0), t=numtext(t),
+        stem = d["stem"].format(b=numtext(b), m=numtext(m), y0=year_text(y0), t=numtext(t),
                                 v=numtext(v))
         extra = [("input_year", "read the input as the population"),
                  ("input_wrong_year", "read the input as the population and as the year"),
@@ -314,7 +326,7 @@ def interpret_constant(rng: random.Random, seed: int, *, mode=None, ctx=None, b=
                                       "after the starting year")]
         key_role = "value_year"
         P = {"kind": "lf_interpret_constant", "mode": mode, "ask": "value_year"}
-        rationale = (f"t is measured from {numtext(y0)}, so t = {numtext(t)} is the year "
+        rationale = (f"t is measured from {year_text(y0)}, so t = {numtext(t)} is the year "
                      f"{year} and the value there is {numtext(v)}.")
     return _role_item("lin.interpret_constant", "interpreting a constant term", "medium",
                       seed, stem, P, roles, key_role, rng, extra, rationale)

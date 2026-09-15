@@ -167,3 +167,12 @@ def choose(key, mistakes, rng, **kw):
     if shapes.count(shapes["ABCD".index(letter)]) == 1:
         raise ItemError("the key would be the only option of its surface form")
     return choices, latex, reasons, letter
+
+
+def year_text(v) -> str:
+    """A year is a label, not a quantity: 1980, never 1,980.
+
+    Everything else in a stem is a measurement and groups its thousands, which
+    is why this cannot just be `numtext`.
+    """
+    return str(int(v))

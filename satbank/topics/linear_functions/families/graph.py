@@ -13,7 +13,11 @@ from fractions import Fraction as Q
 
 from ....figures import coordinate_grid
 from ....item import Item, ItemError, Mis, assemble
-from ....plot import line_graph
+# `_ticks` places the gridlines `line_graph` draws, and how finely a reader
+# can take a value off the picture is exactly the gap between them. The
+# guard below has to use the same function that draws them: an
+# approximation of the spacing would drift away from the picture.
+from ....plot import _ticks, line_graph
 from ...linear_functions.common import choose, coef_text, ex, lin_text, money, numtext, q
 from .define import _text_item, pair, sig
 
@@ -71,6 +75,9 @@ def graph_read(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, x=Non
     x0, x1 = d["x0"], d["x1"]
     pts = [(x0, m * x0 + b), (x1, m * x1 + b)]
     fig = line_graph(pts, d["xlabel"], d["ylabel"])
+    ys = [float(p[1]) for p in pts]
+    ticks = _ticks(min(min(ys), 0.0), max(ys) * 1.1 or 1.0)
+    gridline = float(ticks[1] - ticks[0]) if len(ticks) > 1 else (max(ys) or 1.0)
 
     if d["ask"] == "equation":
         lhs, var = d["lhs"], d["var"]
@@ -104,6 +111,10 @@ def graph_read(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, x=Non
                         x / key if key != 0 else None),
                     Mis("gave the input rather than the value read off the graph", x),
                     Mis("left out the starting amount", m * x)]
+        # a value taken off the picture is read to within a fraction of a
+        # gridline, so an option that sits nearer the key than half a gridline
+        # is not a wrong answer -- it is the same reading printed twice
+        tol = gridline / 2
         P = {"kind": "lf_graph_read", "ask": "value", "m": [m.numerator, m.denominator],
              "b": [b.numerator, b.denominator], "x": [x.numerator, x.denominator]}
         rationale = (f"The line has slope {numtext(m)} and passes through "
@@ -128,6 +139,9 @@ def graph_read(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, x=Non
                             q(2)),
                         Mis("halved the rate", m / 2),
                         Mis("read the rise over five units without dividing", 5 * m)]
+        # a rate is two such readings divided by the distance between them, so
+        # what the picture can separate shrinks with the run
+        tol = gridline / (2 * float(x1 - x0)) if x1 != x0 else gridline
         P = {"kind": "lf_graph_read", "ask": "rate", "m": [m.numerator, m.denominator],
              "b": [b.numerator, b.denominator]}
         rationale = (f"The line rises {numtext(m)} for every 1 along, so the rate is "
@@ -142,7 +156,8 @@ def graph_read(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, x=Non
     fmt_value = money if d.get("money") else None
     if d.get("money"):
         P["money"] = True
-    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
+    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None
+                and abs(float(r.value) - float(key)) >= tol]
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, fmt_value=fmt_value,
                                                signed=True)
     return Item("lin.graph_read", skill, difficulty, seed, stem, "mcq", keyx, letter,

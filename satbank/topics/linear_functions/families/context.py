@@ -15,7 +15,8 @@ from fractions import Fraction as Q
 
 from ....item import Item, ItemError, Mis, assemble
 from ...linear_functions.common import (choose, coef_text, dec, ex, lin_text, money, numtext, q,
-                                        recip_text)
+                                        year_text,
+                                        recip_text, terminating)
 from .define import _text_item, pair, sig
 
 __all__ = ["model_equation", "per_unit_model", "tiered_cost", "model_value",
@@ -535,7 +536,7 @@ def context_two_points(rng: random.Random, seed: int, *, ask=None, ctx=None, x1=
         if not d["approx"] and key.denominator != 1:
             raise ItemError("this context reports whole units")
         mid = y1 + m * (Q(x1 + x2, 2) - x1)
-        stem = d["text"].format(y1=numtext(x1), y2=numtext(x2), y3=numtext(x3),
+        stem = d["text"].format(y1=year_text(x1), y2=year_text(x2), y3=year_text(x3),
                                 v1=numtext(y1), v2=numtext(y2))
         mistakes = [Mis("stepped one unit too far from the nearer known point", key - m),
                     Mis("stepped two units too far from the nearer known point",
@@ -571,6 +572,12 @@ def context_two_points(rng: random.Random, seed: int, *, ask=None, ctx=None, x1=
     gap = x2 - x1
     m = (y2 - y1) / gap
     style = style or d["style"]
+    # a context that prints its rate as a decimal can only print a rate that
+    # has one. 862 to 846 over ten years is -1.6; 1,172 to 557 over seventeen
+    # is -36.17..., which `dec` would silently round to -36 -- an option that
+    # no longer fits the table printed above it.
+    if style == "dec" and d.get("places") is None and not terminating(m):
+        raise ItemError("a decimal context must print an exact rate of change")
     lhs, var = d["lhs"], d["var"]
     order = d["order"]
     key = f"{lhs} = {lin_text(m, y1, var, style, d.get('places'), order)}"
@@ -580,7 +587,7 @@ def context_two_points(rng: random.Random, seed: int, *, ask=None, ctx=None, x1=
         table = [list(d["table"]), [numtext(x1), numtext(y1, d.get("vstyle", "dec"))],
                  [numtext(x2), numtext(y2, d.get("vstyle", "dec"))]]
     vstyle = d.get("vstyle", "dec")
-    stem = d["text"].format(y1=numtext(x1), y2=numtext(x2), v1=numtext(y1, vstyle),
+    stem = d["text"].format(y1=year_text(x1), y2=year_text(x2), v1=numtext(y1, vstyle),
                             v2=numtext(y2, vstyle))
     drop = y1 - y2
 
@@ -602,6 +609,8 @@ def context_two_points(rng: random.Random, seed: int, *, ask=None, ctx=None, x1=
                   Mis("changed the sign of the rate of change", T(-m, y1))]
     else:
         alt = -y2 / gap if d.get("alt") == "final" else -drop / gap
+        if style == "dec" and d.get("places") is None and not terminating(alt):
+            raise ItemError("a decimal context must print exact distractor rates")
         wrongs = [Mis("changed the sign of the rate of change", T(-m, y1)),
                   Mis("used the final amount instead of the change in amount", T(alt, y1)),
                   Mis("used the final amount and changed the sign", T(-alt, y1)),
