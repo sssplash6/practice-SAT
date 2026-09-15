@@ -75,6 +75,31 @@ params alone**. Write it from the mathematics, not by calling the generator's
 helpers — if it shares a helper with the template, a wrong helper passes
 twice. Inverse items: root-find with `solve_for` rather than rearranging.
 
+### Naming the distractors a source item printed
+
+`assemble` takes its three distractors from the key's own surface form first,
+which is right for a free draw and wrong for a source item: a fractional key
+pulls fractional distractors ahead of the integer ones College Board actually
+printed. Four topics hit this independently and all four solved it the same
+way, which makes it the house pattern rather than a workaround.
+
+Keep each template's wrong answers as a **named pool** — `{key: Mis}` rather
+than a list — and let a source item name the three it wants, in printed order:
+
+```python
+S("2.18", lambda r: parallel_perpendicular(r, 0, m=Q(-1, 2), b=7,
+                                           wrongs=["reciprocal", "sign", "unchanged"])),
+```
+
+`systems_of_linear_equations/sources.py` and `area_and_volume/kit.py` are the
+worked examples. Area and Volume went from 60% to 97% distractor fidelity and
+a third of that gain was this alone: the right misconceptions were already
+modelled and were simply sitting fourth in a list where only three could
+print.
+
+The pool is also self-documenting — a named key says what the mistake is, so
+a source item reads as the three errors that item is testing.
+
 ### The sources
 
 ```python
