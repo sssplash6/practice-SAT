@@ -18,7 +18,7 @@ import random
 
 from ....item import Item, ItemError
 from ..values import (Q, dec, frac_text, mcq, places_needed, q, root, sig,
-                      snap, spr)
+                      spr, unambiguous)
 
 __all__ = ["convert", "convert_chain", "pop_density", "cube_density"]
 
@@ -441,7 +441,11 @@ def cube_density(rng: random.Random, seed: int, *, ask="mass", frame=None,
         if density <= 0 or edge <= 0:
             raise ItemError("a density and an edge are both positive")
         exact = density * edge ** 3
-        key = snap(exact, Q(1, 10 ** places)) if places is not None else exact
+        # "to the nearest whole number" needs one nearest whole number: 420 kg
+        # per cubic meter in a 1.50 m cube is 1,417.5, which is a convention
+        # rather than an answer
+        key = (unambiguous(exact, Q(1, 10 ** places)) if places is not None
+               else exact)
         P = {"kind": "rr_cube_density", "ask": "mass", "density": float(density),
              "mass": 0.0, "edge": [edge.numerator, edge.denominator],
              "places": places}

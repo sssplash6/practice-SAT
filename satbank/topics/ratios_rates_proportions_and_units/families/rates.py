@@ -20,7 +20,8 @@ from __future__ import annotations
 import random
 
 from ....item import Item, ItemError
-from ..values import (Q, dec, mcq, places_needed, q, sig, snap, spr, text_mcq)
+from ..values import (Q, dec, mcq, places_needed, q, sig, snap, spr, text_mcq,
+                      unambiguous)
 
 __all__ = ["unit_rate", "rate_convert", "rate_product", "gap", "growth_table",
            "table_unit_price", "exchange_fee"]
@@ -299,7 +300,9 @@ def rate_convert(rng: random.Random, seed: int, *, frame=None, value=None,
         difficulty = "medium"
 
     if places is not None:
-        key = snap(key, Q(1, 10 ** places))
+        # a speed that lands exactly between two tenths is answered by a rounding
+        # convention the stem never states, so the draw goes back
+        key = unambiguous(key, Q(1, 10 ** places))
     if key <= 0:
         raise ItemError("a speed has to be positive")
 
@@ -618,7 +621,10 @@ def growth_table(rng: random.Random, seed: int, *, fast=None, slow=None,
     feet = int(feet) if feet is not None else rng.choice([1, 1, 2, 3])
     start = 12 * feet
     exact = years * (Q(1) / gf - Q(1) / gs)
-    key = snap(exact, Q(1, 10))
+    # 21 years of a 3.5 tree and a 4.0 tree differ by exactly 0.75 inches, and
+    # "closest to" then has two answers: 0.7 and 0.8 are the same distance away
+    # and the pool prints both. `unambiguous` throws that draw away.
+    key = unambiguous(exact, Q(1, 10))
     if key <= 0:
         raise ItemError("the two trees would not separate")
     table = [["Species of tree", "Growth factor"]] + \

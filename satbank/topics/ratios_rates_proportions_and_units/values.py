@@ -24,7 +24,8 @@ from ...expr import fmt_money
 from ...item import Item, ItemError, Mis, assemble, assemble_text
 
 __all__ = ["Q", "q", "Num", "dec", "frac_text", "places_needed", "grid",
-           "tidy", "snap", "sig", "root", "mcq", "spr", "text_mcq"]
+           "tidy", "snap", "sig", "root", "mcq", "spr", "text_mcq",
+           "unambiguous"]
 
 
 def q(v) -> Q:
@@ -53,6 +54,27 @@ def snap(v, step) -> Q:
     if 2 * (k - n) >= 1:
         n += 1
     return n * step
+
+
+def unambiguous(v, step) -> Q:
+    """`v` rounded to `step`, unless it sits exactly halfway.
+
+    A stem that says "to the nearest tenth of a mile per hour", "to the nearest
+    whole number" or "closest to" names a value only while one multiple of
+    `step` is nearer than every other. 54 miles in 32 minutes is 101.25 miles
+    an hour, and whether that is 101.2 or 101.3 is a rounding convention the
+    stem never states -- round-half-up says one and round-half-to-even the
+    other -- so the draw is thrown away rather than shipped with an answer a
+    carefully taught student gets wrong. Rejecting is free; the registry
+    redraws.
+    """
+    v, step = q(v), q(step)
+    k = v / step
+    if 2 * (k - k.numerator // k.denominator) == 1:
+        raise ItemError("this value sits exactly halfway between two answers, and "
+                        "which of them is nearest is a convention rather than "
+                        "mathematics")
+    return snap(v, step)
 
 
 def sig(v, figures: int = 3, strict: bool = False) -> Q:

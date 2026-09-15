@@ -301,19 +301,40 @@ def simplify(rng: random.Random, seed: int, *, n1=None, n2=None, ctx=None,
     stem = (f"{owner} has {n1:,} {first} and {n2:,} {second}. What is the ratio "
             f"of {first} to {second} that {owner} has?")
     P = {"kind": "rr_simplify", "n1": n1, "n2": n2}
+    # `{n1} to {n2}` is not on this list, and must never be: the counts
+    # unreduced are the same ratio as the key, so offering them is a second
+    # right answer rather than a misconception. It used to sit here, and reached
+    # the page whenever g == b collapsed the two options above it into one --
+    # `7 to 3` beside `21 to 9`, both correct, in 114 draws in 2,000.
     wrong = [
         (f"reversed the order, giving {second} to {first}", f"{b} to {a}"),
         (f"divided {n2:,} by {b} rather than by the {g} that reduces {n1:,} to "
          f"{a}", f"{a} to {g}"),
         ("reversed that, and divided by the wrong count as well", f"{g} to {a}"),
-        ("never reduced the two counts", f"{n1} to {n2}"),
         (f"gave {first} to all the objects rather than {first} to {second}",
          f"{n1 // _gcd(n1, n1 + n2)} to {(n1 + n2) // _gcd(n1, n1 + n2)}"),
+        (f"reduced the {first} and left the {second} as they were",
+         f"{a} to {n2}"),
+        (f"reduced the {second} and left the {first} as they were",
+         f"{n1} to {b}"),
     ]
+    # the one invariant that matters here, enforced on the pool rather than on
+    # each entry: a wrong option must not be the key written another way. The
+    # options are ratios, and `assemble_text` de-duplicates on the *string*, so
+    # `4 to 2` sails past it beside a key of `2 to 1`. Deciding it as a ratio is
+    # the only thing that catches that, and it catches the next one too.
+    wrong = [(why, text) for why, text in wrong if _ratio_of(text) != Q(a, b)]
     rationale = (f"{n1:,} and {n2:,} share a factor of {g}, and dividing both by "
                  f"{g} gives {a} to {b}.")
     return text_mcq("rr.simplify", "a ratio in lowest terms", "easy", seed, stem,
                     key, wrong, rng, rationale, params=P)
+
+
+def _ratio_of(text: str) -> Q:
+    """`5 to 8` as the number it names, so two spellings of one ratio compare
+    equal. Nothing else in this file needs it; nothing else prints a ratio."""
+    left, right = text.split(" to ")
+    return Q(int(left), int(right))
 
 
 def _whole(v):
@@ -643,6 +664,13 @@ def chain_unknown(rng: random.Random, seed: int, *, c=None, first=None,
     if first <= 0 or second <= 0:
         raise ItemError("both stated values have to be positive")
     key = first / (c * second)
+    if places_needed(second, 4) > 2:
+        # the stem prints this value in two decimals: 17.625 would be shown as
+        # 17.63, and a student solving the stem in front of them would not get
+        # the keyed answer
+        raise ItemError("the second stated value does not print exactly")
+    if places_needed(first, 4) > 2:
+        raise ItemError("the first stated value does not print exactly")
     if places_needed(first / c, 4) > 3:
         raise ItemError("the ratio between the two letters does not print exactly")
     if key <= 0 or places_needed(key, 5) > 4:
