@@ -39,11 +39,16 @@ misconception library models the errors students actually make. The key is
 excluded from the count — acceptance already requires it to match, so
 including it would put a free 25% under every figure.
 
-Area and Volume is the low one for a structural reason: measurement
-distractors are arithmetic slips — halved twice, forgot the ½ — and a slip
-has many plausible values, so matching the particular one College Board chose
-is partly luck. Circle and function misconceptions are named and finite, so
-they are hittable.
+The spread across topics is mostly chronology, not mathematics. Area and
+Volume sat at 60% for a day, and the explanation offered for it — that
+measurement distractors are formless arithmetic slips with no canonical value
+— was comfortable and wrong. It was the oldest topic, built before the
+misconception discipline the later ones used. Most of its misses turned out to
+be ordinary named errors nobody had modelled (squared one dimension instead of
+multiplying both; halved the area as though the figure were a triangle), and a
+third of the gap needed no new mathematics at all: the right wrong answers
+were already there, sitting fourth in a list where only three could print. It
+is 97% now, and Percentages went 76% to 87% the same way.
 
 Three items are excluded across the eleven, each with its reason recorded in
 the topic's `sources.py`; all three offer four coordinate grids as options, so
@@ -155,10 +160,13 @@ few are genuinely bounded — `circle.equal_area_square` at 696 and
 `lin.from_table` at 592 are the smallest. `satbank capacity` re-measures after
 any change.
 
-**Fidelity is not uniform.** Geometry measurement items reproduce fewer of
-College Board's own options than circle or function items do, because their
-wrong answers are arithmetic slips rather than named misconceptions, and a
-slip has no single canonical value.
+**Fidelity has a real ceiling, below 100%.** Some printed distractors have no
+derivation at all — one item's three wrong options are 72.1%, 73.9% and 77.2%
+of the total, numbers chosen to sit near the key rather than produced by any
+error. Those are left unreached and named in the topic's `sources.py`. An
+honest 87% with the unreachable ones recorded is worth more than a fabricated
+95%: the figure only means anything while it measures whether wrong answers
+are modelled.
 
 ## Before a student sees this
 
