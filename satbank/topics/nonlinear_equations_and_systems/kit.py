@@ -1,0 +1,413 @@
+"""How a nonlinear equation is printed, and how its four options are built.
+
+Everything on this topic's page is an equation: a quadratic set to zero, a
+radical, a rational equation, a system of a line and a curve, a formula
+rearranged for one of its letters. The printing lives here once -- a
+coefficient, a power, a signed sum, a bracket, an ordered pair, a solution set
+-- and nothing in this file solves anything. The algebra lives in the families
+and is re-derived, from the mathematics rather than from these helpers, in
+`audit.py`.
+
+The SAT is typeset, so this is too: x², √, ±, and U+2212 for a minus sign.
+"""
+
+from __future__ import annotations
+
+import random
+import re
+from fractions import Fraction as Q
+
+from ...exact import E, Exact
+from ...item import ItemError, Mis, assemble, assemble_text
+
+__all__ = ["Q", "E", "MINUS", "PM", "ROOT", "q", "ex", "num", "dec", "sup",
+           "mono", "join", "poly", "paren", "frac", "prod", "point", "setof",
+           "sent", "displayed", "terminating", "griddable", "gridin", "choices",
+           "pick", "eq", "signed_terms", "coef_times", "approx_free", "opt",
+           "text_choices"]
+
+MINUS = "−"        # the typeset minus the source prints
+PM = "±"
+ROOT = "√"
+_SUP = str.maketrans("0123456789", "⁰¹²³⁴⁵⁶"
+                                   "⁷⁸⁹")
+GROUP_FROM = 1_000
+
+
+# ------------------------------------------------------------------ numbers
+
+def q(v) -> Q:
+    if isinstance(v, Q):
+        return v
+    if isinstance(v, float):
+        return Q(str(v))
+    if isinstance(v, Exact):
+        if v.pi_exp != 0 or v.rad != 1:
+            raise ValueError(f"{v.plain()} is not a rational value")
+        return v.coef
+    return Q(v)
+
+
+def ex(v) -> Exact:
+    return v if isinstance(v, Exact) else E(q(v))
+
+
+def terminating(v) -> bool:
+    d = q(v).denominator
+    for p in (2, 5):
+        while d % p == 0:
+            d //= p
+    return d == 1
+
+
+def sup(n: int) -> str:
+    return str(int(n)).translate(_SUP)
+
+
+def num(v, group: bool = True) -> str:
+    """A bare number as the source prints it: 8, −11, 40,000, 9/4."""
+    v = q(v)
+    if v.denominator == 1:
+        n = abs(v.numerator)
+        body = f"{n:,}" if group and n >= GROUP_FROM else str(n)
+    else:
+        body = f"{abs(v.numerator)}/{v.denominator}"
+    return (MINUS if v < 0 else "") + body
+
+
+def dec(v, places: int | None = None) -> str:
+    """A decimal: 0.606, 331.3, 4.5. Falls back to a fraction when it repeats."""
+    v = q(v)
+    if places is None:
+        if not terminating(v):
+            return num(v)
+        d, twos, fives = v.denominator, 0, 0
+        while d % 2 == 0:
+            d //= 2
+            twos += 1
+        while d % 5 == 0:
+            d //= 5
+            fives += 1
+        places = max(twos, fives)
+    head = MINUS if v < 0 else ""
+    a = abs(v)
+    if places == 0:
+        return head + f"{int(a):,}"
+    return head + f"{float(a):,.{places}f}"
+
+
+def griddable(v) -> bool:
+    """What a student can actually enter in the five grid boxes."""
+    v = q(v)
+    if v.denominator == 1:
+        return abs(v.numerator) < 100_000
+    if terminating(v) and abs(v) < 1000 and v.denominator <= 10_000:
+        return len(gridin(v).lstrip("-")) <= 6
+    return abs(v.numerator) < 1000 and v.denominator < 1000
+
+
+def gridin(v) -> str:
+    """The grid-in form: digits only, a short decimal, or a fraction."""
+    v = q(v)
+    if v.denominator == 1:
+        return str(v.numerator)
+    if terminating(v):
+        s = f"{float(v):.6f}".rstrip("0").rstrip(".")
+        if Q(s) == v:
+            return s
+    return f"{v.numerator}/{v.denominator}"
+
+
+# -------------------------------------------------------------- expressions
+
+def mono(c, sym: str = "", power: int = 1, style: str = "frac") -> str:
+    """One term: '3x²', '−x', '(1/2)y', '0.606T', '42cf', '8'."""
+    c = q(c)
+    body = "" if not sym else (sym if power == 1 else sym + sup(power))
+    if c == 0:
+        return "0"
+    if not body:
+        return dec(c) if style == "dec" else num(c)
+    if c == 1:
+        return body
+    if c == -1:
+        return MINUS + body
+    if c.denominator != 1 and style == "frac":
+        return (MINUS if c < 0 else "") + f"({num(abs(c))}){body}"
+    head = dec(c) if style == "dec" else num(c)
+    return f"{head}{body}"
+
+
+def join(parts: list[str]) -> str:
+    """Sum already-signed pieces readably: '3x − 7', never '3x + −7'."""
+    parts = [p for p in parts if p not in ("", "0")]
+    if not parts:
+        return "0"
+    out = parts[0]
+    for p in parts[1:]:
+        if p.startswith(MINUS):
+            out += f" {MINUS} {p[1:]}"
+        elif p.startswith("-"):
+            out += f" {MINUS} {p[1:]}"
+        else:
+            out += f" + {p}"
+    return out
+
+
+def signed_terms(terms, style: str = "frac") -> str:
+    """A signed sum from [(coefficient, symbol), ...]; '' is the constant term."""
+    return join([mono(c, s, style=style) for c, s in terms if q(c) != 0]) or "0"
+
+
+def poly(coeffs, var: str = "x", style: str = "frac") -> str:
+    """Coefficients lowest degree first: (18, -15, 3) -> '3x² − 15x + 18'."""
+    parts = []
+    for i in range(len(coeffs) - 1, -1, -1):
+        if q(coeffs[i]) != 0:
+            parts.append(mono(coeffs[i], var if i else "", i or 1, style))
+    return join(parts) if parts else "0"
+
+
+def paren(body: str) -> str:
+    return f"({body})"
+
+
+def _atomic(body: str) -> bool:
+    """Does this printed piece need no brackets inside a product or quotient?"""
+    return not re.search(r"[+\s]|" + MINUS, body.strip().lstrip(MINUS))
+
+
+def frac(numerator: str, denominator: str) -> str:
+    """A quotient as the page prints one: 'mv²/L', '(k + 15m)/8', '14/(p − 9)'."""
+    n = numerator if _atomic(numerator) else paren(numerator)
+    d = denominator if _atomic(denominator) else paren(denominator)
+    return f"{n}/{d}" if d != "1" else n
+
+
+def prod(*pieces: str) -> str:
+    """A product written by juxtaposition: '150vx', '2(n + p)'."""
+    return "".join(p for p in pieces if p not in ("", "1"))
+
+
+def coef_times(c, body: str, style: str = "frac") -> str:
+    """'2(n + p)', '−(x − 3)', '(25/9)(D − T)', '100T'."""
+    c = q(c)
+    inner = body if _atomic(body) else paren(body)
+    if c == 1:
+        return inner
+    if c == -1:
+        return MINUS + inner
+    if c.denominator != 1 and style == "frac":
+        return (MINUS if c < 0 else "") + f"({num(abs(c))}){inner}"
+    return f"{dec(c) if style == 'dec' else num(c)}{inner}"
+
+
+def eq(lhs: str, rhs: str) -> str:
+    return f"{lhs} = {rhs}"
+
+
+def point(x, y, style: str = "frac") -> str:
+    fx = x if isinstance(x, str) else (dec(x) if style == "dec" else num(x))
+    fy = y if isinstance(y, str) else (dec(y) if style == "dec" else num(y))
+    return f"({fx}, {fy})"
+
+
+def setof(values) -> str:
+    """A solution set as the source prints one: '{−1, 5}'."""
+    return "{" + ", ".join(v if isinstance(v, str) else num(v) for v in values) + "}"
+
+
+def sent(text: str) -> str:
+    """One space between words; a displayed line keeps its own line."""
+    text = re.sub(r"[ \t]+", " ", text)
+    return re.sub(r" *\n *", "\n", text).strip()
+
+
+def displayed(*lines: str) -> str:
+    return "\n".join(lines)
+
+
+def approx_free(value, step) -> bool:
+    """Is this value clear of the midpoint between two printable answers?
+
+    A stem that says `closest`, `nearest` or `approximately`, or that prints
+    money, must refuse a draw whose exact value sits exactly halfway between
+    two answers a student could write down: the page then carries no answer at
+    all. `percentages.values.unambiguous` is the same guard.
+    """
+    v, s = q(value), q(step)
+    if s <= 0:
+        raise ValueError("a step has to be positive")
+    r = (v / s) % 1
+    return r != Q(1, 2)
+
+
+# --------------------------------------------------------------- option sets
+
+_LETTERS = re.compile(r"[a-zA-Z]")
+
+
+def _surface(opt: str) -> tuple:
+    """What an option looks like at a glance -- the signature the gate uses."""
+    return (bool(_LETTERS.search(opt)), "/" in opt, "." in opt,
+            opt.strip().startswith("-"))
+
+
+def opt(v) -> str:
+    """A numeric option as the page prints it: 9/4, 40,000, −8.
+
+    The minus is the typeset one, because that is what the source prints and
+    because a plain hyphen makes a lone negative key the odd one out at a
+    glance -- which is a real defect when the source's own option set puts one
+    negative against three positives, as `x² = 64` does.
+    """
+    return ex(v).plain().replace("-", MINUS)
+
+
+def _free_assembly(key: Exact, pool: list[Mis], fmt_value):
+    """Four numeric options in ascending order, with no rule about signs.
+
+    `assemble` refuses an option set in which the key is the only option of its
+    sign, on the evidence that College Board never prints one. Two official
+    items in this topic do -- x² = 64 keyed −8 against 4, 32 and 128, and
+    y = x + 1 with y = x² + x keyed −1 against 0, 2 and 3 -- so those two
+    are assembled here instead. The guard that replaces it is the typeset minus:
+    printed as U+2212 rather than a hyphen, a lone negative key no longer looks
+    different from its neighbours at a glance, which is what the rule was for.
+    """
+    picked, seen = [], {key}
+    for m in pool:
+        if m.value is None or m.value in seen:
+            continue
+        seen.add(m.value)
+        picked.append(m)
+        if len(picked) == 3:
+            break
+    if len(picked) < 3:
+        raise ItemError("could not build three distinct distractors")
+    options = sorted([(key, "")] + [(m.value, m.reason) for m in picked],
+                     key=lambda t: float(t[0]))
+    show = fmt_value or opt
+    texts = [show(v) for v, _ in options]
+    letter = "ABCD"[next(i for i, (_, r) in enumerate(options) if r == "")]
+    return texts, list(texts), [r for _, r in options], letter
+
+
+def choices(key, mistakes: list[Mis], rng: random.Random, fmt_value=None,
+            signed: bool = True, sign_rule: bool = True):
+    """assemble(), then refuse a draw where the key stands alone on the page.
+
+    An algebra answer is signed, and it solves rather than measures, so the
+    fallback near-misses shift rather than scale. The sign rule itself is
+    `assemble`'s; nothing here reorders the pool to game it. `signed=False` is
+    for the handful of source items whose own four options are a negative key
+    against three positives -- a shape `assemble` refuses by default, and
+    rightly, but which College Board does print.
+    """
+    key = ex(key)
+    pool = [Mis(m.reason, ex(m.value)) for m in mistakes if m.value is not None]
+    built = (_free_assembly(key, pool, fmt_value) if not sign_rule else
+             assemble(key, pool, rng, fmt_value=fmt_value or opt, signed=signed,
+                      fillers="shift"))
+    if len(set(built[0])) != 4:
+        raise ItemError("two options render the same way")
+    shapes = [_surface(c) for c in built[0]]
+    if shapes.count(shapes["ABCD".index(built[3])]) == 1:
+        raise ItemError("the key would be the only option of its printed form")
+    return built
+
+
+def text_choices(key: str, mistakes: list[Mis], rng: random.Random, variables=(),
+                 check: bool = True, guard: bool = False):
+    """Four printed expressions, one of them right, shuffled.
+
+    Where the options are equations rather than values there is no ascending
+    order to hide the key in, so the only defence against two correct answers is
+    to decide each candidate as mathematics before it is printed. Every
+    distractor is evaluated against the key at several points and dropped if the
+    two agree -- a distractor that is the key in a different jacket is a question
+    with no defensible answer, and `assemble_text` would shuffle it in without a
+    murmur.
+
+    `guard` additionally refuses a free draw in which the key is the only option
+    of its printed shape. Source items are exempt: College Board does print an
+    option set whose key is the only fraction, and reproducing what it printed is
+    the whole point of encoding one.
+    """
+    from ...expr import ParseError, agree
+    keep, seen = [], {key}
+    for m in mistakes:
+        if m.value is None or m.value in seen:
+            continue
+        if check and variables:
+            try:
+                if agree(_juxtaposed(_rhs(m.value), variables),
+                         _juxtaposed(_rhs(key), variables),
+                         variables=tuple(variables)):
+                    continue
+            except (ParseError, ValueError, ZeroDivisionError):
+                raise ItemError(f"cannot decide whether {m.value!r} is the key")
+        seen.add(m.value)
+        keep.append(m)
+    if len(keep) < 3:
+        raise ItemError("could not build three distinct wrong options")
+    built = assemble_text(key, keep, rng)
+    if guard:
+        shapes = [_surface(c) for c in built[0]]
+        if shapes.count(shapes["ABCD".index(built[2])]) == 1:
+            raise ItemError("the key would be the only option of its printed form")
+    return built
+
+
+_RUN = re.compile(r"[A-Za-z][A-Za-z_0-9]*")
+
+
+def _juxtaposed(text: str, variables) -> str:
+    """`cy` means c times y, which the shared reader cannot know.
+
+    `expr.parse` lexes a run of letters as one name, which is right for `V_B` and
+    wrong for a product of two single letters. Splitting the run into the longest
+    names the caller actually has turns `cy` into `c*y` and leaves `V_B` alone;
+    without it `agree` sees a ParseError, skips every point, and quietly reports
+    that no two options are equal.
+    """
+    names = set(variables)
+
+    def repl(m):
+        run = m.group()
+        if run in names or run in ("sqrt", "pi"):
+            return run
+        parts, i = [], 0
+        while i < len(run):
+            for j in range(len(run), i, -1):
+                if run[i:j] in names:
+                    parts.append(run[i:j])
+                    i = j
+                    break
+            else:
+                return run
+        return "*".join(parts)
+
+    return _RUN.sub(repl, text)
+
+
+def _rhs(option: str) -> str:
+    """The side of a printed option that carries the mathematics."""
+    return option.split(" = ", 1)[1] if " = " in option else option
+
+
+def pick(pool: dict, wrongs: list | None) -> list[Mis]:
+    """The misconceptions this draw offers, in the order they are offered.
+
+    A source item names the three College Board actually printed; a free draw
+    gets the whole pool and lets `assemble` choose.
+    """
+    keys = list(pool) if wrongs is None else list(wrongs)
+    out = []
+    for k in keys:
+        if k not in pool:
+            raise ItemError(f"no misconception named {k!r}")
+        m = pool[k]
+        if m.value is not None:
+            out.append(m)
+    return out
