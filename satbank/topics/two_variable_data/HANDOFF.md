@@ -1,7 +1,10 @@
 # Two-Variable Data — handoff
 
-Paused on budget, not blocked. Nothing is half-written; every file is complete
-and imports cleanly.
+**Resolved.** This note was written at a mid-wave pause. Everything it lists as
+outstanding is now done: `OPTION-CHECK.md` is written, and the full gate and the
+400-draw `option_check` sweep were both re-run clean after the cosmetic edits.
+The record of what was found and how it is checked lives in `OPTION-CHECK.md`;
+this file is kept only for the history.
 
 ## Gate
 
@@ -16,10 +19,9 @@ PYTHONPATH=. python3 -m satbank check --topic two_variable_data          # last 
   ok capacity    19,215+ distinct items
 ```
 
-The full run above was made before the last round of cosmetic edits (axis-label
-thinning, shorter axis titles, realistic value bands in `interval_change`). Since
-those, only `--quick` has been re-run: **PASS, same 39/39 and 90%**. Re-run the
-full gate before signing off; nothing in those edits touches an answer.
+Re-run in full after the cosmetic edits (axis-label thinning, shorter axis
+titles, realistic value bands in `interval_change`): **PASS, same 39/39 and 90%,
+capacity 19,216+**.
 
 ## Templates — all 18 done
 
@@ -90,8 +92,9 @@ Decided for truth on **all four options**, in `audit.py` and again in
 `option_check.py`, both from the printed sentence rather than from the
 generator's parameters.
 
-## Next change I was about to make
+## What is left
 
-Re-run the full gate and `option_check.py --draws 400` after the cosmetic edits,
-then hunt the last 10% of distractor fidelity (2.12, 3.2 and 2.4 print wrong
-answers no modelled misconception reaches).
+Only distractor fidelity, and only where it would have to be invented: 2.4, 2.12
+and 3.2 print wrong answers no modelled misconception reaches. The honest 90%
+with those three named is the number; curve-fitting to College Board's digits
+would hollow it out.

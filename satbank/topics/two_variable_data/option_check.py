@@ -830,8 +830,21 @@ def prove() -> int:
     bad = 0
 
     def expect(name, mutate, why):
+        """Break one generated item on purpose and insist the check sees it."""
         nonlocal bad
-        item = copy.deepcopy(generate(name, 1))
+        item = None
+        for seed in range(1, 60):
+            try:
+                made = generate(name, seed)
+            except ItemError:
+                continue
+            if made.fmt == "mcq":          # every injection swaps or rewrites an option
+                item = copy.deepcopy(made)
+                break
+        if item is None:
+            bad += 1
+            print(f" FAIL  {why}: no multiple-choice draw to break")
+            return
         mutate(item)
         try:
             CHECKS[name](item)
@@ -848,11 +861,12 @@ def prove() -> int:
 
     expect("tvdata.predict_from_line", point_at_key,
            "a prediction keyed to the wrong option")
-    expect("tvdata.fit_slope",
-           lambda it: it.__setattr__("figure", it.figure.replace('class="bf"',
-                                                                 'class="bf" ')
-                                     if False else _tilt(it.figure)),
+    def tilt_the_line(it):
+        it.figure = _tilt(it.figure)
+
+    expect("tvdata.fit_slope", tilt_the_line,
            "a line of best fit drawn at the wrong slope")
+
     def second_truth(it):
         """Add the sentence that says the same thing the other way round."""
         text = it.choices[keyed(it)]
