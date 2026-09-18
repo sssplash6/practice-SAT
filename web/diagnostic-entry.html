@@ -1,0 +1,504 @@
+<title>SAT Math Diagnostic</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@500&family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Schibsted+Grotesk:wght@400;500;700&display=swap">
+
+<style>
+  /* ===============================================================
+     SAT Math — diagnostic entry.
+
+     One committed visual world: a dark exam room lit by a single
+     amber lamp. No light variant, so every colour is painted
+     explicitly rather than inherited from the host.
+
+     The subject supplies the ornament. The ground is ruled like
+     graph paper, and the question mark sits on an answer rule with
+     its dot struck in brand amber -- a filled grid-in bubble.
+     =============================================================== */
+  :root {
+    --ink:        #0F0C07;   /* ground: near-black, warmed toward the accent */
+    --ink-raised: #1A1510;   /* modal surface */
+    --ink-edge:   #2E2618;   /* hairlines */
+    --amber:      #F18D05;   /* brand */
+    --amber-lit:  #FFA736;   /* hover */
+    --paper:      #FFFFFF;   /* brand */
+    --paper-dim:  #A6998A;   /* warm grey — modal prose only */
+
+    --rule:       rgba(241, 141, 5, 0.06);
+
+    --display: "Fraunces", "Iowan Old Style", Georgia, serif;
+    --ui:      "Schibsted Grotesk", "Helvetica Neue", system-ui, sans-serif;
+    --mono:    "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    --tap: 52px;             /* comfortably past the 44px floor */
+    --ease: cubic-bezier(.22, .68, .28, 1);
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--ui);
+    overflow: hidden;              /* the screen is a fixed frame */
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* --- ground -------------------------------------------------- */
+
+  .ground, .grain, .vignette { position: fixed; inset: 0; pointer-events: none; }
+
+  /* graph paper: an SAT math page is ruled like this */
+  .ground {
+    background-image:
+      linear-gradient(to right,  var(--rule) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--rule) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 66% at 50% 46%, #000 30%, transparent 100%);
+            mask-image: radial-gradient(ellipse 80% 66% at 50% 46%, #000 30%, transparent 100%);
+    opacity: 0;
+    animation: fade-in 1200ms var(--ease) 80ms forwards;
+  }
+
+  /* fine grain keeps a large dark field from reading as flat fill */
+  .grain {
+    opacity: .045;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .vignette {
+    background: radial-gradient(ellipse 72% 62% at 50% 44%, transparent 40%, rgba(0,0,0,.55) 100%);
+  }
+
+  /* --- wordmark ------------------------------------------------- */
+
+  .wordmark {
+    position: fixed;
+    top: env(safe-area-inset-top, 0px);
+    left: 0;
+    z-index: 3;
+    padding: 24px 26px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--paper);
+    opacity: 0;
+    animation: fade-in 900ms var(--ease) 620ms forwards;
+  }
+  .wordmark i { font-style: normal; color: var(--amber); }
+
+  /* --- screen --------------------------------------------------- */
+
+  .screen {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(20px, 4vh, 40px);
+    padding-inline: 24px;
+    padding-block: 20px;
+    text-align: center;
+  }
+
+  /* --- the centrepiece ------------------------------------------ */
+
+  .mark {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(14px, 2.4vh, 26px);
+    filter: drop-shadow(0 0 60px rgba(241,141,5,.28));
+    animation: mark-in 1100ms var(--ease) both;
+  }
+
+  /* the lamp */
+  .mark::before {
+    content: "";
+    position: absolute;
+    top: 46%;
+    left: 50%;
+    translate: -50% -50%;
+    width: min(86vw, 52vh);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+                rgba(241,141,5,.26) 0%,
+                rgba(241,141,5,.09) 44%,
+                transparent 70%);
+    animation: breathe 7.5s ease-in-out infinite;
+  }
+
+  .glyph {
+    position: relative;
+    display: block;
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: clamp(8.5rem, 30vh, 20rem);
+    line-height: .76;
+    letter-spacing: -.02em;
+    /* Two-tone glyph: the hook reads white, the dot is struck amber --
+       a filled grid-in bubble. A hard-stop gradient at the dot's
+       height does it without hand-drawing the letterform. */
+    background: linear-gradient(
+      to bottom,
+      var(--paper) 0%, var(--paper) 78%,
+      var(--amber) 78.01%, var(--amber) 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+    animation: breathe 7.5s ease-in-out infinite;
+  }
+
+  /* the answer rule the question sits on */
+  .rule {
+    width: clamp(88px, 18vh, 168px);
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(to right, transparent, var(--amber), transparent);
+    opacity: .75;
+    animation: breathe 7.5s ease-in-out infinite;
+  }
+
+  /* --- headline ------------------------------------------------- */
+
+  .headline {
+    margin: 0;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(1.9rem, 6.4vw, 3.5rem);
+    line-height: 1.0;
+    letter-spacing: -.022em;
+    text-wrap: balance;
+    animation: rise 900ms var(--ease) 240ms both;
+  }
+
+  /* --- actions -------------------------------------------------- */
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    animation: rise 900ms var(--ease) 360ms both;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: var(--tap);
+    padding: 0 32px;
+    border-radius: 999px;
+    border: 1.5px solid transparent;
+    font-family: var(--ui);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .005em;
+    cursor: pointer;
+    transition: background-color .2s var(--ease), color .2s var(--ease),
+                border-color .2s var(--ease), box-shadow .25s var(--ease),
+                transform .12s var(--ease);
+  }
+  .btn:active { transform: translateY(1px); }
+
+  .btn-primary {
+    background: var(--amber);
+    color: #190F02;
+    border-color: var(--amber);
+    box-shadow: 0 6px 26px -8px rgba(241,141,5,.75);
+  }
+  .btn-primary:hover {
+    background: var(--amber-lit);
+    border-color: var(--amber-lit);
+    box-shadow: 0 10px 34px -8px rgba(241,141,5,.95);
+  }
+  /* the arrow leans out on hover — the one micro-interaction */
+  .btn-primary svg { transition: transform .22s var(--ease); }
+  .btn-primary:hover svg { transform: translateX(3px); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--paper);
+    border-color: #453A29;
+  }
+  .btn-ghost:hover { border-color: var(--paper); background: rgba(255,255,255,.04); }
+
+  /* text-style: clearly subordinate to the primary, still a real button */
+  .btn-quiet {
+    background: transparent;
+    border-color: transparent;
+    color: var(--paper-dim);
+    font-weight: 500;
+    padding: 0 16px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: #4A3E2D;
+  }
+  .btn-quiet:hover { color: var(--paper); text-decoration-color: currentColor; }
+
+  :focus-visible {
+    outline: 2.5px solid var(--amber);
+    outline-offset: 3px;
+    border-radius: 999px;
+  }
+
+  /* --- skip modal ----------------------------------------------- */
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    padding: 24px;
+    background: rgba(7, 5, 2, .74);
+    -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity .24s var(--ease);
+  }
+  .overlay.is-open { opacity: 1; }
+
+  .dialog {
+    position: relative;
+    width: min(100%, 470px);
+    box-sizing: border-box;
+    background: var(--ink-raised);
+    border: 1px solid var(--ink-edge);
+    border-radius: 22px;
+    padding: 36px 34px 28px;
+    text-align: left;
+    overflow: hidden;
+    box-shadow: 0 40px 80px -30px rgba(0,0,0,.9);
+    transform: translateY(16px) scale(.98);
+    transition: transform .28s var(--ease);
+  }
+  .overlay.is-open .dialog { transform: none; }
+
+  /* amber rule across the top edge — the lamp reaching the card */
+  .dialog::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--amber), transparent);
+  }
+
+  .dialog h2 {
+    margin: 0 0 14px;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(1.45rem, 4.8vw, 1.8rem);
+    line-height: 1.12;
+    letter-spacing: -.015em;
+    text-wrap: balance;
+  }
+  .dialog p {
+    margin: 0 0 28px;
+    max-width: 40ch;
+    color: var(--paper-dim);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .dialog-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+  /* the quiet action sits apart, never beside the primary as a pair */
+  .dialog-actions .btn-quiet { margin-left: auto; }
+
+  @media (max-width: 430px) {
+    .actions { width: 100%; flex-direction: column; }
+    .actions .btn { width: 100%; }
+    .dialog { padding: 30px 24px 24px; }
+    .dialog-actions { flex-direction: column-reverse; align-items: stretch; }
+    .dialog-actions .btn-quiet { margin-left: 0; }
+  }
+
+  /* short landscape phones: keep everything inside one screen */
+  @media (max-height: 520px) {
+    .glyph { font-size: clamp(5rem, 26vh, 9rem); }
+    .screen { gap: 14px; }
+  }
+
+  /* --- motion --------------------------------------------------- */
+
+  @keyframes breathe {
+    0%, 100% { transform: scale(1);     opacity: 1;   }
+    50%      { transform: scale(1.035); opacity: .92; }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes mark-in {
+    from { opacity: 0; transform: translateY(24px) scale(.94); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes fade-in { to { opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01ms !important;
+    }
+    .ground, .wordmark { opacity: 1; }
+  }
+</style>
+
+<div class="ground"   aria-hidden="true"></div>
+<div class="grain"    aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<header class="wordmark">Sat<i>·</i>Bank</header>
+
+<main class="screen">
+  <div class="mark" aria-hidden="true">
+    <span class="glyph">?</span>
+    <span class="rule"></span>
+  </div>
+
+  <h1 class="headline">Find your level.</h1>
+
+  <div class="actions">
+    <button class="btn btn-primary" id="start-test" type="button">
+      Take the Test
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M2 8h11M9 4l4 4-4 4" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="btn btn-ghost" id="skip" type="button">Skip</button>
+  </div>
+</main>
+
+<div class="overlay" id="skip-modal" hidden>
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="skip-title">
+    <h2 id="skip-title">Take the diagnostic first</h2>
+    <p>
+      It maps what you already know, so you start from your real level instead of
+      from scratch — and it finds the topics costing you the most points.
+    </p>
+    <div class="dialog-actions">
+      <button class="btn btn-primary" id="modal-start" type="button">Take the Test</button>
+      <button class="btn btn-quiet" id="modal-skip" type="button">Skip anyway</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================================================================
+   Diagnostic entry screen.
+
+   Written as a self-contained screen module so it drops into a router
+   unchanged: it owns its own DOM and listeners, and never decides
+   where the app goes next. It reports what the user chose and lets
+   the caller route.
+   =================================================================== */
+
+/* -- ROUTER SEAM ----------------------------------------------------
+   Swap for the real router once more screens exist ('/diagnostic',
+   '/results', '/dashboard'). Every exit from this screen goes through
+   navigate(), so nothing else here changes when it lands.
+   ------------------------------------------------------------------ */
+function navigate(route) {
+  console.log('[router] navigate ->', route);
+}
+
+/* -- SESSION SEAM ---------------------------------------------------
+   Stands in for the user record; replace with the real profile API.
+   `diagnosticComplete` is the flag the rest of the platform reads.
+   ------------------------------------------------------------------ */
+const session = {
+  diagnosticComplete: false,
+  diagnosticSkipped: false,
+};
+
+function DiagnosticEntry(root) {
+  const modal      = root.querySelector('#skip-modal');
+  const dialog     = modal.querySelector('.dialog');
+  const startBtn   = root.querySelector('#start-test');
+  const skipBtn    = root.querySelector('#skip');
+  const modalStart = root.querySelector('#modal-start');
+  const modalSkip  = root.querySelector('#modal-skip');
+
+  const FOCUSABLE = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+  let lastFocused = null;
+  let closeTimer  = null;
+
+  function openModal() {
+    clearTimeout(closeTimer);
+    lastFocused = document.activeElement;
+    modal.hidden = false;
+    // one frame between unhiding and animating, or the transition is skipped
+    requestAnimationFrame(() => {
+      modal.classList.add('is-open');
+      modalStart.focus();
+    });
+    document.addEventListener('keydown', onKeydown);
+  }
+
+  function closeModal() {
+    if (modal.hidden) return;
+    modal.classList.remove('is-open');
+    document.removeEventListener('keydown', onKeydown);
+    // transitionend is unreliable under reduced motion, so time it out
+    closeTimer = setTimeout(() => { modal.hidden = true; }, 280);
+    if (lastFocused) lastFocused.focus();
+  }
+
+  function onKeydown(e) {
+    if (e.key === 'Escape') { closeModal(); return; }
+    if (e.key !== 'Tab') return;
+    const items = [...dialog.querySelectorAll(FOCUSABLE)].filter(el => !el.disabled);
+    if (!items.length) return;
+    const first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
+  function takeTest() {
+    session.diagnosticSkipped = false;
+    closeModal();
+    navigate('/diagnostic');
+  }
+
+  function skipAnyway() {
+    session.diagnosticSkipped = true;
+    closeModal();
+    /* -- RESUME SEAM ------------------------------------------------
+       The diagnostic stays available after a skip. Hook the later
+       entry point here — a persistent "Take the diagnostic" card on
+       the dashboard, shown while
+       `!session.diagnosticComplete && session.diagnosticSkipped`.
+       Nothing on this screen needs to change when that lands.
+       --------------------------------------------------------------- */
+    navigate('/dashboard');
+  }
+
+  startBtn.addEventListener('click', takeTest);
+  modalStart.addEventListener('click', takeTest);
+  skipBtn.addEventListener('click', openModal);
+  modalSkip.addEventListener('click', skipAnyway);
+
+  // backdrop dismisses; the dialog itself must not
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+}
+
+DiagnosticEntry(document);
+</script>
