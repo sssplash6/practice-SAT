@@ -8,6 +8,7 @@ stem -- change a length and the picture changes with it.
 
 from __future__ import annotations
 
+import math
 import random
 from fractions import Fraction as Q
 
@@ -191,7 +192,7 @@ def parallel_similar(rng: random.Random, seed: int, *, base=None, height=None,
     m = int(base if base is not None else rng.randint(2, 40))
     n = int(height if height is not None else rng.randint(2, 40))
     d2 = m * m + n * n
-    d = int(round(d2 ** 0.5))
+    d = math.isqrt(d2)
     if d * d != d2:
         raise ItemError("the small triangle's hypotenuse is not a whole number")
     k = Q(factor if factor is not None else rng.randint(2, 3))
@@ -235,9 +236,9 @@ def parallel_similar(rng: random.Random, seed: int, *, base=None, height=None,
         "difference": Mis("used the difference of the two parallel segments as the "
                           "scale", ae - bd),
     }
-    rationale = (f"{B}{Dp} ∥ {A}{Ev} makes triangle {C}{B}{Dp} similar to triangle "
-                 f"{C}{A}{Ev}, and its legs {cb.plain()} and {bd.plain()} give "
-                 f"{C}{Dp} = {cd.plain()}."
+    rationale = (f"{B}{Dp} is parallel to {A}{Ev}, so triangle {C}{B}{Dp} is "
+                 f"similar to triangle {C}{A}{Ev}, and its legs {cb.plain()} and "
+                 f"{bd.plain()} give {C}{Dp} = {cd.plain()}."
                  + ("" if ask == "cd" else
                     f" The scale {ae.plain()} ÷ {bd.plain()} = {E(k).plain()} then "
                     f"gives {seg[ask]} = {key.plain()}."))

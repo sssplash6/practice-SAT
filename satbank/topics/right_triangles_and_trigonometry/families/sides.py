@@ -54,8 +54,7 @@ def _hyp_pool(a: Exact, b: Exact, key: Exact) -> dict:
     """The wrong answers a student actually produces for a hypotenuse."""
     return {
         "sqrt_sum": Mis("took the square root of the sum of the legs instead of the "
-                        "sum of their squares", E(1, 0, int(a.coef + b.coef))
-                        if (a.is_integer and b.is_integer) else None),
+                        "sum of their squares", E(1, 0, a.coef + b.coef)),
         "average": Mis("averaged the two legs", (a + b) / E(2)),
         "add": Mis("added the legs instead of using the Pythagorean theorem", a + b),
         "double_sum": Mis("doubled the sum of the legs, as though finding a perimeter",
@@ -65,8 +64,8 @@ def _hyp_pool(a: Exact, b: Exact, key: Exact) -> dict:
         "half_squares": Mis("halved the sum of the squares instead of taking its "
                             "square root", (a ** 2 + b ** 2) / E(2)),
         "difference": Mis("subtracted the squares instead of adding them",
-                          exact_leg(max(float(a), float(b)), min(float(a), float(b)))
-                          if a != b else None),
+                          exact_leg(a, b) if float(a) > float(b) else
+                          (exact_leg(b, a) if float(b) > float(a) else None)),
         "product": Mis("multiplied the legs instead of squaring and adding them", a * b),
         "half": Mis("halved the longer leg", (a if float(a) > float(b) else b) / E(2)),
     }
@@ -75,14 +74,12 @@ def _hyp_pool(a: Exact, b: Exact, key: Exact) -> dict:
 def _leg_pool(c: Exact, a: Exact, key: Exact) -> dict:
     return {
         "add_squares": Mis("added the squares instead of subtracting them",
-                           E(1, 0, int(c.coef ** 2 + a.coef ** 2))
-                           if c.is_integer and a.is_integer else None),
+                           E(1, 0, c.coef ** 2 + a.coef ** 2)),
         "subtract": Mis("subtracted the leg from the hypotenuse", c - a),
         "no_root": Mis("stopped at the square of the missing leg", c ** 2 - a ** 2),
         "sqrt_difference": Mis("took the square root of the difference of the lengths "
                                "instead of the difference of their squares",
-                               E(1, 0, int(c.coef - a.coef))
-                               if c.is_integer and a.is_integer else None),
+                               E(1, 0, c.coef - a.coef) if c.coef > a.coef else None),
         "half": Mis("halved the hypotenuse", c / E(2)),
         "hypotenuse": Mis("gave the hypotenuse, which the stem states", c),
     }
@@ -117,7 +114,7 @@ def pythagoras(rng: random.Random, seed: int, *, mode=None, a=None, b=None,
         leg = E(b if b is not None else rng.randint(2, 59))
         if float(leg) >= float(c):
             raise ItemError("a leg is shorter than the hypotenuse")
-        key = exact_leg(float(c), float(leg))
+        key = exact_leg(c, leg)
         legs = (key, leg)
         given_pair = [float(leg), float(c)]
         pool = _leg_pool(c, leg, key)
@@ -220,7 +217,7 @@ def leg_expression(rng: random.Random, seed: int, *, mode=None, c=None, a=None,
 
     if mode == "leg":
         key_text = f"√({B}² {MINUS} {A}²)"
-        third = exact_leg(float(big), float(small))
+        third = exact_leg(big, small)
         sides = {"p": A, "hyp": B, "q": letter}
         shape = (float(small), float(third))
         pool = {

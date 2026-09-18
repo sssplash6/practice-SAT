@@ -354,12 +354,26 @@ def leg_from(hyp: int, leg: int) -> int:
     return r
 
 
+def rational(v) -> Q:
+    """An `Exact`, an int or a Fraction as an exact Fraction.
+
+    The point is that nothing goes through `float` on the way: √(53² − 52²) is
+    √105 because 2,809 and 2,704 are integers, not because two doubles
+    subtracted to something near 105.
+    """
+    if isinstance(v, Exact):
+        if not v.is_rational:
+            raise ItemError(f"{v.plain()} is not a rational length")
+        return v.coef
+    return Q(v)
+
+
 def exact_leg(hyp, leg) -> Exact:
     """The third side, exactly -- a whole number or a radical, never a float."""
-    d = int(hyp) ** 2 - int(leg) ** 2
+    d = rational(hyp) ** 2 - rational(leg) ** 2
     if d <= 0:
         raise ItemError("that leg is not shorter than the hypotenuse")
     return E(1, 0, d)
 
 
-__all__ += ["leg_from", "exact_leg"]
+__all__ += ["leg_from", "exact_leg", "rational"]

@@ -110,14 +110,24 @@ def _side_label(cls, a, b, away, text: str, gap: float = 13.0) -> str:
     return _text(cls, mx, my, text, gap * ox / d, gap * oy / d)
 
 
-def _readable(spans: dict, written: dict, margin: float = 1.35) -> None:
-    """Every written label has to sit nearer its own segment than any other.
+def _name_anchor(vertex, centre, gap: float = 14.0) -> tuple[float, float]:
+    """Where the letter naming a vertex is written."""
+    ox, oy = vertex[0] - centre[0], vertex[1] - centre[1]
+    d = math.hypot(ox, oy) or 1.0
+    return (vertex[0] + gap * ox / d, vertex[1] + gap * oy / d)
+
+
+def _readable(spans: dict, written: dict, names: dict = None, spots: dict = None,
+              margin: float = 1.35, apart: float = 17.0) -> None:
+    """Every written label has to be attributable, and clear of every other.
 
     A number printed beside a line names that line, so two segments whose
     middles are almost on top of each other make a figure nobody -- reader or
-    checker -- can attribute. The registry simply redraws.
+    checker -- can attribute; and a letter naming a vertex must not land on top
+    of a length. The registry simply redraws.
     """
     mids = {k: _mid(v[0], v[1]) for k, v in spans.items()}
+    placed = {}
     for key, text in (written or {}).items():
         if not text or key not in spans:
             continue
@@ -126,6 +136,16 @@ def _readable(spans: dict, written: dict, margin: float = 1.35) -> None:
         for other, m in mids.items():
             if other != key and _len(spot, m) < margin * own:
                 raise ValueError(f"the label on {key} would sit as close to {other}")
+        placed[key] = spot
+    for key, text in (names or {}).items():
+        if text and key in (spots or {}):
+            placed[f"the name {text}"] = spots[key]
+    keys = list(placed)
+    for i, one in enumerate(keys):
+        for other in keys[i + 1:]:
+            if _len(placed[one], placed[other]) < apart:
+                raise ValueError(f"{one} and {other} would be printed on top of "
+                                 f"each other")
 
 
 def _angle_label(vertex, a, b, text: str, gap: float = 34.0) -> str:
@@ -218,7 +238,9 @@ def right_triangle(leg_p, leg_q, *, layout="left", names=None, sides=None,
            f'L{_r(q[0])},{_r(q[1])} Z"/>',
            _right_angle_mark(rt, p, q)]
     spans = {"p": (rt, p, q), "q": (rt, q, p), "hyp": (p, q, rt)}
-    _readable(spans, sides)
+    _readable(spans, sides, names,
+              {"rt": _name_anchor(rt, centre), "p": _name_anchor(p, centre),
+               "q": _name_anchor(q, centre)})
     for key, (a, b, away) in spans.items():
         text = (sides or {}).get(key)
         if text:
@@ -279,10 +301,13 @@ def cut_right_triangle(leg_p, leg_q, cut_at, *, parallel="q", layout="left",
     near = p if parallel == "q" else q          # the leg the cut crosses
     far = q if parallel == "q" else p
     spans = {"p": (rt, p, q), "q": (rt, q, p), "hyp": (p, q, rt),
-             "cut": (foot, edge, rt), "stub": (rt, foot, edge),
+             "cut": (foot, edge, near), "stub": (rt, foot, edge),
              "upper": (foot, near, edge),
              "lower": (near, edge, rt), "top": (edge, far, rt)}
-    _readable(spans, sides)
+    _readable(spans, sides, names,
+              {"rt": _name_anchor(rt, centre), "p": _name_anchor(p, centre),
+               "q": _name_anchor(q, centre),
+               "foot": _name_anchor(foot, centre), "edge": _name_anchor(edge, centre)})
     for key, (u, v, away) in spans.items():
         text = (sides or {}).get(key)
         if text:
@@ -331,7 +356,9 @@ def altitude_triangle(left, right, height, *, names=None, sides=None,
            _right_angle_mark(d, b, c)]
     spans = {"ab": (a, b, c), "bc": (b, c, a), "ad": (a, d, b),
              "dc": (d, c, b), "bd": (b, d, a), "ac": (a, c, b)}
-    _readable(spans, sides)
+    _readable(spans, sides, names,
+              {"a": _name_anchor(a, centre), "b": _name_anchor(b, centre),
+               "c": _name_anchor(c, centre), "d": _name_anchor(d, centre)})
     for key, (u, v, away) in spans.items():
         text = (sides or {}).get(key)
         if text:
