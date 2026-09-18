@@ -169,7 +169,7 @@ def _fillers(key: Exact, style: str = "scale"):
 
 
 def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None,
-             signed: bool = False, fillers: str = "scale"):
+             signed: bool = False, fillers: str = "scale", forbid=()):
     """Choose three distractors, then order all four the way the SAT does.
 
     Two rules do most of the work:
@@ -181,12 +181,23 @@ def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None
 
     `signed=True` allows negative and zero options, which an algebra answer
     needs and a measure must not have.
+
+    `forbid` lists values that are also correct and so must never be offered --
+    the other root of the quadratic, the second intersection, the solution the
+    stem's "which of the following" would equally accept. Only the caller knows
+    these; this function cannot work them out from a key. Passing them matters
+    because the fillers below are near-misses built by arithmetic (key + 1,
+    key - 2), so a template that carefully strikes the other root from its own
+    pool can have this function hand it straight back when the pool runs short.
+    That produces an item with two correct options, which is the one defect the
+    gate cannot see.
     """
+    banned = {v for v in forbid if isinstance(v, Exact)}
     seen = {key}
     same_form: list[Mis] = []
     other_form: list[Mis] = []
     for m in mistakes:
-        if not _usable(m.value, key, signed) or m.value in seen:
+        if not _usable(m.value, key, signed) or m.value in seen or m.value in banned:
             continue
         seen.add(m.value)
         (same_form if m.value.form == key.form else other_form).append(m)
@@ -199,7 +210,8 @@ def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None
     for m in _fillers(key, fillers):
         if len(picked) >= 3:
             break
-        if not _usable(m.value, key, signed) or m.value in seen or m.value.form != key.form:
+        if (not _usable(m.value, key, signed) or m.value in seen
+                or m.value in banned or m.value.form != key.form):
             continue
         seen.add(m.value)
         picked.append(m)

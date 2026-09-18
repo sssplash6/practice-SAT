@@ -18,7 +18,7 @@ import re
 from fractions import Fraction as Q
 
 from ...exact import E, Exact
-from ...item import ItemError, Mis, assemble, assemble_text
+from ...item import ItemError, Mis, assemble, assemble_text, numeral
 
 __all__ = ["Q", "E", "MINUS", "PM", "ROOT", "q", "ex", "num", "dec", "sup",
            "mono", "join", "poly", "paren", "frac", "prod", "point", "setof",
@@ -112,7 +112,7 @@ def griddable(v) -> bool:
         return abs(v.numerator) < 100_000
     if not terminating(v) and (abs(v.numerator) >= 1000 or v.denominator >= 1000):
         return False
-    return len(gridin(v).lstrip("-")) <= GRID_WIDTH
+    return len(gridin(v).lstrip("-" + MINUS)) <= GRID_WIDTH
 
 
 def gridin(v) -> str:
@@ -257,9 +257,30 @@ _LETTERS = re.compile(r"[a-zA-Z]")
 
 
 def _surface(opt: str) -> tuple:
-    """What an option looks like at a glance -- the signature the gate uses."""
+    """What an option looks like at a glance -- the signature the gate uses.
+
+    Both minus signs count. The page prints U+2212 and a literal in this file
+    may carry the ASCII hyphen, and reading only one of them stops this seeing
+    negatives at all -- which is most of what the guard is for, since a lone
+    negative among three positives is the answer. This copy was blind to the
+    typeset minus, so it passed option sets the gate then caught.
+    """
     return (bool(_LETTERS.search(opt)), "/" in opt, "." in opt,
-            opt.strip().startswith("-"))
+            opt.strip().startswith(("-", MINUS)))
+
+
+def _stands_alone(texts, key_index: int) -> bool:
+    """Is the key the only option of its shape, with the rest forming a crowd?
+
+    Four options that all look different give nothing away -- every one is then
+    the only one of its own shape and the key does not stand out. The key
+    standing alone only tells a student something when there is a crowd for it
+    to stand out from, which is the rule `check._structure` applies.
+    """
+    shapes = [_surface(t) for t in texts]
+    others = [s for i, s in enumerate(shapes) if i != key_index]
+    return (shapes.count(shapes[key_index]) == 1
+            and max(others.count(s) for s in others) > 1)
 
 
 def opt(v) -> str:
@@ -303,7 +324,8 @@ def _free_assembly(key: Exact, pool: list[Mis], fmt_value):
 
 
 def choices(key, mistakes: list[Mis], rng: random.Random, fmt_value=None,
-            signed: bool = True, sign_rule: bool = True):
+            signed: bool = True, sign_rule: bool = True, guard: bool = True,
+            forbid=()):
     """assemble(), then refuse a draw where the key stands alone on the page.
 
     An algebra answer is signed, and it solves rather than measures, so the
@@ -320,8 +342,22 @@ def choices(key, mistakes: list[Mis], rng: random.Random, fmt_value=None,
                       fillers="shift"))
     if len(set(built[0])) != 4:
         raise ItemError("two options render the same way")
-    shapes = [_surface(c) for c in built[0]]
-    if shapes.count(shapes["ABCD".index(built[3])]) == 1:
+    # Striking a value out of the pool is not enough. When the pool runs short
+    # `assemble` fills the gap with near-misses of its own -- key ± 1, ± 2 -- and
+    # those never passed through the pool, so a second correct answer can arrive
+    # by that route: two roots one apart, and the filler for the first is the
+    # second. The four options as built are therefore checked against the values
+    # the question genuinely admits.
+    banned = {float(ex(v)) for v in forbid if v is not None}
+    banned.discard(float(key))
+    for i, text in enumerate(built[0]):
+        if i == "ABCD".index(built[3]):
+            continue
+        shown = numeral(text)
+        if shown is not None and any(abs(shown - b) <= 1e-9 * max(1.0, abs(b))
+                                     for b in banned):
+            raise ItemError(f"the option {text!r} is a second correct answer")
+    if guard and _stands_alone(built[0], "ABCD".index(built[3])):
         raise ItemError("the key would be the only option of its printed form")
     return built
 
@@ -343,19 +379,29 @@ def text_choices(key: str, mistakes: list[Mis], rng: random.Random, variables=()
     option set whose key is the only fraction, and reproducing what it printed is
     the whole point of encoding one.
     """
-    from ...expr import ParseError, agree
+    from ...expr import ParseError, agree, parse
     keep, seen = [], {key}
+    names = tuple(variables)
     for m in mistakes:
         if m.value is None or m.value in seen:
             continue
-        if check and variables:
+        if check and names:
             try:
-                if agree(_juxtaposed(_rhs(m.value), variables),
-                         _juxtaposed(_rhs(key), variables),
-                         variables=tuple(variables)):
-                    continue
-            except (ParseError, ValueError, ZeroDivisionError):
+                same = agree(parse(_rhs(m.value), names=names),
+                             parse(_rhs(key), names=names), variables=names)
+            except ParseError as exc:
+                # `agree` used to answer "not equal" when it could read neither
+                # side, which made this guard a no-op for every juxtaposed
+                # product. It now says so, and an option this topic prints but
+                # cannot read back is a bug here, not an unlucky draw -- so it
+                # is raised past `generate`, which would otherwise retry it away.
+                raise RuntimeError(f"{__name__}: cannot decide whether "
+                                   f"{m.value!r} duplicates the key {key!r}: "
+                                   f"{exc}") from exc
+            except (ZeroDivisionError, ValueError):
                 raise ItemError(f"cannot decide whether {m.value!r} is the key")
+            if same:
+                continue
         seen.add(m.value)
         keep.append(m)
     if len(keep) < 3:
@@ -366,38 +412,6 @@ def text_choices(key: str, mistakes: list[Mis], rng: random.Random, variables=()
         if shapes.count(shapes["ABCD".index(built[2])]) == 1:
             raise ItemError("the key would be the only option of its printed form")
     return built
-
-
-_RUN = re.compile(r"[A-Za-z][A-Za-z_0-9]*")
-
-
-def _juxtaposed(text: str, variables) -> str:
-    """`cy` means c times y, which the shared reader cannot know.
-
-    `expr.parse` lexes a run of letters as one name, which is right for `V_B` and
-    wrong for a product of two single letters. Splitting the run into the longest
-    names the caller actually has turns `cy` into `c*y` and leaves `V_B` alone;
-    without it `agree` sees a ParseError, skips every point, and quietly reports
-    that no two options are equal.
-    """
-    names = set(variables)
-
-    def repl(m):
-        run = m.group()
-        if run in names or run in ("sqrt", "pi"):
-            return run
-        parts, i = [], 0
-        while i < len(run):
-            for j in range(len(run), i, -1):
-                if run[i:j] in names:
-                    parts.append(run[i:j])
-                    i = j
-                    break
-            else:
-                return run
-        return "*".join(parts)
-
-    return _RUN.sub(repl, text)
 
 
 def _rhs(option: str) -> str:

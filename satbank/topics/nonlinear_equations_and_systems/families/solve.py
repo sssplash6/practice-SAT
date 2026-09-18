@@ -103,7 +103,8 @@ def _strike(pool: dict, values, ask: str, key) -> dict:
 
 def _value_item(template: str, skill: str, difficulty: str, seed: int, stem: str,
                 key, pool: dict, wrongs, rng, rationale: str, params: dict,
-                fmt: str, signed: bool = True, sign_rule: bool = True) -> Item:
+                fmt: str, signed: bool = True, sign_rule: bool = True,
+                forbid=()) -> Item:
     """A numeric answer, gridded or offered among four."""
     keyx = E(q(key))
     if fmt == "spr":
@@ -111,8 +112,11 @@ def _value_item(template: str, skill: str, difficulty: str, seed: int, stem: str
             raise ItemError("that answer could not be entered in the grid")
         return Item(template, skill, difficulty, seed, sent(stem), "spr", keyx,
                     gridin(key), sent(rationale), params=params)
+    # a source item reproduces the option set College Board printed, whatever
+    # surface it has; a free draw has to earn its four
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, signed=signed,
-                                   sign_rule=sign_rule)
+                                   sign_rule=sign_rule, guard=wrongs is None,
+                                   forbid=forbid)
     return Item(template, skill, difficulty, seed, sent(stem), "mcq", keyx, letter,
                 sent(rationale), ch, why, tex, params=params)
 
@@ -242,7 +246,7 @@ def square_equation(rng: random.Random, seed: int, *, shape=None, a=None, h=None
                      f"{num(-root)}, giving x = {num(hi)} and x = {num(lo)}.")
     return _value_item("nleq.square_equation", "undoing a square", difficulty, seed,
                        stem, key, pool, wrongs, rng, rationale, P, fmt, signed,
-                       sign_rule)
+                       sign_rule, forbid=[lo, hi] if ask in ANY_SOLUTION else ())
 
 
 # -------------------------------------------------------- an absolute value
@@ -305,7 +309,8 @@ def absolute_equation(rng: random.Random, seed: int, *, a=1, b=0, h=None,
                          f"{num(-m)}, so x = {num(hi)} or x = {num(lo)}."))
     return _value_item("nleq.absolute_equation", "an absolute-value equation",
                        difficulty, seed, stem, key, pool, wrongs, rng, rationale,
-                       P, fmt)
+                       P, fmt,
+                       forbid=[lo, hi] if ask in ANY_SOLUTION else ())
 
 
 # ------------------------------------------------------------- a quadratic
@@ -324,6 +329,12 @@ def quadratic_solve(rng: random.Random, seed: int, *, a=None, b=None, c=None,
     ask = ask or rng.choice(["positive", "negative", "sum", "which", "a_positive"])
     if ask in ("sum",):
         roots = None
+        if nb * nb - 4 * na * nc <= 0:
+            # a repeated root leaves one solution, and "the sum of the solutions"
+            # is then two answers: 2·r counting it twice, r counting it once.
+            # 6x² − 12x + 6 = 0 is keyed 2 and answered 1 by anyone who solves it
+            raise ItemError("a repeated root makes the sum of the solutions "
+                            "ambiguous")
         key = -nb / na
     else:
         roots = _roots(na, nb, nc)
@@ -363,7 +374,8 @@ def quadratic_solve(rng: random.Random, seed: int, *, a=None, b=None, c=None,
                          f"two solutions of a quadratic add to minus its middle "
                          f"coefficient over its leading one, which is {num(key)}.")
     return _value_item("nleq.quadratic_solve", "solving a quadratic", difficulty,
-                       seed, stem, key, pool, wrongs, rng, rationale, P, fmt)
+                       seed, stem, key, pool, wrongs, rng, rationale, P, fmt,
+                       forbid=(roots or []) if ask in ANY_SOLUTION else ())
 
 
 def _draw_quadratic(rng: random.Random):
@@ -374,14 +386,41 @@ def _draw_quadratic(rng: random.Random):
     return a, -a * (r1 + r2), a * r1 * r2
 
 
+def _integer_lead(a, b, c) -> Q:
+    """The leading coefficient once the printed equation is cleared of fractions.
+
+    Factoring `3x² − 8x − 35` by the ac method produces 15 and −7 and the roots
+    are those divided by 3. A student who stops before dividing reports 15, and
+    that is a whole number whenever the solution is -- which is what keeps an
+    integer key from standing alone among fractions on the page.
+    """
+    a, b, c = q(a), q(b), q(c)
+    scale = 1
+    for v in (a, b, c):
+        scale = scale * v.denominator // math.gcd(scale, v.denominator)
+    whole = [int(v * scale) for v in (a, b, c)]
+    g = 0
+    for v in whole:
+        g = math.gcd(g, abs(v))
+    return Q(abs(whole[0]) // (g or 1))
+
+
 def _quadratic_pool(a, b, c, roots, key, ask) -> dict:
     other = None
     if roots:
         other = roots[0] if key == roots[1] else roots[1]
+    lead = _integer_lead(a, b, c)
     pool = {
         "other": Mis("reported the other solution", other),
         "other_abs": Mis("reported the other solution without its sign",
                          abs(other) if other is not None else None),
+        "times_lead": Mis("factored the equation by the ac method and forgot to "
+                          "divide the result by the leading coefficient",
+                          key * lead if lead != 1 else None),
+        "other_times_lead": Mis("forgot to divide by the leading coefficient and "
+                                "reported the other factor's number",
+                                other * lead if other is not None and lead != 1
+                                else None),
         "b_over_a": Mis("read the ratio of the first two coefficients as the "
                         "solution", abs(b / a) if a else None),
         "b_itself": Mis("read the coefficient of x as the solution", abs(b)),
@@ -478,13 +517,19 @@ def quadratic_formula(rng: random.Random, seed: int, *, a=None, b=None, c=None,
         pool = {
             "minus_b": Mis("read minus the coefficient of x as a solution by "
                            "itself", num(-b)),
+            # with the denominator already 1 there is nothing left to forget
+            # dividing by, and this "mistake" is the other root -- a second
+            # right answer to "which of the following is a solution"
             "no_denominator": Mis("never divided by twice the leading coefficient",
-                                  _surd(top, -g, m, 1)),
+                                  _surd(top, -g, m, 1) if den != 1 else None),
             "first_over_only": Mis("divided only the first term by twice the "
                                    "leading coefficient",
                                    _surd_split(top, g, m, den) if den != 1 else None),
             "sign_b": Mis("used the coefficient of x with its own sign instead of "
                           "the opposite one", _surd(-top, g, m, den)),
+            "unsimplified": Mis("left the square factor inside the radical instead "
+                                "of taking it out before dividing",
+                                _surd(top, 1, disc, den)),
             "whole_root": Mis("treated the discriminant as though its square root "
                               "were a whole number",
                               num(Q(-b + _isqrt(int(disc)), 1) / (2 * a))
@@ -493,14 +538,54 @@ def quadratic_formula(rng: random.Random, seed: int, *, a=None, b=None, c=None,
         }
         variables = ()
         check = False
+    # Two of these options can be printed differently and mean the same number:
+    # with a = 3, b = 9, c = 3 the key's √(81 − 36) and the sign-slip's √(9 + 36)
+    # are both √45, so the page carried two right answers. Strings are deduped by
+    # `assemble_text`; values have to be deduped here, by reading what is printed.
+    # Both roots answer "which of the following is a solution", so neither may be
+    # offered as a distractor; and two options can be printed differently and
+    # mean the same number -- with a = 3, b = 9, c = 3 the key's √(81 − 36) and
+    # the sign-slip's √(9 + 36) are both √45. Strings are deduped by
+    # `assemble_text`; values have to be deduped here, by reading what is printed.
+    forbidden = [key]
+    if style == "single":
+        forbidden += [_surd(top, g, m, den), _surd(top, -g, m, den)]
+    pool = _distinct_by_value(forbidden, pool)
     P = {"kind": "nleq_formula", "a": _p(a), "b": _p(b), "c": _p(c), "style": style}
     rationale = sent(f"With a = {num(a)}, b = {num(b)} and c = {num(c)}, the quadratic "
                      f"formula gives {key}.")
     ch, why, letter = text_choices(key, pick(pool, wrongs), rng, variables=variables,
-                                   check=check)
+                                   check=check, guard=wrongs is None)
     return Item("nleq.quadratic_formula", "the quadratic formula", difficulty, seed,
                 sent(stem), "mcq", E(1), letter, rationale, ch, why, list(ch),
                 params=dict(P, options=list(ch)))
+
+
+def _distinct_by_value(forbidden, pool: dict) -> dict:
+    """Drop any option that comes to a number the page must not offer twice."""
+    banned = {v for v in (_formula_values(f) for f in forbidden) if v is not None}
+    if not banned:
+        return pool
+    return {name: (Mis(m.reason, None)
+                   if m.value is not None and _formula_values(m.value) in banned
+                   else m)
+            for name, m in pool.items()}
+
+
+def _formula_values(text: str):
+    """What a printed formula option comes to, both branches of its ± expanded."""
+    from ....expr import ParseError, parse
+    out = []
+    for piece in str(text).split(" and "):
+        piece = piece.split("=", 1)[1] if "=" in piece else piece
+        forms = ([piece.replace(PM, "+"), piece.replace(PM, MINUS)]
+                 if PM in piece else [piece])
+        for f in forms:
+            try:
+                out.append(round(parse(f)(), 9))
+            except (ParseError, ZeroDivisionError, ValueError, OverflowError):
+                return None
+    return tuple(sorted(out)) if out else None
 
 
 def _formula(head, first, second, den) -> str:
@@ -712,7 +797,7 @@ def cancel_squares(rng: random.Random, seed: int, *, p=None, r=None, k=None,
                      f"{num(2 * (p + r))}x = {num(k)}, so x = {num(key)}.")
     return _value_item("nleq.cancel_squares", "an equation whose squares cancel",
                        difficulty, seed, stem, key, pool, wrongs, rng, rationale,
-                       P, fmt)
+                       P, fmt, forbid=[key])
 
 
 # ------------------------------------- reading a whole expression off at once
@@ -932,6 +1017,10 @@ def rational_linear(rng: random.Random, seed: int, *, p=None, a=None, b=None,
         "excluded": Mis("gave the value that makes the denominator zero", -b),
         "denominator_number": Mis("read the number in the denominator as the "
                                   "solution", abs(b)),
+        "numerator": Mis("stopped at the numerator and never divided by the "
+                         "coefficient the x terms left", r * b - m - p * a),
+        "drop_m": Mis("left the second fraction out of the working altogether",
+                      (r * b - p * a) / (p - r)),
         "zero": Mis("cancelled the two fractions against each other and concluded "
                     "that x is zero", Q(0)),
         "drop_r": Mis("left the whole number on the right out of the working",
@@ -987,7 +1076,8 @@ def rational_quadratic(rng: random.Random, seed: int, *, shape="cross", n=None,
                          f"{poly((-n, b, 1))} = 0, so x = {num(lo)} or x = {num(hi)}.")
         return _value_item("nleq.rational_quadratic", "a rational equation",
                            difficulty, seed, stem, key, pool, wrongs, rng,
-                           rationale, P, fmt or "spr")
+                           rationale, P, fmt or "spr",
+                           forbid=live if ask in ANY_SOLUTION else ())
 
     # 1/(x + h)² = k, and the question asks for x + h
     h = Q(rng.randint(1, 12)) if h is None else q(h)

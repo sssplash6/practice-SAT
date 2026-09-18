@@ -286,7 +286,8 @@ def graph_count(rng: random.Random, seed: int, *, a=None, h=None, k=None, m=None
                      f"two graphs share "
                      f"{['no points', 'exactly one point', 'two points'][count]}.")
     keyx = E(Q(count))
-    ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, sign_rule=False)
+    ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, sign_rule=False,
+                                   guard=wrongs is None)
     return Item("nleq.graph_count", "counting crossings on a graph", difficulty,
                 seed, stem, "mcq", keyx, letter, rationale, ch, why, tex,
                 figure=fig, params=P)

@@ -15,8 +15,8 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....item import Item, ItemError, Mis, assemble_text
-from ....expr import sign_join
-from .kit import VARS, choices, dec, eq_of, num, paren, sent, side, term
+from .kit import (VARS, choices, dec, eq_of, num, paren, sent, side,
+                  sign_join, term)
 
 __all__ = ["count_solutions", "identity_constant", "no_solution_constant",
            "identity_pair", "no_solution_conditions", "zero_chunk",

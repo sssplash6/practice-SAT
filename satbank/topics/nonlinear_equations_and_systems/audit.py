@@ -24,6 +24,11 @@ from ...audit import AuditError
 from ...expr import ParseError, parse
 
 TOL = 1e-9
+# A root found by bisection lands near its value, not on it, so a root of zero
+# comes back as a whisker either side. Asking whether such a root is negative is
+# a coin toss unless the test has a tolerance -- and `4(x + 9)² = 324`, whose
+# roots are 0 and −18, is exactly the draw that turns that coin over.
+SIGN_EPS = 1e-9
 
 
 # ------------------------------------------------------------ reading params
@@ -390,12 +395,12 @@ def _pick(ask, roots):
             out *= r
         return out
     if ask in ("positive", "a_positive"):
-        live = [r for r in roots if r > 0]
+        live = [r for r in roots if r > SIGN_EPS]
         if len(live) != 1:
             raise AuditError("not exactly one positive solution")
         return live[0]
     if ask == "negative":
-        live = [r for r in roots if r < 0]
+        live = [r for r in roots if r < -SIGN_EPS]
         if len(live) != 1:
             raise AuditError("not exactly one negative solution")
         return live[0]
@@ -645,7 +650,7 @@ def _curve_line(p):
     if ask in ("possible_xy", "positive_xy"):
         prods = [x * y for x, y in pts]
         if ask == "positive_xy":
-            live = [x * y for x, y in pts if x > 0]
+            live = [x * y for x, y in pts if x > SIGN_EPS]
             if len(live) != 1:
                 raise AuditError("not exactly one point with positive x")
             return live[0]

@@ -18,6 +18,8 @@ from dataclasses import dataclass
 from fractions import Fraction as Q
 from math import gcd, isqrt
 
+from .exact import MINUS
+
 __all__ = ["Q", "num", "fmt_num", "fmt_frac", "Poly", "linear", "quadratic",
            "fmt_eq", "fmt_point", "fmt_ineq", "fmt_interval", "fn_of",
            "line_through", "slope", "exp_model", "sign_join", "fmt_percent", "SYMBOL",
@@ -94,10 +96,17 @@ def fmt_percent(v, places: int = 0) -> str:
 
 
 def sign_join(parts: list[str]) -> str:
-    """Join already-signed terms into a readable sum: '3x - 7', not '3x + -7'."""
+    """Join already-signed terms into a readable sum: '3x − 7', not '3x + −7'.
+
+    Reads both spellings of the sign and writes the typeset one. A caller whose
+    terms come from `Exact.plain()` hands over a U+2212, and a test for the
+    ASCII hyphen alone would read every such term as positive and print
+    "3x + −7" -- the same keyboard-hyphen assumption that had four topics'
+    guards silently not seeing negatives at all.
+    """
     out = parts[0]
     for p in parts[1:]:
-        out += f" - {p[1:]}" if p.startswith("-") else f" + {p}"
+        out += f" {MINUS} {p[1:]}" if p[:1] in ("-", MINUS) else f" + {p}"
     return out
 
 

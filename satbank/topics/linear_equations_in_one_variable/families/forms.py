@@ -13,9 +13,8 @@ import random
 from fractions import Fraction as Q
 from math import gcd
 
-from ....expr import sign_join
 from ....item import ItemError
-from .kit import eq_of, num, over, paren, side, term
+from .kit import eq_of, num, over, paren, side, sign_join, term
 
 __all__ = ["SHAPES", "render", "collapse", "draw_shape", "nice"]
 

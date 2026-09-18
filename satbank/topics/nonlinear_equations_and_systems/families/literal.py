@@ -319,10 +319,16 @@ def _trail(head, tail_text: str, style: str) -> str:
 
 
 def _glue(parts) -> str:
+    """Join already-signed pieces: `3x − 7`, never `3x + −7`.
+
+    Both minus signs are read. Everything this file prints carries the typeset
+    one, but a test for a single spelling of the sign is how a guard stops
+    guarding without saying so, and this is the same shape of test that did.
+    """
     parts = [p for p in parts if p not in ("", "0")]
     out = parts[0]
     for p in parts[1:]:
-        out += f" {MINUS} {p[1:]}" if p.startswith(MINUS) else f" + {p}"
+        out += f" {MINUS} {p[1:]}" if p.startswith((MINUS, "-")) else f" + {p}"
     return out
 
 
@@ -783,7 +789,7 @@ def _lead_positive(ratio: str, trail, style: str) -> str:
     if trail == 0:
         return ratio
     piece = mono(trail, "", style=style)
-    if ratio.startswith(MINUS) and trail > 0:
+    if ratio.startswith((MINUS, "-")) and trail > 0:
         return _glue([piece, MINUS + ratio[1:]]).replace(f"+ {MINUS}", MINUS)
     return _glue([ratio, piece])
 

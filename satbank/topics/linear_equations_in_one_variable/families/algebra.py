@@ -18,10 +18,9 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....item import Item, ItemError, Mis
-from ....expr import sign_join
 from . import forms
 from .kit import (VARS, choices, dec, eq_of, griddable, num, over, paren,
-                  pick, sent, side, term)
+                  pick, sent, side, sign_join, term)
 
 __all__ = ["solve", "distribute", "then_value", "chunk", "reciprocal"]
 

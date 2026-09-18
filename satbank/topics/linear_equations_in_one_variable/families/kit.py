@@ -14,32 +14,65 @@ import re
 from fractions import Fraction as Q
 
 from ....exact import E, Exact
-from ....expr import fmt_frac, fmt_num, sign_join
+from ....expr import fmt_frac, fmt_num
 from ....item import ItemError, Mis, assemble
 
 __all__ = ["Q", "E", "num", "dec", "term", "side", "paren", "eq_of", "frame_stem",
-           "choices", "pick", "sent", "money", "over", "VARS", "FRAMES",
-           "griddable", "plainly", "article"]
+           "choices", "pick", "sent", "money", "over", "sign_join", "VARS",
+           "FRAMES", "griddable", "plainly", "article"]
 
 VARS = ["x", "n", "p", "t", "w", "y", "m", "z", "q", "j"]
+
+MINUS = "\N{MINUS SIGN}"        # U+2212, the sign a typeset page prints
+
+
+def typeset(s: str) -> str:
+    """The minus as the page prints it, not as a keyboard types it.
+
+    `Exact.plain()` typesets its sign, and neither the shared `fmt_frac` nor
+    Python's own integer formatting does, so a stem rendered here used to read
+    `-n - 12 = 11` above options that read `-23`. Both spellings on one page
+    is the defect; which one wins is the SAT's business, and the SAT prints
+    U+2212. Every reader in the engine folds the two together -- `norm_text`,
+    `numeral`, and this topic's own `option_check.plain` -- so this changes
+    what is printed and not what compares equal.
+
+    Applied inside the number and expression renderers only. A stem is prose as
+    well as algebra, and `a 30-sided polygon` keeps its hyphen.
+    """
+    return s.replace("-", MINUS)
+
+
+def sign_join(parts: list[str]) -> str:
+    """Join already-signed terms into a readable sum: '3x - 7', not '3x + -7'.
+
+    The engine's shared `expr.sign_join` decides that a part is negative with
+    `startswith("-")`, which is the ASCII hyphen only. Once these renderers
+    typeset the sign it would read every term as positive and print `3x + -7`,
+    so the topic needs a join that knows both spellings. Nothing else differs.
+    """
+    out = parts[0]
+    for p in parts[1:]:
+        out += f" {MINUS} {p[1:]}" if p.startswith(("-", MINUS)) else f" + {p}"
+    return out
 
 
 # ----------------------------------------------------------------- numbers
 
 def num(v, decimal: bool = False) -> str:
-    """A number as an SAT option prints it: 8, -11, 1,100, 1/2, 0.001."""
+    """A number as an SAT option prints it: 8, −11, 1,100, 1/2, 0.001."""
     v = Q(v)
     if decimal:
         return dec(v)
     if v.denominator == 1:
         n = v.numerator
-        return f"{n:,}" if abs(n) >= 1000 else str(n)
-    return fmt_frac(v)
+        return typeset(f"{n:,}" if abs(n) >= 1000 else str(n))
+    return typeset(fmt_frac(v))
 
 
 def dec(v) -> str:
     s = f"{float(Q(v)):.10f}".rstrip("0").rstrip(".")
-    return s or "0"
+    return typeset(s) if s else "0"
 
 
 GRID_DENOMS = (1, 2, 4, 5, 10, 20, 25, 50, 100)
@@ -82,20 +115,20 @@ def money(v, cents: bool = True) -> str:
 # ------------------------------------------------------------- expressions
 
 def term(c, var: str, decimal: bool = False) -> str:
-    """The x-term: 'x', '-x', '3x', '-(1/6)x', '0.8t'."""
+    """The x-term: 'x', '−x', '3x', '−(1/6)x', '0.8t'."""
     c = Q(c)
     if c == 1:
         return var
     if c == -1:
-        return f"-{var}"
+        return f"{MINUS}{var}"
     if c.denominator != 1 and not decimal:
-        sign = "-" if c < 0 else ""
+        sign = MINUS if c < 0 else ""
         return f"{sign}({fmt_frac(abs(c))}){var}"
     return f"{num(c, decimal)}{var}"
 
 
 def side(m, b, var: str, const_first: bool = False, decimal: bool = False) -> str:
-    """One side of an equation: '5p + 180', '112 - x', '2 + x', '60'."""
+    """One side of an equation: '5p + 180', '112 − x', '2 + x', '60'."""
     m, b = Q(m), Q(b)
     if m == 0:
         return num(b, decimal)
@@ -107,14 +140,14 @@ def side(m, b, var: str, const_first: bool = False, decimal: bool = False) -> st
 
 
 def paren(c, inner: str, decimal: bool = False) -> str:
-    """A coefficient against a bracket: '2(w + 5)', '-(x - 3)', '(1/4)(x + 5)'."""
+    """A coefficient against a bracket: '2(w + 5)', '−(x − 3)', '(1/4)(x + 5)'."""
     c = Q(c)
     if c == 1:
         return f"({inner})"
     if c == -1:
-        return f"-({inner})"
+        return f"{MINUS}({inner})"
     if c.denominator != 1 and not decimal:
-        sign = "-" if c < 0 else ""
+        sign = MINUS if c < 0 else ""
         return f"{sign}({fmt_frac(abs(c))})({inner})"
     return f"{num(c, decimal)}({inner})"
 

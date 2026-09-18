@@ -261,7 +261,7 @@ def discriminant_constant(rng: random.Random, seed: int, *, a=None, b=None, c=No
             return Item("nleq.discriminant_constant", "a condition on the "
                         "discriminant", difficulty, seed, sent(stem), "spr", keyx,
                         gridin(key), rationale, params=P)
-        ch, tex, why, letter_ = choices(keyx, pick(pool, wrongs), rng)
+        ch, tex, why, letter_ = choices(keyx, pick(pool, wrongs), rng, guard=wrongs is None)
         return Item("nleq.discriminant_constant", "a condition on the discriminant",
                     difficulty, seed, sent(stem), "mcq", keyx, letter_, rationale,
                     ch, why, tex, params=P)
@@ -317,7 +317,7 @@ def discriminant_constant(rng: random.Random, seed: int, *, a=None, b=None, c=No
                      f"{'inside' if condition == 'none' else 'outside'} that "
                      f"boundary, which {num(key)} satisfies.")
     keyx = E(key)
-    ch, tex, why, letter_ = choices(keyx, pick(pool, wrongs), rng)
+    ch, tex, why, letter_ = choices(keyx, pick(pool, wrongs), rng, guard=wrongs is None)
     return Item("nleq.discriminant_constant", "a condition on the discriminant",
                 difficulty, seed, sent(stem), "mcq", keyx, letter_, rationale, ch,
                 why, tex, params=P)
@@ -459,7 +459,7 @@ def tangent_point(rng: random.Random, seed: int, *, a=None, b=None, c=None, m=No
     if fmt == "spr":
         return Item("nleq.tangent_point", "a line touching a parabola", difficulty,
                     seed, sent(stem), "spr", keyx, gridin(key), rationale, params=P)
-    ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng)
+    ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, guard=wrongs is None)
     return Item("nleq.tangent_point", "a line touching a parabola", difficulty, seed,
                 sent(stem), "mcq", keyx, letter, rationale, ch, why, tex, params=P)
 

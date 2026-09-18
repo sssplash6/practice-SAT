@@ -253,7 +253,7 @@ def curve_line_system(rng: random.Random, seed: int, *, curve=None, line=None,
     if ask in ("which_pair", "the_pair", "which_pair_plain", "both_pairs"):
         return _pair_item(seed, stem, pts, curve, line, A1, B1, C1, D1, B2, C2, D2,
                           ask, branch, offsets, wrongs, rng, rationale, P, difficulty)
-    key, pool = _value_key(ask, pts, xs, ys, A1, B2, C2, D2, branch, line)
+    key, pool, admits = _value_key(ask, pts, xs, ys, A1, B2, C2, D2, branch, line)
     if key is None:
         raise ItemError("this draw does not answer the question asked")
     if not key.rational:
@@ -267,7 +267,8 @@ def curve_line_system(rng: random.Random, seed: int, *, curve=None, line=None,
                     seed, sent(stem), "spr", keyx, gridin(key.p), rationale,
                     params=P)
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng,
-                                   sign_rule=sign_rule)
+                                   sign_rule=sign_rule, guard=wrongs is None,
+                                   forbid=admits)
     return Item("nleq.curve_line_system", "a line meeting a curve", difficulty, seed,
                 sent(stem), "mcq", keyx, letter, rationale, ch, why, tex,
                 params=dict(P, options=list(ch)))
@@ -287,8 +288,8 @@ def _value_key(ask, pts, xs, ys, A1, B2, C2, D2, branch, line):
     key, pool, correct = _value_pool(ask, pts, xs, ys, A1, B2, C2, D2, branch,
                                      line)
     if key is None:
-        return None, {}
-    return key, _drop_correct(pool, correct, key)
+        return None, {}, ()
+    return key, _drop_correct(pool, correct, key), correct
 
 
 def _drop_correct(pool: dict, correct, key) -> dict:
@@ -386,6 +387,11 @@ def _value_pool(ask, pts, xs, ys, A1, B2, C2, D2, branch, line):
         pool.update(_line_numbers(line))
         return key, pool, correct
     if ask == "sum_y":
+        if len(set(xs)) != 2:
+            # the stem names (x\u2081, y\u2081) and (x\u2082, y\u2082) as two
+            # solutions; a repeated root leaves one, and their sum is then two
+            # answers depending on whether it is counted once or twice
+            return None, {}, ()
         key = ylo + yhi
         pool = {
             "sum_x": Mis("added the two x-coordinates instead of the two "
@@ -726,7 +732,7 @@ def sum_product(rng: random.Random, seed: int, *, total=None, product=None,
             raise ItemError("that answer could not be entered in the grid")
         return Item("nleq.sum_product", "a sum and a product", difficulty, seed,
                     sent(stem), "spr", keyx, gridin(key), rationale, params=P)
-    ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng)
+    ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, guard=wrongs is None)
     return Item("nleq.sum_product", "a sum and a product", difficulty, seed,
                 sent(stem), "mcq", keyx, letter, rationale, ch, why, tex, params=P)
 
@@ -777,7 +783,7 @@ def secant_slope(rng: random.Random, seed: int, *, a=1, b=0, c=None, x1=None,
             raise ItemError("that answer could not be entered in the grid")
         return Item("nleq.secant_slope", "the slope of a secant", difficulty, seed,
                     sent(stem), "spr", keyx, gridin(key), rationale, params=P)
-    ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng)
+    ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, guard=wrongs is None)
     return Item("nleq.secant_slope", "the slope of a secant", difficulty, seed,
                 sent(stem), "mcq", keyx, letter, rationale, ch, why, tex, params=P)
 
