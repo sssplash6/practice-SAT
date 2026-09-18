@@ -131,6 +131,7 @@ class Fig:
         self.arcs: list[tuple] = []
         self.squares: list[tuple] = []
         self.texts: list[tuple] = []
+        self.angle_texts: dict[int, tuple] = {}   # text index -> its arc's vertex
         self.dots: list[tuple] = []
         self.marks: list[tuple] = []
 
@@ -173,6 +174,7 @@ class Fig:
             half = max(math.sin(math.radians(span / 2.0)), 0.05)
             room = (3.7 * len(str(text)) + 4.0) / half
             gap = max(r + ARC_GAP, min(4.0 * r, room))
+            self.angle_texts[len(self.texts)] = v
             self.texts.append((v, text, d1 + span / 2.0, gap, italic))
         return self
 
@@ -263,7 +265,9 @@ class Fig:
             n = math.radians(d + 90.0)
             prim.append(("line", (X(m) + 5 * math.cos(n), Y(m) - 5 * math.sin(n),
                                   X(m) - 5 * math.cos(n), Y(m) + 5 * math.sin(n))))
-        for p, text, deg, gap, italic in self.texts:
+        written = []
+        placed: list[tuple] = []
+        for idx, (p, text, deg, gap, italic) in enumerate(self.texts):
             tx = X(p) + gap * math.cos(math.radians(deg))
             ty = Y(p) - gap * math.sin(math.radians(deg))
             c = math.cos(math.radians(deg))
@@ -274,6 +278,34 @@ class Fig:
             wid = 7.4 * len(text)
             shift = {"start": wid / 2, "end": -wid / 2, "middle": 0.0}[anchor]
             box(tx + shift, ty - 4, wid, 15)
+            # two labels printed on top of each other is a figure nobody can
+            # read: which number belongs to which angle stops being decidable,
+            # so the draw is refused rather than shipped
+            here = (tx + shift - 6.6 * len(text) / 2 - 2.0, ty - 13.0,
+                    tx + shift + 6.6 * len(text) / 2 + 2.0, ty + 3.0)
+            for other, what in written:
+                if (here[0] < other[2] and other[0] < here[2]
+                        and here[1] < other[3] and other[1] < here[3]):
+                    raise ItemError(f"the labels {what!r} and {text!r} would be "
+                                    f"printed on top of each other")
+            written.append((here, text))
+            if idx in self.angle_texts:
+                v = self.angle_texts[idx]
+                placed.append(((X(v), Y(v)), tx, ty, text))
+
+        # An angle's number has to be plainly nearer its own vertex than any
+        # other number is, or the figure stops saying which angle it names --
+        # the same test the topic's option_check applies when it reads the
+        # picture back, so a draw it could not read is never shipped.
+        for mine, tx, ty, text in placed:
+            own = math.hypot(tx - mine[0], ty - mine[1])
+            for other, ox, oy, otext in placed:
+                if other == mine:
+                    continue
+                if math.hypot(ox - mine[0], oy - mine[1]) < 1.4 * own:
+                    raise ItemError(
+                        f"the number {otext!r} would be printed as near the "
+                        f"vertex of {text!r} as {text!r} itself")
 
         pad = 4.0
         foot = 20.0 if self.caption else 0.0

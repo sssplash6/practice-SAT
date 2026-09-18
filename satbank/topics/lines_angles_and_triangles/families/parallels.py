@@ -17,7 +17,7 @@ import random
 
 from ....exact import E
 from ....item import Item, ItemError, Mis, assemble_text
-from ..figures import Fig, P, meet, polar, ray
+from ..figures import Fig, P, dist, meet, polar, ray
 from ..kit import pick, whole
 from .triangles import cosd, finish, sind
 
@@ -121,7 +121,8 @@ def transversal(rng: random.Random, seed: int, *, given=None, given_spot=None,
 
     labels = tuple(labels or rng.choice(LINE_PAIRS))
     cutter = cutter or rng.choice([c for c in CUTTERS if c not in labels])
-    unknown = unknown or rng.choice(["w", "x", "a", "b"])
+    unknown = unknown or rng.choice([u for u in ("w", "x", "a", "b")
+                                     if u not in labels and u != cutter])
 
     pool = {
         "supplement": Mis("used the supplementary angle where the two marked angles "
@@ -435,7 +436,7 @@ def perp_transversal(rng: random.Random, seed: int, *, given=None, labels=None,
         raise ItemError("this slope makes the perpendicular's angle unreadable")
     key = E(b)
     m_lab, n_lab = tuple(labels or rng.choice([("m", "n"), ("ℓ", "k"),
-                                               ("q", "t"), ("a", "b"),
+                                               ("q", "t"), ("r", "s"),
                                                ("s", "t"), ("j", "k")]))
     j, k, el = [c for c in ("j", "k", "ℓ", "p", "r") if c not in (m_lab, n_lab)][:3]
     pool = {
@@ -449,22 +450,25 @@ def perp_transversal(rng: random.Random, seed: int, *, given=None, labels=None,
     order = ["a_itself", "half_given", "apex", "supp_b"]
 
     top = P(0, 1.6)
+    # both transversals have to be drawn past line n, or the angles marked at
+    # the lower crossings sit at points where their own line is not there
+    reach = 1.6 / sind(a) + 0.55
     j_ray, k_ray = ray(top, 180 - a), ray(top, a)
     n_line, m_line = ray(P(0, 0), 0), ray(P(0, 1.0), 0)
     jn, kn = meet(j_ray, n_line), meet(k_ray, n_line)
     jm, km = meet(j_ray, m_line), meet(k_ray, m_line)
     x0, x1 = min(kn[0], km[0]) - 0.45, jn[0] + 0.5
     fig = (Fig().seg(P(x0, 0), P(x1, 0)).seg(P(x0, 1.0), P(x1, 1.0))
-           .seg(polar(top, a, 0.4), polar(top, a + 180, 1.45 * 1.6))
-           .seg(polar(top, 180 - a, 0.4), polar(top, -a, 1.45 * 1.6))
+           .seg(polar(top, a, 0.4), polar(top, a + 180, reach))
+           .seg(polar(top, 180 - a, 0.4), polar(top, -a, reach))
            .seg(P(jn[0], -0.35), P(jn[0], 1.45))
            .name(P(x1, 1.0), m_lab, 0).name(P(x1, 0), n_lab, 0)
            .name(polar(top, 180 - a, 0.4), j, 110)
            .name(polar(top, a, 0.4), k, 70)
            .name(P(jn[0], 1.45), el, 90)
            .right(P(jn[0], 1.0), P(x1, 1.0), P(jn[0], 1.45))
-           .angle(km, P(x0, 1.0), polar(km, -a, 0.4), f"a°", r=17)
-           .angle(jm, P(x1, 1.0), polar(jm, a + 180, 0.4), f"a°", r=17)
+           .angle(km, P(x0, 1.0), polar(km, a + 180, 0.4), "a°", r=17)
+           .angle(jm, P(x1, 1.0), polar(jm, -a, 0.4), "a°", r=17)
            .angle(kn, P(x0, 0), polar(kn, a, 0.4), f"{given}°", r=17,
                   italic=False)
            .angle(jn, P(jn[0], 1.45), polar(jn, 180 - a, 0.4), "b°", r=17)
@@ -656,6 +660,10 @@ def big_chain(rng: random.Random, seed: int, *, at_q=None, at_x=None, at_w=None,
     ans = 180 - slope - foot
     if min(at_s, slope, foot, ans) < 12 or at_q < 12:
         raise ItemError("this chain leaves an angle too small to draw")
+    if at_s > 85:
+        # the first triangle's long side would lean past the foot of the
+        # segment, putting X to the right of S and tangling the two triangles
+        raise ItemError("this draw puts the first triangle's apex the wrong side")
     key = E(ans)
 
     q_pt, s_pt = P(0, 0), P(1.0, 0)
@@ -664,12 +672,18 @@ def big_chain(rng: random.Random, seed: int, *, at_q=None, at_x=None, at_w=None,
              s_pt[1] + (x_pt[1] - s_pt[1]) * 0.45)
     back = -w_pt[1] / sind(slope)
     r_pt = P(w_pt[0] - back * cosd(slope), 0.0)
-    u_pt = polar(w_pt, -slope, 0.42)
+    u_pt = polar(w_pt, -slope, max(0.45, 0.9 * back))
     fwd = -u_pt[1] / sind(foot)
     t_pt = P(u_pt[0] + fwd * cosd(foot), 0.0)
     if not (0.02 < r_pt[0] < s_pt[0] - 0.05) or t_pt[0] < s_pt[0] + 0.08:
         raise ItemError("the points on the segment would not fall in order")
     p_pt, v_pt = P(min(q_pt[0], r_pt[0]) - 0.25, 0), P(t_pt[0] + 0.25, 0)
+    named = (p_pt, q_pt, r_pt, s_pt, t_pt, v_pt, x_pt, u_pt, w_pt)
+    span = v_pt[0] - p_pt[0]
+    if min(dist(a, b) for i, a in enumerate(named) for b in named[i + 1:]) \
+            < 0.06 * span:
+        raise ItemError("two of the nine named points would be drawn on top of "
+                        "each other")
     fig = (Fig().seg(p_pt, v_pt).path(q_pt, x_pt, s_pt).path(r_pt, u_pt, t_pt)
            .name(p_pt, Pl, 95).name(q_pt, Ql, 95).name(r_pt, Rl, 95)
            .name(s_pt, Sl, 95).name(t_pt, Tl, 95).name(v_pt, Vl, 95)

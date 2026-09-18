@@ -334,6 +334,9 @@ def parallel_segments(rng: random.Random, seed: int, *, ab=None, bc=None, fe=Non
     total1, total2 = ab + bc, fe + exact
     if not (Q(1, 2) <= total2 / total1 <= 2):
         raise ItemError("the two transversals are too different in length to draw")
+    if not Q(1, 10) <= ab / bc <= 10:
+        raise ItemError("the two pieces of the first transversal are too unlike "
+                        "to draw")
     h = 0.93 * min(float(total1), float(total2))
     alpha = 180.0 - math.degrees(math.asin(h / float(total1)))
     beta = math.degrees(math.asin(h / float(total2)))
@@ -466,6 +469,10 @@ def similar_sufficient(rng: random.Random, seed: int, *, a=None, m=None, k=None,
     third = 180 - a - m
     if third < 15 or m < 15 or abs(m - third) < 6:
         raise ItemError("the two remaining angles are too close to tell apart")
+    if a == m:
+        # then naming angles M and S as m and a would also force the two
+        # triangles equiangular, and the item would have two right answers
+        raise ItemError("this draw makes one of the wrong options sufficient too")
     L, M, N = tuple(names or ("L", "M", "N"))
     R, S, T = tuple(partner or ("R", "S", "T"))
     key_text = (f"The measures of angles {M} and {T} are {m}° and "
@@ -645,6 +652,10 @@ def geometric_mean(rng: random.Random, seed: int, *, mode=None, ad=None, bd=None
             raise ItemError("that hypotenuse gives a leg that cannot be written down")
     if dc <= 0 or dc > 400 or dc.denominator > 4:
         raise ItemError("the far piece of the hypotenuse is not a usable length")
+    if not Q(1, 20) <= ad / dc <= 20:
+        # one piece of the hypotenuse two hundred times the other puts the foot
+        # of the altitude on top of a vertex, whatever scale it is drawn at
+        raise ItemError("the two pieces of the hypotenuse are too unlike to draw")
     key = E(dc)
     height = math.sqrt(float(ad * dc))
     a_pt, c_pt = P(0, 0), P(float(ad + dc), 0)

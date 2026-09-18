@@ -458,6 +458,9 @@ def isosceles_cross(rng: random.Random, seed: int, *, s=None, t=None, v=None,
     pool = {
         "apex_supp": Mis("used the supplement of the apex angle as the base angle, "
                          "without halving it", whole(s + (180 - t))),
+        "apex_only": Mis("stopped at the supplement of the apex angle, without "
+                         "adding the angle at the top of the figure",
+                         whole(180 - t)),
         "base_only": Mis("stopped at the base angle of the isosceles triangle",
                          whole(u)),
         "apex_half": Mis("halved the apex angle itself instead of what was left of "
@@ -469,7 +472,8 @@ def isosceles_cross(rng: random.Random, seed: int, *, s=None, t=None, v=None,
         "double_base": Mis("doubled the base angle instead of subtracting twice the "
                            "base angle from 180 degrees", whole(2 * u)),
     }
-    order = (["apex_supp", "base_only", "apex_half", "given_only", "supp_v"]
+    order = (["apex_supp", "apex_only", "base_only", "apex_half", "given_only",
+              "supp_v"]
              if ask == "v" else ["no_double", "double_base", "supp_v", "base_only"])
 
     # U at the origin, the base line running left to R; T is where the two
@@ -543,6 +547,11 @@ def vertical_isosceles(rng: random.Random, seed: int, *, apex=None, extra=None,
     half = apex / 2.0
     o = P(0, 0)
     far = sind(extra) / sind(180 - apex - extra)
+    if not 0.45 <= far <= 2.2:
+        # one pair of arms many times the other squeezes the marked angle at Q
+        # up against the one at P, and then which number names which stops
+        # being readable
+        raise ItemError("this draw makes one pair of arms far longer than the other")
     q_pt = polar(o, half, 1.0)
     n_pt = polar(o, 180 - half, 1.0)
     r_pt = polar(o, -half, far)
@@ -602,13 +611,19 @@ def crossing_triangles(rng: random.Random, seed: int, *, a=None, x=None, e=None,
         "supp_e": Mis(f"took the supplement of the angle at {Ee}", whole(180 - e)),
         "supp_mid": Mis("used the supplement of the crossing angle in the second "
                         "triangle", whole(mid - e)),
+        "right": Mis("gave a right angle, which the figure only looks like",
+                     whole(90)),
     }
-    order = ["given_x", "vertical", "sum_ax", "supp_e", "supp_mid"]
+    order = ["given_x", "vertical", "sum_ax", "supp_e", "supp_mid", "right"]
 
     c_pt = P(0, 0)
     a_pt, d_pt = P(-1.0, 0), P(1.15, 0)
     cb = 1.0 * sind(a) / sind(x)
     ce = 1.15 * sind(y) / sind(e)
+    # a triangle only a sliver deep puts the angle marked at its apex down on
+    # the segment AD, where it reads as naming an angle at A instead
+    if min(cb, ce) * sind(mid) < 0.125 * (a_pt[0] * -1 + d_pt[0]):
+        raise ItemError("one of the two triangles is too shallow to mark")
     b_pt = polar(c_pt, 180 - mid, cb)
     e_pt = polar(c_pt, -mid, ce)
     fig = (Fig().path(a_pt, d_pt).path(b_pt, e_pt).path(a_pt, b_pt).path(d_pt, e_pt)

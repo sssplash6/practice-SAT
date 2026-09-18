@@ -49,7 +49,7 @@ SLUG = "lines_angles_and_triangles"
 DEG = "\N{DEGREE SIGN}"
 MINUS = "\N{MINUS SIGN}"
 ANG = "\N{ANGLE}"
-TOL = 1.4          # degrees: the slack a figure rounded to a tenth of a pixel needs
+TOL = 0.4          # degrees: the slack a figure rounded to a tenth of a pixel needs
 
 
 class Unreadable(Exception):
@@ -195,6 +195,15 @@ class Drawn:
         return best
 
     def _marks(self) -> list[Mark]:
+        """Every marked angle, measured off the lines rather than off the arc.
+
+        An arc is only twenty pixels across and its ends are rounded to a tenth
+        of a pixel, which leaves half a degree of slop -- enough to lose an
+        item whose options are a degree apart. So the arc is used only to say
+        *which* two rays are marked, and the angle itself is then measured
+        between the drawn lines, which run for hundreds of pixels and are good
+        to a twentieth of a degree.
+        """
         out = []
         for x1, y1, r, x2, y2 in ARC.findall(self.svg):
             p1, p2, r = (float(x1), float(y1)), (float(x2), float(y2)), float(r)
@@ -202,12 +211,29 @@ class Drawn:
                 v = self.near_vertex(c, 3.0)
                 if v is None:
                     continue
-                d1, d2 = _dir(v, p1), _dir(v, p2)
+                rays = self.rays_at(v)
+                d1, d2 = _snap(_dir(v, p1), rays), _snap(_dir(v, p2), rays)
+                if d1 is None or d2 is None:
+                    raise Bad("an angle arc does not open along two drawn lines")
                 span = abs((d1 - d2 + 180.0) % 360.0 - 180.0)
                 out.append(Mark(v, span, d1, d2, r))
                 break
             else:
                 raise Unreadable("an angle arc is not centred on any drawn vertex")
+        return out
+
+    def rays_at(self, v) -> list[float]:
+        """The directions of every drawn line leaving the point v."""
+        out = []
+        for p, q in self.segs:
+            if _off_segment(v, p, q) > 0.9:
+                continue
+            for end in (p, q):
+                if _dist(v, end) > 4.0:
+                    d = _dir(v, end)
+                    if not any(abs((d - e + 180.0) % 360.0 - 180.0) < 0.4
+                               for e in out):
+                        out.append(d)
         return out
 
     def _squares(self) -> list[tuple]:
@@ -237,28 +263,45 @@ class Drawn:
         return {k: v[0] for k, v in out.items() if len(v) == 1}
 
     def _label_marks(self):
-        """Attach each angle's printed name to the arc it belongs to."""
-        used = set()
-        for m in self.marks:
-            mid = (m.d1 + (m.d2 - m.d1 + 360.0) % 360.0 / 2.0) % 360.0
-            if abs((m.d2 - m.d1) % 360.0) > 180.0:
-                mid = (mid + 180.0) % 360.0
-            best, score = None, None
-            for i, (kind, pos, body) in enumerate(self.texts):
-                if i in used or not body.endswith(DEG):
+        """Attach each angle's printed name to the arc it belongs to.
+
+        A reader decides this the way a person does: the number that names an
+        angle sits *inside* the angle and *nearest* its vertex. So a text is a
+        candidate for an arc when it falls in that arc's wedge and within a
+        plausible radius, and the nearest candidate wins. If the runner-up is
+        nearly as near, nobody can tell which angle the number names and the
+        figure is reported rather than guessed at.
+        """
+        cands = []
+        for i, m in enumerate(self.marks):
+            span = (m.d2 - m.d1) % 360.0
+            lo, hi = (m.d1, m.d2) if span <= 180.0 else (m.d2, m.d1)
+            width = (hi - lo) % 360.0
+            for j, (kind, pos, body) in enumerate(self.texts):
+                if not body.endswith(DEG):
                     continue
                 d = _dist(m.vertex, pos)
-                if not (m.radius * 0.8 <= d <= m.radius * 5.0 + 26.0):
+                if not (m.radius * 0.7 <= d <= m.radius * 6.0 + 30.0):
                     continue
-                off = abs((_dir(m.vertex, pos) - mid + 180.0) % 360.0 - 180.0)
-                if off > 34.0:
+                inside = (_dir(m.vertex, pos) - lo) % 360.0
+                if not (-7.0 <= inside <= width + 7.0
+                        or inside >= 353.0):
                     continue
-                s = off + d * 0.08
-                if score is None or s < score:
-                    best, score = i, s
-            if best is not None:
-                used.add(best)
-                m.label = self.texts[best][2]
+                cands.append((d, i, j))
+        cands.sort()
+        taken_arc, taken_text = {}, set()
+        for d, i, j in cands:
+            if i in taken_arc or j in taken_text:
+                continue
+            taken_arc[i], _ = j, taken_text.add(j)
+        for i, m in enumerate(self.marks):
+            if i not in taken_arc:
+                continue
+            mine = sorted(d for d, k, _ in cands if k == i)
+            if len(mine) > 1 and mine[1] < 1.3 * mine[0]:
+                raise Bad("two printed labels sit equally close to the same angle, "
+                          "so which one names it is not decidable")
+            m.label = self.texts[taken_arc[i]][2]
 
     # -------------------------------------------------------------- reading
 
@@ -283,6 +326,25 @@ class Drawn:
         if a not in self.points or b not in self.points:
             raise Unreadable(f"the figure does not name both {a!r} and {b!r}")
         return _dist(self.points[a], self.points[b])
+
+
+def _snap(d: float, rays: list[float], tol: float = 3.5):
+    """The drawn ray an arc's end points along, or None when it points nowhere."""
+    best = min(rays, key=lambda e: abs((d - e + 180.0) % 360.0 - 180.0),
+               default=None)
+    if best is None or abs((d - best + 180.0) % 360.0 - 180.0) > tol:
+        return None
+    return best
+
+
+def _off_segment(v, p, q) -> float:
+    """How far v is from the segment pq, in pixels."""
+    dx, dy = q[0] - p[0], q[1] - p[1]
+    n = dx * dx + dy * dy
+    if n < 1e-9:
+        return _dist(v, p)
+    t = max(0.0, min(1.0, ((v[0] - p[0]) * dx + (v[1] - p[1]) * dy) / n))
+    return _dist(v, (p[0] + t * dx, p[1] + t * dy))
 
 
 def _cross(p1, p2, p3, p4):
@@ -338,15 +400,20 @@ def hits_value(item, target: float, tol: float = 1e-6) -> list[bool]:
     return out
 
 
-def check_answer(item, target: float, what: str) -> str:
-    """The item's own answer, whichever format it is in, is `target`."""
+def check_answer(item, target: float, what: str, tol: float = 1e-6) -> str:
+    """The item's own answer, whichever format it is in, is `target`.
+
+    `tol` is relative, and says how precise the reading was: a value computed
+    from the printed numbers is exact, while one measured off the drawing is
+    only as good as the pixels it was measured from.
+    """
     if item.fmt == "spr":
         v = value(item.answer)
-        if v is None or not near(v, target, 1e-9):
+        if v is None or abs(v - target) > tol * max(1.0, abs(target)):
             raise Bad(f"the grid-in answer is {item.answer!r} but the page gives "
                       f"{target} ({what})")
         return what
-    return settle(item, hits_value(item, target), what)
+    return settle(item, hits_value(item, target, tol), what)
 
 
 # ================================== the figure agrees with the page it is on
@@ -400,14 +467,26 @@ def audit_figure(item, answer: float | None, unknown: str | None):
                           f"as {drawn:.1f} degrees")
 
 
+def question(stem: str) -> str:
+    """The sentence that asks something -- never the ones that state the givens.
+
+    A stem says "The measure of angle JKL is 97 degrees ... What is the measure
+    of angle KJL?", so a reader that takes the first angle it sees measures the
+    given rather than the answer. Everything asked for is read out of the final
+    question alone.
+    """
+    parts = re.split(r"(?<=[.?]) +", stem.strip())
+    return parts[-1] if parts else stem
+
+
 def asked_letter(stem: str) -> str | None:
-    m = re.search(r"value of ([a-z])\b", stem)
+    m = re.search(r"value of ([a-z])\b", question(stem))
     return m.group(1) if m else None
 
 
 def asked_angle(stem: str) -> str | None:
     m = re.search(r"measure(?:, in degrees,)? of (?:" + ANG + r"|angle )"
-                  r"([A-Z]{3})\b", stem)
+                  r"([A-Z]{3})\b", question(stem))
     return m.group(1) if m else None
 
 
@@ -531,13 +610,20 @@ def check_transversal(item) -> str:
 
 
 def check_transversal_proof(item) -> str:
-    """Only a fact about the far crossing can make the two lines parallel."""
+    """Only a fact about the far crossing can make the two lines parallel.
+
+    The figure is drawn with the lines already parallel, so each unknown's
+    drawn angle is either the given one or its supplement; a statement about an
+    unknown at the *same* crossing as the given angle is true whatever the far
+    line does, and one at the far crossing is sufficient exactly when it names
+    the value the parallel drawing shows.
+    """
     fig = Drawn(item.figure)
     printed = [m for m in fig.marks if m.label and m.label.rstrip(DEG).isdigit()]
     if len(printed) != 1:
         raise Unreadable("this figure does not mark exactly one number")
-    here = printed[0].vertex
-    drawn = {m.label.rstrip(DEG): (m.span, m.vertex) for m in fig.marks
+    given, here = float(printed[0].label.rstrip(DEG)), printed[0].vertex
+    drawn = {m.label.rstrip(DEG): m for m in fig.marks
              if m.label and not m.label.rstrip(DEG).isdigit()}
     hits = []
     for text in options(item):
@@ -547,9 +633,17 @@ def check_transversal_proof(item) -> str:
         name, want = m.group(1), float(m.group(2))
         if name not in drawn:
             raise Unreadable(f"the figure marks no angle {name!r}")
-        span, where = drawn[name]
-        far = _dist(where, here) > 8.0
-        hits.append(far and abs(span - want) <= TOL)
+        mark = drawn[name]
+        if abs(mark.span - printed[0].span) <= TOL:
+            needs = given
+        elif abs(mark.span + printed[0].span - 180.0) <= TOL:
+            needs = 180.0 - given
+        else:
+            raise Bad(f"{name} is drawn {mark.span:.1f} degrees beside a "
+                      f"{printed[0].span:.1f} degree angle, which is neither equal "
+                      f"nor supplementary although the lines are drawn parallel")
+        far = _dist(mark.vertex, here) > 8.0
+        hits.append(far and abs(want - needs) < 1e-9)
     return settle(item, hits, "only a fact about the other crossing settles it")
 
 
@@ -632,19 +726,33 @@ def check_two_transversals(item) -> str:
 # ================================================ the similarity templates
 
 def check_similar_angle(item) -> str:
-    """A similarity carries the angle across untouched, whatever k is."""
+    """A similarity carries the angle across untouched, whatever k is.
+
+    One of the four stems prints the angle only in the picture, so when the
+    prose does not carry it the figure is read for it instead -- and where both
+    carry it, the two have to agree.
+    """
     degs = degrees_in(item.stem)
-    if len(degs) != 1:
-        raise Unreadable("this stem does not print exactly one angle")
-    target = degs[0]
-    if item.figure and "dilated by a scale factor" in item.stem:
+    drawn = None
+    if item.figure:
         fig = Drawn(item.figure)
-        name = re.search(r"angle ([A-Z])\?", item.stem)
-        drawn = [m.span for m in fig.marks if m.label == f"{int(target)}" + DEG]
-        if len(drawn) != 1 or abs(drawn[0] - target) > TOL:
-            raise Bad(f"the figure draws the marked angle as "
-                      f"{drawn[0] if drawn else None} rather than {target}")
-        del name
+        numbered = [m for m in fig.marks
+                    if m.label and m.label.rstrip(DEG).replace(".", "").isdigit()]
+        if len(numbered) == 1:
+            drawn = numbered[0]
+            printed = float(drawn.label.rstrip(DEG))
+            if abs(drawn.span - printed) > TOL:
+                raise Bad(f"the figure marks {printed} on an angle it draws as "
+                          f"{drawn.span:.1f} degrees")
+    if len(degs) == 1:
+        target = degs[0]
+        if drawn is not None and abs(float(drawn.label.rstrip(DEG)) - target) > TOL:
+            raise Bad(f"the stem prints {target} but the figure marks "
+                      f"{drawn.label!r}")
+    elif drawn is not None:
+        target = float(drawn.label.rstrip(DEG))
+    else:
+        raise Unreadable("neither the stem nor the figure prints one angle")
     return check_answer(item, target, f"a similarity keeps the angle at {target}")
 
 
@@ -755,32 +863,25 @@ def _settles(text: str, shared: float, M, N, S, T) -> bool:
 
 
 def check_vertical_similar(item) -> str:
+    """Every printed length is drawn to one scale, and the answer is measured."""
     fig = Drawn(item.figure)
-    m = re.search(r"([A-Z]{2}) and ([A-Z]{2}) intersect at point ([A-Z])", item.stem)
-    if m is None:
+    if re.search(r"([A-Z]{2}) and ([A-Z]{2}) intersect at point ([A-Z])",
+                 item.stem) is None:
         raise Unreadable("this stem does not say which segments cross")
-    lengths = dict(re.findall(r"([A-Z])([A-Z]) = (\d+)", item.stem.replace(" = ", "=")
-                              .replace("=", " = ")))
-    pairs = re.findall(r"([A-Z]{2}) = (\d+)", item.stem)
+    pairs = [(name, float(size))
+             for name, size in re.findall(r"([A-Z]{2}) = (\d+)", item.stem)]
     if len(pairs) < 4:
         raise Unreadable("this stem does not print four lengths")
-    scale = []
-    for name, size in pairs:
-        scale.append(fig.length(name[0], name[1]) / float(size))
-    if max(scale) - min(scale) > 0.02 * max(scale):
-        raise Bad(f"the figure does not draw the four printed lengths to one scale: "
-                  f"{[round(s, 4) for s in scale]}")
-    k = sum(scale) / len(scale)
+    k = _drawn_scale(fig, [((n[0], n[1]), v) for n, v in pairs])
     ask = re.search(r"length of ([A-Z]{2})\?", item.stem)
     if ask is None:
         raise Unreadable("this stem does not say which length is asked for")
     target = fig.length(ask.group(1)[0], ask.group(1)[1]) / k
-    del lengths
-    return check_answer(item, round(target * 1000) / 1000,
-                        f"the drawing makes it {target:.3f}")
+    return check_answer(item, target, f"the drawing makes it {target:.3f}", 0.012)
 
 
-def _drawn_scale(fig: Drawn, item, pairs) -> float:
+def _drawn_scale(fig: Drawn, pairs) -> float:
+    """Pixels per printed unit, and a complaint if the figure uses two scales."""
     vals = [fig.length(a, b) / v for (a, b), v in pairs]
     if max(vals) - min(vals) > 0.02 * max(vals):
         raise Bad(f"the figure draws the printed lengths to different scales: "
@@ -789,64 +890,62 @@ def _drawn_scale(fig: Drawn, item, pairs) -> float:
 
 
 def check_altitude_legs(item) -> str:
+    """The two legs are printed beside the drawing; the altitude is measured off it."""
     fig = Drawn(item.figure)
-    sides = re.findall(r'<text class="lb" x="[-\d.]+" y="[-\d.]+" '
-                       r'text-anchor="\w+">(\d+)</text>', item.figure)
-    if len(sides) != 2:
-        raise Unreadable("this figure does not label two legs")
+    legs = sorted(float(v) for v in re.findall(
+        r'<text class="lb" x="[-\d.]+" y="[-\d.]+" text-anchor="\w+">(\d+)</text>',
+        item.figure))
+    if len(legs) != 2:
+        raise Unreadable("this figure does not label exactly two legs")
     ask = re.search(r"length of ([A-Z])([A-Z])", item.stem)
     if ask is None:
         raise Unreadable("this stem does not say which length is asked for")
-    corner = [v for v in fig.squares]
-    if len(corner) != 2:
-        raise Bad(f"{len(corner)} right angles are drawn, not two")
-    legs = sorted(float(v) for v in sides)
+    apex, foot = ask.group(1), ask.group(2)
+    if len(fig.squares) != 2:
+        raise Bad(f"{len(fig.squares)} right angles are drawn, not two")
+    named = sorted(fig.points)
+    if len(named) != 4 or apex not in named or foot not in named:
+        raise Unreadable(f"this figure names {named}, not four points including "
+                         f"{apex} and {foot}")
+    ends = [n for n in named if n not in (apex, foot)]
+    # the right angle at the apex is between the two ends of the hypotenuse
+    if abs(_between(fig.points[apex], fig.points[ends[0]], fig.points[ends[1]])
+           - 90.0) > TOL:
+        raise Bad(f"the angle drawn at {apex} is "
+                  f"{_between(fig.points[apex], fig.points[ends[0]], fig.points[ends[1]]):.1f} "
+                  f"degrees, not a right angle")
+    drawn_legs = sorted((fig.length(apex, e), e) for e in ends)
+    k = _drawn_scale(fig, [((apex, e), leg)
+                           for (_, e), leg in zip(drawn_legs, legs)])
     hyp = math.hypot(*legs)
-    k = _leg_scale(fig, item, legs)
-    target = fig.length(ask.group(1), ask.group(2)) / k
-    if abs(target - legs[0] * legs[1] / hyp) > 0.02 * target:
+    if abs(fig.length(*ends) / k - hyp) > 0.02 * hyp:
+        raise Bad(f"the drawn hypotenuse is {fig.length(*ends) / k:.3f} but the "
+                  f"labelled legs make it {hyp:.3f}")
+    target = fig.length(apex, foot) / k
+    if abs(target - legs[0] * legs[1] / hyp) > 0.02 * max(target, 1e-9):
         raise Bad(f"the drawn altitude is {target:.3f} but the labelled legs make "
                   f"it {legs[0] * legs[1] / hyp:.3f}")
-    return check_answer(item, round(target * 1000) / 1000,
-                        f"the drawing makes the altitude {target:.3f}")
-
-
-def _leg_scale(fig: Drawn, item, legs) -> float:
-    """Pixels per unit, from the two legs the figure labels."""
-    names = sorted(fig.points)
-    best = None
-    for a in names:
-        for b in names:
-            if a >= b:
-                continue
-            d = fig.length(a, b)
-            for leg in legs:
-                r = d / leg
-                if best is None or abs(math.log(r)) < abs(math.log(best)):
-                    pass
-    del best
-    # the two labelled legs meet at the drawn right angle at the apex
-    apex = fig.squares[0]
-    ends = [p for p in fig.vertices if abs(_dist(p, apex)) > 1.0]
-    got = sorted(_dist(apex, p) for p in ends)[:2]
-    return sum(g / l for g, l in zip(got, sorted(legs))) / 2.0
+    return check_answer(item, target,
+                        f"the drawing makes the altitude {target:.3f}", 0.012)
 
 
 def check_geometric_mean(item) -> str:
+    """The printed lengths fix the scale; the answer is read off the drawing."""
     fig = Drawn(item.figure)
-    m = re.search(r"([A-Z])([A-Z]) = ([\d./]+) and", item.stem)
-    if m is None:
-        raise Unreadable("this stem does not print a first length")
-    known = value(m.group(3))
-    if known is None:
-        raise Unreadable("the first printed length is not a number")
-    k = fig.length(m.group(1), m.group(2)) / known
+    pairs = []
+    for a, b, text in re.findall(r"\b([A-Z])([A-Z]) = ([\d./]+)(?= and |\. )",
+                                 item.stem):
+        v = value(text)
+        if v is not None and a in fig.points and b in fig.points:
+            pairs.append(((a, b), v))
+    if not pairs:
+        raise Unreadable("this stem prints no length this reader can parse")
+    k = _drawn_scale(fig, pairs)
     ask = re.search(r"length of ([A-Z])([A-Z])", item.stem)
     if ask is None:
         raise Unreadable("this stem does not say which length is asked for")
     target = fig.length(ask.group(1), ask.group(2)) / k
-    return check_answer(item, round(target * 1000) / 1000,
-                        f"the drawing makes it {target:.3f}")
+    return check_answer(item, target, f"the drawing makes it {target:.3f}", 0.012)
 
 
 def check_parallel_cut_area(item) -> str:
@@ -859,8 +958,7 @@ def check_parallel_cut_area(item) -> str:
                     float(m.group(5).replace(",", "")))
     st = 2 * area / rt
     target = st * (1 - lk / rt)
-    return check_answer(item, round(target * 1e6) / 1e6,
-                        f"the similar triangle leaves {target:.4f}")
+    return check_answer(item, target, f"the similar triangle leaves {target:.4f}")
 
 
 def check_area_range(item) -> str:
@@ -947,15 +1045,25 @@ def _moved_key():
 
 
 def _bent_arc():
-    """A figure whose marked angle no longer matches its printed number."""
+    """A real arc, at the right vertex, drawn a size its label does not say.
+
+    This is the shape the whole exercise is about: the picture still parses,
+    the vertex is still a vertex, and only the angle is wrong.
+    """
     it = generate("lat.transversal", 2)
-    m = ARC.search(it.figure)
-    x1, y1, r, x2, y2 = (float(v) for v in m.groups())
-    cx = float(x1)
-    ang = math.radians(28.0)
-    bent = (f'<path class="ar" d="M{x1},{y1} A{r},{r} 0 0 0 '
-            f'{cx + r * math.cos(ang):.1f},{y1 - r * math.sin(ang):.1f}"/>')
-    return replace(it, figure=it.figure.replace(m.group(0), bent))
+    fig = Drawn(it.figure)
+    mark = next(m for m in fig.marks if m.label and m.label.rstrip(DEG).isdigit())
+    raw = next(t for t in ARC.finditer(it.figure)
+               if abs(_dist((float(t.group(1)), float(t.group(2))), mark.vertex)
+                      - mark.radius) < 0.4)
+    v, r = mark.vertex, mark.radius
+    d2 = (mark.d2 + 17.0) if (mark.d2 - mark.d1) % 360.0 <= 180.0 \
+        else (mark.d2 - 17.0)
+    x2 = v[0] + r * math.cos(math.radians(d2))
+    y2 = v[1] - r * math.sin(math.radians(d2))
+    bent = (f'<path class="ar" d="M{raw.group(1)},{raw.group(2)} A{r},{r} 0 0 0 '
+            f'{x2:.1f},{y2:.1f}"/>')
+    return replace(it, figure=it.figure.replace(raw.group(0), bent))
 
 
 def _relabelled_figure():

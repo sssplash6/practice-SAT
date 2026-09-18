@@ -32,8 +32,9 @@ UPPER, LOWER = "upper", "lower"
 ALL: list[Source] = [
     # ------------------------------------------------------------- set 1
     S("1.1", lambda r: isosceles(r, 0, mode="base", base=67, names=("A", "B", "C")),
-      "the three printed distractors are near-misses around 46 rather than the "
-      "supplement or the double, so the pool's own order is used"),
+      "unreachable: 36, 58 and 70 are near-misses scattered around 46 and none "
+      "of them is 67, 113, 134 or any other route through this triangle, so the "
+      "pool's own order is used and this item scores 0 of 3"),
     S("1.2", lambda r: parallel_triangle(r, 0, y=20, z=60, labels=("ℓ", "m"),
                                          wrongs=["supp_z", "right", "sum"])),
     S("1.3", lambda r: triangle_sum(r, 0, frame="plain", names=("X", "Y", "Z"),
@@ -52,7 +53,7 @@ ALL: list[Source] = [
                               short=("a nearby cherry tree", "the cherry tree"),
                               wrongs=["swap", "shadow_ratio", "height_over_shadow"])),
     S("1.6", lambda r: crossing_triangles(r, 0, a=20, x=100, e=40,
-                                          wrongs=["given_x", "vertical", "sum_ax"])),
+                                          wrongs=["given_x", "right", "vertical"])),
     S("1.7", lambda r: angle_algebra(r, 0, c=31, mult=2, a=45,
                                      wrongs=["unreduced", "right_c", "sum_given"])),
     S("1.8", lambda r: three_lines_point(r, 0, x=65, y=75, labels="P",
@@ -99,10 +100,13 @@ ALL: list[Source] = [
     # ------------------------------------------------------------- set 2
     S("2.1", lambda r: parallel_segments(r, 0, ab=9, bc=Q(37, 2), fe=Q(17, 2),
                                          wrongs=["swapped", "inverted", "added"]),
-      "two of the three printed distractors are near-misses either side of 17.5"),
+      "unreachable: 16.8 and 18.4 sit a tenth or so either side of 17.472 and "
+      "answer to no proportion this figure admits; 19.6 is matched"),
     S("2.2", lambda r: shadow(r, 0, story="trees", h1=10, s1=5, s2=2,
                               wrongs=["diff_shadows", "height_minus_shadow",
-                                      "invert_ratio"])),
+                                      "invert_ratio"]),
+      "unreachable: 27 is not 10(5)/2 = 25, which is where inverting the "
+      "proportion lands, nor any other arrangement of 10, 5 and 2"),
     S("2.3", lambda r: ratio_match(r, 0, a=32, names=("A", "B", "C"),
                                    partner=("D", "E", "F"))),
     S("2.4", lambda r: transversal_inequality(r, 0, bound=65, labels=("r", "s"),
@@ -142,12 +146,16 @@ ALL: list[Source] = [
                                      labels=("M", "N", "P", "Q"),
                                      wrongs=["median", "leg_sq_short",
                                              "leg_sq_long"]),
-      "two of the printed distractors are tenths either side of 2.4 rather than "
-      "wrong routes"),
+      "unreachable: 2.2 and 2.3 are single tenths either side of 2.4 and answer "
+      "to no route through a 3-4-5 triangle; 2.5, the median from the right "
+      "angle, is matched"),
     S("3.6", lambda r: isosceles_cross(r, 0, labels=("S", "T", "U", "R", "V"),
                                        s=31, t=114, ask="v",
-                                       wrongs=["apex_supp", "apex_half",
-                                               "base_only"])),
+                                       wrongs=["apex_only", "apex_half",
+                                               "base_only"]),
+      "unreachable: 72 and 58 straddle 64 by eight and six degrees and answer "
+      "to no step of this chain; 66, the supplement of the apex angle, is "
+      "matched"),
     S("3.7", lambda r: area_range(r, 0, d1=5, d2=7, lo=48, hi=60)),
     S("3.8", lambda r: parallel_cut_area(r, 0, rt=72, lk=24, area=792)),
     S("3.9", lambda r: two_transversals(r, 0, a=43, b=122, labels=("q", "t"))),
