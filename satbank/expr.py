@@ -382,7 +382,39 @@ def _lex(text: str) -> list:
     return out
 
 
-def parse(text: str):
+def split_names(text: str, names) -> str:
+    """Write juxtaposed variables as explicit products: "cy" -> "c*y".
+
+    The lexer takes a run of letters as one name, which is right for `V_B` and
+    `pi` and wrong for `jb`, which is j times b. It cannot tell them apart on
+    its own, so the caller says which names are real and a run is split into
+    the longest of those that tile it. A run that cannot be tiled is left for
+    the parser to reject, because an option nobody can read must not quietly
+    become an option that disagrees.
+    """
+    known = sorted({str(n) for n in names}, key=len, reverse=True)
+    if not known:
+        return str(text)
+
+    def tile(run: str) -> list[str] | None:
+        if not run:
+            return []
+        for n in known:
+            if run.startswith(n) and (rest := tile(run[len(n):])) is not None:
+                return [n] + rest
+        return None
+
+    def sub(m: re.Match) -> str:
+        run = m.group()
+        if run in known or run in ("pi", "sqrt"):
+            return run
+        parts = tile(run)
+        return "*".join(parts) if parts else run
+
+    return re.sub(r"[A-Za-z][A-Za-z_]*", sub, str(text))
+
+
+def parse(text: str, names=()):
     """Read printed mathematics back into a function of its variables.
 
     Returns `f(**values) -> float`, so two printed expressions can be compared
@@ -392,7 +424,14 @@ def parse(text: str):
     Understands what the engine prints -- juxtaposition as multiplication
     (3x, 2(x+1)), typeset superscripts (x²), π and √, a caret or ** for a
     power, and thousands separators. Raises ParseError on anything else.
+
+    `names` lists the variables in play, which is what lets a printed product
+    of single letters read as one: `parse("cy", names="cy")` is c times y,
+    where `parse("cy")` is a single variable called cy. Left empty, the run
+    stays whole and nothing about the default reading changes.
     """
+    if names:
+        text = split_names(text, names)
     toks = _lex(str(text))
     pos = 0
 
@@ -505,17 +544,29 @@ def agree(a, b, variables=("x",), points=(Q(2), Q(3), Q(5, 2), Q(-3), Q(7), Q(-5
     fa = parse(a) if isinstance(a, str) else a
     fb = parse(b) if isinstance(b, str) else b
     seen = 0
+    unreadable = 0
     for i, p in enumerate(points):
         env = {v: p + Q(i * 3 + n, 7) for n, v in enumerate(variables)}
         try:
             va, vb = fa(**env), fb(**env)
-        except (ZeroDivisionError, ValueError, OverflowError, ParseError):
+        except ParseError:
+            unreadable += 1
+            continue
+        except (ZeroDivisionError, ValueError, OverflowError):
             continue
         if not (math.isfinite(va) and math.isfinite(vb)):
             continue
         seen += 1
         if abs(va - vb) > tol * max(1.0, abs(va), abs(vb)):
             return False
+    # "I could not read it" is not "they are different". Returning False for an
+    # expression that never parsed turned this into a silent no-op: a topic's
+    # duplicate-key guard called it on every juxtaposed product ("jb" lexes as
+    # one name, so the environment has no value for it), was told "not equal"
+    # every time, and dropped nothing for months without one failing test.
+    if seen == 0 and unreadable:
+        raise ParseError(f"neither {a!r} nor {b!r} could be evaluated at any "
+                         f"test point, so they cannot be compared")
     return seen >= 2
 
 

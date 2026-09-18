@@ -248,25 +248,49 @@ def _structure(item, name: str, seed: int) -> list[str]:
                    f"{item.choices}")
     key_i = "ABCD".index(item.answer)
     shapes = [_shape(c) for c in item.choices]
-    if shapes.count(shapes[key_i]) == 1:
+    others = [s for i, s in enumerate(shapes) if i != key_i]
+    # A lone integer among radicals is guessable; four options that all look
+    # different are not, because then nothing is lone -- every option is the
+    # only one of its own shape and the key does not stand out among them. So
+    # the key standing alone only tells a student something when the rest form
+    # a crowd for it to stand out from.
+    if shapes.count(shapes[key_i]) == 1 and max(others.count(s) for s in others) > 1:
         out.append(f"{name} seed {seed}: the key is the only option that looks like "
                    f"{item.choices[key_i]!r} -- guessable without the mathematics")
     return out
 
 
 def _shape(opt: str) -> tuple:
-    """A crude surface signature: what the option looks like at a glance."""
+    """A crude surface signature: what the option looks like at a glance.
+
+    Both signs count as negative. The page prints U+2212 and an author's
+    literal may carry the ASCII hyphen; reading only one of them would quietly
+    stop this check seeing negatives at all, which is the failure it exists to
+    catch -- a lone negative among three positives is the answer.
+    """
     return (bool(re.search(r"[a-zA-Z]", opt.replace("pi", "").replace("π", ""))),
             "π" in opt or "pi" in opt, "√" in opt or "sqrt" in opt,
-            "/" in opt, "." in opt, opt.strip().startswith("-"))
+            "/" in opt, "." in opt, opt.strip().startswith(("-", "\N{MINUS SIGN}")))
 
 
 # An unrendered placeholder, and nothing that is merely English. "None of
 # these squares shares a side" and "the slope of line l is undefined" are both
 # SAT prose; banning the words made an author reword a stem and drop an option
 # that the source actually prints.
-_PLACEHOLDER = re.compile(r"\{|\}|\bTODO\b|\bFIXME\b|\bnan\b"
+#
+# A brace is a placeholder when it holds a name or a format spec -- "{value}",
+# "{0:.2f}", "{}" -- and not when it holds a solution set, which is how the SAT
+# writes one: {5}, {−3, 7}, {1/2}. Reading every brace as a placeholder made a
+# topic reserve the braced surface for the one source item that asks for it and
+# print free draws as grid-ins instead.
+_PLACEHOLDER = re.compile(r"\{\s*\}|\{[^}]*[!:][^}]*\}|\{\s*[A-Za-z_]\w*\s*\}"
+                          r"|\bTODO\b|\bFIXME\b|\bnan\b"
                           r"|(?<![A-Za-z])None(?=[,.\s]*$)|= *None\b")
+
+# A stem may close on a parenthetical -- College Board prints "(Disregard the
+# degree symbol when entering your answer.)" -- so the sentence that ends the
+# stem may be the one inside the brackets.
+_ENDS_SENTENCE = re.compile(r"[?.:]\s*\)?\s*$")
 
 
 def _prose(item, name: str, seed: int) -> list[str]:
@@ -276,7 +300,7 @@ def _prose(item, name: str, seed: int) -> list[str]:
         out.append(f"{name} seed {seed}: stem has an unrendered placeholder: {text[:90]!r}")
     if "  " in text:
         out.append(f"{name} seed {seed}: doubled space in the stem")
-    if not text.rstrip().endswith(("?", ".", ":")):
+    if not _ENDS_SENTENCE.search(text):
         out.append(f"{name} seed {seed}: stem does not end a sentence: {text[-40:]!r}")
     if item.fmt == "mcq":
         for c in item.choices:

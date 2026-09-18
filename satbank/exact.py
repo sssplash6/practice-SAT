@@ -19,6 +19,8 @@ import math
 from dataclasses import dataclass
 from fractions import Fraction
 
+MINUS = "\N{MINUS SIGN}"        # U+2212, the sign a typeset page prints
+
 __all__ = ["Exact", "E", "PI"]
 
 
@@ -156,10 +158,19 @@ class Exact:
         return head + sym, d
 
     def plain(self) -> str:
+        """The value as the SAT prints it, typeset minus and all.
+
+        The sign is U+2212, not the ASCII hyphen: the page is typeset, so an
+        option reads -8 nowhere and −8 everywhere. Every reader in the engine
+        folds the two together (`item.norm_text`, `item.numeral`, and each
+        topic's own option reader), so this changes what is printed and not
+        what compares equal. `gridin` keeps the ASCII sign, because that is a
+        student's keystroke rather than a printed page.
+        """
         if self.coef == 0:
             return "0"
         num, den = self._parts(tex=False)
-        sign = "-" if self.coef < 0 else ""
+        sign = MINUS if self.coef < 0 else ""
         return f"{sign}{num}" if den == 1 else f"{sign}{num}/{den}"
 
     def latex(self) -> str:
