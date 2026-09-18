@@ -23,8 +23,8 @@ from ...item import ItemError, Mis, assemble, assemble_text
 __all__ = ["Q", "E", "MINUS", "PM", "ROOT", "q", "ex", "num", "dec", "sup",
            "mono", "join", "poly", "paren", "frac", "prod", "point", "setof",
            "sent", "displayed", "terminating", "griddable", "gridin", "choices",
-           "pick", "eq", "signed_terms", "coef_times", "approx_free", "opt",
-           "text_choices"]
+           "pick", "eq", "signed_terms", "coef_times", "opt", "text_choices",
+           "cap"]
 
 MINUS = "−"        # the typeset minus the source prints
 PM = "±"
@@ -96,24 +96,42 @@ def dec(v, places: int | None = None) -> str:
     return head + f"{float(a):,.{places}f}"
 
 
+GRID_WIDTH = 5          # characters a positive grid-in answer may use
+
+
 def griddable(v) -> bool:
-    """What a student can actually enter in the five grid boxes."""
+    """What a student can actually enter.
+
+    The digital SAT takes five characters for a positive answer and six for a
+    negative one, the extra being the minus sign -- so the test is on the length
+    of what is printed, once the sign is set aside. `−0.5625` is six characters
+    of answer and does not fit, however exact it is.
+    """
     v = q(v)
     if v.denominator == 1:
         return abs(v.numerator) < 100_000
-    if terminating(v) and abs(v) < 1000 and v.denominator <= 10_000:
-        return len(gridin(v).lstrip("-")) <= 6
-    return abs(v.numerator) < 1000 and v.denominator < 1000
+    if not terminating(v) and (abs(v.numerator) >= 1000 or v.denominator >= 1000):
+        return False
+    return len(gridin(v).lstrip("-")) <= GRID_WIDTH
 
 
 def gridin(v) -> str:
-    """The grid-in form: digits only, a short decimal, or a fraction."""
+    """The grid-in form: digits only, a short decimal, or a fraction.
+
+    Nothing here is ever rounded. A decimal is used only when it is exactly the
+    value -- the round trip through `Q` is what proves that -- and anything else
+    is printed as a fraction, so the page can never carry an answer the key does
+    not have. Three topics in earlier waves shipped an item whose printed page
+    could not produce its own key, every one of them by rounding; this topic has
+    no stem that says `closest`, `nearest` or `approximately` and none that
+    prints money, so the exactness below is the whole of the guard it needs.
+    """
     v = q(v)
     if v.denominator == 1:
         return str(v.numerator)
     if terminating(v):
         s = f"{float(v):.6f}".rstrip("0").rstrip(".")
-        if Q(s) == v:
+        if Q(s) == v:                       # exact, not merely close
             return s
     return f"{v.numerator}/{v.denominator}"
 
@@ -227,19 +245,10 @@ def displayed(*lines: str) -> str:
     return "\n".join(lines)
 
 
-def approx_free(value, step) -> bool:
-    """Is this value clear of the midpoint between two printable answers?
-
-    A stem that says `closest`, `nearest` or `approximately`, or that prints
-    money, must refuse a draw whose exact value sits exactly halfway between
-    two answers a student could write down: the page then carries no answer at
-    all. `percentages.values.unambiguous` is the same guard.
-    """
-    v, s = q(value), q(step)
-    if s <= 0:
-        raise ValueError("a step has to be positive")
-    r = (v / s) % 1
-    return r != Q(1, 2)
+def cap(text: str) -> str:
+    """A sentence built from clauses still opens with a capital letter."""
+    text = text.lstrip()
+    return text[:1].upper() + text[1:] if text else text
 
 
 # --------------------------------------------------------------- option sets

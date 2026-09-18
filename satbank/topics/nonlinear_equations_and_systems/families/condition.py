@@ -19,7 +19,8 @@ from fractions import Fraction as Q
 from ....exact import E
 from ....item import Item, ItemError, Mis
 from ..kit import (MINUS, choices, dec, displayed, eq, gridin, griddable, join,
-                   mono, num, paren, pick, poly, q, sent, sup, text_choices)
+                   mono, num, paren, pick, poly, q, sent, signed_terms, sup,
+                   text_choices)
 
 __all__ = ["count_real_solutions", "count_system_solutions",
            "symbolic_intersections", "discriminant_constant", "tangent_constant",
@@ -133,12 +134,12 @@ def count_system_solutions(rng: random.Random, seed: int, *, a=None, b=None, c=N
 
 # --------------------------------- a system written entirely in constants
 
-LETTER_PAIRS = [("a", "c"), ("a", "b"), ("b", "c"), ("c", "d"), ("k", "n"),
-                ("m", "n"), ("p", "q"), ("r", "s"), ("h", "k"), ("j", "k"),
-                ("t", "w"), ("u", "v"), ("a", "k"), ("b", "n")]
+_CONSTANTS = ["a", "b", "c", "d", "h", "j", "k", "m", "n", "p", "q", "r", "t",
+              "u", "v", "w"]
+LETTER_PAIRS = [(x, y) for x in _CONSTANTS for y in _CONSTANTS if x != y]
 
 
-def symbolic_intersections(rng: random.Random, seed: int, *, pair=None, sign=-1,
+def symbolic_intersections(rng: random.Random, seed: int, *, pair=None, sign=None,
                            line=None, wrongs=None, difficulty="medium") -> Item:
     """y = ax² ± c against a horizontal line built from the same two constants.
 
@@ -147,7 +148,7 @@ def symbolic_intersections(rng: random.Random, seed: int, *, pair=None, sign=-1,
     read off the signs alone.
     """
     a, c = pair or rng.choice(LETTER_PAIRS)
-    sign = int(sign)
+    sign = int(rng.choice([-1, 1]) if sign is None else sign)
     line = line or rng.choice(["sum", "difference", "reverse", "negative"])
     rhs = {"sum": f"{a} + {c}", "difference": f"{a} {MINUS} {c}",
            "reverse": f"{c} {MINUS} {a}", "negative": f"{MINUS}{a} {MINUS} {c}"}[line]
@@ -252,8 +253,8 @@ def discriminant_constant(rng: random.Random, seed: int, *, a=None, b=None, c=No
              "unknown": letter, "condition": condition,
              "side": side}
         rationale = sent(f"One solution means the discriminant is zero, so "
-                         f"({num(b)}){sup(2)} {MINUS} 4({num(a)}){letter} = 0 and "
-                         f"{letter} = {num(key)}.")
+                         f"{signed_terms([(b * b, ''), (-4 * a, letter)])} = 0 and "
+                         f"{letter} = {gridin(key).replace('-', MINUS)}.")
         keyx = E(key)
         fmt = fmt or "spr"
         if fmt == "spr":
@@ -322,6 +323,17 @@ def discriminant_constant(rng: random.Random, seed: int, *, a=None, b=None, c=No
                 why, tex, params=P)
 
 
+def _bracketed(text: str) -> str:
+    """A height printed against a coefficient keeps its brackets when it needs
+    them: `12(c/4)` is a product, `4c` is not."""
+    return text if text.isalpha() else f"({text})"
+
+
+def _signed(v) -> str:
+    """A number inside a formula: bracketed only when its sign needs it."""
+    return f"({num(v)})" if q(v) < 0 else num(v)
+
+
 def _printed(a, b, letter, side, rhs) -> str:
     """`ax² + bx + t = 0`, or `ax² + bx = t` when the source puts it on the right."""
     if side == "left":
@@ -372,9 +384,10 @@ def tangent_constant(rng: random.Random, seed: int, *, p=None, height=None, a=No
                     f"{named} intersects a parabola at exactly one point. If the "
                     f"parabola has equation y = {poly((0, b, a))}, what is the value "
                     f"of {named}?")
-        rationale = sent(f"The line is y = {named}/{num(p)}, and one intersection "
-                         f"means ({num(b)}){sup(2)} + 4({num(a)})({named}/{num(p)}) "
-                         f"= 0, so {named} = {gridin(key)}.")
+        height = named if p == 1 else f"{named}/{num(p)}"
+        rationale = sent(f"The line is y = {height}, and one intersection means "
+                         f"{join([num(b * b), mono(4 * a, _bracketed(height))])}"
+                         f" = 0, so {named} = {gridin(key).replace('-', MINUS)}.")
         P = {"kind": "nleq_tangent_constant", "p": _p(p), "a": _p(a), "b": _p(b),
              "ask": ask, "height": _p(h)}
     else:
@@ -390,8 +403,8 @@ def tangent_constant(rng: random.Random, seed: int, *, p=None, height=None, a=No
                     f"y = {poly((0, 0, a))} + {named}x, where {named} is a positive "
                     f"constant, what is the value of {named}?")
         rationale = sent(f"The line is y = {num(h)}, and one intersection means "
-                         f"{named}{sup(2)} + 4({num(a)})({num(h)}) = 0, so "
-                         f"{named} = {num(key)}.")
+                         f"{join([named + sup(2), mono(4 * a * h, '')])} = 0, so "
+                         f"{named} = {gridin(key).replace('-', MINUS)}.")
         P = {"kind": "nleq_tangent_constant", "p": _p(p), "a": _p(a),
              "b": _p(0), "ask": ask, "height": _p(h)}
     return Item("nleq.tangent_constant", "a line touching a parabola", difficulty,
@@ -440,8 +453,8 @@ def tangent_point(rng: random.Random, seed: int, *, a=None, b=None, c=None, m=No
                      f"({num(b)}))/(2·{num(a)}) = {num(key)}.")
     rationale = sent(f"Whatever {named} is, the line has slope {num(m)}, so the one "
                      f"point it can touch the curve at is where the curve's own "
-                     f"slope matches: x = ({num(m)} {MINUS} ({num(b)}))/"
-                     f"(2·{num(a)}) = {num(key)}.")
+                     f"slope matches: x = ({num(m)} {MINUS} {_signed(b)})/"
+                     f"{_signed(2 * a)} = {num(key)}.")
     keyx = E(key)
     if fmt == "spr":
         return Item("nleq.tangent_point", "a line touching a parabola", difficulty,
@@ -478,11 +491,13 @@ def integer_roots_constant(rng: random.Random, seed: int, *, k=None, named=None,
                           f"{named} > 0. If the equation has two integer solutions, "
                           f"what is a possible value of {named} ?"))
     P = {"kind": "nleq_integer_roots", "k": _p(k), "sign": int(sign)}
-    pairs = ", ".join(f"{d} and {n // d}" for d in range(1, n + 1)
-                      if n % d == 0 and d * d <= n)
+    pairs = [f"{d} and {n // d}" for d in range(1, n + 1)
+             if n % d == 0 and d * d <= n]
+    shown = ", ".join(pairs[:4]) + (", and so on" if len(pairs) > 4 else "")
     rationale = sent(f"Two integer solutions multiply to {num(k)}, so they are "
-                     f"{pairs}, and {named} is their sum: "
-                     f"{', '.join(str(v) for v in sums)}.")
+                     f"{shown}; {named} is their sum, which can be "
+                     f"{', '.join(str(v) for v in sums[:4])}"
+                     f"{' and so on' if len(sums) > 4 else ''}.")
     return Item("nleq.integer_roots_constant", "a constant with integer roots",
                 difficulty, seed, sent(stem), "spr", E(key), gridin(Q(key)),
                 rationale, params=P)

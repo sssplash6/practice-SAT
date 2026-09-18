@@ -46,41 +46,59 @@ def _poly_at(coeffs, x: float) -> float:
     return out
 
 
-def _real_roots(coeffs, lo: float = -4000.0, hi: float = 4000.0,
-                steps: int = 400_000) -> list:
-    """Every real root of a polynomial, by sign change and bisection.
+def _deriv(coeffs) -> list:
+    return [i * c for i, c in enumerate(coeffs)][1:]
 
-    No formula is used, so a template that solved by factoring, by completing the
-    square or by the quadratic formula is being checked by something that shares
-    none of those steps. A root the sweep only touches (a repeated root) is found
-    by looking for a local extremum that sits on the axis.
+
+def _bound(coeffs) -> float:
+    """Cauchy's bound: every real root lies inside it."""
+    lead = abs(coeffs[-1])
+    return 1.0 + max((abs(c) / lead for c in coeffs[:-1]), default=0.0)
+
+
+def _real_roots(coeffs) -> list:
+    """Every real root of a polynomial, without any root formula.
+
+    Between two consecutive stationary points a polynomial is monotone, so every
+    root is either a sign change across one of those intervals or a stationary
+    point sitting on the axis. The stationary points are the roots of the
+    derivative, found the same way, and the recursion bottoms out at a linear
+    polynomial. Each bracketed root is then squeezed by bisection.
+
+    Nothing here forms a discriminant, factors anything, or completes a square,
+    which is the whole point: the families do all three, and a solver that
+    repeated any of them would agree with a broken template twice over.
     """
     coeffs = [float(c) for c in coeffs]
     while len(coeffs) > 1 and abs(coeffs[-1]) < 1e-15:
         coeffs.pop()
     if len(coeffs) <= 1:
         return []
-    span = (hi - lo) / steps
-    out, prev_x, prev = [], lo, _poly_at(coeffs, lo)
-    best_x, best = prev_x, abs(prev)
-    for i in range(1, steps + 1):
-        x = lo + span * i
-        v = _poly_at(coeffs, x)
-        if v == 0.0:
-            out.append(x)
-        elif prev != 0.0 and (v > 0) != (prev > 0):
-            out.append(_bisect(coeffs, prev_x, x))
-        if abs(v) < best:
-            best, best_x = abs(v), x
-        prev_x, prev = x, v
-    if not out and best < 1e-6:
-        out.append(_polish(coeffs, best_x))
+    if len(coeffs) == 2:
+        return [-coeffs[0] / coeffs[1]]
+
+    scale = max(abs(c) for c in coeffs)
+    tol = 1e-12 * max(1.0, scale)
+    crit = _real_roots(_deriv(coeffs))
+    r = _bound(coeffs)
+    nodes = [-r] + [c for c in sorted(crit) if -r < c < r] + [r]
+
+    out = []
+    for u, v in zip(nodes, nodes[1:]):
+        fu, fv = _poly_at(coeffs, u), _poly_at(coeffs, v)
+        if abs(fu) <= tol:
+            out.append(u)
+        if abs(fv) <= tol:
+            out.append(v)
+        elif abs(fu) > tol and (fu > 0) != (fv > 0):
+            out.append(_bisect(coeffs, u, v))
     return sorted(_dedupe(out))
 
 
 def _bisect(coeffs, a: float, b: float) -> float:
+    """Squeeze a bracketed root. The interval is monotone, so this converges."""
     fa = _poly_at(coeffs, a)
-    for _ in range(200):
+    for _ in range(120):
         m = (a + b) / 2
         fm = _poly_at(coeffs, m)
         if fm == 0.0:
@@ -92,18 +110,7 @@ def _bisect(coeffs, a: float, b: float) -> float:
     return (a + b) / 2
 
 
-def _polish(coeffs, x: float) -> float:
-    """Newton, for the repeated root a sign sweep cannot straddle."""
-    d = [i * c for i, c in enumerate(coeffs)][1:]
-    for _ in range(80):
-        f, fp = _poly_at(coeffs, x), _poly_at(d, x)
-        if abs(fp) < 1e-14:
-            break
-        x -= f / fp
-    return x
-
-
-def _dedupe(values, tol: float = 1e-6) -> list:
+def _dedupe(values, tol: float = 1e-7) -> list:
     out = []
     for v in sorted(values):
         if not out or abs(v - out[-1]) > tol * max(1.0, abs(v)):
@@ -112,7 +119,7 @@ def _dedupe(values, tol: float = 1e-6) -> list:
 
 
 def _count_roots(coeffs) -> int:
-    return len(_real_roots(coeffs, -2000.0, 2000.0, 200_000))
+    return len(_real_roots(coeffs))
 
 
 # ------------------------------------------- printed options, read back again
@@ -655,26 +662,39 @@ def _curve_line(p):
 
 
 def _closest(p, values):
-    """Which of the values the item actually keyed, read off its own options.
+    """Which of the two solutions the item actually keyed.
 
-    A "which of the following" item keys one of the two solutions, and which one
-    is a property of the printed page rather than of the mathematics -- so it is
-    read off the page: the value that appears among the four options.
+    Both roots answer "which of the following is a possible value of x", so
+    which one is keyed is a property of the item rather than of the mathematics.
+    Where there are four printed options it is read off the page -- the root that
+    appears among them -- and the check then also catches an option set in which
+    *both* roots are printed, which is a question with two right answers. A
+    grid-in prints no options, so there the branch the item was built to report
+    is taken from its parameters; the roots themselves are still derived here.
     """
     opts = p.get("options")
     if not opts:
-        return max(values)
-    shown = []
-    for o in opts:
-        try:
-            shown.append(float(o.replace("−", "-").replace(",", "")))
-        except ValueError:
-            pass
-    hits = [v for v in values if any(abs(v - s) < 1e-7 * max(1.0, abs(v))
-                                     for s in shown)]
+        return max(values) if p.get("branch") == "hi" else min(values)
+    shown = [v for v in (_as_number(o) for o in opts) if v is not None]
+    # the two solutions can share a value -- a line through a parabola can meet
+    # it at two points with the same product xy -- and that is one answer, not two
+    hits = [v for v in _dedupe(values) if any(abs(v - s) < 1e-7 * max(1.0, abs(v))
+                                              for s in shown)]
     if len(hits) != 1:
         raise AuditError(f"{len(hits)} of the solutions appear among the options")
     return hits[0]
+
+
+def _as_number(text: str):
+    """A printed option as a number: 40, −15, −550/9, 20.25, 1,200."""
+    t = text.replace("−", "-").replace(",", "").strip()
+    try:
+        if "/" in t:
+            a, b = t.split("/", 1)
+            return float(a) / float(b)
+        return float(t)
+    except (ValueError, ZeroDivisionError):
+        return None
 
 
 def _spec(packed):
@@ -696,14 +716,51 @@ def _spec(packed):
     return Q(0), -c, pp, k - c * d
 
 
-_POINT = re.compile(r"\(([^,]+),([^)]+)\)")
+def _top_level_groups(text: str) -> list:
+    """Every outermost (...) group, so a nested bracket does not end one early.
+
+    `(2/3 \u2212 (1/3)\u221a46, 14/3 + (2/3)\u221a46)` is one point whose
+    coordinates carry brackets of their own; a regular expression that stops at
+    the first `)` reads it as something else entirely.
+    """
+    out, depth, start = [], 0, None
+    for i, ch in enumerate(text):
+        if ch == "(":
+            if depth == 0:
+                start = i
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+            if depth == 0 and start is not None:
+                out.append(text[start + 1:i])
+                start = None
+    return out
+
+
+def _top_level_split(body: str) -> list:
+    out, depth, cur = [], 0, ""
+    for ch in body:
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+        if ch == "," and depth == 0:
+            out.append(cur)
+            cur = ""
+        else:
+            cur += ch
+    out.append(cur)
+    return out
 
 
 def _read_points(option: str):
     out = []
-    for xa, ya in _POINT.findall(option):
+    for body in _top_level_groups(option):
+        parts = _top_level_split(body)
+        if len(parts) != 2:
+            return None
         try:
-            out.append((_value_of(xa, {}), _value_of(ya, {})))
+            out.append((_value_of(parts[0], {}), _value_of(parts[1], {})))
         except (ParseError, ZeroDivisionError, ValueError):
             return None
     return out or None
@@ -784,8 +841,10 @@ def _symbolic(p):
 
 
 def _discriminant_constant(p):
-    a, b, c = _q(p["a"]), _q(p["b"]), _q(p["c"])
-    slot, side, condition = p["slot"], p["side"], p["condition"]
+    a, b = _q(p["a"]), _q(p["b"])
+    c = _q(p.get("c", [0, 1]))
+    slot = p.get("slot", "constant")
+    side, condition = p.get("side", "left"), p["condition"]
     sgn = 1 if side == "left" else -1
     if condition == "one":
         want = _solve_for_one(a, b, sgn)

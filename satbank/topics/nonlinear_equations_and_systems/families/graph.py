@@ -21,7 +21,7 @@ from fractions import Fraction as Q
 from ....exact import E
 from ....item import Item, ItemError, Mis
 from ..figure import plane
-from ..kit import (MINUS, choices, join, mono, num, pick, point, q, sent,
+from ..kit import (MINUS, choices, join, mono, num, pick, point, q, sent, sup,
                    text_choices)
 
 __all__ = ["graph_solution", "graph_count", "function_meets"]
@@ -205,13 +205,23 @@ def _crossings(kind, a, h, k, m, b) -> int:
         d = B * B - 4 * A * C
         return 0 if d < 0 else (1 if d == 0 else 2)
     if kind == "absolute":
+        # each arm is its own line: (branch·a − m)x + (k − branch·a·h − b) = 0.
+        # When that slope is zero the arm is parallel to the drawn line, and when
+        # the constant vanishes too the line lies *along* the arm -- every point
+        # of it is a solution, and the picture shows two graphs on top of each
+        # other. That draw has to go, and the sign test alone would have counted
+        # it as a single clean crossing.
         hits = 0
-        if a - m != 0:
-            x = (b - k + a * h) / (a - m)
-            hits += x >= h
-        if -a - m != 0:
-            x = (b - k - a * h) / (-a - m)
-            hits += x <= h
+        for branch in (1, -1):
+            slope = branch * a - m
+            const = k - branch * a * h - b
+            if slope == 0:
+                if const == 0:
+                    return 99
+                continue
+            x = -const / slope
+            if (branch == 1 and x >= h) or (branch == -1 and x <= h):
+                hits += 1
         return hits
     if (a > 1 and m < 0) or (0 < a < 1 and m > 0):
         return 1
@@ -319,16 +329,31 @@ def function_meets(rng: random.Random, seed: int, *, a=None, h=None, k=None, m=N
     xs = sorted({(-B - r) / (2 * A), (-B + r) / (2 * A)})
     if any(x.denominator != 1 for x in xs) or xs[0] == xs[1]:
         raise ItemError("the two agree at points the grid cannot show")
-    xmin, xmax, ymin, ymax = window or (0, int(max(xs) + 2), 0,
-                                        int(k) + 2 if a < 0 else int(k) + 12)
+    # the window has to show both places the two functions agree, in y as well
+    # as in x: a point the drawn curve does not reach is a picture that does not
+    # carry its own answer
+    ys = [m * x + b for x in xs]
+    if window is None:
+        lo_x, hi_x = int(min(0, *xs)) - 1, int(max(xs)) + 2
+        lo_y = int(min(0, k, *ys)) - 1
+        hi_y = int(max(0, k, *ys)) + 2
+        window = (lo_x, hi_x, lo_y, hi_y)
+    xmin, xmax, ymin, ymax = window
     if not all(xmin <= x <= xmax for x in xs):
         raise ItemError("an agreement falls outside the drawn window")
+    if not all(ymin <= y <= ymax for y in ys):
+        raise ItemError("an agreement sits off the top or bottom of the window")
+    if not (ymin <= k <= ymax):
+        raise ItemError("the curve's turning point is outside the window")
     fig = plane(xmin, xmax, ymin, ymax, curves=[_curve("parabola", a, h, k)],
                 step=step, labels=[(h, k + (1 if a < 0 else -1),
                                     f"y = {fname}(x)")])
     inner = f"x {MINUS} {num(h)}" if h > 0 else (f"x + {num(-h)}" if h else "x")
-    head = num(a) if q(a).denominator == 1 else f"({num(a)})"
-    ftext = f"{fname}(x) = {head}({inner})² + {num(k)}"
+    head = "" if a == 1 else (MINUS if a == -1 else
+                              (num(a) if q(a).denominator == 1 else f"({num(a)})"))
+    # a parabola centred on the axis is x², never (x)²
+    squared = f"x{sup(2)}" if h == 0 else f"({inner}){sup(2)}"
+    ftext = f"{fname}(x) = {head}{squared} + {num(k)}"
     gtext = f"{gname}(x) = " + join([mono(m, "x"), mono(b, "")])
     stem = sent(f"The graph of the function {fname}, defined by {ftext}, is shown in "
                 f"the xy-plane above. If the function {gname} (not shown) is defined "
@@ -338,7 +363,7 @@ def function_meets(rng: random.Random, seed: int, *, a=None, h=None, k=None, m=N
     P = {"kind": "nleq_function_meets", "a": _p(a), "h": _p(h), "k": _p(k),
          "m": _p(m), "b": _p(b)}
     gathered = join([mono(A, "a", 2), mono(B, "a"), mono(C, "")])
-    rationale = sent(f"Setting {head}({inner})² + {num(k)} equal to "
+    rationale = sent(f"Setting {head}{squared} + {num(k)} equal to "
                      f"{join([mono(m, 'x'), mono(b, '')])} and gathering gives "
                      f"{gathered} = 0, so a = {num(xs[0])} or a = {num(xs[1])}.")
     from ..kit import gridin, griddable

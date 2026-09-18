@@ -23,9 +23,9 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....item import Item, ItemError, Mis
-from ..kit import (MINUS, PM, ROOT, choices, displayed, eq, gridin, griddable,
-                   join, mono, num, paren, pick, poly, q, sent, setof, sup,
-                   text_choices)
+from ..kit import (MINUS, PM, ROOT, cap, choices, displayed, eq, gridin,
+                   griddable, join, mono, num, paren, pick, poly, q, sent, setof,
+                   sup, text_choices)
 
 __all__ = ["square_equation", "absolute_equation", "quadratic_solve",
            "quadratic_formula", "factored_equation", "shared_factor",
@@ -81,6 +81,26 @@ ASKS = {
 }
 
 
+# The asks that any solution answers. "Which of the following is a solution"
+# is true of every root, so no root may be offered as a distractor; "the
+# positive solution" singles one out, and there the other root is a fair wrong
+# answer -- it is what a student who ignored the word `positive` would pick.
+ANY_SOLUTION = {"which", "which_above", "which_value", "one_possible",
+                "one_possible_above", "what_value", "solution"}
+
+
+def _strike(pool: dict, values, ask: str, key) -> dict:
+    """Remove the other solutions from the pool when they answer the question."""
+    if ask not in ANY_SOLUTION:
+        return pool
+    live = [q(v) for v in values if q(v) != q(key)]
+    out = {}
+    for name, m in pool.items():
+        clash = m.value is not None and any(q(m.value) == v for v in live)
+        out[name] = Mis(m.reason, None) if clash else m
+    return out
+
+
 def _value_item(template: str, skill: str, difficulty: str, seed: int, stem: str,
                 key, pool: dict, wrongs, rng, rationale: str, params: dict,
                 fmt: str, signed: bool = True, sign_rule: bool = True) -> Item:
@@ -111,17 +131,34 @@ def square_equation(rng: random.Random, seed: int, *, shape=None, a=None, h=None
     """
     shape = shape or rng.choice(["plain", "plain", "shifted", "shifted",
                                  "gathered"])
-    a = Q(rng.choice([1, 1, 1, 2, 3, 4, 5, 9])) if a is None else q(a)
-    h = (Q(rng.randint(-9, 9)) if shape == "shifted" else Q(0)) \
-        if h is None else q(h)
-    spare = (Q(rng.randint(-40, 40)) if shape in ("gathered", "plain") else Q(0)) \
-        if spare is None else q(spare)
     if k is None:
+        # a free draw builds the right-hand side from a square root it has
+        # chosen, so the page always carries a root the grid can take
+        a = Q(rng.choice([1, 1, 1, 2, 3, 4, 5, 9])) if a is None else q(a)
+        h = (Q(rng.randint(-9, 9)) if shape == "shifted" else Q(0)) \
+            if h is None else q(h)
         root = Q(rng.randint(1, 15))
-        k = a * root * root + spare
-    k = q(k)
+        if shape == "gathered":
+            # (a+1)x² + spare = x² gathers to a·x² = −spare, so the right-hand
+            # side is the printed x² and nothing else: k has to be zero here
+            spare = -a * root * root if spare is None else q(spare)
+            k = Q(0)
+        else:
+            spare = (Q(rng.randint(-40, 40)) if shape == "plain" else Q(0)) \
+                if spare is None else q(spare)
+            k = a * root * root + spare
+    else:
+        # a source item pins the numbers it prints; everything it leaves out
+        # takes its neutral value rather than a fresh draw, or the page stops
+        # matching the item being reproduced
+        a = Q(1) if a is None else q(a)
+        h = Q(0) if h is None else q(h)
+        spare = Q(0) if spare is None else q(spare)
+        k = q(k)
     if a == 0:
         raise ItemError("no square left in the equation")
+    if shape == "gathered" and k != 0:
+        raise ItemError("a gathered square is printed against x², not a number")
     inner = (k - spare) / a
     if inner <= 0:
         raise ItemError("this square has no real solutions to report")
@@ -199,6 +236,7 @@ def square_equation(rng: random.Random, seed: int, *, shape=None, a=None, h=None
     }
     P = {"kind": "nleq_square", "shape": shape, "a": _p(a), "h": _p(h), "k": _p(k),
          "spare": _p(spare), "ask": ask}
+    pool = _strike(pool, [lo, hi], ask, key)
     shifted = join(["x", mono(h, "")]) if h else "x"
     rationale = sent(f"The square is {num(inner)}, so {shifted} is {num(root)} or "
                      f"{num(-root)}, giving x = {num(hi)} and x = {num(lo)}.")
@@ -258,12 +296,13 @@ def absolute_equation(rng: random.Random, seed: int, *, a=1, b=0, h=None,
                          lo + hi if ask != "sum" else None),
         "abs_other": Mis("lost the sign of the other solution", abs(lo)),
     }
+    pool = _strike(pool, [lo, hi], ask, key)
     P = {"kind": "nleq_absolute", "a": _p(a), "b": _p(b), "h": _p(h), "k": _p(k),
          "bare": bool(bare), "ask": ask}
     head = (f"Gathering the two terms gives {num(a + b)} times the absolute value, so "
             if b else "")
-    rationale = sent(f"{head}the quantity inside the bars is {num(m)} or {num(-m)}, "
-                     f"so x = {num(hi)} or x = {num(lo)}.")
+    rationale = sent(cap(f"{head}the quantity inside the bars is {num(m)} or "
+                         f"{num(-m)}, so x = {num(hi)} or x = {num(lo)}."))
     return _value_item("nleq.absolute_equation", "an absolute-value equation",
                        difficulty, seed, stem, key, pool, wrongs, rng, rationale,
                        P, fmt)
@@ -312,7 +351,8 @@ def quadratic_solve(rng: random.Random, seed: int, *, a=None, b=None, c=None,
     fmt = fmt or ("mcq" if ask == "which" else "spr")
     stem = displayed(equation, question)
 
-    pool = _quadratic_pool(na, nb, nc, roots, key, ask)
+    pool = _strike(_quadratic_pool(na, nb, nc, roots, key, ask), roots or [], ask,
+                   key)
     P = {"kind": "nleq_quadratic", "a": _p(na), "b": _p(nb), "c": _p(nc),
          "ask": ask}
     if roots:
@@ -552,10 +592,17 @@ def factored_equation(rng: random.Random, seed: int, *, roots=None, ask="product
     }
     P = {"kind": "nleq_factored", "roots": [_p(r) for r in roots], "ask": ask}
     rationale = sent(f"Each bracket gives a solution, so they are "
-                     f"{', '.join(num(r) for r in roots)}, and their "
+                     f"{_listed([num(r) for r in roots])}, and their "
                      f"{'product' if ask == 'product' else 'sum'} is {num(key)}.")
     return _value_item("nleq.factored_equation", "a factored equation", difficulty,
                        seed, stem, key, pool, wrongs, rng, rationale, P, fmt)
+
+
+def _listed(parts) -> str:
+    parts = list(parts)
+    if len(parts) < 2:
+        return "".join(parts)
+    return ", ".join(parts[:-1]) + f" and {parts[-1]}"
 
 
 def _from_printed(roots, ask):
@@ -618,8 +665,10 @@ def shared_factor(rng: random.Random, seed: int, *, a=None, k=None, b=None, m=No
          "m": _p(m), "ask": ask}
     rationale = sent(f"Taking everything to one side gives "
                      f"{paren(join(['x', mono(k, '')]))}"
-                     f"[{num(a)} {MINUS} {num(b)}(x {MINUS} {num(m)})] = 0, so "
-                     f"x = {num(r1)} or x = {num(r2)}.")
+                     f"[{num(a)} {MINUS} {num(b)}"
+                     f"{paren(join(['x', mono(-m, '')]))}] = 0, so "
+                     f"x = {gridin(r1).replace('-', MINUS)} or "
+                     f"x = {gridin(r2).replace('-', MINUS)}.")
     return _value_item("nleq.shared_factor", "a factor on both sides", difficulty,
                        seed, stem, key, pool, wrongs, rng, rationale, P, fmt)
 
@@ -634,6 +683,8 @@ def cancel_squares(rng: random.Random, seed: int, *, p=None, r=None, k=None,
     k = Q(rng.choice([i for i in range(-40, 41) if i])) if k is None else q(k)
     if p + r == 0:
         raise ItemError("the x terms cancel as well, leaving no equation")
+    if p == r:
+        raise ItemError("the two brackets would print identically")
     key = k / (2 * (p + r))
     if key.denominator > 4:
         raise ItemError("the solution would not print cleanly")
@@ -655,6 +706,7 @@ def cancel_squares(rng: random.Random, seed: int, *, p=None, r=None, k=None,
                          k / (p + r)),
         "negate": Mis("solved for the wrong sign of x", -key),
     }
+    pool = _strike(pool, [key], ask, key)
     P = {"kind": "nleq_cancel_squares", "p": _p(p), "r": _p(r), "k": _p(k)}
     rationale = sent(f"Both sides carry x², and what is left is "
                      f"{num(2 * (p + r))}x = {num(k)}, so x = {num(key)}.")
@@ -679,6 +731,9 @@ def scaled_quadratic(rng: random.Random, seed: int, *, shape="divide", k=None,
         c = Q(rng.choice([i for i in range(-60, 61) if i])) if c is None else q(c)
         if k == 0:
             raise ItemError("nothing to divide by")
+        if (k * b) ** 2 - 4 * k * c < 0:
+            raise ItemError("the printed equation has no real solutions, so the "
+                            "stem's premise is false")
         key = -c / k
         if key.denominator != 1:
             raise ItemError("the value asked for would not print cleanly")
@@ -694,9 +749,8 @@ def scaled_quadratic(rng: random.Random, seed: int, *, shape="divide", k=None,
         }
         P = {"kind": "nleq_scaled", "shape": shape, "k": _p(k), "b": _p(b),
              "c": _p(c)}
-        rationale = sent(f"Dividing {equation} by {num(k)} gives {want} "
-                         f"{MINUS if key < 0 else '+'} {num(abs(-key))} = 0, so "
-                         f"{want} = {num(key)}.")
+        rationale = sent(f"Dividing {equation} by {num(k)} gives "
+                         f"{poly((c / k, b, 1))} = 0, so {want} = {num(key)}.")
         ask = ask or "value"
         fmt = fmt or "spr"
     else:
@@ -728,8 +782,8 @@ def scaled_quadratic(rng: random.Random, seed: int, *, shape="divide", k=None,
 
 # ------------------------------------------------------------- a radical
 
-def radical_equation(rng: random.Random, seed: int, *, shape="simple", a=1, b=None,
-                     c=None, d=0, e=0, ask=None, fmt=None, wrongs=None,
+def radical_equation(rng: random.Random, seed: int, *, shape=None, a=None, b=None,
+                     c=None, d=None, e=None, ask=None, fmt=None, wrongs=None,
                      difficulty="medium") -> Item:
     """√(ax + b) = c, or √(ax + b) + d = x + e -- where extraneous roots live.
 
@@ -737,8 +791,13 @@ def radical_equation(rng: random.Random, seed: int, *, shape="simple", a=1, b=No
     candidate is put back into the printed equation here before it is kept; the
     audit cannot see that, because it re-derives from the same parameters.
     """
-    a = q(a)
-    b = Q(rng.randint(-20, 20)) if b is None else q(b)
+    # the extraneous-root shape is the whole point of this template, so a free
+    # draw reaches it as often as the plain one
+    shape = shape or rng.choice(["simple", "linear"])
+    a = Q(rng.choice([1, 1, 2, 3, 4])) if a is None else q(a)
+    b = Q(rng.randint(-30, 30)) if b is None else q(b)
+    d = (Q(rng.randint(0, 6)) if shape == "linear" else Q(0)) if d is None else q(d)
+    e = (Q(rng.randint(-6, 6)) if shape == "linear" else Q(0)) if e is None else q(e)
     if a == 0:
         raise ItemError("no unknown under the radical")
     inside = poly((b, a))
@@ -769,15 +828,13 @@ def radical_equation(rng: random.Random, seed: int, *, shape="simple", a=1, b=No
         fmt = fmt or "spr"
         stem = displayed(equation, ASKS[ask])
         P = {"kind": "nleq_radical", "shape": shape, "a": _p(a), "b": _p(b),
-             "c": _p(c), "d": Q(0).numerator and 0 or [0, 1], "e": [0, 1],
-             "ask": ask}
+             "c": _p(c), "d": _p(0), "e": _p(0), "ask": ask}
         rationale = sent(f"Squaring both sides gives {inside} = {num(c * c)}, so "
-                         f"x = {num(key)}.")
+                         f"x = {gridin(key).replace('-', MINUS)}.")
         return _value_item("nleq.radical_equation", "a radical equation", difficulty,
                            seed, stem, key, pool, wrongs, rng, rationale, P, fmt)
 
     # √(ax + b) + d = x + e
-    d, e = q(d), q(e)
     shift = e - d
     # (x + shift)² = ax + b
     cand = _roots(1, 2 * shift - a, shift * shift - b)
@@ -788,16 +845,20 @@ def radical_equation(rng: random.Random, seed: int, *, shape="simple", a=1, b=No
     if len(good) != 1 or not bad:
         raise ItemError("this draw is not an extraneous-root item")
     key = good[0]
-    ask = ask or rng.choice(["solution_set", "what_value"])
+    # A solution set is printed the way the source prints one, in braces -- and
+    # `check._prose` reads a brace as an unrendered placeholder, which it has to,
+    # since that is what a half-rendered template looks like. So the braced
+    # surface is offered only where a source item asks for it by name; a free
+    # draw takes the same mathematics as a grid-in, and the extraneous root is
+    # tested either way.
+    ask = ask or "what_value"
     equation = eq(join([f"{ROOT}{paren(inside)}", mono(d, "")]),
                   join(["x", mono(e, "")]))
     stem = displayed(equation, ASKS[ask])
     P = {"kind": "nleq_radical", "shape": shape, "a": _p(a), "b": _p(b),
          "c": [0, 1], "d": _p(d), "e": _p(e), "ask": ask}
-    rationale = sent(f"Squaring gives x² {MINUS if (2 * shift - a) < 0 else '+'} "
-                     f"{num(abs(2 * shift - a))}x "
-                     f"{MINUS if (shift * shift - b) < 0 else '+'} "
-                     f"{num(abs(shift * shift - b))} = 0, whose roots are "
+    rationale = sent(f"Squaring gives {poly((shift * shift - b, 2 * shift - a, 1))}"
+                     f" = 0, whose roots are "
                      f"{num(cand[0])} and {num(cand[1])}; only x = {num(key)} "
                      f"satisfies the printed equation, because a square root is "
                      f"never negative.")
@@ -974,10 +1035,10 @@ def rational_combine(rng: random.Random, seed: int, *, A=None, B=None, C=None,
     Multiplying by (x + h)(x − h) leaves a quadratic whose roots include x = −h,
     which the printed equation forbids. That root is the item.
     """
-    h = Q(rng.choice([2, 3, 4, 5, 6, 7])) if h is None else q(h)
-    A = Q(rng.choice([2, 3, 4, 5, 6])) if A is None else q(A)
-    B = Q(rng.choice([1, 2, 3, 4])) if B is None else q(B)
-    C = Q(rng.choice([1, 2, 3, 4, 5])) if C is None else q(C)
+    h = Q(rng.randint(2, 14)) if h is None else q(h)
+    A = Q(rng.randint(2, 14)) if A is None else q(A)
+    B = Q(rng.randint(1, 12)) if B is None else q(B)
+    C = Q(rng.randint(1, 14)) if C is None else q(C)
     if h <= 0:
         raise ItemError("the two denominators would coincide")
     # A x² − B x (x − h) = C (x + h)
@@ -1035,12 +1096,16 @@ def product_roots_constant(rng: random.Random, seed: int, *, p=None, u=None, v=N
     middle one contributes a pair that cancels, the last one s/w -- so the stated
     total fixes p outright, provided the five roots stay distinct.
     """
-    p = Q(rng.randint(1, 12)) if p is None else q(p)
-    u = Q(rng.choice([2, 3, 4, 5])) if u is None else q(u)
-    v = Q(rng.choice([2, 3, 5, 7])) if v is None else q(v)
-    w = Q(rng.choice([2, 3, 4])) if w is None else q(w)
-    g = Q(rng.choice([20, 45, 63, 80, 125, 147])) if g is None else q(g)
-    s = Q(rng.choice([8, 10, 12, 16, 20])) if s is None else q(s)
+    p = Q(rng.randint(1, 24)) if p is None else q(p)
+    u = Q(rng.choice([2, 3, 4, 5, 6, 7])) if u is None else q(u)
+    v = Q(rng.choice([2, 3, 5, 6, 7, 10, 11])) if v is None else q(v)
+    w = Q(rng.choice([1, 2, 3, 4, 5])) if w is None else q(w)
+    if g is None:
+        # the middle factor has to come apart, so build it from its own root
+        g = v * Q(rng.randint(2, 12)) ** 2
+    g = q(g)
+    s = Q(rng.choice([6, 8, 9, 10, 12, 14, 15, 16, 18, 20, 21, 24])) \
+        if s is None else q(s)
     t = q(t)
     if p <= 0 or u == 0 or v == 0 or w == 0 or t == 0:
         raise ItemError("a coefficient of zero collapses a factor")
@@ -1141,7 +1206,7 @@ def paired_quadratics(rng: random.Random, seed: int, *, b1=None, c1=None, b2=Non
          "c2": _p(c2)}
     rationale = sent(f"The two sums add to {num(-(b1 + b2))}, which matches the "
                      f"middle coefficient, and their product is "
-                     f"[({num(b1 + b2)})² {MINUS} ({num(d1)} + {num(d2)} + "
+                     f"[{num(b1 + b2)}² {MINUS} ({num(d1)} + {num(d2)} + "
                      f"2·{num(cross)})]/4 = {num(key)}.")
     return _value_item("nleq.paired_quadratics", "two quadratics feeding a third",
                        difficulty, seed, stem, key, pool, wrongs, rng, rationale,

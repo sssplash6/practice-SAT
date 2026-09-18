@@ -83,10 +83,16 @@ class Surd:
         return float(self.p) + float(self.g) * math.sqrt(float(self.m))
 
     def text(self) -> str:
+        """`1 + √3`, `−√35`, `(1/3)√46`.
+
+        A fractional coefficient is bracketed: `1/3√46` could be read as
+        1/(3√46), and a page that can be read two ways has two answers.
+        """
         if self.rational:
             return num(self.p)
-        root = (num(abs(self.g)) if abs(self.g) != 1 else "") + ROOT + num(self.m)
-        body = (MINUS if self.g < 0 else "") + root
+        g = abs(self.g)
+        head = "" if g == 1 else (num(g) if g.denominator == 1 else f"({num(g)})")
+        body = (MINUS if self.g < 0 else "") + head + ROOT + num(self.m)
         return join([num(self.p), body]) if self.p else body
 
 
@@ -241,7 +247,7 @@ def curve_line_system(rng: random.Random, seed: int, *, curve=None, line=None,
         stem = displayed(_print(curve), _print(line), sent(text))
 
     P = {"kind": "nleq_curve_line", "curve": _pack(curve), "line": _pack(line),
-         "ask": ask}
+         "ask": ask, "branch": branch}
     rationale = _story(curve, line, pts)
 
     if ask in ("which_pair", "the_pair", "which_pair_plain", "both_pairs"):
@@ -263,23 +269,55 @@ def curve_line_system(rng: random.Random, seed: int, *, curve=None, line=None,
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng,
                                    sign_rule=sign_rule)
     return Item("nleq.curve_line_system", "a line meeting a curve", difficulty, seed,
-                sent(stem), "mcq", keyx, letter, rationale, ch, why, tex, params=P)
+                sent(stem), "mcq", keyx, letter, rationale, ch, why, tex,
+                params=dict(P, options=list(ch)))
 
 
 def _value_key(ask, pts, xs, ys, A1, B2, C2, D2, branch, line):
+    """The keyed value and the pool of wrong ones, with every *right* value
+    struck out of the pool first.
+
+    "Which of the following is a possible value of x?" is answered by either
+    root, so the other root is a second key, not a distractor -- and so is any
+    near-miss that lands on it. The same goes for xy when the stem does not
+    single out one of the two points. The set of values that genuinely answer
+    the question is worked out here and removed from the pool wholesale, rather
+    than one pool entry at a time.
+    """
+    key, pool, correct = _value_pool(ask, pts, xs, ys, A1, B2, C2, D2, branch,
+                                     line)
+    if key is None:
+        return None, {}
+    return key, _drop_correct(pool, correct, key)
+
+
+def _drop_correct(pool: dict, correct, key) -> dict:
+    live = {float(v) for v in correct if float(v) != float(key.p)}
+    out = {}
+    for name, m in pool.items():
+        if m.value is not None and any(abs(float(m.value) - c) < 1e-12
+                                       for c in live):
+            out[name] = Mis(m.reason, None)
+        else:
+            out[name] = m
+    return out
+
+
+def _value_pool(ask, pts, xs, ys, A1, B2, C2, D2, branch, line):
     lo, hi = xs[0], xs[-1]
     ylo, yhi = ys[0], ys[-1]
     one = len(set(xs)) == 1
-    first = 1 if branch == "hi" else 0
+    # a repeated root leaves one point, so "the other branch" is that same point
+    first = min(1, len(xs) - 1) if branch == "hi" else 0
 
     def rat(s):
         return s if s.rational else None
 
     if ask in ("possible_x", "could_be_x", "one_possible_x", "one_solution_x",
                "intersect_x"):
-        key = rat(xs[first]) or rat(xs[1 - first])
+        key = rat(xs[first]) or rat(xs[-1 - first])
         other = hi if key == lo else lo
-        yk = ys[first] if key == xs[first] else ys[1 - first]
+        yk = ys[first] if key == xs[first] else ys[-1 - first]
         pool = {
             "other": Mis("reported the other point's x-coordinate", _v(other)),
             "y_instead": Mis("reported the y-coordinate of that point instead",
@@ -298,38 +336,46 @@ def _value_key(ask, pts, xs, ys, A1, B2, C2, D2, branch, line):
             "curve_coef": Mis("read the coefficient of x² in the curve as the "
                               "answer", A1),
         }
+        if key is None:
+            return None, {}, ()
         pool.update(_near(key))
-        return key, pool
+        return key, pool, [x.p for x in xs if x.rational]
     if ask == "solution_x":
-        if not one:
-            return None, {}
+        if not one or not lo.rational:
+            return None, {}, ()
         return lo, {"negate": Mis("solved for the wrong sign of x", _neg(lo)),
                     "half": Mis("halved the solution as well as dividing by the "
                                 "leading coefficient", _v(lo.scale(Q(1, 2)))),
-                    "y_instead": Mis("reported the y-coordinate instead", _v(ylo))}
+                    "y_instead": Mis("reported the y-coordinate instead",
+                                     _v(ylo))}, [lo.p]
     if ask == "y_coordinate":
         key = rat(ylo) if one or ylo == yhi else None
-        return key, {}
+        return key, {}, ([key.p] if key is not None else ())
     if ask in ("possible_xy", "positive_xy"):
         prods = [x * y for x, y in pts]
         if ask == "positive_xy":
             live = [i for i, (x, _) in enumerate(pts) if float(x) > 0]
             if len(live) != 1:
-                return None, {}
+                return None, {}, ()
             i = live[0]
+            # the stem singles out the point with positive x, so the other
+            # point's product is a legitimate wrong answer
+            correct = [prods[i].p] if prods[i].rational else []
         else:
-            i = first
+            i = min(first, len(prods) - 1)
+            correct = [v.p for v in prods if v.rational]
         key = rat(prods[i])
         if key is None:
-            return None, {}
+            return None, {}, ()
         x, y = pts[i]
+        other = (i + 1) % len(pts)
         pool = {
             "other": Mis("multiplied the other point's coordinates instead",
-                         _v(prods[1 - i])),
+                         _v(prods[other])),
             "x_only": Mis("reported x rather than the product asked for", _v(x)),
             "y_only": Mis("reported y rather than the product asked for", _v(y)),
             "x_other": Mis("reported the other point's x rather than the product",
-                           _v(pts[1 - i][0])),
+                           _v(pts[other][0])),
             "double_x": Mis("doubled x instead of multiplying it by y",
                             _v(x.scale(2))),
             "sum": Mis("added the two coordinates instead of multiplying them",
@@ -338,7 +384,7 @@ def _value_key(ask, pts, xs, ys, A1, B2, C2, D2, branch, line):
                           _v(x * x)),
         }
         pool.update(_line_numbers(line))
-        return key, pool
+        return key, pool, correct
     if ask == "sum_y":
         key = ylo + yhi
         pool = {
@@ -354,16 +400,18 @@ def _value_key(ask, pts, xs, ys, A1, B2, C2, D2, branch, line):
             "product": Mis("multiplied the two y-values instead of adding them",
                            _v(ylo * yhi)),
         }
-        return key, pool
+        return key, pool, ([key.p] if key.rational else ())
     if ask == "meets_at":
         live = [x for x in xs if float(x) != 0]
         if len(live) != 1 or not live[0].rational:
-            return None, {}
-        return live[0], {}
-    return None, {}
+            return None, {}, ()
+        return live[0], {}, [live[0].p]
+    return None, {}, ()
 
 
 def _near(key) -> dict:
+    if key is None:
+        return {}
     """The nearby whole numbers a "which of these works" item offers.
 
     The source's option set for those items is usually a short run of
@@ -403,7 +451,33 @@ def _neg(s):
 
 def _pair_item(seed, stem, pts, curve, line, A1, B1, C1, D1, B2, C2, D2, ask,
                branch, offsets, wrongs, rng, rationale, P, difficulty) -> Item:
-    def pt(x, y):
+    """An item whose options are points, with every option that is *also* a
+    solution refused before it is printed.
+
+    "Which ordered pair is a solution to the given system?" has as many correct
+    answers as the system has solutions, and a line meets a curve twice. So the
+    other intersection is not a distractor -- it is a second key -- and neither
+    is any near-miss that happens to land on it: the origin when the origin is
+    the other crossing, a point one gridline along when that is where the second
+    crossing sits. Rather than special-case those one at a time, every candidate
+    point is substituted into both printed equations here and dropped if it
+    satisfies both. `pt` is the single place a point becomes text, so nothing
+    can get onto the page without passing through the test.
+    """
+    def solves(x, y) -> bool:
+        try:
+            curve_val = ((x * x).scale(A1) + x.scale(B1) + y.scale(C1)
+                         + Surd.of(D1))
+            line_val = x.scale(B2) + y.scale(C2) + Surd.of(D2)
+        except ItemError:
+            return False
+        return _is_zero(curve_val) and _is_zero(line_val)
+
+    def pt(x, y, key=False):
+        if x is None or y is None:
+            return None
+        if not key and solves(x, y):
+            return None
         return f"({x.text()}, {y.text()})"
 
     def on_line(x):
@@ -420,27 +494,29 @@ def _pair_item(seed, stem, pts, curve, line, A1, B1, C1, D1, B2, C2, D2, ask,
         if lo == hi:
             raise ItemError("the two points coincide, so there is only one")
         order = [hi, lo]                     # the source prints the larger x first
-        key = " and ".join(pt(*p) for p in order)
+        key = " and ".join(pt(*p, key=True) for p in order)
+        true_set = {(float(x), float(y)) for x, y in order}
         k = -D2 / C2                         # a horizontal line's own height
         pool = {
             "no_constant": Mis("read the y-values off x² alone, leaving the curve's "
                                "constant term out",
-                               _two(pt, [(x, x * x) for x, _ in order])),
+                               _two(pt, [(x, x * x) for x, _ in order], true_set)),
             "y_as_x": Mis("used the line's own value as x and then read the curve",
                           _two(pt, [(Surd.of(k), on_curve(Surd.of(k))),
-                                    (Surd.of(-k), on_curve(Surd.of(-k)))])
-                          if C1 and k else None),
+                                    (Surd.of(-k), on_curve(Surd.of(-k)))],
+                               true_set) if C1 and k else None),
             "sign_const": Mis("moved the curve's constant across without changing "
-                              "its sign", _mirror(pt, A1, C1, D1, k, flip=True)),
+                              "its sign",
+                              _mirror(pt, A1, C1, D1, k, true_set, flip=True)),
             "swapped": Mis("wrote each pair's coordinates the wrong way round",
-                           _two(pt, [(y, x) for x, y in order])),
+                           _two(pt, [(y, x) for x, y in order], true_set)),
         }
     else:
         if lo != hi and ask == "the_pair":
             raise ItemError("the stem promises a single solution")
         target = hi if branch == "hi" else lo
         other = lo if target is hi else hi
-        key = pt(*target)
+        key = pt(*target, key=True)
         roots = _curve_roots(curve)
         pool = {
             "other": Mis("named the other point the two graphs share", pt(*other)
@@ -499,14 +575,21 @@ def _pair_item(seed, stem, pts, curve, line, A1, B1, C1, D1, B2, C2, D2, ask,
                 params=dict(P, options=list(ch)))
 
 
-def _two(pt, pairs) -> str | None:
-    if any(p is None or p[1] is None for p in pairs):
+def _is_zero(s: Surd) -> bool:
+    return s.p == 0 and s.g == 0
+
+
+def _two(pt, pairs, true_set) -> str | None:
+    """Two printed points, refused when they are the pair the stem asks for."""
+    if any(p is None or p[0] is None or p[1] is None for p in pairs):
         return None
-    out = [pt(*p) for p in pairs]
+    if {(float(x), float(y)) for x, y in pairs} == true_set:
+        return None
+    out = [pt(*p, key=True) for p in pairs]
     return " and ".join(out) if out[0] != out[1] else None
 
 
-def _mirror(pt, A1, C1, D1, k, flip=False) -> str | None:
+def _mirror(pt, A1, C1, D1, k, true_set, flip=False) -> str | None:
     """The two points a horizontal line gives when the constant keeps its sign."""
     if A1 == 0 or C1 == 0:
         return None
@@ -514,7 +597,7 @@ def _mirror(pt, A1, C1, D1, k, flip=False) -> str | None:
     r = _sqrt_surd(v)
     if r is None or float(r) == 0:
         return None
-    return " and ".join(pt(x, Surd.of(k)) for x in (r, -r))
+    return _two(pt, [(x, Surd.of(k)) for x in (r, -r)], true_set)
 
 
 def _radical_only(pt, x, on_curve) -> str | None:
@@ -559,9 +642,16 @@ def _root_pair(pts) -> str | None:
     return " and ".join(out) if len(out) == 2 and out[0] != out[1] else None
 
 
+def _listed(parts) -> str:
+    parts = list(parts)
+    if len(parts) < 2:
+        return "".join(parts)
+    return ", ".join(parts[:-1]) + f" and {parts[-1]}"
+
+
 def _story(curve, line, pts) -> str:
-    xs = ", ".join(x.text() for x, _ in pts)
-    ys = ", ".join(y.text() for _, y in pts)
+    xs = _listed([x.text() for x, _ in pts])
+    ys = _listed([y.text() for _, y in pts])
     if len(pts) == 2 and pts[0] != pts[1]:
         return sent(f"Putting the line into {_print(curve)} leaves a quadratic in x "
                     f"whose solutions are {xs}, and the line then gives y = {ys}.")

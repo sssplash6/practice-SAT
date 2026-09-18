@@ -24,9 +24,9 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....item import Item, ItemError, Mis
-from ..kit import (MINUS, coef_times, dec, displayed, eq, gridin, griddable,
-                   mono, num, paren, pick, prod, q, sent, signed_terms, sup,
-                   text_choices)
+from ..kit import (MINUS, cap, coef_times, dec, displayed, eq, gridin,
+                   griddable, mono, num, paren, pick, prod, q, sent,
+                   signed_terms, sup, text_choices)
 
 __all__ = ["isolate_sum", "isolate_bracket", "isolate_factor",
            "isolate_denominator", "scale_relation"]
@@ -208,8 +208,8 @@ def isolate_sum(rng: random.Random, seed: int, *, target=None, coef=None,
     step += (f"taking {signed_terms(extras, style)} across leaves "
              if extras else "reading the equation the other way round gives ")
     step += eq(signed_terms([(coef, target)], style), signed_terms(top, style))
-    story_text = step + (f", and dividing by {_n(coef, style)} gives {key}."
-                         if coef != 1 else ".")
+    story_text = cap(step + (f", and dividing by {_n(coef, style)} gives {key}."
+                             if coef != 1 else "."))
 
     if fmt == "spr":
         syms = [(c, s) for c, s in top if s]
