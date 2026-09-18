@@ -76,7 +76,7 @@ def fmt_places(v, places: int = 2) -> str:
     v = num(v)
     scale = 10 ** places
     n = (abs(v) * scale + Q(1, 2)).__floor__()
-    sign = "-" if v < 0 else ""
+    sign = MINUS if v < 0 else ""          # the page is typeset; see Exact.plain
     whole, frac = divmod(n, scale)
     return f"{sign}{whole:,}" if places == 0 else f"{sign}{whole:,}.{frac:0{places}d}"
 

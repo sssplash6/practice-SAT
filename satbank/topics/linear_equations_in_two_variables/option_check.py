@@ -38,6 +38,37 @@ class Unreadable(Exception):
     """The printed text is not something this reader understands."""
 
 
+def as_printed(text) -> str:
+    """Printed text as the grammars below read it: the typeset minus folded.
+
+    The page prints U+2212 -- `Exact.plain` and this topic's renderers both --
+    and every pattern in this file is written with the ASCII hyphen. Folding
+    once, on the way in, is the direction that keeps working. The alternative
+    is thirty patterns each of which has to remember the second spelling, and
+    one that forgets does not fail loudly: it quietly stops reading the sign.
+    """
+    return str(text).replace(MINUS, "-")
+
+
+class AsRead:
+    """An item whose printed surfaces carry one spelling of the minus.
+
+    A thin view rather than a copy, so that the key's letter and everything
+    else the assertions rely on stay the item's own, and only the text the
+    grammars parse is folded.
+    """
+
+    def __init__(self, item):
+        self._item = item
+        self.stem = as_printed(item.stem)
+        self.choices = [as_printed(c) for c in item.choices]
+        self.table = ([[as_printed(c) for c in r] for r in item.table]
+                      if item.table else item.table)
+
+    def __getattr__(self, name):
+        return getattr(self._item, name)
+
+
 # --------------------------------------------------- printed text -> numbers
 
 def num(text: str) -> Q:
@@ -1005,7 +1036,7 @@ def selftest() -> int:
     worst = 0
     for what, bad, checker in cases:
         try:
-            checker(bad)
+            checker(AsRead(bad))
         except AssertionError as exc:
             print(f"  ok   caught {what}: {exc}")
             continue
@@ -1046,7 +1077,7 @@ def main() -> int:
                 continue
             made += 1
             try:
-                what = checker(item) or what
+                what = checker(AsRead(item)) or what
             except Unreadable as exc:
                 skipped += 1
                 if skipped == 1:

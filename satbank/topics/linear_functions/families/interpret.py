@@ -189,7 +189,7 @@ def interpret_slope(rng: random.Random, seed: int, *, ctx=None, m=None, b=None) 
 CONST_CTX = [
     dict(mode="start",
          stem="As part of a science project on evaporation, Amaya measured the height of a "
-              "liquid in a container over a period of time. The function f(x) = {b} - {m}x "
+              "liquid in a container over a period of time. The function f(x) = {b} − {m}x "
               "gives the estimated height, in centimeters (cm), of the liquid in the "
               "container x days after the start of the project. Which of the following is "
               "the best interpretation of {b} in this context?",
@@ -204,7 +204,7 @@ CONST_CTX = [
     dict(mode="start",
          stem="In science class, Diego conducted an experiment to learn about evaporation. "
               "Diego measured the height of fluid in a beaker over a period of time. The "
-              "function f(x) = {b} - {m}x gives the estimated height, in centimeters (cm), "
+              "function f(x) = {b} − {m}x gives the estimated height, in centimeters (cm), "
               "of the fluid in the beaker x days after the start of the experiment. Which "
               "of the following is the best interpretation of {b} in this context?",
          roles=lambda b, m: {
@@ -217,7 +217,7 @@ CONST_CTX = [
          order=["end", "rate", "zero_time"], brange=(2000, 4500), mrange=(8, 40)),
     dict(mode="start",
          stem="A technician recorded the charge remaining in a battery over a period of "
-              "time. The function f(x) = {b} - {m}x gives the estimated charge, as a "
+              "time. The function f(x) = {b} − {m}x gives the estimated charge, as a "
               "percent, remaining in the battery x hours after the recording began. Which "
               "of the following is the best interpretation of {b} in this context?",
          roles=lambda b, m: {
@@ -235,7 +235,7 @@ SHIFT_CTX = [
               "price per gallon of regular gasoline in the United States from September 1, "
               "2014, to December 1, 2014, is modeled by the function F defined below, "
               "where F(x) is the average price per gallon x months after September 1. "
-              "F(x) = {b} - {m}(x - {k}) The constant {b} in this function estimates which "
+              "F(x) = {b} − {m}(x − {k}) The constant {b} in this function estimates which "
               "of the following?",
          roles=lambda b, m, k: {
              "at_k": "The average price per gallon on December 1, 2014",
@@ -296,7 +296,7 @@ def interpret_constant(rng: random.Random, seed: int, *, mode=None, ctx=None, b=
         extra = [(kk, CONST_WHY[kk]) for kk in d["order"]]
         key_role = "at_k"
         P = {"kind": "lf_interpret_constant", "mode": mode, "ask": "at_k", "k": k}
-        rationale = (f"The constant sits outside a factor of (x - {numtext(k)}), so it is "
+        rationale = (f"The constant sits outside a factor of (x − {numtext(k)}), so it is "
                      f"the value when x = {numtext(k)}.")
     else:
         d = POINT_CTX[rng.randrange(len(POINT_CTX))] if ctx is None else POINT_CTX[ctx]
@@ -337,7 +337,7 @@ def interpret_constant(rng: random.Random, seed: int, *, mode=None, ctx=None, b=
 XINT_CTX = [
     dict(stem="A team of workers has been moving cargo off of a ship. The equation below "
               "models the approximate number of tons of cargo, y, that remains to be moved "
-              "x hours after the team started working. y = {b} - {m}x The graph of this "
+              "x hours after the team started working. y = {b} − {m}x The graph of this "
               "equation in the xy-plane is a line. What is the best interpretation of the "
               "x-intercept in this context?",
          roles=lambda b, m, xi: {
@@ -348,7 +348,7 @@ XINT_CTX = [
              "initial": f"The team started with {b} tons of cargo to move."},
          order=["rate_wrong_units", "rate", "initial"], brange=(60, 300), mrange=(5, 40),
          places=1),
-    dict(stem="y = {b} - {m}x The equation above represents the speed y, in feet per "
+    dict(stem="y = {b} − {m}x The equation above represents the speed y, in feet per "
               "second, of Sheila's bicycle x seconds after she applied the brakes at the "
               "end of a ride. If the equation is graphed in the xy-plane, which of the "
               "following is the best interpretation of the x-coordinate of the line's "
@@ -367,7 +367,7 @@ XINT_CTX = [
          places=None),
     dict(stem="A tank is being drained. The equation below models the number of gallons of "
               "water, y, left in the tank x minutes after the draining began. "
-              "y = {b} - {m}x The graph of this equation in the xy-plane is a line. What "
+              "y = {b} − {m}x The graph of this equation in the xy-plane is a line. What "
               "is the best interpretation of the x-intercept in this context?",
          roles=lambda b, m, xi: {
              "time": f"The tank will be empty in about {xi} minutes.",

@@ -12,6 +12,8 @@ from __future__ import annotations
 
 import math
 
+from .render import num
+
 __all__ = ["circle_with_points", "circle_on_grid"]
 
 _CSS = (".ax{stroke:currentColor;stroke-width:1.4;fill:none}"
@@ -45,7 +47,7 @@ def circle_with_points(points, *, center="O", radii=(), chords=(), diameters=(),
     when it is a right angle and with `angle_label` otherwise.
     """
     longest = max((len(str(lab)) for lab in points), default=1)
-    padx = max(pad, 12 + 7 * longest)          # room for a label like "T (-1, 0)"
+    padx = max(pad, 12 + 7 * longest)          # room for a label like "T (−1, 0)"
     w, h = 2 * (R + padx), 2 * (R + pad)
     cx, cy = padx + R, pad + R
     out = [f'<svg viewBox="0 0 {w} {h}" width="{w}" height="{h}" role="img" '
@@ -127,10 +129,12 @@ def circle_on_grid(xmin, xmax, ymin, ymax, cx, cy, r, *, step=2, pad=26,
     out.append(f'<text class="it" x="{X(0) - 14}" y="{Y(ymax) - 10}">y</text>')
     for x in range(xmin, xmax + 1):
         if x and x % step == 0:
-            out.append(f'<text class="lb" x="{X(x)}" y="{Y(0) + 15}" text-anchor="middle">{x}</text>')
+            out.append(f'<text class="lb" x="{X(x)}" y="{Y(0) + 15}" '
+                       f'text-anchor="middle">{num(x)}</text>')
     for y in range(ymin, ymax + 1):
         if y and y % step == 0:
-            out.append(f'<text class="lb" x="{X(0) - 7}" y="{Y(y) + 4}" text-anchor="end">{y}</text>')
+            out.append(f'<text class="lb" x="{X(0) - 7}" y="{Y(y) + 4}" '
+                       f'text-anchor="end">{num(y)}</text>')
     out.append(f'<text class="it" x="{X(0) - 11}" y="{Y(0) + 15}">O</text>')
     out.append(f'<circle class="ax" cx="{X(cx)}" cy="{Y(cy)}" r="{round(r * px, 2)}" '
                f'stroke-width="2"/>')

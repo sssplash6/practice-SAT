@@ -16,8 +16,8 @@ from math import gcd
 
 from ....figures import coordinate_grid
 from ....item import Item, ItemError, Mis
-from ..common import (choose, coef_text, ex, lin_text, numtext, point_text, q, sig,
-                      std_text, text_item)
+from ..common import (MINUS, choose, coef_text, ex, lin_text, numtext, point_text, q,
+                      sig, std_text, text_item)
 
 __all__ = ["slope_of_line", "parallel_perpendicular", "slope_two_points",
            "point_on_line", "line_equation", "intercepts", "equivalent_system"]
@@ -63,7 +63,7 @@ def slope_of_line(rng: random.Random, seed: int, *, form=None, p=None, d=None, r
         P_ = {"kind": "le2_slope_form", "form": form, "p": P, "d": D, "r": R, "s": S}
     else:
         key = Q(P, D)
-        body = f"{numtext(P)}x/{numtext(D)} - {numtext(abs(C))}" if C < 0 else \
+        body = f"{numtext(P)}x/{numtext(D)} {MINUS} {numtext(abs(C))}" if C < 0 else \
                f"{numtext(P)}x/{numtext(D)} + {numtext(C)}"
         why = (f"Only the term in x tilts the line: {numtext(P)}x/{numtext(D)} moves "
                f"y by {numtext(Q(P, D))} for every 1 that x moves, and the constant "
@@ -152,12 +152,13 @@ def parallel_perpendicular(rng: random.Random, seed: int, *, form=None, relation
             line = (std_text(Bc, Ac, Cc, "y", "x") if flip
                     else std_text(Ac, Bc, Cc, "x", "y"))
         else:
-            line = f"{coef_text(Ac, 'x')} + {coef_text(Bc, 'y')} - {numtext(abs(Cc))} = 0" \
+            line = (f"{coef_text(Ac, 'x')} + {coef_text(Bc, 'y')} {MINUS} "
+                    f"{numtext(abs(Cc))} = 0") \
                 if Cc > 0 else \
                 f"{coef_text(Ac, 'x')} + {coef_text(Bc, 'y')} + {numtext(-Cc)} = 0"
             if Bc < 0:
                 line = line.replace(f"+ {coef_text(Bc, 'y')}",
-                                    f"- {coef_text(-Bc, 'y')}")
+                                    f"{MINUS} {coef_text(-Bc, 'y')}")
         extra = [("coefx", "read the coefficient of x as the slope", Ac),
                  ("coefy", "read the coefficient of y as the slope", Bc),
                  ("negcoefx", "read the coefficient of x as the slope and changed its "
@@ -632,10 +633,10 @@ def intercepts(rng: random.Random, seed: int, *, mode=None, m=None, b=None, A=No
 # -------------------------------------------- two equations, one same line
 
 def _rterm(coef, var: str = "r") -> str:
-    """The source's layout for a multiple of r: 'r/5', '-(3r)/2', '2r', '-r'."""
+    """The source's layout for a multiple of r: 'r/5', '−(3r)/2', '2r', '−r'."""
     coef = q(coef)
     n, d = abs(coef.numerator), coef.denominator
-    sign = "-" if coef < 0 else ""
+    sign = MINUS if coef < 0 else ""
     body = var if n == 1 else f"{n}{var}"
     if d == 1:
         return f"{sign}{body}"

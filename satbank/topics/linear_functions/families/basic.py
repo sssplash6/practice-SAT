@@ -14,7 +14,8 @@ import random
 from fractions import Fraction as Q
 
 from ....item import Item, ItemError, Mis, assemble
-from ...linear_functions.common import choose, coef_text, ex, lin_text, numtext, q
+from ...linear_functions.common import (MINUS, choose, coef_text, ex, lin_text,
+                                        numtext, q)
 
 __all__ = ["evaluate", "coefficient", "combine", "inner_scale"]
 
@@ -132,7 +133,8 @@ def evaluate(rng: random.Random, seed: int, *, m=None, b=None, x0=None, form=Non
             b = q(b if b is not None else rng.randint(12, 99))
             k = q(-m if m is not None else rng.randint(2, 12))
             m = -k
-            body = f"{numtext(b, style, places)} - {coef_text(k, var, style, places)}"
+            body = (f"{numtext(b, style, places)} {MINUS} "
+                    f"{coef_text(k, var, style, places)}")
         else:
             m = q(m if m is not None else rng.choice(
                 [rng.randint(2, 12), rng.randint(-12, -2), 1, -1, 10, 100]))
@@ -269,7 +271,7 @@ def coefficient(rng: random.Random, seed: int, *, m=None, b=None, x1=None, x2=No
 
 def combine(rng: random.Random, seed: int, *, mode=None, c=None, d=None, p=None,
             qv=None, af=None, bg=None, fmt="mcq") -> Item:
-    """Two function values put together: 4f(2) - g(2), or f(9) - f(1)."""
+    """Two function values put together: 4f(2) − g(2), or f(9) − f(1)."""
     mode = mode or rng.choice(["same_function", "two_functions"])
     if mode == "same_function":
         c = q(c if c is not None else rng.randint(1, 12))
@@ -280,7 +282,7 @@ def combine(rng: random.Random, seed: int, *, mode=None, c=None, d=None, p=None,
             raise ItemError("the two inputs must differ")
         key = (p - qv) / d
         stem = (f"f(x) = (x + {numtext(c)})/{numtext(d)} For the function f defined above, "
-                f"what is the value of f({numtext(p)}) - f({numtext(qv)}) ?")
+                f"what is the value of f({numtext(p)}) {MINUS} f({numtext(qv)}) ?")
         mistakes = [Mis("divided by the denominator twice, once in each term",
                         (p - qv) / (2 * d)),
                     Mis("subtracted the constant from the difference of the inputs",
@@ -304,7 +306,7 @@ def combine(rng: random.Random, seed: int, *, mode=None, c=None, d=None, p=None,
         gpart = (f"g({numtext(p)})" if bg == 1
                  else f"{numtext(bg)}g({numtext(p)})")
         stem = (f"If f(x) = x + {numtext(c)} and g(x) = {coef_text(d, 'x')}, what is the "
-                f"value of {numtext(af)}f({numtext(p)}) - {gpart}?")
+                f"value of {numtext(af)}f({numtext(p)}) {MINUS} {gpart}?")
         mistakes = [Mis("multiplied the input by the outside factor instead of the value",
                         af * p + c - bg * d * p),
                     Mis("left the outside factor off the first value",
@@ -371,7 +373,7 @@ def inner_scale(rng: random.Random, seed: int, *, c=None, d=None, k=None, ask=No
         if key <= 0:
             raise ItemError("c must be positive")
         # a signed constant reads "- 3", never "+ (-3)"
-        tail = f"- {numtext(-d)}" if d < 0 else f"+ {numtext(d)}"
+        tail = f"{MINUS} {numtext(-d)}" if d < 0 else f"+ {numtext(d)}"
         rationale = (f"f({numtext(k)}) means x = {numtext(k)}/c, so {numtext(k)}/c {tail} "
                      f"= {numtext(value)} and c = {numtext(key)}.")
         P = {"kind": "lf_inner", "ask": ask, "d": [d.numerator, d.denominator],

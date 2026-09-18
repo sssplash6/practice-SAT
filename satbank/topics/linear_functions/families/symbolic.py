@@ -11,7 +11,7 @@ import random
 from fractions import Fraction as Q
 
 from ....item import Item, ItemError, Mis, assemble
-from ...linear_functions.common import choose, dec, ex, numtext, q
+from ...linear_functions.common import MINUS, choose, dec, ex, numtext, q
 from .define import _text_item
 
 __all__ = ["parameter_intercept", "affine_conversion", "unit_relation"]
@@ -36,12 +36,13 @@ def parameter_intercept(rng: random.Random, seed: int, *, c=None, a=None, b=None
             f"{numtext(e)} Which of the following represents the x-intercept of the graph "
             f"of y = f({var}) + {numtext(k)} in the xy-plane, where {letter} is a "
             f"constant?")
-    key = (f"((-{numtext(cb)}{letter} - {numtext(top)})/({numtext(ca)}{letter}), 0)")
+    key = (f"(({MINUS}{numtext(cb)}{letter} {MINUS} {numtext(top)})"
+           f"/({numtext(ca)}{letter}), 0)")
     wrongs = [Mis("left the added constant outside the fraction",
-                  (f"({numtext(k)} - ({numtext(cb)}{letter} + {numtext(e)})/"
+                  (f"({numtext(k)} {MINUS} ({numtext(cb)}{letter} + {numtext(e)})/"
                    f"({numtext(ca)}{letter}), 0)", ["outside", cb, e, ca, k])),
               Mis("added the constant to the denominator instead of the numerator",
-                  (f"(-{numtext(b + e)}/({numtext(ca)}{letter} + {numtext(k)}), 0)",
+                  (f"({MINUS}{numtext(b + e)}/({numtext(ca)}{letter} + {numtext(k)}), 0)",
                    ["denominator", b + e, ca, k])),
               Mis("did not divide by the coefficient of x",
                   (f"({numtext(cb)}{letter} + {numtext(top)}, 0)",
@@ -51,7 +52,8 @@ def parameter_intercept(rng: random.Random, seed: int, *, c=None, a=None, b=None
                    ["unsigned", cb, top, ca]))]
     P = {"kind": "lf_param_intercept", "c": c, "a": a, "b": b, "e": e, "k": k}
     rationale = (f"Expanding gives y = {numtext(ca)}{letter}{var} + {numtext(cb)}{letter} "
-                 f"+ {numtext(top)}, which is zero at x = -({numtext(cb)}{letter} + "
+                 f"+ {numtext(top)}, which is zero at x = {MINUS}({numtext(cb)}{letter} "
+                 f"+ "
                  f"{numtext(top)})/({numtext(ca)}{letter}).")
     return _text_item("lin.parameter_intercept", "an intercept with a parameter", "hard",
                       seed, stem, key, ["ratio", cb, top, ca], wrongs, rng, P, rationale)
@@ -60,11 +62,11 @@ def parameter_intercept(rng: random.Random, seed: int, *, c=None, a=None, b=None
 # ------------------------------------------------------- a scaled conversion
 
 CONV_CTX = [
-    dict(text="F(x) = ({p}/{qd})(x - {s}) + {t} The function F gives the temperature, in "
+    dict(text="F(x) = ({p}/{qd})(x − {s}) + {t} The function F gives the temperature, in "
               "degrees Fahrenheit, that corresponds to a temperature of x kelvins. If a "
               "temperature increased by {delta} kelvins, by how much did the temperature "
               "increase, in degrees Fahrenheit?",
-         inverse="The equation h = {p}(v - {s})/{qd} + {t} gives the corresponding "
+         inverse="The equation h = {p}(v − {s})/{qd} + {t} gives the corresponding "
                  "temperature h, in degrees Fahrenheit, of any substance that has a "
                  "temperature of v kelvins, where v > 0. If a substance has a temperature "
                  "of {value} degrees Fahrenheit, what is the corresponding temperature, in "
@@ -75,7 +77,7 @@ CONV_CTX = [
 
 def affine_conversion(rng: random.Random, seed: int, *, ctx=0, delta=None, ask=None,
                       target=None, fmt=None) -> Item:
-    """A conversion of the form (p/q)(x - s) + t: a change, or a value back."""
+    """A conversion of the form (p/q)(x − s) + t: a change, or a value back."""
     d = CONV_CTX[ctx]
     ask = ask or rng.choice(["change", "inverse"])
     p, qd, s, t = q(d["p"]), q(d["qd"]), q(d["s"]), q(d["t"])
@@ -110,7 +112,7 @@ def affine_conversion(rng: random.Random, seed: int, *, ctx=0, delta=None, ask=N
                         (target + t) / scale + s),
                     Mis("left the shift out", (target - t) / scale),
                     Mis("inverted the scale factor", (target - t) * scale + s)]
-        rationale = (f"({dec(target, 2)} - {numtext(t)}) x {numtext(qd)}/{numtext(p)} + "
+        rationale = (f"({dec(target, 2)} {MINUS} {numtext(t)}) x {numtext(qd)}/{numtext(p)} + "
                      f"{numtext(s, 'dec')} = {numtext(key, 'dec')}.")
         P = {"kind": "lf_affine", "ask": ask, "p": [p.numerator, p.denominator],
              "qd": [qd.numerator, qd.denominator], "s": [s.numerator, s.denominator],
@@ -186,13 +188,13 @@ def unit_relation(rng: random.Random, seed: int, *, mode=None, cal=None, fat=Non
                    f"from p grams of protein, f grams of fat, and c grams of "
                    f"carbohydrate, which of the following expresses f in terms of p and "
                    f"c ?")
-    key = f"f = {numtext(const)} - ({numtext(frac)})(p + c)"
+    key = f"f = {numtext(const)} {MINUS} ({numtext(frac)})(p + c)"
     wrongs = [Mis("added the other two terms instead of subtracting them",
                   (f"f = {numtext(const)} + ({numtext(frac)})(p + c)",
                    ["s", const.numerator, const.denominator, 1, frac.numerator,
                     frac.denominator, "sum"])),
               Mis("subtracted the carbohydrate term instead of adding it",
-                  (f"f = {numtext(const)} - ({numtext(frac)})(p - c)",
+                  (f"f = {numtext(const)} {MINUS} ({numtext(frac)})(p {MINUS} c)",
                    ["s", const.numerator, const.denominator, -1, frac.numerator,
                     frac.denominator, "diff"])),
               Mis("inverted the ratio of the two energy values and added",
@@ -200,13 +202,13 @@ def unit_relation(rng: random.Random, seed: int, *, mode=None, cal=None, fat=Non
                    ["s", const.numerator, const.denominator, 1, (1 / frac).numerator,
                     (1 / frac).denominator, "sum"])),
               Mis("inverted the ratio of the two energy values",
-                  (f"f = {numtext(const)} - ({numtext(1 / frac)})(p + c)",
+                  (f"f = {numtext(const)} {MINUS} ({numtext(1 / frac)})(p + c)",
                    ["s", const.numerator, const.denominator, -1, (1 / frac).numerator,
                     (1 / frac).denominator, "sum"]))]
     P = {"kind": "lf_unit_relation", "mode": "solve", "cal": cal, "fat": fat,
          "total": total}
     rationale = (f"{numtext(total)} = {numtext(cal)}p + {numtext(fat)}f + {numtext(cal)}c "
-                 f"rearranges to f = {numtext(const)} - ({numtext(frac)})(p + c).")
+                 f"rearranges to f = {numtext(const)} {MINUS} ({numtext(frac)})(p + c).")
     return _text_item("lin.unit_relation", "solving a linear relation for one variable",
                       "hard", seed, stem, key,
                       ["s", const.numerator, const.denominator, -1, frac.numerator,

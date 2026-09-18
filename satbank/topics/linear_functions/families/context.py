@@ -14,8 +14,8 @@ import random
 from fractions import Fraction as Q
 
 from ....item import Item, ItemError, Mis, assemble
-from ...linear_functions.common import (choose, coef_text, dec, ex, lin_text, money, numtext, q,
-                                        year_text,
+from ...linear_functions.common import (MINUS, choose, coef_text, dec, ex, lin_text, money,
+                                        numtext, q, year_text,
                                         recip_text, terminating)
 from .define import _text_item, pair, sig
 
@@ -229,7 +229,7 @@ def per_unit_model(rng: random.Random, seed: int, *, shape=None, ctx=None, c=Non
         stem = d["text"].format(c=numtext(c), n=numtext(n))
 
         def T(first, second, minus):
-            return pair(f"{lhs} = {numtext(first)} {'-' if minus else '+'} "
+            return pair(f"{lhs} = {numtext(first)} {MINUS if minus else '+'} "
                         f"{var}/{numtext(second)}",
                         Q(-1 if minus else 1, second), first)
         key_text, key_sig = T(c, n, down)
@@ -328,7 +328,8 @@ def tiered_cost(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, k=No
                       pair(f"{lhs} = {coef_text(b, var)}", b, 0))]
     P = {"kind": "lf_tiered", "a": a, "b": b, "k": k}
     rationale = (f"The first {numtext(k)} cost {numtext(k * a)} and each of the remaining "
-                 f"{var} - {numtext(k)} costs {numtext(b)}, so the total is {key}.")
+                 f"{var} {MINUS} {numtext(k)} costs {numtext(b)}, so the total is "
+                 f"{key}.")
     return _text_item("lin.tiered_cost", "a two-rate cost model", "hard", seed, stem, key,
                       sig(b, const), wrongs, rng, P, rationale)
 
@@ -368,7 +369,7 @@ VALUE_CTX = [
               "pressure, in psi, exerted on the scuba diver at {x} feet below sea level?",
          money=False, places=2, bscale=100, brange=(1200, 1800), mscale=100,
          mrange=(30, 70), xrange=(40, 140), wrong="given"),
-    dict(text="The function f(x) = {b} - {mneg}x gives the estimated surface water "
+    dict(text="The function f(x) = {b} − {mneg}x gives the estimated surface water "
               "temperature f(x), in degrees Celsius, of a body of water on the xth day of "
               "the year, where 220 ≤ x ≤ 360. Based on the model, what is the estimated "
               "surface water temperature, in degrees Celsius, of this body of water on the "
@@ -597,8 +598,8 @@ def context_two_points(rng: random.Random, seed: int, *, ask=None, ctx=None, x1=
 
     def shifted(cval):
         c = q(cval)
-        body = (f"{numtext(y1, style)} {'+' if c > 0 else '-'} "
-                f"{numtext(abs(c), style)}({var} - {numtext(x1)})")
+        body = (f"{numtext(y1, style)} {'+' if c > 0 else MINUS} "
+                f"{numtext(abs(c), style)}({var} {MINUS} {numtext(x1)})")
         return pair(f"{lhs} = {body}", c, y1 - c * x1)
     if wrong == "offset":
         wrongs = [Mis("did not divide the change by the number of years",

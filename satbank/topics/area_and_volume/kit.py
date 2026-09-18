@@ -15,10 +15,10 @@ state where it knew the mistake and printed something else.
 
 from __future__ import annotations
 
-from ...exact import Exact
+from ...exact import MINUS, Exact
 from ...item import ItemError, Mis
 
-__all__ = ["pick", "attempt", "decimal_text"]
+__all__ = ["pick", "attempt", "decimal_text", "signed"]
 
 
 def pick(pool: dict[str, Mis], wrongs: list[str] | None) -> list[Mis]:
@@ -46,6 +46,20 @@ def attempt(fn) -> Exact | None:
         return None
 
 
+def signed(n) -> str:
+    """An integer as the printed page writes it, typeset minus and all.
+
+    `Exact.plain` prints U+2212 for a negative; an f-string interpolating a
+    plain int prints the keyboard hyphen, so a rationale that mixes the two
+    puts two different minus signs on one page. Anything a student reads that
+    is a signed number rather than a subtraction goes through here.
+
+    No thousands separator: the numbers this renders are coordinates and a
+    shoelace determinant, which the source items print ungrouped.
+    """
+    return f"{MINUS}{-n}" if n < 0 else f"{n}"
+
+
 def decimal_text(v: Exact) -> str:
     """4.5 where the source prints a decimal, 1/3 where it prints a fraction.
 
@@ -53,6 +67,12 @@ def decimal_text(v: Exact) -> str:
     and keep the fraction only when it repeats. `Exact.plain` always writes the
     fraction, so the templates whose answers come out of a division pass their
     options through this.
+
+    The sign is taken off the value and written as U+2212 rather than left to
+    `%g`, which writes the keyboard hyphen -- this is the page's spelling, the
+    same one `Exact.plain` uses. Taking the sign from the value rather than
+    from the formatted string also keeps the minus of an exponent ("1e-06")
+    out of it. Nothing here feeds `gridin`, which keeps the ASCII sign.
     """
     if v.is_rational and v.coef.denominator != 1:
         d = v.coef.denominator
@@ -61,5 +81,6 @@ def decimal_text(v: Exact) -> str:
         while d % 5 == 0:
             d //= 5
         if d == 1:
-            return f"{float(v.coef):,g}"
+            sign = MINUS if v.coef < 0 else ""
+            return f"{sign}{abs(float(v.coef)):,g}"
     return v.plain()

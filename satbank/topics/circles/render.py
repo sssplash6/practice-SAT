@@ -14,7 +14,27 @@ from ...exact import Exact
 from ...expr import fmt_num, sign_join
 
 __all__ = ["pi_back", "pi_front", "pi_style", "radical", "point", "sq_term",
-           "standard_equation", "general_equation", "coef_term", "degrees"]
+           "standard_equation", "general_equation", "coef_term", "degrees",
+           "num", "MINUS"]
+
+MINUS = "\N{MINUS SIGN}"       # U+2212, the sign a typeset page prints
+
+
+def num(v, **kw) -> str:
+    """A number as this page prints it: fmt_num's digits, with a typeset sign.
+
+    `Exact.plain` already spells a negative U+2212, but the shared algebra
+    formatters in `expr.py` spell it with the ASCII hyphen, and an item that
+    takes its stem from one and its options from the other prints two
+    different minus signs on one page. Everything in this module is read by a
+    student, so it all goes out in the page's spelling. Nothing about equality
+    changes: `item.norm_text`, `item.numeral` and this topic's `option_check`
+    all fold the two together on the way in.
+
+    A grid-in keeps the ASCII sign -- that is a keystroke, not a page -- so it
+    is built from `Exact.gridin` and never comes through here.
+    """
+    return fmt_num(v, **kw).replace("-", MINUS)
 
 
 # ------------------------------------------------------------- pi multiples
@@ -33,7 +53,7 @@ def pi_front(v: Exact) -> str:
     if v.pi_exp != 1 or v.rad != 1:
         return v.plain()
     n, d = v.coef.numerator, v.coef.denominator
-    sign = "-" if n < 0 else ""
+    sign = MINUS if n < 0 else ""
     n = abs(n)
     return f"{sign}{n}π" if d == 1 else f"{sign}{n}/{d} π"
 
@@ -55,25 +75,25 @@ def radical(v: Exact) -> str:
 
 
 def degrees(v) -> str:
-    return f"{fmt_num(v)}°"
+    return f"{num(v)}°"
 
 
 # -------------------------------------------------------------------- points
 
 def point(x, y) -> str:
-    return f"({fmt_num(x)}, {fmt_num(y)})"
+    return f"({num(x)}, {num(y)})"
 
 
 # ----------------------------------------------------------------- equations
 
 def sq_term(var: str, c) -> str:
-    """(x - 6)^2, (x + 8)^2, x^2 -- the squared factor for a center coordinate."""
+    """(x − 6)², (x + 8)², x² -- the squared factor for a center coordinate."""
     c = Fraction(c)
     if c == 0:
         return f"{var}²"
     if c > 0:
-        return f"({var} - {fmt_num(c)})²"
-    return f"({var} + {fmt_num(-c)})²"
+        return f"({var} {MINUS} {num(c)})²"
+    return f"({var} + {num(-c)})²"
 
 
 def standard_equation(h, k, rhs: str) -> str:
@@ -81,17 +101,17 @@ def standard_equation(h, k, rhs: str) -> str:
 
 
 def coef_term(coef, body: str) -> str:
-    """A signed term: 8x^2, -64py, x^2, -y. Empty when the coefficient is zero."""
+    """A signed term: 8x², −64py, x², −y. Empty when the coefficient is zero."""
     coef = Fraction(coef)
     if coef == 0:
         return ""
     if not body:
-        return fmt_num(coef)
+        return num(coef)
     if coef == 1:
         return body
     if coef == -1:
-        return f"-{body}"
-    return f"{fmt_num(coef)}{body}"
+        return f"{MINUS}{body}"
+    return f"{num(coef)}{body}"
 
 
 def general_equation(a, d, e, rhs, *, sym: str = "") -> str:
@@ -105,5 +125,5 @@ def general_equation(a, d, e, rhs, *, sym: str = "") -> str:
              coef_term(a, "y²"), coef_term(e, f"{s}y")]
     lhs = sign_join([p for p in parts if p])
     tail = f"{s}²" if s else ""
-    right = coef_term(rhs, tail) if tail else fmt_num(rhs)
+    right = coef_term(rhs, tail) if tail else num(rhs)
     return f"{lhs} = {right or '0'}"

@@ -18,7 +18,8 @@ from ....item import Item, ItemError, Mis, assemble
 # guard below has to use the same function that draws them: an
 # approximation of the spacing would drift away from the picture.
 from ....plot import _ticks, line_graph
-from ...linear_functions.common import choose, coef_text, ex, lin_text, money, numtext, q
+from ...linear_functions.common import (MINUS, choose, coef_text, ex, lin_text, money,
+                                        numtext, q)
 from .define import _text_item, pair, sig
 
 __all__ = ["graph_read", "graph_shifted"]
@@ -168,7 +169,7 @@ def graph_read(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, x=Non
 
 def graph_shifted(rng: random.Random, seed: int, *, m=None, c=None, k=None,
                   name=None) -> Item:
-    """The graph shown is y = f(x) - k, so the drawn intercept is not f's."""
+    """The graph shown is y = f(x) − k, so the drawn intercept is not f's."""
     name = name or rng.choice(["f", "g", "h"])
     m = q(m if m is not None else rng.choice([rng.randint(-6, -1), rng.randint(1, 6)]))
     c = q(c if c is not None else rng.randint(-8, 8))
@@ -184,7 +185,8 @@ def graph_shifted(rng: random.Random, seed: int, *, m=None, c=None, k=None,
     ys = [seg[0][1], seg[1][1]]
     fig = coordinate_grid(min(lo, 0) - 1, max(hi, 0) + 1, min(min(ys), 0) - 1,
                           max(max(ys), 0) + 1, segments=[seg], step=1)
-    stem = (f"The graph of y = {name}(x) - {numtext(k)} is shown. Which equation defines "
+    stem = (f"The graph of y = {name}(x) {MINUS} {numtext(k)} is shown. Which equation "
+            f"defines "
             f"the linear function {name}?")
     key = f"{name}(x) = {lin_text(m, b)}"
     wrongs = [Mis("subtracted the shift from the slope instead of the constant term",
@@ -197,7 +199,8 @@ def graph_shifted(rng: random.Random, seed: int, *, m=None, c=None, k=None,
                   pair(f"{name}(x) = {lin_text(m, c)}", m, c))]
     P = {"kind": "lf_graph_shift", "m": [m.numerator, m.denominator],
          "c": [c.numerator, c.denominator], "k": [k.numerator, k.denominator]}
-    rationale = (f"The drawn line is y = {lin_text(m, c)}, and that is {name}(x) - "
+    rationale = (f"The drawn line is y = {lin_text(m, c)}, and that is {name}(x) "
+                 f"{MINUS} "
                  f"{numtext(k)}, so {key}.")
     return _text_item("lin.graph_shifted", "a vertically shifted graph", "medium", seed,
                       stem, key, sig(m, b), wrongs, rng, P, rationale, figure=fig)

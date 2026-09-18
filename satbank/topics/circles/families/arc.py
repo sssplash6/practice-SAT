@@ -15,7 +15,7 @@ from ....exact import E, PI, Exact
 from ....item import Item, ItemError, Mis, assemble
 from ....shapes import UNITS
 from ..figures import circle_with_points
-from ..render import pi_style
+from ..render import MINUS, pi_style
 
 __all__ = ["arc", "arc_pair", "arc_fraction", "arc_angle", "chord_angle", "sector"]
 
@@ -243,7 +243,7 @@ def arc_pair(rng: random.Random, seed: int, *, mode=None, minor=None, ratio=None
         ])
         rationale = (f"The given arc is {theta}/360 of the circle, so the circumference is "
                      f"{circumference.plain()} and the rest of the circle is "
-                     f"{circumference.plain()} - {given.plain()} = {key.plain()}.")
+                     f"{circumference.plain()} {MINUS} {given.plain()} = {key.plain()}.")
         P = {"kind": "circles_arc_pair", "mode": "other", "theta": theta,
              "given": float(given)}
 
@@ -345,8 +345,8 @@ def arc_angle(rng: random.Random, seed: int, *, theta=None, ask=None, fmt=None,
             f"In a circle with center O, minor arc {a}{b} measures {theta}°. What is the "
             f"measure, in degrees, of major arc {a}{b}?",
         ])
-        rationale = (f"The two arcs make a full turn, so the major arc measures 360 - "
-                     f"{theta} = {key.plain()} degrees.")
+        rationale = (f"The two arcs make a full turn, so the major arc measures "
+                     f"360 {MINUS} {theta} = {key.plain()} degrees.")
     given_arc = E(360) - key if ask == "major" else key
     left_over = E(360) - key
     bigger = "major" if float(left_over) > 180 else "minor"
@@ -368,7 +368,7 @@ def arc_angle(rng: random.Random, seed: int, *, theta=None, ask=None, fmt=None,
         return Item("circles.arc_angle", "arc measure", "easy", seed, stem, "spr", key,
                     key.gridin(), rationale, params=P)
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
-    if any(float(c.replace(",", "")) > 360 for c in choices):
+    if any(float(c.replace(",", "").replace(MINUS, "-")) > 360 for c in choices):
         # a filler slipped past the named mistakes; no arc measures more than a
         # full turn, so the draw is thrown away rather than shipped
         raise ItemError("an option came out larger than a full turn")
@@ -413,8 +413,8 @@ def chord_angle(rng: random.Random, seed: int, *, base=None, r=None, ask=None,
         ]
         asked = f"what is the measure, in degrees, of angle {a}O{b}?"
         rationale = (f"O{a} and O{b} are radii, so the triangle is isosceles and angle O{b}{a} "
-                     f"also measures {base} degrees. That leaves 180 - 2({base}) = {central} "
-                     f"degrees at the center.")
+                     f"also measures {base} degrees. That leaves 180 {MINUS} 2({base}) = "
+                     f"{central} degrees at the center.")
     else:
         key = circumference * E(frac)
         mistakes = [
@@ -430,7 +430,7 @@ def chord_angle(rng: random.Random, seed: int, *, base=None, r=None, ask=None,
         ]
         asked = f"what is the length of arc {a}{b} ?"
         rationale = (f"O{a} and O{b} are radii, so angle O{b}{a} also measures {base} degrees "
-                     f"and the central angle is 180 - 2({base}) = {central} degrees. The "
+                     f"and the central angle is 180 {MINUS} 2({base}) = {central} degrees. The "
                      f"circumference is {circumference.plain()}, so the arc is "
                      f"({central}/360)({circumference.plain()}) = {key.plain()}.")
 

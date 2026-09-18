@@ -14,7 +14,7 @@ from fractions import Fraction as F
 from ....exact import E, PI, Exact
 from ....item import Item, ItemError, Mis, assemble
 from ..figures import circle_with_points
-from ..render import pi_back, pi_style
+from ..render import MINUS, num as printed, pi_back, pi_style
 
 __all__ = ["degree_radian", "unit_circle_angle", "coterminal", "exact_trig"]
 
@@ -162,9 +162,11 @@ def unit_circle_angle(rng: random.Random, seed: int, *, a=None, b=None, ask=None
         f"Points {p}, {q}, {r}, and {t} lie on the circle shown, which has center O. {given} "
         f"{asked}{q}O{r} ?",
     ])
-    fig = circle_with_points({f"{t} (-1, 0)": 180, f"{p} (1, 0)": 0, q: a, r: 180 - b},
-                             radii=(f"{t} (-1, 0)", f"{p} (1, 0)", q, r))
-    rationale = (f"{p}, O and {t} are collinear, so angle {q}O{r} is 180 - {a} - {b} = "
+    far, near = f"{t} ({MINUS}1, 0)", f"{p} (1, 0)"
+    fig = circle_with_points({far: 180, near: 0, q: a, r: 180 - b},
+                             radii=(far, near, q, r))
+    rationale = (f"{p}, O and {t} are collinear, so angle {q}O{r} is "
+                 f"180 {MINUS} {a} {MINUS} {b} = "
                  f"{middle} degrees, which is {key.plain()}" +
                  (" radians." if ask == "radians" else " degrees."))
     P = {"kind": "circles_unit_circle_angle", "a": a, "b": b, "ask": ask}
@@ -185,7 +187,7 @@ QUARTERS = ((1, 0), (0, 1), (-1, 0), (0, -1))
 
 def _at(spot: int, radius: int) -> str:
     x, y = QUARTERS[spot % 4]
-    return f"({x * radius}, {y * radius})"
+    return f"({printed(x * radius)}, {printed(y * radius)})"
 
 
 def coterminal(rng: random.Random, seed: int, *, spot=None, radius=None, k=None,

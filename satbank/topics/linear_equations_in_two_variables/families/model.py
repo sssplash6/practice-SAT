@@ -15,7 +15,8 @@ import random
 from fractions import Fraction as Q
 
 from ....item import Item, ItemError, Mis
-from ..common import coef_text, dec, numtext, pair, q, sig, std_text, text_item
+from ..common import (MINUS, coef_text, dec, numtext, pair, q, sig, std_text,
+                      text_item)
 
 __all__ = ["model_standard", "model_percent", "material_table"]
 
@@ -185,7 +186,7 @@ def model_standard(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, c
                           "share out of the total", std_opt(1, 1))
         pool["flip"] = Mis("subtracted the total from the part instead of the other "
                            "way round",
-                           (f"{yv} - {xv} = {numtext(C)}", sig("flip", C)))
+                           (f"{yv} {MINUS} {xv} = {numtext(C)}", sig("flip", C)))
         pool["twice"] = Mis("counted the whole budget twice", std_opt(2, -1))
     else:
         pool["swap"] = Mis("swapped the two rates", std_opt(B, A))

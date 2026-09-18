@@ -8,6 +8,8 @@ reads correctly on light and dark backgrounds.
 
 from __future__ import annotations
 
+from .exact import MINUS
+
 __all__ = ["coordinate_grid", "cylinder_rh", "prism_lwh", "triangle_xyz"]
 
 _CSS = (".ax{stroke:currentColor;stroke-width:1.4;fill:none}"
@@ -16,6 +18,16 @@ _CSS = (".ax{stroke:currentColor;stroke-width:1.4;fill:none}"
         ".sg{stroke:currentColor;stroke-width:2.2;fill:none}"
         ".lb{fill:currentColor;font:11px ui-sans-serif,system-ui,sans-serif}"
         ".it{fill:currentColor;font:italic 13px ui-serif,Georgia,serif}")
+
+
+def _tick(n: int) -> str:
+    """An axis label as the page prints it, with a typeset minus.
+
+    A Python int formats its sign as the ASCII hyphen, so a grid drawn beside
+    typeset options would label its own axis in the other spelling -- the
+    remainder a topic cannot reach from its own directory.
+    """
+    return f"{n}".replace("-", MINUS)
 
 
 def coordinate_grid(xmin, xmax, ymin, ymax, points=(), segments=(),
@@ -47,10 +59,10 @@ def coordinate_grid(xmin, xmax, ymin, ymax, points=(), segments=(),
     out.append(f'<text class="it" x="{X(0)-14}" y="{Y(ymax)-10}">y</text>')
     for x in range(xmin, xmax + 1):
         if x and x % step == 0:
-            out.append(f'<text class="lb" x="{X(x)}" y="{Y(0)+15}" text-anchor="middle">{x}</text>')
+            out.append(f'<text class="lb" x="{X(x)}" y="{Y(0)+15}" text-anchor="middle">{_tick(x)}</text>')
     for y in range(ymin, ymax + 1):
         if y and y % step == 0:
-            out.append(f'<text class="lb" x="{X(0)-7}" y="{Y(y)+4}" text-anchor="end">{y}</text>')
+            out.append(f'<text class="lb" x="{X(0)-7}" y="{Y(y)+4}" text-anchor="end">{_tick(y)}</text>')
     out.append(f'<text class="it" x="{X(0)-11}" y="{Y(0)+15}">O</text>')
     for (x1, y1), (x2, y2) in segments:
         out.append(f'<line class="sg" x1="{X(x1)}" y1="{Y(y1)}" x2="{X(x2)}" y2="{Y(y2)}"/>')

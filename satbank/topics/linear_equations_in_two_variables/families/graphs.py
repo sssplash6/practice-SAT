@@ -18,8 +18,8 @@ from math import gcd
 from ....figures import coordinate_grid
 from ....item import Item, ItemError, Mis
 from ....plot import line_graph, scatter
-from ..common import (choose, coef_text, dec, ex, lin_text, numtext, q, sig, std_text,
-                      text_item)
+from ..common import (MINUS, choose, coef_text, dec, ex, lin_text, numtext, q, sig,
+                      std_text, text_item)
 
 __all__ = ["line_from_graph", "graph_combinations"]
 
@@ -60,13 +60,13 @@ def line_from_graph(rng: random.Random, seed: int, *, ask=None, m=None, b=None, 
                                     sig("param", A, C, "num_y"))),
                  Mis("changed the sign of the y term and of the right-hand side, which "
                      "puts the x-intercept on the wrong side of the origin",
-                     (f"Rx - {coef_text(A, 'y')} = {numtext(-C)}",
+                     (f"Rx {MINUS} {coef_text(A, 'y')} = {numtext(-C)}",
                       sig("param", A, -C, "neg_y"))),
                  Mis("changed the sign of the y term and of the right-hand side",
-                     (f"{coef_text(A, 'x')} - Ry = {numtext(-C)}",
+                     (f"{coef_text(A, 'x')} {MINUS} Ry = {numtext(-C)}",
                       sig("param", A, -C, "neg_num_x"))),
                  Mis("kept the right-hand side positive while negating the y term",
-                     (f"{coef_text(A, 'x')} - Ry = {ct}",
+                     (f"{coef_text(A, 'x')} {MINUS} Ry = {ct}",
                       sig("param", A, C, "neg_num_x")))]
         P = {"kind": "le2_graph_line", "ask": ask, "xi": xi, "yi": yi, "scale": K}
         why = (f"The line crosses the x-axis at {numtext(xi)} and the y-axis at "

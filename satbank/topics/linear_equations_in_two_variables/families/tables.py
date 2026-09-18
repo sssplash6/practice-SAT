@@ -15,8 +15,8 @@ from fractions import Fraction as Q
 from math import gcd
 
 from ....item import Item, ItemError, Mis
-from ..common import (choose, ex, lin_text, numtext, point_text, q, sig, std_text,
-                      text_item)
+from ..common import (MINUS, choose, ex, lin_text, numtext, point_text, q, sig,
+                      std_text, text_item)
 
 __all__ = ["table_equation", "which_table", "table_symbolic", "table_line"]
 
@@ -298,7 +298,7 @@ def table_symbolic(rng: random.Random, seed: int, *, ask=None, step=None, d=None
                      "changes", (f"(n + {numtext(D)})/({numtext(-S)})",
                                  sig("row", D, -S))),
                  Mis("subtracted the two outputs the wrong way round, leaving an n "
-                     "behind", (f"(2n - {numtext(D)})/{numtext(S)}",
+                     "behind", (f"(2n {MINUS} {numtext(D)})/{numtext(S)}",
                                 sig("twon", D, S))),
                  Mis("changed the sign of the slope",
                      (numtext(Q(D, S)), sig("plain", Q(D, S))))]

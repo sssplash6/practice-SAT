@@ -13,7 +13,7 @@ from fractions import Fraction
 from ....exact import E, PI, Exact
 from ....figures import coordinate_grid
 from ....item import Item, ItemError, Mis, assemble
-from ..kit import decimal_text, pick
+from ..kit import decimal_text, pick, signed
 from ....shapes import UNITS
 
 __all__ = ["circle_from_points", "triangle_from_points", "square_on_axes", "leg_from_area"]
@@ -111,8 +111,12 @@ def triangle_from_points(rng: random.Random, seed: int, *, fmt=None, pts=None,
         "area, in square units, of the triangle?",
     ])
     fig = coordinate_grid(xmin, xmax, ymin, ymax, points=pts, step=1 if xmax - xmin < 9 else 2)
-    rationale = (f"With vertices ({x1}, {y1}), ({x2}, {y2}) and ({x3}, {y3}), the area is "
-                 f"|{cross}|/2 = {decimal_text(key)}.")
+    # the only place in this topic where a student reads a negative number in
+    # prose: a vertex below or left of the origin, and a shoelace determinant
+    # that comes out negative when the vertices are listed clockwise
+    rationale = (f"With vertices ({signed(x1)}, {signed(y1)}), ({signed(x2)}, {signed(y2)}) "
+                 f"and ({signed(x3)}, {signed(y3)}), the area is "
+                 f"|{signed(cross)}|/2 = {decimal_text(key)}.")
     wide = E(max(x1, x2, x3) - min(x1, x2, x3))
     tall = E(max(y1, y2, y3) - min(y1, y2, y3))
     pool = {

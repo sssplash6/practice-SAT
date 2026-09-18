@@ -17,14 +17,23 @@ import re
 from fractions import Fraction as Q
 
 from ...exact import E, Exact
-from ...expr import fmt_money, fmt_places
+from ...expr import fmt_money, fmt_places, sign_join
 from ...item import Item, ItemError, Mis, assemble, assemble_text
 
 __all__ = ["q", "ex", "numtext", "dec", "money", "coef_text", "lin_text", "std_text",
            "term_text", "point_text", "signed_join", "choose", "shortlist",
-           "shortlist_text", "sig", "pair", "text_item", "GROUP_FROM", "plural"]
+           "shortlist_text", "sig", "pair", "text_item", "GROUP_FROM", "MINUS",
+           "plural"]
 
 GROUP_FROM = 1000          # the source prints 1,277.94 and 4,529 but not 641
+
+# The SAT typesets a minus as U+2212, and so does `Exact.plain`, which renders
+# every option `assemble` orders. A stem rendered in this module and an option
+# rendered there land on the same page, so the two have to spell the sign the
+# same way: an ASCII hyphen beside a typeset minus is visible on the page. The
+# hyphen that joins words -- "a 4-hectare park", "the x-axis" -- is a hyphen and
+# stays one; only a sign or an operator becomes U+2212.
+MINUS = "\N{MINUS SIGN}"
 
 
 def q(v) -> Q:
@@ -71,35 +80,39 @@ def dec(v, places: int | None = None) -> str:
         if d != 1:
             raise ValueError(f"{v} has no finite decimal expansion")
         places = max(twos, fives)
-    return fmt_places(v, places)
+    return fmt_places(v, places).replace("-", MINUS)
 
 
 def money(v, places: int = 2) -> str:
-    return fmt_money(v, places)
+    return fmt_money(v, places).replace("-", MINUS)
 
 
 def numtext(v, style: str = "frac", places: int | None = None) -> str:
-    """A bare number as the source prints it: 162, 4,529, 7.30, 3/4, -1/2."""
+    """A bare number as the source prints it: 162, 4,529, 7.30, 3/4, −1/2.
+
+    The sign is the typeset minus. Everything printed in this topic goes
+    through here, so this is the one place that has to get it right.
+    """
     v = q(v)
     if places is not None or style == "dec":
         return dec(v, places)
     if v.denominator == 1:
         n = v.numerator
-        return f"{n:,}" if abs(n) >= GROUP_FROM else str(n)
-    return f"{'-' if v < 0 else ''}{abs(v.numerator)}/{v.denominator}"
+        return (f"{n:,}" if abs(n) >= GROUP_FROM else str(n)).replace("-", MINUS)
+    return f"{MINUS if v < 0 else ''}{abs(v.numerator)}/{v.denominator}"
 
 
 def coef_text(m, var: str, style: str = "frac", places: int | None = None) -> str:
-    """'4x', '-x', '(3/4)x', '0.50x'. A bare fraction against a variable needs
-    its brackets, or -1/2x reads as -1/(2x)."""
+    """'4x', '−x', '(3/4)x', '0.50x'. A bare fraction against a variable
+    needs its brackets, or −1/2x reads as −1/(2x)."""
     m = q(m)
     if m == 1:
         return var
     if m == -1:
-        return f"-{var}"
+        return f"{MINUS}{var}"
     if m.denominator != 1 and style != "dec" and places is None:
-        # the sign sits outside the brackets, as the SAT prints it: -(1/4)x
-        return f"-({numtext(-m)}){var}" if m < 0 else f"({numtext(m)}){var}"
+        # the sign sits outside the brackets, as the SAT prints it: −(1/4)x
+        return f"{MINUS}({numtext(-m)}){var}" if m < 0 else f"({numtext(m)}){var}"
     return f"{numtext(m, style, places)}{var}"
 
 
@@ -111,15 +124,22 @@ def term_text(m, var: str, style: str = "frac", places: int | None = None) -> st
 
 
 def signed_join(head: str, b, style: str = "frac", places: int | None = None) -> str:
+    """Join a constant onto a term: '6x + 8', '6x − 8'.
+
+    The join itself is the shared `expr.sign_join`, which reads a term's own
+    printed sign and writes the typeset one. Deciding here instead would mean a
+    second place that has to agree with `numtext` about how a negative is
+    spelled, and the two drifting apart is what puts an ASCII hyphen next to a
+    typeset minus on the same page.
+    """
     b = q(b)
     if b == 0:
         return head
-    sign = "+" if b > 0 else "-"
-    return f"{head} {sign} {numtext(abs(b), style, places)}"
+    return sign_join([head, numtext(b, style, places)])
 
 
 def lin_text(m, b, var: str = "x", style: str = "frac", places: int | None = None) -> str:
-    """'6x + 8', '-x - 4', '(1/4)x'. The slope-intercept right-hand side."""
+    """'6x + 8', '−x − 4', '(1/4)x'. The slope-intercept right-hand side."""
     m, b = q(m), q(b)
     if m == 0:
         return numtext(b, style, places)
@@ -145,10 +165,12 @@ def std_text(a, b, c, xv: str = "x", yv: str = "y", style: str = "frac",
 
 def signed_join_term(head: str, m, var: str, style: str = "frac",
                      places: int | None = None) -> str:
-    """Join a second variable term onto a first: '3a + 4b', '0.48x - 0.04y'."""
-    m = q(m)
-    sign = "+" if m > 0 else "-"
-    return f"{head} {sign} {coef_text(abs(m), var, style, places)}"
+    """Join a second variable term onto a first: '3a + 4b', '0.48x − 0.04y'.
+
+    `coef_text` already signs the term, so the shared `expr.sign_join` reads
+    that sign back rather than this deciding it a second time.
+    """
+    return sign_join([head, coef_text(q(m), var, style, places)])
 
 
 def point_text(x, y, style: str = "frac", places: int | None = None) -> str:

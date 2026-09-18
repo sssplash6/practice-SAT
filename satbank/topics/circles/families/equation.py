@@ -16,7 +16,7 @@ from ....exact import E, Exact
 from ....item import Item, ItemError, Mis, assemble, assemble_text
 from ..figures import circle_on_grid
 from ....expr import sign_join
-from ..render import (coef_term, general_equation, point, radical,
+from ..render import (MINUS, coef_term, general_equation, num, point, radical,
                       standard_equation)
 
 __all__ = ["equation_read", "equation_write", "point_on", "interior",
@@ -289,7 +289,7 @@ def equation_write(rng: random.Random, seed: int, *, h=None, k=None, r=None,
                 f"{size}. Which equation represents this circle?",
             ])
             rationale = (f"A circle with center (h, k) and radius r has equation "
-                         f"(x - h)² + (y - k)² = r², which gives {key_text}.")
+                         f"(x {MINUS} h)² + (y {MINUS} k)² = r², which gives {key_text}.")
         P = {"kind": "circles_equation_write", "h": [h.numerator, h.denominator],
              "k": [k.numerator, k.denominator], "ask": "equation", "sym": sym or "",
              "mult": mult, "r2": None if r2 is None else [r2.numerator, r2.denominator]}
@@ -356,9 +356,9 @@ def point_on(rng: random.Random, seed: int, *, mode=None, h=None, k=None, r=None
         side = side or rng.choice([1, -1])
         fmt = fmt or ("spr" if rng.random() < 0.5 else "mcq")
         if axis == "x":
-            shown, key, other = f"({h + side * r}, c)", E(k), "y"
+            shown, key, other = f"({num(h + side * r)}, c)", E(k), "y"
         else:
-            shown, key, other = f"(c, {k + side * r})", E(h), "x"
+            shown, key, other = f"(c, {num(k + side * r)})", E(h), "x"
         eq = standard_equation(h, k, str(r2))
         mistakes = [
             Mis("added the radius to the center's coordinate", E((k if axis == 'x' else h) + r)),
@@ -511,9 +511,9 @@ def tangent_slope(rng: random.Random, seed: int, *, h=None, k=None, dx=None, dy=
         f"In the xy-plane, line {lab} is tangent at {point(h + dx, k + dy)} to the circle with "
         f"center {point(h, k)}. What is the slope of line {lab}?",
     ])
-    rationale = (f"The radius to {point(h + dx, k + dy)} has slope {F(dy, dx)}, and a tangent "
-                 f"is perpendicular to the radius at the point of tangency, so its slope is "
-                 f"{key.plain()}.")
+    rationale = (f"The radius to {point(h + dx, k + dy)} has slope {num(F(dy, dx))}, and a "
+                 f"tangent is perpendicular to the radius at the point of tangency, so its "
+                 f"slope is {key.plain()}.")
     P = {"kind": "circles_tangent", "h": h, "k": k, "dx": dx, "dy": dy}
     choices, latex, reasons, letter = assemble(key, _sign_safe(key, mistakes), rng,
                                                signed=True, fillers="shift")
@@ -597,9 +597,9 @@ def transform(rng: random.Random, seed: int, *, mode=None, h=None, k=None, r2=No
                              h, k, math.sqrt(r2)) if figure is not False else None
         stem = (f"Circle {a_name} shown is defined by the equation {eq_a}. Circle {b_name} "
                 f"(not shown) has the same radius but is translated {shift} units to the "
-                f"{direction}. If the equation of circle {b_name} is (x - h)² + "
-                f"(y - k)² = a, where h, k, and a are constants, what is the value of "
-                f"{asked}?")
+                f"{direction}. If the equation of circle {b_name} is (x {MINUS} h)² + "
+                f"(y {MINUS} k)² = a, where h, k, and a are constants, what is the value "
+                f"of {asked}?")
         rationale = (f"A translation moves the center but not the radius, so a is still "
                      f"{r2} and {asked} = {key.plain()}.")
         P = {"kind": "circles_transform", "mode": "translate", "h": h, "k": k, "r2": r2,

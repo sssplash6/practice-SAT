@@ -19,7 +19,7 @@ import random
 import re
 from fractions import Fraction as Q
 
-from ...exact import Exact
+from ...exact import MINUS, Exact
 from ...item import Item, ItemError, Mis, assemble, assemble_text
 
 __all__ = ["Q", "q", "Num", "dec", "places_needed", "grid", "tidy", "snap",
@@ -97,6 +97,12 @@ def dec(v, places: int, group: bool = True) -> str:
 
     ``dec(Q(27,5), 1)`` is ``'5.4'`` and ``dec(Q(145770), 0)`` is
     ``'145,770'`` -- the thousands separator the source items print.
+
+    A negative prints U+2212, the sign a typeset page carries and the one
+    ``Exact.plain`` uses, so a net change of ``−0.8%`` is spelled the same way
+    here as everywhere else in the engine. Every reader folds the two signs
+    together, so this changes what is printed and not what compares equal.
+    ``grid`` undoes it, because a grid-in is a keystroke rather than a page.
     """
     v = q(v)
     neg = v < 0
@@ -110,7 +116,7 @@ def dec(v, places: int, group: bool = True) -> str:
     frac = s[len(s) - places:] if places else ""
     head = f"{int(whole):,}" if group else str(int(whole))
     out = head + ("." + frac if places else "")
-    return ("-" + out) if neg else out
+    return (MINUS + out) if neg else out
 
 
 def places_needed(v, cap: int = 2) -> int:
@@ -152,7 +158,13 @@ class Num(Exact):
         if self.style == "percent":
             return body + "%"
         if self.style == "money":
-            return ("-$" + body[1:]) if body.startswith("-") else "$" + body
+            # the sign goes outside the dollar sign: −$4.50, never $−4.50. The
+            # test reads both spellings on purpose -- a test for the ASCII
+            # hyphen alone stopped seeing the sign the moment `dec` printed the
+            # typeset one, and put it in the wrong place without complaining.
+            if body[:1] in ("-", MINUS):
+                return MINUS + "$" + body[1:]
+            return "$" + body
         return body
 
     def latex(self) -> str:
@@ -166,18 +178,29 @@ _STRIP = re.compile(r"[$,%]")
 
 
 def _parse(text: str) -> Q:
-    """A rendered option back to its exact value, fillers included."""
-    return Q(_STRIP.sub("", text))
+    """A rendered option back to its exact value, fillers included.
+
+    The typeset minus is folded to the keyboard one on the way in. Reading is
+    the direction that normalises: the page keeps its own sign, and the parser
+    accepts either spelling rather than the renderer giving one up.
+    """
+    return Q(_STRIP.sub("", text.replace(MINUS, "-")))
 
 
 def grid(v) -> str:
-    """Student-produced-response form: the shortest exact entry."""
+    """Student-produced-response form: the shortest exact entry.
+
+    The ASCII sign, deliberately: this is what a student types into the grid,
+    not what the page prints, so `dec`'s typeset minus is folded back. `spr`
+    refuses a negative key today, so the fold is a guard rather than a
+    behaviour -- but the fold is where it belongs if that ever changes.
+    """
     v = q(v)
     if v.denominator == 1:
         return str(v.numerator)
     for p in range(1, 9):
         if (v * 10 ** p).denominator == 1:
-            return dec(v, p, group=False)
+            return dec(v, p, group=False).replace(MINUS, "-")
     return f"{v.numerator}/{v.denominator}"
 
 

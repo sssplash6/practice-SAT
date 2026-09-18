@@ -1380,6 +1380,29 @@ CHECKS = {
 
 # --------------------------------------------------- proving it can fail
 
+def as_printed(item):
+    """The finished item with the page's typeset minus folded to the ASCII sign.
+
+    The number readers in this file already fold U+2212 on the way in (`num`,
+    `terms`, `expr_value`), because an option prints it. The patterns that
+    search a STEM cannot: they are written as literal algebra -- "y = f(x) - 7
+    is shown", "(9/5)(x - 273.15)" -- and a regex spelled with the keyboard
+    hyphen simply stops matching the day the renderer starts typesetting. That
+    is the reader's version of the bug this file exists to catch, so the fold
+    happens once, here, at the only door items come through, and every checker
+    below sees one spelling. It normalises inbound; it decides nothing.
+    """
+    out = copy.copy(item)
+    out.stem = item.stem.replace(MINUS, "-")
+    out.rationale = item.rationale.replace(MINUS, "-")
+    out.choices = [c.replace(MINUS, "-") for c in item.choices]
+    if item.table:
+        out.table = [[c.replace(MINUS, "-") for c in row] for row in item.table]
+    if item.figure:
+        out.figure = item.figure.replace(MINUS, "-")
+    return out
+
+
 def broken(item, **changes):
     """A copy of a finished item with something wrong done to it."""
     bad = copy.deepcopy(item)
@@ -1391,7 +1414,7 @@ def broken(item, **changes):
 def first(name, want=lambda it: True):
     for seed in range(400):
         try:
-            item = generate(name, seed)
+            item = as_printed(generate(name, seed))
         except ItemError:
             continue
         if item.fmt == "mcq" and want(item):
@@ -1512,11 +1535,12 @@ def main() -> int:
         made, bad, skipped, what = 0, 0, 0, ""
         for seed in range(args.draws):
             try:
-                item = generate(name, seed)
+                raw = generate(name, seed)
             except ItemError:
                 continue
-            if item.fmt != "mcq":
+            if raw.fmt != "mcq":
                 continue
+            item = as_printed(raw)
             made += 1
             try:
                 what = checker(item) or what
@@ -1524,12 +1548,12 @@ def main() -> int:
                 skipped += 1
                 if skipped <= args.show:
                     print(f"\n{name} seed {seed}: unreadable -- {exc}")
-                    print(item.pretty())
+                    print(raw.pretty())
             except AssertionError as exc:
                 bad += 1
                 if bad <= args.show:
                     print(f"\n{name} seed {seed}: {exc}")
-                    print(item.pretty())
+                    print(raw.pretty())
         total += made
         mark = "  ok  " if not (bad or skipped) else " FAIL "
         tail = f", {skipped} unreadable" if skipped else ""

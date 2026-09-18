@@ -209,9 +209,18 @@ def point(text: str) -> tuple[Q, Q]:
 
 # =================================================== printed text -> a circle
 
-RHS_PAT = (rf"(?:-?\d(?:[\d,]*\d)?(?:/\d+)?(?:[A-Za-z]{SUP2}?)?"
-           rf"|-?[A-Za-z]{SUP2}?)")
-EQ_RE = re.compile(rf"(?:\(x\s*[+-][^)]*\)|\d*x){SUP2}[^\n?]*?=\s*{RHS_PAT}")
+# Either spelling of a minus. The page is typeset, so a sign printed on it is
+# U+2212, while an author's literal and an injected option may still carry the
+# ASCII hyphen. `SIGN` is for the patterns that run against the raw stem --
+# EQ_RE and RHS_PAT here, TOKEN and PAIR below -- which see the text before
+# anything folds the two together; a class matching only the keyboard hyphen
+# would stop finding the printed equation at all and report every such item as
+# unreadable. `STD_RE` and `TERM_RE` need no such class: their callers
+# normalise to the hyphen on the way in, which is the other right answer.
+SIGN = rf"[-{MINUS}]"
+RHS_PAT = (rf"(?:{SIGN}?\d(?:[\d,]*\d)?(?:/\d+)?(?:[A-Za-z]{SUP2}?)?"
+           rf"|{SIGN}?[A-Za-z]{SUP2}?)")
+EQ_RE = re.compile(rf"(?:\(x\s*[+{MINUS}-][^)]*\)|\d*x){SUP2}[^\n?]*?=\s*{RHS_PAT}")
 STD_RE = re.compile(
     rf"^\(?x\)?(?:\s*([+-])\s*([^)]+)\))?{SUP2}\s*\+\s*"
     rf"\(?y\)?(?:\s*([+-])\s*([^)]+)\))?{SUP2}\s*=\s*(.+)$")
@@ -471,7 +480,7 @@ def grid_circle(svg: str) -> tuple[float, float, float]:
 
 # ================================================== reading the printed stem
 
-TOKEN = rf"[-\d,./{PI}{ROOT}]+"
+TOKEN = rf"[-{MINUS}\d,./{PI}{ROOT}]+"
 
 
 def amount(stem: str, before: str) -> Val:
@@ -787,7 +796,8 @@ def check_coterminal(item) -> str:
 
     def spot(body: str) -> float:
         parts = [s.strip() for s in body.split(",")]
-        known = [(i, frac(s)) for i, s in enumerate(parts) if re.fullmatch(r"-?\d+", s)]
+        known = [(i, frac(s)) for i, s in enumerate(parts)
+                 if re.fullmatch(rf"{SIGN}?\d+", s)]
         if len(known) == 2:
             x, y = float(known[0][1]), float(known[1][1])
         elif len(known) == 1:
@@ -942,7 +952,7 @@ def check_equation_write(item) -> str:
                   f"{name} = {want} in x² + y² + ax + by + c = 0")
 
 
-PAIR = re.compile(r"\(\s*(-?[\d,/]+|[a-z])\s*,\s*(-?[\d,/]+|[a-z])\s*\)")
+PAIR = re.compile(rf"\(\s*({SIGN}?[\d,/]+|[a-z])\s*,\s*({SIGN}?[\d,/]+|[a-z])\s*\)")
 
 
 def check_point_on(item) -> str:
@@ -1105,8 +1115,8 @@ def _minor_arc_of_a_reflex_angle():
 def _second_answer_equation():
     """The keyed circle a second time, with its zero coordinate written out."""
     item = generate("circles.equation_write", 0, h=0, k=5, r=3, ask="equation")
-    key = item.choices["ABCD".index(item.answer)]          # "x² + (y - 5)² = 9"
-    return _swap(item, _not_key(item), key.replace("x²", "(x - 0)²", 1))
+    key = item.choices["ABCD".index(item.answer)]          # "x² + (y − 5)² = 9"
+    return _swap(item, _not_key(item), key.replace("x²", f"(x {MINUS} 0)²", 1))
 
 
 def _second_answer_interior():
@@ -1129,10 +1139,20 @@ def _moved_key():
 
 
 def _dropped_minus():
-    """A renderer that loses a sign: no option is the answer any more."""
+    """A renderer that loses a sign: no option is the answer any more.
+
+    Both spellings are stripped. The page is typeset, so the key's sign is
+    U+2212, and a `lstrip("-")` written against the keyboard hyphen took the
+    sign off nothing at all -- leaving a perfectly good item as the "injected
+    fault" and this whole check reporting that it had looked.
+    """
     item = generate("circles.tangent_slope", 0, h=-4, k=-6, dx=-3, dy=-1, label="k")
     i = "ABCD".index(item.answer)
-    return _swap(item, i, item.choices[i].lstrip("-"))
+    stripped = item.choices[i].lstrip("-" + MINUS)
+    if stripped == item.choices[i]:
+        raise AssertionError(f"the keyed option {item.choices[i]!r} carries no minus "
+                             f"sign to drop, so this injects nothing")
+    return _swap(item, i, stripped)
 
 
 def _spliced_dial():
@@ -1161,7 +1181,7 @@ def _spliced_unit_circle():
 INJECTIONS = [
     ("a second correct option: the key's value in the other pi spelling",
      _second_answer_arc),
-    ("a second correct option: the keyed circle with (x - 0)² for x²",
+    ("a second correct option: the keyed circle with (x − 0)² for x²",
      _second_answer_equation),
     ("a second correct option: another point outside the circle",
      _second_answer_interior),

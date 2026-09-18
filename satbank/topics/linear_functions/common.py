@@ -16,12 +16,22 @@ import re
 from fractions import Fraction as Q
 
 from ...exact import E, Exact
+from ...expr import sign_join
 from ...item import ItemError, assemble
 
-__all__ = ["q", "ex", "numtext", "coef_text", "lin_text", "fn_eq", "money",
+__all__ = ["MINUS", "q", "ex", "numtext", "coef_text", "lin_text", "fn_eq", "money",
            "dec", "recip_text", "GROUP_FROM", "terminating", "signed_join", "choose"]
 
 GROUP_FROM = 1000          # the source writes 2,268 and 1,000 but not 862
+
+# The page is typeset, so every minus it prints -- the sign on a number, the
+# operator between two terms -- is U+2212, the same character `Exact.plain`
+# puts in front of an option. An ASCII hyphen on the page is the English one,
+# in "y-intercept" and "two-way". Readers fold the two (`item.norm_text`,
+# `item.numeral`, this topic's `option_check`), so this changes what is
+# printed and not what compares equal. `Exact.gridin` keeps the ASCII sign,
+# because a grid-in is a student's keystroke rather than a printed page.
+MINUS = "\N{MINUS SIGN}"
 
 
 def q(v) -> Q:
@@ -63,7 +73,7 @@ def dec(v, places: int | None = None) -> str:
         body = f"{abs(float(v)):.{places}f}"
         whole, _, frac = body.partition(".")
         whole = f"{int(whole):,}" if int(whole) >= GROUP_FROM else whole
-        return ("-" if v < 0 else "") + (f"{whole}.{frac}" if frac else whole)
+        return (MINUS if v < 0 else "") + (f"{whole}.{frac}" if frac else whole)
     d, twos, fives = v.denominator, 0, 0
     while d % 2 == 0:
         d //= 2
@@ -72,49 +82,57 @@ def dec(v, places: int | None = None) -> str:
         d //= 5
         fives += 1
     digits = max(twos, fives)
-    return ("-" if v < 0 else "") + f"{float(abs(v)):.{digits}f}"
+    return (MINUS if v < 0 else "") + f"{float(abs(v)):.{digits}f}"
 
 
 def numtext(v, style: str = "frac", places: int | None = None) -> str:
-    """A bare number as the source prints it: 162, 2,268, 9.25, 3/4, -1/2."""
+    """A bare number as the source prints it: 162, 2,268, 9.25, 3/4, −1/2."""
     v = q(v)
     if places is not None:
         return dec(v, places)
     if v.denominator == 1:
-        n = v.numerator
-        return f"{n:,}" if abs(n) >= GROUP_FROM else str(n)
+        n = abs(v.numerator)
+        # format the magnitude and put the sign on by hand: "{-52:,}" would
+        # spell the sign with Python's ASCII hyphen
+        body = f"{n:,}" if n >= GROUP_FROM else str(n)
+        return (MINUS if v < 0 else "") + body
     if style == "dec":
         return dec(v, places)
-    return f"{'-' if v < 0 else ''}{abs(v.numerator)}/{v.denominator}"
+    return f"{MINUS if v < 0 else ''}{abs(v.numerator)}/{v.denominator}"
 
 
 def coef_text(m, var: str, style: str = "frac", places: int | None = None) -> str:
-    """'4x', '-x', '(3/4)x', '0.50x'. A bare fraction against a variable needs
-    its brackets, or -1/2x reads as -1/(2x)."""
+    """'4x', '−x', '(3/4)x', '0.50x'. A bare fraction against a variable needs
+    its brackets, or −1/2x reads as −1/(2x)."""
     m = q(m)
     if m == 1:
         return var
     if m == -1:
-        return f"-{var}"
+        return f"{MINUS}{var}"
     if m.denominator != 1 and style != "dec" and places is None:
         return f"({numtext(m)}){var}"
     return f"{numtext(m, style, places)}{var}"
 
 
 def signed_join(head: str, b, style: str = "frac", places: int | None = None) -> str:
+    """'8s + 15', '(3/4)x − 3'. The sign is `expr.sign_join`'s to decide.
+
+    `numtext` renders the constant with its own typeset sign and the shared
+    joiner reads it back, so nothing here tests a rendered string for a minus
+    -- the one thing that goes wrong when a page stops using the ASCII hyphen.
+    """
     b = q(b)
     if b == 0:
         return head
-    sign = "+" if b > 0 else "-"
-    return f"{head} {sign} {numtext(abs(b), style, places)}"
+    return sign_join([head, numtext(b, style, places)])
 
 
 def lin_text(m, b, var: str = "x", style: str = "frac", places: int | None = None,
              order: str = "var_first") -> str:
     """mx + b, in either of the two layouts the source set uses.
 
-    order='var_first'  -> '8s + 15', '(3/4)x - 3', '-x + 41'
-    order='var_second' -> '9.25 + 0.50x', '212 - x/550' is built elsewhere
+    order='var_first'  -> '8s + 15', '(3/4)x − 3', '−x + 41'
+    order='var_second' -> '9.25 + 0.50x', '212 − x/550' is built elsewhere
     """
     m, b = q(m), q(b)
     if m == 0:
@@ -123,7 +141,7 @@ def lin_text(m, b, var: str = "x", style: str = "frac", places: int | None = Non
         return signed_join(coef_text(m, var, style, places), b, style, places)
     if b == 0:
         return coef_text(m, var, style, places)
-    sign = "+" if m > 0 else "-"
+    sign = "+" if m > 0 else MINUS
     return (f"{numtext(b, style, places)} {sign} "
             f"{coef_text(abs(m), var, style, places)}")
 
@@ -136,10 +154,11 @@ def fn_eq(lhs: str, body: str) -> str:
 
 def recip_text(v, var: str) -> str:
     """The reciprocal coefficient, printed the way the source prints it:
-    an integer divisor becomes (1/84)x, a decimal one becomes x/5.7."""
+    an integer divisor becomes (1/84)x or (−1/84)x, a decimal one x/5.7."""
     v = q(v)
     if v.denominator == 1:
-        return f"(1/{numtext(abs(v))}){var}" if v > 0 else f"(-1/{numtext(abs(v))}){var}"
+        return (f"(1/{numtext(abs(v))}){var}" if v > 0
+                else f"({MINUS}1/{numtext(abs(v))}){var}")
     return f"{var}/{dec(v)}"
 
 

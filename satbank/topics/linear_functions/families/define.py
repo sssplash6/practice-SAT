@@ -17,7 +17,8 @@ from fractions import Fraction as Q
 from ....exact import E
 from ....figures import coordinate_grid
 from ....item import Item, ItemError, Mis, assemble, assemble_text
-from ...linear_functions.common import choose, coef_text, ex, lin_text, numtext, q
+from ...linear_functions.common import (MINUS, choose, coef_text, ex, lin_text,
+                                        numtext, q)
 
 __all__ = ["from_points", "from_table", "define_line", "table_facts",
            "x_intercept", "y_intercept", "sig", "pair"]
@@ -121,7 +122,8 @@ def from_points(rng: random.Random, seed: int, *, x1=None, y1=None, x2=None, y2=
     P = {"kind": "lf_from_points", "x1": [x1.numerator, x1.denominator],
          "y1": [y1.numerator, y1.denominator], "x2": [x2.numerator, x2.denominator],
          "y2": [y2.numerator, y2.denominator]}
-    rationale = (f"The slope is ({numtext(y2)} - {numtext(y1)})/({numtext(x2)} - "
+    rationale = (f"The slope is ({numtext(y2)} {MINUS} {numtext(y1)})"
+                 f"/({numtext(x2)} {MINUS} "
                  f"{numtext(x1)}) = {numtext(m)}, and the y-intercept is {numtext(b)}.")
     return _text_item("lin.from_points", "a line through two points", "medium", seed,
                       stem, key, sig(m, b), wrong, rng, P, rationale)
@@ -403,7 +405,7 @@ def table_facts(rng: random.Random, seed: int, *, m=None, b=None, xs=None, x0=No
         stem = (f"For the linear function {name}, the table shows {_count(rows)} values of "
                 f"x and their corresponding values of {name}(x). Function {name} is "
                 f"defined by {name}(x) = ax + b, where a and b are constants. What is the "
-                f"value of a - b?")
+                f"value of a {MINUS} b?")
         mistakes = [Mis("added a and b instead of subtracting them", m + b),
                     Mis("gave b without its sign", abs(b)),
                     Mis("subtracted the second input instead of b", m - xs[1]),
