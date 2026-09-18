@@ -159,8 +159,8 @@ def quad_word(rng: random.Random, seed: int, *, mode=None, w=None, d=None, p=Non
         }
         order = ["sum", "product", "difference"]
         stem = TRIANGLE_X.format(b=poly_text([2 * c, 2]), MINUS=MINUS, h=num(d))
-        why = (f"x² = (1/2)({num(2 * c)} + 2x)(x {MINUS} {num(d)}) simplifies to "
-               f"x² = x² + {num(c - d)}x {MINUS} {num(c * d)}, so x = {num(key)}.")
+        why = (f"x² = (1/2)({poly_text([2 * c, 2])})(x {MINUS} {num(d)}) simplifies "
+               f"to x² = x² + {num(c - d)}x {MINUS} {num(c * d)}, so x = {num(key)}.")
         P = {"kind": "nlf_quad_word", "mode": mode, "c": [c.numerator, c.denominator],
              "d": [d.numerator, d.denominator]}
         fmt = "spr"

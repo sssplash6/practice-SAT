@@ -1,9 +1,7 @@
-# Nonlinear Functions — handoff
+# Nonlinear Functions — state
 
-Paused on budget, not cancelled. **The gate is green and `option_check.py` is
-written and clean.** The three acceptance failures named in the pause message
-were diagnosed and fixed before the pause; they are recorded below as history,
-not as open work.
+Complete. The gate is green, `option_check.py` is clean, `OPTION-CHECK.md` is
+written, and a page of items has been read by eye and by rendered figure.
 
 ```
 Nonlinear Functions  [nonlinear_functions]  PASS
@@ -13,18 +11,22 @@ Nonlinear Functions  [nonlinear_functions]  PASS
     ok   audit       10,800 items re-derived
     ok   structure   99% of distractors named
     ok   prose       10,800 items read
-    ok   capacity    33,559+ distinct items
+    ok   capacity    33,577+ distinct items
 ```
 
-## What is done
+`option_check.py`: 33 templates with options, 400 draws each, **11,877 items
+read back, 0 defects, 0 unreadable**. Three templates answer only with a
+grid-in and are reported by name as having nothing to read.
+`--selftest` catches all six injected faults.
 
-* `material/transcripts/nonlinear_functions.json` — all 110 items transcribed
-  from the images (every image read; the key table was used only to check).
-* `satbank/topics/nonlinear_functions/` — `__init__.py`, `common.py`,
-  `figures.py`, `audit.py`, `sources.py`, `option_check.py`, and seven family
-  modules under `families/`.
-* 36 templates, all live, none stubbed. Every one passes audit, structure,
-  prose and capacity at full volume (1,200 draws each).
+## What is here
+
+* `material/transcripts/nonlinear_functions.json` — all 110 items, transcribed
+  from the images.
+* 36 templates in seven family modules, plus `common.py` (rendering),
+  `figures.py` (this topic's own SVG, because `plot.curve` fits gridlines to
+  its data and a y-intercept item needs gridlines a reader can count),
+  `audit.py`, `sources.py`, `option_check.py`, `OPTION-CHECK.md`.
 
 | family file | templates |
 |---|---|
@@ -38,115 +40,124 @@ Nonlinear Functions  [nonlinear_functions]  PASS
 | `families/word.py` | `nlfunc.quad_word`, `build_expression` |
 | `families/polynomial.py` | `nlfunc.factor_from_table`, `zeros_constant` |
 
-## What is NOT done
+## The five exclusions (4.5%; the wave's highest count)
 
-1. **`OPTION-CHECK.md` is not written.** `option_check.py` is finished, green
-   at 400 draws per template (11,904 items read back) and its `--selftest`
-   catches all six injected faults, but the prose note that explains it has
-   not been written yet. That is the one deliverable missing.
-2. **Nobody has looked at a page of items.** `tools/preview.py
-   nonlinear_functions --per 3` has not been run. Every prose defect in waves
-   1 and 2 was found by eye; this topic has not had that pass.
+All five have **picture- or table-valued options**, so there is no printed
+option text to carry the answer and a template would have to generate three
+wrong pictures as carefully as the right one. Reasoning and the rejected
+alternative are set out in full in `OPTION-CHECK.md`, under "Why five items are
+excluded, and why not fewer".
 
-## The three acceptance failures — diagnosed and fixed
-
-All three were real and all three are closed.
-
-* **2.19** — the engine printed *"the number of brachiopods species"* where
-  College Board prints *"brachiopod species"*. Cause: one `thing` string was
-  used both in the stem (plural, "species of brachiopods") and inside the
-  option sentences (singular, "brachiopod species"). Fixed by storing the
-  singular and appending `"s"` at the one place the stem needs the plural
-  (`families/interpret.py`, `interpret_rate`), and by changing the source row
-  to `thing="brachiopod"`.
-* **3.9 and 3.14** — both raised `ItemError("the key would be the only option
-  of its surface form")`. Cause: `common.choose`/`common.text_item` applied a
-  *stricter* guard than the gate's own `check._shape`, and applied it to
-  source items as well as to free draws. Two separate bugs:
-  - the local guard tested `startswith(("-", MINUS))` while the gate tests
-    only the ASCII hyphen, so `−1 < r < 0` looked unique when the gate would
-    have seen it as identical to `r < −1` (3.9);
-  - College Board's own option set for 3.14 genuinely leaves the key as the
-    only option containing a slash (`1,800(1.02)^(q/4)` against three options
-    with no slash). The gate never runs `structure` on source items, so this
-    is legal; the engine was refusing to build an item the gate would accept.
-
-  Fixed by aligning `_surface` with `check._shape` exactly, and by making
-  `common.pick` return a `Named` list that records whether a source item chose
-  the wrong answers. When it did, College Board's set is the authority and the
-  surface guard is skipped; free draws are still guarded.
-
-## The five excluded items (4.5% of 110; ceiling is 15%)
-
-All five have **options that are pictures or tables**, so no printed option
-text can carry the answer. They are the only five such items in the topic.
-
-| id | why |
+| id | what its four options are |
 |---|---|
-| 1.2 | the four options are two-column tables of readings taken off a drawn parabola; the item matches a picture to a table |
-| 1.4 | the four options are coordinate grids showing four cubic curves |
-| 1.11 | the four options are coordinate grids showing four parabolas that differ only in where the vertex sits |
-| 1.21 | the four options are two-row tables of `x` and `h(x)` |
-| 2.9 | the four options are graphs of exponential curves differing in direction and steepness |
+| 1.2 | four two-column tables of readings taken off a drawn parabola |
+| 1.4 | four coordinate grids showing four cubic curves |
+| 1.11 | four coordinate grids of parabolas differing only in vertex position |
+| 1.21 | four two-row tables of `x` and `h(x)` |
+| 2.9 | four graphs of exponential curves differing in direction and steepness |
 
-Rendering a table option as a line of text (`"x: 1, 2, 3; h(x): −2, 1, 6"`)
-was considered and rejected: it is not what the source prints, and the
-acceptance check would then be comparing the engine against a format the
-engine invented. If a reviewer wants these four back, the honest route is a
-table-valued option type in the core, not a text rendering.
+Every other picture-bearing item — 1.1, 1.7, 1.10, 1.13, 1.16, 1.18, 1.20,
+1.23, 1.25, 2.31, 3.41 — is encoded, because there the picture carries the
+question and the options are text.
 
-## What `option_check.py` covers, per template
+## The three acceptance failures (history; all fixed)
 
-Written and passing. Every option is decided from its **printed text** (or
-from the SVG's own pixel geometry); nothing consults `item.params`. The only
-engine imports are `registry.generate`, `expr.parse` and `expr.agree`.
+* **2.19** — the engine printed "brachiopods species" where College Board
+  prints "brachiopod species". One `thing` string was serving both the plural
+  stem and the singular option sentences. Fixed at the one place the stem needs
+  the plural.
+* **3.9, 3.14** — `ItemError: the key would be the only option of its surface
+  form`. The local guard was stricter than the gate's own `check._shape` (it
+  tested U+2212 as well as the ASCII hyphen) and was being applied to source
+  items, where College Board's option set is the authority — 3.14's key
+  genuinely is the only option containing a slash, and the gate never runs
+  `structure` on source items anyway. Fixed by aligning the guard with the gate
+  and skipping it when a source item names its own `wrongs`.
 
-| template | what makes an option decidable |
-|---|---|
-| `evaluate`, `exp_evaluate` | the rule is parsed out of the stem and evaluated at the printed input; all four printed numbers must also be distinct |
-| `solve_value` | the option is substituted back into the printed equation (`7n³ = 56`, `½mv² = E`) |
-| `param_value` | the hidden `c` is recovered from the printed `p(c) = v`, then the value at the printed input |
-| `y_intercept` | the printed rule at x = 0, matched against each printed point; the identity mode demands exactly one option of the form `f(0)` |
-| `x_intercept` | each printed point is substituted into the printed rule; the NOT variant demands exactly one option that is *not* a zero |
-| `graph_intercept` | the y-intercept is read off the **drawn** polyline at the drawn vertical axis, and no option may sit within a gridline of the key |
-| `graph_context` | the drawn start value or the drawn peak, with the same gridline separation rule |
-| `graph_zeros` | sign changes counted along the drawn polyline |
-| `graph_equation` | each printed equation is evaluated at 25 points sampled off the drawn curve, to a fiftieth of a gridline |
-| `exp_model`, `exp_period`, `exp_anchor`, `exp_reach`, `exp_offset` | the intended model is rebuilt from the words (start, percent, period, ambient) and each printed equation is evaluated at 0, 1 and 2 periods — so the same model written a different way is caught |
-| `exp_from_table` | each printed equation must reproduce every printed row |
-| `exp_rate` | the growth factor from the printed percent; the yearly percent from the printed period form; the r-range mode tests six sample values of r against each printed interval |
-| `exp_two_points` | `a` and `b` are recovered from the two printed points |
-| `exp_display` | each Roman-numeral equation is evaluated at x = 0 and compared with the number literals it prints — "displays as a constant" made concrete |
-| `exp_rewrite` | the y-intercept must appear among the option's own literals; the coefficient mode asserts all four forms are equivalent and then finds the one whose printed coefficient of x is 1/c |
-| `exp_steps` | doublings counted from the printed ratio, including scientific notation in the table |
-| `vertex_value` | the vertex is found by numerical search on the parsed rule, never by algebra the generator shares |
-| `vertex_symmetry`, `shift_max`, `quad_fit`, `quad_must_be_true` | rebuilt from the printed vertex, zeros, or the pair of equal values |
-| `interpret_value`, `interpret_initial`, `interpret_rate`, `quad_feature` | each sentence is matched against the shape its family prints, and the numbers it names are checked against numbers the item itself prints |
-| `quad_word`, `build_expression`, `factor_from_table` | the situation's equation is rebuilt from the stem; expressions are compared with `expr.agree`; a factor is a hit only if every one of its zeros is a zero the table shows |
-| `abs_value`, `exp_power_table`, `zeros_constant` | grid-in only — reported as having no options to read rather than passed silently |
+## What the preview pass found
 
-`--selftest` injects six faults and catches all six: a model rewritten with a
-fractional base, an exponential with the root taken into the base, the key
-under the wrong letter, a figure spliced in from another item, a distractor
-moved to six tenths of a gridline from the key, and a sentence repeated under
-another noun.
+`tools/preview.py nonlinear_functions --per 3`, read as text, and the figures
+rendered to PNG and looked at. It has never come back empty on this project and
+did not here: **eighteen defects**, none of which any of the seven gate checks
+can see.
 
-### Four live defects it found, all now fixed
+**Prose and rationale**
 
-1. `exp_anchor` printed its growth factor to one decimal place, so a 275%
-   rise printed as `24(3.8)^t` when the words demand 3.75 — the printed option
-   could not be produced from the printed stem. Now printed exactly.
-2. `exp_rate`'s rising variant keyed `0 < r < 1` for a model that rises by a
-   fixed percent, which only forces `r > 0`; `r = 2` satisfies the stem and
-   not the key. The rising variant is no longer drawn.
-3. `factor_from_table` offered a single factor of one of the table's own zeros
-   as a distractor — it is genuinely forced, so the item had two correct
-   answers. Replaced with a repeated factor, which is not forced.
-4. `factor_from_table` also allowed a mirror pair of zeros (−2 and 2), which
-   made the sign-flipped distractor the same polynomial as the key. Now
-   rejected at draw time.
+1. `evaluate` (rational): "p(35) = 22/35 = 22/35" — the same quotient printed
+   twice when it is already in lowest terms.
+2. `shift_max`: "f is greatest at t = 83/8 = 83/8", same cause.
+3. `quad_fit` (table): "p(x) = 2(x − 10)² + 0" and "4(x − 36)² + −1".
+4. `zeros_constant`: "(x − −3)(x − 1)(x − 5)".
+5. `exp_power_table`: "g(x) = a^(4x − −1)".
+6. `exp_display`: "the answer is neither i nor ii" — Roman numerals lowercased.
+7. `quad_must_be_true`: the same lowercasing in three distractor reasons.
+8. `graph_zeros`: "f(x) = 0 for one values of x".
+9. `exp_steps` (bounce): the rationale ended "= 27/2 feet" where the grid-in
+   answer is 13.5; `quad_fit` (three points) likewise printed "13,143/5".
+10. `interpret_initial`: "At t = 0 the power is 1" on models written in x.
+11. `interpret_value`: a thrown object's distractor was explained as "a
+    multiplier of the previous year's value".
+12. `vertex_value` (factored): a distractor's reason described an arithmetic it
+    did not perform.
 
-## What I was about to do next
+**Typography**
 
-Write `OPTION-CHECK.md` from the material above, then run
-`tools/preview.py nonlinear_functions --per 3` and read a page of items by eye.
+13. Every negative numeric option printed an ASCII hyphen — `Exact.plain()`
+    writes `-11` where the source typesets `−11`. Every numeric-option
+    template now renders through this topic's own `num()`.
+14. Every figure's tick labels did the same (`-10`, `-2`) and printed `2000`
+    without a thousands separator.
+
+**Items that were internally wrong or degenerate**
+
+15. `exp_rate`: with the period drawn as 4, the stem counted months, asked for
+    a yearly percent, and printed an exponent of `x/4` — the item contradicted
+    itself, and the checker had encoded the same wrong assumption. The divisor
+    is now twelve.
+16. `exp_steps` (culture): the doubling count was being reused from the
+    year-counting branch, so the answer could be a day the table already
+    prints, and "Day 0" could appear as an option.
+17. `exp_model` (jackrabbits): "had reached 10 billion" was a fixed constant
+    that did not follow from the generated start, rate and span. It is now
+    computed and printed as a magnitude.
+18. Degenerate option bases: a 100% rise and a 1% rise each produced a
+    distractor of `(1)^t`; an exponent of 1 collapsed three of four
+    misconceptions onto the key. All now refused at draw time.
+
+**Figures** (rendered with `qlmanage` and looked at; the browser extension was
+not connected)
+
+19. `graph_intercept`'s decaying exponential came out a 180×396 sliver with the
+    tick labels sitting on top of the curve — the plane forced one pixel scale
+    on both axes, and this shape's y range is fourteen units against five of x.
+    The two axes are now scaled independently, as a printed SAT plane is, and
+    the decay and growth windows follow the source's own (x from −1 to 1).
+20. `graph_equation`'s quartic was drawn to the height of its own tails, which
+    made all three zeros and the repeated root sit flat on the axis — the
+    question was unanswerable from the picture. The window is now set by the
+    turning points between the outermost zeros, which reproduces College
+    Board's own y range for item 2.31 exactly.
+21. `quad_feature`'s marble chart had up to sixteen y labels touching each
+    other on a 190-pixel axis.
+22. `graph_context`'s "3,000" tick collided with the axis's `x` glyph.
+23. An axis could be drawn with twenty-eight labels on it; label density is now
+    thinned automatically, and the origin's `O` is dropped when the units are
+    too narrow for it to clear the `−1` label.
+
+## Live defects `option_check.py` found (all fixed)
+
+Detailed in `OPTION-CHECK.md`. In short: a growth factor printed to one decimal
+place so `24(3.8)^t` could not come from a 275% rise; a rising-rate variant
+keyed `0 < r < 1` when the stem only forces `r > 0`; a `factor_from_table`
+distractor that was genuinely a forced factor; and a mirror pair of zeros that
+made the sign-flipped distractor the same polynomial as the key.
+
+## Nothing outside the topic was changed
+
+Only `satbank/topics/nonlinear_functions/` and
+`material/transcripts/nonlinear_functions.json`. No change to the shared core
+was needed. `expr.parse` / `expr.agree` read every printed form this topic
+produces, and `assemble` / `assemble_text` needed no extension — the one thing
+worth noting for the core is that `Exact.plain()` writes an ASCII hyphen, which
+every topic with signed numeric options has to paper over with its own
+`fmt_value`; a typeset minus there would save each of them a step.

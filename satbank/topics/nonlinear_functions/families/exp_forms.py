@@ -15,8 +15,8 @@ import random
 from fractions import Fraction as Q
 
 from ....item import ItemError, Mis
-from ..common import (MINUS, dec, num, ordinal, pair, pick, q, sig, sup, text_item,
-                      value_item, year)
+from ..common import (MINUS, dec, num, ordinal, pair, pick, q, sig, signed, sup,
+                      text_item, value_item, year)
 
 __all__ = ["exp_rate", "exp_two_points", "exp_display", "exp_rewrite",
            "exp_steps", "exp_power_table"]
@@ -66,24 +66,27 @@ def exp_rate(rng: random.Random, seed: int, *, mode=None, a=None, r=None, base=N
     if mode == "percent_from_period":
         a = int(a if a is not None else rng.randrange(10, 90) * 100 + rng.randrange(10, 90))
         base = q(base if base is not None else Q(rng.randrange(35, 96), 100))
-        k = int(k if k is not None else rng.choice([12, 4]))
+        k = int(k if k is not None else 12)
+        if k != 12:
+            raise ItemError("the stem counts months and asks per year, so the "
+                            "exponent's divisor must be twelve")
         key = 100 * (1 - base)
         if key.denominator != 1:
             raise ItemError("the printed percent must be a whole number")
         rule = f"f(x) = {num(a)}({dec(base, 2)})^(x/{k})"
         monthly = round(100 * (1 - float(base) ** (1 / k)))
         pool = {
-            "monthly": (f"gave the percent lost in one of the {num(k)} periods rather "
-                        f"than in a year", q(monthly) if monthly > 0 else None),
-            "base_over_k": ("divided the printed base by the number of periods",
+            "monthly": ("gave the percent lost in one month rather than in a year",
+                        q(monthly) if monthly > 0 else None),
+            "base_over_k": ("divided the printed base by the number of months in a year",
                             q(round(100 * float(base) / k))),
             "base": ("gave the base itself as a percent", 100 * base),
-            "complement_over_k": ("divided the yearly percent by the number of periods",
+            "complement_over_k": ("divided the yearly percent by the months in a year",
                                   q(round(float(key) / k))),
         }
         order = ["monthly", "base_over_k", "base", "complement_over_k"]
-        why = (f"After {num(k)} months the exponent is 1, so a year multiplies the "
-               f"value by {dec(base, 2)} -- a loss of {num(key)}%.")
+        why = (f"After 12 months the exponent is 1, so a year multiplies the value "
+               f"by {dec(base, 2)} -- a loss of {num(key)}%.")
         P = {"kind": "nlf_exp_rate", "mode": mode,
              "base": [base.numerator, base.denominator], "k": k}
         return value_item("nlfunc.exp_rate", "the yearly percent behind a period form",
@@ -265,7 +268,7 @@ def exp_display(rng: random.Random, seed: int, *, A=None, base=None, form1=None,
              if t != key]
     what = "maximum" if not rising else "minimum"
     why = (f"Both functions are {'increasing' if rising else 'decreasing'}, so each "
-           f"takes its {what} value at x = 0; the answer is {key.lower()}.")
+           f"takes its {what} value at x = 0; the answer is {key}.")
     P = {"kind": "nlf_exp_display", "A": A, "base": [base.numerator, base.denominator],
          "form1": form1, "form2": form2, "s1": s1, "s2": s2,
          "c1": None if c1 is None else [q(c1).numerator, q(c1).denominator],
@@ -406,7 +409,7 @@ def exp_steps(rng: random.Random, seed: int, *, ask=None, mode=None, a=None, den
                                  n2=ordinal(n + 1))
             why = (f"Each bounce reaches one-{WORDS[den]} of the previous height, so "
                    f"after {num(n)} bounces the height is {dec(a, 1)}/{num(den ** n)} "
-                   f"= {num(key)} feet.")
+                   f"= {dec(key)} feet.")
             P = {"kind": "nlf_exp_steps", "ask": ask, "mode": mode,
                  "a": [q(a).numerator, q(a).denominator], "den": den, "n": n}
         else:
@@ -456,7 +459,9 @@ def exp_steps(rng: random.Random, seed: int, *, ask=None, mode=None, a=None, den
 
     start = int(start if start is not None else rng.choice([25, 50, 15, 20]))
     exp0 = int(k if k is not None else rng.choice([4, 5, 6]))
-    power = int(power) if power is not None else rng.randint(7, 12)
+    power = int(power) if power is not None else rng.randint(7, 14)
+    if power < rows_shown() + 2:
+        raise ItemError("the target must lie well past the rows the table prints")
     table = [["Day", "Number of bacteria per milliliter at end of day"]]
     for i in range(3):
         table.append([str(i + 1), _sci(q(start) * 2 ** i / 10, exp0)])
@@ -475,7 +480,8 @@ def exp_steps(rng: random.Random, seed: int, *, ask=None, mode=None, a=None, den
         "plus_two": ("counted one doubling too many", pair(f"Day {power + 2}",
                                                            power + 2)),
     }
-    order = ["no_offset", "from_third", "half", "two_short", "plus_two"]
+    order = [n for n in ("no_offset", "from_third", "half", "two_short", "plus_two")
+             if _day_of(pool[n]) >= 1]
     why = (f"The count doubles every day, so it is multiplied by {num(2 ** power)} "
            f"after {num(power)} more days: day {num(power + 1)}.")
     P = {"kind": "nlf_exp_steps", "ask": ask, "mode": "culture", "start": start,
@@ -483,6 +489,15 @@ def exp_steps(rng: random.Random, seed: int, *, ask=None, mode=None, a=None, den
     return text_item("nlfunc.exp_steps", "the day a doubling count is reached",
                      "hard", seed, CULTURE.format(target=target), key, sig(power + 1),
                      pick(pool, order, wrongs), rng, P, why, table=table)
+
+
+def _day_of(entry) -> int:
+    return int(entry[1][1][0])
+
+
+def rows_shown() -> int:
+    """How many days the culture table prints."""
+    return 3
 
 
 def _sci(mant, exp0: int) -> str:
@@ -523,9 +538,9 @@ def exp_power_table(rng: random.Random, seed: int, *, step=None, first=None, k=N
     for i in range(rows):
         e = first + step * i
         table.append([str(i + 1), "a" if e == 1 else "a" + sup(e)])
+    shape = signed(f"{num(step)}x", first - step)
     why = (f"The exponent rises by {num(step)} for each step in x, so {name}(x) = "
-           f"a^({num(step)}x {MINUS} {num(step - first)}); setting that exponent to "
-           f"{num(target)} gives x = {num(k)}.")
+           f"a^({shape}); setting that exponent to {num(target)} gives x = {num(k)}.")
     P = {"kind": "nlf_exp_power_table", "step": step, "first": first, "rows": rows,
          "target": target}
     return value_item("nlfunc.exp_power_table", "an exponent read off a table", "hard",

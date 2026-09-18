@@ -21,6 +21,7 @@ from ...exact import E, Exact
 from ...item import Item, ItemError, Mis, assemble, assemble_text
 
 __all__ = ["MINUS", "Q", "q", "ex", "sup", "num", "dec", "power", "mono", "join",
+           "signed", "linear_factor",
            "poly_text", "factored", "exp_text", "point", "fn", "money", "choose",
            "text_item", "sig", "pair", "unambiguous", "pick", "terminating",
            "ordinal", "year"]
@@ -174,6 +175,22 @@ def exp_text(a, base, expo: str, base_places: int | None = None,
     head = dec(a, a_places) if a_places is not None else num(a)
     b = dec(base, base_places) if base_places is not None else num(base)
     return f"{head}({b})^{expo}"
+
+
+def signed(head: str, v, plus: str = " + ") -> str:
+    """Append a signed term readably: '4(x − 3)² + 5', '… − 1', and nothing at 0."""
+    v = q(v)
+    if v == 0:
+        return head
+    return f"{head}{plus}{num(v)}" if v > 0 else f"{head} {MINUS} {num(-v)}"
+
+
+def linear_factor(r, var: str = "x") -> str:
+    """The factor a zero produces: 3 -> '(x − 3)', −3 -> '(x + 3)'."""
+    r = q(r)
+    if r == 0:
+        return var
+    return f"({var} {MINUS} {num(r)})" if r > 0 else f"({var} + {num(-r)})"
 
 
 def point(x, y) -> str:
@@ -333,6 +350,10 @@ def value_item(template: str, skill: str, difficulty: str, seed: int, stem: str,
             raise ItemError("a grid-in answer is at most five characters")
         return Item(template, skill, difficulty, seed, stem, "spr", keyx, entered,
                     rationale, figure=figure, table=table, params=params)
+    if fmt_value is None:
+        # Exact.plain() writes a hyphen; the source typesets a minus sign, and
+        # every option on this topic is a plain rational
+        fmt_value = num
     kept = Named(Mis(m.reason, ex(m.value)) for m in mistakes if m.value is not None)
     kept.named = getattr(mistakes, "named", False)
     mistakes = kept

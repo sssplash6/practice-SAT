@@ -37,7 +37,7 @@ MODEL_CTX = [
               "in the United States. Of the following, which best models {y}, the "
               "number of millions of CDs sold in the United States, {x} years after "
               "{y0}?",
-         y="C", x="t", lhs="C = "),
+         y="C", x="t", lhs="C = ", rate=(50, 300)),
     dict(kind="decay",
          stem="A certain college had {a} students enrolled in {y0}. The college "
               "predicts that after {y0}, the number of students enrolled each year "
@@ -45,23 +45,34 @@ MODEL_CTX = [
               "before. Which of the following functions models the relationship "
               "between the number of students enrolled, f({x}), and the number of "
               "years after {y0}, {x}?",
-         y="f", x="x", lhs="f(x) = "),
+         y="f", x="x", lhs="f(x) = ", rate=(10, 90)),
     dict(kind="growth",
          stem="A model predicts that the population of Bergen was {a} in {y0}. The "
               "model also predicts that each year for the next 5 years, the "
               "population {y} increased by {pct} of the previous year's population. "
               "Which equation best represents this model, where {x} is the number of "
               "years after {y0}, for {x} ≤ 5?",
-         y="p", x="x", lhs="p = "),
+         y="p", x="x", lhs="p = ", rate=(10, 95)),
     dict(kind="growth",
          stem="There were no jackrabbits in Australia before {y0} when {a} "
               "jackrabbits were introduced. By {y1} the population of jackrabbits had "
-              "reached 10 billion. If the population had grown exponentially, this "
-              "would correspond to a {pct} increase, on average, in the population "
+              "reached about {total}. If the population had grown exponentially, "
+              "this would correspond to a {pct} increase, on average, in the "
+              "population "
               "each year. Which of the following functions best models the "
               "population {y}({x}) of jackrabbits {x} years after {y0}?",
-         y="p", x="t", lhs="p(t) = "),
+         y="p", x="t", lhs="p(t) = ", rate=(80, 260)),
 ]
+
+
+def _magnitude(v) -> str:
+    """A big number the way a sentence says it: '10 billion', '4 million'."""
+    v = float(v)
+    for cut, word in ((10 ** 9, "billion"), (10 ** 6, "million")):
+        if v >= cut:
+            n = round(v / cut)
+            return f"{n:,} {word}"
+    return f"{round(v):,}"
 
 
 def _pct(r) -> str:
@@ -83,13 +94,17 @@ def exp_model(rng: random.Random, seed: int, *, ctx=None, a=None, r=None, y0=Non
     else:
         a = int(a if a is not None else rng.choice(
             [rng.randrange(2, 60) * 100, rng.randrange(3, 40) * 1000, rng.randint(12, 90)]))
-        r = q(r if r is not None else Q(rng.randrange(2, 400), 1000))
+        lo, hi = d.get("rate", (20, 300))
+        r = q(r if r is not None else Q(rng.randrange(lo, hi), 1000))
         factor = 1 + r if d["kind"] == "growth" else 1 - r
         places = max(len(dec(r).split(".")[-1]) if "." in dec(r) else 0, 2)
     if a <= 0 or factor <= 0:
         raise ItemError("an exponential model needs a positive start and factor")
     y0 = int(y0 if y0 is not None else rng.randrange(1780, 2016))
     y1 = int(y1 if y1 is not None else y0 + rng.randint(5, 140))
+    total = q(a) * factor ** (y1 - y0)
+    if "{total}" in d["stem"] and not 10 ** 6 <= float(total) < 10 ** 13:
+        raise ItemError("the population reached must be a readable magnitude")
 
     def eq(head, base, expo, head_places=None, base_places=places):
         h = dec(head, head_places) if head_places is not None else num(head)
@@ -139,7 +154,7 @@ def exp_model(rng: random.Random, seed: int, *, ctx=None, a=None, r=None, y0=Non
                                    1 - r, a, x))
 
     stem = d["stem"].format(a=num(a), pct=_pct(r), y=d["y"], x=x, y0=year(y0),
-                            y1=year(y1))
+                            y1=year(y1), total=_magnitude(total))
     why = (f"The amount starts at {num(a)} and is multiplied by "
            f"{dec(factor, places) if places else num(factor)} for each {x}, so "
            f"{key}.")
@@ -351,7 +366,7 @@ def exp_offset(rng: random.Random, seed: int, *, amb=None, t0=None, f=None, k=No
     amb = int(amb if amb is not None else rng.randrange(60, 76))
     diff = int(rng.randrange(60, 140)) if t0 is None else int(t0) - amb
     t0 = amb + diff
-    f = q(f if f is not None else Q(rng.choice([3, 4, 7]), rng.choice([4, 5, 10])))
+    f = q(f if f is not None else rng.choice([Q(3, 4), Q(4, 5), Q(7, 10)]))
     k = int(k if k is not None else rng.choice([5, 10]))
     hour = int(hour if hour is not None else rng.randint(1, 9))
     if not (0 < f < 1) or diff <= 20:
@@ -416,6 +431,10 @@ def exp_anchor(rng: random.Random, seed: int, *, r=None, v=None, y0=None, span=N
     """A later reading is given; the model's coefficient has to be worked back."""
     thing = thing or rng.choice(CRITTERS)
     r = q(r if r is not None else Q(rng.randrange(50, 300, 25), 100))
+    if r == 1:
+        # the "read the percent as the factor" option would be a base of 1,
+        # which is not a model at all
+        raise ItemError("a rise of exactly 100% degenerates one of the options")
     factor = 1 + r
     span = int(span if span is not None else rng.randint(4, 6))
     y0 = int(y0 if y0 is not None else rng.randrange(1995, 2018))
@@ -458,7 +477,7 @@ def exp_reach(rng: random.Random, seed: int, *, a=None, b=None, r=None,
     """Not the answer but the equation: which one would you solve for t?"""
     a = int(a if a is not None else rng.randrange(10, 90) * 1000)
     b = int(b if b is not None else a + rng.randrange(1, 9) * 5000)
-    r = q(r if r is not None else Q(rng.randrange(1, 10), 100))
+    r = q(r if r is not None else Q(rng.randrange(2, 10), 100))
     if b <= a:
         raise ItemError("the target must be above the current population")
     factor = 1 + r

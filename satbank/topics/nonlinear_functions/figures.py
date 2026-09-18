@@ -25,8 +25,17 @@ _CSS = (".ax{stroke:currentColor;stroke-width:1.4;fill:none}"
         ".ti{fill:currentColor;font:600 12px ui-sans-serif,system-ui,sans-serif}")
 
 
+MINUS = "−"                      # U+2212: an axis is typeset like the rest
+
+
 def _nice(v: float) -> str:
-    return str(int(round(v))) if abs(v - round(v)) < 1e-9 else f"{v:g}"
+    """A tick label the way the source prints one: −10, 2,000, 0.5."""
+    if abs(v - round(v)) < 1e-9:
+        n = int(round(v))
+        body = f"{abs(n):,}"
+    else:
+        body = f"{abs(v):g}"
+    return (MINUS + body) if v < 0 else body
 
 
 def _frange(lo: float, hi: float, step: float):
@@ -45,17 +54,24 @@ def plane_curve(branches, xmin, xmax, ymin, ymax, xstep=1, ystep=1,
     """
     xmin, xmax, ymin, ymax = float(xmin), float(xmax), float(ymin), float(ymax)
     wide, tall = (xmax - xmin) / xstep, (ymax - ymin) / ystep
-    if px is None:
-        px = max(9.0, min(30.0, 340.0 / max(wide, tall, 1)))
+    # the two axes are scaled independently, the way a printed SAT plane is:
+    # one plot may run from −1 to 1 across and from −1 to 12 up, and forcing a
+    # square unit there produces an unreadable strip
+    pxx = px if px is not None else max(12.0, min(70.0, 300.0 / max(wide, 1)))
+    pxy = px if px is not None else max(12.0, min(70.0, 260.0 / max(tall, 1)))
+    while tall / ylabel_every > 14:
+        ylabel_every *= 2
+    while wide / xlabel_every > 14:
+        xlabel_every *= 2
     pad = 30
-    w = wide * px + 2 * pad
-    h = tall * px + 2 * pad
+    w = wide * pxx + 2 * pad
+    h = tall * pxy + 2 * pad
 
     def X(x):
-        return round(pad + (float(x) - xmin) / xstep * px, 2)
+        return round(pad + (float(x) - xmin) / xstep * pxx, 2)
 
     def Y(y):
-        return round(h - pad - (float(y) - ymin) / ystep * px, 2)
+        return round(h - pad - (float(y) - ymin) / ystep * pxy, 2)
 
     out = [f'<svg viewBox="0 0 {w:.0f} {h:.0f}" width="{w:.0f}" height="{h:.0f}" '
            f'role="img" xmlns="http://www.w3.org/2000/svg"><style>{_CSS}</style>']
@@ -73,7 +89,8 @@ def plane_curve(branches, xmin, xmax, ymin, ymax, xstep=1, ystep=1,
     out.append(f'<path class="pt" d="M{X(0)},{Y(ymax) - 12} l-3.5,6 h7 z"/>')
     out.append(f'<text class="it" x="{X(xmax) + 8}" y="{Y(0) + 18}">x</text>')
     out.append(f'<text class="it" x="{X(0) - 14}" y="{Y(ymax) - 10}">y</text>')
-    out.append(f'<text class="it" x="{X(0) - 12}" y="{Y(0) + 15}">O</text>')
+    if pxx >= 22 or xlabel_every > 1:
+        out.append(f'<text class="it" x="{X(0) - 12}" y="{Y(0) + 15}">O</text>')
     for x in _frange(xmin, xmax, xstep):
         if abs(x) > 1e-9 and abs(round(x / xstep)) % xlabel_every == 0:
             out.append(f'<text class="lb" x="{X(x)}" y="{Y(0) + 15}" '
@@ -114,7 +131,7 @@ def context_curve(fnc, x0, x1, y0, y1, xlabel="", ylabel="", xstep=2, ystep=5,
     elapsed hours -- rather than being a signed coordinate axis.
     """
     x0, x1, y0, y1 = float(x0), float(x1), float(y0), float(y1)
-    left, bottom, top, right = 62, 52, 18, 18
+    left, bottom, top, right = 62, 52, 18, 40
 
     def X(x):
         return round(left + (float(x) - x0) / (x1 - x0) * (width - left - right), 2)
@@ -138,10 +155,10 @@ def context_curve(fnc, x0, x1, y0, y1, xlabel="", ylabel="", xstep=2, ystep=5,
             out.append(f'<text class="lb" x="{X(x0) - 7}" y="{Y(y) + 4}" '
                        f'text-anchor="end">{_group(y)}</text>')
     out.append(f'<line class="ax" x1="{X(x0)}" y1="{Y(y0)}" '
-               f'x2="{X(x1) + 10}" y2="{Y(y0)}"/>')
+               f'x2="{X(x1) + 20}" y2="{Y(y0)}"/>')
     out.append(f'<line class="ax" x1="{X(x0)}" y1="{Y(y0)}" '
                f'x2="{X(x0)}" y2="{Y(y1) - 10}"/>')
-    out.append(f'<text class="it" x="{X(x1) + 8}" y="{Y(y0) + 18}">x</text>')
+    out.append(f'<text class="it" x="{X(x1) + 24}" y="{Y(y0) + 18}">x</text>')
     out.append(f'<text class="it" x="{X(x0) - 14}" y="{Y(y1) - 8}">y</text>')
     out.append(f'<text class="it" x="{X(x0) - 12}" y="{Y(y0) + 15}">O</text>')
 
@@ -168,7 +185,4 @@ def context_curve(fnc, x0, x1, y0, y1, xlabel="", ylabel="", xstep=2, ystep=5,
 
 
 def _group(v: float) -> str:
-    n = round(v)
-    if abs(v - n) < 1e-9:
-        return f"{n:,}" if abs(n) >= 1000 else str(n)
-    return f"{v:g}"
+    return _nice(v)

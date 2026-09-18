@@ -61,7 +61,9 @@ def graph_intercept(rng: random.Random, seed: int, *, shape=None, c=None, d=None
         a = int(a if a is not None else rng.randint(2, 12))
         base = int(base if base is not None else rng.choice([2, 3, 4]))
         y0 = a
-        xmin, xmax = -2, 3
+        if a * base > 16:
+            raise ItemError("the drawn height axis would need too many gridlines")
+        xmin, xmax = -1, 1
         ymin, ymax = -1, a * base + 1
 
         def fnc(x, a=a, base=base):
@@ -74,6 +76,8 @@ def graph_intercept(rng: random.Random, seed: int, *, shape=None, c=None, d=None
         a = int(a if a is not None else rng.randint(2, 9))
         base = int(base if base is not None else rng.choice([2, 3]))
         y0 = a
+        if a * base ** 2 > 16:
+            raise ItemError("the drawn height axis would need too many gridlines")
         xmin, xmax = -5, 5
         ymin, ymax = -1, a * base ** 2 + 1
 
@@ -114,7 +118,10 @@ def graph_intercept(rng: random.Random, seed: int, *, shape=None, c=None, d=None
         branches = [left, right]
         what, asym = "rational", 0
 
-    fig = plane_curve(branches, xmin, xmax, ymin, ymax, dots=[(0, y0)])
+    tall, wide = ymax - ymin, xmax - xmin
+    fig = plane_curve(branches, xmin, xmax, ymin, ymax, dots=[(0, y0)],
+                      xlabel_every=1 if wide <= 12 else 2,
+                      ylabel_every=1 if tall <= 13 else 2)
     why = (f"The curve crosses the y-axis at (0, {num(y0)}), so the y-intercept is "
            f"(0, {num(y0)}).")
     P = {"kind": "nlf_graph_intercept", "shape": shape,
@@ -304,7 +311,8 @@ def graph_zeros(rng: random.Random, seed: int, *, a=None, c=None, base=None,
     order = [WORDS[n_] for n_ in (3, 2, 1, 0) if n_ != count]
     why = (f"The curve approaches the horizontal line y = {num(c)} and lies "
            f"{'on both sides of' if crosses else 'entirely on one side of'} the "
-           f"x-axis, so {name}(x) = 0 for {key.lower()} values of x.")
+           f"x-axis, so {name}(x) = 0 for {key.lower()} "
+           f"{'value' if count == 1 else 'values'} of x.")
     P = {"kind": "nlf_graph_zeros", "a": a, "c": c, "base": base}
     return text_item("nlfunc.graph_zeros", "how often a curve meets the x-axis",
                      "hard", seed, ZEROS.format(n=name), key, sig(count),
@@ -336,12 +344,16 @@ def graph_equation(rng: random.Random, seed: int, *, r=None, p=None, lead=None,
         return lead * x * (x - r) * (x + p) ** 2
 
     span = max(r, p) + 3
-    reach = max(abs(fnc(x / 4)) for x in range(-4 * span, 4 * span + 1))
-    ystep = 10 ** max(0, len(str(int(reach / 5))) - 1)
-    ystep = ystep * next(s for s in (1, 2, 5, 10) if s * ystep >= reach / 5)
-    top = int(ystep * int(reach / ystep + 0.999))
-    if top <= 0 or top / ystep > 10:
-        raise ItemError("the drawn window would not be readable")
+    # the window is set by the turning points between the outermost zeros, not
+    # by the tails: a curve drawn to the height of its tails is a flat line
+    # through all three zeros and shows nothing the question asks about
+    inner = max(abs(fnc(x / 8)) for x in range(-8 * p, 8 * r + 1))
+    if inner <= 0:
+        raise ItemError("the drawn curve is flat between its zeros")
+    want = 5 * inner
+    mag = 10.0 ** (len(str(int(want))) - 1)
+    top = int(next(s * mag for s in (1, 2, 5, 10) if s * mag >= want))
+    ystep = top // 5
     fig = plane_curve([fnc], -span, span, -top, top, xstep=1, ystep=ystep,
                       xlabel_every=1, ylabel_every=2)
     pool = {

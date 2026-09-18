@@ -8,7 +8,7 @@ import random
 from fractions import Fraction as Q
 
 from ....item import ItemError, Mis
-from ..common import MINUS, num, pair, pick, q, sig, text_item, value_item
+from ..common import MINUS, linear_factor, num, pair, pick, q, sig, text_item, value_item
 
 __all__ = ["factor_from_table", "zeros_constant"]
 
@@ -26,8 +26,11 @@ def factor_from_table(rng: random.Random, seed: int, *, z1=None, z2=None, lo=Non
     name = name or rng.choice(["p", "f", "g", "h"])
     lo = int(lo if lo is not None else rng.randint(-4, -1))
     xs = [lo + i for i in range(5)]
-    z1 = int(z1 if z1 is not None else rng.choice(xs[:3]))
-    z2 = int(z2 if z2 is not None else rng.choice(xs[2:]))
+    z1 = int(z1 if z1 is not None else rng.choice([x for x in xs[:3] if x]))
+    z2 = int(z2 if z2 is not None else rng.choice([x for x in xs[2:] if x]))
+    if z1 == 0 or z2 == 0:
+        # a zero at the origin prints as the bare variable, not as (x + 0)
+        raise ItemError("neither zero may sit at the origin")
     if z1 == z2 or z1 == -z2:
         # a mirror pair would make the sign-flipped option the same polynomial
         # as the key, which is a second correct answer, not a distractor
@@ -47,8 +50,7 @@ def factor_from_table(rng: random.Random, seed: int, *, z1=None, z2=None, lo=Non
     for x in xs:
         table.append([num(x), "0" if x in (z1, z2) else num(vals[x])])
 
-    def factor(r) -> str:
-        return f"(x {MINUS} {num(r)})" if r > 0 else f"(x + {num(-r)})"
+    factor = linear_factor
 
     key = factor(z1) + factor(z2)
     pool = {
@@ -82,9 +84,9 @@ def zeros_constant(rng: random.Random, seed: int, *, r1=None, r2=None, r3=None,
         raise ItemError("the three zeros must differ and none may be zero")
     key = q(-r1 * r2 * r3)
     rule = f"{name}(x) = x³ + ax² + bx + c"
-    why = (f"{name}(x) = (x {MINUS} {num(r1)})(x {MINUS} {num(r2)})(x {MINUS} "
-           f"{num(r3)}), and the constant term is the product of the three zeros with "
-           f"its sign changed: {num(key)}.")
+    why = (f"{name}(x) = {linear_factor(r1)}{linear_factor(r2)}{linear_factor(r3)}, "
+           f"and the constant term is the product of the three zeros with its sign "
+           f"changed: {num(key)}.")
     P = {"kind": "nlf_zeros_constant", "roots": [r1, r2, r3]}
     return value_item("nlfunc.zeros_constant", "the constant term from three zeros",
                       "hard", seed, ZEROS.format(rule=rule, n=name, z1=num(r1),

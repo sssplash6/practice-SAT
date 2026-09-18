@@ -150,12 +150,14 @@ def interpret_value(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, 
         inputs = {"a": [int(a), 1], "b": [b.numerator, b.denominator]}
 
     key = d["key"].format(**f)
-    pool = {k_: (_reason(k_), pair(text.format(**f), _shape(k_), vnum if k_ in
-                                   ("total", "times", "percent", "decrease") else tnum))
+    pool = {k_: (_reason(k_, d["name"]),
+                 pair(text.format(**f), _shape(k_), vnum if k_ in
+                      ("total", "times", "percent", "decrease") else tnum))
             for k_, text in d["wrong"].items()}
     order = list(d["wrong"])
-    why = (f"f({f['t']}) is the output when the input is {f['t']}, so the model's "
-           f"value at that input is {f['v']}.")
+    fname = {"isotope": "s", "height": "h"}.get(d["name"], "f")
+    why = (f"{fname}({f['t']}) is the output when the input is {f['t']}, so the "
+           f"model's value at that input is {f['v']}.")
     P = {"kind": "nlf_interpret_value", "ctx": d["name"],
          "t": [tnum.numerator, tnum.denominator], **inputs}
     return text_item("nlfunc.interpret_value", "what a function value says", "easy",
@@ -169,10 +171,13 @@ def _shape(name: str) -> str:
             "speed": "speed"}[name]
 
 
-def _reason(name: str) -> str:
+def _reason(name: str, ctx: str = "") -> str:
+    times = ("read the input as a multiple of the object's starting height"
+             if ctx == "height" else
+             "read the input as a multiplier of the previous year's value")
     return {
         "total": "read the output as the total increase rather than the value itself",
-        "times": "read the input as a multiplier of the previous year's value",
+        "times": times,
         "percent": "read the input as a percent increase over the previous year",
         "decrease": "read the output as the amount lost rather than the amount left",
         "swap_decrease": "swapped the input and the output and read the output as the "
@@ -271,8 +276,9 @@ def interpret_initial(rng: random.Random, seed: int, *, ctx=None, a=None, b=None
     pool = {k_: (INITIAL_REASON[k_], pair(text.format(**f), k_))
             for k_, text in d["wrong"].items()}
     order = list(d["wrong"])
-    why = (f"At t = 0 the power is 1, so {num(a)} is the model's value at the start, "
-           f"in {year(y0)}.")
+    v = "t" if d["name"] in ("traffic", "employees") else "x"
+    why = (f"At {v} = 0 the power is 1, so {num(a)} is the model's value at the "
+           f"start, in {year(y0)}.")
     P = {"kind": "nlf_interpret_initial", "ctx": d["name"], "a": a,
          "base": [b.numerator, b.denominator], "y0": y0, "cap": cap}
     return text_item("nlfunc.interpret_initial", "what the coefficient stands for",
@@ -461,12 +467,16 @@ def quad_feature(rng: random.Random, seed: int, *, mode=None, a=None, b=None, c=
 
     if mode == "graph":
         h = int(h if h is not None else rng.randint(3, 7))
-        k = int(k if k is not None else rng.randint(1, 5))
-        start = int(c if c is not None else k + rng.randint(3, 8))
+        k = int(k if k is not None else rng.randint(1, 4))
+        start = int(c if c is not None else k + rng.randint(3, 7))
         aa = Q(start - k, h ** 2)
         if aa <= 0 or (aa * h ** 2).denominator != 1:
             raise ItemError("the drawn parabola must sit on whole-number gridlines")
-        top = start + 3
+        top = start + 2
+        if top > 12:
+            # eleven-odd labels on a 190-pixel axis touch each other; the
+            # source's own marble chart runs to 10
+            raise ItemError("the drawn height axis would need too many labels")
 
         def fnc(x, aa=float(aa), h=h, k=k):
             return aa * (x - h) ** 2 + k

@@ -14,8 +14,9 @@ import random
 from fractions import Fraction as Q
 
 from ....item import ItemError, Mis
-from ..common import (MINUS, dec, factored, fn, num, pair, pick, point, poly_text, q,
-                      sig, sup, text_item, value_item)
+from ..common import (MINUS, dec, factored, fn, linear_factor, num, pair, pick,
+                      point, poly_text, q, sig, signed, sup, text_item,
+                      value_item)
 
 __all__ = ["vertex_value", "vertex_symmetry", "shift_max", "quad_must_be_true",
            "quad_fit"]
@@ -128,8 +129,6 @@ def vertex_value(rng: random.Random, seed: int, *, form=None, ask=None, name=Non
         k = q(k if k is not None else rng.randint(-40, 60))
         if a == 0 or h == 0 or k == 0:
             raise ItemError("every number in the vertex form must be visible")
-        if (a > 0) != (ask == "value" or True):
-            pass
         if a < 0:
             raise ItemError("a minimum needs an upward-opening parabola")
         body = (f"(x {MINUS} {num(h)})²" if h > 0 else f"(x + {num(-h)})²")
@@ -225,8 +224,8 @@ def vertex_value(rng: random.Random, seed: int, *, form=None, ask=None, name=Non
     pool = {
         "product": ("multiplied the zeros instead of averaging them", r1 * r2),
         "one_zero": ("gave one of the zeros", r2),
-        "flip_first": ("read both brackets as if the constant inside them were the "
-                       "zero, and averaged those", (-r1 + r2) / 2),
+        "flip_first": ("changed the sign of one of the zeros before averaging them",
+                       (-r1 + r2) / 2),
         "printed_average": ("averaged the numbers printed inside the brackets rather "
                             "than the zeros", (-r1 - r2) / 2),
         "sum": ("added the zeros without halving", r1 + r2),
@@ -335,8 +334,10 @@ def shift_max(rng: random.Random, seed: int, *, a=None, b=None, k=None,
                                                     k, 2 * a)),
     }
     order = ["no_coef", "minus_coef", "minus_plain", "double"]
-    why = (f"f is greatest at t = {num(b)}/{num(2 * a)} = {num(t)}, where it equals "
-           f"{num(a)}({num(t)})², so g is greatest at {num(k)} + {num(a)}({num(t)})².")
+    raw = f"{num(b)}/{num(2 * a)}"
+    at = raw if raw == num(t) else f"{raw} = {num(t)}"
+    why = (f"f is greatest at t = {at}, where it equals {num(a)}({num(t)})², so g is "
+           f"greatest at {num(k)} + {num(a)}({num(t)})².")
     P = {"kind": "nlf_shift_max", "a": [a.numerator, a.denominator],
          "b": [b.numerator, b.denominator], "k": [k.numerator, k.denominator]}
     return text_item("nlfunc.shift_max", "a maximum written as an expression", "hard",
@@ -380,7 +381,7 @@ def quad_must_be_true(rng: random.Random, seed: int, *, b=None, p=None, qv=None,
     for combo, text in MUST_ANSWERS.items():
         if text == key:
             continue
-        pool[text] = (f"claims {text.lower()}, which the printed facts do not force",
+        pool[text] = (f"claims {text}, which the printed facts do not force",
                       pair(text, 1 if combo[0] else 0, 1 if combo[1] else 0))
     order = [t_ for t_ in ("I only", "II only", "I and II", "Neither I nor II")
              if t_ != key]
@@ -506,8 +507,8 @@ def quad_fit(rng: random.Random, seed: int, *, mode=None, y0=None, k=None, h=Non
                 raise ItemError("every printed distance must land on a tenth")
         stem = FIT_POINTS.format(t1=dec(t1, 1), d1=dec(d1, 1), t2=dec(t2, 1),
                                  d2=dec(d2, 1), t3=dec(t3, 1))
-        why = (f"Fitting d = at² + bt to the two readings gives a = {num(a)} and "
-               f"b = {num(b)}, so d({dec(t3, 1)}) = {num(key)}.")
+        why = (f"Fitting d = at² + bt to the two readings gives a = {dec(a)} and "
+               f"b = {dec(b)}, so d({dec(t3, 1)}) = {dec(key, 1)}.")
         P = {"kind": "nlf_quad_fit", "mode": mode,
              "t1": [t1.numerator, t1.denominator], "d1": [d1.numerator, d1.denominator],
              "t2": [t2.numerator, t2.denominator], "d2": [d2.numerator, d2.denominator],
@@ -527,8 +528,10 @@ def quad_fit(rng: random.Random, seed: int, *, mode=None, y0=None, k=None, h=Non
     key = a * x0 ** 2 + peak
     if abs(key) >= 100000:
         raise ItemError("the answer would be too long to grid in")
-    why = (f"The table is symmetric about x = {num(x0)}, so {name}(x) = "
-           f"{num(a)}(x {MINUS} {num(x0)})² + {num(peak)} and {name}(0) = {num(key)}.")
+    head = f"{num(a)}" if abs(a) != 1 else ("" if a == 1 else MINUS)
+    shape = signed(f"{head}(x {MINUS} {num(x0)})²", peak)
+    why = (f"The table is symmetric about x = {num(x0)}, so {name}(x) = {shape} and "
+           f"{name}(0) = {num(key)}.")
     P = {"kind": "nlf_quad_fit", "mode": "table", "x0": [x0.numerator, x0.denominator],
          "step": [step.numerator, step.denominator], "a": [a.numerator, a.denominator],
          "peak": [peak.numerator, peak.denominator], "s": [s.numerator, s.denominator]}

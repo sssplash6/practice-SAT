@@ -124,8 +124,10 @@ def evaluate(rng: random.Random, seed: int, *, form=None, name=None, frame=None,
             "difference": ("subtracted the input instead of dividing by it", k - x0),
         }
         order = ["inverted", "numerator", "input", "difference"]
-        why = (f"{name}(x) = {num(k)}/x, so {name}({num(x0)}) = {num(k)}/{num(x0)} = "
-               f"{num(key)}.")
+        quotient = f"{num(k)}/{num(x0)}"
+        why = (f"{name}(x) = {num(k)}/x, so {name}({num(x0)}) = {quotient}."
+               if quotient == num(key) else
+               f"{name}(x) = {num(k)}/x, so {name}({num(x0)}) = {quotient} = {num(key)}.")
         skill = "evaluating a rational function"
 
     elif form == "ratio_quad":
@@ -208,9 +210,13 @@ def exp_evaluate(rng: random.Random, seed: int, *, a=None, base=None, x0=None,
     a = q(a if a is not None else rng.choice([2, 3, 4, 5, 6, 10, 270, 500]))
     base = q(base if base is not None else rng.choice(
         [2, 3, 4, 5, Q(1, 10), Q(1, 2)]))
-    x0 = q(x0 if x0 is not None else rng.randint(0, 3))
+    x0 = q(x0 if x0 is not None else rng.choice([0, 2, 3]))
     if a <= 0 or base <= 0 or base == 1:
         raise ItemError("an exponential needs a positive base other than 1")
+    if x0 == 1:
+        # at an exponent of 1 the coefficient, the base and the product all
+        # coincide, so three of the four misconceptions print the key
+        raise ItemError("an exponent of 1 collapses the wrong answers onto the key")
     body = f"{num(a)}({dec(base, places) if places is not None else num(base)}^x)" \
         if bracket else f"{num(a)}({dec(base, places) if places is not None else num(base)})^x"
     rule = fn(name, "x", body)
@@ -291,7 +297,8 @@ def solve_value(rng: random.Random, seed: int, *, mode=None, k=None, m=None,
             "root_double_energy": ("took the square root of twice the energy without "
                                    "dividing by the mass", None),
             "half_energy": ("halved the energy instead of doubling it",
-                            energy / (2 * mass)),
+                            energy / (2 * mass)
+                            if (energy / (2 * mass)).denominator == 1 else None),
         }
         root2 = _int_sqrt(2 * energy)
         if root2 is not None:
