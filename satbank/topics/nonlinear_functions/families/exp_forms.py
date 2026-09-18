@@ -101,13 +101,18 @@ def exp_rate(rng: random.Random, seed: int, *, mode=None, a=None, r=None, base=N
     pool = {
         "below": ("chose the range that would make the factor 1 + r negative",
                   pair(f"r < {MINUS}1", -2)),
+        "below_pair": ("chose a range in which 1 + r is negative, so the population "
+                       "would change sign from one year to the next",
+                       pair(f"{MINUS}2 < r < {MINUS}1", -3)),
         "neg": ("chose a negative r where the population is rising",
                 pair(f"{MINUS}1 < r < 0", -1)),
         "pos": ("chose a positive r where the population is falling", pair("0 < r < 1", 1)),
         "big": ("chose r > 1, which would more than double the population each year",
                 pair("r > 1", 2)),
     }
-    order = (["below", "neg", "big"] if rising else ["below", "pos", "big"])
+    # a free draw needs a second range that opens with a minus sign, or the key
+    # is the only option of its printed shape
+    order = ["below_pair", "pos", "big"]
     why = (f"The factor 1 + r must be {'greater' if rising else 'less'} than 1 but "
            f"{'' if rising else 'still '}positive, so "
            f"{'r is between 0 and 1' if rising else 'r is between −1 and 0'}.")

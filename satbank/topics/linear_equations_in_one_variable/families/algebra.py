@@ -21,7 +21,7 @@ from ....item import Item, ItemError, Mis
 from ....expr import sign_join
 from . import forms
 from .kit import (VARS, choices, dec, eq_of, griddable, num, over, paren,
-                  sent, side, term)
+                  pick, sent, side, term)
 
 __all__ = ["solve", "distribute", "then_value", "chunk", "reciprocal"]
 
@@ -47,55 +47,110 @@ def _stem(frame: str, eq: str, v: str) -> str:
 
 # ------------------------------------------------------------------ mistakes
 
-def _solve_mistakes(shape: str, p: dict, A: Q, C: Q, key: Q) -> list[Mis]:
-    """Wrong values a student actually produces when solving for the unknown."""
+def _solve_mistakes(shape: str, p: dict, A: Q, C: Q, key: Q) -> dict[str, Mis]:
+    """The wrong values a student actually produces when solving for the unknown.
+
+    A named pool rather than a list, so a source item can ask for the three
+    College Board printed instead of taking whichever three `assemble` happens
+    to prefer. See TOPIC-GUIDE, "Naming the distractors a source item printed".
+    """
     g = lambda k, d=0: Q(p.get(k, d))                                   # noqa: E731
     D = _shown_rhs(shape, p)
-    M: list[Mis] = []
+    M: list[tuple[str, Mis]] = []
 
     if shape == "over":
         a, den = g("a"), g("den", 1)
-        M += [Mis("multiplied by the fraction instead of dividing by it", C * A),
-              Mis("added the numerator to the right side instead of dividing", C + a),
-              Mis("subtracted the denominator instead of multiplying by it", C - den),
-              Mis("divided by the numerator but never multiplied by the denominator", C / a),
-              Mis("multiplied by the denominator but never divided by the numerator", C * den)]
+        M += [("times_coefficient",
+               Mis("multiplied by the fraction instead of dividing by it", C * A)),
+              ("add_numerator",
+               Mis("added the numerator to the right side instead of dividing", C + a)),
+              ("sub_denominator",
+               Mis("subtracted the denominator instead of multiplying by it", C - den)),
+              ("over_numerator",
+               Mis("divided by the numerator but never multiplied by the denominator",
+                   C / a)),
+              ("times_denominator",
+               Mis("multiplied by the denominator but never divided by the numerator",
+                   C * den))]
     elif shape == "split":
-        d1, d2 = Q(1) / g("f1"), Q(1) / g("f2")
-        M += [Mis("reported the combined coefficient instead of the value of the unknown", A),
-              Mis("subtracted the denominators instead of finding a common denominator",
-                  C * (d1 - d2) if d1 != d2 else None),
-              Mis("divided by the second coefficient only", C / g("f2")),
-              Mis("added the two coefficients instead of subtracting them",
-                  C / (g("f1") + g("f2")) if g("f1") + g("f2") else None)]
+        f1, f2 = g("f1"), g("f2")
+        d1, d2 = Q(1) / f1, Q(1) / f2
+        M += [("combined_coefficient",
+               Mis("reported the combined coefficient instead of the value of the "
+                   "unknown", A)),
+              ("denominator_difference",
+               Mis("subtracted the denominators instead of finding a common "
+                   "denominator", C * (d1 - d2) if d1 != d2 else None)),
+              ("second_coefficient",
+               Mis("divided by the second coefficient only", C / f2)),
+              ("coefficient_sum",
+               Mis("added the two coefficients instead of subtracting them",
+                   C / (f1 + f2) if f1 + f2 else None)),
+              # The shape prints as a subtraction, so the two terms a student
+              # may work with alone carry different signs: the coefficient of
+              # the second one is negative. Whichever term is kept, dividing by
+              # its coefficient lands on the key's own side of zero for one of
+              # the two -- so a negative key always has a plain negative among
+              # the wrong answers and is never the only minus sign on the page.
+              ("subtracted_term",
+               Mis("divided by the coefficient of the subtracted term, keeping its "
+                   "minus sign, and ignored the first term", C / -f2)),
+              ("first_term",
+               Mis("divided by the coefficient of the first term and ignored the "
+                   "term subtracted from it", C / f1))]
     elif g("b") == 0 and shape == "standard" and D is not None:
-        M += [Mis("subtracted the coefficient instead of dividing by it", C - A),
-              Mis("added the coefficient instead of dividing by it", C + A),
-              Mis("multiplied by the coefficient instead of dividing by it", C * A),
-              Mis("reported the number on the right side of the equation", D)]
+        M += [("sub_coefficient",
+               Mis("subtracted the coefficient instead of dividing by it", C - A)),
+              ("add_coefficient",
+               Mis("added the coefficient instead of dividing by it", C + A)),
+              ("times_coefficient",
+               Mis("multiplied by the coefficient instead of dividing by it", C * A)),
+              ("right_side",
+               Mis("reported the number on the right side of the equation", D))]
     else:
         b = g("b")
         if D is not None:
-            M += [Mis("added the constant instead of subtracting it when moving it "
-                      "across the equals sign", (D + b) / A),
-                  Mis("subtracted the coefficient instead of dividing by it", C - A),
-                  Mis("reported the number on the right side of the equation", D),
-                  Mis("forgot to divide by the coefficient of the unknown", C),
-                  Mis("divided the constant by the coefficient and stopped",
-                      b / A if A else None)]
+            M += [("add_constant",
+                   Mis("added the constant instead of subtracting it when moving it "
+                       "across the equals sign", (D + b) / A)),
+                  ("sub_coefficient",
+                   Mis("subtracted the coefficient instead of dividing by it", C - A)),
+                  ("right_side",
+                   Mis("reported the number on the right side of the equation", D)),
+                  ("no_divide",
+                   Mis("forgot to divide by the coefficient of the unknown", C)),
+                  ("constant_over_coefficient",
+                   Mis("divided the constant by the coefficient and stopped",
+                       b / A if A else None)),
+                  # Dividing by the coefficient is the step a student remembers;
+                  # clearing the constant first is the one they skip. The answer
+                  # then takes its sign from the coefficient, as the key does,
+                  # which is what a negative key needs beside it on the page
+                  # when multiplying by the coefficient lands back on the key.
+                  ("divide_before_moving",
+                   Mis("divided the right side by the coefficient without first "
+                       "moving the constant across", D / A))]
         else:
-            M += [Mis("forgot to divide by the coefficient of the unknown", C),
-                  Mis("changed the sign when moving a term across the equals sign", -key),
-                  Mis("multiplied by the coefficient instead of dividing by it", C * A)]
+            M += [("no_divide",
+                   Mis("forgot to divide by the coefficient of the unknown", C)),
+                  ("sign_flip",
+                   Mis("changed the sign when moving a term across the equals sign",
+                       -key)),
+                  ("times_coefficient",
+                   Mis("multiplied by the coefficient instead of dividing by it", C * A))]
     if shape != "split":
-        M += [Mis("multiplied by the coefficient instead of dividing by it", C * A),
-              Mis("changed the sign when moving a term across the equals sign", -key),
-              Mis("divided the coefficient by the constant instead of the other way "
-                  "round", Q(1) / key if key else None)]
+        M += [("times_coefficient",
+               Mis("multiplied by the coefficient instead of dividing by it", C * A)),
+              ("sign_flip",
+               Mis("changed the sign when moving a term across the equals sign", -key)),
+              ("reciprocal",
+               Mis("divided the coefficient by the constant instead of the other way "
+                   "round", Q(1) / key if key else None))]
     if shape == "standard" and g("c") != 0:
-        M.insert(0, Mis("added the two variable terms instead of subtracting one from "
-                        "the other", C / (g("a") + g("c")) if g("a") + g("c") else None))
-    return [m for m in M if m.value is not None]
+        M.insert(0, ("added_variable_terms",
+                     Mis("added the two variable terms instead of subtracting one from "
+                         "the other", C / (g("a") + g("c")) if g("a") + g("c") else None)))
+    return {n: m for n, m in M if m.value is not None}
 
 
 def _dist_mistakes(shape: str, p: dict, A: Q, C: Q, key: Q) -> list[Mis]:
@@ -122,8 +177,40 @@ def _dist_mistakes(shape: str, p: dict, A: Q, C: Q, key: Q) -> list[Mis]:
               Mis("forgot to divide by the combined coefficient of the unknown", C),
               Mis("changed the sign when moving a term across the equals sign", -key)]
     M += [Mis("multiplied by the combined coefficient instead of dividing by it", C * A),
-          Mis("reported the combined coefficient of the unknown rather than its value", A)]
+          Mis("reported the combined coefficient of the unknown rather than its value", A),
+          Mis("moved the constant across the equals sign without changing its sign",
+              _kept_sign(shape, p, A, C))]
     return [m for m in M if m.value is not None]
+
+
+def _kept_sign(shape: str, p: dict, A: Q, C: Q):
+    """Solving after moving the left-hand constant across without negating it.
+
+    The classic sign error, and the one wrong answer of this family that keeps
+    the key's own denominator: the coefficient is gathered correctly, only the
+    constant is wrong, so the answer is a fraction over the same A the key is
+    over. Every other mistake here lands on a whole number or on -key, which is
+    why a fractional key used to be the only option of its shape on the page.
+
+    `two_paren` is left out: its whole constant is the term being moved, so
+    keeping its sign is exactly -key, which the pool already names.
+    """
+    g = lambda k, d=0: Q(p.get(k, d))                                   # noqa: E731
+    if A == 0:
+        return None
+    if shape == "sum_left":                 # a*v + b(v + c) = d
+        moved = -g("b") * g("c")
+    elif shape == "paren_right":            # a*v + b = c(v + d) + e
+        moved = -g("b")
+    elif shape == "paren_sum":              # a(b*v + c) + d*v = e + f*v
+        moved = -g("a") * g("c")
+    elif shape == "paren_both":             # a(b*v + c) + d = e(v + f) + g
+        moved = -g("d") - g("a") * g("c")
+    else:
+        return None
+    if moved == 0:
+        return None
+    return (C - 2 * moved) / A
 
 
 def _partial(shape: str, p: dict):
@@ -168,7 +255,7 @@ def _build_solve(rng, seed, shape, p, var, frame, fmt, decimal, mistakes,
 
 
 def solve(rng: random.Random, seed: int, *, shape=None, var=None, frame=None,
-          fmt=None, decimal=False, dec_opts=False, **kw) -> Item:
+          fmt=None, decimal=False, dec_opts=False, wrongs=None, **kw) -> Item:
     """A gathered linear equation, solved for its unknown."""
     shape = shape or rng.choice(SOLVE_SHAPES)
     var = var or rng.choice(VARS)
@@ -180,7 +267,7 @@ def solve(rng: random.Random, seed: int, *, shape=None, var=None, frame=None,
     key = C / A
     if key == 0:
         raise ItemError("a zero solution makes half the distractors collapse")
-    mistakes = _solve_mistakes(shape, p, A, C, key)
+    mistakes = pick(_solve_mistakes(shape, p, A, C, key), wrongs)
     if fmt == "spr" and not griddable(key):
         raise ItemError("this grid-in answer would not be enterable")
     return _build_solve(rng, seed, shape, p, var, frame, fmt, decimal, mistakes,

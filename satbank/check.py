@@ -42,6 +42,19 @@ class Result:
     detail: list[str]
 
 
+def _first(bad: list[str], n: int) -> list[str]:
+    """The first `n` failures, and how many were not shown.
+
+    A silently truncated list reads as the whole truth. One topic had a
+    template failing at ordinary depth for weeks that never once appeared,
+    because ten other messages filled every slot -- so the count is part of the
+    report, not a nicety.
+    """
+    if len(bad) <= n:
+        return bad
+    return bad[:n] + [f"... and {len(bad) - n:,} more not shown"]
+
+
 # "the table above", "the table shows" -- but not "the graph of the equation
 # above", which points at a line of the stem, and not "each of the following
 # tables", where the tables are the options themselves
@@ -146,7 +159,7 @@ def _transcript(topic: Topic, key: dict, tr: dict) -> Result:
         # nobody can answer -- the commonest way a transcription goes wrong
         if TABLE_REF.search(rec.get("stem", "")) and not rec.get("table"):
             detail.append(f"{it['id']} points at a table that was not transcribed")
-    return Result("transcript", not detail, f"{len(tr)}/{len(key['items'])} items", detail[:20])
+    return Result("transcript", not detail, f"{len(tr)}/{len(key['items'])} items", _first(detail, 20))
 
 
 def _acceptance(topic: Topic, key: dict, tr: dict) -> Result:
@@ -191,7 +204,7 @@ def _acceptance(topic: Topic, key: dict, tr: dict) -> Result:
         detail.append(f"only {share:.0%} of College Board's own distractors are "
                       f"reproduced; the floor is {MIN_OFFICIAL_OPTIONS:.0%} -- the wrong "
                       "answers are invented rather than modelled")
-    return Result("acceptance", not detail and ok == len(topic.sources), stat, detail[:20])
+    return Result("acceptance", not detail and ok == len(topic.sources), stat, _first(detail, 20))
 
 
 def _volume(topic: Topic, per_template: int) -> tuple[Result, Result, Result, list]:
@@ -225,10 +238,10 @@ def _volume(topic: Topic, per_template: int) -> tuple[Result, Result, Result, li
     if total and share < MIN_NAMED_DISTRACTORS:
         struct_bad.append(f"only {share:.0%} of distractors name a misconception; "
                           f"the floor is {MIN_NAMED_DISTRACTORS:.0%}")
-    return (Result("audit", not audit_bad, f"{made:,} items re-derived", audit_bad[:10]),
+    return (Result("audit", not audit_bad, f"{made:,} items re-derived", _first(audit_bad, 10)),
             Result("structure", not struct_bad,
-                   f"{share:.0%} of distractors named", struct_bad[:10]),
-            Result("prose", not prose_bad, f"{made:,} items read", prose_bad[:10]),
+                   f"{share:.0%} of distractors named", _first(struct_bad, 10)),
+            Result("prose", not prose_bad, f"{made:,} items read", _first(prose_bad, 10)),
             items)
 
 

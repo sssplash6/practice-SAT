@@ -22,7 +22,7 @@ __all__ = ["substitute", "context_substitute", "mixture_solve"]
 
 def _article(text: str) -> str:
     """'a 973-square-inch' but 'an 840-square-inch': the sound, not the letter."""
-    lead = text.lstrip("-").replace(",", "")
+    lead = text.lstrip("-\N{MINUS SIGN}").replace(",", "")
     return "an" if lead[:1] == "8" or lead[:2] == "11" or lead[:2] == "18" else "a"
 
 

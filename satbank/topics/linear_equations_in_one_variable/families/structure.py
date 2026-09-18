@@ -419,7 +419,11 @@ def zero_chunk(rng: random.Random, seed: int, *, var=None, c=None, p=None, q=Non
         mistakes.append(Mis(why, text))
     if key is None or len(mistakes) != 3:
         raise ItemError("the ranges do not make a usable option set")
-    if not any(m.value.strip().startswith("-") for m in mistakes):
+    # Both minus signs: the ranges are printed by `num`, which spells the sign
+    # as an ASCII hyphen, but every other printed surface in the engine is
+    # typeset with U+2212. Reading only one of them is how a guard like this
+    # goes quietly blind to the negatives it exists to count.
+    if not any(m.value.strip().startswith(("-", "\N{MINUS SIGN}")) for m in mistakes):
         raise ItemError("the key would be the only range that starts negative")
 
     eq = eq_of(f"({inner})/{num(p)}", f"({inner})/{num(q)}")

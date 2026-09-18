@@ -362,7 +362,12 @@ def table_facts(rng: random.Random, seed: int, *, m=None, b=None, xs=None, x0=No
                         "of by the change in x",
                         y_near + (ys[-1] - y_near) / x_ask if x_ask != 0 else None),
                     Mis("gave the value from the nearest row of the table", y_near),
-                    Mis("added the slope to the wrong row", ys[-1] + m)]
+                    Mis("added the slope to the wrong row", ys[-1] + m),
+                    # the sign slip lands on the key's own surface -- it moves the
+                    # answer by 2mx and nothing else, so it carries the key's
+                    # denominator, which the five mistakes above need not
+                    Mis("subtracted the outputs in the wrong order, giving the slope "
+                        "the wrong sign", -m * x_ask + b)]
     elif ask == "intercept":
         key = b
         stem = (f"For the linear function {name}, the table shows {_count(rows)} values of "
@@ -384,7 +389,15 @@ def table_facts(rng: random.Random, seed: int, *, m=None, b=None, xs=None, x0=No
                     Mis("used the change in the outputs without dividing by the step in x",
                         ys[1] - ys[0]),
                     Mis("changed the sign of the slope", -m),
-                    Mis("gave the constant term instead of the slope", b)]
+                    Mis("gave the constant term instead of the slope", b),
+                    # when the rows step by one, "used the change in the outputs
+                    # without dividing" lands on the slope itself and drops out as a
+                    # duplicate, leaving no wrong option that reads like a slope. This
+                    # one always does: it is a whole multiple of m, so it carries the
+                    # key's sign and its integer surface whatever the table's step
+                    Mis("divided the change in the outputs across the whole table by "
+                        "the step between two consecutive rows",
+                        (ys[-1] - ys[0]) / step if rows > 2 else None)]
     else:
         key = m - b
         stem = (f"For the linear function {name}, the table shows {_count(rows)} values of "

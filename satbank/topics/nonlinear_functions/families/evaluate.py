@@ -142,13 +142,22 @@ def evaluate(rng: random.Random, seed: int, *, form=None, name=None, frame=None,
         key = top / bottom
         rule = fn(name, "x", f"({poly_text([c, b, 1])})/({poly_text([d, 1])})")
         pool = {
+            "inverted": ("inverted the quotient, dividing the denominator by the "
+                         "numerator", bottom / top if top != 0 else None),
             "sign": ("changed the sign of the quotient", -key),
             "denominator": ("gave the denominator rather than the quotient", bottom),
             "abs_denominator": ("gave the denominator with its sign dropped",
                                 abs(bottom)),
             "numerator": ("gave the numerator rather than the quotient", top),
+            "no_constant": ("left the constant term out of the numerator before "
+                            "dividing", (top - c) / bottom),
+            "square_as_double": ("read x² as 2x in the numerator",
+                                 (2 * x0 + b * x0 + c) / bottom),
         }
-        order = ["sign", "denominator", "abs_denominator", "numerator"]
+        # the inverted quotient leads, because it always carries the key's own
+        # sign: a fractional key is then never the only fraction of its sign
+        order = ["inverted", "sign", "denominator", "abs_denominator",
+                 "no_constant", "square_as_double", "numerator"]
         why = (f"At x = {num(x0)} the numerator is {num(top)} and the denominator is "
                f"{num(bottom)}, so {name}({num(x0)}) = {num(key)}.")
         skill = "evaluating a rational function"

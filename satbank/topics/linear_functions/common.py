@@ -148,10 +148,16 @@ def money(v) -> str:
 
 
 def _surface(opt: str) -> tuple:
-    """What an option looks like at a glance -- the same signature the gate uses."""
+    """What an option looks like at a glance -- the same signature the gate uses.
+
+    Both minus signs count. An Exact prints the typeset U+2212 and this topic's
+    own renderers (`numtext`, `dec`, `money`) print the ASCII hyphen, so reading
+    only one of them would leave this guard blind to negatives -- which is the
+    one surface it exists to watch.
+    """
     return (bool(re.search(r"[a-zA-Z]", opt.replace("pi", "").replace("\u03c0", ""))),
             "\u03c0" in opt or "pi" in opt, "\u221a" in opt or "sqrt" in opt,
-            "/" in opt, "." in opt, opt.strip().startswith("-"))
+            "/" in opt, "." in opt, opt.strip().startswith(("-", "\u2212")))
 
 
 def choose(key, mistakes, rng, **kw):

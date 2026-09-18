@@ -56,6 +56,8 @@ def infinite_constant(rng: random.Random, seed: int, *, a=None, b=None, c=None,
                     c / k),
         "negate": Mis("moved the constant across the equals sign without changing its "
                       "sign", -key),
+        "neg_constant": Mis("never scaled the constant and changed its sign on the "
+                            "way across the equals sign", -c),
     }
     P = {"kind": "sys_infinite_constant", "a": _p(a), "b": _p(b), "c": _p(c),
          "k": _p(k)}
@@ -110,6 +112,15 @@ def infinite_normalized(rng: random.Random, seed: int, *, shape=None, p=None, r=
             "scaled_const": Mis("scaled the constant instead of the coefficient of x",
                                 s / r),
             "negate": Mis("scaled correctly but changed the sign", -key),
+            "doubled": Mis("scaled the first equation by twice the factor that turns "
+                           "its y-term into y, and read the coefficient of x off "
+                           "that", 2 * key),
+            "const_over_x": Mis("divided the constant by the coefficient of x instead "
+                                "of dividing the coefficient of x by the coefficient "
+                                "of y", s / p),
+            "neg_scaled_const": Mis("scaled the constant instead of the coefficient of "
+                                    "x, and changed its sign on the way across",
+                                    -s / r),
         }
         rationale = sent(f"Multiplying {eq1} by {num(1 / r)} makes its y-term y, and "
                          f"the x-term becomes {coef(key, 'x')}, so {letter} = "
@@ -145,6 +156,9 @@ def infinite_normalized(rng: random.Random, seed: int, *, shape=None, p=None, r=
                                      "then read the constant off the cleared equation",
                                      key * (m.denominator if ask == "b"
                                             else m.numerator)),
+            "doubled": Mis(f"doubled the given equation to build the second one and "
+                           f"read the {named} off it, without dividing by the "
+                           f"doubled coefficient of y", 2 * key),
         }
         rationale = sent(f"Two equations have every solution in common only when they "
                          f"are the same line, so y = mx + b has to be {eq1}, giving "
@@ -181,8 +195,11 @@ def no_solution_slope(rng: random.Random, seed: int, *, m=None, b1=None, b2=None
         raise ItemError("a horizontal line leaves nothing for the constant to match")
     key = m
     eq1 = solved(1, "y", m, "x", b1)
-    eq2 = f"y = {letter}x + {num(b2)}" if b2 > 0 else \
-          f"y = {letter}x {MINUS} {num(-b2)}"
+    if b2 == 0:
+        eq2 = f"y = {letter}x"
+    else:
+        eq2 = f"y = {letter}x + {num(b2)}" if b2 > 0 else \
+              f"y = {letter}x {MINUS} {num(-b2)}"
     stem = displayed(eq1, eq2,
                      sent(f"In the system of equations above, {letter} is a constant. "
                           f"If the system has no solution, what is the value of "
@@ -198,6 +215,7 @@ def no_solution_slope(rng: random.Random, seed: int, *, m=None, b1=None, b2=None
         "neg": Mis("copied the coefficient of x but changed its sign", -m),
         "const": Mis("matched the constant terms instead of the coefficients of x",
                      b2),
+        "doubled": Mis("doubled the coefficient of x instead of matching it", 2 * m),
     }
     P = {"kind": "sys_no_solution_slope", "m": _p(m), "b1": _p(b1), "b2": _p(b2)}
     rationale = sent(f"Two lines miss each other only when they rise at the same rate "

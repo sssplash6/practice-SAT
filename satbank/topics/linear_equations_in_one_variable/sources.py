@@ -56,8 +56,13 @@ ALL: list[Source] = [
       "source lists its options in descending order"),
     S("1.12", lambda r: then_value(r, 0, shape="over", a=2, den=5, d=10, var="n",
                                    m=2, k=-1, fmt="mcq")),
+    # -4, 1/3, 6: the three College Board printed, named because the pool now
+    # also holds integer wrong answers that `assemble` would otherwise prefer
+    # over the fraction this item actually offers.
     S("1.13", lambda r: solve(r, 0, shape="split", f1=F(1, 2), f2=F(1, 6), d=1,
-                              var="x", frame="if_value", fmt="mcq")),
+                              var="x", frame="if_value", fmt="mcq",
+                              wrongs=["denominator_difference", "combined_coefficient",
+                                      "second_coefficient"])),
     S("1.14", lambda r: then_value(r, 0, shape="standard", a=1, b=2, c=0, d=60,
                                    cf_l=True, var="x", m=8, k=16, cf_expr=True,
                                    fmt="spr")),

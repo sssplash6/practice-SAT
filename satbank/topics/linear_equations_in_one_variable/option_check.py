@@ -1028,7 +1028,8 @@ def selftest() -> int:
     #    with one value written another way
     item = _draw("lin1.identity_pair")
     key = item.choices[keyed(item)]
-    item.choices[(keyed(item) + 1) % 4] = re.sub(r"= (-?\d+) and", r"= \1.0 and", key)
+    item.choices[(keyed(item) + 1) % 4] = re.sub(r"= ([-\u2212]?\d+) and",
+                                                 r"= \1.0 and", key)
     cases.append(("the key's pair written twice", item, CHECKS["lin1.identity_pair"]))
 
     # 4. two options that give the same solution count, spelled differently

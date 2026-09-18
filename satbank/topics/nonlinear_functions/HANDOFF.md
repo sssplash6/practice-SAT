@@ -9,9 +9,9 @@ Nonlinear Functions  [nonlinear_functions]  PASS
     ok   transcript  110/110 items
     ok   acceptance  105/105 answers, 96% of official distractors recreated, 76/84 option sets complete
     ok   audit       10,800 items re-derived
-    ok   structure   99% of distractors named
+    ok   structure   100% of distractors named
     ok   prose       10,800 items read
-    ok   capacity    33,577+ distinct items
+    ok   capacity    33,572+ distinct items
 ```
 
 `option_check.py`: 33 templates with options, 400 draws each, **11,877 items
@@ -143,6 +143,44 @@ not connected)
 23. An axis could be drawn with twenty-eight labels on it; label density is now
     thinned automatically, and the origin's `O` is dropped when the units are
     too narrow for it to clear the `−1` label.
+
+## The lone-key defect the typeset minus exposed (fixed)
+
+`Exact.plain()` now prints U+2212 and `check._shape` now reads both sign
+characters. That made visible a guessability defect the structure check had
+never been able to see: **the key was the only option of its printed shape** in
+three templates, because the other three options formed a crowd it stood out
+from.
+
+| template | example | why the key stood alone |
+|---|---|---|
+| `nlfunc.evaluate` (quotient form) | `−13/2, 4, 13/2, 26`, keyed `13/2` | the wrong answers were the numerator, the denominator and the key's own negative: two integers and a fraction of the *other* sign, so the key was the only positive fraction |
+| `nlfunc.vertex_value` (standard form, location) | `−43, −43/2, 0, 43/2`, keyed `−43/2` | `−b/a`, `c` and `b/(2a)` leave `−b/(2a)` the only fraction of its sign |
+| `nlfunc.exp_rate` (sign of r) | `r < −1, −1 < r < 0, 0 < r < 1, r > 1`, keyed `−1 < r < 0` | the only range that opens with a minus sign |
+
+Fixed in the distractor pools, not in the check and not by rejecting draws.
+Each pool gained a named misconception that lands on the key's own surface, and
+the default order leads with it:
+
+* `inverted` — "inverted the quotient, dividing the denominator by the
+  numerator". It always carries the key's own sign, so a fractional key is
+  never the only fraction of its sign. Two more honest quotient mistakes were
+  added alongside it (`no_constant`, `square_as_double`).
+* `swap_coefs` — "swapped the two coefficients in −b/(2a)", giving −a/(2b),
+  which likewise always carries the key's sign.
+* `below_pair` — `−2 < r < −1`, "chose a range in which 1 + r is negative, so
+  the population would change sign from one year to the next". A range that
+  merely *contains* the answer, such as `−1 < r < 1`, was rejected as a
+  distractor: under "which must be true" it would have been a second correct
+  option.
+
+Source items name their own `wrongs=` and were not disturbed — 1.5, 3.8 and 3.9
+still print College Board's own four options, and the acceptance figures are
+unchanged at 105/105 and 96%. The local guard in `common._surface` was also
+re-aligned with the corrected `check._shape`: it had been reading the ASCII
+hyphen only, which is exactly the blindness the core fix removed from the gate.
+Distractors named rose from 99% to 100%, because the new entries displaced the
+last of the generic fillers.
 
 ## Live defects `option_check.py` found (all fixed)
 

@@ -42,7 +42,18 @@ def _eval_mistakes(m: Q, b: Q, x0: Q, key: Q, form: str, wrong: str,
                 Mis("added the coefficient and the input instead of multiplying them",
                     (a + x0) / d),
                 Mis("divided only the constant term by the denominator", a * x0 + c / d),
-                Mis("subtracted the constant instead of adding it", (a * x0 - c) / d)]
+                Mis("subtracted the constant instead of adding it", (a * x0 - c) / d),
+                # the mirror of "divided only the constant term": it divides the x-term
+                # and leaves the constant whole, so it keeps the denominator d the key
+                # is printed over instead of clearing it
+                Mis("divided only the coefficient of x by the denominator",
+                    (a / d) * x0 + c),
+                Mis("substituted the input without its negative sign",
+                    (a * abs(x0) + c) / d),
+                Mis("divided by the coefficient of x instead of by the denominator",
+                    (a * x0 + c) / a),
+                Mis("inverted the fraction, dividing the denominator by the value of "
+                    "the numerator", d / (a * x0 + c) if a * x0 + c != 0 else None)]
     if form == "constant_first":
         k = -m
         M = [Mis("subtracted the coefficient instead of the whole product", b - k),

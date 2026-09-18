@@ -225,9 +225,14 @@ _LETTERS = re.compile(r"[a-zA-Z]")
 
 
 def _surface(opt: str) -> tuple:
-    """What an option looks like at a glance -- the signature the gate uses."""
+    """What an option looks like at a glance -- the signature the gate uses.
+
+    Both minus signs count. `num` writes the typeset U+2212 and `opt_dec` the
+    ASCII hyphen, so a test that reads only one of them stops seeing negatives
+    in half the topic while still reporting that it looked.
+    """
     return (bool(_LETTERS.search(opt)), "/" in opt, "." in opt,
-            opt.strip().startswith("-"))
+            opt.strip().startswith(("-", MINUS)))
 
 
 def choices(key, mistakes: list[Mis], rng: random.Random, fmt_value=None):

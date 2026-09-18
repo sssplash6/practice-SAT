@@ -232,10 +232,17 @@ def unambiguous(value, step) -> bool:
 # ------------------------------------------------------------ assembling
 
 def _surface(opt: str) -> tuple:
-    """What an option looks like at a glance -- the gate's own signature."""
+    """What an option looks like at a glance -- the gate's own signature.
+
+    Deliberately the same crude test `check._shape` makes, both sign
+    characters included: a guard stricter than the gate rejects draws the gate
+    would have passed, and a looser one ships them. Reading only the ASCII
+    hyphen here, while the page prints U+2212, is what let a lone positive
+    fraction through before the core began typesetting the minus sign.
+    """
     return (bool(re.search(r"[a-zA-Z]", opt.replace("pi", "").replace("π", ""))),
             "π" in opt or "pi" in opt, "√" in opt or "sqrt" in opt,
-            "/" in opt, "." in opt, opt.strip().startswith("-"))
+            "/" in opt, "." in opt, opt.strip().startswith(("-", MINUS)))
 
 
 def choose(key, mistakes, rng, **kw):

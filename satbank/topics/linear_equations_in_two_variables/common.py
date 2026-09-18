@@ -12,6 +12,7 @@ assembly only, so the solvers in `audit.py` share none of it.
 
 from __future__ import annotations
 
+import itertools
 import re
 from fractions import Fraction as Q
 
@@ -20,8 +21,8 @@ from ...expr import fmt_money, fmt_places
 from ...item import Item, ItemError, Mis, assemble, assemble_text
 
 __all__ = ["q", "ex", "numtext", "dec", "money", "coef_text", "lin_text", "std_text",
-           "term_text", "point_text", "signed_join", "choose", "sig", "pair",
-           "text_item", "GROUP_FROM", "plural"]
+           "term_text", "point_text", "signed_join", "choose", "shortlist",
+           "shortlist_text", "sig", "pair", "text_item", "GROUP_FROM", "plural"]
 
 GROUP_FROM = 1000          # the source prints 1,277.94 and 4,529 but not 641
 
@@ -177,25 +178,121 @@ def pair(text: str, *vals) -> tuple:
 
 
 def _surface(opt: str) -> tuple:
-    """What an option looks like at a glance -- the gate's own signature."""
+    """What an option looks like at a glance -- the gate's own signature.
+
+    A negative is spelled with the typeset minus, U+2212, because that is what
+    `Exact.plain` prints and what the page shows; an option written out by hand
+    here may still carry the ASCII hyphen. Reading only one of the two is how
+    this signature quietly stops seeing negatives at all, which is the single
+    thing it exists to see: a lone negative among three positives is the answer.
+    """
     return (bool(re.search(r"[a-zA-Z]", opt.replace("pi", "").replace("π", ""))),
             "π" in opt or "pi" in opt, "√" in opt or "sqrt" in opt,
-            "/" in opt, "." in opt, opt.strip().startswith("-"))
+            "/" in opt, "." in opt, opt.strip().startswith(("-", "\N{MINUS SIGN}")))
+
+
+def _hands_the_key_over(choices: list[str], letter: str) -> bool:
+    """Do the four printed options give the answer away by their looks alone?
+
+    The giveaway is the key standing alone in its printed shape while the other
+    three form a crowd for it to stand out from -- the only negative, the only
+    fraction, the only radical. Four options that all look different are not a
+    giveaway, because then nothing is lone: every option is the only one of its
+    own shape and the key does not stand out among them.
+    """
+    shapes = [_surface(c) for c in choices]
+    key_i = "ABCD".index(letter)
+    others = [s for i, s in enumerate(shapes) if i != key_i]
+    return shapes.count(shapes[key_i]) == 1 and max(others.count(s) for s in others) > 1
+
+
+def shortlist(key, mistakes: list[Mis], fmt_value=None) -> list[Mis]:
+    """Which three of a named pool print. Signed answers only.
+
+    `assemble` takes the first three wrong answers it can use, preferring ones
+    of the key's own surface form, and for a signed answer that is the wrong
+    three often enough to matter. A perpendicular slope is a negative
+    reciprocal, so the key is a fraction, so the fractions in the pool go in
+    first and the integers -- the given line's own slope among them, which is
+    the error the whole item is about -- are crowded out by weaker mistakes
+    that happen to be fractions too. What prints is then one negative fraction
+    against three options that are not, and a student who knows only that a
+    perpendicular slope is a negative reciprocal picks it without computing
+    anything.
+
+    So the pools here name more mistakes than can print, and this chooses among
+    them, earliest first, so that the most telling misconceptions print
+    whenever they can. A trio is refused when
+
+      * no wrong answer carries the key's sign -- `assemble` would then have to
+        swap one in, and would rather raise than print a lone negative; or
+      * the printed four would hand the key over by their looks.
+
+    Nothing here recomputes or even reads the key's value: the choice is made
+    on how the four options look, which is the property being protected, and
+    every option that prints still carries the misconception that produces it.
+    A source item that names its own three in `wrongs` never reaches this --
+    College Board already chose there.
+    """
+    def printed(v) -> str:
+        return fmt_value(v) if fmt_value else v.plain()
+
+    key = ex(key)
+    pool, seen = [], {key}
+    for m in mistakes:
+        v = ex(m.value)
+        if v in seen:                       # `assemble` would drop it anyway
+            continue
+        seen.add(v)
+        pool.append((m, v, printed(v)))
+    if len(pool) <= 3:
+        return [m for m, _, _ in pool]
+    key_text, negative = printed(key), float(key) < 0
+    for trio in itertools.combinations(pool, 3):
+        if not any((float(v) < 0) == negative for _, v, _ in trio):
+            continue
+        if not _hands_the_key_over([key_text] + [t for _, _, t in trio], "A"):
+            return [m for m, _, _ in trio]
+    return [m for m, _, _ in pool[:3]]
 
 
 def choose(key, mistakes, rng, **kw):
-    """assemble(), with the draw rejected when the key ends up alone in its form.
+    """assemble(), over the three of the pool that print, and never a giveaway.
 
-    A lone negative among three positive options is crossed off without doing
-    any algebra. Every pool here already carries misconceptions that produce a
-    same-signed option, so when none of them survives the right answer is to
-    redraw rather than to invent one.
+    Two steps, and the order is the point. `shortlist` decides which named
+    mistakes print, because a pool that names six and prints three can print
+    the three that leave the key looking like every other option. Only then is
+    the draw refused, when even the best trio in the pool would leave the key
+    alone on the page: that is a thin pool, and the honest answer is to redraw
+    rather than to invent a wrong answer nobody would reach.
     """
+    if kw.get("signed"):
+        mistakes = shortlist(key, mistakes, kw.get("fmt_value"))
     choices, latex, reasons, letter = assemble(key, mistakes, rng, **kw)
-    shapes = [_surface(c) for c in choices]
-    if shapes.count(shapes["ABCD".index(letter)]) == 1:
-        raise ItemError("the key would be the only option of its surface form")
+    if _hands_the_key_over(choices, letter):
+        raise ItemError("the printed options would hand the key over")
     return choices, latex, reasons, letter
+
+
+def shortlist_text(key_text: str, eligible: list[Mis]) -> list[Mis]:
+    """Which three written options print, when the pool names more than three.
+
+    The same choice `shortlist` makes for numeric options, on the same grounds
+    and with none of the sign arithmetic, because a written option has no sign
+    to share. A symbolic slope printed as (2n - 4)/8 beside (n + 4)/(-8) leaves
+    -1/2 the only option on the page with no letter in it, and "changed the
+    sign of the slope" -- which prints as 1/2, and was sitting fourth in a pool
+    where only three can appear -- breaks up the pair that gives it away.
+
+    Earliest first, so the pool's own order still says which mistakes matter
+    most and a pool whose first three already print well is left alone.
+    """
+    if len(eligible) <= 3:
+        return list(eligible)
+    for trio in itertools.combinations(eligible, 3):
+        if not _hands_the_key_over([key_text] + [m.value[0] for m in trio], "A"):
+            return list(trio)
+    return list(eligible[:3])
 
 
 def text_item(template, skill, difficulty, seed, stem, key_text, key_sig, wrong, rng, P,
@@ -209,7 +306,7 @@ def text_item(template, skill, difficulty, seed, stem, key_text, key_sig, wrong,
     which option it belongs to -- so the mathematics is checked head on and the
     rendering as a side effect.
     """
-    picked, seen, sigs = [], {key_text}, {tuple(key_sig)}
+    eligible, seen, sigs = [], {key_text}, {tuple(key_sig)}
     for m in wrong:
         if m.value is None:
             continue
@@ -218,11 +315,10 @@ def text_item(template, skill, difficulty, seed, stem, key_text, key_sig, wrong,
             continue
         seen.add(text)
         sigs.add(tuple(s))
-        picked.append(m)
-        if len(picked) == 3:
-            break
-    if len(picked) < 3:
+        eligible.append(m)
+    if len(eligible) < 3:
         raise ItemError("could not build three distinct written distractors")
+    picked = shortlist_text(key_text, eligible)
     choices, reasons, letter = assemble_text(
         key_text, [Mis(m.reason, m.value[0]) for m in picked], rng)
     by_text = {m.value[0]: m.value[1] for m in picked}

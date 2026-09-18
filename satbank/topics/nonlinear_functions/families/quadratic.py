@@ -170,13 +170,18 @@ def vertex_value(rng: random.Random, seed: int, *, form=None, ask=None, name=Non
             "no_two": ("divided by the coefficient without the factor of 2",
                        -b / a if b != 0 else None),
             "double": ("doubled the answer", 2 * key),
+            "swap_coefs": (f"swapped the two coefficients in {MINUS}b/(2a)",
+                           -a / (2 * b) if (b != 0 and ask == "location") else None),
             "square": ("squared the constant term", c ** 2 if ask == "value" else None),
             "zero": ("assumed the least value of a square is the whole function",
                      q(0) if ask == "value" else None),
             "flip": ("changed the sign of the answer", -key),
         }
-        order = (["no_two", "double", "constant", "flip"] if ask == "location"
-                 else ["zero", "double", "square", "constant", "flip"])
+        # the swapped coefficients always carry the key's own sign, so a
+        # fractional vertex is never the only fraction of its sign
+        order = (["swap_coefs", "no_two", "double", "constant", "flip"]
+                 if ask == "location"
+                 else ["double", "zero", "square", "constant", "flip"])
         why = (f"The vertex of {rule} is at x = {num(-b / (2 * a))}, where "
                f"{name}(x) = {num(c - b ** 2 / (4 * a))}.")
         P = {"kind": "nlf_vertex", "form": form, "ask": ask,

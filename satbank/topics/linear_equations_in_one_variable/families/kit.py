@@ -18,7 +18,7 @@ from ....expr import fmt_frac, fmt_num, sign_join
 from ....item import ItemError, Mis, assemble
 
 __all__ = ["Q", "E", "num", "dec", "term", "side", "paren", "eq_of", "frame_stem",
-           "choices", "sent", "money", "over", "VARS", "FRAMES",
+           "choices", "pick", "sent", "money", "over", "VARS", "FRAMES",
            "griddable", "plainly", "article"]
 
 VARS = ["x", "n", "p", "t", "w", "y", "m", "z", "q", "j"]
@@ -161,27 +161,63 @@ _LETTERS = re.compile(r"[a-zA-Z]")
 
 def _surface(opt: str) -> tuple:
     """What an option looks like at a glance -- the signature the quality gate
-    uses. The sign is part of it: a lone negative key is guessable."""
+    uses. The sign is part of it: a lone negative key is guessable.
+
+    Both minus signs count. Options are printed by `Exact.plain()`, which
+    typesets the sign as U+2212, while a decimal option formatted here still
+    carries the ASCII hyphen. Reading only the hyphen made this guard blind to
+    every negative it exists to catch: a negative key read as positive matched
+    the three positives around it and the draw was waved through.
+    """
     return (bool(_LETTERS.search(opt.replace("pi", "").replace("π", ""))),
             "π" in opt or "pi" in opt, "√" in opt or "sqrt" in opt,
-            "/" in opt, "." in opt, opt.strip().startswith("-"))
+            "/" in opt, "." in opt, opt.strip().startswith(("-", "\N{MINUS SIGN}")))
 
 
-def _sign_first(key: Exact, mistakes: list[Mis]) -> list[Mis]:
-    """Reorder so a distractor that shares the key's sign is offered first.
+def _surface_first(key: Exact, mistakes: list[Mis], fmt_value=None) -> list[Mis]:
+    """Reorder so a distractor printed like the key is offered first.
 
-    `assemble` already refuses to leave the key alone as the only fraction,
-    but it does not see the minus sign, and a negative answer among three
-    positive options can be picked without solving anything.
+    `assemble` refuses to leave the key alone as the only fraction and insists
+    one distractor share its sign, but sign and form are checked separately:
+    a key of −210 sitting among −1/15, 56 and 84 satisfies both and is still
+    the only plain negative on the page. The rule is about the whole printed
+    surface, so rank on the whole printed surface -- same look first, then
+    merely the same sign, then the rest.
+
+    This only reorders the pool; it never invents an option. If the template
+    has named no misconception that lands on the key's surface, `choices`
+    still refuses the draw.
     """
+    show = (lambda v: fmt_value(v)) if fmt_value else (lambda v: v.plain())
+    want = _surface(show(key))
     neg = float(key) < 0
 
     def rank(m: Mis) -> int:
         if m.value is None:
-            return 2
-        return 0 if (float(m.value) < 0) == neg else 1
+            return 3
+        if _surface(show(m.value)) == want:
+            return 0
+        return 1 if (float(m.value) < 0) == neg else 2
 
     return sorted(mistakes, key=rank)
+
+
+def pick(pool: dict, wrongs: list | None) -> list[Mis]:
+    """The misconceptions this draw offers, in the order they are offered.
+
+    A source item names the three College Board actually printed; a free draw
+    gets the whole pool and lets `assemble` choose. Without this a fractional
+    wrong answer the source prints loses its place to an integer one, because
+    `assemble` prefers a distractor shaped like the key.
+    """
+    keys = list(pool) if wrongs is None else list(wrongs)
+    out = []
+    for k in keys:
+        if k not in pool:
+            raise ItemError(f"no misconception named {k!r}")
+        if pool[k].value is not None:
+            out.append(pool[k])
+    return out
 
 
 def _exact(m: Mis) -> Mis:
@@ -199,7 +235,7 @@ def choices(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None)
     """
     mistakes = [_exact(m) for m in mistakes if m.value is not None]
     tried = []
-    for cand in (mistakes, _sign_first(key, mistakes)):
+    for cand in (mistakes, _surface_first(key, mistakes, fmt_value)):
         try:
             built = assemble(key, cand, rng, fmt_value=fmt_value,
                              signed=True, fillers="shift")
