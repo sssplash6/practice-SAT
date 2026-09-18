@@ -11,6 +11,8 @@ off the picture that the numbers do not say.
 
 from __future__ import annotations
 
+from .exact import MINUS
+
 from fractions import Fraction
 
 __all__ = ["scatter", "bar", "histogram", "dotplot", "boxplot", "line_graph", "curve",
@@ -27,8 +29,15 @@ _CSS = (".ax{stroke:currentColor;stroke-width:1.3;fill:none}"
 
 
 def _nice(v: float) -> str:
+    """An axis label as the page prints it, with a typeset minus.
+
+    Python spells a number's sign with the ASCII hyphen, so a chart whose axis
+    runs below zero would label itself in the other spelling from the options
+    beside it.
+    """
     f = float(v)
-    return str(int(round(f))) if abs(f - round(f)) < 1e-9 else f"{f:g}"
+    out = str(int(round(f))) if abs(f - round(f)) < 1e-9 else f"{f:g}"
+    return out.replace("-", MINUS)
 
 
 class _Frame:

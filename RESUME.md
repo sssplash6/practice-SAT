@@ -103,3 +103,70 @@ yourself, and read a page of items** rather than trusting the report.
 8. **Fidelity is only meaningful while it is honest.** Every unreached
    distractor in wave 3 is named item by item rather than reached by inventing
    a misconception to fit the digits.
+
+## Before wave 4 starts — state as of 2026-09-18
+
+All sixteen topics pass the full gate. The four core fixes wave 3 earned are
+done, and they were worth far more than the four lines they looked like.
+
+### Done
+
+* `Exact.plain()`, `expr.fmt_places`, `expr.sign_join`, `figures.coordinate_grid`
+  and `plot._nice` all print the typeset minus, and six topics' renderers with
+  them. The bank now shows one spelling of the sign, verified per item across
+  stem, options, table cells, SVG labels and rationale.
+* `expr.parse(text, names=)` splits a juxtaposed product; `expr.agree` raises
+  instead of silently returning "not equal" when it could read neither side.
+* `check._prose` accepts a solution set's brace and a closing parenthetical.
+* `check` no longer truncates a failure list without saying how many it hid.
+* `assemble` takes `forbid=`: values that are also correct and must never be
+  offered. Its fillers were inventing near-misses (key ± 1) that bypassed every
+  topic's own filter, handing back the other root a template had just struck.
+* 1,825 lone-key draws repaired across 17 templates in 5 topics, every
+  fidelity number unchanged and checked per source item, not by the percentage.
+
+### Still open, in the order I would do it
+
+1. **Promote `shortlist` into `item.assemble`.** Two topics independently built
+   the same thing and the flaw it fixes is `assemble`'s own: `same_form[:3]`
+   prefers the key's surface form, which for a signed answer systematically
+   drops the integer-valued misconceptions — so a perpendicular-slope item
+   printed "multiplied the slope by the y-intercept and inverted that" instead
+   of "gave the given line's own slope", the error the item exists to test.
+   `linear_equations_in_two_variables/common.py` has the general version with
+   the reasoning written down. It composes with `forbid=`: one says which three
+   of the pool print, the other which values never may. It assumes
+   `signed=True`, and by handing over exactly three it takes `_fillers` out of
+   play.
+2. **`lin1.distribute`, `no_solution_constant`, `chunk`** still lean on the
+   restored guard refusing draws (715, 279 and 160 per 4,000) rather than on a
+   repaired pool. No student sees a lone key, but the discarded draws are a
+   systematic slice, so the bank is quietly narrower than the parameter space
+   suggests. `distribute` is largest and best understood: when the key is a
+   fraction, every misconception but one lands on a whole number or on −key.
+3. `kit.Surd` into `exact.py` (`a + b√d`, which `Exact` cannot hold), and a
+   scatter primitive for `plot.py` with a stated window and readable gridlines.
+   Both already have their requirements written down by the topic that needed
+   them.
+
+### Run a volume option_check after any rendering change
+
+Typesetting the page broke two topics' checkers, and **the full gate stayed
+green the whole time**. Linear Functions went from 0 unreadable draws to 2,061
+— three templates at 100% unreadable — and 2 of its 6 selftest faults stopped
+being caught. Linear Equations in Two Variables lost 289 of 582 draws in one
+template. Both were found only by a volume run. A checker's number readers may
+fold the sign while its stem patterns are literal algebra spelled with the
+keyboard hyphen, and a regex like that simply stops matching. Fold once on the
+way in; never widen thirty patterns.
+
+### The lesson this wave keeps repeating
+
+A check that quietly stops checking is indistinguishable from a check that
+passes. Today alone: seven sign tests written against the keyboard hyphen (the
+gate's own `_shape`, four topics' private guards, `sign_join`, and a fault
+injection that stripped nothing and reported it had looked); a gate truncating
+failures to ten with no count, which hid a template failing all along; four
+fault-injection proofs that were themselves broken; and two option_checks whose
+readers stopped parsing the page and therefore reported nothing wrong. Every
+one was green while measuring nothing.
