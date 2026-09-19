@@ -15,7 +15,7 @@ from fractions import Fraction as Q
 
 from ....exact import E, Exact
 from ....expr import fmt_frac, fmt_num
-from ....item import ItemError, Mis, assemble
+from ....item import ItemError, Mis, assemble, hands_the_key_over
 
 __all__ = ["Q", "E", "num", "dec", "term", "side", "paren", "eq_of", "frame_stem",
            "choices", "pick", "sent", "money", "over", "sign_join", "VARS",
@@ -265,21 +265,21 @@ def choices(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None)
 
     Equation answers are signed, so `signed=True`; they solve rather than
     measure, so the fallback near-misses shift rather than scale.
+
+    Which three of the pool print is `assemble`'s `shortlist` now, and whether
+    the printed four give the answer away is `item.hands_the_key_over` -- the
+    same test `check` applies, rather than a local near-miss of it. The guard
+    here used to demand that another option share the key's shape exactly,
+    which is stricter than the rule: four options that all look different give
+    nothing away, because then nothing is lone. That strictness was discarding
+    draws the gate would have passed -- 715 of every 4,000 in `distribute`
+    alone -- and the discarded ones were a systematic slice, not a random one.
     """
     mistakes = [_exact(m) for m in mistakes if m.value is not None]
-    tried = []
-    for cand in (mistakes, _surface_first(key, mistakes, fmt_value)):
-        try:
-            built = assemble(key, cand, rng, fmt_value=fmt_value,
-                             signed=True, fillers="shift")
-        except ItemError:
-            continue
-        if len(set(built[0])) != 4:
-            continue                       # two values rendered the same way
-        shapes = [_surface(c) for c in built[0]]
-        if shapes.count(shapes["ABCD".index(built[3])]) > 1:
-            return built
-        tried.append(built)
-    if tried:
-        raise ItemError("the key would be the only option of its printed form")
-    raise ItemError("could not build three distinct distractors")
+    built = assemble(key, mistakes, rng, fmt_value=fmt_value,
+                     signed=True, fillers="shift", shortlist=True)
+    if len(set(built[0])) != 4:
+        raise ItemError("two values rendered the same way")
+    if hands_the_key_over(built[0], built[3]):
+        raise ItemError("the printed options would hand the key over")
+    return built
