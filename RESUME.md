@@ -127,7 +127,12 @@ done, and they were worth far more than the four lines they looked like.
 
 ### Still open, in the order I would do it
 
-1. **Promote `shortlist` into `item.assemble`.** Two topics independently built
+1. ~~Promote `shortlist` into `item.assemble`.~~ **Done 2026-09-19** —
+   `item.shortlist`, `item.hands_the_key_over`, and `assemble(shortlist=True)`.
+   Opt-in, so no existing caller changed; pass it from any signed template
+   whose pool names more mistakes than can print. `linear_equations_in_two_
+   variables/common.py` still carries the local copy and can now drop it.
+   Superseded note follows, kept for the reasoning: Two topics independently built
    the same thing and the flaw it fixes is `assemble`'s own: `same_form[:3]`
    prefers the key's surface form, which for a signed answer systematically
    drops the integer-valued misconceptions — so a perpendicular-slope item

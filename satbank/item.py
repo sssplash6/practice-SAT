@@ -4,6 +4,7 @@ turning a key plus a list of misconceptions into four defensible options.
 
 from __future__ import annotations
 
+import itertools
 import random
 import re
 from dataclasses import dataclass, field
@@ -12,7 +13,7 @@ from fractions import Fraction
 from .exact import E, Exact
 
 __all__ = ["Item", "Mis", "assemble", "assemble_text", "ItemError", "numeral",
-           "norm_text"]
+           "norm_text", "shortlist", "hands_the_key_over"]
 
 SUPERSCRIPT = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
 
@@ -168,8 +169,82 @@ def _fillers(key: Exact, style: str = "scale"):
         yield Mis("near-miss arithmetic slip", key * E(f))
 
 
+def _surface(opt: str) -> tuple:
+    """What an option looks like at a glance. Mirrors `check._shape`.
+
+    Kept here rather than imported because `check` imports this module; the
+    two must agree, and a change to either belongs in both.
+    """
+    return (bool(re.search(r"[a-zA-Z]", opt.replace("pi", "").replace("π", ""))),
+            "π" in opt or "pi" in opt, "√" in opt or "sqrt" in opt,
+            "/" in opt, "." in opt, opt.strip().startswith(("-", "\N{MINUS SIGN}")))
+
+
+def hands_the_key_over(choices: list[str], letter: str) -> bool:
+    """Do the four printed options give the answer away by their looks alone?
+
+    The giveaway is the key standing alone in its printed shape while the
+    other three form a crowd for it to stand out from -- the only negative,
+    the only fraction, the only radical. Four options that all look different
+    are not a giveaway: then nothing is lone, and the key does not stand out.
+    """
+    shapes = [_surface(c) for c in choices]
+    key_i = LETTERS.index(letter)
+    others = [s for i, s in enumerate(shapes) if i != key_i]
+    return shapes.count(shapes[key_i]) == 1 and max(others.count(s) for s in others) > 1
+
+
+def _shortlist(key: Exact, mistakes: list[Mis], fmt_value=None) -> list[Mis]:
+    """Which three of a named pool print. Signed answers only.
+
+    `assemble` takes the first three wrong answers it can use, preferring the
+    key's own surface form, and for a signed answer that is the wrong three
+    often enough to matter. A perpendicular slope is a negative reciprocal, so
+    the key is a fraction, so the fractions go in first and the integers --
+    the given line's own slope among them, the error the item is about -- are
+    crowded out by weaker mistakes that happen to be fractions too. What
+    prints is one negative fraction against three that are not, and a student
+    who knows only that a perpendicular slope is a negative reciprocal picks
+    it without computing anything.
+
+    So a pool may name more mistakes than can print, and this chooses among
+    them earliest first, so the pool's order still says which mistakes matter
+    most and a pool whose first three already print well is left untouched. A
+    trio is refused when no wrong answer carries the key's sign, or when the
+    printed four would hand the key over.
+
+    Nothing here reads the key's value: the choice is made on how the four
+    options look, which is the property being protected, and every option that
+    prints still carries the misconception that produces it. A source item
+    naming its own three never reaches this -- College Board chose there.
+    """
+    def printed(v) -> str:
+        return fmt_value(v) if fmt_value else v.plain()
+
+    pool, seen = [], {key}
+    for m in mistakes:
+        if not isinstance(m.value, Exact) or m.value in seen:
+            continue
+        seen.add(m.value)
+        pool.append((m, m.value, printed(m.value)))
+    if len(pool) <= 3:
+        return [m for m, _, _ in pool]
+
+    key_text, negative = printed(key), float(key) < 0
+    for trio in itertools.combinations(pool, 3):
+        if not any((float(v) < 0) == negative for _, v, _ in trio):
+            continue
+        if not hands_the_key_over([key_text] + [t for _, _, t in trio], "A"):
+            return [m for m, _, _ in trio]
+    return [m for m, _, _ in pool[:3]]
+
+
+shortlist = _shortlist          # public name; `assemble`'s keyword shadows it
+
+
 def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None,
-             signed: bool = False, fillers: str = "scale", forbid=()):
+             signed: bool = False, fillers: str = "scale", forbid=(),
+             shortlist: bool = False):
     """Choose three distractors, then order all four the way the SAT does.
 
     Two rules do most of the work:
@@ -193,6 +268,10 @@ def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None
     gate cannot see.
     """
     banned = {v for v in forbid if isinstance(v, Exact)}
+    if shortlist and signed:
+        mistakes = _shortlist(key, [m for m in mistakes
+                                    if isinstance(m.value, Exact) and m.value not in banned],
+                              fmt_value)
     seen = {key}
     same_form: list[Mis] = []
     other_form: list[Mis] = []
