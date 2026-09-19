@@ -150,9 +150,26 @@ done, and they were worth far more than the four lines they looked like.
    `no_solution_constant` did not improve: measured against its own call path in
    `families/structure.py` (not `kit`, which is why it read as zero at first) it
    refuses **422 of 2,823 raw MCQ draws, 15%** — now the worst of the three. That
-   one is a real pool gap and needs misconceptions added, not a guard changed:
-   its second shape names four wrong answers of which three are fractions built
-   from the same p/q, so they collapse onto each other and onto the key.
+   one is a real pool gap and needs misconceptions added, not a guard changed.
+
+   **Isolated 2026-09-19, and the earlier guess in this note was wrong.** It is
+   the `coef_zero` shape, not `match_coef`:
+
+       coef_zero    refused 888 of 3,000  (29.6%)
+       match_coef   refused  15 of 3,000  ( 0.5%)
+
+   and it fails in two distinct ways — 585 "the printed options would hand the
+   key over" and 303 "key would be the only option of its sign". So `coef_zero`
+   needs wrong answers that carry the key's sign and its surface; its five named
+   mistakes are built around the constant in the parentheses and the right-hand
+   value, and land on the wrong side of zero too often. `match_coef` needs
+   nothing.
+
+   A caution for whoever takes this: my first probe passed `shape='plain'` and
+   `shape='frac'`, which are not names this template accepts, and reported "0
+   refused of 1,500" — a clean result from a measurement of nothing, and I
+   briefly believed it. The shapes are `coef_zero` and `match_coef`. Check that
+   a probe is driving what you think it is before you trust a zero.
 
    Superseded note, kept for the reasoning:
    **`lin1.distribute`, `no_solution_constant`, `chunk`** still lean on the
