@@ -143,7 +143,19 @@ done, and they were worth far more than the four lines they looked like.
    of the pool print, the other which values never may. It assumes
    `signed=True`, and by handing over exactly three it takes `_fillers` out of
    play.
-2. **`lin1.distribute`, `no_solution_constant`, `chunk`** still lean on the
+2. **`lin1.no_solution_constant` is the one left.** Aligning the topic's guard
+   with the gate (done 2026-09-19) cut `distribute` from 715 refusals per 4,000
+   seeds to 225 and `chunk` from 160 to 21, because two thirds of what was being
+   discarded was a local guard stricter than the rule rather than a thin pool.
+   `no_solution_constant` did not improve: measured against its own call path in
+   `families/structure.py` (not `kit`, which is why it read as zero at first) it
+   refuses **422 of 2,823 raw MCQ draws, 15%** — now the worst of the three. That
+   one is a real pool gap and needs misconceptions added, not a guard changed:
+   its second shape names four wrong answers of which three are fractions built
+   from the same p/q, so they collapse onto each other and onto the key.
+
+   Superseded note, kept for the reasoning:
+   **`lin1.distribute`, `no_solution_constant`, `chunk`** still lean on the
    restored guard refusing draws (715, 279 and 160 per 4,000) rather than on a
    repaired pool. No student sees a lone key, but the discarded draws are a
    systematic slice, so the bank is quietly narrower than the parameter space
