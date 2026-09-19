@@ -205,7 +205,30 @@ fault-injection proofs that were themselves broken; and two option_checks whose
 readers stopped parsing the page and therefore reported nothing wrong. Every
 one was green while measuring nothing.
 
-## Wave 4 is not started — and one false start is worth knowing about
+## Wave 4: 1 of 3 topics done
+
+**Evaluating Statistical Claims is finished** (2026-09-19, commit 821f8d1):
+11/11 encoded, 0 excluded, 6 templates, 100% of official distractors, capacity
+5,955+. It derives the answer instead of declaring it — `sources.py` passes a
+study and the licensed population falls out of the sampling frame. Verified by
+the wrong-answer test: asked to print the licensed population as a distractor
+it refuses, and switching the method to convenience moves both the key and the
+stem. Its `option_check` reads `item.params` nowhere and ships nine injected
+faults, all caught.
+
+Remaining: **Probability** (36 items, 28% grid-ins, two-way tables shared with
+Sample Statistics) and **Sample Statistics and Margin of Error** (18 items).
+Both should read `evaluating_statistical_claims/` first now — it is the nearest
+sibling for statement-valued options and the only topic that derives a
+judgement rather than a number.
+
+Two core notes it worked around, worth fixing between topics:
+`check._prose` reads a bare `None` as an unrendered placeholder, and official
+item 2.3 prints `None` as option A; `check._shape` reads the letters "pi"
+inside ordinary English, so `hospital` makes a prose option look like
+mathematics.
+
+### The two false starts on that topic, worth keeping
 
 2026-09-19. Evaluating Statistical Claims was attempted twice by an outside
 model and removed both times. Both attempts passed all seven gate checks at
