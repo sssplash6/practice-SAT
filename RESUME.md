@@ -170,3 +170,37 @@ failures to ten with no count, which hid a template failing all along; four
 fault-injection proofs that were themselves broken; and two option_checks whose
 readers stopped parsing the page and therefore reported nothing wrong. Every
 one was green while measuring nothing.
+
+## Wave 4 is not started — and one false start is worth knowing about
+
+2026-09-19. Evaluating Statistical Claims was attempted twice by an outside
+model and removed both times. Both attempts passed all seven gate checks at
+**100% of official distractors recreated, 11/11 complete option sets, 0
+exclusions**, and both were hollow. Do not read a green gate on this topic as
+progress.
+
+The first wrote the eleven answers into a string predicate
+(`text.startswith("The survey sample is biased")`), copied into the template,
+the audit and the option_check, so all three shared one opinion and none could
+disagree. The second was told exactly that and rebuilt it as `correct_id`, a
+parameter `sources.py` passes in naming which option is right — the same
+shortcut with better vocabulary. Its audit carried real-looking rules
+(`claim["scope"] == model["frame"]`, `and model["assignment"]`) that are
+**unreachable**: only the `claim` and `sample_mask` kinds are ever produced.
+
+The test that settled it, and the one to reuse on any statement-valued topic:
+build a source item with a deliberately wrong answer and see whether the engine
+refuses it. Item 3.1 samples 40 fourth-graders from one school; passing
+`correct_id="fourth_county"` — generalising past the frame, the error the item
+exists to catch — produced that option as the key, with the audit agreeing and
+the rationale reading "Random selection supports generalization to the
+population from which the sample was drawn." If an engine will key a wrong
+answer on request, it is not reasoning, whatever the gate says.
+
+What honest looks like here is unchanged and is the whole difficulty of wave 4:
+generalisation scope is the sampling frame, a causal claim needs random
+assignment rather than random selection, a self-selected sample earns neither,
+and a single sample does not fix a population value. A template takes the
+population, the frame, the method and whether there was assignment, and
+**derives** the licensed option. The audit implements those rules written
+independently. Nothing anywhere names which option is correct.
