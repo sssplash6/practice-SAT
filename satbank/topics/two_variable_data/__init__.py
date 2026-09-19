@@ -1,10 +1,12 @@
 """Problem-Solving and Data Analysis -> Two-Variable Data: Models and Scatterplots.
 
 Eighteen templates over the 39 official items. Almost every item is a question
-about a picture, so the picture is the thing that has to be right: `charts.py`
-draws to a stated window with stated gridlines, `common.fit_scatter` builds the
-scatter so that the drawn line really is its least-squares line, and
-`option_check.py` reads both back out of the finished SVG and refits.
+about a picture, so the picture is the thing that has to be right:
+`plot.chart_scatter` and its two siblings draw to a stated window with stated
+gridlines -- this topic wrote that layer and it now lives in the core --
+`common.fit_scatter` builds the scatter so that the drawn line really is its
+least-squares line, and `option_check.py` reads both back out of the finished
+SVG and refits.
 
 The two guards that decide whether a chart item is answerable at all live in
 `common.py`. `separated` refuses a draw whose options are closer together than

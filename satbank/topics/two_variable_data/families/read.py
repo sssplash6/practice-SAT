@@ -18,7 +18,7 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....item import Item, ItemError, Mis, assemble_text
-from ...two_variable_data import charts
+from ....plot import chart_curve, chart_scatter, chart_series
 from ..common import (ascending, assemble_num, cap_first, closest_guard, count_word,
                       listing, num_str, ordinal, pick, plural, q, separated, snap,
                       year_text)
@@ -147,7 +147,7 @@ def point_read(rng: random.Random, seed: int, *, ctx=None, xs=None, ys=None,
     intro = d["intro"].format(n=count_word(n))
     y0, y1 = _window(ys, d["ystep"], every=d["ylabel_every"])
     x0, x1 = q(min(xs)) - q(d["xstep"]), q(max(xs)) + q(d["xstep"])
-    fig = charts.scatter([(x, y) for x, y in zip(xs, ys)],
+    fig = chart_scatter([(x, y) for x, y in zip(xs, ys)],
                          x0=x0, x1=x1, y0=y0, y1=y1,
                          xstep=d["xstep"], ystep=d["ystep"],
                          xlabel_every=d["xlabel_every"], ylabel_every=d["ylabel_every"],
@@ -263,7 +263,7 @@ def interval_change(rng: random.Random, seed: int, *, ctx=None, values=None,
     intro = d["intro"].format(gap=num_str(gap), first=show(xs[0]), last=show(xs[-1]))
     y0, y1 = _window(values, d["ystep"], every=d["ylabel_every"])
     pts = list(zip(xs, [q(v) for v in values]))
-    draw = charts.series if d["kindly"] == "series" else charts.scatter
+    draw = chart_series if d["kindly"] == "series" else chart_scatter
     fig = draw(pts, x0=xs[0] - q(gap) / 2, x1=xs[-1] + q(gap) / 2, y0=y0, y1=y1,
                xstep=d["xstep"] * q(gap), ystep=d["ystep"],
                xlabel_every=d["xlabel_every"], ylabel_every=d["ylabel_every"],
@@ -350,7 +350,7 @@ def series_extreme(rng: random.Random, seed: int, *, ctx=None, values=None, x0=N
     choices, reasons, letter = ascending(*assemble_text(key, wrong, rng))
     y0, y1 = _window(vals, step, every=d["ylabel_every"])
     pts = list(zip(xs, vals))
-    draw = charts.series if d["kindly"] == "series" else charts.scatter
+    draw = chart_series if d["kindly"] == "series" else chart_scatter
     fig = draw(pts, x0=xs[0] - 1, x1=xs[-1] + 1, y0=y0, y1=y1,
                xstep=d["xstep"], ystep=step, xlabel_every=d["xlabel_every"],
                ylabel_every=d["ylabel_every"], xlabel=d["xlabel"], ylabel=d["ylabel"],
@@ -466,7 +466,7 @@ def curve_read(rng: random.Random, seed: int, *, ctx=None, a=None, c=None, x=Non
     dots = []
     if d["dots"]:
         dots = [(t, f(t)) for t in range(lo + 10, int(right), 10) if f(t) <= y1]
-    fig = charts.curve(f, x0=lo, x1=right, y0=y0, y1=y1, xstep=d["xstep"], ystep=step,
+    fig = chart_curve(f, x0=lo, x1=right, y0=y0, y1=y1, xstep=d["xstep"], ystep=step,
                        xlabel_every=d["xlabel_every"], ylabel_every=d["ylabel_every"],
                        xlabel=d["xlabel"], ylabel=d["ylabel"], title=d["title"],
                        points=dots)
@@ -525,7 +525,7 @@ def rate_of_change(rng: random.Random, seed: int, *, ctx=None, ys=None, i=None,
     if rate.denominator > 4 or abs(rate) > 40:
         raise ItemError("that rate is not a value this test would ask a student to enter")
     y0, y1 = _window(ys, d["ystep"], every=d["ylabel_every"])
-    fig = charts.scatter(list(zip(xs, ys)), x0=0, x1=xs[-1] + 1, y0=y0, y1=y1,
+    fig = chart_scatter(list(zip(xs, ys)), x0=0, x1=xs[-1] + 1, y0=y0, y1=y1,
                          xstep=d["xstep"], ystep=d["ystep"],
                          xlabel_every=d["xlabel_every"], ylabel_every=d["ylabel_every"],
                          xlabel=d["xlabel"], ylabel=d["ylabel"])

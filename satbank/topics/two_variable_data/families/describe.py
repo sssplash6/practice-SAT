@@ -16,7 +16,7 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....item import Item, ItemError, Mis, assemble_text
-from ...two_variable_data import charts
+from ....plot import chart_scatter, chart_series
 from ..common import (bow, cap_first, count_word, fit_scatter, num_str, pick, q,
                       regression, separated, wiggle)
 
@@ -120,7 +120,7 @@ def association(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, xs=N
 
     ys = [p[1] for p in pts]
     y0, y1 = _window(ys, d["ystep"], every=d["ylabel_every"])
-    fig = charts.scatter(pts, x0=d["x0"], x1=d["x1"], y0=y0, y1=y1, xstep=d["xstep"],
+    fig = chart_scatter(pts, x0=d["x0"], x1=d["x1"], y0=y0, y1=y1, xstep=d["xstep"],
                          ystep=d["ystep"], xlabel_every=d["xlabel_every"],
                          ylabel_every=d["ylabel_every"], xlabel=d["xlabel"],
                          ylabel=d["ylabel"], title=d["title"], line=(m, b))
@@ -217,7 +217,7 @@ def interpret_slope(rng: random.Random, seed: int, *, ctx=None, m=None, b=None,
     if min(ys) <= 0:
         raise ItemError("a reading below the axis is not one of these charts")
     ylo, yhi = _window(ys, d["ystep"], every=d["ylabel_every"])
-    fig = charts.scatter(pts, x0=0, x1=span + 10, y0=ylo, y1=yhi, xstep=d["xstep"],
+    fig = chart_scatter(pts, x0=0, x1=span + 10, y0=ylo, y1=yhi, xstep=d["xstep"],
                          ystep=d["ystep"], xlabel_every=d["xlabel_every"],
                          ylabel_every=d["ylabel_every"],
                          xlabel=d["xlabel"].format(y0=y0), ylabel=d["ylabel"],
@@ -375,7 +375,7 @@ def graph_statement(rng: random.Random, seed: int, *, ctx=None, pts=None) -> Ite
                  t) for i, (t, _) in enumerate(facts) if i != k]
     choices, reasons, letter = assemble_text(key, wrong, rng)
     ylo, yhi = _window(vs + [0], d["ystep"], every=d["ylabel_every"])
-    fig = charts.series(pts, x0=0, x1=total, y0=ylo, y1=yhi, xstep=d["xstep"],
+    fig = chart_series(pts, x0=0, x1=total, y0=ylo, y1=yhi, xstep=d["xstep"],
                         ystep=d["ystep"], xlabel_every=d["xlabel_every"],
                         ylabel_every=d["ylabel_every"], xlabel=d["xlabel"],
                         ylabel=d["ylabel"], title=d["title"].format(name=name))

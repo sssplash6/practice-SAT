@@ -52,7 +52,7 @@ All eighteen templates are covered. None is exempt.
 ## Reading the chart
 
 The reader imports `generate` and `ItemError` from the engine and nothing else —
-no template, no renderer, no solver, no `charts.py`. It gets the finished item in
+no template, no renderer, no solver, no chart code. It gets the finished item in
 the state a student receives it, and everything after that comes from the printed
 stem, the printed options and the SVG's own pixels.
 
@@ -184,10 +184,13 @@ printing "rounded to the nearest ," with an empty placeholder, an axis labelled
 titles clipped by the frame, a stem saying "every 5 years" over a chart drawn
 every 10, and a June temperature of 250 °F.
 
-## A note for whoever promotes `charts.py` into the core
+## `charts.py`, promoted: `plot.chart_scatter` and its two siblings
 
-This topic draws its own charts rather than calling `plot.scatter`, and the
-reason is worth recording so it does not have to be re-derived from the code.
+This topic drew its own charts rather than calling `plot.scatter`. The reason
+is worth keeping, because it is the requirement the promoted version had to
+meet — and it now lives in `satbank/plot.py` as `chart_scatter`,
+`chart_series` and `chart_curve`, with `fmt_tick` and `ticks_between` beside
+them. `charts.py` is gone; the families import from `plot` directly.
 
 `plot.scatter` fits its axes to the data it is handed. That is right for a chart
 that illustrates and wrong for a chart that is *the question*: two draws of the
@@ -195,10 +198,10 @@ same item can end up gridlined differently, so what a reader can resolve stops
 being something the template knows. And because the gridlines carry no printed
 labels of their own, there is nothing in the SVG to recover a scale from — the
 picture cannot be read back, so nothing can check that it still agrees with the
-answer.
+answer. That older `scatter` is untouched and still there for a chart that only
+illustrates.
 
-A promoted version needs three things, and they are all this topic's `charts.py`
-adds:
+The promoted version needed three things, and it has all three:
 
 * **A stated window.** `x0, x1, y0, y1` are arguments, never inferred from the
   data. A caller that wants the old behaviour can compute them and pass them.
@@ -215,7 +218,30 @@ adds:
   their own class as well, and the picture states everything a reader takes off
   it.
 
-Nothing else in `charts.py` is topic-specific. The axis-label thinning, the
-left gutter sized to the widest printed label and the window aligned to the
-*labelled* gridlines rather than to every gridline are all general chart
-housekeeping, and all three were added because the page showed them missing.
+Nothing else in it was topic-specific, and all of it came across. The
+axis-label thinning, the left gutter sized to the widest printed label and the
+window aligned to the *labelled* gridlines rather than to every gridline are
+all general chart housekeeping, and all three were added because the page
+showed them missing.
+
+### The one thing the promotion changed on the page
+
+`plot._nice`, the label formatter for the older charts, typesets its minus;
+`charts.fmt_tick` spelled the same sign with the keyboard hyphen. Two
+formatters in one module disagreeing about a sign is exactly what the bank
+spent a wave removing, so the promoted `fmt_tick` typesets it — which moved
+**1,028 axis labels across 600 draws of the eighteen templates**, in
+`fit_slope`, `best_model`, `predict_from_line` and `fit_equation`.
+
+That is the whole of the change. Fingerprinting every field of every item —
+stem, options, latex, answer, rationale, reasons, table, params and the figure
+itself — over 600 draws of all eighteen templates gives the identical digest
+before and after once the minus is folded back, so nothing else moved by a
+byte.
+
+And the reader was checked to be reading it rather than skipping it. `num()`
+already folded U+2212 on the way in, which is why nothing broke; disabling
+just that fold turns `fit_slope` from 0 defects in 600 draws to **600**,
+`best_model` to 241 and `predict_from_line` to 53. A checker that had quietly
+stopped parsing these labels would look exactly like one that passed, so the
+difference had to be shown rather than assumed.

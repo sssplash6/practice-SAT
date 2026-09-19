@@ -16,7 +16,7 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....item import Item, ItemError, Mis, assemble_text
-from ...two_variable_data import charts
+from ....plot import chart_scatter, fmt_tick, ticks_between
 from ..common import (assemble_num, closest_guard, count_word, fit_scatter, num_str,
                       pick, q, regression, separated, snap, wiggle)
 
@@ -186,7 +186,7 @@ def predict_from_line(rng: random.Random, seed: int, *, ctx=None, m=None, b=None
     if gap < step:
         raise ItemError("the options are spaced more finely than the chart's gridlines")
     if xq is None:
-        inside = [v for v in charts.ticks_between(xa, xb, d["xstep"]) if xa < v < xb]
+        inside = [v for v in ticks_between(xa, xb, d["xstep"]) if xa < v < xb]
         if not inside:
             raise ItemError("no gridline inside the data to ask about")
         xq = inside[rng.randrange(len(inside))]
@@ -241,9 +241,9 @@ def predict_from_line(rng: random.Random, seed: int, *, ctx=None, m=None, b=None
     y0, y1 = _window(list(ys) + [key], step, every=d["ylabel_every"])
     xlabels = None
     if d.get("percent_x"):
-        xlabels = {v: f"{charts.fmt_tick(v)}%"
-                   for v in charts.ticks_between(d["x0"], d["x1"], d["xstep"])}
-    fig = charts.scatter(pts, x0=d["x0"], x1=d["x1"], y0=y0, y1=y1,
+        xlabels = {v: f"{fmt_tick(v)}%"
+                   for v in ticks_between(d["x0"], d["x1"], d["xstep"])}
+    fig = chart_scatter(pts, x0=d["x0"], x1=d["x1"], y0=y0, y1=y1,
                          xstep=d["xstep"], ystep=step, xlabel_every=d["xlabel_every"],
                          ylabel_every=d["ylabel_every"], xlabel=d["xlabel"],
                          ylabel=d["ylabel"], title=d["title"], xlabels=xlabels,
@@ -361,7 +361,7 @@ def fit_slope(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, gap=No
 
     ys = [p[1] for p in pts]
     y0, y1 = _window(ys, q(d["ystep"]), every=d["ylabel_every"])
-    fig = charts.scatter(pts, x0=d["x0"], x1=d["x1"], y0=y0, y1=y1, xstep=d["xstep"],
+    fig = chart_scatter(pts, x0=d["x0"], x1=d["x1"], y0=y0, y1=y1, xstep=d["xstep"],
                          ystep=d["ystep"], xlabel_every=d["xlabel_every"],
                          ylabel_every=d["ylabel_every"], xlabel=d["xlabel"],
                          ylabel=d["ylabel"], title=d["title"], line=(m, b))
@@ -500,7 +500,7 @@ def fit_equation(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, xs=
     year = year0 if year0 is not None else (
         rng.randint(*d["year0"]) if "year0" in d else None)
     fmt = dict(n=count_word(n), y0=year, y1=None if year is None else year + int(xb))
-    fig = charts.scatter(pts, x0=d["x0"], x1=d["x1"], y0=y0, y1=y1, xstep=d["xstep"],
+    fig = chart_scatter(pts, x0=d["x0"], x1=d["x1"], y0=y0, y1=y1, xstep=d["xstep"],
                          ystep=d["ystep"], xlabel_every=d["xlabel_every"],
                          ylabel_every=d["ylabel_every"],
                          xlabel=d["xlabel"].format(**fmt), ylabel=d["ylabel"],
@@ -610,7 +610,7 @@ def residual(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, xs=None
     closest_guard(rs[j], key, others)
 
     y0, y1 = _window(ys, q(d["ystep"]), every=d["ylabel_every"])
-    fig = charts.scatter(pts, x0=d["x0"], x1=d["x1"], y0=y0, y1=y1, xstep=d["xstep"],
+    fig = chart_scatter(pts, x0=d["x0"], x1=d["x1"], y0=y0, y1=y1, xstep=d["xstep"],
                          ystep=d["ystep"], xlabel_every=d["xlabel_every"],
                          ylabel_every=d["ylabel_every"], xlabel=d["xlabel"],
                          ylabel=d["ylabel"], title=d["title"], line=(m, b))
@@ -677,7 +677,7 @@ def slope_scaled(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, k=N
         raise ItemError("that step gives an answer that is not a whole number of people")
     ys = [p[1] for p in pts]
     y0, y1 = _window(ys, q(d["ystep"]), every=d["ylabel_every"])
-    fig = charts.scatter(pts, x0=d["x0"], x1=d["x1"], y0=y0, y1=y1, xstep=d["xstep"],
+    fig = chart_scatter(pts, x0=d["x0"], x1=d["x1"], y0=y0, y1=y1, xstep=d["xstep"],
                          ystep=d["ystep"], xlabel_every=d["xlabel_every"],
                          ylabel_every=d["ylabel_every"], xlabel=d["xlabel"],
                          ylabel=d["ylabel"], title=d["title"], line=(m, b))

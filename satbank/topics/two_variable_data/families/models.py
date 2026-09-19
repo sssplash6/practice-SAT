@@ -13,7 +13,7 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....item import Item, ItemError, Mis, assemble_text
-from ...two_variable_data import charts
+from ....plot import chart_scatter
 from ..common import count_word, listing, num_str, pick, q
 
 __all__ = ["best_model", "growth_compare", "invest_compare", "nonlinear_table"]
@@ -146,7 +146,7 @@ def best_model(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, c=Non
     y1 = (hi // step + 1 + (1 if hi % step else 0)) * step
     if lo >= 0 and y0 < 0:
         y0 = Q(0)
-    fig = charts.scatter(pts, x0=q(d["x_lo"]) - q(d["dx"]), x1=xs[-1] + q(d["dx"]),
+    fig = chart_scatter(pts, x0=q(d["x_lo"]) - q(d["dx"]), x1=xs[-1] + q(d["dx"]),
                          y0=y0, y1=y1, xstep=d["xstep"], ystep=step,
                          xlabel_every=d["xlabel_every"], ylabel_every=d["ylabel_every"],
                          xlabel=d["xlabel"], ylabel=d["ylabel"], title=d["title"])

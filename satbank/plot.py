@@ -16,7 +16,9 @@ from .exact import MINUS
 from fractions import Fraction
 
 __all__ = ["scatter", "bar", "histogram", "dotplot", "boxplot", "line_graph", "curve",
-           "boxplots", "histograms"]
+           "boxplots", "histograms",
+           "chart_scatter", "chart_series", "chart_curve", "fmt_tick",
+           "ticks_between"]
 
 _CSS = (".ax{stroke:currentColor;stroke-width:1.3;fill:none}"
         ".bx{stroke:currentColor;stroke-width:1.3;fill:none}"
@@ -411,3 +413,260 @@ def histograms(edges, series, labels, xlabel="", ylabel="Frequency",
                    f'y="{floor + 36}" text-anchor="middle">{xlabel}</text>')
     out.append("</svg>")
     return "".join(out)
+
+
+# ------------------------------------------------- charts on a stated window
+#
+# `scatter` above fits its axes to the data it is handed. That is right for a
+# chart that illustrates and wrong for a chart that *is* the question: two
+# draws of one item come out gridlined differently, so what a reader can
+# resolve stops being something the template knows -- and because those
+# gridlines carry no printed labels, there is nothing in the SVG to recover a
+# scale from. A picture that cannot be read back is a picture no check can
+# hold to the answer, which is how an item ships with two options nobody
+# could tell apart.
+#
+# The `chart_*` family states all three of those instead. Two-Variable Data
+# wrote this layer for itself and left the requirement written down:
+#
+# * **A stated window.** `x0, x1, y0, y1` are arguments, never inferred from
+#   the data. A caller that wants the old behaviour computes them and passes
+#   them.
+# * **Stated gridline steps.** `xstep` and `ystep` are arguments too, with
+#   `xlabel_every` / `ylabel_every` for how often a gridline is labelled. The
+#   step is the resolution of the chart, which is the number an item's
+#   separation guard compares its options against, so it must not be a
+#   function of the data.
+# * **Label-bearing gridlines that can be read back.** Each labelled gridline
+#   emits its own `<text>` at its own pixel position, in a distinguishable
+#   class. That is the whole read-back contract: pair the labels with the
+#   positions, fit the pixels-to-data map, verify it against the labels it was
+#   not fitted through. The line of best fit (`bf`), the curve (`cv`) and the
+#   series (`sr`) each carry their own class as well, so the picture states
+#   everything a reader takes off it.
+#
+# Nothing is fitted here. A line of best fit is passed in; the caller that
+# passes it is the one that has to prove its points support it.
+
+_CHART_CSS = (".ax{stroke:currentColor;stroke-width:1.4;fill:none}"
+              ".gr{stroke:currentColor;stroke-width:.6;opacity:.3}"
+              ".pt{fill:currentColor}"
+              ".bf{stroke:currentColor;stroke-width:1.9;fill:none}"
+              ".cv{stroke:currentColor;stroke-width:1.9;fill:none}"
+              ".sr{stroke:currentColor;stroke-width:1.9;fill:none}"
+              ".lb{fill:currentColor;font:11px ui-sans-serif,system-ui,sans-serif}"
+              ".ti{fill:currentColor;font:600 12px ui-sans-serif,system-ui,sans-serif}")
+
+
+def fmt_tick(v, group: bool = True) -> str:
+    """A gridline label the way a chart prints one: 8,500 and 0.5 and 37.
+
+    Exact: the value is a rational, and its decimal expansion is written out
+    digit by digit rather than handed to a float. `_nice` above is the same
+    job for the float-ticked charts, and this agrees with it on the sign --
+    U+2212, because an axis running below zero must spell its minus the way
+    the options printed beside it do.
+
+    `group=False` is for an axis of years, where 1,960 is a misprint of 1960.
+    """
+    q = Fraction(v)
+    if q.denominator == 1:
+        return (f"{q.numerator:,}" if group else str(q.numerator)).replace("-", MINUS)
+    neg = q < 0
+    a = -q if neg else q
+    whole = a.numerator // a.denominator
+    rest = a - whole
+    digits = ""
+    for _ in range(6):
+        if rest == 0:
+            break
+        rest *= 10
+        digits += str(rest.numerator // rest.denominator)
+        rest -= rest.numerator // rest.denominator
+    head = f"{whole:,}" if group else str(whole)
+    body = f"{head}.{digits}" if digits else head
+    return (MINUS if neg else "") + body
+
+
+def ticks_between(lo, hi, step) -> list:
+    """Every multiple of `step` inside [lo, hi], as exact rationals."""
+    lo, hi, step = Fraction(lo), Fraction(hi), Fraction(step)
+    if step <= 0:
+        raise ValueError("a gridline step must be positive")
+    k = -((-lo) // step) if lo % step else lo // step
+    out = []
+    v = k * step
+    while v <= hi:
+        if v >= lo:
+            out.append(v)
+        v += step
+    return out
+
+
+class _Chart:
+    """A stated window and its data-to-pixel map, in exact arithmetic."""
+
+    def __init__(self, x0, x1, y0, y1, w, h, pad):
+        self.x0, self.x1 = Fraction(x0), Fraction(x1)
+        self.y0, self.y1 = Fraction(y0), Fraction(y1)
+        if self.x1 <= self.x0 or self.y1 <= self.y0:
+            raise ValueError("a chart window must have positive width and height")
+        self.w, self.h = w, h
+        self.l, self.r, self.t, self.b = pad
+        self.out = [f'<svg viewBox="0 0 {w} {h}" width="{w}" height="{h}" role="img" '
+                    f'xmlns="http://www.w3.org/2000/svg"><style>{_CHART_CSS}</style>']
+
+    def X(self, x) -> float:
+        span = self.x1 - self.x0
+        return round(float(self.l + (Fraction(x) - self.x0) / span
+                           * (self.w - self.l - self.r)), 2)
+
+    def Y(self, y) -> float:
+        span = self.y1 - self.y0
+        return round(float(self.h - self.b - (Fraction(y) - self.y0) / span
+                           * (self.h - self.b - self.t)), 2)
+
+    def grid(self, xstep, ystep, xlabel_every=1, ylabel_every=1, xlabels=None,
+             xgroup=True):
+        # a tall window can carry more gridlines than an axis can carry labels,
+        # so the labels thin out rather than run into each other
+        while len(ticks_between(self.y0, self.y1, Fraction(ystep))) // ylabel_every > 9:
+            ylabel_every *= 2
+        xs = ticks_between(self.x0, self.x1, xstep)
+        wide = max((len(xlabels[x]) if xlabels and x in xlabels
+                    else len(fmt_tick(x, xgroup))) for x in xs) if xs else 2
+        room = max(1, int((self.w - self.l - self.r) // (6.6 * wide + 10)))
+        while len(xs) // xlabel_every > room:
+            xlabel_every *= 2
+        for i, x in enumerate(xs):
+            px = self.X(x)
+            self.out.append(f'<line class="gr" x1="{px}" y1="{self.Y(self.y0)}" '
+                            f'x2="{px}" y2="{self.Y(self.y1)}"/>')
+            if i % xlabel_every == 0:
+                text = (xlabels[x] if xlabels and x in xlabels
+                        else fmt_tick(x, xgroup))
+                self.out.append(f'<text class="lb xl" x="{px}" y="{self.h - self.b + 16}" '
+                                f'text-anchor="middle">{text}</text>')
+        ys = ticks_between(self.y0, self.y1, ystep)
+        for i, y in enumerate(ys):
+            py = self.Y(y)
+            self.out.append(f'<line class="gr" x1="{self.X(self.x0)}" y1="{py}" '
+                            f'x2="{self.X(self.x1)}" y2="{py}"/>')
+            if i % ylabel_every == 0:
+                self.out.append(f'<text class="lb yl" x="{self.l - 7}" y="{py + 4}" '
+                                f'text-anchor="end">{fmt_tick(y)}</text>')
+        return self
+
+    def axes(self, xlabel="", ylabel="", title=""):
+        self.out.append(f'<line class="ax" x1="{self.X(self.x0)}" y1="{self.Y(self.y0)}" '
+                        f'x2="{self.X(self.x1)}" y2="{self.Y(self.y0)}"/>')
+        self.out.append(f'<line class="ax" x1="{self.X(self.x0)}" y1="{self.Y(self.y0)}" '
+                        f'x2="{self.X(self.x0)}" y2="{self.Y(self.y1)}"/>')
+        if xlabel:
+            self.out.append(f'<text class="ti" x="{(self.l + self.w - self.r) / 2}" '
+                            f'y="{self.h - 6}" text-anchor="middle">{xlabel}</text>')
+        if ylabel:
+            cy = (self.t + self.h - self.b) / 2
+            self.out.append(f'<text class="ti" x="13" y="{cy}" text-anchor="middle" '
+                            f'transform="rotate(-90 13 {cy})">{ylabel}</text>')
+        if title:
+            self.out.append(f'<text class="ti" x="{(self.l + self.w - self.r) / 2}" '
+                            f'y="13" text-anchor="middle">{title}</text>')
+        return self
+
+    def dots(self, points, r=3.4):
+        for x, y in points:
+            self.out.append(f'<circle class="pt" cx="{self.X(x)}" cy="{self.Y(y)}" r="{r}"/>')
+        return self
+
+    def straight(self, m, b, cls="bf"):
+        """y = mx + b, clipped to the window so it never leaves the axes."""
+        m, b = Fraction(m), Fraction(b)
+        xa, xb = self.x0, self.x1
+        if m != 0:
+            for edge in (self.y0, self.y1):
+                xe = (edge - b) / m
+                if self.x0 <= xe <= self.x1:
+                    if (m > 0) == (edge == self.y0):
+                        xa = max(xa, xe)
+                    else:
+                        xb = min(xb, xe)
+        if xb <= xa:
+            raise ValueError("the line of best fit does not cross the window")
+        self.out.append(f'<line class="{cls}" x1="{self.X(xa)}" y1="{self.Y(m * xa + b)}" '
+                        f'x2="{self.X(xb)}" y2="{self.Y(m * xb + b)}"/>')
+        return self
+
+    def path(self, points, cls):
+        d = " ".join(f"{self.X(x)},{self.Y(y)}" for x, y in points)
+        self.out.append(f'<polyline class="{cls}" points="{d}"/>')
+        return self
+
+    def done(self) -> str:
+        self.out.append("</svg>")
+        return "".join(self.out)
+
+
+def _gutter(y0, y1, ystep, ylabel_every, pad):
+    """Room on the left for the longest printed y label, and no more.
+
+    A fixed gutter puts "100,000" under the axis title; the width of the widest
+    label is what actually decides how much room the numbers need.
+    """
+    if pad is not None:
+        return pad
+    ticks = ticks_between(y0, y1, Fraction(ystep) * ylabel_every)
+    wide = max((len(fmt_tick(t)) for t in ticks), default=2)
+    return (max(46, 24 + round(6.6 * wide)), 16, 24, 46)
+
+
+def chart_scatter(points, *, x0, x1, y0, y1, xstep, ystep, xlabel="", ylabel="",
+                  title="", line=None, xlabel_every=1, ylabel_every=1, xlabels=None,
+                  xgroup=True, width=390, height=272, pad=None) -> str:
+    """A scatterplot on a stated window, optionally with a line drawn through it.
+
+    `line` is `(slope, intercept)` and is drawn exactly as given: nothing here
+    fits one, so the picture can disagree with the answer only if the caller
+    handed it the wrong line.
+    """
+    f = _Chart(x0, x1, y0, y1, width, height,
+               _gutter(y0, y1, ystep, ylabel_every, pad))
+    f.grid(xstep, ystep, xlabel_every, ylabel_every, xlabels, xgroup)
+    f.axes(xlabel, ylabel, title)
+    if line is not None:
+        f.straight(line[0], line[1])
+    f.dots(points)
+    return f.done()
+
+
+def chart_series(points, *, x0, x1, y0, y1, xstep, ystep, xlabel="", ylabel="",
+                 title="", xlabel_every=1, ylabel_every=1, xlabels=None, xgroup=True,
+                 width=390, height=272, pad=None) -> str:
+    """A line graph on a stated window: the same points, joined in order."""
+    f = _Chart(x0, x1, y0, y1, width, height,
+               _gutter(y0, y1, ystep, ylabel_every, pad))
+    f.grid(xstep, ystep, xlabel_every, ylabel_every, xlabels, xgroup)
+    f.axes(xlabel, ylabel, title)
+    f.path(points, "sr")
+    f.dots(points, r=3.0)
+    return f.done()
+
+
+def chart_curve(fn, *, x0, x1, y0, y1, xstep, ystep, xlabel="", ylabel="", title="",
+                points=(), steps=96, xlabel_every=1, ylabel_every=1,
+                width=390, height=272, pad=None) -> str:
+    """y = fn(x) on a stated window, with the plotted observations over it."""
+    f = _Chart(x0, x1, y0, y1, width, height,
+               _gutter(y0, y1, ystep, ylabel_every, pad))
+    f.grid(xstep, ystep, xlabel_every, ylabel_every)
+    f.axes(xlabel, ylabel, title)
+    span = Fraction(x1) - Fraction(x0)
+    drawn = []
+    for i in range(steps + 1):
+        x = Fraction(x0) + span * Fraction(i, steps)
+        y = Fraction(fn(x))
+        if Fraction(y0) <= y <= Fraction(y1):
+            drawn.append((x, y))
+    f.path(drawn, "cv")
+    f.dots(points)
+    return f.done()
