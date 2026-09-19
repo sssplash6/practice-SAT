@@ -62,7 +62,12 @@ A template is a function `(rng, seed, **params) -> Item`. Study
   Rejecting is free; the registry redraws.
 * `assemble(...)` builds and orders the options. Pass `signed=True` when a
   negative answer is legitimate, and `fillers="shift"` when the answer solves
-  an equation rather than measures something.
+  an equation rather than measures something. Pass `named_only=True` once your
+  pools are wide to treat a short pool as the bug it is: `assemble` otherwise
+  patches a short list with arithmetic near-misses, which are wrong answers
+  nobody can explain to the student who picked one. It is off by default, so
+  turning it on is a decision your topic makes; `probability` made it and that
+  is why its distractor naming is 100% rather than merely above the 80% floor.
 * Every distractor carries the misconception that produces it, in words a
   teacher would use: "used the diameter as the radius", "found x, not 2x".
   Distractors invented to fill space are the difference between a bank and a

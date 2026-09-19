@@ -244,7 +244,7 @@ shortlist = _shortlist          # public name; `assemble`'s keyword shadows it
 
 def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None,
              signed: bool = False, fillers: str = "scale", forbid=(),
-             shortlist: bool = False):
+             shortlist: bool = False, named_only: bool = False):
     """Choose three distractors, then order all four the way the SAT does.
 
     Two rules do most of the work:
@@ -266,6 +266,20 @@ def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None
     pool can have this function hand it straight back when the pool runs short.
     That produces an item with two correct options, which is the one defect the
     gate cannot see.
+
+    `named_only=True` takes the fillers out of play altogether: a pool that
+    cannot name three wrong answers is a bug in the pool, and this raises
+    rather than patching it with a near-miss no misconception explains. It is
+    the same rule `probability` enforces on itself from the outside -- its
+    `values.mcq` raises when a reason comes back reading "near-miss arithmetic
+    slip" -- and it is why that topic's distractor naming is 100% rather than
+    merely above the gate's 80% floor. A filler is a wrong answer a teacher
+    cannot explain to the student who picked it, and the gate counts it as
+    unnamed, so a topic that never reaches one is measurably better than the
+    floor and knows why.
+
+    It is off by default because nineteen topics were built against the
+    fallback and it is not this function's business to decide when they change.
     """
     banned = {v for v in forbid if isinstance(v, Exact)}
     if shortlist and signed:
@@ -286,6 +300,10 @@ def assemble(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None
         if len(picked) >= 3:
             break
         picked.append(m)
+    if named_only and len(picked) < 3:
+        raise ItemError(f"only {len(picked)} of the three distractors name a "
+                        f"misconception, and named_only forbids patching the pool "
+                        f"with a near-miss nothing explains")
     for m in _fillers(key, fillers):
         if len(picked) >= 3:
             break
