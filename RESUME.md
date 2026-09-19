@@ -205,7 +205,27 @@ fault-injection proofs that were themselves broken; and two option_checks whose
 readers stopped parsing the page and therefore reported nothing wrong. Every
 one was green while measuring nothing.
 
-## Wave 4: 1 of 3 topics done
+## Wave 4: 2 of 3 done, Probability in flight
+
+**Done:** Evaluating Statistical Claims (11/11, 6 templates, commit 821f8d1) and
+Sample Statistics and Margin of Error (18/18, 12 templates, 100% of official
+distractors, commit 5579584). Both derive the answer from the study rather than
+naming it, and both were verified with the wrong-answer test, not just the gate.
+
+**Probability is unfinished.** An agent was mid-build when the session ended. A
+checkpoint of its work is committed (2cc96f5 and later), so nothing is lost, but
+it is NOT verified: read `satbank/topics/probability/HANDOFF.md` first — it is
+current and outranks this file on its own state — then run the gate, its
+`option_check.py --selftest`, and the wrong-answer test before trusting it. Its
+gate was already green at checkpoint time, which here means nothing: two topics
+have now passed every check while hollow.
+
+Its sharpest exposure, as briefed: P(A|B) against P(B|A) and the wrong
+denominator; a printed two-way table that must close arithmetically, which no
+gate check verifies; and 10 of 36 items are grid-ins, so an un-enterable
+probability must be refused at draw time.
+
+## Superseded: wave 4 at 1 of 3
 
 **Evaluating Statistical Claims is finished** (2026-09-19, commit 821f8d1):
 11/11 encoded, 0 excluded, 6 templates, 100% of official distractors, capacity

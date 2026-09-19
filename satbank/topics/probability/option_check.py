@@ -387,7 +387,10 @@ FRAMES = [
                                + ASK + r" that (?:the )?\S+ (?P<ev>.+)\?$", re.I)),
     ("given", re.compile(r"^.*?" + ASK + r" of selecting (?P<ev>.+?), given that "
                          r"(?:the )?\S+ (?P<cond>.+)\?$", re.I)),
-    ("if_cond", re.compile(r"^If (?:the |a |an )?\S+(?: \S+)? (?P<cond>.+?), " + ASK
+    # the subject of the "If ..." clause is whatever the scenario calls its
+    # units, from "the caller" to "a gas station customer selected at random on
+    # that day", so the clause is taken whole and the labels found inside it
+    ("if_cond", re.compile(r"^If (?P<cond>.+?), " + ASK
                            + r" that (?:the )?\S+ (?P<ev>.+)\?$", re.I)),
     ("of_the", re.compile(r"^Of the (?P<cond>.+?), what fraction (?P<ev>.+)\?$", re.I)),
     ("split_fraction", re.compile(r"^What fraction of the (?P<rest>.+)\?$", re.I)),
@@ -476,6 +479,12 @@ def split_two(rest: str, rows: list[str], cols: list[str]):
     Two clauses run together with no punctuation between them, so every split
     point is tried and the one that names exactly one set on each axis wins.
     The first half is the condition: that is what "what fraction of X Y" means.
+
+    The winner is the split that accounts for the *most printed label*, not
+    the longest halves -- every split has the same words in it, so scoring by
+    length picked whichever split came first and quietly halved a union.
+    "soccer players and track athletes are returning" split after "players"
+    reads as one row where the page names two.
     """
     toks = rest.split()
     best = None
@@ -486,13 +495,19 @@ def split_two(rest: str, rows: list[str], cols: list[str]):
         for cond, ev in (((lr, ()), ((), rc)), (((), lc), (rr, ()))):
             if not (cond[0] or cond[1]) or not (ev[0] or ev[1]):
                 continue
-            score = len(words(left)) + len(words(right))
+            score = (_weight(cond[0], rows) + _weight(cond[1], cols)
+                     + _weight(ev[0], rows) + _weight(ev[1], cols))
             if best is None or score > best[0]:
                 best = (score, ev, cond)
     if best is None:
         raise Unreadable(f"cannot split {rest!r} into a condition and an event")
     _, ev, cond = best
     return ev[0] or None, ev[1] or None, cond[0] or None, cond[1] or None
+
+
+def _weight(idx, labels) -> int:
+    """How much printed label a match accounts for, counted in tokens."""
+    return sum(len(label_tokens(labels[i])) for i in (idx or ()))
 
 
 def meet(a, b):
