@@ -9,10 +9,11 @@ inside another.
 
 Two things run through all of it. Nothing floats -- a 5√3 leg, a √2/2 sine and
 a 58 + 58√2 perimeter all stay exact to the printed page, the last of them in
-a local `Surd` because `Exact` holds `coef · π^e · √rad` and not a rational
-added to a radical. And every figure is drawn to scale from the item's own
-parameters, right-angle mark included, so `option_check.py` can read the
-picture back off the pixels and ask whether it still agrees with the answer.
+`exact.Surd`, written here and since promoted, because `Exact` holds
+`coef · π^e · √rad` and not a rational added to a radical. And every figure
+is drawn to scale from the item's own parameters, right-angle mark included,
+so `option_check.py` can read the picture back off the pixels and ask whether
+it still agrees with the answer.
 """
 
 from __future__ import annotations

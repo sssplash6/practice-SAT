@@ -330,12 +330,14 @@ integers, not because two doubles subtracted to something near 105.
 
 ---
 
-## `kit.Surd` — the one place this topic reaches outside the shared core
+## `exact.Surd` — written here, now in the shared core
 
 **What it is.** A small exact type, `a + b√d`, with `a` and `b` exact
 `Fraction`s and `d` a squarefree positive integer. It supports the four
 operations, including division by another surd, which it rationalises through the
-conjugate. It lives in `kit.py`, local to this topic. `exact.py` was not touched.
+conjugate. It was written in `kit.py`, local to this topic, and now lives in
+`exact.py` beside `Exact`. `kit.py` re-exports it, so every call site here is
+unchanged and every item this topic makes is byte-for-byte what it was.
 
 **Why `Exact` could not do it.** `Exact` is `coef · π^e · √rad` — one rational
 coefficient, one radical. That covers every answer in this topic but one shape:
@@ -368,18 +370,27 @@ anywhere. `kit.assemble_surd` mirrors `item.assemble` on the same contract —
 distinct values, ascending order, and the key never the only option of its
 surface form.
 
-**For whoever promotes it.** This is a candidate for `exact.py`. The requirement
-is not "support addition" — it is that a value of the form `a + b√d` must
+**The five requirements for promotion, and where each is met now.** The
+requirement was never "support addition" — it is that a value of the form
+`a + b√d` must
 
-1. stay exact from the draw to the printed string, never rounding;
+1. stay exact from the draw to the printed string, never rounding — `a` and `b`
+   are `Fraction`s and nothing in the type reaches for a float except
+   `__float__` itself, which exists to order options and to feed the audit;
 2. print as the source prints it — `58 + 58√2`, not `58 + 82.02` and not
-   `58(1 + √2)`;
+   `58(1 + √2)`: `Surd.plain`, through `exact._rational_text` and
+   `exact._radical_text`, with the typeset minus on both halves;
 3. divide by another surd exactly, because a stem states a perimeter and the
-   template has to undo it;
+   template has to undo it: `Surd.__truediv__` multiplies above and below by the
+   conjugate, so `(94 + 94√2) / (2 + √2)` is exactly `47√2`;
 4. answer `float()` and `.plain()`, because that is the whole of the contract
-   `satbank/audit.py` has with `item.key`;
+   `satbank/audit.py` has with `item.key` — unchanged, and still the reason the
+   shared numeric audit runs over a `Surd` key with no special case anywhere;
 5. expose a surface signature, so an assembler can keep the key from being the
-   only option of its form.
+   only option of its form: `Surd.form`, which `kit.assemble_surd` reads.
+
+`assemble_surd` stayed here. `item.assemble` is written against `Exact`, and
+restating its rule in a second type is a second change, not this one.
 
 Everything else in `Surd` is convenience.
 

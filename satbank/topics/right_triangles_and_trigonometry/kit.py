@@ -13,8 +13,9 @@ reads as the errors an item is testing rather than as filler.
 set but one shape: a perimeter like `58 + 58√2`, where a rational and a
 radical are added and cannot be folded together. `Surd` is `a + b√d` with `a`
 and `b` exact Fractions, so those answers stay exact to the printed page. It
-is deliberately local -- `exact.py` is shared and four other topics are being
-written against it.
+was written here and now lives in `exact.py` beside `Exact`; this module
+re-exports it, and `assemble_surd` below is the assembler that uses its
+`.form`.
 
 **A halfway guard.** A stem that says *closest* has an answer only while one
 printed option is nearer the true value than every other, so `closest_only`
@@ -24,19 +25,14 @@ refuses a draw where two options tie or the key is not the nearest.
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass
 from fractions import Fraction as Q
 
-from ...exact import E, Exact
+from ...exact import E, Exact, Surd, squarefree
 from ...item import ItemError, Mis, assemble
 
 __all__ = ["pick", "attempt", "Surd", "S0", "assemble_surd", "assemble_exact",
            "closest_only", "places_text", "ratio_text", "TRIPLES", "triple_for",
            "squarefree", "grid_ok"]
-
-MINUS = "\N{MINUS SIGN}"
-ROOT = "\N{SQUARE ROOT}"
-
 
 # --------------------------------------------------------------- the pool
 
@@ -72,143 +68,6 @@ def attempt(fn):
 
 
 # ------------------------------------------------------- a + b*sqrt(d)
-
-def squarefree(n: int) -> tuple[int, int]:
-    """n = m² · k with k squarefree, so √8 and 2√2 are one number."""
-    m, k, d = 1, int(n), 2
-    while d * d <= k:
-        while k % (d * d) == 0:
-            k //= d * d
-            m *= d
-        d += 1
-    return m, k
-
-
-def _group(v: Q) -> str:
-    if v.denominator == 1:
-        n = v.numerator
-        return f"{MINUS if n < 0 else ''}{abs(n):,}"
-    sign = MINUS if v < 0 else ""
-    return f"{sign}{abs(v.numerator):,}/{v.denominator}"
-
-
-def _radical_text(b: Q, d: int) -> str:
-    """b√d the way the source prints it: 58√2, √2, 47√2/3, −√3/3."""
-    sign = MINUS if b < 0 else ""
-    n, q = abs(b.numerator), b.denominator
-    head = "" if n == 1 else f"{n:,}"
-    body = f"{head}{ROOT}{d}"
-    return f"{sign}{body}" if q == 1 else f"{sign}{body}/{q}"
-
-
-@dataclass(frozen=True)
-class Surd:
-    """a + b√d, exactly. The one answer shape `Exact` cannot hold."""
-    a: Q = Q(0)
-    b: Q = Q(0)
-    d: int = 1
-
-    @staticmethod
-    def of(a=0, b=0, d=1) -> "Surd":
-        a, b, d = Q(a), Q(b), int(d)
-        if d < 1:
-            raise ValueError("a radicand is a positive integer")
-        m, k = squarefree(d)
-        b = b * m
-        if k == 1:
-            return Surd(a + b, Q(0), 1)
-        if b == 0:
-            return Surd(a, Q(0), 1)
-        return Surd(a, b, k)
-
-    @staticmethod
-    def exact(v: Exact) -> "Surd":
-        """An `Exact` with no π in it, as a Surd."""
-        if v.pi_exp != 0:
-            raise ValueError("π has no place in a triangle's side length")
-        return Surd.of(0, v.coef, v.rad) if v.rad != 1 else Surd.of(v.coef)
-
-    # -------------------------------------------------------- arithmetic
-
-    def _like(self, o) -> "Surd":
-        o = o if isinstance(o, Surd) else Surd.of(o)
-        if self.b and o.b and self.d != o.d:
-            raise ArithmeticError(f"{self.plain()} and {o.plain()} are unlike radicals")
-        return o
-
-    def __add__(self, o) -> "Surd":
-        o = self._like(o)
-        return Surd.of(self.a + o.a, self.b + o.b, self.d if self.b else o.d)
-
-    __radd__ = __add__
-
-    def __neg__(self) -> "Surd":
-        return Surd(-self.a, -self.b, self.d)
-
-    def __sub__(self, o) -> "Surd":
-        return self + (-self._like(o))
-
-    def __rsub__(self, o) -> "Surd":
-        return self._like(o) + (-self)
-
-    def __mul__(self, o) -> "Surd":
-        o = self._like(o)
-        if not self.b or not o.b:
-            d = self.d if self.b else o.d
-            return Surd.of(self.a * o.a, self.a * o.b + self.b * o.a, d)
-        return Surd.of(self.a * o.a + self.b * o.b * self.d,
-                       self.a * o.b + self.b * o.a, self.d)
-
-    __rmul__ = __mul__
-
-    def __truediv__(self, o) -> "Surd":
-        o = self._like(o)
-        if o.a == 0 and o.b == 0:
-            raise ZeroDivisionError
-        if o.b == 0:
-            return Surd.of(self.a / o.a, self.b / o.a, self.d)
-        # rationalise: multiply above and below by the conjugate
-        den = o.a * o.a - o.b * o.b * o.d
-        if den == 0:
-            raise ZeroDivisionError
-        conj = Surd(o.a, -o.b, o.d)
-        top = self * conj
-        return Surd.of(top.a / den, top.b / den, top.d)
-
-    def __rtruediv__(self, o) -> "Surd":
-        return self._like(o) / self
-
-    # -------------------------------------------------------- predicates
-
-    @property
-    def rational(self) -> bool:
-        return self.b == 0
-
-    @property
-    def form(self) -> tuple:
-        """Surface signature, the way `assemble` uses one: two options that
-        differ here are told apart by eye rather than by geometry."""
-        return (self.a != 0, self.b != 0, self.d,
-                self.a.denominator != 1 or self.b.denominator != 1)
-
-    def __float__(self) -> float:
-        return float(self.a) + float(self.b) * math.sqrt(self.d)
-
-    def __hash__(self):
-        return hash((self.a, self.b, self.d))
-
-    def plain(self) -> str:
-        if self.b == 0:
-            return _group(self.a)
-        rad = _radical_text(self.b, self.d)
-        if self.a == 0:
-            return rad
-        join = f" {MINUS} " if self.b < 0 else " + "
-        return f"{_group(self.a)}{join}{_radical_text(abs(self.b), self.d)}"
-
-    def __repr__(self) -> str:
-        return f"Surd({self.plain()})"
-
 
 S0 = Surd.of(0)
 

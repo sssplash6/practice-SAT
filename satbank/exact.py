@@ -1,13 +1,31 @@
 """Exact arithmetic for SAT geometry answers.
 
-Every answer in the source set has the shape
+Two shapes, because two shapes are what the source set prints.
+
+`Exact` is
 
     coef * pi**pi_exp * sqrt(rad)
 
 with `coef` rational, `pi_exp` rational (0, 1/2, 1, ...) and `rad` a squarefree
-positive integer. That one form covers all of it: integers (3,025), fractions
+positive integer. That one form covers most of it: integers (3,025), fractions
 (135/8), pi-multiples (192*pi, 19,652*pi/375), radicals (36*sqrt(13),
 1/sqrt(3) -> sqrt(3)/3) and sqrt-of-pi (2*sqrt(pi)).
+
+`Surd` is
+
+    a + b*sqrt(d)
+
+with `a` and `b` exact Fractions and `d` squarefree. It is the one shape
+`Exact` cannot hold: a rational *added* to a radical, which has no single
+coefficient to fold into. An isosceles right triangle with a hypotenuse of 58
+has a perimeter of 58 + 58*sqrt(2), and no `coef * sqrt(rad)` is that number.
+Surds divide through the conjugate, so a template handed a surd perimeter in
+the stem can undo it exactly: (94 + 94*sqrt(2)) / (2 + sqrt(2)) is 47*sqrt(2).
+
+Both answer `float()` and `.plain()`, which is the whole of the contract
+`audit.py` has with `item.key`, so the shared audit runs over either with no
+special case. Both expose `.form`, the surface signature an assembler uses to
+keep the key from being the only option of its shape.
 
 Floats are never used to compute a key -- only to sort choices and to render
 "which of the following is closest to" items.
@@ -21,12 +39,13 @@ from fractions import Fraction
 
 MINUS = "\N{MINUS SIGN}"        # U+2212, the sign a typeset page prints
 
-__all__ = ["Exact", "E", "PI"]
+__all__ = ["Exact", "Surd", "E", "PI", "MINUS", "squarefree"]
 
 
-def _squarefree(n: int) -> tuple[int, int]:
-    """Factor n = m**2 * k with k squarefree. Returns (m, k)."""
-    m, k, d = 1, n, 2
+def squarefree(n: int) -> tuple[int, int]:
+    """Factor n = m**2 * k with k squarefree, so sqrt(8) and 2*sqrt(2) are one
+    number. Returns (m, k)."""
+    m, k, d = 1, int(n), 2
     while d * d <= k:
         while k % (d * d) == 0:
             k //= d * d
@@ -57,7 +76,7 @@ class Exact:
         if rad == 0 or coef == 0:
             return Exact(Fraction(0), Fraction(0), 1)
         # sqrt(p/q) == sqrt(p*q)/q
-        m, k = _squarefree(rad.numerator * rad.denominator)
+        m, k = squarefree(rad.numerator * rad.denominator)
         return Exact(coef * Fraction(m, rad.denominator), pi_exp, k)
 
     # ------------------------------------------------------------ arithmetic
@@ -228,3 +247,150 @@ def E(coef=1, pi_exp=0, rad=1) -> Exact:
 
 
 PI = E(1, 1)
+
+
+# ------------------------------------------------------------- a + b*sqrt(d)
+#
+# The shape `Exact` cannot hold. A rational added to a radical has no single
+# coefficient to fold into, and the source set prints it: 58 + 58*sqrt(2) is
+# the perimeter of an isosceles right triangle with a hypotenuse of 58, and
+# the stems that state such a perimeter need it divided back out exactly.
+
+
+def _rational_text(v: Fraction) -> str:
+    """A rational as the page prints it: 1,184 and −47/3."""
+    sign = MINUS if v < 0 else ""
+    n, d = abs(v.numerator), v.denominator
+    return f"{sign}{_group(n)}" if d == 1 else f"{sign}{_group(n)}/{d}"
+
+
+def _radical_text(b: Fraction, d: int) -> str:
+    """b√d the way the source prints it: 58√2, √2, 47√2/3, −√3/3."""
+    sign = MINUS if b < 0 else ""
+    n, q = abs(b.numerator), b.denominator
+    head = "" if n == 1 else _group(n)
+    body = f"{head}√{d}"
+    return f"{sign}{body}" if q == 1 else f"{sign}{body}/{q}"
+
+
+@dataclass(frozen=True)
+class Surd:
+    """a + b√d, exactly. The one answer shape `Exact` cannot hold."""
+    a: Fraction = Fraction(0)
+    b: Fraction = Fraction(0)
+    d: int = 1
+
+    @staticmethod
+    def of(a=0, b=0, d=1) -> "Surd":
+        a, b, d = Fraction(a), Fraction(b), int(d)
+        if d < 1:
+            raise ValueError("a radicand is a positive integer")
+        m, k = squarefree(d)
+        b = b * m
+        if k == 1:
+            return Surd(a + b, Fraction(0), 1)
+        if b == 0:
+            return Surd(a, Fraction(0), 1)
+        return Surd(a, b, k)
+
+    @staticmethod
+    def exact(v: Exact) -> "Surd":
+        """An `Exact` with no π in it, as a Surd."""
+        if v.pi_exp != 0:
+            raise ValueError("π has no place in a + b√d")
+        return Surd.of(0, v.coef, v.rad) if v.rad != 1 else Surd.of(v.coef)
+
+    # ------------------------------------------------------------ arithmetic
+
+    def _like(self, o) -> "Surd":
+        o = o if isinstance(o, Surd) else Surd.of(o)
+        if self.b and o.b and self.d != o.d:
+            raise ArithmeticError(f"{self.plain()} and {o.plain()} are unlike radicals")
+        return o
+
+    def __add__(self, o) -> "Surd":
+        o = self._like(o)
+        return Surd.of(self.a + o.a, self.b + o.b, self.d if self.b else o.d)
+
+    __radd__ = __add__
+
+    def __neg__(self) -> "Surd":
+        return Surd(-self.a, -self.b, self.d)
+
+    def __sub__(self, o) -> "Surd":
+        return self + (-self._like(o))
+
+    def __rsub__(self, o) -> "Surd":
+        return self._like(o) + (-self)
+
+    def __mul__(self, o) -> "Surd":
+        o = self._like(o)
+        if not self.b or not o.b:
+            d = self.d if self.b else o.d
+            return Surd.of(self.a * o.a, self.a * o.b + self.b * o.a, d)
+        return Surd.of(self.a * o.a + self.b * o.b * self.d,
+                       self.a * o.b + self.b * o.a, self.d)
+
+    __rmul__ = __mul__
+
+    def __truediv__(self, o) -> "Surd":
+        """Exact division, rationalised through the conjugate.
+
+        A stem that states a surd perimeter has to be undone by the template
+        that printed it, so this is a requirement and not a convenience:
+        (94 + 94√2) / (2 + √2) comes out as exactly 47√2.
+        """
+        o = self._like(o)
+        if o.a == 0 and o.b == 0:
+            raise ZeroDivisionError
+        if o.b == 0:
+            return Surd.of(self.a / o.a, self.b / o.a, self.d)
+        # rationalise: multiply above and below by the conjugate
+        den = o.a * o.a - o.b * o.b * o.d
+        if den == 0:
+            raise ZeroDivisionError
+        conj = Surd(o.a, -o.b, o.d)
+        top = self * conj
+        return Surd.of(top.a / den, top.b / den, top.d)
+
+    def __rtruediv__(self, o) -> "Surd":
+        return self._like(o) / self
+
+    # ------------------------------------------------------------ predicates
+
+    @property
+    def rational(self) -> bool:
+        return self.b == 0
+
+    @property
+    def form(self) -> tuple:
+        """Surface signature, the way `assemble` uses one: two options that
+        differ here are told apart by eye rather than by geometry."""
+        return (self.a != 0, self.b != 0, self.d,
+                self.a.denominator != 1 or self.b.denominator != 1)
+
+    def __float__(self) -> float:
+        return float(self.a) + float(self.b) * math.sqrt(self.d)
+
+    def __hash__(self):
+        return hash((self.a, self.b, self.d))
+
+    # ------------------------------------------------------------- rendering
+
+    def plain(self) -> str:
+        """The value as the SAT prints it: 58 + 58√2, and never 58 + 82.02.
+
+        This is half of the contract `audit.py` has with `item.key`; `float()`
+        is the other half, and between them the shared audit runs over a Surd
+        with no special case.
+        """
+        if self.b == 0:
+            return _rational_text(self.a)
+        rad = _radical_text(self.b, self.d)
+        if self.a == 0:
+            return rad
+        join = f" {MINUS} " if self.b < 0 else " + "
+        return f"{_rational_text(self.a)}{join}{_radical_text(abs(self.b), self.d)}"
+
+    def __repr__(self) -> str:
+        return f"Surd({self.plain()})"
