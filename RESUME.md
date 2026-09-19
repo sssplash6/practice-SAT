@@ -63,7 +63,7 @@ needed them: a scatter/chart primitive for `plot.py` with a stated window,
 stated gridline steps and label-bearing gridlines that can be read back
 (Two-Variable Data's `OPTION-CHECK.md`), and `kit.Surd` into `exact.py` for
 `a + b√d`, which `Exact`'s `coef · π^e · √rad` cannot hold (Right Triangles',
-five numbered requirements).
+five numbered requirements). *Both done 2026-09-20; see the top of this file.*
 
 ## How to run a wave
 
@@ -178,10 +178,12 @@ done, and they were worth far more than the four lines they looked like.
    systematic slice, so the bank is quietly narrower than the parameter space
    suggests. `distribute` is largest and best understood: when the key is a
    fraction, every misconception but one lands on a whole number or on −key.
-3. `kit.Surd` into `exact.py` (`a + b√d`, which `Exact` cannot hold), and a
-   scatter primitive for `plot.py` with a stated window and readable gridlines.
-   Both already have their requirements written down by the topic that needed
-   them.
+3. ~~`kit.Surd` into `exact.py`, and a scatter primitive for `plot.py`.~~
+   **Both done 2026-09-20** — `exact.Surd` (729b0c1) and `plot.chart_scatter`
+   / `chart_series` / `chart_curve` (f88dd4e). Having the requirement written
+   down by the topic that needed it is what made each one a morning's work
+   rather than a re-derivation; both notes are worth reading as the model for
+   the next promotion.
 
 ### Run a volume option_check after any rendering change
 
@@ -229,8 +231,25 @@ asking for it:
   the default.
 
 Also still open from wave 3: `lin1.no_solution_constant`'s `coef_zero` shape
-refuses 29.6% of draws, diagnosed and not repaired; `kit.Surd` into `exact.py`;
-a scatter primitive for `plot.py`.
+refuses 29.6% of draws, diagnosed and not repaired.
+
+**The other two are done, 2026-09-20.** `kit.Surd` is now `exact.Surd`
+(commit 729b0c1), meeting all five of Right Triangles' numbered requirements;
+that topic is migrated and every item it makes is byte-for-byte unchanged.
+Two-Variable Data's chart layer is now `plot.chart_scatter`, `chart_series`
+and `chart_curve` with `fmt_tick` and `ticks_between` (commit f88dd4e);
+`charts.py` is deleted and the topic imports from `plot`. `plot.scatter` is
+untouched and still there for a chart that only illustrates.
+
+One thing changed on the page, deliberately, and it is the kind of thing this
+file keeps warning about: `plot._nice` typesets its minus and `fmt_tick` did
+not, so Two-Variable Data was printing `-2` on an axis beside an option
+reading `−1.4`. `fmt_tick` typesets it now — 1,028 axis labels per 600 draws
+in four templates. Everything else is identical, proved by fingerprinting
+every field of every item over 600 draws of all 18 templates with the minus
+folded back. And the checker was shown to be *reading* the new labels rather
+than skipping them: disabling its U+2212 fold turns `fit_slope` from 0 defects
+in 600 draws to 600, `best_model` to 241 and `predict_from_line` to 53.
 
 ## Superseded: wave 4 at 2 of 3
 
