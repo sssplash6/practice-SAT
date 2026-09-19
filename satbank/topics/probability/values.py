@@ -33,7 +33,8 @@ from ...item import Item, ItemError, Mis, assemble, assemble_text
 
 __all__ = ["Q", "q", "PVal", "ratio", "reduced", "decimal", "percent", "count",
            "grid", "griddable", "snap", "unambiguous", "places_needed", "dec",
-           "pick", "mcq", "spr", "text_mcq", "tidy", "FILLER", "GRID_CHARS"]
+           "pick", "mcq", "spr", "text_mcq", "tidy", "roll_fmt", "FILLER",
+           "GRID_CHARS"]
 
 FILLER = "near-miss arithmetic slip"       # item._fillers' reason; never shipped here
 GRID_CHARS = 5                             # the digital SAT's student-response field
@@ -258,6 +259,16 @@ def pick(pool: dict, order, wrongs=None) -> list:
         if value is not None:
             out.append((why, value))
     return out
+
+
+def roll_fmt(rng: random.Random, fmt):
+    """A free draw picks its own format; a source item states one.
+
+    Ten of the 36 official items are grid-ins, so a template that can only be
+    reached as multiple choice from a free draw leaves a quarter of its own
+    behaviour unswept by any volume check.
+    """
+    return fmt or ("spr" if rng.random() < 0.25 else "mcq")
 
 
 def tidy(text: str) -> str:

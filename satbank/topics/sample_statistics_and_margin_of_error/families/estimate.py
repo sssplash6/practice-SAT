@@ -35,6 +35,21 @@ class Kit:
     extra: dict = field(default_factory=dict)
 
 
+def _spread(vals, frac=Q(1, 10)) -> None:
+    """Four options a student has to be able to tell apart.
+
+    A stem that says "about" or "best estimate" is unanswerable when two of
+    its options are within rounding of each other, and no gate check reads
+    the gap. The floor is a tenth of the larger value; the closest pair in
+    any official item here is a third apart.
+    """
+    for i, a in enumerate(vals):
+        for b in vals[i + 1:]:
+            if abs(a - b) * (1 / frac) < max(abs(a), abs(b)):
+                raise ItemError(f"the options {a} and {b} are too close to tell "
+                                f"apart on a stem that says 'about'")
+
+
 def _pick(pool: dict, order, wrongs=None) -> list[Mis]:
     """The misconceptions this draw offers, in the order it offers them.
 
@@ -131,7 +146,11 @@ def scale_count(rng: random.Random, seed: int, *, ctx=None, N=None, n=None,
         "complement": ("estimated the units that did not have the trait",
                        base * Q(n - k, n)),
     }
-    pool = {a: (w, v if v is not None and q(v).denominator == 1 and q(v) > 0
+    # two options a tenth of a percent apart cannot both be read off a stem
+    # that says "about how many": 774 against 779 has no answer a student can
+    # pick. College Board's own sets are never closer than a third apart.
+    pool = {a: (w, v if (v is not None and q(v).denominator == 1 and q(v) > 0
+                         and q(v) < Q(N) and abs(q(v) - key) * 10 >= key)
                 else None) for a, (w, v) in pool.items()}
     order = ["sample_count", "unpolled", "rate_as_count", "times_n",
              "tenth_rate", "n_as_percent", "complement"]
@@ -144,6 +163,7 @@ def scale_count(rng: random.Random, seed: int, *, ctx=None, N=None, n=None,
     best = min(vals, key=lambda v: abs(v - exact))
     if sum(1 for v in vals if abs(v - exact) == abs(best - exact)) != 1 or best != key:
         raise ItemError("the keyed option is not the one closest to the estimate")
+    _spread(vals)
 
     stem = tidy(kit.stem.format(N=f"{N:,}", n=f"{n:,}", k=f"{k:,}"))
     why = (f"{k} of {n} is {rate}, so the estimate for {dec(base, 0)} is "
@@ -169,7 +189,7 @@ GROUP = {
              "of the following best estimates the number of eighth-grade "
              "students in the state who have fewer than two siblings?",
         ranges=dict(n=(18, 32), g=(600, 2600), gstep=100),
-        extra=dict(group="eighth-grade classes", unit="eighth-grade students",
+        extra=dict(who="students", whole="the state's eighth-grade students",
                    trait="have at least two siblings",
                    asked="have fewer than two siblings")),
     "commuters": Kit(
@@ -182,7 +202,7 @@ GROUP = {
              "which of the following best estimates the number of the agency's "
              "daily riders who do not hold a monthly pass?",
         ranges=dict(n=(20, 44), g=(200, 1500), gstep=50),
-        extra=dict(group="busloads", unit="daily riders",
+        extra=dict(who="riders", whole="the agency's daily riders",
                    trait="hold a monthly pass", asked="do not hold a monthly pass")),
 }
 
@@ -198,37 +218,44 @@ def scale_group(rng: random.Random, seed: int, *, ctx=None, n=None, k=None,
     """
     kit = GROUP[ctx] if ctx is not None else GROUP[rng.choice(sorted(GROUP))]
     r = kit.ranges
-    n = int(n) if n is not None else rng.randint(*r["n"])
+    n = int(n) if n is not None else rng.randrange(r["n"][0] + r["n"][0] % 2,
+                                                   r["n"][1] + 1, 2)
     k = int(k) if k is not None else rng.randint(2, n - 2)
     g = int(g) if g is not None else rng.randrange(r["g"][0], r["g"][1] + 1, r["gstep"])
     if not 0 < k < n:
         raise ItemError("the reported group is a proper part of the class")
+    # the class must not split down the middle: when it does, the group that
+    # was asked about, the group that was not, and half the total are all the
+    # same number, and three of the four options collapse onto the key
+    if n % 2 or 2 * k == n:
+        raise ItemError("an evenly split class leaves nothing to tell apart")
     pct = unambiguous(Q(100 * k, n), Q(1, 10))
-    if pct == snap(pct, 1) and Q(100 * k, n) != pct:
-        raise ItemError("a percent that prints as a whole number hides the "
-                        "rounding the item is about")
+    if pct.denominator == 1:
+        # the item is about recovering the count from a percent printed to a
+        # tenth; a whole-number percent prints as "50.0 percent", which no
+        # source item does, and gives the count away
+        raise ItemError("this class gives a whole-number percent")
     total = n * g
     key = Q((n - k) * g)
     pool = {
-        "reported_group": (f"estimated the students who {kit.extra['trait']}, "
-                           f"the group the question leaves out", Q(k * g)),
-        "all_units": (f"gave every one of the state's {kit.extra['unit']} "
-                      f"without using the survey at all", Q(total)),
-        "half": ("assumed the class splits evenly and took half of the total",
+        "reported_group": (f"estimated the {kit.extra['who']} who "
+                           f"{kit.extra['trait']}, the group the question "
+                           f"leaves out", Q(k * g)),
+        "all_units": (f"gave every one of {kit.extra['whole']} without using "
+                      f"the survey at all", Q(total)),
+        "half": ("assumed the group splits evenly and took half of the total",
                  Q(total, 2)),
-        "one_class": (f"stopped at the one {kit.extra['group'][:-2]} that was "
-                      f"surveyed instead of scaling to all of them", Q(n - k)),
-        "rate_of_groups": ("scaled the number of groups rather than the number "
-                           "of units", Q((n - k) * g, n)),
     }
     pool = {a: (w, v if v is not None and q(v).denominator == 1 and q(v) > 0
                 else None) for a, (w, v) in pool.items()}
-    order = ["reported_group", "half", "all_units", "one_class", "rate_of_groups"]
+    order = ["reported_group", "half", "all_units"]
     mistakes = _pick(pool, order, wrongs)
     choices, latex, reasons, letter = assemble(Num(key), mistakes, rng)
+    _spread([q(c.replace(",", "")) for c in choices])
     stem = tidy(kit.stem.format(n=n, pct=dec(pct, 1), g=f"{g:,}"))
-    why = (f"{dec(pct, 1)} percent of {n} is {k} students, so {n - k} of the {n} "
-           f"{kit.extra['asked']}, and {n - k} x {g:,} = {dec(key, 0)}.")
+    why = (f"{dec(pct, 1)} percent of {n} is {k} {kit.extra['who']}, so {n - k} "
+           f"of the {n} {kit.extra['asked']}, and {n - k} x {g:,} = "
+           f"{dec(key, 0)}.")
     P = dict(kind="sstat.scale_group", ctx=kit.key, n=n, k=k, g=g,
              pct=str(pct), choices=list(choices))
     return Item("sstat.scale_group", "sample statistics and margin of error",
@@ -388,8 +415,8 @@ def scale_two_way(rng: random.Random, seed: int, *, ctx=None, N=None, counts=Non
     for name, row in zip(e["rows"], counts):
         table.append([name] + [f"{c:,}" for c in row])
     stem = tidy(kit.stem.format(n=f"{n:,}", N=f"{N:,}"))
-    why = (f"{col:,} of the {n:,} in the sample plan to vote that way, and "
-           f"{col:,}/{n:,} of {N:,} is {dec(key, 0)}.")
+    why = (f"{col:,} of the {n:,} in the sample answered {e['cols'][e['focus']].lower()}, "
+           f"and {col:,}/{n:,} of {N:,} is {dec(key, 0)}.")
     P = dict(kind="sstat.scale_two_way", ctx=kit.key, N=N, counts=counts,
              focus=e["focus"])
     return Item("sstat.scale_two_way", "sample statistics and margin of error",
@@ -447,12 +474,14 @@ def scale_frequency(rng: random.Random, seed: int, *, ctx=None, P=None,
     n = sum(freq)
     plus = sum(freq[i] for i in e["plus"])
     minus = sum(freq[i] for i in e["minus"])
-    if plus <= minus:
-        raise ItemError("the difference the stem asks for has to be positive")
+    if plus <= minus or 8 * (plus - minus) < n:
+        raise ItemError("the two groups are too close for the difference the "
+                        "stem asks for to survive being scaled and rounded")
     P = int(P) if P is not None else rng.randrange(r["P"][0], r["P"][1] + 1, r["Pstep"])
     key = unambiguous(Q((plus - minus) * P, n), 1)
-    if key <= 0:
-        raise ItemError("the estimate rounds away to nothing")
+    if key < 5:
+        raise ItemError("the estimate is too small to be worth rounding to a "
+                        "whole number")
     table = [list(e["head"])] + [[name, f"{f:,}"] for name, f in zip(e["rows"], freq)]
     stem = tidy(kit.stem.format(n=f"{n:,}", P=f"{P:,}"))
     why = (f"{plus:,} of the {n:,} responses are on one side and {minus:,} on the "

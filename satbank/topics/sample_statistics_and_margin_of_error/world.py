@@ -223,8 +223,12 @@ MEAN_SCENES = {
         ask="Which of the following is the most appropriate conclusion that can "
             "be made about the population mean?",
         subject="It", subject_lc="the population mean",
-        pop_all="the population", trait="are in the population",
-        members="members", member="member", did="measured",
+        pop_all="the population", trait="",
+        # no verb: an anonymous study has nothing its members can be said to
+        # have *done*, and the sentences that need one read as nonsense
+        # ("It is likely that all members measured between 69 and 73"). The
+        # two `indiv` fragments carry the individual-value claims instead.
+        members="members", member="member", did="",
         indiv="The actual values for all members of the population",
         indiv_sample="The actual values for all members of the sample",
         nrange=(0, 0), nstep=1, erange=(18, 96), mrange=(2, 9)),
@@ -285,8 +289,7 @@ MEAN_SCENES = {
         unit=" hours", unit_each=False,
         nrange=(40, 200), nstep=10,
         erange=(Q(146, 10), Q(392, 10)), estep=Q(1, 10),
-        mrange=(Q(2, 10), Q(15, 10)), mstep=Q(1, 10),
-        extra=dict(first_use="hours")),
+        mrange=(Q(2, 10), Q(15, 10)), mstep=Q(1, 10)),
 }
 
 PCT_SCENES = {**PCT_SCENES, **PROP_SCENES}

@@ -17,7 +17,7 @@ from fractions import Fraction as Q
 
 from ....item import ItemError
 from ..values import (decimal, griddable, mcq, percent, pick, ratio, reduced,
-                      spr, unambiguous)
+                      roll_fmt, spr, unambiguous)
 from .simple import exact_decimal, order_of
 
 SURFACES = ("ratio", "reduced", "decimal")
@@ -98,7 +98,7 @@ def _rows(c, cats, counts, total_row):
 
 
 def freq_table(rng: random.Random, seed: int, *, scenario=None, counts=None, idx=None,
-               cats=None, surface=None, places=None, total_row=None, fmt="mcq",
+               cats=None, surface=None, places=None, total_row=None, fmt=None,
                wrongs=None, tier="easy"):
     """P(one category) read off a frequency table."""
     c = FREQ[scenario] if scenario else FREQ[rng.choice(sorted(FREQ))]
@@ -113,6 +113,7 @@ def freq_table(rng: random.Random, seed: int, *, scenario=None, counts=None, idx
         raise ItemError("a probability of 0 or 1 is not what this question asks")
     total_row = (c.total_row if c.total_row is not None else rng.random() < 0.5) \
         if total_row is None else total_row
+    fmt = roll_fmt(rng, fmt)
     surface = "reduced" if fmt == "spr" else (surface or rng.choice(SURFACES))
     if surface == "decimal":
         places = exact_decimal(num, N, places)
@@ -184,7 +185,7 @@ GROUPED = {
 
 def freq_grouped(rng: random.Random, seed: int, *, scenario=None, start=None,
                  width=None, bands=None, counts=None, cut=None, cut2=None,
-                 total_row=None, fmt="mcq", wrongs=None, tier="medium"):
+                 total_row=None, fmt=None, wrongs=None, tier="medium"):
     """A conditional read off a table of ordered intervals: of those at least a,
     what fraction are at least b?"""
     key_s = scenario or rng.choice(sorted(GROUPED))
@@ -209,6 +210,7 @@ def freq_grouped(rng: random.Random, seed: int, *, scenario=None, start=None,
     N = sum(counts)
     a, b = lows[cut], lows[cut2]
     total_row = rng.random() < 0.4 if total_row is None else total_row
+    fmt = roll_fmt(rng, fmt)
 
     pool = {
         "joint": (f"divided by all {N:,} {units} instead of by the {den:,} in the "

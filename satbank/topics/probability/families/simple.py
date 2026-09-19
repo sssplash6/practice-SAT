@@ -13,8 +13,8 @@ import random
 from fractions import Fraction as Q
 
 from ....item import ItemError
-from ..values import (decimal, griddable, mcq, pick, q, ratio, reduced, spr,
-                      text_mcq, unambiguous)
+from ..values import (decimal, griddable, mcq, pick, q, ratio, reduced,
+                      roll_fmt, spr, text_mcq, unambiguous)
 
 SURFACES = ("ratio", "reduced", "decimal")
 
@@ -73,7 +73,7 @@ def _bag_list(counts, colors, noun, nouns, style):
 
 
 def bag(rng: random.Random, seed: int, *, which=None, counts=None, colors=None,
-        idx=None, neither=None, style=None, surface=None, places=None, fmt="mcq",
+        idx=None, neither=None, style=None, surface=None, places=None, fmt=None,
         wrongs=None, tier="easy"):
     """Counts of each kind are listed in the stem; pick one kind, or rule two out."""
     where, noun, nouns, palette = BAGS[rng.randrange(len(BAGS))] if which is None \
@@ -85,6 +85,7 @@ def bag(rng: random.Random, seed: int, *, which=None, counts=None, colors=None,
         raise ItemError("a bag needs a count for every colour named")
     N = sum(counts)
     style = style or rng.choice(("colon", "contains", "inline"))
+    fmt = roll_fmt(rng, fmt)
     surface = surface or rng.choice(SURFACES)
 
     if neither:
@@ -199,7 +200,7 @@ THINGS = [("MP3 player", "MP3 players"), ("light bulb", "light bulbs"),
 
 
 def subset(rng: random.Random, seed: int, *, scenario=None, n=None, k=None,
-           letter=None, surface=None, places=None, fmt="mcq", wrongs=None,
+           letter=None, surface=None, places=None, fmt=None, wrongs=None,
            tier="easy"):
     """Of N things, k have a trait; find the probability of that trait."""
     scenario = scenario or rng.choice([s for s in SUBSETS if s != "planets"])
@@ -222,6 +223,7 @@ def subset(rng: random.Random, seed: int, *, scenario=None, n=None, k=None,
     fill = {"n": f"{n:,}", "k": f"{k:,}", "thing": thing, "things": things,
             "last": last, "a": "an" if thing[0] in "aeiou" else "a",
             "pick": letter or chr(ord("A") + rng.randrange(min(n, 26)))}
+    fmt = roll_fmt(rng, fmt)
     surface = "reduced" if fmt == "spr" else (surface or rng.choice(SURFACES))
     if surface == "decimal":
         places = exact_decimal(k, n, places)
@@ -273,11 +275,12 @@ TRAITS = {
 
 
 def data_set(rng: random.Random, seed: int, *, values=None, trait=None, size=None,
-             fmt="mcq", wrongs=None, tier="easy"):
+             fmt=None, wrongs=None, tier="easy"):
     """A short list of numbers is printed; how likely is one with a given trait?"""
     size = size or rng.randint(3, 7)
     values = values or sorted(rng.sample(range(-30, 31), size))
     trait = trait or rng.choice(sorted(TRAITS))
+    fmt = roll_fmt(rng, fmt)
     phrase, adj, test = TRAITS[trait]
     n = len(values)
     hits = sum(1 for v in values if test(v))
@@ -389,6 +392,7 @@ def count_from_prob(rng: random.Random, seed: int, *, mode=None, n=None, p=None,
     if not 0 < key < n:
         raise ItemError("a probability of 0 or 1 is not what this question asks")
     adj = rng.choice(adjs)
+    fmt = roll_fmt(rng, fmt)
     stem = f"{intro.format(n=f'{n:,}')} {ask.format(adj=adj, p=_dp(p))}"
     digits = int(str(_dp(p)).replace("0.", "").lstrip("0") or "0")
     P = {"kind": "prob_count", "mode": "single", "n": n,

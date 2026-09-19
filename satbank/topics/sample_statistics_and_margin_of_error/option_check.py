@@ -228,10 +228,26 @@ def value_set(text: str):
     return ("only", ns[-1]) if ns else None
 
 
+# a "no conclusion" sentence has to say *why*, and the why has to be a fault
+# the page's study actually has. "The sample did not include all the people
+# who watch nature shows" is true of every sample ever drawn, so a sentence
+# refusing the inference on that ground refuses every inference.
+GROUNDS = ((r"chose to take part", "not_random"),
+           (r"did not include all", "not_exhaustive"),
+           (r"and not just", "mixed_sample"))
+
+
+def ground_of(text: str) -> str:
+    for pat, name in GROUNDS:
+        if re.search(pat, text):
+            return name
+    raise Unreadable(f"a no-conclusion sentence that blames nothing: {text!r}")
+
+
 def read_sentence(sc, text: str):
     """(aspect, population, modality, value set) for one printed option."""
     if "no conclusion can be made" in text:
-        return ("no_conclusion", "frame", "plausible", None)
+        return ("no_conclusion", ground_of(text), "plausible", None)
     body = text
     if sc.trait and sc.trait in body:
         body = body.replace(sc.trait, " ")
@@ -270,10 +286,11 @@ def read_sentence(sc, text: str):
     return where + (modality, vs)
 
 
-def sentence_holds(sc, text: str, rep: dict) -> bool:
+def sentence_holds(sc, text: str, rep: dict, random: bool = True) -> bool:
     aspect, pop, modality, vs = read_sentence(sc, text)
     if aspect == "no_conclusion":
-        return ("parameter", "frame") not in rep
+        return (("parameter", "frame") not in rep
+                and pop == "not_random" and not random)
     r = rep.get((aspect, pop))
     if r is None:
         return False
@@ -323,6 +340,13 @@ def four_distinct(item) -> None:
         if "pi" in c.lower() or "π" in c:
             raise Defect(f"the option {c!r} carries the letters 'pi', which the "
                          f"gate's surface check reads as a pi-bearing option")
+        # every printed range, right or wrong, has to be a range. A wrong
+        # option is still a sentence a student reads, and the gate never
+        # reads one: this is how "between 280.00 and 280.00" reached a page.
+        for m in re.finditer(rf"between {NUM}[^.]*? and {NUM}", c, re.I):
+            lo, hi = Qs(m.group(1)), Qs(m.group(2))
+            if lo >= hi:
+                raise Defect(f"the option {c!r} prints a range that is not one")
 
 
 def closed_table(item, n: int | None = None, totals: bool = False) -> list[list[int]]:
@@ -380,9 +404,9 @@ def read_interpret(item) -> None:
     sc = SCENES[item.params["scene"]]
     est, moe = estimate_and_margin(item.stem)
     size = stated_population(item.stem)
-    rep = study_reports(est, moe, is_random(item.stem), size,
-                        sc.quantity == "percent")
-    hits = [c for c in item.choices if sentence_holds(sc, c, rep)]
+    rnd = is_random(item.stem)
+    rep = study_reports(est, moe, rnd, size, sc.quantity == "percent")
+    hits = [c for c in item.choices if sentence_holds(sc, c, rep, rnd)]
     exactly_one(item, hits, "is supported by the study the stem describes")
     aspect, pop, _, vs = read_sentence(sc, hits[0])
     if (aspect, pop) in rep:
@@ -417,9 +441,9 @@ def read_subgroup(item) -> None:
     est = Qs(m.group(1))
     if re.search(r"margin of error", item.stem):
         raise Unreadable("this reader expects a study with no margin of error")
-    rep = study_reports(est, None, is_random(item.stem),
-                        stated_population(item.stem), True)
-    hits = [c for c in item.choices if sentence_holds(sc, c, rep)]
+    rnd = is_random(item.stem)
+    rep = study_reports(est, None, rnd, stated_population(item.stem), True)
+    hits = [c for c in item.choices if sentence_holds(sc, c, rep, rnd)]
     exactly_one(item, hits, "is supported by the sample the stem describes")
 
 
@@ -706,7 +730,7 @@ TEXTING = dict(ctx="texting", counts=[[110, 146], [139, 164], [166, 74]], moe=3,
 
 
 def selftest() -> int:
-    """Eighteen injected faults, each one proven caught."""
+    """Twenty-one injected faults, each one proven caught."""
     ok = True
 
     # 1 -- the point estimate keyed: the mistake the whole topic is about
@@ -818,6 +842,27 @@ def selftest() -> int:
                                        "best_right"]),
                      lambda c: c.startswith("Exactly 375"))))
 
+    # 19 -- the right verdict for a reason that would refuse every sample
+    def bogus_reason():
+        item = generate("sstat.interpret_percent", 24)
+        assert item.params["random"] is False, "the seed stopped being a "\
+                                               "self-selected draw"
+        _swap(item, lambda c: "chose to take part themselves" in c,
+              "Since the sample did not include all of the city's residents, no "
+              "conclusion can be made.")
+        read_interpret(item)
+    ok &= _prove("the right verdict on a reason that would refuse every sample",
+                 bogus_reason)
+
+    # 20 -- "no conclusion can be made" keyed on a sample chosen at random
+    ok &= _prove("a random sample keyed to no conclusion at all",
+                 lambda: read_interpret(_rekey(
+                     generate("sstat.interpret_percent", 0, ctx="television",
+                              n=720, est=32, moe="341/100",
+                              options=["more_than_upper", "interval",
+                                       "no_conclusion_a", "no_conclusion_b"]),
+                     lambda c: c.startswith("Since the sample did not include"))))
+
     print("\n  the engine refusing a wrong answer it was asked for:")
     # these call the generators directly rather than through `generate`, which
     # retries an ItemError sixty times and then reports only that it gave up --
@@ -833,9 +878,15 @@ def selftest() -> int:
     ok &= _prove("a source item whose four options hold nothing",
                  lambda: interpret_percent(_r.Random(0), 0, ctx="characteristic",
                                            est="49/100", moe="1/25",
+                                           # not "point" beside "point_exact":
+                                           # that pair is refused for saying
+                                           # the same thing twice, and the
+                                           # proof would pass for a reason it
+                                           # is not making
                                            options=["plausible_below",
                                                     "point_exact",
-                                                    "plausible_above", "point"]))
+                                                    "plausible_above",
+                                                    "greater_est"]))
 
     # 14 -- ask for a page with two supported sentences
     ok &= _prove("a source item asked to print two supported sentences",

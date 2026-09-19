@@ -159,6 +159,7 @@ class Claim:
     modality: str               # approximate | plausible | certain
     vset: object = None
     kind: str = "value"         # value | member | no_conclusion
+    ground: str = ""            # for a no_conclusion sentence: the fault it names
 
 
 @dataclass
@@ -184,6 +185,19 @@ class Study:
     @property
     def hi(self) -> Q:
         return q(self.estimate) + q(self.margin)
+
+
+# The fault a "no conclusion can be made" sentence names, and whether a study
+# can actually have it. Only one of these is ever a reason to refuse an
+# inference. A sample is *never* the whole population and never contains only
+# the members with the trait -- that is what a sample is -- so a sentence
+# refusing the inference on those grounds is refusing it for a reason that
+# would refuse every inference ever drawn from a sample.
+GROUNDS = {
+    "not_random": lambda st: not st.random,
+    "not_exhaustive": lambda st: False,
+    "mixed_sample": lambda st: False,
+}
 
 
 def _per(quantity: str) -> Q:
@@ -216,9 +230,13 @@ def supported(st: Study, claim: Claim) -> bool:
     """Does the study support this sentence? The one rule, and nothing else."""
     rep = reports(st)
     if claim.kind == "no_conclusion":
-        # "no conclusion can be made about the population" is right exactly
-        # when the study reports nothing about the population
-        return ("parameter", "frame") not in rep
+        # right exactly when the study reports nothing about the population
+        # *and* the sentence says why. A sentence that reaches the right
+        # verdict from "the sample did not include everybody" is not the
+        # answer: that is true of every sample there has ever been.
+        if ("parameter", "frame") in rep:
+            return False
+        return GROUNDS[claim.ground](st)
     r = rep.get((claim.aspect, claim.pop))
     if r is None:
         return False

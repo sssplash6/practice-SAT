@@ -83,6 +83,35 @@ def setup(rng: random.Random, scenario, cells):
     return c, T
 
 
+def free(rng, margins, fmt):
+    """The choices a source item pins and a free draw makes for itself.
+
+    Both of these are printed properties the official set varies -- five of
+    its tables print no margins at all, and ten of its items are grid-ins --
+    so a free draw has to reach them too. A branch only a `sources.py` row can
+    enter is a branch no volume sweep ever reads.
+    """
+    if margins is None:
+        margins = rng.random() < 0.75
+    if fmt is None:
+        fmt = "spr" if rng.random() < 0.25 else "mcq"
+    return margins, fmt
+
+
+def grid_exact(fmt, surface, places):
+    """A grid-in prints no rounded answer, so it prints no rounded surface.
+
+    The audit re-derives the value the page carries, and for a decimal or a
+    percent that value is the *rounded* one. A grid-in carries the exact
+    fraction, so recording the surface a free draw happened to roll would
+    have the audit round an answer the page never rounded -- which is how
+    this was found.
+    """
+    if fmt == "spr":
+        return "reduced", 0
+    return surface, PLACES.get(surface, 0) if places is None else places
+
+
 def intro_of(c, T) -> str:
     return c.intro.format(n=f"{T.total:,}", r=f"{T.row_total(0):,}")
 
@@ -107,17 +136,17 @@ def params_of(kind, c, T, ev, given, surface, places, approx=False):
 # ------------------------------------------------------------ prob.two_way.marginal
 
 def marginal(rng: random.Random, seed: int, *, scenario=None, cells=None, axis=None,
-             idx=None, surface=None, places=None, frame=None, margins=True,
-             fmt="mcq", wrongs=None, tier="easy"):
+             idx=None, surface=None, places=None, frame=None, margins=None,
+             fmt=None, wrongs=None, tier="easy"):
     """P(one category), over every unit in the table."""
     c, T = setup(rng, scenario, cells)
+    margins, fmt = free(rng, margins, fmt)
     axis = axis or rng.choice(("row", "col"))
     sels = c.rows if axis == "row" else c.cols
     idx = rng.randrange(len(sels)) if idx is None else idx
     sel = sels[idx]
     ev = Event(rows=sel.idx) if axis == "row" else Event(cols=sel.idx)
-    surface = surface or rng.choice(SURFACES)
-    places = PLACES.get(surface, 0) if places is None else places
+    surface, places = grid_exact(fmt, surface or rng.choice(SURFACES), places)
     num, N = T.count(ev), T.total
     if not 0 < num < N:
         raise ItemError("a probability of 0 or 1 is not what this question asks")
@@ -194,16 +223,16 @@ def _ask(c, sel, frame: str) -> str:
 # --------------------------------------------------------------- prob.two_way.joint
 
 def joint(rng: random.Random, seed: int, *, scenario=None, cells=None, ri=None,
-          cj=None, surface=None, places=None, margins=True, fmt="mcq",
+          cj=None, surface=None, places=None, margins=None, fmt=None,
           wrongs=None, tier="medium"):
     """P(this row and this column) -- one cell, over every unit in the table."""
     c, T = setup(rng, scenario, cells)
+    margins, fmt = free(rng, margins, fmt)
     ri = rng.randrange(T.nr) if ri is None else ri
     cj = rng.randrange(T.nc) if cj is None else cj
     row, col = c.rows[ri], c.cols[cj]
     ev = Event(rows=row.idx, cols=col.idx)
-    surface = surface or rng.choice(SURFACES)
-    places = PLACES.get(surface, 0) if places is None else places
+    surface, places = grid_exact(fmt, surface or rng.choice(SURFACES), places)
     num, N = T.count(ev), T.total
     if not 0 < num < N:
         raise ItemError("a probability of 0 or 1 is not what this question asks")
@@ -260,12 +289,14 @@ def joint(rng: random.Random, seed: int, *, scenario=None, cells=None, ri=None,
 # --------------------------------------------- prob.two_way.conditional / .grouped
 
 FRAMES = ("given", "if_cond", "select_cond", "fraction_of", "of_the")
+HEDGED = ("given", "if_cond", "select_cond")   # can print "closest to"
 
 
 def _conditional(name, rng, seed, *, scenario, cells, ev_axis, ev_idx, cd_idx,
                  surface, places, frame, margins, fmt, wrongs, tier, approx,
                  unions):
     c, T = setup(rng, scenario, cells)
+    margins, fmt = free(rng, margins, fmt)
     ev_axis = ev_axis or rng.choice(("row", "col"))
     cd_axis = "col" if ev_axis == "row" else "row"
     ev_pool = (c.row_sels() if ev_axis == "row" else c.col_sels())
@@ -301,10 +332,18 @@ def _conditional(name, rng, seed, *, scenario, cells, ev_axis, ev_idx, cd_idx,
     N = T.total
     if den == 0 or not 0 < num < den:
         raise ItemError("a conditional probability of 0 or 1 is not what this asks")
-    surface = surface or rng.choice(SURFACES)
-    places = PLACES.get(surface, 0) if places is None else places
-    if approx and surface != "decimal":
-        raise ItemError("only a decimal answer is offered as the closest of four")
+    surface, places = grid_exact(fmt, surface or rng.choice(SURFACES), places)
+    frame = frame or rng.choice(FRAMES)
+    # A rounded answer may print only under a stem that says it is rounded, and
+    # two of the five frames have nowhere to put the words: "What fraction of
+    # the X are Y?" cannot also say "which of the following is closest to". A
+    # draw that rounded under those frames printed an answer no option held.
+    if approx is None:
+        approx = (surface == "decimal" and fmt == "mcq" and frame in HEDGED
+                  and rng.random() < 0.45)
+    if approx and (surface != "decimal" or frame not in HEDGED):
+        raise ItemError("only a decimal answer under a frame that can say "
+                        "'closest to' is offered as the closest of four")
     guard_surface(num, den, surface, places, approx)
 
     n_ev_all = T.count(E)
@@ -354,7 +393,6 @@ def _conditional(name, rng, seed, *, scenario, cells, ev_axis, ev_idx, cd_idx,
 
     order = wrongs or _order(pool, ["joint", "reverse", "event_over_grand",
                                     "complement_in", "cond_over_grand"])
-    frame = frame or rng.choice(FRAMES)
     stem = f"{intro_of(c, T)} {_ask_cond(c, T, ev, cd, frame, approx, surface, places)}"
     key = render(num, den, surface, places)
     P = params_of("prob_two_way", c, T, E, G, surface, places, approx)
@@ -419,7 +457,7 @@ def _ask_cond(c, T, ev, cd, frame, approx, surface, places) -> str:
 
 def conditional(rng, seed, *, scenario=None, cells=None, ev_axis=None, ev_idx=None,
                 cd_idx=None, surface=None, places=None, frame=None, margins=True,
-                fmt="mcq", wrongs=None, tier="medium", approx=False):
+                fmt=None, wrongs=None, tier="medium", approx=None):
     """P(A|B) where A and B are each one printed category."""
     return _conditional("prob.two_way.conditional", rng, seed, scenario=scenario,
                         cells=cells, ev_axis=ev_axis, ev_idx=ev_idx, cd_idx=cd_idx,
@@ -429,7 +467,7 @@ def conditional(rng, seed, *, scenario=None, cells=None, ev_axis=None, ev_idx=No
 
 def grouped(rng, seed, *, scenario=None, cells=None, ev_axis=None, ev_idx=None,
             cd_idx=None, surface=None, places=None, frame=None, margins=True,
-            fmt="mcq", wrongs=None, tier="hard", approx=False):
+            fmt=None, wrongs=None, tier="hard", approx=None):
     """P(A|B) where at least one of A and B merges several printed categories."""
     return _conditional("prob.two_way.grouped", rng, seed, scenario=scenario,
                         cells=cells, ev_axis=ev_axis, ev_idx=ev_idx, cd_idx=cd_idx,

@@ -71,7 +71,7 @@ def _assemble(sc, st, rng, specs, template, tier, seed, stem, table=None,
             f"study; an item has exactly one defensible answer "
             f"({[p.name for p in good]})")
     key = good[0]
-    wrong = [Mis(p.why, p.text) for p in printed if p is not key]
+    wrong = [Mis(_wrong_why(sc, st, p), p.text) for p in printed if p is not key]
     choices, reasons, letter = assemble_text(key.text, wrong, rng)
     if len(set(choices)) != 4:
         raise ItemError("two options print as the same sentence")
@@ -86,6 +86,23 @@ def _assemble(sc, st, rng, specs, template, tier, seed, stem, table=None,
     return Item(template, "sample statistics and margin of error", tier, seed,
                 stem, "mcq", E(0), letter, _why(sc, st), choices, reasons,
                 list(choices), table=table, params=P)
+
+
+def _wrong_why(sc, st, p) -> str:
+    """The mistake a distractor is made of, said in the draw's own terms.
+
+    A claim's own reason is written for the ordinary page, where the sample
+    was selected at random and the mistake is in the reading of the margin.
+    When the sample selected itself, every statement about the population is
+    wrong for one reason instead, and saying "took the bottom of the
+    interval" there would name a mistake the student did not make.
+    """
+    if st.random:
+        return p.why
+    if p.claim.kind == "no_conclusion":
+        return p.why
+    return (f"generalized to {sc.pop_all} from a sample that selected itself, "
+            f"which speaks for nobody but the units in it")
 
 
 def _why(sc, st) -> str:
@@ -106,10 +123,15 @@ def _study_and_stem(sc, n, est, moe, self_selected: bool, size=None):
     st = Study(sc.quantity, q(est), None if moe is None else q(moe), n=int(n),
                random=not self_selected, size=size)
     draw = sc.extra["draw_self"] if self_selected else sc.draw
-    parts = [draw.format(n=f"{int(n):,}", est=sc.one(st.estimate),
+    # the SAT spells a unit out where it first appears and abbreviates it
+    # afterwards: "27.8 ounces (oz), with an associated margin of error of
+    # 0.02 oz", and then "27.78 oz" in the options
+    first = sc.extra.get("first_use")
+    shown = (f"{sc.num(st.estimate)} {first}" if first else sc.one(st.estimate))
+    parts = [draw.format(n=f"{int(n):,}", est=shown,
                          moe=sc.one(st.margin) if st.margin is not None else "")]
     if sc.report:
-        parts.append(sc.report.format(n=f"{int(n):,}", est=sc.one(st.estimate),
+        parts.append(sc.report.format(n=f"{int(n):,}", est=shown,
                                       moe=sc.one(st.margin)))
     parts.append(sc.ask)
     return st, tidy(" ".join(parts))

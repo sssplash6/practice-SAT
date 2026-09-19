@@ -31,7 +31,7 @@ from fractions import Fraction as Q
 
 from ...item import ItemError
 from .study import Band, Claim, Not, Only, Outside, Study
-from .values import q
+from .values import dec, q
 
 __all__ = ["Printed", "build", "catalogue", "NAMES"]
 
@@ -78,15 +78,15 @@ def _interval(sc, st, v):
 def _point(sc, st, v):
     return (f"{sc.subject} is {sc.one(st.estimate)}.",
             Claim("parameter", "frame", "plausible", Only(q(st.estimate))),
-            "gave the sample's estimate as the population's value, when a single "
-            "sample only places the value within the margin of error")
+            "gave the sample's estimate as the population's value, when one "
+            "sample can only estimate it")
 
 
 def _point_exact(sc, st, v):
     return (f"{sc.subject} is exactly {sc.one(st.estimate)}.",
             Claim("parameter", "frame", "certain", Only(q(st.estimate))),
-            "read a point estimate as an exact population value, so the margin of "
-            "error does no work at all")
+            "read a point estimate as an exact population value, which no single "
+            "sample can settle")
 
 
 def _point_upper(sc, st, v):
@@ -118,7 +118,11 @@ def _less_est(sc, st, v):
 
 
 def _outside(sc, st, v):
-    return (f"{sc.subject} is less than {sc.num(st.lo)} or greater than "
+    # a unit goes on both endpoints wherever the scene puts one on each --
+    # "less than 27 or greater than 37%" was printing the per-cent sign on
+    # the second number alone
+    lo = sc.one(st.lo) if sc.unit_each else sc.num(st.lo)
+    return (f"{sc.subject} is less than {lo} or greater than "
             f"{sc.one(st.hi)}.",
             Claim("parameter", "frame", "plausible", Outside(st.lo, st.hi)),
             "turned the interval inside out and ruled out exactly the values the "
@@ -158,10 +162,13 @@ def _not_possible_above(sc, st, v):
 def _doubtful(sc, st, v):
     if v is None:
         raise ItemError("a doubtful-value claim needs the value it doubts")
+    inside = st.margin is not None and st.lo <= v <= st.hi
+    why = ("called a value doubtful although it sits inside the interval the "
+           "margin of error makes plausible" if inside else
+           "doubted a value on the strength of a sample that was never drawn "
+           "at random")
     return (f"It is doubtful that {sc.subject_lc} is {sc.one(v)}.",
-            Claim("parameter", "frame", "plausible", Not(v)),
-            "called a value doubtful although it sits inside the interval the "
-            "margin of error makes plausible")
+            Claim("parameter", "frame", "plausible", Not(v)), why)
 
 
 def _plausible_below(sc, st, v):
@@ -179,10 +186,21 @@ def _plausible_above(sc, st, v):
 
 
 def _count_from_sample(sc, st, v):
+    # a headcount, so it prints as a whole number with its thousands
+    # separator -- not through the scene's own `num`, which carries the
+    # decimal places the *measure* is printed to. A proportion scene fixes
+    # two places, and reading a count through it printed "between 280.00 and
+    # 280.00": the wrong surface and, because a margin below 1 floors to
+    # nothing, a range with no width.
     m = _floor(q(st.margin))
+    if st.n <= 0 or m <= 0:
+        raise ItemError("this study's margin does not reach a whole member of "
+                        "the sample, so there is no such range to misread")
     lo, hi = Q(st.n) - m, Q(st.n) + m
-    return (f"Plausible values of {sc.count_np} are between {sc.num(lo)} and "
-            f"{sc.num(hi)}.",
+    if lo <= 0:
+        raise ItemError("the misread range would run below zero")
+    return (f"Plausible values of {sc.count_np} are between {dec(lo, 0)} and "
+            f"{dec(hi, 0)}.",
             Claim("count", "frame", "plausible", Band(lo, hi)),
             "applied the margin of error to the size of the sample instead of to "
             "the estimate it belongs to")
@@ -266,22 +284,26 @@ def _wider_mean(sc, st, v):
 
 
 def _no_conclusion_a(sc, st, v):
-    return (sc.extra["no_conc"][0], Claim("parameter", "frame", "plausible",
-                                          None, kind="no_conclusion"),
-            "refused a conclusion the random sample does support, on a point "
-            "about the sample that does not stop it")
+    return (sc.extra["no_conc"][0],
+            Claim("parameter", "frame", "plausible", None,
+                  kind="no_conclusion", ground="mixed_sample"),
+            "refused the conclusion because the sample held members without the "
+            "trait as well as members with it, which is what a sample has to "
+            "hold to measure anything")
 
 
 def _no_conclusion_b(sc, st, v):
-    return (sc.extra["no_conc"][1], Claim("parameter", "frame", "plausible",
-                                          None, kind="no_conclusion"),
+    return (sc.extra["no_conc"][1],
+            Claim("parameter", "frame", "plausible", None,
+                  kind="no_conclusion", ground="not_exhaustive"),
             "asked the sample to be the whole population before it may be used, "
-            "which is what a sample is for")
+            "which would refuse every inference ever drawn from a sample")
 
 
 def _no_conclusion_self(sc, st, v):
-    return (sc.extra["no_conc_self"], Claim("parameter", "frame", "plausible",
-                                            None, kind="no_conclusion"),
+    return (sc.extra["no_conc_self"],
+            Claim("parameter", "frame", "plausible", None,
+                  kind="no_conclusion", ground="not_random"),
             "refused a conclusion a randomly selected sample does support")
 
 
@@ -332,6 +354,17 @@ EXTRA_NEEDS = {"no_conclusion_a": "no_conc", "no_conclusion_b": "no_conc",
 
 
 # a sentence that prints an endpoint cannot be written without a margin
+# "More than 35% of all adults who own televisions use ..." counts members of
+# a population, so it is a sentence about a percent. A mean has no such
+# reading -- the anonymous scene printed "More than 62 of the population are
+# in the population" before this was here -- and a proportion between 0 and 1
+# does not either.
+WANTS_PERCENT = frozenset({"more_than_upper", "less_than_lower"})
+
+# two sentences that say the same wrong thing, differing only by the word
+# "exactly". Printing both wastes an option and reads as a misprint.
+CONFLICT = (frozenset({"point", "point_exact"}),)
+
 WANTS_MARGIN = frozenset({
     "interval", "point_upper", "point_lower", "outside", "more_than_upper",
     "less_than_lower", "not_possible_below", "not_possible_above",
@@ -347,6 +380,9 @@ def build(sc, st: Study, spec: str) -> Printed:
         raise ItemError(f"no claim named {base!r}")
     if base in WANTS_MARGIN and st.margin is None:
         raise ItemError(f"{base!r} prints an endpoint and this study has no margin")
+    if base in WANTS_PERCENT and sc.quantity != "percent":
+        raise ItemError(f"{base!r} counts members of a population and only a "
+                        f"percent reads that way")
     need = NEEDS.get(base)
     if need and not getattr(sc, need):
         raise ItemError(f"scene {sc.key!r} has no wording for {base!r}")
@@ -363,4 +399,8 @@ def catalogue(sc, st: Study, specs) -> list[Printed]:
     out = [build(sc, st, s) for s in specs]
     if len({p.text for p in out}) != len(out):
         raise ItemError("two of the printed options are the same sentence")
+    bases = {s.partition(":")[0] for s in specs}
+    for pair in CONFLICT:
+        if pair <= bases:
+            raise ItemError(f"{sorted(pair)} say the same thing twice")
     return out

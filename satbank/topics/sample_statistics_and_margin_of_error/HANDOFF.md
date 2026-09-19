@@ -5,9 +5,18 @@ Started 2026-09-19. Wave 4, the third and last topic of the wave.
 
 ## Status
 
-**Gate green on all seven checks** (18/18 encoded, 0 excluded, 100% of
-official distractors, 16/16 complete option sets, 13,586+ distinct items).
-`option_check.py` and `OPTION-CHECK.md` are the remaining pieces.
+**Finished 2026-09-19. All three gate commands green.**
+
+```
+check        7/7 ok, 18/18 encoded, 0 excluded, 100% of official distractors,
+             16/16 complete option sets, 3,598 audited, 13,788+ distinct items
+option_check 21 injected faults, all caught; 10,811 generated items and the
+             eighteen official ones read back, 0 defects outstanding
+preview      12 templates x 3 items rendered and read by eye
+```
+
+All eighteen official items reproduce College Board's stem and its four
+options word for word.
 
 * **Transcribed: 18/18.** `material/transcripts/sample_statistics_and_margin_of_error.json`
   is complete; every question image was read. The two grid-ins are 2.6 (3540)
@@ -93,13 +102,21 @@ template raises rather than keying it.
    sets, parsing the printed sentences with its own patterns. It imports
    neither `study.py` nor `claims.py`.
 4. Done — `sources.py` (18/18, `EXCLUDED` empty), `__init__.py`.
-5. **Next** — `option_check.py` + `OPTION-CHECK.md`: a third writing of the
-   rule that reads the numbers off the printed **stem** rather than out of
-   `item.params`, plus the table arithmetic, plus injected faults.
+5. Done — `option_check.py` + `OPTION-CHECK.md`: a third writing of the rule
+   that reads the numbers off the printed **stem** rather than out of
+   `item.params`, re-adds every table, and ships twenty-one injected faults.
 
-## Defects found and not yet fixed
+## Defects found and fixed
 
-None outstanding. Two found and fixed while building:
+None outstanding. `OPTION-CHECK.md` has the full account; in short, three
+live defects from the checker (a zero-width range printed as
+`between 280.00 and 280.00`; a "no conclusion can be made" sentence keyed for
+a reason that would refuse every sample; a sentence reader that had silently
+stopped parsing half the page) and five more from reading the rendered page
+(a percent-shaped sentence offered on a mean scene; a verb the anonymous
+scene has no use for; a per-cent sign on one endpoint of two; two options
+five apart on a stem that says "about"; a class splitting evenly so that
+three options collapsed onto the key). Two more were found while building:
 
 * the audit's interval reader was case-sensitive, so it could not read
   "Between 28.59% and 35.41% ..." at the head of a sentence and silently
@@ -108,6 +125,14 @@ None outstanding. Two found and fixed while building:
   was noticed; a reader that had defaulted to True would have passed.
 * the same reader's number pattern was `[\d,.]+`, which swallows the full
   stop that ends the sentence and turns `0.91.` into a parse error.
+
+## If you change anything
+
+Re-run `option_check.py --selftest` **and** a volume sweep, and look at the
+item counts. The readers are literal about the sentences they parse, and one
+that has stopped matching prints `0 defects` in the same words as one that
+checked everything -- that is exactly how defect 3 below announced itself,
+and it only announced itself because it failed loudly rather than quietly.
 
 ## Known weak point, named rather than hidden
 

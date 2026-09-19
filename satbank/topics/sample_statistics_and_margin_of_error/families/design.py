@@ -89,6 +89,11 @@ PLAUSIBLE = {
 }
 
 
+def _pct(v: Q) -> str:
+    """A percent at its own length: 30%, not 30.00%."""
+    return dec(v, 0 if q(v).denominator == 1 else 2) + "%"
+
+
 def _counts(N: int, pct: Q) -> Q:
     return Q(N) * pct / 100
 
@@ -120,8 +125,7 @@ def plausible_count(rng: random.Random, seed: int, *, ctx=None, N=None, n=None,
         raise ItemError("the interval's endpoints have to be whole counts")
 
     stem = tidy(kit.stem.format(N=f"{N:,}", n=f"{n:,}" if n else "",
-                                est=f"{dec(est, 0) if est.denominator == 1 else dec(est, 2)}%",
-                                moe=f"{dec(moe, 0) if moe.denominator == 1 else dec(moe, 2)}%",
+                                est=_pct(est), moe=_pct(moe),
                                 sym=kit.extra.get("sym", "")))
 
     if kit.form == "range":
@@ -174,7 +178,7 @@ def plausible_count(rng: random.Random, seed: int, *, ctx=None, N=None, n=None,
             key[1], [Mis(p[3], p[1]) for p in bad], rng)
         if len(set(choices)) != 4:
             raise ItemError("two options print the same range")
-        why = (f"{dec(st.lo, 2)}% to {dec(st.hi, 2)}% of {N:,} is {dec(lo, 0)} to "
+        why = (f"{_pct(st.lo)} to {_pct(st.hi)} of {N:,} is {dec(lo, 0)} to "
                f"{dec(hi, 0)}, so those are the plausible counts.")
         P = dict(kind="sstat.plausible_count", ctx=kit.key, form="range", N=N,
                  n=n, estimate=str(est), margin=str(moe), texts=list(choices),
@@ -219,7 +223,7 @@ def plausible_count(rng: random.Random, seed: int, *, ctx=None, N=None, n=None,
     if len(inside) != 1 or inside[0] != choices["ABCD".index(letter)]:
         raise ItemError(f"{len(inside)} of the four printed counts are plausible "
                         f"values; the page needs exactly one, and it must be the key")
-    why = (f"{dec(st.lo, 2)}% to {dec(st.hi, 2)}% of {N:,} is {dec(lo, 0)} to "
+    why = (f"{_pct(st.lo)} to {_pct(st.hi)} of {N:,} is {dec(lo, 0)} to "
            f"{dec(hi, 0)}, and {dec(key_v, 0)} is in that interval.")
     P = dict(kind="sstat.plausible_count", ctx=kit.key, form="value", N=N, n=n,
              estimate=str(est), margin=str(moe), texts=list(choices),

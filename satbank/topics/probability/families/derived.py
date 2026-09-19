@@ -83,6 +83,10 @@ def cell_from_total(rng: random.Random, seed: int, *, scenario=None, cells=None,
                     hr=None, hc=None, wrongs=None, tier="easy"):
     """The grand total is in the stem and one cell is printed as a question mark."""
     c, T = setup(rng, scenario, cells)
+    if "{n}" not in c.intro:
+        raise ItemError("this scenario's prose never states the grand total, and "
+                        "without it the missing cell cannot be recovered from the "
+                        "page")
     hr = rng.randrange(T.nr) if hr is None else hr
     hc = rng.randrange(T.nc) if hc is None else hc
     x, N = T.cells[hr][hc], T.total

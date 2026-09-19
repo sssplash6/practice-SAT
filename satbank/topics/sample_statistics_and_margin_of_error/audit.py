@@ -154,10 +154,26 @@ def _vset(text: str):
     return ("only", ns[-1])
 
 
+# what a "no conclusion can be made" sentence blames, read off the sentence.
+# Only the first is ever a reason: every sample leaves somebody out and every
+# sample holds members without the trait, so refusing an inference on either
+# of those grounds would refuse every inference ever drawn from a sample.
+_GROUNDS = ((r"chose to take part", "not_random"),
+            (r"did not include all", "not_exhaustive"),
+            (r"and not just", "mixed_sample"))
+
+
+def _ground(text: str) -> str:
+    for pat, name in _GROUNDS:
+        if re.search(pat, text):
+            return name
+    raise AuditError(f"a no-conclusion sentence that blames nothing: {text!r}")
+
+
 def _read(sc, text: str):
     """(aspect, population, modality, value set) for one printed sentence."""
     if "no conclusion can be made" in text:
-        return ("no_conclusion", "frame", "plausible", None)
+        return ("no_conclusion", _ground(text), "plausible", None)
 
     body = text
     for frag in (sc.trait, sc.extra.get("wider_trait", "")):
@@ -228,7 +244,8 @@ def _supported(p: dict, claim) -> bool:
     aspect, pop, modality, vs = claim
     rep = _reports(p)
     if aspect == "no_conclusion":
-        return ("parameter", "frame") not in rep
+        return (("parameter", "frame") not in rep
+                and pop == "not_random" and not p.get("random", True))
     r = rep.get((aspect, pop))
     if r is None:
         return False                # nothing is reported about this subject
