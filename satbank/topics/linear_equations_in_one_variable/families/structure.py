@@ -213,7 +213,24 @@ def no_solution_constant(rng: random.Random, seed: int, *, shape=None, var=None,
                     Mis("subtracted the constant in the parentheses from the "
                         "right-hand value", d - c),
                     Mis("reported the right-hand value", d),
-                    Mis("changed the sign of the constant in the parentheses", -c)]
+                    Mis("changed the sign of the constant in the parentheses", -c),
+                    # Every one of the five above is read off the right-hand
+                    # value, so its sign follows d rather than the key's. When d
+                    # falls the other way the key is left standing alone -- the
+                    # only negative, or the only whole number among fractions --
+                    # and the draw is refused; 888 of every 3,000 were.
+                    # The one below is read off the parentheses instead, so it
+                    # carries the key's sign whichever way d falls, and it is a
+                    # mistake the equation really admits: carry d across the
+                    # equals sign and set the parentheses equal to it, and you
+                    # name the constant for which the equation solves at -1 -- an
+                    # equation with one solution, not an empty one. It is
+                    # appended rather than inserted, so a draw whose first three
+                    # already print well keeps exactly those three (2.4 among
+                    # them), and this one prints only where one of the five was
+                    # leaving the key alone.
+                    Mis("carried the right-hand value across the equals sign and "
+                        "then set the parentheses equal to it", c - d)]
     else:                                       # a(L*v + b) = (p/q)v + d
         a = Q(rng.randint(2, 9) if a is None else a)
         b = Q(rng.choice([i for i in range(-20, 21) if i]) if b is None else b)
