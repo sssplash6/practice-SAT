@@ -216,6 +216,20 @@ it refuses, and switching the method to convenience moves both the key and the
 stem. Its `option_check` reads `item.params` nowhere and ships nine injected
 faults, all caught.
 
+**Both remaining topics were launched 2026-09-19 and may be unfinished.**
+If `satbank/topics/probability/` or
+`satbank/topics/sample_statistics_and_margin_of_error/` exists but is not
+committed, an agent was mid-build when the session ended. Each was told to keep
+a current `HANDOFF.md` in its own directory — read that first, it is the
+authority on its own state, not this file. To pick up: run the gate and the
+topic's `option_check.py --selftest`, read its HANDOFF, and continue from the
+"what is next" line. Nothing outside those two directories and their
+transcripts should have changed; `git status` will show if it did.
+
+Verify either one the way the third attempt at Evaluating Statistical Claims
+was verified, because a green gate is not the standard here: hand a source item
+a deliberately wrong answer and check the engine refuses it.
+
 Remaining: **Probability** (36 items, 28% grid-ins, two-way tables shared with
 Sample Statistics) and **Sample Statistics and Margin of Error** (18 items).
 Both should read `evaluating_statistical_claims/` first now — it is the nearest
