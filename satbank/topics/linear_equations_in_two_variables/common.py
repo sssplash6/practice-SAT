@@ -199,6 +199,12 @@ def pair(text: str, *vals) -> tuple:
     return (text, sig(*vals))
 
 
+# `pi` as a word, not two letters inside one -- the same reading as
+# `check._shape`, which this mirrors. A digit may precede it (12pi is twelve
+# pi); a letter never can, which keeps opinion, hospital and camping out.
+_PI_WORD = re.compile(r"(?<![A-Za-z])pi(?![A-Za-z])")
+
+
 def _surface(opt: str) -> tuple:
     """What an option looks like at a glance -- the gate's own signature.
 
@@ -208,8 +214,9 @@ def _surface(opt: str) -> tuple:
     this signature quietly stops seeing negatives at all, which is the single
     thing it exists to see: a lone negative among three positives is the answer.
     """
-    return (bool(re.search(r"[a-zA-Z]", opt.replace("pi", "").replace("π", ""))),
-            "π" in opt or "pi" in opt, "√" in opt or "sqrt" in opt,
+    return (bool(re.search(r"[a-zA-Z]", _PI_WORD.sub("", opt.replace("π", "")))),
+            "π" in opt or _PI_WORD.search(opt) is not None,
+            "√" in opt or "sqrt" in opt,
             "/" in opt, "." in opt, opt.strip().startswith(("-", "\N{MINUS SIGN}")))
 
 

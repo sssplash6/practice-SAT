@@ -449,3 +449,30 @@ Serve before you calibrate. A thin layer that enumerates by seed, keeps
 per-student history and records outcomes is enough for a first cohort, and it
 produces the data the rest depends on. Blueprint weighting and difficulty
 re-weighting are both cheap once there are p-values and both guesswork before.
+
+
+## Open: the contestants table says one thing and counts another
+
+Found 2026-09-20 while promoting the table check, and left unfixed deliberately
+because the fix belongs in the template, not the checker.
+
+Probability's `contestants` scenario draws each day's row independently, so a
+stem reading "The same 33 contestants, on each of 3 days" stands over day rows
+totalling 33, 29 and 27. College Board's own item 3.1 has all three rows equal
+to its 20 contestants and a grand total of 60 -- that is the whole meaning of
+"the same N contestants".
+
+Measured: **81 of 81 contestants draws are wrong**, across
+`prob.two_way.grouped` (39/39), `prob.two_way.missing_cell` (28/28) and
+`prob.two_way.conditional` (14/14). Only the Day 1 row ever matches.
+
+Nothing in the tree catches it and nothing should be expected to: every margin
+closes, the answer is computed from the cells, so the new `table` check, the
+topic's own closure reader and the audit all agree with each other. Only the
+English disagrees with the arithmetic. Widening the stem-total reader to catch
+a bare "each of N" was measured and rejected -- it also fails `ovd.odd_measure`
+in 200 of 200 draws, where "counted in each of 20 hours" is a count of hours
+and not of the things in the table.
+
+The repair: make the scenario draw one contestant population and hold it across
+the day rows, as the source item does.
