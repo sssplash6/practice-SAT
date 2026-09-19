@@ -273,6 +273,13 @@ def _structure(item, name: str, seed: int) -> list[str]:
     return out
 
 
+# `pi` as a word, not as two letters inside one. `\b` alone still matches
+# inside "pi-shaped", so the boundaries are explicit about what may sit beside
+# it: no letter either side. A digit may precede it -- 12pi is twelve pi --
+# but a letter never can, which is what keeps opinion, hospital and camping out.
+_PI_WORD = re.compile(r"(?<![A-Za-z])pi(?![A-Za-z])")
+
+
 def _shape(opt: str) -> tuple:
     """A crude surface signature: what the option looks like at a glance.
 
@@ -280,9 +287,16 @@ def _shape(opt: str) -> tuple:
     literal may carry the ASCII hyphen; reading only one of them would quietly
     stop this check seeing negatives at all, which is the failure it exists to
     catch -- a lone negative among three positives is the answer.
+
+    `pi` counts only as a word of its own, never as two letters inside another.
+    Read as a substring it fires on `participants`, `opinion`, `hospital` and
+    `camping`, so a sentence-valued option reads as mathematics and the key
+    becomes "the only option of its shape". Three topics worked around this and
+    one permanently barred a scenario from a template because of it.
     """
-    return (bool(re.search(r"[a-zA-Z]", opt.replace("pi", "").replace("π", ""))),
-            "π" in opt or "pi" in opt, "√" in opt or "sqrt" in opt,
+    has_pi = "π" in opt or _PI_WORD.search(opt) is not None
+    return (bool(re.search(r"[a-zA-Z]", _PI_WORD.sub("", opt.replace("π", "")))),
+            has_pi, "√" in opt or "sqrt" in opt,
             "/" in opt, "." in opt, opt.strip().startswith(("-", "\N{MINUS SIGN}")))
 
 
