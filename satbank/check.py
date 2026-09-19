@@ -1,6 +1,6 @@
 """The quality gate. A topic ships when this is green, and not before.
 
-Seven checks, in the order a failure is worth hearing about:
+Eight checks, in the order a failure is worth hearing about:
 
   coverage      every official item is either encoded or excluded with a reason
   transcript    the questions were transcribed, and each agrees with the key table
@@ -8,6 +8,7 @@ Seven checks, in the order a failure is worth hearing about:
   audit         generated items survive an independently written solver, at volume
   structure     four distinct options, ascending, key never alone in its form
   prose         no placeholder, no doubled space, no sentence that is not one
+  table         a printed table adds up: rows, columns, margins, the stem's total
   capacity      no template is a one-trick: each can make hundreds of items
 
 The official answers come from `material/keys/<slug>.json`, extracted from the
@@ -207,11 +208,12 @@ def _acceptance(topic: Topic, key: dict, tr: dict) -> Result:
     return Result("acceptance", not detail and ok == len(topic.sources), stat, _first(detail, 20))
 
 
-def _volume(topic: Topic, per_template: int) -> tuple[Result, Result, Result, list]:
-    """Generate at volume: the audit, the structure and the prose checks share
-    one pass, because generating is the expensive part."""
-    audit_bad, struct_bad, prose_bad = [], [], []
-    named = total = made = 0
+def _volume(topic: Topic, per_template: int
+            ) -> tuple[Result, Result, Result, Result, list]:
+    """Generate at volume: the audit, the structure, the prose and the table
+    checks share one pass, because generating is the expensive part."""
+    audit_bad, struct_bad, prose_bad, table_bad = [], [], [], []
+    named = total = made = tables = 0
     items = []
     for name in topic.templates:
         for seed in range(per_template):
@@ -228,6 +230,16 @@ def _volume(topic: Topic, per_template: int) -> tuple[Result, Result, Result, li
             items.append(item)
             struct_bad += _structure(item, name, seed)
             prose_bad += _prose(item, name, seed)
+            if item.table:
+                tables += 1
+                # a reader that throws has stopped reading, and a gate that
+                # dies on one item reports nothing about the other 5,000
+                try:
+                    table_bad += [f"{name} seed {seed}: {b}"
+                                  for b in _closes(item.table, item.stem)]
+                except Exception as exc:                            # noqa: BLE001
+                    table_bad.append(f"{name} seed {seed}: the table could not be "
+                                     f"read: {type(exc).__name__}: {exc}")
             if item.fmt == "mcq":
                 for r in item.reasons:
                     if r == "":
@@ -242,6 +254,9 @@ def _volume(topic: Topic, per_template: int) -> tuple[Result, Result, Result, li
             Result("structure", not struct_bad,
                    f"{share:.0%} of distractors named", _first(struct_bad, 10)),
             Result("prose", not prose_bad, f"{made:,} items read", _first(prose_bad, 10)),
+            Result("table", not table_bad,
+                   f"{tables:,} tables re-added" if tables else "no item prints a table",
+                   _first(table_bad, 10)),
             items)
 
 
@@ -338,6 +353,164 @@ def _prose(item, name: str, seed: int) -> list[str]:
     return out
 
 
+# ------------------------------------------------------------------- tables
+
+# A printed table is arithmetic the student is expected to trust, and until
+# now nothing in the gate added one up. Two topics wrote their own reader
+# rather than ship a table that does not close -- `probability`'s `Printed`
+# and `sample_statistics_and_margin_of_error`'s `closed_table` -- and this is
+# the better of the two promoted: `Printed`'s shape, because it reports rather
+# than raises, survives a cell the question hides and does not insist a table
+# carry both margins, plus `closed_table`'s check of the body against the
+# total the stem names.
+#
+# It runs over GENERATED draws only, never over the source material. College
+# Board's own table for Probability item 1.2 does not add up -- 60 + 35 = 95
+# under a printed column total of 90, and 90 + 40 = 130 under a printed grand
+# total of 135 -- and that item is answerable and ships. Pointed at the 92
+# transcribed tables this reader fails two of them: that one, and One-Variable
+# Data 3.9, whose header spans columns and so transcribes ragged. Both are
+# faithful transcriptions of a printed page, and a gate that punishes a topic
+# for transcribing what College Board printed teaches the author to edit the
+# source. The invariant that belongs to the engine is the other one: whatever
+# the source did, a table the engine BUILDS must close. Driven with the source
+# items' own numbers the engine already satisfies it 85 times out of 85 -- it
+# prints item 1.2 without the bad margins -- so the line costs nothing today
+# and holds tomorrow.
+
+
+def _cell(text):
+    """The number a printed cell holds, or None when it does not hold one.
+
+    A cell printed `x` or `?` is the question, not a defect; a cell may carry
+    a comma, a percent sign, a dollar sign or the typeset minus.
+    """
+    t = (str(text).strip().replace(",", "").replace("\N{MINUS SIGN}", "-")
+         .replace("%", "").replace("$", "").strip())
+    if not t:
+        return None
+    try:
+        return int(t)
+    except ValueError:
+        pass
+    try:
+        return float(t)
+    except ValueError:
+        return None
+
+
+def _is_total(text) -> bool:
+    return str(text).strip().rstrip("s").lower() == "total"
+
+
+# The total a stem names for the table under it. Deliberately narrow: the
+# danger is not missing one, it is reading the wrong number as the total and
+# failing an item that is right. Every phrase here was measured over 32,211
+# generated tables; the ones left out were left out for a reason a draw
+# showed:
+#
+#   "a total of N"        the town has a total of 6,000 voters -- the
+#                         population, not the 417 in the table
+#   "each of N days"      on each of 3 days ... -- the article is what
+#                         separates "each of its 168 employees" from a
+#                         sub-unit of the scenario
+#   "selected N patients" the study drew 78; the table shows the 48 of them
+#                         who recovered in at least four weeks
+_STEM_TOTAL = re.compile(
+    r"\b(?:each|all) of (?:its|the|these|her|his|their) ([\d,]+)\b"
+    r"|\ball ([\d,]+) of (?:its|the|their)\b"
+    r"|\bfor the ([\d,]+) [\w\- ]{0,24}?\b"
+    r"(?:in|on|at|who|that|enrolled|recorded|surveyed|listed)\b"
+    r"|\bsurvey (?:of|taken by) ([\d,]+)\b"
+    r"|\bsample of ([\d,]+)\b"
+    r"|\bsummarizes (?:all |the )?([\d,]+)\b", re.I)
+
+
+def _stem_total(stem: str) -> int | None:
+    """The one total the stem names, or None when it names none or several.
+
+    Two different numbers both reading as the total means the reader has not
+    understood the sentence, and a check that is not sure is worth less than
+    no check at all -- so it stands down rather than guess.
+    """
+    hits = {int(g.replace(",", "")) for m in _STEM_TOTAL.finditer(stem)
+            for g in m.groups() if g}
+    return hits.pop() if len(hits) == 1 else None
+
+
+def _closes(rows: list[list[str]], stem: str = "") -> list[str]:
+    """Add a printed table up again, from its own printed cells.
+
+    Every row must reach its printed row total, every column its printed
+    column total, the two margins must meet at the printed grand total, and a
+    body of counts must hold the total the stem names. A table that prints no
+    margins has nothing to close and passes; a row or column holding a cell
+    the question hides is skipped rather than guessed at, and so is the grand
+    total above it.
+
+    Nothing is read from `item.params`: the whole point is to decide the page
+    from the page, because a renderer that drops a digit is invisible to any
+    check that goes back through the renderer.
+    """
+    bad: list[str] = []
+    if not rows or len(rows) < 2:
+        return bad
+    width = len(rows[0])
+    if width < 2 or any(len(r) != width for r in rows):
+        return [f"the table is ragged -- its rows are "
+                f"{[len(r) for r in rows]} cells wide"]
+    total_col = _is_total(rows[0][-1])
+    total_row = _is_total(rows[-1][0])
+    body = rows[1:-1] if total_row else rows[1:]
+    ncol = width - 1 - (1 if total_col else 0)
+    if not body or ncol < 1:
+        return bad
+    cells = [[_cell(v) for v in r[1:1 + ncol]] for r in body]
+
+    def off(got, printed) -> bool:              # a cell may be 3.0 as well as 3
+        return abs(got - printed) > 1e-9 * max(1.0, abs(printed))
+
+    if total_col:
+        for i, row in enumerate(body):
+            printed = _cell(row[-1])
+            if printed is None or any(v is None for v in cells[i]):
+                continue
+            if off(sum(cells[i]), printed):
+                bad.append(f"row {row[0]!r} holds {cells[i]} summing to "
+                           f"{sum(cells[i])}, but prints a total of {printed}")
+    if total_row:
+        for j in range(ncol):
+            col = [cells[i][j] for i in range(len(body))]
+            printed = _cell(rows[-1][1 + j])
+            if printed is None or any(v is None for v in col):
+                continue
+            if off(sum(col), printed):
+                bad.append(f"column {rows[0][1 + j]!r} holds {col} summing to "
+                           f"{sum(col)}, but prints a total of {printed}")
+    if total_col and total_row:
+        grand = _cell(rows[-1][-1])
+        rtot = [_cell(r[-1]) for r in body]
+        ctot = [_cell(rows[-1][1 + j]) for j in range(ncol)]
+        if grand is not None and None not in rtot and off(sum(rtot), grand):
+            bad.append(f"the row totals {rtot} sum to {sum(rtot)}, not to the "
+                       f"printed grand total {grand}")
+        if grand is not None and None not in ctot and off(sum(ctot), grand):
+            bad.append(f"the column totals {ctot} sum to {sum(ctot)}, not to the "
+                       f"printed grand total {grand}")
+
+    # The stem's own total, and only for a body that counts units: a column of
+    # percentages adds to 100 and a column of prices adds to nothing anybody
+    # would name in a sentence.
+    flat = [v for r in cells for v in r]
+    if flat and all(isinstance(v, int) and v >= 0 for v in flat) \
+            and not any("%" in str(v) for r in body for v in r[1:1 + ncol]):
+        named = _stem_total(stem)
+        if named is not None and sum(flat) != named:
+            bad.append(f"the body of the table holds {sum(flat)}, but the stem "
+                       f"names a total of {named}")
+    return bad
+
+
 def _capacity(topic: Topic, draws: int) -> Result:
     # the floor is a property of the template, but it cannot be judged from
     # fewer draws than the floor itself, so a short pass asks for less
@@ -377,8 +550,8 @@ def check_topic(slug: str, per_template: int = 300, draws: int = 1200,
     tr = transcript(slug)
     results = [_coverage(topic, key), _transcript(topic, key, tr),
                _acceptance(topic, key, tr)]
-    a, s, p, _ = _volume(topic, 40 if quick else per_template)
-    results += [a, s, p]
+    a, s, p, t, _ = _volume(topic, 40 if quick else per_template)
+    results += [a, s, p, t]
     results.append(_capacity(topic, 200 if quick else draws))
     return results
 
