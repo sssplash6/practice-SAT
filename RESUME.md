@@ -216,22 +216,72 @@ and has run its own `option_check`.
 **Next is the serving layer** — see "Before a student sees this" in the README.
 Correct items are not a usable bank.
 
-Three core promotions are still open and each now has two or three topics
-asking for it:
-* `check._shape` reads the letters "pi" inside ordinary English (participants,
-  opinion, hospital, camping), so a prose option looks like a π option. Three
-  topics have now worked around it; one permanently bars a scenario from a
-  template because of it.
-* Nothing in the gate reads a table as arithmetic. Two topics wrote their own
-  closure check. College Board's own table for Probability item 1.2 does not
-  add up, which is how one of them found the gap.
-* `assemble`'s `_fillers` produce options no misconception explains.
-  Probability treats reaching one as a pool bug and raises, which is why its
-  distractor naming is 100% rather than merely above the floor. Worth making
-  the default.
+~~Three core promotions are still open~~ **All three done 2026-09-20.**
+* ~~`check._shape` reads the letters "pi" inside ordinary English.~~
+  **Done** (commit 01ea9bd) — `check._PI_WORD` reads `pi` as a word, never as
+  two letters inside `participants`, `opinion`, `hospital` or `camping`.
+  **Left behind by it:** there are three copies of that surface reader, and
+  only the gate's was changed. `item._surface` — whose own docstring says it
+  mirrors `check._shape` and that "a change to either belongs in both" — and
+  `linear_equations_in_two_variables/common._hands_the_key_over` both still
+  read `pi` as a substring. Nothing is red: the two callers
+  (`item.hands_the_key_over`, used by `lin1/families/kit.py`, and
+  `item._shortlist`) only ever see numeric and algebraic options, where the
+  English words never appear. But the gate and the assembler now disagree
+  about what an option looks like, which is exactly the divergence that
+  docstring exists to forbid, and the next topic with prose options that
+  reaches for `shortlist=` gets the old reading back.
+* ~~Nothing in the gate reads a table as arithmetic.~~ **Done** (commit
+  d1c4650) — an eighth gate check, `table`. `check._closes` re-adds every
+  printed table from its own cells: each row to its row margin, each column to
+  its column margin, both margins to the grand total, and a body of counts to
+  the total the stem names. It is the better of the two topic-local readers
+  (`probability`'s `Printed`, which reports rather than raises and survives a
+  hidden cell) plus the half the other had (`sample_statistics`'s check against
+  the stem's total). It runs on **generated draws only, deliberately**: pointed
+  at the 92 transcribed tables it fails Probability 1.2, whose own printed
+  column total is wrong, and One-Variable Data 3.9, whose header spans columns.
+  Both are faithful transcriptions, and the engine must not be taught to edit
+  the source. Driven with the source items' own numbers the engine closes 85
+  of 85. 12,092 tables are re-added on every full gate run.
+* ~~`assemble`'s `_fillers` produce options no misconception explains.~~
+  **Done as an opt-in flag** (commit 05bbc41) — `assemble(named_only=True)`
+  raises rather than reaching for a filler. **Not** the default: flipping the
+  default and running the whole gate gives **16 of 19 topics passing**. The
+  three that fail, fail on acceptance alone — six official items whose option
+  set the topic today reproduces partly with a filler:
+  `linear_equations_in_one_variable` 1.20, 2.1, 3.1;
+  `nonlinear_equations_and_systems` 1.3, 1.11; `nonlinear_functions` 1.18.
+  That is six named pools to widen, not a design to reconsider. Across 300
+  draws of all 349 templates, 1,115 of 279,228 distractors are fillers (0.40%);
+  five topics are already at zero, and the concentration is
+  `lat.three_lines_point` (54% of its draws), `lat.shadow` (41%),
+  `rtt.cofunction_angles` (39%) and `nlfunc.solve_value` (25%).
 
 Also still open from wave 3: `lin1.no_solution_constant`'s `coef_zero` shape
 refuses 29.6% of draws, diagnosed and not repaired.
+
+**One live defect found while promoting the table check, which that check
+deliberately does not catch.** Probability's `contestants` scenario draws each
+day's row independently, so a stem reading "The same 33 contestants, on each
+of 3 days" sits over day rows totalling 33, 29 and 27. College Board's own
+item 3.1 has every day row equal to its 20 contestants and a grand total of
+60 — the whole point of "the same N contestants". Measured: **81 of 81**
+contestants draws are wrong, across `prob.two_way.grouped` (39/39),
+`prob.two_way.missing_cell` (28/28) and `prob.two_way.conditional` (14/14);
+only the Day 1 row ever matches.
+
+Nothing sees it. The table closes against its own printed margins, so neither
+the new gate check nor `probability`'s own `option_check` closure fires; the
+answer is computed from the cells, so the audit agrees; only the English
+disagrees with the arithmetic. The gate's stem-total reader stands down on
+"on each of 3 days" on purpose — that phrase names a sub-unit of the scenario,
+not the table's total. Measured: widening the reader to a bare "each of N"
+does catch these draws, and also fails `ovd.odd_measure` in **200 of 200**
+draws, where "the number of X was counted in each of 20 hours" is a count of
+hours and not of the things in the table. The fix belongs in the template:
+draw the rows of that scenario to a common contestant count, as the source
+does.
 
 **The other two are done, 2026-09-20.** `kit.Surd` is now `exact.Surd`
 (commit 729b0c1), meeting all five of Right Triangles' numbered requirements;
@@ -341,3 +391,61 @@ and a single sample does not fix a population value. A template takes the
 population, the frame, the method and whether there was assignment, and
 **derives** the licensed option. The audit implements those rules written
 independently. Nothing anywhere names which option is correct.
+
+## The serving layer: what UI work needs, and what it must not assume
+
+Written 2026-09-20, after the four core promotions landed. The item bank is
+finished and correct. This is the list of what stands between it and a student,
+stated so a UI can be built against it. Nothing here is built yet.
+
+### The contract a UI can rely on today
+
+An item is addressed by **(topic slug, template name, seed)** and that triple is
+stable: `registry.generate(name, seed)` returns the identical item every time,
+so a UI can store the triple rather than the rendered item, and a student can be
+handed the same question twice on purpose (review) or never twice by accident.
+An `Item` already carries everything a page needs — `stem`, `fmt` (`mcq` or
+`spr`), `choices`, `answer`, `rationale`, `figure` (SVG), `table`, and
+`reasons`, which is the misconception behind each wrong option and is the thing
+worth showing *after* an answer, not before.
+
+**Answer checking is already solved and should not be reimplemented in the UI.**
+`item.norm_text` and `item.numeral` decide equality the way the bank does: 0.5
+is 1/2, 3,025 is 3025, a typeset minus equals a keyboard one. A grid-in may
+accept several spellings. Any UI that compares strings itself will mark correct
+answers wrong.
+
+### The three gaps, measured rather than guessed
+
+1. **Difficulty is an inherited label, not a measurement.** A template keeps the
+   tier of the source item it was learned from, and nothing checks a generated
+   instance is as hard as its parent. Drawing evenly across templates skews
+   hard: Area and Volume generates 106/146/223 easy/medium/hard from a source
+   set that was 20/21/18. A student asking for easy practice cannot reliably get
+   it. The serving layer must weight draws per template, not per topic.
+
+2. **Random draws repeat.** Seeds collide on parameters. Over 1,000 items in
+   twenty-item sets, Area and Volume repeated a stem 25 times and One-Variable
+   Data 22 — about one visible repeat every second set. Serving needs
+   enumeration by seed plus per-student history, never `random()`.
+
+3. **There is no exam blueprint.** The real test weights its domains; nothing
+   here knows that, so a practice set drawn from this bank has a distribution
+   unlike the SAT's.
+
+### The one that cannot be coded
+
+**Real difficulty comes from real students.** Until items have been sat and
+there are p-values, easy/medium/hard is an informed guess however well the
+engine is built. Every calibration idea above is a placeholder for a p-value.
+That is an argument for getting this in front of a class early and instrumenting
+it, not for calibrating harder in private — and it means the UI should record
+per-item outcomes from the first session, because that data is the only thing
+that can fix gap 1 properly.
+
+### Suggested order
+
+Serve before you calibrate. A thin layer that enumerates by seed, keeps
+per-student history and records outcomes is enough for a first cohort, and it
+produces the data the rest depends on. Blueprint weighting and difficulty
+re-weighting are both cheap once there are p-values and both guesswork before.
