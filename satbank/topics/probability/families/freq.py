@@ -18,7 +18,7 @@ from fractions import Fraction as Q
 from ....item import ItemError
 from ..values import (decimal, griddable, mcq, percent, pick, ratio, reduced,
                       roll_fmt, spr, unambiguous)
-from .simple import exact_decimal, order_of
+from .simple import art, exact_decimal, order_of
 
 SURFACES = ("ratio", "reduced", "decimal")
 
@@ -58,7 +58,7 @@ FREQ = {c.key: c for c in [
          "A total of {n} men registered for singing lessons. The frequency table "
          "shows how many of these singers have certain voice types.",
          "If one of these singers is selected at random, what is the probability he "
-         "is a {cat}?",
+         "is {art} {cat}?",
          ["Countertenor", "Tenor", "Baritone", "Bass"], "singer", "singers",
          lo=3, hi=20, total_row=False),
     FCtx("rocks", "Classification", "Frequency",
@@ -72,18 +72,18 @@ FREQ = {c.key: c for c in [
          "A veterinary clinic recorded the type of each of the {n} pets it treated "
          "in one week.",
          "If one of these pets is selected at random, what is the probability that "
-         "it is a {cat}?",
+         "it is {art} {cat}?",
          ["Dog", "Cat", "Rabbit", "Lizard"], "pet", "pets", lo=4, hi=35),
     FCtx("sandwiches", "Sandwich", "Number sold",
          "A shop recorded the number of each kind of sandwich it sold on one day.",
          "If one of these sandwiches is selected at random, what is the probability "
-         "that it is a {cat} sandwich?",
+         "that it is {art} {cat} sandwich?",
          ["Turkey", "Cheese", "Tuna", "Egg"], "sandwich", "sandwiches",
          lo=6, hi=40, total_row=True),
     FCtx("seedlings", "Species", "Number planted",
          "A nursery recorded the species of each of the {n} seedlings it planted.",
          "If one of these seedlings is selected at random, what is the probability "
-         "that it is a {cat} seedling?",
+         "that it is {art} {cat} seedling?",
          ["Spruce", "Maple", "Willow", "Alder"], "seedling", "seedlings",
          lo=5, hi=40),
 ]}
@@ -137,7 +137,7 @@ def freq_table(rng: random.Random, seed: int, *, scenario=None, counts=None, idx
                             f"of by all {N:,}", (num, counts[j]))
 
     intro = c.intro.format(n=f"{N:,}")
-    stem = f"{intro} {c.ask.format(cat=low)}"
+    stem = f"{intro} {c.ask.format(cat=low, art=art(low))}"
     key = render(num, N, surface, places)
     P = {"kind": "prob_freq", "counts": list(counts), "idx": idx, "surface": surface,
          "places": places}
@@ -213,13 +213,13 @@ def freq_grouped(rng: random.Random, seed: int, *, scenario=None, start=None,
     fmt = roll_fmt(rng, fmt)
 
     pool = {
-        "joint": (f"divided by all {N:,} {units} instead of by the {den:,} in the "
-                  f"group the question names", (num, N)),
+        "joint": (f"divided by all {N:,} {units} instead of by the {den:,} at or "
+                  f"above {a}", (num, N)),
         "band": (f"divided by the {sum(counts[cut:cut2]):,} {units} below {b} "
                  f"instead of by the {den:,} at or above {a}",
                  (num, sum(counts[cut:cut2]))),
-        "complement_in": (f"counted the {units} in the group who are below {b} "
-                          f"rather than at or above it", (den - num, den)),
+        "complement_in": (f"counted the {units} that fall below {b} rather than the "
+                          f"ones at or above it", (den - num, den)),
         "reverse": (f"divided by the {num:,} at or above {b} instead of by the "
                     f"{den:,} at or above {a}", (den, num)),
         "one_band": (f"used only the single interval beginning at {b}",
@@ -230,8 +230,8 @@ def freq_grouped(rng: random.Random, seed: int, *, scenario=None, start=None,
     stem = f"{intro} {ask.format(a=a, b=b)}"
     key = ratio(num, den)
     P = {"kind": "prob_grouped", "counts": list(counts), "cut": cut, "cut2": cut2}
-    rationale = (f"{den:,} {units} are in the group the question names and {num:,} of "
-                 f"them are at or above {b}, so the fraction is {key.plain()}.")
+    rationale = (f"{den:,} {units} are at or above {a}, and {num:,} of those are at "
+                 f"or above {b}, so the fraction is {key.plain()}.")
     rows = [[head, chead]] + [[lab, f"{k:,}"] for lab, k in zip(labels, counts)]
     if total_row:
         rows.append(["Total", f"{N:,}"])

@@ -141,6 +141,10 @@ def marginal(rng: random.Random, seed: int, *, scenario=None, cells=None, axis=N
     """P(one category), over every unit in the table."""
     c, T = setup(rng, scenario, cells)
     margins, fmt = free(rng, margins, fmt)
+    if c.condition_axis:
+        raise ItemError(f"the {c.key} table is not a plain cross-classification of "
+                        f"its units, so an unconditional probability off it means "
+                        f"nothing")
     axis = axis or rng.choice(("row", "col"))
     sels = c.rows if axis == "row" else c.cols
     idx = rng.randrange(len(sels)) if idx is None else idx
@@ -152,8 +156,8 @@ def marginal(rng: random.Random, seed: int, *, scenario=None, cells=None, axis=N
         raise ItemError("a probability of 0 or 1 is not what this question asks")
     guard_surface(num, N, surface, places, False)
 
-    pool = {"not": (f"found the probability of the complement, that the {c.unit} "
-                    f"is not among the {sel.g}", (N - num, N)),
+    pool = {"not": (f"found the probability of the complement \u2014 the "
+                    f"{N - num:,} {c.units} the question does not count", (N - num, N)),
             "one": (f"treated the answer as one {c.unit} out of the {N:,}", (1, N))}
     for i, r in enumerate(c.rows):
         pool[f"row{i}"] = (f"used the number of {r.g} instead of the number of "
@@ -228,6 +232,9 @@ def joint(rng: random.Random, seed: int, *, scenario=None, cells=None, ri=None,
     """P(this row and this column) -- one cell, over every unit in the table."""
     c, T = setup(rng, scenario, cells)
     margins, fmt = free(rng, margins, fmt)
+    if c.condition_axis:
+        raise ItemError(f"the {c.key} table is not a plain cross-classification of "
+                        f"its units, so a joint probability off it means nothing")
     ri = rng.randrange(T.nr) if ri is None else ri
     cj = rng.randrange(T.nc) if cj is None else cj
     row, col = c.rows[ri], c.cols[cj]
@@ -267,13 +274,15 @@ def joint(rng: random.Random, seed: int, *, scenario=None, cells=None, ri=None,
                 f"divided it by its own column total", (v, T.col_total(j)))
 
     order = wrongs or _order(pool, ["over_row", "over_col", "row", "col", "union"])
-    ask = (f"what is the probability that {c.subject} {row.p} {c.join} {col.p}?")
+    # "has camping facilities but does not have bicycle paths" turns on the
+    # contrast; two negatives in a row read as one condition and take "and"
+    conj = c.join if ("not" in row.p.split()) != ("not" in col.p.split()) else "and"
+    ask = (f"what is the probability that {c.subject} {row.p} {conj} {col.p}?")
     stem = f"{intro_of(c, T)} {sentence(c.select.format(n=f'{T.total:,}'), ask)}"
     key = render(num, N, surface, places)
     P = params_of("prob_two_way", c, T, ev, Event(), surface, places)
-    rationale = (f"The table shows {num:,} {c.units} that {row.plural()} and "
-                 f"{col.plural()}, out of {N:,} in all, so the probability is "
-                 f"{key.plain()}.")
+    rationale = (f"{num:,} of the {N:,} {c.units} {row.plural()} and "
+                 f"{col.plural()}, so the probability is {key.plain()}.")
     table = T.printed(c, margins=margins)
     if fmt == "spr":
         if not griddable(Q(num, N)):
@@ -297,7 +306,12 @@ def _conditional(name, rng, seed, *, scenario, cells, ev_axis, ev_idx, cd_idx,
                  unions):
     c, T = setup(rng, scenario, cells)
     margins, fmt = free(rng, margins, fmt)
+    if c.condition_axis:
+        ev_axis = "row" if c.condition_axis == "col" else "col"
     ev_axis = ev_axis or rng.choice(("row", "col"))
+    if c.condition_axis and ev_axis == c.condition_axis:
+        raise ItemError(f"the {c.key} table only answers a question conditioned on "
+                        f"its {c.condition_axis} axis")
     cd_axis = "col" if ev_axis == "row" else "row"
     ev_pool = (c.row_sels() if ev_axis == "row" else c.col_sels())
     cd_pool = (c.col_sels() if ev_axis == "row" else c.row_sels())

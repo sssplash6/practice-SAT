@@ -150,6 +150,37 @@ def label_tokens(label: str) -> list[str]:
     return [w for w in tokens(label) if w not in LABEL_NOISE]
 
 
+SLACK = 4       # how far a label's words may be spread before it is not that label
+
+
+def spread(needle: list[str], hay: list[str]) -> int | None:
+    """The shortest run of the clause that holds every word of the label.
+
+    Containment alone is not enough when both axes of a table are numbered.
+    The column "2 out of 5" has the words 2, out and 5, and so does the
+    sentence "...a score of 0 out of 5 received that score on Day 2" -- with
+    the 2 nine words away from the other two. A label is only being *named*
+    when its words stand together, so the run has to be about as long as the
+    label is.
+    """
+    need = set(needle)
+    marks = sorted((i, h) for i, h in enumerate(hay) if h in need)
+    if {h for _, h in marks} != need:
+        return None
+    seen, lo, best = {}, 0, None
+    for hi, (pos, tok) in enumerate(marks):
+        seen[tok] = seen.get(tok, 0) + 1
+        while len(seen) == len(need):
+            width = pos - marks[lo][0] + 1
+            best = width if best is None else min(best, width)
+            drop = marks[lo][1]
+            seen[drop] -= 1
+            if not seen[drop]:
+                del seen[drop]
+            lo += 1
+    return best
+
+
 # ---------------------------------------------------------------- intervals
 
 INF = math.inf
@@ -213,11 +244,13 @@ def match_labels(clause: str, labels: list[str]) -> tuple[int, ...]:
        0-9 years, 10-19 years and 20+ years, and it names the two whose
        ranges lie inside it. Tried first, because "before 2010" contains the
        token 2010 and would otherwise be read as the 2010 column itself.
-    2. **Containment.** Every token of the label appears somewhere in the
-       clause, in any order, which is what matches the row "Gasoline not
-       purchased" to "did not purchase gasoline", and a one-character token
-       keeps its case so that the article in "a flower from site B" is not
-       read as the column Site A.
+    2. **Containment, within a short run.** Every token of the label appears
+       in the clause, in any order but close together, which is what matches
+       the row "Gasoline not purchased" to "did not purchase gasoline". A
+       one-character token keeps its case, so the article in "a flower from
+       site B" is not read as the column Site A; and the words have to stand
+       together, so the column "2 out of 5" is not read out of "a score of 0
+       out of 5 received that score on Day 2".
 
     A label whose tokens are a proper subset of another matched label's is
     then dropped: "Has bicycle paths" sits inside "does not have bicycle
@@ -234,9 +267,16 @@ def match_labels(clause: str, labels: list[str]) -> tuple[int, ...]:
         out = [i for i, t in enumerate(spans) if lo <= t[0] and t[1] <= hi]
         if out:
             return tuple(out)
-    cw = words(clause)
-    hit = [(i, label_words(lab)) for i, lab in enumerate(labels)
-           if lab.strip() and label_words(lab) and label_words(lab) <= cw]
+    cw, ct = words(clause), tokens(clause)
+
+    def named(lab: str) -> bool:
+        lw = label_words(lab)
+        if not lab.strip() or not lw or not lw <= cw:
+            return False
+        run = spread(label_tokens(lab), ct)
+        return run is not None and run <= len(lw) + SLACK
+
+    hit = [(i, label_words(lab)) for i, lab in enumerate(labels) if named(lab)]
     return tuple(sorted(i for i, w in hit
                         if not any(w < w2 for j, w2 in hit if j != i)))
 
@@ -706,7 +746,8 @@ def check_count(item) -> list[str]:
 
 
 def check_symbolic(item) -> list[str]:
-    m = re.match(r"There are n ([\w\- ]+?) and ([\d,]+) ([\w\- ]+?) on a ", item.stem)
+    m = re.match(r"There are n ([\w\- ]+?) and ([\d,]+) ([\w\- ]+?) "
+                 r"(?:on|in) an? ", item.stem)
     if not m:
         raise Unreadable(f"cannot read the two groups out of {item.stem[:60]!r}")
     first, k, second = m.group(1), int(m.group(2).replace(",", "")), m.group(3)
@@ -776,7 +817,7 @@ def check_missing_cell(item) -> list[str]:
     if not said:
         raise Unreadable("no stated probability on the page")
     sent = said[-1]
-    m = re.search(r"who (.+?) is chosen at random", sent)
+    m = re.search(r"If one of the (.+?) is chosen at random", sent)
     if not m:
         raise Unreadable(f"cannot find the condition in {sent!r}")
     rows = match_labels(m.group(1), T.row_labels)

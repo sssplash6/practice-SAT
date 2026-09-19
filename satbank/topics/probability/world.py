@@ -80,6 +80,13 @@ class Ctx:
     row_unions: tuple[Sel, ...] = ()
     col_unions: tuple[Sel, ...] = ()
     join: str = "and"
+    # Some tables are not a simple cross-classification of the units. The
+    # contestants table counts one row per contestant *per day*, so "the
+    # probability that a contestant is in the Day 3 row" is meaningless, and
+    # its row phrases say "that score", which needs a score to have been
+    # named. Such a scenario may only be asked about with the named axis as
+    # the condition.
+    condition_axis: str = ""
 
     def row_sels(self) -> tuple[Sel, ...]:
         return self.rows + self.row_unions
@@ -597,6 +604,7 @@ _add(_ctx(
          "contestants who received a score of 0 out of 5",
          "received a score of 0 out of 5")],
     title="Number of Contestants by Score and Day", lo=1, hi=8,
+    condition_axis="col",
     row_unions=(_union((1, 2), "a contestant who received that score on Day 2 or Day 3",
                        "received that score on Day 2 or Day 3",
                        "contestants who received that score on Day 2 or Day 3",
@@ -639,7 +647,8 @@ def _with_unions(key, rows=(), cols=()):
     c = TWO_WAY[key]
     TWO_WAY[key] = Ctx(c.key, c.intro, c.unit, c.units, c.select, c.subject, c.rows,
                        c.cols, c.row_head, c.col_head, c.title, c.lo, c.hi,
-                       c.row_unions + tuple(rows), c.col_unions + tuple(cols), c.join)
+                       c.row_unions + tuple(rows), c.col_unions + tuple(cols), c.join,
+                       c.condition_axis)
 
 
 _with_unions("tiles", cols=[

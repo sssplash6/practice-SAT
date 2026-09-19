@@ -62,6 +62,11 @@ BAGS = [
 ]
 
 
+def art(word: str) -> str:
+    """"an orange button", not "a orange button"."""
+    return "an" if word[:1].lower() in "aeiou" else "a"
+
+
 def _bag_list(counts, colors, noun, nouns, style):
     bare = style == "inline"
     parts = [f"{k:,} {c}" if bare else f"{k:,} {c} {nouns}"
@@ -112,7 +117,8 @@ def bag(rng: random.Random, seed: int, *, which=None, counts=None, colors=None,
     else:
         idx = rng.randrange(len(colors)) if idx is None else idx
         num = counts[idx]
-        ask = f"what is the probability of selecting a {colors[idx]} {noun}?"
+        ask = (f"what is the probability of selecting {art(colors[idx])} "
+               f"{colors[idx]} {noun}?")
         pool = {"complement": (f"found the probability that the {noun} is not "
                                f"{colors[idx]}", (N - num, N)),
                 "over_rest": (f"divided by the {N - num:,} {nouns} that are not "
@@ -229,8 +235,9 @@ def subset(rng: random.Random, seed: int, *, scenario=None, n=None, k=None,
         places = exact_decimal(k, n, places)
 
     pool = {
-        "one_over_total": (f"used 1 as the numerator -- the one item selected -- "
-                           f"instead of the {k:,} that have the property", (1, n)),
+        "one_over_total": (f"used 1 as the numerator \u2014 the one item selected "
+                           f"\u2014 instead of the {k:,} that have the property",
+                           (1, n)),
         "one_over_part": (f"used the {k:,} as the denominator instead of the {n:,}",
                           (1, k)),
         "inverted": (f"inverted the fraction, dividing {n:,} by {k:,}", (n, k)),
@@ -433,11 +440,11 @@ def _dp(v) -> str:
 
 # -------------------------------------------------------------- prob.symbolic
 
-SHELVES = [("nonfiction books", "fiction books", "bookshelf", "books", "book"),
-           ("red marbles", "blue marbles", "bag", "marbles", "marble"),
-           ("blue pens", "black pens", "box", "pens", "pen"),
-           ("green tiles", "white tiles", "crate", "tiles", "tile"),
-           ("small candles", "large candles", "shelf", "candles", "candle")]
+SHELVES = [("nonfiction books", "fiction books", "on a bookshelf", "books", "book"),
+           ("red marbles", "blue marbles", "in a bag", "marbles", "marble"),
+           ("blue pens", "black pens", "in a box", "pens", "pen"),
+           ("green tiles", "white tiles", "on a tray", "tiles", "tile"),
+           ("small candles", "large candles", "on a shelf", "candles", "candle")]
 
 
 def symbolic(rng: random.Random, seed: int, *, which=None, k=None, ask_first=None,
@@ -449,7 +456,7 @@ def symbolic(rng: random.Random, seed: int, *, which=None, k=None, ask_first=Non
     ask_first = rng.choice((True, False)) if ask_first is None else ask_first
     want, other = (a, b) if ask_first else (b, a)
     want_s = want.rsplit(" ", 1)[0]
-    stem = (f"There are n {a} and {k:,} {b} on a {place}. If one of these {plural} is "
+    stem = (f"There are n {a} and {k:,} {b} {place}. If one of these {plural} is "
             f"selected at random, what is the probability of selecting a {want_s} "
             f"{one}, in terms of n ?")
     top, bottom = ("n", f"{k:,}") if ask_first else (f"{k:,}", "n")

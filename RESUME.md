@@ -205,7 +205,34 @@ fault-injection proofs that were themselves broken; and two option_checks whose
 readers stopped parsing the page and therefore reported nothing wrong. Every
 one was green while measuring nothing.
 
-## Wave 4: 2 of 3 done, Probability in flight
+## Wave 4 complete. 19 of 19 topics, 1,039 of 1,039 official items.
+
+Probability finished last: 36/36, 0 excluded, 16 templates, 97% of official
+distractors, capacity 18,006+. Every topic in the bank now passes the full gate
+and has run its own `option_check`.
+
+**Next is the serving layer** — see "Before a student sees this" in the README.
+Correct items are not a usable bank.
+
+Three core promotions are still open and each now has two or three topics
+asking for it:
+* `check._shape` reads the letters "pi" inside ordinary English (participants,
+  opinion, hospital, camping), so a prose option looks like a π option. Three
+  topics have now worked around it; one permanently bars a scenario from a
+  template because of it.
+* Nothing in the gate reads a table as arithmetic. Two topics wrote their own
+  closure check. College Board's own table for Probability item 1.2 does not
+  add up, which is how one of them found the gap.
+* `assemble`'s `_fillers` produce options no misconception explains.
+  Probability treats reaching one as a pool bug and raises, which is why its
+  distractor naming is 100% rather than merely above the floor. Worth making
+  the default.
+
+Also still open from wave 3: `lin1.no_solution_constant`'s `coef_zero` shape
+refuses 29.6% of draws, diagnosed and not repaired; `kit.Surd` into `exact.py`;
+a scatter primitive for `plot.py`.
+
+## Superseded: wave 4 at 2 of 3
 
 **Done:** Evaluating Statistical Claims (11/11, 6 templates, commit 821f8d1) and
 Sample Statistics and Margin of Error (18/18, 12 templates, 100% of official
