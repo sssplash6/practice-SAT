@@ -11,17 +11,40 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;900&family=DM+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="../assets/app.css">
 <style>
-  .stage > svg.scene { aspect-ratio: 900 / 460; --scene-ratio: 1.956; --scene-max: 860px; }
+  /* The rank is the page. The mark is the badge, per spec/rating.md: the ring
+     fills in ten steps and the counter takes the digit, so a level is read as
+     how much is filled rather than off a colour ramp. */
+  .rank {
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:clamp(18px,3vh,30px); padding:24px var(--gutter) 48px; text-align:center;
+  }
 
-  /* Nothing is filled. It is all pencil: one weight of graphite line, roughed
-     up by the filter so it reads as drawn rather than plotted. */
-  .pencil { fill:none; stroke:var(--ink); stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
-  .fold   { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; opacity:.75; }
-  .leg    { fill:none; stroke:var(--ink); stroke-width:2.1; stroke-linecap:round; stroke-linejoin:round; }
-  .ground { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; opacity:.3; }
-  .bird   { fill:none; stroke:var(--ink); stroke-width:2.1; stroke-linecap:round; }
-  .bang   { fill:none; stroke:var(--amber); stroke-width:2.6; stroke-linecap:round; }
-  .puff   { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; opacity:.45; }
+  .badge { width:clamp(180px,26vh,248px); height:auto; display:block; }
+  .badge .fill { transition:none; }
+
+  .stat { display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .stat-n {
+    font:900 clamp(2.6rem,7vw,3.9rem)/1 var(--font);
+    letter-spacing:-.05em; font-variant-numeric:tabular-nums;
+  }
+  .stat-k { font:500 10.5px var(--mono); letter-spacing:.16em; text-transform:uppercase; color:var(--soft); }
+  .stat-band { font:500 11.5px var(--mono); letter-spacing:.05em; color:var(--faint); }
+  .unplaced .stat-n { color:var(--faint); }
+
+  /* the ten steps, laid out flat, so the shape of the ladder is visible */
+  .ladder { display:flex; align-items:flex-end; gap:5px; margin:0; padding:0; list-style:none; }
+  .ladder li {
+    width:12px; border-radius:2px; background:var(--line);
+    transition:background-color .4s var(--ease), height .45s var(--ease-mid);
+  }
+  .ladder li[data-done="true"] { background:var(--ink); }
+  .ladder li[data-here="true"] { background:var(--amber); }
+  .ladder-k { font:500 10px var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--faint); }
+
+  .note { max-width:40ch; font-size:13.5px; color:var(--soft); }
+  .note[hidden] { display:none; }
+
+  @media (prefers-reduced-motion: reduce) { .ladder li { transition:none; } }
 </style>
 </head>
 <body data-nav="duels">
@@ -41,28 +64,24 @@
       <h1 class="head-title">Duels</h1>
     </header>
 
-    <section class="stage rise">
-      <svg class="scene" id="scene" viewBox="0 0 900 460" aria-hidden="true">
-        <defs>
-          <!-- the pencil: a little displacement so no line is mechanically true -->
-          <filter id="pencil" x="-8%" y="-12%" width="116%" height="124%">
-            <feTurbulence type="fractalNoise" baseFrequency=".022" numOctaves="3" seed="4" result="n"/>
-            <feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/>
-          </filter>
-          <!-- the same hand, lighter, for shapes too small to take the full wobble -->
-          <filter id="pencilfine" x="-20%" y="-30%" width="140%" height="160%">
-            <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="9" result="n"/>
-            <feDisplacementMap in="SourceGraphic" in2="n" scale="1.3" xChannelSelector="R" yChannelSelector="G"/>
-          </filter>
-        </defs>
-        <g filter="url(#pencil)">
-          <g id="floor"></g>
-          <g id="fx"></g>
-          <g id="left"></g>
-          <g id="right"></g>
-          <g id="birds" filter="url(#pencilfine)"></g>
-        </g>
+    <section class="rank rise" id="rank">
+      <svg class="badge" id="badge" viewBox="0 0 100 100" role="img" aria-labelledby="badgeLabel">
+        <title id="badgeLabel"></title>
       </svg>
+
+      <div class="stat">
+        <p class="stat-n" id="rating">0</p>
+        <p class="stat-k" id="ratingKey">rating</p>
+        <p class="stat-band" id="band"></p>
+      </div>
+
+      <div class="stat">
+        <ol class="ladder" id="ladder" aria-hidden="true"></ol>
+        <p class="ladder-k">ten levels</p>
+      </div>
+
+      <p class="note" id="note" hidden></p>
+
       <button class="btn" type="button" id="go">Find a duel</button>
     </section>
   </main>
@@ -74,207 +93,87 @@ const NS='http://www.w3.org/2000/svg';
 const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
 const $=id=>document.getElementById(id);
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-const lerp=(a,b,k)=>a+(b-a)*k;
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-const easeOut=k=>1-Math.pow(1-k,3);
-const easeIn=k=>k*k;
-/* how far through a span, 0 before it and 1 after */
-const span=(t,a,b)=>clamp((t-a)/(b-a),0,1);
 
-/* ---------------------------------------------------------------- the brain
-   Drawn facing right, around its own origin, and mirrored for the one coming
-   the other way. Outline, cerebellum, stem, and a few folds. No fill anywhere:
-   the form has to come out of the line alone. */
-const HIP={x:-4,y:28}, L1=25, L2=25;
+const S=window.SATF||{};
+const P=(S.player&&S.player())||{rating:1000,placed:false};
+const LEVEL=(S.levelOf||(()=>3))(P.rating);
+const CORNER=S.corner||'M45 8 H30 A22 22 0 0 0 8 30 V45 H34 V41 A7 7 0 0 1 41 34 H45 Z';
 
-const CEREBRUM='M-46 -20 C-44 -32 -40 -38 -30 -36 C-22 -44 -14 -44 -6 -40'
-             +' C4 -44 14 -42 20 -36 C34 -40 46 -32 44 -22 C54 -18 58 -8 54 -2'
-             +' C58 8 54 16 46 18 C48 26 38 30 24 28 C16 34 6 34 0 30'
-             +' C-10 32 -20 30 -24 26 C-36 28 -46 22 -44 12 C-50 6 -50 -12 -46 -20 Z';
-const FOLDS=[
-  'M-34 -20 C-24 -27 -13 -21 -7 -28',
-  'M-31 -5  C-18 -13 -5 -5 3 -14',
-  'M-29 9   C-16 1 -3 9 7 0',
-  'M6 -31   C14 -24 24 -29 32 -22',
-  'M11 -13  C21 -20 31 -13 39 -20',
-  'M9 5     C19 -2 29 5 39 -4',
-];
-const CEREBELLUM='M-44 12 C-57 13 -62 26 -51 32 C-42 38 -28 34 -26 25 C-28 19 -34 13 -44 12 Z';
-const CEREB_LINES=['M-52 18 C-46 22 -38 23 -30 21','M-50 26 C-44 30 -36 30 -28 28'];
-const STEM='M-33 32 C-31 40 -26 44 -18 46';
+/* the bands, straight off spec/rating.md: a floor, eight equal steps, an open top */
+const BANDS=[[1,800],[801,950],[951,1100],[1101,1250],[1251,1400],
+             [1401,1550],[1551,1700],[1701,1850],[1851,2000],[2001,null]];
 
-function buildBrain(g){
-  el('path',{class:'pencil',d:CEREBRUM},g);
-  FOLDS.forEach(d=>el('path',{class:'fold',d},g));
-  el('path',{class:'pencil',d:CEREBELLUM},g);
-  CEREB_LINES.forEach(d=>el('path',{class:'fold',d},g));
-  el('path',{class:'pencil',d:STEM},g);
+/* ---------------------------------------------------------------- the badge */
+const quads=(fill,clip)=>[0,90,180,270].map(a=>
+  el('path',{d:CORNER,fill,...(a?{transform:`rotate(${a} 50 50)`}:{})}));
+
+function buildBadge(level,placed){
+  const svg=$('badge'); 
+  [...svg.querySelectorAll('g,defs')].forEach(n=>n.remove());
+  const clip=el('clipPath',{id:'fillclip'},el('defs',{},svg));
+  const rect=el('rect',{x:0,y:100,width:100,height:0},clip);
+
+  const track=el('g',{},svg);
+  quads('#E4E1DC').forEach(p=>track.appendChild(p));
+  const fill=el('g',{class:'fill','clip-path':'url(#fillclip)'},svg);
+  quads('#F18508').forEach(p=>fill.appendChild(p));
+
+  const t=el('text',{x:50,y:51,'text-anchor':'middle','dominant-baseline':'central',
+    'font-family':'Archivo, sans-serif','font-weight':'900','font-size':'36',fill:'#3F3F3F'},svg);
+  t.textContent=placed?level:'';
+
+  svg.querySelector('title').textContent=placed
+    ? `Level ${level} of ten, rating ${P.rating}.`
+    : 'Not yet placed. Three duels to go.';
+
+  /* the ring climbing to the level is the one moment of motion on the page */
+  const target=placed?level*10:0;
+  if(reduce||!target){ rect.setAttribute('y',100-target); rect.setAttribute('height',target); return; }
+  const t0=performance.now(), dur=900;
+  (function step(now){
+    const k=Math.max(0,Math.min(1,(now-t0)/dur)), e=1-Math.pow(1-k,3), h=target*e;
+    rect.setAttribute('y',100-h); rect.setAttribute('height',h);
+    if(k<1) requestAnimationFrame(step);
+  })(t0);
 }
 
-/* a runner is a brain, two legs, and nothing else */
-function makeRunner(host){
-  const root=el('g',{},host);
-  const legs=el('g',{},root);            // behind the mass
-  const body=el('g',{},root);
-  buildBrain(body);
-  return {root,legs,body};
-}
-const L=makeRunner($('left')), R=makeRunner($('right'));
-
-/* one leg, hip to knee to foot. The thigh swings, and the knee folds hardest
-   as the leg comes through, which is what reads as a run rather than a waddle */
-function legPath(phase){
-  const thigh=.62*Math.sin(phase);
-  const bend=.18+.95*clamp(Math.sin(phase+1.9),0,1);
-  const kx=HIP.x+Math.sin(thigh)*L1, ky=HIP.y+Math.cos(thigh)*L1;
-  const sh=thigh-bend;
-  const fx=kx+Math.sin(sh)*L2, fy=ky+Math.cos(sh)*L2;
-  const toe=`M${fx} ${fy} l${Math.cos(sh)*9+4} ${-Math.sin(sh)*3+1}`;
-  return `M${HIP.x} ${HIP.y} L${kx.toFixed(1)} ${ky.toFixed(1)} L${fx.toFixed(1)} ${fy.toFixed(1)}`+toe;
-}
-function drawLegs(r,phase,planted){
-  r.legs.replaceChildren();
-  if(planted!==undefined){                 // standing, or fallen: legs at rest
-    el('path',{class:'leg',d:`M${HIP.x} ${HIP.y} L${HIP.x-7} ${HIP.y+26} L${HIP.x-11} ${HIP.y+49} l9 2`},r.legs);
-    el('path',{class:'leg',d:`M${HIP.x} ${HIP.y} L${HIP.x+7} ${HIP.y+26} L${HIP.x+9} ${HIP.y+49} l9 1`},r.legs);
-    return;
+/* ---------------------------------------------------------------- the ladder */
+function buildLadder(level,placed){
+  const ol=$('ladder'); ol.replaceChildren();
+  for(let i=1;i<=10;i++){
+    const li=document.createElement('li');
+    li.style.height=(14+i*4)+'px';
+    if(placed&&i<level) li.dataset.done='true';
+    if(placed&&i===level) li.dataset.here='true';
+    ol.appendChild(li);
   }
-  el('path',{class:'leg',d:legPath(phase),opacity:.85},r.legs);
-  el('path',{class:'leg',d:legPath(phase+Math.PI)},r.legs);
 }
 
-/* ---------------------------------------------------------------- the floor */
+/* ---------------------------------------------------------------- the page */
 (()=>{
-  const g=$('floor');
-  el('path',{class:'ground',d:'M84 372 C240 368 330 374 448 371 C560 368 690 374 818 370'},g);
-  el('path',{class:'ground',d:'M150 380 C250 378 300 381 372 379',opacity:.18},g);
-  el('path',{class:'ground',d:'M540 381 C620 378 690 382 760 379',opacity:.18},g);
+  const placed=!!P.placed;
+  buildBadge(LEVEL,placed);
+  buildLadder(LEVEL,placed);
+
+  $('rank').classList.toggle('unplaced',!placed);
+  $('rating').textContent=placed?P.rating:'--';
+  $('ratingKey').textContent=placed?'rating':'unplaced';
+
+  const b=BANDS[LEVEL-1];
+  $('band').textContent=placed
+    ? (b[1]===null?`Level ${LEVEL} · ${b[0]} and up`:`Level ${LEVEL} · ${b[0]} to ${b[1]}`)
+    : '';
+
+  const note=$('note');
+  if(!placed){
+    note.hidden=false;
+    note.textContent='Everyone starts at 1000, which is level 3. Three placement duels decide where you actually sit, and the level counts from there.';
+  }
+
+  const go=$('go');
+  go.textContent=placed?'Find a duel':'Calibrate';
+  go.addEventListener('click',()=>console.log('[router]',placed?'/duel/find':'/duel/calibrate'));
 })();
-
-/* ---------------------------------------------------------------- the beats
-   run in, collide, one goes over, birds, clear, and round again with the other
-   one losing. */
-const LOOP=7.4, MEET=2.15, SETTLE=3.35, CLEAR=6.4;
-const GROUND=352, S=1.5, FOOT=79;      // FOOT: how far under the brain's origin the feet land
-const LX0=-150, RX0=1050, LX1=364, RX1=536;
-
-let t0=performance.now(), turn=0;
-
-function poseUp(r,x,flip,phase,lean){
-  drawLegs(r,phase);
-  const bob=Math.abs(Math.sin(phase))*4*S;
-  r.root.setAttribute('transform',
-    `translate(${x.toFixed(1)} ${(GROUND-FOOT*S-bob).toFixed(1)}) scale(${(flip*S).toFixed(3)} ${S}) rotate(${lean})`);
-}
-function poseDown(r,x,flip,k){
-  drawLegs(r,0,true);
-  const rot=lerp(0,-84,easeOut(k));                 // topples away from the blow
-  r.root.setAttribute('transform',
-    `translate(${x.toFixed(1)} ${(GROUND-FOOT*S).toFixed(1)}) scale(${(flip*S).toFixed(3)} ${S}) rotate(${rot} ${HIP.x} ${FOOT})`);
-}
-
-/* where the brain mass lands once it has toppled: its origin swung about the
-   feet, then scaled and placed. Guessing this put the birds between the two. */
-const FALL=-84*Math.PI/180;
-function headOf(x,flip){
-  const dx=0-HIP.x, dy=0-FOOT;
-  const rx=dx*Math.cos(FALL)-dy*Math.sin(FALL), ry=dx*Math.sin(FALL)+dy*Math.cos(FALL);
-  return {x:x+flip*S*(HIP.x+rx), y:GROUND-FOOT*S+S*(FOOT+ry)};
-}
-
-function bang(x,y,k){
-  const g=$('fx');
-  if(k===0){ g.replaceChildren(); return; }
-  g.replaceChildren();
-  const n=9;
-  for(let i=0;i<n;i++){
-    const a=(i/n)*Math.PI*2+.3, r0=14+easeOut(k)*26, r1=r0+20*(1-k*.6);
-    el('path',{class:'bang',d:`M${x+Math.cos(a)*r0} ${y+Math.sin(a)*r0} L${x+Math.cos(a)*r1} ${y+Math.sin(a)*r1}`,
-               opacity:(1-k).toFixed(2)},g);
-  }
-  for(let i=0;i<4;i++){
-    const a=Math.PI*(1.15+i*.23), r=30+k*40;
-    el('path',{class:'puff',d:`M${x+Math.cos(a)*r} ${y+Math.sin(a)*r*.5+22} a7 7 0 1 0 .1 0`,opacity:((1-k)*.6).toFixed(2)},g);
-  }
-}
-
-/* three birds going round the head of whoever is down */
-function birds(cx,cy,t,vis){
-  const g=$('birds'); g.replaceChildren();
-  if(!vis) return;
-  for(let i=0;i<3;i++){
-    const a=t*2.3+i*Math.PI*2/3;
-    const x=cx+Math.cos(a)*62, y=cy+Math.sin(a)*17-4;
-    const depth=.75+.35*(1+Math.sin(a))/2;                 // nearer ones a touch bigger
-    const flap=6+4*Math.sin(t*13+i);
-    el('path',{class:'bird',transform:`translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${(depth*1.7).toFixed(2)})`,
-               d:`M-11 0 q5.5 -${flap} 11 0 q5.5 -${flap} 11 0`,
-               opacity:(.6+.4*(1+Math.sin(a))/2).toFixed(2)},g);
-  }
-}
-
-function frame(now){
-  const el0=(now-t0)/1000;
-  const n=Math.floor(el0/LOOP);
-  if(n!==turn){ turn=n; }
-  const t=el0%LOOP;
-  const loser=turn%2;                                       // 0 left goes down, 1 right
-
-  if(t<MEET){
-    /* the run in */
-    const k=t/MEET, run=easeIn(k)*.25+k*.75;                // builds a little speed
-    const ph=t*15.5;
-    poseUp(L,lerp(LX0,LX1,run),1,ph,4);
-    poseUp(R,lerp(RX0,RX1,run),-1,ph+1.1,4);
-    bang(0,0,0); birds(0,0,0,false);
-  } else if(t<SETTLE){
-    /* the hit, and one of them going over */
-    const k=span(t,MEET,SETTLE);
-    const knock=easeOut(clamp(k*2.4,0,1));
-    const lx=LX1-(loser===0?knock*54:knock*10);
-    const rx=RX1+(loser===1?knock*54:knock*10);
-    if(loser===0){ poseDown(L,lx,1,clamp(k*1.5,0,1)); poseUp(R,rx,-1,0,-6); }
-    else         { poseUp(L,lx,1,0,6);                poseDown(R,rx,-1,clamp(k*1.5,0,1)); }
-    bang(450,GROUND-FOOT*S+10,clamp(k*3.1,0,1));
-    birds(0,0,0,false);
-  } else if(t<CLEAR){
-    /* flat out, with the birds */
-    const lx=LX1-(loser===0?54:10), rx=RX1+(loser===1?54:10);
-    if(loser===0){ poseDown(L,lx,1,1); poseUp(R,rx,-1,0,0); }
-    else         { poseUp(L,lx,1,0,0); poseDown(R,rx,-1,1); }
-    bang(0,0,0);
-    const h=headOf(loser===0?lx:rx, loser===0?1:-1);
-    birds(h.x,h.y-96,t,true);
-  } else {
-    /* up again, and away */
-    const k=span(t,CLEAR,LOOP);
-    const out=easeIn(k);
-    const lx=lerp(LX1-(loser===0?54:10),LX0,out), rx=lerp(RX1+(loser===1?54:10),RX0,out);
-    const ph=t*15.5;
-    poseUp(L,lx,1,ph,4); poseUp(R,rx,-1,ph+1.1,4);
-    bang(0,0,0); birds(0,0,0,false);
-  }
-  requestAnimationFrame(frame);
-}
-
-if(reduce){
-  /* one held frame: the blow has landed and the birds are out */
-  poseDown(L,LX1-54,1,1); poseUp(R,RX1+10,-1,0,0);
-  const h0=headOf(LX1-54,1); birds(h0.x,h0.y-96,0,true);
-} else {
-  requestAnimationFrame(frame);
-}
-
-/* a tap runs it again from the top */
-$('scene').addEventListener('pointerdown',()=>{ if(!reduce){ t0=performance.now(); turn=0; } });
-
-/* -- ROUTER SEAM: placement runs for three duels, per spec/rating.md --------- */
-const go=$('go');
-(()=>{
-  const p=(window.SATF&&window.SATF.player&&window.SATF.player())||{placed:true};
-  if(!p.placed) go.textContent='Calibrate';
-})();
-go.addEventListener('click',()=>console.log('[router] /duel/find'));
 </script>
 
 </body>
