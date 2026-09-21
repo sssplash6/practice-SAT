@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Mixed practice, one sheet · SAT Freshman</title>
-<meta name="description" content="One sheet of stickers, banded by domain. A layout test.">
+<meta name="description" content="One sheet of topics, four to a line, each opening to its own sticker.">
 <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,27 +12,47 @@
 <link rel="stylesheet" href="../assets/app.css">
 <style>
   .stage > svg.scene { --scene-max: 940px; aspect-ratio: 960 / 660; --scene-ratio: 1.4545; }
-  .sheet { fill:#F7F5F0; stroke:var(--ink); stroke-width:1.5; }
+  .sheet { fill:#F7F5F0; stroke:var(--ink); stroke-width:1.5; transition: height .34s var(--ease); }
   .band { font:700 10px var(--mono); fill:var(--ink); letter-spacing:.16em; text-transform:uppercase; }
   .bandrule { stroke:var(--line); stroke-width:1; }
-  .name { font:500 9px var(--mono); fill:var(--soft); letter-spacing:.02em; }
-  /* the cut mark sits well clear of the drawing now, rather than hugging it */
-  .cut { fill:none; stroke:var(--ink); stroke-width:.8; stroke-dasharray:2 2.6; opacity:.3; transition:opacity .18s var(--ease); }
-  .cell { cursor:pointer; }
-  .cell:hover .cut { opacity:.75; }
-  .cell:hover .stk { fill:#fff; }
+
+  /* closed, a topic is only its name. The sheet is a list until you open one. */
+  .cell { cursor:pointer; transition: transform .34s var(--ease); }
+  .name { font:500 9px var(--mono); fill:var(--soft); letter-spacing:.02em; transition: fill .18s var(--ease); }
+  .caret { fill:none; stroke:var(--faint); stroke-width:1.3; stroke-linecap:round; stroke-linejoin:round;
+           transition: transform .28s var(--ease), stroke .18s var(--ease); transform-box:fill-box; transform-origin:center; }
   .cell:hover .name { fill:var(--ink); }
-  .stk { fill:#FBFAF7; stroke:var(--ink); stroke-width:1.3; stroke-linejoin:round; transition: fill .2s; }
+  .cell:hover .caret { stroke:var(--ink); }
+  .cell.open .name { fill:var(--ink); font-weight:500; }
+  .cell.open .caret { transform: rotate(180deg); stroke:var(--ink); }
+
+  .bandg { transition: transform .34s var(--ease); }
+
+  /* open, it drops a panel: the drawing, and the count you are building */
+  .panel { transition: opacity .26s var(--ease), transform .3s var(--ease); transform-box:fill-box; transform-origin:top center; }
+  .panel[data-open="0"] { opacity:0; transform: translateY(-6px) scale(.97); pointer-events:none; }
+  .panel[data-open="1"] { opacity:1; transform:none; }
+  .panelbg { fill:#fff; stroke:var(--line); stroke-width:1; }
+  .step { cursor:pointer; }
+  .stepbg { fill:#F7F5F0; stroke:var(--line); stroke-width:1; transition: fill .16s var(--ease), stroke .16s var(--ease); }
+  .step:hover .stepbg { fill:#fff; stroke:var(--faint); }
+  .stepg { fill:none; stroke:var(--ink); stroke-width:1.5; stroke-linecap:round; }
+  .step[data-off="1"] { cursor:default; opacity:.35; pointer-events:none; }
+  .count { font:700 13px var(--font); fill:var(--ink); font-variant-numeric:tabular-nums; }
+  .count[data-zero="1"] { fill:var(--faint); }
+
+  .stk { fill:#FBFAF7; stroke:var(--ink); stroke-width:1.3; stroke-linejoin:round; }
   .stki { fill:none; stroke:var(--ink); stroke-width:.9; opacity:.55; stroke-linecap:round; }
   .stkl { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
   .stkd { fill:var(--ink); }
-  .badge { fill:var(--ink); stroke:#F7F5F0; stroke-width:2; } .badget { font:900 8.5px var(--font); fill:#fff; letter-spacing:-.02em; }
+
   .page { fill:#fff; stroke:var(--ink); stroke-width:1.5; }
   .rule { stroke:var(--line); stroke-width:1; }
   .total { font:900 46px var(--font); fill:var(--amber); letter-spacing:-.05em; font-variant-numeric:tabular-nums; }
   .lbl { font:500 10px var(--mono); fill:var(--soft); letter-spacing:.14em; text-transform:uppercase; }
   .placed { cursor:pointer; } .placed:hover { opacity:.55; }
   .fly .stk { fill:#fff; stroke:var(--amber); stroke-width:1.6; } .fly .stki { stroke:var(--amber); opacity:.9; } .fly .stkl { stroke:var(--amber); } .fly .stkd { fill:var(--amber); }
+  @media (prefers-reduced-motion: reduce) { .cell, .bandg, .panel, .sheet { transition: none; } }
 </style>
 </head>
 <body data-nav="mixed">
@@ -55,14 +75,14 @@
     <section class="stage rise">
       <svg class="scene" id="scene" viewBox="0 0 960 660" aria-hidden="true">
         <g id="board">
-        <g id="sheet"></g>
-        <g id="pageG" style="cursor:pointer">
-          <rect class="page" id="pageRect" x="620" y="30" width="240" height="480" rx="4"/>
-          <g id="rules"></g>
-          <g id="page"></g>
-          <text class="total" id="total" x="740" y="0" text-anchor="middle">0</text>
-          <text class="lbl" id="totalLbl" x="740" y="0" text-anchor="middle">questions</text>
-        </g>
+          <g id="sheet"></g>
+          <g id="pageG" style="cursor:pointer">
+            <rect class="page" id="pageRect" x="620" y="30" width="240" height="400" rx="4"/>
+            <g id="rules"></g>
+            <g id="page"></g>
+            <text class="total" id="total" x="740" y="0" text-anchor="middle">0</text>
+            <text class="lbl" id="totalLbl" x="740" y="0" text-anchor="middle">questions</text>
+          </g>
         </g>
         <g id="flyer" style="pointer-events:none"></g>
       </svg>
@@ -140,104 +160,172 @@ const TOPICS_BY_SUBJECT = {
 };
 
 /* ---------------------------------------------------------------- the sheet
-   One sheet, four bands. Stickers flow four to a row inside a band instead of
-   one per line, so the sheet no longer changes shape with the topic count and
-   there are no columns left to align. The name sits under its drawing, and the
-   cut mark is given room rather than hugging the glyph. */
-const SHEET={x:70,y:30,w:460,pad:20,top:20,bot:20};
-const CELL={w:105,h:58}, COLS=4, BAND_H=26, BAND_GAP=12;
+   Closed, a topic is only its name, four to a line. Tapping one drops a panel
+   under it with the drawing and the count, and the rows below slide down to
+   make room. The sheet is a list you read first and a set of stickers second. */
+const SHEET={x:70,y:30,w:460,pad:20,top:20,bot:18};
+const CELL={w:105,h:30}, COLS=4, BAND_H=26, BAND_GAP=12, PANEL={w:97,h:80,gap:6};
 const PAGE={x:620,y:30,w:240}, SLOT={cols:6,dx:36,dy:34,x0:650,y0:62};
 
 const sticker=(p,shape,cls='')=>{ const g=el('g',{class:cls},p); SHAPES[shape](g); return g; };
 
-function measure(domains){
+const basket={}; let total=0, CAP=0;
+let bands=[], stalls=[];
+
+/* ---------------------------------------------------------------- layout
+   Rows are laid out top down. A row that holds an open topic is taller by the
+   panel, so every cell in it keeps its line and only the row grows. */
+function relayout(animate){
   let cur=SHEET.top;
-  const bands=domains.map(([dom,items])=>{
-    const rows=Math.ceil(items.length/COLS);
-    const b={dom,items,labelY:cur,gridY:cur+BAND_H,rows};
-    cur+=BAND_H+rows*CELL.h+BAND_GAP;
-    return b;
+  bands.forEach(b=>{
+    b.g.style.transform=`translate(0px, ${cur}px)`;
+    let rowY=BAND_H;
+    const rows=Math.ceil(b.cells.length/COLS);
+    for(let r=0;r<rows;r++){
+      const inRow=b.cells.filter(c=>c.row===r);
+      const open=inRow.some(c=>c.open);
+      inRow.forEach(c=>{ c.g.style.transform=`translate(${c.x}px, ${rowY}px)`; });
+      rowY+=CELL.h+(open?PANEL.h+PANEL.gap:0);
+    }
+    b.height=rowY+10;
+    cur+=b.height+BAND_GAP;
   });
-  return {bands,height:cur-BAND_GAP+SHEET.bot};
+  const h=cur-BAND_GAP+SHEET.bot;
+  $('sheetRect').setAttribute('height',h);
+  if(!animate) $('board').setAttribute('transform',`translate(0 ${Math.max(0,(660-(collapsedH+72))/2-SHEET.y).toFixed(1)})`);
+  return h;
 }
 
-const basket={}; let total=0; const stalls=[]; const placed=[];
-let CAP=0;
+let collapsedH=0;
 
 function buildSheet(domains){
-  $('sheet').replaceChildren(); $('rules').replaceChildren(); stalls.length=0;
-  const {bands,height}=measure(domains);
-  el('rect',{class:'sheet',x:SHEET.x,y:SHEET.y,width:SHEET.w,height,rx:6},$('sheet'));
+  $('sheet').replaceChildren(); $('rules').replaceChildren();
+  bands=[]; stalls=[];
+  el('rect',{class:'sheet',id:'sheetRect',x:SHEET.x,y:SHEET.y,width:SHEET.w,height:0,rx:6},$('sheet'));
 
-  bands.forEach(b=>{
-    const ly=SHEET.y+b.labelY;
-    txt($('sheet'),SHEET.x+SHEET.pad,ly+8,b.dom,'band');
-    el('line',{class:'bandrule',x1:SHEET.x+SHEET.pad,y1:ly+18,x2:SHEET.x+SHEET.w-SHEET.pad,y2:ly+18},$('sheet'));
+  domains.forEach(([dom,items])=>{
+    const bg=el('g',{class:'bandg'},$('sheet'));
+    bg.style.transform='translate(0px, 0px)';
+    const inner=el('g',{transform:`translate(${SHEET.x} ${SHEET.y})`},bg);
+    txt(inner,SHEET.pad,8,dom,'band');
+    el('line',{class:'bandrule',x1:SHEET.pad,y1:18,x2:SHEET.w-SHEET.pad,y2:18},inner);
 
-    b.items.forEach(([name,slug,shape],i)=>{
+    const cells=items.map(([name,slug,shape],i)=>{
       const col=i%COLS, row=Math.floor(i/COLS);
-      const cx=SHEET.x+SHEET.pad+col*CELL.w+CELL.w/2;
-      const cy=SHEET.y+b.gridY+row*CELL.h;
-      const g=el('g',{class:'cell'},$('sheet'));
-      el('rect',{x:cx-CELL.w/2,y:cy,width:CELL.w,height:CELL.h,fill:'transparent'},g);   // the whole cell is the target
-      el('rect',{class:'cut',x:cx-20,y:cy+2,width:40,height:40,rx:9},g);
-      sticker(g,shape).setAttribute('transform',`translate(${cx} ${cy+22}) scale(1.35)`);
-      txt(g,cx,cy+51,name,'name',{'text-anchor':'middle'});
+      const g=el('g',{class:'cell'},inner);
+      const x=SHEET.pad+col*CELL.w;
+      g.style.transform=`translate(${x}px, 0px)`;
+      el('rect',{x:0,y:0,width:CELL.w,height:CELL.h,fill:'transparent'},g);   // the line is the target
+      txt(g,3,15,name,'name');
+      el('path',{class:'caret',d:'M92 13.2 l3.4 3.6 l3.4 -3.6'},g);
 
-      const badge=el('g',{opacity:0},g);
-      el('circle',{class:'badge',cx:cx+19,cy:cy+4,r:9.5},badge);
-      const bt=txt(badge,cx+19,cy+4.5,'0','badget',{'text-anchor':'middle'});
+      /* the panel: the drawing, and how many of this topic you have taken */
+      const seat=el('g',{transform:`translate(${(CELL.w-PANEL.w)/2} ${CELL.h+PANEL.gap})`},g);
+      const panel=el('g',{class:'panel','data-open':'0'},seat);
+      el('rect',{class:'panelbg',x:0,y:0,width:PANEL.w,height:PANEL.h,rx:8},panel);
+      sticker(panel,shape).setAttribute('transform',`translate(${PANEL.w/2} 27) scale(1.25)`);
 
-      const st={slug,name,shape,cx,cy:cy+22,badge,bt,n:0,hold:null}; stalls.push(st);
-      const start=()=>{ peel(st); const t0=performance.now();
-        const tick=()=>{ if(st.hold===null) return; const hh=(performance.now()-t0)/1000; peel(st); st.hold=setTimeout(tick,hh<.7?240:hh<1.8?100:45); };
-        st.hold=setTimeout(tick,240); };
-      const stop=()=>{ clearTimeout(st.hold); st.hold=null; };
-      g.addEventListener('pointerdown',e=>{ try{ g.setPointerCapture(e.pointerId); }catch(_){} start(); });
-      ['pointerup','pointerleave','pointercancel'].forEach(e=>g.addEventListener(e,stop));
+      const st={slug,name,shape,n:0,open:false,row,col,x,g,panel,
+                cx:x+SHEET.x+CELL.w/2, cy:0};
+      const minus=el('g',{class:'step','data-off':'1'},panel);
+      el('circle',{class:'stepbg',cx:20,cy:60,r:11},minus);
+      el('path',{class:'stepg',d:'M15 60h10'},minus);
+      const count=txt(panel,PANEL.w/2,60.5,'0','count',{'text-anchor':'middle','data-zero':'1'});
+      const plus=el('g',{class:'step'},panel);
+      el('circle',{class:'stepbg',cx:PANEL.w-20,cy:60,r:11},plus);
+      el('path',{class:'stepg',d:`M${PANEL.w-25} 60h10M${PANEL.w-20} 55v10`},plus);
+
+      st.count=count; st.minus=minus;
+      minus.addEventListener('pointerdown',e=>{ e.stopPropagation(); takeBack(st); });
+      plus.addEventListener('pointerdown',e=>{ e.stopPropagation(); add(st); });
+      g.addEventListener('pointerdown',()=>toggle(st));
+
+      stalls.push(st); return st;
     });
+    bands.push({dom,g:bg,cells});
   });
 
-  // the page you build on is cut to the sheet, so the two always read level
-  $('pageRect').setAttribute('height',height);
-  const rows=Math.floor((height-46)/SLOT.dy);
+  collapsedH=relayout(false);
+  $('board').setAttribute('transform',`translate(0 ${Math.max(0,(660-(collapsedH+72))/2-SHEET.y).toFixed(1)})`);
+
+  /* the page is cut to the closed sheet, so the two read level at rest */
+  $('pageRect').setAttribute('height',collapsedH);
+  const rows=Math.floor((collapsedH-46)/SLOT.dy);
   CAP=rows*SLOT.cols;
   for(let i=0;i<rows;i++) el('line',{class:'rule',x1:PAGE.x+16,y1:SLOT.y0+i*SLOT.dy+12,x2:PAGE.x+PAGE.w-16,y2:SLOT.y0+i*SLOT.dy+12},$('rules'));
-  $('total').setAttribute('y',SHEET.y+height+44);
-  $('totalLbl').setAttribute('y',SHEET.y+height+66);
-  const content=height+72;                     // sheet plus the counter under the page
-  $('board').setAttribute('transform',`translate(0 ${Math.max(0,(660-content)/2-SHEET.y).toFixed(1)})`);
+  $('total').setAttribute('y',SHEET.y+collapsedH+44);
+  $('totalLbl').setAttribute('y',SHEET.y+collapsedH+66);
 }
 
-/* ---------------------------------------------------------------- peeling */
+function toggle(st){
+  st.open=!st.open;
+  st.g.classList.toggle('open',st.open);
+  st.panel.setAttribute('data-open',st.open?'1':'0');
+  relayout(true);
+}
+
+/* ---------------------------------------------------------------- the page */
 const page=$('page'), pageG=$('pageG'), totalT=$('total'), go=$('go');
+const placed=[];
 const slotAt=n=>({x:SLOT.x0+(n%SLOT.cols)*SLOT.dx, y:SLOT.y0+Math.floor(n/SLOT.cols)*SLOT.dy});
 
-function peel(st){
+function paint(st){
+  st.count.textContent=st.n;
+  st.count.setAttribute('data-zero',st.n?'0':'1');
+  st.minus.setAttribute('data-off',st.n?'0':'1');
+  totalT.textContent=total; go.disabled=total===0;
+}
+
+function add(st){
   if(total>=CAP) return;
-  st.n++; total++; basket[st.slug]=st.n; st.bt.textContent=st.n; st.badge.setAttribute('opacity',1);
-  totalT.textContent=total; go.disabled=false;
+  st.n++; total++; basket[st.slug]=st.n; paint(st);
   const {x:tx,y:ty}=slotAt(total-1);
+  const board=$('board').getAttribute('transform')||'';
+  const dy=parseFloat((board.match(/translate\(0 ([-\d.]+)\)/)||[0,0])[1])||0;
+  const from={x:st.cx, y:SHEET.y+bandTop(st)+cellTop(st)+CELL.h+PANEL.gap+27+dy};
   const f=sticker($('flyer'),st.shape,'fly');
-  tween(560,k=>{ const s=lerp(1.35,1.15,k)+.3*Math.sin(Math.PI*k);
-    f.setAttribute('transform',`translate(${lerp(st.cx,tx,k)} ${lerp(st.cy,ty,k)-70*Math.sin(Math.PI*k)}) scale(${s}) rotate(${40*Math.sin(Math.PI*k)})`); },easeIn)
+  tween(540,k=>{ const s=lerp(1.25,1.15,k)+.28*Math.sin(Math.PI*k);
+    f.setAttribute('transform',`translate(${lerp(from.x,tx,k)} ${lerp(from.y,ty,k)-66*Math.sin(Math.PI*k)}) scale(${s}) rotate(${36*Math.sin(Math.PI*k)})`); },easeIn)
   .then(()=>{
     f.remove();
     const g=sticker(page,st.shape,'placed');
     g.setAttribute('transform',`translate(${tx} ${ty}) scale(1.15)`);
-    el('circle',{r:12,fill:'transparent'},g);          // most of a glyph is fill:none stroke, so give it a real target
+    el('circle',{r:12,fill:'transparent'},g);      // most of a glyph is fill:none stroke, so give it a real target
     const rec={el:g,st}; placed.push(rec);
-    g.addEventListener('pointerdown',e=>{ e.stopPropagation(); removeOne(rec); });
+    g.addEventListener('pointerdown',e=>{ e.stopPropagation(); pull(rec); });
     tween(200,k=>pageG.setAttribute('transform',`translate(0 ${1.5*Math.sin(Math.PI*k)})`));
   });
 }
 
-function removeOne(rec){
+/* where a cell's panel currently sits, so the sticker flies from the drawing */
+function bandOf(st){ return bands.find(b=>b.cells.includes(st)); }
+
+function bandTop(st){
+  let cur=SHEET.top;
+  for(const b of bands){ if(b.cells.includes(st)) return cur; cur+=b.height+BAND_GAP; }
+  return cur;
+}
+
+function cellTop(st){
+  const b=bandOf(st); let y=BAND_H;
+  for(let r=0;r<st.row;r++){
+    const open=b.cells.some(c=>c.row===r&&c.open);
+    y+=CELL.h+(open?PANEL.h+PANEL.gap:0);
+  }
+  return y;
+}
+
+function takeBack(st){
+  const rec=[...placed].reverse().find(r=>r.st===st);
+  if(rec) return pull(rec);
+}
+
+function pull(rec){
   const i=placed.indexOf(rec); if(i<0) return;
   placed.splice(i,1); rec.el.remove();
-  rec.st.n=Math.max(0,rec.st.n-1); rec.st.bt.textContent=rec.st.n;
-  if(rec.st.n<=0){ rec.st.badge.setAttribute('opacity',0); delete basket[rec.st.slug]; } else basket[rec.st.slug]=rec.st.n;
-  total=Math.max(0,total-1); totalT.textContent=total; go.disabled=total===0;
+  rec.st.n=Math.max(0,rec.st.n-1);
+  if(rec.st.n<=0) delete basket[rec.st.slug]; else basket[rec.st.slug]=rec.st.n;
+  total=Math.max(0,total-1); paint(rec.st);
   placed.forEach((r,n)=>{ const {x,y}=slotAt(n); r.el.setAttribute('transform',`translate(${x} ${y}) scale(1.15)`); });
 }
 
@@ -245,17 +333,17 @@ pageG.addEventListener('pointerdown', async ()=>{
   if(!total) return;
   await tween(320,k=>page.setAttribute('opacity',1-k));
   page.replaceChildren(); page.setAttribute('opacity',1); placed.length=0;
-  stalls.forEach(st=>{ st.n=0; st.badge.setAttribute('opacity',0); });
+  stalls.forEach(st=>{ st.n=0; paint(st); });
   for(const k in basket) delete basket[k];
   total=0; totalT.textContent='0'; go.disabled=true;
 });
 
-/* the sheet follows the shell's subject */
 function loadSubject(id){
   page.replaceChildren(); page.setAttribute('opacity',1); $('flyer').replaceChildren();
   placed.length=0; for(const k in basket) delete basket[k];
-  total=0; totalT.textContent='0'; go.disabled=true;
+  total=0; go.disabled=true;
   buildSheet(TOPICS_BY_SUBJECT[id] || TOPICS_BY_SUBJECT.math);
+  totalT.textContent='0';
 }
 document.addEventListener('satf:subject', e=>loadSubject(e.detail.id));
 loadSubject((window.SATF && window.SATF.subject().id) || 'math');
