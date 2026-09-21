@@ -206,22 +206,38 @@ function buildTape(s){
 const pose=(x,y,rot,sc,sy)=>tape.setAttribute('transform',`translate(${x} ${y}) rotate(${rot}) scale(${sc} ${sc*sy})`);
 const describe=s=>`${s.num} · ${s.score==null?'not taken yet':s.score}`;
 
+/* The tape turns edge-on, it is not squashed. A card turning about its long
+   axis loses height as cos(angle), so interpolating the height straight from
+   1 to .12 reads as flattening rather than turning. EDGE is the angle whose
+   cosine is the .12 the case rests at; `face` maps a 0..1 turn onto it.
+   The turn is also kept off its own clock from the travel: squeezing both
+   through one easeOut flattened the tape in the first few frames and then
+   slid a sliver across the screen for the rest of the move. */
+const EDGE=Math.acos(.12);
+const face=turn=>Math.cos(EDGE*easeInOut(Math.min(1,Math.max(0,turn))));
+const linear=k=>k;
+
 let state='idle', current=null, busy=false;
 const run=async fn=>{ if(busy) return; busy=true; document.body.classList.add('busy'); try{ await fn(); } finally{ busy=false; document.body.classList.remove('busy'); } };
 
 async function pull(s){
   current=s; s.slot.classList.add('out'); buildTape(s); tape.style.display=''; hint.textContent=describe(s);
   // out of the box edge-on, turning to face you as it comes up to the middle
-  await tween(720,k=>pose(lerp(s.gx,SX,k), lerp(s.gy,SY,k)-36*Math.sin(Math.PI*k), lerp(s.ang,0,k), lerp(.53,SC,k), lerp(.12,1,k)));
+  await tween(760,k=>{
+    const t=easeOut(k);                       // the travel arrives decelerating
+    pose(lerp(s.gx,SX,t), lerp(s.gy,SY,t)-36*Math.sin(Math.PI*t), lerp(s.ang,0,t), lerp(.53,SC,t), face(1-k/.78));
+  },linear);
   await tween(160,k=>pose(SX,SY,0,SC*(1+.03*Math.sin(Math.PI*k)),1));
   state='staged'; deck.classList.add('ready'); hint.textContent=describe(s)+' · tap the deck';
 }
 async function putBack(fast){
   const s=current;
-  // travel down into the slot, rotating and flattening edge-on to match the resting case -- eased like the
-  // pull's arrival (decelerating into place) rather than the mechanical slow-fast-slow of easeInOut
-  await tween(fast?380:620,k=>pose(lerp(SX,s.gx,k), lerp(SY,s.gy,k)-32*Math.sin(Math.PI*k), lerp(0,s.ang,k), lerp(SC,.53,k), lerp(1,.12,k)));
-  if(!fast) await tween(130,k=>pose(s.gx,s.gy,s.ang,.53*(1-.025*Math.sin(Math.PI*k)),.12));   // a small settle as it drops home
+  // back down to the slot: it carries most of the way still facing you and only
+  // turns edge-on over the last stretch, as it drops in
+  await tween(fast?440:700,k=>{
+    const t=easeInOut(k);                     // leaves and arrives gently, no snap at either end
+    pose(lerp(SX,s.gx,t), lerp(SY,s.gy,t)-30*Math.sin(Math.PI*t), lerp(0,s.ang,t), lerp(SC,.53,t), face((k-.30)/.70));
+  },linear);
   s.slot.classList.remove('out');                              // the real case starts fading back in now
   await tween(fast?130:240,k=>{ tape.style.opacity=String(1-k); });   // crossfade the floating tape out under it, so nothing ever shows a blank gap
   tape.style.display='none'; tape.style.opacity='';
