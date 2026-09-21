@@ -24,12 +24,6 @@
     border-radius:18px; transition:transform .18s var(--ease);
   }
   .badge-btn:active { transform:scale(.97); }
-  .badge-btn::after {
-    content:'All ten levels'; display:block; margin-top:12px;
-    font:500 10px var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--faint);
-    transition:color .16s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine) { .badge-btn:hover::after { color:var(--ink); } }
   .badge { width:clamp(180px,26vh,248px); height:auto; display:block; }
 
   .stat { display:flex; flex-direction:column; align-items:center; gap:6px; }
