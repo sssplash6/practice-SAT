@@ -61,7 +61,7 @@
 
 <main class="screen">
   <svg class="scene" id="scene" viewBox="0 0 800 600" aria-hidden="true">
-    <rect class="plinth" x="120" y="60" width="600" height="360" rx="28"/>
+    <rect class="plinth" id="plinth" x="120" y="60" width="600" height="360" rx="28"/>
     <g id="platter"><circle class="platter" cx="330" cy="240" r="160"/><g id="ticks"></g></g>
     <g id="onPlatter"></g>
     <circle class="spindle" cx="330" cy="240" r="5"/>
@@ -140,10 +140,14 @@ let current = null, busy = false, spinning = false, platterA = 0, last = perform
     const d = discs[current]; d.r += 110 * dt; place(d); }
   requestAnimationFrame(spin); })(last);
 
+async function returnCurrent(midHint) {                 // lift the needle, send the playing disc back to its sleeve
+  const p = discs[current]; spinning = false; p.g.classList.remove('on'); hl.textContent = 'One domain. Deep.'; hint.textContent = midHint;
+  await armTo(REST_A, 550, easeOut); await goHome(p); current = null;
+}
+
 async function play(i) {
   if (busy || current === i) return; busy = true; document.body.classList.add('busy'); go.disabled = true;
-  if (current !== null) { const p = discs[current]; spinning = false; p.g.classList.remove('on'); hl.textContent = 'One domain. Deep.'; hint.textContent = 'Changing record';
-    await armTo(REST_A, 550, easeOut); await goHome(p); current = null; }
+  if (current !== null) await returnCurrent('Changing record');
   const d = discs[i]; current = i; hint.textContent = 'Cueing';
   // 1. slide out of the sleeve
   d.g.querySelector('.lift').style.transform = 'none';
@@ -167,6 +171,17 @@ async function goHome(d) {
   await tween(280, k => { d.y = d.home.y - 30 + 30 * k; place(d); });
   d.g.querySelector('.lift').style.transform = '';
 }
+
+/* tapping the player itself (the plinth, the platter track, or the spinning disc) while something
+   is on it stops the play and sends that disc back to its sleeve */
+async function stopPlaying() {
+  if (busy || current === null) return; busy = true; document.body.classList.add('busy'); go.disabled = true;
+  await returnCurrent('Taking it off');
+  hint.textContent = 'Tap a record'; go.disabled = true;
+  busy = false; document.body.classList.remove('busy');
+}
+const onDeckTap = e => { e.stopPropagation(); stopPlaying(); };
+[document.getElementById('plinth'), document.getElementById('platter'), onPlatter].forEach(t => t.addEventListener('pointerdown', onDeckTap));
 
 /* -- ROUTER SEAM: the chosen domain is discs[current].name ---------------- */
 go.addEventListener('click', () => console.log('[router] /practice/domain ->', discs[current].name));

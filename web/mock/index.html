@@ -51,6 +51,7 @@
   .hinge { stroke: var(--ink); stroke-width: .8; opacity: .5; }
   .tape { fill: var(--tape); opacity: .96; } .tapeline { stroke: var(--ink); stroke-width: .6; opacity: .12; }
   .mk { font-family: var(--hand); fill: var(--ink); opacity: .9; dominant-baseline: central; }
+  .mk.amber { fill: var(--amber); }
   .stroke { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linecap: round; opacity: .85; }
   .slot { cursor: pointer; } .slot .lift { transition: transform .3s var(--ease), opacity .3s; } .slot:hover .lift { transform: translateY(-4px); }
   .slot.out .lift { opacity: 0; }
@@ -115,9 +116,10 @@ const ADV={'.':.3,'-':.5,' ':.3,'!':.32,'1':.48,'i':.3,'l':.32,'t':.4,'n':.56,'o
 function scrawl(parent,x,y,str,size,o={}){
   const g=el('g',{filter:'url(#marker)',transform:`translate(${x} ${y}) rotate(${o.rot||0})`},parent);
   const chars=[...str], adv=chars.map(ch=>(ADV[ch]??.6)*size), total=adv.reduce((a,b)=>a+b,0);
+  const cls=o.color?`mk ${o.color}`:'mk';
   let cx=-total/2;
   chars.forEach((ch,i)=>{ const w=adv[i], mx=cx+w/2;
-    const t=el('text',{class:'mk',x:(mx+(rnd()*2-1)*size*.03).toFixed(2),y:((rnd()*2-1)*size*.06).toFixed(2),'font-size':(size*(.94+rnd()*.14)).toFixed(1),'text-anchor':'middle',transform:`rotate(${((rnd()*2-1)*7).toFixed(1)} ${mx.toFixed(2)} 0)`},g);
+    const t=el('text',{class:cls,x:(mx+(rnd()*2-1)*size*.03).toFixed(2),y:((rnd()*2-1)*size*.06).toFixed(2),'font-size':(size*(.94+rnd()*.14)).toFixed(1),'text-anchor':'middle',transform:`rotate(${((rnd()*2-1)*7).toFixed(1)} ${mx.toFixed(2)} 0)`},g);
     t.textContent=ch; cx+=w; });
   if(o.deco==='under'){ const hw=total/2+2; el('path',{class:'stroke',d:`M${-hw} ${size*.55} q ${hw*.6} ${size*.12} ${hw*2} ${-size*.06}`},g); }
   if(o.deco==='ring'){ const rx=total/2+size*.4, ry=size*.66; el('path',{class:'stroke',d:`M${-rx} 0 a ${rx} ${ry} 0 1 0 ${rx*2} 0 a ${rx*1.03} ${ry*1.05} 0 1 0 ${-rx*2.02} ${-1.5}`},g); }
@@ -186,7 +188,7 @@ function buildTape(s){
   el('rect',{class:'shell',x:-150,y:-95,width:300,height:190,rx:14},tape);
   el('rect',{class:'label',x:-128,y:-77,width:256,height:66,rx:4},tape);
   scrawl(tape,-62,-46,s.num,30,{rot:-3});
-  scrawl(tape,62,-44,s.score==null?'--':String(s.score),24,{rot:2,deco:s.score!=null&&rnd()<.5?'under':null});
+  scrawl(tape,62,-44,s.score==null?'--':String(s.score),24,{rot:2,deco:s.score!=null&&rnd()<.5?'under':null,color:s.score!=null?'amber':null});
   el('use',{href:'#mark',x:106,y:-26,width:12,height:12,color:'#3F3F3F',opacity:.85},tape);
   el('rect',{class:'win',x:-88,y:3,width:176,height:60,rx:30},tape);
   const clip=el('clipPath',{id:'winClip'},tape); el('rect',{x:-88,y:3,width:176,height:60,rx:30},clip);
@@ -211,8 +213,13 @@ async function pull(s){
 }
 async function putBack(fast){
   const s=current;
-  await tween(fast?400:480,k=>pose(lerp(SX,s.gx,k), lerp(SY,s.gy,k)-28*Math.sin(Math.PI*k), lerp(0,s.ang,k), lerp(SC,.53,k), lerp(1,.12,k)), easeInOut);
-  tape.style.display='none'; s.slot.classList.remove('out');
+  // travel down into the slot, rotating and flattening edge-on to match the resting case -- eased like the
+  // pull's arrival (decelerating into place) rather than the mechanical slow-fast-slow of easeInOut
+  await tween(fast?380:620,k=>pose(lerp(SX,s.gx,k), lerp(SY,s.gy,k)-32*Math.sin(Math.PI*k), lerp(0,s.ang,k), lerp(SC,.53,k), lerp(1,.12,k)));
+  if(!fast) await tween(130,k=>pose(s.gx,s.gy,s.ang,.53*(1-.025*Math.sin(Math.PI*k)),.12));   // a small settle as it drops home
+  s.slot.classList.remove('out');                              // the real case starts fading back in now
+  await tween(fast?130:240,k=>{ tape.style.opacity=String(1-k); });   // crossfade the floating tape out under it, so nothing ever shows a blank gap
+  tape.style.display='none'; tape.style.opacity='';
   current=null; state='idle'; deck.classList.remove('ready'); hint.textContent='Tap a tape';
 }
 async function load(){
