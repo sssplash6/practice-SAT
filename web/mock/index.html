@@ -3,32 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Shoebox Tapes — Mock Tests</title>
+<title>Mock tests · SAT Freshman</title>
+<meta name="description" content="Full length, timed, and scored like the real thing.">
+<link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&family=Permanent+Marker&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;900&family=DM+Mono:wght@400;500&family=Permanent+Marker&display=swap">
+<link rel="stylesheet" href="../assets/app.css">
 <style>
+  /* only what the shell does not already define */
   :root {
-    color-scheme: light;
-    --paper: #FFFFFF; --ink: #3F3F3F; --amber: #F18508;
-    --mat: #EDEAE5; --sleeve: #F6F4F0; --line: #E4E1DC; --soft: #8A847C; --card: #FBFAF8; --tape: #EFE5CC;
-    --font: "Archivo", "Helvetica Neue", system-ui, sans-serif;   /* placeholder type */
-    --mono: "DM Mono", ui-monospace, monospace;
+    --tape: #EFE5CC;
     --hand: "Permanent Marker", "Marker Felt", "Chalkboard SE", "Comic Sans MS", cursive;
-    --ease: cubic-bezier(.2, .8, .2, 1);
   }
-  html, body { height: 100%; margin: 0; }
-  body { background: var(--paper); color: var(--ink); font-family: var(--font); font-size: 14px; -webkit-font-smoothing: antialiased; }
-  img { max-width: 100%; }
-  .screen { min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: clamp(18px, 3vh, 30px); padding-block: 32px 48px; padding-inline: 24px; text-align: center; }
-  svg.scene { width: min(780px, 94vw); max-width: 100%; aspect-ratio: 800 / 600; display: block; overflow: visible; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
-  h1 { margin: 0; font-size: clamp(2rem, 6vw, 3.4rem); font-weight: 900; letter-spacing: -.04em; line-height: .98; min-height: 1em; text-wrap: balance; }
-  .btn { font: 800 15px var(--font); min-height: 52px; padding: 0 32px; border: 0; border-radius: 999px; background: var(--amber); color: #fff; cursor: pointer;
-         box-shadow: 0 10px 30px -14px rgba(241,133,8,.9); transition: transform .18s var(--ease), box-shadow .25s var(--ease), opacity .3s var(--ease); }
-  .btn:hover { transform: translateY(-1px); } .btn:active { transform: translateY(1px); } .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
-  .btn[disabled] { opacity: .35; cursor: default; box-shadow: none; transform: none; }
-  .hint { font: 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin: 0; min-height: 1.4em; }
+  .stage > svg.scene { aspect-ratio: 800 / 600; }
 
   /* the deck, a top-loader seen from above */
   .plinth { fill: var(--card); stroke: var(--line); stroke-width: 1.5; }
@@ -65,13 +53,30 @@
   .pool { fill: var(--ink); } .hub { fill: #fff; stroke: var(--ink); stroke-width: 1.5; } .spoke { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
   .screw { fill: none; stroke: var(--ink); stroke-width: 1; }
   #tape { cursor: pointer; }
-  @media (prefers-reduced-motion: reduce) { .lift, .btn, .label, .led { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .lift, .label, .led { transition: none; } }
 </style>
 </head>
-<body>
+<body data-nav="mock">
 
-<main class="screen">
-  <svg class="scene" id="scene" viewBox="0 0 800 600" aria-hidden="true">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="app">
+  <aside class="rail"></aside>
+
+  <main class="main" id="main">
+    <header class="head">
+      <button class="rail-toggle" type="button" aria-label="Show navigation" aria-expanded="false">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <p class="head-title">Mock tests</p>
+      <p class="head-note">Three boxes of seven. Tap a spine to pull the tape.</p>
+      <span class="head-right"><span class="chip">Whole test</span></span>
+    </header>
+
+    <section class="stage rise">
+      <svg class="scene" id="scene" viewBox="0 0 800 600" aria-hidden="true">
     <defs>
       <filter id="marker" x="-20%" y="-30%" width="140%" height="160%">
         <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="7" result="n"/>
@@ -96,11 +101,14 @@
     <g id="boxes"></g>
     <g id="tape" style="display:none"></g>
   </svg>
-  <p class="hint" id="hint">Tap a tape</p>
-  <h1 id="hl">Pick a tape.</h1>
-  <button class="btn" type="button" id="go" disabled>Start mock</button>
-</main>
+      <p class="hint" id="hint">Tap a tape</p>
+      <h1 id="hl">Pick a tape.</h1>
+      <button class="btn" type="button" id="go" disabled>Start mock</button>
+    </section>
+  </main>
+</div>
 
+<script src="../assets/app.js"></script>
 <script>
 const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};

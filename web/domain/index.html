@@ -3,30 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Domain Turntable — Domain Practice</title>
+<title>Domain practice · SAT Freshman</title>
+<meta name="description" content="One domain at a time, until it stops being the weak one.">
+<link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/app.css">
 <style>
-  :root {
-    color-scheme: light;
-    --paper: #FFFFFF; --ink: #3F3F3F; --amber: #F18508;
-    --vinyl: #3F3F3F; --groove: #5C5C5C; --mat: #EDEAE5; --sleeve: #F6F4F0; --line: #E4E1DC; --soft: #8A847C;
-    --font: "Archivo", "Helvetica Neue", system-ui, sans-serif;   /* placeholder type */
-    --mono: "DM Mono", ui-monospace, monospace;
-    --ease: cubic-bezier(.2, .8, .2, 1);
-  }
-  html, body { height: 100%; margin: 0; }
-  body { background: var(--paper); color: var(--ink); font-family: var(--font); font-size: 14px; -webkit-font-smoothing: antialiased; }
-  img { max-width: 100%; }
-  .screen { min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: clamp(18px, 3vh, 30px); padding: 32px 24px 48px; text-align: center; }
-  svg.scene { width: min(780px, 94vw); aspect-ratio: 800 / 600; display: block; overflow: visible; }
-  h1 { margin: 0; font-size: clamp(2rem, 6vw, 3.4rem); font-weight: 900; letter-spacing: -.04em; line-height: .98; min-height: 1em; }
-  .btn { font: 800 15px var(--font); min-height: 52px; padding: 0 32px; border: 0; border-radius: 999px; background: var(--amber); color: #fff; cursor: pointer;
-         box-shadow: 0 10px 30px -14px rgba(241,133,8,.9); transition: transform .18s var(--ease), box-shadow .25s var(--ease), opacity .3s var(--ease); }
-  .btn:hover { transform: translateY(-1px); } .btn:active { transform: translateY(1px); }
-  .btn[disabled] { opacity: .35; cursor: default; box-shadow: none; transform: none; }
+  /* only what the shell does not already define */
+  :root { --vinyl: #3F3F3F; --groove: #5C5C5C; }
+  .stage > svg.scene { aspect-ratio: 800 / 600; }
 
   .plinth { fill: #FBFAF8; stroke: var(--line); stroke-width: 1.5; }
   .platter { fill: var(--mat); stroke: var(--ink); stroke-width: 2; }
@@ -34,7 +21,7 @@
   .spindle { fill: var(--ink); }
   .arm { stroke: var(--ink); stroke-width: 5; stroke-linecap: round; fill: none; }
   .arm-base { fill: #fff; stroke: var(--ink); stroke-width: 2; }
-  .head { fill: var(--ink); }
+  .arm-head { fill: var(--ink); }
   .weight { fill: var(--ink); }
   .rest { stroke: var(--line); stroke-width: 6; stroke-linecap: round; }
 
@@ -53,14 +40,30 @@
   .disc.on .label { fill: var(--amber); stroke: var(--amber); }
   .disc.on .label-text { fill: #fff; }
   .hole { fill: var(--paper); }
-  .hint { font: 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft); }
-  @media (prefers-reduced-motion: reduce) { .lift, .btn, .label, .label-text { transition: none; } }
+  @media (prefers-reduced-motion: reduce) { .lift, .label, .label-text { transition: none; } }
 </style>
 </head>
-<body>
+<body data-nav="domain">
 
-<main class="screen">
-  <svg class="scene" id="scene" viewBox="0 0 800 600" aria-hidden="true">
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="app">
+  <aside class="rail"></aside>
+
+  <main class="main" id="main">
+    <header class="head">
+      <button class="rail-toggle" type="button" aria-label="Show navigation" aria-expanded="false">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <p class="head-title">Domain practice</p>
+      <p class="head-note">Tap a sleeve to put its record on. Tap the deck to take it off.</p>
+      <span class="head-right"><span class="chip"><b data-subject-echo>Math</b></span></span>
+    </header>
+
+    <section class="stage rise">
+      <svg class="scene" id="scene" viewBox="0 0 800 600" aria-hidden="true">
     <rect class="plinth" id="plinth" x="120" y="60" width="600" height="360" rx="28"/>
     <g id="platter"><circle class="platter" cx="330" cy="240" r="160"/><g id="ticks"></g></g>
     <g id="onPlatter"></g>
@@ -68,18 +71,21 @@
     <line class="rest" x1="612" y1="352" x2="642" y2="352"/>
     <g id="arm">
       <line class="arm" id="armLine"/>
-      <rect class="head" id="armHead" width="22" height="14" rx="3"/>
+      <rect class="arm-head" id="armHead" width="22" height="14" rx="3"/>
       <rect class="weight" x="-38" y="-8" width="30" height="16" rx="6"/>
     </g>
     <circle class="arm-base" cx="640" cy="120" r="16"/>
     <g id="sleeves"></g>
     <g id="fly"></g>
   </svg>
-  <p class="hint" id="hint">Tap a record</p>
-  <h1 id="hl">One domain. Deep.</h1>
-  <button class="btn" type="button" id="go" disabled>Start practice</button>
-</main>
+      <p class="hint" id="hint">Tap a record</p>
+      <h1 id="hl">One domain. Deep.</h1>
+      <button class="btn" type="button" id="go" disabled>Start practice</button>
+    </section>
+  </main>
+</div>
 
+<script src="../assets/app.js"></script>
 <script>
 const NS = 'http://www.w3.org/2000/svg';
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -107,12 +113,39 @@ let armA = REST_A; const setArm = a => { armA = a; arm.setAttribute('transform',
 setArm(REST_A);
 const armTo = (a, ms = 650, ease = easeBack) => { const from = armA; return tween(ms, k => setArm(lerp(from, a, k)), ease); };
 
-/* ---------------------------------------------------------------- the records */
-const DOMAINS = [['Algebra', 'ALG'], ['Advanced Math', 'ADV'], ['Problem-Solving & Data', 'DATA'], ['Geometry & Trig', 'GEO']];
+/* ---------------------------------------------------------------- the records
+   Four sleeves either way: the two SAT sections each have four domains, so the
+   deck holds whichever section the shell is set to. */
+const DOMAINS_BY_SUBJECT = {
+  math: [
+    ['Algebra', 'ALG'], ['Advanced Math', 'ADV'],
+    ['Problem-Solving and Data', 'DATA'], ['Geometry and Trigonometry', 'GEO'],
+  ],
+  verbal: [
+    ['Information and Ideas', 'INFO'], ['Craft and Structure', 'CRAFT'],
+    ['Expression of Ideas', 'EXPR'], ['Standard English Conventions', 'CONV'],
+  ],
+};
 const sleeves = document.getElementById('sleeves'), fly = document.getElementById('fly'), onPlatter = document.getElementById('onPlatter');
-const SW = 128, GAP = 24, X0 = (800 - (4 * SW + 3 * GAP)) / 2, SY = 466;
+const SW = 128, GAP = 24, SY = 466;
 
-const discs = DOMAINS.map(([name, abbr], i) => {
+/* greedy wrap, so a long domain name sits on the sleeve instead of past it */
+function wrap(name, max) {
+  const out = []; let line = '';
+  name.split(' ').forEach(w => {
+    if (!line) line = w;
+    else if ((line + ' ' + w).length <= max) line += ' ' + w;
+    else { out.push(line); line = w; }
+  });
+  if (line) out.push(line);
+  return out.slice(0, 2);
+}
+
+let discs = [];
+
+function buildDiscs(list) {
+  const X0 = (800 - (list.length * SW + (list.length - 1) * GAP)) / 2;
+  discs = list.map(([name, abbr], i) => {
   const cx = X0 + i * (SW + GAP) + SW / 2, home = { x: cx, y: SY + 22 };
   const slot = el('g', { class: 'slot' }, sleeves);
   const g = el('g', { class: 'disc' }, slot);            // positioned by JS
@@ -124,12 +157,13 @@ const discs = DOMAINS.map(([name, abbr], i) => {
   const t = el('text', { class: 'label-text', 'text-anchor': 'middle', 'dominant-baseline': 'middle', y: 1 }, lift); t.textContent = abbr;
   el('circle', { class: 'hole', r: 2.4 }, lift);
   const sleeve = el('rect', { class: 'sleeve', x: cx - SW / 2, y: SY, width: SW, height: SW, rx: 8 }, slot);
-  const lines = name.split(' & ');
-  lines.forEach((ln, j) => { const tx = el('text', { class: 'sleeve-name', x: cx, y: SY + SW - 34 + j * 15 - (lines.length - 1) * 7, 'text-anchor': 'middle' }, slot); tx.textContent = (j ? '& ' : '') + ln; });
+  const lines = wrap(name, 16);
+  lines.forEach((ln, j) => { const tx = el('text', { class: 'sleeve-name', x: cx, y: SY + SW - 34 + j * 15 - (lines.length - 1) * 7, 'text-anchor': 'middle' }, slot); tx.textContent = ln; });
   const d = { i, name, g, slot, sleeve, home, x: home.x, y: home.y, s: 1, r: 0 };
   slot.addEventListener('pointerdown', () => play(i));
   place(d); return d;
-});
+  });
+}
 function place(d) { d.g.setAttribute('transform', `translate(${d.x} ${d.y}) scale(${d.s}) rotate(${d.r})`); }
 
 /* ---------------------------------------------------------------- playing */
@@ -182,6 +216,23 @@ async function stopPlaying() {
 }
 const onDeckTap = e => { e.stopPropagation(); stopPlaying(); };
 [document.getElementById('plinth'), document.getElementById('platter'), onPlatter].forEach(t => t.addEventListener('pointerdown', onDeckTap));
+
+/* the deck follows the shell's subject: same turntable, the other section's
+   four domains. Anything on the platter comes off first. */
+function loadSubject(id) {
+  const list = DOMAINS_BY_SUBJECT[id] || DOMAINS_BY_SUBJECT.math;
+  spinning = false; current = null; busy = false; platterA = 0;
+  document.body.classList.remove('busy');
+  setArm(REST_A);
+  document.getElementById('platter').removeAttribute('transform');
+  sleeves.replaceChildren(); fly.replaceChildren(); onPlatter.replaceChildren();
+  buildDiscs(list);
+  hl.textContent = 'One domain. Deep.';
+  hint.textContent = 'Tap a record';
+  go.disabled = true;
+}
+document.addEventListener('satf:subject', e => loadSubject(e.detail.id));
+loadSubject((window.SATF && window.SATF.subject().id) || 'math');
 
 /* -- ROUTER SEAM: the chosen domain is discs[current].name ---------------- */
 go.addEventListener('click', () => console.log('[router] /practice/domain ->', discs[current].name));
