@@ -4,33 +4,127 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Mixed practice · SAT Freshman</title>
-<meta name="description" content="Build a set by hand, from any topics you choose.">
+<meta name="description" content="Four domains on a line, each opening its topics onto a sticker sheet.">
 <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;900&family=DM+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="../assets/app.css">
 <style>
-  /* only what the shell does not already define. This scene is wider than the
-     others, and `sheet` here is the drawn paper, not the shell's page body. */
-  .stage > svg.scene { --scene-max: 940px; aspect-ratio: 960 / 640; --scene-ratio: 1.5; }
-  .sheet { fill:#F7F5F0; stroke:var(--ink); stroke-width:1.5; }
-  .signt { font:700 10px var(--mono); fill:var(--ink); letter-spacing:.16em; text-transform:uppercase; }
-  .name { font:500 9.5px var(--mono); fill:var(--ink); letter-spacing:.04em; }
-  .row { cursor:pointer; } .row:hover .stk { fill:#fff; }
-  .placed { cursor:pointer; } .placed:hover { opacity:.6; }
-  .stk { fill:#FBFAF7; stroke:var(--ink); stroke-width:1.3; stroke-linejoin:round; transition: fill .2s; }
-  .stki { fill:none; stroke:var(--ink); stroke-width:.9; opacity:.55; stroke-linecap:round; }
-  .stkl { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
-  .stkd { fill:var(--ink); }
-  .badge { fill:var(--ink); stroke:#F7F5F0; stroke-width:2; } .badget { font:900 8.5px var(--font); fill:#fff; letter-spacing:-.02em; }
-  .page { fill:#fff; stroke:var(--ink); stroke-width:1.5; }
-  .rule { stroke:var(--line); stroke-width:1; }
-  .cut { fill:none; stroke:var(--ink); stroke-width:.8; stroke-dasharray:2 2.6; opacity:.45; }
-  .total { font:900 46px var(--font); fill:var(--amber); letter-spacing:-.05em; font-variant-numeric:tabular-nums; }
-  .lbl { font:500 10px var(--mono); fill:var(--soft); letter-spacing:.14em; text-transform:uppercase; }
-  /* in flight the sticker keeps its drawing: white face, orange line, orange marks -- never a silhouette */
-  .fly .stk { fill:#fff; stroke:var(--amber); stroke-width:1.6; } .fly .stki { stroke:var(--amber); opacity:.9; } .fly .stkl { stroke:var(--amber); } .fly .stkd { fill:var(--amber); }
+  .board {
+    padding: clamp(22px,3.5vh,36px) var(--gutter) 40px;
+    width: 100%; max-width: 1060px;
+    display: grid; grid-template-columns: minmax(0,1fr) 248px; gap: 34px;
+    align-items: start;
+  }
+
+  /* the four domains, one line. A domain is its name until you open it. */
+  .domains { list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); column-gap:16px; }
+  .dom-btn {
+    appearance:none; border:0; background:none; cursor:pointer;
+    width:100%; display:flex; align-items:center; gap:8px;
+    padding:0 6px 11px 0; border-bottom:1px solid var(--line);
+    font:700 10.5px var(--mono); letter-spacing:.15em; text-transform:uppercase;
+    color:var(--soft); text-align:left;
+    transition:color .16s var(--ease), border-color .16s var(--ease);
+  }
+  @media (hover:hover) and (pointer:fine) { .dom-btn:hover { color:var(--ink); } }
+  .dom-btn .caret { margin-left:auto; flex:none; color:var(--faint); transition:transform .28s var(--ease), color .16s var(--ease); }
+  .dom[data-open="true"] .dom-btn { color:var(--ink); border-color:var(--ink); }
+  .dom[data-open="true"] .caret { transform:rotate(180deg); color:var(--ink); }
+
+  /* 0fr to 1fr is the one way to transition to a height you do not know */
+  .drawer { display:grid; grid-template-rows:0fr; transition:grid-template-rows .32s var(--ease); }
+  .dom[data-open="true"] .drawer { grid-template-rows:1fr; }
+  .drawer-in { overflow:hidden; }
+
+  .topics { list-style:none; margin:0; padding:6px 0 18px; }
+  .topic {
+    width:100%; display:flex; align-items:center; gap:10px;
+    padding:5px 6px 5px 0; border:0; background:none; cursor:pointer;
+    font:500 11.5px var(--mono); letter-spacing:.01em; color:var(--ink); text-align:left;
+    transition:transform .14s var(--ease);
+  }
+  /* no fill behind the row: the sticker is the thing being taken, so it is the
+     thing that reacts. Its cut line firms up and its face goes white. */
+  @media (hover:hover) and (pointer:fine) { .topic:hover .cut { border-color:var(--ink); } .topic:hover .stk { fill:#fff; } }
+  .topic:active { transform:scale(.99); }
+  .topic-n { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cut {
+    position:relative;
+    margin-left:auto; flex:none;
+    width:38px; height:38px; display:grid; place-items:center;
+    border:1px dashed var(--faint); border-radius:9px;
+    transition:border-color .16s var(--ease);
+  }
+  .n-badge {
+    position:absolute; top:-7px; right:-7px; z-index:1;
+    min-width:18px; height:18px; padding:0 4px;
+    display:grid; place-items:center; border-radius:999px;
+    border:2px solid var(--paper);
+    background:var(--ink); color:#fff;
+    font:900 9px var(--font); font-variant-numeric:tabular-nums;
+  }
+  .n-badge[hidden] { display:none; }
+
+  .glyph { width:26px; height:26px; display:block; color:var(--ink); }
+  .stk  { fill:#FBFAF7; stroke:currentColor; stroke-width:1.3; stroke-linejoin:round; transition:fill .18s; }
+  .stki { fill:none; stroke:currentColor; stroke-width:.9; opacity:.55; stroke-linecap:round; }
+  .stkl { fill:none; stroke:currentColor; stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
+  .stkd { fill:currentColor; }
+
+  /* the sheet you are building: ruled paper, stickers land on it */
+  .sheet { position:sticky; top:78px; }
+  .paper {
+    position:relative;
+    min-height:420px; padding:14px;
+    border:1.5px solid var(--ink); border-radius:4px; background:#fff;
+    background-image:repeating-linear-gradient(to bottom, transparent 0 33px, var(--line) 33px 34px);
+    background-position:0 12px;
+    display:grid; grid-template-columns:repeat(6,1fr); align-content:start; gap:0;
+    cursor:pointer;
+  }
+  .paper-empty {
+    position:absolute; inset:auto 18px 50% 18px; transform:translateY(50%);
+    margin:0; text-align:center;
+    font:500 10.5px var(--mono); letter-spacing:.1em; text-transform:uppercase; color:var(--faint);
+  }
+  .placed {
+    display:grid; place-items:center; height:34px;
+    background:none; border:0; padding:0; cursor:pointer;
+    transition:opacity .16s var(--ease), transform .16s var(--ease);
+  }
+  .placed .glyph { width:22px; height:22px; }
+  @media (hover:hover) and (pointer:fine) { .placed:hover { opacity:.45; transform:scale(.92); } }
+
+  .tally { display:flex; align-items:flex-end; gap:14px; margin-top:16px; }
+  .tally-n { display:block; font:900 32px var(--font); letter-spacing:-.04em; color:var(--amber); font-variant-numeric:tabular-nums; line-height:1; }
+  .tally-k { display:block; margin-top:3px; font:500 10px var(--mono); letter-spacing:.14em; text-transform:uppercase; color:var(--soft); }
+  .tally-clear {
+    margin-left:auto; appearance:none; border:0; background:none; cursor:pointer;
+    font:500 11px var(--mono); letter-spacing:.05em; color:var(--soft);
+    text-decoration:underline; text-underline-offset:3px; transition:color .16s var(--ease);
+  }
+  .tally-clear:hover { color:var(--ink); }
+  .tally-clear[hidden] { display:none; }
+  .sheet .btn { width:100%; margin-top:14px; }
+
+  /* a sticker in flight, from its cut square to the sheet */
+  .flyer { position:fixed; z-index:60; pointer-events:none; color:var(--amber); }
+  .flyer .glyph { width:30px; height:30px; }
+  .flyer .stk { fill:#fff; stroke:var(--amber); stroke-width:1.6; }
+  .flyer .stki { stroke:var(--amber); opacity:.9; }
+  .flyer .stkl { stroke:var(--amber); }
+  .flyer .stkd { fill:var(--amber); }
+
+  @media (max-width: 1040px) {
+    .board { grid-template-columns:minmax(0,1fr); }
+    .sheet { position:static; }
+    .paper { min-height:220px; }
+  }
+  @media (max-width: 720px) { .domains { grid-template-columns:repeat(2,minmax(0,1fr)); row-gap:4px; } }
+  @media (max-width: 420px) { .domains { grid-template-columns:minmax(0,1fr); } }
+  @media (prefers-reduced-motion: reduce) { .drawer, .caret, .topic, .placed { transition:none; } }
 </style>
 </head>
 <body data-nav="mixed">
@@ -50,35 +144,35 @@
       <h1 class="head-title">Mixed practice</h1>
     </header>
 
-    <section class="stage rise">
-      <svg class="scene" id="scene" viewBox="0 0 960 640" aria-hidden="true">
-    <g id="sheets"></g>
-    <g id="pageG" style="cursor:pointer">
-      <rect class="page" x="620" y="30" width="240" height="482" rx="4"/>
-      <g id="rules"></g>
-      <g id="page"></g>
-      <text class="total" id="total" x="740" y="560" text-anchor="middle">0</text>
-      <text class="lbl" x="740" y="582" text-anchor="middle">questions</text>
-    </g>
-    <g id="flyer" style="pointer-events:none"></g>
-  </svg>
-      <button class="btn" type="button" id="go" disabled>Build a set</button>
-    </section>
+    <div class="board rise">
+      <ul class="domains" id="domains"></ul>
+
+      <div class="sheet">
+        <div class="paper" id="paper"></div>
+        <div class="tally">
+          <span>
+            <span class="tally-n" id="total">0</span>
+            <span class="tally-k" id="totalK">questions</span>
+          </span>
+          <button class="tally-clear" type="button" id="clear" hidden>Start over</button>
+        </div>
+        <button class="btn" type="button" id="go" disabled>Build a set</button>
+      </div>
+    </div>
   </main>
 </div>
 
 <script src="../assets/app.js"></script>
 <script>
-const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const NS='http://www.w3.org/2000/svg';
 const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
-const txt=(p,x,y,s,cls,a={})=>{const t=el('text',{x,y,class:cls,'dominant-baseline':'middle',...a},p);t.textContent=s;return t;};
-const lerp=(a,b,k)=>a+(b-a)*k, easeIn=k=>k*k*k, easeOut=k=>1-Math.pow(1-k,3);
-const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
 const $=id=>document.getElementById(id);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* one glyph per topic, each a small diagram of the thing itself. Drawn around (0,0), about 20px across. */
 const poly=(n,r,rot=-90)=>Array.from({length:n},(_,i)=>{const a=(rot+i*360/n)*Math.PI/180;return (r*Math.cos(a)).toFixed(2)+','+(r*Math.sin(a)).toFixed(2);}).join(' ');
 const star=(r,ri)=>Array.from({length:10},(_,i)=>{const a=(-90+i*36)*Math.PI/180,rr=i%2?ri:r;return (rr*Math.cos(a)).toFixed(2)+','+(rr*Math.sin(a)).toFixed(2);}).join(' ');
+
 const SHAPES={
   /* Algebra */
   numberline: g=>{ el('path',{class:'stkl',d:'M-10 2 H10 M-6 -1 V5 M0 -1 V5 M6 -1 V5'},g); el('circle',{class:'stkd',cx:3,cy:2,r:2.6},g); },          // one solution on a number line
@@ -118,8 +212,7 @@ const SHAPES={
   colon:       g=>{ el('path',{class:'stkl',d:'M-11 0 H-3.5 M3.5 0 H11'},g); el('circle',{class:'stkd',cx:0,cy:-3,r:1.9},g); el('circle',{class:'stkd',cx:0,cy:3,r:1.9},g); },
   caret:       g=>{ el('path',{class:'stkl',d:'M-10 -3 H10'},g); el('path',{class:'stkl',d:'M-4 7 L0 0.5 L4 7'},g); },                                                  // the proofreader's mark
 };
-/* Four sheets per subject, one row per topic. Math is what the bank holds
-   today; Reading and Writing is the published taxonomy, waiting on items. */
+
 const TOPICS_BY_SUBJECT = {
   math: [
     ['Algebra',       [['Linear eqs','linear_equations_in_one_variable','numberline'],['Lines','linear_equations_in_two_variables','graphline'],['Linear fn','linear_functions','slope'],['Systems','systems_of_linear_equations','cross'],['Inequalities','linear_inequalities','ray']]],
@@ -134,88 +227,162 @@ const TOPICS_BY_SUBJECT = {
     ['Conventions',           [['Boundaries','boundaries','colon'],['Form and sense','form_structure_and_sense','caret']]],
   ],
 };
-const sticker=(p,shape,x,y,cls='')=>{ const g=el('g',{class:cls,transform:`translate(${x} ${y})`},p); SHAPES[shape](g); return g; };
-for(let i=0;i<13;i++) el('line',{class:'rule',x1:636,y1:60+i*34,x2:844,y2:60+i*34},$('rules'));
 
-/* four sheets in two columns, a row of one topic's stickers on each */
-const basket={}; let total=0; const CAP=120; const stalls=[]; const placed=[];   // placed: the stickers actually drawn on the page, in grid order
+/* ---------------------------------------------------------------- the list
+   Four domains on one line. A domain is its name until you open it, and then
+   it drops its topics underneath: the name, and the sticker still on its
+   backing. Tapping a topic peels one onto the sheet; holding keeps peeling. */
+const basket={}; let total=0;
+const rows=[];                 // one per topic
+const placed=[];               // one per sticker on the sheet, in order
+const paper=$('paper');
 
-const GAP=14, TOP=30, SHEET_W=210, ROW=40, HEAD=34;
-const sheetH=d=>d[1].length*ROW+HEAD;
-
-/* Two columns of the same height. Taking the domains in their given order put
-   five rows and three against seven and four, so the right column ran a third
-   longer. Each sheet now goes to whichever column is currently shorter, tallest
-   first, and the leftover height is spread into the shorter column's gap so the
-   two end level. The first domain is kept top-left, and each column reads down
-   in order. */
-function columns(domains){
-  const cols=[[],[]];
-  const colH=c=>cols[c].reduce((t,i)=>t+sheetH(domains[i]),0)+Math.max(0,cols[c].length-1)*GAP;
-  domains.map((_,i)=>i).sort((a,b)=>sheetH(domains[b])-sheetH(domains[a]))
-         .forEach(i=>cols[colH(0)<=colH(1)?0:1].push(i));
-  if(cols[1].includes(0)) cols.reverse();
-  cols.forEach(c=>c.sort((a,b)=>a-b));
-  return { cols, heights:[colH(0),colH(1)] };
+function glyph(shape){
+  const s=el('svg',{viewBox:'-13 -13 26 26','aria-hidden':'true'});
+  s.setAttribute('class','glyph');
+  SHAPES[shape](s);
+  return s;
 }
 
-function buildSheets(domains){
-  $('sheets').replaceChildren(); stalls.length=0;
-  const { cols, heights } = columns(domains);
-  const tallest = Math.max(...heights);
-cols.forEach((ds,c)=>{ let y=TOP; const x=80+c*250;
-  const gap = GAP + (ds.length>1 ? (tallest-heights[c])/(ds.length-1) : 0);
-  ds.forEach(di=>{ const dd=domains[di]; if(!dd) return; const [dom,items]=dd; const h=sheetH(dd); el('rect',{class:'sheet',x,y,width:SHEET_W,height:h,rx:6},$('sheets')); txt($('sheets'),x+14,y+16,dom,'signt');
-    items.forEach(([name,slug,shape],r)=>{ const ry=y+34+r*40+20; const g=el('g',{class:'row'},$('sheets')); el('rect',{x,y:ry-20,width:210,height:40,fill:'transparent'},g); txt(g,x+14,ry,name,'name');
-      el('rect',{class:'cut',x:x+116,y:ry-19,width:38,height:38,rx:8},g); sticker(g,shape,x+135,ry).setAttribute('transform',`translate(${x+135} ${ry}) scale(1.7)`);
-      const badge=el('g',{opacity:0},g); el('circle',{class:'badge',cx:x+153,cy:ry-18,r:10},badge); const bt=txt(badge,x+153,ry-17.5,'0','badget',{'text-anchor':'middle'});
-      const st={slug,name,shape,cx:x+135,cy:ry,badge,bt,n:0,hold:null}; stalls.push(st);
-      const start=()=>{ peel(st); const t0=performance.now(); const tick=()=>{ if(st.hold===null) return; const hh=(performance.now()-t0)/1000; peel(st); st.hold=setTimeout(tick,hh<.7?240:hh<1.8?100:45); }; st.hold=setTimeout(tick,240); };
-      const stop=()=>{ clearTimeout(st.hold); st.hold=null; };
-      g.addEventListener('pointerdown',e=>{ try{ g.setPointerCapture(e.pointerId); }catch(_){} start(); }); ['pointerup','pointerleave','pointercancel'].forEach(e=>g.addEventListener(e,stop)); });
-    y+=h+gap; }); });
+const caret = () => {
+  const s=el('svg',{width:12,height:12,viewBox:'0 0 24 24','aria-hidden':'true'});
+  s.setAttribute('class','caret');
+  el('path',{d:'M6 9.5 12 15.5 18 9.5',fill:'none',stroke:'currentColor','stroke-width':'2','stroke-linecap':'round','stroke-linejoin':'round'},s);
+  return s;
+};
+
+function build(domains){
+  const host=$('domains'); host.replaceChildren(); rows.length=0;
+
+  domains.forEach(([dom,items])=>{
+    const li=document.createElement('li');
+    li.className='dom'; li.dataset.open='false';
+
+    const btn=document.createElement('button');
+    btn.type='button'; btn.className='dom-btn'; btn.setAttribute('aria-expanded','false');
+    const nm=document.createElement('span'); nm.textContent=dom;
+    btn.append(nm, caret());
+
+    const drawer=document.createElement('div'); drawer.className='drawer';
+    const inner=document.createElement('div'); inner.className='drawer-in';
+    const ul=document.createElement('ul'); ul.className='topics';
+
+    items.forEach(([name,slug,shape])=>{
+      const item=document.createElement('li');
+      const t=document.createElement('button');
+      t.type='button'; t.className='topic';
+      t.setAttribute('aria-label','Add a '+name+' question');
+
+      const n=document.createElement('span'); n.className='topic-n'; n.textContent=name;
+      const badge=document.createElement('span'); badge.className='n-badge'; badge.hidden=true; badge.textContent='0';
+      const cut=document.createElement('span'); cut.className='cut';
+      cut.append(glyph(shape), badge);
+      t.append(n, cut);
+      item.appendChild(t); ul.appendChild(item);
+
+      const row={slug,name,shape,n:0,badge,cut,hold:null};
+      rows.push(row);
+
+      /* tap peels one, holding keeps peeling, the way the sheet did before */
+      const start=()=>{ add(row); const t0=performance.now();
+        const tick=()=>{ if(row.hold===null) return; const s=(performance.now()-t0)/1000;
+          add(row); row.hold=setTimeout(tick, s<.7?240 : s<1.8?110 : 55); };
+        row.hold=setTimeout(tick,260); };
+      const stop=()=>{ clearTimeout(row.hold); row.hold=null; };
+      t.addEventListener('pointerdown',e=>{ try{ t.setPointerCapture(e.pointerId); }catch(_){} start(); });
+      ['pointerup','pointerleave','pointercancel'].forEach(ev=>t.addEventListener(ev,stop));
+      t.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); add(row); } });
+    });
+
+    inner.appendChild(ul); drawer.appendChild(inner);
+    li.append(btn, drawer); host.appendChild(li);
+
+    btn.addEventListener('click',()=>{
+      const open=li.dataset.open!=='true';
+      li.dataset.open=String(open);
+      btn.setAttribute('aria-expanded',String(open));
+    });
+  });
+
+  paintTotal();
 }
 
-/* peeling: the sticker lifts, turns, and lands on the page -- as its own shape, so the page shows the mix */
-const page=$('page'), pageG=$('pageG'), totalT=$('total'), go=$('go');
-const hint={};   // the hint line is gone; state writes here go nowhere
-function peel(st){ if(total>=CAP){ hint.textContent='Page is full · tap it to start over'; return; }
-  st.n++; total++; basket[st.slug]=st.n; st.bt.textContent=st.n; st.badge.setAttribute('opacity',1); totalT.textContent=total; go.disabled=false;
-  const n=Math.min(total,78)-1, tx=650+(n%6)*36, ty=60+Math.floor(n/6)*34;
-  const f=sticker($('flyer'),st.shape,st.cx,st.cy,'fly');
-  tween(560,k=>{ const s=lerp(1.7,1.35,k)+.3*Math.sin(Math.PI*k); f.setAttribute('transform',`translate(${lerp(st.cx,tx,k)} ${lerp(st.cy,ty,k)-70*Math.sin(Math.PI*k)}) scale(${s}) rotate(${40*Math.sin(Math.PI*k)})`); }, easeIn)
-    .then(()=>{ f.remove(); if(total<=78){ const placedEl=sticker(page,st.shape,tx,ty,'placed'); placedEl.setAttribute('transform',`translate(${tx} ${ty}) scale(1.35)`);
-        el('circle',{r:11,fill:'transparent'},placedEl);   // most of the glyph is fill:none strokes, so give the whole icon a generous, reliable tap area rather than just the thin lines
-        const rec={el:placedEl,st}; placed.push(rec);
-        placedEl.addEventListener('pointerdown',e=>{ e.stopPropagation(); removeOne(rec); }); }
-      tween(200,k=>pageG.setAttribute('transform',`translate(0 ${1.5*Math.sin(Math.PI*k)})`)); }); }
-/* tapping a sticker already on the page peels it back off, on its own -- the reset below only
-   fires for a tap that lands on the blank page itself (the sticker's own handler stops it there) */
-function removeOne(rec){
-  const idx=placed.indexOf(rec); if(idx<0) return;
-  placed.splice(idx,1); rec.el.remove();
-  rec.st.n=Math.max(0,rec.st.n-1); rec.st.bt.textContent=rec.st.n;
-  if(rec.st.n<=0){ rec.st.badge.setAttribute('opacity',0); delete basket[rec.st.slug]; } else basket[rec.st.slug]=rec.st.n;
-  total=Math.max(0,total-1); totalT.textContent=total; go.disabled=total===0;
-  hint.textContent = total===0 ? 'Tap a sticker to peel one · hold to keep peeling · tap the page to start over' : 'Tap a sticker on the page to peel it back off';
-  placed.forEach((r,i)=>{ const tx=650+(i%6)*36, ty=60+Math.floor(i/6)*34; r.el.setAttribute('transform',`translate(${tx} ${ty}) scale(1.35)`); });   // close the gap
+/* ---------------------------------------------------------------- the sheet */
+function add(row){
+  if(placed.length>=120) return;
+  row.n++; total++; basket[row.slug]=row.n;
+  row.badge.hidden=false; row.badge.textContent=row.n;
+
+  const btn=document.createElement('button');
+  btn.type='button'; btn.className='placed';
+  btn.setAttribute('aria-label','Take back a '+row.name+' question');
+  btn.appendChild(glyph(row.shape));
+  const rec={el:btn,row};
+  btn.addEventListener('click',()=>take(rec));
+  placed.push(rec);
+  paper.appendChild(btn);
+  paintTotal();
+
+  if(reduce) return;
+  // fly a copy from the cut square to where the sticker just landed
+  const from=row.cut.getBoundingClientRect(), to=btn.getBoundingClientRect();
+  btn.style.opacity='0';
+  const f=document.createElement('div');
+  f.className='flyer'; f.appendChild(glyph(row.shape));
+  f.style.left=(from.left+from.width/2)+'px'; f.style.top=(from.top+from.height/2)+'px';
+  document.body.appendChild(f);
+  const dx=(to.left+to.width/2)-(from.left+from.width/2), dy=(to.top+to.height/2)-(from.top+from.height/2);
+  const a=f.animate([
+    {transform:'translate(-50%,-50%) scale(1) rotate(0deg)'},
+    {transform:`translate(-50%,-50%) translate(${dx*.5}px,${dy*.5-46}px) scale(1.18) rotate(22deg)`, offset:.5},
+    {transform:`translate(-50%,-50%) translate(${dx}px,${dy}px) scale(.78) rotate(0deg)`},
+  ],{duration:520,easing:'cubic-bezier(.4,0,.2,1)'});
+  a.onfinish=()=>{ f.remove(); btn.style.opacity=''; };
 }
-pageG.addEventListener('pointerdown', async ()=>{ if(!total) return; await tween(320,k=>page.setAttribute('opacity',1-k)); page.replaceChildren(); page.setAttribute('opacity',1);
-  placed.length=0; stalls.forEach(st=>{ st.n=0; st.badge.setAttribute('opacity',0); }); for(const k in basket) delete basket[k]; total=0; totalT.textContent='0'; go.disabled=true; hint.textContent='Tap a sticker to peel one · hold to keep peeling · tap the page to start over'; });
-/* the sheets follow the shell's subject. A set is one section's topics, so
-   switching starts a fresh page rather than mixing the two. */
-const HINT_IDLE='Tap a sticker to peel one · hold to keep peeling · tap the page to start over';
+
+function take(rec){
+  const i=placed.indexOf(rec); if(i<0) return;
+  placed.splice(i,1); rec.el.remove();
+  const row=rec.row;
+  row.n=Math.max(0,row.n-1);
+  row.badge.textContent=row.n; row.badge.hidden=!row.n;
+  if(row.n) basket[row.slug]=row.n; else delete basket[row.slug];
+  total=Math.max(0,total-1);
+  paintTotal();
+}
+
+function paintTotal(){
+  $('total').textContent=total;
+  $('totalK').textContent=total===1?'question':'questions';
+  $('go').disabled=total===0;
+  $('clear').hidden=total===0;
+  const empty=paper.querySelector('.paper-empty');
+  if(total===0 && !empty){
+    const p=document.createElement('p');
+    p.className='paper-empty'; p.textContent='Peel a sticker for each question';
+    paper.appendChild(p);
+  } else if(total>0 && empty) empty.remove();
+}
+
+function clearAll(){
+  placed.splice(0).forEach(r=>r.el.remove());
+  rows.forEach(r=>{ r.n=0; r.badge.textContent='0'; r.badge.hidden=true; });
+  for(const k in basket) delete basket[k];
+  total=0; paintTotal();
+}
+$('clear').addEventListener('click',clearAll);
+paper.addEventListener('click',e=>{ if(e.target===paper||e.target.classList.contains('paper-empty')) clearAll(); });
+
 function loadSubject(id){
-  page.replaceChildren(); page.setAttribute('opacity',1); $('flyer').replaceChildren();
-  placed.length=0; for(const k in basket) delete basket[k];
-  total=0; totalT.textContent='0'; go.disabled=true; hint.textContent=HINT_IDLE;
-  buildSheets(TOPICS_BY_SUBJECT[id] || TOPICS_BY_SUBJECT.math);
+  clearAll();
+  build(TOPICS_BY_SUBJECT[id] || TOPICS_BY_SUBJECT.math);
 }
 document.addEventListener('satf:subject', e=>loadSubject(e.detail.id));
 loadSubject((window.SATF && window.SATF.subject().id) || 'math');
 
 /* -- ROUTER SEAM: the set is `basket`, a map of topic slug -> question count -- */
-go.addEventListener('click', ()=>console.log('[router] /practice/combined', {...basket}));
+$('go').addEventListener('click', ()=>console.log('[router] /practice/combined', {...basket}));
 </script>
 
-</body></html>
+</body>
+</html>
