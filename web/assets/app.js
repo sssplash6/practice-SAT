@@ -196,5 +196,5 @@
     ? document.addEventListener('DOMContentLoaded', boot)
     : boot();
 
-  window.SATF = { levelOf, subject: readSubject, mark };
+  window.SATF = { levelOf, subject: readSubject, mark, player: () => ({ ...PLAYER }) };
 })();

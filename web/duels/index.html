@@ -10,6 +10,45 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;900&family=DM+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="../assets/app.css">
+<style>
+  .stage > svg.scene { aspect-ratio: 800 / 540; --scene-ratio: 1.481; cursor: crosshair; }
+
+  /* the butt: a coil of straw on a trestle */
+  .straw   { fill:#F3EFE6; stroke:var(--ink); stroke-width:1.5; }
+  .coil    { fill:none; stroke:var(--ink); stroke-width:.9; opacity:.35; }
+  .wood    { fill:none; stroke:var(--ink); stroke-width:3; stroke-linecap:round; }
+  .woodthin{ fill:none; stroke:var(--ink); stroke-width:2; stroke-linecap:round; }
+  .grain   { fill:none; stroke:var(--ink); stroke-width:.8; opacity:.3; stroke-linecap:round; }
+
+  /* the rings. Orange is the gold, and the only place it sits at rest. */
+  .ring    { fill:#FFFFFF; stroke:var(--ink); stroke-width:1.4; }
+  .ring-alt{ fill:#F6F4F0; stroke:var(--ink); stroke-width:1.4; }
+  .gold    { fill:var(--amber); stroke:var(--amber); }
+
+  /* the bow */
+  .limb   { fill:none; stroke:var(--ink); stroke-width:5.5; stroke-linecap:round; }
+  .horn   { fill:none; stroke:var(--ink); stroke-width:3; stroke-linecap:round; }
+  .string { fill:none; stroke:var(--ink); stroke-width:1.3; }
+  .grip   { fill:var(--ink); }
+  .shaft  { fill:none; stroke:var(--ink); stroke-width:1.8; stroke-linecap:round; }
+  .head   { fill:var(--ink); }
+  .fletch { fill:var(--mat); stroke:var(--ink); stroke-width:1; stroke-linejoin:round; }
+
+  /* the aim, and what a hit throws off */
+  .retic  { fill:none; stroke:var(--amber); stroke-width:1.6; stroke-linecap:round; }
+  .spark  { stroke:var(--amber); stroke-width:2; stroke-linecap:round; }
+
+  .tallymk  { fill:none; stroke:var(--ink); stroke-width:1.6; stroke-linecap:round; }
+  .tallymk.spent { opacity:.22; }
+  .tnum   { font:900 30px var(--font); fill:var(--ink); letter-spacing:-.03em; }
+  .tkey   { font:500 9.5px var(--mono); fill:var(--soft); letter-spacing:.16em; text-transform:uppercase; }
+  .tscore { font:900 17px var(--font); fill:var(--amber); letter-spacing:-.02em; }
+
+  .mute { cursor:pointer; }
+  .mute rect { fill:transparent; }
+  .mute path, .mute line { fill:none; stroke:var(--faint); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; transition:stroke .16s var(--ease); }
+  .mute:hover path, .mute:hover line { stroke:var(--ink); }
+</style>
 </head>
 <body data-nav="duels">
 
@@ -28,20 +67,355 @@
       <h1 class="head-title">Duels</h1>
     </header>
 
-    <!-- Front page not designed yet. The concept is chosen but not drawn, so
-         the page says so rather than standing in for it. -->
-    <div class="blank rise">
-      <div class="blank-frame">
-        <svg width="56" height="56" viewBox="0 0 44 44" aria-hidden="true">
-          <path d="M22 8v28" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
-          <path d="M12.5 16.5 18 22l-5.5 5.5M31.5 16.5 26 22l5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-      <p>The duel front page has not been drawn. The ladder behind it is settled: ten levels, a seed of 1000, and three placement duels before the level counts.</p>
-    </div>
+    <section class="stage rise">
+      <svg class="scene" id="scene" viewBox="0 0 800 540" aria-hidden="true">
+        <g id="stand"></g>
+        <g id="butt"></g>
+        <g id="rings"></g>
+        <g id="shafts"></g>
+        <g id="sparks"></g>
+        <g id="bow"></g>
+        <g id="arrow"></g>
+        <g id="retic" style="display:none"></g>
+        <g id="tally"></g>
+        <g class="mute" id="mute"></g>
+      </svg>
+      <button class="btn" type="button" id="go">Find a duel</button>
+    </section>
   </main>
 </div>
 
 <script src="../assets/app.js"></script>
+<script>
+const NS='http://www.w3.org/2000/svg';
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const $=id=>document.getElementById(id);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const lerp=(a,b,k)=>a+(b-a)*k;
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const easeOut=k=>1-Math.pow(1-k,3);
+const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();
+  (function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(performance.now())});
+
+/* ---------------------------------------------------------------- sound
+   All synthesised, nothing fetched. Nothing makes a noise until you put a
+   finger on the bow, so the page never speaks first. */
+const snd=(()=>{
+  let ctx, master, muted=false, noiseBuf=null, draw=null;
+  const get=()=>{
+    if(!ctx){
+      try{ ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; }
+      master=ctx.createGain(); master.gain.value=.9; master.connect(ctx.destination);
+    }
+    if(ctx.state==='suspended') ctx.resume();
+    return ctx;
+  };
+  const noise=c=>{
+    if(noiseBuf) return noiseBuf;
+    const n=c.sampleRate*2; noiseBuf=c.createBuffer(1,n,c.sampleRate);
+    const d=noiseBuf.getChannelData(0); let last=0;
+    for(let i=0;i<n;i++){ const w=Math.random()*2-1; last=(last+.02*w)/1.02; d[i]=last*3.5; }  // brown, for wood and straw
+    return noiseBuf;
+  };
+  const burst=(dur,type,freq,gain,q=1)=>{
+    const c=get(); if(!c||muted) return;
+    const s=c.createBufferSource(); s.buffer=noise(c);
+    s.playbackRate.value=1+Math.random()*.3;
+    const f=c.createBiquadFilter(); f.type=type; f.frequency.value=freq; f.Q.value=q;
+    const g=c.createGain(); const t=c.currentTime;
+    g.gain.setValueAtTime(gain,t); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    s.connect(f).connect(g).connect(master); s.start(t); s.stop(t+dur+.02);
+  };
+  const tone=(type,f0,f1,dur,gain,delay=0)=>{
+    const c=get(); if(!c||muted) return;
+    const o=c.createOscillator(), g=c.createGain(), t=c.currentTime+delay;
+    o.type=type; o.frequency.setValueAtTime(f0,t);
+    if(f1!==f0) o.frequency.exponentialRampToValueAtTime(Math.max(1,f1),t+dur);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(gain,t+.008);
+    g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g).connect(master); o.start(t); o.stop(t+dur+.02);
+  };
+
+  return {
+    get muted(){ return muted; },
+    toggle(){ muted=!muted; if(muted) this.drawStop(); return muted; },
+
+    /* the bow under tension: straining wood and a creaking string, both
+       climbing as you pull */
+    drawStart(){
+      const c=get(); if(!c||muted||draw) return;
+      const s=c.createBufferSource(); s.buffer=noise(c); s.loop=true;
+      const f=c.createBiquadFilter(); f.type='bandpass'; f.frequency.value=260; f.Q.value=5;
+      const g=c.createGain(); g.gain.value=0;
+      const o=c.createOscillator(); o.type='sawtooth'; o.frequency.value=58;
+      const og=c.createGain(); og.gain.value=0;
+      const lp=c.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=320;
+      s.connect(f).connect(g).connect(master);
+      o.connect(lp).connect(og).connect(master);
+      s.start(); o.start();
+      draw={s,o,g,og,f};
+    },
+    drawTo(k){                                   // k is how far the bow is pulled
+      if(!draw) return; const c=get(); if(!c) return; const t=c.currentTime;
+      draw.g.gain.setTargetAtTime(.05+.14*k,t,.05);
+      draw.f.frequency.setTargetAtTime(240+560*k,t,.06);
+      draw.og.gain.setTargetAtTime(.012+.05*k,t,.05);
+      draw.o.frequency.setTargetAtTime(52+26*k,t,.08);
+    },
+    drawStop(){
+      if(!draw) return; const c=get(); const t=c?c.currentTime:0;
+      try{ draw.g.gain.setTargetAtTime(0,t,.02); draw.og.gain.setTargetAtTime(0,t,.02);
+           draw.s.stop(t+.12); draw.o.stop(t+.12); }catch(e){}
+      draw=null;
+    },
+
+    loose(k){ burst(.09,'highpass',1700,.28+.2*k); tone('triangle',420+180*k,120,.10,.16); },
+    fly(){ burst(.22,'bandpass',900,.055,2); },
+    thud(){ burst(.11,'lowpass',420,.3); tone('sine',110,42,.16,.3); },
+    straw(){ burst(.16,'lowpass',700,.22,.7); tone('sine',80,38,.13,.16); },
+    ting(score){                                 // higher ring, higher bell
+      const f=[0,392,494,587,698,880][score/2]||660;
+      tone('triangle',f,f,.5,.11); tone('sine',f*2,f*2,.3,.05,.012);
+    },
+    nock(){ burst(.03,'highpass',2400,.16); },
+    reload(){ tone('triangle',300,520,.12,.1); burst(.05,'highpass',1500,.1); },
+  };
+})();
+
+/* ---------------------------------------------------------------- the scene
+   A straw butt on a trestle, and a longbow held side on. Pull anywhere to
+   draw, move to aim, let go to loose. Five arrows to an end, which is the
+   five questions a duel is. */
+const TC={x:532,y:238}, RINGS=[130,104,78,52,26], STRAW=146;
+const BOWX=176, NOCKY=238, TIPT=86, TIPB=390, PULL=68, ARROW=165;
+const ENDS=5;
+
+/* the butt */
+(()=>{
+  const st=$('stand');
+  el('path',{class:'wood',d:`M${TC.x-64} ${TC.y+96} L${TC.x-112} 496`},st);
+  el('path',{class:'wood',d:`M${TC.x+64} ${TC.y+96} L${TC.x+112} 496`},st);
+  el('path',{class:'wood',d:`M${TC.x-30} ${TC.y+150} L${TC.x+30} ${TC.y+150}`},st);
+  el('path',{class:'woodthin',d:`M${TC.x-96} 420 L${TC.x+96} 420`},st);
+  [[-104,470],[92,470]].forEach(([dx,y])=>el('path',{class:'grain',d:`M${TC.x+dx} ${y} l6 -22`},st));
+
+  const b=$('butt');
+  el('circle',{class:'straw',cx:TC.x,cy:TC.y,r:STRAW},b);
+  for(let i=0;i<64;i++){                       // the coil of a straw boss, seen end on
+    const a=i/64*Math.PI*2, c=Math.cos(a), s=Math.sin(a);
+    el('line',{class:'coil',x1:TC.x+c*(RINGS[0]+3),y1:TC.y+s*(RINGS[0]+3),x2:TC.x+c*(STRAW-2),y2:TC.y+s*(STRAW-2)},b);
+  }
+  el('circle',{class:'coil',cx:TC.x,cy:TC.y,r:(RINGS[0]+STRAW)/2},b);
+
+  const g=$('rings');
+  RINGS.forEach((r,i)=>el('circle',{class:i===RINGS.length-1?'ring gold':(i%2?'ring-alt':'ring'),cx:TC.x,cy:TC.y,r},g));
+})();
+
+/* the bow, redrawn at whatever draw length it is at */
+const bow=$('bow'), arrowG=$('arrow');
+function drawBow(d){
+  bow.replaceChildren(); arrowG.replaceChildren();
+  const tipX=BOWX+10*d, ctrl=BOWX-66-20*d, nockX=BOWX+PULL*d;
+  el('path',{class:'limb',d:`M${tipX} ${TIPT} Q${ctrl} ${NOCKY} ${tipX} ${TIPB}`},bow);
+  el('path',{class:'horn',d:`M${tipX} ${TIPT} l7 -9M${tipX} ${TIPB} l7 9`},bow);
+  el('path',{class:'string',d:`M${tipX} ${TIPT} L${nockX} ${NOCKY} L${tipX} ${TIPB}`},bow);
+  /* the belly of a quadratic sits midway between its ends and its control,
+     not on the control, which is where the grip was floating */
+  el('rect',{class:'grip',x:(tipX+ctrl)/2-4.5,y:NOCKY-26,width:9,height:52,rx:4},bow);
+
+  if(d<=0) return;
+  const a=aimAngle(nockX);                     // the shaft follows where you are looking
+  const g=el('g',{transform:`translate(${nockX} ${NOCKY}) rotate(${a})`},arrowG);
+  el('line',{class:'shaft',x1:0,y1:0,x2:ARROW,y2:0},g);
+  el('path',{class:'head',d:`M${ARROW} 0 l-13 -5 v10 z`},g);
+  el('path',{class:'fletch',d:'M2 0 l20 -7 l7 7 l-7 7 z'},g);
+}
+function aimAngle(nockX){
+  if(!aim) return 0;
+  return clamp(Math.atan2(aim.y-NOCKY,aim.x-nockX)*180/Math.PI,-26,26);
+}
+
+/* the reticle */
+(()=>{
+  const r=$('retic');
+  el('circle',{class:'retic',cx:0,cy:0,r:19},r);
+  el('path',{class:'retic',d:'M-29 0h13M16 0h13M0 -29v13M0 16v13'},r);
+  el('circle',{class:'retic',cx:0,cy:0,r:2.2,fill:'#F18508'},r);
+})();
+const retic=$('retic');
+function moveRetic(){
+  if(!aim){ retic.style.display='none'; return; }
+  retic.style.display='';
+  retic.setAttribute('transform',`translate(${aim.x} ${aim.y})`);
+}
+
+/* the end: five arrows, and what they scored */
+let left=ENDS, score=0;
+function paintTally(){
+  const t=$('tally'); t.replaceChildren();
+  for(let i=0;i<ENDS;i++){
+    const x=58+i*26, spent=i>=left;
+    el('path',{class:'tallymk'+(spent?' spent':''),d:`M${x} 470 v-30M${x} 440 l-4 6M${x} 440 l4 6`},t);
+  }
+  const n=el('text',{class:'tnum',x:58,y:512},t); n.textContent=score;
+  const k=el('text',{class:'tkey',x:58+(score>99?58:score>9?40:22),y:512},t); k.textContent='points';
+
+  /* an empty quiver needs to say so, or the tap that refills it reads as the
+     round being wiped for no reason */
+  if(left<=0){
+    const g=el('g',{class:'reload',transform:'translate(190 455)'},t);
+    el('path',{d:'M-9 0a9 9 0 1 0 3-6.7',fill:'none',stroke:'#F18508','stroke-width':2,'stroke-linecap':'round'},g);
+    el('path',{d:'M-7 -9 l1 4.6 l4.6 -1',fill:'none',stroke:'#F18508','stroke-width':2,'stroke-linecap':'round','stroke-linejoin':'round'},g);
+  }
+}
+
+/* ---------------------------------------------------------------- shooting */
+let aim=null, drawing=false, drawStart=0, busy=false, raf=0;
+
+const svg=$('scene');
+function toScene(e){
+  const p=svg.createSVGPoint(); p.x=e.clientX; p.y=e.clientY;
+  const m=svg.getScreenCTM(); if(!m) return null;
+  const q=p.matrixTransform(m.inverse());
+  return {x:clamp(q.x,TC.x-215,TC.x+205), y:clamp(q.y,40,470)};
+}
+const drawAmount=()=>drawing?clamp((performance.now()-drawStart)/620,0,1):0;
+
+function loop(){
+  if(!drawing) return;
+  const d=drawAmount();
+  drawBow(d); snd.drawTo(d);
+  raf=requestAnimationFrame(loop);
+}
+
+svg.addEventListener('pointerdown',e=>{
+  if(busy||left<=0) { if(left<=0) reload(); return; }
+  try{ svg.setPointerCapture(e.pointerId); }catch(_){}
+  aim=toScene(e)||aim; moveRetic();
+  drawing=true; drawStart=performance.now();
+  snd.nock(); snd.drawStart();
+  loop();
+});
+svg.addEventListener('pointermove',e=>{
+  if(!drawing) return;
+  aim=toScene(e)||aim; moveRetic();
+});
+['pointerup','pointercancel'].forEach(ev=>svg.addEventListener(ev,()=>{
+  if(!drawing) return;
+  const d=drawAmount();
+  drawing=false; cancelAnimationFrame(raf); snd.drawStop();
+  loose(d);
+}));
+
+async function loose(d){
+  busy=true;
+  snd.loose(d);
+  const nockX=BOWX+PULL*d;
+  drawBow(0);
+  retic.style.display='none';
+
+  /* a shot let go early flies weak and drops: the spread closes as you pull */
+  const spread=(1-d)*74;
+  const target={
+    x:aim.x+(Math.random()*2-1)*spread,
+    y:aim.y+(Math.random()*2-1)*spread+(d<.34?(1-d)*150:0),
+  };
+  const from={x:nockX,y:NOCKY};
+  const ctrl={x:(from.x+target.x)/2,y:Math.min(from.y,target.y)-52-40*(1-d)};
+
+  const fly=el('g',{},$('shafts'));
+  const sh=el('line',{class:'shaft',x1:-ARROW*.62,y1:0,x2:0,y2:0},fly);
+  el('path',{class:'head',d:'M0 0 l-13 -5 v10 z'},fly);
+  el('path',{class:'fletch',d:`M${-ARROW*.6} 0 l20 -7 l7 7 l-7 7 z`},fly);
+  snd.fly();
+
+  await tween(reduce?1:340,k=>{
+    const x=(1-k)*(1-k)*from.x+2*(1-k)*k*ctrl.x+k*k*target.x;
+    const y=(1-k)*(1-k)*from.y+2*(1-k)*k*ctrl.y+k*k*target.y;
+    const dx=2*(1-k)*(ctrl.x-from.x)+2*k*(target.x-ctrl.x);
+    const dy=2*(1-k)*(ctrl.y-from.y)+2*k*(target.y-ctrl.y);
+    fly.setAttribute('transform',`translate(${x} ${y}) rotate(${Math.atan2(dy,dx)*180/Math.PI})`);
+  },k=>k);
+  fly.remove();
+
+  land(target,ctrl);
+  left--; paintTally();
+  busy=false;
+}
+
+function land(p,ctrl){
+  const dist=Math.hypot(p.x-TC.x,p.y-TC.y);
+  const ri=RINGS.findIndex(r=>dist<=r);
+  const pts=ri<0?0:(RINGS.length-ri)*2;                 // 2 at the rim, 10 in the gold
+  const ang=Math.atan2(p.y-ctrl.y,p.x-ctrl.x)*180/Math.PI;
+
+  const g=el('g',{transform:`translate(${p.x} ${p.y}) rotate(${ang})`},$('shafts'));
+  el('line',{class:'shaft',x1:-46,y1:0,x2:0,y2:0},g);
+  el('path',{class:'fletch',d:'M-46 0 l16 -6 l6 6 l-6 6 z'},g);
+  if(!reduce) tween(160,k=>g.setAttribute('transform',
+    `translate(${p.x} ${p.y}) rotate(${ang+Math.sin(k*Math.PI*3)*(1-k)*7})`));
+
+  if(dist<=STRAW){ snd.thud(); if(pts){ snd.ting(pts); spark(p,pts); } else snd.straw(); }
+  else snd.straw();
+
+  if(pts){ score+=pts; flashScore(p,pts); }
+}
+
+/* each hit throws a few orange sparks off the boss */
+function spark(p,pts){
+  if(reduce) return;
+  const n=4+pts/2, g=el('g',{},$('sparks'));
+  const lines=Array.from({length:n},()=>{
+    const a=Math.random()*Math.PI*2, len=7+Math.random()*13;
+    return {a,len,l:el('line',{class:'spark',x1:p.x,y1:p.y,x2:p.x,y2:p.y},g)};
+  });
+  tween(420,k=>{
+    const e=easeOut(k);
+    lines.forEach(s=>{
+      const r0=6+e*s.len*1.7, r1=r0+s.len*(1-k*.7);
+      s.l.setAttribute('x1',p.x+Math.cos(s.a)*r0); s.l.setAttribute('y1',p.y+Math.sin(s.a)*r0);
+      s.l.setAttribute('x2',p.x+Math.cos(s.a)*r1); s.l.setAttribute('y2',p.y+Math.sin(s.a)*r1);
+    });
+    g.setAttribute('opacity',1-k);
+  },k=>k).then(()=>g.remove());
+}
+
+function flashScore(p,pts){
+  const t=el('text',{class:'tscore',x:p.x,y:p.y-26,'text-anchor':'middle'},$('sparks'));
+  t.textContent='+'+pts;
+  tween(760,k=>{ t.setAttribute('y',p.y-26-k*26); t.setAttribute('opacity',1-k*k); },k=>k).then(()=>t.remove());
+}
+
+function reload(){
+  $('shafts').replaceChildren();
+  left=ENDS; score=0; paintTally(); snd.reload();
+}
+
+/* ---------------------------------------------------------------- the mute */
+(()=>{
+  const m=$('mute'); let off=false;
+  const paint=()=>{
+    m.replaceChildren();
+    el('rect',{x:722,y:470,width:44,height:44,rx:10},m);
+    el('path',{d:'M737 489h6l7-7v20l-7-7h-6z'},m);
+    if(off) el('path',{d:'M754 486l10 10M764 486l-10 10'},m);
+    else { el('path',{d:'M755 486a7 7 0 0 1 0 12'},m); el('path',{d:'M759 482a12 12 0 0 1 0 20'},m); }
+    m.setAttribute('aria-label',off?'Turn sound on':'Turn sound off');
+  };
+  m.addEventListener('pointerdown',e=>{ e.stopPropagation(); off=snd.toggle(); paint(); });
+  paint();
+})();
+
+drawBow(0); paintTally();
+
+/* -- ROUTER SEAM: placement runs for three duels, per spec/rating.md --------- */
+const go=$('go');
+(()=>{
+  const p=(window.SATF&&window.SATF.player&&window.SATF.player())||{placed:true};
+  if(!p.placed) go.textContent='Calibrate';
+})();
+go.addEventListener('click',()=>console.log('[router] /duel/find'));
+</script>
+
 </body>
 </html>
