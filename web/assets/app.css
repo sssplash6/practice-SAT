@@ -73,6 +73,15 @@ button { font: inherit; color: inherit; }
   border-radius: 4px;
 }
 
+/* Controls get tapped repeatedly, and held down to repeat. Without this the
+   second tap starts selecting the label and a press on a touch screen flashes
+   a grey box over it. A button's label is not text anyone copies. */
+button {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 /* ---------------------------------------------------------------- shell */
 
 .app {
