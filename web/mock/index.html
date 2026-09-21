@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Shoebox Tapes — Mock Tests</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&family=Permanent+Marker&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --paper: #FFFFFF; --ink: #3F3F3F; --amber: #F18508;
+    --mat: #EDEAE5; --sleeve: #F6F4F0; --line: #E4E1DC; --soft: #8A847C; --card: #FBFAF8; --tape: #EFE5CC;
+    --font: "Archivo", "Helvetica Neue", system-ui, sans-serif;   /* placeholder type */
+    --mono: "DM Mono", ui-monospace, monospace;
+    --hand: "Permanent Marker", "Marker Felt", "Chalkboard SE", "Comic Sans MS", cursive;
+    --ease: cubic-bezier(.2, .8, .2, 1);
+  }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--font); font-size: 14px; -webkit-font-smoothing: antialiased; }
+  img { max-width: 100%; }
+  .screen { min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: clamp(18px, 3vh, 30px); padding-block: 32px 48px; padding-inline: 24px; text-align: center; }
+  svg.scene { width: min(780px, 94vw); max-width: 100%; aspect-ratio: 800 / 600; display: block; overflow: visible; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  h1 { margin: 0; font-size: clamp(2rem, 6vw, 3.4rem); font-weight: 900; letter-spacing: -.04em; line-height: .98; min-height: 1em; text-wrap: balance; }
+  .btn { font: 800 15px var(--font); min-height: 52px; padding: 0 32px; border: 0; border-radius: 999px; background: var(--amber); color: #fff; cursor: pointer;
+         box-shadow: 0 10px 30px -14px rgba(241,133,8,.9); transition: transform .18s var(--ease), box-shadow .25s var(--ease), opacity .3s var(--ease); }
+  .btn:hover { transform: translateY(-1px); } .btn:active { transform: translateY(1px); } .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .btn[disabled] { opacity: .35; cursor: default; box-shadow: none; transform: none; }
+  .hint { font: 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin: 0; min-height: 1.4em; }
+
+  /* the deck, a top-loader seen from above */
+  .plinth { fill: var(--card); stroke: var(--line); stroke-width: 1.5; }
+  .well { fill: var(--mat); stroke: var(--ink); stroke-width: 1.2; }
+  .pin { fill: #fff; stroke: var(--ink); stroke-width: 1.2; }
+  .keycap { fill: #fff; stroke: var(--ink); stroke-width: 1.2; } .key.down .keycap { fill: var(--mat); }
+  .glyph { fill: var(--ink); }
+  .dot { fill: var(--ink); opacity: .28; }
+  .counter { fill: #fff; stroke: var(--ink); stroke-width: 1.2; }
+  .ctr { font: 500 11px var(--mono); fill: var(--ink); letter-spacing: .18em; font-variant-numeric: tabular-nums; }
+  .knob { fill: #fff; stroke: var(--ink); stroke-width: 1.2; } .knobtick { stroke: var(--ink); stroke-width: 1.5; stroke-linecap: round; }
+  .led { fill: var(--line); stroke: var(--ink); stroke-width: .8; transition: fill .3s; } .led.on { fill: var(--amber); }
+  #deck.ready { cursor: pointer; }
+
+  /* the shoeboxes, lids off, cases standing spine-up */
+  .box { fill: var(--sleeve); stroke: var(--ink); stroke-width: 1.5; }
+  .floor { fill: var(--mat); }
+  .case { fill: var(--card); stroke: var(--ink); stroke-width: 1.2; }
+  .jcard { fill: #fff; stroke: var(--line); stroke-width: .8; }
+  .hinge { stroke: var(--ink); stroke-width: .8; opacity: .5; }
+  .tape { fill: var(--tape); opacity: .96; } .tapeline { stroke: var(--ink); stroke-width: .6; opacity: .12; }
+  .mk { font-family: var(--hand); fill: var(--ink); opacity: .9; dominant-baseline: central; }
+  .stroke { fill: none; stroke: var(--ink); stroke-width: 1.5; stroke-linecap: round; opacity: .85; }
+  .slot { cursor: pointer; } .slot .lift { transition: transform .3s var(--ease), opacity .3s; } .slot:hover .lift { transform: translateY(-4px); }
+  .slot.out .lift { opacity: 0; }
+  body.busy .slot { cursor: default; } body.busy .slot:hover .lift { transform: none; }
+
+  /* the cassette */
+  .shell { fill: #F5F3EF; stroke: var(--ink); stroke-width: 1.5; }
+  .label { fill: #fff; stroke: var(--ink); stroke-width: 1; transition: fill .4s var(--ease); }
+  #tape.on .label { fill: var(--amber); stroke: var(--amber); }
+  .win { fill: #fff; stroke: var(--ink); stroke-width: 1.2; }
+  .pool { fill: var(--ink); } .hub { fill: #fff; stroke: var(--ink); stroke-width: 1.5; } .spoke { stroke: var(--ink); stroke-width: 2; stroke-linecap: round; }
+  .screw { fill: none; stroke: var(--ink); stroke-width: 1; }
+  #tape { cursor: pointer; }
+  @media (prefers-reduced-motion: reduce) { .lift, .btn, .label, .led { transition: none; } }
+</style>
+</head>
+<body>
+
+<main class="screen">
+  <svg class="scene" id="scene" viewBox="0 0 800 600" aria-hidden="true">
+    <defs>
+      <filter id="marker" x="-20%" y="-30%" width="140%" height="160%">
+        <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="7" result="n"/>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="1.5" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+      <symbol id="mark" viewBox="0 0 100 100"><rect x="11" y="11" width="78" height="78" rx="21" fill="none" stroke="currentColor" stroke-width="22" pathLength="400" stroke-dasharray="20.3 11.6 88.4 11.6 88.4 11.6 88.4 11.6 68.1"/></symbol>
+    </defs>
+
+    <g id="deck" transform="translate(260 20)">
+      <rect class="plinth" x="0" y="0" width="280" height="180" rx="14"/>
+      <rect class="well" x="24" y="30" width="150" height="96" rx="6"/>
+      <g id="pins"></g>
+      <g id="grille"></g>
+      <rect class="counter" x="196" y="122" width="68" height="20" rx="3"/>
+      <text class="ctr" id="ctr" x="230" y="136" text-anchor="middle">000</text>
+      <circle class="knob" cx="222" cy="156" r="9"/><line class="knobtick" x1="222" y1="156" x2="222" y2="149"/>
+      <circle class="led" id="led" cx="252" cy="156" r="3.5"/>
+      <g id="keys"></g>
+      <use href="#mark" x="250" y="10" width="16" height="16" color="#3F3F3F" opacity=".85"/>
+    </g>
+
+    <g id="boxes"></g>
+    <g id="tape" style="display:none"></g>
+  </svg>
+  <p class="hint" id="hint">Tap a tape</p>
+  <h1 id="hl">Pick a tape.</h1>
+  <button class="btn" type="button" id="go" disabled>Start mock</button>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const lerp=(a,b,k)=>a+(b-a)*k, easeOut=k=>1-Math.pow(1-k,3), easeInOut=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+const $=id=>document.getElementById(id);
+let seed=23; const rnd=()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
+
+/* ---------------------------------------------------------------- handwriting
+   every glyph is placed by hand, then roughed up so it reads as marker on card */
+const ADV={'.':.3,'-':.5,' ':.3,'!':.32,'1':.48,'i':.3,'l':.32,'t':.4,'n':.56,'o':.56,'p':.56,'a':.56,'u':.56,'s':.5,'g':.56};
+function scrawl(parent,x,y,str,size,o={}){
+  const g=el('g',{filter:'url(#marker)',transform:`translate(${x} ${y}) rotate(${o.rot||0})`},parent);
+  const chars=[...str], adv=chars.map(ch=>(ADV[ch]??.6)*size), total=adv.reduce((a,b)=>a+b,0);
+  let cx=-total/2;
+  chars.forEach((ch,i)=>{ const w=adv[i], mx=cx+w/2;
+    const t=el('text',{class:'mk',x:(mx+(rnd()*2-1)*size*.03).toFixed(2),y:((rnd()*2-1)*size*.06).toFixed(2),'font-size':(size*(.94+rnd()*.14)).toFixed(1),'text-anchor':'middle',transform:`rotate(${((rnd()*2-1)*7).toFixed(1)} ${mx.toFixed(2)} 0)`},g);
+    t.textContent=ch; cx+=w; });
+  if(o.deco==='under'){ const hw=total/2+2; el('path',{class:'stroke',d:`M${-hw} ${size*.55} q ${hw*.6} ${size*.12} ${hw*2} ${-size*.06}`},g); }
+  if(o.deco==='ring'){ const rx=total/2+size*.4, ry=size*.66; el('path',{class:'stroke',d:`M${-rx} 0 a ${rx} ${ry} 0 1 0 ${rx*2} 0 a ${rx*1.03} ${ry*1.05} 0 1 0 ${-rx*2.02} ${-1.5}`},g); }
+  return g;
+}
+function tapeNote(parent,x,y,w,str,size,rot,deco){            // a torn strip of masking tape with something written on it
+  const g=el('g',{transform:`translate(${x} ${y}) rotate(${rot})`},parent);
+  const h=size+4, hw=w/2, hh=h/2, L=[], R=[], steps=4;
+  for(let i=0;i<=steps;i++){ const yy=-hh+i*(h/steps); L.push([-hw+(i%2?2.2:0)+rnd()*1.2,yy]); R.push([hw-(i%2?2.2:0)-rnd()*1.2,yy]); }
+  el('polygon',{class:'tape',points:[...L,...R.reverse()].map(p=>p.map(v=>v.toFixed(1)).join(',')).join(' ')},g);
+  el('line',{class:'tapeline',x1:-hw+3,y1:-hh+2.5,x2:hw-3,y2:-hh+2.5},g);
+  scrawl(g,0,.5,str,size,{rot:(rnd()*2-1)*2,deco});
+  return g;
+}
+
+/* ---------------------------------------------------------------- the deck */
+const DECK={x:260,y:20}, WELL={x:DECK.x+99,y:DECK.y+78};            // where a loaded cassette sits, at half size
+[[-17.5,16.5],[17.5,16.5]].forEach(([dx,dy])=>{ const g=el('g',{},$('pins')); const cx=99+dx, cy=78+dy;
+  el('circle',{class:'pin',cx,cy,r:4.5},g); for(let i=0;i<3;i++){ const a=i*Math.PI*2/3; el('line',{class:'spoke',x1:cx,y1:cy,x2:cx+3.2*Math.cos(a),y2:cy+3.2*Math.sin(a)},g);} });
+for(let r=0;r<9;r++) for(let c=0;c<8;c++) el('circle',{class:'dot',cx:198+c*9.4,cy:36+r*9.4,r:1.7},$('grille'));
+const keys={};
+['rec','rew','play','ff','stop','pause'].forEach((k,i)=>{ const x=24+i*26, g=el('g',{class:'key',transform:`translate(${x} 140)`},$('keys')); keys[k]={g,x};
+  el('rect',{class:'keycap',x:0,y:0,width:22,height:28,rx:3},g); const cx=11, cy=14;
+  ({ rec:()=>el('circle',{class:'glyph',cx,cy,r:3.5},g),
+     rew:()=>{ el('polygon',{class:'glyph',points:`${cx-1},${cy} ${cx+4},${cy-4} ${cx+4},${cy+4}`},g); el('polygon',{class:'glyph',points:`${cx-7},${cy} ${cx-2},${cy-4} ${cx-2},${cy+4}`},g); },
+     play:()=>el('polygon',{class:'glyph',points:`${cx-3},${cy-4.5} ${cx+4.5},${cy} ${cx-3},${cy+4.5}`},g),
+     ff:()=>{ el('polygon',{class:'glyph',points:`${cx-7},${cy-4} ${cx-2},${cy} ${cx-7},${cy+4}`},g); el('polygon',{class:'glyph',points:`${cx-1},${cy-4} ${cx+4},${cy} ${cx-1},${cy+4}`},g); },
+     stop:()=>el('rect',{class:'glyph',x:cx-3.5,y:cy-3.5,width:7,height:7},g),
+     pause:()=>{ el('rect',{class:'glyph',x:cx-4,y:cy-4,width:2.6,height:8},g); el('rect',{class:'glyph',x:cx+1.4,y:cy-4,width:2.6,height:8},g); } })[k]();
+});
+const press=(k,down)=>{ const {g,x}=keys[k]; g.classList.toggle('down',down); g.setAttribute('transform',`translate(${x} ${down?142:140})`); };
+
+/* ---------------------------------------------------------------- the shoeboxes */
+const BOXES=[
+  {n:1,x:30, y:380,scores:[620,660,650,710,null,null,null]},
+  {n:2,x:300,y:380,scores:[690,null,null,null,null,null,null]},
+  {n:3,x:570,y:380,scores:[null,null,null,null,null,null,null]},
+];
+const B=200, WALL=10, PITCH=25, CW=160, CH=22, slots=[];
+BOXES.forEach(b=>{
+  const G=el('g',{transform:`translate(${b.x} ${b.y})`},$('boxes'));
+  el('rect',{class:'box',x:0,y:0,width:B,height:B,rx:4},G);
+  el('rect',{class:'floor',x:WALL,y:WALL,width:B-2*WALL,height:B-2*WALL},G);
+  b.scores.forEach((score,j)=>{
+    const jx=(rnd()*2-1)*2, ang=(rnd()*2-1)*1.1, lx=B/2+jx, ly=WALL+12.5+j*PITCH;
+    const slot=el('g',{class:'slot',transform:`translate(${lx.toFixed(1)} ${ly}) rotate(${ang.toFixed(2)})`},G);
+    const lift=el('g',{class:'lift'},slot);
+    el('rect',{class:'case',x:-CW/2,y:-CH/2,width:CW,height:CH,rx:2},lift);                    // the case, seen along its spine
+    el('rect',{class:'jcard',x:-CW/2+6,y:-6.5,width:CW-12,height:13,rx:1},lift);                 // the paper spine inside the clear plastic
+    [-CW/2+3,CW/2-3].forEach(x=>el('line',{class:'hinge',x1:x,y1:-CH/2+3,x2:x,y2:CH/2-3},lift));
+    const num=`${b.n}.${j+1}`, r=rnd(), deco=r<.2?'under':r<.3?'ring':null;
+    scrawl(lift,-50+rnd()*30,0,num,12,{rot:(rnd()*2-1)*2,deco});
+    el('rect',{x:-CW/2,y:-PITCH/2,width:CW,height:PITCH,fill:'transparent'},slot);               // generous tap target
+    const s={b,j,num,score,slot,gx:b.x+lx,gy:b.y+ly,ang}; slots.push(s);
+    slot.addEventListener('pointerdown',e=>{ e.stopPropagation(); onSlot(s); });
+  });
+  tapeNote(G,B/2+(rnd()*2-1)*20,B-9,62,`BOX ${b.n}`,12,(rnd()*2-1)*3);
+});
+
+/* ---------------------------------------------------------------- the cassette */
+const tape=$('tape'), deck=$('deck'), led=$('led'), ctr=$('ctr'), hint=$('hint'), hl=$('hl'), go=$('go');
+const SX=400, SY=290, SC=.9;                    // held up in the middle of the floor
+let hubs=[], tL, tR;
+function buildTape(s){
+  tape.replaceChildren(); tape.classList.remove('on');
+  el('rect',{class:'shell',x:-150,y:-95,width:300,height:190,rx:14},tape);
+  el('rect',{class:'label',x:-128,y:-77,width:256,height:66,rx:4},tape);
+  scrawl(tape,-62,-46,s.num,30,{rot:-3});
+  scrawl(tape,62,-44,s.score==null?'--':String(s.score),24,{rot:2,deco:s.score!=null&&rnd()<.5?'under':null});
+  el('use',{href:'#mark',x:106,y:-26,width:12,height:12,color:'#3F3F3F',opacity:.85},tape);
+  el('rect',{class:'win',x:-88,y:3,width:176,height:60,rx:30},tape);
+  const clip=el('clipPath',{id:'winClip'},tape); el('rect',{x:-88,y:3,width:176,height:60,rx:30},clip);
+  const pools=el('g',{'clip-path':'url(#winClip)'},tape);
+  tL=el('circle',{class:'pool',cx:-35,cy:33,r:52},pools); tR=el('circle',{class:'pool',cx:35,cy:33,r:22},pools);
+  hubs=[-35,35].map(cx=>{ const h=el('g',{},tape); el('circle',{class:'hub',cx,cy:33,r:14},h);
+    for(let i=0;i<6;i++){ const a=i*Math.PI/3; el('line',{class:'spoke',x1:cx+5*Math.cos(a),y1:33+5*Math.sin(a),x2:cx+12*Math.cos(a),y2:33+12*Math.sin(a)},h); } return {h,cx}; });
+  [[-136,-81],[136,-81],[-136,81],[136,81]].forEach(([x,y])=>el('circle',{class:'screw',cx:x,cy:y,r:4},tape));
+}
+const pose=(x,y,rot,sc,sy)=>tape.setAttribute('transform',`translate(${x} ${y}) rotate(${rot}) scale(${sc} ${sc*sy})`);
+const describe=s=>`${s.num} · ${s.score==null?'not taken yet':s.score}`;
+
+let state='idle', current=null, busy=false;
+const run=async fn=>{ if(busy) return; busy=true; document.body.classList.add('busy'); try{ await fn(); } finally{ busy=false; document.body.classList.remove('busy'); } };
+
+async function pull(s){
+  current=s; s.slot.classList.add('out'); buildTape(s); tape.style.display=''; hint.textContent=describe(s);
+  // out of the box edge-on, turning to face you as it comes up to the middle
+  await tween(720,k=>pose(lerp(s.gx,SX,k), lerp(s.gy,SY,k)-36*Math.sin(Math.PI*k), lerp(s.ang,0,k), lerp(.53,SC,k), lerp(.12,1,k)));
+  await tween(160,k=>pose(SX,SY,0,SC*(1+.03*Math.sin(Math.PI*k)),1));
+  state='staged'; deck.classList.add('ready'); hint.textContent=describe(s)+' · tap the deck';
+}
+async function putBack(fast){
+  const s=current;
+  await tween(fast?400:480,k=>pose(lerp(SX,s.gx,k), lerp(SY,s.gy,k)-28*Math.sin(Math.PI*k), lerp(0,s.ang,k), lerp(SC,.53,k), lerp(1,.12,k)), easeInOut);
+  tape.style.display='none'; s.slot.classList.remove('out');
+  current=null; state='idle'; deck.classList.remove('ready'); hint.textContent='Tap a tape';
+}
+async function load(){
+  const s=current; hint.textContent='Loading';
+  await tween(680,k=>pose(lerp(SX,WELL.x,k), lerp(SY,WELL.y,k)-30*Math.sin(Math.PI*k), 0, lerp(SC,.5,k), 1), easeInOut);
+  snd.clunk(); await tween(140,k=>pose(WELL.x,WELL.y,0,.5*(1-.03*Math.sin(Math.PI*k)),1));
+  await wait(160); press('play',true); snd.click(); led.classList.add('on'); tape.classList.add('on');
+  playing=true; played=0; p=0; state='loaded';
+  hl.textContent=`Mock ${s.num}.`; hint.textContent='Loaded · side A'; go.disabled=false;
+}
+async function unload(){
+  const s=current; press('stop',true); snd.click(); playing=false; led.classList.remove('on'); tape.classList.remove('on'); go.disabled=true;
+  await wait(140); press('play',false); press('stop',false); hint.textContent='Ejecting';
+  hl.textContent='Pick a tape.';
+  await tween(600,k=>pose(lerp(WELL.x,SX,k), lerp(WELL.y,SY,k)-30*Math.sin(Math.PI*k), 0, lerp(.5,SC,k), 1), easeInOut);
+  state='staged'; hint.textContent=describe(s)+' · tap the deck';
+}
+function onSlot(s){ run(async()=>{
+  if(state==='idle') return pull(s);
+  if(state==='staged'){ if(current===s) return putBack(); await putBack(true); return pull(s); }
+  if(state==='loaded'){ const same=current===s; await unload(); await putBack(true); if(!same) await pull(s); }
+}); }
+deck.addEventListener('pointerdown',()=>run(async()=>{ if(state==='staged') await load(); else if(state==='loaded') await unload(); }));
+tape.addEventListener('pointerdown',e=>{ e.stopPropagation(); run(async()=>{ if(state==='staged') await putBack(); else if(state==='loaded') await unload(); }); });
+
+/* ---------------------------------------------------------------- the transport: reels turn, tape moves across, the counter runs */
+let playing=false, played=0, p=0, angle=0, last=performance.now(); const SIDE_S=60;
+(function loop(now){ const dt=Math.min(.05,(now-last)/1000); last=now;
+  if(playing&&!reduce){ angle+=170*dt; hubs.forEach(({h,cx})=>h.setAttribute('transform',`rotate(${angle} ${cx} 33)`));
+    played+=dt; p=Math.min(1,played/SIDE_S); tL.setAttribute('r',52-30*p); tR.setAttribute('r',22+30*p);
+    ctr.textContent=String(Math.floor(played*2.6)%1000).padStart(3,'0'); }
+  requestAnimationFrame(loop); })(last);
+
+/* ---------------------------------------------------------------- two small mechanical sounds */
+const snd=(()=>{ let ctx; const get=()=>{ if(!ctx){ try{ ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; } } if(ctx.state==='suspended') ctx.resume(); return ctx; };
+  const burst=(sec,type,freq,gain)=>{ const c=get(); if(!c) return; const b=c.createBuffer(1,Math.floor(c.sampleRate*sec),c.sampleRate), d=b.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
+    const s=c.createBufferSource(); s.buffer=b; const f=c.createBiquadFilter(); f.type=type; f.frequency.value=freq; const g=c.createGain(); g.gain.value=gain; s.connect(f).connect(g).connect(c.destination); s.start(); };
+  return { click(){ burst(.025,'highpass',2500,.2); },
+    clunk(){ burst(.05,'lowpass',900,.3); const c=get(); if(!c) return; const o=c.createOscillator(), g=c.createGain(), t=c.currentTime; o.type='sine'; o.frequency.setValueAtTime(140,t); o.frequency.exponentialRampToValueAtTime(60,t+.12);
+      g.gain.setValueAtTime(.25,t); g.gain.exponentialRampToValueAtTime(.001,t+.16); o.connect(g).connect(c.destination); o.start(t); o.stop(t+.18); } }; })();
+
+/* -- ROUTER SEAM: the tape in the deck is `current`, its id is current.num ------------------- */
+go.addEventListener('click', ()=>console.log('[router] /mock/'+current.num));
+</script>
+
+</body></html>

@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sticker Sheets — Combined Practice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root { color-scheme: light; --paper:#FFFFFF; --ink:#3F3F3F; --amber:#F18508; --line:#E4E1DC; --soft:#8A847C; --font:"Archivo","Helvetica Neue",system-ui,sans-serif; --mono:"DM Mono",ui-monospace,monospace; --ease:cubic-bezier(.2,.8,.2,1); }
+  html, body { height:100%; margin:0; }
+  body { background:var(--paper); color:var(--ink); font-family:var(--font); font-size:14px; -webkit-font-smoothing:antialiased; }
+  img { max-width:100%; }
+  .screen { min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(14px,2.6vh,26px); padding:24px 16px 44px; text-align:center; }
+  svg.scene { width:min(940px,97vw); aspect-ratio:960/640; display:block; overflow:visible; }
+  h1 { margin:0; font-size:clamp(2rem,6vw,3.4rem); font-weight:900; letter-spacing:-.04em; line-height:.98; }
+  .btn { font:800 15px var(--font); min-height:52px; padding:0 32px; border:0; border-radius:999px; background:var(--amber); color:#fff; cursor:pointer; box-shadow:0 10px 30px -14px rgba(241,133,8,.9); transition:transform .18s var(--ease), opacity .3s var(--ease); }
+  .btn:hover { transform:translateY(-1px); } .btn[disabled] { opacity:.35; cursor:default; box-shadow:none; transform:none; }
+  .hint { font:11px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-top:-4px; }
+  .sheet { fill:#F7F5F0; stroke:var(--ink); stroke-width:1.5; }
+  .signt { font:700 10px var(--mono); fill:var(--ink); letter-spacing:.16em; text-transform:uppercase; }
+  .name { font:500 9.5px var(--mono); fill:var(--ink); letter-spacing:.04em; }
+  .row { cursor:pointer; } .row:hover .stk { fill:#fff; }
+  .stk { fill:#FBFAF7; stroke:var(--ink); stroke-width:1.3; stroke-linejoin:round; transition: fill .2s; }
+  .stki { fill:none; stroke:var(--ink); stroke-width:.9; opacity:.55; stroke-linecap:round; }
+  .stkl { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
+  .stkd { fill:var(--ink); }
+  .badge { fill:var(--ink); stroke:#F7F5F0; stroke-width:2; } .badget { font:900 8.5px var(--font); fill:#fff; letter-spacing:-.02em; }
+  .page { fill:#fff; stroke:var(--ink); stroke-width:1.5; }
+  .rule { stroke:var(--line); stroke-width:1; }
+  .cut { fill:none; stroke:var(--ink); stroke-width:.8; stroke-dasharray:2 2.6; opacity:.45; }
+  .total { font:900 46px var(--font); fill:var(--amber); letter-spacing:-.05em; font-variant-numeric:tabular-nums; }
+  .lbl { font:500 10px var(--mono); fill:var(--soft); letter-spacing:.14em; text-transform:uppercase; }
+  /* in flight the sticker keeps its drawing: white face, orange line, orange marks -- never a silhouette */
+  .fly .stk { fill:#fff; stroke:var(--amber); stroke-width:1.6; } .fly .stki { stroke:var(--amber); opacity:.9; } .fly .stkl { stroke:var(--amber); } .fly .stkd { fill:var(--amber); }
+</style>
+</head>
+<body>
+
+<main class="screen">
+  <svg class="scene" id="scene" viewBox="0 0 960 640" aria-hidden="true">
+    <g id="sheets"></g>
+    <g id="pageG" style="cursor:pointer">
+      <rect class="page" x="620" y="30" width="240" height="470" rx="4"/>
+      <g id="rules"></g>
+      <g id="page"></g>
+      <text class="total" id="total" x="740" y="560" text-anchor="middle">0</text>
+      <text class="lbl" x="740" y="582" text-anchor="middle">questions</text>
+    </g>
+    <g id="flyer" style="pointer-events:none"></g>
+  </svg>
+  <p class="hint" id="hint">Tap a sticker to peel one · hold to keep peeling · tap the page to start over</p>
+  <h1>Make your sheet.</h1>
+  <button class="btn" type="button" id="go" disabled>Build a set</button>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const txt=(p,x,y,s,cls,a={})=>{const t=el('text',{x,y,class:cls,'dominant-baseline':'middle',...a},p);t.textContent=s;return t;};
+const lerp=(a,b,k)=>a+(b-a)*k, easeIn=k=>k*k*k, easeOut=k=>1-Math.pow(1-k,3);
+const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
+const $=id=>document.getElementById(id);
+
+/* one glyph per topic, each a small diagram of the thing itself. Drawn around (0,0), about 20px across. */
+const poly=(n,r,rot=-90)=>Array.from({length:n},(_,i)=>{const a=(rot+i*360/n)*Math.PI/180;return (r*Math.cos(a)).toFixed(2)+','+(r*Math.sin(a)).toFixed(2);}).join(' ');
+const star=(r,ri)=>Array.from({length:10},(_,i)=>{const a=(-90+i*36)*Math.PI/180,rr=i%2?ri:r;return (rr*Math.cos(a)).toFixed(2)+','+(rr*Math.sin(a)).toFixed(2);}).join(' ');
+const SHAPES={
+  /* Algebra */
+  numberline: g=>{ el('path',{class:'stkl',d:'M-10 2 H10 M-6 -1 V5 M0 -1 V5 M6 -1 V5'},g); el('circle',{class:'stkd',cx:3,cy:2,r:2.6},g); },          // one solution on a number line
+  graphline:  g=>{ el('path',{class:'stki',d:'M-9 7 H9 M-7 9 V-9'},g); el('path',{class:'stkl',d:'M-9 6 L9 -7'},g); },                             // a line on axes
+  slope:      g=>{ el('path',{class:'stkl',d:'M-9 7 L9 -7'},g); el('path',{class:'stki',d:'M-3 2.3 H4.6 V-3.6'},g); },                               // rise over run
+  cross:      g=>{ el('path',{class:'stkl',d:'M-9 -6 L9 8 M-9 8 L9 -6'},g); el('circle',{class:'stkd',cx:0,cy:1,r:2.4},g); },                       // two lines, one solution
+  ray:        g=>{ el('path',{class:'stkl',d:'M-10 2 H10'},g); el('path',{class:'stkl',d:'M-.4 2 H9','stroke-width':3.2},g); el('circle',{class:'stk',cx:-3,cy:2,r:2.8},g); }, // an open circle and a shaded ray
+  /* Advanced Math */
+  equiv:      g=>el('path',{class:'stkl',d:'M-7 -5 H7 M-7 0 H7 M-7 5 H7','stroke-width':1.8},g),                                                    // identically equal
+  curveline:  g=>{ el('path',{class:'stkl',d:'M-9 8 Q0 -14 9 8'},g); el('path',{class:'stkl',d:'M-10 1 H10'},g); el('circle',{class:'stkd',cx:-5.4,cy:1,r:2.1},g); el('circle',{class:'stkd',cx:5.4,cy:1,r:2.1},g); }, // a line meeting a curve
+  parabola:   g=>{ el('path',{class:'stki',d:'M-9 6 H9 M0 9 V-9'},g); el('path',{class:'stkl',d:'M-8 -8 Q0 14 8 -8'},g); },                          // a parabola on axes
+  /* Data */
+  balance:    g=>{ el('path',{class:'stkl',d:'M0 -8 V8 M-8 -5 H8 M-5 9 H5'},g); el('path',{class:'stki',d:'M-8 -5 L-10.5 1 M-8 -5 L-5.5 1 M8 -5 L10.5 1 M8 -5 L5.5 1 M-11 1.5 H-5 M5 1.5 H11'},g); }, // a balance
+  percent:    g=>{ el('circle',{class:'stk',cx:-5,cy:-5,r:3},g); el('circle',{class:'stk',cx:5,cy:5,r:3},g); el('path',{class:'stkl',d:'M-8 9 L8 -9'},g); }, // %
+  bars:       g=>{ el('rect',{class:'stk',x:-9,y:1,width:5,height:8},g); el('rect',{class:'stk',x:-2.5,y:-6,width:5,height:15},g); el('rect',{class:'stk',x:4,y:-2,width:5,height:11},g); el('path',{class:'stki',d:'M-11 9.5 H11'},g); }, // a histogram
+  scatter:    g=>{ el('path',{class:'stki',d:'M-9 8 H9 M-9 8 V-9'},g); el('path',{class:'stki',d:'M-8 6 L8 -6'},g); [[-5,4],[-2,1.5],[1,-.5],[3,-4],[6,-2.5]].forEach(([x,y])=>el('circle',{class:'stkd',cx:x,cy:y,r:1.7},g)); }, // a scatterplot with its fit
+  die:        g=>{ el('rect',{class:'stk',x:-9,y:-9,width:18,height:18,rx:3},g); [[-4.5,-4.5],[0,0],[4.5,4.5]].forEach(([x,y])=>el('circle',{class:'stkd',cx:x,cy:y,r:1.8},g)); }, // a die
+  errorbar:   g=>{ el('path',{class:'stkl',d:'M-9 0 H9 M-9 -3.5 V3.5 M9 -3.5 V3.5'},g); el('circle',{class:'stkd',cx:0,cy:0,r:2.8},g); },            // an estimate and its margin
+  magnifier:  g=>{ el('circle',{class:'stk',cx:-2,cy:-2,r:6.5},g); el('path',{class:'stkl',d:'M2.8 2.8 L9 9','stroke-width':2.4},g); },                // look closely
+  /* Geometry */
+  cube:       g=>{ el('polygon',{class:'stk',points:poly(6,10.5,-90)},g); el('path',{class:'stki',d:'M0 0 L0 10.5 M0 0 L-9.1 -5.25 M0 0 L9.1 -5.25'},g); },
+  angle:      g=>{ el('path',{class:'stk',d:'M-9 8 L2 -9 L9 8 z','fill-opacity':0},g); el('path',{class:'stki',d:'M-1.26 -3.96 A6 6 0 0 0 4.29 -3.45'},g); },
+  right:      g=>{ el('polygon',{class:'stk',points:'-9,9 9,9 9,-9'},g); el('path',{class:'stki',d:'M9 5 h-4 v4'},g); },
+  dotcircle:  g=>{ el('circle',{class:'stk',r:9.5},g); el('circle',{class:'stkd',r:1.6},g); },
+};
+const DOMAINS=[
+  ['Algebra',       [['Linear eqs','linear_equations_in_one_variable','numberline'],['Lines','linear_equations_in_two_variables','graphline'],['Linear fn','linear_functions','slope'],['Systems','systems_of_linear_equations','cross'],['Inequalities','linear_inequalities','ray']]],
+  ['Advanced Math', [['Expressions','equivalent_expressions','equiv'],['Nonlin. eqs','nonlinear_equations_and_systems','curveline'],['Nonlinear fn','nonlinear_functions','parabola']]],
+  ['Data',          [['Ratios','ratios_rates_proportions_and_units','balance'],['Percents','percentages','percent'],['1-var data','one_variable_data','bars'],['2-var data','two_variable_data','scatter'],['Probability','probability','die'],['Samples','sample_statistics_and_margin_of_error','errorbar'],['Claims','evaluating_statistical_claims','magnifier']]],
+  ['Geometry',      [['Area/volume','area_and_volume','cube'],['Angles','lines_angles_and_triangles','angle'],['Trig','right_triangles_and_trigonometry','right'],['Circles','circles','dotcircle']]],
+];
+const sticker=(p,shape,x,y,cls='')=>{ const g=el('g',{class:cls,transform:`translate(${x} ${y})`},p); SHAPES[shape](g); return g; };
+for(let i=0;i<13;i++) el('line',{class:'rule',x1:636,y1:60+i*34,x2:844,y2:60+i*34},$('rules'));
+
+/* four sheets in two columns, a row of one topic's stickers on each */
+const basket={}; let total=0; const CAP=120; const stalls=[];
+[[0,1],[2,3]].forEach((ds,c)=>{ let y=30; const x=80+c*250;
+  ds.forEach(di=>{ const [dom,items]=DOMAINS[di]; const h=items.length*40+34; el('rect',{class:'sheet',x,y,width:210,height:h,rx:6},$('sheets')); txt($('sheets'),x+14,y+16,dom,'signt');
+    items.forEach(([name,slug,shape],r)=>{ const ry=y+34+r*40+20; const g=el('g',{class:'row'},$('sheets')); el('rect',{x,y:ry-20,width:210,height:40,fill:'transparent'},g); txt(g,x+14,ry,name,'name');
+      el('rect',{class:'cut',x:x+116,y:ry-19,width:38,height:38,rx:8},g); sticker(g,shape,x+135,ry).setAttribute('transform',`translate(${x+135} ${ry}) scale(1.7)`);
+      const badge=el('g',{opacity:0},g); el('circle',{class:'badge',cx:x+153,cy:ry-18,r:10},badge); const bt=txt(badge,x+153,ry-17.5,'0','badget',{'text-anchor':'middle'});
+      const st={slug,name,shape,cx:x+135,cy:ry,badge,bt,n:0,hold:null}; stalls.push(st);
+      const start=()=>{ peel(st); const t0=performance.now(); const tick=()=>{ if(st.hold===null) return; const hh=(performance.now()-t0)/1000; peel(st); st.hold=setTimeout(tick,hh<.7?240:hh<1.8?100:45); }; st.hold=setTimeout(tick,240); };
+      const stop=()=>{ clearTimeout(st.hold); st.hold=null; };
+      g.addEventListener('pointerdown',e=>{ try{ g.setPointerCapture(e.pointerId); }catch(_){} start(); }); ['pointerup','pointerleave','pointercancel'].forEach(e=>g.addEventListener(e,stop)); });
+    y+=h+14; }); });
+
+/* peeling: the sticker lifts, turns, and lands on the page -- as its own shape, so the page shows the mix */
+const page=$('page'), pageG=$('pageG'), totalT=$('total'), hint=$('hint'), go=$('go');
+function peel(st){ if(total>=CAP){ hint.textContent='Page is full · tap it to start over'; return; }
+  st.n++; total++; basket[st.slug]=st.n; st.bt.textContent=st.n; st.badge.setAttribute('opacity',1); totalT.textContent=total; go.disabled=false;
+  const n=Math.min(total,78)-1, tx=650+(n%6)*36, ty=60+Math.floor(n/6)*34;
+  const f=sticker($('flyer'),st.shape,st.cx,st.cy,'fly');
+  tween(560,k=>{ const s=lerp(1.7,1.35,k)+.3*Math.sin(Math.PI*k); f.setAttribute('transform',`translate(${lerp(st.cx,tx,k)} ${lerp(st.cy,ty,k)-70*Math.sin(Math.PI*k)}) scale(${s}) rotate(${40*Math.sin(Math.PI*k)})`); }, easeIn)
+    .then(()=>{ f.remove(); if(total<=78) sticker(page,st.shape,tx,ty).setAttribute('transform',`translate(${tx} ${ty}) scale(1.35)`); tween(200,k=>pageG.setAttribute('transform',`translate(0 ${1.5*Math.sin(Math.PI*k)})`)); }); }
+pageG.addEventListener('pointerdown', async ()=>{ if(!total) return; await tween(320,k=>page.setAttribute('opacity',1-k)); page.replaceChildren(); page.setAttribute('opacity',1);
+  stalls.forEach(st=>{ st.n=0; st.badge.setAttribute('opacity',0); }); for(const k in basket) delete basket[k]; total=0; totalT.textContent='0'; go.disabled=true; hint.textContent='Tap a sticker to peel one · hold to keep peeling · tap the page to start over'; });
+/* -- ROUTER SEAM: the set is `basket`, a map of topic slug -> question count -- */
+go.addEventListener('click', ()=>console.log('[router] /practice/combined', {...basket}));
+</script>
+
+</body></html>
