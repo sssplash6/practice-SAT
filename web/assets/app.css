@@ -361,49 +361,6 @@ button { font: inherit; color: inherit; }
   transition: background-color .18s var(--ease);
 }
 
-/* practice list: rows with a drawn mark, not a deck of identical cards */
-.sec-k {
-  font: 500 10.5px var(--mono);
-  letter-spacing: .14em; text-transform: uppercase;
-  color: var(--faint);
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--line);
-}
-.modes { display: flex; flex-direction: column; }
-.mode {
-  display: flex; align-items: center; gap: 20px;
-  padding: 18px 8px 18px 4px;
-  border-bottom: 1px solid var(--line);
-  text-decoration: none; color: inherit;
-  transition: padding-left .22s var(--ease), background-color .18s var(--ease);
-}
-@media (hover: hover) and (pointer: fine) {
-  .mode:hover { background: var(--card); padding-left: 12px; }
-  .mode:hover .mode-art { color: var(--amber); }
-  .mode:hover .mode-arrow { opacity: 1; transform: none; }
-}
-.mode-art {
-  flex: none; color: var(--ink);
-  transition: color .22s var(--ease);
-}
-.mode-txt { flex: 1; min-width: 0; }
-.mode-n { display: block; font-weight: 700; font-size: 16px; letter-spacing: -.02em; }
-.mode-d { display: block; margin-top: 2px; font-size: 13.5px; color: var(--soft); }
-.mode-meta {
-  flex: none;
-  font: 500 11px var(--mono);
-  letter-spacing: .06em;
-  color: var(--faint);
-  font-variant-numeric: tabular-nums;
-}
-.mode-arrow {
-  flex: none; color: var(--soft);
-  opacity: 0; transform: translateX(-4px);
-  transition: opacity .22s var(--ease), transform .22s var(--ease);
-}
-.mode[data-state="soon"] { cursor: default; }
-.mode[data-state="soon"] .mode-n,
-.mode[data-state="soon"] .mode-art { color: var(--faint); }
 
 /* ---------------------------------------------------------------- empty page
    diagnostic and duels are not built. An honest blank, not a mock-up. */
@@ -439,7 +396,6 @@ button { font: inherit; color: inherit; }
 .rise { animation: rise .5s var(--ease) both; }
 .rise-1 { animation-delay: .04s; }
 .rise-2 { animation-delay: .10s; }
-.rise-3 { animation-delay: .16s; }
 
 @keyframes draw { to { stroke-dashoffset: 0; } }
 
@@ -474,15 +430,12 @@ button { font: inherit; color: inherit; }
 
   .head { position: sticky; top: 0; z-index: 30; background: var(--paper); }
   .standing { grid-template-columns: minmax(0, 1fr); align-items: start; gap: 26px; }
-  .mode-meta { display: none; }
   .resume { gap: 14px; padding: 16px; }
   .resume-sub { display: none; }
 }
 
 @media (max-width: 560px) {
   .splits { gap: 18px; }
-  .mode { gap: 14px; }
-  .mode-art { width: 40px; height: 40px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

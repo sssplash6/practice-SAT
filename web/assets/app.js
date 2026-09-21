@@ -152,7 +152,6 @@
       btn.setAttribute('aria-label', `Subject: ${next.name}. Switch to ${other.name}.`);
     }
     document.body.dataset.subject = next.id;
-    document.querySelectorAll('[data-subject-echo]').forEach(el => { el.textContent = next.name; });
     writeSubject(next.id);
     if (announce) document.dispatchEvent(new CustomEvent('satf:subject', { detail: next }));
   }
@@ -166,7 +165,6 @@
     const subject = readSubject();
     rail.innerHTML = railHTML(document.body.dataset.nav || '', subject);
     document.body.dataset.subject = subject.id;
-    document.querySelectorAll('[data-subject-echo]').forEach(el => { el.textContent = subject.name; });
 
     rail.querySelector('[data-subject-toggle]').addEventListener('click', () => {
       const now = SUBJECTS.find(s => s.id === document.body.dataset.subject) || SUBJECTS[0];
