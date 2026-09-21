@@ -122,6 +122,7 @@ function peel(st){ if(total>=CAP){ hint.textContent='Page is full · tap it to s
   const f=sticker($('flyer'),st.shape,st.cx,st.cy,'fly');
   tween(560,k=>{ const s=lerp(1.7,1.35,k)+.3*Math.sin(Math.PI*k); f.setAttribute('transform',`translate(${lerp(st.cx,tx,k)} ${lerp(st.cy,ty,k)-70*Math.sin(Math.PI*k)}) scale(${s}) rotate(${40*Math.sin(Math.PI*k)})`); }, easeIn)
     .then(()=>{ f.remove(); if(total<=78){ const placedEl=sticker(page,st.shape,tx,ty,'placed'); placedEl.setAttribute('transform',`translate(${tx} ${ty}) scale(1.35)`);
+        el('circle',{r:11,fill:'transparent'},placedEl);   // most of the glyph is fill:none strokes, so give the whole icon a generous, reliable tap area rather than just the thin lines
         const rec={el:placedEl,st}; placed.push(rec);
         placedEl.addEventListener('pointerdown',e=>{ e.stopPropagation(); removeOne(rec); }); }
       tween(200,k=>pageG.setAttribute('transform',`translate(0 ${1.5*Math.sin(Math.PI*k)})`)); }); }
