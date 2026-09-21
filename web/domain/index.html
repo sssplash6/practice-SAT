@@ -13,7 +13,7 @@
 <style>
   /* only what the shell does not already define */
   :root { --vinyl: #3F3F3F; --groove: #5C5C5C; }
-  .stage > svg.scene { aspect-ratio: 800 / 600; }
+  .stage > svg.scene { aspect-ratio: 800 / 660; --scene-ratio: 1.212; }
 
   .plinth { fill: #FBFAF8; stroke: var(--line); stroke-width: 1.5; }
   .platter { fill: var(--mat); stroke: var(--ink); stroke-width: 2; }
@@ -61,7 +61,7 @@
     </header>
 
     <section class="stage rise">
-      <svg class="scene" id="scene" viewBox="0 0 800 600" aria-hidden="true">
+      <svg class="scene" id="scene" viewBox="0 0 800 660" aria-hidden="true">
     <rect class="plinth" id="plinth" x="120" y="60" width="600" height="360" rx="28"/>
     <g id="platter"><circle class="platter" cx="330" cy="240" r="160"/><g id="ticks"></g></g>
     <g id="onPlatter"></g>
@@ -123,7 +123,7 @@ const DOMAINS_BY_SUBJECT = {
   ],
 };
 const sleeves = document.getElementById('sleeves'), fly = document.getElementById('fly'), onPlatter = document.getElementById('onPlatter');
-const SW = 128, GAP = 24, SY = 466;
+const SW = 128, GAP = 24, SY = 500;   // clear of the plinth, which ends at 420
 
 /* greedy wrap, so a long domain name sits on the sleeve instead of past it */
 function wrap(name, max) {

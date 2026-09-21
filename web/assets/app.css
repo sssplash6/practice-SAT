@@ -268,11 +268,21 @@ button { font: inherit; color: inherit; }
 }
 .stage > svg.scene {
   width: 100%;
-  max-width: 780px;
+  /* A scene is sized by its width, so on a short screen a tall one pushed the
+     button off the bottom. The second term is the widest this scene can be and
+     still leave room for the header, the padding and the button: page height
+     minus that furniture, times the scene's own ratio. */
+  max-width: min(var(--scene-max, 780px), calc((100dvh - 220px) * var(--scene-ratio, 1.333)));
   display: block;
   overflow: visible;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  /* these scenes are tapped repeatedly, and held down to repeat. Without this a
+     second tap starts selecting the labels, and a long press on iOS raises the
+     callout menu. Nothing here is text anyone needs to copy. */
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 /* ---------------------------------------------------------------- overview */
