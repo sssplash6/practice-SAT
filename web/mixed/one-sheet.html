@@ -3,56 +3,98 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mixed practice, one sheet · SAT Freshman</title>
-<meta name="description" content="One sheet of topics, four to a line, each opening to its own sticker.">
+<title>Mixed practice, list · SAT Freshman</title>
+<meta name="description" content="Topics four to a line, each opening to a count.">
 <link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;900&family=DM+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="../assets/app.css">
 <style>
-  .stage > svg.scene { --scene-max: 940px; aspect-ratio: 960 / 660; --scene-ratio: 1.4545; }
-  .sheet { fill:#F7F5F0; stroke:var(--ink); stroke-width:1.5; transition: height .34s var(--ease); }
-  .band { font:700 10px var(--mono); fill:var(--ink); letter-spacing:.16em; text-transform:uppercase; }
-  .bandrule { stroke:var(--line); stroke-width:1; }
+  /* No drawn sheet here, so this is laid out as real elements rather than by
+     hand inside an SVG. The grid gives the four-to-a-line arrangement, and an
+     open row grows on its own because its cell is taller. */
+  .list { padding: clamp(24px,4vh,40px) var(--gutter) 40px; max-width: 780px; width: 100%; }
 
-  /* closed, a topic is only its name. The sheet is a list until you open one. */
-  .cell { cursor:pointer; transition: transform .34s var(--ease); }
-  .name { font:500 9px var(--mono); fill:var(--soft); letter-spacing:.02em; transition: fill .18s var(--ease); }
-  .caret { fill:none; stroke:var(--faint); stroke-width:1.3; stroke-linecap:round; stroke-linejoin:round;
-           transition: transform .28s var(--ease), stroke .18s var(--ease); transform-box:fill-box; transform-origin:center; }
-  .cell:hover .name { fill:var(--ink); }
-  .cell:hover .caret { stroke:var(--ink); }
-  .cell.open .name { fill:var(--ink); font-weight:500; }
-  .cell.open .caret { transform: rotate(180deg); stroke:var(--ink); }
+  .domain + .domain { margin-top: 30px; }
+  .domain-k {
+    padding-bottom: 8px; border-bottom: 1px solid var(--line);
+    font: 700 10px var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--ink);
+  }
 
-  .bandg { transition: transform .34s var(--ease); }
+  .topics { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); column-gap: 14px; }
 
-  /* open, it drops a panel: the drawing, and the count you are building */
-  .panel { transition: opacity .26s var(--ease), transform .3s var(--ease); transform-box:fill-box; transform-origin:top center; }
-  .panel[data-open="0"] { opacity:0; transform: translateY(-6px) scale(.97); pointer-events:none; }
-  .panel[data-open="1"] { opacity:1; transform:none; }
-  .panelbg { fill:#fff; stroke:var(--line); stroke-width:1; }
-  .step { cursor:pointer; }
-  .stepbg { fill:#F7F5F0; stroke:var(--line); stroke-width:1; transition: fill .16s var(--ease), stroke .16s var(--ease); }
-  .step:hover .stepbg { fill:#fff; stroke:var(--faint); }
-  .stepg { fill:none; stroke:var(--ink); stroke-width:1.5; stroke-linecap:round; }
-  .step[data-off="1"] { cursor:default; opacity:.35; pointer-events:none; }
-  .count { font:700 13px var(--font); fill:var(--ink); font-variant-numeric:tabular-nums; }
-  .count[data-zero="1"] { fill:var(--faint); }
+  .topic-btn {
+    appearance: none; border: 0; background: none; cursor: pointer;
+    width: 100%; display: flex; align-items: center; gap: 8px;
+    padding: 13px 10px 13px 0;
+    font: 500 12px var(--mono); letter-spacing: .01em; color: var(--soft);
+    text-align: left;
+    transition: color .16s var(--ease);
+  }
+  @media (hover: hover) and (pointer: fine) { .topic-btn:hover { color: var(--ink); } }
+  .topic-btn .caret {
+    margin-left: auto; flex: none; color: var(--faint);
+    transition: transform .28s var(--ease), color .16s var(--ease);
+  }
+  .topic[data-open="true"] .topic-btn { color: var(--ink); }
+  .topic[data-open="true"] .caret { transform: rotate(180deg); color: var(--ink); }
+  .topic[data-count="on"] .topic-btn { color: var(--ink); }
 
-  .stk { fill:#FBFAF7; stroke:var(--ink); stroke-width:1.3; stroke-linejoin:round; }
-  .stki { fill:none; stroke:var(--ink); stroke-width:.9; opacity:.55; stroke-linecap:round; }
-  .stkl { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
-  .stkd { fill:var(--ink); }
+  /* the drawer: 0fr to 1fr is the one way to transition to an unknown height */
+  .drawer { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .3s var(--ease); }
+  .topic[data-open="true"] .drawer { grid-template-rows: 1fr; }
+  .drawer-in { overflow: hidden; }
+  .panel {
+    display: flex; align-items: center; gap: 14px;
+    margin: 0 10px 14px 0; padding: 12px;
+    border: 1px solid var(--line); border-radius: 10px; background: var(--card);
+    opacity: 0; transform: translateY(-4px);
+    transition: opacity .26s var(--ease) .04s, transform .26s var(--ease) .04s;
+  }
+  .topic[data-open="true"] .panel { opacity: 1; transform: none; }
+  .glyph { flex: none; width: 40px; height: 40px; display: block; color: var(--ink); }
 
-  .page { fill:#fff; stroke:var(--ink); stroke-width:1.5; }
-  .rule { stroke:var(--line); stroke-width:1; }
-  .total { font:900 46px var(--font); fill:var(--amber); letter-spacing:-.05em; font-variant-numeric:tabular-nums; }
-  .lbl { font:500 10px var(--mono); fill:var(--soft); letter-spacing:.14em; text-transform:uppercase; }
-  .placed { cursor:pointer; } .placed:hover { opacity:.55; }
-  .fly .stk { fill:#fff; stroke:var(--amber); stroke-width:1.6; } .fly .stki { stroke:var(--amber); opacity:.9; } .fly .stkl { stroke:var(--amber); } .fly .stkd { fill:var(--amber); }
-  @media (prefers-reduced-motion: reduce) { .cell, .bandg, .panel, .sheet { transition: none; } }
+  .stepper { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+  .step {
+    appearance: none; cursor: pointer;
+    width: 28px; height: 28px; display: grid; place-items: center;
+    border: 1px solid var(--line); border-radius: 999px; background: var(--paper); color: var(--ink);
+    transition: border-color .16s var(--ease), background-color .16s var(--ease), transform .14s var(--ease);
+  }
+  @media (hover: hover) and (pointer: fine) { .step:hover:not(:disabled) { border-color: var(--faint); background: var(--sleeve); } }
+  .step:active:not(:disabled) { transform: scale(.92); }
+  .step:disabled { opacity: .3; cursor: default; }
+  .count { min-width: 26px; text-align: center; font: 700 14px var(--font); font-variant-numeric: tabular-nums; }
+  .count[data-zero="true"] { color: var(--faint); }
+
+  .stk { fill:#FBFAF7; stroke:currentColor; stroke-width:1.3; stroke-linejoin:round; }
+  .stki { fill:none; stroke:currentColor; stroke-width:.9; opacity:.55; stroke-linecap:round; }
+  .stkl { fill:none; stroke:currentColor; stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
+  .stkd { fill:currentColor; }
+
+  /* what you have built so far, and the way out */
+  .tally {
+    position: sticky; bottom: 0; z-index: 5;
+    display: flex; align-items: flex-end; gap: 20px;
+    margin-top: 32px; padding: 16px 0 4px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, var(--paper) 22%);
+  }
+  .tally-n { display: block; font: 900 34px var(--font); letter-spacing: -.04em; color: var(--amber); font-variant-numeric: tabular-nums; line-height: 1; }
+  .tally-k { display: block; margin-top: 3px; font: 500 10.5px var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--soft); }
+  .tally .btn { margin-left: auto; }
+  .tally-clear {
+    appearance: none; border: 0; background: none; cursor: pointer;
+    font: 500 11.5px var(--mono); letter-spacing: .06em; color: var(--soft);
+    text-decoration: underline; text-underline-offset: 3px;
+    transition: color .16s var(--ease);
+  }
+  .tally-clear:hover { color: var(--ink); }
+  .tally-clear[hidden] { display: none; }
+
+  @media (max-width: 900px) { .topics { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (max-width: 520px) { .topics { grid-template-columns: minmax(0,1fr); } .panel { margin-right: 0; } }
+  @media (prefers-reduced-motion: reduce) { .drawer, .panel, .caret, .step { transition: none; } }
 </style>
 </head>
 <body data-nav="mixed">
@@ -69,35 +111,27 @@
           <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
         </svg>
       </button>
-      <h1 class="head-title">Mixed practice, one sheet</h1>
+      <h1 class="head-title">Mixed practice, list</h1>
     </header>
 
-    <section class="stage rise">
-      <svg class="scene" id="scene" viewBox="0 0 960 660" aria-hidden="true">
-        <g id="board">
-          <g id="sheet"></g>
-          <g id="pageG" style="cursor:pointer">
-            <rect class="page" id="pageRect" x="620" y="30" width="240" height="400" rx="4"/>
-            <g id="rules"></g>
-            <g id="page"></g>
-            <text class="total" id="total" x="740" y="0" text-anchor="middle">0</text>
-            <text class="lbl" id="totalLbl" x="740" y="0" text-anchor="middle">questions</text>
-          </g>
-        </g>
-        <g id="flyer" style="pointer-events:none"></g>
-      </svg>
-      <button class="btn" type="button" id="go" disabled>Build a set</button>
-    </section>
+    <div class="list rise">
+      <div id="domains"></div>
+      <div class="tally">
+        <span>
+          <span class="tally-n" id="total">0</span>
+          <span class="tally-k" id="totalK">questions</span>
+        </span>
+        <button class="tally-clear" type="button" id="clear" hidden>Start over</button>
+        <button class="btn" type="button" id="go" disabled>Build a set</button>
+      </div>
+    </div>
   </main>
 </div>
 
 <script src="../assets/app.js"></script>
 <script>
-const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const NS='http://www.w3.org/2000/svg';
 const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
-const txt=(p,x,y,s,cls,a={})=>{const t=el('text',{x,y,class:cls,'dominant-baseline':'middle',...a},p);t.textContent=s;return t;};
-const lerp=(a,b,k)=>a+(b-a)*k, easeIn=k=>k*k*k, easeOut=k=>1-Math.pow(1-k,3);
-const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
 const $=id=>document.getElementById(id);
 
 /* one glyph per topic, each a small diagram of the thing itself. Drawn around (0,0), about 20px across. */
@@ -159,197 +193,122 @@ const TOPICS_BY_SUBJECT = {
   ],
 };
 
-/* ---------------------------------------------------------------- the sheet
-   Closed, a topic is only its name, four to a line. Tapping one drops a panel
-   under it with the drawing and the count, and the rows below slide down to
-   make room. The sheet is a list you read first and a set of stickers second. */
-const SHEET={x:70,y:30,w:460,pad:20,top:20,bot:18};
-const CELL={w:105,h:30}, COLS=4, BAND_H=26, BAND_GAP=12, PANEL={w:97,h:80,gap:6};
-const PAGE={x:620,y:30,w:240}, SLOT={cols:6,dx:36,dy:34,x0:650,y0:62};
+/* ---------------------------------------------------------------- the list
+   Four topics to a line. A topic is its name until you open it, and then it
+   drops a drawer holding its drawing and the number of questions you want.
+   The grid does the arranging: an open cell is taller, so its row grows and
+   the rest of the line stays put. */
+const basket={}; let total=0;
+const rows=[];                       // one per topic, so counts can be reset in a sweep
 
-const sticker=(p,shape,cls='')=>{ const g=el('g',{class:cls},p); SHAPES[shape](g); return g; };
+const caret = () => {
+  const s=el('svg',{width:13,height:13,viewBox:'0 0 24 24','aria-hidden':'true'});
+  s.setAttribute('class','caret');
+  el('path',{d:'M6 9.5 12 15.5 18 9.5',fill:'none',stroke:'currentColor','stroke-width':'1.9','stroke-linecap':'round','stroke-linejoin':'round'},s);
+  return s;
+};
 
-const basket={}; let total=0, CAP=0;
-let bands=[], stalls=[];
-
-/* ---------------------------------------------------------------- layout
-   Rows are laid out top down. A row that holds an open topic is taller by the
-   panel, so every cell in it keeps its line and only the row grows. */
-function relayout(animate){
-  let cur=SHEET.top;
-  bands.forEach(b=>{
-    b.g.style.transform=`translate(0px, ${cur}px)`;
-    let rowY=BAND_H;
-    const rows=Math.ceil(b.cells.length/COLS);
-    for(let r=0;r<rows;r++){
-      const inRow=b.cells.filter(c=>c.row===r);
-      const open=inRow.some(c=>c.open);
-      inRow.forEach(c=>{ c.g.style.transform=`translate(${c.x}px, ${rowY}px)`; });
-      rowY+=CELL.h+(open?PANEL.h+PANEL.gap:0);
-    }
-    b.height=rowY+10;
-    cur+=b.height+BAND_GAP;
-  });
-  const h=cur-BAND_GAP+SHEET.bot;
-  $('sheetRect').setAttribute('height',h);
-  if(!animate) $('board').setAttribute('transform',`translate(0 ${Math.max(0,(660-(collapsedH+72))/2-SHEET.y).toFixed(1)})`);
-  return h;
+function glyph(shape){
+  const s=el('svg',{viewBox:'-13 -13 26 26','aria-hidden':'true'});
+  s.setAttribute('class','glyph');
+  SHAPES[shape](s);
+  return s;
 }
 
-let collapsedH=0;
-
-function buildSheet(domains){
-  $('sheet').replaceChildren(); $('rules').replaceChildren();
-  bands=[]; stalls=[];
-  el('rect',{class:'sheet',id:'sheetRect',x:SHEET.x,y:SHEET.y,width:SHEET.w,height:0,rx:6},$('sheet'));
+function build(domains){
+  const host=$('domains'); host.replaceChildren(); rows.length=0;
 
   domains.forEach(([dom,items])=>{
-    const bg=el('g',{class:'bandg'},$('sheet'));
-    bg.style.transform='translate(0px, 0px)';
-    const inner=el('g',{transform:`translate(${SHEET.x} ${SHEET.y})`},bg);
-    txt(inner,SHEET.pad,8,dom,'band');
-    el('line',{class:'bandrule',x1:SHEET.pad,y1:18,x2:SHEET.w-SHEET.pad,y2:18},inner);
+    const sec=document.createElement('section');
+    sec.className='domain';
+    const k=document.createElement('p');
+    k.className='domain-k'; k.textContent=dom;
+    sec.appendChild(k);
 
-    const cells=items.map(([name,slug,shape],i)=>{
-      const col=i%COLS, row=Math.floor(i/COLS);
-      const g=el('g',{class:'cell'},inner);
-      const x=SHEET.pad+col*CELL.w;
-      g.style.transform=`translate(${x}px, 0px)`;
-      el('rect',{x:0,y:0,width:CELL.w,height:CELL.h,fill:'transparent'},g);   // the line is the target
-      txt(g,3,15,name,'name');
-      el('path',{class:'caret',d:'M92 13.2 l3.4 3.6 l3.4 -3.6'},g);
+    const ul=document.createElement('ul');
+    ul.className='topics';
 
-      /* the panel: the drawing, and how many of this topic you have taken */
-      const seat=el('g',{transform:`translate(${(CELL.w-PANEL.w)/2} ${CELL.h+PANEL.gap})`},g);
-      const panel=el('g',{class:'panel','data-open':'0'},seat);
-      el('rect',{class:'panelbg',x:0,y:0,width:PANEL.w,height:PANEL.h,rx:8},panel);
-      sticker(panel,shape).setAttribute('transform',`translate(${PANEL.w/2} 27) scale(1.25)`);
+    items.forEach(([name,slug,shape])=>{
+      const li=document.createElement('li');
+      li.className='topic'; li.dataset.open='false'; li.dataset.count='off';
 
-      const st={slug,name,shape,n:0,open:false,row,col,x,g,panel,
-                cx:x+SHEET.x+CELL.w/2, cy:0};
-      const minus=el('g',{class:'step','data-off':'1'},panel);
-      el('circle',{class:'stepbg',cx:20,cy:60,r:11},minus);
-      el('path',{class:'stepg',d:'M15 60h10'},minus);
-      const count=txt(panel,PANEL.w/2,60.5,'0','count',{'text-anchor':'middle','data-zero':'1'});
-      const plus=el('g',{class:'step'},panel);
-      el('circle',{class:'stepbg',cx:PANEL.w-20,cy:60,r:11},plus);
-      el('path',{class:'stepg',d:`M${PANEL.w-25} 60h10M${PANEL.w-20} 55v10`},plus);
+      const btn=document.createElement('button');
+      btn.type='button'; btn.className='topic-btn'; btn.setAttribute('aria-expanded','false');
+      const nm=document.createElement('span'); nm.textContent=name;
+      btn.append(nm, caret());
 
-      st.count=count; st.minus=minus;
-      minus.addEventListener('pointerdown',e=>{ e.stopPropagation(); takeBack(st); });
-      plus.addEventListener('pointerdown',e=>{ e.stopPropagation(); add(st); });
-      g.addEventListener('pointerdown',()=>toggle(st));
+      const drawer=document.createElement('div'); drawer.className='drawer';
+      const inner=document.createElement('div'); inner.className='drawer-in';
+      const panel=document.createElement('div'); panel.className='panel';
 
-      stalls.push(st); return st;
+      const stepper=document.createElement('div'); stepper.className='stepper';
+      const minus=document.createElement('button');
+      minus.type='button'; minus.className='step'; minus.disabled=true;
+      minus.setAttribute('aria-label','One fewer '+name);
+      minus.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+      const out=document.createElement('output');
+      out.className='count'; out.dataset.zero='true'; out.textContent='0';
+      const plus=document.createElement('button');
+      plus.type='button'; plus.className='step';
+      plus.setAttribute('aria-label','One more '+name);
+      plus.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+      stepper.append(minus, out, plus);
+
+      panel.append(glyph(shape), stepper);
+      inner.appendChild(panel); drawer.appendChild(inner);
+      li.append(btn, drawer);
+      ul.appendChild(li);
+
+      const row={slug,name,n:0,li,out,minus};
+      rows.push(row);
+
+      btn.addEventListener('click',()=>{
+        const open=li.dataset.open!=='true';
+        li.dataset.open=String(open);
+        btn.setAttribute('aria-expanded',String(open));
+      });
+      minus.addEventListener('click',()=>bump(row,-1));
+      plus.addEventListener('click',()=>bump(row,1));
     });
-    bands.push({dom,g:bg,cells});
+
+    sec.appendChild(ul); host.appendChild(sec);
   });
-
-  collapsedH=relayout(false);
-  $('board').setAttribute('transform',`translate(0 ${Math.max(0,(660-(collapsedH+72))/2-SHEET.y).toFixed(1)})`);
-
-  /* the page is cut to the closed sheet, so the two read level at rest */
-  $('pageRect').setAttribute('height',collapsedH);
-  const rows=Math.floor((collapsedH-46)/SLOT.dy);
-  CAP=rows*SLOT.cols;
-  for(let i=0;i<rows;i++) el('line',{class:'rule',x1:PAGE.x+16,y1:SLOT.y0+i*SLOT.dy+12,x2:PAGE.x+PAGE.w-16,y2:SLOT.y0+i*SLOT.dy+12},$('rules'));
-  $('total').setAttribute('y',SHEET.y+collapsedH+44);
-  $('totalLbl').setAttribute('y',SHEET.y+collapsedH+66);
+  paintTotal();
 }
 
-function toggle(st){
-  st.open=!st.open;
-  st.g.classList.toggle('open',st.open);
-  st.panel.setAttribute('data-open',st.open?'1':'0');
-  relayout(true);
+function bump(row,d){
+  const next=Math.max(0,row.n+d);
+  if(next===row.n) return;
+  row.n=next; total+=d;
+  if(row.n) basket[row.slug]=row.n; else delete basket[row.slug];
+  row.out.textContent=row.n;
+  row.out.dataset.zero=row.n?'false':'true';
+  row.minus.disabled=!row.n;
+  row.li.dataset.count=row.n?'on':'off';
+  paintTotal();
 }
 
-/* ---------------------------------------------------------------- the page */
-const page=$('page'), pageG=$('pageG'), totalT=$('total'), go=$('go');
-const placed=[];
-const slotAt=n=>({x:SLOT.x0+(n%SLOT.cols)*SLOT.dx, y:SLOT.y0+Math.floor(n/SLOT.cols)*SLOT.dy});
-
-function paint(st){
-  st.count.textContent=st.n;
-  st.count.setAttribute('data-zero',st.n?'0':'1');
-  st.minus.setAttribute('data-off',st.n?'0':'1');
-  totalT.textContent=total; go.disabled=total===0;
+function paintTotal(){
+  $('total').textContent=total;
+  $('totalK').textContent=total===1?'question':'questions';
+  $('go').disabled=total===0;
+  $('clear').hidden=total===0;
 }
 
-function add(st){
-  if(total>=CAP) return;
-  st.n++; total++; basket[st.slug]=st.n; paint(st);
-  const {x:tx,y:ty}=slotAt(total-1);
-  const board=$('board').getAttribute('transform')||'';
-  const dy=parseFloat((board.match(/translate\(0 ([-\d.]+)\)/)||[0,0])[1])||0;
-  const from={x:st.cx, y:SHEET.y+bandTop(st)+cellTop(st)+CELL.h+PANEL.gap+27+dy};
-  const f=sticker($('flyer'),st.shape,'fly');
-  tween(540,k=>{ const s=lerp(1.25,1.15,k)+.28*Math.sin(Math.PI*k);
-    f.setAttribute('transform',`translate(${lerp(from.x,tx,k)} ${lerp(from.y,ty,k)-66*Math.sin(Math.PI*k)}) scale(${s}) rotate(${36*Math.sin(Math.PI*k)})`); },easeIn)
-  .then(()=>{
-    f.remove();
-    const g=sticker(page,st.shape,'placed');
-    g.setAttribute('transform',`translate(${tx} ${ty}) scale(1.15)`);
-    el('circle',{r:12,fill:'transparent'},g);      // most of a glyph is fill:none stroke, so give it a real target
-    const rec={el:g,st}; placed.push(rec);
-    g.addEventListener('pointerdown',e=>{ e.stopPropagation(); pull(rec); });
-    tween(200,k=>pageG.setAttribute('transform',`translate(0 ${1.5*Math.sin(Math.PI*k)})`));
-  });
-}
-
-/* where a cell's panel currently sits, so the sticker flies from the drawing */
-function bandOf(st){ return bands.find(b=>b.cells.includes(st)); }
-
-function bandTop(st){
-  let cur=SHEET.top;
-  for(const b of bands){ if(b.cells.includes(st)) return cur; cur+=b.height+BAND_GAP; }
-  return cur;
-}
-
-function cellTop(st){
-  const b=bandOf(st); let y=BAND_H;
-  for(let r=0;r<st.row;r++){
-    const open=b.cells.some(c=>c.row===r&&c.open);
-    y+=CELL.h+(open?PANEL.h+PANEL.gap:0);
-  }
-  return y;
-}
-
-function takeBack(st){
-  const rec=[...placed].reverse().find(r=>r.st===st);
-  if(rec) return pull(rec);
-}
-
-function pull(rec){
-  const i=placed.indexOf(rec); if(i<0) return;
-  placed.splice(i,1); rec.el.remove();
-  rec.st.n=Math.max(0,rec.st.n-1);
-  if(rec.st.n<=0) delete basket[rec.st.slug]; else basket[rec.st.slug]=rec.st.n;
-  total=Math.max(0,total-1); paint(rec.st);
-  placed.forEach((r,n)=>{ const {x,y}=slotAt(n); r.el.setAttribute('transform',`translate(${x} ${y}) scale(1.15)`); });
-}
-
-pageG.addEventListener('pointerdown', async ()=>{
-  if(!total) return;
-  await tween(320,k=>page.setAttribute('opacity',1-k));
-  page.replaceChildren(); page.setAttribute('opacity',1); placed.length=0;
-  stalls.forEach(st=>{ st.n=0; paint(st); });
-  for(const k in basket) delete basket[k];
-  total=0; totalT.textContent='0'; go.disabled=true;
+$('clear').addEventListener('click',()=>{
+  rows.forEach(r=>{ if(r.n) bump(r,-r.n); });
 });
 
 function loadSubject(id){
-  page.replaceChildren(); page.setAttribute('opacity',1); $('flyer').replaceChildren();
-  placed.length=0; for(const k in basket) delete basket[k];
-  total=0; go.disabled=true;
-  buildSheet(TOPICS_BY_SUBJECT[id] || TOPICS_BY_SUBJECT.math);
-  totalT.textContent='0';
+  for(const k in basket) delete basket[k];
+  total=0;
+  build(TOPICS_BY_SUBJECT[id] || TOPICS_BY_SUBJECT.math);
 }
 document.addEventListener('satf:subject', e=>loadSubject(e.detail.id));
 loadSubject((window.SATF && window.SATF.subject().id) || 'math');
 
 /* -- ROUTER SEAM: the set is `basket`, a map of topic slug -> question count -- */
-go.addEventListener('click', ()=>console.log('[router] /practice/combined', {...basket}));
+$('go').addEventListener('click', ()=>console.log('[router] /practice/combined', {...basket}));
 </script>
 
 </body>
