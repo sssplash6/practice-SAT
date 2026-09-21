@@ -11,17 +11,27 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;900&family=DM+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="../assets/app.css">
 <style>
-  .stage > svg.scene { aspect-ratio: 900 / 460; --scene-ratio: 1.956; --scene-max: 860px; }
+  .stage > svg.scene { aspect-ratio: 980 / 470; --scene-ratio: 2.085; --scene-max: 900px; }
 
-  /* Nothing is filled. It is all pencil: one weight of graphite line, roughed
-     up by the filter so it reads as drawn rather than plotted. */
-  .pencil { fill:none; stroke:var(--ink); stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
-  .fold   { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; opacity:.75; }
-  .leg    { fill:none; stroke:var(--ink); stroke-width:2.1; stroke-linecap:round; stroke-linejoin:round; }
-  .ground { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; opacity:.3; }
-  .bird   { fill:none; stroke:var(--ink); stroke-width:2.1; stroke-linecap:round; }
-  .bang   { fill:none; stroke:var(--amber); stroke-width:2.6; stroke-linecap:round; }
-  .puff   { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; opacity:.45; }
+  /* flat vector: solid graphite where the shape carries, outline where the
+     detail does. No texture, no shading. */
+  .ink    { fill:var(--ink); }
+  .line   { fill:none; stroke:var(--ink); stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+  .thin   { fill:none; stroke:var(--ink); stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+  .paper  { fill:var(--paper); stroke:var(--ink); stroke-width:2.2; stroke-linejoin:round; }
+  .dust   { fill:none; stroke:var(--ink); stroke-width:1.6; stroke-linecap:round; opacity:.32; }
+  .ground { fill:none; stroke:var(--ink); stroke-width:2; stroke-linecap:round; opacity:.25; }
+
+  /* the round, and its number */
+  .shell  { fill:var(--paper); stroke:var(--ink); stroke-width:2.4; stroke-linejoin:round; }
+  .shell-win { fill:var(--amber); stroke:var(--amber); }
+  .score  { font:900 25px var(--font); fill:var(--ink); letter-spacing:-.02em; }
+  .score-win { fill:var(--ink); }
+  .groove { fill:none; stroke:var(--ink); stroke-width:1.6; opacity:.55; }
+  .groove-win { stroke:var(--ink); opacity:.4; }
+
+  .flash  { fill:none; stroke:var(--amber); stroke-width:3; stroke-linecap:round; }
+  .shard  { fill:var(--paper); stroke:var(--ink); stroke-width:1.8; stroke-linejoin:round; }
 </style>
 </head>
 <body data-nav="duels">
@@ -42,26 +52,13 @@
     </header>
 
     <section class="stage rise">
-      <svg class="scene" id="scene" viewBox="0 0 900 460" aria-hidden="true">
-        <defs>
-          <!-- the pencil: a little displacement so no line is mechanically true -->
-          <filter id="pencil" x="-8%" y="-12%" width="116%" height="124%">
-            <feTurbulence type="fractalNoise" baseFrequency=".022" numOctaves="3" seed="4" result="n"/>
-            <feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/>
-          </filter>
-          <!-- the same hand, lighter, for shapes too small to take the full wobble -->
-          <filter id="pencilfine" x="-20%" y="-30%" width="140%" height="160%">
-            <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="9" result="n"/>
-            <feDisplacementMap in="SourceGraphic" in2="n" scale="1.3" xChannelSelector="R" yChannelSelector="G"/>
-          </filter>
-        </defs>
-        <g filter="url(#pencil)">
-          <g id="floor"></g>
-          <g id="fx"></g>
-          <g id="left"></g>
-          <g id="right"></g>
-          <g id="birds" filter="url(#pencilfine)"></g>
-        </g>
+      <svg class="scene" id="scene" viewBox="0 0 980 470" aria-hidden="true">
+        <g id="floor"></g>
+        <g id="manL"></g>
+        <g id="manR"></g>
+        <g id="hats"></g>
+        <g id="rounds"></g>
+        <g id="fx"></g>
       </svg>
       <button class="btn" type="button" id="go">Find a duel</button>
     </section>
@@ -77,195 +74,285 @@ const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const lerp=(a,b,k)=>a+(b-a)*k;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const easeOut=k=>1-Math.pow(1-k,3);
-const easeIn=k=>k*k;
-/* how far through a span, 0 before it and 1 after */
+const easeIn=k=>k*k*k;
 const span=(t,a,b)=>clamp((t-a)/(b-a),0,1);
 
-/* ---------------------------------------------------------------- the brain
-   Drawn facing right, around its own origin, and mirrored for the one coming
-   the other way. Outline, cerebellum, stem, and a few folds. No fill anywhere:
-   the form has to come out of the line alone. */
-const HIP={x:-4,y:28}, L1=25, L2=25;
+/* ---------------------------------------------------------------- the cowboy
+   A filled silhouette rather than an outline: the shape carries it, and the
+   detail is cut back out in paper white. Standing in profile, boots on the
+   origin, about 265 tall, mirrored for the man opposite.
 
-const CEREBRUM='M-46 -20 C-44 -32 -40 -38 -30 -36 C-22 -44 -14 -44 -6 -40'
-             +' C4 -44 14 -42 20 -36 C34 -40 46 -32 44 -22 C54 -18 58 -8 54 -2'
-             +' C58 8 54 16 46 18 C48 26 38 30 24 28 C16 34 6 34 0 30'
-             +' C-10 32 -20 30 -24 26 C-36 28 -46 22 -44 12 C-50 6 -50 -12 -46 -20 Z';
-const FOLDS=[
-  'M-34 -20 C-24 -27 -13 -21 -7 -28',
-  'M-31 -5  C-18 -13 -5 -5 3 -14',
-  'M-29 9   C-16 1 -3 9 7 0',
-  'M6 -31   C14 -24 24 -29 32 -22',
-  'M11 -13  C21 -20 31 -13 39 -20',
-  'M9 5     C19 -2 29 5 39 -4',
-];
-const CEREBELLUM='M-44 12 C-57 13 -62 26 -51 32 C-42 38 -28 34 -26 25 C-28 19 -34 13 -44 12 Z';
-const CEREB_LINES=['M-52 18 C-46 22 -38 23 -30 21','M-50 26 C-44 30 -36 30 -28 28'];
-const STEM='M-33 32 C-31 40 -26 44 -18 46';
+   The hat is the read at any size, so it goes on first: a wide brim sloping
+   over the eyes, a creased crown, a band. Then a long coat open over the
+   gunbelt, and chaps fringed down the outside. */
+const SHOULDER={x:6,y:-208};
+const GRIP={x:52,y:4}, MUZZLE={x:152,y:-3};     // in the gun's own frame
 
-function buildBrain(g){
-  el('path',{class:'pencil',d:CEREBRUM},g);
-  FOLDS.forEach(d=>el('path',{class:'fold',d},g));
-  el('path',{class:'pencil',d:CEREBELLUM},g);
-  CEREB_LINES.forEach(d=>el('path',{class:'fold',d},g));
-  el('path',{class:'pencil',d:STEM},g);
+function fringe(x,y0,y1,dir,len,step){
+  let d='';
+  for(let y=y0;y<y1;y+=step) d+=`M${x} ${y} L${(x+dir*len).toFixed(1)} ${y+step*.42} L${x} ${y+step*.86} Z`;
+  return d;
 }
 
-/* a runner is a brain, two legs, and nothing else */
-function makeRunner(host){
-  const root=el('g',{},host);
-  const legs=el('g',{},root);            // behind the mass
-  const body=el('g',{},root);
-  buildBrain(body);
-  return {root,legs,body};
-}
-const L=makeRunner($('left')), R=makeRunner($('right'));
+function buildMan(host){
+  const g=el('g',{},host);
+  const body=el('g',{},g);
+  const I=d=>el('path',{class:'ink',d},body);
+  const P=d=>el('path',{fill:'#FFFFFF',d},body);
 
-/* one leg, hip to knee to foot. The thigh swings, and the knee folds hardest
-   as the leg comes through, which is what reads as a run rather than a waddle */
-function legPath(phase){
-  const thigh=.62*Math.sin(phase);
-  const bend=.18+.95*clamp(Math.sin(phase+1.9),0,1);
-  const kx=HIP.x+Math.sin(thigh)*L1, ky=HIP.y+Math.cos(thigh)*L1;
-  const sh=thigh-bend;
-  const fx=kx+Math.sin(sh)*L2, fy=ky+Math.cos(sh)*L2;
-  const toe=`M${fx} ${fy} l${Math.cos(sh)*9+4} ${-Math.sin(sh)*3+1}`;
-  return `M${HIP.x} ${HIP.y} L${kx.toFixed(1)} ${ky.toFixed(1)} L${fx.toFixed(1)} ${fy.toFixed(1)}`+toe;
+  /* boots, with a stacked heel */
+  I('M-32 -50 L-6 -50 L-4 -20 L16 -15 L19 -2 L-32 -2 L-34 -16 Z');
+  I('M6 -50 L32 -50 L34 -20 L54 -14 L57 -2 L6 -2 L4 -16 Z');
+  P('M-28 -8 L15 -8 L16 -4 L-28 -4 Z');
+  P('M10 -8 L52 -8 L53 -4 L10 -4 Z');
+
+  /* legs under fringed chaps */
+  I('M-31 -152 L-2 -152 L-5 -50 L-34 -50 Z');
+  I('M4 -152 L32 -152 L31 -50 L3 -50 Z');
+  I(fringe(-34,-146,-58,-1,12,12));
+  I(fringe(32,-146,-58,1,12,12));
+  P('M-1 -150 L3 -150 L1 -52 L-3 -52 Z');
+
+  /* gunbelt and buckle, sitting in the open front of the coat */
+  I('M-34 -168 L34 -168 L34 -150 L-34 -150 Z');
+  P('M-8 -166 L8 -166 L8 -152 L-8 -152 Z');
+  P('M-4 -163 L5 -163 L5 -155 L-4 -155 Z');
+  for(let x=-29;x<30;x+=9) if(x<-10||x>10) P(`M${x} -165 L${x+3.2} -165 L${x+3.2} -154 L${x} -154 Z`);
+  I('M12 -156 C34 -152 40 -132 34 -114 C28 -102 14 -100 12 -112 C10 -132 8 -148 12 -156 Z');
+
+  /* the coat: long, open at the front, flaring at the hem */
+  I('M-34 -210 C-18 -226 22 -226 34 -208 C44 -184 47 -148 45 -112 L22 -108 C25 -144 24 -178 19 -202 L-19 -202 C-25 -176 -26 -142 -24 -108 L-45 -112 C-46 -148 -44 -184 -34 -210 Z');
+  I('M-18 -204 L18 -204 L16 -160 L-16 -160 Z');
+  P('M-2 -206 C-5 -184 -5 -172 -3 -162 L3 -162 C1 -174 1 -186 4 -205 Z');
+  P('M-28 -198 C-32 -180 -33 -156 -32 -132');
+  P('M28 -196 C33 -178 34 -154 33 -130');
+
+  /* bandana at the throat */
+  I('M-14 -224 L16 -224 L2 -202 Z');
+  P('M-6 -221 L8 -221 L2 -212 Z');
+
+  /* the jaw, with the profile cut out of it: brow, nose, chin */
+  I('M-16 -248 C-4 -245 12 -245 20 -248 C23 -232 16 -221 2 -220 C-11 -221 -17 -232 -16 -248 Z');
+  P('M20 -246 L26 -240 L19 -238 L22 -232 L15 -228 L18 -246 Z');
+
+  /* the hat */
+  I('M-64 -266 C-34 -280 26 -278 74 -258 C80 -255 77 -248 66 -247 C24 -239 -22 -246 -56 -258 C-66 -261 -67 -264 -64 -266 Z');
+  I('M-34 -266 C-37 -288 -22 -298 2 -297 C26 -296 37 -286 34 -265 C14 -260 -14 -260 -34 -266 Z');
+  P('M-1 -295 C-6 -283 -6 -274 -4 -267 L3 -267 C1 -275 1 -284 5 -294 Z');
+  P('M-32 -270 C-12 -266 14 -266 33 -270 L33 -266 C13 -262 -12 -262 -32 -266 Z');
+
+  /* the gun, drawn level and pointing forward, butt on the origin. It is swung
+     down beside him when he is not using it. */
+  const gun=el('g',{},g);
+  const G=d=>el('path',{class:'ink',d},gun);
+  G('M0 -12 C-3 -2 -3 6 0 14 L26 11 C24 2 24 -4 26 -10 Z');          // butt plate and comb
+  G('M24 -11 L48 -9 L52 8 L26 12 Z');                                 // wrist
+  G('M46 -10 L78 -9 L78 8 L50 7 Z');                                  // receiver
+  G('M76 -8 L152 -6 L152 0 L76 2 Z');                                 // barrel
+  G('M84 1 L128 0 L128 5 L84 6 Z');                                   // magazine tube
+  G('M62 -14 L70 -14 L70 -8 L62 -8 Z');                               // hammer
+  G('M56 7 C68 9 70 20 60 22 C52 22 50 9 56 7 Z');                    // lever loop
+  el('path',{fill:'#FFFFFF',d:'M58 11 C64 12 65 17 59 18 C55 18 55 11 58 11 Z'},gun);
+  el('path',{fill:'#FFFFFF',d:'M82 -6 L148 -4 L148 -2 L82 -3 Z'},gun);
+
+  /* the arm is redrawn each frame from the shoulder to wherever the grip is */
+  const arm=el('g',{},g);
+  return {g,body,gun,arm};
 }
-function drawLegs(r,phase,planted){
-  r.legs.replaceChildren();
-  if(planted!==undefined){                 // standing, or fallen: legs at rest
-    el('path',{class:'leg',d:`M${HIP.x} ${HIP.y} L${HIP.x-7} ${HIP.y+26} L${HIP.x-11} ${HIP.y+49} l9 2`},r.legs);
-    el('path',{class:'leg',d:`M${HIP.x} ${HIP.y} L${HIP.x+7} ${HIP.y+26} L${HIP.x+9} ${HIP.y+49} l9 1`},r.legs);
-    return;
-  }
-  el('path',{class:'leg',d:legPath(phase),opacity:.85},r.legs);
-  el('path',{class:'leg',d:legPath(phase+Math.PI)},r.legs);
+
+const MAN={L:buildMan($('manL')), R:buildMan($('manR'))};
+
+/* ---------------------------------------------------------------- the round
+   Big enough to read the number off it. Points right; mirrored for the other. */
+function buildRound(host,score,win,flip){
+  const g=el('g',{},host);
+  /* a bullet, not a capsule: straight case, then an ogive to a point */
+  el('path',{class:'shell'+(win?' shell-win':''),
+             d:'M-62 -25 L16 -25 C44 -23 66 -13 73 0 C66 13 44 23 16 25 L-62 25 Z'},g);
+  el('path',{class:'groove'+(win?' groove-win':''),d:'M-50 -25 L-50 25M-43 -25 L-43 25'},g);
+  el('path',{class:'groove'+(win?' groove-win':''),d:'M16 -25 C40 -20 56 -11 62 0 C56 11 40 20 16 25'},g);
+  /* the group is mirrored for the man facing the other way, so the number is
+     turned back the right way round inside it */
+  const t=el('text',{class:'score'+(win?' score-win':''),x:flip?10:-10,y:1,
+                     'text-anchor':'middle','dominant-baseline':'central'},g);
+  if(flip) t.setAttribute('transform','scale(-1 1)');
+  t.textContent=score;
+  return g;
 }
 
 /* ---------------------------------------------------------------- the floor */
 (()=>{
   const g=$('floor');
-  el('path',{class:'ground',d:'M84 372 C240 368 330 374 448 371 C560 368 690 374 818 370'},g);
-  el('path',{class:'ground',d:'M150 380 C250 378 300 381 372 379',opacity:.18},g);
-  el('path',{class:'ground',d:'M540 381 C620 378 690 382 760 379',opacity:.18},g);
+  el('path',{class:'ground',d:'M70 396 C300 391 540 400 910 394'},g);
+  el('path',{class:'ground',d:'M150 406 C260 403 330 408 420 404',opacity:.12},g);
+  el('path',{class:'ground',d:'M580 407 C680 403 780 409 850 405',opacity:.12},g);
 })();
 
 /* ---------------------------------------------------------------- the beats
-   run in, collide, one goes over, birds, clear, and round again with the other
-   one losing. */
-const LOOP=7.4, MEET=2.15, SETTLE=3.35, CLEAR=6.4;
-const GROUND=352, S=1.5, FOOT=79;      // FOOT: how far under the brain's origin the feet land
-const LX0=-150, RX0=1050, LX1=364, RX1=536;
+   Stand off, draw, fire. The rounds meet in the middle; the smaller number
+   buckles and drops, the bigger one carries on and puts the other man down.
+   No blood: his hat goes one way, his gun the other, and he lands in the dust. */
+const GY=396, LX=196, RX=784, MID=490;
+const T={draw:1.45, fire:1.9, meet:2.85, clash:3.15, land:3.85, up:6.9, loop:8.2};
 
-let t0=performance.now(), turn=0;
+/* a spread of real-looking totals, never a tie */
+const CARDS=[[1520,1340],[1460,1280],[1390,1180],[1550,1420],[1300,1150],[1480,1360]];
+let turn=0, t0=performance.now();
 
-function poseUp(r,x,flip,phase,lean){
-  drawLegs(r,phase);
-  const bob=Math.abs(Math.sin(phase))*4*S;
-  r.root.setAttribute('transform',
-    `translate(${x.toFixed(1)} ${(GROUND-FOOT*S-bob).toFixed(1)}) scale(${(flip*S).toFixed(3)} ${S}) rotate(${lean})`);
-}
-function poseDown(r,x,flip,k){
-  drawLegs(r,0,true);
-  const rot=lerp(0,-84,easeOut(k));                 // topples away from the blow
-  r.root.setAttribute('transform',
-    `translate(${x.toFixed(1)} ${(GROUND-FOOT*S).toFixed(1)}) scale(${(flip*S).toFixed(3)} ${S}) rotate(${rot} ${HIP.x} ${FOOT})`);
-}
+const roundsG=$('rounds'), fxG=$('fx'), hatsG=$('hats');
 
-/* where the brain mass lands once it has toppled: its origin swung about the
-   feet, then scaled and placed. Guessing this put the birds between the two. */
-const FALL=-84*Math.PI/180;
-function headOf(x,flip){
-  const dx=0-HIP.x, dy=0-FOOT;
-  const rx=dx*Math.cos(FALL)-dy*Math.sin(FALL), ry=dx*Math.sin(FALL)+dy*Math.cos(FALL);
-  return {x:x+flip*S*(HIP.x+rx), y:GROUND-FOOT*S+S*(FOOT+ry)};
-}
+/* at rest the gun stands beside him, muzzle in the dirt and butt at his waist.
+   Raised, the butt comes to his shoulder and the barrel goes level. */
+const GUN_REST={x:SHOULDER.x+52,y:SHOULDER.y+54,a:92};
+const GUN_AIM ={x:SHOULDER.x,  y:SHOULDER.y,   a:0};
+const gunAt=r=>{ const k=easeOut(r);
+  return {x:lerp(GUN_REST.x,GUN_AIM.x,k), y:lerp(GUN_REST.y,GUN_AIM.y,k), a:lerp(GUN_REST.a,GUN_AIM.a,k)}; };
+const onGun=(g,p)=>{ const r=g.a*Math.PI/180, c=Math.cos(r), s=Math.sin(r);
+  return {x:g.x+p.x*c-p.y*s, y:g.y+p.x*s+p.y*c}; };
 
-function bang(x,y,k){
-  const g=$('fx');
-  if(k===0){ g.replaceChildren(); return; }
-  g.replaceChildren();
-  const n=9;
-  for(let i=0;i<n;i++){
-    const a=(i/n)*Math.PI*2+.3, r0=14+easeOut(k)*26, r1=r0+20*(1-k*.6);
-    el('path',{class:'bang',d:`M${x+Math.cos(a)*r0} ${y+Math.sin(a)*r0} L${x+Math.cos(a)*r1} ${y+Math.sin(a)*r1}`,
-               opacity:(1-k).toFixed(2)},g);
-  }
-  for(let i=0;i<4;i++){
-    const a=Math.PI*(1.15+i*.23), r=30+k*40;
-    el('path',{class:'puff',d:`M${x+Math.cos(a)*r} ${y+Math.sin(a)*r*.5+22} a7 7 0 1 0 .1 0`,opacity:((1-k)*.6).toFixed(2)},g);
-  }
+function poseMan(m,x,flip,raise,lean,pivotY){
+  m.g.setAttribute('transform',
+    `translate(${x} ${GY}) scale(${flip} 1) rotate(${lean} 0 ${pivotY||0})`);
+  const g=gunAt(raise);
+  m.gun.setAttribute('transform',`translate(${g.x.toFixed(1)} ${g.y.toFixed(1)}) rotate(${g.a.toFixed(1)})`);
+
+  /* the arm is not posed, it just reaches wherever the grip has got to */
+  const h=onGun(g,GRIP);
+  m.arm.replaceChildren();
+  const dx=h.x-SHOULDER.x, dy=h.y-SHOULDER.y, L=Math.hypot(dx,dy)||1;
+  const nx=-dy/L*1, ny=dx/L*1;
+  el('path',{class:'ink',d:`M${(SHOULDER.x+nx*10).toFixed(1)} ${(SHOULDER.y+ny*10).toFixed(1)}`
+    +` L${(h.x+nx*6).toFixed(1)} ${(h.y+ny*6).toFixed(1)}`
+    +` L${(h.x-nx*6).toFixed(1)} ${(h.y-ny*6).toFixed(1)}`
+    +` L${(SHOULDER.x-nx*10).toFixed(1)} ${(SHOULDER.y-ny*10).toFixed(1)} Z`},m.arm);
+  el('circle',{class:'ink',cx:h.x.toFixed(1),cy:h.y.toFixed(1),r:7.5},m.arm);
 }
 
-/* three birds going round the head of whoever is down */
-function birds(cx,cy,t,vis){
-  const g=$('birds'); g.replaceChildren();
+/* the hat leaves when he does */
+function hat(x,y,rot,flip,vis){
+  hatsG.replaceChildren();
   if(!vis) return;
-  for(let i=0;i<3;i++){
-    const a=t*2.3+i*Math.PI*2/3;
-    const x=cx+Math.cos(a)*62, y=cy+Math.sin(a)*17-4;
-    const depth=.75+.35*(1+Math.sin(a))/2;                 // nearer ones a touch bigger
-    const flap=6+4*Math.sin(t*13+i);
-    el('path',{class:'bird',transform:`translate(${x.toFixed(1)} ${y.toFixed(1)}) scale(${(depth*1.7).toFixed(2)})`,
-               d:`M-11 0 q5.5 -${flap} 11 0 q5.5 -${flap} 11 0`,
-               opacity:(.6+.4*(1+Math.sin(a))/2).toFixed(2)},g);
+  const g=el('g',{transform:`translate(${x} ${y}) scale(${flip} 1) rotate(${rot})`},hatsG);
+  el('path',{class:'ink',d:'M-30 0 q30 -9 60 0 q-6 7 -30 7 q-24 0 -30 -7 z'},g);
+  el('path',{class:'ink',d:'M-14 -1 q-3 -18 5 -24 q9 -5 18 0 q8 6 5 24 z'},g);
+}
+
+function flash(x,y,k,dir){
+  if(k<=0) return;
+  for(let i=0;i<5;i++){
+    const a=(-40+i*20)*Math.PI/180, r0=8+k*10, r1=r0+22*(1-k);
+    el('path',{class:'flash',opacity:(1-k).toFixed(2),
+      d:`M${x+Math.cos(a)*r0*dir} ${y+Math.sin(a)*r0} L${x+Math.cos(a)*r1*dir} ${y+Math.sin(a)*r1}`},fxG);
+  }
+}
+
+function burst(x,y,k,n,cls){
+  for(let i=0;i<n;i++){
+    const a=(i/n)*Math.PI*2+.4, r0=16+easeOut(k)*34, r1=r0+26*(1-k*.7);
+    el('path',{class:cls,opacity:(1-k).toFixed(2),
+      d:`M${x+Math.cos(a)*r0} ${y+Math.sin(a)*r0} L${x+Math.cos(a)*r1} ${y+Math.sin(a)*r1}`},fxG);
+  }
+}
+
+function puff(x,y,k){
+  for(let i=0;i<5;i++){
+    const a=Math.PI*(1.05+i*.22), r=18+k*46;
+    el('path',{class:'dust',opacity:((1-k)*.6).toFixed(2),
+      d:`M${x+Math.cos(a)*r} ${y+Math.sin(a)*r*.42} a9 9 0 1 0 .1 0`},fxG);
   }
 }
 
 function frame(now){
-  const el0=(now-t0)/1000;
-  const n=Math.floor(el0/LOOP);
-  if(n!==turn){ turn=n; }
-  const t=el0%LOOP;
-  const loser=turn%2;                                       // 0 left goes down, 1 right
+  const e=Math.max(0,(now-t0)/1000), n=Math.floor(e/T.loop);
+  if(n!==turn) turn=n;
+  const t=e%T.loop;
+  const card=CARDS[turn%CARDS.length];
+  const leftWins=turn%2===0;
+  const sL=leftWins?card[0]:card[1], sR=leftWins?card[1]:card[0];
 
-  if(t<MEET){
-    /* the run in */
-    const k=t/MEET, run=easeIn(k)*.25+k*.75;                // builds a little speed
-    const ph=t*15.5;
-    poseUp(L,lerp(LX0,LX1,run),1,ph,4);
-    poseUp(R,lerp(RX0,RX1,run),-1,ph+1.1,4);
-    bang(0,0,0); birds(0,0,0,false);
-  } else if(t<SETTLE){
-    /* the hit, and one of them going over */
-    const k=span(t,MEET,SETTLE);
-    const knock=easeOut(clamp(k*2.4,0,1));
-    const lx=LX1-(loser===0?knock*54:knock*10);
-    const rx=RX1+(loser===1?knock*54:knock*10);
-    if(loser===0){ poseDown(L,lx,1,clamp(k*1.5,0,1)); poseUp(R,rx,-1,0,-6); }
-    else         { poseUp(L,lx,1,0,6);                poseDown(R,rx,-1,clamp(k*1.5,0,1)); }
-    bang(450,GROUND-FOOT*S+10,clamp(k*3.1,0,1));
-    birds(0,0,0,false);
-  } else if(t<CLEAR){
-    /* flat out, with the birds */
-    const lx=LX1-(loser===0?54:10), rx=RX1+(loser===1?54:10);
-    if(loser===0){ poseDown(L,lx,1,1); poseUp(R,rx,-1,0,0); }
-    else         { poseUp(L,lx,1,0,0); poseDown(R,rx,-1,1); }
-    bang(0,0,0);
-    const h=headOf(loser===0?lx:rx, loser===0?1:-1);
-    birds(h.x,h.y-96,t,true);
-  } else {
-    /* up again, and away */
-    const k=span(t,CLEAR,LOOP);
-    const out=easeIn(k);
-    const lx=lerp(LX1-(loser===0?54:10),LX0,out), rx=lerp(RX1+(loser===1?54:10),RX0,out);
-    const ph=t*15.5;
-    poseUp(L,lx,1,ph,4); poseUp(R,rx,-1,ph+1.1,4);
-    bang(0,0,0); birds(0,0,0,false);
+  roundsG.replaceChildren(); fxG.replaceChildren();
+
+  /* the arm comes up out of the holster */
+  const raise=span(t,T.draw,T.fire);
+
+  let lx=LX, rx=RX, leanL=0, leanR=0, pivL=0, pivR=0;
+  let hatShown=false, hx=0, hy=0, hrot=0, hflip=1;
+
+  if(t>=T.land){
+    /* the loser is down, and stays down until the round resets */
+    const k=span(t,T.land,T.land+.55);
+    const back=easeOut(k)*74, tip=easeOut(k)*-86;
+    if(leftWins){ rx=RX+back; leanR=tip; pivR=-10; }
+    else        { lx=LX-back; leanL=-tip; pivL=-10; }
+    /* the hat carries on past him */
+    const hk=span(t,T.land,T.land+1.5);
+    hatShown=hk<1;
+    const hdir=leftWins?1:-1;
+    hx=(leftWins?RX:LX)+hdir*(30+hk*190);
+    hy=GY-152-Math.sin(hk*Math.PI)*70+hk*20;
+    hrot=hdir*hk*520; hflip=hdir;
+    puff((leftWins?RX:LX)+back*.8,GY,span(t,T.land,T.land+.9));
   }
+
+  poseMan(MAN.L,lx,1,raise,leanL,pivL);
+  poseMan(MAN.R,rx,-1,raise,leanR,pivR);
+
+  /* the round starts wherever the muzzle has actually ended up */
+  const gm=gunAt(raise), mz=onGun(gm,MUZZLE);
+  const MUZ={x:mz.x,y:mz.y+GY};
+  if(t>=T.fire&&t<T.fire+.16){
+    const k=span(t,T.fire,T.fire+.16);
+    flash(LX+MUZ.x,MUZ.y,1-k,1); flash(RX-MUZ.x,MUZ.y,1-k,-1);
+  }
+
+  if(t>=T.fire&&t<T.meet){
+    /* both rounds in the air, closing */
+    const k=span(t,T.fire,T.meet);
+    const bx=lerp(LX+MUZ.x+60,MID-62,k), cx=lerp(RX-MUZ.x-60,MID+62,k);
+    buildRound(roundsG,sL,false).setAttribute('transform',`translate(${bx} ${MUZ.y})`);
+    buildRound(roundsG,sR,false,true).setAttribute('transform',`translate(${cx} ${MUZ.y}) scale(-1 1)`);
+  } else if(t>=T.meet&&t<T.clash){
+    /* they meet. The smaller number buckles */
+    const k=span(t,T.meet,T.clash);
+    const winLeft=sL>sR;
+    const wx=lerp(MID-62,MID-20,k), lxs=lerp(MID+62,MID+30,k);
+    const w=buildRound(roundsG,winLeft?sL:sR,true,!winLeft);
+    w.setAttribute('transform',winLeft?`translate(${wx} ${MUZ.y})`:`translate(${980-wx} ${MUZ.y}) scale(-1 1)`);
+    const l=buildRound(roundsG,winLeft?sR:sL,false,winLeft);
+    l.setAttribute('transform',winLeft
+      ? `translate(${lxs} ${MUZ.y}) scale(${(-1+k*.45).toFixed(2)} ${(1-k*.5).toFixed(2)})`
+      : `translate(${980-lxs} ${MUZ.y}) scale(${(1-k*.45).toFixed(2)} ${(1-k*.5).toFixed(2)})`);
+    burst(MID,MUZ.y,k,10,'flash');
+  } else if(t>=T.clash&&t<T.land){
+    /* the winner drives on, the wreck drops out of the air */
+    const k=span(t,T.clash,T.land);
+    const winLeft=sL>sR;
+    const tgt=winLeft?RX-40:LX+40;
+    const wx=lerp(winLeft?MID-20:MID+20,tgt,easeIn(k));
+    const w=buildRound(roundsG,winLeft?sL:sR,true,!winLeft);
+    w.setAttribute('transform',winLeft?`translate(${wx} ${MUZ.y})`:`translate(${wx} ${MUZ.y}) scale(-1 1)`);
+
+    const fallK=span(t,T.clash,T.clash+.6);
+    const fx=winLeft?MID+34:MID-34;
+    const fy=MUZ.y+easeIn(fallK)*(GY-MUZ.y-8);
+    const wreck=el('g',{transform:`translate(${fx+(winLeft?18:-18)*fallK} ${fy}) rotate(${fallK*(winLeft?92:-92)}) scale(.62 .5)`},roundsG);
+    el('path',{class:'shard',d:'M-58 -24 L20 -18 L34 4 L12 24 L-58 24 Z'},wreck);
+    el('path',{class:'groove',d:'M-44 -20 L-40 22'},wreck);
+  }
+
+  if(t>=T.land&&t<T.land+.4) burst((leftWins?RX:LX)+(leftWins?-28:28),MUZ.y,span(t,T.land,T.land+.4),9,'flash');
+  hat(hx,hy,hrot,hflip,hatShown);
+  if(t>=T.up){ /* both back on their feet for the next one */ }
+
   requestAnimationFrame(frame);
 }
 
 if(reduce){
-  /* one held frame: the blow has landed and the birds are out */
-  poseDown(L,LX1-54,1,1); poseUp(R,RX1+10,-1,0,0);
-  const h0=headOf(LX1-54,1); birds(h0.x,h0.y-96,0,true);
-} else {
-  requestAnimationFrame(frame);
-}
+  poseMan(MAN.L,LX,1,1,0,0);
+  poseMan(MAN.R,RX+74,-1,1,-86,-10);
+  hat(RX+150,GY-190,300,1,true);
+} else requestAnimationFrame(frame);
 
-/* a tap runs it again from the top */
 $('scene').addEventListener('pointerdown',()=>{ if(!reduce){ t0=performance.now(); turn=0; } });
 
 /* -- ROUTER SEAM: placement runs for three duels, per spec/rating.md --------- */
