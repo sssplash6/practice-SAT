@@ -47,15 +47,15 @@
   }
   /* no fill behind the row: the sticker is the thing being taken, so it is the
      thing that reacts. Its cut line firms up and its face goes white. */
-  @media (hover:hover) and (pointer:fine) { .topic:hover .cut { opacity:.9; } .topic:hover .stk { fill:#fff; } }
+  @media (hover:hover) and (pointer:fine) { .topic:hover .cut { border-color:var(--ink); } .topic:hover .stk { fill:#fff; } }
   .topic:active { transform:scale(.99); }
   .topic-n { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .cut {
     position:relative;
     margin-left:auto; flex:none;
     width:38px; height:38px; display:grid; place-items:center;
-    border:1px dashed var(--ink); border-radius:9px; opacity:.4;
-    transition:opacity .16s var(--ease);
+    border:1px dashed var(--faint); border-radius:9px;
+    transition:border-color .16s var(--ease);
   }
   .n-badge {
     position:absolute; top:-7px; right:-7px; z-index:1;
