@@ -14,7 +14,6 @@
   /* only what the shell does not already define. This scene is wider than the
      others, and `sheet` here is the drawn paper, not the shell's page body. */
   .stage > svg.scene { max-width: 940px; aspect-ratio: 960/640; }
-  .stage .hint { margin-top: -4px; }
   .sheet { fill:#F7F5F0; stroke:var(--ink); stroke-width:1.5; }
   .signt { font:700 10px var(--mono); fill:var(--ink); letter-spacing:.16em; text-transform:uppercase; }
   .name { font:500 9.5px var(--mono); fill:var(--ink); letter-spacing:.04em; }
@@ -48,9 +47,7 @@
           <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
         </svg>
       </button>
-      <p class="head-title">Mixed practice</p>
-      <p class="head-note">Peel a sticker for each question you want. Tap one on the page to take it back.</p>
-      <span class="head-right"><span class="chip"><b data-subject-echo>Math</b></span></span>
+      <h1 class="head-title">Mixed practice</h1>
     </header>
 
     <section class="stage rise">
@@ -65,8 +62,6 @@
     </g>
     <g id="flyer" style="pointer-events:none"></g>
   </svg>
-      <p class="hint" id="hint">Tap a sticker to peel one · hold to keep peeling · tap the page to start over</p>
-      <h1>Make your sheet.</h1>
       <button class="btn" type="button" id="go" disabled>Build a set</button>
     </section>
   </main>
@@ -160,7 +155,8 @@ function buildSheets(domains){
 }
 
 /* peeling: the sticker lifts, turns, and lands on the page -- as its own shape, so the page shows the mix */
-const page=$('page'), pageG=$('pageG'), totalT=$('total'), hint=$('hint'), go=$('go');
+const page=$('page'), pageG=$('pageG'), totalT=$('total'), go=$('go');
+const hint={};   // the hint line is gone; state writes here go nowhere
 function peel(st){ if(total>=CAP){ hint.textContent='Page is full · tap it to start over'; return; }
   st.n++; total++; basket[st.slug]=st.n; st.bt.textContent=st.n; st.badge.setAttribute('opacity',1); totalT.textContent=total; go.disabled=false;
   const n=Math.min(total,78)-1, tx=650+(n%6)*36, ty=60+Math.floor(n/6)*34;

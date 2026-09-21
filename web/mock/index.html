@@ -70,9 +70,7 @@
           <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
         </svg>
       </button>
-      <p class="head-title">Mock tests</p>
-      <p class="head-note">Three boxes of seven. Tap a spine to pull the tape.</p>
-      <span class="head-right"><span class="chip">Whole test</span></span>
+      <h1 class="head-title">Mock tests</h1>
     </header>
 
     <section class="stage rise">
@@ -101,8 +99,6 @@
     <g id="boxes"></g>
     <g id="tape" style="display:none"></g>
   </svg>
-      <p class="hint" id="hint">Tap a tape</p>
-      <h1 id="hl">Pick a tape.</h1>
       <button class="btn" type="button" id="go" disabled>Start mock</button>
     </section>
   </main>
@@ -188,7 +184,8 @@ BOXES.forEach(b=>{
 });
 
 /* ---------------------------------------------------------------- the cassette */
-const tape=$('tape'), deck=$('deck'), led=$('led'), ctr=$('ctr'), hint=$('hint'), hl=$('hl'), go=$('go');
+const tape=$('tape'), deck=$('deck'), led=$('led'), ctr=$('ctr'), go=$('go');
+const hint={}, hl={};   // hint and headline are gone; state writes here go nowhere
 const SX=400, SY=290, SC=.9;                    // held up in the middle of the floor
 let hubs=[], tL, tR;
 function buildTape(s){

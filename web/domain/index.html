@@ -57,9 +57,7 @@
           <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
         </svg>
       </button>
-      <p class="head-title">Domain practice</p>
-      <p class="head-note">Tap a sleeve to put its record on. Tap the deck to take it off.</p>
-      <span class="head-right"><span class="chip"><b data-subject-echo>Math</b></span></span>
+      <h1 class="head-title">Domain practice</h1>
     </header>
 
     <section class="stage rise">
@@ -78,8 +76,6 @@
     <g id="sleeves"></g>
     <g id="fly"></g>
   </svg>
-      <p class="hint" id="hint">Tap a record</p>
-      <h1 id="hl">One domain. Deep.</h1>
       <button class="btn" type="button" id="go" disabled>Start practice</button>
     </section>
   </main>
@@ -167,7 +163,8 @@ function buildDiscs(list) {
 function place(d) { d.g.setAttribute('transform', `translate(${d.x} ${d.y}) scale(${d.s}) rotate(${d.r})`); }
 
 /* ---------------------------------------------------------------- playing */
-const hl = document.getElementById('hl'), hint = document.getElementById('hint'), go = document.getElementById('go');
+const go = document.getElementById('go');
+const hint = {}, hl = {};   // hint and headline are gone; state writes here go nowhere
 let current = null, busy = false, spinning = false, platterA = 0, last = performance.now();
 (function spin(now) { const dt = Math.min(.05, (now - last) / 1000); last = now;
   if (spinning && !reduce) { platterA += 110 * dt; document.getElementById('platter').setAttribute('transform', `rotate(${platterA} ${PLATTER.x} ${PLATTER.y})`);
