@@ -43,10 +43,11 @@
     width:100%; display:flex; align-items:center; gap:10px;
     padding:5px 6px 5px 0; border:0; background:none; cursor:pointer;
     font:500 11.5px var(--mono); letter-spacing:.01em; color:var(--ink); text-align:left;
-    border-radius:6px;
-    transition:background-color .16s var(--ease);
+    transition:transform .14s var(--ease);
   }
-  @media (hover:hover) and (pointer:fine) { .topic:hover { background:var(--sleeve); } .topic:hover .cut { opacity:.85; } .topic:hover .stk { fill:#fff; } }
+  /* no fill behind the row: the sticker is the thing being taken, so it is the
+     thing that reacts. Its cut line firms up and its face goes white. */
+  @media (hover:hover) and (pointer:fine) { .topic:hover .cut { opacity:.9; } .topic:hover .stk { fill:#fff; } }
   .topic:active { transform:scale(.99); }
   .topic-n { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   .cut {
