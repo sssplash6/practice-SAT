@@ -13,31 +13,32 @@
 <style>
   .stage > svg.scene { aspect-ratio: 800 / 540; --scene-ratio: 1.481; cursor: crosshair; }
 
-  /* the butt: a coil of straw on a trestle */
-  .straw   { fill:#F3EFE6; stroke:var(--ink); stroke-width:1.5; }
-  .coil    { fill:none; stroke:var(--ink); stroke-width:.9; opacity:.35; }
-  .wood    { fill:none; stroke:var(--ink); stroke-width:3; stroke-linecap:round; }
-  .woodthin{ fill:none; stroke:var(--ink); stroke-width:2; stroke-linecap:round; }
-  .grain   { fill:none; stroke:var(--ink); stroke-width:.8; opacity:.3; stroke-linecap:round; }
+  /* hewn timber: filled and tapered, not a uniform stroke */
+  .timber { fill:#EDE8DE; stroke:var(--ink); stroke-width:1.5; stroke-linejoin:round; }
+  .grain  { fill:none; stroke:var(--ink); stroke-width:.7; opacity:.32; stroke-linecap:round; }
+  .lash   { fill:none; stroke:var(--ink); stroke-width:1.5; stroke-linecap:round; }
 
-  /* the rings. Orange is the gold, and the only place it sits at rest. */
-  .ring    { fill:#FFFFFF; stroke:var(--ink); stroke-width:1.4; }
-  .ring-alt{ fill:#F6F4F0; stroke:var(--ink); stroke-width:1.4; }
-  .gold    { fill:var(--amber); stroke:var(--amber); }
+  /* the boss: coiled straw, bound with cord */
+  .straw  { fill:#F2EDE1; stroke:var(--ink); stroke-width:1.6; }
+  .coil   { fill:none; stroke:var(--ink); stroke-width:.85; opacity:.4; stroke-linecap:round; }
+  .cord   { fill:none; stroke:var(--ink); stroke-width:1.2; opacity:.65; }
+
+  /* the rings, painted on by hand: warm whites, uneven line */
+  .ring   { fill:#FFFDF9; stroke:var(--ink); stroke-width:1.5; }
+  .ring-alt { fill:#F4F0E7; stroke:var(--ink); stroke-width:1.5; }
+  .gold   { fill:var(--amber); stroke:var(--amber); }
 
   /* the bow */
-  .limb   { fill:none; stroke:var(--ink); stroke-width:5.5; stroke-linecap:round; }
-  .horn   { fill:none; stroke:var(--ink); stroke-width:3; stroke-linecap:round; }
-  .string { fill:none; stroke:var(--ink); stroke-width:1.3; }
-  .grip   { fill:var(--ink); }
+  .limb   { fill:#E6DCC9; stroke:var(--ink); stroke-width:1.4; stroke-linejoin:round; }
+  .stave  { fill:none; stroke:var(--ink); stroke-width:.7; opacity:.38; stroke-linecap:round; }
+  .horn   { fill:#F6F4F0; stroke:var(--ink); stroke-width:1.4; }
+  .string { fill:none; stroke:var(--ink); stroke-width:1.2; }
+  .wrap   { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; }
   .shaft  { fill:none; stroke:var(--ink); stroke-width:1.8; stroke-linecap:round; }
   .head   { fill:var(--ink); }
   .fletch { fill:var(--mat); stroke:var(--ink); stroke-width:1; stroke-linejoin:round; }
 
-  /* the aim, and what a hit throws off */
-  .retic  { fill:none; stroke:var(--amber); stroke-width:1.6; stroke-linecap:round; }
   .spark  { stroke:var(--amber); stroke-width:2; stroke-linecap:round; }
-
   .tallymk  { fill:none; stroke:var(--ink); stroke-width:1.6; stroke-linecap:round; }
   .tallymk.spent { opacity:.22; }
   .tnum   { font:900 30px var(--font); fill:var(--ink); letter-spacing:-.03em; }
@@ -70,13 +71,11 @@
     <section class="stage rise">
       <svg class="scene" id="scene" viewBox="0 0 800 540" aria-hidden="true">
         <g id="stand"></g>
-        <g id="butt"></g>
-        <g id="rings"></g>
+        <g id="boss"></g>
         <g id="shafts"></g>
         <g id="sparks"></g>
         <g id="bow"></g>
         <g id="arrow"></g>
-        <g id="retic" style="display:none"></g>
         <g id="tally"></g>
         <g class="mute" id="mute"></g>
       </svg>
@@ -96,7 +95,6 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const easeOut=k=>1-Math.pow(1-k,3);
 const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();
   (function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(performance.now())});
-
 /* ---------------------------------------------------------------- sound
    All synthesised, nothing fetched. Nothing makes a noise until you put a
    finger on the bow, so the page never speaks first. */
@@ -182,74 +180,108 @@ const snd=(()=>{
   };
 })();
 
+
 /* ---------------------------------------------------------------- the scene
-   A straw butt on a trestle, and a longbow held side on. Pull anywhere to
-   draw, move to aim, let go to loose. Five arrows to an end, which is the
-   five questions a duel is. */
-const TC={x:532,y:238}, RINGS=[130,104,78,52,26], STRAW=146;
-const BOWX=176, NOCKY=238, TIPT=86, TIPB=390, PULL=68, ARROW=165;
+   A coiled straw boss lashed to a hewn trestle, and a longbow held side on.
+   We are standing at the archer's shoulder, so the boss is turned away from
+   us: it is drawn on a tilted, foreshortened plane, not face on. */
+const TC={x:540,y:232}, RINGS=[130,104,78,52,26], STRAW=148;
+const LEAN=-9, SQUASH=.8;                       // the boss leans back and away
+const BOWX=186, NOCKY=236, TIPT=84, TIPB=392, PULL=70, ARROW=168;
 const ENDS=5;
 
-/* the butt */
+/* a limb is thick at the grip and thin at the nocks, so it is a filled
+   outline around the curve rather than one weight of stroke */
+function tapered(p0,pc,p1,wMid,wEnd,steps=26){
+  const A=[],B=[];
+  for(let i=0;i<=steps;i++){
+    const t=i/steps;
+    const x=(1-t)*(1-t)*p0.x+2*(1-t)*t*pc.x+t*t*p1.x;
+    const y=(1-t)*(1-t)*p0.y+2*(1-t)*t*pc.y+t*t*p1.y;
+    const dx=2*(1-t)*(pc.x-p0.x)+2*t*(p1.x-pc.x);
+    const dy=2*(1-t)*(pc.y-p0.y)+2*t*(p1.y-pc.y);
+    const L=Math.hypot(dx,dy)||1, w=(wEnd+(wMid-wEnd)*Math.sin(Math.PI*t))/2;
+    A.push(`${(x-dy/L*w).toFixed(1)},${(y+dx/L*w).toFixed(1)}`);
+    B.push(`${(x+dy/L*w).toFixed(1)},${(y-dx/L*w).toFixed(1)}`);
+  }
+  return 'M'+A.join('L')+'L'+B.reverse().join('L')+'Z';
+}
+
+/* the trestle: rough timber, lashed at the joints */
 (()=>{
   const st=$('stand');
-  el('path',{class:'wood',d:`M${TC.x-64} ${TC.y+96} L${TC.x-112} 496`},st);
-  el('path',{class:'wood',d:`M${TC.x+64} ${TC.y+96} L${TC.x+112} 496`},st);
-  el('path',{class:'wood',d:`M${TC.x-30} ${TC.y+150} L${TC.x+30} ${TC.y+150}`},st);
-  el('path',{class:'woodthin',d:`M${TC.x-96} 420 L${TC.x+96} 420`},st);
-  [[-104,470],[92,470]].forEach(([dx,y])=>el('path',{class:'grain',d:`M${TC.x+dx} ${y} l6 -22`},st));
-
-  const b=$('butt');
-  el('circle',{class:'straw',cx:TC.x,cy:TC.y,r:STRAW},b);
-  for(let i=0;i<64;i++){                       // the coil of a straw boss, seen end on
-    const a=i/64*Math.PI*2, c=Math.cos(a), s=Math.sin(a);
-    el('line',{class:'coil',x1:TC.x+c*(RINGS[0]+3),y1:TC.y+s*(RINGS[0]+3),x2:TC.x+c*(STRAW-2),y2:TC.y+s*(STRAW-2)},b);
-  }
-  el('circle',{class:'coil',cx:TC.x,cy:TC.y,r:(RINGS[0]+STRAW)/2},b);
-
-  const g=$('rings');
-  RINGS.forEach((r,i)=>el('circle',{class:i===RINGS.length-1?'ring gold':(i%2?'ring-alt':'ring'),cx:TC.x,cy:TC.y,r},g));
+  const beam=(x1,y1,x2,y2,w)=>{
+    const a=Math.atan2(y2-y1,x2-x1), nx=-Math.sin(a)*w/2, ny=Math.cos(a)*w/2;
+    el('path',{class:'timber',d:`M${x1+nx} ${y1+ny}L${x2+nx} ${y2+ny}L${x2-nx} ${y2-ny}L${x1-nx} ${y1-ny}Z`},st);
+    for(let i=1;i<4;i++){
+      const t=i/4;
+      el('line',{class:'grain',x1:lerp(x1,x2,t)+nx*.5,y1:lerp(y1,y2,t)+ny*.5,
+                 x2:lerp(x1,x2,t+.14)-nx*.4,y2:lerp(y1,y2,t+.14)-ny*.4},st);
+    }
+  };
+  beam(TC.x-58,TC.y+104,TC.x-116,498,11);
+  beam(TC.x+62,TC.y+96,TC.x+118,498,11);
+  beam(TC.x-100,414,TC.x+104,406,8);
+  [[TC.x-92,418],[TC.x+96,410]].forEach(([x,y])=>{          // cord at each joint
+    el('path',{class:'lash',d:`M${x-9} ${y-8} l18 15M${x-9} ${y+7} l18 -15`},st);
+  });
 })();
 
-/* the bow, redrawn at whatever draw length it is at */
+/* the boss, on its tilted plane */
+const bossPlane=`translate(${TC.x} ${TC.y}) rotate(${LEAN}) scale(1 ${SQUASH})`;
+(()=>{
+  const g=el('g',{transform:bossPlane},$('boss'));
+  el('circle',{class:'straw',cx:0,cy:0,r:STRAW},g);
+  for(let i=0;i<72;i++){                                    // the coil, seen end on
+    const a=i/72*Math.PI*2, c=Math.cos(a), s=Math.sin(a);
+    el('line',{class:'coil',x1:c*(RINGS[0]+4),y1:s*(RINGS[0]+4),x2:c*(STRAW-3),y2:s*(STRAW-3)},g);
+  }
+  [0,1].forEach(i=>{                                        // cord binding the coil, kept on the straw
+    el('circle',{class:'cord',cx:0,cy:0,r:RINGS[0]+7+i*9},g);
+  });
+  RINGS.forEach((r,i)=>el('circle',{class:i===RINGS.length-1?'ring gold':(i%2?'ring-alt':'ring'),cx:0,cy:0,r},g));
+})();
+
+/* where a point lands on that plane, so scoring matches what is drawn */
+function ringAt(p){
+  const a=-LEAN*Math.PI/180, dx=p.x-TC.x, dy=p.y-TC.y;
+  const lx=dx*Math.cos(a)-dy*Math.sin(a);
+  const ly=(dx*Math.sin(a)+dy*Math.cos(a))/SQUASH;
+  const d=Math.hypot(lx,ly);
+  return {d, idx:RINGS.findIndex(r=>d<=r)};
+}
+
+/* ---------------------------------------------------------------- the bow
+   The back of a bow faces what it is shot at, and the string is drawn away
+   from it. The target is to the right, so the limbs bow right and the nock
+   travels left. */
 const bow=$('bow'), arrowG=$('arrow');
 function drawBow(d){
   bow.replaceChildren(); arrowG.replaceChildren();
-  const tipX=BOWX+10*d, ctrl=BOWX-66-20*d, nockX=BOWX+PULL*d;
-  el('path',{class:'limb',d:`M${tipX} ${TIPT} Q${ctrl} ${NOCKY} ${tipX} ${TIPB}`},bow);
-  el('path',{class:'horn',d:`M${tipX} ${TIPT} l7 -9M${tipX} ${TIPB} l7 9`},bow);
+  const tipX=BOWX-8*d, belly=BOWX+64+22*d, nockX=BOWX-PULL*d;
+  const T1={x:tipX,y:TIPT}, T2={x:tipX,y:TIPB}, C={x:belly,y:NOCKY};
+
+  el('path',{class:'limb',d:tapered(T1,C,T2,14,4.5)},bow);
+  el('path',{class:'stave',d:`M${T1.x} ${T1.y} Q${C.x-4} ${C.y} ${T2.x} ${T2.y}`},bow);   // the grain of the stave
+  el('circle',{class:'horn',cx:tipX,cy:TIPT,r:3.4},bow);
+  el('circle',{class:'horn',cx:tipX,cy:TIPB,r:3.4},bow);
   el('path',{class:'string',d:`M${tipX} ${TIPT} L${nockX} ${NOCKY} L${tipX} ${TIPB}`},bow);
-  /* the belly of a quadratic sits midway between its ends and its control,
-     not on the control, which is where the grip was floating */
-  el('rect',{class:'grip',x:(tipX+ctrl)/2-4.5,y:NOCKY-26,width:9,height:52,rx:4},bow);
+
+  const gx=(tipX+C.x)/2;                                    // the belly, where it is held
+  for(let i=-3;i<=3;i++) el('line',{class:'wrap',x1:gx-5,y1:NOCKY+i*7.5,x2:gx+5,y2:NOCKY+i*7.5-3},bow);
 
   if(d<=0) return;
-  const a=aimAngle(nockX);                     // the shaft follows where you are looking
-  const g=el('g',{transform:`translate(${nockX} ${NOCKY}) rotate(${a})`},arrowG);
+  const g=el('g',{transform:`translate(${nockX} ${NOCKY}) rotate(${aimAngle(nockX)})`},arrowG);
   el('line',{class:'shaft',x1:0,y1:0,x2:ARROW,y2:0},g);
-  el('path',{class:'head',d:`M${ARROW} 0 l-13 -5 v10 z`},g);
-  el('path',{class:'fletch',d:'M2 0 l20 -7 l7 7 l-7 7 z'},g);
+  el('path',{class:'head',d:`M${ARROW} 0 l-14 -5 v10 z`},g);
+  el('path',{class:'fletch',d:'M2 0 l21 -7 l7 7 l-7 7 z'},g);
 }
 function aimAngle(nockX){
   if(!aim) return 0;
-  return clamp(Math.atan2(aim.y-NOCKY,aim.x-nockX)*180/Math.PI,-26,26);
+  return clamp(Math.atan2(aim.y-NOCKY,aim.x-nockX)*180/Math.PI,-24,24);
 }
 
-/* the reticle */
-(()=>{
-  const r=$('retic');
-  el('circle',{class:'retic',cx:0,cy:0,r:19},r);
-  el('path',{class:'retic',d:'M-29 0h13M16 0h13M0 -29v13M0 16v13'},r);
-  el('circle',{class:'retic',cx:0,cy:0,r:2.2,fill:'#F18508'},r);
-})();
-const retic=$('retic');
-function moveRetic(){
-  if(!aim){ retic.style.display='none'; return; }
-  retic.style.display='';
-  retic.setAttribute('transform',`translate(${aim.x} ${aim.y})`);
-}
-
-/* the end: five arrows, and what they scored */
+/* the end: five arrows and what they scored */
 let left=ENDS, score=0;
 function paintTally(){
   const t=$('tally'); t.replaceChildren();
@@ -259,19 +291,15 @@ function paintTally(){
   }
   const n=el('text',{class:'tnum',x:58,y:512},t); n.textContent=score;
   const k=el('text',{class:'tkey',x:58+(score>99?58:score>9?40:22),y:512},t); k.textContent='points';
-
-  /* an empty quiver needs to say so, or the tap that refills it reads as the
-     round being wiped for no reason */
-  if(left<=0){
-    const g=el('g',{class:'reload',transform:'translate(190 455)'},t);
+  if(left<=0){                                              // an empty quiver has to say so
+    const g=el('g',{transform:'translate(190 455)'},t);
     el('path',{d:'M-9 0a9 9 0 1 0 3-6.7',fill:'none',stroke:'#F18508','stroke-width':2,'stroke-linecap':'round'},g);
     el('path',{d:'M-7 -9 l1 4.6 l4.6 -1',fill:'none',stroke:'#F18508','stroke-width':2,'stroke-linecap':'round','stroke-linejoin':'round'},g);
   }
 }
 
 /* ---------------------------------------------------------------- shooting */
-let aim=null, drawing=false, drawStart=0, busy=false, raf=0;
-
+let aim={x:TC.x,y:TC.y}, drawing=false, drawStart=0, busy=false, raf=0;
 const svg=$('scene');
 function toScene(e){
   const p=svg.createSVGPoint(); p.x=e.clientX; p.y=e.clientY;
@@ -280,26 +308,21 @@ function toScene(e){
   return {x:clamp(q.x,TC.x-215,TC.x+205), y:clamp(q.y,40,470)};
 }
 const drawAmount=()=>drawing?clamp((performance.now()-drawStart)/620,0,1):0;
-
 function loop(){
   if(!drawing) return;
-  const d=drawAmount();
-  drawBow(d); snd.drawTo(d);
+  const d=drawAmount(); drawBow(d); snd.drawTo(d);
   raf=requestAnimationFrame(loop);
 }
 
 svg.addEventListener('pointerdown',e=>{
-  if(busy||left<=0) { if(left<=0) reload(); return; }
+  if(busy) return;
+  if(left<=0){ reload(); return; }
   try{ svg.setPointerCapture(e.pointerId); }catch(_){}
-  aim=toScene(e)||aim; moveRetic();
+  aim=toScene(e)||aim;
   drawing=true; drawStart=performance.now();
-  snd.nock(); snd.drawStart();
-  loop();
+  snd.nock(); snd.drawStart(); loop();
 });
-svg.addEventListener('pointermove',e=>{
-  if(!drawing) return;
-  aim=toScene(e)||aim; moveRetic();
-});
+svg.addEventListener('pointermove',e=>{ if(drawing) aim=toScene(e)||aim; });
 ['pointerup','pointercancel'].forEach(ev=>svg.addEventListener(ev,()=>{
   if(!drawing) return;
   const d=drawAmount();
@@ -308,25 +331,23 @@ svg.addEventListener('pointermove',e=>{
 }));
 
 async function loose(d){
-  busy=true;
-  snd.loose(d);
-  const nockX=BOWX+PULL*d;
+  busy=true; snd.loose(d);
+  const from={x:BOWX-PULL*d,y:NOCKY};
   drawBow(0);
-  retic.style.display='none';
 
-  /* a shot let go early flies weak and drops: the spread closes as you pull */
+  /* pull time buys both power and accuracy: a snatched shot scatters, and a
+     very short one never gets there */
   const spread=(1-d)*74;
   const target={
     x:aim.x+(Math.random()*2-1)*spread,
     y:aim.y+(Math.random()*2-1)*spread+(d<.34?(1-d)*150:0),
   };
-  const from={x:nockX,y:NOCKY};
-  const ctrl={x:(from.x+target.x)/2,y:Math.min(from.y,target.y)-52-40*(1-d)};
+  const ctrl={x:(from.x+target.x)/2,y:Math.min(from.y,target.y)-54-40*(1-d)};
 
   const fly=el('g',{},$('shafts'));
-  const sh=el('line',{class:'shaft',x1:-ARROW*.62,y1:0,x2:0,y2:0},fly);
-  el('path',{class:'head',d:'M0 0 l-13 -5 v10 z'},fly);
-  el('path',{class:'fletch',d:`M${-ARROW*.6} 0 l20 -7 l7 7 l-7 7 z`},fly);
+  el('line',{class:'shaft',x1:-ARROW*.62,y1:0,x2:0,y2:0},fly);
+  el('path',{class:'head',d:'M0 0 l-14 -5 v10 z'},fly);
+  el('path',{class:'fletch',d:`M${-ARROW*.6} 0 l21 -7 l7 7 l-7 7 z`},fly);
   snd.fly();
 
   await tween(reduce?1:340,k=>{
@@ -339,14 +360,12 @@ async function loose(d){
   fly.remove();
 
   land(target,ctrl);
-  left--; paintTally();
-  busy=false;
+  left--; paintTally(); busy=false;
 }
 
 function land(p,ctrl){
-  const dist=Math.hypot(p.x-TC.x,p.y-TC.y);
-  const ri=RINGS.findIndex(r=>dist<=r);
-  const pts=ri<0?0:(RINGS.length-ri)*2;                 // 2 at the rim, 10 in the gold
+  const {d,idx}=ringAt(p);
+  const pts=idx<0?0:(RINGS.length-idx)*2;             // 2 at the rim, 10 in the gold
   const ang=Math.atan2(p.y-ctrl.y,p.x-ctrl.x)*180/Math.PI;
 
   const g=el('g',{transform:`translate(${p.x} ${p.y}) rotate(${ang})`},$('shafts'));
@@ -355,13 +374,11 @@ function land(p,ctrl){
   if(!reduce) tween(160,k=>g.setAttribute('transform',
     `translate(${p.x} ${p.y}) rotate(${ang+Math.sin(k*Math.PI*3)*(1-k)*7})`));
 
-  if(dist<=STRAW){ snd.thud(); if(pts){ snd.ting(pts); spark(p,pts); } else snd.straw(); }
+  if(d<=STRAW){ snd.thud(); if(pts){ snd.ting(pts); spark(p,pts); } else snd.straw(); }
   else snd.straw();
-
   if(pts){ score+=pts; flashScore(p,pts); }
 }
 
-/* each hit throws a few orange sparks off the boss */
 function spark(p,pts){
   if(reduce) return;
   const n=4+pts/2, g=el('g',{},$('sparks'));
@@ -386,10 +403,7 @@ function flashScore(p,pts){
   tween(760,k=>{ t.setAttribute('y',p.y-26-k*26); t.setAttribute('opacity',1-k*k); },k=>k).then(()=>t.remove());
 }
 
-function reload(){
-  $('shafts').replaceChildren();
-  left=ENDS; score=0; paintTally(); snd.reload();
-}
+function reload(){ $('shafts').replaceChildren(); left=ENDS; score=0; paintTally(); snd.reload(); }
 
 /* ---------------------------------------------------------------- the mute */
 (()=>{
