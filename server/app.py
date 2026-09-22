@@ -25,7 +25,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, EmailStr, Field
 
-from . import blueprint, db, drill, mail, practice, progress, scoring
+from . import blueprint, daily, db, drill, mail, practice, progress, scoring
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s %(message)s")
 log = logging.getLogger("satf")
@@ -760,6 +760,98 @@ def drill_finish(sid: str, x_learner: str | None = Header(default=None)) -> dict
     out = drill.finish(row)
     out["next"] = progress.coach(learner, count=per_session(profile(learner)))
     return out
+
+
+# ------------------------------------------------------- the day, for everyone
+
+def qotd_feedback(q: dict, given, day: str) -> dict:
+    ok = scoring.is_correct(q, given)
+    reason = ""
+    if not ok and isinstance(given, int) and 0 <= given < 4:
+        reason = (q.get("reasons") or [""] * 4)[given]
+    crowd = db.one("SELECT COUNT(*) n, COALESCE(SUM(correct), 0) r FROM attempts WHERE session=?",
+                   f"qotd:{day}")
+    return {"correct": ok, "given": given, "answer": q["answer"],
+            "answer_index": "ABCD".index(q["answer"]),
+            "mistake": reason[:1].upper() + reason[1:] if reason else None,
+            "rationale": q["rationale"],
+            "crowd": {"answered": crowd["n"], "right": crowd["r"]}}
+
+
+@app.get("/api/qotd")
+def get_qotd(x_learner: str | None = Header(default=None)) -> dict:
+    day = daily.today()
+    q = daily.question(day)
+    out = {"day": day, "question": drill.public(q), "mine": None}
+    if x_learner and LEARNER_OK.match(x_learner.strip()):
+        had = db.one("SELECT given FROM attempts WHERE learner=? AND session=?",
+                     x_learner.strip(), f"qotd:{day}")
+        if had:
+            given = int(had["given"]) if had["given"] is not None and had["given"].isdigit() else had["given"]
+            out["mine"] = qotd_feedback(q, given, day)
+    return out
+
+
+class Reply(BaseModel):
+    answer: int | str
+
+
+@app.post("/api/qotd")
+def answer_qotd(body: Reply, x_learner: str | None = Header(default=None)) -> dict:
+    """One answer a day. A second one is a double tap, and gets the first back."""
+    learner = learner_of(x_learner)
+    day = daily.today()
+    q = daily.question(day)
+    had = db.one("SELECT given FROM attempts WHERE learner=? AND session=?", learner, f"qotd:{day}")
+    if had:
+        given = int(had["given"]) if had["given"] is not None and had["given"].isdigit() else had["given"]
+        return qotd_feedback(q, given, day)
+    progress.record(learner, f"qotd:{day}", q, body.answer)
+    return qotd_feedback(q, body.answer, day)
+
+
+def challenge_row(learner: str, day: str):
+    return db.one("SELECT * FROM sessions WHERE kind='challenge' AND learner=? AND day=?", learner, day)
+
+
+@app.get("/api/challenge")
+def get_challenge(x_learner: str | None = Header(default=None)) -> dict:
+    learner = learner_of(x_learner)
+    day = daily.today()
+    row = challenge_row(learner, day)
+    b = daily.board(day, learner, limit=5)
+    return {"day": day, "count": daily.CHALLENGE_SIZE,
+            "seconds": daily.CHALLENGE_SIZE * SECONDS_PER_QUESTION,
+            "session": row["id"] if row else None,
+            "finished": bool(row and row["finished"]),
+            "board": b}
+
+
+@app.post("/api/challenge/start")
+def start_challenge(x_learner: str | None = Header(default=None)) -> dict:
+    """Today's ten, one sitting each. Coming back resumes it; it never restarts."""
+    learner = learner_of(x_learner)
+    day = daily.today()
+    row = challenge_row(learner, day)
+    if row is None:
+        qs = daily.challenge(day)
+        sid = secrets.token_urlsafe(16)
+        drill.create(learner, sid, list(dict.fromkeys(q["topic"] for q in qs)), len(qs), None, True,
+                     "challenge", items=[[q["key"], q["seed"]] for q in qs],
+                     kind="challenge", fixed=True, day=day)
+        row = session_or_404(sid)
+        log.info("challenge %s started by %s", day, learner[:12])
+    if row["finished"]:
+        return {**drill.state(row), "done": True}
+    return {**drill.state(row), **drill.next_question(row)}
+
+
+@app.get("/api/challenge/board")
+def challenge_board(day: str | None = None, x_learner: str | None = Header(default=None)) -> dict:
+    if day and not DATE_OK.match(day):
+        raise HTTPException(422, "day is YYYY-MM-DD")
+    me = x_learner.strip() if x_learner and LEARNER_OK.match(x_learner.strip()) else None
+    return daily.board(day or daily.today(), me)
 
 
 @app.get("/api/health")

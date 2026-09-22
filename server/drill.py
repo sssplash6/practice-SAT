@@ -151,17 +151,21 @@ def _serve(row, cfg: dict, served: list[dict]) -> dict | None:
 
 def create(learner: str, sid: str, topics: list[str], count: int | None,
            difficulty: list[str] | None, timed: bool, source: str,
-           queue: list[str] | None = None, items: list[list] | None = None) -> None:
+           queue: list[str] | None = None, items: list[list] | None = None,
+           kind: str = "drill", fixed: bool = False, day: str | None = None) -> None:
+    """A fixed set (the challenge) is the same for everyone, so it has no
+    repairs and never grows; the answer is still shown after each question."""
     every = set(topics) | {topic_of(t) for t in (queue or [])} | {topic_of(t) for t, _ in (items or [])}
     cfg = {
         "topics": topics, "count": count, "total": count,
         "difficulty": [d for d in (difficulty or TIERS) if d in TIERS] or list(TIERS),
-        "timed": bool(timed), "source": source, "turn": 0,
+        "timed": bool(timed), "source": source, "turn": 0, "fixed": fixed,
         "queue": list(queue or []), "items": [list(i) for i in (items or [])],
         "before": {t: progress.topic_mastery(learner, t) for t in every},
     }
-    db.run("INSERT INTO sessions (id, kind, learner, started, cfg, questions) VALUES (?,?,?,?,?,?)",
-           sid, "drill", learner, progress.now(), json.dumps(cfg), "[]")
+    db.run("INSERT INTO sessions (id, kind, learner, started, cfg, questions, day)"
+           " VALUES (?,?,?,?,?,?,?)",
+           sid, kind, learner, progress.now(), json.dumps(cfg), "[]", day)
 
 
 def state(row) -> dict:
@@ -169,7 +173,7 @@ def state(row) -> dict:
     cfg, served, answers = _cfg(row), _served(row), db.load_answers(row)
     current = served[-1] if served and served[-1]["id"] not in answers else None
     return {
-        "id": row["id"], "mode": "drill", "topics": cfg.get("topics", []),
+        "id": row["id"], "mode": row["kind"], "topics": cfg.get("topics", []),
         "total": cfg.get("total"), "timed": cfg.get("timed", False),
         "seconds": (cfg["count"] * blueprint.MODULE_SECONDS // blueprint.MODULE_SIZE)
                    if cfg.get("timed") and cfg.get("count") else None,
@@ -209,7 +213,7 @@ def answer(row, qid: str, given, ms: int | None) -> dict:
     answers[qid] = given
     db.save_answers(row["id"], answers)
 
-    if not filed["correct"]:
+    if not filed["correct"] and not cfg.get("fixed"):
         cfg["repair"] = q["key"]
         if cfg.get("total") is not None:
             cfg["total"] += 1                        # the set grows to fit the repair
@@ -265,8 +269,9 @@ def finish(row) -> dict:
               for t in db.rows("SELECT label, topic FROM traps WHERE learner=? AND closed>=?",
                                learner, row["started"])]
     result = {
-        "mode": "drill", "asked": len(got), "right": sum(a["correct"] for a in got),
+        "mode": row["kind"], "asked": len(got), "right": sum(a["correct"] for a in got),
         "topics": topics_out, "opened": opened, "closed": closed,
+        "ms": sum(r["ms"] or 0 for r in db.rows("SELECT ms FROM attempts WHERE session=?", row["id"])),
     }
     if not row["finished"]:
         db.run("UPDATE sessions SET finished=?, result=? WHERE id=?",

@@ -503,6 +503,51 @@ def check_learner(c) -> None:
     assert first_fix["key"] == missed_keys[0] and first_fix["stem"] != qs1[20]["stem"]
     print(f"ok  'fix these' turns {fix['total']} misses into fresh questions on the same templates")
 
+    # --- the question of the day: one question, everyone, one answer each --------
+    qd = c.get("/api/qotd").json()
+    for bad in LEAKS:
+        assert bad not in qd["question"], f"{bad} leaked from the question of the day"
+    from server import daily
+    kq = daily.question(qd["day"])
+    assert c.get("/api/qotd").json()["question"]["stem"] == qd["question"]["stem"], "it changed"
+    wrong = keyed_answer(kq, False)
+    got = c.post("/api/qotd", headers=H, json={"answer": wrong}).json()
+    assert got["correct"] is False and got["mistake"] and got["crowd"]["answered"] == 1
+    again = c.post("/api/qotd", headers=H, json={"answer": keyed_answer(kq, True)}).json()
+    assert again["correct"] is False, "a second answer replaced the first"
+    c.post("/api/qotd", headers={"X-Learner": "a:qotdother"}, json={"answer": keyed_answer(kq, True)})
+    mine = c.get("/api/qotd", headers=H).json()["mine"]
+    assert mine and mine["crowd"] == {"answered": 2, "right": 1}, mine
+    print("ok  the question of the day is one question, one answer each, with the crowd's count")
+
+    # --- the challenge: the same ten for everyone, ranked --------------------------
+    def play(headers, right_upto):
+        st = c.post("/api/challenge/start", headers=headers).json()
+        sid = st["id"]
+        assert st["total"] == 10 and st["mode"] == "challenge"
+        for i in range(10):
+            cur = stored(sid)[-1]
+            fb = c.post(f"/api/drill/{sid}/answer", headers=headers,
+                        json={"question_id": cur["id"], "answer": keyed_answer(cur, i < right_upto)}).json()
+            assert fb["total"] == 10, "a challenge grew a repair"
+            nx = c.post(f"/api/drill/{sid}/next", headers=headers).json()
+            if nx.get("done"):
+                break
+        c.post(f"/api/drill/{sid}/finish", headers=headers)
+        return sid
+
+    a = play(H, 6)
+    B = {"X-Learner": "a:challengeb"}
+    b = play(B, 9)
+    assert [q["stem"] for q in stored(a)] == [q["stem"] for q in stored(b)], "two students got different sets"
+    again = c.post("/api/challenge/start", headers=H).json()
+    assert again["id"] == a and again.get("done"), "a second start began a second sitting"
+    board = c.get("/api/challenge/board", headers=H).json()
+    assert board["players"] == 2 and board["entries"][0]["right"] == 9
+    assert board["you"]["rank"] == 2 and board["you"]["name"] == "Ada"
+    assert board["entries"][0]["name"].startswith("Student "), board["entries"][0]
+    print("ok  the challenge is the same ten for everyone, one sitting each, ranked right then time")
+
     hist = c.get("/api/history", headers=H).json()["sessions"]
     kinds = {h["kind"] for h in hist}
     assert {"drill", "mock"} <= kinds, kinds
