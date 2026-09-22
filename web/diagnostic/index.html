@@ -5,68 +5,31 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Diagnostic · SAT Freshman</title>
 <meta name="description" content="Find the level to start from, in one sitting.">
-<link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;900&family=DM+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="../assets/app.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
 <style>
-  .open {
-    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:clamp(26px,5vh,44px); padding:24px var(--gutter) 48px; text-align:center;
-  }
-
-  .open h2 {
-    margin:0;
-    font:900 clamp(2.4rem,8vw,4.4rem)/.98 var(--font);
-    letter-spacing:-.045em; text-wrap:balance;
-  }
-
-  .acts { display:flex; align-items:center; gap:18px; flex-wrap:wrap; justify-content:center; }
-
-  /* skip is the way out, not an offer: text, and only as loud as it needs to be */
-  .txt {
-    appearance:none; border:0; background:none; cursor:pointer;
-    padding:0 2px; min-height:46px;
-    font:600 14.5px var(--font); color:var(--soft);
-    transition:color .16s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine) { .txt:hover { color:var(--ink); } }
+  .door { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end;
+          border-radius: 14px; padding: 28px; background: var(--wash); max-width: 760px; }
+  .door .num { font-size: clamp(64px, 10vw, 104px); display: block; margin-top: 8px; }
+  .door .meta { display: block; margin-top: 10px; color: var(--ink); }
+  @media (max-width: 560px) { .door { grid-template-columns: 1fr; } }
 </style>
 </head>
-<body data-nav="diagnostic">
+<body data-page="diagnostic">
+<header id="bar"></header>
 
-<a class="skip" href="#main">Skip to content</a>
+<main class="page">
+  <div class="door rise">
+    <div><span class="k">Diagnostic</span><span class="num">20</span><span class="meta">questions · 32 min</span></div>
+    <div><a class="pill" href="/test/">Start</a></div>
+  </div>
+</main>
 
-<div class="app">
-  <aside class="rail"></aside>
-
-  <main class="main" id="main">
-    <header class="head">
-      <button class="rail-toggle" type="button" aria-label="Show navigation" aria-expanded="false">
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-        </svg>
-      </button>
-      <h1 class="head-title">Diagnostic</h1>
-    </header>
-
-    <section class="open">
-      <h2 class="rise">Diagnostic test</h2>
-      <div class="acts rise rise-2">
-        <button class="txt" type="button" id="skip">Skip</button>
-        <button class="btn" type="button" id="go">Continue</button>
-      </div>
-    </section>
-  </main>
-</div>
-
-<script src="../assets/app.js"></script>
-<script>
-document.getElementById('skip').addEventListener('click',()=>location.href='../index.html');
-/* the test window opens its own session, so this only has to get out of the way */
-document.getElementById('go').addEventListener('click',()=>location.href='../test/');
-</script>
-
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script>UI.shell();</script>
 </body>
 </html>

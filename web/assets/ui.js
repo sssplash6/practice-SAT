@@ -202,7 +202,7 @@
     ['plan', '/plan/', 'Plan'],
     ['results', '/results/', 'Results'],
   ];
-  const SECTION = { session: 'practice', mistakes: 'practice', report: 'results', challenge: 'today' };
+  const SECTION = { session: 'practice', mistakes: 'practice', report: 'results', challenge: 'today', diagnostic: 'tests' };
 
   function shell() {
     const page = document.body.dataset.page || '';

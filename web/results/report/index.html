@@ -137,7 +137,7 @@
     }
 
     const misses = r.review.filter(q => !q.correct).length;
-    if (misses && r.mode !== 'diagnostic') {
+    if (misses) {
       const b = h('button', { type: 'button', class: 'pill', text: `Fix these · ${misses}` });
       b.addEventListener('click', async () => {
         b.setAttribute('aria-busy', 'true');
