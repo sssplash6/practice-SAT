@@ -73,6 +73,7 @@
     try {
       const r = await api('/me', { method: 'PUT', body: { name: $('#name').value.trim() || null } });
       paintAv(r.profile.name);
+      UI.me(true);
       $('#nameOk').hidden = false;
       setTimeout(() => { $('#nameOk').hidden = true; }, 1600);
     } catch (err) { $('#err').textContent = err.message; $('#err').hidden = false; }

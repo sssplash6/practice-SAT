@@ -236,6 +236,7 @@
   async function me(fresh = false) {
     if (meCache && !fresh) return meCache;
     meCache = await api('/me');
+    if (fresh) paintMe();              // a changed name or streak shows in the bar at once
     return meCache;
   }
   async function paintMe() {
