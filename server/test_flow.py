@@ -28,7 +28,7 @@ os.environ.pop("SATF_SMTP_HOST", None)                       # mail goes to the 
 
 from fastapi.testclient import TestClient                    # noqa: E402
 
-from server import mail, practice, scoring                   # noqa: E402
+from server import mail, practice, progress, scoring         # noqa: E402
 from server.app import app                                   # noqa: E402
 
 mail.OUTBOX = pathlib.Path(_tmp.name) / "outbox"
@@ -567,6 +567,35 @@ def check_learner(c) -> None:
     assert skill and "skill" not in full, "the stored forms carry no skill; this checks the lookup"
     assert trap["label"] == skill[:1].upper() + skill[1:] and trap["label"] != grid["topic_name"], trap
     print(f"ok  a diagnostic grid-in miss is filed as \"{trap['label']}\", not the topic")
+
+    # --- one device takes another's code, and keeps its own work too ---------------
+    def miss(headers, topic):
+        d = c.post("/api/drill", headers=headers, json={"topics": [topic], "count": 2}).json()
+        q = stored(d["id"])[0]
+        c.post(f"/api/drill/{d['id']}/answer", headers=headers,
+               json={"question_id": q["id"], "answer": keyed_answer(q, False)})
+        return q
+
+    OLD, NEW = {"X-Learner": "a:carryold"}, {"X-Learner": "a:carrynew"}
+    shared = miss(OLD, "circles")
+    miss(OLD, "probability")
+    c.put("/api/me", headers=OLD, json={"name": "Bo", "minutes": 45})
+    c.put("/api/me", headers=NEW, json={"minutes": 20})
+    # the same mistake, open under both codes
+    progress.record("a:carrynew", None, shared, keyed_answer(shared, False))
+    assert c.post("/api/me/carry", headers=NEW, json={"learner": "<script>"}).status_code == 400
+    moved = c.post("/api/me/carry", headers=NEW, json={"learner": "a:carryold"}).json()["moved"]
+    assert moved == 2, moved
+    after = c.get("/api/me", headers=NEW).json()
+    assert after["days"]["total"] == 3 and c.get("/api/me", headers=OLD).json()["days"]["total"] == 0
+    assert after["profile"]["name"] == "Bo" and after["profile"]["minutes"] == 20, after["profile"]
+    traps = c.get("/api/mistakes", headers=NEW).json()["traps"]
+    topics = sorted(t["topic"] for t in traps)
+    assert "probability" in topics and "circles" in topics, topics
+    same = [t for t in traps if t["template"] == shared["key"]]
+    assert len(same) == 1 and same[0]["hits"] == 2, same
+    assert not c.get("/api/mistakes", headers=OLD).json()["traps"]
+    print("ok  taking another device's code carries this one's answers, mistakes and profile over")
 
 
 if __name__ == "__main__":

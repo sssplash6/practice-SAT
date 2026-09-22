@@ -79,11 +79,23 @@
     } catch (err) { $('#err').textContent = err.message; $('#err').hidden = false; }
   });
 
-  // the code is the learner: using another device's code makes this browser that learner
-  $('#useForm').addEventListener('submit', e => {
+  // the code is the learner: using another device's code makes this browser
+  // that learner, and what this browser had done goes along with it first
+  $('#useForm').addEventListener('submit', async e => {
     e.preventDefault();
-    const v = $('#other').value.trim();
-    if (!/^[A-Za-z0-9:_\-]{4,120}$/.test(v)) { $('#err').textContent = 'That is not a code.'; $('#err').hidden = false; return; }
+    const v = $('#other').value.trim(), old = UI.learner();
+    const fail = t => { $('#err').textContent = t; $('#err').hidden = false; };
+    $('#err').hidden = true;
+    if (!/^[A-Za-z0-9:_\-]{4,120}$/.test(v)) return fail('That is not a code.');
+    if (v === old) return fail('That is this device.');
+    const as = (path, init = {}) => fetch('/api' + path, { ...init, headers: { 'X-Learner': v, 'content-type': 'application/json' } });
+    try {
+      const m = await (await as('/me')).json();
+      const known = m.days.total > 0 || ['name', 'exam_date', 'target', 'minutes', 'days'].some(k => m.profile[k] != null);
+      if (!known) return fail('Nothing is saved under that code.');
+      const r = await as('/me/carry', { method: 'POST', body: JSON.stringify({ learner: old }) });
+      if (!r.ok) throw new Error(r.status);
+    } catch (_) { return fail('The server is not answering.'); }
     UI.useLearner(v);
     location.href = '/';
   });

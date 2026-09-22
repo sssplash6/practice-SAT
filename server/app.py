@@ -568,6 +568,21 @@ def put_me(body: Me, x_learner: str | None = Header(default=None)) -> dict:
     return {"profile": profile(learner)}
 
 
+class Carry(BaseModel):
+    learner: str = Field(max_length=120)       # the code this device held until now
+
+
+@app.post("/api/me/carry")
+def carry(body: Carry, x_learner: str | None = Header(default=None)) -> dict:
+    """Bring another code's progress into this one, so switching a device to
+    another device's code keeps what both have done."""
+    to = learner_of(x_learner)
+    frm = body.learner.strip()
+    if not LEARNER_OK.match(frm):
+        raise HTTPException(400, "that is not a learner code")
+    return {"moved": 0 if frm == to else progress.carry(frm, to)}
+
+
 def latest_score(learner: str) -> dict | None:
     """The newest section estimate a sitting has produced, and when."""
     for r in db.rows("SELECT id, kind, result, finished FROM sessions WHERE learner=?"

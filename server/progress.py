@@ -159,6 +159,40 @@ def record_paper(learner: str, session: str, questions: list[dict], answers: dic
     return n
 
 
+def carry(frm: str, to: str) -> int:
+    """Move everything one code has done onto another, as one change.
+
+    A student who opens a second device and types in the first one's code
+    must not strand what the second device had already done. A mistake open
+    under both codes stays one mistake: its hits add up and it stays open
+    until both would have closed it. The target's profile keeps what it has
+    set and takes the rest from the other code.
+    """
+    c = db.conn()
+    with c:
+        n = c.execute("SELECT COUNT(*) FROM attempts WHERE learner=?", (frm,)).fetchone()[0]
+        c.execute("UPDATE attempts SET learner=? WHERE learner=?", (to, frm))
+        # ponytail: two sittings of one day's challenge can end up under one code; the board shows both
+        c.execute("UPDATE sessions SET learner=? WHERE learner=?", (to, frm))
+        c.execute("UPDATE traps AS t SET hits = t.hits + s.hits, owed = MAX(t.owed, s.owed),"
+                  " last = MAX(t.last, s.last),"
+                  " closed = CASE WHEN t.closed IS NULL OR s.closed IS NULL THEN NULL"
+                  "          ELSE MAX(t.closed, s.closed) END"
+                  " FROM traps AS s WHERE t.learner=? AND s.learner=?"
+                  " AND s.template = t.template AND s.reason = t.reason", (to, frm))
+        c.execute("UPDATE learners AS t SET"
+                  " name = COALESCE(t.name, s.name), exam_date = COALESCE(t.exam_date, s.exam_date),"
+                  " target = COALESCE(t.target, s.target), minutes = COALESCE(t.minutes, s.minutes),"
+                  " days = COALESCE(t.days, s.days), updated = ?"
+                  " FROM learners AS s WHERE t.id=? AND s.id=?", (now(), to, frm))
+        for table in ("practice_seen", "saved", "traps"):
+            c.execute(f"UPDATE OR IGNORE {table} SET learner=? WHERE learner=?", (to, frm))
+            c.execute(f"DELETE FROM {table} WHERE learner=?", (frm,))
+        c.execute("UPDATE OR IGNORE learners SET id=? WHERE id=?", (to, frm))
+        c.execute("DELETE FROM learners WHERE id=?", (frm,))
+    return n
+
+
 # ------------------------------------------------------------------ the coach
 
 def _days_since(at: str | None, today: dt.date) -> int:
