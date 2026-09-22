@@ -168,11 +168,52 @@ honest 87% with the unreachable ones recorded is worth more than a fabricated
 95%: the figure only means anything while it measures whether wrong answers
 are modelled.
 
+## The serving layer
+
+A student's first move is the diagnostic, and `server/` is what runs it.
+
+```bash
+PYTHONPATH=. python3 tools/build_diagnostics.py    # the ten forms, once
+python3 -m uvicorn server.app:app --port 8000      # the site and the API
+PYTHONPATH=. python3 server/test_flow.py           # the whole flow, end to end
+```
+
+**Ten fixed forms, drawn at random.** A diagnostic is sixteen questions: four
+domains, and from each of them one easy, two medium and one hard. That is not
+the exam blueprint on purpose -- the real test weights Algebra and Advanced
+Math at 35% each against 15% for the other two -- because a diagnostic is
+measuring four things rather than predicting one, so it spends its questions
+evenly. The forms are built ahead of time rather than drawn per student: live
+draws would hit the repeat described below, and would make one student's
+result impossible to reproduce. All 160 questions are distinct, fifteen of the
+nineteen topics appear in every form, and each form runs easiest to hardest the
+way a real module does.
+
+**The key never leaves the process.** Questions go out without the answer, the
+rationale or the distractor reasons; responses come back; marking happens
+server-side. `server/test_flow.py` asserts this against the live payload rather
+than trusting it.
+
+**What the report is allowed to claim.** The digital SAT is scored by item
+response theory over items calibrated on real test-takers, and no raw-to-scaled
+table exists or could. None of those parameters are public, so `scoring.py`
+uses an ordinal heuristic over the College Board's own easy/medium/hard labels
+and says so; calling it IRT would be the one false claim available. The real
+test reports a standard error near 20 points per section off ninety calibrated
+adaptive items. Sixteen uncalibrated ones cannot beat that, so the result is a
+200-point band, and each domain gets a bar and a word rather than a number --
+which is also what the College Board's own report does, with its own warning
+that a four-item domain estimate can make a strong student look weak by chance.
+
+**The test window** (`web/test/`) is deliberately a copy of Bluebook's layout,
+because anything a student has to re-learn on test day is a cost we handed
+them. It keeps the brand orange for every highlight and nothing else.
+
 ## Before a student sees this
 
 Everything above measures whether an item is *right*. None of it measures
 whether the bank is usable as practice. Three gaps, measured rather than
-guessed, and all of them belong to a serving layer that does not exist yet:
+guessed. The first two now have an answer in `server/`; the third does not:
 
 **Difficulty is an inherited label, not a measurement.** A template keeps the
 tier of the source item it was learned from, and nothing checks that a
@@ -185,7 +226,9 @@ hard from a source set that was 20 / 21 / 18, and Circles 50 / 170 / 180 from
 items drawn in twenty-item sets, Circles, Percentages and Linear Equations
 repeated a stem zero times, but Area and Volume repeated 25 and One-Variable
 Data 22 — about one visible repeat every second set. Serving needs
-enumeration by seed plus per-student history, not `random()`.
+enumeration by seed plus per-student history, not `random()`. The diagnostic
+sidesteps this by building its forms once and checking all 160 questions
+against each other; practice, which is unbounded, still needs the history.
 
 **There is no exam blueprint.** The real test weights its domains; nothing
 here knows that, so a practice set drawn from this bank has a distribution

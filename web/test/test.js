@@ -251,7 +251,7 @@
     if (S.ended) return;
     S.ended = true;
     if (!S.id || S.id === 'local') {
-      location.href = '../diagnostic/results.html?demo=1';
+      location.href = '../diagnostic/';      // no server behind this; nothing to mark
       return;
     }
     try {

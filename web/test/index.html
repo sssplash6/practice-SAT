@@ -111,7 +111,13 @@ button { font:inherit; color:inherit; -webkit-tap-highlight-color:transparent; u
 .body { flex:1; min-height:0; display:flex; }
 
 /* R&W sits the passage beside the question, math runs one column */
-.pane { min-width:0; overflow:auto; padding:18px clamp(18px,3.4vw,44px) 26px; position:relative; }
+.pane {
+  min-width:0; overflow:auto; padding:18px clamp(18px,3.4vw,44px) 26px; position:relative;
+  /* A figure and a KaTeX font both land after first paint. Scroll anchoring
+     reads that as content growing above the viewport and scrolls down to
+     compensate, which buries the question header under the rule. */
+  overflow-anchor:none;
+}
 .pane-l { flex:1 1 50%; border-right:1px solid #c9c9c9; }
 .pane-r { flex:1 1 50%; }
 .body[data-layout="single"] .pane-l { display:none; }

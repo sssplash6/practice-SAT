@@ -8,3 +8,10 @@ __pycache__/
 # the PDFs; the keys and transcripts are tracked because the gate reads them.
 material/*.pdf
 material/items/
+
+# The serving layer's runtime state: a student database and the mail that had
+# nowhere to go. forms.json IS tracked -- the ten diagnostics are the product.
+server/*.db
+server/*.db-wal
+server/*.db-shm
+server/outbox/

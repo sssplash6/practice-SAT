@@ -63,8 +63,9 @@
 
 <script src="../assets/app.js"></script>
 <script>
-document.getElementById('skip').addEventListener('click',()=>console.log('[router] /overview'));
-document.getElementById('go').addEventListener('click',()=>console.log('[router] /diagnostic/start'));
+document.getElementById('skip').addEventListener('click',()=>location.href='../index.html');
+/* the test window opens its own session, so this only has to get out of the way */
+document.getElementById('go').addEventListener('click',()=>location.href='../test/');
 </script>
 
 </body>

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Email confirmed · SAT Freshman</title>
+<link rel="icon" href="../assets/mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;900&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/app.css">
+<style>
+  .centre { min-height:100dvh; display:grid; place-items:center; padding:40px var(--gutter); text-align:center; }
+  h1 { font:900 clamp(2rem,6vw,3rem)/1 var(--font); letter-spacing:-.04em; }
+  p { margin-top:12px; color:var(--soft); font-size:14.5px; }
+  .btn { margin-top:26px; }
+</style>
+</head>
+<body>
+<div class="centre">
+  <div class="rise">
+    <h1 id="title">Email confirmed</h1>
+    <p id="note">You are all set.</p>
+    <a class="btn" href="../index.html">Go to overview</a>
+  </div>
+</div>
+<script>
+  if (new URL(location.href).searchParams.get('state') === 'bad') {
+    document.getElementById('title').textContent = 'That link has expired';
+    document.getElementById('note').textContent =
+      'It may have been used already. Your results are safe either way.';
+  }
+</script>
+</body>
+</html>
