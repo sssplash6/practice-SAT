@@ -22,8 +22,16 @@
     letter-spacing:-.045em; text-wrap:balance;
   }
 
-  .acts { display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center; }
-  .acts .btn-quiet { min-height:46px; padding:0 22px; font-size:14.5px; font-weight:700; }
+  .acts { display:flex; align-items:center; gap:18px; flex-wrap:wrap; justify-content:center; }
+
+  /* skip is the way out, not an offer: text, and only as loud as it needs to be */
+  .txt {
+    appearance:none; border:0; background:none; cursor:pointer;
+    padding:0 2px; min-height:46px;
+    font:600 14.5px var(--font); color:var(--soft);
+    transition:color .16s var(--ease);
+  }
+  @media (hover:hover) and (pointer:fine) { .txt:hover { color:var(--ink); } }
 </style>
 </head>
 <body data-nav="diagnostic">
@@ -46,7 +54,7 @@
     <section class="open">
       <h2 class="rise">Diagnostic test</h2>
       <div class="acts rise rise-2">
-        <button class="btn btn-quiet" type="button" id="skip">Skip</button>
+        <button class="txt" type="button" id="skip">Skip</button>
         <button class="btn" type="button" id="go">Continue</button>
       </div>
     </section>
