@@ -80,7 +80,7 @@
     <p class="error" id="err" hidden></p>
     <section class="cal rise rise-3" aria-label="Until the exam">
       <div class="grid7" id="cal"></div>
-      <div class="legend"><span><i class="mk p"></i>Practice</span><span><i class="mk t"></i>Test</span></div>
+      <div class="legend"><span><i class="mk p"></i>Practice</span><span id="legendTest"><i class="mk t"></i>Test</span></div>
     </section>
   </div>
 </main>
@@ -165,13 +165,14 @@
       const past = s < todayIso;
       const cell = h('div', { class: 'cell' + (s === todayIso ? ' today' : '') + (k === 'exam' ? ' exam' : '') + (past || k === 'none' ? ' past' : ''),
                              title: s }, h('span', { class: 'd', text: d.getDate() === 1 || s === iso(start) ? day(s) : String(d.getDate()) }));
-      if (k === 'practice' || k === 'test') {
+      if ((k === 'practice' || k === 'test') && (!past || done[s])) {     // a day gone by shows only what was done
         const mk = h('i', { class: `mk ${k === 'test' ? 't' : 'p'}${done[s] ? ' done' : ''}` });
         cell.append(mk);
       } else if (k === 'exam') cell.append(h('span', { text: 'SAT' }));
       cells.push(cell);
     }
     $('#cal').replaceChildren(...cells);
+    $('#legendTest').hidden = !testOf(P.minutes);
   }
 
   function startBtn(make, where) {

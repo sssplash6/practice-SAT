@@ -102,7 +102,8 @@
     const host = $('#chart');
     const pts = sittings.filter(x => x.estimate).slice(0, 12).reverse();
     if (!pts.length) { host.replaceChildren(h('p', { class: 'empty', text: 'No scored sittings yet.' })); return; }
-    const W = 640, H = 260, L = 38, R = 10, T = 12, B = 30;
+    // drawn at the card's own width, so the labels stay their CSS size on a phone
+    const W = Math.max(280, Math.round(host.clientWidth) || 640), H = W < 480 ? 200 : 260, L = 38, R = 10, T = 12, B = 30;
     const y = v => T + (H - T - B) * (1 - (v - 200) / 600);
     const step = (W - L - R) / Math.max(pts.length, 6);
     const x = i => L + step * (i + .5);
