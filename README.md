@@ -173,7 +173,8 @@ are modelled.
 A student's first move is the diagnostic, and `server/` is what runs it.
 
 ```bash
-PYTHONPATH=. python3 tools/build_diagnostics.py    # the ten forms, once
+PYTHONPATH=. python3 tools/build_diagnostics.py    # the ten diagnostic forms
+PYTHONPATH=. python3 tools/build_mocks.py         # the seven mock sections
 python3 -m uvicorn server.app:app --port 8000      # the site and the API
 PYTHONPATH=. python3 server/test_flow.py           # the whole flow, end to end
 PYTHONPATH=. python3 tools/measure_mix.py          # how repetitive practice is
@@ -211,6 +212,29 @@ adaptive items. Twenty uncalibrated ones cannot beat that, so the result is a
 200-point band, and each domain gets a bar and a word rather than a number --
 which is also what the College Board's own report does, with its own warning
 that a four-item domain estimate can make a strong student look weak by chance.
+
+**Mock sections are the real shape.** Box one holds seven, built by
+`tools/build_mocks.py` into `server/mocks.json`. Each is a full digital SAT
+Math section: two modules of 22 questions, 35 minutes each, 44 in total, and
+the second module chosen from how the first went. Domain counts follow the
+published weights -- 15 Algebra, 15 Advanced Math, 7 Problem-Solving and Data
+Analysis, 7 Geometry and Trigonometry -- with about half of each domain in each
+module, so a student who only reaches module 1 has still met all four.
+Difficulty is interleaved before being dealt to the domains, so every domain
+carries a share of the module's range instead of a corner of it. Modules run
+easiest to hardest, as the real ones do. 462 questions, all distinct, and none
+of them shared with the diagnostic forms.
+
+The adaptive half is the point of the format. Module 1 is marked on its own and
+routes: above 60% earns the harder second module. College Board sets that cut
+at the population median and says so in the Technical Manual, but never
+publishes the threshold, so the 60 is a stated choice and `scoring.py` says so.
+The ceiling is not a choice -- their own simulation of a student who takes the
+easier module and answers every question in it correctly reports a maximum of
+580, so a low route caps there, and the results page says that is why the
+number stopped. What this cannot copy: the real section carries two unscored
+pretest items per module and scores the rest by item response theory. There is
+nothing to pretest here and no calibration to score with, so all 22 count.
 
 **Mixed practice is scheduled, not sampled.** A student picks topics on the
 sticker sheet and asks for a number of questions; `server/practice.py` fills
