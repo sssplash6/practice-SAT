@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Me · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* No account and no billing. A name for the board, and the code that is
+     this learner, which is how progress moves to another device. */
+  .me { display: grid; gap: 36px; max-width: 560px; }
+  .me .k { display: block; margin-bottom: 10px; }
+  .row { display: flex; gap: 10px; align-items: center; }
+  .row .field { flex: 1; }
+  .code { font: 500 15px var(--mono); padding: 13px 14px; border-radius: 10px; background: var(--tile); flex: 1; overflow-x: auto; white-space: nowrap; }
+  .ok { font: 500 12.5px var(--mono); color: var(--soft); }
+  .big { display: flex; align-items: center; gap: 16px; }
+  .big .avatar { width: 64px; height: 64px; font-size: 26px; }
+</style>
+</head>
+<body data-page="me">
+<header id="bar"></header>
+
+<main class="page">
+  <div class="me rise">
+    <div class="big"><span class="avatar" id="av"></span></div>
+
+    <form id="nameForm"><span class="k">Name</span>
+      <div class="row"><input class="field" id="name" maxlength="24" autocomplete="nickname" aria-label="Name">
+        <button type="submit" class="quiet" style="margin:0">Save</button></div>
+      <p class="ok" id="nameOk" hidden>Saved</p>
+    </form>
+
+    <div><span class="k">This device</span>
+      <div class="row"><span class="code" id="code"></span><button type="button" class="quiet" id="copy" style="margin:0">Copy</button></div>
+    </div>
+
+    <form id="useForm"><span class="k">From another device</span>
+      <div class="row"><input class="field" id="other" autocomplete="off" spellcheck="false" aria-label="Code from another device">
+        <button type="submit" class="quiet" style="margin:0">Use</button></div>
+      <p class="error" id="err" hidden></p>
+    </form>
+
+    <div><a class="quiet" href="/plan/">Plan</a></div>
+  </div>
+</main>
+
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script>
+(() => {
+  'use strict';
+  const { api, $ } = UI;
+  UI.shell();
+  $('#code').textContent = UI.learner();
+
+  const paintAv = name => { $('#av').textContent = name ? name.trim()[0].toUpperCase() : ''; if (!name) $('#av').innerHTML = UI.mark(28, '#8A847C'); };
+
+  $('#copy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(UI.learner()); $('#copy').textContent = 'Copied'; }
+    catch (_) {
+      const r = document.createRange(); r.selectNodeContents($('#code'));
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    }
+  });
+
+  $('#nameForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    try {
+      const r = await api('/me', { method: 'PUT', body: { name: $('#name').value.trim() || null } });
+      paintAv(r.profile.name);
+      $('#nameOk').hidden = false;
+      setTimeout(() => { $('#nameOk').hidden = true; }, 1600);
+    } catch (err) { $('#err').textContent = err.message; $('#err').hidden = false; }
+  });
+
+  // the code is the learner: using another device's code makes this browser that learner
+  $('#useForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const v = $('#other').value.trim();
+    if (!/^[A-Za-z0-9:_\-]{4,120}$/.test(v)) { $('#err').textContent = 'That is not a code.'; $('#err').hidden = false; return; }
+    UI.useLearner(v);
+    location.href = '/';
+  });
+
+  (async () => {
+    try {
+      const m = await UI.me();
+      $('#name').value = m.profile.name || '';
+      paintAv(m.profile.name);
+    } catch (_) {}
+  })();
+})();
+</script>
+</body>
+</html>

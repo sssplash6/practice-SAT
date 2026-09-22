@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Plan · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* Three answers make a plan: when the exam is, how long a study day is, and
+     which days they are. What to practise comes from the results, and the
+     plan is recomputed from today every time it is opened, so a missed day
+     never piles up behind the next one. One test day a week, on the last
+     study day, sized to the day. */
+  .setup { display: grid; gap: 30px; max-width: 760px; }
+  .setup .k { display: block; margin-bottom: 8px; }
+  .dates { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 2px; }
+  .dates input { width: auto; height: 38px; padding: 0 10px; font: 500 14px var(--font); margin-left: 8px; }
+  .wk button { min-width: 40px; }
+
+  .head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; }
+  .head .num { font-size: clamp(64px, 10vw, 104px); display: block; }
+  .head .meta { display: block; margin-top: 10px; color: var(--ink); }
+
+  .task { margin-top: 30px; padding: 26px; border-radius: 14px; background: var(--wash); display: grid; gap: 20px; }
+  .task.rest { background: var(--tile); }
+  .task .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .task .chip { background: var(--paper); }
+  .task-foot { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+  .task .h2 { font-size: 22px; }
+
+  .cal { margin-top: 40px; }
+  .cal .k { display: block; margin-bottom: 12px; }
+  .grid7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+  .dh { font: 500 10.5px var(--mono); color: var(--soft); text-align: center; padding-bottom: 4px; }
+  .cell { height: 64px; border-radius: 10px; background: var(--tile); position: relative;
+          display: grid; place-items: center; font: 500 11px var(--mono); color: var(--soft); }
+  @media (max-width: 560px) { .cell { height: 46px; } }
+  .cell.past { background: none; }
+  .cell.none { background: none; }
+  .cell .d { position: absolute; top: 6px; left: 8px; }
+  .mk { width: 10px; height: 10px; display: block; }
+  .mk.p { border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .mk.p.done { background: var(--ink); box-shadow: none; }
+  .mk.t { border-radius: 3px; box-shadow: inset 0 0 0 1.5px var(--ink); width: 14px; }
+  .mk.t.done { background: var(--ink); box-shadow: none; }
+  .cell.today { box-shadow: inset 0 0 0 1.5px var(--ink); background: var(--paper); }
+  .cell.exam { background: var(--amber); color: var(--ink-deep); font-weight: 600; }
+  .legend { margin-top: 14px; display: flex; gap: 18px; flex-wrap: wrap; font: 500 12px var(--mono); color: var(--soft); }
+  .legend span { display: inline-flex; align-items: center; gap: 7px; }
+  @media (max-width: 560px) { .head { grid-template-columns: 1fr; } .cell .d { top: 3px; left: 5px; font-size: 9.5px; } }
+</style>
+</head>
+<body data-page="plan">
+<header id="bar"></header>
+
+<main class="page">
+  <form class="setup rise" id="setup" hidden>
+    <div><span class="k">Exam</span>
+      <div class="choices dates" id="dates" role="group" aria-label="Exam date"></div></div>
+    <div><span class="k">Minutes a day</span>
+      <div class="choices" id="mins" role="group" aria-label="Minutes a day"></div></div>
+    <div><span class="k">Days</span>
+      <div class="choices wk" id="wk" role="group" aria-label="Study days"></div></div>
+    <div><span class="k">Target</span>
+      <div class="choices" id="target" role="group" aria-label="Target Math score"></div></div>
+    <div><button type="submit" class="pill" id="save">Save</button></div>
+    <p class="error" id="serr" hidden></p>
+  </form>
+
+  <div id="plan" hidden>
+    <div class="head rise">
+      <div><span class="num" id="left"></span><span class="meta" id="to"></span></div>
+      <button type="button" class="quiet" id="change">Change</button>
+    </div>
+    <section class="task rise rise-2" id="task" aria-label="Today"></section>
+    <p class="error" id="err" hidden></p>
+    <section class="cal rise rise-3" aria-label="Until the exam">
+      <div class="grid7" id="cal"></div>
+      <div class="legend"><span><i class="mk p"></i>Practice</span><span><i class="mk t"></i>Test</span></div>
+    </section>
+  </div>
+</main>
+
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script>
+(() => {
+  'use strict';
+  const { api, h, day, minutesFor, $ } = UI;
+  UI.shell();
+
+  // the published administrations, 2026-27
+  const SAT_DATES = ['2026-10-03', '2026-11-07', '2026-12-05', '2027-03-13', '2027-05-01', '2027-06-05'];
+  const MINS = [15, 30, 45, 60, 90];
+  const TARGETS = [550, 600, 650, 700, 750, 800];
+  const LET = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const at = s => new Date(s + 'T12:00:00');
+  const dow = d => (d.getDay() + 6) % 7;          // Monday is 0
+  const todayIso = iso(new Date());
+
+  let P = null, T = null;
+  const form = { exam: null, minutes: 30, days: '1111100', target: null };
+
+  /* ---------------------------------------------------------- the plan */
+  function perDay(minutes) { return Math.max(5, Math.min(60, Math.round(minutes * 60 / 95))); }
+  function testOf(minutes) { return minutes >= 70 ? 'section' : minutes >= 35 ? 'module' : null; }
+  function isTestDay(d, days, minutes) {
+    if (!testOf(minutes) || days[dow(d)] !== '1') return false;
+    for (let k = dow(d) + 1; k < 7; k++) if (days[k] === '1') return false;   // the week's last study day
+    return true;
+  }
+  function kindOf(d, p) {
+    const s = iso(d);
+    if (s === p.exam_date) return 'exam';
+    if (s > p.exam_date) return 'none';
+    const eve = new Date(at(p.exam_date)); eve.setDate(eve.getDate() - 1);
+    if (s === iso(eve)) return 'rest';                                         // the day before is off
+    if (p.days[dow(d)] !== '1') return 'rest';
+    return isTestDay(d, p.days, p.minutes) ? 'test' : 'practice';
+  }
+
+  function paintPlan() {
+    $('#setup').hidden = true;
+    $('#plan').hidden = false;
+    const exam = at(P.exam_date), now = at(todayIso);
+    const left = Math.round((exam - now) / 86400000);
+    $('#left').textContent = left;
+    $('#to').textContent = `${left === 1 ? 'day' : 'days'} · ${day(P.exam_date)}${P.target ? ` · ${P.target}` : ''}`;
+
+    const done = Object.fromEntries((T.days.recent || []).map(d => [d.day, d.questions]));
+    const kind = kindOf(now, P);
+    const task = $('#task');
+    task.className = 'task rise rise-2' + (kind === 'rest' || kind === 'none' || kind === 'exam' ? ' rest' : '');
+    task.replaceChildren();
+    if (kind === 'practice') {
+      const c = T.coach;
+      const n = perDay(P.minutes);
+      task.append(h('div', { class: 'chips' }, c.topics.map(t => UI.chip(t))),
+        h('div', { class: 'task-foot' }, h('span', { class: 'meta', text: `${n} questions · ${minutesFor(n)} min` }), startBtn(() => api('/drill', { method: 'POST', body: { topics: c.topics, count: n, source: 'plan' } }), 'session')));
+    } else if (kind === 'test') {
+      const full = testOf(P.minutes) === 'section';
+      task.append(h('span', { class: 'h2', text: full ? 'Section' : 'Module' }),
+        h('div', { class: 'task-foot' }, h('span', { class: 'meta', text: full ? '44 questions · 70 min' : '22 questions · 35 min' }),
+          startBtn(() => api('/mock/new', { method: 'POST', body: { full } }), 'test')));
+    } else if (kind === 'exam') {
+      task.append(h('span', { class: 'h2', text: day(P.exam_date) }));
+    } else {
+      task.append(h('div', { class: 'task-foot' }, h('span', { class: 'h2', text: kind === 'none' ? 'Done' : 'Rest' }),
+        h('a', { class: 'quiet', href: '/practice/', text: 'Practice anyway' })));
+    }
+
+    // until the exam, a week a row, Monday first; at most sixteen weeks shown
+    const start = new Date(now); start.setDate(start.getDate() - dow(start));
+    const end = new Date(exam); end.setDate(end.getDate() + (6 - dow(end)));
+    const cells = LET.map(l => h('span', { class: 'dh', text: l }));
+    let count = 0;
+    for (let d = new Date(start); d <= end && count < 16 * 7; d.setDate(d.getDate() + 1), count++) {
+      const s = iso(d);
+      const k = kindOf(d, P);
+      const past = s < todayIso;
+      const cell = h('div', { class: 'cell' + (s === todayIso ? ' today' : '') + (k === 'exam' ? ' exam' : '') + (past || k === 'none' ? ' past' : ''),
+                             title: s }, h('span', { class: 'd', text: d.getDate() === 1 || s === iso(start) ? day(s) : String(d.getDate()) }));
+      if (k === 'practice' || k === 'test') {
+        const mk = h('i', { class: `mk ${k === 'test' ? 't' : 'p'}${done[s] ? ' done' : ''}` });
+        cell.append(mk);
+      } else if (k === 'exam') cell.append(h('span', { text: 'SAT' }));
+      cells.push(cell);
+    }
+    $('#cal').replaceChildren(...cells);
+  }
+
+  function startBtn(make, where) {
+    const b = h('button', { type: 'button', class: 'pill', text: 'Start' });
+    b.addEventListener('click', async () => {
+      b.setAttribute('aria-busy', 'true');
+      try {
+        const s = await make();
+        location.href = where === 'test' ? `/test/?s=${encodeURIComponent(s.id)}` : `/practice/session/?id=${encodeURIComponent(s.id)}`;
+      } catch (e) { b.removeAttribute('aria-busy'); $('#err').textContent = e.message; $('#err').hidden = false; }
+    });
+    return b;
+  }
+
+  /* ---------------------------------------------------------- the setup */
+  function choice(host, values, label, pick, on) {
+    host.replaceChildren(...values.map(v => {
+      const b = h('button', { type: 'button', 'aria-pressed': String(on(v)), text: label(v) });
+      b.addEventListener('click', () => { pick(v); paintSetup(); });
+      return b;
+    }));
+  }
+  function paintSetup() {
+    $('#setup').hidden = false;
+    $('#plan').hidden = true;
+    const upcoming = SAT_DATES.filter(d => d > todayIso);
+    const dates = $('#dates');
+    choice(dates, upcoming, d => day(d) + (d.slice(0, 4) !== todayIso.slice(0, 4) ? ` ’${d.slice(2, 4)}` : ''),
+           v => { form.exam = v; }, v => form.exam === v);
+    const other = h('input', { class: 'field', type: 'date', min: todayIso, value: form.exam && !upcoming.includes(form.exam) ? form.exam : '', 'aria-label': 'Another date' });
+    other.addEventListener('change', () => { form.exam = other.value || null; paintSetup(); });
+    dates.append(other);
+    choice($('#mins'), MINS, v => String(v), v => { form.minutes = v; }, v => form.minutes === v);
+    choice($('#wk'), [0, 1, 2, 3, 4, 5, 6], i => LET[i], i => {
+      const a = form.days.split('');
+      a[i] = a[i] === '1' ? '0' : '1';
+      if (a.includes('1')) form.days = a.join('');
+    }, i => form.days[i] === '1');
+    choice($('#target'), TARGETS, v => String(v), v => { form.target = form.target === v ? null : v; }, v => form.target === v);
+    $('#save').disabled = !form.exam;
+  }
+  $('#setup').addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!form.exam) return;
+    try {
+      const r = await api('/me', { method: 'PUT', body: { exam_date: form.exam, minutes: form.minutes, days: form.days, target: form.target } });
+      P = r.profile;
+      T = await api('/today');
+      paintPlan();
+    } catch (err) { $('#serr').textContent = err.message; $('#serr').hidden = false; }
+  });
+  $('#change').addEventListener('click', () => {
+    Object.assign(form, { exam: P.exam_date, minutes: P.minutes || 30, days: P.days || '1111100', target: P.target });
+    paintSetup();
+  });
+
+  (async () => {
+    try { T = await api('/today'); } catch (_) { return; }
+    P = T.profile;
+    if (P.exam_date && P.exam_date >= todayIso && P.minutes && P.days) paintPlan();
+    else {
+      form.exam = SAT_DATES.find(d => d > todayIso) || null;
+      if (P.minutes) form.minutes = P.minutes;
+      if (P.days) form.days = P.days;
+      if (P.target) form.target = P.target;
+      paintSetup();
+    }
+  })();
+})();
+</script>
+</body>
+</html>
