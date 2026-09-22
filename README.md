@@ -220,10 +220,20 @@ the second module chosen from how the first went. Domain counts follow the
 published weights -- 15 Algebra, 15 Advanced Math, 7 Problem-Solving and Data
 Analysis, 7 Geometry and Trigonometry -- with about half of each domain in each
 module, so a student who only reaches module 1 has still met all four.
-Difficulty is interleaved before being dealt to the domains, so every domain
-carries a share of the module's range instead of a corner of it. Modules run
-easiest to hardest, as the real ones do. 462 questions, all distinct, and none
-of them shared with the diagnostic forms.
+Modules run easiest to hardest across all 22 positions with no domain
+grouping, which is College Board's stated rule for Math and the one homemade
+sections break most often. Domains are spread across the positions rather than
+dealt round-robin, which ran the small domains out early and left every hard
+position to Algebra and Advanced Math. 462 questions, all distinct, and none of
+them shared with the diagnostic forms.
+
+Grid-ins sit at positions 6, 7, 13, 14, 21 and 22 of every module. That is not
+a guess: College Board's answer keys for the linear practice forms put the
+student-produced responses at 6, 7, 13, 14, 20, 21 and 27 of 27, across seven
+published tests and fourteen modules, without an exception. They are
+interleaved in small clusters with one at the end, not banked up at the finish.
+Hitting those slots needs a survey of what each template can produce, since a
+grid-in slot cannot be filled by a template that only makes multiple choice.
 
 The adaptive half is the point of the format. Module 1 is marked on its own and
 routes: above 60% earns the harder second module. College Board sets that cut
@@ -232,7 +242,13 @@ publishes the threshold, so the 60 is a stated choice and `scoring.py` says so.
 The ceiling is not a choice -- their own simulation of a student who takes the
 easier module and answers every question in it correctly reports a maximum of
 580, so a low route caps there, and the results page says that is why the
-number stopped. What this cannot copy: the real section carries two unscored
+number stopped.
+
+Three things College Board does not publish, which are therefore stated choices
+in the code rather than reported facts: the per-module domain counts (every
+table they print is scoped to the whole section), the easy/medium/hard
+proportions in any module ("differing proportions" is the entire statement),
+and the routing threshold itself ("around the median" is all there is). What this cannot copy: the real section carries two unscored
 pretest items per module and scores the rest by item response theory. There is
 nothing to pretest here and no calibration to score with, so all 22 count.
 
