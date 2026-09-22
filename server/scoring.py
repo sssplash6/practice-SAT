@@ -1,4 +1,4 @@
-"""Marking a diagnostic, and saying only what sixteen questions can support.
+"""Marking a diagnostic, and saying only what twenty questions can support.
 
 What the College Board actually does, and what this cannot copy: the digital
 SAT is scored by item response theory, not by counting. A student's section
@@ -15,13 +15,13 @@ that is actually false.
 
 The size of the band is not modesty either. The real test reports a standard
 error near 20 points per section off ninety calibrated, adaptively targeted
-items. This has sixteen, none calibrated, with no adaptivity. Scaling that
-error by the square root of the question count puts one standard error near 50
+items. This has twenty, none calibrated, with no adaptivity. Scaling that
+error by the square root of the question count puts one standard error near 45
 points, so a band narrower than 200 points would be pretending.
 
 Per domain it is worse, and the College Board says so itself: a domain scored
-off four items has low precision, and a strong student can look weak in a hard
-domain by chance. That is why a domain gets a bar and a word, never a number,
+off a handful of items has low precision, and a strong student can look weak in
+a hard domain by chance. That is why a domain gets a bar and a word, never a number,
 and why the copy says where to practise next rather than what you are bad at.
 """
 
@@ -31,8 +31,10 @@ from __future__ import annotations
 # correctly says more than an easy one; how much more is a judgement call.
 WEIGHT = {"easy": 1, "medium": 2, "hard": 3}
 
-# one easy, two medium, one hard per domain
-DOMAIN_MAX = WEIGHT["easy"] + 2 * WEIGHT["medium"] + WEIGHT["hard"]   # 8
+# one easy, two medium, two hard per domain. Not used in the marking, which
+# accumulates what each domain actually carried, but it is the number the bands
+# below are pitched against.
+DOMAIN_MAX = WEIGHT["easy"] + 2 * WEIGHT["medium"] + 2 * WEIGHT["hard"]   # 11
 
 BANDS = (
     (0.00, "Start here",  "Worth building the basics of this domain first."),
@@ -45,7 +47,7 @@ BANDS = (
 # and stated as invented. Four options mean blind guessing earns about a
 # quarter of the weight, so a quarter is where the scale should start to mean
 # anything; half the weight sits near the national mean; and everything right
-# including the hard items sits high but short of the ceiling, because sixteen
+# including the hard items sits high but short of the ceiling, because twenty
 # questions cannot evidence an 800.
 ANCHORS = ((0.0, 200.0), (0.25, 300.0), (0.5, 480.0), (0.75, 620.0), (1.0, 780.0))
 
@@ -85,7 +87,7 @@ def _interpolate(x: float) -> float:
 
 
 def score(questions: list[dict], answers: dict) -> dict:
-    """Mark the sixteen, and report per domain plus one wide band."""
+    """Mark the paper, and report per domain plus one wide band."""
     domains: dict[str, dict] = {}
     earned = possible = 0
 

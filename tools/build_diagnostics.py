@@ -1,7 +1,7 @@
 """Build the ten diagnostic forms.
 
-A diagnostic is sixteen questions: four domains, and from each of them one
-easy, two medium and one hard. That is deliberately not the exam blueprint --
+A diagnostic is twenty questions: four domains, and from each of them one easy,
+two medium and two hard. That is deliberately not the exam blueprint --
 the real test weights Algebra and Advanced Math at 35% each against 15% for
 the other two. A diagnostic is trying to measure four things, not to predict
 one, so it spends its questions evenly.
@@ -10,7 +10,7 @@ The forms are fixed and built ahead of time rather than drawn per student.
 Drawing live would hit the repeat the README warns about -- distinct seeds
 collide onto identical parameters, and Area and Volume repeated 25 stems in
 1,000 items -- and would make one student's result unreproducible. Ten forms
-built once, checked for duplicates across all 160 questions, and handed out at
+built once, checked for duplicates across all 200 questions, and handed out at
 random cost nothing to serve and can be looked at before anyone sits them.
 
     PYTHONPATH=. python3 tools/build_diagnostics.py
@@ -29,7 +29,9 @@ from satbank.registry import generate, templates, topic_of
 from satbank.topic import load_topics
 
 FORMS = 10
-PER_DOMAIN = ("easy", "medium", "medium", "hard")
+# Two hard per domain, not one. A single hard question is a coin toss, and the
+# top of the range is exactly where a diagnostic has to separate people.
+PER_DOMAIN = ("easy", "medium", "medium", "hard", "hard")
 DOMAINS = (
     "Algebra",
     "Advanced Math",
@@ -147,7 +149,8 @@ def deal(pool: dict, rng: random.Random, log=print) -> list[list[dict]]:
         for i, q in enumerate(picked, 1):
             q["id"] = f"f{f + 1}q{i:02d}"
         forms.append(picked)
-        log(f"  form {f + 1:2d}: {len({q['topic'] for q in picked})} topics, "
+        log(f"  form {f + 1:2d}: {len(picked)} questions, "
+            f"{len({q['topic'] for q in picked})} topics, "
             f"{sum(1 for q in picked if q['type'] == 'spr')} grid-in, "
             f"{sum(1 for q in picked if q['figure'])} with a figure")
 

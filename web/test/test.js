@@ -18,7 +18,7 @@
     id: null,
     section: 'Section 1, Module 1: Math',
     subject: 'math',
-    seconds: 1500,
+    seconds: 1900,
     qs: [],
     i: 0,
     answers: {},        // qid -> option index, or typed string
@@ -34,7 +34,7 @@
     id: 'local',
     section: 'Section 1, Module 1: Math',
     subject: 'math',
-    seconds: 1500,
+    seconds: 380,
     questions: [
       { id:'s1', domain:'Advanced Math', difficulty:'medium', type:'mcq',
         stem:'Which expression is equivalent to x\u00b2 + 3x \u2212 40?',

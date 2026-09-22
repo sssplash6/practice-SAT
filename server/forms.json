@@ -1,5 +1,5 @@
 {
- "built": "2026-09-22T09:36:56+00:00",
+ "built": "2026-09-22T09:54:40+00:00",
  "blueprint": {
   "domains": [
    "Algebra",
@@ -11,6 +11,7 @@
    "easy",
    "medium",
    "medium",
+   "hard",
    "hard"
   ]
  },
@@ -407,6 +408,24 @@
      "id": "f1q13"
     },
     {
+     "key": "lin.x_intercept",
+     "seed": 34,
+     "topic": "linear_functions",
+     "topic_name": "Linear Functions",
+     "domain": "Algebra",
+     "difficulty": "hard",
+     "type": "spr",
+     "stem": "The functions f and g are defined as f(x) = (1/2)x − 17 and g(x) = (1/2)x + 4. If the function h is defined as h(x) = f(x) + g(x), what is the x-coordinate of the x-intercept of the graph of y = h(x) in the xy-plane?",
+     "choices": [],
+     "latex": [],
+     "figure": null,
+     "table": null,
+     "answer": "13",
+     "rationale": "h(x) = x − 13, which is zero at x = 13.",
+     "reasons": [],
+     "id": "f1q14"
+    },
+    {
      "key": "nlfunc.quad_must_be_true",
      "seed": 35,
      "topic": "nonlinear_functions",
@@ -437,7 +456,40 @@
       "claims I only, which the printed facts do not force",
       "claims Neither I nor II, which the printed facts do not force"
      ],
-     "id": "f1q14"
+     "id": "f1q15"
+    },
+    {
+     "key": "nleq.count_system_solutions",
+     "seed": 40,
+     "topic": "nonlinear_equations_and_systems",
+     "topic_name": "Nonlinear Equations and Systems",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "y = x² + 2x − 18\ny − 5x + 20 = 0\nHow many solutions are there to the system of equations above?",
+     "choices": [
+      "There are no solutions.",
+      "There are exactly 4 solutions.",
+      "There is exactly 1 solution.",
+      "There are exactly 2 solutions."
+     ],
+     "latex": [
+      "There are no solutions.",
+      "There are exactly 4 solutions.",
+      "There is exactly 1 solution.",
+      "There are exactly 2 solutions."
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "D",
+     "rationale": "Setting the two right-hand sides equal gives x² − 3x + 2 = 0, whose discriminant is 1, so the graphs share exactly two points.",
+     "reasons": [
+      "read the sign of the discriminant the wrong way round, and concluded that the curve never meets the axis",
+      "multiplied the number of solutions of the quadratic by the two branches of the curve",
+      "counted the two square roots of a positive number as a single solution",
+      ""
+     ],
+     "id": "f1q16"
     },
     {
      "key": "prob.two_way.grouped",
@@ -507,7 +559,40 @@
       "",
       "divided by the number of trees at the south site instead of by the number of birches and willows — the conditional the other way round"
      ],
-     "id": "f1q15"
+     "id": "f1q17"
+    },
+    {
+     "key": "esc.generalize",
+     "seed": 0,
+     "topic": "evaluating_statistical_claims",
+     "topic_name": "Evaluating Statistical Claims",
+     "domain": "Problem-Solving and Data Analysis",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "A sample of 30 adult patrons was formed by surveying the patrons who came to a certain library branch on one Saturday morning. The 30 patrons completed a survey about the opening hours, and 21 said the hours were convenient. Which of the following is the largest population to which the results of the survey can be applied?",
+     "choices": [
+      "All patrons at the branch",
+      "The 30 patrons who were surveyed",
+      "All adult patrons at the branch",
+      "All adult patrons in the county library system"
+     ],
+     "latex": [
+      "All patrons at the branch",
+      "The 30 patrons who were surveyed",
+      "All adult patrons at the branch",
+      "All adult patrons in the county library system"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "B",
+     "rationale": "The patrons were not selected at random, so the results reach only the patrons who were measured.",
+     "reasons": [
+      "read a sample that was not selected at random as if it had been, and generalized from it",
+      "",
+      "read a sample that was not selected at random as if it had been, and generalized from it",
+      "read a sample that was not selected at random as if it had been, and generalized from it"
+     ],
+     "id": "f1q18"
     },
     {
      "key": "scaling.percent",
@@ -525,7 +610,40 @@
      "answer": "50",
      "rationale": "Each dimension is multiplied by 1/2, so the area is multiplied by (1/2)² = 1/4: 200 × 1/4 = 50.",
      "reasons": [],
-     "id": "f1q16"
+     "id": "f1q19"
+    },
+    {
+     "key": "circles.coterminal",
+     "seed": 16,
+     "topic": "circles",
+     "topic_name": "Circles",
+     "domain": "Geometry and Trigonometry",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "In the xy-plane, point G is the center of a circle of radius 5, point U on the circle has coordinates (0, −5), and point V on the circle has coordinates (x, 5), where x is a constant. Which of the following could be the positive measure of angle UGV, in radians?",
+     "choices": [
+      "33π/2",
+      "22π",
+      "47π/2",
+      "25π"
+     ],
+     "latex": [
+      "\\frac{33\\pi}{2}",
+      "22\\pi",
+      "\\frac{47\\pi}{2}",
+      "25\\pi"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "D",
+     "rationale": "V must be (0, 5), the far end of the diameter through U, so angle UGV is a half turn plus any whole number of full turns: π + 24π = 25π.",
+     "reasons": [
+      "a half-integer multiple of π stops a quarter turn away, at (5, 0)",
+      "an even multiple of π is a whole number of full turns, which ends back at U",
+      "a half-integer multiple of π stops a quarter turn away, at (−5, 0)",
+      ""
+     ],
+     "id": "f1q20"
     }
    ]
   },
@@ -962,37 +1080,58 @@
      "id": "f2q13"
     },
     {
-     "key": "nleq.count_system_solutions",
-     "seed": 40,
+     "key": "lin.x_intercept",
+     "seed": 22,
+     "topic": "linear_functions",
+     "topic_name": "Linear Functions",
+     "domain": "Algebra",
+     "difficulty": "hard",
+     "type": "spr",
+     "stem": "In the xy-plane, line k has a slope of 8 and a y-intercept of (0, −89). What is the x-coordinate of the x-intercept of line k?",
+     "choices": [],
+     "latex": [],
+     "figure": null,
+     "table": null,
+     "answer": "89/8",
+     "rationale": "0 = 8x − 89 gives x = 89/8.",
+     "reasons": [],
+     "id": "f2q14"
+    },
+    {
+     "key": "nleq.discriminant_constant",
+     "seed": 8,
      "topic": "nonlinear_equations_and_systems",
      "topic_name": "Nonlinear Equations and Systems",
      "domain": "Advanced Math",
      "difficulty": "hard",
-     "type": "mcq",
-     "stem": "y = x² + 2x − 18\ny − 5x + 20 = 0\nHow many solutions are there to the system of equations above?",
-     "choices": [
-      "There are no solutions.",
-      "There are exactly 4 solutions.",
-      "There is exactly 1 solution.",
-      "There are exactly 2 solutions."
-     ],
-     "latex": [
-      "There are no solutions.",
-      "There are exactly 4 solutions.",
-      "There is exactly 1 solution.",
-      "There are exactly 2 solutions."
-     ],
+     "type": "spr",
+     "stem": "2x² + x + c = 0\nIn the given equation, c is a constant. The equation has exactly one solution. What is the value of c?",
+     "choices": [],
+     "latex": [],
      "figure": null,
      "table": null,
-     "answer": "D",
-     "rationale": "Setting the two right-hand sides equal gives x² − 3x + 2 = 0, whose discriminant is 1, so the graphs share exactly two points.",
-     "reasons": [
-      "read the sign of the discriminant the wrong way round, and concluded that the curve never meets the axis",
-      "multiplied the number of solutions of the quadratic by the two branches of the curve",
-      "counted the two square roots of a positive number as a single solution",
-      ""
-     ],
-     "id": "f2q14"
+     "answer": "0.125",
+     "rationale": "One solution means the discriminant is zero, so 1 − 8c = 0 and c = 0.125.",
+     "reasons": [],
+     "id": "f2q15"
+    },
+    {
+     "key": "nlfunc.abs_value",
+     "seed": 31,
+     "topic": "nonlinear_functions",
+     "topic_name": "Nonlinear Functions",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "spr",
+     "stem": "The function g is defined by g(x) = |x|/a − 9, where a < 0. What is the product of g(13a) and g(3a)?",
+     "choices": [],
+     "latex": [],
+     "figure": null,
+     "table": null,
+     "answer": "264",
+     "rationale": "Because a < 0, |13a|/a = −13, so g(13a) = −22 and g(3a) = −12; their product is 264.",
+     "reasons": [],
+     "id": "f2q16"
     },
     {
      "key": "pct.two_step",
@@ -1010,7 +1149,40 @@
      "answer": "3.15",
      "rationale": "2.1 x 1.5 = 3.15.",
      "reasons": [],
-     "id": "f2q15"
+     "id": "f2q17"
+    },
+    {
+     "key": "ovd.measure_effect",
+     "seed": 18,
+     "topic": "one_variable_data",
+     "topic_name": "One-Variable Data: Distributions and Measures of Centre and Spread",
+     "domain": "Problem-Solving and Data Analysis",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "The weights, in pounds, for 13 horses in a stable were reported, and the mean, median, range, and standard deviation for the data were found. The horse with the lowest reported weight was found to actually have a weight 5 pounds less than its reported weight. What value remains unchanged if the values are reported using the corrected data?",
+     "choices": [
+      "Median",
+      "Standard deviation",
+      "Mean",
+      "Range"
+     ],
+     "latex": [
+      "Median",
+      "Standard deviation",
+      "Mean",
+      "Range"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "A",
+     "rationale": "Only the least value moves, so the total, the spread and the average all change; the value in the middle of the ordered list does not.",
+     "reasons": [
+      "",
+      "assumed the spread cannot change while the values stay in the same order",
+      "assumed the average is fixed by the middle of the list rather than by every value in it",
+      "assumed the range depends only on the greatest value"
+     ],
+     "id": "f2q18"
     },
     {
      "key": "expression.symbolic_volume",
@@ -1043,7 +1215,40 @@
       "doubled the radius instead of using the stated height",
       "added the constant without the base area"
      ],
-     "id": "f2q16"
+     "id": "f2q19"
+    },
+    {
+     "key": "rtt.similar_sides_ratio",
+     "seed": 5,
+     "topic": "right_triangles_and_trigonometry",
+     "topic_name": "Right Triangles and Trigonometry",
+     "domain": "Geometry and Trigonometry",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "QP = 420\nPR = 675\nRQ = 795\nThe side lengths of right triangle QPR are given. Triangle QPR is similar to triangle TSU, where P corresponds to S and R corresponds to U. What is the value of sin T ?",
+     "choices": [
+      "28/53",
+      "45/53",
+      "53/45",
+      "45/28"
+     ],
+     "latex": [
+      "\\frac{28}{53}",
+      "\\frac{45}{53}",
+      "\\frac{53}{45}",
+      "\\frac{45}{28}"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "B",
+     "rationale": "The right angle is at P, and T matches Q, so sin T = 45/53.",
+     "reasons": [
+      "used cosine where the question asks for sine",
+      "",
+      "took the reciprocal of the ratio",
+      "used tangent where the question asks for sine"
+     ],
+     "id": "f2q20"
     }
    ]
   },
@@ -1457,73 +1662,203 @@
      "id": "f3q12"
     },
     {
-     "key": "lin.x_intercept",
-     "seed": 34,
-     "topic": "linear_functions",
-     "topic_name": "Linear Functions",
+     "key": "ineq.greatest_value",
+     "seed": 28,
+     "topic": "linear_inequalities",
+     "topic_name": "Linear Inequalities",
      "domain": "Algebra",
      "difficulty": "hard",
      "type": "spr",
-     "stem": "The functions f and g are defined as f(x) = (1/2)x − 17 and g(x) = (1/2)x + 4. If the function h is defined as h(x) = f(x) + g(x), what is the x-coordinate of the x-intercept of the graph of y = h(x) in the xy-plane?",
+     "stem": "A number x is at most 4 more than 3 times the value of y. If the value of y is 2, what is the greatest possible value of x?",
      "choices": [],
      "latex": [],
      "figure": null,
      "table": null,
-     "answer": "13",
-     "rationale": "h(x) = x − 13, which is zero at x = 13.",
+     "answer": "10",
+     "rationale": "The condition is x ≤ 3y + 4, and with y = 2 the right side is 10, so the greatest value x can take is 10.",
      "reasons": [],
      "id": "f3q13"
     },
     {
-     "key": "nleq.discriminant_constant",
-     "seed": 8,
-     "topic": "nonlinear_equations_and_systems",
-     "topic_name": "Nonlinear Equations and Systems",
-     "domain": "Advanced Math",
+     "key": "lin.tiered_cost",
+     "seed": 30,
+     "topic": "linear_functions",
+     "topic_name": "Linear Functions",
+     "domain": "Algebra",
      "difficulty": "hard",
-     "type": "spr",
-     "stem": "2x² + x + c = 0\nIn the given equation, c is a constant. The equation has exactly one solution. What is the value of c?",
-     "choices": [],
-     "latex": [],
+     "type": "mcq",
+     "stem": "For groups of 29 or more people, a museum charges $13 per person for the first 29 people and $4 for each additional person. Which function f gives the total charge, in dollars, for a tour group with n people, where n ≥ 29?",
+     "choices": [
+      "f(n) = 4n + 13",
+      "f(n) = 4n + 261",
+      "f(n) = 4n + 377",
+      "f(n) = 17n − 116"
+     ],
+     "latex": [
+      "f(n) = 4n + 13",
+      "f(n) = 4n + 261",
+      "f(n) = 4n + 377",
+      "f(n) = 17n − 116"
+     ],
      "figure": null,
      "table": null,
-     "answer": "0.125",
-     "rationale": "One solution means the discriminant is zero, so 1 − 8c = 0 and c = 0.125.",
-     "reasons": [],
+     "answer": "B",
+     "rationale": "The first 29 cost 377 and each of the remaining n − 29 costs 4, so the total is f(n) = 4n + 261.",
+     "reasons": [
+      "used the per-person price of the first block as the constant term",
+      "",
+      "charged the whole first block again on top of every person",
+      "added the two prices into the rate and subtracted the block"
+     ],
      "id": "f3q14"
     },
     {
-     "key": "esc.generalize",
-     "seed": 0,
+     "key": "eqx.divide_remainder",
+     "seed": 16,
+     "topic": "equivalent_expressions",
+     "topic_name": "Equivalent Expressions",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "The equation (z² + 8z − 9)/(z + 9) = pz + k is true for all z ≠ −9, where p and k are integers. What is the value of p + k ?",
+     "choices": [
+      "−8",
+      "−1",
+      "0",
+      "1"
+     ],
+     "latex": [
+      "-8",
+      "-1",
+      "0",
+      "1"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "C",
+     "rationale": "z² + 8z − 9 is (z + 9)(z − 1), so dividing by z + 9 leaves z − 1.",
+     "reasons": [
+      "took k from the divisor rather than from the quotient",
+      "reported k on its own",
+      "",
+      "reported p on its own"
+     ],
+     "id": "f3q15"
+    },
+    {
+     "key": "nlfunc.exp_anchor",
+     "seed": 6,
+     "topic": "nonlinear_functions",
+     "topic_name": "Nonlinear Functions",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "A model estimates that at the end of each year from 1999 to 2003, the number of beetles in a population was 200% more than the number of beetles in the population at the end of the previous year. The model estimates that at the end of 2000, there were 90 beetles in the population. Which of the following equations represents this model, where n is the estimated number of beetles in the population t years after the end of 1999 and t ≤ 4?",
+     "choices": [
+      "n = 90(2)^t",
+      "n = 90(3)^t",
+      "n = 30(2)^t",
+      "n = 30(3)^t"
+     ],
+     "latex": [
+      "n = 90(2)^t",
+      "n = 90(3)^t",
+      "n = 30(2)^t",
+      "n = 30(3)^t"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "D",
+     "rationale": "A rise of 200% multiplies by 3, so the count at the end of 1999 was 90/3 = 30.",
+     "reasons": [
+      "used the later count and read the percent as the factor",
+      "used the count a year later as the starting count",
+      "read the percent as the factor itself",
+      ""
+     ],
+     "id": "f3q16"
+    },
+    {
+     "key": "esc.conclusion",
+     "seed": 13,
      "topic": "evaluating_statistical_claims",
      "topic_name": "Evaluating Statistical Claims",
      "domain": "Problem-Solving and Data Analysis",
      "difficulty": "hard",
      "type": "mcq",
-     "stem": "A sample of 30 adult patrons was formed by surveying the patrons who came to a certain library branch on one Saturday morning. The 30 patrons completed a survey about the opening hours, and 21 said the hours were convenient. Which of the following is the largest population to which the results of the survey can be applied?",
+     "stem": "A botanist selected 125 seedlings at random from the seedlings in a greenhouse and randomly assigned them to two groups. One group was grown under a blue lamp for 3 weeks and the other under the usual lamp. The group grown under the blue lamp put on significantly more stem growth. Which of the following is the most appropriate conclusion from this study?",
      "choices": [
-      "All patrons at the branch",
-      "The 30 patrons who were surveyed",
-      "All adult patrons at the branch",
-      "All adult patrons in the county library system"
+      "The blue lamp causes an increase in stem growth for the seedlings in this greenhouse.",
+      "There is an association between the blue lamp and an increase in stem growth for the 125 seedlings in the study.",
+      "There is an association between the blue lamp and an increase in stem growth for all seedlings of this species.",
+      "The blue lamp causes an increase in stem growth for all seedlings of this species."
      ],
      "latex": [
-      "All patrons at the branch",
-      "The 30 patrons who were surveyed",
-      "All adult patrons at the branch",
-      "All adult patrons in the county library system"
+      "The blue lamp causes an increase in stem growth for the seedlings in this greenhouse.",
+      "There is an association between the blue lamp and an increase in stem growth for the 125 seedlings in the study.",
+      "There is an association between the blue lamp and an increase in stem growth for all seedlings of this species.",
+      "The blue lamp causes an increase in stem growth for all seedlings of this species."
      ],
      "figure": null,
      "table": null,
-     "answer": "B",
-     "rationale": "The patrons were not selected at random, so the results reach only the patrons who were measured.",
+     "answer": "A",
+     "rationale": "The seedlings were randomly assigned, so the difference between the groups is a cause; they were selected at random from the seedlings in this greenhouse, so the conclusion reaches that group.",
      "reasons": [
-      "read a sample that was not selected at random as if it had been, and generalized from it",
       "",
-      "read a sample that was not selected at random as if it had been, and generalized from it",
-      "read a sample that was not selected at random as if it had been, and generalized from it"
+      "under-claimed twice over: random assignment earns a cause, and random selection earns the group the units came from",
+      "generalized past the seedlings in this greenhouse, the group the seedlings were selected from",
+      "generalized past the seedlings in this greenhouse, the group the seedlings were selected from"
      ],
-     "id": "f3q15"
+     "id": "f3q17"
+    },
+    {
+     "key": "sstat.margin_size",
+     "seed": 9,
+     "topic": "sample_statistics_and_margin_of_error",
+     "topic_name": "Sample Statistics and Margin of Error",
+     "domain": "Problem-Solving and Data Analysis",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "The results of two random samples of votes for a proposition are shown above. The samples were selected from the same population, and the margins of error were calculated using the same method. Which of the following is the most appropriate reason that the margin of error for sample A is greater than the margin of error for sample B?",
+     "choices": [
+      "Sample A had a smaller sample size.",
+      "Sample A had a lower percent of favorable responses.",
+      "Sample A was reported at a higher level of confidence.",
+      "Sample A had a smaller number of votes that could not be recorded."
+     ],
+     "latex": [
+      "Sample A had a smaller sample size.",
+      "Sample A had a lower percent of favorable responses.",
+      "Sample A was reported at a higher level of confidence.",
+      "Sample A had a smaller number of votes that could not be recorded."
+     ],
+     "figure": null,
+     "table": [
+      [
+       "Sample",
+       "Percent in favor",
+       "Margin of error"
+      ],
+      [
+       "A",
+       "48%",
+       "5.8%"
+      ],
+      [
+       "B",
+       "41%",
+       "4.3%"
+      ]
+     ],
+     "answer": "A",
+     "rationale": "The two margins were found the same way from the same population, so the only thing that can differ is the size of the sample. Sample A has the wider margin, so sample A is the smaller sample and sample B is the larger one.",
+     "reasons": [
+      "",
+      "read the margin off the statistic, when the stem fixes the method and leaves only the sample size free",
+      "reached for the confidence level, which does widen an interval but which the stem has already fixed",
+      "looked for the difference in the votes that were lost rather than in the size of the sample"
+     ],
+     "id": "f3q18"
     },
     {
      "key": "expression.symbolic_volume",
@@ -1556,7 +1891,25 @@
       "added the constant without the base area",
       ""
      ],
-     "id": "f3q16"
+     "id": "f3q19"
+    },
+    {
+     "key": "rtt.similar_sides_ratio",
+     "seed": 41,
+     "topic": "right_triangles_and_trigonometry",
+     "topic_name": "Right Triangles and Trigonometry",
+     "domain": "Geometry and Trigonometry",
+     "difficulty": "hard",
+     "type": "spr",
+     "stem": "ED = 448\nDF = 720\nFE = 848\nThe side lengths of right triangle EDF are given. Triangle EDF is similar to triangle HGJ, where D corresponds to G and F corresponds to J. What is the value of cos J ?",
+     "choices": [],
+     "latex": [],
+     "figure": null,
+     "table": null,
+     "answer": "45/53",
+     "rationale": "The right angle is at D, and J matches F, so cos J = 45/53.",
+     "reasons": [],
+     "id": "f3q20"
     }
    ]
   },
@@ -1970,106 +2323,284 @@
      "id": "f4q12"
     },
     {
-     "key": "ineq.greatest_value",
-     "seed": 28,
+     "key": "ineq.y_range_from_system",
+     "seed": 3,
      "topic": "linear_inequalities",
      "topic_name": "Linear Inequalities",
      "domain": "Algebra",
      "difficulty": "hard",
-     "type": "spr",
-     "stem": "A number x is at most 4 more than 3 times the value of y. If the value of y is 2, what is the greatest possible value of x?",
-     "choices": [],
-     "latex": [],
-     "figure": null,
-     "table": null,
-     "answer": "10",
-     "rationale": "The condition is x ≤ 3y + 4, and with y = 2 the right side is 10, so the greatest value x can take is 10.",
-     "reasons": [],
-     "id": "f4q13"
-    },
-    {
-     "key": "nlfunc.abs_value",
-     "seed": 31,
-     "topic": "nonlinear_functions",
-     "topic_name": "Nonlinear Functions",
-     "domain": "Advanced Math",
-     "difficulty": "hard",
-     "type": "spr",
-     "stem": "The function g is defined by g(x) = |x|/a − 9, where a < 0. What is the product of g(13a) and g(3a)?",
-     "choices": [],
-     "latex": [],
-     "figure": null,
-     "table": null,
-     "answer": "264",
-     "rationale": "Because a < 0, |13a|/a = −13, so g(13a) = −22 and g(3a) = −12; their product is 264.",
-     "reasons": [],
-     "id": "f4q14"
-    },
-    {
-     "key": "ovd.measure_effect",
-     "seed": 18,
-     "topic": "one_variable_data",
-     "topic_name": "One-Variable Data: Distributions and Measures of Centre and Spread",
-     "domain": "Problem-Solving and Data Analysis",
-     "difficulty": "hard",
      "type": "mcq",
-     "stem": "The weights, in pounds, for 13 horses in a stable were reported, and the mean, median, range, and standard deviation for the data were found. The horse with the lowest reported weight was found to actually have a weight 5 pounds less than its reported weight. What value remains unchanged if the values are reported using the corrected data?",
+     "stem": "y > 2x − 10\n6x > 16\nWhich of the following consists of the y-coordinates of all the points that satisfy the given system of inequalities?",
      "choices": [
-      "Median",
-      "Standard deviation",
-      "Mean",
-      "Range"
+      "y > −14/3",
+      "y > 26",
+      "y > −22/3",
+      "y > 8/3"
      ],
      "latex": [
-      "Median",
-      "Standard deviation",
-      "Mean",
-      "Range"
+      "y > −14/3",
+      "y > 26",
+      "y > −22/3",
+      "y > 8/3"
      ],
      "figure": null,
      "table": null,
      "answer": "A",
-     "rationale": "Only the least value moves, so the total, the spread and the average all change; the value in the middle of the ordered list does not.",
+     "rationale": "6x > 16 gives x > 8/3, so 2x − 10 is greater than −14/3, and y is greater than that again, so y > −14/3.",
      "reasons": [
       "",
-      "assumed the spread cannot change while the values stay in the same order",
-      "assumed the average is fixed by the middle of the list rather than by every value in it",
-      "assumed the range depends only on the greatest value"
+      "used the number the second inequality prints instead of the bound it gives for x",
+      "added the constant to the bound on x without multiplying by the coefficient of x",
+      "reported the bound on x rather than the bound on y"
      ],
+     "id": "f4q13"
+    },
+    {
+     "key": "lin.inner_scale",
+     "seed": 4,
+     "topic": "linear_functions",
+     "topic_name": "Linear Functions",
+     "domain": "Algebra",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "For the function f, if f(3x) = x − 3 for all values of x, what is the value of f(24) ?",
+     "choices": [
+      "−3",
+      "5",
+      "8",
+      "21"
+     ],
+     "latex": [
+      "-3",
+      "5",
+      "8",
+      "21"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "B",
+     "rationale": "3x = 24 when x = 8, so f(24) = 8 + (−3) = 5.",
+     "reasons": [
+      "used the constant term as the value",
+      "",
+      "gave the value of x that makes the argument match",
+      "substituted the argument directly, ignoring the scale factor"
+     ],
+     "id": "f4q14"
+    },
+    {
+     "key": "nleq.tangent_constant",
+     "seed": 31,
+     "topic": "nonlinear_equations_and_systems",
+     "topic_name": "Nonlinear Equations and Systems",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "spr",
+     "stem": "In the xy-plane, a line with equation 4y = c for some constant c intersects a parabola at exactly one point. If the parabola has equation y = −2x² − 8x, what is the value of c?",
+     "choices": [],
+     "latex": [],
+     "figure": null,
+     "table": null,
+     "answer": "32",
+     "rationale": "The line is y = c/4, and one intersection means 64 − 8(c/4) = 0, so c = 32.",
+     "reasons": [],
      "id": "f4q15"
     },
     {
-     "key": "rtt.similar_sides_ratio",
-     "seed": 5,
+     "key": "nlfunc.shift_max",
+     "seed": 33,
+     "topic": "nonlinear_functions",
+     "topic_name": "Nonlinear Functions",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "f(t) = 23t − 5t² The function f is defined by the given equation. The function g is defined by g(t) = f(t) + 8. Which expression represents the maximum value of g(t)?",
+     "choices": [
+      "8 + 5(23/10)²",
+      "8 − 5(23/10)²",
+      "8 − (23/10)²",
+      "8 + (23/10)²"
+     ],
+     "latex": [
+      "8 + 5(23/10)²",
+      "8 − 5(23/10)²",
+      "8 − (23/10)²",
+      "8 + (23/10)²"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "A",
+     "rationale": "f is greatest at t = 23/10, where it equals 5(23/10)², so g is greatest at 8 + 5(23/10)².",
+     "reasons": [
+      "",
+      "subtracted the squared term instead of adding it",
+      "subtracted the squared term and left the coefficient out",
+      "left the coefficient out when squaring the half-way point"
+     ],
+     "id": "f4q16"
+    },
+    {
+     "key": "sstat.scale_frequency",
+     "seed": 23,
+     "topic": "sample_statistics_and_margin_of_error",
+     "topic_name": "Sample Statistics and Margin of Error",
+     "domain": "Problem-Solving and Data Analysis",
+     "difficulty": "hard",
+     "type": "spr",
+     "stem": "A researcher interviewed 363 randomly selected US residents and asked about their views on the use of nuclear energy. The table above summarizes the responses of the interviewees. If the population of the United States was 200 million when the survey was given, based on the sample data for the 363 US residents, what is the best estimate, in millions, of the difference between the number of US residents who somewhat favor or strongly favor the use of nuclear energy and the number of those who somewhat oppose or strongly oppose it? (Round your answer to the nearest whole number.)",
+     "choices": [],
+     "latex": [],
+     "figure": null,
+     "table": [
+      [
+       "Response",
+       "Frequency"
+      ],
+      [
+       "Strongly favor",
+       "152"
+      ],
+      [
+       "Somewhat favor",
+       "54"
+      ],
+      [
+       "Somewhat oppose",
+       "78"
+      ],
+      [
+       "Strongly oppose",
+       "79"
+      ]
+     ],
+     "answer": "27",
+     "rationale": "206 of the 363 responses are on one side and 157 on the other, a difference of 49, and 49/363 of 200 rounds to 27.",
+     "reasons": [],
+     "id": "f4q17"
+    },
+    {
+     "key": "esc.generalize_table",
+     "seed": 11,
+     "topic": "evaluating_statistical_claims",
+     "topic_name": "Evaluating Statistical Claims",
+     "domain": "Problem-Solving and Data Analysis",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "A trivia tournament organizer wanted to study the relationship between the number of points a team scores in a trivia round and the number of hours that a team practices each week. For the study, the organizer selected 61 teams at random from all trivia teams in a certain tournament. The table displays the information for the 36 teams in the sample that practiced for at least 4 hours per week. Which of the following is the largest population to which the results of the study can be generalized?",
+     "choices": [
+      "The 36 trivia teams in the sample that practiced for at least 4 hours per week",
+      "All trivia teams in the tournament",
+      "All trivia teams in the tournament that scored 17 or more points in the round",
+      "The 61 trivia teams in the sample"
+     ],
+     "latex": [
+      "The 36 trivia teams in the sample that practiced for at least 4 hours per week",
+      "All trivia teams in the tournament",
+      "All trivia teams in the tournament that scored 17 or more points in the round",
+      "The 61 trivia teams in the sample"
+     ],
+     "figure": null,
+     "table": [
+      [
+       "Hours practiced",
+       "12 to 16 points",
+       "17 or more points",
+       "Total"
+      ],
+      [
+       "4 to 7 hours",
+       "9",
+       "7",
+       "16"
+      ],
+      [
+       "More than 7 hours",
+       "2",
+       "18",
+       "20"
+      ],
+      [
+       "Total",
+       "11",
+       "25",
+       "36"
+      ]
+     ],
+     "answer": "B",
+     "rationale": "The trivia teams were selected at random from all trivia teams in the tournament, so the results reach that population and no wider one.",
+     "reasons": [
+      "read the table as the study, and applied the result only to the part of the sample the table reports",
+      "",
+      "named a population the sample can speak for, but not the largest one it can speak for",
+      "stopped at the trivia teams who were measured, although selecting them at random earns the population they were drawn from"
+     ],
+     "id": "f4q18"
+    },
+    {
+     "key": "rtt.parallel_similar",
+     "seed": 34,
      "topic": "right_triangles_and_trigonometry",
      "topic_name": "Right Triangles and Trigonometry",
      "domain": "Geometry and Trigonometry",
      "difficulty": "hard",
      "type": "mcq",
-     "stem": "QP = 420\nPR = 675\nRQ = 795\nThe side lengths of right triangle QPR are given. Triangle QPR is similar to triangle TSU, where P corresponds to S and R corresponds to U. What is the value of sin T ?",
+     "stem": "In the figure shown, DE is parallel to BC. What is the length of BD ?",
      "choices": [
-      "28/53",
-      "45/53",
-      "53/45",
-      "45/28"
+      "2",
+      "36",
+      "39",
+      "51"
      ],
      "latex": [
-      "\\frac{28}{53}",
-      "\\frac{45}{53}",
-      "\\frac{53}{45}",
-      "\\frac{45}{28}"
+      "2",
+      "36",
+      "39",
+      "51"
+     ],
+     "figure": "<svg viewBox=\"0 0 266.0 155.17\" width=\"266.0\" height=\"155.17\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.ax{stroke:currentColor;stroke-width:1.7;fill:none}.sg{stroke:currentColor;stroke-width:1.2;fill:none}.sh{fill:currentColor;opacity:.22;stroke:none}.lb{fill:currentColor;font:13px ui-serif,Georgia,serif}.an{fill:currentColor;font:11px ui-sans-serif,system-ui,sans-serif}.vx{fill:currentColor;font:italic 12px ui-serif,Georgia,serif}.nt{fill:currentColor;font:12px ui-serif,Georgia,serif}</style><path class=\"ax\" d=\"M228.0,117.17 L228.0,38.0 L38.0,117.17 Z\"/><line class=\"ax\" x1=\"133.0\" y1=\"117.17\" x2=\"133.0\" y2=\"77.58\"/><path class=\"sg\" d=\"M228.0,106.17 L217.0,106.17 L217.0,117.17\"/><path class=\"sg\" d=\"M122.0,117.17 L122.0,106.17 L133.0,106.17\"/><text class=\"lb\" x=\"240.73\" y=\"78.93\" text-anchor=\"start\">30</text><text class=\"lb\" x=\"145.73\" y=\"98.72\" text-anchor=\"start\">15</text><text class=\"lb\" x=\"75.51\" y=\"135.49\" text-anchor=\"end\">36</text><text class=\"vx\" x=\"240.92\" y=\"132.55\" text-anchor=\"start\">B</text><text class=\"vx\" x=\"238.76\" y=\"27.04\" text-anchor=\"start\">C</text><text class=\"vx\" x=\"24.29\" y=\"124.02\" text-anchor=\"end\">A</text><text class=\"vx\" x=\"122.24\" y=\"136.13\" text-anchor=\"end\">D</text><text class=\"vx\" x=\"120.08\" y=\"70.2\" text-anchor=\"end\">E</text></svg>",
+     "table": null,
+     "answer": "B",
+     "rationale": "DE is parallel to BC, so triangle ADE is similar to triangle ABC, and its legs 36 and 15 give AE = 39. The scale 30 ÷ 15 = 2 then gives BD = 36.",
+     "reasons": [
+      "stopped at the scale factor",
+      "",
+      "gave AE, the corresponding side of the small triangle, without scaling it up",
+      "added the two given lengths instead of scaling"
+     ],
+     "id": "f4q19"
+    },
+    {
+     "key": "circles.tangent_slope",
+     "seed": 42,
+     "topic": "circles",
+     "topic_name": "Circles",
+     "domain": "Geometry and Trigonometry",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "A circle in the xy-plane has its center at (10, 6). Line n is tangent to this circle at the point (14, 13). What is the slope of line n?",
+     "choices": [
+      "−7/4",
+      "−4/7",
+      "4/7",
+      "7/4"
+     ],
+     "latex": [
+      "-\\frac{7}{4}",
+      "-\\frac{4}{7}",
+      "\\frac{4}{7}",
+      "\\frac{7}{4}"
      ],
      "figure": null,
      "table": null,
      "answer": "B",
-     "rationale": "The right angle is at P, and T matches Q, so sin T = 45/53.",
+     "rationale": "The radius to (14, 13) has slope 7/4, and a tangent is perpendicular to the radius at the point of tangency, so its slope is −4/7.",
      "reasons": [
-      "used cosine where the question asks for sine",
+      "changed the sign but did not take the reciprocal",
       "",
-      "took the reciprocal of the ratio",
-      "used tangent where the question asks for sine"
+      "took the reciprocal but did not change the sign",
+      "gave the slope of the radius instead of the slope of the tangent"
      ],
-     "id": "f4q16"
+     "id": "f4q20"
     }
    ]
   },
@@ -2547,88 +3078,206 @@
      "id": "f5q13"
     },
     {
-     "key": "eqx.divide_remainder",
+     "key": "ineq.greatest_value",
      "seed": 16,
+     "topic": "linear_inequalities",
+     "topic_name": "Linear Inequalities",
+     "domain": "Algebra",
+     "difficulty": "hard",
+     "type": "spr",
+     "stem": "A number x is at least 5 more than 9 times the value of y. If the value of y is −1, what is the least possible value of x?",
+     "choices": [],
+     "latex": [],
+     "figure": null,
+     "table": null,
+     "answer": "-4",
+     "rationale": "The condition is x ≥ 9y + 5, and with y = −1 the right side is −4, so the least value x can take is −4.",
+     "reasons": [],
+     "id": "f5q14"
+    },
+    {
+     "key": "nleq.discriminant_constant",
+     "seed": 30,
+     "topic": "nonlinear_equations_and_systems",
+     "topic_name": "Nonlinear Equations and Systems",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "spr",
+     "stem": "−x² − 22x + c = 0\nIn the given equation, c is a constant. The equation has exactly one solution. What is the value of c?",
+     "choices": [],
+     "latex": [],
+     "figure": null,
+     "table": null,
+     "answer": "-121",
+     "rationale": "One solution means the discriminant is zero, so 484 + 4c = 0 and c = −121.",
+     "reasons": [],
+     "id": "f5q15"
+    },
+    {
+     "key": "eqx.exponent_value",
+     "seed": 22,
      "topic": "equivalent_expressions",
      "topic_name": "Equivalent Expressions",
      "domain": "Advanced Math",
      "difficulty": "hard",
-     "type": "mcq",
-     "stem": "The equation (z² + 8z − 9)/(z + 9) = pz + k is true for all z ≠ −9, where p and k are integers. What is the value of p + k ?",
-     "choices": [
-      "−8",
-      "−1",
-      "0",
-      "1"
-     ],
-     "latex": [
-      "-8",
-      "-1",
-      "0",
-      "1"
-     ],
+     "type": "spr",
+     "stem": "If √(w⁷)/³√(w²) = w^(a/b) for all positive values of w, what is the value of a/b ?",
+     "choices": [],
+     "latex": [],
      "figure": null,
      "table": null,
-     "answer": "C",
-     "rationale": "z² + 8z − 9 is (z + 9)(z − 1), so dividing by z + 9 leaves z − 1.",
-     "reasons": [
-      "took k from the divisor rather than from the quotient",
-      "reported k on its own",
-      "",
-      "reported p on its own"
-     ],
-     "id": "f5q14"
+     "answer": "17/6",
+     "rationale": "The two radicals are w^(7/2) and w^(2/3), and dividing subtracts the exponents.",
+     "reasons": [],
+     "id": "f5q16"
     },
     {
-     "key": "esc.conclusion",
-     "seed": 13,
-     "topic": "evaluating_statistical_claims",
-     "topic_name": "Evaluating Statistical Claims",
+     "key": "sstat.interpret_table",
+     "seed": 41,
+     "topic": "sample_statistics_and_margin_of_error",
+     "topic_name": "Sample Statistics and Margin of Error",
      "domain": "Problem-Solving and Data Analysis",
      "difficulty": "hard",
      "type": "mcq",
-     "stem": "A botanist selected 125 seedlings at random from the seedlings in a greenhouse and randomly assigned them to two groups. One group was grown under a blue lamp for 3 weeks and the other under the usual lamp. The group grown under the blue lamp put on significantly more stem growth. Which of the following is the most appropriate conclusion from this study?",
+     "stem": "In a study of cell phone use, 895 randomly selected US teens were asked how often they talked on a cell phone and about their texting behavior. The data are summarized in the table above. Based on the data from the study, an estimate of the percent of US teens who are heavy texters is 35% and the associated margin of error is 5%. Which of the following is a correct statement based on the given margin of error?",
      "choices": [
-      "The blue lamp causes an increase in stem growth for the seedlings in this greenhouse.",
-      "There is an association between the blue lamp and an increase in stem growth for the 125 seedlings in the study.",
-      "There is an association between the blue lamp and an increase in stem growth for all seedlings of this species.",
-      "The blue lamp causes an increase in stem growth for all seedlings of this species."
+      "The percent of all US teens who are heavy texters is 30%.",
+      "The percent of all US teens who are heavy texters is less than 35%.",
+      "It is doubtful that the percent of all US teens who are heavy texters is 45%.",
+      "The percent of all US teens who are heavy texters is 40%."
      ],
      "latex": [
-      "The blue lamp causes an increase in stem growth for the seedlings in this greenhouse.",
-      "There is an association between the blue lamp and an increase in stem growth for the 125 seedlings in the study.",
-      "There is an association between the blue lamp and an increase in stem growth for all seedlings of this species.",
-      "The blue lamp causes an increase in stem growth for all seedlings of this species."
+      "The percent of all US teens who are heavy texters is 30%.",
+      "The percent of all US teens who are heavy texters is less than 35%.",
+      "It is doubtful that the percent of all US teens who are heavy texters is 45%.",
+      "The percent of all US teens who are heavy texters is 40%."
+     ],
+     "figure": null,
+     "table": [
+      [
+       "Texting behavior",
+       "Talks on cell phone daily",
+       "Does not talk on cell phone daily",
+       "Total"
+      ],
+      [
+       "Light",
+       "187",
+       "174",
+       "361"
+      ],
+      [
+       "Medium",
+       "123",
+       "101",
+       "224"
+      ],
+      [
+       "Heavy",
+       "126",
+       "184",
+       "310"
+      ],
+      [
+       "Total",
+       "436",
+       "459",
+       "895"
+      ]
+     ],
+     "answer": "C",
+     "rationale": "The margin of error gives an interval of plausible values for the percent of all US teens who are heavy texters: from 30% to 40%. It is a statement about that value, it does not make it certain, and it says nothing about any one teen.",
+     "reasons": [
+      "took the bottom of the interval as the population's value, rather than as the smallest value the margin makes plausible",
+      "read the margin of error as though it could only pull the value down from the estimate",
+      "",
+      "took the top of the interval as the population's value, rather than as the largest value the margin makes plausible"
+     ],
+     "id": "f5q17"
+    },
+    {
+     "key": "rr.rate_product",
+     "seed": 28,
+     "topic": "ratios_rates_proportions_and_units",
+     "topic_name": "Ratios, Rates, Proportional Relationships, and Units",
+     "domain": "Problem-Solving and Data Analysis",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "The total power capacity of the nine largest wind projects in one state was 7,934 megawatts (MW), and the total power capacity of the twenty largest wind projects in the country was 13,805 MW. The amount of energy produced in one hour at a rate of one megawatt is one megawatt-hour. If each of the nine projects had operated continuously for 18 hours at its maximum rate of power generation, approximately how many megawatt-hours of energy would the nine projects have produced?",
+     "choices": [
+      "440",
+      "7,900",
+      "14,000",
+      "140,000"
+     ],
+     "latex": [
+      "440",
+      "7,900",
+      "14,000",
+      "140,000"
      ],
      "figure": null,
      "table": null,
-     "answer": "A",
-     "rationale": "The seedlings were randomly assigned, so the difference between the groups is a cause; they were selected at random from the seedlings in this greenhouse, so the conclusion reaches that group.",
+     "answer": "D",
+     "rationale": "One megawatt running for one hour is one megawatt-hour, so 7,934 MW running for 18 hours is 7,934 × 18 = 142,812 megawatt-hours, which is about 140,000.",
      "reasons": [
-      "",
-      "under-claimed twice over: random assignment earns a cause, and random selection earns the group the units came from",
-      "generalized past the seedlings in this greenhouse, the group the seedlings were selected from",
-      "generalized past the seedlings in this greenhouse, the group the seedlings were selected from"
+      "divided by the 18 hours where the hours multiply",
+      "gave the power capacity itself, never multiplying by the 18 hours it ran for",
+      "used the capacity of all twenty projects rather than the nine",
+      ""
      ],
-     "id": "f5q15"
+     "id": "f5q18"
     },
     {
-     "key": "rtt.similar_sides_ratio",
-     "seed": 41,
+     "key": "rtt.split_right_angle",
+     "seed": 33,
      "topic": "right_triangles_and_trigonometry",
      "topic_name": "Right Triangles and Trigonometry",
      "domain": "Geometry and Trigonometry",
      "difficulty": "hard",
      "type": "spr",
-     "stem": "ED = 448\nDF = 720\nFE = 848\nThe side lengths of right triangle EDF are given. Triangle EDF is similar to triangle HGJ, where D corresponds to G and F corresponds to J. What is the value of cos J ?",
+     "stem": "In the triangle shown, point X (not shown) lies on JL. What is the value of cos(∠JKX) − sin(∠XKL) ?",
      "choices": [],
      "latex": [],
+     "figure": "<svg viewBox=\"0 0 303.01 179.98\" width=\"303.01\" height=\"179.98\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.ax{stroke:currentColor;stroke-width:1.7;fill:none}.sg{stroke:currentColor;stroke-width:1.2;fill:none}.sh{fill:currentColor;opacity:.22;stroke:none}.lb{fill:currentColor;font:13px ui-serif,Georgia,serif}.an{fill:currentColor;font:11px ui-sans-serif,system-ui,sans-serif}.vx{fill:currentColor;font:italic 12px ui-serif,Georgia,serif}.nt{fill:currentColor;font:12px ui-serif,Georgia,serif}</style><path class=\"ax\" d=\"M105.99,38.0 L38.0,141.98 L265.01,141.98 Z\"/><path class=\"sg\" d=\"M99.97,47.21 L109.17,53.23 L115.19,44.02\"/><text class=\"lb\" x=\"59.44\" y=\"90.61\" text-anchor=\"end\">17</text><text class=\"lb\" x=\"197.76\" y=\"83.67\" text-anchor=\"start\">26</text><text class=\"vx\" x=\"100.37\" y=\"23.18\" text-anchor=\"end\">K</text><text class=\"vx\" x=\"24.8\" y=\"156.63\" text-anchor=\"end\">J</text><text class=\"vx\" x=\"278.53\" y=\"149.62\" text-anchor=\"start\">L</text></svg>",
+     "table": null,
+     "answer": "0",
+     "rationale": "Angle JKX and angle XKL make up the right angle at K, so they are complementary and the cosine of one equals the sine of the other. The difference is 0.",
+     "reasons": [],
+     "id": "f5q19"
+    },
+    {
+     "key": "circles.interior",
+     "seed": 4,
+     "topic": "circles",
+     "topic_name": "Circles",
+     "domain": "Geometry and Trigonometry",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "A circle in the xy-plane has equation (x + 5)² + (y + 6)² = 16. Which of the following points does NOT lie in the interior of the circle?",
+     "choices": [
+      "(−3, −4)",
+      "(−3, −9)",
+      "(−5, −6)",
+      "(2, −4)"
+     ],
+     "latex": [
+      "(−3, −4)",
+      "(−3, −9)",
+      "(−5, −6)",
+      "(2, −4)"
+     ],
      "figure": null,
      "table": null,
-     "answer": "45/53",
-     "rationale": "The right angle is at D, and J matches F, so cos J = 45/53.",
-     "reasons": [],
-     "id": "f5q16"
+     "answer": "D",
+     "rationale": "The circle has center (−5, −6) and radius 4. The squared distance from the center to (2, −4) is 53, which is more than 4² = 16, so that point lies outside the circle; for the other three the squared distance is less than 16.",
+     "reasons": [
+      "inside the circle: a student who compares the squared distance with the radius instead of with the square of the radius calls this one outside",
+      "inside the circle: a student who compares the point's own coordinates with the radius, rather than its distance from the center, calls this one outside",
+      "the center of the circle, which lies inside it",
+      ""
+     ],
+     "id": "f5q20"
     }
    ]
   },
@@ -3032,104 +3681,172 @@
      "id": "f6q12"
     },
     {
-     "key": "lin.x_intercept",
-     "seed": 22,
+     "key": "lin.context_two_points",
+     "seed": 36,
      "topic": "linear_functions",
      "topic_name": "Linear Functions",
      "domain": "Algebra",
      "difficulty": "hard",
      "type": "spr",
-     "stem": "In the xy-plane, line k has a slope of 8 and a y-intercept of (0, −89). What is the x-coordinate of the x-intercept of line k?",
+     "stem": "A linear model estimates the population of a city from 1995 to 2019. The model estimates the population was 71 thousand in 1995, 179 thousand in 2014, and x thousand in 2019. To the nearest whole number, what is the value of x?",
      "choices": [],
      "latex": [],
      "figure": null,
      "table": null,
-     "answer": "89/8",
-     "rationale": "0 = 8x − 89 gives x = 89/8.",
+     "answer": "207",
+     "rationale": "The rate of change is 108/19 per unit, so the value at 2,019 is 3941/19.",
      "reasons": [],
      "id": "f6q13"
     },
     {
-     "key": "nlfunc.exp_anchor",
-     "seed": 6,
-     "topic": "nonlinear_functions",
-     "topic_name": "Nonlinear Functions",
-     "domain": "Advanced Math",
+     "key": "sys.two_rates",
+     "seed": 19,
+     "topic": "systems_of_linear_equations",
+     "topic_name": "Systems of Linear Equations",
+     "domain": "Algebra",
      "difficulty": "hard",
      "type": "mcq",
-     "stem": "A model estimates that at the end of each year from 1999 to 2003, the number of beetles in a population was 200% more than the number of beetles in the population at the end of the previous year. The model estimates that at the end of 2000, there were 90 beetles in the population. Which of the following equations represents this model, where n is the estimated number of beetles in the population t years after the end of 1999 and t ≤ 4?",
+     "stem": "In one season, a ranger paddled p miles at 8 miles per hour and motored s miles at 24 miles per hour. The ranger paddled and motored a total of 110 miles that season, and the ranger motored for three times as many hours as the ranger paddled. What is the total number of miles that the ranger motored that season?",
      "choices": [
-      "n = 90(2)^t",
-      "n = 90(3)^t",
-      "n = 30(2)^t",
-      "n = 30(3)^t"
+      "33",
+      "55",
+      "77",
+      "99"
      ],
      "latex": [
-      "n = 90(2)^t",
-      "n = 90(3)^t",
-      "n = 30(2)^t",
-      "n = 30(3)^t"
+      "33",
+      "55",
+      "77",
+      "99"
      ],
      "figure": null,
      "table": null,
      "answer": "D",
-     "rationale": "A rise of 200% multiplies by 3, so the count at the end of 1999 was 90/3 = 30.",
+     "rationale": "An hour of the faster leg covers 3 times as far, so three times the hours means 9 times the miles; 10 times the slower leg is 110, so the slower leg is 11 miles and the faster leg is 99 miles.",
      "reasons": [
-      "used the later count and read the percent as the factor",
-      "used the count a year later as the starting count",
-      "read the percent as the factor itself",
+      "multiplied the slower leg by the number of times without converting hours into miles",
+      "split the total distance evenly between the two legs",
+      "took the slower leg times the number of times away from the total",
       ""
      ],
      "id": "f6q14"
     },
     {
-     "key": "sstat.margin_size",
-     "seed": 9,
-     "topic": "sample_statistics_and_margin_of_error",
-     "topic_name": "Sample Statistics and Margin of Error",
+     "key": "nlfunc.quad_fit",
+     "seed": 3,
+     "topic": "nonlinear_functions",
+     "topic_name": "Nonlinear Functions",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "A quadratic function models the height, in feet, of an object above the ground in terms of the time, in seconds, after the object is launched off an elevated surface. The model indicates the object has an initial height of 20 feet above the ground and reaches its maximum height of 92 feet above the ground 3 seconds after being launched. Based on the model, what is the height, in feet, of the object above the ground 5 seconds after being launched?",
+     "choices": [
+      "17",
+      "28",
+      "52",
+      "60"
+     ],
+     "latex": [
+      "17",
+      "28",
+      "52",
+      "60"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "D",
+     "rationale": "The model is 92 − 8(t − 3)², so at t = 5 the height is 92 − 32 = 60.",
+     "reasons": [
+      "used the vertex's time as the coefficient and the time itself as the distance",
+      "subtracted the square of the coefficient rather than the square of the time past the vertex",
+      "multiplied the time past the vertex by the initial height instead of squaring and scaling",
+      ""
+     ],
+     "id": "f6q15"
+    },
+    {
+     "key": "nlfunc.exp_display",
+     "seed": 32,
+     "topic": "nonlinear_functions",
+     "topic_name": "Nonlinear Functions",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "The functions j and f are defined by the given equations, where x ≥ 0. I. j(x) = 43(1.49)^(x + 3) II. f(x) = 43(1.49)^x Which of the following equations displays, as a constant or coefficient, the minimum value of the function it defines, where x ≥ 0?",
+     "choices": [
+      "I only",
+      "Neither I nor II",
+      "II only",
+      "I and II"
+     ],
+     "latex": [
+      "I only",
+      "Neither I nor II",
+      "II only",
+      "I and II"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "C",
+     "rationale": "Both functions are increasing, so each takes its minimum value at x = 0; the answer is II only.",
+     "reasons": [
+      "only the first equation shows it, which is not what the printed forms do",
+      "neither equation shows it, which is not what the printed forms do",
+      "",
+      "both equations show it, which is not what the printed forms do"
+     ],
+     "id": "f6q16"
+    },
+    {
+     "key": "tvdata.interpret_slope",
+     "seed": 12,
+     "topic": "two_variable_data",
+     "topic_name": "Two-Variable Data: Models and Scatterplots",
      "domain": "Problem-Solving and Data Analysis",
      "difficulty": "hard",
      "type": "mcq",
-     "stem": "The results of two random samples of votes for a proposition are shown above. The samples were selected from the same population, and the margins of error were calculated using the same method. Which of the following is the most appropriate reason that the margin of error for sample A is greater than the margin of error for sample B?",
+     "stem": "The scatterplot shows the mean cost, in dollars, of a cinema ticket every 10 years between 1930 and 1990. A line of best fit is shown, and its equation is y = 0.152x − 0.551. What does the line of best fit predict about the increase in the mean ticket cost over the 60-year period?",
      "choices": [
-      "Sample A had a smaller sample size.",
-      "Sample A had a lower percent of favorable responses.",
-      "Sample A was reported at a higher level of confidence.",
-      "Sample A had a smaller number of votes that could not be recorded."
+      "Every 10 years between 1930 and 1990, the average increase in mean ticket cost was 0.152 dollars.",
+      "Each year between 1930 and 1990, the average increase in mean ticket cost was 0.55 dollars.",
+      "Each year between 1930 and 1990, the average increase in mean ticket cost was 0.152 dollars.",
+      "Every 10 years between 1930 and 1990, the average increase in mean ticket cost was 0.551 dollars."
      ],
      "latex": [
-      "Sample A had a smaller sample size.",
-      "Sample A had a lower percent of favorable responses.",
-      "Sample A was reported at a higher level of confidence.",
-      "Sample A had a smaller number of votes that could not be recorded."
+      "Every 10 years between 1930 and 1990, the average increase in mean ticket cost was 0.152 dollars.",
+      "Each year between 1930 and 1990, the average increase in mean ticket cost was 0.55 dollars.",
+      "Each year between 1930 and 1990, the average increase in mean ticket cost was 0.152 dollars.",
+      "Every 10 years between 1930 and 1990, the average increase in mean ticket cost was 0.551 dollars."
      ],
-     "figure": null,
-     "table": [
-      [
-       "Sample",
-       "Percent in favor",
-       "Margin of error"
-      ],
-      [
-       "A",
-       "48%",
-       "5.8%"
-      ],
-      [
-       "B",
-       "41%",
-       "4.3%"
-      ]
-     ],
-     "answer": "A",
-     "rationale": "The two margins were found the same way from the same population, so the only thing that can differ is the size of the sample. Sample A has the wider margin, so sample A is the smaller sample and sample B is the larger one.",
+     "figure": "<svg viewBox=\"0 0 390 272\" width=\"390\" height=\"272\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.ax{stroke:currentColor;stroke-width:1.4;fill:none}.gr{stroke:currentColor;stroke-width:.6;opacity:.3}.pt{fill:currentColor}.bf{stroke:currentColor;stroke-width:1.9;fill:none}.cv{stroke:currentColor;stroke-width:1.9;fill:none}.sr{stroke:currentColor;stroke-width:1.9;fill:none}.lb{fill:currentColor;font:11px ui-sans-serif,system-ui,sans-serif}.ti{fill:currentColor;font:600 12px ui-sans-serif,system-ui,sans-serif}</style><line class=\"gr\" x1=\"46.0\" y1=\"226.0\" x2=\"46.0\" y2=\"24.0\"/><text class=\"lb xl\" x=\"46.0\" y=\"242\" text-anchor=\"middle\">0</text><line class=\"gr\" x1=\"92.86\" y1=\"226.0\" x2=\"92.86\" y2=\"24.0\"/><text class=\"lb xl\" x=\"92.86\" y=\"242\" text-anchor=\"middle\">10</text><line class=\"gr\" x1=\"139.71\" y1=\"226.0\" x2=\"139.71\" y2=\"24.0\"/><text class=\"lb xl\" x=\"139.71\" y=\"242\" text-anchor=\"middle\">20</text><line class=\"gr\" x1=\"186.57\" y1=\"226.0\" x2=\"186.57\" y2=\"24.0\"/><text class=\"lb xl\" x=\"186.57\" y=\"242\" text-anchor=\"middle\">30</text><line class=\"gr\" x1=\"233.43\" y1=\"226.0\" x2=\"233.43\" y2=\"24.0\"/><text class=\"lb xl\" x=\"233.43\" y=\"242\" text-anchor=\"middle\">40</text><line class=\"gr\" x1=\"280.29\" y1=\"226.0\" x2=\"280.29\" y2=\"24.0\"/><text class=\"lb xl\" x=\"280.29\" y=\"242\" text-anchor=\"middle\">50</text><line class=\"gr\" x1=\"327.14\" y1=\"226.0\" x2=\"327.14\" y2=\"24.0\"/><text class=\"lb xl\" x=\"327.14\" y=\"242\" text-anchor=\"middle\">60</text><line class=\"gr\" x1=\"374.0\" y1=\"226.0\" x2=\"374.0\" y2=\"24.0\"/><text class=\"lb xl\" x=\"374.0\" y=\"242\" text-anchor=\"middle\">70</text><line class=\"gr\" x1=\"46.0\" y1=\"226.0\" x2=\"374.0\" y2=\"226.0\"/><text class=\"lb yl\" x=\"39\" y=\"230.0\" text-anchor=\"end\">0</text><line class=\"gr\" x1=\"46.0\" y1=\"192.33\" x2=\"374.0\" y2=\"192.33\"/><text class=\"lb yl\" x=\"39\" y=\"196.33\" text-anchor=\"end\">2</text><line class=\"gr\" x1=\"46.0\" y1=\"158.67\" x2=\"374.0\" y2=\"158.67\"/><text class=\"lb yl\" x=\"39\" y=\"162.67\" text-anchor=\"end\">4</text><line class=\"gr\" x1=\"46.0\" y1=\"125.0\" x2=\"374.0\" y2=\"125.0\"/><text class=\"lb yl\" x=\"39\" y=\"129.0\" text-anchor=\"end\">6</text><line class=\"gr\" x1=\"46.0\" y1=\"91.33\" x2=\"374.0\" y2=\"91.33\"/><text class=\"lb yl\" x=\"39\" y=\"95.33\" text-anchor=\"end\">8</text><line class=\"gr\" x1=\"46.0\" y1=\"57.67\" x2=\"374.0\" y2=\"57.67\"/><text class=\"lb yl\" x=\"39\" y=\"61.67\" text-anchor=\"end\">10</text><line class=\"gr\" x1=\"46.0\" y1=\"24.0\" x2=\"374.0\" y2=\"24.0\"/><text class=\"lb yl\" x=\"39\" y=\"28.0\" text-anchor=\"end\">12</text><line class=\"ax\" x1=\"46.0\" y1=\"226.0\" x2=\"374.0\" y2=\"226.0\"/><line class=\"ax\" x1=\"46.0\" y1=\"226.0\" x2=\"46.0\" y2=\"24.0\"/><text class=\"ti\" x=\"210.0\" y=\"266\" text-anchor=\"middle\">Years since 1930</text><text class=\"ti\" x=\"13\" y=\"125.0\" text-anchor=\"middle\" transform=\"rotate(-90 13 125.0)\">Mean ticket cost (dollars)</text><text class=\"ti\" x=\"210.0\" y=\"13\" text-anchor=\"middle\">Mean Cinema Ticket Cost</text><line class=\"bf\" x1=\"62.99\" y1=\"226.0\" x2=\"374.0\" y2=\"56.17\"/><circle class=\"pt\" cx=\"46.0\" cy=\"221.36\" r=\"3.4\"/><circle class=\"pt\" cx=\"92.86\" cy=\"209.69\" r=\"3.4\"/><circle class=\"pt\" cx=\"139.71\" cy=\"192.45\" r=\"3.4\"/><circle class=\"pt\" cx=\"186.57\" cy=\"169.65\" r=\"3.4\"/><circle class=\"pt\" cx=\"233.43\" cy=\"141.28\" r=\"3.4\"/><circle class=\"pt\" cx=\"280.29\" cy=\"107.34\" r=\"3.4\"/><circle class=\"pt\" cx=\"327.14\" cy=\"67.84\" r=\"3.4\"/></svg>",
+     "table": null,
+     "answer": "C",
+     "rationale": "The slope is the change in mean ticket cost for each one-year increase in x.",
      "reasons": [
+      "read the slope as a change per 10 years rather than per year",
+      "read the y-intercept as the yearly rate",
       "",
-      "read the margin off the statistic, when the stem fixes the method and leaves only the sample size free",
-      "reached for the confidence level, which does widen an interval but which the stem has already fixed",
-      "looked for the difference in the votes that were lost rather than in the size of the sample"
+      "read the y-intercept as a change per 10 years"
      ],
-     "id": "f6q15"
+     "id": "f6q17"
+    },
+    {
+     "key": "rr.cube_density",
+     "seed": 0,
+     "topic": "ratios_rates_proportions_and_units",
+     "topic_name": "Ratios, Rates, Proportional Relationships, and Units",
+     "domain": "Problem-Solving and Data Analysis",
+     "difficulty": "hard",
+     "type": "spr",
+     "stem": "The density of a certain solid substance is 981 kilograms per cubic meter. A sample of this substance is in the shape of a cube, where each edge has a length of 2.90 meters. To the nearest whole number, what is the mass, in kilograms, of this sample?",
+     "choices": [],
+     "latex": [],
+     "figure": null,
+     "table": null,
+     "answer": "23926",
+     "rationale": "The cube's volume is 2.90³ = 24.389 cubic meters, and each cubic meter has a mass of 981 kilograms, so the mass multiplies: 981 × 24.389 = 23,926.",
+     "reasons": [],
+     "id": "f6q18"
     },
     {
      "key": "scaling.percent",
@@ -3162,7 +3879,25 @@
       "",
       "cubed the ratio as if it were a volume"
      ],
-     "id": "f6q16"
+     "id": "f6q19"
+    },
+    {
+     "key": "lat.vertical_similar",
+     "seed": 12,
+     "topic": "lines_angles_and_triangles",
+     "topic_name": "Lines, Angles, and Triangles",
+     "domain": "Geometry and Trigonometry",
+     "difficulty": "hard",
+     "type": "spr",
+     "stem": "In the figure shown, WZ and XY intersect at point Q. YQ = 46, WQ = 46, WX = 152, and XQ = 156. What is the length of YZ?",
+     "choices": [],
+     "latex": [],
+     "figure": "<svg viewBox=\"0 0 365.7 238.8\" width=\"365.7\" height=\"238.8\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.fg{stroke:currentColor;stroke-width:1.5;fill:none}.ar{stroke:currentColor;stroke-width:1.1;fill:none}.pt{fill:currentColor}.lb{fill:currentColor;font:12px ui-sans-serif,system-ui,sans-serif}.it{fill:currentColor;font:italic 13px ui-serif,Georgia,serif}</style><line class=\"fg\" x1=\"132.7\" y1=\"32.6\" x2=\"352.8\" y2=\"206.2\"/><line class=\"fg\" x1=\"12.8\" y1=\"206.2\" x2=\"233.0\" y2=\"32.6\"/><line class=\"fg\" x1=\"132.7\" y1=\"32.6\" x2=\"12.8\" y2=\"206.2\"/><line class=\"fg\" x1=\"233.0\" y1=\"32.6\" x2=\"352.8\" y2=\"206.2\"/><path class=\"ar\" d=\"M123.0,46.6 A17.0,17.0 0 0 0 146.1,43.1\"/><path class=\"ar\" d=\"M219.6,43.1 A17.0,17.0 0 0 0 242.6,46.6\"/><text class=\"it\" x=\"127.6\" y=\"15.5\" text-anchor=\"middle\">W</text><text class=\"it\" x=\"7.7\" y=\"231.3\" text-anchor=\"middle\">X</text><text class=\"it\" x=\"238.1\" y=\"15.5\" text-anchor=\"middle\">Y</text><text class=\"it\" x=\"358.0\" y=\"231.3\" text-anchor=\"middle\">Z</text><text class=\"it\" x=\"178.4\" y=\"95.3\" text-anchor=\"middle\">Q</text><text class=\"it\" x=\"137.0\" y=\"72.3\" text-anchor=\"middle\">a°</text><text class=\"it\" x=\"228.6\" y=\"72.3\" text-anchor=\"middle\">a°</text></svg>",
+     "table": null,
+     "answer": "152",
+     "rationale": "The angles at W and Y are equal and the angles at Q are vertical, so triangle WQX is similar to triangle YQZ: YZ = 152(46)/46 = 152.",
+     "reasons": [],
+     "id": "f6q20"
     }
    ]
   },
@@ -3536,127 +4271,266 @@
      "id": "f7q12"
     },
     {
-     "key": "ineq.y_range_from_system",
-     "seed": 3,
+     "key": "ineq.allowable_dimension",
+     "seed": 1,
      "topic": "linear_inequalities",
      "topic_name": "Linear Inequalities",
      "domain": "Algebra",
      "difficulty": "hard",
      "type": "mcq",
-     "stem": "y > 2x − 10\n6x > 16\nWhich of the following consists of the y-coordinates of all the points that satisfy the given system of inequalities?",
+     "stem": "A shipping service restricts the dimensions of the boxes it will ship for a certain type of service. The restriction states that for boxes shaped like rectangular prisms, the sum of the perimeter of the base of the box and the height of the box cannot exceed 245 inches. The perimeter of the base is determined using the width and length of the box. If a box has a height of 70 inches and its length is 3.5 times the width, which inequality shows the allowable width x, in inches, of the box?",
      "choices": [
-      "y > −14/3",
-      "y > 26",
-      "y > −22/3",
-      "y > 8/3"
+      "0 < x ≤ 21 7/8",
+      "0 < x ≤ 19 4/9",
+      "0 < x ≤ 43 3/4",
+      "0 < x ≤ 38 8/9"
      ],
      "latex": [
-      "y > −14/3",
-      "y > 26",
-      "y > −22/3",
-      "y > 8/3"
+      "0 < x ≤ 21 7/8",
+      "0 < x ≤ 19 4/9",
+      "0 < x ≤ 43 3/4",
+      "0 < x ≤ 38 8/9"
      ],
      "figure": null,
      "table": null,
-     "answer": "A",
-     "rationale": "6x > 16 gives x > 8/3, so 2x − 10 is greater than −14/3, and y is greater than that again, so y > −14/3.",
+     "answer": "B",
+     "rationale": "The base has perimeter 2(x + 3.5x) = 9x, so 9x + 70 ≤ 245, leaving x ≤ 19 4/9; a width is positive, so 0 < x ≤ 19 4/9.",
      "reasons": [
+      "doubled the length but counted the width only once",
       "",
-      "used the number the second inequality prints instead of the bound it gives for x",
-      "added the constant to the bound on x without multiplying by the coefficient of x",
-      "reported the bound on x rather than the bound on y"
+      "used four widths, as though the base were a square",
+      "added the width and the length once each instead of finding the whole perimeter"
      ],
      "id": "f7q13"
     },
     {
-     "key": "nleq.tangent_constant",
-     "seed": 31,
+     "key": "lin.parameter_intercept",
+     "seed": 14,
+     "topic": "linear_functions",
+     "topic_name": "Linear Functions",
+     "domain": "Algebra",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "f(x) = 7c(35x + 6) + 25 Which of the following represents the x-intercept of the graph of y = f(x) + 5 in the xy-plane, where c is a constant?",
+     "choices": [
+      "(5 − (42c + 25)/(245c), 0)",
+      "(−31/(245c + 5), 0)",
+      "((−42c − 30)/(245c), 0)",
+      "(42c + 30, 0)"
+     ],
+     "latex": [
+      "(5 − (42c + 25)/(245c), 0)",
+      "(−31/(245c + 5), 0)",
+      "((−42c − 30)/(245c), 0)",
+      "(42c + 30, 0)"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "C",
+     "rationale": "Expanding gives y = 245cx + 42c + 30, which is zero at x = −(42c + 30)/(245c).",
+     "reasons": [
+      "left the added constant outside the fraction",
+      "added the constant to the denominator instead of the numerator",
+      "",
+      "did not divide by the coefficient of x"
+     ],
+     "id": "f7q14"
+    },
+    {
+     "key": "nleq.product_roots_constant",
+     "seed": 30,
      "topic": "nonlinear_equations_and_systems",
      "topic_name": "Nonlinear Equations and Systems",
      "domain": "Advanced Math",
      "difficulty": "hard",
      "type": "spr",
-     "stem": "In the xy-plane, a line with equation 4y = c for some constant c intersects a parabola at exactly one point. If the parabola has equation y = −2x² − 8x, what is the value of c?",
+     "stem": "(2x + p)(7x² − 343)(x² − 15x + 6p) = 0\nIn the given equation, p is a positive constant. The sum of the solutions to the equation is 21/2. What is the value of p?",
      "choices": [],
      "latex": [],
      "figure": null,
      "table": null,
-     "answer": "32",
-     "rationale": "The line is y = c/4, and one intersection means 64 − 8(c/4) = 0, so c = 32.",
-     "reasons": [],
-     "id": "f7q14"
-    },
-    {
-     "key": "sstat.scale_frequency",
-     "seed": 23,
-     "topic": "sample_statistics_and_margin_of_error",
-     "topic_name": "Sample Statistics and Margin of Error",
-     "domain": "Problem-Solving and Data Analysis",
-     "difficulty": "hard",
-     "type": "spr",
-     "stem": "A researcher interviewed 363 randomly selected US residents and asked about their views on the use of nuclear energy. The table above summarizes the responses of the interviewees. If the population of the United States was 200 million when the survey was given, based on the sample data for the 363 US residents, what is the best estimate, in millions, of the difference between the number of US residents who somewhat favor or strongly favor the use of nuclear energy and the number of those who somewhat oppose or strongly oppose it? (Round your answer to the nearest whole number.)",
-     "choices": [],
-     "latex": [],
-     "figure": null,
-     "table": [
-      [
-       "Response",
-       "Frequency"
-      ],
-      [
-       "Strongly favor",
-       "152"
-      ],
-      [
-       "Somewhat favor",
-       "54"
-      ],
-      [
-       "Somewhat oppose",
-       "78"
-      ],
-      [
-       "Strongly oppose",
-       "79"
-      ]
-     ],
-     "answer": "27",
-     "rationale": "206 of the 363 responses are on one side and 157 on the other, a difference of 49, and 49/363 of 200 rounds to 27.",
+     "answer": "9",
+     "rationale": "The middle factor contributes 7 and −7, which cancel, and the last contributes 15; the first contributes −p/2, so 15 − p/2 = 21/2 and p = 9.",
      "reasons": [],
      "id": "f7q15"
     },
     {
-     "key": "circles.coterminal",
-     "seed": 16,
+     "key": "nlfunc.graph_zeros",
+     "seed": 21,
+     "topic": "nonlinear_functions",
+     "topic_name": "Nonlinear Functions",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "The graph of y = h(x) is shown, where h(x) = ab^x + c, and a, b, and c are constants. For how many values of x does h(x) = 0?",
+     "choices": [
+      "Zero",
+      "One",
+      "Three",
+      "Two"
+     ],
+     "latex": [
+      "Zero",
+      "One",
+      "Three",
+      "Two"
+     ],
+     "figure": "<svg viewBox=\"0 0 360 320\" width=\"360\" height=\"320\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.ax{stroke:currentColor;stroke-width:1.4;fill:none}.gr{stroke:currentColor;stroke-width:.5;opacity:.28}.pt{fill:currentColor}.ln{stroke:currentColor;stroke-width:2;fill:none}.lb{fill:currentColor;font:11px ui-sans-serif,system-ui,sans-serif}.it{fill:currentColor;font:italic 13px ui-serif,Georgia,serif}.ti{fill:currentColor;font:600 12px ui-sans-serif,system-ui,sans-serif}</style><line class=\"gr\" x1=\"30.0\" y1=\"290.0\" x2=\"30.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"45.0\" y1=\"290.0\" x2=\"45.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"60.0\" y1=\"290.0\" x2=\"60.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"75.0\" y1=\"290.0\" x2=\"75.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"90.0\" y1=\"290.0\" x2=\"90.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"105.0\" y1=\"290.0\" x2=\"105.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"120.0\" y1=\"290.0\" x2=\"120.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"135.0\" y1=\"290.0\" x2=\"135.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"150.0\" y1=\"290.0\" x2=\"150.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"165.0\" y1=\"290.0\" x2=\"165.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"180.0\" y1=\"290.0\" x2=\"180.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"195.0\" y1=\"290.0\" x2=\"195.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"210.0\" y1=\"290.0\" x2=\"210.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"225.0\" y1=\"290.0\" x2=\"225.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"240.0\" y1=\"290.0\" x2=\"240.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"255.0\" y1=\"290.0\" x2=\"255.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"270.0\" y1=\"290.0\" x2=\"270.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"285.0\" y1=\"290.0\" x2=\"285.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"300.0\" y1=\"290.0\" x2=\"300.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"315.0\" y1=\"290.0\" x2=\"315.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"330.0\" y1=\"290.0\" x2=\"330.0\" y2=\"30.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"290.0\" x2=\"330.0\" y2=\"290.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"270.0\" x2=\"330.0\" y2=\"270.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"250.0\" x2=\"330.0\" y2=\"250.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"230.0\" x2=\"330.0\" y2=\"230.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"210.0\" x2=\"330.0\" y2=\"210.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"190.0\" x2=\"330.0\" y2=\"190.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"170.0\" x2=\"330.0\" y2=\"170.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"150.0\" x2=\"330.0\" y2=\"150.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"130.0\" x2=\"330.0\" y2=\"130.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"110.0\" x2=\"330.0\" y2=\"110.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"90.0\" x2=\"330.0\" y2=\"90.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"70.0\" x2=\"330.0\" y2=\"70.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"50.0\" x2=\"330.0\" y2=\"50.0\"/><line class=\"gr\" x1=\"30.0\" y1=\"30.0\" x2=\"330.0\" y2=\"30.0\"/><line class=\"ax\" x1=\"30.0\" y1=\"70.0\" x2=\"342.0\" y2=\"70.0\"/><line class=\"ax\" x1=\"180.0\" y1=\"290.0\" x2=\"180.0\" y2=\"18.0\"/><path class=\"pt\" d=\"M342.0,70.0 l-6,-3.5 v7 z\"/><path class=\"pt\" d=\"M180.0,18.0 l-3.5,6 h7 z\"/><text class=\"it\" x=\"338.0\" y=\"88.0\">x</text><text class=\"it\" x=\"166.0\" y=\"20.0\">y</text><text class=\"it\" x=\"168.0\" y=\"85.0\">O</text><text class=\"lb\" x=\"30.0\" y=\"85.0\" text-anchor=\"middle\">−10</text><text class=\"lb\" x=\"60.0\" y=\"85.0\" text-anchor=\"middle\">−8</text><text class=\"lb\" x=\"90.0\" y=\"85.0\" text-anchor=\"middle\">−6</text><text class=\"lb\" x=\"120.0\" y=\"85.0\" text-anchor=\"middle\">−4</text><text class=\"lb\" x=\"150.0\" y=\"85.0\" text-anchor=\"middle\">−2</text><text class=\"lb\" x=\"210.0\" y=\"85.0\" text-anchor=\"middle\">2</text><text class=\"lb\" x=\"240.0\" y=\"85.0\" text-anchor=\"middle\">4</text><text class=\"lb\" x=\"270.0\" y=\"85.0\" text-anchor=\"middle\">6</text><text class=\"lb\" x=\"300.0\" y=\"85.0\" text-anchor=\"middle\">8</text><text class=\"lb\" x=\"330.0\" y=\"85.0\" text-anchor=\"middle\">10</text><text class=\"lb\" x=\"173.0\" y=\"274.0\" text-anchor=\"end\">−10</text><text class=\"lb\" x=\"173.0\" y=\"234.0\" text-anchor=\"end\">−8</text><text class=\"lb\" x=\"173.0\" y=\"194.0\" text-anchor=\"end\">−6</text><text class=\"lb\" x=\"173.0\" y=\"154.0\" text-anchor=\"end\">−4</text><text class=\"lb\" x=\"173.0\" y=\"114.0\" text-anchor=\"end\">−2</text><text class=\"lb\" x=\"173.0\" y=\"34.0\" text-anchor=\"end\">2</text><polyline class=\"ln\" points=\"30.0,229.98 31.25,229.98 32.5,229.98 33.75,229.98 35.0,229.98 36.25,229.97 37.5,229.97 38.75,229.97 40.0,229.97 41.25,229.97 42.5,229.97 43.75,229.96 45.0,229.96 46.25,229.96 47.5,229.96 48.75,229.95 50.0,229.95 51.25,229.95 52.5,229.94 53.75,229.94 55.0,229.94 56.25,229.93 57.5,229.93 58.75,229.93 60.0,229.92 61.25,229.92 62.5,229.91 63.75,229.91 65.0,229.9 66.25,229.9 67.5,229.89 68.75,229.88 70.0,229.88 71.25,229.87 72.5,229.86 73.75,229.85 75.0,229.84 76.25,229.83 77.5,229.82 78.75,229.81 80.0,229.8 81.25,229.79 82.5,229.78 83.75,229.77 85.0,229.75 86.25,229.74 87.5,229.72 88.75,229.71 90.0,229.69 91.25,229.67 92.5,229.65 93.75,229.63 95.0,229.61 96.25,229.58 97.5,229.56 98.75,229.53 100.0,229.5 101.25,229.47 102.5,229.44 103.75,229.41 105.0,229.38 106.25,229.34 107.5,229.3 108.75,229.26 110.0,229.21 111.25,229.17 112.5,229.12 113.75,229.06 115.0,229.01 116.25,228.95 117.5,228.89 118.75,228.82 120.0,228.75 121.25,228.68 122.5,228.6 123.75,228.51 125.0,228.43 126.25,228.33 127.5,228.23 128.75,228.13 130.0,228.02 131.25,227.9 132.5,227.77 133.75,227.64 135.0,227.5 136.25,227.35 137.5,227.19 138.75,227.03 140.0,226.85 141.25,226.66 142.5,226.46 143.75,226.25 145.0,226.03 146.25,225.8 147.5,225.55 148.75,225.28 150.0,225.0 151.25,224.7 152.5,224.39 153.75,224.05 155.0,223.7 156.25,223.33 157.5,222.93 158.75,222.51 160.0,222.06 161.25,221.59 162.5,221.09 163.75,220.56 165.0,220.0 166.25,219.41 167.5,218.78 168.75,218.11 170.0,217.4 171.25,216.65 172.5,215.86 173.75,215.02 175.0,214.13 176.25,213.18 177.5,212.18 178.75,211.12 180.0,210.0 181.25,208.81 182.5,207.55 183.75,206.22 185.0,204.8 186.25,203.3 187.5,201.72 188.75,200.03 190.0,198.25 191.25,196.36 192.5,194.36 193.75,192.25 195.0,190.0 196.25,187.62 197.5,185.1 198.75,182.43 200.0,179.6 201.25,176.61 202.5,173.43 203.75,170.07 205.0,166.5 206.25,162.73 207.5,158.73 208.75,154.49 210.0,150.0 211.25,145.24 212.5,140.2 213.75,134.86 215.0,129.21 216.25,123.21 217.5,116.86 218.75,110.14 220.0,103.01 221.25,95.46 222.5,87.46 223.75,78.98 225.0,70.0 226.25,60.49 227.5,50.41 228.75,39.73\"/></svg>",
+     "table": null,
+     "answer": "B",
+     "rationale": "The curve approaches the horizontal line y = −8 and lies on both sides of the x-axis, so h(x) = 0 for one value of x.",
+     "reasons": [
+      "counted no crossing, but the curve does cross the x-axis",
+      "",
+      "counted the turning points of a polynomial, not of an exponential",
+      "counted a second crossing that an exponential curve cannot have"
+     ],
+     "id": "f7q16"
+    },
+    {
+     "key": "ovd.measure_effect",
+     "seed": 5,
+     "topic": "one_variable_data",
+     "topic_name": "One-Variable Data: Distributions and Measures of Centre and Spread",
+     "domain": "Problem-Solving and Data Analysis",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "A data set of 27 different numbers is recorded. A new data set is created by adding 5 to each number in the original data set. Which of the following measures has the same value in both the original and new data sets?",
+     "choices": [
+      "Mean",
+      "Sum of the numbers",
+      "Median",
+      "Standard deviation"
+     ],
+     "latex": [
+      "Mean",
+      "Sum of the numbers",
+      "Median",
+      "Standard deviation"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "D",
+     "rationale": "Every value moves by the same amount, so every centre moves with them and the distances between the values -- the spread -- do not change.",
+     "reasons": [
+      "assumed the average is fixed by the middle of the list rather than by every value in it",
+      "assumed the total is fixed by how many values there are",
+      "assumed the middle value is fixed by its position, whatever the values around it do",
+      ""
+     ],
+     "id": "f7q17"
+    },
+    {
+     "key": "pct.series",
+     "seed": 4,
+     "topic": "percentages",
+     "topic_name": "Percentages",
+     "domain": "Problem-Solving and Data Analysis",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "The manager of a garden center received the report above on the number of rose bushes sold by the center. The manager estimated that the percent increase from 2016 to 2017 would be triple the percent increase from 2017 to 2018. How many rose bushes did the manager expect would be sold in 2018?",
+     "choices": [
+      "3,360",
+      "3,381",
+      "4,480",
+      "4,669"
+     ],
+     "latex": [
+      "3,360",
+      "3,381",
+      "4,480",
+      "4,669"
+     ],
+     "figure": null,
+     "table": [
+      [
+       "Year",
+       "Rose bushes sold"
+      ],
+      [
+       "2016",
+       "2,800"
+      ],
+      [
+       "2017",
+       "3,220"
+      ]
+     ],
+     "answer": "B",
+     "rationale": "The increase from 2016 to 2017 is 15%, so the next increase is 5%: 3,220 x 1.05 = 3,381.",
+     "reasons": [
+      "added a third of the previous rise in rose bushes instead of a third of the percent increase",
+      "",
+      "added 3 times the previous rise in rose bushes",
+      "tripled the percent increase instead of dividing it by 3"
+     ],
+     "id": "f7q18"
+    },
+    {
+     "key": "circles.transform",
+     "seed": 9,
      "topic": "circles",
      "topic_name": "Circles",
      "domain": "Geometry and Trigonometry",
      "difficulty": "hard",
      "type": "mcq",
-     "stem": "In the xy-plane, point G is the center of a circle of radius 5, point U on the circle has coordinates (0, −5), and point V on the circle has coordinates (x, 5), where x is a constant. Which of the following could be the positive measure of angle UGV, in radians?",
+     "stem": "In the xy-plane, circle A is defined by (x + 2)² + (y + 9)² = 64. Circle B is circle A translated 23 units up. Which equation represents circle B?",
      "choices": [
-      "33π/2",
-      "22π",
-      "47π/2",
-      "25π"
+      "(x + 2)² + (y − 14)² = 64",
+      "(x + 25)² + (y + 9)² = 64",
+      "(x + 2)² + (y + 32)² = 64",
+      "(x − 21)² + (y + 9)² = 64"
      ],
      "latex": [
-      "\\frac{33\\pi}{2}",
-      "22\\pi",
-      "\\frac{47\\pi}{2}",
-      "25\\pi"
+      "(x + 2)² + (y − 14)² = 64",
+      "(x + 25)² + (y + 9)² = 64",
+      "(x + 2)² + (y + 32)² = 64",
+      "(x − 21)² + (y + 9)² = 64"
      ],
      "figure": null,
      "table": null,
-     "answer": "D",
-     "rationale": "V must be (0, 5), the far end of the diameter through U, so angle UGV is a half turn plus any whole number of full turns: π + 24π = 25π.",
+     "answer": "A",
+     "rationale": "Translating 23 units up moves the center from (−2, −9) to (−2, 14) and leaves the radius alone, so circle B is (x + 2)² + (y − 14)² = 64.",
      "reasons": [
-      "a half-integer multiple of π stops a quarter turn away, at (5, 0)",
-      "an even multiple of π is a whole number of full turns, which ends back at U",
-      "a half-integer multiple of π stops a quarter turn away, at (−5, 0)",
-      ""
+      "",
+      "translated left instead of up",
+      "translated to the down instead of to the up",
+      "translated right instead of up"
      ],
-     "id": "f7q16"
+     "id": "f7q19"
+    },
+    {
+     "key": "lat.similar_sufficient",
+     "seed": 9,
+     "topic": "lines_angles_and_triangles",
+     "topic_name": "Lines, Angles, and Triangles",
+     "domain": "Geometry and Trigonometry",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "In triangles LMN and RST, angles L and R each have measure 58°, LN = 29, and RT = 58. Which additional piece of information is sufficient to prove that triangle LMN is similar to triangle RST?",
+     "choices": [
+      "MN = 22 and ST = 22",
+      "The measures of angles M and S are 41° and 58°, respectively.",
+      "The measures of angles M and T are 41° and 81°, respectively.",
+      "MN = 22 and ST = 44"
+     ],
+     "latex": [
+      "MN = 22 and ST = 22",
+      "The measures of angles M and S are 41° and 58°, respectively.",
+      "The measures of angles M and T are 41° and 81°, respectively.",
+      "MN = 22 and ST = 44"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "C",
+     "rationale": "Angle M = 41° makes angle N = 81°, and angle T = 81° with angle R = 58° makes angle S = 41°, so the two triangles agree in all three angles.",
+     "reasons": [
+      "MN and ST lie opposite the angles that are given, so this is a side-side-angle pairing, which does not fix a triangle's shape",
+      "this would make triangle RST have angles 58°, 58° and 64°, which does not match triangle LMN",
+      "",
+      "the ratio matches, but MN and ST are again opposite the given angles rather than beside them"
+     ],
+     "id": "f7q20"
     }
    ]
   },
@@ -4085,113 +4959,220 @@
      "id": "f8q13"
     },
     {
-     "key": "nlfunc.shift_max",
-     "seed": 33,
+     "key": "sys.all_solutions",
+     "seed": 22,
+     "topic": "systems_of_linear_equations",
+     "topic_name": "Systems of Linear Equations",
+     "domain": "Algebra",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "10x + 12y = 27\n20x + 24y = 54\nFor each real number r, which of the following points lies on the graph of each equation in the xy-plane for the given system?",
+     "choices": [
+      "(r/2 + 27, −r/2 + 54)",
+      "(r, −5r/6 + 9/4)",
+      "(−5r/6 + 9/4, r)",
+      "(−5r/6 + 27, 5r/6 + 54)"
+     ],
+     "latex": [
+      "(r/2 + 27, −r/2 + 54)",
+      "(r, −5r/6 + 9/4)",
+      "(−5r/6 + 9/4, r)",
+      "(−5r/6 + 27, 5r/6 + 54)"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "B",
+     "rationale": "The second equation is 2 times the first, so the two describe one line; solving 10x + 12y = 27 for y gives y = −5x/6 + 9/4.",
+     "reasons": [
+      "divided by the factor relating the two equations instead of by the coefficient of y",
+      "",
+      "wrote the two coordinates in the wrong order",
+      "divided only the x-term by the coefficient of y and took the two right-hand values as printed"
+     ],
+     "id": "f8q14"
+    },
+    {
+     "key": "nlfunc.exp_display",
+     "seed": 20,
      "topic": "nonlinear_functions",
      "topic_name": "Nonlinear Functions",
      "domain": "Advanced Math",
      "difficulty": "hard",
      "type": "mcq",
-     "stem": "f(t) = 23t − 5t² The function f is defined by the given equation. The function g is defined by g(t) = f(t) + 8. Which expression represents the maximum value of g(t)?",
+     "stem": "The functions g and j are defined by the given equations, where x ≥ 0. I. g(x) = 65(0.6)^x II. j(x) = 65(0.6)^(x + 2) Which of the following equations displays, as a constant or coefficient, the maximum value of the function it defines, where x ≥ 0?",
      "choices": [
-      "8 + 5(23/10)²",
-      "8 − 5(23/10)²",
-      "8 − (23/10)²",
-      "8 + (23/10)²"
+      "I only",
+      "I and II",
+      "Neither I nor II",
+      "II only"
      ],
      "latex": [
-      "8 + 5(23/10)²",
-      "8 − 5(23/10)²",
-      "8 − (23/10)²",
-      "8 + (23/10)²"
+      "I only",
+      "I and II",
+      "Neither I nor II",
+      "II only"
      ],
      "figure": null,
      "table": null,
      "answer": "A",
-     "rationale": "f is greatest at t = 23/10, where it equals 5(23/10)², so g is greatest at 8 + 5(23/10)².",
+     "rationale": "Both functions are decreasing, so each takes its maximum value at x = 0; the answer is I only.",
      "reasons": [
       "",
-      "subtracted the squared term instead of adding it",
-      "subtracted the squared term and left the coefficient out",
-      "left the coefficient out when squaring the half-way point"
-     ],
-     "id": "f8q14"
-    },
-    {
-     "key": "esc.generalize_table",
-     "seed": 11,
-     "topic": "evaluating_statistical_claims",
-     "topic_name": "Evaluating Statistical Claims",
-     "domain": "Problem-Solving and Data Analysis",
-     "difficulty": "hard",
-     "type": "mcq",
-     "stem": "A trivia tournament organizer wanted to study the relationship between the number of points a team scores in a trivia round and the number of hours that a team practices each week. For the study, the organizer selected 61 teams at random from all trivia teams in a certain tournament. The table displays the information for the 36 teams in the sample that practiced for at least 4 hours per week. Which of the following is the largest population to which the results of the study can be generalized?",
-     "choices": [
-      "The 36 trivia teams in the sample that practiced for at least 4 hours per week",
-      "All trivia teams in the tournament",
-      "All trivia teams in the tournament that scored 17 or more points in the round",
-      "The 61 trivia teams in the sample"
-     ],
-     "latex": [
-      "The 36 trivia teams in the sample that practiced for at least 4 hours per week",
-      "All trivia teams in the tournament",
-      "All trivia teams in the tournament that scored 17 or more points in the round",
-      "The 61 trivia teams in the sample"
-     ],
-     "figure": null,
-     "table": [
-      [
-       "Hours practiced",
-       "12 to 16 points",
-       "17 or more points",
-       "Total"
-      ],
-      [
-       "4 to 7 hours",
-       "9",
-       "7",
-       "16"
-      ],
-      [
-       "More than 7 hours",
-       "2",
-       "18",
-       "20"
-      ],
-      [
-       "Total",
-       "11",
-       "25",
-       "36"
-      ]
-     ],
-     "answer": "B",
-     "rationale": "The trivia teams were selected at random from all trivia teams in the tournament, so the results reach that population and no wider one.",
-     "reasons": [
-      "read the table as the study, and applied the result only to the part of the sample the table reports",
-      "",
-      "named a population the sample can speak for, but not the largest one it can speak for",
-      "stopped at the trivia teams who were measured, although selecting them at random earns the population they were drawn from"
+      "both equations show it, which is not what the printed forms do",
+      "neither equation shows it, which is not what the printed forms do",
+      "only the second equation shows it, which is not what the printed forms do"
      ],
      "id": "f8q15"
     },
     {
-     "key": "lat.vertical_similar",
-     "seed": 12,
+     "key": "eqx.rational_simplify",
+     "seed": 4,
+     "topic": "equivalent_expressions",
+     "topic_name": "Equivalent Expressions",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "f(n) = n³ − 9n\ng(n) = n² + 7n − 30\nWhich of the following expressions is equivalent to f(n)/g(n), for n > 3 ?",
+     "choices": [
+      "(n + 3)/(n + 10)",
+      "n(n − 3)/(n + 10)",
+      "1/(n + 10)",
+      "n(n + 3)/(n + 10)"
+     ],
+     "latex": [
+      "(n + 3)/(n + 10)",
+      "n(n − 3)/(n + 10)",
+      "1/(n + 10)",
+      "n(n + 3)/(n + 10)"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "D",
+     "rationale": "n³ − 9n is n(n − 3)(n + 3) and n² + 7n − 30 is (n − 3)(n + 10), so only n − 3 cancels.",
+     "reasons": [
+      "cancelled the n in front as well as the shared bracket",
+      "cancelled the wrong bracket and kept the one the denominator shares",
+      "cancelled everything in the numerator against the denominator",
+      ""
+     ],
+     "id": "f8q16"
+    },
+    {
+     "key": "pct.successive",
+     "seed": 34,
+     "topic": "percentages",
+     "topic_name": "Percentages",
+     "domain": "Problem-Solving and Data Analysis",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "The value of a collectible comic book was $3,475 at the end of 2009. Its value increased by 125% from the end of 2009 to the end of 2010 and then decreased by 8% from the end of 2010 to the end of 2011. What was the value of the collectible comic book at the end of 2011?",
+     "choices": [
+      "$7,193.25",
+      "$7,540.75",
+      "$7,818.75",
+      "$8,444.25"
+     ],
+     "latex": [
+      "$7,193.25",
+      "$7,540.75",
+      "$7,818.75",
+      "$8,444.25"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "A",
+     "rationale": "2.25 x 0.92 = 2.07.",
+     "reasons": [
+      "",
+      "added the two percents and applied them in one step",
+      "applied the first change only",
+      "increased in the second year instead of decreasing"
+     ],
+     "id": "f8q17"
+    },
+    {
+     "key": "sstat.scale_group",
+     "seed": 27,
+     "topic": "sample_statistics_and_margin_of_error",
+     "topic_name": "Sample Statistics and Margin of Error",
+     "domain": "Problem-Solving and Data Analysis",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "A transit agency surveyed the 34 riders on one of its buses and 79.4 percent of them reported that they hold a monthly pass. The average number of riders on a bus in the agency's fleet is 34. If the riders on the surveyed bus are representative of the agency's riders and the fleet carries 500 busloads of riders each day, which of the following best estimates the number of the agency's daily riders who do not hold a monthly pass?",
+     "choices": [
+      "3,500",
+      "8,500",
+      "13,500",
+      "17,000"
+     ],
+     "latex": [
+      "3,500",
+      "8,500",
+      "13,500",
+      "17,000"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "A",
+     "rationale": "79.4 percent of 34 is 27 riders, so 7 of the 34 do not hold a monthly pass, and 7 x 500 = 3,500.",
+     "reasons": [
+      "",
+      "assumed the group splits evenly and took half of the total",
+      "estimated the riders who hold a monthly pass, the group the question leaves out",
+      "gave every one of the agency's daily riders without using the survey at all"
+     ],
+     "id": "f8q18"
+    },
+    {
+     "key": "lat.three_lines_triangle",
+     "seed": 43,
      "topic": "lines_angles_and_triangles",
      "topic_name": "Lines, Angles, and Triangles",
      "domain": "Geometry and Trigonometry",
      "difficulty": "hard",
      "type": "spr",
-     "stem": "In the figure shown, WZ and XY intersect at point Q. YQ = 46, WQ = 46, WX = 152, and XQ = 156. What is the length of YZ?",
+     "stem": "Intersecting lines r, s, and t are shown below. What is the value of x ?",
      "choices": [],
      "latex": [],
-     "figure": "<svg viewBox=\"0 0 365.7 238.8\" width=\"365.7\" height=\"238.8\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.fg{stroke:currentColor;stroke-width:1.5;fill:none}.ar{stroke:currentColor;stroke-width:1.1;fill:none}.pt{fill:currentColor}.lb{fill:currentColor;font:12px ui-sans-serif,system-ui,sans-serif}.it{fill:currentColor;font:italic 13px ui-serif,Georgia,serif}</style><line class=\"fg\" x1=\"132.7\" y1=\"32.6\" x2=\"352.8\" y2=\"206.2\"/><line class=\"fg\" x1=\"12.8\" y1=\"206.2\" x2=\"233.0\" y2=\"32.6\"/><line class=\"fg\" x1=\"132.7\" y1=\"32.6\" x2=\"12.8\" y2=\"206.2\"/><line class=\"fg\" x1=\"233.0\" y1=\"32.6\" x2=\"352.8\" y2=\"206.2\"/><path class=\"ar\" d=\"M123.0,46.6 A17.0,17.0 0 0 0 146.1,43.1\"/><path class=\"ar\" d=\"M219.6,43.1 A17.0,17.0 0 0 0 242.6,46.6\"/><text class=\"it\" x=\"127.6\" y=\"15.5\" text-anchor=\"middle\">W</text><text class=\"it\" x=\"7.7\" y=\"231.3\" text-anchor=\"middle\">X</text><text class=\"it\" x=\"238.1\" y=\"15.5\" text-anchor=\"middle\">Y</text><text class=\"it\" x=\"358.0\" y=\"231.3\" text-anchor=\"middle\">Z</text><text class=\"it\" x=\"178.4\" y=\"95.3\" text-anchor=\"middle\">Q</text><text class=\"it\" x=\"137.0\" y=\"72.3\" text-anchor=\"middle\">a°</text><text class=\"it\" x=\"228.6\" y=\"72.3\" text-anchor=\"middle\">a°</text></svg>",
+     "figure": "<svg viewBox=\"0 0 297.0 385.2\" width=\"297.0\" height=\"385.2\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.fg{stroke:currentColor;stroke-width:1.5;fill:none}.ar{stroke:currentColor;stroke-width:1.1;fill:none}.pt{fill:currentColor}.lb{fill:currentColor;font:12px ui-sans-serif,system-ui,sans-serif}.it{fill:currentColor;font:italic 13px ui-serif,Georgia,serif}</style><line class=\"fg\" x1=\"80.1\" y1=\"373.5\" x2=\"80.1\" y2=\"33.5\"/><line class=\"fg\" x1=\"46.1\" y1=\"41.0\" x2=\"196.2\" y2=\"362.9\"/><line class=\"fg\" x1=\"4.0\" y1=\"266.8\" x2=\"272.6\" y2=\"359.2\"/><path class=\"ar\" d=\"M88.2,131.2 A19.0,19.0 0 0 0 80.1,95.0\"/><path class=\"ar\" d=\"M168.6,303.6 A26.0,26.0 0 0 0 155.0,318.7\"/><path class=\"ar\" d=\"M80.1,274.0 A19.0,19.0 0 0 0 62.2,286.8\"/><text class=\"it\" x=\"207.7\" y=\"350.2\" text-anchor=\"start\">r</text><text class=\"it\" x=\"285.6\" y=\"377.7\" text-anchor=\"start\">t</text><text class=\"it\" x=\"80.1\" y=\"15.5\" text-anchor=\"middle\">s</text><text class=\"lb\" x=\"110.4\" y=\"111.8\" text-anchor=\"start\">155°</text><text class=\"lb\" x=\"150.8\" y=\"298.3\" text-anchor=\"end\">46°</text><text class=\"it\" x=\"62.1\" y=\"264.7\" text-anchor=\"end\">x°</text></svg>",
      "table": null,
-     "answer": "152",
-     "rationale": "The angles at W and Y are equal and the angles at Q are vertical, so triangle WQX is similar to triangle YQZ: YZ = 152(46)/46 = 152.",
+     "answer": "71",
+     "rationale": "The three lines make a triangle with angles 180 − 155 = 25°, 46° and 109°, and x is the supplement of the last of those: x = 71.",
      "reasons": [],
-     "id": "f8q16"
+     "id": "f8q19"
+    },
+    {
+     "key": "coord.leg_from_area",
+     "seed": 6,
+     "topic": "area_and_volume",
+     "topic_name": "Area and Volume",
+     "domain": "Geometry and Trigonometry",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "The line segment shown in the xy-plane represents one of the legs of a right triangle. The area of this triangle is 6√113 square units. What is the length, in units, of the other leg of this triangle?",
+     "choices": [
+      "6",
+      "√113",
+      "12",
+      "3√113"
+     ],
+     "latex": [
+      "6",
+      "\\sqrt{113}",
+      "12",
+      "3\\sqrt{113}"
+     ],
+     "figure": "<svg viewBox=\"0 0 452 402\" width=\"452\" height=\"402\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.ax{stroke:currentColor;stroke-width:1.4;fill:none}.gr{stroke:currentColor;stroke-width:.5;opacity:.28}.pt{fill:currentColor}.sg{stroke:currentColor;stroke-width:2.2;fill:none}.lb{fill:currentColor;font:11px ui-sans-serif,system-ui,sans-serif}.it{fill:currentColor;font:italic 13px ui-serif,Georgia,serif}</style><line class=\"gr\" x1=\"26\" y1=\"376\" x2=\"26\" y2=\"26\"/><line class=\"gr\" x1=\"51\" y1=\"376\" x2=\"51\" y2=\"26\"/><line class=\"gr\" x1=\"76\" y1=\"376\" x2=\"76\" y2=\"26\"/><line class=\"gr\" x1=\"101\" y1=\"376\" x2=\"101\" y2=\"26\"/><line class=\"gr\" x1=\"126\" y1=\"376\" x2=\"126\" y2=\"26\"/><line class=\"gr\" x1=\"151\" y1=\"376\" x2=\"151\" y2=\"26\"/><line class=\"gr\" x1=\"176\" y1=\"376\" x2=\"176\" y2=\"26\"/><line class=\"gr\" x1=\"201\" y1=\"376\" x2=\"201\" y2=\"26\"/><line class=\"gr\" x1=\"226\" y1=\"376\" x2=\"226\" y2=\"26\"/><line class=\"gr\" x1=\"251\" y1=\"376\" x2=\"251\" y2=\"26\"/><line class=\"gr\" x1=\"276\" y1=\"376\" x2=\"276\" y2=\"26\"/><line class=\"gr\" x1=\"301\" y1=\"376\" x2=\"301\" y2=\"26\"/><line class=\"gr\" x1=\"326\" y1=\"376\" x2=\"326\" y2=\"26\"/><line class=\"gr\" x1=\"351\" y1=\"376\" x2=\"351\" y2=\"26\"/><line class=\"gr\" x1=\"376\" y1=\"376\" x2=\"376\" y2=\"26\"/><line class=\"gr\" x1=\"401\" y1=\"376\" x2=\"401\" y2=\"26\"/><line class=\"gr\" x1=\"426\" y1=\"376\" x2=\"426\" y2=\"26\"/><line class=\"gr\" x1=\"26\" y1=\"376\" x2=\"426\" y2=\"376\"/><line class=\"gr\" x1=\"26\" y1=\"351\" x2=\"426\" y2=\"351\"/><line class=\"gr\" x1=\"26\" y1=\"326\" x2=\"426\" y2=\"326\"/><line class=\"gr\" x1=\"26\" y1=\"301\" x2=\"426\" y2=\"301\"/><line class=\"gr\" x1=\"26\" y1=\"276\" x2=\"426\" y2=\"276\"/><line class=\"gr\" x1=\"26\" y1=\"251\" x2=\"426\" y2=\"251\"/><line class=\"gr\" x1=\"26\" y1=\"226\" x2=\"426\" y2=\"226\"/><line class=\"gr\" x1=\"26\" y1=\"201\" x2=\"426\" y2=\"201\"/><line class=\"gr\" x1=\"26\" y1=\"176\" x2=\"426\" y2=\"176\"/><line class=\"gr\" x1=\"26\" y1=\"151\" x2=\"426\" y2=\"151\"/><line class=\"gr\" x1=\"26\" y1=\"126\" x2=\"426\" y2=\"126\"/><line class=\"gr\" x1=\"26\" y1=\"101\" x2=\"426\" y2=\"101\"/><line class=\"gr\" x1=\"26\" y1=\"76\" x2=\"426\" y2=\"76\"/><line class=\"gr\" x1=\"26\" y1=\"51\" x2=\"426\" y2=\"51\"/><line class=\"gr\" x1=\"26\" y1=\"26\" x2=\"426\" y2=\"26\"/><line class=\"ax\" x1=\"26\" y1=\"376\" x2=\"438\" y2=\"376\"/><line class=\"ax\" x1=\"226\" y1=\"376\" x2=\"226\" y2=\"14\"/><path class=\"pt\" d=\"M438,376 l-6,-3.5 v7 z\"/><path class=\"pt\" d=\"M226,14 l-3.5,6 h7 z\"/><text class=\"it\" x=\"434\" y=\"394\">x</text><text class=\"it\" x=\"212\" y=\"16\">y</text><text class=\"lb\" x=\"26\" y=\"391\" text-anchor=\"middle\">−8</text><text class=\"lb\" x=\"76\" y=\"391\" text-anchor=\"middle\">−6</text><text class=\"lb\" x=\"126\" y=\"391\" text-anchor=\"middle\">−4</text><text class=\"lb\" x=\"176\" y=\"391\" text-anchor=\"middle\">−2</text><text class=\"lb\" x=\"276\" y=\"391\" text-anchor=\"middle\">2</text><text class=\"lb\" x=\"326\" y=\"391\" text-anchor=\"middle\">4</text><text class=\"lb\" x=\"376\" y=\"391\" text-anchor=\"middle\">6</text><text class=\"lb\" x=\"426\" y=\"391\" text-anchor=\"middle\">8</text><text class=\"lb\" x=\"219\" y=\"330\" text-anchor=\"end\">2</text><text class=\"lb\" x=\"219\" y=\"280\" text-anchor=\"end\">4</text><text class=\"lb\" x=\"219\" y=\"230\" text-anchor=\"end\">6</text><text class=\"lb\" x=\"219\" y=\"180\" text-anchor=\"end\">8</text><text class=\"lb\" x=\"219\" y=\"130\" text-anchor=\"end\">10</text><text class=\"lb\" x=\"219\" y=\"80\" text-anchor=\"end\">12</text><text class=\"lb\" x=\"219\" y=\"30\" text-anchor=\"end\">14</text><text class=\"it\" x=\"215\" y=\"391\">O</text><line class=\"sg\" x1=\"51\" y1=\"251\" x2=\"251\" y2=\"76\"/><circle class=\"pt\" cx=\"51\" cy=\"251\" r=\"4\"/><circle class=\"pt\" cx=\"251\" cy=\"76\" r=\"4\"/></svg>",
+     "table": null,
+     "answer": "C",
+     "rationale": "The drawn leg has length √(8² + 7²) = √113. From A = ½(leg₁)(leg₂): leg₂ = 2(6√113)/√113 = 12.",
+     "reasons": [
+      "divided the area by the leg without doubling",
+      "gave the length of the drawn leg",
+      "",
+      "halved the area instead of doubling it"
+     ],
+     "id": "f8q20"
     }
    ]
   },
@@ -4644,137 +5625,271 @@
      "id": "f9q12"
     },
     {
-     "key": "ineq.greatest_value",
-     "seed": 16,
+     "key": "ineq.y_range_from_system",
+     "seed": 25,
      "topic": "linear_inequalities",
      "topic_name": "Linear Inequalities",
      "domain": "Algebra",
      "difficulty": "hard",
-     "type": "spr",
-     "stem": "A number x is at least 5 more than 9 times the value of y. If the value of y is −1, what is the least possible value of x?",
-     "choices": [],
-     "latex": [],
+     "type": "mcq",
+     "stem": "y > 6x − 5\n3x > −15\nWhich of the following consists of the y-coordinates of all the points that satisfy the given system of inequalities?",
+     "choices": [
+      "y > −30",
+      "y > −35",
+      "y > −5",
+      "y > −10"
+     ],
+     "latex": [
+      "y > −30",
+      "y > −35",
+      "y > −5",
+      "y > −10"
+     ],
      "figure": null,
      "table": null,
-     "answer": "-4",
-     "rationale": "The condition is x ≥ 9y + 5, and with y = −1 the right side is −4, so the least value x can take is −4.",
-     "reasons": [],
+     "answer": "B",
+     "rationale": "3x > −15 gives x > −5, so 6x − 5 is greater than −35, and y is greater than that again, so y > −35.",
+     "reasons": [
+      "multiplied the bound on x but left the constant out",
+      "",
+      "reported the bound on x rather than the bound on y",
+      "added the constant to the bound on x without multiplying by the coefficient of x"
+     ],
      "id": "f9q13"
     },
     {
-     "key": "nleq.discriminant_constant",
+     "key": "le2.table_line",
      "seed": 30,
+     "topic": "linear_equations_in_two_variables",
+     "topic_name": "Linear Equations in Two Variables",
+     "domain": "Algebra",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "For line h, the table shows three values of x and their corresponding values of y. Line k is the result of translating line h down 4 units in the xy-plane. What is the x-intercept of line k?",
+     "choices": [
+      "(4/3, 0)",
+      "(16/9, 0)",
+      "(−8/9, 0)",
+      "(8/9, 0)"
+     ],
+     "latex": [
+      "(4/3, 0)",
+      "(16/9, 0)",
+      "(−8/9, 0)",
+      "(8/9, 0)"
+     ],
+     "figure": null,
+     "table": [
+      [
+       "x",
+       "y"
+      ],
+      [
+       "14",
+       "−114"
+      ],
+      [
+       "20",
+       "−168"
+      ],
+      [
+       "26",
+       "−222"
+      ]
+     ],
+     "answer": "D",
+     "rationale": "The table gives line h a slope of −9 and a constant term of 12; sliding it down 4 leaves the slope alone and takes 4 off the constant term, and the x-intercept is where that new line reaches zero.",
+     "reasons": [
+      "gave the x-intercept of the original line, leaving the translation out",
+      "translated the line up instead of down",
+      "changed the sign of the x-intercept",
+      ""
+     ],
+     "id": "f9q14"
+    },
+    {
+     "key": "nleq.function_meets",
+     "seed": 7,
      "topic": "nonlinear_equations_and_systems",
      "topic_name": "Nonlinear Equations and Systems",
      "domain": "Advanced Math",
      "difficulty": "hard",
      "type": "spr",
-     "stem": "−x² − 22x + c = 0\nIn the given equation, c is a constant. The equation has exactly one solution. What is the value of c?",
+     "stem": "The graph of the function f, defined by f(x) = (1/2)(x − 3)² + 6, is shown in the xy-plane above. If the function g (not shown) is defined by g(x) = x + 7, what is one possible value of a such that f(a) = g(a) ?",
+     "choices": [],
+     "latex": [],
+     "figure": "<svg viewBox=\"0 0 292 460\" width=\"292\" height=\"460\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.ax{stroke:currentColor;stroke-width:1.4;fill:none}.gr{stroke:currentColor;stroke-width:.5;opacity:.28}.pt{fill:currentColor}.sg{stroke:currentColor;stroke-width:2.2;fill:none}.cv{stroke:currentColor;stroke-width:2.2;fill:none}.lb{fill:currentColor;font:11px ui-sans-serif,system-ui,sans-serif}.it{fill:currentColor;font:italic 13px ui-serif,Georgia,serif}</style><line class=\"gr\" x1=\"26\" y1=\"434\" x2=\"26\" y2=\"26\"/><line class=\"gr\" x1=\"50\" y1=\"434\" x2=\"50\" y2=\"26\"/><line class=\"gr\" x1=\"74\" y1=\"434\" x2=\"74\" y2=\"26\"/><line class=\"gr\" x1=\"98\" y1=\"434\" x2=\"98\" y2=\"26\"/><line class=\"gr\" x1=\"122\" y1=\"434\" x2=\"122\" y2=\"26\"/><line class=\"gr\" x1=\"146\" y1=\"434\" x2=\"146\" y2=\"26\"/><line class=\"gr\" x1=\"170\" y1=\"434\" x2=\"170\" y2=\"26\"/><line class=\"gr\" x1=\"194\" y1=\"434\" x2=\"194\" y2=\"26\"/><line class=\"gr\" x1=\"218\" y1=\"434\" x2=\"218\" y2=\"26\"/><line class=\"gr\" x1=\"242\" y1=\"434\" x2=\"242\" y2=\"26\"/><line class=\"gr\" x1=\"266\" y1=\"434\" x2=\"266\" y2=\"26\"/><line class=\"gr\" x1=\"26\" y1=\"434\" x2=\"266\" y2=\"434\"/><line class=\"gr\" x1=\"26\" y1=\"410\" x2=\"266\" y2=\"410\"/><line class=\"gr\" x1=\"26\" y1=\"386\" x2=\"266\" y2=\"386\"/><line class=\"gr\" x1=\"26\" y1=\"362\" x2=\"266\" y2=\"362\"/><line class=\"gr\" x1=\"26\" y1=\"338\" x2=\"266\" y2=\"338\"/><line class=\"gr\" x1=\"26\" y1=\"314\" x2=\"266\" y2=\"314\"/><line class=\"gr\" x1=\"26\" y1=\"290\" x2=\"266\" y2=\"290\"/><line class=\"gr\" x1=\"26\" y1=\"266\" x2=\"266\" y2=\"266\"/><line class=\"gr\" x1=\"26\" y1=\"242\" x2=\"266\" y2=\"242\"/><line class=\"gr\" x1=\"26\" y1=\"218\" x2=\"266\" y2=\"218\"/><line class=\"gr\" x1=\"26\" y1=\"194\" x2=\"266\" y2=\"194\"/><line class=\"gr\" x1=\"26\" y1=\"170\" x2=\"266\" y2=\"170\"/><line class=\"gr\" x1=\"26\" y1=\"146\" x2=\"266\" y2=\"146\"/><line class=\"gr\" x1=\"26\" y1=\"122\" x2=\"266\" y2=\"122\"/><line class=\"gr\" x1=\"26\" y1=\"98\" x2=\"266\" y2=\"98\"/><line class=\"gr\" x1=\"26\" y1=\"74\" x2=\"266\" y2=\"74\"/><line class=\"gr\" x1=\"26\" y1=\"50\" x2=\"266\" y2=\"50\"/><line class=\"gr\" x1=\"26\" y1=\"26\" x2=\"266\" y2=\"26\"/><line class=\"ax\" x1=\"26\" y1=\"410\" x2=\"278\" y2=\"410\"/><line class=\"ax\" x1=\"50\" y1=\"434\" x2=\"50\" y2=\"14\"/><path class=\"pt\" d=\"M278,410 l-6,-3.5 v7 z\"/><path class=\"pt\" d=\"M50,14 l-3.5,6 h7 z\"/><text class=\"it\" x=\"274\" y=\"428\">x</text><text class=\"it\" x=\"36\" y=\"16\">y</text><text class=\"lb\" x=\"26\" y=\"425\" text-anchor=\"middle\">-1</text><text class=\"lb\" x=\"74\" y=\"425\" text-anchor=\"middle\">1</text><text class=\"lb\" x=\"98\" y=\"425\" text-anchor=\"middle\">2</text><text class=\"lb\" x=\"122\" y=\"425\" text-anchor=\"middle\">3</text><text class=\"lb\" x=\"146\" y=\"425\" text-anchor=\"middle\">4</text><text class=\"lb\" x=\"170\" y=\"425\" text-anchor=\"middle\">5</text><text class=\"lb\" x=\"194\" y=\"425\" text-anchor=\"middle\">6</text><text class=\"lb\" x=\"218\" y=\"425\" text-anchor=\"middle\">7</text><text class=\"lb\" x=\"242\" y=\"425\" text-anchor=\"middle\">8</text><text class=\"lb\" x=\"266\" y=\"425\" text-anchor=\"middle\">9</text><text class=\"lb\" x=\"43\" y=\"438\" text-anchor=\"end\">-1</text><text class=\"lb\" x=\"43\" y=\"390\" text-anchor=\"end\">1</text><text class=\"lb\" x=\"43\" y=\"366\" text-anchor=\"end\">2</text><text class=\"lb\" x=\"43\" y=\"342\" text-anchor=\"end\">3</text><text class=\"lb\" x=\"43\" y=\"318\" text-anchor=\"end\">4</text><text class=\"lb\" x=\"43\" y=\"294\" text-anchor=\"end\">5</text><text class=\"lb\" x=\"43\" y=\"270\" text-anchor=\"end\">6</text><text class=\"lb\" x=\"43\" y=\"246\" text-anchor=\"end\">7</text><text class=\"lb\" x=\"43\" y=\"222\" text-anchor=\"end\">8</text><text class=\"lb\" x=\"43\" y=\"198\" text-anchor=\"end\">9</text><text class=\"lb\" x=\"43\" y=\"174\" text-anchor=\"end\">10</text><text class=\"lb\" x=\"43\" y=\"150\" text-anchor=\"end\">11</text><text class=\"lb\" x=\"43\" y=\"126\" text-anchor=\"end\">12</text><text class=\"lb\" x=\"43\" y=\"102\" text-anchor=\"end\">13</text><text class=\"lb\" x=\"43\" y=\"78\" text-anchor=\"end\">14</text><text class=\"lb\" x=\"43\" y=\"54\" text-anchor=\"end\">15</text><text class=\"lb\" x=\"43\" y=\"30\" text-anchor=\"end\">16</text><text class=\"it\" x=\"39\" y=\"425\">O</text><polyline class=\"cv\" points=\"26,74 27.2,78.77 28.4,83.48 29.6,88.13 30.8,92.72 32,97.25 33.2,101.72 34.4,106.13 35.6,110.48 36.8,114.77 38,119 39.2,123.17 40.4,127.28 41.6,131.33 42.8,135.32 44,139.25 45.2,143.12 46.4,146.93 47.6,150.68 48.8,154.37 50,158 51.2,161.57 52.4,165.08 53.6,168.53 54.8,171.92 56,175.25 57.2,178.52 58.4,181.73 59.6,184.88 60.8,187.97 62,191 63.2,193.97 64.4,196.88 65.6,199.73 66.8,202.52 68,205.25 69.2,207.92 70.4,210.53 71.6,213.08 72.8,215.57 74,218 75.2,220.37 76.4,222.68 77.6,224.93 78.8,227.12 80,229.25 81.2,231.32 82.4,233.33 83.6,235.28 84.8,237.17 86,239 87.2,240.77 88.4,242.48 89.6,244.13 90.8,245.72 92,247.25 93.2,248.72 94.4,250.13 95.6,251.48 96.8,252.77 98,254 99.2,255.17 100.4,256.28 101.6,257.33 102.8,258.32 104,259.25 105.2,260.12 106.4,260.93 107.6,261.68 108.8,262.37 110,263 111.2,263.57 112.4,264.08 113.6,264.53 114.8,264.92 116,265.25 117.2,265.52 118.4,265.73 119.6,265.88 120.8,265.97 122,266 123.2,265.97 124.4,265.88 125.6,265.73 126.8,265.52 128,265.25 129.2,264.92 130.4,264.53 131.6,264.08 132.8,263.57 134,263 135.2,262.37 136.4,261.68 137.6,260.93 138.8,260.12 140,259.25 141.2,258.32 142.4,257.33 143.6,256.28 144.8,255.17 146,254 147.2,252.77 148.4,251.48 149.6,250.13 150.8,248.72 152,247.25 153.2,245.72 154.4,244.13 155.6,242.48 156.8,240.77 158,239 159.2,237.17 160.4,235.28 161.6,233.33 162.8,231.32 164,229.25 165.2,227.12 166.4,224.93 167.6,222.68 168.8,220.37 170,218 171.2,215.57 172.4,213.08 173.6,210.53 174.8,207.92 176,205.25 177.2,202.52 178.4,199.73 179.6,196.88 180.8,193.97 182,191 183.2,187.97 184.4,184.88 185.6,181.73 186.8,178.52 188,175.25 189.2,171.92 190.4,168.53 191.6,165.08 192.8,161.57 194,158 195.2,154.37 196.4,150.68 197.6,146.93 198.8,143.12 200,139.25 201.2,135.32 202.4,131.33 203.6,127.28 204.8,123.17 206,119 207.2,114.77 208.4,110.48 209.6,106.13 210.8,101.72 212,97.25 213.2,92.72 214.4,88.13 215.6,83.48 216.8,78.77 218,74 219.2,69.17 220.4,64.28 221.6,59.33 222.8,54.32 224,49.25 225.2,44.12 226.4,38.93 227.6,33.68 228.8,28.37\"/><text class=\"it\" x=\"122\" y=\"290\">y = f(x)</text></svg>",
+     "table": null,
+     "answer": "7",
+     "rationale": "Setting (1/2)(x − 3)² + 6 equal to x + 7 and gathering gives (1/2)a² − 4a + 7/2 = 0, so a = 1 or a = 7.",
+     "reasons": [],
+     "id": "f9q15"
+    },
+    {
+     "key": "nleq.scaled_quadratic",
+     "seed": 17,
+     "topic": "nonlinear_equations_and_systems",
+     "topic_name": "Nonlinear Equations and Systems",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "spr",
+     "stem": "If 3x² + 15x − 18 = 0, what is the value of x² + 5x?",
      "choices": [],
      "latex": [],
      "figure": null,
      "table": null,
-     "answer": "-121",
-     "rationale": "One solution means the discriminant is zero, so 484 + 4c = 0 and c = −121.",
+     "answer": "6",
+     "rationale": "Dividing 3x² + 15x − 18 = 0 by 3 gives x² + 5x − 6 = 0, so x² + 5x = 6.",
      "reasons": [],
-     "id": "f9q14"
+     "id": "f9q16"
     },
     {
-     "key": "sstat.interpret_table",
-     "seed": 41,
-     "topic": "sample_statistics_and_margin_of_error",
-     "topic_name": "Sample Statistics and Margin of Error",
+     "key": "pct.per_serving_model",
+     "seed": 30,
+     "topic": "percentages",
+     "topic_name": "Percentages",
      "domain": "Problem-Solving and Data Analysis",
      "difficulty": "hard",
      "type": "mcq",
-     "stem": "In a study of cell phone use, 895 randomly selected US teens were asked how often they talked on a cell phone and about their texting behavior. The data are summarized in the table above. Based on the data from the study, an estimate of the percent of US teens who are heavy texters is 35% and the associated margin of error is 5%. Which of the following is a correct statement based on the given margin of error?",
+     "stem": "Marisol bought a box of Trail Crunch granola. The nutrition facts on the box state that a serving size of the granola is 1/2 cup and provides 220 calories, 10 of which are calories from fat. In addition, each serving of the granola provides 20 milligrams of calcium, which is 2% of the daily allowance for adults. If p percent of an adult's daily allowance of calcium is provided by x servings of Trail Crunch granola per day, which of the following expresses p in terms of x ?",
      "choices": [
-      "The percent of all US teens who are heavy texters is 30%.",
-      "The percent of all US teens who are heavy texters is less than 35%.",
-      "It is doubtful that the percent of all US teens who are heavy texters is 45%.",
-      "The percent of all US teens who are heavy texters is 40%."
+      "p = (1.02)^x",
+      "p = 2x",
+      "p = x/2",
+      "p = 2^x"
      ],
      "latex": [
-      "The percent of all US teens who are heavy texters is 30%.",
-      "The percent of all US teens who are heavy texters is less than 35%.",
-      "It is doubtful that the percent of all US teens who are heavy texters is 45%.",
-      "The percent of all US teens who are heavy texters is 40%."
+      "p = (1.02)^x",
+      "p = 2x",
+      "p = x/2",
+      "p = 2^x"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "B",
+     "rationale": "One serving is 2% of the allowance, so x servings is 2x percent of it.",
+     "reasons": [
+      "treated each extra serving as a repeated percent increase rather than a repeated amount",
+      "",
+      "divided by the percent instead of multiplying by it",
+      "treated each extra serving as multiplying the percent again rather than adding another serving's worth of it"
+     ],
+     "id": "f9q17"
+    },
+    {
+     "key": "tvdata.invest_compare",
+     "seed": 27,
+     "topic": "two_variable_data",
+     "topic_name": "Two-Variable Data: Models and Scatterplots",
+     "domain": "Problem-Solving and Data Analysis",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "Two investments were made as shown in the table. The interest in Account A is compounded once per year. Which of the following is true about the investments?",
+     "choices": [
+      "Account A always earns less money per year than Account B.",
+      "Account A always earns more money per year than Account B.",
+      "Account A earns more money per year than Account B at first but eventually earns less money per year.",
+      "Account A earns less money per year than Account B at first but eventually earns more money per year."
+     ],
+     "latex": [
+      "Account A always earns less money per year than Account B.",
+      "Account A always earns more money per year than Account B.",
+      "Account A earns more money per year than Account B at first but eventually earns less money per year.",
+      "Account A earns less money per year than Account B at first but eventually earns more money per year."
      ],
      "figure": null,
      "table": [
       [
-       "Texting behavior",
-       "Talks on cell phone daily",
-       "Does not talk on cell phone daily",
-       "Total"
+       "",
+       "Amount invested",
+       "Balance increase"
       ],
       [
-       "Light",
-       "187",
-       "174",
-       "361"
+       "Account A",
+       "$1,500",
+       "6% annual interest"
       ],
       [
-       "Medium",
-       "123",
-       "101",
-       "224"
-      ],
-      [
-       "Heavy",
-       "126",
-       "184",
-       "310"
-      ],
-      [
-       "Total",
-       "436",
-       "459",
-       "895"
+       "Account B",
+       "$1,900",
+       "$40 per year"
       ]
      ],
-     "answer": "C",
-     "rationale": "The margin of error gives an interval of plausible values for the percent of all US teens who are heavy texters: from 30% to 40%. It is a statement about that value, it does not make it certain, and it says nothing about any one teen.",
+     "answer": "B",
+     "rationale": "In the first year Account A earns $90 and Account B earns $40, and what Account A earns grows every year.",
      "reasons": [
-      "took the bottom of the interval as the population's value, rather than as the smallest value the margin makes plausible",
-      "read the margin of error as though it could only pull the value down from the estimate",
+      "compares only the first year, and then assumes nothing changes",
       "",
-      "took the top of the interval as the population's value, rather than as the largest value the margin makes plausible"
+      "has the compounded account falling behind a fixed amount, which compounding never does",
+      "assumes the fixed amount is larger in the first year"
      ],
-     "id": "f9q15"
+     "id": "f9q18"
     },
     {
-     "key": "coord.leg_from_area",
-     "seed": 6,
+     "key": "context.formula_solve",
+     "seed": 32,
      "topic": "area_and_volume",
      "topic_name": "Area and Volume",
      "domain": "Geometry and Trigonometry",
      "difficulty": "hard",
      "type": "mcq",
-     "stem": "The line segment shown in the xy-plane represents one of the legs of a right triangle. The area of this triangle is 6√113 square units. What is the length, in units, of the other leg of this triangle?",
+     "stem": "The vase pictured above can hold a maximum volume of 224 cubic centimeters. Its volume is given by Volume = 9πk³⁄64, where k is the height in centimeters. What is the value of k, in centimeters?",
      "choices": [
-      "6",
-      "√113",
-      "12",
-      "3√113"
+      "2.16",
+      "6.07",
+      "7.97",
+      "11.68"
      ],
      "latex": [
-      "6",
-      "\\sqrt{113}",
-      "12",
-      "3\\sqrt{113}"
+      "2.16",
+      "6.07",
+      "7.97",
+      "11.68"
      ],
-     "figure": "<svg viewBox=\"0 0 452 402\" width=\"452\" height=\"402\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.ax{stroke:currentColor;stroke-width:1.4;fill:none}.gr{stroke:currentColor;stroke-width:.5;opacity:.28}.pt{fill:currentColor}.sg{stroke:currentColor;stroke-width:2.2;fill:none}.lb{fill:currentColor;font:11px ui-sans-serif,system-ui,sans-serif}.it{fill:currentColor;font:italic 13px ui-serif,Georgia,serif}</style><line class=\"gr\" x1=\"26\" y1=\"376\" x2=\"26\" y2=\"26\"/><line class=\"gr\" x1=\"51\" y1=\"376\" x2=\"51\" y2=\"26\"/><line class=\"gr\" x1=\"76\" y1=\"376\" x2=\"76\" y2=\"26\"/><line class=\"gr\" x1=\"101\" y1=\"376\" x2=\"101\" y2=\"26\"/><line class=\"gr\" x1=\"126\" y1=\"376\" x2=\"126\" y2=\"26\"/><line class=\"gr\" x1=\"151\" y1=\"376\" x2=\"151\" y2=\"26\"/><line class=\"gr\" x1=\"176\" y1=\"376\" x2=\"176\" y2=\"26\"/><line class=\"gr\" x1=\"201\" y1=\"376\" x2=\"201\" y2=\"26\"/><line class=\"gr\" x1=\"226\" y1=\"376\" x2=\"226\" y2=\"26\"/><line class=\"gr\" x1=\"251\" y1=\"376\" x2=\"251\" y2=\"26\"/><line class=\"gr\" x1=\"276\" y1=\"376\" x2=\"276\" y2=\"26\"/><line class=\"gr\" x1=\"301\" y1=\"376\" x2=\"301\" y2=\"26\"/><line class=\"gr\" x1=\"326\" y1=\"376\" x2=\"326\" y2=\"26\"/><line class=\"gr\" x1=\"351\" y1=\"376\" x2=\"351\" y2=\"26\"/><line class=\"gr\" x1=\"376\" y1=\"376\" x2=\"376\" y2=\"26\"/><line class=\"gr\" x1=\"401\" y1=\"376\" x2=\"401\" y2=\"26\"/><line class=\"gr\" x1=\"426\" y1=\"376\" x2=\"426\" y2=\"26\"/><line class=\"gr\" x1=\"26\" y1=\"376\" x2=\"426\" y2=\"376\"/><line class=\"gr\" x1=\"26\" y1=\"351\" x2=\"426\" y2=\"351\"/><line class=\"gr\" x1=\"26\" y1=\"326\" x2=\"426\" y2=\"326\"/><line class=\"gr\" x1=\"26\" y1=\"301\" x2=\"426\" y2=\"301\"/><line class=\"gr\" x1=\"26\" y1=\"276\" x2=\"426\" y2=\"276\"/><line class=\"gr\" x1=\"26\" y1=\"251\" x2=\"426\" y2=\"251\"/><line class=\"gr\" x1=\"26\" y1=\"226\" x2=\"426\" y2=\"226\"/><line class=\"gr\" x1=\"26\" y1=\"201\" x2=\"426\" y2=\"201\"/><line class=\"gr\" x1=\"26\" y1=\"176\" x2=\"426\" y2=\"176\"/><line class=\"gr\" x1=\"26\" y1=\"151\" x2=\"426\" y2=\"151\"/><line class=\"gr\" x1=\"26\" y1=\"126\" x2=\"426\" y2=\"126\"/><line class=\"gr\" x1=\"26\" y1=\"101\" x2=\"426\" y2=\"101\"/><line class=\"gr\" x1=\"26\" y1=\"76\" x2=\"426\" y2=\"76\"/><line class=\"gr\" x1=\"26\" y1=\"51\" x2=\"426\" y2=\"51\"/><line class=\"gr\" x1=\"26\" y1=\"26\" x2=\"426\" y2=\"26\"/><line class=\"ax\" x1=\"26\" y1=\"376\" x2=\"438\" y2=\"376\"/><line class=\"ax\" x1=\"226\" y1=\"376\" x2=\"226\" y2=\"14\"/><path class=\"pt\" d=\"M438,376 l-6,-3.5 v7 z\"/><path class=\"pt\" d=\"M226,14 l-3.5,6 h7 z\"/><text class=\"it\" x=\"434\" y=\"394\">x</text><text class=\"it\" x=\"212\" y=\"16\">y</text><text class=\"lb\" x=\"26\" y=\"391\" text-anchor=\"middle\">−8</text><text class=\"lb\" x=\"76\" y=\"391\" text-anchor=\"middle\">−6</text><text class=\"lb\" x=\"126\" y=\"391\" text-anchor=\"middle\">−4</text><text class=\"lb\" x=\"176\" y=\"391\" text-anchor=\"middle\">−2</text><text class=\"lb\" x=\"276\" y=\"391\" text-anchor=\"middle\">2</text><text class=\"lb\" x=\"326\" y=\"391\" text-anchor=\"middle\">4</text><text class=\"lb\" x=\"376\" y=\"391\" text-anchor=\"middle\">6</text><text class=\"lb\" x=\"426\" y=\"391\" text-anchor=\"middle\">8</text><text class=\"lb\" x=\"219\" y=\"330\" text-anchor=\"end\">2</text><text class=\"lb\" x=\"219\" y=\"280\" text-anchor=\"end\">4</text><text class=\"lb\" x=\"219\" y=\"230\" text-anchor=\"end\">6</text><text class=\"lb\" x=\"219\" y=\"180\" text-anchor=\"end\">8</text><text class=\"lb\" x=\"219\" y=\"130\" text-anchor=\"end\">10</text><text class=\"lb\" x=\"219\" y=\"80\" text-anchor=\"end\">12</text><text class=\"lb\" x=\"219\" y=\"30\" text-anchor=\"end\">14</text><text class=\"it\" x=\"215\" y=\"391\">O</text><line class=\"sg\" x1=\"51\" y1=\"251\" x2=\"251\" y2=\"76\"/><circle class=\"pt\" cx=\"51\" cy=\"251\" r=\"4\"/><circle class=\"pt\" cx=\"251\" cy=\"76\" r=\"4\"/></svg>",
+     "figure": null,
      "table": null,
      "answer": "C",
-     "rationale": "The drawn leg has length √(8² + 7²) = √113. From A = ½(leg₁)(leg₂): leg₂ = 2(6√113)/√113 = 12.",
+     "rationale": "9πk³/64 = 224 gives k³ = 64(224)/(9π), so k ~= 7.97.",
      "reasons": [
-      "divided the area by the leg without doubling",
-      "gave the length of the drawn leg",
+      "inverted the coefficient",
+      "ignored the coefficient and took the cube root of the volume alone",
       "",
-      "halved the area instead of doubling it"
+      "left pi out of the calculation"
      ],
-     "id": "f9q16"
+     "id": "f9q19"
+    },
+    {
+     "key": "lat.isosceles_cross",
+     "seed": 8,
+     "topic": "lines_angles_and_triangles",
+     "topic_name": "Lines, Angles, and Triangles",
+     "domain": "Geometry and Trigonometry",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "In the figure above, RT = TU. What is the value of x ?",
+     "choices": [
+      "46",
+      "101",
+      "134",
+      "157"
+     ],
+     "latex": [
+      "46",
+      "101",
+      "134",
+      "157"
+     ],
+     "figure": "<svg viewBox=\"0 0 348.0 203.1\" width=\"348.0\" height=\"203.1\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.fg{stroke:currentColor;stroke-width:1.5;fill:none}.ar{stroke:currentColor;stroke-width:1.1;fill:none}.pt{fill:currentColor}.lb{fill:currentColor;font:12px ui-sans-serif,system-ui,sans-serif}.it{fill:currentColor;font:italic 13px ui-serif,Georgia,serif}</style><line class=\"fg\" x1=\"4.0\" y1=\"169.8\" x2=\"344.0\" y2=\"169.8\"/><line class=\"fg\" x1=\"344.0\" y1=\"169.8\" x2=\"12.5\" y2=\"29.1\"/><line class=\"fg\" x1=\"4.0\" y1=\"169.8\" x2=\"174.0\" y2=\"97.7\"/><line class=\"fg\" x1=\"12.5\" y1=\"29.1\" x2=\"39.9\" y2=\"169.8\"/><path class=\"ar\" d=\"M154.7,105.9 A21.0,21.0 0 0 0 193.3,105.9\"/><line class=\"fg\" x1=\"87.0\" y1=\"129.1\" x2=\"91.0\" y2=\"138.3\"/><line class=\"fg\" x1=\"261.0\" y1=\"129.1\" x2=\"257.0\" y2=\"138.3\"/><text class=\"it\" x=\"23.1\" y=\"15.5\" text-anchor=\"start\">S</text><text class=\"it\" x=\"181.5\" y=\"81.7\" text-anchor=\"start\">T</text><text class=\"it\" x=\"329.9\" y=\"169.2\" text-anchor=\"end\">U</text><text class=\"it\" x=\"18.1\" y=\"179.5\" text-anchor=\"start\">R</text><text class=\"it\" x=\"42.5\" y=\"195.6\" text-anchor=\"middle\">V</text><text class=\"it\" x=\"174.0\" y=\"141.7\" text-anchor=\"middle\">x°</text></svg>",
+     "table": null,
+     "answer": "C",
+     "rationale": "RT = TU makes ∠TUR = (180 − 134)/2 = 23°, and ∠RVS is exterior to triangle SVU, so it measures 56 + 23 = 79°.",
+     "reasons": [
+      "doubled the base angle instead of subtracting twice the base angle from 180 degrees",
+      "took the supplement of the angle asked for",
+      "",
+      "subtracted the base angle from 180 degrees once instead of twice"
+     ],
+     "id": "f9q20"
     }
    ]
   },
@@ -5163,121 +6278,238 @@
      "id": "f10q12"
     },
     {
-     "key": "ineq.allowable_dimension",
-     "seed": 1,
+     "key": "ineq.y_range_from_system",
+     "seed": 9,
      "topic": "linear_inequalities",
      "topic_name": "Linear Inequalities",
      "domain": "Algebra",
      "difficulty": "hard",
      "type": "mcq",
-     "stem": "A shipping service restricts the dimensions of the boxes it will ship for a certain type of service. The restriction states that for boxes shaped like rectangular prisms, the sum of the perimeter of the base of the box and the height of the box cannot exceed 245 inches. The perimeter of the base is determined using the width and length of the box. If a box has a height of 70 inches and its length is 3.5 times the width, which inequality shows the allowable width x, in inches, of the box?",
+     "stem": "y > 5x + 1\n2x > 22\nWhich of the following consists of the y-coordinates of all the points that satisfy the given system of inequalities?",
      "choices": [
-      "0 < x ≤ 21 7/8",
-      "0 < x ≤ 19 4/9",
-      "0 < x ≤ 43 3/4",
-      "0 < x ≤ 38 8/9"
+      "y > 11",
+      "y > 21",
+      "y > 56",
+      "y > 12"
      ],
      "latex": [
-      "0 < x ≤ 21 7/8",
-      "0 < x ≤ 19 4/9",
-      "0 < x ≤ 43 3/4",
-      "0 < x ≤ 38 8/9"
+      "y > 11",
+      "y > 21",
+      "y > 56",
+      "y > 12"
      ],
      "figure": null,
      "table": null,
-     "answer": "B",
-     "rationale": "The base has perimeter 2(x + 3.5x) = 9x, so 9x + 70 ≤ 245, leaving x ≤ 19 4/9; a width is positive, so 0 < x ≤ 19 4/9.",
+     "answer": "C",
+     "rationale": "2x > 22 gives x > 11, so 5x + 1 is greater than 56, and y is greater than that again, so y > 56.",
      "reasons": [
-      "doubled the length but counted the width only once",
+      "reported the bound on x rather than the bound on y",
+      "used the number the second inequality prints instead of the bound it gives for x",
       "",
-      "used four widths, as though the base were a square",
-      "added the width and the length once each instead of finding the whole perimeter"
+      "added the constant to the bound on x without multiplying by the coefficient of x"
      ],
      "id": "f10q13"
     },
     {
-     "key": "eqx.exponent_value",
-     "seed": 22,
-     "topic": "equivalent_expressions",
-     "topic_name": "Equivalent Expressions",
-     "domain": "Advanced Math",
+     "key": "sys.no_solution_slope",
+     "seed": 11,
+     "topic": "systems_of_linear_equations",
+     "topic_name": "Systems of Linear Equations",
+     "domain": "Algebra",
      "difficulty": "hard",
      "type": "spr",
-     "stem": "If √(w⁷)/³√(w²) = w^(a/b) for all positive values of w, what is the value of a/b ?",
+     "stem": "y = 5x − 5\ny = rx + 6\nIn the system of equations above, r is a constant. If the system has no solution, what is the value of r ?",
      "choices": [],
      "latex": [],
      "figure": null,
      "table": null,
-     "answer": "17/6",
-     "rationale": "The two radicals are w^(7/2) and w^(2/3), and dividing subtracts the exponents.",
+     "answer": "5",
+     "rationale": "Two lines miss each other only when they rise at the same rate but start apart, and −5 is not 6, so r must equal 5.",
      "reasons": [],
      "id": "f10q14"
     },
     {
-     "key": "ovd.measure_effect",
-     "seed": 5,
+     "key": "nlfunc.exp_anchor",
+     "seed": 21,
+     "topic": "nonlinear_functions",
+     "topic_name": "Nonlinear Functions",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "A model estimates that at the end of each year from 2017 to 2023, the number of beetles in a population was 150% more than the number of beetles in the population at the end of the previous year. The model estimates that at the end of 2018, there were 280 beetles in the population. Which of the following equations represents this model, where n is the estimated number of beetles in the population t years after the end of 2017 and t ≤ 6?",
+     "choices": [
+      "n = 112(2.5)^t",
+      "n = 280(1.5)^t",
+      "n = 112(1.5)^t",
+      "n = 280(2.5)^t"
+     ],
+     "latex": [
+      "n = 112(2.5)^t",
+      "n = 280(1.5)^t",
+      "n = 112(1.5)^t",
+      "n = 280(2.5)^t"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "A",
+     "rationale": "A rise of 150% multiplies by 2.5, so the count at the end of 2017 was 280/2.5 = 112.",
+     "reasons": [
+      "",
+      "used the later count and read the percent as the factor",
+      "read the percent as the factor itself",
+      "used the count a year later as the starting count"
+     ],
+     "id": "f10q15"
+    },
+    {
+     "key": "nlfunc.exp_display",
+     "seed": 36,
+     "topic": "nonlinear_functions",
+     "topic_name": "Nonlinear Functions",
+     "domain": "Advanced Math",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "The functions g and h are defined by the given equations, where x ≥ 0. I. g(x) = 82(1.44)^(x + 3) II. h(x) = 82(1.44)^x Which of the following equations displays, as a constant or coefficient, the minimum value of the function it defines, where x ≥ 0?",
+     "choices": [
+      "Neither I nor II",
+      "I and II",
+      "I only",
+      "II only"
+     ],
+     "latex": [
+      "Neither I nor II",
+      "I and II",
+      "I only",
+      "II only"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "D",
+     "rationale": "Both functions are increasing, so each takes its minimum value at x = 0; the answer is II only.",
+     "reasons": [
+      "neither equation shows it, which is not what the printed forms do",
+      "both equations show it, which is not what the printed forms do",
+      "only the first equation shows it, which is not what the printed forms do",
+      ""
+     ],
+     "id": "f10q16"
+    },
+    {
+     "key": "ovd.freq_choose",
+     "seed": 33,
      "topic": "one_variable_data",
      "topic_name": "One-Variable Data: Distributions and Measures of Centre and Spread",
      "domain": "Problem-Solving and Data Analysis",
      "difficulty": "hard",
      "type": "mcq",
-     "stem": "A data set of 27 different numbers is recorded. A new data set is created by adding 5 to each number in the original data set. Which of the following measures has the same value in both the original and new data sets?",
+     "stem": "19, 19, 19, 19, 19, 23, 23, 23, 28, 28, 28, 28, 28\nWhich frequency table correctly represents the data listed?",
      "choices": [
-      "Mean",
-      "Sum of the numbers",
-      "Median",
-      "Standard deviation"
+      "95 (frequency 19), 69 (frequency 23), 140 (frequency 28)",
+      "19 (frequency 95), 23 (frequency 69), 28 (frequency 140)",
+      "5 (frequency 19), 3 (frequency 23), 5 (frequency 28)",
+      "19 (frequency 5), 23 (frequency 3), 28 (frequency 5)"
      ],
      "latex": [
-      "Mean",
-      "Sum of the numbers",
-      "Median",
-      "Standard deviation"
+      "95 (frequency 19), 69 (frequency 23), 140 (frequency 28)",
+      "19 (frequency 95), 23 (frequency 69), 28 (frequency 140)",
+      "5 (frequency 19), 3 (frequency 23), 5 (frequency 28)",
+      "19 (frequency 5), 23 (frequency 3), 28 (frequency 5)"
      ],
      "figure": null,
      "table": null,
      "answer": "D",
-     "rationale": "Every value moves by the same amount, so every centre moves with them and the distances between the values -- the spread -- do not change.",
+     "rationale": "19 appears 5 times, 23 appears 3 times, 28 appears 5 times.",
      "reasons": [
-      "assumed the average is fixed by the middle of the list rather than by every value in it",
-      "assumed the total is fixed by how many values there are",
-      "assumed the middle value is fixed by its position, whatever the values around it do",
+      "multiplied each value by its count and then swapped the columns",
+      "multiplied each value by how many times it appears instead of counting the appearances",
+      "swapped the two columns, reading each count as a data value",
       ""
      ],
-     "id": "f10q15"
+     "id": "f10q17"
     },
     {
-     "key": "context.formula_solve",
+     "key": "esc.generalize",
+     "seed": 19,
+     "topic": "evaluating_statistical_claims",
+     "topic_name": "Evaluating Statistical Claims",
+     "domain": "Problem-Solving and Data Analysis",
+     "difficulty": "hard",
+     "type": "mcq",
+     "stem": "A survey was conducted using a sample of history professors selected at random from the California State Universities. The professors surveyed were asked to name the publishers of their current texts. What is the largest population to which the results of the survey can be generalized?",
+     "choices": [
+      "All history professors in the United States",
+      "All professors in the United States",
+      "All history professors at all California State Universities",
+      "All professors at all California State Universities"
+     ],
+     "latex": [
+      "All history professors in the United States",
+      "All professors in the United States",
+      "All history professors at all California State Universities",
+      "All professors at all California State Universities"
+     ],
+     "figure": null,
+     "table": null,
+     "answer": "C",
+     "rationale": "The professors were selected at random from all history professors at all California State Universities, so the results reach that population and no wider one.",
+     "reasons": [
+      "generalized past the sampling frame: the units were drawn from one place, so the result stops there",
+      "generalized past the sampling frame twice over, to a wider group in a wider place than the one sampled",
+      "",
+      "dropped the trait the units were selected on and generalized to the whole group"
+     ],
+     "id": "f10q18"
+    },
+    {
+     "key": "circle.equal_area_square",
      "seed": 32,
      "topic": "area_and_volume",
      "topic_name": "Area and Volume",
      "domain": "Geometry and Trigonometry",
      "difficulty": "hard",
      "type": "mcq",
-     "stem": "The vase pictured above can hold a maximum volume of 224 cubic centimeters. Its volume is given by Volume = 9πk³⁄64, where k is the height in centimeters. What is the value of k, in centimeters?",
+     "stem": "What is the perimeter of a square that has the same area as a circle with a radius of 14?",
      "choices": [
-      "2.16",
-      "6.07",
-      "7.97",
-      "11.68"
+      "√(14π)",
+      "14",
+      "14π",
+      "56√π"
      ],
      "latex": [
-      "2.16",
-      "6.07",
-      "7.97",
-      "11.68"
+      "√(14π)",
+      "14",
+      "14π",
+      "56√π"
      ],
      "figure": null,
      "table": null,
-     "answer": "C",
-     "rationale": "9πk³/64 = 224 gives k³ = 64(224)/(9π), so k ~= 7.97.",
+     "answer": "D",
+     "rationale": "The circle has area pi(14)^2 = 196π; a square of that area has side 14√π, so its perimeter is 56√π.",
      "reasons": [
-      "inverted the coefficient",
-      "ignored the coefficient and took the cube root of the volume alone",
-      "",
-      "left pi out of the calculation"
+      "found the area as πr, forgetting to square the radius, and then took the square root",
+      "used the radius as the side length",
+      "used πr, forgetting to square the radius or take the root",
+      ""
      ],
-     "id": "f10q16"
+     "id": "f10q19"
+    },
+    {
+     "key": "rtt.split_right_angle",
+     "seed": 11,
+     "topic": "right_triangles_and_trigonometry",
+     "topic_name": "Right Triangles and Trigonometry",
+     "domain": "Geometry and Trigonometry",
+     "difficulty": "hard",
+     "type": "spr",
+     "stem": "In the triangle shown, point N (not shown) lies on PR. What is the value of cos(∠PQN) − sin(∠NQR) ?",
+     "choices": [],
+     "latex": [],
+     "figure": "<svg viewBox=\"0 0 326.24 199.65\" width=\"326.24\" height=\"199.65\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.ax{stroke:currentColor;stroke-width:1.7;fill:none}.sg{stroke:currentColor;stroke-width:1.2;fill:none}.sh{fill:currentColor;opacity:.22;stroke:none}.lb{fill:currentColor;font:13px ui-serif,Georgia,serif}.an{fill:currentColor;font:11px ui-sans-serif,system-ui,sans-serif}.vx{fill:currentColor;font:italic 12px ui-serif,Georgia,serif}.nt{fill:currentColor;font:12px ui-serif,Georgia,serif}</style><path class=\"ax\" d=\"M143.99,38.0 L38.0,161.65 L288.24,161.65 Z\"/><path class=\"sg\" d=\"M136.83,46.35 L145.18,53.51 L152.34,45.16\"/><text class=\"lb\" x=\"78.59\" y=\"99.94\" text-anchor=\"end\">24</text><text class=\"lb\" x=\"228.4\" y=\"93.56\" text-anchor=\"start\">28</text><text class=\"vx\" x=\"141.84\" y=\"22.16\" text-anchor=\"middle\">Q</text><text class=\"vx\" x=\"24.77\" y=\"176.24\" text-anchor=\"end\">P</text><text class=\"vx\" x=\"301.6\" y=\"175.84\" text-anchor=\"start\">R</text></svg>",
+     "table": null,
+     "answer": "0",
+     "rationale": "Angle PQN and angle NQR make up the right angle at Q, so they are complementary and the cosine of one equals the sine of the other. The difference is 0.",
+     "reasons": [],
+     "id": "f10q20"
     }
    ]
   }

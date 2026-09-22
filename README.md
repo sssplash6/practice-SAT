@@ -178,21 +178,27 @@ python3 -m uvicorn server.app:app --port 8000      # the site and the API
 PYTHONPATH=. python3 server/test_flow.py           # the whole flow, end to end
 ```
 
-**Ten fixed forms, drawn at random.** A diagnostic is sixteen questions: four
-domains, and from each of them one easy, two medium and one hard. That is not
+**Ten fixed forms, drawn at random.** A diagnostic is twenty questions: four
+domains, and from each of them one easy, two medium and two hard. That is not
 the exam blueprint on purpose -- the real test weights Algebra and Advanced
 Math at 35% each against 15% for the other two -- because a diagnostic is
 measuring four things rather than predicting one, so it spends its questions
-evenly. The forms are built ahead of time rather than drawn per student: live
-draws would hit the repeat described below, and would make one student's
-result impossible to reproduce. All 160 questions are distinct, fifteen of the
-nineteen topics appear in every form, and each form runs easiest to hardest the
-way a real module does.
+evenly. Two hard per domain rather than one, because a single hard question is
+a coin toss and the top of the range is exactly where a diagnostic has to
+separate people. The forms are built ahead of time rather than drawn per
+student: live draws would hit the repeat described below, and would make one
+student's result impossible to reproduce. All 200 questions are distinct,
+seventeen of the nineteen topics appear in every form, and each form runs
+easiest to hardest the way a real module does.
 
 **The key never leaves the process.** Questions go out without the answer, the
 rationale or the distractor reasons; responses come back; marking happens
 server-side. `server/test_flow.py` asserts this against the live payload rather
-than trusting it.
+than trusting it, along with the blueprint, the ordering and the gates.
+
+The clock is derived from the form's length at the real test's pace -- 35
+minutes for 22 math questions, so about 95 seconds each -- and counts from the
+session's start time on the server, so a reload is not free time.
 
 **What the report is allowed to claim.** The digital SAT is scored by item
 response theory over items calibrated on real test-takers, and no raw-to-scaled
@@ -200,7 +206,7 @@ table exists or could. None of those parameters are public, so `scoring.py`
 uses an ordinal heuristic over the College Board's own easy/medium/hard labels
 and says so; calling it IRT would be the one false claim available. The real
 test reports a standard error near 20 points per section off ninety calibrated
-adaptive items. Sixteen uncalibrated ones cannot beat that, so the result is a
+adaptive items. Twenty uncalibrated ones cannot beat that, so the result is a
 200-point band, and each domain gets a bar and a word rather than a number --
 which is also what the College Board's own report does, with its own warning
 that a four-item domain estimate can make a strong student look weak by chance.
@@ -227,7 +233,7 @@ items drawn in twenty-item sets, Circles, Percentages and Linear Equations
 repeated a stem zero times, but Area and Volume repeated 25 and One-Variable
 Data 22 — about one visible repeat every second set. Serving needs
 enumeration by seed plus per-student history, not `random()`. The diagnostic
-sidesteps this by building its forms once and checking all 160 questions
+sidesteps this by building its forms once and checking all 200 questions
 against each other; practice, which is unbounded, still needs the history.
 
 **There is no exam blueprint.** The real test weights its domains; nothing

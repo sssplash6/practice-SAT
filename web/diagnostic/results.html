@@ -11,8 +11,8 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;900&family=DM+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="../assets/app.css">
 <style>
-  /* One number, four bars. The number is a band because sixteen questions
-     cannot support a point, and the bars carry no numbers at all because four
+  /* One number, four bars. The number is a band because twenty questions
+     cannot support a point, and the bars carry no numbers at all because five
      questions per domain cannot support one either. */
   .sheet-body { max-width:640px; margin:0 auto; padding:clamp(28px,6vh,56px) var(--gutter) 64px; }
 
@@ -85,7 +85,7 @@
 
 <main class="sheet-body">
   <section class="band rise" id="band" hidden>
-    <p class="band-k" id="bandK">Math, from 16 questions</p>
+    <p class="band-k" id="bandK">Math</p>
     <p class="band-v" id="bandV">&nbsp;</p>
     <p class="band-n" id="bandN"></p>
   </section>
@@ -116,11 +116,11 @@
 const $ = id => document.getElementById(id);
 const sid = new URL(location.href).searchParams.get('s');
 
-const CAVEAT =
-  'A band, not a score. Sixteen questions cannot place you more precisely than this, ' +
-  'and four questions cannot measure a domain -- the College Board says the same about ' +
-  'its own report. Read the bars as where to practise next, not as what you are bad at. ' +
-  'A full practice test is the only thing that gives you a real score.';
+const caveat = (asked, perDomain) =>
+  `A band, not a score. ${asked} questions cannot place you more precisely than this, ` +
+  `and ${perDomain} questions cannot measure a domain -- the College Board says the same ` +
+  'about its own report. Read the bars as where to practise next, not as what you are ' +
+  'bad at. A full practice test is the only thing that gives you a real score.';
 
 async function load() {
   if (!sid) { location.replace('./'); return; }
@@ -154,7 +154,8 @@ function paint(d) {
     document.querySelectorAll('.fill').forEach(f => { f.style.width = f.dataset.to + '%'; });
   }));
 
-  $('caveat').textContent = CAVEAT;
+  const perDomain = d.domains.length ? d.domains[0].asked : 0;
+  $('caveat').textContent = caveat(d.asked, perDomain);
   buildReview(d.review || []);
 }
 

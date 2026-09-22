@@ -6,7 +6,7 @@ Walks a student through the whole thing against a scratch database: start,
 answer, finish, signup, verify, results. What it is really guarding is the
 answer key -- that it never appears in anything a student can fetch before
 they have submitted -- plus the gates that stop results being read early and
-the blueprint that makes a form a diagnostic rather than sixteen questions.
+the blueprint that makes a form a diagnostic rather than twenty questions.
 """
 
 from __future__ import annotations
@@ -40,22 +40,33 @@ LEAKS = ("answer", "rationale", "reasons", "distractor_reasons", "key", "seed")
 
 def main() -> int:
     with TestClient(app) as c:
-        # --- every form is a diagnostic, not just sixteen questions -----------
+        # --- every form is a diagnostic, not just twenty questions -----------
         from server.app import FORMS
         assert len(FORMS) == 10, f"{len(FORMS)} forms"
+        seen_stems = set()
         for fid, qs in FORMS.items():
-            assert len(qs) == 16, f"form {fid} has {len(qs)}"
+            assert len(qs) == 20, f"form {fid} has {len(qs)}"
             for d in DOMAINS:
                 tiers = sorted(q["difficulty"] for q in qs if q["domain"] == d)
-                assert tiers == ["easy", "hard", "medium", "medium"], f"form {fid} {d}: {tiers}"
-        print(f"ok  {len(FORMS)} forms, 4 domains x (1 easy, 2 medium, 1 hard)")
+                assert tiers == ["easy", "hard", "hard", "medium", "medium"], \
+                    f"form {fid} {d}: {tiers}"
+            # a module runs easiest to hardest, as the real one does
+            rank = {"easy": 0, "medium": 1, "hard": 2}
+            order = [rank[q["difficulty"]] for q in qs]
+            assert order == sorted(order), f"form {fid} is out of order"
+            for q in qs:
+                assert q["stem"] not in seen_stems, f"form {fid} repeats a stem"
+                seen_stems.add(q["stem"])
+        print(f"ok  {len(FORMS)} forms, 4 domains x (1 easy, 2 medium, 2 hard), "
+              f"{len(seen_stems)} distinct questions")
 
         # --- starting ---------------------------------------------------------
         s = c.post("/api/session").json()
         sid, qs = s["id"], s["questions"]
         # the clock counts from the start time, so a fresh one is at or just under
-        assert len(qs) == 16
-        assert 1480 <= s["seconds"] <= 1500, s["seconds"]
+        assert len(qs) == 20
+        full = 20 * 95
+        assert full - 20 <= s["seconds"] <= full, s["seconds"]
         assert c.get(f"/api/session/{sid}").json()["seconds"] <= s["seconds"], \
             "the clock reset on reload"
 
@@ -100,10 +111,10 @@ def main() -> int:
 
         # --- finishing --------------------------------------------------------
         done = c.post(f"/api/session/{sid}/finish").json()
-        assert done["right"] == 16, f"a perfect paper marked {done['right']}/16"
+        assert done["right"] == 20, f"a perfect paper marked {done['right']}/20"
         assert c.post(f"/api/session/{sid}/answer",
                       json={"question_id": form[1]["id"], "answer": 0}).status_code == 409
-        print("ok  a perfect paper marks 16/16, and the test then closes")
+        print("ok  a perfect paper marks 20/20, and the test then closes")
 
         # --- signup ------------------------------------------------------------
         assert c.get(f"/api/session/{sid}/results").status_code == 403, "results before signup"
@@ -129,12 +140,12 @@ def main() -> int:
 
         # --- results -------------------------------------------------------------
         res = c.get(f"/api/session/{sid}/results").json()
-        assert res["right"] == 16 and res["verified"] is True
+        assert res["right"] == 20 and res["verified"] is True
         assert [d["domain"] for d in res["domains"]] == list(DOMAINS)
         assert all(d["band"] == "Strong" and d["focus"] == [] for d in res["domains"])
         lo, hi = res["estimate"]["low"], res["estimate"]["high"]
         assert hi - lo >= 100 and 200 <= lo < hi <= 800, f"band {lo}-{hi}"
-        assert len(res["review"]) == 16 and res["review"][0]["rationale"]
+        assert len(res["review"]) == 20 and res["review"][0]["rationale"]
         print(f"ok  results release after signup: Math {lo}-{hi}, every domain Strong")
 
     # --- the marking itself, away from the wire -------------------------------

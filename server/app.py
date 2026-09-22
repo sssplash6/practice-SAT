@@ -4,7 +4,7 @@
     python3 -m uvicorn server.app:app --reload --port 8000
 
 A student's first move is the diagnostic, so that is what this serves: one of
-ten fixed forms, drawn at random, sixteen questions, marked here. The answer
+ten fixed forms, drawn at random, twenty questions, marked here. The answer
 key never leaves this process -- questions go out without it, responses come
 back, and grading happens on this side. A student reading the page source finds
 their own answers and nothing else.
@@ -34,9 +34,10 @@ HERE = pathlib.Path(__file__).resolve().parent
 WEB = HERE.parent / "web"
 FORMS_PATH = HERE / "forms.json"
 
-# 16 questions at the real test's pace -- 35 minutes for 22 -- is a little
-# under 26 minutes. Rounded down, because a diagnostic is not an endurance test.
-DURATION_SECONDS = 25 * 60
+# The real test gives 35 minutes to 22 math questions, so about 95 seconds each.
+# Deriving the duration from the form means changing the blueprint cannot leave
+# a stale clock behind.
+SECONDS_PER_QUESTION = 95
 
 # what a student is allowed to see about a question
 PUBLIC_FIELDS = ("id", "domain", "topic_name", "difficulty", "type",
@@ -73,15 +74,19 @@ def session_or_404(sid: str):
     return row
 
 
+def duration(form_id: int) -> int:
+    return len(FORMS[form_id]) * SECONDS_PER_QUESTION
+
+
 def remaining(row) -> int:
     """Time left, from when the session started -- not from when the page loaded.
 
-    Otherwise a reload is a free extra 25 minutes, and the clock is the one
+    Otherwise a reload is a free extra half hour, and the clock is the one
     thing on this screen a student has a reason to game.
     """
     started = dt.datetime.fromisoformat(row["started"])
     elapsed = (dt.datetime.now(dt.timezone.utc) - started).total_seconds()
-    return max(0, int(DURATION_SECONDS - elapsed))
+    return max(0, int(duration(row["form_id"]) - elapsed))
 
 
 def payload(row) -> dict:
