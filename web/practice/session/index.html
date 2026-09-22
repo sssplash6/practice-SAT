@@ -297,7 +297,7 @@
       // the next set, shown as what it is before the button that starts it
       const nx = r.next;
       box.append(h('div', { class: 'upnext' }, nx.topics.map(t => UI.chip(t)),
-                   h('span', { class: 'meta', text: `${nx.count} · ${UI.minutesFor(nx.count)} min` })));
+                   h('span', { class: 'meta', text: `${nx.count} questions · ${UI.minutesFor(nx.count)} min` })));
       const keep = h('button', { type: 'button', class: 'pill', text: 'Keep going' });
       keep.addEventListener('click', async () => {
         keep.setAttribute('aria-busy', 'true');
