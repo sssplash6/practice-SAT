@@ -102,4 +102,33 @@ compare that marked 0.125 wrong against 1/8.
 
 ## State
 
-2026-09-23: plan written. Nothing built yet.
+2026-09-23: plan written, and all ten steps built the same day. Run it with
+`PYTHONPATH=. python3 -m uvicorn server.app:app --port 8000`; the check is
+`PYTHONPATH=. python3 server/test_flow.py`. Every page was walked in a browser
+at 1280 and 390 px wide.
+
+Decided while building, against the plan above:
+
+* The diagnostic has no results page of its own. After sign-up it opens the
+  same report as every other sitting, Fix these included -- its forms are
+  templates like the rest.
+* The object-era pages are gone from `web/` (the shelf, domain pages, sticker
+  sheet, duels, `app.css`, `app.js`). The shelf's endpoints stay in the API,
+  so the archived site still runs against it.
+* Me carries progress between devices: typing another device's code moves this
+  one's answers, mistakes, saved and seen questions onto it first
+  (`/api/me/carry`). A code with nothing behind it is refused. Codes are
+  minted from `crypto.getRandomValues`.
+
+Found by the walk and fixed: a miss on a repair added another repair, so a
+student who kept missing never finished (now one repair per miss, a set at most
+twice its length); a missed grid-in was filed under the topic's own name
+because the stored forms carry no skill (now read off the item); the results
+chart shrank its labels to five pixels on a phone; the plan calendar marked
+days before the student existed.
+
+Not built, as planned: vocabulary (no R&W bank) and comments. Not built, and
+not planned yet: contests beyond the daily challenge (`spec/rating.md` has the
+thinking). Known edges: after a carry, a day's challenge can show two sittings
+under one code; difficulty is still the inherited label; the UI face is a
+placeholder until the brand face is known.
