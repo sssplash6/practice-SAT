@@ -54,6 +54,54 @@ ANCHORS = ((0.0, 200.0), (0.25, 300.0), (0.5, 480.0), (0.75, 620.0), (1.0, 780.0
 HALF_BAND = 100             # a 200-point band, per the note above
 
 
+# ---------------------------------------------------------------- the mock
+#
+# Routing. The College Board sets the cut between the two second modules at the
+# median of archival test scores -- half the population each way -- and says so
+# in the Technical Manual, but does not publish the threshold itself, nor how
+# it weights the module's items. The "miss two or three and you route down"
+# figure that circulates is third-party and has no source behind it.
+#
+# So this is a stated choice, not a reported fact: above sixty per cent of a
+# mixed-difficulty first module routes up. A median SAT Math score sits near
+# 520 of 800, and a student there gets a little over half of a module spanning
+# the full difficulty range.
+ROUTE_UP_AT = 0.60
+
+# What a low route costs. The Technical Manual simulates a student who takes
+# the lower second module and answers every question in it correctly, and
+# reports they "would, at most, earn a 580" on Math. That is the College
+# Board's own number for the ceiling, so it is the one used here.
+LOWER_ROUTE_CEILING = 580
+
+# A mock is 44 questions against the diagnostic's 20, so its band is narrower
+# by the square root of the ratio. It is not as narrow as the real test's 20
+# points, because none of these items are calibrated on real test-takers.
+MOCK_HALF_BAND = 70
+
+
+def route_after(right: int, asked: int) -> str:
+    """Which second module this performance earns. See ROUTE_UP_AT."""
+    return "upper" if asked and (right / asked) >= ROUTE_UP_AT else "lower"
+
+
+def section_score(result: dict, route: str | None) -> dict:
+    """A Math section score from both modules, with the route's ceiling applied."""
+    earned = sum(d["earned"] for d in result["domains"])
+    possible = sum(d["possible"] for d in result["domains"])
+    centre = _interpolate(earned / possible if possible else 0.0)
+
+    low = max(200, int(round((centre - MOCK_HALF_BAND) / 10) * 10))
+    high = min(800, int(round((centre + MOCK_HALF_BAND) / 10) * 10))
+    capped = False
+    if route == "lower" and high > LOWER_ROUTE_CEILING:
+        high = LOWER_ROUTE_CEILING
+        low = min(low, high - 10)
+        capped = True
+    return {"low": low, "high": high, "section": "Math", "scale": [200, 800],
+            "route": route, "capped": capped}
+
+
 def normalise(text: str) -> str:
     """Grid-in answers are compared without the decoration a student may add."""
     return (text or "").strip().replace(",", "").replace(" ", "").lstrip("$").rstrip(".")

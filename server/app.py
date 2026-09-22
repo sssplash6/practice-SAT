@@ -33,11 +33,15 @@ log = logging.getLogger("satf")
 HERE = pathlib.Path(__file__).resolve().parent
 WEB = HERE.parent / "web"
 FORMS_PATH = HERE / "forms.json"
+MOCKS_PATH = HERE / "mocks.json"
 
 # The real test gives 35 minutes to 22 math questions, so about 95 seconds each.
 # Deriving the duration from the form means changing the blueprint cannot leave
 # a stale clock behind.
 SECONDS_PER_QUESTION = 95
+
+# A mock is the real thing: 35 minutes a module, whatever is in it.
+MOCK_MODULE_SECONDS = 35 * 60
 
 # what a student is allowed to see about a question
 PUBLIC_FIELDS = ("id", "domain", "topic_name", "difficulty", "type",
@@ -47,6 +51,7 @@ MAX_PRACTICE = 120          # the sticker sheet stops here too
 
 app = FastAPI(title="SAT Freshman")
 FORMS: dict[int, list[dict]] = {}
+MOCKS: dict[str, dict] = {}
 
 
 @app.on_event("startup")
@@ -65,6 +70,13 @@ def startup() -> None:
     log.info("practice catalogue: %d topics, %d templates",
              len(cat["by_topic"]), sum(len(v) for v in cat["by_topic"].values()))
 
+    if MOCKS_PATH.exists():
+        for m in json.loads(MOCKS_PATH.read_text())["mocks"]:
+            MOCKS[m["id"]] = m
+        log.info("loaded %d mock sections", len(MOCKS))
+    else:
+        log.warning("%s is missing; run tools/build_mocks.py", MOCKS_PATH)
+
 
 def now() -> str:
     return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
@@ -74,10 +86,27 @@ def public(q: dict) -> dict:
     return {k: q[k] for k in PUBLIC_FIELDS if k in q}
 
 
+def mock_module(row, module: int | None = None, route: str | None = None) -> list[dict]:
+    """One module of a mock. Module 2 exists in two forms and the route picks."""
+    m = MOCKS[row["mock_id"]]
+    module = module or row["module"] or 1
+    if module == 1:
+        return m["module1"]
+    return m["module2_" + (route or row["route"] or "upper")]
+
+
+def mock_all(row) -> list[dict]:
+    """Both modules, for marking the section once it is over."""
+    return mock_module(row, 1) + mock_module(row, 2)
+
+
 def questions_of(row) -> list[dict]:
-    """A diagnostic points at a form; a practice set carries its own."""
+    """A diagnostic points at a form, a practice set carries its own, and a
+    mock serves whichever of its two modules the student is in."""
     if row["kind"] == "practice":
         return json.loads(row["questions"] or "[]")
+    if row["kind"] == "mock":
+        return mock_module(row)
     return FORMS[row["form_id"]]
 
 
@@ -89,27 +118,37 @@ def session_or_404(sid: str):
 
 
 def duration(row) -> int:
+    if row["kind"] == "mock":
+        return MOCK_MODULE_SECONDS
     return len(questions_of(row)) * SECONDS_PER_QUESTION
 
 
 def remaining(row) -> int:
-    """Time left, from when the session started -- not from when the page loaded.
-
-    Otherwise a reload is a free extra half hour, and the clock is the one
-    thing on this screen a student has a reason to game.
+    """Time left, from when the live module started -- not from when the page
+    loaded, or a reload is free time, and the clock is the one thing on this
+    screen a student has a reason to game. A mock's second module gets its own
+    thirty-five minutes, so the clock restarts with it rather than running on.
     """
-    started = dt.datetime.fromisoformat(row["started"])
-    elapsed = (dt.datetime.now(dt.timezone.utc) - started).total_seconds()
+    began = row["module_started"] or row["started"]
+    elapsed = (dt.datetime.now(dt.timezone.utc) - dt.datetime.fromisoformat(began)).total_seconds()
     return max(0, int(duration(row) - elapsed))
+
+
+def section_label(row) -> str:
+    if row["kind"] == "practice":
+        return "Mixed practice"
+    if row["kind"] == "mock":
+        return f"Section 2, Module {row['module'] or 1}: Math"
+    return "Section 1, Module 1: Math"
 
 
 def payload(row) -> dict:
     qs = questions_of(row)
     practice_mode = row["kind"] == "practice"
-    return {
+    out = {
         "id": row["id"],
         "mode": row["kind"],
-        "section": "Mixed practice" if practice_mode else "Section 1, Module 1: Math",
+        "section": section_label(row),
         "subject": "math",
         # practice is not an exam, so it is not on a clock
         "seconds": None if practice_mode else remaining(row),
@@ -118,6 +157,10 @@ def payload(row) -> dict:
         "answers": db.load_answers(row),
         "finished": row["finished"],
     }
+    if row["kind"] == "mock":
+        out["mock"] = row["mock_id"]
+        out["module"] = row["module"] or 1
+    return out
 
 
 # --------------------------------------------------------------- the session
@@ -162,16 +205,80 @@ def put_answer(sid: str, body: Answer) -> dict:
 
 @app.post("/api/session/{sid}/finish")
 def finish(sid: str) -> dict:
-    """Mark the paper. The result is stored now and released after signup."""
+    """Mark the paper. The result is stored now and released after signup.
+
+    A mock has two modules, and finishing the first one does not finish the
+    test: it routes. Which module 2 a student gets is decided from module 1
+    alone, as on the day, and there is no way back into module 1 afterwards.
+    """
     row = session_or_404(sid)
     if row["finished"]:
         return {"finished": row["finished"], "already": True}
 
-    result = scoring.score(questions_of(row), db.load_answers(row))
+    if row["kind"] == "mock" and (row["module"] or 1) == 1:
+        answers = db.load_answers(row)
+        m1 = mock_module(row, 1)
+        right = sum(1 for q in m1 if scoring.is_correct(q, answers.get(q["id"])))
+        route = scoring.route_after(right, len(m1))
+        db.run("UPDATE sessions SET module=2, route=?, module1=?, module_started=? WHERE id=?",
+               route, json.dumps({"right": right, "asked": len(m1)}), now(), sid)
+        log.info("mock %s (%s): module 1 %d/%d -> %s module 2",
+                 row["mock_id"], sid[:8], right, len(m1), route)
+        return {"next_module": 2, "finished_module": 1,
+                "right": right, "asked": len(m1)}
+
+    marked = mock_all(row) if row["kind"] == "mock" else questions_of(row)
+    result = scoring.score(marked, db.load_answers(row))
+    if row["kind"] == "mock":
+        result["mock"] = row["mock_id"]
+        result["route"] = row["route"]
+        result["module1"] = json.loads(row["module1"] or "{}")
+        result["estimate"] = scoring.section_score(result, row["route"])
     db.run("UPDATE sessions SET finished=?, result=? WHERE id=?",
            now(), json.dumps(result), sid)
     log.info("session %s finished: %d/%d", sid[:8], result["right"], result["asked"])
     return {"finished": now(), "right": result["right"], "asked": result["asked"]}
+
+
+# ------------------------------------------------------------------ the mock
+
+@app.get("/api/mocks")
+def list_mocks(learner: str = "") -> dict:
+    """What is on the shelf, and what this learner last scored on each."""
+    scores: dict[str, int] = {}
+    if learner:
+        for r in db.conn().execute(
+            "SELECT mock_id, result FROM sessions"
+            " WHERE kind='mock' AND learner=? AND finished IS NOT NULL"
+            " ORDER BY finished", (learner,)
+        ):
+            est = (json.loads(r["result"]) or {}).get("estimate") or {}
+            if est:
+                # the middle of the band, because a cassette spine fits a number
+                scores[r["mock_id"]] = int(round((est["low"] + est["high"]) / 20) * 10)
+    return {"mocks": [
+        {"id": m["id"], "box": m["box"],
+         "questions": len(m["module1"]) + len(m["module2_upper"]),
+         "score": scores.get(m["id"])}
+        for m in MOCKS.values()
+    ]}
+
+
+class MockStart(BaseModel):
+    learner: str = Field(default="", max_length=120)
+
+
+@app.post("/api/mock/{num}")
+def start_mock(num: str, body: MockStart | None = None) -> dict:
+    if num not in MOCKS:
+        raise HTTPException(404, f"no mock {num}")
+    sid = secrets.token_urlsafe(16)
+    learner = (body.learner.strip() if body else "") or ("anon:" + secrets.token_urlsafe(9))
+    stamp = now()
+    db.run("INSERT INTO sessions (id, kind, mock_id, module, learner, started, module_started)"
+           " VALUES (?,?,?,?,?,?,?)", sid, "mock", num, 1, learner, stamp, stamp)
+    log.info("mock %s started as %s", num, sid[:8])
+    return payload(session_or_404(sid))
 
 
 # -------------------------------------------------------------- the practice
@@ -289,11 +396,13 @@ def results(sid: str) -> dict:
     # The diagnostic holds its results back until there is somewhere to send
     # them. Practice does not: the student asked for these questions and
     # already knows who they are.
-    if row["kind"] != "practice" and not row["user_id"]:
+    if row["kind"] == "diagnostic" and not row["user_id"]:
         raise HTTPException(403, {"need": "signup"})
 
     out = json.loads(row["result"])
     out["mode"] = row["kind"]
+    if row["kind"] == "mock":
+        out["mock"] = row["mock_id"]
     user = db.one("SELECT * FROM users WHERE id=?", row["user_id"]) if row["user_id"] else None
     out["first"] = user["first"] if user else None
     out["verified"] = bool(user["verified"]) if user else False
@@ -308,7 +417,7 @@ def results(sid: str) -> dict:
             "rationale": q["rationale"],
             "correct": scoring.is_correct(q, answers.get(q["id"])),
         }
-        for q in questions_of(row)
+        for q in (mock_all(row) if row["kind"] == "mock" else questions_of(row))
     ]
     return out
 
@@ -316,6 +425,20 @@ def results(sid: str) -> dict:
 @app.get("/api/health")
 def health() -> dict:
     return {"ok": True, "forms": len(FORMS)}
+
+
+@app.middleware("http")
+async def revalidate(request, call_next):
+    """Ask the browser to check before reusing a file.
+
+    Without this a page keeps running the stylesheet and script it loaded an
+    hour ago, which during development means testing a fix that is not there.
+    The etag still means nothing is re-downloaded when it has not changed.
+    """
+    response = await call_next(request)
+    if not request.url.path.startswith("/api"):
+        response.headers["Cache-Control"] = "no-cache"
+    return response
 
 
 # The site itself. Mounted last so every /api route above wins the match.

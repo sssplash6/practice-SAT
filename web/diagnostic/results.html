@@ -22,7 +22,7 @@
     margin-top:6px; font:900 clamp(2.9rem,10vw,4.6rem)/1 var(--font);
     letter-spacing:-.05em; color:var(--amber); font-variant-numeric:tabular-nums;
   }
-  .band-n { margin-top:8px; font-size:13.5px; color:var(--soft); }
+  .band-n { margin-top:8px; font-size:13.5px; color:var(--soft); max-width:46ch; margin-inline:auto; }
 
   .domains { margin-top:clamp(32px,6vh,52px); display:flex; flex-direction:column; }
   .dom { padding:18px 0; border-top:1px solid var(--line); }
@@ -145,11 +145,32 @@ function paint(d) {
     document.title = 'Practice results · SAT Freshman';
     $('onward').href = '../mixed/';
     $('onward').textContent = 'Another set';
+  } else if (d.mode === 'mock') {
+    $('onward').href = '../mock/';
+    $('onward').textContent = 'Back to the shelf';
   } else {
     $('bandV').textContent = `${d.estimate.low}–${d.estimate.high}`;
-    $('bandK').textContent = `${d.estimate.section}, from ${d.asked} questions`;
+    $('bandK').textContent = d.mode === 'mock'
+      ? `Mock ${d.mock} · Math section`
+      : `${d.estimate.section}, from ${d.asked} questions`;
     /* no praise attached: "nice work" on 2 of 16 is worse than saying nothing */
     $('bandN').textContent = `${d.right} of ${d.asked} right`;
+
+    /* A mock is adaptive, so which second module you were given is part of the
+       result and not a detail. The lower one has a ceiling, and a student who
+       hit it deserves to know that is why the number stopped where it did. */
+    if (d.mode === 'mock' && d.estimate.route) {
+      const m1 = d.module1 || {};
+      const route = d.estimate.route === 'upper'
+        ? 'the harder second module'
+        : 'the easier second module';
+      $('bandN').textContent =
+        `${d.right} of ${d.asked} right. Module 1 went ${m1.right} of ${m1.asked}, ` +
+        `which earned ${route}.` +
+        (d.estimate.capped
+          ? ` The easier module tops out at ${d.estimate.high}, so this section could not score above it.`
+          : '');
+    }
   }
 
   $('domains').innerHTML = d.domains.map(x => `
@@ -172,6 +193,14 @@ function paint(d) {
     $('caveat').textContent =
       'Practice, not a measurement. These are the topics you chose, so the bars ' +
       'say how today went on them and nothing about where you would score.';
+  } else if (d.mode === 'mock') {
+    /* This IS the full section, so it must not tell you to go and sit one. */
+    $('caveat').textContent =
+      'A full Math section, in the shape the real one takes: two modules of 22, ' +
+      '35 minutes each, the second chosen from how the first went. It is still a ' +
+      'band rather than a score, because these questions have not been sat by ' +
+      'thousands of students the way the real ones have, and that calibration is ' +
+      'what turns answers into a number.';
   } else {
     const perDomain = d.domains.length ? d.domains[0].asked : 0;
     $('caveat').textContent = caveat(d.asked, perDomain);

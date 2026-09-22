@@ -60,6 +60,11 @@ LATER_COLUMNS = (
     ("sessions", "kind", "TEXT NOT NULL DEFAULT 'diagnostic'"),
     ("sessions", "questions", "TEXT"),
     ("sessions", "learner", "TEXT"),
+    ("sessions", "mock_id", "TEXT"),        # "1.3", the cassette
+    ("sessions", "module", "INTEGER"),      # 1 or 2, which one is live
+    ("sessions", "route", "TEXT"),          # "lower" or "upper", set after module 1
+    ("sessions", "module1", "TEXT"),        # what module 1 was marked at
+    ("sessions", "module_started", "TEXT"), # the live module's clock, not the session's
 )
 
 _local = threading.local()

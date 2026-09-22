@@ -157,10 +157,13 @@ const keys={};
 const press=(k,down)=>{ const {g,x}=keys[k]; g.classList.toggle('down',down); g.setAttribute('transform',`translate(${x} ${down?142:140})`); };
 
 /* ---------------------------------------------------------------- the shoeboxes */
+/* Seven cassettes a box. The scores start blank and are filled from the
+   learner's own finished mocks; the numbers that used to sit here were demo
+   data, and demo data beside a real test is a lie on the shelf. */
 const BOXES=[
-  {n:1,x:30, y:380,scores:[620,660,650,710,null,null,null]},
-  {n:2,x:300,y:380,scores:[690,null,null,null,null,null,null]},
-  {n:3,x:570,y:380,scores:[null,null,null,null,null,null,null]},
+  {n:1,x:30, y:380,scores:new Array(7).fill(null)},
+  {n:2,x:300,y:380,scores:new Array(7).fill(null)},
+  {n:3,x:570,y:380,scores:new Array(7).fill(null)},
 ];
 const B=200, WALL=10, PITCH=25, CW=160, CH=22, slots=[];
 BOXES.forEach(b=>{
@@ -283,7 +286,40 @@ const snd=(()=>{ let ctx; const get=()=>{ if(!ctx){ try{ ctx=new (window.AudioCo
       g.gain.setValueAtTime(.25,t); g.gain.exponentialRampToValueAtTime(.001,t+.16); o.connect(g).connect(c.destination); o.start(t); o.stop(t+.18); } }; })();
 
 /* -- ROUTER SEAM: the tape in the deck is `current`, its id is current.num ------------------- */
-go.addEventListener('click', ()=>console.log('[router] /mock/'+current.num));
+/* ------------------------------------------------------------------ the seam
+   A cassette is a mock: a full Math section, two modules, the second chosen
+   from how the first went. The shelf shows what this learner last scored on
+   each, so the spines are their own record rather than decoration. */
+const LEARNER_KEY='satf.learner';
+const learner=()=>{ try{
+  let v=localStorage.getItem(LEARNER_KEY);
+  if(!v){ v='a:'+Math.random().toString(36).slice(2)+Date.now().toString(36); localStorage.setItem(LEARNER_KEY,v); }
+  return v;
+}catch(_){ return ''; } };
+
+go.addEventListener('click', async ()=>{
+  if(go.disabled||!current) return;
+  go.disabled=true;
+  try{
+    const r=await fetch(`/api/mock/${encodeURIComponent(current.num)}`,{
+      method:'POST', headers:{'content-type':'application/json'},
+      body:JSON.stringify({learner:learner()}),
+    });
+    if(!r.ok) throw new Error('not ready');
+    const d=await r.json();
+    location.href=`../test/?s=${encodeURIComponent(d.id)}`;
+  }catch(_){ go.disabled=false; hint.textContent='That mock is not ready yet'; }
+});
+
+/* paint the spines with the learner's real scores */
+(async()=>{
+  try{
+    const r=await fetch('/api/mocks?learner='+encodeURIComponent(learner()));
+    if(!r.ok) return;
+    const by={}; (await r.json()).mocks.forEach(m=>{ by[m.id]=m; });
+    slots.forEach(s=>{ const m=by[s.num]; if(m) s.score=m.score ?? null; s.live=!!m; });
+  }catch(_){ /* offline: the shelf still opens, the tapes just have no numbers */ }
+})();
 </script>
 
 </body></html>

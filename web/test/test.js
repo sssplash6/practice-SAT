@@ -292,14 +292,54 @@
       location.href = '../diagnostic/';      // no server behind this; nothing to mark
       return;
     }
+
+    let done = {};
     try {
-      await fetch(`${API}/session/${S.id}/finish`, { method: 'POST' });
+      const r = await fetch(`${API}/session/${S.id}/finish`, { method: 'POST' });
+      done = await r.json();
     } catch (_) { /* the server has every answer already; let them through */ }
+
+    /* A mock runs two modules, and the second is chosen from how the first
+       went. Finishing module 1 therefore does not finish the test -- it routes
+       and comes back, with no way into module 1 again, as on the day. */
+    if (done.next_module) {
+      leaving = false;
+      S.ended = false;
+      await nextModule(done);
+      return;
+    }
+
     /* the diagnostic asks who you are before it says anything; practice does
        not, because you chose these questions yourself */
     location.href = S.mode === 'practice'
       ? `../diagnostic/results.html?s=${encodeURIComponent(S.id)}`
       : `../diagnostic/signup.html?s=${encodeURIComponent(S.id)}`;
+  }
+
+  function nextModule(done) {
+    return new Promise(resolve => {
+      const sheet = $('gateSheet');
+      $('gateTitle').textContent = `End of Module ${done.finished_module}`;
+      $('gateBody').textContent =
+        'You cannot return to this module. The next one starts when you continue.';
+      sheet.showModal();
+      $('gateGo').onclick = async () => {
+        sheet.close();
+        const r = await fetch(`${API}/session/${S.id}`);
+        const data = await r.json();
+        S.section = data.section || S.section;
+        S.seconds = data.seconds;
+        S.qs = data.questions || [];
+        S.answers = data.answers || {};
+        S.marked = new Set();
+        S.out = {};
+        S.i = 0;
+        render();
+        paintCells();
+        startClock();
+        resolve();
+      };
+    });
   }
 
   /* ------------------------------------------------------------- navigator */
@@ -329,7 +369,9 @@
 
   /* ---------------------------------------------------------------- clock */
 
+  let ticker = null;
   function startClock() {
+    if (ticker) clearInterval(ticker);      // module 2 must not inherit module 1's
     let left = S.seconds;
     const el = $('clock');
     const paint = () => {
@@ -338,11 +380,12 @@
       el.textContent = `${m}:${String(s).padStart(2, '0')}`;
     };
     paint();
-    setInterval(() => {
+    if (left === null) return;
+    ticker = setInterval(() => {
       if (S.ended) return;
       left -= 1;
       paint();
-      if (left <= 0) finish();
+      if (left <= 0) { clearInterval(ticker); ticker = null; finish(); }
     }, 1000);
   }
 
@@ -569,10 +612,15 @@
   $('moreBtn').addEventListener('click', () => $('moreSheet').showModal());
   $('endBtn').addEventListener('click', () => { $('moreSheet').close(); finish(); });
 
+  /* Most sheets can be dismissed. The module gate cannot: moving on is a
+     decision, and clicking past it would leave the test between modules. */
   document.querySelectorAll('.sheet').forEach(d => {
-    d.querySelector('[data-close]').addEventListener('click', () => d.close());
+    const x = d.querySelector('[data-close]');
+    if (!x) return;
+    x.addEventListener('click', () => d.close());
     d.addEventListener('click', e => { if (e.target === d) d.close(); });
   });
+  $('gateSheet').addEventListener('cancel', e => e.preventDefault());   // no escape out
 
   $('sprInput').addEventListener('input', e => {
     const q = cur();

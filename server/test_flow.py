@@ -213,6 +213,74 @@ def main() -> int:
         assert res.json()["mode"] == "practice"
         print("ok  practice guards hold, and its results need no signup")
 
+        # --- mocks, and the adaptive second module --------------------------
+        from server.app import MOCKS
+        assert len(MOCKS) == 7, f"{len(MOCKS)} mocks"
+
+        DOM_TOTAL = {"Algebra": 15, "Advanced Math": 15,
+                     "Problem-Solving and Data Analysis": 7,
+                     "Geometry and Trigonometry": 7}
+        for mid, m in MOCKS.items():
+            for form in ("module1", "module2_lower", "module2_upper"):
+                qs = m[form]
+                assert len(qs) == 22, f"{mid} {form}: {len(qs)}"
+                rank = {"easy": 0, "medium": 1, "hard": 2}
+                order = [rank[q["difficulty"]] for q in qs]
+                assert order == sorted(order), f"{mid} {form} is not easiest first"
+            both = m["module1"] + m["module2_upper"]
+            got = {d: sum(1 for q in both if q["domain"] == d) for d in DOM_TOTAL}
+            assert got == DOM_TOTAL, f"{mid} section domains: {got}"
+            # the two second modules must actually differ, or it is not adaptive
+            lo = {q["stem"] for q in m["module2_lower"]}
+            up = {q["stem"] for q in m["module2_upper"]}
+            assert not (lo & up), f"{mid}: the two second modules share questions"
+            hard_lo = sum(1 for q in m["module2_lower"] if q["difficulty"] == "hard")
+            hard_up = sum(1 for q in m["module2_upper"] if q["difficulty"] == "hard")
+            assert hard_up > hard_lo, f"{mid}: the upper module is not harder"
+        print(f"ok  7 mocks, 44 questions each at 15/15/7/7, easiest first, "
+              f"two distinct second modules")
+
+        def sit(mock, m1_right):
+            """Sit a mock, getting the first m1_right of module 1 correct."""
+            st = c.post(f"/api/mock/{mock}", json={"learner": "u:mocks"}).json()
+            sid = st["id"]
+            assert st["seconds"] > 2000, "a module is 35 minutes"
+            keyed = {q["id"]: q for f in ("module1", "module2_lower", "module2_upper")
+                     for q in MOCKS[mock][f]}
+            def reply(qs, upto):
+                for i, q in enumerate(qs):
+                    k = keyed[q["id"]]
+                    right = "ABCD".index(k["answer"]) if k["type"] == "mcq" else k["answer"]
+                    wrong = ("ABCD".index(k["answer"]) + 1) % 4 if k["type"] == "mcq" else "0"
+                    c.post(f"/api/session/{sid}/answer",
+                           json={"question_id": q["id"],
+                                 "answer": right if i < upto else wrong})
+            reply(st["questions"], m1_right)
+            gate = c.post(f"/api/session/{sid}/finish").json()
+            assert gate["next_module"] == 2, "module 1 finished the whole test"
+            two = c.get(f"/api/session/{sid}").json()
+            assert two["module"] == 2 and len(two["questions"]) == 22
+            assert two["seconds"] > 2000, "module 2 did not get its own clock"
+            reply(two["questions"], 22)
+            c.post(f"/api/session/{sid}/finish")
+            return gate, c.get(f"/api/session/{sid}/results").json()
+
+        gate, res = sit("1.1", 22)
+        assert res["estimate"]["route"] == "upper", res["estimate"]
+        assert res["right"] == 44 and not res["estimate"]["capped"]
+        top = res["estimate"]["high"]
+
+        gate, res = sit("1.2", 8)
+        assert res["estimate"]["route"] == "lower", res["estimate"]
+        assert res["estimate"]["capped"], "a low route has no ceiling"
+        assert res["estimate"]["high"] <= 580, res["estimate"]
+        print(f"ok  routing is adaptive: a strong module 1 reaches {top}, "
+              f"a weak one is capped at {res['estimate']['high']}")
+
+        # answering 22/22 on the lower module 2 still cannot reach the top
+        assert res["estimate"]["high"] < top, "the route made no difference"
+        print("ok  a perfect lower module 2 still scores under a strong route")
+
     # --- the marking itself, away from the wire -------------------------------
     assert scoring.is_correct({"type": "spr", "answer": "5776"}, "5,776")
     assert scoring.is_correct({"type": "mcq", "answer": "C"}, 2)
