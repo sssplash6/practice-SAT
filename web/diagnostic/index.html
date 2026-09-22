@@ -11,27 +11,45 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;900&family=DM+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="../assets/app.css">
 <style>
-  /* A sheet of scan film on the page. The film is dark because an MRI is
-     bright tissue on black; the page around it stays paper. */
-  .stage > svg.scene { aspect-ratio: 900 / 520; --scene-ratio: 1.731; --scene-max: 760px; cursor: pointer; }
-  .film   { fill:#17181A; }
-  .filmedge { fill:none; stroke:#2C2E31; stroke-width:1.5; }
-  .corner { fill:none; stroke:#5A5C60; stroke-width:1.6; stroke-linecap:round; }
+  /* A chart on the wall, seen square on. Ten rows for ten levels, each row
+     smaller than the one above it, and a mark against the row you read to. */
+  .wall {
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:clamp(20px,3.4vh,34px); padding:22px var(--gutter) 44px;
+  }
 
-  /* T1: white matter bright, cortex a shade darker, fluid and bone near black */
-  .scalp  { fill:#6E6A60; }
-  .bone   { fill:#17181A; }
-  .cortex { fill:#8E8F90; }
-  .white  { fill:#D3D1C8; }
-  .fluid  { fill:#1D1E20; }
-  .bright { fill:#E2DFD5; }
-  .mid    { fill:#B4B2AA; }
-  .cleft  { fill:none; stroke:#1D1E20; stroke-width:4.2; stroke-linecap:round; }
-  .folia  { fill:none; stroke:#8E8F90; stroke-width:1.6; stroke-linecap:round; }
+  .chart {
+    width:min(430px,100%);
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:clamp(22px,3vh,32px) clamp(20px,4vw,34px) clamp(26px,4vh,38px);
+  }
 
-  .beam  { stroke:var(--amber); stroke-width:2.4; }
-  .glow  { stroke:var(--amber); stroke-width:14; opacity:.13; }
-  .pip   { fill:var(--amber); }
+  .chart-title {
+    font:900 clamp(1.6rem,4.4vw,2.05rem)/1 var(--font);
+    letter-spacing:-.035em; text-align:center;
+  }
+  .chart-rule { margin:14px 0 clamp(16px,2.4vh,24px); border:0; border-top:1px solid var(--line); }
+
+  .rows { list-style:none; margin:0; padding:0; }
+  .rows li {
+    position:relative;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; color:var(--ink);
+    font-size:var(--s); line-height:1.06;
+    letter-spacing:calc(var(--s) * .16);
+    text-indent:calc(var(--s) * .16);          /* letter-spacing trails the last glyph */
+    margin-bottom:calc(var(--s) * .22);
+  }
+  .rows li:last-child { margin-bottom:0; }
+
+  /* the one live thing on the wall: the row you read to */
+  .rows li[data-here="true"]::before {
+    content:''; position:absolute; left:-14px;
+    width:5px; height:calc(var(--s) * .62); border-radius:3px;
+    background:var(--amber);
+  }
 </style>
 </head>
 <body data-nav="diagnostic">
@@ -51,20 +69,12 @@
       <h1 class="head-title">Diagnostic</h1>
     </header>
 
-    <section class="stage rise">
-      <svg class="scene" id="scene" viewBox="0 0 900 520" aria-hidden="true">
-        <defs>
-          <clipPath id="filmClip"><rect x="228" y="34" width="444" height="452" rx="5"/></clipPath>
-          <clipPath id="scanned"><rect id="scanRect" x="228" y="34" width="0" height="452"/></clipPath>
-        </defs>
-        <g id="sheet"></g>
-        <g clip-path="url(#filmClip)">
-          <g id="dim" opacity=".28"></g>
-          <g id="lit" clip-path="url(#scanned)"></g>
-          <g id="beam"></g>
-        </g>
-        <g id="marks"></g>
-      </svg>
+    <section class="wall rise">
+      <div class="chart">
+        <p class="chart-title">Diagnostic test</p>
+        <hr class="chart-rule">
+        <ol class="rows" id="rows"></ol>
+      </div>
       <button class="btn" type="button" id="go">Start diagnostic</button>
     </section>
   </main>
@@ -72,140 +82,35 @@
 
 <script src="../assets/app.js"></script>
 <script>
-const NS='http://www.w3.org/2000/svg';
-const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
 const $=id=>document.getElementById(id);
-const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const FILM={x:228,y:34,w:444,h:452};
-const C={x:450,y:258};
-
-/* ---------------------------------------------------------------- the slice
-   The silhouette is anatomical and hand-drawn: frontal pole at the left, the
-   vertex over the top, occipital behind, the temporal lobe hanging at the
-   front-underside, and the notch where the cerebellum tucks in.
-
-   The folded look does not come from scalloping the edge, which just reads as
-   a cog. It comes from the sulci: dark clefts cut inward from the surface,
-   through the cortical ribbon and into the white matter, the way they do on a
-   real slice. */
-const CEREBRUM='M-150 -14 C-153 -60 -132 -95 -98 -110 C-63 -126 -16 -130 25 -120'
-             +' C66 -110 102 -87 124 -57 C142 -33 146 -6 139 17 C133 37 118 50 98 55'
-             +' C80 59 64 54 53 45 C44 60 26 70 2 70 C-24 70 -52 62 -74 48'
-             +' C-96 34 -118 22 -136 10 C-147 3 -150 -4 -150 -14 Z';
-const WHITE='M-124 -14 C-127 -52 -110 -80 -82 -93 C-52 -106 -12 -109 22 -100'
-          +' C57 -91 86 -72 104 -47 C118 -28 121 -7 116 12 C111 28 99 38 82 42'
-          +' C66 45 52 41 43 33 C36 44 20 51 0 51 C-22 51 -45 44 -63 33'
-          +' C-82 21 -100 11 -114 2 C-122 -3 -124 -7 -124 -14 Z';
-
-/* each cleft: where it starts on the surface and how far in it reaches */
-const SULCI=[
-  'M-122 -52 C-108 -56 -96 -62 -88 -70',
-  'M-92 -96  C-86 -82 -80 -70 -70 -60',
-  'M-52 -116 C-50 -98 -48 -82 -42 -68',
-  'M-8 -127  C-8 -104 -6 -84 -2 -66',
-  'M34 -117  C30 -96 28 -78 30 -62',
-  'M74 -95   C66 -78 60 -62 60 -48',
-  'M108 -68  C96 -56 86 -46 80 -34',
-  'M130 -30  C116 -26 104 -22 94 -14',
-  'M134 10   C120 8 108 6 98 2',
-  'M-142 2   C-128 -2 -116 -6 -106 -12',
-  'M-100 30  C-92 20 -84 12 -78 2',
-  'M-40 62   C-38 48 -34 36 -28 26',
-  'M18 66    C16 52 16 40 20 30',
+/* Snellen letters, and the sizes stepped down the way a real card steps them */
+const ROWS=[
+  ['E',                    66],
+  ['F P',                  46],
+  ['T O Z',                35],
+  ['L P E D',              28],
+  ['P E C F D',            23],
+  ['E D F C Z P',          19],
+  ['F E L O P Z D',        16],
+  ['D E F P O T E C',      13.5],
+  ['L E F O D P C T',      11.5],
+  ['F D P L T C E O',      10],
 ];
 
-function drawSlice(host){
-  const g=el('g',{transform:`translate(${C.x} ${C.y-16})`},host);
+const S=window.SATF||{};
+const P=(S.player&&S.player())||{rating:1120};
+const HERE=(S.levelOf||(()=>4))(P.rating);
 
-  /* scalp, the dark table of bone under it, then fluid round the brain */
-  el('path',{class:'scalp',d:'M-172 -18 C-176 -78 -150 -120 -108 -140 C-62 -162 10 -164 62 -142'
-    +' C118 -119 158 -72 162 -14 C166 46 140 90 96 110 C56 128 4 130 -38 116'
-    +' C-84 101 -126 74 -152 40 C-168 19 -172 2 -172 -18 Z'},g);
-  el('path',{class:'bone',d:'M-163 -18 C-167 -75 -143 -114 -103 -133 C-59 -153 8 -155 58 -134'
-    +' C111 -112 149 -69 153 -14 C157 42 133 84 91 102 C53 119 4 121 -35 108'
-    +' C-79 94 -118 68 -143 36 C-158 16 -163 1 -163 -18 Z'},g);
-  el('path',{class:'fluid',d:'M-158 -16 C-162 -70 -139 -107 -101 -125 C-58 -144 7 -146 55 -126'
-    +' C106 -105 143 -65 147 -13 C151 40 128 80 88 97 C51 113 4 115 -33 102'
-    +' C-76 89 -113 64 -137 34 C-152 14 -158 0 -158 -16 Z'},g);
+const ol=$('rows');
+ROWS.forEach(([letters,size],i)=>{
+  const li=document.createElement('li');
+  li.style.setProperty('--s',size+'px');
+  if(i+1===HERE) li.dataset.here='true';
+  li.textContent=letters;
+  ol.appendChild(li);
+});
 
-  /* the cortical ribbon, the white matter under it, and the clefts through both */
-  el('path',{class:'cortex',d:CEREBRUM},g);
-  el('path',{class:'white',d:WHITE},g);
-  SULCI.forEach(d=>el('path',{class:'cleft',d},g));
-
-  /* the great commissure, and the fluid space it arches over */
-  el('path',{class:'bright',d:'M-56 14 C-76 0 -72 -30 -44 -44 C-6 -62 42 -58 70 -36'
-    +' C86 -23 88 -4 78 9 C70 19 57 18 53 8 C61 -4 55 -19 34 -29'
-    +' C4 -42 -32 -41 -49 -25 C-61 -14 -57 -1 -46 5 C-38 10 -42 18 -56 14 Z'},g);
-  el('path',{class:'fluid',d:'M-40 12 C-28 -2 14 -6 42 6 C50 10 48 20 36 24 C8 34 -24 30 -40 20 Z'},g);
-  el('ellipse',{class:'mid',cx:0,cy:34,rx:29,ry:19},g);
-
-  /* midbrain, pons, medulla, and the cord leaving the frame */
-  el('path',{class:'mid',d:'M-8 48 C-22 64 -24 84 -10 96 C-2 104 4 116 8 130'
-    +' C11 140 13 148 13 154 L35 154 C35 140 31 124 27 110 C23 96 21 82 24 70'
-    +' C27 58 16 48 4 48 Z'},g);
-
-  /* the cerebellum: its folia are far finer than cortical gyri, and the arbor
-     vitae branches up the middle of it */
-  el('path',{class:'cortex',d:'M44 52 C74 40 116 46 134 68 C148 86 143 112 122 121'
-    +' C99 131 66 126 50 110 C38 98 36 64 44 52 Z'},g);
-  el('path',{class:'white',d:'M58 66 C80 58 110 62 123 78 C132 90 128 106 113 112'
-    +' C96 119 73 115 62 103 C53 94 52 74 58 66 Z'},g);
-  for(let i=0;i<9;i++){
-    const a=-1.15+i*.30, r0=16, r1=41;
-    el('path',{class:'folia',d:`M${(90+Math.cos(a)*r0).toFixed(1)} ${(88+Math.sin(a)*r0*.74).toFixed(1)}`
-      +` L${(90+Math.cos(a)*r1).toFixed(1)} ${(88+Math.sin(a)*r1*.74).toFixed(1)}`},g);
-  }
-
-  /* the tentorium, keeping the two apart */
-  el('path',{class:'cleft',d:'M34 48 C62 52 96 54 132 50','stroke-width':3},g);
-  return g;
-}
-
-/* the film itself, and the marks on its edge */
-(()=>{
-  const g=$('sheet');
-  el('rect',{class:'film',x:FILM.x,y:FILM.y,width:FILM.w,height:FILM.h,rx:5},g);
-  el('rect',{class:'filmedge',x:FILM.x+.75,y:FILM.y+.75,width:FILM.w-1.5,height:FILM.h-1.5,rx:5},g);
-  const m=$('marks'), L=16;
-  [[FILM.x,FILM.y,1,1],[FILM.x+FILM.w,FILM.y,-1,1],
-   [FILM.x,FILM.y+FILM.h,1,-1],[FILM.x+FILM.w,FILM.y+FILM.h,-1,-1]].forEach(([x,y,sx,sy])=>{
-    el('path',{class:'corner',d:`M${x+sx*14} ${y+sy*14} h${sx*L}M${x+sx*14} ${y+sy*14} v${sy*L}`},m);
-  });
-})();
-
-drawSlice($('dim'));
-drawSlice($('lit'));
-
-/* ---------------------------------------------------------------- the scan */
-const X0=FILM.x, X1=FILM.x+FILM.w;
-const rect=$('scanRect'), beam=$('beam');
-function paint(x,on){
-  rect.setAttribute('width',Math.max(0,x-X0));
-  beam.replaceChildren();
-  if(!on) return;
-  el('line',{class:'glow',x1:x,y1:FILM.y,x2:x,y2:FILM.y+FILM.h},beam);
-  el('line',{class:'beam',x1:x,y1:FILM.y,x2:x,y2:FILM.y+FILM.h},beam);
-  el('path',{class:'pip',d:`M${x-5} ${FILM.y} L${x+5} ${FILM.y} L${x} ${FILM.y+9} Z`},beam);
-  el('path',{class:'pip',d:`M${x-5} ${FILM.y+FILM.h} L${x+5} ${FILM.y+FILM.h} L${x} ${FILM.y+FILM.h-9} Z`},beam);
-}
-
-let raf=0;
-function scan(){
-  cancelAnimationFrame(raf);
-  if(reduce){ paint(X1,false); return; }
-  const t0=performance.now(), dur=2600;
-  (function step(now){
-    const k=Math.max(0,Math.min(1,(now-t0)/dur));
-    paint(X0+(X1-X0)*k,k<1);
-    if(k<1) raf=requestAnimationFrame(step);
-  })(t0);
-}
-scan();
-$('scene').addEventListener('pointerdown',scan);
-
-/* -- ROUTER SEAM -------------------------------------------------------- */
 $('go').addEventListener('click',()=>console.log('[router] /diagnostic/start'));
 </script>
 
