@@ -1,0 +1,99 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Jukebox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root { --paper:#FFFFFF; --ink:#3F3F3F; --amber:#F18508; --line:#E4E1DC; --soft:#8A847C; --font:"Archivo","Helvetica Neue",system-ui,sans-serif; --mono:"DM Mono",ui-monospace,monospace; --ease:cubic-bezier(.2,.8,.2,1); }
+  html, body { height:100%; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+  .screen { min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(14px,2.6vh,26px); padding:24px 16px 44px; text-align:center; }
+  svg.scene { width:min(620px,94vw); aspect-ratio:600/640; display:block; overflow:visible; }
+  h1 { margin:0; font-size:clamp(2rem,6vw,3.4rem); font-weight:900; letter-spacing:-.04em; line-height:.98; }
+  .btn { font:800 15px var(--font); min-height:52px; padding:0 32px; border:0; border-radius:999px; background:var(--amber); color:#fff; cursor:pointer; box-shadow:0 10px 30px -14px rgba(241,133,8,.9); transition:transform .18s var(--ease), opacity .3s var(--ease); }
+  .btn:hover { transform:translateY(-1px); } .btn[disabled] { opacity:.35; cursor:default; box-shadow:none; transform:none; }
+  .hint { font:11px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-top:-4px; }
+  .m { fill:none; stroke:var(--ink); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+  .body { fill:#FBFAF8; stroke:var(--ink); stroke-width:2; }
+  .glass { fill:#F4F2EE; stroke:var(--ink); stroke-width:1.5; }
+  .card { fill:#fff; stroke:var(--ink); stroke-width:1.2; cursor:pointer; }
+  .cardg:hover .card { fill:#F5F3EF; }
+  .code { font:700 9px var(--mono); fill:var(--ink); letter-spacing:.1em; }
+  .name { font:500 9.5px var(--mono); fill:var(--ink); letter-spacing:.04em; }
+  .key { fill:#F5F3EF; stroke:var(--ink); stroke-width:1.4; transition: transform .08s, fill .08s; }
+  .keyt { font:700 11px var(--mono); fill:var(--ink); pointer-events:none; }
+  .key.down { fill:var(--ink); transform: translateY(2px); } .key.down + .keyt { fill:#fff; }
+  .rec { fill:var(--ink); } .recl { fill:#fff; }
+  .disp { fill:var(--ink); }
+  .dispt { font:700 12px var(--mono); fill:#fff; letter-spacing:.14em; }
+  .dispn { font:900 16px var(--font); fill:var(--amber); letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+  .badge { fill:var(--ink); } .badget { font:900 9px var(--font); fill:#fff; }
+  .fly { fill:var(--amber); }
+  .grille { stroke:var(--ink); stroke-width:1; opacity:.35; }
+</style>
+
+<main class="screen">
+  <svg class="scene" id="scene" viewBox="0 0 600 640" aria-hidden="true">
+    <rect class="body" x="20" y="16" width="560" height="608" rx="48"/>
+    <rect class="glass" x="56" y="44" width="488" height="112" rx="16"/>
+    <g id="queue" style="cursor:pointer"></g>
+    <rect class="disp" x="200" y="170" width="200" height="30" rx="6"/>
+    <text class="dispt" x="222" y="190">QUEUE</text><text class="dispn" id="qn" x="380" y="191" text-anchor="end">0</text>
+    <g id="cards"></g>
+    <g id="keys"></g>
+    <g id="grille"></g>
+    <g id="flyer" style="pointer-events:none"></g>
+  </svg>
+  <p class="hint" id="hint">Tap a card to queue one · hold to keep queueing · tap the window to clear</p>
+  <h1>Load the queue.</h1>
+  <button class="btn" type="button" id="go" disabled>Build a set</button>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const txt=(p,x,y,s,cls,a={})=>{const t=el('text',{x,y,class:cls,'dominant-baseline':'middle',...a},p);t.textContent=s;return t;};
+const lerp=(a,b,k)=>a+(b-a)*k, easeIn=k=>k*k*k, easeOut=k=>1-Math.pow(1-k,3);
+const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+const $=id=>document.getElementById(id);
+
+/* the wall: a letter per domain, a number per topic -- the grouping is the code */
+const DOMAINS=[
+  ['A',[['Linear eqs','linear_equations_in_one_variable'],['Lines','linear_equations_in_two_variables'],['Linear fn','linear_functions'],['Systems','systems_of_linear_equations'],['Inequalities','linear_inequalities']]],
+  ['B',[['Expressions','equivalent_expressions'],['Nonlin. eqs','nonlinear_equations_and_systems'],['Nonlinear fn','nonlinear_functions']]],
+  ['C',[['Ratios','ratios_rates_proportions_and_units'],['Percents','percentages'],['1-var data','one_variable_data'],['2-var data','two_variable_data'],['Probability','probability'],['Samples','sample_statistics_and_margin_of_error'],['Claims','evaluating_statistical_claims']]],
+  ['D',[['Area/volume','area_and_volume'],['Angles','lines_angles_and_triangles'],['Trig','right_triangles_and_trigonometry'],['Circles','circles']]],
+];
+const keys={}; const KY=460;
+'ABCD'.split('').forEach((L,i)=>{ const x=96+i*40; const k=el('rect',{class:'key',x:x-15,y:KY-14,width:30,height:28,rx:5},$('keys')); txt($('keys'),x,KY+1,L,'keyt',{'text-anchor':'middle'}); keys[L]=k; });
+for(let n=1;n<=7;n++){ const x=282+(n-1)*36; const k=el('rect',{class:'key',x:x-15,y:KY-14,width:30,height:28,rx:5},$('keys')); txt($('keys'),x,KY+1,n,'keyt',{'text-anchor':'middle'}); keys[n]=k; }
+for(let y=500;y<=600;y+=10) el('line',{class:'grille',x1:60,y1:y,x2:540,y2:y},$('grille'));
+
+const basket={}; let total=0; const CAP=120; const stalls=[];
+DOMAINS.forEach(([L,items],c)=>items.forEach(([name,slug],r)=>{ const x=56+c*124, y=222+r*30; const g=el('g',{class:'cardg'},$('cards'));
+  el('rect',{class:'card',x,y,width:116,height:25,rx:3},g); txt(g,x+7,y+13,L+(r+1),'code'); txt(g,x+30,y+13,name,'name');
+  const badge=el('g',{opacity:0},g); el('circle',{class:'badge',cx:x+108,cy:y+3,r:8},badge); const bt=txt(badge,x+108,y+3.5,'0','badget',{'text-anchor':'middle'});
+  const st={slug,name,L,n:r+1,cx:x+58,cy:y+12,badge,bt,count:0,hold:null}; stalls.push(st);
+  const start=()=>{ queue(st); const t0=performance.now(); const tick=()=>{ if(st.hold===null) return; const h=(performance.now()-t0)/1000; queue(st); st.hold=setTimeout(tick,h<.7?240:h<1.8?100:45); }; st.hold=setTimeout(tick,240); };
+  const stop=()=>{ clearTimeout(st.hold); st.hold=null; };
+  g.addEventListener('pointerdown',e=>{ try{ g.setPointerCapture(e.pointerId); }catch(_){} start(); }); ['pointerup','pointerleave','pointercancel'].forEach(e=>g.addEventListener(e,stop)); }));
+
+/* queueing: the keys press, a record drops into the window */
+const Q=$('queue'), qn=$('qn'), hint=$('hint'), go=$('go'); const recs=[];
+async function press(k){ k.classList.add('down'); await wait(140); k.classList.remove('down'); }
+function layout(){ const n=recs.length, vis=Math.min(n,12), x0=300-(vis-1)*18; recs.slice(-12).forEach((r,i)=>r.setAttribute('transform',`translate(${x0+i*36} 100)`)); }
+function queue(st){ if(total>=CAP){ hint.textContent='Queue is full · tap the window to clear'; return; }
+  st.count++; total++; basket[st.slug]=st.count; st.bt.textContent=st.count; st.badge.setAttribute('opacity',1); qn.textContent=total; go.disabled=false;
+  press(keys[st.L]); setTimeout(()=>press(keys[st.n]),90);
+  const f=el('circle',{class:'fly',r:9},$('flyer')); const n=Math.min(total,12), tx=300-(n-1)*18+(n-1)*36;
+  tween(520,k=>{ f.setAttribute('cx',lerp(st.cx,tx,k)); f.setAttribute('cy',lerp(st.cy,100,k)-60*Math.sin(Math.PI*k)); }, easeIn).then(()=>{ f.remove();
+    const r=el('g',{},Q); el('circle',{class:'rec',r:30},r); el('circle',{class:'recl',r:9},r); el('circle',{class:'rec',r:2},r); recs.push(r); if(recs.length>12) recs.shift().remove(); layout(); }); }
+Q.addEventListener('pointerdown', async ()=>{ if(!total) return; await tween(300,k=>Q.setAttribute('opacity',1-k)); Q.replaceChildren(); recs.length=0; Q.setAttribute('opacity',1);
+  stalls.forEach(st=>{ st.count=0; st.badge.setAttribute('opacity',0); }); for(const k in basket) delete basket[k]; total=0; qn.textContent='0'; go.disabled=true; hint.textContent='Tap a card to queue one · hold to keep queueing · tap the window to clear'; });
+el('rect',{x:56,y:44,width:488,height:112,fill:'transparent'},Q);   // the window is tappable even when empty
+/* -- ROUTER SEAM: the set is `basket`, a map of topic slug -> question count -- */
+go.addEventListener('click', ()=>console.log('[router] /practice/combined', {...basket}));
+</script>
+
+</body></html>

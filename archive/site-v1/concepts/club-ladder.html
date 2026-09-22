@@ -1,0 +1,151 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Club Ladder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root { --paper:#FFFFFF; --ink:#3F3F3F; --amber:#F18508; --line:#E4E1DC; --soft:#8A847C; --wood:#F4EDE2; --grain:#E4D9C9; --groove:#D6CDBF; --font:"Archivo","Helvetica Neue",system-ui,sans-serif; --mono:"DM Mono",ui-monospace,monospace; --ease:cubic-bezier(.2,.8,.2,1); }
+  html, body { height:100%; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+  .screen { min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(14px,2.6vh,26px); padding:24px 16px 44px; text-align:center; }
+  svg.scene { width:min(560px,94vw); max-width:100%; aspect-ratio:640/560; display:block; overflow:visible; cursor:pointer; touch-action:manipulation; }
+  h1 { margin:0; font-size:clamp(2rem,6vw,3.4rem); font-weight:900; letter-spacing:-.04em; line-height:.98; text-wrap:balance; }
+  .btn { font:800 15px var(--font); min-height:52px; padding:0 32px; border:0; border-radius:999px; background:var(--amber); color:var(--ink); cursor:pointer; box-shadow:0 10px 30px -14px rgba(241,133,8,.9); transition:transform .18s var(--ease), opacity .3s var(--ease); }
+  .btn:hover { transform:translateY(-1px); } .btn:focus-visible { outline:3px solid var(--ink); outline-offset:3px; }
+  .hint { font:11px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-top:-4px; min-height:1.4em; }
+  .board { fill:var(--wood); stroke:var(--ink); stroke-width:2; stroke-linejoin:round; }
+  .edge { fill:none; stroke:var(--grain); stroke-width:1; }
+  .grain { fill:none; stroke:var(--grain); stroke-width:1.2; }
+  .groove { fill:var(--groove); stroke:var(--ink); stroke-width:1.2; }
+  .lip { fill:var(--wood); stroke:var(--ink); stroke-width:1.2; }
+  .plate { fill:#fff; stroke:var(--ink); stroke-width:1.4; }
+  .screw { fill:var(--ink); }
+  .plate-t { font:500 11px var(--mono); fill:var(--ink); letter-spacing:.22em; text-transform:uppercase; }
+  .rung { font:500 11px var(--mono); fill:var(--soft); letter-spacing:.14em; }
+  .card { fill:#fff; stroke:var(--ink); stroke-width:1.6; }
+  .card.you { fill:var(--amber); }
+  .hole { fill:var(--wood); stroke:var(--ink); stroke-width:1.2; }
+  .name { font:700 17px var(--font); fill:var(--ink); letter-spacing:-.01em; }
+  .shadow { fill:var(--ink); }
+  .notch { stroke:var(--ink); stroke-width:2.2; stroke-linecap:round; opacity:.32; }
+  .notch.done { opacity:1; }
+  @media (prefers-reduced-motion: reduce) { .btn { transition:none; } }
+</style>
+
+<main class="screen">
+  <svg class="scene" id="scene" viewBox="0 0 640 560" aria-hidden="true">
+    <g id="root">
+      <g id="board">
+        <rect class="board" x="120" y="20" width="400" height="520" rx="10"/>
+        <rect class="edge" x="128" y="28" width="384" height="504" rx="7"/>
+        <rect class="plate" x="240" y="38" width="160" height="26" rx="3"/>
+        <circle class="screw" cx="248" cy="51" r="1.8"/><circle class="screw" cx="392" cy="51" r="1.8"/>
+        <text class="plate-t" x="320" y="55" text-anchor="middle">Club ladder</text>
+      </g>
+      <g id="slots"></g>
+      <g id="cards"></g>
+      <g id="lips"></g>
+      <g id="float"></g>
+    </g>
+  </svg>
+  <p class="hint" id="hint">Tap the board · placement, duel 1 of 3</p>
+  <h1>Move up the board.</h1>
+  <button class="btn" type="button" id="go">Calibrate</button>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const lerp=(a,b,k)=>a+(b-a)*k, easeIn=k=>k*k*k, easeOut=k=>1-Math.pow(1-k,3), easeInOut=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2, back=k=>{const c=1.4;return 1+(c+1)*Math.pow(k-1,3)+c*Math.pow(k-1,2)};
+const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+const $=id=>document.getElementById(id);
+
+/* ---------------- a small wooden knock, synthesised on the spot ---------------- */
+let AC=null; const ac=()=>{ try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); }catch(_){ AC=null; } return AC; };
+function knock(vol=1){ const a=ac(); if(!a) return; const t=a.currentTime;
+  const o=a.createOscillator(), g=a.createGain(); o.type='triangle'; o.frequency.setValueAtTime(220,t); o.frequency.exponentialRampToValueAtTime(90,t+.09);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.3*vol,t+.004); g.gain.exponentialRampToValueAtTime(.0001,t+.15); o.connect(g).connect(a.destination); o.start(t); o.stop(t+.17);
+  const n=a.createBufferSource(), buf=a.createBuffer(1,Math.floor(a.sampleRate*.03),a.sampleRate), d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
+  n.buffer=buf; const bp=a.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1300; bp.Q.value=.9; const g2=a.createGain(); g2.gain.value=.1*vol; n.connect(bp).connect(g2).connect(a.destination); n.start(t); }
+function tick(){ const a=ac(); if(!a) return; const t=a.currentTime; const n=a.createBufferSource(), buf=a.createBuffer(1,Math.floor(a.sampleRate*.012),a.sampleRate), d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*(1-i/d.length);
+  n.buffer=buf; const hp=a.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=2400; const g=a.createGain(); g.gain.value=.05; n.connect(hp).connect(g).connect(a.destination); n.start(t); }
+
+/* ---------------- the board: eight rungs, one card each ---------------- */
+const N=8, TOP=96, PITCH=56, seatY=i=>TOP+i*PITCH;
+const scene=$('scene'), root=$('root'), slotsG=$('slots'), cardsG=$('cards'), lipsG=$('lips'), floatG=$('float'), boardG=$('board'), hint=$('hint'), go=$('go');
+for(let i=0;i<9;i++){ const y=84+i*52+(i%2)*6; el('path',{class:'grain',d:`M134 ${y} C 230 ${y-3}, 330 ${y+4}, 506 ${y-1}`},boardG); }
+for(let i=0;i<N;i++){ const y=seatY(i);
+  el('rect',{class:'groove',x:150,y:y+6,width:340,height:20,rx:3},slotsG);
+  el('rect',{class:'lip',x:150,y:y+14,width:340,height:12,rx:3},lipsG);
+  const t=el('text',{class:'rung',x:140,y:y+5,'text-anchor':'end'},slotsG); t.textContent=i+1; }
+
+const POOL=['Maya R.','Jonah K.','Priya S.','Diego M.','Ava T.','Noah B.','Zoe L.','Eli W.','Sofia G.','Marcus H.','Lena P.','Owen C.'];
+for(let i=POOL.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [POOL[i],POOL[j]]=[POOL[j],POOL[i]]; }
+const YOU={you:true,name:'You'}, start=3+Math.floor(Math.random()*3);          // rung 4, 5 or 6: two or three off the floor, like a seed of 1000
+const order=[]; for(let i=0;i<N;i++) order.push(i===start?YOU:{name:POOL.pop()});
+const players=order.slice();
+
+function makeCard(p,i){ const g=el('g',{},cardsG), f=el('g',{},g);
+  el('rect',{class:'shadow',x:172,y:-12,width:300,height:40,rx:5,opacity:0},f);
+  el('rect',{class:'card'+(p.you?' you':''),x:170,y:-20,width:300,height:40,rx:4},f);
+  el('circle',{class:'hole',cx:186,cy:0,r:3.2},f);
+  const t=el('text',{class:'name',x:204,y:6},f); t.textContent=p.you?'':p.name;
+  if(p.you) p.notches=[0,1,2].map(k=>el('line',{class:'notch',x1:428+k*14,y1:-7,x2:428+k*14,y2:7},f));
+  p.g=g; p.f=f; p.t=t; p.y=seatY(i); p.fx=0; p.fy=0; place(p,0,p.y,0); }
+function place(p,x,y,l){ p.g.setAttribute('transform',`translate(${x} ${y}) translate(320 0) scale(${1+.025*l}) translate(-320 0)`); p.g.firstChild.firstChild.setAttribute('opacity',.14*l); }
+players.forEach(makeCard);
+
+/* ---------------- hover: the cards flex a millimetre toward the hand ---------------- */
+let cur=null, flexing=false;
+scene.addEventListener('pointermove',e=>{ const r=scene.getBoundingClientRect(); cur={x:(e.clientX-r.left)/r.width*640,y:(e.clientY-r.top)/r.height*560}; if(!flexing&&!reduce){ flexing=true; requestAnimationFrame(flex); } });
+scene.addEventListener('pointerleave',()=>cur=null);
+function flex(){ let moving=false;
+  for(const p of players){ let tx=0,ty=0; if(cur){ const dx=cur.x-320, dy=cur.y-p.y, d=Math.hypot(dx,dy)||1, k=Math.exp(-d/150); tx=dx/d*k*1.8; ty=dy/d*k*1.8; }
+    p.fx=lerp(p.fx,tx,.16); p.fy=lerp(p.fy,ty,.16); if(Math.abs(p.fx-tx)>.02||Math.abs(p.fy-ty)>.02) moving=true; p.f.setAttribute('transform',`translate(${p.fx.toFixed(2)} ${p.fy.toFixed(2)})`); }
+  if(moving||cur) requestAnimationFrame(flex); else flexing=false; }
+
+/* ---------------- a duel: challenge up the board, and move by beating a person ---------------- */
+const SCRIPT=[1,1,0,1,1,1,0,1,1,0];   // won, won, lost … so the board goes both ways
+let duels=0, busy=false;
+const rungOf=p=>order.indexOf(p)+1;
+async function lift(p,h=16){ floatG.appendChild(p.g); const y0=p.y; await tween(220,k=>place(p,0,y0-h*k,k),back); }
+async function seat(p,h=16,vol=1){ const y=seatY(order.indexOf(p)); p.y=y;
+  await tween(170,k=>place(p,0,y-h*(1-k),1-k),easeIn); knock(vol); cardsG.appendChild(p.g); shake(vol);
+  await tween(150,k=>place(p,0,y-2.5*Math.sin(Math.PI*k),0)); }
+function shake(v){ tween(220,k=>{ const d=(1-k)*v; root.setAttribute('transform',`translate(${1.6*d*Math.sin(k*Math.PI*5)} ${.7*d})`); }); }
+async function shuffleOne(p){ await lift(p,8); const y0=p.y, y1=seatY(order.indexOf(p)); await tween(240,k=>place(p,0,lerp(y0,y1,k)-8,.5),easeInOut); p.y=y1; await seat(p,8,.5); }
+async function hold(p){ await Promise.all([lift(YOU,10),lift(p,10)]); await wait(160); await Promise.all([seat(YOU,10),seat(p,10)]); }
+
+async function move(me,t,win){ const opp=order[t];
+  await Promise.all([lift(YOU),lift(opp)]);
+  await wait(90);
+  const yA=YOU.y, yB=opp.y, destA=seatY(t), destB=seatY(win?t+1:t-1);   // the two cross: yours passes in front
+  await tween(480,k=>{ const s=easeInOut(k); place(YOU,16*Math.sin(Math.PI*k),lerp(yA,destA,s)-16,1); place(opp,-16*Math.sin(Math.PI*k),lerp(yB,destB,s)-16,1); });
+  YOU.y=destA; opp.y=destB;
+  order.splice(me,1); order.splice(t,0,YOU);
+  const between=players.filter(p=>p!==YOU&&p!==opp&&seatY(order.indexOf(p))!==p.y);   // the cards the challenge displaced
+  const shuffles=between.map((p,i)=>wait(i*90).then(()=>shuffleOne(p)));
+  await Promise.all([seat(YOU),seat(opp),...shuffles]); }
+
+async function engrave(){ const name=YOU.name; YOU.notches.forEach(n=>tween(300,k=>n.style.opacity=1-k));
+  await wait(200); for(let i=1;i<=name.length;i++){ YOU.t.textContent=name.slice(0,i); tick(); await wait(70); }
+  await tween(260,k=>place(YOU,0,YOU.y,.6*Math.sin(Math.PI*k))); knock(.6); }
+
+async function duel(){ if(busy) return; busy=true; ac();
+  const me=order.indexOf(YOU), win=SCRIPT[duels%SCRIPT.length]===1; let line;
+  if(win){ if(me===0){ hint.textContent='Challenged from below · held the top rung'; await hold(order[1]); line='Held rung 1 of 8'; }
+    else { const t=me>=2&&Math.random()<.45?me-2:me-1, opp=order[t]; hint.textContent=`Duelling ${opp.name}`; await move(me,t,true); line=`Beat ${opp.name} · up ${me-t===1?'one rung':'two rungs'} to ${rungOf(YOU)}`; } }
+  else { if(me===N-1){ hint.textContent='Lost · already on the bottom rung'; await hold(order[N-2]); line='Held rung 8 of 8'; }
+    else { const opp=order[me+1]; hint.textContent=`Duelling ${opp.name}`; await move(me,me+1,false); line=`Lost to ${opp.name} · down one rung to ${rungOf(YOU)}`; } }
+  duels++;
+  if(duels<3){ YOU.notches[duels-1].classList.add('done'); hint.textContent=`${line} · placement, duel ${duels+1} of 3`; }
+  else if(duels===3){ YOU.notches[2].classList.add('done'); hint.textContent=`${line} · placed`; await engrave(); hint.textContent=`Placed on rung ${rungOf(YOU)} of 8 · your name is on the board`; go.textContent='Start duel'; }
+  else hint.textContent=line;
+  busy=false; }
+scene.addEventListener('pointerdown',duel);
+/* -- ROUTER SEAM ------------------------------------------------------------ */
+go.addEventListener('click',()=>console.log('[router] /duel',{rung:rungOf(YOU),of:N,duels,placed:duels>=3}));
+</script>
+
+</body></html>

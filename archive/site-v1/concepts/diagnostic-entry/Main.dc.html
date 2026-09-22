@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SAT Math — Diagnostic</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  body { margin: 0; background: #0a0a09; }
+  * { box-sizing: border-box; }
+
+  @keyframes dc-breathe {
+    0%, 100% { transform: scale(1); opacity: 0.96; }
+    50% { transform: scale(1.035); opacity: 1; }
+  }
+  @keyframes dc-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes dc-rise-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .dc-take-btn:hover { background: #e4ff6b; }
+  .dc-take-btn:active { transform: scale(0.98); }
+  .dc-skip-btn:hover { border-color: rgba(244,242,237,0.5); color: #ffffff; }
+  .dc-skip-btn:active { transform: scale(0.98); }
+  .dc-modal-secondary:hover { color: #ffffff; }
+</style>
+</helmet>
+
+<div style="width: 100%; min-height: 100vh; position: relative; background-color: #0a0a09; background-image: linear-gradient(rgba(244,242,237,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(244,242,237,0.05) 1px, transparent 1px); background-size: 44px 44px; font-family: 'Space Grotesk', system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; padding: 32px;">
+
+  <div style="position: absolute; top: 36px; left: 40px; display: flex; align-items: baseline; gap: 10px;">
+    <span style="font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 22px; color: #d7ff3e; line-height: 1;">&radic;</span>
+    <span style="font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 13px; letter-spacing: 0.22em; color: rgba(244,242,237,0.55); text-transform: uppercase;">SAT&nbsp;&middot;&nbsp;Math&nbsp;Only</span>
+  </div>
+
+  <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; max-width: 900px;">
+
+    <div style="font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: clamp(180px, 34vw, 460px); line-height: 0.8; color: #d7ff3e; text-shadow: 0 0 90px rgba(215,255,62,0.55), 0 0 200px rgba(215,255,62,0.25); animation: dc-breathe 4.5s ease-in-out infinite; user-select: none;">?</div>
+
+    <h1 style="margin: 0; margin-top: clamp(8px, 2vw, 24px); font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: clamp(34px, 6.4vw, 84px); line-height: 1.02; letter-spacing: -0.01em; color: #f4f2ed; text-transform: uppercase;">Find your level.</h1>
+
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 18px; margin-top: clamp(28px, 5vw, 56px);">
+      <button onClick="{{ takeTest }}" class="dc-take-btn" style="font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: clamp(16px, 1.6vw, 20px); letter-spacing: 0.06em; text-transform: uppercase; color: #0a0a09; background: #d7ff3e; border: none; border-radius: 3px; padding: 22px 48px; cursor: pointer; transition: background 0.15s ease, transform 0.1s ease;">
+        Take the Test
+      </button>
+      <button onClick="{{ openSkip }}" class="dc-skip-btn" style="font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: clamp(16px, 1.6vw, 20px); letter-spacing: 0.06em; text-transform: uppercase; color: rgba(244,242,237,0.75); background: transparent; border: 2px solid rgba(244,242,237,0.22); border-radius: 3px; padding: 20px 44px; cursor: pointer; transition: border-color 0.15s ease, color 0.15s ease, transform 0.1s ease;">
+        Skip
+      </button>
+    </div>
+
+  </div>
+
+  <sc-if value="{{ skipOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeSkip }}" style="position: fixed; inset: 0; background: rgba(6,6,5,0.86); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; padding: 24px; z-index: 50; animation: dc-fade-in 0.18s ease-out;">
+      <div onClick="{{ stopClose }}" style="width: 100%; max-width: 560px; background: #131311; border: 1px solid rgba(244,242,237,0.1); border-radius: 4px; padding: clamp(36px, 6vw, 64px); text-align: center; animation: dc-rise-in 0.22s ease-out;">
+        <h2 style="margin: 0; font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: clamp(28px, 4.2vw, 40px); line-height: 1.05; letter-spacing: -0.01em; color: #f4f2ed; text-transform: uppercase;">Don't skip this.</h2>
+        <p style="margin: 20px 0 0 0; font-family: 'IBM Plex Mono', monospace; font-weight: 500; font-size: 15px; line-height: 1.6; color: rgba(244,242,237,0.6);">Skip it and you start blind. Ten minutes finds exactly where you're losing points.</p>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 36px;">
+          <button onClick="{{ takeTest }}" class="dc-take-btn" style="width: 100%; font-family: 'Space Grotesk', system-ui, sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 0.06em; text-transform: uppercase; color: #0a0a09; background: #d7ff3e; border: none; border-radius: 3px; padding: 20px 0; cursor: pointer; transition: background 0.15s ease, transform 0.1s ease;">
+            Take the Test
+          </button>
+          <button onClick="{{ closeSkip }}" class="dc-modal-secondary" style="font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(244,242,237,0.45); background: transparent; border: none; padding: 8px; cursor: pointer; transition: color 0.15s ease;">
+            Skip Anyway
+          </button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { skipOpen: false };
+  }
+  renderVals() {
+    return {
+      skipOpen: this.state.skipOpen,
+      openSkip: () => this.setState({ skipOpen: true }),
+      closeSkip: (e) => { if (e) e.stopPropagation(); this.setState({ skipOpen: false }); },
+      stopClose: (e) => { if (e) e.stopPropagation(); },
+      takeTest: (e) => { if (e) e.stopPropagation(); this.setState({ skipOpen: false }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

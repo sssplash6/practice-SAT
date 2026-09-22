@@ -1,0 +1,152 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Rope and the Ribbon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #FFFFFF; --ink: #3F3F3F; --amber: #F18508;
+    --rope: #EDE9E1; --chalk: #D9D4CB; --line: #E4E1DC; --soft: #8A847C;
+    --font: "Archivo", "Helvetica Neue", system-ui, sans-serif;   /* placeholder type */
+    --mono: "DM Mono", ui-monospace, monospace;
+    --ease: cubic-bezier(.2, .8, .2, 1);
+  }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+  .screen { min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: clamp(18px, 3vh, 30px); padding-block: 32px 48px; padding-inline: 24px; text-align: center; }
+  svg.scene { width: min(780px, 94vw); max-width: 100%; aspect-ratio: 800 / 440; display: block; overflow: visible; cursor: pointer; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+  h1 { margin: 0; font-size: clamp(2rem, 6vw, 3.4rem); font-weight: 900; letter-spacing: -.04em; line-height: .98; min-height: 1em; text-wrap: balance; }
+  .btn { font: 800 15px var(--font); min-height: 52px; padding: 0 32px; border: 0; border-radius: 999px; background: var(--amber); color: #fff; cursor: pointer;
+         box-shadow: 0 10px 30px -14px rgba(241,133,8,.9); transition: transform .18s var(--ease), box-shadow .25s var(--ease), opacity .3s var(--ease); }
+  .btn:hover { transform: translateY(-1px); } .btn:active { transform: translateY(1px); } .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .hint { font: 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin: 0; min-height: 1.4em; }
+
+  .chalk { fill: none; stroke: var(--chalk); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 18 4 26 3 12 6 30 4; }
+  .side { font: 500 10.5px var(--mono); fill: var(--soft); letter-spacing: .16em; text-transform: uppercase; }
+  .rope-back { fill: none; stroke: var(--ink); stroke-width: 13; stroke-linecap: round; stroke-linejoin: round; }
+  .rope-front { fill: none; stroke: var(--rope); stroke-width: 10; stroke-linecap: round; stroke-linejoin: round; }
+  .twist { fill: none; stroke: var(--ink); stroke-width: 1.2; stroke-linecap: round; opacity: .45; }
+  .ribbon { fill: var(--amber); stroke: var(--ink); stroke-width: .8; stroke-linejoin: round; }
+  .knot { fill: var(--amber); stroke: var(--ink); stroke-width: .8; }
+</style>
+
+<main class="screen">
+  <svg class="scene" id="scene" viewBox="0 0 800 440" aria-hidden="true">
+    <g id="chalk"></g>
+    <text class="side" x="36" y="150">you</text>
+    <text class="side" x="764" y="150" text-anchor="end">them</text>
+    <path class="rope-back" id="ropeBack"/>
+    <path class="rope-front" id="ropeFront"/>
+    <path class="twist" id="twist"/>
+    <g id="ribbon">
+      <g id="tails">
+        <path class="ribbon" d="M-2 3 Q-9 17 -6 30 L0 26 Q-3 15 1 4 Z"/>
+        <path class="ribbon" d="M2 3 Q10 15 6 28 L1 24 Q4 14 -1 4 Z"/>
+      </g>
+      <ellipse class="ribbon" cx="-11" cy="-6" rx="11.5" ry="6" transform="rotate(-24 -11 -6)"/>
+      <ellipse class="ribbon" cx="11" cy="-6" rx="11.5" ry="6" transform="rotate(24 11 -6)"/>
+      <circle class="knot" r="5.2"/>
+    </g>
+  </svg>
+  <p class="hint" id="hint">Placement · duel 1 of 3 · 1000 · tap the rope</p>
+  <h1 id="hl">Pull the line.</h1>
+  <button class="btn" type="button" id="go">Calibrate</button>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const lerp=(a,b,k)=>a+(b-a)*k, clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const easeOut=k=>1-Math.pow(1-k,3), easeInOut=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+const easeOutBack=k=>1+2.7*Math.pow(k-1,3)+1.7*Math.pow(k-1,2);
+const easeDrop=k=>k<.78?easeOut(k/.78):1-.09*Math.sin((k-.78)/.22*Math.PI);           // falls, lands, settles
+const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
+const $=id=>document.getElementById(id);
+let seed=9; const rnd=()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
+
+/* ---------------------------------------------------------------- the ground: two chalk lines, a rope's length apart */
+const CHALK=60;                                                    // the ribbon has to cross this far to count
+[400-CHALK,400+CHALK].forEach(x=>{ let d=`M${x} 110`; for(let y=140;y<=340;y+=25) d+=` L${(x+(rnd()*2-1)*2.2).toFixed(1)} ${y}`; el('path',{class:'chalk',d},$('chalk')); });
+
+/* ---------------------------------------------------------------- the rope: a curve that knows how slack it is, where it has been pulled to,
+   how hard it is trembling, and where a hand is holding it */
+const N=64, X0=-20, X1=820, BASE=200, SAG=62;
+let sag=1, shift=0, trem=0, pull=0, pullT=0, px=400, py=0, t=0;
+function ropeY(x){
+  const u=(x-400)/440, g=Math.exp(-((x-px)**2)/(2*90*90));
+  let s=sag*SAG*(1-u*u)*(1-.85*pull*g);                            // slack, less so under the hand
+  s+=pull*g*1.1*Math.sin(t*45+x*.2);                                  // and a little live under the hand
+  s+=trem*(1-sag*.7)*(Math.sin(x*.11+t*38)*.6+Math.sin(x*.05-t*27)*.4);
+  return BASE+s;
+}
+const ropeBack=$('ropeBack'), ropeFront=$('ropeFront'), twist=$('twist'), ribbon=$('ribbon'), tails=$('tails');
+let last=performance.now(), lastShift=0, swing=0;
+(function render(now){ const dt=Math.min(.05,(now-last)/1000); last=now; t=now/1000; pull+=(pullT-pull)*.12;
+  let d=''; for(let i=0;i<=N;i++){ const x=X0+i*(X1-X0)/N; d+=(i?'L':'M')+x.toFixed(1)+' '+ropeY(x).toFixed(1)+' '; }
+  ropeBack.setAttribute('d',d); ropeFront.setAttribute('d',d);
+  let h=''; const step=11, off=((shift%step)+step)%step;            // the twist slides with the rope, so you can see it move
+  for(let x=X0+off;x<X1;x+=step){ const y=ropeY(x), dy=ropeY(x+1)-ropeY(x-1), L=Math.hypot(2,dy), tx=2/L, ty=dy/L, nx=-ty, ny=tx;
+    h+=`M${(x+5*nx+3*tx).toFixed(1)} ${(y+5*ny+3*ty).toFixed(1)}L${(x-5*nx-3*tx).toFixed(1)} ${(y-5*ny-3*ty).toFixed(1)}`; }
+  twist.setAttribute('d',h);
+  const rx=400+shift, ry=ropeY(rx), ang=Math.atan2(ropeY(rx+1)-ropeY(rx-1),2)*180/Math.PI;
+  ribbon.setAttribute('transform',`translate(${rx.toFixed(1)} ${ry.toFixed(1)}) rotate(${ang.toFixed(1)})`);
+  const v=(shift-lastShift)/Math.max(.004,dt); lastShift=shift; swing+=(clamp(-v*.08,-32,32)-swing)*.18;   // the tails trail the pull
+  tails.setAttribute('transform',`rotate(${swing.toFixed(1)})`);
+  requestAnimationFrame(render); })(last);
+
+/* the hand: hover along the rope and it tightens under you */
+const scene=$('scene');
+function track(e){ const r=scene.getBoundingClientRect(); px=(e.clientX-r.left)/r.width*800; py=(e.clientY-r.top)/r.height*440;
+  const dy=py-ropeY(px); pullT=Math.exp(-(dy*dy)/(2*45*45)); }
+scene.addEventListener('pointermove',track); scene.addEventListener('pointerleave',()=>{ pullT=0; });
+
+/* ---------------------------------------------------------------- the ladder */
+const LEVEL=r=>r<=800?1:r<=950?2:r<=1100?3:r<=1250?4:r<=1400?5:r<=1550?6:r<=1700?7:r<=1850?8:r<=2000?9:10;
+let rating=1000, duels=0; const PLACEMENT=3;
+const hint=$('hint'), hl=$('hl'), go=$('go');
+const atRest=()=>duels<PLACEMENT?`Placement · duel ${duels+1} of ${PLACEMENT} · ${rating} · tap the rope`:`Level ${LEVEL(rating)} · ${rating} · tap the rope`;
+
+/* ---------------------------------------------------------------- one duel: taut, tremble, creep, haul, creep, cross, hold, drop */
+let busy=false;
+async function duel(){
+  if(busy) return; busy=true;
+  const win=duels===0?true:Math.random()<.7, before=rating;
+  hl.textContent='Pull the line.'; hint.textContent='Taking the strain'; snd.snap();
+  const sag0=sag, shift0=shift;
+  await tween(380,k=>{ sag=lerp(sag0,0,k); shift=lerp(shift0,0,k); });
+  trem=1.2;
+  const creep=async(to,ms,label)=>{ hint.textContent=label; const from=shift; await tween(ms,k=>{ shift=lerp(from,to,k); },easeInOut); };
+  const haul=async(to,ms,label)=>{ hint.textContent=label; snd.creak(); const from=shift; trem=2.4; await tween(ms,k=>{ shift=lerp(from,to,k); },easeOutBack); trem=1.6; };
+  await creep(30+rnd()*15, 1200+rnd()*500, 'Losing ground');
+  await haul(-(15+rnd()*15), 420, 'Hauled back');
+  await creep(win?18+rnd()*15:40+rnd()*10, 1400+rnd()*600, 'Losing ground');
+  if(win) await haul(-(CHALK+6+rnd()*8), 520, 'Over the chalk');
+  else { await haul(-(4+rnd()*8), 380, 'Hauled back'); await creep(CHALK+8+rnd()*8, 900, 'Hauled over'); }
+  hint.textContent='Holding'; await tween(1200,k=>{ trem=lerp(2.4,.5,k); });
+  trem=0; snd.drop(); hint.textContent='Slack';
+  await tween(560,k=>{ sag=k; },easeDrop);
+  const K=duels<PLACEMENT?64:24; rating+=Math.round(K*(win?.5:-.5)); duels++;
+  hl.textContent=win?'Held.':'Hauled over.';
+  hint.textContent=`${win?'Won':'Lost'} · ${before} → ${rating} · level ${LEVEL(rating)}${duels<PLACEMENT?' provisional':''} · tap to pull again`;
+  go.textContent=duels<PLACEMENT?'Calibrate':'Duel';
+  busy=false;
+}
+scene.addEventListener('pointerdown',e=>{ track(e); duel(); });
+
+/* ---------------------------------------------------------------- three sounds: strain, creak, drop */
+const snd=(()=>{ let ctx; const get=()=>{ if(!ctx){ try{ ctx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){ return null; } } if(ctx.state==='suspended') ctx.resume(); return ctx; };
+  const noise=(sec,type,f0,f1,q,gain)=>{ const c=get(); if(!c) return; const b=c.createBuffer(1,Math.floor(c.sampleRate*sec),c.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,1.4);
+    const s=c.createBufferSource(); s.buffer=b; const f=c.createBiquadFilter(); f.type=type; f.Q.value=q; f.frequency.setValueAtTime(f0,c.currentTime); f.frequency.linearRampToValueAtTime(f1,c.currentTime+sec);
+    const g=c.createGain(); g.gain.value=gain; s.connect(f).connect(g).connect(c.destination); s.start(); };
+  return { snap(){ noise(.07,'lowpass',700,300,.8,.28); },
+    creak(){ noise(.24,'bandpass',600,1300,4,.10); },
+    drop(){ noise(.09,'lowpass',420,200,.8,.22); const c=get(); if(!c) return; const o=c.createOscillator(), g=c.createGain(), t0=c.currentTime; o.type='sine'; o.frequency.setValueAtTime(95,t0); o.frequency.exponentialRampToValueAtTime(40,t0+.13);
+      g.gain.setValueAtTime(.22,t0); g.gain.exponentialRampToValueAtTime(.001,t0+.18); o.connect(g).connect(c.destination); o.start(t0); o.stop(t0+.2); } }; })();
+
+/* -- ROUTER SEAM: rating, level and whether placement is done ------------------------------ */
+go.addEventListener('click', ()=>console.log('[router] /duel', {rating, level:LEVEL(rating), placed:duels>=PLACEMENT}));
+</script>
+
+</body></html>

@@ -1,0 +1,151 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Spinning Tops</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root { --paper:#FFFFFF; --ink:#3F3F3F; --amber:#F18508; --line:#E4E1DC; --soft:#8A847C; --wood:#F4EDE2; --dish:#F6F4F0; --floor:#FBFAF7; --font:"Archivo","Helvetica Neue",system-ui,sans-serif; --mono:"DM Mono",ui-monospace,monospace; --ease:cubic-bezier(.2,.8,.2,1); }
+  html, body { height:100%; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+  .screen { min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(14px,2.6vh,26px); padding:24px 16px 44px; text-align:center; }
+  svg.scene { width:min(900px,96vw); max-width:100%; aspect-ratio:960/540; display:block; overflow:visible; cursor:pointer; touch-action:manipulation; }
+  h1 { margin:0; font-size:clamp(2rem,6vw,3.4rem); font-weight:900; letter-spacing:-.04em; line-height:.98; text-wrap:balance; }
+  .btn { font:800 15px var(--font); min-height:52px; padding:0 32px; border:0; border-radius:999px; background:var(--amber); color:var(--ink); cursor:pointer; box-shadow:0 10px 30px -14px rgba(241,133,8,.9); transition:transform .18s var(--ease), opacity .3s var(--ease); }
+  .btn:hover { transform:translateY(-1px); } .btn:focus-visible { outline:3px solid var(--ink); outline-offset:3px; } .btn[disabled] { opacity:.35; cursor:default; box-shadow:none; transform:none; }
+  .hint { font:11px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-top:-4px; min-height:1.4em; }
+  .rim { fill:var(--dish); stroke:var(--ink); stroke-width:2; }
+  .floor { fill:var(--floor); stroke:var(--ink); stroke-width:1.2; }
+  .ring { fill:none; stroke:var(--line); stroke-width:1; }
+  .body { fill:var(--wood); stroke:var(--ink); stroke-width:1.8; stroke-linejoin:round; }
+  .body.you { fill:var(--amber); }
+  .peg { fill:var(--ink); }
+  .stripe { stroke:var(--ink); stroke-width:1.6; stroke-linecap:round; }
+  .string { fill:none; stroke:var(--ink); stroke-width:1.4; stroke-linecap:round; }
+  .shade { fill:var(--ink); }
+  .spark { stroke:var(--ink); stroke-width:2; stroke-linecap:round; }
+  .lbl { font:500 11px var(--mono); fill:var(--soft); letter-spacing:.16em; text-transform:uppercase; }
+  @media (prefers-reduced-motion: reduce) { .btn { transition:none; } }
+</style>
+
+<main class="screen">
+  <svg class="scene" id="scene" viewBox="0 0 960 540" aria-hidden="true">
+    <defs>
+      <clipPath id="clipA"><path id="clipPathA"/></clipPath>
+      <clipPath id="clipB"><path id="clipPathB"/></clipPath>
+    </defs>
+    <g id="dish">
+      <ellipse class="rim" cx="480" cy="356" rx="352" ry="126"/>
+      <ellipse class="floor" cx="480" cy="350" rx="320" ry="106"/>
+      <ellipse class="ring" cx="480" cy="350" rx="214" ry="71"/>
+      <ellipse class="ring" cx="480" cy="350" rx="107" ry="35"/>
+    </g>
+    <g id="shadows"></g>
+    <g id="tops"></g>
+    <g id="fx"></g>
+    <text class="lbl" x="250" y="532" text-anchor="middle">you</text>
+    <text class="lbl" x="710" y="532" text-anchor="middle">them</text>
+  </svg>
+  <p class="hint" id="hint">Tap to pull both strings</p>
+  <h1>Spin up.</h1>
+  <button class="btn" type="button" id="go" disabled>Calibrate</button>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const lerp=(a,b,k)=>a+(b-a)*k, clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), easeOut=k=>1-Math.pow(1-k,3), easeIn=k=>k*k*k;
+const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+const $=id=>document.getElementById(id);
+
+/* ---------------- sounds: a clack of wood on wood, and the rattle of a top going over ---------------- */
+let AC=null; const ac=()=>{ try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); }catch(_){ AC=null; } return AC; };
+function noise(a,len,f,type,gain,when=0){ const n=a.createBufferSource(), buf=a.createBuffer(1,Math.floor(a.sampleRate*len),a.sampleRate), d=buf.getChannelData(0); for(let i=0;i<d.length;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);
+  n.buffer=buf; const bq=a.createBiquadFilter(); bq.type=type; bq.frequency.value=f; bq.Q.value=1; const g=a.createGain(); g.gain.value=gain; n.connect(bq).connect(g).connect(a.destination); n.start(a.currentTime+when); }
+function thump(a,f0,f1,gain,len,when=0){ const t=a.currentTime+when, o=a.createOscillator(), g=a.createGain(); o.type='triangle'; o.frequency.setValueAtTime(f0,t); o.frequency.exponentialRampToValueAtTime(f1,t+len*.6);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(gain,t+.004); g.gain.exponentialRampToValueAtTime(.0001,t+len); o.connect(g).connect(a.destination); o.start(t); o.stop(t+len+.02); }
+const clack=()=>{ const a=ac(); if(!a) return; noise(a,.025,2600,'bandpass',.22); thump(a,520,240,.18,.09); };
+const rattle=()=>{ const a=ac(); if(!a) return; [0,.09,.16,.21].forEach((w,i)=>{ thump(a,260-i*30,110,.22-i*.04,.12,w); noise(a,.02,1400,'bandpass',.08,w); }); };
+const whip=()=>{ const a=ac(); if(!a) return; noise(a,.18,900,'highpass',.06); noise(a,.18,1200,'highpass',.06,.03); };
+
+/* ---------------- the dish, as physics: a circular bowl seen from a low chair ---------------- */
+const CX=480, CY=350, RX=320, RY=106, SQ=RY/RX, SC=1.3;         // dish-plane (p,q) is a circle of radius RX; the screen squashes q by SQ
+const R=27*1.3;                                          // a top's widest radius
+const topsG=$('tops'), shadowsG=$('shadows'), fx=$('fx'), hint=$('hint'), go=$('go');
+const BODY='M0 0 L3 -12 C 22 -20, 27 -32, 27 -42 C 27 -52, 20 -58, 14 -60 L 5 -62 L 5 -84 L -5 -84 L -5 -62 L -14 -60 C -20 -58 -27 -52 -27 -42 C -27 -32 -22 -20 -3 -12 Z';
+$('clipPathA').setAttribute('d',BODY); $('clipPathB').setAttribute('d',BODY);
+
+function makeTop(you,clip,side){ const g=el('g',{},topsG), lean=el('g',{},g);
+  el('path',{class:'body'+(you?' you':''),d:BODY},lean);
+  const s=el('g',{'clip-path':`url(#${clip})`},lean); const stripes=[0,1,2].map(()=>el('line',{class:'stripe',y1:-16,y2:-58},s)); const stem=el('line',{class:'stripe',y1:-64,y2:-82},s);
+  el('circle',{class:'peg',cx:0,cy:-1,r:2.2},lean);
+  const wound=[0,1,2,3].map(i=>el('line',{class:'string',x1:-26+i*1.5,x2:26-i*1.5,y1:-28-i*4.5,y2:-28-i*4.5},lean));
+  const tail=el('path',{class:'string'},g);
+  const sh=el('ellipse',{class:'shade',rx:31,ry:8,opacity:.1},shadowsG);
+  return {you,g,lean,stripes,stem,wound,tail,sh,side}; }
+const A=makeTop(true,'clipA',-1), B=makeTop(false,'clipB',1), tops=[A,B];
+
+function reset(){ for(const T of tops){ T.p=T.side*230; T.q=T.side*-50; T.vp=0; T.vq=0; T.w=0; T.phase=Math.random()*6; T.tilt=0; T.psi=Math.random()*6; T.fallen=false; T.fall=0; T.settling=false; T.done=false;
+    T.wound.forEach(l=>l.setAttribute('opacity',1)); T.tail.setAttribute('opacity',1); T.tail.setAttribute('d',tailPath(T,0)); }
+  draw(); }
+function tailPath(T,k){ const x=CX+T.p, y=CY+T.q*SQ; const ex=T.side<0?-40:1000, ey=y-160-260*k; return `M${x+T.side*34} ${y-57} Q ${lerp(x,ex,.35)+T.side*-60*k} ${lerp(y-44,ey,.5)-120*k} ${ex} ${ey}`; }
+
+/* ---------------- drawing a top from the side, its texture turning, its axis leaning ---------------- */
+function draw(){ const byDepth=tops.slice().sort((a,b)=>a.q-b.q); byDepth.forEach(T=>topsG.appendChild(T.g));
+  for(const T of tops){ const x=CX+T.p, y=CY+T.q*SQ; const leanDeg=T.fallen?T.fall:T.tilt*Math.cos(T.psi)*57.3;
+    T.g.setAttribute('transform',`translate(${x.toFixed(2)} ${y.toFixed(2)})`); T.lean.setAttribute('transform',`rotate(${leanDeg.toFixed(2)}) scale(${SC})`);
+    const blur=clamp(1-(T.w-18)/30,.3,1);
+    T.stripes.forEach((l,k)=>{ const ph=T.phase+k*2.094, c=Math.cos(ph), s=Math.sin(ph); const vis=s>0; l.setAttribute('x1',(25*c).toFixed(2)); l.setAttribute('x2',(25*c).toFixed(2)); l.setAttribute('opacity',vis?(.34*s*blur).toFixed(3):0); });
+    const sp=Math.sin(T.phase*1.3), cp=Math.cos(T.phase*1.3); T.stem.setAttribute('x1',(4.2*cp).toFixed(2)); T.stem.setAttribute('x2',(4.2*cp).toFixed(2)); T.stem.setAttribute('opacity',sp>0?(.3*sp*blur).toFixed(3):0);
+    const lift=Math.abs(leanDeg)/90; T.sh.setAttribute('cx',x+leanDeg*.35); T.sh.setAttribute('cy',y+1); T.sh.setAttribute('rx',31+24*lift); T.sh.setAttribute('ry',8+2*lift); } }
+
+/* ---------------- the physics: friction, the bowl, precession, and a walk that comes from the lean ---------------- */
+const G=.35;                                            // bowl curvature
+let running=false, spun=false, hitDone=false, decided=false, last=0, elapsed=0;
+function step(dt){ elapsed+=dt;
+  for(const T of tops){ if(T.fallen){ const fr=Math.exp(-3*dt); T.vp*=fr; T.vq*=fr; T.p+=T.vp*dt; T.q+=T.vq*dt; continue; }
+    if(T.settling){ T.w=Math.max(0,T.w-dt*(2.5+T.w*.45)); T.tilt*=Math.exp(-1.6*dt); }
+    else { T.w=Math.max(0,T.w*Math.exp(-.05*dt)-.6*dt);
+      const wc=20; const grow=(wc-T.w)/wc; T.tilt+=(grow>0?grow*1.5*Math.max(T.tilt,.04):grow*1.2*T.tilt)*dt; T.tilt=clamp(T.tilt,0,1); }
+    T.phase+=T.w*dt; T.psi+=(70/Math.max(T.w,5))*dt;
+    // the bowl pulls to the centre; the lean makes it walk sideways; the floor rubs
+    const walk=T.tilt*90; T.vp+=(-G*T.p+walk*-Math.sin(T.psi))*dt; T.vq+=(-G*T.q+walk*Math.cos(T.psi))*dt;
+    const fr=Math.exp(-.55*dt); T.vp*=fr; T.vq*=fr; T.p+=T.vp*dt; T.q+=T.vq*dt;
+    const d=Math.hypot(T.p,T.q); if(d>RX-40){ const k=(RX-40)/d; T.p*=k; T.q*=k; T.vp*=-.4; T.vq*=-.4; }
+    if(T.tilt>.7&&!T.settling) topple(T); }
+  // contact
+  const dx=B.p-A.p, dy=B.q-A.q, d=Math.hypot(dx,dy);
+  if(d<2*R&&(A.fallen||B.fallen)){ const up=A.fallen?B:A, dn=A.fallen?A:B, nx=(up.p-dn.p)/d, ny=(up.q-dn.q)/d, ov=2*R-d; up.p+=nx*ov; up.q+=ny*ov; const vn=up.vp*nx+up.vq*ny; if(vn<0){ up.vp-=1.6*vn*nx; up.vq-=1.6*vn*ny; } }
+  if(d<2*R&&!A.fallen&&!B.fallen){ const nx=dx/d, ny=dy/d; const rel=(A.vp-B.vp)*nx+(A.vq-B.vq)*ny;
+    if(rel>0){ const j=rel*.9; A.vp-=j*nx; A.vq-=j*ny; B.vp+=j*nx; B.vq+=j*ny; const ov=2*R-d; A.p-=nx*ov/2; A.q-=ny*ov/2; B.p+=nx*ov/2; B.q+=ny*ov/2;
+      clack(); spark(CX+(A.p+B.p)/2,CY+(A.q+B.q)/2*SQ-40);
+      if(!hitDone){ hitDone=true; const loser=(A.w+Math.random()*6)<(B.w+Math.random()*6)?A:B, winner=loser===A?B:A;
+        loser.w=Math.min(loser.w*.55,15); loser.tilt=Math.max(loser.tilt,.3); winner.w*=.9; winner.tilt=Math.max(winner.tilt,.12); hint.textContent='Clack'; }
+      else { A.tilt+=.08; B.tilt+=.08; } } }
+  draw(); }
+function spark(x,y){ const g=el('g',{transform:`translate(${x} ${y})`},fx); [[-14,-6,-22,-12],[14,-6,22,-12],[0,-10,0,-20]].forEach(([a,b,c,d])=>el('line',{class:'spark',x1:a,y1:b,x2:c,y2:d},g)); tween(220,k=>g.setAttribute('opacity',1-k)).then(()=>g.remove()); }
+async function topple(T){ T.fallen=true; const dir=Math.sign(Math.cos(T.psi))||1, from=T.tilt*Math.cos(T.psi)*57.3; const o=tops.find(t=>t!==T), ox=T.p-o.p, oy=T.q-o.q, od=Math.hypot(ox,oy)||1; T.vp+=ox/od*110; T.vq+=oy/od*110; hint.textContent=T.you?'Yours is going over':'Theirs is going over';
+  await tween(380,k=>T.fall=lerp(from,dir*88,k),easeIn); rattle();
+  await tween(160,k=>T.fall=dir*(88-8*Math.sin(Math.PI*k)),easeOut); await tween(120,k=>T.fall=dir*(88-3*Math.sin(Math.PI*k))); T.fall=dir*89;
+  if(!decided){ decided=true; const W=tops.find(t=>t!==T); W.settling=true; hint.textContent=W.you?'Yours stayed up · spinning down':'Theirs stayed up · spinning down'; } }
+
+function frame(now){ if(!running) return; const dt=Math.min(.04,(now-last)/1000||0); last=now; step(dt);
+  const W=tops.find(t=>t.settling); if(W&&W.w<=0&&!W.done){ W.done=true; running=false; hint.textContent=(W.you?'Yours stood longest':'Theirs stood longest')+' · tap to spin again'; go.disabled=false; return; }
+  if(elapsed>26&&!decided){ running=false; hint.textContent='Both wound down · tap to spin again'; go.disabled=false; return; }
+  requestAnimationFrame(frame); }
+
+async function pull(){ if(running) return; ac();
+  if(spun){ reset(); await wait(120); } spun=true; hitDone=false; decided=false; elapsed=0;
+  hint.textContent='Pulled'; whip();
+  // both strings come off at once; the tops start with a shove toward the middle
+  for(const T of tops){ T.w=46+Math.random()*8; T.vp=-T.side*(60+Math.random()*20); T.vq=T.side*(14+Math.random()*14); T.tilt=.05; }
+  tops.forEach(T=>T.wound.forEach((l,i)=>wait(i*45).then(()=>tween(90,k=>l.setAttribute('opacity',1-k)))));
+  tops.forEach(T=>tween(420,k=>{ T.tail.setAttribute('d',tailPath(T,k)); T.tail.setAttribute('opacity',1-k*k); },easeIn));
+  running=true; last=performance.now(); requestAnimationFrame(frame); }
+reset();
+$('scene').addEventListener('pointerdown',pull);
+/* -- ROUTER SEAM ------------------------------------------------------------ */
+go.addEventListener('click',()=>console.log('[router] /duel',{stoodLongest:A.settling?'you':'them'}));
+</script>
+
+</body></html>

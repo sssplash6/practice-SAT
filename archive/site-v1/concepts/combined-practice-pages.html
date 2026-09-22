@@ -1,0 +1,222 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Combined Practice Pages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root { --paper:#FFFFFF; --ink:#3F3F3F; --amber:#F18508; --line:#E4E1DC; --soft:#8A847C; --font:"Archivo","Helvetica Neue",system-ui,sans-serif; --mono:"DM Mono",ui-monospace,monospace; --ease:cubic-bezier(.2,.8,.2,1); }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+  .note { max-width:760px; margin:0 auto; padding:28px 24px 8px; font:12px var(--mono); letter-spacing:.04em; color:var(--soft); line-height:1.7; }
+  .stage { position:relative; min-height:92vh; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(18px,3vh,30px); padding:56px 24px 64px; text-align:center; border-top:1px solid var(--line); }
+  .tag { position:absolute; top:18px; left:24px; right:24px; font:11px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--soft); text-align:left; }
+  .tag b { color:var(--amber); font-weight:500; }
+  svg.scene { width:min(700px,92vw); aspect-ratio:720/520; display:block; overflow:visible; }
+  h1 { margin:0; font-size:clamp(2rem,6vw,3.4rem); font-weight:900; letter-spacing:-.04em; line-height:.98; }
+  .btn { font:800 15px var(--font); min-height:52px; padding:0 32px; border:0; border-radius:999px; background:var(--amber); color:#fff; cursor:pointer; box-shadow:0 10px 30px -14px rgba(241,133,8,.9); transition:transform .18s var(--ease), opacity .3s var(--ease); }
+  .btn:hover { transform:translateY(-1px); } .btn[disabled] { opacity:.35; cursor:default; box-shadow:none; transform:none; }
+  .hint { font:11px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-top:-8px; }
+  .m { fill:none; stroke:var(--ink); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+  .mf { fill:var(--ink); }
+  .p { fill:#fff; stroke:var(--ink); stroke-width:1.5; }
+  .pw { fill:#F5F3EF; stroke:var(--ink); stroke-width:1.5; }
+  .glass { fill:#fff; fill-opacity:.35; stroke:var(--ink); stroke-width:1.5; }
+  .lbl { font:500 10px var(--mono); fill:var(--soft); letter-spacing:.14em; text-transform:uppercase; }
+  .num { font:900 22px var(--font); fill:var(--ink); letter-spacing:-.04em; font-variant-numeric:tabular-nums; }
+  .live { fill:none; stroke:var(--amber); stroke-width:3; stroke-linecap:round; } .livef { fill:var(--amber); }
+  .livet { font:900 18px var(--font); fill:var(--amber); letter-spacing:-.03em; font-variant-numeric:tabular-nums; }
+  .hot { cursor:pointer; }
+  .sweet { fill:var(--ink); opacity:.55; }
+  .bag { fill:#F5F3EF; stroke:var(--ink); stroke-width:1.5; }
+  .bagfill { fill:var(--ink); opacity:.25; }
+  .card { fill:#fff; stroke:var(--ink); stroke-width:1.5; }
+  .back { fill:url(#hatch); }
+  .pip { font:900 30px var(--font); fill:var(--ink); }
+  .pip.on { fill:var(--amber); }
+  .coil { fill:none; stroke:var(--ink); stroke-width:2; }
+  .item { fill:#fff; stroke:var(--ink); stroke-width:1.5; }
+  .itemt { font:700 9px var(--mono); fill:var(--ink); letter-spacing:.1em; }
+  .bean { stroke:none; }
+  .sand0 { fill:#3F3F3F; } .sand1 { fill:#7A756D; } .sand2 { fill:#B5AFA5; } .sand3 { fill:#DAD5CC; }
+  .stream { stroke:var(--amber); stroke-width:3; stroke-linecap:round; fill:none; }
+</style>
+
+<p class="note">Combined practice, five counters. All interactive — the quantities are the idea, and one tap is one question, and holding a jar or a lever pours faster the longer you hold — the number is live, so you let go when it reads what you want. The sand pours five a tap. One orange live element on each: the scale needle, the dealt pip, the readout, the balance, the pouring stream.</p>
+
+<!-- A -->
+<section class="stage">
+  <span class="tag">A · Pick-and-mix counter — tap a jar for one, hold it to keep pouring; tap the bag to empty · <b>pick</b></span>
+  <svg class="scene" id="mix" viewBox="0 0 720 520" aria-hidden="true"></svg>
+  <p class="hint" id="mixh">Tap or hold a jar</p>
+  <h1>Fill your own bag.</h1>
+  <button class="btn" type="button" disabled id="mixgo">Build a set</button>
+</section>
+
+<!-- B -->
+<section class="stage">
+  <span class="tag">B · Four suits — tap a suit to deal; tap the table to riffle them into one deck</span>
+  <svg class="scene" id="suits" viewBox="0 0 720 520" aria-hidden="true"></svg>
+  <p class="hint" id="suitsh">Tap a suit</p>
+  <h1>Deal your own hand.</h1>
+  <button class="btn" type="button" disabled id="suitsgo">Build a set</button>
+</section>
+
+<!-- C -->
+<section class="stage">
+  <span class="tag">C · Vending machine — tap a coil</span>
+  <svg class="scene" id="vend" viewBox="0 0 720 520" aria-hidden="true"></svg>
+  <p class="hint" id="vendh">Tap a coil</p>
+  <h1>Your selection.</h1>
+  <button class="btn" type="button" disabled id="vendgo">Build a set</button>
+</section>
+
+<!-- D -->
+<section class="stage">
+  <span class="tag">D · Four hoppers and a scoop — press and hold a hopper; the stream runs while you hold</span>
+  <svg class="scene" id="hop" viewBox="0 0 720 520" aria-hidden="true"></svg>
+  <p class="hint" id="hoph">Hold a lever</p>
+  <h1>Your blend.</h1>
+  <button class="btn" type="button" disabled id="hopgo">Build a set</button>
+</section>
+
+<!-- E -->
+<section class="stage">
+  <span class="tag">E · Sand jar — tap a funnel to pour a layer; tap the jar to empty it</span>
+  <svg class="scene" id="sand" viewBox="0 0 720 520" aria-hidden="true"></svg>
+  <p class="hint" id="sandh">Tap a funnel · each pour is five</p>
+  <h1>No two the same.</h1>
+  <button class="btn" type="button" disabled id="sandgo">Build a set</button>
+</section>
+
+<script>
+const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const txt=(p,x,y,s,cls='lbl',a={})=>{const t=el('text',{x,y,class:cls,'text-anchor':'middle','dominant-baseline':'middle',...a},p);t.textContent=s;return t;};
+const lerp=(a,b,k)=>a+(b-a)*k, clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const easeOut=k=>1-Math.pow(1-k,3), easeIn=k=>k*k*k, easeInOut=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2, back=k=>{const c=1.6;return 1+(c+1)*Math.pow(k-1,3)+c*Math.pow(k-1,2)};
+const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+const $=id=>document.getElementById(id);
+const svgXY=(s,e)=>{const r=s.getBoundingClientRect(), vb=s.viewBox.baseVal; return {x:(e.clientX-r.left)/r.width*vb.width, y:(e.clientY-r.top)/r.height*vb.height};};
+const NAMES=['Alg','Adv','Data','Geo'];
+let seed=7; const rnd=()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
+
+/* =============================================================== A pick-and-mix */
+(()=>{
+  const s=$('mix'), hint=$('mixh'), go=$('mixgo'); const JX=[120,280,440,600], counts=[0,0,0,0], CAP=60; let total=0, busy=false, hold=null;
+  const bag=el('g',{},s);   // declared early: sweets land inside it
+  const jars=JX.map((x,i)=>{ const g=el('g',{class:'hot'},s); const body=el('g',{},g);
+    el('rect',{x:x-50,y:70,width:100,height:120,rx:14,class:'glass'},body); el('rect',{x:x-54,y:56,width:108,height:18,rx:6,class:'pw'},body);
+    const cp=el('clipPath',{id:'jar'+i},body); el('rect',{x:x-48,y:90,width:96,height:98,rx:10},cp); const inner=el('g',{'clip-path':`url(#jar${i})`},body);
+    for(let k=0;k<16;k++) el('circle',{class:'sweet',cx:x-40+rnd()*80,cy:110+rnd()*78,r:5+rnd()*3},inner);
+    el('path',{class:'m',d:`M${x+34} 118 l14 -20 M${x+48} 98 a7 7 0 1 1 6 6`},body);
+    const c=txt(s,x,214,'0','num'); txt(s,x,236,NAMES[i]);
+    const start=()=>{ scoop(i); const t0=performance.now(); const tick=()=>{ if(hold===null) return; const h=(performance.now()-t0)/1000; scoop(i); hold=setTimeout(tick, h<.7?260:h<1.8?110:48); }; hold=setTimeout(tick,260); }, stop=()=>{ clearTimeout(hold); hold=null; };
+    g.addEventListener('pointerdown',start); ['pointerup','pointerleave','pointercancel'].forEach(e=>g.addEventListener(e,stop)); return {g,body,x,c}; });
+  el('rect',{x:300,y:452,width:120,height:12,rx:4,class:'pw'},s); el('rect',{x:352,y:440,width:16,height:14,class:'mf'},s);
+  s.appendChild(bag); const cp=el('clipPath',{id:'bagc'},bag); el('path',{d:'M318 340 h84 l8 100 h-100 z'},cp);
+  const inBag=el('g',{'clip-path':'url(#bagc)'},bag); el('path',{class:'bag',d:'M318 340 h84 l8 100 h-100 z'},bag); el('path',{class:'m',d:'M318 340 q42 -14 84 0'},bag);
+  bag.classList.add('hot'); bag.addEventListener('pointerdown',empty);
+  el('circle',{cx:560,cy:400,r:52,class:'p'},s); for(let i=0;i<=10;i++){const a=(-210+i*24)*Math.PI/180; el('line',{x1:560+42*Math.cos(a),y1:400+42*Math.sin(a),x2:560+(i%5?47:50)*Math.cos(a),y2:400+(i%5?47:50)*Math.sin(a),class:'m','stroke-width':i%5?1:1.5},s);}
+  const needle=el('line',{x1:560,y1:400,x2:560,y2:360,class:'live'},s); el('circle',{cx:560,cy:400,r:4,class:'mf'},s);
+  const tot=txt(s,560,478,'0','num',{style:'font-size:30px'}); txt(s,560,500,'questions'); let na=-120;
+  needle.setAttribute('transform','rotate(-120 560 400)');
+  function needleTo(v){ tween(500,k=>{ na=lerp(na,-120+clamp(v,0,CAP)*4,k); needle.setAttribute('transform',`rotate(${na} 560 400)`); }, back); }
+  async function scoop(i){ if(total>=CAP){ hint.textContent='Bag is full · tap it to empty'; return; } const j=jars[i]; const dir=j.x<360?1:-1; const ox=j.x+dir*50, oy=190;
+    if(!busy){ busy=true; tween(220,k=>j.body.setAttribute('transform',`rotate(${dir*14*k} ${ox} ${oy})`)).then(()=>{ if(!hold) tween(260,k=>j.body.setAttribute('transform',`rotate(${dir*14*(1-k)} ${ox} ${oy})`)); busy=false; }); }
+    // one sweet, one question: it pours, lands in the bag, and stays there
+    counts[i]++; total++; j.c.textContent=counts[i]; tot.textContent=total; needleTo(total); go.disabled=false;
+    if(inBag.children.length>44) inBag.firstChild.remove(); const d=el('circle',{class:'sweet',r:6,opacity:.9},inBag); const x0=j.x+dir*30, y0=96, tx=330+rnd()*60, ty=434-Math.floor((Math.min(total,45)-1)/7)*11-rnd()*3;
+    await tween(520,t=>{ d.setAttribute('cx',lerp(x0,tx,t)); d.setAttribute('cy',lerp(y0,ty,t)-90*Math.sin(Math.PI*t)); }, easeIn);
+    tween(300,k=>bag.setAttribute('transform',`translate(0 ${2.5*Math.sin(Math.PI*k)})`)); hint.textContent='Tap or hold a jar'; }
+  async function empty(){ if(!total) return; counts.fill(0); jars.forEach(j=>j.c.textContent='0'); total=0; tot.textContent='0';
+    await tween(350,k=>inBag.setAttribute('opacity',1-k)); inBag.replaceChildren(); inBag.setAttribute('opacity',1); needleTo(0); hint.textContent='Tap or hold a jar'; go.disabled=true; }
+})();
+
+/* =============================================================== B four suits */
+(()=>{
+  const s=$('suits'), hint=$('suitsh'), go=$('suitsgo'); const defs=el('defs',{},s); const pat=el('pattern',{id:'hatch',width:6,height:6,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs); el('rect',{width:6,height:6,fill:'#fff'},pat); el('line',{x1:0,y1:0,x2:0,y2:6,stroke:'#B9B4AC','stroke-width':1.2},pat);
+  const SX=[135,285,435,585], SUIT=['♠','♥','♦','♣'], stacks=[[],[],[],[]]; let busy=false, lastPip=null, total=0;
+  const table=el('rect',{x:60,y:60,width:600,height:400,rx:24,fill:'transparent',class:'hot'},s); table.addEventListener('pointerdown',riffle);
+  const layer=el('g',{},s); const totB=txt(s,360,478,'0','num',{style:'font-size:30px'}); txt(s,360,500,'questions');
+  SX.forEach((x,i)=>{ const z=el('g',{class:'hot'},s); el('rect',{x:x-40,y:260,width:80,height:110,rx:8,fill:'transparent'},z); txt(s,x,410,NAMES[i]); const g=txt(s,x,388,SUIT[i],'pip'); g.setAttribute('style','font-size:16px'); z.addEventListener('pointerdown',()=>deal(i)); });
+  function cardEl(i,face){ const g=el('g',{},layer); el('rect',{class:'card',x:-35,y:-49,width:70,height:98,rx:8},g); if(face){ const p=txt(g,0,0,SUIT[i],'pip'); p.classList.add('on'); } else el('rect',{class:'back',x:-29,y:-43,width:58,height:86,rx:5},g); return g; }
+  function restack(){ stacks.forEach((st,i)=>st.forEach((c,k)=>c.setAttribute('transform',`translate(${SX[i]} ${310-k*2.2})`))); }
+  async function deal(i){ if(busy||total>=20) return; busy=true; const st=stacks[i]; const c=cardEl(i,false); const y1=310-st.length*2.2;
+    await tween(420,k=>{ const sx=Math.cos(Math.PI*k); c.setAttribute('transform',`translate(${SX[i]} ${lerp(150,y1,k)}) scale(${Math.abs(sx)} 1)`); if(k>=.5&&!c.dataset.face){ c.dataset.face=1; c.replaceChildren(); el('rect',{class:'card',x:-35,y:-49,width:70,height:98,rx:8},c); const p=txt(c,0,0,SUIT[i],'pip'); p.classList.add('on'); } }, easeInOut);
+    await tween(160,k=>c.setAttribute('transform',`translate(${SX[i]} ${y1+3*Math.sin(Math.PI*k)})`));
+    if(lastPip) lastPip.classList.remove('on'); lastPip=c.querySelector('.pip'); st.push(c); total++; totB.textContent=total; hint.textContent='Tap the table to shuffle'; go.disabled=false; busy=false; }
+  async function riffle(){ if(busy||total<2) return; busy=true; hint.textContent='Riffle';
+    const all=[]; stacks.forEach((st,i)=>st.forEach((c,k)=>all.push({c,i,k}))); const L=all.filter(a=>a.i<2), R=all.filter(a=>a.i>=2);
+    await tween(500,k=>{ L.forEach((a,n)=>a.c.setAttribute('transform',`translate(${lerp(SX[a.i],315,k)} ${310-n*2.2})`)); R.forEach((a,n)=>a.c.setAttribute('transform',`translate(${lerp(SX[a.i],405,k)} ${310-n*2.2})`)); }, easeInOut);
+    const order=[]; while(L.length||R.length){ if(L.length) order.push({a:L.pop(),side:-1}); if(R.length) order.push({a:R.pop(),side:1}); }
+    for(let n=0;n<order.length;n++){ const {a,side}=order[n]; layer.appendChild(a.c); const from=side<0?315:405; tween(320,k=>a.c.setAttribute('transform',`translate(${lerp(from,360,k)} ${lerp(310,300-n*2.2,k)-40*Math.sin(Math.PI*k)}) rotate(${side*14*Math.sin(Math.PI*k)})`), easeInOut); await wait(70); }
+    await wait(300); // the bridge, then squared up with a tap
+    await tween(420,k=>order.forEach(({a},n)=>{ const b=Math.sin(Math.PI*k)*(1-Math.abs(n/(order.length-1)-.5)*2)*22; a.c.setAttribute('transform',`translate(360 ${300-n*2.2-b})`); }), easeInOut);
+    await tween(220,k=>order.forEach(({a},n)=>a.c.setAttribute('transform',`translate(360 ${300-n*2.2+3*Math.sin(Math.PI*k)})`)));
+    if(lastPip) lastPip.classList.remove('on'); hint.textContent='One deck · tap a suit to deal again'; busy=false;
+    stacks.forEach(st=>st.length=0); total=0; const deck=[...layer.children]; const clear=()=>{ deck.forEach(c=>c.remove()); s.removeEventListener('pointerdown',clear); }; setTimeout(()=>s.addEventListener('pointerdown',clear,{once:true}),50); }
+})();
+
+/* =============================================================== C vending machine */
+(()=>{
+  const s=$('vend'), hint=$('vendh'), go=$('vendgo'); let busy=false, total=0;
+  el('rect',{x:190,y:30,width:340,height:470,rx:18,class:'pw'},s); el('rect',{x:214,y:52,width:292,height:330,rx:10,class:'glass'},s);
+  el('rect',{x:214,y:412,width:292,height:52,rx:8,class:'p'},s); el('rect',{x:214,y:430,width:292,height:34,fill:'#EFECE7'},s);
+  el('rect',{x:440,y:400,width:70,height:24,rx:4,class:'mf'},s); const read=txt(s,475,412,'00','livet'); txt(s,475,438,'questions');
+  const CX=[254,324,394,464]; const coilPath=(x,ph)=>{ let d=''; for(let y=0;y<=230;y+=4){ const xx=x+13*Math.sin((y/22+ph)*Math.PI*2); d+=(y?'L':'M')+xx.toFixed(1)+' '+(100+y); } return d; };
+  const coils=CX.map((x,i)=>{ const z=el('g',{class:'hot'},s); el('rect',{x:x-32,y:90,width:64,height:250,fill:'transparent'},z); const c=el('path',{class:'coil',d:coilPath(x,0)},z); el('line',{x1:x-30,y1:332,x2:x+30,y2:332,class:'m'},z);
+    const item=el('g',{transform:`translate(${x} 110)`},z); el('rect',{class:'item',x:-22,y:-14,width:44,height:28,rx:4},item); txt(item,0,0,NAMES[i].toUpperCase(),'itemt'); z.addEventListener('pointerdown',()=>vend(i)); return {x,c,item,z}; });
+  const tray=[];
+  async function vend(i){ if(busy) return; busy=true; hint.textContent='Turning'; const co=coils[i];
+    await tween(900,k=>{ co.c.setAttribute('d',coilPath(co.x,k)); co.item.setAttribute('transform',`translate(${co.x} ${110+k*24}) rotate(${k*22})`); }, easeInOut);
+    // tips, falls, thuds
+    const drop=el('g',{},s); el('rect',{class:'item',x:-22,y:-14,width:44,height:28,rx:4},drop); txt(drop,0,0,NAMES[i].toUpperCase(),'itemt'); co.item.setAttribute('transform',`translate(${co.x} 110)`);
+    const tx=236+(tray.length%6)*46+10, ty=446-Math.floor(tray.length/6)*4;
+    await tween(520,k=>drop.setAttribute('transform',`translate(${lerp(co.x,tx,k)} ${lerp(134,ty,k)}) rotate(${22-160*k})`), easeIn);
+    await tween(220,k=>drop.setAttribute('transform',`translate(${tx} ${ty-8*Math.sin(Math.PI*k)}) rotate(${-138+8*Math.sin(Math.PI*k)})`));
+    tray.push(drop); if(tray.length>12) tray.shift().remove(); total++; read.textContent=String(total).padStart(2,'0'); hint.textContent='Tap a coil'; go.disabled=false; busy=false; }
+})();
+
+/* =============================================================== D hoppers + scoop */
+(()=>{
+  const s=$('hop'), hint=$('hoph'), go=$('hopgo'); const HX=[150,290,430,570], SHADE=['#3F3F3F','#6E6A63','#9A948B','#C4BEB4'], SZ=[5,6,4.5,5.5]; let held=null, pile=[], timer=null;
+  const beansLayer=el('g',{},s);
+  HX.forEach((x,i)=>{ const z=el('g',{class:'hot'},s); el('polygon',{class:'pw',points:`${x-46},50 ${x+46},50 ${x+14},150 ${x-14},150`},z); el('rect',{x:x-14,y:150,width:28,height:14,class:'mf'},z);
+    const lev=el('line',{x1:x+16,y1:157,x2:x+40,y2:140,class:'m','stroke-width':3},z); txt(s,x,190,NAMES[i]);
+    z.addEventListener('pointerdown',e=>{ held=i; lev.setAttribute('x2',x+40); lev.setAttribute('y2',164); hint.textContent='Pouring'; }); z.addEventListener('pointerup',rel); z.addEventListener('pointerleave',rel); z.addEventListener('pointercancel',rel);
+    function rel(){ if(held===i){ held=null; lev.setAttribute('x2',x+40); lev.setAttribute('y2',140); hint.textContent='Hold a lever'; } } });
+  // the scoop, and the balance
+  const cp=el('clipPath',{id:'scoopc'},s); el('path',{d:'M250 380 q110 90 220 0 v-2 h-220 z'},cp);
+  const inScoop=el('g',{'clip-path':'url(#scoopc)'},s); el('path',{class:'m',d:'M250 380 q110 90 220 0','stroke-width':2.5},s); el('line',{x1:470,y1:380,x2:560,y2:340,class:'m','stroke-width':4},s);
+  el('circle',{cx:620,cy:250,r:46,class:'p'},s); for(let i=0;i<=8;i++){const a=(-210+i*30)*Math.PI/180; el('line',{x1:620+38*Math.cos(a),y1:250+38*Math.sin(a),x2:620+44*Math.cos(a),y2:250+44*Math.sin(a),class:'m','stroke-width':1},s);}
+  const needle=el('line',{x1:620,y1:250,x2:620,y2:214,class:'live'},s); el('circle',{cx:620,cy:250,r:4,class:'mf'},s); needle.setAttribute('transform','rotate(-120 620 250)'); let na=-120; const cnt=txt(s,620,316,'0','num',{style:'font-size:26px'}); txt(s,620,338,'questions');
+  function bean(i){ const b=el('ellipse',{class:'bean',fill:SHADE[i],rx:SZ[i]*.75,ry:SZ[i]},beansLayer); const x0=HX[i], tx=290+rnd()*140, ty=378-Math.min(pile.length,60)*.7-rnd()*14;
+    tween(560,k=>{ b.setAttribute('cx',lerp(x0,tx,k)); b.setAttribute('cy',lerp(164,ty,k)); }, easeIn).then(()=>{ inScoop.appendChild(b); pile.push(b); if(pile.length>90) pile.shift().remove(); cnt.textContent=Math.min(pile.length,90); go.disabled=false; }); }
+  let acc=0, last=performance.now(), holdT=0;
+  (function loop(now){ const dt=(now-last)/1000; last=now; if(held!==null&&!reduce){ holdT+=dt; acc+=dt; const iv=holdT<.7?.24:holdT<1.8?.1:.045; while(acc>iv){ acc-=iv; bean(held); } } else holdT=0;
+    const want=-120+clamp(pile.length,0,90)*2.6; na+=(want-na)*.08; needle.setAttribute('transform',`rotate(${na} 620 250)`); requestAnimationFrame(loop); })(last);
+})();
+
+/* =============================================================== E sand jar */
+(()=>{
+  const s=$('sand'), hint=$('sandh'), go=$('sandgo'); const FX=[210,310,410,510], JX0=285, JX1=435, JB=470, JT=272; let layers=[], busy=false;
+  FX.forEach((x,i)=>{ const z=el('g',{class:'hot'},s); el('polygon',{class:'pw',points:`${x-34},60 ${x+34},60 ${x+5},116 ${x-5},116`},z); el('rect',{x:x-5,y:116,width:10,height:14,class:'mf'},z);
+    el('circle',{cx:x,cy:88,r:8,class:'sand'+i},z); txt(s,x,150,NAMES[i]); z.addEventListener('pointerdown',()=>pour(i)); });
+  const cp=el('clipPath',{id:'jarc'},s); el('path',{d:`M${JX0} ${JT} h150 v${JB-JT-18} a18 18 0 0 1 -18 18 h-114 a18 18 0 0 1 -18 -18 z`},cp);
+  const sandG=el('g',{'clip-path':'url(#jarc)',class:'hot'},s); const jar=el('path',{class:'glass hot',d:`M${JX0} ${JT} h150 v${JB-JT-18} a18 18 0 0 1 -18 18 h-114 a18 18 0 0 1 -18 -18 z`},s); el('rect',{x:JX0-6,y:JT-14,width:162,height:16,rx:5,class:'pw'},s);
+  const stream=el('path',{class:'stream',opacity:0},s); const cntE=txt(s,360,500,'0','num',{style:'font-size:30px'}); txt(s,360,520,'questions'); [jar,sandG].forEach(n=>n.addEventListener('pointerdown',empty));
+  const TH=16, N=30;
+  function draw(){ sandG.replaceChildren(); let base=JB; layers.forEach(L=>{ const pts=[]; for(let k=0;k<=N;k++){ const x=JX0+150*k/N; const bump=L.bump*Math.exp(-Math.pow((x-L.xf)/26,2)); pts.push(`${x},${base-L.th*(1+bump)}`); }
+      el('polygon',{class:'sand'+L.i,points:`${JX0},${base} ${pts.join(' ')} ${JX1},${base}`},sandG); base-=L.th; }); }
+  async function pour(i){ if(busy) return; const used=layers.reduce((a,l)=>a+l.th,0); if(used+TH>JB-JT-6){ hint.textContent='Jar is full · tap it to empty'; return; } busy=true; hint.textContent='Pouring';
+    const xf=clamp(lerp(JX0+20,JX1-20,i/3),JX0+20,JX1-20); const top=JB-used; const L={i,th:0,xf,bump:1.2}; layers.push(L);
+    stream.setAttribute('opacity',1); stream.setAttribute('d',`M${FX[i]} 130 C${FX[i]} 200 ${xf} 200 ${xf} ${top}`);
+    await tween(520,k=>{ L.th=TH*k; draw(); stream.setAttribute('d',`M${FX[i]} 130 C${FX[i]} 200 ${xf} 200 ${xf} ${top-L.th}`); }, easeInOut);
+    stream.setAttribute('opacity',0);
+    await tween(700,k=>{ L.bump=1.2*(1-k); draw(); });
+    cntE.textContent=layers.length*5; hint.textContent='Tap a funnel · each pour is five'; go.disabled=false; busy=false; }
+  async function empty(){ if(busy||!layers.length) return; cntE.textContent='0'; busy=true; await tween(400,k=>sandG.setAttribute('opacity',1-k)); layers=[]; draw(); sandG.setAttribute('opacity',1); hint.textContent='Tap a funnel'; go.disabled=true; busy=false; }
+})();
+</script>
+
+</body></html>

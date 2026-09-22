@@ -1,0 +1,99 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Mixtape</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root { --paper:#FFFFFF; --ink:#3F3F3F; --amber:#F18508; --line:#E4E1DC; --soft:#8A847C; --font:"Archivo","Helvetica Neue",system-ui,sans-serif; --mono:"DM Mono",ui-monospace,monospace; --ease:cubic-bezier(.2,.8,.2,1); }
+  html, body { height:100%; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+  .screen { min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(14px,2.6vh,26px); padding:24px 16px 44px; text-align:center; }
+  svg.scene { width:min(940px,97vw); aspect-ratio:960/520; display:block; overflow:visible; }
+  h1 { margin:0; font-size:clamp(2rem,6vw,3.4rem); font-weight:900; letter-spacing:-.04em; line-height:.98; }
+  .btn { font:800 15px var(--font); min-height:52px; padding:0 32px; border:0; border-radius:999px; background:var(--amber); color:#fff; cursor:pointer; box-shadow:0 10px 30px -14px rgba(241,133,8,.9); transition:transform .18s var(--ease), opacity .3s var(--ease); }
+  .btn:hover { transform:translateY(-1px); } .btn[disabled] { opacity:.35; cursor:default; box-shadow:none; transform:none; }
+  .hint { font:11px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-top:-4px; }
+  .m { fill:none; stroke:var(--ink); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+  .liner { fill:#F7F5F0; stroke:var(--ink); stroke-width:1.5; }
+  .signt { font:700 10px var(--mono); fill:var(--ink); letter-spacing:.16em; text-transform:uppercase; }
+  .no { font:500 9px var(--mono); fill:var(--soft); }
+  .name { font:500 10px var(--mono); fill:var(--ink); letter-spacing:.04em; }
+  .track { cursor:pointer; } .track:hover .name { fill:var(--amber); }
+  .tally { font:700 10px var(--mono); fill:var(--ink); }
+  .shell { fill:#F5F3EF; stroke:var(--ink); stroke-width:1.5; }
+  .label { fill:#fff; stroke:var(--ink); stroke-width:1; }
+  .side { font:900 22px var(--font); fill:var(--ink); letter-spacing:-.04em; }
+  .hand { font:500 9px var(--mono); fill:var(--soft); letter-spacing:.14em; text-transform:uppercase; }
+  .win { fill:#fff; stroke:var(--ink); stroke-width:1.2; }
+  .tape { fill:var(--ink); } .hub { fill:#fff; stroke:var(--ink); stroke-width:1.5; } .spoke { stroke:var(--ink); stroke-width:2; stroke-linecap:round; }
+  .total { font:900 46px var(--font); fill:var(--amber); letter-spacing:-.05em; font-variant-numeric:tabular-nums; }
+  .lbl { font:500 10px var(--mono); fill:var(--soft); letter-spacing:.14em; text-transform:uppercase; }
+  .fly { fill:var(--amber); }
+</style>
+
+<main class="screen">
+  <svg class="scene" id="scene" viewBox="0 0 960 520" aria-hidden="true">
+    <rect class="liner" x="30" y="30" width="520" height="440" rx="6"/>
+    <g id="tracks"></g>
+    <g id="cassette" style="cursor:pointer">
+      <rect class="shell" x="600" y="120" width="330" height="200" rx="14"/>
+      <rect class="label" x="622" y="138" width="286" height="66" rx="4"/>
+      <text class="side" x="640" y="176" dominant-baseline="middle">MIX · A</text>
+      <text class="hand" x="890" y="160" text-anchor="end" dominant-baseline="middle">SAT Freshman</text>
+      <text class="hand" x="890" y="180" text-anchor="end" dominant-baseline="middle">Combined</text>
+      <rect class="win" x="672" y="220" width="186" height="64" rx="32"/>
+      <clipPath id="winClip"><rect x="672" y="220" width="186" height="64" rx="32"/></clipPath>
+      <g clip-path="url(#winClip)"><circle class="tape" id="tL" cx="728" cy="252" r="22"/><circle class="tape" id="tR" cx="802" cy="252" r="22"/></g>
+      <g id="hubL"><circle class="hub" cx="728" cy="252" r="14"/><g id="spL"></g></g>
+      <g id="hubR"><circle class="hub" cx="802" cy="252" r="14"/><g id="spR"></g></g>
+      <text class="total" id="total" x="765" y="400" text-anchor="middle">0</text>
+      <text class="lbl" x="765" y="422" text-anchor="middle">questions on the tape</text>
+    </g>
+    <g id="flyer" style="pointer-events:none"></g>
+  </svg>
+  <p class="hint" id="hint">Tap a track to record one · hold to keep recording · tap the cassette to wipe it</p>
+  <h1>Record your mix.</h1>
+  <button class="btn" type="button" id="go" disabled>Build a set</button>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const txt=(p,x,y,s,cls,a={})=>{const t=el('text',{x,y,class:cls,'dominant-baseline':'middle',...a},p);t.textContent=s;return t;};
+const lerp=(a,b,k)=>a+(b-a)*k, easeIn=k=>k*k*k, easeOut=k=>1-Math.pow(1-k,3);
+const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
+const $=id=>document.getElementById(id);
+[['spL',728],['spR',802]].forEach(([id,cx])=>{ const g=$(id); for(let i=0;i<6;i++){ const a=i*Math.PI/3; el('line',{class:'spoke',x1:cx+5*Math.cos(a),y1:252+5*Math.sin(a),x2:cx+12*Math.cos(a),y2:252+12*Math.sin(a)},g);} });
+const DOMAINS=[
+  ['Algebra',       [['Linear eqs','linear_equations_in_one_variable'],['Lines','linear_equations_in_two_variables'],['Linear fn','linear_functions'],['Systems','systems_of_linear_equations'],['Inequalities','linear_inequalities']]],
+  ['Advanced Math', [['Expressions','equivalent_expressions'],['Nonlin. eqs','nonlinear_equations_and_systems'],['Nonlinear fn','nonlinear_functions']]],
+  ['Data',          [['Ratios','ratios_rates_proportions_and_units'],['Percents','percentages'],['1-var data','one_variable_data'],['2-var data','two_variable_data'],['Probability','probability'],['Samples','sample_statistics_and_margin_of_error'],['Claims','evaluating_statistical_claims']]],
+  ['Geometry',      [['Area/volume','area_and_volume'],['Angles','lines_angles_and_triangles'],['Trig','right_triangles_and_trigonometry'],['Circles','circles']]],
+];
+/* the liner notes: two columns of tracks under their headings, a tally beside any you've recorded */
+const basket={}; let total=0; const CAP=120; const stalls=[]; let no=0;
+[[0,1],[2,3]].forEach((ds,c)=>{ let y=56; const x=54+c*250;
+  ds.forEach(di=>{ const [dom,items]=DOMAINS[di]; txt($('tracks'),x,y,dom,'signt'); y+=22;
+    items.forEach(([name,slug])=>{ no++; const g=el('g',{class:'track'},$('tracks')); el('rect',{x:x-8,y:y-11,width:236,height:22,fill:'transparent'},g);
+      txt(g,x,y,String(no).padStart(2,'0'),'no'); txt(g,x+26,y,name,'name'); const tally=txt(g,x+220,y,'','tally',{'text-anchor':'end'});
+      const st={slug,name,cx:x+80,cy:y,tally,n:0,hold:null}; stalls.push(st);
+      const start=()=>{ rec(st); const t0=performance.now(); const tick=()=>{ if(st.hold===null) return; const h=(performance.now()-t0)/1000; rec(st); st.hold=setTimeout(tick,h<.7?240:h<1.8?100:45); }; st.hold=setTimeout(tick,240); };
+      const stop=()=>{ clearTimeout(st.hold); st.hold=null; };
+      g.addEventListener('pointerdown',e=>{ try{ g.setPointerCapture(e.pointerId); }catch(_){} start(); }); ['pointerup','pointerleave','pointercancel'].forEach(e=>g.addEventListener(e,stop)); y+=22; });
+    y+=14; }); });
+
+/* recording: the tape moves from the feed reel to the take-up, and the reels turn while it does */
+const tL=$('tL'), tR=$('tR'), hubL=$('hubL'), hubR=$('hubR'), totalT=$('total'), hint=$('hint'), go=$('go'); let ang=0, spinUntil=0;
+function drawTape(){ const p=Math.min(total,60)/60; tL.setAttribute('r',22-0*p); tL.setAttribute('r',44-24*p); tR.setAttribute('r',20+24*p); }
+tL.setAttribute('r',44); tR.setAttribute('r',20);
+let last=performance.now(); (function loop(now){ const dt=Math.min(.05,(now-last)/1000); last=now; if(now<spinUntil&&!reduce){ ang+=170*dt; hubL.setAttribute('transform',`rotate(${ang} 728 252)`); hubR.setAttribute('transform',`rotate(${ang} 802 252)`); } requestAnimationFrame(loop); })(last);
+function rec(st){ if(total>=CAP){ hint.textContent='Tape is full · tap the cassette to wipe it'; return; }
+  st.n++; total++; basket[st.slug]=st.n; st.tally.textContent='×'+st.n; totalT.textContent=total; go.disabled=false;
+  const f=el('circle',{class:'fly',r:5},$('flyer'));
+  tween(500,k=>{ f.setAttribute('cx',lerp(st.cx,765,k)); f.setAttribute('cy',lerp(st.cy,252,k)-60*Math.sin(Math.PI*k)); }, easeIn).then(()=>{ f.remove(); drawTape(); spinUntil=performance.now()+700; }); }
+$('cassette').addEventListener('pointerdown', ()=>{ if(!total) return; stalls.forEach(st=>{ st.n=0; st.tally.textContent=''; }); for(const k in basket) delete basket[k]; total=0; totalT.textContent='0'; drawTape(); spinUntil=performance.now()+900; go.disabled=true; hint.textContent='Tap a track to record one · hold to keep recording · tap the cassette to wipe it'; });
+/* -- ROUTER SEAM: the set is `basket`, a map of topic slug -> question count -- */
+go.addEventListener('click', ()=>console.log('[router] /practice/combined', {...basket}));
+</script>
+
+</body></html>

@@ -1,0 +1,172 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Thumb War</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #FFFFFF; --ink: #3F3F3F; --amber: #F18508;
+    --mat: #EDEAE5; --line: #E4E1DC; --soft: #8A847C;
+    --font: "Archivo", "Helvetica Neue", system-ui, sans-serif;   /* placeholder type, see brand/BRAND.md */
+    --mono: "DM Mono", ui-monospace, monospace;
+    --ease: cubic-bezier(.2, .8, .2, 1);
+  }
+  html, body { height: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+  .screen { min-height: 100%; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: clamp(18px, 3vh, 30px); padding-block: 32px 48px; padding-inline: 24px; text-align: center; }
+  svg.scene { width: min(780px, 94vw); max-width: 100%; aspect-ratio: 800 / 600; display: block; overflow: visible; }
+  h1 { margin: 0; font-size: clamp(2rem, 6vw, 3.4rem); font-weight: 900; letter-spacing: -.04em; line-height: .98; min-height: 1em; text-wrap: balance; }
+  .btn { font: 800 15px var(--font); min-height: 52px; padding: 0 32px; border: 0; border-radius: 999px; background: var(--amber); color: var(--ink); cursor: pointer;
+         box-shadow: 0 10px 30px -14px rgba(241,133,8,.9); transition: transform .18s var(--ease), box-shadow .25s var(--ease); }
+  .btn:hover { transform: translateY(-1px); } .btn:active { transform: translateY(1px); } .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .hint { font: 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin: 0; min-height: 1.4em; }
+
+  /* the drawing: one line, one weight; the paper-white fill only exists so a moving thumb hides what is behind it */
+  .sil { fill: var(--paper); stroke: none; fill-rule: evenodd; }
+  .ink { fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
+  .patch { fill: var(--paper); }
+  .edge { fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; }
+  @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
+</style>
+
+<main class="screen">
+  <svg class="scene" id="scene" viewBox="0 0 800 600" aria-hidden="true">
+    <defs>
+      <linearGradient id="heatL" gradientUnits="userSpaceOnUse" x1="191.0" y1="246.9" x2="328.7" y2="124.8"></linearGradient>
+      <linearGradient id="heatR" gradientUnits="userSpaceOnUse" x1="577.0" y1="278.0" x2="408.2" y2="127.2"></linearGradient>
+      <linearGradient id="beamGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#F18508" stop-opacity="0"/>
+        <stop offset=".4" stop-color="#F18508" stop-opacity=".26"/>
+        <stop offset="1" stop-color="#F18508" stop-opacity=".78"/>
+      </linearGradient>
+      <filter id="softlight" x="-100%" y="-30%" width="300%" height="160%"><feGaussianBlur stdDeviation="5"/></filter>
+      <clipPath id="frame"><rect x="0" y="0" width="800" height="600"/></clipPath>
+      <mask id="noThumbs" maskUnits="userSpaceOnUse" x="0" y="0" width="800" height="600">
+        <rect width="800" height="600" fill="#fff"/>
+        <polygon points="132,246.9 103.3,180.5 144.3,98.5 365.6,73.9 365.6,155.9 259,237.9 250.8,246.9" fill="#000" stroke="#fff" stroke-width="2"/>
+        <polygon points="514.8,252.6 472.1,180.5 373.8,155.9 373.8,65.7 570.5,57.5 677,221.5 640.2,303.4" fill="#000" stroke="#fff" stroke-width="2"/>
+      </mask>
+      <clipPath id="clipL"><polygon points="132,246.9 103.3,180.5 144.3,98.5 365.6,73.9 365.6,155.9 259,237.9 250.8,246.9"/></clipPath>
+      <clipPath id="clipR"><polygon points="514.8,252.6 472.1,180.5 373.8,155.9 373.8,65.7 570.5,57.5 677,221.5 640.2,303.4"/></clipPath>
+      <clipPath id="keepL"><path d="M809.8 311.6 L748.4 311.6 L715.6 318.2 L688.5 320.7 L664.8 320.7 L655.7 319 L649.2 315.7 L643.4 310 L612.3 259.2 L600.8 233 L596.7 212.5 L592.6 199.3 L581.1 179.7 L563.9 158.4 L553.3 133.8 L545.1 108.4 L540.2 99.3 L533.6 92.8 L523.8 87.9 L512.3 86.2 L502.5 87.9 L486.1 95.2 L467.2 101 L454.1 103.4 L418 105.1 L411.5 107.5 L408.2 110.8 L405.7 116.6 L405.7 127.2 L407.4 132.1 L415.6 142.8 L432 153.4 L449.2 159.2 L466.4 161.6 L486.1 161.6 L487.7 173.1 L492.6 188.7 L504.1 214.9 L504.1 232.1 L500 244.4 L495.9 248.5 L488.5 251 L458.2 250.2 L418 258.4 L364.8 261.6 L342.6 264.9 L329.5 269 L310.7 278.9 L303.3 284.6 L299.2 284.6 L263.1 273.1 L255.7 265.7 L250 256.7 L240.2 245.2 L238.5 240.3 L239.3 228.9 L135.2 228.9 L133.6 231.3 L131.1 242 L127.9 281.3 L122.1 312.5 L116.4 333 L109 346.1 L99.2 354.3 L63.1 365.7 L36.9 371.5 L18 377.2 L-9.8 377.2 L-9.8 577.2 L21.3 577.2 L95.9 557.5 L126.2 554.3 L162.3 557.5 L209 567.4 L227 569.8 L267.2 569.8 L290.2 566.6 L333.6 556.7 L361.5 548.5 L377 542 L381.1 542 L407.4 549.3 L447.5 555.1 L513.9 560 L577 559.2 L595.9 556.7 L613.9 552.6 L634.4 545.2 L652.5 536.2 L680.3 524.8 L697.5 519.8 L732 514.1 L749.2 509.2 L809.8 509.2Z"/><path id="trimL" d="M335.2 109.2 L327 103.4 L312.3 103.4 L287.7 108.4 L271.3 110 L255.7 109.2 L234.4 104.3 L223.8 104.3 L212.3 109.2 L203.3 117.4 L199.2 123.1 L188.5 146.9 L175.4 171.5 L163.9 187 L137.7 217.4 L132.8 226.4 L132.8 228.9 L135.2 230.5 L241 229.7 L242.6 223.1 L248.4 212.5 L253.3 199.3 L265.6 180.5 L269.7 170.7 L289.3 165.7 L308.2 156.7 L316.4 151.8 L331.1 139.5 L336.9 130.5 L338.5 123.9 L337.7 114.1Z"/></clipPath>
+      <clipPath id="keepR"><path d="M-9.8 377.2 L-9.8 577.2 L21.3 577.2 L95.9 557.5 L126.2 554.3 L162.3 557.5 L209 567.4 L227 569.8 L267.2 569.8 L290.2 566.6 L333.6 556.7 L361.5 548.5 L377 542 L381.1 542 L407.4 549.3 L447.5 555.1 L513.9 560 L577 559.2 L595.9 556.7 L613.9 552.6 L634.4 545.2 L652.5 536.2 L680.3 524.8 L697.5 519.8 L732 514.1 L749.2 509.2 L809.8 509.2 L809.8 311.6 L748.4 311.6 L715.6 318.2 L688.5 320.7 L664.8 320.7 L655.7 319 L649.2 315.7 L643.4 310 L623 277.2 L504.1 228.9 L502.5 239.5 L500 244.4 L495.9 248.5 L488.5 251 L458.2 250.2 L428.7 256.7 L411.5 259.2 L351.6 263.3 L329.5 269 L310.7 278.9 L303.3 284.6 L299.2 284.6 L263.1 273.1 L255.7 265.7 L239.3 243.6 L238.5 230.5 L240.2 222.3 L253.3 193.6 L263.1 179.7 L268 168.2 L289.3 163.3 L306.6 155.1 L321.3 145.2 L331.1 135.4 L335.2 127.2 L336.1 119 L332.8 110 L327 105.9 L312.3 105.9 L287.7 110.8 L271.3 112.5 L255.7 111.6 L234.4 106.7 L223.8 106.7 L211.5 112.5 L201.6 123.9 L191 147.7 L177.9 172.3 L166.4 187.9 L140.2 218.2 L135.2 227.2 L131.1 242 L127.9 281.3 L122.1 312.5 L116.4 333 L109 346.1 L99.2 354.3 L63.1 365.7 L36.9 371.5 L18 377.2Z"/><path id="trimR" d="M405.7 110 L403.3 115.7 L403.3 128 L404.9 133 L409.8 140.3 L421.3 150.2 L432 155.9 L449.2 161.6 L466.4 164.1 L484.4 164.1 L486.1 177.2 L493.4 197.7 L501.6 215.7 L501.6 228.9 L503.3 230.5 L622.1 278.9 L624.6 277.2 L624.6 274.8 L614.8 258.4 L604.1 234.6 L595.1 198.5 L583.6 178.9 L566.4 157.5 L555.7 133 L547.5 107.5 L542.6 98.5 L535.2 91.1 L526.2 86.2 L520.5 84.6 L506.6 84.6 L500 86.2 L486.1 92.8 L467.2 98.5 L454.1 101 L418 102.6 L409.8 105.9Z"/></clipPath>
+    </defs>
+    <g clip-path="url(#frame)"><g id="root">
+      <g id="patches">
+        <path class="patch" d="M 130.3 247.7 C 156.6 236.2 218 235.4 252.5 247.7 L 252.5 262.5 L 130.3 262.5 Z"/><path class="edge" d="M 130.3 247.7 C 156.6 236.2 218 235.4 252.5 247.7"/>
+        <path class="patch" d="M 514.8 252.6 C 554.1 258.4 603.3 278.9 640.2 303.4 L 640.2 336.2 L 554.1 295.2 L 514.8 278.9 Z"/><path class="edge" d="M 514.8 252.6 C 554.1 258.4 603.3 278.9 640.2 303.4"/>
+      </g>
+      <g mask="url(#noThumbs)"><path class="sil" d="M809.8 311.6 L748.4 311.6 L744.3 313.3 L715.6 318.2 L689.3 319.8 L688.5 320.7 L664.8 320.7 L655.7 319 L649.2 315.7 L643.4 310 L612.3 259.2 L600.8 233 L596.7 212.5 L592.6 199.3 L581.1 179.7 L563.9 158.4 L557.4 144.4 L546.7 112.5 L541.8 101.8 L531.1 91.1 L523.8 87.9 L515.6 86.2 L502.5 87.9 L486.1 95.2 L459 102.6 L418 105.1 L411.5 107.5 L408.2 110.8 L405.7 116.6 L405.7 127.2 L408.2 133.8 L415.6 142.8 L428.7 151.8 L449.2 159.2 L466.4 161.6 L479.5 161.6 L480.3 160.8 L486.1 161.6 L487.7 173.1 L492.6 188.7 L504.1 214.9 L503.3 236.2 L501.6 242 L495.9 248.5 L488.5 251 L458.2 250.2 L418 258.4 L364.8 261.6 L342.6 264.9 L329.5 269 L310.7 278.9 L303.3 284.6 L299.2 284.6 L286.1 279.7 L266.4 274.8 L263.1 273.1 L255.7 265.7 L250 256.7 L240.2 245.2 L238.5 240.3 L238.5 230.5 L240.2 222.3 L245.9 211.6 L253.3 193.6 L263.1 179.7 L267.2 169 L293.4 161.6 L306.6 155.1 L321.3 145.2 L328.7 138.7 L334.4 129.7 L336.1 123.1 L335.2 114.9 L332.8 110 L327 105.9 L312.3 105.9 L287.7 110.8 L271.3 112.5 L255.7 111.6 L234.4 106.7 L220.5 107.5 L211.5 112.5 L203.3 121.5 L177.9 172.3 L166.4 187.9 L140.2 218.2 L135.2 227.2 L131.1 242 L127.9 281.3 L122.1 312.5 L116.4 333 L109 346.1 L99.2 354.3 L63.1 365.7 L36.9 371.5 L18 377.2 L-9.8 377.2 L-9.8 577.2 L21.3 577.2 L95.9 557.5 L111.5 555.1 L125.4 555.1 L126.2 554.3 L143.4 555.1 L162.3 557.5 L209 567.4 L227 569.8 L236.9 569.8 L237.7 570.7 L267.2 569.8 L290.2 566.6 L333.6 556.7 L361.5 548.5 L377 542 L381.1 542 L395.9 546.9 L407.4 549.3 L447.5 555.1 L458.2 555.1 L459 555.9 L480.3 556.7 L513.9 560 L577 559.2 L595.9 556.7 L613.9 552.6 L634.4 545.2 L652.5 536.2 L680.3 524.8 L697.5 519.8 L732 514.1 L749.2 509.2 L809.8 509.2Z"/><path class="ink" d="M409.8 111.6 L407.4 117.4 L408.2 128 L413.1 137 L418 142 L427.9 148.5 L444.3 155.1 L459.8 158.4 L479.5 159.2 L486.9 156.7 L489.3 157.5 L488.5 163.3 L491.8 178.9 L504.1 206.7 L506.6 214.9 L507.4 226.4 L504.9 241.1 L508.2 243.6 L509 246.1 L499.2 251 L498.4 255.9 L481.1 252.6 L459 252.6 L449.2 254.3 L436.9 258.4 L427 263.3 L424.6 260.8 L418.9 260 L405.7 262.5 L365.6 264.1 L344.3 267.4 L328.7 272.3 L311.5 281.3 L304.1 286.2 L300 291.1 L295.9 301 L296.7 319 L300.8 328.9 L307.4 334.6 L313.9 337 L298.4 344.4 L291 351.8 L286.1 364.9 L286.1 388.7 L290.2 399.3 L294.3 404.3 L300 407.5 L313.9 410.8 L311.5 411.6 L302.5 419.8 L298.4 427.2 L296.7 433.8 L296.7 450.2 L301.6 462.5 L308.2 469 L313.9 471.5 L334.4 475.6 L332 476.4 L328.7 482.1 L326.2 497.7 L329.5 512.5 L335.2 519.8 L350.8 528 L391 542.8 L412.3 547.7 L441 551.8 L501.6 556.7 L563.1 557.5 L589.3 555.1 L612.3 550.2 L635.2 542 L677 523.1 L708.2 514.9 L742.6 509.2 L809.8 509.2 L809.8 314.1 L749.2 314.1 L722.1 319.8 L691 323.1 L662.3 323.1 L649.2 319 L641.8 312.5 L611.5 263.3 L601.6 242.8 L591 202.6 L582 185.4 L561.5 159.2 L551.6 137 L542.6 109.2 L539.3 105.1 L537.7 100.2 L532.8 95.2 L519.7 89.5 L512.3 88.7 L504.1 90.3 L482.8 99.3 L465.6 103.4 L460.7 105.9 L454.1 105.1 L422.1 106.7 L415.6 108.4ZM329.5 110.8 L323.8 110.8 L320.5 116.6 L312.3 122.3 L290.2 125.6 L282 123.9 L279.5 121.5 L277.9 115.7 L275.4 114.9 L254.9 114.1 L232 109.2 L226.2 109.2 L216.4 112.5 L211.5 115.7 L208.2 122.3 L204.9 123.9 L188.5 159.2 L181.1 172.3 L170.5 187 L144.3 217.4 L138.5 226.4 L133.6 243.6 L132 269.8 L123.8 317.4 L118 336.2 L110.7 348.5 L103.3 355.1 L95.1 359.2 L63.1 368.2 L19.7 378 L-9.8 378 L-9.8 576.4 L19.7 576.4 L35.2 570.7 L83.6 557.5 L104.1 553.4 L119.7 551.8 L153.3 553.4 L206.6 564.1 L229.5 567.4 L263.9 567.4 L288.5 564.1 L312.3 559.2 L354.9 547.7 L373 541.1 L373 536.2 L355.7 530.5 L341 523.1 L330.3 514.1 L327 505.9 L326.2 500.2 L326.2 484.6 L331.1 478.9 L330.3 474.8 L313.1 472.3 L301.6 462.5 L298.4 456.7 L295.1 437 L299.2 425.6 L308.2 414.9 L309 411.6 L308.2 410 L300.8 408.4 L295.9 405.1 L287.7 395.2 L287.7 355.1 L299.2 344.4 L309 340.3 L309.8 338.7 L309 335.4 L304.1 332.1 L299.2 326.4 L296.7 319 L296.7 314.9 L295.1 312.5 L295.9 301 L300 292 L300 288.7 L297.5 286.2 L263.1 276.4 L254.9 269 L241.8 251 L238.5 247.7 L234.4 246.9 L236.1 235.4 L236.1 226.4 L234.4 223.9 L239.3 218.2 L251.6 191.1 L258.2 183 L264.8 171.5 L264.8 169 L262.3 166.6 L273 164.9 L291.8 159.2 L308.2 151 L321.3 142 L328.7 134.6 L332.8 126.4 L332.8 115.7ZM237.7 247.7 C226.2 295.2 223 369 231.1 442.8M336.9 475.6 L408.2 485.4 L421.3 492.8 L432.8 504.3 L422.1 492.8 L405.7 484.6 L370.5 480.5 L341.8 475.6M316.4 410.8 L408.2 415.7 L427.9 418.2 L408.2 415.7 L379.5 414.9 L327.9 410.8M316.4 337.9 L339.3 342 L373 340.3 L409 340.3 L419.7 338.7 L409 340.3 L373 340.3 L339.3 342 L330.3 341.1 L318.9 337.9"/></g>
+      <g id="thumbs">
+        <g id="wrapL" clip-path="url(#keepL)"><g id="thL"><g clip-path="url(#clipL)"><path class="sil" style="fill:url(#heatL)" d="M809.8 311.6 L748.4 311.6 L744.3 313.3 L715.6 318.2 L689.3 319.8 L688.5 320.7 L664.8 320.7 L655.7 319 L649.2 315.7 L643.4 310 L612.3 259.2 L600.8 233 L596.7 212.5 L592.6 199.3 L581.1 179.7 L563.9 158.4 L557.4 144.4 L546.7 112.5 L541.8 101.8 L531.1 91.1 L523.8 87.9 L515.6 86.2 L502.5 87.9 L486.1 95.2 L459 102.6 L418 105.1 L411.5 107.5 L408.2 110.8 L405.7 116.6 L405.7 127.2 L408.2 133.8 L415.6 142.8 L428.7 151.8 L449.2 159.2 L466.4 161.6 L479.5 161.6 L480.3 160.8 L486.1 161.6 L487.7 173.1 L492.6 188.7 L504.1 214.9 L503.3 236.2 L501.6 242 L495.9 248.5 L488.5 251 L458.2 250.2 L418 258.4 L364.8 261.6 L342.6 264.9 L329.5 269 L310.7 278.9 L303.3 284.6 L299.2 284.6 L286.1 279.7 L266.4 274.8 L263.1 273.1 L255.7 265.7 L250 256.7 L240.2 245.2 L238.5 240.3 L238.5 230.5 L240.2 222.3 L245.9 211.6 L253.3 193.6 L263.1 179.7 L267.2 169 L293.4 161.6 L306.6 155.1 L321.3 145.2 L328.7 138.7 L334.4 129.7 L336.1 123.1 L335.2 114.9 L332.8 110 L327 105.9 L312.3 105.9 L287.7 110.8 L271.3 112.5 L255.7 111.6 L234.4 106.7 L220.5 107.5 L211.5 112.5 L203.3 121.5 L177.9 172.3 L166.4 187.9 L140.2 218.2 L135.2 227.2 L131.1 242 L127.9 281.3 L122.1 312.5 L116.4 333 L109 346.1 L99.2 354.3 L63.1 365.7 L36.9 371.5 L18 377.2 L-9.8 377.2 L-9.8 577.2 L21.3 577.2 L95.9 557.5 L111.5 555.1 L125.4 555.1 L126.2 554.3 L143.4 555.1 L162.3 557.5 L209 567.4 L227 569.8 L236.9 569.8 L237.7 570.7 L267.2 569.8 L290.2 566.6 L333.6 556.7 L361.5 548.5 L377 542 L381.1 542 L395.9 546.9 L407.4 549.3 L447.5 555.1 L458.2 555.1 L459 555.9 L480.3 556.7 L513.9 560 L577 559.2 L595.9 556.7 L613.9 552.6 L634.4 545.2 L652.5 536.2 L680.3 524.8 L697.5 519.8 L732 514.1 L749.2 509.2 L809.8 509.2Z"/><path class="ink" d="M409.8 111.6 L407.4 117.4 L408.2 128 L413.1 137 L418 142 L427.9 148.5 L444.3 155.1 L459.8 158.4 L479.5 159.2 L486.9 156.7 L489.3 157.5 L488.5 163.3 L491.8 178.9 L504.1 206.7 L506.6 214.9 L507.4 226.4 L504.9 241.1 L508.2 243.6 L509 246.1 L499.2 251 L498.4 255.9 L481.1 252.6 L459 252.6 L449.2 254.3 L436.9 258.4 L427 263.3 L424.6 260.8 L418.9 260 L405.7 262.5 L365.6 264.1 L344.3 267.4 L328.7 272.3 L311.5 281.3 L304.1 286.2 L300 291.1 L295.9 301 L296.7 319 L300.8 328.9 L307.4 334.6 L313.9 337 L298.4 344.4 L291 351.8 L286.1 364.9 L286.1 388.7 L290.2 399.3 L294.3 404.3 L300 407.5 L313.9 410.8 L311.5 411.6 L302.5 419.8 L298.4 427.2 L296.7 433.8 L296.7 450.2 L301.6 462.5 L308.2 469 L313.9 471.5 L334.4 475.6 L332 476.4 L328.7 482.1 L326.2 497.7 L329.5 512.5 L335.2 519.8 L350.8 528 L391 542.8 L412.3 547.7 L441 551.8 L501.6 556.7 L563.1 557.5 L589.3 555.1 L612.3 550.2 L635.2 542 L677 523.1 L708.2 514.9 L742.6 509.2 L809.8 509.2 L809.8 314.1 L749.2 314.1 L722.1 319.8 L691 323.1 L662.3 323.1 L649.2 319 L641.8 312.5 L611.5 263.3 L601.6 242.8 L591 202.6 L582 185.4 L561.5 159.2 L551.6 137 L542.6 109.2 L539.3 105.1 L537.7 100.2 L532.8 95.2 L519.7 89.5 L512.3 88.7 L504.1 90.3 L482.8 99.3 L465.6 103.4 L460.7 105.9 L454.1 105.1 L422.1 106.7 L415.6 108.4ZM329.5 110.8 L323.8 110.8 L320.5 116.6 L312.3 122.3 L290.2 125.6 L282 123.9 L279.5 121.5 L277.9 115.7 L275.4 114.9 L254.9 114.1 L232 109.2 L226.2 109.2 L216.4 112.5 L211.5 115.7 L208.2 122.3 L204.9 123.9 L188.5 159.2 L181.1 172.3 L170.5 187 L144.3 217.4 L138.5 226.4 L133.6 243.6 L132 269.8 L123.8 317.4 L118 336.2 L110.7 348.5 L103.3 355.1 L95.1 359.2 L63.1 368.2 L19.7 378 L-9.8 378 L-9.8 576.4 L19.7 576.4 L35.2 570.7 L83.6 557.5 L104.1 553.4 L119.7 551.8 L153.3 553.4 L206.6 564.1 L229.5 567.4 L263.9 567.4 L288.5 564.1 L312.3 559.2 L354.9 547.7 L373 541.1 L373 536.2 L355.7 530.5 L341 523.1 L330.3 514.1 L327 505.9 L326.2 500.2 L326.2 484.6 L331.1 478.9 L330.3 474.8 L313.1 472.3 L301.6 462.5 L298.4 456.7 L295.1 437 L299.2 425.6 L308.2 414.9 L309 411.6 L308.2 410 L300.8 408.4 L295.9 405.1 L287.7 395.2 L287.7 355.1 L299.2 344.4 L309 340.3 L309.8 338.7 L309 335.4 L304.1 332.1 L299.2 326.4 L296.7 319 L296.7 314.9 L295.1 312.5 L295.9 301 L300 292 L300 288.7 L297.5 286.2 L263.1 276.4 L254.9 269 L241.8 251 L238.5 247.7 L234.4 246.9 L236.1 235.4 L236.1 226.4 L234.4 223.9 L239.3 218.2 L251.6 191.1 L258.2 183 L264.8 171.5 L264.8 169 L262.3 166.6 L273 164.9 L291.8 159.2 L308.2 151 L321.3 142 L328.7 134.6 L332.8 126.4 L332.8 115.7ZM237.7 247.7 C226.2 295.2 223 369 231.1 442.8M336.9 475.6 L408.2 485.4 L421.3 492.8 L432.8 504.3 L422.1 492.8 L405.7 484.6 L370.5 480.5 L341.8 475.6M316.4 410.8 L408.2 415.7 L427.9 418.2 L408.2 415.7 L379.5 414.9 L327.9 410.8M316.4 337.9 L339.3 342 L373 340.3 L409 340.3 L419.7 338.7 L409 340.3 L373 340.3 L339.3 342 L330.3 341.1 L318.9 337.9"/></g></g></g>
+        <g id="wrapR" clip-path="url(#keepR)"><g id="thR"><g clip-path="url(#clipR)"><path class="sil" style="fill:url(#heatR)" d="M809.8 311.6 L748.4 311.6 L744.3 313.3 L715.6 318.2 L689.3 319.8 L688.5 320.7 L664.8 320.7 L655.7 319 L649.2 315.7 L643.4 310 L612.3 259.2 L600.8 233 L596.7 212.5 L592.6 199.3 L581.1 179.7 L563.9 158.4 L557.4 144.4 L546.7 112.5 L541.8 101.8 L531.1 91.1 L523.8 87.9 L515.6 86.2 L502.5 87.9 L486.1 95.2 L459 102.6 L418 105.1 L411.5 107.5 L408.2 110.8 L405.7 116.6 L405.7 127.2 L408.2 133.8 L415.6 142.8 L428.7 151.8 L449.2 159.2 L466.4 161.6 L479.5 161.6 L480.3 160.8 L486.1 161.6 L487.7 173.1 L492.6 188.7 L504.1 214.9 L503.3 236.2 L501.6 242 L495.9 248.5 L488.5 251 L458.2 250.2 L418 258.4 L364.8 261.6 L342.6 264.9 L329.5 269 L310.7 278.9 L303.3 284.6 L299.2 284.6 L286.1 279.7 L266.4 274.8 L263.1 273.1 L255.7 265.7 L250 256.7 L240.2 245.2 L238.5 240.3 L238.5 230.5 L240.2 222.3 L245.9 211.6 L253.3 193.6 L263.1 179.7 L267.2 169 L293.4 161.6 L306.6 155.1 L321.3 145.2 L328.7 138.7 L334.4 129.7 L336.1 123.1 L335.2 114.9 L332.8 110 L327 105.9 L312.3 105.9 L287.7 110.8 L271.3 112.5 L255.7 111.6 L234.4 106.7 L220.5 107.5 L211.5 112.5 L203.3 121.5 L177.9 172.3 L166.4 187.9 L140.2 218.2 L135.2 227.2 L131.1 242 L127.9 281.3 L122.1 312.5 L116.4 333 L109 346.1 L99.2 354.3 L63.1 365.7 L36.9 371.5 L18 377.2 L-9.8 377.2 L-9.8 577.2 L21.3 577.2 L95.9 557.5 L111.5 555.1 L125.4 555.1 L126.2 554.3 L143.4 555.1 L162.3 557.5 L209 567.4 L227 569.8 L236.9 569.8 L237.7 570.7 L267.2 569.8 L290.2 566.6 L333.6 556.7 L361.5 548.5 L377 542 L381.1 542 L395.9 546.9 L407.4 549.3 L447.5 555.1 L458.2 555.1 L459 555.9 L480.3 556.7 L513.9 560 L577 559.2 L595.9 556.7 L613.9 552.6 L634.4 545.2 L652.5 536.2 L680.3 524.8 L697.5 519.8 L732 514.1 L749.2 509.2 L809.8 509.2Z"/><path class="ink" d="M409.8 111.6 L407.4 117.4 L408.2 128 L413.1 137 L418 142 L427.9 148.5 L444.3 155.1 L459.8 158.4 L479.5 159.2 L486.9 156.7 L489.3 157.5 L488.5 163.3 L491.8 178.9 L504.1 206.7 L506.6 214.9 L507.4 226.4 L504.9 241.1 L508.2 243.6 L509 246.1 L499.2 251 L498.4 255.9 L481.1 252.6 L459 252.6 L449.2 254.3 L436.9 258.4 L427 263.3 L424.6 260.8 L418.9 260 L405.7 262.5 L365.6 264.1 L344.3 267.4 L328.7 272.3 L311.5 281.3 L304.1 286.2 L300 291.1 L295.9 301 L296.7 319 L300.8 328.9 L307.4 334.6 L313.9 337 L298.4 344.4 L291 351.8 L286.1 364.9 L286.1 388.7 L290.2 399.3 L294.3 404.3 L300 407.5 L313.9 410.8 L311.5 411.6 L302.5 419.8 L298.4 427.2 L296.7 433.8 L296.7 450.2 L301.6 462.5 L308.2 469 L313.9 471.5 L334.4 475.6 L332 476.4 L328.7 482.1 L326.2 497.7 L329.5 512.5 L335.2 519.8 L350.8 528 L391 542.8 L412.3 547.7 L441 551.8 L501.6 556.7 L563.1 557.5 L589.3 555.1 L612.3 550.2 L635.2 542 L677 523.1 L708.2 514.9 L742.6 509.2 L809.8 509.2 L809.8 314.1 L749.2 314.1 L722.1 319.8 L691 323.1 L662.3 323.1 L649.2 319 L641.8 312.5 L611.5 263.3 L601.6 242.8 L591 202.6 L582 185.4 L561.5 159.2 L551.6 137 L542.6 109.2 L539.3 105.1 L537.7 100.2 L532.8 95.2 L519.7 89.5 L512.3 88.7 L504.1 90.3 L482.8 99.3 L465.6 103.4 L460.7 105.9 L454.1 105.1 L422.1 106.7 L415.6 108.4ZM329.5 110.8 L323.8 110.8 L320.5 116.6 L312.3 122.3 L290.2 125.6 L282 123.9 L279.5 121.5 L277.9 115.7 L275.4 114.9 L254.9 114.1 L232 109.2 L226.2 109.2 L216.4 112.5 L211.5 115.7 L208.2 122.3 L204.9 123.9 L188.5 159.2 L181.1 172.3 L170.5 187 L144.3 217.4 L138.5 226.4 L133.6 243.6 L132 269.8 L123.8 317.4 L118 336.2 L110.7 348.5 L103.3 355.1 L95.1 359.2 L63.1 368.2 L19.7 378 L-9.8 378 L-9.8 576.4 L19.7 576.4 L35.2 570.7 L83.6 557.5 L104.1 553.4 L119.7 551.8 L153.3 553.4 L206.6 564.1 L229.5 567.4 L263.9 567.4 L288.5 564.1 L312.3 559.2 L354.9 547.7 L373 541.1 L373 536.2 L355.7 530.5 L341 523.1 L330.3 514.1 L327 505.9 L326.2 500.2 L326.2 484.6 L331.1 478.9 L330.3 474.8 L313.1 472.3 L301.6 462.5 L298.4 456.7 L295.1 437 L299.2 425.6 L308.2 414.9 L309 411.6 L308.2 410 L300.8 408.4 L295.9 405.1 L287.7 395.2 L287.7 355.1 L299.2 344.4 L309 340.3 L309.8 338.7 L309 335.4 L304.1 332.1 L299.2 326.4 L296.7 319 L296.7 314.9 L295.1 312.5 L295.9 301 L300 292 L300 288.7 L297.5 286.2 L263.1 276.4 L254.9 269 L241.8 251 L238.5 247.7 L234.4 246.9 L236.1 235.4 L236.1 226.4 L234.4 223.9 L239.3 218.2 L251.6 191.1 L258.2 183 L264.8 171.5 L264.8 169 L262.3 166.6 L273 164.9 L291.8 159.2 L308.2 151 L321.3 142 L328.7 134.6 L332.8 126.4 L332.8 115.7ZM237.7 247.7 C226.2 295.2 223 369 231.1 442.8M336.9 475.6 L408.2 485.4 L421.3 492.8 L432.8 504.3 L422.1 492.8 L405.7 484.6 L370.5 480.5 L341.8 475.6M316.4 410.8 L408.2 415.7 L427.9 418.2 L408.2 415.7 L379.5 414.9 L327.9 410.8M316.4 337.9 L339.3 342 L373 340.3 L409 340.3 L419.7 338.7 L409 340.3 L373 340.3 L339.3 342 L330.3 341.1 L318.9 337.9"/></g></g></g>
+      </g>
+    </g></g>
+    <rect id="beam" x="-20" y="-230" width="40" height="230" rx="20" fill="url(#beamGrad)" filter="url(#softlight)" style="display:none"/>
+  </svg>
+  <p class="hint" id="hint">Placement · duel 1 of 3 · seed 1000 · level 3</p>
+  <h1 id="hl">One, two, three, four.</h1>
+  <button class="btn" type="button" id="go">Calibrate</button>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const $=id=>document.getElementById(id);
+const lerp=(a,b,k)=>a+(b-a)*k, clamp=v=>Math.min(1,Math.max(0,v)), f1=v=>(+v).toFixed(1);
+
+/* ---------------------------------------------------------------- the thumbs: each a cut-out of the drawing that turns about its root */
+const PIV={L:[191.0,246.9],R:[577.0,278.0]}, TIP={L:[328.7,124.8],R:[408.2,127.2]};
+const SGN={L:1,R:-1};                      // a positive turn leans the thumb toward the other one
+const PIN={L:46,R:44}, WIN={L:51,R:40};     // how far each has to turn to lie flat on the knuckles, or to come down across the other
+const FC={L:.85,R:.85};                      // where along the thumb the joint is: the point of contact
+const root=$('root'), thumbs=$('thumbs'), beam=$('beam');
+const hands={};
+['L','R'].forEach(s=>{ const grad=$('heat'+s), stops=[]; for(let i=0;i<7;i++) stops.push(el('stop',{offset:0,'stop-color':'#FFFFFF'},grad)); hands[s]={g:$('th'+s),wrap:$('wrap'+s),trim:$('trim'+s),stops}; });
+
+/* ---------------------------------------------------------------- colour: paper, one orange, a grey for the spent thumb */
+const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+const PAPER=hex('#FFFFFF'), ORANGE=hex('#F18508'), HOT=hex('#E2481A'), GREY=hex('#E4E1DC');
+const mix=(a,b,k)=>a.map((v,i)=>v+(b[i]-v)*k);
+const css=c=>`rgb(${c.map(v=>Math.round(v)).join(',')})`;
+
+/* ---------------------------------------------------------------- motion: seven seconds, one clock, every pose a function of it */
+const ss=(a,b,t)=>{ const k=clamp((t-a)/(b-a)); return k*k*(3-2*k); };
+const bump=(t,t0,w)=>{ const k=(t-t0)/w; return k<0||k>1?0:Math.pow(Math.sin(Math.PI*k),2); };
+const spring=(v,damp,freq)=>v<0?0:Math.exp(-v*damp)*Math.cos(v*freq);
+const LOOP=7;
+
+function pose(T,loop){
+  const w=loop%2?'L':'R', l=w==='R'?'L':'R';
+  const P={shiftX:0,bob:0,rock:0,winner:w,loser:l};
+  /* the count: four heavy beats; the thumbs cross on one and two, again on three and four */
+  let b=0; if(T<1.6){ const u=(T%.4)/.4; b=u<.28?Math.pow(u/.28,2):spring(u-.28,7,20); }
+  const cross=(ss(0,.16,T)-ss(.4,.56,T)+ss(.8,.96,T)-ss(1.2,1.36,T))*(1-ss(1.6,1.85,T));
+  P.bob=12*b;
+  /* the break: loose, circling opposite ways, arrhythmic */
+  const loose=ss(1.6,1.85,T)*(1-ss(3.4,3.58,T)), circ=loose*(1-.5*ss(2.4,2.6,T));
+  const phi=(T-1.6)*Math.PI*2*1.5+.6*Math.sin(T*7.3);
+  let rW=26*cross+loose*6+circ*13*Math.sin(phi),      xW=circ*5*Math.cos(phi),      yW=circ*3*Math.sin(phi*1.3);
+  let rL=26*cross+loose*6+circ*13*Math.sin(-phi+1.2), xL=circ*5*Math.cos(-phi+1.2), yL=circ*3*Math.sin(-phi*1.3+1.9);
+  rW+=30*bump(T,1.95,.16); rL-=18*bump(T,2.02,.14);                                          // a dart, a flinch
+  rW+=30*bump(T,2.68,.22); rL+=30*bump(T,2.76,.22);                                          // a near-miss
+  rW+=34*bump(T,3.1,.2);  rL+=34*bump(T,3.12,.2); rW-=20*bump(T,3.3,.12); rL-=20*bump(T,3.3,.12);   // catches a corner, slips off
+  P.rock=(T>2.78?2.0*spring(T-2.78,6,24):0)+(T>3.22?2.8*spring(T-3.22,6,24):0);
+  /* the pin: one drops flat across the other, onto the knuckles; the whole mass takes the hit */
+  const pinK=Math.pow(ss(3.4,3.58,T),2.2), relW=ss(5.0,5.5,T), relL=ss(5.15,5.9,T);
+  const pinW=pinK*(1-relW), pinL=pinK*(1-relL), hold=pinL*ss(3.58,3.7,T)*(1-ss(4.0,4.3,T));
+  const sign=w==='R'?-1:1;
+  if(T>3.58){ const j=spring(T-3.58,9,26); P.shiftX=4*sign*j; P.bob+=3*j; P.rock+=1.2*sign*j; }
+  if(T>5.6) P.bob+=-3*spring(T-5.6,7,20);
+  /* the spent thumb: grey and slack after the light leaves it, then the grip re-settles */
+  const slack=ss(4.55,4.9,T)*(1-ss(6.0,6.6,T));
+  const W={rot:lerp(rW,WIN[w],pinW)+1.5*Math.sin(T*6)*hold, dx:lerp(xW,0,pinW), dy:lerp(yW,8,pinW)};
+  const L={rot:lerp(rL,PIN[l],pinL)+1.4*Math.sin(T*38)*hold-8*slack*(1-pinL), dx:lerp(xL,0,pinL), dy:lerp(yL,6,pinL)+4*slack*(1-pinL)};
+  L.heat=ss(4.0,4.5,T); L.deepen=ss(4.3,4.55,T); L.cool=ss(4.55,4.98,T); L.slack=slack;
+  W.heat=0; W.deepen=0; W.cool=0; W.slack=0;
+  P[w]=W; P[l]=L;
+  const grow=ss(4.4,4.64,T), rise=ss(4.58,5.02,T);
+  P.beam=grow>0&&rise<1?{grow,rise,op:grow*(1-rise)}:null;
+  return P;
+}
+
+function thumbPoint(s,th,frac){                                 // a point part-way up the thumb, in scene coordinates
+  const [px,py]=PIV[s], [tx,ty]=TIP[s], a=th.rot*SGN[s]*Math.PI/180, vx=(tx-px)*frac, vy=(ty-py)*frac;
+  return [px+th.dx+vx*Math.cos(a)-vy*Math.sin(a), py+th.dy+vx*Math.sin(a)+vy*Math.cos(a)];
+}
+function applyThumb(s,th){
+  const h=hands[s], [px,py]=PIV[s];
+  const tr=`translate(${f1(px+th.dx)} ${f1(py+th.dy)}) rotate(${f1(th.rot*SGN[s])}) translate(${f1(-px)} ${f1(-py)})`;
+  h.g.setAttribute('transform',tr); h.trim.setAttribute('transform',tr);
+  /* heat: a tint that spreads from the point of contact toward the base, deepest at the contact, and never reaches the root,
+     so the cut where the thumb leaves the hand stays paper on paper; afterwards the same region cools to a faint grey */
+  const spent=mix(PAPER,GREY,th.slack);
+  const hot=mix(mix(PAPER,ORANGE,.78),spent,th.cool), centre=mix(mix(mix(PAPER,ORANGE,.92),HOT,th.deepen*.55),spent,th.cool), ahead=PAPER;
+  const fc=FC[s], k=th.heat*.62, e=.14;
+  const offs=[0, clamp(fc-k-e), clamp(fc-k), fc, clamp(fc+k), clamp(fc+k+e), 1];
+  const cols=th.heat>0||th.slack>0?[ahead,ahead,hot,centre,hot,ahead,ahead]:[ahead,ahead,ahead,ahead,ahead,ahead,ahead];
+  h.stops.forEach((st,i)=>{ st.setAttribute('offset',offs[i].toFixed(3)); st.setAttribute('stop-color',css(cols[i])); });
+}
+function apply(P){
+  root.setAttribute('transform',`translate(${f1(P.shiftX)} ${f1(P.bob)}) rotate(${f1(P.rock)} 400 340)`);
+  applyThumb('L',P.L); applyThumb('R',P.R);
+  if(P.beam){ const [x,y]=thumbPoint(P.loser,P[P.loser],FC[P.loser]);
+    beam.style.display=''; beam.setAttribute('transform',`translate(${f1(x+P.shiftX)} ${f1(y+P.bob-130*P.beam.rise)}) scale(1 ${Math.max(.001,P.beam.grow).toFixed(3)})`); beam.style.opacity=P.beam.op.toFixed(3); }
+  else beam.style.display='none';
+}
+function order(P){ thumbs.appendChild(hands[P.winner].wrap); }        // the winning thumb goes over the other
+
+/* ---------------------------------------------------------------- run */
+let lastLoop=-1;
+if(reduce||location.hash==='#still'){ const P=pose(0,0); order(P); apply(P); }
+else { const t0=performance.now();
+  (function frame(now){ const e=(now-t0)/1000, loop=Math.floor(e/LOOP), P=pose(e%LOOP,loop);
+    if(loop!==lastLoop){ lastLoop=loop; order(P); } apply(P); requestAnimationFrame(frame); })(t0); }
+window.__peek=(T,loop=0)=>{ const P=pose(T,loop); order(P); apply(P); };
+
+/* -- ROUTER SEAM: placement is three duels from seed 1000; the button starts the first ------------ */
+$('go').addEventListener('click',()=>console.log('[router] /duel/calibrate'));
+</script>
+
+</body></html>

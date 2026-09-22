@@ -1,0 +1,114 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Conkers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root { --paper:#FFFFFF; --ink:#3F3F3F; --amber:#F18508; --line:#E4E1DC; --soft:#8A847C; --shell:#E6E2DB; --font:"Archivo","Helvetica Neue",system-ui,sans-serif; --mono:"DM Mono",ui-monospace,monospace; --ease:cubic-bezier(.2,.8,.2,1); }
+  html, body { height:100%; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+  .screen { min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(14px,2.6vh,26px); padding:24px 16px 44px; text-align:center; }
+  svg.scene { width:min(700px,94vw); max-width:100%; aspect-ratio:720/520; display:block; overflow:visible; cursor:pointer; touch-action:manipulation; }
+  h1 { margin:0; font-size:clamp(2rem,6vw,3.4rem); font-weight:900; letter-spacing:-.04em; line-height:.98; text-wrap:balance; }
+  .btn { font:800 15px var(--font); min-height:52px; padding:0 32px; border:0; border-radius:999px; background:var(--amber); color:var(--ink); cursor:pointer; box-shadow:0 10px 30px -14px rgba(241,133,8,.9); transition:transform .18s var(--ease), opacity .3s var(--ease); }
+  .btn:hover { transform:translateY(-1px); } .btn:focus-visible { outline:3px solid var(--ink); outline-offset:3px; } .btn[disabled] { opacity:.35; cursor:default; box-shadow:none; transform:none; }
+  .hint { font:11px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-top:-4px; min-height:1.4em; }
+  .string { fill:none; stroke:var(--ink); stroke-width:1.6; stroke-linecap:round; }
+  .knot { fill:var(--ink); }
+  .shell { fill:var(--shell); stroke:var(--ink); stroke-width:1.8; }
+  .shell.you { fill:var(--amber); }
+  .eye { fill:#fff; opacity:.85; }
+  .crack { fill:none; stroke:var(--ink); stroke-width:1.6; stroke-linejoin:round; stroke-linecap:round; }
+  .tag { fill:#fff; stroke:var(--ink); stroke-width:1.4; }
+  .tag.you { stroke:var(--ink); stroke-width:2; }
+  .num { font:900 16px var(--font); fill:var(--ink); letter-spacing:-.04em; font-variant-numeric:tabular-nums; }
+  .spark { stroke:var(--ink); stroke-width:2; stroke-linecap:round; }
+  .lbl { font:500 11px var(--mono); fill:var(--soft); letter-spacing:.16em; text-transform:uppercase; }
+  @media (prefers-reduced-motion: reduce) { .btn { transition:none; } }
+</style>
+
+<main class="screen">
+  <svg class="scene" id="scene" viewBox="0 0 720 520" aria-hidden="true">
+    <g id="pend"></g>
+    <g id="fx"></g>
+    <text class="lbl" x="270" y="500" text-anchor="middle">you</text>
+    <text class="lbl" x="450" y="500" text-anchor="middle">them</text>
+  </svg>
+  <p class="hint" id="hint">Tap to strike · yours is a none-er, theirs a five-er</p>
+  <h1>Beat a five, become a six.</h1>
+  <button class="btn" type="button" id="go" disabled>Calibrate</button>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const lerp=(a,b,k)=>a+(b-a)*k, easeOut=k=>1-Math.pow(1-k,3), easeIn=k=>k*k*k, easeInOut=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+const $=id=>document.getElementById(id);
+
+/* ---------------- sounds: a whoosh past, a crack on the shell, a small paper flip ---------------- */
+let AC=null; const ac=()=>{ try{ AC=AC||new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); }catch(_){ AC=null; } return AC; };
+function noise(len,f,type,gain,q=1,when=0){ const a=ac(); if(!a) return; const n=a.createBufferSource(), buf=a.createBuffer(1,Math.floor(a.sampleRate*len),a.sampleRate), d=buf.getChannelData(0); for(let i=0;i<d.length;i++){ const u=i/d.length; d[i]=(Math.random()*2-1)*Math.sin(Math.PI*u)*Math.pow(1-u,.6); }
+  n.buffer=buf; const bq=a.createBiquadFilter(); bq.type=type; bq.frequency.value=f; bq.Q.value=q; const g=a.createGain(); g.gain.value=gain; n.connect(bq).connect(g).connect(a.destination); n.start(a.currentTime+when); }
+function thump(f0,f1,gain,len){ const a=ac(); if(!a) return; const t=a.currentTime, o=a.createOscillator(), g=a.createGain(); o.type='triangle'; o.frequency.setValueAtTime(f0,t); o.frequency.exponentialRampToValueAtTime(f1,t+len*.6);
+  g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(gain,t+.003); g.gain.exponentialRampToValueAtTime(.0001,t+len); o.connect(g).connect(a.destination); o.start(t); o.stop(t+len+.02); }
+const whoosh=()=>noise(.26,700,'bandpass',.09,.7);
+const crack=()=>{ noise(.05,3200,'highpass',.3); thump(900,300,.2,.08); noise(.12,1800,'bandpass',.1,2,.02); };
+const clack=()=>{ noise(.03,2400,'bandpass',.14); thump(600,260,.12,.07); };
+const flip=()=>noise(.04,2000,'highpass',.06);
+
+/* ---------------- two conkers on knotted strings ---------------- */
+const L=330, R=32, pend=$('pend'), fx=$('fx'), hint=$('hint'), go=$('go');
+const CRACK='M-8 -28 L-2 -16 L-11 -6 L-1 6 L-7 17 L-2 28';
+function conker(px,you){ const g=el('g',{},pend), s=el('g',{},g), c=el('g',{transform:`translate(0 ${L})`},s);
+  el('line',{class:'string',x1:0,y1:0,x2:0,y2:L},s);
+  const tagG=el('g',{transform:'translate(0 120)'},s); el('rect',{class:'tag'+(you?' you':''),x:-17,y:-12,width:34,height:24,rx:3},tagG); el('line',{class:'string',x1:0,y1:-11,x2:0,y2:-8,opacity:0},tagG);
+  const num=el('text',{class:'num',x:0,y:6,'text-anchor':'middle'},tagG);
+  const spin=el('g',{},c); el('circle',{class:'shell'+(you?' you':''),r:R},spin); el('ellipse',{class:'eye',cx:-6,cy:-10,rx:11,ry:7},spin);
+  const crackP=el('path',{class:'crack',d:CRACK,pathLength:100,'stroke-dasharray':'100','stroke-dashoffset':100},spin);
+  el('line',{class:'string',x1:0,y1:R,x2:0,y2:R+8},c); el('circle',{class:'knot',cy:R+11,r:4},c);
+  return {px,you,g,s,c,tagG,num,spin,crackP,th:0,w:0,rot:0,rotV:0,n:0,lift:0,scale:1}; }
+const A=conker(270,true), B=conker(450,false);
+A.n=0; B.n=5; const word=n=>n===0?'none-er':`${n}-er`;
+function draw(){ for(const C of [A,B]){ C.g.setAttribute('transform',`translate(${C.px} ${C.lift})`); C.s.setAttribute("transform",`scale(${C.scale}) rotate(${(-C.th*57.2958).toFixed(2)})`); C.spin.setAttribute('transform',`rotate(${C.rot.toFixed(1)})`); C.num.textContent=C.n; } }
+draw();
+
+/* ---------------- the strike: draw back, swing out, miss, swing again, connect ---------------- */
+const g=2600; let running=false, phase='idle', struck=0;
+async function strike(){ if(running) return; running=true; ac();
+  if(A.cracked||B.cracked) await newOpponent();
+  hint.textContent='Drawn back';
+  await tween(520,k=>{ A.th=lerp(0,-1.26,k); draw(); });
+  await wait(140);
+  // released: the first swing passes behind theirs; the second is in the same plane
+  A.w=0; A.behind=true; A.passed=false; A.inPlane=false; A.damp=.28; B.damp=.6; B.w=0; B.th=0; hint.textContent='Swinging'; pend.insertBefore(A.g,B.g); struck=0;
+  let last=performance.now(), whooshed=false, elapsed=0;
+  await new Promise(res=>{ (function frame(now){ const dt=Math.min(.033,(now-last)/1000||0); last=now; elapsed+=dt;
+    for(const C of [A,B]){ for(let k=0;k<3;k++){ const h=dt/3; C.w+=(-(g/L)*Math.sin(C.th)-C.damp*C.w)*h; C.th+=C.w*h; } C.rotV*=Math.exp(-1.4*dt); C.rot+=C.rotV*dt; }
+    if(!A.inPlane){ if(!A.passed&&A.th>.28){ A.passed=true; if(!whooshed){ whooshed=true; whoosh(); hint.textContent='Missed'; } }
+      if(A.passed&&A.w>0&&A.th<-.2){ A.inPlane=true; pend.appendChild(A.g); hint.textContent='Again'; } A.scale=A.inPlane?1:.95; }
+    else { const ax=A.px+L*Math.sin(A.th), ay=L*Math.cos(A.th), bx=B.px+L*Math.sin(B.th), by=L*Math.cos(B.th), dx=bx-ax, dy=by-ay, d=Math.hypot(dx,dy);
+      const vax=A.w*L*Math.cos(A.th), vbx=B.w*L*Math.cos(B.th);
+      if(d<2*R&&vax>vbx){ const e=.72, va=((1-e)*vax+(1+e)*vbx)/2, vb=((1+e)*vax+(1-e)*vbx)/2; A.w=va/(L*Math.cos(A.th)); B.w=vb/(L*Math.cos(B.th));
+        struck++; spark((ax+bx)/2,(ay+by)/2); if(struck===1){ crack(); B.rotV=520; A.damp=1.3; hit(); } else clack(); } }
+    draw();
+    const still=Math.abs(A.w)<.05&&Math.abs(A.th)<.03&&Math.abs(B.w)<.05&&Math.abs(B.th)<.03;
+    if((still&&struck)||elapsed>9) res(); else requestAnimationFrame(frame); })(last); });
+  await tween(300,k=>{ A.th*=1-k; B.th*=1-k; A.w=B.w=0; draw(); }); A.scale=1;
+  go.disabled=false; running=false; }
+function spark(x,y){ const s=el('g',{transform:`translate(${x} ${y})`},fx); [[-16,-8,-26,-14],[16,-8,26,-14],[0,-16,0,-28],[-12,10,-20,16],[12,10,20,16]].forEach(([a,b,c,d])=>el('line',{class:'spark',x1:a,y1:b,x2:c,y2:d},s)); tween(240,k=>s.setAttribute('opacity',1-k)).then(()=>s.remove()); }
+async function hit(){ B.cracked=true; const beaten=B.n; tween(320,k=>B.crackP.setAttribute('stroke-dashoffset',100*(1-k)));
+  await wait(260); flip();
+  await tween(130,k=>A.tagG.setAttribute('transform',`translate(0 120) scale(1 ${1-k})`),easeIn); A.n=A.n+beaten+1; B.n=''; draw();
+  await tween(160,k=>A.tagG.setAttribute('transform',`translate(0 120) scale(1 ${k})`));
+  hint.textContent=`Beat a ${word(beaten)} · yours is a ${word(A.n)} now · tap for the next`; }
+async function newOpponent(){ hint.textContent='Next conker'; await tween(420,k=>{ B.lift=-460*k; draw(); },easeIn);
+  B.cracked=false; B.crackP.setAttribute('stroke-dashoffset',100); B.rot=0; B.rotV=0; B.th=0; B.w=0; B.n=1+Math.floor(Math.random()*7); draw();
+  await tween(520,k=>{ B.lift=-460*(1-k); draw(); }); await wait(120); }
+$('scene').addEventListener('pointerdown',strike);
+/* -- ROUTER SEAM ------------------------------------------------------------ */
+go.addEventListener('click',()=>console.log('[router] /duel',{yours:A.n}));
+</script>
+
+</body></html>

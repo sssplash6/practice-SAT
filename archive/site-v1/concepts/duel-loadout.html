@@ -1,0 +1,114 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Duel Loadout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root { --paper:#FFFFFF; --ink:#3F3F3F; --amber:#F18508; --line:#E4E1DC; --soft:#8A847C; --font:"Archivo","Helvetica Neue",system-ui,sans-serif; --mono:"DM Mono",ui-monospace,monospace; --ease:cubic-bezier(.2,.8,.2,1); }
+  html, body { height:100%; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+  .screen { min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(14px,2.6vh,26px); padding:24px 16px 44px; text-align:center; }
+  svg.scene { width:min(940px,97vw); aspect-ratio:960/560; display:block; overflow:visible; }
+  h1 { margin:0; font-size:clamp(2rem,6vw,3.4rem); font-weight:900; letter-spacing:-.04em; line-height:.98; }
+  .btn { font:800 15px var(--font); min-height:52px; padding:0 32px; border:0; border-radius:999px; background:var(--amber); color:#fff; cursor:pointer; box-shadow:0 10px 30px -14px rgba(241,133,8,.9); transition:transform .18s var(--ease), opacity .3s var(--ease); }
+  .btn:hover { transform:translateY(-1px); } .btn[disabled] { opacity:.35; cursor:default; box-shadow:none; transform:none; }
+  .hint { font:11px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-top:-4px; }
+  .m { fill:none; stroke:var(--ink); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+  .steel { fill:#F5F3EF; stroke:var(--ink); stroke-width:2; stroke-linejoin:round; }
+  .dark { fill:#E6E2DB; stroke:var(--ink); stroke-width:2; stroke-linejoin:round; }
+  .skin { fill:#FBFAF7; stroke:var(--ink); stroke-width:2; stroke-linejoin:round; }
+  .chamber { fill:#fff; stroke:var(--ink); stroke-width:1.8; }
+  .round { fill:#EDEAE4; stroke:var(--ink); stroke-width:1.6; }
+  .primer { fill:var(--amber); }
+  .track { fill:none; stroke:var(--line); stroke-width:16; }
+  .arc { fill:none; stroke:var(--amber); stroke-width:16; stroke-linecap:round; }
+  .tick { stroke:var(--ink); stroke-width:2; stroke-linecap:round; }
+  .lvl { font:900 128px var(--font); fill:var(--ink); letter-spacing:-.06em; }
+  .elo { font:900 44px var(--font); fill:var(--ink); letter-spacing:-.05em; font-variant-numeric:tabular-nums; }
+  .lbl { font:500 11px var(--mono); fill:var(--soft); letter-spacing:.16em; text-transform:uppercase; }
+  .gun { cursor:pointer; }
+</style>
+
+<main class="screen">
+  <svg class="scene" id="scene" viewBox="0 0 960 560" aria-hidden="true">
+    <!-- ================= your rating, on the left ================= -->
+    <g id="badge">
+      <text class="lbl" x="240" y="62" text-anchor="middle">Your rating</text>
+      <circle class="track" cx="240" cy="250" r="118"/>
+      <circle class="arc" id="arc" cx="240" cy="250" r="118" pathLength="100" stroke-dasharray="0 100" transform="rotate(-90 240 250)"/>
+      <g id="ticks"></g>
+      <text class="lvl" id="lvl" x="240" y="296" text-anchor="middle">1</text>
+      <text class="elo" id="elo" x="240" y="438" text-anchor="middle">0</text>
+      <text class="lbl" id="band" x="240" y="466" text-anchor="middle">Level 1 · 1 – 800</text>
+    </g>
+
+    <!-- ================= the revolver, in your hand, seen from behind ================= -->
+    <g class="gun" id="gun">
+      <!-- wrist and palm come up from the bottom edge -->
+      <path class="skin" d="M720 560 V470 q0 -26 24 -34 L810 420 q30 -10 36 16 L868 560 z"/>
+      <!-- grip -->
+      <path class="dark" id="grip" d="M664 296 L648 402 q0 22 24 24 L722 434 q24 -2 22 -28 L728 296 z"/>
+      <!-- frame, with the cylinder window -->
+      <path class="steel" d="M626 172 h140 a20 20 0 0 1 20 20 v100 a20 20 0 0 1 -20 20 h-140 a20 20 0 0 1 -20 -20 v-100 a20 20 0 0 1 20 -20 z"/>
+      <!-- top strap and rear sight -->
+      <rect class="steel" x="654" y="154" width="84" height="22" rx="5"/>
+      <path class="m" d="M690 158 l-5 8 h10 z" fill="#fff"/>
+      <!-- hammer spur -->
+      <rect class="dark" x="682" y="122" width="16" height="36" rx="6" transform="rotate(-12 690 140)"/>
+      <!-- the cylinder, from the rear: six chambers, on a crane that swings it out -->
+      <g id="cyl">
+        <circle class="steel" cx="696" cy="242" r="54"/>
+        <circle class="m" cx="696" cy="242" r="6" fill="#fff"/>
+        <g id="chambers"></g>
+      </g>
+      <text class="lbl" id="loaded" x="696" y="540" text-anchor="middle">Hold to load</text>
+    </g>
+  </svg>
+  <p class="hint" id="hint">Press and hold the revolver · five questions, five chambers</p>
+  <h1>Every duel moves the number.</h1>
+  <button class="btn" type="button" id="go" disabled>Start duel</button>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const lerp=(a,b,k)=>a+(b-a)*k, easeIn=k=>k*k*k, easeOut=k=>1-Math.pow(1-k,3), back=k=>{const c=1.5;return 1+(c+1)*Math.pow(k-1,3)+c*Math.pow(k-1,2)};
+const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+const $=id=>document.getElementById(id);
+
+/* ---------------- the rating: seed 1000, which is level 3 of ten ---------------- */
+const LADDER=[[1,800],[801,950],[951,1100],[1101,1250],[1251,1400],[1401,1550],[1551,1700],[1701,1850],[1851,2000],[2001,Infinity]];
+const levelOf=r=>LADDER.findIndex(([a,b])=>r>=a&&r<=b)+1;
+for(let i=0;i<10;i++){ const a=(-90+i*36)*Math.PI/180; el('line',{class:'tick',x1:240+132*Math.cos(a),y1:250+132*Math.sin(a),x2:240+140*Math.cos(a),y2:250+140*Math.sin(a)},$('ticks')); }
+const RATING=1000, L=levelOf(RATING), [lo,hi]=LADDER[L-1];
+tween(1300,k=>{ const r=Math.round(RATING*k), l=Math.max(1,levelOf(r)); $('elo').textContent=r; $('lvl').textContent=l; $('arc').setAttribute('stroke-dasharray',`${l*10*k} 100`);
+  const [a,b]=LADDER[l-1]; $('band').textContent=`Level ${l} · ${a} – ${b===Infinity?'':b}`.replace(' – $',' +'); });
+
+/* ---------------- the revolver: hold to swing the cylinder out and load it ---------------- */
+const CX=696, CY=242, N=6, TO_LOAD=5; const cyl=$('cyl'), chambers=$('chambers'), loadedT=$('loaded'), hint=$('hint'), go=$('go');
+const slots=[]; for(let i=0;i<N;i++){ const a=(-90+i*60)*Math.PI/180; const x=CX+33*Math.cos(a), y=CY+33*Math.sin(a); const c=el('circle',{class:'chamber',cx:x,cy:y,r:12},chambers); slots.push({x,y,c,round:null}); }
+let holding=false, open=false, loaded=0, busy=false, timer=null;
+async function swingOut(){ busy=true; open=true; hint.textContent='Loading';
+  await tween(420,k=>cyl.setAttribute('transform',`translate(${-92*k} ${18*k}) rotate(${-22*k} ${CX} ${CY})`),back); busy=false; }
+async function swingIn(){ busy=true;
+  await tween(360,k=>cyl.setAttribute('transform',`translate(${-92*(1-k)} ${18*(1-k)}) rotate(${-22*(1-k)} ${CX} ${CY})`),easeOut);
+  await tween(120,k=>cyl.setAttribute('transform',`translate(${3*Math.sin(Math.PI*k)} 0)`)); cyl.removeAttribute('transform');   // the click
+  open=false; busy=false; hint.textContent=loaded===TO_LOAD?'Loaded · five questions':`${loaded} of five loaded · hold to load the rest`; }
+async function load(i){ const s=slots[i]; const g=el('g',{},chambers); s.round=g;
+  el('circle',{class:'round',cx:s.x,cy:s.y,r:10},g); el('circle',{class:'primer',cx:s.x,cy:s.y,r:3.2},g);
+  await tween(260,k=>g.setAttribute('transform',`translate(0 ${-26*(1-k)}) `),easeIn);
+  await tween(160,k=>g.setAttribute('transform',`scale(${1+.12*Math.sin(Math.PI*k)})`+` `),easeOut); g.removeAttribute('transform');
+  loaded=i+1; loadedT.textContent=`${loaded} of 5`; go.disabled=loaded<TO_LOAD; }
+async function unload(){ for(const s of slots){ if(s.round){ const g=s.round; s.round=null; tween(220,k=>{ g.setAttribute('transform',`translate(0 ${30*k})`); g.setAttribute('opacity',1-k); }).then(()=>g.remove()); await wait(60); } } loaded=0; loadedT.textContent='Hold to load'; go.disabled=true; }
+function tickLoad(){ if(!holding||!open) return; if(loaded<TO_LOAD){ load(loaded).then(()=>{ if(holding) timer=setTimeout(tickLoad,300); }); } }
+const gun=$('gun');
+gun.addEventListener('pointerdown', async e=>{ if(busy) return; try{ gun.setPointerCapture(e.pointerId); }catch(_){} holding=true;
+  timer=setTimeout(async ()=>{ if(!holding) return; if(loaded===TO_LOAD){ await swingOut(); await unload(); return; } await swingOut(); tickLoad(); }, 300); });
+const release=async ()=>{ if(!holding) return; holding=false; clearTimeout(timer); if(open&&!busy) swingIn(); else if(open){ const w=setInterval(()=>{ if(!busy){ clearInterval(w); if(open) swingIn(); } },30); } };
+['pointerup','pointercancel','pointerleave'].forEach(ev=>gun.addEventListener(ev,release));
+/* -- ROUTER SEAM ------------------------------------------------------------ */
+go.addEventListener('click', ()=>console.log('[router] /duel', {rating:RATING, level:L, questions:loaded}));
+</script>
+
+</body></html>

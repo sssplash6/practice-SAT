@@ -1,0 +1,134 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Thumb War</title>
+<style>
+  :root { --paper:#FFFFFF; }
+  html, body { height:100%; }
+  body { margin:0; background:var(--paper); overflow:hidden; cursor:default; }
+  .hero { min-height:100%; display:flex; align-items:center; justify-content:center; box-sizing:border-box; padding-block:16px; padding-inline:16px; }
+  #stage { width:min(720px, 94vw); max-width:100%; aspect-ratio:5/4; display:block; }
+  canvas { display:block; width:100%; height:100%; }
+</style>
+<main class="hero"><div id="stage"></div></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+if(!window.THREE){ return; }
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const stage=document.getElementById('stage');
+
+/* ---------------------------------------------------------------- colour: one graphite, one orange, white */
+const lin=h=>new THREE.Color(h).convertSRGBToLinear();
+const GRAPHITE=lin(0x3F3F3F), ORANGE=lin(0xF18508), HOT=lin(0xE2481A);
+const matte=()=>new THREE.MeshStandardMaterial({color:GRAPHITE.clone(), roughness:.9, metalness:0});
+
+/* ---------------------------------------------------------------- scene, camera, light */
+const renderer=new THREE.WebGLRenderer({antialias:true, alpha:false});
+renderer.setPixelRatio(Math.min(devicePixelRatio||1,2)); renderer.setClearColor(0xffffff,1);
+renderer.outputEncoding=THREE.sRGBEncoding; renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+stage.appendChild(renderer.domElement);
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0xffffff);
+const camera=new THREE.PerspectiveCamera(26,1.25,.1,60); camera.position.set(.3,4.9,4.5); camera.lookAt(0,.45,-.1);
+scene.add(new THREE.HemisphereLight(0xffffff,0x999999,.5));
+scene.add(new THREE.AmbientLight(0xffffff,.22));
+const key=new THREE.DirectionalLight(0xffffff,1.0); key.position.set(2.4,7,3.2); key.castShadow=true;
+key.shadow.mapSize.set(2048,2048); key.shadow.camera.near=.5; key.shadow.camera.far=20; key.shadow.camera.left=key.shadow.camera.bottom=-4; key.shadow.camera.right=key.shadow.camera.top=4; key.shadow.bias=-.0006; key.shadow.normalBias=.02;
+scene.add(key);
+const fill=new THREE.DirectionalLight(0xffffff,.28); fill.position.set(-4,2.5,2); scene.add(fill);
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(30,30), new THREE.ShadowMaterial({opacity:.17}));
+ground.rotation.x=-Math.PI/2; ground.position.y=0; ground.receiveShadow=true; scene.add(ground);
+
+/* ---------------------------------------------------------------- one sculptural object: two hands, built as one and mirrored */
+function capsule(r,L,seg=10){ const pts=[]; for(let i=0;i<=seg;i++){ const a=-Math.PI/2+(i/seg)*Math.PI/2; pts.push(new THREE.Vector2(r*Math.cos(a),-L/2+r*Math.sin(a))); }
+  for(let i=0;i<=seg;i++){ const a=(i/seg)*Math.PI/2; pts.push(new THREE.Vector2(r*Math.cos(a),L/2+r*Math.sin(a))); } return new THREE.LatheGeometry(pts,30); }
+const shadowed=m=>{ m.castShadow=true; m.receiveShadow=true; return m; };
+function segment(r,L,m,knuckle){ const j=new THREE.Group(); const body=shadowed(new THREE.Mesh(capsule(r,L),m)); body.position.y=L/2; j.add(body);
+  if(knuckle){ const k=shadowed(new THREE.Mesh(new THREE.SphereGeometry(r*knuckle,22,16),m)); j.add(k); } j.userData.L=L; return j; }
+function chain(spec,m){ const root=new THREE.Group(); let parent=root; const joints=[];
+  spec.forEach((s,i)=>{ const j=segment(s.r,s.L,m,s.k); j.position.y=i?spec[i-1].L:0; j.rotation.z=s.bend; j.userData.bend=s.bend; parent.add(j); joints.push(j); parent=j; });
+  return {root,joints}; }
+
+function buildHand(){
+  const h=new THREE.Group(), m=matte(); h.userData.mat=m;
+  const palm=shadowed(new THREE.Mesh(new THREE.SphereGeometry(1,44,30),m)); palm.scale.set(.6,.46,.68); palm.position.set(.14,.02,0); h.add(palm);
+  const heel=shadowed(new THREE.Mesh(new THREE.SphereGeometry(1,32,22),m)); heel.scale.set(.42,.36,.5); heel.position.set(.45,-.1,-.25); h.add(heel);
+  const up=new THREE.Vector3(0,1,0), d=new THREE.Vector3(.5,-.28,-.82).normalize();
+  const wrist=shadowed(new THREE.Mesh(capsule(.34,2.2),m)); wrist.quaternion.setFromUnitVectors(up,d); wrist.position.copy(d.clone().multiplyScalar(1.2).add(new THREE.Vector3(.45,-.08,-.3))); h.add(wrist);
+  h.userData.fingers=[];
+  [[-.46,.9],[-.16,1],[.15,1],[.45,.84]].forEach(([z,s])=>{                                       // index to little, hooked over the other hand
+    const c=chain([{r:.155*s,L:.42*s,bend:1.2,k:1.18},{r:.145*s,L:.34*s,bend:.98,k:1.12},{r:.13*s,L:.27*s,bend:1.05,k:1.08}],m);
+    c.root.position.set(-.3,.3,z); c.root.rotation.x=z*.3; h.add(c.root); h.userData.fingers.push(c); });
+  const mats=[matte(),matte()];                                                                     // the thumb has its own colour
+  const pivot=new THREE.Group(); pivot.position.set(-.16,.4,-.1); h.add(pivot);
+  const base=segment(.19,.46,mats[0],1.12), tip=segment(.17,.4,mats[1],1.06); tip.position.y=.46; tip.rotation.z=.16; base.add(tip); pivot.add(base);
+  h.userData.thumb={pivot,base,tip,mats,restY:.4};
+  return h;
+}
+const root=new THREE.Group(); scene.add(root);
+const right=buildHand(); right.position.set(.63,.74,-.13); root.add(right);
+const left=buildHand();  left.position.set(-.63,.74,.13); left.scale.x=-1; root.add(left);
+root.position.y=.02;
+
+/* ---------------------------------------------------------------- the beam: a soft column of orange, the only light in the piece */
+const tex=(()=>{ const c=document.createElement('canvas'); c.width=4; c.height=256; const g=c.getContext('2d'); const gr=g.createLinearGradient(0,0,0,256);
+  gr.addColorStop(0,'rgba(241,133,8,0)'); gr.addColorStop(.35,'rgba(241,133,8,.35)'); gr.addColorStop(1,'rgba(241,133,8,.92)'); g.fillStyle=gr; g.fillRect(0,0,4,256); const t=new THREE.CanvasTexture(c); t.encoding=THREE.sRGBEncoding; return t; })();
+const BEAM_H=2.6;
+const beam=new THREE.Mesh(new THREE.CylinderGeometry(.17,.21,BEAM_H,36,1,true), new THREE.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,side:THREE.DoubleSide,opacity:0}));
+beam.visible=false; scene.add(beam);
+
+/* ---------------------------------------------------------------- motion: six seconds, one clock, everything a function of it */
+const ss=(a,b,t)=>{ const k=Math.min(1,Math.max(0,(t-a)/(b-a))); return k*k*(3-2*k); };
+const bump=(t,t0,w)=>{ const k=(t-t0)/w; return k<0||k>1?0:Math.pow(Math.sin(Math.PI*k),2); };
+const spring=(v,damp,freq)=>v<0?0:Math.exp(-v*damp)*Math.cos(v*freq);          // 1 at v=0, settling
+const lerp=(a,b,k)=>a+(b-a)*k;
+const tmp=new THREE.Vector3();
+
+function pose(T,loop){
+  const winner=loop%2?left:right, loser=loop%2?right:left, sign=winner===right?-1:1;
+  /* the count: four heavy beats, wrist-driven */
+  let bobY=0, pitch=0, rock=0, shiftX=0;
+  if(T<1.6){ const u=(T%.4)/.4; const b=u<.28?Math.pow(u/.28,2):spring(u-.28,7,20); bobY=-.16*b; pitch=-.11*b; }
+  /* the break: thumbs drop and circle opposite ways, loose and arrhythmic */
+  const loose=ss(1.6,1.85,T)*(1-ss(3.4,3.58,T)), circ=loose*(1-.5*ss(2.4,2.6,T));
+  const phi=(T-1.6)*Math.PI*2*1.5+.6*Math.sin(T*7.3);
+  let zr=.15+circ*.36*Math.sin(phi),        xr=-.15+loose*.5+circ*.3*Math.cos(phi);
+  let zl=.15+circ*.36*Math.sin(-phi+1.2),   xl=-.15+loose*.5+circ*.3*Math.cos(-phi+1.2);
+  zr+=.5*bump(T,1.95,.16); zl-=.35*bump(T,2.02,.14); xl-=.2*bump(T,2.02,.14);           // a dart, a flinch
+  /* the struggle: two near-misses, the second catches a corner and slips */
+  zr+=.55*bump(T,2.68,.22); zl+=.55*bump(T,2.76,.22);
+  zr+=.62*bump(T,3.1,.2);  zl+=.62*bump(T,3.12,.2); zr-=.3*bump(T,3.3,.12); zl-=.3*bump(T,3.3,.12);
+  rock=.045*spring(T-2.78,6,24)*(T>2.78?1:0)+.07*spring(T-3.22,6,24)*(T>3.22?1:0);
+  /* the pin: one drops flat and hard across the other; the whole mass takes the hit */
+  const pinK=Math.pow(ss(3.4,3.58,T),2.2);
+  const relW=ss(5.0,5.5,T), relL=ss(5.15,5.78,T);
+  const pinW=pinK*(1-relW), pinL=pinK*(1-relL);
+  shiftX=.045*sign*spring(T-3.58,9,26)*(T>3.58?1:0); bobY+=-.02*spring(T-3.58,9,26)*(T>3.58?1:0);
+  /* the reset: grip re-settles */
+  bobY+=-.05*spring(T-5.6,7,20)*(T>5.6?1:0);
+  root.position.set(shiftX,.02+bobY,0); root.rotation.set(pitch,0,rock);
+  /* apply thumbs */
+  const set=(hand,z,x,pin,flatZ,lift)=>{ const th=hand.userData.thumb; th.pivot.rotation.z=lerp(z,flatZ,pin); th.pivot.rotation.x=lerp(x,0,pin); th.pivot.position.y=th.restY+lift*pin; th.tip.rotation.z=lerp(.16,.05,pin); };
+  const zw=winner===right?zr:zl, xw=winner===right?xr:xl, zL=winner===right?zl:zr, xL=winner===right?xl:xr;
+  set(winner,zw,xw,pinW,1.78,.27); set(loser,zL,xL,pinL,1.5,0);
+  /* knuckles flex faintly while the thumbs are loose */
+  [right,left].forEach((h,hi)=>h.userData.fingers.forEach((c,i)=>{ c.joints[1].rotation.z=c.joints[1].userData.bend+loose*.05*Math.sin(T*9+i*1.7+hi*2.1); }));
+  /* the beam: heat travels under the skin of the pinned thumb, then lifts off and takes the colour with it */
+  const baseHeat=ss(4.0,4.3,T), tipHeat=ss(4.08,4.45,T), deepen=ss(4.3,4.55,T), cool=ss(4.55,4.98,T);
+  const lm=loser.userData.thumb.mats, wm=winner.userData.thumb.mats;
+  lm[0].color.copy(GRAPHITE).lerp(ORANGE,baseHeat*(1-cool));
+  lm[1].color.copy(GRAPHITE).lerp(ORANGE,tipHeat*(1-cool)).lerp(HOT,deepen*(1-cool)*.85);
+  wm[0].color.copy(GRAPHITE); wm[1].color.copy(GRAPHITE);
+  const grow=ss(4.4,4.64,T), rise=ss(4.58,5.0,T);
+  if(grow>0&&rise<1){ beam.visible=true; loser.userData.thumb.tip.getWorldPosition(tmp);
+    beam.scale.set(1,Math.max(.001,grow),1); beam.position.set(tmp.x,tmp.y+BEAM_H/2*grow+1.5*rise,tmp.z); beam.material.opacity=grow*(1-rise); }
+  else beam.visible=false;
+}
+
+/* ---------------------------------------------------------------- run */
+function resize(){ const w=stage.clientWidth, h=stage.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+addEventListener('resize',resize); resize();
+const t0=performance.now(); const LOOP=6;
+(function frame(now){ const e=reduce?0:(now-t0)/1000; pose(e%LOOP,Math.floor(e/LOOP)); renderer.render(scene,camera); requestAnimationFrame(frame); })(t0);
+})();
+</script>
+
+</body></html>

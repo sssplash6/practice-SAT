@@ -1,0 +1,130 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Arm Wrestle</title>
+<style>
+  :root { --paper:#FFFFFF; }
+  html, body { height:100%; }
+  body { margin:0; background:var(--paper); overflow:hidden; cursor:default; }
+  .hero { min-height:100%; display:flex; align-items:center; justify-content:center; box-sizing:border-box; padding-block:16px; padding-inline:16px; }
+  #stage { width:min(780px, 94vw); max-width:100%; aspect-ratio:3/2; display:block; }
+  canvas { display:block; width:100%; height:100%; }
+</style>
+<main class="hero"><div id="stage"></div></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+if(!window.THREE) return;
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const stage=document.getElementById('stage');
+
+/* ---------------------------------------------------------------- colour */
+const lin=h=>new THREE.Color(h).convertSRGBToLinear();
+const GRAPHITE=lin(0x3F3F3F), PALE=lin(0x666666), ORANGE=lin(0xF18508), HOT=lin(0xE2481A);
+const matte=()=>new THREE.MeshStandardMaterial({color:GRAPHITE.clone(), roughness:.92, metalness:0});
+
+/* ---------------------------------------------------------------- scene: side-on, slightly low, soft key from upper left */
+const renderer=new THREE.WebGLRenderer({antialias:true}); renderer.setPixelRatio(Math.min(devicePixelRatio||1,2)); renderer.setClearColor(0xffffff,1);
+renderer.outputEncoding=THREE.sRGBEncoding; renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap; stage.appendChild(renderer.domElement);
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0xffffff);
+const camera=new THREE.PerspectiveCamera(22,1.5,.1,80); camera.position.set(0,.95,8.7); camera.lookAt(0,1.2,0);
+scene.add(new THREE.HemisphereLight(0xffffff,0x8a8a8a,.45)); scene.add(new THREE.AmbientLight(0xffffff,.2));
+const key=new THREE.DirectionalLight(0xffffff,1.05); key.position.set(-4.5,6.5,3.5); key.castShadow=true;
+key.shadow.mapSize.set(2048,2048); key.shadow.camera.near=1; key.shadow.camera.far=25; key.shadow.camera.left=key.shadow.camera.bottom=-5; key.shadow.camera.right=key.shadow.camera.top=5; key.shadow.bias=-.0005; key.shadow.normalBias=.03; scene.add(key);
+const fill=new THREE.DirectionalLight(0xffffff,.22); fill.position.set(4,2,4); scene.add(fill);
+const table=new THREE.Mesh(new THREE.PlaneGeometry(40,40), new THREE.ShadowMaterial({opacity:.2})); table.rotation.x=-Math.PI/2; table.receiveShadow=true; scene.add(table);
+
+/* ---------------------------------------------------------------- the arms: clay from elbow to hand, lengths follow the lock */
+function capsule(r,L,seg=10){ const pts=[]; for(let i=0;i<=seg;i++){ const a=-Math.PI/2+(i/seg)*Math.PI/2; pts.push(new THREE.Vector2(r*Math.cos(a),-L/2+r*Math.sin(a))); }
+  for(let i=0;i<=seg;i++){ const a=(i/seg)*Math.PI/2; pts.push(new THREE.Vector2(r*Math.cos(a),L/2+r*Math.sin(a))); } return new THREE.LatheGeometry(pts,32); }
+const shadowed=m=>{ m.castShadow=true; m.receiveShadow=true; return m; };
+const UP=new THREE.Vector3(0,1,0);
+const A=.62, EY=.3, M=new THREE.Vector3(0,EY+.05,0), R=1.85;            // elbows at ±A, the lock swings about M at radius R
+
+function buildArm(side){
+  const g=new THREE.Group(), m=matte(); g.userData={side,mat:m};
+  const E=new THREE.Vector3(side*A,EY,0); g.userData.E=E;
+  const elbow=shadowed(new THREE.Mesh(new THREE.SphereGeometry(.31,36,24),m)); elbow.position.copy(E); g.add(elbow);
+  const upper=shadowed(new THREE.Mesh(capsule(.37,5),m)); const ud=new THREE.Vector3(side*1,.32,-1.1).normalize();
+  upper.quaternion.setFromUnitVectors(UP,ud); upper.position.copy(E).addScaledVector(ud,2.6); g.add(upper);                       // upper arm leaves the frame toward the shoulder
+  const fore=new THREE.Group(); g.add(fore); g.userData.fore=fore;                                                                   // oriented elbow -> hand each frame
+  const rad=u=>.3-.07*u; const segs=[0,1,2].map(i=>{ const mat=matte(); const s=shadowed(new THREE.Mesh(new THREE.CylinderGeometry(rad((i+1)/3),rad(i/3),1,36,1,false),mat)); s.userData.mat=mat; fore.add(s); return s; });   // wrist-ward thirds take the colour in turn
+  g.userData.segs=segs;
+  const bulge=shadowed(new THREE.Mesh(capsule(.16,1),m)); fore.add(bulge); g.userData.bulge=bulge;                                    // the muscle beside the bone, so the hollow reads
+  const tendonMat=matte(); const tendon=shadowed(new THREE.Mesh(capsule(.07,1),tendonMat)); fore.add(tendon); g.userData.tendon=tendon; g.userData.tendonMat=tendonMat;
+  return g;
+}
+const root=new THREE.Group(); scene.add(root);
+const left=buildArm(-1), right=buildArm(1); root.add(left,right);
+
+/* the lock: one mass of two hands, knuckles facing us */
+const lock=new THREE.Group(); root.add(lock); const knuckleMat=matte();
+const palmA=shadowed(new THREE.Mesh(new THREE.SphereGeometry(1,40,28),matte())); palmA.scale.set(.36,.4,.3); palmA.position.set(-.1,0,.02); lock.add(palmA);
+const palmB=shadowed(new THREE.Mesh(new THREE.SphereGeometry(1,40,28),matte())); palmB.scale.set(.36,.4,.3); palmB.position.set(.1,-.02,-.02); lock.add(palmB);
+const knuckles=[[-.22,.16,.26],[-.08,.24,.27],[.07,.24,.27],[.2,.16,.26]].map(([x,y,z])=>{ const k=shadowed(new THREE.Mesh(new THREE.SphereGeometry(.105,20,14),knuckleMat)); k.position.set(x,y,z); lock.add(k); return k; });
+const thumb=shadowed(new THREE.Mesh(capsule(.11,.34),knuckleMat)); thumb.position.set(.02,.3,.12); thumb.rotation.z=-.5; lock.add(thumb);
+
+/* ---------------------------------------------------------------- the beam */
+const tex=(()=>{ const c=document.createElement('canvas'); c.width=4; c.height=256; const g=c.getContext('2d'); const gr=g.createLinearGradient(0,0,0,256);
+  gr.addColorStop(0,'rgba(241,133,8,0)'); gr.addColorStop(.4,'rgba(241,133,8,.35)'); gr.addColorStop(1,'rgba(241,133,8,.9)'); g.fillStyle=gr; g.fillRect(0,0,4,256); const t=new THREE.CanvasTexture(c); t.encoding=THREE.sRGBEncoding; return t; })();
+const BEAM_H=2.8;
+const beam=new THREE.Mesh(new THREE.CylinderGeometry(.22,.3,BEAM_H,40,1,true), new THREE.MeshBasicMaterial({map:tex,transparent:true,depthWrite:false,side:THREE.DoubleSide,opacity:0}));
+beam.visible=false; scene.add(beam);
+
+/* ---------------------------------------------------------------- motion: seven seconds on one clock */
+const ss=(a,b,t)=>{ const k=Math.min(1,Math.max(0,(t-a)/(b-a))); return k*k*(3-2*k); };
+const lerp=(a,b,k)=>a+(b-a)*k, rad=d=>d*Math.PI/180;
+const tremor=t=>Math.sin(t*37.1)*.5+Math.sin(t*61.7+1.3)*.3+Math.sin(t*23.3+2.1)*.2+Math.sin(t*97.9)*.15;   // irregular, never a rhythm
+const settle=(v,damp,freq)=>v<0?0:Math.exp(-v*damp)*Math.cos(v*freq);
+const dir=new THREE.Vector3(), tmp=new THREE.Vector3(), H=new THREE.Vector3();
+
+function layArm(arm,H,thick,slack){
+  const {E,fore,segs,bulge,tendon}=arm.userData; dir.copy(H).sub(E); const L=dir.length(); dir.normalize();
+  fore.position.copy(E); fore.quaternion.setFromUnitVectors(UP,dir);
+  segs.forEach((s,i)=>{ s.scale.set(thick,L/3+.01,thick); s.position.y=(i+.5)*L/3; });
+  bulge.scale.set(thick,L*.5,thick); bulge.position.set(.1*arm.userData.side*-1,L*.42,.2);            // sits toward the light, above the bone
+  tendon.scale.set(1,L*.36,1); tendon.position.set(0,L*.72,.25);
+}
+
+function pose(T,loop){
+  const loserSide=loop%2?1:-1, loser=loserSide<0?left:right, winner=loserSide<0?right:left;
+  /* the apex angle, in degrees, positive to the right */
+  let th=0;
+  if(T<1.2) th=0;
+  else if(T<1.95) th=-15*ss(1.2,1.95,T)+1.4*Math.sin((T-1.2)*13)*ss(1.2,1.4,T)*(1-ss(1.8,1.95,T));      // fighting for every degree
+  else if(T<2.15) th=-15;
+  else if(T<2.6) th=lerp(-15,20,ss(2.15,2.6,T));
+  else if(T<2.95) th=lerp(20,2,ss(2.6,2.95,T));
+  else if(T<3.8) th=2;
+  else if(T<4.35){ const k=Math.pow(Math.min(1,(T-3.8)/.55),3.2); th=lerp(2,90*loserSide,k); }          // gives all at once, no bounce
+  else if(T<5.6) th=90*loserSide;
+  else th=lerp(90*loserSide,0,ss(5.6,7.0,T));
+  /* tremor envelope: fine in the lock, peaks in the stall, gone at the break */
+  const amp = T<1.2? .55 : T<2.6? .35 : T<3.8? lerp(.6,1.4,ss(2.6,3.2,T)) : T<5.6? 0 : .25*ss(6.2,7,T);
+  th+=amp*tremor(T)*.9;
+  const a=rad(th); H.copy(M).add(tmp.set(Math.sin(a)*R,Math.cos(a)*R,0));
+  /* tension: forearms thicken as it loads; the loser goes limp after the break */
+  const load=ss(0,1.2,T)*(1-ss(3.8,4.35,T)), reload=ss(5.6,7,T)*.5;
+  const thickW=1+.06*(load+reload), thickL=1+.06*load*(1-ss(3.8,4.35,T));
+  layArm(winner,H,thickW,0); layArm(loser,H,thickL,1);
+  lock.position.copy(H); lock.position.x+=amp*tremor(T*1.3)*.012; lock.position.y+=amp*tremor(T*.9+4)*.01; lock.rotation.z=-a*.85;
+  knuckleMat.color.copy(GRAPHITE).lerp(PALE,.8*load);                                                  // knuckles whiten in tone
+  /* the jolt on impact, settled in 150 ms */
+  const j=T>=4.35?settle(T-4.35,22,42):0; root.position.set(.05*loserSide*j,-.03*j,0);
+  /* the beam: strain floods the pinned forearm from the wrist back, then lifts off and drains it */
+  const heat=[ss(4.4,4.75,T),ss(4.55,4.92,T),ss(4.7,5.08,T)], deep=ss(4.6,5.05,T), drain=ss(5.15,5.7,T);
+  loser.userData.segs.forEach((s,i)=>s.userData.mat.color.copy(GRAPHITE).lerp(ORANGE,heat[2-i]*(1-drain)).lerp(HOT,deep*(1-drain)*.35));
+  loser.userData.tendonMat.color.copy(GRAPHITE).lerp(HOT,deep*(1-drain));
+  winner.userData.segs.forEach(s=>s.userData.mat.color.copy(GRAPHITE)); winner.userData.tendonMat.color.copy(GRAPHITE);
+  const grow=ss(4.95,5.2,T), rise=ss(5.15,5.85,T);
+  if(grow>0&&rise<1){ beam.visible=true; loser.userData.segs[1].getWorldPosition(tmp);
+    beam.scale.set(1,Math.max(.001,grow),1); beam.position.set(tmp.x,tmp.y+BEAM_H/2*grow+1.6*rise,tmp.z); beam.material.opacity=grow*(1-rise); }
+  else beam.visible=false;
+}
+
+function resize(){ const w=stage.clientWidth,h=stage.clientHeight; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+addEventListener('resize',resize); resize();
+const t0=performance.now(), LOOP=7;
+(function frame(now){ const e=reduce?0:(now-t0)/1000; pose(e%LOOP,Math.floor(e/LOOP)); renderer.render(scene,camera); requestAnimationFrame(frame); })(t0);
+})();
+</script>
+
+</body></html>

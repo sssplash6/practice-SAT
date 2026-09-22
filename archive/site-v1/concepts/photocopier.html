@@ -1,0 +1,91 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Photocopier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root { --paper:#FFFFFF; --ink:#3F3F3F; --amber:#F18508; --line:#E4E1DC; --soft:#8A847C; --font:"Archivo","Helvetica Neue",system-ui,sans-serif; --mono:"DM Mono",ui-monospace,monospace; --ease:cubic-bezier(.2,.8,.2,1); }
+  html, body { height:100%; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+  .screen { min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(18px,3vh,30px); padding:32px 24px 48px; text-align:center; }
+  svg.scene { width:min(680px,92vw); aspect-ratio:700/460; display:block; overflow:visible; cursor:pointer; }
+  h1 { margin:0; font-size:clamp(2rem,6vw,3.4rem); font-weight:900; letter-spacing:-.04em; line-height:.98; }
+  .btn { font:800 15px var(--font); min-height:52px; padding:0 32px; border:0; border-radius:999px; background:var(--amber); color:#fff; cursor:pointer; box-shadow:0 10px 30px -14px rgba(241,133,8,.9); transition:transform .18s var(--ease), opacity .3s var(--ease); }
+  .btn:hover { transform:translateY(-1px); } .btn[disabled] { opacity:.35; cursor:default; box-shadow:none; transform:none; }
+  .hint { font:11px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--soft); }
+  .body { fill:#F3F1ED; stroke:var(--ink); stroke-width:1.5; }
+  .lid { fill:#FAF9F7; stroke:var(--ink); stroke-width:1.5; }
+  .glass { fill:#2E2C29; opacity:.55; }
+  .bar { fill:var(--amber); }
+  .glow { fill:var(--amber); opacity:.5; filter:url(#blur); }
+  .panel { fill:#fff; stroke:var(--ink); stroke-width:1; }
+  .key { fill:var(--ink); }
+  .tray { fill:none; stroke:var(--ink); stroke-width:1.5; }
+  .sheet { fill:#fff; stroke:var(--ink); stroke-width:1.2; }
+  .sheet line { stroke:var(--line); stroke-width:1.5; }
+  .sheet text { font:900 22px var(--font); fill:var(--ink); letter-spacing:-.04em; }
+  .shadow { fill:#3F3F3F; opacity:.07; }
+  .counter { font:500 11px var(--mono); fill:var(--soft); letter-spacing:.14em; text-transform:uppercase; }
+</style>
+
+<main class="screen">
+  <svg class="scene" id="scene" viewBox="0 0 700 460" aria-hidden="true">
+    <defs><filter id="blur" x="-50%" y="-200%" width="200%" height="500%"><feGaussianBlur stdDeviation="6"/></filter></defs>
+    <g id="machine">
+      <rect class="shadow" x="126" y="216" width="380" height="200" rx="16"/>
+      <rect class="body" x="120" y="200" width="380" height="200" rx="14"/>
+      <rect class="glass" x="140" y="199" width="340" height="7" rx="2"/>
+      <rect class="glow" id="glow" x="140" y="192" width="40" height="20" rx="8" opacity="0"/>
+      <rect class="bar" id="bar" x="140" y="199" width="34" height="7" rx="2" opacity="0"/>
+      <rect class="lid" id="lid" x="120" y="166" width="380" height="36" rx="8"/>
+      <rect class="panel" x="404" y="176" width="80" height="16" rx="4"/>
+      <circle class="key" cx="470" cy="184" r="4"/><rect class="key" x="414" y="181" width="10" height="6" rx="1"/><rect class="key" x="430" y="181" width="10" height="6" rx="1"/><rect class="key" x="446" y="181" width="10" height="6" rx="1"/>
+      <rect class="tray" x="500" y="300" width="70" height="10" rx="3"/>
+      <path class="tray" d="M500 300 h-14 v-40 h14"/>
+    </g>
+    <g id="out"></g>
+    <text class="counter" id="count" x="535" y="340" text-anchor="middle">0 copies</text>
+  </svg>
+  <p class="hint" id="hint">Tap to copy</p>
+  <h1>An exact copy.</h1>
+  <button class="btn" type="button" id="go" disabled>Start mock</button>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const lerp=(a,b,k)=>a+(b-a)*k, easeOut=k=>1-Math.pow(1-k,3), easeInOut=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
+const wait=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
+const $=id=>document.getElementById(id);
+const machine=$('machine'), bar=$('bar'), glow=$('glow'), out=$('out'), count=$('count'), hint=$('hint'), go=$('go');
+let busy=false, n=0;
+
+function sheet(){ const g=el('g',{class:'sheet'},out); el('rect',{x:0,y:0,width:120,height:160,rx:3},g);
+  const t=el('text',{x:60,y:40,'text-anchor':'middle'},g); t.textContent='SAT';
+  [64,82,100,118,136].forEach((y,i)=>el('line',{x1:18,y1:y,x2:18+[84,60,84,48,72][i],y2:y},g)); return g; }
+
+async function copy(){
+  if(busy) return; busy=true; hint.textContent='Copying';
+  // the machine shifts its weight
+  await tween(160, k=>machine.setAttribute('transform',`translate(0 ${2.5*Math.sin(Math.PI*k)})`));
+  // the light bar sweeps under the glass, left to right
+  bar.setAttribute('opacity',1); glow.setAttribute('opacity',.5);
+  await tween(900, k=>{ const x=lerp(140,446,k); bar.setAttribute('x',x); glow.setAttribute('x',x-3); }, easeInOut);
+  bar.setAttribute('opacity',0); glow.setAttribute('opacity',0);
+  await wait(180);
+  // a warm sheet slides out of the side tray and settles
+  const g=sheet(); n++; const off=Math.min(n-1,5);
+  const x0=430, x1=500+off*2.5, y=304-160+off*1.5;  // stacks with a slight offset
+  g.setAttribute('transform',`translate(${x0} ${y})`); g.setAttribute('opacity',0);
+  await tween(620, k=>{ g.setAttribute('transform',`translate(${lerp(x0,x1,k)} ${y-6*(1-k)})`); g.setAttribute('opacity',Math.min(1,k*3)); });
+  await tween(160, k=>g.setAttribute('transform',`translate(${x1} ${y+6*Math.sin(Math.PI*k)*.5})`));
+  if(out.children.length>6) out.removeChild(out.firstChild);
+  count.textContent=`${n} ${n===1?'copy':'copies'}`; hint.textContent='Tap for another · identical'; go.disabled=false; busy=false;
+}
+$('scene').addEventListener('pointerdown', copy);
+/* -- ROUTER SEAM ---------------------------------------------------------- */
+go.addEventListener('click', ()=>console.log('[router] /mock'));
+</script>
+
+</body></html>

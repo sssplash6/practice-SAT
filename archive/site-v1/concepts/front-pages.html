@@ -1,0 +1,555 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>SAT Freshman Front Pages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #FFFFFF; --ink: #3F3F3F; --amber: #F18508;
+    --mute: #CFCAC2; --line: #E8E5E0; --soft: #8A847C;
+    --font: "Archivo", "Helvetica Neue", system-ui, sans-serif;   /* placeholder type */
+    --mono: "DM Mono", ui-monospace, monospace;
+    --spring: cubic-bezier(.22, 1.1, .3, 1); --ease: cubic-bezier(.2, .8, .2, 1);
+  }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--font); -webkit-font-smoothing: antialiased; }
+  .note { max-width: 780px; margin: 0 auto; padding: 28px 24px 8px; font: 12px var(--mono); letter-spacing: .04em; color: var(--soft); line-height: 1.7; }
+  .sec { padding: 40px 24px 0; font: 11px var(--mono); letter-spacing: .18em; text-transform: uppercase; color: var(--soft); text-align: center; }
+  .stage { position: relative; min-height: 86vh; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center;
+           gap: clamp(22px, 4vh, 40px); padding: 56px 24px 64px; text-align: center; border-top: 1px solid var(--line); }
+  .tag { position: absolute; top: 18px; left: 24px; right: 24px; font: 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft); text-align: left; }
+  .tag b { color: var(--amber); font-weight: 500; }
+  h1 { margin: 0; font-size: clamp(2rem, 6vw, 3.4rem); font-weight: 900; letter-spacing: -.04em; line-height: .98; }
+  .btn { font: 800 15px var(--font); min-height: 52px; padding: 0 32px; border: 0; border-radius: 999px; background: var(--amber); color: #fff; cursor: pointer;
+         box-shadow: 0 10px 30px -14px rgba(241,133,8,.9); transition: transform .18s var(--ease), box-shadow .25s var(--ease); }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 16px 36px -14px rgba(241,133,8,1); } .btn:active { transform: translateY(1px); }
+  .inst { width: min(420px, 84vw); aspect-ratio: 1; display: block; overflow: visible; }
+  .inst.wide { width: min(660px, 92vw); aspect-ratio: 660 / 400; }
+  /* one maker built all of these */
+  .bezel { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; }
+  .m  { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }   /* mechanism */
+  .mf { fill: var(--ink); stroke: none; }                                                                 /* mechanism, solid */
+  .g  { fill: none; stroke: var(--ink); stroke-width: 1; }                                                /* graduations */
+  .gl { fill: none; stroke: var(--mute); stroke-width: 1; }                                               /* light graduations */
+  .p  { fill: #fff; stroke: var(--ink); stroke-width: 2; }                                                /* plates */
+  .live  { fill: none; stroke: var(--amber); stroke-width: 3; stroke-linecap: round; }                    /* the one orange thing */
+  .livef { fill: var(--amber); stroke: none; }
+  .num { font: 900 var(--fs, 28px) var(--font); fill: var(--ink); letter-spacing: -.04em; font-variant-numeric: tabular-nums; }
+  .lbl { font: 500 10px var(--mono); fill: var(--soft); letter-spacing: .12em; text-transform: uppercase; }
+  .lbl.on { fill: var(--amber); }
+  .hint { font: 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--soft); margin-top: -10px; }
+  @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
+</style>
+
+<p class="note">Eighteen instruments, all sketches. Placeholder type: Archivo. Graphite mechanism, one orange live element per instrument, the mark's gapped ring as every bezel. Sections marked <b style="color:var(--amber);font-weight:500">pick</b> were the other chat's recommendation.</p>
+
+<!-- ============================ 1. MOCK ============================ -->
+<p class="sec">1 · Mock tests</p>
+
+<section class="stage">
+  <span class="tag">1A · Pantograph — locked at 1:1, the far point copies the stylus exactly · <b>pick</b> · move your cursor over it</span>
+  <svg class="inst wide" id="panto" viewBox="0 0 660 400" aria-hidden="true"></svg>
+  <h1>Exactly the real thing.</h1>
+  <button class="btn" type="button">Start mock</button>
+</section>
+
+<section class="stage">
+  <span class="tag">1B · Time lock — a vault movement sealing seventy minutes shut · try lifting the lever</span>
+  <svg class="inst wide" id="tlock" viewBox="0 0 660 400" aria-hidden="true"></svg>
+  <h1>Seventy sealed minutes.</h1>
+  <button class="btn" type="button">Start mock</button>
+</section>
+
+<section class="stage">
+  <span class="tag">1C · Totalizer register — wheels that roll continuously, carry cascading left a beat late</span>
+  <svg class="inst wide" id="total" viewBox="0 0 660 400" aria-hidden="true"></svg>
+  <h1>Seventy minutes, start to finish.</h1>
+  <button class="btn" type="button">Start mock</button>
+</section>
+
+<section class="stage">
+  <span class="tag">1D · Copy lathe — the second module's cam is cut from the first's trace</span>
+  <svg class="inst wide" id="lathe" viewBox="0 0 660 400" aria-hidden="true"></svg>
+  <h1>The second half is cut from the first.</h1>
+  <button class="btn" type="button">Start mock</button>
+</section>
+
+<!-- ============================ 2. DOMAIN ============================ -->
+<p class="sec">2 · Domain practice</p>
+
+<section class="stage">
+  <span class="tag">2A · Dividing engine — index to one quadrant, then subdivide it without end · <b>pick</b></span>
+  <svg class="inst" id="divide" viewBox="0 0 400 400" aria-hidden="true"></svg>
+  <h1>As fine as you want to go.</h1>
+  <button class="btn" type="button">Choose a domain</button>
+</section>
+
+<section class="stage">
+  <span class="tag">2B · Turret and fine focus — one objective into the axis, then the drum keeps driving down · click to index</span>
+  <svg class="inst" id="turret" viewBox="0 0 400 400" aria-hidden="true"></svg>
+  <h1>One domain, all the way down.</h1>
+  <button class="btn" type="button">Choose a domain</button>
+</section>
+
+<section class="stage">
+  <span class="tag">2C · Band switch and reduction drive — a big turn becomes a small, precise travel · move your cursor across</span>
+  <svg class="inst wide" id="band" viewBox="0 0 660 400" aria-hidden="true"></svg>
+  <h1>Tune into one.</h1>
+  <button class="btn" type="button">Choose a domain</button>
+</section>
+
+<section class="stage">
+  <span class="tag">2D · Indexing head and quill — lock on one hole, feed down in thousandths · click to index</span>
+  <svg class="inst" id="index" viewBox="0 0 400 400" aria-hidden="true"></svg>
+  <h1>Pick one. Go deep.</h1>
+  <button class="btn" type="button">Choose a domain</button>
+</section>
+
+<!-- ============================ 3. COMBINED ============================ -->
+<p class="sec">3 · Combined practice</p>
+
+<section class="stage">
+  <span class="tag">3A · Four-bank totalizer — four thumbwheels, one sum register with lagging carry · <b>pick</b> · drag a wheel</span>
+  <svg class="inst wide" id="bank" viewBox="0 0 660 400" aria-hidden="true"></svg>
+  <h1>Your four numbers, your total.</h1>
+  <button class="btn" type="button">Build a set</button>
+</section>
+
+<section class="stage">
+  <span class="tag">3B · Four-jaw independent chuck — four screws, one workpiece, centred or not · click a jaw</span>
+  <svg class="inst" id="chuck" viewBox="0 0 400 400" aria-hidden="true"></svg>
+  <h1>Four settings, one set.</h1>
+  <button class="btn" type="button">Build a set</button>
+</section>
+
+<section class="stage">
+  <span class="tag">3C · Change-gear train — alter one gear and the whole train re-expresses itself · click a gear</span>
+  <svg class="inst wide" id="gears" viewBox="0 0 660 400" aria-hidden="true"></svg>
+  <h1>Set the ratio.</h1>
+  <button class="btn" type="button">Build a set</button>
+</section>
+
+<section class="stage">
+  <span class="tag">3D · Composing stick — four slugs justified into one measure</span>
+  <svg class="inst wide" id="stick" viewBox="0 0 660 400" aria-hidden="true"></svg>
+  <h1>Compose the set.</h1>
+  <button class="btn" type="button">Build a set</button>
+</section>
+
+<!-- ============================ 4. DIAGNOSTIC ============================ -->
+<p class="sec">4 · Diagnostic</p>
+
+<section class="stage">
+  <span class="tag">4A · Null-balance bridge — the needle hunts to zero, and the unknown reads out · <b>pick</b></span>
+  <svg class="inst" id="bridge" viewBox="0 0 400 400" aria-hidden="true"></svg>
+  <h1>Twenty questions. One number.</h1>
+  <button class="btn" type="button">Start the diagnostic</button>
+</section>
+
+<section class="stage">
+  <span class="tag">4B · Hydrometer — dropped in, it plunges, bobs, and settles at one line</span>
+  <svg class="inst" id="hydro" viewBox="0 0 400 400" aria-hidden="true"></svg>
+  <h1>Find your level.</h1>
+  <button class="btn" type="button">Start the diagnostic</button>
+</section>
+
+<section class="stage">
+  <span class="tag">4C · Trial lens rack — it clicks through powers until the target is crisp</span>
+  <svg class="inst" id="lens" viewBox="0 0 400 400" aria-hidden="true"></svg>
+  <h1>Twenty clicks to clear.</h1>
+  <button class="btn" type="button">Start the diagnostic</button>
+</section>
+
+<!-- ============================ 5. DUELS ============================ -->
+<p class="sec">5 · Duels</p>
+
+<section class="stage">
+  <span class="tag">5A · Differential into a rating drum — equal inputs hold the carrier still; a gap rolls the number · <b>pick</b></span>
+  <svg class="inst wide" id="diff" viewBox="0 0 660 400" aria-hidden="true"></svg>
+  <h1>Every duel moves the number.</h1>
+  <button class="btn" type="button">Calibrate</button>
+</section>
+
+<section class="stage">
+  <span class="tag">5B · Synchroscope — one needle two people are driving; it stands still when they're matched</span>
+  <svg class="inst" id="sync" viewBox="0 0 400 400" aria-hidden="true"></svg>
+  <h1>One needle, two people.</h1>
+  <button class="btn" type="button">Calibrate</button>
+</section>
+
+<section class="stage">
+  <span class="tag">5C · Coupled pendulums — advantage passes back and forth, total conserved · click near a bob to nudge it</span>
+  <svg class="inst wide" id="pend" viewBox="0 0 660 400" aria-hidden="true"></svg>
+  <h1>Advantage moves.</h1>
+  <button class="btn" type="button">Calibrate</button>
+</section>
+
+<script>
+/* ------------------------------------------------------------------ kit */
+const NS = 'http://www.w3.org/2000/svg';
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el = (t, a = {}, p) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
+const txt = (p, x, y, s, cls = 'num', extra = {}) => { const t = el('text', { x, y, class: cls, 'text-anchor': 'middle', 'dominant-baseline': 'middle', ...extra }, p); t.textContent = s; return t; };
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, k) => a + (b - a) * k;
+const R = (d) => d * Math.PI / 180;
+const svgOf = id => document.getElementById(id);
+function bezel(s, w = 400, h = 400) { el('rect', { x: 8, y: 8, width: w - 16, height: h - 16, rx: Math.min(w, h) * .18, pathLength: 100, 'stroke-dasharray': '19 6', 'stroke-dashoffset': 9.5, class: 'bezel' }, s); }
+function pointer(s, cb) { const f = e => { const r = s.getBoundingClientRect(), vb = s.viewBox.baseVal; cb((e.clientX - r.left) / r.width * vb.width, (e.clientY - r.top) / r.height * vb.height, e); }; s.addEventListener('pointermove', f); s.addEventListener('pointerdown', f); return f; }
+
+/* a shared animation loop that only runs what is on screen */
+const anims = [];
+const io = new IntersectionObserver(es => es.forEach(e => { const a = anims.find(x => x.node === e.target); if (a) a.on = e.isIntersecting; }), { rootMargin: '160px' });
+function animate(node, fn) { const a = { node, fn, on: false, last: 0 }; anims.push(a); io.observe(node); if (reduce) fn(3, 0); }
+let T0 = performance.now();
+function loop(now) { const t = (now - T0) / 1000; for (const a of anims) { if (!a.on) { a.last = t; continue; } const dt = Math.min(.05, t - a.last || 0); a.last = t; a.fn(t, dt); } requestAnimationFrame(loop); }
+if (!reduce) requestAnimationFrame(loop);
+
+/* continuous-roll digit wheels with lagging carry, the fuel-pump kind */
+function wheel(p, x, y, base, w = 44, h = 56, fs = 34) {
+  const id = 'c' + Math.random().toString(36).slice(2, 8);
+  const cp = el('clipPath', { id }, p); el('rect', { x: x - w / 2, y: y - h / 2, width: w, height: h, rx: 6 }, cp);
+  el('rect', { x: x - w / 2, y: y - h / 2, width: w, height: h, rx: 6, class: 'p' }, p);
+  const g = el('g', { 'clip-path': `url(#${id})` }, p); const col = el('g', {}, g);
+  for (let k = 0; k <= base; k++) txt(col, x, y + k * h, k % base, 'num', { style: `--fs:${fs}px` });
+  el('line', { x1: x - w / 2, y1: y, x2: x - w / 2 + 6, y2: y, class: 'g' }, p); el('line', { x1: x + w / 2 - 6, y1: y, x2: x + w / 2, y2: y, class: 'g' }, p);
+  return pos => col.setAttribute('transform', `translate(0 ${-pos * h})`);
+}
+/* positions for wheels given a continuous value and bases, least significant first */
+function carryPositions(v, bases) {
+  const out = []; let carry = 0, q = v;
+  for (let i = 0; i < bases.length; i++) {
+    const b = bases[i]; const d = Math.floor(q) % b; const frac = i === 0 ? q - Math.floor(q) : carry;
+    const pos = d + (i === 0 ? frac : (d === b - 1 ? carry : 0)); out.push(pos);
+    carry = i === 0 ? Math.max(0, (frac - .85) / .15) * (d === b - 1 ? 1 : 0) : (d === b - 1 ? carry : 0);
+    q = Math.floor(q / b);
+  }
+  return out;
+}
+function gearPath(cx, cy, teeth, r, depth = 6) {
+  let d = ''; const n = teeth * 4;
+  for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2, rr = (i % 4 === 1 || i % 4 === 2) ? r + depth : r - depth * .4; d += (i ? 'L' : 'M') + (cx + rr * Math.cos(a)).toFixed(1) + ' ' + (cy + rr * Math.sin(a)).toFixed(1); }
+  return d + 'Z';
+}
+function ik(O, T, L) { const dx = T.x - O.x, dy = T.y - O.y, d = clamp(Math.hypot(dx, dy), 1, 2 * L - 1); const h = Math.sqrt(L * L - d * d / 4), mx = O.x + dx / 2, my = O.y + dy / 2; const nx = -dy / d, ny = dx / d; return { x: mx - nx * h, y: my - ny * h }; }
+
+/* ================================================================== 1A pantograph */
+(() => {
+  const s = svgOf('panto'); bezel(s, 660, 400);
+  const O1 = { x: 190, y: 74 }, O2 = { x: 470, y: 74 }, L = 150, OFF = 280;
+  el('circle', { cx: O1.x, cy: O1.y, r: 6, class: 'mf' }, s); el('circle', { cx: O2.x, cy: O2.y, r: 6, class: 'mf' }, s);
+  // ratio scale, locked at 1:1
+  const sc = el('g', {}, s); el('line', { x1: 250, y1: 40, x2: 410, y2: 40, class: 'g' }, sc);
+  ['1:2', '1:1', '2:1'].forEach((v, i) => { const x = 250 + i * 80; el('line', { x1: x, y1: 34, x2: x, y2: 46, class: 'g' }, sc); txt(sc, x, 24, v, 'lbl'); });
+  el('circle', { cx: 330, cy: 40, r: 7, class: 'p' }, sc); el('line', { x1: 325, y1: 35, x2: 335, y2: 45, class: 'm' }, sc);
+  const trailA = el('path', { class: 'gl', 'stroke-width': 1.5 }, s), trailB = el('path', { class: 'live', 'stroke-width': 1.5, opacity: .9 }, s);
+  const a1 = el('line', { class: 'm' }, s), a2 = el('line', { class: 'm' }, s), b1 = el('line', { class: 'm' }, s), b2 = el('line', { class: 'm' }, s), link = el('line', { class: 'm' }, s);
+  const eA = el('circle', { r: 5, class: 'p' }, s), eB = el('circle', { r: 5, class: 'p' }, s), sty = el('circle', { r: 7, class: 'p' }, s), pen = el('circle', { r: 6, class: 'livef' }, s);
+  txt(s, 190, 372, 'stylus', 'lbl'); txt(s, 470, 372, 'copy', 'lbl');
+  let cur = null, tA = [], tB = [];
+  pointer(s, (x, y) => { cur = { x: clamp(x, 60, 330), y: clamp(y, 150, 350) }; });
+  s.addEventListener('pointerleave', () => cur = null);
+  animate(s, t => {
+    const idle = { x: 190 + 95 * Math.cos(t * .7) * Math.cos(t * .23), y: 250 + 70 * Math.sin(t * .9) };
+    const T = cur || idle, D = { x: T.x + OFF, y: T.y };
+    const A = ik(O1, T, L), B = ik(O2, D, L);
+    a1.setAttribute('x1', O1.x); a1.setAttribute('y1', O1.y); a1.setAttribute('x2', A.x); a1.setAttribute('y2', A.y);
+    a2.setAttribute('x1', A.x); a2.setAttribute('y1', A.y); a2.setAttribute('x2', T.x); a2.setAttribute('y2', T.y);
+    b1.setAttribute('x1', O2.x); b1.setAttribute('y1', O2.y); b1.setAttribute('x2', B.x); b1.setAttribute('y2', B.y);
+    b2.setAttribute('x1', B.x); b2.setAttribute('y1', B.y); b2.setAttribute('x2', D.x); b2.setAttribute('y2', D.y);
+    link.setAttribute('x1', A.x); link.setAttribute('y1', A.y); link.setAttribute('x2', B.x); link.setAttribute('y2', B.y);
+    eA.setAttribute('cx', A.x); eA.setAttribute('cy', A.y); eB.setAttribute('cx', B.x); eB.setAttribute('cy', B.y);
+    sty.setAttribute('cx', T.x); sty.setAttribute('cy', T.y); pen.setAttribute('cx', D.x); pen.setAttribute('cy', D.y);
+    tA.push(T); tB.push(D); if (tA.length > 140) { tA.shift(); tB.shift(); }
+    trailA.setAttribute('d', tA.map((p, i) => (i ? 'L' : 'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1)).join(''));
+    trailB.setAttribute('d', tB.map((p, i) => (i ? 'L' : 'M') + p.x.toFixed(1) + ' ' + p.y.toFixed(1)).join(''));
+  });
+})();
+
+/* ================================================================== 1B time lock */
+(() => {
+  const s = svgOf('tlock'); bezel(s, 660, 400);
+  // main dial 0–70
+  const cx = 230, cy = 205, r = 120;
+  el('circle', { cx, cy, r, class: 'm' }, s);
+  for (let i = 0; i <= 70; i++) { const a = R(-220 + i * 260 / 70), big = i % 10 === 0; el('line', { x1: cx + (r - (big ? 14 : 7)) * Math.cos(a), y1: cy + (r - (big ? 14 : 7)) * Math.sin(a), x2: cx + r * Math.cos(a), y2: cy + r * Math.sin(a), class: big ? 'g' : 'gl' }, s); if (big) txt(s, cx + (r - 30) * Math.cos(a), cy + (r - 30) * Math.sin(a), i, 'lbl'); }
+  const hand = el('line', { x1: cx, y1: cy, x2: cx, y2: cy - r + 22, class: 'live' }, s); el('circle', { cx, cy, r: 6, class: 'mf' }, s);
+  // escapement: balance wheel + pallet
+  const bx = 505, by = 150; el('circle', { cx: bx, cy: by, r: 46, class: 'm' }, s); el('circle', { cx: bx, cy: by, r: 4, class: 'mf' }, s);
+  const bal = el('g', {}, s); [0, 60, 120].forEach(a => el('line', { x1: bx, y1: by, x2: bx + 44 * Math.cos(R(a)), y2: by + 44 * Math.sin(R(a)), class: 'm' }, bal));
+  el('line', { x1: bx, y1: by, x2: bx - 44 * Math.cos(R(0)), y2: by, class: 'm' }, bal);
+  const esc = el('path', { d: `M${bx - 40} ${by + 78} l14 -16 l14 12 l-6 -20 l14 -10 l8 22 l14 -14`, class: 'm' }, s);
+  const pal = el('path', { class: 'm', d: `M${bx} ${by + 50} l-18 18 M${bx} ${by + 50} l18 18` }, s);
+  // two arbors
+  [[420, 300, 'Module 1'], [590, 300, 'Module 2']].forEach(([x, y, l]) => { el('circle', { cx: x, cy: y, r: 30, class: 'm' }, s); for (let i = 0; i < 12; i++) { const a = R(i * 30); el('line', { x1: x + 24 * Math.cos(a), y1: y + 24 * Math.sin(a), x2: x + 30 * Math.cos(a), y2: y + 30 * Math.sin(a), class: 'gl' }, s); } txt(s, x, y + 48, l, 'lbl'); txt(s, x, y, '35', 'num', { style: '--fs:20px' }); });
+  // lever, dropped; resists when tried
+  const lev = el('g', { transform: 'rotate(0 470 230)' }, s); el('line', { x1: 470, y1: 230, x2: 560, y2: 250, class: 'm', 'stroke-width': 5 }, lev); el('circle', { cx: 470, cy: 230, r: 7, class: 'p' }, lev); el('rect', { x: 556, y: 240, width: 14, height: 20, rx: 3, class: 'mf' }, lev);
+  let lift = 0, want = 0; s.addEventListener('pointerdown', () => want = 1); ['pointerup', 'pointerleave', 'pointercancel'].forEach(e => s.addEventListener(e, () => want = 0));
+  let elapsed = 0;
+  animate(s, (t, dt) => {
+    elapsed += dt; const a = -220 + clamp(elapsed / 70, 0, 1) * 260 * 60;   // creeps 1 minute per second, for the sketch
+    hand.setAttribute('transform', `rotate(${-220 + (elapsed % 70) / 70 * 260 + 90} ${cx} ${cy})`);
+    bal.setAttribute('transform', `rotate(${Math.sin(t * 22) * 28} ${bx} ${by})`);
+    pal.setAttribute('transform', `rotate(${Math.sin(t * 22) * 5} ${bx} ${by + 50})`);
+    lift += ((want ? -5 : 0) - lift) * .25; lev.setAttribute('transform', `rotate(${lift} 470 230)`);
+  });
+})();
+
+/* ================================================================== 1C totalizer */
+(() => {
+  const s = svgOf('total'); bezel(s, 660, 400);
+  const banks = [[110, 'Module 1'], [400, 'Module 2']].map(([x0, l]) => {
+    const ws = [wheel(s, x0 + 150, 170, 10), wheel(s, x0 + 100, 170, 6), wheel(s, x0 + 50, 170, 10), wheel(s, x0, 170, 7)];
+    txt(s, x0 + 75, 176, ':', 'num', { style: '--fs:34px' }); txt(s, x0 + 75, 240, l, 'lbl'); return ws;
+  });
+  const big = [wheel(s, 405, 320, 10, 40, 48, 28), wheel(s, 360, 320, 6, 40, 48, 28), wheel(s, 300, 320, 10, 40, 48, 28), wheel(s, 255, 320, 7, 40, 48, 28)];
+  txt(s, 330, 324, ':', 'num', { style: '--fs:28px' }); txt(s, 180, 322, 'total', 'lbl');
+  el('rect', { x: 395, y: 296, width: 20, height: 48, rx: 4, class: 'live', 'stroke-width': 2 }, s);
+  const start = 70 * 60;
+  animate(s, t => { const left = Math.max(0, start - t * 12); const each = left / 2;
+    banks.forEach(ws => carryPositions(each, [10, 6, 10, 7]).forEach((p, i) => ws[i](p)));
+    carryPositions(left, [10, 6, 10, 7]).forEach((p, i) => big[i](p)); });
+})();
+
+/* ================================================================== 1D copy lathe */
+(() => {
+  const s = svgOf('lathe'); bezel(s, 660, 400);
+  const prof = a => 62 + 16 * Math.sin(2 * a) + 8 * Math.cos(5 * a);
+  const camPath = (cx, cy, upto) => { let d = ''; const n = 120; for (let i = 0; i <= n * upto; i++) { const a = i / n * Math.PI * 2, rr = prof(a); d += (i ? 'L' : 'M') + (cx + rr * Math.cos(a)).toFixed(1) + ' ' + (cy + rr * Math.sin(a)).toFixed(1); } return d; };
+  const L = { x: 190, y: 200 }, Rt = { x: 470, y: 200 };
+  const master = el('path', { d: camPath(L.x, L.y, 1) + 'Z', class: 'm' }, s), cut = el('path', { class: 'm' }, s);
+  el('circle', { cx: L.x, cy: L.y, r: 5, class: 'mf' }, s); el('circle', { cx: Rt.x, cy: Rt.y, r: 5, class: 'mf' }, s);
+  el('circle', { cx: Rt.x, cy: Rt.y, r: 86, class: 'gl', 'stroke-dasharray': '3 5' }, s);
+  const sty = el('circle', { r: 6, class: 'p' }, s), cutter = el('circle', { r: 6, class: 'livef' }, s), bar = el('line', { class: 'm', 'stroke-width': 3 }, s);
+  // follower + scale on the right
+  el('line', { x1: 600, y1: 90, x2: 600, y2: 310, class: 'g' }, s); for (let i = 0; i <= 10; i++) el('line', { x1: 600, y1: 90 + i * 22, x2: 600 + (i % 5 ? 6 : 12), y2: 90 + i * 22, class: 'g' }, s);
+  const fol = el('line', { class: 'live', 'stroke-width': 4 }, s); txt(s, 190, 320, 'Module 1', 'lbl'); txt(s, 470, 320, 'Module 2', 'lbl');
+  animate(s, t => { const a = (t * .5) % (Math.PI * 2), rr = prof(a); const sx = L.x + rr * Math.cos(a), sy = L.y + rr * Math.sin(a);
+    sty.setAttribute('cx', sx); sty.setAttribute('cy', sy); cutter.setAttribute('cx', Rt.x + rr * Math.cos(a)); cutter.setAttribute('cy', Rt.y + rr * Math.sin(a));
+    bar.setAttribute('x1', sx); bar.setAttribute('y1', sy); bar.setAttribute('x2', Rt.x + rr * Math.cos(a)); bar.setAttribute('y2', Rt.y + rr * Math.sin(a));
+    cut.setAttribute('d', camPath(Rt.x, Rt.y, a / (Math.PI * 2)));
+    const h = prof(a) - 46; fol.setAttribute('x1', 586); fol.setAttribute('x2', 614); fol.setAttribute('y1', 310 - h * 5.5); fol.setAttribute('y2', 310 - h * 5.5); });
+})();
+
+/* ================================================================== 2A dividing engine */
+(() => {
+  const s = svgOf('divide'); bezel(s);
+  const cx = 200, cy = 200, r = 128; el('circle', { cx, cy, r, class: 'm' }, s);
+  [0, 90, 180, 270].forEach(a => el('line', { x1: cx, y1: cy, x2: cx + r * Math.cos(R(a)), y2: cy + r * Math.sin(R(a)), class: 'gl' }, s));
+  const marks = el('g', {}, s); const head = el('g', {}, s); el('path', { d: 'M0 0 l-8 -22 h16 z', class: 'livef' }, head);
+  const counter = txt(s, cx, cy, '0', 'num', { style: '--fs:34px' }); txt(s, cx, cy + 26, 'graduations', 'lbl');
+  const names = ['Algebra', 'Advanced', 'Geometry', 'Data']; const lab = names.map((n, i) => txt(s, cx + 160 * Math.cos(R(i * 90 + 45)), cy + 160 * Math.sin(R(i * 90 + 45)), n, 'lbl'));
+  let q = 0, pass = 0, k = 0, tPass = 0, count = 0, rot = 0;
+  const passes = [10, 40, 160]; // drawn marks per pass; counter reads 10, 100, 1000
+  animate(s, (t, dt) => {
+    tPass += dt; const need = passes[pass], per = pass === 0 ? .18 : pass === 1 ? .05 : .014;
+    while (k < need && tPass > per) { tPass -= per; const a = R(q * 90 + (k + .5) / need * 90), len = pass === 0 ? 22 : pass === 1 ? 12 : 6;
+      el('line', { x1: cx + (r - len) * Math.cos(a), y1: cy + (r - len) * Math.sin(a), x2: cx + r * Math.cos(a), y2: cy + r * Math.sin(a), class: pass === 2 ? 'gl' : 'g' }, marks); k++; count += [1, 10, 10][pass] * (pass === 0 ? 1 : pass === 1 ? 90 / 40 / 10 * 10 : 900 / 160 / 10 * 10) / 1; rot = a;
+      head.setAttribute('transform', `translate(${cx + (r + 16) * Math.cos(a)} ${cy + (r + 16) * Math.sin(a)}) rotate(${a * 180 / Math.PI + 90})`); }
+    counter.textContent = Math.min(pass === 0 ? k : pass === 1 ? 10 + Math.round(k / need * 90) : 100 + Math.round(k / need * 900), 1000);
+    if (k >= need) { if (pass < 2) { pass++; k = 0; tPass = -.6; } else if (tPass > 2.2) { marks.replaceChildren(); q = (q + 1) % 4; pass = 0; k = 0; tPass = 0; } }
+    lab.forEach((l, i) => l.classList.toggle('on', i === q));
+  });
+})();
+
+/* ================================================================== 2B turret + fine focus */
+(() => {
+  const s = svgOf('turret'); bezel(s);
+  const cx = 200, cy = 150; el('circle', { cx, cy, r: 70, class: 'p' }, s); el('circle', { cx, cy, r: 6, class: 'mf' }, s);
+  const names = ['Alg', 'Adv', 'Geo', 'Data']; const nose = el('g', {}, s);
+  const objs = names.map((n, i) => { const a = R(i * 90 - 90); const g = el('g', {}, nose); el('rect', { x: cx + 62 * Math.cos(a) - 12, y: cy + 62 * Math.sin(a) - 16, width: 24, height: 32, rx: 4, class: 'p', transform: `rotate(${i * 90} ${cx + 62 * Math.cos(a)} ${cy + 62 * Math.sin(a)})` }, g); return g; });
+  const labs = names.map((n, i) => txt(s, cx + 118 * Math.cos(R(i * 90 - 90)), cy + 118 * Math.sin(R(i * 90 - 90)), n, 'lbl'));
+  el('line', { x1: cx, y1: cy + 92, x2: cx, y2: cy + 118, class: 'live' }, s); // the optical axis
+  // fine focus drum + vernier
+  const dx = 200, dy = 320; el('rect', { x: dx - 90, y: dy - 26, width: 180, height: 52, rx: 26, class: 'p' }, s);
+  const drum = el('g', {}, s); for (let i = 0; i < 24; i++) el('line', { x1: dx - 80 + i * 7, y1: dy - 18, x2: dx - 80 + i * 7, y2: dy + 18, class: 'gl' }, drum);
+  const ver = txt(s, 200, 265, '0.000', 'num', { style: '--fs:24px' }); txt(s, 200, 286, 'fine focus', 'lbl');
+  let idx = 0, ang = 0, want = 0, depth = 0; s.addEventListener('pointerdown', () => { idx = (idx + 1) % 4; want = -idx * 90; depth = 0; });
+  animate(s, (t, dt) => { ang += (want - ang) * .12; nose.setAttribute('transform', `rotate(${ang} ${cx} ${cy})`); labs.forEach((l, i) => l.classList.toggle('on', i === idx));
+    const settled = Math.abs(want - ang) < 1; if (settled) depth += dt * .9; ver.textContent = depth.toFixed(3);
+    drum.setAttribute('transform', `translate(${-(depth * 40) % 7} 0)`); });
+})();
+
+/* ================================================================== 2C band switch + reduction */
+(() => {
+  const s = svgOf('band'); bezel(s, 660, 400);
+  const names = ['Algebra', 'Advanced Math', 'Geometry & Trig', 'Data'];
+  const sw = el('g', {}, s); names.forEach((n, i) => { const x = 120 + i * 60; el('circle', { cx: x, cy: 90, r: 9, class: 'p' }, sw); txt(sw, x, 64, ['I', 'II', 'III', 'IV'][i], 'lbl'); });
+  const knobS = el('g', {}, s); el('circle', { cx: 120, cy: 90, r: 14, class: 'p' }, knobS); el('line', { x1: 120, y1: 90, x2: 120, y2: 78, class: 'm', 'stroke-width': 3 }, knobS);
+  const bname = txt(s, 330, 90, names[0], 'num', { style: '--fs:22px' });
+  // scale, denser toward the centre
+  const sg = el('g', {}, s); const y0 = 200; el('line', { x1: 80, y1: y0, x2: 580, y2: y0, class: 'g' }, s);
+  for (let i = 0; i <= 80; i++) { const u = i / 80, x = 80 + 500 * (u < .5 ? .5 * Math.pow(2 * u, 1.6) / 1 : 1 - .5 * Math.pow(2 * (1 - u), 1.6)); el('line', { x1: x, y1: y0, x2: x, y2: y0 + (i % 10 ? 8 : 16), class: i % 10 ? 'gl' : 'g' }, sg); }
+  const ptr = el('line', { x1: 330, y1: y0 - 28, x2: 330, y2: y0 + 22, class: 'live' }, s);
+  const tk = el('g', {}, s); el('circle', { cx: 330, cy: 320, r: 44, class: 'p' }, tk); for (let i = 0; i < 36; i++) el('line', { x1: 330 + 38 * Math.cos(R(i * 10)), y1: 320 + 38 * Math.sin(R(i * 10)), x2: 330 + 44 * Math.cos(R(i * 10)), y2: 320 + 44 * Math.sin(R(i * 10)), class: 'gl' }, tk);
+  const dot = el('circle', { cx: 330, cy: 286, r: 4, class: 'mf' }, tk); txt(s, 330, 380, 'tuning · 6:1 reduction', 'lbl');
+  let band = 0, target = 330, px = 330, ka = 0; pointer(s, (x, y) => { if (y < 130) { band = clamp(Math.round((x - 120) / 60), 0, 3); } else target = clamp(330 + (x - 330) / 6, 100, 560); });
+  animate(s, () => { px += (target - px) * .08; ptr.setAttribute('x1', px); ptr.setAttribute('x2', px); ka += ((px - 330) * 4 - ka) * .1; tk.setAttribute('transform', `rotate(${ka} 330 320)`);
+    knobS.setAttribute('transform', `translate(${band * 60} 0)`); bname.textContent = names[band]; });
+})();
+
+/* ================================================================== 2D indexing head + quill */
+(() => {
+  const s = svgOf('index'); bezel(s);
+  const cx = 130, cy = 200; el('circle', { cx, cy, r: 78, class: 'p' }, s); el('circle', { cx, cy, r: 8, class: 'mf' }, s);
+  const plate = el('g', {}, s); [0, 90, 180, 270].forEach(a => el('circle', { cx: cx + 56 * Math.cos(R(a - 90)), cy: cy + 56 * Math.sin(R(a - 90)), r: 7, class: 'm' }, plate));
+  const plunger = el('g', {}, s); el('rect', { x: cx - 5, y: cy - 108, width: 10, height: 48, rx: 3, class: 'mf' }, plunger);
+  const names = ['Alg', 'Adv', 'Geo', 'Data']; const labs = names.map((n, i) => txt(s, cx + 100 * Math.cos(R(i * 90 - 90)), cy + 100 * Math.sin(R(i * 90 - 90)), n, 'lbl'));
+  // quill
+  el('rect', { x: 262, y: 250, width: 96, height: 60, rx: 6, class: 'p' }, s); txt(s, 310, 330, 'work', 'lbl');
+  const quill = el('rect', { x: 300, y: 120, width: 20, height: 100, rx: 3, class: 'mf' }, s); const tip = el('line', { x1: 310, y1: 220, x2: 310, y2: 250, class: 'live', 'stroke-width': 4 }, s);
+  el('line', { x1: 370, y1: 250, x2: 370, y2: 310, class: 'g' }, s); for (let i = 0; i <= 6; i++) el('line', { x1: 370, y1: 250 + i * 10, x2: 378, y2: 250 + i * 10, class: 'gl' }, s);
+  const dial = txt(s, 310, 96, '0.000', 'num', { style: '--fs:22px' }); txt(s, 310, 74, 'depth · in', 'lbl');
+  let idx = 0, ang = 0, want = 0, lift = 0, feed = 0; s.addEventListener('pointerdown', () => { idx = (idx + 1) % 4; want = idx * 90; feed = 0; });
+  animate(s, (t, dt) => { const moving = Math.abs(want - ang) > .5; lift += ((moving ? -18 : 0) - lift) * .2; ang += (want - ang) * .1;
+    plate.setAttribute('transform', `rotate(${ang} ${cx} ${cy})`); plunger.setAttribute('transform', `translate(0 ${lift})`);
+    if (!moving) feed = Math.min(feed + dt * .12, .6); const y = 250 + feed * 100; quill.setAttribute('y', y - 130); tip.setAttribute('y1', y - 30); tip.setAttribute('y2', y);
+    dial.textContent = feed.toFixed(3); labs.forEach((l, i) => l.classList.toggle('on', i === idx)); });
+})();
+
+/* ================================================================== 3A four-bank totalizer */
+(() => {
+  const s = svgOf('bank'); bezel(s, 660, 400);
+  const names = ['Alg', 'Adv', 'Data', 'Geo'], vals = [8, 4, 6, 2], shown = [8, 4, 6, 2];
+  const wheels = vals.map((v, i) => { const x = 150 + i * 120; const w = wheel(s, x, 150, 10, 56, 72, 44); txt(s, x, 210, names[i], 'lbl');
+    el('path', { d: `M${x - 8} 96 l8 -10 l8 10 M${x - 8} 204 l8 10 l8 -10`, class: 'gl' }, s); return w; });
+  const sum = [wheel(s, 350, 310, 10, 48, 60, 36), wheel(s, 300, 310, 10, 48, 60, 36)]; txt(s, 330, 358, 'questions', 'lbl');
+  el('rect', { x: 366, y: 282, width: 6, height: 56, rx: 3, class: 'livef' }, s);
+  let drag = null; pointer(s, (x, y, e) => { const i = Math.round((x - 150) / 120); if (e.type === 'pointerdown' && i >= 0 && i < 4 && Math.abs(y - 150) < 60) drag = { i, y0: y, v0: vals[i] };
+    if (drag && e.type === 'pointermove') vals[drag.i] = clamp(Math.round(drag.v0 + (drag.y0 - y) / 30), 0, 9); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(e => s.addEventListener(e, () => drag = null));
+  let sumShown = 20;
+  animate(s, () => { vals.forEach((v, i) => { shown[i] += (v - shown[i]) * .18; wheels[i](((shown[i] % 10) + 10) % 10); });
+    const target = vals.reduce((a, b) => a + b, 0); sumShown += (target - sumShown) * .06; carryPositions(sumShown, [10, 10]).forEach((p, i) => sum[i](p)); });
+})();
+
+/* ================================================================== 3B four-jaw chuck */
+(() => {
+  const s = svgOf('chuck'); bezel(s);
+  const cx = 200, cy = 200; el('circle', { cx, cy, r: 140, class: 'p' }, s); el('circle', { cx, cy, r: 120, class: 'gl' }, s);
+  const jaws = [0, 90, 180, 270].map((a, i) => { const g = el('g', {}, s); el('line', { x1: cx + 60 * Math.cos(R(a)), y1: cy + 60 * Math.sin(R(a)), x2: cx + 136 * Math.cos(R(a)), y2: cy + 136 * Math.sin(R(a)), class: 'gl', 'stroke-dasharray': '2 3' }, s);
+    const jaw = el('rect', { width: 22, height: 34, rx: 3, class: 'mf' }, g); const d = txt(s, cx + 160 * Math.cos(R(a)), cy + 160 * Math.sin(R(a)), '0.00', 'lbl'); return { g, jaw, a, d, r: 70, want: 70 }; });
+  const work = el('circle', { r: 34, class: 'live', 'stroke-width': 2.5 }, s); el('circle', { cx, cy, r: 3, class: 'mf' }, s);
+  s.addEventListener('pointerdown', e => { const r = s.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width * 400 - cx, y = (e.clientY - r.top) / r.height * 400 - cy; const a = ((Math.atan2(y, x) * 180 / Math.PI) + 360) % 360; const j = jaws[Math.round(a / 90) % 4]; j.want = j.want > 60 ? 44 + Math.random() * 14 : 68 + Math.random() * 14; });
+  animate(s, t => { jaws.forEach((j, i) => { if (Math.random() < .002) j.want = 44 + Math.random() * 40; j.r += (j.want - j.r) * .05; const a = R(j.a); j.jaw.setAttribute('x', -11); j.jaw.setAttribute('y', -17); j.g.setAttribute('transform', `translate(${cx + j.r * Math.cos(a)} ${cy + j.r * Math.sin(a)}) rotate(${j.a})`); j.d.textContent = ((j.r - 40) / 40).toFixed(2); });
+    const ox = (jaws[0].r - jaws[2].r) / 2, oy = (jaws[1].r - jaws[3].r) / 2; work.setAttribute('cx', cx + ox); work.setAttribute('cy', cy + oy); work.setAttribute('r', Math.min(...jaws.map(j => j.r)) - 12); });
+})();
+
+/* ================================================================== 3C change-gear train */
+(() => {
+  const s = svgOf('gears'); bezel(s, 660, 400);
+  const teeth = [24, 40, 16, 32], mod = 3.2; const gs = teeth.map(() => ({ path: el('path', { class: 'm' }, s), hub: el('circle', { r: 5, class: 'mf' }, s), lab: txt(s, 0, 0, '', 'lbl'), ang: 0 }));
+  const out = txt(s, 560, 340, '1.00×', 'num', { style: '--fs:22px' }); txt(s, 560, 364, 'output', 'lbl');
+  const live = el('circle', { r: 5, class: 'livef' }, s);
+  function layout() { let x = 90; const y = 200; gs.forEach((g, i) => { g.r = teeth[i] * mod / 2; if (i) x += gs[i - 1].r + g.r; g.x = x; g.y = y; g.path.setAttribute('d', gearPath(0, 0, teeth[i], g.r)); g.hub.setAttribute('cx', x); g.hub.setAttribute('cy', y); g.lab.setAttribute('x', x); g.lab.setAttribute('y', y + g.r + 22); g.lab.textContent = teeth[i] + 'T'; }); }
+  layout();
+  s.addEventListener('pointerdown', e => { const r = s.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width * 660; let best = 0; gs.forEach((g, i) => { if (Math.abs(x - g.x) < Math.abs(x - gs[best].x)) best = i; }); teeth[best] = [16, 24, 32, 40, 48][(([16, 24, 32, 40, 48].indexOf(teeth[best]) + 1) % 5)]; layout(); });
+  animate(s, (t, dt) => { const w0 = 40; gs.forEach((g, i) => { const w = w0 * teeth[0] / teeth[i] * (i % 2 ? -1 : 1); g.ang += w * dt; g.path.setAttribute('transform', `translate(${g.x} ${g.y}) rotate(${g.ang})`); });
+    const last = gs[3]; live.setAttribute('cx', last.x + (last.r - 8) * Math.cos(R(last.ang))); live.setAttribute('cy', last.y + (last.r - 8) * Math.sin(R(last.ang))); out.textContent = (teeth[0] / teeth[3]).toFixed(2) + '×'; });
+})();
+
+/* ================================================================== 3D composing stick */
+(() => {
+  const s = svgOf('stick'); bezel(s, 660, 400);
+  const y = 200, x0 = 90; el('path', { d: `M${x0 - 10} ${y - 40} v80 M${x0 - 10} ${y + 40} h500`, class: 'm', 'stroke-width': 3 }, s);
+  const meas = el('path', { class: 'live', 'stroke-width': 3 }, s);
+  for (let i = 0; i <= 25; i++) el('line', { x1: x0 + i * 20, y1: y + 44, x2: x0 + i * 20, y2: y + (i % 5 ? 50 : 56), class: i % 5 ? 'gl' : 'g' }, s);
+  const names = ['Alg', 'Adv', 'Data', 'Geo'], counts = [8, 4, 6, 2]; let measure = 20;
+  const slugs = names.map((n, i) => { const g = el('g', {}, s); el('rect', { y: y - 34, height: 68, rx: 3, class: 'mf', opacity: .92 - i * .16 }, g); txt(g, 0, y, n, 'lbl', { fill: '#fff' }); return { g, x: 640, w: 0 }; });
+  const rem = txt(s, 330, 300, '0 ems remaining', 'lbl'); txt(s, 330, 330, '', 'lbl');
+  let phase = 0;
+  animate(s, (t, dt) => { phase += dt; if (phase > 6) { phase = 0; measure = [18, 20, 24, 16][Math.floor(Math.random() * 4)]; }
+    const scale = 500 / 25, total = counts.reduce((a, b) => a + b, 0), unit = (measure * scale) / total; let cursor = x0;
+    slugs.forEach((sl, i) => { const w = counts[i] * unit, tx = cursor; const delay = i * .5, k = clamp((phase - delay) / .9, 0, 1), e = 1 - Math.pow(1 - k, 3); sl.x += ((640 - (640 - tx) * e) - sl.x) * .35; sl.w += (w - sl.w) * .2; sl.g.setAttribute('transform', `translate(${sl.x} 0)`); sl.g.firstChild.setAttribute('width', sl.w); sl.g.firstChild.setAttribute('x', 0); sl.g.lastChild.setAttribute('x', sl.w / 2); cursor += w + 3; });
+    meas.setAttribute('d', `M${x0 + measure * scale} ${y - 40} v80`); rem.textContent = `measure ${measure} ems · ${Math.max(0, measure - total)} remaining`; });
+})();
+
+/* ================================================================== 4A null-balance bridge */
+(() => {
+  const s = svgOf('bridge'); bezel(s);
+  const cx = 200, top = 70, bot = 250, lx = 70, rx = 330;
+  const zig = (x1, y1, x2, y2) => { const n = 7, d = []; for (let i = 0; i <= n; i++) { const u = i / n, x = x1 + (x2 - x1) * u, y = y1 + (y2 - y1) * u, dx = (y2 - y1), dy = -(x2 - x1), L = Math.hypot(dx, dy), o = (i && i < n) ? (i % 2 ? 7 : -7) : 0; d.push((i ? 'L' : 'M') + (x + dx / L * o).toFixed(1) + ' ' + (y + dy / L * o).toFixed(1)); } return d.join(''); };
+  [[lx, 160, cx, top], [cx, top, rx, 160], [lx, 160, cx, bot]].forEach(([a, b, c, d]) => el('path', { d: zig(a, b, c, d), class: 'm' }, s));
+  const unk = el('path', { d: zig(cx, bot, rx, 160), class: 'm', 'stroke-dasharray': '4 3' }, s); txt(s, 296, 232, 'unknown', 'lbl');
+  el('line', { x1: lx, y1: 160, x2: rx, y2: 160, class: 'gl' }, s);
+  // galvanometer
+  el('circle', { cx, cy: 160, r: 40, class: 'p' }, s); for (let i = -4; i <= 4; i++) { const a = R(-90 + i * 18); el('line', { x1: cx + 30 * Math.cos(a), y1: 160 + 30 * Math.sin(a), x2: cx + 36 * Math.cos(a), y2: 160 + 36 * Math.sin(a), class: i ? 'gl' : 'g' }, s); }
+  const nd = el('line', { x1: cx, y1: 160, x2: cx, y2: 128, class: 'live' }, s); el('circle', { cx, cy: 160, r: 3, class: 'mf' }, s);
+  // slide-wire
+  el('line', { x1: lx, y1: 300, x2: rx, y2: 300, class: 'm', 'stroke-width': 3 }, s); for (let i = 0; i <= 26; i++) el('line', { x1: lx + i * 10, y1: 304, x2: lx + i * 10, y2: 304 + (i % 13 ? 5 : 10), class: i % 13 ? 'gl' : 'g' }, s);
+  const contact = el('path', { d: 'M0 0 l-7 -14 h14 z', class: 'mf' }, s); const readout = txt(s, cx, 350, '—', 'num', { style: '--fs:30px' }); txt(s, cx, 374, 'score', 'lbl');
+  let u = .62, c = .1, v = 0, n = 0, hold = 0;
+  animate(s, (t, dt) => { const err = u - c; v += (-30 * -err - 5.5 * v) * dt; c += v * dt; const want = clamp(err * 900, -70, 70); n += (want - n) * .18; nd.setAttribute('transform', `rotate(${n} ${cx} 160)`);
+    contact.setAttribute('transform', `translate(${lx + c * (rx - lx)} 300)`);
+    if (Math.abs(err) < .004 && Math.abs(v) < .03) { hold += dt; readout.textContent = Math.round((200 + 600 * u) / 10) * 10; if (hold > 2.4) { u = .3 + Math.random() * .6; c = Math.random() < .5 ? .05 : .95; v = 0; hold = 0; } } else { readout.textContent = '—'; } });
+})();
+
+/* ================================================================== 4B hydrometer */
+(() => {
+  const s = svgOf('hydro'); bezel(s);
+  const cx = 200; el('path', { d: 'M150 60 v260 a50 50 0 0 0 100 0 v-260', class: 'm' }, s);
+  const men = el('line', { x1: 154, y1: 250, x2: 246, y2: 250, class: 'live', 'stroke-width': 2 }, s);
+  const fl = el('g', {}, s); el('path', { d: `M${cx - 6} 0 v120 a20 20 0 0 0 12 0 v-120 a6 6 0 0 0 -12 0`, class: 'p' }, fl); el('circle', { cx, cy: 128, r: 9, class: 'mf' }, fl);
+  for (let i = 0; i <= 10; i++) el('line', { x1: cx - 6, y1: 12 + i * 10, x2: cx - 6 + (i % 5 ? 4 : 8), y2: 12 + i * 10, class: 'gl' }, fl);
+  const read = txt(s, cx, 40, '—', 'num', { style: '--fs:28px' });
+  const rest = 180; let phase = 0;
+  animate(s, (t, dt) => { phase += dt; if (phase > 9) phase = 0; const T = phase; let y;
+    if (T < .9) y = -160 + (rest + 160) * (T / .9) * (T / .9); else { const u = T - .9; y = rest + 60 * Math.exp(-1.6 * u) * Math.cos(5.5 * u) + 1.2 * Math.sin(t * 1.3); }
+    fl.setAttribute('transform', `translate(0 ${y})`); const stable = T > 3.2; read.textContent = stable ? Math.round((200 + 600 * (1 - ((250 - y) - 20) / 100)) / 10) * 10 : '—'; });
+})();
+
+/* ================================================================== 4C trial lens rack */
+(() => {
+  const s = svgOf('lens'); bezel(s);
+  const cx = 200, cy = 250, R0 = 160; const wheelG = el('g', {}, s); const powers = [-3, -2, -1, -0.5, 0, 0.5, 1, 2, 3];
+  powers.forEach((p, i) => { const a = R(i * 40 - 90); el('circle', { cx: cx + R0 * Math.cos(a), cy: cy + R0 * Math.sin(a), r: 26, class: 'p' }, wheelG); txt(wheelG, cx + R0 * Math.cos(a), cy + R0 * Math.sin(a), (p > 0 ? '+' : '') + p.toFixed(1), 'lbl'); });
+  el('circle', { cx, cy: cy - R0, r: 28, class: 'live', 'stroke-width': 2.5 }, s);
+  const target = el('g', { style: 'transition: filter .35s' }, s); txt(target, cx, 60, 'E', 'num', { style: '--fs:54px' });
+  const rd = txt(s, cx, cy, '', 'num', { style: '--fs:26px' }); txt(s, cx, cy + 24, 'dioptres', 'lbl');
+  const correct = 6; let k = 0, ang = 0, want = 0, tk = 0;
+  animate(s, (t, dt) => { tk += dt; if (tk > .75) { tk = 0; k = (k + 1) % 9; want = -k * 40; } ang += (want - ang) * .2; wheelG.setAttribute('transform', `rotate(${ang} ${cx} ${cy})`);
+    const off = Math.abs(k - correct); target.style.filter = `blur(${off * 2.2}px)`; rd.textContent = (powers[k] > 0 ? '+' : '') + powers[k].toFixed(1); });
+})();
+
+/* ================================================================== 5A differential */
+(() => {
+  const s = svgOf('diff'); bezel(s, 660, 400);
+  const y = 190; const mk = (x, n) => { const g = el('g', {}, s); el('path', { d: gearPath(0, 0, 22, 44), class: 'm' }, g); for (let i = 0; i < 4; i++) el('line', { x1: 0, y1: 0, x2: 36 * Math.cos(R(i * 90)), y2: 36 * Math.sin(R(i * 90)), class: 'gl' }, g); txt(s, x, y + 78, n, 'lbl'); return { g, x }; };
+  const L = mk(130, 'you'), Rg = mk(330, 'opponent'); el('line', { x1: 60, y1: y, x2: 86, y2: y, class: 'm', 'stroke-width': 4 }, s); el('line', { x1: 374, y1: y, x2: 400, y2: y, class: 'm', 'stroke-width': 4 }, s);
+  const car = el('g', {}, s); el('circle', { cx: 230, cy: y, r: 40, class: 'm' }, car); el('circle', { cx: 230, cy: y - 40, r: 10, class: 'p' }, car); el('circle', { cx: 230, cy: y + 40, r: 10, class: 'p' }, car); el('line', { x1: 230, y1: y - 40, x2: 230, y2: y + 40, class: 'gl' }, car);
+  txt(s, 230, y + 78, 'carrier', 'lbl');
+  const drum = [wheel(s, 590, 150, 10, 40, 50, 30), wheel(s, 548, 150, 10, 40, 50, 30), wheel(s, 506, 150, 10, 40, 50, 30), wheel(s, 464, 150, 10, 40, 50, 30)]; txt(s, 527, 196, 'rating', 'lbl');
+  el('line', { x1: 450, y1: 260, x2: 610, y2: 260, class: 'g' }, s); for (let i = 1; i <= 10; i++) { const x = 450 + (i - 1) * 160 / 9; el('line', { x1: x, y1: 254, x2: x, y2: 266, class: 'g' }, s); txt(s, x, 282, i, 'lbl'); }
+  const lp = el('path', { d: 'M0 0 l-6 -12 h12 z', class: 'livef' }, s); txt(s, 530, 310, 'level', 'lbl');
+  let aL = 0, aR = 0, aC = 0, rating = 1000;
+  const level = r => r <= 800 ? 1 : r > 2000 ? 10 : 2 + Math.floor((r - 801) / 150);
+  animate(s, (t, dt) => { const wL = 60 + 40 * Math.sin(t * .37), wR = 60 + 40 * Math.sin(t * .37 + Math.sin(t * .11) * 1.4); aL += wL * dt; aR += wR * dt; const wc = (wL - wR) / 2; aC += wc * dt;
+    L.g.setAttribute('transform', `translate(${L.x} ${y}) rotate(${aL})`); Rg.g.setAttribute('transform', `translate(${Rg.x} ${y}) rotate(${-aR})`); car.setAttribute('transform', `rotate(${aC} 230 ${y})`);
+    rating += wc * dt * .9; rating += (1000 - rating) * .0015; carryPositions(rating, [10, 10, 10, 10]).forEach((p, i) => drum[i](p));
+    lp.setAttribute('transform', `translate(${450 + (level(rating) - 1) * 160 / 9} 252)`); });
+})();
+
+/* ================================================================== 5B synchroscope */
+(() => {
+  const s = svgOf('sync'); bezel(s);
+  const cx = 200, cy = 200, r = 130; el('circle', { cx, cy, r, class: 'm' }, s);
+  for (let i = 0; i < 36; i++) { const a = R(i * 10); el('line', { x1: cx + (r - (i % 9 ? 8 : 16)) * Math.cos(a), y1: cy + (r - (i % 9 ? 8 : 16)) * Math.sin(a), x2: cx + r * Math.cos(a), y2: cy + r * Math.sin(a), class: i % 9 ? 'gl' : 'g' }, s); }
+  txt(s, cx - r - 22, cy, 'you', 'lbl', { transform: `rotate(-90 ${cx - r - 22} ${cy})` }); txt(s, cx + r + 22, cy, 'them', 'lbl', { transform: `rotate(90 ${cx + r + 22} ${cy})` });
+  const nd = el('line', { x1: cx, y1: cy, x2: cx, y2: cy - r + 24, class: 'live', 'stroke-width': 4 }, s); el('circle', { cx, cy, r: 8, class: 'mf' }, s);
+  let a = 0; animate(s, (t, dt) => { const gap = .9 * Math.sin(t * .35) * Math.sin(t * .13); a += gap * dt * 80; nd.setAttribute('transform', `rotate(${a} ${cx} ${cy})`); });
+})();
+
+/* ================================================================== 5C coupled pendulums */
+(() => {
+  const s = svgOf('pend'); bezel(s, 660, 400);
+  el('line', { x1: 150, y1: 70, x2: 510, y2: 70, class: 'm', 'stroke-width': 4 }, s);
+  const P = [{ x: 230, th: .55, w: 0 }, { x: 430, th: 0, w: 0 }], L = 230, ks = 3.2, kc = 1.1;
+  const rods = P.map(() => el('line', { class: 'm' }, s)), bobs = P.map(() => el('circle', { r: 16, class: 'mf' }, s)), spring = el('path', { class: 'live', 'stroke-width': 2 }, s);
+  P.forEach(p => el('circle', { cx: p.x, cy: 70, r: 5, class: 'p' }, s));
+  s.addEventListener('pointerdown', e => { const r = s.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width * 660; const i = Math.abs(x - P[0].x) < Math.abs(x - P[1].x) ? 0 : 1; P[i].w += .5; });
+  animate(s, (t, dt) => { for (let k = 0; k < 4; k++) { const h = dt / 4; const a0 = -ks * P[0].th - kc * (P[0].th - P[1].th), a1 = -ks * P[1].th - kc * (P[1].th - P[0].th); P[0].w += a0 * h; P[1].w += a1 * h; P[0].th += P[0].w * h; P[1].th += P[1].w * h; }
+    const pts = P.map((p, i) => { const bx = p.x + L * Math.sin(p.th), by = 70 + L * Math.cos(p.th); rods[i].setAttribute('x1', p.x); rods[i].setAttribute('y1', 70); rods[i].setAttribute('x2', bx); rods[i].setAttribute('y2', by); bobs[i].setAttribute('cx', bx); bobs[i].setAttribute('cy', by); return { x: p.x + L * .45 * Math.sin(p.th), y: 70 + L * .45 * Math.cos(p.th) }; });
+    let d = `M${pts[0].x} ${pts[0].y}`; const n = 12; for (let i = 1; i < n; i++) { const u = i / n; d += ` L${lerp(pts[0].x, pts[1].x, u)} ${lerp(pts[0].y, pts[1].y, u) + (i % 2 ? 7 : -7)}`; } spring.setAttribute('d', d + ` L${pts[1].x} ${pts[1].y}`); });
+})();
+</script>
+
+</body></html>

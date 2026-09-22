@@ -1,0 +1,99 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Record Crates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=DM+Mono:wght@400;500&display=swap">
+<style>
+  :root { --paper:#FFFFFF; --ink:#3F3F3F; --amber:#F18508; --line:#E4E1DC; --soft:#8A847C; --font:"Archivo","Helvetica Neue",system-ui,sans-serif; --mono:"DM Mono",ui-monospace,monospace; --ease:cubic-bezier(.2,.8,.2,1); }
+  html, body { height:100%; }
+  body { margin:0; background:var(--paper); color:var(--ink); font-family:var(--font); -webkit-font-smoothing:antialiased; }
+  .screen { min-height:100%; box-sizing:border-box; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(14px,2.6vh,26px); padding:24px 16px 44px; text-align:center; }
+  svg.scene { width:min(920px,97vw); aspect-ratio:960/600; display:block; overflow:visible; }
+  h1 { margin:0; font-size:clamp(2rem,6vw,3.4rem); font-weight:900; letter-spacing:-.04em; line-height:.98; }
+  .btn { font:800 15px var(--font); min-height:52px; padding:0 32px; border:0; border-radius:999px; background:var(--amber); color:#fff; cursor:pointer; box-shadow:0 10px 30px -14px rgba(241,133,8,.9); transition:transform .18s var(--ease), opacity .3s var(--ease); }
+  .btn:hover { transform:translateY(-1px); } .btn[disabled] { opacity:.35; cursor:default; box-shadow:none; transform:none; }
+  .hint { font:11px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--soft); margin-top:-4px; }
+  .m { fill:none; stroke:var(--ink); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+  .wood { fill:#F5F3EF; stroke:var(--ink); stroke-width:1.5; }
+  .inside { fill:#EAE6DF; }
+  .sleeve { fill:#FBFAF7; stroke:var(--ink); stroke-width:1.4; }
+  .sleeve.alt { fill:#F1EEE8; }
+  .spine { font:500 9.5px var(--mono); fill:var(--ink); letter-spacing:.05em; }
+  .signt { font:700 10px var(--mono); fill:var(--ink); letter-spacing:.16em; text-transform:uppercase; }
+  .badge { fill:var(--ink); } .badget { font:900 10px var(--font); fill:#fff; }
+  .stall { cursor:pointer; } .stall .lift { transition: transform .3s var(--ease); } .stall:hover .lift { transform: translateY(-8px); }
+  .rec { fill:#3F3F3F; stroke:#fff; stroke-width:.8; }
+  .total { font:900 46px var(--font); fill:var(--amber); letter-spacing:-.05em; font-variant-numeric:tabular-nums; }
+  .lbl { font:500 10px var(--mono); fill:var(--soft); letter-spacing:.14em; text-transform:uppercase; }
+  .fly { fill:var(--amber); }
+</style>
+
+<main class="screen">
+  <svg class="scene" id="scene" viewBox="0 0 960 600" aria-hidden="true">
+    <g id="crates"></g>
+    <line class="m" x1="40" y1="424" x2="920" y2="424" stroke-dasharray="2 5"/>
+    <g id="stackG">
+      <text class="total" id="total" x="400" y="548" text-anchor="end">0</text>
+      <text class="lbl" x="400" y="570" text-anchor="end">questions</text>
+      <line class="m" x1="420" y1="566" x2="560" y2="566" stroke-width="2"/>
+      <g id="stack"></g>
+    </g>
+    <g id="flyer" style="pointer-events:none"></g>
+  </svg>
+  <p class="hint" id="hint">Tap a sleeve for one · hold to keep pulling · tap the stack to put them back</p>
+  <h1>Build your stack.</h1>
+  <button class="btn" type="button" id="go" disabled>Build a set</button>
+</main>
+
+<script>
+const NS='http://www.w3.org/2000/svg', reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const txt=(p,x,y,s,cls,a={})=>{const t=el('text',{x,y,class:cls,'text-anchor':'middle','dominant-baseline':'middle',...a},p);t.textContent=s;return t;};
+const lerp=(a,b,k)=>a+(b-a)*k, easeIn=k=>k*k*k, easeOut=k=>1-Math.pow(1-k,3);
+const tween=(ms,fn,ease=easeOut)=>new Promise(r=>{if(reduce){fn(1);return r();}const t0=performance.now();(function s(n){const k=Math.min(1,(n-t0)/ms);fn(ease(k));k<1?requestAnimationFrame(s):r();})(t0)});
+const $=id=>document.getElementById(id);
+let seed=5; const rnd=()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
+
+const DOMAINS=[
+  ['Algebra',       [['Linear eqs','linear_equations_in_one_variable'],['Lines','linear_equations_in_two_variables'],['Linear fn','linear_functions'],['Systems','systems_of_linear_equations'],['Inequalities','linear_inequalities']]],
+  ['Advanced Math', [['Expressions','equivalent_expressions'],['Nonlin. eqs','nonlinear_equations_and_systems'],['Nonlinear fn','nonlinear_functions']]],
+  ['Data',          [['Ratios','ratios_rates_proportions_and_units'],['Percents','percentages'],['1-var data','one_variable_data'],['2-var data','two_variable_data'],['Probability','probability'],['Samples','sample_statistics_and_margin_of_error'],['Claims','evaluating_statistical_claims']]],
+  ['Geometry',      [['Area/volume','area_and_volume'],['Angles','lines_angles_and_triangles'],['Trig','right_triangles_and_trigonometry'],['Circles','circles']]],
+];
+
+/* four crates on the floor, records standing on edge, names down the spines */
+const stalls=[], basket={}; let total=0, x=42; const PITCH=36, PAD=14, GAP=22;
+DOMAINS.forEach(([dom,items])=>{
+  const w=items.length*PITCH+PAD*2, C=$('crates');
+  el('rect',{class:'inside',x:x+4,y:268,width:w-8,height:80},C);                                   // the inside back of the crate
+  items.forEach(([name,slug],i)=>{ const cx=x+PAD+i*PITCH+PITCH/2;
+    const g=el('g',{class:'stall',transform:`translate(${cx} 380)`},C); const lift=el('g',{class:'lift'},g);
+    el('rect',{class:'sleeve'+(i%2?' alt':''),x:-15,y:-134,width:30,height:134,rx:2,transform:'rotate(-4 0 0)'},lift);
+    txt(lift,0,-92,name,'spine',{transform:'rotate(-90 0 -92) rotate(-4 0 0)'});
+    const badge=el('g',{opacity:0},lift); el('circle',{class:'badge',cx:9,cy:-128,r:9},badge); const bt=txt(badge,9,-127.5,'0','badget');
+    const st={slug,name,launch:{x:cx,y:262},badge,bt,n:0,hold:null}; stalls.push(st);
+    const start=()=>{ pull(st); const t0=performance.now(); const tick=()=>{ if(st.hold===null) return; const h=(performance.now()-t0)/1000; pull(st); st.hold=setTimeout(tick,h<.7?240:h<1.8?100:45); }; st.hold=setTimeout(tick,240); };
+    const stop=()=>{ clearTimeout(st.hold); st.hold=null; };
+    g.addEventListener('pointerdown',e=>{ try{ g.setPointerCapture(e.pointerId); }catch(_){} start(); }); ['pointerup','pointerleave','pointercancel'].forEach(e=>g.addEventListener(e,stop)); });
+  el('rect',{class:'wood',x,y:340,width:w,height:82,rx:4},C);                                       // the crate front, over the sleeves' feet
+  [362,384,404].forEach(y=>el('line',{class:'m',x1:x+6,y1:y,x2:x+w-6,y2:y,opacity:.3},C));
+  txt(C,x+w/2,392,dom,'signt');
+  x+=w+GAP;
+});
+
+/* pulling: the record flies to your stack, edge-on, and the stack rises */
+const stack=$('stack'), stackG=$('stackG'), totalT=$('total'), hint=$('hint'), go=$('go'); const CAP=120;
+function pull(st){ if(total>=CAP){ hint.textContent='That is a full crate · tap the stack to put them back'; return; }
+  st.n++; total++; basket[st.slug]=st.n; st.bt.textContent=st.n; st.badge.setAttribute('opacity',1); totalT.textContent=total; go.disabled=false;
+  const n=Math.min(total,32), tx=490+(rnd()*6-3), ty=562-n*4;
+  const f=el('rect',{class:'fly',x:-50,y:-2,width:100,height:4,rx:2},$('flyer'));
+  tween(560,k=>f.setAttribute('transform',`translate(${lerp(st.launch.x,tx,k)} ${lerp(st.launch.y,ty,k)-120*Math.sin(Math.PI*k)}) rotate(${lerp(-86,rnd()*4-2,k)})`), easeIn)
+    .then(()=>{ f.remove(); if(total<=32) el('rect',{class:'rec',x:tx-50,y:ty-2,width:100,height:4,rx:2,transform:`rotate(${rnd()*3-1.5} ${tx} ${ty})`},stack); tween(220,k=>stackG.setAttribute('transform',`translate(0 ${2*Math.sin(Math.PI*k)})`)); }); }
+stackG.style.cursor='pointer';
+stackG.addEventListener('pointerdown', async ()=>{ if(!total) return; await tween(320,k=>stack.setAttribute('opacity',1-k)); stack.replaceChildren(); stack.setAttribute('opacity',1);
+  stalls.forEach(st=>{ st.n=0; st.badge.setAttribute('opacity',0); }); for(const k in basket) delete basket[k]; total=0; totalT.textContent='0'; go.disabled=true; hint.textContent='Tap a sleeve for one · hold to keep pulling · tap the stack to put them back'; });
+/* -- ROUTER SEAM: the set is `basket`, a map of topic slug -> question count -- */
+go.addEventListener('click', ()=>console.log('[router] /practice/combined', {...basket}));
+</script>
+
+</body></html>
