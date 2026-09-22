@@ -22,6 +22,7 @@ offset and never reissued, so a second sitting is not the first one again.
 
 from __future__ import annotations
 
+import functools
 import hashlib
 import logging
 import re
@@ -282,6 +283,19 @@ def build(basket: dict[str, int], learner: str,
 
 
 # ------------------------------------------------------------------ the wire
+
+@functools.lru_cache(maxsize=4096)
+def _skill(key: str, seed: int) -> str:
+    return generate(key, seed).skill
+
+
+def skill_of(q: dict) -> str | None:
+    """What a question tests, in the bank's words. The stored diagnostic forms
+    and shelf mocks predate the field, so for them it is read off the item."""
+    if q.get("skill"):
+        return q["skill"]
+    return _skill(q["key"], q["seed"]) if "key" in q else None
+
 
 def to_question(card: Card, n: int) -> dict:
     """The stored form: everything, key included. Stripped before it is served."""

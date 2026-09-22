@@ -130,7 +130,7 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
                        left, when, learner, q["key"], t["reason"])
     else:
         # a grid-in names no mistake, so it is filed under what it was testing
-        label = reason or q.get("skill") or q.get("topic_name") or q["topic"]
+        label = reason or practice.skill_of(q) or q.get("topic_name") or q["topic"]
         label = label[:1].upper() + label[1:]
         if db.one("SELECT 1 FROM traps WHERE learner=? AND template=? AND reason=?",
                   learner, q["key"], reason):

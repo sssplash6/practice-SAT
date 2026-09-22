@@ -28,7 +28,7 @@ os.environ.pop("SATF_SMTP_HOST", None)                       # mail goes to the 
 
 from fastapi.testclient import TestClient                    # noqa: E402
 
-from server import mail, scoring                             # noqa: E402
+from server import mail, practice, scoring                   # noqa: E402
 from server.app import app                                   # noqa: E402
 
 mail.OUTBOX = pathlib.Path(_tmp.name) / "outbox"
@@ -553,6 +553,20 @@ def check_learner(c) -> None:
     assert {"drill", "mock"} <= kinds, kinds
     assert c.get("/api/today", headers=H).json()["score"]["kind"] == "mock"
     print(f"ok  history lists {len(hist)} sittings, and today carries the latest score")
+
+    # --- a grid-in names no mistake, so it is filed under the bank's skill ---------
+    D = {"X-Learner": "a:diaggrid"}
+    s = c.post("/api/session", headers=D).json()
+    grid = next(q for q in s["questions"] if q["type"] == "spr")
+    c.post(f"/api/session/{s['id']}/answer", json={"question_id": grid["id"], "answer": "123456"})
+    c.post(f"/api/session/{s['id']}/finish")
+    form = json.loads(pathlib.Path("server/forms.json").read_text())["forms"]
+    full = next(q for f in form for q in f["questions"] if q["id"] == grid["id"] and q["stem"] == grid["stem"])
+    skill = practice.skill_of(full)
+    [trap] = c.get("/api/mistakes", headers=D).json()["traps"]
+    assert skill and "skill" not in full, "the stored forms carry no skill; this checks the lookup"
+    assert trap["label"] == skill[:1].upper() + skill[1:] and trap["label"] != grid["topic_name"], trap
+    print(f"ok  a diagnostic grid-in miss is filed as \"{trap['label']}\", not the topic")
 
 
 if __name__ == "__main__":

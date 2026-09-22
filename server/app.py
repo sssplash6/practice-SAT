@@ -502,7 +502,7 @@ def results(sid: str) -> dict:
         if not ok and q["type"] == "mcq" and isinstance(given, int) and 0 <= given < 4:
             reason = (q.get("reasons") or [""] * 4)[given]
             mistake = reason[:1].upper() + reason[1:] if reason else None
-        review.append({**public(q), "topic": q.get("topic"), "skill": q.get("skill"),
+        review.append({**public(q), "topic": q.get("topic"), "skill": practice.skill_of(q),
                        "given": given, "answer": q["answer"], "rationale": q["rationale"],
                        "correct": ok, "mistake": mistake})
     out["review"] = review
