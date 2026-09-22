@@ -73,7 +73,7 @@
   .q[data-ok="false"] .q-verdict { color:#b3261e; }
   .q-stem { margin-top:9px; font-size:14.5px; white-space:pre-wrap; }
   .q-fig { margin-top:10px; }
-  .q-fig svg { max-width:100%; height:auto; }
+  .q-fig svg { max-width:100%; height:auto; overflow:visible; }
   .q-ans { margin-top:10px; font-size:13.5px; color:var(--soft); }
   .q-ans b { color:var(--ink); font-weight:600; }
   .q-why { margin-top:7px; font-size:13.5px; color:var(--soft); }
@@ -178,6 +178,18 @@ function buildReview(list) {
   }).join('');
   /* stems are plain text with real newlines, so they are set as text */
   document.querySelectorAll('.q-stem').forEach((el, i) => { el.textContent = list[i].stem; });
+
+  /* the same 1.45 the test window uses: a chart's labels are 11px inside its
+     viewBox, which reads far too small beside the text. No fitting loop here,
+     because this panel scrolls by design. */
+  document.querySelectorAll('.q-fig svg').forEach(svg => {
+    const w = (svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width)
+              || parseFloat(svg.getAttribute('width')) || 0;
+    if (!w) return;
+    svg.removeAttribute('width');
+    svg.removeAttribute('height');
+    svg.style.width = Math.round(w * 1.45) + 'px';
+  });
 }
 
 $('reviewBtn').addEventListener('click', () => $('review').showModal());

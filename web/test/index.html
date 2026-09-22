@@ -189,6 +189,7 @@ button { font:inherit; color:inherit; -webkit-tap-highlight-color:transparent; u
 }
 .tablewrap th { font-weight:600; background:#f6f6f6; }
 .figure svg, .figure img { max-width:100%; height:auto; display:block; }
+.figure svg { overflow:visible; }   /* a point sitting on the axis is not clipped */
 
 /* ------------------------------------------------------------- options */
 .opts { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }

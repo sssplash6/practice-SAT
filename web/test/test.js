@@ -71,6 +71,37 @@
 
   const cur = () => S.qs[S.i];
 
+  /* Every generated chart sets its labels at 11px inside a viewBox a few
+     hundred units across, so at natural size they read half the height of the
+     17px stem under them, and a 390-wide plot leaves most of a 760 column
+     empty. Scaling to 1.45 puts those labels near 16px whatever the viewBox.
+
+     But a taller chart then pushes the answer off the bottom, and hunting for
+     the input on a timed test is worse than a slightly smaller chart. So the
+     figure takes the most room it can without making the question scroll,
+     between its natural size and that 1.45 ceiling, measured rather than
+     guessed because how much is left depends on the stem and the options. */
+  const FIGURE_MAX = 1.45;
+  const FIGURE_MIN = 1.0;
+
+  function sizeFigure(host, pane) {
+    const svg = host.querySelector('svg');
+    if (!svg) return;
+    const vb = svg.viewBox && svg.viewBox.baseVal;
+    const natural = (vb && vb.width) || parseFloat(svg.getAttribute('width')) || 0;
+    if (!natural) return;
+
+    svg.removeAttribute('width');
+    svg.removeAttribute('height');
+    const at = k => { svg.style.width = Math.round(natural * k) + 'px'; };
+
+    at(FIGURE_MAX);
+    if (!pane) return;
+    for (let k = FIGURE_MAX; k > FIGURE_MIN && pane.scrollHeight > pane.clientHeight; k -= 0.05) {
+      at(k);
+    }
+  }
+
   function render() {
     const q = cur();
     if (!q) return;
@@ -112,6 +143,10 @@
 
     $('backBtn').hidden = S.i === 0;
     $('nextBtn').textContent = S.i === S.qs.length - 1 ? 'Finish' : 'Next';
+
+    /* last, because it measures what the options left behind */
+    if (q.figure) sizeFigure($('figure'), $('paneR'));
+
     $('paneR').scrollTop = 0;
     if (split) $('paneL').scrollTop = 0;
   }
