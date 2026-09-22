@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Practice · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* A session is the one screen with no navigation: the question, and the
+     way out. Everything else the student needs is one tap away on the bar. */
+  .run-top {
+    position: sticky; top: 0; z-index: 30; background: var(--paper);
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .run-top.scrolled { box-shadow: 0 1px 0 var(--line); }
+  .run-in {
+    max-width: var(--max); margin: 0 auto; height: 60px; padding: 0 clamp(10px, 3vw, 28px);
+    display: grid; grid-template-columns: 1fr minmax(0, 620px) 1fr; align-items: center; gap: 14px;
+  }
+  .run-in .x { justify-self: start; }
+  .tools { justify-self: end; display: flex; align-items: center; gap: 2px; }
+  .tool {
+    appearance: none; border: 0; background: none; cursor: pointer;
+    width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; color: var(--soft);
+    transition: color .16s var(--ease), background-color .16s var(--ease);
+  }
+  @media (hover: hover) and (pointer: fine) { .tool:hover { color: var(--ink); background: var(--tile); } }
+  .tool[aria-pressed="true"] { color: var(--ink); }
+  .tool[aria-pressed="true"] svg path { fill: var(--amber); stroke: var(--amber-deep); }
+  .tick { font: 500 14px var(--mono); font-variant-numeric: tabular-nums; color: var(--ink); padding: 0 10px 0 4px; }
+  .tick.low { color: var(--ink-deep); font-weight: 600; }
+
+  .prog { display: flex; gap: 4px; justify-content: center; }
+  .seg { flex: 1 1 0; max-width: 26px; height: 4px; border-radius: 2px; background: var(--line); }
+  .seg.now { background: none; box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .seg.ok { background: var(--amber); }
+  .seg.no { background: var(--ink); }
+  .seg.add { animation: grow .55s var(--ease) both; transform-origin: left center; }
+  .count { font: 500 13px var(--mono); color: var(--soft); text-align: center; font-variant-numeric: tabular-nums; }
+
+  .run { max-width: 700px; margin: 0 auto; padding: clamp(18px, 6vh, 64px) clamp(16px, 4vw, 24px) 96px; }
+  .q.enter { animation: rise .4s var(--ease) both; }
+  .qhead { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .qhead .q-skill { margin-bottom: 0; }
+  .qm { width: 74px; flex: none; }
+  .qbody { margin-top: 16px; }
+  .fixed { display: flex; align-items: center; gap: 10px; font: 600 14.5px var(--font); color: var(--ink); }
+  .fixed svg { width: 16px; height: 16px; color: var(--amber-deep); flex: none; }
+  .fixed span { text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: var(--faint); }
+  .next-row { margin-top: 26px; display: flex; align-items: center; gap: 18px; }
+  .keys { font: 500 11px var(--mono); color: var(--faint); letter-spacing: .06em; }
+
+  /* the summary */
+  .sum { max-width: 700px; margin: 0 auto; padding: clamp(24px, 7vh, 72px) clamp(16px, 4vw, 24px) 96px; }
+  .score { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .score .num { font-size: clamp(64px, 12vw, 104px); }
+  .score .of { font: 800 clamp(28px, 5vw, 40px) var(--font); color: var(--faint); letter-spacing: -.03em; }
+  .rows { margin-top: 34px; display: grid; gap: 8px; }
+  .row { display: grid; grid-template-columns: 22px minmax(0, 1fr) minmax(90px, 180px) auto; gap: 14px; align-items: center;
+         padding: 14px 16px; border-radius: 10px; background: var(--tile); }
+  .row .glyph { color: var(--ink); }
+  .row .nm { font: 600 14.5px var(--font); }
+  .row .rs { font: 500 13px var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; }
+  .traps { margin-top: 26px; display: grid; gap: 10px; }
+  .actions { margin-top: 18px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
+  .upnext { margin-top: 38px; padding-top: 22px; box-shadow: 0 -1px 0 var(--line); display: flex; flex-wrap: wrap; align-items: center; gap: 8px 8px; }
+  .upnext .meta { margin-left: 6px; }
+  @media (hover: none) { .keys { display: none; } }
+  .rank { margin-top: 18px; font: 600 16px var(--font); }
+  .rank .num { font-size: 28px; }
+  @media (max-width: 560px) {
+    .row { grid-template-columns: 22px minmax(0, 1fr) auto; }
+    .row .mbar { grid-column: 2 / -1; }
+    .run-in { grid-template-columns: auto minmax(0, 1fr) auto; }
+  }
+</style>
+</head>
+<body data-page="session">
+
+<header class="run-top" id="top">
+  <div class="run-in">
+    <button type="button" class="x" id="quit" aria-label="End"></button>
+    <div id="progress"></div>
+    <div class="tools">
+      <span class="tick" id="tick" hidden></span>
+      <button type="button" class="tool" id="save" aria-pressed="false" aria-label="Save this question"></button>
+      <button type="button" class="tool" id="calc" aria-label="Calculator"></button>
+      <button type="button" class="tool" id="refb" aria-label="Reference"></button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="run" id="run">
+    <div class="q" id="q"></div>
+    <div class="next-row" id="nextRow" hidden>
+      <button type="button" class="pill" id="next">Next</button>
+      <span class="keys" id="keys">Enter</span>
+    </div>
+    <p class="error" id="err" hidden></p>
+  </div>
+  <div class="sum" id="sum" hidden></div>
+</main>
+
+<script src="/assets/ui.js"></script>
+<script>
+(() => {
+  'use strict';
+  const { api, h, glyph, svg, ICON, TOPIC, mmss, snap, $ } = UI;
+
+  const id = new URL(location.href).searchParams.get('id');
+  const S = { st: null, q: null, ctrl: null, shownAt: 0, marks: [], total: null, busy: false,
+              mastery: {}, saved: new Set(), clock: 0, ended: false };
+
+  $('#quit').innerHTML = svg(ICON.x, 20);
+  $('#save').innerHTML = svg(ICON.bookmark, 21);
+  $('#calc').innerHTML = svg(ICON.calc, 21);
+  $('#refb').innerHTML = svg(ICON.ref, 21);
+  addEventListener('scroll', () => $('#top').classList.toggle('scrolled', scrollY > 4), { passive: true });
+
+  // what the map last showed, so the bar on each question starts where it was
+  const was = snap.get('map') || {};
+  Object.entries(was).forEach(([k, v]) => { S.mastery[k] = v.mastery; });
+
+  /* ---------------------------------------------------------- progress */
+  function paintProgress(grew) {
+    const host = $('#progress');
+    const n = S.total === null ? null : S.total;
+    if (n === null) {
+      const right = S.marks.filter(Boolean).length;
+      host.replaceChildren(h('div', { class: 'count', text: `${right} / ${S.marks.length}` }));
+      return;
+    }
+    const segs = [];
+    for (let i = 0; i < n; i++) {
+      const cls = i < S.marks.length ? (S.marks[i] ? 'ok' : 'no') : (i === S.marks.length && S.q && !S.ctrl?.answered() ? 'now' : '');
+      const seg = h('span', { class: 'seg ' + cls });
+      if (grew && i === n - 1) seg.classList.add('add');
+      segs.push(seg);
+    }
+    host.replaceChildren(h('div', { class: 'prog', 'aria-label': `${S.marks.length} of ${n}` }, segs));
+  }
+
+  /* ---------------------------------------------------------- the clock */
+  function startClock() {
+    if (!S.st.seconds) return;
+    const t0 = Date.parse(S.st.started);
+    const tick = $('#tick');
+    tick.hidden = false;
+    const paint = () => {
+      const left = S.st.seconds - (Date.now() - t0) / 1000;
+      tick.textContent = mmss(left);
+      tick.classList.toggle('low', left < 60);
+      if (left <= 0 && !S.ended) { clearInterval(S.clock); finish(); }
+    };
+    paint();
+    S.clock = setInterval(paint, 500);
+  }
+
+  /* ---------------------------------------------------------- a question */
+  function show(q) {
+    S.q = q;
+    $('#nextRow').hidden = true;
+    $('#err').hidden = true;
+    const box = $('#q');
+    box.classList.remove('enter'); void box.offsetWidth; box.classList.add('enter');
+    box.replaceChildren();
+    const head = h('div', { class: 'qhead' });
+    const body = h('div', { class: 'qbody' });
+    box.append(head, body);
+    S.ctrl = UI.question(body, q, { onAnswer: answer });
+    // the question's own header carries the topic and how far along it is
+    const skill = body.querySelector('.q-skill');
+    const m = h('i');
+    const mb = h('span', { class: 'mbar qm', 'aria-hidden': 'true' }, m);
+    head.append(skill, mb);
+    const known = S.mastery[q.topic];
+    mb.hidden = known === undefined;
+    m.style.setProperty('--m', (known || 0).toFixed(3));
+    S.mbar = { el: mb, fill: m };
+    $('#save').setAttribute('aria-pressed', String(S.saved.has(q.id)));
+    S.shownAt = performance.now();
+    paintProgress(false);
+    scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  async function answer(given) {
+    if (S.busy) return;
+    S.busy = true;
+    const ms = Math.round(performance.now() - S.shownAt);
+    let fb;
+    try {
+      fb = await api(`/drill/${id}/answer`, { method: 'POST', body: { question_id: S.q.id, answer: given, ms } });
+    } catch (e) {
+      S.busy = false;
+      $('#err').textContent = e.message; $('#err').hidden = false;
+      return;
+    }
+    S.busy = false;
+    S.ctrl.reveal(fb);
+    S.marks.push(fb.correct);
+    const grew = fb.total !== null && S.total !== null && fb.total > S.total;
+    S.total = fb.total;
+    paintProgress(grew);
+
+    if (fb.mastery) {
+      const { el, fill } = S.mbar;
+      if (el.hidden) { fill.style.setProperty('--m', fb.mastery.before.toFixed(3)); el.hidden = false; void el.offsetWidth; }
+      requestAnimationFrame(() => fill.style.setProperty('--m', fb.mastery.after.toFixed(3)));
+      S.mastery[fb.mastery.topic] = fb.mastery.after;
+    }
+    if (fb.closed && fb.closed.length) {
+      const verdict = $('#q').querySelector('.verdict');
+      fb.closed.forEach(label => verdict.prepend(h('p', { class: 'fixed', html: svg('<path d="M5 12.5l4.3 4.3L19 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>', 16) }, h('span', { text: label }))));
+    }
+    const done = fb.total !== null && fb.answered >= fb.total;
+    $('#next').textContent = done ? 'Finish' : 'Next';
+    $('#nextRow').hidden = false;
+    $('#next').focus({ preventScroll: true });
+  }
+
+  async function next() {
+    if (S.busy) return;
+    S.busy = true;
+    try {
+      const r = await api(`/drill/${id}/next`, { method: 'POST' });
+      S.busy = false;
+      if (r.done) return finish();
+      if (r.total !== undefined) S.total = r.total;
+      show(r.question);
+    } catch (e) {
+      S.busy = false;
+      $('#err').textContent = e.message; $('#err').hidden = false;
+    }
+  }
+
+  /* ---------------------------------------------------------- the end */
+  async function finish() {
+    if (S.ended) return;
+    S.ended = true;
+    clearInterval(S.clock);
+    let r;
+    try { r = await api(`/drill/${id}/finish`, { method: 'POST' }); }
+    catch (e) { location.href = '/practice/'; return; }
+    summary(r);
+  }
+
+  function summary(r) {
+    S.ended = true;
+    $('#run').hidden = true;
+    $('#tick').hidden = true;
+    $('#progress').replaceChildren();
+    ['save', 'calc', 'refb'].forEach(x => { $('#' + x).hidden = true; });
+    UI.calc.close();
+    const box = $('#sum');
+    box.hidden = false;
+    box.replaceChildren();
+    const mins = Math.max(1, Math.round((r.ms || 0) / 60000));
+    box.append(h('div', { class: 'score rise' },
+      h('span', { class: 'num', text: String(r.right) }),
+      h('span', { class: 'of', text: `/ ${r.asked}` }),
+      r.asked ? h('span', { class: 'meta', text: `${mins} min` }) : null));
+
+    const rows = h('div', { class: 'rows' });
+    (r.topics || []).forEach((t, i) => {
+      const fill = h('i');
+      fill.style.setProperty('--m', (t.before || 0).toFixed(3));
+      rows.append(h('div', { class: 'row rise', style: `animation-delay:${.05 + i * .05}s` },
+        glyph(t.topic),
+        h('span', { class: 'nm', text: (TOPIC[t.topic] || {}).short || t.name }),
+        h('span', { class: 'mbar' }, fill),
+        h('span', { class: 'rs', text: `${t.right}/${t.asked}` })));
+      setTimeout(() => fill.style.setProperty('--m', (t.after || 0).toFixed(3)), 350 + i * 80);
+    });
+    box.append(rows);
+
+    const traps = h('div', { class: 'traps' });
+    (r.closed || []).forEach(t => traps.append(h('p', { class: 'fixed', html: svg('<path d="M5 12.5l4.3 4.3L19 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>', 16) }, h('span', { text: t.label }))));
+    (r.opened || []).forEach(t => traps.append(h('p', { class: 'mistake', text: t.label })));
+    if (traps.children.length) box.append(traps);
+
+    const actions = h('div', { class: 'actions' });
+    if (r.mode === 'challenge') {
+      const rank = h('p', { class: 'rank' });
+      box.append(rank);
+      api('/challenge').then(c => {
+        const you = c.board && c.board.you;
+        if (you) rank.replaceChildren(h('span', { class: 'num', text: `#${you.rank}` }), ` of ${c.board.players}`);
+      }).catch(() => {});
+      actions.append(h('a', { class: 'pill', href: '/challenge/', text: 'Board' }),
+                     h('a', { class: 'quiet', href: '/', text: 'Today' }));
+    } else if (r.next && r.next.topics && r.next.topics.length) {
+      // the next set, shown as what it is before the button that starts it
+      const nx = r.next;
+      box.append(h('div', { class: 'upnext' }, nx.topics.map(t => UI.chip(t)),
+                   h('span', { class: 'meta', text: `${nx.count} · ${UI.minutesFor(nx.count)} min` })));
+      const keep = h('button', { type: 'button', class: 'pill', text: 'Keep going' });
+      keep.addEventListener('click', async () => {
+        keep.setAttribute('aria-busy', 'true');
+        try {
+          const d = await api('/drill', { method: 'POST', body: { topics: nx.topics, count: nx.count, source: 'coach' } });
+          location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`;
+        } catch (e) { keep.removeAttribute('aria-busy'); }
+      });
+      actions.append(keep, h('a', { class: 'quiet', href: '/practice/', text: 'Map' }));
+    } else {
+      actions.append(h('a', { class: 'pill', href: '/practice/', text: 'Map' }));
+    }
+    box.append(actions);
+    snap.set('map', Object.fromEntries(Object.entries(was).map(([k, v]) => [k, v])));
+  }
+
+  /* ---------------------------------------------------------- tools */
+  $('#quit').addEventListener('click', () => {
+    if (S.ended || !S.marks.length) { location.href = S.st && S.st.mode === 'challenge' ? '/challenge/' : '/practice/'; return; }
+    finish();
+  });
+  $('#next').addEventListener('click', next);
+  $('#calc').addEventListener('click', () => { UI.calc.toggle(); });
+  $('#refb').addEventListener('click', () => UI.ref.open());
+  $('#save').addEventListener('click', async () => {
+    if (!S.q) return;
+    const on = !S.saved.has(S.q.id);
+    on ? S.saved.add(S.q.id) : S.saved.delete(S.q.id);
+    $('#save').setAttribute('aria-pressed', String(on));
+    try { await api('/saved', { method: 'POST', body: { session: id, question_id: S.q.id, on } }); } catch (_) {}
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey || !S.q || S.ended) return;
+    if (e.target.matches('input, textarea') && e.key !== 'Enter') return;
+    const k = e.key.toLowerCase();
+    if (S.ctrl && !S.ctrl.answered() && S.q.type === 'mcq') {
+      const i = 'abcd'.indexOf(k) >= 0 ? 'abcd'.indexOf(k) : '1234'.indexOf(k);
+      if (i >= 0 && k.length === 1) { e.preventDefault(); S.ctrl.choose(i); }
+    } else if (e.key === 'Enter' && !$('#nextRow').hidden && e.target.id !== 'next') {
+      e.preventDefault(); next();
+    }
+  });
+
+  /* ---------------------------------------------------------- boot */
+  (async () => {
+    if (!id) { location.href = '/practice/'; return; }
+    try { S.st = await api(`/drill/${id}`); }
+    catch (e) { $('#err').textContent = e.status === 404 ? 'That set does not exist.' : e.message; $('#err').hidden = false; return; }
+    S.total = S.st.total;
+    S.marks = S.st.marks || [];
+    if (S.st.mode === 'challenge') document.title = 'Challenge · SAT Freshman';
+    if (S.st.finished) { S.ended = true; const r = await api(`/drill/${id}/finish`, { method: 'POST' }); return summary(r); }
+    startClock();
+    if (S.st.question) show(S.st.question);
+    else next();
+  })();
+})();
+</script>
+</body>
+</html>

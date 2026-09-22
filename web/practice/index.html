@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Practice · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* The map: nineteen skills in four columns, laid on one grid so the rows
+     line up across domains. The start block sits in the cells Geometry leaves
+     empty, which is the one place on the page with room for it. */
+  .top { display: flex; align-items: center; justify-content: flex-end; min-height: 36px; gap: 18px; }
+  .mistakes-link { display: inline-flex; align-items: center; gap: 9px; text-decoration: none;
+                   font: 600 14px var(--font); color: var(--ink); padding: 8px 12px; margin: -8px -12px; border-radius: 8px; }
+  @media (hover: hover) and (pointer: fine) { .mistakes-link:hover { background: var(--tile); } }
+
+  .grid {
+    margin-top: clamp(8px, 2vh, 20px);
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: auto repeat(7, 62px);
+    column-gap: 18px; row-gap: 8px;
+  }
+  .grid > * { grid-column: var(--c4); grid-row: var(--r4); }
+
+  .dom {
+    appearance: none; border: 0; background: none; cursor: pointer;
+    align-self: end; justify-self: start; padding: 0 0 11px 2px; margin: 0;
+    font: 500 10.5px var(--mono); letter-spacing: .15em; text-transform: uppercase; color: var(--soft); text-align: left;
+    transition: color .16s var(--ease);
+  }
+  .dom[data-all="true"] { color: var(--ink); }
+  @media (hover: hover) and (pointer: fine) { .dom:hover { color: var(--ink); } }
+
+  .tile {
+    --gb: var(--tile);
+    position: relative; appearance: none; border: 0; margin: 0; cursor: pointer; text-align: left;
+    display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; column-gap: 12px;
+    padding: 0 14px 5px; border-radius: 10px; background: var(--gb); color: var(--ink);
+    font: 500 14px/1.2 var(--font); letter-spacing: -.005em;
+    transition: background-color .18s var(--ease), box-shadow .18s var(--ease), transform .14s var(--ease);
+    touch-action: manipulation; user-select: none; -webkit-user-select: none;
+  }
+  .tile .glyph { transition: color .18s var(--ease); }
+  .tile[aria-pressed="true"] { --gb: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); font-weight: 600; }
+  .tile[aria-pressed="true"] .glyph { color: var(--ink); }
+  @media (hover: hover) and (pointer: fine) {
+    .tile:hover { --gb: var(--tile-2); }
+    .tile[aria-pressed="true"]:hover { --gb: var(--wash-2); }
+  }
+  .tile:active { transform: scale(.985); }
+  .tile .mbar { position: absolute; left: 14px; right: 14px; bottom: 9px; height: 2px; }
+
+  .go { align-self: end; display: flex; flex-direction: column; gap: 10px; }
+  .go-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin: 0 -6px; }
+  .tiers { display: flex; align-items: flex-end; gap: 3px; padding: 0 6px; height: 38px; }
+  .tiers button {
+    appearance: none; border: 0; background: none; cursor: pointer; padding: 10px 3px 11px;
+    display: flex; align-items: flex-end;
+  }
+  .tiers i { display: block; width: 5px; border-radius: 2px; background: var(--faint); transition: background-color .16s var(--ease); }
+  .tiers button:nth-child(1) i { height: 7px; }
+  .tiers button:nth-child(2) i { height: 11px; }
+  .tiers button:nth-child(3) i { height: 15px; }
+  .tiers button[aria-pressed="true"] i { background: var(--ink); }
+  .clock {
+    appearance: none; border: 0; background: none; cursor: pointer;
+    display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 6px;
+    color: var(--faint); font: 500 12.5px var(--mono); font-variant-numeric: tabular-nums;
+    transition: color .16s var(--ease);
+  }
+  .clock svg { width: 21px; height: 21px; flex: none; }
+  .clock .hand { stroke: currentColor; }
+  .clock[aria-pressed="true"] { color: var(--ink); }
+  .clock[aria-pressed="true"] .hand { stroke: var(--amber); stroke-width: 2.2; }
+  @media (hover: hover) and (pointer: fine) { .clock:hover { color: var(--ink); } }
+  .choices .inf { font-size: 20px; line-height: 1; }
+
+  .tip {
+    position: absolute; z-index: 20; max-width: 280px; padding: 11px 13px; border-radius: 10px; background: var(--paper);
+    box-shadow: 0 0 0 1px var(--line), 0 14px 30px -16px rgba(63, 63, 63, .45);
+    font: 500 13px/1.35 var(--font); pointer-events: none;
+    opacity: 0; transform: translateY(4px); transition: opacity .16s var(--ease), transform .16s var(--ease);
+  }
+  .tip.on { opacity: 1; transform: none; }
+  .tip p { display: flex; gap: 9px; align-items: baseline; }
+  .tip p + p { margin-top: 7px; }
+  .tip p::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); transform: translateY(-1px); }
+  .err { margin-top: 10px; }
+
+  @media (max-width: 1039px) {
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto repeat(5, 62px) auto repeat(7, 62px); }
+    .grid > * { grid-column: var(--c2); grid-row: var(--r2); }
+    .dom.lower { padding-top: 28px; }
+  }
+  @media (max-width: 639px) {
+    .grid { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+    .grid > * { grid-column: auto; grid-row: auto; }
+    .tile { min-height: 58px; }
+    .dom { padding-top: 22px; }
+    .go {
+      position: fixed; left: 0; right: 0; bottom: calc(62px + env(safe-area-inset-bottom, 0px)); z-index: 25;
+      padding: 16px 16px 12px; background: linear-gradient(to top, var(--paper) 78%, rgba(255, 255, 255, 0));
+    }
+    .page { padding-bottom: 240px; }
+  }
+</style>
+</head>
+<body data-page="practice">
+<header id="bar"></header>
+
+<main class="page" id="main">
+  <div class="top"><a class="mistakes-link" id="mistakes" href="/mistakes/" hidden><span class="dot"></span><span></span></a></div>
+  <div class="grid" id="grid" aria-label="Topics"></div>
+
+  <div class="go" id="go">
+    <div class="go-row">
+      <div class="choices" id="count" role="group" aria-label="Questions">
+        <button type="button" data-n="5" aria-pressed="false">5</button>
+        <button type="button" data-n="10" aria-pressed="true">10</button>
+        <button type="button" data-n="22" aria-pressed="false">22</button>
+        <button type="button" data-n="inf" class="inf" aria-pressed="false" aria-label="Endless">∞</button>
+      </div>
+      <div class="tiers" id="tiers" role="group" aria-label="Difficulty">
+        <button type="button" data-t="easy" aria-pressed="true" aria-label="Easy"><i></i></button>
+        <button type="button" data-t="medium" aria-pressed="true" aria-label="Medium"><i></i></button>
+        <button type="button" data-t="hard" aria-pressed="true" aria-label="Hard"><i></i></button>
+      </div>
+      <button type="button" class="clock" id="clock" aria-pressed="false" aria-label="Timed"></button>
+    </div>
+    <button type="button" class="pill wide" id="start">Start</button>
+    <p class="error err" id="err" hidden></p>
+  </div>
+  <div class="tip" id="tip" role="tooltip"></div>
+</main>
+
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script>
+(() => {
+  'use strict';
+  const { api, h, glyph, TOPICS, DOMAINS, mmss, snap, $ } = UI;
+  UI.shell();
+
+  const grid = $('#grid'), go = $('#go'), start = $('#start'), tip = $('#tip');
+  const picked = new Set();
+  const cfg = { count: 10, tiers: new Set(['easy', 'medium', 'hard']), timed: false };
+  const tiles = {}, heads = [];
+  let board = {};
+
+  /* where each thing sits: 4 columns, 2 columns, or one */
+  function place(node, d, row) {
+    node.style.setProperty('--c4', d + 1);
+    node.style.setProperty('--c2', (d % 2) + 1);
+    if (row === 'go') { node.style.setProperty('--r4', '6 / 9'); node.style.setProperty('--r2', '12 / 15'); }
+    else { node.style.setProperty('--r4', row + 1); node.style.setProperty('--r2', (d < 2 ? 0 : 6) + row + 1); }
+  }
+
+  let paintTo = null, eat = false, tipT = 0;
+  function build() {
+    DOMAINS.forEach(([domain, short], d) => {
+      const mine = TOPICS.filter(t => t.domain === domain);
+      const head = h('button', { type: 'button', class: 'dom' + (d >= 2 ? ' lower' : ''), text: short });
+      place(head, d, 0);
+      head.addEventListener('click', () => {
+        const all = mine.every(t => picked.has(t.slug));
+        mine.forEach(t => setPick(t.slug, !all));
+      });
+      heads.push([head, mine]);
+      grid.append(head);
+      mine.forEach((t, i) => {
+        const fill = h('i');
+        const dots = h('span', { class: 'dots' });
+        const tile = h('button', { type: 'button', class: 'tile', 'aria-pressed': 'false' },
+          glyph(t.slug), h('span', { text: t.short }), dots, h('span', { class: 'mbar' }, fill));
+        place(tile, d, i + 1);
+        grid.append(tile);
+        tiles[t.slug] = { tile, fill, dots };
+        // a mouse can paint across tiles; a finger taps
+        tile.addEventListener('pointerdown', e => {
+          if (e.pointerType !== 'mouse' || e.button !== 0) return;
+          paintTo = !picked.has(t.slug); setPick(t.slug, paintTo); eat = true;
+        });
+        tile.addEventListener('pointerenter', e => {
+          if (paintTo !== null && e.buttons === 1) setPick(t.slug, paintTo);
+          const b = board[t.slug];
+          if (matchMedia('(hover: hover)').matches && b && b.traps.length) {
+            clearTimeout(tipT); tipT = setTimeout(() => showTip(t.slug), 320);
+          }
+        });
+        tile.addEventListener('pointerleave', hideTip);
+        tile.addEventListener('click', () => { if (eat) { eat = false; return; } setPick(t.slug, !picked.has(t.slug)); });
+        tile.addEventListener('focus', () => { if (tile.matches(':focus-visible') && (board[t.slug] || {}).traps?.length) showTip(t.slug); });
+        tile.addEventListener('blur', hideTip);
+      });
+    });
+    place(go, 3, 'go');
+    grid.append(go);
+  }
+  addEventListener('pointerup', () => { paintTo = null; setTimeout(() => { eat = false; }, 0); });
+
+  function setPick(slug, on) {
+    on ? picked.add(slug) : picked.delete(slug);
+    tiles[slug].tile.setAttribute('aria-pressed', String(on));
+    heads.forEach(([head, mine]) => { head.dataset.all = String(mine.every(t => picked.has(t.slug))); });
+    start.disabled = picked.size === 0;
+  }
+
+  function paintTile(slug, animate) {
+    const b = board[slug] || { mastery: 0, traps: [] };
+    const { fill, dots } = tiles[slug];
+    fill.style.setProperty('--m', b.mastery.toFixed(3));
+    const want = Math.min(3, b.traps.length);
+    const live = [...dots.children].filter(i => !i.classList.contains('out'));
+    for (let i = live.length; i < want; i++) dots.append(h('i', { class: animate ? 'in' : '' }));
+    live.slice(want).forEach(dot => {
+      if (!animate) return dot.remove();
+      dot.classList.add('out');
+      dot.addEventListener('animationend', () => dot.remove(), { once: true });
+    });
+  }
+
+  function showTip(slug) {
+    const b = board[slug];
+    if (!b || !b.traps.length) return;
+    tip.replaceChildren(...b.traps.slice(0, 4).map(t => h('p', { text: t.label })));
+    const r = tiles[slug].tile.getBoundingClientRect(), host = $('#main').getBoundingClientRect();
+    tip.style.maxWidth = Math.max(220, Math.min(300, r.width + 40)) + 'px';
+    const hh = tip.offsetHeight;
+    let top = r.top - host.top - hh - 8;
+    if (r.top - hh - 8 < 72) top = r.bottom - host.top + 8;
+    tip.style.left = Math.max(0, r.left - host.left) + 'px';
+    tip.style.top = top + 'px';
+    tip.classList.add('on');
+  }
+  function hideTip() { clearTimeout(tipT); tip.classList.remove('on'); }
+
+  /* ---------------------------------------------------------- the dock */
+  const clock = $('#clock');
+  clock.innerHTML = UI.svg(UI.ICON.clock, 21) + '<span id="clockT"></span>';
+  function paintClock() {
+    clock.setAttribute('aria-pressed', String(cfg.timed));
+    $('#clockT').textContent = cfg.timed && Number.isFinite(cfg.count) ? mmss(Math.round(cfg.count * 95 / 60) * 60) : '';
+  }
+  $('#count').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    cfg.count = b.dataset.n === 'inf' ? Infinity : Number(b.dataset.n);
+    $('#count').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    paintClock();
+  });
+  $('#tiers').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const t = b.dataset.t;
+    if (cfg.tiers.has(t) && cfg.tiers.size === 1) return;     // always something to ask
+    cfg.tiers.has(t) ? cfg.tiers.delete(t) : cfg.tiers.add(t);
+    b.setAttribute('aria-pressed', String(cfg.tiers.has(t)));
+  });
+  clock.addEventListener('click', () => { cfg.timed = !cfg.timed; paintClock(); });
+
+  start.addEventListener('click', async () => {
+    if (!picked.size || start.getAttribute('aria-busy') === 'true') return;
+    start.setAttribute('aria-busy', 'true');
+    $('#err').hidden = true;
+    try {
+      const d = await api('/drill', { method: 'POST', body: {
+        topics: [...picked], count: Number.isFinite(cfg.count) ? cfg.count : null,
+        difficulty: [...cfg.tiers], timed: cfg.timed, source: 'map' } });
+      snap.set('map', Object.fromEntries(Object.entries(board).map(([k, v]) => [k, { mastery: v.mastery, traps: v.traps.length }])));
+      location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`;
+    } catch (e) {
+      start.removeAttribute('aria-busy');
+      $('#err').textContent = e.message; $('#err').hidden = false;
+    }
+  });
+
+  /* ---------------------------------------------------------- load */
+  build();
+  paintClock();
+  start.disabled = true;
+
+  (async () => {
+    let data;
+    try { data = await api('/map'); }
+    catch (e) { $('#err').textContent = 'The server is not answering.'; $('#err').hidden = false; return; }
+    board = Object.fromEntries(data.topics.map(t => [t.topic, t]));
+
+    // come back from a session and the map moves from where it was
+    const before = snap.get('map');
+    if (before && !UI.reduced()) {
+      Object.keys(tiles).forEach(slug => {
+        const was = before[slug] || { mastery: 0, traps: 0 };
+        tiles[slug].fill.style.setProperty('--m', was.mastery.toFixed(3));
+        for (let i = 0; i < Math.min(3, was.traps); i++) tiles[slug].dots.append(h('i'));
+      });
+      requestAnimationFrame(() => requestAnimationFrame(() => Object.keys(tiles).forEach(s => paintTile(s, true))));
+    } else {
+      Object.keys(tiles).forEach(s => paintTile(s, false));
+    }
+    snap.set('map', null);
+
+    (data.coach.topics || []).forEach(slug => setPick(slug, true));
+    const n = data.topics.reduce((a, t) => a + t.traps.length, 0);
+    const m = $('#mistakes');
+    m.hidden = !n;
+    m.lastElementChild.textContent = `${n} ${n === 1 ? 'mistake' : 'mistakes'}`;
+  })();
+})();
+</script>
+</body>
+</html>
