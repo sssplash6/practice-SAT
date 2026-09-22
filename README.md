@@ -170,15 +170,79 @@ are modelled.
 
 ## The serving layer
 
-A student's first move is the diagnostic, and `server/` is what runs it.
+`server/` runs the site in `web/`: FastAPI over sqlite, the pages served
+statically at `/`, free and with no plans or quotas.
 
 ```bash
-PYTHONPATH=. python3 tools/build_diagnostics.py    # the ten diagnostic forms
-PYTHONPATH=. python3 tools/build_mocks.py         # the seven mock sections
-python3 -m uvicorn server.app:app --port 8000      # the site and the API
+PYTHONPATH=. python3 -m uvicorn server.app:app --port 8000   # the site and the API: http://localhost:8000
 PYTHONPATH=. python3 server/test_flow.py           # the whole flow, end to end
+PYTHONPATH=. python3 tools/build_diagnostics.py    # the ten diagnostic forms
+PYTHONPATH=. python3 tools/build_mocks.py         # the seven shelf sections
 PYTHONPATH=. python3 tools/measure_mix.py          # how repetitive practice is
 ```
+
+**The site** is one shell (`web/assets/ui.css`, `ui.js`) and these pages,
+rebuilt from a teardown of TopTierPrep (`spec/toptierprep-teardown.md`; the
+plan is `spec/rebuild.md`). The site before it is kept in `archive/site-v1/`.
+
+| page | what it is | API |
+|---|---|---|
+| `/` Today | the coach's next set, the question of the day, score band, countdown, the week, the challenge | `/api/today`, `/api/qotd` |
+| `/practice/` | the map of the 19 skills with mastery and open mistakes; how many (5, 10, 22, endless), difficulty, clock | `/api/map`, `POST /api/drill` |
+| `/practice/session/` | one question at a time: the key, the mistake named, a repair, the rationale, a summary | `/api/drill/{id}/...` |
+| `/tests/` | a new adaptive section or one module for every sitting; the diagnostic | `POST /api/mock/new` |
+| `/test/` | the Bluebook-shaped test window | `/api/session/{id}/...` |
+| `/results/report/` | one sitting: band, domains, each miss by its mistake, and Fix these | `/api/session/{id}/results` |
+| `/results/` | the band over time, the 19 skills, every sitting | `/api/history` |
+| `/plan/` | exam date, minutes, days; today's task and a calendar to the exam | `GET`/`PUT /api/me` |
+| `/mistakes/` | every open mistake by name, fixed one topic or all at once; saved questions | `/api/mistakes`, `/api/saved` |
+| `/challenge/` | today's ten, the same for everyone, and the board | `/api/challenge`, `/api/challenge/start`, `/api/challenge/board` |
+| `/me/` | a name for the board, and the device code | `/api/me`, `/api/me/carry` |
+| `/diagnostic/` | the diagnostic's door, its sign-up and the email confirmation | `/api/session/...` |
+
+**A learner is a code, not an account.** The browser mints twelve random
+bytes (`satf.learner` in localStorage) and sends them as `X-Learner` on every
+call; the server checks their shape and nothing else. Every answer
+(`attempts`), open mistake (`traps`), saved question, seen question and the
+profile hang off that code. Me shows it, and typed into another device it makes
+that device the same learner -- `/api/me/carry` first moves whatever the second
+device had done onto it, so switching loses nothing. The diagnostic's sign-up
+is still the only account.
+
+**A wrong answer is a diagnosis.** Every wrong option in the bank names the
+mistake that produces it (`Item.reasons`), so a miss says which one, shows the
+key and the rationale, and opens a trap on that template and mistake. The next
+question is its repair: the same template on a fresh seed, the same trap with
+new numbers. A miss gets one repair and a missed repair gets none, or a student
+who kept missing would never reach the end of the set; the trap stays open and
+comes back later. Two clean answers on the template close it. A grid-in names
+no mistake, so it is filed under the bank's skill for it.
+
+**Mastery and the coach** (`server/progress.py`). A topic's mastery is a
+difficulty-weighted average of its last forty answers, each older one counting
+0.93 of the next, and pulled toward zero while there are few. The coach picks
+the next set: open mistakes first, then topics never practised weighted by the
+blueprint, then the weakest, then a strong topic unseen for ten days, never
+more than two from one domain. Every screen opens set to its pick, and the
+student can change it.
+
+**Nothing is used up.** A practice set generates each question when it is
+asked for, against the learner's history, and can be endless
+(`server/drill.py`). A section is built for its sitting by
+`server/blueprint.py` -- module 1 when it starts, module 2 for the route module
+1 earned -- from questions this learner has never been given. Fix these turns a
+sitting's misses into fresh questions on the same templates.
+
+**The day is the same for everyone** (`server/daily.py`). The question of the
+day and the daily challenge -- ten questions, easiest to hardest, two of them
+grid-ins -- are chosen from a hash of the date in the student's own timezone
+(`X-Tz`), and the challenge is stored once so everyone sits the same ten, once
+each. The board ranks by right answers, then time.
+
+**Grid-ins are marked by value** (`scoring.grid_equal`): the bank's own
+equality, plus the SAT's rule that a decimal filling the grid may be cut off or
+rounded at its last place, so 0.6666 and 0.6667 both match 2/3 and 0.66 does
+not.
 
 **Ten fixed forms, drawn at random.** A diagnostic is twenty questions: four
 domains, and from each of them one easy, two medium and two hard. That is not
@@ -213,8 +277,10 @@ adaptive items. Twenty uncalibrated ones cannot beat that, so the result is a
 which is also what the College Board's own report does, with its own warning
 that a four-item domain estimate can make a strong student look weak by chance.
 
-**Mock sections are the real shape.** Box one holds seven, built by
-`tools/build_mocks.py` into `server/mocks.json`. Each is a full digital SAT
+**Mock sections are the real shape.** The shelf holds seven, built by
+`tools/build_mocks.py` into `server/mocks.json`; the Tests page instead builds
+one per sitting with the same code (`server/blueprint.py`), to the same rules
+below. Each is a full digital SAT
 Math section: two modules of 22 questions, 35 minutes each, 44 in total, and
 the second module chosen from how the first went. Domain counts follow the
 published weights -- 15 Algebra, 15 Advanced Math, 7 Problem-Solving and Data
@@ -241,8 +307,8 @@ at the population median and says so in the Technical Manual, but never
 publishes the threshold, so the 60 is a stated choice and `scoring.py` says so.
 The ceiling is not a choice -- their own simulation of a student who takes the
 easier module and answers every question in it correctly reports a maximum of
-580, so a low route caps there, and the results page says that is why the
-number stopped.
+580, so a low route caps there, and the report says that is why the number
+stopped.
 
 Three things College Board does not publish, which are therefore stated choices
 in the code rather than reported facts: the per-module domain counts (every
@@ -252,10 +318,10 @@ and the routing threshold itself ("around the median" is all there is). What thi
 pretest items per module and scores the rest by item response theory. There is
 nothing to pretest here and no calibration to score with, so all 22 count.
 
-**Mixed practice is scheduled, not sampled.** A student picks topics on the
-sticker sheet and asks for a number of questions; `server/practice.py` fills
-every slot by scoring a handful of candidates against what they have just seen
-and taking the least similar. Never repeating a question is the easy half. The
+**Practice is scheduled, not sampled.** A student picks topics on the map,
+or the coach does, and asks for a number of questions; `server/practice.py`
+fills every slot, one at a time as the set is played, by scoring a handful of
+candidates against what they have just seen and taking the least similar. Never repeating a question is the easy half. The
 hard half is that sixty questions from one subtopic can all be distinct and
 still feel like the same question sixty times, so sameness is counted on seven
 features at once -- template, skill, opening words, format, difficulty, whether
@@ -277,7 +343,7 @@ them. It keeps the brand orange for every highlight and nothing else.
 
 Everything above measures whether an item is *right*. None of it measures
 whether the bank is usable as practice. Three gaps, measured rather than
-guessed. The first two now have an answer in `server/`; the third does not:
+guessed. All three now have an answer in `server/`, the third only in part:
 
 **Difficulty is an inherited label, not a measurement.** A template keeps the
 tier of the source item it was learned from, and nothing checks that a
@@ -296,9 +362,11 @@ against each other, and practice keeps the per-student history the note asks
 for: seeds are walked from a per-learner offset, never reissued, and checked by
 stem as well as by seed, because two seeds can land on the same question.
 
-**There is no exam blueprint.** The real test weights its domains; nothing
-here knows that, so a practice set drawn from this bank has a distribution
-unlike the SAT's.
+**There is no exam blueprint.** The real test weights its domains, and the
+bank alone does not know that. Sections now follow the published weights
+(`server/blueprint.py`) -- the diagnostic is even across domains on purpose,
+as above -- and the coach weights topics a student has not yet practised by
+them, but a set the student picks is whatever mix they picked.
 
 And the one that cannot be coded: **real difficulty comes from real students.**
 Until items have been sat and there are p-values, easy/medium/hard is an
