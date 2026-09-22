@@ -128,7 +128,7 @@ def mock_all(row) -> list[dict]:
 def questions_of(row) -> list[dict]:
     """A diagnostic points at a form, a practice set carries its own, and a
     mock serves whichever of its two modules the student is in."""
-    if row["kind"] in ("practice", "drill"):
+    if row["kind"] in ("practice", "drill", "challenge"):
         return json.loads(row["questions"] or "[]")
     if row["kind"] == "module":
         return json.loads(row["questions"] or "{}")["module1"]
@@ -522,8 +522,9 @@ def profile(learner: str) -> dict:
 
 def per_session(p: dict) -> int:
     """How many questions a study day's minutes hold, at the real test's pace."""
-    minutes = p.get("minutes") or 15
-    return max(5, min(60, round(minutes * 60 / SECONDS_PER_QUESTION)))
+    if not p.get("minutes"):
+        return 10
+    return max(5, min(60, round(p["minutes"] * 60 / SECONDS_PER_QUESTION)))
 
 
 @app.get("/api/me")
@@ -779,8 +780,8 @@ def qotd_feedback(q: dict, given, day: str) -> dict:
 
 
 @app.get("/api/qotd")
-def get_qotd(x_learner: str | None = Header(default=None)) -> dict:
-    day = daily.today()
+def get_qotd(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0)) -> dict:
+    day = daily.today(x_tz)
     q = daily.question(day)
     out = {"day": day, "question": drill.public(q), "mine": None}
     if x_learner and LEARNER_OK.match(x_learner.strip()):
@@ -797,10 +798,11 @@ class Reply(BaseModel):
 
 
 @app.post("/api/qotd")
-def answer_qotd(body: Reply, x_learner: str | None = Header(default=None)) -> dict:
+def answer_qotd(body: Reply, x_learner: str | None = Header(default=None),
+                x_tz: int = Header(default=0)) -> dict:
     """One answer a day. A second one is a double tap, and gets the first back."""
     learner = learner_of(x_learner)
-    day = daily.today()
+    day = daily.today(x_tz)
     q = daily.question(day)
     had = db.one("SELECT given FROM attempts WHERE learner=? AND session=?", learner, f"qotd:{day}")
     if had:
@@ -815,9 +817,9 @@ def challenge_row(learner: str, day: str):
 
 
 @app.get("/api/challenge")
-def get_challenge(x_learner: str | None = Header(default=None)) -> dict:
+def get_challenge(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0)) -> dict:
     learner = learner_of(x_learner)
-    day = daily.today()
+    day = daily.today(x_tz)
     row = challenge_row(learner, day)
     b = daily.board(day, learner, limit=5)
     return {"day": day, "count": daily.CHALLENGE_SIZE,
@@ -828,10 +830,10 @@ def get_challenge(x_learner: str | None = Header(default=None)) -> dict:
 
 
 @app.post("/api/challenge/start")
-def start_challenge(x_learner: str | None = Header(default=None)) -> dict:
+def start_challenge(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0)) -> dict:
     """Today's ten, one sitting each. Coming back resumes it; it never restarts."""
     learner = learner_of(x_learner)
-    day = daily.today()
+    day = daily.today(x_tz)
     row = challenge_row(learner, day)
     if row is None:
         qs = daily.challenge(day)
@@ -847,11 +849,12 @@ def start_challenge(x_learner: str | None = Header(default=None)) -> dict:
 
 
 @app.get("/api/challenge/board")
-def challenge_board(day: str | None = None, x_learner: str | None = Header(default=None)) -> dict:
+def challenge_board(day: str | None = None, x_learner: str | None = Header(default=None),
+                    x_tz: int = Header(default=0)) -> dict:
     if day and not DATE_OK.match(day):
         raise HTTPException(422, "day is YYYY-MM-DD")
     me = x_learner.strip() if x_learner and LEARNER_OK.match(x_learner.strip()) else None
-    return daily.board(day or daily.today(), me)
+    return daily.board(day or daily.today(x_tz), me)
 
 
 @app.get("/api/health")

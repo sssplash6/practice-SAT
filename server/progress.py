@@ -210,7 +210,8 @@ def coach(learner: str, k: int = 3, count: int = 10) -> dict:
     else:
         why = "weak"
     return {"topics": picks, "count": count, "why": why,
-            "mistakes": sum(len(b[p]["traps"]) for p in picks)}
+            "mistakes": sum(len(b[p]["traps"]) for p in picks),
+            "traps": {p: len(b[p]["traps"]) for p in picks}}
 
 
 # ------------------------------------------------------------------ the days

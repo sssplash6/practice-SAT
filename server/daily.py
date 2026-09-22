@@ -25,8 +25,11 @@ LADDER = ["easy"] * 3 + ["medium"] * 4 + ["hard"] * 3
 SPR_AT = (4, 8)             # two grid-ins, as a module carries about a quarter
 
 
-def today() -> str:
-    return dt.datetime.now(dt.timezone.utc).date().isoformat()
+def today(tz: int = 0) -> str:
+    """The student's own date. tz is JavaScript's getTimezoneOffset(), minutes
+    behind UTC. Everyone on the same calendar day gets the same question, which
+    is what "of the day" means to the person reading it."""
+    return (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=tz)).date().isoformat()
 
 
 def _hash(text: str) -> int:

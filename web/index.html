@@ -3,101 +3,223 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Overview · SAT Freshman</title>
-<meta name="description" content="Where you stand on the SAT, and the next thing to practise.">
-<link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+<title>SAT Freshman</title>
+<meta name="description" content="Free SAT Math practice that never runs out and never repeats.">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;900&family=DM+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="assets/app.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* Today: the one thing to do, then the day's question, then where you
+     stand. The coach's set is the only pill on the page. */
+  .today { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .col { display: grid; gap: 20px; }
+
+  .next { padding: 26px 26px 24px; border-radius: 14px; background: var(--wash); }
+  .next .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .next .chip { background: var(--paper); }
+  .next .chip .dots { margin-left: 2px; }
+  .next-foot { margin-top: 26px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .next-foot .meta { color: var(--ink); }
+
+  .qotd { padding: 24px 26px 26px; border-radius: 14px; background: var(--tile); }
+  .qotd-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .qotd .q-skill { margin-bottom: 12px; }
+  .qotd .q-skill .glyph { --gb: var(--tile); }
+  .qotd .q-stem { font-size: 18.5px; }
+  .qotd .opt { background: var(--paper); font-size: 17px; padding: 11px 16px; }
+  @media (hover: hover) and (pointer: fine) { .qotd .opts:not(.done) .opt:hover { background: var(--wash); } }
+  .crowd { margin-top: 14px; }
+
+  .stat { padding: 22px 24px; border-radius: 14px; background: var(--tile); }
+  .stat .num { font-size: clamp(38px, 4.6vw, 52px); display: block; }
+  .stat .k { display: block; margin-top: 10px; }
+  .stat .quiet { margin-top: 10px; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  .week { display: flex; justify-content: space-between; margin-top: 14px; }
+  .week div { display: grid; justify-items: center; gap: 7px; }
+  .week i { width: 14px; height: 14px; border-radius: 50%; background: var(--mat); display: block; }
+  .week i.on { background: var(--amber); }
+  .week i.now { box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--ink); }
+  .week span { font: 500 10.5px var(--mono); color: var(--soft); }
+
+  .chal { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; }
+  .chal svg { width: 26px; height: 26px; color: var(--ink); }
+  .chal .h2 { font-size: 16px; }
+  .chal .meta { display: block; margin-top: 2px; }
+  .chal .num { font-size: 26px; }
+
+  @media (max-width: 859px) {
+    .today { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (max-width: 420px) { .pair { grid-template-columns: 1fr; } }
+</style>
 </head>
-<body data-nav="overview">
+<body data-page="today">
+<header id="bar"></header>
 
-<a class="skip" href="#main">Skip to content</a>
-
-<div class="app">
-  <aside class="rail"></aside>
-
-  <main class="main" id="main">
-    <header class="head">
-      <button class="rail-toggle" type="button" aria-label="Show navigation" aria-expanded="false">
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-        </svg>
-      </button>
-      <h1 class="head-title">Overview</h1>
-    </header>
-
-    <div class="page-body">
-
-      <!-- Standing. Figures are stand-in until the serving layer exists. -->
-      <section class="standing rise rise-1" aria-label="Your standing">
-        <div>
-          <p class="score-n">1290</p>
-          <p class="score-cap">Projected score</p>
-          <div class="splits">
-            <div>
-              <p class="split-k">Math</p>
-              <p class="split-v">660</p>
-            </div>
-            <div>
-              <p class="split-k">Reading and Writing</p>
-              <p class="split-v">630</p>
-            </div>
-          </div>
+<main class="page">
+  <div class="today">
+    <div class="col">
+      <section class="next rise" id="next" aria-label="Next">
+        <div class="chips" id="chips"></div>
+        <div class="next-foot">
+          <span class="meta" id="nextMeta"></span>
+          <button type="button" class="pill" id="go" disabled>Start</button>
         </div>
-
-        <figure class="trend">
-          <svg viewBox="0 0 300 72" role="img" aria-label="Projected score across the last six mocks, rising from 1150 to 1290.">
-            <line x1="0" y1="66" x2="300" y2="66" stroke="#E4E1DC" stroke-width="1"/>
-            <path id="trendline"
-                  d="M8 50.2 L64.8 43.1 L121.6 47.8 L178.4 33.6 L235.2 26.5 L292 17.1"
-                  fill="none" stroke="#F18508" stroke-width="1.5"
-                  stroke-linecap="round" stroke-linejoin="round"
-                  pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"
-                  style="animation: draw .9s cubic-bezier(.77,0,.175,1) .25s forwards"/>
-            <g fill="#3F3F3F">
-              <circle cx="8" cy="50.2" r="1.7"/><circle cx="64.8" cy="43.1" r="1.7"/>
-              <circle cx="121.6" cy="47.8" r="1.7"/><circle cx="178.4" cy="33.6" r="1.7"/>
-              <circle cx="235.2" cy="26.5" r="1.7"/>
-            </g>
-            <circle cx="292" cy="17.1" r="3.4" fill="#FFFFFF" stroke="#F18508" stroke-width="1.5"/>
-          </svg>
-          <figcaption class="trend-cap">Last six mocks</figcaption>
-        </figure>
+        <p class="error" id="err" hidden></p>
       </section>
 
-      <!-- The one thing to do next gets the weight. -->
-      <section class="rise rise-2" aria-label="Continue">
-        <a class="resume" href="mixed/">
-          <span class="resume-art">
-            <svg width="40" height="40" viewBox="0 0 44 44" aria-hidden="true">
-              <rect x="9" y="5" width="26" height="34" rx="2.5" fill="none" stroke="#3F3F3F" stroke-width="1.4"/>
-              <circle cx="17" cy="14" r="3.6" fill="none" stroke="#3F3F3F" stroke-width="1.3"/>
-              <rect x="24" y="10.6" width="6.8" height="6.8" rx="1.5" fill="none" stroke="#3F3F3F" stroke-width="1.3"/>
-              <path d="M17 23.4 20.4 30h-6.8z" fill="none" stroke="#3F3F3F" stroke-width="1.3" stroke-linejoin="round"/>
-              <path d="M25 28h6" fill="none" stroke="#E4E1DC" stroke-width="1.3" stroke-linecap="round"/>
-            </svg>
-          </span>
-          <span class="resume-txt">
-            <span class="resume-k">Pick up where you left off</span>
-            <span class="resume-v">Mixed practice, 8 questions</span>
-            <span class="resume-sub">Percentages, circles and two more, built yesterday.</span>
-          </span>
-          <span class="resume-go">
-            <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 12h13M13 6.5 18.5 12 13 17.5" fill="none" stroke="#3F3F3F" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </span>
-        </a>
+      <section class="qotd rise rise-2" id="qotd" aria-label="Question of the day">
+        <div class="qotd-head"><span class="k" id="qday"></span><span class="meta" id="qcrowd"></span></div>
+        <div id="qbox"></div>
       </section>
-
-
     </div>
-  </main>
-</div>
 
-<script src="assets/app.js"></script>
+    <div class="col">
+      <div class="pair rise rise-2">
+        <section class="stat" aria-label="Score">
+          <span class="num" id="score">—</span>
+          <span class="k" id="scoreK">Math</span>
+          <a class="quiet" id="scoreGo" href="/tests/" hidden>Take a test</a>
+        </section>
+        <section class="stat" aria-label="Exam">
+          <span class="num" id="exam">—</span>
+          <span class="k" id="examK">Exam</span>
+          <a class="quiet" id="examGo" href="/plan/" hidden>Set a date</a>
+        </section>
+      </div>
 
+      <section class="stat rise rise-3" aria-label="This week">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span class="k">Week</span><span class="meta" id="weekMeta"></span>
+        </div>
+        <div class="week" id="week"></div>
+      </section>
+
+      <section class="stat rise rise-3" aria-label="Challenge">
+        <div class="chal">
+          <span id="trophy"></span>
+          <div><span class="h2">Challenge</span><span class="meta" id="chalMeta"></span></div>
+          <div id="chalGo"></div>
+        </div>
+      </section>
+
+      <a class="quiet rise rise-3" id="mistakes" href="/mistakes/" hidden style="justify-self:start;margin-left:0"><span class="dot"></span><span></span></a>
+    </div>
+  </div>
+</main>
+
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script>
+(() => {
+  'use strict';
+  const { api, h, glyph, TOPIC, band, day, minutesFor, $, svg, ICON } = UI;
+  UI.shell();
+  $('#trophy').innerHTML = svg(ICON.trophy, 26);
+
+  /* ---------------------------------------------------------- the coach */
+  let coach = null;
+  $('#go').addEventListener('click', async () => {
+    if (!coach) return;
+    const go = $('#go');
+    go.setAttribute('aria-busy', 'true');
+    try {
+      const d = await api('/drill', { method: 'POST', body: { topics: coach.topics, count: coach.count, source: 'coach' } });
+      location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`;
+    } catch (e) {
+      go.removeAttribute('aria-busy');
+      $('#err').textContent = e.message; $('#err').hidden = false;
+    }
+  });
+
+  function paintToday(t) {
+    coach = t.coach;
+    $('#chips').replaceChildren(...coach.topics.map(slug => {
+      const c = UI.chip(slug);
+      const n = (coach.traps || {})[slug] || 0;
+      if (n) c.append(h('span', { class: 'dots' }, Array.from({ length: Math.min(3, n) }, () => h('i'))));
+      return c;
+    }));
+    $('#nextMeta').textContent = `${coach.count} questions · ${minutesFor(coach.count)} min`;
+    $('#go').disabled = false;
+
+    if (t.score) {
+      $('#score').textContent = band(t.score);
+      $('#scoreK').textContent = `Math · ${day(t.score.at)}`;
+    } else { $('#scoreGo').hidden = false; $('#scoreK').hidden = true; }
+
+    if (t.exam && t.exam.days >= 0) {
+      $('#exam').textContent = t.exam.days;
+      $('#examK').textContent = `${t.exam.days === 1 ? 'day' : 'days'} · ${day(t.exam.date)}`;
+    } else { $('#examGo').hidden = false; $('#examK').hidden = true; }
+
+    // the last seven days, today last
+    const recent = t.days.recent.slice(-7);
+    const LETTER = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    $('#week').replaceChildren(...recent.map((d, i) => {
+      const dt = new Date(d.day + 'T12:00:00');
+      const dot = h('i', { class: (d.questions ? 'on' : '') + (i === recent.length - 1 ? ' now' : '') });
+      return h('div', { title: `${d.questions} questions` }, dot, h('span', { text: LETTER[dt.getDay()] }));
+    }));
+    const q7 = recent.reduce((a, d) => a + d.questions, 0);
+    $('#weekMeta').textContent = q7 ? `${q7} ${q7 === 1 ? 'question' : 'questions'}` : '';
+
+    const m = $('#mistakes');
+    m.hidden = !t.mistakes;
+    m.lastElementChild.textContent = `${t.mistakes} ${t.mistakes === 1 ? 'mistake' : 'mistakes'}`;
+  }
+
+  /* ---------------------------------------------------------- the question of the day */
+  function crowd(c) {
+    if (!c || !c.answered) return '';
+    return `${Math.round(100 * c.right / c.answered)}% of ${c.answered} right`;
+  }
+  function paintQotd(d) {
+    $('#qday').textContent = day(d.day);
+    const ctrl = UI.question($('#qbox'), d.question, {
+      onAnswer: async given => {
+        try {
+          const fb = await api('/qotd', { method: 'POST', body: { answer: given } });
+          ctrl.reveal(fb);
+          $('#qcrowd').textContent = crowd(fb.crowd);
+        } catch (e) { $('#qcrowd').textContent = e.message; }
+      },
+    });
+    if (d.mine) { ctrl.reveal(d.mine); $('#qcrowd').textContent = crowd(d.mine.crowd); }
+  }
+
+  /* ---------------------------------------------------------- the challenge */
+  function paintChallenge(c) {
+    const go = $('#chalGo');
+    const you = c.board && c.board.you;
+    if (c.finished && you) {
+      $('#chalMeta').textContent = `${you.right}/${you.asked} · ${UI.mmss(you.seconds)}`;
+      go.replaceChildren(h('a', { class: 'quiet', href: '/challenge/' },
+        h('span', { class: 'num', text: `#${you.rank}` })));
+      return;
+    }
+    $('#chalMeta').textContent = `${c.count} questions · ${Math.round(c.seconds / 60)} min${c.board.players ? ` · ${c.board.players} in` : ''}`;
+    const b = h('button', { type: 'button', class: 'quiet', text: c.session ? 'Resume' : 'Start' });
+    b.addEventListener('click', async () => {
+      try {
+        const s = await api('/challenge/start', { method: 'POST' });
+        location.href = `/practice/session/?id=${encodeURIComponent(s.id)}`;
+      } catch (e) { $('#chalMeta').textContent = e.message; }
+    });
+    go.replaceChildren(b);
+  }
+
+  (async () => {
+    try { paintToday(await api('/today')); }
+    catch (e) { $('#err').textContent = 'The server is not answering.'; $('#err').hidden = false; }
+    api('/qotd').then(paintQotd).catch(() => { $('#qotd').hidden = true; });
+    api('/challenge').then(paintChallenge).catch(() => {});
+  })();
+})();
+</script>
 </body>
 </html>
