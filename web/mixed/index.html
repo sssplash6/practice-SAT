@@ -110,7 +110,8 @@
   .sheet .btn { width:100%; margin-top:14px; }
 
   /* a sticker in flight, from its cut square to the sheet */
-  .flyer { position:fixed; z-index:60; pointer-events:none; color:var(--amber); }
+  .flyer { position:fixed; z-index:60; pointer-events:none; color:var(--amber);
+           transform:translate(-50%,-50%); }   /* held here too, or it paints uncentred before the animation starts */
   .flyer .glyph { width:30px; height:30px; }
   .flyer .stk { fill:#fff; stroke:var(--amber); stroke-width:1.6; }
   .flyer .stki { stroke:var(--amber); opacity:.9; }
@@ -317,6 +318,7 @@ function add(row){
   btn.type='button'; btn.className='placed';
   btn.setAttribute('aria-label','Take back a '+row.name+' question');
   btn.appendChild(glyph(row.shape));
+  if(!reduce) btn.style.opacity='0';        // hidden from the start, not hidden after showing
   const rec={el:btn,row};
   btn.addEventListener('click',()=>take(rec));
   placed.push(rec);
@@ -326,7 +328,6 @@ function add(row){
   if(reduce) return;
   // fly a copy from the cut square to where the sticker just landed
   const from=row.cut.getBoundingClientRect(), to=btn.getBoundingClientRect();
-  btn.style.opacity='0';
   const f=document.createElement('div');
   f.className='flyer'; f.appendChild(glyph(row.shape));
   f.style.left=(from.left+from.width/2)+'px'; f.style.top=(from.top+from.height/2)+'px';
@@ -336,8 +337,8 @@ function add(row){
     {transform:'translate(-50%,-50%) scale(1) rotate(0deg)'},
     {transform:`translate(-50%,-50%) translate(${dx*.5}px,${dy*.5-46}px) scale(1.18) rotate(22deg)`, offset:.5},
     {transform:`translate(-50%,-50%) translate(${dx}px,${dy}px) scale(.78) rotate(0deg)`},
-  ],{duration:520,easing:'cubic-bezier(.4,0,.2,1)'});
-  a.onfinish=()=>{ f.remove(); btn.style.opacity=''; };
+  ],{duration:520,easing:'cubic-bezier(.4,0,.2,1)',fill:'both'});
+  a.onfinish=()=>{ a.cancel(); f.remove(); btn.style.opacity=''; };
 }
 
 function take(rec){
