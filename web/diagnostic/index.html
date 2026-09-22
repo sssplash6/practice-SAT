@@ -11,45 +11,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;900&family=DM+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="../assets/app.css">
 <style>
-  /* A chart on the wall, seen square on. Ten rows for ten levels, each row
-     smaller than the one above it, and a mark against the row you read to. */
-  .wall {
+  .open {
     flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:clamp(20px,3.4vh,34px); padding:22px var(--gutter) 44px;
+    gap:clamp(26px,5vh,44px); padding:24px var(--gutter) 48px; text-align:center;
   }
 
-  .chart {
-    width:min(430px,100%);
-    background:var(--paper);
-    border:1px solid var(--line);
-    border-radius:3px;
-    padding:clamp(22px,3vh,32px) clamp(20px,4vw,34px) clamp(26px,4vh,38px);
+  .open h2 {
+    margin:0;
+    font:900 clamp(2.4rem,8vw,4.4rem)/.98 var(--font);
+    letter-spacing:-.045em; text-wrap:balance;
   }
 
-  .chart-title {
-    font:900 clamp(1.6rem,4.4vw,2.05rem)/1 var(--font);
-    letter-spacing:-.035em; text-align:center;
-  }
-  .chart-rule { margin:14px 0 clamp(16px,2.4vh,24px); border:0; border-top:1px solid var(--line); }
-
-  .rows { list-style:none; margin:0; padding:0; }
-  .rows li {
-    position:relative;
-    display:flex; align-items:center; justify-content:center;
-    font-weight:700; color:var(--ink);
-    font-size:var(--s); line-height:1.06;
-    letter-spacing:calc(var(--s) * .16);
-    text-indent:calc(var(--s) * .16);          /* letter-spacing trails the last glyph */
-    margin-bottom:calc(var(--s) * .22);
-  }
-  .rows li:last-child { margin-bottom:0; }
-
-  /* the one live thing on the wall: the row you read to */
-  .rows li[data-here="true"]::before {
-    content:''; position:absolute; left:-14px;
-    width:5px; height:calc(var(--s) * .62); border-radius:3px;
-    background:var(--amber);
-  }
+  .acts { display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center; }
+  .acts .btn-quiet { min-height:46px; padding:0 22px; font-size:14.5px; font-weight:700; }
 </style>
 </head>
 <body data-nav="diagnostic">
@@ -69,49 +43,20 @@
       <h1 class="head-title">Diagnostic</h1>
     </header>
 
-    <section class="wall rise">
-      <div class="chart">
-        <p class="chart-title">Diagnostic test</p>
-        <hr class="chart-rule">
-        <ol class="rows" id="rows"></ol>
+    <section class="open">
+      <h2 class="rise">Diagnostic test</h2>
+      <div class="acts rise rise-2">
+        <button class="btn btn-quiet" type="button" id="skip">Skip</button>
+        <button class="btn" type="button" id="go">Continue</button>
       </div>
-      <button class="btn" type="button" id="go">Start diagnostic</button>
     </section>
   </main>
 </div>
 
 <script src="../assets/app.js"></script>
 <script>
-const $=id=>document.getElementById(id);
-
-/* Snellen letters, and the sizes stepped down the way a real card steps them */
-const ROWS=[
-  ['E',                    66],
-  ['F P',                  46],
-  ['T O Z',                35],
-  ['L P E D',              28],
-  ['P E C F D',            23],
-  ['E D F C Z P',          19],
-  ['F E L O P Z D',        16],
-  ['D E F P O T E C',      13.5],
-  ['L E F O D P C T',      11.5],
-  ['F D P L T C E O',      10],
-];
-
-const S=window.SATF||{};
-const P=(S.player&&S.player())||{rating:1120};
-const HERE=(S.levelOf||(()=>4))(P.rating);
-
-const ol=$('rows');
-ROWS.forEach(([letters,size],i)=>{
-  const li=document.createElement('li');
-  li.style.setProperty('--s',size+'px');
-  if(i+1===HERE) li.dataset.here='true';
-  li.textContent=letters;
-  ol.appendChild(li);
-});
-
-$('go').addEventListener('click',()=>console.log('[router] /diagnostic/start'));
+document.getElementById('skip').addEventListener('click',()=>console.log('[router] /overview'));
+document.getElementById('go').addEventListener('click',()=>console.log('[router] /diagnostic/start'));
 </script>
 
 </body>
