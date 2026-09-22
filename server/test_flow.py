@@ -284,6 +284,8 @@ def main() -> int:
         assert res["estimate"]["high"] < top, "the route made no difference"
         print("ok  a perfect lower module 2 still scores under a strong route")
 
+        check_learner(c)
+
     # --- the marking itself, away from the wire -------------------------------
     assert scoring.is_correct({"type": "spr", "answer": "5776"}, "5,776")
     assert scoring.is_correct({"type": "mcq", "answer": "C"}, 2)
@@ -309,6 +311,203 @@ def main() -> int:
 
     print("\nall good")
     return 0
+
+
+def stored(sid: str) -> list[dict]:
+    """A drill's served questions as the server keeps them, key included."""
+    return json.loads(db.one("SELECT questions FROM sessions WHERE id=?", sid)["questions"])
+
+
+def keyed_answer(q: dict, right: bool):
+    if q["type"] == "mcq":
+        k = "ABCD".index(q["answer"])
+        if right:
+            return k
+        # a wrong option that names its mistake, so the trap has a label
+        return next(i for i in range(4) if i != k and q["reasons"][i])
+    return q["answer"] if right else "-99999"
+
+
+def check_learner(c) -> None:
+    """The rebuild's half: drills, mistakes, the map, the coach, fresh sections."""
+    H = {"X-Learner": "a:flowcheck01"}
+
+    # --- identity is required and checked for shape ----------------------------
+    assert c.get("/api/map").status_code == 400, "a map with no learner"
+    assert c.get("/api/map", headers={"X-Learner": "<script>"}).status_code == 400
+    blank = c.get("/api/map", headers=H).json()
+    assert len(blank["topics"]) == 19, len(blank["topics"])
+    assert all(t["mastery"] == 0 and not t["traps"] for t in blank["topics"])
+    assert len(blank["coach"]["topics"]) == 3 and blank["coach"]["why"] == "new"
+    print("ok  a new learner has 19 empty topics and a coach pick of 3")
+
+    # --- a drill: one question at a time, nothing given away ---------------------
+    d = c.post("/api/drill", headers=H,
+               json={"topics": ["percentages"], "count": 3}).json()
+    sid, q = d["id"], d["question"]
+    assert d["total"] == 3 and d["mode"] == "drill"
+    for bad in LEAKS:
+        assert bad not in q, f"{bad} leaked from a drill question"
+    first = stored(sid)[0]
+    assert first["rationale"] not in json.dumps(d, ensure_ascii=False)
+
+    # wrong: the mistake is named, the key shown, and the set grows by one
+    fb = c.post(f"/api/drill/{sid}/answer", headers=H,
+                json={"question_id": q["id"], "answer": keyed_answer(first, False), "ms": 4000}).json()
+    assert fb["correct"] is False and fb["answer"] == first["answer"]
+    assert fb["rationale"] == first["rationale"]
+    if first["type"] == "mcq":
+        assert fb["mistake"] and fb["mistake"][0].isupper(), fb
+    assert fb["total"] == 4, "a miss did not add its repair"
+    assert fb["opened"], "a miss opened no mistake"
+
+    # the repair is the same template on a fresh seed
+    nx = c.post(f"/api/drill/{sid}/next", headers=H).json()
+    again = stored(sid)[1]
+    assert nx["question"]["repair"] is True
+    assert again["key"] == first["key"] and again["seed"] != first["seed"]
+    assert again["stem"] != first["stem"]
+    print("ok  a miss names the mistake, shows the key, and the same trap comes back fresh")
+
+    trap_map = {t["topic"]: t for t in c.get("/api/map", headers=H).json()["topics"]}
+    assert trap_map["percentages"]["traps"], "the map does not show the open mistake"
+    coach = c.get("/api/map", headers=H).json()["coach"]
+    assert "percentages" in coach["topics"] and coach["why"] == "mistakes", coach
+
+    # two clean answers on that template close it
+    c.post(f"/api/drill/{sid}/answer", headers=H,
+           json={"question_id": nx["question"]["id"], "answer": keyed_answer(again, True)})
+    m = c.get("/api/mistakes", headers=H).json()
+    assert m["traps"] and m["traps"][0]["owed"] == 1
+    fix = c.post("/api/drill", headers=H, json={"mistakes": True}).json()
+    assert fix["total"] == 2
+    for _ in range(2):
+        cur = stored(fix["id"])[-1]
+        c.post(f"/api/drill/{fix['id']}/answer", headers=H,
+               json={"question_id": cur["id"], "answer": keyed_answer(cur, True)})
+        c.post(f"/api/drill/{fix['id']}/next", headers=H)
+    assert not c.get("/api/mistakes", headers=H).json()["traps"], "two clean answers did not close it"
+    print("ok  the map and coach point at the open mistake, and two clean answers close it")
+
+    # finishing reports the topics moved and what was closed
+    for _ in range(3):
+        nx = c.post(f"/api/drill/{sid}/next", headers=H).json()
+        if nx.get("done"):
+            break
+        cur = stored(sid)[-1]
+        c.post(f"/api/drill/{sid}/answer", headers=H,
+               json={"question_id": cur["id"], "answer": keyed_answer(cur, True)})
+    assert c.post(f"/api/drill/{sid}/next", headers=H).json().get("done"), "the set did not end at 4"
+    summary = c.post(f"/api/drill/{sid}/finish", headers=H).json()
+    pct = next(t for t in summary["topics"] if t["topic"] == "percentages")
+    assert pct["asked"] == 4 and pct["right"] == 3 and pct["after"] > pct["before"], pct
+    assert summary["next"]["topics"], "no next session after finishing"
+    assert c.post(f"/api/drill/{sid}/answer", headers=H,
+                  json={"question_id": "d001", "answer": 0}).status_code == 409
+    other = {"X-Learner": "a:someoneelse"}
+    assert c.get(f"/api/drill/{sid}", headers=other).status_code == 403
+    print("ok  finishing moves the topic up, suggests the next set, and closes the drill")
+
+    # --- endless: it never runs out, and never repeats --------------------------
+    e = c.post("/api/drill", headers=H, json={"topics": ["circles", "probability"], "count": None}).json()
+    assert e["total"] is None
+    stems = set()
+    for _ in range(30):
+        cur = stored(e["id"])[-1]
+        stems.add(cur["stem"])
+        c.post(f"/api/drill/{e['id']}/answer", headers=H,
+               json={"question_id": cur["id"], "answer": keyed_answer(cur, True)})
+        nx = c.post(f"/api/drill/{e['id']}/next", headers=H).json()
+        assert "question" in nx, nx
+    assert len(stems) == 30, "an endless set repeated itself"
+    served = stored(e["id"])
+    topics_seen = [q["topic"] for q in served]
+    assert set(topics_seen) == {"circles", "probability"}
+    print("ok  an endless set serves 30 distinct questions across its topics and keeps going")
+
+    # difficulty is honoured
+    hard = c.post("/api/drill", headers=H,
+                  json={"topics": ["linear_functions"], "count": 5, "difficulty": ["hard"]}).json()
+    for _ in range(5):
+        cur = stored(hard["id"])[-1]
+        assert cur["difficulty"] == "hard", cur["difficulty"]
+        c.post(f"/api/drill/{hard['id']}/answer", headers=H,
+               json={"question_id": cur["id"], "answer": keyed_answer(cur, True)})
+        if c.post(f"/api/drill/{hard['id']}/next", headers=H).json().get("done"):
+            break
+    print("ok  a hard-only set serves only hard questions")
+
+    # --- saved questions come back exactly --------------------------------------
+    keep = stored(e["id"])[3]
+    assert c.post("/api/saved", headers=H,
+                  json={"session": e["id"], "question_id": keep["id"]}).json()["saved"]
+    back = c.post("/api/drill", headers=H, json={"saved": True}).json()
+    assert stored(back["id"])[0]["stem"] == keep["stem"], "a saved question came back different"
+    print("ok  a saved question is served again exactly")
+
+    # --- the profile ---------------------------------------------------------------
+    assert c.put("/api/me", headers=H, json={"target": 755}).status_code == 422
+    assert c.put("/api/me", headers=H, json={"days": "1111"}).status_code == 422
+    me = c.put("/api/me", headers=H, json={"name": "Ada", "exam_date": "2026-12-05",
+                                           "target": 700, "minutes": 30, "days": "1111100"}).json()
+    assert me["profile"]["name"] == "Ada" and me["profile"]["minutes"] == 30
+    today = c.get("/api/today", headers={**H, "X-Tz": "-300"}).json()
+    assert today["exam"]["date"] == "2026-12-05" and today["coach"]["count"] == 19
+    assert today["days"]["streak"] >= 1 and today["days"]["recent"][-1]["questions"] > 0
+    print(f"ok  profile saves and validates; today has a streak of {today['days']['streak']}"
+          f" and a {today['coach']['count']}-question coach set for 30 minutes")
+
+    # --- a fresh section: built for the sitting, never repeated -------------------
+    def sit_fresh(m1_right: int):
+        st = c.post("/api/mock/new", headers=H, json={"full": True}).json()
+        mid = st["id"]
+        assert st["mode"] == "mock" and len(st["questions"]) == 22 and st["seconds"] > 2000
+        for bad in LEAKS:
+            assert all(bad not in q for q in st["questions"]), f"{bad} leaked from a fresh section"
+        kept = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", mid)["questions"])
+        m1 = kept["module1"]
+        rank = {"easy": 0, "medium": 1, "hard": 2}
+        assert [rank[q["difficulty"]] for q in m1] == sorted(rank[q["difficulty"]] for q in m1)
+        at = tuple(i for i, q in enumerate(m1, 1) if q["type"] == "spr")
+        assert at == (6, 7, 13, 14, 21, 22), f"fresh module 1 grid-ins at {at}"
+        for i, q in enumerate(m1):
+            c.post(f"/api/session/{mid}/answer",
+                   json={"question_id": q["id"], "answer": keyed_answer(q, i < m1_right)})
+        gate = c.post(f"/api/session/{mid}/finish").json()
+        assert gate["next_module"] == 2
+        two = c.get(f"/api/session/{mid}").json()
+        kept = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", mid)["questions"])
+        m2 = kept["module2"]
+        assert len(two["questions"]) == 22 and len(m2) == 22
+        for q in m2:
+            c.post(f"/api/session/{mid}/answer",
+                   json={"question_id": q["id"], "answer": keyed_answer(q, False)})
+        c.post(f"/api/session/{mid}/finish")
+        res = c.get(f"/api/session/{mid}/results").json()
+        return mid, m1 + m2, res
+
+    mid1, qs1, res1 = sit_fresh(20)
+    assert res1["estimate"]["route"] == "upper" and res1["right"] == 20
+    assert any(r["mistake"] for r in res1["review"]), "the review names no mistakes"
+    mid2, qs2, res2 = sit_fresh(5)
+    assert res2["estimate"]["route"] == "lower" and res2["estimate"]["high"] <= 580, res2["estimate"]
+    shared = {q["stem"] for q in qs1} & {q["stem"] for q in qs2}
+    assert not shared, f"two fresh sections shared {len(shared)} questions"
+    print("ok  fresh sections are built to the blueprint, route, name mistakes, and share nothing")
+
+    # the misses of a sitting become a repair set on the same templates
+    fix = c.post("/api/drill", headers=H, json={"from_session": mid1}).json()
+    assert fix["total"] == 44 - 20, fix["total"]
+    missed_keys = [q["key"] for q in qs1[20:]]
+    first_fix = stored(fix["id"])[0]
+    assert first_fix["key"] == missed_keys[0] and first_fix["stem"] != qs1[20]["stem"]
+    print(f"ok  'fix these' turns {fix['total']} misses into fresh questions on the same templates")
+
+    hist = c.get("/api/history", headers=H).json()["sessions"]
+    kinds = {h["kind"] for h in hist}
+    assert {"drill", "mock"} <= kinds, kinds
+    assert c.get("/api/today", headers=H).json()["score"]["kind"] == "mock"
+    print(f"ok  history lists {len(hist)} sittings, and today carries the latest score")
 
 
 if __name__ == "__main__":

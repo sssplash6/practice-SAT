@@ -52,6 +52,76 @@ CREATE TABLE IF NOT EXISTS practice_seen (
 CREATE INDEX IF NOT EXISTS sessions_user  ON sessions(user_id);
 CREATE INDEX IF NOT EXISTS users_token    ON users(token);
 CREATE INDEX IF NOT EXISTS seen_learner   ON practice_seen(learner);
+
+-- A learner is whoever holds the token in their browser. Everything below is
+-- optional: a student who never opens the profile still gets a map and a coach.
+CREATE TABLE IF NOT EXISTS learners (
+  id         TEXT PRIMARY KEY,
+  name       TEXT,
+  exam_date  TEXT,            -- YYYY-MM-DD
+  target     INTEGER,         -- a Math section score, 200-800
+  minutes    INTEGER,         -- a study day's length
+  days       TEXT,            -- which weekdays are study days, Monday first: "1111100"
+  created    TEXT NOT NULL,
+  updated    TEXT
+);
+
+-- Every answer, from every mode. Mastery, open mistakes, streaks and the week
+-- are all derived from this, so nothing about a student is stored twice.
+CREATE TABLE IF NOT EXISTS attempts (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  learner    TEXT NOT NULL,
+  session    TEXT,
+  qid        TEXT,
+  template   TEXT NOT NULL,
+  seed       INTEGER NOT NULL,
+  topic      TEXT NOT NULL,
+  difficulty TEXT NOT NULL,
+  fmt        TEXT NOT NULL,
+  correct    INTEGER NOT NULL,
+  reason     TEXT,            -- the mistake the chosen option names, when wrong
+  given      TEXT,
+  ms         INTEGER,
+  at         TEXT NOT NULL
+);
+
+-- An open mistake: a template a learner fell for, and the misconception the
+-- option they picked names. It closes after `owed` clean answers on the same
+-- template, which is what the repair questions are for.
+CREATE TABLE IF NOT EXISTS traps (
+  learner    TEXT NOT NULL,
+  template   TEXT NOT NULL,
+  reason     TEXT NOT NULL,   -- '' for a missed grid-in, which names no mistake
+  label      TEXT NOT NULL,   -- what to call it: the reason, or the skill
+  topic      TEXT NOT NULL,
+  hits       INTEGER NOT NULL DEFAULT 1,
+  owed       INTEGER NOT NULL,
+  opened     TEXT NOT NULL,
+  last       TEXT NOT NULL,
+  closed     TEXT,
+  PRIMARY KEY (learner, template, reason)
+);
+
+-- A question kept to see again, addressed by the triple that regenerates it.
+CREATE TABLE IF NOT EXISTS saved (
+  learner    TEXT NOT NULL,
+  template   TEXT NOT NULL,
+  seed       INTEGER NOT NULL,
+  topic      TEXT NOT NULL,
+  at         TEXT NOT NULL,
+  PRIMARY KEY (learner, template, seed)
+);
+
+-- The day's challenge, built once so every student sits the same ten.
+CREATE TABLE IF NOT EXISTS challenges (
+  day        TEXT PRIMARY KEY,
+  questions  TEXT NOT NULL,
+  built      TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS attempts_learner ON attempts(learner, topic, id);
+CREATE INDEX IF NOT EXISTS attempts_session ON attempts(session);
+CREATE INDEX IF NOT EXISTS traps_open       ON traps(learner, closed);
 """
 
 # Columns added after the first release. sqlite has no ADD COLUMN IF NOT EXISTS,
@@ -65,6 +135,8 @@ LATER_COLUMNS = (
     ("sessions", "route", "TEXT"),          # "lower" or "upper", set after module 1
     ("sessions", "module1", "TEXT"),        # what module 1 was marked at
     ("sessions", "module_started", "TEXT"), # the live module's clock, not the session's
+    ("sessions", "cfg", "TEXT"),            # a drill's settings and its moving parts
+    ("sessions", "day", "TEXT"),            # a challenge's date
 )
 
 _local = threading.local()
@@ -149,6 +221,10 @@ def remember(learner: str, items, when: str) -> None:
 
 def one(sql: str, *args) -> sqlite3.Row | None:
     return conn().execute(sql, args).fetchone()
+
+
+def rows(sql: str, *args) -> list[sqlite3.Row]:
+    return conn().execute(sql, args).fetchall()
 
 
 def run(sql: str, *args) -> sqlite3.Cursor:

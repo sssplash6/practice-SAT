@@ -20,12 +20,12 @@ import random
 import re
 import secrets
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, EmailStr, Field
 
-from . import db, mail, practice, scoring
+from . import blueprint, db, drill, mail, practice, progress, scoring
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s %(message)s")
 log = logging.getLogger("satf")
@@ -48,6 +48,17 @@ PUBLIC_FIELDS = ("id", "domain", "topic_name", "difficulty", "type",
                  "stem", "choices", "latex", "figure", "table")
 
 MAX_PRACTICE = 120          # the sticker sheet stops here too
+
+# A learner is the token in their browser, sent as X-Learner. It is minted on
+# the client, so it is checked for shape and nothing else.
+LEARNER_OK = re.compile(r"^[A-Za-z0-9:_\-]{4,120}$")
+
+
+def learner_of(x_learner: str | None) -> str:
+    v = (x_learner or "").strip()
+    if not LEARNER_OK.match(v):
+        raise HTTPException(400, "send your learner token in the X-Learner header")
+    return v
 
 app = FastAPI(title="SAT Freshman")
 FORMS: dict[int, list[dict]] = {}
@@ -76,6 +87,10 @@ def startup() -> None:
         log.info("loaded %d mock sections", len(MOCKS))
     else:
         log.warning("%s is missing; run tools/build_mocks.py", MOCKS_PATH)
+    # what every template can make, which fresh sections and difficulty
+    # filters both need, surveyed once rather than on a student's first request
+    can = blueprint.abilities()
+    log.info("surveyed %d templates", len(can))
 
 
 def now() -> str:
@@ -86,10 +101,20 @@ def public(q: dict) -> dict:
     return {k: q[k] for k in PUBLIC_FIELDS if k in q}
 
 
+FRESH = "new"               # a mock built for its sitting, not taken off the shelf
+
+
 def mock_module(row, module: int | None = None, route: str | None = None) -> list[dict]:
-    """One module of a mock. Module 2 exists in two forms and the route picks."""
-    m = MOCKS[row["mock_id"]]
+    """One module of a mock. Module 2 exists in two forms and the route picks.
+
+    A fresh mock carries its own questions: module 1 made when it started,
+    module 2 made when module 1 routed, so only the route taken is ever built.
+    """
     module = module or row["module"] or 1
+    if row["mock_id"] == FRESH:
+        built = json.loads(row["questions"] or "{}")
+        return built["module1"] if module == 1 else built.get("module2", [])
+    m = MOCKS[row["mock_id"]]
     if module == 1:
         return m["module1"]
     return m["module2_" + (route or row["route"] or "upper")]
@@ -103,11 +128,18 @@ def mock_all(row) -> list[dict]:
 def questions_of(row) -> list[dict]:
     """A diagnostic points at a form, a practice set carries its own, and a
     mock serves whichever of its two modules the student is in."""
-    if row["kind"] == "practice":
+    if row["kind"] in ("practice", "drill"):
         return json.loads(row["questions"] or "[]")
+    if row["kind"] == "module":
+        return json.loads(row["questions"] or "{}")["module1"]
     if row["kind"] == "mock":
         return mock_module(row)
     return FORMS[row["form_id"]]
+
+
+def marked_questions(row) -> list[dict]:
+    """Everything a finished sitting asked, for marking and for review."""
+    return mock_all(row) if row["kind"] == "mock" else questions_of(row)
 
 
 def session_or_404(sid: str):
@@ -118,7 +150,7 @@ def session_or_404(sid: str):
 
 
 def duration(row) -> int:
-    if row["kind"] == "mock":
+    if row["kind"] in ("mock", "module"):
         return MOCK_MODULE_SECONDS
     return len(questions_of(row)) * SECONDS_PER_QUESTION
 
@@ -139,6 +171,8 @@ def section_label(row) -> str:
         return "Mixed practice"
     if row["kind"] == "mock":
         return f"Section 2, Module {row['module'] or 1}: Math"
+    if row["kind"] == "module":
+        return "Module 1: Math"
     return "Section 1, Module 1: Math"
 
 
@@ -166,12 +200,13 @@ def payload(row) -> dict:
 # --------------------------------------------------------------- the session
 
 @app.post("/api/session")
-def new_session() -> dict:
+def new_session(x_learner: str | None = Header(default=None)) -> dict:
     """Start a diagnostic on one of the ten forms, drawn at random."""
     sid = secrets.token_urlsafe(16)
     form_id = random.choice(list(FORMS))
-    db.run("INSERT INTO sessions (id, kind, form_id, started) VALUES (?,?,?,?)",
-           sid, "diagnostic", form_id, now())
+    learner = x_learner.strip() if x_learner and LEARNER_OK.match(x_learner.strip()) else None
+    db.run("INSERT INTO sessions (id, kind, form_id, learner, started) VALUES (?,?,?,?,?)",
+           sid, "diagnostic", form_id, learner, now())
     log.info("session %s started on form %d", sid[:8], form_id)
     return payload(session_or_404(sid))
 
@@ -220,6 +255,13 @@ def finish(sid: str) -> dict:
         m1 = mock_module(row, 1)
         right = sum(1 for q in m1 if scoring.is_correct(q, answers.get(q["id"])))
         route = scoring.route_after(right, len(m1))
+        if row["mock_id"] == FRESH:
+            # module 2 is made now, for the route module 1 earned and nothing
+            # else, from questions this student has never been given
+            built = json.loads(row["questions"])
+            built["module2"] = fresh_module(row["learner"], "module2_" + route)
+            db.run("UPDATE sessions SET questions=? WHERE id=?",
+                   json.dumps(built, ensure_ascii=False), sid)
         db.run("UPDATE sessions SET module=2, route=?, module1=?, module_started=? WHERE id=?",
                route, json.dumps({"right": right, "asked": len(m1)}), now(), sid)
         log.info("mock %s (%s): module 1 %d/%d -> %s module 2",
@@ -227,8 +269,9 @@ def finish(sid: str) -> dict:
         return {"next_module": 2, "finished_module": 1,
                 "right": right, "asked": len(m1)}
 
-    marked = mock_all(row) if row["kind"] == "mock" else questions_of(row)
-    result = scoring.score(marked, db.load_answers(row))
+    marked = marked_questions(row)
+    answers = db.load_answers(row)
+    result = scoring.score(marked, answers)
     if row["kind"] == "mock":
         result["mock"] = row["mock_id"]
         result["route"] = row["route"]
@@ -236,6 +279,9 @@ def finish(sid: str) -> dict:
         result["estimate"] = scoring.section_score(result, row["route"])
     db.run("UPDATE sessions SET finished=?, result=? WHERE id=?",
            now(), json.dumps(result), sid)
+    # every answered question goes on the learner's map, whatever the mode
+    if row["learner"] and row["kind"] != "drill":
+        progress.record_paper(row["learner"], sid, marked, answers)
     log.info("session %s finished: %d/%d", sid[:8], result["right"], result["asked"])
     return {"finished": now(), "right": result["right"], "asked": result["asked"]}
 
@@ -262,6 +308,40 @@ def list_mocks(learner: str = "") -> dict:
          "score": scores.get(m["id"])}
         for m in MOCKS.values()
     ]}
+
+
+def fresh_module(learner: str, form: str) -> list[dict]:
+    """A module built to the blueprint now, from questions this learner has
+    never been given, and remembered so they never are again."""
+    qs = blueprint.module(form, drill._builder(learner))
+    db.remember(learner, [{"key": q["key"], "seed": q["seed"],
+                           "stem_hash": practice.stem_hash(q["stem"])} for q in qs], now())
+    return qs
+
+
+class NewMock(BaseModel):
+    full: bool = True           # the whole adaptive section, or one module on its own
+
+
+@app.post("/api/mock/new")
+def new_mock(body: NewMock | None = None, x_learner: str | None = Header(default=None)) -> dict:
+    """A section that has never existed before and will never be sat again.
+
+    The shelf above is seven fixed sections. This is the one to use: the bank
+    makes a new one for every sitting, to the same blueprint, so a student can
+    sit a hundred and never meet a question twice.
+    """
+    learner = learner_of(x_learner)
+    full = True if body is None else body.full
+    sid = secrets.token_urlsafe(16)
+    stamp = now()
+    m1 = fresh_module(learner, "module1")
+    db.run("INSERT INTO sessions (id, kind, mock_id, module, learner, started, module_started,"
+           " questions) VALUES (?,?,?,?,?,?,?,?)",
+           sid, "mock" if full else "module", FRESH, 1, learner, stamp, stamp,
+           json.dumps({"module1": m1}, ensure_ascii=False))
+    log.info("fresh %s %s for %s", "section" if full else "module", sid[:8], learner[:12])
+    return payload(session_or_404(sid))
 
 
 class MockStart(BaseModel):
@@ -407,18 +487,278 @@ def results(sid: str) -> dict:
     out["first"] = user["first"] if user else None
     out["verified"] = bool(user["verified"]) if user else False
 
-    # the review: every question with what they put and what was right
+    # the review: every question with what they put, what was right, and --
+    # for a wrong option -- the mistake that option is built from
     answers = db.load_answers(row)
-    out["review"] = [
-        {
-            **public(q),
-            "given": answers.get(q["id"]),
-            "answer": q["answer"],
-            "rationale": q["rationale"],
-            "correct": scoring.is_correct(q, answers.get(q["id"])),
-        }
-        for q in (mock_all(row) if row["kind"] == "mock" else questions_of(row))
-    ]
+    review = []
+    for q in marked_questions(row):
+        given = answers.get(q["id"])
+        ok = scoring.is_correct(q, given)
+        mistake = None
+        if not ok and q["type"] == "mcq" and isinstance(given, int) and 0 <= given < 4:
+            reason = (q.get("reasons") or [""] * 4)[given]
+            mistake = reason[:1].upper() + reason[1:] if reason else None
+        review.append({**public(q), "topic": q.get("topic"), "skill": q.get("skill"),
+                       "given": given, "answer": q["answer"], "rationale": q["rationale"],
+                       "correct": ok, "mistake": mistake})
+    out["review"] = review
+    out["started"], out["finished"] = row["started"], row["finished"]
+    return out
+
+
+# --------------------------------------------------------------- the learner
+
+TARGETS = range(200, 810, 10)
+DATE_OK = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+DAYS_OK = re.compile(r"^[01]{7}$")
+
+
+def profile(learner: str) -> dict:
+    row = db.one("SELECT * FROM learners WHERE id=?", learner)
+    base = {"id": learner, "name": None, "exam_date": None, "target": None,
+            "minutes": None, "days": None}
+    return {**base, **({k: row[k] for k in base} if row else {})}
+
+
+def per_session(p: dict) -> int:
+    """How many questions a study day's minutes hold, at the real test's pace."""
+    minutes = p.get("minutes") or 15
+    return max(5, min(60, round(minutes * 60 / SECONDS_PER_QUESTION)))
+
+
+@app.get("/api/me")
+def get_me(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0)) -> dict:
+    learner = learner_of(x_learner)
+    return {"profile": profile(learner), "days": progress.days(learner, x_tz)}
+
+
+class Me(BaseModel):
+    name: str | None = Field(default=None, max_length=24)
+    exam_date: str | None = None
+    target: int | None = None
+    minutes: int | None = None
+    days: str | None = None
+
+
+@app.put("/api/me")
+def put_me(body: Me, x_learner: str | None = Header(default=None)) -> dict:
+    learner = learner_of(x_learner)
+    got = body.model_dump(exclude_unset=True)
+    if "name" in got and got["name"] is not None:
+        got["name"] = got["name"].strip() or None
+        if got["name"] and not NAME_OK.match(got["name"]):
+            raise HTTPException(422, "that name has characters it cannot have")
+    if got.get("exam_date") and not DATE_OK.match(got["exam_date"]):
+        raise HTTPException(422, "exam_date is YYYY-MM-DD")
+    if got.get("target") is not None and got["target"] not in TARGETS:
+        raise HTTPException(422, "target is a Math score, 200 to 800 in tens")
+    if got.get("minutes") is not None and not 5 <= got["minutes"] <= 240:
+        raise HTTPException(422, "minutes is between 5 and 240")
+    if got.get("days") and not DAYS_OK.match(got["days"]):
+        raise HTTPException(422, "days is seven 0s and 1s, Monday first")
+    if not db.one("SELECT 1 FROM learners WHERE id=?", learner):
+        db.run("INSERT INTO learners (id, created) VALUES (?,?)", learner, now())
+    for k, v in got.items():
+        db.run(f"UPDATE learners SET {k}=?, updated=? WHERE id=?", v, now(), learner)
+    return {"profile": profile(learner)}
+
+
+def latest_score(learner: str) -> dict | None:
+    """The newest section estimate a sitting has produced, and when."""
+    for r in db.rows("SELECT id, kind, result, finished FROM sessions WHERE learner=?"
+                     " AND finished IS NOT NULL AND kind IN ('mock','module','diagnostic')"
+                     " ORDER BY finished DESC", learner):
+        est = (json.loads(r["result"] or "{}") or {}).get("estimate")
+        if est:
+            return {**est, "kind": r["kind"], "session": r["id"], "at": r["finished"]}
+    return None
+
+
+@app.get("/api/map")
+def get_map(x_learner: str | None = Header(default=None)) -> dict:
+    """The 19 topics with mastery and open mistakes, and the coach's pick."""
+    learner = learner_of(x_learner)
+    board = progress.board(learner)
+    return {"topics": list(board.values()),
+            "coach": progress.coach(learner, count=per_session(profile(learner)))}
+
+
+@app.get("/api/today")
+def get_today(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0)) -> dict:
+    learner = learner_of(x_learner)
+    p = profile(learner)
+    days = progress.days(learner, x_tz)
+    exam = None
+    if p["exam_date"]:
+        left = (dt.date.fromisoformat(p["exam_date"]) - dt.date.fromisoformat(days["today"])).days
+        exam = {"date": p["exam_date"], "days": left}
+    return {"profile": p, "days": days, "exam": exam, "score": latest_score(learner),
+            "coach": progress.coach(learner, count=per_session(p)),
+            "mistakes": len(progress.open_traps(learner))}
+
+
+@app.get("/api/history")
+def history(x_learner: str | None = Header(default=None)) -> dict:
+    learner = learner_of(x_learner)
+    out = []
+    for r in db.rows("SELECT id, kind, mock_id, started, finished, result, cfg FROM sessions"
+                     " WHERE learner=? AND finished IS NOT NULL ORDER BY finished DESC LIMIT 200",
+                     learner):
+        res = json.loads(r["result"] or "{}")
+        cfg = json.loads(r["cfg"] or "{}")
+        out.append({"id": r["id"], "kind": r["kind"], "started": r["started"],
+                    "finished": r["finished"], "right": res.get("right"), "asked": res.get("asked"),
+                    "estimate": res.get("estimate"),
+                    "topics": [t["topic"] for t in res.get("topics", [])] or cfg.get("topics", [])})
+    return {"sessions": out}
+
+
+@app.get("/api/mistakes")
+def mistakes(x_learner: str | None = Header(default=None)) -> dict:
+    learner = learner_of(x_learner)
+    names = progress.topics()
+    saved = [{"template": r["template"], "topic": r["topic"], "name": names[r["topic"]].name,
+              "at": r["at"]}
+             for r in db.rows("SELECT template, topic, at FROM saved WHERE learner=? ORDER BY at DESC",
+                              learner)]
+    traps = [{**t, "name": names[t["topic"]].name, "domain": names[t["topic"]].domain}
+             for t in progress.open_traps(learner)]
+    return {"traps": traps, "saved": saved}
+
+
+class Save(BaseModel):
+    session: str
+    question_id: str
+    on: bool = True
+
+
+@app.post("/api/saved")
+def save_question(body: Save, x_learner: str | None = Header(default=None)) -> dict:
+    """Keep a question to see again. It is stored as the triple that makes it."""
+    learner = learner_of(x_learner)
+    row = session_or_404(body.session)
+    q = next((x for x in questions_of(row) if x["id"] == body.question_id), None)
+    if q is None or "key" not in q:
+        raise HTTPException(404, "no such question in that session")
+    if body.on:
+        db.run("INSERT OR IGNORE INTO saved (learner, template, seed, topic, at) VALUES (?,?,?,?,?)",
+               learner, q["key"], q["seed"], q["topic"], now())
+    else:
+        db.run("DELETE FROM saved WHERE learner=? AND template=? AND seed=?",
+               learner, q["key"], q["seed"])
+    return {"saved": body.on}
+
+
+# ----------------------------------------------------------------- the drill
+
+class Drill(BaseModel):
+    topics: list[str] = Field(default_factory=list)
+    count: int | None = 10       # None is a set with no end
+    difficulty: list[str] | None = None
+    timed: bool = False
+    source: str = Field(default="map", max_length=20)
+    from_session: str | None = None    # "fix these": the misses of a sitting
+    mistakes: bool = False             # every open mistake, twice each
+    saved: bool = False                # the saved questions, exactly
+
+
+def mine(row, learner: str):
+    if row["learner"] and row["learner"] != learner:
+        raise HTTPException(403, "that session belongs to someone else")
+    return row
+
+
+@app.post("/api/drill")
+def new_drill(body: Drill, x_learner: str | None = Header(default=None)) -> dict:
+    learner = learner_of(x_learner)
+    cat = practice.catalogue()
+    topics, queue, items, count = list(dict.fromkeys(body.topics)), [], [], body.count
+
+    if body.from_session:
+        src = mine(session_or_404(body.from_session), learner)
+        if not src["finished"]:
+            raise HTTPException(409, "finish that sitting first")
+        answers = db.load_answers(src)
+        missed = [q for q in marked_questions(src)
+                  if "key" in q and not scoring.is_correct(q, answers.get(q["id"]))]
+        if not missed:
+            raise HTTPException(409, "nothing was missed")
+        queue = [q["key"] for q in missed]
+        topics = list(dict.fromkeys(q["topic"] for q in missed))
+        count = len(queue)
+    elif body.mistakes:
+        traps = [t for t in progress.open_traps(learner) if not topics or t["topic"] in topics]
+        if not traps:
+            raise HTTPException(409, "no open mistakes")
+        once = list(dict.fromkeys(t["template"] for t in traps))
+        queue = once + once              # two clean answers close a mistake
+        topics = list(dict.fromkeys(t["topic"] for t in traps))
+        count = len(queue)
+    elif body.saved:
+        items = [[r["template"], r["seed"]]
+                 for r in db.rows("SELECT template, seed FROM saved WHERE learner=? ORDER BY at",
+                                  learner)]
+        if not items:
+            raise HTTPException(409, "nothing saved")
+        topics = list(dict.fromkeys(practice.topic_of(t) for t, _ in items))
+        count = len(items)
+    else:
+        unknown = [t for t in topics if t not in cat["by_topic"]]
+        if unknown:
+            raise HTTPException(400, f"no such topic: {', '.join(sorted(unknown)[:3])}")
+        if not topics:
+            raise HTTPException(400, "pick at least one topic")
+        if count is not None and not 1 <= count <= drill.MAX_FIXED:
+            raise HTTPException(400, f"a set is 1 to {drill.MAX_FIXED} questions, or endless")
+
+    sid = secrets.token_urlsafe(16)
+    drill.create(learner, sid, topics, count, body.difficulty, body.timed, body.source,
+                 queue=queue, items=items)
+    row = session_or_404(sid)
+    first = drill.next_question(row)
+    log.info("drill %s: %s questions over %d topics for %s", sid[:8],
+             count if count is not None else "endless", len(topics), learner[:12])
+    return {**drill.state(session_or_404(sid)), **first}
+
+
+@app.get("/api/drill/{sid}")
+def get_drill(sid: str, x_learner: str | None = Header(default=None)) -> dict:
+    return drill.state(mine(session_or_404(sid), learner_of(x_learner)))
+
+
+@app.post("/api/drill/{sid}/next")
+def drill_next(sid: str, x_learner: str | None = Header(default=None)) -> dict:
+    row = mine(session_or_404(sid), learner_of(x_learner))
+    if row["finished"]:
+        raise HTTPException(409, "this set is finished")
+    return drill.next_question(row)
+
+
+class DrillAnswer(BaseModel):
+    question_id: str
+    answer: int | str | None = None
+    ms: int | None = Field(default=None, ge=0)
+
+
+@app.post("/api/drill/{sid}/answer")
+def drill_answer(sid: str, body: DrillAnswer, x_learner: str | None = Header(default=None)) -> dict:
+    row = mine(session_or_404(sid), learner_of(x_learner))
+    if row["finished"]:
+        raise HTTPException(409, "this set is finished")
+    if body.answer is None or body.answer == "":
+        raise HTTPException(400, "no answer")
+    try:
+        return drill.answer(row, body.question_id, body.answer, body.ms)
+    except KeyError:
+        raise HTTPException(400, "that question is not in this set")
+
+
+@app.post("/api/drill/{sid}/finish")
+def drill_finish(sid: str, x_learner: str | None = Header(default=None)) -> dict:
+    learner = learner_of(x_learner)
+    row = mine(session_or_404(sid), learner)
+    out = drill.finish(row)
+    out["next"] = progress.coach(learner, count=per_session(profile(learner)))
     return out
 
 

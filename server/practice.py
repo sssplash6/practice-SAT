@@ -295,6 +295,7 @@ def to_question(card: Card, n: int) -> dict:
         "topic_name": topics[card.topic].name,
         "domain": topics[card.topic].domain,
         "difficulty": it.difficulty,
+        "skill": it.skill,
         "type": it.fmt,
         "stem": it.stem,
         "choices": list(it.choices),
