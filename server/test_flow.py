@@ -53,7 +53,11 @@ def main() -> int:
         # --- starting ---------------------------------------------------------
         s = c.post("/api/session").json()
         sid, qs = s["id"], s["questions"]
-        assert len(qs) == 16 and s["seconds"] == 1500
+        # the clock counts from the start time, so a fresh one is at or just under
+        assert len(qs) == 16
+        assert 1480 <= s["seconds"] <= 1500, s["seconds"]
+        assert c.get(f"/api/session/{sid}").json()["seconds"] <= s["seconds"], \
+            "the clock reset on reload"
 
         for q in qs:
             for bad in LEAKS:

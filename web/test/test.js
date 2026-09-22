@@ -247,8 +247,10 @@
     go(S.i + 1);
   }
 
+  let leaving = false;
   async function finish() {
-    if (S.ended) return;
+    if (leaving) return;
+    leaving = true;
     S.ended = true;
     if (!S.id || S.id === 'local') {
       location.href = '../diagnostic/';      // no server behind this; nothing to mark
@@ -424,9 +426,22 @@
     S.id = data.id;
     S.section = data.section || S.section;
     S.subject = data.subject || 'math';
-    S.seconds = data.seconds || S.seconds;
+    S.seconds = data.seconds ?? S.seconds;
     S.qs = data.questions || [];
     if (!S.qs.length) { $('stem').textContent = 'This test has no questions.'; return; }
+
+    /* A test you lose by reloading is not a test. Putting the session in the
+       URL means the back button and a refresh both land back in it. */
+    if (S.id && S.id !== 'local') {
+      const u = new URL(location.href);
+      if (u.searchParams.get('s') !== S.id) {
+        u.searchParams.set('s', S.id);
+        history.replaceState(null, '', u);
+      }
+    }
+
+    if (data.finished) { S.ended = true; return finish(); }
+    S.answers = data.answers || {};          // what they had already put down
 
     $('dirsBody').innerHTML = DIRECTIONS[S.subject] || DIRECTIONS.math;
     $('who').textContent = data.name || '';

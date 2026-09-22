@@ -73,13 +73,24 @@ def session_or_404(sid: str):
     return row
 
 
+def remaining(row) -> int:
+    """Time left, from when the session started -- not from when the page loaded.
+
+    Otherwise a reload is a free extra 25 minutes, and the clock is the one
+    thing on this screen a student has a reason to game.
+    """
+    started = dt.datetime.fromisoformat(row["started"])
+    elapsed = (dt.datetime.now(dt.timezone.utc) - started).total_seconds()
+    return max(0, int(DURATION_SECONDS - elapsed))
+
+
 def payload(row) -> dict:
     qs = FORMS[row["form_id"]]
     return {
         "id": row["id"],
         "section": "Section 1, Module 1: Math",
         "subject": "math",
-        "seconds": DURATION_SECONDS,
+        "seconds": remaining(row),
         "form": row["form_id"],
         "questions": [public(q) for q in qs],
         "answers": db.load_answers(row),

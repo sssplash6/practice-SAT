@@ -362,9 +362,25 @@ button { font:inherit; color:inherit; -webkit-tap-highlight-color:transparent; u
 @media (max-width:820px) {
   .body { flex-direction:column; }
   .pane-l { flex:none; max-height:42dvh; border-right:0; border-bottom:1px solid #c9c9c9; }
-  .tools { gap:14px; }
   .sect { font-size:16px; }
   .clock { font-size:20px; }
+}
+
+/* Phones: four tools and a section title will not share one row without the
+   title wrapping three deep, so the tools take a row of their own. */
+@media (max-width:700px) {
+  .top {
+    grid-template-columns:1fr auto;
+    grid-template-areas:"title clock" "tools tools";
+    row-gap:10px; padding:12px 16px 10px;
+  }
+  .top-l { grid-area:title; }
+  .top-c { grid-area:clock; text-align:right; }
+  .tools { grid-area:tools; justify-content:space-between; gap:8px; }
+  .tool { flex:1; }
+  .foot { padding:11px 16px 13px; gap:8px; }
+  .move { padding:0 18px; }
+  .who { display:none; }
 }
 </style>
 </head>
