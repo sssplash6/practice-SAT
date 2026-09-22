@@ -189,6 +189,25 @@
   const band = e => e ? `${e.low}–${e.high}` : '—';
   const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* what a day of the plan holds, from three answers: the exam date, a study
+     day's minutes, and which weekdays are study days (Monday first). Plan
+     draws its calendar from this and Today leads with it. */
+  const plan = {
+    iso: d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`,
+    dow: d => (d.getDay() + 6) % 7,
+    testOf: minutes => minutes >= 70 ? 'section' : minutes >= 35 ? 'module' : null,
+    set: p => !!(p && p.exam_date && p.minutes && p.days),
+    dayOf(d, p) {
+      const s = plan.iso(d);
+      if (s === p.exam_date) return 'exam';
+      if (s > p.exam_date) return 'none';
+      const eve = new Date(p.exam_date + 'T12:00:00'); eve.setDate(eve.getDate() - 1);
+      if (s === plan.iso(eve) || p.days[plan.dow(d)] !== '1') return 'rest';   // the day before is off
+      for (let k = plan.dow(d) + 1; k < 7; k++) if (p.days[k] === '1') return 'practice';
+      return plan.testOf(p.minutes) ? 'test' : 'practice';                   // the week's last study day
+    },
+  };
+
   /* a snapshot kept for one tab, so a page can animate from where it was */
   const snap = {
     get(k) { try { return JSON.parse(sessionStorage.getItem('satf.' + k) || 'null'); } catch (_) { return null; } },
@@ -465,6 +484,6 @@
   /* ------------------------------------------------------------ export */
   window.UI = {
     api, learner, useLearner, h, s, svg, mark, ICON, TOPICS, TOPIC, DOMAINS, glyph, chip,
-    question, calc, ref, shell, me, snap, mmss, minutesFor, day, cap, band, reduced, $,
+    question, calc, ref, shell, me, snap, mmss, minutesFor, day, cap, band, reduced, plan, $,
   };
 })();

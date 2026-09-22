@@ -98,9 +98,8 @@
   const MINS = [15, 30, 45, 60, 90];
   const TARGETS = [550, 600, 650, 700, 750, 800];
   const LET = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
-  const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const { iso, dow, testOf } = UI.plan;
   const at = s => new Date(s + 'T12:00:00');
-  const dow = d => (d.getDay() + 6) % 7;          // Monday is 0
   const todayIso = iso(new Date());
 
   let P = null, T = null;
@@ -108,21 +107,7 @@
 
   /* ---------------------------------------------------------- the plan */
   function perDay(minutes) { return Math.max(5, Math.min(60, Math.round(minutes * 60 / 95))); }
-  function testOf(minutes) { return minutes >= 70 ? 'section' : minutes >= 35 ? 'module' : null; }
-  function isTestDay(d, days, minutes) {
-    if (!testOf(minutes) || days[dow(d)] !== '1') return false;
-    for (let k = dow(d) + 1; k < 7; k++) if (days[k] === '1') return false;   // the week's last study day
-    return true;
-  }
-  function kindOf(d, p) {
-    const s = iso(d);
-    if (s === p.exam_date) return 'exam';
-    if (s > p.exam_date) return 'none';
-    const eve = new Date(at(p.exam_date)); eve.setDate(eve.getDate() - 1);
-    if (s === iso(eve)) return 'rest';                                         // the day before is off
-    if (p.days[dow(d)] !== '1') return 'rest';
-    return isTestDay(d, p.days, p.minutes) ? 'test' : 'practice';
-  }
+  const kindOf = UI.plan.dayOf;
 
   function paintPlan() {
     $('#setup').hidden = true;
@@ -232,7 +217,7 @@
   (async () => {
     try { T = await api('/today'); } catch (_) { return; }
     P = T.profile;
-    if (P.exam_date && P.exam_date >= todayIso && P.minutes && P.days) paintPlan();
+    if (UI.plan.set(P) && P.exam_date >= todayIso) paintPlan();
     else {
       form.exam = SAT_DATES.find(d => d > todayIso) || null;
       if (P.minutes) form.minutes = P.minutes;

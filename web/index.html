@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
   /* Today: the one thing to do, then the day's question, then where you
-     stand. The coach's set is the only pill on the page. */
+     stand. The next thing -- the coach's set, or the plan's test -- is the
+     only pill on the page. */
   .today { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 20px; align-items: start; }
   .col { display: grid; gap: 20px; }
 
@@ -121,31 +122,44 @@
   UI.shell();
   $('#trophy').innerHTML = svg(ICON.trophy, 26);
 
-  /* ---------------------------------------------------------- the coach */
-  let coach = null;
+  /* ---------------------------------------------------------- the next thing
+     The coach's set, or on the plan's test day the test, until one is done. */
+  let start = null;              // makes the sitting and says where it opens
   $('#go').addEventListener('click', async () => {
-    if (!coach) return;
+    if (!start) return;
     const go = $('#go');
     go.setAttribute('aria-busy', 'true');
-    try {
-      const d = await api('/drill', { method: 'POST', body: { topics: coach.topics, count: coach.count, source: 'coach' } });
-      location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`;
-    } catch (e) {
+    try { location.href = await start(); }
+    catch (e) {
       go.removeAttribute('aria-busy');
       $('#err').textContent = e.message; $('#err').hidden = false;
     }
   });
 
-  function paintToday(t) {
-    coach = t.coach;
-    $('#chips').replaceChildren(...coach.topics.map(slug => {
-      const c = UI.chip(slug);
-      const n = (coach.traps || {})[slug] || 0;
-      if (n) c.append(h('span', { class: 'dots' }, Array.from({ length: Math.min(3, n) }, () => h('i'))));
-      return c;
-    }));
-    $('#nextMeta').textContent = `${coach.count} questions · ${minutesFor(coach.count)} min`;
+  function paintNext(t) {
+    const p = t.profile;
+    const kind = UI.plan.set(p) && p.exam_date >= t.days.today ? UI.plan.dayOf(new Date(t.days.today + 'T12:00:00'), p) : 'practice';
+    if (kind === 'test' && !t.tested) {
+      const full = UI.plan.testOf(p.minutes) === 'section';
+      $('#chips').replaceChildren(h('span', { class: 'h2', text: full ? 'Section' : 'Module' }));
+      $('#nextMeta').textContent = full ? '44 questions · 70 min' : '22 questions · 35 min';
+      start = async () => `/test/?s=${encodeURIComponent((await api('/mock/new', { method: 'POST', body: { full } })).id)}`;
+    } else {
+      const coach = t.coach;
+      $('#chips').replaceChildren(...coach.topics.map(slug => {
+        const c = UI.chip(slug);
+        const n = (coach.traps || {})[slug] || 0;
+        if (n) c.append(h('span', { class: 'dots' }, Array.from({ length: Math.min(3, n) }, () => h('i'))));
+        return c;
+      }));
+      $('#nextMeta').textContent = `${coach.count} questions · ${minutesFor(coach.count)} min`;
+      start = async () => `/practice/session/?id=${encodeURIComponent((await api('/drill', { method: 'POST', body: { topics: coach.topics, count: coach.count, source: 'coach' } })).id)}`;
+    }
     $('#go').disabled = false;
+  }
+
+  function paintToday(t) {
+    paintNext(t);
 
     if (t.score) {
       $('#score').textContent = band(t.score);

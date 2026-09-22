@@ -612,7 +612,11 @@ def get_today(x_learner: str | None = Header(default=None), x_tz: int = Header(d
     if p["exam_date"]:
         left = (dt.date.fromisoformat(p["exam_date"]) - dt.date.fromisoformat(days["today"])).days
         exam = {"date": p["exam_date"], "days": left}
-    return {"profile": p, "days": days, "exam": exam, "score": latest_score(learner),
+    # a section or module finished today is a plan's test day done
+    tested = any(progress._local_day(r["finished"], x_tz).isoformat() == days["today"]
+                 for r in db.rows("SELECT finished FROM sessions WHERE learner=?"
+                                  " AND kind IN ('mock', 'module') AND finished IS NOT NULL", learner))
+    return {"profile": p, "days": days, "exam": exam, "tested": tested, "score": latest_score(learner),
             "coach": progress.coach(learner, count=per_session(p)),
             "mistakes": len(progress.open_traps(learner))}
 

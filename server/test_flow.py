@@ -551,8 +551,10 @@ def check_learner(c) -> None:
     hist = c.get("/api/history", headers=H).json()["sessions"]
     kinds = {h["kind"] for h in hist}
     assert {"drill", "mock"} <= kinds, kinds
-    assert c.get("/api/today", headers=H).json()["score"]["kind"] == "mock"
-    print(f"ok  history lists {len(hist)} sittings, and today carries the latest score")
+    today = c.get("/api/today", headers=H).json()
+    assert today["score"]["kind"] == "mock" and today["tested"] is True
+    assert c.get("/api/today", headers={"X-Learner": "a:nevertested"}).json()["tested"] is False
+    print(f"ok  history lists {len(hist)} sittings; today carries the latest score and that a test is done")
 
     # --- a grid-in names no mistake, so it is filed under the bank's skill ---------
     D = {"X-Learner": "a:diaggrid"}
