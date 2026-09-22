@@ -36,6 +36,7 @@
   --sans:"Archivo","Helvetica Neue",system-ui,sans-serif;
   --serif:"Source Serif 4",Georgia,"Times New Roman",serif;
   --tint:#f7bd6b;          /* orange at marker strength, for 'marked for review' */
+  --tint-wash:#fdf1e2;     /* the same, at reading strength, behind a pressed control */
 }
 
 * { box-sizing:border-box; }
@@ -44,6 +45,10 @@
    outranks the [hidden] attribute's own display:none. Say it once, loudly,
    rather than adding a :not() to every rule that hides something. */
 [hidden] { display:none !important; }
+
+/* The browser's own focus ring is blue, which is the one colour this page is
+   not. Keep the ring -- it is how a keyboard finds its place -- and recolour it. */
+:focus-visible { outline:2px solid var(--amber-deep); outline-offset:2px; border-radius:3px; }
 html,body { height:100%; }
 body {
   margin:0; background:var(--paper); color:var(--ink);
@@ -154,7 +159,11 @@ button { font:inherit; color:inherit; -webkit-tap-highlight-color:transparent; u
   font:600 13.5px var(--sans); padding:3px 4px; border-radius:5px;
 }
 .mark svg { flex:none; }
-.mark[aria-pressed="true"] svg { fill:var(--tint); stroke:var(--ink); }
+/* The path carries fill="none" as a presentation attribute. A CSS fill set on
+   the parent svg only inherits, and an attribute on the element beats an
+   inherited value, so the rule has to land on the path itself. */
+.mark[aria-pressed="true"] svg path { fill:var(--amber); }
+.mark[aria-pressed="true"] { background:var(--tint-wash); }
 @media (hover:hover) and (pointer:fine) { .mark:hover { background:#f2f2f2; } }
 
 .abc {
@@ -326,6 +335,7 @@ button { font:inherit; color:inherit; -webkit-tap-highlight-color:transparent; u
 .sheet p, .sheet li { font:400 15.5px/1.55 var(--serif); }
 .ref { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:18px 20px; }
 .ref figure { margin:0; text-align:center; font:400 14px var(--serif); }
+.ref-note { display:block; margin-bottom:3px; }
 .ref svg { display:block; margin:0 auto 6px; }
 
 /* ------------------------------------------------------------ calculator
@@ -582,6 +592,6 @@ button { font:inherit; color:inherit; -webkit-tap-highlight-color:transparent; u
 
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/katex.min.js" integrity="sha512-UPFOadao2nEorjtjl0xUTtN3w20Ja143UPEU6EyJ1mi5MB2bDtMkiWmqGDqi47xNLB5z1dy31GKJDEWhjUJFiQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.11/contrib/auto-render.min.js" integrity="sha512-YJVxTjqttjsU3cSvaTRqsSl0wbRgZUNF+NGGCgto/MUbIvaLdXQzGTCQu4CvyJZbZctgflVB0PXw9LLmTWm5/w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="test.js"></script>
+<script defer src="test.js"></script>
 </body>
 </html>

@@ -367,24 +367,45 @@
   }
 
   /* ------------------------------------------------------------- reference
-     The formula sheet the math section gives you. Drawn, not screenshotted. */
+     The formula sheet the math section gives you. Drawn, not screenshotted.
+     Each caption is a LaTeX body with no delimiters, so it is typeset here
+     rather than left to the auto-renderer, which only looks for $ and \( . */
   const REF = [
-    ['<circle cx="34" cy="30" r="24" fill="none" stroke="#1e1e1e" stroke-width="1.6"/><path d="M34 30h24" stroke="#1e1e1e" stroke-width="1.4"/><text x="44" y="26" font-size="12" font-family="Source Serif 4, serif" font-style="italic">r</text>', 'A = \\pi r^{2}<br>C = 2\\pi r'],
-    ['<rect x="10" y="12" width="48" height="34" fill="none" stroke="#1e1e1e" stroke-width="1.6"/><text x="32" y="56" font-size="12" text-anchor="middle" font-family="Source Serif 4, serif" font-style="italic">ℓ</text><text x="4" y="32" font-size="12" font-family="Source Serif 4, serif" font-style="italic">w</text>', 'A = \\ell w'],
-    ['<path d="M10 46 L58 46 L40 14 Z" fill="none" stroke="#1e1e1e" stroke-width="1.6"/><path d="M40 14 L40 46" stroke="#1e1e1e" stroke-width="1" stroke-dasharray="3 3"/>', 'A = \\tfrac{1}{2}bh'],
-    ['<path d="M14 46 L54 46 L54 16 Z" fill="none" stroke="#1e1e1e" stroke-width="1.6"/><path d="M50 46 v-4 h4" fill="none" stroke="#1e1e1e" stroke-width="1.2"/>', 'a^{2} + b^{2} = c^{2}'],
-    ['<path d="M12 44 L44 44 L28 16 Z" fill="none" stroke="#1e1e1e" stroke-width="1.6"/><text x="46" y="34" font-size="11" font-family="Source Serif 4, serif">30°</text>', 'Special right triangles<br>\\(x,\\ x\\sqrt3,\\ 2x\\)'],
-    ['<rect x="14" y="18" width="30" height="24" fill="none" stroke="#1e1e1e" stroke-width="1.6"/><path d="M14 18 L26 10 L56 10 L44 18 M44 42 L56 34 L56 10" fill="none" stroke="#1e1e1e" stroke-width="1.4"/>', 'V = \\ell w h'],
-    ['<ellipse cx="34" cy="17" rx="18" ry="6" fill="none" stroke="#1e1e1e" stroke-width="1.5"/><path d="M16 17v22a18 6 0 0 0 36 0V17" fill="none" stroke="#1e1e1e" stroke-width="1.5"/>', 'V = \\pi r^{2} h'],
-    ['<circle cx="34" cy="30" r="20" fill="none" stroke="#1e1e1e" stroke-width="1.6"/><ellipse cx="34" cy="30" rx="20" ry="7" fill="none" stroke="#1e1e1e" stroke-width="1.1" stroke-dasharray="3 3"/>', 'V = \\tfrac{4}{3}\\pi r^{3}'],
-    ['<path d="M34 10 L54 44 L14 44 Z" fill="none" stroke="#1e1e1e" stroke-width="1.6"/><ellipse cx="34" cy="44" rx="20" ry="6" fill="none" stroke="#1e1e1e" stroke-width="1.2"/>', 'V = \\tfrac{1}{3}\\pi r^{2} h'],
+    ['<circle cx="34" cy="30" r="24" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M34 30h24" stroke="currentColor" stroke-width="1.4"/><text x="44" y="26" font-size="12" font-family="Source Serif 4, serif" font-style="italic">r</text>',
+     ['A = \\pi r^{2}', 'C = 2\\pi r']],
+    ['<rect x="10" y="12" width="48" height="34" fill="none" stroke="currentColor" stroke-width="1.6"/><text x="32" y="56" font-size="12" text-anchor="middle" font-family="Source Serif 4, serif" font-style="italic">ℓ</text><text x="4" y="32" font-size="12" font-family="Source Serif 4, serif" font-style="italic">w</text>',
+     ['A = \\ell w']],
+    ['<path d="M10 46 L58 46 L40 14 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M40 14 L40 46" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3"/>',
+     ['A = \\tfrac{1}{2}bh']],
+    ['<path d="M14 46 L54 46 L54 16 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M50 46 v-4 h4" fill="none" stroke="currentColor" stroke-width="1.2"/>',
+     ['a^{2} + b^{2} = c^{2}']],
+    ['<path d="M12 44 L44 44 L28 16 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><text x="46" y="34" font-size="11" font-family="Source Serif 4, serif">30°</text>',
+     ['x,\\ x\\sqrt{3},\\ 2x'], 'Special right triangles'],
+    ['<rect x="14" y="18" width="30" height="24" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M14 18 L26 10 L56 10 L44 18 M44 42 L56 34 L56 10" fill="none" stroke="currentColor" stroke-width="1.4"/>',
+     ['V = \\ell w h']],
+    ['<ellipse cx="34" cy="17" rx="18" ry="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 17v22a18 6 0 0 0 36 0V17" fill="none" stroke="currentColor" stroke-width="1.5"/>',
+     ['V = \\pi r^{2} h']],
+    ['<circle cx="34" cy="30" r="20" fill="none" stroke="currentColor" stroke-width="1.6"/><ellipse cx="34" cy="30" rx="20" ry="7" fill="none" stroke="currentColor" stroke-width="1.1" stroke-dasharray="3 3"/>',
+     ['V = \\tfrac{4}{3}\\pi r^{3}']],
+    ['<path d="M34 10 L54 44 L14 44 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><ellipse cx="34" cy="44" rx="20" ry="6" fill="none" stroke="currentColor" stroke-width="1.2"/>',
+     ['V = \\tfrac{1}{3}\\pi r^{2} h']],
   ];
 
+  const tex = src => {
+    if (!window.katex) return src;
+    try { return window.katex.renderToString(src, { throwOnError: false }); }
+    catch (_) { return src; }
+  };
+
   function buildRef() {
-    $('refBody').innerHTML = REF.map(([art, cap]) =>
-      `<figure><svg width="68" height="60" viewBox="0 0 68 60" aria-hidden="true">${art}</svg>
-       <figcaption>${cap}</figcaption></figure>`).join('');
-    mathify($('refBody'));
+    $('refBody').innerHTML = REF.map(([art, lines, note]) => `
+      <figure>
+        <svg width="68" height="60" viewBox="0 0 68 60" aria-hidden="true">${art}</svg>
+        <figcaption>
+          ${note ? `<span class="ref-note">${note}</span>` : ''}
+          ${lines.map(tex).join('<br>')}
+        </figcaption>
+      </figure>`).join('');
   }
 
   const DIRECTIONS = {
