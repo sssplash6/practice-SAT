@@ -176,6 +176,7 @@ A student's first move is the diagnostic, and `server/` is what runs it.
 PYTHONPATH=. python3 tools/build_diagnostics.py    # the ten forms, once
 python3 -m uvicorn server.app:app --port 8000      # the site and the API
 PYTHONPATH=. python3 server/test_flow.py           # the whole flow, end to end
+PYTHONPATH=. python3 tools/measure_mix.py          # how repetitive practice is
 ```
 
 **Ten fixed forms, drawn at random.** A diagnostic is twenty questions: four
@@ -211,6 +212,23 @@ adaptive items. Twenty uncalibrated ones cannot beat that, so the result is a
 which is also what the College Board's own report does, with its own warning
 that a four-item domain estimate can make a strong student look weak by chance.
 
+**Mixed practice is scheduled, not sampled.** A student picks topics on the
+sticker sheet and asks for a number of questions; `server/practice.py` fills
+every slot by scoring a handful of candidates against what they have just seen
+and taking the least similar. Never repeating a question is the easy half. The
+hard half is that sixty questions from one subtopic can all be distinct and
+still feel like the same question sixty times, so sameness is counted on seven
+features at once -- template, skill, opening words, format, difficulty, whether
+there is a figure, and the shape of the answer -- each weighted by how much it
+shows and faded by how far back it was. A template used earlier in the same set
+is penalised on its own, so a set spreads over every template a topic has.
+
+`tools/measure_mix.py` is the evidence. Across all nineteen topics at sixty
+questions each, the scheduler never repeats a template or an opening sentence
+back to back, uses every template the topic owns, and produces sixty distinct
+stems. Drawing at random instead loses up to fifteen of the sixty to duplicates
+and runs the same template four deep. Sets build in 9 to 260 ms.
+
 **The test window** (`web/test/`) is deliberately a copy of Bluebook's layout,
 because anything a student has to re-learn on test day is a cost we handed
 them. It keeps the brand orange for every highlight and nothing else.
@@ -234,7 +252,9 @@ repeated a stem zero times, but Area and Volume repeated 25 and One-Variable
 Data 22 — about one visible repeat every second set. Serving needs
 enumeration by seed plus per-student history, not `random()`. The diagnostic
 sidesteps this by building its forms once and checking all 200 questions
-against each other; practice, which is unbounded, still needs the history.
+against each other, and practice keeps the per-student history the note asks
+for: seeds are walked from a per-learner offset, never reissued, and checked by
+stem as well as by seed, because two seeds can land on the same question.
 
 **There is no exam blueprint.** The real test weights its domains; nothing
 here knows that, so a practice set drawn from this bank has a distribution

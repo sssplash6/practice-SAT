@@ -148,6 +148,71 @@ def main() -> int:
         assert len(res["review"]) == 20 and res["review"][0]["rationale"]
         print(f"ok  results release after signup: Math {lo}-{hi}, every domain Strong")
 
+        # --- mixed practice ------------------------------------------------
+        # the point of the scheduler: sixty from one topic, and it must not
+        # read as the same question sixty times
+        r = c.post("/api/practice",
+                   json={"basket": {"probability": 60}, "learner": "u:check"})
+        assert r.status_code == 200, r.text
+        first = r.json()
+        qs = first["questions"]
+        assert len(qs) == 60, len(qs)
+        assert first["seconds"] is None, "practice is not on a clock"
+        assert first["mode"] == "practice"
+
+        for q in qs:
+            for bad in LEAKS:
+                assert bad not in q, f"{bad} leaked from a practice set"
+        assert len({q["stem"] for q in qs}) == 60, "a stem repeated inside one set"
+
+        # no feature that carries the feel of a question may run back to back
+        from server import practice as sched
+        feats = [sched.opening(q["stem"]) for q in qs]
+        assert all(a != b for a, b in zip(feats, feats[1:])), "two neighbours share an opening"
+
+        stored = json.loads(db.one("SELECT questions FROM sessions WHERE id=?",
+                                   first["id"])["questions"])
+        keys = [q["key"] for q in stored]
+        assert all(a != b for a, b in zip(keys, keys[1:])), "a template ran twice over"
+        assert len(set(keys)) == len(sched.catalogue()["by_topic"]["probability"]), \
+            "the set leaned on a subset of the topic's templates"
+        print(f"ok  60 from one topic: 60 distinct stems, all "
+              f"{len(set(keys))} templates used, no feature repeats back to back")
+
+        # a second sitting is not the first one again
+        again = c.post("/api/practice",
+                       json={"basket": {"probability": 60}, "learner": "u:check"}).json()
+        overlap = {q["stem"] for q in qs} & {q["stem"] for q in again["questions"]}
+        assert not overlap, f"{len(overlap)} questions came back on the second sitting"
+        print("ok  a second sitting repeats none of the first")
+
+        # topics interleave rather than arriving in blocks
+        mixed = c.post("/api/practice",
+                       json={"basket": {"circles": 4, "percentages": 4, "probability": 4},
+                             "learner": "u:check2"}).json()["questions"]
+        names = [q["topic_name"] for q in mixed]
+        assert all(a != b for a, b in zip(names, names[1:])), f"topics blocked: {names}"
+        print("ok  three topics interleave, never two of the same in a row")
+
+        for label, body, want in [
+            ("unknown topic", {"basket": {"nope": 3}}, 400),
+            ("empty basket", {"basket": {}}, 400),
+            ("over the cap", {"basket": {"circles": 500}}, 400),
+        ]:
+            got = c.post("/api/practice", json=body).status_code
+            assert got == want, f"{label}: {got}"
+
+        # practice results need no signup: you chose these questions
+        pid = mixed and c.post("/api/practice",
+                               json={"basket": {"circles": 3}, "learner": "u:check2"}).json()
+        for q in pid["questions"]:
+            c.post(f"/api/session/{pid['id']}/answer", json={"question_id": q["id"], "answer": 0})
+        c.post(f"/api/session/{pid['id']}/finish")
+        res = c.get(f"/api/session/{pid['id']}/results")
+        assert res.status_code == 200, "practice results were gated behind signup"
+        assert res.json()["mode"] == "practice"
+        print("ok  practice guards hold, and its results need no signup")
+
     # --- the marking itself, away from the wire -------------------------------
     assert scoring.is_correct({"type": "spr", "answer": "5776"}, "5,776")
     assert scoring.is_correct({"type": "mcq", "answer": "C"}, 2)

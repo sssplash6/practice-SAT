@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import json
+import logging
 import pathlib
 import sqlite3
 import threading
+
+log = logging.getLogger("satf.db")
 
 DB_PATH = pathlib.Path(__file__).resolve().parent / "satfreshman.db"
 
@@ -22,18 +25,42 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS sessions (
-  id       TEXT PRIMARY KEY,
-  form_id  INTEGER NOT NULL,
-  started  TEXT NOT NULL,
-  finished TEXT,
-  answers  TEXT NOT NULL DEFAULT '{}',
-  result   TEXT,
-  user_id  TEXT REFERENCES users(id)
+  id        TEXT PRIMARY KEY,
+  kind      TEXT NOT NULL DEFAULT 'diagnostic',
+  form_id   INTEGER,          -- diagnostics: which of the ten forms
+  questions TEXT,             -- practice: the built set, key included
+  learner   TEXT,             -- who this counts against for repetition
+  started   TEXT NOT NULL,
+  finished  TEXT,
+  answers   TEXT NOT NULL DEFAULT '{}',
+  result    TEXT,
+  user_id   TEXT REFERENCES users(id)
 );
 
-CREATE INDEX IF NOT EXISTS sessions_user ON sessions(user_id);
-CREATE INDEX IF NOT EXISTS users_token   ON users(token);
+-- Every question a learner has been given, so the next set is not the last one
+-- again. The stem hash is carried as well as the seed because two seeds can
+-- land on the same question.
+CREATE TABLE IF NOT EXISTS practice_seen (
+  learner  TEXT NOT NULL,
+  template TEXT NOT NULL,
+  seed     INTEGER NOT NULL,
+  stem     TEXT NOT NULL,
+  at       TEXT NOT NULL,
+  PRIMARY KEY (learner, template, seed)
+);
+
+CREATE INDEX IF NOT EXISTS sessions_user  ON sessions(user_id);
+CREATE INDEX IF NOT EXISTS users_token    ON users(token);
+CREATE INDEX IF NOT EXISTS seen_learner   ON practice_seen(learner);
 """
+
+# Columns added after the first release. sqlite has no ADD COLUMN IF NOT EXISTS,
+# so the existing shape is read and the gaps filled.
+LATER_COLUMNS = (
+    ("sessions", "kind", "TEXT NOT NULL DEFAULT 'diagnostic'"),
+    ("sessions", "questions", "TEXT"),
+    ("sessions", "learner", "TEXT"),
+)
 
 _local = threading.local()
 
@@ -51,7 +78,67 @@ def conn() -> sqlite3.Connection:
 
 
 def init() -> None:
-    conn().executescript(SCHEMA)
+    c = conn()
+    c.executescript(SCHEMA)
+    for table, column, decl in LATER_COLUMNS:
+        have = {r["name"] for r in c.execute(f"PRAGMA table_info({table})")}
+        if column not in have:
+            c.execute(f"ALTER TABLE {table} ADD COLUMN {column} {decl}")
+    _relax_form_id(c)
+    c.commit()
+
+
+def _relax_form_id(c: sqlite3.Connection) -> None:
+    """Practice sessions have no form, and the first schema said form_id was
+    required. sqlite cannot drop a NOT NULL in place, so the table is rebuilt:
+    make the new shape, copy the rows over, swap the names. Rows are kept --
+    a student who sat a diagnostic should not lose it to a schema change.
+    """
+    cols = {r["name"]: r for r in c.execute("PRAGMA table_info(sessions)")}
+    if not cols or not cols.get("form_id", {})["notnull"]:
+        return
+    keep = [n for n in ("id", "kind", "form_id", "questions", "learner",
+                        "started", "finished", "answers", "result", "user_id")
+            if n in cols]
+    names = ", ".join(keep)
+    c.executescript(f"""
+      PRAGMA foreign_keys=OFF;
+      CREATE TABLE sessions_new (
+        id        TEXT PRIMARY KEY,
+        kind      TEXT NOT NULL DEFAULT 'diagnostic',
+        form_id   INTEGER,
+        questions TEXT,
+        learner   TEXT,
+        started   TEXT NOT NULL,
+        finished  TEXT,
+        answers   TEXT NOT NULL DEFAULT '{{}}',
+        result    TEXT,
+        user_id   TEXT REFERENCES users(id)
+      );
+      INSERT INTO sessions_new ({names}) SELECT {names} FROM sessions;
+      DROP TABLE sessions;
+      ALTER TABLE sessions_new RENAME TO sessions;
+      CREATE INDEX IF NOT EXISTS sessions_user ON sessions(user_id);
+      PRAGMA foreign_keys=ON;
+    """)
+    log.info("rebuilt sessions so a practice set can exist without a form")
+
+
+def seen_for(learner: str) -> tuple[set[tuple[str, int]], set[str]]:
+    """Everything this learner has already been shown."""
+    rows = conn().execute(
+        "SELECT template, seed, stem FROM practice_seen WHERE learner=?", (learner,)
+    ).fetchall()
+    return {(r["template"], r["seed"]) for r in rows}, {r["stem"] for r in rows}
+
+
+def remember(learner: str, items, when: str) -> None:
+    """Record a whole set at once; a re-served set must not fail on the key."""
+    conn().executemany(
+        "INSERT OR IGNORE INTO practice_seen (learner, template, seed, stem, at)"
+        " VALUES (?,?,?,?,?)",
+        [(learner, q["key"], q["seed"], q["stem_hash"], when) for q in items],
+    )
     conn().commit()
 
 

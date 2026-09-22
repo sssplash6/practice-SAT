@@ -381,8 +381,42 @@ function loadSubject(id){
 document.addEventListener('satf:subject', e=>loadSubject(e.detail.id));
 loadSubject((window.SATF && window.SATF.subject().id) || 'math');
 
-/* -- ROUTER SEAM: the set is `basket`, a map of topic slug -> question count -- */
-$('go').addEventListener('click', ()=>console.log('[router] /practice/combined', {...basket}));
+/* ---------------------------------------------------------------- the set
+   The basket is a map of topic slug -> how many questions. The server builds
+   the set; it is scheduled rather than sampled, so sixty from one topic still
+   read as sixty different questions. The learner token is what the server
+   counts repetition against, so it has to outlive the tab. */
+const LEARNER_KEY='satf.learner';
+
+function learner(){
+  try{
+    let v=localStorage.getItem(LEARNER_KEY);
+    if(!v){ v='a:'+Math.random().toString(36).slice(2)+Date.now().toString(36); localStorage.setItem(LEARNER_KEY,v); }
+    return v;
+  }catch(_){ return ''; }          // private window: the server mints one
+}
+
+$('go').addEventListener('click', async ()=>{
+  const go=$('go');
+  if(go.disabled) return;
+  go.disabled=true; const said=go.textContent; go.textContent='Building';
+  try{
+    const r=await fetch('/api/practice',{
+      method:'POST', headers:{'content-type':'application/json'},
+      body:JSON.stringify({basket:{...basket}, learner:learner()}),
+    });
+    if(!r.ok) throw new Error((await r.json().catch(()=>({}))).detail || 'Could not build that set.');
+    const d=await r.json();
+    try{ localStorage.setItem(LEARNER_KEY, d.learner); }catch(_){}
+    location.href=`../test/?s=${encodeURIComponent(d.id)}`;
+  }catch(e){
+    go.textContent=said; go.disabled=false;
+    $('total').textContent=total;
+    console.warn('[practice]', e.message);
+    const note=$('paper').querySelector('.paper-empty');
+    if(!note){ const p=document.createElement('p'); p.className='paper-empty'; p.textContent=e.message; $('paper').appendChild(p); }
+  }
+});
 </script>
 
 </body>

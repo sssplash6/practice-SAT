@@ -93,7 +93,7 @@
   <section class="domains rise rise-2" id="domains"></section>
 
   <div class="after rise rise-2">
-    <a class="btn" href="../index.html">Start practising</a>
+    <a class="btn" href="../index.html" id="onward">Start practising</a>
     <button class="txt" type="button" id="reviewBtn">See the questions</button>
   </div>
 
@@ -132,11 +132,25 @@ async function load() {
 }
 
 function paint(d) {
+  const practice = d.mode === 'practice';
   $('band').hidden = false;
-  $('bandV').textContent = `${d.estimate.low}–${d.estimate.high}`;
-  $('bandK').textContent = `${d.estimate.section}, from ${d.asked} questions`;
-  /* no praise attached: "nice work" on 2 of 16 is worse than saying nothing */
-  $('bandN').textContent = `${d.right} of ${d.asked} right`;
+
+  if (practice) {
+    /* No score estimate here. The student picked these topics themselves, in
+       whatever mix they liked, so a projected section score off them would be
+       a number with nothing behind it. The count is the honest headline. */
+    $('bandK').textContent = 'Mixed practice';
+    $('bandV').textContent = `${d.right}/${d.asked}`;
+    $('bandN').textContent = d.right === d.asked ? 'All of them' : '';
+    document.title = 'Practice results · SAT Freshman';
+    $('onward').href = '../mixed/';
+    $('onward').textContent = 'Another set';
+  } else {
+    $('bandV').textContent = `${d.estimate.low}–${d.estimate.high}`;
+    $('bandK').textContent = `${d.estimate.section}, from ${d.asked} questions`;
+    /* no praise attached: "nice work" on 2 of 16 is worse than saying nothing */
+    $('bandN').textContent = `${d.right} of ${d.asked} right`;
+  }
 
   $('domains').innerHTML = d.domains.map(x => `
     <div class="dom">
@@ -154,8 +168,14 @@ function paint(d) {
     document.querySelectorAll('.fill').forEach(f => { f.style.width = f.dataset.to + '%'; });
   }));
 
-  const perDomain = d.domains.length ? d.domains[0].asked : 0;
-  $('caveat').textContent = caveat(d.asked, perDomain);
+  if (practice) {
+    $('caveat').textContent =
+      'Practice, not a measurement. These are the topics you chose, so the bars ' +
+      'say how today went on them and nothing about where you would score.';
+  } else {
+    const perDomain = d.domains.length ? d.domains[0].asked : 0;
+    $('caveat').textContent = caveat(d.asked, perDomain);
+  }
   buildReview(d.review || []);
 }
 

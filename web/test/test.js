@@ -16,6 +16,7 @@
   /* ------------------------------------------------------------ the state */
   const S = {
     id: null,
+    mode: 'diagnostic',
     section: 'Section 1, Module 1: Math',
     subject: 'math',
     seconds: 1900,
@@ -294,7 +295,11 @@
     try {
       await fetch(`${API}/session/${S.id}/finish`, { method: 'POST' });
     } catch (_) { /* the server has every answer already; let them through */ }
-    location.href = `../diagnostic/signup.html?s=${encodeURIComponent(S.id)}`;
+    /* the diagnostic asks who you are before it says anything; practice does
+       not, because you chose these questions yourself */
+    location.href = S.mode === 'practice'
+      ? `../diagnostic/results.html?s=${encodeURIComponent(S.id)}`
+      : `../diagnostic/signup.html?s=${encodeURIComponent(S.id)}`;
   }
 
   /* ------------------------------------------------------------- navigator */
@@ -480,9 +485,12 @@
   async function boot() {
     const data = await load();
     S.id = data.id;
+    S.mode = data.mode || 'diagnostic';
     S.section = data.section || S.section;
     S.subject = data.subject || 'math';
-    S.seconds = data.seconds ?? S.seconds;
+    /* ?? treats the server's explicit null as absent and falls back, so the
+       mode decides this rather than the value: practice has no clock. */
+    S.seconds = S.mode === 'practice' ? null : (data.seconds ?? S.seconds);
     S.qs = data.questions || [];
     if (!S.qs.length) { $('stem').textContent = 'This test has no questions.'; return; }
 
@@ -504,7 +512,11 @@
     buildRef();
     render();
     paintCells();
-    startClock();
+
+    /* Practice is not an exam, so it is not on a clock. A timer over questions
+       a student chose for themselves only teaches them to rush. */
+    if (S.seconds === null) { $('top-clock').hidden = true; }
+    else startClock();
   }
 
   /* ---------------------------------------------------------------- wiring */

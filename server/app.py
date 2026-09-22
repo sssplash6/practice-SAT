@@ -25,7 +25,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, EmailStr, Field
 
-from . import db, mail, scoring
+from . import db, mail, practice, scoring
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s %(message)s")
 log = logging.getLogger("satf")
@@ -43,6 +43,8 @@ SECONDS_PER_QUESTION = 95
 PUBLIC_FIELDS = ("id", "domain", "topic_name", "difficulty", "type",
                  "stem", "choices", "latex", "figure", "table")
 
+MAX_PRACTICE = 120          # the sticker sheet stops here too
+
 app = FastAPI(title="SAT Freshman")
 FORMS: dict[int, list[dict]] = {}
 
@@ -57,6 +59,11 @@ def startup() -> None:
         FORMS[form["id"]] = form["questions"]
     log.info("loaded %d diagnostic forms, %d questions each",
              len(FORMS), len(next(iter(FORMS.values()))))
+    # the bank's lazy globals are not thread safe on first touch, so they are
+    # warmed here rather than on whichever request happens to arrive first
+    cat = practice.catalogue()
+    log.info("practice catalogue: %d topics, %d templates",
+             len(cat["by_topic"]), sum(len(v) for v in cat["by_topic"].values()))
 
 
 def now() -> str:
@@ -67,6 +74,13 @@ def public(q: dict) -> dict:
     return {k: q[k] for k in PUBLIC_FIELDS if k in q}
 
 
+def questions_of(row) -> list[dict]:
+    """A diagnostic points at a form; a practice set carries its own."""
+    if row["kind"] == "practice":
+        return json.loads(row["questions"] or "[]")
+    return FORMS[row["form_id"]]
+
+
 def session_or_404(sid: str):
     row = db.one("SELECT * FROM sessions WHERE id=?", sid)
     if row is None:
@@ -74,8 +88,8 @@ def session_or_404(sid: str):
     return row
 
 
-def duration(form_id: int) -> int:
-    return len(FORMS[form_id]) * SECONDS_PER_QUESTION
+def duration(row) -> int:
+    return len(questions_of(row)) * SECONDS_PER_QUESTION
 
 
 def remaining(row) -> int:
@@ -86,16 +100,19 @@ def remaining(row) -> int:
     """
     started = dt.datetime.fromisoformat(row["started"])
     elapsed = (dt.datetime.now(dt.timezone.utc) - started).total_seconds()
-    return max(0, int(duration(row["form_id"]) - elapsed))
+    return max(0, int(duration(row) - elapsed))
 
 
 def payload(row) -> dict:
-    qs = FORMS[row["form_id"]]
+    qs = questions_of(row)
+    practice_mode = row["kind"] == "practice"
     return {
         "id": row["id"],
-        "section": "Section 1, Module 1: Math",
+        "mode": row["kind"],
+        "section": "Mixed practice" if practice_mode else "Section 1, Module 1: Math",
         "subject": "math",
-        "seconds": remaining(row),
+        # practice is not an exam, so it is not on a clock
+        "seconds": None if practice_mode else remaining(row),
         "form": row["form_id"],
         "questions": [public(q) for q in qs],
         "answers": db.load_answers(row),
@@ -110,7 +127,8 @@ def new_session() -> dict:
     """Start a diagnostic on one of the ten forms, drawn at random."""
     sid = secrets.token_urlsafe(16)
     form_id = random.choice(list(FORMS))
-    db.run("INSERT INTO sessions (id, form_id, started) VALUES (?,?,?)", sid, form_id, now())
+    db.run("INSERT INTO sessions (id, kind, form_id, started) VALUES (?,?,?,?)",
+           sid, "diagnostic", form_id, now())
     log.info("session %s started on form %d", sid[:8], form_id)
     return payload(session_or_404(sid))
 
@@ -130,7 +148,7 @@ def put_answer(sid: str, body: Answer) -> dict:
     row = session_or_404(sid)
     if row["finished"]:
         raise HTTPException(409, "this test is already finished")
-    if not any(q["id"] == body.question_id for q in FORMS[row["form_id"]]):
+    if not any(q["id"] == body.question_id for q in questions_of(row)):
         raise HTTPException(400, "that question is not on this form")
 
     answers = db.load_answers(row)
@@ -149,11 +167,62 @@ def finish(sid: str) -> dict:
     if row["finished"]:
         return {"finished": row["finished"], "already": True}
 
-    result = scoring.score(FORMS[row["form_id"]], db.load_answers(row))
+    result = scoring.score(questions_of(row), db.load_answers(row))
     db.run("UPDATE sessions SET finished=?, result=? WHERE id=?",
            now(), json.dumps(result), sid)
     log.info("session %s finished: %d/%d", sid[:8], result["right"], result["asked"])
     return {"finished": now(), "right": result["right"], "asked": result["asked"]}
+
+
+# -------------------------------------------------------------- the practice
+
+class Practice(BaseModel):
+    """The sticker sheet, as the mixed page keeps it: topic slug -> how many."""
+    basket: dict[str, int]
+    learner: str = Field(default="", max_length=120)
+
+
+@app.post("/api/practice")
+def new_practice(body: Practice) -> dict:
+    """Build a mixed set. Nothing here is drawn at random; see practice.py."""
+    cat = practice.catalogue()
+    basket = {k: int(v) for k, v in body.basket.items() if int(v) > 0}
+    unknown = [k for k in basket if k not in cat["by_topic"]]
+    if unknown:
+        raise HTTPException(400, f"no such topic: {', '.join(sorted(unknown)[:3])}")
+    if not basket:
+        raise HTTPException(400, "pick at least one question")
+    total = sum(basket.values())
+    if total > MAX_PRACTICE:
+        raise HTTPException(400, f"{total} questions is over the limit of {MAX_PRACTICE}")
+
+    # An anonymous learner still gets a history, because repetition is felt by
+    # the person and not by the account.
+    learner = body.learner.strip() or ("anon:" + secrets.token_urlsafe(9))
+    seen, seen_stems = db.seen_for(learner)
+
+    cards = practice.build(basket, learner, seen, seen_stems)
+    if not cards:
+        raise HTTPException(409, "nothing left to ask on those topics")
+    questions = [practice.to_question(c, i + 1) for i, c in enumerate(cards)]
+
+    sid = secrets.token_urlsafe(16)
+    db.run("INSERT INTO sessions (id, kind, questions, learner, started) VALUES (?,?,?,?,?)",
+           sid, "practice", json.dumps(questions, ensure_ascii=False), learner, now())
+    db.remember(learner, [
+        {"key": c.key, "seed": c.seed, "stem_hash": practice.stem_hash(c.item.stem)}
+        for c in cards
+    ], now())
+
+    if len(cards) < total:
+        log.warning("asked for %d, built %d -- topics are running thin", total, len(cards))
+    log.info("practice %s: %d questions over %d topics for %s",
+             sid[:8], len(cards), len(basket), learner[:12])
+
+    out = payload(session_or_404(sid))
+    out["learner"] = learner
+    out["asked"] = total
+    return out
 
 
 # ---------------------------------------------------------------- the signup
@@ -217,13 +286,17 @@ def results(sid: str) -> dict:
     row = session_or_404(sid)
     if not row["finished"]:
         raise HTTPException(409, {"need": "finish"})
-    if not row["user_id"]:
+    # The diagnostic holds its results back until there is somewhere to send
+    # them. Practice does not: the student asked for these questions and
+    # already knows who they are.
+    if row["kind"] != "practice" and not row["user_id"]:
         raise HTTPException(403, {"need": "signup"})
 
-    user = db.one("SELECT * FROM users WHERE id=?", row["user_id"])
     out = json.loads(row["result"])
-    out["first"] = user["first"]
-    out["verified"] = bool(user["verified"])
+    out["mode"] = row["kind"]
+    user = db.one("SELECT * FROM users WHERE id=?", row["user_id"]) if row["user_id"] else None
+    out["first"] = user["first"] if user else None
+    out["verified"] = bool(user["verified"]) if user else False
 
     # the review: every question with what they put and what was right
     answers = db.load_answers(row)
@@ -235,7 +308,7 @@ def results(sid: str) -> dict:
             "rationale": q["rationale"],
             "correct": scoring.is_correct(q, answers.get(q["id"])),
         }
-        for q in FORMS[row["form_id"]]
+        for q in questions_of(row)
     ]
     return out
 
