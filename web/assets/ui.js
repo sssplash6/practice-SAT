@@ -20,7 +20,8 @@
     try {
       memo = localStorage.getItem(LEARNER_KEY);
       if (!memo) {
-        memo = 'a:' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+        // the code is the whole of a learner's access, so it is not guessable
+        memo = 'a:' + Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(36).padStart(2, '0')).join('');
         localStorage.setItem(LEARNER_KEY, memo);
       }
     } catch (_) {
