@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Report · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* A report is a diagnosis, so it ends in the cure: every miss is one tap
+     from a fresh question on the same template. */
+  .head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; }
+  .head .num { font-size: clamp(64px, 11vw, 112px); display: block; margin-top: 10px; }
+  .head .meta { display: block; margin-top: 12px; color: var(--ink); }
+  .fix { display: grid; justify-items: end; gap: 10px; }
+
+  .block { margin-top: 44px; }
+  .block > .k { display: block; margin-bottom: 14px; }
+  .doms { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .dom { padding: 18px 18px 16px; border-radius: 10px; background: var(--tile); display: grid; gap: 12px; }
+  .dom .nm { font: 600 14px var(--font); }
+  .dom .foot { display: flex; justify-content: space-between; align-items: baseline; }
+  .dom .word { font: 700 15px var(--font); }
+  .dom .rs { font: 500 12.5px var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; }
+
+  .mods { display: grid; gap: 10px; }
+  .mrow { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: center; }
+  .mrow .k { margin: 0; }
+  .cells { display: flex; flex-wrap: wrap; gap: 6px; }
+  .cell {
+    appearance: none; border: 0; cursor: pointer; width: 36px; height: 36px; border-radius: 9px;
+    font: 600 13px var(--font); font-variant-numeric: tabular-nums;
+    background: var(--tile); color: var(--soft);
+    transition: transform .12s var(--ease), box-shadow .16s var(--ease);
+  }
+  .cell.ok { background: var(--amber); color: var(--ink-deep); }
+  .cell.no { background: var(--ink); color: #FFFFFF; }
+  .cell[aria-current="true"] { box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--ink); }
+  .cell:active { transform: scale(.94); }
+
+  .detail { margin-top: 26px; padding: 26px 28px 28px; border-radius: 14px; background: var(--tile); max-width: 760px; }
+  .detail .q-skill .glyph { --gb: var(--tile); }
+  .detail .opt { background: var(--paper); }
+  .dnav { margin-top: 18px; display: flex; gap: 18px; }
+
+  .missed { display: grid; gap: 8px; }
+  .miss { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 12px; align-items: center;
+          padding: 12px 14px; border-radius: 10px; background: var(--tile); cursor: pointer; text-align: left;
+          appearance: none; border: 0; width: 100%; font: inherit; color: inherit; }
+  .miss .glyph { color: var(--ink); }
+  .miss .lbl { font: 600 14.5px var(--font); }
+  .miss .n { font: 500 12.5px var(--mono); color: var(--soft); }
+  @media (hover: hover) and (pointer: fine) { .miss:hover { background: var(--tile-2); } }
+
+  @media (max-width: 859px) { .doms { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .head { grid-template-columns: 1fr; } .fix { justify-items: start; } .detail { padding: 20px; } }
+</style>
+</head>
+<body data-page="report">
+<header id="bar"></header>
+
+<main class="page">
+  <div class="head rise">
+    <div>
+      <span class="k" id="when"></span>
+      <span class="num" id="big">—</span>
+      <span class="meta" id="sub"></span>
+    </div>
+    <div class="fix" id="fix"></div>
+  </div>
+  <p class="error" id="err" hidden></p>
+
+  <section class="block rise rise-2" id="domsBlock" hidden><span class="k">Domains</span><div class="doms" id="doms"></div></section>
+  <section class="block rise rise-2" id="topicsBlock" hidden><span class="k">Topics</span><div class="missed" id="topics"></div></section>
+  <section class="block rise rise-3" id="missBlock" hidden><span class="k">Mistakes</span><div class="missed" id="missed"></div></section>
+  <section class="block rise rise-3"><span class="k">Questions</span><div class="mods" id="mods"></div>
+    <div class="detail" id="detail" hidden><div id="dq"></div>
+      <div class="dnav"><button type="button" class="quiet" id="prev">Previous</button><button type="button" class="quiet" id="nextq">Next</button></div>
+    </div>
+  </section>
+</main>
+
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script>
+(() => {
+  'use strict';
+  const { api, h, glyph, TOPIC, DOMAINS, band, day, $ } = UI;
+  UI.shell();
+  const id = new URL(location.href).searchParams.get('id');
+  const KIND = { mock: 'Section', module: 'Module', diagnostic: 'Diagnostic', drill: 'Practice', challenge: 'Challenge', practice: 'Practice' };
+  let R = null, cur = -1, cells = [];
+
+  function feedback(item) {
+    return {
+      correct: item.correct, given: item.given, answer: item.answer, mistake: item.mistake,
+      rationale: item.rationale,
+      answer_index: item.type === 'mcq' ? 'ABCD'.indexOf(item.answer) : null,
+    };
+  }
+
+  function open(i) {
+    if (i < 0 || i >= R.review.length) return;
+    cur = i;
+    cells.forEach((c, j) => c.setAttribute('aria-current', String(j === i)));
+    const item = R.review[i];
+    $('#detail').hidden = false;
+    const ctrl = UI.question($('#dq'), item, {});
+    ctrl.reveal(feedback(item), { open: true });
+    if (item.given === null || item.given === undefined || item.given === '') {
+      $('#dq').querySelector('.verdict').prepend(h('p', { class: 'note', text: 'Not answered' }));
+    }
+    $('#prev').disabled = i === 0;
+    $('#nextq').disabled = i === R.review.length - 1;
+  }
+  $('#prev').addEventListener('click', () => open(cur - 1));
+  $('#nextq').addEventListener('click', () => { open(cur + 1); });
+
+  function paint(r) {
+    R = r;
+    const kind = KIND[r.mode] || 'Practice';
+    $('#when').textContent = `${day(r.finished || r.started)} · ${kind}`;
+    document.title = `${kind} · SAT Freshman`;
+
+    if (r.estimate) {
+      $('#big').textContent = band(r.estimate);
+      let sub = `Math · ${r.right}/${r.asked}`;
+      if (r.mode === 'mock' && r.estimate.route) sub += r.estimate.route === 'upper' ? ' · harder module 2' : ' · easier module 2';
+      if (r.estimate.capped) sub += ` · ${r.estimate.high} cap`;
+      $('#sub').textContent = sub;
+    } else {
+      $('#big').textContent = `${r.right}/${r.asked}`;
+      $('#sub').textContent = r.ms ? `${Math.max(1, Math.round(r.ms / 60000))} min` : '';
+    }
+
+    const misses = r.review.filter(q => !q.correct).length;
+    if (misses && r.mode !== 'diagnostic') {
+      const b = h('button', { type: 'button', class: 'pill', text: `Fix these · ${misses}` });
+      b.addEventListener('click', async () => {
+        b.setAttribute('aria-busy', 'true');
+        try {
+          const d = await api('/drill', { method: 'POST', body: { from_session: id } });
+          location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`;
+        } catch (e) { b.removeAttribute('aria-busy'); $('#err').textContent = e.message; $('#err').hidden = false; }
+      });
+      $('#fix').append(b);
+    }
+
+    if (r.domains && r.domains.length) {
+      $('#domsBlock').hidden = false;
+      const short = Object.fromEntries(DOMAINS);
+      $('#doms').replaceChildren(...r.domains.map(d => {
+        const fill = h('i');
+        const el = h('div', { class: 'dom' }, h('span', { class: 'nm', text: short[d.domain] || d.domain }),
+          h('span', { class: 'mbar' }, fill),
+          h('div', { class: 'foot' }, h('span', { class: 'word', text: d.band }), h('span', { class: 'rs', text: `${d.right}/${d.asked}` })));
+        setTimeout(() => fill.style.setProperty('--m', d.mastery.toFixed(3)), 250);
+        return el;
+      }));
+    }
+    if (r.topics && r.topics.length) {
+      $('#topicsBlock').hidden = false;
+      $('#topics').replaceChildren(...r.topics.map(t => {
+        const fill = h('i');
+        fill.style.setProperty('--m', (t.before || 0).toFixed(3));
+        setTimeout(() => fill.style.setProperty('--m', (t.after || 0).toFixed(3)), 300);
+        return h('div', { class: 'miss', style: 'cursor:default' }, glyph(t.topic),
+          h('span', { class: 'lbl', text: (TOPIC[t.topic] || {}).short || t.name }),
+          h('span', { class: 'n', text: `${t.right}/${t.asked}` }));
+      }));
+    }
+
+    // the misses by name, each one opening its question
+    const named = [];
+    r.review.forEach((q, i) => { if (!q.correct) named.push([q, i]); });
+    if (named.length) {
+      $('#missBlock').hidden = false;
+      $('#missed').replaceChildren(...named.slice(0, 12).map(([q, i]) => {
+        const b = h('button', { type: 'button', class: 'miss' }, glyph(q.topic),
+          h('span', { class: 'lbl', text: q.mistake || (q.given === null || q.given === undefined ? 'Not answered' : UI.cap(q.skill || q.topic_name || '')) }),
+          h('span', { class: 'n', text: `Q${i + 1}` }));
+        b.addEventListener('click', () => { open(i); $('#detail').scrollIntoView({ behavior: UI.reduced() ? 'auto' : 'smooth', block: 'start' }); });
+        return b;
+      }));
+    }
+
+    // the question grid, one row per module
+    const rows = r.mode === 'mock' ? [['M1', 0, 22], ['M2', 22, r.review.length]] : [['', 0, r.review.length]];
+    cells = [];
+    $('#mods').replaceChildren(...rows.map(([label, a, b]) => {
+      const row = h('div', { class: 'cells' });
+      for (let i = a; i < b; i++) {
+        const q = r.review[i];
+        const blank = q.given === null || q.given === undefined || q.given === '';
+        const c = h('button', { type: 'button', class: 'cell ' + (q.correct ? 'ok' : blank ? '' : 'no'), text: String(i - a + 1),
+                                'aria-label': `Question ${i - a + 1}` });
+        c.addEventListener('click', () => open(i));
+        cells.push(c);
+        row.append(c);
+      }
+      return label ? h('div', { class: 'mrow' }, h('span', { class: 'k', text: label }), row) : row;
+    }));
+    const firstMiss = r.review.findIndex(q => !q.correct);
+    if (firstMiss >= 0) open(firstMiss);
+  }
+
+  (async () => {
+    if (!id) { location.href = '/results/'; return; }
+    try { paint(await api(`/session/${encodeURIComponent(id)}/results`)); }
+    catch (e) {
+      if (e.status === 403) { location.href = `/diagnostic/signup.html?s=${encodeURIComponent(id)}`; return; }
+      if (e.status === 409) { location.href = `/test/?s=${encodeURIComponent(id)}`; return; }
+      $('#err').textContent = e.status === 404 ? 'That sitting does not exist.' : e.message; $('#err').hidden = false;
+    }
+  })();
+})();
+</script>
+</body>
+</html>

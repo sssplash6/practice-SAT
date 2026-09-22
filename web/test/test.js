@@ -13,6 +13,21 @@
   const $ = id => document.getElementById(id);
   const API = '/api';
 
+  /* who is sitting this: the same token the rest of the site keeps, so a test
+     lands on the same map, the same mistakes and the same history */
+  const learner = () => {
+    try {
+      let v = localStorage.getItem('satf.learner');
+      if (!v) {
+        v = 'a:' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+        localStorage.setItem('satf.learner', v);
+      }
+      return v;
+    } catch (_) { return ''; }
+  };
+  const HDR = () => ({ 'content-type': 'application/json', 'X-Learner': learner(),
+                       'X-Tz': String(new Date().getTimezoneOffset()) });
+
   /* ------------------------------------------------------------ the state */
   const S = {
     id: null,
@@ -265,7 +280,7 @@
     if (!S.id || S.id === 'local') return;
     fetch(`${API}/session/${S.id}/answer`, {
       method: 'POST',
-      headers: { 'content-type': 'application/json' },
+      headers: HDR(),
       body: JSON.stringify({ question_id: qid, answer: value }),
     }).catch(() => {});
   }
@@ -295,7 +310,7 @@
 
     let done = {};
     try {
-      const r = await fetch(`${API}/session/${S.id}/finish`, { method: 'POST' });
+      const r = await fetch(`${API}/session/${S.id}/finish`, { method: 'POST', headers: HDR() });
       done = await r.json();
     } catch (_) { /* the server has every answer already; let them through */ }
 
@@ -309,11 +324,11 @@
       return;
     }
 
-    /* the diagnostic asks who you are before it says anything; practice does
-       not, because you chose these questions yourself */
-    location.href = S.mode === 'practice'
-      ? `../diagnostic/results.html?s=${encodeURIComponent(S.id)}`
-      : `../diagnostic/signup.html?s=${encodeURIComponent(S.id)}`;
+    /* the diagnostic asks who you are before it says anything; everything
+       else goes straight to its report, because you chose to sit it */
+    location.href = S.mode === 'diagnostic'
+      ? `../diagnostic/signup.html?s=${encodeURIComponent(S.id)}`
+      : `/results/report/?id=${encodeURIComponent(S.id)}`;
   }
 
   function nextModule(done) {
@@ -325,7 +340,7 @@
       sheet.showModal();
       $('gateGo').onclick = async () => {
         sheet.close();
-        const r = await fetch(`${API}/session/${S.id}`);
+        const r = await fetch(`${API}/session/${S.id}`, { headers: HDR() });
         const data = await r.json();
         S.section = data.section || S.section;
         S.seconds = data.seconds;
@@ -555,7 +570,7 @@
     const want = url.searchParams.get('s');
     try {
       const r = await fetch(want ? `${API}/session/${want}` : `${API}/session`,
-                           want ? undefined : { method: 'POST' });
+                           want ? { headers: HDR() } : { method: 'POST', headers: HDR() });
       if (!r.ok) throw new Error(r.status);
       return await r.json();
     } catch (_) {
@@ -571,7 +586,7 @@
     S.subject = data.subject || 'math';
     /* ?? treats the server's explicit null as absent and falls back, so the
        mode decides this rather than the value: practice has no clock. */
-    S.seconds = S.mode === 'practice' ? null : (data.seconds ?? S.seconds);
+    S.seconds = S.mode === 'practice' || data.seconds === null ? null : (data.seconds ?? S.seconds);
     S.qs = data.questions || [];
     if (!S.qs.length) { $('stem').textContent = 'This test has no questions.'; return; }
 

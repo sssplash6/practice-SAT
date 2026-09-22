@@ -194,6 +194,8 @@ def payload(row) -> dict:
     if row["kind"] == "mock":
         out["mock"] = row["mock_id"]
         out["module"] = row["module"] or 1
+    if row["kind"] in ("mock", "module") and json.loads(row["cfg"] or "{}").get("timed") is False:
+        out["seconds"] = None           # sat untimed, by choice
     return out
 
 
@@ -321,6 +323,7 @@ def fresh_module(learner: str, form: str) -> list[dict]:
 
 class NewMock(BaseModel):
     full: bool = True           # the whole adaptive section, or one module on its own
+    timed: bool = True
 
 
 @app.post("/api/mock/new")
@@ -333,13 +336,14 @@ def new_mock(body: NewMock | None = None, x_learner: str | None = Header(default
     """
     learner = learner_of(x_learner)
     full = True if body is None else body.full
+    timed = True if body is None else body.timed
     sid = secrets.token_urlsafe(16)
     stamp = now()
     m1 = fresh_module(learner, "module1")
     db.run("INSERT INTO sessions (id, kind, mock_id, module, learner, started, module_started,"
-           " questions) VALUES (?,?,?,?,?,?,?,?)",
+           " questions, cfg) VALUES (?,?,?,?,?,?,?,?,?)",
            sid, "mock" if full else "module", FRESH, 1, learner, stamp, stamp,
-           json.dumps({"module1": m1}, ensure_ascii=False))
+           json.dumps({"module1": m1}, ensure_ascii=False), json.dumps({"timed": timed}))
     log.info("fresh %s %s for %s", "section" if full else "module", sid[:8], learner[:12])
     return payload(session_or_404(sid))
 
