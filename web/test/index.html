@@ -93,6 +93,7 @@ button { font:inherit; color:inherit; -webkit-tap-highlight-color:transparent; u
 .top-c { text-align:center; padding-top:2px; }
 .clock { font:700 23px var(--sans); font-variant-numeric:tabular-nums; letter-spacing:-.01em; }
 .clock[data-hidden="true"] { visibility:hidden; }
+.clock-note { margin-top:5px; font:700 12px var(--sans); color:var(--amber-deep); }
 .hide {
   margin-top:4px; appearance:none; cursor:pointer;
   border:1px solid #9a9a9a; background:var(--paper); border-radius:999px;
@@ -251,6 +252,7 @@ button { font:inherit; color:inherit; -webkit-tap-highlight-color:transparent; u
 }
 .spr input:focus { outline:2px solid var(--amber-deep); outline-offset:1px; border-color:var(--amber-deep); }
 .spr .preview { font:400 17px var(--serif); color:var(--grey); min-height:24px; }
+.spr-rule { margin:0; font:400 12.5px/1.45 var(--sans); color:var(--grey); }
 
 /* ------------------------------------------------------------------ foot */
 .foot {
@@ -413,6 +415,7 @@ button { font:inherit; color:inherit; -webkit-tap-highlight-color:transparent; u
     <div class="top-c" id="top-clock">
       <div class="clock" id="clock">25:00</div>
       <button class="hide" type="button" id="hideBtn">Hide</button>
+      <p class="clock-note" id="clockNote" hidden>5 minutes left</p>
     </div>
 
     <div class="tools">
@@ -494,7 +497,9 @@ button { font:inherit; color:inherit; -webkit-tap-highlight-color:transparent; u
 
         <div class="spr" id="spr" hidden>
           <input id="sprInput" type="text" inputmode="text" autocomplete="off" spellcheck="false"
-                 aria-label="Your answer">
+                 maxlength="6" aria-label="Your answer">
+          <p class="spr-rule">Up to 5 characters, or 6 with a minus sign.
+             No commas, percent or dollar signs.</p>
           <div class="preview" id="sprPreview">Answer preview</div>
         </div>
       </div>

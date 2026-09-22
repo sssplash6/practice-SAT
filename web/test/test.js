@@ -381,10 +381,20 @@
     };
     paint();
     if (left === null) return;
+    let warned = false;
     ticker = setInterval(() => {
       if (S.ended) return;
       left -= 1;
       paint();
+      /* Bluebook shows a five-minute warning, and unhides the clock to show
+         it, because a student who hid the timer still has to be told. */
+      if (!warned && left <= 300) {
+        warned = true;
+        el.dataset.hidden = 'false';
+        $('hideBtn').textContent = 'Hide';
+        $('clockNote').hidden = false;
+        setTimeout(() => { $('clockNote').hidden = true; }, 6000);
+      }
       if (left <= 0) { clearInterval(ticker); ticker = null; finish(); }
     }, 1000);
   }
@@ -450,28 +460,34 @@
   }
 
   /* ------------------------------------------------------------- reference
-     The formula sheet the math section gives you. Drawn, not screenshotted.
-     Each caption is a LaTeX body with no delimiters, so it is typeset here
-     rather than left to the auto-renderer, which only looks for $ and \( . */
+     The sheet College Board actually gives you, from the official practice
+     test: ten formulas, two special right triangles, three facts. Nothing
+     else -- no slope, no quadratic formula, no statistics. Drawn rather than
+     screenshotted, and each caption typeset here because the captions are
+     LaTeX bodies with no delimiters for the auto-renderer to find. */
   const REF = [
     ['<circle cx="34" cy="30" r="24" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M34 30h24" stroke="currentColor" stroke-width="1.4"/><text x="44" y="26" font-size="12" font-family="Source Serif 4, serif" font-style="italic">r</text>',
      ['A = \\pi r^{2}', 'C = 2\\pi r']],
-    ['<rect x="10" y="12" width="48" height="34" fill="none" stroke="currentColor" stroke-width="1.6"/><text x="32" y="56" font-size="12" text-anchor="middle" font-family="Source Serif 4, serif" font-style="italic">ℓ</text><text x="4" y="32" font-size="12" font-family="Source Serif 4, serif" font-style="italic">w</text>',
+    ['<rect x="10" y="12" width="48" height="34" fill="none" stroke="currentColor" stroke-width="1.6"/><text x="34" y="56" font-size="12" text-anchor="middle" font-family="Source Serif 4, serif" font-style="italic">ℓ</text><text x="4" y="32" font-size="12" font-family="Source Serif 4, serif" font-style="italic">w</text>',
      ['A = \\ell w']],
-    ['<path d="M10 46 L58 46 L40 14 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M40 14 L40 46" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3"/>',
+    ['<path d="M8 44 L60 44 L40 12 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M40 12 L40 44" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3"/><text x="46" y="30" font-size="11" font-family="Source Serif 4, serif" font-style="italic">h</text><text x="32" y="56" font-size="11" font-family="Source Serif 4, serif" font-style="italic">b</text>',
      ['A = \\tfrac{1}{2}bh']],
-    ['<path d="M14 46 L54 46 L54 16 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M50 46 v-4 h4" fill="none" stroke="currentColor" stroke-width="1.2"/>',
-     ['a^{2} + b^{2} = c^{2}']],
-    ['<path d="M12 44 L44 44 L28 16 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><text x="46" y="34" font-size="11" font-family="Source Serif 4, serif">30°</text>',
+    ['<path d="M12 44 L54 44 L54 12 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M50 44 v-4 h4" fill="none" stroke="currentColor" stroke-width="1.2"/><text x="30" y="56" font-size="11" font-family="Source Serif 4, serif" font-style="italic">b</text><text x="58" y="30" font-size="11" font-family="Source Serif 4, serif" font-style="italic">a</text><text x="28" y="26" font-size="11" font-family="Source Serif 4, serif" font-style="italic">c</text>',
+     ['c^{2} = a^{2} + b^{2}']],
+    ['<path d="M10 45 L54 45 L54 20 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M50 45 v-4 h4" fill="none" stroke="currentColor" stroke-width="1.2"/><text x="13" y="41" font-size="8.5" font-family="Source Serif 4, serif">30\u00b0</text><text x="44" y="29" font-size="8.5" font-family="Source Serif 4, serif">60\u00b0</text>',
      ['x,\\ x\\sqrt{3},\\ 2x'], 'Special right triangles'],
-    ['<rect x="14" y="18" width="30" height="24" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M14 18 L26 10 L56 10 L44 18 M44 42 L56 34 L56 10" fill="none" stroke="currentColor" stroke-width="1.4"/>',
+    ['<path d="M16 45 L52 45 L52 9 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M48 45 v-4 h4" fill="none" stroke="currentColor" stroke-width="1.2"/><text x="19" y="41" font-size="8.5" font-family="Source Serif 4, serif">45\u00b0</text><text x="40" y="20" font-size="8.5" font-family="Source Serif 4, serif">45\u00b0</text>',
+     ['s,\\ s,\\ s\\sqrt{2}']],
+    ['<rect x="14" y="20" width="30" height="24" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M14 20 L26 11 L56 11 L44 20 M44 44 L56 35 L56 11" fill="none" stroke="currentColor" stroke-width="1.4"/>',
      ['V = \\ell w h']],
-    ['<ellipse cx="34" cy="17" rx="18" ry="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M16 17v22a18 6 0 0 0 36 0V17" fill="none" stroke="currentColor" stroke-width="1.5"/>',
+    ['<ellipse cx="34" cy="16" rx="17" ry="6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M17 16v24a17 6 0 0 0 34 0V16" fill="none" stroke="currentColor" stroke-width="1.5"/>',
      ['V = \\pi r^{2} h']],
     ['<circle cx="34" cy="30" r="20" fill="none" stroke="currentColor" stroke-width="1.6"/><ellipse cx="34" cy="30" rx="20" ry="7" fill="none" stroke="currentColor" stroke-width="1.1" stroke-dasharray="3 3"/>',
      ['V = \\tfrac{4}{3}\\pi r^{3}']],
-    ['<path d="M34 10 L54 44 L14 44 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><ellipse cx="34" cy="44" rx="20" ry="6" fill="none" stroke="currentColor" stroke-width="1.2"/>',
+    ['<path d="M34 9 L54 43 L14 43 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><ellipse cx="34" cy="43" rx="20" ry="6" fill="none" stroke="currentColor" stroke-width="1.2"/>',
      ['V = \\tfrac{1}{3}\\pi r^{2} h']],
+    ['<path d="M34 9 L57 40 L11 40 Z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M11 40 L22 47 L57 47 L57 40" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M34 9 L57 47" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M22 47 L34 9" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 3"/>',
+     ['V = \\tfrac{1}{3}\\ell w h']],
   ];
 
   const tex = src => {
@@ -491,23 +507,45 @@
       </figure>`).join('');
   }
 
+  /* The wording College Board prints on the directions page, kept as it is
+     written rather than paraphrased: a student who has read these should meet
+     the same sentences on the day. */
   const DIRECTIONS = {
-    math: `<p>The questions in this section address a number of important math skills.</p>
-           <p>Use of a calculator is permitted for all questions. A reference sheet, calculator and
-              these directions can be accessed throughout the test.</p>
-           <p>All variables and expressions represent real numbers unless otherwise stated. Figures
-              are drawn to scale unless otherwise stated. All figures lie in a plane unless otherwise
-              stated. The domain of a given function is the set of all real numbers for which the
-              corresponding value of the function is a real number unless otherwise stated.</p>
-           <p>For multiple-choice questions, solve each problem and choose the best answer from the
-              choices provided. For student-produced response questions, solve each problem and enter
-              your answer.</p>`,
-    verbal: `<p>The questions in this section address a number of important reading and writing
-                skills. Each question includes one or more passages, which may include a table or
-                graph. Read each passage and question carefully, and then choose the best answer to
-                the question based on the passage.</p>
-             <p>All questions in this section are multiple-choice with four answer choices. Each
-                question has a single best answer.</p>`,
+    math: `
+      <p>The questions in this section address a number of important math skills.
+         Use of a calculator is permitted for all questions.</p>
+      <p><b>NOTES</b><br>Unless otherwise indicated:</p>
+      <ul>
+        <li>All variables and expressions represent real numbers.</li>
+        <li>Figures provided are drawn to scale.</li>
+        <li>All figures lie in a plane.</li>
+        <li>The domain of a given function <i>f</i> is the set of all real numbers
+            <i>x</i> for which <i>f</i>(<i>x</i>) is a real number.</li>
+      </ul>
+      <p>For <b>multiple-choice questions</b>, solve each problem and choose the
+         correct answer from the choices provided. Each multiple-choice question
+         has a single correct answer.</p>
+      <p>For <b>student-produced response questions</b>, solve each problem and
+         enter your answer as described below.</p>
+      <ul>
+        <li>If you find <b>more than one correct answer</b>, enter only one answer.</li>
+        <li>You can enter up to 5 characters for a <b>positive</b> answer and up to
+            6 characters (including the negative sign) for a <b>negative</b> answer.</li>
+        <li>If your answer is a <b>fraction</b> that doesn't fit in the provided space,
+            enter the decimal equivalent.</li>
+        <li>If your answer is a <b>decimal</b> that doesn't fit in the provided space,
+            enter it by truncating or rounding at the fourth digit.</li>
+        <li>If your answer is a <b>mixed number</b> (such as 3&frac12;), enter it as an
+            improper fraction (7/2) or its decimal equivalent (3.5).</li>
+        <li>Don't enter <b>symbols</b> such as a percent sign, comma, or dollar sign.</li>
+      </ul>`,
+    verbal: `
+      <p>The questions in this section address a number of important reading and
+         writing skills. Each question includes one or more passages, which may
+         include a table or graph. Read each passage and question carefully, and
+         then choose the best answer to the question based on the passage.</p>
+      <p>All questions in this section are multiple-choice with four answer choices.
+         Each question has a single best answer.</p>`,
   };
 
   /* ------------------------------------------------------------------ boot */

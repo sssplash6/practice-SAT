@@ -227,6 +227,9 @@ def main() -> int:
                 rank = {"easy": 0, "medium": 1, "hard": 2}
                 order = [rank[q["difficulty"]] for q in qs]
                 assert order == sorted(order), f"{mid} {form} is not easiest first"
+                # College Board's own answer keys put the grid-ins here
+                at = tuple(i for i, q in enumerate(qs, 1) if q["type"] == "spr")
+                assert at == (6, 7, 13, 14, 21, 22), f"{mid} {form}: grid-in at {at}"
             both = m["module1"] + m["module2_upper"]
             got = {d: sum(1 for q in both if q["domain"] == d) for d in DOM_TOTAL}
             assert got == DOM_TOTAL, f"{mid} section domains: {got}"
@@ -237,8 +240,8 @@ def main() -> int:
             hard_lo = sum(1 for q in m["module2_lower"] if q["difficulty"] == "hard")
             hard_up = sum(1 for q in m["module2_upper"] if q["difficulty"] == "hard")
             assert hard_up > hard_lo, f"{mid}: the upper module is not harder"
-        print(f"ok  7 mocks, 44 questions each at 15/15/7/7, easiest first, "
-              f"two distinct second modules")
+        print("ok  7 mocks at 15/15/7/7, easiest first, grid-in at 6/7/13/14/21/22, "
+              "two distinct second modules")
 
         def sit(mock, m1_right):
             """Sit a mock, getting the first m1_right of module 1 correct."""
