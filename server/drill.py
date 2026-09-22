@@ -213,7 +213,9 @@ def answer(row, qid: str, given, ms: int | None) -> dict:
     answers[qid] = given
     db.save_answers(row["id"], answers)
 
-    if not filed["correct"] and not cfg.get("fixed"):
+    # one repair per question: a missed repair stays an open mistake for later,
+    # or a student who keeps missing would never reach the end of the set
+    if not filed["correct"] and not cfg.get("fixed") and not q.get("repair"):
         cfg["repair"] = q["key"]
         if cfg.get("total") is not None:
             cfg["total"] += 1                        # the set grows to fit the repair

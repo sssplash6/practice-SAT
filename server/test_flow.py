@@ -568,6 +568,19 @@ def check_learner(c) -> None:
     assert trap["label"] == skill[:1].upper() + skill[1:] and trap["label"] != grid["topic_name"], trap
     print(f"ok  a diagnostic grid-in miss is filed as \"{trap['label']}\", not the topic")
 
+    # --- missing everything still ends: one repair per question -------------------
+    M = {"X-Learner": "a:missall"}
+    d = c.post("/api/drill", headers=M, json={"topics": ["circles"], "count": 2}).json()
+    for _ in range(6):
+        cur = stored(d["id"])[-1]
+        fb = c.post(f"/api/drill/{d['id']}/answer", headers=M,
+                    json={"question_id": cur["id"], "answer": keyed_answer(cur, False)}).json()
+        nx = c.post(f"/api/drill/{d['id']}/next", headers=M).json()
+        if nx.get("done"):
+            break
+    assert nx.get("done") and fb["total"] == 4 and fb["answered"] == 4, (fb["total"], nx)
+    print("ok  a set of 2 missed throughout ends after 4: each miss gets one repair, not a loop")
+
     # --- one device takes another's code, and keeps its own work too ---------------
     def miss(headers, topic):
         d = c.post("/api/drill", headers=headers, json={"topics": [topic], "count": 2}).json()
