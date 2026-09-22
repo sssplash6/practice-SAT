@@ -292,6 +292,21 @@ def main() -> int:
     assert not scoring.is_correct({"type": "spr", "answer": "12"}, "")
     print("ok  marking: commas ignored, blanks wrong, a letter is not an index")
 
+    # a grid-in is the same number written any acceptable way, per the SAT's
+    # own directions -- including a long decimal cut or rounded at the fourth digit
+    for given, key, want in [
+        ("0.125", "1/8", True), ("1/8", "0.125", True), ("2/4", "1/2", True),
+        ("−8", "-8", True), ("-8", "−8", True), ("1,208", "1208", True),
+        (".6666", "2/3", True), (".6667", "2/3", True), ("0.666", "2/3", True),
+        ("0.667", "2/3", True), ("-.6666", "-2/3", True), ("45.12", "45.125", True),
+        ("45.13", "45.125", True),
+        ("0.66", "2/3", False), (".67", "2/3", False), ("22.6", "22.68", False),
+        ("0.668", "2/3", False), ("7/2", "3.4", False), ("x", "12", False), ("12", "-12", False),
+    ]:
+        got = scoring.grid_equal(given, key)
+        assert got is want, f"grid-in {given!r} against {key!r}: {got}, wanted {want}"
+    print("ok  grid-ins: equivalent forms count, the fourth-digit rule holds, short cuts do not")
+
     print("\nall good")
     return 0
 

@@ -27,6 +27,10 @@ and why the copy says where to practise next rather than what you are bad at.
 
 from __future__ import annotations
 
+import math
+
+from satbank.item import norm_text, numeral
+
 # The published labels, turned into an ordinal weight. A hard question answered
 # correctly says more than an easy one; how much more is a judgement call.
 WEIGHT = {"easy": 1, "medium": 2, "hard": 3}
@@ -107,6 +111,38 @@ def normalise(text: str) -> str:
     return (text or "").strip().replace(",", "").replace(" ", "").lstrip("$").rstrip(".")
 
 
+def _value(text: str) -> float | None:
+    return numeral(str(text).strip().replace("−", "-").replace(" ", "").lstrip("+"))
+
+
+def grid_equal(given: str, key: str) -> bool:
+    """Whether a typed grid-in answer is the keyed one, the way the SAT marks it.
+
+    The same number written another way counts: 0.125 is 1/8, 2/4 is 1/2, a
+    typeset minus is a keyboard one. And a decimal too long for the grid counts
+    when it is truncated or rounded at the fourth digit, so 2/3 accepts .6666,
+    .6667, 0.666 and 0.667 -- but not 0.66, which stops short of filling it.
+    That is College Board's own rule, printed in the grid-in directions.
+    """
+    g = (given or "").strip()
+    if not g:
+        return False
+    if normalise(g) == normalise(key) or norm_text(g) == norm_text(key):
+        return True
+    gv, kv = _value(g), _value(key)
+    if gv is None or kv is None:
+        return False
+    if math.isclose(gv, kv, rel_tol=0, abs_tol=1e-9):
+        return True
+    body = g.replace("−", "-").lstrip("-")
+    if "." in body and "/" not in body and len(body) >= 5:
+        scale = 10 ** len(body.split(".", 1)[1])
+        cut = math.trunc(kv * scale) / scale
+        near = math.copysign(math.floor(abs(kv) * scale + 0.5) / scale, kv)
+        return math.isclose(gv, cut, abs_tol=1e-9) or math.isclose(gv, near, abs_tol=1e-9)
+    return False
+
+
 def is_correct(question: dict, given) -> bool:
     if given is None or given == "":
         return False
@@ -115,7 +151,7 @@ def is_correct(question: dict, given) -> bool:
         if not isinstance(given, int) or not 0 <= given < 4:
             return False
         return "ABCD"[given] == question["answer"]
-    return normalise(str(given)) == normalise(question["answer"])
+    return grid_equal(str(given), str(question["answer"]))
 
 
 def band_for(fraction: float) -> tuple[str, str]:
