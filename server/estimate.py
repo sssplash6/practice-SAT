@@ -539,6 +539,25 @@ def gains(learner: str, subject: str = "math") -> dict | None:
             "skills": skills, "tiers": tiers, "extras": extras, "by_domain": by_domain}
 
 
+def trap_pts(learner: str, template: str, normalized: str, topic: str, at: str | None = None) -> int | None:
+    """V4 / U1: a trap's points, gain(t) x share, where gain(t) is gains' own
+    figure for its skill and share is the trap's wrong first tries over all
+    wrong first tries in the skill in the 60 days to `at`. Whole points, None
+    below 1 and while gains is None (under 30 answers, or not Math)."""
+    rows = _rows(learner, until=at)
+    if len(rows) < MIN_ANSWERS or topic not in SKILL_WEIGHT:
+        return None
+    end = dt.datetime.fromisoformat(at) if at else dt.datetime.now(dt.timezone.utc)
+    misses = db.rows("SELECT template, norm FROM attempts WHERE learner=? AND topic=? AND correct=0"
+                     " AND repeat=0 AND disputed=0 AND void IS NULL AND at>=? AND at<=?",
+                     learner, topic, (end - dt.timedelta(days=60)).isoformat(), end.isoformat())
+    mine = sum(r["template"] == template and (r["norm"] or "") == normalized for r in misses)
+    if not mine:
+        return None
+    pts = round(_round5(_lift(model(rows), [topic])) * mine / len(misses))
+    return pts if pts >= 1 else None
+
+
 def need(target: int, learner: str | None = None) -> dict:
     """U4 step 7 (+ T12's path): what a Math target takes, in right answers of
     44, the module-1 route and the skill work."""

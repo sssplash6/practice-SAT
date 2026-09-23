@@ -256,10 +256,11 @@ def _check_due(closed: str, checks: int) -> str | None:
 
 
 def log(learner: str, template: str, normalized: str, event: str, when: str,
-        attempt: int | None = None, pts: int | None = None) -> None:
-    """V8's trap log, written beside every traps change."""
-    db.run("INSERT INTO trap_log(learner,template,norm,at,event,attempt,pts) VALUES (?,?,?,?,?,?,?)",
-           learner, template, normalized, when, event, attempt, pts)
+        attempt: int | None = None, pts: int | None = None, ref: int | None = None) -> None:
+    """V8's trap log, written beside every traps change. pts: a fix's points
+    (V4); ref: the row a `discarded` or `restored` row undoes or re-applies."""
+    db.run("INSERT INTO trap_log(learner,template,norm,at,event,attempt,pts,ref) VALUES (?,?,?,?,?,?,?,?)",
+           learner, template, normalized, when, event, attempt, pts, ref)
 
 
 def _reason_of(q: dict, given) -> tuple[str, str | None]:
@@ -444,7 +445,9 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
                     db.run("UPDATE traps SET owed=0,closed=?,closed_how='fixed',last=?,due=?,checks=0 WHERE id=?",
                            when, when, _check_due(when, 0), t["id"])
                     log(learner, t["template"], t["norm"], "pip", when, attempt)
-                    log(learner, t["template"], t["norm"], "fixed", when, attempt)
+                    from . import estimate
+                    log(learner, t["template"], t["norm"], "fixed", when, attempt,
+                        estimate.trap_pts(learner, t["template"], t["norm"], t["topic"], when))
                     closed.append(t["label"])
                     closed_ids.append(t["id"])
                 else:
@@ -1443,13 +1446,13 @@ def discard(learner: str, sid: str) -> dict:
                 checks = max(0, t["checks"] - 1)
                 db.run("UPDATE traps SET checks=?, due=? WHERE id=?", checks,
                        _check_due(t["closed"], checks) if t["closed"] else None, t["id"])
-            log(learner, e["template"], e["norm"], "discarded", stamp, e["attempt"], e["id"])
+            log(learner, e["template"], e["norm"], "discarded", stamp, e["attempt"], ref=e["id"])
     return out
 
 
 def restore(learner: str, sid: str) -> dict:
     """V13's Restore: clear the void and re-apply what discard() rolled back,
-    oldest first. The discarded rows name the event they undid (in pts)."""
+    oldest first. The discarded rows name the event they undid (in ref)."""
     ids = [r["id"] for r in db.rows("SELECT id FROM attempts WHERE learner=? AND session=? AND void='discarded'", learner, sid)]
     out = {"answers": len(ids), "traps_closed": 0, "pips_back": 0, "reopened": 0}
     if not ids:
@@ -1459,9 +1462,9 @@ def restore(learner: str, sid: str) -> dict:
     with db.atomic():
         db.run(f"UPDATE attempts SET void=NULL WHERE id IN ({marks})", *ids)
         for d in db.rows(f"SELECT d.*, e.event AS undid, e.at AS undid_at FROM trap_log AS d"
-                         f" JOIN trap_log AS e ON e.id=d.pts WHERE d.learner=? AND d.event='discarded'"
+                         f" JOIN trap_log AS e ON e.id=d.ref WHERE d.learner=? AND d.event='discarded'"
                          f" AND d.attempt IN ({marks})"
-                         " AND NOT EXISTS (SELECT 1 FROM trap_log AS r WHERE r.event='restored' AND r.pts=d.id)"
+                         " AND NOT EXISTS (SELECT 1 FROM trap_log AS r WHERE r.event='restored' AND r.ref=d.id)"
                          " ORDER BY e.id", learner, *ids):
             t = db.one("SELECT * FROM traps WHERE learner=? AND template=? AND norm=?", learner, d["template"], d["norm"])
             if not t:
@@ -1481,5 +1484,5 @@ def restore(learner: str, sid: str) -> dict:
             elif d["undid"] == "check_ok" and t["closed"]:
                 checks = min(3, t["checks"] + 1)
                 db.run("UPDATE traps SET checks=?, due=? WHERE id=?", checks, _check_due(t["closed"], checks), t["id"])
-            log(learner, d["template"], d["norm"], "restored", stamp, d["attempt"], d["id"])
+            log(learner, d["template"], d["norm"], "restored", stamp, d["attempt"], ref=d["id"])
     return out

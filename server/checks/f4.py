@@ -283,6 +283,25 @@ def checks():
     assert trap(d, template="lin.only")["closed"] is None and trap(d, template="lin.keep")["hits"] == 2
     assert progress.topic_mastery(d, "linear_functions") == m_before
 
+    assert all(r["ref"] for r in db.rows("SELECT ref FROM trap_log WHERE learner=? AND event IN ('discarded','restored')", d))
+    assert all(r["pts"] is None for r in db.rows("SELECT pts FROM trap_log WHERE learner=? AND event IN ('discarded','restored')", d))
+
+    # V4: a fix stores its points, gain(t) x this trap's share of the skill's misses
+    pt = "a:f4pts"
+    for i in range(27):
+        add("attempts", learner=pt, template="prob.x" if i < 7 else "lin.x", seed=i, topic="probability" if i < 7 else "linear_functions",
+            difficulty="medium", fmt="mcq", correct=int(i >= 7), norm="other" if i < 7 else None,
+            at=at(TODAY - dt.timedelta(days=2)))
+    for seed in (1, 2, 3):
+        progress.record(pt, None, q(seed, key="prob.trap", topic="probability"), 1)
+    for seed in (4, 5):
+        progress.record(pt, None, q(seed, key="prob.trap", topic="probability"), 0)
+    assert trap(pt, template="prob.trap")["closed_how"] == "fixed"
+    gain = next(s["gain"] for s in estimate.gains(pt)["skills"] if s["topic"] == "probability")
+    fixed = db.one("SELECT pts FROM trap_log WHERE learner=? AND event='fixed' ORDER BY id DESC LIMIT 1", pt)["pts"]
+    assert fixed == round(gain * 3 / 10) and fixed >= 1, (fixed, gain)
+    assert db.one("SELECT pts FROM trap_log WHERE learner=? AND event='fixed'", "a:f4progress")["pts"] is None  # under 30 answers
+
     # U3: remarking an answer right closes the trap it alone opened
     rm = "a:f4remark"
     progress.record(rm, None, q(1, key="lin.rm"), 1)

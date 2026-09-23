@@ -208,6 +208,7 @@ LATER_COLUMNS = (
     ("word_reviews", "gap", "TEXT"), ("word_reviews", "subject", "TEXT"),
     ("word_reviews", "skill", "TEXT"), ("word_reviews", "domain", "TEXT"),
     ("word_reviews", "difficulty", "TEXT"), ("word_reviews", "attempt", "INTEGER"),
+    ("trap_log", "ref", "INTEGER"),                             # the row a discarded/restored one undoes
 )
 
 EXTRA_SCHEMA = """
@@ -379,6 +380,8 @@ def init() -> None:
     _backfill_attempts(c)
     c.commit()
     _once(c, "backfill:trap_log", _backfill_trap_log)
+    _once(c, "backfill:trap_log_ref", lambda c: c.execute(   # pts held the back-reference before ref
+        "UPDATE trap_log SET ref=pts, pts=NULL WHERE event IN ('discarded','restored') AND ref IS NULL"))
     _once(c, "backfill:handle", _backfill_handles)
     from . import ratings
     ratings.backfill()
