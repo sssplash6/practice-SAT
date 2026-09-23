@@ -14,7 +14,7 @@ import random
 from fractions import Fraction as Q
 
 from ....exact import E
-from ....item import Item, ItemError, Mis
+from ....item import Item, ItemError, Mis, gridin_mistakes
 from .kit import (dec, griddable, money, num, plural, rel, sent,
                   value_choices)
 
@@ -240,7 +240,7 @@ def whole_number_bound(rng: random.Random, seed: int, *, scene=None, fee=None,
             raise ItemError("this answer would not be enterable in a grid-in")
         return Item("ineq.whole_number_bound", "a whole-number bound",
                     d["tier"], seed, stem, "spr", ex, ex.gridin(), rationale,
-                    params=P)
+                    params=P, spr_mistakes=gridin_mistakes(ex, pool))
     ch, tex, wh, letter = value_choices(ex, [m for m in pool if m.value], rng)
     return Item("ineq.whole_number_bound", "a whole-number bound", d["tier"],
                 seed, stem, "mcq", ex, letter, rationale, ch, wh, tex, params=P)
