@@ -16,7 +16,7 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....figures import coordinate_grid
-from ....item import Item, ItemError, Mis, assemble, assemble_text
+from ....item import Item, ItemError, Mis, assemble, assemble_text, gridin_mistakes
 from ...linear_functions.common import (MINUS, choose, coef_text, ex, lin_text,
                                         numtext, q)
 
@@ -418,10 +418,11 @@ def table_facts(rng: random.Random, seed: int, *, m=None, b=None, xs=None, x0=No
     rationale = (f"The table gives slope {numtext(m)} and constant term {numtext(b)}, so "
                  f"the answer is {numtext(key)}.")
     keyx = ex(key)
+    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
         return Item("lin.table_facts", "reading a linear table", "medium", seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, table=table, params=P)
-    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
+                    "spr", keyx, keyx.gridin(), rationale, table=table, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, mistakes))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                                fillers="shift")
     return Item("lin.table_facts", "reading a linear table", "medium", seed, stem, "mcq",
@@ -490,9 +491,17 @@ def x_intercept(rng: random.Random, seed: int, *, m=None, b=None, given=None, fm
         P["xs"] = [[v.numerator, v.denominator] for v in xs]
         P["ys"] = [[v.numerator, v.denominator] for v in ys]
     keyx = ex(key)
+    wrong = [("gave the y-intercept as the x-intercept", B),
+             ("gave the slope as the x-intercept", M),
+             ("divided without changing the sign", B / M),
+             ("stepped one row too far along the table", key - M)]
     if fmt == "spr":
+        # key - M is not one row along the table, whose rows step by 1 in x, so
+        # a grid-in never files a typed value under that slip
         return Item("lin.x_intercept", "the x-intercept of a line", "hard", seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, table=table, params=P)
+                    "spr", keyx, keyx.gridin(), rationale, table=table, params=P,
+                    spr_mistakes=gridin_mistakes(
+                        keyx, [Mis(r, ex(v)) for r, v in wrong[:3]]))
 
     if key.denominator != 1 or (B / M).denominator != 1:
         raise ItemError("every option must be a lattice point on the x-axis")
@@ -501,13 +510,9 @@ def x_intercept(rng: random.Random, seed: int, *, m=None, b=None, given=None, fm
     def pt(v):
         v = q(v)
         return (f"({numtext(v)}, 0)", [v.numerator, v.denominator, 0, 1])
-    wrong = [Mis("gave the y-intercept as the x-intercept", pt(B)),
-             Mis("gave the slope as the x-intercept", pt(M)),
-             Mis("divided without changing the sign", pt(B / M)),
-             Mis("stepped one row too far along the table", pt(key - M))]
     return _text_item("lin.x_intercept", "the x-intercept of a line", "hard", seed, stem,
                       f"({numtext(key)}, 0)", [key.numerator, key.denominator, 0, 1],
-                      wrong, rng, P, rationale, table=table)
+                      [Mis(r, pt(v)) for r, v in wrong], rng, P, rationale, table=table)
 
 
 def y_intercept(rng: random.Random, seed: int, *, m=None, b=None, given=None, fmt=None,
@@ -528,12 +533,13 @@ def y_intercept(rng: random.Random, seed: int, *, m=None, b=None, given=None, fm
         P = {"kind": "lf_y_intercept", "given": given, "m": [m.numerator, m.denominator],
              "b": [b.numerator, b.denominator]}
         rationale = f"At x = 0 the value is {numtext(b)}."
-        if (fmt or "spr") == "spr":
-            return Item("lin.y_intercept", "the y-intercept of a line", "easy", seed, stem,
-                        "spr", keyx, keyx.gridin(), rationale, params=P)
         mistakes = [Mis("gave the slope instead of the y-intercept", ex(m)),
                     Mis("changed the sign of the y-intercept", ex(-b)),
-                    Mis("gave the x-intercept instead", ex(-b / m))]
+                    Mis("gave the x-intercept instead", ex(-b / m) if m else None)]
+        if (fmt or "spr") == "spr":
+            return Item("lin.y_intercept", "the y-intercept of a line", "easy", seed, stem,
+                        "spr", keyx, keyx.gridin(), rationale, params=P,
+                        spr_mistakes=gridin_mistakes(keyx, mistakes))
         choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                                    fillers="shift")
         return Item("lin.y_intercept", "the y-intercept of a line", "easy", seed, stem,

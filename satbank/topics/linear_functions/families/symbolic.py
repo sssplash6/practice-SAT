@@ -10,7 +10,7 @@ from __future__ import annotations
 import random
 from fractions import Fraction as Q
 
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ...linear_functions.common import MINUS, choose, dec, ex, numtext, q
 from .define import _text_item
 
@@ -120,12 +120,13 @@ def affine_conversion(rng: random.Random, seed: int, *, ctx=0, delta=None, ask=N
              "target": [target.numerator, target.denominator], "places": None}
         fmt = fmt or "spr"
     keyx = ex(key)
+    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
         if not keyx.is_rational or len(keyx.gridin()) > 8:
             raise ItemError("the answer does not fit a grid-in")
         return Item("lin.affine_conversion", "a scaled linear conversion", "hard", seed,
-                    stem, "spr", keyx, keyx.gridin(), rationale, params=P)
-    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
+                    stem, "spr", keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, mistakes))
     choices, latex, reasons, letter = choose(
         keyx, mistakes, rng, fmt_value=lambda v: dec(v, 2), signed=True, fillers="shift")
     return Item("lin.affine_conversion", "a scaled linear conversion", "hard", seed, stem,
