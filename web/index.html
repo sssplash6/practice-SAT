@@ -219,10 +219,11 @@
     $('#chalMeta').textContent = `${c.count} questions · ${Math.round(c.seconds / 60)} min${c.board.players ? ` · ${c.board.players} in` : ''}`;
     const b = h('button', { type: 'button', class: 'quiet', text: c.session ? 'Resume' : 'Start' });
     b.addEventListener('click', async () => {
+      b.setAttribute('aria-busy', 'true');
       try {
         const s = await api('/challenge/start', { method: 'POST' });
         location.href = `/practice/session/?id=${encodeURIComponent(s.id)}`;
-      } catch (e) { $('#chalMeta').textContent = e.message; }
+      } catch (e) { b.removeAttribute('aria-busy'); $('#chalMeta').textContent = e.message; }
     });
     go.replaceChildren(b);
   }

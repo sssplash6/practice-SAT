@@ -173,6 +173,7 @@ a { color: inherit; }
 .pill:active { transform: scale(.97); }
 .pill:disabled { opacity: .32; cursor: default; }
 .pill[aria-busy="true"] { opacity: .6; cursor: progress; }
+[aria-busy="true"] { pointer-events: none; }       /* a second click would start a second sitting */
 
 .quiet {
   appearance: none; border: 0; background: none; cursor: pointer; text-decoration: none;
