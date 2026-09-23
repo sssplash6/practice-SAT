@@ -13,7 +13,7 @@ import random
 from fractions import Fraction as Q
 
 from ....exact import E, Exact
-from ....item import Item, ItemError, Mis, assemble, assemble_text
+from ....item import Item, ItemError, Mis, assemble, assemble_text, gridin_mistakes
 from ..figures import right_triangle
 from ..kit import TRIPLES, attempt, exact_leg, pick, ratio_text
 
@@ -141,7 +141,8 @@ def trig_ratio(rng: random.Random, seed: int, *, hyp=None, leg=None, mode=None,
     P = {"kind": "rtt_trig_ratio", "hyp": c, "leg": q_leg, "fn": fn, "at": at}
     if fmt == "spr":
         return Item("rtt.trig_ratio", "trigonometric ratios", "medium", seed, stem,
-                    "spr", key, key.gridin(), rationale, figure=fig, params=P)
+                    "spr", key, key.gridin(), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, pick(pool, wrongs)))
     choices, latex, reasons, letter_ = assemble(key, pick(pool, wrongs), rng)
     return Item("rtt.trig_ratio", "trigonometric ratios", "medium", seed, stem, "mcq",
                 key, letter_, rationale, choices, reasons, latex, figure=fig, params=P)
@@ -231,7 +232,8 @@ def ratio_to_side(rng: random.Random, seed: int, *, triple=None, swap=False, sca
     fmt = fmt or ("spr" if rng.random() < 0.3 else "mcq")
     if fmt == "spr":
         return Item("rtt.ratio_to_side", "trigonometric ratios", "medium", seed, stem,
-                    "spr", key, key.gridin(), rationale, figure=fig, params=P)
+                    "spr", key, key.gridin(), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, pick(pool, wrongs)))
     choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("rtt.ratio_to_side", "trigonometric ratios", "medium", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex, figure=fig, params=P)
@@ -360,10 +362,11 @@ def cofunction_angles(rng: random.Random, seed: int, *, m1=None, b1=None, m2=Non
     rationale = (f"Complementary angles give ({expr(m1, b1)}) + ({expr(m2, b2)}) = 90, "
                  f"so {m1 + m2}x = {90 - b1 - b2} and x = {key.plain()}.")
     P = {"kind": "rtt_cofunction_angles", "m1": m1, "b1": b1, "m2": m2, "b2": b2}
+    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
     if fmt == "spr":
         return Item("rtt.cofunction_angles", "cofunctions", "hard", seed, stem, "spr",
-                    key, key.gridin(), rationale, params=P)
-    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
+                    key, key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng, signed=True,
                                                fillers="shift")
     return Item("rtt.cofunction_angles", "cofunctions", "hard", seed, stem, "mcq", key,
@@ -428,7 +431,8 @@ def complement_tangent(rng: random.Random, seed: int, *, num=None, den=None,
         if not key.is_rational:
             raise ItemError("a radical cannot be entered in a grid-in")
         return Item("rtt.complement_tangent", "cofunctions", "hard", seed, stem, "spr",
-                    key, key.gridin(), rationale, params=P)
+                    key, key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, pick(pool, wrongs)))
     choices, latex, reasons, letter = assemble(
         key, pick(pool, wrongs), rng, signed=True,
         fmt_value=lambda v: surface.get(v, v.plain()))
@@ -477,10 +481,11 @@ def complement_ratio(rng: random.Random, seed: int, *, triple=None, swap=False,
                  f"complement of angle {K}, so {ask} {L} = {key.plain()}.")
     P = {"kind": "rtt_complement_ratio", "u": u, "v": v, "w": w, "t": t, "fn": fn,
          "ask": ask}
+    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
     if fmt == "spr":
         return Item("rtt.complement_ratio", "cofunctions", "hard", seed, stem, "spr",
-                    key, key.gridin(), rationale, params=P)
-    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
+                    key, key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("rtt.complement_ratio", "cofunctions", "hard", seed, stem, "mcq", key,
                 letter, rationale, choices, reasons, latex, params=P)
