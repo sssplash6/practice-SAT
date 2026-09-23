@@ -63,6 +63,10 @@ def put_note(body: Note, x_learner: str | None = Header(default=None)) -> dict:
         for mark in body.marks:
             if mark.get("style") not in STYLES or not isinstance(mark.get("note", ""), str) or len(mark.get("note", "")) > 500:
                 raise HTTPException(422, "marks has an invalid style or note")
+    # R6: the template goes back only to a write made from the learner's own
+    # attempt (Review); the session page never learns it, live tests and
+    # today's challenge included
+    shown = {"template": template} if body.attempt_id is not None else {}
     old = db.one("SELECT note,marks FROM notes WHERE learner=? AND template=? AND seed=?", learner, template, seed)
     note = body.note if "note" in body.model_fields_set else (old["note"] if old else "")
     marks = body.marks if "marks" in body.model_fields_set else (json.loads(old["marks"] or "[]") if old else [])
@@ -70,8 +74,8 @@ def put_note(body: Note, x_learner: str | None = Header(default=None)) -> dict:
     if not note and not marks:
         # empty values delete the row (QBank §3.3.5)
         db.run("DELETE FROM notes WHERE learner=? AND template=? AND seed=?", learner, template, seed)
-        return {"note": None, "marks": [], "deleted": True, "template": template, "type_rule": rule}
+        return {"note": None, "marks": [], "deleted": True, "type_rule": rule, **shown}
     db.run("INSERT INTO notes(learner,template,seed,note,marks,at) VALUES (?,?,?,?,?,?)"
            " ON CONFLICT(learner,template,seed) DO UPDATE SET note=excluded.note,marks=excluded.marks,at=excluded.at",
            learner, template, seed, note or "", json.dumps(marks), now())
-    return {"note": note or "", "marks": marks, "template": template, "type_rule": rule}
+    return {"note": note or "", "marks": marks, "type_rule": rule, **shown}
