@@ -61,6 +61,20 @@
    prints light, state fills print exactly, rows never split. .no-print hides,
    .print-only shows only on paper, .page-break starts a page, .keep never
    splits, button.print-keep stays.
+
+   Components, in this order; each group opens with the markup it expects:
+     shell     .side (.rail .open) .scrim .pbar .tabs .tabs-grip .ibtn .nextup .side-day
+               .now-strip .sections
+     controls  .pill .btn .verb .seg .tablist .switch .pref .chips .check .field .counter
+               .otp .dd .filters .selbar .score-slider .choices, range
+     data      .card .card-head .card-err .skel .stat .stats .meter .badge .kbd .table
+               .table-wrap .thumbs .empty .pts [data-fact] .ring .avatar
+     marks     .cell .cell-grid .sw .legend .strip .atlas .pips .dbars .heat .trend
+     overlays  dialog.sheet dialog.more .menu .popover [role=option] .tip .toasts .banner
+               dialog.palette .calc
+   Where a page still defines one of these names itself (.seg, .cell, .tip, .legend,
+   .stat, .card), the shared rule is written so the page's own rule wins until the
+   page is rebuilt.
    ========================================================================== */
 
 :root {
@@ -321,7 +335,6 @@ main[tabindex="-1"]:focus { outline: none; }     /* the skip link's target */
 .avatar.lg { width: 40px; height: 40px; font-size: 15px; }
 .avatar.xl { width: 72px; height: 72px; font-size: 26px; }
 .avatar > img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
-.avatar > svg { width: 64%; height: 64%; }
 .avatar[data-ring] { position: relative; box-shadow: 0 0 0 2px var(--amber); }
 .avatar[data-ring]::after {
   content: "\2713"; position: absolute; right: -3px; bottom: -3px; width: 14px; height: 14px; border-radius: 50%;
