@@ -246,8 +246,7 @@ def context_solve(rng: random.Random, seed: int, *, scene=None, fmt=None, **kw) 
         if ex.coef.denominator > 1000:
             raise ItemError("this grid-in answer would not be enterable")
         return Item("lin1.context_solve", "linear equation in context", "medium", seed,
-                    sent(s["stem"]), "spr", ex, ex.gridin(), rationale, params=P,
-                    spr_mistakes=spr_mistakes(ex, _context_gridin(s, m, k, total)))
+                    sent(s["stem"]), "spr", ex, ex.gridin(), rationale, params=P)
     # a count, a price and a length of time are positive, and an option orders
     # of magnitude away from the answer is crossed out without any algebra
     lo, hi = key / 25, key * 25

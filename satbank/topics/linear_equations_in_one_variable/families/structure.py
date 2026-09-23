@@ -186,9 +186,7 @@ def identity_constant(rng: random.Random, seed: int, *, shape=None, var=None,
         if ex.coef.denominator > 1000:
             raise ItemError("this grid-in answer would not be enterable")
         return Item("lin1.identity_constant", "solution set", "medium", seed, stem,
-                    "spr", ex, ex.gridin(), rationale, params=P,
-                    spr_mistakes=spr_mistakes(ex, [m for m in mistakes
-                                                   if m is not added]))
+                    "spr", ex, ex.gridin(), rationale, params=P)
     ch, tex, why, letter_ = choices(ex, [m for m in mistakes if m.value is not None], rng)
     return Item("lin1.identity_constant", "solution set", "medium", seed, stem, "mcq",
                 ex, letter_, rationale, ch, why, tex, params=P)
