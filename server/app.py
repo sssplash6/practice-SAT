@@ -706,6 +706,7 @@ class Drill(BaseModel):
     count: int | None = 10       # None is a set with no end
     difficulty: list[str] | None = None
     timed: bool = False
+    minutes: int | None = Field(default=None, ge=1, le=180)   # a timed set's own clock
     source: str = Field(default="map", max_length=20)
     from_session: str | None = None    # "fix these": the misses of a sitting
     mistakes: bool = False             # every open mistake, twice each
@@ -771,7 +772,7 @@ def new_drill(body: Drill, x_learner: str | None = Header(default=None)) -> dict
 
     sid = secrets.token_urlsafe(16)
     drill.create(learner, sid, topics, count, body.difficulty, body.timed, body.source,
-                 queue=queue, items=items)
+                 queue=queue, items=items, minutes=body.minutes)
     row = session_or_404(sid)
     first = drill.next_question(row)
     log.info("drill %s: %s questions over %d topics for %s", sid[:8],

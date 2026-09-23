@@ -54,23 +54,27 @@
   .tile:active { transform: scale(.985); }
   .tile .mbar { position: absolute; left: 14px; right: 14px; bottom: 9px; height: 2px; }
 
-  .go { align-self: end; display: flex; flex-direction: column; gap: 10px; }
-  .go-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin: 0 -6px; }
-  .tiers { display: flex; align-items: flex-end; gap: 3px; padding: 0 6px; height: 38px; }
-  .tiers button {
-    appearance: none; border: 0; background: none; cursor: pointer; padding: 10px 3px 11px;
-    display: flex; align-items: flex-end;
+  .go { align-self: end; display: flex; flex-direction: column; gap: 4px; }
+  .go .choices { margin: 0 -9px; flex-wrap: nowrap; }       /* first word in line with the tiles */
+  /* a blank to write your own number in: the line is the invitation, and it
+     turns orange, like a pressed choice, once it holds the number in use */
+  .blank {
+    appearance: none; border: 0; border-radius: 0; margin: 0 4px; padding: 0 2px; width: 40px; height: 38px;
+    font: 600 15px var(--font); font-variant-numeric: tabular-nums; color: var(--ink); text-align: center;
+    background: linear-gradient(var(--mat), var(--mat)) no-repeat center bottom 4px / calc(100% - 8px) 2px;
+    transition: background-image .16s var(--ease);
   }
-  .tiers i { display: block; width: 5px; border-radius: 2px; background: var(--faint); transition: background-color .16s var(--ease); }
-  .tiers button:nth-child(1) i { height: 7px; }
-  .tiers button:nth-child(2) i { height: 11px; }
-  .tiers button:nth-child(3) i { height: 15px; }
-  .tiers button[aria-pressed="true"] i { background: var(--ink); }
+  .blank:focus { outline: none; background-image: linear-gradient(var(--ink), var(--ink)); }
+  .blank.on { background-image: linear-gradient(var(--amber), var(--amber)); }
+  .go-foot { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+  .go-foot .pill { flex: 1; }
+  .timer { display: flex; align-items: center; margin-left: -6px; }
+  .mins { display: flex; align-items: center; font: 500 12.5px var(--mono); color: var(--soft); }
+  .mins .blank { margin: 0 2px 0 0; width: 34px; }
   .clock {
     appearance: none; border: 0; background: none; cursor: pointer;
-    display: flex; align-items: center; gap: 6px; height: 38px; padding: 0 6px;
-    color: var(--faint); font: 500 12.5px var(--mono); font-variant-numeric: tabular-nums;
-    transition: color .16s var(--ease);
+    display: flex; align-items: center; height: 38px; padding: 0 6px;
+    color: var(--faint); transition: color .16s var(--ease);
   }
   .clock svg { width: 21px; height: 21px; flex: none; }
   .clock .hand { stroke: currentColor; }
@@ -104,9 +108,9 @@
     .dom { padding-top: 22px; }
     .go {
       position: fixed; left: 0; right: 0; bottom: calc(62px + env(safe-area-inset-bottom, 0px)); z-index: 25;
-      padding: 16px 16px 12px; background: linear-gradient(to top, var(--paper) 78%, rgba(255, 255, 255, 0));
+      padding: 18px 16px 12px; background: linear-gradient(to top, var(--paper) calc(100% - 18px), rgba(255, 255, 255, 0));
     }
-    .page { padding-bottom: 240px; }
+    .page { padding-bottom: 270px; }
   }
 </style>
 </head>
@@ -118,21 +122,25 @@
   <div class="grid" id="grid" aria-label="Topics"></div>
 
   <div class="go" id="go">
-    <div class="go-row">
-      <div class="choices" id="count" role="group" aria-label="Questions">
-        <button type="button" data-n="5" aria-pressed="false">5</button>
-        <button type="button" data-n="10" aria-pressed="true">10</button>
-        <button type="button" data-n="22" aria-pressed="false">22</button>
-        <button type="button" data-n="inf" class="inf" aria-pressed="false" aria-label="Endless">∞</button>
-      </div>
-      <div class="tiers" id="tiers" role="group" aria-label="Difficulty">
-        <button type="button" data-t="easy" aria-pressed="true" aria-label="Easy"><i></i></button>
-        <button type="button" data-t="medium" aria-pressed="true" aria-label="Medium"><i></i></button>
-        <button type="button" data-t="hard" aria-pressed="true" aria-label="Hard"><i></i></button>
-      </div>
-      <button type="button" class="clock" id="clock" aria-pressed="false" aria-label="Timed"></button>
+    <div class="choices" id="count" role="group" aria-label="Questions">
+      <button type="button" data-n="5" aria-pressed="false">5</button>
+      <button type="button" data-n="10" aria-pressed="true">10</button>
+      <button type="button" data-n="22" aria-pressed="false">22</button>
+      <button type="button" data-n="inf" class="inf" aria-pressed="false" aria-label="Endless">∞</button>
+      <input class="blank" id="countIn" inputmode="numeric" maxlength="3" autocomplete="off" aria-label="Another number of questions">
     </div>
-    <button type="button" class="pill wide" id="start">Start</button>
+    <div class="choices" id="tiers" role="group" aria-label="Difficulty">
+      <button type="button" data-t="easy" aria-pressed="true">Easy</button>
+      <button type="button" data-t="medium" aria-pressed="true">Medium</button>
+      <button type="button" data-t="hard" aria-pressed="true">Hard</button>
+    </div>
+    <div class="go-foot">
+      <div class="timer">
+        <button type="button" class="clock" id="clock" aria-pressed="false" aria-label="Timed"></button>
+        <label class="mins" id="mins" hidden><input class="blank on" id="minIn" inputmode="numeric" maxlength="3" autocomplete="off" aria-label="Minutes">min</label>
+      </div>
+      <button type="button" class="pill" id="start">Start</button>
+    </div>
     <p class="error err" id="err" hidden></p>
   </div>
   <div class="tip" id="tip" role="tooltip"></div>
@@ -143,12 +151,12 @@
 <script>
 (() => {
   'use strict';
-  const { api, h, glyph, TOPICS, DOMAINS, mmss, snap, $ } = UI;
+  const { api, h, glyph, TOPICS, DOMAINS, snap, $ } = UI;
   UI.shell();
 
   const grid = $('#grid'), go = $('#go'), start = $('#start'), tip = $('#tip');
   const picked = new Set();
-  const cfg = { count: 10, tiers: new Set(['easy', 'medium', 'hard']), timed: false };
+  const cfg = { count: 10, tiers: new Set(['easy', 'medium', 'hard']), timed: false, minutes: null, ownMinutes: false };
   const tiles = {}, heads = [];
   let board = {};
 
@@ -239,19 +247,49 @@
   }
   function hideTip() { clearTimeout(tipT); tip.classList.remove('on'); }
 
-  /* ---------------------------------------------------------- the dock */
-  const clock = $('#clock');
-  clock.innerHTML = UI.svg(UI.ICON.clock, 21) + '<span id="clockT"></span>';
+  /* ---------------------------------------------------------- the dock
+     How many: a preset, or any number written in the blank. The clock, when
+     on, runs at the test's pace for the set unless the student writes their
+     own minutes; an endless set on a clock is a sprint. */
+  const clock = $('#clock'), countIn = $('#countIn'), minIn = $('#minIn');
+  const MAX = 120, MAX_MIN = 180;                // the server's limits
+  clock.innerHTML = UI.svg(UI.ICON.clock, 21);
+  let preset = $('#count').querySelector('[aria-pressed="true"]');     // what an emptied blank falls back to
+  const presetCount = () => preset.dataset.n === 'inf' ? Infinity : Number(preset.dataset.n);
+  const paceMinutes = () => Number.isFinite(cfg.count) ? UI.minutesFor(cfg.count) : 10;
+  // digits only, no leading zero, at most max; returns the number or 0
+  function number(el, max) {
+    const n = Math.min(max, Number(el.value.replace(/\D/g, '')) || 0);
+    el.value = n ? String(n) : '';
+    return n;
+  }
   function paintClock() {
     clock.setAttribute('aria-pressed', String(cfg.timed));
-    $('#clockT').textContent = cfg.timed && Number.isFinite(cfg.count) ? mmss(Math.round(cfg.count * 95 / 60) * 60) : '';
+    $('#mins').hidden = !cfg.timed;
+    if (!cfg.ownMinutes) { cfg.minutes = paceMinutes(); if (document.activeElement !== minIn) minIn.value = cfg.minutes; }
   }
   $('#count').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
-    cfg.count = b.dataset.n === 'inf' ? Infinity : Number(b.dataset.n);
+    preset = b;
+    countIn.value = ''; countIn.classList.remove('on');
+    cfg.count = presetCount();
     $('#count').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
     paintClock();
   });
+  countIn.addEventListener('input', () => {
+    const n = number(countIn, MAX);
+    countIn.classList.toggle('on', !!n);
+    $('#count').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(!n && x === preset)));
+    cfg.count = n || presetCount();
+    paintClock();
+  });
+  minIn.addEventListener('input', () => {
+    const n = number(minIn, MAX_MIN);
+    cfg.ownMinutes = !!n;
+    cfg.minutes = n || paceMinutes();
+  });
+  minIn.addEventListener('blur', () => { if (!minIn.value) minIn.value = cfg.minutes; });
+  [countIn, minIn].forEach(el => el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); start.click(); } }));
   $('#tiers').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b) return;
     const t = b.dataset.t;
@@ -268,7 +306,7 @@
     try {
       const d = await api('/drill', { method: 'POST', body: {
         topics: [...picked], count: Number.isFinite(cfg.count) ? cfg.count : null,
-        difficulty: [...cfg.tiers], timed: cfg.timed, source: 'map' } });
+        difficulty: [...cfg.tiers], timed: cfg.timed, minutes: cfg.timed ? cfg.minutes : null, source: 'map' } });
       snap.set('map', Object.fromEntries(Object.entries(board).map(([k, v]) => [k, { mastery: v.mastery, traps: v.traps.length }])));
       location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`;
     } catch (e) {

@@ -584,6 +584,18 @@ def check_learner(c) -> None:
     assert nx.get("done") and fb["total"] == 4 and fb["answered"] == 4, (fb["total"], nx)
     print("ok  a set of 2 missed throughout ends after 4: each miss gets one repair, not a loop")
 
+    # --- a timed set runs on the minutes the student set, endless ones too ------------
+    C = {"X-Learner": "a:ownclock"}
+    assert c.post("/api/drill", headers=C, json={"topics": ["circles"], "count": 37, "timed": True}).json()["seconds"] == 37 * 2100 // 22
+    assert c.post("/api/drill", headers=C, json={"topics": ["circles"], "count": 37, "timed": True,
+                                                "minutes": 3}).json()["seconds"] == 180
+    sprint = c.post("/api/drill", headers=C, json={"topics": ["circles"], "count": None, "timed": True, "minutes": 5}).json()
+    assert sprint["seconds"] == 300 and sprint["total"] is None
+    assert c.post("/api/drill", headers=C, json={"topics": ["circles"], "count": 5, "minutes": 3}).json()["seconds"] is None
+    for bad in (0, 181):
+        assert c.post("/api/drill", headers=C, json={"topics": ["circles"], "timed": True, "minutes": bad}).status_code == 422
+    print("ok  a set of any length can run on the student's own minutes, and an endless one becomes a sprint")
+
     # --- one device takes another's code, and keeps its own work too ---------------
     def miss(headers, topic):
         d = c.post("/api/drill", headers=headers, json={"topics": [topic], "count": 2}).json()

@@ -159,7 +159,8 @@ def _serve(row, cfg: dict, served: list[dict]) -> dict | None:
 def create(learner: str, sid: str, topics: list[str], count: int | None,
            difficulty: list[str] | None, timed: bool, source: str,
            queue: list[str] | None = None, items: list[list] | None = None,
-           kind: str = "drill", fixed: bool = False, day: str | None = None) -> None:
+           kind: str = "drill", fixed: bool = False, day: str | None = None,
+           minutes: int | None = None) -> None:
     """A fixed set (the challenge) is the same for everyone, so it has no
     repairs and never grows; the answer is still shown after each question."""
     every = set(topics) | {topic_of(t) for t in (queue or [])} | {topic_of(t) for t, _ in (items or [])}
@@ -167,6 +168,8 @@ def create(learner: str, sid: str, topics: list[str], count: int | None,
         "topics": topics, "count": count, "total": count,
         "difficulty": [d for d in (difficulty or TIERS) if d in TIERS] or list(TIERS),
         "timed": bool(timed), "source": source, "turn": 0, "fixed": fixed,
+        # the student's own clock, if they set one; otherwise the set's length decides
+        "seconds": minutes * 60 if timed and minutes else None,
         "queue": list(queue or []), "items": [list(i) for i in (items or [])],
         "before": {t: progress.topic_mastery(learner, t) for t in every},
     }
@@ -184,8 +187,14 @@ def create(learner: str, sid: str, topics: list[str], count: int | None,
 
 
 def seconds_of(cfg: dict) -> int | None:
-    """A timed set's clock, at the real test's pace."""
-    if cfg.get("timed") and cfg.get("count"):
+    """A timed set's clock: the minutes the student set, or the real test's
+    pace for the set's length. An endless set is timed only by the student,
+    which makes it a sprint -- as many as they can in the time."""
+    if not cfg.get("timed"):
+        return None
+    if cfg.get("seconds"):
+        return cfg["seconds"]
+    if cfg.get("count"):
         return cfg["count"] * blueprint.MODULE_SECONDS // blueprint.MODULE_SIZE
     return None
 
