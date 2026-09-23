@@ -27,3 +27,11 @@ disagree, this file wins. Builders read it alongside the plan and `spec/v2-upgra
    shortcuts, previews, confirmations of what will happen, visible state, counts, legends,
    explanations of a number, one-tap ways to the next step. The only reason to leave something
    out is that it does none of these.
+5. **No classes.** "We have a separate platform for classes, drop it." Task S2 (Classes and
+   homework, Shell spec §7) is removed: no teacher or student roles, classes, homework,
+   assignments, class codes, `/class/` or `/join/` pages, class leaderboards or teacher views,
+   and no data or endpoints for them. Anything elsewhere in the plan or the upgrades that
+   depends on classes goes too. Compete keeps private contests, but not through classes: a
+   private contest is an invite code or link that Compete owns (friends competing together),
+   with no teacher or homework features. Resolution 3 of the plan ("Compete's groups are the
+   same thing as classes") is void.
