@@ -137,5 +137,17 @@ def _structure(item: Item) -> None:
     elif item.fmt == "spr":
         if not item.answer.strip():
             raise AuditError("grid-in with no answer")
+        # a named wrong answer that is the key, or no value at all, would file
+        # a right answer as a mistake -- `item.gridin_mistakes` drops them
+        seen = [float(item.key)]
+        for m in item.spr_mistakes:
+            if m.value is None:
+                raise AuditError(f"grid-in mistake {m.reason!r} has no value")
+            v = float(m.value)
+            if any(close(v, o, 1e-9) for o in seen):
+                raise AuditError(f"grid-in mistake {m.reason!r} is "
+                                 f"{'the key' if close(v, seen[0], 1e-9) else 'repeated'}"
+                                 f": {m.value.plain()}")
+            seen.append(v)
     else:
         raise AuditError(f"unknown format {item.fmt!r}")

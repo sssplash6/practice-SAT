@@ -13,7 +13,7 @@ from fractions import Fraction
 from .exact import E, Exact
 
 __all__ = ["Item", "Mis", "assemble", "assemble_text", "ItemError", "numeral",
-           "norm_text", "shortlist", "hands_the_key_over"]
+           "norm_text", "shortlist", "hands_the_key_over", "gridin_mistakes"]
 
 SUPERSCRIPT = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
 
@@ -79,6 +79,25 @@ class Mis:
     value: Exact | None
 
 
+def gridin_mistakes(key, mistakes: list[Mis]) -> list[Mis]:
+    """The mistakes a grid-in can name: a value, not the key, first of its value.
+
+    Compared by value, as a typed answer is matched, so 1/2 and 0.5 are one
+    wrong answer. What this drops is what the audit refuses.
+    """
+    out: list[Mis] = []
+    seen = [float(key)]
+    for m in mistakes:
+        if m.value is None:
+            continue
+        v = float(m.value)
+        if any(abs(v - o) <= 1e-9 * max(1.0, abs(v), abs(o)) for o in seen):
+            continue
+        seen.append(v)
+        out.append(m)
+    return out
+
+
 @dataclass
 class Item:
     template: str
@@ -92,6 +111,11 @@ class Item:
     rationale: str
     choices: list[str] = field(default_factory=list)
     reasons: list[str] = field(default_factory=list)
+    # A grid-in's wrong answers, each with the mistake that produces it, so a
+    # wrong typed value can be named the way a wrong option is. Build it with
+    # `gridin_mistakes`. Keyword-only: the fields after it are passed by
+    # position all over the topics.
+    spr_mistakes: list[Mis] = field(default_factory=list, kw_only=True)
     latex_choices: list[str] = field(default_factory=list)
     figure: str | None = None
     table: list[list[str]] | None = None
