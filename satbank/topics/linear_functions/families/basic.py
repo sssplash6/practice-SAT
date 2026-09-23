@@ -35,15 +35,20 @@ def _concat(a: Q, b: Q):
 # ------------------------------------------------------------------ evaluate
 
 def _eval_mistakes(m: Q, b: Q, x0: Q, key: Q, form: str, wrong: str,
-                   a: Q = None, c: Q = None, d: Q = None) -> list[Mis]:
+                   a: Q = None, c: Q = None, d: Q = None, spr: bool = False) -> list[Mis]:
+    """spr: the grid-in list. A typed value is filed under its reason, so there
+    every reason must be exactly the route to its value on these numbers: a
+    sign slip is named by the sign actually printed, and a slip these numbers
+    cannot produce is None."""
     M: list[Mis] = []
     if form == "quotient":
         return [Mis("did not divide by the denominator", a * x0 + c),
                 Mis("left out the coefficient of x in the numerator", (x0 + c) / d),
                 Mis("added the coefficient and the input instead of multiplying them",
-                    (a + x0) / d),
+                    (a + x0 + c) / d if spr else (a + x0) / d),
                 Mis("divided only the constant term by the denominator", a * x0 + c / d),
-                Mis("subtracted the constant instead of adding it", (a * x0 - c) / d),
+                Mis("added the constant instead of subtracting it" if spr and c < 0
+                    else "subtracted the constant instead of adding it", (a * x0 - c) / d),
                 # the mirror of "divided only the constant term": it divides the x-term
                 # and leaves the constant whole, so it keeps the denominator d the key
                 # is printed over instead of clearing it
@@ -67,9 +72,11 @@ def _eval_mistakes(m: Q, b: Q, x0: Q, key: Q, form: str, wrong: str,
         return M
     if wrong == "sign":
         M = [Mis("used the sign of the input rather than its value",
-                 (Q(1) if x0 >= 0 else Q(-1)) * m + b),
-             Mis("added the coefficient to the constant, ignoring its sign", m + abs(b)),
-             Mis("dropped the negative sign from the result", -key),
+                 None if spr and x0 == 0 else (Q(1) if x0 >= 0 else Q(-1)) * m + b),
+             Mis("added the coefficient to the constant, ignoring its sign",
+                 None if spr and b > 0 else m + abs(b)),
+             Mis("dropped the negative sign from the result",
+                 None if spr and key >= 0 else -key),
              Mis("substituted the input without its negative sign", m * abs(x0) + b),
              Mis("left out the constant term", m * x0)]
     elif wrong == "given":
@@ -77,7 +84,7 @@ def _eval_mistakes(m: Q, b: Q, x0: Q, key: Q, form: str, wrong: str,
              Mis("gave the coefficient of x instead of evaluating the function", m),
              Mis("subtracted the constant term from the input", x0 - b),
              Mis("multiplied the input and the constant term instead of adding them",
-                 x0 * b),
+                 None if spr and m != 1 else x0 * b),
              Mis("gave the input instead of the output", x0)]
     else:
         M = [Mis("left out the constant term", m * x0),
@@ -85,13 +92,16 @@ def _eval_mistakes(m: Q, b: Q, x0: Q, key: Q, form: str, wrong: str,
              Mis("multiplied the input by the constant term and added the coefficient",
                  b * x0 + m),
              Mis("multiplied the input and the constant term instead of adding them",
-                 x0 * b),
-             Mis("subtracted the constant term instead of adding it", m * x0 - b)]
+                 None if spr and m != 1 else x0 * b),
+             Mis("added the constant term instead of subtracting it" if spr and b < 0
+                 else "subtracted the constant term instead of adding it", m * x0 - b)]
     if abs(m) == 1:
-        cat = _concat(abs(x0), abs(b))
+        # side by side is x + 200 at 50 written 50200; with a sign in the rule
+        # or in the input, nothing a student writes side by side gives it
+        cat = (_concat(x0, b) if m == 1 else None) if spr else _concat(abs(x0), abs(b))
         M = [Mis("gave the constant term instead of evaluating the function", b),
              Mis("multiplied the input and the constant term instead of adding them",
-                 x0 * b),
+                 None if spr and m != 1 else x0 * b),
              Mis("wrote the input beside the constant instead of adding them", cat),
              Mis("subtracted the constant term from the input", x0 - b),
              Mis("doubled the constant term", 2 * b)] + M
@@ -169,14 +179,17 @@ def evaluate(rng: random.Random, seed: int, *, m=None, b=None, x0=None, form=Non
     rationale = (f"Substituting {var} = {numtext(x0)} into {body} gives "
                  f"{numtext(key)}.")
     keyx = ex(key)
-    mistakes = [Mis(r.reason, ex(r.value)) for r in
-                _eval_mistakes(m, b, x0, key, form, wrong, a, c, d) if r.value is not None]
+    def named(spr=False):
+        return [Mis(r.reason, ex(r.value)) for r in
+                _eval_mistakes(m, b, x0, key, form, wrong, a, c, d, spr)
+                if r.value is not None]
     if fmt == "spr":
         if keyx.gridin().lstrip("-").replace("/", "").replace(".", "") == "":
             raise ItemError("no grid-in form")
         return Item("lin.evaluate", "evaluating a linear function", "easy", seed, stem,
                     "spr", keyx, keyx.gridin(), rationale, params=P,
-                    spr_mistakes=gridin_mistakes(keyx, mistakes))
+                    spr_mistakes=gridin_mistakes(keyx, named(spr=True)))
+    mistakes = named()
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True)
     return Item("lin.evaluate", "evaluating a linear function", "easy", seed, stem, "mcq",
                 keyx, letter, rationale, choices, reasons, latex, params=P)
@@ -293,6 +306,8 @@ def combine(rng: random.Random, seed: int, *, mode=None, c=None, d=None, p=None,
                     Mis("added the two values instead of subtracting them",
                         (p + qv + 2 * c) / d),
                     Mis("subtracted the inputs without dividing", p - qv)]
+        spr = [Mis("added the denominators when subtracting the fractions",
+                   mistakes[0].value)] + mistakes[1:]
         rationale = (f"f({numtext(p)}) = {numtext((p + c) / d)} and f({numtext(qv)}) = "
                      f"{numtext((qv + c) / d)}, so the difference is {numtext(key)}.")
         P = {"kind": "lf_combine", "mode": mode, "c": [c.numerator, c.denominator],
@@ -322,12 +337,14 @@ def combine(rng: random.Random, seed: int, *, mode=None, c=None, d=None, p=None,
         P = {"kind": "lf_combine", "mode": mode, "c": [c.numerator, c.denominator],
              "d": [d.numerator, d.denominator], "p": [p.numerator, p.denominator],
              "af": [af.numerator, af.denominator], "bg": [bg.numerator, bg.denominator]}
+        spr = mistakes
     keyx = ex(key)
     mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
         return Item("lin.combine", "combining function values", "medium", seed, stem,
                     "spr", keyx, keyx.gridin(), rationale, params=P,
-                    spr_mistakes=gridin_mistakes(keyx, mistakes))
+                    spr_mistakes=gridin_mistakes(
+                        keyx, [Mis(r.reason, ex(r.value)) for r in spr]))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True)
     return Item("lin.combine", "combining function values", "medium", seed, stem, "mcq",
                 keyx, letter, rationale, choices, reasons, latex, params=P)
@@ -357,6 +374,9 @@ def inner_scale(rng: random.Random, seed: int, *, c=None, d=None, k=None, ask=No
                     Mis("used the constant term as the value", d),
                     Mis("multiplied by the scale factor instead of dividing", k * c + d),
                     Mis("subtracted the constant instead of adding it", k / c - d)]
+        # a grid-in names the sign actually printed: x - 5 had 5 added
+        spr = mistakes[:4] + [Mis("added the constant instead of subtracting it"
+                                  if d < 0 else mistakes[4].reason, k / c - d)]
         rationale = (f"{coef_text(c, 'x')} = {numtext(k)} when x = {numtext(k / c)}, so "
                      f"f({numtext(k)}) = {numtext(k / c)} + ({numtext(d)}) = "
                      f"{numtext(key)}.")
@@ -385,13 +405,20 @@ def inner_scale(rng: random.Random, seed: int, *, c=None, d=None, k=None, ask=No
         mistakes = [Mis("divided the stated value by the argument", (value - d) / k),
                     Mis("added the constant instead of subtracting it", k / (value + d)),
                     Mis("left the constant out altogether", k / value)]
+        # (value - d)/k is k/c = value - d solved for c upside down, and when
+        # the rule prints x - 5 its slip subtracts the 5 rather than adding it
+        spr = [Mis("inverted the ratio after removing the constant", (value - d) / k),
+               Mis("subtracted the constant instead of adding it" if d < 0
+                   else mistakes[1].reason, k / (value + d)),
+               mistakes[2]]
         fmt = fmt or "spr"
     keyx = ex(key)
     mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
         return Item("lin.inner_scale", "a function of a scaled argument", "hard", seed,
                     stem, "spr", keyx, keyx.gridin(), rationale, params=P,
-                    spr_mistakes=gridin_mistakes(keyx, mistakes))
+                    spr_mistakes=gridin_mistakes(
+                        keyx, [Mis(r.reason, ex(r.value)) for r in spr if r.value is not None]))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True)
     return Item("lin.inner_scale", "a function of a scaled argument", "hard", seed, stem,
                 "mcq", keyx, letter, rationale, choices, reasons, latex, params=P)
