@@ -16,3 +16,9 @@ disagree, this file wins. Builders read it alongside the plan and `spec/v2-upgra
    the full SAT (both sections, 1600 scale, R&W practice, tests and reports). Build v2 so that
    expansion is additive: subject-aware data and routes where it costs little, no Math-only
    assumptions baked into shared components that would have to be torn out.
+4. **No visual budget.** "We are not limiting ourselves visually to miss on functionality...
+   as long as we have useful functionality, we can use however much elements, space, and
+   whatnot." A useful feature, stat, control, filter, panel or explanation is never cut,
+   collapsed away or hidden to save space or look lighter. Pages may be as long and as dense
+   as the functionality needs; organise it (sections, tabs, sticky bars, tables) rather than
+   remove it. The only test for leaving something out is that it does not help a student.
