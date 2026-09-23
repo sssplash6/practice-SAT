@@ -481,8 +481,7 @@ def _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis, te
             raise ItemError("grid-in answers must be enterable as digits")
         return Item(template, f"{shape.short} {measure.replace('_', ' ')}",
                     _difficulty(shape, measure), seed, stem, "spr", key,
-                    key.gridin(), rationale, params=P,
-                    spr_mistakes=gridin_wrongs(key, pool))
+                    key.gridin(), rationale, params=P)
     mistakes = pick(pool, wrongs)
     choices, latex, reasons, letter = assemble(key, mistakes, rng,
                                                fmt_value=_with_unit(unit, measure, option_units))
@@ -703,8 +702,7 @@ def inverse(rng: random.Random, seed: int, *, shape_key=None, measure=None,
         if not key.is_rational:
             raise ItemError("grid-in answers must be enterable as digits")
         return Item(template, skill, _difficulty(shape, measure), seed, stem, "spr",
-                    key, key.gridin(), rationale, params=P,
-                    spr_mistakes=gridin_wrongs(key, routes))
+                    key, key.gridin(), rationale, params=P)
     choices, latex, reasons, letter = assemble(key, mistakes, rng,
                                                fmt_value=decimal_text)
     return Item(template, skill, _difficulty(shape, measure), seed, stem, "mcq", key,
