@@ -40,7 +40,7 @@ COUNT_VALUE = [
               "incorrect answers from twice the number of correct answers. If a "
               "player answered {n} questions and obtained a score of {t}, how many "
               "questions did the player answer correctly?", currency=False,
-         cents=False, fixed=True, per="points an answer is worth",
+         cents=False, fixed=True, per="point value",
          each="kind of answer", kinds="kinds of answer"),
     dict(key="cinema", ask="spend_first", spr=True,
          text="A movie theater sells two types of tickets, adult tickets for {p} and "
@@ -195,10 +195,12 @@ def purchase_solve(rng: random.Random, seed: int, *, shape=None, scene=None, n=N
         return Item("sys.purchase_solve", "a system from a purchase", "medium", seed,
                     stem, "spr", keyx, keyx.gridin(), rationale, params=P,
                     # a dollar answer: the adult count is not "the other kind",
-                    # and a slip of one ticket is not a slip of one dollar
+                    # half the tickets is not dollars, and a slip of one ticket
+                    # is not a slip of one dollar; trivia never prints its −1
                     spr_mistakes=gridin_pool(keyx, pool, (
-                        "other", "off_by_one_up", "off_by_one_down")
-                        if ask == "spend_first" else ()))
+                        "other", "half_count", "off_by_one_up", "off_by_one_down")
+                        if ask == "spend_first" else ("price2", "total_over_price2")
+                        if d.get("fixed") else ()))
     fmt_value = None
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, fmt_value=fmt_value)
     return Item("sys.purchase_solve", "a system from a purchase", "medium", seed,

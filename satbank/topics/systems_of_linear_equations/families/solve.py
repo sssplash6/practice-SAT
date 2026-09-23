@@ -206,15 +206,34 @@ def solve_standard(rng: random.Random, seed: int, *, a1=None, b1=None, c1=None,
     if fmt == "spr":
         if not griddable(key):
             raise ItemError("this answer could not be entered in the grid")
+        # "instead of adding them" is only true when x + y is asked; the two
+        # divide slips assume the elimination left 2x or 2y and x or y is asked;
+        # halving the first equation only follows on the source items
+        drop = ("rhs1_half",) + (() if ask == "sum" else ("swap",))
+        if _eliminated(a1, b1, a2, b2) not in ((ask, 2), (ask, -2)):
+            drop += ("pre_divide", "over_divide")
         return Item("sys.solve_standard", "solving a system", difficulty, seed, stem,
                     "spr", keyx, keyx.gridin(), rationale, params=P,
-                    # "instead of adding them" is only true when x + y is asked
-                    spr_mistakes=gridin_pool(keyx, pool,
-                                             () if ask == "sum" else ("swap",)))
+                    spr_mistakes=gridin_pool(keyx, pool, drop))
     fmt_value = opt_dec if value_style == "dec" else None
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, fmt_value=fmt_value)
     return Item("sys.solve_standard", "solving a system", difficulty, seed, stem,
                 "mcq", keyx, letter, rationale, ch, why, tex, params=P)
+
+
+def _eliminated(a1, b1, a2, b2) -> tuple:
+    """The unknown `_story`'s first step leaves alone, and its coefficient."""
+    if b1 == b2 and b1 != 0:
+        return "x", a1 - a2
+    if b1 == -b2 and b1 != 0:
+        return "x", a1 + a2
+    if a1 == a2 and a1 != 0:
+        return "y", b1 - b2
+    if b1 == 0:
+        return "x", a1
+    if b2 == 0:
+        return "x", a2
+    return "x", a1 * b2 - a2 * b1
 
 
 def _story(a1, b1, c1, a2, b2, c2, x0, y0, ask, k, label, style="frac",
@@ -311,6 +330,26 @@ def solve_substitution(rng: random.Random, seed: int, *, e1=None, e2=None, ask=N
         # "instead of subtracting them" is only true when x − y is asked
         drop = ((() if ask == "kx" else ("double_k", "k_only", "slope_times_k"))
                 + (() if ask == "diff" else ("other_sum",)))
+        # _sub_pool reads "the first equation" off whichever one is solved, so
+        # those entries hold only when it is e1; the x-coefficient only when e1
+        # is solved for y and shows one
+        if e1[0] != "solved":
+            drop += ("const1", "recip1", "recip_sum")
+        if e1[0] != "solved" or e1[2] != "y" or q(e1[3]) == 0:
+            drop += ("slope1", "slope_times_k")
+        if e2[0] != "solved" or q(e2[4]) >= 0:
+            drop += ("neg_const2",)
+        # these three are values of the unknown substitution leaves behind
+        solved_eq = e1 if e1[0] == "solved" else e2
+        if ask != ("x" if solved_eq[2] == "y" else "y"):
+            drop += ("sign_const", "subtract_sub", "numerator")
+        # and these are values of the asked unknown off the equation stating it:
+        # a substitution only if it names the other one, "adding it" only at 1·
+        own = next((e for e in (e1, e2) if e[0] == "solved" and e[2] == ask), None)
+        if own is None or q(own[3]) == 0:
+            drop += ("const_over", "const_minus", "drop_const")
+        elif q(own[3]) != q(own[1]):
+            drop += ("const_over", "const_minus")
         return Item("sys.solve_substitution", "solving a system by substitution",
                     difficulty, seed, stem, "spr", keyx, keyx.gridin(), rationale,
                     params=P, spr_mistakes=gridin_pool(keyx, pool, drop))

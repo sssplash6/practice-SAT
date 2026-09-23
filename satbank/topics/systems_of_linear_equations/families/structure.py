@@ -174,7 +174,10 @@ def infinite_normalized(rng: random.Random, seed: int, *, shape=None, p=None, r=
             raise ItemError("this answer could not be entered in the grid")
         return Item("sys.infinite_normalized", "infinitely many solutions", "medium",
                     seed, stem, "spr", keyx, keyx.gridin(), rationale, params=P,
-                    spr_mistakes=gridin_pool(keyx, pool))
+                    # clearing y = (3/5)x + 3 gives 5y = 3x + 15: no 9/5 in it
+                    spr_mistakes=gridin_pool(keyx, pool, (
+                        "clear_denominator",) if shape == "slope_intercept"
+                        and ask == "m" else ()))
     fmt_value = opt_dec if value_style == "dec" else None
     ch, tex, why, ltr = choices(keyx, pick(pool, wrongs), rng, fmt_value=fmt_value)
     return Item("sys.infinite_normalized", "infinitely many solutions", "medium", seed,
