@@ -532,7 +532,7 @@ def per_session(p: dict) -> int:
 
 
 @app.get("/api/me")
-def get_me(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0)) -> dict:
+def get_me(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0, ge=-840, le=720)) -> dict:
     learner = learner_of(x_learner)
     return {"profile": profile(learner), "days": progress.days(learner, x_tz)}
 
@@ -553,8 +553,13 @@ def put_me(body: Me, x_learner: str | None = Header(default=None)) -> dict:
         got["name"] = got["name"].strip() or None
         if got["name"] and not NAME_OK.match(got["name"]):
             raise HTTPException(422, "that name has characters it cannot have")
-    if got.get("exam_date") and not DATE_OK.match(got["exam_date"]):
-        raise HTTPException(422, "exam_date is YYYY-MM-DD")
+    if got.get("exam_date"):
+        try:
+            if not DATE_OK.match(got["exam_date"]):
+                raise ValueError
+            dt.date.fromisoformat(got["exam_date"])        # 2026-02-30 matches the pattern
+        except ValueError:
+            raise HTTPException(422, "exam_date is a real date, YYYY-MM-DD")
     if got.get("target") is not None and got["target"] not in TARGETS:
         raise HTTPException(422, "target is a Math score, 200 to 800 in tens")
     if got.get("minutes") is not None and not 5 <= got["minutes"] <= 240:
@@ -604,7 +609,7 @@ def get_map(x_learner: str | None = Header(default=None)) -> dict:
 
 
 @app.get("/api/today")
-def get_today(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0)) -> dict:
+def get_today(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0, ge=-840, le=720)) -> dict:
     learner = learner_of(x_learner)
     p = profile(learner)
     days = progress.days(learner, x_tz)
@@ -803,7 +808,7 @@ def qotd_feedback(q: dict, given, day: str) -> dict:
 
 
 @app.get("/api/qotd")
-def get_qotd(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0)) -> dict:
+def get_qotd(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0, ge=-840, le=720)) -> dict:
     day = daily.today(x_tz)
     q = daily.question(day)
     out = {"day": day, "question": drill.public(q), "mine": None}
@@ -822,7 +827,7 @@ class Reply(BaseModel):
 
 @app.post("/api/qotd")
 def answer_qotd(body: Reply, x_learner: str | None = Header(default=None),
-                x_tz: int = Header(default=0)) -> dict:
+                x_tz: int = Header(default=0, ge=-840, le=720)) -> dict:
     """One answer a day. A second one is a double tap, and gets the first back."""
     learner = learner_of(x_learner)
     day = daily.today(x_tz)
@@ -840,7 +845,7 @@ def challenge_row(learner: str, day: str):
 
 
 @app.get("/api/challenge")
-def get_challenge(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0)) -> dict:
+def get_challenge(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0, ge=-840, le=720)) -> dict:
     learner = learner_of(x_learner)
     day = daily.today(x_tz)
     row = challenge_row(learner, day)
@@ -853,7 +858,7 @@ def get_challenge(x_learner: str | None = Header(default=None), x_tz: int = Head
 
 
 @app.post("/api/challenge/start")
-def start_challenge(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0)) -> dict:
+def start_challenge(x_learner: str | None = Header(default=None), x_tz: int = Header(default=0, ge=-840, le=720)) -> dict:
     """Today's ten, one sitting each. Coming back resumes it; it never restarts."""
     learner = learner_of(x_learner)
     day = daily.today(x_tz)
@@ -873,7 +878,7 @@ def start_challenge(x_learner: str | None = Header(default=None), x_tz: int = He
 
 @app.get("/api/challenge/board")
 def challenge_board(day: str | None = None, x_learner: str | None = Header(default=None),
-                    x_tz: int = Header(default=0)) -> dict:
+                    x_tz: int = Header(default=0, ge=-840, le=720)) -> dict:
     if day and not DATE_OK.match(day):
         raise HTTPException(422, "day is YYYY-MM-DD")
     me = x_learner.strip() if x_learner and LEARNER_OK.match(x_learner.strip()) else None
