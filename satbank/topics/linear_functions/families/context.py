@@ -13,7 +13,7 @@ from __future__ import annotations
 import random
 from fractions import Fraction as Q
 
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ...linear_functions.common import (MINUS, choose, coef_text, dec, ex, lin_text, money,
                                         numtext, q, year_text,
                                         recip_text, terminating)
@@ -475,9 +475,11 @@ def model_value(rng: random.Random, seed: int, *, ctx=None, direction=None, b=No
         if P["money"]:
             P["places"] = 2
     keyx = ex(key)
+    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
         return Item("lin.model_value", "evaluating a linear model", "medium", seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, params=P)
+                    "spr", keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, mistakes))
     if P.get("money"):
         fmt_value = money
     elif direction == "forward" and d.get("places") and not d.get("approx"):
@@ -485,7 +487,6 @@ def model_value(rng: random.Random, seed: int, *, ctx=None, direction=None, b=No
         P["places"] = d["places"]
     else:
         fmt_value = None
-    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, fmt_value=fmt_value,
                                                signed=not P.get("money"),
                                                fillers="shift")
@@ -551,11 +552,11 @@ def context_two_points(rng: random.Random, seed: int, *, ask=None, ctx=None, x1=
              "approx": bool(d["approx"])}
         keyx = ex(key)
         fmt = fmt or ("spr" if rng.random() < 0.4 else "mcq")
+        mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
         if fmt == "spr":
             return Item("lin.context_two_points", "a linear model from two readings",
                         "hard", seed, stem, "spr", keyx, keyx.gridin(), rationale,
-                        params=P)
-        mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
+                        params=P, spr_mistakes=gridin_mistakes(keyx, mistakes))
         choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                                    fillers="shift")
         return Item("lin.context_two_points", "a linear model from two readings", "hard",

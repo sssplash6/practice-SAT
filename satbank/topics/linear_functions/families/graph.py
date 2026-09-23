@@ -12,7 +12,7 @@ import random
 from fractions import Fraction as Q
 
 from ....figures import coordinate_grid
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 # `_ticks` places the gridlines `line_graph` draws, and how finely a reader
 # can take a value off the picture is exactly the gap between them. The
 # guard below has to use the same function that draws them: an
@@ -151,14 +151,15 @@ def graph_read(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, x=Non
 
     keyx = ex(key)
     fmt = fmt or "mcq"
+    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None
+                and abs(float(r.value) - float(key)) >= tol]
     if fmt == "spr":
         return Item("lin.graph_read", skill, difficulty, seed, stem, "spr", keyx,
-                    keyx.gridin(), rationale, figure=fig, params=P)
+                    keyx.gridin(), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, mistakes))
     fmt_value = money if d.get("money") else None
     if d.get("money"):
         P["money"] = True
-    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None
-                and abs(float(r.value) - float(key)) >= tol]
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, fmt_value=fmt_value,
                                                signed=True)
     return Item("lin.graph_read", skill, difficulty, seed, stem, "mcq", keyx, letter,

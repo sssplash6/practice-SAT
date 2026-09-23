@@ -13,7 +13,7 @@ from __future__ import annotations
 import random
 from fractions import Fraction as Q
 
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ...linear_functions.common import (MINUS, choose, coef_text, ex, lin_text,
                                         numtext, q)
 
@@ -169,13 +169,14 @@ def evaluate(rng: random.Random, seed: int, *, m=None, b=None, x0=None, form=Non
     rationale = (f"Substituting {var} = {numtext(x0)} into {body} gives "
                  f"{numtext(key)}.")
     keyx = ex(key)
+    mistakes = [Mis(r.reason, ex(r.value)) for r in
+                _eval_mistakes(m, b, x0, key, form, wrong, a, c, d) if r.value is not None]
     if fmt == "spr":
         if keyx.gridin().lstrip("-").replace("/", "").replace(".", "") == "":
             raise ItemError("no grid-in form")
         return Item("lin.evaluate", "evaluating a linear function", "easy", seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, params=P)
-    mistakes = [Mis(r.reason, ex(r.value)) for r in
-                _eval_mistakes(m, b, x0, key, form, wrong, a, c, d) if r.value is not None]
+                    "spr", keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, mistakes))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True)
     return Item("lin.evaluate", "evaluating a linear function", "easy", seed, stem, "mcq",
                 keyx, letter, rationale, choices, reasons, latex, params=P)
@@ -240,9 +241,6 @@ def coefficient(rng: random.Random, seed: int, *, m=None, b=None, x1=None, x2=No
                  + (f", so {name}({numtext(x2)}) = {numtext(m * x2 + b)}."
                     if ask == "value" else "."))
     keyx = ex(key)
-    if fmt == "spr":
-        return Item("lin.coefficient", "an unknown coefficient", "medium", seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, params=P)
     if ask == "unknown" and unknown == "b":
         mistakes = [Mis("added the coefficient and the input instead of multiplying them",
                         y1 - (m + x1)),
@@ -261,6 +259,10 @@ def coefficient(rng: random.Random, seed: int, *, m=None, b=None, x1=None, x2=No
                     Mis("scaled the given value by the ratio of the inputs", y1 * x2 / x1),
                     Mis("added the constant term twice", m * x2 + 2 * b)]
     mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
+    if fmt == "spr":
+        return Item("lin.coefficient", "an unknown coefficient", "medium", seed, stem,
+                    "spr", keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, mistakes))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                                fillers="shift")
     return Item("lin.coefficient", "an unknown coefficient", "medium", seed, stem, "mcq",
@@ -321,10 +323,11 @@ def combine(rng: random.Random, seed: int, *, mode=None, c=None, d=None, p=None,
              "d": [d.numerator, d.denominator], "p": [p.numerator, p.denominator],
              "af": [af.numerator, af.denominator], "bg": [bg.numerator, bg.denominator]}
     keyx = ex(key)
+    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
         return Item("lin.combine", "combining function values", "medium", seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, params=P)
-    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
+                    "spr", keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, mistakes))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True)
     return Item("lin.combine", "combining function values", "medium", seed, stem, "mcq",
                 keyx, letter, rationale, choices, reasons, latex, params=P)
@@ -384,10 +387,11 @@ def inner_scale(rng: random.Random, seed: int, *, c=None, d=None, k=None, ask=No
                     Mis("left the constant out altogether", k / value)]
         fmt = fmt or "spr"
     keyx = ex(key)
+    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
         return Item("lin.inner_scale", "a function of a scaled argument", "hard", seed,
-                    stem, "spr", keyx, keyx.gridin(), rationale, params=P)
-    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
+                    stem, "spr", keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, mistakes))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True)
     return Item("lin.inner_scale", "a function of a scaled argument", "hard", seed, stem,
                 "mcq", keyx, letter, rationale, choices, reasons, latex, params=P)
