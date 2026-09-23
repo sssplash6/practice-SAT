@@ -154,14 +154,14 @@ def bag(rng: random.Random, seed: int, *, which=None, counts=None, colors=None,
                if neither else f"are {colors[idx]}")
     rationale = (f"{num:,} of the {N:,} {nouns} {counted}, so the probability is "
                  f"{key.plain()}.")
+    mistakes = [(why, render(a, b, surface, places))
+                for why, (a, b) in pick(pool, wrongs or order_of(pool, prefer), wrongs)
+                if b]
     if fmt == "spr":
         if not griddable(Q(num, N)):
             raise ItemError("this probability is not enterable in five characters")
         return spr("prob.bag", "counting", tier, seed, stem + GRID_NOTE, Q(num, N),
-                   rationale, params=P)
-    mistakes = [(why, render(a, b, surface, places))
-                for why, (a, b) in pick(pool, wrongs or order_of(pool, prefer), wrongs)
-                if b]
+                   rationale, params=P, mistakes=mistakes)
     return mcq("prob.bag", "counting", tier, seed, stem, key, mistakes, rng,
                rationale, params=P)
 
@@ -253,11 +253,6 @@ def subset(rng: random.Random, seed: int, *, scenario=None, n=None, k=None,
     P = {"kind": "prob_bag", "counts": [k, n - k], "num": k, "surface": surface,
          "places": places}
     rationale = f"{why.format(**fill)} The probability is {key.plain()}."
-    if fmt == "spr":
-        if not griddable(Q(k, n)):
-            raise ItemError("this probability is not enterable in five characters")
-        return spr("prob.subset", "counting", tier, seed, stem + GRID_NOTE, Q(k, n),
-                   rationale, params=P)
     prefer = ["one_over_total", "one_over_part", "inverted", "complement"]
     mistakes = []
     for why, (a, b) in pick(pool, wrongs or order_of(pool, prefer), wrongs):
@@ -267,6 +262,11 @@ def subset(rng: random.Random, seed: int, *, scenario=None, n=None, k=None,
             mistakes.append((why, decimal(Q(a, b), 0)))
         else:
             mistakes.append((why, render(a, b, surface, places)))
+    if fmt == "spr":
+        if not griddable(Q(k, n)):
+            raise ItemError("this probability is not enterable in five characters")
+        return spr("prob.subset", "counting", tier, seed, stem + GRID_NOTE, Q(k, n),
+                   rationale, params=P, mistakes=mistakes)
     return mcq("prob.subset", "counting", tier, seed, stem, key, mistakes, rng,
                rationale, params=P)
 
@@ -303,11 +303,6 @@ def data_set(rng: random.Random, seed: int, *, values=None, trait=None, size=Non
     rationale = (f"{hits} of the {n} numbers listed "
                  f"{'is' if hits == 1 else 'are'} {adj}, so the probability is "
                  f"{key.plain()}.")
-    if fmt == "spr":
-        if not griddable(Q(hits, n)):
-            raise ItemError("this probability is not enterable in five characters")
-        return spr("prob.data_set", "counting", tier, seed, stem + GRID_NOTE,
-                   Q(hits, n), rationale, params=P)
     pool = {
         "none": (f"read none of the numbers as {adj}", (0, 1)),
         "all": (f"read every number as {adj}", (1, 1)),
@@ -319,6 +314,11 @@ def data_set(rng: random.Random, seed: int, *, values=None, trait=None, size=Non
     mistakes = [(why, reduced(Q(a, b))) for why, (a, b) in
                 pick(pool, wrongs or order_of(pool, ["none", "complement", "all"]),
                      wrongs)]
+    if fmt == "spr":
+        if not griddable(Q(hits, n)):
+            raise ItemError("this probability is not enterable in five characters")
+        return spr("prob.data_set", "counting", tier, seed, stem + GRID_NOTE,
+                   Q(hits, n), rationale, params=P, mistakes=mistakes)
     return mcq("prob.data_set", "counting", tier, seed, stem, key, mistakes, rng,
                rationale, params=P, signed=True)
 
@@ -405,9 +405,6 @@ def count_from_prob(rng: random.Random, seed: int, *, mode=None, n=None, p=None,
     P = {"kind": "prob_count", "mode": "single", "n": n,
          "p": [p.numerator, p.denominator], "p2": None}
     rationale = f"{_dp(p)} of {n:,} is {int(key):,}."
-    if fmt == "spr":
-        return spr("prob.count_from_prob", "counting", tier, seed, stem, key,
-                   rationale, params=P)
     from ..values import count as C
     pool = {
         "prob_as_count": (f"read the probability {_dp(p)} as a count of {digits:,}",
@@ -422,6 +419,9 @@ def count_from_prob(rng: random.Random, seed: int, *, mode=None, n=None, p=None,
                 pick(pool, wrongs or order_of(pool, ["prob_as_count", "complement",
                                                      "total_minus_digits"]), wrongs)
                 if v and 0 < v]
+    if fmt == "spr":
+        return spr("prob.count_from_prob", "counting", tier, seed, stem, key,
+                   rationale, params=P, mistakes=mistakes)
     return mcq("prob.count_from_prob", "counting", tier, seed, stem, C(key),
                mistakes, rng, rationale, params=P)
 
