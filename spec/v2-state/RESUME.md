@@ -1,5 +1,25 @@
 # Resume here
 
+## Now (2026-09-24): building
+
+Done since the last pause: the way-better pass (all 9 sections fixed once, no second check; class
+material stripped, commit 8f022f1), `v2/f0` merged (45b903e), `v2/t-bank-all` merged (897e9a2);
+master passes test_flow and all 19 bank topics. Steps 3 and 4a-c below are finished; do not re-run them.
+
+**The build** runs from `next/build.js` (args: `[{id, from?, unit?, round?, issues?}]`). Each task: unit
+builders in order on `v2/<task>` (worktree isolation) -> an independent verifier -> up to 3 fix rounds.
+I merge each passing task into master myself (Part 4.4), then launch the next wave.
+- **F1** design system: running, run `wf_d6beb6e4-66c` (task ww8sskbdh), launched with `[{id:'F1'}]`.
+  To restart after a pause: look at `git log master..v2/f1` and the saved results in `runs/wf_d6beb6e4-66c/`,
+  then relaunch with `unit: <first unfinished unit index>` or `from: 'verify'` / `from: 'fix', issues: <file>`.
+  Never resume it from its run ID.
+- **F4** data layer: **taken by another agent the user runs** (worktree `.claude/worktrees/f4`, branch `v2/f4`,
+  branched from `v2/f0`). Do not build it. When the user says it is done: add an F4 entry to TASKS in
+  build.js and run it with `from: 'verify'`, then rebase on master and merge.
+- **Words content** (`server/words/*.json`, `tools/build_words.py`; S9-owned files): offered to the other agent
+  on branch `v2/words-content`. Ask the user before building it.
+- Then wave 1b: F2, F3, F5 (after F4), F6 (after F1 and F4). Then S1, S3-S10 (S2 dropped). Then I1.
+
 ## Resumed 2026-09-23: second check dropped
 
 The user: "remember that we are dropping check2". The way-better pass now applies each section's saved verdict once, with no
