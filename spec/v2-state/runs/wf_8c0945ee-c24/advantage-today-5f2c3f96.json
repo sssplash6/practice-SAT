@@ -1,0 +1,212 @@
+{
+ "label": "advantage: today",
+ "key": "v2:b1ab9666463d6892e7600678d94048811aa3ad3261256f01ea9410d65f2c3f96",
+ "result": {
+  "proposals": [
+   {
+    "title": "Points on the table: every skill priced in score points and minutes, and one tap drills it",
+    "what": "A new card `#gain`. At desktop it sits directly under Up next (`gain x8 | exam x4`, with the countdown moving up beside it). On a phone it comes straight after `next`. Header: `POINTS ON THE TABLE` on the left, `from 312 answers · updates after every answer` on the right. Each row: topic glyph and name; three tier pips showing first-try accuracy on easy, medium and hard; the gain in big mono (`+20 pts`); the time at this student's own pace (`~35 min`); an orange dot with the open-trap count; and a `.btn` `Start`. Start opens a drill on that topic at the tier holding most of the points, sized to the minutes shown. The card shows 6 rows, then `Show all 19`, and a sort toggle `Most points · Most points per minute`. Two extra row kinds appear only when they apply: `Grid-in format · +30 pts` when grid-in accuracy trails multiple choice by 15 or more (starts `formats:['spr']`), and `Pace · +10 pts` when the student's median time is over 95 s (links to Speed round). Footer: `Top 5 together: 560 -> 640 (est.)`. A topic with fewer than 5 first tries reads `Not measured · try 5` instead of a number. The Score card gains a second line under the latest band: `Practice estimate today 560-620 · +10 this week` from the same model, labelled as an estimate. Model: (1) Expected questions per (topic, tier) on a real section, from about 500 simulated `blueprint.module` fills (DOMAIN_SPLIT, TIERS, the route mix), cached at startup. (2) The student's first-try accuracy per (topic, tier), shrunk toward the crowd mean with a Beta prior (weight 5). (3) The expected weighted fraction sum(q x WEIGHT x p) / sum(q x WEIGHT), mapped through scoring's ANCHORS interpolation, gives the score now. (4) A topic's gain is the score with that topic's accuracy raised to min(0.9, p + 0.25), minus the score now. (5) Minutes = the questions needed (from the mastery evidence curve) x the student's median ms in that topic, 95 s by default. The coach's reason line and the Today list's Why read the same numbers (`≈ +20 pts`).",
+    "beats": "Their Score gap tile ('1000 now, 1400 target') and the plan's Progress tab 'Accuracy by domain, weakest first'. They state a gap or rank by accuracy but never say which skill is worth how many points or how long it takes. Their per-question payload has no skill, difficulty or time, so they cannot price a skill at all. Ours prices every skill in scaled points and in this student's own minutes, then drills it at once with unlimited fresh items. Their estimate also ignores sections sitting at the floor. Ours moves with every practice answer.",
+    "effort": "L",
+    "needs": "`estimate.forecast(learner)` in server/estimate.py (F4, R16), plus a cached per-(topic, tier) expected-count table from blueprint simulation. First-try accuracy and median ms per (topic, tier) from attempts, excluding repeat rows per R8 (F4). /api/today.forecast (S3). The drill body's topics, tiers, count and formats (F5). progress.coach may read the forecast to order its picks (F4). A plain row list, so no new chart."
+   },
+   {
+    "title": "Time-boxed Up next: 'I have 10 minutes' builds the best set that fits",
+    "what": "The first control in Up next becomes a minutes group, `.choices` `5 · 10 · 20 · 30 · 45 min · Custom`. The default is today's remaining plan minutes, else the daily goal's remainder, else 20. The count chips (5 · 10 · 22 · Endless) move behind `More options`. Under the choice, a live composition preview from `POST /api/drill/preview`: `10 min · 7 questions`, then rows such as `2 check-ins due`, `1 twin of yesterday's miss (Percentages)`, `3 Circles · +12 pts`, `1 review · Linear equations, last seen 12 days ago`. The pill reads `Start · 10 min`. Server: a new drill field `budget` (minutes) composes the queue. Each item costs the student's median first-try ms in that topic (95 s when unknown). Fill order: pool `checks` due today, up to 25% of the budget; twins of yesterday's misses from the day's questions, the challenge and tests (up to 2); the top-gain topics from the forecast at adaptive tiers (R33); one strong topic untouched for 10+ days. With Timed on, the clock equals the budget. When the budget runs out, the session offers `Finish` or `Keep going` and never cuts the student off. With a plan, a budget smaller than the day's task spreads the rest over the week's remaining study days, shown before start: `The other 28 questions move to Thu and Fri`.",
+    "beats": "Their plan tasks have fixed durations taken from a fixed 'dailyStudyTime'. Their QBank Volume picks a count (10/20/30/40/50/All), not a time, so a student with 10 minutes on a bus has no right-sized thing to do. Ours turns any amount of time into the highest-value set, priced in the student's own pace, and says what is in it before it starts.",
+    "effort": "M",
+    "needs": "The drill body's `budget` field and a composer in drill.py, with preview support (F5). progress.pace(learner): median ms per topic (F4, shared with Plan's pace gap). R9's `checks` pool. The forecast from proposal 1, optional (it falls back to the coach order). Plan's plan.py redistribution API when a plan is set (S7)."
+   },
+   {
+    "title": "Twin anywhere on Today: every miss the page shows has a fresh 'same trap, new numbers' in place",
+    "what": "One shared action, `Twin`: the same template at the same tier with a new seed, answered inline. It is `UI.twinSheet({template, seed, session, qid})`, a `dialog.sheet` (a bottom sheet on phones) that runs the workspace's `inline` mode. A collapsed header recalls the original: `Sep 21 · Module · Q13 · you picked B · added the percentages`. Below it come the twin and the full feedback (key, misconception, rationale), then `Another twin` / `Done`. On Done, the source mark on Today takes the Repaired state from §2.3 (amber with an ink ↻ corner). Where it appears: (1) After a wrong day's question, the column's actions row is replaced by `Now its twin`, answered in the same column. It is filed for mastery and never counted in the crowd or the streak. (2) On a recent-test card, tapping a miss chip opens a two-item menu, `Review Q13` / `Twin`. (3) The calendar day detail gets `Twin this day's misses (4)`, a 4-question inline mini set. (4) The finished challenge row gets `Twin your 2 misses`. (5) Up next's composition picks up yesterday's misses automatically (proposal 2). The server refuses a twin of a live-test item or an unanswered challenge item with 409, and the sheet says why.",
+    "beats": "Their QOTD allows one attempt and hides the key. Their test-card chips are plain spans that do nothing, and the only action is Review. Retrying on a finite bank replays the same item, which tests memory rather than skill. Ours turns every miss on the dashboard into a new question of the exact same kind within one tap, without leaving the page.",
+    "effort": "M",
+    "needs": "The F5 drill body `pool:'items', ids:[[template, seed]], exact:false, each:1, level:'as_missed', source:'twin', parent`. deps.access for the refusals (R19). R24 inline twins, which count on their parent. F3 workspace `inline` mode. /api/history rows that carry per-position (template, seed) or a server lookup by (session, qid) (S6). Calendar sittings with their misses (S3)."
+   },
+   {
+    "title": "Habit breaker: drills built from the student's own misconception profile across topics",
+    "what": "The Mistakes/Review card (#mist, R30) gains a `HABITS` block above the top 5. A habit is a normalised misconception (R9 `norm`) the student has hit on 2 or more question types, or 3 or more times. Row: `Changed the sign of the slope · 5 times · 3 question types`, the topic glyphs it spans, a progress mark `2 of 5 avoided`, and a `.btn` `Break it · 8`. It starts a drill of `pool:'related', ids:[norm], count:8, adaptive:true, source:'habit'`. Every item is a fresh seed, walked (at most 40 seeds) until one option carries exactly that misconception, and spread across every template that sets this trap. In the session, choosing a different option shows `Avoided your habit` with a run counter, and falling for it shows `Your habit again` with the concrete reason. A habit reads `Broken · Sep 30` after 5 consecutive avoidances across at least 2 templates, and moves back to open on a relapse. A secondary `.quiet` `Spot it · 3` runs Review's Spot the trap ('Which choice comes from: <habit>?'), which trains recognising the trap. The Today list and the hero brief name the top habit when it is new this week.",
+    "beats": "They have no mistakes view on the dashboard. Their 'Distractor Analysis' is prose on one question at a time, so there is no profile of what keeps catching you. A fixed, unlabelled bank cannot find other questions that bait the same error. Ours finds every question type that sets your trap and generates as many fresh ones as it takes to break the habit. It measures 'broken' by avoidance, which a finite bank would exhaust.",
+    "effort": "M",
+    "needs": "attempts.norm and traps.norm (R8/R9, F4). Review's norm -> templates index and the `related` pool (S10; 79 norms recur across 2+ templates, 12 across topics). The F5 drill `pool:'related'`. A habits aggregate in /api/today.traps (S3). 'Avoided' is computed from right answers in `source:'habit'` drills, because every item there contains the trap. Review's /api/review/spot (S10) for Spot it."
+   },
+   {
+    "title": "Retake as twin, with a slot-by-slot before and after",
+    "what": "Every scored test card on Today gets a `.btn` `Retake as twin`, placed first among the card's actions once the sitting is 3 or more days old or has 5 or more misses. It sends `POST /api/mock/new {kind:'twin', twin_of:id}`: the same templates in every slot, at the same tier and position, with new numbers. When the twin finishes, its card reads `Twin of Sep 21` and carries a comparison strip: for each module, two rows of 22 squares (source over twin) in §2.3 tokens. Summary line: `Fixed 9 of 13 · 2 new misses · 520-600 -> 580-660 (+60)`, then per-domain deltas `Algebra +3 · Geometry -1`. Tapping a pair of squares opens the report at that position with both versions side by side. On the Score trend, a twin and its source are joined by a bracket. On a plan test day, Up next defaults to `Twin of your last test` when that test is 7 or more days old, labelled `measures what changed`, with a `Fresh test` toggle.",
+    "beats": "They have about 29 fixed papers. Retaking Paper #47 shows the same questions, so the second score measures memory, and once the papers are used up there is no clean retest. Their card offers Review only. Ours builds an equal form on demand as often as the student likes, and shows exactly which of the old misses are now right.",
+    "effort": "M",
+    "needs": "The Tests twin kind (S5, §3.4 `twin(source_qs, b)`). A `twin_of` field on /api/history rows (S6, R26; Today reads /api/history, not /api/tests/recent). A new `GET /api/session/{id}/compare?with={sid}` returning per-position pairs and deltas (S6). The R35 blank/wrong buckets. UI.bandChart pair brackets (F1)."
+   },
+   {
+    "title": "Final stretch: the last 14 days change Today into a taper, a relapse sweep and a dress rehearsal",
+    "what": "When the exam is 14 days away or less, the Up next header reads `FINAL STRETCH · 12 days`, and the card follows a program. (1) A relapse sweep: every mistake closed in the last 90 days gets one fresh twin (pool `checks` with a sweep scope, `each:1`), spread over the remaining study days. The Today list shows it as `Sweep · 5 of 34 fixed mistakes today`, and any relapse reopens the trap as Relapsed. (2) A dress rehearsal: on the Saturday one week before the exam, a full section is planned at 08:00 local, the real start. Up next leads with it that morning (`Dress rehearsal · starts 8:00, like the real one · 70 min + break`), and it is offered as an .ics event. (3) Readiness per domain, a 4-row block: `Ready`, `Shaky · 3 open traps` or `Untested 14 days`, each with a `10 min` set. (4) Taper: from day -6 to day -2, sets are short and drawn only from check-ins and open traps. The eve is a rest day with the checklist open and an optional `5-minute warm-up`. The countdown card shows the program as a 14-cell strip.",
+    "beats": "Theirs is a countdown clock and 'Exam day has arrived', with no taper, no rehearsal at the real start time and no final review of past mistakes. Re-checking fixed mistakes on a finite bank shows the item the student already saw. Ours re-tests every past mistake with new numbers and schedules a rehearsal that matches the real day.",
+    "effort": "M",
+    "needs": "R9 check-ins with a `sweep` scope over closed traps (F4, F5). Final-stretch rules in plan.py so plan days honour the taper and the rehearsal day (S7). UI.ics(event) (F1). A sections start from Up next (S5). Readiness from progress.board plus open traps (F4)."
+   },
+   {
+    "title": "Traps ahead: the misconceptions likely to catch you, warned about before you fall for them",
+    "what": "A `TRAPS AHEAD` block, at the foot of #gain or in #mist when there are few open mistakes. It lists 3 misconceptions the student has not met, on question types answered 2 times or fewer. They are ranked by the share of students at the same band who pick them, times how often that question type appears on a section. Row: `Probability · 'Divided by the wrong total' · caught 41% of students at 520-600` and a `.btn` `Test yourself · 3`. That button sends `pool:'related', ids:[norm], count:3, source:'ahead'`, so every question offers exactly that trap. The outcome reads `Avoided 3 of 3 · cleared` (hidden for 30 days) or files an ordinary open trap. Band buckets: under 450, 450-550, 550-650, 650 and up, taken from each learner's latest estimate. When a norm has fewer than 20 crowd first tries, the row falls back to the bank's own distractors: `The 3 traps this question type sets`, tagged `not measured yet`.",
+    "beats": "They can only tell you after you fall for something, and their data has no skill or misconception per question. They cannot aggregate which error students at your level make. Ours predicts a student's likely mistakes from labelled distractors across every student's answers, then tests for them with fresh items that set exactly that trap.",
+    "effort": "M",
+    "needs": "attempts.norm across learners (F4, R8/R9). A cached aggregate, `norm_stats(norm, band, n, picked)`, rebuilt lazily or nightly (S3 or F4). The latest band per learner from estimate.py (R16). The `related` pool (S10, F5). The crowd threshold of 20 is shared with open question 12."
+   },
+   {
+    "title": "Speed round: pace per skill from recorded time, with a drill that trains it",
+    "what": "A `PACE` block in #study (or as a row kind in #gain) listing the 3 slowest topics on right first tries, as a median against the 95 s test pace: `Circles 2:40 · Linear equations 2:05 · Ratios 1:58`, each with a small bar and a line at 1:35. Helper: `On a real module these cost ~3 min, about 2 questions left unanswered at the end`. A `.btn` `Speed round · 8 Circles` runs a drill with `timing:'pace'` and a new soft per-question ring that counts down 95 s. At zero the ring turns ink and the question can still be answered, but it is marked `over pace`. The summary reads `6 of 8 under 1:35 · median 1:22 (was 2:40)`. An accuracy guard applies: if accuracy drops 15 points or more below the topic's usual, the summary says `Slow down: accuracy first` and the next round is untimed. The pace trend per topic appears in the calendar day detail.",
+    "beats": "Their report has no time per question, and their QBank stopwatch resets on reload. Their timed mode is one module clock, which cannot show which skill eats the time. We record the ms of every answer in every mode, and speed practice never uses up a finite bank.",
+    "effort": "M",
+    "needs": "attempts.ms for tests too, via qstate -> record_paper (R7, F4). progress.pace(learner), shared with Plan's pace gap tag (F4, S7). A soft per-question clock in the drill cfg (F5) and a ring in the runner (S4, F3)."
+   },
+   {
+    "title": "Print today's pack: a fresh worksheet of today's work, with a key and a code to file it later",
+    "what": "A `.quiet` `Print` in the Up next header and on the Today list header. It opens `/review/print.html?pack=today`. Page 1: date, name, `Today's set · 10 questions · ~16 min`. Then the chosen set (fresh seeds), one twin for each of the top 3 open traps, and the day's questions only if already answered (so the crowd stays clean), each with space to work. The last page holds the key, each option's misconception and the rationale. A short code and a QR (qr.js) in the corner open `/practice/session/?pack=CODE` in end mode, where the student enters the answers and they are filed as practice (they count toward the plan task and study time). The seeds are remembered as seen, so practice never repeats them.",
+    "beats": "Their Share/Export button is dead and nothing on their dashboard prints. A finite bank prints the same pages every time. Ours prints a new pack every day, with a misconception key, and the paper work still counts once it is entered.",
+    "effort": "S",
+    "needs": "Review's worksheet endpoint (S10, `GET /api/review/worksheet`) extended with `pack=today`. A sets code for re-entry (R18c, F6). End-mode entry in the session (S4). Print CSS (F1). qr.js (F2)."
+   },
+   {
+    "title": "Challenge post-mortem: which of the 10 slots the field missed, and a twin of yours",
+    "what": "Once the student has finished (or the day has closed), the challenge card shows 10 slot squares in §2.3 tokens: the student's result on each, with the field's % right underneath. Tapping a slot opens a line, `Slot 7 · Circles · 18% of 124 right · most picked: used the diameter as the radius`, with `Twin slot 7` (inline sheet, proposal 3). A summary line: `Your hardest slot vs the field: 7` and `You beat the field on 3 slots`. The card copy follows decision 1: `10 question types · the same for everyone, your own numbers · ranked by right answers, then time`.",
+    "beats": "Their contests are empty, and their rules say answers are revealed only after the contest ends, with no per-question field data. Because our challenge uses twins, the pattern and the misconception can be shown the same day without leaking anyone's key, and every slot has a practisable twin.",
+    "effort": "S",
+    "needs": "Per-slot field stats from Compete: `GET /api/compete/contest/{id}/slots` returning right %, n and the top norm per slot (S8). R24 twins and R19 access (the student's own finished items)."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Hero greeting and date",
+    "spec_says": "Date eyebrow, a time-of-day greeting with the name, and 4 status chips (streak, minutes, SAT in N days, plan progress).",
+    "why_only_parity": "The greeting and date are theirs word for word. The chips repeat numbers that the cards below already show.",
+    "upgrade": "A 'since you were here' line under the heading: `Since Monday: 3 mistakes closed · estimate +10 · 2 check-ins due today · challenge yesterday #4 of 30 · new habit: sign of the slope`. Each fact links to its card. The server stamps `learners.seen` on /api/today and returns the previous value. The first visit of a day summarises yesterday."
+   },
+   {
+    "feature": "Second question of the day (their R&W slot)",
+    "spec_says": "Two Math questions, one multiple choice and one grid-in, side by side.",
+    "why_only_parity": "It matches the count but not the substance. A student who thinks in 1600 gets no Reading & Writing at all, which is below theirs.",
+    "upgrade": "A third column, `WORD`, taken from Words (EBRW, decision 2): one words-in-context item, the same for everyone. It has a crowd spread and counts in the day's-questions streak, and after answering it offers `Add to my words` and `3 more like this`. It needs S9 `words.daily(day)`, and it is a first step toward the full-SAT roadmap."
+   },
+   {
+    "feature": "Day's question: one attempt with a Check step",
+    "spec_says": "Confirm mode: select, then Check, with one attempt. The spec notes that theirs has the same Check step.",
+    "why_only_parity": "One attempt with a Check is their exact interaction. The reveal is richer, but a miss still ends the day on a wrong answer.",
+    "upgrade": "After a miss, the column's actions row turns into `Now its twin`: the same template on a fresh seed, answered in place, filed for mastery and never counted in the crowd or streak. A right answer unlocks `Spot the trap` on the twin ('Which choice comes from: <misconception>?')."
+   },
+   {
+    "feature": "Day's-questions streak",
+    "spec_says": "A flame with `3 days in a row`, or `Start a streak`.",
+    "why_only_parity": "Their QOTD card has the same streak pill. Ours is consistent, but it is the same fact.",
+    "upgrade": "Add the month's record against the crowd and the best streak: `3 in a row · best 11 · 19 of 23 right this month · crowd 61% · you avoided the top trap 5 times`. The past-days strip keeps its marks."
+   },
+   {
+    "feature": "Study time today / this month",
+    "spec_says": "Four totals: today, this week, this month and active days, with goal bars.",
+    "why_only_parity": "It is their 'STUDY TIME TODAY / THIS MONTH' with two more totals. It still only says how long, not whether the time went where the points are.",
+    "upgrade": "A `WHERE THE TIME WENT` bar: this week's minutes split by domain, set beside the share of missing points per domain from the forecast. For example: `62% of your time on Algebra; 48% of your missing points are in Advanced Math`, with `Rebalance today's set`. A second split shows new, repair, review and test time."
+   },
+   {
+    "feature": "Daily and weekly goal",
+    "spec_says": "A minutes goal (15 to 240) on Today. The weekly goal is the minutes times the study days.",
+    "why_only_parity": "It is their Daily 2 Hours / Weekly 12 Hours, moved from the profile to the dashboard.",
+    "upgrade": "Let the goal be minutes, questions or mistakes closed. The weekly bar says what is left per remaining study day (`2h 5m of 5h · 58 min a day for the 3 days left`). The popover suggests the goal that keeps the plan on pace (`45 min keeps you on pace for 700`)."
+   },
+   {
+    "feature": "Study plan CTA",
+    "spec_says": "A CTA with the 4 steps, a personalised preview line, 3 bullets and `Build my plan ->` into the wizard.",
+    "why_only_parity": "It is still a button that leads to a 4-step wizard, like theirs. The preview is a single sentence.",
+    "upgrade": "A one-tap plan built inline from what we already know. The exam date is the one set, else the next official date. Minutes are the 7-day average rounded to 15 (at least 20). Days are the weekdays actually studied. The target is the band plus 100. The CTA shows the first 3 days' real sets (topic chips, counts, the test day) and the pace tag, then `Use this plan`, which saves through Plan's API. `Adjust…` opens the wizard prefilled. It needs S7 `plan.preview(draft)`."
+   },
+   {
+    "feature": "Today list 'Why' reason",
+    "spec_says": "A `.quiet` Why toggle that opens one line of reason, such as the coach's reason.",
+    "why_only_parity": "Their 'Why this task?' also expands one line of aiReason.",
+    "upgrade": "An evidence-backed Why: `3 open mistakes · 48% right on your last 25 · ≈ +20 pts · ~22 min at your pace`, with `See the evidence` linking to Review filtered to that topic, or to the attempt history."
+   },
+   {
+    "feature": "All Done state",
+    "spec_says": "`All done for today ✓ · 64 of 60 min`, and the pill reads Keep going.",
+    "why_only_parity": "It is their 'All Done' badge with minutes: it marks completion, not outcome.",
+    "upgrade": "An end-of-day receipt: `Today: 2 mistakes closed · Percentages Learning -> Getting there · est. +4 pts · streak 5`, plus an optional `3-minute bonus` of the check-ins due tomorrow."
+   },
+   {
+    "feature": "Skip and Move a task",
+    "spec_says": "`Skip for today` / `Undo skip`, and `Move to…` for a test, to any study day up to the eve (R14).",
+    "why_only_parity": "Theirs has Skip, Undo and Move to (within the same week). Ours only widens the range.",
+    "upgrade": "`Shrink to fit`: 'I have 15 min today' resizes today's task and shows where the rest goes before it applies (`28 questions move to Thu and Fri`). Add `Swap with tomorrow`, and let a test mark be dragged to another day in the week strip."
+   },
+   {
+    "feature": "Plan stat row",
+    "spec_says": "`Day 12 of 45` · `20% done · 9 of 45 study days` · `10 days to the SAT` · `+140 to target`.",
+    "why_only_parity": "It maps one-to-one onto their 4 tiles: days to exam, streak, plan complete % and score gap.",
+    "upgrade": "Replace the raw gap with Plan's pace status (`On pace`, `Ahead · +25`, `Behind · 40`) against the plan's trajectory, and add the projected exam-day band. Plan % shows questions and minutes done against what was planned to date, not only days."
+   },
+   {
+    "feature": "Week strip and pager",
+    "spec_says": "A `Week 3 of 7` pager with a This week jump, and 7 day tiles showing done, partial, missed, skipped or rest, plus the planned load.",
+    "why_only_parity": "Theirs has a 3 / 7 pager, a This week jump and 7 tiles with done/total or rest. Ours adds two states.",
+    "upgrade": "Each tile shows studied against planned minutes as a tiny bar, plus the day's topic glyphs. Future tiles show the forecast set. Tapping a future day offers `Work ahead: do Thursday's set now`."
+   },
+   {
+    "feature": "Behind line",
+    "spec_says": "A text line, then a `.btn` `Change daily time` linking to /plan/?step=2.",
+    "why_only_parity": "This is below theirs: their banner rebalances the plan in one tap ('Rebalance my plan'), and ours sends the student into the wizard.",
+    "upgrade": "`Fit the plan to your real 25 min a day` applied in place, with Plan's before-and-after preview (`Same date and target · 870 -> 480 questions · pace unchanged`) and an Undo toast. An alternative, `Add a catch-up Saturday`, is shown with its effect."
+   },
+   {
+    "feature": "Score drift prompt",
+    "spec_says": "The mean of the last 3 scores against the plan's start at 30 or more, with `Update the plan's start to 610` and `Not now`. (R16 overrides this to 40 either way with Plan's `suggest`.)",
+    "why_only_parity": "It is their drift banner (Not now / Rebuild with these scores), with our threshold instead of theirs.",
+    "upgrade": "Name the skills behind the drift (`Percentages +0.18, Circles +0.12 since the plan started`) and preview what updating changes (`2 Algebra days become Advanced Math next week`) before applying it. Downward drift is framed as `Tests are running below the plan: check-ins first`, with the sweep set."
+   },
+   {
+    "feature": "Target editor",
+    "spec_says": "A number input kept in sync with a slider, quick choices, the latest band and the plan start, optional R&W fields, and Save disabled until something changes.",
+    "why_only_parity": "Theirs is a number input with a 400-1600 bar and Save disabled until you type. Ours is the same dialog, done correctly.",
+    "upgrade": "A live `WHAT IT TAKES` panel under the slider, from the forecast model: the accuracy needed per domain, the points gap split by domain, the minutes at this student's pace, and a feasibility tag against the days left (`Ambitious: ~55 min a day for 10 days`)."
+   },
+   {
+    "feature": "Score gap and pace",
+    "spec_says": "`+140 to target · about 20 a week` = (target - band middle) / weeks left.",
+    "why_only_parity": "Theirs shows 'Score gap 1000 now, 1400 target' and 'about 60 points per week', which never says whether that is realistic. Ours is the same arithmetic.",
+    "upgrade": "A projection on the trend chart out to the exam date, from the student's own rate over mean3 history (R16), drawn as a confidence cone: `Projected Oct 3: 600-660 at your pace · target needs +18 a week, you have averaged +9`. It adds one what-if: `+15 min a day -> 630-690`."
+   },
+   {
+    "feature": "Exam countdown",
+    "spec_says": "A live DD : HH : MM : SS to 8:00 AM, an upcoming-dates popover with a custom date, a plan line, a checklist and .ics.",
+    "why_only_parity": "The ticking clock and the official-date picker are theirs. Offering only upcoming dates plus a custom date fixes their bugs; it does not go beyond them.",
+    "upgrade": "Turn time into capacity: `~6h 20m of study left at your 7-day pace · ~410 questions · enough to close all 29 open mistakes twice`. Within 14 days, the Final stretch program (proposal 6) takes over."
+   },
+   {
+    "feature": "Recent test card: New one like this",
+    "spec_says": "`New one like this`: `POST /api/mock/new {full}`, a never-seen test of the same shape.",
+    "why_only_parity": "It equals starting another of their papers. A fresh test does not measure what changed since the last one.",
+    "upgrade": "`Retake as twin`, with the slot-by-slot comparison (proposal 5): the same templates and tiers with new numbers, and `Fixed 9 of 13 · 520-600 -> 580-660`."
+   },
+   {
+    "feature": "Recent test card score",
+    "spec_says": "The Math band with a route tag, right/asked and minutes.",
+    "why_only_parity": "Theirs shows a total plus R&W and Math rows. For a student who thinks in 1600, a Math-only card is at best parity.",
+    "upgrade": "When rw_now is set, each card also shows `≈ 1130-1210 total with your R&W 610`. Added Bluebook and official scores sit in the same grid as their own cards, with the source tag."
+   },
+   {
+    "feature": "Up next count and clock controls",
+    "spec_says": "Count choices `5 · 10 · 22 · {coach} · Endless` and a Timed/Untimed toggle.",
+    "why_only_parity": "Their QBank builder has Volume 10/20/30/40/50/All and Timed/Untimed: the same two controls.",
+    "upgrade": "Minutes-first composition (proposal 2), with each topic chip showing its adaptive tier and next step (`Percentages · Medium -> Hard after 2 right`). Count stays under More options."
+   },
+   {
+    "feature": "Difficulty control",
+    "spec_says": "`Harder · {topic}` = hard questions from the same topic, 5 of them.",
+    "why_only_parity": "Their profile has a Difficulty Level Adaptive/Fixed preference. A manual 'harder' button is the same idea.",
+    "upgrade": "Up next and the day's-question follow-ups are adaptive by default (R33: up a tier after 2 first-try rights, down after a miss), and the chips show where each skill stands. `Harder` stays as a manual override, and `prefs` records the choice."
+   },
+   {
+    "feature": "Calendar export time",
+    "spec_says": "An .ics with the study days at a time the student picks (default 17:00).",
+    "why_only_parity": "Their profile has 'Preferred Time Evening'. Asking for a time is the same.",
+    "upgrade": "Default to the hour the student actually studies (the median local start of sittings over 30 days, `You usually start around 20:30`), and use the R18(b) calendar feed so the events follow the plan's redraws."
+   }
+  ]
+ }
+}

@@ -1,0 +1,60 @@
+{
+ "label": "verify: area_and_volume",
+ "key": "v2:e73c0ae77885c5a6f192d6d981e72ea521b75cc52253eb0e3baeb060681637dd",
+ "result": {
+  "pass": false,
+  "evidence": "Worktree detached at v2/t-bank-all (a6bc1b6); master is 59caa25. No commits were made and the tree is clean. Scratch dumps are in /private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/av327 (dump.py, cmp.py, pairs.py, src.py, edge.py).\n\n(1) MCQ is identical to master. I dumped all 19 templates for seeds 0-80 in three modes (default, fmt=\"mcq\", fmt=\"spr\"), 4617 keys on each side, from `git archive` copies of both branches. Across every item I compared every Item field (stem, choices, reasons, answer, rationale, latex_choices, figure, table, params, key, difficulty and so on). There are 0 differences and every MCQ item has an empty spr_mistakes. The 8 special templates reject fmt= with the same TypeError on both branches. scaling.solid and coord.leg_from_area return MCQ even when fmt=\"spr\" is passed, the same on both.\n\n(2) Grid-ins differ from master only in spr_mistakes: 0 differences outside that field across the 913 grid-in items. Every grid-in has 1 to 8 named mistakes, and none is empty.\n\n(4) Gate: `PYTHONPATH=. python3 -m satbank check --topic area_and_volume` prints PASS (59/59 coverage and acceptance, 5,700 items audited).\n\n(3) Reasons: this check fails. I recomputed the spr_mistakes by hand on more than 60 free-draw grid-ins (measure.inverse, measure.forward, circle.convert, coord.square_diagonals, coord.triangle_area, coord.circle_3pt, similar.linear, similar.area, scaling.percent) and on all 15 official grid-in sources. I also listed every distinct (template, reason) pair across the 913 grid-ins. Most reasons are sound: the forward measure pools, similar.*, scaling.percent, coord.circle_3pt, the circle.convert \"gave the radius/diameter\" reasons, and the inverse \"did not take the root\", \"divided by 3 instead of taking the cube root\", \"gave the diameter\", \"reported a value that was given\" and the rect_prism \"divided by only one of the known dimensions\" reasons. But several reasons that the bank really produces are impossible for the question they are attached to, or their words do not describe the value. The confirmed cases:\n\n- Square with perimeter 248, find the side (spr|63): \"4 multiplied the known dimensions\". There are no known dimensions; 4 is the formula's coefficient.\n- Triangle with height 30 and area 75, find the base (spr|52): \"15 multiplied the known dimensions\". There is one known dimension, and 15 is half of it.\n- Cylinder with radius 3 and volume 369π, find the height (None|22): \"366 subtracted the height from the volume\". The height is the unknown; 366 is 369 − 3, the radius.\n- Circle with diameter 32, find the radius (None|24): \"4 halved when the value should have been doubled\". No step in that problem doubles.\n- Circle with area 1024π, find the radius (None|63): \"8\" and \"128\", described as halving and doubling steps the problem does not have.\n- Rhombus with half-diagonals 6 and 8 (spr|41): \"20 used a full diagonal as the side\". The full diagonals are 12 and 16; 20 is twice the side.\n\nThe complete list is in the defects below. The official source 2.5 (circle with circumference 31π) and 3.8 (triangle area) carry these reasons too.\n\nNot counted as defects: 3.4 names 622.08 (15552/25), which does not fit a 5-character grid-in, but the engine enforces no length rule, not even for keys. The 0 named for a 50% decrease applied twice is a real route.",
+  "defects": [
+   {
+    "where": "satbank/topics/area_and_volume/families/measure.py inverse(), pool['multiply_known'] (value = coeff when p == 1), passed to routes",
+    "what": "For a square's perimeter the value is the formula coefficient 4, named \"multiplied the known dimensions instead of dividing the perimeter by them\". The stem gives no dimensions, so this is impossible. Seen in GEO.square.perimeter.inverse.s at spr|63, spr|74 and None|59, always with value 4. For a triangle's area the value is b/2 or h/2, but there is only one known dimension, so \"multiplied the known dimensions\" does not describe the value. Seen at spr|52 (value 15 with h=30), spr|0 (35/2 with b=35), spr|75 (22 with b=44) and spr|7 (9 with b=18).",
+    "fix": "Keep multiply_known out of routes unless there are at least two known dimensions and coeff equals their product (as for rect_prism). Or change it only in routes, without touching the MCQ pool."
+   },
+   {
+    "where": "measure.py inverse(), pool['subtract_coef'] ('subtracted the height from the ...') with first_known",
+    "what": "When the unknown is h, first_known is the radius, so the value is the volume's π-coefficient minus r, not minus the height. The height is the answer being asked for. GEO.cylinder.volume.inverse.h at None|22: r=3, V=369π, the value 366 is labelled 'subtracted the height'. GEO.cone.volume.inverse.h at spr|4: r=3, V=15π, value 12. This affects every cylinder or cone inverse for h.",
+    "fix": "In routes, keep subtract_coef only when the known dimension is h. Otherwise give it a reason that names the radius, or drop it."
+   },
+   {
+    "where": "circle.convert: special.py circle_convert(), pool['quarter'] and pool['quadruple'] passed to gridin_wrongs",
+    "what": "\"halved when the value should have been doubled\" (key/4) and \"doubled when the value should have been halved\" (key*4) are sent to every grid-in, whether or not the conversion has a doubling or halving step. Diameter to radius (None|24, d=32, key 16): 4 is called 'halved when it should have doubled', but the only step halves. Area to radius (None|63, A=1024π, key 32): 8 and 128 name doubling and halving steps that do not exist. Circumference to radius (None|14, C=30π, key 15): 15/4 is called 'halved when it should have doubled', but no step doubles. Area to diameter (None|4, key 66): 264 is called 'doubled when it should have been halved', but no step halves. The circumference-to-diameter version of quadruple (source 2.5: 124, None|3: 160) needs a contrived route.",
+    "fix": "Choose them by (given, ask). Keep quarter only where the correct route doubles (radius to diameter, i.e. given area or circumference and ask for the diameter). Keep quadruple only where the correct route halves (given diameter or circumference and ask for the radius). Drop them otherwise."
+   },
+   {
+    "where": "measure.py inverse(), pool['halve_measure'] when there are no known dimensions (square perimeter, cube surface area, cube volume)",
+    "what": "\"halved the given perimeter/area/volume instead of dividing by the known dimension\" is used when the stem gives no dimension at all. Examples: square P=248 gives 124 (spr|63); cube SA=7350 gives 3675 (None|2); cube V=15625 gives 15625/2 (None|9). The words refer to a dimension that is not in the question.",
+    "fix": "When known is empty, reword the reason for grid-ins (for example 'halved the perimeter', i.e. treated it as l+w), or drop it from routes."
+   },
+   {
+    "where": "measure.py inverse(), pool['invert_divide'] ('divided the coefficient by the <measure> instead of the <measure> by the coefficient')",
+    "what": "The value is sqrt(coeff/total), which is 1/key, but the words describe coeff/total, which is 1/key². So the value is the root of what the words describe. For a square's area the coefficient is 1: square A=2704 gives 1/52 (spr|31), and a student has no coefficient to divide there. Other examples: cube SA 1/35 (None|2), square_prism 1/12 (source 3.12), circle 1/18 (spr|68). Typing 1/key as the side is not a plausible grid-in route.",
+    "fix": "Drop invert_divide from grid-in routes, or at least reword it to 'divided the coefficient by the area, then took the root' and exclude cases where the coefficient is 1."
+   },
+   {
+    "where": "coordinate.py square_on_axes(), ask == 'side', pool['full_diagonal']",
+    "what": "\"used a full diagonal as the side\" has the value 2*sqrt(a²+b²). That is not a full diagonal, which would be 2a or 2b. spr|41: half-diagonals 6 and 8, diagonals 12 and 16, but the value is 20. spr|52: half-diagonals 4 and 3, value 10, but the diagonals are 8 and 6.",
+    "fix": "For grid-ins, reword it to 'used the full diagonals in the Pythagorean theorem', which does give 2*side. Or use the value 2*max(a,b) for the words as written, in the spr pool only."
+   },
+   {
+    "where": "measure.py inverse(), pool['halve_measure'] for flat area inverses ('halved the area as though the figure were a triangle')",
+    "what": "For the length or width of a rectangle, square or parallelogram, the value is A/2, which is an area and not a route to a length. Treating the figure as a triangle would double the area going backwards (2A/w). Examples: rectangle A=1836, w=34 gives 918 (spr|28, key 54); square A=2704 gives 1352 (spr|31, key 52); parallelogram 189/2 (spr|36).",
+    "fix": "Leave it out of routes for inverse questions. The triangle-style slip for a length is already covered by divide_twice (A/(2w))."
+   },
+   {
+    "where": "coordinate.py triangle_from_points(), pool['box_minus']",
+    "what": "\"subtracted the bounding rectangle from the triangle\" names box − key, but those words mean key − box, which is negative. The value is the area of the rectangle outside the triangle. Examples: source 3.8, box 56 and key 24.5, value 63/2; None|4, value 69 with box 96 and key 27.",
+    "fix": "In the grid-in pool, reword it to 'gave the area of the rectangle outside the triangle (rectangle minus triangle)'."
+   },
+   {
+    "where": "measure.py inverse(), pool['divide_one'] for a triangle (one known dimension)",
+    "what": "\"divided by only one of the known dimensions\" names A/h = b/2 when h is the only known dimension (spr|52: 5/2; spr|7: 17). The real slip is forgetting to double. The words imply there were other dimensions to divide by.",
+    "fix": "For a triangle, reword it in routes to 'divided the area by the known dimension without doubling'."
+   },
+   {
+    "where": "measure.py inverse(), pool['over_four'] for a volume or a cube's surface area",
+    "what": "\"divided the volume by 4, as though it were a perimeter\" (square_prism V→s, source 3.12: 504; None|73: 441/4) and the cube-SA version (None|2: 3675/2) take a square-perimeter slip into a solid's question. That is a mistake from a different question type.",
+    "fix": "Keep over_four in routes only for a square's area to its side."
+   }
+  ]
+ }
+}

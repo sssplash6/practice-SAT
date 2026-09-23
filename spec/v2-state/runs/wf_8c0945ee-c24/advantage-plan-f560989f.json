@@ -1,0 +1,214 @@
+{
+ "label": "advantage: plan",
+ "key": "v2:f951e9bfea7bf88289a6907f6a35fa8f6048f763e94a68bbc276c2ddf560989f",
+ "result": {
+  "proposals": [
+   {
+    "title": "Points on the table: a score model that decides where every minute goes",
+    "what": "Server: plan.points(learner, cfg) in server/plan.py, a pure function. (1) For each of the 19 topics and each tier (easy, medium, hard), take first-try accuracy p from the last 90 days of clean answers (R8: rows with repeat, disputed or void are left out, a guess counts half). Shrink it toward a prior from topic mastery m, with a weight of 4 answers. The prior is m+0.2 for easy, m for medium and m-0.2 for hard, clamped to 0.05-0.95. An unworked topic uses m=0.5 and is labelled 'estimated'. (2) Model a 44-question section. Domain slots come from blueprint.DOMAIN_SPLIT (Algebra 15, Advanced Math 15, PSDA 7, Geometry 7), split equally across the domain's topics (ponytail: College Board publishes no per-skill counts; swap in real weights if they appear). Module 1 uses TIERS['module1']. Module 2 uses upper when the expected module-1 fraction is at least ROUTE_UP_AT, otherwise lower. Expected earned points E = sum of slots x mix x WEIGHT x p. Score = scoring._interpolate(E/max), capped at LOWER_ROUTE_CEILING on the lower route. This is the exact function our tests are scored with; expose it as scoring.expected_section(p_table). (3) Per topic: available = the score with that topic's p raised to 0.95, minus the current score. per_hour = available x learn_rate / the questions needed to get there. When the expected module-1 fraction is within 0.08 of 0.6, add a separate 'route' line: 'You're at 52% of module 1; 14 of 22 routes you to the harder module and lifts your ceiling past 580'. (4) Allocation: in section 4, Domain shares, replace (1.5 - m_d) and the coach score with per_hour x {focus 2, normal 1, strong 0.4}. A domain's share is the sum of its topics. Slots, deficits and the fallback are unchanged. UI: (a) Wizard step 4 gets a 'Where your points are' panel above the DomainRows: the top 6 topics as rows such as 'Circles · +14 pts · 41% on 17 · 2 open traps', each with a bar sized by points. Every DomainRow and SkillRow shows '+22 pts available'. 'Use suggestions' picks the top per_hour. (b) Why-this lines lead with the value, e.g. 'Worth about +9 points: 38% on hard Linear equations; a section has about 4 of them'. (c) The Progress tab DomainCard sorts by points (a segmented 'By points · By accuracy') and prints 'recovered +18 since Sep 23' per domain, measured against a start snapshot. (d) A 'Time vs points' card: two stacked bars, the share of planned practice minutes by domain against the share of available points, e.g. 'Algebra: 35% of your time, 12% of your points'. Every number reads 'about', with the caption 'Estimated with the weights our tests use (hard 3, medium 2, easy 1), from your first tries. A skill with under 8 answers is estimated.'",
+    "beats": "Their plan claims to be 'weighted toward the domains costing the most points', but the weighting comes from domains the student hand-marks as Focus or Strong, plus AI prose. Their per-question data carries no skill, difficulty or time (live walk), so they cannot compute points per skill at all. Their 'Accuracy by domain, weakest first' ignores domain weight: a 15% domain at 40% can be worth fewer points than a 35% domain at 60%, and ours shows exactly that. It also replaces the v2 spec's heuristic (1.5 - m) weight.",
+    "effort": "M",
+    "needs": "scoring.py: expose expected_section() over _interpolate, WEIGHT, ROUTE_UP_AT and LOWER_ROUTE_CEILING (F4). blueprint.DOMAIN_SPLIT and TIERS. attempts with R8 flags (F4). A new plans.start_points JSON column in §2.5 (F4). POST /api/plan/preview stays under 150 ms (57 numbers)."
+   },
+   {
+    "title": "Will I make it? A forecast with one-tap what-ifs, replacing the unsourced pace tags",
+    "what": "Forecast = the points model rolled forward to the exam. For each topic, the questions the allocation plans for it on the remaining practice days raise p by rate x q/10 x (1-p). The rate is the student's own measured slope (the change in first-try accuracy per 10 answers, once there are 40 or more answers in the domain), otherwise a stated default of 0.03 per 10 answers (README: heuristic). The forecast score is expected_section at the exam, with a ±70 band as for tests. A second signal: with 3 or more sittings, mean3's trend over 45 days, extended to the exam. When the two disagree by more than 60, the page says so ('your tests are rising faster than your practice suggests'). UI: (1) The wizard GlancePanel's first row reads 'Forecast Nov 7 · 640–700 · target 700 · likely ~20 short'. Under it, 'What closes it' lists the three cheapest levers that preview computes: '+15 min a day → 690–750', 'add Saturday → 670–730', 'Dec 5 → 700–760'. Each is a button that applies the change to the draft. (2) Step 2's DateChips print the forecast midpoint as their second line ('Nov 7 · 670'). A chip whose forecast reaches the target carries a check glyph and the text 'reaches 700'. This replaces 'points a week' and PaceTag. (3) The plan view's Score tile shows 'Forecast 650–710 by Nov 7', a status chip ('On track', 'Short ~30' or 'Ahead') and the caption 'from your practice rates + 2 tests'. 'Short' comes with one lever button. (4) The Progress tab's TrajectoryChart gets a forecast cone: a --mat area from today to the exam around the forecast line. Under it, a What-if strip holds minutes chips and a days stepper that re-run preview and redraw the cone within 300 ms, plus an 'Apply to plan' pill (PATCH). (5) Every Monday, a snapshot goes into plan_forecasts(plan, day, low, high), so the chart can show how the forecast moved ('up 30 since Sep 23'). Copy: 'A forecast from your own practice rates, not a promise. It tightens as you answer more.'",
+    "beats": "They print '7 weeks to prepare · about 60 points per week' and never say whether that is realistic. Their Score gap tile is just the target minus now. The v2 PaceTag thresholds (Steady ≤15, Ambitious ≤30) have no source (open question 12). A forecast from the student's own measured rate, with the cheapest fix one tap away, answers the question every student actually has.",
+    "effort": "M",
+    "needs": "The points model (proposal 1). POST /api/plan/preview returning forecast, levers and per_date forecasts. estimate.py mean3 and sittings (R16). A new plan_forecasts table (F4 §2.5). Area/cone support in UI.bandChart (F1 charts.js)."
+   },
+   {
+    "title": "Checkpoints on a parallel form of your baseline test",
+    "what": "The baseline is the first scored sitting (a module 1, a section or the diagnostic) finished inside the plan window, or else the most recent one in the 14 days before the start. The Score tile shows it: 'Baseline Sep 23 · 470–610'. Step 3's TestRhythm gets a 'Checkpoints' segmented control: 'Every test · Every 2nd test (default) · Off'. A checkpoint test is POST /api/mock/new {kind:'twin', twin_of: baseline, task}: each slot keeps its template, difficulty and position, with new seeds. The other test days stay fresh adaptive sections. DayPanel row: 'Checkpoint 2 · Twin of your Sep 23 module · same 22 question types, new numbers · 35 min'. A CheckpointCard sits at the top of the Progress tab and also appears in the test report when cfg.task is a checkpoint. It reads 'Baseline 11/22 · 470–610 → Checkpoint 2 16/22 · 560–700 · +90'. A 22-cell slot strip follows. Each cell has a glyph and text for its state: fixed (✗→✓), held (✓→✓), slipped (✓→✗) or still missed (✗→✗). Counts sit under the strip ('fixed 7 · held 9 · slipped 2 · still missed 4'). Tapping a cell names its skill, tier and the trap chosen. The pill 'Fix these 6' starts a twin drill of exactly the slipped and still-missed slots ({from_session, only:[qids], each:2, source:'twin', task:'<today>:extra'}). A series line reads 'Baseline 11 → CP1 14 → CP2 16 of 22'. On the TrajectoryChart, checkpoints are filled squares and fresh tests are dots. Once 2 or more checkpoints exist, drift (R16) and the forecast's test signal prefer them, because they compare like with like.",
+    "beats": "Their plan draws on 10 fixed papers, and the free tier gets one exam attempt. A retake repeats questions whose keys the student has already seen, so their second score is contaminated. Their report has no per-question skill or difficulty, so they cannot compare slot by slot. A like-for-like re-test every two weeks needs a generator; no fixed bank can build a parallel form on demand.",
+    "effort": "M",
+    "needs": "Tests' twin kind (S5: POST /api/mock/new kind twin, twin(source_qs)). The report's per-slot data (S6). A twin_of field on the plan's test task body. R19 access for re-showing baseline items. Drill only/each twin bodies (R10/F5). CheckpointCard in UI (S7)."
+   },
+   {
+    "title": "Your misconception profile, and trap hunts across question types",
+    "what": "Data: satbank/misconceptions.json, built in T-bank (resolves open question 18), with about 80 families: radius-diameter, reciprocal-ratio, percent-as-whole, stopped-one-step-early (answered an intermediate value), sign-in-distribution, coordinates-swapped, margin-one-direction, and so on. Each family maps normalised reason strings. A scan found 1,813 distinct reasons, and only 47 appear in more than one template, so exact text cannot link question types. The families are therefore seeded by keyword rules and then checked by hand; an unmapped reason is its own family. At warm-up, an index is built from family to [(template, option slot)] by generating 12 seeds per template. Profile: plan.profile(learner) gives, per family, hits in the last 30 days (wrong answers whose reason maps to it), open traps, relapses, the last hit and the week-over-week trend. A 'Your traps' card on the Plan tab (right column, under ComingUp) lists the top 5, e.g. 'Stopped one step early · 6 hits · 3 question types · ↓ from 9 last week'. Each row opens a trap hunt. Task kind 'trap' in section 4, placed after fix: 'Trap hunt · Stopped one step early · 8 questions across 5 question types, each with that trap as an option'. Its drill body is {family, count, task}. The pool is every template carrying the family, on seeds where that distractor is present (verified by generating), spread by practice.py's scheduler. At most one trap task a day, and only when a family has 3 or more hits in 14 days across 2 or more templates. Feedback in a trap hunt, and anywhere else the chosen option's family is in the student's top 5, reads: 'Your trap again: stopped one step early (4th time this week)'. The Progress tab adds 'Traps over time': small multiples of weekly hits per top family, where falling means it is working. A family counts as 'Beaten' after 14 days with 0 hits following 3 or more.",
+    "beats": "Their review has per-question 'Distractor Analysis' prose, but nothing records which trap a student fell for. There is no cross-question view, and a fixed item cannot be regenerated so that it carries a chosen distractor. Their plan's weak areas are the 8 domains. Ours names the student's habits and hunts each one across every question type that can provoke it.",
+    "effort": "L",
+    "needs": "The misconception taxonomy file and a warm index (T-bank, open question 18). The traps norm column (R9, F4). A drill body 'family' field through the registry (R10/F5, resolved by plan.resolve_drill). The Practice feedback hook for the 'Your trap again' line (S4)."
+   },
+   {
+    "title": "What your target takes: a readiness grid, with difficulty that climbs per skill",
+    "what": "A card 'What 700 takes' on the Progress tab, also expandable in wizard step 4. It has 19 rows grouped by domain and three columns: Easy, Medium, Hard. Each cell shows the student's first-try % and count ('62% · 13'), the % the target needs, and a state as glyph plus word: met ✓, close (within 10 points), not yet, or not measured (dashed). Each row ends with its '+9 pts' from the points model. How the required % is computed: bisect one lift x in p' = p + x(1-p), applied to every cell, until expected_section = min(target, 780); each cell's requirement is its p'. So the numbers are personal and consistent with the score model. Header: '700 needs about: Easy 96% · Medium 84% · Hard 58%' plus '31 of 57 cells met'. Scheduler: a focus set serves each topic's lowest unmet tier, with R33 adaptive stepping inside [lowest unmet, hard]: up after 2 first-try rights, down after a miss. This replaces the static phase x target table in section 4, Difficulty. Phase still decides the clock, and in Final at least 40% of the questions are at the tier routing needs. Task meta shows the rung ('Circles · Medium → Hard'). After a set, a receipt line reads 'Circles medium 55% → 70% · met'. A met cell that later drops below its requirement over the last 10 answers returns to 'not yet' and says so in Why this.",
+    "beats": "They have a Difficulty preference (Adaptive/Fixed) and an opaque Question Score 1–7, but nothing connects the target to what each skill must reach. Their plan tasks carry a domain and a duration, never a difficulty. The v2 spec's phase-by-target-band difficulty table is static and ignores the student.",
+    "effort": "M",
+    "needs": "The points model (proposal 1). R33 adaptive tiers in the drill engine (F5). Per-(topic, difficulty) first-try counts from attempts (F4). The R37 mastery word for labels."
+   },
+   {
+    "title": "Instant plan: one tap to day 1, with the wizard as optional tuning",
+    "what": "The landing's primary pill becomes 'Start my plan'; 'Set it up step by step' opens the wizard. One tap sends POST /api/plan with plan.defaults(learner):\n- current: mean3, else the latest midpoint, else 500 marked estimated;\n- target: min(round10(current+100), 780);\n- exam: learners.exam_date, else the first SAT_DATES entry at least 28 days away, marked booked=false;\n- minutes: the median minutes of the last 21 active days, rounded to a chip (else 45);\n- days: the weekdays actually studied most (else Mon–Fri);\n- tests: weekly module;\n- focus: the suggestions from the points model;\n- extras: the defaults.\nThe response opens the Plan tab with a 'Built from your results' banner. It lists the six assumptions as editable chips ('Target 660 ✎ · Nov 7 · not booked ✎ · 45 min × 5 ✎ · Weekly module ✎ · Focus Advanced Math ✎ · Rechecks on ✎'). Each chip edits in place through a popover and PATCH, with no wizard. The banner stays for 3 days or until dismissed. For a new student, day 1's first task is the 12-question placement (see parity gap 'Step 1'). When it finishes, the plan re-bases current and shows a toast with Undo: 'Starting score set to 540 from your placement'.",
+    "beats": "Their build is 'Takes about a minute · 1 plan left this cycle', it failed 3 of 3 times in the live walk, and it needs all four steps answered before anything shows. A TopTierPrep student who opens ours has a working plan and a startable first task in one tap.",
+    "effort": "S",
+    "needs": "plan.defaults() and POST /api/plan in plan.py. progress.days minutes history (R13, F4). The placement drill (parity gap 2). UI.popover chips (F1 kit)."
+   },
+   {
+    "title": "Short on time? Sets sized to the minutes you have",
+    "what": "A chip row labelled 'Short on time?' with '5 · 10 · 15 · 25 min' sits under the DayPanel progress line and on Today's plan card. Tapping a chip calls GET /api/plan/{id}/quick?day=&minutes=, which returns a Task.start {path, body}. The question count q is clamp(round(m*60/95), 3, 30). The set is filled in order: today's undone fix items (at most 40% of q), then today's undone focus topics ranked by the points model's per_hour, then due keep-sharp topics. It is timed when the day's phase is Sharpen or Final. It is tagged task='<day>:focus' with count q, so it counts as partial progress on that task (the row's Resume reads '6 of 18' across both sessions), or '<day>:extra' once focus is done. The undone rest of focus keeps its deficit and comes back sooner in the re-deal. When the set ends, the summary reads '9 of 18 of today's focus done · 12 min left' with 'Another 10 min'. On a rest day, 'Practice anyway' becomes the same chips.",
+    "beats": "Their tasks have fixed durations, so a student with 10 minutes can only Skip, and their Behind banner fires only after a week of misses. Our bank sizes any set to any time, drawn from the student's highest-value work.",
+    "effort": "S",
+    "needs": "Ranking from the points model (fallback: the allocation order). The drill body's count/timed/task fields (F5). Section 4 task status counting partial sessions toward a task."
+   },
+   {
+    "title": "Week in review, with goals the plan checks",
+    "what": "On the first visit after a week's last study day, a sheet 'Week 3 review · Sep 21–27' opens once. It can be reopened from 'Review week' in the WeekStrip header. Receipts come first, as a grid: 'Days 4/5 · 3h 10m of 3h 45m · 212 questions · 71% right · traps closed 6, opened 2 · Circles Learning → Getting there · Checkpoint +40 · forecast 650 → 670'. Next comes 'Next week', prefilled by plan.propose_goals():\n- at most 3 goals, each of type close_traps {family or labels, n}, tier {topic, tier, pct, min_n 10}, checkpoint {date} or minutes {n};\n- 7 per-day minute selects;\n- days off;\n- a 'Swap a focus skill' select.\nControls: × per goal, 'Add goal', and 'Save week', which writes plan_overrides for that week. The week header then shows 'Goals 2/3' as chips with glyphs (met ✓, open ○, missed –), evaluated live. A missed goal offers 'Carry to next week'. Server: plan_weeks(plan, n, goals JSON, reviewed TEXT NULL); GET and PUT /api/plan/{id}/week/{n}. plan.week_review() reuses the stats the Progress tab already computes.",
+    "beats": "Their week is a theme sentence plus 'X of Y tasks · Z%'. Their adapt and regenerate endpoints are a black box, and 'Rebalance my plan' rebuilds every remaining week at once. Ours gives measurable weekly outcomes, checked, with the student adjusting next week in one sheet.",
+    "effort": "M",
+    "needs": "Points model and trap profile for proposing goals (falls back to trap labels and mastery). plan_overrides. A new plan_weeks table (F4 §2.5). UI.sheet (F1)."
+   },
+   {
+    "title": "Personal trap sheet for exam week, and a printable week of worksheets",
+    "what": "Trap sheet: GET /api/plan/{id}/trapsheet returns up to 10 entries from the misconception profile (falling back to trap labels). Each entry has:\n- the family name and its hits;\n- one freshly generated item (a new seed, so no seen key; R19);\n- the trap option marked 'Your trap', plus the key, the rationale and a one-line 'Tell' (the reason text).\nIt renders at /plan/?print=traps as a phone-readable page and a 2-page print (@media print, A4/Letter). Final phase schedules 'Trap gauntlet · 10 questions, one per trap on your sheet' 3 days out, and 'Read your trap sheet · 5 min' (tick to done) as the eve's only task, beside the checklist. Week pack: PlanMenu 'Print…' gains 'This week's worksheets'. For every remaining study day of the viewed week, it prints the day's focus set through Practice's worksheet renderer, headed 'Thu Sep 24 · Focus · Circles, Percentages · 18 questions · 28 min'. Answer keys and rationales go at the back ('Include answer keys', on by default). Each sheet carries a code such as 'W-7K2P'. Entering answers at /practice/session/?ws=W-7K2P files them and counts toward that day.",
+    "beats": "Their Share / Export is a dead button and they print nothing. A trap sheet needs a per-student record of labelled misconceptions and fresh items for each one, which a fixed bank with prose distractor notes cannot produce.",
+    "effort": "M",
+    "needs": "Practice's worksheet renderer and print CSS (S4 §2.12). R19 access. The sets table for worksheet codes (R18 c, F6). The trap profile (proposal 4) or R9 trap labels."
+   },
+   {
+    "title": "Keep-sharp checks for skills you already have",
+    "what": "Each topic with mastery 0.8 or more (or marked Strong) gets a retention schedule: due 7 days after its last clean run, then 21, then 45 after each passed check. This is the same shape as R9's 3/10/30 for mistakes. Task kind 'keep' (counted, 5 min or less), placed after fix and recheck when due: 'Keep sharp · 3 questions · Ratios, Lines, Percentages · last worked 18 days ago', at medium to hard. A miss resets that topic to 7 days and lowers its Strong weight to Normal for 7 days, with the Why line 'Missed a keep-sharp check on Ratios'. Progress card line: 'Kept sharp 12 of 13 checks'. Readiness-grid cells that are due carry a clock glyph and the word 'due'.",
+    "beats": "Their Strong setting just means 'easing off your strengths', and nothing checks that a strength held. Re-testing a strength from a fixed pool also re-serves questions already seen. Ours checks each strong skill with new numbers on a spaced schedule.",
+    "effort": "S",
+    "needs": "progress.board last-worked dates (F4). A task kind in plan.py (S7). Drill topics plus difficulty (F5)."
+   },
+   {
+    "title": "Speed ladder for slow skills",
+    "what": "A topic qualifies when the median first-try ms over its last 20 answers exceeds 120 s (the existing Clock auto rule) or runs above 1.3x test pace. The plan then adds a 'Speed ladder' task: 3 rounds of 4 questions from the topic's two most-missed templates, with per-question timers of 130 s, then 110 s, then 95 s. A round under 3/4 right repeats at the same timer, up to 5 rounds. A question that runs past its timer is filed normally and tagged 'late', never 'wrong'. The runner shows a per-question timer bar (Compete's sprint mode, generic per R28) and a round header 'Round 2 · 110 s a question · 3 of 4 so far'. Summary: 'Circles: 2:40 → 1:48 median · 11 of 12 right'. The Progress tab adds 'Pace by skill': a UI.barChart of median seconds per skill against a 95 s line.",
+    "beats": "They offer Timed/Untimed and a session countdown, but no per-skill pace. Drilling the same question type again and again under a shrinking clock needs fresh numbers every round.",
+    "effort": "M",
+    "needs": "Runner per-question timer (F3/S4, R28 sprint). attempts.ms including tests (R7). Drill body ladder fields (F5). UI.barChart pace option (F1)."
+   },
+   {
+    "title": "Class homework lands in the plan",
+    "what": "When the student is in a class (S2) and an assignment has a due date, plan.py adds a counted task of kind 'assignment'. It goes on the latest study day at least 1 day before the due date that has the minutes, or else on the due day: 'Homework · Ms Lee · Systems of equations · 15 questions · due Thu'. Its start body is {assignment} (classes.resolve_drill). It can be moved only up to the due date. Overdue shows 'Overdue · due Tue' as a ring with an exclamation (graphite, not colour alone). The Behind banner and rebalancing count homework minutes. Opt-in per student: the teacher's class view shows each student's plan adherence (days done %, minutes this week) beside homework status.",
+    "beats": "Their hidden /my-classes homework is a separate list that their plan ignores, so a student with both double-books the evening. Ours schedules homework into the same day the plan is built around.",
+    "effort": "M",
+    "needs": "S2 classes and assignments API (R4, classes.resolve_drill). A task kind in plan.py. An adherence field for the class view (S2 reads plan.today_summary)."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Landing (hero, stat cards, how it works, plans list)",
+    "spec_says": "PlanHero with Create my plan, three BankStats tiles, three HowItWorks tiles, one ExampleDay, and a PlansList",
+    "why_only_parity": "The same four blocks as theirs: hero and CTA, 3 stat cards, 3 numbered cards, a list. The example day is the only difference, and the student still has to finish a 4-step wizard before any plan exists.",
+    "upgrade": "One-tap 'Start my plan' from results (proposal 6). The landing shows a live first week: 5 day cards from preview with real topics, minutes and the forecast. The stat tiles become the student's own numbers: points on the table, open traps by name, and the forecast at their current pace."
+   },
+   {
+    "feature": "Wizard step 1: Where you are",
+    "spec_says": "SourceNote variants, a Math slider with a number field, a RangeBar, an optional R&W field. New students are sent to the 30-minute diagnostic with a return path.",
+    "why_only_parity": "Theirs is also sliders prefilled from results. Sending a new student out of the wizard for 30 minutes is worse than their guess.",
+    "upgrade": "An inline 12-question adaptive placement inside step 1: 3 per domain, about 15 min, difficulty stepping after each answer. It gives an honest ±130 band (the diagnostic's ±100 scaled for 12 questions), prefills current, seeds step 4's rows and the points model's priors. 'Skip, I'll estimate' keeps the slider. Answers file as normal attempts with source 'placement'."
+   },
+   {
+    "feature": "Wizard step 2: target, date chips and pace",
+    "spec_says": "GainCard, TargetNote, DateChips with '10 d · 98/wk', and a PaceTag (Steady / Ambitious / Very ambitious) whose thresholds have no source",
+    "why_only_parity": "Their live pace line is 'about 60 points per week'. Ours is the same points-per-week arithmetic plus a heuristic tag.",
+    "upgrade": "A forecast on every date chip ('Nov 7 · 670'), a 'reaches 700' check on chips that make it, and the three cheapest levers that close a gap, each applied in one tap (proposal 2)."
+   },
+   {
+    "feature": "Wizard step 3: Time you have",
+    "spec_says": "MinutesChips, DaysSlider, WeekdayTiles with per-day minutes, DaysOff, TestRhythm, ClockMode, PreferredTime chips",
+    "why_only_parity": "They have the same chips, slider, STUDY/REST tiles, exam-every-day toggle and preferred time. The student guesses their availability, and the preferred time is only used for the calendar.",
+    "upgrade": "Prefill from real behaviour and say so: 'Last 3 weeks: 4 days a week, median 32 min', with 'Use that' and 'Stretch to 45'. Each weekday tile shows its own average ('Mon avg 40m'). PreferredTime is suggested from first-try accuracy by hour ('9 points more accurate before 7 pm · 212 answers'), shown only with 100 or more answers across at least 2 time bands."
+   },
+   {
+    "feature": "Wizard step 4: focus per domain",
+    "spec_says": "DomainRow Focus/Normal/Strong with caps, tints and a helper line. Suggestions: weakest below 0.8, a third of the mistakes, Strong at 0.8 or above. SkillRows and a SplitBar.",
+    "why_only_parity": "The same segmented control, caps and counters as theirs. The suggestions are accuracy thresholds that ignore how much of the test a domain or skill is worth.",
+    "upgrade": "Rows ranked by points available, with '+22 pts' on each domain and skill, and 'Use suggestions' picking by points per minute (proposal 1). The SplitBar gets a second bar, 'where your points are', so a Focus choice that misses the points is visible before Create."
+   },
+   {
+    "feature": "Include vocabulary practice",
+    "spec_says": "Extras replace it (Rechecks, Question of the day, Daily challenge); the plan never schedules Words",
+    "why_only_parity": "Below parity. Their plan schedules Vocabulary and Flashcards tasks, and our Words section (EBRW vocabulary, decision 2) ships in v2, yet the plan ignores it.",
+    "upgrade": "A Words extra in step 4, on by default when the learner has Words data or an R&W score. It is a counted task, 'Words · 14 due · 6 new · 8 min', drawn from Words' due queue through words.resolve_drill, with minutes from its per-review cap. Every task carries a subject field (math|rw), so the full-SAT expansion is additive, and Words reviews feed the plan streak per R13."
+   },
+   {
+    "feature": "Plan view stat tiles",
+    "spec_says": "Days to exam, Score (start→target plus a status chip), Plan done %, This week with streak",
+    "why_only_parity": "The same four slots as theirs: Days to exam, Streak, Plan complete %, Score gap.",
+    "upgrade": "The Score tile becomes a forecast tile ('Forecast 650–710 by Nov 7 · Short ~20') with a one-tap lever (proposal 2). Plan done adds 'points recovered +18' (proposal 1), and Score adds 'Baseline → last checkpoint +90' (proposal 3)."
+   },
+   {
+    "feature": "Task card and 'Why this?'",
+    "spec_says": "Title, type tag, detail, meta, action, and a Why this? list of facts: open mistakes, accuracy, days since, focus share, timing gap",
+    "why_only_parity": "The same anatomy as their task card and aiReason. Facts beat prose, but they explain what the task is, not what it buys or what it did.",
+    "upgrade": "Each task shows 'worth ~+6 pts'. A done task shows a receipt: 'Closed 2 of 3 traps · Circles 41% → 58% · 12 min'. Why this adds a counterfactual line: 'Close these 2 traps and Circles leaves tomorrow's set'."
+   },
+   {
+    "feature": "Again · new questions",
+    "spec_says": "10 more on the same topics, tagged :extra",
+    "why_only_parity": "Equal to their Practice again / Redo.",
+    "upgrade": "'Again · the 3 you missed, new numbers', a twin drill of exactly the missed questions (only, each:2), shown only when there were misses. 'Again · 10 more like this set' stays as the second choice."
+   },
+   {
+    "feature": "Week view",
+    "spec_says": "Week N of M, tasks done %, a bar, a server theme line, a pager, This week, seven columns",
+    "why_only_parity": "Identical to theirs: Week N, X of Y · Z%, theme sentence, pager, day tiles.",
+    "upgrade": "Measurable weekly goals checked at week end ('Goals 2/3' in the header) and a Week review sheet that re-plans next week (proposal 8)."
+   },
+   {
+    "feature": "Behind banner and rebalance",
+    "spec_says": "Fits the plan to the minutes you actually average, with a preview of questions and pace",
+    "why_only_parity": "Theirs rebuilds the remaining weeks around the time you have. Ours is the same action with numbers attached.",
+    "upgrade": "Triage by points per minute. The preview names what is cut and what it costs ('drops keep-sharp and 2 Strong slots a week · forecast 690 → 675'), with a Protect toggle per domain. A second option keeps the time and moves the date ('Dec 5 → 700–750')."
+   },
+   {
+    "feature": "Score drift banner",
+    "spec_says": "mean3 against the plan's start, 40 points or more in either direction, plus 'Target reached · raise it'",
+    "why_only_parity": "Their drift banner with Rebuild, extended to go downward too.",
+    "upgrade": "With 2 or more checkpoint twins, drift uses them, because they compare like with like. The banner shows the forecast effect before applying ('Start from 650 → forecast 700–760'). 'Raise it' proposes the highest target the forecast reaches, not a fixed +50."
+   },
+   {
+    "feature": "Progress: accuracy by domain, weakest first",
+    "spec_says": "DomainCard sorted by accuracy, a mastery bar with a start tick, planned vs done share, and an 'All 19 skills' table",
+    "why_only_parity": "Their card is the same: accuracy by domain, weakest first, 'where your remaining time pays off most'.",
+    "upgrade": "Sort by points available (with a toggle for accuracy), show recovered points since the start, and add the readiness grid by tier ('What 700 takes', proposal 5)."
+   },
+   {
+    "feature": "Progress: study time per day",
+    "spec_says": "Bars of studied vs planned, tests hatched, a range control, a tooltip",
+    "why_only_parity": "Theirs has Studied vs Planned per day.",
+    "upgrade": "Overlay first-try accuracy per day as a line, with question counts. Tapping a day opens its past-day view and sessions. A 'Best hours' strip shows accuracy by hour of day once there are 100 or more answers, and it feeds the PreferredTime suggestion."
+   },
+   {
+    "feature": "Progress: how the plan splits your time",
+    "spec_says": "Planned minutes by task type across the plan, with a second bar for done",
+    "why_only_parity": "Identical to theirs ('Planned minutes by task type across the whole plan').",
+    "upgrade": "Split by domain against where the points are ('Algebra: time 35% · points 12%'), and by tier, so a misallocation shows at a glance. It includes the 'Rebalance to the points' action."
+   },
+   {
+    "feature": "Plans tab",
+    "spec_says": "Rows with status, dates, target, days left, tasks done and adherence; Open, Make active, Duplicate, Remove; an archived-view banner",
+    "why_only_parity": "The same as their History tab.",
+    "upgrade": "A finished plan's row shows its outcome ('Target 700 · got 690 · baseline → last checkpoint +90 · 38/44 days') and a changelog timeline of edits ('Oct 2 fitted to 25 min · Oct 9 target 750'). 'Plan the next one from this' carries the traps, readiness and time settings forward."
+   },
+   {
+    "feature": "Test rhythm and the test task",
+    "spec_says": "None / Weekly / Twice / Every study day, module or section, a test day, and Final upgrading to a section",
+    "why_only_parity": "The equivalent of their 'Solve a practice exam every day' toggle. Fresh tests never run out, but no two tests in the plan are comparable.",
+    "upgrade": "Twin checkpoints of the baseline (proposal 3). In Final, one full-section dress rehearsal at the real start time (Saturday 8:00 local) on the weekend 7–10 days out, with a calendar event, no pause and a 'Rehearsal' kind tag."
+   },
+   {
+    "feature": "Custom tasks",
+    "spec_says": "Title, minutes, a repeat rule, tick to done; quick-add R&W and Bluebook test",
+    "why_only_parity": "Their CUSTOM task with Mark done, plus repeats.",
+    "upgrade": "An 'Official practice test (Bluebook)' type that asks for the Math and R&W scores and, optionally, the missed question numbers with a skill for each. The scores join the trajectory as outside sittings (R16). Each miss becomes a logged outside mistake (R2) and gets a scheduled 'Try 3 like it' set on that skill."
+   },
+   {
+    "feature": "Difficulty over the plan",
+    "spec_says": "A static table by phase (Build / Sharpen / Final) and target band (<550, 550–680, ≥690)",
+    "why_only_parity": "Matches their Adaptive/Fixed difficulty preference at best. It is one fixed tier list per band, not adaptive per template.",
+    "upgrade": "Each topic starts at its lowest unmet tier from the readiness grid and steps up per template under R33 rules (proposal 5)."
+   },
+   {
+    "feature": "Today's plan card",
+    "spec_says": "'Today's plan · 2 of 4 done · 33 min left of 45', a first-undone pill, compact rows, checkboxes, Full plan",
+    "why_only_parity": "Matches their dashboard 'Today's Plan' card (N of M completed, min left, Full Plan, checkboxes).",
+    "upgrade": "'Short on time?' chips (proposal 7), a forecast line ('On track for 680–740'), and today's trap-hunt row when one is scheduled."
+   }
+  ]
+ }
+}

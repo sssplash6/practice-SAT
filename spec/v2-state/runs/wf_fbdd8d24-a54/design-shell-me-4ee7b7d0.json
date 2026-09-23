@@ -1,0 +1,548 @@
+{
+ "label": "design: shell-me",
+ "key": "v2:e539d7865b8f6cf5dd9f2bfae031509d93a39cd16dd953af5f3e95844ee7b7d0",
+ "result": {
+  "section": "App shell, navigation, profile and account",
+  "theirs": [
+   {
+    "feature": "Left sidebar",
+    "detail": "About 220px wide, collapses to a ~60px icon rail with a toggle beside the logo. Stacked black 'TOP TIER PREP' wordmark at the top."
+   },
+   {
+    "feature": "Primary nav (10 items, in order)",
+    "detail": "Dashboard, Practice, Study Plan, Results, Question Bank, Contests & Challenges, Contests Rankings, Leaderboards, Vocabulary, Subscription. Each section is its own route. Nav items carry no counts or badges."
+   },
+   {
+    "feature": "Active nav state",
+    "detail": "Gray-blue pill background and bold label."
+   },
+   {
+    "feature": "Upgrade card",
+    "detail": "Blue 'Upgrade to Pro · Unlimited tests & QBank' card with a TRIAL badge at the bottom of the sidebar, linking to /subscription."
+   },
+   {
+    "feature": "User card",
+    "detail": "Avatar, name, role ('User') and a chevron at the bottom of the sidebar."
+   },
+   {
+    "feature": "User popover",
+    "detail": "Avatar, name and email, then My Profile, Send feedback, Sign out (red). Bug: it ignores Escape and needs an outside click to close."
+   },
+   {
+    "feature": "Floating quick-add button",
+    "detail": "Blue circle at the bottom right of every page: 'Add your own word (drag to move)'. It is draggable and adds to the vocab 'Custom Added Words' collection. It covers the Next button in QBank sessions."
+   },
+   {
+    "feature": "Auth",
+    "detail": "/auth ('Welcome back'). Google sign-in only, and unauthenticated routes redirect there. Email/password can be added later from the profile. Nothing works before signing in."
+   },
+   {
+    "feature": "Report / feedback modal",
+    "detail": "The same modal serves exams, questions and vocab. A read-only 'Sent with your report' box (item type, title, UUID); Title prefilled with a 0/200 counter; Category select (General feedback / Bug or something broken / Wrong answer key / Typo or content error / Feature request / Other); Details 0/5000; up to 10 image attachments of 50MB each (JPEG/PNG/WebP/GIF); a full-width 'Send feedback' button."
+   },
+   {
+    "feature": "Send feedback (general)",
+    "detail": "Opened from the user popover. The same modal without item context."
+   },
+   {
+    "feature": "Profile layout",
+    "detail": "/profile: left third and right two thirds."
+   },
+   {
+    "feature": "Profile identity card",
+    "detail": "Tinted card: avatar with a camera upload badge, name, email, a 'Not set yet' pill, and a 2x2 grid of stat tiles (icon chip, label, big value): Streak N Days, Tests N Taken, Solved N Qs, Vocab N Words."
+   },
+   {
+    "feature": "Performance Snapshot (ranks)",
+    "detail": "Global rank (e.g. 128) and country rank (e.g. 43)."
+   },
+   {
+    "feature": "Subscription & Credits card",
+    "detail": "FREE badge; usage meters (label, n/max, bar) for Practice Exam Attempts, TopTierPrep Bank, New Words Today and AI Study Plan Generations; 'Upgrade for unlimited prep' with an Upgrade button."
+   },
+   {
+    "feature": "Saved Content",
+    "detail": "Counts for Saved Words, Redo Questions and Saved Questions."
+   },
+   {
+    "feature": "Account block",
+    "detail": "Sign out; Name; Email; Password ('Your account uses Google Sign-In' + Set Password); 'Google account connected'."
+   },
+   {
+    "feature": "Study Goals",
+    "detail": "Target score (a bar, 'Not set'); exam date with an 'N days remaining' progress bar; Daily goal (2 Hours); Weekly goal (12 Hours); Preferred time (Evening)."
+   },
+   {
+    "feature": "Subject performance",
+    "detail": "Per-subject performance block, empty on a new account."
+   },
+   {
+    "feature": "Score trend",
+    "detail": "A line chart with 'Latest: N'."
+   },
+   {
+    "feature": "Achievements",
+    "detail": "Badge tiles: 7-Day Streak, 1000 Solved, Consistency, Top Rank, plus 'View All'."
+   },
+   {
+    "feature": "Learning Preferences",
+    "detail": "Practice Mode select (Timed), Difficulty Level select (Adaptive), and toggles for AI Explanations, Show Desmos Calculator and Include Vocab Review."
+   },
+   {
+    "feature": "Recent Activity",
+    "detail": "An activity list, empty on a new account."
+   },
+   {
+    "feature": "Subscription page header",
+    "detail": "'Subscription & Billing' with a back link."
+   },
+   {
+    "feature": "Current plan status",
+    "detail": "'Free Tier' with an Active badge, an 'Upgrade to Pro' button, and copy on what upgrading adds (full-length tests, daily TTP questions, AI plans)."
+   },
+   {
+    "feature": "Usage meters",
+    "detail": "Practice Exam Attempts 0/1, TopTierPrep Bank 0/0 (unset on paid tiers, a bug), New Words Today 0/5, AI Study Plan Generations 0/1."
+   },
+   {
+    "feature": "Plan cards",
+    "detail": "A Monthly | 3 months ('Save 15%') toggle. Pro $13.99 (3mo $35.99) with a 7-day trial; Elite $23.99 (3mo $59.99) marked 'Most Popular', with a blue border and tint. Feature lists (exams + retakes, vocab/day, contests), CTAs 'Start 7-Day Free Trial' / 'Subscribe to Elite', and a trust strip (Risk-Free Trial / Cancel Anytime in 1-Click / Instant Access / Secure 256-bit checkout)."
+   },
+   {
+    "feature": "FAQ accordion",
+    "detail": "Six questions with the first one open: free trial; cancel or switch; Pro vs Elite; is history lost on cancel; monthly to 3-month; is payment safe."
+   },
+   {
+    "feature": "Payment history",
+    "detail": "A table with Date, ID, Payment method, Amount, Status, Receipt and Invoice; 'Amounts shown in USD'; empty on a free account."
+   },
+   {
+    "feature": "Canvas",
+    "detail": "Light gray app canvas behind white 18px-radius cards; Results uses a darker gray canvas."
+   }
+  ],
+  "ours_now": [
+   {
+    "feature": "Primary nav",
+    "status": "worse",
+    "note": "The top bar has 5 links (Today, Practice, Tests, Plan, Results). Mistakes, Challenge, Me and the diagnostic are in no nav; they are reachable only through links inside pages. No counts or badges."
+   },
+   {
+    "feature": "Collapsible sidebar / rail",
+    "status": "missing",
+    "note": "A fixed top bar that cannot hold more sections. No collapse, no tooltips."
+   },
+   {
+    "feature": "Brand",
+    "status": "partial",
+    "note": "The 26px mark links home. No wordmark."
+   },
+   {
+    "feature": "Active state",
+    "status": "have",
+    "note": "A 2px orange underline on desktop; a 2px bar above the icon on the phone tabs."
+   },
+   {
+    "feature": "Phone nav",
+    "status": "partial",
+    "note": "5 bottom tabs with the same gaps: no Mistakes, Challenge or Me tab, and no 'More'."
+   },
+   {
+    "feature": "Upgrade card",
+    "status": "have",
+    "note": "Nothing to sell, correctly. The slot shows nothing useful either."
+   },
+   {
+    "feature": "Streak in the bar",
+    "status": "have",
+    "note": "A flame and count linking to /results/, hidden until the first answer. Ours only; they have no streak in the chrome."
+   },
+   {
+    "feature": "User card + popover",
+    "status": "worse",
+    "note": "A 34px avatar (initial, or the mark) links straight to /me/. No name, no email, no menu, no feedback, no sign out."
+   },
+   {
+    "feature": "Floating quick action",
+    "status": "missing",
+    "note": "There is no action that works from any page."
+   },
+   {
+    "feature": "Sign-in / account",
+    "status": "worse",
+    "note": "An anonymous 'a:' + 24-char code in localStorage. Recovering it after the browser is cleared requires having copied that code by hand. The diagnostic's email sign-up (users table) is not linked to the learner at all. web/test/test.js mints its own weaker code with Math.random and no sessionStorage fallback, so a first visit that starts at /test/ gets a guessable identity."
+   },
+   {
+    "feature": "Sign out",
+    "status": "missing",
+    "note": "Nothing. A shared computer cannot be left."
+   },
+   {
+    "feature": "Feedback / report",
+    "status": "missing",
+    "note": "No report button on any question, test or page, and no general feedback. There is no endpoint."
+   },
+   {
+    "feature": "Storage-blocked warning",
+    "status": "have",
+    "note": "A red-dot paragraph prepended to main when localStorage and sessionStorage both refuse."
+   },
+   {
+    "feature": "Profile identity",
+    "status": "worse",
+    "note": "The avatar initial and a Name field with Save. No email, no goal pill, no member-since, no stats."
+   },
+   {
+    "feature": "Profile stats",
+    "status": "missing",
+    "note": "None on /me/. Results shows answered / right% / streak."
+   },
+   {
+    "feature": "Ranks / performance snapshot",
+    "status": "missing",
+    "note": "Only today's challenge rank, on Challenge and Today."
+   },
+   {
+    "feature": "Credits meters",
+    "status": "have",
+    "note": "None, correctly: nothing is metered."
+   },
+   {
+    "feature": "Saved content",
+    "status": "partial",
+    "note": "Saved questions and open mistakes are on /mistakes/. Me has no counts and no Resume."
+   },
+   {
+    "feature": "Account block",
+    "status": "partial",
+    "note": "Name, the device code with Copy, and a 'From another device' field that carries this device's progress into the typed code (/api/me/carry). The code is shown unmasked."
+   },
+   {
+    "feature": "Study goals on the profile",
+    "status": "partial",
+    "note": "Target, exam date, minutes and days are set in /plan/. Me shows none of it. No preferred time; the weekly goal is never shown."
+   },
+   {
+    "feature": "Subject performance",
+    "status": "partial",
+    "note": "Results has 19 skill tiles with mastery bars. Nothing on Me."
+   },
+   {
+    "feature": "Score trend",
+    "status": "partial",
+    "note": "Results has the band over time. Nothing on Me."
+   },
+   {
+    "feature": "Achievements",
+    "status": "missing",
+    "note": "None."
+   },
+   {
+    "feature": "Learning preferences",
+    "status": "missing",
+    "note": "The Practice page always opens at 10 questions, all difficulties, untimed. Nothing is remembered and nothing is stored per learner."
+   },
+   {
+    "feature": "Recent activity",
+    "status": "partial",
+    "note": "Results lists finished sittings. No feed of closed mistakes, question-of-the-day answers, challenge ranks or earned badges."
+   },
+   {
+    "feature": "FAQ / help",
+    "status": "missing",
+    "note": "No help page. The only explanations are in the README."
+   },
+   {
+    "feature": "Subscription / payments",
+    "status": "have",
+    "note": "Deliberately none: free."
+   },
+   {
+    "feature": "Keyboard / search",
+    "status": "missing",
+    "note": "No global shortcuts, no search, no skip link."
+   },
+   {
+    "feature": "Offline / server down",
+    "status": "worse",
+    "note": "paintMe swallows the error and every page quietly shows nothing."
+   }
+  ],
+  "design": "\n# App shell, navigation, profile and account: the rebuild\n\nRules for this section:\n* No section is further than one click away on desktop, or two taps on a phone.\n* Every nav item says what is waiting there (a count, \"New\", \"Resume\", \"Test day\").\n* Nothing is sold. The slots they use for selling hold the student's own day.\n* Settings save the moment they change and say \"Saved\".\n* A short helper line appears under a control only when its effect isn't obvious from its name.\n* Orange (#F18508) is the only accent. Destructive actions use graphite and a confirm dialog, not red.\n* Borders are allowed: a 1px `--line` where it separates.\n\n---\n\n## 1. Identity and account model\n\nKeep what is better than theirs: **no sign-up wall**. A new visitor practises on their first click under an anonymous code, exactly as now. Add what is missing: a safe, portable identity that needs no password and no copying.\n\n| state | what the student has | how they got it |\n|---|---|---|\n| **Anonymous** | a device code (`a:` + 24 base-36 chars, `crypto.getRandomValues`) in `localStorage` `satf.learner` | first visit, any page (including `/test/`, which must use `UI.learner()`) |\n| **Saved** | the same code, plus a verified email bound to it (`users.learner`) | \"Save progress\" sends a sign-in link, and tapping it binds the email |\n| **Signed in elsewhere** | another device adopts the saved code | an email link or a 6-digit pairing code. This device's own answers are carried in first (`progress.carry`) |\n\n* **Email links, not passwords.** POST `/api/account/link {email}` mails a single-use link that expires in 30 minutes. Opening it (in any browser, phone mail app included) verifies the email.\n  * The first time, the link binds the email to the requesting code.\n  * If the email already belongs to another code, it marks a *claim* for the requesting device.\n  * The requesting page polls `/api/account` every 3 s. When it sees `claimable: true` it calls POST `/api/account/claim`, the server carries this device into the account's code, and the page adopts that code (`UI.useLearner`) and reloads.\n* **Pairing code, no email needed.** Device A: \"Show a pairing code\" → 6 digits and a QR of `/pair/?c=482913`, valid 10 minutes, single use. Device B types or scans it → preview (\"Dana · 1,284 answers\") → confirm → carry → adopt.\n* **The raw device code** stays as an advanced fallback. It is masked (`a:••••••••••••hist`), with Show and Copy.\n* **The diagnostic sign-up is the same account.** Signing up after a diagnostic sets `users.learner` to that sitting's learner when it is empty, and its confirmation email is also a sign-in link.\n* **Sign out of this device**: clears `satf.learner` and the `satf.*` session caches (keeps `satf.look`), mints a fresh code, goes to `/`, and shows a toast.\n* **Sign out everywhere else** (saved accounts only): the server moves everything to a new code, rebinds the email and records the old code in `retired`. A device still holding the old code gets `{retired: true}` from `/api/shell` and a 401 on writes, and its shell shows the retired banner (§2.11).\n* **Privacy for minors**: no photo upload (the avatar is an initial or one of our 19 topic glyphs), no country, and a board visibility setting (with my name / anonymously / don't list me).\n\n---\n\n## 2. The shell (`UI.shell()` in `web/assets/ui.js`)\n\nPages keep `<header id=\"bar\">`, `<main class=\"page\">` and `<nav id=\"tabs\">`. The shell renders the sidebar or top bar into `#bar` and the phone tabs into `#tabs`, and adds `body.has-side` / `body.has-rail`. `.page` keeps `max-width: 1120px` inside the remaining width. **The practice session (`/practice/session/`) and the test window (`/test/`) render no shell**: no sidebar, no quick question, no floating anything, so nothing can cover Next.\n\nIt also adds a **skip link** as the first focusable element (\"Skip to content\", visible on focus, jumps to `main`).\n\n### 2.1 Breakpoints\n\n| width | chrome |\n|---|---|\n| ≥ 1100px | **Sidebar**, 248px, expanded by default. Collapses to the 68px rail with the toggle or `[`; the state is kept in `localStorage` `satf.rail` |\n| 760–1099px | **Rail**, 68px, by default. The toggle opens the full sidebar as an overlay over a scrim (rgba(40,38,34,.32)); it closes on Esc, a scrim click or navigation |\n| < 760px | **Phone**: a 56px top bar plus 5 bottom tabs plus the More sheet |\n\n### 2.2 Desktop sidebar (expanded, 248px)\n\nFixed, full height, background `--tile`, a 1px `--line` right edge. Top to bottom:\n\n1. **Brand row** (64px): mark 26px + wordmark \"SAT FRESHMAN\" (Archivo 800 13px, letter-spacing .06em, two lines like the lockup) linking to `/`; at the right, the collapse button (`ICON.sidebar`, `aria-label=\"Collapse sidebar\"`, tooltip \"Collapse  [\").\n2. **Search button** (40px, paper background, radius 10): magnifier + \"Search\" + a `kbd` \"⌘K\" (Ctrl K on non-Mac). Opens the command palette (§2.8).\n3. **Quick question button** (40px, `--wash` background, ink text): bolt icon + \"Quick question\" + `kbd` \"Q\". Opens the quick question sheet (§2.7). This is our version of their floating button: available from every page, but it sits in the chrome and never floats over content.\n4. **Group \"STUDY\"** (label: DM Mono 10.5px uppercase, `--soft`, 20px above, 6px below):\n   * **Today** `/`: right meta = none.\n   * **Practice** `/practice/`: meta = none.\n   * **Mistakes** `/mistakes/`: meta = orange dot + open count (\"● 14\"), hidden at 0.\n   * **Tests** `/tests/`: meta = \"Resume\" chip (`--wash-2` background, ink 600 11.5px) when an unfinished test has time left.\n   * **Plan** `/plan/`: meta = today's kind in DM Mono 12px `--soft`: \"Test day\" / \"28 q\" / \"Rest\" / \"Exam day\"; none without a plan.\n5. **Group \"PROGRESS\"**:\n   * **Results** `/results/`.\n   * **Challenge** `/challenge/`: meta = \"New\" chip when today's challenge isn't played, \"#4\" in DM Mono once finished, \"Resume\" if started.\n6. Flexible space. On short viewports, items 4 and 5 scroll inside the sidebar and 7–9 stay pinned.\n7. **Today card** (the slot where they sell upgrades). A paper card, radius 12, padding 14:\n   * Header row: \"TODAY\" (k label) · on the right, the flame + streak (\"🔥 6\", flame filled orange when the streak is above 0).\n   * Bar 1: \"18 of 45 min\" (label left, DM Mono), 4px bar (`--amber` fill on `--mat`).\n   * Bar 2: \"12 of 28 questions\".\n   * Footer: \"Exam in 45 days · Nov 7\" (DM Mono 12 `--soft`).\n   * Without a plan: \"18 min · 12 questions today\" and a link \"Set a daily goal\" → `/plan/`.\n   * Brand-new student: \"Nothing yet today\" + link \"Set a daily goal\".\n   * Clicking the card body goes to `/plan/`; the flame goes to `/me/#activity`.\n8. **Help & FAQ** `/help/` and **Send feedback** (opens §2.10 in general mode): quiet 36px rows with icons.\n9. **User card** (56px, a button with `aria-haspopup=\"menu\"`): avatar 34 (initial, glyph or mark), name (600 14px; the board handle \"Student 4F2A\" when unnamed), and a second line in DM Mono 12px — the masked email \"d•••@gmail.com\" when saved, or an orange dot + \"Not saved yet\". A chevron at the right. Opens the account menu (§2.6).\n\n**Nav item anatomy**: 40px row, radius 10, 10px side padding, 20px icon, label Archivo 500 14.5px `--ink`, meta right-aligned.\n* Hover: `--tile-2`.\n* Active (`aria-current=\"page\"`): `--wash` background, label 600, a 3px orange bar on the inside left edge.\n* Focus: the global 2px ink outline.\n\nSection mapping for the active state:\n* session → Practice\n* mistakes → Mistakes\n* report → Results\n* challenge → Challenge\n* diagnostic → Tests\n* me, settings → the user card (it gets the active background)\n* help → Help & FAQ\n\n### 2.3 Rail (68px)\n\nThe same order, icons only, centred in 44px targets. Badges become:\n* Mistakes: a count bubble (orange fill, ink-deep 10px mono, top-right of the icon).\n* Challenge \"New\" and Tests \"Resume\": a 7px orange dot.\n* Plan: nothing.\n\nEach item has a tooltip (`role=\"tooltip\"`, on hover and focus, 8px to the right) with name + meta + shortcut, e.g. \"Mistakes · 14 open · G M\".\n\nThe Today card becomes a 36px ring of today's minutes against the goal (orange arc) with the streak digit inside, and its tooltip carries the full card text. Search, Quick question, Help and Feedback become icons with tooltips. The avatar sits at the bottom. The expand toggle sits under the mark.\n\n### 2.4 Phone (< 760px)\n\n**Top bar** (56px + safe area, paper, a 1px `--line` bottom border after scrolling 4px):\n* The mark (links `/`).\n* Right cluster, 8px gaps:\n  * the Mistakes chip \"● 14\" (links `/mistakes/`, hidden at 0)\n  * the streak \"🔥 6\"\n  * the Quick question button (bolt, 40px target, `aria-label=\"Quick question\"`)\n  * the avatar (40px target, opens the account menu as a bottom sheet).\n\n**Bottom tabs** (64px + safe area, 5 equal columns, 22px icon, label 10.5px): **Today, Practice, Tests, Results, More**.\n* When the current page is Plan, Mistakes, Challenge, Profile, Settings or Help, the fifth tab shows *that* page's icon and name, with `aria-current`. Tapping it still opens More.\n* A 6px orange dot sits on More while today's challenge is unplayed.\n\n**More sheet** (a bottom sheet with a drag handle, max-height 85vh, rows 52px, grouped):\n* The Today card (same content as §2.2.7, full width).\n* A search row \"Search skills and actions\" (opens the palette).\n* Plan (meta: today's kind), Mistakes (● 14), Challenge (New / #4).\n* A divider, then the account block: avatar + name + email / \"Not saved yet\" → Profile; then Settings, Pair a device, Help & FAQ, Send feedback, Sign out.\n\nNo horizontal page scroll at 390px. Fixed tabs never cover content, because `.page` has `padding-bottom: calc(96px + env(safe-area-inset-bottom))`.\n\n### 2.5 Pages without the shell\n\n`/practice/session/` and `/test/` keep their own top strips. They still load `ui.js` (for `UI.learner()`, `UI.report`, `UI.toast` and theme), and `web/test/test.js` must replace its own `learner()` with `UI.learner()`. Global shortcuts are off there, except the page's own and `?`.\n\n### 2.6 Account menu (`UI.menu`)\n\nA popover 288px wide, above the user card on desktop and next to the rail avatar; a bottom sheet on the phone. `role=\"menu\"`, items `role=\"menuitem\"`.\n* ↑/↓ move, Home/End jump, Enter activates.\n* Esc closes and returns focus to the trigger; so does an outside click (their Esc bug, fixed).\n\nContents:\n* Header (not focusable): avatar 40 + name + email (or \"This device only\").\n* When not saved: a callout row with an orange dot, \"Save your progress\", and the sub-line \"So clearing this browser can't lose it\" → `/me/settings/#account`.\n* Profile (`G U`) · Settings (`G S`) · Pair a device · Keyboard shortcuts (`?`) · Help & FAQ · Send feedback.\n* Divider.\n* When saved: **Sign out** (confirm dialog). When not saved: **Sign in** (have progress on another device? → `/me/settings/#account`) and **Leave this device…** (the unsaved sign-out dialog, §4.4).\n\n### 2.7 Quick question (`UI.quick()`)\n\nA sheet (640px centred on desktop, full-screen on the phone). Header: \"Quick question\" + the skill chip + a live tally \"3 answered · 2 right\" + a close ×.\n\n1. On open: POST `/api/drill {topics: coach.topics, count: null, source: \"quick\", difficulty: from prefs}`. While it loads, three skeleton lines; on failure, \"Couldn't get a question.\" + Retry.\n2. The body renders `UI.question()` exactly as in a session: keyboard A–D / 1–4 / Enter when the preference is on.\n3. After an answer, the verdict shows (the key, the named mistake, the rationale per the explanation preference). An actions row follows:\n   * **Another** (pill, Enter or N): this is `/next`, so a miss's repair (same trap, new numbers) comes next.\n   * **Save** (bookmark toggle).\n   * **Report** (§2.10 with this question's context).\n   * **Practise {skill} · 10** (quiet; starts a normal set).\n4. Closing the sheet with at least one answer calls POST `/api/drill/{id}/finish`, and the sitting appears in history as \"Quick questions\". With zero answers nothing is kept.\n\nAfter closing, the shell refreshes its badges.\n\n### 2.8 Command palette (`UI.palette()`)\n\nOpens with ⌘K / Ctrl K / `/`, from the Search button, or from the More sheet. A modal 640px wide, 12vh from the top, with the input \"Search skills, pages and actions\". Results are grouped:\n* **Suggested** (empty query only):\n  * today's set (\"Today's set · Probability, Equivalent expressions, Linear functions · 28 q\")\n  * \"Fix all mistakes (14)\"\n  * \"Resume module · 12/22\"\n  * \"Today's challenge\"\n* **Recent**: the last 5 run, from `localStorage` `satf.palette`.\n* **Skills**: all 19. Each row shows the glyph, name, mastery bar (48px) and \"● 2\" open mistakes. Enter = practise 10. Tab reveals the sub-actions: Practise 10 · Practise hard · Fix mistakes (n) · Open stats (→ `/results/#<slug>`).\n* **Pages**: every nav destination + Profile, Settings, Help.\n* **Actions**:\n  * Quick question\n  * Start a module (22 q · 35 min)\n  * Start a full section (44 q · 70 min)\n  * Take the diagnostic\n  * Practise saved (n)\n  * Practise types I haven't met\n  * Send feedback\n  * Pair a device\n  * Copy device code\n  * Theme: Light / Dark / System\n  * Keyboard shortcuts\n\n**Parsing** (only possible because the bank never runs out): a query like \"circles hard 5 timed\" puts a composed first row on top — \"Practise **Circles** · Hard · 5 questions · timed\".\n* Numbers 1–120 set the count; \"endless\" or \"∞\" makes it endless.\n* easy / medium / hard / mixed set the difficulty.\n* \"timed\" or \"untimed\" set the clock.\n* \"mc\" / \"grid\" set the format.\n* Several skills can be combined: \"circles percent 10\".\n\nMatching is case-insensitive prefix and substring over names plus an alias list kept beside `TOPICS` in ui.js, e.g.:\n* nonlinear_functions: quadratic, exponential, parabola, vertex\n* right_triangles_and_trigonometry: trig, sin, cos, tan, sohcahtoa, pythagorean\n* circles: arc, sector, radian, chord\n* ratios_rates_proportions_and_units: ratio, rate, unit, proportion\n* sample_statistics_and_margin_of_error: margin, sample, inference\n* evaluating_statistical_claims: claim, study, experiment\n\nKeys: ↑↓ move, Enter runs, Esc closes. No match: \"No match. Try a skill like \"circles\" or \"percent\".\"\n\n### 2.9 Keyboard shortcuts (`UI.keys`)\n\nA registry with scopes. They are ignored while focus is in an input, textarea, select or contenteditable, while a dialog is open (Esc aside), or when the \"Keyboard shortcuts\" preference is off.\n* Global:\n  * `G` then `T` Today, `P` Practice, `M` Mistakes, `E` Tests, `L` Plan, `R` Results, `C` Challenge, `U` Profile, `S` Settings, `H` Help\n  * `Q` quick question\n  * ⌘K / Ctrl K / `/` palette\n  * `[` collapse the sidebar\n  * `?` the shortcuts sheet\n* Session and test pages register their own (A–D, 1–4, Enter, M mark, X strike, C calculator, R reference). The `?` sheet lists them under \"This page\".\n\nThe shortcuts sheet is a two-column table (key in DM Mono `kbd` tiles, action) grouped Global / This page.\n\n### 2.10 Feedback and report (`UI.report(ctx)`, one component for every place)\n\nIt opens from:\n* Send feedback (general mode)\n* the Report button on every question: session, test window, report review, question of the day, challenge (other sections add the button and call this)\n* Report on a test sitting\n\nIt is a modal 560px wide; full-screen on the phone.\n\n* **Title**: \"Report a problem with this question\" or \"Send feedback\".\n* **\"Sent with this\"** box (`--tile`, DM Mono 12.5):\n  * For a question: skill chip · difficulty · \"Question 7 of 10\" · \"Your answer: B, marked wrong\" · `circles/central_angle · seed 88213` (the exact address that regenerates it; theirs sends only a UUID).\n  * For a page: the page name + path.\n  * A checkbox \"Include device details\" (on), with a \"Show\" disclosure listing exactly what is sent: browser, viewport, timezone, app version.\n* **What's wrong?** radio chips (required):\n  * For a question: Answer key is wrong · **The named mistake doesn't fit** (feedback on `Item.reasons`, which only we have) · Explanation unclear · Figure or table wrong · Typo or display · Difficulty label off · Other.\n  * General: Bug · Idea · Confusing · Other.\n* **Answer key is wrong** reveals:\n  * \"What answer do you get?\" (max 40 chars)\n  * a checkbox, checked by default: \"Don't count this question against me while it's checked\" (sets `attempts.disputed`; mastery ignores it and the trap it opened is closed)\n* **Details** textarea: placeholder \"What happened? What did you expect?\", a live counter \"0 / 5000\"; required for Bug and Other.\n* **Screenshots**: \"Add screenshots\" button + paste (⌘V) + drop. Up to 3, PNG/JPEG/WebP, ≤ 5 MB each. Thumbnails 64px with a remove ×. Errors inline: \"That's over 5 MB.\" / \"Up to 3 screenshots.\"\n* **Reply to** (optional email, prefilled when saved).\n* **Footer**: Cancel (quiet) · **Send** (pill, busy state).\n* **Success** replaces the body with \"Thanks. Report #123 is in.\" and Close; the question's Report button then reads \"Reported\" and is disabled for this question.\n* The draft (category, text, answer) is kept in `sessionStorage` under its context key, so closing by accident loses nothing.\n* 429: \"That's a lot of reports in an hour. Try again later.\"\n\n### 2.11 Banners and toasts\n\n`UI.banner(kind, text, actions)`: a strip at the top of `main`, `--wash` background for notices and `--tile` for system messages. At most one at a time, in this priority order:\n1. **Retired code**: \"This device was signed out from another device.\" [Sign in] [Start fresh]\n2. **Offline** (a network error from any `api()` call, not a 4xx): \"Can't reach SAT Freshman. Retrying in 5s\" [Retry now]. Backoff 5, 10, 20, 30 s; clears itself when a call succeeds.\n3. **Storage blocked** (replaces today's paragraph): \"This browser is blocking site data, so progress can't be kept here.\" [How to fix] → `/help/#storage`\n4. **Save nudge**: at 50+ answers with no email, at most once every 7 days, dismissal kept in `localStorage` `satf.nudge`. \"Your progress is only in this browser. Save it to an email so clearing the browser can't lose it.\" [Save progress] [Not now]\n\n`UI.toast(text, {action, href, ms=4000})`: bottom-left on desktop (clear of the sidebar), bottom-centre above the tabs on the phone. At most 3 stacked, `aria-live=\"polite\"`. Used for Saved, Copied, \"Link sent\", \"Signed out\", \"Moved 24 answers here\", and achievements: badge + \"Achievement · 7-day streak\" + [See] → `/me/#achievements`. After new achievements are shown, POST `/api/me/achievements/seen`.\n\n### 2.12 Shell data\n\nGET `/api/shell` once per page load. `ui.js` keeps the last response in `sessionStorage` `satf.shell` and paints it at once, then revalidates. It refreshes on `visibilitychange` → visible, and wherever pages call `UI.me(true)` today (rename it to `UI.refresh()` and keep `UI.me` as an alias).\n* Badges have fixed-width right slots, so they never shift labels.\n* On failure the nav still works: badges stay hidden, and a network error shows the offline banner.\n* `UI.plan.dayOf` computes the Plan meta client-side from `shell.plan`, so no rule is duplicated in Python.\n\n### 2.13 Theme, text size, motion\n\n`prefs.theme / text / motion` are applied as `html[data-theme=\"dark\"|\"light\"]`, `html[data-text=\"large\"]` and `html[data-motion=\"reduce\"]`. They are mirrored to `localStorage` `satf.look` so one inline line in every page's `<head>` applies them before first paint:\n\n`<script>try{var l=JSON.parse(localStorage.getItem('satf.look')||'{}');var d=document.documentElement;l.theme&&(d.dataset.theme=l.theme);l.text&&(d.dataset.text=l.text);l.motion&&(d.dataset.motion=l.motion)}catch(e){}</script>`\n\nDark tokens (under `@media (prefers-color-scheme: dark)` guarded by `:root:not([data-theme=\"light\"])`, and again under `:root[data-theme=\"dark\"]`):\n\n| token | value |\n|---|---|\n| `--paper` | #1A1917 |\n| `--ink` | #ECE8E1 |\n| `--ink-deep` | #1E1E1E (stays: it is the label on orange) |\n| `--amber` | #F18508 |\n| `--amber-deep` | #F59B32 |\n| `--wash` | rgba(241,133,8,.13) |\n| `--wash-2` | rgba(241,133,8,.22) |\n| `--tile` | #242220 |\n| `--tile-2` | #2D2A27 |\n| `--mat` | #3A3631 |\n| `--line` | #34312C |\n| `--soft` | #A39C92 |\n| `--faint` | #6E685F |\n\n`.mbar` uses `--ink`. Question text size is `--q-size` (20px, or 23px large); choices are `--q-opt` (18.5px, or 21px).\n\n---\n\n## 3. Profile `/me/` (rebuild of web/me/index.html)\n\nH1 \"Profile\" (visually the identity card; the H1 is the name).\n\n**Desktop at 1280** (content ≈ 960px): two columns.\n* **Left, 320px, sticky** (top 24px): Identity, Snapshot, Saved & in progress, Account.\n* **Right, fluid**: Goals, Skills, Score trend, What keeps catching you, Achievements, Activity, Recent activity, Question types met.\n\n**Phone at 390**: one column, 16px gutters, in this order: Identity, Goals, Snapshot, Skills, Score trend, What keeps catching you, Achievements, Activity, Recent activity, Question types met, Saved & in progress, Account.\n\nEvery card: `--tile` background, radius 14, padding 20 (16 on the phone). The header row has an H2 (700 16px) on the left and a quiet link on the right. Each card loads with a static skeleton (tile-2 blocks in the final layout, no shimmer). A card that fails shows \"Couldn't load this.\" + Retry inside that card only; the rest still render.\n\nThe whole page comes from **GET `/api/me/summary`** (one call), plus `/api/me/activity`, `/api/me/feed` and `/api/me/achievements`, which load in parallel.\n\n### 3.1 Identity card (`.id-card`)\n\n`--wash` background.\n* **Avatar** 72px (the initial on paper, a chosen topic glyph, or the mark when unnamed), with a 24px pencil badge at the bottom-right: a button labelled \"Change avatar\".\n  * It opens a popover: \"Initial\" + the 19 glyph tiles (5 a row, 44px, selected = 2px orange ring). A click saves (`PUT /api/me {avatar}`), then a toast \"Saved\". Esc closes.\n* **Name**: 800 24px, with a pencil button \"Edit name\".\n  * Editing swaps in an inline field (max 24). Enter saves, Esc cancels.\n  * Errors inline: \"Names can't have digits, @, < or >.\"\n  * Below it: \"On boards: Dana\", or \"On boards: Student 4F2A\" when anonymous or unnamed, or \"Not listed on boards\".\n* Line: \"Studying since Sep 23\" (DM Mono 12.5 `--soft`; the first attempt; hidden before one).\n* Account line: saved → check + \"d•••@gmail.com\"; not saved → orange dot + \"This device only · **Save progress**\" (link to `/me/settings/#account`).\n* **Goal pills** (32px, paper, links to `/plan/`): \"Target 700\" · \"Nov 7 · 45 days\". Without a plan, one pill: \"Set a goal\".\n* **Stat tiles**, a 2×3 grid of paper tiles (radius 10, padding 12). Each has a label (k), a value (`.num` 28px) and a sub-line (DM Mono 12 `--soft`):\n\n| label | value | sub-line |\n|---|---|---|\n| STREAK | \"6 days\" | \"best 9\" |\n| ANSWERED | \"1,284\" | \"84 this week\" |\n| ACCURACY | \"71%\" | \"76% last 7 days\" |\n| STUDY TIME | \"42h 10m\" | \"3h 20m this week\" |\n| TESTS | \"7\" | \"2 sections · 5 modules\" |\n| MISTAKES FIXED | \"38\" | \"14 open\" |\n\n  * Links: streak → `#activity`, answered → `/results/`, tests → `/tests/`, mistakes → `/mistakes/`.\n  * New student: values are \"0\" (streak) and \"—\" (the rest), and the streak sub-line reads \"Answer one question to start\".\n\n### 3.2 Performance snapshot (their ranks)\n\nThree rows separated by a 1px `--line`:\n1. **Math score**: band \"560–640\" (`.num` 32) + \"Module · Sep 20\" + a \"Report\" link (→ `/results/report/?id=`). Next line: \"Best 600–680 · Sep 12\". Empty: \"No score yet\" + two quiet buttons, \"Take the diagnostic · 20 q\" and \"Start a module · 22 q\".\n2. **Daily challenge**: \"This week **#4** of 37\" · \"Best day #1 · Sep 21\" · \"Played 12\" · \"Ahead of 62% today\" (only when played today; computed from today's board, never an invented percentile). Empty: \"Not played yet\" + \"Play today's\".\n3. **Question of the day**: \"18 answered · 14 right\".\n\nThere is no country rank: we collect no location (see open questions).\n\n### 3.3 Study goals\n\nEach row: label (k), value, bar. An \"Edit plan\" link (→ `/plan/`) sits in the header.\n* **Target**: a 200–800 range bar with the latest band shaded (ink 25%) and the target as a 3px orange tick. Labels: \"560–640 now · 700 target · +100 to go\" (to go = target − band midpoint, floored at 0 → \"Target reached\").\n* **Exam**: \"Sat, Nov 7 · 45 days\". A countdown bar from the first activity day to the exam. Next line: \"6 test days · 32 study days left\" (from `UI.plan.dayOf`).\n* **Daily goal**: \"45 min · 28 questions\", then today's bars \"18 of 45 min\", \"12 of 28 questions\".\n* **Weekly goal**: \"3h 45m · Mon–Fri\". This week's bar \"1h 30m of 3h 45m\", then 7 day dots Mo…Su: done = orange fill, study = 1.5px outline, rest = a faint dash, today = a ring. The week starts per preference.\n* **Preferred time**: \"Evening · 19:00\" + \"Add to calendar\" (downloads the plan's .ics; see shared needs) + \"Change\" → `/me/settings/#study`.\n\nWithout a plan: \"No plan yet. Four questions, about a minute.\" + a **Build my plan** button (this card's only filled button).\n\n### 3.4 Skills (their subject performance)\n\nThe header's right side reads \"Strongest: Circles · Weakest: Probability\" (only once there are answers).\n* Four domain rows: domain name (600 15), mastery bar (`.mbar`, 6px here), \"312 answered · 74% right\", and a chevron that expands the domain's skills.\n* Skill rows: glyph, name, bar, answered, accuracy, open-mistake dots (up to 3, then \"+n\"), and a \"Practise\" link (a 10-question set on that skill).\n* Footer link: \"All skills in Results\".\n* New student: bars at 0 and \"Not started\" in place of the counts.\n\nIt reuses the Results section's skill-row component.\n\n### 3.5 Score trend\n\n`UI.trend(host, points, {target, exam})`, shared with Results. 200px tall (160 on the phone), y from 200 to 800 with gridlines every 100.\n* Each sitting is a vertical range bar from low to high: ink for sections, ink at 50% for modules, a hollow diamond for the diagnostic. The latest is orange.\n* The target is a dashed line labelled \"Target 700\"; the exam date is a vertical tick at the right edge when it falls in range.\n* Hover or focus on a bar: tooltip \"Module · Sep 20 · 560–640\" and a click to its report.\n* Header: \"Latest 560–640 · Best 600–680\".\n* Legend under the chart: \"▮ Section  ▯ Module  ◇ Diagnostic\".\n* Empty: the frame with the target line and \"Your first module puts a point here.\" + \"Start a module\".\n\n### 3.6 What keeps catching you (ours only: their bank has no named mistakes)\n\nThe top 5 named misconceptions by hits, all time. Each row:\n* an orange dot (open) or a check (fixed)\n* the label (600 14.5, e.g. \"Used the base angle as the central angle\")\n* a small skill chip\n* \"×3\"\n* last seen \"Sep 21\"\n* **Practise**: POST `/api/drill {trap: {template, reason}}` → the same template, fresh numbers, 3 questions\n\nFooter: \"All mistakes\". Empty: \"No mistakes yet. When you miss, the mistake gets a name here.\"\n\n### 3.7 Achievements\n\nThe header has \"View all (43)\". The card shows 6 tiles in a 3-column grid (2 on the phone): the 3 most recently earned, then the 3 closest to their next tier.\n\nTile anatomy:\n* Badge circle 44px. Earned: orange fill with an ink-deep icon or glyph. Locked: `--tile-2` with a `--faint` icon.\n* Name (600 14), tier in Roman numerals (\"II\").\n* Progress \"5 / 7 days\" with a 3px bar.\n* Earned date \"Sep 21\".\n\nThe **View all sheet**:\n* Filter chips: All · Earned · In progress.\n* Grouped Habits / Volume / Mistakes / Skills / Tests / Challenge. The Skills group is the **19 topic-glyph badges**, which fill when a skill's mastery reaches 0.8, plus 4 domain badges and \"Explorer\" (question types met).\n* Each row: badge, name, one-line rule (\"Answer on 7 days in a row\"), tier ladder \"3 · 7 · 14 · 30 · 60 · 100\" with the earned tiers in ink, and dates.\n\nThe rules are in the server section. New student: every badge locked with its first-tier progress at 0.\n\n### 3.8 Activity (heatmap; theirs has a study-time calendar on the dashboard only)\n\n`UI.heatmap(host, days, {weeks})`.\n* 26 weeks × 7 rows of 12px cells with 3px gaps, radius 3. Month labels above, M / W / F at the left.\n* Colour by questions answered: 0 = `--tile-2`; 1–9 / 10–24 / 25–49 / 50+ = orange at 25 / 50 / 75 / 100%.\n* Tooltip on hover or focus (cells are focusable in a `role=\"grid\"`, arrow keys move): \"Wed, Sep 23 · 24 questions · 33 min · 5 right\".\n* Legend \"Less ▢▢▢▢▢ More\".\n* Stats row: \"Active days 34 · Current streak 6 · Best 9\".\n* Toggle \"26 weeks | 52 weeks\" on desktop. The phone shows the last 20 weeks and fits 358px with no scroll.\n* Anchor `#activity`.\n\n### 3.9 Recent activity\n\nFilter chips: All · Practice · Tests · Mistakes · Challenge · Achievements. Items are grouped under day headers (\"Today\", \"Yesterday\", \"Mon, Sep 21\"). Each row has an icon, title, detail, a time (\"14:02\") and a chevron, and links where it can. Kinds:\n\n| kind | title | detail | link |\n|---|---|---|---|\n| Practice set | \"Practice · 7/10\" | \"Circles, Percentages · 12 min\" | `/results/report/?id=` |\n| Quick questions | \"Quick questions · 3/4\" | | |\n| Module / Section / Diagnostic | \"Module · 540–620\" | \"22 questions · 31 min\" | the report |\n| Challenge | \"Daily challenge · #4 of 37\" | \"8/10 · 11:42\" | |\n| Question of the day | \"Question of the day · right\" or \"missed\" | | |\n| Mistake fixed | \"Fixed: Used the base angle as the central angle\" | \"Circles\" | |\n| Achievement | \"Earned: 7-day streak\" | | |\n\nThe list pages 20 at a time: \"Show more\" loads the next page by cursor. Empty: \"Nothing yet. Your first set shows up here.\" + **Start today's set** (the coach's pick).\n\n### 3.10 Question types met (what we show where they show usage meters)\n\nNothing is metered here, so the meter becomes a study tool.\n* \"57 of 386 question types\" with a bar.\n* Four domain rows: \"Algebra 22 / 101\", with bars.\n* One helper line: \"A type is a template: new numbers every time you meet it.\"\n* Button **Practise types I haven't met** → POST `/api/drill {topics: all, unseen: true, count: prefs.set_length}`.\n* When all 386 are met: \"Every type met.\" and the button hides.\n\n### 3.11 Saved & in progress\n\n* \"Saved questions **3**\" + **Practise saved** (`/api/drill {saved: true}`) + \"See all\" → `/mistakes/#saved`.\n* \"Open mistakes **14**\" + **Fix all** (`/api/drill {mistakes: true}`).\n* \"In progress\": up to 3 rows, e.g. \"Module · 12/22 answered · 18 min left · **Resume**\" (→ `/test/?s=`) or \"Practice · 4/10 · **Resume**\" (→ `/practice/session/?id=`).\n* Each part hides when its count is 0; all empty: \"Nothing saved or in progress.\"\n\n### 3.12 Account (summary)\n\n* Saved: \"Progress saved to d•••@gmail.com\" + **Manage** → `/me/settings/#account`.\n* Not saved: \"This device only. Clearing this browser loses it.\" + **Save progress** (filled) + \"Pair a device\" + \"Share with a parent or tutor\".\n\n### Lots of history\n\nNumbers take thousands separators (1,284) and hours (\"42h 10m\"). The feed pages. The heatmap offers 52 weeks. Skills stay collapsed to the 4 domains by default. Achievements \"View all\" scrolls inside its sheet. The page does one summary call regardless of how much history there is (the server aggregates).\n\n---\n\n## 4. Settings `/me/settings/` (new)\n\nH1 \"Settings\". Desktop: a sticky section nav on the left (200px): Practice · Tools & display · Study · Account & devices · Privacy & data (anchors; the one in view is highlighted). Phone: sections stacked, with the same five as a wrapping chip row under the H1.\n\n**Row anatomy**: label (600 15) plus an optional one-line helper (13px `--soft`) on the left, the control on the right. On the phone the control goes under the label. Every change sends `PUT /api/me {prefs: {key: value}}` (partial merge).\n* Success: \"Saved\" (DM Mono 12.5 `--soft`) at the row's end for 1.6s.\n* Failure: the control reverts, with inline \"Couldn't save. Retry\".\n* A \"Reset practice defaults\" quiet button sits at the end of section 1.\n\nControls: `.seg` (segmented, `role=\"radiogroup\"`, arrow keys), `.switch` (`role=\"switch\"`), `.field`, native time input.\n\n### 4.1 Practice\n\nThese are the defaults a new set opens with; the Practice page can still change them per set. Today's coach set keeps the plan's length.\n\n| row | control | default | helper |\n|---|---|---|---|\n| Questions per set | seg 5 · 10 · 22 · ∞, plus a number box 1–120 | 10 | — |\n| Clock | seg Off · SAT pace · Custom (+ minutes 1–180) | Off | \"SAT pace is 95 seconds a question.\" |\n| Difficulty | seg Adaptive · Mixed · Easy · Medium · Hard | Mixed | Adaptive: \"Harder as a skill's bar fills.\" |\n| Question format | seg Both · Multiple choice · Grid-in | Both | — |\n| Feedback | seg After each question · At the end | After each | — |\n| Repair questions | seg Right after a miss · At the end of the set | Right after | \"The same mistake, new numbers.\" |\n| Explanations | seg Open when I miss · Always open · Tap to open | Open when I miss | — |\n| Keep strong skills warm | switch | on | \"Brings back a mastered skill after 10 days.\" |\n| Confirm before ending a set | switch | on | — |\n| Keyboard shortcuts | switch | on | \"A–D, 1–4, Enter, and G-letter navigation.\" |\n\n### 4.2 Tools & display\n\nRows:\n* Show the timer (on)\n* Show the per-question stopwatch (on)\n* Calculator button (on)\n* Open the calculator when a set starts (off)\n* Reference sheet button (on)\n* Theme: seg System · Light · Dark\n* Question text: seg Normal · Large, with a live serif preview line \"If 3x + 5 = 20, what is x?\"\n* Motion: seg System · Reduce\n* Week starts on: seg Monday · Sunday\n\n### 4.3 Study\n\n* **Preferred study time**: seg Morning 7:00 · After school 16:00 · Evening 19:00 · Night 21:00, plus a custom time input.\n* **Add my plan to a calendar**: \"Download .ics\", disabled without a plan, with the helper \"Build a plan first\".\n* Plan line \"Nov 7 · 700 · 45 min · Mon–Fri\" + \"Edit plan\".\n\n### 4.4 Account & devices (`#account`)\n\n* **Name** (field + Save) with the board preview underneath.\n* **Avatar**: the 19-glyph grid inline.\n* **Show me on boards**: seg With my name · Anonymously · Don't list me. Helper: \"Anonymous shows Student 4F2A. Unlisted still shows you your own rank.\"\n\n**Email** block, by state:\n* *Not saved*: \"Save your progress to an email. No password. We send a link.\" Email field + **Send link**. 429 → \"Wait a minute before sending another.\"\n* *Link sent*: \"Check d•••@gmail.com and tap the link. This page updates when you do.\" A small spinner (static dots under reduced motion), \"Resend in 45s\", \"Use a different email\". Polls `/api/account` every 3s for up to 30 minutes.\n* *Claimable* (this email belongs to another code): auto-claim. Toast \"Signed in as Dana. Moved 24 answers here.\" Reload.\n* *Saved*: \"Saved to d•••@gmail.com · since Sep 23\" + \"Change email\" (sends to the new address; switches on verify) + \"Unlink email\" (confirm: \"Unlink? This device keeps its progress, but you won't be able to sign in with this email.\").\n\n**Pair a device**:\n* **Show a pairing code** → a panel with the 6 digits (DM Mono 32, grouped 482 913), a 160px QR of `/pair/?c=`, and \"Expires in 9:41\" counting down. Then \"New code\" and \"On the other device, open **satfreshman…/pair** or scan this.\"\n* **I have a code** → 6 OTP boxes → the preview confirm (see §5).\n\n**Device code** (a `<details>`, \"Device code, for moving progress by hand\"):\n* The masked code + Show/Hide + Copy (toast \"Copied\").\n* \"Use a code from another device\" field + **Use**. This is today's carry flow, now behind a confirm dialog showing both sides: \"This device: 24 answers. That code: 1,284 answers. They'll be combined under that code.\"\n* Errors kept: \"That is not a code.\" / \"That is this device.\" / \"Nothing is saved under that code.\"\n\n**Sign out of this device** (a quiet button with a door icon):\n* Saved → confirm: \"Sign out? You can sign back in with d•••@gmail.com.\" [Sign out] [Cancel]\n* Not saved → confirm: \"This device's progress isn't saved to an email. If you sign out, this browser forgets it.\" It shows the masked code with Copy, then [Save to email first] (filled) [Sign out anyway] [Cancel].\n\n**Sign out everywhere else** (saved only): confirm \"Other devices will need to sign in again.\" → POST `/api/account/rotate`.\n\n### 4.5 Privacy & data\n\n* **Share with a parent or tutor**: [Create a link] → a list of links (created \"Sep 23\" · \"Viewed 3 times, last Sep 22\" · Copy · Turn off). Helper: \"They see your stats, skills, score trend and activity. Never your email or device code.\"\n* **Download my data**: GET `/api/me/export` → `sat-freshman-2026-09-23.json`.\n* **Delete everything**: a dialog listing what goes (answers, mistakes, saved, sittings, plan, email link, share links; your challenge results leave the boards). A type-to-confirm field (\"DELETE\"), then [Delete everything]. After it: a new anonymous code, redirect to `/`, toast \"Deleted.\"\n\n---\n\n## 5. Pair `/pair/` (new, the page the other device opens)\n\nA centred card, 420px (full width on the phone): mark, H1 \"Open your progress here\".\n* Six OTP boxes: `inputmode=\"numeric\"`, `autocomplete=\"one-time-code\"`, paste splits across the boxes, backspace moves back. A **Continue** pill, enabled at 6 digits. `?c=482913` prefills and continues on its own.\n* **Preview**: \"Dana · 1,284 answers · since Sep 2\". \"This device: 24 answers. They'll be added to Dana's.\" [Use Dana's progress here] [Cancel].\n* Success: carry, adopt, reload to `/` with the toast \"Signed in as Dana\".\n* Errors:\n  * 404 \"No code like that. Check the six digits.\"\n  * 410 \"That code has expired or was used. Make a new one on your other device.\"\n  * 429 \"Too many tries. Wait 10 minutes.\"\n* Link: \"Sign in with email instead\" → `/me/settings/#account`.\n\n## 6. Shared view `/share/?t=` (new, read-only)\n\nFor a parent or tutor, with no login. A minimal bar: the mark, and \"SAT Freshman\" linking to `/`.\n* H1 \"Dana's SAT Math progress\" + \"Shared by Dana · live\".\n* Cards: the identity card without email, avatar editing or goal links, with its stat tiles; Snapshot; Goals (read-only); Skills; Score trend; What keeps catching you; Activity heatmap; Recent activity (titles only, no links).\n* No actions, no nav.\n* Turned off or unknown: \"This link was turned off.\"\n* Adds `<meta name=\"robots\" content=\"noindex\">`.\n\n## 7. Help `/help/` (new, in place of their subscription FAQ)\n\nH1 \"Help\". A search field filters questions live (no match: \"No question matches. Send feedback and ask.\"). Sections of `<details>`, each with an anchor id and a copy-link button:\n* **Getting started**:\n  * Is it really free? (yes, all of it, no plans or limits)\n  * Do I need an account? (no; save to email when you like)\n  * What does it cover? (SAT Math: 4 domains, 19 skills; Reading & Writing not yet)\n* **Practice & mistakes**:\n  * What is an open mistake?\n  * How does a mistake close? (two clean answers on that type)\n  * What is a repair question?\n  * What does the bar under a skill mean? (recent answers, harder ones counting more, growing with evidence)\n  * Will I see the same question twice? (no; saved ones come back exactly)\n* **Tests & scores**:\n  * How is my score estimated, and why a band?\n  * What decides module 2? (60% of module 1, a stated choice)\n  * Why did my score stop at 580? (the lower route's ceiling)\n  * How are grid-ins marked? (by value, with the fourth-digit rule)\n  * Can I retake a test? (every sitting is new)\n* **Plan**:\n  * How does the plan choose what I do?\n  * What if I miss a day? (it recomputes daily)\n* **Account & devices** (`#devices`, `#storage`):\n  * How do I use my progress on another device?\n  * What happens if I clear my browser?\n  * What is the device code?\n  * How do I sign out?\n  * Why does it say site data is blocked?\n* **Privacy**:\n  * Who sees my name?\n  * What do you store?\n  * How do I download or delete it?\n\nThen a **Keyboard shortcuts** table and a **Still stuck? Send feedback** button. Answers are drawn from the README's stated facts; nothing is claimed that the README doesn't support.\n\n## 8. What replaces Subscription\n\nNo route, no plan cards, no meters, no \"Upgrade\", no \"Free\" badge (a free site doesn't need to announce it on every screen). Their three selling surfaces become the student's own:\n* sidebar upgrade card → the **Today card**\n* profile credits card → **Question types met**\n* subscription FAQ → **/help/**\n\n## 9. Component inventory (ui.js / ui.css)\n\n`UI.shell`, `UI.refresh`, `UI.menu(trigger, items)`, `UI.sheet({title, body, actions, size})`, `UI.confirm({title, text, confirm, cancel, input})` (returns a Promise), `UI.toast`, `UI.banner`, `UI.tooltip`, `UI.report(ctx)`, `UI.quick()`, `UI.palette()`, `UI.keys.register(scope, map)`, `UI.prefs()` (defaults merged), `UI.trend`, `UI.heatmap`, `UI.otp(host, onComplete)`, `UI.avatar(profile, size)`.\n\nCSS: `.side`, `.side-item`, `.side-meta`, `.side-day`, `.rail`, `.pbar` (phone top bar), `.tabs`, `.more`, `.menu`, `.popover`, `.tip`, `.toast`, `.banner`, `.palette`, `.seg`, `.switch`, `.chips` (radio chips), `.counter`, `.otp`, `.stat`, `.meter`, `.skel`, `.card`, `.kbd`, `.badge`, `.heat`, `.trend`.\n\nNew icons: mistakes (a target), challenge (the existing trophy), help, feedback (a speech bubble), search, bolt, sidebar, settings, profile, devices, link, signout, more, chevron, check, pencil, eye, eye-off, copy, download, trash, calendar.\n\nDialogs are native `<dialog>` (focus is trapped natively, Esc closes). Under 760px, `dialog.sheet` becomes a bottom sheet: full width, radius 16 16 0 0, drag handle, max-height 90vh.\n",
+  "extras": [
+   {
+    "feature": "Start without an account, save to an email later with a sign-in link (no password)",
+    "why": "Theirs puts a Google wall in front of everything. Ours lets a student practise on the first click and still get a portable, recoverable account. Clearing the browser can no longer lose months of work."
+   },
+   {
+    "feature": "6-digit pairing code plus a QR code for moving to another device",
+    "why": "Replaces copying a 26-character code. Laptop to phone becomes a scan. Works for students without email access, such as school-managed devices."
+   },
+   {
+    "feature": "Sign out everywhere else (code rotation, with a retired-code banner)",
+    "why": "The device code is the whole credential. A student who used a library computer can cut it off. They have plain sign-out only."
+   },
+   {
+    "feature": "Live nav badges: open mistakes, challenge New/#rank, test Resume, plan's day",
+    "why": "Every section says what is waiting there. Their nav is ten silent labels."
+   },
+   {
+    "feature": "Today card in the sidebar and the More sheet (minutes and questions against the goal, streak, exam countdown)",
+    "why": "Uses their upgrade-card slot for the one thing a student should see on every page: how today is going against the plan."
+   },
+   {
+    "feature": "Quick question from any page (Q), with the repair question next",
+    "why": "Our version of their floating button, done without covering Next. One fresh question from the coach's pick, and a miss is followed by the same misconception with new numbers. That only works with a bank that never runs out."
+   },
+   {
+    "feature": "Command palette with 'skill difficulty count timed' parsing",
+    "why": "'circles hard 5 timed' plus Enter starts exactly that set. That is possible because any skill × difficulty × count can be generated instantly. It is also the fastest way into any of 19 skills, 7 sections and ~15 actions."
+   },
+   {
+    "feature": "Global keyboard shortcuts with a ? sheet",
+    "why": "Power users and accessibility. Their site has none, and their popovers ignore Esc."
+   },
+   {
+    "feature": "Reports that carry (template, seed), a 'named mistake doesn't fit' category, and 'don't count this against me'",
+    "why": "A reported question can be regenerated exactly, and the misconception labels, our core asset, get checked by students. A disputed key stops hurting mastery and stops opening a trap while it is reviewed."
+   },
+   {
+    "feature": "Achievements tied to learning: 19 skill glyph badges, mistakes fixed, 'never twice', question types met, upper route, podium",
+    "why": "Theirs are four generic tiles. Ours reward the behaviours that raise scores, and several can only exist with named mistakes and a template bank."
+   },
+   {
+    "feature": "'What keeps catching you': your top named misconceptions, each with Practise",
+    "why": "No finite bank without distractor reasons can show this. It is the most actionable summary of a student there is."
+   },
+   {
+    "feature": "Question types met, 57/386, with 'Practise types I haven't met'",
+    "why": "Turns their usage meters into coverage. It guarantees a student has met every kind of problem before test day."
+   },
+   {
+    "feature": "Activity heatmap (26 or 52 weeks) with per-day questions, minutes and accuracy",
+    "why": "Consistency made visible. Their study-time calendar is one month on the dashboard, with an off-by-one day."
+   },
+   {
+    "feature": "Recent activity feed with filters, including mistakes closed and achievements",
+    "why": "Theirs is an empty box. Ours shows progress as events a student can revisit."
+   },
+   {
+    "feature": "Resume unfinished sittings from the profile and the nav",
+    "why": "Their QBank sessions survive only by URL."
+   },
+   {
+    "feature": "Board visibility: with my name / anonymously / don't list me",
+    "why": "Privacy for minors on public leaderboards, while the student still sees their own rank."
+   },
+   {
+    "feature": "Read-only share link for a parent or tutor, with view count and revoke",
+    "why": "Parents and tutors are part of SAT prep. Theirs has no way to show progress without handing over the account."
+   },
+   {
+    "feature": "Download my data / delete everything",
+    "why": "Trust and legal hygiene for a free site used by minors."
+   },
+   {
+    "feature": "Dark theme, large question text, reduced motion",
+    "why": "Evening study is the common case (their own 'Preferred time: Evening'), and larger serif text helps students with low vision. Their site has neither setting."
+   },
+   {
+    "feature": "Preferred study time that exports the plan to a calendar (.ics)",
+    "why": "Gives their decorative 'Preferred time' a real effect: the study sessions appear in the student's own calendar."
+   },
+   {
+    "feature": "Offline banner with retry, and a retired-code banner",
+    "why": "Ours currently fails silently. Theirs has no stated behaviour."
+   },
+   {
+    "feature": "Help & FAQ with search and deep links",
+    "why": "Explains the parts students actually ask about: bands, routing, the 580 cap, grid-in marking, how mistakes close. Theirs answers only billing questions."
+   },
+   {
+    "feature": "Save-progress nudge after 50 answers (dismissible, weekly at most)",
+    "why": "Prevents the single biggest way to lose work under an anonymous model, without an upsell."
+   },
+   {
+    "feature": "Question links: /q/?t=template&s=seed opens exactly that question for anyone, key held server-side (owned by the session section; the shell provides UI.share)",
+    "why": "'Send this one to a friend' works because every question has an exact address. Their Share opened the OS sheet and froze the page."
+   }
+  ],
+  "server": [
+   {
+    "change": "db.py: new learner columns",
+    "detail": "LATER_COLUMNS adds:\n- learners.avatar TEXT (a topic slug, or NULL for the initial)\n- learners.prefs TEXT (JSON of changed keys only)\n- learners.board TEXT ('name' | 'anon' | 'hidden', NULL = name)\n- learners.study_time TEXT ('HH:MM')\n- learners.ach_seen TEXT (ISO time)\n- users.learner TEXT, users.login_token TEXT, users.login_for TEXT, users.login_sent TEXT, users.last_login TEXT\n- attempts.disputed INTEGER NOT NULL DEFAULT 0\n\nIndexes: users(learner), users(login_token)."
+   },
+   {
+    "change": "db.py: new tables",
+    "detail": "- pairs(code TEXT PRIMARY KEY, learner TEXT NOT NULL, created TEXT, expires TEXT, used TEXT)\n- retired(code TEXT PRIMARY KEY, into TEXT, at TEXT)\n- reports(id INTEGER PRIMARY KEY AUTOINCREMENT, learner TEXT, kind TEXT ('question'|'sitting'|'page'), category TEXT, answer TEXT, details TEXT, context TEXT JSON, device TEXT JSON, email TEXT, files TEXT JSON, at TEXT, status TEXT DEFAULT 'new')\n- shares(token TEXT PRIMARY KEY, learner TEXT NOT NULL, created TEXT, revoked TEXT, views INTEGER DEFAULT 0, last_view TEXT)\n- earned(learner TEXT, id TEXT, tier INTEGER, at TEXT, PRIMARY KEY(learner, id, tier))"
+   },
+   {
+    "change": "app.py learner_of: retired codes",
+    "detail": "After the shape check, look the code up in retired (PK lookup). Writes (POST/PUT/DELETE) with a retired code → 401 {detail: {retired: true}}. GET /api/shell returns {retired: true} instead of data so the client can show the banner."
+   },
+   {
+    "change": "GET /api/shell",
+    "detail": "Returns:\n- me: {name, handle (daily.handle), avatar, linked, email (masked 'd•••@gmail.com')}\n- streak, best_streak\n- today: {day, questions, right, minutes}\n- plan: {exam_date, minutes, days, tests, per_session} | null\n- tested_today\n- mistakes (open count)\n- saved (count)\n- challenge: {day, done, started, rank, players}\n- resume: {id, kind, answered, total, seconds_left, href} | null — the newest unfinished mock/module with time left, or practice started in the last 24h with ≥1 answer\n- new_achievements: [{id, tier, name}] earned after ach_seen\n- prefs (defaults merged)\n\nAchievements are evaluated here, with a 60 s in-process memo per learner (ponytail: per-process memo; move evaluation to the write paths if it shows in profiles)."
+   },
+   {
+    "change": "GET/PUT /api/me: new fields",
+    "detail": "profile() adds avatar, board, study_time, prefs (defaults merged) and account {linked, email_masked, since}. PUT validates:\n- avatar: a topic slug or null\n- board: name | anon | hidden\n- study_time: ^([01]\\d|2[0-3]):[0-5]\\d$\n- prefs: a dict whose keys are all in PREFS, each value checked against its enum or range\n\nPREFS:\n- set_length 0–120 (0 = endless)\n- clock off|pace|custom; clock_minutes 1–180\n- difficulty adaptive|mixed|easy|medium|hard\n- format both|mcq|grid\n- feedback each|end\n- repairs next|end\n- rationale miss|always|tap\n- keep_warm, confirm_end, keys, show_timer, show_stopwatch, calc_button, calc_autoopen, ref_button: bool\n- theme system|light|dark\n- text normal|large\n- motion system|reduce\n- week_start mon|sun\n\nUnknown key or bad value → 422 naming the key. prefs are merged into the stored JSON, and only non-default values are stored."
+   },
+   {
+    "change": "GET /api/me/summary",
+    "detail": "One payload for the profile:\n- stats {answered, right, accuracy, accuracy7, minutes_total, minutes_week, active_days, streak, best_streak, since, tests, sections, modules, sets, mistakes_open, mistakes_fixed, saved, hard_right, qotd {answered, right}, challenges_played}\n- score {latest, best, points: [{at, low, high, kind, session}]}\n- domains [{domain, mastery, answered, right, skills: [{topic, name, mastery, answered, right, traps}]}]\n- catching: top 5 traps by hits over all rows (open or closed) [{template, reason, label, topic, hits, open, last}]\n- coverage [{topic, met, total}] — met = distinct templates in practice_seen ∪ attempts, total = len(catalogue.by_topic[topic])\n- challenge {week_rank, week_players, best_rank, best_day, played, ahead_today}\n- resume [up to 3]\n- goals {plan fields, first_day}\n\nDisputed attempts are excluded from every count."
+   },
+   {
+    "change": "progress.days: any number of weeks, and best streak",
+    "detail": "Add weeks: int = 2 (max 53) and best_streak to the result. GET /api/me/activity?weeks=26 returns {days: [{day, questions, right, minutes}], streak, best_streak, active_days}. MS_CAP is kept."
+   },
+   {
+    "change": "GET /api/me/feed",
+    "detail": "Parameters: before=<iso>, kind=all|practice|test|mistakes|challenge|achievements, limit=20 (max 50).\n\nMerges finished sessions (with kind, source, right/asked, estimate, topics, duration), traps closed (label, topic, closed), earned rows and qotd attempts. Ordered by time desc. Returns {items: [{kind, at, title, detail, href}], next}. Titles are built server-side with the copy in the design (§3.9)."
+   },
+   {
+    "change": "server/achievements.py (new)",
+    "detail": "RULES, a list of (id, name, group, tiers, counter-fn), evaluated from SQL aggregates. Earned tiers are upserted into earned with the time they were crossed (the n-th attempt's `at`; the day the streak reached n).\n\n- **Habits**: streak 3/7/14/30/60/100 (longest ever); on_target (days meeting plan minutes) 5/20/50/100; consistency (weeks with every planned study day done) 1/4/8; qotd 7/30/100.\n- **Volume**: answered 50/100/250/500/1000/2500/5000; hard_right 10/50/150/500; hours 5/20/50/100.\n- **Mistakes**: fixed 1/10/25/50/100/250; clean_set (≥10 questions, no misses) 1/5/20; never_twice (closed and not reopened for 14 days) 5/25/100.\n- **Skills**: skill:<slug> ×19 (mastery ≥ progress.STRONG); domain:<name> ×4; explorer (types met) 50/100/200/300/386.\n- **Tests**: first_module, first_section, sections 1/5/10, upper_route 1/5, climbing (band midpoint above the first) 50/100/150/200.\n- **Challenge**: played 1/7/30/100, podium (top 3) 1/5/20, first_place 1/5, perfect (10/10) 1/5.\n\nGET /api/me/achievements → [{id, name, group, rule, icon, tiers, tier, have, next, earned: [{tier, at}]}]. POST /api/me/achievements/seen sets ach_seen = now."
+   },
+   {
+    "change": "server/account.py (new): email sign-in",
+    "detail": "POST /api/account/link {email}: pydantic EmailStr; lowercased. Upsert users (first = '' allowed for non-diagnostic accounts; relax NOT NULL via rebuild or default ''). Sets login_token (token_urlsafe(24)), login_for = X-Learner, login_sent = now. Sends mail.send_login. Rate limits (in-process, ponytail: resets on restart): 1 a minute per email, 5 an hour per learner → 429. Returns {sent: true, delivery}.\n\nGET /api/account/verify?token=: 30-minute expiry → verified = 1, last_login. Then:\n- users.learner is null → bind it to login_for\n- users.learner == login_for → done\n- otherwise → keep login_for as claimable\n\nClears login_token and redirects 303 to /me/settings/?signed=ok#account (or ?signed=bad).\n\nGET /api/account → {email_masked, verified, since, pending (a link was sent and not used), claimable (a verified login_for == X-Learner that is different from users.learner)}.\n\nPOST /api/account/claim → progress.carry(X-Learner, users.learner), clears login_for, returns {learner, moved}.\n\nDELETE /api/account → users.learner = NULL (the email is kept unverified).\n\nPOST /api/account/rotate → mint a new code server-side (same alphabet as ui.js: 'a:' + 24 base-36 chars from secrets), progress.carry(old, new), users.learner = new, INSERT retired(old, new, now) → {learner: new}."
+   },
+   {
+    "change": "server/account.py: pairing",
+    "detail": "- POST /api/pair → deletes this learner's unused codes and inserts a 6-digit code (secrets.randbelow, zero-padded, retried on collision) expiring in 10 minutes → {code, expires}.\n- GET /api/pair/{code} → {name or handle, answers, since} for the preview. 404 unknown; 410 expired or used.\n- POST /api/pair/claim {code} → marks used, progress.carry(X-Learner, pairs.learner) → {learner, moved}.\n- Claiming your own code → 409.\n- Failed lookups are counted per learner and per client IP: 5 per 10 minutes → 429."
+   },
+   {
+    "change": "progress.carry: every new table",
+    "detail": "Also moves earned (INSERT OR IGNORE then delete), shares, reports and users.learner. It deletes the source's pairs and carries the new learner columns: avatar, prefs (the target's keys win), board, study_time, ach_seen = MAX."
+   },
+   {
+    "change": "GET /api/me/export and DELETE /api/me",
+    "detail": "Export: Content-Disposition attachment sat-freshman-YYYY-MM-DD.json with profile, prefs, attempts, traps, saved, sessions (id, kind, started, finished, result, no question keys), earned, shares (without tokens) and the account email.\n\nDelete: body {confirm: 'DELETE'}, else 422. It deletes the learner's rows in attempts, traps, saved, practice_seen, sessions, learners, earned, shares, pairs and reports, and sets users.learner = NULL → {deleted: {table: n}}."
+   },
+   {
+    "change": "POST /api/report",
+    "detail": "Multipart: a `data` JSON field {kind, category, answer?, details?, email?, session?, question_id?, page?, device?, dispute?} plus files[] (≤ 3, image/png|jpeg|webp, ≤ 5 MB each; 413 over, 415 wrong type).\n\nCategory must be in the list for its kind. details ≤ 5000; required for bug and other.\n\nFor a question, the server resolves template, seed, topic, difficulty, skill, the learner's given answer and its marking from the session (the learner must own it; the key is never returned). It stores those in context, so nothing is trusted from the client.\n\nFiles are written to server/reports/{id}/. dispute: true with category key_wrong sets attempts.disputed = 1 for (learner, session, qid) and closes any trap that attempt opened, if no other miss on that template remains.\n\nRate limit 10 an hour per learner → 429. Returns {id}. Log line 'report #id category'."
+   },
+   {
+    "change": "progress.py: disputed attempts are ignored",
+    "detail": "board(), topic_mastery(), days() and the summary aggregates add AND disputed = 0."
+   },
+   {
+    "change": "Shares",
+    "detail": "- POST /api/share → {token (token_urlsafe(16)), url: '/share/?t=...'}\n- GET /api/share → [{token, created, views, last_view}] (not revoked)\n- DELETE /api/share/{token} → revoked = now\n- GET /api/shared/{token} (no X-Learner) → the summary minus email, code, resume and account, plus the feed titles; views += 1, last_view = now. 404 when revoked or unknown."
+   },
+   {
+    "change": "daily.board: board visibility",
+    "detail": "JOIN learners.board.\n- 'anon' → name = handle(learner, None)\n- 'hidden' → left out of entries and players, but `you` is still computed for the owner (rank among all)\n\nThe Challenge section's week/month/all-time boards apply the same rule."
+   },
+   {
+    "change": "drill: new sources and fields",
+    "detail": "The Drill body adds:\n- unseen: bool — templates never met first, falling back to least-met\n- trap: {template, reason} — queue that template 3 times\n- source 'quick' and 'palette' are allowed labels\n- difficulty 'adaptive' — per question, a tier chosen from the topic's mastery: <0.35 easy/medium, 0.35–0.7 medium/hard, >0.7 hard; shared with the practice section\n\n/api/history and the feed label source 'quick' as 'Quick questions'."
+   },
+   {
+    "change": "mail.py: sign-in email",
+    "detail": "send_login(to, token): subject 'Your SAT Freshman sign-in link'; body with the link {BASE_URL}/api/account/verify?token=..., '30 minutes, one use', and 'If you didn't ask for this, ignore it.' Same outbox fallback as today."
+   },
+   {
+    "change": "Diagnostic sign-up joins the account",
+    "detail": "In signup(): after the user upsert, if users.learner is null and the session has a learner, set users.learner = session.learner. The existing verify link also counts as the sign-in (sets last_login)."
+   },
+   {
+    "change": "test_flow.py",
+    "detail": "New checks:\n- /api/shell shape for new and seeded learners\n- prefs 422 on unknown key and bad value, and the merge\n- pair create/preview/claim/expired/used/self/429\n- account link → outbox token → verify binds → a second learner claims and carries → rotate retires the old code (401 on write, retired flag on shell)\n- export has the attempt count\n- delete empties every table\n- report: context resolved server-side, 4 files → 400, a 6 MB file → 413, dispute excludes from mastery\n- board 'hidden' excluded, but you is present\n- share view has no email or code, 404 after revoke\n- achievements: 50 answers earns answered I with the 50th attempt's time\n- feed pagination cursor"
+   }
+  ],
+  "files": [
+   "web/assets/ui.js",
+   "web/assets/ui.css",
+   "web/me/index.html",
+   "web/me/settings/index.html (new)",
+   "web/pair/index.html (new)",
+   "web/share/index.html (new)",
+   "web/help/index.html (new)",
+   "web/test/test.js",
+   "web/test/index.html",
+   "web/index.html",
+   "web/practice/index.html",
+   "web/practice/session/index.html",
+   "web/tests/index.html",
+   "web/results/index.html",
+   "web/results/report/index.html",
+   "web/plan/index.html",
+   "web/mistakes/index.html",
+   "web/challenge/index.html",
+   "web/diagnostic/index.html",
+   "web/diagnostic/signup.html",
+   "web/diagnostic/verified.html",
+   "server/db.py",
+   "server/app.py",
+   "server/progress.py",
+   "server/account.py (new)",
+   "server/achievements.py (new)",
+   "server/mail.py",
+   "server/daily.py",
+   "server/drill.py",
+   "server/test_flow.py",
+   "README.md",
+   "spec/rebuild.md"
+  ],
+  "shared_needs": [
+   "UI.report(ctx), one report/feedback modal. The session, test window, report review, question of the day and challenge each add a Report button that calls it with {kind:'question', session, question_id}; a sitting uses {kind:'sitting', session}.",
+   "UI.sheet / UI.confirm (native <dialog>, a bottom sheet under 760px), UI.menu (keyboard popover menu, Esc and outside click close, focus returns), UI.tooltip, UI.toast, UI.banner. Filter dropdowns, the start-exam wizard, review modals and 'end set?' dialogs elsewhere should all use these.",
+   "Form controls in ui.css: .seg (segmented radiogroup), .switch (role=switch), .chips (radio chips), .field with .counter, .otp. The practice builder, plan wizard and test wizard should use the same ones.",
+   "Card and data primitives: .card, .stat (label/value/sub tile), .meter (label + n/max + bar), .skel (static skeleton), .badge, .kbd, and .empty with an action button. Results, Today, Challenge and Tests share them.",
+   "UI.trend(host, points, {target, exam}) and UI.heatmap(host, days, {weeks}): one implementation shared by Profile, Results and Today (study-time calendar). The Results section owns the full-size trend; Profile uses the compact size.",
+   "Skill-row component (glyph, name, mastery bar, answered, accuracy, open-mistake dots, Practise link), shared by Profile, Results and Practice.",
+   "UI.prefs(), read by every set-starting page. Practice opens at prefs.set_length / clock / difficulty / format. Session and test honour feedback, repairs, rationale, show_timer, show_stopwatch, calc_button, calc_autoopen, ref_button, confirm_end, keys. The question renderer uses --q-size / --q-opt for prefs.text.",
+   "Dark-theme tokens on :root, and a head snippet on every page. Pages must use tokens only: web/test/index.html has ~40 hard-coded colours to convert.",
+   "UI.keys.register(scope, map), so session and test key handlers appear in the ? sheet and don't collide with global shortcuts.",
+   "web/test/test.js must use UI.learner() (load /assets/ui.js) instead of its own Math.random mint.",
+   "drill.py 'adaptive' difficulty, `unseen`, and `trap` queue options (shared with the practice section's builder).",
+   "Challenge week/month/all-time standing (daily.standing(learner, period)) from the Challenge section, for the profile snapshot; board visibility ('anon'/'hidden') applied on every board.",
+   "Plan .ics export (UI.plan.ics(profile, study_time)): generated client-side from UI.plan.dayOf, used by Plan and Settings.",
+   "History and feed label for drill source 'quick' ('Quick questions') in Results.",
+   "Question links /q/?t=&s= (session section) using a UI.share(question) helper, if adopted."
+  ],
+  "acceptance": [
+   "At 1280x900, every page except /practice/session/ and /test/ shows a 248px left sidebar. It lists, in order: Search, Quick question, Today, Practice, Mistakes, Tests, Plan, Results, Challenge, the Today card, Help & FAQ, Send feedback, and the user card. Exactly one nav link has aria-current=\"page\" and it matches the page (e.g. /results/report/ → Results, /diagnostic/ → Tests).",
+   "Clicking the collapse button (or pressing [) makes the sidebar 68px (getBoundingClientRect().width === 68). A reload keeps it collapsed (localStorage satf.rail). Focusing a rail item shows a role=tooltip containing its name.",
+   "At 900px wide the rail is the default. The toggle opens the full sidebar over a scrim, and Esc closes it.",
+   "At 390x844, document.documentElement.scrollWidth <= 390 on /, /me/, /me/settings/, /help/, /pair/ and /share/?t=…. The bottom tabs read Today, Practice, Tests, Results, More. On /plan/ the fifth tab reads 'Plan' with aria-current. Tapping it opens a sheet listing Plan, Mistakes, Challenge, Profile, Settings, Pair a device, Help & FAQ, Send feedback, Sign out.",
+   "For a learner with 14 open traps (seed via /api/drill answers), the sidebar Mistakes item and the phone top-bar chip both show 14. After closing all traps they are hidden.",
+   "curl -s -H 'X-Learner: a:v2revshellA' localhost:8000/api/shell returns JSON with keys me, streak, best_streak, today, plan, tested_today, mistakes, saved, challenge, resume, new_achievements, prefs.",
+   "The account menu opens on Enter on the user card; ArrowDown moves focus through its items; Esc closes it and document.activeElement is the user card again.",
+   "Ctrl+K opens the palette. Typing 'circles hard 5' and pressing Enter navigates to /practice/session/?id=X, and GET /api/drill/X shows topics ['circles'], count 5, difficulty ['hard'].",
+   "Pressing Q on / opens the Quick question sheet with a question. Answering shows the verdict; Another (Enter) loads a new question. On /practice/session/ and /test/ there is no quick-question button and Q does not open the sheet.",
+   "Send feedback with category Bug and details 'x' → POST /api/report returns {id}, and sqlite shows a reports row with kind 'page'. Reporting a session question stores context.template and context.seed equal to the session's stored question (checked in sqlite), although the client never sent them.",
+   "POST /api/report with 4 files → 400; with one 6 MB PNG → 413; with category 'key_wrong' and dispute true → that attempt has disputed=1 and the topic's mastery in /api/map ignores it.",
+   "Pairing: POST /api/pair as learner A → {code}. GET /api/pair/{code} as B → A's name and answer count. POST /api/pair/claim as B → {learner: A} and B's attempts now have learner A. Claiming again → 410. Six wrong codes from B within 10 minutes → 429.",
+   "Email: POST /api/account/link {email} as A writes a mail to server/outbox/ with a verify URL. Opening it redirects 303 to /me/settings/?signed=ok, and GET /api/account as A shows the masked email. Repeating as C with the same email, then opening its link → GET /api/account as C shows claimable true, and POST /api/account/claim as C → {learner: A}.",
+   "POST /api/account/rotate as A → {learner: A2}. A PUT /api/me with header A → 401 with detail.retired true, and /api/shell with A → {retired: true}.",
+   "PUT /api/me {prefs:{set_length:22, difficulty:'hard', format:'grid'}} → 200, and /practice/ then opens with 22, only Hard and Grid-in selected. PUT /api/me {prefs:{colour:'x'}} → 422 naming 'colour'.",
+   "Settings Theme → Dark sets html[data-theme=dark], and getComputedStyle(document.body).backgroundColor is rgb(26, 25, 23). A reload has no light flash: the head snippet applies data-theme before ui.css paints.",
+   "New learner a:v2revnew on /me/: the name shows 'Student XXXX'; the stat tiles show 0 / —; Snapshot shows 'Take the diagnostic' and 'Start a module'; Goals shows 'Build my plan'; the activity feed shows 'Start today's set'; all 43 achievements are locked. No console errors.",
+   "Seeded learner a:v2revshellhist on /me/: ANSWERED equals SELECT COUNT(*) FROM attempts WHERE learner=… AND disputed=0, and ACCURACY equals round(100*SUM(correct)/COUNT(*)). The heatmap cell for today has a tooltip with today's questions and minutes.",
+   "After a learner's 50th answer, the next page load shows a toast containing 'Questions answered'. After POST /api/me/achievements/seen, the next load shows none. GET /api/me/achievements has answered.earned[0].at equal to the 50th attempt's `at`.",
+   "Board privacy: with board 'hidden', GET /api/challenge/board omits the learner from entries and players, but `you` still has a rank.",
+   "POST /api/share → token. GET /api/shared/{token} with no X-Learner returns stats, and its body contains neither the email nor the learner code. After DELETE /api/share/{token}, GET /api/shared/{token} → 404, and /share/?t= shows 'This link was turned off.'",
+   "GET /api/me/export returns Content-Disposition: attachment, and its attempts array length equals the DB count. DELETE /api/me {confirm:'DELETE'} → every listed table has 0 rows for that learner, and without confirm → 422.",
+   "A fresh browser whose first page is /test/?s=… ends up with localStorage satf.learner matching ^a:[0-9a-z]{24}$.",
+   "With the server stopped (simulated by blocking /api in the browser), pages show the offline banner 'Can't reach SAT Freshman' with Retry now, and the nav links still work.",
+   "Every icon-only button in the shell has an aria-label, the skip link is the first Tab stop and moves focus to main, and every dialog closes on Esc and returns focus to its trigger.",
+   "PYTHONPATH=. python3 server/test_flow.py passes."
+  ],
+  "open_questions": [
+   "Is SMTP configured for production (SATF_SMTP_*)? Without it, sign-in links only reach server/outbox/, and email accounts can't work for real students. Pairing codes still work.",
+   "Should we also offer Google sign-in (needs an OAuth client ID and a privacy review), or keep email links and pairing only?",
+   "Their profile shows a country rank. We collect no location. Leave it out, or add an optional school or region for a school leaderboard?",
+   "Photo avatars are left out for minors' privacy (initial or topic glyph only). Confirm that.",
+   "Where should reports go beyond the reports table: an email to a team address, or a minimal read-only /admin/reports page? Who clears the 'disputed' flag once a key is checked?",
+   "Delete everything removes the student's challenge results, which changes other students' historical ranks. Acceptable, or keep anonymised rows on the boards?",
+   "Is a separate /me/settings/ page acceptable, or should settings sit at the bottom of /me/ like theirs? The spec splits them for clarity.",
+   "Should dark mode ship with this section, or after the test window's ~40 hard-coded colours are tokenised by that section's rebuild?",
+   "Age gate / consent: do we need a parental-consent step before an under-13 student saves an email (COPPA)?",
+   "Should the parent/tutor share view include the names of open mistakes, or only counts?"
+  ]
+ }
+}

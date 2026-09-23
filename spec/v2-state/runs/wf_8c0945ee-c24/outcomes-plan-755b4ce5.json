@@ -1,0 +1,207 @@
+{
+ "label": "outcomes: plan",
+ "key": "v2:dcf0df8fea4ef9b057a94ee63f8b3837131c22a0e97dfcfa42495034755b4ce5",
+ "result": {
+  "proposals": [
+   {
+    "title": "Points ledger: the plan spends minutes where the questions are, and knows about the Module 1 gate",
+    "what": "SERVER plan.ledger(learner), recomputed daily. For each of the 19 skills: per_section = the domain's section count (15/15/7/7) x the skill's template share in its domain. That is the share the section builder actually draws from: Nonlinear functions 6.1 a section, Nonlinear equations 5.4, Circles 1.3, Evaluating statistical claims 0.4. p[skill][tier] = first-try accuracy over the last 40 answers at that tier, shrunk toward the student's overall accuracy at that tier with a prior of 5 answers; guesses count half. lost[skill] = per_section x sum over tiers of mix[tier] x (1 - p). mix is module 1's 7/8/7 plus the predicted route's module 2 (11/8/3 or 3/8/11). The sum is expected misses per section, and scoring.fraction_for turns 'fix half of X' into a midpoint change. MODULE 1 GATE: m1_expected = the sum of p[domain][tier] over the 22 module-1 slots (blueprint.slots). Gate = 14 (ROUTE_UP_AT). When target > 580 and m1_expected < 14.5, the plan enters Gate mode: focus sets are easy+medium only, Fix takes easy/medium traps first, and the week theme reads 'Gate: 12.4 -> 14 of 22 in module 1'. It leaves Gate mode at 15.5 (hysteresis). ALLOCATION: skill weight = lost[skill] x {focus 2, normal 1, strong 0.4}. Domain shares are the sums. This replaces w_d = BLUEPRINT x state x (1.5 - m); the slot walk and its fallback stay. SCREENS: (a) Step 4 opens with a 'Where your points are' table: rank, skill, 'about 2.4 of 6.1 a section', a bar, and a 'rough' tag under 8 answers. The Suggested focus is taken from its top rows. (b) Step 2 TargetNote adds 'A 700 allows about 5 misses a section; you are near 15. The top 4 skills below hold 8 of them.' (c) A Progress-tab 'Points ledger' card shows start vs now per skill ('Nonlinear functions 2.9 -> 1.6 a section') and 'about 4.1 questions a section recovered since Sep 23'. (d) Every Why this? gains 'Nonlinear functions: about 2.4 questions a section at stake, the most of any skill'. HONESTY: numbers read 'about'. The gate caption says 'Our tests route up at 14 of 22; the College Board does not publish its cut.' STUDENT DOES DIFFERENTLY: stops spending a week on Circles (1.3 a section) while Nonlinear functions (6.1) leaks 2+ questions. Below the gate, stops grinding hard items that the lower module cannot even show, since it caps at 580. WHY IT MOVES THE SCORE: every minute goes to the largest expected raw gain, and clearing the gate is the single biggest jump open to a mid-500s student.",
+    "beats": "Their landing and dashboard say the plan is 'weighted toward the domains costing the most points', but that is AI prose over 8 self-set domain toggles, with no counts, no sense of skill size and no routing. In the live walk their generator failed 3 of 3 times. Ours shows the arithmetic per skill, lets the student check it, and changes the plan when the route is at risk.",
+    "effort": "L",
+    "needs": "scoring.fraction_for (already in this spec); per-tier accuracy per skill from attempts (the difficulty column exists); blueprint.DOMAIN_SPLIT/TIERS/slots and catalogue template counts; estimate.py (R16) for the predicted route; drill `tiers` (exists in §2.6). Changes only this section's allocator, step 2, step 4 and the Progress tab."
+   },
+   {
+    "title": "Warm-up: spaced, mixed, unlabelled retrieval of every skill already learned",
+    "what": "SERVER table skill_memory(learner, topic, interval_days, due, last, lapses). progress.record updates it. A skill enters memory the first time its mastery reaches 0.5, with a first interval of 2 days. A first-try right on a due skill multiplies the interval by 2.5 (cap 60 days). A first-try miss resets it to 2 days, adds a lapse and files a trap as usual. NEW TASK KIND `warmup`, first on every practice day: one question per due skill, oldest due first, 3-6 questions (15% of the question budget, at least 3). Medium tier (easy in Gate mode). Each question uses a template in that skill other than the last one answered there, on a fresh seed, fully interleaved. The skill chip stays hidden until after Check. Untimed in Build, 95 s a question from Sharpen. Final phase: the warm-up widens so every skill in memory is retrieved at least once in any 10 days. FOCUS SETS CHANGE ORDER: the first half is grouped by topic (learning), the second half is mixed (order 'mixed'), so the student practises choosing the method. SURFACES: TaskRow 'Warm-up · 4 questions · 6 min' with the detail 'Due: Linear inequalities (12 d), Percentages (5 d)…'. Why this?: 'Percentages: last retrieved 12 days ago; right today pushes the next check to 30 days.' ComingUp and the calendar tooltip show the due count per day. A Progress-tab Memory card reads 'Holding 11 · Due today 3 · Slipped this week 2', and the 'All 19 skills' table gets a 'Next check' column. STUDENT DOES DIFFERENTLY: starts each session by recalling skills from days and weeks ago, mixed and unlabelled, instead of only drilling this week's topics and never seeing them again. WHY IT MOVES THE SCORE: spaced retrieval and interleaving give much better delayed performance (Cepeda et al. on spacing; Rohrer's classroom studies of interleaved math). The SAT itself is mixed and unlabelled, so picking the method is a scored skill that blocked practice never trains.",
+    "beats": "Nothing in theirs. Their plan tasks are per-domain question sets, and their only spaced review is vocabulary (My Words 'Due Today'). A Math skill never comes back after its week. They also cannot re-ask a skill every week for months: their bank is a fixed pool of 3,867 Math items. Our templates can, with no repeats.",
+    "effort": "M",
+    "needs": "skill_memory table (F4 schema); progress.record hook (F4); drill `templates` plus `order:'mixed'` (exists in §2.6; the existing `pool:'review'` can seed it); a session option to hide the skill chip until Check (S4); the warmup kind in UI.taskRow and in the task-status rules."
+   },
+   {
+    "title": "Twin checkpoints: before and after on the same question types, and focus that moves on once a skill is fixed",
+    "what": "BEFORE: when a skill enters focus for a block (its first focus slot in a Mon-Sun week), its first focus task opens with 4 questions: 4 templates from the skill at the working tier. Their (template, seed) pairs are stored in plan_checks(plan, topic, block, items JSON, before_right, before_ms, after_right, after_ms, before_at, after_at). AFTER: at the block's end (the last practice day of the week, or after 30 focus answers on that skill, whichever comes first) the same 4 templates return on fresh seeds (drill pool:'items', ids, exact:false, each:1), timed at 95 s each. A result row appears in the DayPanel and in the week summary: 'Circles · before 1/4 -> after 4/4 on the same question types · 6:10 -> 4:05'. RULE: 3/4 or better with less time sends the skill to 'maintain': it leaves focus, joins warm-ups at a 7-day interval, and its slots move to the next ledger skill. 2/4 keeps it for another block with a Learn task added. 1/4 or less keeps it with Learn first. A toast shows the change: 'Circles passed. Next week's focus: Percentages (ledger #2) · Undo'. STEP 4: focus defaults to Auto, meaning the plan rotates focus weekly using the ledger and these checks. The student can Pin up to 2 domains or 6 skills, and the Focus/Normal/Strong control stays as an override. PROGRESS TAB: a Checks table with one row per block (skill, before, after, time, dates). Tapping a row opens the twin pairs side by side (UI.review). STUDENT DOES DIFFERENTLY: gets exact proof that a week of work fixed a skill and moves on as soon as it is fixed. Theirs keeps a 'focus' chosen once in the wizard until it goes stale. WHY IT MOVES THE SCORE: the loop closes weekly on the precise question types, over-practising a mastered skill stops, and hours move to the next-largest leak. Visible before/after gains are also the strongest motivator a practice platform has.",
+    "beats": "Their focus is set once in the wizard and never changes by itself. The plan changes only on score drift (a test at least 60 points up) or a manual 'Rebalance'. A fixed bank cannot re-ask the same question type with new numbers without repeating the question. Our (template, seed) addressing makes an exact twin post-test trivial.",
+    "effort": "M",
+    "needs": "plan_checks table (F4 schema, S7); drill `pool:'items'` with exact:false and each (exists, F5); the ledger (proposal 1) to pick the next skill; the Auto/Pin control in step 4; UI.review side by side (F3)."
+   },
+   {
+    "title": "A plan you keep: 'I have 15 minutes', a set time and place, and a one-minute weekly reset",
+    "what": "TIME-BOX: chips 'I have 10 · 20 · 30 · All' at the top of the DayPanel and Today's plan card. A chip trims today to its highest-value tasks, in order: warm-up (3), top Fix, then focus by ledger. The rest is shown moving to the next study day ('3 tasks move to Thu · Undo'), and the day counts as partial for the streak. This uses PUT /day/{date} {minutes} plus moves. MINIMUM DAY: when nothing is done by the preferred time + 3 h, Today and the reminder offer 'Do the 10-minute version' (warm-up plus the top Fix). WHEN AND WHERE: step 3 keeps the time chips and adds an optional 'Where' field (30 characters or fewer). Both appear in the reminder: 'SAT Math, 16:00 at the library: 4 tasks, 45 min'. REMINDERS: prefs.remind (0/10/30) is sent as an email to verified learners through mail.py and as the .ics VALARM that already exists. WEEKLY RESET: the first open after the week's last study day shows a card: 'Week 3: 4 of 5 days · 3h 10m · 23 mistakes fixed · Circles 1/4 -> 4/4'. Under it, 'Next week' lists 7 day tiles with their minutes; tapping one marks it Busy (off) or Short (15 min) before the week starts, then Confirm. SMARTER BEHIND BANNER: it reads the weekday pattern of misses: 'You miss most Tuesdays and Thursdays. Make them 15-minute days?' (one tap, day_minutes). STUDENT DOES DIFFERENTLY: studies for 10 minutes on a bad day instead of skipping it, at a set time and place, and replans each week in a minute instead of drifting until the plan is abandoned. WHY IT MOVES THE SCORE: adherence is the biggest real-world factor; a plan that is not used raises nothing. Implementation intentions (Gollwitzer) reliably raise follow-through, and short days keep the spacing that the warm-ups depend on.",
+    "beats": "They collect 'Preferred time: Evening' and never use it. Their only adherence tool is 'Rebalance my plan' after a week under 60% done, and their dashboard card offers no way to shrink a day.",
+    "effort": "M",
+    "needs": "Day overrides and moves (already in this spec); prefs study_time and remind (§2.7); mail.py daily email (the spec's open question; needs a default decision); ledger ordering (proposal 1); Today's plan card (S3) renders the chips through UI.taskRow."
+   },
+   {
+    "title": "Weekly error review: say why you missed it, and the plan matches the fix to the cause",
+    "what": "TASK `errors`, once a week on the last practice day before the test day: about 8 minutes, counted. It lists the week's misses from plan sets and tests, grouped by named misconception, each shown as a compact question (UI.review pane) with the chosen option's label. ONE TAP PER MISS: 'Yes, that's what I did' (preselected when the option names a misconception) · 'Misread what it asked' · 'Arithmetic slip' · 'Knew it, ran out of time' · 'Didn't know how to start'. The answer is stored as a cause on the attempt. ROUTING: a misconception goes to Fix, as now. 'Didn't know how to start' gets a Learn task for that template. 'Misread' gets a 'Read the ask' set built from templates whose options name reading traps ('found the other unknown and reported that instead', 'wrote the two coordinates in the wrong order'), using drill `want` regexes. 'Slip' gets an untimed accuracy set on that skill with a required 'Check your answer' step before Check. 'Ran out of time' moves that skill down a pacing rung. PROGRESS TAB: a 'Why you lose points' card, a stacked bar 'Concept 46% · Misread 18% · Slip 22% · Time 14%' with a weekly trend and one action line, e.g. 'Slips are up: this week's sets end with a check step.' STUDENT DOES DIFFERENTLY: keeps the error log that tutors make students keep, at one tap a miss, and gets a remedy that fits the cause instead of 'more questions on the topic'. WHY IT MOVES THE SCORE: a careless-error problem and a concept problem need opposite remedies. Reflecting on and self-explaining errors improves transfer (Chi's self-explanation work), and naming slips is what gets students to check their work.",
+    "beats": "Nothing in theirs. Their plan has no error step, their 'Distractor Analysis' is static text in the explanation, and their QBank marks mean nothing once the session ends.",
+    "effort": "M",
+    "needs": "A cause field on missed attempts (F4 schema; Review, S10, shows it too); drill `want` (exists); a session 'check step' option (S4); UI.review pane (F3); the Learn task (proposal 6) and pacing rungs (proposal 7)."
+   },
+   {
+    "title": "Learn task: study a worked example with its traps named, then solve its twins as support fades",
+    "what": "TRIGGERS: a focus skill with mastery under 0.35 or fewer than 8 answers (Build phase); a template missed twice in one set; a twin checkpoint at 2/4 or worse; a Skip with the reason 'Too hard'; an error review marked 'Didn't know how to start'. TASK `learn` (about 9 min) runs over 2 templates in the skill. For each: (1) WORKED EXAMPLE: seed A in UI.workspace review mode, solved. The key is highlighted, the rationale is shown, and every wrong option carries its named misconception ('B: added 3u instead of subtracting it'), with a 'Your turn' button. (2) TWIN WITH SUPPORT: seed B, with the rationale behind 'Show the approach'. Opening it counts the answer half toward mastery, like 'I'm guessing'. (3) TWO INDEPENDENT TWINS: seeds C and D, no support. Then the next template. ROW: 'Learn · Circles · 2 examples · 6 questions · 9 min'. Why this?: 'Circles: 3 of 11 right. A solved example first is faster on new ground.' DONE when both templates' independent twins are right, or the set is finished. It appears in Build by default; in Sharpen and Final only through the triggers. STUDENT DOES DIFFERENTLY: on a skill they cannot yet do, studies one solved question and its traps before attempting, instead of failing ten questions cold in a Focus set. WHY IT MOVES THE SCORE: the worked-example effect (Sweller) and fading from example to problem (Renkl) are among the most robust results for novices in math. Fewer early misses also means fewer traps to unlearn later.",
+    "beats": "Their tasks only launch a question set ('Start questions'). Explanations appear only after a wrong answer, never as teaching before the first attempt. A fixed bank also cannot give a solved example and then three unseen twins of the same question.",
+    "effort": "M",
+    "needs": "Drill `pool:'items'` with `each` for 'example, then twins' (F5); a solved-example card and 'Show the approach' in the session (S4, UI.workspace review mode per R21); the half-credit rule (exists for guesses). Rationales are one sentence per template today; step-by-step fading would need per-template steps in the bank (later)."
+   },
+   {
+    "title": "Pacing ladder per skill, with two-pass test training",
+    "what": "RUNGS per skill: Untimed -> 1.5x (143 s) -> Test pace (95 s) -> Bank time (76 s). PROMOTION: 80% or better first-try on the last 10 at the current rung, with median ms at or under the rung's target. DEMOTION: under 60% on the last 10 at the rung. The rung is stored with skill_memory. Focus sets run each skill at its rung. The session shows a thin per-question bar that fills to the rung's seconds (no alarm) and records answers over target. ClockMode Auto uses the rungs instead of 'Sharpen on, or a median over 120 s'. TWO-PASS: from Sharpen on, every test task carries a pass plan: 'First pass: answer, or mark anything past 1:30. Second pass: the marked ones.' The report (S6) returns 'Time on questions you got wrong anyway: 7:40' and 'Marked and returned: 4 of 6 right'. The week theme adds 'Pace: 4 skills at test pace, 2 banking time'. PROGRESS TAB: a Pace card with one dot per skill on a 60-180 s axis at its median, a tick at its rung target, and the rung name. STUDENT DOES DIFFERENTLY: builds speed one skill at a time without letting accuracy collapse, and practises skip-and-return on every test instead of meeting the clock only on test day. WHY IT MOVES THE SCORE: in a 35-minute, 22-question module many mid-range students lose points by running out of time or sinking 4 minutes into one item. Speed trained under an accuracy floor becomes fluency, and banked seconds go to the hard questions at the end of module 2.",
+    "beats": "Their plan's only time lever is 'Solve a practice exam every day', which is locked below 150 minutes a day. Their report shows no time per question, and their plan has no pacing idea at all.",
+    "effort": "M",
+    "needs": "attempts.ms (exists for practice); per-question ms from the test runner (a Report-section need already listed); the session target bar (S4); report fields for time-on-wrong and marked-returned (S6); a rung column on skill_memory (F4)."
+   },
+   {
+    "title": "Map week: measure all 19 skills before spending the plan's hours on them",
+    "what": "TRIGGER: a student with fewer than 6 first-try answers in more than 5 skills. The first 5 study days are Map days: focus slots are dealt so every skill gets at least 6 first-try answers over at least 2 tiers (1 easy, 3 medium, 2 hard, adaptive within the set). Sets are mixed and untimed, with feedback 'end' and repairs at the end, so the answers measure. A header tile reads 'Map 11 of 19 skills measured', with a 19-cell grid that fills in. The ledger shows 'rough' on unmapped skills. MAP COMPLETE: the plan re-deals and shows one summary screen: 'Strongest: Linear equations in one variable, 86%. Most points leak in Nonlinear functions (about 2.9 a section). Module 1 is about 11.8 of 22.' Below it, the suggested focus, confirmed with one tap. AFTERWARDS: any skill with fewer than 6 answers, or last measured over 30 days ago, gets one measure slot a week. Step 1 offers 'Not sure? Start with a Map week' as an alternative to guessing on the slider. STUDENT DOES DIFFERENTLY: spends week one measuring instead of guessing a starting score and choosing focus areas by feel. WHY IT MOVES THE SCORE: the 20-question diagnostic is ±100, and domain reads from a handful of items are noise (scoring.py says so). A 30-hour plan built on noise spends hours on the wrong skills. Six answers per skill over two tiers make the ledger's allocation trustworthy.",
+    "beats": "Theirs builds from self-reported sliders plus 8 domain toggles, and uses measured scores only when full tests exist. There is no measurement step, and nothing at skill level.",
+    "effort": "M",
+    "needs": "A coverage mode in the allocator (S7); drill `feedback:'end'`, `tiers` and `adaptive` (exist, F5); the ledger (proposal 1)."
+   },
+   {
+    "title": "Confidence calibration: fix sure-and-wrong first, recheck lucky rights",
+    "what": "CAPTURE: plan sets show a 2-state confidence tap under the choices, Sure / Not sure (key K), on by default for plan tasks (pref plan_confidence), next to the existing 'I'm guessing'. The value is stored on the attempt. FIX ORDER: traps opened on a Sure answer come first, get an immediate twin, and get a 1-day recheck instead of 3. Their rows are tagged 'You were sure'. LUCKY RIGHTS: 'Not sure' or guessing, and right, opens an '~unsure' trap (R9 kind unsure), and the next day's warm-up includes it. PROGRESS TAB: a Calibration card, 'Sure: 88% right (212) · Not sure: 51% (74) · Guessing: 27% (19)', with per-skill flags such as 'Overconfident: Percentages, sure but 64% right'. A test-strategy line follows from it: 'Your Not sure answers are right about half the time. Mark them and come back on the second pass.' STUDENT DOES DIFFERENTLY: rates certainty in one tap, learns where that certainty misleads them, and is corrected fastest where they were most sure and wrong. WHY IT MOVES THE SCORE: high-confidence errors that get immediate feedback are the most likely to be corrected for good (the hypercorrection effect, Butterfield and Metcalfe). Calibrated students also spend their review minutes in a test on the right items.",
+    "beats": "Nothing in theirs: no confidence anywhere, and their QBank marks do nothing after the session. Our own tests have Sure/Unsure/Guess only as an option, and nothing uses it for planning.",
+    "effort": "M",
+    "needs": "A confidence control in the practice session (S4; tests already have it); an attempts.conf column (F4); the unsure trap kind (R9); warm-up (proposal 2)."
+   },
+   {
+    "title": "Forecast with levers: where you land at your rate, and what changes it",
+    "what": "SERVER plan.forecast() -> {low, high, basis: 'tests'|'practice', hours_left}. With 2+ sittings and 5+ study hours: the slope of mean3 midpoints against cumulative study hours (progress.days minutes), projected over the planned hours left. Otherwise: expected misses recovered per hour, from the observed ledger change per hour on focus skills, mapped through scoring. The range widens with fewer data points. SCORE TILE: 'Forecast Nov 7: 640–690' under the status chip. The TrajectoryChart draws a grey cone from now to the exam next to the pace line. 'WHAT CHANGES IT': three computed levers, each with a preview and one tap: '+15 min a day -> 670–720' (PATCH minutes); 'Move to Dec 5 -> 690–740' (PATCH exam_date, only when not booked); 'Pin Nonlinear functions -> +10'. Caption: 'A forecast from your own rate, not a promise. It narrows with each test.' STUDENT DOES DIFFERENTLY: sees in week 2, not week 6, whether this plan reaches the target, and picks the lever that closes the gap. WHY IT MOVES THE SCORE: goal-gap feedback tied to concrete actions raises effort and prevents late panic cramming. Choosing time vs date vs focus is exactly the decision students get wrong without numbers.",
+    "beats": "Their 'Score gap' tile is static ('1000 now, 1400 target'). Their drift banner reacts only after a test comes in 60+ points up, and their step 2 pace line 'never says whether that is realistic'.",
+    "effort": "M",
+    "needs": "estimate.py mean3 and sittings (R16); progress.days minutes (R13); POST /api/plan/preview (exists in this spec) for the lever previews; the ledger (proposal 1) for the practice basis; UI.bandChart cone (F1 charts.js)."
+   },
+   {
+    "title": "Final stretch: dress rehearsals on the real schedule, then a taper",
+    "what": "Two 'Dress rehearsal' tasks in Final, 14 and 7 days out, on the exam's weekday (Saturday when it is a study day, else the nearest study day). Each is a full adaptive section (44 questions, 70 min, official timing, Desmos). It is preceded by a custom 'Bluebook R&W section first (64 min + 10 min break)' task, so Math is sat tired, as on the real day. The .ics event is placed at the Math start time on test morning. TAPER: in the last 5 days, volume drops 40% (a minutes override); no Learn and no Map; warm-ups cover every skill in memory plus open mistakes; the last timed practice is 2 days out; the eve is rest with the checklist (exists). The rehearsal report is compared with the previous one: 'M1 15/22 -> routed up · 1:38 a question · 2 unanswered'. A plan under 14 days gets one rehearsal. STUDENT DOES DIFFERENTLY: rehearses the exact sequence, timing and fatigue of test morning twice, then eases off instead of cramming. WHY IT MOVES THE SCORE: practice under test-like conditions transfers best, and a rested student performs closer to their true level.",
+    "beats": "Their only test lever is 'Solve a practice exam every day', locked below 150 minutes, and it draws on 10 papers with 1 free attempt. It has no sequencing, no taper and no test-morning timing.",
+    "effort": "S",
+    "needs": "The full-section test runner (S5); custom tasks and the .ics builder (already in this spec); phases (already in this spec)."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Include vocabulary practice / Vocabulary and Flashcards task types",
+    "spec_says": "Step 4 Extras list only Rechecks, Question of the day and Daily challenge. No Words task is specified, although prefs.words_goal names 'Plan step 4' and §2.9 lists 'S7 Plan: Words task (S9)'.",
+    "why_only_parity": "Below parity as written. Their plan schedules vocabulary and flashcard tasks, and ours drops the only piece of Reading & Writing the site will have (v2 decision 2: SAT words and transitions).",
+    "upgrade": "A counted `words` task from S9's spaced queue: 'Words · 12 due · 5 new · 6 min'. It is done when the due queue for the day is cleared. words_goal chips (0/5/10/20) sit in step 4, and the R&W quick-add links to it. Words missed in the task come back in the next day's queue, and minutes count through R13."
+   },
+   {
+    "feature": "Landing stat cards",
+    "spec_says": "BankStats: ∞ practice sections, 386 question types · 19 skills, and one example named mistake.",
+    "why_only_parity": "Same shape as their '10 tests / 6,933 questions / 1,002 words': marketing numbers about the bank, not about the student.",
+    "upgrade": "With 20+ answers, the cards become the student's own 'Where your points are' top 3 from the ledger ('Nonlinear functions: about 2.4 questions a section'), 'Module 1 about 12 of 22 (14 routes up)', and open mistakes by name. New students get a 5-question mixed 'Try it' that seeds the Map week."
+   },
+   {
+    "feature": "Four-step wizard as the only way in",
+    "spec_says": "Four steps with forward jump, server draft and a synchronous create.",
+    "why_only_parity": "The same four questions and the same length as theirs. A returning student still answers four screens before the first question.",
+    "upgrade": "A 'Quick plan' single screen: current from mean3 or the diagnostic, the next SAT date, 45 min x 5, Auto focus, weekly module. One 'Create' tap lands on Day 1's first task in under 20 s. 'Customize' opens the wizard, and acceptance measures time to the first question."
+   },
+   {
+    "feature": "Step 1 starting score",
+    "spec_says": "Math slider and number field, optional R&W, the SourceNote, and a link out to the 30-minute diagnostic with a return path.",
+    "why_only_parity": "Like theirs, it asks the student to estimate, or sends them away to measure.",
+    "upgrade": "'Not sure? Start with a Map week' (proposal 8) replaces the guess with measurement inside the plan itself. Where tests exist, the slider shows the mean3 band rather than a point."
+   },
+   {
+    "feature": "Step 2 target note and pace",
+    "spec_says": "GainCard, pace tag, later-date suggestion, and '700 is about 88% of the section's points'.",
+    "why_only_parity": "Better worded than theirs, but still abstract percentages that a student cannot act on.",
+    "upgrade": "Translate the target into misses and skills: '700 allows about 5 misses a section; you are near 15; the top 4 ledger skills hold 8 of them', plus the gate status ('you need the harder module: 12.4 -> 14 of 22 in module 1')."
+   },
+   {
+    "feature": "Step 3 daily time",
+    "spec_says": "Minute chips, a days slider, a per-day minutes select, days off, and the test rhythm.",
+    "why_only_parity": "Theirs has the same chips and days. Both ask for a number the student will probably overestimate.",
+    "upgrade": "Show 'You averaged 22 min on your last 10 study days' beside the chips, and offer 'Ramp': start at 20 min and add 5 a week up to the target. The plan grows its own minutes, so the Behind banner rarely fires."
+   },
+   {
+    "feature": "Step 4 focus per domain (Focus / Normal / Strong)",
+    "spec_says": "4 domains plus skill rows, a cap of 2 domains and 6 skills, suggestions from mastery and mistakes, and a live SplitBar.",
+    "why_only_parity": "Focus is still chosen once in the wizard and stays fixed for the plan's life, like theirs. Suggestions rank weakness, not points at stake.",
+    "upgrade": "Auto is the default: focus rotates weekly from the ledger and twin checkpoints (proposals 1 and 3), with Pin for the student's own picks. Every suggestion shows 'about N questions a section at stake', and the SplitBar shows next week's shares."
+   },
+   {
+    "feature": "Task 'Why this?'",
+    "spec_says": "Fact lines the scheduler used: open mistakes by name, accuracy, days since last worked, focus share, and timing gap.",
+    "why_only_parity": "It beats their AI prose on trust, but, like theirs, it explains the choice and says nothing about what the task is worth or when it counts as done.",
+    "upgrade": "Each task states its value and its goal: 'about 1.2 questions a section at stake · Goal: 4 in a row right on medium'. The done state reports against the goal ('Goal met: 5 in a row' or 'Not yet: 2 of 4, one more set tomorrow')."
+   },
+   {
+    "feature": "Skip",
+    "spec_says": "Skip / Undo skip; a skipped focus task keeps its deficit.",
+    "why_only_parity": "Equivalent to their Skip: it only defers.",
+    "upgrade": "Skip asks one tap for the reason. 'No time' moves the task to the next study day. 'Too hard' inserts a Learn task first (proposal 6). 'I know this' runs a 5-question test-out at medium/hard, 95 s each: 4/5 or better sends the skill to maintain and redistributes its slots; otherwise the task stays with 'Not yet: 2/5'."
+   },
+   {
+    "feature": "Practice again / Again · new questions",
+    "spec_says": "Starts 10 more on the same topics, tagged :extra.",
+    "why_only_parity": "The same as their 'Practice again', only unlimited.",
+    "upgrade": "'Again on what you missed': the set's missed templates x 2 on fresh seeds (drill pool:'items', exact:false), so the student re-meets the same traps with new numbers. 'Again, harder' steps the tier up when the set was 90% or better."
+   },
+   {
+    "feature": "Custom tasks",
+    "spec_says": "Title, minutes, day or repeat, and a tick to mark done.",
+    "why_only_parity": "Theirs has CUSTOM plus Mark done. Repeat is our only addition, and a ticked task still carries no information.",
+    "upgrade": "Typed quick-adds. 'Bluebook practice test' asks for the Math and R&W scores when ticked, and they enter estimate.py as an outside sitting feeding drift, the trajectory and the forecast. 'Tutor session' offers 'Log a mistake' (R29 quick sheet) for each miss. 'R&W study' links to the Words task."
+   },
+   {
+    "feature": "Stat tiles (Days to exam, Score, Plan done %, This week / Streak)",
+    "spec_says": "Four tiles: plan done by study days, the score status chip, and the week with a streak that rest days do not break.",
+    "why_only_parity": "The same four facts as theirs. Plan done % measures compliance, not learning.",
+    "upgrade": "Add 'Exam-ready 7 of 19 skills': 80% or better on medium+hard over the last 10, a median at or under 95 s, and a spaced check passed 7+ days after last practice. Add 'Recovered about 4.1 questions a section since start' from the ledger delta. The Score tile carries the forecast range (proposal 10)."
+   },
+   {
+    "feature": "Week view and theme line",
+    "spec_says": "'Week 3 of 7', tasks done %, a bar, and a server theme line (phase, top topics, test day).",
+    "why_only_parity": "Their week also has a theme sentence and a progress bar. Ours is a better description of the same thing.",
+    "upgrade": "The week theme becomes goals with a scorecard: 'Circles check 1/4 -> 3/4 or better · clear 6 open mistakes · module 1 14 or more on Friday'. The weekly reset card (proposal 4) marks each goal met or not, and next week's goals come from the result."
+   },
+   {
+    "feature": "Behind banner / rebalance",
+    "spec_says": "Shows your real average minutes and fits the plan to it, with a preview of questions and pace.",
+    "why_only_parity": "Better than their vague 'Rebalance', but still one global shrink after a bad week.",
+    "upgrade": "Read the pattern: 'You miss most Tuesdays and Thursdays. Make them 15-minute days?' (per-day minutes). Show the effect on the forecast, not just the question count. Offer the time-box chips and the 10-minute minimum day (proposal 4) before any shrink."
+   },
+   {
+    "feature": "Score drift banner",
+    "spec_says": "Up, down and target-reached, from mean3 with a 40-point threshold, remembered per set of sittings.",
+    "why_only_parity": "Theirs does the same at section-score level (upward only). Ours is more honest but still waits for a test.",
+    "upgrade": "Add skill-level drift every week without a test: 'Percentages is at 88% on the last 20: moved to maintain; its 2 slots go to Nonlinear functions · Undo', driven by the twin checkpoints and the ledger."
+   },
+   {
+    "feature": "Progress tab charts (Accuracy by domain, Study time per day, How the plan splits your time)",
+    "spec_says": "The same three charts as theirs, plus the trajectory, a domain card with start-mastery ticks, a skills table and a gaps card.",
+    "why_only_parity": "Theirs shows the same three things. None of them tells a student whether their time is paying.",
+    "upgrade": "A 'What your time bought' table per skill: minutes spent, accuracy before -> now, mistakes fixed, twin check before -> after, and a 'stopped paying' flag when the last 60 minutes moved accuracy under 3 points (with a suggested move). Add the Memory card (proposal 2), 'Why you lose points' (proposal 5), Pace (proposal 7) and Calibration (proposal 9)."
+   },
+   {
+    "feature": "Rechecks 3/10/30 days",
+    "spec_says": "Fixed mistakes come back at 3, 10 and 30 days with new numbers (R9).",
+    "why_only_parity": "It matches their spaced review in kind (their vocab 'Due Today') but covers only individual traps, not the skills themselves.",
+    "upgrade": "Extend spacing to every learned skill through skill_memory and the daily warm-up (proposal 2), so the skill's method comes back mixed and unlabelled, not just the one question type that was missed."
+   },
+   {
+    "feature": "Test rhythm (None / Weekly / Twice / Every study day)",
+    "spec_says": "The rhythm, the size (module or section), the test day, and 'Make it a section' on long days.",
+    "why_only_parity": "A finer version of their 'practice exam every day' toggle: a frequency setting with no sense of purpose.",
+    "upgrade": "Warn when tests exceed 30% of the planned minutes ('tests measure; practice raises the score'). Schedule the Final-phase dress rehearsals on the exam weekday and time (proposal 11), and make every test task carry the two-pass plan (proposal 7)."
+   },
+   {
+    "feature": "Preferred time and reminders",
+    "spec_says": "Usual-time chips used for the .ics events, with a 10-minute VALARM.",
+    "why_only_parity": "It beats theirs, which ignores the preferred time, but it reaches only students who import a calendar.",
+    "upgrade": "An optional 'Where' plus an email reminder for verified learners (mail.py) at the set time, and the 'Do the 10-minute version' nudge at the preferred time + 3 h when nothing is done (proposal 4)."
+   },
+   {
+    "feature": "Plans tab (history, switch, duplicate)",
+    "spec_says": "A plan list with status, built date, days left, tasks done, Open, Make active, Duplicate, Remove, and the older-plan banner.",
+    "why_only_parity": "A one-for-one match of their History tab.",
+    "upgrade": "A finished plan gets a 'What worked' summary: gain per study hour, skills fixed, skills that relapsed, the adherence pattern and the best weekday. 'Plan the next one' seeds the new plan with it (relapsed skills pre-loaded into warm-ups, the weekday pattern applied to day minutes)."
+   }
+  ]
+ }
+}

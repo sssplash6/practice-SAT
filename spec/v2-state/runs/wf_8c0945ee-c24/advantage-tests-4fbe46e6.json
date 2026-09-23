@@ -1,0 +1,226 @@
+{
+ "label": "advantage: tests",
+ "key": "v2:5054f9d5e81d330afde3fc496e752b9d12120c3e0b3650fd3b58dbfd4fbe46e6",
+ "result": {
+  "proposals": [
+   {
+    "title": "Pressure check: an untimed twin round after hand-in that separates what you don't know from points the clock took",
+    "what": "SCREEN: after the final POST /finish of any timed sitting (section, paper, twin, shared, module, custom), the Handing-in step shows #pressure before the redirect. h1 'Before your score: a pressure check'. Line: '9 questions like the ones you missed, left blank, guessed or spent over 3:10 on. Same kind, same difficulty, new numbers, no clock.' Tiles: Missed 5 · Blank 2 · Guessed 1 · Slow 1. Pill 'Start the check · about 12 min'. Quiet 'See my score now'. If skipped, the report keeps offering 'Pressure check · 9' for 7 days.\nWHICH QUESTIONS: every qid that was wrong, blank, tagged conf='guess' (right or wrong), or whose qstate.ms is over 2 x 95 s x the timing factor. Cap 15, one per template, in module and position order.\nBUILD: POST /api/drill {source:'pressure', parent:sid, feedback:'end', timing:'off'}. Each slot is blueprint.draw_matching(b, template, tier, fmt), a fresh seed. cfg.inline=true (R24), so it is never listed and is counted on the parent. cfg.pressure_of maps each twin qid to its original qid. It runs in the runner in exam mode: nothing revealed, a count-up clock, ms recorded per question.\nCLASSIFY (server pressure.classify(parent, drill), one verdict per original question):\n- Knowledge gap: the twin was also wrong, with the same misconception (same norm, R9). Shown as 'Real gap: <label>'.\n- Shaky: the twin was wrong a different way, or a grid-in was wrong.\n- Speed: the twin was right but took over 2x pace. 'You can do it, not yet at test speed.'\n- Pressure: wrong or blank in the test, twin right at pace.\n- Lucky: right in the test with conf=guess, twin wrong.\n- Confirmed: guessed right, twin right.\nSTORED on the parent: result.pressure {buckets:{knowledge:[qid], shaky, speed, pressure, lucky, confirmed}, ceiling}. ceiling is the band from scoring.section_score with the Pressure questions counted right. When module 1 changes route, it reads 'would have routed up'.\nREPORT BLOCK (S6 renders; this section supplies the data): a stacked bar with counts and glyphs, e.g. 'Knowledge 3 · Speed 1 · Pressure 3 · Lucky 1'. Line: 'Your band today 540-680. Without the 3 pressure losses: 580-720.' Each bucket lists its M1 Q7-style chips and has one fix:\n- Knowledge: 'Fix these 3' (pool:'redo', those traps).\n- Speed: 'Timed sprint · 6 at 95 s' (templates, timing:'pace').\n- Pressure: 'Next test with the pace guide' (sets prefs.pace and opens the start sheet).\n- Lucky: 'Practise 5 like it'.\nTESTS PAGE: the sittings row gets the chip 'Pressure 3 · Knowledge 3' and a 'Has pressure losses' filter.\nRULES: the twins' answers file as normal attempts (source pressure) and count toward mastery. They never change the sitting's band, percentile or paper stats.",
+    "beats": "TopTierPrep's report only splits Correct / Incorrect / Unanswered, and even that contradicts itself (25 Wrong vs 0 Incorrect / 45 Unanswered). It can never say why a question was lost. Re-testing needs the same question at the same difficulty with new numbers. A fixed 29-paper bank can't make that; it could only re-show the exact item, whose answer the student has already seen.",
+    "effort": "M",
+    "needs": "S5 blueprint.twin/draw_matching; F5 drill body: source 'pressure' with parent, cfg.inline and feedback 'end'; F4 qstate ms/conf (R7) and traps norm (R9) for the same-misconception match; scoring.section_score for the ceiling; S6 report renders result.pressure; prefs.pace (R11). Keep it subject-aware (per-section buckets) so R&W slots in later (v2 decision 3)."
+   },
+   {
+    "title": "Projected score from practice and 'Where your next points are', on the Tests page",
+    "what": "T1 ADDITION: a second band row, 'From practice: 570-650', with meta '1,240 answers on 212 question types, last 45 days · a projection, not a test'. It appears once there are 60 first-try practice answers across all 4 domains. Before that: 'Answer 60 practice questions across the four domains for a projection (38 so far)'. When a test estimate exists, a line compares the two: 'Practice and tests agree' (within 40), or 'You test 50 below your practice: see your pressure check'.\nMATH (estimate.projected(learner)):\n- Every slot of blueprint.slots for module 1 and both module 2 forms gets p(right) = the mean, over templates able to fill it (abilities() has that tier and format), of the learner's smoothed first-try accuracy.\n- Smoothing: (right + 4·prior)/(n + 4). The prior is the learner's accuracy on that tier in that domain, falling back to the site-wide tier accuracy.\n- Answers are recency-weighted (21-day half-life). The R8 exclusions apply (repeat, disputed, void); a right guess counts half.\n- Monte Carlo over 2,000 sections: module 1 outcome → route_after → module 2 from the earned form → section_score. The band is the 10th-90th percentile of the centres, rounded to 10. route_up_prob is also returned.\n- Cached per learner and recomputed at most once a minute after new attempts.\nNEW CARD T1b 'Where your next points are' (full width, under T1): up to 8 skill rows. Each row has:\n- the glyph and name;\n- 'about 3.4 slots a section';\n- 'you: 45% · 28 answered';\n- the gain, '+20 to +30': the simulated midpoint with this skill raised to min(95%, now + 25 points, your best skill's accuracy in the domain), minus today's;\n- '2 open';\n- actions 'Fix 2' (pool redo, topic) and 'Practise 10' (topic, adaptive);\n- a checkbox that feeds the header button 'Custom test on 3 checked skills'.\nSort: Biggest gain / Most slots / Most open mistakes.\nA pinned first row appears when route_up_prob is between 20% and 80%: 'Routing: you route up 45% of the time. Module 1 decides it: up to +60 on your ceiling', with 'Route-up trainer'.\nHelper: 'Gains assume everything else stays where it is.' Empty state: 'Practise across the four domains and this ranks the skills worth the most points.'\nAPI: GET /api/tests adds projected {band, n, types, route_up_prob, since} and gains [{topic, slots, acc, n, gain_low, gain_high, open}]. The How scoring works sheet gets a 'Projection' paragraph.",
+    "beats": "TopTierPrep's Estimated Score is empty until you sit a full test or module ('Complete a full-length test or a practice module to get your score estimate'). It never breaks down where points would come from, and their plan's 'Score gap' is just target minus current. Every one of our practice answers is tied to a template with known blueprint slots, so practice alone projects a section and prices each skill in points.",
+    "effort": "M",
+    "needs": "F4 estimate.py (R16): projected() and gains(); attempts' template/difficulty/fmt (these exist) and the R8 flags; blueprint.slots/abilities/by_domain and scoring.route_after/section_score (exist); proposal 5 (route-up trainer) as a link target. S7 Plan and S3 Today can read gains() for Focus and Try one. Keyed per section so R&W is additive."
+   },
+   {
+    "title": "Trap test: a timed test where your own past misconceptions are among the wrong answers",
+    "what": "CARD: a T4 card 'Trap test' and a start-sheet step 1 option.\n- Tags: Your traps · Test rules.\n- Facts: '10-22 questions · 95 s each'.\n- Helper: 'Every question offers a wrong answer you've fallen for before. Do you still take it?'\n- Stats: 'Traps ready 14' (open, plus fixed ones due a check-in, plus fixed within 60 days) and 'Last trap test: took 3 of 12'.\nSTEP 2:\n- 'Which traps': All ready 14 / Open 9 / Check-ins due 5 / Pick (a checklist of trap labels with topic glyph and 'hit 3x').\n- Length: 10 / 22 / all.\n- 'Neutral questions mixed in': 1 in 4 (default) / none.\nBUILD: for each trap (template, norm), the drill body want {template: regex(norm)} walks up to 40 seeds for an item where a distractor's reason matches. When the template can't, pool 'related' takes a sibling template that carries the same norm. The neutral slots come from the same skills, with none of your traps on offer, so the test isn't transparent. Ladder order, 95 s a question, no reveal until hand-in, calculator as your defaults.\nIt is kind 'custom' with cfg.custom.source 'traps'. Not scored (no estimate), listed as 'Trap test' (UI.KIND).\nMARKING per question: trap taken (the chosen option's reason is the trap), other wrong, right, or blank.\nRESULT (S6 renders; data from S5):\n- Headline: 'Your traps were on offer 14 times. You took them 3 times.' History: 'Last time: 7 of 12 (Sep 2)'.\n- One row per trap: the label, 'offered 2 · taken 0' with glyphs, and the change: 'Check-in passed' / 'Still open' / 'Relapsed'.\n- A right, non-guess answer with the trap on offer counts as a clean check-in (R9). Taking the trap reopens it.\nUP NEXT (T2): offer a trap test when 5 or more check-ins are due, or 8 or more traps are open, and none was sat in the last 7 days.",
+    "beats": "TopTierPrep's wrong options carry a prose 'Distractor Analysis' written after the fact. Nothing is indexed per student, so they can't choose questions by which wrong answer tempts you, and their Redo list just replays the same item. Every option in our bank names its misconception, and any template can be walked to a seed that offers a specific one.",
+    "effort": "M",
+    "needs": "F4 traps with norm and check-ins (R9); F5 drill body `want` and pool 'related' (§2.6); S5 blueprint.custom with queue; open question 18 (a stable misconception tag per option) makes the matching exact. Until then the number-stripped norm is used. S10 Review consumes the check-ins; S6 renders the block; F1 UI.KIND 'Trap test'."
+   },
+   {
+    "title": "Personal pacing: a pace line from your own timing, time-sink nudges and a triage on Check your work",
+    "what": "SETTING: 'Pacing coach' in the start sheet's Tools and the lobby, off by default; stored as prefs.coach. When on, the sitting gets cfg.coach, a 'Coached' pill on the report, and is left out of percentiles and paper stats. It still gets an estimate.\nPERSONAL PACE LINE (whenever Pace guide is on):\n- GET /api/session adds pace: [s1..s22], one per position, with no template names.\n- Each value is your median first-try seconds on that template (at least 3 timed answers), else on that tier in that domain, else the tier default (easy 70, medium 95, hard 125).\n- The values are scaled so the module sums to its duration minus a 3:00 reserve.\n- The strip's amber tick sits at the question you should be on. Under the clock, in DM Mono 12px: '2:05 ahead' or '1:40 behind'. It hides with the clock.\n- The lobby shows the plan: 'Q1-8 by 26:00 left · Q9-16 by 13:30 · Q17-22 by 3:00 · 3:00 to check'.\nTIME-SINK NUDGE (coach on, timed only):\n- Trigger: time on the current question passes max(2 x pace[i], 2:30).\n- A 40px --wash banner under the question header: '3:10 on this one. Your pace for it is 1:20. Mark it and come back?' [Mark and next] [Keep going].\n- Once per question, announced in the live region, never a modal.\nCHECK YOUR WORK TRIAGE (coach on):\n- Above the grid: 'Spend your 6:12 like this'.\n- The unanswered and marked questions, ordered by p(right) / expected seconds. p is your first-try accuracy on that kind and tier, shown only as a number.\n- Rows: 'Q18 · unanswered · about 1:10 · you get 80% of these', 'Q21 · marked · about 3:00 · 35% · guess and move'. A row opens its question.\nREPORT: the report gets a 'Time sinks' line (S6 renders): '3 questions took 9:40 together; 2 were wrong'.",
+    "beats": "TopTierPrep's runner, like Bluebook, has only a countdown and a hide toggle. Their QBank stopwatch resets on reload, and their report payload has no time per question at all. They give no pace target, no warning when one question is eating the clock, and no advice on how to spend the last minutes.",
+    "effort": "M",
+    "needs": "F4 qstate.ms and attempts.ms (R7); a pace(learner, questions, factor) helper in S5 api_tests; F3 runner strip, banner and review triage slot; F4 prefs key 'coach' (R11); F4 estimate.percentile excludes cfg.coach (R16); S6 time-sink line."
+   },
+   {
+    "title": "Route-up trainer and harder-module gauntlet: fresh module drills with a live goal",
+    "what": "TRAINER CARD (T4 'Route-up trainer'; shown while your route-up rate is under 80%, or before any section):\n- Tags: Module 1 · Official timing · Never repeats. Facts '22 questions · 35 min'.\n- Goal: 'Route up 3 times in a row'. Pips for the last 5 trainer sittings (filled = routed up), plus 'Best streak 2'.\nEACH SITTING is kind module with cfg.module 'm1' and cfg.trainer 'route'.\n- Lobby fact: 'The line: 14 of 22 right routes you up'.\n- The hand-in block says '13/22 · 1 short of the harder module 2'. A 22-cell strip marks where the 14th right answer would be.\n- 'These cost the route: Q2 (easy), Q5 (easy)' lists the easiest misses that make up the gap, each with 'Try a twin'.\n- Pill 'Fix what cost the route' (POST /api/drill {from_session, only:[those qids], each:2}). Quiet 'Next module 1'.\nROUTE MARGIN everywhere a section or paper appears (sittings row chip, report hero line): 'Routed up with 2 to spare' or '1 short'. It is module 1's right count minus ceil(0.6 x asked).\nGAUNTLET CARD (shown when the target is 620 or more, or after 2 upper routes): 'Harder module 2 gauntlet' · Fixed · Leans hard.\n- Goal '18 of 22 on the harder module 2', with the last 5 results.\n- A hard-question table by skill over the gauntlet sittings ('Circles, hard: 2 of 5') with 'Practise hard' per row.\nSTREAKS count only official timing on the standard module 1 tier.\nLISTS: the history Kind filter adds 'Trainer'. Plan can schedule 'Route-up trainer' as a test task.",
+    "beats": "TopTierPrep gives a free student 1 exam attempt, and even paid tiers resit the same fixed module 1 of a paper. Nowhere does it show how close module 1 came to the upper route, which is what decides whether a score can pass 580. Only an unlimited generator can serve a fresh module 1 every time you want to try again.",
+    "effort": "S",
+    "needs": "Module kinds m1/m2u and cfg.trainer on POST /api/mock/new (S5); scoring.route_after and ROUTE_UP_AT (exist); F5 drill from_session + only + each; S6 history rows with modules[] and the report margin line; S7 Plan task (optional)."
+   },
+   {
+    "title": "Twin rematch with a slot-by-slot diff, and twin shares so friends compare without passing answers around",
+    "what": "TWIN DIFF (on hand-in of a twin_of sitting):\n- The report handoff opens a block, 'Same test, new numbers'.\n- Two aligned rows of 44 cells: Original #11 · Sep 12, and Twin · today. Each column's tooltip gives the skill and difficulty.\n- Legend with counts: Fixed 6 · Held 33 · Still missing 3 · New misses 2. Each count is a filter.\n- Each 'still missing' slot says whether the misconception repeated ('Same trap both times: forgot to square the radius') or changed.\n- Headline: '+60 on an equal test: 520-660 → 580-720'.\nCHAINS: twins can chain ('3rd sitting of this form'), with a small band chart of that form across its sittings. Every sittings row gets 'Twin again'.\nTWIN SHARE: the share sheet (2.9) gains 'What they sit':\n- Twin (default): 'The same kinds of question in the same order, with their own numbers. Answers can't be passed around, and you still compare question by question.'\n- Exact: 'The same questions as yours.'\nPEERS: after both have finished, each peer row gets a slot grid: 'Q7 · a line touching a parabola: you ✓ · Ana ✕ · she picked: forgot to halve c'. Only the misconception label is shown, never the peer's raw answer, and only after both have finished.\nCLASSES: a teacher's 'Assign a test' defaults to a twin for each student.",
+    "beats": "A retake on TopTierPrep is the same paper with the same questions, so it measures memory, and nothing compares two sittings question by question. Their share exists only for QBank sessions (and froze the page), and assigning a test is hidden in an unlinked teacher area. A fixed bank can't produce a parallel form on demand.",
+    "effort": "M",
+    "needs": "S5 blueprint.twin (already in spec); F6 sets kind 'test' with cfg.twin (R18); S6 renders the diff and peer grids; F4 traps norm (R9); S2 classes for the assignment default. This matches the user's Daily Challenge decision (twins, so answers can't be passed around)."
+   },
+   {
+    "title": "Paper question boards: every paper question with the crowd's answer spread and the trap that caught most people",
+    "what": "TABS: after you finish a paper, its Discussion sheet opens on a new first tab, 'Questions'. The tabs are Questions · Posts 12.\nROWS: M1 Q1-22, then M2 harder and M2 easier (your route first). Each row has:\n- the position, skill glyph and name, and difficulty glyph;\n- '% right' among first standard sittings with its n ('71% of 214');\n- your result glyph, or 'not on your route';\n- the top trap: '24% picked B · added the exponents instead of multiplying';\n- the post count.\nSORT: Most missed / Your misses / Where you differ from the field (you missed it, 75% or more got it) / Most discussed. FILTER: Module.\nA ROW OPENS the read-only question pane (UI.review):\n- the stem, your answer and the key;\n- a UI.spread bar with each option's share and its misconception label;\n- the rationale;\n- that question's thread (about 'm1:17'), with the composer prefilled 'About M1 Q17';\n- 'Try a twin', an inline drill (R24).\nPAPER HEADER, after sitting:\n- 'Traps of this paper': the top 3 misconceptions by the share of sitters who took them.\n- 'Your cheapest points': 'You missed 3 questions that 80% or more got right' (Q chips).\nTHRESHOLD: stats per question appear at 20 first sittings. Before that: 'Stats after 20 sittings (12 so far)'. Gating stays as specified: nothing is sent before you've sat the paper.",
+    "beats": "TopTierPrep's Comments are one flat, unmoderated thread per paper, full of spoilers and tied to no question. They show no per-question statistics, and their distractor analysis is prose, not counts. Ours puts data first, and because every wrong option already names its misconception, the spread comes labelled automatically.",
+    "effort": "M",
+    "needs": "S5: the posts table with `about` (in spec) and paper aggregates per qid and option from first sittings (cached per paper, refreshed on finish); F1 UI.spread; F3 UI.review; F4 deps.access (R19), so keys reach sitters only; F5 inline twin drill (R24)."
+   },
+   {
+    "title": "Coverage-aware sections: each fresh test brings the question types you've met least, and the lobby says what it holds",
+    "what": "SERVER: blueprint.fill ranks each slot's candidate templates by (uses in this set, then learner exposure, then the current penalty). Exposure is the number of the learner's attempts plus practice_seen rows on that template. The blueprint's domain split, difficulty ladder and grid-in positions don't change, so the section stays representative and its estimate valid.\nLOBBY: two fact rows are added:\n- 'What it holds: Algebra 8 · Advanced Math 7 · Problem-Solving 4 · Geometry 3 · 6 grid-ins';\n- '9 question types you've never met'. It is a count only; the names are withheld until hand-in.\nREPORT (S6): 'New types this test: 9 · right on 5', with the list and a 'Practise' on each.\nTESTS PAGE (under T4): 'Question types met under the clock: 142 of 386', with a quiet 'Which ones?'. It opens a list by skill in three groups: met in tests / practice only / never, with 'Practise the never-met' (pool untried).\nSTART SHEET, Tools: a 'Favour types I haven't met' switch, on by default. Off gives today's scheduler.",
+    "beats": "TopTierPrep's 29 papers are fixed, so which question kinds a student meets under the clock depends on the shelf, not on the student. Kinds they have never met turn up for the first time on test day. Within the official blueprint, ours chooses the types this student has not seen timed, and says how many are in each test.",
+    "effort": "S",
+    "needs": "An exposure term in blueprint.fill (S5, from F5's blueprint); practice_seen and attempts counts (exist); counting shared with Me's 'Question types met' (Shell §3.11); S6 renders 'New types'."
+   },
+   {
+    "title": "Pencil-and-paper tests: print any test with an answer sheet, time it on screen, bubble in, get the full report",
+    "what": "START: step 4 adds 'Format: On screen / On paper'. For paper, the lobby shows the 'Print module 1' pill, 'Print answer sheet' and the proctor clock.\nPRINT VIEW (/test/?s=ID&print=m1; Letter or A4, black on white):\n- a cover with the directions and the reference sheet;\n- questions in two columns, with SVG figures and grid-in boxes drawn;\n- a bubble sheet: 22 rows of A-D, plus 5-box grid-in grids;\n- the footer 'SAT Freshman · Full section #12 · Module 1 · print id'. No key anywhere.\nPROCTOR SCREEN: a big DM Mono clock with Start and Pause (no pause in strict mode), the 5-minute notice, and 'Time' at 0.\nANSWER ENTRY (#enter):\n- 22 rows, each an A-D radio group or a grid-in field with the spec's keystroke filter.\n- Fast entry: typing letters in sequence ('ABDC...') fills rows; digits go into grid-ins; Tab or Enter moves on.\n- An 'Unanswered N' count and 'Hand in module 1'.\n- Sent as one batch: POST /api/session/{sid}/answers.\nADAPTIVE: routing happens on that hand-in, and 'Print module 2' then offers the routed module with a fresh clock. Keys and rationales are released only after module 2 is in. The report is the normal one, so every wrong letter gets its misconception name.\nFLAGS: cfg.format 'paper', answers stored with ms null. The estimate is kept and flagged 'paper'; percentile only when strict; per-question time reads 'not recorded on paper'.\nTEACHER (Shell classes): 'Print for class · 28 students' gives one twin per student, each with its own print id and key, and a class answer-entry grid.",
+    "beats": "TopTierPrep has no print or export anywhere (their Share / Export button is dead) and no way to practise on paper. A fixed bank printing one paper for a class hands every student the same answers. Ours prints any fresh or twin test, and the labelled distractors diagnose a paper answer exactly.",
+    "effort": "M",
+    "needs": "F1 print conventions in ui.css; the S4 print-view pattern (§3.3 2.12); S5: a batch answers endpoint, cfg.format, and begin/pause for the proctor clock; S5 blueprint.twin; S2 classes; F4 deps.access (R19) for the key release."
+   },
+   {
+    "title": "How you take tests: a cross-sitting panel of test-taking habits, each with one fix",
+    "what": "SECTION: 'How you take tests' on /tests/, after T1, with its own section-nav item. Shown after 2 timed sittings. Each tile has a number, a trend against your previous 3 tests, and one action line:\n1. End of module: 'Q17-22: 38% right · Q1-16: 71%', with an accuracy-by-position sparkline. Action: 'Hard-end practice: 10 hard at 95 s'.\n2. Pace: median time by position against the pace line. 'You reach Q16 with 9:10 left on average.'\n3. Time left at hand-in: '4:10 left and 1.2 blanks a module'. Action: 'Spend spare minutes on marked questions'.\n4. Answer changes: '+5 net (7 wrong→right, 2 right→wrong): your second look pays'. When the net is negative: 'Change an answer only when you find an error.'\n5. Mark for review: 'Marked 18 · went back to 15 · changed 6 · gained 4'.\n6. Confidence, when the tags were used: 'Sure 91% right · Unsure 62% · Guess 30%'.\n7. Calculator: 'Open on 40% of questions · 78% right with it, 64% without'.\n8. Away: 'Left the window 3 times in 5 tests'.\n9. Pressure, from proposal 1: 'Pressure losses: 3 a test, down from 5'.\nFILTERS: Last 5 / 10 / All; Sections and papers / All timed. Each tile has a quiet 'Which sittings?' that sets the T6 filter.\nSERVER: GET /api/tests adds habits{}, computed from qstate over timed, non-abandoned sittings. Older rows without qstate are counted out, and the tile says 'from 4 of 7 tests'.",
+    "beats": "TopTierPrep shows no test-taking behaviour at all: their report has no time per question, and they record no answer changes, no flag outcomes and no calculator use. Their contest 'Time analysis' was empty. Ours comes from per-question state the runner already stores.",
+    "effort": "M",
+    "needs": "F4 qstate trail/first/changes/conf/ms/away (R7); a new qstate.calc_ms written by the runner (an F3 UI.calc hook); S6 per-sitting blocks as drill-down targets; proposal 1's result.pressure for tile 9; coordinate with S6 Results (its accuracy split is per difficulty only, not per habit)."
+   },
+   {
+    "title": "Desmos coach: your calculator work kept per question, and the question already typed into Desmos in review",
+    "what": "RUNNER: records per question qstate.calc_ms (how long the calculator was open while on it) and calc_exprs (the expressions added while on it, up to 20 LaTeX strings, taken from getExpressions on move-away).\nBANK: a template hook desmos(item) → [latex] for templates that graphing or a regression solves: linear and nonlinear equations, systems, quadratics and tangency, exponentials, regressions from tables. Start with about 80-120 templates. desmos_best: true when graphing is the faster route. An audit check confirms the expressions reproduce the key.\nREVIEW (after hand-in, through deps.access):\n- 'Your calculator on this question': a read-only Desmos showing your expressions, or 'Not used'.\n- 'The Desmos way': opens Desmos preloaded with this seed's expressions (e.g. y=2x^2-6x and y=c/2 with a slider for c), plus one line of how: 'Slide c until the line touches the parabola once.'\nREPORT (S6): 'Desmos was the quick route on 4 questions you did by hand (2:10 on average; the Desmos way takes about 0:40)'.\nELSEWHERE: the practice session's explanation gets the same 'Desmos way' for those templates.",
+    "beats": "TopTierPrep embeds Desmos but forgets its state and never shows when it is the fast route. Teaching it question by question would mean hand-writing every item. Our templates hold their own equations, so every seed can be typed into Desmos automatically.",
+    "effort": "L",
+    "needs": "F3 UI.calc (per-sitting state is in spec) extended with per-question snapshots; a T-bank template hook desmos() plus its audit check; F4 deps.access (R19); the S6 review player button; S4 practice explanation."
+   },
+   {
+    "title": "Scratch work that's kept: a pen and typed scratch layer per question, shown beside the named mistake in review",
+    "what": "TOOL: 'Scratch' in the top-bar tools, key W (free in the §2.8 runner map). It toggles a transparent pen layer over the question column: pen, touch or mouse; 2 widths; graphite ink; an eraser; Clear. A 'Typed scratch' box under the options (monospace, 0/1000) serves keyboard users.\nSTORAGE: strokes are simplified (Ramer-Douglas-Peucker, 20 KB or less per question) and saved as qstate[qid].scratch through POST /state and the same save queue, so a reload keeps them. The text size and column width are recorded, so the overlay lines up again.\nREVIEW (after hand-in): a 'Your work' toggle draws the strokes over the stem where they were made, next to the misconception the chosen option names. The student sees 'added the exponents' at the line where they did it.\nPHONE: two fingers scroll while the pen is on, and a 'Done' button closes it.\nSTRICT: allowed in strict mode, since the real test gives scratch paper.",
+    "beats": "Neither TopTierPrep nor Bluebook has a scratch area, so a student's working is lost and the review can't show where the reasoning went wrong. Ours keeps the work next to the misconception behind the chosen answer.",
+    "effort": "M",
+    "needs": "An F3 runner tool slot and overlay (built alongside UI.annotate); an F4 qstate scratch field with a size cap (R7); the S6 review player overlay; F2 UI.keys W."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Number of papers on the shelf",
+    "spec_says": "Papers #1-#7 from mocks.json plus one new paper every Monday; 'Shows 6 papers, then Show all 8'.",
+    "why_only_parity": "At launch that is 8 papers against their 29-31. The grid a TopTierPrep student opens looks a quarter the size, and the weekly drip is a scarcity we don't have.",
+    "upgrade": "Build 30 papers at launch: the 7 launch-set sections plus 23 from daily.paper seeds 'paper:launch-N', each excluding the others' items. Keep the weekly one. Pre-build the next 4 weeks lazily so no paper is ever built cold on a student's click."
+   },
+   {
+    "feature": "Paper difficulty filter and sort",
+    "spec_says": "Easier than most / Typical / Harder than most, measured from 20 or more first standard sittings; otherwise 'Not rated yet', and unrated papers sort last.",
+    "why_only_parity": "On a new site every paper reads 'Not rated yet' for months. That is less than their editorial Easy/Medium/Hard label.",
+    "upgrade": "Predict the rating from day one: the paper's expected share of weight earned, from every learner's first-try accuracy per (template, tier) across all practice. It shows as 'Harder than most · predicted' and switches to 'measured from 34 sittings' at 20. Add 'Predicted for you: 540-620' on each card (estimate.projected run on that paper's items) and a 'Best for me' sort: most slots in your weakest skills and open traps."
+   },
+   {
+    "feature": "Paper card stats",
+    "spec_says": "Sat by / Average / You, plus 'New to you: 63 of 66' and 'your first sitting beats 62%'.",
+    "why_only_parity": "The same information as their 'People took' and 'Your last score', better formatted.",
+    "upgrade": "Add 'Traps here you've fallen for: 3' (items whose distractors carry your traps) and 'You vs average: +40'. Add a 'Worth a retake' status: sat over 30 days ago, with 3 or more of its missed misconceptions fixed since. Its action is 'Retake as a twin', which counts as a fresh sitting for you but never toward the paper's stats."
+   },
+   {
+    "feature": "Estimated score: empty state and trend",
+    "spec_says": "'No estimate yet. A full section gives a band about 140 points wide...' until a scored sitting; the headline gives the trend since the last sitting.",
+    "why_only_parity": "It behaves exactly like theirs: nothing until a test, then a trend against the previous one.",
+    "upgrade": "Fill it from practice (proposal 2), with the empty state counting toward it ('38 of 60 answers'). Add a date forecast: 'At +12 a week over your last 5 sections: 610-690 by Oct 3', with a link to the plan's drift (R16 and S7 own the rule)."
+   },
+   {
+    "feature": "Percentile and ranked sittings",
+    "spec_says": "Rank among each learner's first standard sitting of the same kind (a paper: of that paper), shown from n 20 (30 on papers).",
+    "why_only_parity": "The same rule as their 'N% scored at or below you on their first attempt'.",
+    "upgrade": "Add cohort percentiles: among students with the same exam date ('among 214 sitting Oct 3') and the same target band. Two weeks before each official SAT date, release a paper for that date with its own cohort board (their 'September Predictions' papers, done honestly), coordinated with Compete's Season Final. Always print n."
+   },
+   {
+    "feature": "Start sheet",
+    "spec_says": "A 4-step sheet: Test · Modules · Timing · Tools. A card's Start is one tap with your defaults.",
+    "why_only_parity": "Their 3-step wizard with a tools step added.",
+    "upgrade": "A presets row at the top of the sheet: 'Like test day' (strict, official, adaptive, no extras), 'Same as last time', 'Pacing practice', 'Accommodations 1.5x'. Each goes to the lobby in one tap, and the summary line names what the preset changed."
+   },
+   {
+    "feature": "Timing modes",
+    "spec_says": "Official / time and a half / double / untimed count-up, and custom minutes.",
+    "why_only_parity": "Timed and Untimed are theirs; extended time is Bluebook's.",
+    "upgrade": "Add 'Tightening pace' training timing. It starts at 1.25x and tightens by 0.05 each sitting while accuracy holds within 5 points of the previous sitting, until it reaches official. Its line reads 'Pace training: 1.15x · 2 more sittings to official'. It is only practical because every sitting is fresh."
+   },
+   {
+    "feature": "Fullscreen gate and test conditions",
+    "spec_says": "The lobby offers 'Enter fullscreen and begin' or 'Begin without fullscreen'. Save and exit pauses the clock, and pauses are shown on the report.",
+    "why_only_parity": "Fullscreen stays optional and has no consequence, as on theirs.",
+    "upgrade": "Strict mode, a lobby switch that is also the 'Like test day' preset:\n- fullscreen is required, and leaving it counts;\n- no pause (Save and exit keeps the clock running);\n- extras are off (coach, confidence tags, reveal route);\n- away time is counted.\nOnly strict sittings are 'Ranked' on paper boards and in percentiles. Other sittings show a 'Practice conditions' pill with the reason ('paused once')."
+   },
+   {
+    "feature": "Question strip tools",
+    "spec_says": "Q badge · Mark for review · confidence · Eliminate · Report.",
+    "why_only_parity": "The same tool set as theirs (their Mark doubles as a save list).",
+    "upgrade": "Add 'Save for later' (key B, as in practice). The question goes to Review > Saved with the sitting's context, and its key shows after hand-in. Also use the stored strikes in the report: 'You struck the right answer on Q9', and 'The option you kept over the key was the trap: added the exponents'."
+   },
+   {
+    "feature": "Highlights and notes",
+    "spec_says": "7 styles in orange and graphite, a notes rail, and notes kept per (template, seed) (R6).",
+    "why_only_parity": "Their 4 colours, 3 underlines and a note, restyled.",
+    "upgrade": "Let a note also attach to the question type. A note on a template is offered on its twins in review and practice ('Your note on this kind, Sep 12: square the radius first'). The notes rail can print as a per-skill 'My rules' sheet."
+   },
+   {
+    "feature": "Reference sheet",
+    "spec_says": "The existing UI.ref: a drawn SVG sheet in a dialog.",
+    "why_only_parity": "Their official image in a modal.",
+    "upgrade": "Templates tag the formula they use. The review highlights that line on the sheet ('It was on the reference sheet: V = πr²h'), and the runner records reference opens per question for the Test habits panel."
+   },
+   {
+    "feature": "Grid-in entry",
+    "spec_says": "A keystroke filter, KaTeX preview, and the 'Entering your answer' rail or disclosure with the examples table.",
+    "why_only_parity": "Their SPR pane and preview; the filter is the only gain.",
+    "upgrade": "Key-blind format warnings while typing:\n- a repeating decimal that stops short of the grid ('0.66: a repeating decimal fills every space, .6666 or .6667');\n- a leading zero that wastes a space on a 5-character decimal;\n- a dash typed as a minus.\nAfter hand-in, a grid-in whose value is right but whose form breaks the rule is labelled 'Right value, wrong form' (per scoring.grid_equal), apart from math misses."
+   },
+   {
+    "feature": "Module navigator",
+    "spec_says": "A legend with counts, the filters All / Unanswered / For review / Guesses, 40px cells, Esc and arrow keys.",
+    "why_only_parity": "Their popover with counts added.",
+    "upgrade": "Add a Time toggle, as on Check your work, and the personal pace marker on the cell you should be on. Add 'Next unanswered' and 'Next marked' buttons (with keys) so a student can sweep without opening the grid."
+   },
+   {
+    "feature": "Check your work",
+    "spec_says": "Three filter tiles, a Status/Time view, the no-penalty guessing tip and a pacing line.",
+    "why_only_parity": "Their page, with a time view and tips.",
+    "upgrade": "A coached triage (proposal 4): unanswered and marked questions ordered by expected points per minute, from your own accuracy and speed on each kind."
+   },
+   {
+    "feature": "Between modules",
+    "spec_says": "'Module 1 is in' with tiles, the module 2 card and an optional 'You earned the harder module 2'.",
+    "why_only_parity": "The same information as theirs and Bluebook's: no break, route hidden.",
+    "upgrade": "After the test, show the route margin on the report and the sittings row: 'routed up with 2 to spare', or '1 short: Q2 and Q5, both easy'. Link it to the Route-up trainer (proposal 5). Between modules, add a module 1 time profile: '3 questions took over 3:00'."
+   },
+   {
+    "feature": "Time's up",
+    "spec_says": "A 'Time's up' screen after the fact, and a 5-minute warning earlier.",
+    "why_only_parity": "Their behaviour, plus a message.",
+    "upgrade": "At 1:00 left with blanks, a banner: '3 unanswered. A guess can't cost you.' Its 'Go to next blank' cycles through the blanks and never fills anything in. The report counts 'blank at time' apart from blanks skipped earlier."
+   },
+   {
+    "feature": "Report a problem",
+    "spec_says": "UI.report: 10 images, the category list, (template, seed) attached, and status shown in Me.",
+    "why_only_parity": "Their modal, with a status loop added.",
+    "upgrade": "An instant independent re-check. On a key or answer category, the server regenerates the (template, seed) and runs the satbank.audit solver. After hand-in the student sees one of two verdicts:\n- 'Checked: the independent solver agrees with C (65b²c²). Your B is what you get if you add the three coefficients.'\n- 'The solver disagrees: your answer now counts, and this template is paused for everyone.' The answer is marked disputed (R8) and the template is quarantined until fixed.\nMid-test the verdict is held back (R17)."
+   },
+   {
+    "feature": "Paper discussion",
+    "spec_says": "Gated threads, tagged by question, with Helpful, report-to-hide and a 20-a-day limit.",
+    "why_only_parity": "Their comments, with gating and question tags.",
+    "upgrade": "Question boards (proposal 7): the crowd's % right and a labelled answer spread per question, the paper's top traps, and 'your cheapest points', before any posts."
+   },
+   {
+    "feature": "Share a test",
+    "spec_says": "A link to the exact questions; both scores show once both have finished.",
+    "why_only_parity": "Their QBank share mechanics (link and copy), applied to tests.",
+    "upgrade": "Twin share by default (proposal 6): own numbers, so answers can't be copied, with a slot-by-slot peer comparison that names each person's misconception."
+   },
+   {
+    "feature": "Assigning a test to a class",
+    "spec_says": "Classes live in Shell §7; the Tests share is called 'the equivalent of their teacher homework'.",
+    "why_only_parity": "Their hidden 'assign a full practice test' with a due date.",
+    "upgrade": "Every student gets a twin form, so there's no copying. The teacher sees a slot-by-slot class grid with each slot's misconception spread, and one tap assigns 'Fix the class's top 3 traps' as a follow-up drill."
+   },
+   {
+    "feature": "Diagnostic",
+    "spec_says": "'Asks for your name and email before the result' (R38, pending open question 8).",
+    "why_only_parity": "Worse than theirs: their diagnostic is hidden but not gated, and a gate conflicts with 'completely free, no paywalls'.",
+    "upgrade": "Show the result at once, like any sitting. After it, offer 'Keep this on your other devices: add an email'. The diagnostic stays the Up next default for new students."
+   },
+   {
+    "feature": "Custom test difficulty",
+    "spec_says": "Easy / Medium / Hard toggles (at least one), ladder or mixed order.",
+    "why_only_parity": "Their QBank difficulty filter.",
+    "upgrade": "An 'At my level' option: per skill, the tier where your first-try accuracy is between 50% and 75% (your frontier). Add 'Stretch' (one tier above). The summary line shows the tier chosen for each skill."
+   }
+  ]
+ }
+}

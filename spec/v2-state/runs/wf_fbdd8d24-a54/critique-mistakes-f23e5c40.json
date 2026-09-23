@@ -1,0 +1,445 @@
+{
+ "label": "critique: mistakes",
+ "key": "v2:008917a117e664422d52af15d8c0468c67364ee52e33f12757265474f23e5c40",
+ "result": {
+  "section": "Review hub: the redo list (open mistakes), marked for review, saved questions, attempt history and the fixed log. It replaces /mistakes/ and plugs into the practice session, the exam runner, the report, the practice builder, Today and Me",
+  "theirs": [
+   {
+    "feature": "Redo List filter in the QBank builder",
+    "detail": "A select in the Advanced Filter: Redo List = All / Redo Only. It combines with the domain and skill checkboxes, the Easy/Medium/Hard pills, the Question Score 1–7 slider, Solved, Marked for Review, Volume (10/20/30/40/50/All) and Timed/Untimed. The live walk found how a question gets onto it: the API has toggleRedo, but no screen calls it (there is no Redo button in the session UI), so the list stays empty and Profile reads 'Redo Questions 0'. No page lists the redo questions."
+   },
+   {
+    "feature": "Marked for Review filter in the builder (this is their saved list)",
+    "detail": "The live walk shows its options are All / Saved Only. Marking a question for review in the QBank is how it gets saved (the API calls it toggleSaved), so 'marked' and 'saved' are one list. It sits next to Redo List."
+   },
+   {
+    "feature": "Solved filter in the builder",
+    "detail": "Solved = All / Solved Only / Unsolved Only. Their bank is finite, so 'Unsolved' runs out, and 'Solved Only' is how a student re-practises questions already done. Unchecking a domain does not update the 'N questions' count (a bug)."
+   },
+   {
+    "feature": "Question Score 1–7",
+    "detail": "A dual-thumb range slider in the builder that gives a finer difficulty. The Details popover never shows the score."
+   },
+   {
+    "feature": "Mark for Review in a QBank session",
+    "detail": "A bookmark button on the question strip that fills blue when on. Marked questions show in the Question Overview as yellow with a bookmark corner flag."
+   },
+   {
+    "feature": "Mark for Review in the exam runner",
+    "detail": "The strip button turns into 'Unmark' (yellow). The footer navigator shows a red 'For Review' flag in its legend and grid. Check Your Work has a FOR REVIEW stat card and yellow cells with a bookmark."
+   },
+   {
+    "feature": "Flagged in the score report",
+    "detail": "The Question Review filters are All / R&W / Math / Flagged (n). The legend reads Correct / Incorrect / Unanswered / Flagged for review (n). Flagged cells get an orange corner dot in the per-module grids, and the review modal header shows a 'Flagged for review' chip."
+   },
+   {
+    "feature": "Attempt History modal",
+    "detail": "An 'Attempts' button on the QBank question strip, with a blue count badge, opens a modal with one row per try, for example '#1 ⊗ Incorrect · Option A · 00:22 · Sep 23, 11:35 AM', and a [Close] button. The empty state is 'No attempts yet.' It covers one question in one session."
+   },
+   {
+    "feature": "Unlimited retries until right",
+    "detail": "The key is never shown after a wrong answer: you retry, or open the explanation. Because of this, per-question accuracy means little."
+   },
+   {
+    "feature": "Mixed status and the Question Overview",
+    "detail": "A question answered wrong and then right counts as 'Mixed', drawn as a square split diagonally green and red. Status legend: Unanswered (outline) / Correct / Incorrect / Mixed / Marked (yellow) / Current (blue, which overrides the other states). Difficulty mode tints each cell Easy green / Medium blue / Hard red."
+   },
+   {
+    "feature": "Per-question stopwatch",
+    "detail": "It counts up on the question strip, and the Attempt History rows use it for time spent. A reload resets it to 00:00, and an earlier wrong pick comes back as a plain blue 'selected' instead of red."
+   },
+   {
+    "feature": "Details popover",
+    "detail": "QUESTION ID (for example 06469-DC), DOMAIN, SKILL and DIFFICULTY. It needs an outside click to close."
+   },
+   {
+    "feature": "Saved Content card in Profile",
+    "detail": "Counts only: Saved Words / Redo Questions / Saved Questions. Nothing seen lists the saved questions or offers a way to practise them."
+   },
+   {
+    "feature": "Review modal in the report",
+    "detail": "'R&W - M1 · Q1' with a Correct/Unanswered chip and a 'Flagged for review' chip. Buttons: [Hide answers] / [Report] / '1 of 49' / Close. The body has the passage, stem, choices, a YOUR ANSWER box ('Unanswered' when blank), a CORRECT ANSWER box, and an explanation that is 'Justification:' followed by 'Distractor Analysis:' with one line per wrong option. ← and → move between questions. 'Hide answers' shows an 'Answers hidden' chip, removes the key and the explanation, turns the button into [Show answers], and stays on across Next, but you still cannot re-answer. The per-question payload has no domain, skill, difficulty or time spent."
+   },
+   {
+    "feature": "Results list wrong-number chips",
+    "detail": "Each sitting card lists wrong and unanswered question numbers together per module as red chips ('2 3 4 5 6 7 +19') above a full-width Review button. The chips cannot be clicked. The report's gauge counts unanswered as wrong, but its Performance Summary does not."
+   },
+   {
+    "feature": "Shared session",
+    "detail": "From the bundle: Share creates /question-bank/shared/:shareId with a 'Start Practice' landing. The toasts are 'Share link copied to clipboard' and 'Share created (id: …)'. On screen, Share called navigator.share and froze the page."
+   },
+   {
+    "feature": "Clear Session",
+    "detail": "A red button in the session top bar with the confirm text 'This removes answers, annotations, and attempts from this session only. Your question-bank progress from other sessions is kept.' It lets a student redo a session clean, but it deletes the history."
+   },
+   {
+    "feature": "Eliminations and annotations saved to the server",
+    "detail": "From the bundle: crossed-out choices and passage notes are kept per session."
+   },
+   {
+    "feature": "Vocab My Words (their pattern for a saved + due list)",
+    "detail": "Two nav cards, 'Saved Words N' and 'Due Today N' (spaced repetition), the same filters as the library, and a dashed empty state: 'No saved words match these filters / Try broader filters or save more words from the library.' A save star appears on a flashcard after it flips."
+   },
+   {
+    "feature": "Weaknesses around this section",
+    "detail": "There is no review-mistakes flow, no session summary and no list of sessions: a session survives only by its URL. The redo list has no way in. The key is hidden after a miss, the overview popover ignores Esc, Share freezes the page, and 'Share / Export Report' on Results has no handler."
+   }
+  ],
+  "ours_now": [
+   {
+    "feature": "Redo list (open mistakes)",
+    "status": "partial",
+    "note": "/mistakes/ lists every open trap by the misconception's name, grouped by topic, with a ×hits count and two pips for the clean answers still owed, plus 'Fix' per topic and 'Fix all · N'. A row cannot be clicked: you cannot see the question you missed, what you picked, the key, when it happened, its difficulty or where it came from. There is no selection, filter, sort or search. Still, it is already more than TopTierPrep's redo list, which nothing fills."
+   },
+   {
+    "feature": "Trap identity",
+    "status": "worse",
+    "note": "Traps are keyed by (template, raw reason text). Measured over 24–40 seeds per template, about 70 of the 349 MC templates put seed-specific numbers in their reasons ('applied the 10% change…' vs 'applied the 50% change…'), so one misconception opens a separate trap for each seed. That fragments the list and inflates the count (the seeded learner had 25 rows over 11 templates)."
+   },
+   {
+    "feature": "Grid-in and filler misses in the list",
+    "status": "worse",
+    "note": "A grid-in miss is filed under the skill name ('Trigonometric ratios', 'Counting'). The bank's filler distractor 'near-miss arithmetic slip' (satbank/item.py _fillers, used in 27 templates) is filed as if it were a named misconception. Both are styled exactly like real misconceptions, so the list mixes three kinds of row with nothing to tell them apart."
+   },
+   {
+    "feature": "Fix all count",
+    "status": "worse",
+    "note": "The header reads '25 open mistakes' next to 'Fix all · 22'. 22 is templates × 2, and the drill really asks each template twice (queue = once + once) even when a trap is half fixed and needs only one more answer. Nothing explains the mismatch."
+   },
+   {
+    "feature": "Marked for review in practice",
+    "status": "missing",
+    "note": "The practice session has no flag."
+   },
+   {
+    "feature": "Marked for review in tests",
+    "status": "worse",
+    "note": "test.js keeps marks in a client-side Set. A reload loses them, the move to module 2 clears them (S.marked = new Set() in the gate handler), and they never reach the server, the report or any list."
+   },
+   {
+    "feature": "Flagged filter in the report",
+    "status": "missing",
+    "note": "/results/report/ has no flagged state or filter."
+   },
+   {
+    "feature": "Saved questions",
+    "status": "partial",
+    "note": "The session's bookmark saves (template, seed), which is exact and regenerable, better than a finite ID. But the hub shows only '14 saved · Again'. You cannot see the saved questions, unsave outside the session, add a note, filter, pick a subset, practise fresh versions, or save from a finished test's report (POST /api/saved returns 404 for any session that is not a drill or challenge)."
+   },
+   {
+    "feature": "Exact re-serve counts as evidence",
+    "status": "worse",
+    "note": "When a saved question is served again exactly, a right answer counts toward mastery and closes traps, even though the student has already seen its key. The same happens on a retake of a fixed diagnostic form or shelf mock, whose (template, seed) pairs repeat."
+   },
+   {
+    "feature": "Attempt history",
+    "status": "missing",
+    "note": "The attempts table has every answer (template, seed, given, correct, reason, ms, session, at), but no endpoint or UI exposes it, per question, per kind of question or overall. Test answers are filed at finish with ms = NULL, so tests have no time per question."
+   },
+   {
+    "feature": "Mixed status",
+    "status": "missing",
+    "note": "Repair questions exist (drill.py serves the same template on a fresh seed after a miss, and the served question carries repair: true), but the status has no name, no visual and no column in attempts."
+   },
+   {
+    "feature": "Solved / unsolved",
+    "status": "partial",
+    "note": "'Unsolved only' is implicit and better: practice never repeats a question (practice_seen), so every set is fresh and never runs out. There is no equivalent of 'Solved only' (practise what you have already done), except the saved set."
+   },
+   {
+    "feature": "Builder source filters (redo / marked / saved)",
+    "status": "missing",
+    "note": "The Practice builder cannot draw from the redo list, the marked questions or the saved ones. Redo starts only from /mistakes/, and it ignores difficulty and the clock."
+   },
+   {
+    "feature": "Fixed mistakes",
+    "status": "missing",
+    "note": "Closed traps stay in the table but are never shown. When a trap reopens, closed is set back to NULL, so the fact that it was once fixed is lost."
+   },
+   {
+    "feature": "Question details and address",
+    "status": "missing",
+    "note": "There is no way to see a question's skill, difficulty or (template, seed) address, or to copy a link to it."
+   },
+   {
+    "feature": "List of sittings to go back to",
+    "status": "partial",
+    "note": "GET /api/history lists finished sessions, and Results shows them. A practice set cannot be retaken exactly or with fresh numbers from there; only a test's misses can be fixed (from_session)."
+   },
+   {
+    "feature": "Share",
+    "status": "missing",
+    "note": "There is no way to share a question or a set."
+   },
+   {
+    "feature": "Saved-content counts on Me",
+    "status": "missing",
+    "note": "/me/ shows only the name and the device code."
+   },
+   {
+    "feature": "Empty state",
+    "status": "worse",
+    "note": "A new student sees '0 open mistakes' and a bare 'Practice' link. Nothing says what this page will hold or how things get here."
+   },
+   {
+    "feature": "Reachability",
+    "status": "partial",
+    "note": "The page is reached only from an 'N mistakes' link on Practice and Today. It is not in the navigation (NAV in ui.js is Today / Practice / Tests / Plan / Results, and SECTION maps mistakes to practice)."
+   }
+  ],
+  "design": "## Review changes\n\nWhat this review changed in the proposed spec, and why:\n\n1. **TopTierPrep's inventory, corrected from the live walk.**\n   - Their 'Marked for Review' builder select is *All / Saved Only*: in the QBank, marking a question is saving it.\n   - Their redo list is filled only by a toggleRedo API call that no screen makes, so Profile reads 'Redo Questions 0'.\n   - Added what the proposal did not list: the exact Attempt History row and empty-state copy; Hide answers staying on across Next; ←/→ keys; the report payload having no skill, difficulty or time; unanswered counted as wrong on one card only; the shared-session link with its landing page; the Clear Session copy; a reload losing the stopwatch and the wrong pick; the Overview's Mixed/Marked/Current and difficulty views; the Solved filter; eliminations kept on the server; the 1–7 score.\n2. **The trap key: facts corrected and a flaw fixed.** I measured the bank (386 templates, 24–40 seeds each; one generate call with its audit takes 0.26 ms).\n   - About 70 of the 349 MC templates put seed-specific numbers in a reason. The proposal said 109 of 348.\n   - The filler 'near-miss arithmetic slip' appears in 27 templates. The proposal said 13.\n   - The digit regex also folds two different options of **one** item into one mistake in 29 templates. For example, circles.degree_radian's 'divided by 360 instead of 180' and 'divided by 90 instead of 180' become one, and so do pct.series' 'the 2013 value as a percent of the 2014 value' and its reverse.\n   - I kept the normalised key, because most of these folds are the same error: circles.coterminal's two 'quarter turn away' options are one misconception. But the label is now always the concrete text of the latest miss, every attempt stores its concrete reason and its norm, and a bank-side `Mis.tag` is listed as the exact fix (open question).\n3. **Trap ids.** `template|norm` contains `#` and spaces, which breaks `?open=`. Traps get an INTEGER id.\n4. **Repeat detection moved into `progress.record`.** It is one EXISTS query on attempts, so every caller gets it: drill, paper, QOTD and challenge. The proposal covered drills only. One consequence is now stated: a retake of a fixed diagnostic form or shelf mock files repeats.\n5. **Marks: one `flags` table keyed (learner, session, qid).** The proposal had a JSON column plus a table keyed (learner, template, seed).\n   - The 10 diagnostic forms and the shelf mocks are fixed papers, so the same (template, seed) comes back in another sitting, and a per-item key would move a report's flags between sittings.\n   - The API says `flags` because `drill.state()` already uses `marks` for right/wrong.\n6. **The access rule, made precise.** It now separates *reveal* (key, rationale, per-option reasons), *kept* (question only) and 404.\n   - The flag endpoint checks ownership, which matters because `GET /api/session/{sid}` has no learner check.\n   - Live-test items and unanswered challenge items can never reach a drill, a share or a worksheet.\n7. **One strip, with integrity.** The exam runner uses the practice strip's slots, but Save and History are disabled during a live test ('After the test'). They are also disabled on an unanswered challenge question, because a family history is a study aid in the middle of a test. In practice, the History modal before answering shows results with no Open button: reading a solved sibling's rationale first would make the answer unclean.\n8. **Minimalism cut back out.**\n   - History gets selection and an action bar (Fresh versions / Again, exactly / Share). This is our 'Solved only'.\n   - History gets a Group by **Day | Sitting** control. Sitting gives the list of sessions TopTierPrep lacks and a clean retake in place of Clear Session.\n   - The pane shows skill, difficulty, format, source and date inline; Details keeps only the address.\n   - The phone Options disclosure echoes its values in the summary line.\n   - Marked rows show pick → key and time.\n   - Result cells carry glyphs, and the legend is always visible.\n   - Flag calibration is added.\n9. **Tests get time per question.** The runner sends dwell ms with each answer save, so History's median, Slowest sort and the report's time tile cover tests. TopTierPrep's report has no time at all. This change is shared with Tests and Report.\n10. **Blanks.** The proposal's 'Blank' result in History could not exist, because `record_paper` files no blanks. History holds answers; blanks live in the report, with Save and Mark.\n11. **The drill body, consolidated.** Six new fields became `list`, `ids`, `exact`, `each` and `level`. `mistakes:true` and `saved:true` stay as aliases.\n12. **The nav badge count** rides on `/api/me`, which the shell already fetches, instead of adding one request per page.\n13. **Server-side search** needs stored text. attempts gains `stem`, written when an answer is filed and backfilled once.\n14. **Share is made concrete.** It was an open question, and TopTierPrep has it (broken). There is a shares table and a `/s/` landing page. Only items revealed to the sharer can be shared, the link is copied to the clipboard, and navigator.share is never used.\n15. **Extras added:**\n    - the same mistake in other question types: 79 normalised misconceptions recur across 2 or more templates, 12 of them across topics (measured),\n    - flag calibration,\n    - a printable fresh worksheet,\n    - Hide answers that persists,\n    - shortcuts ignored while typing,\n    - relapse rules (dismissed then missed = reopened, not relapsed; Fixed excludes dismissed),\n    - spot and pane drills kept out of the sittings lists.\n\n---\n\n# Review hub (`/review/`)\n\nTopTierPrep spreads this across builder selects, a profile counter and a modal for one question at a time. Here it is one page with five tabs over a list: **Redo, Marked, Saved, History, Fixed**. A question pane sits beside the list.\n\n- Every item opens the exact question again, rebuilt from its (template, seed) in the practice session's renderer.\n- Every list, or any selection from it, becomes a practice set in one tap. The set is either **exactly** these questions or **fresh versions** on new numbers. Fresh versions are what a finite bank cannot offer.\n\n## 0. Vocabulary (one set of words on every page)\n\n**Mistake kinds** (a chip on each redo row):\n\n| kind | what it is | label | chip |\n|---|---|---|---|\n| Misconception | A wrong MC option. | The concrete text of the latest miss. | none (the default kind) |\n| Grid-in | A wrong typed answer. | The skill. | `Grid-in` |\n| Slip | The picked option is the bank's filler 'near-miss arithmetic slip'. | 'Arithmetic slip'. | `Slip` |\n| Unsure | Answered right while flagged, or added by hand. | The skill. | `Unsure` |\n\nAn Unsure needs 1 clean answer.\n\n**Mistake statuses:**\n- **Open**: 2 clean answers owed. Pips ○○.\n- **Half fixed**: 1 owed. Pips ●○ in orange.\n- **Relapsed ×n**: fixed before, then missed again (by a new miss or a failed check-in). The chip is ink-filled.\n- **Fixed**: closed by clean answers.\n- **Dismissed**: closed by the student. A later miss reopens it as Open, not Relapsed.\n\n**A clean answer** is a right answer that meets all three conditions:\n1. it is on a (template, seed) this learner has **never answered before**,\n2. it was **not flagged** when answered,\n3. it is on the trap's template.\n\nOnly clean answers close mistakes or count toward check-ins. Exact repeats are filed with `repeat = 1` and shown in History. They are left out of mastery whether right or wrong. A **wrong** repeat still reopens or refreshes its mistake, because it is still evidence of the error.\n\n**Answer results.** Each cell always has a glyph as well as its fill, and a legend is always shown where cells appear.\n\n| result | cell | meaning |\n|---|---|---|\n| Right | amber fill, ✓ | |\n| Wrong | ink fill, ✕ (white) | |\n| Repaired | amber fill with an ink ↻ corner | right on the repair question that followed a miss. This is our 'Mixed', and the proof is on new numbers rather than a retry. |\n| Repeat | outlined, `=` | an exact re-attempt |\n| Blank | grey tile, – | the report grid and Check Your Work only. Blanks are not filed as answers. |\n| Flagged | orange corner flag, overlaid on any result | |\n| Current | 2px ink ring, overlaid | |\n\n**Difficulty** is a 3-step bar glyph (▁▃▅, ink on grey) plus the word Easy / Medium / Hard. It is never shown by colour alone.\n\n## 1. Where it lives\n\n**Navigation.**\n- Top bar: `Today · Practice · Review · Tests · Plan · Results`.\n- Review carries a badge: an orange dot and the number of open mistakes, hidden at 0. It reads `/api/me`'s new `review.open`, so there is no extra request.\n- Phone: a 6th tab with a counter-clockwise-arrow-in-a-square icon, 65px wide at 390px. The longest label, 'Practice', fits at 10.5px.\n- `SECTION` maps `mistakes → review`.\n\n**Routes.** `/mistakes/` becomes a redirect to `/review/?tab=redo` that keeps the query.\n\n**URL state:**\n\n```\n/review/?tab=redo|marked|saved|history|fixed\n  &topics=a,b&difficulty=hard&fmt=mcq&kind=…&status=…&source=…&result=…\n  &since=…&until=…&q=…&sort=…&group=…\n  &open=trap:123 | q:<template>:<seed>\n```\n\n- A filter change uses `replaceState`. A tab change uses `pushState`, so Back returns to the previous tab.\n- `open=` restores the pane. Template names are `[a-z0-9_.]`, so the value needs no escaping.\n\n**Links in:**\n- Today's Review card (§10).\n- The Practice map's 'N mistakes' link, which goes to `?tab=redo&topics=<picked>`.\n- The tooltip on a map tile, which gets a 'Review' link.\n- The session summary's opened and fixed lines, each going to `open=trap:<id>`.\n- The report's Mistakes block ('See all in Review').\n- The Saved content card on Me.\n- The share landing page (§15).\n\n## 2. Desktop layout (1280)\n\n**Top bar.** The shell, with Review current.\n\n**Header row** (`max-width: var(--max)`):\n- Left: the H1 **Review** (Archivo 800, 36px), with a helper line under it (Archivo 500 14px, soft): *\"Every wrong answer lands here, named by the mistake behind it. Two clean answers on fresh questions close it.\"*\n- Right: the primary pill **Redo all · 22 questions**, with a meta line under it: `11 question types · about 35 min`.\n  - The number is the sum, over the open templates, of the largest `owed` among that template's open traps. A half-fixed template adds 1.\n  - The minutes come from `blueprint` pace.\n  - The button is hidden only when nothing is open.\n\n**Stat strip.** Five tiles in one row. Each is `--tile`, 10px radius, with a DM Mono 11px uppercase label, an Archivo 800 32px number and a sub line.\n\n| label | number | sub line |\n|---|---|---|\n| OPEN MISTAKES | 25 | `7 half fixed · 1 relapsed · 2 unsure` |\n| MARKED | 3 | `from 2 sittings · 67% of flags right` |\n| SAVED | 14 | `4 with notes · 3 not answered` |\n| FIXED | 40 | `6 this week · median 2 days` |\n| CHECK-INS DUE | 2 | `fixed 7+ days ago` |\n\nEach tile is a button that opens its tab with the matching filter. For example, CHECK-INS DUE opens Fixed with `status=due`.\n\n**Tab bar.** Segmented tabs, each with its count: `Redo 25 · Marked 3 · Saved 14 · History 312 · Fixed 40`.\n- The current tab has an ink label and a 2px amber underline, the shell nav's style.\n- It is `role=tablist`, and the arrow keys move between tabs.\n- While a filter is set, each count reads `9 of 25`.\n\n**Filter bar** (`UI.filterBar`, shared). A row of dropdown chips. A chip with a value shows it, for example `Topic · 3`.\n\n| chip | options | tabs |\n|---|---|---|\n| Topic | The 19 topics under 4 domain headers. Domain rows are tri-state checkboxes; each topic shows its count in this tab. 'Select all' and 'Clear'. | all |\n| Difficulty | Easy / Medium / Hard, as multi-toggle pills. | all |\n| Format | Multiple choice / Grid-in. | all |\n| Kind | Misconception / Grid-in / Slip / Unsure. | Redo |\n| Status | Redo: Open / Half fixed / Relapsed. Fixed: Check due / Checked / Fixed / Dismissed. | Redo, Fixed |\n| Source | Practice / Section / Module / Diagnostic / Challenge / Question of the day / Review / Shared set. | History, Marked, Saved |\n| Result | Right / Wrong / Repaired / Repeat. | History |\n| Flagged | Flagged when answered / Not flagged. | History |\n| Date | Today / 7 days / 30 days / All / Custom, where Custom is two native `<input type=date>` fields. | all |\n| Sort | See the per-tab list below; the chip shows the current value. | all |\n\nSort options per tab:\n- Redo: Most recent / Most missed / Closest to fixed / Oldest / Topic order.\n- Marked: Newest / Sitting / Wrong first.\n- Saved: Newest / Oldest / Topic / Not answered first.\n- History: Newest / Oldest / Slowest.\n- Fixed: Recently fixed / Longest to fix / Most relapses / Check due first.\n\nAfter the chips come:\n- **Search**, with the placeholder 'Search mistakes and questions'. It matches the label, skill, topic, the misconception and the stem text, runs on the server and is debounced 250ms.\n- **Clear filters**, a text button shown only while a filter is set.\n\nMenus close on Esc and on an outside click, and return focus to their chip.\n\n**Body.** A two-column grid, `minmax(0,1fr) 460px`, gap 24px.\n- Left: the tab's list.\n- Right: the **Question pane** (§8), `position: sticky; top: 76px; max-height: calc(100vh - 96px); overflow: auto`.\n  - With nothing open, it shows the first row.\n  - For an empty tab, it shows what the tab is for.\n\n**Action bar** (`UI.actionBar`, shared). Sticky at the bottom of the viewport, white, with a top hairline. It appears on **every** tab. Left: a live summary. Middle: the tab's options. Right: its primary action.\n\n## 3. Tab: Redo\n\n**Most-missed strip** (shown when 5 or more are open): up to 5 chips, each the label cut to 40 characters plus `×hits`, then **Redo these 5 · n questions**.\n\n**Grouping.** A 'Group by' select: Topic (default) / Domain / Mistake type / None. 'Mistake type' groups rows that share a norm across templates (§14). Each group header has:\n- a tri-state checkbox,\n- the topic glyph, the name and the domain (DM Mono 11px),\n- `n open`,\n- the text button `Redo · n questions`,\n- a collapse chevron.\n\nA group with more than 8 rows shows 8, then a `Show 7 more` button.\n\n**Row** (`.redo-row`, 64px minimum, `--tile`, 10px radius; the open row gets an inset 1.5px amber border):\n1. A checkbox with a 44px hit area.\n2. The pips (●○), with `title` and `aria-label` '1 of 2 clean answers'.\n3. Two lines:\n   - Line 1: the label (Archivo 600 15px, 2 lines at most).\n   - Line 2: DM Mono 12px soft, separated by dots: `skill · ▃ Medium · MC · missed 3× · last Sep 21 · Practice · picked C`.\n4. The kind chip or status chip, if any.\n5. `+2 elsewhere` when the same mistake is open on other templates.\n6. A chevron.\n\nClicking the row opens the pane. The checkbox toggles selection and does not open the pane.\n\n**Selection.**\n- Every row is selected by default.\n- The list head has a tri-state select-all with `25 of 25 selected`.\n- The selection is kept per tab in sessionStorage, wrapped in try/catch.\n\n**Action bar, Redo:**\n- Summary: `12 selected · 6 question types · 10 questions · about 16 min`.\n- Options:\n  - **Level**: segmented `As missed | Any | Harder`, default As missed. As missed draws the fresh seed at the tier of the last miss. Harder goes one tier up where `_tiers_of(template)` has one, and otherwise falls back to As missed; the summary then says `3 can't go harder`.\n  - **Timed**: the same clock toggle and minutes blank as the Practice builder.\n- Primary: **Redo selected**, disabled at 0 selected with the reason 'Select a mistake'.\n- Secondary: **Print worksheet** (§16) and **Share** (§15).\n\n**Undo toast.** Dismissing from the pane removes the row and shows `Removed from Redo · Undo` for 6s.\n\n## 4. Tab: Marked\n\n**Calibration line** at the top: `You flagged 12 questions · 7 were right (58%)`, with the tip *'Most flags right: trust your first answer more. Most wrong: flag and come back.'* It only counts flags set during a sitting, meaning the flag time is earlier than the finish.\n\n**Groups.** Rows are grouped by sitting. Each header gives the kind, date and count, for example `Section · Sep 21 · 3 marked`, with a link to that sitting's report.\n\n**Row:**\n- a checkbox,\n- an orange flag glyph,\n- `Q17` (or `M2 Q5`),\n- the stem's first line (Source Serif 4 15px, 1 line),\n- the meta: `skill · ▅ Hard · MC · 1:40`,\n- a result cell and `C → A`, or `Blank → A`, or 'Not answered yet',\n- `flagged later` when the mark was added from the report or Review.\n\n**Action bar, Marked:**\n- Summary: `3 selected`.\n- **Fresh versions** (primary), with a select `1 / 2 / 3 each`.\n- **Again, exactly**. Items already answered file as repeats, and the summary says so: `2 will be repeats`.\n- **Share**.\n- **Unmark** (quiet), with an undo toast.\n\n**Hidden until finished.** Flags on a live test, or on an unanswered challenge question, do not show until that sitting is finished or the question is answered (§ server access rule).\n\n## 5. Tab: Saved\n\n**Row** (a taller card, 88px minimum):\n- a checkbox and the bookmark glyph (orange fill),\n- the stem clamped to 2 lines (Source Serif 4 15px),\n- the meta: `topic chip · skill · difficulty · MC · saved Sep 20 · answered: Wrong (picked C) · 2 tries`,\n- the note in italic Archivo 13px soft,\n- row actions:\n  - **Note**: an inline textarea, 280 characters at most, with a live counter. It saves on blur and on Cmd/Ctrl+Enter.\n  - **Unsave**: removes the row with an undo toast; undo restores the note too.\n\n**Action bar, Saved:**\n- Summary: `5 selected · 5 questions`.\n- **Again, exactly** (primary).\n- **Fresh versions**, with `1 / 2 / 3 each`.\n- **Share**.\n- **Print worksheet**.\n- **Unsave** (quiet).\n\n**Pagination.** 50 at a time: `Load 50 more · 50 of 140`.\n\n## 6. Tab: History\n\nThis is every answer the student has filed, from any mode. Blanks are not answers, and the empty state of the Result filter says so, linking to the reports.\n\n**Summary card**, for the current filters:\n- Answers 312.\n- Accuracy 71%.\n- Median time 1:08. Tests count once dwell time exists; older test rows show `—` and the card says `time known for 280 of 312`.\n- Accuracy by difficulty as three short bars, each with `r/n`.\n- Repaired 18.\n- Repeats 6.\n- **Download CSV**.\n\n**Group by: Day | Sitting.**\n- **Day header**: `Tue, Sep 23 · 24 answered · 17 right · 38 min`, in local time via X-Tz.\n- **Sitting header**: `Practice · Linear functions, Percentages · Sep 23 14:02 · 9/12 · 14 min`, with these buttons:\n  - **Again, exactly**: a clean retake of that sitting that deletes nothing (it replaces TopTierPrep's Clear Session),\n  - **Fresh versions**,\n  - **Fix the misses** (the existing `from_session`),\n  - **Report / summary** (a link).\n\n**Compact row** (48px):\n- a checkbox,\n- the time (`14:02`, DM Mono),\n- a result cell,\n- the topic glyph and skill,\n- the difficulty glyph,\n- a source chip (Practice / Section M1 / Challenge / QOTD / Diagnostic / Review / Shared),\n- `C → A` (a grid-in reads `12 → 9`),\n- the time spent (`1:12` or `—`),\n- a flag glyph if flagged,\n- on wrong rows, the misconception: inline on desktop, on a second line on a phone.\n\nClicking a row opens that exact question in the pane.\n\n**Action bar, History** (TopTierPrep's 'Solved only', done better):\n- Summary: `24 selected · 19 question types`. Selection defaults to none on this tab; 'Select all 312 matching' selects by filter, capped at 120 with a note.\n- **Fresh versions** (primary), with `1 / 2 / 3 each`.\n- **Again, exactly**.\n- **Share**.\n\n**Pagination.** By attempt-id cursor: `Load 50 more · 50 of 312`.\n\n## 7. Tab: Fixed\n\n**Stat line:** `40 fixed · 6 this week · median 2 days to fix · 3 relapsed · 2 dismissed`. Dismissed ones are not counted as fixed.\n\n**Row:**\n- a checkbox,\n- the label and the topic chip,\n- `fixed Sep 20 · took 3 days · missed 2× · relapsed 1×`,\n- the check-in state: `Check due Sep 27` (amber outline), `Checked ✓ Oct 4 · next Oct 25`, `Checked twice ✓`, or `Dismissed`,\n- **Reopen** on dismissed rows.\n\n**Action bar, Fixed:** **Check these now** (primary). It builds a set with one fresh seed per selected template.\n- A miss reopens the mistake as Relapsed.\n- A clean answer counts as a check-in, even before its due date.\n\n## 8. Question pane (`UI.questionReview`, shared with the report and the challenge review)\n\n**Header**, always visible:\n- a status or result chip, plus a `Flagged` chip,\n- for a trap: its pips and `1 of 2 clean answers`,\n- a meta line: `Circles · Arc length · ▃ Medium · MC · Practice, Sep 21 14:02 · 1:12`, where the source is a link to the sitting's report or summary.\n\n**Details** disclosure: the address `circles.arc · #48213` in DM Mono and **Copy link** (`/review/?open=q:circles.arc:48213`, which works only for the owner).\n\n**Body.** `UI.question(host, item)`, then `reveal(fb, {open: true})`:\n- The student's pick is `.no` and the key is `.ok`, as now.\n- **Every wrong option carries a line under it naming its misconception**, in Archivo 500 12.5px soft with an orange dot.\n  - The picked one starts with `Your pick ·`.\n  - A filler option reads 'A near-miss number, not a named mistake'.\n- The rationale is open.\n- A grid-in shows `You entered 12 · Answer 9`.\n\n**Hide answers** (TopTierPrep's, better).\n- It hides the key, the per-option lines and the rationale, and shows an `Answers hidden` chip. The button becomes **Show answers**.\n- It stays on across Prev/Next and is remembered per viewer (localStorage, in try/catch).\n- Unlike theirs, the item can then be **re-answered**: **Check** files the answer through a 1-question drill as a Repeat.\n\n**Family strip.** `This kind of question: seen 6 · right 3 · repaired 1`, then the last 10 results as small cells, oldest to newest, with a legend and a **History (6)** button that opens the modal (§9).\n\n**Same mistake elsewhere** (when the norm is open or known on other templates): `Also a trap in 3 other question types: Slope from two points, Line from a table, …`, with **Practise across all 4**.\n\n**Actions** (a wrapping row):\n- primary **Fresh one like this**,\n- **Again, exactly**,\n- **Spot the trap** (MC only),\n- **Save / Saved**,\n- **Mark / Marked**,\n- **Share**,\n- **Report a problem** (the Session section's dialog),\n- an overflow menu with **Add to Redo** (answered right only) and **Dismiss** (redo only), which asks: 'Remove this mistake without fixing it? It stays in your history.'\n\n**Prev / Next** move through the current list, with J/K and ←/→. A `3 of 25` position shows between them.\n\n**Inline mini-session.** 'Fresh one like this' and 'Again, exactly' run inside the pane.\n- They create a 1-question drill: `POST /api/drill {list:'templates', ids:[t], count:1, source:'review'}` or `{list:'items', ids:[[t,s]]}`. It renders with the same `UI.question`, calculator and reference buttons, and answers through `/api/drill/{id}/answer`.\n- A miss shows the named mistake, then **Try the repair**, which asks the repair the drill queued (the set grows to 2).\n- A clean answer fills a pip with the map bar's animation.\n- If the mistake closes, the pane shows `Fixed: <label>`, and the row leaves Redo with a 250ms collapse (instant under reduced motion) while the Fixed count goes up.\n- **Back to the question you missed** returns to the original item.\n- Pane drills are never finished, so they never appear as sittings in Results or History's Sitting view. Their answers show under Source = Review.\n\n## 9. Attempt History modal (`UI.history`, shared with the session and the report)\n\nA `<dialog class=\"sheet\">`, 560px wide on desktop and full-screen on a phone.\n\n**Title.** `History · <skill>`, with the sub line: `This kind of question, on every set of numbers.`\n\n**Summary row.** `seen 6 · right 3 · repaired 1 · repeats 1 · median 1:10`, then the open mistakes on this template, with their pips and labels.\n\n**Table.**\n- Columns: `#`, date and time, source, difficulty, a result cell with its label (`Wrong · picked C`), the misconception, time spent, flag.\n- A row for this exact seed gets a `this question` tag.\n- **Open** loads that exact question into the pane (in Review) or into a read-only review sheet (in the session and the report).\n\n**Empty state.** 'No attempts yet. This is your first question of this kind.'\n\n**Behaviour.**\n- 'Load more' pages by cursor.\n- Esc closes it (TopTierPrep's popover ignores Esc), and focus returns to the History button.\n\n**Integrity.**\n- In the practice session **before** answering, rows show but Open is disabled with the note 'Open after you answer'. Reading a solved sibling first would make this answer unclean.\n- In a live test and on an unanswered challenge question, the History button is disabled ('After the test' / 'After you answer').\n\n## 10. Elsewhere (the same components)\n\n**Question strip, one format in the practice session and the exam runner.** The slots, in order: number · **Mark** (flag, `aria-pressed`, orange fill when on) · **Save** · **History n** · **Details** · **Report** · (ABC in the runner, Eliminate in practice).\n- In a live test, Save and History are disabled with a tooltip and `aria-disabled` reason 'After the test'.\n- On a challenge question, they are disabled until it is answered.\n\n**Practice session.**\n- Mark is sent with the answer (`flagged: true`), which makes that answer unclean. If the answer is right, it opens an Unsure mistake.\n- After a save, a 'Note' link shows for 5s and opens a small note popover.\n- The Question Overview legend becomes Unanswered / Right / Wrong / Repaired / Flagged / Current, and gains the Status | Difficulty toggle (the Session section owns the layout).\n\n**Exam runner** (`/test/`).\n- Mark calls `POST /api/session/{sid}/flag`. `GET /api/session/{sid}` returns `flags`, so flags survive a reload and module 2. The module-2 navigator shows only its own questions; module 1's flags stay on the server.\n- Check Your Work's FOR REVIEW card reads from the server.\n- The runner also sends `ms` (dwell time since the question was shown) with each answer save.\n\n**Report** (`/results/report/`).\n- Question-grid filters: `All · Wrong · Blank · Flagged (n)`. Flagged cells get the corner flag, and the legend adds 'Flagged for review (n)'.\n- The detail view becomes `UI.questionReview`, so it gets per-option misconceptions, Save, Mark, History, Share and 'Fresh one like this'.\n- Saving from a finished test is allowed, blanks included.\n\n**Practice builder** (the Practice section owns the layout).\n- A **Source** segmented control: `New | Redo 25 | Marked 3 | Saved 14 | Fixed (check) 2`.\n- For Saved, Marked and Fixed, a second toggle: `Exactly | Fresh versions`.\n- The topic, difficulty, format and clock settings apply to every source.\n- A live count reads `9 of your 25 mistakes are in these topics`, which TopTierPrep's count fails to update.\n\n**Today.** A Review card:\n- the open count with its pips, `7 half fixed`,\n- `2 check-ins due`,\n- `3 marked`,\n- primary **Redo all · 22**, secondary **Open Review**.\n\n**Me.** A Saved content card: `Open mistakes 25 · Marked 3 · Saved 14 · Fixed 40 · Answers 312`. Each number links to its tab.\n\n**Session summary.** Each 'Opened' and 'Fixed' line links to `/review/?open=trap:<id>`.\n\n## 11. Phone (390)\n\n- **Gutters.** 16px side gutters and no horizontal page scroll (`scrollWidth <= 390`).\n- **Header.** The H1 at 28px, the helper line, and **Redo all · 22 questions** as a full-width pill.\n- **Stat strip.** A 2-column grid: Open / Marked / Saved / Fixed. Check-ins due spans the full width when it is above 0.\n- **Tabs.** Five equal segments, sticky under the top bar. Each segment has two lines: the label (Archivo 600 13px) and the count (DM Mono 12px).\n- **Filters.**\n  - One row: **Filters · 2**, a Sort select, and a search icon that expands the field.\n  - Filters opens a bottom sheet (`<dialog>`) with every filter stacked, a sticky footer (`Clear` / `Show 12 results`) and a close X.\n- **List.** Full width. Checkboxes are 24px in 44px hit areas, labels wrap to 3 lines at most, and the meta line wraps.\n- **Pane.** Tapping a row opens it as a full-screen `<dialog>`.\n  - X at the top left; the status chip and `3 of 25` at the top right.\n  - The content scrolls, with a sticky footer: `‹` · **Fresh one like this** · `›`.\n  - The other actions sit in a wrapping row above the footer.\n  - It closes on Esc and on Back (`pushState`).\n- **Action bar.** Fixed above the tab bar at `bottom: calc(62px + env(safe-area-inset-bottom))`.\n  - The summary is one line and **includes the chosen options** (`12 selected · 10 questions · As missed · untimed`).\n  - The primary button is full width. Level, Timed and the secondary actions sit behind an **Options** disclosure.\n  - The page gets `padding-bottom: 200px`, so the last row is never covered.\n- **History rows.** Two lines:\n  - first: the checkbox, time, result and skill;\n  - second: the source, `C → A`, time spent and the misconception.\n\n## 12. States\n\n**Loading.**\n- Stat tiles show grey number blocks, and the list shows 6 skeleton rows at the real row heights. They shimmer at 1.2s, and stay static under `prefers-reduced-motion`.\n- Tab counts read `—`.\n- The action bar is disabled.\n\n**Error.**\n- An error band reads `The server is not answering.` with **Try again**.\n- The last good data stays on screen, and a failed action rolls back its optimistic change.\n- A 409 from a set start shows its message inline in the action bar, for example 'no open mistakes in these topics'.\n\n**New student** (no answers yet).\n- The tiles show 0.\n- A panel with three lines, each with an icon:\n  - '**Redo**: every wrong answer, named by the mistake that caused it.'\n  - '**Marked**: questions you flag in practice or a test.'\n  - '**Saved**: questions you bookmark to keep.'\n- Then **Start practice** (the coach's pick, as on Today) and a quiet **Take the diagnostic**.\n- The pane is hidden.\n\n**Nothing open, but history exists.** 'Nothing open. 40 fixed, 6 this week.' Then **Check 2 fixed mistakes** if check-ins are due, or **Keep going** (the coach set) if not.\n\n**Empty tab.**\n- Marked: 'Flag a question in practice or a test and it waits here.'\n- Saved: 'Tap the bookmark on any question to keep it.'\n- Fixed: 'Fixed mistakes move here. Each comes back once for a check a week later.'\n- History: 'Every answer you give shows up here.'\n\n**Filtered to nothing.** 'Nothing matches these filters.', **Clear filters**, and the tab count reads `0 of 25`.\n\n**Lots of history.**\n- Groups collapse past 8 rows.\n- History, Saved, Marked and Fixed page 50 at a time by cursor.\n- Counts and stats come from SQL, never from the rows loaded.\n- Search runs on the server.\n- The first page renders in under 300ms at 5,000 answers.\n\n**Busy.** Buttons use `aria-busy`. Save, Mark, Unsave, Unmark and Note are optimistic and roll back on failure. One undo toast shows at a time.\n\n**Share or worksheet refused.** An inline message: 'Today's challenge questions can be shared after today.'\n\n**Storage blocked.** The shell's banner, as now.\n\n## 13. Keyboard and accessibility\n\n- **List keys:** J/K or ↑/↓ move, Enter opens, X toggles the checkbox, `/` focuses search.\n- **Pane keys:** ←/→ Prev/Next, F fresh one, E again exactly, S save, M mark, H history, A hide/show answers.\n- **Shortcuts are ignored while focus is in an input, textarea or contenteditable**, so typing a grid-in or a note never triggers them. Esc closes a sheet or menu.\n- **Semantics:** lists are `role=list` with rows as buttons; tabs are `role=tab` with `aria-controls`.\n- **Announcements:** pips carry an `aria-label`, and result cells have text as well as fill and glyph.\n- **Toasts** use `aria-live=polite`.\n- **Touch targets** are at least 44px.\n\n## 14. Same mistake, other question types (extra)\n\nAt first use, the server builds a norm → templates index from 12 seeds per template (386 × 12 × 0.26 ms ≈ 1.2 s, cached in-process with `lru_cache`). There are 79 such misconceptions today, for example 'changed the sign of the slope' in 4 line templates and 'moved the decimal point one place' across percentages, rates and scatterplots.\n\n- Redo rows show `+n elsewhere`.\n- The pane lists the other templates.\n- **Practise across all** builds a set of fresh seeds on those templates. Each one is drawn by walking seeds (at most 40) until the options include that misconception, so every question offers the same trap.\n- The Redo 'Group by: Mistake type' uses the same index.\n\n## 15. Share (TopTierPrep's shared session, working)\n\n**Share** in any action bar, and on the pane, creates `POST /api/shares {items, title?}` and copies `/s/?id=<id>` with `navigator.clipboard.writeText`. The toast reads 'Link copied'. If the clipboard is blocked, a read-only field with the link shows instead. There is no `navigator.share`, which froze their page.\n\n**The landing page** (`/s/`):\n- title (default 'A set from a friend'),\n- `8 questions · Circles, Percentages · ▁▃▅ mix · about 12 min`,\n- **Start**: a drill with those exact items for the visitor's own code, with the key shown only after each answer as always,\n- and **Fresh versions instead**.\n\nFor the visitor, these are new questions, so they are clean evidence. On the sharer's side, a started share shows as 'Shared set' in the visitor's Source only; nothing about the visitor is shown to the sharer.\n\n## 16. Printable worksheet (extra)\n\n**Print worksheet** on Redo and Saved opens `/review/print.html?…`: 1–3 fresh versions per selected template, numbered, with the stems, figures and choices, and space to work. The answers and each option's misconception are on the last page. It uses print CSS only.\n\nThe seeds are remembered as seen, so the worksheet never repeats in practice. The page says 'These answers are not filed. Practise online to count them.'\n",
+  "extras": [
+   {
+    "feature": "Fresh versions of any list or selection",
+    "why": "Saved, marked, fixed, history or redo items can be practised again on new numbers ('Fresh one like this', 'Fresh versions · 1/2/3 each'). A finite bank can only repeat the same item, which tests memory more than skill."
+   },
+   {
+    "feature": "Clean answers only: exact repeats never close a mistake or move mastery",
+    "why": "TopTierPrep's unlimited retries on the same question make accuracy meaningless. A Repeat is filed and shown; only an unseen (template, seed) answered without a flag counts as proof. Repaired is our better 'Mixed'."
+   },
+   {
+    "feature": "Every wrong option explained, not just the one picked",
+    "why": "Every distractor names its misconception (Item.reasons), and a filler is labelled as a near-miss number, not a mistake. TopTierPrep's 'Distractor Analysis' is prose in one explanation and does not highlight the key after a miss."
+   },
+   {
+    "feature": "Hide answers that can be re-answered",
+    "why": "Theirs only hides the key; you cannot re-attempt. Ours hides the key, the per-option lines and the rationale, remembers the setting, and lets the student re-answer. It files as a Repeat, so it never inflates mastery."
+   },
+   {
+    "feature": "Spot the trap",
+    "why": "From a mistake, generate a fresh seed whose options include the same misconception and ask 'Which choice comes from: <misconception>?'. Only a bank with labelled distractors can build this. It trains recognising the trap, not only avoiding it, and it is not filed to mastery."
+   },
+   {
+    "feature": "Same mistake in other question types",
+    "why": "79 normalised misconceptions recur across 2 or more templates, 12 of them across topics (measured), such as 'changed the sign of the slope' in 4 line templates. The pane shows where else the trap lives, and 'Practise across all' draws fresh items whose options contain it."
+   },
+   {
+    "feature": "Spaced check-ins on fixed mistakes",
+    "why": "A fixed mistake comes back once as a fresh question at 7 days, and again at 21 days if that is clean. A miss reopens it as Relapsed. This is TopTierPrep's vocab 'Due Today' applied to math, and it cannot run dry."
+   },
+   {
+    "feature": "Unsure: right-but-flagged answers join the redo list",
+    "why": "A lucky guess is not mastery. Flag and get it right, and an Unsure item opens that needs one clean answer. TopTierPrep's marks mean nothing after the session."
+   },
+   {
+    "feature": "Flag calibration",
+    "why": "'You flagged 12 · 7 were right (58%)' tells a student whether to trust first instincts or to flag and return, which is a real test-day skill. TopTierPrep counts flags but never says what they were worth."
+   },
+   {
+    "feature": "Redo at the difficulty of the miss, or one harder",
+    "why": "A repair should test the same thing at the same level, and 'Harder' lets a student prove it. TopTierPrep's redo filter has no link to the original question's difficulty."
+   },
+   {
+    "feature": "Mistakes merged by misconception, not by numbers",
+    "why": "Normalising the numbers turns '10% change' and '50% change' on one template into one mistake with its hits added, so the counts are honest. The label stays concrete, and History keeps the exact text of each miss."
+   },
+   {
+    "feature": "Attempt history for the whole kind of question",
+    "why": "Every seed of the template, across practice, tests, the challenge and QOTD, with source, difficulty, pick, misconception, flag and time. TopTierPrep's covers one item in one session."
+   },
+   {
+    "feature": "Time per question in tests",
+    "why": "The exam runner sends dwell time with each answer, so History and the report know how long each test question took. TopTierPrep's report has no time per question at all."
+   },
+   {
+    "feature": "Sittings you can retake without erasing them",
+    "why": "History grouped by sitting gives the list of sessions TopTierPrep lacks, with 'Again, exactly', 'Fresh versions' and 'Fix the misses'. That replaces their Clear Session, which deletes the history."
+   },
+   {
+    "feature": "Fixed log with time-to-fix and relapse rate",
+    "why": "It shows progress on mistakes, not just a backlog. TopTierPrep never shows what was fixed."
+   },
+   {
+    "feature": "Notes on saved questions",
+    "why": "Students write the trick down in their own words. TopTierPrep's notes live only on exam highlights."
+   },
+   {
+    "feature": "Persistent flags in tests, per sitting",
+    "why": "Flags survive a reload and module 2, reach the report's Flagged filter and the Marked tab, and feed practice. Ours are lost today."
+   },
+   {
+    "feature": "Working share links",
+    "why": "Share a question or a set with a friend or tutor. They start it on their own code and see keys only after answering. TopTierPrep's Share froze the page, and live-test and same-day challenge items can never be shared."
+   },
+   {
+    "feature": "Printable fresh worksheet",
+    "why": "A tutor, parent or offline student gets a new worksheet every time, with answers and each option's misconception on the last page. A finite bank can only print the same pages."
+   },
+   {
+    "feature": "History CSV export",
+    "why": "A tutor or parent can see every answer with its misconception, free. TopTierPrep's 'Share / Export Report' is a dead button."
+   },
+   {
+    "feature": "Most-missed strip with one-tap 'Redo these 5'",
+    "why": "It points to the few mistakes that cost the most, without scrolling 25 rows."
+   }
+  ],
+  "server": [
+   {
+    "change": "progress.norm() and the trap key",
+    "detail": "norm(reason) = lower(reason), with /[-−]?\\d[\\d.,/]*/ replaced by '#' and whitespace collapsed. A grid-in miss gets '', a flagged-right answer '~unsure', and the filler stays 'near-miss arithmetic slip' (kind 'slip').\n\nKnown fold, documented in the docstring: in 29 templates two options of one item share a norm (circles.degree_radian 'divided by 360/90 instead of 180'; pct.series '2013 as a percent of 2014' and its reverse). They become one mistake whose label is the concrete text of the latest miss.\n\nAn assert-based check in progress.py covers:\n- context.container_percent seeds 10% and 50% share one norm,\n- circles.coterminal's two quarter-turn options share one,\n- the filler maps to kind 'slip'."
+   },
+   {
+    "change": "Schema: traps rebuilt",
+    "detail": "db.py rebuilds traps the way _relax_form_id rebuilds sessions. Columns:\n- id INTEGER PRIMARY KEY (stable, used in ?open=trap:<id>), with UNIQUE(learner, template, norm),\n- reason (the latest concrete text), label, topic, hits, owed, opened, last, closed,\n- closed_how TEXT ('fixed'|'dismissed'),\n- relapses INTEGER DEFAULT 0,\n- seed INTEGER and session TEXT (the latest miss, or the hand-added item),\n- due TEXT (next check-in, ISO date) and checks INTEGER DEFAULT 0.\n\nThe migration merges old rows with equal norm: hits are summed, opened takes MIN, last and owed take MAX, and closed is NULL if any merged row is open. seed and session are filled from the latest wrong attempts row.\n\nprogress.carry merges on (template, norm)."
+   },
+   {
+    "change": "Schema: attempts columns, computed in progress.record for every caller",
+    "detail": "New columns:\n- norm TEXT (NULL when right, '~unsure' for a flagged right),\n- repeat INTEGER NOT NULL DEFAULT 0,\n- repair INTEGER NOT NULL DEFAULT 0,\n- flagged INTEGER NOT NULL DEFAULT 0,\n- stem TEXT (plain text, first 200 characters, for search).\n\nNew index attempts(learner, template, seed).\n\nprogress.record itself sets repeat = EXISTS(an attempts row for the same learner, template, seed) before inserting, so the drill, record_paper, QOTD and the challenge all get it. repair comes from q.get('repair'), and flagged is a new parameter.\n\nThe rules:\n- clean = right AND NOT repeat AND NOT flagged; only a clean answer lowers owed or counts as a check-in;\n- a right answer that is flagged opens or refreshes an '~unsure' trap with owed 1;\n- a wrong answer (repeat or not) opens, refreshes or reopens its trap. Reopening one with closed_how='fixed' adds 1 to relapses; a dismissed one just reopens.\n\ntopic_mastery and board add AND repeat=0; days() still counts every row as study time. A one-off startup backfill fills stem and norm for old rows through generate (0.26 ms each).\n\nConsequence for test_flow: a retake of a fixed diagnostic form or shelf mock files repeats and does not move mastery. Scoring is untouched."
+   },
+   {
+    "change": "Schema: flags table (marks for review)",
+    "detail": "flags(learner, session, qid, template, seed, topic, at), PRIMARY KEY (learner, session, qid).\n\nIt is keyed per sitting because diagnostic forms and shelf mocks are fixed papers whose (template, seed) recur, and one report's flags must not move to another. It is called flags, not marks, because drill.state() already returns 'marks' as the right/wrong list.\n\n'Flagged during the sitting' means flags.at <= sessions.finished (or earlier than the answer, for drills). record_paper(…, flagged=set of qids) and drill answers pass it to record.\n\nprogress.carry adds flags (and shares) to its table loop. No sessions.marks JSON column is needed."
+   },
+   {
+    "change": "Schema: saved, sessions, shares",
+    "detail": "- saved gains note TEXT, session TEXT and qid TEXT.\n- sessions gains times TEXT (JSON qid → accumulated dwell ms, for tests).\n- A new table shares(id TEXT PRIMARY KEY, learner, title, items TEXT JSON, at)."
+   },
+   {
+    "change": "Access rule: app.access(learner, template, seed) -> 'reveal' | 'kept' | None",
+    "detail": "- 'reveal' when this learner has an attempts row for the pair, or the pair is in a flags or saved row whose session is a finished mock, module or diagnostic. A finished report already shows those blanks.\n- 'kept' when the pair is in saved, or in flags whose session is a drill (kind 'drill') or is finished.\n- Otherwise None.\n\nKey, rationale and per-option reasons are returned only with 'reveal'. Drill exact items, shares and worksheets need 'reveal', or 'kept' from a practice drill, so a live-test item or an unanswered challenge item can never be re-served to read its key. Shares also refuse any pair in today's daily.challenge until the day is over (it is the same for everyone).\n\nPOST /api/session/{sid}/flag checks mine(row, learner): GET /api/session/{sid} has no owner check, and a flag must not be settable by anyone holding the id."
+   },
+   {
+    "change": "GET /api/me gains review; GET /api/review/counts",
+    "detail": "/api/me adds review: {open} for the nav badge, which the shell already fetches.\n\n/api/review/counts returns {open, half, relapsed, unsure, marked, marked_right, marked_during, saved, noted, saved_unanswered, fixed, fixed_week, median_days, dismissed, due, answers, redo_questions, redo_templates}. redo_questions = Σ over open templates of max(owed).\n\nIt is used by the stat strip, the tab counts, Today, Practice and Me. /api/today keeps 'mistakes' and adds 'review'."
+   },
+   {
+    "change": "GET /api/review/redo",
+    "detail": "Query: topics, difficulty, fmt, kind (misconception|gridin|slip|unsure), status (open|half|relapsed), q, sort (recent|hits|near|oldest|topic), group (topic|domain|norm).\n\nReturns:\n- items: [{id, template, norm, label, reason, kind, skill, topic, name, domain, hits, owed, clean, status, relapses, opened, last, difficulty, fmt, seed, session, source, given, given_label, elsewhere}]. The item fields come from the trap's latest wrong attempts row, joined on (learner, template, norm).\n- groups: [{key, name, domain, count, questions}]\n- total, questions\n\nCapped at 500 rows."
+   },
+   {
+    "change": "GET /api/review/marked, /saved, /fixed, /history (+ /history.csv)",
+    "detail": "All take the shared filters (topics, difficulty, fmt, source, since, until, q), cursor pagination (limit ≤ 100, default 50, next cursor or null), and return totals from SQL.\n\n- marked items: {session, qid, template, seed, topic, name, domain, skill, difficulty, fmt, at, during, session_kind, session_at, n (question number), answered, correct, given_label, answer, ms, stem}. calibration: {flagged, right}.\n- saved items: the same fields, plus note, tries and last_result.\n- fixed items: the trap fields, plus closed, closed_how, days_to_fix (closed − opened), due, checks. stats: {fixed, fixed_week, median_days, relapsed, dismissed}.\n- history items: {id, at, template, seed, topic, name, domain, skill, difficulty, fmt, correct, result (right|wrong|repaired|repeat), given, given_label, answer, mistake, ms, source, session, qid, flagged, repeat}. The cursor is the attempt id. It also returns days:[{day, questions, right, minutes}] in X-Tz local time, sittings:[{session, kind, source, topics, at, right, asked, minutes}] when group=sitting, and summary {answers, right, accuracy, median_ms, timed, repaired, repeats, by_difficulty}.\n\nsource is derived with LEFT JOIN sessions:\n- kind drill → 'practice', or 'review' / 'shared' from cfg.source,\n- mock → 'section', module → 'module', diagnostic, challenge,\n- a session LIKE 'qotd:%' → 'qotd'.\n\nsessions with kind 'spot' are excluded everywhere, including /api/history. Stems for items without a stored stem come from an lru_cached generate(template, seed) and are cut to 160 characters. history.csv streams the same filtered rows with a header row."
+   },
+   {
+    "change": "GET /api/review/item and /api/review/family",
+    "detail": "item?template=&seed= goes through access() and returns 404 when None. It returns:\n- question (public fields), answer, rationale, reasons (only with 'reveal': a capitalised label per option, null for the key, 'A near-miss number, not a named mistake' for a filler),\n- attempts on this seed,\n- family {seen, right, repaired, repeats, median_ms, recent: [last 10 results]},\n- traps open on the template, elsewhere [{template, skill, topic}],\n- saved, note, flagged, address, access.\n\nfamily takes ?template= or ?session=&question_id=; the latter resolves the template on the server, so the session page never sees it. It returns {template, skill, topic, summary, attempts: […], next}. For a question from a live test, or an unanswered challenge question, it returns 409 'after the test'. Before a drill question is answered, the attempts carry no open link (openable: false)."
+   },
+   {
+    "change": "Flag endpoints",
+    "detail": "- POST /api/session/{sid}/flag {question_id, on}: for mock, module and diagnostic sittings, while live and after finishing. It checks ownership and that the qid is on the paper, upserts or deletes the flags row, and returns {flags}.\n- payload() includes flags: [qid] for the whole session, so module 1's flags survive module 2. results() adds flagged: bool to each review item and flagged: n.\n- POST /api/flags {session, question_id, on} does the same for drills and challenges (challenge flags are hidden by access() until answered). It also accepts {template, seed, session, on:false} for clearing from the hub.\n- drill answers accept flagged: bool (DrillAnswer gains flagged = False). Flags set before the answer are also read from the flags table, so the two paths agree."
+   },
+   {
+    "change": "Per-question time in tests",
+    "detail": "POST /api/session/{sid}/answer accepts ms (0..MS_CAP). The server adds it into sessions.times with json_set, accumulating across revisits. record_paper passes times[qid] as ms, so History, the report and the median cover tests.\n\nThis is shared with the Tests and Report sections: their plan already asks for a time tile. Old test rows keep ms NULL and show '—'."
+   },
+   {
+    "change": "Saved endpoints extended",
+    "detail": "POST /api/saved also accepts {template, seed, note?}, which must pass access(). Saving is allowed for a drill question, an answered challenge question, and any question of a finished test (blanks included); a live test is still refused.\n\nPATCH /api/saved {template, seed, note} sets a note of up to 280 characters, and returns 422 above that. Unsave stays {…, on:false}; the client re-posts the note on undo."
+   },
+   {
+    "change": "Mistake actions",
+    "detail": "- POST /api/mistakes/dismiss {id} sets closed = now and closed_how = 'dismissed'.\n- POST /api/mistakes/restore {id} undoes a dismiss and does not add to relapses.\n- POST /api/mistakes/add {template, seed} requires 'reveal' and opens or refreshes a '~unsure' trap with owed 1, labelled with the skill.\n- POST /api/mistakes/reopen {id} reopens a dismissed trap.\n\nGET /api/mistakes stays for compatibility with test_flow, with id, norm and status added."
+   },
+   {
+    "change": "POST /api/drill: one list source",
+    "detail": "The body gains:\n- list: 'redo'|'marked'|'saved'|'fixed'|'history'|'items'|'templates'|'related'|'share',\n- ids: a selection (trap ids, [session, qid] pairs, [template, seed] pairs, template names, attempt ids or a share id), or null for everything matching the filters,\n- exact: bool, meaning serve those (template, seed) pairs or fresh seeds on their templates,\n- each: 1–3 fresh per template,\n- level: 'as_missed'|'any'|'harder' (redo and fixed).\n\ntopics, difficulty and fmt filter first. A 409 names what is empty ('no open mistakes in these topics'). Every exact pair passes access(), up to 120.\n\nThe queue rules:\n- redo queues each template max(owed) times, all templates once before any second round;\n- fixed queues one per template and is flagged as a check-in;\n- related draws, for a norm, fresh seeds whose options contain it (at most 40 seeds walked per template).\n\nIn drill._pick, a queued redo draws _fresh(b, template, {tier}): the tier of the trap's latest miss, the next tier up for 'harder' when _tiers_of has it, falling back to any.\n\nAliases stay: mistakes:true = {list:'redo', ids:null}, and saved:true = {list:'saved', exact:true}. from_session stays."
+   },
+   {
+    "change": "Drill payloads",
+    "detail": "- public(q) adds seen (this learner's attempts on the template) for the History badge. It never includes template or seed.\n- _feedback adds reasons (per-option labels), family {seen, right}, flagged, repeat and trap ids.\n- state() keeps 'marks' (right/wrong) and adds 'flags'.\n- finish() adds repaired, repeats and opened/closed with trap id.\n- Pane drills (source 'review') are never finished."
+   },
+   {
+    "change": "Spaced check-ins (extra)",
+    "detail": "When a trap closes with how='fixed': due = closed + 7 days, checks = 0.\n\nA clean answer on its template while it is closed and due is set (early answers count too):\n- the first check sets checks = 1 and due = today + 21 days,\n- the second sets checks = 2 and due = NULL.\n\nA miss reopens it as a relapse. progress.coach adds the reason 'check', ranked below open mistakes and above weak topics. drill._pick asks one due template per topic before new material. counts.due reports the number due."
+   },
+   {
+    "change": "Spot the trap (extra)",
+    "detail": "POST /api/review/spot {trap_id} walks seeds from the builder cursor (at most 40, about 10 ms) for an unseen MC item whose reasons include the trap's norm. It remembers the item as seen and stores it as a session with kind 'spot' (never finished, excluded from every sittings list). It returns {id, question (public), prompt: label}.\n\nPOST /api/review/spot/{id} {answer} returns {correct, trap_index, answer_index, reasons, rationale}. Nothing is filed to attempts. If no seed fits, it returns 409 'this mistake has no fresh version with that option'."
+   },
+   {
+    "change": "Related mistakes index (extra)",
+    "detail": "progress.related(): a norm → templates index built on first use from 12 seeds per template, cached with lru_cache (about 1.2 s once). Fillers and '' are excluded. It feeds redo.items[].elsewhere, item.elsewhere, group=norm and list:'related'."
+   },
+   {
+    "change": "Shares (extra)",
+    "detail": "- POST /api/shares {items: [[t, s]] ≤ 40 | from: {list, ids}, title?} checks each pair with access() for the sharer (it must be 'reveal' or 'kept' from a practice drill), refuses today's challenge pairs, and returns {id} (token_urlsafe(9)).\n- GET /api/shares/{id} returns {title, count, topics, difficulties, minutes} and no stems.\n- POST /api/drill {list:'share', ids: id, exact: true|false} starts it for the visitor, with source 'shared'."
+   },
+   {
+    "change": "Worksheet (extra)",
+    "detail": "GET /api/review/worksheet?list=&ids=&each=1..3 returns fresh items (public fields, answer, reasons, rationale), remembered as seen and not filed. It is capped at 40 items."
+   },
+   {
+    "change": "Tests in server/test_flow.py",
+    "detail": "New asserts:\n- norm merges two container_percent seeds into one trap with hits 2, and trap ids are integers;\n- an exact saved re-serve answered right leaves owed and mastery unchanged and files repeat=1; a wrong one refreshes the trap;\n- a flagged right answer opens an unsure trap with owed 1, and one clean fresh answer closes it;\n- test flags survive GET session and module 2, and reach results.review[].flagged and /api/review/marked after finish; flags from two sittings of the same diagnostic form stay separate;\n- /api/session/{sid}/flag from another learner returns 403;\n- /api/review/item returns 404 for an unanswered challenge item and for another learner's item; family returns 409 for a live-test question;\n- redo with a half-fixed trap starts a set of total 1;\n- dismiss then restore leaves relapses unchanged, and a miss after dismiss reopens without a relapse;\n- the history cursor pages strictly older;\n- carry moves flags;\n- a share of today's challenge item returns 409;\n- test answer ms accumulates into times and reaches attempts.ms."
+   }
+  ],
+  "files": [
+   "web/review/index.html (new: the hub, its five tabs, the pane, the action bar, the phone sheets)",
+   "web/review/print.html (new: the printable fresh worksheet, print CSS)",
+   "web/s/index.html (new: the share landing page with Start / Fresh versions instead)",
+   "web/mistakes/index.html (becomes a redirect to /review/?tab=redo, keeping the query)",
+   "web/assets/ui.js (UI.filterBar, UI.tabs, UI.actionBar, UI.questionReview, UI.history, UI.pips, UI.resultCell, UI.statusChip, UI.toast, UI.sheet, UI.triCheck, UI.relTime; the Review NAV item, ICON.review and the badge from /api/me; SECTION mistakes→review; the per-option reasons line in question().reveal; the shortcut guard for inputs)",
+   "web/assets/ui.css (the components above, skeleton rows, the result-cell glyphs and legend, the sheet as a full-screen dialog under 640px, the 6-tab phone bar, the action bar above the tabs)",
+   "web/practice/session/index.html (the strip's Mark / Save / History n / Details, flagged sent with the answer, the save-note popover, Repaired in the overview, History locked before answering, summary links to /review/?open=trap:)",
+   "web/test/test.js and web/test/index.html (server flags via /api/session/{id}/flag, flags restored from GET, no module-2 reset, ms sent with each answer save, the same strip with Save and History disabled while live)",
+   "web/results/report/index.html (All / Wrong / Blank / Flagged filters, the flag corner and legend, the detail through UI.questionReview, Save on blanks)",
+   "web/practice/index.html (the Source control New / Redo / Marked / Saved / Fixed with Exactly / Fresh and a live count; the mistakes link goes to /review/)",
+   "web/challenge/index.html (review through UI.questionReview once answered; flags hidden until answered)",
+   "web/index.html (the Review card from /api/review/counts)",
+   "web/me/index.html (the Saved content card)",
+   "server/db.py (traps rebuild and migration; attempts, saved and sessions columns; flags and shares tables; indexes attempts(learner, template, seed), flags(learner, session))",
+   "server/progress.py (norm() with its assert check, record's repeat/repair/flagged/clean/unsure/relapse/check-in rules, record_paper flags and times, related(), the review queries, carry for flags and shares, coach 'check')",
+   "server/drill.py (the list sources, level modes, check-ins, related draws, reasons and family in feedback, seen in public, flags in state, trap ids in finish)",
+   "server/app.py (access(), the /api/review/* endpoints, flag endpoints, saved extensions, mistake actions, shares, worksheet, the drill body, flags/times in payload/answer/results, review.open in /api/me)",
+   "server/test_flow.py (the asserts listed under server)",
+   "README.md (the serving layer table: /review/, /s/, /review/print.html and their API; the clean-answer rule; flags vs marks)"
+  ],
+  "shared_needs": [
+   "UI.filterBar: dropdown chips (a Topic menu grouped by domain with tri-state checkboxes and counts; Difficulty pills; Format; Kind; Status; Source; Result; Date with native date inputs; Sort), a server-side search field and Clear, plus a 'Filters · n' bottom sheet on phone. Practice, Results, Tests history and the report's question filters need it too.",
+   "UI.questionReview: one question pane (the practice renderer, reveal(open), per-option misconception lines, an inline meta line, Details with the address, the family strip, same-mistake-elsewhere, the actions Save / Mark / History / Share / Fresh one / Again exactly / Spot the trap / Report, re-answerable Hide answers, Prev/Next). The report detail, the Review pane and the challenge review all use it.",
+   "UI.history: the attempt-history dialog for the whole template, opened from the session strip, the report and Review, with an integrity mode (no Open before answering; disabled in live tests and unanswered challenge questions).",
+   "One result vocabulary with components (UI.resultCell: Right / Wrong / Repaired / Repeat / Blank / Flagged / Current, each with a glyph and an always-visible legend; UI.pips; UI.statusChip). The session's Question Overview, the report grid, Check Your Work and History all draw from it.",
+   "One question strip for the practice session and the exam runner: number, Mark, Save, History n, Details, Report, and ABC/Eliminate. Mark state lives on the server (the flags table) in both, and Save and History are disabled while a test is live.",
+   "Per-question dwell time from the exam runner (ms on each answer save, accumulated in sessions.times). The Report section's time tile and the Tests section need the same.",
+   "UI.actionBar: a sticky bottom bar with a live summary that echoes the chosen options, the options themselves and a primary button, sitting above the phone tab bar. The Practice builder's dock and every Review tab use it.",
+   "UI.sheet: a generalised <dialog> that is full-screen under 640px, closes on Esc and on Back, and returns focus. The reference sheet, History, filters, the phone pane, the report dialog and the note popover use it.",
+   "UI.toast with Undo (one at a time, 6s, aria-live polite) for unsave, unmark, dismiss and link copied.",
+   "Shell: the Review nav item with an open-mistakes badge from /api/me review.open, and a 6th phone tab. The Today, Practice and Me owners need to agree on the order.",
+   "The Report a problem dialog (from the Session section): the pane reuses it.",
+   "One drill body with list / ids / exact / each / level, so the Practice builder's Source control, the Review action bars, shares and the report start sets the same way.",
+   "The access() rule (reveal / kept / none) for every endpoint that returns a key or re-serves a (template, seed): Review, shares, worksheets, the challenge review and the report."
+  ],
+  "acceptance": [
+   "curl -s -H 'X-Learner: a:v2revacc1' localhost:8000/api/review/counts returns all zeros for a new code, /api/me has review.open == 0, and /review/ shows the new-student panel with 'Start practice'.",
+   "After a drill in which an MC question is answered wrong, /api/review/redo has one item with an integer id, kind 'misconception', owed 2, status 'open', a seed and a given_label; /api/review/history has a row with result 'wrong', mistake set and ms set.",
+   "Two misses on context.container_percent seeds whose reasons differ only in the percent give ONE redo item with hits 2 (its norm contains '#'), and its label is the concrete text of the second miss.",
+   "A miss whose option is 'near-miss arithmetic slip' gives kind 'slip' with the label 'Arithmetic slip'.",
+   "A half-fixed trap (owed 1) makes redo_questions count 1 for its template, and POST /api/drill {list:'redo', ids:[that id]} returns total 1.",
+   "Save a question, answer it right, start {list:'saved', exact:true} and answer it right again: that attempts row has repeat=1, the trap's owed is unchanged, /api/map mastery for the topic is unchanged, and History shows result 'repeat'.",
+   "Answer a practice question right with flagged:true: /api/review/redo gains an item with kind 'unsure' and owed 1, and one clean fresh answer on that template moves it to /api/review/fixed.",
+   "Live test: POST /api/session/{sid}/flag {question_id, on:true}; GET /api/session/{sid} includes it in flags; after module 1 → 2 the module-1 flag is still in flags; after finish, results.review[].flagged is true for it and /api/review/marked lists it with during:true.",
+   "The same flag call with another learner's X-Learner returns 403.",
+   "Two sittings of the same diagnostic form with different questions flagged: each report's flagged count matches only its own flags.",
+   "GET /api/review/item for the (template, seed) of an unanswered daily-challenge question returns 404; the same call under another learner's code for an item this learner answered returns 404; GET /api/review/family?session=<live test>&question_id=… returns 409.",
+   "POST /api/shares with today's challenge (template, seed) returns 409; a share of an answered practice item returns an id, and POST /api/drill {list:'share', ids:id, exact:true} under a second code serves that exact stem.",
+   "POST /api/mistakes/dismiss moves the item from redo to fixed with closed_how 'dismissed'; /restore brings it back with relapses unchanged; a later miss on a dismissed trap reopens it with relapses unchanged.",
+   "GET /api/review/history?limit=50, then ?cursor=<next>, returns only ids smaller than the first page's smallest id; summary.answers equals counts.answers when no filter is set.",
+   "A test answer saved twice with ms 3000 and 2000 files attempts.ms 5000 for that question after finish.",
+   "POST /api/me/carry moves flags rows to the new code (GET /api/review/marked lists them under the new code and returns an empty list under the old one).",
+   "Browser: http://localhost:8000/mistakes/ lands on /review/?tab=redo; clicking the Saved tab changes the URL to tab=saved, and Back returns to Redo.",
+   "Browser 1280: clicking a redo row opens the pane on the right with the exact missed question, the pick and the key marked, a misconception line under every wrong option, the skill and difficulty visible without opening Details, and pips; 'Fresh one like this' answers inline, and a clean answer fills one pip without a reload.",
+   "Browser 1280: Hide answers hides the key and rationale, stays on after Next and after a reload, and Check re-answers and files a Repeat.",
+   "Browser 1280: History with Group by = Sitting shows sitting headers with 'Again, exactly'; selecting 3 rows and pressing Fresh versions starts a 3-question set on those templates with unseen stems.",
+   "Browser 390: document.documentElement.scrollWidth <= 390 on every tab; a row tap opens a full-screen dialog that both Esc and the Back button close; the action bar sits above the tab bar, its summary shows the chosen Level, and the last row is not covered.",
+   "Browser 390: the Filters sheet with Topic = Circles shows only circle rows, and the tab count reads 'n of 25'; Clear filters restores all rows.",
+   "Browser: in the practice session, the History button shows a count before answering and opens the modal with earlier attempts on that kind of question across seeds, with Open disabled until answered; Esc closes it and returns focus to the button.",
+   "Browser: in /test/, the Save and History strip buttons are present but aria-disabled while the test is live.",
+   "Browser: the report page shows a 'Flagged (n)' filter after a test with a flagged question, and the flagged cell carries the corner flag and a legend entry.",
+   "Browser: pressing S while typing in a grid-in input or a note textarea types 's' and does not toggle Save.",
+   "PYTHONPATH=. python3 server/test_flow.py passes with the new asserts."
+  ],
+  "open_questions": [
+   "Should Review be a 6th top-level nav item (recommended: it is where the study loop goes), or a tab inside Practice? A 6th phone tab is 65px wide at 390.",
+   "Should exact repeats be left out of mastery and out of closing mistakes (proposed), or count as they do today? This changes the saved-set behaviour, and a retake of a fixed diagnostic form or shelf mock will no longer move the map.",
+   "The digit-normalised key folds two different options of one item in 29 templates (for example circles.degree_radian's 'divided by 360' and 'divided by 90'). The exact fix is a stable Mis.tag per misconception in the bank. Should the bank owner add tags, with the server using the tag when present and the norm otherwise?",
+   "Should Dismiss exist? The alternative is that mistakes close only on evidence. It is proposed with a confirmation, Restore and Reopen, for misclicks and bad items.",
+   "In tests, should a question flagged and answered right also open an Unsure mistake? Proposed: yes, because a Bluebook flag usually means unsure.",
+   "Spaced check-ins, Spot the trap, same-mistake-elsewhere, shares and the worksheet are fully specified. Ship them in the first pass with the core hub, or straight after it?",
+   "Shares: should they expire (for example after 30 days), and should the sharer see how many people started one? Proposed: no expiry and no visitor data, since nothing about the visitor is needed.",
+   "Grid-in misses name no misconception because SPR items carry no distractors. Where a template can also render the same parameters as MC, the typed value could be matched to a distractor's value. Worth asking the bank owner.",
+   "The traps migration merges rows by normalised reason, which lowers existing students' counts. Is that acceptable without a notice?",
+   "The worksheet consumes seeds (remembered as seen) without filing answers. Is that the right trade, or should worksheet seeds stay available to practice?"
+  ]
+ }
+}

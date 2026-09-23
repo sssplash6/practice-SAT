@@ -1,0 +1,214 @@
+{
+ "label": "experience: tests",
+ "key": "v2:17001fa66f0f0259785447228e73c8450a346fbdcac3b7b02c32d9f55805bdf6",
+ "result": {
+  "proposals": [
+   {
+    "title": "Coached until test day, then Real SAT: a pace coach that switches itself off before the exam",
+    "what": "The lobby and the start sheet replace the five Tools toggles with one 'Mode' row offering three choices. REAL SAT is Bluebook-exact: official timing, the route hidden, no pace aids, no confidence tags, fullscreen. COACHED keeps the same questions and the same clock, and adds: (1) a signed time bank beside the clock (DM Mono 13px, '+1:20 ahead' or '0:45 behind', computed as answered x 95 s x timing factor - elapsed, and hidden with the clock); (2) the pace tick on the strip; (3) a park nudge: once the open question has run past 2x pace (3:10 at official time) unanswered, an inline bar under .qhead reads '3:10 on this one. Park it and come back?' with [Park and next] (Shift+M) and a quiet 'Keep working'. It is never a toast and never covers content, and it shows once per question. Park marks the question for review, sets qstate[qid].parked and jumps to the next unanswered question; (4) confidence tags; (5) the route named on Between modules; (6) a 'Parked N' tile on Check your work. CUSTOM shows the individual toggles. Defaults: Coached for a learner's first 3 sittings. From the 4th, the lobby offers 'Try this one as the real thing', and within 14 days of prefs.exam_date Real SAT becomes the default. A Coached sitting keeps its estimate but is flagged 'coached' and, like a retake, stays out of percentiles and out of paper Sat by and Average. The report adds 'Parked 3 · went back to 2 · 1 right'.",
+    "beats": "Their runner has a bare mm:ss countdown with an eye toggle, and Untimed is the only other timing. A student who sinks 5 minutes into Q15 finds out only when the clock reads 2:00. Ours teaches the two-pass habit during real sittings, then removes the aids before test day so the real SAT feels the same.",
+    "effort": "M",
+    "needs": "qstate ms per question (R7) plus a new parked field; a test_mode key in server/prefs.py (R11); cfg.coached on the sitting, read by estimate.percentile (R16) and by paper stats; a runner zone under .qhead for the nudge bar (F3 runner.js); one line in the report (S6)."
+   },
+   {
+    "title": "What moves your score: levers under the estimate, each with a points value and a one-tap fix",
+    "what": "A 'What moves your score' block inside T1 on /tests/, under the fact grid. It holds at most 3 rows, built by estimate.levers(learner) from the last 3 scored sittings. Row kinds, highest priority first: (a) ROUTE GATE: a 0-22 dot strip of the last 6 module-1 scores with an orange line at 14 labelled 'routes up', and the line 'Module 1: 12, 13, 15 of 22. 14 of 22 gets you the harder module 2; the easier one stops at 580.' Action: 'Module 1 practice' (kind module1). Shown only when at least one of those scores was under 14. (b) COSTLIEST MISTAKE: the misconception (attempts.reason, grouped by norm) missed most often across those sittings, e.g. 'Dropped the negative when distributing · 4 misses in 3 tests · about +30'. Points come from rescoring the latest sitting with those misses flipped (scoring.section_score midpoint delta, rounded to 10; the row is hidden under 10). Action: 'Fix · 8 questions' (POST /api/drill with those traps). (c) BLANKS: 'Blanks cost about +20: 7 in your last 2 tests, 5 of them in the last 4 questions of module 2. A wrong answer costs no more than a blank.' Points credit each blank multiple-choice question with a quarter of its weight. Action: 'Turn on the pace coach' (sets Coached as the default). (d) EASY MISSES: 'about +40 with your 3 easy misses right'. Action: 'Review them' (report ?q links). Row layout: a title at 600 15px, one evidence line at 13px soft, the points in DM Mono on the right, one quiet action. States: skeleton rows while loading; the block is hidden when there is no scored sitting; '1 test so far' in the header after one sitting.",
+    "beats": "Their Estimated Score card shows 'Math 200-280' and a red LOW CONFIDENCE chip, and nothing about what would raise it. Their report payload carries no skill, difficulty or time, so they couldn't build this. Ours ranks what would raise the number, says by roughly how much, and starts the fix in one tap.",
+    "effort": "M",
+    "needs": "levers() added to server/estimate.py (R16, F4); the report's whatif rescoring (S6), shared rather than written twice; the traps table and drill pool (R9, R10, F5); the Coached mode pref from proposal 1."
+   },
+   {
+    "title": "Compare two sittings, slot by slot for twins, paper retakes and shared tests",
+    "what": "Every finished sittings row gets a 'Compare' action. On a twin, a paper retake or a shared sitting it goes straight to 'vs #11'. On any other row it starts a pick mode: checkboxes on the rows and a footer bar reading 'Compare #11 and #14'. The comparison opens as a full-height sheet (960px on desktop) at /tests/?compare=A,B. HEADER: both bands side by side, with dates, each route and the delta ('+60'). SAME-SLOT PAIRS: a table with one row per position (M1 Q1-22, plus M2 when both took the same route). Columns: skill and tier, the two sittings' glyph cells (right orange, wrong graphite, blank dashed, per R20) and the time per slot ('3:40 → 1:20'). Each row gets a class chip: Fixed (wrong→right), Slipped (right→wrong), Still missed or Solid. Four tiles at the top (Fixed 6 · Slipped 2 · Still missed 3 · Solid 11) filter the table. A Still missed row names the misconception each time ('Same trap both times: treated the rate as a total') and has 'Fix'. DIFFERENT FORMS: bars per domain and per tier with deltas, minutes per module, blanks, and misconceptions split into Recurring / New / Gone. An earned line, '6 question types you missed on #11 were right this time', appears only when Fixed is 3 or more. Keys: J/K move between rows, 1-4 choose a class filter.",
+    "beats": "Their retakes re-serve the same paper, so a better score can be memory, and paid tiers ration retakes at 10 or 20 a month. They have no comparison screen at all. A twin keeps every slot's question type and difficulty with new numbers, so this is the only place a student can see which question types they have actually fixed.",
+    "effort": "M",
+    "needs": "GET /api/compare?a=&b= (S5), owner-only on both sittings, reading per-qid template, tier, correct, reason and ms from attempts plus qstate; twin_of, paper and shared_from on history rows (R26, S6); the report's ?q deep links (S6); the drill for Fix (F5)."
+   },
+   {
+    "title": "Revisit walk: Check your work steps through only the questions that are left",
+    "what": "On Check your work, each tile (Unanswered, For review, Parked, Guesses) gets a 'Revisit' pill, and clicking a cell while a tile filter is on also starts a walk. The walk freezes its list, so answering a blank doesn't reshuffle it. A 40px bar under the progress strip reads 'Revisiting unanswered · 2 of 8' with a quiet 'Back to review' (Shift+R). The footer's Next reads 'Next unanswered' and Back steps back within the list; after the last item Next reads 'Back to review'. Strip segments outside the list are dimmed. In Coached mode a timed sitting also gets a suggested order on Check your work: blanks first (free points), then marked-and-unsure, then guesses, with 'Revisit all 11 in this order' and the pacing line '6:12 left · about 33 s each'. Using the navigator, or jumping to a question outside the list, ends the walk.",
+    "beats": "Their Check Your Work is a grid. After you jump to a cell, Next goes to the following question, so each revisit costs a cell tap, the answer, then the navigator and 'Go to Review Page' again: about 28 taps for 8 blanks. Ours takes 9 (one Revisit, then one Next per question), in the minutes when every second counts.",
+    "effort": "S",
+    "needs": "Runner navigation only (F3 runner.js). Parked and conf come from proposal 1 and the spec's qstate. No server changes."
+   },
+   {
+    "title": "Paper insights after you sit it: the crowd's score spread, and the trap behind each most-missed question",
+    "what": "The paper sheet (Discussion only, in the spec) becomes 'Paper #8' with two tabs, Insights and Discussion. Insights uses Discussion's gate (it opens after you finish the paper) and fills in once the paper has 20 first sittings. It holds: (1) a histogram of first-sitting midpoints in 20-point bins from 200 to 800, with a median line and your first sitting in orange ('You 620 · top 28%'), plus '58% routed up'; (2) a question table covering M1 Q1-22 and both module 2s, sortable by Most missed or Position. Per row: % right as a bar; the most-picked wrong option with its misconception and share ('B · 41% · squared the radius before halving it'); your glyph; median time against yours; 'Review' (/results/report/?id=MYSID&q=M1-19); and 'Discuss 4' (Discussion filtered to about=m1:19); (3) 'The trap of this paper': the misconception with the largest crowd share, with 'Practise it · 6 questions' (same template, new seeds); (4) an earned line when it is true: 'You got 3 of the 5 most-missed right.' Below 20 sittings the tab reads 'Insights open at 20 sittings · 14 so far.' The paper card gains a quiet 'Insights' button beside 'Discussion 12'.",
+    "beats": "Their card offers 'People took 1.6k' and a thread of unmoderated chatter. There is no score spread, no per-question stat, and nothing on why anyone missed a question. We store the misconception behind every wrong pick, so the discussion starts from data: which questions the crowd missed, and why.",
+    "effort": "M",
+    "needs": "GET /api/papers/{n}/insights (S5), aggregating attempts (the reason column already exists) over first sittings as R16 defines them; Discussion's about filter; the report's ?q links (S6); the drill for Practise it (F5); the same n ≥ 20 threshold as the paper's Average."
+   },
+   {
+    "title": "Set it aside: report, save or ask about a question without spending test time",
+    "what": "In the exam question header, Report (key R) becomes a two-way choice. 'After the test' is the default: one tap, with optional category chips (Wrong key / Unclear / Typo / Broken). 'Now' opens the full UI.report sheet. B saves the question in exam mode too, and on a paper 'Ask about this' drafts a Discussion post tagged m1:q. All three are stored in qstate[qid].later, with a 2 s toast 'Set aside for after the test'. Check your work shows a line (not a tile): 'Set aside 3'. After hand-in, the Handing in and Time's up screens and the top of the report list them, e.g. 'Report Q7 · Ask about Q19 · Saved Q12, Q15'. 'Finish report' opens UI.report prefilled with the context, your answer, and now the key and rationale, since the test is over and a 'Wrong answer key' report can be informed. 'Post question' opens Discussion with the draft. Saved items appear in Review's Saved only after hand-in. Step count: theirs is about 6 interactions in a modal mid-exam (Report, title, category select, details, Send, close) while the clock runs; ours is 1 tap during the test.",
+    "beats": "Their Report opens a six-field modal in the middle of a timed exam while the clock keeps running, and their exam has no Save. Ours costs one tap during the test, the report is written once the key can be seen, and nothing set aside is forgotten.",
+    "effort": "S",
+    "needs": "UI.report with a prefill and a queued mode (F6, R17); the saved table and endpoint (S10, R5) accepting a live test qid, held back by deps.access until the sitting is finished (R19); the report page rendering the tray (S6); Discussion drafts (this section)."
+   },
+   {
+    "title": "Test your lucky points: custom tests from guessed-right, slow-right and changed answers",
+    "what": "The custom test's 'Questions from' control gets three new sources, each showing its count: 'Guessed right (5)': right answers tagged Guess or Unsure, or with attempts.guess set, in the last 60 days; 'Slow but right (12)': right answers that took more than 2x pace (190 s); 'Changed answers (4)': test questions whose final answer differs from the first. Each slot draws that template on a fresh seed under test rules: one question per template, easiest first, capped at 60, at 95 s a question. A source with a count of 0 is shown disabled with its reason ('Turn on confidence tags to find answers you guessed right'). The same counts feed Up next ('5 points you guessed right. Check they hold · 5 questions · 8 min') and a row in the score levers. Afterwards the report says '4 of 5 held'.",
+    "beats": "Their QBank filters are Solved / Unsolved / Marked / Redo, so a lucky guess counts as solved forever and a 4-minute right answer looks like mastery. Ours finds the points that won't hold on test day and re-tests them with new numbers, which a fixed bank can't do without repeating the question.",
+    "effort": "S",
+    "needs": "New queue sources in blueprint.custom (F5/S5); attempts.guess (R8) and the qstate fields conf, changes and ms (R7); the counts in GET /api/tests; one line in the report (S6)."
+   },
+   {
+    "title": "Pin the ask: keep what the question wants in view while you solve",
+    "what": "With Highlights & Notes on (on by default in Coached mode), selecting text in a math stem adds a 'Pin as the ask' button to the highlight toolbar. The pinned phrase (e.g. 'the value of 2x + 1') renders as a sticky chip directly above the options or the grid-in field: 'Asked: the value of 2x + 1', in DM Mono on --wash, with × to remove it. There is one per question. It is stored as a mark with style 'ask' through POST /api/notes (R6), so it survives a reload and comes back in review and on a retake of that exact item. On a grid-in the chip sits beside the answer preview, so the value can be checked against the ask before moving on. The report's review shows the chip beside your answer.",
+    "beats": "Their highlighter has 4 colours and 3 underlines and does nothing about the most common careless math error: finding x when the question asks for 2x + 1. Ours keeps the ask next to the answer, where that mistake is made.",
+    "effort": "S",
+    "needs": "UI.annotate (F3) gains the 'ask' style, limited to one per question; the notes store (R6, F4) accepts it; UI.review renders it (F3/S6)."
+   },
+   {
+    "title": "Sitting fingerprints: the shape of every test, with the pattern named",
+    "what": "Each T6 sittings row gets a 44-cell strip (22 + 22 cells, 5px wide with 1px gaps). Cell height shows the tier (easy 6px, medium 9px, hard 12px) and colour shows the result (right orange, wrong graphite, blank dashed outline, per R20). It sits where the miss chips are; the chips stay available on hover or focus and for screen readers. Hovering a cell shows 'M2 Q19 · hard · wrong · 3:10', and clicking opens the report at that question. The server adds up to 3 pattern chips per row, in this priority: 'Short on time' (3 or more of a timed module's last 5 are blank, or its last 5 average under 30 s with 2 or more wrong); 'One short of the harder module' (module 1 at 13 of 22); 'Careless on easy' (2 or more easy questions wrong, blanks excluded); 'Changes cost you' (2 or more right→wrong changes); 'Same trap ×3' (one misconception 3 or more times); 'Best yet' (the highest midpoint so far). A 'Pattern' dropdown joins the filter bar, and the CSV gains a patterns column. On a phone the strip spans the card and the chips wrap.",
+    "beats": "Their results list shows no score on the card, only plain red chips that mix wrong answers with blanks and can't be clicked. Ours shows at a glance where each test went wrong (misses late in module 2 point to time, easy misses to care) and names the pattern.",
+    "effort": "S",
+    "needs": "GET /api/history (S6, R26) adds per-position tier, correct, blank and ms, plus patterns[] computed on the server from qstate (R7); UI.dropdown (F1)."
+   },
+   {
+    "title": "Thumb-first test window on a phone: tools at the bottom, swipe, long-press to strike",
+    "what": "Below 760px the top bar keeps only × Save and exit, the clock (tap to hide) and ⋮ More. A 52px tool tray sits above the footer with Mark · Eliminate · Calculator · Reference · Notes, each a 48px target with an 11px label, so every tool is within thumb reach. A horizontal swipe on the question area moves Next or Back with a 120ms slide (no slide under reduced motion). It needs at least 60px, within 30° of horizontal, and is ignored while text is selected, while Highlights & Notes is on, and while a sheet is open. A long-press on an option (450ms) strikes it or undoes the strike without Eliminate mode, with a scale tick and an aria-live 'B eliminated'. The calculator opens as a 50dvh sheet, with the stem pinned above it and scrolling on its own. The footer reads Back icon · 'M1 · 7 of 22 ⌃' · Next, and a long-press on Next marks the question and moves on. On desktop, right-clicking an option strikes it; the context menu is suppressed on options only.",
+    "beats": "Their runner is Bluebook's desktop chrome on a phone: tools at the top right, strike-out only through ABC mode, and no gestures. Elsewhere on their site a floating vocab button covers Next. Ours puts every test action within reach of one thumb.",
+    "effort": "M",
+    "needs": "Runner shell layout and gesture handling (F3 runner.js and runner.css). No server changes."
+   },
+   {
+    "title": "Race your last sitting: a ghost pace on twins, retakes and shared tests",
+    "what": "When a sitting has a source with the same slots (a twin, a paper retake, or a shared test whose owner allows scores), the lobby shows 'Race #11 · on', or 'Race Ana' for a share. During the test a second tick, outlined in graphite, sits on the progress strip at the number of answers the source had made by the same elapsed time ('#11 was here: Q12'). In Coached mode the time bank adds 'vs #11 +0:40'. Between modules reads 'Module 1 in 31:40 · #11 took 34:55', and the hand-in screen reads '3:15 faster than #11'. Only pace is shown, never right or wrong. It is off by default in Real SAT mode.",
+    "beats": "Their retakes show nothing about your earlier sitting, and nothing in their runner helps with pacing. Racing your own ghost on an equal test gives pacing practice a target to beat.",
+    "effort": "S",
+    "needs": "Keep each first answer's made_left as qstate[qid].at_left (R7; the runner already sends made_left), so a source's answers-over-time curve can be built; the twin_of, paper retake and shared_from links (spec); the share's show_score (R18)."
+   },
+   {
+    "title": "Your work travels with the question: a scratch pad and a Desmos snapshot per question, shown in review",
+    "what": "A 'Scratch' tool (key W) opens a pane docked like the calculator (360px on the right at 1180px and wider, otherwise a bottom sheet) with two tabs. Type is a monospace area of up to 2,000 characters. Draw is an ink canvas driven by pointer events, with pen pressure, an eraser and Clear; strokes are simplified with Ramer-Douglas-Peucker. The pad is per question: moving to another question shows that question's page. When the student leaves a question on which the Desmos state changed, the runner stores a snapshot for that qid. After the test, the report's review shows 'Your work' beside your answer (ink drawn as SVG, plus the typed text) and 'Open your Desmos from Q14', which loads the snapshot read-only. A report can attach the work with a checkbox. Limits: 4,000 ink points and a 30 KB Desmos state per question. Work is loaded when its question opens and is never part of the session payload.",
+    "beats": "Their highlights mark text only, their Desmos forgets its state, and there is nowhere to work, so their review shows what you picked but never how you got there. On test day you get scratch paper; ours keeps it and gives it back when you review the miss.",
+    "effort": "L",
+    "needs": "A work table (session, qid, text, ink, calc, at) with owner-only GET/PUT (F4 schema, S5 endpoints); per-question UI.calc getState (F3); UI.review rendering the work (F3/S6); an attachment option in UI.report (F6)."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Paper card stat tiles (their 'People took N' and 'Your last score')",
+    "spec_says": "'Sat by 1,284', 'Average 540', and 'You' (560–700, Not sat, or In progress), plus 'New to you: 63 of 66'.",
+    "why_only_parity": "The same shape as theirs: a count and your last result. It doesn't say whether the paper suits you or how you compare, at a glance.",
+    "upgrade": "Add a fit line against your estimate ('At your level: average 560, you 580', or 'A stretch: average 640'); a 5-bin mini histogram with your mark once n ≥ 20; a delta on You ('+40 vs your first sitting'); and a 'New best' stamp when your latest sitting is your best."
+   },
+   {
+    "feature": "Sort By",
+    "spec_says": "Newest / Oldest / Hardest / Easiest / Most sat.",
+    "why_only_parity": "Their four sorts plus one. Sorting by date or difficulty still leaves the choice to the student.",
+    "upgrade": "A 'Best for you' sort, the default once an estimate exists: unsat and mostly-new papers first, ranked by how close the paper's average is to your midpoint (within 60 points measures you best), with a 'Best measure of your level' chip on the top card. Unrated papers go last."
+   },
+   {
+    "feature": "Start wizard (Full Test / Select Modules / Timed or Untimed)",
+    "spec_says": "A 4-step sheet (Test, Modules, Timing, Tools) with five Tools toggles, plus a one-tap Start from a card into the lobby.",
+    "why_only_parity": "The same wizard with more switches: five toggles is more to decide than theirs, not less. Taps to Q1: theirs is 5 (Start Exam, Full Test, Timed, Start Exam, Enter Fullscreen); the spec's is 3 (Start, Enter fullscreen and begin, close Directions).",
+    "upgrade": "Replace Tools with Real SAT / Coached / Custom (proposal 1). Remember the last Modules and Timing choice per kind, and print the settings on the card's button ('Start · official · calculator') so Options is rarely needed. With Directions auto-off after 2 sittings (below), Q1 is 2 taps away."
+   },
+   {
+    "feature": "Timer mode",
+    "spec_says": "Official / time and a half / double time / Untimed (counting up) / custom minutes.",
+    "why_only_parity": "Their Timed and Untimed plus accommodations. Nothing trains speed.",
+    "upgrade": "Add 'Tight · 29:45 a module (−15%)', labelled practice and kept out of the estimate, to build a time buffer. Show the signed time bank (proposal 1) in every timed mode."
+   },
+   {
+    "feature": "Directions at the start of a module",
+    "spec_says": "The Directions sheet opens on a section's first Begin, with a 'Don't show at the start' checkbox stored in localStorage.",
+    "why_only_parity": "The same modal Bluebook and they show: one extra tap on every test, and the opt-out lives on one device only.",
+    "upgrade": "Open it automatically only on the learner's first 2 sittings, then leave a 'Directions' link in the lobby. Store the opt-out in prefs so it follows the code to other devices."
+   },
+   {
+    "feature": "Reference sheet",
+    "spec_says": "The existing UI.ref drawn SVG sheet, in a dialog.",
+    "why_only_parity": "The same as theirs: a modal that covers the question you need it for.",
+    "upgrade": "A pinnable pane that isn't modal (a 320px right rail at 1180px and wider, a half-sheet on a phone) and stays open across questions. Formulas are text and SVG, a filter field ('circle', 'volume') highlights matches, F toggles it, and the pinned state is kept per sitting."
+   },
+   {
+    "feature": "Mark for review",
+    "spec_says": "A bookmark with 'Mark for review' that becomes 'Marked', an amber dot on the strip, the M key, stored on the server.",
+    "why_only_parity": "Bluebook's and theirs, now kept on the server. The most common move still takes two actions: mark, then Next.",
+    "upgrade": "'Mark and next' as one move: Shift+M on desktop, long-press on Next on a phone. The coached park nudge (proposal 1) offers it at the moment it matters."
+   },
+   {
+    "feature": "Eliminate (their ABC toggle)",
+    "spec_says": "An Eliminate mode with a strike button per option, Undo, Shift+letter, stored on the server.",
+    "why_only_parity": "The same mode switch as theirs, so striking takes two taps on a phone.",
+    "upgrade": "Strike without the mode: long-press an option on touch, right-click on desktop (proposal 10). The report adds 'You struck the right answer on Q9' when that happens."
+   },
+   {
+    "feature": "Grid-in entry (their placeholder, Answer Preview and SPR directions pane)",
+    "spec_says": "A keystroke filter, the placeholder with examples, a KaTeX preview, and the examples rail or disclosure.",
+    "why_only_parity": "Their placeholder, preview and directions, with invalid input blocked. Nothing prevents the most common grid-in loss: a short, rounded decimal.",
+    "upgrade": "A precision hint that depends only on the entry's shape, so it is the same whatever the key and leaks nothing: when a decimal leaves space unused ('.67', '0.3'), show 'If this is rounded, fill every space (.6667) or enter the fraction.' The preview also prints a fraction's decimal value ('7/2 = 3.5'), so typos show up."
+   },
+   {
+    "feature": "Check Your Work → Next Module / Finish Module",
+    "spec_says": "Filtering tiles, a Time view, the no-penalty warning and a pacing line, then 'Move on to module 2' or 'Hand in', committed at once.",
+    "why_only_parity": "Their page plus filters. Revisiting still goes cell by cell, and hand-in is one irreversible tap.",
+    "upgrade": "The revisit walk (proposal 4), and a 5-second 'Handing in module 1 · Undo' on the pill instead of an instant commit (it sends at once if time runs out). A mis-tap can be undone without a confirm dialog."
+   },
+   {
+    "feature": "Report a problem (their Report modal)",
+    "spec_says": "The UI.report sheet mid-test, with 10 categories, images and (template, seed), and its status shown in Settings.",
+    "why_only_parity": "Their modal with better plumbing. It still takes test time, and it is written before the student can see the key.",
+    "upgrade": "One tap sets it aside, and the report is written after hand-in with the key and your answer in view (proposal 6)."
+   },
+   {
+    "feature": "Comments, as the spec's Discussion",
+    "spec_says": "Gated until you've sat the paper, tagged by question, Top / Newest, Helpful, hidden after 3 reports.",
+    "why_only_parity": "A better-behaved version of their comment thread, but posts are still free text with nothing to anchor them.",
+    "upgrade": "Anchor it to Insights (proposal 5): each most-missed question's thread opens with the crowd line ('23% right · 41% chose B: squared the radius before halving it'), and the About filter lists questions by how many people missed them."
+   },
+   {
+    "feature": "Estimated Score card",
+    "spec_says": "The band, confidence with its reason, headline, trend, Best, Combined, Range, Routed up, Target, Exam, and Counted.",
+    "why_only_parity": "Everything theirs has and more, but it only describes: nothing tells the student what to do next, and the only comparison is against themselves.",
+    "upgrade": "The levers block (proposal 2), plus one national line, 'about the Nth percentile of SAT takers', read from the College Board's published SAT user-percentile table for Math. Keep the table as one dated constant and cite its source in How scoring works."
+   },
+   {
+    "feature": "Your sittings (their /results list cards)",
+    "spec_says": "Rows with the band, M1, M2, time, wrong and blank chips, filters, sorts, Export CSV and actions.",
+    "why_only_parity": "Their list with a score added and blanks told apart from wrong answers. It is still a table of numbers to read.",
+    "upgrade": "Fingerprints and named patterns (proposal 9), and Compare on every row (proposal 3)."
+   },
+   {
+    "feature": "Share (their QBank shared session)",
+    "spec_says": "A link to a finished sitting's exact questions; each person's band shows once both have finished.",
+    "why_only_parity": "Beyond their QBank-only share, but what you get back is just a list of results.",
+    "upgrade": "The friend races the sharer's ghost (proposal 11). The sharer sees '2 people finished your shared test' the next time they open Tests. The share offers 'Same questions' or 'Twin (same kinds, own numbers)', so a class can't pass answers around."
+   },
+   {
+    "feature": "Full test with Reading and Writing (their 4 modules and 1600 total)",
+    "spec_says": "Math only. The shell 'keeps a passage-pane slot', and R&W is an open question.",
+    "why_only_parity": "Below parity: theirs sits all four modules and shows a 1600 total; ours can't until an R&W bank exists.",
+    "upgrade": "Make the expansion additive now (v2-decisions item 3). Sessions and papers carry a subject and a section index, and section_label and the lobby read them instead of hard-coding 'Math'. The 10-minute break screen is designed and built behind a flag. T1 shows 'Math 560–700 · add your R&W score' (the self-reported R&W score, R15/R16) to give a 1600 total."
+   },
+   {
+    "feature": "Resume an unfinished test (their Save and Exit plus the In Progress filter)",
+    "spec_says": "A paused lobby with time left and the answered and marked counts; Resume starts the clock again.",
+    "why_only_parity": "It fixes their missing time left, but the student comes back without context.",
+    "upgrade": "Resume lands on the exact question the student left, with a 3-second line 'You were on Q14 · 21:40 left · 8 unanswered'. The paused lobby shows the navigator's state grid (answered, marked, unanswered, no question text), so the student can plan the rest before the clock starts."
+   },
+   {
+    "feature": "Handing in → score report",
+    "spec_says": "'Marking your test…' with a skeleton bar, then a redirect to the report.",
+    "why_only_parity": "Their flow (finish, then a results page that counts up), with a loading screen in between.",
+    "upgrade": "Fetch the report while marking and render its hero in place, with one earned line only when it is true ('New best', 'Routed up for the first time', 'Fixed 6 question types since #11'), before the full page scrolls in. No blank page in between."
+   },
+   {
+    "feature": "Calculator state",
+    "spec_says": "A docked, resizable Desmos panel whose state is kept per sitting.",
+    "why_only_parity": "Better than their panel, which forgets its state, but one shared state across 22 questions piles up every question's graphs.",
+    "upgrade": "A snapshot per question (proposal 12), plus 'Clear for this question', so each graph starts clean while the old one stays in its snapshot."
+   },
+   {
+    "feature": "Module navigator (their question overview popover)",
+    "spec_says": "A popover with counts in the legend, filters (All / Unanswered / For review / Guesses), arrow keys and Esc.",
+    "why_only_parity": "Their overview with counts added and their Esc bug fixed.",
+    "upgrade": "In Coached mode, cells show the time spent and a parked mark, and each filter has 'Revisit these', which starts the walk (proposal 4)."
+   }
+  ]
+ }
+}

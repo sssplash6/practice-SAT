@@ -1,0 +1,104 @@
+{
+ "label": "skeptic: shell-me",
+ "key": "v2:c2551a337f2e43b0fe7e5b38f0e11395840178aa69eebe55676e1d1522d8a46d",
+ "result": {
+  "pass": false,
+  "failures": [
+   {
+    "feature": "Left sidebar and rail (their ~220px sidebar); §2.2 plus U1 Up next and the U14/U17 Today-card additions",
+    "why_not_way_better": "The pinned parts of the sidebar take more height than a normal laptop window has. rebuild-v2.md:938 lets only items 4–5 (the nav list) scroll. shell-me.md:1508 pins Up next with Search. Items 7–9 stay pinned: the Today card, now with week pips, a due line and a registration line; Help and Feedback; the user card. That pinned stack adds up to about 64+40+180+40+200+72+56 ≈ 650–720px. A 1366×768 school Chromebook shows about 620–650px of viewport, so the nine nav items get no room at all. A 1440×900 MacBook Air shows about 790px and leaves under 100px for them. Even the acceptance size (1280×900) leaves about 180px for about 410px of nav. Theirs shows all 10 items with no scrolling. On top of that, the same fact is repeated: '12/28' appears in both the Today meta and the Today card's second bar, and '28 q' appears again in the Plan meta.",
+    "fix": "Give the chrome a height budget. At viewport heights under 860px, shrink the Today card to one row ('flame 6 · 18/45 min · 12/28 · Nov 7 in 45d', with the details in its tooltip) and shrink Up next to title plus Start. Pin only the brand, Search and the user card. The nav list must keep a minimum height that fits all its items. Drop the Today card's questions bar when the Today meta already shows it. Add acceptance checks at 1366×657 and 1440×790: every nav item is visible with no scroll inside the sidebar."
+   },
+   {
+    "feature": "Report modal (their 'Sent with your report' plus category form); U3 instant 'Answer key is wrong' check",
+    "why_not_way_better": "The instant check re-runs satbank.audit, but satbank/registry.py generate() already audits every item with verify=True before it is served (practice.py, drill.py, daily.py and blueprint.py all call it). So on a served item the 'second solver' agrees every time. It re-derives the answer from item.params, not from the stem, the figure or the option text. The key errors that can actually reach a student are that kind: a stem that asks for the diameter while the params compute the radius, a mislabelled figure, or ambiguous wording. Those pass audit, and the student is told 'Checked: a second solver … also gets B. C is what you get if you used the diameter as the radius.' That is false authority, and it steers them to 'That makes sense'. The outcome order also leaves open whether 'explained' can fire before 'broken'. Correct reports get deflected, which is worse than their silence.",
+    "fix": "Word the check as what it is: 'The numbers check out with our independent solver. If the wording, figure or options are what's wrong, send it to a person.' Put 'broken' and 'unsure' ahead of 'explained'. Add a signal audit cannot give: if students who are Strong in this skill pick the reported option on this template at more than 2× that option's base rate, skip the lesson and escalate as 'unsure' with the rate attached. Categories about the stem, figure or options always go to a person. Add acceptance: a fixture whose stem text contradicts its params returns 'unsure', not 'explained'."
+   },
+   {
+    "feature": "Floating 'Add your own word' capture → quick sheet 'Log a mistake' (U2, College Board question ID lookup)",
+    "why_not_way_better": "The scorecard says any missed official question becomes its exact type. But material/keys holds only 1,039 College Board items, against about 1,921 Math items in their bank (teardown): circles 32 of 67, area and volume 59 of 110. About 46% of real College Board IDs are not in the index at all. U2 specifies only the 911 'Exact' IDs and the 119 'skill only' IDs. An unknown 8-hex ID falls through to 'anything shorter searches the palette index', finds nothing, and dead-ends. So the headline capture flow fails on roughly half of the College Board questions a student brings.",
+    "fix": "Specify the unknown-ID path. Show 'We don't have 1a2b3c4d yet. Paste the question text, or pick its skill', with the text box focused and the skill picker one tap away. Log unknown IDs for coverage. Ingest the remaining College Board Question Bank Math exports so the ID map covers the whole bank, and state the real coverage in the helper text. Add acceptance: an ID not in keys returns via:'none' with the fallback UI, and never an empty result."
+   },
+   {
+    "feature": "Auth / sign-in (their Google sign-in); §5, U19 passkeys, U20 phone approval",
+    "why_not_way_better": "Every sign-in path runs progress.carry(this device, account) with no way to decline. rebuild-v2.md:1604 only informs: 'This device has 24 answers. They'll be added.' U20 says 'It carries in its own answers.' On a library or family computer, the browser often holds someone else's anonymous a: code. Signing in there merges a stranger's or sibling's answers into the student's mastery, mistakes and coach picks. U21's own 'Why' names that as the corruption to prevent, and the shared-computer checkbox does not stop the merge. Google sign-in on theirs never merges anything. Also, /signin/ always opens on Passkey, even for an email-only student.",
+    "fix": "When the device holds answers, the sign-in step offers two choices: 'Add these 24 answers to Dana's (answered here since Sep 21)' and 'Don't add them'. Never carry by default when 'This is a shared computer' is ticked, or when the local answers are more than 24 h old. Open /signin/ on the method this device last used. Add acceptance: a shared-computer sign-in leaves the account's attempt count unchanged."
+   },
+   {
+    "feature": "Sign out and account block (their Sign out); U21 devices list, Undo sign-out, Students on this device",
+    "why_not_way_better": "(1) The original browser keeps using the raw a: learner code as its credential, and Settings offers Show/Copy on it. Any browser holding that code has no devices row, so 'Devices you can see' is incomplete for the most common case. 'When the a: code is held elsewhere, it also rotates it' cannot be detected. (2) satf.profiles keeps up to 4 full credentials in localStorage, each one tap away. On a lab PC where one student forgot the shared-computer tick, the list builds up. Whether Sign out removes that student's entry is unspecified ('clears the satf.* caches'). (3) The 8 s Undo holds the DELETE until the toast closes. A student who taps Sign out and closes the tab leaves a live token and a ghost 'active' device.",
+    "fix": "On first save (passkey or email), turn the saving browser into a d: device too. After that, the a: code is a non-secret learner id that the server no longer accepts as a credential. The Device code row gives a one-time 10-minute transfer code instead. Signing out removes that profile from satf.profiles and revokes its token. Show Students on this device only after the owner turns on 'This is a family device'. Send the revoke with fetch keepalive on pagehide. Sign out on a shared-computer session is immediate, with no Undo."
+   },
+   {
+    "feature": "Canvas / page speed (their SPA skeletons); U23 prerender on hover and paint from cache",
+    "why_not_way_better": "Speculation rules prerender the page and run its JS, including localStorage writes. The only guard is 'UI.api sends GETs only'. Hovering Results writes satf.seen.report, and the Results 'New' dot disappears for a report the student never opened. A hovered /me/ or /plan/ can use up the once-a-week week sheet, the once-only welcome-back sheet and the 'Hold a tab' hint. An achievement toast can play in a page that is never shown. The speed win quietly breaks the 'what's new' signals the nav depends on.",
+    "fix": "Add a single UI.whenVisible(fn) that defers every 'seen/shown/dismissed' write (satf.seen.*, the week and welcome sheets, hints, toast display, achievements/seen, feed/seen) until document.prerendering is false and prerenderingchange has fired. Add acceptance: prerendering /results/ without activating it leaves satf.seen.report unchanged and the dot visible."
+   },
+   {
+    "feature": "Toasts (theirs) and daily/weekly goals: U14 Monday sheet, U25 welcome-back sheet, and the §2.11 banners",
+    "why_not_way_better": "The interruptions pile up with no precedence. A Mon–Fri planner has no activity over the weekend, so every Monday the first page load fires both the 'first shell load of the week' sheet (shell-me.md:840) and the '2 or more days with no activity' welcome-back sheet (shell-me.md:1322). That is two modal sheets on the same load, every week, possibly with a registration, stage or save-nudge banner and achievement toasts on top. Nothing says a load that arrives via ?next=1, a reminder or an assignment link is exempt. This slows a student at the most fragile moment, coming back.",
+    "fix": "At most one auto-opening sheet per day. Merge welcome-back into the week sheet when both apply. Planned rest days do not count as 'no activity'. Never auto-open on loads from ?next=1, notifications, deep links or share or class links. Add acceptance: a Mon–Fri learner on Monday sees exactly one sheet, and /?next=1 opens the session with none."
+   },
+   {
+    "feature": "Phone chrome (their layout was not seen); U26 grip, swipe-up, hold-a-tab, and the thumb-height menu sheet",
+    "why_not_way_better": "The override-9 sheet is max-height 85vh (about 717px on an 844px screen). Its contents run to about 1,300–1,400px: Up next with chips (~190), the Today card (~190), the inbox (up to 20 items), the account header, Students, 7 account rows, then Review, Words, Compete, Class and Quick. The daily rows promised 'at thumb height' sit about 700px below the fold, so Review, our core surface, is two taps plus a scroll. When the open-mistake count is 0 the top-bar chip hides and no faster route exists. A swipe up on a bar sitting on the iOS home indicator (standalone) or on Safari's bottom toolbar collides with the system gestures. The 390px width sum leaves 8px of slack at 360px and overflows with a 3-digit Review count.",
+    "fix": "Put the daily rows (Review, Words, Compete, Class, Quick) in a sticky footer of the sheet that is always visible, or open the sheet scrolled to them. Cap the inbox in the sheet at 3 rows plus 'See all'. Drop swipe-up and keep the grip tap and the hold. Add acceptance at 390×844 and 360×740 with a Review count of 114: the Review row is visible without scrolling the sheet and scrollWidth <= viewport."
+   },
+   {
+    "feature": "Active nav state and profile layout; U26 page sub-links with scroll-spy",
+    "why_not_way_better": "U26 cannot be built as written for 3 of its 4 pages. The section mapping (rebuild-v2.md:970–971) makes the user card the active item for /me/ and /me/settings/, and the sidebar has no Profile item. U26 acceptance 1 nonetheless says 'the Profile item has sub-links' on /me/. Help's item is a pinned bottom row, so opening its sections there makes the overfull pinned stack taller. On the phone, the Me chip row (Week · Goals · Skills · Pace · Trend · Habits · Badges · Activity · Account) leaves out Snapshot, Test-day readiness, What keeps catching you, Recent activity, Learning preferences, and Saved & in progress. So our most distinctive card has no chip.",
+    "fix": "Add a real 'Profile' nav item in PROGRESS (G U) and map me, settings and signin to it. Show sub-links only inside the scrolling nav region. For pages whose item is pinned (Help), show the section list as a sticky in-page rail instead. Build the phone chip row from the same UI.shell({sections}) list so it covers every card."
+   },
+   {
+    "feature": "Score trend (their line chart); U9 projection cone, and the exam-date chips' '~690'",
+    "why_not_way_better": "A projection from 2 sittings, with a least-squares slope clipped only at ±40 a week, extrapolates noise across bands that are ±100 wide. U9's own acceptance example (500 on Sep 1, 560 on Sep 15, exam Nov 7) gives about +30 a week × 7.6 weeks, a midpoint near 787, shown as 'At this pace: 680–800 on Nov 7'. That misleads a student into complacency, and it feeds the '~690' on the date chips and the 'Raise to 750?' logic.",
+    "fix": "Require at least 3 scored sittings spanning at least 21 days. Shrink the slope toward 0 (for example, weight by n/(n+3)) and cap the projected gain with diminishing returns (for example, at most +20 a week after week 4). Take the cone width from the fit's residuals plus the band half-width, not a constant. Label it 'If this pace held'. Leave the projection off the date chips when the cone's half-width exceeds 80. Change the acceptance to assert that the example's projection stays under 700."
+   },
+   {
+    "feature": "Avatar management (their photo upload, replace and remove); U22 living mark and earned glyphs",
+    "why_not_way_better": "On day one a new student can choose only the living mark, which is four empty outlines, or the initial. All 19 glyphs are locked. That is less personal than their photo, not 'way better'. It is also unclear what boards show. The display list omits boards, 'Boards show the plain mark for anon and hidden students' implies named students show the living mark, and S8 is listed as a builder. As S8 would build it, every named student's per-domain mastery (the aria-label 'Algebra Strong · Advanced Math Learning…') appears on public boards. Choosing 'With my name' never agreed to that.",
+    "fix": "Make every glyph selectable from day one. Earning Strong adds a filled ring and a badge to the glyph rather than unlocking it. Show the living mark only to the student, their classes and progress links. Public boards show the chosen glyph or the initial, never the mastery mark. Add acceptance: no board payload contains domain mastery."
+   },
+   {
+    "feature": "Classes and teacher dashboard (their /my-classes and /teacher, provisioned as 'Teacher Seat')",
+    "why_not_way_better": "U19 lets a passkey-only account with no email create a class (shell-me.md:1089–1090, R4 amended). Any anonymous adult can then collect minors' names, weekly practice totals, skills and named mistakes, with no contact channel and no vetting. Theirs ties teachers to provisioned seats. This is a safeguarding regression for a site used by minors.",
+    "fix": "Creating a class requires a verified email, whatever passkeys exist. Show joining students 'Ms. Rivera · verified @lincolnhs.org'. Put free-mail teachers behind a class-size cap (for example 40) and show a 'Report this class' link on the class page. Add acceptance: a passkey-only saved account gets 403 {need:'email'} on POST /api/classes."
+   },
+   {
+    "feature": "Performance Snapshot (their Global and Country rank); U11 movement, gap, Climb, and you against you",
+    "why_not_way_better": "The upgrade that 'rewards learning' (Climb) only shows once there are at least 20 learners whose first midpoint is within ±40 of yours. That will not hold for most students at launch. In practice the snapshot is a volume rank ('Everyone #128', right answers in 7 days) plus movement, which is near parity. Their Country Rank is dropped from Me, although R12 adds learners.country and Compete has a country scope.",
+    "fix": "Widen the Climb window step by step (±40, then ±80, then all learners with a first sitting) until n >= 20, and state the window used ('Started 440–600'). Add a 'Country' line when learners.country is set, read from Compete's board. Show 'You, 30 days ago' from day 8, using the available span ('You, 8 days ago')."
+   },
+   {
+    "feature": "Upgrade-card slot → Up next block (U1)",
+    "why_not_way_better": "Every row shows '≈ N pts', and U13 promises every number explains itself. But U4 defines a gain only per skill (raising the skill to 80%). 'Caught you 3 times · ≈ 6 pts' on a redo row, and the points on check-ins, saved twins and habit rows, have no formula. Builders will invent different numbers, or the popover will have nothing to explain. Check-ins are also both a Plan task (R9) and row 4, and the key-based dedupe will not catch that.",
+    "fix": "Define pts: skill rows = U4 gain. redo = gain(skill) × the trap's share of that skill's misses in the last 60 days. habit = the sum over its skills of the same share. checks, saved, warm, untried and qotd = no pts (hide the figure). Deduplicate plan check-in tasks against row 4 by pool. Add acceptance on a redo row's pts value."
+   },
+   {
+    "feature": "Learning Preferences on the profile (their Practice Mode, Difficulty, AI Explanations, Show Desmos, Include Vocab Review); §3.4 plus U15 modes",
+    "why_not_way_better": "The inline card drops their 'Include Vocab Review'. words_goal is listed in §2.7 as edited on Me, and R31 says test defaults appear there, but §3.4 and override 22 list neither. U15 also does not say which drills the stage bundle governs. In Test-like, feedback is 'end' and repairs are 'end'. If that applies to Up next's redo, checks, habit and gauntlet drills, then in the final 3 weeks a student fixing a named mistake sees no key until the set ends.",
+    "fix": "Add inline rows for 'Words in my plan' (words_goal 0/5/10/20) and 'Test timing' (test_timing). State that the mode and stage bundles apply to builder sets, Up next skill and probe rows, and the time box. Redo, checks, habit, gauntlet, quick and inline drills keep instant feedback and immediate repairs. Add acceptance: at exam minus 10 days, a {pool:'redo'} drill still returns feedback per answer."
+   },
+   {
+    "feature": "Saved Content (their Saved Words / Redo Questions / Saved Questions)",
+    "why_not_way_better": "§3.12 lists saved questions, open mistakes, assignments and in progress. Saved words are gone from Me (the Words tile shows known and due, not saved), although word_state.saved exists. Their three counts become two. Our separate Marked flags (R5) are not listed either, even though R31 says this card reads Review's counts, which include marked.",
+    "fix": "Add 'Saved words n · Review them' (from words.me_stats, linking to /words/?tab=saved) and 'Marked for review n · Practise marked' ({pool:'marked'}) rows, each hidden at 0."
+   },
+   {
+    "feature": "Subject performance → Skills card (U4 + U5)",
+    "why_not_way_better": "The two upgrades contradict each other, so the card cannot be built as written. U4 (shell-me.md:421) says fewer than 5 answers reads 'Not measured yet · try 5'. U5's acceptance 1 (shell-me.md:495) requires a skill with 4 answers to read 'rough · 4 answers'. U4 gains use a shrinkage constant of 10 and U5 uses a 10-answer window, with no single ladder between them.",
+    "fix": "Use one evidence ladder in UI.skillRow: 0 answers 'Not started'; 1–4 'Not measured yet · try 5' (no gain shown); 5–9 'rough · n answers' with the dashed ± bar; 10 or more 'measured'. Change U5 acceptance 1 to 6 answers."
+   },
+   {
+    "feature": "Preferred time (theirs has no effect) → calendar reminders (§4.3, U18a)",
+    "why_not_way_better": "The reminder is the point, and on the main calendar apps it is unreliable. Google Calendar ignores VALARM in feeds added by URL. Apple Calendar's subscribe dialog strips alerts by default. Subscribed feeds also refresh only every several hours, so titles like '3 check-ins + Circles · 25 min' go stale. Push (U18b), the one channel that says what is due on time, is deferred 'after the core waves' behind VAPID. At launch, 'Preferred time that reaches your calendar with reminders' mostly delivers silent calendar blocks.",
+    "fix": "In the Subscribe flow, show per-platform steps ('Google: Settings › this calendar › Event notifications'; 'Apple: untick Remove Alerts'). Offer 'Add to Google Calendar' as a native recurring event through the render URL with a recur RRULE, so the student's default notifications apply. Title feed events generically ('SAT Math · Up next') and put what is due behind the /?next=1 link. Move U18b push into the core for the installed app."
+   },
+   {
+    "feature": "User popover / account menu (their name, email, Profile, Feedback, Sign out)",
+    "why_not_way_better": "The spec contradicts itself. §2.6 makes the header 'not focusable' inside role=menu, and U26 puts interactive Theme and A/A+ toggles in that header, which is also not valid menu ARIA. U25 puts 'up to 20 items' of inbox at the top of a 300px popover, which pushes Profile, Settings and Sign out far down a scrolling menu. Their popover is short and every item is reachable.",
+    "fix": "Render the toggles as menuitemradio rows (Theme: Light / Dark; Text: A / A+) inside the menu's keyboard order. Show at most 3 inbox items plus 'See all (n)', linking to a /me/#inbox list. Add acceptance: ArrowDown reaches Sign out in at most 12 presses with 20 unread items."
+   }
+  ]
+ }
+}

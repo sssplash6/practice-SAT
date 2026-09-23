@@ -1,0 +1,176 @@
+{
+ "label": "outcomes: practice",
+ "key": "v2:631e83ac49f10a8f351c23142ec5350b3b3bfe75d72580a01a2519eee5ea6063",
+ "result": {
+  "proposals": [
+   {
+    "title": "Points on the table: every skill, question type and set priced in score points, with a routing warning",
+    "what": "SERVER: one function progress.worth(learner) (F4). For each skill: q = expected questions on a 44-question section (blueprint.DOMAIN_SPLIT totals 15/15/7/7 split evenly across the domain's skills, so about 3.0 per Algebra skill, 5.0 per Advanced Math skill, 1.0 per PSDA skill and 1.75 per Geometry skill, labelled approximate). p = predicted first-try accuracy at the test's difficulty mix (module-1 tiers 7/8/7), taken from the learner's by-tier accuracy and shrunk toward 0.5 with a Beta(1,1) prior so that 3 answers do not read as certainty. pts = section points per extra right answer at the learner's current estimate (the slope of scoring.ANCHORS at estimate.estimate().latest, or 480 with no estimate). It returns per skill {q, p, missed = q*(1-p), worth = round(missed*pts), to_strong = round(q*max(0, 0.8-p)*pts)}, domain totals, and a routing line. ROUTING: easy+medium first-try accuracy is compared with ROUTE_UP_AT 0.60 and LOWER_ROUTE_CEILING 580, e.g. 'At 54% on Easy and Medium you would likely get the easier module 2, which caps Math at 580. Secure those first.' or 'You are at 71%, so the harder module is likely. Each Easy slip still costs about 9 pts.' BUILDER: SkillRow gets a Worth column: mono '~+14 pts', with an 11px sub-line '3 a test · you miss ~1.1'. DomainCard header: '~+38 pts on the table'. Sort gets a new default 'Most points first' (Test order stays in the list). A preset chip 'Route-up insurance' selects Easy+Medium in the 5 lowest-p skills. The Action bar's line 1 ends '· worth up to ~+31 pts'. The page header meta reads 'Math estimate 560-640 · ~+120 pts on the table' and links to Results. The coach line becomes 'Why these: Nonlinear functions ~+22 pts (5 a test, 56% first try) · Percentages: 2 open mistakes'. progress.coach adds worth to its score, so Today and Plan inherit the same ordering. SUMMARY: 'Linear functions 48% -> 61% predicted · about +4 pts on your estimate'. A quiet link 'How we count points' opens a Help entry: blueprint counts, your accuracy, the scale's slope at your score, 'an estimate, not a promise'. A new student sees the q counts and 'Points appear after 5 answers in a skill.' STUDENT DOES DIFFERENTLY: spends the next set on a 5-a-test skill they get 56% of, not on the familiar 1-a-test skill, and protects the Easy and Medium items that decide the route. WHY IT MOVES THE SCORE: points per minute are highest where a skill comes up often and accuracy is low, and routing up is worth more than any single skill.",
+    "beats": "TopTierPrep's builder prices each skill by the size of their stock ('Linear functions 170 / 408'), which says nothing about the student's score. Their domain copy '20% of test section, 1-5 questions' is unreadable, and nothing on their site links practice to points or explains module-2 routing.",
+    "effort": "M",
+    "needs": "F4: progress.worth, estimate.estimate (R16), a scoring.ANCHORS slope helper, coach change. blueprint.DOMAIN_SPLIT. S4: /api/bank adds worth per skill and domain, plus the summary delta. S1: Help entry. Today (S3) and Plan (S7) read the same coach."
+   },
+   {
+    "title": "Learn-it ladder: worked example, then guided, then solo, then prove it, with step-by-step solutions",
+    "what": "ENTRY POINTS: (a) a quiet 'Learn this type' on every TypeRow and SkillPanel; (b) builder setting 'New types: show me one worked first' (pref worked_first, on by default while the skill is Not started or Learning); (c) after a second miss on a type within 30 days, the verdict offers 'Missed this type twice. Learn it step by step · 3 questions · ~4 min'; (d) Review redo rows. RUNG 1, WORKED EXAMPLE (cfg.inline, never filed, R24): the workspace in a new mode 'example' shows the stem and figure with the key row pre-marked. A Steps panel lists Item.steps with this seed's numbers ('1. Gather the m terms: 8m - 8m = 0 · 2. That leaves 0 = 9, which is false · 3. No m works, so zero solutions'). Under it, 'The traps in this question' lists each distractor as letter · value · misconception. An optional self-explanation tap asks 'Which step would you have skipped?' Then the button 'I'm ready: try one'. RUNG 2, GUIDED (filed with attempts.assisted=1, counts half like a guess, never closes a mistake): a fresh seed with a 'Watch for' box above the choices that lists this type's misconceptions without their letters. A 'Hint' button reveals step 1, then step 2 on a second press, and each press is logged. Check gives the full reveal. RUNG 3, SOLO: a fresh seed, no support, filed normally. RUNG 4, PROVE IT: the type is queued 3 to 5 questions later in the set, or put first in tomorrow's set when the ladder ran on its own. The QuestionStrip shows a 4-pip ladder 'Learn · Guided · Solo · Prove', and the Why line reads 'Step 2 of 4: guided'. FADING RULE: rungs 1 and 2 are skipped once the type has 2 first-try rights, a right Solo skips Guided the next time, and a Solo miss steps back to Guided. CONTENT: T-bank adds Item.steps: list[str], 2 to 5 lines built from the params the audit already re-derives. tools/steps_coverage.py prints 'n of 386 types have steps'. Until a template has steps, rung 1 shows the rationale plus the trap list, and Hint shows only the Watch-for box. Every normal verdict also shows Steps when present, which fixes the depth gap: rationales today are one sentence, median 91 characters. SUMMARY: 'Learned 2 types · solo right 1 of 2 · proof due tomorrow'. STUDENT DOES DIFFERENTLY: meets a new or failing type by studying one solved example and its traps before trying one, instead of failing cold and reading one line after. WHY IT MOVES THE SCORE: for novices, worked-example-then-problem pairs beat problem-only practice. Fading keeps them from leaning on the support, and the delayed proof checks that it stuck.",
+    "beats": "TopTierPrep teaches only after the fact: the Explanation card (Justification + Distractor Analysis) replaces the question you already failed. A fixed bank cannot spend items as worked examples. Ours builds the example, the guided one, the solo one and the proof from one template, fresh every time.",
+    "effort": "L",
+    "needs": "T-bank: Item.steps (coverage grows template by template, like spr_mistakes). F3: workspace modes 'example' and 'guided', and the Hint. F5: ladder sequencing in cfg, with Prove-it queued later or into the checks pool. F4: attempts.assisted (§2.5), which counts half like guess (R8). S10: Prove-it as a next-day check-in."
+   },
+   {
+    "title": "Spaced retrieval inside every set, scheduled per question type",
+    "what": "MEMORY STATE: per (learner, template), a box from 0 to 5 with intervals of 1, 3, 7, 16 and 35 days. A clean first-try right (R8 clean) moves the type up one box, a miss drops it to box 0, and a guess or assisted answer never moves it up. due = last clean right + interval. F4 keeps this in a small type_memory(learner, template, box, due, last) table that progress.record updates. BUILDER: new setting 'Mix in reviews' (Seg): Off · 2 per set · 20%. The default is 20% (pref review_mix). Those slots take due types from anywhere the student has practised; a checkbox 'Only from the skills I picked' is off by default. They go in at random positions (never the first two), on fresh seeds. The preview line reads '3 due now · 5 more this week'. The spec's 'Due for review' pool reads this schedule instead of its fixed 10-day rule. TREE: the SkillRow mastery bar gets a hatched tail for the share of its practised types that are overdue, with the word 'Fading · 3 due'. Sort gains 'Most overdue'. TypeRow shows 'Due today', 'Next review Oct 2' or 'Box 3 of 5'. A 14-bar 'Reviews due' forecast sits above Your sets (Words' .forecast chart). SESSION: the Why line reads 'Review: right 16 days ago'. A right review reads 'Held · next review in 35 days'; a miss reads 'Slipped since Sep 7 · back tomorrow'. REPAIRS: the repairs enum next|end|off gains 'later' (3 questions later) and it becomes the default, because an immediate repeat tests working memory while a gap tests retention. SUMMARY: a 'Retrieval' card: '4 reviews · 3 held · 1 slipped (Circles: equation from centre)'. MASTERY HONESTY: a skill reads Strong only after at least one review held 7+ days after the first right; before that it reads 'Getting there · not yet tested after a gap'. STUDENT DOES DIFFERENTLY: re-answers week-1 types in week 4 without having to remember to, so old skills stop decaying before test day. WHY IT MOVES THE SCORE: spaced retrieval is the most robust retention effect in learning research, and mixing old types into new sets also trains recognising which type a question is.",
+    "beats": "TopTierPrep's math bank has no schedule at all. Solved/Unsolved is not spacing, and only their vocab has 'Due Today', which stayed at 0 after grading. The spec's own 'due' is a binary 10-day rule that treats a type right once the same as one right six times.",
+    "effort": "M",
+    "needs": "F4: type_memory table in §2.5, a record hook, the Strong rule (R37 wording). F5: review_mix slots, repairs 'later', the pool reading the schedule. The prefs registry (§2.7) gains review_mix. F1/S9: the forecast chart. R9 check-ins stay for fixed mistakes; this schedule is for learned types, and both feed Today (S3)."
+   },
+   {
+    "title": "Desmos routes: 'With Desmos' for every type the calculator solves faster",
+    "what": "CONTENT: T-bank adds Item.desmos: list[str] (Desmos-ready LaTeX with this seed's numbers) and Item.desmos_how, one line such as 'Graph both sides; the x of the intersection is the answer'. These go on templates where graphing is faster or safer: systems and intersections, the zeros and vertex of a quadratic, any one-variable equation (graph both sides), tables fitted by regression, and circle equations. tools/desmos_coverage.py prints 'n of 386 types have a Desmos route'. VERDICT AND EXPLANATION: two tabs, 'By hand' (steps or the rationale) and 'With Desmos'. The Desmos tab has the numbered expressions, desmos_how, and a 'Load into calculator' button that opens the dock and sets them through the Desmos API's setExpression, so the student sees the intersection. BUILDER: a TypeRow badge 'Desmos', a filter 'Desmos route: Any · Only types with one', and a preset chip 'Desmos drill · 18 types' that opens the calculator docked on every question. SESSION: the calculator's expressions are captured per question (observeEvent change) into qstate, restored on revisit, and shown read-only in review as 'What you typed in Desmos', so a wrong entry can be diagnosed. SUMMARY: 'Desmos on 6 of 10 · right 6/6 · average 0:52 · by hand 1:34'. STUDENT DOES DIFFERENTLY: learns which types to hand to the calculator and exactly how, then does that on test day. WHY IT MOVES THE SCORE: the digital SAT's built-in Desmos solves many Math items faster than algebra and removes sign and arithmetic slips, and the minutes saved go to the hard questions.",
+    "beats": "TopTierPrep embeds the same Desmos in a floating panel but never teaches when or how to use it. Their explanations are algebra only, and nothing records what the student typed.",
+    "effort": "L",
+    "needs": "T-bank: Item.desmos and desmos_how per template (coverage grows). F3: UI.calc.setExpressions plus per-question expression capture. F4: storage in qstate/notes (R7). Desmos API key and terms (already noted in the teardown). S4: builder filter and summary line."
+   },
+   {
+    "title": "Pace trainer: a target time per type, fluency, time sinks and two passes",
+    "what": "TARGETS: each (template, tier) gets target_ms. It is the crowd median of first-try-right times when n >= 20 (drill.levels() already groups by (template, difficulty)). Otherwise it is a tier default: Easy 1:05, Medium 1:35, Hard 2:05, which averages 95 s over the module-1 mix 7/8/7, so R34 holds. It is served on each q. STOPWATCH: shows '0:48 / 1:05' and turns amber-deep past the question's own target, replacing the flat 1:35. 'Test pace' timing = the sum of the served questions' targets. VERDICT: adds a fluency word: 'Right · 0:48 · fluent', 'Right · 2:10 · slow (target 1:05)', or 'Incorrect · 0:12 · rushed' (under 25% of target). FLUENCY: a type is Fluent when its last 2 first-try rights were under target. SkillRow shows 'Fluent 6 of 23 types', and Sort gains 'Least fluent'. PRESET 'Fluency sprint': types answered right at least twice but with a median over target, timed at target, Order Mixed. Each beat of the target tightens that type's personal target by 10%, down to a floor of 60% of the crowd median. SUMMARY TIME CARD: one bar per question against its own target tick. 'Time sinks · 3' lists the questions over 2x target, with minutes and outcome: '6:40 on 3 questions, 2 wrong anyway. On a test, moving on at 2:10 would have left ~4 min for 3 more questions', then the button 'Practise these at pace'. TWO PASSES: a toggle, on by default in timed sets. Past 1.5x target, an inline chip offers 'Skip for now? (S)'. The summary compares 'Pass 1: 14 answered · 12 right · 1:02 average' with 'Pass 2: 4 answered · 2 right'. STUDENT DOES DIFFERENTLY: stops sinking 3 minutes into a question they will miss, answers routine types at test speed, and practises skipping and coming back. WHY IT MOVES THE SCORE: at 95 s a question, points are lost to time sinks and unfinished modules as much as to not knowing, and fluency on Easy and Medium buys minutes for Hard.",
+    "beats": "TopTierPrep's per-question stopwatch resets on reload and has no target. Timed QBank gives a flat 6 minutes a question (10 questions = 60:00), which trains the wrong pace. Their only time analysis is 'average seconds by difficulty' on contests, which were empty.",
+    "effort": "M",
+    "needs": "F5: target_ms from drill.levels() and the fluency-sprint pool. F4: fluency per type in board and /api/bank. F3: stopwatch target and skip chip in UI.timer and the strip. S4: summary Time card and pass split. Prefs: two_passes."
+   },
+   {
+    "title": "Confidence tags, calibration and blind spots",
+    "what": "CONTROL: above Check, a 3-segment chip 'Sure · Unsure · Guess'. K cycles it (already mapped for the exam, §2.8). It is optional, with pref practice_confidence on by default, and it replaces the one-bit 'I'm guessing' (Guess = guess:1). DATA: attempts.conf = sure | unsure | guess | null, one field shared with Tests' qstate conf. EFFECTS: a Guess that is right counts half, as the spec's guess does. An Unsure that is right counts in full but pulls the type's next review to 3 days. A Sure that is wrong is a BLIND SPOT: the verdict reads 'Sure, and wrong: a blind spot. Fixing these sticks best.', its repair comes next even when repairs are 'later', and its trap gets kind 'blind' with a 1-day check-in. PREDICTION: an optional 'Predict your score' stepper on the Action bar (off by default); the summary reads 'Predicted 8 · got 6'. SUMMARY CALIBRATION CARD: three rows, 'Sure 12 · 11 right (92%)', 'Unsure 6 · 3 right (50%)', 'Guess 2 · 1 right'. One reading line follows: 'Your Sure is reliable: on the test, don't re-check those; spend the time on Unsure.' or 'Your Sure is right only 70%: slow down on questions that feel easy.' Blind spots are listed by misconception with 'Fix now'. ELSEWHERE: the Navigator gets a Confidence view, the ReviewList a 'Blind spots · 1' filter, and the builder's Seen-before Result filter a 'Sure but wrong' option. The SkillPanel stats line gains 'Sure-accuracy 95% (40)'. STUDENT DOES DIFFERENTLY: rates their certainty in one tap, learns which feelings to trust, and gets confident errors repaired first. WHY IT MOVES THE SCORE: calibration drives test-day choices about what to re-check and what to flag. High-confidence errors corrected with feedback are retained better (the hypercorrection effect), and an Unsure right is fragile knowledge that needs early review.",
+    "beats": "TopTierPrep's QBank has no confidence at all. Its 'Mixed' only counts retries, and Marked is a bookmark that means nothing after the session. Only their exam runner has flags, and they are never scored for what they were worth.",
+    "effort": "M",
+    "needs": "F4: attempts.conf (§2.5, one field with Tests' qstate conf, R7/R8) and trap kind 'blind' (R9). F3: the chip and K in practice mode. F5: repair priority. S10: Review filter. S4: summary card and builder filter."
+   },
+   {
+    "title": "Bring your Bluebook miss: paste a question and practise its exact type",
+    "what": "BUILDER: the Search field accepts pasted question text. Over 60 characters it switches to 'Match a question', and there is also a 'Paste a question' button. SERVER: POST /api/types/match {text}. It tokenises the text with numbers replaced by a placeholder and math symbols kept, then scores it by TF-IDF cosine (stdlib only) against an index cached at startup. The index holds each template's name, about line, skill labels, distractor-reason words, and 5 example stems from GET /api/types/{t}/example (seeds 900000+). RESULT CARD: the top 3 matches, e.g. 'Looks like: Circles · Equation from centre and radius · strong match'. Each has a collapsed sample stem and three buttons: 'Practise 5 like this' (POST /api/drill {templates:[t], count:5, source:'outside'}), 'Learn this type' (the ladder), and 'Log it as a mistake' (the Shell's Log a mistake, pre-filled with that type's misconception list and the question 'Which did you do?'). 'None of these' falls back to skill search, and a consent checkbox files the text as a catalog report (R17), so missing types get built. The builder also gets a pool 'From my outside misses': logged Bluebook mistakes turned into fresh seeds of their types. STUDENT DOES DIFFERENTLY: every Bluebook or College Board question they miss becomes 5 to 20 fresh ones of the same kind that evening, instead of a vague 'practise circles'. WHY IT MOVES THE SCORE: Bluebook tests are the best predictor of the real score and students already take them, so drilling exactly the types they miss there is the most targeted practice possible.",
+    "beats": "TopTierPrep's two banks are fixed pools browsed by 19 coarse skills. A Bluebook item you missed has at best about 100 siblings under its skill, and there is no way to find its kind. Their Bluebook Include/Exclude only filters overlap.",
+    "effort": "M",
+    "needs": "F5: GET /api/types and /api/types/{t}/example. A small matcher module (F5 or S4), cached at startup through init(). F2: Shell §2.7 Log a mistake. F6: R17 'catalog' report category."
+   },
+   {
+    "title": "Automatic error log: why each miss happened, and a different fix for each kind",
+    "what": "After a first-try miss (instant mode, or retry once final; in end mode inside the ReviewSheet after finish), a row of one-tap chips appears under the verdict, headed 'What happened?'. The chips: 'Fell for it' (pre-selected when the picked option names a misconception, and shows it), 'Misread what was asked', 'Slip in the arithmetic', 'Didn't know how to start', 'Rushed' (pre-suggested under 25% of target time) and 'Ran long, then guessed' (pre-suggested over 2x target). The row is optional. The choice is stored as attempts.miss_kind. SUMMARY CARD 'Why you missed': one bar per kind with counts, and each kind routes to its own fix. Fell for it -> repair plus Review's Spot the trap. Misread -> the next set shows each question's ask sentence lightly underlined (UI.annotate) for 5 questions of that skill. Slip -> a 'Re-check before Check' nudge on the next 5 questions of that type. Didn't know -> the Learn-it ladder. Rushed or ran long -> the pace trainer. TRENDS: the SkillPanel and Results show 'Slips: 30% of misses in Sep -> 12% in Oct'. HONESTY: a self-tagged slip still needs its clean answers (R8/R9 unchanged); it feeds the trap's kind (slip / misconception / unsure). STUDENT DOES DIFFERENTLY: keeps, in one tap per miss, the error log that tutors ask for, and gets a different remedy for a misread than for a knowledge gap. WHY IT MOVES THE SCORE: misses have different causes, and 'do more questions' does nothing for misreads and slips. Error-log reflection is a standard high-yield SAT tutoring practice, and ours fills itself from the option and the stopwatch.",
+    "beats": "TopTierPrep's Attempt History records only '#1 Incorrect · Option A · 00:22'. Nothing asks or aggregates why, and a named cause is impossible when their distractors are unnamed.",
+    "effort": "S",
+    "needs": "F4: attempts.miss_kind (§2.5) and trap kind mapping (R9). F3: verdict chips. S10: Review grouping by kind. S6: Results trend line. Routing targets come from the ladder, pace and Review proposals."
+   },
+   {
+    "title": "Look-alike order: interleave the types that are easy to confuse",
+    "what": "The Order Seg gains 'Look-alikes', and a SkillPanel gets a preset 'Tell them apart' when it has 2+ look-alike groups. F5 computes the groups from blueprint.kinds() and progress.norm: templates that share a normalised misconception (79 recur across templates, 12 across skills, per Review §3.9.4), or that share a skill label while differing in what they ask. The set alternates between group members in an unpredictable order, never 3 of one type in a row. SAME SETUP, DIFFERENT ASK: for templates whose generator takes an ask or mode argument (e.g. circles degree_radian to_radians / to_degrees, equation_read radius / centre), consecutive items can share a setup, with the Why line 'Same circle as question 4, different question'. AFTER ANSWERING: a 'Tell' line, e.g. 'Look-alike of Arc length (question 4): this one asks for area, so r² appears', from a T-bank LOOKALIKES list [(t1, t2, tell)]. When no tell is written, the default reads 'Look-alike of question 4 (Arc length)'. SUMMARY: 'Look-alikes: told apart 5 of 6', plus the confused pairs, i.e. misses whose misconception is the other type's method, each with 'Practise this pair'. STUDENT DOES DIFFERENTLY: practises choosing the method, not only carrying it out. WHY IT MOVES THE SCORE: blocked practice inflates in-set accuracy while the test is mixed, and interleaving similar types improves later test performance because it trains discrimination.",
+    "beats": "TopTierPrep serves whatever matches its filters in no designed order. Their skill and difficulty filters cannot express 'confusable', and a fixed bank cannot make the same setup ask something else.",
+    "effort": "M",
+    "needs": "F5: order 'lookalike' and the group computation from kinds() and norms (F4 progress.norm). T-bank: optional ask/mode kwargs exposed through registry.generate(**kw), and tell lines. S4: builder option and summary."
+   },
+   {
+    "title": "Milestones and proof of progress on every answer",
+    "what": "NEXT-STEP LINE under every verdict, computed on the server by simulating progress.mastery_of forward. Examples: 'Circles: 2 more first-try rights at Medium or Hard -> Strong', 'Left out the constant term: 1 more clean answer closes it', '4 in a row · your best in this skill is 6'. THEN VS NOW, when a type the student missed before is answered right: 'Sep 12 on this type: B, used the slope as the intercept, 2:40 · today: right, 1:05', taken from attempts. SET GOAL (optional builder Seg): No goal · Close my open mistakes · Reach Strong in <skill> · All under target time · 8 of 10. The RunBar shows 'Goal · 1 of 2 closed', and the summary says 'Goal met' or 'not yet', with the evidence. SUMMARY HEAD adds 'Estimate about +4 pts' (points on the table) and 'Mistakes closed 2 · types now fluent 1 · reviews held 3'. The builder header adds a 4-week comparison: '4 weeks ago: 52% first try in Advanced Math · now 67%'. STUDENT DOES DIFFERENTLY: sees the next reachable step during the set, and concrete proof of improvement on a type they used to miss. WHY IT MOVES THE SCORE: near, specific goals raise effort (the goal-gradient effect), and visible personal improvement builds the self-efficacy that keeps a student practising daily. Daily volume is what compounds into points.",
+    "beats": "TopTierPrep's session gives only a green or red border and never ends. Their achievements are 4 hard-coded tiles with a dead 'View All', and nothing compares a student with their own past.",
+    "effort": "S",
+    "needs": "F4: a mastery simulation helper and per-template history reads. The points-on-the-table worth for the estimate line. S4: verdict lines, RunBar goal, summary head."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Explanation after answering",
+    "spec_says": "The one-sentence rationale shows inline after a miss and behind 'Why' after a right answer. Each distractor shows its misconception underneath. §3.3.4 claims 'TopTierPrep has one long explanation per item'.",
+    "why_only_parity": "The live walk shows their explanation is 'Justification:' followed by 'Distractor Analysis:' with one line per wrong option. So per-option analysis is parity, not an extra. Our justification is shallower: rationales run a median of 91 characters, and only about 1 in 5 has more than one sentence.",
+    "upgrade": "A step-by-step solution with this seed's numbers (Item.steps), a 'With Desmos' tab, and each distractor line computed as value plus mistake ('14 = what you get if you used the slope as the intercept'), with 'Practise this trap' on each line (Spot the trap / want regex)."
+   },
+   {
+    "feature": "Question Score 1-7 (levels)",
+    "spec_says": "Levels are measured only once a (template, tier) has 20+ first tries. With 283 attempts in the db, nearly every type shows 'L3-5 est.', level cells with 0 are disabled, and the helper admits '18 of 386 measured'.",
+    "why_only_parity": "TopTierPrep's 1-7 slider works on day one. Ours is below parity at launch and only reaches parity once data arrives.",
+    "upgrade": "Derive levels from an Elo item rating (Compete's item_ratings) updated by every first-try practice answer, not only ranked contests, and seeded from tier priors. Show 'L4 ±1', with the band narrowing as answers arrive, so the level cells work from day one. Rate the student per skill on the same scale."
+   },
+   {
+    "feature": "Difficulty pills and 'Adaptive'",
+    "spec_says": "Three tier toggles, plus an Adaptive toggle (2 up / 1 down, R33) that is off by default (prefs adaptive=false).",
+    "why_only_parity": "These are the same controls as their pills and their Adaptive preference. With adaptive off by default, most students get fixed tiers, just as on theirs.",
+    "upgrade": "Make 'My zone' the default difficulty. Per skill, it serves the tier or level where predicted first-try success is 65-80% (from by-tier accuracy or the Elo rating) and steps as R33 does, shown as 'Zone: Medium in Circles · you get 72% here'. Tiers stay available as an override."
+   },
+   {
+    "feature": "Volume",
+    "spec_says": "5 · 10 · 20 · 30 · 40 · 50 · ∞ · Other (1-120).",
+    "why_only_parity": "It is their 10-50/All list with more stops.",
+    "upgrade": "Time-first lengths '10 min · 20 min · 35 min (one module)', which compute the count from the student's own average time on the selected types ('about 13 questions for you'). Add 'Fit to today's plan', which uses Plan's minutes left for today."
+   },
+   {
+    "feature": "Timed mode and pace",
+    "spec_says": "Untimed · Test pace (a flat 95 s a question) · Custom, with a pace alert at a flat 1:35.",
+    "why_only_parity": "It is flat pacing like theirs, only a better number. 95 s is too generous for an all-Easy selection and too tight for all-Hard.",
+    "upgrade": "A target per (template, tier): the crowd median, or tier defaults of 1:05, 1:35 and 2:05 that average 95 s over the module mix. Test pace becomes the sum of the served questions' targets, and the stopwatch and alert compare each question against its own target."
+   },
+   {
+    "feature": "Live question count",
+    "spec_says": "Live counts of types and servable questions, and 'unlimited'.",
+    "why_only_parity": "They have a live count too, buggy as it is. Counting types instead of items is still an inventory number.",
+    "upgrade": "Say what the selection means for the test: 'Covers ~21 of the 44 questions on a Math section · worth up to ~+31 pts · ≈16 min', from progress.worth and blueprint.DOMAIN_SPLIT."
+   },
+   {
+    "feature": "Bank toggle: official items (QB | TTP)",
+    "spec_says": "No toggle. One generated bank, a line on where the questions come from, and official replicas left as an open question.",
+    "why_only_parity": "For a student who wants official-style items this is below parity: they offer 1,921 College Board Math items.",
+    "upgrade": "A 'Modelled on official items' badge and pool. sources.py already pins templates to official items' numbers (32 in Circles alone), so each skill can show 'reproduces 32 official items' and serve fresh seeds of those templates. Add the paste matcher, so any official question a student misses gets unlimited twins, which neither of their banks can do."
+   },
+   {
+    "feature": "Bluebook Include / Exclude",
+    "spec_says": "A fixed lock line: 'Never repeats. Nothing you were shown ... comes back'.",
+    "why_only_parity": "It is a static answer to their filter and does nothing new with Bluebook.",
+    "upgrade": "Replace it with 'From my Bluebook misses': logged outside mistakes and pasted questions become a pool of fresh seeds of their types, and the builder shows 'Bluebook misses · 4 types'."
+   },
+   {
+    "feature": "Eliminate",
+    "spec_says": "A strike mode, Shift+A-D, 42% opacity with Undo, saved on the server and restored on any device.",
+    "why_only_parity": "Their eliminations are also saved on the server. It is the same feature.",
+    "upgrade": "Turn strikes into data. The verdict says 'You crossed out the key (C)' when that happened, a distinct and fixable error. The summary reads 'Strikes 14 · 13 right eliminations · crossed out the key once'. In retry mode, 'Why is this wrong?' on a struck option confirms the elimination with that option's misconception."
+   },
+   {
+    "feature": "Reference sheet",
+    "spec_says": "The formula-sheet dialog.",
+    "why_only_parity": "It is identical to their Reference modal.",
+    "upgrade": "After answering, highlight on the sheet the formula this question used. A per-skill 'Not on the sheet' card lists the formulas students must memorise (circle equation, slope, vertex form, discriminant, growth), with the one this type needs marked. This needs a formula tag per template (T-bank)."
+   },
+   {
+    "feature": "Calculator",
+    "spec_says": "Desmos, docked, floating or as a phone sheet, with its state kept per set.",
+    "why_only_parity": "Theirs is also Desmos, floating and resizable. Docking is nicer to use but adds no capability.",
+    "upgrade": "Desmos routes per type with 'Load into calculator' (setExpression), expressions captured per question and shown in review as 'What you typed', and a Desmos drill preset."
+   },
+   {
+    "feature": "Question Overview (navigator)",
+    "spec_says": "Status, Difficulty, Skill and Time views, with legends that carry counts, and Current as a ring.",
+    "why_only_parity": "It is their Status | Difficulty popover with two more views.",
+    "upgrade": "Add a Confidence view (Sure, Unsure, Guess, and blind-spot glyphs) and a Trap view: cells labelled by the misconception fallen for. Clicking a trap chip filters the grid and offers 'Fix these'."
+   },
+   {
+    "feature": "Summary and review list",
+    "spec_says": "Score head, stat tiles, by skill, type and difficulty, time per question against pace, mistakes opened and fixed, and a filterable review list with a read-only ReviewSheet and a persistent Hide answers.",
+    "why_only_parity": "TopTierPrep's QBank has no summary, but this layout is their test score report (tiles, domain cards, question grid, review modal with a Hide answers that persists).",
+    "upgrade": "Add points moved on the estimate, a calibration card, time sinks against per-type targets, a 'Why you missed' breakdown, reviews held, and one primary pill for a next set built from these: 'Fix 2 blind spots + 3 time sinks · 6 questions · 8 min'."
+   },
+   {
+    "feature": "Why this one",
+    "spec_says": "A per-question reason ('Open mistake: ...', 'A type you have never tried', 'Due for review ...').",
+    "why_only_parity": "Their plan's 'Why this task?' (aiReason) is the same idea at task level.",
+    "upgrade": "Add what the question is worth and what happens next: 'Open mistake · 1 clean answer closes it · ~5 pts a test', or 'Review · hold it and the next check is in 35 days'."
+   },
+   {
+    "feature": "Marked pool",
+    "spec_says": "Separate Marked and Saved pools (R5). 'Seen before, exactly' replays the exact question.",
+    "why_only_parity": "It is equal to their 'Saved Only' filter. An exact replay tests memory of that item, not the skill.",
+    "upgrade": "Default the Marked and Saved pools to fresh twins first (same template, new seed), with 'Exactly as it was' as an option, and show the confidence and note from when the question was marked."
+   },
+   {
+    "feature": "Permalink to one question",
+    "spec_says": "?q=TEMPLATE:SEED serves that exact question as a one-question drill.",
+    "why_only_parity": "Their hidden /question/:key route is the same idea.",
+    "upgrade": "Add a type link ?t=TEMPLATE that gives fresh numbers on every open. A tutor posts one link, every student gets a new question of the same type, and the results roll into Shared results with the most common named mistake."
+   }
+  ]
+ }
+}

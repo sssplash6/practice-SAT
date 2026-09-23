@@ -1,0 +1,183 @@
+{
+ "label": "outcomes: today",
+ "key": "v2:ee3bc7fa51bddbabac24fd4ba8ef9e794f99c37fdfb678026dff1416b05479a1",
+ "result": {
+  "proposals": [
+   {
+    "title": "Points map: rank every skill by the Math points it can still add",
+    "what": "SERVER: estimate.gains(learner) in F4's estimate.py (R16) returns one row per topic: {topic, per_section, acc, n, goal, gain, traps, rough}.\n- per_section = 44 × domain share (35/35/15/15, blueprint.DOMAIN_SPLIT) × the topic's share within its domain. The topic shares are a new constant, blueprint.TOPIC_SHARE, taken from College Board Question Bank skill counts (teardown table, e.g. Linear functions 170 of Algebra's 615). The 19 values sum to 44.\n- acc = right / answered over the topic's last 40 non-repeat answers, shrunk toward the student's overall accuracy with a 6-answer prior: (right + 6·overall) / (n + 6). rough = n < 8.\n- goal = the accuracy the target needs (scoring.ANCHORS inverted at profile.target), at least acc + 0.10, at most 0.95.\n- gain = per_section × (goal − acc) × slope, rounded to 5. slope = scaled points per raw question at the student's current fraction, from scoring._interpolate. It is 0 when acc ≥ goal.\n\nTODAY:\n- Up next reason line leads with value: `Worth about +20 points · Linear functions: 58% right, ~4 questions on every test`. It uses the largest gain among the set's topics; the coach's pick is unchanged.\n- Score card: the Domains block becomes POINTS AVAILABLE.\n  - Header line: `Target 700 needs about +140 · your top 6 skills hold about +150`.\n  - Six rows, each with: glyph + skill; `+20` in mono 18px; a 0–100 track with an ink tick at the student's accuracy (58%) and an orange tick at the goal (84%); meta `~4 per test`; the open-trap dot count; a `rough` tag when n < 8; and a .btn `Practise` → POST /api/drill {topics:[t], count:10, source:'gain'}.\n  - `Show all 19` expands in place.\n  - An unmeasured skill reads `Not measured yet · ~4 per test`, with `Measure · 5 questions`.\n  - Legend: `Estimates from your answers and the SAT's question mix.`\n- The values are recomputed on every /api/today.\n\nWHAT THE STUDENT DOES DIFFERENTLY: they spend their minutes where the most points are left, not on the lowest bar. A skill at 40% that appears 0.5 times per test (Evaluating statistical claims) ranks below a 70% skill that appears 4 times (Linear functions). The gap to the target stops being one number and becomes a route.",
+    "beats": "Their 'Score gap · 1000 now, 1400 target' plan tile and the Progress tab's 'Accuracy by domain, weakest first' rank by weakness only and ignore how often a skill appears on the test. Their per-question payload has no skill field, so they can't work out where the 400 points are. Ours names the skills, how many points each is worth, and one tap to start.",
+    "effort": "M",
+    "needs": "F4: estimate.gains(), blueprint.TOPIC_SHARE constant, an inverse of the scoring anchors. /api/today.gains field (S3). progress.board. The target from profile (R15). No new UI component; UI.skillRow can render the rows."
+   },
+   {
+    "title": "Daily warm-up: 5 spaced, interleaved retrieval questions that open every day",
+    "what": "SERVER: review.warmup(learner, tz), in S10's module or in daily.py, builds up to 5 template slots in this priority:\n1. Fixed mistakes with a check-in due (R9: 3, 10 and 30 days).\n2. Fading types: templates whose last clean right answer is older than their interval. The interval is 2, 5, 12, then 30 days, by the number of spaced clean rights on that template. It is derived from attempts, so no new table. Most overdue first.\n3. One strong skill untouched for 10+ days (pool review).\nInterleaved: never two in a row from one domain, and one grid-in when available. Fresh seeds, untimed, instant feedback, source:'warmup'. cfg.hide_skill: the skill line reads `Mixed warm-up` until Check, so the student has to recognise which method to use.\n\nTODAY:\n- It is the first row of the Today list for everyone, with or without a plan: `Warm-up · 5 questions · ~6 min · 3 check-ins due · 2 fading`.\n- Why: `Questions you got right before, back just as you start to forget them.`\n- Up next's pill reads `Start warm-up` when 3 or more are due and today's warm-up isn't done.\n- Once done, the row reads `4 of 5 held · Circles slipped · back Fri`. A held item doubles its interval. A miss reopens the trap (R9) or resets the interval to 2 days.\n- Calendar (§6): future cells show `3 due` in mono 9px from a 14-day forecast. The day detail reads `Planned · warm-up · 3 check-ins`.\n- Study card line: `Held 82% of 40 warm-up questions this month`.\n- With a plan, Plan's Rechecks task is rendered as this one row (no duplicate).\n- Empty: `Nothing to review yet · first check-ins come 3 days after a fix.`\n\nWHAT THE STUDENT DOES DIFFERENTLY: they re-solve types right before forgetting them, mixed across domains, without being told the topic. This combines retrieval practice, spacing and interleaving, and turns 'fixed once' into 'still right on test day'.",
+    "beats": "Their only spaced repetition is vocab 'Due Today', which stayed 0 after grading. Their Math QBank has no review schedule, and their Redo list exists in the API with no UI. A fixed bank would also show the same numbers again. Our template serves new numbers on every return, so the schedule never runs dry.",
+    "effort": "M",
+    "needs": "R9 traps due/checks (F4). F5: an ordered template queue and cfg.hide_skill; F3 workspace must honour hide_skill. A 14-day forecast function for the calendar (S3). S7 must agree that Rechecks shows as the warm-up row on Today."
+   },
+   {
+    "title": "Where your points went: every miss sorted into trap, slip, clock, entry or gap, each with its fix",
+    "what": "SERVER: progress.causes(learner, session=None, days=14) gives every wrong or blank non-repeat attempt one cause. First match wins:\n1. clock: blank in a timed sitting, or answered in the sitting's last 90 s after less than 25 s on the question.\n2. entry: a grid-in whose value is within 1% of the key, or is correct but written in a rejected form (mixed number, over 5/6 characters, a cut-off repeating decimal). Checked with scoring.grid_equal at a looser tolerance.\n3. trap: the picked option names a misconception, or the grid-in mistake has a name.\n4. slip: the student gets that template or topic right at least 80% of the time over the last 10, or the question is easy and was answered in under half their median time for easy questions.\n5. gap: everything else, usually a slow miss with no misconception named.\n\nSCORE CARD: a block `WHERE POINTS WENT · LAST 14 DAYS`.\n- One stacked bar with 5 labelled segments and counts: `Traps 11 · Slips 4 · Clock 3 · Entry 2 · Gaps 6`. Segments are ink shades; the largest is orange.\n- Each segment is a button that opens its fix:\n  - Traps → Fix all (pool redo).\n  - Slips → `See your 4 slips` (UI.review pane of those attempts), with the helper `You know these. Re-read the last line of the question before Check.`\n  - Clock → Pace sprint (see the pace coach proposal).\n  - Entry → `Grid-in entry drill · 5` (formats:['spr'] on those templates), plus the Grid-in rules popover.\n  - Gaps → `Learn it` (example first) on the top gap skill.\n- The helper names the biggest lever, e.g. `Most of your lost points are traps: fixing them is your fastest gain.`\n\nRECENT TEST CARDS (§11): a line `Lost 13: 6 traps · 3 clock · 2 slips · 1 entry · 1 gap`, and `Fixing the 6 traps ≈ +60 on this test` (misses × the scoring slope).\n\nWHAT THE STUDENT DOES DIFFERENTLY: they stop treating every miss as 'study more'. A careless student learns to check, a slow one trains pace, a misconception is fixed, and an entry error is learned in one drill. The fix matches the cause, which is where error analysis pays off.",
+    "beats": "Their report shows Correct / Incorrect / Unanswered, and the gauge counts blanks as wrong ('2 Correct, 25 Wrong' when the API says 0 wrong, 25 unanswered). Their per-question payload has no skill, difficulty or time, so they can't tell a slip from a misconception from running out of time.",
+    "effort": "M",
+    "needs": "attempts reason/ms/difficulty/fmt. qstate dwell time and position (R7, F4). The scoring grid rule. UI.review pane (F3). A /api/today.causes field (S3). /api/history rows carry causes for the test cards (S6)."
+   },
+   {
+    "title": "Pace coach: 'At your pace a module takes 41 minutes', and the sprint that fixes it",
+    "what": "SERVER: progress.pace(learner) returns:\n- median ms per (tier, format) over the last 80 answers, from practice plus test qstate ms, each capped at 10 min;\n- module_ms = the sum, over blueprint.slots('module1', 1), of the median for each slot's (tier, format);\n- runs_out_at = the slot where the running total passes 2100 s;\n- per_skill: median ms and accuracy for every topic with n ≥ 6.\n\nTODAY: a new card #pace. Desktop row: study ×8 | pace ×4, with the challenge card moving under it. Phone: after the score card.\n- Big figure `41:10`, with meta `per module · you have 35:00`.\n- A 22-cell strip for the module: each cell carries its tier pips, and an orange line marks where the clock runs out. Cells past the line are dashed, with `~3 left blank`.\n- `≈ −30 points from time alone` (blank count × the scoring slope).\n- `Slow but right`, up to 3 rows: `Systems of equations · 2:40 a question · 88% right`.\n- .btn `Pace sprint · 6 questions · 95 s each` → POST /api/drill {topics: the top 2 slow-but-right skills, count:6, timed:true, minutes:10, source:'pace'}, with the runner's per-question pace alert on.\n- With time to spare, it reads `4:50 to spare · use it to re-check the last 5.`\n- Weekly delta: `Module pace 43:30 → 41:10 this week`.\n- Under 20 timed answers: `Your pace shows after 20 answers`, with `Start a timed set`.\n\nWHAT THE STUDENT DOES DIFFERENTLY: a slow but accurate student, who loses points to the clock rather than to knowledge, finds out weeks early and trains the 95-second budget on exactly the skills that eat their time. They don't discover it on test day.",
+    "beats": "Their only time insight is 'Time Analysis: average seconds per answered question, by difficulty' on Contest Rankings, and it is empty and contest-only. Their QBank stopwatch resets on reload, and their report has no time per question, so no page ever warns a student they will run out of time.",
+    "effort": "S",
+    "needs": "attempts.ms and qstate ms carried into attempts by record_paper (R7, F4). blueprint.slots. prefs.pace_alert runner support (F3). The scoring slope (shared with the points map)."
+   },
+   {
+    "title": "'I have 5 / 15 / 30 / 60 minutes': Up next builds the best session for the time you have",
+    "what": "UP NEXT: the header gets a .seg `Time today: 5 · 15 · 30 · 60 min`. The default is the plan's minutes left today, or else the goal minus today's minutes, rounded to the nearest option (at least 5).\n\nSERVER: daily.compose(learner, tz, minutes) fills the budget greedily by points per minute, using the student's own median time per question (from the pace coach; 95 s by default). Order:\n1. due warm-up items;\n2. open traps on high-gain skills, 2 questions each;\n3. a set on the top-gain skill;\n4. one new high-frequency skill.\nAt 60 min with no test this week, it offers a module instead (22 questions · 35 min).\n\nTHE CARD shows the plan as numbered blocks, each with its count and minutes:\n`1 Warm-up · 3 q · 4 min`\n`2 Fix 'added the percentages' · 2 q · 3 min`\n`3 Linear functions · 5 q · 8 min`\n`= 15 min`\n- Each block has an × to drop it, and the next candidate takes its place.\n- One pill, `Start · 15 min`, creates one drill whose queue is the blocks in order (F5 templates with order:'grouped', block labels in cfg). The session header shows the current block's name.\n- 5 min is the floor and is always offered: `Short on time? 5 minutes keeps your streak and your check-ins` (the 3 most overdue warm-up items).\n\nWHAT THE STUDENT DOES DIFFERENTLY: no day is a zero. A busy day becomes 5 useful minutes instead of a skipped day, and every minute goes to the item with the most points per minute. Keeping going on busy days is what separates students who finish prep from those who stall.",
+    "beats": "Their plan fixes 'daily study time' once in the wizard, and their dashboard has no single next action (the plan CTA, QOTD, countdown and score compete). A student with 10 free minutes gets nothing sized to them. Ours is a sized, ordered agenda with one Start button.",
+    "effort": "M",
+    "needs": "Data from the points map, warm-up and pace coach proposals. F5: an ordered template queue with block labels. S7: plan.today_summary minutes left. The Words due count (S9) can join as a block."
+   },
+   {
+    "title": "A score estimate that moves every day, from practice, with a 6-question probe to tighten it",
+    "what": "SERVER: estimate.py (F4) adds from_practice(learner).\n- The expected weighted fraction on a standard module is the sum, over the module1 slots, of p(domain, tier): accuracy per domain × tier over the last 60 days, shrunk toward the domain mean. It maps to a score through scoring.ANCHORS.\n- The range is ±100/√(n/40) with a floor of ±40, where n is the number of answers.\n- Evidence is also counted per domain.\n\nSCORE CARD: shown next to the test band: `From practice: ~560 (±50) · from 312 answers`, with evidence per domain: `Geometry & Trig · 9 answers · wide`.\n- When any domain has fewer than 15 answers: .btn `Sharpen · 6 questions · 9 min` → POST /api/drill {source:'probe', count:6, timed:true, minutes:10}. The slots come from the 2 thinnest domains, at the tiers that separate the student's range (medium and hard above 500, easy and medium below).\n- After the probe: `Range 510–610 → 530–590`.\n- The trend chart draws the practice estimate as a thin ink line under the test bars.\n- Hero chip: `Est. ~560`, linking to #score.\n- A test band, where one exists, stays the headline; the practice estimate is labelled as such.\n\nWHAT THE STUDENT DOES DIFFERENTLY: they know where they stand today without sitting a 35-minute test, see each day's practice move the number, and a sharper diagnosis gets practice onto the right domains sooner.",
+    "beats": "Their Score Progress stayed 0 after a 420 sitting ('Complete a full-length test…'). Their practice-page Estimated Score says 'LOW CONFIDENCE' and offers no way to improve it. Ours moves daily and turns low confidence into a 9-minute action.",
+    "effort": "M",
+    "needs": "F4: estimate.from_practice. The scoring anchors. F5: a probe source that picks slots by domain and tier. F1: a line option in UI.bandChart. The hero chip (S3)."
+   },
+   {
+    "title": "Learn it: a worked example on fresh numbers, then a hinted twin, then two on your own",
+    "what": "WHERE IT IS OFFERED: .btn `Learn it · example + 3` on Up next when the pick's reason is `new`, on any Mistakes row with relapses ≥ 1 or hits ≥ 3, and as the Gaps fix in the lost-points breakdown.\n\nIT SENDS POST /api/drill {templates:[t], count:4, source:'learn', examples:1}. The session serves four items:\n1. `Worked example`: a fresh seed with the key highlighted, every option's misconception line, and the rationale open. Only `Next`. It is not filed as an attempt, and its seed goes to db.remember so it is never served as a question.\n2. `Your turn · hint available`: the same template on a fresh seed. `Show a hint` reveals the first clause of the rationale with this seed's numbers (split at the first ';', ' so ' or '. '; fallback `Same steps as the example`). Using the hint files guess=1, so the answer counts half (R8).\n3. Solo, same template, fresh seed.\n4. Solo again, at the next tier up if the template makes one.\n\nAFTER:\n- Session summary: `Example, then 3 on your own: 2 right`. Two clean solo answers close the trap by the normal rule.\n- On Today's Mistakes card, a relapsed trap carries the tag `Relapsed · learn it again`.\n\nWHAT THE STUDENT DOES DIFFERENTLY: on a new or repeatedly broken skill they study a solved problem first, then solve with the support fading. That is the worked-example and fading effect. A relapse means the method is missing, not the numbers, so they re-learn the method instead of guessing again.",
+    "beats": "They show an explanation only after a failed try, and their QOTD never highlights the key. A fixed bank can't give a matched worked example without using up one of its own questions. Ours makes the example, the hinted twin and the solo questions from one template.",
+    "effort": "M",
+    "needs": "F5: the 'examples' field and 'learn' source (an ungraded first item, db.remember). F3: an example render in UI.workspace and the hint button. A rationale clause splitter with a fallback."
+   },
+   {
+    "title": "Blind spots: mistakes you were sure about come first, and what your answer changes cost you",
+    "what": "THE TAP: a `Sure · Not sure` .seg (optional, no default) above Check on Today's inline questions (QOTD, Try one, warm-up) and in the practice session. There it replaces the I'm guessing chip; Not sure = guess=1, so it counts half (R8). Tests keep conf (R7). For untagged answers, a wrong answer faster than 0.6 × the median for its tier counts as 'sure'.\n\nSERVER: progress.calibration(learner, days=30) → {sure:{n, right}, unsure:{n, right}, changes:{right_to_wrong, wrong_to_right}}. The changes come from the tests' qstate trail.\n\nMISTAKES CARD: open traps whose missed answer was sure get an ink `Sure` tag and sort first, under `BLIND SPOTS · 3`.\n\nSCORE CARD: `Sure answers right 78% (of 64) · Not sure 52% (of 25)`, plus one piece of advice chosen by rule:\n- sure < 85% → `1 in 5 of your 'sure' answers is wrong: redo the last step before Check.`\n- unsure ≥ 65% → `Your unsure answers are mostly right: trust them and move on.`\n- more wrong-to-right than right-to-wrong changes (tests) → `You changed 5 right answers to wrong and 2 wrong to right: keep your first answer unless you find an error.`\n\nWHAT THE STUDENT DOES DIFFERENTLY: a confident misconception is the costliest mistake, because it is never flagged or rechecked. The student fixes those first, and learns from their own data when to double-check and when to move on, which is a test-day skill.",
+    "beats": "They have no confidence input, keep no record of answer changes, and their unlimited QBank retries make even accuracy meaningless. Nothing on their site tells a student whether their instincts can be trusted.",
+    "effort": "S",
+    "needs": "attempts.guess (R8). qstate conf/trail (R7). F3: the seg in UI.workspace. POST /api/qotd and drill answers accept conf (S3, F5)."
+   },
+   {
+    "title": "Final stretch: from 14 days out, Today switches to rehearse, retain, and stop starting new things",
+    "what": "WHEN exam_date − today ≤ 14, with or without a plan:\n- Hero chip `Final stretch · 12 days`, and the line `Rehearse, keep what you have, fix what repeats.`\n- Up next changes priority:\n  1. `Dress rehearsal` on the next Saturday before the exam, and the one after if 8 or more days are left: a full timed section, best started at 8:30 local. .btn `Add to calendar` (UI.ics event, Sat 8:30, 2h 20m).\n  2. The warm-up extends to 8 items.\n  3. Fix shows only traps on skills with ≥ 2 questions per test (from the points map), ordered by gain.\n- New skills are no longer offered, with the line `Not starting Evaluating statistical claims: ~0.5 questions per test, 12 days left.` and a quiet `Practise anyway`.\n- Countdown adds `2 rehearsals left · 9 check-ins due · 12 traps worth ~+60`.\n- Exam eve: Up next is `Light warm-up · 5 strong skills · 8 min`, then `Done for today. Sleep does more than cramming now.` The checklist opens.\n- Exam day: the countdown and the checklist; every other card collapses to its header (still expandable).\n\nWHAT THE STUDENT DOES DIFFERENTLY: the last two weeks protect the score. Real-timing rehearsals, keeping what they know over new content, the points left in high-frequency skills, and rest before the test, instead of cramming a low-value topic the night before.",
+    "beats": "Their countdown ticks DD:HH:MM:SS and nothing else on the dashboard changes as the date nears. Their plan's weeks are a theme sentence. Ours changes what the student is asked to do.",
+    "effort": "S",
+    "needs": "S7: align with the plan's Final phase (Today uses the same rules without a plan). Frequencies from the points map. UI.ics (F1). POST /api/mock/new {full:true} (S5)."
+   },
+   {
+    "title": "Your habits: one misconception across skills, broken with one mixed set",
+    "what": "MISTAKES CARD: a view toggle, `By question type · By habit` (UI.seg).\n- By habit groups open and recent (30-day) traps by norm across templates, using Review's norm → templates index (79 cross-template misconceptions today). Example row: `Moved the decimal point one place · 5 times · Percentages, Rates, Scatterplots`.\n- Sorted by hits across templates; only norms seen on 2 or more templates are listed.\n- Each row has .btn `Break the habit · 6` → POST /api/drill {pool:'related', ids:norm, count:6, source:'habit'}. F5's `want` walks seeds so that the misconception is a live wrong option in each question, across different skills.\n- After a clean run: `Comes back in your warm-up in 3 days.`\n- Empty: `No habit shows up in more than one skill yet.`\n\nWHAT THE STUDENT DOES DIFFERENTLY: they fix the underlying habit once instead of re-fixing it skill by skill. Practising it in varied settings is what makes the fix hold on unseen test items.",
+    "beats": "They name no misconceptions anywhere, except a prose 'Distractor Analysis' inside one report explanation. They can't group mistakes by cause across skills, let alone serve new questions that set the same trap.",
+    "effort": "S",
+    "needs": "S10: the related pool and the norm index. F5: want. The view toggle on Today's #mist card (S3)."
+   },
+   {
+    "title": "What changed since your last visit, and a receipt for today's work",
+    "what": "SERVER:\n- learners.seen_at (F4), updated by /api/today at most once every 30 minutes.\n- progress.since(learner, seen_at) returns: fixed traps, check-ins held, relapses, mastery-word changes per topic (R37 thresholds), the change in the practice estimate, and new personal bests (most fixed in a day or week, fastest module pace, longest streak).\n\nTODAY:\n- Hero line under the heading, when anything changed: `Since Monday: 6 fixed · 2 check-ins held · Percentages now Strong · estimate ~540 → ~560`. Each fact links to its place (Review's Fixed tab, #score, the skill).\n- When today's goal is met or the Today list is done, Up next opens with `TODAY'S WORK`: `38 questions · 4 fixed · 1 relapse caught · Probability → Getting there · 8 points of your map claimed` (the drop in the points map's total gain today). Then the pill `Keep going`.\n- A new best appears once, as a line: `Best week for fixing: 14 (was 11).`\n\nWHAT THE STUDENT DOES DIFFERENTLY: they see what their work changed, not just minutes and a flame. Seeing progress keeps daily practice going, and seeing fixes and held check-ins pay off makes the next session more likely.",
+    "beats": "They show study minutes and a streak pill that disagrees with the profile's streak (1 vs 0). Their achievements are four hard-coded tiles with a dead 'View All'. Nothing they show says what improved.",
+    "effort": "S",
+    "needs": "F4: the learners.seen_at column. mastery_of before and after a time. R9 trap timestamps. The practice estimate from the estimate proposal (R16). The hero line (S3)."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Hero greeting and date",
+    "spec_says": "Date eyebrow, 'Good morning, Aziz', and 4 chips (study streak, minutes today, SAT in N days, plan N of M) that link to their cards.",
+    "why_only_parity": "The greeting and date copy theirs word for word. The chips repeat counts that other cards already show; none of them says what to do.",
+    "upgrade": "Add a one-sentence headline under the greeting, computed from the data, e.g. `2 check-ins due and Linear functions is worth +20: 15 minutes covers both.`, which starts the time-budget session. Add the since-last-visit line and an `Est. ~560` chip."
+   },
+   {
+    "feature": "Study time today / this month and the month calendar",
+    "spec_says": "Four figures (today, week, month, active days), heat by minutes against the goal, plan marks, and a day detail on tap.",
+    "why_only_parity": "Their card has the same two figures and a month calendar; ours adds heat and a detail panel. Minutes measure time sitting, not learning, and the calendar only looks back.",
+    "upgrade": "Add clean answers and mistakes fixed to each day's figures and to the day detail. Let the heat switch between `Minutes · Fixed · Held`. Future cells show the warm-up forecast (`3 due`) and the plan's load, so the spacing ahead is visible."
+   },
+   {
+    "feature": "Daily and weekly goal",
+    "spec_says": "Minute chips from 15 to 240, stored in the same profile.minutes field the plan uses; the weekly goal is minutes × study days.",
+    "why_only_parity": "Same as their profile's 'Daily 2 Hours / Weekly 12 Hours'. The student guesses the number, and a minutes goal rewards sitting.",
+    "upgrade": "Show `Suggested: 35 min` in the popover with its arithmetic: (open traps × 2 + the warm-up forecast) × the student's median time, plus a module a week, divided by the study days left. Add a 5-minute floor that still counts as a study day, and an optional outcome goal, `Fix 3 a day`."
+   },
+   {
+    "feature": "Streaks",
+    "spec_says": "Three labelled streaks (study, day's questions, challenge), each from one source, with the best shown.",
+    "why_only_parity": "Their QOTD pill and profile streak are the same idea. Ours is consistent and labelled, but one answer still counts as a study day, so a single tap keeps the streak alive.",
+    "upgrade": "Mark solid days inside the streak (goal met, or 10 or more clean answers): `12-day streak · 9 solid`. Add a consistency figure, `12 of the last 14 study days`, which one missed day doesn't reset to zero. Plan rest days stay protected (R13)."
+   },
+   {
+    "feature": "Questions of the day",
+    "spec_says": "One multiple-choice and one grid-in, side by side; select then Check; one attempt; the day's streak; past days; share; option crowd bars and misconception lines.",
+    "why_only_parity": "The two slots, Check then Done, one attempt, the streak pill and 'More practice' all mirror theirs. Only the crowd and the option reasons add anything.",
+    "upgrade": "Add a `Sure · Not sure` tap before Check, feeding calibration. A wrong answer shows `Comes back Fri with new numbers` and joins the warm-up. A grid-in entry error is labelled as such (`Right value, rejected form: 2/3 entered as .66`), which their grid-in answer check can't tell apart from a wrong answer."
+   },
+   {
+    "feature": "Today list (plan tasks)",
+    "spec_says": "N of M done, minutes left, All done, a Why line, Skip / Undo, Move to…, and completion taken from what the student actually did.",
+    "why_only_parity": "Their Today's Plan card has the same N of M, minutes left, 'Why this task?', skip and move. We only automate the tick. Completion is by count, and Why is one static sentence like their aiReason.",
+    "upgrade": "Why shows evidence and value: `58% right on your last 12 · 2 open traps · worth ~+20`. A done row reports what it achieved: `15 of 15 · 2 fixed · 1 new mistake`. A task that opened new traps offers `+2 repair questions` before it counts as done."
+   },
+   {
+    "feature": "Plan stat row and week pager",
+    "spec_says": "Day 12 of 45, % done, days to the SAT, +N to target; a week strip marked done / partial / missed / skipped with a pager.",
+    "why_only_parity": "A one-for-one copy of their four tiles (Days to exam, Streak, Plan complete %, Score gap) and their '3 / 7' pager.",
+    "upgrade": "Replace the score-gap tile with an on-track tile that compares the practice estimate to the plan's straight line from start to target: `Plan line 590 by today · you ~575 · 15 behind`. Each day in the week strip also shows what it fixed and held, not only whether it was done."
+   },
+   {
+    "feature": "Behind line",
+    "spec_says": "Shown after 2 or more missed study days in 7, with 'Change daily time'.",
+    "why_only_parity": "Same trigger and remedy as their 'You have fallen behind · Rebalance my plan'.",
+    "upgrade": "Say what the missed days cost: `4 check-ins now overdue · 2 traps older than 10 days`. Make the button the 15-minute catch-up session built by the time-budget composer; keep changing the daily time as a quiet link."
+   },
+   {
+    "feature": "Score drift",
+    "spec_says": "The mean of the last 3 scores vs the plan's start (≥ 40 either way, R16), with `Update the plan's start` / `Not now`.",
+    "why_only_parity": "Their drift banner with 'Not now' and 'Rebuild with these scores'.",
+    "upgrade": "Also trigger it when the practice estimate moves, and name the cause: `Geometry up from 48% to 71% right`. On a downward drift, offer `Add 10 min a day` or a Sharpen probe, not only a new start score."
+   },
+   {
+    "feature": "Score card (band, scale, trend, domains)",
+    "spec_says": "Latest band, the 200–800 scale with target and start, the gap and weekly pace, an 8-point trend, and 4 domain rows.",
+    "why_only_parity": "Their Score Progress shows current vs target; ours adds a scale and a trend, but still moves only after a test, and domain bars show weakness, not value.",
+    "upgrade": "Add the practice estimate that moves daily, with a Sharpen probe, and replace the domain rows with the points map, so the gap comes with a ranked route."
+   },
+   {
+    "feature": "Target dialog",
+    "spec_says": "Number and slider (200–800), quick choices, optional R&W now and target with a live 1600 total, and Save disabled until something changes.",
+    "why_only_parity": "The same as their Set Target Score modal (number input, bar, Save disabled until you type), made consistent across pages.",
+    "upgrade": "Show the target as a miss budget, from the scoring curve: `700 ≈ at most 6 misses in 44 (about 3 a module) · your last section: 13`. Add where the extra misses are (`7 of them in Advanced Math`) and the points-map total the target needs."
+   },
+   {
+    "feature": "SAT countdown",
+    "spec_says": "A live DD : HH : MM : SS to 8:00 AM, a plan line with study days and tests left, and the test-day checklist.",
+    "why_only_parity": "Their live DD:HH:MM:SS ticker. Seconds tell a student nothing about how to study.",
+    "upgrade": "Lead with capacity against need: `10 days · 7 study days · ~5h at your goal · needed: 23 traps (~1h) + 2 sections (2h 20m) + warm-ups (~40m): fits`, or `short by 1h: add 10 min a day`. Keep the ticker, smaller."
+   },
+   {
+    "feature": "Exam date picker",
+    "spec_says": "Upcoming official dates only, each with 'in N days', plus Another date and Remove date.",
+    "why_only_parity": "Their combobox of official dates, with the past dates removed and a custom date added.",
+    "upgrade": "Each option also shows the registration deadline, the late deadline and when scores come out, plus a projection: `Nov 7 · +5 weeks · ~+40 at your rate`. Choosing a date becomes a decision made with data. The dates must be verified against College Board."
+   },
+   {
+    "feature": "Recent tests",
+    "spec_says": "Sitting cards with the band and route, right/asked and time, wrong vs blank chips per module, Review, Fix N and New one like this.",
+    "why_only_parity": "Their card shows the total, both sections and Review; we add Fix. It says what was missed, but not why.",
+    "upgrade": "Add the cause line (`Lost 13: 6 traps · 3 clock · 2 slips · 1 entry · 1 gap`), the value of fixing (`Fixing the 6 traps ≈ +60 on this test`) and a pace line (`ran out of time at Q19`)."
+   },
+   {
+    "feature": "Plan CTA (no plan)",
+    "spec_says": "The four steps as links, a personal preview, three bullets, and 'Build my plan →' into the wizard.",
+    "why_only_parity": "Their 'Build Your Adaptive DSAT Study Plan' card with three bullets and a button, with a personal preview added.",
+    "upgrade": "Add `Start with my data`: the exam date and daily minutes as two inline controls on the card, with everything else taken from the student's results. One tap creates the plan and fills Today's list at once; the wizard stays for edits. Theirs failed to generate a plan 3 times out of 3."
+   },
+   {
+    "feature": "Words tile (R30)",
+    "spec_says": "A tile with the day's words due and a link to Words.",
+    "why_only_parity": "Their My Words 'Due Today N' card.",
+    "upgrade": "Fold the due words into the time-budget composer as one block, so a single session sized to the student's minutes covers Math and words together."
+   }
+  ]
+ }
+}

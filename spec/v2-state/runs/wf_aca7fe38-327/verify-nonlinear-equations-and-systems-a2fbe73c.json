@@ -1,0 +1,65 @@
+{
+ "label": "verify: nonlinear_equations_and_systems",
+ "key": "v2:7832cffc457b90ce422a1d39fef3aec089987c55f829ec319f247a32a2fbe73c",
+ "result": {
+  "pass": false,
+  "evidence": "Checked at v2/t-bank-all a6bc1b6 (detached, worktree left clean) against master 59caa25. Both trees were dumped for all 32 templates, seeds 0-80, fmt default, \"mcq\" and \"spr\": 7,776 generate calls per side, all fields compared.\n\n(1) Multiple choice: all 3,059 items are identical to master on every field (stem, choices, reasons, answer, key, rationale, latex, params). No multiple-choice item has spr_mistakes.\n\n(2) Grid-ins: all 2,513 differ from master only in spr_mistakes. 2,204 calls raise the same error on both sides: the TypeError \"unexpected keyword argument 'fmt'\" from 13 templates, and ItemError retries.\n\n(4) The gate `PYTHONPATH=. python3 -m satbank check --topic nonlinear_equations_and_systems` prints PASS. It re-derived 9,488 items with 99% of distractors named.\n\n(3) Hand check: I recomputed every spr_mistakes value on all 27 official grid-in source items and on about 50 random free draws covering all 19 templates that fill spr_mistakes. I then scanned 1,402 unique grid-in stems for each failure class found. Several reasons do not produce their value for the question asked, and 7 of the official source items carry them:\n- 3.30 \"(x − 47)² = 1, sum of solutions\" names 95/2 \"halved the number the square equals\", 49 \"doubled\" and 48 \"reported the number the square equals\". A student making any of those mistakes still gets the sum 94. It also names 46 \"lost the sign of the other solution\", but 46 is itself a solution.\n- 1.20 \"5|x| = 45, positive solution\" names 45 \"dropped the bars and solved only the positive case\", but dropping the bars gives 9, the key. It also names −45 for the negative case and 0 \"reported the number inside the bars\" for |x|, which has no number inside.\n- 3.27: 29 and −21 are named \"dropped the bars\", but dropping the bars alone gives a root; those values also need skipping the division by 5.\n- 2.6 \"y = x² − 4x + 4\" names −1 \"read the coefficient of x² in the curve\"; the printed coefficient is 1.\n- 2.23, a positive-solution question, names −20/7 \"kept the sign of the middle coefficient when adding the solutions\", a mistake that belongs to a sum question.\n- 2.21 \"38x² = 38(9), negative solution\" names 3/2 \"halved the square root\"; a student who halves gets −3/2. It also names −9 \"subtracted the square from the shift\", and there is no shift.\n- 1.13 names −484 \"subtracted the square from the shift\", and there is no shift.\n- 3.10 names 7 and −9, which are key ± |b| offsets, not a mistake route.\nThe free draws repeat each class; counts are in the defects.\n\nThe 7 official items above are counted inside the classes as well. Scratch evidence is in /private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/nleq_refute/ (branch.json, master.json, cmp.py, classes.py).",
+  "defects": [
+   {
+    "where": "satbank/topics/nonlinear_equations_and_systems/families/solve.py:221-241 (square_equation pool, ask='sum')",
+    "what": "On a sum question the pool still names mistakes made while solving for a single x. The roots stay symmetric about −h, so a student who skips the root, halves it, halves or doubles the constant, or never takes the root still gets the key, not the named value. Also, 'other' (hi) is labelled 'reported the other solution' on a sum question, and abs_other can be a true root. Example, official 3.30 (x − 47)² = 1, key 94: 48, 95/2, 49, −48, 46 and 1 are all named. Example, free draw (x − 9)² = 36, key 18: 45, 27, 81, 12, −45, 15, 3 and 6 are all named. 15 free-draw stems plus 3.30.",
+    "fix": "For ask == 'sum' in the grid-in branch, drop constant, half_constant, double_constant, quarter, half_root, no_root, swap_shift, abs_other and root_only. Name each single root as 'reported one solution instead of their sum' in place of 'other'."
+   },
+   {
+    "where": "satbank/topics/nonlinear_equations_and_systems/families/solve.py:293-306 (absolute_equation no_bars / no_bars_neg / shift_only / ask='sum')",
+    "what": "no_bars and no_bars_neg are h ± k, which ignores the a + b divisor. When a + b = 1 they are the true roots and get filtered out, so they only ever appear when a + b ≠ 1, and then the label is wrong: dropping the bars gives a root, and h ± k also needs skipping the division. Official 1.20 (5|x| = 45): 45 and −45 are named 'dropped the bars...'. Official 3.27: 29 and −21. shift_only = h = 0 is named 'reported the number inside the bars' for |x| (1.20 and 3 free draws). On ask='sum' (18 stems), 'reported the other solution' is named on a sum question.",
+    "fix": "In the grid-in branch, drop no_bars and no_bars_neg when a + b ≠ 1; no_divide already names h + k correctly. Drop shift_only when h == 0. Apply the same sum-ask relabelling as square_equation."
+   },
+   {
+    "where": "solve.py:237 and solve.py:305 (abs_other = abs(lo))",
+    "what": "abs_other is always |lo|, labelled 'lost the sign of the other solution'. When the key is lo (negative ask), that value is |key|, not the other solution without its sign. Example: 4(x − 9)² = 900, key −6, names 6 while the other solution is 24; also |x − 10| = 12, key −2, names 2. When lo > 0 the value is a real solution with no sign to lose (3.30: 46). 23 stems.",
+    "fix": "Use abs(other), and include it only when other < 0."
+   },
+   {
+    "where": "satbank/topics/nonlinear_equations_and_systems/families/system.py:338-342 (curve_line_system line_coef / curve_coef)",
+    "what": "B2 and A1 are read from the reduced form A·x² + B·x + C·y + D = 0, so their sign flips whenever the term is printed on the other side from y. 'Read the coefficient of x² in the curve' names −1 for y = x² − 4x + 4 (official 2.6) and for free-draw seeds 19, 56 and 69; the printed coefficient is 1. 'Read the coefficient of x in the line' names 6 for y = −6x + 10 (seed 4) and −3 for y = 3x + 12 (seed 14).",
+    "fix": "Take the printed coefficient from the spec, negating when the term sits on the side opposite y, or leave these two entries out of spr_mistakes."
+   },
+   {
+    "where": "solve.py:436 (quadratic_solve sum_sign)",
+    "what": "'Kept the sign of the middle coefficient when adding the solutions' (b/a) is named on positive, negative, a_positive and which questions, where nothing is being added. This is a mistake from a different question type. Official 2.23 (positive solution) names −20/7; free draws such as 5x² − 15x − 200 = 0 (a > 0) name −3. 26 stems.",
+    "fix": "Gate it like zero_sum: b / a if ask == 'sum' else None."
+   },
+   {
+    "where": "solve.py:231 (square_equation half_root on ask='negative')",
+    "what": "The value is root/2 − h, but on a negative-solution question a student who halves the root would give −h − root/2. Official 2.21 (38x² = 38(9), key −3) names 3/2; free seeds 1, 3 and 39 name 9/2, 5 and 33/2. 9 stems.",
+    "fix": "For ask == 'negative' use −h − root/2. If that equals no candidate the student would pick, drop the entry."
+   },
+   {
+    "where": "solve.py:234 (square_equation swap_shift when h == 0)",
+    "what": "'Subtracted the square from the shift instead of the other way round' is named on equations with no shift printed, such as 9x² − 14 = 1,507, x² = (22)(22) (official 1.13, −484) and 38x² = 38(9) (official 2.21, −9). The words describe nothing on the page. 51 stems.",
+    "fix": "Drop swap_shift from the grid-in pool when h == 0."
+   },
+   {
+    "where": "satbank/topics/nonlinear_equations_and_systems/families/system.py:776 (secant_slope no_shift)",
+    "what": "The value is key + c, labelled 'left the curve's constant term in the difference'. Leaving c in the rise actually gives key ± c/(x2 − x1), which equals key + c only when the run is 1. Example: y = x² − 9 through x = −5 and 7 has slope 2; −7 is named, but leaving c in gives (24 − 9)/12. Example: y = x² + 5 through x = ±1 has slope 0; 5 is named. 60 stems.",
+    "fix": "Use (y2 − y1 + c)/(x2 − x1) or (y2 − y1 − c)/(x2 − x1) as the value, or drop the entry for grid-ins."
+   },
+   {
+    "where": "satbank/topics/nonlinear_equations_and_systems/families/condition.py:242-265 (discriminant_constant)",
+    "what": "two_solutions and no_solutions are key ± |b|, arbitrary offsets that no route of working produces. The reason states a property of the value, not a mistake (official 3.10 names 7 and −9; 69 stems). Separately, 'sign' says 'without the minus sign the leading coefficient carries' when a > 0, where there is no minus sign (36 stems).",
+    "fix": "Leave two_solutions and no_solutions out of spr_mistakes. Reword 'sign' for a > 0, for example 'set b² + 4ac = 0 instead of b² − 4ac = 0'."
+   },
+   {
+    "where": "solve.py:430-431 (quadratic_solve b_itself / c_abs)",
+    "what": "The values are |b| and |c|, but the labels say 'read the coefficient of x' and 'read the constant term'. When b or c is negative the printed number is the opposite sign. Official 2.15 (x² + x − 12 = 0) names 12 as 'read the constant term'; 2.23 names 20 and 32; 2.32 names 24. A student who types the actual constant, −12, is told 'read the product of the solutions'. 51 stems for c and 21 for b.",
+    "fix": "Use the signed b and c for grid-ins, or label the absolute value as 'read the constant term without its sign'."
+   },
+   {
+    "where": "solve.py:1017 (rational_linear drop_bracket), solve.py:749 (shared_factor no_ratio), literal.py _sum_pool negate_all, solve.py radical no_square",
+    "what": "Lower severity, words that do not match the value. drop_bracket, e.g. −4/3 on 4(x + 3)/(x + 7), comes from distributing p onto x only, not from 'multiplied only the first term by the denominator' (80 stems). no_ratio, e.g. 10 on official 3.21, comes from setting the right-hand bracket to zero, not from 'forgot to divide the two outer coefficients' (76 stems). isolate_sum names 'negated every term on the far side instead of the one being moved' on free draws where no term is moved (81 stems); those free-draw grid-in stems also ask 'Which equation…' but key a coefficient, which is inherited from master. radical 'subtracted the right-hand number instead of squaring it' is really 'never squared it' (official 1.12: 7).",
+    "fix": "Reword each reason to the route that actually produces the value. For example: 'multiplied only x in the bracket by p', 'set the other bracket equal to zero and ignored the left side', 'never squared the right-hand number'. Skip negate_all when extras is empty."
+   }
+  ]
+ }
+}

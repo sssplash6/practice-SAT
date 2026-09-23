@@ -1,0 +1,208 @@
+{
+ "label": "advantage: words",
+ "key": "v2:bc281cf3ca7f30efcef1fd785085884b983cf067dadfc3e9b01e1097588cf1ef",
+ "result": {
+  "proposals": [
+   {
+    "title": "Words in Context and Transitions become generated, verified bank topics (the first EBRW templates)",
+    "what": "Decision 2 makes Words R&W-only, which removes every bank-backed extra in the spec. This puts the bank power back as two satbank topics built on the existing assemble_text(key, [Mis(reason, value)], rng).\n(1) Lexicon features per sense in server/words/sat.json: class (semantic family id, e.g. weaken / confirm / cautious / novel / obscure), polarity (-1/0/+1), intensity (1-3 within the class), register, lures (subject tags where the word is a topical lure), frames (argument patterns it fits: verb-claim, adj-person, adj-approach, noun-result), lookalikes, second_sense.\n(2) satbank/topics/words_in_context/: about 40 template families, each with 3-5 authored frames. A frame is a 2-4 sentence text with slots (field, researcher, object, finding) drawn from pools, a need {class, polarity, intensity range, pos, frame} and a cue span that justifies it. The generator fills the slots, picks the key among senses matching need (kw key=slug when a word is asked for), then builds 3 distractors, each from one named trap: reversed (antonym class), too_strong / too_weak (same class, intensity outside range), connotation (same class, opposite polarity), topical (lure for the frame's field) or lookalike. When the key is used in its second sense, the item is tagged key_sense='second'. The stem is the SAT's own: 'Which choice completes the text with the most logical and precise word or phrase?' Reasons are templated and concrete ('Too strong: the text says the data only \"raised questions\"; \"refuted\" means proved false'), and the rationale quotes the cue span.\n(3) satbank/topics/transitions/: pairs.json holds S1 with several S2 variants, each tagged with one of 9 logics. The key is a random member of the right logic group. The other options come from 3 other logics, nearest confusable first (concession~contrast, cause~sequence, example~addition). Reasons read like '\"However\" signals a contrast, but the second sentence adds a point'. The twin is a minimal pair: same S1, an S2 with a different logic.\n(4) A text-topic verifier runs in audit on every item. Exactly one option meets need on every feature. No two options share a class+polarity+intensity cell. All options share a POS and are library entries. No option appears in the passage. Each reason's kind matches the feature its option breaks.\n(5) Wiring: Words' 'In context' and 'Pick the transition' quiz types draw from these generators instead of the finite authored cloze/pairs. The sheet's IN A REAL QUESTION block becomes IN AN SAT-STYLE QUESTION: an instant item for this word, with Answer it and Another (a new context, never repeated). 'Practice 10 with this word' is a drill with cfg.only plus key=slug. Tap-to-define works in these passages on any library word that is not an option. Practice lists an 'English words' domain, subject 'rw'. Every item has a (template, seed), so twins, Review, share links, worksheets and repairs work unchanged.",
+    "beats": "TopTierPrep's vocab quiz has one format (definition → word), with unchecked near-synonym distractors, and their vocabulary never touches their questions. Their QBank has 102 of their own Words in Context items and only 10 of their own Transitions items (plus College Board's 261 / 194). All of it is finite, used up and has no named traps. Ours never runs out and never repeats. Every wrong option names its trap, and every item is tied to the word it tests.",
+    "effort": "L",
+    "needs": "Sense features tagged on about 750 SAT senses (the main cost). About 150 frames and about 300 transition pairs. A text-topic path in satbank verify/check, because material/ has no College Board R&W keys and the feature verifier replaces official-answer matching. F5's drill body must accept R&W topics. The Practice builder must be subject-aware (decision 3). Content review (open question in 3.8.9)."
+   },
+   {
+    "title": "How you miss words: a trap profile, trap drills and distractors that chase your weak spot",
+    "what": "(1) My words and the run summary get a HOW YOU MISS WORDS panel with one row per trap kind: Reversed the logic · Too strong · Too weak · Wrong connotation · Topical lure · Lookalike · Missed a second meaning. Each row shows its count over 60 days, its share of misses, a trend arrow against the previous 30 days, a chip for the last word missed that way, and Drill it (10).\n(2) A Transitions confusion grid, 9×9 logics. Cells are shaded in ink opacity with their counts, and the top cells are named ('Read a concession as a contrast ×5'). Clicking a cell starts a drill of that pair.\n(3) The drill is POST /api/drill {topics:['words_in_context'|'transitions'], want:{trap:'too_strong'}, count:10}. Every served item has that trap among its options. A miss gets a repair twin (same trap, new words). The trap closes after 2 clean answers and gets check-ins at 3/10/30 days, the same as math traps (R9).\n(4) Adaptive distractors: when a learner has an open trap, each generated item has a 50% chance of filling one distractor slot with it. Details says 'Includes a trap you're working on: Too strong'.\n(5) These traps appear in Review's Redo tab, in Today's Review count and on Me as 'Top trap'.",
+    "beats": "TopTierPrep prints 'Correct answer: X' and records nothing about how the student went wrong. There is no drill from vocab mistakes, and nothing pulls a weak spot back into later questions.",
+    "effort": "M",
+    "needs": "Proposal 1. Stable trap ids on R&W reasons (R&W templates carry a trap tag from day one, which settles open question 18 for EBRW). F5 cfg.want generalised from a reason regex to a trap id. Review (S10) renders R&W traps."
+   },
+   {
+    "title": "Proven, not self-rated: every review is a new sentence, typed recall, and latency-aware scheduling",
+    "what": "(1) Card back: IN A NEW SENTENCE shows a context generated for the word's tested sense by Proposal 1's generator, with a new seed on every flip. The authored examples move under More examples.\n(2) Prove it: in any cards run, a word graded Know that is not yet proven comes back 3-5 cards later as a 4-option in-context item. A right answer marks it Proven (a check mark on the tile, 'Proven in context Sep 23'). A wrong one sends it to box 1 and names the trap.\n(3) Known becomes box ≥4 AND at least one right answer in a context the learner had not seen before, tracked by (template, seed). Me and My words read '31 known · 24 proven'.\n(4) Reviews of words at box ≥2 are served as sentences by default. A Settings key sets Review as Cards / Sentences / Mixed (default Mixed).\n(5) A new quiz type, Type the word: a meaning plus a sentence with a blank and a text input. It accepts the word's `also` forms and any case. A 1-edit typo counts as right and is flagged ('Spelling: ocurred → occurred'). A first-letter hint button marks the answer hesitant.\n(6) Latency: every review stores ms. A right answer slower than max(15 s, 1.5× the learner's median for that kind) is hesitant: the box moves up only if the word was due, and the next interval is halved. The status line reads 'Right, but slow · back in 2 days'.",
+    "beats": "Their I Know / Don't Know is pure self-report. Don't Know does not even queue the word. The one fixed example sentence gets memorised along with the card. Nothing checks that the student can use the word in a sentence they have never seen.",
+    "effort": "M",
+    "needs": "Proposal 1's generator with kw key=slug. word_reviews kinds 'incontext' and 'typed'. The §12 rules revised (Known needs a proof; hesitant rule). A text-input mode in F3's quiz runner. A prefs key for review style (R11)."
+   },
+   {
+    "title": "Answer-choice language: the words R&W answer choices are written in",
+    "what": "(1) A new READING & WRITING collection, Answer-choice language, of about 90 entries. Function verbs: qualify, concede, undermine, corroborate, substantiate, illustrate, dismiss, reconcile, challenge, speculate, underscore, refute, extend, contextualize, characterize, critique. Stance and tone words: ambivalent, skeptical, wry, earnest, dismissive, nostalgic, measured, reverent, indignant. This is the R&W counterpart of the Question language deck that decision 2 dropped.\n(2) Each sheet gets HOW THE SAT USES IT: the answer-choice pattern ('It qualifies the claim made in the previous sentence') and the word's place on its Shades ladder.\n(3) Two generated item types. The first uses a relation graph shared with transitions: S1 plus an S2 with a known function (supports / qualifies / contradicts / illustrates / restates / concedes), then 'Which choice best describes the function of the second sentence?' with 4 'It [verb]s…' options. Its traps are too strong (refutes vs qualifies), wrong direction (supports vs undermines), wrong target and off-function (illustrates vs restates). The second is Tone: an authored stance passage with tagged markers and 4 tone words carrying polarity and intensity traps.\n(4) Both appear in Practice under the EBRW domain as 'Text structure and purpose: choice words'.",
+    "beats": "Their collections are generic frequency lists ('Must know 650' and a published book's 400). None of them teaches the words the answer choices themselves use, which appear throughout Craft & Structure questions (their QBank has 149 College Board and 58 of their own Text Structure items, finite).",
+    "effort": "M",
+    "needs": "The relation graph from Proposal 1's transitions pairs, extended with function labels. About 90 entries with sense features. Stance passages. Content review."
+   },
+   {
+    "title": "Words module: a timed SAT-format check that is new every time",
+    "what": "(1) A tile on Tests and in Words study setup: 'Words module · 12 questions · 14 min'. That is 70 s a question, the R&W pace of 32:00 for 27 questions. The mix is 5 Words in Context, 4 Transitions and 3 function or tone items. It runs in two stages: after question 6, the second half moves up a difficulty step if 5 or more were right, the way the SAT routes module 2.\n(2) It runs in R21's exam runner mode: navigator, Mark for review, ABC strike and Check your work. Tap-to-define is off.\n(3) The report shows the score; pace per question against 70 s; right/asked by type and by trap; every miss with its trap reason; the words behind the misses added to Missed lately; and 'Twin every miss (N)'.\n(4) The same generator feeds a daily words challenge in Compete: the same 10 frames for everyone, each student with their own seeds (decision 1's twins).",
+    "beats": "Their vocab quiz never ends and keeps no score or count. Their R&W practice tests are fixed papers, used up after one sitting. Ours is an unlimited timed rehearsal of exactly the vocabulary-heavy R&W question types, with a per-trap report.",
+    "effort": "M",
+    "needs": "Items from Proposals 1 and 4. S5's runner exam mode for text items. The history kind and label (R26 / R36). S8 for the daily challenge."
+   },
+   {
+    "title": "Today's words: one mixed run instead of four tabs",
+    "what": "(1) The /words/ header pill, the Today Words tile and the Plan's Words task all launch the same run: 'Today's words · 12 due · 10 new · 4 checks · about 9 min'. Due reviews come first (as cards or sentences, per Proposal 3). New words come as a card, then an in-context check 3-5 cards later. Missed lately follows, then 2-4 trap-drill items from the profile (Proposal 2).\n(2) Interleaving: no two consecutive items share a word or a transition logic.\n(3) A preview sheet before the start lists each part with its count and an on/off toggle. Enter starts.\n(4) The run is a server session, so it resumes on any device with the code, and the Plan task ticks itself when the run finishes.\n(5) The four tabs stay for browsing and custom decks.",
+    "beats": "Their four tabs make the student choose a mode and a collection every time. Review and new words never mix, and Don't Know never brings a card back. Ours is one keypress to the right study for today, sized in minutes.",
+    "effort": "S",
+    "needs": "A 'today' deck source in words.py. The Plan task (S7) and Today tile (S3) launch it. Proposals 2 and 3 are optional; without them it mixes cards only."
+   },
+   {
+    "title": "By exam day: a retention forecast and a goal sized to the date",
+    "what": "(1) A BY EXAM DAY card on My words: 'Nov 7 · 45 days: 168 of 212 studied words likely to hold · 44 at risk · every core word met by Oct 28 at 10 a day'. The per-word estimate is p = 2^(-t/h), where h is the word's current interval (1/3/7/16/35 days) × 0.8^lapses and t is the days from its last right answer to the exam. Likely means p ≥ 0.8, at risk means p < 0.8. A 'How this is worked out' disclosure explains it.\n(2) The due forecast extends past its 14 daily bars with weekly bars up to the exam, and the exam day is marked.\n(3) A 'Review at-risk (44)' deck. In the last 10 days, Today's words puts at-risk words first.\n(4) A goal suggestion: 'To meet all 300 core words 10 days before your exam: 9 new a day', with Apply. words_goal becomes any integer from 1 to 40, not only 5/10/20. Plan step 4 shows the suggestion prefilled.",
+    "beats": "Their Due Today stayed at 0 after grading, and there is no forecast. New words are capped at 5 a day on the free plan, and nothing ties the word list to the exam date.",
+    "effort": "S",
+    "needs": "exam_date (R15). The prefs registry (R11) accepting words_goal 1-40. A forecast in words.py (?days already up to 120). Plan step 4 (S7)."
+   },
+   {
+    "title": "Bring your words: paste a passage or a missed official question",
+    "what": "(1) From a text: available in the Words title row and in the quick sheet's Add a word tab (R29). A textarea takes up to 5,000 characters. The passage comes back with each library word underlined and marked with its status glyph (new ○ / learning ◐ / known ●). A table below lists word · level · status · checkbox, with 'Add 9 new to the front of New' and 'Save all 14'. Words of 7+ letters that are not in the library are listed under 'Not in the library', each with 'Make it my word' (meaning required).\n(2) A question I missed: fields for the text, options A-D, my pick and the key. The lexicon relation from the pick to the key names the trap: lookalike / reversed / too strong or weak / connotation / topical / transition logic A→B, or 'Not classified'. It saves both words, files an outside trap (R9 source 'outside', like Shell U2 for math) and starts 3 generated twins with that trap.",
+    "beats": "Their 'Add your own word' button takes one typed word, and it covers Next. It can neither read a passage nor explain a miss from Bluebook or a book. Ours turns any reading or any missed official Words in Context or Transitions question into the right words and a named trap, with twins to practise it.",
+    "effort": "M",
+    "needs": "The lexicon and an inflection matcher (the spec's `also` / `match`). Proposal 1's features to classify the relation. R9 outside traps (Shell U2). The R29 quick sheet tab via UI.addWord."
+   },
+   {
+    "title": "Shades: strength and tone ladders for every word family",
+    "what": "(1) A SHADES strip on the sheet (under MEANING) and on the card back. It lays the word's class out from weakest to strongest (question · doubt · challenge · dispute · refute), with a second row by tone (+ / 0 / -) when polarity varies. The current word is in orange, and each chip opens its sheet. One helper line: 'The most precise word matches the text's strength and tone'.\n(2) A generated quiz type, Shades: 'Which word is strongest?' or 'Which fits a text that praises her?', with 4 words from one class.\n(3) A Library filter, Family ▾, that shows a whole class at once.",
+    "beats": "Their Synonyms are a flat list with an icon. That flatness is how their own quiz came to offer ingenious / imaginative / innovative / original, which all fit. Ours shows how near-synonyms differ and then tests exactly that, which is what 'most logical and precise word' questions ask for.",
+    "effort": "S",
+    "needs": "Proposal 1's class / intensity / polarity features (the ladder is a sort over them)."
+   },
+   {
+    "title": "Worksheets with keys, graded online, with a different version per student",
+    "what": "(1) Print next to Start in study setup. Options: deck or words; types (In context / Transitions / Function / Meaning→word / Type the word); count 10-40; key on a separate page (on). The page uses Source Serif 4, numbered items, 4 options with bubbles and a name/date line, under a header code 'W-7KQ2 · 20 questions · Sep 23'. The key page gives the letter, a one-line trap reason for each wrong option, and the word's meaning.\n(2) Grade a worksheet: enter the code and the answers ('CABD…'). It files attempts through R19 access, updates word states and the trap profile, and shows the run summary.\n(3) 'Same sheet again' reprints by code. 'New version' keeps the words and types with new seeds.\n(4) Classes (R4): assign a list 'as worksheets or online', and every student gets their own version. The teacher sees right % per word and the class's trap profile.",
+    "beats": "TopTierPrep has no printing and no worksheets, and their homework covers tests and QBank only. Any list of theirs is the same items every time, so answers can be passed around.",
+    "effort": "M",
+    "needs": "Proposal 1. R18 sets of kind 'items'. R19 access. A print stylesheet. R4 classes (S2)."
+   },
+   {
+    "title": "Crowd difficulty, pick rates and distractors that police themselves",
+    "what": "(1) After 30 or more first-try in-context answers, a word's difficulty comes from real accuracy, shown on the tile bars and the sheet as '58% right in context'. Until then it is the authored level, marked 'est.'.\n(2) After any generated item is answered, the verdict shows the pick split by trap kind for that family ('31% chose a too-strong word'), in the QOTD crowd style (R27).\n(3) 'Another choice also fits' is one tap on the verdict. It files an R17 report with the category prefilled and no form.\n(4) Auto-guard: a (frame, distractor word) pair is removed from generation and queued in /admin/reports when it is picked by 35% or more of learners with 80%+ Words in Context accuracy (n ≥ 20), or after 3 'also fits' reports.",
+    "beats": "Their green/amber/red levels are authored guesses. Their near-synonym distractors ship unchecked and can only be reported through a long form. Ours measures difficulty and catches a bad distractor on its own before most students ever see it.",
+    "effort": "M",
+    "needs": "Attempts storing the picked option and trap (already recorded). R17 admin queue. A suppression list read by Proposal 1's generator."
+   },
+   {
+    "title": "Leeches: words that keep slipping get a different treatment",
+    "what": "(1) A word with 4 or more lapses becomes a Leech: a LEECH tag on its tile, a Leeches tile and filter in My words.\n(2) The Leech card shows the word next to the word the student keeps picking instead (from attempts), with the tell. A 'Your hook' field (up to 140 characters, a personal mnemonic) appears under the front after 4 s without a flip.\n(3) Contrast drill (6): Proposal 1 items whose key alternates between the two words (Quiz the pair until Proposal 1 exists).\n(4) A word stops being a Leech after right in-context answers on 2 different days.",
+    "beats": "Their Don't Know does nothing, and they have no idea of words that fail again and again. Ours finds the word a student confuses it with, from their own answers, and drills the two against each other.",
+    "effort": "S",
+    "needs": "word_state.lapses (in the spec). A hook column (word_state.note). Picked-option history from word_reviews.given. Proposal 1 for the contrast drill."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "The section's WAY-better extras",
+    "spec_says": "§3.8.4: IN A REAL QUESTION, Practice 10 questions with it, Drill it (mix-up drills), Mistake → words, tap-to-define in math stems, Translate the phrase, math word of the day, From my mistakes (all built on math words and the math bank).",
+    "why_only_parity": "Decision 2 (spec/v2-decisions.md) ships only SAT words and transitions, with no Math language deck. Every bank-backed extra goes with it. What is left of the R&W deck is their Library / Flashcards / Quiz / My Words with better SRS and feedback: parity plus polish.",
+    "upgrade": "Proposal 1 puts back an R&W equivalent of each: IN AN SAT-STYLE QUESTION (generated), Practice 10 in context, trap drills (Proposal 2), From my mistakes fed by R&W traps, and tap-to-define inside the generated passages. Translate the phrase moves to Practice as a math topic so it is not lost."
+   },
+   {
+    "feature": "Quiz content for In context and Pick the transition",
+    "spec_says": "§2 `cloze`: 1-3 authored In context texts per word; `pairs`: 2-4 sentence pairs per transition (§7).",
+    "why_only_parity": "A fixed pool of authored items: a student who quizzes daily meets repeats within about a week. That is the same finite-bank limit TopTierPrep has.",
+    "upgrade": "Generate them (Proposal 1): frames × slot fillers × key sense × trapped distractors, addressed by (template, seed), never repeating, each wrong option with a named trap."
+   },
+   {
+    "feature": "Distractor validity",
+    "spec_says": "§7: never a word in the target's authored `same` list or one hop through it; same part of speech; the build proves 3 valid distractors.",
+    "why_only_parity": "It is only as good as hand-made synonym lists. Their failure (four near-synonyms that all fit) returns whenever a list misses a synonym, and nothing catches it after launch.",
+    "upgrade": "A feature-model check (class / polarity / intensity: exactly one option meets the frame's need, and no two share a cell) at generation time (Proposal 1), plus crowd auto-guard and one-tap 'also fits' (Proposal 11)."
+   },
+   {
+    "feature": "Flashcard grading",
+    "spec_says": "§6: Don't know (1) / Know (2), swipe, requeue; §12 moves the box on that self-grade.",
+    "why_only_parity": "The same self-report as their I Know / Don't Know. Requeue and regrade fix their bugs but still trust the student's word.",
+    "upgrade": "Prove it checks in a context the student has not seen, Known requiring a proof, typed recall, and latency-aware 'hesitant' scheduling (Proposal 3)."
+   },
+   {
+    "feature": "Card back examples",
+    "spec_says": "§2 `examples`: 1-3 authored sentences; §6 back: EXAMPLES.",
+    "why_only_parity": "Theirs is one fixed sentence and ours two or three, but both are fixed, so the student memorises them along with the card.",
+    "upgrade": "IN A NEW SENTENCE: a fresh generated context on every flip, with the authored examples under More examples (Proposal 3)."
+   },
+   {
+    "feature": "Synonyms and antonyms",
+    "spec_says": "§4 SAME AS / OPPOSITE OF chips; card back SAME AS / OPPOSITE.",
+    "why_only_parity": "Flat lists, as on their card back. They never say how near-synonyms differ, which is what 'most precise word' questions test.",
+    "upgrade": "Shades ladders by strength and tone, a Shades quiz type and a Family filter (Proposal 7)."
+   },
+   {
+    "feature": "Collections",
+    "spec_says": "§2: SAT words core (about 300), advanced (about 450), Transitions (about 70), My words.",
+    "why_only_parity": "Curated frequency lists, the same kind as their 'Must know 650' and 'The College Panda's 400'. Nothing is grouped by how the SAT uses the words.",
+    "upgrade": "Add Answer-choice language (Proposal 4) and a Second-sense words collection; lists from your own misses (Proposals 2 and 6)."
+   },
+   {
+    "feature": "Topic filter",
+    "spec_says": "§3: Topic ▾ with math topics, SAT subjects (General / Academic / Science / History & social studies / Literature & arts / Economics) and transition logics.",
+    "why_only_parity": "With the math topics gone (decision 2), it is their General / Academic / Science / Economics / Transitions with two more subjects.",
+    "upgrade": "Filters by Family (semantic class, Proposal 7) and by 'Where the SAT uses it' (Words in Context key / answer-choice word / transition), plus Trap (words you missed a given way, Proposal 2)."
+   },
+   {
+    "feature": "Word difficulty",
+    "spec_says": "§2: authored `level`, with bank-derived difficulty winning where it exists (math only).",
+    "why_only_parity": "With R&W only, every word falls back to an authored easy/medium/hard, which is exactly their colour-coded authored levels.",
+    "upgrade": "Crowd difficulty from first-try in-context accuracy after n ≥ 30 ('58% right in context'), with the authored level marked est. until then (Proposal 11)."
+   },
+   {
+    "feature": "Four tabs as the IA",
+    "spec_says": "§1: Library / Flashcards / Quiz / My words, each a route; setup preset to Due or New.",
+    "why_only_parity": "The same four modes as theirs. The student still chooses a mode and a deck, and review and new words never mix in one run.",
+    "upgrade": "Today's words as the default action: one interleaved run of due, new-plus-check, missed and trap items, sized in minutes (Proposal 12)."
+   },
+   {
+    "feature": "Per-question timer",
+    "spec_says": "§5 / §7: TIMER Off · 15 s · 30 s · 60 s; at zero, 'Out of time'.",
+    "why_only_parity": "A stopwatch, like their none / 30 / 60, not tied to SAT pace or to the student's own speed.",
+    "upgrade": "Pace against the R&W budget (70 s a question) in the Words module (Proposal 9), and hesitant rights rescheduled sooner (Proposal 3)."
+   },
+   {
+    "feature": "Spaced review model",
+    "spec_says": "§12: boxes 1-5 at 1/3/7/16/35 days, binary grades, exam cap, 14-day forecast.",
+    "why_only_parity": "It works where theirs is broken, but it is the textbook Leitner model: the same intervals for every word, no speed signal, and no view of what survives to test day.",
+    "upgrade": "A retention forecast to exam day, an at-risk deck and a goal sized to the date (Proposal 5); leeches (Proposal 10); latency (Proposal 3)."
+   },
+   {
+    "feature": "My words lists",
+    "spec_says": "§9: 8 stat tiles, a 14-day forecast, a sortable table, a bulk bar, Import / Export / Print.",
+    "why_only_parity": "A bigger version of their Saved / Due cards: lists of words. It says what you have, not why you miss or what will slip.",
+    "upgrade": "HOW YOU MISS WORDS panel (Proposal 2), BY EXAM DAY card (Proposal 5), Leeches tile (Proposal 10)."
+   },
+   {
+    "feature": "Own words",
+    "spec_says": "§10: add, lists, Quizlet import, CSV export; §5: own words only Meaning → word and Word → meaning, 4+ words needed.",
+    "why_only_parity": "The same as their Custom Added Words studied as cards.",
+    "upgrade": "Blank the student's own example sentence as a Fill the blank item. Link an own word to library lookalikes on save. Capture from a pasted passage (Proposal 6)."
+   },
+   {
+    "feature": "Add from anywhere",
+    "spec_says": "R29: Add a word tab in the quick sheet; §1: Add to my words on selected text.",
+    "why_only_parity": "Their button without the overlap. It still captures one typed word at a time.",
+    "upgrade": "From a text and A question I missed (Proposal 6): whole passages and outside misses become words, a named trap and twins."
+   },
+   {
+    "feature": "Report on a quiz item",
+    "spec_says": "R17: the shared report modal with every category plus 'Wrong or unclear definition'.",
+    "why_only_parity": "Their modal, a little wider. A student must fill in a form to say that two options fit.",
+    "upgrade": "One-tap 'Another choice also fits' on the verdict, aggregated with pick rates so a bad distractor is removed automatically (Proposal 11)."
+   },
+   {
+    "feature": "Plan: words task and goal",
+    "spec_says": "§11: Words each study day, NEW WORDS A DAY 5 · 10 · 20, a Words task with Review cards / Learn 10 / Quiz, minutes out of the day.",
+    "why_only_parity": "Their vocabularyPreference plus Vocabulary / Flashcards tasks. The minutes budget is better, but the goal is a guess the student picks.",
+    "upgrade": "A goal computed from the exam date and list coverage with Apply (Proposal 5). The task launches Today's words with in-context checks (Proposal 12)."
+   },
+   {
+    "feature": "Me and profile vocab stats",
+    "spec_says": "§11 / R31: Words known, Words studied, Saved words, Reviews this week; the tile '31 known · 12 due'.",
+    "why_only_parity": "Counts, like their 'Vocab N Words' tile (which counts cards opened).",
+    "upgrade": "'31 known · 24 proven', Words in Context and Transitions accuracy with a 30-day trend, and the top trap with Drill it (Proposals 2 and 3)."
+   },
+   {
+    "feature": "Word of the day",
+    "spec_says": "§11 / daily.py: two words of the day (math and SAT), the same for everyone, shown with short and Open.",
+    "why_only_parity": "With math dropped, it is one static SAT word to read, not to answer.",
+    "upgrade": "Word of the day as a twin question: everyone gets the same word, each in their own generated context, with the crowd's trap split after answering and its own streak (R27 pattern, Proposals 1 and 11)."
+   }
+  ]
+ }
+}

@@ -1,0 +1,209 @@
+{
+ "label": "outcomes: plan",
+ "key": "v2:9f3f05da189386216bf3e18d5ca296355cd4a4db877b160e8e1c57e4a354dc48",
+ "result": {
+  "proposals": [
+   {
+    "title": "Points map: every minute goes where it buys the most scaled points",
+    "what": "New plan.points(learner, plan), served in GET /api/plan and POST /api/plan/preview as points:[{topic, q_per_test, p_by_tier, pts_open, gain_per_10, pts_per_min, planned_q}]. For each of the 19 skills: q_per_test = the domain's count from blueprint.DOMAIN_SPLIT divided by the domain's topic count, split by the student's likely route through blueprint.TIERS. p_by_tier = accuracy per tier over the last 20 answers, a guess counting half (R8), with a prior of 0.5 until 5 answers. pts_open = sum over tiers of q x (1 - p) x w_tier / W_route x slope, where w is 1, 2 or 3, W_route is 96 for the upper route and 80 for the lower, and slope is read from scoring.ANCHORS at the student's mean3 (5.6 scaled points per 1% between 480 and 620). gain_per_10 = the expected rise in accuracy per 10 answers, from a pooled learning curve over attempts: median accuracy change by (topic, answers so far in buckets 0-10, 11-20, 21-40, 40+), cached daily, with a fallback of 0.08 until 30 learners have worked the topic. The allocation in section 4 replaces w_d = BLUEPRINT x state x (1.5 - m) with a greedy deal: each slot goes to the skill with the highest pts_per_min, recomputed after each slot with diminishing returns (p rises by gain_per_10 / 10 per question). The 2-per-domain and 2-day spacing rules stay. Focus multiplies pts_per_min by 1.5 and Strong by 0.4, as overrides. SCREENS: the Plan tab's right column gets a card 'Where your next points are' listing the top 6 skills, e.g. 'Circles · about 12 pts open · 1.75 questions a test · 41% right · 18 questions this week', plus a stacked domain bar of points open and a total 'about 58 pts open at your level'. Why-this lines start with value: 'about +3 pts for 15 min, the best rate today'. Step 4 shows the same list above the Focus rows with 'Plan by points (recommended)' selected, and a manual state shows its cost: 'Strong on Algebra gives up about 6 pts'. The Progress DomainCard shows points recovered since the start against points still open. The caption states the rules: 'Estimate. Questions per skill are an even split of the published domain counts.' WHAT THE STUDENT DOES DIFFERENTLY: stops giving equal time to skills worth about 1 question a test (Evaluating statistical claims) and moves it to weak skills worth about 5 (Nonlinear functions), and can see why.",
+    "beats": "Their 'we build the plan: every study day gets its own tasks, weighted toward the domains costing the most points' and aiReason. The weighting is a claim in AI prose, made at domain level (8 domains), never shown as a number, and their generator failed 3 of 3 builds. Ours computes points per skill from our own scoring curve and the blueprint, shows the numbers, and every Why line can be checked against them.",
+    "effort": "M",
+    "needs": "A slope helper over scoring.ANCHORS (F4); blueprint.DOMAIN_SPLIT and TIERS; estimate.mean3 (R16); attempts with guess and repeat (R8); a daily-cached pooled learning-curve query over attempts; a rewrite of the plan.py allocation (S7). Acceptance: shares still sum to 1, and Nonlinear functions at 40% gets more slots than Evaluating statistical claims at 40%."
+   },
+   {
+    "title": "Recall 6: a daily set that brings back every skill you have learned, spaced and mixed, with the skill name hidden",
+    "what": "Each study day's first counted task is 'Recall · 6 skills due · 9 min': one fresh question from each of 6 different due skills, in mixed order. The due rule is derived from attempts, with no new table. A skill enters recall 2 days after its first clean day at Getting there or better. Each clean first answer in a recall doubles its interval (2, 4, 8, 16 days, capped at 30). A miss drops the interval back to 2 and gives the skill a focus slot within 2 practice days. Items are medium or the phase's top tier. The runner flag blind:true hides the skill chip and Details until Check, so the student has to recognise which method applies, the part of interleaving that carries over to the test. Final-phase guarantee: every skill with 10 or more answers gets at least one recall in the last 10 days before the eve. SCREENS: the summary reads '5 of 6 recalled · Linear inequalities slipped (last right 19 days ago) · back on Thu'. The Plan tab gets a row 'Exam-ready coverage 14 of 19 skills recalled in the last 14 days' with a 19-cell strip: filled = recalled clean, ring = due, dash = not learned yet. Future calendar days show 'Recall · ~N due'. WHAT THE STUDENT DOES DIFFERENTLY: goes back to old skills on a schedule instead of drilling only this week's focus, so what they learned in week 1 is still there on exam day.",
+    "beats": "None; they lack it. Their spaced review exists only for vocab words. Their Math tasks are domain question sets with no retention schedule, and a fixed bank of 10 papers cannot bring a question type back without repeating items. The v2 spec's rechecks (R9) cover fixed mistakes only; this covers every learned skill.",
+    "effort": "M",
+    "needs": "Drill topics + count + order:mixed + mix:even (F5); a runner flag blind that hides the topic chip until Check (F3/S4); plan.py due computation over attempts from any source; task kind recall, with the drill task regex widened to ':recall'; Today and session-summary hooks."
+   },
+   {
+    "title": "Trap clinic: fix a misconception once, everywhere it shows up",
+    "what": "plan.py groups open, relapsed and recently fixed traps by misconception (traps.norm, R9) across templates and skills. When one misconception has 2 or more hits on 2 or more templates, or has relapsed once, the next practice day gets 'Trap clinic · gave the area instead · 3 skills · 10 min' (counted). It runs as one sitting in four steps. (1) Worked trap: a fresh seed with the key and the trap option revealed, and where the trap number comes from (the rationale plus that option's reason, e.g. '1,225π is the area: you squared the radius'). (2) Spot the trap: a fresh seed asking 'Which choice comes from: gave the area instead?' (Review's component, not filed). (3) Four questions from pool:'related' on templates where the student has not made this mistake, each with the trap option present (want regex), filed normally. (4) 'How I'll catch it': a one-line field stored in traps.note, shown after answering on any later item where that trap option appears. The Progress tab gets a 'Your traps' table: misconception, hits, skill chips, last seen, status (open / fixed / still fixed 2 of 3 / relapsed), your rule, and a Clinic button. The daily Fix task puts relapsed and cross-skill traps first. WHAT THE STUDENT DOES DIFFERENTLY: repairs the thinking error behind many question types at once, and writes the rule in their own words (self-explanation), instead of fixing one template at a time.",
+    "beats": "None; they lack it. TopTierPrep names no misconception anywhere: its 'Distractor Analysis' is prose inside one explanation, and its plan picks question sets by domain. Its fixed bank cannot serve the same trap on another question type with new numbers.",
+    "effort": "M",
+    "needs": "R9 traps (norm, relapses, note); drill pool:'related' + want (F5); Review's Spot the trap in UI.questionReview (F3/S10); task kind clinic; the runner showing traps.note after an answer (S4)."
+   },
+   {
+    "title": "Worked pair, then solo: learn a new skill from a solved twin before solving it cold",
+    "what": "For a skill with no answers, or below 40% after 8 or more, the plan's first slot for it is a 'Learn · Circles · 3 worked pairs + 4 on your own · 12 min' task instead of a focus set. It holds three example-problem pairs on three templates of the skill, ramping easy, medium, hard. Each pair is a worked example followed by the same template with new numbers to solve alone. The worked example is seed A, shown solved in review mode: stem, key marked, rationale, and every wrong option's misconception as a 'Not A: gave the radius instead' line. After the pairs come 4 questions with no worked example. After each example there is an optional prompt, 'Why is B right? (your words)', stored in notes (R6). Examples are inline (R24) and not filed; the solo items are filed. A missed solo item inserts a second worked example on that template before moving on. Why line: 'Circles: 3 answers, 1 right · start from worked examples'. After the Learn task the skill joins normal focus sets. LATER, after a bank change: once rationales are step lists, the second pair fades: steps 1 to n-1 are shown and the student enters the last one. WHAT THE STUDENT DOES DIFFERENTLY: studies a solved problem right before solving its twin, instead of failing cold on a skill they do not have yet (for beginners, example-problem pairs beat problem-only practice).",
+    "beats": "None; they lack it. TopTierPrep has no teaching sequence, only a question set with a 'Show explanation' link. A fixed bank cannot serve the twin of a worked example with new numbers.",
+    "effort": "M",
+    "needs": "Drill field worked:[positions], served revealed and not filed (F5); UI.workspace review mode inside a practice sitting with a 'Try one' continue (F3/S4); notes (R6); task kind learn. Fading needs step-structured rationales in the bank (a separate bank task, L)."
+   },
+   {
+    "title": "Route-up objective: plan for the adaptive module, not only the score",
+    "what": "For a student with a target above 580, plan.py reads module-1 right/asked from recent module and section sittings. The Plan tab and step 2 show a Routing meter: 'Module 1: 12 of 22 on your last 2 tests · 14 routes you up · until then your section tops out at 580'. While the student is under 14, or has routed up in fewer than 2 of the last 3 sittings, the difficulty table in section 4 is replaced by module 1's mix (7 easy, 8 medium, 7 hard), spread across all four domains by blueprint. Why lines say 'Routing: medium Advanced Math is 7 of module 1'. Each test task's summary reports 'Routed up · 15 of 22' or 'Routed down'. Once the student has routed up in 2 of the last 3, the objective flips to 'Upper module: 9 of 22 hard right · 700 needs about 14', and hard tiers lead the sets. WHAT THE STUDENT DOES DIFFERENTLY: a student at 520 aiming for 650 learns that the first 22 questions decide whether 650 is reachable, and trains medium coverage first.",
+    "beats": "None; they lack it. Their plan model (weeks, days, tasks, domain) has no module or route concept, and nothing on their site tells students about routing. The v2 spec prints only a static TargetNote.",
+    "effort": "S",
+    "needs": "Module-1 results per sitting (sessions.result, S5); scoring.ROUTE_UP_AT and LOWER_ROUTE_CEILING (F4); blueprint.TIERS; a difficulty override in plan.py."
+   },
+   {
+    "title": "Confidence calibration: confident errors get fixed first",
+    "what": "Plan focus, recall and clinic sets show a confidence chip under the choices. K cycles Sure / Unsure / Guessing, as in the exam runner; I stays as Guessing. An answer with no tap counts as unsure. It is stored in a new attempts.conf column. (a) A sure-and-wrong answer flags its trap as confident, and it goes to the top of the next Fix task: errors held with high confidence, once corrected, are the most durable corrections (hypercorrection). (b) The Progress tab gets a Calibration card with, per skill, 'Sure 88% right (40) · Unsure 55% · Guess 28%'. The tag Overconfident (sure but under 75% right, n of 10 or more) schedules a Trap clinic. The tag 'Trust yourself' (unsure but over 85% right) suggests Strong and frees minutes. (c) Test reports add 'Sure on 4 wrong answers: Circles ×2, Percentages ×2', using exam conf from qstate. WHAT THE STUDENT DOES DIFFERENTLY: learns which 'I know this' feelings to trust, and fixes confident errors first, which is where careless losses on test day come from.",
+    "beats": "None for the plan; they lack it. TopTierPrep records no confidence anywhere. The v2 spec has confidence tags only in tests (off by default) and a binary I'm guessing in practice, and the plan uses neither.",
+    "effort": "M",
+    "needs": "attempts.conf (F4); a 3-state chip in the practice runner, key K (F3/S4); fix-task ordering in plan.py; the report tie-in (S6)."
+   },
+   {
+    "title": "Pace ladder and triage drill: speed built skill by skill, plus the skill of moving on",
+    "what": "Replace ClockMode Off / Auto / Always with a per-skill pace rung, derived from attempts. Every skill starts measured but untimed. It moves to 130 s a question once its untimed accuracy reaches 70%, then to 110 s, then to test pace, 95 s. Easy items are budgeted 60 s, the time bank that pays for hard ones. Rungs move per skill on evidence, not by calendar phase. Timed sets show a split rail, 'Q6 of 12 · 9:30 left · on pace', and end with 'Median 1:52 · target 1:50 · 8 of 12 under'. A weekly Triage drill (12 min, 8 questions, 2 of them measured level 6-7, strict clock, feedback at the end, free navigation) is scored in weighted points under time. Its debrief names the time sinks: '3:40 on Q5 (hard, worth 3) · Q7 and Q8 left blank (easy, worth 1 each) · skip at 2:00 and come back'. A Plan tile reads 'Pace 1:48 → 1:35 · 11 of 19 skills at pace'. WHAT THE STUDENT DOES DIFFERENTLY: practises moving on and banking time, and adds speed to a skill only once accuracy is there.",
+    "beats": "Their session countdown timer. Their report payload has no time per question, and there is no pacing curriculum and no triage practice. The v2 spec's clock switches on by phase, plus a 120 s slow-skill trigger.",
+    "effort": "M",
+    "needs": "attempts.ms and sms (R7/R8); measured levels 1-7 (QBank); drill timing, feedback:'end' and the navigator (F5/S4); a triage debrief in the session summary (S4); per-skill rung state in plan.py."
+   },
+   {
+    "title": "Weekly checkpoint and retro that plans the next week",
+    "what": "The last study day of each plan week opens with 'Checkpoint · 10 questions · 15 min' (counted): fresh items on that week's focus skills, served at least 2 days after they were practised, so it measures what stuck rather than same-day performance. It leads to a 'Week 3 review' screen, which is also a button on the WeekStrip and kept in history. It shows minutes studied against planned, questions, traps closed and reopened, and each skill from start of week to checkpoint ('Circles 41% → 78%'), with calibration and pace lines. Under them, 'Next week' is the allocator's proposal with its reasons ('Percentages about 9 pts open · Circles moves to Recall'), with Accept or change: swap a skill, change a day's minutes, add a day off. Checkpoint misses feed next week's slots. WHAT THE STUDENT DOES DIFFERENTLY: ends every week with proof of what stuck and a deliberate choice for the next one.",
+    "beats": "Their week view: 'Week N · X of Y tasks · Z%' and a theme sentence, with no measure of learning. Their 'adapt' rebuild reacts only to missed tasks and test scores.",
+    "effort": "M",
+    "needs": "Week boundaries in plan.py; task kind checkpoint; drill topics with the 2-day delay rule; weeks[n].retro in GET /api/plan; the existing day-override endpoints."
+   },
+   {
+    "title": "Mastery exit and top-up inside a task",
+    "what": "A plan set stops practising a skill once it clears today's bar (4 first-try rights in a row at the phase's top tier, within pace). The remaining questions move to the skill with the next-highest points in the same sitting, with the line 'Circles done for today · 4 right in a row · 5 questions moved to Percentages'. The other way round, 2 misses on the same trap inside a set insert a worked example of that trap before the next question. The task's planned count and minutes stay fixed, so the day still ends on time. WHAT THE STUDENT DOES DIFFERENTLY: stops spending another 8 questions on a skill they already have today, and puts them where points are open.",
+    "beats": "Their tasks are fixed question sets of fixed length. completeTask {performance} is recorded afterwards and never used during the task.",
+    "effort": "M",
+    "needs": "Live queue edits in the drill (the repair loop already inserts items; add an exit rule and a topic swap) (F5/S4); the points order from proposal 1 to choose the swap target."
+   },
+   {
+    "title": "12-question placement inside the wizard",
+    "what": "For a student with no test, step 1's SourceNote offers 'Measure it now · 12 questions · about 15 min' next to the slider. It runs in the practice session as an adaptive drill: 3 questions per domain, starting at medium, stepping by R33. There is no sign-up gate. It returns to ?setup=1&step=1 with: the Math start prefilled as a band ('about 540 · ±120, rough'), per-domain accuracy filling step 4's stats and suggestions, and a first Points map. Its answers file normally, so day 1 of the plan is built from the student's own answers instead of 'Algebra and Advanced Math by default'. The diagnostic stays as the precise option. WHAT THE STUDENT DOES DIFFERENTLY: starts the plan from a measured point in 15 minutes instead of guessing on a slider.",
+    "beats": "Their step 1: sliders, prefilled only when full tests exist, with the note 'start with your best estimate'. The v2 spec links out to a 30-minute diagnostic that sits behind a sign-up gate (R38).",
+    "effort": "M",
+    "needs": "Drill adaptive:true + source:'placement' (F5); a placement band (weighted fraction → ANCHORS, ±120) in scoring (F4); the satf.return path; preview reading the result."
+   },
+   {
+    "title": "When and where, plus a minimum day: a habit that survives bad days",
+    "what": "Step 3 adds 'When and where': the existing time chips, plus a cue (After school · After dinner · Before bed · Other) and a place field (30 characters or fewer). Together they make the plan's sentence 'After dinner, 7:30, at my desk · 45 min', shown on Today's plan card and used as the calendar event title. Every study day offers 'Minimum day · 10 min' (Recall 6 plus the top Fix pair). Doing it keeps the streak, with a day status 'kept' and its own glyph, while stats still show the true minutes. At most 2 minimum days a week count before the Behind banner fires. There is an opt-in daily email at the chosen time with today's tasks and one-tap Start links, for verified emails through mail.py, and a Sunday email with the weekly review. The week tile shows 'about +6 pts banked this week' from the points model, rounded down. WHAT THE STUDENT DOES DIFFERENTLY: ties study to a cue (in meta-analyses, if-then plans raise follow-through substantially) and never faces an all-or-nothing day.",
+    "beats": "Their Profile collects a Preferred time and uses it for nothing. Their profile and QOTD streaks disagree, and they send no reminders.",
+    "effort": "S",
+    "needs": "prefs study_time and remind (exist); a cue pref (F4); plan streak rule accepting 'kept' (R13); mail.py plus a scheduler loop at app startup (moves this to M); the points model for 'banked'."
+   },
+   {
+    "title": "Projected exam-day score, and what your minutes buy",
+    "what": "The Score tile gains 'Projected Nov 7: 640-690'. The projection is mean3 plus the planned gain from the points model over the remaining study days, multiplied by the student's adherence (days done ÷ planned over the last 14 days). Its band is the mean3 band widened by the model's uncertainty. Until there is 1 sitting and 100 answers it reads 'Not enough data yet'. Step 3 and the Behind banner compare choices: '45 min × 5 → 650-700 · 25 min × 5 → 620-670'. The Trajectory chart adds a projection cone from now to the exam. The caption states the rule. WHAT THE STUDENT DOES DIFFERENTLY: sees what skipping costs and chooses their minutes knowingly.",
+    "beats": "Their pace line 'about 60 points per week' never says whether it is realistic, and their Score gap tile shows only now and target.",
+    "effort": "M",
+    "needs": "Proposal 1; estimate.mean3 (R16); the plan's adherence stats."
+   },
+   {
+    "title": "Dress rehearsals at test time",
+    "what": "In Final, the plan schedules two full Math sections (2 modules, timed, official tools) at the exam's weekday and start time. For a Saturday 8:00 exam, that is the two Saturdays before it, and the plan asks to move that weekend's rest day to Sunday. The glance confirms 'Rehearsals Oct 24 · Oct 31, 8:00'. The rehearsal report compares with the previous rehearsal: band, route, pace, and sure-but-wrong count. The eve checklist links from it. WHAT THE STUDENT DOES DIFFERENTLY: sits the test twice at test time, in test conditions, before it counts.",
+    "beats": "Their plan draws on 10 papers with 1 free attempt, so it cannot schedule fresh full tests, and 'Solve a practice exam every day' needs 150 minutes a day.",
+    "effort": "S",
+    "needs": "POST /api/mock/new full (S5); a plan test override on a rest day (existing overrides); preferred time."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Landing hero, stat cards, how it works",
+    "spec_says": "A hero with preview tiles (Math now, Next SAT, Open mistakes); BankStats (∞ sections, 386 types, one named mistake); HowItWorks; an Example day; the plans list.",
+    "why_only_parity": "Same structure as theirs (hero, 3 stat cards, 3 how-it-works cards, plans list). The stat cards still describe the bank, not the student.",
+    "upgrade": "The hero preview shows the student's top 3 from the points map ('Circles about 12 pts · Nonlinear functions about 9 · Percentages about 6') and their routing status. BankStats becomes 'What a plan fixes first', built from their data. A new student sees the 12-question placement CTA."
+   },
+   {
+    "feature": "Wizard step 1: where you are",
+    "spec_says": "A slider and number field, a SourceNote from results, an optional R&W field, and a link to the diagnostic.",
+    "why_only_parity": "Theirs is sliders prefilled from results. Ours is the same input plus a link to leave the wizard.",
+    "upgrade": "The 12-question placement inside the wizard (proposal 10) fills the score and per-domain stats. The start shows its band, not a single number."
+   },
+   {
+    "feature": "Wizard step 2: pace line and tag",
+    "spec_says": "A PaceLine with Steady / Ambitious / Very ambitious from fixed heuristic thresholds, pace on each date chip, and a later-date suggestion.",
+    "why_only_parity": "Their live pace line plus a fixed tag. Neither is based on evidence (the spec's own open question admits the thresholds have no source).",
+    "upgrade": "Tag from measured gain rates: the student's own sittings when there are 2 or more, otherwise pooled learners at the same starting band and minutes (n of 20 or more), shown as 'students starting near 560 with 45 min a day gained a median 9 a week'. Add the dynamic route-up line when the target is above 580 and the start is at or below it."
+   },
+   {
+    "feature": "Wizard step 3: time you have",
+    "spec_says": "Minutes chips, a days slider, weekday tiles with per-day minutes, days off, test rhythm, size and day, clock mode, preferred time, a totals line.",
+    "why_only_parity": "Their chips, slider, STUDY/REST tiles and exam toggle, extended. It is still only a time budget.",
+    "upgrade": "Add the when-and-where cue and the minimum day (proposal 11). Each minutes chip shows its projected effect (proposal 12). The clock becomes the per-skill pace ladder (proposal 7)."
+   },
+   {
+    "feature": "Wizard step 4: focus per domain",
+    "spec_says": "Focus / Normal / Strong per domain and skill, caps of 2 domains and 6 skills, a threshold-based Suggested tag, SplitBar.",
+    "why_only_parity": "Same model as theirs: the student hand-picks focus areas under a cap, and the suggestion is a threshold rule (weakest below 0.8, a third of the mistakes).",
+    "upgrade": "Default to 'Plan by points', re-decided every week from the points map. Manual states become overrides that show their cost ('Strong on Algebra gives up about 6 pts'). The caps are only a guard, because the allocator already spreads by marginal points."
+   },
+   {
+    "feature": "Include vocabulary / Words task",
+    "spec_says": "Step 4 Extras list Rechecks, Question of the day and Daily challenge. The Task kinds are fix|recheck|focus|test|custom|qotd|challenge|extra. There is no words kind, and no words acceptance check in the Plan section.",
+    "why_only_parity": "Below parity inside the Plan spec itself. Theirs has Vocabulary and Flashcards task types and an 'Include vocabulary practice' toggle. The Words spec defines a Words task and a step-4 row, but the Plan spec's task model, day budget and acceptance leave it out, so S7 could ship without it.",
+    "upgrade": "Add kind words to the Task model and to the day budget (as the Words spec says: due × 10 s + new × 25 s, capped at a third of the day), plus the step-4 Words row and an acceptance check. New Math-language words are drawn first from the stems of questions the student missed in this week's focus skills (the from_mistakes words)."
+   },
+   {
+    "feature": "Stat tiles",
+    "spec_says": "Days to exam; Score (start → target, pace status chip); Plan done % over study days; This week (minutes, day dots, streak with longest).",
+    "why_only_parity": "The same four facts as theirs (days to exam, streak, plan complete %, score gap), better drawn.",
+    "upgrade": "Replace Plan done % as the headline with 'Exam-ready skills 11/19' (mastery at Getting there or better, recalled clean in the last 14 days, at pace), with adherence as its sub-line. The Score tile adds the projected exam-day band."
+   },
+   {
+    "feature": "Today card and day progress line",
+    "spec_says": "'2 of 4 tasks · 12 of 45 min · 33 min left', Day done / Rest day footers, Keep going.",
+    "why_only_parity": "Their 'N of M done · X min left · Y min planned', word for word.",
+    "upgrade": "Add what the day buys ('about +3 pts · closes 2 traps · 6 recalls due'), the Minimum day button, and the when-and-where line."
+   },
+   {
+    "feature": "Task row actions",
+    "spec_says": "Start / Resume / Review, Skip, Mark done, Move to, Swap topics, Make it a section, Again · new questions.",
+    "why_only_parity": "Their Skip / Mark done / launch / Practice again / Undo, with more ways to move tasks.",
+    "upgrade": "Each task states its exit goal ('Done when: 4 right in a row on Circles') and ends early on mastery (proposal 9). Skip asks one reason (Too long / Too hard / Not today) that feeds the allocation: Too hard → a Learn task; Too long → a shorter-day suggestion."
+   },
+   {
+    "feature": "Why this?",
+    "spec_says": "Fact lines: open mistakes by name, accuracy, days since last worked, focus share, clock reason.",
+    "why_only_parity": "The same slot and purpose as their aiReason. Facts instead of prose, but no value and no trade-off.",
+    "upgrade": "The first line gives points and rate ('about +3 pts for 15 min, the best rate on today's list'), and one line gives the cost of skipping ('skip → Circles moves to Thu, about -1 pt')."
+   },
+   {
+    "feature": "Custom tasks",
+    "spec_says": "Title, minutes and repeat, ticked to mark done; a quick-add chip for an official Bluebook practice test.",
+    "why_only_parity": "Their CUSTOM task with Mark done, plus repeats.",
+    "upgrade": "Ticking a Bluebook test task asks for the Math score (written to outside_scores, so it joins mean3 and drift) and offers 'Log misses': for each missed question, pick the skill and the misconception from our list, and each becomes a trap with fresh-number drills (Shell's Log a mistake). Own tasks can run a timer, so their minutes are measured rather than assumed."
+   },
+   {
+    "feature": "Week view",
+    "spec_says": "'Week 3 of 7', tasks %, a theme line, pager, seven day columns.",
+    "why_only_parity": "Their week header, pager, day tiles and theme sentence.",
+    "upgrade": "A weekly goal line ('By Sun: Circles to 75%, close 3 traps'), checked by the delayed Checkpoint and the review screen (proposal 8)."
+   },
+   {
+    "feature": "Behind banner",
+    "spec_says": "Fits the plan to the minutes you actually study, previewing questions and pace.",
+    "why_only_parity": "Their 'Rebalance my plan', made concrete. It still only shrinks the plan.",
+    "upgrade": "When it shrinks, it picks by points and says what stays: '25 min keeps about 80% of the projected gain · drops focus on Evaluating statistical claims and Probability · keeps Fix and Recall'. It offers a week of minimum days as the other choice."
+   },
+   {
+    "feature": "Drift banner",
+    "spec_says": "mean3 up, down or target reached, asking whether to restart from it; Not now is remembered on the server.",
+    "why_only_parity": "Their drift banner, in both directions.",
+    "upgrade": "Apply it automatically with Undo ('Start moved to 650 from your last 2 tests · Undo') and show the new pace. On Target reached, offer the next target with what it means for routing and hard questions."
+   },
+   {
+    "feature": "Progress tab charts",
+    "spec_says": "ProgressCard, study time per day (studied vs planned), trajectory, accuracy by domain weakest first, plan split by task type, gaps card.",
+    "why_only_parity": "Three of these are their charts: accuracy by domain weakest first, study time studied vs planned, and time split by task type.",
+    "upgrade": "Replace the split by task type with 'Time vs points' (minutes spent per skill against points open per skill, which shows misallocation). Show points recovered per skill instead of domain accuracy. Add the Traps table (proposal 3), Calibration (proposal 6) and the coverage strip (proposal 2)."
+   },
+   {
+    "feature": "Plans tab",
+    "spec_says": "List with status, built date, days left, tasks done, activate, duplicate, remove, older-plan banner.",
+    "why_only_parity": "Their History tab, with Duplicate added.",
+    "upgrade": "A finished plan shows a review row ('38 of 44 days · 29 h · 560 → 690 · about 4.5 pts per study hour'). 'Plan the next one' carries forward the minutes a day the student actually kept, not the ones they set."
+   },
+   {
+    "feature": "Dashboard Today's plan card",
+    "spec_says": "Counts, minutes left, the first undone task as the pill, checkboxes for own tasks, Full plan.",
+    "why_only_parity": "Their 'Today's Plan' card.",
+    "upgrade": "Lead with the single highest-rate next action and its one-line reason in points, plus Minimum day and the when-and-where line."
+   },
+   {
+    "feature": "Toasts",
+    "spec_says": "Skipped, Moved, Marked done, Task removed, Day off, Plan archived (with Undo); Task added, Plan updated, and similar.",
+    "why_only_parity": "Their toast set, with Undo added.",
+    "upgrade": "Add toasts for learning events: 'Trap closed: diameter as radius · check-in Sep 26', 'Circles reached Strong', 'Routed up · 15 of 22'."
+   }
+  ]
+ }
+}

@@ -1,0 +1,30 @@
+{
+ "label": "verify: equivalent_expressions",
+ "key": "v2:54c2d9ca2c1ef553113577957334b755467ff1b68ee1ce9ead1aab375e1d15ea",
+ "result": {
+  "pass": false,
+  "evidence": "Checked on the detached branch v2/t-bank-all at a6bc1b6, against master at 59caa25 (unpacked with git archive into scratchpad/eqx327/master). Nothing was committed.\n\n1. MCQ identical to master: PASS. I dumped every field of the Item dataclass for all 21 equivalent_expressions templates, seeds 0-80, with default settings. For the three templates that take fmt (match_constant, factor_constant, divide_remainder) I also dumped fmt=\"mcq\" and fmt=\"spr\". That is 2187 records, compared by repr on master and on the branch. Every field other than spr_mistakes matched: 0 differences, 0 errors. No MCQ item carries spr_mistakes.\n\n2. Grid-ins differ only in spr_mistakes: PASS. The same dump covered 369 grid-in draws, all identical to master apart from spr_mistakes. Only eqx.match_constant (99 draws) and eqx.divide_remainder coef_sum (32) name mistakes. coef_combination, exponent_value and factor_constant (cubic_root) are grid-ins without them; tools/spr_coverage.py reports 2 of 5 for this topic. That is a coverage gap, not a correctness defect.\n\n3. Reasons are real: the arithmetic is right everywhere, but some reasons are not plausible routes.\n- I recomputed about 40 random distinct grid-ins by hand from the stem, covering every shape (factor_out, factor_pair, rational, scale, expand_sub, cubic_pair, coef_sum). Examples: (py+3)(6y²−ky+3)=36y³−30y²−6y+9 gives p=6, k=8 and key 48, and 3k=24, 36 and p+k=14 are all correct. 20/(5t+50)≡4/(t+c) gives c=10, and 5·50=250, 20, 4+5=9 and 50/4=25/2 are all correct. (t²+11t+24)/(t+3)=t+8 gives key 9, and 8, 1 and 1+3=4 are all correct.\n- I then wrote a separate script (scratchpad/eqx327/recompute.py) that parses every printed stem. It solved 3679 distinct grid-ins from seeds 0-2999 and re-derived each spr_mistakes value from its reason: 0 mismatches.\n- Dropping the mislabelled entries (the `off` indices and mistakes[:2]+mistakes[3:]) is correct. Each dropped value really does differ from what its words say: −d not d, a·d not 2ad, |gathered| and e−m, and 1+r not 1−r.\n- What fails is plausibility. Three reasons are the official MCQ distractor values with a label reverse-engineered to fit, not routes a student takes to find the letter. One reason's words do not describe how its value arises. All are listed under defects.\n\n4. Gate: `PYTHONPATH=. python3 -m satbank check --topic equivalent_expressions` prints PASS (70/70 coverage, transcript and acceptance, 6,300 items audited, 22,143+ distinct items).\n\nVerdict: MCQ identity, spr-only difference, value arithmetic and the gate all hold. It still fails rule 3 on plausibility and wording, so pass=false. Each fix must go through `off`, not rewording, because rewording would change MCQ output against master.",
+  "defects": [
+   {
+    "where": "satbank/topics/equivalent_expressions/families/constants.py:55 (match_constant, shape factor_out, mistake index 1)",
+    "what": "Grid-in reason \"doubled the coefficient of v²\" (value 2c). Example: '4y² + py is equivalent to y(4y + 5)' names 8. The arithmetic is right, but no route to the letter doubles the v² coefficient. It is official item 1.4's distractor 4 with a label made to fit, so a student who types 8 is told of a mistake they did not make.",
+    "fix": "Add 1 to `off` for factor_out, making off = (1, 2), so the grid-in keeps only c and c·k. Do not reword it, because that would change MCQ reasons against master."
+   },
+   {
+    "where": "satbank/topics/equivalent_expressions/families/constants.py:56-57 (match_constant, shape factor_out, mistake index 2)",
+    "what": "Grid-in reason \"took twice the coefficient of v² away from the number inside the parentheses\" (value k − 2c). Example: y(4y + 5) names −3, and w(2w + 9) names 5. The arithmetic matches, but it is not a coherent way to find the letter. It is official distractor 3 (7 − 2·2) given an after-the-fact label.",
+    "fix": "Include index 2 in `off` for factor_out, together with index 1 above."
+   },
+   {
+    "where": "satbank/topics/equivalent_expressions/families/constants.py:103-104 (match_constant, shape rational, mistake index 2)",
+    "what": "Grid-in reason \"added the coefficient of the variable to the new numerator instead of dividing\" (value a/m + m). Example: 20/(5t + 50) ≡ 4/(t + c) names 9 (= 4 + 5), and 24/(6w + 18) names 10. The new numerator plays no part in finding c, so this is not a plausible route. It is official item 2.25's distractor 10 reverse-labelled.",
+    "fix": "Set off = (2,) for the rational shape, so the grid-in keeps m·mk, a and mk/(a/m)."
+   },
+   {
+    "where": "satbank/topics/equivalent_expressions/families/constants.py:155 (match_constant, shape expand_sub, mistake index 2)",
+    "what": "Grid-in reason \"used the constant term instead of the coefficient of the variable\" (value m·c). Example: 4(2n² + cn + 4) − 24n(c + 6) ≡ 8n² − 284n + 16 names 16. The words describe using the constant term in place of the v-coefficient when solving, but matching the constant terms (16 = 16) contains no letter and yields no value. 16 only comes from typing the printed constant term as the answer, which the words do not say. It is weakly plausible and the words do not match the value.",
+    "fix": "Add 2 to `off` for expand_sub, making off = (0, 1, 2) and keeping only 'changed the sign of the letter' (−k). Alternatively, give the grid-in its own Mis whose words match the value, such as 'reported the constant term of the second expression', while leaving the MCQ mistake list unchanged."
+   }
+  ]
+ }
+}

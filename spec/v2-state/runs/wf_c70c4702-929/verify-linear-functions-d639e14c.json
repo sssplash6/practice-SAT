@@ -1,0 +1,35 @@
+{
+ "label": "verify: linear_functions",
+ "key": "v2:48d1d5525d4f8bf44912621f7ea81976548f3c23771c162e7de1ae7fd639e14c",
+ "result": {
+  "pass": false,
+  "evidence": "I checked out v2/t-bank (9403838) and v2/t-bank-linear_functions (1e696b8) detached, each in a fresh worktree. I committed nothing, and I removed both worktrees when I finished.\n\n(1)+(2) Dump: all 23 lin.* templates × {default, fmt=mcq, fmt=spr} × seeds 0-80, plus all 86 source items with their audit results. Every Item field except spr_mistakes is serialised: stem, choices, reasons, latex_choices, answer, key, rationale, params, table, figure, skill, difficulty. Both files are 5,759 lines and diff finds no difference, so multiple-choice output is identical and grid-ins differ only in the new field. On both sides, 39 lin.affine_conversion fmt=mcq seeds hit the same AuditError, and the 12 templates without fmt raise TypeError. Nothing new fails. Before the change every grid-in had spr_mistakes=[]; after it, all 1,125 grid-in rows carry a non-empty list.\n\n(3) I picked 15 random grid-ins, one per template plus 4 extra, and recomputed every value by hand. The arithmetic is right in every case. I also recomputed one item for each sub-branch (evaluate quotient/sign/structural/given, coefficient m-unknown and m-value, combine same_function, inner_scale value, table_facts value and slope, graph_read value, affine change, model_value inverse/scale/structural, two_points demand); the arithmetic is right there too. An automatic scan of 1,111 grid-ins found no entry that is None, none that grid_equal reads as the key, and no duplicates.\n\nSeveral labels, though, do not produce their values. All of them are inherited from the multiple-choice reasons; the defects below list them.\n\n(4) PYTHONPATH=. python3 -m satbank check --topic linear_functions prints PASS: 6,900 items re-derived, 100% of distractors named, exit 0.\n\n(5) tools/spr_coverage.py shows linear_functions at 11 of 11. All 11 fmt==\"spr\" returns in the families pass spr_mistakes. The 12 remaining templates take no fmt, and none of them produced a grid-in in any seed.\n\nThe y_intercept guard `ex(-b/m) if m else None` is needed: without it, an explicit m=0 grid-in, which works on base, would raise. The trade-off is that an explicit m=0 multiple-choice item, which raised ZeroDivisionError on base, now builds and passes the audit. No seed or source reaches m=0.\n\nOut of scope, already on base and left alone because grid-ins must not change:\n- lin.coefficient default seed 39 draws x2 == x1, so it asks for the j(13) the stem already gives, and its rationale says \"m = 435\".\n- model_value's approx grid-in stems still say \"which of the following is closest to\".\n\nFiles: /private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/verify_lf_v/{dump.py,base_main.txt,after_main.txt,base_sm.txt,after_sm.txt,gate.txt,cov.txt,pick.py}",
+  "defects": [
+   {
+    "where": "satbank/topics/linear_functions/families/define.py x_intercept, `named = wrong if given == \"table\" else wrong[:3]`",
+    "what": "Table grid-ins keep \"stepped one row too far along the table\" with value key - M. The table rows step by 1 in x, so one row too far is key +/- step, never key - M; the drawn slopes are |M| >= 2, so this label is wrong on every table item. Example: seed 1 (fmt=spr), with table x=6..9, h(x)=6x+19 and key -19/6, names -55/6. The builder chose to keep this entry for tables.",
+    "fix": "Always use wrong[:3] for the grid-in. Relabel the MCQ reason separately if wanted, since that changes MCQ output."
+   },
+   {
+    "where": "satbank/topics/linear_functions/families/context.py model_value, wrong == \"given\" cands",
+    "what": "When m >= 0, the third candidate is m*x - b (the starting amount subtracted), but it is labelled \"left out the starting amount\", the same reason as the fourth candidate m*x. A student who subtracts the starting amount types exactly this value, and the grid-in would file it under the wrong misconception. Examples: seed 9 (fmt=spr) names 5/2 as \"left out the starting amount\" while 14/5 is the real left-out value; source 2.1 names 7/5 alongside 2.",
+    "fix": "In the grid-in list, drop the m*x - b entry when m >= 0, or fix the template label in its own change (this touches MCQ reasons). The shared spr_mistakes list must never carry a value its reason does not produce."
+   },
+   {
+    "where": "satbank/topics/linear_functions/families/context.py context_two_points predict, Mis(\"used the nearer reading unchanged\", y1)",
+    "what": "y1 is the farther reading in every year-context item (x1 < x2 < x3), and in the demand context whenever x3 is closer to x2. Examples: seed 20 (spr) names 88 (1991) when 224 (2008) is the reading nearer 2017; demand seed 0 names 16,273 when 14,061 is nearer $44. A typed y1 is filed under a reason that does not produce it.",
+    "fix": "Name this entry in the grid-in list only when |x3 - x1| < |x3 - x2|; otherwise drop it. Or correct the label or value in the template in a separate change that accepts the MCQ difference."
+   },
+   {
+    "where": "satbank/topics/linear_functions/families/context.py context_two_points predict, approx items (PREDICT_CTX[0], \"To the nearest whole number\")",
+    "what": "The grid-in mistakes keep unrounded values such as 8,131/25 (325.24), 379/2 and source 2.11's 4,973/20, but the stem asks for a whole number. grid_equal(\"325\", \"325.24\") is False, so these entries can never match a typed answer. That affects 45 of the 47 approx grid-ins across seeds 0-80. model_value already rounds its approx mistakes with q(round(v)).",
+    "fix": "When P[\"approx\"], round each grid-in mistake value to the nearest integer before gridin_mistakes, matching model_value; gridin_mistakes then drops any that round onto the key. The MCQ list stays as it is."
+   },
+   {
+    "where": "satbank/topics/linear_functions/families/basic.py inner_scale ask=constant, Mis(\"divided the stated value by the argument\", (value - d)/k)",
+    "what": "Minor: the value is (value - constant)/argument, the reciprocal of c, not stated value / argument. Seed 21 (spr) names 38/9 where 42/9 would be the stated value over the argument, so the label is loose for the value it names.",
+    "fix": "Optional: relabel in a separate template change (for example \"inverted the answer, dividing the remainder by the argument\"), or accept it as it is."
+   }
+  ]
+ }
+}

@@ -1,0 +1,196 @@
+{
+ "label": "experience: compete",
+ "key": "v2:25352375cca7d4ad675c6cba9701c82a3e99752bb676743ac1f05a6b1c7bea45",
+ "result": {
+  "proposals": [
+   {
+    "title": "Never an empty board: honest pars, personal ghosts and expected field stats",
+    "what": "The dev DB has 7 learners and 3 challenge sittings. The spec shows field % at >=5 answers, top % at >=10 players, the podium at >=3 and the percentile at >=20, so almost every student would see 'No one has finished yet', as TopTierPrep does. Add computed benchmark rows to every contest board.\n\nPar rows:\n- Rows for Level 3, 5, 7 and 9, and 'Your level' when it isn't one of those.\n- Styling: dashed-outline row, flag glyph, no rank numeral.\n- Each row reads 'Level 5 par · 6.8/10 · 171 pts'.\n- Placed at their points value between real players.\n- They never count toward players, ranks, top % or the podium.\n\nPar formula, for rating R at the level's midpoint over the contest's own slots:\n- E_i = 1/(1+10^((Ri-R)/400)), with Ri from item_ratings (priors 900/1100/1300).\n- Points = Σ E_i × tier_pts + 5 × Σ E_i × q_i + 10.\n- q_i = the share of that (template, tier)'s rated right answers given within 95 s (prior 0.75).\n- The label reads 'par (estimated)' until every slot's item has n >= 30 rated answers.\n\nPersonal rows:\n- 'Your best Daily · 230'.\n- 'You, last 7 days avg · 184'.\n\nPlacement line on the result panel: 'Between Level 5 and Level 6 par · beat your 7-day average by 12'.\n\nVerdict line when fewer than 5 have answered the slot: 'Expected for Level 4: 58% get this right', labelled expected, from the same E. It switches to the real '62% of 37' once there are 5.\n\nRating leaderboard: the level thresholds become separator rows ('Level 5 · 1,251').\n\nToggle and empty state:\n- A 'Pars' switch in the board header, on by default, stored per viewer in localStorage.\n- The Leaderboard's empty period shows the par ladder with 'Your spot appears after your first ranked contest', instead of a blank table.",
+    "beats": "TopTierPrep's Global Leaderboard card says 'No rankings yet. Finish a contest to be the first on the board.' All three of their competition pages were empty on both walks. Ours places the student meaningfully from their first sitting, with no one else on the site, and never invents people.",
+    "effort": "M",
+    "needs": "item_ratings with priors and compete.rate (§3.7.5 rating); level ladder (spec/rating.md); attempts.sms (R8) for q_i; board() gains a pars[] list, rendered by UI.board (S8 compete-ui.js)."
+   },
+   {
+    "title": "Race links: async head-to-head against a ghost, no live infrastructure",
+    "what": "Copy result and a new 'Race link' action put `&vs={pid}` on the contest URL.\n\nThe friend's lobby:\n- Reads 'Race Ada · 8/10 · 170 pts · 11:42' with one Start pill.\n- Ghost chips: 'Ada (link)' · 'Your best run' · 'Rank above you' · 'Level 5 par' · 'No ghost'.\n- Defaults: Sprint defaults to 'Your best run this week'; a race link defaults to its sender.\n\nIn the runner, a race rail sits under the progress bar:\n- Two 6 px tracks: you in orange, the ghost in graphite.\n- A right-aligned line reads 'Ada ✓ 1:04 · you ✓ 0:51 · +0:13 ahead'.\n- The ghost's mark at slot k is revealed only after you answer slot k.\n- The server enforces this: GET /api/contest/{cid}/ghost/{pid}?upto=k returns marks and sms for slots <= your answered count, and never the ghost's numbers or picks.\n- Sprint positions the ghost by cumulative sms on the clock: 'Best run: 7 right at 2:41 · you 8'.\n- The rail is motionless apart from entry; the pref `race_rail` (default true) hides it.\n\nAt hand-in the Compare sheet opens on its own. 'Rematch' re-runs it as a ghost sitting (unranked, except a Sprint run).\n\nConsent and ranking:\n- Allowed ghosts are public rows, or anyone whose own race link you followed (sharing the link is the consent).\n- Racing never changes whether your sitting is ranked.\n- Twins make it fair: same slots, different numbers, so the ghost leaks no answers.\n- It works on closed contests and past days, so you can race a run from last Tuesday.",
+    "beats": "TopTierPrep has no head-to-head of any kind, their Share (navigator.share) froze the page, and contests are one attempt with answers hidden until the end. Ours turns a pasted text link into a one-tap race with no account. It covers open question 19 (live duels) without websockets.",
+    "effort": "M",
+    "needs": "compare() data and a new ghost endpoint (S8); attempts.sms per slot (R8); runner hook compete.state_extra for the rail (R28, S4); ghost sittings; a prefs key race_rail (F4 prefs.py)."
+   },
+   {
+    "title": "Debrief: where your points went, and the one fix that moves you up",
+    "what": "A 'Where your points went' block sits on the result panel above the mastery rows.\n\nPoints bar:\n- A stacked horizontal bar: '260 possible → 170 scored'.\n- Lost segments are labelled with count and points: 'Traps −50 (2)', 'Over SAT pace −15 (3 right but slow)', 'Skipped −30 (1)', 'Voided −0', 'Finish bonus −10'.\n- Each segment is a button that filters the Review section below to those questions.\n\nCounterfactual line, computed from the live board by re-scoring each lost question:\n- It names the single question worth the most rank places: 'Q6 right would have put you #2 (+30 pts) · one fix from the podium'.\n- Ties are handled with the same competition ranking.\n\nFix rows, one per cause:\n- Traps: the named misconception + '3 like this' (POST /api/drill templates).\n- Slow-right: 'Pace drill', a 5-question set on those templates with a 95 s per-question clock.\n- Rushed: a chip on wrong answers to easy items given in < 25% of that item's median sms.\n- Skipped: 'Try it now', inline.\n\nWeekly roll-up on Your rankings: 'This week: −210 pts to traps, 60% of it one trap: Swapped the columns' + 'Fix it'.",
+    "beats": "TopTierPrep's per-contest stats are five counts (Score / Correct / Incorrect / Skipped / Voided), answers are revealed only after the contest ends, and nothing leads back to study. Ours turns a result into a ranked to-do list with the exact rank gain of each fix, straight away.",
+    "effort": "S",
+    "needs": "finish_contest storing per-question points parts (S8); board() for re-scoring; attempts.sms (R8); POST /api/drill templates (R10, F5); UI.review filter hook (F3, R23)."
+   },
+   {
+    "title": "Live class mode: projector and phones, where twins stop neighbour-copying",
+    "what": "A class owner (R4) presses 'Run live' on a class contest. That opens /compete/live/?id=, a projector page built for 1280+.\n\nLobby:\n- The join code in 96 px mono, and the short URL /join/?c=.\n- Joined names appear as tiles, with a count.\n- A 'Hide names on screen' switch, on by default.\n\nPacing, chosen at start:\n- 'Own pace': each student sits it as a normal private contest.\n- 'Teacher-paced': the server holds a cursor. Students' runners show 'Waiting for Ms. Lee' between questions. The teacher presses Next (keyboard: Space / →), and each question has a 95 s answer clock.\n\nLive panel:\n- Per-question bars fill as answers arrive: '% right' plus the misconception bars ('Used the base angle… 9 of 24').\n- Per-student progress dots.\n\nEnd screen:\n- 'Where the class went wrong': the top 3 traps.\n- One button, 'Assign a repair to these 9', which creates Shell §7's 5-question assignment for exactly those students.\n\nTransport: polling GET /api/contest/{cid}/live every 2 s while the tab is visible; POST .../live {action: open|start|next|end}.\n\nTwins mean each phone shows its own numbers, so a neighbour's screen is useless and every student gets the key right after each question.",
+    "beats": "TopTierPrep's /teacher dashboard is hidden, async homework only, with no live mode. Kahoot-style tools have no named misconceptions and no per-student variants. Classes also bring whole cohorts in, which solves our small field.",
+    "effort": "L",
+    "needs": "S2 classes, members and assignments (R4); private and group contests (§3.7.3 §7); a runner 'waiting' state (S4, R28); new live endpoints in api_compete (S8)."
+   },
+   {
+    "title": "Personal records and an earned rank reveal at hand-in",
+    "what": "Records are tracked per kind:\n- best points, best top %, fastest perfect Daily, best Sprint, longest challenge streak, peak rating;\n- first time at each level.\n\nAt hand-in the result panel plays one entry-only reveal:\n- The board slice (you ± 2) appears with your row sliding into place, and the line 'Passed Grace and Ada · 15 pts to #3'.\n- PR chips appear: 'New best Daily · 245 (was 230)', 'First top 10%'.\n- prefers-reduced-motion or prefs.motion=reduce renders it static.\n- It never replays on reload (keyed by session in localStorage).\n\nPRs are marked everywhere:\n- History rows and chart points carry a small star glyph (our icon, no emoji).\n- The rankings summary gets a 'Records' row of tiles with dates.\n\nMonday recap card at the top of Compete Overview and on Today:\n- 'Last week: 5 Dailies · 1 Weekly · 620 pts (#12 → #8) · rating +41 · 2 records · top trap: Swapped the columns [Fix it]'.\n- It can be dismissed until next Monday.",
+    "beats": "TopTierPrep's achievements are four hard-coded tiles with no progress and a dead 'View All', and their result, when it exists, is a static number. Records motivate even with one player on the site, which our field needs.",
+    "effort": "S",
+    "needs": "history (GET /api/compete/history), board slice from board(); achievements engine for toasts (R25, S1); UI.toast (F1 kit.js); prefs.motion (F4)."
+   },
+   {
+    "title": "One-tap start, a Compete key map, a thumb bar and instant scope switches",
+    "what": "Step counts to take today's contest and see where you placed:\n- TopTierPrep: sidebar → Contests & Challenges → contest row → fullscreen confirm → sit → wait for the contest to close → sidebar → Contest Rankings → Contest Leaderboard picker → pick. That is about 8 actions and a wait, behind a Pro plan.\n- Spec: Today card → contest page → Start = 2 taps before Q1.\n- Ours: 1 tap. Today's card pill starts the runner directly once the rules have been seen (a server flag `rules_seen` per kind). The rules stay one tap away as a 'Rules' link in the runner's top bar. Rank shows at hand-in, 0 taps.\n\nAdd a 'Compete pages' row to the §2.8 map:\n- Overview: Enter starts or resumes the Daily.\n- Contest page: B board, R review, Y jump to your row, `,` `.` previous / next day (`[` is taken by the sidebar), C copy result.\n- Boards: J K / ↑ ↓ move row focus, Enter opens the row menu (Compare, Follow, Race), `/` finds a student (Leaderboard joins the pages where / focuses search), M and P cycle metric and period.\n- The `?` sheet lists them.\n\nPhone 390:\n- A 56 px bottom action bar on the contest page (Start / Resume / See board) sits above the tabs, in the thumb zone. It merges with the sticky you-bar.\n- Horizontal swipe (40 px threshold, pointer events) moves between questions in the review player only.\n\nSpeed:\n- After the first board load, the other scopes and the next page are prefetched.\n- Switching scope renders from cache in < 100 ms, then revalidates, with a meta line 'updated 12 s ago'.",
+    "beats": "TopTierPrep: roughly 8 actions and a contest-close wait to learn your placement, a forced fullscreen, no shortcuts at all, and a Share that froze the page. Ours: 1 tap to Q1, 0 to see your rank, and keyboard-complete.",
+    "effort": "S",
+    "needs": "UI.keys registry and the §2.8 table (F2, R22); a per-kind rules_seen flag (F4 prefs or a learners column); UI.board caching (S8)."
+   },
+   {
+    "title": "Follow and rivals: a friends board without making a class",
+    "what": "Following:\n- Every named, public board row gets 'Follow' in its ⋯ menu (and F on keyboard).\n- A new table follows(learner, pid, at) is private, holds up to 50, and has no follower lists or messaging.\n- A 'Following' scope appears on every contest board and on the Leaderboard. You are always included.\n- Students who switch to hidden drop out of it.\n\nFind a student:\n- A field on the Leaderboard jumps to a public name's row, since names are unique (R12).\n\nRival:\n- Your rival is the public student directly above you on this week's Points board.\n- Overview's stats card shows 'Rival: Ada · 20 pts ahead · one medium right at pace passes her', with a 'Race her' button that opens a race link on her last Daily.\n- Today shows the same line once a week.\n\nMy level scope: students at your level ± 1, a fair board for a Level 3 on a site whose top is Level 9.",
+    "beats": "TopTierPrep's only scopes are Global ↔ Country. In our spec a friends board needs a class, and creating one needs a saved email (R4). Following needs one tap and nothing else.",
+    "effort": "S",
+    "needs": "follows table (F4 schema §2.5); board()/leaderboard() scope 'following' and 'level' (S8); R12 public names; race links (proposal 2) for 'Race her'."
+   },
+   {
+    "title": "Accommodated time (1.5x / 2x) in every contest, without stigma or loopholes",
+    "what": "Contests read the existing `prefs.test_timing` (official | x1.5 | x2).\n\nLobby:\n- Shows 'Your time: 1.5x · 23:45 answer clock' with a Change link. The link writes the same pref the test start sheet uses.\n\nClock and points:\n- The answer clock and the pace-bonus threshold scale (95 s → 142 s → 190 s). Points are otherwise identical.\n- Rating and level count fully, since they are time-neutral skill measures and the Rating board includes everyone.\n- Streaks, badges (with Pace setter's threshold scaled), review, field stats and Debrief all count.\n\nBoards:\n- Points and Season boards list extended sittings only under a scope 'Extended time'. The default Everyone board is official timing.\n- No row, chip or copied result ever shows the accommodation publicly.\n- The student's own you-bar says '#3 on the extended-time board'.\n\nIntegrity: claiming 2x removes you from the main points board, so it gains nothing.",
+    "beats": "None, they lack it. TopTierPrep runs contests at a fixed fullscreen time, and our Tests spec already notes they have no extended time while Bluebook does. As specced, our Compete would also shut out students with 504/IEP accommodations.",
+    "effort": "S",
+    "needs": "prefs.test_timing (F4 prefs.py); compete.clock scaling; a sessions.cfg timing field; a leaderboard scope 'extended' (S8)."
+   },
+   {
+    "title": "Trap Gauntlet: a weekly contest built from the field's most common misconceptions",
+    "what": "A new kind, `gauntlet-YYYY-Www`, live Monday to Sunday: 12 questions, twins, ranked once, rated, a 19:00 answer clock.\n\nSlot selection:\n- The 12 (template, reason) pairs most fallen-for across all ranked and practice attempts in the last 28 days, each needing >= 3 learners.\n- Until the site has that data, the prior is the medium and hard templates with the most distinct Item.reasons across surveyed seeds.\n- Each twin is drawn from seeds whose choices include the target misconception.\n\nIn play:\n- Every wrong pick shows the trap that caught you: 'Caught by: Swapped the columns (41% of the field)'.\n\nResult and board:\n- The result reads 'Dodged 9 of 12 traps · field average 6.4'.\n- Per-trap rows follow, each marked 'dodged' or 'caught'.\n- The board ranks traps dodged ↓, then answer time ↑.\n- The caught traps open in Review as usual, with 'Fix these 3'.\n- It joins the Contests list and season points.",
+    "beats": "None, they lack it. TopTierPrep has distractor-analysis prose but no structured misconception ids, so they cannot build a contest from 'what students fall for'. It turns our core data asset into a game that is also a lesson.",
+    "effort": "M",
+    "needs": "a site-wide traps aggregation (compete.traps over all learners); blueprint.survey reason counts; twin draw that filters seeds by a reason; compete.ensure schedule (S8)."
+   },
+   {
+    "title": "Board grid view: the whole field's answers at a glance",
+    "what": "Every contest board gets a 'List · Grid' toggle. It is gated like Review: after you finish, or after the contest closes everywhere.\n\nGrid layout:\n- Rows are players, paged 50, in rank order, with your row sticky at the top.\n- Columns are Q1…Qn, and each cell uses the §2.3 status tokens: right / wrong / skipped / voided, with glyphs.\n- A footer row gives % right and the median time per slot.\n- A column header's tooltip reads 'Q7 · Circles · Hard · 23% right · top trap: Used the diameter as the radius'.\n\nInteraction:\n- Click a column to open that slot's review item.\n- Click a row to open Compare.\n- Hidden students show as Anonymous in their real place.\n\nPhone: the grid scrolls inside its own box with a sticky name column. A Daily's 10 cells at 22 px fit at 390.\n\nThe same view is the public version of the owner results table (§4 owner controls), from one component.",
+    "beats": "TopTierPrep's table is RANK / USERNAME / ACCURACY / TIME. Ours shows at a glance where the whole field broke ('everyone missed Q7'), which twins make comparable slot by slot.",
+    "effort": "S",
+    "needs": "the per-slot marks aggregation already specified for /results (owner); a public variant behind the review gate (S8); UI.strip tokens (F1)."
+   },
+   {
+    "title": "Per-domain ratings and a level-to-score bridge",
+    "what": "Ratings:\n- Keep four more Elo ratings, one per domain, updated on the same rated answers with the same rule, from the item's domain (in a ratings(learner, domain, rating, rated) table).\n- Your rankings gets a 'Rating by domain' block: four bars with 32 px level badges, and a line naming the strongest and weakest: 'Geometry 990 · 2 levels below your Algebra'.\n- The Leaderboard's Domain select is enabled for the Rating metric ('Best in Geometry by rating'). The spec disables it.\n\nBridge:\n- On the rating chart and the level badge's tooltip: 'Students at Level 5 average 610–650 on timed Math sections (38 students)'.\n- It comes from learners with both a rating and estimate.mean3 (R16), and appears per level only when n >= 20. Otherwise it is hidden, not guessed.\n- The weakest domain's rating is exposed as a coach signal that Practice and Plan can read.",
+    "beats": "TopTierPrep has no skill rating; their 'Overall Score' metric is only a test number. Ours says which domain holds you back, and what a level means in SAT points, from real data.",
+    "effort": "M",
+    "needs": "a ratings table (F4 §2.5); compete.rate extended (S8); estimate.mean3 (R16, F4); Leaderboard domain × rating query."
+   },
+   {
+    "title": "Word Sprint: Reading & Writing enters Compete now, and contests become subject-aware",
+    "what": "Add a new always-live kind `words-sprint-YYYY-Www`:\n- 3 minutes, as many runs as you like, best run of the week counts, like the Math Sprint.\n- Items come from the Words section's quiz mode (definition → four word tiles) over the SAT word list and transitions (v2 decision 2).\n- The difficulty ladder rises every 8 questions.\n\nAdd `contests.subject` ('math' | 'rw') and a Subject select on the Leaderboard (All · Math · Reading & Writing).\n\nWord Sprint:\n- earns its own points: 10 / 20 / 30 by word difficulty;\n- appears in the Contests list and on Today;\n- counts for badges, but not for the Math rating;\n- ends with 'Missed words' added to My words due today.\n\nThis follows v2 decision 3: build subject-aware now, so full-SAT contests are additive later.",
+    "beats": "TopTierPrep's bank covers both sections (their contests were never seen live). As specced, our Compete is Math only. This gives R&W students a reason to compete today and prepares the model for the full SAT.",
+    "effort": "M",
+    "needs": "S9 Words quiz items and UI.workspace quiz mode (R21); a contests.subject column (F4); Leaderboard subject filter (S8); Words due-queue hook (S9)."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Leaderboard podium",
+    "spec_says": "§5: three cards in 2·1·3 order, heights 132/156/116, name + level badge + value + '82% · 1:34 avg'; empty cards read 'Open'.",
+    "why_only_parity": "TopTierPrep's Leaderboard hero reserves space for exactly this top-3 podium. Ours is the same object on a different ground, and it tells the 99% who aren't on it nothing.",
+    "upgrade": "Add a 'Your path' line under the podium, computed from the board: '#12 · 60 pts to top 10 · 140 to the podium · your average Daily is 170, so today's Daily can put you on it'. Each podium card opens that student's grid row or Compare. When the period has fewer than 3 players, show par rows instead of 'Open'."
+   },
+   {
+    "feature": "Leaderboard table columns",
+    "spec_says": "§5: Rank | Student | metric | Accuracy | Avg time | Contests (Rating adds Change).",
+    "why_only_parity": "TopTierPrep's columns are RANK / USERNAME / ACCURACY / TIME. Ours is theirs plus a Contests count.",
+    "upgrade": "Add a movement column: '▲3 / ▼1 / new' against a stored daily snapshot of ranks (24 h ago for week and month, the previous period otherwise). On desktop, add a 48 px 7-point sparkline of the metric per row. Add a Follow star, par rows (proposal 1) and level separators on the Rating board."
+   },
+   {
+    "feature": "Board navigation at scale",
+    "spec_says": "50 rows, then 'Show 50 more', then \"That's everyone: N students.\" Near me shows ±5.",
+    "why_only_parity": "TopTierPrep scrolls without end, then shows 'No more rankings yet'. Paging a long list is the same experience.",
+    "upgrade": "Add a 'Find a student' field (public names are unique under R12) that jumps to and highlights that row. Add a 'Go to rank' number field, J/K row focus with Enter for the row menu, and prefetch of the next page."
+   },
+   {
+    "feature": "Leaderboard scope",
+    "spec_says": "Everyone · Near me · Country · each class (R4) · exam date (R3).",
+    "why_only_parity": "Country is TopTierPrep's Global ↔ Country. The only friend-sized scope is a class, and creating one needs a saved email (R4).",
+    "upgrade": "Add 'Following' (follow any public row in one tap, no email; proposal 7) and 'My level' (your level ± 1), so a Level 3 student has a fair board on a site whose top is Level 9."
+   },
+   {
+    "feature": "How you placed in a contest (picker)",
+    "spec_says": "§6.3: a <select> of every finished contest, newest first, which shows a mini board inline (top 5 + you ± 2) and 'Open contest ›'.",
+    "why_only_parity": "It is TopTierPrep's Contest Leaderboard card ('Pick a contest you've finished to see how you placed') as a select. It also duplicates the Contest history table below it.",
+    "upgrade": "Remove the select. Every Contest history row expands inline to your answer strip, a mini board (you ± 2 plus #1), the gap to the next rank, the field's top trap, and Race / Review buttons. Rating and top % chart points open the same panel. One list replaces two, one tap instead of two."
+   },
+   {
+    "feature": "Badges / achievements",
+    "spec_says": "18 badges (merged into R25's engine) with rule, progress bar 'n/N', 'Earned Sep 19', a filter, and 'Next badges' (the closest 3) on Overview.",
+    "why_only_parity": "TopTierPrep has the same concepts (7-Day Streak, 1000 Solved, Consistency, Top Rank) as dead tiles. Making them actually work is table stakes, not a win.",
+    "upgrade": "Every unearned tile gets a 'Do it now' action that launches the exact activity: Pace setter → today's Daily with the pace rail; Trap hunter → 'Fix 3 now'; Sprinter → a Sprint run; Challenge week → the Daily. Show rarity from data once there are >= 50 active learners ('earned by 4%'). R25's tiers show as a 3-step ring."
+   },
+   {
+    "feature": "Rank snapshot (Overview Your stats, Me Boards block)",
+    "spec_says": "Tiles for week rank, all-time rank, country rank, points this week, contests and best finish; Me: 'Week #12 of 340 · Country #14 of 96 · All time #210 · Level 3'.",
+    "why_only_parity": "TopTierPrep's Performance Snapshot is Global Rank + Country Rank. Ours is more static numbers of the same kind.",
+    "upgrade": "Each rank carries its movement ('#12 ▲5 this week') and its next milestone in points ('40 pts to top 10%'). Add the rival line with a Race button (proposal 7) and a Monday recap (proposal 5)."
+   },
+   {
+    "feature": "Per-contest stats",
+    "spec_says": "Breakdown line '8 right · 1 wrong · 1 skipped · 0 voided', plus points parts '120 + 40 pace + 10 finish'.",
+    "why_only_parity": "TopTierPrep's contest stats are Score / Correct / Incorrect / Skipped / Voided: the same five counts.",
+    "upgrade": "Add the Debrief bar (proposal 3): points lost by cause as clickable segments, the single fix worth the most rank places ('Q6 right → #2'), and one drill per cause (trap drill, pace drill, rushed chip)."
+   },
+   {
+    "feature": "Contest integrity rules",
+    "spec_says": "Optional fullscreen; the open question is voided after >= 5 s with the tab hidden, or on copy/cut/paste; the too-fast rule is a median sms < 4 s with at least half right.",
+    "why_only_parity": "It is TopTierPrep's rule set (tab switch / copy / paste voids) with a 5 s grace. It also has a real flaw: Desmos is embedded in the page, not in an iframe (web/assets/ui.js:440), so copying an equation from the stem into our own calculator fires copy and paste on our document and voids a legitimate SAT workflow. A single median also misses one hard item answered in 3 s among slow easy ones.",
+    "upgrade": "Drop the copy/cut/paste voids. Twins already make copied text useless to others, and the real exit to a solver is covered by the tab-hidden rule, which stays. Add a per-answer plausibility check from each (template, tier)'s own sms distribution: a right answer faster than max(4 s, the item's p2) flags that answer, and 3 flags make the sitting unranked 'fast'. Show a 'Clean' mark on board rows with zero voids, so a clean run is visible and rewarded."
+   },
+   {
+    "feature": "Contest scoring and tie-breaks",
+    "spec_says": "10/20/30 by tier, +5 for a right answer within 95 s, +10 for finishing. The board sorts points ↓, then answer time ↑.",
+    "why_only_parity": "TopTierPrep: points by difficulty plus a speed bonus. The pace bonus caps speed, but the time tie-break brings back a raw speed race exactly where it matters: at the top of the Daily, where 260-point perfect runs are separated only by who rushed.",
+    "upgrade": "At equal points, answer times at or under SAT pace (950 s for a Daily, 95 s × n for private contests) tie and share the rank. Only time over pace breaks ties. The podium can hold several =1s, and the board shows '=1 · 4 perfect runs within pace'."
+   },
+   {
+    "feature": "Ranked pill and percentile on the score report",
+    "spec_says": "Through R16: a Ranked / Not ranked pill and 'Higher than N% of first standard sittings', shown when n >= 20.",
+    "why_only_parity": "TopTierPrep: 'Practice test — not ranked', or 'N% scored at or below you on their first attempt'. It is the same sentence.",
+    "upgrade": "Add a small histogram of band centres with your marker. Add a same-exam-date cohort percentile ('Among Oct 3 takers: 78% · 41 sittings'), shown at n >= 20. Link to your rank on the Test score leaderboard."
+   },
+   {
+    "feature": "Group / class contests and the owner results table",
+    "spec_says": "A private contest with a due time for a class (R4); owner controls; a results table Student | Status | Score | Points | Time | Q1…Qn with a % right footer; Copy / Download CSV.",
+    "why_only_parity": "TopTierPrep's hidden /teacher dashboard does async homework with due dates. Ours is the same, only visible and free.",
+    "upgrade": "Add Live class mode (proposal 4: projector view, teacher pacing, live misconception bars). The results footer also shows each question's top misconception, with Shell §7's 'Assign a repair to these N' wired to contest results."
+   },
+   {
+    "feature": "Sharing a result",
+    "spec_says": "'Copy result' copies plain text: the title, '8/10 · 170 pts · 11:42 · #4 of 37', a ■□· strip, and the contest link.",
+    "why_only_parity": "TopTierPrep's Share calls navigator.share (and froze). A Wordle-style text with a plain contest link does the same job without the bug, and gives the friend no reason to act.",
+    "upgrade": "The copied link carries vs={pid}. It opens a race against the sharer's ghost: the lobby shows \"Race Ada's 8/10 · 170 pts\" with one Start pill and the race rail in the runner (proposal 2). The share becomes a challenge that needs no account."
+   },
+   {
+    "feature": "Keyboard on Compete pages",
+    "spec_says": "§2.8 has Global, Runner, Player and Lists scopes. There is none for the contest page, boards, leaderboard or rankings.",
+    "why_only_parity": "TopTierPrep has no shortcuts. Ours has none on these pages either, so both are mouse-only here.",
+    "upgrade": "Add a 'Compete pages' row (proposal 6): Enter start/resume · B board · R review · Y jump to me · , . previous/next day · C copy result · J/K rows · Enter row menu · / find a student · M/P cycle metric/period. Also a 1-tap start from Today and a phone thumb bar."
+   },
+   {
+    "feature": "Contest timing for students with accommodations",
+    "spec_says": "Fixed clocks (Daily 950 s, Sprint 5:00, Weekly 35:00); prefs.test_timing is ignored by Compete.",
+    "why_only_parity": "TopTierPrep's contests are fixed-time fullscreen. Both shut out students with 504/IEP extended time, although our Tests section supports 1.5x and 2x.",
+    "upgrade": "Honour prefs.test_timing: scale the clock and the pace threshold, count rating, streaks and badges fully, and list the sittings in an 'Extended time' points scope. Nothing is ever marked publicly (proposal 8)."
+   },
+   {
+    "feature": "Hub leaderboard preview",
+    "spec_says": "Overview E: 'THIS WEEK · POINTS', the top 5 rows, then your row after a separator.",
+    "why_only_parity": "TopTierPrep's Contest & Challenges page has a Global Leaderboard card. Ours is the same card. The top 5 is the least useful slice for almost every student.",
+    "upgrade": "Show #1, then you ± 2 with movement arrows and the gap line ('15 pts to #3'). With fewer than 5 players, fill it with par rows and your personal best."
+   },
+   {
+    "feature": "Empty and small-field states",
+    "spec_says": "'No one has finished yet.' / 'No ranked contests yet this week.' with a link to the nearest non-empty period. Field % needs >= 5, top % >= 10, the podium 3 and the percentile 20.",
+    "why_only_parity": "TopTierPrep: 'No rankings yet. Finish a contest to be the first on the board.' With 7 learners in the dev DB today, both produce the same empty screens for a long time.",
+    "upgrade": "Proposal 1: labelled par rows from item ratings, personal-best and 7-day-average rows, an 'Expected for your level: 58%' verdict line until 5 real answers exist, and the level ladder as the Leaderboard's empty state."
+   }
+  ]
+ }
+}

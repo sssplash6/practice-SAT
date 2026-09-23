@@ -1,0 +1,194 @@
+{
+ "label": "outcomes: compete",
+ "key": "v2:6f8b14a7c002efa52e9525a5648d3e0d158207d270fcf86bf2c236fadd0035e0",
+ "result": {
+  "proposals": [
+   {
+    "title": "Encore: a 4-minute redemption and resurfacing round after every contest",
+    "what": "When a ranked contest ends (Daily, Weekly, Final, Private with reveal) or a ghost sitting ends, the result panel's primary pill becomes \"Encore · 4 questions · about 4 min\". The board moves to the secondary button. The Encore runs in the practice session with instant feedback, sessions.cfg {source:'encore', parent:<contest sid>}, and holds, in this order: (1) up to 3 of this sitting's misses, sure-and-wrong first (see Confidence), then misses that repeat an open trap. Each miss opens on a worked-example card: \"You picked B: {misconception from Item.reasons}. The move: {rationale}\" with \"Got it\". A twin follows: same template, tier and format, a fresh seed from the learner's own stream. Right = Redeemed. Wrong keeps the trap open with owed +1 and a check-in due tomorrow. Skipped questions come as a straight twin with no card, so retrieval comes first. (2) Up to 2 of the learner's due check-ins (R9, pool=checks). Encore points: 50% of the missed question's base points for each redeemed twin, and 15 for each clean check-in. They go into season points and league points, never onto that contest's board, so the board stays fair. The panel line reads \"Encore +40 · season 1,280\". The Encore stays open until the contest closes plus 24 h, and after that its misses sit in Review as normal. With no misses and nothing due, the primary becomes the next step with its reason: \"Pace drill: 2 right answers were over par\" or \"Hard-only rematch\". The student spends 4 minutes on exactly what they got wrong while the error is fresh, instead of closing the tab after seeing #14. The twin's new numbers test whether the fix transfers, and the check-ins give spaced retrieval of older errors. This removes repeat misconceptions, which is where most lost Math points come from.",
+    "beats": "TopTierPrep's \"Answers are revealed after the contest ends\": you read explanations days later if ever, and nothing asks you to prove the fix. Their contest ends at a number, and their QOTD \"More practice\" is generic. Ours turns every contest into a targeted fix-and-verify loop that is scored.",
+    "effort": "M",
+    "needs": "compete.twin_questions for a single slot (S8); R9 check-in pool and owed/due updates (F4); R10 drill body with source 'encore' and templates (F5); a worked-example card in UI.workspace inline mode (F3); season and league aggregation (S8); result panel hook in the practice session (S4, R28)."
+   },
+   {
+    "title": "Leagues ranked on learning value, with promotion and relegation",
+    "what": "Weekly leagues of up to 30 students of similar level in 6 tiers (1 Starter, 2 Climber, 3 Solid, 4 Sharp, 5 Elite, 6 Perfect 800). A student is placed by rating after the Placing period, and new students start in tier 1. A student joins the least-full open group of their tier when they earn their first points of the ISO week (lazy, no cron). Study points (SP) come from attempts: 15 for a clean right on a due check-in; 20 for closing a trap; 10 for a redeemed Encore twin; half the contest points for a ranked contest right; for any other right, round(10 × (1 − P)), where P is the Elo chance of a right answer from the learner's rating and the item's rating, so easy-for-you questions earn about 1 and stretch questions up to 10; 1 for a wrong answer; 0 for repeats (R8); a daily cap of 400. At Monday 00:00 UTC the top 5 promote and the bottom 5 of those who earned demote. The results are stored in league_weeks. Overview card: \"LEAGUE · SHARP · #4 of 27\", a zone bar with the promotion and demotion lines, \"85 SP to the promotion zone · 3d 6h left\" and ±3 rows. The Leaderboard gets a League metric: your group with zone separators, plus your SP by source (\"check-ins 120 · traps fixed 60 · contests 210 · practice 90\"). Cold start: with fewer than 20 active students in a week, everyone is in one group, the zones are the top and bottom 20%, and a line reads \"Leagues split at 20 players · 12 this week\". The student comes back on more days to hold their zone, and picks due check-ins, trap fixes and stretch questions because those pay most. That is consistent weekly practice on the material that raises scores, in a race everyone has a real chance to win.",
+    "beats": "TopTierPrep's Leaderboard is one global board (Weekly/Monthly/Yearly, Contest Points or Overall Score). Only its top can move, it rewards contest results alone, and it was empty on both walks. There are no similar-level groups, no promotion and no reward for fixing mistakes.",
+    "effort": "L",
+    "needs": "Learner rating and item_ratings (S8); R8 clean and repeat flags and R9 check-in and close events (F4); new tables league_groups(week, tier, gid) and league_members(week, learner, gid, sp, result) (F4); R25 achievements for promotions (S1); nav meta and Today card line (F2, S3); R12 board names."
+   },
+   {
+    "title": "The contest remembers: rematch slots at 1 day, 1 week and 1 season",
+    "what": "When ensure() builds a day's Daily, the slot with the same tier as yesterday's hardest slot is replaced by a twin of that slot: the lowest field % right among slots with at least 10 ranked answers, falling back to the slot with the highest share of its top misconception, and skipped when yesterday had no field. The swap is fixed once at creation. The ladder cell is tagged \"Rematch\", with the hover \"Yesterday 58% fell for 'swapped the columns'\". The Weekly Module replaces 3 tier-matched slots with twins of the week's three hardest daily slots. The Season Final replaces 5 with the season's top 5 field traps. Scoring is unchanged. The review of today's hardest slot carries the line \"Tomorrow's Q{n} is a twin of this one\" and opens expanded. The result panel reports \"Rematch: right (yesterday: wrong) · mistake closed\". The student reviews the hardest question after each Daily because it comes back tomorrow with new numbers, so every community trap is retrieved at about 1 day, 1 week and the season end. That is expanding-interval spacing built into the contest everyone already sits, and it stays fair because the slot is the same for everyone.",
+    "beats": "TopTierPrep's contests are independent one-offs, answers are revealed only after the end, and nothing comes back. Their 'Seasonal' is a label. Ours gives the review a concrete payoff the next morning.",
+    "effort": "S",
+    "needs": "compete.review field stats per slot (S8, already specced); ensure() reading the previous contest's stats; a ladder tag in the Overview and contest page UI (S8); twin_questions (S8)."
+   },
+   {
+    "title": "Triage coach and triage drills: time management from your own clock",
+    "what": "A \"Time\" panel on the result of every test-window contest (Weekly, Final) and every timed module, plus a compact version for the Daily. It shows a strip of bars, one per question in the order visited, with width proportional to time: orange right, graphite wrong, dashed blank, and a dashed line where the clock ran out. Its summary line reads \"Time sinks 2 (7:40, both wrong) · Rushed 1 · Blank at the end 2\". A counterfactual follows: \"Moving on at 2:00 on Q17 and Q21 leaves 3:40 for Q20 and Q22. At your 78% on medium that's about +1.6 right.\" It is computed from per-question dwell, par time and the student's P(correct). Par time per (template, tier) is the median sms of first-try right answers once there are 20 (priors: easy 60 s, medium 90 s, hard 130 s). A time sink is over 2× par and wrong. A rush is wrong under 40% of par. From the last 3 timed sittings, compare the student's accuracy by time spent (before and after each cut-off) and propose \"Your rule: flag and move at 2:15\", with one tap to save it as prefs.triage_cut. The test window then shows an opt-in move-on cue: a thin bar under the question that fills to the cut-off. A Triage drill (ranked weekly, also in practice): 12 questions, a 13:00 wall clock, free movement, 3 long hard items placed early and easy ones late, scored as normal, ending on the Time panel. The student learns to flag and return, finishes modules and stops leaving easy questions blank. One or two time sinks per module commonly cost several answerable questions at the end.",
+    "beats": "TopTierPrep's Time Analysis is \"Average seconds per answered question, by difficulty\" plus 'under pressure' copy. It is an average with no diagnosis, no counterfactual, no personal rule and no way to practise it.",
+    "effort": "M",
+    "needs": "Per-question dwell and trail in the test window (R7 qstate, S5); a par-time table from attempts.sms (S8); a prefs key triage_cut (F4, R11); a cue hook in the test window (S5); the Pace section on Your rankings (S8)."
+   },
+   {
+    "title": "Confidence stakes: calibration and priority by how dangerous an error is",
+    "what": "In contest sittings (and in practice by pref) a chip under the choices, \"Sure\" (the default) or \"Not sure\", toggled by K before Check. Points and rank don't change. Sure and wrong opens the trap flagged sure, with its first check-in due in 1 day instead of 3, puts it first in the Encore, and adds a Review filter \"Sure but wrong (n)\". Not sure and right files an R9 'unsure' item with a check-in in 3 days, because it is fragile. The result panel shows a 2×2 (Sure·right 6, Sure·wrong 1, Not sure·right 2, Not sure·wrong 1) and \"Calibration 8 of 10\". Your rankings tracks \"Sure answers right: 88% (aim 90%+) · Not-sure answers right: 40%\" over the last 30 contests. The badge \"Well calibrated\" needs 5 contests in a row with sure-accuracy ≥ 90% and at least one Not sure. The student makes a half-second judgment before each Check, and learns when to double-check or flag and move on under time. Confidently held errors are the ones that repeat on test day, and they stick best when corrected at once (the hypercorrection effect). Unsure-right answers are the next errors, so they are resurfaced before they become one.",
+    "beats": "TopTierPrep's contest stats are only Score/Correct/Incorrect/Skipped/Voided. No confidence is recorded anywhere in contests, so a lucky guess and real knowledge look the same, and nothing ranks errors by risk.",
+    "effort": "S",
+    "needs": "The K confidence chip in UI.workspace for practice-mode contests (F3); R8 guess and conf columns (F4); R9 due scheduling with a 1-day first check for sure-wrong (F4); Encore ordering (S8); R25 badge (S1)."
+   },
+   {
+    "title": "Par for you and a ghost of your best: competition that works with a field of one",
+    "what": "Every contest lobby shows \"Your par: 6.4 / 10 · 165 pts (Level 4)\". Par is the sum over slots of P = 1/(1+10^((R_item − R_you)/400)) using the slot's (template, tier) rating, and points par weights each P by the slot's points. Ladder cells get a par dot: solid = likely for you, hollow = stretch. After finishing: \"8/10 · +1.6 over par\". Your rankings adds a 'vs par' bar series over the last 30 contests, headlined \"+1.2 a contest over your last 10\". Placing students use 1000 with \"par estimate\". The runner header gets an optional ghost track under the progress bar, showing where a past run was at this point of the answer clock (question number and right count), read from stored per-slot sms and marks. A toggle chooses Ghost: Off · My best · Yesterday's me · {rival}, with My best as the default after 3 Dailies. With 3 on the board, par still says whether today was good for you. The student gets a personal target just above their level every sitting and sees day-to-day improvement even at #30. Par also corrects for the day's difficulty, so the student knows whether their practice is working.",
+    "beats": "TopTierPrep's Your Contest Stats reads \"Not ranked yet / Finish your first contest to get a global rank\". With an empty field (as on both walks) a rank means nothing. Ours gives a calibrated benchmark from the first sitting.",
+    "effort": "M",
+    "needs": "item_ratings with tier priors 900/1100/1300 and learner rating (S8); per-slot sms and marks stored on the sitting (S4, F4); a runner header hook via compete.state_extra (S4, R28); Your rankings chart series (S8)."
+   },
+   {
+    "title": "Async duels with a live-feeling ghost race and rivals",
+    "what": "\"Duel\" sits in every named board row's menu, on every result panel (\"Duel on these slots\") and in the Compete header. A one-step sheet asks for length (5 by default, or 10) and domain (All, one of the four, or 'My weakest'), then Copy link. There are no other fields; the full private-contest sheet stays for teachers. A duel is a private contest, kind 'duel', with twin slots and two seats. The challenger's run becomes the ghost, or \"They go first\" if the challenger sends without playing. /compete/duel/?c=CODE shows \"Ada challenges you · 5 questions · Algebra · Ada has played\", with her score hidden until you finish. During the run the ghost track shows Ada's progress by answer-clock time, and after each answer \"Ada: right · 0:58\". The result is a slot-by-slot Compare (spec). The winner has more right, then less answer time, and each rival keeps a W–L record. Answers are rated against items as in any contest, with no second rating. Rematch = new twins on the same slots. Overview: a Rivals tile (\"Ada 3–2 · Sam 1–0 · Rematch\"). Today: \"Ada challenged you · 5 questions · Play\". No sign-up is needed. The student plays extra 5-question interleaved sets because a friend sent one. Social commitment raises the number of study days, and the Compare shows the exact skill where the friend was faster or right, each with 'Another like this'.",
+    "beats": "TopTierPrep's Share calls navigator.share, which froze the page. They have no head-to-head at all, and one attempt per contest means no rematch.",
+    "effort": "M",
+    "needs": "The private contest model and code namespace (S8 §7, R4 db.new_code); twin_questions; per-slot sms; Compare (S8); the ghost track from 'Par for you' (S4 hook); R18 link handling; a Today card row (S3)."
+   },
+   {
+    "title": "A rating that speaks SAT: domain ratings, score band, forecast to exam date",
+    "what": "Four domain ratings (learners.ratings JSON: alg, adv, psda, geo), moved by the same item-Elo on that domain's rated answers. The overall rating weights them by the section's domain share (35/35/15/15). Rating maps to a Math band: fitted on learners who have a timed full-section estimate (R16) and ≥ 30 rated answers in the 30 days before it, once there are 30 such pairs. Until then a prior map from the level ladder applies, labelled 'rough' in R16's confidence wording. Your rankings header: \"Level 4 · 1,184 ≈ Math 560–610 (rough)\", with four domain bars, each showing its rating and ≈ band. The weakest domain gets a pill \"Train Geometry\", a rated 10-question set on that domain. The rating chart adds a forecast cone from the 30-day slope to exam_date and a target line from learners.target: \"At this pace ≈ 620 by Oct 3 · target 650 · gap 30\". The student sees which domain costs them most and trains it, and sees whether their current pace reaches the target before the test. That puts the hours where the score moves most.",
+    "beats": "TopTierPrep's 'Overall Score' metric and the profile's Global Rank 128 / Country Rank 43, shown with no contests played. These numbers say nothing about the SAT score or what to train.",
+    "effort": "M",
+    "needs": "Rating columns (F4); estimate.py for anchoring and confidence wording (R16, F4); target and exam_date (R15); a rated domain drill (F5 drill body); an optional forecast read by Plan (S7)."
+   },
+   {
+    "title": "Skill certificates earned by spaced, timed proof",
+    "what": "19 cells, one per skill, grouped in 4 domain rows on Your rankings (\"Certified 7 of 19\") and as a count on Me. A skill is certified when there are 3 first-try right answers in it (at least one hard, the rest medium or hard) on 3 separate local days, each at least 2 days after the previous counted day. Each must be within par time, and each is the first answer in that skill within its sitting, from a ranked contest, a check-in, an Encore or a 'Prove it' set, so massed practice doesn't count. A cell's states: Not started · 1 of 3 · 2 of 3 · Certified {date} · Renew (after 2 wrong first tries in that skill within 14 days). Tapping a cell shows \"Next proof: any day from Thu · a hard one still needed\" and the pill \"Prove it\", a rated 3-question set on that skill (disabled until the gap has passed). Badges build on it: all of a domain, all 19. The student comes back to each skill on spaced days under time instead of grinding it once. Spaced, timed, first-try success predicts test-day performance, while massed practice inflates mastery and fades.",
+    "beats": "TopTierPrep's Achievements are four hard-coded tiles (7-Day Streak, 1000 Solved, Consistency, Top Rank) with no progress or earned state and a dead View All. Their Badge Progress was empty.",
+    "effort": "M",
+    "needs": "The R25 achievements engine and earned table (S1); attempts.sms and the first answer per session (F4); par times (S8); a topic catalogue; a 3-question rated set via the drill body (F5)."
+   },
+   {
+    "title": "Season Final writes your last week",
+    "what": "After the Season Final the result panel adds \"Your last week\": a 6-day taper built from the Final's data. Day 1–2: an Encore of the Final's misses, plus the student's top 3 uncertified skills among the season's field traps. Day 3: a pace drill on the Final's worst pace row, or a triage drill when there were time sinks. Day 4: the Daily and its rematch. Day 5: a light mixed 10. Day 6 (eve): rest and the test-day checklist. Each task carries its reason (\"Why: Q17 time sink, 4:10\"). \"Put this in my plan\" writes the tasks into the active plan through Plan's task API, with Undo. A line above reads \"Final 610–750 vs target 650 · most likely gains: Geometry (41% right) and 2 time sinks\". The student spends the final week on the few fixes a realistic dress rehearsal exposed, not on a random last-minute test binge. That is where the last points come from, and a rested eve protects them.",
+    "beats": "TopTierPrep's 'Seasonal' contests are only a label. Their study plan never reads contest results (and failed 3 of 3 times on the live walk).",
+    "effort": "M",
+    "needs": "Plan's task create and update API and plan.today_summary (S7, R14); the Final's traps and Time panel (S8, S5); Encore (S8); SAT dates (R15)."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Contest scoring: points by difficulty plus a speed bonus",
+    "spec_says": "10 / 20 / 30 for each easy / medium / hard right, +5 for each right within 95 s, +10 for finishing with no skip or void.",
+    "why_only_parity": "It is the same formula as theirs (\"points by difficulty, plus a speed bonus\") with three coarse tiers. One flat 95 s for every question pays an easy answer at 90 s like a hard one, which is the opposite of the SAT habit of banking time on easy questions.",
+    "upgrade": "Pay the pace bonus against a par time per (template, tier): the median sms of first-try right answers once there are 20 (priors: easy 60 s, medium 90 s, hard 130 s). Show par on each ladder cell and in review (\"par 0:55\"). Once an item has 50 rated answers, set its points from its measured rating in 10-point steps, so a 'medium' that plays hard pays like a hard. Sub-line: \"120 + 35 at par + 10 finish\"."
+   },
+   {
+    "feature": "Integrity: fullscreen and voiding on tab switch, copy or paste",
+    "spec_says": "An optional fullscreen button. The open question is voided after 5 s hidden or on copy/cut/paste, with a banner, and scores 0. Voided counts are shown everywhere.",
+    "why_only_parity": "It is their punitive rule with a 5 s grace. A minor interrupted at home still loses the question, and 'voided' is a dead item.",
+    "upgrade": "Use twins to swap instead of void. After ≥ 5 s away, or on copy/paste, the open slot is replaced by a fresh twin (same template, tier and format, new numbers), so looking it up gains nothing. Answer-clock time already spent stays, and nothing is voided. Add Pause (P key): it hides the question, stops the clock and swaps the slot on resume. The breakdown shows \"Swapped 1\". Only 4 or more swaps in one sitting make it unranked (\"too many swaps\"). This needs twin_questions for one slot and attempts.void='swap'."
+   },
+   {
+    "feature": "Per-contest stats (Score / Correct / Incorrect / Skipped / Voided)",
+    "spec_says": "\"8 right · 1 wrong · 1 skipped · 0 voided\" on the result, review filters, history, Compare and owner results.",
+    "why_only_parity": "These are their exact buckets, renamed.",
+    "upgrade": "Split each bucket by cause from Item.reasons and traps. Wrong: \"1 repeat of an open mistake · 1 new trap: {label}\". Right: \"2 over par · 1 not sure\". Add \"Points left on the table: 50 (two traps you'd met before)\", which links to the Encore. History rows and Compare carry the same split."
+   },
+   {
+    "feature": "Global Leaderboard card on the hub",
+    "spec_says": "Overview E: THIS WEEK · POINTS, the top five with level badges, then a separator and your row.",
+    "why_only_parity": "It is the same card as theirs, and the top five of a global board are irrelevant to almost every student.",
+    "upgrade": "Use a 'next rung' layout: the two rows directly above you with the gap in plain terms (\"14 pts to pass Student 4F2A: one medium right at par\"), you, the one below (\"Sam is 6 behind\"), then the top 3 on one compressed line, and the league zone line when leagues run."
+   },
+   {
+    "feature": "Your Contest Stats / Performance Summary",
+    "spec_says": "Overview D and Your rankings §6.1: ten tiles (rating, ranks, contests, average, accuracy, best finish, podiums, points, season rank, streak) and a Top % / Rating chart.",
+    "why_only_parity": "These are counters of the same kind as their global rank and contests played. They describe, and with a small field they mostly read '—'.",
+    "upgrade": "Lead with \"vs par, last 10 contests: +1.2 a contest\", the rating's Math band (\"≈ 560–610\"), and one 'what's holding your rank' line from slot results (\"Geometry slots 41% right vs 78% elsewhere · Train Geometry\"). Add a vs-par series to the chart."
+   },
+   {
+    "feature": "Contest Leaderboard picker (how you placed)",
+    "spec_says": "Your rankings §6.3: a select of finished contests, newest first, a mini board (top 5 and you ± 2) and 'Open contest ›'.",
+    "why_only_parity": "It is their \"Pick a contest you've finished to see how you placed\", with a select instead of their picker.",
+    "upgrade": "Fold it into the history rows, which expand in place into a race replay: your rank after each question as a step line over answer time, and what would have moved you (\"one more right: #2 · the Q7 time sink cost 3 places\"), plus \"Sit its twins again (unranked)\"."
+   },
+   {
+    "feature": "Time Analysis",
+    "spec_says": "Pace with four views (by difficulty, by domain, right vs wrong, under pressure), your median against the field median and a 95 s SAT pace line.",
+    "why_only_parity": "It is more detailed than their chart but still read-only analysis like theirs, and nothing on it tells the student what to do.",
+    "upgrade": "Measure against par per difficulty instead of one 95 s line, and give every flagged row an action. \"Rushing on hard: wrong answers 0:31 faster\" gets 5 hard questions with a 1:30 minimum before Check. \"Slow on easy\" gets a fluency set of 8 easy at par 0:55. Test-window kinds link to the Triage coach."
+   },
+   {
+    "feature": "Badge Progress and profile Achievements",
+    "spec_says": "18 badges with progress bars and earned dates, merged into R25's engine, including 7-day streak, 1,000 solved, consistency, top ten and podium.",
+    "why_only_parity": "It contains their exact four tiles (7-Day Streak, 1000 Solved, Consistency, Top Rank), working this time, plus more of the same kind: volume and placement.",
+    "upgrade": "Drop the volume badges and add skill certificates (proposal) and badges for behaviour that moves scores: \"10 traps closed and still closed after 30 days\", \"Encore every day for a week\", \"Well calibrated: 5 contests at ≥ 90% sure-accuracy\", \"A Weekly with no time sinks\". Every locked tile carries the action that progresses it."
+   },
+   {
+    "feature": "Contest History",
+    "spec_says": "A table (date, contest, score, R·W·S·V, points, time, rank, top %, rating Δ, ranked, Review ›) with Kind and Sort filters and 20-row paging.",
+    "why_only_parity": "It is a record like their Your Contest History, and a row is finished once you have looked at it.",
+    "upgrade": "Each row carries what happened to its misses since: \"3 missed · 2 fixed since · 1 due Thu\", with Fix. Add a filter \"Has open misses (n)\", and 'Sit its twins again (unranked)' from the row."
+   },
+   {
+    "feature": "Leaderboard podium",
+    "spec_says": "Three cards in the order 2 · 1 · 3 with heights 132 / 156 / 116: rank, name, level badge, metric, accuracy and average time. Your card gets the amber edge.",
+    "why_only_parity": "It is their hero with room for a top-3 podium, and only the three strongest students can ever stand on it.",
+    "upgrade": "In the Week view, show three podiums side by side (swipeable tabs on the phone): Top points · Most improved (rating Δ) · Most fixed (traps closed and clean check-ins). A low starter can reach two of them."
+   },
+   {
+    "feature": "Leaderboard metric control",
+    "spec_says": "Points · Rating · Questions right · Test score.",
+    "why_only_parity": "It mirrors their Contest Points | Overall Score. Every metric measures level or volume, so the same strong students win every board.",
+    "upgrade": "Add Gain (rating change in the period; for tests, the estimate change since the student's first timed section) and Fixed (traps closed plus clean check-ins in the period). Make League the default metric once leagues run."
+   },
+   {
+    "feature": "Leaderboard scope (Global / Country)",
+    "spec_says": "Everyone · Near me · Country · each class, and R3 adds an exam scope for the 'right' metric only.",
+    "why_only_parity": "Everyone and Country are exactly theirs, and the exam cohort exists for only one metric.",
+    "upgrade": "Offer 'Same test date' for every metric, as the default for any student with an exam date (\"Road to Oct 3 · 212 students\"). Add 'Same start' (first estimate within ±50), the fair comparison for Gain."
+   },
+   {
+    "feature": "Leaderboard table columns",
+    "spec_says": "Rank | Student with level badge | metric | Accuracy | Avg time | Contests.",
+    "why_only_parity": "These are their Rank / Username / Accuracy / Time plus two columns.",
+    "upgrade": "Add a Trend column (up 3 since last week) and a Duel action in the row menu, so any row is one tap from a 5-question twin race against that student's ghost."
+   },
+   {
+    "feature": "Profile Performance Snapshot",
+    "spec_says": "The Me Boards block: \"Week #12 of 340 · Country #14 of 96 · All time #210 · Level 3 (1,084)\", '—' before the first ranked contest.",
+    "why_only_parity": "These are the same rank numbers as their Global Rank / Country Rank card, minus the bug.",
+    "upgrade": "\"Level 3 ≈ 520–570 Math · up 1 level in 30 days · League Sharp #4 · 7 of 19 skills certified\": rank movement and what it means for the SAT, each part linking to its next action."
+   },
+   {
+    "feature": "Ranked vs not ranked and the report percentile",
+    "spec_says": "A Ranked / Not ranked pill. R16's percentile ranks among each learner's first standard sitting and shows only when n ≥ 20.",
+    "why_only_parity": "It is the same idea as their \"N% scored at or below you on their first attempt\", and with about 12 learners in the database it won't appear for months.",
+    "upgrade": "From the first sitting, also show the national percentile for the Math band from College Board's published percentile table (\"≈ 78th percentile of SAT takers · College Board\"), labelled with its source. Our field percentile joins once n ≥ 20. The table has to be checked against College Board's current published figures before shipping."
+   },
+   {
+    "feature": "Classes and homework (their hidden teacher dashboard)",
+    "spec_says": "Class contests with a due time and an owner results table: Student × per-question marks, a % right footer, Copy / Download CSV (R4).",
+    "why_only_parity": "It is their teacher dashboard: assign work with due dates and see marks.",
+    "upgrade": "Add a misconception matrix across the class's recent contests (rows = top traps; cells per student: fell / avoided / not met) and \"Re-teach: set the top 3 traps as a twin contest due Fri\" in one tap. The follow-up shows a fixed rate: \"8 of 11 who fell for it on Sep 19 got its twin right on Sep 24\"."
+   },
+   {
+    "feature": "Share",
+    "spec_says": "'Copy result' plain text with the strip and link, and 'Challenge a friend', which opens the full private-contest sheet prefilled.",
+    "why_only_parity": "It is a working version of their Share button, whose navigator.share froze.",
+    "upgrade": "The copied link opens a duel against your run's ghost on the same twin slots: one tap to accept, no form, and the friend races your recorded times."
+   },
+   {
+    "feature": "Challenge streak and 30-day strip",
+    "spec_says": "A challenge streak (best shown), a 30-day strip of sat, ghost and missed days. A missed day can be sat unranked but doesn't count.",
+    "why_only_parity": "It is their QOTD streak pill turned into a strip. One missed day resets it, which is where streak students drop off.",
+    "upgrade": "Streak repair: a missed Daily sat as a ghost within 48 h, together with its Encore, keeps the streak (once per 7 days). The strip marks the day 'repaired'."
+   },
+   {
+    "feature": "Sprint as the speed contest",
+    "spec_says": "A 5-minute run, as many as you can, from one theme domain a week. Best run counts, ranked on points, then right, then answer time.",
+    "why_only_parity": "It is a raw-speed race in the spirit of their speed bonus. One domain a week is blocked practice, which rewards rushing and gives a false sense of mastery.",
+    "upgrade": "Rank on 'right at par' (right answers within the item's par time), and let each wrong answer cost 10 s of the run's clock. Interleave all four domains, with the week's theme as 40% of the slots."
+   }
+  ]
+ }
+}

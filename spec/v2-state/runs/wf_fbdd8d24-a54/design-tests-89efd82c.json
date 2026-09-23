@@ -1,0 +1,601 @@
+{
+ "label": "design: tests",
+ "key": "v2:a4766439a2f46b623b1953b01309f4907cf314eae38c0f4311fea7a589efd82c",
+ "result": {
+  "section": "Practice tests: the catalog (/tests/), the start sheet, and the test window (/test/), with lobby/fullscreen gate, navigator, Check your work, the step between modules, Save and exit, and resume",
+  "theirs": [
+   {
+    "feature": "Estimated Score card",
+    "detail": "At the top of /practice/full-length. Empty state: 'Complete a full-length test or a practice module to get your score estimate.' Fills in from a full test or a single module."
+   },
+   {
+    "feature": "Section tab bar",
+    "detail": "One tab, 'Full-Length Tests' (outlined, full width). Room left for other test types."
+   },
+   {
+    "feature": "Difficulty filter",
+    "detail": "Radix dropdown pill with radio items and a check on the chosen one: All / Easy / Medium / Hard (difficulty of the paper)."
+   },
+   {
+    "feature": "Type filter",
+    "detail": "All / Adaptive / Non-adaptive."
+   },
+   {
+    "feature": "Status filter",
+    "detail": "All / Not Attempted / In Progress / Completed."
+   },
+   {
+    "feature": "Access filter",
+    "detail": "All / Free / Paid."
+   },
+   {
+    "feature": "Sort By",
+    "detail": "Newest / Oldest / Hardest / Easiest. The chosen value is printed under the label (in orange)."
+   },
+   {
+    "feature": "Paper card grid",
+    "detail": "Three columns, about 29 cards: 'Paper #N', 'September Predictions', 'AUGUST PREDICTIONS (2026)'. Papers are dated like official forms."
+   },
+   {
+    "feature": "Card: Report button",
+    "detail": "Flag button in the card header, opens the shared report modal for that exam."
+   },
+   {
+    "feature": "Card: tags",
+    "detail": "Free (green) / Adaptive or Non-Adaptive / Standard."
+   },
+   {
+    "feature": "Card: stat tiles",
+    "detail": "Two tiles: 'People took N' and 'Your last score' ('Not taken' when empty)."
+   },
+   {
+    "feature": "Card: Comments N",
+    "detail": "Full-width gray button with the comment count, opens the comments modal."
+   },
+   {
+    "feature": "Card: Start Exam",
+    "detail": "Full-width blue 'Start Exam >' button, opens the start wizard."
+   },
+   {
+    "feature": "Paid-paper lock",
+    "detail": "The same card, blurred, under an overlay: lock circle, 'Paid exam', 'Unlock it with Pro or Elite', 'See plans'. The free tier gets 1 exam attempt."
+   },
+   {
+    "feature": "Comments modal",
+    "detail": "'Comments 8 · Paper #47'. Threaded list (avatar, name, timestamp, text, Reply, 'Show N reply' collapses), a sticky composer 'Add a comment...' with a round send button, skeleton while it loads. The content is unmoderated chatter."
+   },
+   {
+    "feature": "Report modal",
+    "detail": "'Report this exam'. Read-only 'Sent with your report' box (Exam, title, Exam ID uuid). Title prefilled with a 0/200 counter. Category: General feedback / Bug or something broken / Wrong answer key / Typo or content error / Feature request / Other. Details textarea 0/5000. 'Add images' (JPEG/PNG/WebP/GIF, up to 10, 50 MB each). 'Send feedback'. The same modal serves exams, questions and vocab."
+   },
+   {
+    "feature": "Start wizard: step 1",
+    "detail": "A modal with a segmented progress bar. 'How do you want to practice?' Full Test (all 4 modules) or Select Modules (choose 1 or more)."
+   },
+   {
+    "feature": "Start wizard: step 2 (Select modules)",
+    "detail": "A 2x2 grid of checkable cards with a coloured subject chip (R&W purple, MATH green), 'Module 1 · 27 questions · 32 min'. A non-adaptive paper offers a fixed 'Module 2 · Hard'. Select all / Clear, and 'N of 4 selected'."
+   },
+   {
+    "feature": "Start wizard: step 3 (Timer mode)",
+    "detail": "Timed ('Official time limits apply') or Untimed ('No time pressure'). Back / Start Exam."
+   },
+   {
+    "feature": "Fullscreen gate",
+    "detail": "A dark full page at /practice/session?id=: 'Enter Fullscreen Mode · This exam runs in fullscreen, just like the Digital SAT', an 'Enter Fullscreen' button, a 'Proceed without entering full screen mode' link, and a square badge showing '8'."
+   },
+   {
+    "feature": "Runner chrome",
+    "detail": "No app sidebar. A multicolour dashed rule (Bluebook trade dress) under the header, above the footer and under the question strip."
+   },
+   {
+    "feature": "Header: section title + Directions",
+    "detail": "'Section 1, Module 1: Reading and Writing' and a Directions link that opens the official directions in a modal with Close."
+   },
+   {
+    "feature": "Timer with hide",
+    "detail": "A large mm:ss countdown in the centre with an eye-slash toggle. When hidden, only the eye icon shows."
+   },
+   {
+    "feature": "Highlights & Notes toggle",
+    "detail": "Pen icon in the header, right side."
+   },
+   {
+    "feature": "More menu",
+    "detail": "⋮ opens a menu with 'Save and Exit'."
+   },
+   {
+    "feature": "Calculator",
+    "detail": "Math only. Desmos graphing calculator in a floating panel you can drag and resize. The header button shows an active state, and the question column moves over to make room."
+   },
+   {
+    "feature": "Reference",
+    "detail": "Math only. A modal with the official formula sheet."
+   },
+   {
+    "feature": "Layout",
+    "detail": "R&W: two panes with a draggable divider that turns blue while dragging. Math: one centred column about 750px wide. A math SPR item puts the 'Student-Produced Response Directions' and an examples table (Answer / Acceptable / Unacceptable) in the left pane."
+   },
+   {
+    "feature": "Question strip",
+    "detail": "Number square; Mark for Review (bookmark, turns yellow, the label changes to 'Unmark'); Report; ABC toggle that adds a strike-out circle beside each choice. A struck choice gets an 'Undo' link."
+   },
+   {
+    "feature": "Choices",
+    "detail": "Full-width rows with a 2px black border, radius 8, and a circled letter. The selected choice gets a 3px blue border and a filled letter."
+   },
+   {
+    "feature": "Highlights and notes",
+    "detail": "With H&N on, selecting text shows a toolbar: 4 colours (yellow, green, blue, pink), 3 underline styles (solid/dashed/dotted) and Note. Clicking a highlight opens a popover: 'No note' / Remove (red) / Close."
+   },
+   {
+    "feature": "SPR input",
+    "detail": "Placeholder 'Enter your answer (e.g., 5.566, -5.566, 2/3, -2/3)' with a monospace 'Answer Preview:' line under it."
+   },
+   {
+    "feature": "Footer",
+    "detail": "Light blue-gray bar. Student name on the left; a centre pill 'Question 1 of 27 ⌄' (filled blue); navy Back and Next pills on the right."
+   },
+   {
+    "feature": "Module navigator",
+    "detail": "A popover titled 'Section 1, Module 1: Reading and Writing Questions'. Legend: Current (pin), Unanswered (dashed), For Review (red flag). A grid of question cells and a 'Go to Review Page' button."
+   },
+   {
+    "feature": "Check Your Work page",
+    "detail": "'← Back to Test' and the title. 'Review your answers / Select a question to return to it. Once you submit, you can't come back to this module.' Three stat cards (ANSWERED / UNANSWERED / FOR REVIEW) and a grid (answered solid gray, unanswered dashed, review yellow with a bookmark). An amber warning: '26 questions unanswered. Unanswered questions are marked incorrect.' Footer: Back to Test | '✓ Next Module', or '✓ Finish Module' on the last module."
+   },
+   {
+    "feature": "Module sequence",
+    "detail": "Modules run in order. No break screen between selected modules. A handed-in module can't be reopened."
+   },
+   {
+    "feature": "Resume in-progress",
+    "detail": "Save and Exit plus the 'In Progress' status filter on the catalog let a student come back to an unfinished exam."
+   },
+   {
+    "feature": "Score report handoff",
+    "detail": "Finishing goes to /results/{sessionId}: rings per section, total, a 'Practice test — not ranked' pill, tiles, domain performance, the question grid and a review modal. That page belongs to the Report section and is listed here only as the destination."
+   }
+  ],
+  "ours_now": [
+   {
+    "feature": "Estimated score on the tests page",
+    "status": "missing",
+    "note": "/tests/ has no score. The latest band is shown only on Results and Today."
+   },
+   {
+    "feature": "Catalog of test kinds (their paper grid)",
+    "status": "worse",
+    "note": "Two 'doors' (44 questions · 70 min, 22 · 35 min) and a Diagnostic text link. No card has tags, stats, report or options. The unlimited bank is hidden behind two numbers."
+   },
+   {
+    "feature": "Difficulty / Type / Status / Access / Sort filters",
+    "status": "missing",
+    "note": "No filters. There is nothing to choose except full or one module."
+   },
+   {
+    "feature": "Per-kind stats (people took N, your last score)",
+    "status": "missing",
+    "note": "None on the doors."
+   },
+   {
+    "feature": "Report a problem (exam, question)",
+    "status": "missing",
+    "note": "No report anywhere on the site. There is no endpoint and no table."
+   },
+   {
+    "feature": "Comments",
+    "status": "missing",
+    "note": "Left out on purpose (spec/rebuild.md: 'theirs are noise'). Nothing replaces what comments were used for."
+   },
+   {
+    "feature": "Paywall / lock",
+    "status": "have",
+    "note": "Everything is free. This is better than theirs, and nothing needs building."
+   },
+   {
+    "feature": "Start flow: full vs select modules",
+    "status": "partial",
+    "note": "You can only take the full section or module 1 on its own. There is no fixed Module 2 harder/easier (their non-adaptive 'Module 2 · Hard') and no wizard."
+   },
+   {
+    "feature": "Timer mode",
+    "status": "partial",
+    "note": "The 'Timed' toggle shows only on the full door, but it sets one shared variable, so the module door silently inherits it. Untimed hides the clock completely, with no elapsed time. There is no extended time."
+   },
+   {
+    "feature": "Fullscreen gate",
+    "status": "missing",
+    "note": "None. The clock also starts when the session is created (POST /api/mock/new sets module_started), not when the student begins."
+   },
+   {
+    "feature": "Runner format",
+    "status": "worse",
+    "note": "web/test/ is a standalone Bluebook copy with its own CSS: dashed trade-dress rules, a black number square, and none of ui.css. The user wants it in the practice session's format. The practice session (web/practice/session/) has a different top bar, options, fonts and no footer."
+   },
+   {
+    "feature": "Section label",
+    "status": "worse",
+    "note": "A fresh mock shows 'Section 2, Module 1: Math' when there is no section 1. A single module shows 'Module 1: Math'."
+   },
+   {
+    "feature": "Directions",
+    "status": "have",
+    "note": "A modal with College Board's math wording. It doesn't open by itself at the start of a module the way Bluebook does."
+   },
+   {
+    "feature": "Timer + hide + 5-minute warning",
+    "status": "have",
+    "note": "Server-derived, so a reload is not free time. Hide/Show is a text button. At 5:00 it unhides with '5 minutes left'. This is better than theirs."
+   },
+   {
+    "feature": "Highlights & Notes",
+    "status": "missing",
+    "note": "#annotateBtn exists but is hidden unless the question has a passage, so math never gets it. No highlighter or notes code exists."
+   },
+   {
+    "feature": "More menu → Save and Exit",
+    "status": "worse",
+    "note": "More holds a single red 'End the test' (#b3261e, off-brand). On module 1 of a section it actually hands in module 1 and routes to module 2, so the label is wrong. There is no Save and exit and no pause."
+   },
+   {
+    "feature": "Calculator",
+    "status": "partial",
+    "note": "Desmos, draggable, with an Expand toggle. It can't be resized or docked, and its state is lost on reload. There is no no-calculator option."
+   },
+   {
+    "feature": "Reference sheet",
+    "status": "have",
+    "note": "Drawn SVG sheet in a dialog."
+   },
+   {
+    "feature": "Mark for review",
+    "status": "partial",
+    "note": "Works, but it lives only in client memory (S.marked) and is lost on reload or module change."
+   },
+   {
+    "feature": "ABC eliminate + Undo",
+    "status": "partial",
+    "note": "Works, but it is client-only (S.out) and lost on reload. No keyboard shortcut."
+   },
+   {
+    "feature": "Report question from the strip",
+    "status": "missing",
+    "note": "No button."
+   },
+   {
+    "feature": "SPR input + answer preview",
+    "status": "partial",
+    "note": "maxlength 6 and a one-line rule. The preview is the raw text ('Answer: 2/3'). No character validation, no examples table, no rendered fraction."
+   },
+   {
+    "feature": "Footer: student name",
+    "status": "missing",
+    "note": "#who is set from data.name, which the payload never sends, so it is always blank."
+   },
+   {
+    "feature": "Module navigator",
+    "status": "partial",
+    "note": "Legend: Current / Answered / For review, with no counts. No 'Go to review page', no filters. It closes on outside click and Esc."
+   },
+   {
+    "feature": "Check Your Work page",
+    "status": "missing",
+    "note": "On the last question Next reads 'Finish' and hands the module in at once. Verified: with 1 of 22 answered it went straight to 'End of Module 1' with no warning about the 21 blanks."
+   },
+   {
+    "feature": "Between modules",
+    "status": "worse",
+    "note": "A modal: 'End of Module 1 · You cannot return to this module. The next one starts when you continue.' The server has already started module 2's clock (module_started=now() at routing), so time spent on the modal is lost."
+   },
+   {
+    "feature": "Time's up",
+    "status": "partial",
+    "note": "At 0 the client auto-finishes with no screen that says what happened. The server accepts answers after time is up (put_answer never checks remaining())."
+   },
+   {
+    "feature": "Resume an unfinished test",
+    "status": "partial",
+    "note": "Only by the ?s= URL. /tests/ lists finished sittings only (history filters finished), so a test left mid-module can't be found."
+   },
+   {
+    "feature": "Sittings list on /tests/",
+    "status": "partial",
+    "note": "Rows show date, kind and band only. No per-module score, misses, time, route, status, filters, sort, Review, Fix or retake actions."
+   },
+   {
+    "feature": "Answer saving",
+    "status": "worse",
+    "note": "post() chains fetches and swallows every error (.catch(() => {})), without checking the status. A dropped request is lost silently and there is no save indicator."
+   },
+   {
+    "feature": "Per-question time in tests",
+    "status": "missing",
+    "note": "record_paper files test answers with ms=None, so tests add nothing to study time or pacing analysis."
+   },
+   {
+    "feature": "Keyboard",
+    "status": "have",
+    "note": "A–D choose, ←/→ move, Esc closes the navigator. This is more than theirs, but there are no keys for mark, eliminate or tools, and no shortcuts sheet."
+   },
+   {
+    "feature": "Fresh test per sitting",
+    "status": "have",
+    "note": "blueprint.py builds module 1 at start and module 2 for the route earned, from unseen questions. This is our real edge, but the UI never says so."
+   },
+   {
+    "feature": "Ownership of a sitting",
+    "status": "partial",
+    "note": "GET/POST /api/session/{sid}/* don't check X-Learner. Anyone holding the id can read or answer."
+   }
+  ],
+  "design": "\n# Tests, the start sheet and the test window\n\nWhat this covers: `/tests/` (your score, what to sit, what's unfinished, every sitting), the **start sheet**, and `/test/` (lobby and fullscreen gate, questions, navigator, Check your work, between modules, time's up, Save and exit, resume). Items marked **(extra)** are things TopTierPrep doesn't have.\n\n**Ground rules for this section**\n- **Behaviour is Bluebook's**, so test day holds no surprises: one module at a time; answers can change until the module is handed in; mark for review; eliminate; navigator; Check your work; no way back into a handed-in module; a clock that can be hidden, with a 5-minute warning.\n- **The look is the practice session's**, which is the user's pick. Paper white. A centred 700px column. Source Serif 4 stems at 20px. Warm `--tile` options with circled letters. DM Mono for clocks and counts. A sticky top bar and a sticky footer. The Bluebook dashed rules, the black number square and the ruled question strip go: they are College Board trade dress, and the teardown says to copy the behaviour, not the chrome.\n- **Orange is the only accent.** It marks the selected answer, marked-for-review, and the live or recommended thing. Answered is graphite (`--ink`). Destructive actions are graphite behind a confirm sheet, never red.\n- **Labels everywhere.** Every tool has a label (icon only below 760px, with an `aria-label` and a tooltip). Legends carry counts. Short helper lines appear where they help a student decide. No decorative copy.\n- **Nothing a student does is lost.** Answers, marks, eliminations, highlights, notes and time per question live on the server. They come back after a reload or on another device with the same code.\n\n---\n\n## 1. One runner shell for tests and practice\n\nThe test window and the practice session become **one shell**, in `web/assets/runner.js` and `runner.css`, with a `mode` switch. The shell keeps the practice session's look and adds a sticky footer that both modes use (TopTierPrep's QBank session has the same bottom bar: Previous · Question N of 10 · Check/Next).\n\n| region | practice (`mode:'practice'`) | test (`mode:'exam'`) |\n|---|---|---|\n| top-left | × End set | × Save and exit · title \"Math · Module 1 of 2\" · Directions ⌄ |\n| top-centre | progress strip (right = amber, wrong = ink) + \"4 / 10\" | clock `34:57` + Hide; progress strip under it (answered / unanswered / marked / current) |\n| top-right | Timer (if timed) · Save · Calculator · Reference · More | Annotate · Calculator · Reference · More |\n| question header | skill glyph + skill + difficulty + mastery bar · Save · Eliminate · Report | `Q7` badge · Mark for review · Eliminate · Report |\n| choosing an option | locks; the key, the named mistake and the rationale appear | selects (can change), saved, nothing revealed |\n| footer | Previous · \"Question 3 of 10 ⌃\" · Check / Next | Back · \"Question 7 of 22 ⌃\" · Next / Review |\n| navigator | Status (unanswered / right / wrong / mixed / saved / current) or Difficulty | answered / unanswered / for review / current, with filters |\n| end | summary | Check your work → next module, or hand in → report |\n\nSizes (desktop): top bar 64px; progress strip 16px hit area with 4px segments; column `max-width:700px`, top padding `clamp(20px,5vh,48px)`, bottom padding 120px; footer 68px. Phone (<760px): top bar 56px, footer 64px plus `env(safe-area-inset-bottom)`, side gutters 16px.\n\n---\n\n## 2. `/tests/`\n\n### 2.1 Desktop layout (1280, content max 1120)\n\n```\n[shell bar]\nTests                                                  How scoring works (quiet)\nEvery test is built when you start it, from questions you haven't seen.\n┌ T1 Estimated score (2fr) ─────────────────────┐ ┌ T2 Up next (1fr) ──────┐\n└───────────────────────────────────────────────┘ └────────────────────────┘\n┌ T3 In progress (full width, only when any) ─────────────────────────────┐\nStart a test\n┌ T4 card ┐ ┌ T4 card ┐ ┌ T4 card ┐      (3 columns ≥1000px, 2 at 600–999, 1 below)\n┌ T4 card ┐ ┌ T4 card ┐ ┌ T4 card ┐\nYour sittings  12                        [Kind ▾][Status ▾][Timing ▾][Sort ▾] Clear\nT5 rows…                                                          Show 20 more\n```\n\n### 2.2 T1: Estimated score card (`#score`)\n- `--tile` card, radius 14px, padding 24px, laid out in two columns.\n- **Left column:**\n  - `k` label \"Estimated Math score\".\n  - Band, e.g. \"560–700\" (`.num`, `clamp(48px,6vw,72px)`).\n  - Delta chip (DM Mono 13px, `--wash` background) \"+40 since Sep 12\". Hidden when there is only one scored sitting.\n  - Source line (meta): \"Full section #4 · Sep 23 · harder module 2\", plus \"· 580 cap\" when capped.\n- **Right column:** a mini band chart of the last 8 scored sittings, 120px tall. It uses the Results chart as `UI.bandChart(host, sittings, {height:120})`, and the newest band is orange. Under the chart sit three fact rows (label in `k`, value in 600 15px):\n  - \"Best\" 580–720.\n  - \"Combined, last 3 sections\" 590–690 **(extra)**. Shown when there are ≥2 full sections. It averages the midpoints, with half-width 70/√n rounded to 10; the \"How scoring works\" sheet explains it.\n  - \"Target\" 700, with \"(Plan)\" linking to `/plan/`. When no target is set: \"Set a target\" linking to `/plan/`.\n  - \"Exam\" \"Oct 3 · 10 days\", from the profile. The row is hidden when there is no exam date.\n- **Empty (no scored sitting):**\n  - Band \"—\".\n  - Line: \"No estimate yet. A full section gives a band about 140 points wide; one module or the diagnostic, about 200.\"\n  - The chart area shows the 200–800 axis with no bands.\n- **Loading:** skeleton blocks (`--tile-2`) in the band and chart spots.\n- **Error:** \"Couldn't load your score.\" plus a quiet \"Retry\".\n\n### 2.3 T2: Up next (`#next`) (coach and plan tie-in)\n- `--wash` card, radius 14px, padding 22px. Contents: `k` \"Up next\", a title (700 18px), a meta line, and one pill.\n- What it recommends, in this order:\n  1. An unfinished sitting exists: \"Finish Full section #12\", with a \"Resume\" pill.\n  2. Today is a plan test day (`UI.plan.dayOf(today, profile)` = 'test') and `today.tested` is false:\n     - Title \"Today's test: full section\" (or \"module\" when `plan.testOf(minutes)` = 'module').\n     - Meta \"44 questions · 70 min\".\n     - Pill \"Start\". It opens the start sheet preset and focused on Start.\n  3. Brand-new learner (no attempts): \"Start with the diagnostic\", meta \"20 questions · 32 min · all four domains evenly\", pill \"Start\".\n  4. Otherwise: \"Full section\", meta \"Your last was 9 days ago\" (or \"Next test day: Saturday\" when a plan exists), pill \"Start\".\n- Under the pill, when no plan is set: quiet \"Plan your test days\", linking to `/plan/`.\n\n### 2.4 T3: In progress (`#live`)\n- Shown only when unfinished, non-discarded test sittings exist. Up to 3 rows, newest first. Each row is a `--wash` tile, radius 12px, padding 16px 18px, grid `1fr auto`.\n- **Left side:**\n  - Title \"Full section #12\" (700 15.5px).\n  - Meta: \"Module 1 of 2 · 14 of 22 answered · 3 marked\".\n  - State line (DM Mono 13px), one of:\n    - \"Paused · 21:40 left\"\n    - \"Clock running · 12:03 left\", when the student left without Save and exit (the clock kept going)\n    - \"Time ran out · answers saved\"\n    - \"Untimed · 18 min so far\"\n  - Started (meta): \"Started today 9:14\".\n- **Right side:** pill \"Resume\" (label \"Continue\" when time ran out), quiet \"Hand in\", quiet \"Discard\".\n  - Hand in: opens `/test/?s=ID#review`.\n  - Discard: confirm sheet \"Discard Full section #12? Its 14 answers won't count anywhere. This can't be undone.\" with [Keep it] [Discard], then `POST /api/session/{id}/discard` and the row animates out.\n\n### 2.5 T4: Start a test (`#kinds`), the catalog cards\n- Each `.kind` card: `--tile` background, radius 14px, padding 20px 20px 18px, a flex column with gap 14px.\n- **Header row:** title (700 17px) and a flag icon button (36px, `aria-label` \"Report a problem with this test\") that opens UI.report with `context:'catalog'`.\n- **Tags row:** chips 26px high, radius 8px, 600 12px, `--paper` background. The \"Adaptive\" tag uses a `--wash` background.\n- **Facts line** (DM Mono 13px, ink).\n- **Stat tiles:** two or three `.stat` tiles, each a `k` label plus a 600 17px value.\n  - \"Everyone\": \"1,284 sittings\". Once ≥30 scored sittings of that kind exist, a second line appears: \"Your last beats 62%\".\n  - \"You\": last result, or \"Not taken\".\n  - \"Best\": best band, or \"—\".\n- **Actions row:** a Start button, and quiet \"Options\" (opens the start sheet at that kind's step 2).\n  - The recommended card (the same kind as T2) gets the orange pill.\n  - Other cards get `.btn-2`: a 44px button with `--paper` background, ink text and radius 999px. They are not orange, so the grid doesn't become six orange pills.\n\nThe cards, in order:\n\n1. **Full section**\n   - Tags: Adaptive · Official timing · 15/15/7/7 blueprint\n   - Facts: \"44 questions · 70 min · 2 modules\"\n   - Stats: Everyone / You (band) / Best\n2. **Module 1**\n   - Tags: Mixed difficulty · Official timing\n   - Facts: \"22 questions · 35 min\"\n   - Stats: Everyone / You (\"17/22\") / Best\n3. **Module 2 · harder** (the upper module, fixed)\n   - Tags: Fixed · Leans hard\n   - Facts: \"22 questions · 35 min\"\n   - Helper (12.5px soft): \"What a strong module 1 earns you.\"\n4. **Module 2 · easier** (the lower module, fixed)\n   - Tags: Fixed · Leans easy\n   - Facts: \"22 questions · 35 min\"\n5. **Custom test (extra)**\n   - Tags: Your skills · Test rules\n   - Facts: \"5–60 questions · you choose\"\n   - Helper: \"No answers until you hand in, like a real module.\"\n   - Start opens the start sheet at the custom step. There is no one-tap start.\n6. **Diagnostic**\n   - Tags: All four domains evenly\n   - Facts: \"20 questions · 32 min\"\n   - Helper: \"Asks for your name and email before the result.\"\n7. **Twin of your last test (extra)**\n   - Only when a finished section or module exists.\n   - Title \"Twin of Full section #11\".\n   - Tags: Same slots · New numbers\n   - Facts: \"44 questions · 70 min\"\n   - Helper: \"Every question is the same kind, at the same difficulty and position, with new numbers. An equal test, to see whether you've improved.\"\n   - Stats: \"Original\" band.\n\nThere is deliberately no Access filter and no lock state: everything is free. Their \"Predictions\" papers have no equivalent (see open questions).\n\n### 2.6 T5: Your sittings (`#sittings`)\n- **Header:** `k` \"Your sittings\", a count (DM Mono), then the filter bar `#filters`.\n- **Filter bar.** Each control is `UI.dropdown`: a button showing the label in `k` style and the value in 600 14px underneath (their \"Sort By · Newest\" pattern). It opens a listbox menu with radio items and a check. Esc closes it and arrow keys move.\n  - **Kind:** All / Full sections / Modules / Custom / Diagnostics / Twins.\n  - **Status:** All / Completed / In progress / Timed out.\n  - **Timing:** All / Official / Extended / Untimed.\n  - **Sort:** Newest / Oldest / Highest / Lowest. Unscored rows sort last for Highest and Lowest.\n  - \"Clear\" (quiet) shows when any filter isn't All.\n  - Filters are written to the URL (`?kind=section&sort=high`) and to localStorage `satf.tests.filters`, with every access wrapped in try/catch.\n- **Row (desktop):** a grid `44px 120px minmax(0,1.2fr) 150px 70px 70px 90px minmax(0,1.4fr) auto`, padding 14px 16px, radius 10px, `--tile` hover. The columns:\n  - `#12` (DM Mono).\n  - Date \"Sep 23 · 9:14\" (DM Mono 12.5px soft).\n  - Kind \"Full section\", with sub \"Adaptive · official\" (12px soft).\n  - Score: \"560–700\" (800 17px), or \"17/22\" for unscored kinds, or \"Practice\" for kinds that give no estimate. Chips under it: \"Harder M2\" or \"Easier M2\" when a route is set, and \"580 cap\".\n  - M1 \"17/22\".\n  - M2 \"15/22\" (\"—\" for a single module).\n  - Time \"64 min\", or \"Untimed · 81 min\".\n  - Misses: small ink chips with white numbers, one group per module, e.g. \"M1 3 8 14 · M2 2 9 +4\" (at most 8 chips, then \"+N\"). A chip links to `/results/report/?id=ID&q=M1-3`.\n  - Actions (quiet buttons): \"Review\", \"Fix 7\" (only when there are misses; `POST /api/drill {from_session}`, then the session page), \"Twin\", and \"Note\" (see below).\n- **Note (extra):** a private note to self per sitting, e.g. \"ran out of time on 18–22\".\n  - When a note exists it shows as a second line in the row, in italic serif 14px.\n  - Editing happens inline: a textarea with 0/1000 and Save / Cancel, sent with `PUT /api/session/{id}/note`.\n  - This stands in for their comments (see extras).\n- **Try the other module 2 (extra).** On a section that routed lower, an action \"Try the harder module 2\" starts a single upper module 2.\n- **In-progress rows** appear here too when Status is All or In progress, with Resume in place of Review.\n- **Pagination:** 20 rows, then \"Show 20 more\".\n- **States:**\n  - Loading: 4 skeleton rows.\n  - Empty, new student: \"Nothing sat yet. Your first full section gives your first score estimate.\"\n  - Filtered empty: \"No sittings match these filters.\" plus \"Clear filters\".\n  - Error: \"Couldn't load your sittings.\" plus Retry.\n\n### 2.7 T6: How scoring works (`#howScored` sheet) (extra)\nA plain-language version of scoring.py/README. It covers:\n- The ordinal heuristic, which is not IRT.\n- The band widths: ±70 for a section, ±100 for a module or the diagnostic.\n- The route cut at 60% of module 1.\n- The 580 ceiling on the easier module 2.\n- That harder, easier and custom tests show \"Practice, not a score estimate\".\n- That extended time shows its estimate with \"extended time\" beside it.\n\n### 2.8 Phone (390)\nEverything is one column with 16px gutters and no horizontal scroll.\n- **T1:** the band at 48px. The chart sits below the band at full width, 110px tall. The fact rows form a 2-up grid.\n- **T2** and **T3** stack.\n- **T4** cards are one column, with Start and Options side by side.\n- **Filter bar:** the four dropdowns in a 2×2 grid, with \"Clear\" under them.\n- **T5 row as a card:**\n  - Line 1: `#12 · Sep 23` and the score on the right.\n  - Line 2: kind · M1 17/22 · M2 15/22 · 64 min.\n  - Line 3: miss chips, wrapping (at most 6 plus \"+N\").\n  - Line 4: actions.\n- The dropdown menus open as bottom sheets.\n\n---\n\n## 3. The start sheet (`#start`, `dialog.sheet`, 640px; a full-height sheet on a phone)\n\n- **Header:** title \"Start a test\", a close X, and a stepper of 4 segments (4px bars, amber when done or current) with labels under them: Test · Modules · Timing · Tools.\n- **Footer:** quiet \"Back\"; a summary line in DM Mono, e.g. \"Full section · adaptive · 44 questions · 70 min\"; and the pill \"Next\" or \"Start\".\n- **Behaviour:**\n  - Start becomes available from step 2 on; Tools is optional.\n  - Enter moves forward, Esc closes.\n  - The last choices are remembered in localStorage `satf.tests.last` and preselected next time.\n  - Deep link: `/tests/?start=section|module1|module2u|module2l|custom|diagnostic|twin` opens the sheet preset. Today and Plan use this link.\n\n**Step 1 · \"What do you want to sit?\"**\nRadio cards in a 2×3 grid (one column on a phone), each with a title and a facts line: Full section / Choose modules / Custom test / Diagnostic / Twin of #11 (only when there is a source). The diagnostic goes straight to Start, with no Modules or Tools steps.\n\n**Step 2 · Modules** (depends on step 1)\n- **Full section.** Two segmented controls:\n  - \"Module 2\": **Adaptive** (like the SAT) / **Always harder** / **Always easier**. This is their Adaptive vs Non-adaptive.\n  - \"Module 1\": **Standard** / **Harder** / **Easier** **(extra)**. Harder and Easier use the new tiers `module1_upper` (easy 3 / medium 8 / hard 11) and `module1_lower` (11/8/3). This is their Difficulty filter.\n  - Helper line, only when it applies: \"Harder or easier module 1 is practice, not a score estimate.\" A fixed module 2 with a standard module 1 still gets an estimate, using that route's rules. The helper says so: \"Scored as if module 1 had routed you there.\"\n- **Choose modules.** This is their Select Modules.\n  - Checkable cards: \"Module 1 · 22 questions · 35 min · mixed\", \"Module 2 · harder · 22 questions · 35 min\", \"Module 2 · easier · …\". The two module 2 cards exclude each other.\n  - \"Select all\" checks Module 1 and Module 2 harder. \"Clear\" unchecks everything.\n  - A counter: \"2 of 2 modules · 44 questions · 70 min\".\n  - Choosing Module 1 plus a module 2 becomes a section with that fixed route. At least one card must be checked, or Start stays disabled with the note \"Pick at least one module\".\n- **Custom test (extra):**\n  - Skills picker: 4 domain groups of skill chips (`UI.chip` with glyph). A domain header toggles all of its skills. An open-mistake dot sits on each chip.\n  - Presets: \"Weak spots\" (the coach's `ahead[0]` plus open-mistake topics), \"All\", \"Clear\".\n  - Length: 10 / 22 / 44, plus a number field (5–60).\n  - Order: \"Easiest first, like a module\" / \"Mixed\".\n  - Formats: Both / Multiple choice only / Grid-in only.\n  - Difficulty: Easy / Medium / Hard toggles, at least one.\n  - Live line: \"22 questions · 35:00 at test pace\".\n  - Start stays disabled until ≥1 skill is picked.\n- **Twin.** No choices. Shows the source (\"Full section #11 · Sep 12 · 520–660\") and \"Same 44 slots, new numbers\".\n\n**Step 3 · Timing**\nRadio cards, each with a title and the resulting clock:\n- **Official:** \"35:00 a module\" (custom: \"95 s a question · 35:00\").\n- **Time and a half (extra):** \"52:30 a module\".\n- **Double time (extra):** \"70:00 a module\".\n- **Untimed:** \"The clock counts up, so you still see your time\".\n- Custom only: **My own minutes**, a number field of 1–180.\n\n**Step 4 · Tools** (defaults shown)\n- Fullscreen: on.\n- Calculator: on. Off gives no-calculator practice, and the tool is hidden **(extra)**.\n- Pace guide on the progress strip: on **(extra)**.\n- Tell me which module 2 I got: off, as in Bluebook **(extra)**.\n- Summary card, e.g. \"Full section · adaptive · official timing · calculator on\".\n\n**Start:**\n- The pill reads \"Building…\" with `aria-busy` while `POST /api/mock/new` is in flight (about 0.2s measured). Then it navigates to `/test/?s=ID`.\n- **Error:** inline under the footer: \"Couldn't build the test. Check your connection and try again.\" The pill works again.\n\n---\n\n## 4. `/test/`: the test window\n\n### 4.1 Screens and URL\n`/test/?s=ID`, plus a hash that the page keeps with `replaceState` for moves between questions and `pushState` for `#review`, so the browser's Back returns from review to the question.\n\n| screen | when | hash |\n|---|---|---|\n| Loading | fetching the session | — |\n| Lobby | `begun:false` (fresh, or module 2 not yet begun), or paused | `#lobby` |\n| Question | live | `#q7` |\n| Check your work | from Next on the last question, the navigator or More | `#review` |\n| Between modules | module 1 of a section handed in, module 2 not begun | `#between` |\n| Time's up | the clock hit 0 | `#timeup` |\n| Handing in | final finish in flight | — |\n| Problem | 404 / 403 / network | — |\n\nA finished sitting redirects to `/results/report/?id=ID`. A finished diagnostic goes to signup, as today.\n\n### 4.2 Lobby (`#lobby`): the fullscreen gate, done better\n- A centred 640px `--wash` card, radius 14px, padding 28px. The shell's top bar shows only the × (back to Tests).\n- **Fresh:**\n  - `k` \"Math\", and \"#12\".\n  - h1 (`.h1`): \"Full section\" / \"Module 2 · harder\" / \"Custom test\" / \"Diagnostic\" / \"Twin of Full section #11\".\n  - Fact rows, each with an icon and 15px text:\n    - \"2 modules · 22 questions each\"\n    - \"35:00 for each module\" (or \"52:30 for each module · time and a half\", or \"Untimed · the clock counts up\")\n    - \"Calculator and reference sheet on every question\" (or \"No calculator on this test\")\n    - \"Module 2 is chosen by how module 1 goes\" (or \"Module 2 is the harder one, fixed\")\n    - \"Once you move on, you can't go back to a module\"\n    - \"Every question is new to you\"\n  - Buttons: pill \"Enter fullscreen and begin\" and quiet \"Begin without fullscreen\". Only a \"Begin\" pill where `document.fullscreenEnabled` is false (iOS Safari), or when the Fullscreen tool is off.\n  - Quiet links under the buttons: \"Directions\" · \"Keyboard shortcuts\".\n- **Paused (resume):**\n  - `k` \"Paused\". h1 \"Full section #12\".\n  - Facts: \"Module 1 of 2 · 14 of 22 answered · 3 marked\" and \"21:40 left. The clock is stopped until you resume.\"\n  - Pill \"Resume\" (with fullscreen), quiet \"Hand in module 1\", quiet \"Discard this test\".\n- **Left without Save and exit:** the same card, with the fact \"You left without Save and exit, so the clock kept running: 12:03 left.\"\n- **Expired while away:** \"Time ran out while you were away. Your 14 answers are saved.\" Pill \"Continue\" goes to `#timeup`.\n- **Behaviour:**\n  - The server doesn't send the questions before Begin, or while paused, so neither the lobby nor a pause is free reading time.\n  - Begin calls `POST /api/session/{id}/begin`, and the clock starts then (fixing today's clock that starts at creation).\n  - On a section's first Begin, the Directions sheet opens over question 1 with a pill \"Close\", like Bluebook. A \"Don't show at the start\" checkbox is stored in localStorage.\n\n### 4.3 The question view\n\n**Top bar (`#top`, sticky, 64px, grid `minmax(0,1fr) auto minmax(0,1fr)`)**\n- **Left:**\n  - `#exit`: an × button, 40px, `aria-label` \"Save and exit\". It opens a confirm sheet: \"Save and exit? The clock stops until you come back, and this test waits under In progress on Tests.\" with [Keep going] [Save and exit].\n  - `#title`: \"Math · Module 1 of 2\" (700 15px). For a module: \"Math · Module 2 (harder)\". Custom: \"Custom test\".\n  - `#dirs`: quiet \"Directions ⌄\" (13.5px), which opens the Directions sheet.\n- **Centre (`#clock`):**\n  - `mm:ss` in DM Mono 500 22px, tabular.\n  - The eye toggle `#clockHide` (32px icon, label \"Hide\"/\"Show\" at 11.5px under it on desktop). Hidden shows \"Show time\" in place of the digits.\n  - The hidden state is kept per sitting (localStorage `satf.clock.{sid}`).\n  - Under 5:00 the digits go `--ink-deep` 600, the clock unhides once, and a toast under the bar reads \"5 minutes left\" for 6s. Under 1:00 the digits pulse once a minute, which is off under reduced motion.\n  - Untimed: counts up, with a label \"Elapsed\" (`k`) above.\n- **Right (`#tools`).** Each tool is a 56px-wide button with a 20px icon over an 11.5px 600 label. Pressed: ink label, amber icon fill, and a 2px amber underline.\n  - **Annotate** (`#toolAnnotate`).\n  - **Calculator** (`#toolCalc`; hidden when the calculator is off).\n  - **Reference** (`#toolRef`).\n  - **More** (`#toolMore`).\n\n**Progress strip (`#strip`, under the bar, centred at 700px)**\n- 22 segments (`flex:1`, max 28px, gap 4px, 4px tall), in a 16px hit area.\n- States:\n  - answered: `--ink`\n  - unanswered: `--line`\n  - current: 1.5px inset ink ring\n  - marked: a 5px amber dot above the segment\n- **Pace tick (extra):** a 2×10px `--amber-deep` tick at the position you'd reach at the test's pace (elapsed ÷ (seconds per question × timing factor)). It is shown when Pace guide is on and the test is timed, with the tooltip \"Pace: question 12\".\n- Desktop: hovering a segment shows a tooltip, e.g. \"Question 7 · answered · for review\", and clicking jumps. Phone: tapping the strip opens the navigator.\n- `role=\"progressbar\"`, with `aria-valuetext` \"14 of 22 answered\".\n\n**Question header (`.qhead`, 36px row)**\n- `Q7` badge: DM Mono 500 13px, `--tile`, radius 8px, padding 0 10px.\n- **Mark for review:** bookmark icon plus \"Mark for review\" (600 13.5px). Pressed: amber-filled bookmark, `--wash` background, label \"Marked\". `aria-pressed`.\n- A spacer.\n- **Eliminate:** an ABC-with-a-stroke glyph plus \"Eliminate\". Pressed: `--wash` and an amber underline.\n- **Report:** a flag icon button, 36px, `aria-label` \"Report a problem with this question\".\n\n**Stem:** figure, then table, then `.q-stem` (serif 20px/1.58), in the order the current runner uses. Text size follows the setting: 17, 20 or 23px (`--stem`).\n\n**Multiple choice:** `.opts` of `.opt` tiles.\n- Click, or A–D / 1–4, selects. `.picked` is `--wash` with a 1.5px amber inset ring and a filled amber letter with `--ink-deep`.\n- Choosing another option moves the selection. The chosen option can't be un-chosen except by eliminating it (Bluebook rules).\n- `role=\"radiogroup\"`; each option is `role=\"radio\"` with `aria-checked`.\n- **Eliminate on:** each `li` becomes `grid 1fr 40px` with a strike button (a 32px circle showing the letter with a stroke, `aria-label` \"Eliminate B\").\n  - A struck option (`.opt.out`) has opacity .45, a line-through on `.t` and a faint letter.\n  - The strike button is replaced by a quiet \"Undo\".\n  - Striking the selected option clears the answer (as today).\n  - Eliminations are shown whenever they exist, even with Eliminate off, as in Bluebook.\n\n**Grid-in:** a `.grid-in .field` (56px, serif 20px). Nothing sits beside it, since there is no Check in a test.\n- **Keystroke filter:**\n  - digits, one `.` or one `/`, and a single leading `-` only;\n  - at most 5 characters, or 6 with the minus.\n  - A rejected key keeps the value and shows a hint for 3s under the field (12.5px soft): \"Only digits, one decimal point or fraction bar, and a leading minus\" or \"5 characters at most, 6 with a minus sign\".\n  - `inputmode=\"text\"`, because a decimal pad has no minus.\n- **Preview:** \"Answer preview\" (`k`), then the value rendered by KaTeX: `2/3` as a stacked fraction, `-` as a true minus. It is blank when empty.\n- **\"How to enter your answer ⌄\" (quiet disclosure).** Open by default on the sitting's first grid-in (remembered per sitting), collapsed after that. It holds the College Board rules as five bullets plus an examples table:\n\n  | Answer | Acceptable | Not acceptable |\n  |---|---|---|\n  | 3.5 | 3.5, 3.50, 7/2 | 31/2, 3 1/2 |\n  | 2/3 | 2/3, .6666, .6667, 0.666, 0.667 | 0.66, .66, 0.67, .67 |\n  | −1/3 | −1/3, −.3333, −0.333 | −.33, −0.33 |\n\n**Footer (`#foot`, sticky, 68px, grid `1fr auto 1fr`)**\n- **Left:**\n  - `#who`: the profile name (600 14px). Blank when no name is set.\n  - `#saved`: the save status (DM Mono 12px soft). One of:\n    - \"Saved\"\n    - \"Saving…\" (after 400ms in flight)\n    - \"Offline · 2 answers waiting\"\n    - \"Couldn't save · Retry\" (a button)\n- **Centre:** `#navBtn`, a `--tile` button, 40px, radius 10px, reading \"Question 7 of 22 ⌃\" (600 14px). `aria-expanded`, `aria-controls=\"nav\"`.\n- **Right:**\n  - `#back`: quiet with a left arrow, \"Back\". Disabled on Q1.\n  - `#next`: a pill (44px tall, padding 0 26px), \"Next\". On the last question it reads \"Review\" and opens Check your work.\n\n**Question-level extras**\n- **Question note (extra):** under the options, quiet \"Add a note\". It opens a 3-line textarea (0/500) that is saved to the question's state. Notes come back in the report's review.\n- **Time on the question** is counted while the question is visible and the tab is focused. It is sent as a delta with `POST /state` when the student moves away, and every 30s.\n\n### 4.4 Navigator (`#nav`)\n- **Desktop:** a popover anchored above the footer centre, `min(560px, 100vw-32px)`, radius 14px, with the sheet shadow and padding 18px 20px 20px. **Phone:** a bottom sheet, max 70dvh.\n- **Header:** \"Module 1 of 2 · Math\" (700 15px) and ×.\n- **Legend with counts** (12.5px soft; counts in DM Mono ink): ◯ Current · ■ Answered 14 · ⬚ Unanswered 8 · ◣ For review 3.\n- **Filters** (`.choices`): All / Unanswered / For review.\n- **Cells:** 40px squares (48px on a phone), radius 8px, gap 8px, 600 14px.\n  - answered: `--ink` fill, white number\n  - unanswered: 1.5px dashed `--faint` border on paper\n  - for review: an amber bookmark notch top-right, 9px\n  - current: 2px ink outline at 2px offset\n  - Each cell's `aria-label` reads like \"Question 7, answered, marked for review\".\n- **Footer:** quiet \"Go to review page →\".\n- **Behaviour:**\n  - Esc closes it (their popover ignores Esc) and focus returns to `#navBtn`.\n  - Arrow keys move between cells, and Enter goes to the cell's question.\n  - An outside click closes it.\n  - The N key toggles it.\n\n### 4.5 Check your work (`#review`)\n- It replaces the column. The top bar and clock stay live.\n- **Content:**\n  - h1 \"Check your work\"; meta \"Module 1 of 2 · Math · 6:12 left\".\n  - Line (15px): \"Select a question to go back to it. Once you move on, you can't come back to this module.\"\n  - **Three stat tiles** (`.stat`, `--tile`, radius 10px, padding 16px; `k` label plus `.num` 40px): Answered 14 / Unanswered 8 / For review 3. Each tile is a toggle filter for the grid (`aria-pressed`, amber underline). Pressing it again clears the filter.\n  - **Grid:** the navigator cells at 44px, 11 per row. A click goes to that question.\n  - **Warning** when unanswered > 0 (`.mistake` style with an amber dot): \"8 questions unanswered. A blank is marked wrong, and a wrong answer costs no more than a blank, so guess before you move on.\" (extra: the no-penalty tip)\n  - **Pacing line** when timed (extra): \"6:12 left · about 46 s for each unanswered question\".\n  - **Unsaved answers:** \"2 answers are still saving\" plus Retry. The move-on pill stays disabled until they are acknowledged. Offline: \"You're offline. Your answers are kept on this device and sent when you reconnect.\"\n- **Footer:** left, the save status; right, quiet \"Back to question 22\" and the pill \"Move on to module 2\", or \"Hand in\" on the last or only module.\n\n### 4.6 Between modules (`#between`)\n- h1 \"Module 1 is in\".\n- A row of three small `.stat` tiles: Answered 20 of 22 · Left marked 2 · Time used 31:40.\n- A card: \"Module 2 · 22 questions · 35:00 · calculator and reference sheet on every question\".\n- When Tell-me-the-module is on: \"You earned the harder module 2.\" Otherwise nothing is said, as in Bluebook.\n- Pill \"Begin module 2\". The server builds module 2 at routing time and its clock starts only on this press. The pill reads \"Getting module 2 ready…\" while busy.\n- Quiet \"Save and exit\".\n- No break screen: the SAT has none inside a section.\n\n### 4.7 Time's up and handing in\n- **Time's up** (`#timeup`):\n  - h1 \"Time's up\".\n  - \"Module 1 was handed in with 18 of 22 answered. Every answer you gave is saved.\"\n  - Pill \"Continue to module 2\", or \"See your report\".\n  - Any open sheet or calculator closes first.\n- **Handing in:** the column shows \"Marking your test…\" with the bar skeleton. Then it redirects to `/results/report/?id=ID` (a diagnostic goes to signup, as today).\n\n### 4.8 Tools\n- **Directions** (`#dirsSheet`): the existing College Board math text, plus the grid-in examples table, and a pill \"Close\".\n- **Reference:** the existing `UI.ref`.\n- **Calculator:** `UI.calc`, extended.\n  - A floating Desmos panel, dragged by its bar. Bar actions: **Dock** (≥1180px), **Expand / Shrink**, ×.\n  - A **resize grip** bottom-right; minimum 320×360, maximum the viewport.\n  - **Docked:** fixed left, 420px wide, between the top bar and the footer. The column shifts right (as their question column does).\n  - Position, size and dock state are kept in localStorage `satf.calc.pos`.\n  - The **Desmos state is kept per sitting** (`getState`/`setState`, key `satf.calc.{sid}`, saved on close and every 10s), so expressions survive a reload and moving between modules **(extra)**.\n  - Phone: a bottom sheet at 60dvh, with a drag handle that snaps it to 40, 60 or 90dvh. The question keeps scrolling above it.\n- **Annotate** (Highlights & Notes; for math stems, tables and options):\n  - With Annotate on, selecting text shows a floating toolbar above the selection (below it when near the top). It has 7 styles, in orange and graphite only:\n    - Highlight (`--wash`)\n    - Strong (`--wash-2` plus an amber underline)\n    - Underline (solid amber)\n    - Dashed\n    - Dotted\n    - Box (1px ink outline)\n    - Strike (ink line-through, for crossing out information that doesn't matter)\n  - The toolbar also holds \"Note\" and, when the selection overlaps a mark, \"Remove\".\n  - Each swatch is 32px with an `aria-label`.\n  - Clicking an existing mark opens a popover: the note text (or \"No note\"), Edit note, the 7 swatches to restyle, Remove, Close.\n  - Marks are stored per question as `{start, end, style, note}`. The offsets are into the stem's text node. Table cells and options are addressed as `t:r:c` and `o:i`.\n  - **Notes rail (extra):** in Annotate mode a \"Notes 3\" button opens a 300px right rail (≥1180px), or a bottom sheet on a phone. It lists every note in the module by question, and each note jumps to its question.\n- **More** (`#moreMenu`; a 260px popover under More, or a bottom sheet on a phone). Items with icons:\n  - Directions\n  - Keyboard shortcuts\n  - Text size [A− · A · A+] (17/20/23px, kept in localStorage `satf.textsize`)\n  - Pace guide [toggle]\n  - Notes\n  - Report a problem with question 7\n  - — (divider)\n  - Hand in this module… (goes to `#review`)\n  - Save and exit\n  - Discard this test…\n- **Report a problem** (`UI.report`, shared site-wide):\n  - A sheet titled \"Report a problem\".\n  - A read-only box \"Sent with your report\": Test \"Full section #12\"; Question \"Module 1 · Q7\"; Item \"linear_functions · lf_two_readings · seed 48213\". Because the item is addressed by template and seed, it can be regenerated exactly.\n  - **Category:** Wrong answer key / More than one right answer / No right answer / Unclear wording / Typo / Figure or table is wrong / Something broken / Idea or request / Other.\n  - **Title:** prefilled \"Question 7, module 1\", with 0/200.\n  - **Details:** 0/5000.\n  - **\"Include my answer\"** checkbox, off by default.\n  - **Screenshots:** up to 4 (JPEG, PNG or WebP, 5 MB each), as thumbnails with remove buttons.\n  - In a timed test, a footer note: \"The clock keeps running.\"\n  - Pill \"Send report\". Success: \"Thanks. Report R-1042 is in.\" plus Close. Error: inline, plus Retry.\n  - Limit: 20 reports a day.\n- **Keyboard shortcuts** (`#keysSheet`): a two-column table of the keys below.\n\n### 4.9 Saving, offline, leaving, errors\n- **Answers:**\n  - Painted optimistically.\n  - Written to localStorage `satf.pending.{sid}` as `{qid: value}`.\n  - Sent in order. They are removed from pending only on a 2xx.\n  - Retried with backoff (1, 2, 5, 10s) and on the `online` event. `#saved` reflects every state.\n  - A 409 \"time is up\" goes to `#timeup`. A 409 \"finished\" redirects to the report. A 409 \"paused\" shows the lobby.\n- **State** (mark, strike, marks, note, ms) uses the same queue.\n- **Leaving the page:** while timed, live and not paused, `beforeunload` asks the browser to confirm leaving.\n- **Leaving fullscreen:** a 40px `--wash` banner under the top bar: \"You left fullscreen.\" plus quiet \"Return to fullscreen\" and ×.\n- **Errors:**\n  - 404: \"This test doesn't exist.\" plus \"Back to Tests\".\n  - 403: \"This test belongs to another device's code. Open it there, or switch codes in Me.\"\n  - Network failure on load: \"Can't reach the server.\" plus Retry. Nothing is lost.\n\n### 4.10 Keyboard\nThe keys are ignored while typing in a field, except Enter and Esc.\n\n| key | action |\n|---|---|\n| A–D or 1–4 | choose |\n| Shift+A–D | eliminate / undo |\n| E | Eliminate mode |\n| M | Mark for review |\n| ← / → | Back / Next |\n| N | navigator |\n| Shift+R | Check your work |\n| C | calculator |\n| F | reference |\n| H | hide / show the clock |\n| T | Annotate |\n| ? | shortcuts |\n| Esc | close the top sheet, popover or menu |\n\n### 4.11 Accessibility\n- A live region announces: \"Answer saved\", \"Marked for review\", \"5 minutes left\", \"Module 2 started\".\n- Every sheet traps focus and returns it to its trigger.\n- Toggles use `aria-pressed`. The navigator is a labelled grid.\n- Hit targets are ≥44px on touch.\n- Orange fills always carry `--ink-deep`.\n- `prefers-reduced-motion` turns motion off.\n\n### 4.12 Phone (390)\n- **Top bar (56px):** [⋮ More] [clock, centred; tap to hide/show] [Annotate][Calculator][Reference] as 40px icons with `aria-label` and a long-press tooltip.\n  - The × for Save and exit and Directions move into More.\n  - The title \"Module 1 of 2\" moves into the footer button.\n- **Progress strip:** 22 segments across 358px.\n- **Question header:** `Q7`, Mark (icon plus \"Mark\"), Eliminate (icon), Report (icon).\n- **Options:** full width. With Eliminate on, a 36px strike button at the right.\n- **Footer:** [‹ 44px Back icon] [the \"M1 · 7 of 22 ⌃\" button] [Next pill, 44px tall].\n- **Navigator and More:** bottom sheets. Navigator cells are 48px, 6 per row.\n- **Check your work:** tiles 3-up (numbers at 32px), grid 6 per row, the pill full width in the footer.\n- **Calculator:** a bottom sheet.\n- **Annotate toolbar:** 8 buttons × 36px, which fits.\n- No horizontal page scroll anywhere. A wide table scrolls inside `.q-table`.\n\n---\n\n## 5. Flows (calls)\n\n1. **Start.** Start sheet → `POST /api/mock/new {…}` → `/test/?s=ID` → `GET /api/session/ID` returns `begun:false` → lobby → Begin (plus `requestFullscreen`) → `POST /begin` → `GET` returns the questions → Q1, with Directions on the first start.\n2. **Answer.** Select → `POST /api/session/ID/answer {question_id, answer}`. Mark, strike, highlight, note and time all go through `POST /api/session/ID/state {question_id, …}`.\n3. **Review and move on.**\n   - Last question → Next (\"Review\") → `#review`, with no server call.\n   - Move on → `POST /finish`, which returns `{next_module:2, summary}` → `#between` → Begin module 2 → `POST /begin` → `GET` → module 2, Q1.\n4. **Hand in.** `POST /finish` → `{finished}` → the report.\n5. **Clock runs out.** The client calls `POST /finish` → `#timeup`.\n6. **Save and exit.** `POST /pause` → `/tests/`.\n7. **Resume.** Tests → Resume → the paused lobby → `POST /begin`.\n8. **Discard.** `POST /discard`.\n9. **From the history.** Twin → `POST /api/mock/new {twin_of}`. Fix → `POST /api/drill {from_session}`.\n",
+  "extras": [
+   {
+    "feature": "A fresh test for every sitting, said out loud",
+    "why": "Their 29 papers get used up, and free users get one attempt. Ours never repeat a question, so a student can sit ten sections before test day. The lobby says so: 'Every question is new to you'."
+   },
+   {
+    "feature": "Twin test (a parallel form of any finished sitting)",
+    "why": "It keeps the same template in every slot, at the same difficulty and position, with new seeds. That gives an equal test for measuring improvement. A finite bank can't build a parallel form on demand; ours is addressed by (template, seed)."
+   },
+   {
+    "feature": "Fix N, from any sitting row",
+    "why": "The misses of a sitting become a repair drill on the same templates and the same misconceptions (existing /api/drill from_session), without opening the report first."
+   },
+   {
+    "feature": "Try the other module 2",
+    "why": "A student who routed lower can sit the harder module 2 right away and see what the upper route asks. That needs generation on demand."
+   },
+   {
+    "feature": "Hard and easy variants (module 1 harder or easier, module 2 fixed)",
+    "why": "This is their Difficulty and Type filters, done as a property of the build rather than a filter over a fixed shelf. A 700+ student can drill a whole section that leans hard. Honestly labelled 'Practice, not a score estimate'."
+   },
+   {
+    "feature": "Custom test under test rules",
+    "why": "Any skills, 5–60 questions, the module's easiest-first ladder, no feedback until hand-in. Their QBank is practice-mode only, and their thin skills (SEC 22, Transitions 10, statistical claims 5) couldn't fill it. Ours can, with a 'Weak spots' preset from the coach."
+   },
+   {
+    "feature": "Extended time (1.5× and 2×)",
+    "why": "Students with accommodations practise at the timing they will get. Bluebook supports it; TopTierPrep doesn't."
+   },
+   {
+    "feature": "Save and exit that really stops the clock, and an In progress list",
+    "why": "Their resume is only a Status filter. Ours pauses on the server, shows time left, and handles 'left without saving' and 'expired while away'. Questions aren't sent while paused, so a pause isn't free reading time."
+   },
+   {
+    "feature": "The clock starts on Begin, and module 2's on Begin module 2",
+    "why": "The lobby, the fullscreen prompt and the step between modules no longer eat test time. Today both clocks start early."
+   },
+   {
+    "feature": "Everything persists on the server",
+    "why": "Marks, eliminations, highlights, notes, per-question time, the hidden-clock state and the calculator's expressions all survive a reload, a crash or a device switch. In our current runner the marks and strikes vanish on reload."
+   },
+   {
+    "feature": "Save status and an offline queue",
+    "why": "Every answer is acknowledged or retried, a pending queue is kept on the device, and Check your work refuses to move on with unsaved answers. Today a dropped request is lost silently."
+   },
+   {
+    "feature": "Pace guide on the progress strip",
+    "why": "It shows where you'd be at test pace, so a slow student learns pacing during the test, not only from the report."
+   },
+   {
+    "feature": "No-penalty guessing tip and a pacing line on Check your work",
+    "why": "'A blank is marked wrong, and a wrong answer costs no more than a blank', and 'about 46 s for each unanswered question'. These turn their bare warning into a decision."
+   },
+   {
+    "feature": "Grid-in validator with a rendered preview and the official examples",
+    "why": "It rejects impossible input as it's typed (their field accepts anything), renders 2/3 as a fraction, and teaches the fourth-digit rule. That rule is exactly what our marker applies (scoring.grid_equal)."
+   },
+   {
+    "feature": "7 annotation styles within the brand, a notes rail, notes kept into the review",
+    "why": "It matches their 4 colours plus 3 underlines using only orange and graphite. It adds a Strike style for crossing out information that doesn't matter, and your notes come back when you review the question."
+   },
+   {
+    "feature": "Question notes and sitting notes (private)",
+    "why": "They replace what comments were used for ('I ran out of time on 18–22') with a private note that has no moderation burden."
+   },
+   {
+    "feature": "Reports that point at the exact item",
+    "why": "Each report carries (template, seed), so the item can be regenerated and a bad template fixed for every future seed. Their report sends an exam ID."
+   },
+   {
+    "feature": "How others did, per kind",
+    "why": "Their 'People took N' becomes 'Everyone: N sittings · your last beats 62%'. It is fair because every sitting of a kind follows the same blueprint."
+   },
+   {
+    "feature": "Combined estimate, delta, target gap and exam countdown on the tests page",
+    "why": "Their Estimated Score card is a single number. Ours shows the trend, a tighter band across the last three sections, and how far is left to the target."
+   },
+   {
+    "feature": "Up next, from the plan",
+    "why": "On a plan test day the page leads with that day's test. Otherwise it picks the next sensible sitting, so the catalog has a default action."
+   },
+   {
+    "feature": "No-calculator mode",
+    "why": "Mental-math practice for the questions where the calculator is slower. It is one toggle in Tools."
+   },
+   {
+    "feature": "Docked, resizable calculator that keeps its state",
+    "why": "Their panel resizes but forgets its state. Ours docks on wide screens and keeps its expressions for the whole sitting."
+   },
+   {
+    "feature": "Full keyboard map and a shortcuts sheet",
+    "why": "It covers mark, eliminate (Shift+letter), tools and review, not just choosing. Esc works on every popover, which fixes their navigator bug."
+   },
+   {
+    "feature": "Text size control",
+    "why": "17, 20 or 23px stems, for reading comfort and accessibility on small screens."
+   },
+   {
+    "feature": "Answer-change tracking",
+    "why": "The first answer and the number of changes are stored per question, so the report can show changes that went right→wrong and wrong→right."
+   }
+  ],
+  "server": [
+   {
+    "change": "Clock starts at Begin (POST /api/session/{sid}/begin)",
+    "detail": "New sittings are inserted with module_started NULL and cfg.lobby=true. remaining(): if cfg.lobby and module_started is NULL, it returns the full duration. POST /begin sets module_started=now() when it is NULL, or clears a pause (see below). It is idempotent and returns payload(row). Diagnostics (POST /api/session) take the same path. Older rows without cfg.lobby keep today's behaviour."
+   },
+   {
+    "change": "Pause and resume (Save and exit)",
+    "detail": "New columns: sessions.paused_at TEXT, paused_ms INTEGER DEFAULT 0, pauses INTEGER DEFAULT 0. POST /api/session/{sid}/pause sets paused_at=now() and pauses+=1, only when it is live, timed and unfinished; it is idempotent. POST /begin on a paused row adds now−paused_at to paused_ms and clears paused_at. remaining() subtracts paused_ms, plus now−paused_at while paused. paused_ms resets to 0 when module 2 begins. The result stores pauses so the report can say 'Paused twice'."
+   },
+   {
+    "change": "Questions withheld before Begin and while paused",
+    "detail": "payload() returns questions: [] and question_count: N when not begun or while paused, and adds begun: bool and paused: bool."
+   },
+   {
+    "change": "Per-question state (POST /api/session/{sid}/state)",
+    "detail": "New column sessions.qstate TEXT DEFAULT '{}'. The body is {question_id, marked?: bool, struck?: [0..3], ms?: int delta 0..600000, note?: str ≤500, marks?: [{start:int, end:int, style: one of highlight|strong|underline|dashed|dotted|box|strike, note?: str ≤500, at?: 'stem'|'t:r:c'|'o:i'}] ≤50}. Each field is written with json_set on $.\"qid\".field, like db.set_answer, so two calls at once can't clobber each other; ms is added with COALESCE(json_extract)+?. question_id must be in the live module. Returns 409 when finished, paused or not begun. GET /api/session/{sid} returns qstate for the live module's ids only."
+   },
+   {
+    "change": "Answer rules (POST /api/session/{sid}/answer)",
+    "detail": "Now refuses:\n- a different learner: 403 when row.learner is set and X-Learner differs;\n- not begun: 409 'press Begin first';\n- paused: 409 'paused';\n- remaining() < −15s grace on a timed sitting: 409 'time is up'. Today the server accepts answers after time.\nGrid-in shape is validated: ^-?[0-9./]{1,5}$ with at most one . or /, otherwise 422 'not a grid-in answer'.\nIt stores qstate[qid].first (the first non-null answer) and qstate[qid].changes += 1 when the value changes."
+   },
+   {
+    "change": "Module hand-in (POST /api/session/{sid}/finish)",
+    "detail": "Routing module 1 now sets module_started=NULL for module 2 (not now()), and module 2 is built at that point, as today. The response adds summary: {answered, unanswered, marked, ms, timed_out}. The final finish stores result.modules = [{n, right, asked, missed:[positions], blank:[positions]}], result.timing, result.pauses and result.scored. It passes per-question ms from qstate into progress.record_paper so tests count toward study time."
+   },
+   {
+    "change": "Discard (POST /api/session/{sid}/discard)",
+    "detail": "Owner only; the sitting must be unfinished. Sets a new column sessions.abandoned=now() and finished=now() with result {\"abandoned\": true}. Nothing is filed to attempts. /api/history, latest_score and /api/tests exclude abandoned rows."
+   },
+   {
+    "change": "Sitting options (POST /api/mock/new)",
+    "detail": "Body: {kind: 'section'|'module'|'custom'|'twin', module?: 'm1'|'m2u'|'m2l' (kind=module), m1?: 'standard'|'upper'|'lower', route?: 'adaptive'|'upper'|'lower' (section), timing?: 'official'|'x1.5'|'x2'|'untimed', minutes?: 1..180 (custom), calculator?: bool, reveal_route?: bool, twin_of?: sid, custom?: {topics:[slug] ≥1, count: 5..60, order: 'ladder'|'mixed', formats: 'both'|'mcq'|'spr', tiers: ['easy'|'medium'|'hard'] ≥1}}. Unknown values give 422. The old body {full, timed} still works (full→section, timed:false→untimed). Everything is stored in cfg. New column sessions.number = the learner's count of previous non-abandoned test sittings + 1. Kind stays 'mock' for a section and 'module' for a module; custom sittings use the new session kind 'custom', read through questions_of like 'module'."
+   },
+   {
+    "change": "Blueprint additions (server/blueprint.py)",
+    "detail": "TIERS adds module1_upper {easy 3, medium 8, hard 11} and module1_lower {11, 8, 3}. module(form) accepts them with DOMAIN_SPLIT[1] and id prefix m1.\nNew twin(source_qs, b): for each slot, draw_matching(b, q['key'], q['difficulty'], 'spr' if q['type']=='spr' else None). The fallback is the least-used template in the same topic with that tier and format. Ids and positions match the source.\nNew custom(topics, count, tiers, order, formats, b): positions dealt across topics with practice.interleave; a difficulty ladder in equal thirds of the allowed tiers, sorted when order='ladder'; grid-in slots at round(k·count/22) of SPR_AT when formats='both'. Filled with draw_matching and practice.penalty. Ids c01..cNN.\nA twin section twins module 1 at start. At routing, it twins the source's module 2 when the route matches, and otherwise builds a fresh blueprint module 2."
+   },
+   {
+    "change": "Forced routes and scoring flags (app.py finish, scoring.py)",
+    "detail": "With route 'upper' or 'lower', finish of module 1 skips route_after and uses the fixed route; module1 is still recorded. result.scored = (m1 == 'standard' and kind in (mock, module, diagnostic)). When scored is false, result.estimate = null and result.not_scored = 'harder module 1' / 'easier module 1' / 'custom test'. With x1.5 or x2 timing, the estimate is kept and result.extended = true."
+   },
+   {
+    "change": "Durations",
+    "detail": "duration(row): the module seconds (2100), or len(qs)·95 for a diagnostic or custom test, or cfg.minutes·60, times 1.5 or 2 for extended timing. seconds = null for untimed. The client counts elapsed time up from started plus the qstate ms total."
+   },
+   {
+    "change": "Section label",
+    "detail": "section_label(): mock → 'Math · Module {n} of 2'; module → 'Math · Module 1' or 'Math · Module 2 (harder)' or 'Math · Module 2 (easier)'; custom → 'Custom test'; diagnostic → 'Diagnostic'. This fixes 'Section 2, Module 1' with no section 1."
+   },
+   {
+    "change": "Session payload additions (GET /api/session/{sid})",
+    "detail": "Adds name (learners.name), number, kind_label, modules: 1|2, module, timing, factor, calculator, reveal_route, begun, paused, pauses, qstate (live module only), and route only when reveal_route is set and module==2. Returns 403 when row.learner is set and X-Learner is present and different. The answer, rationale, reasons, key and seed never appear at any depth."
+   },
+   {
+    "change": "History (GET /api/history)",
+    "detail": "Each row adds number, status ('completed'|'in_progress'|'paused'|'timed_out'), route, capped, timing, scored, modules [{n, right, asked, missed, blank}], ms, twin_of, note, module (the live one), answered and left_seconds (for in-progress rows). modules and missed are computed lazily for old rows from answers. A new query ?all=1 includes unfinished, non-abandoned test sittings."
+   },
+   {
+    "change": "Tests overview (GET /api/tests)",
+    "detail": "Returns:\n- estimate: {latest, previous, delta, best, combined (≥2 sections: mean midpoint ± 70/√n, rounded to 10, over the last 3), count}\n- target, exam {date, days}\n- up_next: {kind, reason: 'resume'|'plan'|'new'|'default', session?}\n- in_progress: [the history row shape]\n- kinds: [{id: 'section'|'module1'|'module2u'|'module2l'|'custom'|'diagnostic', everyone: N finished, yours: n, last, best, percentile (null below 30 scored sittings of that kind; % of other sittings whose midpoint is below yours)}]\n- twin: {source, label} or null.\nOne round trip for /tests/."
+   },
+   {
+    "change": "Reports (POST /api/report)",
+    "detail": "Body: {context: 'test'|'practice'|'review'|'catalog'|'qotd'|'challenge', session?, question_id?, kind?, category (the 9 values), title ≤200, details ≤5000, include_answer: bool, images?: [data URL, ≤4, each ≤5 MB, image/jpeg|png|webp]}.\nThe server resolves template, seed and given from the session. It never trusts the client for these.\nImages are written to server/reports/{id}-{n}.{ext} after checking the magic bytes.\nNew table reports (id TEXT PK 'R-####', learner, at, context, session, qid, template, seed, kind, category, title, details, given, images JSON, status DEFAULT 'open').\nLimit: 20 a day per learner (429). Returns {id}."
+   },
+   {
+    "change": "Sitting note (PUT /api/session/{sid}/note)",
+    "detail": "{text ≤1000}. Owner only; stored in new column sessions.note. Returned in /api/history and /api/session/{sid}/results."
+   },
+   {
+    "change": "Schema migration (server/db.py)",
+    "detail": "LATER_COLUMNS adds sessions.qstate, paused_at, paused_ms, pauses, abandoned, number, note. Adds the reports table to SCHEMA and an index on reports(learner, at)."
+   },
+   {
+    "change": "Tests in study time (server/progress.py)",
+    "detail": "record_paper(learner, session, questions, answers, ms_by_qid=None) passes min(ms, MS_CAP) per question into record(), so /api/me days and minutes include tests."
+   },
+   {
+    "change": "test_flow.py checks",
+    "detail": "New checks:\n- begin and pause semantics;\n- questions withheld before begin;\n- answers refused before begin, while paused and after time (by moving module_started back in the DB);\n- qstate round trip, with no key leak;\n- the module 2 clock NULL until begin;\n- m1 upper tier counts 3/8/11 and scored false;\n- twin slot-by-slot equality;\n- x1.5 and x2 durations;\n- history all=1 statuses and modules;\n- discard excluded;\n- report stored with template and seed, with 422 and 429 limits;\n- a foreign learner gets 403."
+   },
+   {
+    "change": "README 'The serving layer'",
+    "detail": "Table rows for /tests/ (GET /api/tests, /api/history?all=1, POST /api/mock/new options) and /test/ (/begin, /pause, /state, /answer, /finish, /discard, /note), and a line for POST /api/report."
+   }
+  ],
+  "files": [
+   "web/tests/index.html",
+   "web/test/index.html",
+   "web/test/test.js",
+   "web/assets/runner.js (new: the shared runner shell)",
+   "web/assets/runner.css (new)",
+   "web/assets/ui.js",
+   "web/assets/ui.css",
+   "web/practice/session/index.html (adopts the runner shell; coordinate with the practice-session section)",
+   "web/results/report/index.html (custom and twin kind names, ?q=M1-3 deep link, notes and annotations in the review; coordinate with the report section)",
+   "web/results/index.html (kind names for custom and twin)",
+   "web/diagnostic/index.html (Start goes through the lobby)",
+   "server/app.py",
+   "server/blueprint.py",
+   "server/db.py",
+   "server/scoring.py",
+   "server/progress.py",
+   "server/test_flow.py",
+   "README.md"
+  ],
+  "shared_needs": [
+   "The runner shell (web/assets/runner.js + runner.css): sticky top bar with left, centre and tool zones, progress strip, 700px column, sticky footer (Back / 'Question N of M ⌃' / Next), toast, live region. Used by /test/ (mode 'exam') and /practice/session/ (mode 'practice').",
+   "UI.question gains mode:'exam': select and change without locking, no reveal, restore the selected and struck options, onSelect and onStrike callbacks. Eliminate (strike + Undo) works in both modes. KaTeX renders the latex choices when they differ from the plain ones. The stem uses the text-size variable --stem.",
+   "UI.navigator: a popover on desktop and a bottom sheet on a phone, with a legend that carries counts, filter chips, and cells with states (answered/unanswered/marked/current for exam; right/wrong/mixed/saved/current plus a Difficulty view for practice). Esc and arrow keys work, and focus returns to the trigger.",
+   "UI.report: the report-a-problem sheet plus POST /api/report, used by the test window, practice session, report review, catalog cards, question of the day and challenge.",
+   "UI.calc upgrades: a resize grip, docking at ≥1180px, position and Desmos state kept per sitting, a phone bottom sheet with snap heights, and the option to hide it (no-calculator mode).",
+   "UI.annotate: the highlight and note engine over the stem, tables and options (7 styles, offsets, popover, notes rail), with a read-only render for the report's review.",
+   "UI.keys and a shortcuts sheet: one key map shared by the test window and the practice session (A–D/1–4, Shift+letter eliminate, M, E, N, C, F, H, T, ?, Esc).",
+   "UI.dropdown: a filter button showing the label and current value, opening a radio listbox (a bottom sheet on a phone). Used by the Tests sittings filters, and also by Results and Mistakes.",
+   "A .stat tile (k label + .num) and a .btn-2 secondary button in ui.css, used by Tests, Check your work, the report and the lobby.",
+   "UI.bandChart(host, sittings, opts): the Results score chart extracted, so the Tests score card can draw it at 120px.",
+   "UI.KIND: one kind-name map (mock→'Full section', module→'Module', custom→'Custom test', diagnostic→'Diagnostic', drill→'Practice', challenge→'Challenge', plus twin_of → 'Twin of …') used by Tests, Results, the report and Today.",
+   "UI.saveQueue: an ordered, retried request queue with a localStorage mirror and a status callback. Used for test answers and state, and also for practice (drill) answers, where the practice page shows its error today.",
+   "UI.sheet and UI.confirm helpers: dialog.sheet with a title, a close button, focus return and an Esc guard. Used by the confirm sheets (Save and exit, Discard) and every tool sheet.",
+   "A text-size setting (localStorage satf.textsize → --stem on :root), shared by the test window, practice session and report review."
+  ],
+  "acceptance": [
+   "curl -s -X POST localhost:8000/api/mock/new -H 'X-Learner: a:v2revacc01' -H 'content-type: application/json' -d '{\"kind\":\"section\"}' returns begun:false, questions:[], question_count:22 and seconds:2100. A GET 3 s later still reports seconds 2100.",
+   "POST /api/session/{id}/answer before /begin returns 409. After POST /begin, GET returns 22 questions and seconds starts to fall.",
+   "POST /pause, wait 4 s, GET: seconds unchanged (±1), questions:[], paused:true. /answer returns 409. POST /begin resumes and the clock falls again from the same value.",
+   "POST /state {question_id:'m1q01', marked:true, struck:[0,2], ms:12000} twice (the ms part) → GET qstate.m1q01 shows marked true, struck [0,2], ms 24000.",
+   "A recursive key scan of the GET /api/session/{id} JSON (including qstate) finds none of: answer, rationale, reasons, key, seed.",
+   "GET /api/session/{id} with X-Learner a:v2revother returns 403.",
+   "After finishing module 1: the response has next_module 2 and a summary with answered+unanswered == 22. GET shows begun:false and seconds 2100 for module 2, unchanged 3 s later, until /begin.",
+   "In test_flow: move module_started back 36 min in the DB. /answer then returns 409 'time is up'.",
+   "{\"kind\":\"section\",\"m1\":\"upper\"}: module 1 difficulties count easy 3 / medium 8 / hard 11. After hand-in the results have estimate null and scored false.",
+   "{\"kind\":\"section\",\"timing\":\"x1.5\"} gives seconds 3150 after begin; x2 gives 4200; untimed gives null.",
+   "{\"kind\":\"twin\",\"twin_of\":<finished section>}: slot by slot, module 1's stored template and difficulty equal the source's, every seed differs, and the grid-in positions are equal.",
+   "GET /api/history?all=1 lists an unfinished sitting with status in_progress and left_seconds. A finished section has modules[0].asked == 22 and a missed list of positions.",
+   "POST /api/session/{id}/discard, then /api/history?all=1 no longer lists it and /api/tests.in_progress is empty.",
+   "POST /api/report with a question context returns an id, and sqlite3 server/satfreshman.db \"SELECT template, seed FROM reports WHERE id='…'\" is non-null. A title of 201 chars gets 422, and the 21st report in a day gets 429.",
+   "Browser 1280, /test/?s=ID: the lobby shows 'Enter fullscreen and begin' and 'Begin without fullscreen'. The second reveals question 1 with the Directions sheet open.",
+   "Browser: press M. #markBtn gets aria-pressed=true and strip segment 1 shows the amber dot. After a reload, both are still there.",
+   "Browser: Eliminate on, click the strike on B. B's text has a line-through and 'Undo' shows. Shift+C strikes C. Reload keeps both.",
+   "Browser: on question 22 the Next label is 'Review'. Clicking it shows 'Check your work', and the three tile numbers add up to 22. Clicking cell 5 opens question 5. Browser Back from #review returns to the question.",
+   "Browser: N opens the navigator. Esc closes it, and document.activeElement is #navBtn.",
+   "Browser grid-in: typing '1/2/3' leaves '1/2'. The preview renders a KaTeX fraction. '-12345' is accepted and '123456' is refused with the hint shown.",
+   "Browser: with DevTools offline, choosing an answer shows 'Offline · 1 answer waiting' in #saved. Back online, it shows 'Saved' and the server's answers include it.",
+   "Browser: Save and exit lands on /tests/. The In progress card shows 'Paused · mm:ss left', matching GET seconds.",
+   "Browser: at ≤300 s left (use a custom test with minutes:6), the hidden clock unhides and the '5 minutes left' toast shows.",
+   "Browser /tests/ at 390: document.documentElement.scrollWidth === 390. At 1280, #kinds computes 3 grid columns.",
+   "Browser /tests/ for a new learner a:v2revacc99: the score card shows 'No estimate yet', the sittings list shows 'Nothing sat yet', Up next recommends the diagnostic, and there are no page errors.",
+   "Browser /tests/: setting Kind to Modules removes section rows and the URL gains ?kind=module. The filter survives a reload.",
+   "Browser start sheet: Full section with Module 1 'Harder' shows 'Harder or easier module 1 is practice, not a score estimate', and the summary line updates.",
+   "The runner at 390 shows no Bluebook dashed rule (.rule elements absent), and every option is a .opt tile from ui.css.",
+   "PYTHONPATH=. python3 server/test_flow.py passes, including the new checks."
+  ],
+  "open_questions": [
+   "Comments: they're left out here, with private sitting and question notes, reports and the 'everyone' distribution standing in. Does the user want public, moderated comments per test kind anyway?",
+   "Save and exit pauses the clock on a timed sitting, and the number of pauses is shown on the report. Is pausing acceptable, or should timed sittings only allow Save and exit with the clock running?",
+   "Should extended-time sittings (1.5×, 2×) count on the score chart as estimates (flagged 'extended time'), as proposed, or be treated as practice?",
+   "Should the route (harder or easier module 2) stay hidden until the report by default, as in Bluebook? Tools offers a toggle to reveal it.",
+   "Report screenshots: the (template, seed) pair already reproduces the item exactly. Keep image attachments (up to 4 × 5 MB, stored on disk) for UI bugs, or drop them to avoid storing uploads?",
+   "The diagnostic still asks for a name and email before its result. Keep that gate, given the 'completely free, no gates' brief, or show the result directly like every other sitting?",
+   "Their 'September/August Predictions' papers: is there any appetite for a 'latest blueprint' variant, or is the published blueprint enough?",
+   "Desmos: the key is the public trial key (DESMOS_KEY in ui.js and test.js). A production key is needed before launch.",
+   "The runner shell changes the practice session too: footer navigation and a navigator there. Confirm this section owns runner.js/css, and that the practice-session spec adopts it rather than writing its own.",
+   "When a Reading and Writing bank exists: 4 modules, a 10-minute break between sections, and the split pane. The shell keeps a passage-pane slot for it, but should that be built now or left until the bank exists?"
+  ]
+ }
+}

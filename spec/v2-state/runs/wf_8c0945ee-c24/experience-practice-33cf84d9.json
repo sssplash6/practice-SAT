@@ -1,0 +1,190 @@
+{
+ "label": "experience: practice",
+ "key": "v2:dea6595e99dc777abf5a3e9e1826a2ce5fc34eca7f362399abcc082c33cf84d9",
+ "result": {
+  "proposals": [
+   {
+    "title": "Official-question twins: paste a College Board Question ID, get unlimited twins of it",
+    "what": "DATA: material/keys/*.json already holds 1,039 official College Board Question Bank Math items with their cb_id (e.g. 84664a7c), and satbank/topics/*/sources.py pins 1,030 of them to a template plus params. At startup, build official_map {cb_id: {template, tier, topic, fmt}} by running each Source.build once, cached to server/official_map.json and keyed by bank version. Also keep the reverse map template -> [cb_id]. The drill NEVER serves the pinned params: it serves fresh seeds on the mapped template at the official tier, so no official item is reproduced and only the ID is cited.\n\nBUILDER: a second field in the Search row, labelled 'Missed an official question?', placeholder 'Paste College Board Question IDs, e.g. 84664a7c'. It takes up to 50 IDs separated by spaces, commas or newlines. A live result line under it reads '3 of 3 found · Linear functions: A line from a table ×2 · Circles: Equation from centre and radius'. Unknown IDs are listed as 'Not in our Math map: 0a1b2c3d'. A Seg sets how many each: 1 / 3 / 5 (default 3). The pill 'Practise twins · 9 questions' sends POST /api/drill {pool:'official', ids:[cb_id], each:3}.\n\nERRORS: 'IDs are 8 letters and digits, like 84664a7c'. An R&W ID reads 'That is a Reading and Writing question; Math only for now.'\n\nTYPE LEVEL: each TypeRow gets a chip 'Built from 11 official questions'. Settings gets the checkbox 'Only types built from official questions (N of 386)'.\n\nSESSION: the 'Why this one' line reads 'Twin of College Board question 84664a7c'. Details gains the row 'Modeled on: College Board 84664a7c and 10 more'.\n\nYOUR SETS: a tab 'Official questions you brought · 12', where each ID shows twins done and right rate ('9 of 12 now right on twins').\n\nDEEP LINK: /practice/?cb=84664a7c,06fc1726 presets the builder. It never auto-starts.",
+    "beats": "Their Question Bank tab (1,921 official Math items) serves each official item once. After that the item is used up, and 'Redo' re-serves the same memorised question. They show an ID in Details, but nothing can be done with it. Ours turns any official item a student missed into unlimited twins with the same trap and tier, in two steps (paste, start). That item can come from CB's own bank, TopTierPrep's QB tab or a teacher's handout. It is also our honest answer to their Bank toggle (open question 17) without reproducing College Board content. Caveat: TopTierPrep's own IDs (06469-DC) are not CB IDs. Only CB IDs are accepted until a stem-text search is added.",
+    "effort": "M",
+    "needs": "Needs:\n- F5: the official_map builder (blueprint/practice) and a drill pool 'official' in §2.6.\n- satbank sources.py pins and material/keys cb_id, which exist.\n- S4: the builder field, the session line, the Details row and the Your sets tab.\n- Confirm that citing CB IDs is acceptable under College Board terms. It shows no content."
+   },
+   {
+    "title": "Worked solution on the student's own numbers, pointing at the step their answer left the path",
+    "what": "T-BANK: Item gains steps: list[{text, math}], built from the same params that build the key. The audit asserts that the last step equals the key. Mis gains at: int (the step where that misconception diverges) and wrong_step: str (that step done the wrong way with these numbers, e.g. 'slope = 3 ÷ 54 = 1/18'). A coverage script prints 'N of 386 templates have worked steps'. Start with the 60 templates that have the most first-try misses in attempts.\n\nSESSION, after the reveal:\n- The Explanation card has tabs 'Steps' (the default when available) and 'Short' (today's one-line rationale).\n- Steps are numbered rows in Source Serif.\n- On a miss, the step where the chosen option diverged gets an ink outline and a two-column compare: 'Right: 54 ÷ 3 = 18' | 'Your B: 3 ÷ 54 = 1/18, the ratio flipped'. The steps before it carry a small ✓ ('you likely had this').\n- Each other option's reason line gets a link 'see where C comes from', which outlines C's step.\n- J / K walk the steps, with 'Step 2 of 4'.\n\nRETRY MODE, as a hint ladder: after a wrong try, a 'Hint' button reveals step 1, then step 2, instead of the key. Hints used are stored on the try (tries.hints). A right answer after hints is Mixed, with 'after 1 hint'. The footer reads 'Hint · 2 tries left · Show answer'.\n\nGRID-IN: a matched spr_mistake maps to its step the same way.\n\nELSEWHERE: the ReviewSheet, the print view and the Review pane render Steps.\n\nFALLBACK: a template without steps shows the rationale and the option reasons as today, never an empty tab.",
+    "beats": "Their explanation is one static prose block ('Justification:' plus 'Distractor Analysis:'). It replaces the question card, and it reads the same whatever you picked. Ours is step by step, uses this student's numbers, marks the exact step where their answer went wrong, and doubles as a hint ladder. A bank with hand-written prose cannot generate that per wrong option. It also closes a gap where we are below them today: our rationale is one sentence (median 21 words, max 58 over the 386 templates), which is thinner than their Justification.",
+    "effort": "L",
+    "needs": "Needs:\n- T-bank: edits to satbank/item.py (Step, Mis.at and the audit check) and per-template work, shipped by coverage like spr_mistakes.\n- practice.to_question passes the steps through.\n- F5: drill feedback returns steps and the step for each option.\n- F3: UI.workspace explanation tabs and the hint control.\n- F4: a tries.hints column."
+   },
+   {
+    "title": "Twin retake: every question again with the same type, trap and difficulty but new numbers, with a Then vs Now table",
+    "what": "SERVER: POST /api/drill {twin_of: sid, scope: 'all'|'misses'}. For each served slot of the parent, in order, it serves the same template, tier and format on a fresh seed (drill._fresh). It stores cfg.twin_of (the root set, so chains compare to the original) and cfg.twin_map {new_qid: old_qid}. Repairs are off by default. A challenge parent returns 409.\n\nENTRY POINTS:\n- Summary NextActions: a secondary pill 'Twin retake · same 10 types, new numbers' and a quiet 'Twins of my misses · 3'.\n- Your sets Finished rows: an action 'Twin retake'.\n- MoreMenu: the item 'Twin retake'.\n- The exact retake stays, as 'Retake exact (tests memory)'.\n\nDURING: after answering, the strip note reads 'Twin of question 4 · Then ✕ 1:40'. It is never shown before answering, so it does not prime.\n\nTWIN SUMMARY: a 'Then vs Now' block.\n- Headline: 'Then 6 / 10 → Now 9 / 10 · 3 fixed · 0 slipped · 14 s faster per question'.\n- Table columns: # · type · Then (status cell and time) · Now (status cell and time) · change (fixed / still missing / slipped / held).\n- A paired bar chart shows then-time against now-time per question.\n- 'Still missing' rows offer 'Steps' and 'Twins ×3'.\n\nOPTIONAL: on a set with misses, a chip 'Twin retake in 3 days' stores due on the set. Today's Up next picks it up on that day.",
+    "beats": "Their only redo is Clear Session, which serves the same questions again. A student half-remembers them, so the second score measures memory. A twin retake measures whether the skill transferred, and Then vs Now shows it question by question. A finite bank cannot do this without spending a second item on every slot.",
+    "effort": "S",
+    "needs": "Needs:\n- F5 / S4: the twin_of branch in drill.create. Served entries already store the template and tier.\n- S4: the summary block.\n- S3 (optional): the Today hook that reads a due date on the set."
+   },
+   {
+    "title": "Points on the table: every skill and type priced in SAT points for this student",
+    "what": "SERVER, value(learner) for each skill s:\n- q_s: expected questions per 44-question Math section. It is blueprint.DOMAIN_SPLIT (15 / 15 / 7 / 7) split inside each domain by the official per-skill counts in material/keys.\n- r_s: the student's first-try rate over their last 30 answers in the skill, shrunk toward 0.5 with a prior of 10 answers.\n- p: points per question at the student's level. It is the slope of scoring.ANCHORS at estimate.mean3, or at the level their practice accuracy implies when there is no test; about 13 points mid-scale.\n- The result is q_s × max(0, 0.9 − r_s) × p, rounded to 5. 0.9 stands for 'reaching Strong'.\n- The same is computed per type, using the type's share of its skill.\n\nBUILDER:\n- SkillRow gets a 'Worth' column, '≈ +20 pts' in mono. An info popover shows the arithmetic: 'About 3.4 questions a test · you get 38% first try · each question is worth about 13 points at your level'.\n- DomainCard carries its total.\n- The header meta adds 'About 140 points on the table'.\n- Sort gains 'Most points available'.\n- A preset chip 'Biggest gains · +60 pts' picks the top 3 skills.\n- A new student sees 'up to +N', labelled 'estimated before you have practised'.\n\nSUMMARY: a 'What this set moved' row per skill, e.g. 'Linear functions 38% → 52% first try · on the table +20 → +15'.\n\nHONESTY: '≈' is always shown. A helper line reads 'From how often the test asks each skill and your first-try accuracy. Your score comes from tests.' It is never shown in the challenge.",
+    "beats": "TopTierPrep never connects practice to score. Their Score Progress stays at 0 until a full four-module test. Their builder shows item counts (Linear functions 170), which says what they stock, not what the student stands to gain. Ours ranks all 19 skills by points available to this student and shows the points each set moved.",
+    "effort": "M",
+    "needs": "Needs:\n- blueprint.DOMAIN_SPLIT, the official counts and scoring.ANCHORS, which all exist.\n- F4 (R16): estimate.mean3.\n- S4 / F5: a points field on /api/bank skills and types, and in finish().\n- Offer the same numbers to Results, Plan and Today, so there is one source per fact."
+   },
+   {
+    "title": "Speed and accuracy map, with fair time budgets per question type and a drill for each quadrant",
+    "what": "BUDGETS: every (template, tier) gets budget_s.\n- When there are 20 or more first tries, it is the crowd median time of right first tries.\n- Otherwise it is the tier default: easy 65 s, medium 95 s, hard 126 s. On module 1's 7 / 8 / 7 mix that totals 2,097 s, about the real 2,100.\n- Budgets are returned in state and in /api/bank.\n\nIN THE SESSION:\n- The QStopwatch reads spent / budget ('0:48 / 1:05'), and its pace alert fires at the question's own budget, not a flat 1:35.\n- Timed sets get a RunBar pace delta, '1:10 ahead of pace' or '0:40 behind'. It updates per answer, not per second, so it does not jitter.\n\nBUILDER: a toggle 'Skills · Speed' above the tree. Speed is a scatter with one dot per type that has 3 or more first tries.\n- x: median time ÷ budget, on a log scale from 0.5× to 2×, with a line at 1×. y: first-try rate, with a line at 70%.\n- Four labelled quadrants with counts: Fluent · 12, Careful · 7 (slow and right), Rushing · 3 (fast and wrong), Stuck · 5 (slow and wrong).\n- Each dot is the skill glyph. Tapping or hovering it shows the type name, 'median 1:48 vs 1:05 · 4 / 5 right' and 'Try one'.\n- A hidden data table sits beneath it. On a phone it is full width and 300 px tall, and a tap hits the nearest dot.\n\nONE-TAP SET PER QUADRANT:\n- Careful → 'Beat the clock': a per-question countdown at 90% of budget. Going over is shown but never blocks.\n- Rushing → 'Slow down': an answer that comes in under 30% of budget asks 'That took 0:12. Check anyway?', with Enter to confirm.\n- Stuck → a Fix set with Steps open.\n- Fluent → 'Keep warm' (the due pool).\n\nSUMMARY: the time chart draws each question's own budget tick (legend 'Over budget 2 · under 8'). When it is true, it adds the line 'Your wrong answers came 0:31 faster than your right ones', with the Slow down set.",
+    "beats": "Their only time data is a per-question stopwatch that resets on reload, plus a contest-only 'average seconds by difficulty'. Neither says which question types cost the student time, or whether they are rushing. Ours gives every type a fair budget, places every type in a quadrant and gives a drill for each quadrant. A flat 95 s pace, which our own spec uses, calls every hard question slow and every easy one fine.",
+    "effort": "M",
+    "needs": "Needs:\n- attempts.ms per template, which exists.\n- F5: crowd medians in the drill.levels() cache, and a cfg per_q_seconds for Beat the clock.\n- F1: a UI.scatter in charts.js.\n- S4: the builder toggle and the summary changes."
+   },
+   {
+    "title": "The Desmos way: one tap loads the question into Desmos, and we measure whether using it helps",
+    "what": "T-BANK: graphable templates emit desmos: {exprs: [latex], look: 'intersection'|'x-intercepts'|'vertex'|'point'|'regression'|'table', bounds}, built from params. Examples: both lines of a system; f(x) against the target value; the circle equation; the data table with y1 ~ m x1 + b. A coverage counter reads 'N of 386 types have a Desmos route'. Start with systems, linear and nonlinear functions and equations, inequalities, circles and two-variable data.\n\nSESSION, after the verdict only (never in end mode, the challenge or tests):\n- The Explanation gets a third tab, 'Desmos way', with 'Show me in Desmos'.\n- It opens the dock (or the phone sheet) and adds a 'Walkthrough' folder. The expressions are typed in one by one, 300 ms apart (all at once under reduced motion).\n- The graph zooms to bounds and labels the point of interest, e.g. 'The lines meet at (3, 7), so x = 3'.\n- The student's own expressions stay in their own folder. 'Back to my graph' restores them.\n\nTAGS: a 'Desmos-able' chip on TypeRow and on the strip after answering. A builder filter 'Desmos-able types only (N)' and a preset 'Desmos drills'.\n\nTRACKING: UI.calc listens to Desmos change events and sends calc_used and calc ms with the /time payload, stored as attempts.calc.\n- Summary: 'Calculator on 4 of 10 · right 4 / 4 with it, 3 / 6 without'.\n- SkillPanel, when both sides have 5 or more answers: 'Systems: 90% with Desmos · 60% without', plus a nudge 'Use Desmos on these'.",
+    "beats": "TopTierPrep embeds Desmos in a floating panel but never shows how to use it on a question. It cannot, because their items are static text and images. We hold every item's exact equations, so the calculator can solve the question on screen, the fastest route on a large share of SAT Math questions. We can also tell the student whether using it helps them, per skill.",
+    "effort": "L",
+    "needs": "Needs:\n- T-bank: the desmos export per template.\n- F3: a UI.calc API with setExpressions, bounds and folders.\n- F4: an attempts.calc column.\n- A Desmos production key (open question 15)."
+   },
+   {
+    "title": "Zero-wait answering: the verdict paints at the tap, the next question is already loaded, and a dropped connection does not stop practice",
+    "what": "SERVER:\n- The answer response carries next: the next served question, chosen with the repair logic already applied. Next renders with no request; POST /next only confirms that qid.\n- In instant-mode practice only (not the challenge, contests, retry, end mode, tests, or shared sets whose sharer sees results), the question payload also carries check {key_index or accepted[], reasons, filler, rationale, steps}.\n\nCLIENT:\n- The verdict, the key, every option's mistake and the explanation render in the same frame as Check.\n- The server reply then adds what only it knows (mistakes opened or closed, mastery movement, crowd), which fades in when it arrives.\n- If the server ever disagrees, the server wins and a toast corrects the verdict.\n\nOFFLINE: answers go into UI.saveQueue. With 2 questions prefetched the student keeps going; after that the footer reads 'Offline · 3 answers waiting'. Everything flushes on the online event.\n\nINPUT:\n- On touch, tapping the selected choice again checks it. A hint 'Tap again to check' shows only in a learner's first 3 questions ever. A 250 ms guard stops double-fires.\n- On desktop, A–D then Enter checks. Next takes focus after the verdict, so Enter again moves on.\n\nACCEPTANCE (Playwright):\n- The verdict paints within 50 ms of Check (click to next requestAnimationFrame).\n- Next renders within 100 ms.\n- Answering with the network offline, then going back online, files all the answers in order.",
+    "beats": "Their Check and Next are each a network round trip. A reload loses the wrong-pick state and resets the stopwatch, and nothing works offline. Per question they need select, Check and Next, plus two more clicks to open and close the explanation after a miss, and they never show the key. Ours on a phone is tap, tap on the same spot, then Next, with the key and the explanation already inline. On desktop it is B, Enter, Enter.",
+    "effort": "M",
+    "needs": "Needs:\n- F5 / S4: drill.answer returns next, and public(q) carries check in instant practice. The key can be read in devtools there, which is acceptable for self-practice and never allowed for ranked or shared-results sittings.\n- F3: UI.saveQueue and the workspace fast path."
+   },
+   {
+    "title": "Sure / Unsure / Guess on practice answers, with confident misses ranked first",
+    "what": "CONTROL: replace the 'I'm guessing' chip with Tests' confidence component (one component in UI.workspace).\n- Three small chips under the choices: Sure · Unsure · Guess. None is set by default.\n- K cycles them, per R22.\n- The pref 'Ask how sure', in the session's More menu and in Settings, is on by default.\n\nWHAT EACH MEANS:\n- Guess: today's I'm guessing (half mastery, does not close a mistake, opens the explanation).\n- Unsure and right: opens a light Unsure item that needs one clean answer (Review's Unsure).\n- Sure and wrong: a confident miss. The notice reads 'Confident miss: used the slope as the intercept. This kind costs points on test day, because you would not have checked it.' The trap gets kinds 'confident', which ranks it first in Coach's pick ('Circles: 2 confident misses').\n\nSUMMARY: a Calibration row with three bars: 'Sure 18 · 17 right (94%) · Unsure 7 · 4 right (57%) · Guess 3 · 1 right'. A one-line reading when it applies:\n- 'Your sure answers were right 70%: re-read before you trust a first read.'\n- 'Your unsure answers were right 90%: trust yourself and move on.'\nThe ReviewList gets the filter 'Confident misses · 2'.\n\nBUILDER: the pool 'Confident misses · 4 types' under Questions from, and a preset chip with the same name.",
+    "beats": "TopTierPrep records nothing about certainty, and their unlimited retries even blur which first answers were wrong. Ours separates misconceptions (sure, wrong and named) from gaps (unsure) and from luck (guess). It also tells the student whether to trust first instincts, which decides when to move on in a timed module.",
+    "effort": "S",
+    "needs": "Needs:\n- F3: the confidence component already specified for exam mode in UI.workspace.\n- F4: an attempts.conf column (guess exists), and the priority in progress.coach.\n- S10: Review's Unsure list."
+   },
+   {
+    "title": "Type map: all 386 question types as a map the student fills in",
+    "what": "BUILDER: a toggle 'List · Map' at the top of the Skill tree.\n\nMAP LAYOUT: one row per skill under the domain headers, each a strip of square cells, one per type (6 to 36 per skill). The cells use the §2.3 tokens:\n- Untried: dashed.\n- Last try wrong: ink with ✕.\n- Right once: amber outline.\n- Strong (2 or more clean rights): amber fill with ✓.\n- Open mistake: orange dot.\n- Due for review: a small clock glyph.\nA legend carries live counts: 'Met 41 of 386 · Strong 12 · Open mistakes 4 · Due 5 · Untried 345'. Each row ends with '8 / 23 met'.\n\nCELLS:\n- Tapping or hovering a cell opens a popover with the type name, the about line, your record, 'Try one' (the inline drill, R24 source 'try') and 'Add to selection'.\n- Selected cells get a 2 px ink ring. A mouse drag paints many cells; on touch, long-press and then drag.\n\nQUICK PICKS above the map: 'Select untried (345)', 'Select open mistakes (4)' and 'Select due (5)'. Each also sets the matching pool.\n\nEARNED MOMENT: when every type in a skill has been answered right at least once, its row gets a check and a one-time toast, 'Every Linear functions type met · 23 of 23'. It never repeats.\n\nPHONE: cells are 16 px with 3 px gaps and wrap at 18 per line (339 px), so there is no horizontal scroll.\n\nRead-only copies can be offered to Results and Me.",
+    "beats": "Their tree stops at 19 skills with item counts. A student cannot see which kinds of question inside 'Nonlinear functions' (530 items) they have never met, or which ones they have beaten. Ours shows every question type as met, strong or still owed, and any of them is one tap from a try. A fixed bank has no type layer to map.",
+    "effort": "M",
+    "needs": "Needs:\n- /api/bank types with per-learner state (already specified in 3.3.5).\n- F1: UI.cell at a small size.\n- The inline 'try' drill (R24).\n- S4: the map view."
+   },
+   {
+    "title": "'For me' difficulty: choose how hard relative to the student, and see right answers against what was expected",
+    "what": "SETTINGS: 'Difficulty' gets a first Seg, 'Standard · For me'.\n- Standard keeps the Easy / Medium / Hard toggles.\n- For me shows 'Warm-up (80%+ likely) · Stretch (50–75%) · Hard for me (under 50%)', with Stretch as the default.\n- Helper: 'Chosen from how you have done and how hard each type has been for everyone.'\n\nMODEL: P(right) = 1 / (1 + 10^((item − you) / 400)).\n- 'you' is learners.rating, or a mastery-derived rating while the learner is unrated.\n- 'item' is item_ratings(template, tier), or the tier prior (easy 850, medium 1000, hard 1150) while the item is unrated.\n- _fresh keeps drawing seeds and tiers until the card falls inside the band. The R33 adaptive step moves inside the band.\n\nDETAILS: 'Predicted for you: 62% · everyone 58%'. It is shown only after answering, so it cannot psych the student out.\n\nSUMMARY: 'Expected 6.4 right · you got 8 · +1.6 above expected'. This is a fair measure on a set of mixed difficulty.\n\nThe 1–7 LevelStrip moves behind 'Advanced: levels 1–7' and is hidden until 30 or more types are measured.",
+    "beats": "Their 'Question Score 1–7' is one fixed label that is the same for every student, and their 'Adaptive' preference visibly does nothing in QBank. Ours aims each set at the student's own success band, where practice moves a score fastest. It scores right answers against what was expected, so a hard set reads as progress, not failure.",
+    "effort": "M",
+    "needs": "Needs:\n- S8 (Compete): item_ratings and learners.rating.\n- F5: the band filter in _fresh.\n- F4: a prefs key for the band.\n- S4: the settings and summary lines."
+   },
+   {
+    "title": "Answer-key disputes that check themselves inside the report sheet",
+    "what": "TRIGGER: in UI.report, choosing 'Wrong answer key', 'More than one answer is right' or 'No right answer' first calls POST /api/report/check {session, question_id}. The server regenerates (template, seed) with verify=True, which re-runs the independent audit (and satbank.verify for geometry). It recomputes each option's value from the params and returns {ok, key, values: [per option], steps?}.\n\nWHEN THE KEY HOLDS, the sheet reads at once: 'We rebuilt this question from its numbers and checked it a second, independent way. The answer is A: j(x) = 18x.' Then one line per option, e.g. 'B: x/18 gives 1/18 at x = 1, not 18', with worked steps once they exist.\n- 'That settles it' closes the sheet and files nothing.\n- 'I still think it is wrong: send it to a person' continues to the normal report, with the check attached.\n\nWHEN THE RE-DERIVATION FAILS (a real engine bug):\n- The sheet reads 'You are right: this question has a bug. It will not count against you.'\n- The attempt gets disputed = 1 (R8), and any trap it opened is removed.\n- (template, seed) is logged at error level and added to server/quarantine.json, which _fresh skips for everyone.\n- The set serves a replacement question.\n\nSettings › Your reports lists these as 'Checked automatically · key confirmed' or 'Bug confirmed · removed'.",
+    "beats": "Their report is a 5,000-character form with 10 image slots and nothing comes back in the session. Ours answers the dispute inside the sheet with the proof. If the student is right, it voids the attempt and removes the question for everyone. That is possible only because every item can be regenerated and re-derived exactly.",
+    "effort": "M",
+    "needs": "Needs:\n- The registry.generate verify path and the per-template audits, which exist.\n- F6: the check endpoint beside /api/report.\n- F4 (R8): the attempts.disputed column.\n- F5: a quarantine check in _fresh."
+   },
+   {
+    "title": "Build any set in one line: the builder's search is also a command bar",
+    "what": "FIELD: the Search field in 1.5 also parses commands. '/' focuses it from anywhere on /practice/.\n\nTOKENS it understands:\n- Size: numbers 1–120 (Questions), 'endless' or '∞'.\n- Difficulty and format: easy, medium, hard, grid-in, mc.\n- Timing: timed, pace, untimed, and 'N min' (time-boxed).\n- Pools: mistakes, due, untried, marked, saved.\n- Answers shown: 'test mode', retry.\n- What to practise: skill names and TOPICS aliases, type names, and CB Question IDs (the official-twins proposal).\nThe parser is shared with the palette (F2), so both agree.\n\nPREVIEW: under the field, a live parse line of removable chips, 'Circles × · Hard × · 10 questions × · Timed 16 min ×', followed by '→ 10 hard Circles questions, timed 16 min · Enter to start'. Unrecognised words stay as the type search.\n\nKEYS:\n- Enter starts, the same POST as Start.\n- Shift+Enter applies the line to the builder without starting, for fine-tuning.\n- ↑ in an empty field recalls the last 10 lines (localStorage satf.cmd, inside try/catch).\n\nTIME-BOXED LENGTH: the Questions Seg also gains '15 min · 30 min'. The count is minutes × 60 ÷ the student's average budget on the selection (95 s until budgets exist). The set ends when time is up, and the question on screen can still be finished.",
+    "beats": "TopTierPrep needs 5 to 7 controls on every visit (bank, subject, domain accordion, skill checks, difficulty, volume, mode, Start), and their Profile Practice Mode is the only thing remembered. Ours is '/', 'circles hard 10 timed', Enter: one line and one key, and the same line works from the palette on any page.",
+    "effort": "S",
+    "needs": "Needs:\n- F2: the palette parser exported as UI.parseSet(text), returning a drill body.\n- S4: the builder wiring.\n- Budgets from the speed-map proposal for time-boxed sets (a 95 s fallback works until then)."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Bank toggle (Question Bank | TTP Bank)",
+    "spec_says": "No toggle. The equivalent is 'a clear statement of where the questions come from'. Official-item replicas are an open question and are left out.",
+    "why_only_parity": "This is below parity. Their QB tab is 1,921 official Math items, and we offer nothing linked to official questions. This is despite already holding 1,039 CB Question IDs in material/keys and 1,030 official items pinned to templates in sources.py.",
+    "upgrade": "Official-question twins (proposal 1):\n- Paste CB Question IDs to get unlimited same-trap twins.\n- A 'Built from N official questions' chip on each type.\n- A filter 'Only types built from official questions'.\n- 'Modeled on College Board 84664a7c' in Details.\nNo official item is ever reproduced."
+   },
+   {
+    "feature": "Explanation, and 'every option explained'",
+    "spec_says": "The explanation is inline (collapsed after a right answer, open after a miss). Every distractor's misconception shows by default. §3.3.4 claims 'TopTierPrep has one long explanation per item'.",
+    "why_only_parity": "Their review explanation already has 'Justification:' plus 'Distractor Analysis:' with one line per wrong option (ttp-live §2 and §3.3.1). So one line per wrong option is parity in what the student reads. Our Justification counterpart is thinner: the rationale is one sentence (median 21 words, max 58).",
+    "upgrade": "Worked steps on the student's own numbers, with the step where their answer diverged outlined beside the right computation. The same steps serve as a hint ladder in retry mode (proposal 2). The option reasons should also be used for what only named reasons can do: crowd share per misconception, confident misses, and 'see where C comes from' linking each wrong option to its step."
+   },
+   {
+    "feature": "Difficulty multi-select (Easy / Medium / Hard)",
+    "spec_says": "Three tier toggles, each with a count of types, and the last one on cannot be turned off.",
+    "why_only_parity": "It is the same control as theirs. The counts are types instead of items.",
+    "upgrade": "A 'For me' band (Warm-up / Stretch / Hard for me) from Elo ratings of the student and each item, plus 'Expected 6.4 · you got 8' in the summary (proposal 10). Standard tiers stay as the first option."
+   },
+   {
+    "feature": "Question Score 1–7",
+    "spec_says": "A LevelStrip of 7 cells. Levels are measured only from 20 or more first tries per (template, tier), using fixed thresholds, and unmeasured types come in through a checkbox.",
+    "why_only_parity": "It copies their control, and at launch it ships almost empty. The db holds 283 attempts, so essentially none of the 386 types are measured. That leaves 7 disabled cells, which is worse than their opaque but working slider.",
+    "upgrade": "Hide the strip behind 'Advanced' until 30 or more types are measured. Measure levels from Compete's item_ratings, which move with every answer and need no 20-try wait. Make 'For me' the everyday difficulty control."
+   },
+   {
+    "feature": "Volume (10 / 20 / 30 / 40 / 50 / All)",
+    "spec_says": "5 · 10 · 20 · 30 · 40 · 50 · ∞, plus Other (1–120) and a sprint for ∞.",
+    "why_only_parity": "It is the same count-based choice, with ∞ as their All.",
+    "upgrade": "Time-boxed lengths ('15 min · 30 min · I have N min'). The count comes from this student's budgets on the selected types, and the set ends on time. It is also reachable as 'N min' in the command bar (proposal 12)."
+   },
+   {
+    "feature": "Timer (Timed / Untimed, Hide)",
+    "spec_says": "Untimed / Test pace (a flat 95 s a question) / Custom. It has Hide, Pause, toasts at 5:00 and 1:00, and a flat 1:35 pace alert.",
+    "why_only_parity": "A countdown with a Hide link is theirs. A flat 95 s per question calls every hard question slow and every easy one fine, so the pace alert misleads.",
+    "upgrade": "Per-type budgets (crowd median, or 65 / 95 / 126 s by tier, which sums to 2,100 s on a module mix). The stopwatch reads spent / budget, and the RunBar shows a pace delta, '1:10 ahead of pace' (proposal 5)."
+   },
+   {
+    "feature": "Clear Session (redo the same questions)",
+    "spec_says": "'Start over with these exact questions' sends {retake}, and the old set stays in history.",
+    "why_only_parity": "It is their Clear Session again: the same items, so the second score measures memory.",
+    "upgrade": "Twin retake as the main redo: the same types, traps, tiers and order with new numbers, and a Then vs Now table per question (proposal 3). Exact retake stays as the secondary option, labelled 'tests memory'."
+   },
+   {
+    "feature": "Share (shared session with a 'Start Practice' landing)",
+    "spec_says": "A shared set gives everyone the same exact questions. The sharer sees results per question and per taker, and takers can opt in to show their name.",
+    "why_only_parity": "The mechanism is theirs (shared session plus a hidden homework idea). Identical questions also let a group pass answers around, which is exactly why the user chose twins for the Daily Challenge.",
+    "upgrade": "Default to 'Twins for everyone': each taker gets their own numbers on the same types, tiers and order. Results still aggregate per slot and per named misconception, and each taker sees 'you vs the group' per type. 'Exact questions' stays as an option for a tutor going over one sheet together."
+   },
+   {
+    "feature": "Eliminate (strike-out)",
+    "spec_says": "An Eliminate mode with a struck-letter circle, Undo, and Shift+A–D. Strikes are saved to /strike and restored on any device.",
+    "why_only_parity": "Theirs also saves eliminations to the server, so the behaviour is identical.",
+    "upgrade": "Grade the strikes after the reveal:\n- Each struck option shows 'dodged: used the slope as the intercept'.\n- 'You struck the key' is called out, and it counts as a miss signal for the coach.\n- The summary adds 'Strikes 14 · 13 on wrong options (93%) · 1 on the key'.\n- An earned line on a right answer: 'Dodged 2 named traps'.\nOnly a bank with named distractors can grade eliminations."
+   },
+   {
+    "feature": "Highlights, underlines and notes (their Annotate / Bluebook H&N)",
+    "spec_says": "Seven mark styles and a per-question 'My note', stored per (template, seed), coming back on replay, retake, review and Saved (R6).",
+    "why_only_parity": "It matches Bluebook and TopTierPrep. In Math, practice almost always serves fresh seeds, so a note tied to one exact seed rarely comes back.",
+    "upgrade": "Type-level notes. 'My note' gets 'Remind me on this type', and the note then shows as a collapsed tip on every future question of that template ('Your note, Sep 20: check the sign of the slope') with 'Still useful? Keep / Remove'. It also shows on the TypeRow and in Review, so the student's own lessons become their hints."
+   },
+   {
+    "feature": "Reference (formula sheet modal)",
+    "spec_says": "The formula-sheet dialog.",
+    "why_only_parity": "It is identical to theirs.",
+    "upgrade": "A contextual reference:\n- The dialog opens scrolled to the formula this question type uses, from a template → formula map across the 19 topics.\n- A 'Not on the sheet: you must know this' card for the type (slope formula, vertex form, discriminant, circle equation, exponential growth).\n- A 'Desmos way' link when the type has one."
+   },
+   {
+    "feature": "Calculator (Desmos, floating, draggable, resizable)",
+    "spec_says": "UI.calc with Dock (a resizable column, the default at 1100 px and up), Float and a phone sheet. Its state is kept per set.",
+    "why_only_parity": "It is the same Desmos embed, better placed. It still does nothing that relates to the question on screen.",
+    "upgrade": "The Desmos way (proposal 6): after the verdict, load the question's own expressions into a Walkthrough folder and label the answer point. Track calculator use per answer, to show 'right 90% with Desmos, 60% without' per skill."
+   },
+   {
+    "feature": "Select then Check, then Next (bottom bar)",
+    "spec_says": "Select, then Check or Enter, then Next. prefs.first_tap restores one-tap submit.",
+    "why_only_parity": "It is their flow step for step, and each Check and Next is a round trip.",
+    "upgrade": "Tap the selected choice again to check on touch, and Enter then Enter on desktop. The verdict paints in the same frame as the tap, and the next question is already loaded. Two questions are prefetched for offline, with queued answers (proposal 7)."
+   },
+   {
+    "feature": "Report a problem",
+    "spec_says": "UI.report (R17): categories, details, up to 10 images, device context, and 'Thanks. We can regenerate this exact question to check it.'",
+    "why_only_parity": "It is the same form as theirs (categories, text, 10 images), and it also ends in a thank-you with no answer.",
+    "upgrade": "Key disputes check themselves in the sheet. The server regenerates and re-derives the question and shows the proof. If it is a real bug, the attempt is voided, the question is quarantined for everyone, and a replacement is served (proposal 11)."
+   },
+   {
+    "feature": "Question Overview (Status | Difficulty)",
+    "spec_says": "A navigator with Status, Difficulty, Skill and Time views, legends with counts, a current ring and future slots.",
+    "why_only_parity": "It is their overview popover with two more views. It only shows; it does not act.",
+    "upgrade": "Make it act. Legend chips work as filters ('Incorrect 2 · Over budget 3 · Marked 2') that select their cells. 'Twins of these (3)' then appends twins to the set, or starts an inline drill. U jumps to the next unanswered question."
+   },
+   {
+    "feature": "Public single question (their /question/:key) and our permalink",
+    "spec_says": "/practice/session/?q=TEMPLATE:SEED serves that exact question as a one-question drill. 'Link copied: anyone who opens it gets this exact question.'",
+    "why_only_parity": "It is the same idea as their public question page.",
+    "upgrade": "Sharing a question offers 'Send a twin' (the same type, trap and tier with the friend's own numbers) next to 'Send this exact one'. Using sets kind 'items', the sender later sees 'Maya ✓ 0:52 · Sam ✕ used the slope as the intercept', which gives study groups a light duel without the Compete machinery."
+   }
+  ]
+ }
+}

@@ -1,0 +1,634 @@
+{
+ "label": "critique: plan",
+ "key": "v2:d9397a216b328fbc8fc460fed0637d3f444e7e260521f2a21d3768a2f98abb7d",
+ "result": {
+  "section": "Study plan (/plan/): landing, four-step wizard, plan view in three tabs (Plan, Progress, Plans) with a task list you can change for each day, plus how Today, the practice session, the test report, Me and the diagnostic connect to it",
+  "theirs": [
+   {
+    "feature": "Landing hero",
+    "detail": "Blue hero with decorative circles, a 'Personalized for you' pill, H1 'Your path to the score you want', and a line promising a week-by-week plan built from target, exam date and available time, with every task linking into practice. White CTA 'Create my plan', with 'Takes about a minute · 1 plan left this cycle' under it."
+   },
+   {
+    "feature": "Landing stat cards",
+    "detail": "Three cards: 10 Practice tests (full-length, scored like the real one), 6,933 Question bank (8 domains), 1,002 Vocabulary words (flashcards, quizzes, spaced review)."
+   },
+   {
+    "feature": "How it works",
+    "detail": "Three numbered cards. 1 Answer four questions: target, date, hours; 'we fill in what we already know from your results'. 2 We build the plan: every study day gets its own tasks, weighted toward the domains costing the most points. 3 Work it day by day: each task opens a question set, a practice exam or the vocab deck."
+   },
+   {
+    "feature": "Your study plans list on the landing",
+    "detail": "A list of built plans. Empty state: 'You have not built a plan yet', with a line saying plans collect here so you can switch between them when your exam date or target changes."
+   },
+   {
+    "feature": "Plan quota",
+    "detail": "Capped per billing cycle ('1 plan left this cycle'). Subscription and Profile show an 'AI Study Plan Generations 0/1' meter. Failed plans are hidden and the landing still says 1 left."
+   },
+   {
+    "feature": "Dashboard plan CTA (no plan)",
+    "detail": "'Build Your Adaptive DSAT Study Plan' with three bullets (custom daily time pacing, dynamic score drift adjustments, scheduled rest days) and 'Build My Plan ->'."
+   },
+   {
+    "feature": "Wizard header",
+    "detail": "'Create your study plan', a subtitle saying the draft saves as you go, and an 'Exit setup' pill that is always visible."
+   },
+   {
+    "feature": "Wizard stepper",
+    "detail": "Four step cards (Where you are / Where you're going / Time you have / What to focus on). The number circle becomes a check when done; the active step has a blue border and tinted fill. Clicking a done step jumps back. You cannot jump forward. Step titles use Bricolage Grotesque 30/700 with a one-line subtitle each."
+   },
+   {
+    "feature": "Draft autosave",
+    "detail": "'Save and continue' on every step saves the draft, and leaving and returning resumes it. After a failed build, Try again resets the draft: the exam date goes back to the profile date and the time back to 1h."
+   },
+   {
+    "feature": "Step 1 Where you are",
+    "detail": "Grey note 'Start with your best estimate. You can rebuild the plan after taking a full practice test.' R&W and Math sliders 200-800 with a value bubble, and an 'Overall score' sum. Prefilled from /exam-sessions/results/overview and /qbank/stats: measured scores are used only when tests exist and both sections are above 200."
+   },
+   {
+    "feature": "Step 2 Where you're going",
+    "detail": "R&W and Math target sliders 500-800 whose minimum is the current score. A NOW -> TARGET card: NOW 1000, '+400 points' pill, TARGET 1400, a 400 min / 1000 avg / 1600 max range bar with two markers, and per-section rows '500 -> 700 (+200)'. A hidden screen-reader sentence ('Starting score 1000, target score 1400, projected gain 400 points'). The exam date is a free calendar popover (any date), prefilled from the profile. The pace line updates live ('7 weeks to prepare · about 60 points per week') and never says whether that is realistic."
+   },
+   {
+    "feature": "Step 3 Time you have",
+    "detail": "Subtitle about a plan you can keep beating an ambitious one. Daily chips 30m/1h/1.5h/2h/2.5h/3h/4h (30-240 min). A 'Study days per week' slider with '5 days · 5h a week'. Mon-Sun tiles labelled STUDY (green) or REST (orange), kept in sync with the slider, plus 'Study days: 5 days / Rest days: 2 days'. A 'Solve a practice exam every day' toggle, locked below 150 min with 'a full practice test runs 134 minutes'. The at-a-glance summary rounds up (1.5h x 5 shows as '8 hours across 5 days')."
+   },
+   {
+    "feature": "Step 4 What to focus on",
+    "detail": "Bar 'Set how much of your week each area should take' with '0/4 focus' (blue) and '0 strong' (green) badges. Groups READING & WRITING and MATH, each with its own 'N focus · N strong' count. Eight domain rows with a Focus (arrow-up) / Normal (dash) / Strong (check) segmented control. At most 4 on Focus: the other Focus buttons grey out and a visible helper reads '4 focus areas is the maximum. Move one back to Normal to pick a different one.' Focus rows are tinted blue and Strong rows green. Toggle 'Include vocabulary practice'. 'Your plan at a glance': current, target, exam date with weekday, weekly study time. Back / 'Create my study plan', disabled until something is on Focus."
+   },
+   {
+    "feature": "Build screen",
+    "detail": "'Building your study plan' / 'This usually takes about a minute. You can leave this page and come back — it keeps building.' A % bar and 5 checklist steps with sub-lines (reading scores, mapping weeks and days off, choosing daily work weighted to weak areas, balancing daily time, almost there). The progress is fake: the server marks the plan FAILED in 0.3 s and the screen keeps playing. In the walk, 3 of 3 builds failed."
+   },
+   {
+    "feature": "Error card",
+    "detail": "'We could not build your plan' / 'Nothing was charged against your plan allowance. Try again, and if it keeps failing, give it a few minutes...' with [Try again], which returns to step 1 with the draft reset."
+   },
+   {
+    "feature": "Plan data model",
+    "detail": "status BUILDING|ACTIVE|COMPLETED|REPLACED|FAILED, version, current/target per section, examDate, dailyStudyTime, weeklyStudyDays, weakAreas[], strengths[], vocabularyPreference, dailyPracticeExam, offDays[], totalTasks, completedTasks, and weeks[{weekNumber, theme, days[{date, isOffDay, tasks[{type, title, duration, domain, aiReason, completed, skipped, order}]}]}]."
+   },
+   {
+    "feature": "Plan endpoints",
+    "detail": "generate, latest, list, get, activate, delete, createTask, updateTask, removeTask, moveTask (PUT tasks/move), completeTask {performance}, skipTask, startTask, progress, analytics, regenerate, adapt."
+   },
+   {
+    "feature": "Plan page tabs",
+    "detail": "Plan | Progress | History."
+   },
+   {
+    "feature": "Four stat tiles",
+    "detail": "Days to exam (hint 'Keep the streak going' or 'Exam day has arrived'); Streak (hint 'Longest N days'); Plan complete % (hint 'X of Y tasks'); Score gap (hint '1000 now, 1400 target')."
+   },
+   {
+    "feature": "Today card",
+    "detail": "'Today' chip with the date; 'N of M done · X min left · Y min planned'. Empty states: 'Rest day' / 'You marked this as a day off. Rest is part of the plan.' and 'No tasks scheduled' / 'Nothing is scheduled for today. Check the week below to work ahead.'"
+   },
+   {
+    "feature": "Task card",
+    "detail": "Title; type badge (Practice test / Question set / Vocabulary / Reading / Practice game / Flashcards / Custom); 'N min'; domain; destination (Practice exam / Question bank / Vocab quiz / Vocabulary / Flashcards / On your own). A 'Skipped' outline badge. 'Why this task?' expands the AI-written aiReason; the label flips to 'Hide AI rationale'."
+   },
+   {
+    "feature": "Task actions",
+    "detail": "Open task: [Skip] (ghost), [Mark done] (outline), and a primary launch button per type (Start test / Start questions / Study words / Start reading / Play / Review cards). CUSTOM tasks get only [Mark done], with 'Work through this one on your own, then mark it done.' A done task shows a '✓ Done' badge, [Practice again] and [Undo]. Custom tasks can be created, updated and removed (API)."
+   },
+   {
+    "feature": "Week view",
+    "detail": "'Week N', 'X of Y tasks · Z%', the week's theme sentence and a progress bar. A pager ‹ '3 / 7' › and a [This week] jump when you are on another week. Seven day tiles: weekday, date, and 'done/total', 'rest' or '—'. Today has a top accent bar; the selected day is filled."
+   },
+   {
+    "feature": "Selected day",
+    "detail": "Header 'Today, Wednesday, September 23'. Empty day: 'Nothing scheduled' / 'No tasks on this day. Pick another day above, or move one here.'"
+   },
+   {
+    "feature": "Task rows in the week",
+    "detail": "A checkbox ('Mark as done' / 'Mark as not done'), the aiReason inline, a ⋯ menu ('More actions for {title}') with 'Move to' and the later days of the same week, or 'No later day this week'. A launch button that becomes [Redo] once done. Skipped rows at 55% opacity. Rescheduling only moves a task to a later day in the same week."
+   },
+   {
+    "feature": "Behind banner",
+    "detail": "Shown when there were at least 4 tasks in the last 7 days and under 60% got done. 'You have fallen behind this week' / 'N tasks done over the last 7 days. We can rebuild the weeks ahead around the time you actually have — finished work stays untouched.' [Rebalance my plan]. Toast: 'Your remaining weeks have been rebalanced'."
+   },
+   {
+    "feature": "Score drift banner",
+    "detail": "Shown when measured R&W + Math beats the plan's starting score by at least 60, upward only. 'Your practice scores are up N points', or 'You have hit your target score'. 'This plan was built around X, but your recent tests average Y. Rebuilding uses your real scores…' [Not now] (snoozes 3h in localStorage) / [Rebuild with these scores]."
+   },
+   {
+    "feature": "Progress tab",
+    "detail": "'Accuracy by domain': horizontal bars, 'Weakest first. This is where your remaining time pays off most.', with an RW/MATH legend. 'Study time per day': hours logged across N days, Studied vs Planned. 'How your plan splits your time': planned minutes by task type across the whole plan. Empty state 'Nothing logged yet'."
+   },
+   {
+    "feature": "History tab",
+    "detail": "'Your plans' / 'Every plan you have built. Open any of them to look around, or switch your active plan without losing the others.' Rows: status badge, Built / Exam / Days left / Tasks, 'you are here', [Open] / [Make active]. Older-plan banner: 'You are viewing an older plan', '… · not your active plan', [Back to active plan] / [Make this my plan]. Footer: 'Need a different plan? … This plan stays available under History.' [New plan]."
+   },
+   {
+    "feature": "Toasts",
+    "detail": "Task skipped / added / updated / removed, 'Your remaining weeks have been rebalanced', 'Switched to this plan', 'Study plan archived', 'Could not start task. Please try again.'"
+   },
+   {
+    "feature": "Dashboard card with a plan",
+    "detail": "'Today's Plan' with an 'All Done 🎉' badge when finished; 'N of M completed'; 'X min left (Y min total)' or 'All time targets reached'; a [Full Plan →] button; checkbox rows ('Mark task as done')."
+   },
+   {
+    "feature": "Profile study goals",
+    "detail": "Target score with a bar, an exam date countdown bar ('10 days remaining'), Daily goal 2 Hours, Weekly goal 12 Hours, Preferred time Evening. Nothing uses the preferred time."
+   },
+   {
+    "feature": "Dashboard countdown, target and study time",
+    "detail": "An exam-date pill select of official dates (it still lists past dates) above a live DD:HH:MM:SS countdown. 'Set Target Score' modal (400-1600, number input, bar), not synced with the wizard target (the dashboard shows 0 after the wizard set 1400). 'Study time today / this month' with a month calendar that marks days in UTC."
+   }
+  ],
+  "ours_now": [
+   {
+    "feature": "Landing hero and create CTA",
+    "status": "missing",
+    "note": "/plan/ opens straight into the wizard when there is no plan. Nothing says what a plan does or offers a way in."
+   },
+   {
+    "feature": "Stat cards",
+    "status": "missing",
+    "note": "Nothing shows what backs the plan (19 skills, 386 question types, tests and questions without limit)."
+   },
+   {
+    "feature": "How it works",
+    "status": "missing",
+    "note": "Nothing explains what the plan will do each day."
+   },
+   {
+    "feature": "Your plans list and switching",
+    "status": "missing",
+    "note": "There is one plan, stored as columns on learners. Change wipes it. No history, no switching, no duplicate."
+   },
+   {
+    "feature": "Draft autosave",
+    "status": "partial",
+    "note": "The draft lives in sessionStorage for one tab ('plan-draft'). It is lost when the tab closes, does not follow the learner code, and nothing offers to continue it."
+   },
+   {
+    "feature": "Exit setup",
+    "status": "missing",
+    "note": "You can only leave through the nav. The Change button clears the draft."
+   },
+   {
+    "feature": "Stepper",
+    "status": "have",
+    "note": "Four steps, all clickable, even forward with nothing checked. Done steps show a filled number; the active step is outlined in orange. At 390px the labels are hidden and only numbers show."
+   },
+   {
+    "feature": "Step 1 score slider",
+    "status": "partial",
+    "note": "Math only, 200-800, a big number, and a line with the latest test band. With no history it links to the diagnostic, which does not come back to the plan. No number field, no R&W or total, no note that the plan can be updated after a test."
+   },
+   {
+    "feature": "Step 2 target + gain",
+    "status": "partial",
+    "note": "Big 500 -> 600 with a +100 pill; the slider paints current-to-target orange. No range bar with an average marker, no feasibility check, no note on what the target takes."
+   },
+   {
+    "feature": "Step 2 exam date",
+    "status": "have",
+    "note": "Chips for the published 2026-27 dates plus a date input; the pace reads 'N days · about X points a week'. The chips do not show each date's pace."
+   },
+   {
+    "feature": "Step 3 daily time",
+    "status": "partial",
+    "note": "Chips 15m, 30m, 45m, 1h, 1.5h, 2h, 3h, 4h. 2.5h (theirs) is missing, and every day gets the same minutes."
+   },
+   {
+    "feature": "Step 3 days slider + weekday tiles",
+    "status": "worse",
+    "note": "Slider and tiles stay in sync, but the tiles are single letters (T/T and S/S look alike) with no STUDY/REST label and no study/rest count."
+   },
+   {
+    "feature": "Step 3 practice tests",
+    "status": "have",
+    "note": "'Each week' or 'Every study day', sized by the minutes (a module at 35 min or more, a section at 70 or more), with 'every day' disabled below 35. No twice a week, no choice of test day, no size override."
+   },
+   {
+    "feature": "Step 4 focus per domain",
+    "status": "partial",
+    "note": "Four domains with Focus / Normal / Strong, at most 2 on Focus, a mastery bar and an answered count, preset from results. At the cap, Focus is disabled with no visible reason. No row tint, no icons, no skill-level focus."
+   },
+   {
+    "feature": "Focus actually changing time",
+    "status": "worse",
+    "note": "progress.coach only adds 40 to a topic's rank. The plan cycles coach.ahead, which deals all 19 topics once per cycle, so a Focus domain comes earlier but gets no more days."
+   },
+   {
+    "feature": "Include vocabulary / extras toggle",
+    "status": "missing",
+    "note": "No equivalent, such as the question of the day, the challenge or rechecks in the plan, or R&W study of your own."
+   },
+   {
+    "feature": "Plan at a glance",
+    "status": "partial",
+    "note": "Step 4 only: score, exam, pace, study, tests, focus, strong. No totals to the exam and no split."
+   },
+   {
+    "feature": "Build reliability",
+    "status": "have",
+    "note": "Saving is one synchronous PUT /api/me, so there is nothing to fail in the background. Keep it synchronous."
+   },
+   {
+    "feature": "Plan page tabs",
+    "status": "missing",
+    "note": "One page: a countdown, one day card and a calendar."
+   },
+   {
+    "feature": "Stat tiles",
+    "status": "partial",
+    "note": "Only the countdown (a big number with the date, gain and rhythm). No plan-complete %, no streak with longest, no score gap tile."
+   },
+   {
+    "feature": "Plan view daily tasks",
+    "status": "partial",
+    "note": "One day card: a single coach set, or a test plus leftover practice. No task list, no per-task status, no record of what was done, no resume of a started set."
+   },
+   {
+    "feature": "Why this task",
+    "status": "missing",
+    "note": "No reason is shown for any day's topics, although the coach knows them (open mistakes, mastery, days since last worked)."
+   },
+   {
+    "feature": "Skip / mark done / undo / practice again",
+    "status": "missing",
+    "note": "No per-task actions besides Start."
+   },
+   {
+    "feature": "Custom tasks",
+    "status": "missing",
+    "note": "You cannot add your own task, such as R&W study, so the plan cannot hold the half of the SAT we do not teach."
+   },
+   {
+    "feature": "Move a task / take a day off / shorter day",
+    "status": "missing",
+    "note": "No rescheduling of any kind after the wizard."
+   },
+   {
+    "feature": "Week view",
+    "status": "missing",
+    "note": "No week header, week progress or pager. The calendar is the only multi-day view."
+   },
+   {
+    "feature": "Week-by-week structure",
+    "status": "missing",
+    "note": "A flat calendar: no phases, no difficulty change over time, no timed practice near the exam."
+   },
+   {
+    "feature": "Calendar",
+    "status": "partial",
+    "note": "Monday-first, with markers for practice (circle), test (rectangle) and SAT (orange). It stops at 16 weeks (count < 16*7), so a later exam never shows. No month navigation. 'Done' means any answer that day, not the planned task."
+   },
+   {
+    "feature": "Adherence / progress stats",
+    "status": "missing",
+    "note": "No days done vs planned, minutes vs plan, or mistakes closed since the plan began."
+   },
+   {
+    "feature": "Study time per day chart",
+    "status": "missing",
+    "note": "Nothing compares studied with planned per day."
+   },
+   {
+    "feature": "Plan split by task type",
+    "status": "missing",
+    "note": "Nothing shows how the plan spends its minutes."
+   },
+   {
+    "feature": "Accuracy by domain, weakest first",
+    "status": "missing",
+    "note": "The plan page shows no accuracy at all."
+   },
+   {
+    "feature": "Behind banner / rebalance",
+    "status": "missing",
+    "note": "The plan redraws from today, so nothing piles up, but nothing tells a student the plan is bigger than the time they really have."
+   },
+   {
+    "feature": "Score drift adjustment",
+    "status": "partial",
+    "note": "The coach re-reads results daily, but a new test never offers to update the starting score or the target."
+   },
+   {
+    "feature": "Score trajectory",
+    "status": "missing",
+    "note": "No chart of where you are against where you should be by now."
+   },
+   {
+    "feature": "Missed days",
+    "status": "partial",
+    "note": "Nothing piles up, but a missed day is not shown and cannot be made up."
+   },
+   {
+    "feature": "Streak",
+    "status": "worse",
+    "note": "progress.days counts consecutive days with any answer, so a plan with weekend rest days breaks the streak every Saturday."
+   },
+   {
+    "feature": "Study time",
+    "status": "worse",
+    "note": "Test answers are filed with ms=None (record_paper), so time spent on a test counts as 0 minutes in progress.days."
+   },
+   {
+    "feature": "Today's plan card on the dashboard",
+    "status": "partial",
+    "note": "Today leads with the plan's test on a test day (UI.plan.dayOf) or else the coach set. No task counts, no minutes left, no done state."
+   },
+   {
+    "feature": "Preferred time / reminders",
+    "status": "missing",
+    "note": "No preferred time, no calendar export, no reminders."
+   },
+   {
+    "feature": "Post-exam state",
+    "status": "missing",
+    "note": "Once the exam date passes, the page silently opens the wizard. No way to log the real score and no summary."
+   },
+   {
+    "feature": "Target / exam date as one value",
+    "status": "partial",
+    "note": "Plan and Today read the same learners columns, so they agree. Me has no goals card yet."
+   },
+   {
+    "feature": "Quota",
+    "status": "have",
+    "note": "Free and unlimited. Keep it that way."
+   }
+  ],
+  "design": "## Review changes\n\nWhat the first spec got wrong, fixed below. The worst gap was its \"theirs\" list. It still said their plan view was \"claimed, not seen\", although the live walk recovered the whole plan view from their bundle. So their tabs, task actions, custom tasks, rescheduling, banners, Progress charts and History details were missing from the spec.\n\n**A. Theirs, left out or covered by something weaker**\n1. Added **page tabs** `Plan · Progress · Plans` (theirs: Plan | Progress | History). Before, ten blocks sat in one long scroll, which was worst on a phone.\n2. The stat row was **3 tiles and is now 4**. Added **Plan done %** (theirs: 'Plan complete % · X of Y tasks'), and moved the **streak with its longest** into the week tile (theirs: 'Streak · Longest N days'). The first spec had no plan-complete figure and put the streak only in a side card, without the longest.\n3. The **day progress line** now reads `2 of 4 tasks · 33 min left · 45 planned` (theirs: 'N of M done · X min left · Y min planned'). It used to show minutes only.\n4. **Per-task actions** were missing. Added Skip, Undo, Mark done / Mark not done, and Again · new questions (theirs: Practice again). Skipped rows sit at 55% opacity with a `Skipped` tag.\n5. **Custom tasks** were missing: theirs has CUSTOM with Mark done, plus create, update and remove. Added `Add a task`, with a title, minutes, a day or a repeat rule (every study day / weekly) and a checkbox. This is also how R&W study gets into the plan.\n6. **Rescheduling** was missing. Theirs only moves a task to a later day in the same week. Ours moves any task to any day up to the eve, swaps a focus set's topics, takes a day off, shortens or lengthens a single day, and has Reset this day.\n7. **'Why this task?'** was missing. Theirs is AI prose. Ours lists the facts the scheduler used: open mistakes by name, accuracy, days since last worked, focus state, and a timing or grid-in gap.\n8. A **week header** was missing. Added `Week 3 of 7`, `8 of 12 tasks · 67%`, a bar, a server-written **week theme** line, and `done/total` in every day column.\n9. Added a **Behind banner** (theirs: fallen behind + Rebalance). Ours shows the minutes you actually study and offers one tap to fit the plan to them, with its effect on totals and pace shown before you apply it.\n10. **Drift** now also has the 'You hit your target' variant, which offers to raise the target. It averages recent tests instead of trusting one sitting, and works in both directions.\n11. Added the **Progress tab** charts that were missing: **Study time per day, studied vs planned**, **How the plan splits your time** (by task type) and **Accuracy by domain, weakest first**.\n12. The **Plans tab** now has Built date, days left, tasks done, `You are here`, `New plan`, and an older-plan banner with both `Back to active plan` and `Make this my plan`.\n13. Added the missing **toasts**, each with Undo where an undo exists.\n14. The **Today card** now matches their dashboard card: counts, minutes left, a done state, a `Full plan` link, and checkboxes for your own tasks.\n15. **Step 4**: at the cap, a **visible helper line** replaces the `title` tooltip, which touch users never see. Focus and Strong rows are **tinted**.\n\n**B. Not clearly better, redesigned**\n- The **weekday tiles now carry each day's minutes as a visible select**, replacing the hidden 'Different time on some days' disclosure. **Days off** is a visible section with an empty state instead of a disclosure.\n- The **R&W score** is a visible optional field, not a switch that is off by default. It is tied to custom R&W tasks.\n- The **landing** gets an **Example day** built from the student's own data, so they see what a day holds before committing. Stat tile 3 shows a **real named mistake from the bank** instead of a bare '4'.\n- Added a **Coming up** list: the next study days with their topics, the next test and the next phase change.\n- The **skills list** (all 19, accuracy since the plan began) opens in place on the Progress tab, instead of only linking away.\n\n**C. Minimalism creeping back, removed**\n- Calendar minutes are **no longer hidden on phones**; they show at 9.5px mono.\n- Mastery stays a bar (a deliberate honesty rule in progress.py), but **accuracy % and answered counts are printed** next to it.\n- WeekMeter day dots now carry **weekday letters**.\n- Each chart has a **visually hidden data table**.\n\n**D. Could not work as described, fixed**\n- **Target note**: '700 ≈ 39 of 44 right' was wrong, because scoring is difficulty-weighted. It now reads 'about 88% of the section's points (hard 3, medium 2, easy 1)'. `ANCHORS` top out at 780, so a target of 790 or 800 can never be 'hit' by a sitting's midpoint. Pace, drift and 'target hit' now cap the target at 780, and the note says so.\n- **Band caption**: 'Bands are ±70' is only true for tests (`MOCK_HALF_BAND`). The diagnostic is ±100 (`HALF_BAND`). The caption now states both.\n- **Pace status and drift** were computed from one sitting with a ±20 or ±30 window, which is inside a ±70 band, so the status would flip on noise. Both now use the mean of up to 3 recent sittings. On pace is ±35; drift needs 40 or more.\n- **Task done**: a drill is only `finished` when /finish is called, so a student who answers the whole count and leaves would show 'active' forever. A task is now done when any of these holds:\n  - the session finished;\n  - it answered its planned count;\n  - it was marked done;\n  - (tests only) any module or section finished that day;\n  - (focus only) that day's answers on its topics from any source reached the count.\n- **Allocation**: Advanced Math has only 3 topics. The rule 'not used on the previous 2 practice days' plus 'up to 2 slots per domain' can therefore be impossible, so a fallback is specified.\n- **Overrides**: Swap, move, skip and a changed day length must survive the daily re-deal. They are now stored in new tables `plan_overrides`, `plan_marks` and `plan_tasks`.\n- **Time zones**: progress.coach uses the UTC date, but the plan must use the learner's local date. X-Tz is required on every plan endpoint, and the tz is stored at creation.\n- **Streak**: the current rule breaks on every rest day. The plan streak skips rest days and days off, and the shell flame uses the same rule, so pages never disagree (their profile and QOTD streaks do).\n- **Study time**: test minutes are added only when a session's answers carry no ms, so they are never counted twice once the runner sends per-question times (a Report-section need).\n- **PUT /api/me**: it only accepts weekly or daily for `tests`. It is widened to the new values.\n- **.ics**: one server-side builder replaces a client `UI.ics`, and the same builder serves a revocable subscription feed. The feed uses a random token, never the learner code.\n- **Diagnostic return**: the diagnostic runs in /test/, so the return path is carried in sessionStorage and only `/plan/` paths are accepted. The report page shows `Back to your plan`.\n- **Removed**: 'widen drill source to 40'. The tag lives in its own `task` field.\n- **Open questions resolved**:\n  - R&W: a visible optional field.\n  - Focus caps: 2 domains, 6 skills.\n  - Edit in place, with 'Save as new plan' beside it.\n  - Logging study done elsewhere: custom tasks and Mark done.\n\n**E. Extras added**\n- The Behind banner fitted to the minutes you actually study.\n- A format gap (grid-in vs multiple choice) and a pace gap (seconds per question), each read from attempts, which tilt focus sets and turn the clock on early.\n- A revocable calendar feed and a revocable read-only link for a tutor or parent (their hidden Classes feature has no student-side sharing).\n- An Example day on the landing.\n- Rechecks passed in the Progress card.\n- `Make it a section` on a test task when the day has time.\n- Repeating custom tasks.\n\n---\n\n# Study plan: rebuild spec\n\nThe section is one route, `/plan/`: `web/plan/index.html` holds the markup and CSS, and a new `web/plan/plan.js` holds the logic (the same split as `web/test/`). All plan arithmetic lives in `server/plan.py`, so the page, Today, the session summary and the report show the same numbers. `UI.plan.dayOf` and `testOf` are deleted from `ui.js`.\n\nThe mode lives in the URL. Changing mode or tab uses `pushState`; picking a day uses `replaceState`.\n\n| URL | shows |\n|---|---|\n| `/plan/` | Plan view, Plan tab, when a plan is active; otherwise the Landing |\n| `/plan/?tab=progress` · `?tab=plans` | Plan view on that tab |\n| `/plan/?day=YYYY-MM-DD` | Plan tab with that day selected |\n| `/plan/?setup=1&step=1..4` | Wizard for a new plan (server draft first) |\n| `/plan/?edit=<id>&step=1..4` | Wizard editing that plan |\n| `/plan/?id=<id>` | an archived plan, read-only |\n| `/plan/?view=<token>` | a shared read-only plan, with no learner code needed |\n\n**Copy rule.** Labels, units, counts, legends and one line of helper text that helps a student decide are all in. Only lines that narrate the interface are out.\n\n**Visual rules.** Numbers use DM Mono. Orange marks what is yours or live: the selected option, the active step, today's next task, the target and the exam day. Status is never shown by colour alone; it always has a shape and text as well.\n\n---\n\n## 1. Landing (no active plan)\n\nMax width 1120px, on a 12-column grid.\n\n**1a. Hero** (`PlanHero`)\n- Full-width `--wash` card, radius 18px, 36px padding, two columns 1.4fr / 1fr.\n- Left column:\n  - Kicker: `STUDY PLAN`.\n  - H1 (44/800): **A plan to your score, one day at a time**.\n  - Line (16px, `--soft`): *Mistakes first, then your focus skills, and a fresh test each week, up to exam day. Skip, move or add anything; miss a day and it redraws from today.*\n  - Pill `Create my plan`, which opens `?setup=1&step=1`.\n  - Under the pill, mono 12px: `About a minute · free · as many plans as you like`.\n- Right column, **HeroPreview**: three stacked mini tiles built from the student's own data.\n  - `Math now`: the latest band, e.g. `590–730`, or `—` with the link `Take a test`.\n  - `Next SAT`: e.g. `Oct 3 · 10 days`.\n  - `Open mistakes`: the count, with an orange dot.\n- **DraftBanner** (shown when a server draft exists):\n  - A paper tile inside the hero reading `Draft · step 3 of 4 · Nov 7 · 560 → 700`.\n  - Pill `Continue`.\n  - Quiet `Discard`, confirmed in place: `Discard draft?` then `Discard` / `Keep`.\n  - While a draft exists, the hero pill reads `Start over`.\n\n**1b. BankStats**: three `--tile` tiles, each a big DM Mono 40 number with a label and one line. The data comes from `GET /api/plan` → `bank`.\n1. `∞` **Practice sections**: *A new adaptive section every sitting, built to the published blueprint.*\n2. `386` **Question types · 19 skills**: *Every question new to you. None repeat.*\n3. **Every wrong answer is named**:\n   - Shows a real example from the bank, `bank.example`, e.g. `“Distributed the minus to the first term only”`, with its skill chip.\n   - Line: *The next question is the same trap with new numbers.*\n\n**1c. HowItWorks**: three numbered tiles, the number in a 28px circle.\n1. **Four questions**: *Your score, your target and date, your time, your focus. Filled in from your results where there are any.*\n2. **Every day planned**: *Open mistakes first, then focus skills, a test on your test day. Harder and timed as the exam gets close.*\n3. **It keeps up**: *Skip, move or add tasks; take a day off; a new test offers to move your starting score.*\n\n**1d. ExampleDay**\n- A tile titled `A day in your plan`.\n- It renders `sample_day` from `POST /api/plan/preview`, called with defaults from the profile and results, using the same `UI.taskRow` as the real plan but read-only. Example rows:\n  - `Fix mistakes · 8 questions · 13 min`\n  - `Focus set · Circles, Percentages, Nonlinear functions · 20 questions · 32 min`\n  - `Question of the day`\n- A new student sees the blueprint-weighted focus set only.\n\n**1e. PlansList**: the same component as the Plans tab (section 3k).\n- With no plans, a dashed empty tile: *No plans yet. Plans you make stay here, so you can switch when your date or target changes.*\n\n**At 390px**\n- The hero becomes one column, with the preview as a 3-up row of small tiles under the pill.\n- Stats, how-it-works and the example day stack one per row.\n- 16px gutters.\n\n---\n\n## 2. Wizard\n\n### 2a. Shell\n- **Top row**:\n  - H1 `Create your plan`, or `Edit plan · <name>`.\n  - A line in `--soft`: *Your draft saves as you go.*\n  - Right-aligned quiet `Exit`: goes back where you came from and keeps the draft.\n- **Stepper**:\n  - Four buttons, each a number circle plus the step name.\n  - Done step: a filled ink circle with a check.\n  - Active step: an orange inset outline on `--wash`, with `aria-current=\"step\"`.\n  - Future step: a grey outline. It becomes clickable once every step before it is valid (step 2 needs a date). This beats theirs, which never jumps forward.\n  - A step holding a server error gets a red dot.\n  - At 390: numbers only in the row, then a full-width line `Step 2 of 4 · Where you're going`.\n- **Body**:\n  - At 1280: two columns, the step at min(660px, 1fr) and a sticky `GlancePanel` of 320px (`top: 88px`).\n  - At 390: the Glance becomes a bar above the footer, e.g. `560 → 700 · Nov 7 · 3h 45m/wk ⌃`. Tapping it opens a bottom sheet.\n- **Footer**, sticky:\n  - Quiet `Back`.\n  - Mono `2 / 4`.\n  - Pill `Next`. On step 4 it reads `Create plan`, or `Save changes` with a quiet `Save as new plan` when editing.\n  - Tapping a disabled Next focuses the first invalid field and shows its reason under it.\n  - Enter advances when focus is not in a text field.\n- **Draft**:\n  - Every change sends `PUT /api/plan/draft {step, fields}`, debounced 600ms.\n  - It is mirrored to localStorage (try/catch) as a fallback for when the server is unreachable.\n  - Boot order: server draft, then local fallback, then defaults from profile and results.\n  - A failed create **never resets the draft**. Theirs resets it.\n- **GlancePanel**: recomputed by `POST /api/plan/preview`, debounced 250ms. Stale rows dim to 60% while the call is in flight. Rows:\n  - `Score 560 → 700 · +140`, plus `Total 1060 → 1400` when R&W is filled in\n  - `Exam Sat, Nov 7 · 45 days`, plus a `not booked` tag when that box is ticked\n  - `Pace 22 points a week` with its PaceTag\n  - `Study 5 days · 3h 45m a week`, using the true total from per-day minutes\n  - `To the exam 31 study days · 23 h · about 870 new questions`\n  - `Tests 6 modules · Fridays`\n  - `Phases Build to Oct 14 · Sharpen to Oct 28 · Final`\n  - `Focus` and `Strong`: domain and skill names, or `—`\n  - `Your own R&W 30 min × 5 a week`\n  - `SplitBar`\n  - `Extras Rechecks · Question of the day`\n\n### 2b. Step 1: Where you are\n- H2 **Where you are**. Subline: *Start from your real number, so the plan is built for the gap you have.*\n- **SourceNote** (a `--tile` row) has four variants:\n  - **Two or more sittings in the last 45 days**: `Your last 2 tests average 650 · Sep 14, Sep 21`, with the quiet button `Use 650`.\n  - **One sitting**: `Latest · Module · Sep 21 · 590–730`, with `Use 660` (the midpoint, rounded to 10).\n  - **Practice only**: `No test yet · 142 practice answers`, with the link `Take a module (35 min)`.\n  - **New student**: `Don't know? Take the diagnostic (20 questions, about 30 min)`.\n    - This link sets sessionStorage `satf.return = '/plan/?setup=1&step=1'` before opening `/diagnostic/`.\n    - The diagnostic's report shows `Back to your plan` when that key holds a `/plan/` path. Any other value is ignored.\n  - Every variant ends with the line: *You can update this after any test; the plan will offer it.*\n- **ScoreSlider** `Math`:\n  - Range 200–800, step 10.\n  - A DM Mono 72 value, with a bubble following the thumb.\n  - A number field beside it (`inputmode=numeric`, snaps to 10 on blur).\n- **RangeBar**: a 200–800 track with the ticks `200`, `avg 505` (`MATH_MEAN`, see open questions) and `800`, and an ink dot at the current value.\n- **Reading & Writing** row, always visible:\n  - Label `Reading & Writing · optional, for your total`.\n  - A number field, 200–800, left empty.\n  - When filled, it shows `Total 1060` and the note *The plan schedules Math. Add R&W study as your own task in step 4.*\n\n### 2c. Step 2: Where you're going\n- H2 **Where you're going**. Subline: *Your target and date set the pace for every week.*\n- **Target ScoreSlider** `Math target`, from the current score to 800, with a number field.\n  - Quick chips: `+50 +100 +150 +200 700 750 800`. A chip below the current score is disabled.\n  - With R&W filled in, an optional `R&W target` number field appears.\n- **GainCard** (`--wash` tile):\n  - `NOW 560`, a pill `+140`, and `TARGET 700` in orange.\n  - A 200–800 track with the now marker (ink), the target marker (orange), the span between them painted orange, and the avg tick.\n  - With R&W filled in, rows `R&W 500 → 650 (+150)` and `Total 1060 → 1350 (+290)` on a 400–1600 track.\n  - A sentence in `aria-live=polite`: *From 560 to 700, 140 points.*\n- **TargetNote** (mono 12.5, `--soft`), computed by the server from `scoring.py`:\n  - Target above 580: *Above 580 needs the harder second module: 14 of 22 right in module 1 routes you up.*\n  - Always: *700 is the middle of a test's band when you earn about 88% of the section's points (hard questions count 3, medium 2, easy 1).*\n  - Target above 780: *A perfect section reads 710–800 here; the plan counts 780 as reaching your target.*\n- **DateChips**:\n  - One chip per published date after today (`plan.SAT_DATES`, on the server).\n  - Two lines per chip: `Oct 3`, and in mono `10 d · 98/wk`. The selected chip is orange.\n  - A last chip `Other date` opens a date input, from tomorrow to today + 730.\n- Checkbox **`Not booked yet`**. When ticked, the date shows `not booked` everywhere and the Plan view shows a reminder banner.\n- **PaceLine**: `45 days · 31 study days · about 22 points a week`, with a **PaceTag**:\n  - `Steady` up to 15 a week, `Ambitious` for 15–30, `Very ambitious` above 30 (server constants, see open questions).\n  - For `Very ambitious`, a line suggests a later date: *Nov 7 brings it to 22 a week.* The date is a button that selects that chip.\n- **Invalid states**:\n  - No date: `Pick a date`.\n  - Today or earlier: `Pick a date after today`.\n\n### 2d. Step 3: Time you have\n- H2 **Time you have**. Subline: *A plan you keep beats one you drop.*\n- **MinutesChips** `A study day`: `15m 30m 45m 1h 1.5h 2h 2.5h 3h 4h`.\n- **DaysSlider** `Days a week`, 1–7:\n  - Readout `5 days · 3h 45m a week`, the true total including per-day minutes.\n  - The slider adds days from Monday and removes them from Sunday back.\n- **WeekdayTiles**: seven tiles, Mon–Sun, with 3-letter names. Each tile is 72px wide at desktop.\n  - Top half: the name, plus `STUDY` (ink on `--wash`) or `REST` (`--soft` on `--tile`). Tapping it toggles the day, and the slider follows.\n  - Bottom half, on study days only: a minutes select. It shows the default (e.g. `45m`) and offers the same values plus `Default`. A day that differs from the default gets an ink underline.\n  - Under the tiles: `Study 5 · Rest 2`.\n  - The last study day cannot be turned off. Its tile shakes (only when reduced motion is off) and `Keep at least one study day` shows.\n- **DaysOff** section, always visible, headed `Days off`:\n  - Rows such as `Oct 12 – Oct 16 · 5 days ×`.\n  - Empty state: `None`.\n  - `Add days off` opens `from` and `to` date inputs plus `Add`.\n  - Validation: from ≤ to, both between today and the exam, at most 20 ranges.\n- **TestRhythm** `Practice tests`: segmented `None · Weekly · Twice a week · Every study day`.\n  - **TestSize**:\n    - `Module · 22 q · 35 min`.\n    - `Section · 44 q · 70 min`, disabled with `Needs a 70-minute day`.\n    - Every option is disabled below 35 minutes, with `A module needs 35 minutes`.\n  - **TestDay** (Weekly and Twice only): `Auto (last study day)`, or one of the study days.\n  - Line: *Each test is a new adaptive section. None repeat.*\n- **ClockMode** `Clock on practice sets`: `Off · Auto · Always`.\n  - `Auto`, the default, times focus sets from Sharpen on, and earlier for any skill where you are slow (see 4, Clock).\n  - Helper: `Test pace is 95 s a question`.\n- **PreferredTime** `Usual time`, used for the calendar: chips `Morning 8:00 · Afternoon 15:00 · Evening 18:00 · Other`, where `Other` opens a time input.\n- **TotalsLine**: `Until Nov 7: 31 study days · 23 h · 6 tests · about 870 new questions`.\n\n### 2e. Step 4: What to focus on\n- H2 **What to focus on**. Subline: *Focus gets most of your week. Strong stays on light review.*\n- **FocusCounters**:\n  - `1/2 focus` (orange tag), `1 strong` (ink tag), `2/6 skills on focus`.\n  - Quiet `Use suggestions` and `Reset`.\n  - **At the cap**, a visible line under the counters: *2 focus areas at most. Move one back to Normal to pick another.* (Skills: *6 skills at most.*)\n- **DomainRow** ×4, a grid of `name | stats | segmented | chevron`:\n  - Row tint: Focus rows `--wash`, Strong rows get a 1.5px ink inset outline. The tint is never the only signal; the segmented control and the tags say it too.\n  - Name, with a mono weight tag under it: `35% of the test` or `15% of the test`.\n  - Stats: an `.mbar` of mastery, then mono `142 answered · 71% right · 3 mistakes` (orange dot on mistakes), or `Not started`.\n  - A **Suggested** tag when the suggestion differs from the choice, e.g. `Suggested: Focus · weakest` or `Suggested: Strong · 86%`.\n  - **Suggestion rule**:\n    - Focus on the weakest worked domain when it is below 0.8.\n    - Focus on any domain that holds a third or more of the open mistakes.\n    - Strong on every domain at 0.8 or above.\n  - **Segmented** `↑ Focus / — Normal / ✓ Strong`:\n    - A radiogroup with arrow-key navigation.\n    - Focus is orange when on.\n    - At the cap, the third domain's Focus is disabled and the helper line above explains why.\n  - **Chevron**: shows a count, e.g. `2 skills on focus` or `4 skills`. It expands **SkillRows**:\n    - Each row: glyph, short name, mastery bar, `answered · right% · mistakes`, and a `Focus / — / Strong` segmented control.\n    - A grid-in or pace gap shows as a tag: `grid-in 48% vs 71%` or `slow · 2:40 a question`.\n- **SplitBar** `Your practice week`:\n  - A stacked bar with the four domains labelled, e.g. `Algebra 24%`. Focus domains are orange; the others use ink and grey tints.\n  - Under it in mono: `was 35 / 35 / 15 / 15 by the test's weights`.\n  - These are the real shares the scheduler deals (section 4).\n- **Extras** (the equivalent of their vocabulary toggle):\n  - `Rechecks`, default on: *Mistakes you fixed come back 3, 10 and 30 days later with new numbers.*\n  - `Question of the day`, default on.\n  - `Daily challenge`, default off.\n  - Extras never count against the day's minutes.\n- **Your own tasks**:\n  - Quick-add chips: `+ Reading & Writing · 30 min · every study day`, `+ Official Bluebook practice test · once`, `+ Other…`.\n  - `Other…` opens title (≤60 characters), minutes (5–240) and repeat (`Once on…` date / `Every study day` / `Weekly on…` weekday).\n  - Added tasks list below with ×.\n  - They count toward the day's planned minutes and are done when you tick them.\n- Create is never blocked by focus. With nothing chosen, the plan follows your results. Theirs disables Create.\n\n### 2f. Create and save\n- `Create plan` sends `POST /api/plan`. It is synchronous and returns in under a second, so there is no fake progress screen; the button shows `aria-busy` until the call returns. Then:\n  - the draft is cleared;\n  - the URL becomes `/plan/`;\n  - the page scrolls to the top on the Plan tab with today selected;\n  - a toast (`role=status`) reads `Plan made · 31 study days to Nov 7`.\n- `Save changes` sends `PATCH /api/plan/{id}`, which freezes past days first. Toast: `Plan updated`.\n- `Save as new plan` sends `POST /api/plan {from: id}`. The old plan is archived.\n- Errors:\n  - 422: the message shows under the footer, and the step with the bad field gets the red dot.\n  - 5xx: *Couldn't save the plan. Your draft is kept.* with `Try again`.\n\n---\n\n## 3. Plan view\n\nAt 1280px the view is max 1120px wide. From the top: title row, stat tiles, banners, sticky tabs, then the tab body.\n\n### 3a. Title row\n- Plan name: H1 28/800, default `Nov 7 · 700`.\n- Mono sub-line: `5 days · 45 min · weekly module · Focus Advanced Math, Circles`.\n- Right-aligned: quiet `Edit` (to `?edit=id&step=1`) and a `⋯` **PlanMenu**:\n  - `Rename`\n  - `Duplicate`\n  - `Calendar…`\n  - `Share read-only…`\n  - `Print`\n  - `Archive`\n- The menu closes on Esc or an outside click and returns focus to its button.\n\n### 3b. StatTiles (4 in a row at desktop; one full-width tile plus a 3-up row at 390)\n1. **Days to exam**:\n   - `45` (DM Mono 72), with `days to Sat, Nov 7` and `31 study days · 6 tests left`.\n   - On the eve: `1 · SAT tomorrow`. On the day: `SAT today`.\n   - A `not booked` tag that links to step 2.\n2. **Score**:\n   - `560 → 700` with `+140 to go`.\n   - A 200–800 track: the start marker, the target in orange, and the recent tests' mean band as a grey span.\n   - A status chip: `Ahead · +25`, `On pace`, `Behind · 40` or `Target reached`, with the mono caption `from 2 tests since Sep 23`.\n   - With no test since the plan began, the chip reads `No test yet` and the quiet button `Take this week's test now` starts the next test task.\n3. **Plan done**:\n   - `27%` with `12 of 44 study days`, a bar, and mono `31 tasks done · 2 skipped · 1 made up`.\n   - Study days are the denominator because the future task count is a forecast, while study days are fixed.\n4. **This week**:\n   - `2h 10m of 3h 45m`, with a bar.\n   - One dot per study day, each with its weekday letter under it: filled = done, half = partly done, ring with a dash = missed, orange ring = today.\n   - `Streak 4 · longest 9`, where rest days and days off do not break the streak.\n\n### 3c. Banners\nEach banner is dismissible. They appear in this order.\n- **DriftBanner** (`suggest` present):\n  - Up: `Your last 2 tests average 650 (Sep 14, Sep 21). The plan starts from 560.` Buttons: `Start from 650` (`PATCH {current}`), `Not now`.\n  - Down: `Your last 2 tests average 520. The plan starts from 560.` Same actions.\n  - Target reached: `Your last 2 tests average 710, past your 700 target.` Buttons: `Raise to 750`, `Keep 700`.\n  - `Not now` is remembered per set of sittings, on the server.\n- **BehindBanner** (`behind` present):\n  - `2 of 5 study days done in the last 7. You average 22 min on a study day; the plan asks 45.`\n  - Pill `Fit the plan to 25 min`. Under it, a preview line: `Same date and target · 870 → 480 questions to Nov 7 · pace unchanged`.\n  - Quiet buttons: `Add days off`, which opens the day-off control, and `Dismiss`.\n  - Toast: `Plan fitted to 25 min a day`.\n- **MissedBanner** (the last planned study day was missed):\n  - `Missed Tue, Sep 29 · Focus set on Circles, Percentages`.\n  - Quiet `Do it now`, which starts that day's focus task and marks the day made up when it finishes.\n  - `Move to Thu`, which moves it onto the next study day.\n  - `Dismiss`.\n- **BookedReminder** (the date is provisional): `Nov 7 isn't booked yet` with `Booked it`.\n\n### 3d. Tabs\n- A sticky segmented control under the banners: `Plan · Progress · Plans 3`.\n- It uses `role=tablist`, arrow keys move between tabs, and it sets `?tab=`.\n- The stat tiles stay above the tabs on every tab.\n\n### 3e. Plan tab: layout\n- At 1280: two columns (1.55fr / 1fr).\n  - Left: DayPanel, then WeekStrip.\n  - Right: ComingUp.\n  - Below both, full width: PhaseStrip and MonthCalendar.\n- At 390, in this order: DayPanel, WeekStrip, ComingUp, PhaseStrip, MonthCalendar.\n\n### 3f. DayPanel\nShows the selected day, today by default.\n\n- **Head**:\n  - Kicker: `TODAY · WED SEP 23`, or `THU · OCT 1` for another day.\n  - Kind tag: `Practice`, `Test day`, `Rest`, `Day off`, `Rest before the SAT` or `SAT`.\n  - Phase tag: `Build`, `Sharpen` or `Final`.\n  - Right-aligned mono: `45 min planned`.\n  - A `⋯ Day` menu:\n    - `Change today's time…`: a minutes select for this day only.\n    - `Take the day off`: its focus topics move to the next practice day.\n    - `Add a task`.\n    - `Reset this day`, shown when the day has overrides.\n- **Progress line**: a bar filled by minutes done over minutes planned, with `2 of 4 tasks · 12 of 45 min · 33 min left` and `9 questions · 7 right`.\n- **TaskRow list** (`UI.taskRow`), in order. Each row has these parts:\n  - **Status circle**:\n    - todo: empty\n    - active: half filled\n    - done: ink with a check\n    - marked done: ink with a check and a small `m` in the title attribute; the text `Marked done` also shows\n    - skipped: ring with a dash\n    - moved: ring with an arrow\n    - For your own tasks, the circle is a real checkbox (`Mark as done` / `Mark as not done`).\n  - **Title**, a **type tag** and one **detail line**. Type tags: `Mistakes`, `Rechecks`, `Focus`, `Test`, `Your own`, `Extra`.\n  - **Mono meta**, e.g. `18 questions · 28 min · Medium–Hard · Timed · Practice session`, with domain tags.\n  - **Action**:\n    - `Start`, or `Resume · 6 of 18` for an active set. The count comes from drill state `answered/total`, and total grows as repairs are added.\n    - A done task shows `8/10 · 12 min` and `Review`, which opens the session summary or the test report.\n    - The first undone task's action is the pill; the others are quiet.\n  - **`Why this?`** is a disclosure listing the server's `why` lines, e.g.:\n    - `Circles: 2 open mistakes, “used the diameter as the radius”`\n    - `Circles: 41% right on 17, last worked 9 days ago`\n    - `Geometry & Trig is on Focus: 32% of your practice`\n    - `Clock on: you take 2:40 a question here; test pace is 1:35`\n  - **`⋯` TaskMenu**:\n    - `Move to…`: the next 7 study days as items (`Thu, Sep 24 · 45 min`), plus `Another date…`, a date input limited to the plan's range before the eve.\n    - `Skip` / `Undo skip`.\n    - `Mark done` / `Mark not done`.\n    - `Swap topics` (focus only): cycles through the server's `alternatives`, two other topic sets with the same domain shares.\n    - `Make it a section` / `Make it a module` (test only, when the day's minutes allow).\n    - `Edit` and `Remove` (your own tasks only).\n    - `Again · new questions` (done tasks): starts 10 more on the same topics, tagged `:extra`.\n  - A **skipped** row drops to 55% opacity, with a `Skipped` tag and `Undo`.\n  - A **moved** row shows as a ghost: `Moved to Thu, Sep 24 · Undo`.\n- **Task kinds**:\n  - **Fix mistakes**:\n    - Detail: the top three open mistake labels with orange dots, plus `+5 more`.\n    - It builds a drill with `{mistakes: true, count, task}`.\n  - **Still fixed?** (rechecks):\n    - Detail: `2 mistakes fixed Sep 12 and Sep 18 · new numbers`.\n    - Body: `{recheck: true, count, task}`.\n  - **Focus set**:\n    - Detail: topic chips with their glyphs.\n    - Body: `{topics, count, difficulty, timed, minutes, fmt, source: 'plan', task}`.\n    - With a grid-in gap, the meta adds `Grid-in only` or `Half grid-in`.\n  - **Module test / Section test**:\n    - Detail: `New adaptive section · 22 questions · 35 min`.\n    - Action `Start` calls `POST /api/mock/new {full, timed: true, task}` and opens `/test/?s=`.\n  - **Your own task**:\n    - Title, minutes and `repeats every study day`.\n    - Tick to mark done.\n    - The helper appears only on the first one: *Do this one on your own, then tick it.*\n  - **Question of the day** (extra):\n    - Detail: its skill.\n    - `Answer` goes to Today's inline question. Once answered: `Done · right` or `Done · wrong`.\n  - **Daily challenge** (extra):\n    - `10 questions, the same for everyone`, then `rank 14 of 203` once done.\n- **Footer states**:\n  - All counted tasks done: `Day done ✓` with the quiet `Keep going · 10 more` (never runs out) and `Start tomorrow's focus set`.\n  - Rest day: `Rest day · next study day Thu, Sep 24`, with `Practice anyway`, which starts 10 questions from the next allocation.\n  - Day off: `Day off`, plus `Undo day off` when it was taken from the Day menu.\n  - Nothing left because every task was moved or skipped: `Nothing left today · 1 moved to Thu` with `Work ahead`.\n- **Future day**:\n  - The same rows, in preview.\n  - Fix and recheck rows read `Open mistakes that day come first · 8 open now`.\n  - The action is a quiet `Start early`, which counts for that day.\n  - Move, skip, swap and add all work on future days too.\n- **Past day**:\n  - `Planned` lists the frozen tasks.\n  - `Done` lists that day's sessions: time, kind, `right/asked`, and a link to the review.\n  - A status tag: `Done`, `Partly done`, `Missed`, `Skipped` or `Made up Oct 2`.\n- **Eve**: `Rest before the SAT`, plus the **Checklist** (checkboxes stored in localStorage per viewer):\n  - Bluebook installed and updated\n  - Admission ticket\n  - Photo ID\n  - Device charged, and a charger\n  - Pencils for scratch paper\n  - Calculator (optional; Desmos is in Bluebook)\n- **Exam day**: `SAT today · good luck`, plus the Checklist.\n- **After the exam**, the **ResultPanel**:\n  - `How did it go?`, a Math field (200–800), an optional R&W field, and `Save`, which calls `POST /api/plan/{id}/result`.\n  - The panel stays until a score is saved: *Enter it when your scores are out.*\n  - Then a summary: `Days done 38 of 44 · 29 h · 1,130 questions · 41 mistakes fixed · Target 700 · got 690`.\n  - Pill `Plan the next one`: the wizard opens with current = the result (or the last test mean), date = the next published date, and the same time, focus and your own tasks.\n\n### 3g. WeekStrip\n- **Header**:\n  - `Week 3 of 7 · Sep 21–27`.\n  - ‹ › buttons, disabled outside the plan's weeks.\n  - `This week`, shown when you are on another week.\n  - Right-aligned: `8 of 12 tasks · 67%`, with a bar.\n- **Theme line** (server `weeks[].theme`): `Build · Circles, Percentages, Nonlinear functions · Module test Fri`. In Final it reads `Final · full sections and open mistakes`.\n- **Seven columns**, each with:\n  - weekday and date (mono);\n  - a kind icon: circle = practice, rounded rectangle = test, none = rest, hatching = day off, orange `SAT`;\n  - `45m`;\n  - `2/3` tasks, or `rest`, or `—`;\n  - a bar filled done/planned;\n  - a check when the day is done.\n- Selected column: an orange inset outline. Today: an ink outline with a 3px ink top bar.\n- Clicking a column selects that day.\n\n### 3h. ComingUp (right column)\n- Headed `Coming up`, listing the next 5 study days:\n  - `Thu Sep 24 · Focus · Circles, Linear inequalities · 45m`\n  - `Fri Sep 25 · Module test · 35m + 10m practice`\n- Then `Next rest Sat Sep 26`, and `Sharpen starts Oct 15 · harder, timed`.\n- Each row selects its day.\n\n### 3i. PhaseStrip and MonthCalendar\n- **PhaseStrip**:\n  - A three-part bar, each part as wide as its phase's days. The current phase is orange; the others `--tile`.\n  - Each part shows its name, dates and one line:\n    - **Build · Sep 23 – Oct 14**: *Weak skills and new ground, every difficulty.*\n    - **Sharpen · Oct 15 – Oct 28**: *Harder, mixed, on the clock.*\n    - **Final · Oct 29 – Nov 6**: *Full sections and your open mistakes.*\n  - A plan under 35 days shows two parts; under 14 days, only Final.\n- **MonthCalendar** (`UI.monthGrid`):\n  - Header `October 2026` with ‹ ›, from the start month to the exam month, with no week cap.\n  - Monday-first grid. Cells are 64px tall at desktop and 46px on phones. The date sits top-left in mono and the kind marker in the centre.\n  - Status on the marker:\n    - done: ink fill\n    - partly done: half fill\n    - missed: ring with a dash\n    - skipped: ring with a slash\n    - made up: ink fill with a dot\n  - Planned minutes sit bottom-right: mono 10px at desktop, **9.5px on phones (still shown)**.\n  - A day with your own tasks gets a small ink tick top-right.\n  - A day off gets a diagonal hatch (`repeating-linear-gradient` with `--mat`).\n  - Exam day: orange fill with `SAT`. The eve: `Rest` in mono.\n  - Days outside the plan are blank and cannot be focused.\n  - Today: ink inset outline. Selected: orange inset outline on `--wash`. The first day of each phase carries a mono label top-right.\n  - Keyboard: `role=grid` with roving tabindex. Arrow keys move, Home/End go to the week's start or end, PageUp/PageDown change month, and T returns to today.\n  - Each cell's `aria-label` reads like `Thu Oct 1, practice, 45 minutes, 2 of 3 tasks, partly done`.\n  - **Legend**, always shown: Practice · Test · Rest · Day off · Done · Partly done · Missed · Skipped · Made up · SAT.\n\n### 3j. Progress tab\nAt 1280 this is a 2-column grid; at 390, one column.\n- **ProgressCard** `Since Sep 23`, big mono numbers with labels:\n  - `Days done 12/15 · 80%`\n  - `Time 9h 20m of 11h 15m`\n  - `Questions 412 · 74% right`\n  - `Mistakes fixed 23 · opened 31 · open 8` (open links to `/mistakes/`)\n  - `Rechecks passed 9 of 11`\n  - `Tests 3`\n  - `Streak 4 · longest 9`\n  - Empty state (day 1): `Day 1. Today's tasks are on the Plan tab.`\n- **StudyTimeChart** `Study time per day`:\n  - Bars per day: studied minutes in ink, with tests stacked in a hatched ink. Planned minutes are an outlined `--mat` bar behind them.\n  - A range segmented control: `2 weeks · Month · Whole plan`.\n  - Header total: `9h 20m studied of 11h 15m planned · 12 days`.\n  - Tooltip (hover or tap): `Thu Oct 1 · 38 of 45 min · 22 questions · 1 own task`.\n  - Empty state: `Nothing logged yet`.\n- **TrajectoryChart**:\n  - An SVG, 100% wide and 220px tall.\n  - The x-axis runs from the start to the exam with month ticks. The y-axis is Math, fitted to the data ±50, with gridlines every 50.\n  - A graphite dashed **pace line** runs from (start, current) to (exam, target, capped at 780).\n  - An orange target dot at the exam.\n  - Each sitting from 30 days before the start is a vertical band (low–high) in `--mat` with an ink midpoint dot. Tooltip: `Module · Oct 2 · 610–750`.\n  - A thin line marks `now`.\n  - Caption: `A test reads as a band: ±70 for a module or section, ±100 for the diagnostic. The status uses your last 3 tests.`\n  - Empty state: `No test yet` with `Start this week's test`.\n  - With up to 60 sittings, bands thin to a 3px minimum and a tap selects the nearest.\n- **DomainCard** `Accuracy by domain · weakest first`:\n  - Four rows, sorted by accuracy since the plan began.\n  - Each row: name, focus or strong tag, `68% right · 142 answered`, and a mastery bar with a tick at `start_mastery` and the change `+0.12` shown as bar length.\n  - Mono `planned 40% · done 36%` of practice.\n  - A row opens `/practice/?topics=…`.\n  - **`All 19 skills`** expands in place into a table sorted weakest first. Columns: skill, answered, % right, open mistakes, last worked, and gap tags. A link to `/results/` follows.\n- **SplitCard** `How the plan splits your time`:\n  - A stacked bar of planned minutes by task type across the whole plan: Mistakes, Rechecks, Focus, Tests, Your own. Each segment is labelled `Focus 62% · 14h`.\n  - Under it, a second bar: done so far, by the same types.\n- **GapsCard** `What the plan is working on` (shown when there is a gap):\n  - `Grid-in 48% right vs multiple choice 71% · 60 answers → focus sets are half grid-in`.\n  - `Slowest: Circles 2:40 a question (test pace 1:35) → timed from now`.\n- Every chart has a visually hidden `<table>` with the same numbers.\n\n### 3k. Plans tab (`PlansList`)\n- Header `Your plans` with the pill `New plan`.\n- Each row shows:\n  - name, a status tag (`Active` in orange, `Archived`, or `Finished · 690`) and `You are here` on the one being viewed;\n  - mono `Built Sep 23 · Sep 23 → Nov 7 · target 700 · 45 days left · 31 tasks done · 80% of days`.\n- Actions:\n  - `Open`: an archived plan opens read-only at `?id=`.\n  - `Make active`, confirmed in place: `Switch to this plan? Your current one is kept.`\n  - `Duplicate`: makes a draft from the plan.\n  - `Remove`: archived plans only, confirmed in place, permanent.\n- More than 5 plans collapse to 5, plus `Show all 12`.\n- Footer line: *Changing your date or target? Edit keeps this plan's record. Save as new keeps this one here.*\n- **Archived view banner**: `You are viewing an older plan · Sep 1 → Oct 3 · not your active plan`, with `Back to active plan` and `Make this my plan`. Every Start, Move and Skip is hidden.\n\n### 3l. Calendar, share and print\n- **Calendar…** dialog:\n  - `Download .ics`: fetches `GET /api/plan/{id}/ics` with the usual headers and saves it as `sat-plan.ics` through a Blob.\n  - `Subscribe`: turns on a feed at `/cal/<token>.ics` and copies the link. The feed updates itself.\n  - `Turn off link` revokes the token.\n  - Note: *Some calendar apps ignore reminders in subscribed calendars; the download keeps them.*\n  - The events:\n    - One event per study day from today, at the preferred time, lasting its minutes: `SAT Math · 45 min · Circles, Percentages`, or `SAT Math · Module test`.\n    - An all-day `SAT` on the exam day and `Rest before the SAT` on the eve.\n    - A 10-minute `VALARM` on each study event.\n    - `UID plan-<id>-<date>@satfreshman`, so a re-import updates instead of duplicating.\n    - Floating local times, with no TZID.\n- **Share read-only…** dialog:\n  - Turns on `/plan/?view=<token>`, shows the link and a copy button, and offers `Turn off link`.\n  - The shared page shows the title row, tiles, calendar, week and Progress tab. It shows no learner code and no start buttons, and a name only if one is set.\n  - Note: *Anyone with the link sees this plan and its progress.*\n- **Print**: `@media print` hides the nav, tabs and menus. It prints the title, tiles, phase strip, month grids and a week-by-week list (each day with its kind, minutes, topics and your own tasks).\n\n### 3m. Toasts (`UI.toast`, `role=status`, 5 s)\n- With Undo: `Skipped`, `Moved to Thu, Sep 24`, `Marked done`, `Task removed`, `Day off`, `Plan archived`.\n- Without: `Task added`, `Plan updated`, `Plan fitted to 25 min a day`, `Switched to this plan`, `Link copied`.\n- A start that fails shows inline on its row: `Couldn't start. Try again`.\n\n---\n\n## 4. How days and tasks are made (`server/plan.py`)\n\nEvery endpoint takes X-Learner and X-Tz. \"Today\" is the learner's local date, and the plan stores the tz it was created with.\n\n**Day kind** for date d, checked in this order:\n1. `before` if d < start; `after` if d > exam; `exam` if d == exam; `eve` if d == exam − 1.\n2. `off` if d is in an off range or an override has `off`; `rest` if `days[dow] == '0'`.\n3. `test`:\n   - An override `test` wins.\n   - `none`: no tests.\n   - `weekly`: `test_day` when it is a study day, else the week's last study day that is not the eve or off. If that is off, the previous study day of the same Mon–Sun week.\n   - `twice`: the weekly day plus the study day nearest Wednesday that is not it. A week with one study day gets one test.\n   - `daily`: every study day.\n   - A test needs ≥ 35 minutes that day, and a section needs ≥ 70; otherwise it drops to a module. Final upgrades a module to a section at ≥ 70.\n4. Otherwise `practice`.\n\n**Minutes**: override minutes, else `day_minutes[dow]`, else `minutes`. Days that are not study days get 0. Moved tasks add their minutes to the target day and take them off the source day.\n\n**Questions for m minutes**: `clamp(round(m*60/95), 5, 120)`.\n\n**Phases**, with T = exam − start in days:\n- T ≥ 35: Build is the first 55%; Final is the last max(10, 15%) days before the eve; Sharpen sits between them.\n- 14 ≤ T < 35: Sharpen, then a 10-day Final.\n- T < 14: Final only.\n\n**Difficulty** (the drill `difficulty` list):\n\n| phase | target < 550 | 550–680 | ≥ 690 |\n|---|---|---|---|\n| Build | easy, medium | all | medium, hard |\n| Sharpen | all | medium, hard | medium, hard |\n| Final | all | all | medium, hard |\n\n**Clock**:\n- `off`: never timed.\n- `always`: every focus set is timed.\n- `auto`:\n  - Focus sets are timed in Sharpen and Final.\n  - A skill whose median ms over its last 20 answers exceeds 120 s is timed in any phase.\n  - Timed means `timed: true, minutes: round(q*95/60)`.\n\n**Format tilt**: over the last 60 answers, when grid-in accuracy trails multiple choice by 15 points or more (with at least 15 grid-ins), focus sets are `fmt: 'mix'` (half grid-in). Needs the drill `fmt` filter shared with the Practice section.\n\n**Domain shares**:\n- `w_d = BLUEPRINT[d] × {focus 2.0, normal 1.0, strong 0.4}[state_d] × (1.5 − m_d)`, where m_d is the mean mastery of the domain's worked topics, or 0.5 when none are worked. The weights are normalised.\n- Topic weight inside a domain: the coach score (floored at 1) × {2, 1, 0.4} for the skill's own state.\n\n**Allocation**:\n- Deterministic, and cached per (plan, local date, overrides version).\n- Slots per practice day: 3 when q ≥ 15, 2 when q ≥ 8, else 1.\n- The walk runs over practice days from today. Each day takes domains by largest deficit (share × slots so far − slots used), at most 2 slots per domain per day.\n- Inside a domain it takes the topic with the largest deficit not used on the previous 2 practice days.\n- **Fallback** when none qualifies, which happens in 3-topic Advanced Math: relax to \"not used on the previous practice day\", then to \"any topic\".\n- Swapped topics from overrides are fixed slots and count toward the deficits.\n- A skipped focus task's topics keep their deficit, so they come back sooner.\n- `alternatives` are the next two candidate sets under the same rules.\n\n**Tasks for a practice budget of q questions**, where `task` is `\"YYYY-MM-DD:kind\"`:\n1. `fix`, when open traps exist: `count = min(2 × open templates, max(4, round(0.3q)))`, rounded to even.\n2. `recheck`, when Rechecks is on and closed traps are due: `count = min(due, 4)`.\n3. `focus`: `count = q − fix − recheck`, at least 5. It is left out when q ≤ 8 and fix used all of q.\n4. On a test day, `test` comes first. Leftover minutes of 15 or more get tasks 1–3.\n5. `custom` tasks for that date or repeat rule. They count toward planned minutes but carry no questions.\n6. Extras `qotd` and `challenge`, which are not counted.\n7. Each task gets `why` lines built from the same numbers the allocator used.\n\n**Task status**:\n- `done` when any of these holds:\n  - a session with its `task` finished;\n  - that session's answered ≥ its planned count;\n  - a `done` mark exists;\n  - for `test`: any module or section finished that local day;\n  - for `focus`: that day's attempts on its topics from any source ≥ its count.\n- `made_up` when this happened on a later date.\n- `active` while a tagged session is open.\n- `skipped` or `moved` from marks.\n- Otherwise `todo`.\n\n**Day status**:\n- `done` when every counted task is done or made up, or minutes_done ≥ 0.8 × planned.\n- `skipped` when every counted task was skipped.\n- `partial` when anything was done.\n- `missed` when planned > 0 and nothing was done.\n- `minutes_done` is the sum of:\n  - the day's attempt ms, each capped at 10 min;\n  - minutes marked done on your own tasks;\n  - for each module or section finished that day **whose answers carry no ms**: min(finished − started, 35 × modules).\n\n**Plan streak**:\n- The run of planned study days back from today (today counts once it is done or partial) whose status is done, partial or made up.\n- Rest days and days off are skipped, not broken.\n- A rest day with any practice extends the streak.\n- `longest` is the best run in the plan.\n\n**Freezing**:\n- On every `GET /api/plan` and before every edit, each day from the last frozen day to yesterday is written to `plan_days`: kind, minutes, test, phase, and the planned tasks with their topics.\n- Past days are never recomputed.\n\n**Recent tests mean**: over the last up to 3 finished module, mock or diagnostic sittings within 45 days, the mean of their band midpoints.\n\n**Drift**:\n- Built from sittings finished after max(plan.updated, drift_seen).\n- `up` or `down` when |mean − current| ≥ 40.\n- `target` when mean ≥ min(target, 780).\n- `suggest = {kind, current: round10(mean), sessions}`.\n\n**Pace status**: the mean against the pace line at the sittings' mean date. |Δ| ≤ 35 is `On pace`; otherwise `Ahead · +n` or `Behind · n`. A mean ≥ min(target, 780) is `Target reached`.\n\n**Behind**:\n- Looks at the last 7 local days.\n- Applies when there were ≥ 3 planned study days and under 60% of them were done or partial.\n- `behind = {planned, done, avg_minutes, suggest_minutes}`, where suggest_minutes is avg_minutes rounded up to a chip value, at least 15.\n- The banner's preview line comes from `POST /api/plan/preview` with that minutes value. Applying it is a `PATCH {minutes}`.\n\n**Week theme**: the phase, the three topics with the most slots that week, the test day, and your own repeating tasks.\n\n---\n\n## 5. Other pages\n\n- **Today (`/`)**, with an active plan, the Next card becomes today's plan:\n  - `Today's plan · 2 of 4 done · 33 min left of 45`.\n  - The first undone counted task is the main row with its pill; the other tasks are compact rows with status circles; your own tasks have checkboxes.\n  - The link `Full plan`.\n  - All done: `Day done ✓` with `Keep going · 10 more`.\n  - Rest day: `Rest day · next study day Thu` and `Practice anyway`.\n  - Without a plan, the coach set stays, with the quiet link `Make a plan`.\n  - It reads `/api/today` → `plan`.\n  - The shell's streak flame shows the plan streak when a plan is active.\n- **Practice session summary**, when `drill_finish` returns `plan`:\n  - `Next in today's plan: Focus set · 18 questions` with `Start`.\n  - Or `Today's plan is done` with `Keep going · 10 more` and `Back to plan`.\n- **Test report**:\n  - When the sitting carries a `task`: `Back to plan`, plus the drift prompt if it applies.\n  - When sessionStorage `satf.return` holds a `/plan/` path: `Back to your plan`.\n- **Me**:\n  - A plan tile: `Nov 7 · 700 · 45 min × 5 · 27% done`, with `Edit plan`.\n  - Me's goals fields (target, exam date, minutes, days) write through to the active plan with `PATCH`. They are one value across Me, Today and Plan; theirs disagree.\n\n---\n\n## 6. States\n\n- **Loading**: skeleton tiles in `--tile`, pulsing only when motion is allowed. That means 4 stat tiles, a 180px day panel, a 90px week strip and 5×7 calendar cells. In the wizard the stepper works and the controls stay disabled until `/api/plan` returns.\n- **Error**:\n  - The page shows `The server is not answering.` with `Try again`.\n  - The wizard keeps working from the local draft, with Create disabled and `Can't save right now`.\n  - Failed task actions show inline and keep their state.\n- **New student**:\n  - The landing preview shows dashes, and the example day holds only a blueprint-weighted focus set.\n  - Step 1 offers the diagnostic. Step 4 rows read `Not started`, with no suggestions.\n  - Day 1 has no fix task, and focus starts on Algebra and Advanced Math.\n  - Progress shows `Day 1`; the trajectory shows `No test yet`; the study-time chart shows `Nothing logged yet`.\n- **Lots of history**:\n  - The months navigate over any span.\n  - Trajectory bands thin.\n  - Plans collapse at 5.\n  - The skills table sorts and scrolls inside its card.\n  - Fix tasks are capped as in section 4, and the rest wait in `/mistakes/`.\n- **Plan in the past** (exam < today): the ResultPanel, and no tasks.\n- **Archived (`?id=`)** and **shared (`?view=`)**: read-only, with their banners.\n- **Blocked storage**: the shell's existing message. The checklist then shows unticked every time.\n\n## 7. Phone at 390px\n- 16px gutters, no horizontal page scroll, and every tap target at least 44px.\n- **Wizard**:\n  - The stepper shows numbers plus the step-name line.\n  - WeekdayTiles wrap to a 4 + 3 grid, each with its STUDY/REST label and minutes select.\n  - The date chips are the only horizontal scroller (scroll-snap).\n  - The Glance is a bottom sheet.\n  - The footer is sticky above the tabs, with `env(safe-area-inset-bottom)`.\n- **Plan view**:\n  - The tiles are one full-width Days tile plus a 3-up row of Score, Plan done and Week.\n  - The tabs are sticky under the header.\n  - A task's action button drops under its title when the row is narrower than 340px, and the ⋯ menu opens as a bottom sheet.\n  - The week strip columns are 7 × ~48px, holding the date, icon and `2/3`.\n  - Calendar minutes stay visible at 9.5px.\n\n## 8. Accessibility\n- Every slider has a paired number field.\n- Segmented controls and tabs are radiogroups or tablists with arrow keys.\n- Stepper buttons carry `aria-current=\"step\"`.\n- The calendar is a grid with roving tabindex.\n- A task status change is announced through `role=status`.\n- Menus, dialogs and sheets close on Esc and return focus.\n- Charts have hidden data tables.\n- Colour is never the only signal.",
+  "extras": [
+   {
+    "feature": "Focus that really changes time, with a live split bar",
+    "why": "Today, Focus only reorders topics and every topic still gets one turn per cycle. Domain shares feeding a slot allocation make 'most of your week goes here' true, and the SplitBar shows the real shares before you commit."
+   },
+   {
+    "feature": "Skill-level focus (19 skills) under each domain",
+    "why": "They stop at domains. A student with one bad skill (circles) should not have to put all of Geometry & Trig on Focus."
+   },
+   {
+    "feature": "'Why this?' built from facts, not AI prose",
+    "why": "Their aiReason is generated text. Ours lists the open mistakes by name, accuracy, days since the skill was last worked, the focus share and any timing gap: the same numbers the scheduler used, so the student can check them."
+   },
+   {
+    "feature": "Move any task to any day, swap topics, take a day off, change one day's time",
+    "why": "Their only reschedule is 'a later day in the same week'. Real weeks need more, and the plan re-deals around every change."
+   },
+   {
+    "feature": "Custom tasks that repeat (for example R&W 30 min every study day)",
+    "why": "We only teach Math. Letting the student put their R&W study, or an official Bluebook test, into the same plan and count it makes the plan cover the whole SAT."
+   },
+   {
+    "feature": "Behind banner fitted to the minutes you actually study",
+    "why": "Theirs offers a vague 'rebalance'. Ours shows what you really average, proposes that as the plan, and previews the effect on questions and pace before you apply it."
+   },
+   {
+    "feature": "Mistake-first daily task",
+    "why": "Every open trap names its misconception, and the drill serves the same template with new numbers. A fixed bank cannot re-ask the same trap without repeating the question."
+   },
+   {
+    "feature": "Rechecks 3, 10 and 30 days after a mistake is fixed",
+    "why": "Spaced checking only works because a template regenerates with fresh numbers. It turns 'fixed once' into 'still fixed', and Progress shows the rechecks passed."
+   },
+   {
+    "feature": "A fresh adaptive test on every test day",
+    "why": "Their plan draws on 10 papers and one free attempt, so a 12-week plan with weekly tests would run out. Ours never does, and 'Make it a section' upgrades a test on long days."
+   },
+   {
+    "feature": "Keep going / Again · new questions / Start tomorrow early",
+    "why": "The bank never runs out, so a keen student is never stuck after 'Day done'."
+   },
+   {
+    "feature": "Phases (Build, Sharpen, Final) with a difficulty ramp and the clock turning on",
+    "why": "Their 'week-by-week' is a theme sentence. Ours makes the weeks actually differ: harder and timed as the date nears, then full sections."
+   },
+   {
+    "feature": "Grid-in gap and pace gap read from attempts",
+    "why": "Every attempt stores its format and time. When grid-ins trail multiple choice, or a skill runs slow, the plan tilts focus sets to grid-ins or turns the clock on early, and says so."
+   },
+   {
+    "feature": "Pace on every exam-date chip, a pace tag and a later-date suggestion",
+    "why": "They print 'about 200 points per week' with no comment. We show the trade-off for each date and offer one tap to a more realistic one."
+   },
+   {
+    "feature": "Honest target note from our own scoring",
+    "why": "Above 580 needs the upper module (14 of 22 in module 1), 700 is about 88% of the weighted points, and above 780 is capped. That is real context their plan never gives."
+   },
+   {
+    "feature": "Frozen day history with done / partly done / skipped / missed / made up",
+    "why": "They keep no record of whether the plan was followed. Freezing past days keeps the record honest when settings change."
+   },
+   {
+    "feature": "Score trajectory with a pace line, from the mean of recent tests",
+    "why": "It answers 'am I going to make it?' without letting one noisy sitting flip the verdict."
+   },
+   {
+    "feature": "Drift in both directions, and 'Target reached, raise it?'",
+    "why": "Theirs only fires upward, as a snoozed localStorage banner. Ours also corrects an optimistic start and offers a next target."
+   },
+   {
+    "feature": "Plan streak that rest days don't break, used app-wide",
+    "why": "Their profile and QOTD streaks disagree, and ours currently breaks every weekend for a 5-day plan. One rule everywhere."
+   },
+   {
+    "feature": "Calendar download and a self-updating calendar feed",
+    "why": "They collect a preferred time and do nothing with it. Ours puts study blocks in the student's calendar through a revocable token, never the learner code."
+   },
+   {
+    "feature": "Read-only share link for a tutor or parent",
+    "why": "Their Classes and teacher dashboard is hidden and needs a teacher account. A revocable link gives an adult the plan and its adherence with no account."
+   },
+   {
+    "feature": "Example day on the landing, and a real named mistake in the stats",
+    "why": "The student sees what a day holds, built from their own data, before committing. Their stat cards are marketing numbers."
+   },
+   {
+    "feature": "Print view",
+    "why": "A paper plan for the desk, built with print CSS."
+   },
+   {
+    "feature": "Exam-eve rest and a test-day checklist",
+    "why": "The eve is already a rest day. Adding what to bring for Bluebook makes the last two days useful."
+   },
+   {
+    "feature": "After the exam: log the real score (whenever it arrives), a plan summary, the next plan in one tap",
+    "why": "Today the page just drops into the wizard. Students often retake, and carrying the result and settings forward is what they need."
+   },
+   {
+    "feature": "Unlimited plans with duplicate, switch and 'You are here'",
+    "why": "They cap plans per billing cycle and hide failed ones. Ours are free."
+   },
+   {
+    "feature": "Server-side draft that survives failures and follows the learner code",
+    "why": "Theirs resets the draft after a failed build; ours is lost when the tab closes. The new one does neither and carries across devices through /api/me/carry."
+   }
+  ],
+  "server": [
+   {
+    "change": "New module server/plan.py",
+    "detail": "Owns: SAT_DATES (moved from the page); day kinds with overrides; test days; phases; difficulty, clock (auto, with the slow-skill rule) and format-tilt rules; domain shares; slot allocation with its fallback and alternatives; tasks and why-lines for a date; task and day status; the plan streak; freezing; stats; the recent-tests mean; pace status; drift; behind; week themes; the target note; the .ics builder. These are pure functions over (plan cfg, overrides, marks, custom tasks, learner history, tz), plus freeze(). It ends with a __main__ assert self-check covering: day kinds (eve, off, the weekly test on the last study day, the exam-week test moving to Thursday, a section dropping to a module on a short day), shares summing to 1, the Advanced Math fallback returning a set, and the streak skipping rest days."
+   },
+   {
+    "change": "New table plans",
+    "detail": "plans(id TEXT PK, learner TEXT, name TEXT, cfg TEXT JSON, start TEXT, tz INTEGER, start_mastery TEXT JSON, created TEXT, updated TEXT, archived TEXT NULL, result TEXT JSON NULL, drift_seen TEXT NULL, cal_token TEXT NULL UNIQUE, view_token TEXT NULL UNIQUE). Index on (learner, archived). cfg fields: current, target, rw_current?, rw_target?, exam_date, booked, minutes, day_minutes[7]|null, days, off[[from,to]], tests none|weekly|twice|daily, test_size module|section, test_day 0-6|null, clock off|auto|always, time HH:MM|null, focus{domain}, skills{topic}, extras{recheck,qotd,challenge}."
+   },
+   {
+    "change": "New tables plan_days, plan_overrides, plan_tasks, plan_marks",
+    "detail": "plan_days(plan, day, kind, minutes, test, phase, tasks JSON, PK(plan, day)) holds frozen history. plan_overrides(plan, day, minutes NULL, off INTEGER DEFAULT 0, test TEXT NULL, topics TEXT JSON NULL, PK(plan, day)). plan_tasks(id TEXT PK, plan, day TEXT NULL, repeat TEXT NULL (study_days | weekly:0-6), title TEXT <= 60, minutes INTEGER 5-240, created, removed NULL) holds custom tasks. plan_marks(plan, day, task, status done|skipped|moved, to_day NULL, at, PK(plan, day, task)); a mark on a custom task id records it done for that day."
+   },
+   {
+    "change": "learners: plan and plan_draft columns",
+    "detail": "plan TEXT is the active plan id. plan_draft TEXT JSON holds {step, fields, updated}. The active plan mirrors current, target, exam_date, minutes, days, tests and focus into the existing learners columns, so the coach keeps working. progress.carry moves plans (UPDATE learner) and COALESCEs plan and plan_draft. When both codes have an active plan, the target's stays active and the other's is archived, never deleted."
+   },
+   {
+    "change": "GET /api/plan",
+    "detail": "Freezes past days first. Returns {active, plans:[PlanSummary {id, name, status, built, start, exam, target, days_left, tasks_done, adherence, result}], draft, bank:{topics:19, templates:386, domains:4, example:{label, topic}}, score, sittings:[{session, kind, at, low, high}], days:[Day], weeks:[{n, from, to, theme, tasks_planned, tasks_done}], today:{day, tasks}, stats:{days_planned, days_done, study_days_total, tasks_done, tasks_skipped, made_up, minutes_planned, minutes_done, questions, right, mistakes_opened, mistakes_closed, mistakes_open, rechecks_passed, rechecks_due, tests, streak, longest, week:{minutes_planned, minutes_done, days:[{date, status}]}, split_planned:{kind: minutes}, split_done:{kind: minutes}}, domains:[{domain, state, mastery, start_mastery, right, answered, share_planned, share_done}], skills:[{topic, answered, right, traps, last, gap}], gaps:{fmt, pace}, phases, pace, suggest, behind, state: active|eve|exam|after}. Day = {date, kind, minutes, phase, test, status, minutes_done, questions, right, tasks_planned, tasks_done, custom:bool, overridden:bool}. Task = {id, kind fix|recheck|focus|test|custom|qotd|challenge|extra, title, detail, topics, labels, count, minutes, difficulty, timed, fmt, counted, status todo|active|done|marked|made_up|skipped|moved, moved_to, session, answered, total, result {right, asked, ms}, why:[str], alternatives, start {path, body}, open}."
+   },
+   {
+    "change": "GET /api/plan/day/{date}",
+    "detail": "Day plus tasks for any date in the plan: frozen for past days (with that day's sessions), a forecast for future days. 404 outside the plan."
+   },
+   {
+    "change": "POST /api/plan",
+    "detail": "Body PlanIn (cfg fields plus name, custom tasks [{title, minutes, day|repeat}], and an optional from). Synchronous, under 1 s. Sets start = today (local, from X-Tz) and tz, computes start_mastery, archives the previous active plan, mirrors to learners, clears the draft, and returns the GET payload. Returns 422, with a message naming the field, when:\n- current or target is outside 200-800 or not a multiple of 10;\n- target < current;\n- exam_date is not a real date, is not after today, or is more than 730 days out;\n- days does not match ^[01]{7}$ or is all zeros;\n- day_minutes is not 7 values of null|0|5-240;\n- minutes is outside 5-240;\n- off ranges are reversed, fall outside today..exam, or number more than 20;\n- tests, test_size or clock is not in its set;\n- test_day is outside 0-6;\n- more than 2 domains or 6 skills are on focus;\n- a domain or topic is unknown;\n- time is not HH:MM;\n- name is over 40 characters;\n- a custom task has a bad title, minutes or repeat, or there are more than 10 custom tasks."
+   },
+   {
+    "change": "PATCH /api/plan/{id}",
+    "detail": "A partial PlanIn on the active plan. Freezes past days, merges, bumps updated and re-mirrors to learners. 409 if archived."
+   },
+   {
+    "change": "Task endpoints",
+    "detail": "POST /api/plan/{id}/tasks {title, minutes, day | repeat} creates a custom task. PATCH /api/plan/{id}/tasks/{task_id} {day, status: done|skipped|todo} sets or clears a mark (todo deletes it: Undo); {day, to: date} moves a generated task (to must be a study day in the plan before the eve; a test may not land on a day under 35 minutes); {title, minutes} edits a custom task. DELETE /api/plan/{id}/tasks/{custom_id} sets removed. All of them freeze first and return the refreshed Day and tasks for the affected dates."
+   },
+   {
+    "change": "Day override endpoints",
+    "detail": "PUT /api/plan/{id}/day/{date} {minutes? 0|5-240, off? bool, topics? (one of the day's alternatives), test? module|section|none}. DELETE clears the override. Only dates from today to the eve. Returns the refreshed days from that date on."
+   },
+   {
+    "change": "Plan lifecycle endpoints",
+    "detail": "POST /api/plan/{id}/activate archives the current plan and unarchives this one; start stays and frozen rows are kept. POST /api/plan/{id}/archive. POST /api/plan/{id}/duplicate writes plan_draft from its cfg and returns the draft. DELETE /api/plan/{id} works on archived plans only, removes the plan and its rows, and returns 409 on the active plan. POST /api/plan/{id}/result {math 200-800 step 10, rw?} is allowed from the exam date on. POST /api/plan/{id}/drift {dismiss: [sessions]} sets drift_seen."
+   },
+   {
+    "change": "Draft and preview",
+    "detail": "PUT /api/plan/draft {step 1-4, fields} stores up to 8 KB; DELETE /api/plan/draft removes it. POST /api/plan/preview takes a PlanIn without saving, runs in under 150 ms, and returns {study_days, tests:{count, size, weekday}, hours, questions, pace_per_week, pace_tag, per_date:[{date, days, study_days, pace_per_week, tag}], later_date, split, base_split, phases, target_note:{route_up, route_right:14, route_of:22, points_pct, capped}, sample_day:[Task], warnings}."
+   },
+   {
+    "change": "Calendar and share",
+    "detail": "GET /api/plan/{id}/ics (X-Learner) returns text/calendar. POST /api/plan/{id}/links {cal?: bool, view?: bool} mints a random token (secrets.token_urlsafe(16)) or revokes it. GET /cal/{token}.ics serves the same builder with no learner header. GET /api/plan/shared/{token} returns a read-only payload: no learner id, no start bodies, and name only if set. Unknown or revoked tokens return 404."
+   },
+   {
+    "change": "scoring.fraction_for(score)",
+    "detail": "The inverse of the ANCHORS interpolation. points_pct = round(fraction x 100). Scores above 780 return 1.0 with capped=True. The route note uses ROUTE_UP_AT (ceil(0.6 x 22) = 14) and LOWER_ROUTE_CEILING 580."
+   },
+   {
+    "change": "POST /api/drill: task, recheck, fmt, count cap for mistakes",
+    "detail": "task (str up to 40, matching ^\\d{4}-\\d{2}-\\d{2}:(fix|recheck|focus|extra)$) is stored in cfg. With mistakes:true, count now caps the queue: the most-hit, most-recent templates first, each twice, up to count. recheck:true queues closed traps whose due <= now, on fresh seeds; 409 'nothing to recheck' when none are due. fmt mcq|spr|mix is shared with the Practice section's format filter."
+   },
+   {
+    "change": "POST /api/mock/new: task",
+    "detail": "task (^...:test$) is stored in cfg. The results payload echoes task."
+   },
+   {
+    "change": "Finish responses carry plan",
+    "detail": "drill_finish and the session finish return plan: {tasks: today's tasks with statuses, next: the first undone counted Task or null} when cfg.task is set, or when a plan is active and the session counts toward today."
+   },
+   {
+    "change": "GET /api/today: plan",
+    "detail": "Adds plan: {id, day, tasks, tasks_done, tasks_counted, minutes_left} when a plan is active and today is inside it, else null. days.streak becomes the plan streak when a plan is active."
+   },
+   {
+    "change": "Trap rechecks (owned by the Mistakes section, consumed here)",
+    "detail": "traps gains stage INTEGER DEFAULT 0 and due TEXT NULL. Closing a trap sets due = closed + 3 days. A correct answer on that template while due <= now advances the stage and sets due to +10 days, then +30 days, then NULL (passed). A wrong answer follows the existing record() rules (same reason reopens it, another reason opens a new trap) and sets the closed trap's due to NULL with stage -1 (failed). Adds progress.due_rechecks(learner) and rechecks_passed(learner, since)."
+   },
+   {
+    "change": "Study time counts tests",
+    "detail": "progress.days adds, for each module or section finished that local day whose attempts all have ms NULL, min(finished - started, 35 x modules) minutes. Once the test runner sends per-question ms (a Report-section need), that session's attempts count and the fallback is skipped."
+   },
+   {
+    "change": "PUT /api/me mirrors into the plan",
+    "detail": "tests validation widens to none|weekly|twice|daily. When exam_date, target, minutes, days, current, tests or focus change through /api/me and a plan is active, the same fields are PATCHed into the plan (freezing first), so Me, Today and Plan never disagree."
+   },
+   {
+    "change": "test_flow.py and README",
+    "detail": "Add the plan checks from the acceptance list to test_flow.py. Update the README serving-layer row for /plan/, add every new endpoint and /cal/{token}.ics, and add a line on the shared-view token."
+   }
+  ],
+  "files": [
+   "web/plan/index.html (rewrite: landing, wizard, plan view with tabs; markup and CSS, including print styles)",
+   "web/plan/plan.js (new: all page logic, as web/test/test.js)",
+   "web/assets/ui.js (remove UI.plan.dayOf/testOf; add UI.seg, UI.tabs, UI.menu, UI.sheet, UI.dialog, UI.scoreSlider, UI.taskRow, UI.monthGrid, UI.toast (with Undo), UI.barChart, UI.bandChart; streak flame reads the plan streak)",
+   "web/assets/ui.css (segmented control, tabs, stat tile, task row states incl. skipped/moved/marked, calendar cell states incl. hatch/half/slash/made-up, bottom sheet, toast, hidden data tables, print)",
+   "web/index.html (Today: the plan's day card reads /api/today.plan)",
+   "web/practice/session/index.html (summary: next in today's plan / keep going / back to plan)",
+   "web/results/report/index.html (Back to plan for task sittings, drift prompt, Back to your plan from satf.return)",
+   "web/diagnostic/index.html (keeps satf.return when the student came from the plan)",
+   "web/me/index.html (plan tile, Edit plan, goals fields write through to the plan)",
+   "server/plan.py (new)",
+   "server/app.py (plan, task, day, lifecycle, draft, preview, ics, links and shared endpoints; /cal/{token}.ics; drill/mock task fields; today.plan; finish.plan; /api/me mirroring and wider tests validation)",
+   "server/db.py (plans, plan_days, plan_overrides, plan_tasks, plan_marks, learners.plan/plan_draft, traps.stage/due)",
+   "server/drill.py (task in cfg, recheck queue, mistakes count cap, fmt filter)",
+   "server/progress.py (test minutes in days(), plan streak, rechecks, due_rechecks, carry of plans)",
+   "server/scoring.py (fraction_for)",
+   "server/test_flow.py (plan checks)",
+   "README.md (serving layer: /plan/ row, new endpoints, calendar and share tokens)"
+  ],
+  "shared_needs": [
+   "UI.taskRow: one task row (status circle or checkbox, title, type tag, detail chips, meta, Start/Resume/Review, Why this?, a ⋯ menu). Used by Plan, Today's plan card, the landing's example day and the practice-session summary.",
+   "UI.seg and UI.tabs: segmented radiogroups and tablists with arrow keys and a visible disabled reason. Used by Practice (mode, volume, format), Results filters, Tests (module or section) and Report.",
+   "UI.menu, UI.sheet and UI.dialog: an overflow menu that becomes a bottom sheet on phones, plus a dialog. All close on Esc and return focus. Report, Mistakes and Practice filters need them.",
+   "UI.toast with an optional Undo (role=status). Saves in Me, Practice and Mistakes.",
+   "UI.monthGrid: a Monday-first month calendar with roving tabindex and cell-state classes. Today's study-time calendar (they have one) uses it. It must mark days in the learner's local time: theirs marks them in UTC.",
+   "UI.scoreSlider: a range input with a paired number field and a value bubble. Me (target) reuses it.",
+   "A stat tile pattern (big mono number, label, sub-line, optional bar). Results, Me and Today.",
+   "UI.barChart (studied vs planned per day) and UI.bandChart (score bands over time with a target or pace line), each with a hidden data table. Today's study time and Results' score over time use the same two.",
+   "Tasks tagged task='YYYY-MM-DD:kind' on drill and mock sessions. Today, the session summary and the report all read plan status from it.",
+   "Rechecks (traps.stage/due, drill recheck:true) are owned by the Mistakes section: it should show 'Still fixed?' and 'Fixed · rechecked 2/3'. The plan only consumes them.",
+   "A drill fmt filter (mcq|spr|mix), shared with the Practice section's multiple-choice / grid-in / both choice.",
+   "Per-question ms from the test runner (a Report-section need). Study time and the pace gap then include tests exactly.",
+   "One streak rule app-wide: rest days and days off don't break it when a plan is active. The shell flame, Today, Me and the Plan all show the same number.",
+   "Target, exam date, minutes and days are one value. Me's goals card and Today's countdown read the active plan and write through PATCH.",
+   "A return-path convention (sessionStorage satf.return, same-origin /plan/ paths only) so the diagnostic and tests can send a student back to the page that sent them."
+  ],
+  "acceptance": [
+   "curl -s localhost:8000/api/plan -H 'X-Learner: a:v2revplanacc1' -H 'X-Tz: 0' returns active=null, bank.topics=19, bank.templates=386 and a non-empty bank.example.label.",
+   "time curl -s -X POST localhost:8000/api/plan -H 'X-Learner: a:v2revplanacc1' -H 'X-Tz: 0' -H 'content-type: application/json' -d '{\"current\":520,\"target\":700,\"exam_date\":\"2026-11-07\",\"minutes\":45,\"days\":\"1111100\",\"tests\":\"weekly\",\"test_size\":\"module\",\"focus\":{\"Geometry and Trigonometry\":\"focus\",\"Algebra\":\"strong\"}}' returns 200 in under 1 s with active.id set. In days: 2026-11-07 is 'exam', 2026-11-06 is 'eve', every Saturday and Sunday is 'rest', each full Mon-Sun week before Nov 2 has exactly one 'test' on its Friday, and the week of Nov 2 has its test on Thursday 2026-11-05.",
+   "POST /api/plan/preview with that body gives split['Geometry and Trigonometry'] > 0.15 and split['Algebra'] < 0.35, the shares sum to 1 ± 0.01, target_note.points_pct is 88 and route_right is 14, and preview for target 800 has target_note.capped true.",
+   "Across GET /api/plan/day/{d} for the next 20 practice days, Geometry and Trigonometry topics fill more slots than Problem-Solving and Data Analysis topics, and no topic appears on 3 practice days in a row. With Advanced Math on focus and minutes 120, all 20 days return focus tasks (the fallback holds).",
+   "POST /api/plan returns 422 for each of: target 190; target 500 with current 520; exam_date yesterday; exam_date '2026-02-30'; days '0000000'; three domains on focus; tests 'hourly'; off [['2026-10-10','2026-10-01']]; a custom task titled with 61 characters.",
+   "PUT /api/plan/draft {step:3, fields:{minutes:90}}, then GET /api/plan, gives draft.step == 3, and the landing (shot.py at 1280) shows 'Continue' and 'step 3 of 4'. A POST /api/plan that returns 422 leaves the draft unchanged.",
+   "Take today.tasks' focus task and POST its start.path with start.body: GET /api/plan shows it 'active' with answered/total. Answer its full planned count without calling finish, and GET shows it 'done'. Call finish and the response carries plan.next.",
+   "After a learner finishes a whole module test with no ms sent, /api/me days.recent[-1].minutes >= 1.",
+   "In test_flow: backdate a plan's start by 3 days in sqlite and GET /api/plan: plan_days has rows for those 3 days. PATCH {minutes:90} leaves those rows' minutes unchanged, and today's Day.minutes becomes 90.",
+   "A past planned day with no study has status 'missed'. Starting its catch-up task (task=<that date>:focus) and finishing it turns that day 'made_up', and stats.made_up is 1.",
+   "POST /api/plan/{id}/tasks {day: today, title: 'Reading & Writing', minutes: 30} shows the task in today.tasks with kind 'custom'. PATCH it {day: today, status: 'done'} raises today's minutes_done by 30. PATCH {status: 'todo'} undoes it. DELETE removes it.",
+   "A repeating custom task {repeat: 'study_days', title: 'R&W', minutes: 30} appears on every study day in the next 14 days and on no rest day, and each such Day.minutes grows by 30.",
+   "PATCH today's focus task {day: today, status: 'skipped'} gives status 'skipped', and the page row has opacity 0.55 and the text 'Skipped'. PATCH {status: 'todo'} restores it.",
+   "PATCH today's focus task {day: today, to: <next study day>} marks today's row 'moved' with moved_to set, and that day's planned minutes grow by the task's minutes.",
+   "PUT /api/plan/{id}/day/{today} {off: true} makes today 'off', and the next practice day's focus topics include today's former topics. DELETE the override and today returns to 'practice'.",
+   "A plan whose start is backdated 8 days, with no study, returns behind.suggest_minutes >= 15. PATCH {minutes: behind.suggest_minutes} then changes Day.minutes for today onward only.",
+   "A learner on a '1111100' plan who studied on Friday and Monday, with nothing on Saturday and Sunday, has stats.streak == 2, and /api/today days.streak == 2.",
+   "curl GET /api/plan/{id}/ics with the learner header returns text/calendar containing 'BEGIN:VCALENDAR', one 'BEGIN:VEVENT' per study day from today plus the exam and eve, 'DTSTART;VALUE=DATE:20261107' with 'SUMMARY:SAT', and at least one 'BEGIN:VALARM'. After POST /links {cal:true}, /cal/<token>.ics returns the same events with no header; after {cal:false} it returns 404.",
+   "After POST /links {view:true}, GET /api/plan/shared/<token> with no X-Learner returns days and stats, and the body contains neither the learner code nor any start body. After {view:false} it returns 404.",
+   "After a module sitting whose band midpoint is 60 above the plan's current, GET /api/plan returns suggest.kind 'up'. POST /drift {dismiss} clears it. Two sittings averaging above the target give suggest.kind 'target'.",
+   "At 390px, document.documentElement.scrollWidth <= 390 on the landing, on each wizard step (?setup=1&step=1..4), and on each tab (?tab=plan|progress|plans), for learners a:v2revplanacc1 (new) and a:v2revshellhist (history).",
+   "At 390px the wizard shows 'Step 2 of 4 · Where you're going' as text. The WeekdayTiles read 'Mon'...'Sun', each with STUDY or REST, and every study tile contains a select. Calendar cells show their minutes text.",
+   "In step 4 with two domains on Focus, the page contains the visible text '2 focus areas at most' (not only a title attribute), and the third domain's Focus button is disabled.",
+   "Toggling Geometry & Trig to Focus in step 4 grows its SplitBar segment within 400ms, with no reload.",
+   "?tab=progress renders an svg in the StudyTimeChart and a table inside it. The DomainCard rows are in ascending order of % right, and 'All 19 skills' expands to 19 rows.",
+   "With the exam date backdated to yesterday, GET /api/plan gives state 'after', the page shows the result form, and POST /api/plan/{id}/result {math:690} makes the Plans tab tag 'Finished · 690'.",
+   "With a plan active, Today (/) shows the first undone task's title from /api/today.plan, and its 'N of M done' equals the Plan tab's.",
+   "In the calendar, focus today's cell and press ArrowRight: the next day's cell gets aria-pressed=true and the DayPanel kicker changes to that date.",
+   "Create a second plan: the first shows under Plans as Archived. POST /api/plan/{first}/activate makes it active again, GET /api/me profile.exam_date equals its exam_date, and ?id=<second> shows the 'You are viewing an older plan' banner with both buttons.",
+   "Setting sessionStorage satf.return to '//evil.example' and opening a report shows no 'Back to your plan'. '/plan/?setup=1&step=1' shows it.",
+   "PYTHONPATH=. python3 server/test_flow.py passes, and python3 -m server.plan (the __main__ self-check) passes."
+  ],
+  "open_questions": [
+   "PaceTag thresholds (Steady up to 15 points a week, Ambitious 15-30, Very ambitious above 30) are a heuristic with no source. One candidate anchor is the College Board / Khan Academy finding that about 20 hours of Official SAT Practice goes with about a 115-point average total gain. It is correlational and for the total score, not Math. Use that, keep the thresholds and call them a heuristic in the README, or show the numbers with no tag?",
+   "MATH_MEAN for the average tick: 505 is the class-of-2024 annual report figure. Confirm the newest published figure before shipping.",
+   "SAT dates: our SAT_DATES has 2027-03-13, but their exam-date select lists Mar 6, 2027. Check the College Board's published 2026-27 calendar and fix whichever is wrong.",
+   "The test-day checklist wording should be checked against the College Board's current Bluebook test-day page (admission ticket, allowed calculators).",
+   "server/mail.py already sends signup verification. Should verified students get an optional daily email of today's tasks, beyond the calendar feed, or is that out of scope?",
+   "Is the read-only share link acceptable privacy-wise? It shows scores, mistake labels and adherence to anyone holding the link. Proposed: yes, off by default and revocable.",
+   "Manual 'Mark done' on a generated task: proposed to count toward the day's status and minutes, but not toward question stats or mastery. Agree?",
+   "Downward drift: offer to lower the starting score (proposed, since it makes the pace honest), or stay upward-only like theirs?"
+  ]
+ }
+}

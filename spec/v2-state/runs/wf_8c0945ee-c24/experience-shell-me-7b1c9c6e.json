@@ -1,0 +1,213 @@
+{
+ "label": "experience: shell-me",
+ "key": "v2:67a5daefa2b9c5c48383e886d78b8342157cce8cbf7600d93fb54dc97b1c9c6e",
+ "result": {
+  "proposals": [
+   {
+    "title": "Save progress and sign in with a passkey: one tap, no email, no password, no Google",
+    "what": "Screens: Settings › Account & devices, the 50-answer save nudge, the account-menu callout and /signin/.\n\nSaving:\n- A new primary button, \"Save with a passkey\". The OS sheet names the method: Face ID, fingerprint or Windows Hello.\n- It calls navigator.credentials.create with:\n  - rp.id = the site host;\n  - user.id = 16 random bytes stored against the learner;\n  - user.name = the board handle or name;\n  - residentKey required, userVerification preferred, algs -7 and -257.\n- It then POSTs /api/passkey/register with clientDataJSON, response.getPublicKey() (SPKI DER, so no CBOR parsing), getPublicKeyAlgorithm() and transports.\n- Toast: \"Saved. This passkey signs you in wherever your passwords sync.\"\n- The nudge becomes \"Save with Face ID\" (one tap), with \"Use email instead\" as the quiet option.\n\nSigning in:\n- The first tab on /signin/ is Passkey.\n- The email field has autocomplete=\"username webauthn\", so the passkey appears in the browser's autofill list (conditional mediation). One tap plus the biometric signs you in. A \"Sign in with a passkey\" button does the same.\n- The server:\n  - checks a single-use challenge (5 minutes, stored server-side);\n  - checks the origin, rpIdHash = sha256(rp_id) in authData[0:32] and the UP flag;\n  - verifies the signature over authData || sha256(clientDataJSON) with `cryptography` (ECDSA-SHA256 or RSA-PKCS1v15-SHA256);\n  - only logs a non-increasing sign_count (synced passkeys send 0);\n  - then runs the existing carry and adopt path. Toast: \"Signed in as Dana · 24 answers moved here\".\n- A school Chromebook with no synced passkey gets the browser's own \"Use a phone\" QR (hybrid transport). We need no extra code for that.\n\nManaging passkeys:\n- Settings lists each one: \"iCloud Keychain · created Sep 23 · last used today\", with [Remove].\n- Removing the last way to sign in brings up a confirm.\n- A passkey counts as \"saved\" everywhere a saved email does, including creating a class.\n\nEmail codes and pairing stay as fallbacks.",
+    "beats": "TopTierPrep's /auth is Google only. On a new device that means Continue with Google, choose the account, then a password and 2FA: at least 3 taps plus typing. It needs a Google account for a minor, and many school-managed Google accounts block third-party sign-in. Ours is 2 taps (the autofill row, then the biometric) with no third party. Saving is where the spec itself falls short: the v2 email path is 5 steps across two apps (type the email, send, open mail, read the code, type it). The passkey is 1 tap, and it works with no SMTP, so the open question 'is SMTP configured?' stops blocking accounts.",
+    "effort": "M",
+    "needs": "- S1 server/account.py: register and login endpoints (options plus verify).\n- F4 tables: passkeys(cred_id PK, learner, user_handle, spki BLOB, alg, sign_count, label, created, last_used) and webauthn_challenges(challenge PK, learner, purpose, expires).\n- `cryptography` is installed locally (46.0.4) but must be added to the deploy.\n- HTTPS and a fixed RP ID (the production host; localhost works in dev).\n- progress.carry, export and delete-everything must cover passkeys.\n- R4's rule 'creating a class needs a saved email' becomes 'saved: passkey or verified email'.\n- The /signin/ and Settings pages (S1)."
+   },
+   {
+    "title": "'Answer key is wrong' is answered in a second: the generator re-solves the question",
+    "what": "The question comes from what the server stored for that attempt, (template, seed).\n\nIn UI.report:\n- \"Answer key is wrong\" now asks \"Which answer do you get?\" as A–D chips, or as the grid-in field with its live preview. This replaces the 40-character text box.\n- For question reports the modal says \"We have this exact question. No screenshot needed.\"\n\nPOST /api/report now returns {id, check}:\n- The server regenerates the Item from the stored (template, seed).\n- It reruns satbank/check.py's structural and prose checks on it and recomputes the key with the template's solver.\n- It compares the student's answer. Four outcomes:\n  - (a) A grid-in that scoring.grid_equal accepts but that was marked wrong. This is a marking bug. The attempt is re-marked right at once, the trap closes, the report becomes 'Fixed (automatic)' and admin is notified. Copy: \"You were right. 0.6667 is accepted, so this now counts as right.\"\n  - (b) A grid-in refused by the entry rule. Copy: \"Your 0.66 is too short. Grid-ins accept 2/3, .6666 or .6667 (the fourth-digit rule).\" The accepted forms are listed.\n  - (c) A multiple-choice pick with a named reason. Copy: \"Checked: the key is B (12). C is what you get if you used the diameter as the radius.\" The rationale steps follow.\n  - (d) The structural check fails on this seed. Copy: \"You found a broken question.\" The attempt is excluded for good (disputed = 1), the seed goes into bad_seeds so the Builder never serves it again, and the template is flagged at the top of the admin list.\n- After (b) or (c) the modal offers two buttons:\n  - \"That makes sense\" closes the report as 'Checked, no change'. No dispute is kept and none of the 5 slots is used.\n  - \"Still wrong: send to a person\" keeps the spec's human dispute.\n\nAfterwards:\n- The question's Report button reads \"Checked\", and the outcome appears in Your reports.\n- In a live sitting nothing is checked or revealed. When the sitting ends, the check runs and a toast says \"Report #123 checked\".",
+    "beats": "With TopTierPrep's report modal 'the student never sees what happens to a report': a wrong-key report disappears. The v2 spec adds a human queue, but who staffs it is an open question. Ours resolves most disputes in about a second and names the exact mistake. It re-marks real marking bugs itself and pulls broken seeds for every student. Only a generator with a solver and a verifier can do this.",
+    "effort": "M",
+    "needs": "- F6 server/reports.py: the check step, the automatic statuses and a bad_seeds table.\n- A public check_item(item) wrapper over satbank/check.py's _structure and _prose (the bank owner).\n- scoring.grid_equal plus the accepted-forms helper from the Results section.\n- F5: practice.Builder skips bad_seeds.\n- R19 deps.access gates the key reveal.\n- F6 report.js: the UI.report changes."
+   },
+   {
+    "title": "Pages that are ready when you click: prerendering plus paint-from-cache",
+    "what": "Prerendering:\n- Every shell page's head gets one inline speculation-rules block, next to the theme snippet.\n- It prerenders same-origin links at moderate eagerness (hover or pointerdown).\n- It excludes /practice/session/*, /test/*, /signin/*, /link/*, /admin/*, /api/* and any link marked data-noprerender.\n\nPaint from cache:\n- UI.api gets UI.cached(path).\n- It paints the last sessionStorage copy of the page's main GET at once, the same pattern satf.shell uses.\n- It then revalidates, and re-renders only if a hash of the JSON changed.\n- Each page's cache is capped at 200 KB and cleared on sign-out or a change of learner.\n\nNo side effects before activation:\n- While document.prerendering is true, pages make GET calls only.\n- Any POST at load waits for the 'prerenderingchange' event.\n- F0 adds a check that greps page scripts for load-time POSTs.\n\nOther warming: hovering the sidebar also fetches the palette index (/api/types) once per session.\n\nPerformance budget, as an acceptance check:\n- Chrome at 1280: after a 200 ms hover, clicking a nav item paints real content, not a skeleton, within 100 ms of activationStart.\n- Safari and Firefox load normally, but the cached content is painted within 50 ms of DOMContentLoaded.",
+    "beats": "TopTierPrep is a React SPA whose routes mount first and fetch afterwards, so sections open on skeletons. Their comments modal opens with a skeleton and then loads, and their plan builder plays a fake progress screen. Ours shows real content on click, with no framework and no service worker.",
+    "effort": "S",
+    "needs": "- F2 ui.js: the UI.api cache and a boot sequence that is safe to prerender.\n- F0: the head snippet on every page.\n- S3–S10: each section page keeps its load-time requests GET-only, or guards them.\n- No server changes."
+   },
+   {
+    "title": "Where your points are: skills ranked by the score they would add",
+    "what": "On /me/, the Skills card header gets a switch: \"By points | By domain\". By points is the default once the student has 30 or more answers.\n\nEach row, sorted by estimated gain:\n- the glyph and the name;\n- a horizontal bar whose length is the gain, labelled \"+30 est.\";\n- \"52% right now · about 5 of 44 in a section\";\n- open-mistake dots;\n- Practise (prefs.set_length at the coach's tier).\n\nThe top row is tagged \"Most points\".\n\nHow the gain is computed, on the server, with the same model the score uses:\n- Section fraction = Σ over topics of (blueprint share × weighted accuracy).\n- Weighted accuracy uses scoring.WEIGHT over the last 60 undisputed answers per topic, pulled toward the global mean when a topic has fewer than 10.\n- gain = scoring._interpolate(the fraction with this skill at 80%) − _interpolate(the fraction now), rounded to 10.\n- A skill with fewer than 5 answers reads \"Not measured yet · try 5\".\n\nCopy:\n- Helper: \"Estimated with our score model: how far your Math band would move if this skill reached 80%.\" It links to Help #points.\n- Footer: \"Your top 3 add about +70\", with [Practise them · 15 q], one mixed set.\n\nThe same component is used on /results/ and the share view.",
+    "beats": "TopTierPrep's subject performance is empty on a new account. Their domain cards read '13% · 13% of test section, 1-8 questions', which really means 1 of 8 right. Their per-question data carries no skill at all. They show percentages. We tell the student where the next 30 points are and start that set in one click.",
+    "effort": "M",
+    "needs": "- F4 server/estimate.py: whatif_skills(learner), reusing scoring.WEIGHT, _interpolate and the blueprint shares.\n- /api/me/summary: domains[].skills[].gain.\n- F1 kit: UI.skillRow gets a gain slot.\n- S6 Results reuses the component.\n- S1: the Help answer.\n- The README must say the scale anchors are invented (scoring.py already does)."
+   },
+   {
+    "title": "Next, from any page: the Today card becomes a one-click launcher (G N)",
+    "what": "The pill:\n- The sidebar Today card, and the card in the phone menu sheet, end with a full-width pill filled from /api/shell.next.\n- It shows the first of these that applies:\n  - \"Resume module · 12/22 · 18 min left\";\n  - the first unfinished plan task: \"Start · Circles, Percentages · 10 q\";\n  - the coach's pick: \"Start · Probability · 10 q\";\n  - \"Answer today's question\".\n- Clicking it POSTs that item's start body and goes straight into the session, with no stop at Today.\n\nOther ways in:\n- On the rail, hovering the Today ring shows a play glyph, and clicking it starts the same thing. Tooltip: \"Next: Circles · 10 q · G N\".\n- The global key is G then N. The palette's first Suggested row is the same item.\n- The session summary's primary button is \"Next: …\" from the same source. A plan day then runs as: G N, answer, Enter on Next, repeat.\n\nWhen the Plan section's day rule says the day is done, the pill turns quiet: \"Day done · Another set?\" (the coach's pick).",
+    "beats": "In the slot where this card sits, TopTierPrep's sidebar shows an 'Upgrade to Pro' card. Starting today's plan task there takes Dashboard, then the Today's Plan card, then the task, then Start: 3 clicks from any other page, and only when their plan builds (it failed 3 times out of 3). Ours is 1 click or 2 keys from every page, and moving from set to set needs no page in between.",
+    "effort": "S",
+    "needs": "- /api/shell adds next {title, detail, kind, start {path, body}}. It comes from S7's plan.today_summary() (the first unfinished counted task), then resume, then progress.coach.\n- F2: the shell renders it.\n- S4: the session summary uses the same next.\n- R22: the §2.8 key map adds G N."
+   },
+   {
+    "title": "Sign in a shared computer without typing on it: it shows a code, your phone approves",
+    "what": "On the new device:\n- /signin/ opens on \"Use your phone\".\n- It shows a 180px QR of /link/?r=<32-character request token>, the same request as 6 digits (\"482 913\", DM Mono 32), \"Expires in 4:59\" and its own label (\"Chrome on Windows\").\n- A checkbox, \"This is a shared computer\", makes the sign-in last for this session only.\n\nOn the phone:\n- Either scan the QR with the camera (it opens /link/?r=), or go to Menu › Sign in another device and type the 6 digits.\n- The phone reads \"Sign in Chrome on Windows as Dana? It asked 20 s ago. Only do this for a screen in front of you.\" [Sign in] [Not me].\n\nFinishing:\n- The computer polls /api/link/{r} every 2 s.\n- On approval it carries in its own answers, adopts the account and shows \"Signed in as Dana\".\n- On Not me it reads \"Your phone said no.\"\n- If the phone's browser has no learner (on iOS the camera opens Safari, whose storage is separate from the home-screen app), /link/ reads: \"Open SAT Freshman on your phone, then Menu › Sign in another device, and type 482 913.\"\n\nThe spec's four-step pairing (A shows a code, B types it, A allows, B confirms) stays only as a fallback.\n\nSecurity:\n- The code names the device that is asking. A guessed code can only let someone in if the owner confirms it on their own phone.\n- Tokens are single use and last 10 minutes.\n- The spec's per-IP limits still apply.",
+    "beats": "On a library or school computer, TopTierPrep means typing a Google email, password and 2FA code on a shared machine. The v2 spec's pairing takes 4 steps across two devices, plus typing 6 digits on the new one. Ours is 2 taps on the phone and nothing typed on the shared computer.",
+    "effort": "M",
+    "needs": "- S1 server/account.py: request, status, approve and deny endpoints.\n- F4: a sign-in request table (token, code, device, answers, created, expires, state, approver), or pairs with a direction column.\n- S1: the /link/ page.\n- qr.js (already in the spec).\n- F2: the menu item.\n- It uses P9's device tokens if they are built; otherwise it adopts the learner code as the spec does."
+   },
+   {
+    "title": "Change anything by typing it: goals and settings as palette commands",
+    "what": "Commands:\n- The palette parses commands and shows them as a composed first row with the current and new value:\n  - \"target 700\" → \"Target: 650 → 700 · about 22 points a week · Ambitious\";\n  - \"exam dec 5\" → \"Exam: Nov 7 → Sat, Dec 5 · in 73 days\";\n  - also \"timer off\", \"clock pace\", \"set 22\", \"hard\", \"adaptive\", \"grid\", \"explanations always\", \"dark\", \"text large\", \"keys off\" and \"week sunday\".\n\nSettings by name:\n- Every pref in the registry is searchable by its label and synonyms (\"calculator\", \"stopwatch\", \"font size\"), and shows its current value.\n- Enter flips a switch, or opens that setting's segmented control inside the row; the arrow keys pick a value.\n\nActions: sign out, save progress, pair, copy share link, download my data, report a bug.\n\nApplying a change:\n- It sends PUT /api/me and closes the palette.\n- A toast confirms, for example \"Target 700 · Undo\". Undo puts the previous value back.\n\nOne list for every surface: GET /api/prefs returns [{key, label, values: [{v, label}], helper, synonyms}], cached per deploy. Settings, Me's inline preferences and the palette all render from it.",
+    "beats": "To change the target on TopTierPrep you go to the Dashboard, tap the pencil, type and Save Score, and the new target never reaches their profile. Changing practice mode or difficulty means going to Profile, finding Learning Preferences and opening a select. Ours is ⌘K, type, Enter from any page. The pace shows before you commit, and Undo is there after.",
+    "effort": "S",
+    "needs": "- F4 prefs.py: labels and synonyms, served at GET /api/prefs.\n- F2: the palette parser.\n- S7: plan.pace(target, exam, estimate), for the preview.\n- R15: the target and exam_date validation."
+   },
+   {
+    "title": "A streak one sick day can't break: earned spare days, free",
+    "what": "The rule, in progress.days (R13):\n- Every 7 study days in a row banks one spare day, up to 2. Planned rest days stay neutral, as specified.\n- If a day with no study was not a planned rest day and a spare is banked, the spare is used automatically, the streak carries on, and the day is marked spare_used.\n\nWhere it shows:\n- The flame tooltip and the Today card header read \"6 days · 1 spare\". Each banked spare adds a small outlined flame beside the count, so the state is shown by an icon, not colour alone.\n- The morning after a spare is used, a toast: \"Yesterday used a spare day. Streak 12 kept.\" [See] → /me/#activity.\n- On the heatmap, a day that used a spare shows a hollow ring, with the tooltip \"Tue, Sep 22 · spare day used · streak kept\".\n- The profile's STREAK tile sub-line: \"best 19 · 1 spare banked\".\n- Help: \"What is a spare day?\". The streak achievement text says spares count.",
+    "beats": "TopTierPrep's streak says 0 on the profile and 1 on the question of the day, and any missed day breaks it. The v2 spec fixes the disagreement and keeps planned rest days, but a student still loses a 40-day streak to one fever. Duolingo sells streak freezes. Ours are earned by studying, cost nothing, and follow one rule on every screen.",
+    "effort": "S",
+    "needs": "- F4 progress.days: spares, a spare_used flag per day, best_streak.\n- /api/me/activity: the spare flag.\n- F2: the shell tooltip and toast.\n- S1: the heatmap copy.\n- The achievements streak rule reads the same function."
+   },
+   {
+    "title": "See every signed-in device and sign one out; a shared-computer mode",
+    "what": "Device tokens:\n- Every new sign-in (email code, pairing, passkey, phone approval) gives that browser its own device token, 'd:' + 32 base-36 characters, instead of handing over the learner code.\n- app.py learner_of resolves 'a:' codes as today, and resolves 'd:' tokens through devices(token PK, learner, label, method, created, last_seen, session_only, revoked). That is one primary-key lookup, and last_seen is written at most every 10 minutes.\n\nThe Devices table in Settings › Account & devices:\n- \"Chrome on Mac · this device · active now\";\n- \"Safari on iPhone · 2h ago · signed in Sep 21 by passkey\";\n- \"Chrome on Windows · shared computer · expires in 11h\".\n- Each row has [Sign out]. That device gets the retired banner on its next call.\n- \"Sign out all other devices\" revokes every other token. Rotating the 'a:' code is kept for when the code itself leaked.\n\nShared computer:\n- A checkbox on /signin/.\n- The token lives only in sessionStorage and expires 12 h after its last use.\n- The user card's second line reads \"Shared computer · Sign out\".\n\nThe copyable device code is no longer offered as the way to move progress. It moves under Advanced.",
+    "beats": "TopTierPrep has a plain Sign out for the current device and no device list, so a session left on a library computer stays signed in. The v2 spec can only rotate the one shared code, which signs out every device at once, and it still treats a copyable code as the credential. Ours shows where you are signed in and signs out one device in one click.",
+    "effort": "M",
+    "needs": "- F4: the devices table, indexed on learner.\n- F0: the app.py learner_of change.\n- S1 account.py: every flow mints tokens.\n- progress.carry moves devices.learner; delete-everything removes the rows.\n- UI.learner accepts d: tokens.\n- test_flow: a revoked token → 401 retired."
+   },
+   {
+    "title": "Thumb-first phone chrome: hold a tab for shortcuts, swipe up for everything",
+    "what": "Hold a tab:\n- Holding any bottom tab for 450 ms opens a bottom-anchored shortcut menu with counts. Moving 8 px cancels it, and -webkit-touch-callout is off.\n- The shortcuts:\n  - Today: \"Next: Circles · 10 q\", \"Question of the day\", \"Daily challenge · New\".\n  - Practice: \"Quick question\", \"Log a mistake\", \"Review · 14 open\", \"Saved · 3\", \"Words · 12 due\".\n  - Tests: \"Resume module · 12/22\", \"New module · 22 q\", \"Full section\", \"Diagnostic\".\n  - Plan: today's tasks.\n  - Results: \"Latest report · Module · Sep 20\", \"Skills\".\n- Every item is also in the menu sheet, for keyboard and screen-reader users.\n\nSwipe up:\n- A swipe up on the tab bar, or a tap on its 24px grip, opens the menu sheet.\n- The most used rows (Review, Words, Compete, Quick) sit in the sheet's bottom half.\n\nPalette on the phone:\n- The input is pinned just above the keyboard (visualViewport).\n- Results run bottom-up, so the best match is nearest the thumb.\n\nThe Quick sheet puts Check and Another in a 56px bottom action bar.\n\nFirst phone visit only: a hint above the tabs, \"Hold a tab for shortcuts\", gone after the first hold or a tap on ×.\n\nThe top bar and the 5 tabs are unchanged (R1, R29).",
+    "beats": "There is nothing to compare: the teardown never saw TopTierPrep's phone layout. This beats the v2 spec's own phone chrome. It puts Search, the Review chip, Quick and the menu in the top strip, which is the hardest reach on a 6-inch phone, so reaching Review, Words or Compete (places a student goes every day) means a stretch to the top-right corner and then a second tap.",
+    "effort": "M",
+    "needs": "- F2 shell: tab hold, the grip, the phone palette layout.\n- F1 kit: UI.pop with bottom anchoring.\n- The counts already come from /api/shell.\n- No change to R1."
+   },
+   {
+    "title": "Live class: run a set on the projector and see why each wrong answer happened",
+    "what": "Starting:\n- The teacher view adds \"Run live\" on any same-for-everyone assignment, or on a new 5–10 question set (skills or question types, and a difficulty).\n- Students in the class see a shell banner, \"Period 3 is live · Join\" (from /api/shell.live).\n- Joining opens a minimal runner with no shell, showing only the current question.\n\nThe teacher's screen, built for a projector:\n- The question at 28px, \"18 of 24 answered\", and one bar per option with its count.\n- After Reveal, each wrong option shows its named misconception: \"C · 9 · Used the diameter as the radius\".\n- Controls sit at the bottom: Reveal, Next, End. Keys: Space reveals, → moves on.\n- The projector never shows a student's name, only counts.\n\nStudents see their own verdict and the rationale at Reveal.\n\nThe end screen:\n- Misconceptions across the set, ranked by students affected, with \"Assign a repair to these 9\" (the spec's repair endpoint).\n- The sitting goes into each student's history as an assignment.\n\nLive state comes from polling GET /api/classes/{id}/live every 2 s, with no websockets.",
+    "beats": "TopTierPrep's /teacher dashboard is hidden and exists only in their code. It creates classes and assigns homework with due dates: fixed work, marked afterwards, scores only. Ours runs the lesson live and shows why students got it wrong while the class is still in the room. Only a bank that names the misconception behind every wrong option can do that.",
+    "effort": "M",
+    "needs": "- S2 server/classes.py: a live table (class, assignment, question index, state, started). Answers reuse attempts, with one session per student.\n- F3: the workspace gets a 'live' mode (exam mode without navigation).\n- F1 charts.js: UI.spread.\n- F2: the shell banner."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Sign-in page (their /auth)",
+    "spec_says": "/signin/ has three tabs: Email code · Pairing code · Device code. Email codes expire in 30 minutes; pairing needs approval on the first device.",
+    "why_only_parity": "No sign-up wall beats theirs on a first visit. Coming back on a new device is slower than theirs, though:\n- by email: type the address, send, switch to mail, read, switch back, type 6 digits (about 7 steps);\n- by pairing: 4 steps across two devices.\nGoogle takes 2–3 taps.",
+    "upgrade": "- Passkey first (proposal 1): the autofill row plus a biometric, 2 taps.\n- The phone approves the new device (proposal 6).\n- Email: on a device not marked shared, remember the last address, so the banner offers 'Send a code to d•••@gmail.com' in 1 tap."
+   },
+   {
+    "feature": "Account menu / user popover",
+    "spec_says": "A 300px role=menu: Profile, Settings, Sign in, Pair, Class, Shortcuts, Help, Feedback, Sign out. Esc closes it and focus returns.",
+    "why_only_parity": "Theirs has the same core list (Profile, Send feedback, Sign out). Fixing their Esc bug is correctness, not an advantage.",
+    "upgrade": "- A 'Switch student' section for family devices:\n  - up to 4 learners remembered on the device (satf.learners: token, name, avatar), each row with today's streak;\n  - one tap switches (UI.useLearner and a reload), with a toast 'Now Maya';\n  - 'Add another student' starts a fresh anonymous learner;\n  - hidden on shared-computer sign-ins.\n- Theme (Light/Dark) and text size (A/A+) toggles inline in the menu header."
+   },
+   {
+    "feature": "Sign out",
+    "spec_says": "A confirm dialog for saved accounts; the unsaved-device warning dialog otherwise.",
+    "why_only_parity": "The same 2–3 clicks and the same result as their Sign out.",
+    "upgrade": "- Saved accounts sign out with no dialog. An 8 s 'Signed out · Undo' toast appears, and the old credential is held in memory until it closes.\n- Shared-computer sign-ins end when the browser closes and after 12 h idle (proposal 9).\n- Unsaved devices keep the warning dialog."
+   },
+   {
+    "feature": "Sidebar collapse to icon rail",
+    "spec_says": "The toggle or [ collapses the sidebar to a 68px rail with badges, tooltips and the Today ring.",
+    "why_only_parity": "Collapsing to a rail is their mechanism. Only the badges are new.",
+    "upgrade": "Peek: resting the pointer on the rail for 400 ms, or holding [, opens the full sidebar as an overlay without changing satf.rail. It closes when the pointer leaves or the key is released, so the rail never costs the badges' text."
+   },
+   {
+    "feature": "Account block",
+    "spec_says": "Saved: 'Progress saved to email · since', Manage, Sign out. Unsaved: Save progress, Pair a device, Share, Leave this device.",
+    "why_only_parity": "It shows the same facts as their Account card: email, connected sign-in, sign out.",
+    "upgrade": "- The Devices list with per-device sign-out (proposal 9) and the Passkeys list (proposal 1), each with last used.\n- A recovery line: 'You can sign in 2 ways: passkey, email', or, with an orange dot, 'Only one way to sign in. Add a passkey or email.' A student then knows they can't be locked out."
+   },
+   {
+    "feature": "Avatar management",
+    "spec_says": "An initial or any of the 19 topic glyphs. No photo, for minors' privacy.",
+    "why_only_parity": "Below theirs: they allow a photo. A picker of 19 glyphs, all free to choose, says nothing about the student.",
+    "upgrade": "Earned avatars:\n- A topic glyph unlocks when that skill's badge is earned (mastery at or above STRONG).\n- The 4 domain badges unlock an outer ring.\n- A locked tile reads 'Reach Strong in Circles · 62%', with a bar.\nThe avatar on boards and class rosters then says something true about the student, and it stays photo-free."
+   },
+   {
+    "feature": "Profile stat tiles",
+    "spec_says": "A 2×4 grid: Streak, Answered, Accuracy, Study time, Tests, Mistakes fixed, Words, Rating. Each has a value, a sub-line and a link.",
+    "why_only_parity": "The same idea as their 2×2 (Streak, Tests, Solved, Vocab), with more tiles. It is still a snapshot with no direction.",
+    "upgrade": "- Each tile gets a 14-day sparkline (24px, no axis).\n- Each gets a delta against the previous period, as an arrow glyph and text: '▲ 5 pts', '▲ 84', '▼ 40m'.\n- A profile-wide range switch, 7 days · 30 days · All (?range=, /api/me/summary?range=), re-scopes the tiles, Skills, What keeps catching you and Recent activity."
+   },
+   {
+    "feature": "Performance snapshot ranks",
+    "spec_says": "'Everyone #128 of 2,410', 'Sitting Nov 7 #4 of 37', one line per class, and the challenge's week rank.",
+    "why_only_parity": "A rank and a total, the same form as their Global and Country Rank (with fairer groups).",
+    "upgrade": "- Movement since last week ('▲ 3', from a stored weekly snapshot).\n- The gap to the next place: '7 right answers to pass #3', from the neighbouring board row.\n- Each student's best skill rank this week ('#6 in Circles'), so weaker students can lead somewhere.\n- Every line opens the board scrolled to 'you'."
+   },
+   {
+    "feature": "Target score quick edit",
+    "spec_says": "A popover with a 200–800 slider in steps of 10, chips 600–800, '+100 from your latest band', and Save.",
+    "why_only_parity": "Their Set Target Score modal (number input, range bar, disabled Save) without their wrong 'current score'.",
+    "upgrade": "- As the slider moves, the popover shows Plan's PaceLine and PaceTag: '45 days · 31 study days · about 22 points a week · Ambitious'.\n- When the tag is Ambitious or above, one tap moves the date: 'Dec 5 makes it Steady'.\n- Once the target is reached, it offers 'Raise to 750?'."
+   },
+   {
+    "feature": "Exam date picker",
+    "spec_says": "Chips for the upcoming official dates, each with 'in N days', plus Another date and No date yet.",
+    "why_only_parity": "Their select of official dates, minus the past ones.",
+    "upgrade": "- Each chip carries the registration and late-registration deadlines: 'Register by Oct 23 · late Oct 27'.\n- A 'Registered' tick is stored on learners. In the deadline's last week, until it is ticked, the Today card reads 'Register for Nov 7 · 5 days left'.\n- 'Add deadline to calendar' uses UI.ics(event).\n- The deadlines live in server/satdates.py, checked against the College Board."
+   },
+   {
+    "feature": "Learning preferences on the profile",
+    "spec_says": "Five inline rows (Questions per set, Clock, Difficulty, Explanations, Calculator), each saved instantly.",
+    "why_only_parity": "The same number and kind of controls as theirs (Practice mode, Difficulty, three toggles).",
+    "upgrade": "Modes above the rows, each setting a documented bundle of prefs in one tap:\n- Learn: instant feedback, explanations always open, untimed, repairs right after a miss.\n- Test-like: feedback at the end, SAT pace, calculator docked.\n- Speed: 5 questions in 6 minutes, instant feedback.\n- Custom.\nA mode shows a preview, 'Your next set: 10 questions · SAT pace 16 min · key after each', and an Undo. Editing any row switches to Custom."
+   },
+   {
+    "feature": "Subject performance (Skills card)",
+    "spec_says": "Four domains with skill rows: mastery bar, answered, accuracy, open-mistake dots, Practise; strongest and weakest in the header.",
+    "why_only_parity": "A bar and a percentage per skill is what their block is meant to show (theirs is empty).",
+    "upgrade": "- Sort by estimated points to gain (proposal 4).\n- Each skill row gets a strip of its last 5 answers (✓ ✕), so a recent slide shows instead of being averaged away."
+   },
+   {
+    "feature": "Score trend",
+    "spec_says": "A range bar per sitting, the target as a dashed line, an exam tick, a tooltip, and a click through to the report.",
+    "why_only_parity": "Their Score Trend chart with 'Latest', drawn better.",
+    "upgrade": "- Hovering or focusing the gap between two sittings shows what happened in between: 'Sep 12 → Sep 20: 212 questions · 3h 40m · 11 mistakes fixed · +40'. It is computed from progress.days and the traps closed between the two finish times.\n- The biggest-gain gap is labelled on the chart once.\nIt ties effort to score, which no chart of theirs does."
+   },
+   {
+    "feature": "Report modal fields",
+    "spec_says": "Title 0/200, category chips, details 0/5000, 10 images downscaled in the browser, reply-to, drafts, disputes.",
+    "why_only_parity": "Field for field, it is their modal.",
+    "upgrade": "- Question reports say 'We have this exact question (circles/central_angle · seed 88213). No screenshot needed.' Images move behind 'Add images'.\n- Typo, Figure and Display send without details, so a report takes 2 taps (Report, a chip, Send).\n- Answer key is wrong asks for the option and gets the instant check (proposal 2)."
+   },
+   {
+    "feature": "Send feedback (general)",
+    "spec_says": "The same modal in general mode: Bug / Idea / Confusing / Other, with page context.",
+    "why_only_parity": "Theirs is the same modal without the item context.",
+    "upgrade": "- /help/#fixed, 'Fixed from your reports': the last 30 reports marked Fixed, each with category, skill or page, date and a one-line change.\n- The Thanks screen links to it, so students see that reports change things."
+   },
+   {
+    "feature": "Toasts",
+    "spec_says": "Bottom-left, up to 3 stacked, with actions. Used for achievements, report replies and new assignments.",
+    "why_only_parity": "They have generic toasts too, and in both products a missed toast is gone.",
+    "upgrade": "- 'Since you were last here' at the top of the account menu, with an unread count: achievements, replies, new assignments, rank changes and spare days used. It holds the last 20 items from /api/me/feed, with unread dots.\n- After 2 or more days away, it opens once as a sheet whose pill is 'Pick up: …' (proposal 5's next)."
+   },
+   {
+    "feature": "Help / FAQ (their subscription FAQ)",
+    "spec_says": "/help/ with live search, sections as <details>, anchors and copy-link buttons.",
+    "why_only_parity": "An FAQ accordion, the same form as their billing FAQ, with better content.",
+    "upgrade": "- UI.help(id): '?' buttons beside the band, the mastery bar, the streak, the open-mistake dot, the rank and every preference row. Each opens its answer in a popover without leaving the page.\n- The palette searches Help: 'why band' shows the answer inline, and Enter opens /help/#band."
+   },
+   {
+    "feature": "Log a mistake (their add-your-own-word button)",
+    "spec_says": "Skill chips → question-type rows with Show an example → an optional reason → an optional where → Add to my mistakes.",
+    "why_only_parity": "Below theirs in step count: 5–7 steps against their 3 (tap, type the word, Add).",
+    "upgrade": "- Search first: one field over the 386 types and the misconception labels (the palette index), each result with a one-line stem preview.\n- Enter logs it, with the origin remembered (satf.quick.origin). Toast: 'Logged · Practise now · 3', with [Add what went wrong].\n- The skill chips stay as a way to browse.\n- The palette logs from anywhere: 'log central angle'.\nThat is 4 keystrokes on a desktop and 3 taps on a phone."
+   },
+   {
+    "feature": "Homework attachments (their Attach file)",
+    "spec_says": "After finishing, attach up to 5 images of working (downscaled, with remove).",
+    "why_only_parity": "Their 'Attach file'.",
+    "upgrade": "- The student is asked per missed question: 'Add working for Q3 · Q7'. Each image attaches to that question.\n- The teacher sees it beside the student's pick and its named misconception, and can reply per question.\n- The student sees 'Ms. Rivera commented on Q7' in the inbox."
+   },
+   {
+    "feature": "Profile length on the phone",
+    "spec_says": "Thirteen cards in one column, in a fixed order.",
+    "why_only_parity": "One long scroll, like theirs.",
+    "upgrade": "- A sticky chip row under the identity card (Goals · Skills · Trend · Mistakes · Badges · Activity · Settings) highlights the card in view.\n- Each card's header collapses it to a one-line summary ('Skills · weakest Probability 41%'). The state is kept in localStorage."
+   },
+   {
+    "feature": "Daily and weekly goal",
+    "spec_says": "Daily and weekly bars, 7 day dots and the preferred time.",
+    "why_only_parity": "Their 'Daily 2 Hours / Weekly 12 Hours' with progress bars.",
+    "upgrade": "- Goal history: 'Met 4 of the last 6 weeks', as 6 mini bars, with the best week named.\n- A missed week says by how much and on which days, from progress.days."
+   }
+  ]
+ }
+}

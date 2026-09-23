@@ -1,0 +1,368 @@
+{
+ "label": "design: reports",
+ "key": "v2:c7bde6d1370cc7e0709b81c30b4c9691f6523a60d8746ad4614c555bf9e13c1e",
+ "result": {
+  "section": "Score report and results (/results/report/ and /results/)",
+  "theirs": [
+   {
+    "feature": "Report header",
+    "detail": "\"PRACTICE TEST REVIEW · Paper #47 · 2025-08-31\": the kind, the paper name and an official-form date."
+   },
+   {
+    "feature": "Section ring gauges",
+    "detail": "One ring per section (R&W and Math), each showing score/800 and \"2 Correct, 25 Wrong\"."
+   },
+   {
+    "feature": "Total score card",
+    "detail": "A blue centre card: Total Score 420/1600, a progress bar, \"4 of 49 correct\" and a \"Practice test — not ranked\" pill."
+   },
+   {
+    "feature": "Performance summary tiles",
+    "detail": "Correct / Incorrect / Unanswered / Accuracy %, with an animated entry."
+   },
+   {
+    "feature": "Domain performance",
+    "detail": "An R&W | Math segmented toggle, then a 2x2 grid of domain cards with name, %, a segmented bar (7 ticks) and confusing copy (\"20% of test section, 1-5 questions\")."
+   },
+   {
+    "feature": "Question review filters",
+    "detail": "A segmented control: All / R&W / Math / Flagged (n)."
+   },
+   {
+    "feature": "Review legend",
+    "detail": "Correct / Incorrect / Unanswered / Flagged."
+   },
+   {
+    "feature": "Per-module colour grids",
+    "detail": "Groups headed like \"R&W - M1  2/27\", with large squares in green (correct), red (incorrect) or gray (unanswered), and an orange corner dot for flagged."
+   },
+   {
+    "feature": "Review modal",
+    "detail": "Title \"R&W - M1 · Q2\", a status chip, a \"Hide answers\" toggle, Report, \"2 of 49\" and a close button. The passage sits in a gray box, then the stem, the choices with the key in green, YOUR ANSWER and CORRECT ANSWER boxes, and a long Explanation that opens with \"Justification:\". Previous and Next move across all 49 questions."
+   },
+   {
+    "feature": "Report-a-problem modal (shared)",
+    "detail": "A read-only meta box, Title (0/200), a Category select (General / Bug / Wrong answer key / Typo / Feature request / Other), Details (0/5000), up to 10 image attachments, and Send feedback."
+   },
+   {
+    "feature": "Results list: Score Overview card",
+    "detail": "Empty until a full four-module test is done (\"Complete a practice test to see your score overview.\"). It has a \"Share / Export Report\" outline button that does nothing when the card is empty."
+   },
+   {
+    "feature": "Results list: Practice Review cards",
+    "detail": "Each card has the paper name, \"COMPLETED: JUST NOW\", one row per module with red chips naming the wrong question numbers (\"2 3 4 5 6 7 +19\"), and a full-width blue Review button."
+   },
+   {
+    "feature": "Results list empty state",
+    "detail": "\"No completed exams yet. / Complete a practice test to see your results here.\""
+   },
+   {
+    "feature": "Related: Profile score trend and snapshot",
+    "detail": "A Score Trend chart (\"Latest: 0\"), a subject-performance snapshot, and Streak / Tests / Solved tiles. These are results-adjacent stats on Profile."
+   },
+   {
+    "feature": "Related: Contest time analysis",
+    "detail": "\"Average seconds per answered question, by difficulty\" (on the rankings page, empty)."
+   },
+   {
+    "feature": "Related: QBank question overview",
+    "detail": "A Status | Difficulty toggle that colours the question grid by status or by difficulty. It is in the practice session, not the report."
+   },
+   {
+    "feature": "Weaknesses",
+    "detail": "Score Overview stays empty until a full test is done. Domain copy is confusing. Retries make accuracy meaningless in QBank. Practice sessions have no report at all. Export is a no-op. Their review cannot give you another question like the one you missed."
+   }
+  ],
+  "ours_now": [
+   {
+    "feature": "Section score gauge",
+    "status": "partial",
+    "note": "A big band number (\"520–660\") and \"Math · 31/44 · harder module 2\". There is no gauge, no target marker, no comparison with the last sitting, and no word on how the band is estimated."
+   },
+   {
+    "feature": "Total /1600 card",
+    "status": "missing",
+    "note": "The bank is Math only. There is no R&W score, so an honest total is impossible without a new input."
+   },
+   {
+    "feature": "Right of asked",
+    "status": "have",
+    "note": "\"31/44\" under the band, and a big \"5/12\" for practice sets."
+   },
+   {
+    "feature": "Performance summary tiles",
+    "status": "missing",
+    "note": "No Correct / Incorrect / Unanswered / Accuracy / Time tiles. A test's time is never shown."
+   },
+   {
+    "feature": "Domain performance",
+    "status": "partial",
+    "note": "Four cards with a band word, a bar and right/asked, but no %, no share of the section, no skills inside, and no change since last time. Practice sets get no domains, and tests get no topics."
+   },
+   {
+    "feature": "Accuracy by difficulty",
+    "status": "missing",
+    "note": "Every review item carries its difficulty, but nothing shows it."
+   },
+   {
+    "feature": "Question review filters",
+    "status": "missing",
+    "note": "No All / Incorrect / Unanswered / Flagged / domain / difficulty filters."
+   },
+   {
+    "feature": "Per-module grids",
+    "status": "worse",
+    "note": "The M1/M2 rows exist, but there is no legend and no per-module score. Orange means RIGHT here, which contradicts the site's own rule that orange marks a mistake still open. Status is shown by colour alone."
+   },
+   {
+    "feature": "Flagged questions",
+    "status": "missing",
+    "note": "Mark for review lives only in test.js memory (S.marked = new Set()). The server never gets it, it is lost on reload, and the report cannot show it."
+   },
+   {
+    "feature": "Review panel",
+    "status": "partial",
+    "note": "An inline tile under the grid: the key is outlined, the wrong pick struck through, then the mistake and the rationale, with Previous/Next. There are no \"Your answer\" / \"Correct answer\" labels, no status chip, no \"n of N\" position, no difficulty or time, no Hide answers, no Report and no Save. On a phone it sits at the bottom of a 2,800px page."
+   },
+   {
+    "feature": "Named mistakes list",
+    "status": "partial",
+    "note": "Unique to us and good, but three things are wrong. It silently stops at 12 (a 13-miss section showed 12). It numbers questions globally (\"Q26\") while the grid numbers them per module (\"M2 4\"). And it lists a missed grid-in under its skill name (\"Two-way table\") as if that were a misconception."
+   },
+   {
+    "feature": "Fix these",
+    "status": "have",
+    "note": "Ours only: POST /api/drill {from_session} turns every miss into a fresh question on the same template. It comes in one variant only: all misses, blanks included, once each."
+   },
+   {
+    "feature": "Practice-set topics before/after",
+    "status": "have",
+    "note": "The mastery bars animate from before to after on a drill report."
+   },
+   {
+    "feature": "Report a problem",
+    "status": "missing",
+    "note": "Not on the report or in the session."
+   },
+   {
+    "feature": "Share / export",
+    "status": "missing",
+    "note": "No print, CSV or link. (The results endpoint has no ownership check, so a link already works by accident.)"
+   },
+   {
+    "feature": "Results overview: score over time",
+    "status": "partial",
+    "note": "Better than theirs: it fills from any scored sitting. But it has no legend, no target line, no tooltip, and points can't be clicked. Same-day sittings are all labelled \"Sep 23\", and there are no range or kind filters."
+   },
+   {
+    "feature": "Results overview: totals",
+    "status": "worse",
+    "note": "\"Answered\" counts all time, but \"Right 71%\" is the last 14 days only, so the two numbers use different windows. There is no study time, tests count, open/fixed mistakes or best score. Tests add 0 study minutes, because record_paper files ms=None."
+   },
+   {
+    "feature": "Results overview: skills",
+    "status": "partial",
+    "note": "19 tiles with a mastery bar and an open-mistake dot. Every tile links to a generic /practice/, with no counts, no accuracy and no skill detail."
+   },
+   {
+    "feature": "Results overview: sittings list",
+    "status": "worse",
+    "note": "Each row shows date, kind, topic glyphs and score only. There are no wrong-question chips, no duration, no filters, no sort, no Fix action and no in-progress/resume. Ordering ties on same-second finishes because the sort is finished DESC with no tie-break."
+   },
+   {
+    "feature": "Empty / error states",
+    "status": "worse",
+    "note": "A new learner sees a giant black dash where the score goes and a quiet \"Take a test\" link. A bad id shows a dash bar, one error line and an orphan \"QUESTIONS\" heading, with no way back. An unfinished DRILL's report redirects to /test/ (the exam runner) instead of /practice/session/."
+   },
+   {
+    "feature": "Practice session summary to report",
+    "status": "missing",
+    "note": "The drill summary never links to /results/report/ for that set, although the endpoint serves drills."
+   }
+  ],
+  "design": "\n# Score report and results — rebuild spec\n\nThis covers two pages, `/results/report/?id=` (one sitting) and `/results/` (overview), plus the review player that both open. The player uses the practice session's layout, as the user asked (\"the practice one is the best\").\n\n## 0. Rules for this section\n- No rule from the old rebuild binds this page: several pills are allowed, borders are allowed, and labels, legends and one-line helpers are allowed. Each screen still has one primary (orange-filled) button.\n- **Colour semantics, fixed site-wide from now on:** orange = needs your attention (incorrect, open mistake, selected). The key is marked with a check glyph and the word \"Correct answer\", not with a colour. Every status carries a glyph as well as a fill, so nothing depends on colour alone.\n  - **Correct:** `--tile-2` fill, ink number, a small ✓ in the top-right corner.\n  - **Incorrect:** `--amber` fill, `--ink-deep` number, a ✕ corner.\n  - **Incorrect, fixed since:** `--wash` fill, a 1.5px `--amber-deep` edge and a ✓ corner. The miss's trap has since closed.\n  - **Unanswered:** paper fill, a 1.5px dashed `--faint` edge, a soft number and a \"–\" corner.\n  - **Flagged:** a graphite bookmark notch in the top-left corner.\n  - **Repair (practice set):** a ↻ glyph in the bottom-right corner.\n  - **Current:** a 2px ink ring.\n- **Numbering is one scheme everywhere:** \"M1 Q7\" / \"M2 Q4\" for a section, \"Q7\" for a one-module test, diagnostic or practice set. The grid, the mistakes list, the table, the player, the chips on the results list and the URL hash all use it.\n- **Difficulty glyph:** three ascending bars (1, 2 or 3 filled) plus the word Easy / Medium / Hard. It is never shown by colour alone.\n- **Fonts:** DM Mono for every count, time and percentage, Source Serif 4 for question text, Archivo for everything else.\n\n## 1. Report page `/results/report/?id=<sid>`\n\n### 1.1 Layout\n- **Desktop (≥1100):** `main.page`, max 1120, a 12-column grid with a 24px gap. Sections stack top to bottom in the order below, each opened by a `.k` eyebrow label and an optional one-line helper in `--soft`.\n- **Tablet (860–1099):** the same order, two-column tiles.\n- **Phone (390):** 16px gutters and one column. Tiles run 3 per row (summary) or 2 per row (domains). The header action bar sticks under the top bar once the hero scrolls away, showing the primary button plus a ⋯ overflow. No horizontal page scroll anywhere. The chart and grid scale to width; the table becomes stacked cards.\n\n### 1.2 Header (`#head`)\n- **Back link:** \"← Results\" (to `/results/`).\n- **Eyebrow, by kind:**\n  - mock: \"PRACTICE TEST · FULL MATH SECTION · ADAPTIVE\"\n  - module: \"PRACTICE TEST · ONE MODULE\"\n  - diagnostic: \"DIAGNOSTIC\"\n  - drill: \"PRACTICE SET\"\n  - challenge: \"DAILY CHALLENGE · SEP 23\"\n- **Title line:** \"Wed, Sep 23, 2026 · 6:15 AM · 64 min\". Minutes come from `ms` and are omitted when `ms` is null.\n- **Actions, right-aligned on desktop and a row under the title on phone:**\n  1. **Primary pill** \"Fix these · 13\", which is split: the main part runs the default (every miss, once each); a ⌄ opens a menu:\n     - \"Incorrect only · 11\" (`only` = incorrect qids)\n     - \"Each miss twice · 26\" (`each: 2`)\n     - \"Not answered · 2\"\n     - When a review filter is active: \"Just the 4 shown\"\n     - All of these POST `/api/drill {from_session, only?, each?}` and go to `/practice/session/?id=`.\n  2. **Outline button** \"Review mistakes\": opens the player filtered to Incorrect + Unanswered.\n  3. **Outline button** \"Redo with new numbers\": POST `/api/drill {from_session, scope:\"all\", timed:true}`. It asks every template of the sitting again with fresh seeds, at test pace (a 44-question section runs 70 min).\n  4. **⋯ menu:** \"Copy share link\" (read-only), \"Print / Save as PDF\" (`window.print()`), \"Download CSV\" (the question table, built client-side as a Blob).\n- **No misses at all:** the primary becomes \"Harder next · New section\" (mock) or \"Keep going\" (drill, the coach's pick), and the helper reads \"No misses. Every question right.\"\n- **Not the owner** (`mine: false`): a read-only strip reading \"Shared report · read-only\". Fix, Redo, Save, Try-one-like-this and Report are hidden.\n\n### 1.3 Score hero (`#hero`)\n**Mock, module and diagnostic.** Two columns on desktop (gauge 5 columns, facts 7 columns); stacked on phone.\n- **Gauge component (`UI.gauge`):** a 240° arc from 200 to 800.\n  - Tick labels 200 / 400 / 600 / 800.\n  - This sitting's band is an orange arc segment from low to high, with a graphite tick at its middle.\n  - The previous scored sitting's band is a `--mat` ghost segment.\n  - The target (`profile.target`) is a dashed ink tick labelled \"Target 700\".\n  - Centre: \"520–660\" (Archivo 800, 56px desktop / 44px phone), and under it \"Math · middle 590\".\n- **Facts column:**\n  - \"31 of 44 correct · 70%\".\n  - A delta chip: \"+90 vs last section (Sep 20)\", from the midpoint difference. It reads \"First section\" when there is no previous one.\n  - Target line: \"Target 700 · 40 above this high end\". It reads \"Target reached\" when high ≥ target and is omitted when there is no target.\n  - Route line:\n    - Upper route: \"Module 1: 15/22 (68%). 60% or more earns the harder Module 2.\"\n    - Lower route: \"Module 1: 11/22 (50%) → easier Module 2, which tops out at 580.\"\n    - Capped: add \"Capped at 580 by the easier route.\"\n  - A `<details>` \"How this is estimated\" with three lines:\n    - \"Each question counts by difficulty: easy 1, medium 2, hard 3.\"\n    - \"The band is ±70 (±100 on the diagnostic) because these questions are not calibrated on real test-takers.\"\n    - \"College Board's own simulation caps the easier Module 2 at 580.\"\n\n**Drill.**\n- Big \"5/12\" plus \"42%\" in mono.\n- Meta: \"10 asked + 2 repairs · 17 min · Nonlinear functions, Probability\".\n- Under it, the existing topic rows (before → after mastery bar, right/asked).\n- A line \"4 mistakes opened · 1 fixed\", each count linking to the Mistakes section.\n\n**Challenge.**\n- Big \"8/10\" and \"9:42\".\n- \"#12 of 140 today\" and a \"Board\" link.\n\n### 1.4 Summary tiles (`#tiles`, component `UI.tile`)\nSix tiles: 6 across on desktop, 3×2 on phone. Each has a label, a value (mono 26px) and an optional sub-line.\n| label | value | sub-line |\n|---|---|---|\n| Correct | 31 | — |\n| Incorrect | 11 | — |\n| Unanswered | 2 | — |\n| Accuracy | 70% | \"76% of answered\" |\n| Time | 64:12 | \"of 70:00\", or omitted when untimed |\n| Per question | 1:27 | \"test pace 1:35\" |\n\n- A drill replaces Unanswered with \"Repairs · 2\".\n- When the sitting has no time data (old sittings), both time tiles read \"—\", with the sub-line \"Not recorded for this sitting\".\n\n### 1.5 Modules (`#modules`, mock only)\n- Two tiles side by side (stacked on phone):\n  - \"Module 1 · mixed · 15/22 · 68% · 31:40 of 35:00\"\n  - \"Module 2 · harder · 16/22 · 73% · 34:05 of 35:00\"\n- Each tile has a 22-segment strip coloured by status. Clicking a segment opens the player there.\n\n### 1.6 Domains (`#domains`)\n- Four cards (4 across desktop, 2×2 phone). Each card has:\n  - The domain name.\n  - \"73%\" (value, mono 28px).\n  - \"11 of 15 correct\".\n  - The band word (\"Steady\").\n  - A **per-question segment bar** with one segment per question in that domain, status-coloured; each segment is clickable and opens the player.\n  - Share copy: \"15 of 44 questions · 35% of the section\". This replaces their \"20% of test section, 1-5 questions\".\n  - Delta: \"+2 vs Sep 20\", only if a previous sitting of the same kind exists.\n  - A disclosure \"Skills ▾\" that expands topic rows: glyph, short name, right/asked, a mini bar, and an open-mistake count (\"2 open\"). Clicking a topic row applies that topic as a review filter and scrolls to the review.\n- **Drills** get domains too (the server computes them).\n- **Helper under the heading:** \"A domain is a handful of questions, so treat one bad card as a hint, not a verdict.\"\n\n### 1.7 Difficulty and format (`#split`)\n- **Easy / Medium / Hard rows:** difficulty glyph, \"6/6 · 100%\", and a bar.\n- **\"Multiple choice 25/34 · Grid-in 6/10\" rows.**\n- Clicking a row sets the matching review filter.\n\n### 1.8 Pace (`#pace`; hidden when there is no time data)\n- **Bar chart:** one bar per question in order, with a thin gap between M1 and M2. Bar height is seconds; the bar is status-coloured.\n- A dashed line at 95s labelled \"Test pace 1:35\".\n- The y-axis caps at 5:00, with an overflow arrow above any bar past it.\n- Tapping or hovering a bar shows a tooltip \"M2 Q19 · 4:12 · Incorrect · Hard\"; clicking opens the player.\n- **Chips under the chart** (each chip is a review filter):\n  - \"Rushed misses 3 (under 0:30 and wrong)\"\n  - \"Long solves 4 (over 3:10)\"\n  - \"Slowest: M2 Q19 4:12\"\n- On phone, 44 bars fit about 7px each within 358px.\n\n### 1.9 Mistakes (`#mistakes`)\n- **Heading:** \"Mistakes · 13\", with the helper \"9 named misconceptions · 2 grid-ins · 2 not answered · 3 fixed since\".\n- **Rows:**\n  - **Misconception row:** the topic glyph, then the misconception text (600 15px). Meta line: \"M1 Q1 · Linear inequalities · Hard\". State:\n    - \"Open · 2 clean answers to close\", with an orange dot;\n    - or \"Fixed Sep 24\", with a ✓ and the text struck through lightly, as the session already does.\n    - Buttons: \"Review\" (opens the player) and \"Fix\" (a 2-question drill on that template: `{from_session, only:[qid], each:2}`).\n  - **Grid-in misses:** text \"Missed grid-in\", with the skill in the meta line (\"Two-way table\").\n  - **Not answered:** a collapsed group \"Not answered · 2\" listing its chips.\n- **Repeats:** the same misconception hit more than once is grouped into one row, \"×2\", with both question refs as chips.\n- **Sort select:** \"Question order / Open first / By topic\".\n- **Length:** rows collapse after 8, with a \"Show all 13\" button. Nothing is ever silently cut.\n\n### 1.10 Question review (`#review`)\n**Toolbar**\n- It sticks under the page bar on scroll on desktop; on phone it scrolls horizontally inside itself only.\n- **\"Show\" radio segmented control, with live counts:** All 44 · Incorrect 11 · Unanswered 2 · Correct 31 · Flagged 3 · Saved 1. Flagged is hidden for drills; Saved is hidden when 0.\n- **Selects:**\n  - Domain: All + 4.\n  - Topic: filled from the domain chosen.\n  - Difficulty: All / Easy / Medium / Hard.\n  - Format: All / Multiple choice / Grid-in.\n- **\"Colour by\" segmented:** Status | Difficulty | Time.\n- **\"View\" segmented:** Grid | Table.\n- A \"Reset\" link, shown only when a filter is set.\n- The filter state lives in the URL query (`?id=..&show=incorrect&domain=Algebra`), so it survives reload and share.\n\n**Legend** (always visible, changes with Colour by)\n- Status: Correct ✓ · Incorrect ✕ · Fixed since · Unanswered – · Flagged · Repair.\n- Difficulty: three swatches (`--tile` / `--mat` / `--ink` with a white number) plus the glyph.\n- Time: a 4-step warm-grey ramp labelled \"0:30 · 1:35 · 3:10 · 5:00+\".\n\n**Grid view**\n- One group per module, with a heading like \"Module 1 · 15/22 · 31:40\" (or \"Questions · 5/12\" for a single group).\n- Cells are 40px on desktop and 44px on phone (7 per row), each a `<button>` with an aria-label like \"M1 Q7, incorrect, hard, 1:42, flagged\".\n- Cells that the filter excludes stay in place at 30% opacity and are skipped by prev/next and by Tab.\n- Challenge cells show the crowd % under the number (\"41%\").\n\n**Table view**\n- Columns: # · Skill (glyph + topic, skill label under it) · Difficulty · Format · Time · Your answer · Correct · Result · Mistake.\n- Sortable by #, Time, Difficulty and Result, with `aria-sort` on the headers.\n- On phone each row is a stacked card: a line \"M1 Q7 · Hard · 1:42\", the skill, \"You: B · Key: D\", then the mistake text.\n\n### 1.11 Review player (`UI.review`, a shared overlay)\n- **Frame:** a full-viewport `<dialog>` in the practice session's layout: a sticky 60px top bar, a centred 700px question column, a sticky bottom bar. It opens from any cell, row, chip, mistake or segment. The URL hash becomes `#q=m1-7`, so the back button closes it and a pasted link opens at that question. Esc closes it and returns focus to the cell that opened it.\n- **Top bar:**\n  - Left: × Close.\n  - Centre: the navigator.\n    - Sittings of 24 questions or fewer get a segment strip of every question in status colours, the current one ringed.\n    - Longer sittings get the compact pill \"M1 Q7 · 7 of 44 ⌄\", which opens a popover grid (same cells and legend) with an Esc close.\n  - Right tools:\n    - Hide answers (eye toggle)\n    - Save (bookmark)\n    - Calculator\n    - Reference\n    - Report problem (flag)\n  - On phone the last two go into a ⋯ menu.\n- **Question header:**\n  - The topic glyph and topic, then the skill label (\"Two-way table\").\n  - The difficulty glyph and word, and \"Multiple choice\" / \"Grid-in\".\n  - \"1:42 · pace 1:35\".\n  - A \"Flagged in test\" tag if flagged; an \"Again\" tag if it was a repair.\n  - A status chip on the right: \"Incorrect\" / \"Correct\" / \"Not answered\" / \"Incorrect · fixed since\".\n- **Body** (`UI.question` in review mode):\n  - Stem in serif, then the figure or table.\n  - **Multiple choice:**\n    - The keyed option gets a ✓ and the tag \"Correct answer\".\n    - A picked wrong option gets a ✕ and the tag \"Your answer\".\n    - A right pick gets \"Your answer · Correct\".\n    - Under the picked wrong option: its misconception in 600 14.5px (\"Used the largest recorded value as the bottom of the range…\").\n    - A toggle \"Why each wrong answer is wrong\" reveals the misconception under EVERY wrong option (`reasons[]`). It defaults closed, and its state is remembered in localStorage.\n  - **Grid-in:** two boxes side by side, \"Your answer −7\" and \"Correct answer 8/161\". Under them, when present: \"Also accepted: .0496, .0497\" (`accepted`).\n  - **Not answered:** \"You left this blank.\" above the key.\n  - **Explanation card:** `--tile` fill, heading \"Explanation\", then the rationale in serif.\n  - **Mistake state line:** \"Open mistake · 2 clean answers to close\" or \"Fixed Sep 24 ✓\".\n  - **Challenge only:** \"41% of 140 students got this right.\"\n- **Actions row:**\n  - Primary pill \"Try one like this\". It POSTs `/api/drill {from_session, only:[qid], scope:\"all\", count:1}` and renders the fresh twin INLINE below, in a tile headed \"Same skill, new numbers\", using normal answer mode. Answering goes through `/api/drill/{id}/answer` (so it files an attempt and can close the trap) and shows the usual verdict. The buttons then become \"Another like this\" (the next question of a new 1-question drill) and \"Back to the original\".\n  - Outline button \"Try it again\": the same as Hide answers. It is local only and not recorded.\n  - Quiet link \"5 more like this\": a drill with `each:5`, which navigates to the session.\n- **Hide answers:** hides the key marks, the \"Your answer\" tags, the mistake, the explanation and the status chip, and makes the options pickable. A pick reveals locally (\"A · right this time\") and restores everything.\n- **Bottom bar:** \"← Previous\" | the position within the active filter (\"7 of 11 incorrect\") | \"Next →\". When the filter is All, a quiet \"Next miss\" also appears.\n- **Keys:** ←/→ or J/K move; N = next miss; H = hide answers; S = save; T = try one like this; A–D / 1–4 pick while hidden; Esc closes. A hint row on hover devices reads \"← → move · N next miss · H hide\". It is hidden on touch.\n\n### 1.12 Up next (`#next`)\n- The coach's pick from `/api/map`: topic chips, \"10 questions · 16 min\", a \"Start\" pill and a \"New section\" link.\n- It sits last on the page, under a divider.\n\n### 1.13 States\n- **Loading:** static skeletons of the real sizes (a gauge circle, 6 tile blocks, 44 cells) with `aria-busy=\"true\"` on main. No dash characters, and nothing loops.\n- **404:** the heading \"That sitting does not exist.\", with links \"All results\" and \"Tests\". No section headings render.\n- **403 diagnostic** (not signed up): redirect to `/diagnostic/signup.html?s=` (as now).\n- **409 unfinished:** redirect by kind, from `detail.kind`. A drill or challenge goes to `/practice/session/?id=` (this fixes the current wrong redirect); mock, module and diagnostic go to `/test/?s=`.\n- **Network error:** an inline error \"Couldn't load this report.\" plus a \"Try again\" button that refetches.\n- **Nothing answered:** the tiles show 0, the grid is all dashed, the mistakes heading reads \"Not answered · 44\", and Fix these reads \"Practise all 44\". The hero says \"Nothing answered, so there's no estimate.\" and shows no gauge.\n- **Old sittings without times or flags:** the time tiles show \"—\", the pace section is hidden, and the Flagged filter is hidden.\n- **Long practice sets (up to 120 questions):** the grid wraps, the navigator uses the compact pill, and the table view is the default above 60 questions.\n\n### 1.14 Print (`@media print`)\n- Hidden: the bar, the tabs, the action buttons, the toolbar and the player.\n- Printed: the hero, the tiles, modules, domains, the difficulty split, the mistakes (every row expanded), and the table view of all questions with your answer, the key and the mistake.\n\n## 2. Results overview `/results/`\n\n### 2.1 Header\n- The H1 \"Results\", with a right-hand ⋯ menu: \"Download CSV\" (sittings) and \"Print\".\n\n### 2.2 Score over time (`#overview`, full width)\n**Chart (8 columns on desktop, full width on phone)**\n- Each scored sitting is a vertical band (low–high) with a middle dot; the newest is orange and the others graphite.\n- A dashed line at `profile.target`, labelled at its right end (\"Target 700\").\n- The x-axis is ordered by sitting. Labels use the date, and add a time when two sittings fall on the same day (\"Sep 23 6:15\"). Label thinning stays as now.\n- Hover or tap shows a tooltip \"Sep 23 · Section · 520–660 · 31/44 · harder M2\" with an \"Open report\" link; clicking a band opens the report.\n- **Controls above the chart:**\n  - Range segmented: Last 10 | 30 days | All.\n  - Kind check-chips: Sections ☑ · Modules ☑ · Diagnostic ☑.\n- **Legend:** \"Band = estimated range · dot = middle · dashed = target\".\n\n**Facts (4 columns)**\n- Latest band, big, with its kind and date.\n- A delta chip: \"+90 vs previous\".\n- \"Best 550–750 · Module · Sep 23\".\n- \"Target 700 · 40 above your latest high\".\n- \"Exam Oct 3 · 10 days\" (from the profile).\n\n**Empty state**\n- The axis frame, with a ghost band and the text \"Your first test puts a point here.\"\n- Two buttons: the pill \"Full section · 70 min\" and the outline \"One module · 35 min\". Both POST `/api/mock/new` and go to `/test/?s=`.\n- A quiet link \"Diagnostic · 20 questions\".\n\n### 2.3 Totals (`#totals`, 6 tiles; 3×2 on phone)\nEvery window is stated in the tile.\n| label | value | sub-line |\n|---|---|---|\n| Questions | 1,284 | all time |\n| Accuracy | 68% | all time · \"last 14 days 72%\" |\n| Study time | 21 h 40 m | \"this week 3 h 10 m\" (includes tests after the timing fix) |\n| Tests | 7 | \"5 sections · 2 modules\" |\n| Streak | 4 days | \"best 11\" |\n| Mistakes | 12 open | \"48 fixed\" |\n\n- The Mistakes tile links to `/mistakes/`.\n\n### 2.4 Accuracy split (`#split`)\n- All-time rows for Easy / Medium / Hard and for Multiple choice / Grid-in: right/answered, % and a bar.\n- Beside them: \"Average time: easy 0:58 · medium 1:31 · hard 2:24\". This is their contest time analysis, done here.\n\n### 2.5 Skills (`#skills`)\n- The 19 tiles, grouped by the 4 domains as now. Each tile has:\n  - the glyph and name, and the mastery bar;\n  - a mono line \"42 answered · 71%\";\n  - an orange count badge \"2 open\" when there are traps.\n- A never-practised tile reads \"Not started\".\n- **Sort select:** By domain / Weakest first / Most open mistakes / Least practised. With any sort except By domain, the grouping flattens.\n- **Clicking a tile opens the Skill panel:** a right drawer of 420px on desktop, a bottom sheet (max 85vh) on phone. It holds:\n  - the name and domain;\n  - the mastery bar, with the helper \"A practice gauge: recent answers, hard ones counting more.\";\n  - \"Answered 42 · Right 30 · 71%\";\n  - by-difficulty rows;\n  - \"Recent run\": the last 20 answers as ✓/✕ dots, newest on the right;\n  - open mistakes (label, \"hit 3×\", \"2 to close\"), each with Fix;\n  - \"Fixed 5\";\n  - \"Last worked 3 days ago\";\n  - the last 5 sittings that included the skill, as links;\n  - actions: the pill \"Practise this skill\" (→ `/practice/?topics=<slug>`, preselected) and the outline \"Fix its mistakes · 2\" (`/api/drill {mistakes:true, topics:[slug]}`).\n\n### 2.6 Top misconceptions (`#traps`)\n- The 10 most-hit traps of all time.\n- Each row: the label, the topic glyph and name, \"×4\", \"Open\" or \"Fixed Sep 22\", and \"last Sep 23\".\n- The heading carries a pill \"Fix all open · 12\" (`/api/drill {mistakes:true}`) and a link \"All mistakes\".\n- Empty: \"No mistakes yet.\"\n\n### 2.7 Sittings (`#sittings`)\n**Controls**\n- Segmented: All 57 · Tests 9 · Practice 45 · Challenge 3.\n- For Tests, a kind select: All / Section / Module / Diagnostic.\n- Sort: Newest / Oldest / Highest score / Lowest score.\n\n**In progress** (a group on top, only when there are any)\n- \"Section · started 6:02 AM · Module 2 · 18:22 left\" with a Resume button (→ `/test/?s=`).\n- \"Practice set · 4 of 10\" with a Resume button (→ `/practice/session/?id=`).\n\n**Groups:** headers \"This week\", \"Last week\", then \"Sep 7–13\".\n\n**Sitting card** (`UI.sittingCard`, shared with Tests)\n- Desktop is one row; phone stacks it. The fields:\n  - date and time;\n  - kind and subtitle (\"Full section · harder M2\" / \"Practice · Linear functions, Percentages, Circles\" / \"Daily challenge · #12 of 140\");\n  - score: the band, or \"10/11 · 91%\";\n  - duration \"64 min\";\n  - **wrong-question chips per module:** \"M1 ✕ 1 6 7 11 15 +2\" and \"M2 ✕ 4 11 12 13\". The overflow shows after 8 per module. Unanswered numbers get dashed chips. Each chip links to `/results/report/?id=..#q=m1-6`;\n  - \"3 still open\" (open traps from this sitting);\n  - buttons \"Review\" (outline) and \"Fix · 7\" (a quiet text button).\n\n**Paging:** 20 per page, with \"Showing 20 of 57\" and \"Show 20 more\", using `/api/history?offset=`.\n\n**Empty:** \"Nothing finished yet.\", with a \"Practise\" pill and a \"Tests\" link.\n\n### 2.8 States\n- **Loading:** skeletons.\n- **API failure:** an inline error per section with \"Try again\". The page never falls silent as it does now (`.catch(() => [null…])` then return).\n- **Brand-new learner:** the chart empty state, tiles at 0, skills all \"Not started\", no traps section, and the empty sittings list.\n- **Lots of history:** the chart defaults to Last 10, the list is paged and grouped, and the CSV exports everything (`limit=200` loops).\n\n## 3. Changes elsewhere, needed for this section\n- **Exam runner (`web/test/test.js`):**\n  - Mark for review calls `POST /api/session/{sid}/flag`.\n  - `S.marked` is restored from `payload.flags` on load and on module 2.\n  - The time on each question is accumulated while it is visible, and `POST /api/session/{sid}/time {times}` is sent on every question change and before finish, chained on the existing `sent` promise.\n- **Practice session summary:** add a \"Review every answer\" outline button → `/results/report/?id=<id>`.\n- **Tests page:** reuse `UI.sittingCard` for its history list.\n- **Practice page:** accept `?topics=a,b` to preselect.\n\n## 4. Accessibility\n- Status is carried by glyph plus text as well as fill.\n- Filters are `role=radiogroup` or `<select>`.\n- The player is a `<dialog>` with focus returned on close.\n- Charts have `role=img` and an aria-label summary, plus a visually-hidden data table.\n- All motion is entry-only and respects `prefers-reduced-motion`.\n- Touch targets are at least 44px on phone.\n",
+  "extras": [
+   {
+    "feature": "What each wrong answer means",
+    "why": "Every wrong option names the misconception that produces it (Item.reasons). The player can show all of them, not just the one picked, so a student learns the whole trap family behind a question. Their explanations cannot."
+   },
+   {
+    "feature": "Try one like this, inline",
+    "why": "Any reviewed question gets a fresh twin (same template, new seed) answered right there, and the answer can close the trap. A finite bank can only re-show the same item, whose key the student has already seen."
+   },
+   {
+    "feature": "Fix these in variants (incorrect only, blanks only, each twice, just the filtered ones, per mistake)",
+    "why": "It turns any slice of the report into a repair set of new questions on the same templates."
+   },
+   {
+    "feature": "Redo with new numbers",
+    "why": "The whole sitting can be sat again on the same templates with fresh seeds: a parallel test, which a paper-based bank cannot produce."
+   },
+   {
+    "feature": "Live mistake status in an old report",
+    "why": "A miss shows 'Open · 2 clean answers to close' or 'Fixed Sep 24', read from traps now. The report reflects progress made after the sitting."
+   },
+   {
+    "feature": "Pace analysis",
+    "why": "Seconds per question against the 1:35 test pace, with 'rushed misses' and 'long solves' as review filters, separates careless errors from hard ones. They only show one average."
+   },
+   {
+    "feature": "Routing explained",
+    "why": "The report shows Module 1's score, the 60% cut, which Module 2 it earned and the 580 ceiling of the easier route. Students misunderstand adaptivity, and theirs shows nothing about it."
+   },
+   {
+    "feature": "Compared with last time and the target",
+    "why": "A delta vs the previous sitting (total and per domain), the target tick on the gauge and the distance to it make every sitting a checkpoint."
+   },
+   {
+    "feature": "Accuracy by difficulty and by format, and average time by difficulty",
+    "why": "It shows whether the student is losing points on easy questions or on grid-ins. It has the same data as their contest 'time analysis', but on every sitting."
+   },
+   {
+    "feature": "Colour the grid by difficulty or by time, and a sortable table view",
+    "why": "Their difficulty colouring is only in the QBank overview. The table makes a 44-question review scannable and printable."
+   },
+   {
+    "feature": "Crowd % on the daily challenge",
+    "why": "Everyone sits the same ten, so each question can show '41% of 140 got this right'. Only a shared-seed generator makes that fair."
+   },
+   {
+    "feature": "Accepted grid-in forms",
+    "why": "'Also accepted: .0496, .0497' comes from the SAT grid rule we already mark by. It teaches the entry rule that costs students points."
+   },
+   {
+    "feature": "Deep links, share link, print/PDF, CSV",
+    "why": "A shared read-only report for a tutor or parent, a printable review, and exports. Their Share/Export button does nothing."
+   },
+   {
+    "feature": "Skill panel on Results",
+    "why": "Mastery, the recent run, per-difficulty accuracy, open and fixed traps, and 'Practise this skill' preselected on the map."
+   },
+   {
+    "feature": "Keyboard review",
+    "why": "Arrow/J/K/N/H/S/T moves through 44 questions without the mouse, as in the practice session."
+   },
+   {
+    "feature": "Practice sets have full reports",
+    "why": "Their QBank sessions never end or summarise. Every practice set here gets the same report as a test."
+   },
+   {
+    "feature": "Resume in-progress sittings from Results",
+    "why": "Their sessions survive only by URL."
+   },
+   {
+    "feature": "Tests count as study time; flags survive reload",
+    "why": "These fix two real data holes found in the code: record_paper files ms=None, and S.marked lives only in memory."
+   }
+  ],
+  "server": [
+   {
+    "change": "Store flags and per-question time on test sittings",
+    "detail": "db.py LATER_COLUMNS: add (\"sessions\",\"flags\",\"TEXT\") as a JSON list of qids and (\"sessions\",\"times\",\"TEXT\") as JSON {qid: ms}. New POST /api/session/{sid}/flag {question_id, on}: 409 once finished, 403 for another learner, 400 for an unknown qid. It updates with json_insert/json_remove in one statement, as set_answer does, and returns {flags}. New POST /api/session/{sid}/time {times: {qid: ms}}: adds each ms (capped at 600000 per qid per call) with json_set, unfinished only. payload() adds \"flags\"."
+   },
+   {
+    "change": "Tests file their time",
+    "detail": "progress.record_paper(learner, session, questions, answers, times) passes times.get(qid) as ms, so attempts.ms is set and days() study minutes include tests. finish() reads row['times']."
+   },
+   {
+    "change": "Extend GET /api/session/{sid}/results",
+    "detail": "Read the X-Learner header and add mine: bool. Keep the existing fields and add:\n- ms: the sum of times, else wall clock (module_started-started + finished-module_started).\n- summary {correct, incorrect, unanswered, answered, accuracy (of asked), accuracy_answered, ms, avg_ms, pace_ms: 95455}.\n- modules: [{n, route, right, asked, ms}] (mock 2, module/diagnostic 1, drill 1 with n=null).\n- route_rule {cut: 0.6, lower_ceiling: 580}.\n- domains for every kind, via scoring.score on marked questions; each domain gains pct, share (BLUEPRINT), previous {right, asked}|null, and topics [{topic, name, right, asked}].\n- by_difficulty and by_format [{key, right, asked}].\n- mistakes: grouped by (template, reason), each {label, kind: misconception|gridin|blank, topic, qids, open, owed, closed}, read from traps now.\n- previous: the last scored sitting of the same kind before this one, {id, finished, estimate, right, asked}.\n- profile {target, exam_date}.\n- challenge {day, rank, players}.\n- In each review item: n (1-based within its module), module (1|2|null), status (correct|incorrect|blank), reasons (4 strings, '' for the key; post-finish only), ms (times[qid], or for drills the first attempt's ms), flagged, saved (join saved on learner+key+seed), repair, trap {open, owed, closed}|null, crowd {right, n} for challenges (first attempts across that day's challenge sessions grouped by qid), and accepted (grid-in only).\nThe 409 detail becomes {need: 'finish', kind: row.kind}."
+   },
+   {
+    "change": "scoring.accepted_forms(key)",
+    "detail": "For a grid-in key whose value has more decimal places than fit in the grid, return the 4-character truncated and rounded decimals that grid_equal accepts (e.g. 2/3 gives .6666, .6667). Otherwise return []. Add an assert-based check in test_flow."
+   },
+   {
+    "change": "POST /api/drill: only / each / scope",
+    "detail": "Drill gains only: list[str] | None (qids of from_session), each: int = 1 (1-5), and scope: 'misses' | 'all' = 'misses'. With from_session: pick = questions with a 'key' where (qid in only) if only, else (scope=='all' or not correct). If nothing is picked, return 409 'nothing to practise'. queue = templates of pick repeated `each` times, as the mistakes path does (once+once), and count = len(queue). timed/minutes pass through, so 'Redo with new numbers' can run at test pace. mine() still applies."
+   },
+   {
+    "change": "POST /api/saved accepts finished tests",
+    "detail": "Allow kind mock/module/diagnostic/practice when row.finished, finding the question in marked_questions(row), so the player's Save works on test reviews. The key-read guard is unchanged for live sittings."
+   },
+   {
+    "change": "Extend GET /api/history",
+    "detail": "Query params kind (csv), limit (default 20, max 200) and offset. Order by finished DESC, rowid DESC (fixes same-second ties). Each item adds ms, pct, route, label (a subtitle string), modules [{n, right, asked, wrong: [n...], blank: [n...]}] computed by marking that page's sittings, and open (traps opened in that sitting that are still open). The response adds counts {all, tests, practice, challenge} and in_progress [{id, kind, started, module, answered, total, seconds_left}] for unfinished mocks/modules with time left and unfinished drills with at least one answer. The 'sessions' key is kept, so Tests and Today keep working."
+   },
+   {
+    "change": "New GET /api/stats",
+    "detail": "progress.stats(learner, tz) returns {answered, right, accuracy, recent_accuracy (14 d), minutes_total, minutes_week, tests {mock, module, diagnostic}, streak, best_streak, by_difficulty [{difficulty, right, answered, avg_ms}], by_format, traps {open, closed}, top_traps [{label, topic, template, hits, open, last, closed}] (top 10 by hits), latest, previous, best {estimate, id, kind, finished}, profile {target, exam_date}}. Everything is read from attempts, traps and sessions, as the rest of progress.py is."
+   },
+   {
+    "change": "New GET /api/skill/{topic}",
+    "detail": "Returns 404 for an unknown slug. Otherwise {topic, name, domain, mastery, answered, right, by_difficulty, recent (last 20 correct flags, oldest first), last, traps_open [{template, label, hits, owed}], traps_closed (count), sittings (last 5 sessions whose attempts include the topic: {id, kind, finished, right, asked})}."
+   },
+   {
+    "change": "Report a problem (shared with the session section)",
+    "detail": "A reports table (id, learner, session, qid, template, seed, category, details, at). POST /api/report {session, question_id, category: key|typo|figure|unclear|other, details (max 2000)} stores it with template and seed read server-side, and returns {ok}. Rate-limit to 20 per learner per day."
+   },
+   {
+    "change": "README and test_flow",
+    "detail": "The serving-layer table rows for /results/ and /results/report/ list the new endpoints. test_flow asserts the new shapes, flags/time round-trips, test minutes in days(), the drill only/each/scope paths, crowd %, 409 kind, and the history tie-break."
+   }
+  ],
+  "files": [
+   "/Users/workingmyassof/satbank/web/results/report/index.html",
+   "/Users/workingmyassof/satbank/web/results/index.html",
+   "/Users/workingmyassof/satbank/web/assets/ui.js",
+   "/Users/workingmyassof/satbank/web/assets/ui.css",
+   "/Users/workingmyassof/satbank/web/test/test.js",
+   "/Users/workingmyassof/satbank/web/practice/session/index.html",
+   "/Users/workingmyassof/satbank/web/tests/index.html",
+   "/Users/workingmyassof/satbank/web/practice/index.html",
+   "/Users/workingmyassof/satbank/server/app.py",
+   "/Users/workingmyassof/satbank/server/db.py",
+   "/Users/workingmyassof/satbank/server/progress.py",
+   "/Users/workingmyassof/satbank/server/scoring.py",
+   "/Users/workingmyassof/satbank/server/test_flow.py",
+   "/Users/workingmyassof/satbank/README.md"
+  ],
+  "shared_needs": [
+   "UI.question review mode (ui.js): reveal(fb, {labels: true, reasons}) adds 'Your answer' / 'Correct answer' tags with ✓/✕ glyphs, a misconception under each wrong option, grid-in your/correct boxes, 'Also accepted', and a hide-answers mode. The practice session, the exam runner's review, Mistakes and the question of the day use the same component, so everything shares one format.",
+   "UI.review player (ui.js): the full-screen dialog in the practice-session layout (top bar with navigator strip or popover, tools, question column, bottom prev/position/next, keys, #q= hash). Mistakes, Challenge and Today reuse it.",
+   "Status cell component and site-wide status semantics: correct ✓ tile / incorrect orange ✕ / fixed-since wash / unanswered dashed / flagged notch / repair ↻ / current ring, with a legend component. The exam navigator, the Check Your Work grid and the practice session's progress segments must adopt the same meanings (orange = needs attention, not 'right').",
+   "Difficulty glyph (three bars + word), used by Practice, the Session header, Tests and here.",
+   "UI.tile stat tile (label, mono value, sub-line), used by Today, Me, Challenge and here.",
+   "UI.gauge (200–800 arc with band, midpoint, target and previous ghost) and UI.scoreChart (bands over time, target line, tooltip, range/kind filters), reused by Today and Me.",
+   "Filter bar component: segmented radio with counts, selects, a Reset link, and state kept in the URL query. Practice's builder and Mistakes need the same.",
+   "UI.sittingCard, shared with the Tests page history.",
+   "Bottom sheet / right drawer component (Skill panel), also useful for the Practice map's skill detail.",
+   "Report-a-problem modal plus POST /api/report, shared with the practice session and the exam runner.",
+   "Split button / menu component (Fix these ⌄, the ⋯ overflow).",
+   "Practice page accepts ?topics=slug,slug to preselect (for 'Practise this skill').",
+   "Exam runner posts flags and per-question times (POST /api/session/{sid}/flag, /time), which the exam-runner section must build.",
+   "Print stylesheet conventions in ui.css (@media print hides .bar, .tabs and actions)."
+  ],
+  "acceptance": [
+   "curl -s -H 'X-Learner: a:v2revresults01' localhost:8000/api/session/3gGTd2b44bXqmkY-2Y4hRg/results | jq: summary.correct+summary.incorrect+summary.unanswered == asked; modules|length == 2 and modules[0].asked == 22; every review item has n in 1..22, module in [1,2], status set; every mcq item has reasons|length == 4 with '' at answer_index; mine == true",
+   "The same curl with header 'X-Learner: a:v2revsomeoneelse' returns mine == false and the same review (read-only share)",
+   "curl results for a drill id returns non-empty domains, review[].ms non-null for answered items, and review[].repair true for repairs",
+   "Start a mock, POST /api/session/{sid}/flag {question_id: first, on: true}, then GET /api/session/{sid} includes that id in flags; after finishing both modules, results.review for that qid has flagged == true",
+   "Start a mock, POST /api/session/{sid}/time {times: {qid: 90000}} for several questions, answer and finish; sqlite attempts rows for that session have ms not null, and GET /api/me days.recent[-1].minutes > 0 for a learner who only sat that test",
+   "POST /api/drill {from_session: <mock id>, only: [<a correct qid>], scope: 'all'} returns total 1, and its served template (sessions.questions[0].key) equals the original question's key with a different seed",
+   "POST /api/drill {from_session, each: 2} returns total == 2 × misses; {from_session, only: ['nope']} returns 409",
+   "GET /api/history?kind=mock&limit=1 returns 1 session with modules[].wrong and modules[].blank arrays; with an unfinished mock present, in_progress lists it with seconds_left > 0; two sittings finished in the same second come back newest-inserted first",
+   "GET /api/stats and GET /api/skill/linear_functions return the documented keys; GET /api/skill/bogus is 404",
+   "GET results on an unfinished drill returns 409 with detail.kind == 'drill', and the report page redirects to /practice/session/?id=",
+   "Browser 1280 on the report: six summary tiles whose numbers match summary; the legend is visible; clicking 'Incorrect' leaves exactly summary.incorrect cells at full opacity; the Mistakes list numbers (e.g. 'M2 Q4') match the grid labels, and all 13 rows are reachable via 'Show all'",
+   "Browser: clicking a cell opens the player with location.hash '#q=m1-N'; ArrowRight moves to the next filtered question; H hides the key tags and explanation; Esc closes and document.activeElement is the originating cell; loading report/?id=..#q=m2-4 opens the player at M2 Q4",
+   "Browser: 'Try one like this' renders a second question in the player without navigation; answering it shows a verdict, and GET /api/map shows one more answered in that topic",
+   "Browser 390 on report and overview: document.documentElement.scrollWidth <= 390; grid cells measure >= 44px; the player's bottom bar is not covered by #tabs",
+   "Browser, a brand-new learner (a:v2revempty02) on /results/: there is no element with text '—' in the hero, the 'Full section · 70 min' button is visible, and the sittings empty text shows with a Practise pill",
+   "Browser: /results/report/?id=nope shows 'That sitting does not exist.' with links to /results/ and /tests/, and no 'QUESTIONS' heading",
+   "Browser: the practice session summary contains a link to /results/report/?id=<that set>",
+   "Browser: the sittings card for a mock shows 'M1 ✕' chips whose count equals modules[0].asked - modules[0].right - blank count; clicking a chip opens that question in the report",
+   "Browser, page.emulate_media(media='print') on the report: .bar and .tabs are display:none and the table of all questions is visible",
+   "Challenge: after two learners sit today's challenge, results.review[i].crowd.n == 2 and the player shows 'x% of 2 students got this right'",
+   "PYTHONPATH=. python3 server/test_flow.py passes, with the new assertions"
+  ],
+  "open_questions": [
+   "Total score: we are Math-only. Should the hero show only the Math 200–800 gauge (the spec's default), or accept a self-reported R&W score (Plan already asks for a current score) to show an estimated /1600 total like theirs?",
+   "Share by link: the results endpoint already has no ownership check. Keep that as the read-only share feature (the spec's default: mine=false hides actions), or lock reports to their owner and add an explicit share token?",
+   "Site-wide colour flip: this spec makes incorrect = orange and correct = a neutral tile with ✓ (today the report has correct = orange). It has to change in the exam navigator and the practice session's progress segments too. Confirm before another section builds on the old meaning.",
+   "Should 'Try one like this' answers count toward mastery and traps? The spec says yes, because it goes through /api/drill. The alternative is a sandbox that files nothing.",
+   "'Redo with new numbers' as a drill (the spec's default: one timed set of the same templates) or as a true parallel adaptive section (same module 1 templates, module 2 routed afresh), which needs blueprint changes?",
+   "Should the 19-skill grid stay on Results, or move entirely to the Practice map, with Results linking to the Skill panel only?"
+  ]
+ }
+}

@@ -1,0 +1,221 @@
+{
+ "label": "advantage: compete",
+ "key": "v2:be60730aced7d45f9d1a689b9d40c4b7e13ec95d6b04d156209c5cd251e7e02e",
+ "result": {
+  "proposals": [
+   {
+    "title": "Races: a pacer lane from any finished run, 'Beat my run' links, and async duels",
+    "what": "Where it appears: a 'Race' action on every board row of a finished contest (named or Anonymous), on your own history rows ('Race your best'), on the contest page (a Pacer select: Your best run · SAT pace · Field median · Winner · each rival), and 'Beat my run' on the result panel, which copies /compete/race/?c=CODE with no setup sheet. A race is an unranked twin sitting of the same contest slots (same template, tier and format per slot, the racer's own numbers; cfg.race = {contest, pacer}) on that contest's answer clock. In the runner, two 6 px lanes sit above the question: 'You' and 'Maya · L5' (20 px level badge). The pacer lane advances by its recorded per-slot sms measured against YOUR answer clock, so it freezes while you read a rationale. The server returns pacer {name, level, at, marks[]} and only includes a mark for slots you have already answered, so the lane never gives a hint. The verdict adds 'Maya: right in 0:58', or for the SAT-pace pacer 'SAT pace: 1:35 · 62% of the field right'. End card: 'You 8/10 · 190 pts · 11:02 — Maya 7/10 · 170 · 12:40 · You won by 20', with both strips aligned by slot, 'Race again' (fresh twins) and 'Rematch your misses' (P4). Three kinds of pacer: a run (any finished sitting of that contest); 'SAT pace' (one slot every 95 s, no marks); 'Field median' (per-slot median sms and % right). Beat-my-run links: a friend on any code opens a landing ('Sam's Daily · Sep 23 · 170 pts in 11:42 · 10 twin questions, same types, your own numbers · Race'). The result goes to the sender's inbox (U25) and to a head-to-head record ('You 3 – Sam 2'). Duels: 'Duel' on a rival or classmate deals 5 twin slots, drawn once at the pair's mean rating. The challenger plays first and the opponent races that pacer within 48 h. Every answer moves the item-based rating as usual, and the duel adds a W–L record and season duel points. Live duels (both lanes moving from real players, polling every 2 s) use the same flow and can come later. Data: table races(code PK, owner, session, contest, created, revoked); sessions.result.race {pacer, you, them, won}; GET /api/drill/{sid}.pacer; POST /api/races; GET /api/races/{code}; GET /api/compete/h2h?pid=. Checks: a pacer mark for slot k is absent until slot k is answered; the pacer's 'at' does not move while clock.running is false.",
+    "beats": "Theirs allows one attempt per contest, hides answers until the contest ends, and has no head-to-head or replay. A fixed bank cannot allow a replay without handing out the answers. Ours makes every finished run on every board an opponent you can race on equivalent questions, any time. A student alone on the site still has two opponents from day one (their own best run and SAT pace), so Compete is never empty the way theirs was on both walks. Their Share froze the page; ours is a link that starts a fair race.",
+    "effort": "M",
+    "needs": "attempts.sms per slot and the answer clock (Compete §8, build step 1); compete.twin_questions and contest_items; R28 runner hooks (state_extra carries the pacer); compete.compare data; U25 inbox for returned results; R12 visibility (hidden rows race as 'Anonymous · L5'); R18 code and link conventions."
+   },
+   {
+    "title": "Par and Net: every student's own expected score, and boards a level-2 student can win",
+    "what": "A sitting's par is the sum over its slots of tier points (10/20/30) × P(right), where P = 1/(1+10^((R_item − R_you)/400)). R_you is frozen at the sitting's start as max(rating, 30-day peak − 100), so tanking to lower your par doesn't pay. R_item comes from item_ratings. Net = base points (right and unvoided × tier points, no pace or finish bonus) − par. Result panel: a Par tile, 'Par 142 · +28 over par', with the helper 'What a student at your rating scores on your ten, on average.' Contest boards: a Net column after Points and a 'Points · Over par' toggle. Leaderboard: a new metric 'Over par' (the sum of Net over ranked sittings in the period; Sprint excluded). On Week the podium becomes three podiums: Top score · Most over par · Biggest climb (rating gained in the period), so each is reachable by a different kind of student. A streak chip, 'Over par 4 Dailies running', and an R25 badge, 'Beat par 5 in a row'. Net ranks need placement done (30 rated answers); a Placing student sees 'Par after placement · 12 of 30'. Calibration change against §3.7.5: item_ratings update from every clean first-try answer in any mode (R8's clean answer: practice, tests, contests). Each (template, tier) is seeded at 900/1100/1300 and re-seeded from its all-time first-try accuracy once n ≥ 20. The student rating still moves only on rated contest answers (and Rush, P6). One function, compete.par(session), serves the result, the boards, the lobby forecast (P10) and Rivals (P7). Checks: a 10-slot par equals the sum of its slot expectations; a learner whose rating drops 150 in a week keeps the peak floor for par.",
+    "beats": "Their scoring is points by difficulty plus a speed bonus. The strongest student tops it every week and a beginner never ranks, so the board only motivates the top. Ours keeps the gross board and adds a net board and podium where beating your own expected score wins, so a student at any level has a race they can win each day. They cannot compute par because their items carry no ratings; ours are calibrated from every answer the site records, in every mode.",
+    "effort": "M",
+    "needs": "Compete's rating and item_ratings (§3.7.5 rating, build step 8), moved earlier in the order; R8 clean-answer flags; compete.leaderboard gains metric 'net'; R25 for the badge; §2.3 tokens for the podium tiles."
+   },
+   {
+    "title": "Verify, don't void: a twin re-check instead of a zero",
+    "what": "The triggers stay as §8 has them (tab hidden ≥ 5 s, copy/cut/paste, or pagehide while a question is open), but the question is no longer zeroed. The slot is marked 'to confirm' (cfg.confirm[qid] = {why, secs}), and the verdict still shows the key and rationale. Only flagged answers that were right need confirming; a flagged wrong answer is simply wrong. The first trigger shows a banner: 'Question 4 needs a quick confirm at the end: the tab was hidden for 12 s.' Before hand-in the runner adds a Confirm step: 'Confirm 2 answers · a twin of each · 95 s each · stay on this tab'. Each confirm is a twin (same template, tier and format, a seed not yet dealt in this contest) in strict mode, where leaving the tab or pasting forfeits it. A right confirm keeps the original slot's base points (the pace bonus only if both answers came within 95 s). A wrong, skipped or forfeited confirm scores the slot 0, counted as Voided. 'Too fast' (the §1.2 rule) no longer unranks silently: 'Your answers came in faster than the questions can be read. Confirm 3 to be ranked.' That serves 3 strict twins of random right slots; 2 of 3 right → ranked, otherwise Unranked 'fast'. The test window (Weekly, Final) runs the same Confirm step after hand-in and before the result, capped at 5 (flags beyond 5 are void). Result and board read '8 right (1 confirmed) · 1 wrong · 1 skipped · 0 voided'. Confirm answers file as normal attempts, so they count as study. Endpoints: POST /api/drill/{sid}/confirm (the next confirm twin); POST /api/session/{sid}/confirm for the test window. Checks: a flagged right answer with a right confirm adds its base points; a forfeited confirm adds 0 and voided == 1; a too-fast sitting that passes 2 of 3 is ranked.",
+    "beats": "Theirs voids the open question the moment you switch tabs, leave fullscreen or paste, and scores the whole attempt 0 past a resume limit, so one phone notification costs a minor a question. v2 copies that with a 5 s grace. Ours never takes a point for a blip, yet a lookup has to be repeated under strict rules on fresh numbers. That needs an unlimited supply of twins; a fixed bank would have to re-serve the same item or keep a reserve that leaks. It also settles the open question on voiding strictness for minors.",
+    "effort": "M",
+    "needs": "§8 void hooks and the runner's hand-in step (S4, S5 via R28); compete.twin_questions with contest_items exclusion; finish_contest reads cfg.confirm; the leave sheet (leaving during Confirm forfeits the open confirm)."
+   },
+   {
+    "title": "Rematch: where you lost places, priced by misconception, and won back on twins",
+    "what": "On the result panel, under the breakdown: 'Where you lost places', one row per wrong, skipped or voided slot, sorted by places: 'Q7 · Advanced Math · Hard · fell for Swapped the columns · right → #2 (+5 places, +35 pts)'. The counterfactual re-ranks your points with that slot right (pace included if its sms ≤ 95 s) against the board as it stands (competition ranking). A last row: 'All of them right → #1'. A loss line groups the lost points by misconception: 'Lost 70 pts: 40 to Swapped the columns (2 slots) · 30 to a skip'. The pill 'Rematch these 3' starts an unranked twin set of exactly those slots (source 'rematch', same tier and format, answer clock 95 s per slot). Its summary reads 'Rematch 3/3 · corrected score 240 would place #2 of 37 · 2 mistakes fixed'. The repair loop closes the traps the contest opened, and R9 check-ins follow. History rows and the rankings picker show 'Rematch' while misses remain and 'Rematched 3/3' afterwards. Endpoints: GET /api/contest/{cid}/lost → [{slot, template, tier, reason, label, pts, rank_if}]; POST /api/drill {source:'rematch', session}. Checks: rank_if equals the board rank for your points plus that slot's value; the rematch serves the same template, tier and format per slot with new seeds.",
+    "beats": "Their per-contest stats are Score / Correct / Incorrect / Skipped / Voided: counts with no reason and no next step, and the answers only open after the contest ends. Ours names the single miss that cost the most places and the misconception behind it, then lets the student win it back on equivalent questions straight away. A fixed bank cannot do that without re-serving the same item.",
+    "effort": "S",
+    "needs": "compete.board's ranking function; twin_questions (or the §2.6 drill body with per-slot template, tier and format); the repair loop and R9 traps; the §4 result panel and the §6 history table."
+   },
+   {
+    "title": "Trap of the week and the Trap Index",
+    "what": "A new weekly contest kind, trap-YYYY-Www. It runs Mon–Sun on the student's local days like the Daily: answer clock 950 s, twins, key after each question, rated, and it earns season points. Its theme is one of U6's 11 habit families: the one the whole site fell for most last week (wrong first-try attempts whose reason tags the family ÷ first-try answers on questions that carry it, all modes), skipping the last 4 themes. 10 slots, 3E 4M 3H, over at least 5 topics. Each slot is a template with a distractor in that family (F5's want matcher), so every question holds the trap. Lobby: 'TRAP OF THE WEEK · Answered a different quantity than asked · caught 41% of the field last week · 10 questions in 6 skills, each with this trap in it'. Result: 'Resisted 8 of 10 · field 5.9 · caught on Q3 (Percentages) and Q8 (Circles)', with U6's tell. The board adds a Resisted column. The Trap Index is a section on Your rankings and a 3-row card on Overview. Each family gets a row: 'field 41% this week ▲6' · 'you 12% · 17 chances in 30 days' · a 'Trap-proof' chip when proven · 'Drill · 8' (U6's habit drill). A chance is a first-try answer on a question with a distractor in the family, and it is resisted when you didn't pick that distractor. Proven means ≥ 5 chances over ≥ 3 templates in 30 days with no fall. A new leaderboard metric, 'Trap-proof', counts families proven (0–11, ties broken by chances resisted, rolling 30 days). Endpoint: GET /api/compete/traps-index; compete.ensure() creates the weekly contest row. Checks: every served slot's regenerated item has a reason in the theme family; a learner with 5 resisted chances over 3 templates shows as proven.",
+    "beats": "Their options carry no labels, so they cannot say which mistake a contest tests, count who fell for what, or build a contest around one mistake. Their contests have no theme and were never live. Ours turns the field's most common mistake of the week into a contest across skills, and publishes a live index of which traps catch the field and whether you are immune to each.",
+    "effort": "M",
+    "needs": "U6 habits.py families and blueprint.kinds(); F5's want matcher; attempts.reason (exists today) and the template → family index; compete schedule (§3.7.5 ensure); U6's Trap-proof ladder through R25."
+   },
+   {
+    "title": "Rush: three strikes, and the difficulty climbs with you",
+    "what": "A new always-live kind, 'rush', as a second mode beside Sprint: an Overview row 'Rush · best 17 today' and a Rush tab on the Sprint lobby. A run starts at a question rated your rating − 300 (700 while Placing). Each right answer moves the target up 60; each miss moves it down 120 and costs a strike; over 95 s on a question is also a strike; 3 strikes end the run. Each question is the (template, tier) whose item rating is nearest the target, going round-robin over domains. A run never repeats a template, and never serves a (template, seed) the student has already seen. A domain filter (All · Algebra · Advanced Math · PSDA · Geometry) gives five separate boards. Header: 'Right 14 · strikes ✕✕○ · Level 6 question'. The verdict works like Sprint's: key, mistake line, and a collapsed 'Why'. End: '14 right · reached Level 6 questions · best ever 17', a strip shaded by difficulty, and 'Your 3 strikes: Swapped the columns · slip · Used the diameter as the radius' with 'Practice these 3'. Runs are unlimited and every run ranks. Boards list each student's best run per day, week and all time, ordered by right answers, then the highest item rating solved, then time. Answers are rated, which makes Rush the fastest way through placement. Server: drill kind 'rush' with cfg {target, strikes, domain}; F5's _pick selects by target rating. Checks: after a right answer the next item's rating is ≥ the last one's; the run ends on the third strike; no template repeats within a run.",
+    "beats": "Theirs has no retakeable ranked mode and no adaptive contest; Adaptive exists only as a practice preference. Their finite bank runs dry at the top of a skill (SEC 22, Transitions 10, statistical claims 5). Ours is an endless, fresh run that seeks the student's level. It takes two minutes, can be replayed all day, and every strike is named and queued for repair.",
+    "effort": "M",
+    "needs": "item_ratings (P2); Sprint mode in the runner (§8); an F5 picker by target rating that respects the per-learner seen set; compete.rate; R25 for a Rush badge."
+   },
+   {
+    "title": "Rivals: three students at your level, and a running head-to-head",
+    "what": "Every Monday at 00:00 UTC, compete.rivals(learner) picks 3 rivals. They are public learners with a ranked contest in the last 14 days and a rating within ±100 of yours, widening to ±200 and then to the nearest. It prefers the same exam date (R3's exam scope), then classmates. A student can also pin up to 3: from any board row of a contest they both sat ('Pin as rival' in the row menu) or from a class. Pinning is one-way and never notifies anyone. The Overview gets a 'Rivals' card in the side column, above the leaderboard preview. Each rival row shows name + level badge, 'You lead 4–2 this season' (points in ranked contests both sat), the last shared result ('Daily · Sep 23 · you 170 · them 150'), and 'Race' (P1) on their latest run you haven't raced. The result panel adds 'Rivals today: beat Maya · lost to Sam · Lee hasn't sat yet'. The inbox (U25) gets at most one message a day: 'Sam beat your Daily by 20 · Race his run'. Your rankings gets a Rivals table with the record by season. Empty state: 'Rivals appear once 3 students near your level have played in the last two weeks. Until then, race your best run.' + Race your best. Storage: rivals(learner, rival, pinned, since); records are computed from sessions. Other students never get a hidden learner (R12) as an auto-picked rival. Checks: a learner at 1,080, with public learners active at 1,050, 1,120 and 1,400, gets the first two before the third; a hidden learner is never picked.",
+    "beats": "Their board is a global or country list. A student at #300 has no race to run and nobody within reach. Ours gives every student three close opponents and a running score against each, every day.",
+    "effort": "S",
+    "needs": "rating (P2, §3.7.5); per-contest points from compete.board; P1 races; U25 inbox; R12 visibility; R3's exam scope."
+   },
+   {
+    "title": "Class live: a projected contest where every desk gets its own twin",
+    "what": "A new option, 'Live: you run it', in Create a contest (§7) and on a class page. The host screen, /compete/live/?id=, is made for a projector: the join code large with /join/?c=CODE, joined names filling in, and Start. For each slot the host screen shows only the slot type ('Q3 · Geometry · Medium · grid-in'), a countdown (default 95 s, with Close now) and '18 of 24 answered'. When the slot closes it shows bars by misconception ('Right 58% · Used the diameter as the radius 27% · Swapped the legs 9% · blank 6%'), the name behind the fastest right answer, and the running top 5 (Points or Over par). 'Explain' shows the host's own twin of the slot with its rationale, so the trap can be taught on the board. At the end: a podium, the class's top 5 traps, and 'Assign these as homework' (U27's Reach a level over those templates, or a class set). Students join on their phones with the code. Each slot opens in the practice-session runner in contest mode, with their own numbers. After answering they see their key and rationale and 'Waiting for the next question · 18 of 24'. Scoring is the Daily's (points, plus the pace bonus within the slot's limit). Transport is polling, GET /api/live/{id}?v= every 1.5 s for host and students, with host actions on POST /api/live/{id} {open|close|next|end}; no websockets. Contest kind 'live' always uses twins, and the owner results table (§4) is there afterwards. Checks: two students' slot-3 questions share template, tier and format with different whole-question hashes; a student cannot fetch slot 4 before the host opens it.",
+    "beats": "Their classes and homework are hidden, and homework is a fixed test or QBank session with a due date; there is no live mode. Live quiz tools project one identical question, so the neighbour's answer works, and their options name no mistakes. Ours turns the misconception spread after each question into the lesson, and copying is useless because every desk has different numbers.",
+    "effort": "L",
+    "needs": "classes (S2, R4) and join codes; private contests (§7); twins; per-slot field aggregation (§3.7.5 review()); a runner hook that gates the next slot (S4 via R28); U27 for 'Assign these'."
+   },
+   {
+    "title": "A rating card: overall, 4 domains and 19 skills",
+    "what": "A table ratings(learner, dim, rating, n), where dim is 'all', each of the 4 domains, or each of the 19 topics. Every rated answer updates its three dims with the same Elo against the item (K 32 while that dim has fewer than 30 rated answers, 12 after). The rating card appears on Your rankings and in Overview D. It shows the overall badge, then four rows like 'Algebra · 1,240 · Level 4 · 86 rated · ▲ 40 in 30 days', each a bar on the level ladder. A 'Skills' disclosure lists the 19 topics (Placing below 10 rated answers). Each domain gets an expectation line from item ratings: 'At 890 you'd get about 45% of medium Geometry questions.' The lowest domain gets 'Rush Geometry' (P6) and 'Practice'. The leaderboard's Rating metric turns on the Domain select, which v2 disables. Level-up toasts fire per domain. Check: one rated Geometry answer changes 'all', the Geometry domain and its topic, and no other dim.",
+    "beats": "Their boards show only accuracy and time, and their time analysis splits only by difficulty; nothing on their site measures skill by area. Ours gives a rating per domain and per skill that the student can climb, shown on boards and in lobbies.",
+    "effort": "S",
+    "needs": "compete.rate (§3.7.5) and item_ratings; UI.level (§3.7.7); leaderboard metric 'rating' with a domain."
+   },
+   {
+    "title": "Every lobby forecasts your result and offers a warm-up",
+    "what": "The contest lobby, contest rows and Today's challenge card show 'Par 142 · about 6.8 right · likely #8–#14 of ~37'. Par comes from P2. The placement range maps par ± one standard deviation (Σ p(1−p)·points²) onto this contest's score distribution, or yesterday's; it stays hidden until there are 10 ranked players. Ladder cells fill by your chance on that slot (your domain rating against the slot's item rating), with hover text 'Q9 · Geometry · Hard · your chance 34%'. The pill 'Warm up · 6' starts a drill of 2 questions on each of the 3 lowest-chance slots' topics and tiers. It leaves out the contest's own slot templates, so the board stays a test of the skill. Afterwards the result links back: 'Warmed up on Circles · Q9 right'. Check: the warm-up never serves a template from the contest's slot list.",
+    "beats": "Their contest list shows a title and a tier gate, and the rules are the only preview. Ours tells a student what to expect and shores up the weakest part first, in six questions.",
+    "effort": "S",
+    "needs": "P2 par; P9 domain ratings; the §2.6 drill body with topics, tiers and exclude-templates; §3A ladder cells."
+   },
+   {
+    "title": "Class battles and squads",
+    "what": "Squads are classes of 2 to 5 friends, made under R4's class rules; whole classes can take part too. The weekly team score is the mean of each member's best 5 Daily Nets (P2) that week, with absent members counting 0, so one strong member can't carry the team. Either owner can set a one-week Battle between two classes or squads with the other's code: 'Period 3 vs Period 5 · Mon–Sun · mean over par +12.4 vs +9.8 · 18 of 24 played vs 20 of 26'. Overview G shows your squad's standing, and the leaderboard gets a Squads scope. Check: a squad of 3 in which one member sat nothing scores (a+b+0)/3.",
+    "beats": "They have no teams at all, and their class feature is hidden. Ours gives classes and friend groups a shared reason to show up, scored fairly across levels by Net.",
+    "effort": "M",
+    "needs": "classes (S2, R4); P2 Net; a squad and battle scope in compete.leaderboard."
+   },
+   {
+    "title": "Paper contests: a printed twin sheet for each student, with keys for the teacher",
+    "what": "A 'Paper' option for private and class contests. /compete/contest/print/?id= prints one sheet per roster member (or N numbered sheets). Each sheet has its own twins, a sheet code and answer boxes, with Bluebook-style boxes for grid-ins. The owner also gets a key booklet: one key row per sheet, with each wrong option's misconception. For marking, the student (or the teacher, for everyone) types the answers into /compete/contest/?id=…&sheet=CODE, a 10-cell grid of letters or numbers. That marks the sheet, files attempts under the linked learner, and fills the board, the owner results table and the field's traps. Printing uses @media print CSS, with no PDF library. Checks: two sheets of one contest share slot types and differ in whole-question hash; typing in a sheet's own key marks it 10/10.",
+    "beats": "Their homework is on screen only, and a printed copy of a fixed set is the same at every desk. Ours works in a classroom without devices and still stops copying.",
+    "effort": "M",
+    "needs": "twins; R19 access (keys only to the owner); classes; the §4 owner results table; any printable-worksheet renderer that Practice or Review builds."
+   },
+   {
+    "title": "Season recap and next-season goal",
+    "what": "When a season closes (close_season), a recap card appears on Overview, with a line on Me: 'Road to Oct 3: 24 contests · rating 980 → 1,190 (Level 3 → 4) · 31 mistakes closed · trap you beat most: Swapped the columns (7×) · best finish #2 · Season Final 610–750'. 'Copy recap' copies it as plain text. The next season opens with goal lines: 'Road to Nov 7: Level 5 is 61 rating away' and 'Over par in 5 Dailies a week'. Each learner's recap is stored in seasons.standings. Check: the recap's counts match history for the season window.",
+    "beats": "Their 'Seasonal' is just a label. Ours shows the student what the stretch before a test date did for them, and sets a target for the next one.",
+    "effort": "S",
+    "needs": "seasons (§1.1, build step 9); rating history in sitting results; R9 closed traps; P5 families."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Scoring rule: points by difficulty plus a speed bonus",
+    "spec_says": "§1.2: 10/20/30 for each easy/medium/hard right, +5 per right answer within 95 s, +10 finish bonus; boards order by points, then answer time.",
+    "why_only_parity": "It has the same shape as theirs (difficulty points plus a time bonus), with pace in place of speed. It still ranks raw strength: the same strong students top every board and a beginner never places.",
+    "upgrade": "Keep gross points and add Par and Net (P2): each sitting's par from item ratings, a Net column, an 'Over par' metric and a triple podium, so every level has a race it can win."
+   },
+   {
+    "feature": "Integrity: fullscreen, and a tab switch, copy or paste voids the open question",
+    "spec_says": "§1.2 and §8: void after 5 s hidden, on copy/cut/paste, or on pagehide; a voided question scores 0; fullscreen is optional; too fast → Unranked.",
+    "why_only_parity": "It is their penalty model with a 5 s grace. A notification still costs a minor a point, and 'too fast' silently drops a real student from the board.",
+    "upgrade": "Verify, don't void (P3): flagged right answers are confirmed at hand-in with strict twins, and a too-fast sitting can confirm 3 answers to be ranked."
+   },
+   {
+    "feature": "Per-contest stats: Score / Correct / Incorrect / Skipped / Voided",
+    "spec_says": "§4 result panel: '8 right · 1 wrong · 1 skipped · 0 voided', the points parts and an answer strip.",
+    "why_only_parity": "The same five counts. They don't say why points were lost or what to do next.",
+    "upgrade": "'Where you lost places' (P4): points lost per misconception and the rank each miss cost, then 'Rematch these 3' on twins."
+   },
+   {
+    "feature": "Contest Leaderboard picker (how you placed in a finished contest)",
+    "spec_says": "§6.3: a select of finished contests, a mini board (top 5 + you ± 2) and 'Open contest ›'.",
+    "why_only_parity": "It is their picker: choose a contest, see where you placed.",
+    "upgrade": "Each picked contest shows its top lost-places row, plus 'Race the winner' and 'Race your rival' (P1, P7), so a past contest becomes something to act on."
+   },
+   {
+    "feature": "Podium",
+    "spec_says": "§5: three cards in the order 2·1·3 for the chosen metric, heights 132/156/116, reading 'Open' with fewer than 3 players.",
+    "why_only_parity": "It is their podium, and the same three strongest students hold it.",
+    "upgrade": "On Week, three podiums side by side (Top score · Most over par · Biggest climb), each card with 'Race' on that student's best run (P1, P2)."
+   },
+   {
+    "feature": "Leaderboard metric: Contest Points | Overall Score",
+    "spec_says": "§5: Points · Rating · Questions right · Test score (Test score is their Overall Score); the Domain select is disabled for Rating.",
+    "why_only_parity": "Points and Test score mirror theirs, and Right adds a volume board. None of them rewards learning, and the one skill metric can't be split by domain.",
+    "upgrade": "Add 'Over par' (P2), 'Climb' (U11's cohort gain, on the leaderboard as well as on Me) and 'Trap-proof' (P5); turn on Domain for Rating through domain ratings (P9)."
+   },
+   {
+    "feature": "Leaderboard table: Rank / Username / Accuracy / Time",
+    "spec_says": "§5: Rank | Student + level | metric | Accuracy | Avg time | Contests; paging; the you-bar 'You · #212 · 150 pts · Jump to me'.",
+    "why_only_parity": "It is their table plus a level badge and a you-bar: a list to read.",
+    "upgrade": "The you-bar gives the gap and the cheapest way to close it ('12 pts to pass #211 · one hard right answer · Rush now'), and every row gets Race and Pin as rival (P1, P7)."
+   },
+   {
+    "feature": "Global Leaderboard card on the contests hub",
+    "spec_says": "§3E: 'THIS WEEK · POINTS', five rows, then your row and 'Full leaderboard ›'.",
+    "why_only_parity": "It is the same card: the top five, who are the same five every week.",
+    "upgrade": "Put Rivals first (P7): three close opponents, your record against each, and Race. Keep the top five below it."
+   },
+   {
+    "feature": "Your Contest Stats card (global rank)",
+    "spec_says": "§3D: level badge + rating and 2×3 tiles (week rank, all-time, country, points, contests, best finish).",
+    "why_only_parity": "These are static numbers. Theirs is the global rank; ours adds more numbers of the same kind.",
+    "upgrade": "Each tile shows movement since last week and the next step ('Level 4 in 16 rating'), and the rating becomes the rating card with four domain rows (P9)."
+   },
+   {
+    "feature": "Your Rankings card and the profile rank snapshot",
+    "spec_says": "§6.2 ranks table: Everyone / Country / groups × Week / Month / Season / All, plus 'Contests played 14'. The Me snapshot: 'Week #12 of 340 · Country #14 · All time #210 · Level 3'.",
+    "why_only_parity": "Their global and country ranks, spread over more cells. Nothing says whether a rank is moving or who is close.",
+    "upgrade": "Put a Same exam date row first (R3's exam scope), add U11's movement (▲) and gap to the next place in each cell, and add Climb. The Me snapshot reads the same function (one source)."
+   },
+   {
+    "feature": "Time analysis by difficulty",
+    "spec_says": "§6.2 Pace: by difficulty / by domain / right vs wrong / under pressure, against the field median and SAT pace.",
+    "why_only_parity": "The views are better than theirs, but it is still a chart with no action. It is also a second pace calculation beside U7's progress.pace on Me, which breaks one source per fact.",
+    "upgrade": "Read progress.pace (U7) with a contest filter. Every row gets U7's quadrant drill ('Speed drill · 8 in 9 min'), and the next Daily offers a 'Race SAT pace' pacer (P1)."
+   },
+   {
+    "feature": "Badge progress",
+    "spec_says": "§6.4: badge tiles with rule, a progress bar 'n/N' and the earned date; the 3 closest on Overview F.",
+    "why_only_parity": "It is their Badge Progress card with real rules: progress is shown but not driven.",
+    "upgrade": "Every badge in progress gets a Go that starts what advances it (Sprinter 14/20 → Rush or Sprint; All-rounder 3/4 → Geometry Rush; Challenge week 5/7 → today's Daily), as U13 does on Me."
+   },
+   {
+    "feature": "Contest history",
+    "spec_says": "§6.6: a table of Date | Contest | Score | R·W·S·V | Points | Time | Rank | Top % | Rating Δ | Ranked | Review ›, with Kind and Sort filters.",
+    "why_only_parity": "Their Contest History with more columns: still a log.",
+    "upgrade": "Add a Net (over par) column, plus 'Rematch' on each row while misses remain, and 'Race' (P4, P1)."
+   },
+   {
+    "feature": "Performance summary",
+    "spec_says": "§6.1: ten stat tiles and a Top % / Rating chart over the last 30 contests, 90 days or all.",
+    "why_only_parity": "A richer version of their Performance Summary that reports without pointing anywhere.",
+    "upgrade": "Add an 'Over par' series to the chart, mark each point with the misconception that cost the most that day, and show movement on the tiles."
+   },
+   {
+    "feature": "Ranked vs not ranked on the score report, with a percentile",
+    "spec_says": "§9 and R16: a 'Ranked: timed full section' pill and a percentile among first standard sittings, shown once n ≥ 20.",
+    "why_only_parity": "Their pill and their percentile.",
+    "upgrade": "Put the gap in questions: 'Top 29% · 3 more right, 2 of them in Advanced Math, would be top 20%', with the drill. Add a same-exam-date cohort percentile once that cohort reaches n ≥ 20."
+   },
+   {
+    "feature": "Anonymous listing",
+    "spec_says": "R12 and §4: hidden students show as 'Anonymous' at their real rank, with no row menu.",
+    "why_only_parity": "It is their 'Anonymous student'.",
+    "upgrade": "A hidden student keeps every competitive feature without being listed: par, own-best and SAT-pace pacers, and rivals (visible to them). Other students can still race their rows as 'Anonymous · L5', which reveals no name."
+   },
+   {
+    "feature": "Contest list and rules",
+    "spec_says": "§3B rows (kind icon, title, window, facts, status chip, action) and the lobby's 'How it's ranked' list.",
+    "why_only_parity": "Ours is never empty, but each row says what theirs says: what, when, and the rules.",
+    "upgrade": "Every row and lobby shows your par, your likely placement and your chance per slot, with 'Warm up · 6' (P10)."
+   },
+   {
+    "feature": "Share",
+    "spec_says": "§8: 'Copy result' text with a ■□· strip; 'Challenge a friend' opens the Create a contest sheet, prefilled.",
+    "why_only_parity": "A text brag and a setup form. Their navigator.share froze and ours works, but it shares the same thing.",
+    "upgrade": "'Beat my run' copies a race link in one tap (P1). The friend races your pacer on twins, and the result comes back to your inbox and your head-to-head record."
+   },
+   {
+    "feature": "Streak pill",
+    "spec_says": "§3A: 'Challenge streak 5 days' and a 30-day strip. Missed days can be sat unranked but don't count.",
+    "why_only_parity": "It is their '1 day' streak pill: one missed day resets it.",
+    "upgrade": "Apply U16's spare days to the challenge streak, and let a missed Daily be made up unranked within 48 h to keep the streak (never for rank or season points)."
+   },
+   {
+    "feature": "Classes and homework",
+    "spec_says": "R4 and §7: a group contest with a due time, and an owner results table with per-question marks and CSV.",
+    "why_only_parity": "It is their hidden teacher dashboard out in the open: assign, collect, see the marks.",
+    "upgrade": "Class live for the lesson itself (P8), paper contests (P12), class battles (P11), and 'Assign these traps' from the results table's top misconceptions (U27)."
+   }
+  ]
+ }
+}

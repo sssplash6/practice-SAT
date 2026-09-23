@@ -1,0 +1,614 @@
+{
+ "label": "design: qbank",
+ "key": "v2:dde9877987462a35cbbd4cb6d407567666d87c21cc12be50bc08174bb31be641",
+ "result": {
+  "section": "Question Bank: the practice builder (/practice/) and the practice session (/practice/session/)",
+  "theirs": [
+   {
+    "feature": "One-screen builder",
+    "detail": "/question-bank is one screen with no page scroll. The skill list scrolls inside its own card and the action bar is fixed at the bottom."
+   },
+   {
+    "feature": "Bank toggle",
+    "detail": "A top segmented control switches between Question Bank (College Board items: 1,848 R&W, 1,921 Math) and TTP Bank (their own items: 1,315 R&W, 3,867 Math). The TTP bank has a quota on the free tier, and the paid tiers show it as '0 a day'."
+   },
+   {
+    "feature": "Live question count",
+    "detail": "The 'SELECT DOMAINS' heading carries a live 'N questions' count for the current selection."
+   },
+   {
+    "feature": "Subject toggle",
+    "detail": "A segmented control: English and Writing | Math."
+   },
+   {
+    "feature": "Domain accordions",
+    "detail": "Each domain is a card with a check circle, its name, a question count and a chevron. It expands to its skills. The parent unchecks when any child is unchecked, and there is no indeterminate state."
+   },
+   {
+    "feature": "Skill checkboxes with counts",
+    "detail": "Every skill has its own checkbox and item count, e.g. Linear functions 170 (QB) / 408 (TTP) and Evaluating statistical claims 12 / 5. Math has 4 domains and 19 skills; R&W has 4 domains."
+   },
+   {
+    "feature": "Bluebook Include | Exclude",
+    "detail": "Segmented, QB tab only. It keeps out (or lets in) items that also appear in Bluebook practice tests."
+   },
+   {
+    "feature": "Difficulty multi-select",
+    "detail": "Easy, Medium and Hard toggle pills, all on by default."
+   },
+   {
+    "feature": "Question Score 1-7",
+    "detail": "A dual-thumb range slider, a finer difficulty scale than easy/medium/hard."
+   },
+   {
+    "feature": "Solved filter",
+    "detail": "A select: All / Solved only / Unsolved only."
+   },
+   {
+    "feature": "Marked for Review filter",
+    "detail": "A select: All / Marked only."
+   },
+   {
+    "feature": "Redo List filter",
+    "detail": "A select: All / Redo only."
+   },
+   {
+    "feature": "Volume",
+    "detail": "Segmented: 10 / 20 / 30 / 40 / 50 / All."
+   },
+   {
+    "feature": "Mode",
+    "detail": "Segmented: Timed | Untimed. A timed set gets 6 min per question (10 questions = 60:00)."
+   },
+   {
+    "feature": "Start Practice Session",
+    "detail": "The primary button, at the right of the bottom bar."
+   },
+   {
+    "feature": "Practice defaults in Profile",
+    "detail": "Learning Preferences sets Practice Mode (Timed), Difficulty Level (Adaptive), and toggles for Show Desmos Calculator and AI Explanations."
+   },
+   {
+    "feature": "Session route",
+    "detail": "/question-bank/session/{uuid}. A session can only be resumed from its URL, and the app sidebar stays visible."
+   },
+   {
+    "feature": "Go Back",
+    "detail": "A top-left link back to the builder."
+   },
+   {
+    "feature": "Details popover",
+    "detail": "Question ID (e.g. 025731-DC), domain, skill and difficulty. It closes only on an outside click."
+   },
+   {
+    "feature": "Explanation",
+    "detail": "The button appears only after a check. It replaces the question card with a blue-tinted explanation card, and the button becomes '<- Back to Question'."
+   },
+   {
+    "feature": "Timer",
+    "detail": "A centre countdown pill in mm:ss, with a Hide link under it."
+   },
+   {
+    "feature": "Clear Session",
+    "detail": "A red outline button that wipes the session's answers."
+   },
+   {
+    "feature": "Share",
+    "detail": "Calls navigator.share, which opens the OS share sheet. It froze the page in the test browser."
+   },
+   {
+    "feature": "Calculator",
+    "detail": "Desmos in a floating panel that can be dragged and resized. The question column shifts over to make room."
+   },
+   {
+    "feature": "Reference",
+    "detail": "A modal with the formula sheet as an image."
+   },
+   {
+    "feature": "Question number square",
+    "detail": "A blue square holding the question number, at the start of the question strip."
+   },
+   {
+    "feature": "Mark for Review",
+    "detail": "A bookmark that fills when on. It shows in the overview and drives the builder's 'Marked for Review' filter."
+   },
+   {
+    "feature": "Eliminate",
+    "detail": "A mode toggle that turns red when on and adds a ⊘ button to every choice. An eliminated choice greys out and its letter is struck."
+   },
+   {
+    "feature": "Report",
+    "detail": "A chip that opens the shared report modal: a read-only context box, Title (0/200), Category (General feedback / Bug / Wrong answer key / Typo / Feature request / Other), Details (0/5000), up to 10 image attachments of 50 MB each, and 'Send feedback'."
+   },
+   {
+    "feature": "Attempts and Attempt History",
+    "detail": "A ↻ button with a count badge opens a modal with one row per try: #, Correct/Incorrect · Option X, time spent, timestamp."
+   },
+   {
+    "feature": "Per-question stopwatch",
+    "detail": "A count-up mm:ss in the question strip."
+   },
+   {
+    "feature": "Stem rendering",
+    "detail": "Text with KaTeX and images. An image floats beside the text, which is a layout bug."
+   },
+   {
+    "feature": "MCQ layout",
+    "detail": "A 2x2 grid of choice cards, each with a letter circle."
+   },
+   {
+    "feature": "SPR input",
+    "detail": "A full-width input with the placeholder 'Enter your answer (e.g., 5.566, -5.566, 2/3, -2/3)' and a monospace 'Answer Preview:' line under it."
+   },
+   {
+    "feature": "Check",
+    "detail": "A correct pick turns green and a wrong one red. The key is never shown and retries are unlimited. A question answered wrong and then right counts as 'Mixed'."
+   },
+   {
+    "feature": "Bottom bar",
+    "detail": "Previous; a centre 'Question N of 10' pill; Check; Next."
+   },
+   {
+    "feature": "Question Overview",
+    "detail": "A popover with a Status | Difficulty toggle. Status legend: Unanswered, Correct, Incorrect, Mixed, Marked (yellow with a bookmark corner), Current (blue). The Difficulty view colours each cell easy green, medium blue, hard red. The popover ignores Esc."
+   },
+   {
+    "feature": "No end",
+    "detail": "There is no summary, no score and no review flow. Next is disabled on the last question, and there is no list of sessions to resume."
+   },
+   {
+    "feature": "Floating vocab button",
+    "detail": "A draggable 'Add your own word' button on every page. It covers the Next button."
+   }
+  ],
+  "ours_now": [
+   {
+    "feature": "Bank toggle (QB | TTP)",
+    "status": "missing",
+    "note": "We have one generated bank, so a second bank has nothing to switch to. The equivalent is a statement of where questions come from (see Settings > Repeats)."
+   },
+   {
+    "feature": "Subject toggle",
+    "status": "missing",
+    "note": "Math only. There is no R&W bank."
+   },
+   {
+    "feature": "Domain accordions with checkbox and count",
+    "status": "partial",
+    "note": "Four mono domain headers toggle all their tiles. There is no checkbox, no tri-state, no count, no collapse and no domain stats."
+   },
+   {
+    "feature": "Skill checkboxes with counts",
+    "status": "partial",
+    "note": "19 toggle tiles, each with a glyph, a short name, an unlabelled mastery hairline and up to 3 orange dots for open mistakes. No answered count, accuracy, last practised or full skill name. The mistake names are in a hover-only tooltip, so they cannot be reached on touch."
+   },
+   {
+    "feature": "Question types below skill level",
+    "status": "missing",
+    "note": "There are 386 templates and 291 distinct skill labels, but none of them can be picked."
+   },
+   {
+    "feature": "Live selection count",
+    "status": "missing",
+    "note": "Nothing says what the selection holds."
+   },
+   {
+    "feature": "Bluebook include/exclude",
+    "status": "partial",
+    "note": "Questions never repeat (practice_seen), so nothing a test served comes back. The page never says so."
+   },
+   {
+    "feature": "Difficulty multi-select",
+    "status": "have",
+    "note": "Easy / Medium / Hard as underline toggles, at least one on."
+   },
+   {
+    "feature": "Question Score 1-7",
+    "status": "missing",
+    "note": "Only the three-tier label exists."
+   },
+   {
+    "feature": "Solved / Unsolved",
+    "status": "missing",
+    "note": "There is no type-level equivalent, such as never tried, missed before, or mastered."
+   },
+   {
+    "feature": "Marked for Review filter",
+    "status": "partial",
+    "note": "A bookmark 'saves' a question. The saved set can only be started from /mistakes/ (POST /api/drill {saved:true}), not from the builder."
+   },
+   {
+    "feature": "Redo list",
+    "status": "partial",
+    "note": "Open mistakes (traps) can be fixed from /mistakes/ ({mistakes:true}), not from the builder. Exact replay of a missed question is missing."
+   },
+   {
+    "feature": "Volume",
+    "status": "have",
+    "note": "5 / 10 / 22 / ∞, plus a custom blank from 1 to 120. Endless beats their 'All'. There are no 20/30/40/50 presets."
+   },
+   {
+    "feature": "Timed / Untimed",
+    "status": "have",
+    "note": "A clock icon toggle and an editable minutes blank, at test pace (95 s a question) by default. Both are unlabelled."
+   },
+   {
+    "feature": "Start",
+    "status": "have",
+    "note": "An orange pill, disabled until a skill is picked. Nothing explains why it is disabled."
+   },
+   {
+    "feature": "Coach preselection",
+    "status": "have",
+    "note": "The coach's topics are preselected. There is no way to reset to them, and no other presets."
+   },
+   {
+    "feature": "Resume / sets list",
+    "status": "missing",
+    "note": "Neither of us has it. Our set is resumable by URL only."
+   },
+   {
+    "feature": "Go back / exit",
+    "status": "worse",
+    "note": "The X ends the set at once. There is no confirm, no 'keep for later' and no pause."
+   },
+   {
+    "feature": "Details popover",
+    "status": "missing",
+    "note": "Only the topic's short name is shown. No ID, domain, question type, difficulty or history."
+   },
+   {
+    "feature": "Explanation",
+    "status": "have",
+    "note": "The rationale is shown inline after a miss. On a right answer it sits behind a 'Why' toggle."
+   },
+   {
+    "feature": "Named mistake on a miss",
+    "status": "have",
+    "note": "The picked option's reason is shown. This is better than theirs."
+   },
+   {
+    "feature": "Key shown after a miss",
+    "status": "have",
+    "note": "Better than theirs, which hides the key."
+   },
+   {
+    "feature": "Repair question",
+    "status": "have",
+    "note": "The same template on a fresh seed follows a miss, marked 'Again'."
+   },
+   {
+    "feature": "Timer with Hide",
+    "status": "partial",
+    "note": "A countdown shows when timed. It cannot be hidden or paused, and an untimed set has no stopwatch."
+   },
+   {
+    "feature": "Clear session",
+    "status": "missing",
+    "note": "There is no retake of the same questions and no restart."
+   },
+   {
+    "feature": "Share",
+    "status": "missing",
+    "note": "There is no link to a question or a set."
+   },
+   {
+    "feature": "Calculator",
+    "status": "have",
+    "note": "Desmos, floating and draggable. It cannot be resized or docked, and on a phone it covers the question."
+   },
+   {
+    "feature": "Reference",
+    "status": "have",
+    "note": "The formula sheet as a dialog."
+   },
+   {
+    "feature": "Mark for review",
+    "status": "partial",
+    "note": "A bookmark icon with no label saves the question across sessions. No navigator shows what is marked."
+   },
+   {
+    "feature": "Eliminate / strike-out",
+    "status": "missing",
+    "note": "It cannot exist today: a tap on an option submits it."
+   },
+   {
+    "feature": "Report a problem",
+    "status": "missing",
+    "note": "There is no reports table and no endpoint."
+   },
+   {
+    "feature": "Attempts / attempt history",
+    "status": "missing",
+    "note": "One try per question. There is no history on the question or on its type."
+   },
+   {
+    "feature": "Per-question stopwatch",
+    "status": "missing",
+    "note": "ms is measured and sent, but never shown."
+   },
+   {
+    "feature": "Select then Check",
+    "status": "worse",
+    "note": "One tap submits, so a student cannot change their mind or eliminate choices first."
+   },
+   {
+    "feature": "MCQ layout",
+    "status": "have",
+    "note": "Full-width rows with letter circles. A-D and 1-4 on the keyboard."
+   },
+   {
+    "feature": "SPR input + preview",
+    "status": "partial",
+    "note": "The preview only echoes the input, with a proper minus sign. No validation of the SAT's 5/6-character rule, no directions and no accepted forms."
+   },
+   {
+    "feature": "Question overview (Status|Difficulty)",
+    "status": "missing",
+    "note": "There are progress segments only: not clickable, no legend, no difficulty view. Above 24 questions they become a count."
+   },
+   {
+    "feature": "Previous / Next",
+    "status": "partial",
+    "note": "Next only. An answered question cannot be revisited and a question cannot be skipped."
+   },
+   {
+    "feature": "Difficulty and skill on each question",
+    "status": "partial",
+    "note": "The topic is shown. The difficulty and the question's own skill label are not."
+   },
+   {
+    "feature": "Mastery movement",
+    "status": "have",
+    "note": "The topic bar animates before to after on each answer. It has no label."
+   },
+   {
+    "feature": "End-of-set summary",
+    "status": "partial",
+    "note": "Shows the score, time, topic bars, mistakes opened and fixed, and Keep going. No accuracy or pace tiles, no difficulty split, no per-question review list, and no retake or 'fix my misses' actions."
+   }
+  ],
+  "design": "## Ground rules for this section\n\n- **Label everything a student acts on.** At 760 px and wider, every tool is an icon plus a word ('Calculator', 'Mark for review'). Below 760 px a tool may be icon-only, but it keeps a small 10.5 px caption under the icon, or an aria-label plus a long-press tooltip.\n- **Print stats as numbers.** Answered counts, accuracy % and times are numbers next to their bars.\n- **Mastery stays a bar plus a word, never a percentage.** The word comes from progress.mastery_of:\n  - 'Not started' when nothing has been answered;\n  - 'Learning' below 0.4;\n  - 'Getting there' from 0.4 to 0.8;\n  - 'Strong' at 0.8 or more (progress.STRONG).\n  A percentage would be read as accuracy, which mastery is not.\n- **Borders are allowed.** Use a 1 px var(--line) wherever grouping needs it: checkboxes, cards, the navigator cells.\n- **Orange is the only accent.** Correct, incorrect, mixed and so on are told apart by glyph and fill, never by green and red. Section 3 has the tokens.\n- **One question workspace.** The builder, the session and every question review use the same component, UI.workspace (see shared_needs). The exam runner at web/test/ adopts it as the same component with feedback='end'.\n\n---\n\n## 1. Builder: `/practice/`\n\n### 1.1 Desktop layout (1040 px and up)\n\nThe page is max 1120 px wide, inside the normal shell (top bar and nav). From top to bottom:\n\n1. **Page header**\n2. **Resume banner** (only when a set is in progress) or **Shared-set banner** (only with ?share=)\n3. **Preset bar**\n4. **Two columns** on a 12-column grid, 24 px gap:\n   - left, 7 columns: the **Skill tree**;\n   - right, 5 columns: the **Settings panel**, `position: sticky; top: 80px`.\n5. **Your sets**, full width.\n6. **Action bar**, fixed to the bottom of the viewport. It is 72 px tall, full-bleed, with a paper background, a top 1 px line and a shadow. Its content is aligned to the 1120 px container. The page gets 96 px of bottom padding to clear it.\n\nThe page scrolls. We do not copy their no-scroll screen: 19 rows with stats plus a real settings panel does not fit in 900 px without hiding things.\n\n### 1.2 Page header\n\n- **Left:**\n  - H1 'Practice' in .h1.\n  - A mono meta line under it: `19 skills · 386 question types · unlimited questions, never repeated`. The numbers come from /api/bank totals.\n- **Right:** three quiet links.\n  - `Mistakes · 4` goes to /mistakes/, with an orange dot when above 0.\n  - `Marked · 6` goes to /mistakes/#marked.\n  - `History` scrolls to Your sets.\n  - A zero count still shows '· 0' in --soft, and the link stays enabled.\n\n### 1.3 Resume banner and Shared-set banner\n\n**ResumeBanner** shows when GET /api/drill has an `active` set. If there are several, it shows the most recent and a '+2 more' link that scrolls to Your sets.\n\n- It is a panel tile, 10 px radius, var(--wash) background, with a 1.5 px amber left edge.\n- Copy: `Set in progress · Linear functions, Percentages · 6 of 10 answered · 12:40 left` (or `· paused`, or `· untimed`).\n- Buttons: `Resume` is a pill in its small 40 px variant. `End it` is quiet and opens a confirm popover: 'End this set and see its summary?' with [End set] [Cancel].\n\n**SharedSetBanner** shows with `?share=CODE`, from GET /api/share/{code}.\n\n- Copy: `Shared set · 10 questions · Linear functions, Circles · timed 16 min · answers after each` and `Taken by 7 · average 6.4 / 10`. If the sharer set a name: `from Maya`.\n- Buttons: `Start this set` (pill) and `Dismiss` (quiet).\n- While the banner is up, the builder below is still usable. Starting the shared set ignores the builder's settings, and the banner says so in a --soft line: 'Uses the sharer's questions and settings.'\n- Bad code: an .error line reads 'That shared set does not exist.' with a Dismiss button.\n\n### 1.4 Preset bar\n\nA row of chips (36 px, 10 px radius, var(--tile), 600 14 px). The selected one gets a --wash fill and a 1.5 px amber inset. The row wraps and never scrolls sideways. Chips, in order:\n\n| chip | what it sets | shown when |\n|---|---|---|\n| `Coach's pick · 2 mistakes` (the suffix comes from coach.why: 'mistakes' → 'N mistakes', 'new' → 'new skills', 'weak' → 'weakest', 'review' → 'keep warm') | skills = coach.topics, count = coach.count, pool = new, levels all | always. Selected on load unless a deep link or share overrides it |\n| `Weakest 3` | the 3 lowest-mastery skills with 5 or more answered | disabled with the tooltip 'Answer 5+ questions in 3 skills first' until they exist |\n| `Plan focus` | every skill in the domains the plan marks Focus | only if /api/me profile.focus has a Focus domain |\n| `Full section mix` | all 19 skills, 44 questions, mix = blueprint (35/35/15/15), order = mixed | always |\n| `My mistakes · 4` | pool = mistakes, skills = those with open traps | disabled at 0 |\n| `Marked · 6` | pool = marked | disabled at 0 |\n| `Custom` | nothing: it lights when any manual change departs from the chip in use | always, inert |\n\nTo the right of the chips sits a quiet link, `Reset`, which goes back to Coach's pick and the default settings.\n\n### 1.5 Skill tree\n\n**Tree header row:**\n- Left: 'Skills' (.h2), then `3 of 19 selected` in mono --soft.\n- Right: quiet buttons `Select all`, `Clear`, `Expand all` / `Collapse all`, and a native `<select>` 'Sort'. The sort options are Test order (default), Weakest first, Most mistakes, Least practised and Recently practised. Sorting reorders skills inside each domain, and never mixes domains.\n\n**DomainCard**, one per domain, in blueprint order: 1 px var(--line) border, 12 px radius, paper background. 10 px gap between cards.\n\n- **Header row**, 56 px, a button (aria-expanded):\n  - a tri-state **Checkbox** (20 px square, 5 px radius, 1.5 px --ink border). Checked is an amber fill with an ink-deep tick. Indeterminate is an amber fill with an ink-deep dash; this fixes their missing indeterminate state. Clicking an unchecked or indeterminate box checks all; clicking a checked box clears all.\n  - the domain name, 700 16 px;\n  - a weight chip, mono 12 px: `35% · ~15 of 44`, or `15% · ~7 of 44` for PSDA and Geometry;\n  - the domain mastery bar, 120 px, the answered-weighted mean of its skills, with its word;\n  - `128 answered · 74%`;\n  - the open-mistakes count, `● 3`;\n  - a chevron.\n- **Expansion:** expanded by default on desktop. Collapse state is kept in localStorage `satf.tree.open` inside try/catch.\n- **Body:** the SkillRows, each with a 1 px top border.\n\n**SkillRow** is a grid: checkbox 20 | glyph 22 | name 1fr | mastery 140 | record 120 | mistakes 72 | last 72 | expand 28. It is 52 px tall.\n\n- **Checkbox:** tri-state against its TypeList.\n- **Name:** the full College Board skill name from catalogue topics[t].name, e.g. 'Linear equations in one variable', 15 px 600. A mono sub-line gives the variety: `18 types · E M H · MC + grid-in`, listing the tiers and formats its templates can produce.\n- **Mastery:** the .mbar (it becomes 4 px tall) with its word under it in 11 px mono.\n- **Record:** `42 answered · 81%`, where 81% is first-try accuracy, right over answered. A new skill shows 'Not practised' in --soft.\n- **Mistakes:** `● 2` when above 0, empty otherwise.\n- **Last:** a relative time: 'today', '3d', '2w', or '—'.\n- **Expand:** a chevron button with aria-label 'Show question types'.\n- **Click behaviour:** clicking anywhere on the row except the chevron toggles its checkbox. Mouse drag-paint across rows is kept from today.\n- **Keyboard:** Space toggles and → expands.\n\n**TypeList** is the expanded skill, indented 42 px. It lists the question types: one row per distinct skill label in that topic, backed by one or more templates, from /api/bank.\n\n- If the skill has open mistakes, the list opens with a block headed 'Open mistakes in this skill'. Each row is `● Left out the constant term · 1 of 2 clean answers to fix`, followed by a quiet link `Fix`. Fix starts {pool: mistakes, templates: [that template]} immediately. This replaces today's hover-only tooltip, which touch could not reach.\n- **TypeRow**, 40 px:\n  - checkbox;\n  - the label, sentence-cased ('A scaled linear conversion'), and `· 9 variants` when several templates share the label;\n  - tier letters `E M H`, with the unavailable ones in --faint;\n  - format chips `MC`, `Grid-in`;\n  - level range `L3–5`;\n  - your record `5 · 4 right`, or '—';\n  - `● 1` for open mistakes;\n  - a quiet `Try one` link, which starts a one-question set of that type with the current settings.\n- More than 12 types collapse behind `Show all 36 types`.\n\n**Live availability:** every row whose types cannot produce the current Settings is dimmed to 42% and gets a --soft reason in its sub-line: 'no grid-in types', 'no Hard at these levels'. Examples: Format = Grid-in and the skill is Statistical claims; or Levels 6–7 and the skill is Probability, which has 4 hard types and may be limited. A dimmed row stays selectable, but the Action bar counts only what can be served.\n\n### 1.6 Settings panel\n\nA card (1 px line, 12 px radius, 20 px padding). Every control has a visible label (11 px mono uppercase .k) and, where noted, one --soft helper line under it (13 px) that changes with the value. From the top:\n\n1. **Questions from** (radio list, one option per row, each 44 px with a count on the right, counted inside the current skill selection):\n   - `New questions`. Default. Helper: 'Generated for you now. You have never seen any of them.'\n   - `My open mistakes · 4 types`. Helper: 'Fresh numbers on each type you fell for, twice each. Two clean answers close a mistake.'\n   - `Missed questions, exactly · 7`. Helper: 'The same questions you got wrong, as they were.'\n   - `Marked for review · 6`. Helper: 'The exact questions you marked.'\n   - `Types I've never tried · 23`. Helper: 'New questions, only from types you have not answered yet.'\n   - An option with 0 is disabled, and its count reads '0'.\n   - Choosing a pool with a natural size fixes Questions to that size (see 2), with the text 'All 7'. The student can lower it but not raise it.\n2. **Questions** (segmented control, **Seg**: equal buttons in a 1 px-bordered track, the selected one amber-filled with an ink-deep label):\n   - Options: `5 · 10 · 20 · 30 · 40 · 50 · ∞`, plus an input `Other` (1–120, numeric, Enter starts).\n   - Default: the coach's count, or 10.\n   - Helper: `≈16 min at test pace`, or for ∞: 'Endless: stop whenever you like.'\n3. **Difficulty and level**: **LevelStrip**.\n   - Seven 36 px square toggle cells labelled 1–7, grouped under three header buttons: `Easy` over 1–2, `Medium` over 3–5, `Hard` over 6–7.\n   - A header toggles its cells. A cell toggles alone. A mouse drag paints across cells. At least one cell must stay on; the last one cannot be switched off, and it shakes if you try.\n   - One control does the work of their difficulty pills and their 1–7 slider, and it can express gaps (Easy + Hard) that a dual-thumb slider cannot.\n   - Helper: 'Level comes from how often students get each type right on the first try.'\n   - Under the strip, a toggle `Adaptive: step up after 2 right, down after a miss`. It works within the selected levels, and it is disabled when Order = Easiest first.\n4. **Format** (Seg): `Both · Multiple choice · Grid-in`. Helper with counts: `31 of 58 types have grid-ins`.\n5. **Timing** (Seg): `Untimed · Test pace · Custom`.\n   - Untimed: a stopwatch counts up.\n   - Test pace: 95 s a question. The helper reads `16:00 for 10 questions · 1:35 each, like the test`.\n   - Custom: a minutes input appears (1–180), with the helper 'Your own clock for the whole set.'\n   - When Questions = ∞, Test pace is disabled with 'An endless set has no length to pace', and Custom becomes `Sprint: as many as you can in N min`.\n   - A toggle `Pace alert on each question` (default on when timed): the per-question stopwatch turns orange after 1:35.\n6. **Answers shown** (radio, 3 rows with helpers):\n   - `After each question`. Default. 'The key, your mistake by name and the explanation, right away.'\n   - `After I retry`. 'Wrong? We tell you which mistake that answer comes from, not the key. Up to 3 tries.'\n   - `At the end, like a test`. 'No feedback until you finish. You can change answers and skip around.'\n7. **After a miss** (toggle, default on): `Follow a miss with one like it (same trap, new numbers)`. It is disabled in 'At the end' mode with the helper 'In test mode, misses become a Fix set at the end.'\n8. **Order** (Seg): `Mixed · Grouped by skill · Easiest first`. Default Mixed.\n9. **Repeats**, a fixed line with a lock glyph: `Never. Nothing you've seen in a set or a test comes back, except Marked and Missed replays.` This is our answer to their Bluebook include/exclude. It is stated rather than offered, because there is nothing to include.\n\nSettings 2–8 persist in localStorage `satf.builder` (try/catch). Skill selection does not persist: a fresh load gets the coach's pick unless a deep link sets it.\n\n### 1.7 Action bar (fixed bottom)\n\n- **Left:**\n  - A summary sentence, 600 15 px: `10 questions · 3 skills · 41 types · Levels 1–7 · Both formats`.\n  - A second line in mono --soft: `Untimed · answers after each · repairs on · ≈16 min`.\n  - Up to 3 skill chips (glyph and short name), then `+2`.\n- **Right:**\n  - Primary `Start practice`, a pill.\n  - While creating: aria-busy and the label 'Building…'.\n  - Disabled when nothing is served. The reason is printed to the left of the button in --soft: 'Pick at least one skill', 'Nothing here makes grid-ins at these levels', 'No open mistakes in these skills'.\n- **Error:** a create failure shows an .error line above the bar with the server's message and a `Try again` quiet button.\n\n### 1.8 Your sets\n\nA full-width section: 'Your sets' (.h2) and tabs (a Seg) `In progress · 2` / `Finished`.\n\n- **Row**, 56 px: started date (Sep 23, 14:05) | skill chips (up to 3, then +n) | mode icons with text: `Timed 16 min` / `Untimed`, `After each` / `Retry` / `Test mode` | progress `6 / 10` (∞ shows `14 answered`) | accuracy `5 right · 83%` | actions.\n- **In progress actions:** `Resume` (pill small), `End` (quiet).\n- **Finished actions:**\n  - `Review` goes to /practice/session/?id=ID, which shows the summary;\n  - `Retake exact` is POST /api/drill {retake: id};\n  - `Same settings` is {again: id};\n  - `Share` copies the link, and a toast says 'Link copied'.\n- **Pagination:** 10 rows, then `Show 20 more`.\n- **Empty state:** 'Sets you start show up here. Leave one halfway and pick it up later, on this device or any device with your code.'\n- **Challenge sittings** are listed with a trophy glyph and no Retake. They link to /challenge/.\n\n### 1.9 Deep links\n\nEvery parameter is optional, and together they override presets. The page never auto-starts.\n\n`/practice/?skills=linear_functions,circles&types=lin.evaluate,lin.graph_read&count=20&pool=mistakes&levels=1-4,7&formats=spr&timing=pace|untimed|custom:25&feedback=instant|retry|end&repairs=0&order=ramp&share=CODE`\n\nResults, Plan, Today and Mistakes link here with `skills=` (and `pool=`).\n\n### 1.10 States\n\n- **Loading:**\n  - The tree shows 4 skeleton cards: grey 14 px bars in var(--tile), with no shimmer loop.\n  - Settings render at once from localStorage or defaults.\n  - Counts show '…'.\n  - Start is disabled and reads 'Loading…'.\n- **Server down:**\n  - The tree area shows .error 'The server is not answering.' with a `Retry` quiet button.\n  - Settings stay editable, and Start stays disabled.\n- **New student** (0 attempts):\n  - Every stat shows 'Not practised' and every mastery word shows 'Not started'.\n  - Coach's pick selects the big-domain skills.\n  - A line above the tree: `New here? The coach picked where the test puts the most questions. Or take the 20-question diagnostic for a starting score.` It links to /diagnostic/.\n  - Your sets shows its empty state. Mistakes and Marked show 0, and their pools are disabled.\n- **Lots of history:**\n  - The stats fill in.\n  - Sort defaults to the saved choice.\n  - Your sets paginates.\n  - Skills with 3 or more open mistakes show `● 3+`, and the full list is in TypeList.\n- **Nothing servable:** see Action bar. The offending rows are dimmed with their reason.\n- **Create error:** see Action bar.\n\n### 1.11 Widths\n\n- **640–1039 px:**\n  - Single column.\n  - The Settings panel moves above the tree, collapsed to a **SettingsSummary** row: `10 questions · Levels 1–7 · Both · Untimed · After each` with an `Edit` button that expands it in place.\n  - The action bar stays.\n- **390 px phone:**\n  - 16 px gutters.\n  - Header: H1, then the meta line wrapped onto two lines, then the Mistakes / Marked / History links as a wrapping row.\n  - The preset chips wrap, 2–3 per row.\n  - The tree:\n    - DomainCards start collapsed. Each header shows `2 of 5 selected` in place of the stats, and the mastery bar drops below the name.\n    - A SkillRow is two lines, 60 px or more:\n      - line 1: checkbox, glyph, name, chevron;\n      - line 2, indented 42 px: mastery bar 80 px with its word, `42 · 81%`, `● 2`, last.\n    - TypeRows wrap their chips under the label.\n  - Settings is the SettingsSummary row. `Edit` opens a full-height **sheet**: a dialog with a sticky header 'Settings' and a `Done` pill, and the same controls stacked. The 7-cell LevelStrip fits in 358 px at 44 px cells.\n  - The action bar is fixed above the tabs, at bottom: calc(62px + safe-area). Its summary is truncated to one line (`10 q · 3 skills · Untimed`), and `Start practice` is a full-width 52 px pill under it.\n  - The page gets 200 px of bottom padding.\n  - No horizontal page scroll: document.documentElement.scrollWidth must be 390 or less.\n\n---\n\n## 2. Session: `/practice/session/?id=ID`\n\nThe session is also reachable as `?q=TEMPLATE:SEED` (a question permalink: the page POSTs /api/drill {item} and replaces the URL with the new id) and `?share=CODE` (it POSTs {share}).\n\nThe session has no site nav. Its layout is a column of max 760 px, with a right-side calculator dock when that is open.\n\n### 2.1 Desktop layout (760 px and up)\n\nFrom top to bottom:\n\n1. **RunBar**, sticky, 60 px.\n2. **ProgressRail**, 6 px plus 18 px of text.\n3. **QuestionStrip**.\n4. **Workspace** (figure, table, stem, choices or grid-in).\n5. **Verdict and explanation**.\n6. **RunFooter**, fixed to the bottom, 68 px.\n\nWith the calculator docked, the page is split into two columns: the question takes minmax(0, 1fr) and the dock takes 420 px, resizable from 320 to 640 px by dragging its left edge. Nothing overlaps the question, which fixes today's floating panel covering it.\n\n### 2.2 RunBar\n\n- **Left:**\n  - `Exit`, an x icon plus the word.\n  - The set title, 600 14 px, truncated: `Linear functions + 2`, or 'Daily challenge', 'Marked for review', 'Fix: Sep 22 test'.\n- **Centre: the TimerBlock.**\n  - mm:ss in mono 18 px, tabular.\n  - It counts down when timed, and counts up as a stopwatch when untimed.\n  - `Hide` / `Show` is a quiet 12 px button, and the eye icon is under it. Hidden, the digits are replaced by '— : —'.\n  - At 5:00 left and 1:00 left, a one-time toast appears: '5 minutes left'. Under 60 s the digits go ink-deep and 700 weight.\n  - `Pause` (∥) is a button for drill sets only, never a challenge. Paused, the workspace is covered by a paper overlay: 'Paused · 12:40 left' with a `Resume` pill. The questions are hidden, so a paused clock cannot be used to think.\n- **Right:** ToolButtons, icon plus label:\n  - `Calculator` (aria-pressed);\n  - `Reference`;\n  - `More ⋯`, which opens the MoreMenu.\n\n### 2.3 ProgressRail\n\n- **Fixed sets up to 60:** one segment per question slot, clickable.\n  - Status fills are those of section 3.\n  - Future slots are --line.\n  - A repair adds a slot, which grows in with the existing .seg.add animation.\n- **Endless sets, or over 60:** a single continuous bar of answered over total. The ∞ track is 100%, with the answered segments compressed into it.\n- **Text line:** right-aligned mono 12 px, `7 of 10 · 5 right · 1 skipped` (or `14 answered · 11 right` for endless).\n- The rail is keyboard-reachable as a group, and each segment has an aria-label.\n\n### 2.4 QuestionStrip\n\nA 1 px-bordered bar, 10 px radius, 48 px.\n\n- **Left:**\n  - the number square, 32 px, ink fill, paper text, 700;\n  - the skill chip (glyph plus short name);\n  - `·` and the question type label ('slope-intercept form');\n  - the difficulty chip `Medium · L4`;\n  - `Grid-in`, only on SPR questions;\n  - `Again`, with an orange dot, on repairs. Its tooltip reads 'Same trap as question 6, new numbers'.\n- **Right**, ToolButtons with labels:\n  - `Mark for review` (bookmark; when on, filled amber and the label reads 'Marked');\n  - `Eliminate` (ABC with a strike; aria-pressed);\n  - `Details` (i);\n  - `Report` (flag);\n  - `Attempts` (↻ with a count badge; shown once there is at least 1 try, or any past history on this type);\n  - the **QStopwatch**: a mono mm:ss count-up of the time on this question, accumulated across visits. With Pace alert on, it turns amber-deep and gains a dot after 1:35.\n- Below 1000 px the labels drop to 10.5 px captions under the icons.\n\n### 2.5 Workspace\n\n**Stem:** the figure, then the table, then the stem, as today's UI.question does. Source Serif 4 at 20 px. A figure always sits on its own row above the text, never floating (their bug).\n\n**MCQ layout:**\n- Default: rows, as today and on the test.\n- **Auto 2x2** when all four choices are 14 characters or fewer, the viewport is 640 px or wider, and the question has no figure. It is a 2-column grid of the same .opt cards, which means less eye travel for short numeric choices.\n- The keyboard is the same either way.\n\n**Choosing (select, then Check):**\n- A click, or A–D / 1–4, *selects*: a --wash fill and a 1.5 px amber inset. It does not submit.\n- Clicking another choice moves the selection. Clicking the selected one deselects it.\n- `Check` in the RunFooter, or Enter, submits.\n- The preference `Answer on first tap` in the MoreMenu brings back today's one-tap submit, stored in localStorage.\n\n**Eliminate:**\n- With Eliminate on, each row grows a 32 px circle at its right holding the struck letter.\n- Clicking it strikes the choice: 42% opacity, the text line-through, and the letter circle dashed. It shows an `Undo` quiet link in place of the circle.\n- Shift+A–D strikes without the mode.\n- A struck choice cannot be selected until it is undone.\n- Strikes persist per question in sessionStorage `satf.strike.ID`.\n\n**SPR:**\n- A field 56 px tall. The placeholder is empty.\n- A label above it: 'Your answer'. Next to the label, a quiet link `How to enter answers` opens the SprDirections popover, in our own wording: positive answers up to 5 characters, negative up to 6; fractions with /; no mixed numbers; decimals may be cut or rounded; a table of examples (Answer 2/3 → accepted 2/3, .6666, .6667, 0.666, 0.667; not accepted 0.66, .67).\n- Live **AnswerPreview** under the field, in mono: `Answer preview: −2⁄3`, typeset with a real minus and a fraction slash.\n- Invalid input shows an inline .error ('Use digits, one \".\", one \"/\", and a leading \"−\"' or 'Too long: 5 characters at most, 6 with a minus'), and Check is disabled.\n- The input takes no inputmode, so the phone keyboard has a minus and a slash, as today.\n\n**'I guessed'** is a small toggle chip under the choices, off by default: `I'm guessing`. When it is on at the moment of Check:\n- a right answer counts half toward mastery;\n- a right answer does not pay off an open mistake;\n- the summary lists the question under 'Right, but guessed'.\n\n**Skip** is a quiet button, `Skip for now`, under the choices while the question is unanswered. It is hidden in challenge mode.\n\n### 2.6 Check flow, by 'Answers shown' mode\n\n**After each question** (instant; today's behaviour, extended):\n- **Right:**\n  - The chosen row turns .ok: amber fill on the letter and a ✓ glyph at the right.\n  - The **Verdict** reads `Correct · 0:48` (and `· your average on this type 1:05` when there is history).\n  - The skill's mastery bar animates, labelled `Linear functions · Getting there`.\n  - The explanation is collapsed behind `Explanation ▾` (or always open, by the preference 'Always open explanations').\n- **Wrong:**\n  - The chosen row turns .no: struck, with a ✗ glyph. Directly under that row, a line reads `Your answer: left out the constant term`, with the orange mistake dot. This is the misconception on the option itself.\n  - The key row turns .ok with a `Correct answer` caption.\n  - The Verdict reads `Incorrect · 1:12`.\n  - A notice: `New mistake to fix: Left out the constant term · 0 of 2 clean answers`, with a link to /mistakes/.\n  - A notice: `Next: one like this, with new numbers` (when repairs are on and this was not itself a repair).\n  - The explanation is open.\n- **Every option explained:** a toggle under the explanation shows, under each of the other distractors, the misconception that produces it ('C: used the slope as the intercept'). This comes from the reasons, sent only after answering. A finite, hand-written bank cannot do this at our scale.\n- **Mistake fixed:** when a mistake closes, show `Fixed: Left out the constant term` with a check glyph, as today.\n- **Another one like this:** after any answer, show `Another one like this` with a split for `easier` / `harder` when the type spans tiers. This is POST /more. The next question is that type on a fresh seed, and a fixed set grows by 1.\n\n**After I retry** (retry):\n- **Wrong try:**\n  - The chosen row is marked ✗ and disabled.\n  - Under it: `That answer comes from: left out the constant term. Try another.` The misconception is the hint, and the key stays hidden.\n  - A counter reads `2 tries left`.\n  - Buttons: `Check` again, and `Show answer` (quiet).\n- **Right on try 2 or 3:** Verdict `Right on try 2 · counts as Mixed`, then the full instant-mode reveal.\n- **Out of tries, or Show answer:** the full reveal as Incorrect.\n- Only the first try counts for accuracy and mastery. Every wrong try with a named reason is filed as a mistake hit. The repair follows a first-try miss, as in instant mode.\n\n**At the end, like a test** (end):\n- `Check` is replaced by `Save & next`.\n- There is no verdict.\n- Answers can be changed until Finish. Skipping and jumping are free.\n- The navigator shows only Answered / Unanswered / Marked.\n- The last question's primary button is `Review & finish`. It opens the **CheckYourWork** sheet, which is the same component as the test's: 3 stat tiles (Answered / Unanswered / Marked), the cell grid, an amber note when anything is unanswered ('3 unanswered. They count as incorrect.'), and `Finish set` / `Back to questions`.\n\n### 2.7 RunFooter (fixed bottom) and moving around\n\n- **Left:** `Previous`, quiet with a ← icon. It is disabled on question 1.\n- **Centre:** the NavPill `Question 7 of 10 ⌃`, or `Question 14 · endless`. It opens the Navigator.\n- **Right**, by state:\n  - unanswered: `Check` (a pill, disabled until something is chosen or typed validly);\n  - answered, not last: `Next →`;\n  - last answered: `Finish`;\n  - end mode: `Save & next` or `Review & finish`.\n- A mono hint `Enter` sits next to the pill on hover-capable devices.\n- **Previous** on an answered question shows it read-only with its feedback: the same reveal, plus a strip note `Answered · Incorrect · 1:12`. In end mode it is editable.\n- **Next** from a revisited question goes to the next served question. At the frontier, it asks the server for a new one.\n- Skipped questions stay reachable from the Navigator and can be answered any time before Finish.\n\n### 2.8 Navigator\n\nA **popover** anchored above the NavPill: 420 px wide, max 70 vh, with the cell grid scrolling inside it. On a phone it is a bottom sheet. It closes on Esc, on an outside click, and on choosing a cell, which fixes their Esc bug.\n\n- **Header:** 'Question overview', then the view **Seg** `Status · Difficulty · Skill · Time`.\n- **Grid:** 8 columns of 40 px cells, gap 6. Every served question is a button with its number. A fixed set also shows its future slots as dashed, disabled cells, with the tooltip 'Comes after you answer or skip 7'.\n- **Status view** (the cell fill and glyph from section 3). Legend with live counts: `Unanswered 2 · Correct 5 · Incorrect 1 · Mixed 1 · Skipped 1 · Marked 2 · Current · Again (repair)`.\n- **Difficulty view:** each cell is tinted by level band, with a corner letter E, M or H so colour is not the only cue. Legend: `Easy 3 · Medium 5 · Hard 2`.\n- **Skill view:** each cell holds the skill glyph under its number. The legend is the skill chips with counts.\n- **Time view:** seconds under each number. Cells over pace have a 1.5 px amber-deep ring. Legend: `Over 1:35: 2 · average 1:04`.\n- **Footer:** `6 answered · 1 skipped · 2 marked`, and a button `Finish set` (or `Review & finish` in end mode).\n- **Aria:** each cell has an aria-label like 'Question 3, incorrect, marked, medium'.\n\n### 2.9 Overlays\n\nAll overlays are UI.popover or UI.sheet. Esc and an outside click close them, and focus returns to the opener.\n\n**DetailsPopover**, a definition list:\n- `Question ID`: `lin.affine_conversion · 48213`, with a copy button.\n- `Domain`: Algebra.\n- `Skill`: Linear functions.\n- `Question type`: A scaled linear conversion.\n- `Difficulty`: Medium · level 4 of 7.\n- `Format`: Multiple choice.\n- `You and this type`: `6 answered · 5 right · last Sep 20`, or 'First time'.\n- `Link to this exact question`: a copy link to /practice/session/?q=lin.affine_conversion:48213, and a toast 'Link copied: anyone who opens it gets this exact question'.\n- In challenge mode, the ID and the link show only after the question is answered, with the text 'Shown after you answer'.\n\n**AttemptsSheet**, 'Attempt history':\n- Section 'This question': a table `# · Result · Answer · Mistake named · Time · When`, e.g. `1 · Incorrect · B · Left out the constant term · 0:41 · 14:05` and `2 · Correct · A · — · 0:12 · 14:06`.\n- Section 'This question type, all sets': the last 20 first tries across sessions (`Sep 20 · Correct · 0:55`, and so on), each with `Open` to replay that exact question as a one-question set.\n- Empty: 'No attempts yet.'\n\n**ReportSheet**, 'Report a problem':\n- A read-only box 'Sent with your report': the question ID (template · seed), the skill, the set and your answer.\n- Category, a radio list:\n  - Wrong answer key\n  - More than one answer is right\n  - Typo or unclear wording\n  - Figure or table is wrong\n  - Difficulty or skill label is wrong\n  - Explanation is wrong or unclear\n  - Other\n- `What's wrong?` textarea with a 0/2000 counter.\n- `Send report`, a pill that stays disabled until a category is picked.\n- Success: the sheet body becomes 'Thanks. We can regenerate this exact question to check it.' with `Close`.\n- Error: an .error line with the server's message, and the input is kept.\n- There are no image attachments. The question can be regenerated exactly from template and seed, so a screenshot adds nothing.\n\n**MoreMenu** (menu role, arrow-key navigation):\n- `Retake these exact questions`: confirm, then {retake}.\n- `New set, same settings`: {again}.\n- `Share this set`: POST share, then copy the link, then the toast 'Link copied: friends get these exact questions'.\n- `Answer on first tap` (checkbox item).\n- `Always open explanations` (checkbox).\n- `Show question stopwatch` (checkbox, default on).\n- `Keyboard shortcuts`, which opens ShortcutsSheet.\n- A divider, then `End set now`.\n\n**ExitSheet**, from Exit, when anything has been answered: 'Leave this set?'\n- `Keep it for later`. If timed and pausable, this reads `Pause and keep for later` and POSTs pause first. It goes to /practice/.\n- `End and see summary`.\n- `Cancel`.\n- The helper under the first option, when timed and not pausable (challenge): 'The clock keeps running while you are away.'\n- With 0 answered, Exit leaves at once and the set stays in progress.\n\n**TimeUpSheet** is modal and cannot be dismissed: 'Time's up · 7 answered, 3 left unanswered', with a `See summary` pill. The finish has already been POSTed.\n\n**ShortcutsSheet** is a two-column table of the keys in 2.10.\n\n**Calculator** (UI.calc, extended):\n- **Dock mode**, the default at 1100 px and wider: a right column with a drag handle on its left edge to resize, and a header `Desmos · Float · ×`.\n- **Float mode:** today's draggable panel, plus a resize corner.\n- **Phone:** a bottom sheet at 62 vh with a grab bar. The question scrolls above it.\n- Open/closed state and mode persist in sessionStorage for the set. The calculator's expressions persist across questions, the same instance.\n\n**Reference:** today's dialog, unchanged.\n\n### 2.10 Keyboard\n\nThese are inactive while a text field, an open dialog or the calculator has focus. Enter still checks inside the SPR field.\n\n| key | action |\n|---|---|\n| A–D, 1–4 | select |\n| Shift+A–D | strike / unstrike |\n| Enter | Check, or Next |\n| ← → | Previous / Next (answered questions) |\n| S | skip |\n| M | mark for review |\n| E | eliminate mode |\n| N | navigator |\n| C | calculator |\n| R | reference |\n| H | hide / show timer |\n| P | pause |\n| ? | shortcuts |\n| Esc | close overlay |\n\n### 2.11 Summary (the set's end, same URL)\n\nThe run chrome is replaced; the RunBar keeps only Exit and the title. The column is max 860 px.\n\n1. **ScoreHead:**\n   - eyebrow `Set complete · Sep 23, 14:22`;\n   - big `7 / 10` (.num at 96 px) beside `70% first-try accuracy`;\n   - skill chips.\n2. **StatTiles** (a 4x2 grid of tiles, 6 across on wide screens), each with its label in .k and its value in 700 28 px:\n   - `Correct 7`\n   - `Incorrect 2`\n   - `Mixed 1` (retry mode only)\n   - `Skipped 0`\n   - `Unanswered 0`\n   - `Time 11:42`\n   - `Per question 1:10 · pace 1:35`\n   - `Right but guessed 1`\n3. **By skill:** one row per skill: glyph, name, `3 / 4`, and a mastery bar showing the before value as a ghost fill and the after value as the ink fill, with the word, e.g. `Learning → Getting there`. Each row has a `Practise` link to /practice/?skills=slug.\n4. **By difficulty:** three rows, `Easy 3 / 3`, `Medium 3 / 4`, `Hard 1 / 3`, each with a horizontal bar. A mono line under them: `Levels seen: 2–6`.\n5. **Mistakes:**\n   - `Opened · 2`: each shows the label, its skill and `Fix now`, which is {pool: mistakes, templates: [t]}.\n   - `Fixed · 1`: shows the label with a check glyph.\n   - `Still open from before · 3`: a link to /mistakes/.\n6. **ReviewList:**\n   - Filter Seg: `All 10 · Incorrect 2 · Mixed 1 · Marked 2 · Slow 2 · Guessed 1 · Skipped 0`.\n   - A row per question: number cell (status fill) | skill glyph and type label | difficulty chip | time | the mistake named, or '—' | a marked bookmark.\n   - Clicking a row opens the **ReviewSheet**. This is UI.workspace in read-only mode: the stem, your answer marked, the key, every option's misconception, and the explanation. It has a toggle `Hide answers` (to re-try it mentally), `Previous` / `Next` across the whole set, `Mark for review`, `Another one like this` (a one-question set), `Report`, and a position readout `3 of 10`.\n7. **NextActions:**\n   - The primary pill depends on the result.\n     - With misses: `Fix my 3 misses`, which is {from_session: id} and gives fresh numbers on the same types, with the helper '3 new questions on the types you missed'.\n     - With none: the coach's `Keep going`, with its chips and `10 questions · 16 min`, as today.\n   - The rest are quiet: `Retake these exact questions`, `Same settings, new questions`, `Share this set`, `Back to Practice`.\n   - **Challenge mode:** the rank `#4 of 31` and `Board`, as today, and no Retake or Share.\n   - **Endless or sprint sets:** the same summary. The ScoreHead reads `14 answered · 11 right`.\n   - **Set ended with 0 answered:** 'Nothing answered in this set.' with `Back to Practice` and `Same settings, new questions`.\n\n### 2.12 Challenge mode\n\nThis is the same page, with these differences:\n- no Pause, Skip, Another one like this, Retake, Share, or 'I'm guessing';\n- repairs off;\n- Answers shown is always 'After each question';\n- the Details ID is hidden until the question is answered;\n- Mark for review is allowed only after answering (the server already enforces this);\n- the title is 'Daily challenge'.\n\n### 2.13 States\n\n- **Loading:**\n  - The RunBar renders.\n  - The workspace shows a skeleton of 3 grey stem lines and 4 option tiles.\n  - The footer buttons are disabled.\n- **Not found (404):** 'That set does not exist.' with `Back to Practice`.\n- **Someone else's (403):** 'This set belongs to a different device code.' with `Back to Practice` and a link to /me/ ('Use that code here').\n- **Finished:** it opens straight on the Summary.\n- **Resumed:** it opens on the first unanswered or skipped question. Marks, strikes, tries, the stopwatch total, the hidden-timer state and the calculator state are all restored. A toast reads 'Picked up where you left off'.\n- **Paused on load:** the paused overlay.\n- **Answer failed:** a network or 5xx error unlocks the choice and shows an .error under the footer, 'Could not send your answer.', with `Try again`. The selection is kept.\n- **409 closed:** time is up, or the set is finished elsewhere. Go to the TimeUpSheet or the Summary.\n- **Exhausted:** a skill ran out of unseen types in a narrow filter. The summary gets a note: 'We ran out of unseen questions for Levels 6–7 in Probability. Widen the levels to keep going.'\n- **Offline:** navigator.onLine is false, so an .error in the footer reads 'You're offline. Your answer will be sent when you're back.' It retries once on the 'online' event.\n- **Long endless set (100+):** the navigator grid scrolls, and the rail becomes the continuous bar.\n\n### 2.14 Phone (390 px)\n\n- **RunBar**, 52 px:\n  - `×` (aria-label 'Exit');\n  - the title, hidden;\n  - the TimerBlock, compact: the digits, where a tap toggles Hide and a long-press pauses, plus a separate ∥ button;\n  - icon-only Calculator, Reference and ⋯, each 40 px with a 10 px caption under it.\n- **ProgressRail:** full-width 4 px segments, with the text line under them.\n- **QuestionStrip**, two rows:\n  - row 1: the number square, the skill short name, the difficulty chip, Again;\n  - row 2: icon buttons with 10 px captions: Mark · Eliminate · Details · Report · Attempts. The stopwatch sits at the right end. The row wraps and never scrolls.\n- **Choices:** always rows (auto 2x2 is off below 640 px). The strike circle is 36 px.\n- **Skip** sits under the choices.\n- **RunFooter:** fixed, 64 px plus the safe area: `←` (Previous, icon only), the NavPill `7 / 10 ⌃`, and a Check/Next pill of at least 128 px.\n- **Overlays:** the Navigator, Details, Attempts, Report and More are all bottom sheets with a grab bar and a max height of 88 vh. The calculator is the 62 vh sheet.\n- **Summary:** StatTiles are 2 across, ReviewList rows are two lines, and the NextActions buttons are stacked full width.\n- **No horizontal scroll:** figures are max-width 100%, and tables scroll inside .q-table only.\n\n---\n\n## 3. Status and difficulty tokens (orange-only, added to ui.css)\n\n- **Correct:** --wash fill, 1.5 px --amber inset, and a ✓ glyph in amber-deep.\n- **Incorrect:** paper fill, 1.5 px --ink inset, and a ✗ glyph in ink.\n- **Mixed:** a diagonal split, half --wash and half paper, with a 1.5 px --amber-deep inset and a '~' glyph.\n- **Skipped:** a 1.5 px dashed --soft border and an empty cell.\n- **Unanswered:** --tile.\n- **Marked:** a small ink bookmark notch in the top-right corner.\n- **Current:** a 2 px --ink outer ring.\n- **Repair:** a 5 px amber dot at the bottom centre.\n- **Difficulty bands:**\n  - --lvl-easy #FDEBD3 with an 'E' corner letter;\n  - --lvl-med #F8BE7A with an 'M' corner letter;\n  - --lvl-hard #F18508 with an 'H' corner letter, ink-deep.\n  - Level cells 1–7 step through the same three.\n\nEvery status carries a glyph as well as its fill, so none depends on colour alone.",
+  "extras": [
+   {
+    "feature": "The misconception under every option",
+    "why": "After answering, each wrong option shows the mistake that produces it, from Item.reasons. TopTierPrep has one long explanation per item. Only a bank where every distractor is generated from a named misconception can show this at our scale."
+   },
+   {
+    "feature": "A retry hint is the misconception, not the key",
+    "why": "In 'After I retry' mode, a wrong try says which mistake that answer comes from ('That answer comes from: left out the constant term') and keeps the key hidden. Their retry says only 'wrong', and their unlimited retries make accuracy meaningless. Ours counts only the first try."
+   },
+   {
+    "feature": "Repair: the same trap with new numbers",
+    "why": "After a miss, the next question is the same template on a fresh seed. Two clean answers close the mistake. A finite bank has no second copy of the same trap with new numbers."
+   },
+   {
+    "feature": "Another one like this (easier / harder)",
+    "why": "One click queues the same question type on a fresh seed, or an adjacent tier when the type spans tiers. Nothing ever runs out."
+   },
+   {
+    "feature": "Question-type selection, one level below skill",
+    "why": "291 skill labels across 386 templates. A student can drill 'the equation of a circle' alone. TopTierPrep stops at the 19 College Board skills."
+   },
+   {
+    "feature": "Types I've never tried / Missed questions exactly / Open mistakes",
+    "why": "Their Solved/Unsolved filter makes no sense for an unlimited bank. Pools at the type and misconception level are the useful equivalents, and each shows a live count."
+   },
+   {
+    "feature": "End-of-set summary, review list and resumable sets",
+    "why": "Their biggest gap: sessions never end, there is no score, no review and no list. Ours has stat tiles, splits by skill and by difficulty, mistakes opened and fixed, a filterable review with read-only replay, and In progress / Finished lists with Resume."
+   },
+   {
+    "feature": "Test-style mode inside practice ('At the end, like a test')",
+    "why": "The same workspace as the exam runner, with feedback held back, answers that can be changed, skip and jump, and Check Your Work. This is the user's 'one format' ask."
+   },
+   {
+    "feature": "Exact retake, question permalinks and shared sets",
+    "why": "(template, seed) regenerates a question exactly. So 'Retake these exact questions', a link to one exact question, and a shared set where friends get the same ten (with 'taken by N, average M') come nearly free. Their Share is a broken OS sheet."
+   },
+   {
+    "feature": "Adaptive difficulty inside a set",
+    "why": "Steps up after 2 first-try rights and down after a miss, per skill, within the chosen levels. Their Profile has an 'Adaptive' preference but no visible behaviour in QBank."
+   },
+   {
+    "feature": "Level 1-7 grounded in real first-try accuracy",
+    "why": "The equivalent of their Question Score, computed openly from our own attempts. Combined with the tiers in one LevelStrip, it can express gaps (Easy plus Hard) that their dual-thumb slider cannot."
+   },
+   {
+    "feature": "Pace coaching per question",
+    "why": "The stopwatch turns amber after the test's 1:35 pace. The verdict shows your average on this type, and the summary counts slow questions and has a Time view in the navigator."
+   },
+   {
+    "feature": "'I'm guessing' flag",
+    "why": "A lucky right counts half for mastery and does not close a mistake. This keeps the mastery bar and the mistakes list honest."
+   },
+   {
+    "feature": "Pause for practice sets",
+    "why": "A study session gets interrupted. The server stores pause intervals, so the clock is still authoritative and a reload is not free time. The questions are hidden while paused."
+   },
+   {
+    "feature": "Skip and come back",
+    "why": "Their session has Previous and Next but no skip state. Ours marks a skipped question as Skipped in the navigator, and it can be answered before Finish."
+   },
+   {
+    "feature": "Order: mixed, grouped or easiest-first, plus a blueprint mix",
+    "why": "'Full section mix' weights the skills 35/35/15/15 like the test, and 'Easiest first' ramps like a module."
+   },
+   {
+    "feature": "Presets: Coach's pick, Weakest 3, Plan focus, Full section mix, Mistakes, Marked",
+    "why": "One tap sets the tree and the settings. The coach and the Plan steer the builder instead of sitting beside it."
+   },
+   {
+    "feature": "Navigator Skill and Time views",
+    "why": "Adds a skill glyph per cell and seconds per cell, with over-pace rings, to their Status | Difficulty toggle."
+   },
+   {
+    "feature": "Grid-in directions, validation and accepted forms",
+    "why": "The SAT's 5/6-character rule is checked live, and after answering the equivalent accepted entries are shown (2/3, .6666, .6667)."
+   },
+   {
+    "feature": "Blueprint weight on each domain",
+    "why": "'35% · ~15 of 44' fixes their confusing '20% of test section, 1-5 questions' copy and helps a student prioritise."
+   },
+   {
+    "feature": "Full keyboard map and shortcuts sheet",
+    "why": "Select, strike, check, skip, mark, navigate and use the tools without the mouse."
+   },
+   {
+    "feature": "Endless and sprint sets",
+    "why": "No 'All' ceiling: an untimed set can run forever, or a timed set can be 'as many as you can in N minutes'."
+   }
+  ],
+  "server": [
+   {
+    "change": "GET /api/bank (new)",
+    "detail": "The builder's one read. It returns {totals:{domains,skills,types}, domains:[{name, weight, on_test, skills:[{slug, name, short, mastery, band, answered, right, last, traps:[{template,label,hits,owed}], marked, missed, types:[{label, templates:[...], tiers:[...], formats:[...], levels:[min,max], by_tier_level:{easy:2,...}, answered, right, last, traps, marked, missed}]}]}], coach, counts:{traps, marked, missed, untried}}.\n\nWhere each part comes from:\n- The catalogue and survey part is cached per process.\n- The per-learner aggregates are one GROUP BY template over attempts (first tries only), open_traps, saved grouped by template, and missed.\n- missed = distinct (template, seed) whose first attempt was wrong and which has no later correct attempt on the same (template, seed).\n\nTypes group a topic's templates by their most common surveyed skill label. The label is sentence-cased once the whole row is assembled."
+   },
+   {
+    "change": "blueprint.survey collects skill labels",
+    "detail": "The same 18-seed loop also counts it.skill per template. Add blueprint.kinds() -> {template: {'kinds': set[(tier, fmt)], 'labels': Counter}}. abilities() is derived from it, so existing callers are unchanged. There is no extra generation cost."
+   },
+   {
+    "change": "Levels 1-7 (drill.level_of(template, tier))",
+    "detail": "The tier fixes the level band: easy 1-2, medium 3-5, hard 6-7.\n- Prior when data is thin: easy 2, medium 4, hard 6.\n- With 30 or more first tries (all learners) on a (template, tier): place it by accuracy within its tier's templates. For easy, the top half → 1 and the rest → 2. For medium, tertiles → 3/4/5. For hard, halves → 6/7.\n- Compute from attempts, cache for 10 minutes, and store the level on each served question (q['level']).\n- Expose it via /api/bank and in state and finish."
+   },
+   {
+    "change": "POST /api/drill: new body fields",
+    "detail": "New fields:\n- templates: list[str], validated against the catalogue. The topics in play become the union of topics and topic_of(templates).\n- levels: list[int 1..7]. It replaces difficulty; the legacy difficulty is still accepted and mapped to its bands.\n- formats: ['mcq','spr'].\n- pool: 'new'|'mistakes'|'marked'|'missed'|'untried'. The existing mistakes/saved flags map to 'mistakes' and 'marked'. 'missed' builds items from the missed (template, seed) list. 'untried' restricts to templates with 0 attempts.\n- feedback: 'instant'|'retry'|'end'.\n- repairs: bool = True.\n- adaptive: bool.\n- order: 'mixed'|'grouped'|'ramp'.\n- mix: 'even'|'blueprint'.\n- retake: sid. Items = that set's served (key, seed), in order, with its cfg.\n- again: sid. That set's cfg, with new questions.\n- share: code.\n- item: 'template:seed'. A one-question set.\n\nValidation happens before anything is created. It returns 409 with a reason when nothing in the selection can serve the filters (e.g. 'no grid-in types at these levels in Statistical claims'), and 400 for an unknown template or level. 'source' stays as the analytics tag."
+   },
+   {
+    "change": "drill._pick / _fresh honour formats, levels, order, mix, adaptive",
+    "detail": "_fresh(b, template, allowed_tiers, formats, levels) rejects a card by fmt or by level_of(template, tier), keeping it (b.keep) so the seed advances.\n\nThe template pool is filtered by kinds() for the (tier, fmt) pairs that can satisfy the filters.\n\nOrder and mix:\n- order 'grouped': blocks of ceil(total/len(topics)) per topic instead of cfg['turn'] round-robin.\n- order 'ramp': the target tier for slot k is the selected tiers split evenly in easy→hard order.\n- mix 'blueprint': pick the topic with the largest deficit against domain weight / skills-in-domain.\n\nadaptive: cfg['adapt'][topic] starts at medium, or the nearest selected tier. In answer(), 2 consecutive first-try rights in that topic step it up, and a first-try miss steps it down, within the selected tiers. repairs=False skips cfg['repair']."
+   },
+   {
+    "change": "Skip and revisit",
+    "detail": "POST /api/drill/{id}/next takes body {skip: bool}.\n- With skip, the current unanswered question is added to cfg['skipped'] and a new one is served.\n- next_question no longer returns served[-1] just because it is unanswered, unless skip is false and it is not in skipped.\n- 'done' when the served count reaches the total and no unanswered frontier is left.\n\nanswer() accepts any served qid that is unanswered, including skipped ones, and removes it from skipped.\n\nNew GET /api/drill/{id}/q/{qid} returns {question: public, status, given, ms, marked, feedback (only when revealable: instant/retry after final, or any mode once finished), tries:[{n, given, correct, mistake, ms, at}], type_history:[{at, correct, mistake, ms, session}] (the last 20 first tries on that template for this learner)}."
+   },
+   {
+    "change": "drill.state returns the whole set",
+    "detail": "state() gains:\n- served: [{id, n, topic, skill, difficulty, level, type, repair, status, marked, ms, tries, guess}]. status is one of unanswered|answered (end mode, before finish)|correct|incorrect|mixed|skipped. marked comes from a join of saved on (key, seed).\n- current qid.\n- feedback, repairs, adaptive, order.\n- paused (bool), seconds_left and elapsed, computed server-side, so the client stops reading Date.parse(started).\n- pace: 95.\n- can: {pause, skip, more, retake, share, guess}. All are false for a challenge."
+   },
+   {
+    "change": "answer(): the three feedback modes, guess, and per-question ms",
+    "detail": "Body: {question_id, answer, ms, guess?: bool}. cfg['ms'][qid] accumulates ms across visits.\n\ninstant: as today, plus the response adds:\n- reasons: a per-option list, with '' for the key;\n- accepted: for SPR, from scoring.accepted_forms;\n- status;\n- pace: {ms, type_avg_ms}.\n\nretry: the first try claims the answer (set_answer only_new) and files the attempt as today. A wrong first try returns {correct:false, final:false, mistake, given, tries_left:2}, with no answer, answer_index or rationale. Later tries on the same qid:\n- are written to the new tries table;\n- file a trap hit when their reason names a mistake (progress.record_trap);\n- return final:true with full feedback when right or when tries run out;\n- make the question 'mixed' when it ends right.\n\nend:\n- set_answer without only_new, so an answer can be changed;\n- nothing is filed until finish;\n- the response is {saved:true, answered}, with no feedback keys.\n\nguess=true stores attempts.guess=1."
+   },
+   {
+    "change": "POST /api/drill/{id}/reveal (new)",
+    "detail": "Retry mode only. It ends the tries for that qid and returns the full feedback. The question's status is 'incorrect'."
+   },
+   {
+    "change": "POST /api/drill/{id}/more (new)",
+    "detail": "Body: {question_id, step: -1|0|1}. It queues that question's template, at an adjacent tier if step is set and kinds() allows it, as the next serve. A fixed set's total grows by 1. It returns {total}. 409 for a challenge or a finished set."
+   },
+   {
+    "change": "POST /api/drill/{id}/pause and /resume (new)",
+    "detail": "cfg['paused_at'] and cfg['paused_s']. overtime(), seconds_left and elapsed subtract the paused time. While paused: answer, next and more return 409 'paused', and state shows paused:true. 409 for a challenge."
+   },
+   {
+    "change": "finish(): a richer result",
+    "detail": "finish() adds:\n- mixed, skipped, unanswered;\n- accuracy (first try);\n- avg_ms and pace: 95;\n- by_difficulty: {easy:{right,asked},...};\n- levels_seen: [min, max];\n- guessed_right;\n- questions: [{id, n, topic, skill, difficulty, level, status, ms, mistake, marked, repair, guess}];\n- fix: the count of missed templates.\n\nIn end mode it first files every answered question through progress.record (in order, with cfg['ms']), then computes opened and closed as today. It keeps 'one attempt per question, the first' for the counts."
+   },
+   {
+    "change": "GET /api/drill (new): the learner's sets",
+    "detail": "Returns {active:[...], recent:[...]}. active = unfinished drills, newest first; recent = the last 50 finished. Each is {id, kind, started, finished, topics, total, answered, right, timed, seconds_left, paused, feedback, pool}. Challenge sittings are included with kind 'challenge'."
+   },
+   {
+    "change": "Shared sets: POST /api/drill/{id}/share, GET /api/share/{code}",
+    "detail": "A new table shares(code TEXT PRIMARY KEY, owner TEXT, items TEXT, cfg TEXT, created TEXT). The code is secrets.token_urlsafe(6), and sharing the same set twice returns the same code.\n\nGET /api/share/{code} returns {count, topics, timed, minutes, feedback, owner_name, taken, avg_right}. taken counts sessions whose cfg.share = code, and avg_right is the mean of their result.right. POST /api/drill {share} creates a drill with those items and that cfg, and stores cfg.share = code. The sharer's name comes from learners.name, or null."
+   },
+   {
+    "change": "POST /api/report (new)",
+    "detail": "Body: {session, question_id, category, details}.\n- category is one of wrong_key|two_right|wording|figure|label|explanation|other.\n- details is 2000 characters or fewer.\n- The server resolves template, seed and the given answer from the session's stored question, and inserts into the new table reports(id INTEGER PRIMARY KEY, learner, session, qid, template, seed, category, details, given, at).\n- 30 or more reports a day per learner returns 429.\n- It logs at warning level with the template and seed so a maintainer can regenerate the question.\n\nThe drill session page and the exam runner both use it."
+   },
+   {
+    "change": "Tables and columns (db.py)",
+    "detail": "New tables: tries(learner, session, qid, n INTEGER, given TEXT, correct INTEGER, reason TEXT, ms INTEGER, at TEXT), shares, reports.\n\nLATER_COLUMNS gains ('attempts','guess','INTEGER NOT NULL DEFAULT 0').\n\nprogress.carry() must also move tries, shares.owner and reports.learner."
+   },
+   {
+    "change": "progress: guess-aware mastery, and record_trap split out",
+    "detail": "- Split out record_trap(learner, q, reason, when) from record(), so retry tries can file a trap hit without an attempt.\n- mastery_of takes (difficulty, correct, guess). A guessed right adds half its weight to the numerator.\n- board() and topic_mastery select guess.\n- In record(), a correct answer with guess=1 does not decrement a trap's owed count."
+   },
+   {
+    "change": "scoring.accepted_forms(answer) (new)",
+    "detail": "For an SPR key, it returns up to 5 entries a student could type that grid_equal accepts: the fraction, then the decimal truncated and rounded to fill 5 characters (6 with a minus), with and without the leading 0. This is shown after answering, and in the SPR directions examples."
+   },
+   {
+    "change": "Saved is renamed 'Marked for review' in copy only",
+    "detail": "The table and /api/saved stay as they are. state() and /api/bank read it as marked. The Mistakes page's 'Saved' heading becomes 'Marked for review'."
+   },
+   {
+    "change": "test_flow.py coverage",
+    "detail": "Add checks for:\n- /api/bank totals (4/19/386);\n- the formats and levels filters;\n- the 409 on an unservable selection;\n- templates-only sets;\n- skip then answer later;\n- retry mode hiding the key until final, and 'mixed' in finish;\n- end mode leaking nothing before finish, and filing at finish;\n- more growing the total, with the same template on a new seed;\n- pause freezing seconds_left;\n- retake giving identical stems in order;\n- share giving identical stems to a second learner;\n- report storing template and seed;\n- GET /api/drill active → recent;\n- guess not closing a trap;\n- challenge refusing pause, more and skip."
+   }
+  ],
+  "files": [
+   "web/practice/index.html",
+   "web/practice/session/index.html",
+   "web/assets/ui.js",
+   "web/assets/ui.css",
+   "server/drill.py",
+   "server/app.py",
+   "server/progress.py",
+   "server/db.py",
+   "server/blueprint.py",
+   "server/scoring.py",
+   "server/test_flow.py",
+   "web/mistakes/index.html",
+   "README.md",
+   "spec/rebuild.md"
+  ],
+  "shared_needs": [
+   "UI.workspace(host, q, opts): one question component for the practice session, the exam runner (web/test/), the report and summary ReviewSheet, the question of the day and Mistakes. It covers the QuestionStrip, select-then-Check, Eliminate (strike, Undo, Shift+A–D), the auto 2x2 layout, the SPR field with AnswerPreview, validation and directions, the per-option misconception reveal, the retry state, the read-only review with 'Hide answers', and the 'I'm guessing' chip. It replaces today's UI.question. The user asked for the exam runner and the practice session to share one format.",
+   "UI.navigator(host, cells, {views}): the Question Overview grid with Status / Difficulty / Skill / Time views, legends with counts, future slots and aria-labels. The exam runner's module navigator and the report's question grid reuse it.",
+   "UI.popover, UI.menu and UI.sheet primitives: anchored popover, menu role with arrow keys, and a modal sheet that becomes a bottom sheet on phones. All close on Esc and outside click and return focus to the opener. Used by Details, Navigator, More, Report, Attempts, Exit and Settings on phones.",
+   "UI.report(context): the ReportSheet and POST /api/report, shared with the exam runner, the report review, the question of the day and the challenge.",
+   "UI.timer: countdown or stopwatch with Hide, Pause, 5-minute and 1-minute toasts, running from the server's seconds_left. The exam runner uses it too, without Pause.",
+   "UI.calc extended: Dock mode (a resizable right column), Float with a resize corner, and a phone bottom sheet, with its state kept per session. The exam runner shares it.",
+   "ui.css additions: a Seg segmented control, a tri-state Checkbox, ToolButton (icon plus label or caption), status tokens (correct / incorrect / mixed / skipped / marked / current / repair), difficulty band tokens --lvl-easy/med/hard, stat tiles, a fixed bottom ActionBar that sits above the phone tabs, skeleton rows, a toast.",
+   "Mastery words (Not started / Learning / Getting there / Strong) as a shared helper, UI.band(m), so Results, Today and Plan label the bar the same way.",
+   "The SkillTree component (domain cards, tri-state skills, stats) can be reused by Results' skill list and Plan's focus step.",
+   "Deep-link contract /practice/?skills=&pool=&... for Results, Plan, Today and Mistakes to open the builder preset.",
+   "Rename 'Saved' to 'Marked for review' across Mistakes, Me and Results copy.",
+   "The exam runner adopts the RunFooter, the CheckYourWork sheet and the keyboard map, so practice 'At the end' mode and a test are the same experience."
+  ],
+  "acceptance": [
+   "curl -s localhost:8000/api/bank -H 'X-Learner: a:v2revacc1' | python3 -c \"import json,sys; d=json.load(sys.stdin); assert d['totals']=={'domains':4,'skills':19,'types':386} or d['totals']['types']==386; assert len(d['domains'])==4 and sum(len(x['skills']) for x in d['domains'])==19; t=[ty for x in d['domains'] for s in x['skills'] for ty in s['types']]; assert all(set(y['tiers'])<={'easy','medium','hard'} and set(y['formats'])<={'mcq','spr'} and 1<=y['levels'][0]<=y['levels'][1]<=7 for y in t)\"",
+   "POST /api/drill {topics:['evaluating_statistical_claims'], formats:['spr']} returns 409, and the detail names the missing grid-in types.",
+   "POST /api/drill {templates:['lin.evaluate'], count:5}, then answer and next five times. Server-side (test_flow served_of), every served key is 'lin.evaluate' and all five seeds are distinct.",
+   "POST /api/drill {topics:['linear_functions'], levels:[6,7], count:6}: every served question in /api/drill/{id} state has difficulty 'hard' and level 6 or 7.",
+   "feedback='end': the POST answer response has none of the keys answer, answer_index, rationale, mistake or reasons. Answering the same qid again with a different value succeeds. /finish returns questions[] with statuses, and the attempts table gains rows only after finish.",
+   "feedback='retry': a wrong first answer returns final:false, tries_left:2 and a non-empty mistake, and no answer or answer_index. The correct second pick returns final:true, and finish reports mixed:1 while right counts first tries only.",
+   "POST /api/drill/{id}/next {skip:true} returns a new question id. State shows the previous one as status 'skipped', and answering it afterwards succeeds and clears 'skipped'.",
+   "POST /api/drill/{id}/more {question_id}: total goes up by 1, and the next served question has the same template and a different seed.",
+   "On a timed set, POST /pause, wait 3 s, then GET state: seconds_left is unchanged, within ±1. POST answer while paused returns 409. After /resume, seconds_left decreases again.",
+   "POST /api/drill {retake: sid} serves the same stems in the same order. POST /api/drill {share: code} from a second learner code serves the same stems, and GET /api/share/{code} shows taken:1.",
+   "POST /api/report {session, question_id, category:'wrong_key', details:'x'} returns 200, and sqlite3 server/satfreshman.db \"select template, seed from reports order by id desc limit 1\" shows that question's template and seed.",
+   "GET /api/drill lists a new set under active. After /finish it appears under recent with answered and right.",
+   "A guessed-right answer (guess:true) on a template with an open trap leaves traps.owed unchanged.",
+   "For a challenge sitting, POST /pause, /more and next {skip:true} all return 409.",
+   "PYTHONPATH=. python3 server/test_flow.py passes.",
+   "Browser 1280 (shot.py a:v2revacc2 1280 …/practice/): 4 domain cards and 19 skill rows are visible, each with an answered count or 'Not practised' and a mastery word. Unchecking one type in an expanded skill makes the skill's and the domain's checkboxes indeterminate (aria-checked='mixed').",
+   "Browser: with no skill selected, Start is disabled and 'Pick at least one skill' is visible beside it. Selecting Format 'Grid-in' dims 'Statistical claims' with the text 'no grid-in types'.",
+   "Browser 390: document.documentElement.scrollWidth <= 390 on /practice/, on /practice/session/?id=… and on the summary. The action bar and Start sit above the tabs and do not overlap them.",
+   "Session: pressing 'b' selects choice B without submitting (no .verdict visible). Enter then submits. Shift+'c' strikes C and shows Undo. Pressing Escape closes the open Navigator.",
+   "Session: the Navigator Difficulty view shows E/M/H corner letters on every served cell. Clicking cell 1 after answering 3 questions shows question 1 read-only with its verdict.",
+   "Session: Details shows a 'Question ID' of the form 'template · seed'. In a challenge it reads 'Shown after you answer' until the question is answered.",
+   "Session: after a wrong MCQ answer, a line starting 'Your answer:' appears directly under the chosen option. Turning on 'Every option explained' shows a reason under each other distractor.",
+   "Session: Hide replaces the timer digits with '— : —', and a reload keeps them hidden. Exit with 1 or more answered opens 'Leave this set?' with 'Keep it for later'.",
+   "Summary: the StatTiles show Correct, Incorrect, Skipped, Time and Per question. The ReviewList filter 'Incorrect' shows exactly the incorrect rows. 'Retake these exact questions' opens a set whose first stem matches.",
+   "SPR: typing '1234567' shows the 'Too long' error and disables Check. Typing '-2/3' shows 'Answer preview: −2⁄3'. After a correct check, the accepted forms line lists '.6666' or '.6667' for a 2/3 key."
+  ],
+  "open_questions": [
+   "Reading & Writing: this spec is Math-only. Should the builder show a disabled R&W subject tab, or nothing until an R&W bank exists? The spec recommends nothing.",
+   "The topic sources.py files pin templates to the numbers of official College Board items, e.g. 86 official Linear Functions items. Should an 'Official-item replicas' pool be offered as the equivalent of their Question Bank | TTP Bank toggle? College Board's reuse terms need checking first. The spec leaves it out.",
+   "Level 1-7: is a data-driven level (a tier prior, then first-try accuracy percentiles once a type has 30+ attempts) acceptable, and is 'Level' the right name, versus mimicking 'Question Score'?",
+   "The default 'Answers shown' mode: 'After each question' (spec default) or 'After I retry'?",
+   "Select-then-Check replaces today's one-tap submit by default, because strike-out needs it. OK to change, with 'Answer on first tap' as an opt-in preference?",
+   "Pause in timed practice sets: allowed (the spec says yes, never in a challenge), even though the real test cannot pause?",
+   "Shared sets are public by code. Should the sharer's board name show on the banner, and is any moderation needed? There are no comments, so the spec assumes none.",
+   "Reports: is storing them in sqlite plus a warning log line enough for now, or is a maintainer page wanted to read them?",
+   "'I'm guessing': visible on every question by default, or behind a preference?",
+   "Should 'Marked for review' and today's 'Saved' be one concept? The spec renames Saved to Marked for review and keeps /api/saved."
+  ]
+ }
+}

@@ -1,0 +1,201 @@
+{
+ "label": "experience: tests",
+ "key": "v2:4552cefccb901fd0109c6ce93964a328594a8f556736261269ab3f79a3515362",
+ "result": {
+  "proposals": [
+   {
+    "title": "Second look: retry your misses before you see the key (slip vs gap)",
+    "what": "After the final hand-in, the test window shows a new screen, #second, instead of redirecting. It is skipped for the diagnostic, contests and sittings with 0 misses and 0 blanks. h1 \"Before you see the answers\". Line: \"You missed 7 and left 3 blank. Try them again with no clock. It tells a slip from a gap.\" Two chip rows show positions only: misses as filled chips (M1 Q9, M1 Q14, M2 Q3 ...) and blanks as dashed chips. Pill \"Try them again (10)\" (Enter) and quiet \"Skip to my report\". Pressing it opens the runner in exam mode over just those questions, using the P4 queue footer (\"Second look · 3 of 10\"). There is no clock; Elapsed counts up. Calculator, reference, highlights, notes and eliminations come back as they were. The original pick is hidden so it can't steer the retry, with the line \"Your test answer is hidden\". Each answer goes to POST /api/session/{sid}/second {question_id, answer, ms}, is stored as qstate[qid].second {given, right, ms}, and is filed to attempts with repeat=1 (R8), so mastery and the score never change. \"Finish second look\" can end it at any point. Second look closes for good the first time the report is opened with keys (qstate._session.second_closed). The report then tags every miss: \"Slip · right on second look\" or \"Gap · wrong again\", with \"same trap twice\" when both picks name the same misconception. Blanks get \"Out of time · right untimed\" or \"Couldn't do it\". The report's Fix drills only Gaps by default. Slips also feed P2 and P3 (\"slips cost about 30 points\").",
+    "beats": "TopTierPrep's review modal. It shows the Correct answer box straight away, and 'Hide answers' only hides it; you can never re-answer. So their report can't tell a careless slip from a real gap, and every miss looks the same. We can re-serve the exact item by (template, seed) before any key is shown, and the misconception on the second wrong pick shows whether it is the same trap.",
+    "effort": "M",
+    "needs": "F4: qstate.second, attempts repeat=1 (R8). S5: POST /second and 409 once closed; /finish returns missed and blank positions (result.modules). F3: runner queue plus untimed exam mode (shared with P4). S6: report slip/gap tags, Fix defaults to Gaps, and setting second_closed on the first keyed GET. Report's what-if for the points on slips."
+   },
+   {
+    "title": "Points on the table: where your next 50 points are, on the score card",
+    "what": "T1 (Estimated score) gets a third block under the facts, titled \"Where your next points are\". It holds up to 4 rows from estimate.levers(learner), which re-scores the last 3 scored sittings with scoring.section_score under one change at a time. Rows are ranked by points:\n(a) \"Easy and medium misses · 6 in 3 tests · about +40\": those misses flipped to right, averaged over the sittings. Action: \"Fix 6\" (a drill on those templates with new seeds).\n(b) \"Route · 1 more right in module 1 on Sep 12 would have earned the harder module 2 and lifted the 580 cap\". Shown when a lower route fell within 2 questions of the 60% cut. Action: \"Sit module 1\".\n(c) \"Recurring trap · 'squared only the first term' · 3 tests · about +20\": open traps hit in 2 or more sittings. Action: \"Fix it\".\n(d) \"Slips · 4 right on second look · about +20\", from P1. Action: \"Turn on the pace guide\", which toggles the pref inline.\nEach row has a label (600 14px), evidence (DM Mono 13px soft), a points chip on --wash (\"+40\", rounded to 10, prefixed with the approximately sign) and a .btn action. A sum line reads \"Worth about +80 · 560–700 → 640–780 · your 700 target is inside\". It is drawn on UI.scale: the current band, the lever band as an outline, and the target tick. A quiet \"How this is counted\" opens #howScored at the what-if paragraph. Empty: \"Sit a full section to see where your points are.\" Loading and error follow T1.",
+    "beats": "TopTierPrep's Estimated Score card. It shows 'Math 200-280' and a red LOW CONFIDENCE chip, and never says how to raise the number. Ours turns the gap to target into ranked, costed actions that start in one tap. Their per-question data has no skill, difficulty or misconception, so they can't compute this.",
+    "effort": "M",
+    "needs": "F4: estimate.py gains levers(), reusing Report's what-if re-score (scoring.py) plus traps. F5: drill body with a template list (§2.6). F1: UI.scale. P1 feeds the slips row (optional). S5 renders it on /tests/."
+   },
+   {
+    "title": "Test habits: how you take tests, measured from the runner",
+    "what": "A full-width card titled \"How you take tests\", placed under T1 and T2. It reads the last 6 finished timed sittings. With fewer than 2: \"Sit 2 timed tests to see your habits: pacing, blanks, answer changes and confidence.\" The server's tests.habits(learner) is returned in GET /api/tests.habits. Each row is {id, verdict good|costs, title, evidence, series, points, action}. A row shows a glyph (check for good, ! for costs, ink only), a title (600 15px), an evidence line (DM Mono 13px), a 60x20 sparkline across the sittings and one action. The habits and their triggers:\n- Answer changes: right to wrong vs wrong to right, from qstate first vs final. Example: \"Changes cost you: 7 right→wrong, 3 wrong→right\". Action: \"See the changes\" (report ?filter=changed).\n- Finish margin: seconds left at each module hand-in. \"4 of 12 modules ran to 0:00\", or the good \"You kept 4:10 on average to check\". Action: the pace guide toggle.\n- Front-loaded time: the share of the module spent on the first third (the easy tiers) vs the P5 budgets.\n- Blanks: the average per module, and the points lost against guessing at 25%.\n- Sure but wrong, when confidence tags are used: \"5 Sure answers were wrong; 3 were 'flipped the inequality'\". Action: \"Fix that trap\".\n- Guess accuracy vs the 25% chance rate, which shows whether eliminating works.\n- Away from the window: the count and the time.\n- Marked but never revisited, from the visit trail.\nRows that cost points come first, sorted by points. 4 show, then \"Show all 7\". Each has a \"Why\" popover stating its rule. On a phone, rows stack with the chart under the text.",
+    "beats": "None. TopTierPrep records nothing about how a student sits a test: their per-question payload has no time spent, and a reload resets the stopwatch. Our qstate (ms, first, changes, conf, away, marks) becomes coaching on how to take the test, which no fixed-paper site offers.",
+    "effort": "M",
+    "needs": "F4: qstate fields per R7, plus result.modules[].left_s written at each hand-in (S5 finish). S5: habits() in api_tests.py, included in GET /api/tests. F1: a tiny sparkline in charts.js. S6: the report's ?filter=changed deep link. P5 budgets for front-loading, and P1 for slips (both optional)."
+   },
+   {
+    "title": "Check your work: 'Go through them' queue and jump keys",
+    "what": "On #review, above the grid, a row of toggle chips with counts: Unanswered 5 · For review 3 · Guesses 2 (Guesses only when confidence tags are on). The default is Unanswered plus For review. Next to them is the pill \"Go through 8\" (Enter). Queue order: unanswered by position ascending (modules run easiest first, so early blanks are the cheapest points), then marked, then guesses. In queue mode:\n- the footer centre reads \"Going through · 3 of 8 · Q14 ⌃\";\n- Next and → go to the next queued question, and Back to the previous one;\n- queued strip segments get a ring;\n- a quiet \"Stop\" returns to #review.\nAnswering a blank or unmarking a question updates the tiles live. Next on the last queued question returns to #review with the toast \"Done: 5 answered, 2 unmarked\". Anywhere in a module, U jumps to the next unanswered question and Shift+M to the next marked one, wrapping around; both are listed in the ? sheet (both keys are free in the runner map). The navigator's footer gets the same \"Go through 8\" beside \"Go to review page\". On a phone the pill is full width in the footer. Step count to revisit 8 questions: on TopTierPrep, each takes a cell click, the answer, opening the navigator and 'Go to Review Page', so 24 extra taps. Ours takes 1 pill and 8 Nexts, or on the keyboard Shift+R, Enter, then A–D and →.",
+    "beats": "TopTierPrep's Check Your Work page and module navigator. A cell jumps to one question, and getting back costs two more taps each time. Ours walks every blank and marked question in order in one pass, with live counts.",
+    "effort": "S",
+    "needs": "F3: runner.js navigator and queue (client only; the same queue drives P1). F2: UI.keys entries U and Shift+M. No server change."
+   },
+   {
+    "title": "Pace guide that follows the module's ladder and your own speed",
+    "what": "The uniform pace (elapsed ÷ 95 s) is replaced by a budget per position. Budget = tier base × personal factor, normalised so the module adds up to its duration minus a check reserve (3:00 for a 35:00 module, scaled by the timing factor). Tier bases are the student's median ms on first-try right answers per tier in timed sittings and timed practice (attempts, at least 15 per tier). Otherwise defaults apply: easy 60 s, medium 95 s, hard 135 s. Each slot's tier comes from the form's public ladder (blueprint.TIERS counts, sorted), which is the same for every sitting of that form, never from the items served, so nothing about the actual questions leaks. The payload adds pace {budget_s[22], reserve_s, source 'you'|'default', n}. With Pace guide on:\n- the strip's tick sits at the question you should be on;\n- under the clock, a DM Mono line reads \"+1:20 ahead\" or \"0:45 behind\", updated every 5 s, in ink and never red;\n- Check your work shows \"Keep 3:00 for checking\";\n- Between modules shows \"At Q11 you were 2:10 behind\".\nThe lobby row reads \"Pace guide · paced to your speed (212 timed answers)\" with Change: Off / Even / Ladder. P2 judges front-loaded time against the same budgets.",
+    "beats": "TopTierPrep's timer (and Bluebook's) is a bare countdown. An even pace is wrong advice on a module that runs easy to hard, and they can't personalise it: they don't keep time per answer, and a reload resets the stopwatch. Ours tells the student, question by question, whether they are banking time for the hard end.",
+    "effort": "S",
+    "needs": "S5: payload.pace computed in api_tests.py from attempts.ms (R7 passes test ms into attempts). F3: the strip tick and the delta line. F4: prefs test_pace changes from bool to off|even|ladder in the prefs registry (R11)."
+   },
+   {
+    "title": "Solve first: cover the choices until you have an answer",
+    "what": "A tool and setting, \"Solve first: cover the choices\". It appears in the start sheet's Tools step, as a lobby row and as a More toggle; the pref test_solve_first is shared with the practice session and off by default. When it is on, multiple-choice options render as one covered --tile-2 block at their final height, reading \"Choices covered · work it out, then reveal (V)\". \"Reveal choices\" (the V key, free in the runner map) uncovers them for that question, and they stay uncovered on later visits. Grid-ins are unaffected. qstate[qid] stores covered: true and reveal_ms, the time before the reveal. Scoring is unchanged, and the sitting keeps its estimate (result.solve_first is recorded for information). The report adds a line: \"Solved first on 18 of 22 · 86% right · 1 trap pick, against 4 on questions where you looked first\". Per question it shows \"Revealed after 1:05\". On a phone the covered block is a single 120px tile; tap to reveal.",
+    "beats": "TopTierPrep has only the ABC eliminator, and their 'Distractor Analysis' is prose you read afterwards. Ours trains the one habit that beats trap answers. Because every wrong option names a misconception, it also measures how many trap picks the habit prevented, which their bank cannot know.",
+    "effort": "S",
+    "needs": "F3: a covered state in UI.workspace. F4: qstate keys and the prefs key test_solve_first. F2: key V. S6: the report line and the per-question reveal time."
+   },
+   {
+    "title": "How everyone did: a per-question crowd view for Papers",
+    "what": "Once you have finished a paper, its Discussion sheet opens on a new first tab: How everyone did · Discussion 12. The header reads \"From 214 first sittings\". Below 20 first sittings it reads \"Needs 20 first sittings · 12 so far\". Sort choices: Hardest for everyone / Where you beat the crowd / Where the crowd beat you / In order.\n- Each row: the \"M1 Q17\" chip, the skill, \"18% right\" with a bar, your result glyph, and median time against yours (\"1:50 · you 3:10\").\n- Expanding a row shows UI.spread of A–D: each option's share plus its misconception (\"41% · divided only one side by 2\"), with your pick marked. For a grid-in it shows the top 3 wrong values.\n- Row actions: \"Try one like this\" (an inline drill of that template with a new seed, R24), \"Discuss\" (Discussion filtered to that question) and \"Open my review\".\n- A top block, \"Fooled the most people\", lists the 3 questions with the lowest right rates.\n- Module 2 questions not on your route sit in a collapsed \"Not on your route\" group.\n- After you have sat it, the paper card gains the line \"Hardest: M2 Q19 · 18% right · you got it\".\n- Posts tagged to a question show that question's % right beside the chip.\nServer: GET /api/papers/{n}/crowd is gated like posts. Per question it aggregates the same first sittings as sat_by: {n, right, picks[4] | top_wrong[3], median_ms}. Misconception labels are read server-side from the paper's stored items. It is cached for 10 minutes, like drill.levels.",
+    "beats": "TopTierPrep's 'People took 1.6k' tile and Comments modal. A head count and unmoderated, spoiler-filled chatter are their only crowd signals, with nothing per question. Ours shows where you stand on every question and which named misconception caught the crowd, and one tap practises that trap.",
+    "effort": "M",
+    "needs": "S5: the crowd endpoint and aggregation in api_tests.py. F1: UI.spread (already listed in charts.js). F5/R24: the inline twin drill source. S6 (optional): the crowd bar in the review of paper sittings. It works unchanged if papers become twin papers (see parity gaps), because it aggregates per slot and per reason."
+   },
+   {
+    "title": "The hand-in moment: an earned result before the report",
+    "what": "Final hand-in no longer shows the 'Marking your test…' skeleton and redirects. It shows #done in the test window. /finish returns {finished, estimate {low, high, previous, best}, route, moments[], misses, blanks}.\n- k \"Full section #12 · handed in\".\n- The band on UI.scale (200–800), with the previous band as a ghost outline and the target tick. The numbers count up once over 600ms; with reduced motion they are static.\n- A headline: \"Up 40 since Sep 12\", \"Level with Sep 12\" or \"Your first estimate\".\n- A route chip (\"Harder module 2\"), always shown now that the test is over.\n- Up to 2 earned moments from a fixed list, each a line with our trophy or marks icon: first route to the harder module 2, a new best band, no blanks, beat Paper #8's average (540), every module finished with 3:00 or more left, a twin beating its original by 30 or more, first High confidence. Nothing shows when nothing is earned.\n- Actions: pill \"See your report\" (Enter); .btn \"Second look (10)\" when P1 is available; quiet \"Fix 7 now\"; quiet \"Back to Tests\".\nUnscored kinds read \"17 of 22 right · practice, no estimate\". The diagnostic keeps its sign-up gate (R38). Offline, it keeps the spec's 'Handing in when you reconnect' state.",
+    "beats": "TopTierPrep drops you onto /results with count-up rings and a 'Practice test — not ranked' pill. It makes no comparison with last time and marks no firsts. Ours earns its moment with facts: the change, the route and real firsts, and puts the next useful action one key away.",
+    "effort": "S",
+    "needs": "S5: the /finish response fields. F4: estimate.py (R16). S1: the achievements engine (R25), where the test moments are registered. F1: UI.scale. P1 for the Second look button."
+   },
+   {
+    "title": "Thumb-first test window on phones (and right-click strike on desktop)",
+    "what": "At under 760px:\n(1) Swiping the question column left or right (at least 64px, angle under 30°, never while text is selected, while Highlights & Notes is on, or inside a .q-table scroller) moves Next or Back with a 160ms slide, and none with reduced motion.\n(2) Long-pressing an option for 450ms strikes or unstrikes it without Eliminate mode. A ring fills to show progress, and navigator.vibrate(8) fires where supported.\n(3) The footer becomes [‹ Back 44px] [Mark 44px, bookmark icon, aria-pressed] [M1 · 7 of 22 ⌃] [Next pill], so Mark for review is within thumb reach, not in the top header.\n(4) Swiping up on the footer button opens the navigator sheet, which carries P4's \"Go through 8\".\n(5) Grid-ins get an optional answer pad pinned above the footer: 0–9, '.', '/', '−' and ⌫, in 4 rows of 44px keys. The OS keyboard no longer covers the stem, and the minus a decimal pad lacks is there. A \"Use the answer pad\" toggle is remembered in localStorage.\n(6) The calculator sheet snaps as specced, with the question scrolling above it.\nOn desktop, right-clicking an option strikes it; the context menu is suppressed on options only.",
+    "beats": "TopTierPrep's runner is a desktop Bluebook clone. Eliminating needs the ABC toggle and then a tap on a small circle, Mark for Review sits at the top of the screen, and grid-in entry relies on the OS keyboard. Ours strikes in one long-press, marks by thumb, and enters grid-ins without covering the question.",
+    "effort": "M",
+    "needs": "F3: runner.js/runner.css gestures, footer layout and the answer pad; the UI.workspace strike hook. No server change."
+   },
+   {
+    "title": "Your working, kept per question: calculator log and scratch pad, replayed in review",
+    "what": "(a) Calculator log. On each question change, if Desmos changed, the runner diffs getState().expressions and stores the new or edited ones for the question just left: qstate[qid].calc = {open_ms, exprs [latex, 20 at most, 200 chars each]}. It opens a Desmos folder named \"Q8\" for the next question, so the list stays readable.\n(b) Scratch pad (tool \"Scratch\", key W, free in the runner map). A transparent canvas over the column with Pen, Marker, Eraser and Clear, for touch, stylus or mouse. Strokes are simplified (Ramer–Douglas–Peucker, 1px) and stored per question as qstate[qid].ink (30 KB at most), sent through the save queue.\n(c) Review. The report's player shows a \"Your working\" block under the question: a read-only Desmos with that question's expressions, and the ink laid over the stem, beside the misconception your pick named. The student sees where the method went wrong.\nP2 also uses calc open_ms (\"calculator open on 70% of questions\").",
+    "beats": "TopTierPrep's Desmos panel forgets its state, and nothing keeps a student's working, so their review can only show the key and prose. Ours shows your own steps next to the named mistake.",
+    "effort": "L",
+    "needs": "F3: UI.calc hooks (getState/setState are already specced) and a new canvas component. F4: qstate cap raised to about 200 KB per sitting. S5: /state accepts calc and ink. S6: the report player renders them read-only."
+   },
+   {
+    "title": "Compare any two sittings, with a slot-by-slot diff for twins and retakes",
+    "what": "In T6 (Your sittings), each row gets a \"Compare\" checkbox; X toggles it on the focused row. With two ticked, a bar appears: \"Compare #11 and #14\" [Compare] [Clear]. The compare sheet is 720px wide, full height on a phone.\n- Two columns: band, M1, M2, route, time used, blanks, away and pauses.\n- Domain bars side by side for the 4 domains (earned / possible).\n- A \"Question types\" table that joins the two sittings by template, in three groups: Missed both times (\"same trap\" when the reason matched), Fixed (missed in the older sitting, right in the newer) and New misses. Each group has a Fix action.\n- For a twin and its source, or a paper retake, the table is slot by slot (M1 Q1..Q22) with a ✓/✕ glyph per side and a summary: \"Fixed 5 · Still missed 2 · New 1 · +60\".\nThe twin's T6 row also carries a chip, \"vs #11: +60 · fixed 5\". Deep link: /tests/?compare=11,14.",
+    "beats": "TopTierPrep's /results list. It shows no score on its cards, can't compare sittings, and a fixed paper can't be re-sat fresh. Our twins make the comparison fair, the same question types at the same positions, so 'did I improve?' gets a real answer.",
+    "effort": "M",
+    "needs": "S5: GET /api/compare?a=&b= (owner-only), from stored templates, reasons and result.modules. S6: /api/history fields (R26). F1: UI.sheet. F2: key X on /tests/."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Papers as fixed shared forms",
+    "spec_says": "Papers #1–#7 plus one new paper each Monday. Everyone gets identical questions, as on TopTierPrep, which is what makes Sat by, Average, the percentile and Discussion comparable.",
+    "why_only_parity": "It is their paper grid plus a weekly refill. Identical questions also mean answers can be passed around, which inflates the percentile the paper exists to give. The user already rejected that for the Daily Challenge (twins, v2-decisions #1).",
+    "upgrade": "Twin papers. Every sitter gets the same template, tier and format in every slot, with their own seed, using blueprint.twin/draw_matching, which the spec already has. Crowd stats, rating and percentile still compare like with like per slot, and the P7 crowd view aggregates per slot and per misconception. Discussion becomes about method, not '(C) is 12', so the spoiler gate matters less. 'New to you' changes to 'question types new to you'. Exact copies stay only for friend Shares."
+   },
+   {
+    "feature": "Estimated score card: Math only, with a trend",
+    "spec_says": "T1 shows the Math band, a confidence chip and reason, a headline like 'Up 40 since Sep 12', and facts.",
+    "why_only_parity": "Theirs is also a Math-only band with a trend delta ('Math estimate only. Practise R&W to see your total'). Ours never shows a total either, although R15 stores rw_now.",
+    "upgrade": "When rw_now is set, add 'Total 1180–1320 · with your R&W 620 (entered Sep 12)', plus an inline 'Add your R&W score from Bluebook' field when it is missing. Draw a projection to the exam date on the band chart: a dashed trend line and a widening band, labelled 'At +15 a week: 620–740 by Oct 3'. Turn the confidence reason into a button ('One more section makes this High · Start')."
+   },
+   {
+    "feature": "Papers Status filter and Sort",
+    "spec_says": "Status: All / Not sat / In progress / Completed. Sort: Newest / Oldest / Hardest / Easiest / Most sat.",
+    "why_only_parity": "These are their Status values and their Sort values, plus one.",
+    "upgrade": "Status adds 'Sat · misses to fix (3)': papers whose misses have open traps, which ties testing to repair. Sort adds 'Best match for me' as the default when an estimate exists: papers rated around 30 points above your midpoint come first, then by how many of their question types you haven't met."
+   },
+   {
+    "feature": "Filter dropdowns (UI.dropdown)",
+    "spec_says": "Their 'Sort By · Newest' pattern copied: the label over the value, a radio listbox and a check.",
+    "why_only_parity": "It is their control, one for one. You still open each menu to find out whether an option has any results.",
+    "upgrade": "Each option shows its count ('Harder than most (3)'), options with 0 are disabled but visible, and active filters also show as removable chips under the bar ('Harder than most ×'). Keys: F focuses the filter bar, and arrows then Enter change a value."
+   },
+   {
+    "feature": "Paper card stat tiles",
+    "spec_says": "Sat by 1,284 · Average 540 · You 560–700, and a percentile line after 30 first sittings.",
+    "why_only_parity": "'People took' and 'Your last score' with an average added. A head count says little about where a score stands.",
+    "upgrade": "A 32px distribution strip of first-sitting midpoints (UI.scale with a histogram) marked with the average, your band and your target. Before you sit it, the strip shows where a student at your estimate would land ('Students at your level average 580 here')."
+   },
+   {
+    "feature": "'Everyone: 1,284 sittings' on the New test cards",
+    "spec_says": "Each kind card shows an Everyone count and, after 30 sittings, 'Your last beats 62% of fresh sections'.",
+    "why_only_parity": "It is their 'People took' number on tests that are built fresh for each student, where the count says nothing.",
+    "upgrade": "Drop the raw count. Show what the kind does for this student: 'Last: 560–700 · Best 600–740', the confidence it would add ('+1 section → High'), and the percentile line only when n ≥ 30."
+   },
+   {
+    "feature": "Report a problem",
+    "spec_says": "UI.report: a 'Sent with your report' box, title 0/200, category, details 0/5000, up to 10 images, and 'Send report'.",
+    "why_only_parity": "It is their form with more categories. Filling in four fields mid-test burns the clock, and screenshots duplicate what (template, seed) already reproduces.",
+    "upgrade": "One-tap category chips send the report at once ('Answer key looks wrong' → sent), with an optional 'Add details' afterwards. In a timed sitting, 'Report after the test' queues the report pre-filled, and it opens on the P8 hand-in screen, so no test time is lost. Reviewers see the regenerated item, so images are optional."
+   },
+   {
+    "feature": "Discussion threads",
+    "spec_says": "Threads one level deep, Reply, a sticky composer, skeletons, plus the sat-it gate, question tags, Helpful and moderation.",
+    "why_only_parity": "The thread UI is their Comments modal. A new thread still starts empty, and its first reply is often wrong.",
+    "upgrade": "Each question thread opens with the item's own rationale and its misconception map as a pinned first post, so every thread starts correct. A post type 'Another way to solve it' is sorted by Helpful. The P7 crowd tab comes first."
+   },
+   {
+    "feature": "Start sheet: Choose modules step",
+    "spec_says": "Checkable module cards, Select all / Clear, and a counter '2 of 2 modules · 44 questions · 70 min'.",
+    "why_only_parity": "It is their Select Modules grid and counter, one for one.",
+    "upgrade": "Each module card shows your last result on it and what it yields ('Module 1 alone · ±100 estimate · last 17/22'; 'Module 2 harder alone · practice · last 12/22'). Three one-tap presets sit above the checkboxes: 'Routing check (module 1)', '700+ finisher (harder module 2)' and 'Whole section, fixed harder route'."
+   },
+   {
+    "feature": "Clock: hide and 5-minute warning",
+    "spec_says": "mm:ss with Hide/Show, a 5-minute unhide and toast, a pulse under 1:00, and a uniform pace tick.",
+    "why_only_parity": "This is Bluebook's and theirs: a countdown you can hide.",
+    "upgrade": "The P5 ladder pace delta under the clock. A hidden clock still shows a small ahead/behind dot, so hiding doesn't blind the pace. Warning points can be chosen (10 / 5 / 1 minutes) in More."
+   },
+   {
+    "feature": "Reference sheet",
+    "spec_says": "The existing UI.ref drawn SVG, in a dialog.",
+    "why_only_parity": "Theirs is a modal image. Both cover the question, so the student flips back and forth.",
+    "upgrade": "A dockable side panel, like the calculator dock at 1180px and wider, and a half-height sheet on a phone, so the formula and the question are visible together. Each formula group collapses on its own, a filter field finds entries ('circle', '30-60-90'), and F toggles the dock."
+   },
+   {
+    "feature": "Question strip: Mark / Eliminate / Report",
+    "spec_says": "The Bluebook set: Mark for review, Eliminate mode with strike circles and Undo, and Report.",
+    "why_only_parity": "Same tools and the same two-step eliminate (turn the mode on, then strike).",
+    "upgrade": "Right-click (desktop) or long-press (phone) strikes directly, with no mode switch (P9). The Solve-first cover (P6) is added. On a phone, Mark moves into the footer, within thumb reach."
+   },
+   {
+    "feature": "Highlights & Notes on math",
+    "spec_says": "7 styles in orange and graphite, notes, and a notes rail.",
+    "why_only_parity": "It is a general-purpose highlighter, as theirs is with 4 colours and 3 underlines. Students rarely use highlighters on math.",
+    "upgrade": "Math-named quick styles on the selection toolbar: 'Asked for' (box), 'Given' (highlight) and 'Ignore' (strike), keyed 1 / 2 / 3 while the toolbar is open. The notes rail lists each question's 'Asked for' text. This trains the fix for our commonest misconceptions ('solved for x, asked for 2x'), and the report can show when the boxed quantity differs from the misconception you picked."
+   },
+   {
+    "feature": "Grid-in answer preview",
+    "spec_says": "A KaTeX preview of the typed value, a keystroke filter and the examples table.",
+    "why_only_parity": "Their QBank already renders the Answer Preview in KaTeX (55/4 as a stacked fraction), so the preview itself is parity.",
+    "upgrade": "The preview adds the value's decimal ('= 0.6667'). A guard, which needs no key, fires on short decimals that look like repeating ones (.33, .66, .16, .83): 'If it repeats, enter .3333 or 1/3: a short decimal is marked wrong'. This is the fourth-digit rule scoring.grid_equal applies. A mobile answer pad is added (P9)."
+   },
+   {
+    "feature": "Resume an unfinished test",
+    "spec_says": "The In progress card on /tests/, Up next 'Resume', and a paused lobby.",
+    "why_only_parity": "Stronger than theirs, but still only on /tests/. A paused test is found only by visiting the Tests page, much as theirs is found through a Status filter.",
+    "upgrade": "A global chip in the shell's top bar and the phone bar on every page ('Paused · Full section #12 · 21:40 · Resume'). Save and exit offers 'Remind me at…' (UI.ics(event)), so a paused sitting is never forgotten."
+   },
+   {
+    "feature": "'Practice test — not ranked'",
+    "spec_says": "The report shows ranked or not after the fact. The lobby lists settings.",
+    "why_only_parity": "Like theirs, a student learns that a sitting didn't rank only afterwards.",
+    "upgrade": "The lobby states it before Begin: 'This sitting ranks among 214 first sittings of Paper #8. Pausing, extended time or a fixed route keeps your score but drops the rank.' If a pause or extended timing would unrank it, the confirm sheet says so."
+   },
+   {
+    "feature": "Prediction papers",
+    "spec_says": "Weekly papers labelled by week ('Week of Sep 21').",
+    "why_only_parity": "Their 'September Predictions' papers are a themed shelf, and ours is a dated shelf. Neither ties a paper to the student's own exam.",
+    "upgrade": "An exam-week paper, released the Monday before each official date in satdates.py and labelled 'Oct 3 rehearsal'. Its percentile and crowd view can be scoped to students with that exam date (Compete's 'exam' scope, R3): 'Among 212 students sitting on Oct 3'. It makes no claim to predict content."
+   },
+   {
+    "feature": "Assigning a test to a class",
+    "spec_says": "A friend Share is called the equivalent of their teacher homework. /tests/ has no assign action.",
+    "why_only_parity": "Their hidden /teacher can assign a full timed test with a due date. A share link has no due date, no roster and no class view.",
+    "upgrade": "When the student teaches a class (R4), each kind and paper card gets 'Assign to a class': pick a class and a due date. The class then sees it under Up next. The teacher gets a roster of bands, a per-question misconception spread across the class (UI.spread) and one 'Fix for the class' drill of the top traps."
+   },
+   {
+    "feature": "Keyboard on the catalog",
+    "spec_says": "The runner has a full map. /tests/ has only the global keys.",
+    "why_only_parity": "Choosing and starting a test is mouse-only, as it is on theirs.",
+    "upgrade": "On /tests/: J/K move through the cards and rows, Enter starts, O opens Options, D opens Discussion, X ticks Compare, and F focuses the filters. Also, §2.8's runner map binds D both to 'choose D' and to 'details', which is a clash to fix: move details to I in exam mode, or to Shift+D."
+   }
+  ]
+ }
+}

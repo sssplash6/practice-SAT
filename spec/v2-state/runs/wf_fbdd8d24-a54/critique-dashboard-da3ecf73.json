@@ -1,0 +1,393 @@
+{
+ "label": "critique: dashboard",
+ "key": "v2:80c6f1f3c848e63e3bc2edf7d74764c874f2ea50a97f0b1ea6c44d62da3ecf73",
+ "result": {
+  "section": "Dashboard (Today, `/`)",
+  "theirs": [
+   {
+    "feature": "Hero banner",
+    "detail": "Full-width blue rounded banner. Date eyebrow in caps (WEDNESDAY, SEPTEMBER 23), time-of-day greeting with the full name (Good Morning / Afternoon / Evening, Samandar Norboyev), a monochrome-blue illustration on the right. No stats and no action in it."
+   },
+   {
+    "feature": "Two questions of the day, side by side",
+    "detail": "One card, two columns visible at once: R&W on the left (whole passage plus question), Math on the right (KaTeX stem, can refer to a figure). Each column has an outline Answer button that opens a modal. The card header has a QOTD streak pill (flame, 1 day). The same questions for every student."
+   },
+   {
+    "feature": "QOTD modal",
+    "detail": "Dialog Question of the Day with a close X. Stem, choices as full-width rows (muted letter, 1px border, radius ~10). Picking gives a blue border and fill. Footer: More practice text link left, Check answer primary right, disabled until something is picked. After Check: the chosen row turns red or green, an Incorrect/Correct banner, a Show explanation link opens a grey box (Choice A is correct...). The correct choice is NOT highlighted. The primary becomes Done. One attempt only."
+   },
+   {
+    "feature": "Study time card",
+    "detail": "Two big figures, STUDY TIME TODAY and THIS MONTH (1m / 1h 13m with data). Under them a one-month calendar (Mo to Su, round cells): today filled black, days with activity filled blue, other months faded. Cells are buttons that do nothing. No month navigation. UTC-vs-local bug: a sitting finished 22:14 UTC shows on the 22nd while the Recent Tests card dates it 23/09/2026."
+   },
+   {
+    "feature": "Study plan CTA (no plan)",
+    "detail": "Full-width card: eyebrow PERSONALIZED CURRICULUM with a target icon, title Build Your Adaptive DSAT Study Plan, two lines of copy, three coloured-dot bullets (Custom daily time pacing / Dynamic score drift adjustments / Scheduled rest days), Build My Plan button. Building uses the one plan the free tier gets per cycle, and their generator failed 3 of 3 times on the re-walk."
+   },
+   {
+    "feature": "Today's Plan card (plan exists, from their bundle)",
+    "detail": "Title Today's Plan, an All Done badge with an emoji when finished, N of M completed, X min left (Y min total) or All time targets reached, a Full Plan button, and one checkbox row per task (aria Mark task as done). Error toast Could not start task. Please try again."
+   },
+   {
+    "feature": "Plan view summaries the dashboard links to (bundle)",
+    "detail": "4 stat tiles: Days to exam (Keep the streak going / Exam day has arrived), Streak (Longest N days), Plan complete % (X of Y tasks), Score gap (1000 now, 1400 target). Week view with a pager (3 / 7) and a This week jump, 7 day tiles with done/total, rest or a dash. Adaptive banners: fallen behind (at least 4 tasks in 7 days and under 60% done) with Rebalance my plan, and score drift up at least 60 with Not now (3h snooze) / Rebuild with these scores. Tasks: Why this task?, Skip, Mark done, Practice again, Undo, Move to a later day of the same week."
+   },
+   {
+    "feature": "Score progress",
+    "detail": "SCORE PROGRESS big number left, TARGET SCORE big number with a pencil right. Empty copy: Complete a full-length test to start tracking your score. Stayed 0 after a 420 module-selection sitting. Target shows 0 even though the plan wizard set 1400: wizard, dashboard and profile targets are not synced."
+   },
+   {
+    "feature": "Target editor",
+    "detail": "Pencil opens Set Target Score: SAT scores range from 400 to 1600. Your current score is 1460 (a wrong number), a big number input with placeholder 1500, a 400-1600 bar, Cancel and Save Score (disabled until you type), a close X. Total score only."
+   },
+   {
+    "feature": "Exam countdown",
+    "detail": "A combobox pill EXAM DATE: 3 OCTOBER 2026 with a calendar icon and chevrons. Its listbox offers 8 official dates (Aug 22 2026, Sept 12, Oct 3, Nov 7, Dec 5, Mar 6 2027, May 1, Jun 5), two already past. Under it a live DD : HH : MM : SS labelled DAYS HOURS MINUTES SECONDS, ticking each second to an unstated time. No custom date."
+   },
+   {
+    "feature": "Recent tests taken",
+    "detail": "Grid of cards: TOTAL SCORE, date as dd/mm/yyyy, total (420), R&W 200 and Math 220 rows, a full-width Review button. Empty: No completed tests yet. No missed questions, no fix or retake, no in-progress tests."
+   },
+   {
+    "feature": "Streaks",
+    "detail": "QOTD pill says 1 day while the profile says Streak 0 Days: two numbers that disagree."
+   },
+   {
+    "feature": "Shell around the dashboard",
+    "detail": "220px collapsible left sidebar, an Upgrade to Pro card, the user card (popover: My Profile, Send feedback, Sign out), and a draggable floating Add your own word button that covers content."
+   },
+   {
+    "feature": "What it lacks",
+    "detail": "No single next action (plan CTA, QOTD, countdown and score compete). Cannot resume an unfinished test or set, no mistakes view, no challenge, no per-day detail, no daily goal on the dashboard, no week view, timezone bugs in calendar and study time, targets out of sync."
+   }
+  ],
+  "ours_now": [
+   {
+    "feature": "Hero greeting with date",
+    "status": "missing",
+    "note": "No greeting or name. The only date is the QOTD eyebrow (SEP 23)."
+   },
+   {
+    "feature": "Next action",
+    "status": "partial",
+    "note": "The coach's set (topic chips, trap dots, N questions, minutes, Start) or the plan's test on a test day. Better than theirs, which has none. No reason, no count or clock choice, no way to change skills, no resume of an unfinished set or of a running timed test, ignores rest days."
+   },
+   {
+    "feature": "Today's plan task list",
+    "status": "missing",
+    "note": "Nothing lists today's tasks, what is done, or minutes left. Their bundle has a Today's Plan card with N of M, minutes left and All Done."
+   },
+   {
+    "feature": "Questions of the day",
+    "status": "partial",
+    "note": "One multiple-choice question answered inline with one tap, so a misclick loses the day. Feedback beats theirs (key shown, mistake named, rationale, % of N right). Missing: a second question, a QOTD streak, more practice, per-option crowd picks, what each wrong answer means, past days, save, share."
+   },
+   {
+    "feature": "Study time today / this month",
+    "status": "missing",
+    "note": "/api/today has per-day minutes but the page never shows them. Tests and the QOTD add no time: record_paper files ms=None and POST /api/qotd takes no ms."
+   },
+   {
+    "feature": "Daily / weekly goal",
+    "status": "missing",
+    "note": "profile.minutes exists (plan step 3) but no goal is shown anywhere on Today; theirs has Daily 2 Hours / Weekly 12 Hours on the profile."
+   },
+   {
+    "feature": "Month calendar",
+    "status": "worse",
+    "note": "Seven dots for the last seven days with a hover title of question counts. No month, minutes, plan days, exam day or day detail."
+   },
+   {
+    "feature": "Study plan CTA / plan status",
+    "status": "missing",
+    "note": "No plan: only a Set a date link under an empty exam tile. With a plan: no week, no progress, no plan-complete figure."
+   },
+   {
+    "feature": "Score progress",
+    "status": "partial",
+    "note": "The latest band (200-350) with Math · Sep 23. No target, gap, trend, domains, drift. Empty state: a Take a test link. Unlike theirs, a module or the diagnostic does give a score."
+   },
+   {
+    "feature": "Editable target",
+    "status": "missing",
+    "note": "Settable only in plan step 2. Math only, so a student who thinks in a 1600 total has nowhere to put it."
+   },
+   {
+    "feature": "Exam countdown",
+    "status": "partial",
+    "note": "A days number and the date. No date picker, no live clock, no official dates, no study days or tests left, no exam-day or after-exam states."
+   },
+   {
+    "feature": "Recent tests",
+    "status": "missing",
+    "note": "None on Today. /tests/ and /results/ list sittings without missed numbers or Fix."
+   },
+   {
+    "feature": "Daily challenge",
+    "status": "have",
+    "note": "Start/Resume, then #rank and right/asked·time. Theirs has nothing like it. Lacks a board preview, progress and time left while in a sitting, a challenge streak, yesterday's result."
+   },
+   {
+    "feature": "Mistakes",
+    "status": "worse",
+    "note": "A small '23 mistakes' link at the bottom of the right column: the page's strongest asset is its least visible element."
+   },
+   {
+    "feature": "Streak",
+    "status": "partial",
+    "note": "A flame count in the top bar from /api/me days.streak. No best streak. One source, so it cannot disagree like theirs, but nothing else on Today shows it."
+   },
+   {
+    "feature": "Diagnostic results gate",
+    "status": "worse",
+    "note": "latest_score() returns a diagnostic's estimate whether or not it was signed up for, so Today shows a band that /results/report/ still hides behind sign-up (403)."
+   },
+   {
+    "feature": "Loading / error states",
+    "status": "worse",
+    "note": "Cards show a bare dash while loading. One 'The server is not answering.' for everything, and the QOTD card silently hides on failure. No retry."
+   },
+   {
+    "feature": "Phone layout",
+    "status": "partial",
+    "note": "One column; Score and Exam tiles stack under the QOTD. No designed priority order."
+   }
+  ],
+  "design": "\n# Today (`/`), rebuilt\n\n## Review changes\n\nWhat the draft still got wrong, and what was changed. The pattern: every time it had to choose, it hid, trimmed or withheld something to look calm, which is the mistake that degraded the site.\n\n**Hidden or cut for looks (reversed)**\n1. The two questions of the day were behind tabs, so one was always hidden. Theirs shows both side by side. Now both are side by side at 1080px and wider, and tabs are used only on narrower screens, with a status mark on each tab.\n2. \"All four choices\" sat in a closed `<details>`. Now each option shows, right under its own text after the reveal, what picking it means and how many picked it.\n3. The top-3 lists grow: mistakes and the challenge board show 5. Recent tests show 6, with `Show 6 more` loading more in place.\n4. The \"only one orange pill on the page\" rule left a rest day with no primary action. The rule is dropped. On a rest day the pill reads `Practice anyway`. The hierarchy comes from the size and position of Up next, not from withholding colour.\n5. The hero chips are kept at every width, and a 4th chip shows plan progress. The draft had left this as an open question.\n\n**Their features the draft left out (added)**\n6. Their **Today's Plan** card (from the bundle): the task rows, `N of M completed`, `X min left (Y min total)`, All Done, and Full Plan. It is now a **Today list** inside Up next. Completion is automatic, taken from what the student actually did, so there is nothing to tick and nothing to fake. Each row has a progress count, a `Why` reason, `Skip` / `Undo skip`, and `Move to…` for a test. Students without a plan get a daily list too.\n7. Their **total target** is on a 400–1600 scale; ours was Math only. The target dialog now takes an optional R&W score now and an R&W target, so the card can show the SAT total next to the Math band. There is one target field, shared by Today, Plan step 2 and Me. Theirs has three targets that disagree. Save stays disabled until something changes, and the number can be typed as well as dragged.\n8. Their **daily and weekly goal** (on their profile) now sits on Today. It sets `profile.minutes`, the same field plan step 3 uses, and the goal bars work without a plan.\n9. Their **score-drift banner** now appears in the Score card as `Update your plan's start`, with `Not now`.\n10. Their **plan stat tiles and week pager**: the Plan card shows the plan day (`Day 12 of 45`), plan complete %, study days done, and a week pager (`Week 3 of 7`, with a `This week` jump). Each day in the strip is done, partial, missed, skipped or rest. A line appears when the student has fallen behind.\n11. **Three separate streaks**, each labelled: study, day's questions, challenge. The study streak comes from one source and reads the same in the bar, the hero, the calendar and Me. Theirs shows 0 on the profile and 1 on the QOTD.\n\n**Things that could not work as written (fixed)**\n12. An unfinished **timed test keeps its clock running** on the server (`remaining()` counts wall-clock time). Up next now puts it first with the time left. A timed drill whose clock has run out is no longer offered as `Continue`, because its answers are refused with \"time is up\".\n13. **\"Harder, same skill\"**: only 59 of 386 templates make more than one difficulty, so a harder version of the same template usually does not exist. It is now `Harder · {topic}`: hard questions from the same topic.\n14. **Tapping one mistake** drilled every open mistake in its topic. A new `templates` filter on `POST /api/drill` fixes exactly that one.\n15. **Mock misses were split at 22.** They are now split at module 1's actual length.\n16. **A `like` drill before answering** could serve the day's own seed and show its key. The drill now requires an answer in that slot first and always excludes the day's seed.\n17. **The diagnostic's gate**: Today already shows the band of a diagnostic nobody signed up for, while the report returns 403. Scores, recent tests and Fix now respect the gate.\n18. **Midnight**: an answer to a question seen at 23:58 and sent at 00:01 would have been filed as late and cost the streak. There is now a 60-minute grace after local midnight.\n19. **The week strip counted a single QOTD tap as a study day done.** Practice-day completion now uses the planned question count.\n20. **\"Every card fails on its own\"** was not true: six cards read the one `/api/today` call. Those cards now each show their own error, and one Retry refetches the call for all of them. The QOTD, calendar, challenge and tests calls stay independent.\n21. **`.clock` is defined on /tests/ only.** It moves to ui.css so this page can use it.\n\n**Extras added**\n22. `Try one now`: a fresh-seed repair of the top mistake, answered in a sheet without leaving Today.\n23. `New one like this` on every test card: a never-seen test of the same shape.\n24. A this-week-versus-last-week recap, with the skills that moved most.\n25. `Add a score`: log a Bluebook practice test or an official SAT, shown in the trend.\n26. An `.ics` export of the SAT date and the study days.\n27. A personalised preview on the plan CTA.\n28. Yesterday's challenge result.\n29. `Report a problem` on the day's questions.\n30. The native share sheet on phones, and copy-link on desktop.\n\n**Open questions resolved**\n- The second daily question is a grid-in. The personal question is `Try one now`.\n- Late answers do move mastery and mistakes.\n- The day's questions use a Check step.\n\n---\n\n## 0. Rules for this page\n\n- Every feature of their dashboard has an equivalent here that does more, and nothing is cut or hidden for looks.\n- **Up next** is the page's main action: it comes first, it is the largest element, and its button is the filled pill.\n  - Other actions are `.btn`, a new shared secondary button: `--tile-2` fill, 40px tall, 10px radius, 600 14px Archivo, ink text.\n  - Lesser links are `.quiet`.\n  - Orange also marks what is the student's or what is live: a selected control, the key's crowd bar, goal fills, open-mistake dots.\n- Labels (`.k`), units, legends, counts and one line of helper text are used wherever they help a student decide.\n- Difficulty is written as a word (`Easy` / `Medium` / `Hard`) with a 3-pip mark (●○○ / ●●○ / ●●●) in ink, never in extra colours.\n\n## 1. Layout\n\nThe content box stays `.page` (max 1120px, `--gutter`). The cards sit in one CSS grid, `#today`, with named areas and a 20px gap.\n\n**Desktop (≥1080px)**, 12 columns:\n```\nhero  ×12\nnext  ×8   | mist ×4\nqotd  ×12             (the two questions side by side, 6 + 6)\nscore ×6   | exam ×6\nstudy ×8   | chal ×4\nplan  ×12\ntests ×12\n```\n\n**Tablet (760–1079px)**, 2 columns: `hero hero / next next / qotd qotd / score exam / study study / mist chal / plan plan / tests tests`. The questions of the day use tabs.\n\n**Phone (<760px, designed at 390px)**, one column: hero, next, qotd, exam, score, mist, study, plan, chal, tests.\n- Card padding drops to 18px 16px, and touch targets are at least 40px.\n- `.page` keeps its 110px bottom padding so the last card clears the tab bar.\n- The QOTD uses tabs, and every sheet or dialog opens as a bottom sheet.\n\n**Cards**\n- `.card`: `--tile` fill, 14px radius, 22px 24px padding.\n- `.card-head`: a flex row with the `.k` label on the left and a meta or action on the right, 14px bottom margin.\n- Up next uses `--wash`. The hero has no fill.\n- Each card is a `<section aria-label>` with an id that the other cards link to: `#next #qotd #exam #score #study #plan #mist #chal #tests`.\n\n**Loading**: a skeleton (`.sk`, static `--tile-2` blocks) at each card's final height, so nothing shifts when data arrives.\n\n**Errors**\n- The cards fed by `/api/today` are next, mist, score, plan, exam, and the hero chips. If that call fails, each of them shows `Couldn't load this.` with a `.btn` Retry. Any one of those Retry buttons refetches `/api/today` and repaints all of them.\n- The QOTD, calendar, challenge and tests cards have their own calls, errors and Retry.\n\n---\n\n## 2. Hero, `#hero`\n\n**Eyebrow**: the local date, upper-cased (`WEDNESDAY, SEPTEMBER 23`), from `Intl.DateTimeFormat('en-US', {weekday:'long', month:'long', day:'numeric'})`, style `.k`.\n\n**Heading** (`h1.h1`): `Good morning, Aziz`.\n- Local hours 5–11 give `Good morning`, 12–17 `Good afternoon`, 18–4 `Good evening`.\n- With no name, the heading reads `Good morning` and is followed by a `.quiet` `Add your name`.\n  - It swaps in an inline field (`.field`, maxlength 24, the same validation as Me), a Save `.btn`, and the helper `Shown on the challenge board`.\n  - Enter saves and Esc cancels. Saving sends `PUT /api/me {name}`, then calls `UI.me(true)` so the avatar in the bar updates. Server errors appear inline.\n\n**Status chips** (`.hero-stats`): each is a link to its card, 32px tall, `--tile` fill.\n- **Study streak**: flame + `4-day study streak`, adding `· best 9` when the best is higher. At zero it reads `No streak yet`. Links to `#study`.\n- **Minutes today**: `38 of 60 min today`, or `38 min today` with no goal. Links to `#study`.\n- **SAT**: `SAT in 10 days`. With no date it reads `Set your SAT date`. It turns ink-bold at 7 days or fewer. Links to `#exam`.\n- **Plan** (only with a plan): `Plan · 1 of 2 done`, or `Plan · rest day`. Links to `#next`.\n\n**Layout**: at desktop the chips sit right-aligned on the heading's baseline. At phone they wrap under it.\n\n**Better than theirs**: the same greeting and date, with the decorative illustration replaced by four live facts that each lead somewhere.\n\n---\n\n## 3. Up next and the Today list, `#next`\n\n**Header**: `UP NEXT` on the left. On the right, when a plan is set: `Today in your plan · 60 min`, `Test day in your plan · 70 min` or `Rest day in your plan`.\n\n### 3a. The next thing, first match wins\n\n**1. A running timed test** (`today.open.test`, timed, `seconds_left > 0`)\n- Title `Module in progress`, or `Section · module 2 in progress`.\n- Meta `14:22 left · 9 of 22 answered`.\n- Helper `The clock keeps running while you're away.`\n- Pill `Resume`, which opens `/test/?s=`.\n- **When the clock has run out**, the title is `Time's up on module 1`.\n  - Module 1 of a section: pill `Continue to module 2`, with the helper `Module 1 is handed in as it stands. Module 2 gets its own 35 minutes.`\n  - Otherwise: pill `See results`. Opening the test window hands the module in.\n\n**2. An unfinished drill** (`today.open.drill`)\n- The pill is `Continue`, with meta `7 of 38 answered`, or `12 answered` for an endless set.\n- A timed set adds `· 6:10 left`.\n- The set's own topic chips are shown.\n- A `.btn` `Start a new set` reveals the controls below.\n- When `today.open.drills > 1`, a `.quiet` `+2 more unfinished sets` links to `/practice/#unfinished`.\n\n**3. A plan test day** (`kind === 'test'`, and the test task is not done)\n- Title `Module test` / `Section test`, with meta `22 questions · 35 min` / `44 questions · 70 min`.\n- Timed/Untimed toggle (`.clock`, default Timed).\n- Pill `Start test`: `POST /api/mock/new {full, timed}`, then `/test/?s=`.\n- `.quiet` `I took a Bluebook test instead` opens Add a score (§9). Saving it marks the test task done.\n\n**4. The coach's set**\n- **Reason line** (15px, ink), from `coach.why`:\n  - `mistakes`: `3 open mistakes in these skills`\n  - `new`: `New skills, the biggest domains first`\n  - `weak`: `Your weakest skills right now`\n  - `review`: `Strong skills you haven't worked on for 10+ days`\n  - With a plan focus, it appends `· Algebra is on focus`.\n- **Topic chips**: `UI.chip(slug)` on a paper fill, each with its open-trap dots (up to 3) and a 2px mastery bar underneath (`.mbar`). The `aria-label` reads `Probability, 12 answered, 2 open mistakes`.\n- **Count**: a `.choices` group of `5 · 10 · 22 · {coach.count} · Endless`, deduplicated. The coach's count is selected. `Endless` sends `count:null`.\n- **Clock**: the `.clock` Timed/Untimed toggle, default Untimed.\n- **Estimate**: meta `{n} questions · {minutesFor(n)} min`, updated live. Endless shows `as many as you like`.\n- **More options**: a `.quiet` link to `/practice/?topics=a,b,c&count=n&timed=0|1`, which opens the builder with this set preselected.\n- **Start**: the pill. It sends `POST /api/drill {topics, count, timed, minutes: timed ? minutesFor(count) : null, source:'coach'}`, then goes to `/practice/session/?id=`.\n\n**Rest day**\n- Title `Rest day`, with the helper `Your plan has today off. Rest is part of it.`\n- The coach's set is shown underneath, and its pill reads `Practice anyway`.\n\n**Goal met** (today's minutes ≥ `profile.minutes`)\n- A line with a check: `Today's goal done · 64 of 60 min`.\n- The coach's set is still offered, with the pill reading `Keep going`.\n\n**New student**\n- The coach's `new` pick.\n- A `.quiet` `Or start from a score: Diagnostic · 20 questions · 32 min`, linking to `/diagnostic/`.\n\n**Start fails**: an inline `.error` in the card, `aria-busy` is cleared, and the controls keep their values.\n\n### 3b. The Today list\n\nThe list sits under the next thing, separated by a hairline (`--line`).\n\n**With a plan**, two groups:\n- **Plan** header: `PLAN · 1 of 2 done · 22 min left of 60`.\n  - When every task is done: `All done for today ✓ · 64 of 60 min`, or `All done · all time targets reached` when minutes ≥ goal.\n- **Daily** header: `DAILY`. Its rows are the questions of the day and the challenge. They are not counted in the plan's figures.\n\n**Without a plan**, one group, `TODAY · 1 of 3 done`:\n- Rows: the coach's set, the questions of the day, and the challenge.\n- A `.quiet` at the end: `Build a plan to set a daily goal`.\n\n**A row, left to right**\n- **Status box**:\n  - done: an amber filled check,\n  - in progress: an ink ring with the fraction filled,\n  - to do: an empty ring,\n  - skipped: a faint dash, with the row at 55% opacity.\n- **Title and type tag**: `Practice set` · `Module test` · `Section test` · `Day's questions` · `Challenge`.\n- **Meta**:\n  - practice: `14 of 38 questions · 22 min`\n  - test: `35 min · timed`\n  - day's questions: `1 of 2`\n  - challenge: `Not started`, `4 of 10 · 9:12 left`, or `#12 of 124`\n- **`Why`**: a `.quiet` toggle that opens one line of reason, and turns into `Hide` while open.\n  - Practice: the coach's reason.\n  - Test: `Your week's test, on its last study day`, or `A test every study day, as you set it`.\n  - Day's questions: `The same two for everyone, one try each`.\n- **Action** (`.btn`): `Start`, `Continue`, `Resume`, or `Practice again` once done (a fresh coach set).\n- **⋯ menu** (plan tasks only; label `More actions for {title}`):\n  - `Skip for today`, or `Undo skip`.\n  - On a test only: `Move to…`, listing the later study days up to next Sunday (`Thu, Sep 24`). With none, it reads `No study day left before the exam`.\n\n**Completion rules**: derived from what the student did, so there is no checkbox to forget or to fake.\n- **Practice task**: non-test answers today (drill, challenge and day's questions) ≥ the planned count.\n- **Test task**: a module or section finished today, or an outside score added for today.\n- **Day's questions**: both slots answered.\n- **Challenge**: finished.\n\n**Skip and Move**\n- Both send `POST /api/plan/mark`.\n- A skipped day shows as skipped in the week strip, not as missed.\n- A moved test makes today a practice day and makes the chosen day a test day, through the marks in `UI.plan.dayOf`.\n- The toasts are polite live-region lines under the list: `Skipped for today · Undo` and `Test moved to Thu · Undo`.\n- If a mark fails, the row reverts and shows `Not saved. Try again.`\n\n**Better than theirs**: their list needs manual ticks, and its only reschedule is a later day in the same week. Ours ticks itself from real work, shows progress inside each task, and shares one list with the next action.\n\n---\n\n## 4. Mistakes, `#mist`\n\nTheirs has no equivalent on the dashboard.\n\n**Header**: `MISTAKES` on the left, `All mistakes` (`.quiet`, to `/mistakes/`) on the right.\n\n**Figures**\n- The open count in big type (`.num` 44px), labelled `open`.\n- Meta under it: `3 fixed today · 12 this week · 2 new today`.\n\n**Top 5 open traps** (`today.traps.top`, ordered by hits, then by most recent). Each row shows:\n- an orange dot,\n- the misconception label (`Added the percentages instead of multiplying them`),\n- `×3` when hits > 1,\n- two owed pips, filled for each clean answer already given (the `.owed` pattern from /mistakes/),\n- the topic glyph with its short name in mono 11px.\n\n**Row actions**\n- The whole row is a button, `Fix · 2 questions`: `POST /api/drill {mistakes:true, templates:[template]}`, which opens the session.\n- The first row also has a `.btn` **`Try one now`**, which opens `dialog.sheet#tryOne`:\n  - It sends `POST /api/drill {mistakes:true, templates:[template], count:1, source:'try'}` and renders the question with `UI.question`, answered in one tap like practice.\n  - The feedback shows the key, the mistake named, the rationale, and the owed pips updating.\n  - Buttons: `Another` (`/drill/{id}/next`, which serves the repair if one is due) and `Done`. `Done` calls `/drill/{id}/finish`, closes the sheet and refetches `/today`.\n\n**Footer**\n- `.btn` `Fix all · {templates×2} questions` (`POST /api/drill {mistakes:true}`).\n- When more than 5 are open, a link `+18 more` to `/mistakes/`.\n\n**Empty**\n- `No open mistakes.`\n- The helper: `Every wrong answer lands here under the mistake it names, and leaves after two clean answers.`\n- A `.quiet` `Practice` link to `#next`.\n\n---\n\n## 5. Questions of the day, `#qotd`\n\nTheirs gives one R&W and one Math. We have no R&W bank, so ours are **one multiple-choice and one grid-in Math question**. That covers both SAT Math formats, and grid-in entry rules are where points leak unnoticed. Both are the same for every student on the same local date.\n\n### Header\n- Left: `QUESTIONS OF THE DAY` · `Wed, Sep 23`.\n- Right: the day's-question streak, a flame with `3 days in a row`, or `Start a streak`. The `aria-label` reads `Day's questions streak, 3 days`.\n\n### Desktop (≥1080px): two columns, both visible\n- Each column has a slot label with its status mark: `MULTIPLE CHOICE` / `GRID-IN`, with a hollow ring when unanswered, an amber filled check when right, an ink cross when wrong.\n- Then the question.\n\n### Below 1080px: tabs\n- A `role=tablist` with the same two labels and marks.\n- It opens on the first unanswered slot.\n- Left and right arrow keys switch tabs.\n\n### The question (shared `UI.question`)\n\n**Skill line**: glyph, topic short name, `· Medium ●●○`, and the skill label (e.g. `Percent of a percent`).\n\n**Body**: the figure or table, then the stem in Source Serif 4.\n\n**Multiple choice uses confirm mode**\n- A tap selects (`.picked`), and a `.btn` `Check` appears under the options. Tapping another option moves the selection.\n- A–D or 1–4 select while the column has focus-within, and Enter checks.\n- The reason: one attempt a day, so a misclick must not lose it. Theirs has the same Check step.\n\n**Grid-in**\n- The input, Check and the answer-preview line.\n- Placeholder `e.g. 2/3, -1.5, 460`.\n- A `.quiet` `Grid-in rules` opens the SAT's entry rules in a popover: up to 5 characters for a positive answer and 6 for a negative one, fractions or decimals, no mixed numbers.\n\n**Timing**: `ms` is measured from first render to Check and sent with the answer.\n\n### After answering, in order\n1. **The key is highlighted**, and the student's wrong pick is struck.\n   - The named mistake is shown.\n   - The rationale is open when the answer was wrong, and behind `Why` when it was right.\n   - Theirs never shows the key.\n2. **Every option explained and counted.** Each option row gets two additions.\n   - A second line in 13.5px ink-soft: `Correct` for the key, and each distractor's misconception for the others (from `choices_explained`, e.g. `Took 70% of 75 as 70 − 75`).\n   - A thin bar along the row's bottom edge, amber on the key and ink at 15% on the others, with `23%` in mono at the right.\n   - The summary line: `62% of 1,204 got it right · most common trap: B (23%)`.\n3. **Grid-in crowd**:\n   - `% right`, then `Most common wrong answers: 14 (9%) · 1.4 (6%)`, with values grouped after normalising (`0.5` = `1/2`).\n   - With fewer than 5 answers the line reads `You're one of the first 4 today`, and no per-option percentages are shown.\n4. **Actions row** (`.btn`s):\n   - `5 more like this`: `POST /api/drill {like:{day, slot}, count:5}`. The same template on fresh seeds, then the session page.\n   - `Harder · Percentages`: `POST /api/drill {topics:[q.topic], difficulty:['hard'], count:5}`. When the day's question is already hard, it reads `More hard · Percentages`.\n   - `Save` / `Saved`: a bookmark toggle, `POST /api/saved {qotd:day, slot, on}`.\n   - `Share`: `navigator.share` on a coarse pointer when available. Otherwise it copies `{origin}/?day=YYYY-MM-DD` and shows `Link copied`; if the copy fails, the URL is selected in a read-only field.\n   - `Report a problem`: the shared report sheet, from the Session section.\n\n### Past days strip (card footer)\n- `PAST DAYS`, then 7 buttons for the 7 days before today. Each shows a weekday letter and two mini marks (MC, grid-in): amber filled for right, an ink stroke for wrong, hollow for not answered.\n- `Older…` opens a date input, allowing up to 30 days back.\n- A day opens **archive mode**:\n  - The header date becomes `Tue, Sep 22`, with the tag `Late · not counted in the crowd or streak`.\n  - A `.quiet` `Back to today` appears.\n  - The body is the same, and the crowd shown is that day's on-time crowd.\n- Loading the page with `?day=` opens archive mode. A day more than 30 days back, or in the future, falls back to today with the note `That day is out of range. Here is today's.`\n\n### States\n- **Loading**: skeletons of the slot labels, 3 stem lines and 4 option rows per column.\n- **Load error**: `Couldn't load today's questions.` with a Retry.\n- **Answer failed**: `ctrl.unlock()`, the selection is kept, and an inline `Not sent. Try again.` appears.\n- **Midnight rollover while open**: a 60-second check of the local date. When it changes, the page refetches everything and shows the note `It's a new day. Here are today's questions.`\n  - An answer to yesterday's question sent within 60 minutes after local midnight counts on time for that day, crowd and streak included.\n  - Later than that, it is filed as late.\n\n---\n\n## 6. Study time and calendar, `#study`\n\n### Figures, a row of four\n- `38m` **Today**, then `31 questions · 71% right`. With a goal, `of 60m` and a 4px amber goal bar. On a plan rest day it reads `Rest day`.\n- `2h 5m` **This week** (Monday to Sunday). With a goal, `of 5h` and a bar; the weekly goal is the minutes times the study days.\n- `4h 12m` **This month**.\n- `9` **Active days** this month.\n- Durations use `UI.dur(min)`: `0m`, `45m`, `1h 12m`.\n\n### Daily goal (`.quiet` `Set a daily goal`, or `Goal 60 min ✎`)\n- A popover with `.choices` `15 · 30 · 45 · 60 · 90 · 120 · 180 · 240 min`.\n- It sends `PUT /api/me {minutes}`, the same field as plan step 3.\n- The helper line: `Your plan uses this as a study day's length.`\n\n### What counts as study time (server)\n- Drill and challenge answer times, each capped at 10 minutes.\n- The day's questions' answer times.\n- Every finished test sitting's elapsed time, capped per module at the module clock plus 1 minute (90 minutes when untimed).\n- Everything is counted on the student's local day (`X-Tz`), which fixes their timezone bug.\n- `days`, `/api/today`, `/api/calendar` and `/api/me` all use this one function, so every number agrees.\n\n### Month calendar (the shared `UI.calendar`, also used by /plan/)\n\n**Header**: `September 2026` with ‹ › buttons.\n- Back stops at the month of the first activity.\n- Forward stops at the exam's month, or the current month without an exam.\n- `Today` jumps back when the calendar is showing another month.\n\n**Grid**: `Mo Tu We Th Fr Sa Su`, 40px cells (34px at 390px), 6px radius.\n\n**Heat**, from that day's minutes:\n- With a goal: under 50% of it, 50% to under 100%, and 100% or more.\n- Without a goal: 1–14, 15–44 and 45+ minutes.\n- The three levels are `--wash`, `--wash-2`, and `--amber` with ink-deep text.\n\n**Other marks**\n- Today: a 1.5px ink ring.\n- Days from other months: `--faint`.\n- Plan days: a 5px dot for practice, a 6×4 square for a test, and a skipped day's dot with a slash.\n- The exam day: an amber outline and `SAT` in 9px mono.\n- `aria-label` on every cell, e.g. `Mon Sep 21, 42 minutes, 31 questions, 71% right`.\n\n**Legend**, mono 11px: `Less ▢▢▢■ More · • study day · ▪ test day · SAT`.\n\n**Day detail**: an inline panel, to the right of the grid at desktop and under it at phone. Today is selected by default, and a tapped cell gets an amber ring.\n- **A past day or today**: `Mon, Sep 21 · 42 min · 31 questions · 71% right`, then that day's sittings as links.\n  - They read `Practice · 10/12`, `Module · 520–600`, `Challenge · #4 · 9/10` or `Day's questions · ✓ ✗`.\n  - With a plan, the day's state: `Plan: done` / `partial` / `missed` / `skipped`.\n  - An empty day reads `Nothing that day.`\n- **A future plan day**: `Planned · Practice · 38 questions` or `Planned · Module test`, plus `Open in plan` (`/plan/?day=`).\n- **Keyboard**: roving focus with the arrow keys, Home and End for the ends of the week, Page Up and Page Down for the month. Enter selects.\n\n### This week vs last\n- A row of deltas: `124 questions (+30) · 71% right (+4) · 3h 10m (+45m) · 6 fixed · 2 new mistakes`.\n- **Moved**: up to 3 topics that rose and 2 that fell, where mastery changed by at least 0.05 since Monday, e.g. `Percentages ▲ · Circles ▲ · Probability ▼`. Each is a chip linking to `/practice/?topics=`.\n\n**Footer**: `4-day study streak · best 9`.\n\n**New student**: every figure reads `0m`, today is ringed, and the day detail reads `Your first answer starts the streak.`\n\n---\n\n## 7. Daily challenge, `#chal`\n\n**Header**: `DAILY CHALLENGE` on the left, `124 in today` on the right.\n\n**Body**\n- `10 questions · 16 min · the same for everyone · ranked by right answers, then time`.\n- The top 5 from the board: rank, name, right/10, mm:ss.\n- Once the student has finished, their own row is added, highlighted with `--wash` and an amber edge.\n\n**Action by state**\n- **Not started**: `.btn` `Start` (`POST /api/challenge/start`, then the session page).\n- **In progress**: `.btn` `Resume · 4 of 10 · 9:12 left`.\n- **Time's up**: `.btn` `See your result`.\n- **Finished**: a big `#12`, meta `of 124 · 8/10 · 11:32`, and a `.quiet` `Full board` to `/challenge/`.\n\n**Footer**\n- `3-day challenge streak` when it is 2 or more.\n- `Yesterday: #4 of 30 · 9/10`, linking to `/challenge/?day=`.\n\n**Error**: `Couldn't load the challenge.` with a Retry.\n\n---\n\n## 8. Plan, `#plan`\n\n### No plan, or the exam has passed\n\nA full-width CTA:\n- Eyebrow `STUDY PLAN`, title `Build your study plan`.\n- The four steps as a numbered row, each a link to its step (`/plan/?step=N`): `1 Where you are · 2 Where you're going · 3 Time you have · 4 What to focus on`.\n- **Preview from the student's own data**, when there is any: `Starts from 520–600 · first up: Probability, Nonlinear functions · 29 open mistakes to fix`.\n- Three bullets:\n  - `A set for every study day, picked from your results`\n  - `Rest days you choose, and a test each week or every day`\n  - `Redrawn every day, so a missed day never piles up`\n- Helper `About a minute. Change it any time. Free, as many as you like.`\n- `.btn` `Build my plan →`.\n\n### Plan set\n\n**Header**: `YOUR PLAN` on the left. On the right: `Open plan` · `Change plan` (`/plan/?edit=1`) · `Add to calendar`.\n\n**Stat row**, four compact figures:\n- `Day 12 of 45`\n- `20% done · 9 of 45 study days`\n- `10 days to the SAT`\n- `+140 to target`, with `560 → 700` under it\n\n**Week strip**\n- A pager: ‹ `Week 3 of 7` ›, with a `This week` jump when viewing another week.\n- 7 columns, Monday to Sunday. Each column has:\n  - the weekday and date,\n  - a kind mark: a practice circle, a test square, a rest dash, or the amber SAT,\n  - a state:\n    - done: filled,\n    - partial: an arc showing the fraction of the planned count,\n    - missed: a hollow faint mark on a past study day with nothing done,\n    - skipped: a dash through the mark,\n    - future: an outline,\n  - an ink ring on today,\n  - the planned load: `38q` or `Module`.\n- Tapping a day selects it in the calendar (§6) and scrolls to it.\n\n**Row under the strip**\n- `Next test: Fri · Module`.\n- `Focus: Algebra · Geometry & Trig` when any domain is on focus.\n\n**Behind**: shown when 2 or more of the last 7 study days were missed (skipped days don't count). It reads `2 study days missed this week. Nothing piles up: each day is redrawn from your results. If the days are too long, shorten them.` with the `.btn` `Change daily time` (`/plan/?step=2`).\n\n**Add to calendar** builds an `.ics` file in the client:\n- An all-day `SAT` event on the exam date, with an alarm at 18:00 the evening before.\n- When a plan is set, a weekly repeating event on the study days (`BYDAY` from `profile.days`) at a time the student picks (default 17:00), lasting `profile.minutes`, until the day before the exam.\n- The file is downloaded as `sat-freshman.ics`.\n\n---\n\n## 9. Score, `#score`\n\n**Header**: `SCORE` on the left, `Target 700 ✎` (`.quiet`) on the right.\n\n**Band**\n- The latest band in `.num` 48px, e.g. `520–600`.\n- Meta `Math · Section · Sep 21`, linking to that report.\n- When the band is capped: `Capped at 580: module 2 was the easier one`.\n\n**SAT total** (when `rw_now` is set): `SAT total 1130–1210 · R&W 610 (yours)`, and `Target 1400` when `rw_target` is set. Without an R&W score it shows a `.quiet` `Add your R&W score for a total`.\n\n**Scale bar**\n- 200 to 800 across the card, 8px, on a `--mat` track.\n- The band is an ink-30% segment with a 6px dot at its middle.\n- The target is a 2px amber tick labelled `700`. The plan's start is a faint tick labelled `Start 560`.\n- The ends read `200` and `800` in mono.\n\n**Gap**\n- `+140 to target · about 20 a week` = (target − band middle) ÷ weeks to the exam. Without a date, the pace is dropped.\n- At or past the target: `At your target ✓`.\n\n**Drift** (plan set; the mean middle of the last 3 scores, counting added Math scores, differs from `profile.current` by 30 or more)\n- `Your last 3 tests average 610; your plan started from 560.`\n- `.btn` `Update the plan's start to 610` sends `PUT /api/me {current:610}`.\n- `.quiet` `Not now` hides the line until a newer score arrives (localStorage `satf.drift.{newest session id}`, try/catch).\n\n**Trend** (`UI.bandChart`, lifted from the /results/ chart)\n- The last 8 scores, 72px tall: bands as bars with their middles joined, the newest in amber, and a dashed amber target line.\n- Added scores are hollow ink diamonds.\n- Legend: `▮ our tests · ◇ Bluebook / official · -- target`.\n- With 1 score: `1 scored sitting`. The trend links to `/results/`.\n\n**Domains**\n- 4 rows: the domain's short name, its mastery bar, `71% right of 120` in mono, and an orange dot with a count when it has open traps.\n- Each row links to `/practice/?domain=`.\n- The domain with the most traps gets the tag `Most points to fix`.\n\n**Actions**: `.quiet` `Add a score`.\n\n### Target dialog, `dialog.sheet#targetSheet`\n- Title `Target`, subtitle `Math, 200 to 800`.\n- **Math target**:\n  - a number input (type=number, step 10, 200–800) kept in sync with a range slider,\n  - quick `.choices` of `500 550 600 650 700 750 800`.\n- The reference line `Latest 520–600 · Plan start 560`.\n- The note `Below your latest band` when the target is under the band's low end. It is still allowed.\n- **SAT total (optional)**: `R&W now` and `R&W target`, each 200–800 in steps of 10, with the helper `We only test Math. Add your R&W from Bluebook or a real SAT to see your total.` With both set, a live `Total target 1400`.\n- **Buttons**: `Clear target` (`.quiet`, left), `Cancel` (`.quiet`), and `Save` (`.btn`, disabled until something changes).\n  - Save sends `PUT /api/me {target, rw_now, rw_target}` and repaints the card, the plan card and the hero without a reload.\n- **Used everywhere**: the same `profile.target` is read by Plan step 2 and Me.\n- Esc or a backdrop click cancels, and focus returns to the pencil.\n\n### Add a score, `dialog.sheet#scoreSheet`\n- Source, a `.choices` group: `Bluebook practice test · Official SAT · Other`.\n- The date, a date input no later than today.\n- `Math`, required, 200–800 in steps of 10. `R&W`, optional.\n- `Save` sends `POST /api/scores`.\n- `Scores you added` lists them under the trend, each with × to delete (confirm: `Delete this score?`).\n- When the student has no `rw_now`, a saved R&W offers `Use 610 as your R&W now`.\n\n### Empty (no scored sitting)\n- `No score yet`. With a plan's `current`, `Your estimate: 560` appears faint on the scale.\n- `.btn`s: `Module · 22 questions · 35 min` (`POST /api/mock/new {full:false}`) and `Diagnostic · 20 questions · 32 min` (`/diagnostic/`), plus `Add a score`.\n- The target stays editable.\n- Any module, the diagnostic, or an added score gives a score. Theirs needs a full test.\n\n---\n\n## 10. SAT countdown, `#exam`\n\n**Header**: `SAT` on the left. On the right, a date trigger: `Sat, Oct 3, 2026 ▾` (`aria-haspopup=listbox`).\n\n### Date popover (`UI.popover`, a bottom sheet under 760px)\n- Only the **upcoming** official dates from `UI.SAT_DATES` (moved out of /plan/). Each reads `Oct 3, 2026 · Sat · in 10 days`, with a check on the current one.\n- A divider, then `Another date…`, which reveals `<input type=date min=today>`.\n- `Remove date`.\n- Choosing sends `PUT /api/me {exam_date}` and repaints the countdown, the plan card, the hero and the score pace.\n- **Keyboard**: up and down arrows move, Enter chooses, and Esc or an outside click closes and returns focus. Their popover ignored Esc.\n\n### Live countdown\n- Four boxes, `DD : HH : MM : SS` (`.num` 56px, 40px at phone, tabular), labelled `DAYS HOURS MIN SEC` in `.k`. Days use 3 digits at 100 or more.\n- It counts to 08:00 local time on the exam date, with the caption `to 8:00 AM, when doors close`.\n- It ticks on a timer aligned to the second and pauses while the page is hidden.\n- `role=timer` with `aria-live=off`, plus a visually hidden sentence: `10 days until your SAT on Saturday, October 3`.\n\n### Plan line\n- `7 study days and 1 test left in your plan`, counted with `UI.plan.dayOf`, marks included.\n- With no plan: `Build a plan for these 10 days` → `/plan/`.\n- `Add to calendar`: the same `.ics` as §8.\n\n### Test-day checklist (7 days or fewer left)\n- A `<details>`, open on the exam's eve and on exam day. Its checkboxes:\n  - `Bluebook installed and updated`\n  - `Exam setup done in Bluebook (it gives you your admission ticket)`\n  - `Admission ticket`\n  - `Acceptable photo ID`\n  - `Pencils or pens for scratch work`\n  - `Device charged, charger packed`\n  - `Calculator, optional: Desmos is built in`\n- A count in the summary: `Test-day checklist · 3 of 7`.\n- Ticks are stored in localStorage `satf.checklist.{exam_date}`, with try/catch.\n\n### States\n- **No date**:\n  - The title `When is your SAT?`.\n  - The next 4 official dates as one-tap `.choices`.\n  - `Another date`.\n- **Exam day**:\n  - `Today. Doors close at 8:00 AM.`\n  - The checklist open.\n  - Meta `Good luck`.\n- **Passed**:\n  - `Your SAT was Oct 3.`\n  - `.btn` `Add your official score` (Add a score, source Official).\n  - `Pick your next date`, with the next official date preselected in the trigger.\n  - The plan card shows its CTA until a new date is set.\n\n---\n\n## 11. Recent tests, `#tests`\n\n**Header**: `RECENT TESTS` on the left, `All tests (N)` → `/tests/` on the right.\n\n**Layout**: 3 per row at desktop, 2 at tablet, a stacked list at phone.\n- Every open test comes first, then the 6 newest finished ones.\n- `.btn` `Show 6 more` loads the next page in place (`offset`).\n\n### Open test card (amber inside edge, `IN PROGRESS`)\n- `Section · module 2` / `Module` / `Diagnostic`.\n- `14:22 left · 9 of 22 answered`, or `Untimed · 9 of 22 answered`.\n- `.btn` `Resume`.\n- When the time is up, it reads `Time's up`, with `Continue to module 2` or `See results`.\n\n### Finished test card (the shared sitting card)\n- **Top line**: `Sep 21 · Section · 44 questions`.\n- **Score**: the band in `.num` 34px, e.g. `520–600`, with the route tag `Harder module 2`, or `Easier module 2 · capped 580`.\n- **Meta**: `31/44 right · 64 min`.\n- **Mini scale**: 200–800, with the band and the target tick.\n- **Missed questions**, one row per module: `M1` then chips of question numbers.\n  - A wrong answer is a filled chip and a blank is an outlined chip.\n  - Up to 10 are shown, then `+N`.\n  - The legend reads `■ wrong ▢ blank`.\n  - Each chip links to `/results/report/?id=…&q=M1-3`.\n- **Footer**:\n  - `.btn` `Review` → `/results/report/?id=`.\n  - `.btn` `Fix 13`: `POST /api/drill {from_session:id}`, the misses as fresh questions on the same templates.\n  - `.btn` `New one like this`: `POST /api/mock/new {full: kind==='mock'}`, a never-seen test of the same shape.\n  - With no misses, Fix is hidden and `All right` is shown.\n\n### Diagnostic not signed up for\n- `Diagnostic · Sep 21`, then `Sign up to see your results`, linking to `/diagnostic/signup.html?s=`.\n- No band, no misses and no Fix, which matches the report's gate.\n\n### Empty\n- `No tests yet.`\n- `.btn` `Module · 22 questions · 35 min`, `.btn` `Section · 44 questions · 70 min`, and `Add a score`.\n\n---\n\n## 12. Data and refresh\n\n**On load, in parallel**\n- `/api/today`\n- `/api/qotd`, or `/api/qotd?day=` in archive mode\n- `/api/calendar?month=YYYY-MM`\n- `/api/challenge`\n- `/api/tests/recent?limit=6`\n\nEach card paints when its own call resolves. The hero's date and greeting paint from the client clock before any call returns.\n\n**After a day's-question answer**: `UI.me(true)` (the bar's streak), then refetch `/today` (minutes, the Today list and the hero chips), then patch today's calendar cell and the day detail.\n\n**On return**\n- On `visibilitychange` to visible, and on `pageshow` from the back-forward cache: refetch `/today`, `/challenge` and `/tests/recent`.\n- If the local date has changed: refetch everything.\n\n**Timezone**\n- Every call sends `X-Tz`. Every \"today\", \"this week\" and \"this month\" is computed by the server in that zone.\n- The countdown and the greeting use the client clock.\n\n**One source per number**\n- The study streak, minutes and questions come from `progress.days`.\n- The target comes from `profile.target`.\n- The plan day kinds come from `UI.plan.dayOf(d, profile, marks)`.\n\n---\n\n## 13. States matrix\n\n| state | what Today shows |\n|---|---|\n| brand-new (no attempts, no profile) | Greeting + `Add your name`; chips `No streak yet · 0 min today · Set your SAT date`; Up next = coach `new` pick + Diagnostic link; Today list `0 of 3`; both day's questions; Mistakes empty helper; calendar empty, today ringed; Challenge Start + board; Plan CTA (no preview); Score `No score yet` + doors; Countdown `When is your SAT?`; Tests empty + doors |\n| some practice, no plan, no test | reason `mistakes`/`weak`; Today list with coach set progress; Mistakes top 5; heat; week recap; Score empty with doors; Plan CTA with preview |\n| plan set, practice day | header plan context; Plan group `N of M · X min left`; goal bars; week strip with states; stat row; countdown plan line |\n| plan test day, not tested | Up next = Start test (Timed) + `I took a Bluebook test instead`; Today list test row with Move to… |\n| plan rest day | `Rest day` + pill `Practice anyway`; Plan group `rest day`; goal figure `Rest day` |\n| plan all done | `All done for today ✓ · 64 of 60 min`; pill `Keep going` |\n| running timed test | Up next = `Resume · 14:22 left`; Tests shows the IN PROGRESS card first |\n| timed test out of time | Up next `Time's up on module 1` + `Continue to module 2` / `See results` |\n| unfinished drill | Up next `Continue · 7 of 38 answered` (+ `+N more unfinished sets`) |\n| behind (2+ missed study days in 7) | Plan card behind line + `Change daily time` |\n| score drift ≥ 30 | Score card drift line + `Update the plan's start` / `Not now` |\n| lots of history | Mistakes top 5 + `+N more`; score trend 8 points; calendar back to first activity; tests 6 + `Show 6 more` + `All tests (N)`; week pager across the plan |\n| exam ≤ 7 days | checklist; hero SAT chip ink-bold |\n| exam day | `Today. Doors close at 8:00 AM.`, checklist open |\n| exam passed | `Your SAT was …` + `Add your official score` + next date; Plan CTA returns |\n| diagnostic not signed up | tests card `Sign up to see your results`; the score ignores it |\n| `/today` fails | next, mist, score, plan, exam, hero chips each show `Couldn't load this.` + Retry (one refetch); QOTD, calendar, challenge, tests unaffected |\n| another call fails | only that card shows its error + Retry |\n| site storage blocked | shell's existing notice; checklist ticks and drift snooze just don't persist |\n\n---\n\n## 14. Accessibility and motion\n\n- Each card is a landmark `section` with an `aria-label`.\n- The tabs use `role=tablist` and arrow keys.\n- Dialogs are `<dialog>`, which traps focus and returns it to the opener.\n- The popover is a `listbox` with `aria-activedescendant`.\n- Calendar cells are buttons with full `aria-label`s, so heat is never the only signal.\n- Status boxes carry text: `Done`, `14 of 38`, `Skipped`.\n- Verdicts keep `role=status`. The countdown is not announced every second.\n- Motion is entry only (`.rise`, staggered by row), and nothing loops. `prefers-reduced-motion` turns off the rises and the count-up.\n- Touch targets are at least 40px at phone width.\n",
+  "extras": [
+   {
+    "feature": "Today list that ticks itself",
+    "why": "Their Today's Plan card needs manual checkboxes (easy to forget, easy to fake). Ours marks a task done from what the student actually did, shows progress inside each task (14 of 38), and works for students without a plan too."
+   },
+   {
+    "feature": "Every option explained and counted after the day's questions",
+    "why": "Item.reasons names the misconception behind each wrong option, so each option row shows both what picking it means and how many picked it (23% took 70% of 75 as 70 - 75). A bank without labelled distractors can only report % right."
+   },
+   {
+    "feature": "5 more like this / Harder in the same topic from the day's question",
+    "why": "The same template on fresh seeds never runs out, so a student who misses the day's question can drill that exact pattern at once. Their More practice goes to a generic bank."
+   },
+   {
+    "feature": "Grid-in of the day next to the multiple-choice one",
+    "why": "It fills their two-question slot honestly without an R&W bank, and covers the SAT's other Math format, where entry rules cost points that multiple-choice practice never exercises."
+   },
+   {
+    "feature": "Past days of the day's questions (30 days, shareable ?day= link)",
+    "why": "A day's question is regenerated from the date, so a missed day stays available and a link shows a friend the same question."
+   },
+   {
+    "feature": "Try one now: a fresh-seed repair of the top mistake in a sheet",
+    "why": "The student closes a named mistake without leaving Today. Only a generator can make a new question of that exact misconception on demand."
+   },
+   {
+    "feature": "Running timed test first in Up next",
+    "why": "The server clock keeps running while the student is away; Today says so and leads them back with the time left. Theirs lists nothing to resume."
+   },
+   {
+    "feature": "Fix N and New one like this on every test card",
+    "why": "Misses become fresh questions on the same templates in one tap, and a never-seen test of the same shape is always available. Their card only offers Review."
+   },
+   {
+    "feature": "Missed question numbers per module, wrong and blank told apart, each linking to its review",
+    "why": "Their list mixes wrong and unanswered in one red chip and the chips are not clickable."
+   },
+   {
+    "feature": "Mistakes card with named misconceptions, hit counts and owed pips",
+    "why": "Our strongest asset on the home page: what keeps catching you, and how close each mistake is to closed."
+   },
+   {
+    "feature": "Tap a calendar day for its detail, with plan state",
+    "why": "Minutes, questions, accuracy, that day's sittings as links and whether the plan day was done, partial, missed or skipped. Their cells are buttons that do nothing."
+   },
+   {
+    "feature": "Daily goal settable on Today, with goal-relative heat and weekly goal",
+    "why": "Study time means something against the student's own goal, and it is the same field the plan uses."
+   },
+   {
+    "feature": "This week vs last week, with the skills that moved",
+    "why": "Mastery is recomputable at any point in time from attempts, so the page can say Percentages went up and Probability slipped this week. Theirs has no week at all on the dashboard."
+   },
+   {
+    "feature": "Plan week strip with done / partial / missed / skipped, a week pager, plan-complete % and a behind line",
+    "why": "It shows at a glance whether the student is on pace, and says what to change, without the fake-progress build screen theirs shows."
+   },
+   {
+    "feature": "Move a test day and skip a task from Today",
+    "why": "Real schedules change. Theirs can only move a task to a later day in the same week, and only from the plan page."
+   },
+   {
+    "feature": "Score scale with band, target, plan start, pace, drift prompt and trend",
+    "why": "It answers how far am I, how fast must I move, and whether the plan's start is stale. Theirs shows 0 until a full test and a target dialog that contradicts it."
+   },
+   {
+    "feature": "SAT total from an optional R&W score, and one target shared everywhere",
+    "why": "Students think in a 1600 total. Ours shows it next to the Math band, and the target cannot drift between pages as theirs does."
+   },
+   {
+    "feature": "Add a score (Bluebook practice test or official SAT)",
+    "why": "Many students also take Bluebook tests; logging them puts real scores on the trend, can mark a plan test day done and can calibrate the plan's start."
+   },
+   {
+    "feature": "Countdown to doors-close with study days and tests left, upcoming official dates only, custom date, .ics export",
+    "why": "Their picker offers passed dates and no custom date. Ours turns days into plan units and puts the SAT and study days in the student's own calendar."
+   },
+   {
+    "feature": "Test-day checklist in the final week",
+    "why": "Practical logistics students forget (Bluebook exam setup, admission ticket, ID), stored per exam date."
+   },
+   {
+    "feature": "Daily challenge on Today with top 5, time left, challenge streak and yesterday's result",
+    "why": "A fair shared contest every day costs nothing because the ten questions are generated from the date. Theirs has no live contests."
+   },
+   {
+    "feature": "Three labelled streaks from single sources",
+    "why": "Their profile and QOTD disagree about one streak. Ours shows study, day's-questions and challenge streaks, each named and each consistent across pages."
+   },
+   {
+    "feature": "Personalised plan CTA preview",
+    "why": "Before building, the student sees where the plan would start and what it would put first, from their own results."
+   },
+   {
+    "feature": "Per-card loading and errors with Retry; midnight rollover with a grace hour",
+    "why": "One failed call never blanks the page, a tab left open overnight moves to the new day, and a question seen at 23:58 still counts."
+   }
+  ],
+  "server": [
+   {
+    "change": "progress.days: one source of daily study figures",
+    "detail": "Per local day (X-Tz):\n- questions, right\n- practice: non-test answers (drill, challenge, qotd)\n- tests: finished mock/module/diagnostic sittings\n- qotd: {mcq, spr}\n- minutes\n\nMinutes are attempt ms capped at MS_CAP, plus finished sittings' elapsed time:\n- mock: min(module_started − started, 35m + 60s) + min(finished − module_started, 35m + 60s)\n- module: min(finished − started, 35m + 60s)\n- diagnostic: min(finished − started, 20×95s + 60s)\n- untimed cfg: each module capped at 90m\n\nThe time goes on the local day of `finished`. Test attempts carry ms=None, so nothing is counted twice.\n\nAlso returns:\n- `streak`\n- `best` (the longest run of consecutive active days)\n- `recent`, extended to cover the plan week pager: today − 13 through today\n\n/api/me, /api/today and /api/calendar all call this function, so the bar, the hero, Me and the calendar agree."
+   },
+   {
+    "change": "GET /api/today: new fields",
+    "detail": "Existing fields stay.\n- `study`: {today, week, month, active_days_month, questions_today, right_today} in minutes; the week is Monday to Sunday.\n- `days.best`, and the richer `days.recent` rows.\n- `scores`: the last 8 estimates, newest first, `[{low, high, kind, session, at, capped, route}]`. Diagnostics with no user_id are excluded (the report's gate). latest_score gets the same filter.\n- `outside`: added scores, newest first.\n- `domains`: `[{domain, mastery, answered, right, traps, topics:[{topic, mastery, answered, traps}]}]` from a new `progress.domains()`. Domain mastery is the mean over the topics that have been answered.\n- `traps`: {open, templates, fixed_today, fixed_week, opened_today, top:[{label, topic, template, hits, owed, last}] (5, by hits then last)}.\n- `open`:\n  - `drill`: the newest kind='drill' with finished NULL, started within 36h, ≥1 answer, source not 'try', and not overtime; {id, topics, answered, total, timed, seconds_left, started}.\n  - `drills`: the count of the other such drills.\n  - `test`: the newest unfinished mock/module/diagnostic: {id, kind, module, answered, asked, timed, seconds_left}.\n- `week`: {this:{questions, right, minutes, fixed, opened}, last:{…}, moved:[{topic, before, now}]}. `before` is mastery_of over the attempts before local Monday. Up to 3 risers and 2 fallers with |Δ| ≥ 0.05.\n- `plan_marks`: marks from today − 13 through the exam date.\n\n`mistakes` (int) stays for compatibility."
+   },
+   {
+    "change": "GET /api/calendar?month=YYYY-MM (new)",
+    "detail": "Response: `{month, today, first_active, days:[{day, questions, right, minutes, practice, tests, qotd:{mcq, spr}, sittings:[{id, kind, right, asked, estimate, rank, gated}]}], totals:{minutes, questions, right, active_days}}`.\n- Every day of the month in the X-Tz zone.\n- `rank` only for challenge sittings.\n- A diagnostic with no user_id is listed with `gated:true` and no estimate.\n- 422 unless the month matches ^\\d{4}-(0[1-9]|1[0-2])$ and lies between 2020-01 and today + 12 months."
+   },
+   {
+    "change": "daily.question(day, fmt)",
+    "detail": "`fmt='mcq'` keeps today's pick and its session `qotd:{day}`, so history stays valid.\n`fmt='spr'`:\n- The pool is the templates whose `blueprint.abilities()` include 'spr' (153 of 386).\n- Hash salt `qotd-spr:{day}`.\n- Templates in the same domain as that day's mcq are skipped.\n- Seeds are walked until `item.fmt == 'spr'`, as draw_matching does.\n- `q['id'] = 'qotd-spr'`, session `qotd-spr:{day}`."
+   },
+   {
+    "change": "GET /api/qotd reshaped",
+    "detail": "Response: `{day, late, streak, slots:[{slot:'mcq', question, mine}, {slot:'spr', question, mine}], past:[{day, mcq, spr}] (the 7 days before)}`.\n- `question` is drill.public() output: no key, rationale or reasons.\n- `mine` is null until answered. For an answered slot, the question is rebuilt from the attempt's own (template, seed), so a bank change can't swap what the student saw.\n- `?day=YYYY-MM-DD` from today − 30 up to yesterday gives that day with late:true. Anything else is 422.\n- `streak`: consecutive days ending today or yesterday with at least one on-time answer (graced answers included)."
+   },
+   {
+    "change": "POST /api/qotd: slot, ms, grace, late answers, richer feedback",
+    "detail": "Body: `{answer, day, slot:'mcq'|'spr', ms}`.\n\n**Routing**\n- `day == today` is on time.\n- `day == yesterday` within 60 minutes after local midnight is on time for that day.\n- Other days from today − 30 are late, filed under `qotd-late:{slot}:{day}`.\n- A future day is 422. This replaces the 409.\n\n**Filing**\n- Still `once=True`, so a double POST returns the first answer.\n- Filed through progress.record, so mastery and traps move for late answers too.\n- `db.remember(learner, [{key, seed, stem_hash}])`, so the day's seed is never served again.\n\n**Feedback** adds:\n- `slot`, `late`\n- `choices_explained`: 4 entries for mcq; null for the key, else the capitalised reason\n- `crowd`: {answered, right, picks:[n,n,n,n] (mcq), top_wrong:[{value, n}] (spr, top 3, values normalised with scoring's grid rule)}\n\nThe crowd counts on-time sessions only, and is returned only once this learner has answered."
+   },
+   {
+    "change": "POST /api/drill: like, templates, count in mistakes mode",
+    "detail": "**`like: {day, slot}`**\n- 409 'answer it first' unless this learner has an attempt in that slot's session (on time or late).\n- 404 outside today − 30 to today.\n- The server regenerates the day's question, then queue = [template] × count (default 5, 1 to 20), topics = [topic], source = 'qotd'.\n- The day's own seed is always excluded, and the key never leaves the server.\n\n**`templates: [..]`** (mistakes mode): only the open traps on those templates, twice each. `count` (optional) truncates the queue, so the Try-one sheet sends count 1.\n\nsource 'try' sets are excluded from open.drill."
+   },
+   {
+    "change": "POST /api/saved: save a day's question",
+    "detail": "Accepts `{qotd: day, slot, on}` in place of session/question_id.\n- Allowed only after this learner has an attempt in that slot (on time or late); otherwise 409 'answer it first'.\n- Stored as the (template, seed) that regenerates the question."
+   },
+   {
+    "change": "GET /api/tests/recent?limit=6&offset=0 (new)",
+    "detail": "Response: `{open:[…], recent:[…], total}`.\n- `open`: `{id, kind, module, answered, asked, timed, seconds_left, started}` for unfinished mock/module/diagnostic sessions.\n- `recent`: `{id, kind, started, finished, minutes, right, asked, estimate, route, capped, gated, modules:[{module, right, asked, wrong:[pos], blank:[pos]}], misses}`.\n  - Positions are 1-based and split at len(mock_module(row, 1)), not 22.\n  - `misses` = wrong + blank, as Fix counts them.\n  - A diagnostic with no user_id returns gated:true, with no estimate or modules.\n- `total` is the count of finished tests.\n- limit is 1 to 20, and offset ≥ 0.\n\nPOST /api/drill {from_session} gets the same gate: a diagnostic with no user_id gives 403."
+   },
+   {
+    "change": "GET /api/challenge: progress, time, streak, yesterday",
+    "detail": "Adds:\n- `answered` and `seconds_left` when a sitting is open\n- `streak`: consecutive days with a finished challenge, ending today or yesterday\n- `yesterday`: {rank, players, right, asked} or null\n\n`board` keeps limit=5, and the page shows all 5."
+   },
+   {
+    "change": "PUT /api/me: exam date, R&W fields, plan start",
+    "detail": "- A new exam_date must be today or later in the X-Tz zone (the header is added to this endpoint); otherwise 422 'exam_date is today or later'. Null clears it.\n- New optional `rw_now` and `rw_target`, each 200–800 in tens.\n- `minutes` may be set without a plan (the daily goal).\n- When exam_date, minutes and days are all set and exam_date or days changed, `plan_started` is stamped with today (local).\n- New learners columns rw_now, rw_target and plan_started go in LATER_COLUMNS, and profile() returns them."
+   },
+   {
+    "change": "POST /api/plan/mark (new, shared with Plan)",
+    "detail": "Table `plan_marks (learner, day, task, state, moved_to, at, PRIMARY KEY (learner, day, task))`.\nBody `{day, task:'practice'|'test', state:'skipped'|'moved'|null, moved_to}`.\n- day must be between today − 13 and the exam date.\n- `moved_to` must be a later study day before the exam's eve.\n- null deletes the mark.\n\nReturns the marks. UI.plan.dayOf(d, p, marks) applies moves: the source day becomes practice and moved_to becomes a test day."
+   },
+   {
+    "change": "GET/POST/DELETE /api/scores (new)",
+    "detail": "Table `outside_scores (id, learner, day, math, rw, source, at)`.\n- `source` is 'bluebook', 'official' or 'other'.\n- `math` is required, 200–800 in tens; `rw` is optional, same range.\n- `day` must be on or before today.\n\nGET lists them newest first. DELETE /api/scores/{id} removes only this learner's own."
+   },
+   {
+    "change": "progress.carry: new data",
+    "detail": "- COALESCE rw_now, rw_target and plan_started in the learners merge.\n- Move plan_marks with UPDATE OR IGNORE, then delete what's left.\n- Move outside_scores."
+   },
+   {
+    "change": "server/test_flow.py",
+    "detail": "Checks:\n- Two learners with the same X-Tz get identical mcq and spr stems, and spr's question.type == 'spr'.\n- No answer, rationale, reasons or key in GET /api/qotd before answering.\n- A double POST returns the first answer.\n- A graced answer at 00:30 counts in the crowd and streak; a late one changes neither.\n- A `like` drill before answering gives 409; after answering it serves the template and never its seed.\n- A `templates` mistakes drill serves only that template.\n- Study minutes include a finished module's elapsed time, and /me and /today agree on the streak.\n- The calendar month has every date, and a bad month gives 422.\n- tests/recent wrong/blank match the report, and the module split uses module 1's length.\n- An un-signed-up diagnostic is gated in scores, tests/recent and from_session.\n- open.drill appears after 1 answer and disappears after finish or overtime; open.test shows seconds_left.\n- A past exam_date gives 422.\n- plan/mark validation.\n- scores CRUD, and carry of the new tables."
+   }
+  ],
+  "files": [
+   "/Users/workingmyassof/satbank/web/index.html",
+   "/Users/workingmyassof/satbank/web/assets/ui.js",
+   "/Users/workingmyassof/satbank/web/assets/ui.css",
+   "/Users/workingmyassof/satbank/web/plan/index.html",
+   "/Users/workingmyassof/satbank/web/tests/index.html",
+   "/Users/workingmyassof/satbank/web/results/index.html",
+   "/Users/workingmyassof/satbank/web/me/index.html",
+   "/Users/workingmyassof/satbank/server/app.py",
+   "/Users/workingmyassof/satbank/server/daily.py",
+   "/Users/workingmyassof/satbank/server/progress.py",
+   "/Users/workingmyassof/satbank/server/db.py",
+   "/Users/workingmyassof/satbank/server/test_flow.py",
+   "/Users/workingmyassof/satbank/README.md",
+   "/Users/workingmyassof/satbank/spec/rebuild.md"
+  ],
+  "shared_needs": [
+   "`.btn` secondary button, `.card`, `.card-head`, `.sk` skeleton and `.card-err` (error + Retry) in ui.css; `.clock` Timed/Untimed toggle moved from /tests/ into ui.css.",
+   "UI.question upgrades shared with the session and report review: confirm mode (select, then Check; A–D/1–4, Enter), difficulty word + 3-pip mark and skill label in the skill line, per-option second line (choices_explained) and crowd bar after reveal, an actions-row slot, and a Grid-in rules popover.",
+   "UI.calendar(host, {month, days, plan, marks, onPick, minMonth, maxMonth}): Monday-first month grid, goal-relative heat, today ring, plan marks (practice/test/skipped), exam mark, roving-tabindex keyboard, aria-labels. /plan/ switches its calendar to it.",
+   "UI.plan.dayOf(d, p, marks) and UI.plan.today(profile, recent, marks, coach): one place that says what a day holds and what is done, used by Today and /plan/ (Plan section must agree on the marks and the completion rules).",
+   "POST /api/plan/mark and the plan_marks table, owned jointly with the Plan section; plan_started stamped by PUT /api/me so the plan can show Day N of M and % done.",
+   "UI.popover (anchored listbox, bottom sheet under 760px, Esc and outside click close, focus returns) and dialog.sheet form dialogs (target, add score, try one).",
+   "UI.SAT_DATES moved from web/plan/index.html into ui.js.",
+   "UI.dur(minutes) and long/short date formatters ('Wed, Sep 23', 'WEDNESDAY, SEPTEMBER 23').",
+   "UI.bandChart(host, points, {height, target, outside}) lifted from /results/, with hollow diamonds for added scores; /results/ uses it too and should list added scores.",
+   "A shared sitting card (band, route tag, right/asked, minutes, wrong vs blank chips per module, Review, Fix N, New one like this, Resume / Time's up / gated states) used by Today, /tests/ and /results/.",
+   "Target dialog and Add-a-score dialog shared with Plan step 2, Me and Results, all reading profile.target / rw_now / rw_target and /api/scores.",
+   "UI.ics(events) client-side calendar export, shared with /plan/.",
+   "A report-a-problem sheet (owned by the Session section) reused on the day's questions.",
+   "Practice builder preselect via URL: /practice/?topics=a,b&count=n&timed=1&difficulty=hard&domain=Algebra, and a #unfinished list of open sets (owned by Practice).",
+   "Report deep link /results/report/?id=…&q=M1-3 (owned by Report).",
+   "Plan deep links /plan/?step=0..3, /plan/?edit=1, /plan/?day=YYYY-MM-DD (owned by Plan).",
+   "Challenge page ?day=YYYY-MM-DD to show a past board (owned by Challenge).",
+   "Shell account menu (Me, Send feedback) is owned by the shell/Me section, not Today."
+  ],
+  "acceptance": [
+   "curl -s -H 'X-Learner: a:v2revacc1' -H 'X-Tz: 0' localhost:8000/api/today | jq '.study, .days.best, .scores, .open, .traps.open, .week.this' shows zeros, 0, [], {drill:null, drills:0, test:null}, 0 and zeroed week figures for a fresh code.",
+   "curl -s -H 'X-Tz: 0' localhost:8000/api/qotd | jq '.slots|map(.slot, .question.type)' gives [\"mcq\",\"mcq\",\"spr\",\"spr\"]. The same call as a:v2revacc2 returns identical stems. jq '[.slots[].question|has(\"answer\",\"rationale\",\"reasons\",\"key\")]|flatten|any' gives false.",
+   "POST /api/qotd {answer:'999', day:<today>, slot:'spr', ms:40000} as a:v2revacc1 returns correct:false with answer and crowd.answered ≥ 1. A second identical POST returns the same given. GET /api/today then shows study.today ≥ 1, and /api/me days.streak equals /api/today days.streak.",
+   "POST /api/qotd {answer:0, day:<today-3>, slot:'mcq'} returns late:true. GET /api/qotd?day=<today-3> shows mine set while crowd.answered is unchanged, and .streak does not count that day.",
+   "POST /api/qotd with day=<tomorrow> gives 422. GET /api/qotd?day=<today-40> gives 422.",
+   "POST /api/drill {like:{day:<today>, slot:'mcq'}} before answering gives 409. After answering, count:5 gives a session whose served items in sqlite (sessions.questions) are all the QOTD's template and none has its seed.",
+   "With 2 open traps on different templates in one topic, POST /api/drill {mistakes:true, templates:[t1]} serves only t1 (twice).",
+   "After POST /api/mock/new {full:false} and /api/session/{id}/finish: GET /api/today .study.today includes the elapsed minutes; GET /api/tests/recent .recent[0].modules[0].wrong + blank equals the incorrect positions in /api/session/{id}/results .review; GET /api/calendar?month=<YYYY-MM> lists the sitting under today.",
+   "A finished mock's tests/recent modules[1] positions start at 1 and modules[0].asked equals len(module 1) from the results review.",
+   "A diagnostic finished with no signup: /api/today .scores excludes it, tests/recent shows gated:true without estimate, and POST /api/drill {from_session} gives 403.",
+   "GET /api/calendar?month=2026-13 gives 422. GET /api/calendar?month=2026-09 has 30 entries in days.",
+   "PUT /api/me {exam_date:'2020-01-01'} gives 422. PUT /api/me {exam_date:'2026-11-07', minutes:60, days:'1111100'} returns 200 with plan_started = today. PUT /api/me {rw_now:610, rw_target:700} returns 200, and profile carries both.",
+   "POST /api/scores {day:<today>, math:610, rw:600, source:'bluebook'} returns 201-ish with an id; GET lists it; DELETE removes it; as another learner, DELETE of that id gives 404.",
+   "POST /api/plan/mark {day:<today>, task:'practice', state:'skipped'} returns the mark; GET /api/today .plan_marks includes it; state:null removes it; a day before today − 13 gives 422.",
+   "shot.py a:v2revacc3 1280 … http://localhost:8000/ for a new code: every card shows its empty state with an action (Add your name, the Diagnostic link, Today list 0 of 3, When is your SAT?, No score yet with doors, No tests yet with doors, the Plan CTA). No page errors, and no card shows a bare dash.",
+   "At 1280 the two day's questions are side by side and both show their stems. At 390 they are tabs with status marks. At 390 the cards stack in the order hero, next, qotd, exam, score, mist, study, plan, chal, tests; document.documentElement.scrollWidth === 390; the last card clears the tab bar.",
+   "With a plan and a practice set of 5 answered out of 38: the Today list reads PLAN · 0 of 1 done with '5 of 38 questions', and the hero chip reads Plan · 0 of 1 done. After 38 answers the row shows a filled check and the header reads All done for today.",
+   "Plan rest day: Up next shows Rest day and an orange pill Practice anyway.",
+   "A timed module started and left: Up next shows Resume with the time left, counting down. With seconds_left 0 on module 1 of a section it shows Continue to module 2.",
+   "In the browser the SEC box changes within 1.1s, and with exam_date = today+10 at 07:00 local the DAYS box reads 10. With Playwright timezoneId 'Asia/Tashkent' at 00:30 local, the ringed calendar cell and the hero date are the local date.",
+   "Clicking Target ✎ opens dialog#targetSheet with Save disabled. Typing 650 enables Save; Save sends PUT /api/me {target:650}, and the score tick, gap line and plan stat row show 650 without a reload; /plan/ step 2 opens at 650. Esc closes without a request.",
+   "The exam trigger lists only official dates after today. Choosing Nov 7 updates the countdown, the hero chip and the plan line. Esc closes the popover and focus returns to the trigger.",
+   "MC day's question: the first tap only selects (no request in the network log); Check sends POST /api/qotd. After the reveal, every option row shows a percentage and each distractor shows its misconception line under it. 5 more like this opens /practice/session/?id=.",
+   "Start a drill from Up next, answer 2, return to / (pageshow): Up next shows Continue · 2 of N answered and links to the same session id.",
+   "Try one now opens dialog#tryOne with a question of the top trap's template. Answering it right fills one owed pip after Done.",
+   "Tapping a calendar day with activity shows 'Mon, Sep 21 · N min · N questions · N% right' and its sittings as links. A future plan day shows 'Planned · …'.",
+   "Aborting /api/challenge with Playwright route interception leaves every other card rendered, and the challenge card shows Couldn't load the challenge. with Retry. Aborting /api/today shows Couldn't load this. on next, mist, score, plan and exam, and one Retry repaints all of them.",
+   "PYTHONPATH=. python3 server/test_flow.py passes."
+  ],
+  "open_questions": [
+   "Official 2026–27 SAT dates: /plan/ has Mar 13 2027 and TopTierPrep has Mar 6 2027 (both Saturdays). Verify every date against College Board before moving them into UI.SAT_DATES.",
+   "Countdown target 8:00 AM local ('doors close') and the checklist wording (Bluebook exam setup, admission ticket, ID, calculator policy): verify against College Board's current SAT-day rules before shipping.",
+   "Diagnostic gate: this spec makes Today respect it (no band, misses or Fix before sign-up). Is the gate still wanted, now that every other sitting is open without an account?",
+   "R&W now/target on Today: should Plan steps 1–2 also take R&W, as theirs do, or stay Math-only with R&W only on Today and Me?",
+   "Added scores (Bluebook/official): should they feed the coach or only the trend, the drift prompt and the plan's test-day completion (proposed)?",
+   "Drift threshold: 30 Math points (theirs is 60 on the 1600 scale). Also offer it downward, or only upward as theirs does?",
+   "Move-a-test from Today depends on the Plan section adopting plan_marks in UI.plan.dayOf. If Plan does not ship marks, drop Move and keep Skip."
+  ]
+ }
+}

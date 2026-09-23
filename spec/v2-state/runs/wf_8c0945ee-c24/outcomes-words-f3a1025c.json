@@ -1,0 +1,196 @@
+{
+ "label": "outcomes: words",
+ "key": "v2:1bd938ef9ef796db82103a72e91b500a31c7fff113582b2f191d7765f3a1025c",
+ "result": {
+  "proposals": [
+   {
+    "title": "Every wrong option names its trap: an R&W trap catalogue, near-synonym distractors that are allowed only with a reason, and Drill this trap",
+    "what": "CONTENT: add server/words/traps.json with 10 trap kinds. Each kind has {id, name, tell, check}:\n- lookalike: looks or sounds like the key (elusive / illusory).\n- wrong-sense: a real meaning of the word, but not the one this text uses.\n- too-strong: the right direction, but more than the text supports ('refute' where the text only raises doubts).\n- too-weak.\n- wrong-charge: the right idea with the opposite connotation (frugal / stingy).\n- reversal: says the opposite of the text's claim.\n- topic-lure: fits the passage's subject but not what the blank has to do.\n- unsupported: fits the sentence on its own, but nothing in the text backs it.\n- wrong-logic and reversed-direction (transitions, e.g. 'as a result' where the cause comes second).\n\nAUTHORING: every In context and Most-nearly-means item authors its 3 wrong options as {word, trap, why ≤120 chars}. Pick the transition gets its wrong-logic reasons from the logic groups. The v2 rule 'never a synonym' stays for Meaning→word and Word→meaning. In context may use a near-synonym only when it carries trap too-strong, too-weak, wrong-charge or wrong-sense plus a why. That is the SAT's real difficulty.\n\nBUILD CHECK (exit 1): a wrong option with no known trap id or no why; anything other than exactly one key; a part of speech that differs from the key's.\n\nVERDICT:\n- The .mistake line becomes '[Too strong] “refute” means prove false; the text only says the results raised doubts.'\n- The trap's check follows as a helper line: 'Ask: does the text say it was proven wrong?'\n- 'Picked by 23% of students' appears once the item has 20 answers (the same crowd rule as the QOTD spread).\n\nSTORAGE: word_reviews gains trap TEXT, the trap of the option that was picked.\n\nMY WORDS gains a YOUR TRAPS panel with one row per trap kind over the last 30 days:\n- the name, 'picked 5 of 12 times offered', and a 14-day trend;\n- a Drill this trap · 10 button. It calls POST /api/words/run {deck:{source:'trap', value:'too-strong'}, mode:'quiz'}. Every item in that run offers an option of that trap kind, weighted toward the student's weakest words.\n\nELSEWHERE: the run summary's Mix-ups section groups by trap kind. A trap kind that makes up ≥25% of the last 20 R&W misses becomes a habit row in Up next (U1 kind 'habit', subject 'rw').",
+    "beats": "Their Quizzes: 4 near-synonym tiles where more than one fits (they offered ingenious / imaginative / innovative / original for one definition), then a red 'Correct answer: X' with no reason. Their QBank R&W items explain in prose only, and nothing is counted per lure. Ours names the SAT's own lure types on every wrong option, counts them per student, and turns each into a drill. The student learns to reject the lure, not to memorise a list. This is our Math misconception engine carried over to R&W.",
+    "effort": "L",
+    "needs": "- Content: about 3 trap-tagged options for each In context text (about 4,500 'why' lines for 750 words at 2 texts each), plus the content review in open question 2.\n- F4: word_reviews.trap column.\n- Crowd counts over word_reviews (the ≥20 rule from R27).\n- F2: U1 next.queue accepts a habit of subject 'rw'.\n- F3: UI.question renders a trap chip in .mistake."
+   },
+   {
+    "title": "R&W word items become bank templates: addressed by (frame, seed), recorded in attempts, with traps and 3/10/30-day check-ins in Review and Up next",
+    "what": "TEMPLATES: add a subject 'rw' package (satbank/rw/; S9 authors it, T-bank reviews it) with three templates:\n- rw.words_in_context\n- rw.most_nearly_means: 'As used in the text, what does X most nearly mean?', the other official WIC form.\n- rw.transitions\n\nEach one is generate(seed) → the existing Item dataclass:\n- template;\n- skill: 'Words in Context' or 'Transitions';\n- difficulty: the word's level × the frame's authored difficulty;\n- stem, 4 choices, reasons (P1's trap whys);\n- rationale: the key's meaning plus why the text needs it;\n- params: {frame, word, sense}.\n\nThe seed picks the frame (an authored context), the key (the word, or a transition from the pair's accepted set), the distractors and the option order. So an item regenerates exactly. Another like this means the same word and trap in a new frame, or the same trap with a new word.\n\nAUDIT for rw: 4 options, exactly one key, the same part of speech, 4 distinct logics on transitions, and every reason names a trap.\n\nSERVING: quiz runs serve these three types as drill sessions: POST /api/drill {subject:'rw', templates:[…], words:[…]}. Answers file in attempts with topic 'words-in-context' or 'transitions' and subject 'rw'. A miss opens a trap keyed (template, norm = trap id + word slug), with R9's check-ins at 3, 10 and 30 days. The target word's word_state is still graded by the §12 rules.\n\nWHAT THEN WORKS FOR R&W WITH NO NEW UI:\n- Review's Redo tab lists 'Too strong: refute vs question' with the question itself.\n- Up next offers 'Check-in: elusive vs illusory · 3 q'.\n- The permalink ?q=rw.words_in_context:SEED works.\n- History shows every earlier try.\n\nMATH STAYS SEPARATE: Math mastery, the estimate (R16), the boards and the Math plan filter to subject 'math'.\n\nOUT OF SCOPE: cards, Meaning→word and Word→meaning stay in word_reviews. They are memory work, not an SAT question type.",
+    "beats": "TopTierPrep's vocabulary and question bank never meet. Their Words in Context pool is fixed (261 College Board + 102 of their own), their own Transitions pool is 10 items, and nothing brings a missed item back later. Ours:\n- every word item is a real SAT-format item that never runs out;\n- every miss comes back fresh on a schedule until it holds;\n- R&W gets Review, check-ins and Up next the day Words ships.\nThis is also the additive first step of decision 3: the first EBRW bank templates.",
+    "effort": "L",
+    "needs": "- F5: the drill accepts subject and rw templates in the catalogue.\n- F4: a subject on attempts (or a topic → subject map); the estimate and mastery exclude 'rw'.\n- S10 Review and F3 UI.question render rw items through the planned head override.\n- F2: the U1 queue includes rw check-ins.\n- satbank audit rules for rw.\n- P1's trap content."
+   },
+   {
+    "title": "Placement: a 4-minute vocabulary-size check with made-up-word guards, so study time goes only to unknown words",
+    "what": "ROUTE: /words/placement/ (data-page words-placement). It is offered as:\n- the new-student state on /words/;\n- Today's Words tile: 'Skip the words you already know · 4 min';\n- the Plan's first Words task.\n\nTHE CHECK: 60 items, one per screen, keys 1 / 2 / 3: 'Do you know this word?' with Know it · Not sure · No.\n- 50 real words, sampled across 6 bands: core easy / medium / hard and advanced easy / medium / hard.\n- 10 made-up words from server/words/foils.json, about 40 authored ones rotating. Build check: none is in the library or in a large dictionary word list used at build time only.\n- After every third 'Know it' on a real word, a 4-option Word→meaning check follows.\n\nESTIMATE, per band: hit = the Know-it rate on real words; fa = the Know-it rate on the made-up words; rate = max(0, (hit − fa) / (1 − fa)) × the band's check accuracy. Total = Σ band size × rate, with a ± range from the sample sizes: 'You know about 540 of the 820 SAT words (±40)'.\n\nRESULT SCREEN: 6 band bars; the guard line ('You said Know it to 2 of 10 made-up words, so we counted cautiously'); and exactly what happens next.\n\nEFFECTS:\n- Words confirmed by a check → box 3, due in 7 days, status 'Placed'. One right review confirms Known under P4.\n- Unconfirmed Know-it words in bands estimated ≥80% known → a 'To confirm' deck of fast Word→meaning runs.\n- No and Not sure → the front of the New deck, in band order.\n- The New deck skips bands estimated ≥90% known until To confirm is done.\n\nRE-CHECK: offered every 30 days. The history is a line on Me's Words tile ('~610 words · +70 since Sep 23') and a chart in Results' Words block.\n\nAPI:\n- POST /api/words/placement returns 60 items. Neither the made-up flag nor the key is ever in the payload.\n- POST /api/words/placement/{id}/answer.\n- GET /api/words/placement/{id} returns the result.\n- Runs are stored as sessions of kind 'words' with cfg.mode 'placement'.",
+    "beats": "TopTierPrep starts every student at word 1 of 650. It meters 5 new words a day on free (130 days to get through) and counts 'Vocab N Words' as cards opened. It never measures what a student already knows. Ours measures it in 4 minutes, with a guard against overclaiming. It skips the known words, and gives a growth number the student can watch rise.",
+    "effort": "M",
+    "needs": "- foils.json, authored.\n- A dictionary word list, at build time only.\n- F4: a word_state 'placed' flag.\n- /api/words gains estimate {n, lo, hi, at, history}.\n- S1's Me tile and S6's Results block read it.\n- P9 uses it."
+   },
+   {
+    "title": "Know has to be proven: commit before you flip, a retrieval check before Known, Sure/Guess, and a calibration readout",
+    "what": "RULE CHANGES (server/words.py §12):\n- A self-graded Know on a card can move a word up to box 3 at most.\n- The step to box 4 (Known) comes only from a right quiz answer on a due review that was not marked Guess.\n- So when a box-3 word is due, the cards run serves it as a one-item quiz (Word→meaning, or In context when the word has one) in the card's place, with the card's keys.\n\nCOMMIT FIRST: a card mode; setup's SHOW FIRST gains 'Commit first'. It switches on automatically when the student's Know holds up less than 75% of the time over their last 50 checked Knows, and it says so.\n- Before the flip, the card shows 3 short meanings and No idea (keys 1–3, 0).\n- The flip shows whether the pick was right and grades it: right = Know; wrong or No idea = Don't know.\n- There is no self-grade in this mode.\n\nSURE / GUESS: quiz items get a toggle before answering (K; pref words_conf, on by default). A right Guess logs correct with guess=1, never promotes, and keeps the word due tomorrow.\n\nCALIBRATION: word_reviews gains conf ('sure' | 'guess' | NULL). My words and each summary show:\n- 'When you say Know, you're right 78% of the time (last 100 checks)';\n- a 2×2 of Sure-right / Sure-wrong / Guess-right / Guess-wrong with counts.\nSure-wrong words form a 'Thought I knew' deck and status, with the helper 'You were sure and it slipped. These come back tomorrow.'",
+    "beats": "Their I Know / Don't Know is pure self-report. Don't Know has no visible effect (Due Today stayed at 0 after grading), and the profile's Vocab count is cards opened. A student can 'know' 650 words there and still not recognise them in a sentence. Ours: Known means the student answered it right, unguessed, after a gap. They also see how far their own 'I know it' can be trusted.",
+    "effort": "M",
+    "needs": "- words.py rule change; acceptance checks 10–13 rewritten.\n- F4: word_reviews.conf column, plus prefs words_conf (bool) and words_commit (auto | on | off).\n- F3: UI.workspace quiz mode can be hosted inside a cards run."
+   },
+   {
+    "title": "The SAT method trainer for In context: predict the blank, find the clue, and label every miss a word gap or a reading gap",
+    "what": "AUTHORING: each In context text gets:\n- gist: 3 plain-English predictions, one of them right ('something that supports the claim' / 'something that weakens it' / 'a neutral description');\n- clue: [start, end] offsets of the words that decide the blank.\n\nMETHOD MODE: a setup toggle. It is on for a student's first 30 In context items, fades off after 8 right of the last 10, and comes back after 3 misses in a row.\n- Step 1 hides the options and asks 'What does the blank need?' with the 3 gists (keys 1–3, or Skip to choices).\n- Step 2 shows the 4 words.\n- At the verdict, the clue span is highlighted (wash, amber underline).\n- On a miss, the student first taps the words that tell them (any overlap with the clue counts). Then the clue is shown.\n\nDIAGNOSIS per miss, stored as word_reviews.gap:\n- Gist right, word wrong = 'word gap': the text was understood but the word was not known. The key and the picked word go to the front of the New and Missed lately decks.\n- Gist wrong = 'reading gap': the item joins a 'Read for the clue' set, weighted to texts whose clue sits 8 or more words from the blank.\n\nSUMMARY AND MY WORDS: 'This week's misses: 7 word gaps · 3 reading gaps'. Each has its fix:\n- 'Learn these 7 words' (a cards run);\n- 'Practise finding the clue · 10' (Method on).\n\nThe fade is visible: 'Method off: your predictions are right 9 of 10. Turn it back on'.",
+    "beats": "TopTierPrep's quiz prompt is a bare definition, so it trains dictionary matching, not the SAT's Words in Context task. Their QBank WIC items are the plain format with a prose explanation. Nothing there says whether a miss came from the word or from the reading. Ours teaches the method with scaffolding that fades as the student improves. Each miss goes to the fix that actually works: flashcards cannot fix a reading gap, and more reading cannot fix an unknown word.",
+    "effort": "M",
+    "needs": "- Authored gist and clue on every In context text; best done with P7's contexts.\n- F4: word_reviews.gap column.\n- F3: a staged item in quiz mode (options hidden, then revealed).\n- words.py: a 'readgap' deck.\n- In the bank path, P2 templates carry gist and clue in params."
+   },
+   {
+    "title": "Transitions by logic: name the relationship first, mastery per logic, a mix-up table, and distractors aimed at the student's own confusion",
+    "what": "LIBRARY: the Transitions collection opens a logic map instead of a grid. It has 9 columns: contrast, concession, cause → effect, addition, example, sequence, clarification and emphasis, similarity, conclusion. Each column holds:\n- its words as tiles;\n- a one-line test ('Does sentence 2 push against sentence 1? → contrast');\n- the neighbour it is most often confused with;\n- a known-bar.\n\nMASTERY is per logic. It is a view rolling transitions' word_state up by group, because the SAT never offers two options of the same logic.\n\nPICK THE TRANSITION gets a 2-step form (on for the first 20 transition items, then faded; also a setup toggle):\n- Step 1: 'How does the second sentence relate to the first?' with 4 logic names.\n- Step 2: the 4 transitions.\n- Both picks are logged in word_reviews, with given = 'logic|word'.\n\nITEMS are addressed by (pair, seed). About 30 authored sentence pairs per logic (about 270 in all), each with its logic and fits[] (the transitions that read naturally there). The seed picks the key from fits[] and 3 distractor logics, so the variants run into the thousands.\n\nADAPTIVE DISTRACTORS: while a logic confusion A→B is open (≥2 such picks in 30 days, with no 2 clean answers since), every A item includes a B option.\n\nMY WORDS gets a LOGIC MIX-UPS list (on desktop, a 9×9 grid of only the non-empty cells):\n- rows like 'You read concession as contrast 4×';\n- Drill this pair · 8: a run whose keys are A and whose distractors always include B.\n\nVERDICT names both logics: '“However” signals contrast, but sentence 2 first admits a point against the claim: concession (“Admittedly”, “Still”).'",
+    "beats": "Theirs: 'Transitions' is a topic tag on vocabulary words, studied as flashcards of 'however'. Their own bank has 10 transitions items. There is no logic grouping, no step for naming the relationship, and no record of which logics a student mixes up. Ours drills the actual SAT skill, recognising the relationship, with unlimited items. It targets the exact pair of logics this student confuses.",
+    "effort": "M",
+    "needs": "- transitions.json gains fits[] and pairs expanded to about 270 with a logic each (the spec already has 2–4 per transition).\n- words.py: quiz_item for transitions with adaptive distractors.\n- My words panel.\n- If P2 lands, rw.transitions is the template form of this."
+   },
+   {
+    "title": "Today's words: one interleaved run sized in minutes, first in Up next, Today and the Plan",
+    "what": "RUN MODE: new mode 'mix', via POST /api/words/run {mode:'mix', minutes: 5 | 10 | 15}.\n\nORDER:\n1. R&W check-ins due (P2).\n2. Due cards.\n3. Proof items for box-3 words (P4).\n4. 2–3 transition items.\n5. One In context item for a word learned yesterday.\n6. New words, up to the day's goal.\n\nINTERLEAVING: no two consecutive items share a word or a transition logic. Lookalike pairs (elusive / illusory) appear in the same run once both are past New, at least 3 items apart.\n\nSIZING: from the student's own median seconds per card and per quiz item over 30 days (defaults 10 s and 20 s). A box clock like U1's reads '4:10 left of your 6'. At zero the current item finishes and the summary opens.\n\nENTRY POINTS:\n- the first panel on /words/: 'Today's words · 12 due · 4 new · about 6 min', with Start and chips 5 · 10 · 15;\n- Today's Words tile;\n- the Plan's Words task, where it is the primary launch (Review cards / Learn 10 / Quiz become secondary);\n- next.queue kind 'words', with a reason built from real counts: '12 come back today; 3 are check-ins on lookalikes you mixed'.\n\nThe summary's primary button is Up next (U1 chaining).",
+    "beats": "Their Flashcards and Quizzes are separate tabs and separate chores. Their plan tasks 'Study words' and 'Review cards' launch to different places, and nothing sizes the work to the minutes the student has. Ours is one tap to a mixed session that fits the time available, which is the easiest way to keep the habit daily.",
+    "effort": "M",
+    "needs": "- words.py: deck and run 'mix'.\n- F2: next.py kind 'words', reading words.today_summary.\n- S7: the Words task's launch.\n- S3: the Today tile.\n- P2 and P4 feed it when present; it works without them."
+   },
+   {
+    "title": "Six contexts per word across the SAT's passage domains, a new one on every review",
+    "what": "CONTENT: every SAT word carries 6 authored contexts, 1–2 sentences each, with the word marked [[ ]] and each tagged with the sense it uses:\n- 2 science;\n- 2 history and social studies;\n- 2 literature and the arts.\n\nSTATE: word_state gains ctx_seen, a 6-bit mask.\n\nCARDS: SHOW FIRST gains 'In a sentence', the new default for SAT words.\n- The front shows the word highlighted inside a context the student has not seen.\n- The back shows the meaning and a second context from a different domain.\n- Each review picks an unseen context. Once all 6 are seen, it picks the least recent.\n\nIN CONTEXT ITEMS (and P2 frames) blank the word in these texts, so every word has 6 SAT-style items instead of 1–3.\n\nSHEET: all six under Science · History · Literature tabs, with the one from the last review marked.\n\nBUILD CHECK: 6 contexts per SAT word, 2 per domain; the word or one of its 'also' forms present; a valid sense tag.",
+    "beats": "Their card has one fixed italic example sentence, the same on every review. Ours never shows the same sentence twice in a row, and spreads each word across the three kinds of passage the SAT uses. What the student learns is the meaning, not one memorised sentence.",
+    "effort": "L",
+    "needs": "- About 4,500 authored sentences, plus the content review (open question 2).\n- F4: word_state.ctx_seen column.\n- P8's gist and clue are authored on the same texts."
+   },
+   {
+    "title": "Roots and word families: decode words the student has never studied",
+    "what": "CONTENT: server/words/roots.json holds about 80 roots, prefixes and suffixes (bene, mal, cred, chron, dict, duc, fid, grat, loqu, luc, mit/miss, path, spec, ten/tain, vert, voc; ab-, ante-, circum-, contra-, dis-, ex-, in-, inter-, ob-, per-, pre-, pro-, re-, sub-, trans-; -ous, -ity, -ize, -ence, -ive). Each has:\n- its meaning;\n- 3–6 family words (slugs);\n- a false-friend note where one exists ('in- in inflammable does not mean not').\n\nENTRIES: SAT words gain parts: [{root, gloss}], or parts:false where splitting the word would mislead. Build check: every part is in roots.json.\n\nCARD BACK AND SHEET: a BUILT FROM row, e.g. cred + ible → 'able to be believed'. Its chips link the family: credible, credulous, incredulous, credence, discredit.\n\nLIBRARY:\n- a Roots collection, one tile per root, showing 'family known 4/6';\n- Topic ▾ gains a Root group.\n\nNEW QUIZ TYPE, Decode it:\n- An advanced word the student has never reviewed, with its parts highlighted: 'What does it most likely mean?' with 4 meanings.\n- The feedback shows how the parts build the meaning.\n- A reverse form: 'Which root do these share?' over 3 family words.\n\nSTATS: 'Roots known 23 of 80 · they unlock about 260 words you haven't studied'.",
+    "beats": "TopTierPrep has nothing like it. Their list is flat, and every word is memorised alone. Ours gives a student a way to handle an answer choice they have never seen: infer it or eliminate it. It also makes learning cheaper, because one root carries several words.",
+    "effort": "M",
+    "needs": "- roots.json and parts on about 500 words (authored, then reviewed).\n- words.py: the decode quiz type (distractor meanings of similar length, never from the same family).\n- A Library filter group."
+   },
+   {
+    "title": "Finish line: new words a day set from the exam date, with a review-load forecast and ordering by test value",
+    "what": "A FINISH LINE CARD appears in the Words Today strip and in Plan step 4. It shows:\n- the unknown words left per group: 'core 180 · advanced 310 · transition logics 3 of 9 not yet known';\n- the days to the exam (learners.exam_date);\n- the suggested new words a day that finishes core 10 days before the exam.\n\nCHIPS 5 / 10 / 15 / 20: each shows its finish date and its daily review load two weeks out ('12 a day: core done Nov 24 · about 45 reviews a day, 8 min'). The load comes from simulating the §12 schedule with the student's own lapse rate. Picking a chip writes prefs.words_goal.\n\nNEW DECK ORDER, by test value: an authored value field (how often the word or its sense turns up in SAT-style answer choices), then placement's weakest bands (P3).\n\nFALLING BEHIND is priced: '3 days missed: 14 a day keeps Nov 24, or stay at 12 and finish Nov 28', one tap each.\n\nFINAL 10 DAYS: no new advanced words; the card reads 'Reviews and Thought-I-knew only'. This goes on top of the spec's exam cap.",
+    "beats": "TopTierPrep has a fixed 5 / 20 / 30 a day set by the paid tier. Nothing tells the student whether they will finish before the test, or what today's new words will cost in reviews later. Ours sets the pace from the test date and warns before a pile of reviews builds up. That pile is the most common reason students quit spaced review.",
+    "effort": "M",
+    "needs": "- R15 exam_date.\n- F4/R11: words_goal accepts 15.\n- An authored value field on SAT words.\n- The simulation lives in words.minutes_today's module.\n- S7 Plan step 4 renders the card.\n- P3 is optional input."
+   },
+   {
+    "title": "Stubborn words get a different treatment, not the same failed card again",
+    "what": "FLAG: a word with ≥4 lapses, or ≥3 wrong answers in 14 days, becomes Stubborn. It gets a status, a filter, a deck and a My words tile: 'Stubborn 6 · words that keep slipping get a different drill'.\n\nITS NEXT REVIEW is a 3-step mini-drill instead of a card:\n1. A contrast card: the word against the word it is most often confused with (read from word_reviews.given), with the tell.\n2. Two In context items in contexts the student has not seen.\n3. An optional 'Write your hook': a one-line memory aid of up to 120 characters, saved to word_state.hook. It appears on later card backs and on every lapse.\n\nSCHEDULE: a stubborn word runs on short intervals (1, 2, 5 days) and rejoins the normal boxes after 2 clean passes. Then the flag clears.",
+    "beats": "Theirs shows the same flashcard forever, and Don't Know does not even add the word to Due. Ours stops spending reviews on a card that has already failed, and uses contrast, new contexts and the student's own hook on the few words that eat most of the review time.",
+    "effort": "S",
+    "needs": "- F4: word_state.hook column.\n- words.py: the 'stubborn' deck and rules.\n- The runner's step sequence, built from existing card and quiz items."
+   },
+   {
+    "title": "Offline cards on the phone: take today's deck, grades sync later",
+    "what": "Words pages register a service worker that caches the Words content bundle (about 300 KB gzipped, ETag-versioned like /api/words/index).\n\n'Take today's cards offline' downloads the due and new cards. Cards only: they have no hidden key, so nothing leaks.\n\nOffline grades are queued in IndexedDB with their timestamps, then replayed in order to POST /api/words/run/{id}/answer {at}. The server applies §12 by the given time: one box a day still holds, and an at older than 72 h or in the future is refused.\n\nA banner reads 'Offline · 14 grades will sync'. R13 days() counts reviews by their at, so a subway review keeps the streak.",
+    "beats": "No offline mode was seen in either walk of TopTierPrep. A 5-minute gap without signal is lost. Ours turns bus and lunch gaps into reviews that count toward the streak.",
+    "effort": "L",
+    "needs": "- F0/F2: a service worker at the web root.\n- words.py: accepts a bounded at on card answers.\n- F4: R13 days() reads word_reviews.at (already does).\n- An IndexedDB queue wrapped in try/catch."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Library size",
+    "spec_says": "About 1,090 entries: about 220 Math-language terms plus about 750 SAT words and about 70 transitions. Acceptance check 2 requires ≥1,000 non-own words.",
+    "why_only_parity": "Below parity now. v2-decisions item 2 drops the Math-language deck, which leaves about 820 against their claimed 1,002. Acceptance check 2 can no longer pass, and every '1,090' in the copy is wrong.",
+    "upgrade": "- Grow sat.json to about 1,000 words, ordered by the authored test-value field (P9).\n- Add about 80 roots as their own collection (P5).\n- Count the senses of two-meaning words separately.\n- Keep the duplicate-failing build check.\n- Rewrite check 2 as '≥1,000 SAT words + ≥70 transitions'.\n- Placement (P3) turns the bigger list into less work, not more."
+   },
+   {
+    "feature": "The bank-linked extras (§3.8.4)",
+    "spec_says": "The main 'what they missed' items:\n- In a real question;\n- Practice 10 questions with it;\n- math mix-up Drill it;\n- Mistake → words;\n- tap-to-define in math stems;\n- Translate the phrase;\n- the Math word of the day;\n- Looked up from math stems.",
+    "why_only_parity": "All of them depend on the Math-language deck that decision 2 removes. What is left on the R&W side is parity-plus: better quiz formats and honest spaced review, with nothing no one else can do.",
+    "upgrade": "Replace the Math-bank link with an R&W one:\n- R&W items as bank templates with traps and check-ins (P2);\n- named traps on every wrong option (P1);\n- word gap vs reading gap diagnosis (P8).\nFeed 'Looked up' from Commit-first misses and placement 'No' answers instead of math stems. Swap the Math word of the day for a transition logic of the day or a root of the day."
+   },
+   {
+    "feature": "Four tabs: Library / Flashcards / Quiz / My words",
+    "spec_says": "A 4-segment control that mirrors their four pill tabs one to one, with a due dot on My words.",
+    "why_only_parity": "The same entry model as theirs: the student picks a tool before being told what to do today.",
+    "upgrade": "A 'Today's words · 6 min' panel with Start and 5 / 10 / 15 chips sits above the tabs as the primary on every Words page (P11). The nav meta reads '12 due · 6 min'."
+   },
+   {
+    "feature": "Difficulty filter (Easy / Medium / Hard)",
+    "spec_says": "The authored level, shown as bars. Bank-derived difficulty was the math words' upgrade and is gone under decision 2.",
+    "why_only_parity": "For R&W words it is an authored 3-level label, just like theirs.",
+    "upgrade": "- Measured difficulty from everyone's quiz answers once a word has 20: 'Hard · 41% of students get it right in context'.\n- A 'Hard for you' sort based on your lapses and Sure-wrong answers.\n- Measured difficulty also drives New deck order within a band."
+   },
+   {
+    "feature": "Tile → flashcard",
+    "spec_says": "A tile opens the word sheet with the meaning showing. 'Flashcards from here' is needed to get recall.",
+    "why_only_parity": "Theirs opens front-first in one click. Ours takes two clicks to reach recall.",
+    "upgrade": "When Meanings is off (the self-test grid), a tile opens the sheet with MEANING behind Show (Space) and Don't know / Know (1 / 2) in its footer, recorded as a review under the early-review rules. ← → pages front-first through the grid, so browsing is reviewing."
+   },
+   {
+    "feature": "Flashcard back content",
+    "spec_says": "Meaning, 2–3 examples, same / opposite, NOT THE SAME AS with tells, and Open word. For R&W words, 'In a real question' is math-only.",
+    "why_only_parity": "The same slots as their back (definition, example, synonyms, antonyms, common confusions). The tell is the only addition.",
+    "upgrade": "- Context-first fronts and a rotating context from another domain (P7).\n- A BUILT FROM roots row with family chips (P5).\n- A 'SAT sense' marker on two-meaning words.\n- Common partners ('bolster a claim / an argument').\n- The student's own hook (P10)."
+   },
+   {
+    "feature": "I Know / Don't Know self-grade",
+    "spec_says": "Two buttons plus keys, swipe, an outcome line and a requeue. Known = box 4 after 10+ days.",
+    "why_only_parity": "Better mechanics, but the same thing is measured: Known still rests on the student's own say-so.",
+    "upgrade": "P4: a card Know caps at box 3, and Known needs a right, unguessed quiz answer on a due review. Commit first, Sure / Guess, a calibration readout, and a 'Thought I knew' deck."
+   },
+   {
+    "feature": "Quiz timer",
+    "spec_says": "Off · 15 s · 30 s · 60 s per question, a draining bar, 'Out of time'.",
+    "why_only_parity": "Theirs is No timer / 30 s / 60 s. The same per-item countdown with one more step.",
+    "upgrade": "- A 'Test pace' preset with per-type targets that fit the R&W module budget (about 71 s a question).\n- Median time per type on the summary and in My words, against its target.\n- 'Rushed misses' (wrong in under 8 s) counted, with a 'slow down on these' line.\n- A speed round that unlocks once untimed accuracy reaches 85%."
+   },
+   {
+    "feature": "Quiz question supply",
+    "spec_says": "Meaning → word, Word → meaning, Fill the blank, In context (1–3 authored per word) and Pick the transition (2–4 pairs per transition). The math types are gone under decision 2.",
+    "why_only_parity": "A finite set of authored items: after a few passes a student sees repeats, just like their fixed pool.",
+    "upgrade": "- (frame, seed) templates (P2) over 6 contexts per word (P7), and about 270 pairs with fits[] (P6), so items run into the thousands and never repeat in a row.\n- Add 'As used in the text, X most nearly means', the other official WIC form.\n- Add Decode it (P5)."
+   },
+   {
+    "feature": "Distractor rule",
+    "spec_says": "A distractor is never a synonym of the target or one hop through one, and matches part of speech. The build proves ≥3 valid distractors.",
+    "why_only_parity": "It fixes their bug (two answers fit), but trains an easier task than the SAT, whose Words in Context lures are near-synonyms that miss on degree, connotation or sense.",
+    "upgrade": "Keep the rule for definition items. In context may use near-synonyms only with an authored trap (too-strong / too-weak / wrong-charge / wrong-sense) and a why, so the item stays single-key and still trains precision (P1)."
+   },
+   {
+    "feature": "Report a problem on a word or quiz item",
+    "spec_says": "The shared R17 modal: their categories plus 'Wrong or unclear definition', 5,000 characters, 10 images.",
+    "why_only_parity": "The same form as theirs, and the student waits for a human.",
+    "upgrade": "- 'Two answers fit' shows, on the spot, the authored reason for every option and the crowd split once there are 20 answers (U3's instant answer, applied to words).\n- 'Suggest a better definition' prefills the current text for editing.\n- One confirmed fix updates the word everywhere and tells every reporter in the inbox (U25)."
+   },
+   {
+    "feature": "Save star / Saved words",
+    "spec_says": "★ on the sheet and card (S / B key), a Saved status, deck and count.",
+    "why_only_parity": "A bookmark list, like their Saved Words.",
+    "upgrade": "A star means 'I want this for test day':\n- the word jumps the New queue;\n- it counts in the finish line (P9);\n- if not reviewed in 14 days, it comes back in Today's words;\n- it gets the exam cap even at box 5."
+   },
+   {
+    "feature": "Plan: include vocabulary, and the Words task",
+    "spec_says": "A step 4 switch, new words a day 5 / 10 / 20, New words from, and a Words task with minutes, a reason, three launch buttons, auto-complete and a budget.",
+    "why_only_parity": "The same shape as their Vocabulary / Flashcards tasks (duration, aiReason, Study words / Review cards, Mark done / Skip). The number is picked blind.",
+    "upgrade": "- The finish line sets the number from the exam date, with finish dates and the future review load on every chip (P9).\n- The task's primary is one Today's words run (P11).\n- The reason quotes real counts: check-ins due, stubborn words, Thought-I-knew."
+   },
+   {
+    "feature": "Profile vocab stat, Saved Words count, Include Vocab Review",
+    "spec_says": "Me tiles: Words known, studied, saved, reviews this week; the Include words switch; new words a day.",
+    "why_only_parity": "The same facts as their 'Vocab N Words' tile and toggle, counted honestly but still only counts.",
+    "upgrade": "Show outcomes on Me:\n- the vocabulary-size estimate and its growth: '~610 words · +70 since Sep 23' (P3);\n- 'Your Know holds up 82%' (P4);\n- 'Core done by Nov 24' (P9)."
+   },
+   {
+    "feature": "Collections (theirs includes The College Panda's 400)",
+    "spec_says": "Our own lists only, plus Quizlet / CSV import of own words, with their meanings.",
+    "why_only_parity": "A student or class working from a book's or a teacher's list either copies the definitions in or has no match. Theirs at least ships one well-known book list.",
+    "upgrade": "'Paste a word list' takes words only. It matches each to a library entry (with also-forms) and makes a named collection of our entries, using our definitions and contexts: '380 of 400 found; 20 added as own words for you to fill in'. It never copies anyone's definitions. Own words also get lookalike and root matches from the library, and an own example sentence becomes a fill-the-blank card automatically."
+   },
+   {
+    "feature": "Spaced review schedule",
+    "spec_says": "Fixed Leitner boxes at 1, 3, 7, 16 and 35 days; an exam cap; one box a day.",
+    "why_only_parity": "A generic fixed schedule that every student and word shares, like their Due Today queue in concept.",
+    "upgrade": "- Aim for about 90% recall at due time. If a student's due-review accuracy runs above 95% over 50 reviews, stretch their intervals by 20%; below 80%, shrink them.\n- Stubborn words run shorter (P10).\n- The forecast shows the effect.\n- Fewer reviews for the same retention."
+   },
+   {
+    "feature": "Two-meaning words",
+    "spec_says": "A Two meanings filter, second_sense entries, and split-sense confusions ('other meaning: to penalize').",
+    "why_only_parity": "Review state is per word, so knowing the common sense of 'qualify' marks the tested sense Known. That is the same blind spot as a word-level list.",
+    "upgrade": "- word_state keyed by (word, sense) for second_sense words.\n- Each sense gets its own box, and Most-nearly-means items ask for exactly one sense.\n- The sheet shows 'SAT sense: learning · common sense: known'."
+   }
+  ]
+ }
+}

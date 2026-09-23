@@ -1,0 +1,85 @@
+{
+ "label": "verify: linear_functions",
+ "key": "v2:b626ab23e459c88a1b7b4649bf1430d0b9c2a9729df27e7ef472e354e5ecb11d",
+ "result": {
+  "pass": false,
+  "evidence": "Checked in worktree wf_aca7fe38-327-5, detached at v2/t-bank-all a6bc1b6, against master 59caa25 (a git archive in scratchpad/lf327x/master). Nothing was committed.\n\nStep 1 (MCQ vs master): PASS. I dumped all 23 templates for seeds 0-80, with the default call, fmt=\"mcq\" and fmt=\"spr\" (5,589 cases per side). Every field (stem, choices, reasons, latex_choices, answer, key, rationale, figure, table, params) is identical on both sides. The only differences are errors that occur identically on both: 12 templates reject the fmt kwarg, and affine_conversion|mcq raises the same AuditError on 39 seeds.\n\nStep 2 (grid-ins): PASS. 1,111 grid-ins across the 11 grid-in templates differ from master only in spr_mistakes. None has an empty spr_mistakes list, and no MCQ item carries any.\n\nStep 4 (gate): PASS. `PYTHONPATH=. python3 -m satbank check --topic linear_functions` prints PASS (audit 6,900 items re-derived).\n\nStep 3 (reasons are real): FAIL. I recomputed every named value by hand for 58 random grid-ins covering all 11 templates. All the arithmetic matches the code, but several reasons do not describe their value, or describe a route this question does not allow. I then counted them over seeds 0-1499 with fmt=\"spr\":\n- graph_read: 593 grid-ins name b as \"read the value where the line meets the vertical axis\", but the drawn axis is not at x=0.\n- context_two_points: 556 predict grid-ins get the step direction wrong (531 of them are the population context); it is right in only 23.\n- evaluate: 265 grid-ins (quotient form) name a value that also drops the constant; 161 name -key as \"dropped the negative sign\" when the key is positive; 228 concatenate numbers after stripping their signs.\n- model_value: 31 grid-ins land exactly on .5 before rounding, and about half of them name the wrong whole number.\n\nHand-checked examples:\n- graph_read, seed 4912: 79x+167, the axis is drawn at x=1 where the line reads 246, yet 167 is named. Seed 7 (hydrogen): the axis is at 100 K, where the line reads 2.2 L, yet 0 is named.\n- context_two_points, seed 487: one step too far past 2002 gives about 295, but 276 is named. Seed 1282: \"two units too far\" names 243, which is just the 1992 reading. Seed 114 (demand, nearer point x1) has the same inversion. Seed 74 (nearer point x2) is correct.\n- evaluate, seed 4585: (3t-4)/4 at t=-3; the single slip gives -1 but 0 is named. Seed 887: key 140, named -140 as \"dropped the negative sign\". Seeds 651 and 2: 788 and 985 from -x-88 and n-85.\n- affine_conversion, seed 246: F(1.5) = -456.97, but 488.97 and 520.97 are named.\n- model_value, seed 193: 40.5 is named as 40; seed 228: 84.5 is named as 84. A student rounding half up types 41 and 85.",
+  "defects": [
+   {
+    "where": "satbank/topics/linear_functions/families/graph.py graph_read (value ask), the Mis 'read the value where the line meets the vertical axis' = b",
+    "what": "line_graph draws the vertical axis at the frame's left edge, which is x0: 1 atm for oxygen, 100 K for hydrogen. The line meets that axis at m*x0 + b, so b (or 0 for hydrogen) never appears on the picture and no student can read it there. Seed 4912: axis value 246, named 167. Seed 7: axis value 2.2, named 0. Affects 593 of 1500 grid-in seeds.",
+    "fix": "For spr, use the value at the drawn axis (m*x0 + b) for this reason, or drop the reason when d['x0'] != 0. Do this only in the spr branch so MCQ is unchanged."
+   },
+   {
+    "where": "satbank/topics/linear_functions/families/context.py context_two_points, slips(v): 'stepped one/two unit(s) too far from the nearer known point' = v - m, v - 2m",
+    "what": "v - m is the value at x3 - 1. That is one step too far only when the nearer known point is above x3. In the population context the nearer point x2 is always below x3, and in the demand context it is below when x3 is nearer x1; there v - m is one step short, and overshooting gives v + m. Seed 487: 295 expected, 276 named. Seed 1282: 'two units too far' names 243, which is just the 1992 reading unchanged. Seed 114: same inversion. Affects 556 of 579 predict grid-ins; only the 23 where the nearer point is x2 (seed 74) are right.",
+    "fix": "Step in the direction away from the nearer point: v + s*m and v + 2*s*m, where s = sign(x3 - nearer x). Alternatively reword those values as 'one/two unit(s) short'. Spr path only."
+   },
+   {
+    "where": "satbank/topics/linear_functions/families/basic.py _eval_mistakes, quotient form: 'added the coefficient and the input instead of multiplying them' = (a + x0)/d",
+    "what": "The value also drops the constant c from the numerator, and c is never 0 here. The single slip the words describe gives (a + x0 + c)/d. Seed 4585: (3t-4)/4 at t=-3, the slip gives -1 but 0 is named. Affects 265 of 1500 grid-ins.",
+    "fix": "In the spr list use (a + x0 + c)/d for this reason, or drop it."
+   },
+   {
+    "where": "basic.py _eval_mistakes, wrong='sign': 'dropped the negative sign from the result' = -key",
+    "what": "This is applied even when the key is positive, so the named value is negative and the student added a sign rather than dropping one. Seed 887: 10n+120 at n=2, key 140, named -140. Affects 161 of 1500 grid-ins.",
+    "fix": "Name -key only when key < 0 in spr, or reword it by sign ('changed the sign of the result')."
+   },
+   {
+    "where": "basic.py _eval_mistakes, |m|==1: 'wrote the input beside the constant instead of adding them' = _concat(|x0|, |b|)",
+    "what": "The concatenation strips signs, so it is also named for -x + b, for x - b and for negative inputs, where nothing a student would write side by side produces it. Seed 651: -x-88 at x=-7 names 788. Seed 2: n-85 at n=-9 names 985. Affects 228 of 1500 grid-ins.",
+    "fix": "In spr, keep this reason only when m == 1, b > 0 and x0 > 0 (the source's x + 200 shape)."
+   },
+   {
+    "where": "satbank/topics/linear_functions/families/symbolic.py affine_conversion (change): 'substituted the change into the whole formula' = scale*(s - delta), and the '...and kept the constant term' variant = scale*(s - delta) + t",
+    "what": "Substituting delta for x gives (9/5)(delta - 273.15) (+32), which is negative. The named values have the subtraction reversed, and the second one adds 32 to that reversed value. Neither stated route produces them. Seed 246: F(1.5) = -456.97, named 488.97 and 520.97. Seeds 3124 and 3835 show the same.",
+    "fix": "In spr use scale*(delta - s) and scale*(delta - s) + t, or drop both reasons from spr_mistakes."
+   },
+   {
+    "where": "satbank/topics/linear_functions/families/context.py model_value, approx (ants) context: mistakes built with q(round(v))",
+    "what": "Python round() rounds half to even. When a slip's raw value is exactly n + 1/2, the value named is often n while a student rounds half up; the branch's own context_two_points code rounds grid-in slips half up. Seed 193: x+b = 40.5, named 40 (a student types 41). Seed 228: x(m+b) = 84.5, named 84. 31 halfway cases in 1500 seeds, about half named wrong.",
+    "fix": "For spr, round with (v + Q(1,2)) // 1, as context_two_points does."
+   },
+   {
+    "where": "graph.py graph_read (value): 'divided the input by the value instead of reading the graph' = x/key",
+    "what": "Producing this value needs the key itself (seed 4912: 2/325). A student who has read 325 already has the answer, so this is not a route to a wrong answer.",
+    "fix": "Drop this reason from spr_mistakes."
+   },
+   {
+    "where": "Sign wording when the constant or rate is negative: basic.py evaluate 'subtracted the constant term instead of adding it' (m*x0 - b) and quotient 'subtracted the constant instead of adding it'; basic.py inner_scale 'subtracted the constant instead of adding it' (value ask) and 'added the constant instead of subtracting it' (constant ask); context.py model_value 'subtracted the change instead of adding it' (temperature context)",
+    "what": "When the printed term is '- 4' or '- 0.21x', the named value comes from adding 4 (or 0.21x) instead of subtracting it, and the student is told the opposite of what they did. Seed 3897: x-4, f(20), named 8 as 'subtracted'. Seed 3814: 100x-42, named -58. Seed 1466: x-3, named 4/23 as 'added'. Seed 122: 48.79-0.21x, named 122.08 as 'subtracted the change'.",
+    "fix": "Pick the verb from the sign of the constant or rate in the spr list, or use sign-neutral words such as 'used the opposite sign for the constant'."
+   },
+   {
+    "where": "symbolic.py affine_conversion (inverse): 'added the shift instead of subtracting the constant term'",
+    "what": "The value adds t = 32 where it should be subtracted, but the next reason uses 'the shift' to mean 273.15. The words therefore suggest a different computation from the one the value comes from (seed 1343: 22328/45).",
+    "fix": "Reword it as 'added the constant term instead of subtracting it'."
+   },
+   {
+    "where": "basic.py inner_scale (constant ask): 'divided the stated value by the argument' = (value - d)/k",
+    "what": "Literally dividing the stated value by the argument gives value/k. The named value is the inverted ratio after the constant has been removed. Seed 1525: 17/2 named; the literal route gives 10.",
+    "fix": "Reword it as 'inverted the ratio after removing the constant', or use value/k."
+   },
+   {
+    "where": "basic.py combine (same_function): 'divided by the denominator twice, once in each term' = (p - q)/(2d)",
+    "what": "The value comes from adding the denominators, not from dividing twice. Dividing twice gives /d^2. Seed 1555: 3/2 named.",
+    "fix": "Reword it as 'added the denominators when subtracting the fractions'."
+   },
+   {
+    "where": "satbank/topics/linear_functions/families/define.py table_facts (a - b ask): 'gave b without its sign' = |b|",
+    "what": "When b > 0 there is no sign to drop and the value is simply b. Seed 2485: b = 46, named 46 as 'without its sign'.",
+    "fix": "Use 'gave b instead of a - b' when b > 0."
+   },
+   {
+    "where": "basic.py _eval_mistakes: 'used the sign of the input rather than its value' when x0 = 0; 'multiplied the input and the constant term instead of adding them' = x0*b when |m| != 1",
+    "what": "Zero has no sign, yet at x0 = 0 the value m + b is named (seed 37: 216). When |m| != 1 the input and the constant are not what gets added (m*x0 is), so x0*b also silently drops m (seed 3814: 100x-42 at -1 names 42).",
+    "fix": "In spr, skip the sign reason when x0 == 0 and the product reason unless |m| == 1."
+   },
+   {
+    "where": "context.py model_value (inverse): 'divided the whole total by the rate...' = round(total/m), 'divided the fixed amount by the rate instead' = round(b/m)",
+    "what": "The stated route gives total/m, for example 1668/22 = 75.82. The named whole number 76 needs a rounding step the words do not mention, and round() here rounds half to even (seed 3483).",
+    "fix": "Name total/m exactly, or round half up and mention the rounding. Spr path only."
+   }
+  ]
+ }
+}

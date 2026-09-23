@@ -1,0 +1,227 @@
+{
+ "label": "advantage: practice",
+ "key": "v2:5bf0afe8d1efafe494e55b15e0e8f62e9fd52d472d2b1957bfffd19765b01453",
+ "result": {
+  "proposals": [
+   {
+    "title": "Twins that really carry the same trap, spaced out through the set",
+    "what": "Server (drill._pick/_fresh): every repair, redo-pool question, check-in, 'Another one like this' and twin walks the template's seeds with want={template: norm of the missed reason} (the `want` field already exists in §2.6, up to 40 seeds, about 10 ms) until the misconception the student fell for is one of the four options. It stores q.trap = {norm, label, slot}. Measured on the bank today: the next fresh seed of the same MC template carries the same trap for only 196 of 309 templates (63%). Walking up to 40 seeds finds it for 301 of 309 (97%), and the median is 1 extra seed. When no seed fits, it falls back to a fresh seed and the why-line says 'Same type, new numbers (this trap can't appear with these numbers)'.\n\nClosing rule: a right answer counts toward closing a trap only when q.trap was among the options ('clean with the trap on the table'). The Review card reads 'clean 1 of 2'.\n\nSession:\n- Why-line: 'Trap check: one of these options comes from \"left out the constant term\", the one you picked on Q6'.\n- After Check, if the student avoided it: 'You stepped past the trap (C)'. If they fell for it again: 'Same trap again · 2nd time this set', and the trap goes to Relapsed.\n- The trap option's reason line gets a 'your trap · 3x' tag.\n\n'After a miss' becomes a Seg: Right away · Spaced (after 3 other questions, then once more at the end; the default) · At the end · Off. The navigator shows repair slots with the repair dot and 'checks Q6'.\n\nSummary: 'Traps: resisted 5 of the 7 times they were on the table'.",
+    "beats": "TopTierPrep's retry shows the identical item again after its key is burned, and a finite bank has no second copy of the trap. This also fixes v2's own 'same trap, new numbers' claim, which is false for 37% of MC templates, where a 'clean' repair proves nothing.",
+    "effort": "S",
+    "needs": "F5 drill.py (_pick/_fresh use `want`); F4 progress.norm() and traps.norm (R9); a trap_present flag on the attempt (cfg or attempts column) for the closing rule; Review's check-ins and Report's twins call the same helper."
+   },
+   {
+    "title": "Your chance on every question: difficulty that works from the first answer and adapts per question type",
+    "what": "Ratings:\n- item_ratings(template, tier) is already in §2.5 for Compete. Seed it at easy 850 / medium 1000 / hard 1150 and update it from every first try in practice, tests and contests (Elo, K = 32/(1+n/50); repeats and guesses excluded).\n- Add abilities(learner, template, rating, n), which falls back to the learner's skill rating, then to 1000.\n\nLevel 1-7 is a band of item rating, so every type has a level from day one:\n- 'L4 · provisional, 6 tries' until n >= 20;\n- then 'L4 · measured from 212'.\n\n'Your chance' is the Elo expectation (learner vs item). It shows:\n- in the question strip ('Medium · L4 · your chance 62%');\n- in Details;\n- on each TypeRow ('you ~45%');\n- in the navigator's new 'Your chance' view (cells shaded by chance).\n\nBuilder Difficulty adds a Seg 'Pick by my chance': Comfortable ~80% · Stretch ~65% (the default when adaptive is on) · Push ~50%.\n- The scheduler picks the tier per template that lands nearest the target inside the allowed tiers. This replaces R33's per-skill 'up after 2 rights' rule.\n- Why-line: 'Picked for your 65% zone in Count solutions'.\n\nOutcome lines:\n- Action bar: 'Expect ~6-7 of 10'.\n- Summary: 'Expected 6.2 of 10 · you got 7 (+0.8)', plus a per-skill above/below-expectation column, so a hard set gets a fair verdict.",
+    "beats": "TopTierPrep's Question Score is a static 1-7 that isn't even in Details, and their 'Adaptive' preference does nothing visible. v2's measured levels need 20 first tries per (template, tier), but the db holds 284 attempts from 11 learners, so at launch every level cell is disabled. Ratings give every type a level and every student a chance on the first day.",
+    "effort": "M",
+    "needs": "F4: item_ratings (shared with S8, one update rule) and a new abilities table, updated from the progress.record hook. F5: scheduler targeting and a revised R33. Compete agrees to reuse the practice-fed item ratings."
+   },
+   {
+    "title": "Trap drills: pick misconceptions, not just skills",
+    "what": "The builder tree gets a Seg above it: Skills · Question types · Traps.\n\nThe Traps view lists the student's misconceptions grouped by norm. Each row has:\n- the label;\n- a status chip (Open / Half fixed / Relapsed / Check-in due / Fixed);\n- hits and last seen;\n- 'lives in 4 question types';\n- a checkbox.\n\nA second block, 'Common traps in these skills', shows the 10 norms with the highest share of all learners' wrong first tries, with n printed. It serves students with no history.\n\nChoosing traps sets pool 'related' with ids = the norms. Every served question is trap-loaded:\n- want across every template whose options can carry that norm;\n- progress.related() covers 79 cross-template norms today, and the rest are template-specific.\n\nPresets:\n- 'My top traps · 5' (hits x recency);\n- 'Traps most students fall for'.\n\nIn the session, the why-line names the trap in play, and the verdict says Resisted or Fell for it.\n\nThe summary gets a 'By trap' table: trap · on the table 4x · resisted 3 · status 'Open -> Half fixed' · [Again].",
+    "beats": "TopTierPrep filters by skill, solved and marked only. Their distractors carry no names, so a misconception can't be selected, counted or drilled across question types.",
+    "effort": "M",
+    "needs": "Review's progress.related() index and the traps table (R9, S10/F4); §2.6 pool 'related' and `want` (F5); a crowd norm aggregation cached for 10 minutes (like drill.levels())."
+   },
+   {
+    "title": "Points on the table: a score-gain forecast per skill, per set and after the set",
+    "what": "worth(skill) = questions that skill gets per Math section × (goal accuracy − current first-try accuracy at the test's tier mix, or your chance at that mix) × the slope of the scale at your estimate.\n- Questions per section come from the blueprint: domain weight × 44 ÷ skills in the domain. Linear functions is about 3.1.\n- The slope comes from scoring.ANCHORS: about 12.7 points per question between 50% and 75%.\n- Example: 'Circles · 48% -> 90% ~ +16 pts'.\n\nWhere it shows:\n- Tree: a mono 'Worth +16 pts' column on each SkillRow and DomainCard.\n- Sort: 'Most points to gain', the default after 30 answers.\n- Preset: 'Biggest payoff 3'.\n- Action bar, third line: 'Works on ~+34 pts of headroom'.\n- Summary: 'Forecast 590 -> 597 (+7)', per-skill deltas, and 'Where the next points are' starting the next preset.\n\nHelper line: 'Rough: from our score scale and your first tries, not a College Board score.'",
+    "beats": "TopTierPrep's builder shows item counts, which tell a student nothing about payoff. Their Estimated Score card is a range with no link to what to practise.",
+    "effort": "M",
+    "needs": "R16 estimate.py for the current score; blueprint weights; scoring.ANCHORS; one progress.worth() that Plan (S7) and Results (S6) can reuse; Proposal 2's chance, optional."
+   },
+   {
+    "title": "See one, do one: a worked twin first, and hints that name the trap",
+    "what": "'Answers shown' gains a toggle, 'Learning mode: show a worked example before a type I haven't tried or keep missing'.\n\nWorked example:\n- Before such a question, a read-only card headed 'Worked example · Count solutions': the same template on another seed, in UI.workspace review mode, with the key, the rationale and every option's mistake.\n- [Now try mine] follows it.\n- The worked seed is remembered as seen (R19) and never served fresh.\n\nHint button: in the footer left of Check, key J (free in the runner map). Three steps:\n1. 'Watch for: <trap>'. The trap is the student's own open trap on this template, else the crowd's top norm here, else the item's first labelled reason.\n2. The first sentence of the rationale.\n3. Show answer.\n\nHints used show in the strip ('Hint 1 used'). The attempt is filed as assisted: half weight, like a guess, and it never closes a trap.\n\nSummary tile: 'Hints 3 · worked examples 2'.",
+    "beats": "TopTierPrep has no hints. Their explanation is the whole solution, and once seen, that item is spent for good. A worked example costs us one seed from an unlimited supply, and a hint can name the exact trap because our distractors are labelled.",
+    "effort": "M",
+    "needs": "F3 UI.workspace review/inline modes; R8 attempts.guess reused, or an assisted flag; the crowd norm aggregation from Proposal 3; prefs key learning_mode (R11)."
+   },
+   {
+    "title": "Desmos, pre-loaded: 'Solve it with Desmos' from the question's own numbers",
+    "what": "Templates gain an optional desmos(item) that returns LaTeX expressions (and an optional table or regression) built from item.params:\n- systems: both lines;\n- nonlinear equations: y = f(x) and y = k;\n- circles: the circle equation;\n- two-variable data: the table plus y1 ~ m x1 + b;\n- function values: f(x) and x = value.\n\nAfter answering (or as hint 2 in learning mode, filed as assisted), a 'Solve it with Desmos' button opens the docked calculator with the expressions loaded via setExpression, with one caption such as 'The intersection is the solution'.\n\nOther surfaces:\n- A 'Desmos-friendly' strip chip on types with a one-graph solution.\n- A builder checkbox 'Desmos-friendly types only' and a 'Desmos strategies' preset.\n- Summary: 'Used the Desmos way 3 · by hand 7'.\n\nA coverage script prints '<n> of 386 types have a Desmos way', and coverage grows template by template, as spr_mistakes does.",
+    "beats": "TopTierPrep embeds Desmos as a blank floating panel, and nothing connects it to the question. Bluebook gives Desmos on every Math question, and graphing is the time-saver students most want to learn. Our generator knows each question's equations, so it can hand them over.",
+    "effort": "L",
+    "needs": "T-bank template work (a desmos hook per family); F3 UI.calc exposing setExpression; Desmos API key and terms (teardown note)."
+   },
+   {
+    "title": "Copy-proof shared sets: every taker gets twins, and the sharer gets a reteach loop",
+    "what": "The share sheet (R18 sets) gets a Seg: 'Everyone gets their own numbers (twins)', the default, or 'Everyone gets these exact questions'.\n\nWith twins, each taker gets the same templates, tier, format and order on their own seeds. Each slot is trap-locked to the same misconception (Proposal 1), so answers can't be passed around but slots stay comparable.\n\nThe sharer's results sheet:\n- per slot: 'Q3 · Count solutions · Medium · 5/7 right · fell for: divided only the constant 2, sign slip 1' (UI.spread by misconception, not by letter);\n- a 'Weakest slots' row;\n- takers with score and time;\n- 'Compare two takers', slot by slot.\n\n[Reteach weak slots] creates, in one tap, a follow-up twin set of the slots under 60% right and their traps, with its own link. That gives a free homework loop.\n\nThe taker's landing says: 'Your numbers are your own; you compare by question type.'",
+    "beats": "TopTierPrep's shared session hands everyone the identical questions, so one student's answers circulate in the group chat and the results measure copying. Their homework feature is hidden.",
+    "effort": "M",
+    "needs": "R18 sets (cfg.twins, F6); Tests' twin() or Compete's twin_questions; UI.spread (F1); Classes (S2) can attach a set as an assignment."
+   },
+   {
+    "title": "My rule for this type: notes that come back on every future question of the type",
+    "what": "The My note popover gets a scope Seg: This question · Every question of this type.\n\nA type note (up to 300 characters) shows up:\n- as a collapsible 'Your rule' card above the stem on every future question of that template, with Edit;\n- in review;\n- as a note glyph on the builder's TypeRow.\n\nAfter a miss, the verdict offers 'Write a rule for next time', prefilled with 'Watch for: <mistake label>'.\n\nThe builder header gets a 'My rules · 12' link to a list grouped by skill: type, rule, open-trap status and [Practise]. The list prints as one page, each rule with one worked twin, for test week.\n\nA More-menu toggle picks 'Show my rules before I answer' (on) or 'after'.",
+    "beats": "TopTierPrep's annotations belong to one item in one session. In a finite bank a note on an item is a dead end. In ours every type comes back forever with new numbers, so a rule gets used again and again. v2's notes on (template, seed) almost never resurface, because we never repeat.",
+    "effort": "S",
+    "needs": "R6 notes table: a type row keyed (learner, template, seed=-1) or a scope column (F4); F3 UI.annotate; the print stylesheet (F1)."
+   },
+   {
+    "title": "Goal sets and fluency sprints: stop when it's learned, not when a count runs out",
+    "what": "Goal sets:\n- The Questions Seg gains 'Until…' with a select: each type right 3 times in a row · these skills reach Strong · my open mistakes here are closed · N Hard right.\n- The cap is 120, and 'I'm done for now' exits at any time.\n- Progress line: 'Circles 2 of 3 in a row · Percentages done'.\n- A type that meets its goal stops being served.\n- The set ends with 'Goal met in 23 questions · 18 min'.\n\nFluency sprints: Order gains 'Same type in a row (fluency)'.\n- One type, 10 twins, each with a target time: your median on the type, else the crowd median, else 95 s.\n- The target shows as a tick on the stopwatch.\n- The summary plots time per question as a line ('1:40 down to 0:48').\n\nPresets: 'Nail this type' (from a TypeRow's menu) and 'Close my mistakes here'.",
+    "beats": "TopTierPrep's Volume tops out at 'All' of a finite pool. 'Until I've got it' needs a supply that never runs out. Ten-in-a-row fluency drills would exhaust their thin skills (Evaluating statistical claims has 5 TTP items).",
+    "effort": "S",
+    "needs": "F5: drill.py stop rules and a served-template filter; progress mastery; stopwatch data; §2.6 count/order extensions."
+   },
+   {
+    "title": "Classroom worksheets: versions A-D, a misconception answer key, and fast paper entry",
+    "what": "The Printable worksheet dialog offers:\n- Versions 1-4: twins with the same types, tiers and order, and a header like 'Version B · code 7KQ2'.\n- Key: none / answers / answers + named mistakes / full explanations.\n- 1 or 2 columns, work space S/M/L, and Name and Class blanks.\n\nThe teacher key lists each question's key for every version and, for each wrong letter, the mistake it comes from ('B -> used the slope as the intercept'). A tally grid (versions x questions) supports hand marking.\n\nPaper entry at /practice/?paper=CODE:\n- One field for the answer string ('A C 2/3 D …') or a tap grid.\n- It files attempts with source 'worksheet' and opens the normal summary, with named mistakes and traps opened.\n- A tutor can enter several students' sheets in a row, each under a taker name, and get the shared-results view (Proposal 7).",
+    "beats": "TopTierPrep's Share / Export button is dead, and nothing of theirs is printable. A finite bank can't print four distinct versions of a sheet without burning four times the items. Ours can, and each version comes with a key that diagnoses as well as grades.",
+    "effort": "M",
+    "needs": "Print stylesheet (F1); twin generation; R18 sets for the code; R19 access checks for keys; shared results (Proposal 7)."
+   },
+   {
+    "title": "Strikes and answer changes as evidence about your traps",
+    "what": "Each strike is stored with the struck option's misconception.\n\nAfter the reveal:\n- A verdict line: 'Your strikes: B trap rejected (slope as intercept) · D near value'.\n- Striking the key is its own named slip, 'Struck the right answer'.\n- Select-then-Check records the selection trail (option and ms, like Tests' qstate.trail in R7), giving lines like 'You had A (right) first, then switched to C (left out the constant term)'.\n\nThe summary's 'How you answered' block, where each count opens a filtered ReviewList:\n- changed right -> wrong 2\n- wrong -> right 1\n- traps rejected by strike 11\n- key struck 1\n- rushed misses (under half your usual time on that type) 2\n\nA trap rejected by a strike on a trap-locked question adds a 'recognised' mark to that trap. It never closes the trap on its own.",
+    "beats": "TopTierPrep saves eliminations on the server and then does nothing with them. With unnamed distractors, a strike can't mean anything.",
+    "effort": "S",
+    "needs": "The /strike endpoint (already in the spec); a per-qid trail in cfg; finish() fields; traps (R9)."
+   },
+   {
+    "title": "Verified answers with the check on tap, and an instant check on 'wrong key' reports",
+    "what": "Every item already passes satbank.audit: a separately written solver re-derives the key from item.params before the item is served.\n\nDetails gains:\n- 'Verified · a second solver, written separately, gets 2/3 from the same numbers';\n- [Show the check], which lists the named params ('slope 3, intercept −2, input 4 -> 10').\n\nIn the Report sheet, choosing 'Wrong answer key' or 'More than one answer is right' runs a server check before Send:\n- regenerate (template, seed);\n- audit it;\n- confirm that no other option's value equals the key.\n\nThe result shows at once: 'Checked just now: the key holds. Reports like this usually come from <the top trap on this question>', with [Send anyway].\n\nIf the check fails (a rendering fault, or two equal values):\n- the report is filed as urgent;\n- that (template, seed) is blocked from serving for everyone;\n- the student's attempt is marked disputed, so it isn't counted.",
+    "beats": "TopTierPrep's report is a form into an inbox. They can't re-derive an item, and their explanations are unverified long-form text. We can settle most key disputes in a second, with the working shown.",
+    "effort": "S",
+    "needs": "satbank.audit plus a params-to-words helper per solver kind (T-bank); an F6 report hook; R8 disputed; a serve-time blocklist in F5."
+   },
+   {
+    "title": "Trap-sense formats: Spot the trap and Name the mistake",
+    "what": "The builder's Format gains: Solve (default) · Spot the trap · Name the mistake · Mixed (1 in 4).\n- Spot the trap: 'Which choice comes from: forgot to divide the constant term?' over the four options. This generalises Review's spot endpoint to any template.\n- Name the mistake: one wrong option is circled, with the prompt 'Why would someone pick C?'. The four answers are the item's three misconception labels plus 'It's the right answer'.\n\nThese are not filed to mastery. They go to a 'trap sense' stat per norm, shown in the Traps view (Proposal 3). A right Name on one of your own open traps adds a 'recognised' mark.\n\nSummary: 'Trap sense 8 of 10 · missed: sign slip on negative inputs'.",
+    "beats": "TopTierPrep's Distractor Analysis is paragraph text in a report. With unlabelled items it can never become a question, so students never practise recognising a trap.",
+    "effort": "S",
+    "needs": "Review's POST /api/review/spot (S10), generalised into drill kinds (F5); Item.reasons; UI.workspace quiz mode (R21)."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Question Score 1-7",
+    "spec_says": "Measured levels 1-7 from fixed accuracy thresholds once a (template, tier) has 20+ first tries. 'Include types not measured yet' checkbox; helper 'N of 386 types measured'.",
+    "why_only_parity": "It is below parity at launch. The db has 284 attempts from 11 learners, so no type is measured, every level cell is disabled and Details says 'not measured yet' everywhere. TopTierPrep shows a score on every item.",
+    "upgrade": "Elo item ratings seeded from the tier and updated by every first try (Proposal 2). Every type gets a level on day one ('provisional, n tries'), plus a personal 'your chance' per question."
+   },
+   {
+    "feature": "Every option's mistake shown after answering",
+    "spec_says": "Under each distractor, the misconception that produces it, on by default; fillers labelled honestly. Called 'the one thing a finite bank cannot do'.",
+    "why_only_parity": "TopTierPrep's explanation already carries 'Distractor Analysis', one line per wrong option (seen in their report review). As text, ours matches it.",
+    "upgrade": "Make each label act:\n- a 'your trap · 3x' tag on options matching your history;\n- 'Practise this trap' on each label (5 trap-locked twins across types);\n- the crowd share per option by misconception (UI.spread).\nThe label becomes a way into study, not just a caption."
+   },
+   {
+    "feature": "Clear Session / retake",
+    "spec_says": "'Start over with these exact questions' ({retake}) in More and the summary; 'Same settings, new questions' ({again}).",
+    "why_only_parity": "An exact retake after the keys were shown measures memory, the same as their Clear Session.",
+    "upgrade": "Make 'Retake as twins' the default: same types, tiers, order and formats, new numbers, trap-locked. The summary compares slot by slot ('Q4 then wrong, now right'). Exact retake stays as the secondary option."
+   },
+   {
+    "feature": "Solved / Marked / Redo filters",
+    "spec_says": "Pool 'Questions I've seen, exactly', with Result (Missed / Right / Guessed), Marked only, and From.",
+    "why_only_parity": "Replaying a missed item whose key you've seen is their Redo list with better filters. It trains recall of that item, not the skill.",
+    "upgrade": "Each exact pool gets a Seg 'Exactly · Same trap, new numbers'. Missed defaults to new numbers; Marked defaults to exactly. The Action bar says which one you'll get."
+   },
+   {
+    "feature": "Shared sets",
+    "spec_says": "A share link gives everyone the exact questions. The sharer sees takers, right rate per question and the top named mistake.",
+    "why_only_parity": "Identical questions are what their shared session gives, so answers can be passed around and the results measure copying.",
+    "upgrade": "Twins by default, with each taker on their own numbers, results per slot by misconception, and a one-tap 'Reteach weak slots' follow-up set (Proposal 7)."
+   },
+   {
+    "feature": "Highlights and notes",
+    "spec_says": "Stored against (template, seed); they come back on replay, retake, review and Marked.",
+    "why_only_parity": "Our exact questions almost never come back (nothing repeats), so notes resurface about as rarely as their per-session annotations.",
+    "upgrade": "Type-scoped notes, 'Your rule' (Proposal 8): a note on the template shows on every future question of that type, and prints as a rules sheet."
+   },
+   {
+    "feature": "Eliminate",
+    "spec_says": "Strike-out circles with Undo, Shift+A-D, saved to the server via /strike.",
+    "why_only_parity": "Their eliminations are saved to the server too. It is feature-for-feature parity.",
+    "upgrade": "Strikes as trap evidence (Proposal 11): 'trap rejected (slope as intercept)', 'Struck the right answer' as a named slip, and strike and answer-change counts in the summary."
+   },
+   {
+    "feature": "Calculator",
+    "spec_says": "Desmos docked (resizable), floating or as a phone sheet, with state kept per set.",
+    "why_only_parity": "Theirs floats, resizes and moves the question over. Docking is nicer but the same tool.",
+    "upgrade": "'Solve it with Desmos' pre-loads the question's own equations (Proposal 6), with a 'Desmos-friendly' chip and filter."
+   },
+   {
+    "feature": "Reference",
+    "spec_says": "The formula-sheet dialog.",
+    "why_only_parity": "Identical to their modal image.",
+    "upgrade": "Open it scrolled to, and highlighting, the formulas this type uses (a topic -> formula map, about 19 entries). After answering, add a line 'Formulas used: area of a circle, 30-60-90 triangle'."
+   },
+   {
+    "feature": "Timer and pace",
+    "spec_says": "Countdown or stopwatch, Hide, Pause, test pace 95 s, a pace alert at 1:35, toasts at 5 and 1 minutes.",
+    "why_only_parity": "One flat pace for every question is what their 6-minute timer does, only tighter.",
+    "upgrade": "Per-type pace targets: the stopwatch shows ticks at your median and the crowd median for this type. A 'Pace ladder' timing mode starts at 2:00 a question and tightens by 5 s each time a type is answered right under target, down to 1:35."
+   },
+   {
+    "feature": "Per-question stopwatch and Time view",
+    "spec_says": "Survives reload and skip; Time view in the navigator; time chart in the summary.",
+    "why_only_parity": "It shows seconds, as their stopwatch does. Persistence fixes their bug but adds no insight.",
+    "upgrade": "Classify every answer by time and result: 'rushed miss' (under half your usual time), 'slow right' (over 2:30). Each class gets its fix: a Hint or Check step for rushed misses, a fluency sprint of that type for slow rights (Proposal 9)."
+   },
+   {
+    "feature": "Check Your Work",
+    "spec_says": "Tiles for Answered / Unanswered / Skipped / Marked, the cell grid, an amber note, Finish set / Back.",
+    "why_only_parity": "It copies Bluebook and their timed session.",
+    "upgrade": "A 'Worth a second look' row that leaks nothing about correctness: answered in under 40% of your median time on that type, answers changed twice or more, and marked. Each is one tap to jump."
+   },
+   {
+    "feature": "Question overview",
+    "spec_says": "Status / Difficulty / Skill / Time views, with legends and counts.",
+    "why_only_parity": "Their Status | Difficulty toggle, with two more views.",
+    "upgrade": "Add a Traps view (after the reveal, cells carry the named mistake, and the legend groups by misconception with 'Practise' on each) and a 'Your chance' view (Proposal 2)."
+   },
+   {
+    "feature": "Report a problem",
+    "spec_says": "R17's modal with category, details, screenshots and device context.",
+    "why_only_parity": "Their report form has the same fields.",
+    "upgrade": "An instant server check for 'Wrong answer key' and 'More than one right': regenerate, audit, show 'the key holds' with the working before Send, and block the item for everyone if it fails (Proposal 12)."
+   },
+   {
+    "feature": "Details popover",
+    "spec_says": "ID, domain / skill / type, difficulty and level, format, why this one, you and this type, everyone, permalink.",
+    "why_only_parity": "A superset of their ID / domain / skill / difficulty, but still descriptive only.",
+    "upgrade": "Add 'Verified by an independent solver' with [Show the check], 'Learned from N official College Board items' (from sources.py), your chance, and the crowd's misconception spread."
+   },
+   {
+    "feature": "Live question count",
+    "spec_says": "The Action bar and pools print type counts and pool sizes from /api/drill/preview.",
+    "why_only_parity": "Theirs prints 'N questions'. For an unlimited bank, a count says nothing about the set.",
+    "upgrade": "Print the expected outcome instead: 'Expect ~6-7 of 10 · ~16 min · works on ~+24 pts' (Proposals 2 and 4)."
+   },
+   {
+    "feature": "Learning preferences (Timed/Untimed, Adaptive/Fixed, explanations, Desmos)",
+    "spec_says": "Eleven settings sections in the builder, all saved to prefs and editable on Me and in the More menu.",
+    "why_only_parity": "The options match theirs key for key. With 11 visible sections, a student used to their 2 toggles is slower to set up a set.",
+    "upgrade": "A 'Style' Seg on top of Settings: Learn (worked examples, hints, after each, spaced repairs) · Practise (after each, repairs) · Simulate the test (end mode, test pace, no repairs). Each sets about six keys in one tap. Everything stays visible below, and 'Custom' lights when you change something."
+   },
+   {
+    "feature": "Adaptive difficulty",
+    "spec_says": "R33: step up a tier after 2 first-try rights in a skill, down after a miss, within the selected tiers.",
+    "why_only_parity": "It fulfils what their 'Adaptive' promises, but per skill and per tier. Every type in a skill moves together, and it jumps a whole tier at a time.",
+    "upgrade": "Per-template zone targeting from ratings: the scheduler picks the tier that lands your chance nearest the chosen zone (80 / 65 / 50%) for each type (Proposal 2)."
+   },
+   {
+    "feature": "Permalink to one question",
+    "spec_says": "/practice/session/?q=TEMPLATE:SEED serves that exact item as a one-question drill.",
+    "why_only_parity": "The same as their public /question/:key route.",
+    "upgrade": "Add type links, /practice/session/?t=TEMPLATE, so everyone who opens one gets their own numbers and it can't be spoiled. Add 'Challenge a friend on this type': 5 twins each, compared slot by slot."
+   },
+   {
+    "feature": "Everyone's stats per type",
+    "spec_says": "Shown only once a type has 20+ first tries; otherwise 'Not enough answers yet'.",
+    "why_only_parity": "With 11 learners it is invisible at launch, which in practice leaves it at their nothing.",
+    "upgrade": "Show it from n >= 5 with n printed ('5 students so far'), pooling practice, test and contest first tries. The item rating gives a difficulty number from the first answer."
+   },
+   {
+    "feature": "Bank and subject toggle",
+    "spec_says": "The eyebrow 'SAT MATH'; one generated bank; official replicas are an open question.",
+    "why_only_parity": "Theirs is a choice between official items and volume. Ours offers no choice, and nothing on the page says why our questions can be trusted.",
+    "upgrade": "A 'Where these come from' line from sources.py, e.g. 'Every type was learned from real College Board questions: 23 Linear functions types reproduce 86 official items', with 'Verified by an independent solver'. Key /api/bank by subject ({subject: 'math'}) so R&W is added later without reshaping anything (v2-decisions)."
+   }
+  ]
+ }
+}

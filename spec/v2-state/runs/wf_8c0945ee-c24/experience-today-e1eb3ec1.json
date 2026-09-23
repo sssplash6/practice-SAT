@@ -1,0 +1,181 @@
+{
+ "label": "experience: today",
+ "key": "v2:fa245510fa6bf448f30aca2fe3d3f5334550b5383a50aa1168547b19e1eb3ec1",
+ "result": {
+  "proposals": [
+   {
+    "title": "Answer-first Up next: question 1 is already on the page, and the set is sized by minutes",
+    "what": "The Up next card shows the first question of the recommended set right on Today, in UI.workspace inline mode. It sits under the reason line and the topic chips: skill line, stem in Source Serif at --q-size, then 4 option rows or the grid-in input. This applies to the coach set, a plan practice or fix task, and due check-ins. For an unfinished drill, the inline question is that drill's next unanswered item, so Continue means answering right there.\n\nSizing by minutes: a .choices row above the question, `5 min · 10 · 20 · 30 · {plan minutes}`, becomes the default control. Count = round(min×60/95) per R34, shown as `≈ 6 questions`. The default chip is the minutes left to the daily goal, or the coach count when there is no goal. `Endless` stays. A .quiet `Count instead` shows the spec's 5·10·22·coach chips.\n\nFlow:\n- A tap selects and Check (or Enter) files the answer. That call creates the drill with this item as question 1.\n- Feedback appears inline: the key, the named mistake, the rationale.\n- Then the pill `Continue · 2 of 12` (Enter) opens /practice/session/?id= at question 2. A .quiet `Stop here` finishes a one-question set, which still counts toward today.\n\nData:\n- GET /api/today adds `next.preview {token, question}`. `question` is drill.public() of the coach's first pick. `token` is an HMAC over (learner, template, seed, local day, picks).\n- The seed is deterministic from learner+day+picks and skips practice_seen, so a reload shows the same question. Loading the page creates no session and marks nothing seen.\n- POST /api/drill takes `first: {token, answer, ms}`. It checks the token (same learner, same day), creates the drill with that item as served[0] and files the answer through drill.answer.\n- A token whose item was served somewhere else in the meantime returns 409, and the client swaps in a fresh preview.\n\nPhone: the question is full width, option rows are 56px, and Check sits directly under the options, where the thumb is. A running timed test and an over-time module still come first in Up next, as the spec orders them.",
+    "beats": "TopTierPrep's dashboard has no practice action without a plan. Starting a set there takes about 6 to 8 taps and a page change before any question shows: sidebar, Question Bank, domains and skills, difficulty, count, Start. With a plan it is Today's Plan, the task, then Start questions: 2 taps plus a page load. Ours shows question 1 with 0 taps, and it is answered after 2 (pick, Check). Their builder asks for a question count; ours takes 'I have 10 minutes', which is how students actually plan a session.",
+    "effort": "M",
+    "needs": "F3 UI.workspace inline mode. F5: the `first` field on the drill body, the HMAC token and deterministic preview-seed selection in drill.py. S7 plan.today_summary for the task's count and minutes. F4 practice_seen written only on answer."
+   },
+   {
+    "title": "Due today: one list of everything owed today, with a minute total, that ticks itself and hands you the next item",
+    "what": "The Today list (§3b) becomes `DUE TODAY · 3 of 6 done · about 34 min left`.\n\nRows, in this order:\n1. A running or over-time test.\n2. Class assignments due within 24h, from GET /api/assignments by due time: `Period 3 · Circles · 10 q · due 5:00 PM`. Overdue ones read `Overdue since Tue` in ink-bold and sit at the top.\n3. Plan tasks (fix / recheck / focus / test / custom) from plan.today_summary.\n4. Check-ins due (R9 due ≤ today), with or without a plan: `3 check-ins · fixed 10 days ago · ~4 min`.\n5. Words due (S9 words.today_summary): `12 words due · ~3 min`.\n6. The day's questions, `1 of 2`.\n7. The challenge.\n8. Group contests that have a due time.\n\nEach row carries:\n- a status ring and the title with its type tag,\n- a minute estimate in DM Mono (95 s a question, 15 s a word review, a test's clock),\n- progress (`4 of 10`) and the due time when there is one,\n- one .btn action,\n- a `Why` line with numbers, from the Plan task's why[] plus the board: `Probability · 2 open mistakes · 48% right of 25 · about 3 questions a section`,\n- on plan tasks with alternatives, `Swap for: Circles`.\n\nThe header gives minutes left (the sum of the undone rows' estimates) against the goal: `Everything due fits in 34 min · goal 45`. Done rows fold into `3 done ✓`, which expands, so what is left always comes first.\n\nRun-through:\n- With 2 or more undone rows, the pill `Do them in order` starts the first one.\n- Every finish screen reads /api/today.due.next and shows `Next due: Check-ins · 3 · ~4 min [Start]` and `Back to Today`, with Enter starting it. That covers the practice summary, the test report, the words run, the challenge result and the assignment finish.\n\nCompletion is automatic, using the spec's rules plus these:\n- Homework is done when its assignment session is finished.\n- Check-ins are done when each due trap has been answered once.\n- Words are done when due = 0.",
+    "beats": "TopTierPrep's Today's Plan card:\n- covers plan tasks only, and every task is ticked by hand ('Mark task as done');\n- has no homework (their /my-classes is hidden from the sidebar and absent from the dashboard), no spaced review of fixed mistakes, and vocab on a separate page;\n- gives no single minute total across the QOTD, the plan and vocab, which compete on the page;\n- sends the student back to the dashboard after each task.\n\nOurs puts everything owed today in one list and one time budget, with zero ticks. The next item is offered on the finish screen of the one just done, so it takes 0 extra taps.",
+    "effort": "M",
+    "needs": "S7 plan.today_summary (tasks, why, alternatives, PATCH for skip and move, per R14 in place of POST /api/plan/mark). S2 GET /api/assignments: the §2.9 contract already says 'Today shows class assignments due first', but §3a/§3b never list them. F4 traps due and checks (R9). S9 words.today_summary. S8 group contests with a due time. S4, S5, S6 and S9 finish screens read `/api/today.due.next`."
+   },
+   {
+    "title": "Where your next points are: 19 skills ranked by the Math points each one can win you, one tap to practise",
+    "what": "A card `#points`. On desktop it spans 6 columns beside Score, and it replaces the Score card's 4 domain rows. Header: `WHERE YOUR NEXT POINTS ARE`, with a toggle `By points · By accuracy` on the right.\n\nIt lists the top 5 topics ranked by pts = qs_per_section × miss_rate × pts_per_q:\n- qs_per_section: blueprint.DOMAIN_SPLIT (44 a section), spread over the domain's topics by their template share. Shown as `about 4 of 44`.\n- miss_rate: 1 − accuracy over the topic's last 30 answers that are not repeats (R8), shrunk toward 0.5 with a 5-answer prior so two answers claim nothing. An untried topic uses its domain's mean and says `not tried yet`.\n- pts_per_q: the slope of scoring.ANCHORS at the student's band middle, divided by the section length. That is about 10 to 14 points a question mid-scale, the same model that gives the band.\n\nEach row has:\n- the glyph and topic, then `about 4 of 44 a section · you miss 38% · ≈ +15`,\n- a mini stacked bar that splits the ≈ +15 into what open mistakes explain (orange) and general misses (ink at 30%),\n- a .btn `Practice · 10`, a drill on that topic with mistakes first.\n\nThe footer reads `Top 5 together ≈ +60 · your open mistakes ≈ +22`. A .quiet `How this is worked out` popover gives the formula and the line 'An estimate from our own model, not College Board scoring.' The coach's `weak` reason line cites the figure too: `Your weakest skills right now · ≈ +15 in Probability`. Rows are buttons with full aria-labels, and a hidden data table serves screen readers. Built subject-aware, so R&W topics can be ranked in the same list later.",
+    "beats": "TopTierPrep's closest feature is on the plan's Progress tab, not the dashboard: 'Accuracy by domain, weakest first. This is where your remaining time pays off most.' It is 4 domain bars of raw accuracy. It is not weighted by how often a domain appears, not converted into points, and has no action. Their report's domain cards are also mislabelled ('13% of test section, 1-8 questions'). Ours ranks 19 skills by the points they are worth, weighted by how often each appears on the test, and starts the right set in 1 tap from Today.",
+    "effort": "M",
+    "needs": "F4: a new `progress.points(learner)` over board(), blueprint.DOMAIN_SPLIT and scoring.ANCHORS, returned in /api/today.points. R16 estimate.py for the band middle. F5 drill body (topics, mistakes first). The Plan's `skills[].gap` should use the same function, so the plan and Today agree (one source per fact)."
+   },
+   {
+    "title": "Pace coach: time per question by skill against the SAT's 1:35, with a timed fix one tap away",
+    "what": "A `PACE` block in the Study card.\n\nHeadline: `Median 1:48 a question this week · the SAT gives you 1:35`, with a thin bar showing the share of answers over 1:35.\n\nDot plot (charts.js, with a hidden data table):\n- x is median seconds over the topic's last 20 non-test answers; y is accuracy.\n- A dashed vertical line sits at 95 s. Toggle `Skills · Domains`.\n- Mono 11px quadrant labels: `Slow & right: time it`, `Slow & wrong: learn it`, `Fast & wrong: slow down`, `Fast & right: keep`.\n- Each dot is a button, for example `Circles, 2:40 median, 81% right, 14 answers`.\n\nUp to 2 prescriptions follow, each with a .btn:\n- `Circles · 2:40 · 81% right → Timed set · 8 in 12:40` (drill timed, minutes = count×95 s)\n- `Percentages · 0:41 · 52% right → Untimed · 8, show your work`\n\nTwo further signals:\n- Rushing: `6 wrong answers under 20 s this week · 4 in Percentages`.\n- Tests, from sessions.qstate (R7): `Ran out of time on 3 of your last 4 modules · 5 blank at time-up`, with a .btn `Timed module`.\n\nOn the day's questions, after answering: `You 1:12 · everyone 0:58 · SAT pace 1:35`, where 'everyone' is the median ms of that day's on-time answers.\n\nEmpty state: `Answer 20 questions to see your pace`.",
+    "beats": "TopTierPrep records no time spent in its per-question report payload (no domain, skill, difficulty or time). Their QBank stopwatch resets to 00:00 on reload, and their dashboard shows only total study time. On the digital SAT, pacing is where points leak, and students there cannot see it at all. Ours names the slow skill and the rushed one, and starts a timed or untimed set on it in 1 tap.",
+    "effort": "M",
+    "needs": "attempts.ms (have). R7 qstate ms for test sittings (F4, S5). F4: a new `progress.pace(learner, tz)` in /api/today, which Plan's slow-skill rule (median > 120 s → timed) should also call. F1 dot-plot chart with a hidden table. S3: POST /api/qotd feedback adds crowd.median_ms."
+   },
+   {
+    "title": "Test-day forecast: where you'll land on the exam date, and whether you're on pace",
+    "what": "The Score card's trend (UI.bandChart) gets a date x-axis running to the exam date:\n- Each sitting is a band bar at its date; added outside scores are hollow diamonds.\n- A projection cone runs from today to the exam date. It is a recency-weighted linear fit of the last up to 6 estimate midpoints within 60 days, the slope clamped to ±40 a week, and the cone half-width equal to the band half-width.\n- The target is a dashed amber line, and the exam date is marked `SAT Oct 3`.\n\nThe verdict line under the chart takes one of four forms:\n- `On pace: about 640–700 on Oct 3 · target 700`\n- `Behind: on pace for 600–660 · 700 needs +18 a week, you've made +9`\n- `At your target ✓`\n- `Not enough to project yet · 3 scored sittings in 60 days needed`, with the .btns `Module · 22 q · 35 min` and `Diagnostic`.\n\nTwo mono figures follow: `Made +9 / wk · needs +18 / wk`. A .quiet `What if I study 60 min a day?` runs Plan's preview for the remaining days and prints only plan-side numbers (study days, hours, pace needed). It never claims how much the score will rise.\n\nThe countdown card's main figure becomes study units: `7 study days · 5h 15m planned · 2 tests left`. The live DD:HH:MM:SS drops to a smaller line under it.\n\nOnce an official score is added: `We projected 600–660 · you scored 640`, shown honestly in either direction.",
+    "beats": "TopTierPrep:\n- Its 'Score gap 1000 now, 1400 target' is a static plan tile.\n- Its pace line ('about 60 points per week') exists only inside the plan wizard.\n- Its dashboard score reads 0 until a full-length test, and after one in our walk it still read 0.\n- Its countdown ticks seconds with no meaning attached.\n\nOurs answers 'will I make it by the date?' on Today every day, from any module, section or added score.",
+    "effort": "M",
+    "needs": "R16 estimate.py: dated estimate history, mean3, trend. F1 UI.bandChart with a date axis, a cone and a hidden table. S7 POST /api/plan/preview for the what-if. R15 exam_date."
+   },
+   {
+    "title": "Exam-week and test-morning mode: Today changes what it asks as the date nears",
+    "what": "Final 7 days, with or without a plan:\n- The grid reorders: #exam moves to full width under the hero.\n- Up next gains `Dress rehearsal`: a full timed Math section suggested for the real test's weekday and start time (`Sat 8:30 AM`; the student can change it, default 8:30). It is offered when no section was taken in the last 7 days, with `Add to calendar` (UI.ics single event).\n\nDays −2 and −1:\n- Up next becomes `Light review · your check-ins and 10 you usually get right · ~15 min`: a drill of due check-ins plus easy and medium items from topics at mastery ≥ STRONG.\n- Helper `No new topics in the last two days.` The coach's `new` pick is suppressed.\n\nThe eve:\n- The checklist opens and gains a `Night before` group: `Bluebook opened and updated today`, `Admission ticket saved`, `Alarm set for [time]`.\n- The ticks and the alarm time are stored with the checklist.\n\nTest morning, exam day before doors:\n- Today shows only the hero, the countdown to doors, the checklist and `Warm-up · 5 easy · untimed · ~7 min` from the strongest topics.\n- Every other card collapses under `Everything else`.\n\nAfter 13:00 local on exam day:\n- `How did it go? Add your official score when it's out` with a reminder date, plus `Pick your next date` (the spec's passed state).\n\nAfter the official score is added: the forecast calibration line (see the forecast proposal), and the plan CTA returns.",
+    "beats": "TopTierPrep's dashboard behaves the same 10 weeks or 10 minutes before the test: a DD:HH:MM:SS ticker, a picker that still offers past dates, and nothing else changes. There is no rehearsal at the real time, no taper, no morning view and no post-test step. Ours changes the work it asks for in the final week and on the day.",
+    "effort": "M",
+    "needs": "S7 plan phases (Final) and state eve|exam|after from /api/plan; without a plan, the same rules keyed off exam_date. S5 section start with a scheduled time. F1 UI.ics(event). Satdates, doors time and checklist wording verified against College Board (open question 10)."
+   },
+   {
+    "title": "Since you were last here: a briefing line in the hero, a streak-at-risk nudge, and an earned day-done recap",
+    "what": "Under the greeting, one line (Archivo 15, ink-soft) from `/api/today.brief`. It holds up to 3 facts, most important first, each linking to its card:\n- First visit of the day: `Yesterday: 42 of 45 min · closed 3 mistakes · challenge #4 of 30`.\n- `2 mistakes you fixed 10 days ago are due a check-in`.\n- `New from Period 3: Circles · due Fri`.\n- `Module on Sep 21: 560–640 · +40`.\n\nStreak at risk: after 18:00 local, with nothing done today and a study streak of 2 or more, the first fact is `One answer keeps your 6-day streak · 5h 12m left today`. An inline .btn `1 question` opens the Try-one sheet on a due check-in or the coach's first question. Plan rest days never trigger it (R13).\n\nDay done: the first time today that the Due-today list is all done, or minutes reach the goal, the Up next card swaps to a recap panel. It enters with a .rise and never loops.\n- `Day done · 48 min · 38 questions · 74% right`\n- `Moved today: Percentages ▲ Learning → Getting there` (UI.masteryWord before and after today)\n- `Closed: Added the percentages instead of multiplying them`\n- The flame fills to `7 days · best 9`.\n- The pill `Keep going · 10 more` and a .quiet `See today in the calendar`.\n\nIt is shown once a day, keyed on localStorage `satf.done.{day}` inside try/catch. Without storage it can repeat, which is harmless. prefers-reduced-motion turns off the rise.",
+    "beats": "TopTierPrep's hero has a date, a greeting and a decorative illustration with no facts in it. Their only completion moment is an 'All Done 🎉' badge. Their streak reads 1 on the QOTD and 0 on the profile, and they never warn that it is about to break. Ours tells a returning student in one line what changed and what is due. The only celebration names the skill that actually moved and the mistake that actually closed.",
+    "effort": "S",
+    "needs": "F4 progress.days (R13) and traps closed today and due (R9). R16 latest and previous estimate. S2 new assignments. S8 yesterday's challenge rank. mastery_of before and after today's attempts, the same method as the spec's week.moved over a one-day window."
+   },
+   {
+    "title": "Any day, redone: the calendar's day detail lists what went wrong, and replays that day's misses as fresh questions",
+    "what": "The spec's day detail (minutes, questions, % right, sittings, plan state) gains:\n- `Mistakes that day: 3 opened · 2 closed`, with each misconception label linking to its item in Review.\n- The topics practised, as chips with right/asked (`Percentages 4/7`).\n- A .btn `Redo this day's misses · 5` (hidden when there were none): POST /api/drill {from_day:'YYYY-MM-DD'} serves each template the student missed that day on a fresh seed, never the original, mistakes-mode repair included.\n- The first and last answer times (`9:12 AM – 10:05 AM`).\n\nA calendar metric toggle `Minutes · Questions · Accuracy` recolours the heat. Accuracy uses the same 3 levels, with a hollow cell under 5 answers so a 1/1 day doesn't read as perfect. Keyboard stays as specified: arrows, Home/End, PgUp/PgDn, Enter.",
+    "beats": "TopTierPrep's calendar cells are buttons that do nothing, drawn in UTC, so a 22:14 UTC sitting lands on the wrong day. There is no day view, no record of what went wrong, and no way to redo a day. Only a generator can replay 'Tuesday's misses' as new questions of the same kind, without showing the ones already seen.",
+    "effort": "S",
+    "needs": "F4 /api/calendar day rows gain opened/closed trap ids and labels and per-topic right/asked. F5 drill body field `from_day`, validated to the learner's own days within 90 days in X-Tz. R19 deps.access for the no-exact-repeat rule."
+   },
+   {
+    "title": "Instant, keyboard-first on desktop, thumb-first on a phone",
+    "what": "Instant paint on return:\n- Each successful /api/today, /api/qotd and /api/challenge response is cached in localStorage `satf.cache.{learner}.{call}` (try/catch), dropped when the local date changes.\n- On load, cards paint from the cache on the first frame, with a mono 11px `Updating…` on a --line top rule until the live response arrives. A card repaints only if its data changed.\n- A first visit uses the spec's skeletons.\n- Hovering or touching Start adds `<link rel=prefetch>` for the session page's assets.\n\nPage keys (through UI.keys, ignored while typing, listed in the `?` sheet and in the palette as 'Start today's set', 'Fix top mistake', …):\n- `N` start or continue Up next (focuses its inline question)\n- `A–D` / `1–4` pick in the focused question; `Enter` Check, then Continue\n- `T` Try one now on the top mistake\n- `D` jump to the day's questions and toggle MC ↔ grid-in\n- `C` challenge; `P` plan card; `E` opens the exam-date popover\n- `J` / `K` next / previous card: focus moves to the card heading and scrolls into view\n\nA `kbd` hint shows on primary buttons on :focus-visible, and on hover for fine pointers only.\n\nOptimistic edits: skip, move, save, daily goal, target and exam date apply at once and revert with `Not saved. Try again.` on failure. The spec waits for the request before showing any change.\n\nPhone:\n- The primary action sits at the bottom of each card; choice rows are 56px.\n- The day's-question tabs also switch with a horizontal swipe on the question body (pointer events, 60px threshold, off while an input is focused).\n- Sheets open at 90% height with the primary button at the bottom.",
+    "beats": "TopTierPrep's dashboard has no shortcuts; the only arrow keys are in the report's review modal. Its QOTD sits behind a modal that takes 5 taps per question (Answer, pick, Check answer, Show explanation, Done), 10 for both. Its errors are toasts. Ours is fully keyboard-operable, both day's questions take 2 taps each with the explanation already open on a miss, and a returning visit shows a complete page on the first frame.",
+    "effort": "S",
+    "needs": "F2 UI.keys registry and palette entries (no clash with R22: these are page-scoped, and the session keys stay in the session). F1 kbd style. F3 workspace keyboard focus-within handling."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Hero greeting",
+    "spec_says": "Local date eyebrow, `Good morning, Aziz`, and 4 status chips linking to cards.",
+    "why_only_parity": "The date and greeting are the same as theirs. The chips repeat figures that the cards below already show.",
+    "upgrade": "A computed briefing line: yesterday's result, check-ins due, new homework or score, and a streak-at-risk nudge after 18:00 with a 1-question action. See the 'Since you were last here' proposal."
+   },
+   {
+    "feature": "Questions of the day: Check step, one attempt",
+    "spec_says": "Confirm mode: select, then Check. One attempt. A–D and Enter.",
+    "why_only_parity": "Theirs has the same select-then-Check and one attempt. The spec even cites theirs as the reason.",
+    "upgrade": "A `Sure · Guess` toggle beside Check, filed as attempts.guess (R8), so a lucky right is not treated as mastery. After the reveal: `You 1:12 · everyone 0:58 · SAT pace 1:35`. After a miss: an inline `Try its twin` (one fresh-seed question in place, no navigation) that fills the new mistake's first owed pip, next to `5 more like this`."
+   },
+   {
+    "feature": "Study time today / this month",
+    "spec_says": "Four figures (today, week, month, active days) with goal bars.",
+    "why_only_parity": "These are their two totals plus two more. It is still 'how long', never 'on what'.",
+    "upgrade": "Split each figure by what the time went on (practice, tests, fixing mistakes, words) and by domain against the test's weight: `This week 3h 10m · Algebra 58% of your time, 35% of the test`, as a stacked bar against the blueprint. A .btn `Rebalance · 10 in Geometry` starts a set in the most under-served high-points domain."
+   },
+   {
+    "feature": "Month calendar",
+    "spec_says": "Heat by minutes, plan marks, exam mark, and a day detail of numbers and sitting links.",
+    "why_only_parity": "The month grid is their component, fixed for the timezone. The detail is figures and links, not what happened.",
+    "upgrade": "A Minutes / Questions / Accuracy heat toggle. A day detail that names the mistakes opened and closed that day and the topics with right/asked. `Redo this day's misses` as fresh questions (POST /api/drill {from_day}). See the 'Any day, redone' proposal."
+   },
+   {
+    "feature": "Study plan CTA",
+    "spec_says": "Title, the 4 wizard steps as links, a preview line, 3 bullets, and `Build my plan →` into the wizard.",
+    "why_only_parity": "Theirs is title, copy, 3 bullets and Build My Plan into the same 4-step wizard. Ours adds a preview line but keeps the same number of steps.",
+    "upgrade": "When exam_date is known, one tap builds it: `Build with these: Nov 7 · 45 min × Mon–Fri · starts at 560 · target 700`. The defaults come from the profile and the estimate. POST /api/plan/preview (<150 ms) draws the first week's 7 days inline before committing. `Adjust` opens the wizard at the step that holds the chosen field. It is instant, with no fake 'building' screen; theirs failed 3 of 3 times."
+   },
+   {
+    "feature": "Today's plan list: N of M, minutes left, All done, Full plan, Why",
+    "spec_says": "Plan and Daily groups, auto-ticked rows, a `Why` one-line reason, Skip, and Move.",
+    "why_only_parity": "The header fields match their Today's Plan card, and Why is a reason sentence like their aiReason. It still lists only plan tasks plus the QOTD and the challenge.",
+    "upgrade": "One Due-today list that also holds homework due, check-ins due, words due and group contests, with a single minute total. Why lines carry numbers (open mistakes, accuracy, questions a section, ≈ points). `Swap for:` uses the Plan task's alternatives. The finish screens offer the next row. See the 'Due today' proposal."
+   },
+   {
+    "feature": "Plan stat row",
+    "spec_says": "`Day 12 of 45`, `20% done`, `10 days to the SAT`, `+140 to target`.",
+    "why_only_parity": "These are the same four tiles as their plan view (days to exam, plan complete %, score gap), plus the day number. Days to the SAT repeats the countdown card.",
+    "upgrade": "Adherence and pace in place of the duplicates: `9 of 10 study days on time` and `made +9/wk · needs +18/wk`, each with a 6-week sparkline, from Plan stats (adherence, pace)."
+   },
+   {
+    "feature": "Plan week strip and pager",
+    "spec_says": "‹ Week 3 of 7 ›, a This week jump, 7 day columns with done/partial/missed/skipped/rest.",
+    "why_only_parity": "Their week view has the same pager, This week jump and 7 day tiles with done/total or rest.",
+    "upgrade": "Each day column gets a studied-vs-planned minutes bar (their Studied vs Planned chart sits on a separate Progress tab). A missed day gets `Make up`, which adds its task to today or a chosen day (Plan status made_up) in one tap."
+   },
+   {
+    "feature": "Fallen-behind line",
+    "spec_says": "Shown at 2+ missed study days in 7, with copy and `Change daily time` linking to the plan wizard.",
+    "why_only_parity": "Theirs is a banner with Rebalance my plan. Ours is also a banner with a link, and it sends the student off to edit.",
+    "upgrade": "Two concrete one-tap fixes, computed with POST /api/plan/preview and shown with their pace tags before applying: `Shorter days: 30 min × 6 days · still +15/wk [Apply]` and `Later date: Nov 7 · +11/wk [Apply]`. Each has an Undo toast."
+   },
+   {
+    "feature": "Score drift prompt",
+    "spec_says": "`Your last 3 tests average 610; your plan started from 560.` Update the plan's start, Not now.",
+    "why_only_parity": "Theirs has the same prompt with Rebuild with these scores and Not now.",
+    "upgrade": "Show the evidence: the 3 sittings as dated band chips linking to their reports. Prompt in both directions (R16, ±40). Show the effect before applying: `New start 610 · pace needed drops from +18 to +12/wk`."
+   },
+   {
+    "feature": "Score progress and target",
+    "spec_says": "Latest band, target tick, scale bar, gap and pace line, a trend of the last 8.",
+    "why_only_parity": "It answers 'where am I and where do I want to be', the same question as their current and target figures, only drawn better.",
+    "upgrade": "A projection cone from the trend to the exam date, with an on-pace / behind verdict and made-vs-needed pace per week. After the SAT, calibration against the official score. See the 'Test-day forecast' proposal."
+   },
+   {
+    "feature": "Target dialog",
+    "spec_says": "Number input kept in sync with a slider, quick chips 500–800, Save disabled until something changes, optional R&W fields.",
+    "why_only_parity": "Theirs is a number input with a 400–1600 bar and Save disabled until you type. Same interaction, different scale.",
+    "upgrade": "Each chip shows what it costs: `700 · +23/wk · Ambitious`, from the plan preview's pace tags. A 'what it takes' line from our own router: `700 needs the harder module 2 · about 14 of 22 right in module 1` (preview target_note), with `Your best module 1: 12 of 22`."
+   },
+   {
+    "feature": "Exam date picker",
+    "spec_says": "Upcoming official dates, `Another date…`, Remove date, keyboard navigation.",
+    "why_only_parity": "Theirs is a select of official dates. Dropping past dates and adding a custom one fixes their bugs but it is the same control.",
+    "upgrade": "Every date row shows its consequences, from POST /api/plan/preview per_date: `Nov 7 · in 45 days · 32 study days · needs +11/wk · Steady`. The first Steady date is tagged `Recommended`. The registration deadline is shown once verified in satdates.py."
+   },
+   {
+    "feature": "Live DD:HH:MM:SS countdown",
+    "spec_says": "Four boxes ticking to 8:00 AM doors, a plan line, a checklist in the final week.",
+    "why_only_parity": "Their dashboard has the same seconds ticker as its main figure. A ticking second is decoration, not information.",
+    "upgrade": "The main figure becomes study units (`7 study days · 5h 15m planned · 2 tests left`) and the ticker becomes a secondary line. Exam-week behaviour changes: dress rehearsal at the real start time, light review on days −2 and −1, a test-morning view. See the 'Exam-week' proposal."
+   },
+   {
+    "feature": "Daily goal",
+    "spec_says": "A popover of minute chips 15–240 writing profile.minutes.",
+    "why_only_parity": "Theirs has Daily 2 Hours / Weekly 12 Hours on the profile. Ours is the same picker, moved to Today.",
+    "upgrade": "A recommended goal computed from the gap and the date: `Recommended: 50 min · to be on pace for 700 by Oct 3 on your study days`, via plan preview. A questions-per-day unit as an alternative (`30 questions ≈ 48 min`)."
+   },
+   {
+    "feature": "Streak",
+    "spec_says": "Three labelled streaks (study, day's questions, challenge) and a best.",
+    "why_only_parity": "Each is a day count like their pill. More counts is not a better streak.",
+    "upgrade": "An at-risk state after 18:00 local with the minimum that keeps it and a one-tap 1-question action. Plan rest days shown as protected (a small shield mark) on the calendar and the week strip, so a student sees why a rest day did not break the streak (R13)."
+   },
+   {
+    "feature": "Recent test cards: score display",
+    "spec_says": "The band, route tag, right/asked, minutes, mini scale, and Review.",
+    "why_only_parity": "The score half of the card (date, score, Review) is their card. Misses and Fix go further; the score does not.",
+    "upgrade": "A delta against the previous sitting of the same kind (`+40 vs Sep 14`). Per-module time used against the clock and blanks at time-up (`M2 35:00 used · 3 blank at time`, from qstate). The R16 percentile when n ≥ 20."
+   },
+   {
+    "feature": "Loading states",
+    "spec_says": "Static skeletons at each card's final height, and per-card errors with Retry.",
+    "why_only_parity": "Skeletons are the standard pattern. A returning student still waits through them on every visit.",
+    "upgrade": "Paint from the last visit's cached responses on the first frame, marked `Updating…`, and repaint only what changed. Prefetch the session page from Start. See the 'Instant, keyboard-first' proposal."
+   }
+  ]
+ }
+}

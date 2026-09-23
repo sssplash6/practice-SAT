@@ -1,0 +1,475 @@
+{
+ "label": "design: competition",
+ "key": "v2:9fbb6a20ed2e86754fb86cf1c5e7f9fdd8a3d30d89093a708eb9f4cfc2794d1c",
+ "result": {
+  "section": "Contests, rankings and leaderboards (Compete)",
+  "theirs": [
+   {
+    "feature": "Three sidebar sections for competition",
+    "detail": "Contests & Challenges (/contest-challenge), Contests Rankings (/contest-rankings), Leaderboards (/leaderboard), all in the main sidebar nav."
+   },
+   {
+    "feature": "Contests & Challenges: Global Leaderboard card",
+    "detail": "Card titled GLOBAL LEADERBOARD with a 'Rankings >' link. Empty state: 'No rankings yet. Finish a contest to be the first on the board.'"
+   },
+   {
+    "feature": "Contests & Challenges: Your Contest Stats card",
+    "detail": "Trophy icon. Empty state: 'Not ranked yet / Finish your first contest to get a global rank.'"
+   },
+   {
+    "feature": "Contests & Challenges: active contests list",
+    "detail": "Full-width list of active contests. Empty state: trophy, 'No active contests right now / New challenges are posted regularly. Check back soon.' Contests are hand-posted, so the list was empty on the day of the teardown."
+   },
+   {
+    "feature": "Contest tiers by plan",
+    "detail": "Free and standard paid contests need Pro. Elite-only prize contests need Elite. The free tier gets no contests (the subscription table shows '—')."
+   },
+   {
+    "feature": "Contest Rankings: Performance Summary card",
+    "detail": "Empty state with a 'Browse contests' button."
+   },
+   {
+    "feature": "Contest Rankings: Contest Leaderboard card",
+    "detail": "'Pick a contest you've finished to see how you placed.' A picker of finished contests opens that contest's board."
+   },
+   {
+    "feature": "Contest Rankings: Your Rankings card",
+    "detail": "Rows: globe icon 'Global rank', medal icon 'Contests played'."
+   },
+   {
+    "feature": "Contest Rankings: Time Analysis card",
+    "detail": "'Average seconds per answered question, by difficulty', drawn as a chart."
+   },
+   {
+    "feature": "Contest Rankings: Badge Progress card",
+    "detail": "Progress toward badges (empty when seen)."
+   },
+   {
+    "feature": "Contest Rankings: Your Contest History card",
+    "detail": "A list of contests you've sat (empty when seen)."
+   },
+   {
+    "feature": "Contest Rankings layout",
+    "detail": "A two-column grid of the six cards above."
+   },
+   {
+    "feature": "Leaderboard hero with podium",
+    "detail": "A centred 'Leaderboard' title, 'See how you stack up… globally and in your country.', and a large space for a top-3 podium."
+   },
+   {
+    "feature": "Leaderboard period control",
+    "detail": "Segmented Weekly / Monthly (the default) / Yearly."
+   },
+   {
+    "feature": "Leaderboard scope select",
+    "detail": "Global, switchable to country."
+   },
+   {
+    "feature": "Leaderboard metric control",
+    "detail": "Segmented Contest Points | Overall Score (the default)."
+   },
+   {
+    "feature": "Leaderboard table",
+    "detail": "Columns RANK / USERNAME / ACCURACY / TIME. Footer 'No more rankings yet.' It pages or scrolls without end. Every period was empty."
+   },
+   {
+    "feature": "Profile Performance Snapshot",
+    "detail": "Global Rank (e.g. 128) and Country Rank (e.g. 43) on /profile."
+   },
+   {
+    "feature": "Profile Achievements",
+    "detail": "Badge tiles 7-Day Streak / 1000 Solved / Consistency / Top Rank, with 'View All'."
+   },
+   {
+    "feature": "Ranked vs not ranked label",
+    "detail": "The score report carries a pill 'Practice test — not ranked', which implies some sittings are ranked."
+   },
+   {
+    "feature": "Username on boards",
+    "detail": "The board shows a username. The account name comes from Google sign-in."
+   },
+   {
+    "feature": "Question of the Day (two a day)",
+    "detail": "One R&W and one Math on the dashboard, each opened by an 'Answer' button into a modal. The stem uses KaTeX and the choices are full-width rows. 'Check answer' stays disabled until you pick. After checking: an Incorrect/Correct banner and a 'Show explanation' link, and the correct choice is NOT highlighted. The primary button then reads 'Done'. A 'More practice' text button. One attempt a day."
+   },
+   {
+    "feature": "Share",
+    "detail": "'Share' elsewhere calls navigator.share (the OS share sheet), which froze the page in Dia."
+   },
+   {
+    "feature": "Nothing is live without staff",
+    "detail": "Contests are posted by hand ('posted regularly'), so the whole section can be empty, and it was."
+   }
+  ],
+  "ours_now": [
+   {
+    "feature": "Daily challenge",
+    "status": "have",
+    "note": "Ten questions a day, the same for everyone: 3 easy, 4 medium, 3 hard over 3/3/2/2 domains, grid-ins at 4 and 8, stored once in `challenges`. One sitting per learner per local day, resumable, run in the practice session with the key and rationale after each answer and no repairs."
+   },
+   {
+    "feature": "Active contests list",
+    "status": "missing",
+    "note": "The daily challenge is the only competition. There are no weekly, sprint or private contests, and no list of contests."
+   },
+   {
+    "feature": "Challenge board",
+    "status": "partial",
+    "note": "/challenge/ shows rank, name, right/asked and time for Today or Yesterday only: the top 100 plus your row, which is highlighted. No accuracy column, no paging, no other days, no scopes."
+   },
+   {
+    "feature": "Board time",
+    "status": "worse",
+    "note": "daily.board ranks on finished − started, so reading rationales and the pause before pressing Finish count against you. The session summary shows the sum of the client-sent ms instead. Seen live: the summary said '7 min' while the board said '0:00' for the same sitting."
+   },
+   {
+    "feature": "Ties",
+    "status": "worse",
+    "note": "The sort is (-right, seconds, finished) and ranks are handed out 1..n, so equal scores get different ranks. Seen: three players on 2/10 in 0:00 were ranked 1, 2 and 3."
+   },
+   {
+    "feature": "Clock length",
+    "status": "worse",
+    "note": "GET /api/challenge says 950 s (10 × 95). drill.seconds_of gives 954 s (10 × 2100 // 22)."
+   },
+   {
+    "feature": "Leaving a challenge",
+    "status": "worse",
+    "note": "In the practice session, X calls finish() once one question is answered, so leaving a challenge hands it in with the rest blank. There is no warning."
+   },
+   {
+    "feature": "Integrity",
+    "status": "worse",
+    "note": "The questions are identical, the key is shown after each answer, and a learner code is free to mint (a private window is a new player). Anyone can harvest today's ten keys on a throwaway code. X-Tz is client-controlled (−840..720), so a student can also sit tomorrow's ten early. There is no too-fast check."
+   },
+   {
+    "feature": "Global leaderboard (week/month/year)",
+    "status": "missing",
+    "note": "No board spans more than one day."
+   },
+   {
+    "feature": "Scope (global/country)",
+    "status": "missing",
+    "note": "There is one global list."
+   },
+   {
+    "feature": "Metric switch (points vs overall)",
+    "status": "missing",
+    "note": "There are no points, no rating and no overall metric."
+   },
+   {
+    "feature": "Podium",
+    "status": "missing",
+    "note": "None."
+   },
+   {
+    "feature": "Your contest stats / performance summary",
+    "status": "partial",
+    "note": "Only today's rank, shown in the /challenge/ header and on Today's Challenge card. No totals, bests or averages."
+   },
+   {
+    "feature": "Contest picker (how you placed in a finished contest)",
+    "status": "partial",
+    "note": "The Today/Yesterday toggle is the only way to see an older board."
+   },
+   {
+    "feature": "Global rank, contests played",
+    "status": "missing",
+    "note": "None."
+   },
+   {
+    "feature": "Time analysis by difficulty",
+    "status": "missing",
+    "note": "attempts.ms exists, but it is client-sent and never shown."
+   },
+   {
+    "feature": "Badges / achievements",
+    "status": "missing",
+    "note": "None, anywhere."
+   },
+   {
+    "feature": "Contest history",
+    "status": "partial",
+    "note": "Challenge sittings show up in the Results list as 'Challenge' rows (score only). No rank, field size or link to that day's board."
+   },
+   {
+    "feature": "Review of the challenge's questions",
+    "status": "missing",
+    "note": "The session summary lists topics and mistakes, but you can't go back to the ten questions, and there are no crowd stats per question."
+   },
+   {
+    "feature": "Profile rank snapshot",
+    "status": "missing",
+    "note": "/me/ holds only a name and the device code."
+   },
+   {
+    "feature": "Ranked vs unranked label",
+    "status": "missing",
+    "note": "There is no idea of unranked, ghost or flagged sittings."
+   },
+   {
+    "feature": "Board name",
+    "status": "worse",
+    "note": "The name form appears only after finishing, or on /me/. NAME_OK (^[^\\d<>@]{1,60}$) rejects digits, so 'mike2027' can't be used. Names aren't unique, can't be reported, and there is no way to stay off public boards. The default name is 'Student 1A2B'."
+   },
+   {
+    "feature": "Navigation",
+    "status": "worse",
+    "note": "The challenge isn't in NAV at all (SECTION maps challenge → today). It is reachable only from Today's card."
+   },
+   {
+    "feature": "Question of the day",
+    "status": "have",
+    "note": "One Math MCQ, answered inline on Today, one attempt. It shows the key, the misconception the chosen option names, the rationale, and '% of N right'. That feedback is better than theirs. Missing: the spread of picks per option, 'another like this', past days, and a QOTD streak. A past day's answer is refused (409)."
+   },
+   {
+    "feature": "Duplicate sittings after a device carry",
+    "status": "worse",
+    "note": "progress.carry leaves two sittings of one day under one code, and the board shows both (a known edge marked with a ponytail comment)."
+   },
+   {
+    "feature": "Always something to do",
+    "status": "have",
+    "note": "The daily challenge makes itself from the date, so it is never empty. Theirs was empty."
+   }
+  ],
+  "design": "\n# Compete: contests, rankings and leaderboards\n\nTopTierPrep splits competition across three sidebar pages (Contests & Challenges, Contest Rankings, Leaderboard). They were all empty, because staff post contests by hand and plans gate them. Ours is one **Compete** section: the sixth nav item, four pages, and one contest model that schedules itself. Something is always live, everything is free, and every student is ranked the same way.\n\n| theirs | ours |\n|---|---|\n| Contests & Challenges | **Overview** `/compete/` |\n| a contest (never seen live) + \"Contest Leaderboard\" picker | **Contest page** `/compete/contest/?id=…` (lobby, sitting, result, board, review, the field's traps) |\n| Leaderboard | **Leaderboard** `/compete/leaderboard/` |\n| Contest Rankings + Profile Performance Snapshot + Achievements | **Your rankings** `/compete/rankings/`, plus a Boards block on `/me/` |\n\nCopy rule for this section: headings, legends, counts and one-line helper text are wanted. Every number on a board says what it is. No illustrations and no marketing lines.\n\n---\n\n## 1. The contest model (everything below renders this)\n\n### 1.1 Kinds\n\n| | Daily Challenge | Sprint | Weekly Module | Private |\n|---|---|---|---|---|\n| id | `daily-2026-09-23` | `sprint-2026-W39` | `weekly-2026-W39` | `p-` + 10 random base32 chars |\n| window | the student's own local calendar day (today's rule, via X-Tz) | Mon 00:00 UTC → next Mon 00:00 UTC (always live) | Sat 00:00 UTC → Mon 00:00 UTC | from creation, for 1 h / 24 h / 3 days / 7 days (creator's choice) |\n| questions | 10: 3E 4M 3H, domains 3/3/2/2, grid-ins at 4 and 8 (today's builder, unchanged) | as many as you can answer, from a 60-slot sequence in the week's theme domain | 22 on the module-1 blueprint: 7E 8M 7H, domains 8/7/4/3, grid-ins at 6, 7, 13, 14, 21, 22 | 5 / 10 / 15 / 22 over the skills and difficulty the creator picks |\n| clock | 16:00 wall clock (fix: 10 × 95 s = 950 s everywhere) | 5:00 | 35:00 | auto (95 s a question) or 5–70 min |\n| runner | practice session | practice session, sprint mode | test window (Bluebook behaviour: navigator, mark, strike, Check Your Work) | practice session |\n| questions per student | **identical** (stored once) | **twins** | **twins** | creator: \"Same questions for everyone\" (default) or \"Everyone gets their own twin\" |\n| key shown | after each question | after each question (short verdict) | at hand-in | creator: after each question (default) / at the end |\n| ranked sittings | your first sitting that day | every run in the week; your best run counts | your first sitting in the window | each member's first sitting in the window |\n| board order | points ↓, answer time ↑ | best-run points ↓, right ↓, answer time ↑ | points ↓, time used ↑ | points ↓, answer time ↑ |\n| rated (moves rating) | yes | yes | yes | no |\n\n**Twin questions** are only possible with our bank. A twin contest stores a canonical slot list `[template, difficulty, format]`. Each student gets that slot's template, at that difficulty and format, on a fresh seed they have never seen (`blueprint.draw_matching` with the student's own builder). Everyone faces the same skills, the same traps and the same difficulty with different numbers. So keys can be shown right away, no one can pass answers on, and retakes are fair.\n\n**Sprint theme** rotates on the ISO week number mod 4: 0 Algebra, 1 Advanced Math, 2 Problem-Solving & Data Analysis, 3 Geometry & Trigonometry. The 60 slots run: slots 1–4 easy, 5–12 medium, then medium and hard alternating. Templates go round-robin through the domain's templates, ordered by `sha256(week + template)`.\n\n### 1.2 Scoring rules (shown on every lobby under \"How it's ranked\")\n- **Points**: 10 for each easy, 20 for each medium and 30 for each hard question answered right, plus 10 for answering every question (not in Sprint). Daily max 210, Weekly max 450.\n- **Answer time** (the board's clock): the server's own time from serving each question to receiving its answer, summed and capped at the clock. Reading the rationale after answering is free. The wall clock still ends the sitting. Weekly Module: start to hand-in.\n- **Ties**: equal points and equal answer seconds share a rank, shown `=4`. The next distinct score takes rank 6 (competition ranking). Within a tie, the earlier finisher is listed first.\n- **Top %**: `ceil(rank / ranked players × 100)`, shown only when there are ≥ 10 ranked players.\n- **Ranked / Unranked**: every result, board row and history row says which. A sitting is **Unranked** when it is:\n  - a *ghost* sitting of a closed contest or a past day (\"Would have placed #6 of 37\");\n  - a second sitting that arrived with a device-code carry;\n  - flagged too fast: median answer time under 4 s with at least half right. Shown as \"Not ranked: answers came in faster than the questions can be read.\"\n- **Rating and level**: each answer in a ranked Daily, Sprint or Weekly moves a skill rating against that question's own rating (Elo against the item). Each (template, difficulty) has a rating that calibrates from everyone's answers. Students start at 1000 and show as \"Placing\" until they have 30 rated answers. Levels 1–10 use the ladder in spec/rating.md (≤800, 801–950, 951–1100, … 2001+). The badge is the brand mark's ring filled in ten steps with the level digit in the counter. Placing is an empty ring with \"–\". Level 10 is a solid orange rounded square with \"10\". The size is 20 px in tables, 32 px in cards and 48 px in stat cards.\n\n---\n\n## 2. Shell changes\n- `NAV` gains **Compete** `/compete/` (trophy icon), sixth after Results. Desktop bar: Today · Practice · Tests · Plan · Results · Compete. Phone tabs: `grid-template-columns: repeat(6, 1fr)`, 65 px each at 390, labels still 10.5 px.\n- `SECTION`: `compete`, `contest`, `leaderboard`, `rankings` → `compete`. The old `challenge` entry is removed.\n- `/challenge/` → a server 307 to `/compete/contest/?id=daily`. `daily` resolves to today's local id using X-Tz. `web/challenge/` is deleted.\n- **Compete sub-nav** on Overview, Leaderboard and Your rankings: three underline links under the H1, \"Overview · Leaderboard · Your rankings\", in `.choices` style with `aria-current=\"page\"`. The contest page instead has a back link \"‹ Compete\".\n\n---\n\n## 3. Overview `/compete/` (theirs: Contests & Challenges)\n\n**Desktop 1280.** H1 \"Compete\" on the left. On the right, two quiet buttons: \"Join with a code\" and \"+ Create a contest\". Then the sub-nav, then a grid: main column `minmax(0, 2fr)`, side column `minmax(0, 1fr)`, gap 20.\n\n### Main column\n**A. Daily Challenge card** (wash ground, radius 14, padding 26)\n- Top line: `k` \"DAILY CHALLENGE · WED, SEP 23\" on the left. On the right, `meta` \"Next one in 07:14:22\", a live countdown to local midnight that ticks each second and is `aria-live=\"off\"`.\n- **Ladder**: ten cells in a row (each `1fr`, 64 px tall, paper tiles). Each cell holds the number (mono 11), the domain glyph (20 px) and difficulty pips (1–3 dots, ink). Cells 4 and 8 carry a `grid-in` tag. Legend below: \"● easy  ●● medium  ●●● hard · grid-in: you type the answer\". Hover or focus on a cell shows the tooltip \"Q4 · Algebra · Medium · grid-in\". The questions themselves are never shown here.\n- Facts line: \"10 questions · 16 min · one sitting · ranked\". Field line: \"37 finished · median 140 pts · best 210\", or \"No one has finished yet. Be first.\"\n- Status block, by state:\n  - *Not started*: pill \"Start the challenge\". Note: \"The clock starts when you press Start and doesn't stop. After each question you see the answer and why.\"\n  - *In progress*: pill \"Resume\" + `meta` \"4 of 10 answered · 9:12 left\". If the clock has already run out, the server finishes the sitting on read and the card shows *Finished*.\n  - *Finished*: result line \"#4 of 37 · top 11% · 8/10 · 170 pts · 11:42 answer time\". Ten mini squares: right in orange, wrong in graphite; each links to `…/contest/?id=daily-…#q3`. Rating chip \"+14 → 1,084 · Level 3\". Buttons: pill \"See the board\", quiet \"Review answers\", quiet \"Copy result\".\n  - *Finished, unranked*: the same, with a chip \"Unranked\" and the reason line.\n- Footer link \"Past days ›\" opens yesterday's contest page.\n\n**B. Contests**\n- Heading row: `h2` \"Contests\" + an underline filter: Live (n) · Upcoming (n) · Finished (n) · Private (n). The default is Live.\n- Row (tile, radius 10, padding 16 18), grid `28px minmax(0,1fr) auto auto`:\n  - Kind icon: sprint = bolt, weekly = module sheet, daily = trophy, private = two people.\n  - Title: \"Sprint · Advanced Math week\", \"Weekly Module · Week 39\", \"Private · Period 3 quiz\". Window line: Live \"Ends Mon 3:00 AM · in 4d 06h\". Upcoming \"Opens Sat 3:00 AM · in 2d 11h\". Finished \"Ended Mon 3:00 AM\". All times are local.\n  - Facts: \"22 questions · 35 min · your own twin questions · 128 in\".\n  - Status chip (tile-2 ground): \"Not entered\" · \"In progress · 12:40 left\" · \"Finished · #12 of 128 · top 10%\" · \"Best 240 pts · 3 runs\" (sprint) · \"Final · #9 of 131\".\n  - Action (quiet): \"Start\" / \"Resume\" / \"Results\" / \"Add to calendar\" (upcoming only; downloads a `.ics` built in the page).\n- Empty states:\n  - Live is never empty (Daily and Sprint are always live).\n  - Upcoming always lists the next Weekly and the next Sprint.\n  - Finished: \"No finished contests yet.\"\n  - Private: \"No private contests. Make one for your class or a friend: pick the skills, the length and how long it stays open, then share the code.\" with the button \"+ Create a contest\".\n- Finished shows 10 rows and then \"Show 10 more\".\n\n**C. Question of the day strip** (tile, one row): `k` \"QUESTION OF THE DAY\".\n- Unanswered: \"Not answered yet\" + quiet \"Answer it on Today ›\".\n- Answered right: \"Right · 61% of 212 got it · 5-day QOTD streak\".\n- Answered wrong: \"Fell for: {misconception}\".\n- Quiet \"This day ›\" opens the day's contest page, which holds the QOTD panel.\n\n### Side column\n**D. Your stats** (tile)\n- Level badge (48) + rating (`num` 32) \"1,084\" + \"Level 3\", or \"Placing · 12 of 30 rated answers\".\n- 2×2 stat tiles: \"Week rank #12 of 340\" · \"Points this week 620\" · \"Contests 14\" · \"Best finish #2 · Sep 19\".\n- Link \"Your rankings ›\".\n- New student: empty badge, tiles show \"—\", and the line \"Finish a ranked contest to get a rank.\"\n\n**E. Leaderboard preview** (tile)\n- `k` \"THIS WEEK · POINTS\". Five rows (rank, name, 20 px level badge, points). If you are outside the top 5, a thin separator and then your row.\n- Link \"Full leaderboard ›\". Empty: \"No one has scored this week yet.\"\n\n**F. Next badges** (tile)\n- The three unearned badges you are closest to: icon, name, rule line, a progress bar and \"5/7\".\n- Link \"All badges ›\" goes to `/compete/rankings/#badges`.\n\n**G. Your groups** (tile)\n- A row per group: name, member count, your week rank in it.\n- Quiet \"Join with a code\", quiet \"Create a group\".\n- Empty: \"Groups are private boards for a class or a group of friends.\"\n\n### Phone 390\n- One column in this order: A, D, B, E, C, F, G.\n- The ladder becomes a 5×2 grid.\n- The two header buttons collapse into one quiet \"Join or create\", which opens a sheet with both.\n- The contest row stacks: icon + title/window on one line, facts, then the status chip and action on one line.\n- No horizontal scroll anywhere.\n\n### Sheets (dialog.sheet)\n- **Join with a code**: a 6-character field (uppercase, mono, `autocomplete=off`) and a pill \"Join\".\n  - Errors: \"No contest or group has that code.\" · \"That contest has ended. You can still sit it unranked.\" (with a quiet \"Sit it unranked\").\n  - On success: a contest code goes to the contest page; a group code shows \"You're in {group}.\" and the group appears in G.\n- **Create a contest**: see §7.\n- **Create a group**: a name field (3–40 chars) and \"Create\". The result shows the code large with \"Copy code\" and \"Copy link\".\n\n### States\n- Loading: skeleton tiles at the final sizes (ladder cells in grey, 3 skeleton contest rows, 5 skeleton board lines), no spinners.\n- Error: `.error` \"The server is not answering.\" + quiet \"Try again\". If an earlier load succeeded, its data stays on screen.\n\n---\n\n## 4. Contest page `/compete/contest/?id=…` (theirs: a contest, plus \"Contest Leaderboard\")\n\n### Header (all states)\n- Back link \"‹ Compete\".\n- `k` kind: \"DAILY CHALLENGE\" / \"SPRINT · ADVANCED MATH WEEK\" / \"WEEKLY MODULE\" / \"PRIVATE CONTEST · by Ms. Lee\".\n- H1: the title (daily: \"Wed, Sep 23\").\n- `meta` window: \"Open until 11:59 PM your time\" / \"Sat 3:00 AM – Mon 3:00 AM\".\n- Status chip: Upcoming / Live / Closed.\n- **Daily only, day navigation**: \"‹ Sep 22\" · `<input type=\"date\">` (min = the first stored challenge day, max = today) · \"Sep 24 ›\" (disabled on today).\n\n### Body by state\n**Upcoming**\n- A big countdown \"Opens in 1d 04:12:09\".\n- The ladder or blueprint preview (as in §3A; the weekly has 22 cells in two rows of 11).\n- \"How it's ranked\" (the §1.2 rules as a 4-line list).\n- Quiet \"Add to calendar\" and pill \"Practice for it\", which starts a 10-question drill over the contest's domains.\n\n**Live, not started**\n- Rules, ladder, field line (\"128 in · median 260 pts · best 410\").\n- Pill \"Start\".\n- Private contests also show \"Entrants (12)\" as a wrapped list of names with status dots (finished / in progress / not started).\n- Weekly: \"Runs in the test window: move freely between questions, mark for review, hand in when ready. Answers and explanations appear when you hand in.\"\n\n**In progress (you left)**\n- Pill \"Resume\" + \"4 of 10 answered · 9:12 left · the clock kept running\".\n\n**Finished (you)**: the result panel\n- Big rank `num` \"#4\" + \"of 37\", with `=` when tied. \"Top 11%\".\n- Tiles: Score \"8/10\" · Points \"170\" · Answer time \"11:42\" · Rating \"+14 → 1,084\" (with a level badge; a level-up shows \"Level 3 → 4\").\n- New badges earned in this sitting: small tiles.\n- Answer strip: 10 (or 22, or N) squares, orange right and graphite wrong. Each jumps to its review item.\n- Actions: pill \"See the board\". Quiet: \"Practice my misses\" (existing `from_session`), \"Practice the field's traps\", \"Copy result\", \"Challenge a friend\".\n- Weekly adds a \"Math estimate from this module\" band, via the existing scoring.\n- Sprint shows \"Best this week 240 pts (run 3 of 3)\" and a pill \"Run again\". Every run uses fresh questions, and only your best run counts.\n\n**Closed / past day, not sat**\n- Board and field traps are visible.\n- Pill \"Sit it now (unranked)\", with the note \"Same questions (or twins). You'll see where you would have placed. It doesn't count for rank or rating.\"\n- After a ghost sitting, the result panel reads \"Would have placed #6 of 37\".\n\n### Board section\n- Heading `h2` \"Board\", `meta` \"37 ranked · updated just now\". While the contest is live and the tab is visible, it polls every 30 s.\n- Scope underline: Everyone · Near me · {each of your groups}.\n- Table (`<table>`, `<th scope=\"col\">`):\n  - Daily and private columns: Rank | Student | Score | Points | Answer time.\n  - Sprint: Rank | Student | Best points | Right/answered | Runs.\n  - Weekly: Rank | Student | Score | Points | Time used.\n  - The Student cell holds the name + a 20 px level badge. Rank shows `=4` for ties.\n  - Your row: wash ground + amber inset edge + `aria-current=\"true\"`, labelled \"You\".\n  - Unranked sittings never appear. Your own unranked result shows as a line above the table: \"Your sitting is unranked: {reason}.\"\n- Paging: 50 rows, then \"Show 50 more\". At the end: \"That's everyone: 37 students.\"\n- **Sticky you-bar**: while your row is out of view (IntersectionObserver), a bar pinned above the phone tabs (bottom 0 on desktop) reads \"You · #212 · 150 pts · Jump to me\".\n- Row menu (⋯, other students' rows only): \"Report name\". After 3 reports from different learners, the name is reset to its default handle.\n- Empty: \"No one has finished yet. The first finisher is #1.\" Near me when you're unranked: \"Finish this contest to see who's around you.\"\n\n### Review section (`#review`)\nGated: open once you've finished your sitting, or once the contest is closed everywhere (daily: day D + 1 at 12:00 UTC). Before that, the section shows \"Answers open when you finish, or after the contest closes.\"\n- Filter underline: All · Wrong (n) · Right (n) · Hardest for the field (the 3 with the lowest field % right).\n- Collapsed row per question: \"Q3\" · skill glyph + skill · pips · your mark (✓ orange / ✗ graphite / – blank) · \"field 62% right\" · \"you 1:12 · field median 1:34\".\n- Expanded (`<details>`):\n  - The question via `UI.question` in review mode (your pick, the key, struck-out wrong picks) + the rationale.\n  - **How the field answered**. Identical contests show one bar per option: \"A 12%\", \"B 41%: Subtracted the constant terms instead of adding them\", \"C 38% · key\", \"D 9%: …\". Twin contests show one bar per misconception across all twins: \"Fell for 'Swapped the columns…' 27%\", \"Right 58%\", \"Blank/timed out 15%\".\n  - Quiet \"Another like this\", which starts a 5-question drill on that template, fresh seeds.\n\n### The field's traps\n- `h2` \"Where the field went wrong\". The top 5 misconceptions in this contest: label, \"% of the field fell for it\", and your status (\"you too\" / \"you avoided it\" / \"not in your questions\").\n- Pill \"Practice these 5\": a drill with those five templates queued twice each.\n\n### QOTD panel (daily only; the side column on desktop, after Review on phone)\n- That day's question of the day. If you answered it: your answer, key, rationale and the option spread.\n- A past day you didn't answer can be answered (\"Answer, unranked: it won't count for your QOTD streak\").\n- Below it, a 30-day strip of dots (answered right / wrong / not answered), each linking to that day.\n\n### Layout\n- Desktop: header full width, then `2fr 1fr`. Main: state panel → Board → Review → Traps. Side: rules card, QOTD panel (daily), Entrants (private), owner controls (private).\n- Phone: one column in this order: header, state panel, Board, Review, Traps, QOTD, rules.\n- The board keeps Rank | Student | Points. Score and time become a `meta` line under the name: \"8/10 · 11:42\".\n\n### Owner controls (private)\n- Shows the code, \"Copy link\", \"Close now\", \"Extend 24 h\", \"Rename\", \"Delete\", and the entrants list with \"Remove\".\n- Every destructive control has a confirm sheet.\n\n### Error and not-found\n- An unknown id shows: \"There's no contest with that link.\" + \"Back to Compete\".\n- A private contest you're not in shows its title + \"Join with the code to take part.\"\n\n---\n\n## 5. Leaderboard `/compete/leaderboard/` (theirs: Leaderboard)\n\n- H1 \"Leaderboard\", sub-nav, and a helper line that changes with the controls: \"Weekly boards reset Monday 00:00 UTC (Mon 3:00 AM your time · in 3d 4h).\"\n- **Controls** (one row on desktop, stacked on phone):\n  - *Metric* underline: Points · Rating · Questions right. A helper line under it names the metric:\n    - Points: \"Contest points: 10 / 20 / 30 for each easy / medium / hard answer right in ranked contests, +10 for finishing. A sprint counts its best run each week.\"\n    - Rating: \"Skill rating from ranked contest answers, weighted by how hard each question is. Level 1–10.\"\n    - Questions right: \"Questions answered right in any mode: practice, tests, contests.\"\n  - *Period* underline: Week (default) · Month · Year · All time. For Rating, the period decides who is listed (students active in it) and adds a \"Change\" column.\n  - *Scope* `<select>`: Everyone · Near me · each of your groups. Theirs had Global ↔ Country. We use groups, and there is no country on purpose (see open questions).\n  - The controls are kept in the URL (`?metric=points&period=week&scope=all`), so a board can be linked.\n- **Podium** (hidden for Near me): three cards in the order 2 · 1 · 3, heights 132 / 156 / 116. Each card: rank numeral (`num`), name, 32 px level badge, metric value, \"82% · 1:34 avg\". Grounds: 1st orange with ink-deep text, 2nd tile-2, 3rd tile. If you're on it, your card gets the amber inset edge. With fewer than 3 players, empty cards read \"—\" / \"Open\".\n- **Table**: Rank | Student (name + level badge) | {Points | Rating | Right} | Accuracy | Avg time | Contests (Change for Rating). Accuracy and Avg time are computed over the same answers the metric counts. Your row, sticky you-bar, 50 rows then \"Show 50 more\", end line \"That's everyone: 1,284 students.\" Unchanged from §4.\n- **Near me**: the 5 above you, you, and the 5 below you, with \"Show 10 more above / below\".\n- **Phone 390**: the metric and period controls fit as 3- and 4-option underlines. Scope is a full-width select. The podium keeps its three cards at 1fr each, with names ellipsised. The table becomes Rank | Student (with the meta line \"82% · 1:34 · 12 contests\") | metric.\n- **States**:\n  - Loading: podium and 8 skeleton rows.\n  - Empty period: \"No ranked contests yet this week. The Daily Challenge is live now.\" + pill \"Start the challenge\".\n  - You unranked: the you-bar reads \"You're not on this board yet: finish a ranked contest.\"\n  - Hidden (public off): the you-bar reads \"You're hidden from public boards. You'd be #212.\" with a link to Me.\n  - Error line + \"Try again\".\n\n---\n\n## 6. Your rankings `/compete/rankings/` (theirs: Contest Rankings + profile rank + achievements)\n\nH1 \"Your rankings\" and sub-nav. Sections in order; desktop places them in a 2-column grid where noted.\n\n1. **Performance summary** (full width): 8 stat tiles, 4×2 on desktop and 2×4 on phone.\n   - Tiles: Rating + level · Contests played · Average score (%) · Best finish (\"#2 · Daily Sep 19\") · Best top % · Podiums (top 3 with ≥ 10 players) · Points this week · Contest accuracy.\n   - Under them, **Top % over your last 30 ranked contests**: a line chart 100% wide, 96 px tall. y runs top 1% (up) to top 100% with gridlines at 10% / 50%; x is the contest date. Points are clickable and open that contest.\n   - New student: \"—\" tiles, \"Finish a ranked contest to fill this in.\" and pill \"Start today's challenge\" (theirs: \"Browse contests\").\n2. **Your ranks** (left) | **Pace** (right)\n   - Your ranks: a table with rows Everyone and each group, and columns Week / Month / All time. Cells read \"#12 of 340 · top 4%\". Each cell links to the Leaderboard with those settings. Hidden students see \"You'd be #12\".\n   - Pace (theirs: Time Analysis): underline toggle By difficulty · By domain. One row per difficulty (or domain):\n     - A bar of your median answer seconds, in orange.\n     - A tick for the field median, in graphite.\n     - A dashed vertical line at 95 s labelled \"SAT pace\".\n     - Text \"you 1:12 · field 1:34 · accuracy 80% (field 64%)\".\n     - Rows with fewer than 3 answers show \"—\".\n     - Helper: \"Median seconds from question shown to answer, in ranked contests.\"\n3. **How you placed in a contest** (theirs: Contest Leaderboard)\n   - A `<select>` of every finished contest, newest first: \"Daily · Sep 23 · #4 of 37\".\n   - Picking one shows a mini board inline (top 5 + you ± 2) and \"Open contest ›\".\n4. **Badges** (`#badges`, full width)\n   - A grid of tiles (auto-fill, min 170 px). Each tile: line icon, name, rule, progress bar + \"n/N\", and \"Earned Sep 19\" once earned. Earned tiles get an orange ring on the icon; locked ones are soft grey with their progress.\n   - Filter underline: All · Earned (n) · In progress.\n5. **Contest history** (full width)\n   - Filters: Kind select (All / Daily / Sprint / Weekly / Private) and Sort select (Newest / Best rank / Best top % / Most points).\n   - Table: Date | Contest | Score | Points | Time | Rank | Top % | Rating Δ | Ranked/Unranked | \"Review ›\".\n   - 20 rows, then \"Show 20 more\". Phone rows are two lines: \"Daily · Sep 23 · Ranked\" and \"8/10 · 170 pts · #4 of 37 · top 11% · +14\".\n   - Empty: \"No contests yet.\" A lot of history is handled by paging and filters.\n\nLoading, error and empty states follow §3.\n\n### Badge set (computed from data; earned date stored the first time it is met)\n\n| id | name | rule | progress |\n|---|---|---|---|\n| first-contest | First contest | Finish a ranked contest | 0/1 |\n| streak-7 | 7-day streak | Answer something 7 days in a row (best ever) | n/7 |\n| daily-7 | Challenge week | Finish the Daily Challenge 7 days in a row | n/7 |\n| perfect-ten | Perfect ten | 10/10 on a Daily Challenge | best/10 |\n| solved-1000 | 1,000 solved | 1,000 questions right, any mode | n/1000 |\n| consistency | Consistency | Practise on 20 of the last 30 days | n/20 |\n| top-ten | Top ten | Top 10 in a Daily with ≥ 20 ranked players | 0/1 |\n| podium | Podium | Top 3 in any ranked contest with ≥ 10 players | 0/1 |\n| weekly-4 | Four weekends | Finish 4 Weekly Modules | n/4 |\n| sprinter | Sprinter | 20 right in one sprint | best/20 |\n| level-5 | Level 5 | Reach a rating of 1,251 | rating/1251 |\n| level-8 | Level 8 | Reach a rating of 1,701 | rating/1701 |\n| trap-hunter | Trap hunter | Close 25 mistakes | n/25 |\n| all-rounder | All-rounder | ≥ 70% in each domain across contests (≥ 10 answers each) | k/4 |\n\nA new badge appears as a toast on the session summary or result panel: \"Badge earned: Challenge week\".\n\n---\n\n## 7. Create a private contest (sheet from Overview; also \"Challenge a friend\")\n\nFields, top to bottom:\n- **Title** (default \"{name}'s challenge\", 3–40 chars).\n- **Questions**: underline 5 · 10 (default) · 15 · 22.\n- **Skills**: the shared topic picker from the practice builder (4 domains × 19 skills, with select-all per domain). The default is all.\n- **Difficulty**: underline \"Easy → hard\" (default) · Easy · Medium · Hard · Mixed.\n- **Format**: Both (default) · Multiple choice · Grid-in.\n- **Clock**: \"Auto (95 s a question)\" (default) or a minutes stepper, 5–70.\n- **Open for**: 1 hour · 24 hours (default) · 3 days · 7 days.\n- **Questions for each student**: radio \"Same questions for everyone: good for going over them together\" (default) / \"Everyone gets their own twin: same skills and difficulty, different numbers, so answers can't be shared\".\n- **Show answers**: radio \"After each question\" (default) / \"At the end\".\n\nFooter: a summary line \"10 questions · 16 min · open until tomorrow 4:10 PM\" and a pill \"Create\". The result shows the code large (mono), \"Copy code\", \"Copy link\" and \"Open contest\".\n\n\"Challenge a friend\" on a result panel opens this sheet prefilled from that contest: same count, skills and clock, with twins on.\n\n---\n\n## 8. The runner in contest mode (practice session, `/practice/session/`)\n\n- **Top bar**: a chip \"Ranked\" or \"Unranked\" (tile ground, 12 px) beside the progress bar. The server's clock. Save is hidden until a question is answered (as today).\n- **X no longer hands the sitting in.** It opens the sheet \"Leave the challenge?\" with the text \"The clock keeps running. Come back before 11:59 PM to finish. Unanswered questions count as wrong.\" and the buttons: quiet \"Leave\", pill \"Hand in now\", × \"Stay\".\n- **Verdict adds the field**: \"62% of 37 got this right\" (identical questions; for twins, the same slot). Shown once ≥ 5 have answered.\n- **Sprint mode**:\n  - Header: \"Right 7 · 2:41 left\" (countdown), no segments.\n  - The verdict shows the key and the mistake line. The rationale is behind a \"Why\" toggle, collapsed. Enter goes to the next question. When time is up, the summary appears.\n- **Summary in contest mode**: the §4 result panel (rank, `=`, top %, points, answer time, rating Δ, level, badge toasts) with pill \"See the board\" and quiet \"Review answers\", \"Copy result\", \"Practice my misses\", \"Challenge a friend\". It replaces today's \"#1 of 3\" line.\n- **Copy result** copies plain text (no emoji, no OS share sheet):\n  ```\n  SAT Freshman · Daily Challenge · Sep 23\n  8/10 · 170 pts · 11:42 · #4 of 37\n  ■■□■■■■□■■\n  https://…/compete/contest/?id=daily-2026-09-23\n  ```\n  The button then reads \"Copied\" for 1.6 s; if the clipboard is refused, the text is selected in a field instead.\n\n**Test window (`/test/`) for the Weekly Module**\n- A \"Weekly Module · Ranked\" chip in the header.\n- Hand-in goes to the contest page's result panel, not the plain report. The report link stays there.\n\n---\n\n## 9. Today `/` and Me `/me/`\n\n**Today's Challenge card** gets:\n- the ten-square ladder (before) or the answer strip (after);\n- \"37 finished\";\n- \"#4 of 37 · top 11%\" + \"Next one in 07:14:22\" once done;\n- the whole card links to the contest page.\n\n**Today's QOTD**, after answering, adds:\n- the option spread (4 thin bars with % and, for wrong options, the misconception);\n- quiet \"Another like this\" (5 questions on that template);\n- \"5-day QOTD streak\";\n- quiet \"Past days ›\".\n\n**Me gets a \"Boards\" block**:\n- **Name on boards**: field (3–24 chars; letters, digits, spaces, `-` `_` `.`). Helper: \"Shown on public boards. Don't use your full name.\" Error on a taken name: \"Someone already has that name.\"\n- **Toggle \"Show me on public boards\"**, on by default. Helper: \"Off: you still see your own rank, others don't see you. Groups you join still show you.\"\n- **Rank snapshot**: \"Week #12 of 340 · All time #210 · Level 3 (1,084)\", which links to Your rankings.\n- **Groups**: a list with name, code + Copy, members count, and \"Leave\". The owner instead gets \"Delete group\" and a member list with \"Remove\".\n\n---\n\n## 10. Build order (each step is one commit and one push)\n\n1. Model and fixes:\n   - contests, sessions and attempts columns; migrate `challenges` into `contests`;\n   - server answer time, ties, 950 s, ranked/unranked, too-fast flag, duplicate sittings after a carry;\n   - X no longer hands in.\n2. Contest page (daily) + `/challenge/` redirect + NAV/SECTION + Overview (A, B, D, E).\n3. Leaderboard (points; week/month/year/all; everyone and near me; podium; paging; you-bar).\n4. Your rankings (summary, ranks, pace, contest picker, history).\n5. Review with the field's answers + the field's traps + QOTD spread, past days and streak + \"Another like this\" (`templates` on POST /api/drill).\n6. Twins + Sprint.\n7. Weekly Module in the test window.\n8. Rating + level + badges.\n9. Groups + Me Boards block + report name.\n10. Private contests + Challenge a friend + Copy result + Add to calendar + ghost sittings.\n11. README serving-layer rows and spec/rebuild.md §9 updated.\n",
+  "extras": [
+   {
+    "feature": "Twin questions for ranked contests",
+    "why": "Same template, difficulty and format per slot, fresh numbers per student. Keys can be shown right away, answers can't be passed on, and retakes are fair. A finite bank can't do this: it would burn items or leak keys."
+   },
+   {
+    "feature": "Sprint with ranked retakes",
+    "why": "A 5-minute run as often as you like, with your best run of the week counting. Each run draws new questions, so a retake can't be memorised. Theirs can't allow retakes of a ranked contest."
+   },
+   {
+    "feature": "The field's answers, by misconception",
+    "why": "For each question, the share who fell for each named mistake ('41% subtracted the constants instead of adding'), not just a % right. It relies on Item.reasons, and it works across twins because it groups by misconception rather than by letter."
+   },
+   {
+    "feature": "The field's traps, then 'Practice these 5'",
+    "why": "A contest ends with a practice set on the misconceptions the most students fell for. Competition feeds study instead of ending at a number."
+   },
+   {
+    "feature": "'Another like this' on every reviewed question and on the QOTD",
+    "why": "A fresh-seed drill on the exact template. It is our core power, and theirs 'More practice' is generic."
+   },
+   {
+    "feature": "Contests that schedule themselves",
+    "why": "Daily, Sprint and Weekly are made from the date and week, so something is always live. Theirs relies on staff and was empty."
+   },
+   {
+    "feature": "Private contests and 'Challenge a friend'",
+    "why": "Anyone (a teacher, a study group) can make a contest over chosen skills, length and window, and share a 6-character code. An unlimited bank can host any number of them."
+   },
+   {
+    "feature": "Groups instead of a country board",
+    "why": "A class or friends' board is who a student actually compares with. Country boards are empty on a small site and need location data."
+   },
+   {
+    "feature": "Near me scope and sticky you-bar",
+    "why": "On a board of thousands you see yourself and the five above and below. You can always jump to your row."
+   },
+   {
+    "feature": "Rating and level vs item difficulty",
+    "why": "A skill measure that works asynchronously with few players (like a puzzle rating) and doesn't reward volume the way points do. It reuses the ladder in spec/rating.md."
+   },
+   {
+    "feature": "Ghost sittings of past days and closed contests",
+    "why": "Any past day can be regenerated exactly. You sit it unranked and see 'would have placed #6 of 37'."
+   },
+   {
+    "feature": "Answer time measured by the server, excluding reading",
+    "why": "Reading the rationale no longer costs rank, and a client can't forge its time. This fixes our current 7 min vs 0:00 bug."
+   },
+   {
+    "feature": "Fair ties, top %, and a Ranked/Unranked label everywhere",
+    "why": "Equal scores share a rank (=4). Top % gives meaning on big boards. Unranked has a stated reason (ghost, carry, too fast)."
+   },
+   {
+    "feature": "Too-fast guard and name reports",
+    "why": "There are no accounts and minors use the site. A cheap rule keeps bots off the board, and three reports reset an offensive name."
+   },
+   {
+    "feature": "Hide me from public boards",
+    "why": "Privacy for students who want to compete only with themselves or inside a group. You still see 'you'd be #212'."
+   },
+   {
+    "feature": "Pace vs SAT pace and vs the field",
+    "why": "Their time analysis shows only your seconds. Ours sets them against the field median and against the 95 s a real module allows, by difficulty or by domain."
+   },
+   {
+    "feature": "QOTD streak, 30-day strip and past days",
+    "why": "Past days are regenerable from the date. A streak gives a reason to come back daily."
+   },
+   {
+    "feature": "Copy result (text + square grid) and Add to calendar (.ics)",
+    "why": "Sharing that works everywhere, with no OS share sheet (theirs froze). Upcoming contests go into the student's own calendar without a notification system."
+   },
+   {
+    "feature": "Live field line during the sitting",
+    "why": "'62% of 37 got this right' after each answer, from identical questions or twin slots. It gives context in the moment."
+   }
+  ],
+  "server": [
+   {
+    "change": "db.py: new tables",
+    "detail": "contests(id TEXT PK, kind TEXT, title TEXT, owner TEXT, code TEXT UNIQUE, opens TEXT, closes TEXT, count INTEGER, seconds INTEGER, spec TEXT JSON {slots:[[template,tier,fmt]], topics, difficulty, formats, theme, twin:bool, reveal:'each'|'end', rated:bool}, questions TEXT JSON (identical contests only), created TEXT). contest_members(contest, learner, joined, PK(contest,learner)). groups(id TEXT PK, code TEXT UNIQUE, name TEXT, owner TEXT, created TEXT). group_members(grp, learner, joined, PK(grp,learner)). badges(learner, id, earned, PK(learner,id)). item_ratings(template, tier, rating REAL, n INTEGER, PK(template,tier)). name_reports(target, reporter, at, PK(target,reporter))."
+   },
+   {
+    "change": "db.py: new columns (LATER_COLUMNS)",
+    "detail": "sessions.contest TEXT, sessions.ranked INTEGER DEFAULT 1, sessions.points INTEGER, sessions.secs INTEGER, sessions.unranked_why TEXT. attempts.sms INTEGER (server ms from serve to answer). learners.public INTEGER NOT NULL DEFAULT 1, learners.rating REAL DEFAULT 1000, learners.rated INTEGER DEFAULT 0. Indexes: sessions(contest, ranked, points DESC, secs), sessions(learner, contest), attempts(session, qid)."
+   },
+   {
+    "change": "db.py: migration",
+    "detail": "INSERT OR IGNORE INTO contests SELECT 'daily-'||day, 'daily', …, questions FROM challenges. UPDATE sessions SET contest='daily-'||day WHERE kind='challenge'. Backfill points/secs on finished challenge sittings from their attempts (secs from finished−started where sms is missing). Keep the challenges table until step 2 ships, then stop writing it."
+   },
+   {
+    "change": "server/compete.py (new): schedule",
+    "detail": "ensure(kind, now, tz) lazily INSERT OR IGNOREs the rows for: today's local daily (built by the existing daily.challenge builder), the current and next sprint-YYYY-Www, and the current and next weekly-YYYY-Www, with deterministic slots from Builder(f'contest:{id}') + blueprint.fill (weekly: slots('module1',1); sprint: the 60-slot theme ladder). The same contest id always gives the same slots. No cron."
+   },
+   {
+    "change": "compete.py: twins",
+    "detail": "twin_questions(learner, slots) → for each [template, tier, fmt], blueprint.draw_matching(drill._builder(learner), template, tier, fmt); fallback to any template of that topic at that tier. The questions are stored on the sitting (sessions.questions) and remembered (db.remember), so a twin is never shown to that learner again."
+   },
+   {
+    "change": "compete.py: points, secs, ranked, too-fast flag",
+    "detail": "points = Σ right × {easy:10, medium:20, hard:30} + (10 if all answered and kind≠sprint). secs = Σ attempts.sms for runner contests, capped at seconds; weekly = finished−started capped at 2100. At finish: ranked=0 with unranked_why='fast' if median sms < 4000 and right ≥ asked/2; 'ghost' if started outside the window; 'repeat' if the learner already has a ranked sitting (sprint excluded). Written to sessions.points/secs/ranked."
+   },
+   {
+    "change": "compete.py: board()",
+    "detail": "board(cid, me, scope='all'|'near'|'group-{gid}', offset, limit=50) → {players, entries:[{pid, rank, tie, name, level, points, right, asked, secs, runs?, you}], you, next_offset}. One row per learner: sprint takes the best run, others the ranked sitting. Rules: public=0 learners are excluded except yourself and inside group scopes. Competition ranking over (points DESC, secs ASC), listed by finished ASC within a tie. pid = first 10 chars of hmac-sha256(server secret, learner), never the code. Name = learners.name or daily.handle()."
+   },
+   {
+    "change": "compete.py: leaderboard()",
+    "detail": "leaderboard(metric='points'|'rating'|'right', period='week'|'month'|'year'|'all', scope, offset, limit) with UTC period starts (ISO Monday / 1st / Jan 1).\n- points: SUM(points) of ranked sittings finished in the period, where sprint counts MAX per week.\n- rating: learners.rating for learners with a rated answer in the period, plus Δ = rating_after(last) − rating_before(first) from the sittings' result JSON.\n- right: COUNT(attempts.correct=1) in the period.\nAlso returns accuracy, median secs and contests played over the same answers, podium = the first 3, you (with rank even when outside the page, or hidden:true with would_be rank), players, resets_at."
+   },
+   {
+    "change": "compete.py: review() and traps()",
+    "detail": "review(cid, learner): 403 unless the learner's sitting of cid is finished or the contest has closed everywhere (daily: D+1 12:00 UTC). Per question/slot: the full question (key, rationale, reasons) from the learner's own sitting (or the stored set for identical), you {given, correct, sms}, field {answered, right, median_sms, options:[{index, share, mistake}] for identical, mistakes:[{label, share}] for twins}. Aggregated from attempts JOIN sessions WHERE contest=? AND ranked=1, first attempt per (session, qid). traps(cid) → the top 5 (template, reason, label, share) by count of wrong ranked attempts."
+   },
+   {
+    "change": "compete.py: rating",
+    "detail": "On each rated answer (a ranked sitting of a rated contest, the first attempt, within time): E = 1/(1+10^((Ri−Rs)/400)); Rs += Ks(S−E) with Ks = 32 while learners.rated < 30, else 12; Ri −= 4(S−E). Ri starts at easy 900, medium 1100, hard 1300. rated += 1. rating_before/after are stored in the sitting's result JSON. level(r) uses the spec/rating.md ladder; provisional while rated < 30."
+   },
+   {
+    "change": "compete.py: badges",
+    "detail": "evaluate(learner) computes the 14 badges from attempts, sessions, traps and learners, INSERT OR IGNOREs newly met ones into badges with earned=now, and returns [{id, name, rule, have, need, earned}]. It is called at drill finish, test finish and GET /api/compete/me. Finish responses carry badges_new."
+   },
+   {
+    "change": "drill.py: server timing and twin slots",
+    "detail": "_serve sets q['served'] = now(). answer() computes sms = min(now − served, clock) and passes it to progress.record(…, sms=). The new cfg 'slots' ([[template, tier, fmt]]) is served in order via blueprint.draw_matching (sprint: cycles to the end of the 60 slots). Sprint = timed with seconds 300, count None, fixed=True (no repairs). _feedback adds field {answered, right} for sittings with a contest (same qid, ranked sittings), shown once answered ≥ 5."
+   },
+   {
+    "change": "progress.record",
+    "detail": "New optional sms parameter written to attempts.sms. After filing, when the session is a ranked sitting of a rated contest, it calls compete.rate()."
+   },
+   {
+    "change": "progress.carry",
+    "detail": "Also moves group_members, contest_members, badges (INSERT OR IGNORE) and the rating (keep the side with more rated answers). After the move, any second ranked sitting of one contest under the target code gets ranked=0, unranked_why='repeat'. This fixes the known edge."
+   },
+   {
+    "change": "daily.py",
+    "detail": "challenge(day) stays as the daily builder and writes to contests. board() is replaced by compete.board. question(day) is unchanged. qotd_feedback adds options: [{index, share, mistake}] and streak (consecutive local days with a qotd:{D} attempt made on day D)."
+   },
+   {
+    "change": "app.py: contest endpoints",
+    "detail": "- GET /api/compete (the hub payload: daily status + field, live/upcoming counts, me {rating, level, provisional, week_rank, week_points, played, best}, board_preview, next_badges, groups).\n- GET /api/contests?status=live|upcoming|finished|private&offset&limit.\n- GET /api/contest/{cid}: 'daily' resolves via X-Tz; returns meta, ladder, rules, field {players, median_points, best}, me {session, status, answered, left, result, ranked, why}, entrants for private, qotd for daily.\n- POST /api/contest/{cid}/start → {session, runner:'session'|'test'}, idempotent per learner (the existing INSERT … WHERE NOT EXISTS pattern keyed on contest), ghost when closed.\n- GET /api/contest/{cid}/board, GET /api/contest/{cid}/review, GET /api/contest/{cid}/traps.\n- POST /api/contests (create private; validates count ∈ {5,10,15,22}, topics ⊂ catalogue, minutes 5–70, open_for ∈ {1,24,72,168} h, twin, reveal) → {id, code}.\n- PATCH /api/contest/{cid} {close|extend|title} and DELETE /api/contest/{cid}: owner only, 403 otherwise.\n- POST /api/join {code} → {kind, id}, plus a member row."
+   },
+   {
+    "change": "app.py: board, ranking and group endpoints",
+    "detail": "- GET /api/leaderboard?metric&period&scope&offset&limit.\n- GET /api/compete/me (summary tiles, the 30-point top% series, ranks table, pace by difficulty and by domain with field medians, badges).\n- GET /api/compete/history?kind&sort&offset&limit=20.\n- GET/POST /api/groups, GET /api/groups/{gid}, DELETE /api/groups/{gid}, DELETE /api/groups/{gid}/members/{pid|me}.\n- POST /api/report-name {pid}.\n- The /api/challenge* routes remain as thin aliases until Today moves, then are removed.\n- GET /challenge/ → 307 /compete/contest/?id=daily."
+   },
+   {
+    "change": "app.py: /api/me",
+    "detail": "name: HANDLE_OK = ^[A-Za-z0-9 _.\\-]{3,24}$, unique case-insensitively among learners (409 'someone already has that name'), a small built-in blocklist (422). public: bool. The response adds ranks {week, all, level, rating}. NAME_OK stays for the diagnostic sign-up."
+   },
+   {
+    "change": "app.py: /api/qotd and /api/drill",
+    "detail": "GET /api/qotd?day=YYYY-MM-DD (≤ today; 422 for a future day). POST /api/qotd accepts a past day (still once per day, stored as qotd:{day}), and only an answer made on its own day counts for the streak. POST /api/drill gains templates: list[str] (queued with fresh seeds, like the mistakes queue) for 'Another like this' and 'Practice these 5'."
+   },
+   {
+    "change": "app.py: weekly in the test window",
+    "detail": "POST /api/contest/weekly-…/start creates kind='module' with contest set and module1 = twin_questions(slots), timed. The existing /api/session/{sid}/finish then calls compete.finish_contest(row) to write points/secs/ranked/rating/badges. GET /api/session/{sid} includes contest {id, title, ranked} for the header chip."
+   },
+   {
+    "change": "test_flow.py",
+    "detail": "New checks:\n- the same contest slots for everyone; twins differ in seed but match template/tier/fmt;\n- ties share a rank;\n- secs excludes the time after the last answer;\n- too fast is unranked;\n- ghost sittings are unranked with a would_be rank;\n- review is 403 before finishing;\n- option shares sum to 1 ± 0.01;\n- leaderboard sprint counts the best run only;\n- near me has you in the middle;\n- public=0 hides you from others but not from yourself;\n- name uniqueness returns 409;\n- private create, join, board;\n- carry leaves one ranked sitting;\n- rating moves and provisional ends at 30;\n- first-contest badge;\n- /challenge/ redirects."
+   }
+  ],
+  "files": [
+   "server/compete.py (new: schedule, twins, points/secs/ranked, board, leaderboard, review, traps, rating, badges, groups)",
+   "server/db.py (tables, columns, indexes, challenges→contests migration)",
+   "server/drill.py (served timestamp, sms, slots cfg, sprint mode, field in feedback)",
+   "server/progress.py (record sms + rate hook, carry moves groups/badges/rating and unranks duplicates)",
+   "server/daily.py (challenge writes to contests; board removed; qotd spread and streak)",
+   "server/app.py (contest, leaderboard, rankings, groups, join, report-name endpoints; /api/me handle + public; /api/qotd past days; /api/drill templates; weekly start/finish hook; /challenge/ redirect)",
+   "server/test_flow.py (the checks listed under server)",
+   "web/compete/index.html (new: Overview)",
+   "web/compete/contest/index.html (new: contest page, with lobby/sitting/result/board/review/traps/QOTD/owner controls)",
+   "web/compete/leaderboard/index.html (new)",
+   "web/compete/rankings/index.html (new: Your rankings)",
+   "web/challenge/index.html (delete; the server redirects)",
+   "web/assets/ui.js (NAV + SECTION, UI.board, UI.level, UI.podium, UI.countdown, UI.subnav, UI.copyText, UI.ics, UI.toast, UI.skeleton, UI.question review-with-field option, shared create-contest sheet, join sheet)",
+   "web/assets/ui.css (6-column tabs, .subnav, .board table + you row + you-bar, .podium, .level badge, .stat tiles, .ladder cells + pips, .spread bars, .badge tiles, .skel, .chip-ranked)",
+   "web/practice/session/index.html (contest mode: ranked chip, leave sheet instead of hand-in, field line, sprint mode, contest summary, copy result, badge toasts)",
+   "web/test/index.html and web/test/test.js (contest chip; hand-in goes to the contest result)",
+   "web/index.html (richer challenge card; QOTD spread, 'Another like this', streak, past days)",
+   "web/me/index.html (Boards block: name rules, public toggle, rank snapshot, groups)",
+   "README.md (serving-layer rows for /compete/* and the endpoints; the day section)",
+   "spec/rebuild.md (§9 Challenge → Compete, status)"
+  ],
+  "shared_needs": [
+   "NAV gets a sixth item (Compete) and the phone tab bar goes to 6 columns. Every page's shell changes.",
+   "UI.board(host, data, {columns, onMore, youBar}): a ranked table with =ties, level badges, your row, a sticky you-bar and paging. Used by the contest page, the leaderboard, the Overview preview, the rankings picker and group boards.",
+   "UI.level(rating, provisional, size): the brand-mark ring level badge (10 steps, digit in the counter, solid square at level 10). Also for Me and Results.",
+   "Stat tile component (label, big number, sub-line, '—' empty state). The same tiles Results, Report and Me need.",
+   "Question review item with the field's answers: UI.question review mode plus an option/misconception spread bar. Report, Mistakes and QOTD use it too.",
+   "Underline segmented control and filter chips (the existing .choices), plus a compact <select> style for scope, kind and sort filters. Shared with the Results/Report/Practice filter bars.",
+   "Topic picker (4 domains × 19 skills with select-all) from the practice builder, reused in the Create a contest sheet.",
+   "POST /api/drill `templates` ('another one like this' queue with fresh seeds). Practice, Report, Mistakes and QOTD all need it.",
+   "Server-measured answer time (attempts.sms) instead of client ms. Results' study time and pace charts should read it too.",
+   "Leave/hand-in confirm sheet in the shared runner. The exam runner and the practice session share one format, so both need it.",
+   "Skeleton loading blocks (.skel) and the standard error line + 'Try again' used across pages.",
+   "UI.countdown(el, iso) for the exam countdown on Today and Plan as well as contests.",
+   "UI.toast for badges earned and 'Copied'.",
+   "UI.copyText (clipboard with a select-in-field fallback) and UI.ics (calendar file) helpers."
+  ],
+  "acceptance": [
+   "curl -s -H 'X-Learner: a:v2revacc1' -H 'X-Tz: 0' localhost:8000/api/contest/daily | jq -r .id → 'daily-'+today (UTC date), and .count == 10, .seconds == 950.",
+   "curl -s -o /dev/null -w '%{http_code} %{redirect_url}' localhost:8000/challenge/ → 307 …/compete/contest/?id=daily",
+   "curl -s localhost:8000/api/contests?status=upcoming -H 'X-Learner: a:v2revacc1' | jq '[.contests[].kind]' contains 'weekly' and 'sprint', each with opens > now.",
+   "POST /api/contest/daily/start twice with a:v2revacc1 → the same .session both times. The dev DB then has exactly 1 sessions row with contest='daily-…' for that learner.",
+   "Two learners (a:v2revtieA, a:v2revtieB) whose sittings end with equal points and equal secs: GET /api/contest/daily/board → both have rank 1 and tie:true, and the next distinct entry has rank 3.",
+   "Answer all 10 of the daily at once, sleep 5 s, then POST finish: board .you.secs < 5, the practice summary's time matches the board's, and neither is '0:00 vs 7 min'.",
+   "A sitting whose answers all arrive within 1 s with ≥ 5 right → /api/contest/daily .me.ranked == false and .me.why == 'fast'. It is absent from the board entries.",
+   "GET /api/contest/daily/review before finishing → 403. After finishing → 200 with 10 items. For each item, the sum of field.options[].share is 1 ± 0.01.",
+   "Weekly twins: start weekly-… for a:v2revtwA and a:v2revtwB. For each position i, the two questions have equal key (template), difficulty and type and different seed.",
+   "Sprint: three runs by one learner with points 60/140/90 → GET /api/leaderboard?metric=points&period=week shows that learner once with 140 for the sprint part.",
+   "GET /api/leaderboard?metric=points&period=week&scope=near for a ranked learner → ≤ 11 entries, with .you at index min(5, rank-1).",
+   "PUT /api/me {public:false} for a:v2revhid → that pid is not in another learner's board entries, but its own board response has .you.hidden == true and .you.would_be ≥ 1.",
+   "PUT /api/me {name:'Ada'} from a second learner when 'Ada' exists (any case) → 409. PUT {name:'mike2027'} → 200.",
+   "POST /api/contests {count:10, topics:[…], open_for:24, twin:true} → .code matches ^[A-HJ-NP-Z2-9]{6}$. POST /api/join {code} from another learner → {kind:'contest'}. After both sit it, the board has 2 players.",
+   "After a learner's first ranked sitting: /api/compete/me .rating != 1000, .provisional == true, and badges includes first-contest with an earned date. After 30 rated answers, provisional == false.",
+   "POST /api/me/carry from a code that sat today's daily into one that also sat it → exactly one ranked sitting remains, and the other has unranked_why 'repeat'.",
+   "GET /api/qotd?day=<yesterday> → 200 with that day's question. POST /api/qotd {day:<yesterday>, answer:0} → 200, and .streak doesn't count it. POST with a future day → 409/422.",
+   "Browser, 1280 and 390 (shot.py with a:v2rev codes) on /compete/, /compete/contest/?id=daily, /compete/leaderboard/, /compete/rankings/: no page errors, and document.documentElement.scrollWidth <= innerWidth.",
+   "Browser: on every /compete/* page the nav/tab 'Compete' link has aria-current='page', and the phone tab bar shows 6 labelled tabs.",
+   "Browser: in a daily sitting with one answer, clicking X opens the 'Leave the challenge?' sheet. 'Leave' goes to the contest page, which shows 'Resume', and GET /api/drill/{id} .finished is null.",
+   "Browser: on the leaderboard, changing the metric/period/scope updates the URL query, and a reload restores the same controls.",
+   "Browser: on a finished daily result, 'Copy result' puts text on the clipboard that starts with 'SAT Freshman · Daily Challenge' and contains exactly 10 characters from the set ■□.",
+   "PYTHONPATH=. python3 server/test_flow.py passes, including the new compete checks."
+  ],
+  "open_questions": [
+   "Should the Daily Challenge also become twins? The spec keeps it identical (the shared ten, exact option spreads). Keys can then still be harvested on a throwaway code or a shifted X-Tz. Twins close that hole at the cost of discussing exact numbers. It is one flag in the contest spec.",
+   "Nothing stops one person holding many learner codes. Is 'first sitting per code + too-fast rule + name reports' enough without accounts, or should ranked boards need the diagnostic's email sign-up?",
+   "The Weekly Module window is Sat 00:00 to Mon 00:00 UTC (Friday evening to Sunday evening in the Americas). Is that the right weekend, or should it be local-time like the daily?",
+   "Is reusing spec/rating.md's duel ladder (seed 1000, levels 1–10, the ring badge) for a rating measured against questions acceptable? That spec was written for duels, and its badge art is marked 'proposed'.",
+   "There is no country scope, on purpose: groups and Near me instead. Theirs has Global ↔ Country. Do you want a country select anyway (it needs a country field on Me)?",
+   "Can 'Questions right' be farmed through practice repairs? It is kept as an effort board. Drop it if you want boards to be contest-only.",
+   "Is a sixth phone tab (65 px each at 390) acceptable, or should Compete sit under Today on phones?",
+   "Real-time head-to-head duels (spec/rating.md) are left out. The async private contest covers 'challenge a friend'. Build live duels later?"
+  ]
+ }
+}

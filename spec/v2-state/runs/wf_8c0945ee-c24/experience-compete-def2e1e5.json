@@ -1,0 +1,181 @@
+{
+ "label": "experience: compete",
+ "key": "v2:ad5591656bd95e3292b5d0eba10b813c7ee737d6d8de809df80e8380def2e1e5",
+ "result": {
+  "proposals": [
+   {
+    "title": "Where your points went: every lost point priced, explained and one tap from a fix",
+    "what": "On the contest result panel (the runner's summary and the contest page), directly under the rank.\n(1) A points bar from 0 to the maximum (Daily 260). Earned points are orange, lost points graphite, and skipped or voided slots are hatched. Header line: '170 of 260 · 90 left: 25 to a trap (Q5), 35 to a skip (Q9), 20 to pace (4 right after 1:35), 10 to the finish bonus'.\n(2) A 'Lost points' table, largest loss first, one row per cause:\n- 'Q5 · Circles · Medium · −25 · Fell for: used the diameter as the radius · 3rd time this month · Circles ≈ +20 SAT pts on the table' [Fix · 3]\n- 'Q9 · Lines and angles · Hard · skipped · −35' [Learn it · 5, untimed]\n- 'Pace · Q2, Q4, Q6, Q8 right in 1:48–2:30 · −20' [Speed drill · 8 in 9 min]\nRows that share a U6 habit family merge into one: 'Habit: answered a different quantity · Q3, Q7 · −50', with the habit's tell in italics. Clicking a row opens that question's review item.\n(3) One primary pill, 'Fix all · 9 questions · ~12 min' (key F). It posts one drill over the lost templates with fresh seeds: traps first, then the skipped slot's template untimed, then the slow skills timed at 95 s. The drill's summary ends with 'Rematch this contest' (proposal 2).\nA perfect sitting shows 'Nothing left on the table.', plus the pace row if any right answer ran past 1:35. Weekly and Final use the same table and drop the pace row until the test window records time per question.",
+    "beats": "Their per-contest stats are five counts (Score / Correct / Incorrect / Skipped / Voided). Answers stay hidden until the contest closes, and nothing links to practice. Their options carry no misconception labels, so they cannot say why a point was lost.\nTo see what went wrong, a TopTierPrep student waits for the close, then goes Contest Rankings → picker → contest (3 taps), and still sees only right or wrong. Ours shows it the moment you finish (0 taps): each lost point, its cause, what that skill is worth on the SAT, and a fix 1 tap away.",
+    "effort": "M",
+    "needs": "- compete.losses(sid) (S8), built from attempts.reason, tier and sms plus result.points_parts.\n- U4 estimate.gains for the SAT-points note (F4).\n- U6 habits.py families and tells (F5).\n- POST /api/drill with templates and segments (R10, F5).\n- The runner summary hook (R28, S4) and the contest page (S8)."
+   },
+   {
+    "title": "Rematch: sit any past contest again on fresh twins and see then vs now",
+    "what": "Where it appears:\n- 'Rematch' (quiet) on every finished result panel, every Contest history row and the contest page.\n- The pill at the end of a Fix-all drill.\n- Key R on a result panel.\n\nHow it runs: an unranked twin sitting of the same canonical slots, with the same clock and rules (sessions.unranked_why='rematch'). Each rematch deals new numbers, so it can be repeated as often as a student wants.\n\nThe result is a Then → Now panel:\n- two answer strips aligned by slot;\n- '8/10 → 10/10 · 170 → 240 pts · 11:42 → 9:05';\n- 'Would place #2 of 37 (you were #12)', against that contest's stored field;\n- per-slot chips: 'Q5 Circles ✗ → ✓ · trap fixed', 'Q9 skipped → ✓'.\n\nRematch answers are real fresh questions, so they count for mastery and can close mistakes. A rematch is the proof that a fix held.\n\nContest history lists rematches as child rows under the original: 'Rematch · Sep 24 · 240 pts · would be #2'.\n\nU1's queue gains a kind 'rematch' after check-ins: 'Rematch Monday's Daily · 2 of its traps are now fixed'. It shows once per contest, when at least 2 of that contest's traps have closed since the sitting.",
+    "beats": "Theirs allows one attempt per contest, with no retake of any kind. A fixed bank could only hand back the same items whose answers you have already seen.\nOurs re-sits the exact blueprint of any past contest with new numbers, as many times as the student wants. It measures the new try against their own first sitting and against the original field: 'you were #12, now you'd be #2'.",
+    "effort": "S",
+    "needs": "- Twin questions and ghost placement (would_be), already in the spec (S8).\n- compare() run on your own two sittings.\n- Child rows in the history (S8).\n- A 'rematch' kind in U1's next.py (F2).\n- The Fix-all summary hook (S4).\n- R8: fresh seeds, so mastery counts."
+   },
+   {
+    "title": "Step away safely: a hidden tab swaps the open question for a fresh twin instead of voiding it",
+    "what": "Applies to every twin contest: Daily, Sprint, Weekly, Final, Trap Hunt, and twin private contests.\n\nTriggers (the ones that void in the spec today), each retiring the open question instead:\n- the tab hidden for 5 s or more;\n- on desktop, the window blurred for 5 s or more (ignored while focus is inside our own calculator or reference sheet);\n- copy or cut of question text.\n\nOn return:\n- one line: 'Question 4 was swapped for a new version: the tab was hidden 12 s. The clock kept running.';\n- a fresh twin of the same slot (same template, tier and format, new seed) via twin_questions and contest_items;\n- the retired question's seconds stay on the answer clock (cfg.swapped[qid].secs is added to used), so leaving costs time, never the slot.\n\nLimits and exceptions:\n- A slot can be swapped twice. The third trigger voids it (0 points, 'Voided'), which caps fishing for an easier seed.\n- Pasting into the grid-in box stays allowed, since it is a number from the calculator.\n\nWhile the tab is hidden with a question open, document.title reads 'Q4 swaps in 5 s · SAT Freshman', so an accidental switch shows in the tab strip.\n\nRecording:\n- The breakdown becomes '8 right · 1 wrong · 1 skipped · 1 swapped · 0 voided'.\n- Swapped questions are never filed as attempts. They appear in the review with their key, marked 'Swapped: not scored'.\n- In the test window (Weekly, Final), the swapped question keeps its navigator number.",
+    "beats": "Theirs forces fullscreen and voids the question the moment you switch tabs, leave fullscreen, copy or paste. Past a resume limit, the whole attempt scores 0. A phone notification costs a question. The v2 spec adds a 5 s grace but still zeroes the question.\nOurs never costs a slot for a blip. Looking the question up elsewhere gains nothing: that question is gone, and its replacement has new numbers. Only an unlimited twin bank can do this.",
+    "effort": "M",
+    "needs": "- POST /api/drill/{sid}/swap and /api/session/{sid}/swap {question_id, why, secs}, returning the new question (S4 and S5, via the R28 hooks).\n- A single-slot compete.twin_questions call, and compete.clock counting swapped seconds (S8).\n- A {r:'swap'} mark in drill.state (F5).\n- Identical private contests keep plain voids unless their creator turns twins on."
+   },
+   {
+    "title": "Weekly leagues: a 30-student race every student can win",
+    "what": "Placement:\n- A student's first ranked finish in an ISO week puts them in an open league of up to 30 students at their tier.\n- There are 10 tiers, drawn with the level ring. The first placement uses the rating level, and Placing students start at tier 3.\n- A new league opens when every league of that tier is full.\n\nLeague points are the week's ranked contest points: the Daily, the best Sprint run, the Weekly or Final, and Trap Hunt. The weekly maximum is bounded, so showing up each day beats grinding.\n\nThe board appears as an Overview card, 'League', and as the Leaderboard's default scope:\n- 30 rows, with an orange dashed rule under the promotion cut labelled 'Promotion ▲' and a graphite rule above the demotion cut labelled 'Demotion ▼';\n- per row: points, today's gain, and a 5-square strip of this week's Dailies;\n- header: 'Tier 4 · ends Mon 3:00 AM (in 3d 4h) · you're #9: 25 pts to the promotion zone, one medium right at pace'.\n\nClose, done lazily on the first request after Monday 00:00 UTC:\n- final ranks are stored;\n- the top 20% (at least 1) move up a tier, the bottom 20% with points move down, and the rest stay;\n- a student with no ranked finish the next week is simply not placed.\n\nThe first visit after close opens a sheet: 'Week 39: #4 of 30 · promoted to Tier 5', with the ring filling one step (entry motion, once).\n\nSmall-site rule: a tier with fewer than 10 players shares a league with the next tier, and the header says 'Tiers 3–4'.\n\nThe Seasons table and Me gain a line: 'Leagues: T3 → T5 this season'.",
+    "beats": "Their leaderboard is one global list (Weekly/Monthly/Yearly, global or country) with a podium only three people reach, and it was empty on both walks. A student at #1,284 on a global board has no race to win.\nOurs gives every student a 30-person board at their own level, a visible promotion line, a gap they can close today, and a fresh start every Monday.",
+    "effort": "M",
+    "needs": "- Tables leagues(id, week, tier, subject, created, closed) and league_members(league, learner, joined, points, final_rank, moved): schema by F4, logic by S8, keyed by subject per v2-decisions item 3.\n- A 'league' scope in compete.board.\n- Placement inside finish_contest.\n- The rating level (S8).\n- An inbox item on close (U25, S1).\n- A 'Promoted' achievements ladder (R25, S1)."
+   },
+   {
+    "title": "Rivals and ghost racing: follow students, race their run as you sit, keep a head-to-head record",
+    "what": "Follow:\n- Every public row on any board gets 'Follow' in its ⋯ menu, up to 10 students.\n- Hidden and Anonymous rows can't be followed.\n- A followed student is never told who follows them.\n\nRivals:\n- 'Rivals' becomes a Leaderboard scope and an Overview card.\n- Per rival: level badge, today's Daily strip (or 'not yet'), and your head-to-head over contests you both sat ranked: 'You 6–3 Sam this season'.\n\nRace:\n- The contest lobby gets a 'Race' select: None · Field median · each rival who has finished this contest · You yesterday (matched by question number) · your league's promotion line.\n- Default: the rival just above you on this week's league board who has finished, else the field median.\n- In the runner, a thin second track under the progress bar shows the ghost's position at the same point on your answer clock ('Sam: 5 answered at 7:10').\n- After each verdict: 'Sam 4/5 · you 5/5 · you lead by 25', announced aria-live polite.\n- The result adds 'You beat Sam by 30 pts' and updates the head-to-head.\n\nA rival passing you on the week board becomes an inbox line: 'Sam passed you on the Tier 4 board: 15 pts behind'.",
+    "beats": "Theirs puts usernames on a board and nothing more: no friends, no follow, no head-to-head. A contest is a solitary one-shot whose results arrive after it closes.\nOurs turns an asynchronous contest into a race against a named person, and it makes a small site feel busy at any hour. Twins make this safe: a rival's per-question marks give nothing away, because your numbers differ.",
+    "effort": "M",
+    "needs": "- Table rivals(learner, target, since) (F4, S8).\n- GET /api/contest/{cid}/ghost/{pid|median|prev} → [{slot, mark, used_ms}], for finished public sittings only (S8).\n- A head-to-head query over sessions.\n- The runner's state_extra line and ghost track (R28, S4).\n- The UI.board row menu (S8).\n- The inbox (U25, S1).\n- The R12 hidden rule."
+   },
+   {
+    "title": "One-tap challenge link: your exact contest, their own numbers, a head-to-head for both",
+    "what": "'Challenge a friend' on any finished result (Daily, Sprint run, Weekly, Rematch, private) copies a link at once: 'Link copied · open 7 days'. No sheet.\n\nServer: POST /api/contests {from_session} creates a private twin contest:\n- the sitting's canonical slots, clock, reveal and rules;\n- open 7 days, owned by the sender;\n- the sender's sitting attached as the benchmark row, not re-sat.\nThe link is /join/?c=CODE.\n\nThe friend:\n- The lobby reads 'Beat Alex: 8/10 · 170 pts · 11:42 · Daily Challenge · Sep 23 · 10 questions · 15:50 answer clock', with one Start.\n- No name or sign-up is needed: a learner code is minted as usual, and the name prompt comes after.\n- At finish, the friend lands on Compare: two strips aligned by slot, per-slot times, 'Both right 6 · only you 2 · only Alex 1 · neither 1', and 'Challenge back' (a new link from their sitting).\n\nThe owner sees each challenger on the contest's board, plus an inbox line: 'Sam took your challenge: 190, beat you by 20'.\n\nMore options:\n- 'Customise…' (quiet, beside the button) opens the full §7 sheet, prefilled.\n- The copied text is the Copy result text plus the link.\n- On phones where navigator.share exists, a 'Share…' button uses it; Copy stays the default.",
+    "beats": "Their Share calls navigator.share, which froze the page. A shared QBank session hands every friend the same questions, so answers pass along, and there is no head-to-head. The v2 spec's 'Challenge a friend' opens a 10-field sheet, about 4 taps to a link.\nOurs is 1 tap to a link and 1 tap for the friend to start. The friend gets fresh numbers, and both sides get a slot-by-slot verdict.",
+    "effort": "S",
+    "needs": "- POST /api/contests with from_session, and a benchmark row in compete.board (S8).\n- compare() (S8).\n- /join/?c= resolving contest codes (R4, S2).\n- UI.copyText and UI.share (F1, F2).\n- An inbox item (U25, S1)."
+   },
+   {
+    "title": "Trap Hunt: a weekly contest built from the traps that caught the most students last week",
+    "what": "A self-scheduling kind, 'Trap Hunt · Week 39':\n- 10 questions, 950 s answer clock, twins, ranked and rated;\n- one ranked sitting per ISO week, Rematch allowed;\n- counted in season and league points.\n\nIts slots are last week's 10 costliest traps:\n- the (template, reason) pairs with the most wrong first-try answers across ranked contests and practice;\n- only templates with at least 20 answers that week, falling back to all-time data when the week is thin;\n- at most 3 per domain.\n\nEach slot is drawn with a seed whose options include that reason: draw_matching with a predicate on Item.reasons, 30 tries. After that it falls back to a same-topic template whose reasons fall in the same habit family.\n\nThe lobby lists the 10 traps by name, each with 'caught 41% last week', because naming a trap is half the fix.\n\nScoring and feedback:\n- Scoring is the Daily's.\n- The verdict adds 'Trap dodged', or 'Caught: {label}' with the habit's tell.\n- The result reads 'Dodged 8 of 10 · the field dodged 5.8 on average'.\n- Every trap you're caught by opens a mistake, as in practice.\n\nThe Overview's Contests list and Today's card show it as 'Trap Hunt · 10 traps · ends Mon'.",
+    "beats": "Their options carry no misconception labels, so they can't build a contest from what students get wrong. Their contests are posted by hand, and the list was empty on both walks.\nOurs teaches the whole field the week's most expensive mistakes, in a contest that builds itself from real answers.",
+    "effort": "M",
+    "needs": "- A 'traps' kind in compete.ensure() and a weekly trap query over attempts.reason (S8).\n- A reason predicate in blueprint.draw_matching (F5 → S5).\n- U6 habit families and tells (F5).\n- twin_questions (S8).\n- The Overview row and Today row (S8, S3).\n- Keyed by subject."
+   },
+   {
+    "title": "The runner keeps score out loud: a pace ring, points after every answer, and a finish that lands",
+    "what": "Contest mode in the practice session.\n\n(1) Pace ring: the answer clock gets a thin ring for the open question. It fills over 95 s with the label 'pace +5' and drops the label after, so the pace bonus is visible while it can still be won.\n\n(2) Points after each verdict:\n- a chip: '+25 · 20 + 5 pace', '+20 · past pace', or '+0 · fell for: {label}';\n- a running line: '145 pts after 7 · 205 still possible'.\n\n(3) Input:\n- Keys (R22 registry): 1–4 or A–D pick, Enter checks and then moves on, S skips, Esc opens the leave sheet.\n- Phone: Check/Next and Skip sit in a bottom action bar at thumb height, 44 px tall.\n\n(4) The finish lands in one sequence on the same screen, in this order:\n- points count up: base → +pace → +finish;\n- '#4 of 37 · top 11%';\n- the board slice (you ± 2 rows), with the row you passed marked 'passed Sam';\n- the level ring fills one step on a level-up;\n- new badges.\nIt plays once as entry motion (about 1.2 s), is off under prefers-reduced-motion, and any key or tap skips to the end. No confetti, no loop.",
+    "beats": "Theirs (from the bundle) holds answers until the contest ends and shows the rank later, on another page (Contest Rankings → picker). A student finishes without knowing their score.\nOurs says what every answer was worth as it happens, and puts the rank, the board around you and the level on the finish screen.",
+    "effort": "S",
+    "needs": "- A finish response carrying points_parts, rank, players and the board slice (S8 finish_contest).\n- state_extra carrying points per answer (R28, S4).\n- UI.keys (F2).\n- The ring in kit.js, beside UI.level (F1, S8)."
+   },
+   {
+    "title": "Live room: a class sits the same contest at the same moment, on a projector board",
+    "what": "A private contest option 'Live' in the §7 sheet: 'Opens: now for 24 h · Live: starts when I press Start'.\n\nBefore the start:\n- Entrants join with the code or /join/?c= and wait in a lobby that lists names as they arrive.\n- The owner's page shows 'Start for everyone · 18 in'.\n\nDuring:\n- Pressing Start opens every entrant's first question at once.\n- It also opens /compete/live/?id=… for a projector: large type, the clock, and one row per student (name, a progress bar of answered slots, right count, points), sorted live.\n- Afterwards the owner can step through the slots on the projector, each showing its misconception spread as big bars ('Fell for: swapped the columns · 27%').\n\nAt the end:\n- the top 3;\n- the class's top 3 traps, with who fell for each;\n- one tap 'Assign these traps · due in 7 days', a U27 Reach-a-level assignment on those templates.\n\nEveryone sits twins, so a neighbour's screen gives nothing away.\n\nTransport is polling: GET /api/contest/{cid}/live every 2 s with an ETag (304 when unchanged). No websockets.",
+    "beats": "Their classes and homework are hidden (/my-classes, /teacher) and asynchronous only: an assignment with a due date, no live mode. Classroom quiz tools serve identical questions a neighbour can copy, and name no mistakes.\nOurs runs a live class game on twins and ends in homework on exactly what the class got wrong.",
+    "effort": "L",
+    "needs": "- Classes (R4, S2).\n- Private contests (§7, S8).\n- U27 assignments (S2).\n- Owner results (S8).\n- A live endpoint with ETag (S8).\n- A 'started' column on contests (F4 schema)."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Per-contest stats (Score / Correct / Incorrect / Skipped / Voided)",
+    "spec_says": "The result panel and history carry Right · Wrong · Skipped · Voided counts, plus Score, Points (sub-line '120 + 40 pace + 10 finish') and Answer time.",
+    "why_only_parity": "These are the same five counts as theirs, plus the points parts. They say how many, not why, what it cost on the SAT, or what to do next.",
+    "upgrade": "Proposal 1: a table of lost points with each cause, habit merges, the SAT points on the table for the skill, and one 'Fix all' drill (key F), chained into Rematch."
+   },
+   {
+    "feature": "Contest scoring rule (points by difficulty plus a speed bonus)",
+    "spec_says": "10 / 20 / 30 by tier, +5 for a right answer within 95 s, +10 for finishing, listed on the lobby as 'How it's ranked'.",
+    "why_only_parity": "Theirs is also points by difficulty plus a speed bonus. Ours is the same idea, presented as a list of rules before the start.",
+    "upgrade": "Show each value where the decision is made. Ladder cells show a slot's worth ('30 · +5 pace') and, once the contest opens, the field's % right. The runner shows the 95 s pace ring and '+25 · 20 + 5 pace' after each answer, with '205 still possible' (proposal 8)."
+   },
+   {
+    "feature": "Integrity rules (fullscreen; tab switch, copy or paste voids the question)",
+    "spec_says": "Voided after 5 s hidden or on copy/cut/paste. A banner the first time, an optional fullscreen button, and voids score 0.",
+    "why_only_parity": "This is their punishment with a 5 s grace. A notification still costs a question, and pasting a calculator number into a grid-in box is voided too.",
+    "upgrade": "Proposal 3: swap the open question for a fresh twin and keep charging its time. Cap it at two swaps per slot, allow paste into the grid-in field, and show 'Q4 swaps in 5 s' in the tab title."
+   },
+   {
+    "feature": "Leaderboard hero with a top-3 podium",
+    "spec_says": "Three cards in the order 2 · 1 · 3, each with rank, name, level, value and '82% · 1:34 avg'. Your card gets the amber edge.",
+    "why_only_parity": "Their hero is a podium too, and it only matters to three students.",
+    "upgrade": "Add 'Your race' beside it; on a phone it comes first when you're outside the top 3. It lists the 3 students just above you with the gap in points and in questions ('Sam +15: one medium right at pace'), who passed you since yesterday, and a Race button for a ghost run (proposal 5). Inside the top 3, it shows who is closing in from below."
+   },
+   {
+    "feature": "Period control (Weekly / Monthly / Yearly)",
+    "spec_says": "Week (default) · Month · Season · Year · All time, live periods only, with a helper line giving the reset time.",
+    "why_only_parity": "Ours adds two periods, but like theirs, a closed week disappears.",
+    "upgrade": "A period pager ('‹ Week 38 · Week 39 ›', the same for months) with final standings frozen at close, as seasons already are. A header line 'Last week: #8 of 340 · ▲4', and a Monday recap sheet (league result, best Daily, traps closed) on the first visit of the week."
+   },
+   {
+    "feature": "Scope select (Global ↔ Country)",
+    "spec_says": "Everyone · Near me · Country · each group (class). R3 adds 'exam' only for the right-answers metric.",
+    "why_only_parity": "Global and country are theirs, and Near me is only a slice of the same global list.",
+    "upgrade": "Default to League (proposal 4), or to Same test date when the student has an exam date, applying R3's exam scope to every metric. Add Rivals (proposal 5). Country stays opt-in."
+   },
+   {
+    "feature": "Metric switch (Contest Points | Overall Score)",
+    "spec_says": "Points · Rating · Questions right · Test score (the best timed full section, by band midpoint).",
+    "why_only_parity": "Test score is their Overall Score renamed. Every metric ranks the students who are already ahead.",
+    "upgrade": "Add Climb: rating gained in the period, and U11's estimate gain within a starting cohort of ±40, shown when n ≥ 20. Add a Δ column to every metric, so a fast improver at 480 can top a board."
+   },
+   {
+    "feature": "Leaderboard table (Rank / Username / Accuracy / Time)",
+    "spec_says": "Rank | Student + level badge | metric | Accuracy | Avg time | Contests, 50 rows per page, a you-bar and Anonymous rows.",
+    "why_only_parity": "Their columns plus a badge and a contest count. A row is still a name and some numbers.",
+    "upgrade": "Add movement (▲3 since yesterday or since the last period) and a 5-contest form strip. Tapping a public row opens a peek card: level, form, strongest domain, your head-to-head, Follow, Race, Compare. On desktop, J/K move between rows and Enter opens the peek."
+   },
+   {
+    "feature": "Global rank / country rank (Your Contest Stats card, Profile Performance Snapshot)",
+    "spec_says": "'All-time rank #210 of 1,284', 'Country #14 of 96' and 'Week #12 of 340' on the hub and on Me, with '—' until the first ranked contest.",
+    "why_only_parity": "Theirs shows bare numbers (Global 128 / Country 43). Ours adds 'of N' and stays honest, but it is still a number with no direction.",
+    "upgrade": "Each rank tile carries:\n- movement since last week;\n- the gap to the next place in points and in questions ('20 pts to #11 · one hard right');\n- league status ('Tier 4 · #9 · 25 to promotion').\nTapping a tile opens that board scrolled to you."
+   },
+   {
+    "feature": "Contest Leaderboard picker and Your Contest History",
+    "spec_says": "Rankings §3 is a <select> of finished contests with a mini board. §6 is a history table with kind and sort filters and 'Review ›'.",
+    "why_only_parity": "Their Contest Rankings has exactly this picker and a history list.",
+    "upgrade": "Drop the select. Each history row expands in place to show:\n- a mini board (you ± 2);\n- your strip against the field's % right per slot;\n- traps from that contest still open;\n- Rematch and Review.\nPoints on the top-% chart open the same row, and ↑↓ plus Enter work on the table."
+   },
+   {
+    "feature": "Time Analysis (average seconds by difficulty, 'under pressure')",
+    "spec_says": "Pace: by difficulty, by domain, right vs wrong and under pressure, against field medians, with a 95 s line.",
+    "why_only_parity": "Theirs has seconds by difficulty and 'under pressure' copy in the bundle. Ours is a richer report, but still only a report.",
+    "upgrade": "Each row ends in its drill, using U7's bodies:\n- slow and right → Speed drill · 8 in 9 min;\n- wrong answers faster than right ones (rushing) → Careful set · 8, with the habit tell;\n- accuracy drops with under 3 min left → 'Last five minutes', 5 questions on a 5:00 clock.\nEach drill ends with a result line to beat next time."
+   },
+   {
+    "feature": "Badge Progress / Achievements",
+    "spec_says": "18 compete badges through R25's engine, a 'Next badges' tile with the 3 closest, and a grid with progress bars and earned dates.",
+    "why_only_parity": "Ours are real where theirs are placeholders, but a badge still only records what happened.",
+    "upgrade": "Every compete badge in progress carries Go (U13):\n- 'Pace setter · best 6/8 · Start today's Daily';\n- 'Sprinter · best 14/20 · Run a sprint';\n- 'Four weekends · 2/4 · Add Saturday to calendar'.\nAdd league badges: Promoted, Tier 5, Tier 8."
+   },
+   {
+    "feature": "Usernames on boards and 'Anonymous student'",
+    "spec_says": "Names of 3–24 characters, unique, with reserved names refused. Hidden students show as 'Anonymous' at their real rank. A name prompt appears after the first finish.",
+    "why_only_parity": "Theirs uses Google names and 'Anonymous student'. Ours matches that and adds validation rules.",
+    "upgrade": "The name prompt offers three generated handles as one-tap chips ('Quiet Otter 27'), with ↻ for more, each already checked for uniqueness, so a minor never has to type a real name. It also states who will see the name: 'Everyone on public boards · your class sees it too'."
+   },
+   {
+    "feature": "Ranked pill and percentile on the score report",
+    "spec_says": "R16: a Ranked / Not ranked pill and 'Higher than 71% of … (212 sections)' when n ≥ 20.",
+    "why_only_parity": "Theirs says 'N% scored at or below you on their first attempt'. Either way it is one number.",
+    "upgrade": "A distribution strip (a histogram of first standard sittings) with markers for this sitting, your previous one and your target. Add the same percentile among students with your test date, and '↑ from 58% last sitting'."
+   },
+   {
+    "feature": "Share",
+    "spec_says": "Copy result as text (Wordle-style), and 'Challenge a friend', which opens the prefilled §7 sheet.",
+    "why_only_parity": "Copying text is table stakes. The challenge takes about 4 taps through a 10-field sheet, where their Share at least tries to be one tap.",
+    "upgrade": "Proposal 6: one tap to a twin challenge link, with an automatic head-to-head for both sides. navigator.share is offered on phones where it works."
+   },
+   {
+    "feature": "Classes and homework (their hidden teacher dashboard)",
+    "spec_says": "Group contests with a due time, and an owner results table (Student | Status | Score | Points | Time | Q1…Qn) with Copy and Download CSV.",
+    "why_only_parity": "That is their teacher dashboard and homework, made visible and free.",
+    "upgrade": "Under the results table add:\n- a class trap report: the top 3 misconceptions and who fell for each;\n- one tap 'Assign these traps' (a U27 Reach-a-level assignment, due in 7 days);\n- a 'still open' column per student.\nAdd the Live room (proposal 9)."
+   },
+   {
+    "feature": "Navigation and entry (a sidebar item leading to the contest lobby)",
+    "spec_says": "Compete sits in the desktop sidebar and the phone menu sheet (R1, two taps). Today's card links to the contest page, where Start is.",
+    "why_only_parity": "Theirs is a sidebar entry too: two taps to a lobby, and one more to start.",
+    "upgrade": "Start the Daily in one tap:\n- from Today's card;\n- from Up next, as a 'daily' kind in U1's queue after assignments ('Daily Challenge · 10 q · ~16 min · streak 5');\n- with G C then Enter from anywhere;\n- from a web-manifest shortcut 'Daily Challenge' on home-screen installs.\nFirst-timers see the rules as the runner's first screen."
+   },
+   {
+    "feature": "Empty boards ('No rankings yet', 'No active contests right now')",
+    "spec_says": "The field line reads 'No one has finished yet'. The verdict's '62% of 37 got this right' appears only once ≥ 5 have answered. An empty period links to the nearest period that has players.",
+    "why_only_parity": "On a small site this will look as empty as their section did on both walks.",
+    "upgrade": "- Until a contest has 5 answers, pool field stats per (template, tier) across all ranked and practice answers ('58% right on this kind · 1,204 answers').\n- Show the week's count on the Daily card ('212 sat a Daily this week').\n- Open an empty period on the nearest non-empty one automatically, with a note.\n- Let leagues merge thin tiers (proposal 4)."
+   }
+  ]
+ }
+}

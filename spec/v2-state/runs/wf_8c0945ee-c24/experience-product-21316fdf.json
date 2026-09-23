@@ -1,0 +1,178 @@
+{
+ "label": "experience: product",
+ "key": "v2:fe263e22379c2af29ab19d042635f251da6cc1ab81c8331c1d19c5dc21316fdf",
+ "result": {
+  "proposals": [
+   {
+    "title": "Play today: the whole day in one run, started with one tap",
+    "what": "Entry points: Today's Up next pill becomes `Start today · 4 parts · 38 min` (autofocused, so Enter starts it). The sidebar Today card and the phone Today tab show `Continue today · part 2 of 4`. It is also the first Suggested row in the palette.\n\nNew `GET /api/today/run` (S3) returns ordered parts `{kind, title, count, minutes, why, pts, status, sid?}`:\n1. `due`: mistakes due a check-in (pool `checks`) plus keep-warm types (pool `review`), at most 6 questions.\n2. `fix`: the top open mistakes by points (pool `redo`, level `as_missed`).\n3. `focus`: the plan's or the coach's set.\n4. `daily`: the two day's questions, if they are unanswered.\n5. `words`: due cards when `words_goal > 0`. This part hands off to `/words/run/?id=&then=run` and comes back.\n6. `test`: on a plan test day only, last, handed off to the lobby.\n\nThe challenge is offered after the summary, never inside the run, because of its ranked rules. The budget is the plan day's minutes, else the daily goal, else 20 min. Focus shrinks first; due and fix never drop below 2 questions.\n\nEach drill part is an ordinary drill session with `cfg.run = 'YYYY-MM-DD'` and `cfg.part = kind`. History, plan auto-completion, study time and Results therefore work unchanged, and no table is added.\n\nRunner:\n- One ProgressRail split into labelled parts (`Check-ins 2/3 · Fix 0/6 · Circles + 1 · Day's 2`).\n- The runner swaps session ids between drill parts, so there is no page load.\n- Between parts, an in-runner card: `Fix done · 5 of 6 · 2 mistakes fixed · Next: Circles + Percentages · 14 q`, with Continue (Enter), `Skip this part` (S) and `Stop for today` (Esc; keeps your place).\n\nThe end is one Day summary: minutes against the goal ring, questions, right %, mistakes fixed and opened, check-ins held, points moved (proposal 3) and the streak day. Its actions are `Today's challenge · 10 q` and `Keep going · 10 more`.\n\n`/practice/session/?run=today` resumes the first unfinished part on any device. On a phone the interstitial is a full card with a 56px Continue pill in thumb reach.\n\nStates:\n- Nothing due: that part is left out.\n- Rest day: `Practice anyway · 3 parts`.\n- All done: `Day done · 42 of 40 min` and `Keep going`.",
+    "beats": "Their Today's Plan card launches one task at a time (Dashboard → Full Plan → Start task). QBank sessions never end, so nothing comes back, and every task needs a manual 'Mark done'. A 4-task day costs about 12 clicks, 4 page loads and 4 ticks, and the dashboard still doesn't know what you did. Ours is 1 tap plus Enter between parts, completes itself, and ends in one summary. Their only spaced 'Due Today' is for vocab. Ours puts mistake check-ins (3/10/30 days), keep-warm types and due words into one Due part.",
+    "effort": "L",
+    "needs": "S3 `/api/today/run` and the Up next state. S7 `plan.today_summary()` supplies parts and minutes. F5 drill body: pools checks/review/redo, `cfg.run`/`cfg.part`, `source:'run'`. F3 runner: multi-part rail, interstitial, session swap. S4 session page `?run=`. S9 words run `then=` return. S8 offers the challenge at the end. F2 shows `Continue today` in the sidebar metas and the palette. Proposal 3 supplies the per-part points."
+   },
+   {
+    "title": "Worked steps with this question's own numbers, checked against the key, plus a hint ladder",
+    "what": "Grounding: I generated one item per template (382 templates, seed 777). 94% of rationales are a single sentence, median 91 characters, for example 'Every term holds at least one w and a factor of 10, so 10w comes out and each exponent drops by one.' Our per-option misconceptions beat their Distractor Analysis, but our Justification is thinner than their long-form one.\n\nBank (T-bank): a new field `Item.steps: list[str]`, 2 to 5 lines built by each template from its own `item.params` with this seed's numbers. Example: `1. The diameter is 14, so the radius is 14 ÷ 2 = 7.` `2. Area = πr² = π · 7² = 49π.` An optional `Item.step_of_reason: {reason: step index}` says where each named misconception goes wrong.\n\nAn audit check requires the last step's value to equal the key (`numeral` or `norm_text` match). A worked solution can therefore never disagree with the key or with the independent solver. `tools/steps_coverage.py` prints `n of 386 templates show steps`. It ships at partial coverage, with templates ordered by attempt count.\n\nVerdict (F3 workspace, in every mode that reveals):\n- `Steps ▾` sits under the rationale. It is open on a miss and collapsed on a right answer; `prefs.rationale` governs.\n- Steps are numbered lines in Source Serif at `--q-opt`, with numbers in DM Mono.\n- On a named miss, the diverging step carries a line `You went wrong here: used the diameter as the radius`.\n\nHint ladder (practice only; never in exams, contests or the day's questions):\n- A `Hint` tool in the question strip, key `W`, labelled `Hint 1 of 3`. Each press reveals the next step except the last.\n- A hinted answer files as `guess=1`: half credit, never closes a mistake (R8). The verdict says `With 1 hint`, and `qstate[qid].hints` stores the count.\n- Templates without steps show the rationale exactly as today. Nothing says 'missing'.",
+    "beats": "Their explanation is one long AI-prose 'Justification: … Distractor Analysis:', shown only after answering, never pointing at your own error, and unverified. Ours is numbered and uses your numbers. It marks the exact step your named mistake broke, is proven against the key by the same audit that ships the item, and can be opened one step at a time before answering, which they cannot do at all.",
+    "effort": "L",
+    "needs": "T-bank: templates emit steps and step_of_reason, plus the audit check and the coverage script. F5/S4: `practice.to_question` carries steps, hidden until reveal like the key. F3: render, the Hint tool and key W. F4: the guess flag on hinted answers and `hints` in qstate. S6 and S10 render steps in the review player and pane."
+   },
+   {
+    "title": "Points on the table: one score-value unit on every mistake, skill and task",
+    "what": "F4 adds `estimate.points(learner)`, which returns `{total, by_topic:[{topic, pts, acc_now, acc_goal, share, basis_n}], by_trap:{id: pts}}`:\n- `share` is the topic's expected share of a Math section's weighted points: the BLUEPRINT domain share × the topic's share within its domain from `blueprint.kinds()`, weighted by `scoring.WEIGHT` over the tier mix.\n- `acc_goal = max(0.85, the accuracy the target band needs)`.\n- `pts = slope of scoring.ANCHORS at the learner's weighted fraction × share × (acc_goal − acc_now)`, rounded to 5. It is hidden below 10 first tries ('not measured yet').\n- A trap's pts = its topic's pts × (the trap's hits ÷ the topic's misses in the last 60 days).\n- `total = Σ` over topics, capped at 800 minus the estimate midpoint.\n- Cached per learner and refreshed on answer write.\n\nOne chip style: DM Mono 12px `≈ +10 pts` in `--soft`, never orange. Tapping it opens proposal 7's popover with the arithmetic in words: 'Circles is about 5% of a section's weighted points. You're at 48% first-try, the goal is 85%. At your level (between 480 and 620) that's about 560 scaled points per whole section, so ≈ +10.'\n\nWhere it shows:\n- Today: hero chip `≈ 80 points on the table`, the Up next reason (`3 open mistakes · worth ≈ +20`) and the Review card rows.\n- Review Redo: new sort `Points` (the default) and a `Most points` preset.\n- Results skills table: column `On the table`, default sort descending, with domain totals.\n- Plan's `Why this?`, the palette's skill rows and the report's what-if line (same function).\n- Play today's summary: `≈ +10 moved today`.",
+    "beats": "Theirs offers one sentence, 'Weakest first. This is where your remaining time pays off most.' (Plan Progress tab only), and one overall 'Score gap (1000 now, 1400 target)'. Their domain copy is mislabelled ('13% of test section, 1-8 questions'). Nothing of theirs says which mistake or skill is worth fixing first. Ours ranks every mistake, skill and task in the unit students think in, with the same number on every page and the arithmetic one tap away.",
+    "effort": "M",
+    "needs": "F4 `estimate.py` using `scoring.ANCHORS`/`WEIGHT` and `progress.BLUEPRINT`. F5 `blueprint.kinds()` for per-topic shares. Consumers: S3, S6, S7, S10, F2 (palette), S4 (summary). Proposal 7's popover. The heuristics join open question 12."
+   },
+   {
+    "title": "Learn any of 386 types in a minute: worked example, then three of your own",
+    "what": "Entry points:\n- `Learn this type` on palette type rows (Shift+Enter), the Log-a-mistake type rows, the Results skill panel's type list, Review's family strip and the builder's type list.\n- A quiet `First time? See a worked example` above a practice stem when `seen == 0` for that template.\n\nFlow, in the inline runner (a 720px sheet on desktop, full screen on a phone):\n1. `Example`: `GET /api/types/{t}/example` (seed 900000+), fully revealed. The key row, every wrong option with its named misconception, and the rationale and steps (proposal 2) are all open. `Your turn` (Enter).\n2. `Your turn 1 of 3`: same template, fresh seed, instant feedback. A miss queues the repair as usual.\n3. Two more at the same tier, or one tier up after two rights when the template spans tiers.\n4. Card: `Circles · Central angle from an arc · 3 of 3 right · counted in your mastery`, with `Practise Circles · 10` and `Done`.\n\nServer: `POST /api/drill {templates:[t], count:3, source:'learn'}`. The example is never an attempt. The 3 answers file normally and list in history as `Learn · Central angle from an arc`. Esc keeps it as an unfinished Learn set. Keys: A–D, Enter, Esc.",
+    "beats": "TopTierPrep never teaches. Every surface is a test, the explanation appears only after a miss, and a fixed bank has no second example of the same kind to try right after. Ours teaches any type in about a minute: an example with every trap labelled, then three fresh ones. It is 1 tap from wherever the student found the type.",
+    "effort": "S",
+    "needs": "F5: `/api/types/{t}/example` and `source 'learn'`. F3: the inline runner mode. F2: the palette row action. S4 (builder, first-meet link), S6 (skill panel), S10 (family strip) and the quick sheet add the entry buttons. It works on today's rationales and gets better with proposal 2."
+   },
+   {
+    "title": "Instant by default: speed budgets, and the mechanisms that meet them",
+    "what": "Budgets go into §2.1 and I1's walk, measured by a Playwright script `tools/perf.py` on a seeded learner. It fails when a budget is missed on two consecutive runs:\n- Check → verdict painted ≤ 100 ms p95 locally.\n- Next → next question painted ≤ 50 ms, with no network call.\n- Any revisited page: cached content ≤ 150 ms, fresh data ≤ 600 ms.\n- Today first-visit LCP ≤ 1.5 s on Slow 4G on a mid phone.\n- CLS 0 from data arriving.\n\nMechanisms:\n(a) `POST /api/drill/{id}/answer` also returns `next`, the following question already chosen with the repair logic. Today every question costs two round trips (answer, then `/next`; verified in `server/app.py`). The runner pre-renders the next stem, KaTeX and figures into a hidden node while the student reads the verdict. `/next` stays for skip and jumps.\n(b) `UI.api` serves GETs stale-while-revalidate: each response is kept in sessionStorage per path and learner (try/catch, 2 MB LRU). Pages paint cached data at once and patch numbers in place. Skeletons appear only on a true first view.\n(c) `head.js` adds Speculation Rules: `prerender` the Up next target and `prefetch` the five tab destinations at `eagerness: moderate`. Never on `/test/` or session URLs, and pages must not POST on load.\n(d) Cross-document View Transitions: `@view-transition {navigation: auto}` with a 120 ms fade of `main` only. The sidebar and tabs are pinned with `view-transition-name`. Off under reduced motion or `prefs.motion=reduce`.\n(e) Optimistic toggles (save, mark, skip, prefs, plan skip/move) flip at once and revert with a toast on failure.\n(f) The runner never waits on non-critical calls (crowd line, family strip, history); they fill in afterwards.",
+    "beats": "TopTierPrep is a client-routed SPA, so their route changes are fast after the first load. Ours is 14+ static pages, each reloading and re-fetching behind skeletons, and would feel slower than theirs without this. Their cards skeleton-load on each visit (the comments modal 'opens with skeleton then loads') and their plan builder plays a fake progress screen. With this, our questions change with zero wait, every revisited page opens painted, and the speed is measured, not hoped for.",
+    "effort": "M",
+    "needs": "F2: ui.js API cache and head.js speculation rules. F1: view-transition CSS. F3: the runner consumes `next` and pre-renders. F5/S4: the answer response carries `next`. I1: `tools/perf.py` and the budget gate."
+   },
+   {
+    "title": "Re-check now: an instant, independent verdict when a student says the key is wrong",
+    "what": "In `UI.report`, choosing `Answer key is wrong` (only once the verdict has been shown) immediately calls `POST /api/report/check {session, question_id, answer}`. The server regenerates (template, seed) and runs `satbank.audit.audit(item)`, whose solver re-derives the answer from `item.params` alone. I timed it: one item per template, 385 audited, 161 ms total, about 0.4 ms each. It returns `{holds, derived:'49π', your:{value:'196π', mistake:'used the diameter as the radius'}|null, steps?}`.\n\nWhen the key holds, the form shows before Send:\n- `Re-checked just now by an independent solver: the answer is 49π.`\n- When the student's answer matches a named reason or spr_mistake: `Your 196π is what you get if you used the diameter as the radius.`\n- `Show steps` (proposal 2).\n- Buttons: `That explains it` (closes without a report and logs a `check_only` count) and `Still send the report` (the form continues).\n\nWhen the audit fails (a real bank bug):\n- The form shows `You're right: our check disagrees with this key. It won't count against you.`\n- The attempt is set `disputed=1` without using one of the 5 dispute slots.\n- The report is created with `status:'confirmed'`.\n- The template joins a quarantine list (kv `quarantine`), which drill, test, contest and QOTD selection skip until a fix ships. The admin page lists quarantined templates first.\n\nNever offered while a sitting is live, since marking never shows then.",
+    "beats": "Their report goes into silence: the student never learns what happened, and the key stays until staff look. Ours answers in under a second from an independent solver and names the student's own misconception when that is the real cause. A truly broken template is pulled from every student's feed automatically. Only a bank where every item is re-derived by a second solver can do this.",
+    "effort": "S",
+    "needs": "F6: `reports.py` endpoint and the modal step. The existing `satbank.audit`. F4: the disputed-flag path. F5 (drill), S5 (tests), S8 (contests) and S3 (QOTD) skip quarantined templates in selection. F6 admin page ordering."
+   },
+   {
+    "title": "Every number explains itself",
+    "what": "`UI.fact(el, key, args)` (F1 kit) turns a displayed number into a button: a dotted underline on hover devices, no visual change on touch. Tap or Enter opens a popover (a bottom sheet under 760px) with:\n- the value and a one-line definition;\n- the arithmetic with the student's own numbers;\n- what was included and left out, with counts;\n- `See the rows`, linking to the filtered list (Review History, Results sittings, the calendar day);\n- `Same number on: Today · Me · Results`.\n\n`GET /api/fact/{key}` (F4) covers `streak`, `minutes?period`, `accuracy?topic&window`, `mastery?topic`, `estimate`, `percentile?sid`, `points?topic|trap`, `open_mistakes`, `rank?metric&period&scope` and `pace?sid`. Each calls the very function the pages display from (one source, rule 5). It returns `{value, label, formula_text, parts:[{label,n}], excluded:[{label,n}], href}`.\n\nExamples:\n- Accuracy 72%: '131 right of 182 first tries in the last 30 days. Left out: 14 exact repeats, 3 disputed. 4 right guesses count half.'\n- Streak 6: '6 study days in a row (an answer, 10 word reviews or a finished sitting). Sat and Sun were plan rest days, so they kept it.'\n- Estimate 560–650: 'Mean of your last 3 scored sittings within 45 days: 590, 610, 620. Confidence medium: only modules so far; a full section would tighten it.'\n\nApplied to hero chips, Me's tiles, nav-meta tooltips, score cards, skill rows, report tiles, your leaderboard row and the plan's stat tiles.",
+    "beats": "Their numbers contradict each other. The profile says Streak 0 while the QOTD says 1 day. The gauge says '25 Wrong' while the summary says '0 Incorrect / 45 Unanswered'. The wizard's target of 1400 shows as 0 on the dashboard. Domain cards read '13% of test section, 1-8 questions'. Ours agree everywhere (one source), and every one can be opened, checked and traced to the answers behind it.",
+    "effort": "M",
+    "needs": "F4: `/api/fact` over `progress.days`, `estimate`, `percentile`, `points` and mastery. F1: the `UI.fact` component. Every page owner wraps its numbers, one call each. S8 supplies the rank fact."
+   },
+   {
+    "title": "The first ten minutes fill the whole product",
+    "what": "For a learner with 0 answers, Today's Up next is `Start with 8 questions · about 10 min`, with the helper `One from each part of SAT Math, then four that adapt to you. No sign-up.` Enter starts it.\n\n`POST /api/drill {count:8, mix:'blueprint', adaptive:true, source:'warmup'}` serves one medium question per domain, then 4 adaptive ones (up a tier after a right, down after a miss).\n\nThe summary variant `warmup` shows:\n- four domain bars (`Algebra 2 of 2 · Advanced Math 1 of 3 …`) labelled `from 8 answers · rough`;\n- the named mistakes opened, with `Fix now · 4 q`;\n- the coach's next set;\n- `Want a score range? One module · 22 q · 35 min`;\n- a non-blocking `Save your progress`.\n\nIt shows no invented score. Afterwards every Today card has content: the Review card lists the new mistakes, study time shows 10 min, and the streak reads `Day 1`. The plan CTA preview uses the domain bars, and Plan step 1's SourceNote reads `8 practice answers · take a module for a real start`. A visitor who does anything else is never nagged, and Up next falls back to the coach's `new` pick.",
+    "beats": "TopTierPrep opens with a Google sign-in wall, then a dashboard of empty cards ('Complete a full-length test to start tracking your score'; a full test is 134 minutes). Nothing fills them quickly. Ours serves the first question on the first click, and after 10 minutes every card on Today is about the student.",
+    "effort": "S",
+    "needs": "F5: `mix blueprint`, `adaptive` and `source warmup`. S3: the Up next new-student state. S4: the summary variant. S10: counts. F2: the shell refresh. S7: the SourceNote variant."
+   },
+   {
+    "title": "One study vocabulary: the same few verbs, keys and icons in every section",
+    "what": "The spec names our core power (new numbers on demand) in many ways. Counted in rebuild-v2.md: 'Another like this' 6, 'Another one like this' 4, 'Try one like this' 7, 'Fresh one like this' 6, 'New one like this' 4, '5 more like this' 3, 'Fresh versions' 11, 'Again · new questions' 3, 'Practice again' 5, 'Try one now' 6, 'Drill it' 4. The exact-replay and fix actions add 'Again, exactly', 'Start over with these exact questions', 'Fix N', 'Fix these', 'Redo these', 'Twin test' and 'Retake as a test'.\n\nKit `UI.VERBS` (F1) defines four verbs. Each has one label, one icon and one helper line (tooltip and `?` sheet); the keys are those §2.8 already gives:\n- `One like this` / `N like these` (T in players and lists, and in the runner after a verdict): same type, new numbers. Helper: `New numbers · counts toward mastery`.\n- `Again, exactly` (E in players and lists; not offered inside a running set, where E is eliminate): same question. Helper: `Same question · doesn't count toward mastery`.\n- `Fix` (a set on the misses; new numbers). Helper: `Two clean answers close each mistake`.\n- `Test like this` (a parallel form of a sitting). Helper: `Same question types, new numbers, scored like any test`.\n\nEvery section's copy uses only these. I1 adds a grep over `web/` for the retired phrases, which must return nothing.",
+    "beats": "Their actions are few and generic ('More practice', 'Practice again'), and their fixed bank can't offer most of ours. Ours are more capable, but about 18 names for 4 ideas would make them hard to learn. One vocabulary with fixed keys turns our advantage into a habit: T for 'another like this', everywhere.",
+    "effort": "S",
+    "needs": "F1: `UI.VERBS` and the icons. F2/F3: key maps (§2.8 already reserves T and E in players; the runner adds T after a verdict). Copy edits by each page owner (S3, S4, S5, S6, S8, S9, S10). The I1 grep gate."
+   },
+   {
+    "title": "Thumb-first runner on phones",
+    "what": "At 390px (F3 runner/workspace):\n- The question strip keeps only number · skill · difficulty.\n- The row of 7 tiny captioned tools (Mark · Eliminate · Highlight · Note · Details · Report · Attempts), today at the top, moves into a 48px tool tray directly above RunFooter: Mark, Eliminate, Calculator, Hint (proposal 2), and `⋯` for the rest in a sheet.\n\nGestures:\n- Long-press an option (450 ms) to strike or unstrike, with an Undo toast.\n- Swipe horizontally on the question body for Next / Previous, only where moving is free (end mode, review, after a verdict), never before Check in instant mode.\n- Swipe up on the NavPill to open the navigator sheet.\n- Pull down on any sheet's grab bar to close it.\n\nThe Check pill stays bottom-right at ≥ 128 × 48 and becomes `Next ›` in the same spot after the verdict. A set is then an answer tap plus one thumb tap per question.\n\nHaptics: `navigator.vibrate(8)` on the verdict and `(4)` on a strike where supported, off when `prefs.motion = reduce`. No sound.\n\nThe grid-in field and the pill ride above the on-screen keyboard (`visualViewport`). In landscape, the calculator docks to the right half.",
+    "beats": "Their QBank on a phone is the desktop layout squeezed, with the tools at the top and the floating vocab button covering Next. Ours puts every frequent action in the bottom third. Nothing ever covers the pill, and a 10-question set is about 20 thumb taps without reaching up the screen.",
+    "effort": "M",
+    "needs": "F3: the tray, gestures, visualViewport handling and haptics in runner.js/question.js. F1: tray styles. F4: `prefs.motion`. S4 and S5 inherit it."
+   },
+   {
+    "title": "Earned moments that mark real learning, never decoration",
+    "what": "Fixed stamp: when an answer closes a mistake (drill feedback already returns closed trap ids), the verdict shows `Fixed · Used the diameter as the radius · caught you 3× since Sep 12`, with one 200 ms scale-in. The Review count in the nav ticks down in place, and the Fixed tab gets the row with its time-to-fix.\n\nPersonal bests are computed on write from attempts and shown as one line in the verdict or summary, never a modal. Each shows once and is stored in `earned` (R25):\n- `Fastest right on this type · 0:41 (was 1:05)`\n- `10 right in a row` (also 20 and 50)\n- `First Hard right in Circles`\n- `First upper-route module`\n- `Best section yet · 610–690`\n\nDay done: when the goal or plan day completes, the sidebar Today ring closes and the flame fills in one entry animation. Up next reads `Day done · 42 of 40 min`.\n\nWeekly proof (Mondays, above Up next until dismissed, and on Me): `Last week: estimate 560–650 → 590–670 · 6 mistakes fixed · Percentages 40% → 85% · 4h 10m`. `Copy image` puts a canvas PNG on the clipboard (download as fallback), and `Share progress link` is beside it.\n\nRules: every moment is caused by measured work. Nothing loops. Reduced motion shows the final state. No emoji or confetti.",
+    "beats": "Their achievements are four hard-coded tiles with no progress and a dead View All, and the plan card's finish is an emoji 'All Done' badge. Nothing of theirs reacts to learning. Ours marks the moments that move a score (a mistake closed, a type got faster, a route earned) at the instant they happen, and gives a weekly proof worth showing a parent.",
+    "effort": "M",
+    "needs": "F4: `record` reports closed traps and best checks. S1: the achievements engine (`earned`). F3: the verdict slot. F2: the nav-meta tick and ring. S3: the day-done state and weekly card. S6: best section. S1: progress link."
+   },
+   {
+    "title": "Offline pack: the installed app keeps working on a bus",
+    "what": "F2 adds `web/sw.js`, which caches the static app (HTML, ui.css, js, fonts, mark) per app version and goes network-first for `/api/*`. `head.js` registers it. This reverses §2.14's 'no service worker'.\n\n`Take 20 offline` on the builder, the session summary and the palette calls `POST /api/drill {..., offline:true}`. It returns the items with keys, reasons, rationale and steps, plus one pre-generated repair per item. Practice pools only: `deps.access` refuses tests, contests and today's QOTD and challenge. The pack is stored in IndexedDB and listed on Today and Practice as `Offline set · 20 q · on this device`.\n\nOffline, the runner (practice mode) marks locally with the same workspace and verdict. Answers queue in `UI.saveQueue` with client timestamps. On reconnect, `POST /api/drill/{id}/sync {answers:[{qid, given, ms, at}]}` files them in order through `progress.record`, with `at` clamped to [pack created, now]. Mistakes open and close normally, and a toast reads `Synced 14 answers`.\n\nEach qid answers once, packs expire after 7 days, and packs never count toward ranks or contests.",
+    "beats": "TopTierPrep needs a connection for every screen. Students study on buses, in school basements and on flights. Ours keeps full verdicts and named mistakes offline, and the work lands in their record when they reconnect.",
+    "effort": "L",
+    "needs": "F2: `sw.js` and registration. F5/S4: the `offline` flag and the sync endpoint. F4: `record` with a clamped client `at`, and the access rule. F3: the runner's local-marking path."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Signing in on a second device",
+    "spec_says": "Save to an email with a 6-digit code, or a pairing code approved on the first device. Google sign-in is left to open question 5.",
+    "why_only_parity": "TopTierPrep's Google sign-in is one tap on a phone already logged into Google. Ours needs the mail app or the other device's approval, so moving to the phone takes more steps than theirs.",
+    "upgrade": "Passkeys become the primary way to save progress. One Face ID, Touch ID or Windows Hello tap creates a WebAuthn credential bound to the learner (credential rows beside `users`; register and verify endpoints in `account.py`). The passkey syncs through iCloud Keychain or Google Password Manager, so the phone signs in with one tap through conditional-UI autofill on `/signin/`. The email code stays for recovery and pairing for school devices. Also `Continue on phone`: a QR in the account menu and palette that pairs and opens the current URL (the same sitting) on the phone."
+   },
+   {
+    "feature": "Explanations after a question",
+    "spec_says": "The rationale plus every wrong option's named misconception.",
+    "why_only_parity": "This is below parity. 94% of our generated rationales are one sentence (median 91 characters, 382 templates sampled), while theirs is a long-form 'Justification:'. Only the per-option reasons match their 'Distractor Analysis'.",
+    "upgrade": "Proposal 2: numbered steps built from this seed's numbers, proven against the key by the audit, pointing at the step the student's named mistake broke, plus a practice-only hint ladder. Coverage is tracked by `tools/steps_coverage.py`."
+   },
+   {
+    "feature": "Plan wizard",
+    "spec_says": "Four steps (Where you are, Where you're going, Time you have, What to focus on) with a glance panel. This mirrors their four steps one-for-one.",
+    "why_only_parity": "Same steps and inputs, about 13 interactions before a plan exists. Our details are better, but the flow is theirs.",
+    "upgrade": "`Your plan, from what we know`. When an exam date, a score or 30+ answers, and 5+ active days exist, the landing shows the built plan (GlancePanel plus the first week). It comes from `estimate.mean3`, the minutes per weekday from `progress.days`, and the weakest domains by mastery. One tap `Start this plan`; each row has an inline Change. The wizard opens only from `Adjust everything`."
+   },
+   {
+    "feature": "Starting a test",
+    "spec_says": "A start sheet with a 4-step stepper (Test · Modules · Timing · Tools), then a lobby that lists every setting with Change, then Begin.",
+    "why_only_parity": "Theirs is 3 steps plus a fullscreen gate; ours is 2 to 4 steps plus the lobby. The count is the same, and ours configures the same settings twice.",
+    "upgrade": "Start on any card goes straight to the lobby with the student's defaults, and the lobby is the only configuration screen. The sheet stays only for `Choose modules` and `Custom test`. The recommended test is 2 clicks (Start, Begin) against their 4 to 5."
+   },
+   {
+    "feature": "Exam countdown",
+    "spec_says": "Four boxes DD : HH : MM : SS ticking every second to 8:00 AM on exam day.",
+    "why_only_parity": "A copy of their ticking clock. Seconds carry no decision, and a perpetual tick breaks our own rule 10 ('nothing loops').",
+    "upgrade": "Count in study units: `45 days · 31 study days · 6 tests · ≈ 870 questions at your pace · ≈ 80 points on the table`, each linking to its card. Hours and minutes appear only in the last 48 hours, seconds only on exam morning."
+   },
+   {
+    "feature": "Loading states",
+    "spec_says": "Rule 8: static skeletons at final size on every load.",
+    "why_only_parity": "TopTierPrep also skeleton-loads its cards (their comments modal 'opens with skeleton then loads'), so this is the same experience.",
+    "upgrade": "Stale-while-revalidate (proposal 5). Every page paints its last response at once from sessionStorage and patches changed values in place without layout shift. Skeletons appear only on a true first view."
+   },
+   {
+    "feature": "Moving between pages",
+    "spec_says": "14+ static pages. Each loads ui.js, calls `/api/shell`, then its own API behind skeletons.",
+    "why_only_parity": "TopTierPrep is a client-routed SPA, so their route changes are instant after the first load. Full reloads would make ours feel slower: at best parity.",
+    "upgrade": "Speculation Rules prerender the Up next target and prefetch the tab destinations. Cross-document View Transitions fade `main` in 120 ms, off under reduced motion. The SWR cache adds the rest. Budget: ≤ 150 ms to painted content on a revisit, enforced by `tools/perf.py`."
+   },
+   {
+    "feature": "Empty states",
+    "spec_says": "Every empty card keeps its frame, says what will appear and offers the action that fills it.",
+    "why_only_parity": "Same pattern as theirs ('No completed tests yet.', 'Browse contests').",
+    "upgrade": "Each empty state shows one dimmed sample row of exactly what will appear (for example a mistake row with its pips and points chip). It offers the smallest filling action with its cost (`Answer 3 questions · about 4 min`), which runs inline in the card without leaving the page."
+   },
+   {
+    "feature": "Report a problem form",
+    "spec_says": "Title 0/200, category, details 0/5000, up to 10 images. Adds (template, seed), disputes and replies.",
+    "why_only_parity": "The form is theirs field for field, and reporting a key still takes about 4 steps.",
+    "upgrade": "Two taps from the verdict: a `Something wrong?` row under every revealed question with three chips (Key wrong · Named mistake doesn't fit · Typo or figure). A chip sends at once with full context; details and images are optional afterwards. Key wrong runs Re-check now (proposal 6) first."
+   },
+   {
+    "feature": "Profile page",
+    "spec_says": "Identity card with stat tiles, snapshot of ranks, goals, learning preferences, skills, score trend, achievements, activity and recent activity, in two columns.",
+    "why_only_parity": "Card for card it is their profile with better data. It lists facts but answers no question.",
+    "upgrade": "Me opens with one verdict: `On track for 700 by Nov 7?`, reading Yes / Close / Behind from the estimate trajectory against the required pace. Beside it are the points on the table and the three moves that would change the verdict, each a one-tap start. Every tile opens its fact popover (proposal 7)."
+   },
+   {
+    "feature": "Learning preferences",
+    "spec_says": "An inline card with the five most-used defaults, saved instantly, plus All settings. Theirs: Practice mode, Difficulty, and three toggles.",
+    "why_only_parity": "The same controls in the same place.",
+    "upgrade": "Study modes: three presets that set many prefs at once and list what they change. `Learn`: instant feedback, explanations always, repairs next, untimed. `Test-like`: end feedback, pace clock, reasons at the end, calculator on. `Speed`: sprint, pace alert, explanations on a miss. The active mode shows on the builder and in the runner's More, and editing any pref turns it into `Custom`."
+   },
+   {
+    "feature": "Home greeting",
+    "spec_says": "Date eyebrow, `Good morning, Aziz`, and four status chips.",
+    "why_only_parity": "The greeting and date are theirs (a decorative hero). The chips show state but not change.",
+    "upgrade": "The line under the greeting says what changed since the last visit: `Since Monday: 4 mistakes fixed · estimate steady · 3 check-ins due today`. Each part links to its card, computed from attempts since `last seen`."
+   },
+   {
+    "feature": "Diagnostic result gate",
+    "spec_says": "R38 keeps a name-and-email step before the diagnostic result (open question 8).",
+    "why_only_parity": "It is their sign-in wall, placed exactly where a new student is most curious.",
+    "upgrade": "Show the diagnostic result immediately, like every other sitting. Then offer `Save your progress` (passkey or email) on the report, non-blocking."
+   },
+   {
+    "feature": "Toasts and undo",
+    "spec_says": "`UI.toast(text, {action, href, undo, ms})`, used for Saved, Copied, sign-in and some Undo cases.",
+    "why_only_parity": "TopTierPrep has the same generic toasts ('Task skipped', 'Switched to this plan').",
+    "upgrade": "One rule: every change a student can regret (skip, move, unsave, unmark, dismiss a mistake, remove a word, leave a class) shows Undo for 6 s. `Z` undoes the last action on any page (a global `UI.keys` entry). Each is reversible in the API, so Undo survives a reload."
+   }
+  ]
+ }
+}

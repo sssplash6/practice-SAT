@@ -1,0 +1,380 @@
+{
+ "label": "synthesize spec/rebuild-v2.md",
+ "key": "v2:c5100dbeefeada0629d2d426187c315ec0d261969e69dba6281facfac6fa079e",
+ "result": {
+  "summary": "Yes. The mistake was building under rules that withheld things for looks: \"one pill per screen\", \"nothing narrates\", no labels, no borders, \"the object carries its state\". Following them, every section ended up worse than TopTierPrep's. Some examples: a Mistakes page that names a mistake but never shows the question, two unlabelled doors on Tests, a builder with no filters or counts, Mistakes, Challenge and Me missing from the nav, and no search, report button, attempt history or settings anywhere.\n\nThe plan is written: /Users/workingmyassof/satbank/spec/rebuild-v2.md (about 940K characters, 11,183 lines). It is committed as 44d8e4f on master. It was not pushed, because the repo has no remote.\n\n- **Part 1** says what went wrong and why, quotes your direction, and lists the old rules as void. §2.1 gives the rules that replace them: labels, legends, counts, units and one-line helpers are wanted; each region (page header, card, sheet, player) gets one primary action instead of one per screen; orange is still the only accent, and status never relies on colour alone.\n- **Part 2** is what every section shares:\n  - 38 numbered decisions for places where the nine section specs disagree. Among them:\n    - The phone keeps its 5 tabs. Review, Words and Compete go in the sidebar and in the avatar menu on phones.\n    - /mistakes/ becomes /review/, and /challenge/ becomes Compete.\n    - Compete's groups are the same thing as classes.\n    - \"Mark for review\" and \"Save\" stay two separate things.\n    - One store for notes and highlights, one set of preferences, one drill request format, one report-a-problem system, and three kinds of share link.\n    - Streak, study time, the score estimate, the percentile and the drift rule each come from one server function.\n  - The full database schema, added once.\n  - Every shared component, with the file it lives in and who builds it.\n  - The drill request format and every preference key.\n  - One keyboard map with no clashes, and one set of status marks and glyphs.\n  - A table of who provides what to whom, and the hooks each page adds for other sections.\n  - A table of acceptance checks from Part 3 that the decisions amend.\n- **Part 3** is the nine section specs, verbatim and complete: their inventory, what we have now, the design, the extras, server changes, a file-by-file owner table, shared needs mapped to where they get built, acceptance checks, and each section's own questions. It was generated from the specs you gave, so nothing was dropped. Each section opens with the decisions that change it.\n- **Part 4** is the build order:\n  - One prep step first: split app.py into per-area routers that register themselves, and add a SATF_DB setting so each worktree gets its own database and server port.\n  - Then the foundations in two stages, then 11 section tasks in parallel, then one integration pass.\n  - Every task owns its files exclusively, and new server checks go in one file per task.\n- **Part 5** has 19 short open questions, each with the default the build will use until you answer.\n\nThings you may want to reconsider:\n- Keeping 5 phone tabs means Review, Words and Compete are two taps away on a phone.\n- The daily challenge is planned as \"twins\" (the same question types for everyone, but each student gets different numbers), which stops students passing answers around.\n- Exact repeats, such as a saved question served again or a retake of a fixed diagnostic form, will no longer count toward mastery or close a mistake. That, plus merging near-duplicate mistakes, will lower existing students' mistake counts.",
+  "foundations": [
+   {
+    "id": "F0",
+    "title": "Repo prep (serial, first): app.py split into routers that register themselves, the daily.py split, a SATF_DB setting, the server/checks runner, the head-block sweep of every page, the web app manifest and icons, the README split",
+    "owns": [
+     "server/app.py",
+     "server/deps.py (then F4)",
+     "server/api_*.py created by the split (each then passes to its owner)",
+     "server/api_legacy.py",
+     "server/challenge.py (then S8)",
+     "server/checks/",
+     "web/manifest.webmanifest",
+     "web/assets/icon-192.png",
+     "web/assets/icon-512.png",
+     "web/assets/apple-touch-icon.png",
+     "web/assets/head.js (then F2)",
+     "web/assets/kit.js stub (then F1)",
+     "web/assets/charts.js stub (then F1)",
+     ".gitignore",
+     "head block of every page (sweep lines only)",
+     "first line of spec/rebuild.md"
+    ]
+   },
+   {
+    "id": "F1",
+    "title": "Design system: tokens (light and dark), status and level tokens, every shared CSS class, overlays, controls, data primitives and formatters (kit.js), charts (charts.js), 404 page",
+    "owns": [
+     "web/assets/ui.css",
+     "web/assets/kit.js",
+     "web/assets/charts.js",
+     "web/404.html",
+     "web/dev/kit.html"
+    ]
+   },
+   {
+    "id": "F2",
+    "title": "Shell: sidebar, rail, phone bar and tabs, menu sheet, account menu, nav badges, banners, quick sheet (Quick question, Log a mistake, Add a word), command palette, keyboard shortcut registry, prefs helpers, theme, /api/shell with parts contributed by other modules",
+    "owns": [
+     "web/assets/ui.js",
+     "web/assets/head.js",
+     "web/assets/quick.js",
+     "web/assets/palette.js",
+     "web/assets/qr.js",
+     "server/api_shell.py",
+     "server/checks/f2.py"
+    ]
+   },
+   {
+    "id": "F3",
+    "title": "Question workspace and runner: one question component in every mode, the runner shell shared by the practice session and the test window, navigator, Check your work, timer, calculator dock, highlights and notes, review player and pane, attempt-history modal, answer save queue",
+    "owns": [
+     "web/assets/question.js",
+     "web/assets/runner.js",
+     "web/assets/runner.css",
+     "web/dev/workspace.html"
+    ]
+   },
+   {
+    "id": "F4",
+    "title": "Data layer: the full schema and migrations, new attempts columns and what counts toward mastery, rebuilt mistakes with check-ins at 3/10/30 days, flags and notes, progress.days (one streak and study-time rule), carry and export lists, the prefs registry, estimate and percentile, SAT dates, the access rule, validation for PUT /api/me",
+    "owns": [
+     "server/db.py",
+     "server/progress.py",
+     "server/prefs.py",
+     "server/estimate.py",
+     "server/satdates.py",
+     "server/scoring.py",
+     "server/deps.py",
+     "server/api_me.py",
+     "server/api_notes.py",
+     "server/checks/f4.py"
+    ]
+   },
+   {
+    "id": "F5",
+    "title": "Drill engine and bank catalogue: the one drill request format (every pool, filter and alias, resolvers owned by other sections, preview), drills that never count as sittings, measured levels, why each question was chosen, blueprint.kinds, whole-question dedupe, /api/types, the question-type example endpoint, /api/mistakes/log",
+    "owns": [
+     "server/drill.py (then S4)",
+     "server/practice.py (then S4)",
+     "server/api_practice.py (then S4)",
+     "server/blueprint.py (then S5)",
+     "server/api_bank.py",
+     "server/checks/f5.py"
+    ]
+   },
+   {
+    "id": "F6",
+    "title": "Reports and question sets: UI.report and POST /api/report (10 images, disputes, Your reports, admin page), shared question sets (sets table, endpoints, access rule, results for the owner, the /s/ landing page), report mail notice",
+    "owns": [
+     "server/reports.py",
+     "server/sets.py",
+     "server/mail.py (then S1)",
+     "web/assets/report.js",
+     "web/admin/reports/index.html",
+     "web/s/index.html",
+     "tools/reports.py",
+     "server/checks/f6.py"
+    ]
+   }
+  ],
+  "tasks": [
+   {
+    "id": "T-bank",
+    "title": "Named grid-in mistakes in the bank (Item.spr_mistakes across grid-in templates, audit check, coverage script)",
+    "depends_on": [
+     "F0"
+    ],
+    "owns": [
+     "satbank/item.py",
+     "satbank/topics/*/families/*.py",
+     "tools/spr_coverage.py"
+    ]
+   },
+   {
+    "id": "S1",
+    "title": "Account, Me, Settings, Sign in, Pair, Share view, Help, achievements (Shell spec §1, §3–§6, §8, §9; Me Boards block, Words stats, Review saved card, test defaults)",
+    "depends_on": [
+     "F0",
+     "F1",
+     "F2",
+     "F3",
+     "F4",
+     "F5",
+     "F6"
+    ],
+    "owns": [
+     "server/account.py",
+     "server/api_account.py",
+     "server/api_profile.py",
+     "server/achievements.py",
+     "server/mail.py",
+     "web/me/**",
+     "web/signin/**",
+     "web/pair/**",
+     "web/share/**",
+     "web/help/**",
+     "web/diagnostic/signup.html",
+     "web/diagnostic/verified.html",
+     "server/checks/s1.py"
+    ]
+   },
+   {
+    "id": "S2",
+    "title": "Classes and homework, which also serve as Compete's groups (Shell spec §7)",
+    "depends_on": [
+     "F0",
+     "F1",
+     "F2",
+     "F3",
+     "F4",
+     "F5",
+     "F6"
+    ],
+    "owns": [
+     "server/classes.py",
+     "web/class/**",
+     "web/join/**",
+     "server/checks/s2.py"
+    ]
+   },
+   {
+    "id": "S3",
+    "title": "Today: the full dashboard spec, the question of the day (two slots, crowd, past days), calendar, added scores, the Review card, the Words tile",
+    "depends_on": [
+     "F0",
+     "F1",
+     "F2",
+     "F3",
+     "F4",
+     "F5",
+     "F6"
+    ],
+    "owns": [
+     "web/index.html",
+     "server/api_today.py",
+     "server/daily.py",
+     "server/checks/s3.py"
+    ]
+   },
+   {
+    "id": "S4",
+    "title": "Practice builder and session: the full question-bank spec, plus contest mode, flags, gloss and plan hooks in the session",
+    "depends_on": [
+     "F0",
+     "F1",
+     "F2",
+     "F3",
+     "F4",
+     "F5",
+     "F6"
+    ],
+    "owns": [
+     "web/practice/**",
+     "server/drill.py",
+     "server/practice.py",
+     "server/api_practice.py",
+     "server/checks/s4.py"
+    ]
+   },
+   {
+    "id": "S5",
+    "title": "Tests catalog, papers and discussion, start sheet, the test window with lobby, pause and Check your work; the weekly and final contest sittings",
+    "depends_on": [
+     "F0",
+     "F1",
+     "F2",
+     "F3",
+     "F4",
+     "F5",
+     "F6"
+    ],
+    "owns": [
+     "web/tests/**",
+     "web/test/**",
+     "web/diagnostic/index.html",
+     "server/api_tests.py",
+     "server/papers.py",
+     "server/blueprint.py",
+     "server/mocks.json",
+     "server/forms.json",
+     "tools/moderate.py",
+     "server/checks/s5.py"
+    ]
+   },
+   {
+    "id": "S6",
+    "title": "Results overview and score report: the one /api/history, stats, skill panel, sitting card, report deep links, flagged filter, percentile pill",
+    "depends_on": [
+     "F0",
+     "F1",
+     "F2",
+     "F3",
+     "F4",
+     "F5",
+     "F6"
+    ],
+    "owns": [
+     "web/results/**",
+     "server/api_results.py",
+     "web/assets/results-ui.js",
+     "server/checks/s6.py"
+    ]
+   },
+   {
+    "id": "S7",
+    "title": "Study plan: landing, 4-step wizard, plan view with Plan, Progress and Plans tabs, all plan arithmetic on the server, calendar feed, Words task",
+    "depends_on": [
+     "F0",
+     "F1",
+     "F2",
+     "F3",
+     "F4",
+     "F5",
+     "F6"
+    ],
+    "owns": [
+     "web/plan/**",
+     "server/plan.py",
+     "server/api_plan.py",
+     "web/assets/plan-ui.js",
+     "server/checks/s7.py"
+    ]
+   },
+   {
+    "id": "S8",
+    "title": "Compete: contests (daily, sprint, weekly, seasons and final, private), leaderboards including practice rank, rankings, rating, the /challenge/ redirect",
+    "depends_on": [
+     "F0",
+     "F1",
+     "F2",
+     "F3",
+     "F4",
+     "F5",
+     "F6"
+    ],
+    "owns": [
+     "web/compete/**",
+     "web/challenge/**",
+     "server/compete.py",
+     "server/challenge.py",
+     "server/api_compete.py",
+     "web/assets/compete-ui.js",
+     "server/checks/s8.py"
+    ]
+   },
+   {
+    "id": "S9",
+    "title": "Words: library, flashcards, quizzes, My words, spaced review, word content and index, phrase translation, gloss and add-a-word helpers",
+    "depends_on": [
+     "F0",
+     "F1",
+     "F2",
+     "F3",
+     "F4",
+     "F5",
+     "F6"
+    ],
+    "owns": [
+     "web/words/**",
+     "web/vocabulary/**",
+     "web/assets/words-ui.js",
+     "server/words.py",
+     "server/words/**",
+     "server/words_index.json",
+     "server/phrases.py",
+     "server/api_words.py",
+     "tools/build_words.py",
+     "server/checks/s9.py"
+    ]
+   },
+   {
+    "id": "S10",
+    "title": "Review hub: Redo, Marked, Saved, History, Fixed; the question pane; flag endpoints; the /mistakes/ redirect",
+    "depends_on": [
+     "F0",
+     "F1",
+     "F2",
+     "F3",
+     "F4",
+     "F5",
+     "F6"
+    ],
+    "owns": [
+     "web/review/**",
+     "web/mistakes/**",
+     "server/api_review.py",
+     "server/checks/s10.py"
+    ]
+   },
+   {
+    "id": "I1",
+    "title": "Integration and full walk: run every acceptance list, walk every page at 1280 and 390 with a new and a seeded learner, fix seams, finish README and State lines",
+    "depends_on": [
+     "T-bank",
+     "S1",
+     "S2",
+     "S3",
+     "S4",
+     "S5",
+     "S6",
+     "S7",
+     "S8",
+     "S9",
+     "S10"
+    ],
+    "owns": [
+     "README.md (final pass)",
+     "spec/rebuild-v2.md (State lines)",
+     "small seam fixes in any file after all merges"
+    ]
+   }
+  ],
+  "open_questions": [
+   "Phone tabs: keep five (Today, Practice, Tests, Plan, Results), with Review, Words and Compete in the menu sheet (default), or give one of them a tab?",
+   "Words: ship about 750 SAT words and 70 transitions now (default), or Math language only? Who reviews about 1,090 definitions?",
+   "Daily Challenge: each student gets twin questions (same types, own numbers; default), or one identical ten with answers held until the day closes?",
+   "Exact repeats no longer count toward mastery or close mistakes, and near-duplicate mistakes are merged, so existing counts drop. OK?",
+   "Sign-in: email codes need SMTP in production (without it, only pairing works across devices). Add Google sign-in too?",
+   "Minors: parental consent before saving an email or joining a class? Vet teachers? Photo avatars stay off and country is opt-in (defaults).",
+   "Who answers reports and key disputes and moderates paper discussion? Which address is SATF_REPORTS_TO? Launch Discussion behind a flag?",
+   "Diagnostic sign-up gate: keep it (default), or show the result directly?",
+   "Save and exit pauses a timed test, and practice sets can pause; both show on the report (default). Or keep the clock running?",
+   "SAT dates: March 13 or March 6, 2027? Verify all 2026–27 dates, the 8:00 AM doors time and the test-day checklist with College Board.",
+   "Grid-in named mistakes: ship with partial coverage and grow (default)?",
+   "Confirm the heuristics: pace tags (15 and 30 points a week), levels 1–7 (20 first tries), crowd stats from 20 answers, drift at 40 points, practice rank by right answers over 7 days.",
+   "Sharing defaults: sharer's score shown, links never expire, progress link shows mistake names. OK?",
+   "Report screenshots: up to 10 stored on disk (default), or text only?",
+   "A production Desmos key is needed.",
+   "Self-reported R&W score and target to show a 1600 total (default). OK?",
+   "A pool of College Board item replicas as their Question Bank equivalent? Reuse terms need checking; left out for now.",
+   "Add a stable misconception tag in the bank so mistakes are identified exactly?",
+   "Real-time duels stay out for now. Build later?"
+  ]
+ }
+}

@@ -1,0 +1,214 @@
+{
+ "label": "outcomes: product",
+ "key": "v2:3ef294cb77d6d126063eb642cbd78a169c6ad9d8f1218fa26d303c42292d1330",
+ "result": {
+  "proposals": [
+   {
+    "title": "Score engine: a Math estimate that moves with every answer, and the points still on the table",
+    "what": "SERVER (F4, server/estimate.py): new estimate.practice(learner, tz). Inputs: clean first-try answers from the last 60 days. Repeats, disputed and voided answers are left out; a guess counts 0.5 (R8). For each (topic, tier, format) keep a Beta posterior. Its prior is the field's first-try rate on that (topic, tier) once n>=50; before that it is the stated defaults (easy 0.80, medium 0.55, hard 0.30), with weight 4. Answers older than 21 days weigh 0.5.\n\nSIMULATION: blueprint.slots('module1',1) gives the 22 (domain, tier, format) slots. A slot's topic mix is the share of that domain's (template, tier) abilities (blueprint.abilities()), the way blueprint.fill draws them. Run an exact Poisson-binomial over module 1 for P(route up), using route_after at 60%. Then take expected earned points on each module-2 route and pass them through scoring.section_score, so the practice estimate and the test bands sit on one scale by construction. The band comes from 1,000 Monte-Carlo sittings. Cache per learner and recompute after every 10 attempts or on a new local day.\n\nGATE: needs 150 clean answers covering at least 12 of 19 skills. Until then it shows 'Estimate after 150 answers in 12 skills · 82 answers, 9 skills so far' with a meter and a 'Fill the gaps' button (one question in each uncovered skill).\n\nPOINTS ON THE TABLE: for each skill, re-run with that skill lifted to max(p, 0.85) at every tier. The gain in the median is that skill's points. Rank by points per estimated minute, where minutes = questions needed to move the posterior times the student's median time. Output gains=[{topic, points, now:'54% on medium', share:'15% of the section', minutes}]. Each open trap also gets its expected points lost per section: P(its template fills a slot) x P(miss) x slot value.\n\nROUTING LINE: 'Upper module 2 in 62% of simulated sittings. 2 more right in module 1 lifts the 580 ceiling; easy and medium Algebra is the cheapest way there.'\n\nSCREENS:\n- Today score card, second row: 'From practice 600-660 · +20 since Monday · 1,240 answers', plus 'Where your next points are' (top 3, each with Practise).\n- Results overview: the practice estimate as a dotted band between test bars, and a full 19-row Points table (points, accuracy by tier, share of the section, Practise).\n- Tests estimate card: both numbers, with 'Tests win when they disagree'.\n- Plan: the SplitBar is labelled in points.\n\nHONESTY: always labelled 'from practice' and never replaces a test band. A new table estimate_log(learner, session, mid, low, high, at) stores the prediction at each finished section. The report shows 'Practice said 630 · this section 610-690'. Help shows the mean error once 20 or more pairs exist.\n\nSTUDENT DOES DIFFERENTLY: spends the next hour on the skill worth the most points (usually easy and medium questions in the 35% domains, and whatever is below the routing cut), not on their favourite or hardest topic, and sees the number move each week. WHY IT MOVES THE SCORE: time goes where the marginal points are, and visible progress between tests keeps practice going.",
+    "beats": "TopTierPrep gives an estimate only after a test: Score Overview stays empty until all four modules are done. It drops floor-score sections and shows a red LOW CONFIDENCE with no way to raise it. Their plan weights 'weak areas' the student picks by domain, and their domain cards read '20% of test section, 1-5 questions'. No screen of theirs puts a point value on anything. Ours updates from every answer, shows how routing caps the score, and ranks skills by points per minute. That needs difficulty- and skill-tagged answers at volume, which only our bank produces.",
+    "effort": "L",
+    "needs": "F4 estimate.py (practice(), gains(), estimate_log table added to §2.5), scoring.section_score and route_after, blueprint.slots/abilities (S5 owns blueprint.py after wave 1), R8 clean-answer columns, S4 per-type crowd rates as priors. Consumers: S3 (score card, Up next reason), S6 (Results band and Points table, report line), S5 (estimate card), S7 (SplitBar labels, drift), F2 (shell Today card). Prior defaults and the 150/12 gate go into open question 12."
+   },
+   {
+    "title": "One 'What next' engine behind every page, with the reason and the payoff",
+    "what": "SERVER: server/next.py, GET /api/next?from=today|summary|report|review|shell&sid=. It returns an ordered list of [{kind, title, minutes, reason, payoff, action: href or a drill body, pinned}].\n\nHARD RULES FIRST (Today §3a rules 1-2 today): a running timed test, then an unfinished set.\n\nSCORED CANDIDATES:\n- today's plan tasks (S7 plan.today_summary)\n- fixed-mistake check-ins due (R9)\n- due question types (proposal 4)\n- open traps\n- the week's test\n- words due (S9)\n- the day's questions and the challenge (S3, S8)\n- 'Fix these N' from the sitting just finished\n\nSCORE: expected points gained per minute (from the score engine; a check-in is worth its trap's points x the relapse risk; words are a small constant) x urgency (days overdue, a running clock, fewer than 3 hours left in the local day). The sum is capped by today's minutes left against the goal. Each item carries a reason line built from the numbers ('4 check-ins due · a missed one reopens a fixed mistake') and a payoff ('keeps ~6 points').\n\nCONSUMERS:\n- Today Up next: item 1 is the big card; items 2-4 head the Today list.\n- Practice summary NextActions: 'Next: 4 check-ins due · 5 min [Start]', with 'Or: Fix my 3 misses' beside it.\n- Report: ends with the same.\n- Review header: 'Next: 6 due · 8 min'.\n- Shell Today card: 'Next: Circles check-in'.\n- Palette: 'What should I do now?'\n- Goal already met: 'Today's goal done. Optional: 10 more in Circles, about +4 points.'\n\nEvery 'next' on the site comes from this one call, so no two pages can disagree.\n\nSTUDENT DOES DIFFERENTLY: never has to decide what to study; after any activity the best next one is one tap away and says why. WHY IT MOVES THE SCORE: sessions end at 'what now?', and ordering by points per minute gets more score out of each hour studied.",
+    "beats": "TopTierPrep's dashboard has no single next action (the plan CTA, QOTD, countdown and score all compete), and a QBank session ends with Next disabled on the last question, no summary and nowhere to go. The v2 spec has four separate next rules that can disagree: Today §3a, the session NextActions, Plan tasks, and Review's 'Check these now'.",
+    "effort": "M",
+    "needs": "Score engine (proposal 1) for points; S7 plan.today_summary; R9 check-ins; proposal 4's due types; S9 words.today_summary; S8 challenge state; S3 QOTD state. A new §2.9 contract line. Consumers: S3 Up next, S4 summary, S6 report, S10 Review header, and F2's shell part 'next' plus a palette action."
+   },
+   {
+    "title": "Every lost point gets a cause and a cure: Trap, Gap, Care, Time",
+    "what": "SERVER (F4): classify each wrong or blank answer when it is filed, into attempts.cause:\n- TRAP: the picked option names a misconception (not the filler), or a typed grid-in value matches an spr_mistake.\n- CARE: wrong on a type the student has right on at least 80% of their last 5 clean answers; or the filler 'near-miss arithmetic slip' was picked; or it was answered in under 40% of the type's target time (proposal 6).\n- TIME: a blank in a timed sitting; a dwell under 15 s in the module's last 90 s (qstate ms and time left); or Time's up.\n- GAP: everything else, e.g. a type never answered right, 2 or more first-try misses on it in 14 days, or 'I'm guessing'.\n\nEach miss costs its slot value from the score engine (fallback: WEIGHT / possible x anchor slope), so a hard miss in upper module 2 costs more than an easy one in lower.\n\nREPORT HERO (S6): a stacked bar 'Points lost ≈ 38 · Trap 14 · Gap 10 · Care 8 · Time 6'. Each segment has its cure:\n- Trap: 'Repair 5 traps' (pool redo on those templates).\n- Gap: 'Learn these 3 types' (worked example first, proposal 5).\n- Care: 'Accuracy run' (10 easy or medium questions, untimed, aim 10 of 10).\n- Time: 'Speed reps on your 3 slowest types' (proposal 6).\n\nThe same bar goes on the practice summary. Review Redo gets a Cause filter and a chip on each row. The Results overview adds 'Where your points went · last 30 days', by cause, with a trend.\n\nCARE NUDGE (practice only, never in tests): when an easy question is answered faster than 40% of its target, a quiet 'Quick one. Re-read what it asks?' with a one-tap Check before submitting.\n\nSTUDENT DOES DIFFERENTLY: fixes the cause instead of 'doing more questions': re-reads easy ones, learns a type from an example, drills speed, or repairs a named trap. WHY IT MOVES THE SCORE: above about 600, careless and time losses are often the biggest and cheapest points, and more practice fixes neither.",
+    "beats": "TopTierPrep's report has Correct / Incorrect / Unanswered / Accuracy tiles and a per-domain %. The per-question payload has no skill, difficulty or time, and the gauge contradicts the tiles on blanks. Nothing says why a point was lost. The spec names the misconception on trap misses and has rushed-miss filters and a what-if line, but it gives no cause for each lost point and no cure for each cause.",
+    "effort": "M",
+    "needs": "F4: attempts.cause column (§2.5), classification in progress.record and record_paper. S5 qstate: per-answer ms and time left (R7). Score engine for slot values. Proposal 6 targets (fallback 95 s). S6 report hero and Results card; S4 summary; S10 Redo filter; F5 presets 'accuracy_run' and 'speed'."
+   },
+   {
+    "title": "Spaced review of every question type you've learned: 'Due' for Math, never the same question twice",
+    "what": "SERVER (F4): a table type_state(learner, template, stage, box, due, last_clean, lapses), updated in progress.record.\n\nSTAGES: New → Learning (first answer) → Learned (2 clean first tries in a row) → Kept (passed a spaced review) → Proven (passed a review 30+ days out).\n\nSCHEDULE: a clean first try on a due review moves the box up one; intervals are 3, 8, 21, 45 and 90 days. A miss drops to box 1 and opens a trap as now. EXAM CAP: every Learned type comes back at least once in the last 14 days before exam_date, and intervals shrink to fit the days left.\n\nSERVING (F5): a new pool 'due' serves fresh seeds on due templates, never the exact question, at the tier last passed. It interleaves across skills (no two neighbours from one skill), so the student has to recognise the method. It replaces the static 'review' pool (right 10+ days ago) and the coach's keep_warm +30. R9's fixed-mistake check-ins use the same scheduler: a fixed trap's template enters at box 1. So there is one Due count.\n\nSCREENS:\n- Today list row: 'Due reviews · 12 types · about 14 min' (it ticks itself).\n- Review nav meta: '12 due'.\n- Review: a Due tab with a 14-day forecast bar chart, as in Words.\n- Plan: a 'review' task sized to what is due, capped at 30% of the day.\n- Builder 'Questions from': 'Due · 12'.\n- Skill rows: 'Strong · fading' when at least half the skill's Learned types are overdue.\n- Results, per skill: a type ladder, one cell per type (New / Learning / Learned / Kept / Proven), e.g. '23 types · 4 proven · 6 kept · 3 learning · 10 new'. 'Question types met 57 of 386' becomes '57 met · 31 kept'.\n- Results retention line: 'Remembered after 3+ weeks: 84% (46 of 55 reviews)'.\n\nSTUDENT DOES DIFFERENTLY: opens each day with about 10 minutes of due types from several skills, each with new numbers. WHY IT MOVES THE SCORE: spaced retrieval is the most robust effect in learning research, and SAT Math is a few hundred recurring types; forgetting between August and test day is a silent leak. Interleaving the due types trains choosing the method, which blocked practice does not.",
+    "beats": "TopTierPrep spaces vocabulary only (and its Due Today stayed at 0 after grading); nothing in their Math ever comes back. A finite bank could not do it without re-showing questions whose keys the student has already seen. The spec re-checks only fixed mistakes, at 3/10/30 days, and has a 'right 10+ days ago' filter, so a type the student got right first time is never scheduled again.",
+    "effort": "M",
+    "needs": "F4: type_state table (§2.5), update in progress.record, carry and LEARNER_TABLES. F5: pool 'due' (§2.6) with the exam cap and interleave. R9 folded into the same scheduler. S3 Today row; S7 review task; S10 Due tab and forecast; S6 type ladder and retention; F2 nav meta; the keep_warm pref becomes the on/off switch for due reviews."
+   },
+   {
+    "title": "Worked example first, hints that fade, and 'your way vs the right way'",
+    "what": "SEE A WORKED ONE (key W, practice only): on any question before answering, a panel opens beside it with a sibling seed of the same template. Seeds come from the 900000+ range, as /api/types/{t}/example uses, so it never gives the answer away. The panel shows:\n- its stem and figure, with the key highlighted;\n- the rationale as numbered steps, split at ', so', ';', '.' and 'then' (279 of 386 templates' rationales have 2 or more clauses, measured on one seed each);\n- 'The traps': each wrong option's value with its misconception.\n'Now yours' closes it. The answer is filed as assisted: half credit like a guess, and it never closes a trap (added to R8).\n\nAUTOMATIC: after 2 first-try misses on one template within 14 days, the repair is preceded by a worked sibling ('Study this one first · about 30 s'). The repair after it can still close the trap.\n\nHINTS (key T): Hint 1 is the first step of this question's own rationale, with its numbers. Hint 2 is 'Watch for: {the field's most common misconception on this type}' (S4 type stats; otherwise the template's first reason). Then Show answer. Using any hint files the answer as assisted.\n\nNEW TYPES: when the coach or the due list serves a template the student has never answered, the strip offers 'New type · See a worked one'. It is not opened automatically.\n\nCONTRAST ON A MISS: one line under the reveal, e.g. 'Your answer 432π/5 · used 360/θ in place of θ/360 | The key 15π/4 · 75/360 of 18π'.\n\nBANK: T-bank adds an optional Item.steps (with this seed's numbers) to the 107 templates whose rationale is a single clause, family by family.\n\nNever shown in tests, the challenge, contests, or the QOTD before answering.\n\nSTUDENT DOES DIFFERENTLY: on a type they cannot do, studies a solved twin and then solves their own, instead of guessing, missing and meeting the same trap again. WHY IT MOVES THE SCORE: for novices, worked examples beat repeated failed attempts (the worked-example effect), fading hints move them to solving alone, and honest half credit keeps mastery true.",
+    "beats": "TopTierPrep teaches nothing before or during a question. The QBank hides the key after a miss and lets you retry blind, and the QOTD does not even highlight the key. Their only teaching is one long explanation after the answer. Ours shows the same kind of problem solved with other numbers, which only a generator can make on demand. Its hints come from the question's own steps, and it never hands over this question's answer.",
+    "effort": "M",
+    "needs": "F3: workspace 'example' panel, hint row and contrast line. F5: POST /api/drill/example {session, question_id} returning a sibling with rationale steps (R19 access; 900000+ seeds). F4: attempts.assisted added to R8 with guess semantics. S4 type stats (most common misconception). T-bank: Item.steps. Keyboard §2.8, runner scope: W worked example, T hint (both free today)."
+   },
+   {
+    "title": "Pacing that is trained: per-type time targets, a time bank and speed reps",
+    "what": "TARGETS: each template's target is the median time of right first tries across all learners (n>=20); before that, the tier defaults are easy 60 s, medium 95 s, hard 130 s (a mean of about 95 s, R34). Served with the question as target_ms.\n\nAFTER ANSWERING: '0:48 · target 0:55', and a 'Right but slow' tag above 1.5x the target.\n\nTIME BANK: in any timed set, and as the tests' pace guide (prefs.test_pace), one figure in the top bar: '+1:40' ahead or '-0:55' behind, the sum of (target - used) over answered questions. In tests it replaces the uniform pace line. Check your work adds 'At this pace you finish with 2:10 to spare' or '3 questions short'.\n\nSPEED REPS (F5, speed:true): a set of one skill's 'right but slow' types. Each question has its own countdown, 1.25x its target, tightening to 1.0x after 3 on time in a row. Over-time answers still count for mastery but not as 'on pace'. Summary: 'On pace 7 of 10 · median 0:58 → 0:47'.\n\nTWO-PASS TRAINING: in timed practice modules, pref two_pass nudges once when a question passes 2x its target: 'Skip (S) and come back'. The summary and report show 'Second pass: 3 answered, 2 right'.\n\nRESULTS PACE PANEL: median vs target for each skill, and 'Last 5 minutes of modules: 48% right vs 71% before' (from qstate ms and time left).\n\nSTUDENT DOES DIFFERENTLY: learns which types they must do faster, drills exactly those against a clock sized to the type, and practises skip-and-return. WHY IT MOVES THE SCORE: blanks and rushed guesses at the end of module 2 are lost points, and speed on routine types buys time for hard ones. A single 1:35 alert cannot tell a slow easy question from a normal hard one.",
+    "beats": "TopTierPrep has a per-question stopwatch that resets on reload, Timed | Untimed, and a contest-only 'average seconds by difficulty' chart. The spec has one 1:35 alert for every question and a 'your average on this type' line. Neither sets a target per type, keeps a running time bank, or drills speed.",
+    "effort": "M",
+    "needs": "attempts ms/sms (R7, R8); S4 type stats for crowd medians (open question 12 threshold); F3 time bank in the runner top bar and Check your work; F5 drill fields speed, per-question limit and two_pass; S5 test pace guide; S6 report and Results pace panels; proposal 3's Time cause."
+   },
+   {
+    "title": "A mistake counts as fixed only when the fix transfers and lasts, in the student's own words",
+    "what": "CHECK-IN RULE (R9 change):\n- The 10-day check-in is served from a different template that carries the same normalised misconception. 79 norms recur across 2 or more templates and 12 across topics (progress.related(norm) + the drill's want regex).\n- If there is none, it is the same template one tier up when that exists, otherwise a fresh seed.\n- The 30-day check-in is timed at the type's target (proposal 6).\n- Passing both sets closed_how='transfer', shown in Review's Fixed tab as 'Fixed · held on a different question type'.\n- A miss on the transfer check reopens the mistake as Relapsed, with 'It came back on {other type}'.\n\nYOUR RULE: when a trap opens, the reveal offers an optional one-line field 'Next time I will…' (up to 120 characters; placeholder from the misconception, e.g. 'check θ/360, not 360/θ'). It is stored in traps.note (already in §2.5). It shows above the question on every repair and check-in of that trap, and can be edited there.\n\nMY RULES: a Review page listing every rule by skill, printable as one sheet. The plan's Final phase puts 'Read your rules · 5 min' on the eve.\n\nFIXED LOG: when true, a relapse insight such as '4 of 5 relapses happened in timed sittings'.\n\nSTUDENT DOES DIFFERENTLY: writes one sentence about each new mistake, and proves the fix days later on a different kind of question. WHY IT MOVES THE SCORE: two clean answers on one template can be pattern-matching; delayed retrieval on a new surface is what holds on test day, and explaining the error in their own words improves retention.",
+    "beats": "TopTierPrep's redo list is filled by an API no screen calls, so it is always empty, and nothing ever re-checks a mistake. The spec closes a mistake after 2 clean answers on the same template and re-checks it on that same template.",
+    "effort": "S",
+    "needs": "F4: R9 serving rule, closed_how 'transfer', progress.related. F5: want regex on the checks pool. F3: rule line on the workspace. S10: Fixed-tab labels and the My rules page with print CSS. S7: eve task. traps.note already exists."
+   },
+   {
+    "title": "A skill map that says how sure it is, and practice that fills the gaps",
+    "what": "BADGES: every skill row (UI.skillRow on Me, Results, the builder and Plan) shows mastery with a measurement badge from the score engine's posterior:\n- Measured: interval ±0.1 or tighter\n- Rough\n- Not measured\nA whisker on the bar draws the interval.\n\nEXPLORATION: while any skill is Rough or Not measured, coach sets and plan focus sets give it 1 slot in 10, tagged 'Checking Probability' in the question's why. This stops once every skill has 8 clean answers across at least 2 tiers.\n\nQUICK PLACEMENT (new drill kind 'placement', about 15 questions, about 20 min, untimed):\n- Each question goes to the (skill, tier) with the widest interval, weighted by blueprint share.\n- Up a tier after a right answer, down after a miss.\n- It stops when every domain's interval is within ±0.15, or at 18 questions.\n- Result: the skill map, a first practice estimate, and suggested plan focus.\n- Offered on Plan step 1 ('Measure me · 15 questions', beside the sliders), on Today for a new student ('Find where you stand · 15 questions'), and whenever more than 6 skills are Not measured.\n- Fresh seeds every time, no sign-up gate (unlike the diagnostic), and it counts as normal practice.\n\nPLAN STEP 4: Focus is pre-set from the score engine's points (top 2 domains, up to 6 skills), each row reading e.g. '+18 points available · 54% on medium'. The student can change any of it.\n\nSTUDENT DOES DIFFERENTLY: measures in 20 minutes instead of guessing their level, and cannot silently skip a skill. WHY IT MOVES THE SCORE: time on skills already known is wasted, a plan built on a guess works on the wrong domains, and a badge stops a student reading 2 lucky answers as Strong.",
+    "beats": "TopTierPrep's plan starts from sliders the student sets (it uses results only when both sections are above 200) and from Focus/Normal/Strong picked by hand for 8 domains. Their domain % rests on 1-8 questions. The spec prefills from tests and suggests the weakest worked domain, but its mastery bar shows no uncertainty, so 3 answers look as certain as 300.",
+    "effort": "M",
+    "needs": "Score engine posteriors (F4 estimate.py); F5 drill 'placement' plus exploration slots in drill._pick with the why tag; F1 UI.skillRow badge and whisker; S7 step 1 and step 4 prefill; S3 new-student Up next; S1 and S6 skill rows."
+   },
+   {
+    "title": "Desmos, loaded with this exact question",
+    "what": "BANK (T-bank): graphable templates get desmos(params) -> list[str], this seed's expressions, plus a one-line move ('Tap the intersection · x = 3'). Candidates: systems_of_linear_equations 20, nonlinear_equations_and_systems 32, linear and nonlinear functions 59, linear_inequalities 18, equivalent_expressions 21. Start with the two systems topics and grow family by family, like spr_mistakes.\n\nAFTER ANSWERING (practice, the review pane and the report player): 'Solve it in Desmos' loads the expressions into the docked calculator (UI.calc → setExpression). The move appears under the rationale as a second solution, with 'By hand · median 1:40 | With Desmos · about 0:30'. Never offered before answering, in a live test, the challenge or a contest (R19).\n\nCALCULATOR SKILLS (builder preset): graphable types with the calculator docked open and the time bank on. The summary compares the student's times with and without it.\n\nBUILDER: a 'Desmos-friendly' chip on TypeRow, and a filter.\n\nSTUDENT DOES DIFFERENTLY: learns to solve linear, quadratic and system questions with the graphing calculator the real test provides. WHY IT MOVES THE SCORE: those skills are most of the 70% of the section in Algebra and Advanced Math. Graphing is faster and avoids algebra slips, which is why tutors teach it first.",
+    "beats": "TopTierPrep embeds the same Desmos panel in the QBank and the exam, and never shows how to use it on a question. Ours opens the calculator with this question's equations already typed, because the template knows its own numbers.",
+    "effort": "L",
+    "needs": "T-bank: per-template desmos expressions. F3: UI.calc setExpression API with dock. R19: access only after answering. Open question 15: a production Desmos key. F5: preset and filter. S4: builder chip."
+   },
+   {
+    "title": "Confidence on every answer, and blind spots fixed first",
+    "what": "CONFIDENCE ROW: practice's single 'I'm guessing' becomes a 3-way row under the options: Sure · Unsure · Guess. K cycles it in practice and in tests, where test_confidence stays. New pref 'confidence', on by default in practice. One tap, optional; untouched means no data. Stored per answer in attempts.conf; record_paper copies qstate.conf. Guess is R8's guess (half credit). Unsure + right opens an Unsure item, as R9 does now.\n\nBLIND SPOTS: misconceptions picked while marked Sure. Each gets a 'Blind spot' chip in Review Redo, sorts first there, and is the coach's first priority. It needs 3 clean answers to close instead of 2. The reveal on a Sure miss reads 'You were sure. This is a belief to fix, not a slip.'\n\nRESULTS CALIBRATION CARD: 3 bars, e.g. 'Sure 91% right · Unsure 58% · Guess 31%', over the last 30 days with a trend, plus a test-day tip computed from it: 'Your Unsure answers are right 58%. On test day, answer, flag, move on.'\n\nSTUDENT DOES DIFFERENTLY: taps how sure they are, and fixes confident errors first. WHY IT MOVES THE SCORE: high-confidence errors are the misconceptions that repeat on test day, and they are corrected best when flagged as surprising (hypercorrection). Calibration tells a student when to trust a first answer and when to flag it.",
+    "beats": "TopTierPrep has no confidence signal anywhere. The spec has Sure/Unsure/Guess in tests (off by default) and a guessing toggle in practice, and shows calibration only inside one test report.",
+    "effort": "S",
+    "needs": "F3: workspace confidence row. F4: attempts.conf (§2.5), R8/R9 rules for Sure misses (3 owed). New prefs key 'confidence' (§2.7); keyboard §2.8 (K in practice). S10: Blind spot chip and sort. S6: calibration card."
+   },
+   {
+    "title": "Proof of progress, at the moment it happens",
+    "what": "- VERDICT LINE: when a clean first try lands on a template the student missed at least twice before, it adds 'Missed 3 times in September · now 4 in a row' (from attempts).\n- MISTAKE CLOSED: 'Fixed · Arc length: θ/360 · took 6 days, 5 questions'.\n- YOUR WEEK: a card on Today every Monday, and on the Results overview. It shows points gained (the practice estimate's change), mistakes fixed, check-ins passed, types moved to Kept or Proven, minutes against the goal and the best day. It has 'Send to a parent or tutor' through the progress link (R18a).\n- THEN AND NOW: a Results toggle that shows the skill map on the plan's start day (mastery can be recomputed from attempts for any date) next to today's.\n- ACHIEVEMENTS: tiers tied to these facts: types Proven 10 / 50 / 150, points gained 20 / 50 / 100.\n\nSTUDENT DOES DIFFERENTLY: sees evidence of improvement every day, not only after a test. WHY IT MOVES THE SCORE: feeling competence grow keeps practice going better than streak pressure alone, and weekly points and fixed mistakes make slow progress visible between tests.",
+    "beats": "TopTierPrep's achievements are four hard-coded tiles with a dead View All, their two streaks disagree, and nothing ever says 'you got better at X'. The spec has a this-week-vs-last row and achievements, but nothing marks the moment an old weakness becomes a strength.",
+    "effort": "S",
+    "needs": "F4: queries over attempts and traps. Score engine delta; proposal 4 stages. S4: verdict line. S3: weekly card. S6: then-and-now toggle. S1: achievement rules (R25). R18a: progress link."
+   },
+   {
+    "title": "Reminders that say what is due, at the time the student chose",
+    "what": "SETTINGS → Study: 'Remind me at 19:00' (prefs.study_time), with the channel Push (installed app, where supported) or Email (when an email is saved and SMTP is set).\n\nThe reminder carries today's content from /api/next, e.g. '4 check-ins and 8 due types · about 12 min · 3-day streak'.\n\nEVENING NUDGE: at most one, at 21:00 local, and only when the day's minimum is not met and the streak is at risk. None on plan rest days, none once the goal is met, nothing between 22:00 and 07:00. One-tap unsubscribe.\n\nWEEKLY DIGEST (opt-in email): the Your week card (proposal 11), sent to the student and, if they choose, to the holder of their progress link.\n\nSERVICE WORKER: used for push only; nothing is cached.\n\nSTUDENT DOES DIFFERENTLY: at the time they picked, gets a nudge naming a concrete 12-minute task. WHY IT MOVES THE SCORE: the most common way daily practice stops is not starting, and a specific small task at a fixed time (an implementation intention) raises follow-through.",
+    "beats": "TopTierPrep asks for 'Preferred time: Evening' and does nothing with it. The spec puts a static .ics alarm in the calendar ('without a notification system'), which cannot say what is due or stay quiet on a rest day.",
+    "effort": "M",
+    "needs": "A push-only service worker (this reverses Shell §2.14's 'no service worker'). VAPID keys and a Web Push sender (a pywebpush dependency; or ship email only first through mail.py). A push_subs table (F4 §2.5); prefs.remind gains a channel. Content from proposal 2. SMTP (open question 5). On iOS, push needs the installed app."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Estimated score",
+    "spec_says": "R16 estimate.py: latest, mean of the last 3 sittings, range, a confidence with a reason, trend. Sittings only.",
+    "why_only_parity": "Like TopTierPrep's card, it waits for a test and stays blank or low-confidence until one exists. Between tests nothing moves, however much the student practises.",
+    "upgrade": "Add a practice-based estimate that updates daily, through the same section_score (proposal 1), and show predicted vs actual after each section so students learn to trust it."
+   },
+   {
+    "feature": "Skill bars (their 'subject performance')",
+    "spec_says": "Me §3.5 and UI.skillRow: a mastery bar plus a word plus accuracy % (R37).",
+    "why_only_parity": "It is the same object as their subject performance and their plan's accuracy by domain: a bar per skill with no uncertainty and no value attached.",
+    "upgrade": "Each row gets a measurement badge with an interval whisker (proposal 8), its points on the table (proposal 1), and 'Strong · fading' when its learned types are overdue (proposal 4)."
+   },
+   {
+    "feature": "Explanation after answering",
+    "spec_says": "§2.6 check flow: one rationale string, open on a miss and collapsed on a right answer, plus each option's misconception. The bank's rationales are 1-2 clauses (107 of 386 are one clause).",
+    "why_only_parity": "It comes at the same moment (after answering) in the same form (text). Our 'why' for the key is shorter than their long-form Justification; only the per-option misconceptions are ahead.",
+    "upgrade": "Numbered steps, a worked sibling before answering, a two-step hint ladder, and a 'your way vs the right way' contrast line (proposal 5); T-bank adds Item.steps to the one-clause templates."
+   },
+   {
+    "feature": "Timed / untimed, stopwatch, pace",
+    "spec_says": "R34: 95 s a question everywhere; a pace alert at 1:35; a stopwatch that survives reload; 'your average on this type'.",
+    "why_only_parity": "Theirs is the same toolkit: Timed | Untimed and a stopwatch. A single pace number treats a 1:30 easy linear equation and a 1:30 hard circle as the same thing.",
+    "upgrade": "Per-type time targets from the field's right answers, a running time bank in sets and tests, speed reps, and two-pass training (proposal 6)."
+   },
+   {
+    "feature": "Question Score 1-7 / measured levels",
+    "spec_says": "QBank: levels 1-7 from first-try accuracy thresholds, 'measured from N', used as a filter.",
+    "why_only_parity": "Like their slider, it is a fixed difficulty number to filter by. It does not say whether a question is right for this student.",
+    "upgrade": "Show each student's own chance of success on every question ('Your chance 62%' in Details, from the posterior at that tier or Compete's rating vs item rating). Add a 'Stretch zone' option (60-80% chance) as the default difficulty for learning sets, and aim R33's adaptive steps at it."
+   },
+   {
+    "feature": "Plan step 1 'Where you are'",
+    "spec_says": "Sliders prefilled from results, with an optional R&W score.",
+    "why_only_parity": "Theirs also prefills from results and otherwise asks the student to guess, so the plan is built on a guess for everyone who has not tested.",
+    "upgrade": "'Measure me · 15 questions', an adaptive placement (proposal 8), or a prefill from the practice estimate with its band."
+   },
+   {
+    "feature": "Plan step 4 Focus / Normal / Strong",
+    "spec_says": "Domains and 19 skills, 2 / 6 caps, a prefill of the weakest worked domain below 0.8, a live SplitBar in minutes.",
+    "why_only_parity": "As on theirs, the student still picks, and each option carries a name, not a value.",
+    "upgrade": "Pre-set from points on the table, with each row showing '+18 points available · 54% on medium' and the SplitBar in expected points. Focus moves on its own when a skill becomes Measured-Strong ('Circles moved to Normal · 20 min a week freed for Probability', with Undo)."
+   },
+   {
+    "feature": "Score-drift banner",
+    "spec_says": "Mean of the last 3 tests vs the plan's start, 40 or more either way, with a target-reached variant.",
+    "why_only_parity": "It fires from the same source as theirs (tests), so a student who has not tested gets no drift and a stale plan.",
+    "upgrade": "Also trigger it from the practice estimate staying 40 or more away for 7 days, and re-weight focus shares from points every week, listing each change in the week theme."
+   },
+   {
+    "feature": "Behind banner / rebalance",
+    "spec_says": "Fit the plan to the minutes actually studied, with a preview of the effect.",
+    "why_only_parity": "Like their 'Rebalance my plan', it reacts after the week is lost by shrinking the plan.",
+    "upgrade": "A 'minimum day': when a day is at risk (evening, nothing done), Today and the reminder offer a 10-minute day (due reviews plus one trap). It counts the day as partial and keeps the streak, so a bad week does not turn into quitting."
+   },
+   {
+    "feature": "Study streak",
+    "spec_says": "R13: a study day has at least one answer, or 10 word reviews, or a finished sitting; rest days neither break nor extend it.",
+    "why_only_parity": "One tap on the day's question keeps it alive, exactly as their QOTD streak does. It rewards showing up, not studying.",
+    "upgrade": "Count goal days: the student's own minimum (default: the day's due reviews done, or 10 clean answers). Headline weekly consistency ('5 of 7 goal days'); one-answer days still appear on the heatmap."
+   },
+   {
+    "feature": "Study time and month calendar",
+    "spec_says": "Today / week / month / active days, heat by minutes against the goal, a day detail with sittings and plan state.",
+    "why_only_parity": "Theirs shows the same: time spent today and this month, on a month grid. Minutes are an input; neither calendar shows what was learned.",
+    "upgrade": "A 'Learning' heat option and day-detail line: mistakes fixed, check-ins passed, types moved to Kept, estimated points. A 20-minute day that fixed 3 mistakes then shows above an hour of easy repeats."
+   },
+   {
+    "feature": "Exam countdown",
+    "spec_says": "A live DD:HH:MM:SS to doors-close, study days and tests left, upcoming official dates only, .ics.",
+    "why_only_parity": "It is their countdown with better dates. It says how long is left, not whether that is enough.",
+    "upgrade": "Under the clock: 'At your pace: 640-700 on Nov 7 · target 700', projected from the practice estimate's 21-day slope with a widening band, and 'about 1,100 questions and 6 tests left at your pace'."
+   },
+   {
+    "feature": "Target score editor",
+    "spec_says": "One shared target (Math plus optional R&W), chips, '+100 to go', and Plan's note that above 580 needs the upper module.",
+    "why_only_parity": "Like their Set Target Score modal, it stores a number without showing what that number asks of this student.",
+    "upgrade": "'What 700 takes', from the score engine: the P(route up) needed, the accuracy needed by tier, and the 3 skills where the gap is ('Advanced Math medium: 54% → 75%'), shown in the target dialog and on Plan step 2."
+   },
+   {
+    "feature": "Eliminate / strike (ABC)",
+    "spec_says": "Shift+A-D strike with Undo, kept in qstate.struck and restored after a reload.",
+    "why_only_parity": "It is the same tool as their ABC and Eliminate mode (which also saves to the server). The strike data is never used for anything.",
+    "upgrade": "Elimination feedback: on a miss, show what was struck; on Results, 'You struck the key 3 times this month · 72% of your strikes removed the trap option'. It teaches how to eliminate."
+   },
+   {
+    "feature": "Reference sheet",
+    "spec_says": "The official formula sheet behind F, in a modal.",
+    "why_only_parity": "It is the same modal as theirs.",
+    "upgrade": "After answering, the sheet highlights the formula the question used (template → formula id for geometry and trig). Add a 'Not on the sheet' card per skill (slope, vertex form, circle equation, exponential growth) that feeds a 5-question recall set."
+   },
+   {
+    "feature": "Desmos panel",
+    "spec_says": "Dock, float and resize; keeps its state for the sitting.",
+    "why_only_parity": "It is the same embedded tool as theirs, and it teaches nothing about using it.",
+    "upgrade": "'Solve it in Desmos' loads this question's expressions after answering, plus a Calculator skills preset (proposal 9)."
+   },
+   {
+    "feature": "Report performance tiles",
+    "spec_says": "Correct / Incorrect / Unanswered / Accuracy plus domains and a what-if line.",
+    "why_only_parity": "The same four tiles as theirs. They count points, they don't explain them.",
+    "upgrade": "A 'Points lost' bar split into Trap / Gap / Care / Time with a cure button on each (proposal 3), and points lost per domain."
+   },
+   {
+    "feature": "Me Learning preferences",
+    "spec_says": "§3.4 'inline, as on theirs': set length, clock, difficulty, explanations, calculator.",
+    "why_only_parity": "The same controls as their Practice Mode, Difficulty and toggles.",
+    "upgrade": "Each row marks the setting the student's data recommends, with one tap to apply, e.g. 'SAT pace recommended: your median on medium is 1:52', or 'Retry mode recommended: 38% of your misses are Care'."
+   },
+   {
+    "feature": "R&W practice and full 4-module tests",
+    "spec_says": "Math only. R&W appears as Words, an optional self-reported R&W score, and custom R&W tasks in the plan.",
+    "why_only_parity": "Below parity: TopTierPrep has an R&W QBank (1,848 College Board items plus 1,315 of their own) and 134-minute four-module tests. A student who switches loses R&W practice.",
+    "upgrade": "When the user's 'full SAT later' begins, generate Standard English Conventions and Transitions first. Both are rule-based and suit templates, and they are exactly where TopTierPrep's own bank is thinnest (SEC 22 items, Transitions 10). Use the same named-misconception-per-option model."
+   },
+   {
+    "feature": "Sign-in",
+    "spec_says": "Anonymous-first, a 6-digit email code, pairing by QR; Google sign-in is open question 5.",
+    "why_only_parity": "For a returning student on a new device, typing an email and a code is slower than their one Google tap, so this is parity at best.",
+    "upgrade": "Add Google sign-in as a third way in on /signin/, keeping anonymous-first and pairing."
+   }
+  ]
+ }
+}

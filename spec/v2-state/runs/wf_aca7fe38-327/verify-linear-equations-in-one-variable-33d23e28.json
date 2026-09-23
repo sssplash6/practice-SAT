@@ -1,0 +1,85 @@
+{
+ "label": "verify: linear_equations_in_one_variable",
+ "key": "v2:03437aa42454220dc7b63661c0ae18e901e786463f071575c4fa3a5a33d23e28",
+ "result": {
+  "pass": false,
+  "evidence": "Worktree detached at v2/t-bank-all (a6bc1b6); master was extracted with git archive into the scratchpad. Nothing was committed.\n\n1. MCQ parity: PASS. I dumped every one of the 18 templates for seeds 0-80, with default, fmt=\"mcq\" and fmt=\"spr\", on both master and the branch (4,374 records each). Every field except spr_mistakes compared equal: stem, choices, reasons, latex_choices, answer, key, rationale, params. There were zero diffs. The seven templates that reject fmt raise the same TypeError on both sides, and no MCQ item carries spr_mistakes.\n\n2. Grid-in parity: PASS. Grid-ins differ from master only in spr_mistakes. The field is non-empty on every grid-in of the 8 grid-in templates: solve, distribute, then_value, chunk, reciprocal, identity_constant, no_solution_constant and context_solve.\n\n3. Reasons are real: FAIL. I recomputed about 80 grid-in items by hand across all 8 templates and every shape and scene. Many named values don't match their words, or can't come from any route a student would take to this question. Some examples:\n- chunk spr 41: 9(z+12)=3(z+12)-20, asks for 6(z+12), key -20. It names -32 as \"added the number inside the parentheses to the answer\", but adding 12 gives -8. It names -5/3 as \"added the two coefficients\", but that is the value of z+12, not of 6(z+12).\n- chunk spr 6: 7(y+11)=2(y+11)+17, key 17/5. It names -11 as \"reported the number inside the parentheses\", but the bracket prints 11. It names 17 as \"expanded the brackets but dropped the products\", but that route gives y+11=72/5. It names -93/5 as \"added ... to the wrong value\", but that value is y-11.\n- chunk spr 19 and spr 34: \"divided by one coefficient only\" names -18/5 and 1, which is the right-side constant divided by a. The equation has only one coefficient.\n- context spr 46 (candle, key 42): names -60, -14 and -9 hours. The natural routes give +60, +14 and +9.\n- context spr 9 and 12 (auger): name -52415/399, -5985 and -23215/399.\n- context spr 52 (coupon, $12 off, key 18): names 14 as \"added the fixed amount instead of subtracting it\", but the student subtracted it. Names -12 as \"reported the fixed amount\", but the stem prints $12.\n- context spr 8 and 11 (museum): same two problems, and spr 11 names -19/3 lockers.\n- context spr 68 (plant): names 42.5 as \"added a day's growth\", but that adds all 10 days (8 cm), not 0.8. Names 8 as \"reported the fixed amount given in the problem\", but 8 is not given.\n- context spr 17 (isosceles): names 58 as \"the fixed amount given\", but the stem gives 29.\n- solve spr 28, 31, 0 and 74 (over shape, e.g. 2z/9=7): name -key as \"changed the sign when moving a term across the equals sign\", but no term moves in that equation.\n- solve spr 74 (q/4=-20): names -19 as \"added the numerator\", but the numerator q shows no number.\n- distribute spr 64 and 27 (sum_left): name d-c as \"subtracted the number inside the parentheses from the total instead of the product\". That route gives (d-c)/(a+b), which the list already names. Here it names 69 where the route gives -69, and 34 where it gives 17/2.\n- then_value spr 73 and 74: name x0+k as \"used x in place of the whole expression\", which describes reporting x0. The same list already names x0 under \"solved for x\".\n- then_value spr 7 (20t-11=21, asks for 12t+12, key 31.2): names 35 as \"divided the number on the right by the ratio instead of multiplying by it\". But 21×3/5 is not the key, because the expression is not a multiple of the given side.\n- then_value spr 60: names -39/2 as \"applied the ratio to the number on the right\", but the value adds the ratio.\n- then_value None-78: names -19 = D-k as \"applied the constant to the number on the right\". Applying it gives D+k = -1.\n- no_solution_constant spr 20 ((s+7)j=-5): the labels are swapped. It names 5/7 as \"divided -5 by the constant\" (should be -5/7), -12 as \"added 7\" (should be 2), and 2 as \"subtracted 7\" (should be -12).\n- identity_constant factor spr 53, 71, 42 and 43: name 2a as \"divided the constant term by the number inside the parentheses and then added\". The words don't say what is added, and the value is implausible.\n- reciprocal spr 71 and 54: name b/a as \"divided the two given numbers the wrong way round\". That implies a/b is the right way, but a/b is itself already named as wrong (c/b).\n\nHow often each defect appears in grid-in items over seeds 0-80, all fmt modes:\n- over sign_flip: 34 of 34 over-shape grid-ins\n- then_value used_x0: 92 of 96\n- reciprocal b/a: 74 of 85\n- factor 2a: 56\n- chunk dropped-products value d: 51\n- context negative time/count/price: 47\n- chunk \"divided by one coefficient only\": 35\n- chunk -c with c>0: 33\n- chunk wrong-coefficient bracket value on var/term asks: 32\n- coef_zero with c<0: 32\n- then_value D/r: 23\n- chunk \"to the wrong value\": 23\n- chunk ask=chunk \"instead of subtracting\": 22\n- sum_left d-c: 20\n- coupon/museum reversed \"added\" and negative fee: 20 each\n- plant/isosceles \"fixed amount given\": 19\n- chunk \"to the answer\" with c>0: 16\n- plant \"a day's growth\": 12\n- chunk ask=var with c<0 reversed: 9\n- over with a=1 \"added the numerator\": 6\n- then_value D-k: 2, D+r: 1\n\nThe cause: these reasons were written for MCQ distractor pools, where assemble shortlists three and context_solve filters to [key/25, key*25]. The grid-in path passes the whole pool, so every weak or mislabelled entry is shown. The audit only rejects None, the key, duplicates and irrational values, so none of these are caught.\n\n4. Gate: PASS. PYTHONPATH=. python3 -m satbank check --topic linear_equations_in_one_variable prints PASS: coverage 65/65, audit 5,400, structure 100%, capacity 21,232+.\n\nVerdict: pass=false. Steps 1, 2 and 4 hold, but step 3 is refuted many times over.\n\nScratch scripts are in /private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/lin1/ (dump.py, cmp.py, show.py, find.py, count.py). The dumps are master.json and branch.json.",
+  "defects": [
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/algebra.py:461-489 (_chunk_mistakes, lin1.chunk grid-ins)",
+    "what": "Several reasons don't match their values, because the code mixes up signed c and printed |c|:\n- 'reported the number inside the parentheses' names -c. For c>0 that is the negative of the printed number: 9(y+11)... names -11.\n- 'added the number inside the parentheses to the answer' names coef*u-c, which subtracts when c>0: key -20, value -32.\n- 'added the number inside the parentheses to the wrong value' names v0-c for c>0, which is a subtraction.\n- 'added ... instead of subtracting it' on ask='chunk' needs two errors (solve for v, then the wrong sign), and on ask='var' with c<0 the direction is reversed.",
+    "fix": "Build the grid-in list separately from the MCQ pool and state each value by its printed arithmetic, for example 'reported the number printed inside the parentheses' = abs(c). For 'added/subtracted', compute the value from the printed sign and word it to match. Drop the ask='chunk' 'instead of subtracting' entry or reword it as the two-step route."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/algebra.py:487 (lin1.chunk)",
+    "what": "'expanded the brackets but dropped the products of the constants' names d. Expanding and dropping the constant products gives v = u, or bracket = u + c. Example: 7(y+11)=2(y+11)+17 names 17, but the route gives 72/5. Seen in 51 grid-ins.",
+    "fix": "Use the value the route actually produces for the asked quantity: v = d/coef for ask='var', v + c for 'chunk', coef*(v + c) for 'term'. Or drop this entry from spr_mistakes."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/algebra.py:488 (lin1.chunk single_right)",
+    "what": "'divided by one coefficient only' names d/coef. In single_right there is only one coefficient, so the value is the right-side constant divided by a: 6=-18+5(x-6) names -18/5, and 58=-6+8(p+6) names -3/4. In two_left and two_sides, d/coef is just u. This is no route to the answer. Seen in 35 grid-ins.",
+    "fix": "Remove it from the grid-in list, or keep it only where a genuine one-coefficient division exists (two_left/two_sides dividing by a alone, d/a) and name that value."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/algebra.py:481-486 (lin1.chunk mixed)",
+    "what": "'added/subtracted the two coefficients instead of ...' names d/wrong_coef. That is the value of the bracket under the wrong coefficient, but on ask='var' or 'term' the question asks for v or coef*(v+c). Example: 8(x-8)+4(x-8)=18 asks 12(x-8) and names 9/2. Seen in 32 grid-ins.",
+    "fix": "Carry the wrong coefficient through to the asked quantity: d/wrong_coef - c for 'var', coef*d/wrong_coef for 'term'. Or keep the entry only for ask='chunk'."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/context.py:233-239 (lin1.context_solve, scenes candle and auger with m<0)",
+    "what": "The generic reasons produce negative times: (total+k)/m, total-k and total/m. Candle key 42 names -60, -14 and -9 hours. Auger names -52415/399 and -5985. The natural routes give the positive values. Seen in 47 grid-ins, which also have negative values from museum.",
+    "fix": "For grid-ins, compute the generic mistakes from the scene's own printed direction: start-left for 'forgot to divide', (start+left)*h for 'added'. Or drop any grid-in mistake whose value is <= 0 for a count, time or price, as the MCQ path already does with its [key/25, key*25] filter."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/context.py:234-235 (context_solve, scenes coupon and museum with k<0)",
+    "what": "'added the fixed amount instead of subtracting it' names (total-|k|)/m, which is subtracting where adding was needed. Coupon, key 18, names 14. 'reported the fixed amount given in the problem' names -12 and -181, but the stem prints $12 and $181. Seen in 20 grid-ins each.",
+    "fix": "When k<0, word it 'subtracted the coupon/expenses instead of adding them back', and name abs(k) for 'reported the fixed amount'."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/context.py:108-110 and 235 (scenes plant and isosceles)",
+    "what": "Plant: 'added a day's growth instead of subtracting it' names total + rate*days, which is all the days' growth. Example: 34.5+8 = 42.5, where a day's growth is 0.8. Plant and isosceles: 'reported the fixed amount given in the problem' names rate*days (8) and 2*leg (58), and neither number is printed in the stem. Seen in 12 and 19 grid-ins.",
+    "fix": "Reword to 'added the total growth instead of subtracting it', or name total + rate. For grid-ins, name the printed number (rate, or leg) or reword to 'reported the total growth' / 'reported the two congruent sides together'."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/algebra.py:143-144 (_solve_mistakes sign_flip, lin1.solve.over)",
+    "what": "Every over-shape grid-in (34/34), for example 2z/9=7, names -key as 'changed the sign when moving a term across the equals sign'. The equation has no term to move. The same applies to standard a*v=d when b=c=0.",
+    "fix": "In the spr list, skip sign_flip for shape 'over', and for standard with b==0 and c==0."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/algebra.py:64-65 (over add_numerator)",
+    "what": "When a=1 the stem prints q/4, which shows no numerator number. The item still names C+1 as 'added the numerator to the right side' (q/4=-20 names -19). Seen in 6 grid-ins.",
+    "fix": "Skip add_numerator, and the degenerate over_numerator (which equals C), when a == 1."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/algebra.py:162-163 (_dist_mistakes sum_left)",
+    "what": "'subtracted the number inside the parentheses from the total instead of the product' names d-c with no division. That route gives (d-c)/(a+b), which the list already names as 'multiplied only the unknown'. Examples: -3t+2(t-11)=58 names 69 where the route gives -69; -m+5(m+4)=38 names 34 where it gives 17/2. Seen in 20/20 sum_left grid-ins.",
+    "fix": "Drop this entry from spr_mistakes, or reword it to 'subtracted the number inside the parentheses instead of the product, and forgot to divide'."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/algebra.py:347 (_then_mistakes used_x0)",
+    "what": "'used {var} in place of the whole expression' names x0+k. Those words describe reporting x0, which named_x0 already covers. The value really comes from dropping the coefficient m, for example 15x-19 -> x-19. Seen in 92/96 then_value grid-ins.",
+    "fix": "Reword to 'dropped the coefficient {m} and used {var} in place of {m}{var}'. It needs its own reason in the grid-in list, because the MCQ reasons must stay unchanged."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/algebra.py:349-356, 367-368, 374-375 (_then_mistakes D-based entries)",
+    "what": "Three kinds of entry fail:\n- 'divided the number on the right by the ratio instead of multiplying by it' (D/r) implies D*r is the key. That only holds when m*v+k is a multiple of the given side, which is never true for random draws. Example: 20t-11=21 asks 12t+12 and names 35. Seen in 23 grid-ins.\n- 'applied the ratio to the number on the right' (D+r) adds the ratio.\n- 'applied the constant to the number on the right' (D-k) should be D+k.\nThe x0+r entry 'added the ratio' has no plausible route.",
+    "fix": "Keep D/r only when k*A == m*b, i.e. the expression is a multiple of the given side. Replace D+r with D*r. Replace D-k with D+k, worded 'added the constant to the number on the right'. Drop x0+r from the grid-in list."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/structure.py:210-215 (no_solution_constant coef_zero)",
+    "what": "When c<0 the stem prints (s+7). The item then names d/c = 5/7 as 'divided -5 by the constant' (should be -5/7), c+d = -12 as 'added the constant' (should be 2), and d-c = 2 as 'subtracted the constant' (should be -12). The labels are swapped or wrong. Seen in 32 grid-ins.",
+    "fix": "Compute these three from the printed constant, -c, when c<0: d/(-c), d+(-c), d-(-c). Or swap the wording by the sign of c."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/structure.py:145-146 (identity_constant factor)",
+    "what": "'divided the constant term by the number inside the parentheses and then added' names b/c + a = 2a. The words never say what is added, and matching then summing both coefficient readings is not a plausible route. Seen in 56 grid-ins.",
+    "fix": "Drop it from spr_mistakes, or state the route fully and check that it is plausible."
+   },
+   {
+    "where": "satbank/topics/linear_equations_in_one_variable/families/algebra.py:519 (reciprocal)",
+    "what": "'divided the two given numbers the wrong way round' names b/a. That implies a/b is correct, but a/b is c/b, which is itself named as wrong. The real route (solved x=b/a and reported x) is two errors. Seen in 74/85 grid-ins.",
+    "fix": "Reword to 'divided instead of multiplying to find {var}, and reported {var}', or drop it from the grid-in list."
+   }
+  ]
+ }
+}

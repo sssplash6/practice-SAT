@@ -1,0 +1,441 @@
+{
+ "label": "design: vocab",
+ "key": "v2:7cfcc22929733bb5e160bd6bc1efee34aa42f95a8b2159cf318bec984ad51668",
+ "result": {
+  "section": "Vocabulary",
+  "theirs": [
+   {
+    "feature": "Nav item and route",
+    "detail": "Sidebar 'Vocabulary' → /vocabulary redirects to /vocabulary/library. The same shell as every other page."
+   },
+   {
+    "feature": "Four big pill tabs",
+    "detail": "Library / Flashcards / Quizzes / My Words, each on its own route (/vocabulary/library, /vocabulary/flashcards?cardId=, /vocabulary/quizzes, /vocabulary/my-words/saved)."
+   },
+   {
+    "feature": "Library: Difficulty filter",
+    "detail": "Easy / Medium / Hard. Colour coded throughout vocab: green easy, amber medium, red hard."
+   },
+   {
+    "feature": "Library: Topic filter",
+    "detail": "General / Academic / Science / Economics / Transitions."
+   },
+   {
+    "feature": "Library: Collection filter",
+    "detail": "'Must know 650 SAT words' / 'The College Panda's 400' (a published book's list) / 'Custom Added Words'."
+   },
+   {
+    "feature": "Library: Start Practice Session",
+    "detail": "The primary button at the top right, acting on the filtered library."
+   },
+   {
+    "feature": "Library: tile grid",
+    "detail": "Word tiles in 6 columns, 16px radius, with a 1px border coloured by difficulty. There is no search, no status and no progress on a tile."
+   },
+   {
+    "feature": "Tile → flashcard",
+    "detail": "Clicking a tile opens that word's flashcard (?cardId=uuid)."
+   },
+   {
+    "feature": "Flashcard: difficulty pill",
+    "detail": "A coloured difficulty pill above the card."
+   },
+   {
+    "feature": "Flashcard: stacked deck",
+    "detail": "The card has two ghost cards behind it to suggest a deck."
+   },
+   {
+    "feature": "Flashcard: front",
+    "detail": "The word, large and centred."
+   },
+   {
+    "feature": "Flashcard: flip",
+    "detail": "Click the card to flip it."
+   },
+   {
+    "feature": "Flashcard back: definition",
+    "detail": "In bold."
+   },
+   {
+    "feature": "Flashcard back: example",
+    "detail": "One fixed example sentence, in italics and quotes."
+   },
+   {
+    "feature": "Flashcard back: Synonyms",
+    "detail": "A list with a share-style icon."
+   },
+   {
+    "feature": "Flashcard back: Antonyms",
+    "detail": "A list with an x icon."
+   },
+   {
+    "feature": "Flashcard back: Common Confusions",
+    "detail": "A lightbulb and a blue list of lookalike words (illusory → illusion, illustrate, elusive)."
+   },
+   {
+    "feature": "Save star",
+    "detail": "A star at the top right of the panel. It appears only after the card is flipped."
+   },
+   {
+    "feature": "I Know / Don't Know",
+    "detail": "Two grade buttons. Don't Know just advances: nothing visible happens and the word is not added to Due right away."
+   },
+   {
+    "feature": "Previous / Next",
+    "detail": "Move through the deck (Next is blue)."
+   },
+   {
+    "feature": "New-word allowance",
+    "detail": "Opening a card uses up one new word for the day: Free 5, Pro 20, Elite 30. It is metered as 'New Words Today 0/5' on Subscription and Profile. It punishes browsing."
+   },
+   {
+    "feature": "Quizzes: Collection select",
+    "detail": "'All Collections' or one collection."
+   },
+   {
+    "feature": "Quizzes: timer",
+    "detail": "No timer / 30 sec / 60 sec, per question."
+   },
+   {
+    "feature": "Quiz item",
+    "detail": "The definition is the prompt, centred and large, with 4 word tiles in a row as the answers. This is the only question type."
+   },
+   {
+    "feature": "Quiz feedback",
+    "detail": "A wrong tile tints red, the others fade, the correct one gets a faint outline, and a red label says 'Correct answer: {word}'. A Next pill appears. It does not advance on its own and does not explain the mistake."
+   },
+   {
+    "feature": "Report chip",
+    "detail": "On a quiz item. It opens the shared Report modal: a read-only box of what is sent, Title 0/200, Category (General feedback / Bug / Wrong answer key / Typo / Feature request / Other), Details 0/5000, up to 10 image attachments."
+   },
+   {
+    "feature": "My Words: two nav cards",
+    "detail": "'Saved Words N words >' and 'Due Today N words >' (the spaced-repetition queue)."
+   },
+   {
+    "feature": "My Words: filters",
+    "detail": "The same Difficulty / Topic / Collection filters as the Library."
+   },
+   {
+    "feature": "My Words: empty state",
+    "detail": "Dashed box: 'No saved words match these filters / Try broader filters or save more words from the library.'"
+   },
+   {
+    "feature": "Add-your-own-word FAB",
+    "detail": "A draggable blue circle at the bottom right of every page ('Add your own word (drag to move)') that feeds 'Custom Added Words'. It covers the Next button in QBank sessions."
+   },
+   {
+    "feature": "Plan wizard: Include vocabulary practice",
+    "detail": "A toggle on step 4 ('What to focus on'), on by default."
+   },
+   {
+    "feature": "Profile: vocab surfaces",
+    "detail": "A 'Vocab N Word' stat tile, a Saved Words count under Saved Content, and an 'Include Vocab Review' toggle under Learning Preferences."
+   },
+   {
+    "feature": "Plan landing stat",
+    "detail": "'1,002 Vocabulary words (flashcards, quizzes, spaced review)'."
+   }
+  ],
+  "ours_now": [
+   {
+    "feature": "Words section / route",
+    "status": "missing",
+    "note": "There is no page. /vocabulary/ and /words/ both return FastAPI's raw JSON {\"detail\":\"Not Found\"} (seen at 1280). spec/rebuild.md deferred it: 'not now: the bank is Math. Later, with an R&W bank'."
+   },
+   {
+    "feature": "Nav item",
+    "status": "missing",
+    "note": "UI.NAV has five entries (Today, Practice, Tests, Plan, Results), and the phone tab grid is repeat(5,1fr)."
+   },
+   {
+    "feature": "Word content",
+    "status": "missing",
+    "note": "There is no glossary. But the bank already speaks in words. A 1,541-item scan (4 seeds × 386 templates) finds 293 distinct skill labels and ~886 distinct misconception labels, many of them word mix-ups ('used the diameter as the radius', 'used sine where the question asks for cosine', 'the tangent compares the two legs, not a leg with the hypotenuse'). Terms also appear in the stems: 'median' in 14 templates, 'y-intercept' 10, 'in terms of' 13, 'must be true' 8, 'margin of error' 5, 'respectively' 5."
+   },
+   {
+    "feature": "Tile grid and filters",
+    "status": "partial",
+    "note": "The practice map has a reusable .tile (glyph, mastery bar, orange mistake dots) and .choices toggles. There is no search box and no dropdown filter anywhere on the site."
+   },
+   {
+    "feature": "Flashcards (flip, know/don't know)",
+    "status": "missing",
+    "note": "There is nothing to flip on any page."
+   },
+   {
+    "feature": "Spaced repetition / Due today",
+    "status": "missing",
+    "note": "Traps close after two clean answers on a template. That is a repair rule, not a review schedule, and nothing is dated."
+   },
+   {
+    "feature": "Quiz runner",
+    "status": "partial",
+    "note": "The practice session (web/practice/session/) already renders a 4-option MCQ that shows the key and names the mistake, with a progress bar, a clock and a summary. The user calls it the best format, and a word quiz can be the same thing."
+   },
+   {
+    "feature": "Per-question timer",
+    "status": "missing",
+    "note": "Practice has a whole-set clock (minutes) but no per-question timer."
+   },
+   {
+    "feature": "Save",
+    "status": "partial",
+    "note": "Questions can be saved (saved table, bookmark tool in the session). Words cannot."
+   },
+   {
+    "feature": "My Words (saved + due)",
+    "status": "missing",
+    "note": "Mistakes lists saved questions only."
+   },
+   {
+    "feature": "Custom words",
+    "status": "missing",
+    "note": "There is no user-authored content anywhere."
+   },
+   {
+    "feature": "Report a problem",
+    "status": "missing",
+    "note": "There is no report sheet or endpoint anywhere on the site. It is planned for the session (enrichment item 6)."
+   },
+   {
+    "feature": "Plan: include vocabulary",
+    "status": "missing",
+    "note": "Plan step 4 has only the four domains as Focus / Normal / Strong."
+   },
+   {
+    "feature": "Me: vocab stat and preference",
+    "status": "missing",
+    "note": "Me shows the name, the device code and a Plan link, nothing else (seen at 390)."
+   },
+   {
+    "feature": "Daily word",
+    "status": "partial",
+    "note": "There is no word of the day. daily.py already picks the question of the day from a date hash, and a word of the day can use the same pattern."
+   },
+   {
+    "feature": "Term help inside questions",
+    "status": "missing",
+    "note": "Stems are set as plain text, and a term cannot be looked up from inside a question."
+   }
+  ],
+  "design": "\n# Words: the Vocabulary section, rebuilt for a Math-first site\n\n## 0. What it is, and why it belongs on a Math site\n\nTopTierPrep's vocabulary is 1,002 R&W words in a room of its own. Nothing in it touches a question. SAT Math, though, is mostly read: the bank's own wrong options show that students miss questions over words. In a scan of 1,541 generated items (4 seeds × 386 templates), options built on mix-ups turn up again and again: sample vs population in about 14 templates, radius vs diameter in 5, hypotenuse vs leg in 7, sine vs cosine in 3. The stems say \"median\" in 14 templates, \"in terms of\" in 13, \"y-intercept\" in 10, \"must be true\" in 8 and \"respectively\" in 5.\n\nSo **Words** teaches the language of SAT Math, and it is wired into the bank in both directions:\n\n1. **Word to questions.** Every word shows a real question that uses it, generated on demand. \"Another\" never runs out. Every word can also start a practice set made only of questions that use it.\n2. **Mistake to words.** A wrong answer whose named mistake is a word mix-up links to those words. Every mix-up can start a drill of bank questions in which exactly that mix-up is one of the options.\n3. **Words inside questions.** Math words are underlined in practice questions, and tapping one shows its meaning.\n4. **The student's own words**, in any subject, with the same flashcards, quizzes and spaced review. This is where R&W words live until we have an R&W bank (see open questions).\n\nIt is free: there is no allowance, and opening or browsing a card costs nothing. The nav label and H1 are \"Words\".\n\n## 1. Shell and navigation\n\n- `UI.NAV` gains `['words','/words/','Words']` after Practice, so the nav reads Today · Practice · Words · Tests · Plan · Results.\n- `ICON.words` is two stacked rounded cards: the back card offset up and to the right, the front card carrying two text lines, drawn with the 1.6 stroke used by the other icons.\n- Phone tabs change to `repeat(6,1fr)`. That gives 65px a tab at 390, which fits the 10.5px labels.\n- `SECTION` maps `words-study`, `words-run` and `words-mine` to `words`.\n- **Words tabs** (`UI.wordsTabs(host, active)`) is a 4-segment control under the H1. The segments are Library · Flashcards · Quiz · My words, each its own route: `/words/`, `/words/study/?mode=cards`, `/words/study/?mode=quiz`, `/words/mine/`. It uses the Plan steps style: tile fill, and the selected segment in wash with a 1.5px amber inset. My words carries an orange dot and the due count when anything is due. Below 420px the labels shorten to Library · Cards · Quiz · Mine.\n- The header row on every Words page holds a search field (Library and My words only) and an **Add a word** button (quiet, with a + icon, shortcut `N`).\n- There is **no floating button anywhere**. Theirs covers Next.\n\n## 2. What a word is (content model)\n\nThe content is authored in `server/words.json`. The definitions and examples are our own wording, and no third-party list is used.\n\n- **Word entry**:\n  - `slug`, `word`, `also` (plurals and alternate spellings), `sense` (the disambiguator for split words), `collection`, `topics` (the bank's topic slugs).\n  - `meaning`: our definition, 1–2 sentences.\n  - `short`: at most 60 characters, used on tiles, in popovers and in quiz feedback.\n  - `symbols`: the notation line, e.g. \"In y = a(x − h)² + k, the vertex is (h, k).\"\n  - `figure`: optional key of an inline SVG in ui.js.\n  - `same`, `opposite`, `related`: lists of slugs or plain text.\n  - `cloze`: 1–3 authored fill-in sentences using `____`.\n  - `match`: the regexes that find the word in stems.\n  - `gloss`: whether to underline it inside questions (false for tiny words like \"of\" and \"per\").\n  - `cloze_templates`: bank templates approved for the \"In a real question\" blank.\n  - `bankless`: true when no template uses the word.\n- **Collections (v1, about 220 entries):**\n  - **Question language**, about 26: which of the following, value of, in terms of, respectively, must be true, could be, is closest to, equivalent, satisfies, constant, positive constant, nonzero, integer, distinct, real number, intersect, in the xy-plane, best interpretation, approximately.\n  - **Word-problem phrases**, about 28: less than, more than, fewer than, subtracted from, decreased by, increased by, of, per, each, twice, twice as many, the sum of, the difference of, the product of, the quotient of, the ratio of … to …, percent of, percent more than, percent less than, what percent, at least, at most, no more than, no less than, exceeds, consecutive integers, markup, discount.\n  - **Algebra**, about 36: coefficient, constant term, like terms, solution, solution set, no solution, infinitely many solutions, slope, rate of change, y-intercept, x-intercept, slope-intercept form, point-slope form, standard form, parallel, perpendicular, ordered pair, system, substitution, elimination, inequality, compound inequality, boundary line, function, input, output, f(x) notation, linear model, absolute value, and so on.\n  - **Advanced Math**, about 38: quadratic, parabola, vertex, axis of symmetry, vertex form, factored form, zero, root, factor, polynomial, degree (polynomial), leading coefficient, exponent, base (power), exponential growth, exponential decay, growth factor, growth rate, decay factor, initial value, rational expression, radical, extraneous solution, discriminant, quadratic formula, completing the square, maximum, minimum, geometric sequence, common ratio, and so on.\n  - **Problem-Solving & Data**, about 45: ratio, unit rate, proportional, constant of proportionality, unit conversion, density, percent change, percentage point, mean, median, mode, range (data), standard deviation, outlier, frequency table, histogram, dot plot, box plot, quartile, interquartile range, scatterplot, line of best fit, association, probability, conditional probability, two-way table, sample, population, random sample, random assignment, margin of error, estimate, plausible, bias, causation, and so on.\n  - **Geometry & Trig**, about 45: area, perimeter, volume, surface area, similar, congruent, scale factor, transversal, vertical angles, supplementary, complementary, alternate interior, corresponding angles, isosceles, equilateral, exterior angle, triangle inequality, hypotenuse, leg, Pythagorean theorem, special right triangles, sine, cosine, tangent (ratio), cofunction, degree (angle), radian, arc, arc length, arc measure, sector, central angle, inscribed angle, chord, tangent line, radius, diameter, circumference, center, unit circle, equation of a circle, coterminal angles, and so on.\n  - **My own**: the student's words, optionally in their own named lists (e.g. \"English\").\n- **Split senses** become separate entries, cross-linked as a confusion called \"same word, different meaning\": degree (angle / polynomial), base (power / triangle), range (data / of values), tangent (ratio / line).\n- **Confusions** (about 40), with `id`, `words` [2], `tell` (one sentence that separates them) and `links` [{template, reason regex}]. Examples: median~mean, mean~mode, radius~diameter, circumference~area, area~perimeter, volume~surface area, hypotenuse~leg, sine~cosine, tangent ratio~tangent line, complementary~supplementary, similar~congruent, scale factor~area scale (k vs k²), degrees~radians, arc length~arc measure, central~inscribed angle, slope~y-intercept, x-intercept~y-intercept, zero~y-intercept, vertex~y-intercept, coefficient~constant term, factor~term, growth factor~growth rate, percent~percentage point, percent of~percent more than, at least~at most, exceeds~at least, sample~population, random sample~random assignment, correlation~causation, no solution~infinitely many solutions.\n- **Linking is curated, not guessed.** Naive regex links are wrong too often: \"complement\" matched sample-complement reasons, \"less than\" matched \"one power less than\", and \"degree\", \"base\", \"range\" and \"mean\" each have two senses. `tools/build_words.py` proposes links and an author confirms them in words.json. The build then verifies every link against 20 seeds and fails if any link has gone dead.\n- **Derived per word** (`server/words_index.json`, generated):\n  - `tests`: templates whose skill label names the word.\n  - `uses`: templates whose stems contain it, restricted to the word's topics.\n  - `bank`: how many kinds of question use it.\n  - `difficulty`: the mean of the linked templates' easy/medium/hard labels (from `blueprint.abilities()`), at 1/2/3 weights, cut at 1.67 and 2.34. So a word's difficulty is how hard the questions that use it are.\n  - `examples`: 3 stem excerpts, for instant flashcard backs.\n\n## 3. Library `/words/` (data-page `words`)\n\n**Desktop (1280), top to bottom:**\n\n1. **Title row**\n   - H1 \"Words\", with the meta line \"218 words · 31 known · 12 due\" beside it.\n   - On the right, a search field (placeholder \"Search words and meanings\", `/` focuses it; it matches word, `also`, `short` and `same`) and **Add a word**.\n2. **Words tabs**\n3. **Today strip**: three stat tiles in a row.\n   - **Due today**: a big number, with a **Review** pill that starts the due flashcard deck directly. At 0 the helper reads \"Nothing due · next: 6 on Thu\".\n   - **New today**: \"4 / 10\", a thin bar, a **Learn 10** button that starts the New deck, and the helper \"Daily goal, set in Plan\".\n   - **Word of the day**: the word (700 20px), its `short`, and an **Open** link. It is the same for everyone that day.\n4. **Collections row**\n   - Seven tiles: All, Question language, Word-problem phrases, Algebra, Advanced Math, Problem-Solving & Data, Geometry & Trig, then My own (and each own list).\n   - Each tile shows its name, \"26 words\", an ink known-bar with \"4 known\", and an orange dot with the number when anything is due.\n   - Clicking a tile toggles its filter (aria-pressed; wash with an amber inset when on). The row wraps to two rows below 1100px.\n5. **Filter bar** (`UI.filters`, dropdown chips `.fchip`)\n   - **Topic ▾**: multi-select from the 19 topics grouped by domain, each with its glyph and a count.\n   - **Difficulty**: Easy · Medium · Hard, multi-toggle, in the practice-map style.\n   - **Status ▾**: All / New / Learning / Known / Due today / Saved / From my mistakes / My own, each with a count.\n   - **Sort ▾**: A–Z / By topic / Most used in the bank / Due soonest / Weakest first / Recently added.\n   - **Select**, a quiet button that toggles tile checkboxes.\n   - On the right, a live count (\"42 words\") and **Clear** whenever any filter is set.\n   - The URL carries every filter (`?c=&t=&d=&s=&sort=&q=`), so a view can be linked and Back works.\n6. **Legend** (mono 12px): `●●●○○ strength · DUE · ★ saved · ● from your mistakes · ▮▮▯ difficulty`.\n7. **Grid**\n   - Columns: 6 at 1100px and wider, 4 at 760–1099, 3 at 560–759, 2 below that. Gap 8px.\n   - **Tile** `.wtile`, min-height 92px, tile fill, 10px radius, no border:\n     - the word (600 16px, up to 2 lines);\n     - a mono sense tag or \"MINE\";\n     - a meta line with the topic's short name;\n     - a bottom row with the strength pips `.pips` on the left and the difficulty bars `.dbars` (aria-label \"Medium\") on the right;\n     - in the top-right corner, a star (orange fill when saved), an orange dot when the word comes from an open mistake, and \"DUE\" in amber-deep mono when due.\n   - Difficulty is shown as bars plus a label, never as colour, because orange is the only accent.\n   - Hover shows `tile-2`. A click opens the word sheet (`?w=slug`). In Select mode a click checks the tile and shift-click selects a range.\n   - With Sort = By topic, the grid is grouped under headers: glyph, topic name, \"8/21 known\" and an mbar.\n8. **Study bar**: sticky at the bottom. It is their Start Practice Session, made live.\n   - On the left: \"42 words · 12 due · 30 new\", or \"5 selected\".\n   - On the right: **Quiz** (tile button) and **Flashcards** (pill). Both skip setup and use the last-used options.\n   - Above 30 words, the helper reads \"Takes 30: due first, then new\".\n\n**States**\n\n- **Loading**: 18 static skeleton tiles, with no looping shimmer.\n- **Error**: \"Words did not load.\" with Retry.\n- **No match**: \"No words match these filters.\" with a Clear filters button.\n- **New student**: every tile shows empty pips. The Due tile reads \"Nothing due yet\" and New reads \"Learn your first 10\".\n- **Lots of own words**: the first 400 tiles, then \"Show 200 more\".\n- **`?w=unknown`**: an inline message, \"No word called “x”.\"\n\n## 4. Word sheet (`UI.word.open(slug, {list})`)\n\nThe sheet is a dialog, 720px wide and at most 88vh tall, scrolling inside. On a phone it is full-screen.\n\n- **Head** (sticky):\n  - the word (800 32px), an \"also: vertices\" meta line and the sense tag;\n  - tools: ★ Save (aria-pressed), ⚑ Report, ‹ › previous/next through the list the sheet was opened from (←/→), and X (Esc).\n- **Chip row**: the collection chip, topic chips (`UI.chip` with glyph), \"Medium\" with its bars, and \"Used in 14 kinds of bank question\".\n- **MEANING**: serif 19px.\n- **IN SYMBOLS**, and **FIGURE** when there is one.\n- **IN A REAL QUESTION**\n  - An excerpt from a freshly generated question, with the word highlighted (wash with an amber underline).\n  - The meta line: \"Nonlinear functions · the vertex of a parabola · Hard\".\n  - **Answer it** expands the full question inline through `UI.question`. It is answered through the drill endpoint and shows the key, the named mistake and the rationale, like the question of the day.\n  - **Another** makes a new example, from a different template when one exists.\n  - Loading shows the line \"Finding one…\". A failure shows \"Could not make one.\" with Try again.\n- **SAME AS / OPPOSITE OF**: word chips that open that word's sheet, or plain text when the word is not in the library.\n- **NOT THE SAME AS**: one row per confusion.\n  - \"vs **y-intercept**\" (a link), then the tell (serif 15px).\n  - The meta line: \"An option in 7 kinds of question is built on this mix-up\".\n  - When the student has picked such an option, an orange dot and \"You fell for it 3× · last Sep 21\".\n  - **Drill it** sends `POST /api/drill {confusion, count:10}` and opens the practice session.\n- **YOUR RECORD**\n  - The pips and a status: \"Learning · next review Thu, Sep 26\".\n  - \"Reviews 6 · right 4\".\n  - \"Questions that use it: 9 answered · 6 right\", with a mini bar. This is read from `attempts` on the linked templates.\n  - \"First seen Sep 12\".\n- **Footer** (sticky): a **Practice 10 questions with it** pill (`POST /api/drill {word, count:10}`), a **Flashcard** quiet button (the word and its related words as a run), and **Reset progress** in an overflow menu, behind a confirm.\n- **Own word**: the same frame, showing the student's meaning, example, same, opposite and notes. **Edit** and **Delete** sit in the head, and there are no bank blocks.\n\n## 5. Study setup `/words/study/?mode=cards|quiz` (data-page `words-study`)\n\nThe H1 is \"Flashcards\" or \"Quiz\", above the tabs. Desktop has two columns: options on the left, and an **At a glance** panel on the right in the Plan style.\n\n1. **DECK**: radio tiles, each with a count.\n   - Due today (12).\n   - New (\"Next 10 from the skills you're working on\").\n   - Saved.\n   - From my mistakes.\n   - A collection ▸ (inline select).\n   - A topic ▸ (the 19 topics).\n   - My own.\n   - From the Library, shown only when arriving with a filter or selection (\"42 from your filter\").\n   - An empty deck is disabled with a helper, e.g. \"Star words to build this deck\".\n   - The default is Due when anything is due, otherwise New.\n2. **HOW MANY**: cards 10 · 20 · 30 · All (capped at 200); quiz 10 · 20 · 30 · ∞.\n3. **Cards only**: **SHOW FIRST** Word · Meaning · Mixed; **ORDER** Due first · Shuffle · A–Z.\n4. **Quiz only**\n   - **QUESTION TYPES** (multi-toggle, at least one): Meaning → word · Word → meaning · Fill the blank · In a real question · Translate the phrase.\n   - A type the deck cannot supply is disabled with a reason. For example, Translate needs phrase words, and own words allow only the first two types and need at least 4 words.\n   - **TIMER per question**: Off · 15 s · 30 s · 60 s.\n5. **At a glance**: \"20 cards · about 5 min\" (12 s a card, 20 s a quiz item, or the timer value), \"12 due · 8 new\", the chosen order, and a **Start** pill.\n\nThe last options for each mode are remembered in `localStorage` (`satf.words.study`, wrapped in try/catch).\n\n## 6. Runner `/words/run/?id=` for flashcards (data-page `words-run`)\n\n- **Shell**: the practice session's own. The `.run-*` styles move to ui.css.\n  - X ends the run and shows the summary, or goes back to the Library if nothing was graded.\n  - Progress segments: up to 24, with ink for don't know, amber for know and an outline for the current card. Beyond 24 it shows \"7 / 30\".\n  - Tools: ★ Save and ⚑ Report.\n- **Card** `.fcard`\n  - Centred, at most 620px wide, at least 340px tall (56vh on a phone).\n  - Two ghost cards sit behind it, offset 8px and 16px, in `tile-2` and `mat`. Under the stack, a mono line reads \"18 left\".\n- **Front**: a chip row (collection · difficulty); the word (800 clamp(36px, 6vw, 56px)) or, in Meaning-first mode, the meaning (serif 24px); the sense tag; and the helper \"Tap or press Space to turn\".\n- **Back**\n  - The card flips with rotateY(180°) over .45s. Under reduced motion it crossfades in .15s.\n  - Content, top to bottom: the word, small; MEANING; IN SYMBOLS; IN A REAL QUESTION (instant, from the index examples); SAME AS / OPPOSITE; up to two NOT THE SAME AS rows, then \"+1 more\", which opens the sheet; and an **Open word** link.\n- **Controls**\n  - Before the flip: a **Show** pill (Space).\n  - After the flip: two equal buttons, **Don't know** (tile; `1` or ←) and **Know** (pill; `2` or →).\n  - After a grade, a status line shows for 900ms, then the next card: \"Back in 3 days\", \"Again in 3 cards\" or \"Known · back in 16 days\".\n  - **Back** (Backspace or ↑) shows the previous card read-only with its grade, and offers \"Change to Know\" or \"Change to Don't know\". Only the last graded card can be regraded.\n- **Touch**: after the flip, swipe right for Know and left for Don't know. The card tilts up to 8° with the finger and grades past 80px. Under reduced motion there is no tilt.\n- **Requeue**: Don't know puts the card back 3 cards later, at most twice per run. The bar grows by one animated segment, the way practice shows a repair.\n\n## 7. Runner for quizzes\n\nThe shell is the same. Each item renders through `UI.question(host, q, {head:{label:'MEANING → WORD', topic}})`.\n\n**Question types**\n\n- **Meaning → word**: the meaning (serif 20px) and \"Which word means this?\", with 4 words as options.\n- **Word → meaning**: the word (Archivo 700 28px) and \"What does it mean?\", with 4 `short` meanings as options.\n- **Fill the blank**: an authored cloze sentence (\"The ____ of y = (x − 3)² + 5 is (3, 5).\"), with 4 words as options.\n- **In a real question**: an approved bank stem excerpt with the word blanked, 4 words as options, and the meta line \"From a Nonlinear functions question\". Every one is new.\n- **Translate the phrase**: \"Which expression represents 7 less than 3 times a number x?\", with 4 expressions (serif) generated by `server/phrases.py`. Every wrong option carries its misreading, and the items are unlimited.\n\n**Distractors**: up to two from the word's confusions, then words in the same topic, then the same collection. A word listed as Same as is never a distractor. Own words take distractors from own words only.\n\n**Timer**: a thin bar under the head drains over the time, with mm:ss in the top bar. Under 5 seconds the digits turn ink-deep and bold. At zero the item is revealed as wrong, with \"Out of time\".\n\n**Verdict** (the practice one)\n\n- The key is always shown in amber, and the student's pick is struck through.\n- The `.mistake` line depends on what was picked:\n  - a confusion: \"Mixed up median with mean\", followed by the tell;\n  - another word: \"“mode” means: the value that occurs most often\";\n  - a phrase misreading: \"Wrote it in the order it is read. “Less than” flips the order.\"\n- A right answer offers a **Why** toggle that shows the meaning.\n- Links: **Open word**, and on a confusion, **Drill this mix-up in math**.\n- A **Next** pill, or Enter.\n\n**Keys**: A–D or 1–4 choose, Enter goes on, S saves, O opens the word.\n\n## 8. Summary (both modes)\n\nThe layout is the practice summary:\n\n- A big score (\"14 / 20\"; for cards, \"14 known / 20\") and \"6 min\".\n- One row per collection or topic: glyph, name, a known-bar that animates from before to after, and \"right/asked\".\n- **Moved to Known**: word chips.\n- **Still learning**: chips with their next dates.\n- The line \"Next reviews: 8 tomorrow · 7 in 3 days · 5 in a week\".\n- Quiz only: **By type** (Meaning → word 8/10 · Translate 4/5).\n- **Mix-ups**: `.mistake` rows (\"Mixed up median with mean ×2\"), each with **Drill it in math**.\n- **Up next**: chips for the next deck (\"8 more due\" / \"10 new\" / \"Quiz these 20\"), a **Keep going** pill and a **Library** quiet button.\n\nReloading a finished run shows the summary.\n\n## 9. My words `/words/mine/` (data-page `words-mine`)\n\n1. **Stat tiles** (6; 3×2 on a phone): Due today (with Review), Learning, Known, Saved, My own, From my mistakes. Each tile filters the list, and a selected tile is wash with an amber inset. The helpers:\n   - Known: \"Right on 3 separate days, the last a week after the first\".\n   - From my mistakes: \"Words behind the mistakes you still have open\".\n2. **Forecast** panel, \"Due in the next 14 days\"\n   - 14 bars: today in amber, the other days in ink at 30%.\n   - Mono day initials, with the date on hover.\n   - The exam day marked when it falls in range.\n   - On the right: \"Reviewed today 24 · this week 130 · review streak 5 days\".\n3. **Filter bar and search**: the same component as the Library.\n4. **List** `.wlist`\n   - Desktop is a table: ☐ | Word | Collection · topic | Strength | Next review (\"Due\" in amber-deep, or \"Thu 26\") | Quiz (right/total) | Last reviewed | ★.\n   - Clicking a column head sorts by it, and clicking a row opens the sheet.\n   - The table shows 120 rows, then \"Show 120 more\".\n5. **Bulk bar**: \"5 selected · Flashcards · Quiz · Save · Unsave · Reset progress · Delete (own only)\", with Clear.\n6. **Tools**: Add a word · Import · Export CSV · Print this list (a print stylesheet with word and meaning in two columns).\n\n**Empty states**\n\n- **New student**: \"No words yet. Study a deck in the Library, star words to keep them, or add your own.\" with Library and Add a word buttons.\n- **Nothing due**: \"Nothing due. Next: 6 on Thu, Sep 26.\"\n- **From my mistakes, empty**: \"None of your open mistakes points to a word.\"\n- **Filtered to nothing**: \"No words match these filters.\" with Clear filters.\n\n## 10. Add, edit and import own words\n\n**Add sheet**: a 560px dialog, or a full-height bottom sheet on a phone.\n\n- **Fields**:\n  - Word*, up to 60 characters.\n  - Meaning*, up to 400, in a 3-row textarea.\n  - Example, up to 300.\n  - Same as and Opposite of: comma lists of up to 10 items each.\n  - Notes, up to 1000.\n  - List: a combobox of the student's own lists, defaulting to \"My words\", up to 30 characters.\n- **Buttons**: Save (pill), Save and add another, Cancel.\n- **Inline errors**: \"Add the word\" / \"Add what it means\".\n- **Duplicates**:\n  - An own duplicate shows \"You already have “ubiquitous”.\" with an Edit link.\n  - A library match shows \"“median” is in the library.\" with a **Save that one** button that stars it.\n- **Edit and Delete**: Edit opens the same sheet, prefilled. Delete confirms first: \"Delete “x” and its review history?\".\n\n**Import sheet**\n\n- A textarea for \"One per line: word, then a tab, ' - ', ':' or ' — ', then the meaning\".\n- A live preview table with a status per row (new / duplicate / not understood).\n- An \"Add 18 words\" pill, then the result: \"Added 18 · skipped 2\", with the reasons.\n\n**Export**: `GET /api/words/mine.csv`.\n\n## 11. Words across the site\n\n- **Tap-to-define** (`UI.gloss(stemEl)`)\n  - Runs in the practice session, the question of the day, the challenge and the report review, and **never in the test window during a sitting**.\n  - It underlines up to 3 library terms per stem that have `gloss:true`: longest match first, first occurrence only, whole words, in text nodes only. The underline is a dotted `--faint` line.\n  - Tapping a term opens a `.pop` popover, 300px wide: the word, its `short`, ★ Save and **Open**.\n  - Esc or an outside click closes it (theirs ignores Esc), and focus returns to the term.\n  - Me has the setting \"Underline math words in questions\", on by default.\n- **Practice verdict**: when the named mistake is a linked confusion, a line under it reads \"Words: median · mean\". The chips open the sheet, and the words join From my mistakes.\n- **Mistakes page**: each open trap row gets its word chips. The header gains a \"Review these words (N)\" button.\n- **Today**: a Words tile in the right column, under Challenge.\n  - It shows the cards icon, \"Words\", a big \"12\" with \"due\", the meta \"4/10 new today\", and **Review**, which starts the due deck.\n  - Below it: \"Word of the day · discriminant: how many real solutions a quadratic has\", which opens the sheet.\n  - A new student sees \"Learn 10\".\n- **Plan step 4**: a Words row under the domains.\n  - A switch, \"Review words each study day\", on by default.\n  - NEW WORDS A DAY: 5 · 10 · 20, default 10, with the helper \"Due reviews come first; about 5 min a day\".\n  - At a glance gains the row \"Words · 10 new a day\", and each calendar day shows \"Words · N due\".\n- **Me**: a \"Words known\" stat tile; the same \"New words a day\" setting; the underline switch.\n- **Results**: a Words block with a stacked New / Learning / Known bar, quiz accuracy over the last 30 days, and reviews a day over 14 bars.\n- **Streak and study time**: a day with 10 or more word reviews keeps the streak. Review time counts as study time, capped at 60 s a review.\n\n## 12. Spaced review rules (`server/words.py`)\n\n- **Boxes**: 0 is new. Boxes 1–5 are due again after 1, 3, 7, 16 and 35 days.\n- **Know on a new word**: box 2. **Know** otherwise: box+1, up to 5.\n- **Don't know, a wrong answer or a timeout**: box 1, due today, lapses+1, and requeued in the run.\n- **At most one box up per word per local day.** Known has to be earned on separate days.\n- **Exam cap**: when an exam date is set and a due date would land on or after it, the due date becomes max(tomorrow, the exam date − 1). Every word is seen once more before the test.\n- **A quiz grades only its target word**, never the distractors.\n- **Statuses**: New is box 0 or no row. Learning is boxes 1–3. Known is box 4 or higher. Due means due ≤ today, in the student's timezone (X-Tz). \"New today\" counts the words whose first grade came today.\n- **The New deck order**:\n  1. words linked to open traps, then words in the coach's current topics (`progress.coach`);\n  2. then words in topics the student has worked on;\n  3. then by bank count;\n  4. then A–Z;\n  5. with question-language and phrase words interleaved one in three.\n\n## 13. Phone (390)\n\n- **Library**\n  - The H1, with the meta line under it.\n  - A full-width search field and a 40px \"+\" button.\n  - Tabs as 4 segments.\n  - The Today strip and the collections as horizontal scroll-snap rows, with tiles at 78% width and 160px.\n  - Filter chips in one scroll row: Topic ▾ · Difficulty ▾ · Status ▾ · Sort ▾. Each opens a bottom sheet (`dialog.sheet.bottom`, at most 80vh) with 48px option rows, check marks, Clear and a Done pill.\n  - A 2-column grid.\n  - The study bar fixed above the tab bar, with 170px of bottom padding under the page.\n  - No horizontal page scroll.\n- **Sheet**: full-screen, with a sticky 56px head and a sticky footer pill.\n- **Setup**: one column. At a glance becomes a sticky bottom bar: \"20 cards · 5 min [Start]\".\n- **Runner**: no tab bar. The card spans the width minus 32px. The grade buttons sit 50/50 at the bottom, above the safe area. Swipe grading works.\n- **My words**: 3×2 stat tiles, the forecast at full width, the table as stacked rows (\"vertex ●●●○○ / Advanced Math · next Thu 26 · quiz 4/5\"), and a fixed bulk bar.\n\n## 14. Accessibility and keys\n\n- **Tiles** are buttons with a full aria-label: \"vertex, Advanced Math, medium, learning, due today, saved\".\n- **The flip** announces the back face through aria-live=polite. Grades announce \"Know, back in 3 days\".\n- **Dialogs** trap focus and close on Esc.\n- **The quiz verdict** reuses the practice status region.\n- **Keys**:\n  - Library: `/` search, `N` add a word.\n  - Cards: Space flip, 1/← and 2/→ grade, S save, Backspace back.\n  - Quiz: A–D or 1–4, then Enter.\n- **Reduced motion**: no flip rotation, no tilt, no bar growth.\n",
+  "extras": [
+   {
+    "feature": "Real questions as examples, never the same twice",
+    "why": "Their card has one fixed example sentence. Ours is a live bank question that uses the word, with 'Another' for more and 'Answer it' inline. A finite bank cannot promise that."
+   },
+   {
+    "feature": "Practice 10 questions that use this word",
+    "why": "It turns a definition into points: a drill restricted to the templates that use or test the word."
+   },
+   {
+    "feature": "Mix-up drills (Drill it)",
+    "why": "Every confusion is linked to the templates whose options include that exact mix-up, so the student practises the trap itself (radius vs diameter, sample vs population) with fresh numbers each time."
+   },
+   {
+    "feature": "Mistake → words link",
+    "why": "When the named mistake in a practice verdict is a word confusion, it shows the words and feeds 'From my mistakes'. Their vocabulary never touches their questions."
+   },
+   {
+    "feature": "Tap-to-define inside questions",
+    "why": "Math words are underlined in practice, question-of-the-day, challenge and review stems, and a tap gives the meaning without leaving the question. It stays off in the live test for fidelity."
+   },
+   {
+    "feature": "Translate-the-phrase quizzes with named misreadings",
+    "why": "'7 less than 3 times x' and similar items are generated without limit and self-checked, and every wrong option names its misreading. That is our misconception format applied to the words that cause word-problem misses."
+   },
+   {
+    "feature": "Quiz feedback that explains the pick",
+    "why": "Theirs only prints 'Correct answer: X'. Ours names the mix-up and its tell, or says what the picked word actually means."
+   },
+   {
+    "feature": "Five quiz types, not one",
+    "why": "Meaning → word, word → meaning, fill the blank, a real-question blank and phrase translation. Recall is tested from several directions."
+   },
+   {
+    "feature": "Record on questions that use the word",
+    "why": "'9 answered · 6 right' on bank questions that use 'median' shows whether knowing the word carries into scoring. It is read from existing attempts."
+   },
+   {
+    "feature": "Exam-date-aware spaced review and a 14-day forecast",
+    "why": "Intervals are capped so every word comes back before the exam, the forecast shows the coming load, and 'Known' needs right answers on separate days."
+   },
+   {
+    "feature": "Visible grading outcome, requeue and undo",
+    "why": "Their Don't Know does nothing visible. Ours says 'Again in 3 cards' or 'Back in 3 days', brings the card back in the same run, and lets the last grade be changed."
+   },
+   {
+    "feature": "Search, status filter, sort by 'most used in the bank', per-collection progress",
+    "why": "Their library has none of these. A student can find 'slope' and see how much of each collection they know."
+   },
+   {
+    "feature": "Split senses",
+    "why": "Degree, base, range and tangent each have two SAT meanings. They get separate entries, cross-linked as a confusion."
+   },
+   {
+    "feature": "Word of the day, the same for everyone",
+    "why": "It pairs with the question of the day on Today at no content cost, using the daily date hash."
+   },
+   {
+    "feature": "Own words with lists, import (paste) and CSV export",
+    "why": "R&W words can be studied with the same tools today, with no copyright exposure, and students own their data."
+   },
+   {
+    "feature": "Swipe grading, keyboard shortcuts, printable lists",
+    "why": "Faster review on a phone and at a desk, and a sheet to study offline."
+   },
+   {
+    "feature": "Words inside the plan",
+    "why": "A daily review task is sized in minutes and new words a day come from a goal, not a paywalled cap. Browsing never costs anything."
+   }
+  ],
+  "server": [
+   {
+    "change": "server/words.json (new, authored content)",
+    "detail": "Holds {collections:[{id,name}], words:[entry], confusions:[{id, words:[a,b], tell, links:[{template, reason (regex)}]}]}. The entry fields are listed in design §2. There are about 220 words in 6 collections and about 40 confusions. Definitions are our own wording. Every entry must have meaning, short (≤60), ≥1 cloze and match[]."
+   },
+   {
+    "change": "tools/build_words.py → server/words_index.json (generated)",
+    "detail": "Generates 20 seeds per template. Per word it records tests (a skill label matches), uses (a stem matches within the word's topics), bank = |tests∪uses|, difficulty (weights 1/2/3 over blueprint.abilities() tiers, cut at 1.67/2.34) and examples (3 excerpts: {template, seed, text, start, end}). Per confusion it records templates, verifying each link's regex on at least 1 of the 20 seeds. It exits 1 on a word with no links and no bankless:true, on a dead confusion link, or on a cloze_template whose stem no longer contains the word. It prints proposed new links for an author to review and never writes them itself. Run it like tools/build_mocks.py."
+   },
+   {
+    "change": "server/words.py (new)",
+    "detail": "Loads words.json and the index once. Exposes entry(slug); library(learner, tz), which returns every word with its state for client-side filtering; deck(learner, source, value, n, tz); grade(learner, word, ok, mode, ms, session, confusion, tz), which applies the §12 rules; quiz_item(word, kind, rng), with distractors from confusions, then the topic, then the collection, excluding same[]; of_reason(template, reason) → words and a confusion for drill feedback; mistake_words(learner) from open traps (confusion links plus skill-label words); record(learner, slug) from attempts on the linked templates; gloss_index(). Runs are stored in sessions (kind='words', cfg JSON {mode, direction, formats, timer, deck, i, requeue}, questions = served items with keys, answers)."
+   },
+   {
+    "change": "server/phrases.py (new)",
+    "detail": "About 15 phrase families: less than, more than, subtracted from, decreased/increased by n%, percent of, x is what percent of y, twice as many A as B, the ratio of a to b, per + fixed fee, at least/at most/no more than/exceeds (inequalities), the product of x and the sum, the square of the sum vs the sum of squares, consecutive integers. Each family(seed) → {stem, choices[4], answer_index, reasons[4], word slug}, with parametric numbers and variable names. The `__main__` self-check generates 200 per family and asserts that no distractor is equivalent to the key: expressions by evaluating at 5 random x, inequalities by direction and boundary."
+   },
+   {
+    "change": "db.py schema",
+    "detail": "Three tables. word_state(learner, word, box INT NOT NULL DEFAULT 0, due TEXT, reps INT, lapses INT, right INT, wrong INT, saved INT DEFAULT 0, first TEXT, last TEXT, lastday TEXT, PRIMARY KEY(learner, word)); word_reviews(id PK, learner, word, session, mode TEXT, kind TEXT, correct INT, given TEXT, confusion TEXT, ms INT, at TEXT); my_words(id TEXT PK 'u:'+random, learner, word, meaning, example, same TEXT json, opposite TEXT json, notes, list, created, updated). Indexes on word_state(learner, due), word_reviews(learner, at) and my_words(learner). LATER_COLUMNS adds learners.words_goal INT (NULL = 10, 0 = off) and learners.gloss INT (NULL = on)."
+   },
+   {
+    "change": "GET /api/words",
+    "detail": "Needs X-Learner and X-Tz. Returns {today, collections:[{id,name,count,known,due}], words:[{slug,word,sense,collection,topics,difficulty,short,bank,own,list,state:{box,due,saved,right,wrong,last}|null,is_due,from_mistakes}], counts:{total,due,new,learning,known,saved,mine,mistakes,new_today,goal}, forecast:[{day,n}]×14}. Own words are included. About 250 rows, filtered on the client."
+   },
+   {
+    "change": "GET /api/words/{slug}",
+    "detail": "Returns the full entry: meaning, symbols, figure, same, opposite and related (resolved to {slug,word} or text), confusions [{id, other, tell, templates:n, fell:n, last}] (fell = the learner's attempts whose reason matches the link regex), examples, and record {questions:{answered,right}, reviews:{n,right}, box, due, first, last}. 404 for an unknown slug, and for a 'u:' id that belongs to someone else."
+   },
+   {
+    "change": "GET /api/words/{slug}/example",
+    "detail": "Creates a 1-question drill (kind 'drill', source 'word', cfg.only = the word's templates) through drill.create and next_question. It first deletes this learner's earlier unanswered 'word' example session for the same slug. Returns {session, question (public), excerpt:{text,start,end}}. 'Answer it' posts to /api/drill/{session}/answer, so the key only ever leaves through the normal drill feedback and no (template, seed) is accepted from the client. /api/history excludes source 'word' sessions with no answers."
+   },
+   {
+    "change": "POST /api/words/{slug}/save",
+    "detail": "Body {on}. Upserts word_state.saved and returns {saved}. Works for library slugs and for own 'u:' ids."
+   },
+   {
+    "change": "GET /api/words/today and GET /api/words/index",
+    "detail": "today: the word of the day from daily.word(day), a hash of 'word:'+the local date over the bank-linked words. It returns {day, word:{slug,word,short,collection}, excerpt}, plus state when X-Learner is sent. index: public, no learner needed, {v, terms:[{slug,word,match,short}]} for gloss:true words, with ETag and Cache-Control max-age=3600."
+   },
+   {
+    "change": "POST /api/words/run (+ GET /{id}, POST /{id}/next, /{id}/answer, /{id}/finish)",
+    "detail": "create: {deck:{source: due|new|saved|mistakes|collection|topic|mine|list|words, value?, words?≤200}, mode: cards|quiz, direction: word|meaning|mixed, formats:[meaning2word, word2meaning, cloze, bankcloze, phrase], count: 1–200 or null, timer: 0|15|30|60}. It returns 409 'nothing to study' for an empty deck and 400 for a quiz asked of fewer than 4 own words. A public item never carries answer_index, reasons, tell or key. meaning2word and cloze items also omit the target slug. answer: {item_id, answer: 0–3 | 'know' | 'dontknow' | null (timeout), ms, regrade?:bool}. It claims the answer once, like db.set_answer(only_new), and regrade is allowed only for the latest graded card. It returns {correct, answer_index, mistake, tell, word:{slug,word,short}, box:{before,after}, due, requeued, total}. finish returns {asked, right, ms, groups:[{id,name,known_before,known_after,right,asked}], moved_known, learning:[{slug,due}], schedule:{tomorrow,in3,in7,later}, by_kind, mixups:[{confusion,n}], next:{source,count,mode}}. A run that belongs to someone else is 403, and a finished run is 409."
+   },
+   {
+    "change": "Own words endpoints",
+    "detail": "POST /api/words/mine (400 on a missing word or meaning or an over-long field; 409 {existing_id} on a case-insensitive duplicate among own words; 200 with {library_slug} as a hint on a library match). PUT /api/words/mine/{id}; DELETE /api/words/mine/{id}, which also removes its word_state and word_reviews; POST /api/words/mine/import {text ≤ 50 KB, ≤500 lines} → {added, skipped:[{line, why}]}; GET /api/words/mine.csv. POST /api/words/reset {words:[…]} deletes word_state for those words."
+   },
+   {
+    "change": "drill.py and POST /api/drill: word and mix-up sets",
+    "detail": "The Drill body gains word: str|None and confusion: str|None (max_length 80). The endpoint resolves them to templates from the index (409 when there are none), sets topics = their topics, and sets cfg['only'] = the templates. For a confusion it also sets cfg['want'] = {template: regex}. In _pick the pool is filtered by cfg['only']. In _fresh, a template with a want regex walks up to 12 seeds for an item where some reason matches, and otherwise accepts the first. _feedback gains words:[{slug,word}] and confusion:{id,words,tell} from words.of_reason(q['key'], reason)."
+   },
+   {
+    "change": "progress.carry and progress.days",
+    "detail": "carry moves word_reviews and my_words. word_state is merged per word: the higher box, summed reps/right/wrong/lapses, saved = max, due = the earlier, first = the earlier, last = the later. days() also reads word_reviews: a local day with 10 or more reviews counts toward the streak, minutes add min(ms, 60000) per review, and recent[] gains 'words'."
+   },
+   {
+    "change": "GET/PUT /api/me",
+    "detail": "Accepts words_goal ∈ {0,5,10,20} and gloss ∈ {true,false}, and returns both in profile. Plan step 4 and Me write them."
+   },
+   {
+    "change": "reports table + POST /api/report (shared)",
+    "detail": "reports(id PK, learner, kind: word|question|test, ref TEXT, category: wrong_definition|wrong_key|typo|confusing|bug|other, title ≤200, details ≤2000, at). Returns {ok}. Rate limit: 20 per learner per day (429). No attachments in v1."
+   },
+   {
+    "change": "server/test_flow.py",
+    "detail": "Checks: the word-run payload never contains LEAKS or tell; the SRS transitions and the exam cap; the same-day single promotion; requeue; a word drill serves only linked templates; a confusion drill's items carry a matching reason; drill feedback lists radius and diameter after a pick whose reason is 'used the diameter as the radius'; own-word validation and duplicates; import partial success; carry moves all three word tables; days() counts a review-only day."
+   }
+  ],
+  "files": [
+   "server/words.json (new: authored words, collections, confusions)",
+   "server/words_index.json (new: generated by tools/build_words.py)",
+   "tools/build_words.py (new: link, verify and index the words against the bank)",
+   "server/words.py (new: library, SRS, decks, quiz items, runs, gloss index, mistake→word links)",
+   "server/phrases.py (new: phrase-translation families with a __main__ self-check)",
+   "server/db.py (word_state, word_reviews, my_words, reports tables; learners.words_goal, learners.gloss)",
+   "server/app.py (the /api/words* endpoints, /api/report, Drill.word/confusion, /api/me fields, history exclusion)",
+   "server/drill.py (cfg.only / cfg.want in _pick and _fresh; words and confusion in _feedback)",
+   "server/progress.py (carry the word tables; days() counts reviews)",
+   "server/daily.py (word(day))",
+   "server/test_flow.py (the checks listed under server)",
+   "web/assets/ui.js (NAV and ICON.words, SECTION, UI.wordsTabs, UI.word sheet, UI.gloss, UI.pop, UI.filters, UI.report, UI.addWord, UI.pips, UI.dbars, a head option on UI.question)",
+   "web/assets/ui.css (.run-* shell moved from the practice session, .wtile, .pips, .dbars, .fchip, dialog.sheet.bottom, .pop, .term, .fcard flip, .qtimer, .forecast, .stat, print styles, 6-column phone tabs)",
+   "web/words/index.html (new: Library and the word sheet via ?w=)",
+   "web/words/study/index.html (new: Flashcards and Quiz setup, ?mode=cards|quiz)",
+   "web/words/run/index.html (new: the runner for cards and quizzes, with the summary)",
+   "web/words/mine/index.html (new: My words, forecast, list, bulk actions, import and export)",
+   "web/practice/session/index.html (gloss on stems, word chips in the verdict, .run-* CSS moved to ui.css)",
+   "web/index.html (Today: the Words tile and the word of the day)",
+   "web/plan/index.html (step 4 Words row, At a glance row, the calendar's 'Words · N due')",
+   "web/me/index.html (Words known stat, new words a day, underline switch)",
+   "web/mistakes/index.html (word chips per trap, 'Review these words')",
+   "web/results/index.html (Words block)",
+   "web/results/report/index.html (gloss in the review)",
+   "README.md (the serving-layer table: the /words pages and the /api/words endpoints)",
+   "spec/rebuild.md (map row Vocabulary → Words; state)"
+  ],
+  "shared_needs": [
+   "The runner shell (.run-top, .run-in, .tools/.tool, .prog/.seg, .count, .next-row/.keys, .sum/.score/.rows/.row/.upnext) moves from web/practice/session inline CSS into ui.css. The practice session, the words runner and the test window, which is to take the practice look, all use it.",
+   "UI.question(host, q, {head}): a head override (label and glyph) for items with no topic, such as word quiz items. Phrase and word choices render through the same .opts.",
+   "UI.filters: dropdown filter chips with counts and multi or single select, a phone bottom-sheet variant (dialog.sheet.bottom), and URL sync. Practice (source and format filters), Results (sittings by kind) and Mistakes need it too.",
+   "UI.pop: an anchored popover that closes on Esc and outside click and returns focus. Used by the gloss, and by the practice session's Details popover and the navigator.",
+   "UI.report and POST /api/report: one report sheet (category, title, details, and a read-only 'Sent with your report' box) for words, practice questions and the test review.",
+   "A stat tile (.stat: label, big value, helper, optional action) for Me, Results, Challenge stats and My words.",
+   "A 14-bar day chart (.forecast) for the Today week, Results study time and the words forecast.",
+   "NAV grows to 6 entries, and the phone .tabs grid becomes repeat(6,1fr), which every page inherits.",
+   "progress.days() learns about non-question study (word reviews), and progress.carry() has to move every new per-learner table.",
+   "A friendly 404 page for unknown routes. /vocabulary/ now shows FastAPI's raw {\"detail\":\"Not Found\"}."
+  ],
+  "acceptance": [
+   "curl -s -o /dev/null -w '%{http_code}' for http://localhost:8000/words/, /words/study/?mode=cards, /words/study/?mode=quiz, /words/run/ and /words/mine/ each prints 200.",
+   "curl -s -H 'X-Learner: a:v2revwords01' localhost:8000/api/words | jq '.words|length' is at least 200, and jq '[.words[]|select(.own|not)|select(.bank<1)]|length' prints 0 unless every such entry is bankless in words.json.",
+   "curl -s -H 'X-Learner: a:v2revwords01' localhost:8000/api/words | jq '.counts|keys' contains due, new, learning, known, saved, mine, mistakes, new_today and goal, and jq '.forecast|length' prints 14.",
+   "PYTHONPATH=. python3 tools/build_words.py exits 0 and writes server/words_index.json. Breaking one confusion link regex in a copy of words.json makes it exit 1 and name the link.",
+   "PYTHONPATH=. python3 server/phrases.py exits 0 (the self-check: no distractor is equivalent to its key across 200 items per family).",
+   "POST /api/words/run {deck:{source:'new'}, mode:'quiz', count:10, formats:['meaning2word']} returns an item whose JSON contains none of answer, answer_index, reasons, tell, key or seed, and has no target slug.",
+   "On a new word, answering 'know' in a cards run returns box.after=2 and due=today+3. 'dontknow' returns box.after=1, due=today and requeued=true, and the same word comes back within the next 4 items.",
+   "After PUT /api/me {exam_date: today+5}, a word at box 4 graded 'know' gets due ≤ exam_date−1. Grading the same word 'know' twice on one day moves it up only one box.",
+   "POST /api/drill {word:'vertex', count:5}: every stored question's key is in words_index.words.vertex.tests ∪ uses (checked in test_flow against the stored session).",
+   "POST /api/drill {confusion:'radius~diameter', count:5}: most served items (asserted ≥4 of 5 in test_flow) carry a reason matching the link regex.",
+   "In a drill, picking an option whose reason is 'used the diameter as the radius' returns feedback.words containing the slugs radius and diameter.",
+   "GET /api/words/index with no X-Learner returns 200 with terms[] and an ETag. Repeating it with If-None-Match returns 304.",
+   "POST /api/words/mine with no meaning returns 400. A second 'Ubiquitous' after 'ubiquitous' returns 409 with existing_id. DELETE of another learner's id returns 404.",
+   "POST /api/words/mine/import with 3 lines, one of them lacking a separator, returns added=2 and skipped[0].why set.",
+   "After POST /api/me/carry from code A to code B, B's GET /api/words shows A's saved words and own words, and A has no rows left in word_state, word_reviews or my_words.",
+   "A learner with 10 card reviews today and no questions has days.streak ≥ 1 in GET /api/me.",
+   "Browser at 1280 (shot.py a:v2revwords01 1280 …/words/): the grid has 6 tiles per row (getComputedStyle(grid).gridTemplateColumns splits into 6), the Today strip shows three tiles, and the collection tiles show counts.",
+   "Browser at 390: document.scrollingElement.scrollWidth ≤ 390 on /words/, /words/mine/ and /words/run/?id=…. The grid has 2 columns, and the study bar is visible above the tab bar.",
+   "On /words/?w=vertex the word sheet is open with MEANING, IN A REAL QUESTION (an excerpt with a highlighted span), NOT THE SAME AS and YOUR RECORD. Pressing Esc closes it and removes ?w from the URL.",
+   "In a cards run, pressing Space flips the card (the back face gets aria-hidden=false), then pressing 2 grades Know and a status line containing 'Back in' appears.",
+   "In a quiz run with the 15 s timer, waiting 16 s reveals the key with 'Out of time', and the progress segment is ink.",
+   "In /practice/session/, a stem containing 'median' has at least one button.term. Clicking it opens .pop with the meaning, and Escape closes it and returns focus to the term.",
+   "In /test/ during a live sitting, document.querySelectorAll('.term').length is 0.",
+   "The Today page shows a Words tile whose due number equals GET /api/words counts.due, plus a word-of-the-day line matching GET /api/words/today.",
+   "Plan step 4 shows the Words switch and the 5/10/20 choices. After choosing 5 and Create plan, GET /api/me profile.words_goal is 5.",
+   "With prefers-reduced-motion emulated, flipping a card applies no rotateY transform (the computed transform is none on both faces)."
+  ],
+  "open_questions": [
+   "R&W words: v1 ships math words, question language, word-problem phrases and the student's own words, and no authored R&W list, because there is no R&W bank to link to. Should we author about 500 R&W words now (our own definitions, words chosen from the answer choices of official Words in Context items), or ship them together with the R&W bank? The schema already supports it.",
+   "Nav placement: Words as a 6th top-level item (proposed, matching their sidebar), or tucked under Practice? Six phone tabs fit at 390 but are tighter.",
+   "Should word reviews count toward the streak and study time? The proposal is yes, with 10 or more reviews a day.",
+   "Content authoring: who checks about 220 definitions and about 40 confusion links before they go live? The build tool verifies links against the bank, not the wording.",
+   "Tap-to-define in the daily challenge: it is on in the proposal, since a definition does not give away the answer. Or keep the challenge bare, like the test?",
+   "Report attachments: they allow 10 images. The proposal leaves them out of v1. Is that acceptable?",
+   "When a plan day has words due, should Today's coach set shrink by about 5 minutes to make room, or should words sit on top of the day's minutes?"
+  ]
+ }
+}

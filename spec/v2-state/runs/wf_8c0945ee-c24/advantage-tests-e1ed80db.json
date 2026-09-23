@@ -1,0 +1,178 @@
+{
+ "label": "advantage: tests",
+ "key": "v2:c26a5f7d4f60dfa6094241e123d620f9938011b7a28b4a9d761e1781e1ed80db",
+ "result": {
+  "proposals": [
+   {
+    "title": "Twin papers: shared forms that can't leak and never get used up",
+    "what": "Papers store slots, not items. papers.questions becomes, per module (module1, module2_upper, module2_lower), 22 slots {pos, template, tier, fmt} plus one canonical seed per slot, used for the exact-copy share, printing and the answer-key view. Every sitting of a paper draws its own seed for each slot with blueprint.draw_matching(b, template, tier, fmt), from a Builder seeded f'paper:{n}:{learner}:{k}', where k is that learner's attempt number. So every sitter and every retake gets the same 66 question types, at the same position, tier and format, with their own numbers and option order. The launch set #1-7 converts directly from server/mocks.json: each stored question already carries key (template), difficulty, type and seed.\n\nCard changes:\n- 'New to you 63 of 66' is dropped, since every sitting is new.\n- The action reads 'Start' or 'Retake · new numbers'.\n- A helper line: 'Everyone sits the same question types in the same order. Your numbers are your own, so a retake is a real re-measure.'\n- Sat by, Average and the percentile still count first sittings only. A retake row reads 'Paper #8 · Retake 2 · +40 on your first'.\n\nPer-slot crowd facts are pooled across twins by slot and grouped by the misconception text: % right and the top named trap ('Q17 · 41% right · 29% used the diameter as the radius'). They show on the paper's report and at the head of each question's discussion once the slot has 20 first sittings.\n\nGuard: api_tests tracks each slot's %-right spread across seeds. A slot whose seeds differ by more than 15 points is listed in tools/reports.py for bank review.\n\nShare a test (R18 sets) keeps exact copies, with a new toggle 'Same numbers / Twin (new numbers)'.",
+    "beats": "Their paper grid: 29-31 fixed papers. A free student gets 1 exam attempt, and paid tiers get 10-20 retakes a month. A retake re-shows questions whose answers the student has already reviewed, so it measures memory. Their comments sit next to identical questions, so answers can be posted. Twin papers keep the shared comparison (Sat by, Average, rank), and add unlimited honest retakes and keys that are useless to pass on. It is the rule the user already chose for the Daily Challenge (spec/v2-decisions.md #1).",
+    "effort": "M",
+    "needs": "- blueprint.twin()/draw_matching (spec'd in 3.4.5).\n- F4: papers.questions holds slots; change the schema before any paper row exists.\n- daily.paper builds slots.\n- api_tests: per-slot stats and the seed-spread guard.\n- S6: the report renders the per-slot crowd line.\n- Compete's compete.twin_questions can share the seeding helper."
+   },
+   {
+    "title": "Trap exam: your open mistakes hidden in new questions, under the clock",
+    "what": "A new source in the start sheet's Custom step, 'My traps, in disguise (6 open)', plus a New test card that shows when there are 3 or more open traps. It is a test-rules custom test: no feedback until hand-in, 95 s a question. Every trap question offers one of your open misconceptions as an option.\n\nHow it is built, for each open trap (template, norm, reason):\n- Slot A: the same template, seed-walked with the drill's `want` set to that reason until the option carrying that exact mistake is on offer. A plain new-numbers twin can lose that distractor; this guarantees it is there.\n- Slot B: a different template whose options carry the same misconception, taken from T-bank's misconception tags once they exist (Part 5 Q18). Until then, a same-skill template whose reason text matches the trap's keyword pattern (e.g. radius|diameter).\n- About a quarter of the questions are ordinary same-skill fillers, so the traps aren't obvious.\n- Order is easiest first. Length is 2 × traps + fillers, capped at 60.\n\nLobby fact: '14 questions · each of your 6 open traps is hidden in 2 of them'.\n\nAfter hand-in the report leads with one row per trap. It reads either 'Offered 2× · avoided both · fixed under the clock' (a clean answer closes it under R9) or 'Fell for it again, in a question type you'd never missed' (a relapse; check-ins reset).\n\nUp next suggests it when 4 or more traps are half fixed: it is the proof step. The sittings list gets the kind 'Trap exam'.",
+    "beats": "None; they lack it. Their bank names no misconceptions, so they can't know which trap a student fell for, let alone plant it in other questions. Their Redo list exists in the API with no UI, and it re-serves the same items the student has already seen.",
+    "effort": "M",
+    "needs": "- F5: the drill `want` field (§2.6), reused in blueprint.custom(queue).\n- R9 traps: norm, reason, due, checks.\n- T-bank misconception tags for the cross-template slot B (open question 18), with the keyword fallback until then.\n- S10 (Review) updates trap state on finish.\n- S6 renders the per-trap rows."
+   },
+   {
+    "title": "Expected for you, and what the clock costs you",
+    "what": "For every built sitting, the server computes an expected number right per slot from this learner's history. p is the first-try accuracy on that template, smoothed toward skill×tier accuracy and then toward the population's (template, tier) accuracy: (right + 2·p_prior)/(n + 2). It is summed per module and mapped through scoring.section_score for an expected band.\n\nWhere it shows:\n- (a) Paper and kind cards get a 'For you' tag: Harder than usual / About your level / Easier than usual. It compares the expected share with your last 3 sections (±0.05).\n- (b) After hand-in, per module: 'Expected 15 · got 18', and '+3 vs practice' in the sittings row.\n- (c) A new T1 fact row, 'Tests vs practice: −2 a module': the mean of got − expected over the last 3 timed sittings. A helper line says where: 'mostly Q15-22' or 'mostly Advanced Math'.\n\nUp next uses it:\n- At −2 or worse over 2 sittings: 'Your practice is ahead of your tests: sit timed modules' (recommends Module 1 or a Slice).\n- At 0 or better: 'Your tests match your practice: more practice moves your score' (opens the Practice builder on the plan's focus).\n\n'Measure the clock': from any untimed sitting, a row action 'Sit its twin timed' (and the reverse). The pair's report says 'Untimed 19/22 · timed twin 15/22: the clock costs you 4 questions, about 60 points'.\n\nExpected numbers are never shown in the lobby or during the test.",
+    "beats": "Their test payload carries no skill, difficulty or time per question (confirmed in their API). So they can't tell a student whether points are lost to knowledge or to test conditions; their estimate is one band and a red LOW CONFIDENCE chip. A timed retake of the same paper after an untimed one only measures memory, so they can't measure the clock's cost either.",
+    "effort": "M",
+    "needs": "- F4: attempts per (learner, template) and per (template, tier), and attempts.session → kind to split practice answers from test answers.\n- R16: estimate.py gains expected() and gap.\n- twin() for the timed/untimed pair.\n- S6 renders expected vs got.\n- Today (S3) reads the same gap if it shows it (one source per fact, §2.1)."
+   },
+   {
+    "title": "Check your work that knows you: best bets, your change record, your guess calibration",
+    "what": "Three additions to #review, under a Tools switch 'Coaching on Check your work' (on by default, forced off in Dress rehearsal):\n\n1. Best bets: a third Show option beside Status and Time. It orders the unanswered and marked questions by expected points per minute for you: your p on that question's type × its difficulty weight ÷ your median seconds on that type. Cells are numbered 1..n on the grid, with the line 'With 6:12 left, go in this order. It uses how you usually do on these question types, not whether your answers are right.'\n2. Your answer-change record. It shows once you have 10 or more recorded changes and this module has at least one changed answer: 'In your last 4 tests you changed 14 answers: 3 wrong→right, 7 right→wrong. Change an answer only when you've found the mistake.'\n3. Guess calibration, when confidence tags are on and at least 20 tagged answers exist: 'Your Sure answers are right 91%, Unsure 58%, Guess 31%. Recheck the Unsure ones first.' An 'Unsure' tile joins 'Guesses'.\n\nServer: GET /api/session/{sid}/triage returns {order:[qid], changes:{n, wr, rw, sittings}, calib:{sure, unsure, guess, n}}. It is owner-only. Changes and calibration come from finished sittings only. It never returns keys, template names or correctness for the live module.",
+    "beats": "Their Check Your Work page is three counts, a grid and '26 questions unanswered. Unanswered questions are marked incorrect.' It knows nothing about the student. They record no answer changes, confidence or time per question, so it can't.",
+    "effort": "M",
+    "needs": "- R7: qstate first, changes, conf and ms.\n- The per-template p from 'Expected for you'.\n- F3: the runner renders the order.\n- S6 shows the same change and calibration numbers on the report, so the two screens agree (§2.1 rule 5)."
+   },
+   {
+    "title": "Slices: any stretch of a real module, under test rules",
+    "what": "A New test card 'Slice' and a step-1 option, with presets:\n- 'Hard end': Q15-22 of a harder module 2. 8 questions, 12:40 (8 × 95 s). This is where a 700 is decided.\n- 'Fast start': Q1-11 of module 1 at 65 s each (11:55), to bank time on the easy half.\n- 'Grid-ins': the 6 grid-in positions of module 1 and of a harder module 2, at their slot tiers. 12 questions, 19:00.\n- 'Custom slice': a tier (Module 1 / Module 2 harder / Module 2 easier), a two-thumb position range over 1-22 (at least 4), and a clock (test pace / tight 85% / my own minutes).\n\nBuilt with blueprint.slots(form, n)[a−1:b] and fill(), so every position carries the real module's domain, tier and format, drawn from unseen seeds. It uses the full runner and Check your work, with no feedback until hand-in.\n\nResult: 'Hard end · 6/8'. Once 20 standard sections exist, it adds 'Students at 650+ get 5.9/8 here' (from their Q15-22 of the harder module 2). It is kind 'custom' with cfg.slice, labelled 'Practice, not a score estimate'.\n\nCard stats: 'You: last 6/8 · best 7/8'. The sittings Kind filter adds Slices. Up next suggests 'Hard end' after 2 sections where Q15-22 of the harder module 2 went 50% or lower.",
+    "beats": "Their Select Modules offers only whole modules from a finite set of papers, and a free student gets one attempt in total. The stretch of the test that decides a 700 can't be practised on its own there, and nothing tells a student how others do on it.",
+    "effort": "S",
+    "needs": "- blueprint.slots/fill (they exist).\n- Tests' custom kind and cfg.minutes (3.4.5).\n- api_tests: a population stat over positions 15-22 of the harder module 2, from qstate.\n- No new tables."
+   },
+   {
+    "title": "Pacing replay and a pace plan per position",
+    "what": "Capture: the runner writes visits to qstate[qid].trail as [enter_s, leave_s] on the module clock, plus answer-change and mark events. It is capped at 400 events per module and sent with the /state deltas.\n\nBetween modules and Time's up show 'Your module in time':\n- 22 columns whose height is the seconds spent on each question: first visit in ink, returns hatched.\n- A dashed line for the pace plan.\n- One reading line from the data, e.g. 'Q14 took 4:10 in one visit; Q18-22 got 1:50 together.'\n\nThe pace plan replaces the flat 95 s. The target for each position is the median time at that position's tier in everyone's first standard sittings; until 20 exist it is easy 60 / medium 95 / hard 130 s. The targets are scaled so the module sums to its clock × the timing factor. The pace tick on the progress strip follows the cumulative plan ('Pace: question 12').\n\nOptional nudge: a Tools switch 'Nudge me when one question runs long', off by default and off in Dress rehearsal. After twice the plan for a position, a quiet line under the question header reads '3:10 on this one. Mark it and come back?', with a 'Mark and next' button.\n\nThe report's review (S6) draws the full replay: the module clock across, one row per question, one bar per visit.",
+    "beats": "Their test payload has no time per question, and their QBank stopwatch resets on reload. The only timing aid in their runner is the countdown, so a student can't see where the 35 minutes went.",
+    "effort": "M",
+    "needs": "- R7: qstate trail.\n- F3: visibility and focus hooks in the runner (already needed for ms).\n- api_tests: population medians per (form, position), cached.\n- S6 renders the replay."
+   },
+   {
+    "title": "Desmos or by hand: calculator use measured per question type",
+    "what": "Capture: the runner records calculator time per question (qstate[qid].calc_ms, and calc:true when the panel was open on that question), in tests and in practice. F4 adds attempts.calc.\n\nFrom everyone's first tries, per template: accuracy and median time with and without the calculator. Shown once 30 answers exist each way.\n\nWhere it shows:\n- (a) The report's review and the practice rationale (S6, S4): 'On this question type, students who graphed it were right 84% vs 61% by hand, and 30 s faster', with 'Try one with Desmos' (a twin).\n- (b) A Tests card 'Your calculator use' after 2 sections: 'You opened Desmos on 14 of 44. On 6 of them most students are faster by hand; you spent 7:20 there.' It also lists the reverse: types you did by hand where graphing wins.\n- (c) A Custom test source 'Desmos-fast types': the 20 question types where graphing wins most, under test rules with the calculator on.\n\nNothing is shown during a test.",
+    "beats": "They embed the same Desmos and learn nothing from how it is used. Desmos strategy is one of the biggest levers on digital SAT Math, and neither their runner nor their explanations teach when to use it.",
+    "effort": "M",
+    "needs": "- F3: UI.calc open/close events.\n- R7: qstate calc fields.\n- F4: an attempts.calc column.\n- A cached population query.\n- S4 and S6 render the lines.\n- Volume: the lines stay hidden below 30 answers each way. The capture ships now; the insights appear as data grows."
+   },
+   {
+    "title": "Scores that heal: a confirmed bad question leaves every score it touched",
+    "what": "When an admin resolves a report on (template, seed) as a fault in /admin/reports (wrong key, no right answer, two right answers, or a broken figure), the server:\n1. Finds every sitting that holds that item, through a new index session_items(template, seed, session, qid) filled at build and at routing.\n2. Sets qstate[qid].void='bad item' in each of those sittings.\n3. Rescores them without the item: scoring.score skips void items, so the possible total drops too.\n4. Voids the matching attempts (R8 void), so mastery and traps forget it.\n5. When the fault is in the template itself, adds the template to a quarantine list that blueprint and drill skip until it is fixed.\n\nAffected students see a one-time notice on Tests and on that report: 'Q7 of your Sep 23 section had a wrong key and was removed after a report. Your band moved 560-700 → 570-710.' The reporter's 'Your reports' row reads 'Fixed · removed from 38 sittings'.\n\nIn review contexts (never mid-test, per R17), choosing 'Wrong answer key' first shows the independent check: 'A second solver that shares no code with the generator gets 7/2.' It is followed by 'Still wrong? Send it'.",
+    "beats": "Their report modal sends an exam ID into silence, and a wrong key stays in everyone's score. Ours shows the independent check before the report is sent, and repairs every affected score after a fault is confirmed.",
+    "effort": "M",
+    "needs": "- R17: reports and admin statuses (F6).\n- R8: attempts.void (F4).\n- A session_items table (F4).\n- The satbank audit re-derivation (it exists), exposed as audit_line(template, seed).\n- Void support in scoring.\n- S6 renders the notice."
+   },
+   {
+    "title": "Dress rehearsal: one tap to sit a section the way test day runs",
+    "what": "A preset in the start sheet (a step-1 option and a Tools switch), and an Up next item in the last 14 days before the exam date.\n\nSettings:\n- Full section, official timing, adaptive, standard module 1, calculator on.\n- Confidence tags, pace guide, nudges and Check-your-work coaching off.\n- Fullscreen required; leaving it counts as away time and is flagged.\n- Save and exit keeps the clock running: no pause. This answers Part 5 Q9 by offering both behaviours.\n- 'Tell me my module 2' off.\n\nAn optional 'At test-day time' line in the lobby: 'On test day Math starts at about 10:15 (after Reading and Writing and the 10-minute break). Sit it at 10:15 on Saturday?', with Add to calendar (UI.ics(event)).\n\nA lobby check-in list as ticks: pencil and scratch paper · a calculator you know · water · phone away.\n\nThe result is flagged 'Dress rehearsal', and T1 gains 'Last rehearsal: 600-740 · Sep 26'. It counts toward Compete's dress-rehearsal badge (R25).",
+    "beats": "Their runner always runs the same way, any sitting can be saved and left for as long as the student likes, and nothing rehearses the timing of the real day.",
+    "effort": "S",
+    "needs": "- cfg flags from 3.4.5.\n- /pause refuses when cfg.rehearsal is set.\n- satdates.py holds the Math start time, to be checked against College Board (Part 5 Q10).\n- S7: Plan can schedule one rehearsal in the last two weeks.\n- UI.ics(event) (kit)."
+   },
+   {
+    "title": "Printable tests with a fast answer-sheet entry and class versions",
+    "what": "A 'Print' action on every New test kind, paper, twin and share, and 'Print instead' in the start-sheet footer. It builds the sitting without beginning it and opens /test/?s=ID&print=1:\n- A cover: the date, 'Module 1 · 22 questions · 35 minutes', the directions and the grid-in examples table.\n- The questions, two to a page, with figures and tables.\n- An answer sheet: 22 rows of A-D bubbles and 5-character grid-in boxes.\n\nThe answer-sheet screen /test/?s=ID#sheet takes answers fast:\n- Typing letters in order auto-advances ('BDAC…').\n- Grid-in cells use the keystroke filter.\n- On a phone, tap the bubbles.\n- An optional minutes field.\n\nHand-in routes module 2, then offers 'Print module 2' or 'Sit module 2 on screen', so routing stays adaptive on paper.\n\n'Print versions' (1-40, from anywhere; from a class it names each student): each version is a twin sitting (same slots, its own numbers), stamped 'Version 7 · K7Q2M9XA'. Each version has a teacher key that lists the misconception behind every wrong option ('B: forgot to square the radius'). Answers are entered at /s/?c=CODE.\n\nPaper sittings are scored like any section, flagged 'On paper', with self-reported time and no pace data.",
+    "beats": "They have no print, no answer-key sheets and no paper mode. Their teacher homework sits on a hidden route, with one identical paper for everyone.",
+    "effort": "L",
+    "needs": "- F1: the print stylesheet (the Practice §2.12 conventions).\n- twin() for versions.\n- R18 sets for version codes.\n- POST /api/session/{sid}/sheet {module, answers, minutes}.\n- S2 classes, optional, for student names.\n- S6: the report accepts paper sittings."
+   },
+   {
+    "title": "Class mock day: synchronized start, twin seats, a proctor view",
+    "what": "From a class (S2), 'Mock test day'. The teacher picks Full section or a paper, a start time and the timing. Every member gets a twin seat: the same slots, their own numbers.\n\nAt the start time the lobby reads 'Waiting · 12 of 18 here'. The teacher presses 'Start for everyone', or it starts on the time; each seat's /begin fires then.\n\nProctor view /class/mock/?id=: a table refreshed every 10 s with name, here, module, question number, answered, marked, time left, away count and handed in. It never shows answers. A 'Send 5-minute warning' button shows a banner in every seat.\n\nAfterwards:\n- A class results table: band per student, per-slot % right, blanks.\n- The class's top 5 traps by name.\n- 'Assign a drill on these': an S2 assignment built from those traps.",
+    "beats": "Their classes and homework live on hidden routes, with no live view, no synchronized start and one identical paper, so neighbours can copy. The teacher gets no summary of misconceptions.",
+    "effort": "L",
+    "needs": "- S2: classes, members and assignments.\n- twin().\n- A new mockdays table (id, class, spec, starts, started) in F4's schema.\n- GET /api/mockday/{id}/room (owner only).\n- F3: a banner hook in the runner."
+   },
+   {
+    "title": "Scratch pad per question, kept into the review",
+    "what": "A 'Scratch' tool in the top bar (key W, which is free in the runner map). It opens a drawing layer under the question, using pointer events: pen, eraser, clear, and one typed line.\n\nStrokes are simplified and saved per question in the R6 notes store (a new scratch field, at most 50 KB a question), so they survive a reload and a move to another device.\n\nIn the review they show beside the rationale as 'Your working', so a student or tutor can see where the working left the solution.\n\nOff in Dress rehearsal, since the real test gives paper.",
+    "beats": "Their Highlights & Notes work on text only. Math working stays on loose paper and is lost, so their review can't put the student's working next to the explanation.",
+    "effort": "M",
+    "needs": "- F3: the runner tool.\n- F4: a notes.scratch column (R6).\n- S6: the review renders it read-only.\n- UI.keys: W added in the runner scope (§2.8)."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Estimated Score card (T1)",
+    "spec_says": "Band, a confidence chip with its reason, a headline from trend and target, best, combined band, range, 'Routed up N of M', target, exam date and counted sittings. Floor-score sittings count.",
+    "why_only_parity": "It is their card done honestly: a readout of past sittings. It says where the student is, not where they will be on test day, or which skills would move the band.",
+    "upgrade": "Add a forecast and a breakdown.\n- Forecast: the slope of band midpoints over at least 3 sittings in the last 60 days, projected to the exam date, with the band widened by the slope's error: 'At this pace: 620-740 on Oct 3 · 40 short of 700'.\n- 'Where your next 40 points are': the 3 skills with the most expected points. Over the section blueprint, sum each slot's weight × (0.85 − your p on that skill and tier), mapped through ANCHORS. Each skill gets '+20 if fixed' and a Fix button.\n- The 'Tests vs practice' row from 'Expected for you'.\n- Later, once item_ratings reach 50 answers per template and tier, measured weights replace the 1/2/3 weights and the band narrows. Label: 'calibrated from 48,210 answers'."
+   },
+   {
+    "feature": "Paper grid (Papers #1-7 plus one each Monday)",
+    "spec_says": "Fixed shared forms: everyone gets identical questions, so Sat by, Average, the percentile and discussion compare like with like. Retakes are allowed at any time but don't count.",
+    "why_only_parity": "It is their model without the paywall: a finite shelf of identical papers whose answers can be passed on, and whose retakes re-show questions the student has already seen the keys for.",
+    "upgrade": "Twin papers (proposal 1): the same slots for everyone, each sitting with its own numbers, unlimited retakes that really re-measure, and crowd facts per slot grouped by misconception."
+   },
+   {
+    "feature": "Paper difficulty filter and card stats (their Difficulty, People took, Your last score)",
+    "spec_says": "Difficulty is measured once a paper has 20 first sittings; until then 'Not rated yet'. Sat by; Average from 20 sittings; You; New to you; the percentile from 30.",
+    "why_only_parity": "On a new site nearly every card will read 'Not rated yet · Average — · Sat by 3' for months, which looks emptier than their '1.6k'. The measured label only arrives once a crowd exists.",
+    "upgrade": "Rate from item data on day one. Predicted difficulty is the mean population accuracy of the paper's (template, tier) slots, from every answer on the site including practice. Below 20 answers a slot uses the tier prior. The label switches to the measured one at 20 first sittings.\n\nAdd the 'For you' tag (Harder than usual / About your level / Easier) from 'Expected for you'. Until the paper has 20 sittings, the stat tile reads 'Its question types: answered 3,120 times · 58% right' instead of '—'."
+   },
+   {
+    "feature": "Comments → Discussion sheet",
+    "spec_says": "Per-paper threads, gated until you've sat the paper. One reply level, Top/Newest, question chips like 'M1 Q17', Helpful, hidden after 3 reports, 20 posts a day, a moderation tool.",
+    "why_only_parity": "It is their Comments with guards. On a small site each paper's thread starts empty and stays empty, and threads split across papers even when they talk about the same question type.",
+    "upgrade": "Key each question's thread to its template. A post on 'M1 Q17' then appears wherever that question type appears (every paper, twin, fresh section and practice review), so threads grow with an unlimited shelf. The paper sheet lists the threads for its 66 slots.\n\nOpen every thread with a machine post from real data, which needs no moderator: '% right in first sittings · the top trap by name (29% used the diameter as the radius) · Another like this'.\n\nWith twin papers, a posted letter or number leaks nothing, so posts are about method. After a right answer, the review offers 'Explain how you did it', posted to that thread."
+   },
+   {
+    "feature": "Report a problem",
+    "spec_says": "Their modal, with a 'Sent with your report' box carrying (template, seed), 10 categories, up to 10 images, status under Your reports, and admin tools.",
+    "why_only_parity": "The same modal plus a status list. The outcome never reaches the student's score, and a key dispute costs a moderator's time even when the key is right.",
+    "upgrade": "Scores that heal (proposal 8). A confirmed fault is voided and rescored in every sitting that held the item, with a notice to each student. A key dispute made in review shows the independent solver's answer before it is sent."
+   },
+   {
+    "feature": "Start wizard: Select modules (their Module 1 / Module 2 cards)",
+    "spec_says": "A Module 1 kind card with 'You: 17/22 · 460-660'; fixed harder and easier module 2; checkable module cards in Choose modules; 'Routed up N of M' on T1.",
+    "why_only_parity": "It is their module picker over our generator. The one number that matters on module 1, the route, shows only as a count.",
+    "upgrade": "Make the Module 1 card a route-up trainer:\n- After each fresh module 1: 'Routed up with 2 to spare', or 'Short by 1: Q3 and Q8 were easy misses' (from result.would_route and the 60% cut).\n- A sparkline of the route margin over the last 10 sittings, on the card.\n- A goal line: 'Route up 3 in a row: 1 of 3'.\n\nAdd Slices (proposal 5) beside whole modules."
+   },
+   {
+    "feature": "Timer mode (Timed / Untimed) and accommodations",
+    "spec_says": "Official, time and a half, double time, and Untimed counting up; custom minutes for custom tests.",
+    "why_only_parity": "This is Bluebook parity: the timings students get on the real test. Nothing in it trains speed.",
+    "upgrade": "- Add 'Tight · 85%' (29:45 a module), to build a time buffer.\n- Add the 'Measure the clock' pair from proposal 3: untimed, then a timed twin.\n- Store an accommodations set in prefs: time factor, extra breaks, and read-aloud of stems and options through the device's speechSynthesis. An approved student's settings then apply to every test by default."
+   },
+   {
+    "feature": "Check your work",
+    "spec_says": "Answered / Unanswered / For review tiles that filter the grid, a Time view, the no-penalty guessing tip, and 'about 46 s for each unanswered question'.",
+    "why_only_parity": "It is their page with better copy. Nothing on it comes from the student's own record.",
+    "upgrade": "Proposal 4: a Best bets order for the minutes left, plus the student's answer-change record and guess calibration, shown at the moment of hand-in."
+   },
+   {
+    "feature": "Calculator",
+    "spec_says": "A floating Desmos panel: docks at 1180px and wider, resizes, and keeps its position and state per sitting in localStorage (satf.calc.{sid}).",
+    "why_only_parity": "It is the same Desmos they embed. Keeping its state in localStorage also breaks the section's own rule that nothing is lost on another device.",
+    "upgrade": "Keep the Desmos state per question in qstate on the server. Returning to Q14 then restores the graph made for Q14, and a new device gets it back. Measure calculator use per question type (proposal 7)."
+   },
+   {
+    "feature": "Share a test",
+    "spec_says": "A link to a finished sitting's exact questions. The friend sits them under test rules, and both bands show afterwards.",
+    "why_only_parity": "It is their QBank share applied to tests, with a score line added.",
+    "upgrade": "- After both finish, a slot-by-slot compare strip (Compete's Compare): 'only you 3 · only them 2 · both missed Q17', with times per slot.\n- 'Fix what we both missed' as a shared drill.\n- A 'Twin' share option (same slots, the friend's own numbers), so a friend who has seen your review can still sit it honestly."
+   },
+   {
+    "feature": "Classes and homework (their hidden /my-classes and /teacher)",
+    "spec_says": "Shell §7 classes, with assignments of kind set, module or section and due dates.",
+    "why_only_parity": "It is their teacher homework made visible.",
+    "upgrade": "Class mock day (proposal 11): twin seats, a synchronized start, a proctor view, and the class's traps turned into an assignment. Add printable versions with a key per version (proposal 10)."
+   },
+   {
+    "feature": "Sittings list (their /results card with red wrong-number chips)",
+    "spec_says": "Rows with M1/M2, route and time, miss chips (wrong filled, blank outlined) linking to the review, filters, sorts, CSV export and 'Fix N'.",
+    "why_only_parity": "Like theirs, it still shows question numbers, only now clickable. The row doesn't say what went wrong.",
+    "upgrade": "- Add a 'Caught by' line naming the sitting's top traps, with their status now: 'Caught by: sign when distributing ×2 (fixed) · radius vs diameter (open)'.\n- 'Fix 7' becomes 'Fix 2 open traps · 7 questions'.\n- Show '+3 vs practice' (proposal 3) in the score column."
+   },
+   {
+    "feature": "Highlights & Notes",
+    "spec_says": "7 styles in orange and graphite, notes, a notes rail, and marks kept into the review.",
+    "why_only_parity": "It is Bluebook's tool, built for Reading and Writing passages. On math stems it mostly marks numbers.",
+    "upgrade": "Keep it for Reading and Writing later. For math, add the per-question scratch pad (proposal 12), shown beside the rationale in the review."
+   },
+   {
+    "feature": "Between modules",
+    "spec_says": "Answered, left marked, time used and away time; a module 2 card; no break.",
+    "why_only_parity": "It is their step between modules (and Bluebook's), with counts added.",
+    "upgrade": "Show the 'Your module in time' strip from proposal 6 here. It is the one moment a student can still change their pacing before module 2."
+   }
+  ]
+ }
+}
