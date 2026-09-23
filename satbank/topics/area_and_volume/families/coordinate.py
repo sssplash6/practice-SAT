@@ -12,7 +12,7 @@ from fractions import Fraction
 
 from ....exact import E, PI, Exact
 from ....figures import coordinate_grid
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ..kit import decimal_text, pick, signed
 from ....shapes import UNITS
 
@@ -70,7 +70,8 @@ def circle_from_points(rng: random.Random, seed: int, *, fmt=None, r=None,
     }
     if fmt == "spr":
         return Item("GEO.coord.circle_3pt", "circles in the plane", "medium", seed, stem,
-                    "spr", key, key.gridin(), rationale, figure=fig, params=P)
+                    "spr", key, key.gridin(), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, pick(pool, None)))
     choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.coord.circle_3pt", "circles in the plane", "medium", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex, figure=fig, params=P)
@@ -131,7 +132,8 @@ def triangle_from_points(rng: random.Random, seed: int, *, fmt=None, pts=None,
     }
     if fmt == "spr":
         return Item("GEO.coord.triangle_area", "area in the plane", "hard", seed, stem, "spr",
-                    key, key.gridin(), rationale, figure=fig, params=P)
+                    key, key.gridin(), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, pick(pool, None)))
     choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng,
                                                fmt_value=decimal_text)
     return Item("GEO.coord.triangle_area", "area in the plane", "hard", seed, stem, "mcq", key,
@@ -214,7 +216,8 @@ def square_on_axes(rng: random.Random, seed: int, *, fmt="mcq", a=None, b=None,
     P = {"kind": "square_diagonals", "a": a, "b": b, "ask": ask}
     if fmt == "spr":
         return Item("GEO.coord.quad_diagonals", "area in the plane", "medium", seed, stem,
-                    "spr", key, key.gridin(), rationale, figure=fig, params=P)
+                    "spr", key, key.gridin(), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, pick(pool, None)))
     choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.coord.quad_diagonals", "area in the plane", "medium", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex, figure=fig, params=P)

@@ -15,7 +15,7 @@ import random
 from fractions import Fraction
 
 from ....exact import E, PI, Exact
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ....shapes import SHAPES, UNITS, Shape, Unit, measure_phrase, unit_noun
 from ....verify import check
 from ..kit import attempt, decimal_text, pick
@@ -471,16 +471,17 @@ def _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis, te
     rationale = (f"{_formula_text(shape.key, measure)} with {detail} gives "
                  + (f"{exact_key.plain()}, so n = {key.plain()}." if ask_coefficient
                     else f"{exact_key.plain()}" + (f" ~= {key.plain()}." if approximate else ".")))
+    pool = {**extra_mis, **_forward_mistakes(shape.key, measure, dims)}
+    if post:
+        pool = {k: Mis(m.reason, post(m.value)) for k, m in pool.items()
+                if m.value is not None and (not ask_coefficient or m.value.pi_exp >= 1)}
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("grid-in answers must be enterable as digits")
         return Item(template, f"{shape.short} {measure.replace('_', ' ')}",
                     _difficulty(shape, measure), seed, stem, "spr", key,
-                    key.gridin(), rationale, params=P)
-    pool = {**extra_mis, **_forward_mistakes(shape.key, measure, dims)}
-    if post:
-        pool = {k: Mis(m.reason, post(m.value)) for k, m in pool.items()
-                if m.value is not None and (not ask_coefficient or m.value.pi_exp >= 1)}
+                    key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, pick(pool, None)))
     mistakes = pick(pool, wrongs)
     choices, latex, reasons, letter = assemble(key, mistakes, rng,
                                                fmt_value=_with_unit(unit, measure, option_units))
@@ -672,7 +673,8 @@ def inverse(rng: random.Random, seed: int, *, shape_key=None, measure=None,
         if not key.is_rational:
             raise ItemError("grid-in answers must be enterable as digits")
         return Item(template, skill, _difficulty(shape, measure), seed, stem, "spr",
-                    key, key.gridin(), rationale, params=P)
+                    key, key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, pick(pool, None)))
     choices, latex, reasons, letter = assemble(key, mistakes, rng,
                                                fmt_value=decimal_text)
     return Item(template, skill, _difficulty(shape, measure), seed, stem, "mcq", key,

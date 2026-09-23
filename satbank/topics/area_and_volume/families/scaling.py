@@ -16,7 +16,7 @@ from fractions import Fraction
 
 from ....exact import E, PI, Exact
 from ....figures import cylinder_rh, two_rectangles
-from ....item import Item, ItemError, Mis, assemble, assemble_text
+from ....item import Item, ItemError, Mis, assemble, assemble_text, gridin_mistakes
 from ....shapes import UNITS, Unit, unit_noun
 from ..kit import decimal_text, pick
 
@@ -113,7 +113,8 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
         fig = two_rectangles(f"{bw.plain()} in", f"{sw} in", f"{sl} in")
         if fmt == "spr":
             return Item("GEO.similar.linear", "similar figures", "medium", seed, stem, "spr",
-                        key, key.gridin(), rationale, figure=fig, params=P)
+                        key, key.gridin(), rationale, figure=fig, params=P,
+                        spr_mistakes=gridin_mistakes(key, pick(pool, None)))
         choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
         return Item("GEO.similar.linear", "similar figures", "medium", seed, stem, "mcq", key,
                     letter, rationale, choices, reasons, latex, figure=fig, params=P)
@@ -139,7 +140,8 @@ def similar_linear(rng: random.Random, seed: int, *, presentation=None, ask=None
 
     if fmt == "spr":
         return Item("GEO.similar.linear", "similar figures", "easy", seed, stem, "spr",
-                    key, key.gridin(), rationale, table=table, params=P)
+                    key, key.gridin(), rationale, table=table, params=P,
+                    spr_mistakes=gridin_mistakes(key, pick(pool, None)))
     choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.similar.linear", "similar figures", "easy", seed, stem, "mcq", key,
                 letter, rationale, choices, reasons, latex, table=table, params=P)
@@ -212,7 +214,8 @@ def similar_area(rng: random.Random, seed: int, *, direction=None, shape=None,
 
     if fmt == "spr":
         return Item("GEO.similar.area", "similar figures", "medium", seed, stem, "spr",
-                    key, key.gridin(), rationale, params=P)
+                    key, key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, pick(pool, None)))
     choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.similar.area", "similar figures", "medium", seed, stem, "mcq", key,
                 letter, rationale, choices, reasons, latex, params=P)
@@ -309,7 +312,8 @@ def percent_change(rng: random.Random, seed: int, *, fmt=None, pct=None,
                  f"{decimal_text(key)}.")
     if fmt == "spr":
         return Item("GEO.scaling.percent", "area scaling", "hard", seed, stem, "spr", key,
-                    key.gridin(), rationale, params=P)
+                    key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, pick(pool, None)))
     choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng,
                                                fmt_value=decimal_text)
     return Item("GEO.scaling.percent", "area scaling", "hard", seed, stem, "mcq", key, letter,
