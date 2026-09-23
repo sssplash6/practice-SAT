@@ -1,0 +1,74 @@
+{
+ "label": "skeptic 1: product",
+ "key": "v2:812fdbd992e9804668510a14fe97ed237e4d2a1967588cae1fc7504c6e03d535",
+ "result": {
+  "pass": false,
+  "failures": [
+   {
+    "feature": "The one next action and doing the day across sections (scorecard rows 4-5; G1, R40, R41)",
+    "why_not_way_better": "product.md was checked against seven sibling files and never read review.md or words.md. review.md V1 adds a third launcher, 'Start review · 10 min' (source 'due', its own box). It also has a second 'Due today' list covering check-ins, relapsed, sure-and-wrong, half fixed, saved and marked, with its own cap. review.md §3.2 (row 'today T9 / R30') makes that pill the primary of Today's #mist card. So Today has three start pills: 'Study 15 min', 'Start today' and 'Start review'. That is exactly TopTierPrep's weakness 3 (no single next action). Check-ins are counted both in T2's Warm-up row and in V1's list, so the 'due' counts disagree on one page. Start today can report 'Day done' while the Review card still says '12 due today'. G6's facts gate does not compare any due count. 'Keep going · N min' means U1's box in G1 but the coach's quick set in V1. Plan's default Words task (L4, words_goal 10) and T2's 'Words due' row are not merged the way the recheck task is. So the Due list shows words twice, and the run would walk them twice. Source 'due' is missing from product.md §3.1 item 19's canonical source list.",
+    "fix": "Add R56 to product.md and §2.2. V1's capped list becomes one Due row, kind 'review'. It replaces T2's Warm-up row, because check-ins are V1 kind 1. It comes from next.due, so Up next, Start today and Review read one list. Review's page pill and Today's #mist card start that row. While a run is on, they show 'part n of the run' and are not a separate primary. Label 'Keep going' only for the box. Merge the plan's words task into the words row, as T2 already does for the recheck task. Add 'due' to §2.6 sources and to the R10 registry. Add 'due today' to G6's facts gate. Add a §3.2 table covering review.md V1 and its T9/R30 row. Acceptance: /api/today.due has one review row and no warmup row. With words_goal 10 and a plan, map(.kind) has one 'words'. /api/review/due count equals that row's progress.of."
+   },
+   {
+    "feature": "One study vocabulary for 'another question like this' (rows 9 and 20; G2, R42, R44)",
+    "why_not_way_better": "The fix exists only on paper. review.md uses retired phrases as live labels: 'Fresh one like this' as the pane's primary on T, 'Another like this', 'Try one now', 'Fresh versions', 'Redo these 5', 'Fix these' and 'Learn it'. It also adds 'See one solved' on V. words.md uses 'another like this' and 'Drill it'. In W1, T means 'Same word, new text' and Shift+T means 'Same trap, new word', both as direct actions, not Twin and Twin's menu. Those are separate twin buttons, which R44 forbids. product.md §3.2 has no rows for review.md or words.md, so S10 and S9 will build those strings and G2's grep gate will fail. 'Twin' is also a coined word. Its only explanation is a tooltip or '?' sheet, and touch devices have no tooltip. On a phone it is less clear than the phrases it replaces, which goes against decision 4's clarity rule.",
+    "fix": "Add §3.2 rows mapping every review.md and words.md label to UI.VERBS (pane primary → Twin, Try one now → Twin, Fresh versions / Redo these → Fix n or Twin this set, Learn it → Learn this type, Drill it → Twin ×5). Make W1's two axes items in UI.twin's menu ('Same word, new text', 'Same trap, new word'), with T = Twin and Shift+T = the menu. Show the verb's helper as a visible sublabel under Twin wherever the pointer is coarse, and on the first 3 uses on any device, not only in a tooltip. Extend G2's grep to the spec's §3.2 outputs, and add 'fresh one like this|learn it\\b|drill it' to it."
+   },
+   {
+    "feature": "Keyboard (row 20; R43)",
+    "why_not_way_better": "The 'one key per verb' claim is false. Details is Q in the runner (G2) but I in players (§2.8 player row, kept by G2). I is 'I'm guessing' in the runner (R54) but Details in players, and Guess in Words quizzes. Shift+T opens the Twin menu in the runner and players, but runs 'Same trap, new word' directly in Words. The duplicate check in UI.keys.register only catches the same key twice inside one scope. It cannot catch one key meaning two verbs across runner and player, which a student moves between every session.",
+    "fix": "Pick one Details key that is free in the runner, players and the global map, and use it in both. Keep I for Guess. Make Shift+T the Twin menu everywhere, Words included. Add a cross-scope check in /dev/: UI.VERBS declares each verb's key, and a key registered in runner, player or words scopes must map to the same verb id unless it is on a short, listed exception list (E eliminate vs again). Acceptance: /dev/workspace.html throws when Details differs between runner and player."
+   },
+   {
+    "feature": "Mistake loop and trap-true twins (rows 9-10; G3 rule 4, R45)",
+    "why_not_way_better": "G3's close rule lets a clean answer lower owed only when attempts.offered holds the trap's norm. offered is the list of named-distractor norms, with fillers left out (practice.md P6). Several trap kinds can never appear in it. Unsure traps have norm '~unsure'. Unnamed grid-in misses have norm ''. Slip traps come from the filler 'near-miss arithmetic slip'. Outside-logged '~unsure' traps (POST /api/mistakes/add, U2) are the same. As written, those mistakes never close. This breaks Part 3 Review acceptance 7 ('one clean fresh answer closes an unsure'), turns 'Fixed' into a dead end for whole kinds, and none of G3's acceptance checks would notice.",
+    "fix": "Scope rule 4 to kind misconception and to grid-in traps whose template has spr_mistakes. Unsure, slip and unnamed grid-in traps keep v2's rule: a clean answer on the template counts. Add acceptance for each kind: a flagged-right unsure trap closes after one clean answer, an unnamed grid-in trap closes after two, and a filler slip closes after two."
+   },
+   {
+    "feature": "Reading & Writing now, and the subject axis (row 7, row 44; G11, R51, decisions 2 and 3)",
+    "why_not_way_better": "Row 7 rates itself BELOW parity. G11 declares that R&W has no bank: POST /api/drill {subject:'rw'} returns 409 no_bank and /api/types?subject=rw returns available:false. §4 rejects logging R&W mistakes because there would be 'no twin, fix or check-in'. But words.md W1/W2 build server/rw_items.py, which generates Words in Context and Transitions items in the bank's Item shape, with a named trap on every wrong option and exact regeneration. today.md already uses rw_items.another for R&W twins in T14's two R&W slots. So an R&W generator exists, but it lives outside drill, Review, traps and /types, with Words' own mistake rows (W5). That is a second system that would have to be torn out when the R&W bank lands, which decision 3 rules out. Row 44's 'Words upgrades when merged' shows the file was never checked. §3.1 item 19 also keeps source 'word-example', which words.md removed under decision 2.",
+    "fix": "Register the rw_items templates (rw.wic.*, rw.nearly.*, transitions) as subject 'rw' in the catalogue. /api/types?subject=rw then lists them with available:true, and /api/drill {subject:'rw', topics:['words-in-context']} serves them. Their misses open traps with kind misconception, norm = W1's trap id, and subject rw, so Review, Fix n, check-ins, UI.twin and UI.questionActions work unchanged. The Results R&W row counts them. Replace the §4 rejection with this for those two skills. Drop 'word-example' from item 19. Replace row 44's placeholder with a real reconciliation of words.md."
+   },
+   {
+    "feature": "Explanations (row 8; P1 + G14)",
+    "why_not_way_better": "The WAY BETTER verdict rests on worked steps. But G14 'ships partial and grows' and P1's first milestone is 50% of U8 weight, with no floor before launch. 'The site never says a field is missing' and 'no fake steps' mean that at launch about half of the test's weight still shows a one-sentence rationale (median 21 words) plus option labels. Their 'Justification + Distractor Analysis' reads fuller. For those items we are at parity or below, and nothing in the plan stops that from shipping.",
+    "fix": "Make coverage a launch gate. I1 does not sign off until tools/bank_coverage.py reports steps (with step_of_reason) on 100% of U8 weight, or at least every template the default builder serves, with the audit passing. Put the threshold in G14's acceptance, and have product_gates fail below it. Order the topic commits so the gate is reachable inside wave 2."
+   },
+   {
+    "feature": "Phone runner and Read aloud (row 19 and row 21; R50, G8)",
+    "why_not_way_better": "R50 (product.md's own addition) moves Hint, Eliminate, Calculator, the Desmos way and Read aloud into a footer ⋯ sheet under 760 px. G8 puts Read aloud in the strip's ⋯ on every screen size. Both collapse useful tools out of sight to save space. That breaks decision 4 ('never cut, collapsed away or hidden to save space') and §2.1 rule 9 ('nothing hidden that desktop shows; it wraps or stacks instead'). Calculator is not even a practice-only tool.",
+    "fix": "Under 760 px, the tools wrap into a visible labelled second row (icon plus text, 44 px) between the question and the footer, or into a horizontally wrapping strip. Read aloud becomes a visible labelled tool in the strip wherever it is allowed. Acceptance: at 390, Calculator, Eliminate, Hint, Desmos way and Read aloud each have a visible, labelled button with no menu open."
+   },
+   {
+    "feature": "Every number explains itself (rows 13 and 35; G6)",
+    "why_not_way_better": "UI.fact's only affordance is 'a dotted underline on hover-capable pointers (nothing on touch)'. On a phone no number shows that it opens, so the working is undiscoverable on the device most students use, which breaks rule 9 and decision 4 ('explanations of a number'). Row 35 claims 'a \"?\" … beside every number', but G6 never specifies it, so product.md contradicts itself.",
+    "fix": "Give every [data-fact] a visible cue on every pointer type: a small ⓘ glyph after the value, or a persistent dotted underline, specified in F1's kit, with a 44 px hit area on touch. Update row 35 to match. Acceptance: at 390, every [data-fact] on /, /results/, /plan/ and /compete/ renders the cue."
+   },
+   {
+    "feature": "Sign-in (row 2; U19, Google rejected in §4)",
+    "why_not_way_better": "Their sign-in is Google in 2–3 taps on any device already signed in to Google. We reject that for now. Ours needs a passkey saved first. On a new device from another ecosystem (a school Windows or Chromebook machine plus an iPhone), the passkey has not synced, so it is the browser's phone-QR walk or an email code that needs SMTP. For a TopTierPrep user who switches, that is one of their features dropped and a return path that is at best equal. That is not WAY better.",
+    "fix": "Add Google Identity Services sign-in (free) as one more method on /signin/ and in the save nudge. It links to the same learner as passkeys and email, and carries over the anonymous learner on the first link. Answer open question 5 as 'yes' by default. Keep passkeys first where a platform authenticator exists."
+   },
+   {
+    "feature": "Question sources: official College Board questions (row 6)",
+    "why_not_way_better": "A free TopTierPrep student's core practice is the 1,921 official College Board Math items in filtered QBank sessions (their TTP Bank is 0 on Free). We drop in-app practice of official items entirely (§4, open question 17) and only map an ID to a type after the fact. A student who trusts official items loses that workflow, so this drops something of theirs.",
+    "fix": "Add an 'Official questions' session that never serves College Board text. The student opens each item in College Board's free question bank by its ID, from a list built from material/keys and filterable by skill and not-yet-done. They answer on our answer pad. U2's cb_id map files the pick, names the reason (2,186 of 2,367 official wrong options resolve), opens the trap and serves the trap-true Twin next. Progress per ID is kept, like their Solved filter."
+   },
+   {
+    "feature": "Content trust (row 34)",
+    "why_not_way_better": "Row 34 claims WAY BETTER because every new bank field is audited (G14). That audit covers only the Math bank. The Words content (about 1,090 definitions, about 300 W1 frames, sense features and trap tags) still has no named reviewer: open question 2 stays open in §3.1 item 35. W1's own verifier 're-checks from the same features', so wrong features pass. For the EBRW content, trust is no better than their unverified prose.",
+    "fix": "Add a Words audit to G14. Each definition and part of speech is checked against an open lexical source (for example WordNet, licence-compatible), and each frame's key and traps get a second-solver pass. Mismatches go to a human review queue. Words does not ship until the queue is empty. Name the reviewer in open question 2 and gate I1 on it."
+   },
+   {
+    "feature": "One sheet before the test (G13)",
+    "why_not_way_better": "G13 promises one printable sheet at /plan/?print=sheet. review.md V19 separately builds 'One trap sheet' at /review/print.html?sheet=traps and /plan/?print=traps, plus an exam-week card with its own 'Final check · 10'. That card overlaps T13's final stretch and L19's eve task. So there are three print URLs for overlapping content and two final-week flows, which is the scattering G13 set out to end.",
+    "fix": "One URL. V19's trap entries become G13's section 1, and /review/print.html?sheet=traps and /plan/?print=traps redirect to /plan/?print=sheet. V19's Final check becomes a Due row inside T13's final stretch, not its own card. Add these as §3.2 rows for review.md."
+   },
+   {
+    "feature": "Empty states and the first visit (row 37 and row 3; G12, R55)",
+    "why_not_way_better": "review.md V16 builds Review's own new-student sample row and 'Try one now', then offers 'Take the diagnostic'. That bypasses UI.empty, uses a retired phrase, and contradicts R55, which makes 'Start with 8' the brand-new student's first action. So Review's empty state will not match every other card's empty state or the G10 start.",
+    "fix": "Add a §3.2 row: V16 is rendered through UI.empty(host, {sample, text, action}). Its action is Twin (inline) for a returning learner, and 'Start with 8 · about 10 min' for a learner with 0 answers, instead of 'Take the diagnostic'."
+   }
+  ]
+ }
+}

@@ -1,0 +1,77 @@
+[
+ {
+  "feature": "Difficulty filter and paper rating chip (X20)",
+  "why_not_way_better": "Every paper uses the same blueprint. That covers the 7 launch forms (mocks.json follows the same TIERS 7/8/7, 3/8/11, 11/8/3 and DOMAIN_SPLIT) and every weekly paper. X20's predicted rating uses per-(template, tier) crowd accuracy, or tier defaults of 0.80/0.60/0.35 where n < 20. The db has 287 attempts, and no template has 20 or more. So every paper gets the same expected share and reads 'Typical · predicted', and 'Easier than most' and 'Harder than most' show (0), disabled. Twin seeds also average away most differences, so even a measured rating will rarely move past ±0.05. Their editorial Easy/Medium/Hard at least separates papers; ours separates nothing on day one. That contradicts scorecard row 3's 'a real rating on day one'. It is also a second difficulty model beside P11's item_ratings.",
+  "fix": "Rate each paper for the viewer: the expected right answers per module from P11's ratings.odds(learner, template, tier) over the paper's slots, e.g. 'Harder for you · expect 14/22, your usual 16'. This works from the first answer. The Difficulty options become Harder for me / About my level / Easier for me, and the crowd-measured chip is added once 20 ranked first sittings exist. Base the crowd prediction on P11's item_ratings, not new tier defaults."
+ },
+ {
+  "feature": "Paper card stat tiles (their 'People took N' and 'Your last score') and the New test cards",
+  "why_not_way_better": "X20 builds Sat by, Average, the rating, the distribution strip and the percentile from first *ranked* sittings only, with thresholds of n ≥ 20 or 30 per paper. A new paper every Monday splits a 13-learner crowd further, which is the reason §4 gives for rejecting 30 launch papers. At launch every card reads 'Sat by 0' and 'Average —', while theirs shows 'People took 1.6k'. X20 also deletes the 'Everyone: N sittings' tile from the New test cards, but decision 4 lists counts among what belongs. The thresholds also disagree: R16 shows percentiles at n ≥ 20, while §3.4 and X20 use n ≥ 30. Their date-pegged 'September Predictions' papers have no anytime equivalent either, because the Season Final is weekend-only and never joins the shelf.",
+  "fix": "Count Sat by over all first finished sittings and show '· N ranked' beside it. Keep 'Everyone: N sittings' on the T4 cards next to 'Adds'. Use R16's single threshold of 20 everywhere. When each Compete Season Final closes, add it to the shelf as a paper, e.g. 'Road to Oct 3'. Its crowd starts with the contest's sitters, and it becomes the anytime pre-exam paper."
+ },
+ {
+  "feature": "Comments modal, replaced by Questions & discussion (X21 and §2.7)",
+  "why_not_way_better": "Part 5 question 7 still asks whether to launch Discussion behind a flag until someone moderates, and v2-decisions does not answer it. So the equivalent of their Comments may ship switched off. The Questions board is meant to beat comments and be 'never empty', but it returns right:null below 20 first ranked sittings of that paper. 'Your cheapest points' needs those numbers too, so at launch the board is a list of nulls, while their Paper #47 has 8 comments. X20 already uses site-wide (template, tier) data for its prediction, but X21 has no such fallback. Spread and 'Traps of this paper' have no minimum n, so with one other sitter they reveal that person's pick.",
+  "fix": "When a paper has too few sittings, each slot uses site-wide data for its (template, tier) from all attempts. This is valid because twin papers share templates with the bank. Show '34% right on this type · 1,240 answers site-wide', the item's designed traps from its option reasons, and the median time. Switch to paper-only numbers at n ≥ 20 and label the source. Require n ≥ 5 before showing any spread share. Settle question 7 in the build: Discussion launches on, with the gate, report-to-hide and tools/moderate.py, and a named owner in Part 4."
+ },
+ {
+  "feature": "Question strip: the Save key (X9, override 49)",
+  "why_not_way_better": "X9 and override 49 bind Save to B 'in exam mode too', while A–D and 1–4 choose. In exam mode the options never lock, so B always has to choose option B. §4.10 says 'No letter key does two things', and override 49 fixed the D clash but missed this one. X9 acceptance 3 ('B on Q3 … GET /api/saved lists it') can't pass without breaking the choice of B. §2.8's practice 'B save' also contradicts practice acceptance 29 ('pressing b selects B').",
+  "fix": "In exam mode, Save is S (there is no Skip in exam mode) or Shift+S. Update §2.8's runner row, the shortcuts sheet, override 49 and X9 acceptance 3. Resolve the practice B clash the same way."
+ },
+ {
+  "feature": "Highlights and notes: type notes in a live test (X9)",
+  "why_not_way_better": "X9 shows 'Your note on this kind, Sep 12: square the radius first' under the stem of any later test question of that template, 'in both conditions'. That is a method hint, and it reveals the template during a live module. It contradicts X1 ('Test-day: Exactly the SAT: no aids') and the shared rule that no template leaks before hand-in. Ranked paper percentiles would then compare students who had personal hints with students who didn't.",
+  "fix": "Show type notes only in Training: list them under 'Training aids' and leave them absent under Test-day. Show them in both conditions in the review after hand-in."
+ },
+ {
+  "feature": "Reference and calculator docks (X9 with v2 §4.8)",
+  "why_not_way_better": "At 1180px and wider, three sets of panels compete for the screen. The calculator docks on the left at 420px. On the right go the reference dock (no width given), the grid-in rail (260px, which moves right when the calculator is docked) and the notes rail (300px). At 1280, the calculator plus the 700px column leaves 160px for all three right-side panels. There is no priority or stacking rule, and X9 acceptance 1 tests the reference alone. The layout is not buildable as written. X9 and scorecard row 28 also cite P23 for 'the formula used highlighted in review'; that mechanism is P24.",
+  "fix": "Specify one right-hand slot, 300px wide, in which the reference, the notes rail and the grid-in rail sit as tabs. Set a minimum column width of 560px. Below about 1540px, when the calculator and the right panel don't both fit, the later-opened one floats. Add an acceptance check at 1280 with the calculator docked, the reference open and a grid-in question: the column is at least 560px wide and fully in the viewport."
+ },
+ {
+  "feature": "Module sequence and the step between modules (X11, v2 §4.6)",
+  "why_not_way_better": "Module 2's clock starts only on 'Begin module 2', and #between offers Save and exit. /pause applies only to a live module, so a Test-day sitting can rest for hours or days between modules with pauses=0 and still rank. X11 puts a prediction step in the same place. Bluebook goes straight into module 2, so 'exactly Bluebook' fails, and ranked percentiles mix rested and unrested sittings. Theirs has no such hole.",
+  "fix": "Under Test-day, #between runs a visible 60-second countdown ('Module 2 starts in 0:48') with the prediction sheet inside it, then begins module 2 automatically. Begin starts it sooner. Leaving #between counts as a pause (unranked_why 'break 12:40'). Training keeps the open-ended step. Add a test_flow check that a 10-minute gap between modules unranks."
+ },
+ {
+  "feature": "Percentile and the ranked rule (X1)",
+  "why_not_way_better": "X1 unranks a sitting when the server sees a gap of more than 120 s between state saves (last_ping) while the clock ran. A Wi-Fi drop, which the v2 offline queue is built to survive ('Nothing a student does is lost'), therefore unranks a student who never left the window. The reason then reads 'away 3:10', which is false.",
+  "fix": "Stamp every queued answer and state call with the client's elapsed ms. When the queue flushes, the server measures gaps from those stamps. Only document.hidden time counts as away. Offline time is recorded separately ('offline 3:10', shown but not unranking). Add a test_flow check: a flushed queue with a 3-minute offline gap and no hidden time stays ranked."
+ },
+ {
+  "feature": "Eliminate: the long-press strike on phones (X6)",
+  "why_not_way_better": "X6 strikes an option on a 450ms long-press, but Highlights & Notes also works over option text (o:i marks), and on touch screens long-press is how text is selected. Only the swipe is suppressed while H&N is on; the long-press isn't. Blocking the native callout on .opt to make the strike work would stop students highlighting options. The interaction is undefined.",
+  "fix": "Long-press strikes only while Highlights & Notes and Scratch are both off. With H&N on, long-press selects text as usual. Add an acceptance check at 390px: with H&N on, a long-press on option B selects text and does not add .out."
+ },
+ {
+  "feature": "SPR input: the grid-in form nudge (X4)",
+  "why_not_way_better": "X4's key-blind rule warns on any decimal with 2 or more decimal digits that doesn't fill the grid and lies within 10^−d of a non-terminating k/n for n in {3,6,7,9,11,12}. That fires on 52 of the 99 two-digit decimals from .01 to .99, including clean answers like .45, .15, .64 and .85. A warning that fires on half of normal entries teaches students to ignore it. So the SPR 'WAY BETTER' verdict rests on v2's parity preview.",
+  "fix": "Warn only when the entry equals the truncation or rounding of k/n for n in {3,6,9}: 15 two-digit values (.11 .16 .17 .22 .33 .44 .55 .56 .66 .67 .77 .78 .83 .88 .89). Warn once per value per sitting. Add fixtures on web/dev/workspace.html: .45 and .64 don't warn, .66 does."
+ },
+ {
+  "feature": "Estimated score validity: exposure-first sections (X2)",
+  "why_not_way_better": "X2 fills every slot of fresh sections and module 2 with the type the student has met least, and that includes ranked Test-day sittings. For a student with history, this serves unfamiliar types every time. It pushes their estimate below what test day would give, and below new students in the fresh-section percentile. Its premise is also wrong: 'Candidates are uniform within a domain today' is false, because blueprint.fill ranks the pool by (uses in module, name), which is alphabetical order.",
+  "fix": "Use exposure-first selection in Training sittings and custom tests only. Ranked Test-day sections pick templates within each domain by a seeded shuffle, or by U8's College Board weights, with exposure only breaking ties. The lobby's 'new types' line stays. Correct the premise line."
+ },
+ {
+  "feature": "Classes and homework (X22)",
+  "why_not_way_better": "X22 puts 'Assign to a class' on every T4 card and every paper card, but it can't be built as written. S2's assign sheet offers only Practice set / Module / Full section, and §2.5 limits assignments.kind to 'set'|'module'|'section'. A paper, custom test, twin, trap test, Route-up trainer or diagnostic can't be expressed. The Test-day/Training conditions aren't a field either. §3.2's row 'Assignments of a section, module or paper' has nothing to land on.",
+  "fix": "Add 'paper' and 'custom' to assignments.kind and to S2's What field. The field lists Paper #n, Custom test, Trap test (built from each student's own traps) and Route-up trainer, with cfg {paper, conditions, timing, fresh:true}. Until S2 supports a kind, 'Assign' shows only on the cards it can express."
+ },
+ {
+  "feature": "Additive full-SAT expansion (v2-decisions 3)",
+  "why_not_way_better": "The preamble says every section payload carries `subject`, but only the habits shape includes it. It is missing from pace_plan, crowd, levers, gate, done and papers.questions (which is {module1, module2_lower, module2_upper} of [template, tier, fmt]). Neither sessions nor papers has a subject column. section_label hard-codes 'Math · Module {n} of 2', the payload says modules are '1 or 2', and the CSV columns are M1 and M2. A full SAT paper (R&W 27+27, a break, then Math 22+22) would need all of this torn out, which is what decision 3 forbids where it costs little.",
+  "fix": "Add sessions.subject DEFAULT 'math'. Key papers.questions by section: {sections:[{subject:'math', module1, module2_lower, module2_upper}]}. Put `subject` in every payload shape named above. Derive section_label and 'Module n of N' from the payload's modules list, and generate the CSV module columns from it."
+ },
+ {
+  "feature": "Cross-references to the practice upgrades (X5, X9, X18, X22, §3.2)",
+  "why_not_way_better": "tests.md cites the wrong practice upgrades: P18 for rematch (it is P19), P19 for the U key (P20), P20 for type notes with seed −1 (P21), P21 for twin share sets (P22) and P23 for the formula used in review (P24). A builder who follows the reference opens the wrong mechanism, so these upgrades aren't buildable as written.",
+  "fix": "Change the references to P19, P20, P21, P22 and P24 throughout tests.md: the preamble, scorecard rows 28 and 40, X5, X9, X18, X22 and the §3.2 rows."
+ },
+ {
+  "feature": "Calculator: the Desmos key",
+  "why_not_way_better": "Part 5 question 15 is still open, and only the public trial key exists. Their runner ships Desmos. Ours rests the calculator dock and state, X8's calculator log and P3's Desmos way on a key nobody has secured, and nothing covers the case where it is refused.",
+  "fix": "Make the production Desmos API key a launch blocker with an owner in Part 4. Spec the fallback if it is refused: a built-in scientific calculator in the same dock, and the no-calculator mode, so the runner never ships without a calculator."
+ }
+]

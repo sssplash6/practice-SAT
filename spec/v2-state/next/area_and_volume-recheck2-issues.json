@@ -1,0 +1,52 @@
+[
+ {
+  "where": "satbank/topics/area_and_volume/families/measure.py inverse(), routes['divide_one'] (square_prism, unknown h)",
+  "what": "Wording does not match the stem: 'divided by only one of the known dimensions', but the stem gives only one dimension. At inverse|None|1 (s=3, V=108, h=12) it names 36; the real slip is dividing by s instead of s squared. The previous fixer reported this and left it in.",
+  "fix": "For square_prism with unknown h, reword it to 'divided by the base edge instead of its square' (V/s), or drop divide_one from routes whenever len(known) < 2 (the triangle's own rewording stays)."
+ },
+ {
+  "where": "measure.py inverse(), routes['halve_measure'] ('halved the given area/volume instead of dividing by the known dimension')",
+  "what": "Total/2 is not a route to a dimension. Examples: triangle inverse|None|52 names 2209/2 as a base; official 2.6 names 108 as a base area (V=216, h=8); official 3.12 names 1008 as a base edge (key 12); rect_prism spr|32 names 315 as a width (key 9). The previous fixer flagged this as weak and kept it.",
+  "fix": "Drop halve_measure from grid-in routes whenever the stem gives a dimension. Keep only the square-perimeter reword 'divided the perimeter by 2 instead of 4'."
+ },
+ {
+  "where": "measure.py inverse(), routes['double_measure'] ('doubled the given ... instead of undoing the formula')",
+  "what": "Twice the given measure is typed as a length. Only square area is backed by an official distractor (source 1.2: 128 for area 64). Everywhere else there is no route: cube spr|39 names 9,826 as the edge of a 4,913 cube; square perimeter spr|51 names 512 as the side (P=256); rectangle None|35 names 648 as the length (key 12); 2.6 names 432 as a base area; 3.12 names 4,032 as an edge. For a triangle, 2A is a partial step, but 'instead of undoing the formula' misdescribes it.",
+  "fix": "Keep double_measure only for (square, area). Drop it elsewhere, or for the triangle reword it to 'doubled the area but did not divide by the base'."
+ },
+ {
+  "where": "measure.py inverse(), routes['subtract'] ('subtracted the known dimension from the volume instead of dividing')",
+  "what": "Only rectangle area is backed by an official distractor (1.7). For solids it is neither a route nor accurate wording. rect_prism spr|78 has two known dimensions (19 and 10) but names 3800-19=3781 as 'the known dimension'. prism_base 2.6 subtracts a height from a volume to name 208 as a base area. square_prism 3.12 names 2016-14=2002 as an edge (key 12).",
+  "fix": "Keep subtract only for flat area shapes (rectangle, and parallelogram or triangle if wanted). Drop it for rect_prism, square_prism and prism_base."
+ },
+ {
+  "where": "measure.py inverse(), routes['divide_twice'] ('divided by twice the known dimension')",
+  "what": "No official source backs it. It is plausible for a triangle (A/(2b)) and for square_prism h (2s mistaken for s squared), but not for a rectangle (None|35: 324/54=6), a parallelogram (spr|55: 540/54=10), prism_base (2.11: 377/26=29/2) or rect_prism (spr|32: 630/28=45/2). For square_prism s it also takes the value that belongs to the likelier 'halved after dividing instead of taking the square root' (3.12: 72 = 144/2).",
+  "fix": "Keep divide_twice only for triangle and square_prism with unknown h. For square_prism with unknown s, drop it so that 'halve' names V/(2h)."
+ },
+ {
+  "where": "satbank/topics/area_and_volume/families/coordinate.py circle_from_points(), pool['doubled'] in the grid-in path",
+  "what": "'doubled the correct value' describes the arithmetic, not a mistake. For ask=area no route gives 2r squared: spr|7 (r=3, k=9) names 18. For circumference, 4r really comes from using the diameter as the radius.",
+  "fix": "In the grid-in routes, drop 'doubled' for ask=area. For circumference, reword it to 'used the diameter as the radius'."
+ },
+ {
+  "where": "coordinate.py square_on_axes(), grid-in routes 'halved' (ask=side) and 'one_diagonal' (ask=area)",
+  "what": "Neither is a route to the answer. At spr|41 (a=6, b=8, side 10), 'halved the side' names 5. At spr|0 (a=4, b=9, area 72), 'used one diagonal only' names 18, a diagonal length typed as an area.",
+  "fix": "Pop 'halved' and 'one_diagonal' from the grid-in routes."
+ },
+ {
+  "where": "satbank/topics/area_and_volume/families/scaling.py percent_change(), pool['additive'] in the grid-in path",
+  "what": "With a 50% decrease, 'decreased the area by 50% twice, additively' names an area of 0. This happens at spr|19 (area 120) and None|18 (area 300). A student does not type 0 as the area of a copy.",
+  "fix": "Leave 'additive' out of the grid-in routes when area*(1+2(ratio-1)) <= 0."
+ },
+ {
+  "where": "measure.py inverse() 'gave the diameter instead of the radius' when finding r from an area or volume (p==2); scaling.py similar_linear _wrong_powers 'cube' for triangle perimeters and sides; coordinate.py triangle_from_points 'halved twice' and 'added the width and the height of the rectangle...'; measure.py forward square area 'squared the perimeter'",
+  "what": "These are doubtful routes with no official source. Finding r from a circle area or cone volume and then doubling it means computing the key and then changing it: inverse|None|65 names 14 for a cone with r=7. Cubing the ratio for a triangle's perimeter has no volume behind it: similar.linear spr|70 names 3750. 'halved twice' is shoelace/4 on a coordinate triangle. The brief says to drop doubtful entries.",
+  "fix": "Drop these from the grid-in routes. For the inverse diameter, keep it only where p==1 (circumference, where C/pi gives the diameter)."
+ },
+ {
+  "where": "satbank/topics/area_and_volume/kit.py gridin_wrongs (value ties among pool entries)",
+  "what": "When two routes give the same value, the first one in the pool is named, and it can be the less likely one. forward square_prism surface area with s=4 names 176 'found the volume instead of the surface area', but 'left out the two bases' (4sh) gives the same 176. Cube e=4 names 16 'squared the edge' when 4e also gives 16. collide.py lists 25 kinds of tie across the dump.",
+  "fix": "In the topic's gridin_wrongs, drop any value that two different reasons produce, or order each pool so the most likely route comes first. item.py stays untouched."
+ }
+]

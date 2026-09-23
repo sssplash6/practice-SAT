@@ -1,0 +1,17 @@
+[
+ {
+  "where": "satbank/topics/linear_equations_in_two_variables/families/solve.py, context_substitute, the d.get(\"speeds\") mistakes list (ctx 2, Cameron's drive)",
+  "what": "\"gave the second speed as the number of hours\" (A) and \"gave the first speed\" (B) are bare guesses listed before the computed routes. gridin_mistakes keeps the first reason for each value. Whenever y=1, the miles left (C-B*g) equal A, so a student who stopped at the miles left (seed 38: 370-300=70) is told they gave the second speed as the number of hours. Whenever x=1, the miles driven (B*g) equal B, so a student who computed the first leg is told they gave the first speed. This includes the official item 2.2, where 60 is named \"gave the first speed\". That is 224 plus 280 of the 1120 drive draws. A student asked for hours rarely types a speed without doing any arithmetic, so the entries are doubtful on their own as well.",
+  "fix": "Drop the two bare-speed entries (A, B) from the speeds list, or at least move them after \"gave the miles left rather than the hours they take\", \"gave the miles driven at the first speed\" and the C/A entry, so the computed route names the shared value."
+ },
+ {
+  "where": "satbank/topics/linear_equations_in_two_variables/families/solve.py, substitute, candidate order for the reversed contexts (ctx 3 parallelogram, ctx 4 rug)",
+  "what": "When the given side is twice the answer (g = 2o, e.g. 18 = 2a + 2b with a = 6, b = 3), the value 6 also comes from \"took off the two sides of length a but never halved what was left\" (18-12=6) and \"took off only one side of length a before halving\". The earlier \"gave the side length a the question already states\" names it. A student who subtracted and forgot to halve is then told they copied a (18 of 1444 draws per context).",
+  "fix": "When the stated value equals C - 2g or (C - g)/2, drop that value (it is ambiguous). Or list the computed routes before the stated-value entry for the reversed contexts."
+ },
+ {
+  "where": "satbank/topics/linear_equations_in_two_variables/families/solve.py, substitute (ctx 3, 4, 7)",
+  "what": "Low severity and never shadowing: \"gave the total itself\" (typing the perimeter or the 1,260 square inches as a count or side) and, for tiles, \"gave what one of them accounts for rather than how many there are\" (typing 7 as the number of green tiles) are copied numbers, not routes a student plausibly takes to this answer. The brief says to drop doubtful entries.",
+  "fix": "Consider suppressing \"gave the total itself\", and the coefficient entry for the tiles context, in the grid-in list, as `sides` already does for the reversed contexts."
+ }
+]

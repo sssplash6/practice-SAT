@@ -1,0 +1,92 @@
+[
+ {
+  "feature": "Redo list, replaced by V1 Due today ('a finite list that ends')",
+  "why_not_way_better": "As written, the list cannot end. review.due is 'pure over the rows' and is recomputed on every call. Three kinds leave the set once answered instead of turning into a done row:\n- Kind 7 'Mistake' requires that the template's last attempt was on an earlier local day, so answering one today removes it, and the next of the '14 more wait for later days' slides into the cap.\n- A passed check-in gets due = today + 10.\n- A half-fixed trap closes.\nSo acceptance 3 ('shows it with done == true, left one lower') fails if built literally. `left` reaches 0 only when the whole backlog is cleared, and 'Done for today' never shows.\nThree more contradictions:\n- 'Items not done roll to the top of tomorrow' contradicts the fixed kind order.\n- The kind order contradicts order:'mixed' (no two topics in a row), and acceptance 2 requires both.\n- The list is sized by cap = 0.4 × minutes_per_day, but the pill defaults to a 10-minute box. At 60 min/day that is 15 items (about 24 min) behind 'Start review · 10 min', so the file's own bar ('the whole daily job fits in ten minutes and then ends') is false for most students.",
+  "fix": "Freeze the day. review.due(learner, tz) computes membership and order from attempts made before the learner's local midnight, or writes due_days(learner, day, keys JSON) on the first read of the day. It marks items done from today's attempts. Done items stay in the list with a ✓, and waiting items never enter today's list.\nSize the list and the pill with one rule: cap = the items that fit prefs.review_minutes at the learner's median, so 'Start review · 10 min' covers today's list.\nUndone items keep their kind order tomorrow.\nThe mixed-topic rule only reorders inside the frozen list, and acceptance 2 checks that the first five match as a set, not in order.\nNew acceptance: answer every item in the cap and get left == 0 and done == cap while waiting > 0."
+ },
+ {
+  "feature": "Due badge and 'Not today' snooze (V1)",
+  "why_not_way_better": "Snoozes live only in localStorage, but due_left is computed on the server and feeds the sidebar badge, the phone top-bar chip, Me, Today's #mist card and 'Done for today' (left == 0).\nExample: snooze 3 of 12 and finish the other 9. The ring shows full, but the badge says 3 for the rest of the day, Today never shows Done, and another device shows all 12.\nThis breaks §2.1 rule 5 (one source per fact) and rule 7 (nothing is lost across devices). The open count, which R1 put on the badge, moves into a hover tooltip that touch screens never show, which hides a useful number (decision 4).",
+  "fix": "Store snoozes on the server: a snoozes(learner, key, day) table or prefs.snooze {key: day}, carried by progress.carry. U1's 'Not today' uses the same store. due_left, Today and Me leave snoozed keys out.\nShow both numbers with no tooltip-only figure: the sidebar meta reads '12 due · 25 open', and the phone chip shows both."
+ },
+ {
+  "feature": "Due today vs Today's T2 Due list, T3 Warm-up and U1's Up next box",
+  "why_not_way_better": "V1 adds a third daily spaced-review model with its own session:\n- V1: review.due, source 'due', boxes 5/10/20/All minutes, cap from 0.4 × minutes.\n- T3: progress.warmup_candidates, source 'warmup', 5 questions of check-ins and fading types.\n- U1: source 'next', boxes 5/15/30, up to 3 check-ins and up to 4 mistakes.\nCheck-ins are in all three. Today then shows T2's 'DUE TODAY · 3 of 7' (which has no Review row, so its 'minutes left' leaves the review out), a Warm-up row, Up next, and #mist's '12 due today · Start review · 10 min'.\nThis contradicts the file's own precedence rule ('spaced returns: T3's progress.warmup_candidates') and §2.1 rule 5. A student cannot tell which 'due' to clear.",
+  "fix": "Use one model.\n- review.due extends progress.warmup_candidates with V1's trap kinds (relapsed, sure-and-wrong, half fixed, saved, marked, mistakes), with one ordering and one cap.\n- T2's Warm-up row becomes this row ('Review · 12 · ~16 min') and counts in T2's done/total and minutes left.\n- Source 'warmup' becomes an alias of 'due'.\n- U1's checks and redo rows start the same body.\n- One set of box chips across the site.\nAcceptance: /api/today.due's review row, /api/me.review.due_left and /api/review/due.left are equal."
+ },
+ {
+  "feature": "Clean answers only (vs their unlimited retries): blanks from finished tests",
+  "why_not_way_better": "progress.record sets repeat only when an attempts row exists for (template, seed). Blanks are never filed, yet the finished report shows their key; the access rule even grants 'reveal' for that reason.\nSo a student can save or mark a blank, then use Again, exactly. That files a clean first answer on an item whose key they have already read. It lowers owed, counts as a check-in, and moves mastery and ratings.\nThe headline claim 'exact repeats never close a mistake or move mastery' has a hole.",
+  "fix": "In progress.record, set repeat = 1 when an attempts row exists OR the pair was on a finished sitting of this learner (the paper of any finished mock, module, diagnostic, custom test or challenge, or a flags/saved row from one). Put simply: whenever deps.access would already have returned 'reveal' before this answer.\nAcceptance: leave an item blank in a finished module, save it, re-serve it exactly and answer it right. Then attempts.repeat == 1, and owed and topic mastery are unchanged."
+ },
+ {
+  "feature": "V18 printable worksheet whose answers are filed",
+  "why_not_way_better": "S4's print view has an optional answer-key page with every option's misconception. V18 files the answers entered on /review/sheet/ as clean ('the seeds were unseen') even when the key was printed with the questions.\nSo a student can mark their own paper with the key, then file clean rights that close mistakes, pass check-ins and move mastery. v2 avoided this by not filing the answers at all; V18 removes that guard without replacing it.",
+  "fix": "A worksheet set prints without the key. The key page is offered only after Submit on /review/sheet/.\nIf the student prints it earlier through 'Print the key', set cfg.key_printed, and every answer entered afterwards files with repeat = 1.\nAcceptance: print with the key, then submit, and every attempt has repeat = 1. Print without the key, then submit, and the answers count as clean."
+ },
+ {
+  "feature": "Attempt History per try, and the Mixed status",
+  "why_not_way_better": "TTP's Attempt History lists every try ('#1 ⊗ Incorrect · Option A · 00:22', '#2 Correct …'), and their Overview shows Mixed. R20 and the practice session keep Mixed (retry mode, tries 2 and 3).\nReview has neither:\n- Its result vocabulary has no Mixed.\n- History's Result filter and item results (right|wrong|repaired|repeat plus slow|rushed|changed) have no Mixed.\n- UI.history rows show no later tries; those tries live only in the drill's served state.\nSo a retry-mode question shows in Review as just 'Wrong · picked C', which is less than their modal shows.",
+  "fix": "History items and UI.history rows carry tries: [{given, given_label, correct, ms, at}], read from the drill's served tries. The result is 'mixed' when a later try was right; the first try still counts.\nAdd Mixed to the Result filter and the summary card, and draw the R20 Mixed cell. A modal row expands to show tries 2 and 3 with the pick and the time."
+ },
+ {
+  "feature": "Clear Session",
+  "why_not_way_better": "Their Clear Session does two things: a clean redo, and removing that session's answers from the record ('Your question-bank progress from other sessions is kept').\nRematch covers the first. Nothing covers the second for practice: /discard exists only for unfinished tests, and drill answers are filed the moment they are given.\nSo these stay in mastery, Redo, the ledger, points and History forever:\n- a set someone else answered on the student's code,\n- a set started by mistake,\n- a set done with the notes open.\nSomething of theirs is dropped.",
+  "fix": "Add 'Discard this sitting's answers…' to the History sitting header's overflow and to the session summary.\n- A confirm sheet states the counts: '12 answers · 2 mistakes opened · can be undone'.\n- POST /api/session/{sid}/void sets attempts.void = 'discarded' for that session. R8 already leaves void rows out of mastery, accuracy and boards.\n- It rolls back traps whose only misses were in that session and writes a trap_log 'discarded' event.\n- The rows stay in History with a Discarded chip, and /unvoid undoes it."
+ },
+ {
+  "feature": "Volume and Timed on every source (V15)",
+  "why_not_way_better": "Three problems:\n- Their bar offers Volume 10/20/30/40/50/All. V15 offers 10 · 20 · All, so 30, 40 and 50 are gone: we have fewer options than theirs.\n- V15 puts Feedback 'At the end' on the Due, Redo and Fixed bars, but V1 and U15 say fixing drills always show the key after each answer. The spec does not say which rule wins.\n- On the Due tab, the header's 5/10/20/All-minute control and the action bar's Volume both size the same session.",
+  "fix": "- Volume: 5 · 10 · 20 · 30 · 40 · 50 · All, plus a number field.\n- Feedback only on Marked, Saved and History. Fixing sources stay instant, and the bar says so.\n- On Due, one sizing control (the minutes control), echoed in the action bar's summary."
+ },
+ {
+  "feature": "Saved tab: fresh versions of any selection (override 16)",
+  "why_not_way_better": "Override 16 deletes v2's 'Fresh versions, 1/2/3 each'. The primary becomes 'Practise due · n', and Fresh versions returns only when nothing is due.\nSo while anything is due, a student who selects 6 saved questions that are not due can only replay them exactly, which the file itself labels 'tests memory'.\nA v2 feature is cut, and the file's own claimed advantage (new numbers on any list) disappears just when the deck is in use.",
+  "fix": "Keep both actions:\n- primary 'Practise due · n' when the Due card is selected or nothing is selected;\n- always a secondary 'Fresh versions of selected · n' with 1/2/3 each ({pool:'saved', ids: selection, exact: false, each})."
+ },
+ {
+  "feature": "Their Question Score 1–7 vs our Level L1–L7 (V15)",
+  "why_not_way_better": "P11's priors put every Easy type at L2, every Medium at L4 and every Hard at L6, and its own acceptance ships every type marked 'rough'. With only a few hundred answers on the site, the Level chip opens with L1, L3, L5 and L7 empty.\nOn launch day it is Easy/Medium/Hard renamed, against their real 7-step score. The 'WAY BETTER' verdict holds only after a large number of answers arrive.",
+  "fix": "Spread the priors before launch. A one-off tools/seed_ratings.py sets item_ratings priors per (template, tier) from a stated signal:\n- measured first-try accuracy where n ≥ 5;\n- otherwise the tier prior, shifted by the template's P1 step count and by SPR vs MC.\nAdd an assert that every level L1–L7 holds at least 5% of types. Until then, the Level chip shows empty levels greyed with 0 and 'rough' in the chip label."
+ },
+ {
+  "feature": "Explanation depth in the review (their Justification + Distractor Analysis)",
+  "why_not_way_better": "Scorecard row 15's 'WAY BETTER' depends on P1 steps, which are Effort L, added template by template, with a first milestone of 50% of test weight.\nOn every template without steps, the pane and V11's worked twin show the one-sentence rationale (median 21 words) plus option labels. That is about equal to their Distractor Analysis and shorter than their Justification.\nReview does not set any coverage target, and does not say which templates get steps first.",
+  "fix": "Order the T-bank steps work by Review demand: open traps across learners × U8 weight, so the templates students actually miss get steps first.\nAdd a gate to S10's acceptance: 80% or more of open traps sit on templates with steps before the verdict is claimed.\nOn an uncovered template, the pane shows P1's option lines with values ('C · 14 · used the slope as the intercept') and the key's value line, with no Steps tab."
+ },
+ {
+  "feature": "Details popover (question ID, domain, skill, difficulty)",
+  "why_not_way_better": "Their Details shows DOMAIN. Our pane meta (v2 §8 and override 19) is topic · skill · difficulty · level · format · source · time · budget · points, and our Details holds only the address and Copy link.\nSo the pane never names the domain, which is how the SAT score report and their app group questions. Something of theirs is dropped.",
+  "fix": "Start the pane meta with the domain: 'Geometry & Trig · Circles · Arc length · ▃ Medium · L4 · …'.\nHistory rows, Marked rows and the CSV carry the domain too; history items already return it."
+ },
+ {
+  "feature": "Decision 4: nothing collapsed or cut to look lighter",
+  "why_not_way_better": "Several useful things are still collapsed or cut to save space:\n- On a phone, Level, Volume, Clock, Feedback and the secondary actions (Walk these, Drill my blind spots, Print worksheet, Ask for help, Share) sit behind an Options disclosure (v2 §11, kept by the upgrades).\n- Redo groups fold after 8 rows ('Show 7 more').\n- Your instincts' Readings stop at three, with no way to see the rest.\n- The new tile sub-lines drop v2's '2 unsure' (OPEN) and '3 not answered' (SAVED).",
+  "fix": "- Phone: show the options as a wrapping row of controls in a non-sticky block at the top of the list, with the secondary actions as a visible wrapping row. The sticky bar keeps the summary and the primary.\n- Groups show every row; the tab pages by 50 like the other lists.\n- Readings list every one that qualifies, most points first.\n- Put 'unsure' back in the OPEN tile's sub-line and 'not answered' back in SAVED."
+ },
+ {
+  "feature": "V2 walk, step 1 'Try again' (offered only when the student has not seen the key)",
+  "why_not_way_better": "Nothing records whether the student has seen a key. The report opens with answers shown (parity with theirs), so most New misses have already been read.\nBut 'New' is defined as 'from a no-feedback sitting, with diag null', not as 'key unseen'. A builder cannot tell when to offer Try again, and the 'try it again blind' step is usually not blind.\nThe report player's behaviour for a New item (reveal it, or open at What happened? like the pane) is not specified either.",
+  "fix": "Record key views: whenever UI.review reveals an item (in the report, the pane or walk step 3), POST /api/review/seen {attempt_id} sets attempts.revealed_at.\nTry again shows only while revealed_at is null.\nThe report's dialog opens a New item at What happened? with Just show me, as the pane does.\nAcceptance: open a miss in the report with answers shown, and its walk skips Try again."
+ },
+ {
+  "feature": "Results-list wrong-number chips (wrong and unanswered together)",
+  "why_not_way_better": "Their chips list wrong and blank questions together. History holds answers only, so V13's sitting cells have no stated source for blanks.\nThe walk, 'Rematch my misses', Redo and Due take wrong answers only. A module with 8 blanks sends none of them anywhere in Review, yet blanks ('didn't know how to start', 'ran out of time') are the questions a student has practised least.",
+  "fix": "- Build sitting cells from the session's paper: blanks are dashed R20 cells, each opening its item through access 'reveal'.\n- /api/review/history?group=sitting returns the blanks per sitting.\n- The sitting header gets 'Blanks · n': a fresh twin per blank template, which counts as clean.\n- The walk includes blanks as 'Didn't answer', running steps 2–4."
+ },
+ {
+  "feature": "Near-identical 'redo this sitting's misses' actions",
+  "why_not_way_better": "A History sitting header offers 'Rematch my misses · 3', 'Walk these misses' and, in its overflow, 'Fix the misses'. The report adds 'Review these 6 misses' beside 'Fix these'.\nNone of them says how it differs from the others (Then vs Now? repeats until the mistake is paid off? diagnose first?), so they read as synonyms. Decision 4 asks for things to be clearer and more straightforward.",
+  "fix": "Offer two actions, each labelled with its effect:\n- 'Walk these misses · name each, then prove it · ~9 min';\n- 'Fix on new numbers · 6 q · Then → Now' (P19 with scope misses, repeated until owed = 0, so from_session and Rematch my misses become one body).\nKeep 'Again, exactly (tests memory)' in the overflow."
+ },
+ {
+  "feature": "Blind spots (V5) vs Rushed (V12) on the same miss",
+  "why_not_way_better": "T9's inferred 'sure' is 'not a guess, and faster than 0.6 × the tier median'. V12's Rushed is 'wrong in under 25% of the budget'. A 20-second wrong answer on a 95-second question is both.\nThe pane says 'You were sure', Due ranks it as 'Sure and wrong' (kind 3, above half fixed), and History calls it 'Rushed'. A fast give-up is labelled as certainty, and the same miss gets two different verdicts.",
+  "fix": "Rushed wins over inferred sure: blind requires conf = 'sure', or the inferred rule plus ms ≥ 25% of the budget.\nFor an inferred case, the pane prints 'Fast answer · assumed sure', never 'You were sure'.\nAcceptance: a 20-second untagged miss on a medium question is rushed and not blind."
+ },
+ {
+  "feature": "V14 result strip in the pane on the Redo, Due and Fixed tabs",
+  "why_not_way_better": "The strip is 'one UI.cell per row of the current list', using R20's answer results. But rows on Redo, Due and Fixed are mistakes, not answers, and 'N next wrong' means nothing on a list where every row is a miss.\nWhat each cell shows on those tabs is unspecified, so the strip is not buildable as written.",
+  "fix": "Specify it per tab:\n- History, Marked, Saved: each cell is the row's result.\n- Redo and Due: status cells (Open ○○, Half fixed ●○, Relapsed, Stuck, Sure ✕) drawn with UI.pips.\n- Fixed: the check-in state.\nOn tabs whose rows are not answers, N means 'next not yet seen'."
+ }
+]

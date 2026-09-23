@@ -1,7 +1,9 @@
 # v2 upgrades: Today (the dashboard)
 
 Written 2026-09-23 for `spec/rebuild-v2.md` §3.2 (lines 2295–3347). It merges three designers'
-proposals (outcomes, experience, unfair advantage) into one build-ready list, T1–T20.
+proposals (outcomes, experience, unfair advantage) into one build-ready list, T1–T20. Revised
+the same day after a skeptic pass: T1, T2, T6–T9, T12–T14 and T17–T19 changed, and §3.1 entry
+32 removes the stale endpoints.
 
 * **Precedence.** `spec/v2-decisions.md` wins over this file. This file wins over §3.2 where
   they differ: §3 of this file lists every place that changes. Part 2 resolutions (R1–R38)
@@ -20,6 +22,8 @@ proposals (outcomes, experience, unfair advantage) into one build-ready list, T1
   `web/index.html`, `server/api_today.py`, `server/daily.py` and the new `server/today.py`.
 * **Subject-aware.** Per v2-decisions item 3, every new payload about a section (points,
   causes, pace, readiness, the warm-up) carries `subject` (`math` now), so R&W is additive.
+  The day's questions are keyed `{subject, fmt}` (`math:mcq`, `rw:wic`, …), so an R&W bank's
+  passage slot is one more row, not a rename (T14).
 * **Facts this file relies on** (from the code as of 2026-09-23):
   * `scoring.ANCHORS` = (0, 200), (0.25, 300), (0.5, 480), (0.75, 620), (1.0, 780). Mid-scale
     the curve rises 560 points per unit of weighted fraction.
@@ -32,6 +36,12 @@ proposals (outcomes, experience, unfair advantage) into one build-ready list, T1
     153 of 386 templates make grid-ins. 59 of 386 make more than one tier.
   * `GET /api/types/{t}/example` serves a reserved seed (900000+) that is never served in
     practice (F5), so a worked example costs no real question.
+  * `scoring.grid_equal` accepts a decimal too long for the grid only when it fills the grid
+    (5 characters, truncated or rounded): 2/3 takes .6666, .6667, 0.666 and 0.667, never 0.66.
+    T7's `'early'` entry error is that same test applied to a shorter entry.
+  * The SAT's R&W section is 54 questions in 64 minutes (71 s a question), then a 10-minute
+    break, then Math. Words in Context sits in the Craft and Structure domain, and Transitions
+    in Expression of Ideas.
 
 ---
 
@@ -44,32 +54,32 @@ dashboard (sidebar, Upgrade card, user card, floating word button) are scored in
 
 | # | Their feature | Their version | v2 spec | After these upgrades | Verdict |
 |---|---|---|---|---|---|
-| 1 | Hero banner | Blue banner: date eyebrow, time-of-day greeting with the full name, a decorative illustration. No facts, no action | Date eyebrow, greeting, `Add your name`, 4 chips (streak, minutes today, SAT in N days, plan N of M), each linking to its card | Adds a briefing line (yesterday's result, what came due, new homework or score, a skill that moved), a streak-at-risk line with a one-question action after 18:00, and a Final stretch chip (T19, T13) | v2 PARITY: the chips repeat numbers the cards show. **T19 → WAY BETTER.** The first line a returning student reads says what changed and what is owed, and each fact is one tap from its action. |
-| 2 | Single next action | None: the plan CTA, QOTD, countdown and score compete | Up next: running test, unfinished set, plan test day, or the coach's set with count and clock chips | "I have 15 minutes" builds a points-ordered session and lists its blocks before Start. Any block can be dropped. Question 1 is already on the page (T1). A new skill starts with a worked example (T4) | Better than theirs already, but v2's chooser is their QBank builder's count and timer. **T1 → WAY BETTER.** The student states their time and gets the best session that fits. The first answer is 2 taps from landing (theirs: 6–8 taps and a page change). |
-| 3 | Today's Plan card | N of M completed, X min left (Y total), All Done badge, Full Plan, a checkbox per task, "Could not start task" toast | Today list: auto-ticked from real work, progress per row, Why, Skip / Undo, Move to… | **Due today**: homework, plan tasks, warm-up, words, the day's questions, the challenge and group contests in one list with one minute total. Done rows say what they achieved and offer the repair. Every finish screen hands you the next row (T2) | v2 PARITY plus auto-tick. **T2 → WAY BETTER.** Everything owed today is in one place, with zero ticks and zero trips back to the dashboard between items. |
+| 1 | Hero banner | Blue banner: date eyebrow, time-of-day greeting with the full name, a decorative illustration. No facts, no action | Date eyebrow, greeting, `Add your name`, 4 chips (streak, minutes today, SAT in N days, plan N of M), each linking to its card | Adds a briefing line (yesterday's result, what came due, new homework or score, a skill that moved), a streak-at-risk line with a one-question action after 18:00, a Final stretch chip, and the day's receipt, open all day once earned (T19, T13) | v2 PARITY: the chips repeat numbers the cards show. **T19 → WAY BETTER.** The first line a returning student reads says what changed and what is owed, each fact is one tap from its action, and "All Done" becomes what the day achieved, points included, with one source for the points figure. |
+| 2 | Single next action | None: the plan CTA, QOTD, countdown and score compete | Up next: running test, unfinished set, plan test day, or the coach's set with count and clock chips | One `Size` row offers time (5–60 min) or count (5 · 10 · 22 · coach · Endless), both visible, beside the Timed/Untimed clock and More options. A time box builds a points-ordered session and lists its blocks before Start. Any block can be dropped. Question 1 is already on the page (T1). A new skill starts with a worked example (T4) | Better than theirs already, but v2's chooser is their QBank builder's count and timer. **T1 → WAY BETTER.** The student states their time or their count, timed or not, and gets the best session that fits. No control is hidden. The first answer is 2 taps from landing (theirs: 6–8 taps and a page change). |
+| 3 | Today's Plan card | N of M completed, X min left (Y total), All Done badge, Full Plan, a checkbox per task, "Could not start task" toast | Today list: auto-ticked from real work, progress per row, Why, Skip / Undo, Move to… | **Due today**: homework, plan tasks, warm-up, words, the day's questions, the challenge and group contests in one list with one minute total. The site's own work ticks itself. The student's own tasks (their R&W study, a tutor session) have a real checkbox, and any plan task can be marked done from ⋯ for work done elsewhere. Done rows say what they achieved and offer the repair. Every finish screen hands you the next row (T2) | v2 BELOW theirs on one point: a student's own task could never turn done. **T2 → WAY BETTER.** Everything owed today is in one place. The site ticks what it can see, the student ticks what it can't, and the counts match /plan/. There are no trips back to the dashboard between items. |
 | 4 | "Why this task?" | Expands one `aiReason` sentence | A `Why` toggle with one line (the coach's reason) | Why gives numbers: open mistakes, recent accuracy, questions a section, ≈ points, minutes at your pace, and `See the evidence` (T2) | v2 PARITY. **T2 → WAY BETTER.** A claim the student can check, not a sentence. |
-| 5 | Skip / Undo / Move a task | Skip, Mark done, Undo, Move to a later day in the same week only | Skip / Undo skip, Move to any study day up to the eve (R14), automatic completion | Adds `Swap for: Circles` (the plan's alternatives). Every edit applies at once with Undo (T2, T20) | **WAY BETTER already** (wider range, no manual done). T20 makes it instant. |
-| 6 | Two questions of the day | R&W left, Math right, the same for everyone | One MC and one grid-in Math, side by side | Adds a third slot, **Word in context** (the SAT's R&W item type, from Words), with a crowd spread and why each wrong word fails (T14) | v2 BELOW theirs for a student who thinks in 1600: no R&W at all. **T14 → WAY BETTER.** An R&W item, plus both Math formats. |
-| 7 | Answering the QOTD | A modal: select, Check, one attempt, key never highlighted, Show explanation, More practice, Done | Inline confirm mode. The key is highlighted, every option shows its misconception and crowd bar. 5 more like this, Harder, Save, Share, Report, 30 past days | After a miss, its twin is answered in place and the slot turns Repaired. A pace line: you, everyone, the SAT. A grid-in entry error is named as entry, not as a wrong idea (T14, T5) | **WAY BETTER already** in feedback. T14 means a miss ends on a right answer. |
+| 5 | Skip / Undo / Move a task | Skip, Mark done, Undo, Move to a later day in the same week only | Skip / Undo skip, Move to any study day up to the eve (R14), automatic completion | Adds `Swap for: Circles` (the plan's alternatives) and `Mark done` for work done off the site. Every edit goes through S7's one `PATCH /api/plan/{id}/tasks/{task}` and applies at once with Undo (T2, T20) | **WAY BETTER already** (wider range, automatic done). T20 makes it instant. |
+| 6 | Two questions of the day | R&W left, Math right, the same for everyone | One MC and one grid-in Math, side by side | **Four slots**: Math multiple choice and grid-in, plus two R&W slots, **Words in Context** and **Transitions**. These are the SAT's own R&W item types, generated by Words (W1, W2), and every wrong option names its trap. The R&W key word appears nowhere on the site until you answer. Each slot has a twin, and the rationale is open after every answer (T14) | v2 BELOW theirs for a student who thinks in 1600: no R&W at all. **T14 → WAY BETTER.** Two R&W questions a day from two R&W domains (Craft and Structure, Expression of Ideas) against their one, plus both Math formats. Every miss ends on a right twin. Their passage question can come from any of the 4 domains; ours covers 2 until the R&W bank lands, when an `rw:mcq` passage slot is added with no change to the others (decision 3). |
+| 7 | Answering the QOTD | A modal: select, Check, one attempt, key never highlighted, Show explanation, More practice, Done | Inline confirm mode. The key is highlighted, every option shows its misconception and crowd bar. 5 more like this, Harder, Save, Share, Report, 30 past days. The rationale is hidden behind Why after a right answer | After a miss, its twin is answered in place and the slot turns Repaired. The rationale is open after every answer, right or wrong. A pace line: you, everyone, the SAT. A grid-in entry error is named as entry, by exact equivalence, not as a wrong idea (T14, T5) | **WAY BETTER already** in feedback. T14 means a miss ends on a right answer and nothing is hidden behind a toggle. |
 | 8 | QOTD streak | A "1 day" pill; the profile says 0 | A labelled day's-questions streak from one source | Adds the best streak and the month's record against the crowd (T14) | **WAY BETTER** (one source, labelled, with a record). |
 | 9 | Study time today / this month | Two figures: 1m / 1h 13m | Four figures (today, week, month, active days) with goal bars, one local-day function | Each day also counts clean answers and mistakes fixed. **Where the time went**: minutes by domain against the test's share and against where the points are, with Rebalance (T17) | v2 PARITY: still only "how long". **T17 → WAY BETTER.** It says whether the minutes went where the points are, and fixes it in one tap. |
 | 10 | Month calendar | Round cells, today black, activity blue, cells do nothing, no navigation, drawn in UTC | Goal-relative heat, plan marks, exam mark, month nav, a day detail, keyboard | Heat by Minutes, Questions, Accuracy or Fixed. Future cells show check-ins due. The day detail names the mistakes opened and closed and has **Redo this day's misses** as fresh questions (T17) | v2 PARITY in kind (a better grid). **T17 → WAY BETTER.** Any past day becomes a set; the days ahead show the spacing. |
-| 11 | Daily / weekly goal | On the profile: "Daily 2 Hours / Weekly 12 Hours", no effect | Minute chips on Today, the same field as the plan, weekly goal = minutes × study days | A suggested goal worked out from the real workload to the exam, with its arithmetic; each chip shows its question count; "58 min a day for the 3 days left" (T17) | v2 PARITY: a number the student guesses. **T17 → WAY BETTER.** |
+| 11 | Daily / weekly goal | On the profile: "Daily 2 Hours / Weekly 12 Hours", no effect | Minute chips on Today, the same field as the plan, weekly goal = minutes × study days | A suggested goal worked out from the real workload to the exam, with its arithmetic. The workload includes the skill work the target needs, not only open mistakes. The goal is at least 15 min and is never suggested before 30 answers and a target (it says what's missing instead). Each chip shows its question count; "58 min a day for the 3 days left" (T17, T12) | v2 PARITY: a number the student guesses. **T17 → WAY BETTER.** A goal sized to the gap and the date, which never tells a student who is far behind that they have time to spare. |
 | 12 | Streaks | QOTD says 1, profile says 0 | Three labelled streaks (study, day's questions, challenge), one source each, with the best | Spare days (U16), "goal met 9 of the last 14 days", rest days shielded on the calendar and week strip, and an at-risk warning with a one-question action (T17, T19) | **WAY BETTER.** It can't disagree with itself, can't be broken by one sick day, and warns before it breaks. |
-| 13 | Study plan CTA (no plan) | "Build Your Adaptive DSAT Study Plan", 3 bullets, Build My Plan, 1 plan a cycle; the generator failed 3 of 3 times | 4 step links, a personal preview, 3 bullets, `Build my plan →` into the 4-step wizard | **Build with these**: the SAT date, daily minutes and days, prefilled from the student's data, with the first week drawn inline. One tap creates the plan and fills Due today (T18) | v2 PARITY: a button into a wizard. **T18 → WAY BETTER.** A working plan in one tap, free and unlimited. |
+| 13 | Study plan CTA (no plan) | "Build Your Adaptive DSAT Study Plan", 3 bullets, Build My Plan, 1 plan a cycle; the generator failed 3 of 3 times | 4 step links, a personal preview, 3 bullets, `Build my plan →` into the 4-step wizard | **Build with these**: where you start (your tests' average, one test, a 35-min module, the diagnostic or your own guess), the SAT date, daily minutes and days, all prefilled from the student's data, with the first week drawn inline. One tap creates the plan and fills Due today, for a student with no test too (T18) | v2 PARITY: a button into a wizard. **T18 → WAY BETTER.** A working plan in one tap, free and unlimited, from any starting point. |
 | 14 | Plan stat tiles | Days to exam, Streak, Plan complete %, Score gap "1000 now, 1400 target" | Day 12 of 45, 20% done, 10 days to the SAT, +140 to target | Adherence ("on time 9 of 10 study days") and pace status ("Behind · making +9 a week, needs +18") replace the two tiles that repeat other cards (T18) | v2 PARITY: a one-for-one copy. **T18 → WAY BETTER.** It says whether the plan is working. |
-| 15 | Week pager and day tiles | "3 / 7" pager, This week, 7 tiles with done/total or rest | The same, plus partial, missed and skipped states and the planned load | Each day shows studied-vs-planned minutes, its topics, and what it fixed and held. `Make up` on a missed day, `Work ahead` on a future one (T18) | v2 PARITY. **T18 → WAY BETTER.** |
+| 15 | Week pager and day tiles | "Week N" pager, This week, "X of Y tasks · Z%", a theme sentence, a progress bar, 7 tiles with done/total or rest | `Week 3 of 7` pager and 7 tiles with partial, missed and skipped states and the planned load; no week total and no theme | The week header `Week 3 of 7 · 8 of 12 tasks · 67%` with its bar, and the server's theme line (phase, top topics, test day), both the same figures as /plan/. Each day shows studied-vs-planned minutes, its topics, and what it fixed and held. `Make up` on a missed day, `Work ahead` on a future one (T18) | v2 BELOW theirs: it dropped their week total and theme. **T18 → WAY BETTER.** Their header, plus what each day achieved and a one-tap repair for the day it missed. |
 | 16 | Behind banner | "You have fallen behind" with Rebalance my plan (one tap) | A line and `Change daily time`, which opens the wizard | Says what the missed days cost (check-ins overdue, mistakes aging). `Catch up · 15 min` starts the fix; two previewed plan fixes apply in one tap with Undo (T18) | v2 BELOW theirs (a trip to the wizard). **T18 → WAY BETTER.** |
 | 17 | Score drift banner | Upward only, ≥ 60, Not now (3 h) / Rebuild with these scores | Plan's `suggest` (R16, ±40), Update the plan's start / Not now | The 3 sittings as dated chips, the skills that moved since the plan started, and the effect before applying ("pace needed drops from +18 to +12 a week"). Downward drift gets its own fix (T10) | v2 PARITY. **T10 → WAY BETTER.** |
 | 18 | Score progress | Current and target; stayed 0 after a 420 sitting ("Complete a full-length test…") | A band from any sitting, the scale with target and start, gap and pace, an 8-point trend, 4 domain rows | "Practice since Sep 21: ≈ +15". Evidence per domain with Sharpen. A projection cone to the exam date with an On pace / Behind verdict and made-vs-needed per week. After the SAT, the forecast against the real score (T10). **Where your points went** (T7) | v2 PARITY: it still moves only after a test. **T10 + T7 → WAY BETTER.** It moves every day, looks forward, and says why points are lost. |
-| 19 | Accuracy by domain, weakest first (their plan's Progress tab) | 4 raw-accuracy bars: "This is where your remaining time pays off most" | 4 domain rows on the Score card, with `Most points to fix` | **Points on the table**: 19 skills priced in scaled points and in the student's own minutes, one tap each. Grid-in entry and pace get their own rows when they cost points (T6) | v2 PARITY: ranked by weakness, not value. **T6 → WAY BETTER.** A skill on every test outranks a rare one at the same accuracy. |
+| 19 | Accuracy by domain, weakest first (their plan's Progress tab) | 4 raw-accuracy bars: "This is where your remaining time pays off most" | 4 domain rows on the Score card, with `Most points to fix` | **Points on the table**: all 19 skills priced in scaled points and in the student's own minutes, all visible (Top 6, then the other 13), one tap each. Grid-in entry and pace get their own rows when they cost points. The pace row is the same figure `#pace` prints (T6, T8) | v2 PARITY: ranked by weakness, not value. **T6 → WAY BETTER.** A skill on every test outranks a rare one at the same accuracy, every skill can be compared at a glance, and one fact has one number. |
 | 20 | Target editor | Wrong "current score", number input, 400–1600 bar, Save disabled until you type; targets not synced | Number + slider, quick chips, optional R&W, one target shared everywhere | **What it takes**: "700 ≈ 37 of 44 right; you're near 31", where the missing ones are, "needs the harder module 2: 14 of 22 in module 1", a pace tag on every chip, and a later date that makes it Steady (T11) | v2 PARITY: the same dialog, done right. **T11 → WAY BETTER.** The target becomes a count of questions and a route. |
 | 21 | Exam date picker | A select of 8 official dates, two already past | Upcoming official dates, Another date, Remove date | Each date shows its study days, the pace it needs with a tag, a projected score, and the registration and late deadlines. The first Steady date is marked Recommended (T12, U17) | v2 PARITY: their control without their bugs. **T12 → WAY BETTER.** Choosing a date is a decision made with data. |
-| 22 | Exam countdown | Live DD : HH : MM : SS to an unstated time | The same ticker to doors-close, a plan line, a checklist in the final week | The main figure is capacity against need: "7 study days · 5h 15m · needed: 23 mistakes, 2 sections, warm-ups · fits with 1h to spare", or "short by 1h: add 10 min a day". The ticker stays, smaller (T12) | v2 PARITY: seconds are decoration. **T12 → WAY BETTER.** It says whether the time left is enough. |
-| 23 | The last weeks | Nothing changes as the date nears; "Exam day has arrived" | A checklist from 7 days out; exam-day and passed states | **Final stretch** from 14 days: dress rehearsals, a relapse sweep of every fixed mistake, readiness per domain, no new low-value topics, a taper, the eve, a test-morning order, and after the test the scores date and the official score (T13) | v2 PARITY. **T13 → WAY BETTER.** The page changes what it asks for when it matters most. |
-| 24 | Recent tests | Total, date, R&W and Math rows, Review | Band, route tag, wrong-vs-blank chips per module linking to the question, Review, Fix N, New one like this | Why the points went (traps, slips, clock, entry, gaps), what fixing them is worth on this paper (exact re-score), time used per module and blanks at time-up, delta, percentile, total with R&W. **Retake as twin** with fixed-vs-still-wrong. Any miss chip opens its twin (T16, T5) | v2 better on misses; the score half was PARITY. **T16 → WAY BETTER.** |
+| 22 | Exam countdown | Live DD : HH : MM : SS to an unstated time | The same ticker to doors-close, a plan line, a checklist in the final week | The main figure is capacity against need, and the need includes reaching the target: "7 study days · 5h 15m · needed: 23 mistakes, 2 sections, warm-ups, reach 700: Circles, Probability, Nonlinear functions (~3h) · short by 1h 45m: add 15 min a day". Under 30 answers, or with no target, it says what it needs in order to size the work and never says "fits". The ticker stays, smaller (T12) | v2 PARITY: seconds are decoration. **T12 → WAY BETTER.** It says whether the time left is enough for the score the student wants, and it stays quiet rather than wrong when it can't tell. |
+| 23 | The last weeks | Nothing changes as the date nears; "Exam day has arrived" | A checklist from 7 days out, collapsed until the eve; exam-day and passed states | **Final stretch** from 14 days: dress rehearsals, a relapse sweep of every fixed mistake, readiness per domain, rare-skill mistakes shown as their own group with their own Fix, a taper, the eve, a test-morning order, and after the test the scores date and the official score. The test-day checklist is open from 7 days out (T13) | v2 PARITY, and its checklist was closed on the days a missing ID can still be fixed. **T13 → WAY BETTER.** The page changes what it asks for when it matters most and hides nothing. |
+| 24 | Recent tests | Total, date, R&W and Math rows, Review | Band, route tag, wrong-vs-blank chips per module linking to the question, Review, Fix N, New one like this | Why the points went (traps, slips, clock, entry, gaps), what fixing them is worth on this paper (exact re-score), time used per module and blanks at time-up, delta, percentile, total with R&W. **Retake as twin** with fixed-vs-still-wrong. Any miss chip opens its twin. All of it read from the one sittings list, `/api/history` (R26) (T16, T5) | v2 better on misses; the score half was PARITY. **T16 → WAY BETTER.** |
 | 25 | Resume a test or a set | Nothing to resume | Up next resumes a running test (clock shown) and unfinished sets | Also a Due today row; the page paints from the last visit at once (T2, T20) | **WAY BETTER already.** |
-| 26 | Mistakes on the dashboard | None (their Redo list exists only in their API) | Mistakes card: named misconceptions, hits, owed pips, Fix, Try one now | By habit across skills with Drill this habit and the gauntlet; **blind spots** (sure and wrong) first; a relapse offers Learn it; one twin sheet (T9, T5, T4) | **WAY BETTER already.** T9 fixes the habit, not the question. |
+| 26 | Mistakes on the dashboard | None (their Redo list exists only in their API) | Mistakes card: named misconceptions, hits, owed pips, Fix, Try one now | By habit across skills with Drill this habit and the gauntlet; **blind spots** (sure and wrong on a medium or hard question) first, labelled the same way as the causes bar; a relapse offers Learn it; one twin sheet (T9, T5, T4) | **WAY BETTER already.** T9 fixes the habit, not the question. |
 | 27 | Spaced review | Only vocab "Due Today" (stayed 0 after grading) | Check-ins at 3/10/30 days live in Review | **Warm-up**: 5 spaced, mixed, unlabelled retrievals every day on fresh numbers, with a forecast on the calendar and a held rate (T3) | **WAY BETTER.** Theirs cannot re-test a Math question without showing the same numbers. |
 | 28 | Time insight | "Time Analysis" on Contest Rankings, empty; the QBank stopwatch resets on reload | Nothing on Today | **Pace**: a module at your pace against 35:00, the strip showing where the clock runs out, points lost to time, slow-but-right skills with a speed drill (T8) | v2 BELOW (nothing). **T8 → WAY BETTER.** |
 | 29 | Homework | `/my-classes` exists but is hidden from the sidebar and dashboard | §2.9 says Today shows assignments due first, but §3a/§3b never list them | A Due today row with its due time; overdue rows at the top; Up next leads with homework due within 24 h (T2) | v2 missed it. **T2 → WAY BETTER.** |
@@ -93,7 +103,8 @@ checks. Learner codes in the checks start `a:v2revtoday`; `:PORT` is S3's own.
 hero  ×12
 next  ×8   | mist  ×4
 gain  ×8   | exam  ×4
-qotd  ×12             (MC + grid-in side by side, 6 + 6; Word in context full width under them)
+qotd  ×12             (MATH row: MC + grid-in, 6 + 6; READING & WRITING row under it:
+                       Words in Context + Transitions, 6 + 6)
 score ×6   | pace  ×6
 study ×8   | chal  ×4
 plan  ×8   | words ×4
@@ -104,7 +115,7 @@ unchanged). On exam day before 13:00: `hero / exam ×12 / next ×12 / …`.
 
 **Tablet (760–1079px)**, 2 columns: `hero hero / next next / qotd qotd / gain gain / mist exam
 / score pace / study study / chal words / plan plan / tests tests`. The questions of the day
-use tabs.
+use 4 tabs.
 
 **Phone (<760px)**: hero, next, qotd, gain, mist, exam, score, pace, study, plan, chal, words,
 tests.
@@ -129,15 +140,36 @@ over the last 60 days, passed into pure functions.
 **Why.** A student plans by time ("I have 15 minutes before the bus"), not by count. Theirs
 fixes daily time once in a wizard, and starting a QBank set takes 6–8 taps and a page change.
 Listing the blocks before Start shows the session is worth the minutes, and answering the first
-question on Today removes the last reason not to start.
+question on Today removes the last reason not to start. A student who thinks in questions
+("22, like a module") or wants the clock on gets that on the same row, with nothing to unfold.
 
 **Screens and components** (inside `#next`, after v2 §3a items 1–3, which still come first:
 running test, unfinished drill, plan test day; `next.queue` supplies them, see §3.2).
-* **Time seg** (`UI.seg`) under the header: `Time today: 5 · 15 · 30 · 45 · 60 min`.
-  * Default: the plan's minutes left today (`plan.today_summary`). Otherwise the daily goal
-    minus today's minutes. Otherwise 15. Rounded to the nearest option, at least 5.
-  * Helper under the 5 chip when it is selected: `Short on time? 5 minutes keeps your streak
-    and your check-ins.`
+* **Size row** under the header. It is one labelled row, and both halves are always visible:
+  ```
+  Size   Time  5 · 15 · 30 · 45 · 60 min    or    Count  5 · 10 · 22 · {coach} · Endless
+  ```
+  * The ten chips are one `role=radiogroup` named "Session size", so the arrow keys walk all
+    ten and only one chip is selected. Picking a Count chip clears the Time chip, and the
+    reverse. Time is selected by default.
+  * **Default time**: the plan's minutes left today (`plan.today_summary`). Otherwise the
+    daily goal minus today's minutes. Otherwise 15. Rounded to the nearest option, at least 5.
+    When the goal is met or the Due list is all done, the default is **15**, the same 15 the
+    pill offers (`Keep going · 15 min`).
+  * **Count** keeps v2's chips and rule: deduplicated, and `Endless` sends `count:null`. When
+    Count is picked, the coach's count is the one selected. The blocks below become a count
+    set: the preview is asked for `count` instead of `box`, and the same block rows show it.
+  * Helper under the 5-min chip when it is selected: `Short on time? 5 minutes keeps your
+    streak and your check-ins.`
+* **Clock and More options**, always beside the pill, never behind a toggle:
+  * v2's `.clock` Timed/Untimed toggle, default Untimed.
+    * An untimed box is a soft limit. The session shows U1's `12:40 left of your 15` and ends
+      after the question in progress when it reaches 0:00.
+    * A timed box is a hard countdown of the box at test pace (95 s a question, R34), with the
+      runner's pace alert on.
+    * A timed count set runs `minutesFor(count)`, as in v2.
+  * `.quiet More options` → `/practice/?topics=…&count=n&timed=0|1`, or `&box=15` for a box,
+    which opens the builder with this session preselected (v2).
 * **The plan of the session**: numbered block rows from `POST /api/drill/preview`. For example:
   ```
   1  Warm-up · 2 check-ins, 1 fading          3 q · 4 min
@@ -150,6 +182,8 @@ running test, unfinished drill, plan test day; `next.queue` supplies them, see �
   * Each row: its number, label, `count q · minutes` in DM Mono, the U4 points when known, and
     an `×` button (`aria-label="Drop Fix Added the percentages"`). Dropping re-runs the
     preview with that block key in `drop`, and the next candidate takes its place.
+  * A skill block carries v2's topic chip (`UI.chip`: glyph, open-trap dots, the 2px mastery
+    bar), so v2's chips are still on the card, on the rows they describe.
   * At 60 min with no module or section finished this week, one extra row:
     `Or a timed module · 22 q · 35 min · no test yet this week` with a `.btn Start module`.
   * With a plan, when the box is shorter than today's task: `The other 28 questions stay in
@@ -167,11 +201,8 @@ running test, unfinished drill, plan test day; `next.queue` supplies them, see �
   * When block 1 is the warm-up, the skill line reads `Mixed warm-up` until Check (T3).
   * Phone: the question is full width, option rows are 56px, and Check sits directly under the
     options.
-* **The pill** `Start · 15 min` (the region's primary) starts the same session without
-  answering in place.
-* **Kept, behind `.quiet Count instead`**: v2's count chips `5 · 10 · 22 · {coach} · Endless`,
-  the Timed/Untimed `.clock` and `More options`. Choosing a count replaces the box with a
-  count set, as in v2.
+* **The pill** `Start · 15 min` (or `Start · 22 questions`, the region's primary) starts the
+  same session without answering in place.
 * **Learn it** (T4): a `.btn Learn it · example + 3` beside the pill when the box's first skill
   block is new to the student (fewer than 5 answers).
 
@@ -180,31 +211,32 @@ running test, unfinished drill, plan test day; `next.queue` supplies them, see �
 * Preview fails: v2's coach set with its count chips and the note `Couldn't size the set.
   Here is the usual one.`
 * Rest day: the blocks and the question show, and the pill reads `Practice anyway`.
-* Goal met or Due list all done: the receipt (T19) sits above the blocks, and the pill reads
-  `Keep going · 15 min`.
-* Changing the box re-fetches the preview (debounced 200 ms). Stale rows dim to 60% until it
-  returns. The inline question is replaced only if block 1's first item changed.
+* Goal met or Due list all done: the receipt (T19) sits above the blocks, the Time chip 15 is
+  selected, and the pill reads `Keep going · 15 min`.
+* Changing the size or the clock re-fetches the preview (debounced 200 ms). Stale rows dim to
+  60% until it returns. The inline question is replaced only if block 1's first item changed.
 * A stale preview item (409 `preview_stale`): the client refetches and shows `That question
   was used elsewhere. Here's a fresh one.`
 
 **Data and endpoints.**
-* `POST /api/drill/preview {source:'next', box, drop:[key]}` (§2.6's preview, F5) returns
-  `{box, blocks:[{key, kind:'warmup'|'redo'|'skill'|'warm'|'then', label, detail, count,
-  minutes, pts}], minutes, alt:{kind:'module'}|null, plan_note|null, first:{token,
-  question}|null}`.
+* `POST /api/drill/preview {source:'next', box | count, timed, drop:[key]}` (§2.6's preview,
+  F5) takes exactly one of `box` (minutes) or `count` (a number, or null for Endless), else
+  422. It returns `{box, count, timed, blocks:[{key, kind:'warmup'|'redo'|'skill'|'warm'|'then',
+  label, detail, count, minutes, pts}], minutes, alt:{kind:'module'}|null, plan_note|null,
+  first:{token, question}|null}`.
   * Block keys are stable: `warmup`, `redo:{trap id}`, `skill:{topic}`, `warm:{topic}`,
     `then:{topic}`.
   * `minutes` per block = count × the learner's median seconds for that topic over 60 days
     (95 by default), the same rule as U1.
-* `/api/today.next` carries `{items, box:{default, options}, preview}` for the default box,
-  so the first paint needs no second call.
+* `/api/today.next` carries `{items, box:{default, options}, count:{default, options},
+  preview}` for the default box, so the first paint needs no second call.
 * **The first question** is chosen without writing anything. Its seed comes from
   `drill.preview_seed(learner, template, day)`: a walk from `sha256(learner:template:day)` that
   skips `practice_seen` and passes `deps.access`. `question` is `drill.public()` output (no
   key, rationale or reasons). Loading the page marks nothing seen and creates no session.
 * **The token** is an HMAC-SHA256 over `learner|template|seed|local day|sorted block keys`,
   with a secret F5 creates once in `kv` (`preview_secret`), base64url, 22 characters.
-* `POST /api/drill {source:'next', box, drop, first:{token, answer, ms}}`:
+* `POST /api/drill {source:'next', box | count, timed, drop, first:{token, answer, ms}}`:
   * F5 recomputes block 1's first item from the same body and checks the token (same learner,
     same local day, same item).
   * It creates the session with that item as `served[0]` and files the answer through
@@ -233,6 +265,12 @@ summary's "Next" comes from `GET /api/next` (U1 chaining).
    with "Question 2 of".
 6. At 390, `#next` is the second card, the Check button's top is within 24 px of the last
    option's bottom, and `document.documentElement.scrollWidth === 390`.
+7. On first paint at 1280, with nothing clicked, `#next` shows 10 size chips (5 Time, 5 Count),
+   the `.clock` toggle and `More options`, and has no `Count instead` control. Picking Count 22
+   leaves no Time chip selected and sends a preview with `count:22` and no `box`.
+8. With today's minutes at or past the goal: the selected Time chip is 15 and the pill reads
+   `Keep going · 15 min`. Timed on a 15-min box: `GET /api/drill/{id}` has `cfg.timed == true`
+   and `cfg.minutes == 15`.
 
 #### T2. Due today: one list, one minute total, and each finish hands you the next
 
@@ -252,20 +290,38 @@ and chaining the finish screens removes the trip back to the dashboard.
   2 or more undone rows) starts the first undone row.
 * **Groups**: with a plan, `PLAN · 1 of 2 · 22 min left of 60` (the plan's own figures, as v2),
   then `ALSO DUE`. Without a plan, one group.
+  * PLAN's `N of M` is `plan.tasks_done` of `plan.tasks_counted` from `plan.today_summary`, so
+    it equals /plan/'s day line. Plan tasks of kind `qotd` and `challenge` (Plan's uncounted
+    extras) are shown only as rows 7 and 8 under ALSO DUE, never in PLAN, and PLAN's count
+    leaves them out.
 * **Rows, in this order**:
   1. A running or out-of-time test (v2's rules).
   2. Class assignments due within 24 h, by due time: `Period 3 · Circles · 10 q · due 5:00 PM`.
      Overdue ones (up to 7 days late) read `Overdue since Tue` in ink-bold and sit at the top.
   3. Plan tasks (fix, focus, test, custom, extra), from `plan.today_summary`. The plan's
-     recheck task is rendered as the Warm-up row (T3), not twice.
+     recheck task is rendered as the Warm-up row (T3), not twice. Its `qotd` and `challenge`
+     tasks are rows 7 and 8, not twice.
   4. **Warm-up** (T3): `Warm-up · 5 questions · ~6 min · 3 check-ins due · 2 fading`. Shown
      with or without a plan whenever anything is due.
   5. **Sweep** (T13, final stretch only).
   6. Words due: `12 words due · ~3 min` (`words.today_summary`), starting S9's review run.
-  7. The day's questions: `1 of 3`.
+  7. The day's questions: `1 of 4` (`N` is the number of slots shown, T14).
   8. The challenge.
   9. Group contests closing today: `Period 3 contest · 10 q · closes 9:00 PM`.
 * **A row** keeps v2's status box, title with type tag, meta, action and ⋯ menu, plus:
+  * **your own task** (plan kind `custom`, tag `Your own`, e.g. `R&W reading · 30 min`): the
+    status box is a real `input[type=checkbox]`, `aria-label` `Mark as done` / `Mark as not
+    done`, as on /plan/. The site can't see this work, so the student ticks it.
+    * Ticking sends S7's `PATCH /api/plan/{id}/tasks/{task_id} {day, status:'done'}` at once
+      (T20) with U25's Undo toast, which sends `{day, status:'todo'}`. Unticking sends the
+      same `todo`.
+    * The task then reads `marked` (Plan's status: ink with a check and `Marked done`), and
+      its minutes join today's study time (R13), so the header's minutes left, the goal bar
+      and the hero's minutes chip move with it;
+  * `Mark done` / `Mark not done` in the ⋯ menu of a generated plan task, for work done where
+    the site can't see it (a Bluebook test, a tutor session). It sends the same PATCH, as
+    /plan/'s task menu does. It counts toward the day's status and minutes, not toward
+    question stats or mastery (Plan's rule for a manual mark);
   * the minute estimate in DM Mono: a practice or assignment count × the learner's median
     seconds, a word review 15 s (`words.minutes_today`), a test its clock, the challenge 16 min;
   * the due time when there is one;
@@ -283,7 +339,12 @@ and chaining the finish screens removes the trip back to the dashboard.
   `Next due: Warm-up · 5 · ~6 min [Start]` and `Back to Today`. Enter starts it. The item comes
   from `GET /api/next` with the just-finished key excluded (U1), so there is one rule.
 
-**Completion rules** (v2's, plus):
+**Completion rules** (v2's, plus). The site's own work ticks itself; the only ticks are the
+student's own tasks and a manual mark, for work the site can't see.
+* Own task: its box is ticked (a `done` mark; status `marked`).
+* Any plan task marked done from ⋯: done (`marked`).
+* Day's questions: every slot shown is answered (`4 of 4`, or `2 of 2` while the R&W slots
+  are absent; T14). This replaces v2's "both slots answered".
 * Homework: its assignment session is finished.
 * Warm-up: today's warm-up session is finished, or every check-in due today has been answered
   once.
@@ -296,14 +357,23 @@ and chaining the finish screens removes the trip back to the dashboard.
   first kinds from the same rows, so Up next and the list can't disagree.
 * `/api/today.due = {rows:[{key, kind, title, tag, minutes, progress:{have, of}, due_at,
   status, why:[str], evidence_href, start:{path, body}|href, result:{answered, right, fixed,
-  opened, session}|null, alternatives, task_id}], minutes_left, goal_minutes, done, total}`.
+  opened, session}|null, alternatives, task_id, own, marked}], minutes_left, goal_minutes, done,
+  total}`. `own` is true for a plan task of kind `custom` (the checkbox), `marked` for a task
+  done by a mark.
 * Sources are read through `deps.part`, so a missing module drops its rows quietly:
   `classes.due_soon(learner, tz)`, `plan.today_summary`, `words.today_summary`,
   `compete.due_today(learner, tz)`.
 
-**Uses the rest of the site.** Skip, Move and Swap use S7's `PATCH /api/plan/{id}/tasks/{task}`
-(R14), applied at once with Undo (T20). The sidebar's Today card (F2) shows the same
-`done / total` and minutes left.
+**Uses the rest of the site.** Every plan edit on Today uses S7's one
+`PATCH /api/plan/{id}/tasks/{task_id}` (R14), applied at once with Undo (T20):
+* Skip: `{day, status:'skipped'}`.
+* Mark done, or tick an own task: `{day, status:'done'}`.
+* Undo, or untick: `{day, status:'todo'}`.
+* Move: `{day, to: date}`, to any study day up to the eve.
+* Swap: the task's `alternatives`, as /plan/'s Swap topics.
+
+There is no Today-side mark table or endpoint (§3.1 entry 32). The sidebar's Today card (F2)
+shows the same `done / total` and minutes left.
 
 **Acceptance.**
 1. A learner in a class with an assignment due in 3 hours, a plan practice day and 2
@@ -316,6 +386,15 @@ and chaining the finish screens removes the trip back to the dashboard.
    button's body has `still_open: true`.
 5. Words module absent: no `words` row and no error; present with 12 due: the row reads
    "12 words due".
+6. A plan with a custom task `R&W reading · 30 min` today: its row's status box is an
+   `input[type=checkbox]` labelled "Mark as done". Ticking it sends one
+   `PATCH /api/plan/{id}/tasks/{task_id}` with `{day:<today>, status:'done'}`. After it,
+   `GET /api/plan` has that task at `status:'marked'`, /plan/ shows it done,
+   `/api/today.study.today` rose by 30, and PLAN's `N of M` rose by 1. Undo sends
+   `status:'todo'` and restores all three.
+7. With the plan's qotd and challenge extras on: PLAN's header `N of M` equals
+   `/api/today.plan.tasks_done` of `tasks_counted`, it equals /plan/'s day line, and no row of
+   kind `qotd` or `challenge` sits in the PLAN group.
 
 #### T3. Warm-up: spaced, mixed, unlabelled retrieval every day
 
@@ -443,7 +522,8 @@ skill.
 | from | body |
 |---|---|
 | Try one now (v2 §4, now this sheet) | `{pool:'redo', ids:[trap id], count:1, source:'try'}` |
-| A wrong day's question (T14, in the column itself on desktop) | `{like:{day, slot}, count:1, source:'twin'}` |
+| A wrong Math day's question (T14, in the column itself on desktop) | `{like:{day, slot}, count:1, source:'twin'}` |
+| A wrong R&W day's question (T14, in the column) | not a drill: `POST /api/qotd/another {day, slot, like:'word'}` (T14) |
 | A miss chip on a test card (T16) | `{from_session: sid, only:[qid], each:1, source:'twin', parent: sid}` |
 | The calendar day detail (T17) | `{pool:'history', ids:[attempt ids], exact:false, each:1, source:'twin'}` |
 | The finished challenge (T15) | `{from_session: sid, only:[qid], each:1, source:'twin'}` |
@@ -476,27 +556,35 @@ minutes makes the trade-off plain, and one tap starts it.
 
 **Card `#gain`** (desktop `gain ×8` under Up next; phone after the day's questions).
 * **Header**: `POINTS ON THE TABLE` on the left. On the right, `from 312 answers · updated
-  after every answer` and a `.seg By points · By minutes · By domain`.
+  after every answer` and a `.seg By points · By minutes · By domain`. The header, with the
+  seg, is sticky inside the card (`position: sticky`, just under the shell's top bar) while
+  the rows scroll past, so the sort is always one tap away.
 * **Header line**: `About +60 on the table · your top 3 together ≈ +34`. With a target:
   `Target 700 needs about 37 of 44 right; you're near 31` (U4 `need`), which opens the target
   dialog (T11).
-* **Rows** (6, then `.quiet Show all 19`, which expands in place), each `UI.skillRow`:
-  * glyph and skill name;
-  * `≈ +20` in DM Mono 18px 600, or `under 5`;
-  * a 0–100 track: an ink tick at the student's accuracy and an amber tick at 80% (the level
-    U4's gain assumes), with `52% → 80%` in mono 11px;
-  * meta: `about 4 of 44 · at least 6 right · ~9 min`;
-  * first-try accuracy by tier in mono 11px: `E 9/10 · M 6/11 · H 1/5`;
-  * the open-mistake dots (up to 3) with a count;
-  * `rough · 4 answers` when evidence is under 10 (U5);
-  * `.btn Practise · 10`: `POST /api/drill {topics:[t], count: prefs.set_length, adaptive:true,
-    source:'gain'}`.
+* **Rows**: all 19 skills, sorted by the seg, in two groups that are both always visible.
+  Nothing is folded (decision 4).
+  * `TOP 6` first.
+  * `THE OTHER 13 · ≈ +18 together` under it (the 13 as one U4 change, never a sum).
+  * Extra rows (below) sit in whichever group their points place them.
+  * Each row is a `UI.skillRow`:
+    * glyph and skill name;
+    * `≈ +20` in DM Mono 18px 600, or `under 5`;
+    * a 0–100 track: an ink tick at the student's accuracy and an amber tick at 80% (the level
+      U4's gain assumes), with `52% → 80%` in mono 11px;
+    * meta: `about 4 of 44 · at least 6 right · ~9 min`;
+    * first-try accuracy by tier in mono 11px: `E 9/10 · M 6/11 · H 1/5`;
+    * the open-mistake dots (up to 3) with a count;
+    * `rough · 4 answers` when evidence is under 10 (U5);
+    * `.btn Practise · 10`: `POST /api/drill {topics:[t], count: prefs.set_length, adaptive:true,
+      source:'gain'}`.
 * **Extra rows**, placed by their points, only when they apply:
   * `Grid-in answers · ≈ +15`, when grid-in first-try accuracy trails multiple choice by 15
     points or more over at least 10 of each. Meta `grid-ins 45% · multiple choice 71% · 12 of
     44 are grid-ins`. `.btn Practise · 10` → `{formats:['spr'], count:10, source:'gain'}`.
-  * `Pace · ≈ +10`, when U7's forecast leaves questions blank. Meta `a module takes 38:40 of
-    35:00`. `.btn See pace` scrolls to `#pace`.
+  * `Pace · ≈ +10`, when U7's forecast leaves questions blank. Its figure is
+    `estimate.time_cost(learner)` (T8), the same number `#pace` prints as `≈ −10 points from
+    time alone`. Meta `a module takes 38:40 of 35:00`. `.btn See pace` scrolls to `#pace`.
 * **By minutes** sorts by gain ÷ minutes and prints `≈ +2 a minute`.
 * **By domain** is v2's Score-card domain block, moved here: 4 rows with the mastery bar,
   `71% right of 120`, the trap dot, and `Most points to fix` on the domain with the largest
@@ -513,7 +601,7 @@ minutes makes the trade-off plain, and one tap starts it.
 * `tiers: {topic: {easy:[right, n], medium:[…], hard:[…]}}`, first tries, R8 counting;
 * `extras: [{kind:'spr'|'pace', gain, detail}]`. The grid-in gain is U4's formula applied to
   the grid-in share of the section (12/44), raising its accuracy to the MC accuracy. The pace
-  gain is `S − _interpolate(F × (22 − blanks) / 22)` with U7's forecast blanks;
+  gain is `estimate.time_cost(learner)` (T8), read from the same call, never recomputed here;
 * `by_domain: [{domain, gain, mastery, answered, right, traps}]`.
 
 **Uses the rest of the site.** Up next's reason line, the Due list's Why and T11 read the same
@@ -527,30 +615,47 @@ call it too, so the plan and Today agree (§3.2).
    a `spr` entry with `gain > 0`, and the card shows "Grid-in answers".
 3. `By domain` shows 4 rows whose `answered` equals `/api/today.domains[].answered`.
 4. With 12 answers the card reads "Answer 30 questions" and "12 of 30".
+5. A learner with 40 answers: `#gain` renders 19 skill rows under the sub-headers `TOP 6` and
+   `THE OTHER 13`, and has no `Show all` or other expand control. At 1280, after scrolling to
+   the last row, the seg is still inside the viewport.
+6. An assert in `server/checks/f4.py` for U7's seeded learner with 2 forecast blanks:
+   `gains.extras[kind=='pace'].gain == insights.pace.pts_lost`, and `#gain`'s Pace row and
+   `#pace`'s cost line print the same number.
 
 #### T7. Where your points went: every miss sorted into trap, slip, clock, entry or gap, each with its fix
 
 *From: outcomes #3, outcomes #8 (answer changes). Effort M. Builders: F4 (`progress.causes`,
-`estimate.per_question`), S3 (the block), F3 (`UI.review` pane for slips).*
+`scoring.entry_error`), S3 (the block), F3 (`UI.review` pane for slips).*
 
 **Why.** "Study more" is the wrong fix for most misses. A careless student needs to check, a
 slow one needs pace, a misconception needs fixing, and a grid-in entry error is learned in one
 drill. Theirs shows Correct / Incorrect / Unanswered, counts blanks as wrong on one card, and
 has no skill, difficulty or time per question, so they can't tell these apart.
 
-**The rule** (`progress.causes(learner, tz, days=14, session=None)`, F4). Every wrong or blank
-first try that R8 counts (not a repeat, not disputed, not void) gets one cause, first match
-wins:
+**The rule** (`progress.causes(learner, tz, days=14, session=None)`, F4, which maps the
+per-attempt `progress.cause_of(attempt, ctx)` over the window). Every wrong or blank first try
+that R8 counts (not a repeat, not disputed, not void) gets one cause, first match wins:
 1. **clock**: blank in a timed sitting, or answered in the sitting's last 90 s after under 25 s
    on the question (`qstate` ms and `made_left`, R7).
-2. **entry**: a grid-in whose value matches the key at 2 significant figures but not by
-   `scoring.grid_equal`, or equals the key in a form the grid rejects (a mixed number, more
-   than 5 characters for a positive answer or 6 for a negative one; `scoring.accepted_forms`).
-3. **slip**: the student got this template right on at least 4 of their last 5 first tries
-   before this one, or the question is easy and was answered in under half their median time
-   for easy questions.
-4. **trap**: the picked option names a misconception, or the grid-in mistake is named
-   (`spr_mistakes`).
+2. **entry**: exact equivalence only, from `scoring.entry_error(given, key)` (F4), which
+   returns `'form'`, `'early'` or None. There is no tolerance: a nearby number is never entry.
+   * `'form'`: the typed value equals the key exactly, but the grid rejects how it is written:
+     a mixed number (`1 1/2` for 3/2), or more than 5 characters for a positive answer or 6
+     for a negative one (`scoring.accepted_forms`).
+   * `'early'`: a decimal cut short. The typed answer has a decimal point and no `/`, at least
+     2 significant digits, and fewer characters than the grid holds (5, or 6 with a minus).
+     It must equal the key's exact value truncated or rounded at its own number of decimal
+     places, while the key is not exactly that value. This is `grid_equal`'s own
+     truncate-or-round test for a filled grid, applied to an entry that stopped short.
+     Examples: `.66`, `0.66` or `.67` for 2/3; `1.2` for 1.25.
+   * Not entry: `455` or `465` for 460, `154` for 150, `.7` for 2/3 (1 significant digit), and
+     `3` for 3.5 (no decimal point).
+3. **trap**: the picked option names a misconception, or the grid-in mistake is named
+   (`spr_mistakes`). A named misconception is always a trap, never a slip, so this bar and the
+   Mistakes card (T9) label the same miss the same way.
+4. **slip**: nothing named, and either the student got this template right on at least 4 of
+   their last 5 first tries before this one, or the question is easy and was answered in under
+   half their median time for easy questions.
 5. **gap**: everything else, usually a slow miss with nothing named.
 
 It returns `{subject, days, total, by:{clock, entry, slip, trap, gap}, items:{cause: [attempt
@@ -560,8 +665,8 @@ ids ≤ 40]}, lever, top_gap_topic, changes:{right_to_wrong, wrong_to_right, sit
 * `changes` counts answer changes on tests over 30 days from `qstate.trail` (R7).
 
 **Block** in `#score`, `WHERE POINTS WENT · LAST 14 DAYS`.
-* One stacked bar with 5 labelled segments and counts: `Traps 11 · Slips 4 · Clock 3 · Entry 2
-  · Gaps 6`. Segments are ink shades; the largest is orange; each carries its text label (never
+* One stacked bar with 5 labelled segments and counts, in rule order: `Clock 3 · Entry 2 ·
+  Traps 11 · Slips 4 · Gaps 6`. Segments are ink shades; the largest is orange; each carries its text label (never
   colour alone). A hidden table lists them.
 * The helper names the biggest lever: `Most of your misses are traps (11 of 26): fixing them is
   your fastest gain.`
@@ -584,10 +689,19 @@ ids ≤ 40]}, lever, top_gap_topic, changes:{right_to_wrong, wrong_to_right, sit
 * The test cards (T16) print the same rule for one sitting.
 
 **Acceptance.** In `server/checks/f4.py`, one seeded learner:
-1. A grid-in "0.66" to the key "2/3" → `by.entry == 1`. "1 1/2" to "3/2" → entry.
+1. `scoring.entry_error` asserts in `server/checks/f4.py`:
+   * `('.66','2/3')`, `('0.66','2/3')` and `('.67','2/3')` → `'early'`; `('1.2','1.25')` →
+     `'early'`;
+   * `('1 1/2','3/2')` → `'form'`;
+   * `('455','460')`, `('154','150')`, `('.7','2/3')` and `('3','3.5')` → None;
+   * `('.6667','2/3')` is right (`grid_equal`), so it is no miss at all.
+   A seeded learner with a grid-in "0.66" to the key "2/3" has `by.entry == 1`, and one with
+   "455" to "460" has `by.entry == 0`.
 2. A timed module finished with 3 blanks → `by.clock == 3`.
-3. A named wrong answer on a template the learner got right 4 of the previous 5 → slip; the
-   same answer on a new template → trap; an unnamed grid-in miss answered in 3 minutes → gap.
+3. A named wrong answer on a template the learner got right 4 of the previous 5 → trap, never
+   slip. An unnamed grid-in miss on that template → slip. The named answer on a new template →
+   trap. An unnamed grid-in miss answered in 3 minutes on a new template → gap. A fast named
+   pick on an easy question → trap, and T9 lists the same attempt's trap.
 4. `sum(by.values()) == total`, and each `items[cause]` has ids only of that learner.
 5. On `/` at 1280, clicking the Entry segment shows a button whose drill body has
    `formats:['spr']`.
@@ -607,7 +721,8 @@ empty contest page. Ours records ms on every answer in every mode (R7).
 * **Module strip**: 22 cells (`UI.strip`) in `blueprint.slots('module1', 1)` order, each with
   its tier pips. An orange vertical marker sits where the running total passes 2,100 s. Cells
   after it are dashed (the Unanswered token) with `~2 left blank`.
-* **Cost**: `≈ −25 points from time alone` (blanks × `estimate.per_question`).
+* **Cost**: `≈ −25 points from time alone` (`estimate.time_cost`, below). It is the same number
+  as `#gain`'s Pace row (T6).
 * With time to spare instead: `4:50 to spare · use it to check your last 5.`
 * **Slow but right**, up to 3 rows: `Systems of equations · 2:40 a question · 88% right`, each
   with `.btn Speed drill · 8 in 12:40` → `{topics:[t], count:8, timing:'pace', source:'pace'}`
@@ -625,8 +740,23 @@ empty contest page. Ours records ms on every answer in every mode (R7).
 * **Empty** (fewer than 20 timed answers): `Your pace shows after 20 answers with the clock on ·
   12 so far`, with `.btn Timed set · 10` (`clock: pace`).
 
-**Data.** `estimate.per_question(learner)` (F4) is the curve's slope at the student's weighted
-fraction × a medium question's weight ÷ the section's weight (≈ 12 points mid-scale).
+**Data.** The time cost is defined once, as `estimate.time_cost(learner, pace)` (F4):
+```
+pts_lost = S − _interpolate(F − Σ_blank WEIGHT[tier] × ā[tier] / W)
+```
+* `S` and `F` are U4's.
+* The sum runs over the blanked cells of **both** modules: the strip's cells after
+  `runs_out_at` in module 1, and the same count at the end of module 2 with module 2's tiers.
+  A section blanks each module, not only one.
+* `ā[tier]` is the learner's first-try accuracy at that tier (from `gains.tiers`), pulled
+  toward the overall accuracy with U4's `EVIDENCE` = 10. A blank costs only what the student
+  would have scored on it, not a sure right.
+* `W` is the section's weight on the student's route: 96 routed up (44 + 52), 80 lower
+  (44 + 36). The route is the latest sitting's, else up when F ≥ `ROUTE_UP_AT`.
+* It is rounded to 5, and it is 0 when nothing is blanked.
+* `insights.pace.pts_lost` is this value, and `gains.extras[pace].gain` reads the same call
+  (T6), so the page has one number for it.
+
 `/api/today/insights.pace` = U7's `progress.pace` plus
 `{strip:[{slot, tier, ms}], runs_out_at, blanks, pts_lost, slow_right:[…], rushing:{n, topic,
 n_topic}, tests:{modules, ran_out, blanks}, week_before_ms, guard:[topic]}`.
@@ -636,7 +766,11 @@ n_topic}, tests:{modules, ran_out, blanks}, week_before_ms, guard:[topic]}`.
    'circles'`, and the button's body has `timing:'pace'`.
 2. `runs_out_at` equals the first index where the cumulative strip ms passes 2,100,000 (an
    assert in `server/checks/f4.py`).
-3. `pts_lost` equals `blanks × per_question` rounded to 5.
+3. Asserts in `server/checks/f4.py`:
+   * `pts_lost == estimate.time_cost(learner, pace)`, and it equals `gains.extras` pace gain;
+   * with no blanks it is 0;
+   * for a learner with ā = 1 at every tier, routed up, with 2 medium blanks a module, it
+     equals `round5(S − _interpolate(F − 8/96))`.
 4. A `source:'pace'` session with accuracy 20 points below the topic's usual → the summary
    contains "accuracy first", and `/api/today/insights.pace.guard` contains the topic.
 
@@ -667,9 +801,15 @@ names no misconceptions at all.
   avoidance. A later miss in the family reopens it.
 * **Blind spots.** A trap whose latest miss was *sure* gets an ink `Sure` tag and sorts first,
   under the sub-header `BLIND SPOTS · 3` with the helper `You were sure and wrong: these never
-  get double-checked.` Sure means not a guess (R8) and either the test's `qstate.conf` said sure
-  or the answer came faster than 0.6 × the student's median for its tier. There is no new tap
-  (see Rejected).
+  get double-checked.` The latest miss is **sure** when all of these hold:
+  * it is not a guess (R8);
+  * T7 gives it the cause `trap`, so the causes bar and this card never disagree about one
+    attempt;
+  * either the test's `qstate.conf == 'sure'`, or it is a **medium or hard** question answered
+    faster than 0.6 × the student's median for that tier.
+
+  Speed alone never makes an easy question sure: a fast easy miss is T7's slip ("You know
+  these"), not a blind spot. There is no new tap (see Rejected).
 * **Relapsed** traps carry `Relapsed · learn it again`, which starts T4.
 * **Try one now** opens T5's sheet.
 
@@ -682,8 +822,11 @@ card).
    row naming both skills; its button posts `{source:'habit', habit:'whole_part', count:8}`.
 2. Five right answers in a `habit` session on 2 templates → `broken_at` is set; a later wrong
    pick in the family clears it.
-3. A trap whose missed attempt had `ms` under 0.6 × the tier median and `guess = 0` is in
-   `blind` and is the first row.
+3. A trap whose missed attempt was a medium question with `ms` under 0.6 × the medium median
+   and `guess = 0` is in `blind` and is the first row. The same on an easy question is not in
+   `blind`. A test miss with `qstate.conf == 'sure'` on an easy question is in `blind`.
+4. For every id in `blind`, T7's per-attempt rule (`progress.cause_of`, which
+   `progress.causes` maps over the window) gives its latest missed attempt `trap`.
 
 ---
 
@@ -732,8 +875,10 @@ know which domains are measured, and know whether they'll make it by the date.
 
 **Data.** `/api/today/insights.estimate = {latest, practice_delta:{pts, answers, since},
 evidence:{domain: n}, thin:[domain], projection (U9), verdict, made_per_week, needs_per_week,
-calibration|null}`. `estimate.practice_delta(learner)` recomputes U4's `S` over the attempts up
-to the latest sitting's `finished`, and now.
+calibration|null}`. `estimate.practice_delta(learner, since)` recomputes U4's `S` over the
+attempts up to `since`, and now, and returns the difference. Here `since` is the latest
+sitting's `finished`. The day's receipt (T19) calls the same function with local midnight, so
+both points-moved figures on the page come from one rule.
 
 **Acceptance.**
 1. A learner with a module on Sep 21 and 40 practice answers since, at higher accuracy:
@@ -778,17 +923,30 @@ Theirs states a wrong current score.
 *From: all three countdown and date-picker gaps, U17. Effort S. Builders: S3 (the card,
 `today.workload`), F1 (`UI.examDate`), S7 (preview `per_date`), F4 (`satdates` deadlines).*
 
-**Why.** Seconds tell a student nothing about how to study. Whether the time left covers the
-work left is the question that matters, and a date chosen with its pace and deadlines visible
-is a better decision.
+**Why.** Seconds tell a student nothing about how to study. The question that matters is
+whether the time left covers the work left, and that includes the skills the target still
+needs, not only the mistakes already made. A new student with no mistakes, 200 points short,
+must never read "fits, with 4h to spare". When the site can't size the work yet, it says what
+it needs instead of guessing. A date chosen with its pace and deadlines visible is a better
+decision.
 
 **`#exam` card.**
 * **Main figure**, capacity: `7 study days · ~5h 15m at your goal · 2 tests left`.
-* **Need against capacity**, one line:
-  * `Needed: 23 open mistakes (~1h) · 2 sections (2h 20m) · warm-ups (~40m) · fits, with
-    1h 15m to spare`;
-  * or `Short by 1h: add 10 min a day [Set 55 min]`, which sends `PUT /api/me {minutes:55}`
-    with Undo.
+* **Need against capacity**, one line, whose need includes the target:
+  * `Needed: 23 open mistakes (~1h) · 2 sections (2h 20m) · warm-ups (~40m) · reach 700:
+    Circles, Probability, Nonlinear functions (at least ~3h) · short by 1h 45m: add 15 min a
+    day [Set 60 min]`. The button sends `PUT /api/me {minutes:60}` with Undo; the value is
+    `suggest_minutes`, a chip.
+  * or, when capacity covers every item: `… · fits, with 1h 15m to spare`.
+  * **Reach {target}** is its own item, and each skill name links to its `#gain` row. When no
+    skill work is needed, it reads `reach 700: covered at your current accuracy`. When every
+    skill at 80% still falls short, it reads `reach 700: all 19 skills to 80% (at least ~31h),
+    and more past 80%`, and the line never says `fits`.
+  * **Not sized yet**. The capacity figure still shows, but neither `fits`, `short by` nor a
+    suggested goal is printed:
+    * under 30 answers (U4's `gains` is null): `Answer 30 questions to size the work · 12 of
+      30`, with the coach's set;
+    * no target: `Set a target to size the work` with `.btn Set target` (the T11 dialog).
 * **The ticker** (v2's `DD : HH : MM : SS` to doors-close) stays under it at `.num` 28px, with
   its caption.
 * **Registration** (U17): `Register for Nov 7 by Oct 23 · 5 days left`, with `I've registered`
@@ -804,10 +962,27 @@ is a better decision.
 * capacity = the remaining study days' planned minutes before the eve (the plan's days, else
   `profile.minutes` × the study days, else the 7-day average × the days);
 * need = open traps × 2 × median seconds + check-ins due before the exam × median + the tests
-  left (the plan's, else T13's rehearsals) × their clocks + warm-ups (size × median × study days);
-* `{study_days, capacity, need:{traps, checks, tests, warmups}, fits, short_by, add_per_day,
-  suggest_minutes}`. All of it is workload at the student's own pace; nothing is converted into
-  points.
+  left (the plan's, else T13's rehearsals) × their clocks + warm-ups (size × median × study
+  days) + **to target**;
+* **to target** = `estimate.need(target).path` (F4, extending U4's `need`), the skill work the
+  target takes:
+  * Take U4's skills in gain order. Raise one more skill to 80% at each step, as one U4 change
+    (never a sum of gains), until `F′ ≥ F*`. `F*` is `need`'s inverse of the target, the same
+    F\* behind T11's `700 ≈ 37 of 44 right`.
+  * Its minutes are the sum of those skills' U4 `minutes` (`to_strong` right answers at the
+    learner's median). U4 counts right answers only, so the figure is a floor, printed
+    `at least`.
+  * The open-trap term already covers fixing those mistakes. The overlap is left in, which
+    errs toward more time, never less.
+* `{study_days, capacity, sized, unsized:'answers'|'target'|null, answers:{have, of:30},
+  need:{traps, checks, tests, warmups, target:{target, skills:[topic], minutes,
+  reachable}|null}, fits, short_by, add_per_day, suggest_minutes}`.
+  * `sized` is false while `gains` is null or there is no target. Then `fits`, `short_by`,
+    `add_per_day` and `suggest_minutes` are null.
+  * `suggest_minutes` = Σ need ÷ study days, rounded up to a chip value, **at least 15** (the
+    smallest chip).
+  * All of it is workload at the student's own pace. Points appear only as the target the work
+    is sized to.
 * The popover reads `POST /api/plan/preview` `per_date` (with or without a plan: the preview
   takes the profile as a draft).
 
@@ -818,6 +993,15 @@ is a better decision.
 3. The popover's rows each contain "study days" and a tag; with `satdates` deadlines present,
    "register by".
 4. The SEC box still ticks within 1.1 s (v2 check 20).
+5. A learner with 40 answers, no open traps, no sittings, exam today + 30 and a target 200
+   points above `_interpolate(F)`: `need.target.minutes > 0`, `need.target.skills` is
+   non-empty and in gain order, the line contains "reach 700", and `fits` is true only when
+   `capacity ≥ Σ need` including the target term.
+6. With 12 answers: `sized == false` and `unsized == 'answers'`, the card shows "Answer 30
+   questions to size the work · 12 of 30", and neither "fits" nor "Suggested" appears on `/`.
+   With 40 answers and no target: `unsized == 'target'` and the card shows "Set a target".
+7. An assert in `server/checks/s3.py`: `suggest_minutes` is null or ≥ 15, for a sweep of
+   need and capacity values that includes a need of 5 minutes.
 
 #### T13. Final stretch: from 14 days out, Today changes what it asks for
 
@@ -839,18 +1023,28 @@ the rehearsals, and no second schedule is made.
 * **Layout**: `#exam` moves to full width under the hero.
 * **Dress rehearsal**, on each Saturday before the exam that leaves at least 6 days (at most
   2). That morning Up next leads with `Dress rehearsal · full Math section · 44 q · 70 min ·
-  start around 8:30, like the real day`, pill `Start section` (`POST /api/mock/new
-  {kind:'section', timing:'official'}` → the lobby). `.btn Add to calendar` downloads
-  `UI.ics(event)` for that Saturday at a time the student picks (default 08:30, 90 min with the
-  break). Without a plan, Due today lists it that day.
+  at the time your Math section will start (after R&W and the break)`, pill `Start section`
+  (`POST /api/mock/new {kind:'section', timing:'official'}` → the lobby).
+  * `.btn Add to calendar` downloads `UI.ics(event)` for that Saturday, 90 min with the break.
+  * Its time field reads `Pick your time`, with the helper `On test day Math starts after
+    Reading and Writing (64 min) and a 10-minute break.`
+  * It has no default time and makes no clock claim until the real Math start is verified
+    (open question). The verified start then becomes the default.
+  * Without a plan, Due today lists it that day.
 * **Relapse sweep**: every trap closed in the last 90 days (not dismissed) gets one fresh twin,
   spread evenly over the study days left before the eve. The Due row reads `Sweep · 5 of 34
   fixed mistakes today · ~8 min` → `{pool:'checks', sweep:true, count:5}`. A trap counts as
   swept once any attempt on its template comes after the stretch began. A miss reopens it as
   Relapsed.
 * **Warm-up** grows to 8.
-* **Fix** lists only traps on skills with 2 or more questions a test (U4 `per_test`), by gain.
-  The rest: `11 mistakes on rare skills are parked until after Nov 7 · Show`.
+* **Fix, in two visible groups** on `#mist`, both expanded, neither behind a Show:
+  * `WORTH FIXING NOW · 12 · ≈ +60`: traps on skills with 2 or more questions a test (U4
+    `per_test`), by gain, with `.btn Fix all · 24`. Up next's boxes, the plan's fix task and
+    the Due list draw only from this group.
+  * `RARE SKILLS · after Nov 7 · 11`: the other traps, each as a normal row (name, hits, owed
+    pips, `Try one now`), with the helper `About 0.5 of 44 a test each: after the SAT, or now
+    if you have time.`
+    * Its own `.btn Fix · 22` sends `{pool:'redo', ids:[those trap ids]}`.
 * **No new rare skills**: the coach's `new` pick is suppressed with the line `Not starting
   Evaluating statistical claims: about 0.5 of 44 a test, 12 days left.` and `.quiet Practise
   anyway`.
@@ -862,11 +1056,15 @@ the rehearsals, and no second schedule is made.
   * `Untested for 14 days`.
 * **The countdown adds** `2 rehearsals left · 9 check-ins due · 12 mistakes worth ≈ +60`.
 * **Taper** (7–2 days): boxes draw only from the warm-up, the sweep and open traps (U1's final
-  week drops probe and untried). The time seg's default caps at 30.
+  week drops probe and untried). The Size row's default time caps at 30.
+* **Test-day checklist, open from 7 days out**: v2's `<details>` is replaced by an open list
+  in `#exam`, headed `TEST-DAY CHECKLIST · 3 of 7`, from exam − 7 through exam day. The days
+  when a missing ID or ticket can still be fixed are the days it must be seen. The ticks stay
+  in v2's localStorage key.
 * **Eve**: Up next is `Light warm-up · 5 from your strongest skills · ~8 min`, then `Done for
-  today. Sleep does more than cramming now.` The checklist opens with a `Night before` group:
-  `Bluebook opened and updated today`, `Admission ticket saved`, `Alarm set` (wording to verify,
-  open question 10).
+  today. Sleep does more than cramming now.` The checklist adds a `Night before` group at its
+  top: `Bluebook opened and updated today`, `Admission ticket saved`, `Alarm set` (wording to
+  verify, open question 10), and the heading counts all 10.
 * **Exam day before 13:00**: the order becomes hero, exam (the countdown to doors and the open
   checklist), next (`Warm-up · 5 easy · untimed · ~7 min` from the strongest skills), then every
   other card in its usual order. Nothing is collapsed (decision 4).
@@ -876,73 +1074,184 @@ the rehearsals, and no second schedule is made.
   returns.
 
 **Data.** `/api/today.next.stage = {mode, days, rehearsals:[{day, done}], sweep:{total, today,
-done}, parked}`.
+done}, rare:{n, ids, until}}`. `/api/today.traps` carries the two groups as `now` and `rare`.
 
 **Acceptance.**
 1. Exam today + 12: `stage.mode == 'stretch'`; `/api/next` items contain no kind `untried` or
    `probe`; the Up next reason never reads "New skills".
 2. Three traps closed 20 days ago → a Due row of kind `sweep`; the body has `sweep:true`.
 3. On the rehearsal Saturday, `/api/today.next.items[0].title` starts "Dress rehearsal".
-4. Exam today + 1 → Up next's title starts "Light warm-up"; the checklist `<details>` is open
-   with 3 more items.
+4. Exam today + 1 → Up next's title starts "Light warm-up"; the checklist shows the 3 Night
+   before items, and its heading reads "of 10".
 5. Exam today, 07:00 local: `#exam` is the second card in DOM order, and all other cards are
    present and expanded.
+6. Exam today + 6: `#exam` contains the checklist with no closed `<details>` (none at all), its
+   7 checkboxes are visible, and the heading reads "Test-day checklist · 0 of 7". At today + 8
+   there is no checklist.
+7. Exam today + 12 with 3 traps on 2+-a-test skills and 2 on rare ones: `#mist` shows both
+   group headings and all 5 rows without a click. The rare group's Fix body has exactly those
+   2 trap ids.
+8. The rehearsal line contains "after R&W and the break" and no clock time, and its `.ics` time
+   field is empty until the student picks one.
 
 ---
 
 ### D. The daily items
 
-#### T14. The day's questions: pace, a twin in place, entry errors named, and a word in context
+#### T14. The day's questions: four slots (two Math, two R&W), a twin in place, entry errors named, the rationale always open
 
-*From: the QOTD gaps of all three designers, unfair-advantage #3. Effort M. Builders: S3
-(`daily.py`, the card), S9 (the word item and its grading), F3 (the in-column twin), F4
-(`scoring.accepted_forms`).*
+*From: the QOTD gaps of all three designers, unfair-advantage #3, the skeptic pass. Effort M.
+Builders: S3 (`daily.py`, the card, `POST /api/qotd/another`), S9 (`rw_items.item`,
+`rw_items.transition`, `rw_items.another`, `words.daily_item`, `words.record_daily`), F3 (the
+in-column twin), F4 (`scoring.accepted_forms`, `scoring.entry_error`).*
 
-**Why.** Theirs gives an R&W question beside the Math one; ours had none. A miss should end on
-a right answer. A grid-in entry mistake is a different fix from a wrong idea. Knowing your time
-against everyone's builds pace.
+**Why.** Theirs gives an R&W question beside the Math one; v2 had none. We have no R&W bank
+yet, but Words already generates the SAT's two vocabulary-and-logic R&W item types (W1, W2):
+Words in Context (Craft and Structure) and Transitions (Expression of Ideas). Each option is
+checked by rule, and every wrong one names its trap. So the day can carry both Math formats
+and two R&W domains. A miss should end on a right answer. A grid-in entry mistake is a
+different fix from a wrong idea. Knowing your time against everyone's builds pace. And a daily
+question is worthless if its answer is printed one card over.
 
-**Changes to `#qotd`.**
-* **Third slot, `WORD IN CONTEXT`**: the day's SAT word as an In-context item from Words (S9):
-  a 2–3 sentence text with a blank, "Which choice completes the text with the most logical and
-  precise word?", 4 words of the same part of speech. It is the same for everyone.
-  * Desktop: under the two Math columns, full width, choices in a 2×2 grid. Below 1080px: a
-    third tab.
-  * After answering: the key, why each wrong word fails, the crowd spread (`UI.spread`, F1),
-    `Add to my words` and `3 more like this` (a Words In-context quiz on that word's group).
-  * It counts toward `N of 3` and the Due row. The day's-questions streak rule (one on-time
-    answer) is unchanged.
-  * Until S9 ships `words.daily_item`, the slot is absent and the card keeps 2 slots.
-  * Only the SAT word appears; the math word of the day from the Words spec is dropped
-    (decision 2).
-* **Pace line** after the reveal (when the crowd has 5 or more): `You 1:12 · everyone 0:58 ·
-  SAT pace 1:35`.
-* **After a miss**: the first action becomes `Now its twin`, answered in the same column (T5).
-  A right twin gives the slot mark the ↻ corner. It never counts in the crowd or the streak.
-* **Entry errors**, for a grid-in: `Right value, rejected form: you entered 1 1/2. The grid
-  takes 3/2 or 1.5.` or `Stopped too early: .66 for 2/3 needs 4 characters (.666 or .667).`
-  The answer is still wrong, as the SAT marks it.
-* **Header meta**: `3 in a row · best 11 · 19 of 23 right this month · crowd 61%`.
-* The past-days strip carries a third mark per day.
+**Slots.** A slot is `{subject, fmt}`, and its id is `{subject}:{fmt}`. All four are the same
+for everyone on the same local date.
+
+| id | label | item | session |
+|---|---|---|---|
+| `math:mcq` | `MATH · MULTIPLE CHOICE` | `daily.question(day, 'mcq')` | `qotd:{day}` (kept, so history stays valid) |
+| `math:spr` | `MATH · GRID-IN` | `daily.question(day, 'spr')` | `qotd-spr:{day}` (kept) |
+| `rw:wic` | `R&W · WORDS IN CONTEXT` | `words.daily_item(day, 'wic')` (W1, W21) | `qotd:rw:wic:{day}` |
+| `rw:transition` | `R&W · TRANSITIONS` | `words.daily_item(day, 'transition')` (W2, W21) | `qotd:rw:transition:{day}` |
+
+* New slots use `qotd:{subject}:{fmt}:{day}`, and late answers use `qotd-late:{id}:{day}`.
+* `slot:'mcq'` and `slot:'spr'` stay accepted as aliases of `math:mcq` and `math:spr`, in
+  requests and in stored rows, so v2 clients and history keep working.
+* When the R&W bank lands, its passage question is a new slot `rw:mcq` with its own session.
+  Nothing collides and nothing is renamed (decision 3).
+* An R&W item is Words' generated Item: a 2–3 sentence text, the SAT's own stem ("Which choice
+  completes the text with the most logical and precise word or phrase?", or the Transitions
+  stem), and 4 options, each wrong one carrying a named trap (W1) or a named wrong logic (W2).
+* **R&W is not optional.** The R&W slots depend on S9's generators, which are stdlib-only.
+  Under wave 2's contract they degrade quietly only until S9 merges: while
+  `deps.part('words', 'daily_item')` is missing, the card shows the two Math slots and `N` is 2.
+  I1's walk requires all four, so Today never ships Math-only.
+
+**The key is never on the page before the student answers.**
+* The Words in Context key word is drawn by `sha256('qotd:rw:wic:' + day)` over SAT words that
+  have at least 2 in-context frames, so its twin always exists. The frame is drawn from that
+  word's legal frames, and the seed from W21's `sha256('wic:' + day)`. The transition's family
+  and seed come from `sha256('qotd:rw:transition:' + day)`.
+* This one item is also the Word of the day on `/words/` (W21), answered once for both pages.
+  Until this learner has answered it, nothing names or defines its key:
+  * `/api/words/today.wic.word` is null;
+  * Today's Words tile names neither item's key. Words' override 42 gives it the line
+    `Transition of the day · answer it`; on Today that line becomes `Word and transition of
+    the day · in the day's questions ↑`, a link to `#qotd`'s R&W row (§3.2);
+  * the options carry no key marker (no class, `data-` attribute or `aria` state);
+  * no gloss, tap-to-define, Add to my words or word sheet on `/` names it.
+* After answering, the verdict names the word and its meaning, and Add to my words appears.
+
+**Layout.**
+* Desktop (≥1080px): a `MATH` row with MC and grid-in side by side (6 + 6), then a
+  `READING & WRITING` row with Words in Context and Transitions side by side (6 + 6). R&W
+  options sit in a column (A–D), as in Words' quiz item.
+* Below 1080px: 4 tabs, `MC · Grid-in · Words · Transitions`, each with its status mark. They
+  open on the first unanswered slot.
+* The past-days strip carries one mini mark per slot, 4 a day.
+
+**After answering, every slot, right or wrong** (this replaces v2's "rationale open when wrong,
+behind `Why` when right"; decision 4):
+* The key is highlighted, the pick is struck, and the named mistake is shown.
+* The explanation is **open** after every answer:
+  * Math: the rationale, and every option's misconception line (v2);
+  * R&W: all four options' reasons at once (W1: no toggle). Words in Context also lights the
+    clue span with its "Clue: …" line. Transitions also lights the two idea spans with the
+    relation label (W2).
+* **Crowd**:
+  * Math, as v2;
+  * R&W: the pick spread (`UI.spread`, F1), each wrong option labelled with its trap, and
+    `52% right · 31% chose a too-strong word`. Shown from 5 on-time answers, as Math.
+* **Pace line** (crowd ≥ 5): `You 1:12 · everyone 0:58 · SAT pace 1:35`. R&W uses `SAT pace
+  1:11` (64 min ÷ 54 questions).
+* **Actions**:
+  * Math: v2's `5 more like this`, `Harder`, Save, Share and Report.
+  * R&W: `Add to my words` (the key), `5 more like this` (a Words quiz run of that format,
+    W1 / W2), Share and Report.
+
+**After a miss: `Now its twin`** becomes the first action. It is answered in the same column
+(T5):
+* Math: `POST /api/drill {like:{day, slot}, count:1, source:'twin'}` (T5's table).
+* R&W: `POST /api/qotd/another {day, slot, like:'word'}` (S3). It calls `rw_items.another(prev,
+  like='word')` (W1): the same key word in a different frame, or the same logic in a new text.
+  * It returns `{item, token}` with W1's sample token.
+  * The answer goes to W1's `POST /api/words/sample/answer {token, answer, ms}`, which files
+    one `word_reviews` row (mode `sheet`) under W1's rules.
+  * A second action, `Same trap, new word` (`like:'trap'`), gives the trap or the pair of
+    logics the student fell for, with a different key.
+* Both are 409 until the slot is answered. The ≥ 2 frames rule, and 5 or more variants per
+  transition family, mean a twin always exists. If `another` still finds none, the action reads
+  `No twin for this one` and is disabled.
+* A right twin gives the slot mark the ↻ corner. It never counts in the crowd or the streak.
+
+**Entry errors**, for a grid-in (T7's `scoring.entry_error`). The answer is still wrong, as
+the SAT marks it.
+* `'form'`: `Right value, rejected form: you entered 1 1/2. The grid takes 3/2 or 1.5.`
+* `'early'`: `Stopped too early: .66 for 2/3. Fill the grid: .6666, .6667, 0.666 or 0.667.`
+
+**The rest of the card.**
+* **Header meta**: `3 in a row · best 11 · 71 of 88 right this month · crowd 61%`.
+* **Due row and completion**: `The day's questions · 1 of 4`. It is done when every slot shown
+  is answered. Its Why reads `The same 4 for everyone, one try each` (N is the slots shown).
+* **The streak rule** (one on-time answer in any slot) is unchanged. `daily.qotd_streak`
+  reads all four slots' sessions, so the R&W slots' `word_reviews` rows count too.
 
 **Data.**
-* `GET /api/qotd` slots add `{slot:'word', question}` when `deps.part('words', 'daily_item')`
-  exists; `question` has no key or reasons.
-* `POST /api/qotd {slot:'word', answer, day, ms}` is filed through `words.record_daily` (S9,
-  a `word_reviews` row with session `qotd-word:{day}`), once per day, with the same grace and
-  late rules.
-* Feedback adds `crowd.median_ms` (on-time answers), and for grid-ins
-  `entry:{kind:'form'|'early', text}|null` from `scoring.accepted_forms` and the grid rule.
-* `GET /api/qotd` adds `month:{right, of, crowd_pct}` and `best`.
+* `GET /api/qotd` → `{day, late, streak, best, month:{right, of, crowd_pct}, slots:[{slot,
+  subject, fmt, label, question, mine}], past:[{day, marks:{slot id: 'right'|'wrong'|null}}]}`.
+  * `question` never carries a key, reasons, traps or seed.
+  * An R&W `question` is Words' public item (`{item_id, kind, head, text, stem, choices}`, no
+    target slug).
+* `POST /api/qotd {slot, answer, day, ms}`:
+  * `math:*` as v2;
+  * `rw:*` filed through `words.record_daily(learner, day, fmt, answer, ms)` (S9): one
+    `word_reviews` row with the slot's session, once per day, with the same grace and late
+    rules.
+* Feedback adds:
+  * `crowd.median_ms` (on-time answers);
+  * for grid-ins, `entry:{kind:'form'|'early', text}|null`;
+  * for R&W, W1's and W2's reply fields (`trap, reasons[4], traps[4], spans, needs` /
+    `logic_needed, logic_picked, relation`), `key_word` and `meaning`.
+* `POST /api/qotd/another {day, slot, like:'word'|'trap'}` is R&W only (a Math twin is a drill).
+  It is 409 until answered and 404 outside today − 30 to today.
+* `/api/calendar` day rows: `qotd` becomes `{slot id: 'right'|'wrong'|null}`.
 
 **Acceptance.**
-1. With the Words module present: `GET /api/qotd | jq '.slots|map(.slot)'` gives
-   `["mcq","spr","word"]` and the word slot has no key. Without it: `["mcq","spr"]`.
-2. `POST /api/qotd {slot:'spr', answer:'1 1/2'}` for a key of 3/2 returns `correct:false` and
-   `entry.kind == 'form'`.
-3. With 5 or more on-time answers, feedback has `crowd.median_ms` as an integer.
-4. After a wrong MC, `Now its twin` renders a new stem inside `#qotd` without opening a
-   dialog at 1280.
+1. With Words merged: `GET /api/qotd | jq '.slots|map(.slot)'` gives
+   `["math:mcq","math:spr","rw:wic","rw:transition"]`, and `jq '[.slots[].question |
+   has("answer","answer_index","reasons","traps","key","seed","word")] | flatten | any'` gives
+   `false`. Without Words: `["math:mcq","math:spr"]`.
+2. `POST /api/qotd {slot:'mcq', …}` is filed as `math:mcq` in session `qotd:{day}`.
+   `{slot:'rw:wic', …}` files one `word_reviews` row in session `qotd:rw:wic:{day}`, and a
+   second identical POST returns the first answer.
+3. **Key hidden.** Learner B answers `rw:wic` and reads `key_word`. Then fresh learner A loads
+   `/` at 1280 and waits for `#qotd`. For A:
+   * no text outside the `rw:wic` slot's option buttons contains `key_word` (whole word, any
+     case), and no option carries a key marker;
+   * `/api/words/today.wic.word` is null.
+   After A answers, the verdict names `key_word`.
+4. `POST /api/qotd {slot:'math:spr', answer:'1 1/2'}` for a key of 3/2 → `correct:false`,
+   `entry.kind == 'form'`. `'.66'` for 2/3 → `'early'`. `'455'` for 460 → `entry == null`.
+5. With 5 or more on-time answers, feedback has `crowd.median_ms` as an integer.
+6. Twins in the column at 1280:
+   * After a wrong MC, `Now its twin` renders a new stem inside `#qotd` without opening a
+     dialog.
+   * After a wrong `rw:wic`, `POST /api/qotd/another {like:'word'}` returns an item whose
+     server-side key is the same word, in a different frame.
+   * Before the slot is answered, the call gives 409.
+7. After a **right** answer in each slot, the rationale (Math) or all four reasons (R&W) are
+   visible with no click.
+8. The Due row reads `N of 4`. It is done only after all four are answered, and its Why reads
+   "The same 4 for everyone, one try each".
 
 #### T15. The challenge card after you finish: your ten slots against the field
 
@@ -1024,10 +1333,16 @@ not guessed.
   (T6). Line: `62% of your time on Algebra · 35% of the test · 18% of your points`.
   `.btn Rebalance · 10 in Advanced Math` → `{topics: that domain's top-gain skills, count:10,
   source:'gain'}`. A second line splits the minutes into new, fixing, review and tests.
-* **Daily goal popover**: each chip shows `≈ 30 q` (minutes × 60 ÷ median seconds). With an
-  exam date, `Suggested: 35 min` and its arithmetic from `today.workload`: `(23 open mistakes ×
-  2 + 18 check-ins + 2 sections) at 1:40 each ÷ 28 study days`. The weekly line reads
-  `2h 5m of 5h · 58 min a day for the 3 days left`.
+* **Daily goal popover**: each chip shows `≈ 30 q` (minutes × 60 ÷ median seconds).
+  * With an exam date and `workload.sized`: `Suggested: 30 min`, with its arithmetic from
+    `today.workload` (T12): `(23 mistakes × 2 + 18 check-ins) at 1:40 each (1h 47m) + 2
+    sections (2h 20m) + warm-ups (2h 48m) + reach 700 (at least 6h) = 12h 55m ÷ 28 study days
+    ≈ 28 min → 30 min`. The suggested chip is ringed.
+  * It is rounded up to a chip (15 · 30 · 45 · 60 · 90 · 120 · 180 · 240) and is never below
+    15 min, the smallest chip.
+  * Not sized: the popover shows T12's line instead (`Answer 30 questions to size the work ·
+    12 of 30`, or `Set a target to size the work` with Set target), and no Suggested.
+  * The weekly line reads `2h 5m of 5h · 58 min a day for the 3 days left`.
 * **Footer**: `4-day study streak · best 9 · 1 spare` (U16) · `goal met 9 of the last 14 days`
   · `held 82% of 40 warm-up answers this month` (T3).
 * **Calendar**:
@@ -1051,15 +1366,18 @@ not guessed.
 **Data.** `/api/calendar` day rows add `fixed, opened:[{id, label}], closed:[{id, label}],
 topics:[{topic, right, asked}], first_at, last_at, missed:[attempt id], due:{checks, fading}`.
 `/api/today/insights.time_split = {domains:{d: minutes}, kinds:{new, fix, review, test},
-test_share, points_share}`. `/api/today.goal_suggest = {minutes, arithmetic}`.
+test_share, points_share}`. `/api/today.goal_suggest = {minutes, arithmetic}|null`, null
+exactly when `workload.sized` is false.
 
 **Acceptance.**
 1. A day with 5 wrong first tries: its Redo button's body has 5 attempt ids, and the session it
    creates serves 5 templates matching those attempts, each on a new seed.
 2. The Accuracy heat draws a hollow cell for a day with 1 answer.
 3. `time_split.domains` sums to the week's practice minutes (± 1).
-4. With `exam_date` set, the goal popover shows "Suggested" with a chip value, and the chip
-   meta "≈ N q".
+4. With `exam_date` and a target set and 40 answers, the goal popover shows "Suggested" with
+   a chip value of at least 15, its arithmetic contains "reach", and each chip has the meta
+   "≈ N q". With 12 answers it shows "Answer 30 questions to size the work · 12 of 30" and no
+   "Suggested".
 
 #### T18. The plan card: adherence, pace, make-ups, previewed fixes, and a plan in one tap
 
@@ -1068,25 +1386,52 @@ test_share, points_share}`. `/api/today.goal_suggest = {minutes, arithmetic}`.
 
 **Why.** Theirs copies four tiles and sends a behind student to rebalance; their generator
 failed 3 of 3. A student needs to know if the plan is working, fix a missed day in one tap, and
-get a plan without a wizard.
+get a plan without a wizard. The commonest student without a plan has practised but never
+taken a test, so the one-tap plan must start from a guess, a module or the diagnostic as
+readily as from a score. The week needs their header (tasks done and a theme) too.
 
 **No plan: `Build with these`** (above v2's CTA, which stays under it).
-* Three inline controls, prefilled:
+* Four inline controls, prefilled:
+  * **`Start from`**, with Plan step 1's four source variants (its SourceNote rules and
+    wording, so Today and the wizard agree):
+    * **2 or more sittings in 45 days**: `Your last 2 tests average 650 · Use 650` (R16's
+      `mean3`), selected;
+    * **1 sitting**: `Latest · Module · Sep 21 · 590–730 · Use 660` (the midpoint, rounded to
+      10), selected;
+    * **Practice only**: a 200–800 slider (step 10) labelled `Your best guess`, with no value
+      until the student moves it. Beside it, `.btn Take a module · 35 min`. It saves this
+      draft as the plan draft and sets `satf.return = '/plan/?setup=1&step=1'` (Plan's own
+      return, so the report's `Back to your plan` brings the student to step 1, where the new
+      sitting is the source);
+    * **New student**: `.btn Diagnostic · 20 q · ~30 min` (the same draft and return), or the
+      `Your best guess` slider.
   * `SAT date [Nov 7 ▾]`: the profile's date, else the next official date;
   * `Daily [45 min ▾]`: `profile.minutes`, else the 7-day average rounded to 15 (at least 20);
   * `Days [Mon–Fri]`: the weekdays actually studied over 28 days, else Mon–Fri.
-* The target is `profile.target`, else the band's high end + 50. The start is the latest band's
-  midpoint.
+* **Target**: `profile.target`. Otherwise, with a band, the band's high end + 50. Otherwise
+  the start + 100. It is shown as a chip, `Target 750 ✎`, which opens the target dialog (T11)
+  on the same draft. It is always visible, so the assumed target is never silent.
 * Under them, the first 7 days drawn read-only with `UI.taskRow` from `POST /api/plan/preview`
-  (`week`), plus its pace tag.
-* Pill `Use this plan` → `POST /api/plan` with that draft. Today repaints with the plan and Due
-  today fills. `.quiet Adjust…` → `/plan/?step=1` with the draft saved.
+  (`week`), plus its pace tag. Without a start, the rows are drawn with the pace tag replaced
+  by `Set a start to see the pace`.
+* Pill `Use this plan` → `POST /api/plan` with that draft (`current` = the start). It is
+  disabled, with the helper `Pick where you start`, until a start exists. Today repaints with
+  the plan and Due today fills. `.quiet Adjust…` → `/plan/?step=1` with the draft saved.
 
 **Plan set.**
 * **Stat row**: `Day 12 of 45` · `20% done · 9 of 45 study days` · `On time 9 of 10 study days`
   (adherence, replacing `10 days to the SAT`, which the countdown shows) · `Behind · making +9
   a week, needs +18` or `On pace` (Plan's pace status with U9's slope, replacing `+140 to
   target`, which the Score card's gap line shows).
+* **Week header**, under v2's `‹ Week 3 of 7 ›` pager, both lines read from
+  `/api/today.plan.weeks[n]` (plan.py's `weeks[{n, from, to, theme, tasks_planned,
+  tasks_done}]`, the rows /plan/ renders):
+  * `Week 3 of 7 · 8 of 12 tasks · 67%`, with a 4px amber bar filled to 67%;
+  * the server's theme line: `Build · Circles, Percentages, Nonlinear functions · Module test
+    Fri` (Plan's week theme: the phase, the week's top topics, the test day, your own repeating
+    tasks).
+  * Paging to another week repaints both from that week's row.
+* **Day N of M** and `% done` count from `plans.start` (R15), read from `/api/today.plan`.
 * **Week strip**: each day column adds a 4px studied-vs-planned bar, its topic glyphs, and for
   past days `2 fixed · 1 held` in mono 10px. A missed day gets `.quiet Make up` (starts its
   catch-up task, `task=<date>:focus`, which Plan marks `made_up`). A future day gets
@@ -1101,13 +1446,26 @@ get a plan without a wizard.
   * `.quiet Change daily time` stays.
 
 **Acceptance.**
-1. A learner with 40 answers and no plan: `Build with these` shows 3 controls and 7 day rows.
-   `Use this plan` sends one `POST /api/plan`, after which `/api/today.plan` is non-null.
+1. A learner with 2 module sittings (midpoints 620 and 680, within 45 days) and no plan:
+   `Build with these` shows 4 controls, the Start from reads "average 650", and there are 7 day
+   rows. `Use this plan` sends one `POST /api/plan` with `current:650`, after which
+   `/api/today.plan` is non-null and its start is today.
+1b. **No sitting.** A learner with 40 practice answers and no sitting: Start from shows the
+   `Your best guess` slider with no value and `Take a module · 35 min`, the target chip is
+   visible, and `Use this plan` is disabled. After the slider is set to 520, the target chip
+   reads 620 (start + 100) and `Use this plan` sends `{current:520, target:620}`.
+1c. **New student.** A fresh code: Start from shows `Diagnostic · 20 q` and the slider.
+   Clicking the diagnostic saves the draft and sets `sessionStorage satf.return` to
+   `/plan/?setup=1&step=1`. With neither done, `Use this plan` stays disabled.
 2. With a plan: the stat row has "On time" and no "days to the SAT".
 3. A missed past study day: its `Make up` starts a drill with `task` equal to
    `<that date>:focus`. After finishing, the day reads made up.
 4. Behind with 2 missed days: two Apply buttons. Applying the first sends
    `PATCH {minutes}`, and Undo sends the old value.
+5. With a plan: the week header's text equals `Week {n} of {N} · {tasks_done} of
+   {tasks_planned} tasks · {pct}%` from `GET /api/plan`'s `weeks[n]`, and its theme line
+   equals that row's `theme`. Both match /plan/'s week header for the same week, including
+   after paging to the previous week.
 
 ---
 
@@ -1140,12 +1498,19 @@ an "All Done" badge that marks completion, not outcome.
   * `Moved: Percentages Learning → Getting there`;
   * `Fixed: Added the percentages instead of multiplying them (+2 more)`;
   * `Check-ins held 3 of 3 · 1 relapse caught`;
-  * `≈ +8 claimed from your points on the table` (U4's total at local midnight minus now);
+  * `Points today: ≈ +8 on our score model`. This is `estimate.practice_delta(learner,
+    since = local midnight)`, the same function as T10's `Practice since Sep 21`, so the two
+    figures can't disagree in kind.
+    * A fall prints as it is: `Points today: ≈ −5 on our score model · a rough day; the
+      mistakes it opened are in Fix`.
+    * Under 5 either way: `Points today: under 5 either way`.
+    * `.quiet How` opens U13's popover;
   * the flame: `7 days · best 9`.
-  Then the pill `Keep going · 15 min` and `.quiet See today in the calendar`. On later visits
-  the same day, the receipt is one line at the top of Up next with its `Show`.
-  `localStorage satf.done.{day}` (try/catch) remembers the first showing; without storage it can
-  show again, which is harmless. `prefers-reduced-motion` turns off the rise.
+  Then the pill `Keep going · 15 min` and `.quiet See today in the calendar`.
+* **The receipt stays fully expanded all day**, on every visit, until local midnight. Only
+  the `.rise` entry plays just once. `localStorage satf.done.{day}` (try/catch) remembers that
+  it played; without storage it plays again, which is harmless. `prefers-reduced-motion` turns
+  off the rise.
 
 **Data.** `/api/today.brief = [{kind, text, href}]` (≤ 3), `.at_risk = {streak, left_ms,
 start:{body}, spare}|null`, `.receipt = {minutes, questions, right, moved, fixed, checks,
@@ -1159,7 +1524,11 @@ relapses, claimed, streak, best}|null`. "Since" is the start of the last study d
    hero fact contains "keeps your 6-day streak", and its button opens `dialog` with a question.
    At 17:00 it doesn't appear.
 3. After the goal's minutes are reached, `receipt` is non-null, and `#next` shows "TODAY'S
-   WORK" once. A reload shows the one-line form.
+   WORK" with every receipt line. A reload shows the same full receipt, with no `.rise`
+   animation, and no `Show` control exists.
+4. `receipt.claimed == estimate.practice_delta(learner, local midnight)` (an assert in
+   `server/checks/s3.py`). A seeded day whose answers lower `S` gives a negative `claimed`, and
+   the line reads "≈ −".
 
 #### T20. Instant and keyboard-first
 
@@ -1173,8 +1542,8 @@ edit should feel instant, and a keyboard user should never need the mouse.
   until:'day'})` (U23 with a day-scoped localStorage option), so a new tab paints too. A mono
   11px `Updating…` shows on a `--line` top rule until the live response arrives. A card
   repaints only when its part of the JSON changed. A first visit uses the skeletons.
-* **Optimistic edits**: skip, move, swap, dropping a box block, the daily goal, the target and
-  the exam date apply at once, show U25's Undo toast for 6 s, and revert with `Not saved. Try
+* **Optimistic edits**: skip, move, swap, mark done, the own-task tick, dropping a box block,
+  the daily goal, the target and the exam date apply at once, show U25's Undo toast for 6 s, and revert with `Not saved. Try
   again.` on failure.
 * **Page keys** (`UI.keys` scope `today`, listed in `?`): `J` / `K` next / previous card (focus
   moves to its heading and scrolls it into view), `T` Try one now, `Enter` on a focused card
@@ -1212,9 +1581,14 @@ Each entry quotes the current text, then gives the replacement or addition.
      nothing is cut or hidden for looks."
    * Add after it:
      * "- **One source per fact.** Up next and Due today (`next.queue`, `next.due`), points on
-       the table (`estimate.gains`), pace (`progress.pace`), causes (`progress.causes`), the
-       warm-up (`progress.warmup_candidates`) and the workload (`today.workload`) each come
-       from one function and read the same on every screen."
+       the table (`estimate.gains`), pace (`progress.pace`), the time cost
+       (`estimate.time_cost`), points moved by practice (`estimate.practice_delta`), causes
+       (`progress.causes` / `cause_of`), the warm-up (`progress.warmup_candidates`), the
+       workload (`today.workload`, with `estimate.need(target).path`) and the plan's counts
+       (`plan.today_summary`) each come from one function and read the same on every screen."
+     * "- **Nothing useful is folded to look lighter** (decision 4): no `Show all`, no
+       one-line collapsed receipt, no closed checklist in the last week, no control behind a
+       `.quiet` toggle. Long lists are grouped under visible sub-headers instead."
      * "- **Every figure explains itself** (U13), and **every end leads on**: each finish
        screen offers the next Due row."
 
@@ -1228,7 +1602,7 @@ Each entry quotes the current text, then gives the replacement or addition.
      / study study / mist chal / plan plan / tests tests`. The questions of the day use tabs."
    * Replace with: "**Tablet (760–1079px)**, 2 columns: `hero hero / next next / qotd qotd /
      gain gain / mist exam / score pace / study study / chal words / plan plan / tests tests`.
-     The questions of the day use tabs (3 with the word slot)."
+     The questions of the day use tabs (4 with the R&W slots)."
 
 5. **§1 Layout, phone.**
    * Quote: "**Phone (<760px, designed at 390px)**, one column: hero, next, qotd, exam, score,
@@ -1266,21 +1640,28 @@ Each entry quotes the current text, then gives the replacement or addition.
 9. **§3 header.**
    * Quote: "**Header**: `UP NEXT` on the left. On the right, when a plan is set: `Today in your
      plan · 60 min`, `Test day in your plan · 70 min` or `Rest day in your plan`."
-   * Add: "Under it, the time seg `Time today: 5 · 15 · 30 · 45 · 60 min` (T1). Items 1–3 of §3a
-     come from `next.queue` (`resume`, `assignment`, `plan` test)."
+   * Add: "Under it, the Size row `Size: Time 5 · 15 · 30 · 45 · 60 min or Count 5 · 10 · 22 ·
+     {coach} · Endless`, both halves visible, one choice at a time (T1). Items 1–3 of §3a come
+     from `next.queue` (`resume`, `assignment`, `plan` test)."
 
 10. **§3a item 4.**
     * Quote the block from "**4. The coach's set**" through "- **Start**: the pill. It sends
       `POST /api/drill {topics, count, timed, minutes: timed ? minutesFor(count) : null,
       source:'coach'}`, then goes to `/practice/session/?id=`."
-    * Replace with: "**4. The time box** (T1): the reason line (value first), the numbered
-      blocks from `POST /api/drill/preview {source:'next', box, drop}` with × to drop, question
-      1 inline (`first` token), and the pill `Start · {box} min`. v2's topic chips, count
-      choices, clock, estimate and More options stay behind `.quiet Count instead`, unchanged."
+    * Replace with: "**4. The session** (T1): the reason line (value first), the numbered
+      blocks from `POST /api/drill/preview {source:'next', box | count, timed, drop}` with × to
+      drop, question 1 inline (`first` token), and the pill `Start · {box} min` or `Start · {n}
+      questions`. Nothing of v2's is hidden:
+      * the count choices are the Count half of the Size row;
+      * the `.clock` Timed/Untimed toggle and `More options` sit beside the pill, always
+        visible;
+      * v2's topic chips ride on the skill block rows;
+      * the estimate is each block's and the total's minutes."
 
 11. **§3a Goal met.**
     * Quote: "- A line with a check: `Today's goal done · 64 of 60 min`."
-    * Replace with: "- The day's receipt (T19), then the box with the pill `Keep going · 15 min`."
+    * Replace with: "- The day's receipt (T19), fully expanded all day, then the session with the
+      Time chip 15 selected and the pill `Keep going · 15 min`."
 
 12. **§3a New student.**
     * Quote: "- The coach's `new` pick."
@@ -1300,11 +1681,41 @@ Each entry quotes the current text, then gives the replacement or addition.
       (a fresh coach set)."
     * Add after it: "- **Result** once done (T2), and `Fix the N it opened` when it opened
       mistakes. ⋯ adds `Swap for: {topic}` when the plan task has alternatives."
+    * Quote: "- **Status box**:"
+      Add to its list: "- own task (plan kind `custom`): a real checkbox, `Mark as done` /
+      `Mark as not done`, sending S7's PATCH `{day, status:'done'}` / `{day, status:'todo'}`
+      with Undo (T2)."
+    * Quote: "  - day's questions: `1 of 2`"
+      → "  - day's questions: `1 of 4` (N = the slots shown, T14)"
+    * Quote: "  - Day's questions: `The same two for everyone, one try each`."
+      → "  - Day's questions: `The same 4 for everyone, one try each` (N = the slots shown)."
+    * Quote: "  - On a test only: `Move to…`, listing the later study days up to next Sunday (`Thu,
+      Sep 24`). With none, it reads `No study day left before the exam`."
+      → "  - `Move to…` on any plan task, listing the next 7 study days plus `Another date…`, up to
+      the eve (R14). With none, it reads `No study day left before the exam`.
+        - `Mark done` / `Mark not done` on a generated task, for work done off the site (T2)."
+    * Quote: "**Completion rules**: derived from what the student did, so there is no checkbox to
+      forget or to fake."
+      → "**Completion rules**: derived from what the student did. The only ticks are for work the
+      site can't see: the student's own tasks (a checkbox) and a manual `Mark done` (⋯)."
+    * Quote: "- **Day's questions**: both slots answered."
+      → "- **Day's questions**: every slot shown answered."
     * Quote: "- **Challenge**: finished."
-    * Add after it the completion rules of T2 (homework, warm-up, sweep, words, contest).
-    * Quote: "- If a mark fails, the row reverts and shows `Not saved. Try again.`"
-    * Replace with: "- Every edit applies at once with an Undo toast (U25). If it fails, the row
-      reverts and shows `Not saved. Try again.`"
+    * Add after it the completion rules of T2 (own task, marked done, homework, warm-up, sweep,
+      words, contest), and: "- Plan tasks of kind `qotd` and `challenge` are shown only as the
+      ALSO DUE rows; PLAN's `N of M` is `plan.tasks_done` of `plan.tasks_counted`."
+    * Quote the **Skip and Move** block from "- Both send `POST /api/plan/mark`." through "- If
+      a mark fails, the row reverts and shows `Not saved. Try again.`"
+    * Replace with:
+      "- Skip, Move, Mark done and the own-task checkbox send S7's `PATCH
+        /api/plan/{id}/tasks/{task_id}`: `{day, status:'skipped'}`, `{day, to: date}`,
+        `{day, status:'done'}`; Undo sends `{day, status:'todo'}` (R14).
+      - A skipped day shows as skipped in the week strip, not as missed.
+      - A moved test makes today a practice day and the chosen day a test day. Plan's server
+        applies it, and `/api/today.plan` returns the result.
+      - Every edit applies at once with an Undo toast (U25): `Skipped for today · Undo`,
+        `Test moved to Thu · Undo`, `Marked done · Undo`. If it fails, the row reverts and
+        shows `Not saved. Try again.`"
 
 14. **§4 Mistakes.**
     * Quote: "**Top 5 open traps** (`today.traps.top`, ordered by hits, then by most recent).
@@ -1319,26 +1730,46 @@ Each entry quotes the current text, then gives the replacement or addition.
     * Add at the end of the row list: "- A relapsed row carries `Relapsed · learn it again`
       (T4)."
 
-15. **§5 Questions of the day, intro.**
+15. **§5 Questions of the day.**
     * Quote: "Theirs gives one R&W and one Math. We have no R&W bank, so ours are **one
       multiple-choice and one grid-in Math question**. That covers both SAT Math formats, and
       grid-in entry rules are where points leak unnoticed. Both are the same for every student
       on the same local date."
-    * Replace with: "Theirs gives one R&W and one Math. Ours are **one multiple-choice and one
-      grid-in Math question, and one Word in context** (the SAT R&W item type, from Words; T14).
-      All three are the same for every student on the same local date."
+    * Replace with: "Theirs gives one R&W and one Math. Ours are **four**: a multiple-choice
+      and a grid-in Math question, and two R&W items generated by Words, **Words in Context**
+      and **Transitions** (T14). All four are the same for every student on the same local
+      date. Slots are `{subject, fmt}` (`math:mcq`, `math:spr`, `rw:wic`, `rw:transition`), so
+      an R&W passage slot is added later without renaming anything."
     * Quote: "###### Desktop (≥1080px): two columns, both visible"
-    * Add under its bullets: "- The Word in context slot runs full width under the two columns."
+      → "###### Desktop (≥1080px): two rows of two, all visible". Under its bullets add: "- A
+      `MATH` row (MC, grid-in) and a `READING & WRITING` row (Words in Context, Transitions),
+      6 + 6 each. Labels: `MATH · MULTIPLE CHOICE`, `MATH · GRID-IN`, `R&W · WORDS IN
+      CONTEXT`, `R&W · TRANSITIONS`."
+    * Quote: "- A `role=tablist` with the same two labels and marks."
+      → "- A `role=tablist` with the four labels (`MC · Grid-in · Words · Transitions`) and
+      marks."
     * Quote: "- Right: the day's-question streak, a flame with `3 days in a row`, or `Start a
       streak`. The `aria-label` reads `Day's questions streak, 3 days`."
-    * Append: "Meta after it: `best 11 · 19 of 23 right this month · crowd 61%` (T14)."
+      Append: "Meta after it: `best 11 · 71 of 88 right this month · crowd 61%` (T14)."
+    * Quote: "   - The rationale is open when the answer was wrong, and behind `Why` when it was
+      right."
+      → "   - The rationale is open after every answer, right or wrong (decision 4). For R&W,
+      all four options' reasons show at once, with the clue span (Words in Context) or the two
+      idea spans and their relation (Transitions)."
     * Quote: "4. **Actions row** (`.btn`s):"
-    * Add before it: "3b. **Pace line** (crowd ≥ 5): `You 1:12 · everyone 0:58 · SAT pace 1:35`.
-      **Entry line** for a grid-in entry error (T14)."
-    * Add as the first action: "- After a miss: `Now its twin`, answered in the column (T5)."
+      Add before it: "3b. **Pace line** (crowd ≥ 5): `You 1:12 · everyone 0:58 · SAT pace 1:35`
+      (R&W: 1:11). **Entry line** for a grid-in entry error (T14, T7's `scoring.entry_error`).
+      **R&W crowd**: the pick spread with each option's trap."
+      Add as the first action: "- After a miss: `Now its twin`, answered in the column (T5;
+      R&W through `POST /api/qotd/another`)." Add for the R&W slots: "- `Add to my words`,
+      `5 more like this` (a Words quiz run of that format), Share, Report."
     * Quote: "- `PAST DAYS`, then 7 buttons for the 7 days before today. Each shows a weekday
       letter and two mini marks (MC, grid-in):"
-    * Replace "two mini marks (MC, grid-in)" with "a mini mark per slot (MC, grid-in, word)".
+      Replace "two mini marks (MC, grid-in)" with "a mini mark per slot (MC, grid-in, words,
+      transitions)".
+    * Add to **States**: "- **R&W not merged yet** (wave 2's contract): the two Math slots only,
+      `N` = 2; I1 requires all four. - **Before answering an R&W slot**: no text on the page
+      outside its option buttons names or defines its key (T14)."
 
 16. **§6 Study time.**
     * Quote: "- `38m` **Today**, then `31 questions · 71% right`. With a goal, `of 60m` and a 4px
@@ -1374,13 +1805,21 @@ Each entry quotes the current text, then gives the replacement or addition.
 
 18. **§8 Plan.**
     * Quote: "- `.btn` `Build my plan →`."
-    * Add before the CTA's title: "**Build with these** (T18): 3 prefilled controls, the first 7
-      days drawn from the preview, the pill `Use this plan`, and `.quiet Adjust…`." The CTA
-      keeps its steps, preview, bullets and helper; `Build my plan →` becomes a `.quiet`.
+    * Add before the CTA's title: "**Build with these** (T18): 4 prefilled controls (`Start
+      from` with Plan step 1's four variants, SAT date, daily minutes, days), the target chip,
+      the first 7 days drawn from the preview, the pill `Use this plan` (disabled until a start
+      exists), and `.quiet Adjust…`." The CTA keeps its steps, preview, bullets and helper;
+      `Build my plan →` becomes a `.quiet`.
+    * Quote: "- `Day 12 of 45`"
+      Append: "counted from `plans.start` (R15), read from `/api/today.plan`."
     * Quote: "- `10 days to the SAT`"
       → "- `On time 9 of 10 study days`"
     * Quote: "- `+140 to target`, with `560 → 700` under it"
       → "- `On pace`, or `Behind · making +9 a week, needs +18`"
+    * Quote: "- A pager: ‹ `Week 3 of 7` ›, with a `This week` jump when viewing another week."
+      Add after it: "- The week header (T18): `Week 3 of 7 · 8 of 12 tasks · 67%` with a 4px
+      bar, and the server's theme line (`Build · Circles, Percentages, Nonlinear functions ·
+      Module test Fri`), both from `/api/today.plan.weeks[n]`, the same rows as /plan/."
     * Quote: "- the planned load: `38q` or `Module`."
     * Add after it: "- a 4px studied-vs-planned bar, the day's topic glyphs, and for past days
       `2 fixed · 1 held`; `Make up` on a missed day and `Work ahead` on a future one (T18)."
@@ -1425,9 +1864,18 @@ Each entry quotes the current text, then gives the replacement or addition.
       `UI.examDate`. Each reads `Nov 7 · Sat · in 45 days · 32 study days · +11 a week · Steady
       · register by Oct 23` (plus `~690` when projected), with a check on the current one and
       `Recommended` on the first Steady date (T12)."
+    * Quote: "- `7 study days and 1 test left in your plan`, counted with `UI.plan.dayOf`, marks
+      included."
+      → "- `7 study days and 1 test left in your plan`, from `/api/today.plan` (R14)."
+    * Quote: "###### Test-day checklist (7 days or fewer left)"
+      and "- A `<details>`, open on the exam's eve and on exam day. Its checkboxes:"
+      → "- An open list, never a `<details>`, from 7 days out through exam day (T13). Its
+      checkboxes:"
+    * Quote: "- A count in the summary: `Test-day checklist · 3 of 7`."
+      → "- A count in the heading: `TEST-DAY CHECKLIST · 3 of 7`."
     * Quote: "- `Calculator, optional: Desmos is built in`"
-    * Add after it: "- On the eve, a `Night before` group: `Bluebook opened and updated
-      today`, `Admission ticket saved`, `Alarm set` (T13)."
+    * Add after it: "- On the eve, a `Night before` group at the top: `Bluebook opened and updated
+      today`, `Admission ticket saved`, `Alarm set` (T13); the heading counts all 10."
     * Quote the "- **Exam day**:" and "- **Passed**:" state blocks.
     * Replace with T13's `exam` and `after` modes, and add T13's `stretch`, `taper` and `eve`
       modes, readiness rows and the countdown additions.
@@ -1453,17 +1901,24 @@ Each entry quotes the current text, then gives the replacement or addition.
 
 24. **§13 States matrix.** Add rows:
     * `final stretch (≤ 14 days)` → hero chip; `#exam` full width with readiness; rehearsal on
-      Saturdays; Sweep row; Fix parked; no new rare skills.
-    * `exam eve` → Up next `Light warm-up`; checklist open with Night before.
+      Saturdays at a time the student picks; Sweep row; `#mist` in two visible groups (worth
+      fixing now, rare skills with their own Fix); no new rare skills.
+    * `7 days out or fewer` → the test-day checklist, open, with its count in the heading.
+    * `exam eve` → Up next `Light warm-up`; checklist with Night before.
     * `exam day, before 13:00` → order hero, exam, next; nothing collapsed.
     * `after the exam` → scores date with Remind me; Add your official score; calibration once
       added.
     * `streak at risk (after 18:00)` → first hero fact and `1 question`.
-    * `day done` → the receipt once, then its one-line form.
+    * `day done` → the receipt, fully expanded on every visit that day; the rise plays once.
     * `/today/insights fails` → gain, pace and score's forward parts show `Couldn't load this.`
       + Retry; the rest renders.
-    * `under 30 answers` → `#gain` shows "Answer 30 questions · N of 30".
-    * `Words module absent` → 2 day's-question slots; no words row.
+    * `under 30 answers` → `#gain` shows "Answer 30 questions · N of 30"; `#exam` and the goal
+      popover show "Answer 30 questions to size the work · N of 30", with no "fits" and no
+      "Suggested".
+    * `no target` → `#exam` shows "Set a target to size the work" + Set target.
+    * `no sitting, no plan` → Build with these shows the best-guess slider, Take a module and
+      Diagnostic; `Use this plan` is disabled until a start is set.
+    * `R&W not merged yet` (wave 2 only) → the 2 Math slots; no words row. I1 requires all 4.
 
 25. **§14 Accessibility and motion.**
     * Quote: "- Motion is entry only (`.rise`, staggered by row), and nothing loops.
@@ -1482,9 +1937,13 @@ Each entry quotes the current text, then gives the replacement or addition.
     * Add a new item: "- **GET /api/today/insights (new)**: `{subject, gains, causes, pace,
       estimate, time_split}` (T6–T10, T17)."
     * Quote: "- **POST /api/qotd: slot, ms, grace, late answers, richer feedback**"
-    * Add: "`slot:'word'` (T14); feedback `crowd.median_ms`, `entry`; GET adds `month`, `best`."
+    * Add: "Slots are `{subject, fmt}` ids (`math:mcq`, `math:spr`, `rw:wic`, `rw:transition`);
+      `mcq` / `spr` stay as aliases; R&W answers go through `words.record_daily` with session
+      `qotd:rw:{fmt}:{day}` (T14). Feedback adds `crowd.median_ms`, `entry`, and W1 / W2's
+      fields for R&W. GET adds `month`, `best`, `past[].marks`. New `POST /api/qotd/another`
+      (R&W twins)."
     * Quote: "- **POST /api/drill: like, templates, count in mistakes mode**"
-    * Add: "`first`, `drop`, `box` preview blocks (T1); `source:'warmup'` with `cfg.hide_skill`
+    * Add: "`first`, `drop`, `box` or `count` with `timed` in the preview (T1); `source:'warmup'` with `cfg.hide_skill`
       (T3); `source:'learn'` with `example` (T4); `sweep` on pool `checks` (T13); sources `gain`,
       `pace`, `today`. All through F5's one contract (§2.6)."
     * Quote: "- **GET /api/calendar?month=YYYY-MM (new)**"
@@ -1495,8 +1954,9 @@ Each entry quotes the current text, then gives the replacement or addition.
       Add: "Checks in `server/checks/s3.py` cover T1–T20's server acceptance items."
 
 28. **§3.2.6 Files.** Add rows: `server/today.py` S3; `server/next.py` F2 (`due`, `stage`);
-    `server/habits.py` F5; `server/estimate.py` F4 (`practice_delta`, `per_question`,
-    `rescore`); `server/checks/s3.py` S3.
+    `server/habits.py` F5; `server/estimate.py` F4 (`practice_delta(learner, since)`,
+    `time_cost`, `need(target).path`, `rescore`); `server/scoring.py` F4 (`entry_error`);
+    `server/checks/s3.py` S3.
 
 29. **§3.2.7 Shared needs.** Add:
     * "`UI.twinSheet` and the in-column twin, `hideSkill`, the worked-example card → F3."
@@ -1509,8 +1969,9 @@ Each entry quotes the current text, then gives the replacement or addition.
     * Quote: "16. At 1280 the two day's questions are side by side and both show their stems. At
       390 they are tabs with status marks. At 390 the cards stack in the order hero, next, qotd,
       exam, score, mist, study, plan, chal, tests; …"
-    * Replace the order with: "hero, next, qotd, gain, mist, exam, score, pace, study, plan,
-      chal, words, tests". With the Words module present, the tabs are three.
+    * Replace "the two day's questions are side by side" with "the four day's questions sit in
+      two rows of two (MATH, READING & WRITING)", and the order with: "hero, next, qotd, gain,
+      mist, exam, score, pace, study, plan, chal, words, tests". The tabs are four.
     * Quote: "17. With a plan and a practice set of 5 answered out of 38: the Today list reads
       PLAN · 0 of 1 done with '5 of 38 questions', …"
     * Replace "the Today list" with "the Due today list's PLAN group".
@@ -1518,40 +1979,120 @@ Each entry quotes the current text, then gives the replacement or addition.
       shows its empty state with an action (…)"
     * Add to its list: "`#gain` 'Answer 30 questions', `#pace` 'Your pace shows after 20
       answers', Warm-up empty line, the box with question 1".
+    * Checks 2, 8, 9, 10, 12 and 14 are rewritten by entry 32 below.
     * Append T1–T20's acceptance lists as items 29 onward.
 
 31. **§3.2.9 Open questions.** Add:
-    * "Rehearsal start time: the default 08:30 and '70 min + break' should match when the Math
-      section really starts on SAT day (after R&W and the break); verify with College Board."
+    * "Rehearsal start time: verify with College Board when the Math section really starts on
+      SAT day (after check-in, R&W's 64 minutes and the 10-minute break). Until then the
+      rehearsal names no clock time and the student picks one; the verified start then becomes
+      the default."
     * "The warm-up intervals (2, 5, 12, 30 days) are a stated choice, not a measurement; revisit
       them once held rates exist."
-    * "The word-in-context slot depends on S9 shipping `words.daily_item`; until then Today
-      keeps two slots."
+    * "R&W coverage: the two R&W slots cover Craft and Structure (Words in Context) and
+      Expression of Ideas (Transitions). Information and Ideas and Standard English
+      Conventions wait for the R&W bank, whose passage question joins as slot `rw:mcq`."
+
+32. **Stale endpoints, everywhere in §3.2** (R14, R15, R26). Part 2 already says
+    Dashboard's own `plan_marks (learner, …)` table, `POST /api/plan/mark`,
+    `/api/tests/recent`, `plan_started` and `UI.plan.dayOf` are not built. These are the lines
+    that still use them, so a builder running the section's own acceptance list can pass it.
+    Plan's own `plan_marks (plan, …)` table (§3.6) is not affected.
+    * **§3b Skip and Move**: entry 13 above replaces "- Both send `POST /api/plan/mark`." and
+      the `UI.plan.dayOf` line with S7's `PATCH /api/plan/{id}/tasks/{task_id}`.
+    * **§10 Plan line**: entry 21 above replaces its `UI.plan.dayOf` count.
+    * **§12 On return**: quote "refetch `/today`, `/challenge` and `/tests/recent`" → "refetch
+      `/today`, `/today/insights`, `/challenge` and `/history?kind=tests&all=1&limit=6`".
+    * **§12 One source per number**: quote "- The plan day kinds come from `UI.plan.dayOf(d,
+      profile, marks)`." → "- The plan day kinds, marks and Day N of M come from
+      `/api/today.plan` (`plan.today_summary`, `plans.start`; R14, R15)."
+    * **§3.2.5 GET /api/today**: quote "- `plan_marks`: marks from today − 13 through the exam
+      date." Delete it (marks are inside `plan.tasks[].status`).
+    * **§3.2.5 GET /api/tests/recent**: quote the block from "- **GET /api/tests/recent?limit=6&
+      offset=0 (new)**" through "- limit is 1 to 20, and offset ≥ 0."
+      → "- **Recent tests** read `GET /api/history?kind=tests&all=1&limit=6` (R26, S6). Its
+      rows carry what the card needs: unfinished sittings with status and `left_seconds`, and
+      `modules[{n, right, asked, missed, blank}]` as 1-based positions split at module 1's
+      length. A diagnostic with no user_id is listed gated, with no band or modules." Keep the
+      next line: "POST /api/drill {from_session} gets the same gate: a diagnostic with no
+      user_id gives 403."
+    * **§3.2.5 PUT /api/me**: quote "- When exam_date, minutes and days are all set and
+      exam_date or days changed, `plan_started` is stamped with today (local)." Delete it.
+      Quote "- New learners columns rw_now, rw_target and plan_started go in LATER_COLUMNS" →
+      "- New learners columns rw_now and rw_target go in LATER_COLUMNS". A plan's start is
+      `plans.start`, set by `POST /api/plan` (R15).
+    * **§3.2.5 POST /api/plan/mark**: quote the block from "- **POST /api/plan/mark (new,
+      shared with Plan)**" through "Returns the marks. UI.plan.dayOf(d, p, marks) applies
+      moves: the source day becomes practice and moved_to becomes a test day."
+      → "- **Plan edits from Today** use S7's `PATCH /api/plan/{id}/tasks/{task_id}` (`{day,
+      status:'skipped'|'done'|'todo'}`, `{day, to}`), R14. No table or endpoint here."
+    * **§3.2.5 progress.carry**: quote "- COALESCE rw_now, rw_target and plan_started in the
+      learners merge." → "- COALESCE rw_now and rw_target in the learners merge." Quote "-
+      Move plan_marks with UPDATE OR IGNORE, then delete what's left." Delete it (Plan's carry
+      moves plans, §3.6).
+    * **§3.2.5 test_flow.py**: quote "- tests/recent wrong/blank match the report, and the
+      module split uses module 1's length." → "- `/api/history?kind=tests&all=1`
+      missed/blank match the report, and the module split uses module 1's length." Quote "-
+      An un-signed-up diagnostic is gated in scores, tests/recent and from_session." → "… in
+      scores, history and from_session." Quote "- plan/mark validation." → "- Today's Skip,
+      Mark done and own-task tick send S7's PATCH and read back through `/api/today.plan`."
+    * **§3.2.7**: quote "- UI.plan.dayOf(d, p, marks) and UI.plan.today(profile, recent,
+      marks, coach): …" and "- POST /api/plan/mark and the plan_marks table, owned jointly
+      with the Plan section; plan_started stamped by PUT /api/me so the plan can show Day N of
+      M and % done." Delete both.
+    * **§3.2.8 check 2**: replace with T14's acceptance 1.
+    * **§3.2.8 check 8**: quote "GET /api/tests/recent .recent[0].modules[0].wrong + blank
+      equals the incorrect positions" → "the newest row of GET /api/history?kind=tests&all=1
+      has modules[0].missed + blank equal to the incorrect positions".
+    * **§3.2.8 check 9**: quote "A finished mock's tests/recent modules[1] positions start at
+      1" → "A finished mock's /api/history modules[1] positions start at 1".
+    * **§3.2.8 check 10**: quote "tests/recent shows gated:true without estimate" →
+      "/api/history?kind=tests&all=1 lists it gated, with no band or modules".
+    * **§3.2.8 check 12**: quote "returns 200 with plan_started = today" → "returns 200, and
+      profile has no plan_started; after POST /api/plan, /api/today.plan's start is today".
+    * **§3.2.8 check 14**: replace with: "With a plan, Skip on today's practice task sends
+      PATCH /api/plan/{id}/tasks/{task_id} {day:<today>, status:'skipped'}; /api/today.plan
+      shows the task skipped; {status:'todo'} restores it; a move with `to` past the eve gives
+      422 (S7's rule)."
+    * **§3.2.9**: quote "- Move-a-test from Today depends on the Plan section adopting
+      plan_marks in UI.plan.dayOf. If Plan does not ship marks, drop Move and keep Skip."
+      Delete it (S7's PATCH moves any task, R14).
 
 ### 3.2 Outside the section (Part 2 and shell-me lines these upgrades need; I1 applies them with the owners)
 
 | where | change | upgrade |
 |---|---|---|
 | shell-me U1 `next.queue` | Adds kind `resume` for an unfinished drill (v2 §3a item 2) and a plan test day as `plan` with `test`. Row 4 `checks` starts `{source:'warmup'}`. `next.due(learner, tz)` is the source of rows 1–4 and of Today's Due list. `next.stage` holds T13's modes (stretch, taper, eve, exam, after) and drops `new` for rare skills in the stretch | T2, T3, T13 |
-| shell-me U1 box | Segment 1 is `progress.warmup_candidates` (check-ins due, then fading), up to 3. The preview returns `blocks` with stable keys, and the body takes `drop` and `first`. The box options are 5–60 (Today offers 5, 15, 30, 45, 60) | T1, T3 |
+| shell-me U1 box | Segment 1 is `progress.warmup_candidates` (check-ins due, then fading), up to 3. The preview returns `blocks` with stable keys, and the body takes `drop` and `first`. The box options are 5–60 (Today offers 5, 15, 30, 45, 60). The preview and the drill take `box` or `count` (one of them) and `timed`: an untimed box is a soft limit, a timed box a hard countdown at 95 s a question | T1, T3 |
 | shell-me U1 chaining | Add the words run end (S9), the contest result (S8) and the assignment finish (S2) to the finish screens that show "Next: {title}" | T2 |
 | shell-me U23 | `UI.cached(path, {store:'local', until:'day'})`: localStorage keyed to the local date, dropped when it changes, same 200 KB cap and sign-out clearing | T20 |
 | R9 | Check-ins also feed `progress.due_forecast`; in the final stretch, pool `checks` with `sweep:true` selects traps closed in the last 90 days and not yet swept | T3, T13 |
-| R16 | `estimate.py` adds `practice_delta`, `per_question`, `rescore(sid, positions)`; `gains` adds `tiers`, `extras`, `by_domain` | T6, T7, T10, T16 |
+| R16 | `estimate.py` adds `practice_delta(learner, since)` (T10 from the latest sitting, T19 from local midnight), `time_cost(learner, pace)` (the one time-cost figure: `insights.pace.pts_lost` and the `gains` pace extra), `need(target).path` (the to-target work for `today.workload`) and `rescore(sid, positions)`; `gains` adds `tiers`, `extras`, `by_domain`. `per_question` is not built | T6, T7, T8, T10, T12, T16, T19 |
+| F4 scoring | `scoring.entry_error(given, key) → 'form' \| 'early' \| None`, exact equivalence only (T7's rule), next to `grid_equal` and sharing its truncate-or-round test; `progress.cause_of(attempt, ctx)` is T7's per-attempt rule, which `progress.causes` and T9's blind spots both call | T7, T9, T14 |
 | R19 | Twins from a live test's positions are refused (409), as for any exact item | T5 |
 | R24 | Sources `twin` and `try` from Today stay inline; `warmup`, `learn`, `pace`, `gain` and `today` are ordinary sittings | T3–T5 |
 | §2.5 | No new tables. The warm-up, causes, habits' broken state and sweep are computed from existing rows. `kv` holds `preview_secret`, which F5 writes once at init | T1, T3, T7, T9, T13 |
-| §2.6 | Fields: `first {token, answer, ms}`, `drop [key]`, `example` (bool), `sweep` (bool, pool checks). Sources: `warmup` (sets `cfg.hide_skill`), `learn`, `gain`, `pace`, `today`. The preview returns `blocks` and `first` for `source:'next'` | T1, T3, T4, T6, T8, T13, T17 |
+| §2.6 | Fields: `first {token, answer, ms}`, `drop [key]`, `box` (minutes) for `source:'next'` beside `count` and `timed`, `example` (bool), `sweep` (bool, pool checks). Sources: `warmup` (sets `cfg.hide_skill`), `learn`, `gain`, `pace`, `today`. The preview returns `blocks` and `first` for `source:'next'` | T1, T3, T4, T6, T8, T13, T17 |
 | §2.8 | Page scope `today`: `J`, `K`, `T` | T20 |
-| §2.9 | Providers: F4 `progress.causes`, `progress.warmup_candidates`, `progress.due_forecast` → S3, S7, S10; F2 `next.due`, `next.stage` → S3, S7; F3 `UI.twinSheet` → S3, S6, S8; S8 `compete.due_today` → S3; S2 `classes.due_soon` → S3 (already in U1); S9 `words.daily_item`, `words.record_daily` → S3; S6 `GET /api/session/{id}/compare?with=` → S3, S5; S7 preview `week` (7 days of `{date, kind, minutes, topics}`) → S3 | all |
-| S7 Plan | The recheck task's start body is `{source:'warmup', task:'YYYY-MM-DD:recheck'}`. The Final phase's test days are Today's rehearsals. `skills[].gap` reads `estimate.gains`. `POST /api/plan/preview` returns `week` | T3, T6, T13, T18 |
-| S9 Words | The Words spec's math word of the day is not shown on Today (decision 2); the SAT word becomes the Word in context slot | T14 |
+| §2.9 | Providers: F4 `progress.causes`, `progress.warmup_candidates`, `progress.due_forecast` → S3, S7, S10; F2 `next.due`, `next.stage` → S3, S7; F3 `UI.twinSheet` → S3, S6, S8; S8 `compete.due_today` → S3; S2 `classes.due_soon` → S3 (already in U1); S9 `words.daily_item`, `words.record_daily` → S3; S6 `GET /api/session/{id}/compare?with=` → S3, S5; S7 preview `week` (7 days of `{date, kind, minutes, topics}`) → S3; S9 `rw_items.another(prev, like)` and W1's sample token and `POST /api/words/sample/answer` → S3 (R&W twins); F4 `estimate.time_cost`, `estimate.need(target).path`, `scoring.entry_error`, `progress.cause_of` → S3, S1 | all |
+| S7 Plan | The recheck task's start body is `{source:'warmup', task:'YYYY-MM-DD:recheck'}`. The Final phase's test days are Today's rehearsals. `skills[].gap` reads `estimate.gains`. `POST /api/plan/preview` returns `week`, and takes a draft with no `current` (it draws the week and returns `pace_tag: null`). `/api/today.plan` adds `start` (`plans.start`) and `weeks` (the `GET /api/plan` rows `{n, from, to, theme, tasks_planned, tasks_done}`), so Today's week header and theme are /plan/'s. Today sends the same `PATCH /api/plan/{id}/tasks/{task_id}` for Skip, Move, Mark done and the own-task checkbox; a manual mark on a generated task counts toward the day and minutes, not question stats (Plan's proposed rule, now used from Today too) | T2, T3, T6, T13, T18 |
+| S9 Words | The Words spec's math word of the day is not shown on Today (decision 2). `words.daily_item(day, 'wic')` and `(day, 'transition')` (W21) are T14's slots `rw:wic` and `rw:transition`, and I1's walk requires both. The WIC key word is drawn by `sha256('qotd:rw:wic:' + day)` over SAT words with at least 2 in-context frames; the transition's family and seed by `sha256('qotd:rw:transition:' + day)`. `GET /api/words/today.wic.word` is null until this learner has answered the item (Today and `/words/` share one record), and `/words/`'s Word of the day tile shows the item, never the word, until then. On Today, the Words tile's `Transition of the day · answer it` line (words.md override 42) becomes `Word and transition of the day · in the day's questions ↑`, linking to `#qotd`. `words.record_daily(learner, day, fmt, answer, ms)` files session `qotd:rw:{fmt}:{day}` | T14 |
 | S6 Results | `UI.sittingCard` takes extra lines (delta, causes, worth, time per module, total) and a chip menu; the compare endpoint | T16 |
 
 ---
 
 ## 4. Rejected
 
+* **A significant-figure tolerance for grid-in entry errors** (the first T7 draft): 455 for 460
+  would have read "right value, rejected form", and 0.66 for 2/3 failed its own check. Entry
+  is exact equivalence only (T7).
+* **A Words in Context slot drawn from a different word than the word of the day, with the
+  word of the day still printed** (skeptic pass): that makes two "words of the day", and the
+  printed one teaches nothing. There is one item for Today and `/words/` (W21), and its key is
+  hidden everywhere until answered (T14).
+* **A rehearsal clock time before it is verified** ("8:30, like the real day", or "R&W start +
+  2h15m"): a wrong time on test-day practice is worse than none. The student picks it until
+  the open question is answered (T13).
 * **A `Sure · Not sure` tap before every Check** (outcomes #8, the experience QOTD gap): most
   students won't tap it, and `shell-me.md` rejected the same tap. Blind spots are inferred from
   speed, guess flags and test confidence instead (T9).

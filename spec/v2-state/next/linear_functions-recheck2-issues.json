@@ -1,0 +1,47 @@
+[
+ {
+  "where": "satbank/topics/linear_functions/families/define.py table_facts, ask=value: 'divided the change in the outputs by the requested input instead of by the change in x' = y_near + (ys[-1]-y_near)/x_ask",
+  "what": "When the asked input is past the last row, the nearest row is the last row. The change is then 0 and the value is just the nearest row's output, so a student who read the nearest row is told they made a division slip. This is 11 of the 14 value grid-ins. Examples: table_facts|20|spr (x 4,6,8 -> -41,-63,-85; j(9)), where -85 gets this reason; |27|spr, where 39 does; |18|spr, where -147 does. In the other 3 the route is incoherent. In |19|spr it gives 63, which is simply the first row. In |70|spr it gives 37.4, which adds one whole wrong slope to the nearest row.",
+  "fix": "Drop this reason from the grid-in list. Name y_near under 'gave the value from the nearest row of the table' and pick the nearest row without an arbitrary first-row tie-break."
+ },
+ {
+  "where": "define.py table_facts, ask=value: 'subtracted the outputs in the wrong order, giving the slope the wrong sign' = -m*x_ask + b",
+  "what": "This value pairs a wrong-sign slope with the true b. When 0 is not an input in the table, b can only be found with the correct slope, so no student route gives this value (13 of 14 items). Example: table_facts|20|spr names 102 = 11*9 + 3. A student with slope +11 gets b = -85 and types 14, or steps from x=8 and types -74. Same problem in |27|spr (-37.5) and |35|spr (105.5).",
+  "fix": "Keep it only when 0 is in xs. Otherwise compute what the wrong slope really gives, e.g. -m*x_ask + (ys[0] + m*xs[0]), or drop it."
+ },
+ {
+  "where": "define.py table_facts, ask=value: 'used the step in x as the slope and left out the constant term' (step*x_ask) and 'added the slope to the wrong row' (ys[-1]+m)",
+  "what": "When the step is 1, step*x_ask is the asked input itself. A student who typed the input back is told 'used the step in x as the slope and left out the constant term': table_facts|27|spr names 4.5, and |28|spr, |70|spr, |78|spr and |19|None do the same. ys[-1]+m is the value one unit past the last row whatever x_ask is, which is not the route the wording describes. In |19|spr (asked j(-1) between rows -2 and 0) it names 88 = j(1).",
+  "fix": "Drop both from the grid-in list, or keep step*x_ask only when step != 1 and say what it is."
+ },
+ {
+  "where": "satbank/topics/linear_functions/families/basic.py _eval_mistakes: 'subtracted the constant term from the input' (x0 - b) in the given and abs(m)==1 lists",
+  "what": "When b < 0, x0 - b is x0 + |b|, so the student added. The branch applies its own rule, 'a sign slip is named by the sign actually printed', to the structural slip but not to this one. Because this reason comes first, it also hides the correctly worded 'added the constant term instead of subtracting it'. There are 9 cases. evaluate|2|spr, k(n) = n - 85 at n = -9: 76 is 'subtracted'. evaluate|63|spr, h(n) = 10n - 10 at h(10): 20 is 'subtracted'. The same happens in |40, |45, |54, |58, |67, |77 and |79 (all spr). Separately, for m != 1 this route also drops the coefficient (12x + 55 at 10 gives -45), which is doubtful.",
+  "fix": "With spr and b < 0, name it 'added the constant to the input instead of subtracting it', or set it to None and let the structural entry name it. Consider None when m != 1."
+ },
+ {
+  "where": "basic.py _eval_mistakes: 'added the coefficient, the input and the constant term' (m+x0+b) and 'multiplied the input by the constant term and added the coefficient' (b*x0+m) when abs(m)==1",
+  "what": "When m = +-1 the rule prints no coefficient (n - 85, x + 95, -x + 12), so adding a coefficient of 1 is not a plausible route. Numbers one off the key or off x0*b get named this way. evaluate|2|spr (n - 85 at -9) names -93 and 766. |3|spr (n + 229 at 6) names 236 and 1375. |31|spr names 161, |61|spr 136 and |65|None 148/-759. Also in |14, |22, |41 and |54.",
+  "fix": "With spr and abs(m)==1, set both values to None. Treat 'gave the coefficient of x' for m = -1 the same way."
+ },
+ {
+  "where": "basic.py _eval_mistakes wrong=='sign': 'used the sign of the input rather than its value'",
+  "what": "The fix sets this to None only when x0 == 0. When x0 > 0 the value is f(1), and a positive input has no sign to use. evaluate|1|spr (10n - 27 at h(4)) names -17. |68|spr (100x + 17 at 8) names 117, and |75|spr names 229. Also |14|None, |24|spr and |52|None.",
+  "fix": "With spr, set it to None when x0 >= 0."
+ },
+ {
+  "where": "basic.py _eval_mistakes constant_first: 'added the input instead of multiplying it by the coefficient' (b - k + x0)",
+  "what": "When k == x0 this value equals b. It is listed first, so a student who gave the constant term is told they added the input, and 'gave the constant term' is dropped as a duplicate. evaluate|4|spr (y = 23 - 9n at n = 9) names 23 this way, as does |27|spr (33 - 4x at x = 4).",
+  "fix": "With spr, set it to None when k == x0, or put 'gave the constant term' before it in the grid-in list."
+ },
+ {
+  "where": "define.py table_facts, ask=a_minus_b: 'subtracted the second input instead of b' (m - xs[1])",
+  "what": "When the second input is 0, the value is a, so a student who gave a alone is told they subtracted the second input. table_facts|0|spr names -8 this way ('gave a alone' is dropped). table_facts|0|None does the same with -5. More generally, subtracting the second x in place of b is a doubtful route.",
+  "fix": "Set it to None when xs[1] == 0, or drop it from the grid-in list."
+ },
+ {
+  "where": "Lower severity, plausibility only: coefficient 'divided the constant term by the input' (b/x1, 19 items); model_value inverse 'halved the remaining amount before dividing' (12 items); table_facts intercept 'halved the first output', including when x=0 is in the table (e.g. table_facts|15, |77); graph_read rate 'gave the input at a labelled gridline instead of the rate' (always 2) and 'halved the rate'; evaluate 'added the coefficient to the constant, ignoring its sign' (m+|b| ignores the input, evaluate|1|spr names 37)",
+  "what": "Each value is computed correctly, but none is a route a student would plausibly take to this answer. Under 'dropping a doubtful entry is always better', they should not name a typed answer.",
+  "fix": "Leave these out of the spr lists. The MCQ lists are unchanged."
+ }
+]

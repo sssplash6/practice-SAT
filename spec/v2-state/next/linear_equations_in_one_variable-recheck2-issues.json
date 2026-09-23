@@ -1,0 +1,37 @@
+[
+ {
+  "where": "satbank/topics/linear_equations_in_one_variable/families/structure.py, identity_constant, same_coef list (about lines 128-133)",
+  "what": "The grid-in names three wrong answers with no route to L in a·v + L = a·v + c: c/a ('divided the constant by the coefficient of the unknown'), c*a ('multiplied the constant by the coefficient of the unknown') and c+a ('added the coefficient to the constant'). Official item 1.17, '6x + k = 6x + 5' (key 5), names 5/6, 30 and 11. Another example: '14x + r = 14x + 18' names 9/7, 252 and 32. These appear in 56-57 of the 57 same_coef grid-ins. The template author invented these options; College Board printed none, because the source is a grid-in.",
+  "fix": "Leave all three out of the grid-in list, the way `added` is left out for factor. Keep −c (a sign slip). Optionally drop a ('reported the coefficient of the unknown instead') too, since it is doubtful."
+ },
+ {
+  "where": "satbank/topics/linear_equations_in_one_variable/families/structure.py, identity_constant, factor list (about line 151)",
+  "what": "'added the two numbers on the left' (a+b) adds a coefficient to a constant; no student route to L does that. Official item 2.3, '2x + 16 = a(x + 8)' (key 2), names 18. '11j − 110 = s(j − 10)' names −99. It appears in 61 of 62 factor grid-ins. The branch dropped b/c + a from this same list for exactly this reason and kept this one.",
+  "fix": "Leave a+b out of the grid-in list, as is already done for b/c + a."
+ },
+ {
+  "where": "satbank/topics/linear_equations_in_one_variable/families/algebra.py, solve(): the grid-in skip set for shape 'standard'",
+  "what": "When |a| = 1 no coefficient is printed, but three grid-in reasons still use one:\n- sub_coefficient (C−A)\n- constant_over_coefficient (b/A): with a = 1 this is just the printed constant, but the reason says it was divided\n- reciprocal (A/C)\nOfficial item 1.24, 'x + 40 = 95' (key 55), names 54 'subtracted the coefficient instead of dividing by it', 40 'divided the constant by the coefficient and stopped' and 1/55 'divided the coefficient by the constant instead of the other way round'. solve seed 18 default, '−n + 16 = 0', names −15 and 1/16. The branch already skips add_numerator/over_numerator for `over` with a = 1 for the same reason ('prints no numerator to use').",
+  "fix": "When shape == 'standard' and |p['a']| == 1, add 'sub_coefficient', 'constant_over_coefficient' and 'reciprocal' to the skip set."
+ },
+ {
+  "where": "satbank/topics/linear_equations_in_one_variable/families/algebra.py, _dist_mistakes: 'reported the combined coefficient of the unknown rather than its value'",
+  "what": "When the combined coefficient A is ±1, the equation gathers to 'j = 27' or '−j = −26', and no student types the unprinted 1. Even so, 11 of 87 distinct distribute grid-ins name 1 or −1. Examples: '−2j + 3(j + 3) = 36' (key 27) names 1; '5j + 2 = 6(j − 4)' (key 26) names −1; '4(2y − 9) + 13 = 7(y + 7) − 14' names 1.",
+  "fix": "On the grid-in path (the gridin flag is already passed in), leave out the A entry when |A| == 1."
+ },
+ {
+  "where": "satbank/topics/linear_equations_in_one_variable/families/context.py, _context_gridin, m > 0 branch: 'added the fixed amount instead of subtracting it'",
+  "what": "The isosceles and flags pages print no 'fixed amount'. The branch gave isosceles its own wording for the 'reported' line ('added the two congruent sides and stopped') but not for this one. Examples: perimeter 66 with sides 29 names 124 'added the fixed amount instead of subtracting it'; 57 flags with 25 purple names 82 with the same wording. This affects 6 isosceles and 6 flags grid-ins, including official 1.2 (131).",
+  "fix": "Give each scene its own wording in gridin_extra. For example 'added the two congruent sides to the perimeter instead of subtracting them', and 'added the <c1> flags to the total instead of subtracting them'. Or drop the entry for these scenes."
+ },
+ {
+  "where": "satbank/topics/linear_equations_in_one_variable/families/context.py, membership scene 'extra': 'used twice the monthly fee'",
+  "what": "The grid-in names (total − fee)/(2·rate), but nothing in the stem is doubled. Example: $46 fee, $38 a month, $730 total names 9. College Board printed this value as an option in the MCQ source 1.10, but as the named cause of a typed grid-in value it is doubtful. It appears in 11 grid-ins.",
+  "fix": "Add a membership 'gridin_extra' that leaves it out, as the plant scene already does."
+ },
+ {
+  "where": "satbank/topics/linear_equations_in_one_variable/families/algebra.py, _solve_mistakes add_constant: 'added the constant instead of subtracting it when moving it across the equals sign'",
+  "what": "For b < 0 the wording is the reverse of what the student did on the page. For '−2j − 6 = 49' the value −43/2 comes from 49 − 6: the student subtracted 6. The branch made then_value, chunk and context word these slips by printed sign; this one was not changed. It affects 4 grid-ins, a low-severity wording issue.",
+  "fix": "Word it by the sign of b ('subtracted the constant instead of adding it' when b < 0), or use the neutral 'moved the constant across the equals sign without changing its sign'."
+ }
+]

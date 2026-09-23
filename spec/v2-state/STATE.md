@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-23T18:46:58+05:00
+# v2 build state -- 2026-09-23T19:52:56+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -12,9 +12,16 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/t-bank-circles` at 7f9dd2c, 2 commits ahead of master
 - `v2/t-bank-equivalent_expressions` at 719a0ac, 3 commits ahead of master
 - `v2/t-bank-evaluating_statistical_claims` at 9403838, 1 commits ahead of master
-- `v2/t-bank-fix-equivalent_expressions` at b75c946, 47 commits ahead of master
-- `v2/t-bank-fix-linear_equations_in_two_variables` at 7df9baf, 48 commits ahead of master
+- `v2/t-bank-fix-area_and_volume` at 8b45b2a, 47 commits ahead of master
+- `v2/t-bank-fix-equivalent_expressions` at 5bae662, 48 commits ahead of master
+- `v2/t-bank-fix-linear_equations_in_one_variable` at bb419a4, 47 commits ahead of master
+- `v2/t-bank-fix-linear_equations_in_two_variables` at 343eb30, 49 commits ahead of master
+- `v2/t-bank-fix-linear_functions` at c7e62a3, 47 commits ahead of master
 - `v2/t-bank-fix-linear_inequalities` at 241b13d, 47 commits ahead of master
+- `v2/t-bank-fix-nonlinear_equations_and_systems` at ecf609a, 47 commits ahead of master
+- `v2/t-bank-fix-right_triangles_and_trigonometry` at d7a76c3, 47 commits ahead of master
+- `v2/t-bank-fix-systems_of_linear_equations` at 10364cf, 47 commits ahead of master
+- `v2/t-bank-fix-two_variable_data` at 596dc6e, 47 commits ahead of master
 - `v2/t-bank-linear_equations_in_one_variable` at 6c76ede, 2 commits ahead of master
 - `v2/t-bank-linear_equations_in_two_variables` at bedb9bd, 3 commits ahead of master
 - `v2/t-bank-linear_functions` at c322f18, 3 commits ahead of master
@@ -47,8 +54,8 @@ Unfinished when saved: fix: area_and_volume, fix: linear_equations_in_one_variab
 
 ### wf_c70c4702-929: 49 finished, 0 unfinished
 
-### wf_f6283862-332: 3 finished, 6 unfinished
-Unfinished when saved: judge: compete, judge: plan, judge: reports, judge: review, judge: tests, judge: words
+### wf_f6283862-332: 36 finished, 6 unfinished
+Unfinished when saved: fix 1: plan, fix 1: right_triangles_and_trigonometry, fix 1: tests, fix 2: shell-me, recheck 2: nonlinear_equations_and_systems, recheck 2: two_variable_data
 
 ### wf_fbdd8d24-a54: 20 finished, 0 unfinished
 

@@ -1,0 +1,77 @@
+[
+ {
+  "feature": "Contest integrity rules (theirs: fullscreen; a tab switch, leaving fullscreen, copy or paste voids the open question). Ours: C15 Verify, don't void",
+  "why_not_way_better": "C15 removes their copy trigger and their fullscreen-exit trigger, and adds nothing in their place. Our triggers are tab hidden for 5 s or more (visibilitychange), a paste outside the calculator, pagehide, and fast. That leaves the most common desktop cheat open. A student copies the stem (now free), pastes it into an AI in a second window or on a second monitor (the paste event fires there, not in our page), then types the answer. The tab never becomes hidden, so no flag is raised and no confirm follows. Theirs voids at the copy. On this path ours is weaker than theirs, and 'looked-up answers must be repeated on new numbers' never fires. The confirm twin has the same hole: its strict mode also watches only tab-hide and paste.",
+  "fix": "In C15 Triggers, add a window blur trigger: document.hasFocus() false for 5 s or more while a question is open, not counting focus inside the calculator host. Also flag a copy of stem or choice text when a blur follows within 20 s. Both feed the existing confirm step, so nothing is zeroed. Apply the same triggers to the confirm twin's strict mode. Acceptance: in Playwright, open a second window and focus it for 6 s during a ranked daily, and the confirm banner shows. A copy in the stem followed by a paste into the calculator still raises nothing."
+ },
+ {
+  "feature": "Twin questions, which replace their one attempt and delayed reveal (rows 5 and 9; §1.1 'Twin questions'; decision 1)",
+  "why_not_way_better": "I measured this on the shipped bank. nleq.sum_product gives only 201 distinct whole questions in 3,000 seeds, and sys.relation_pair gives 648. Both pass the slot rule of at least 15 distinct in 18 seeds, because the rule checks short-range variety and puts no limit on total variety. contest_items de-duplicates on (template, seed), not on the whole-question hash. So on a field the size of theirs ('People took 1.6k'), a slot on such a template deals identical questions to several entrants, and 'answers can't be passed on' fails for that slot. The spec's fix for this would force a fallback to 'another template of the same topic', and that breaks decision 1: every student gets the same ten question types in the same order.",
+  "fix": "Key contest_items on the whole-question sha1 (stem, choices, figure, table) instead of the seed. At startup, cache a 3,000-seed survey of total distinct questions per (template, tier). Let Daily, Trap and Weekly slots draw only from templates with at least 1,000 distinct, or at least 2× the largest field seen, so the Daily never needs a cross-template fallback. Acceptance: simulate 500 entrants on today's daily and find no duplicate whole-question hash in any slot, and every entrant's template list equal to the canonical slots."
+ },
+ {
+  "feature": "Contest tiers by plan: Elite-only prize contests (row 6), and the Period control (row 21)",
+  "why_not_way_better": "Their prize contests are dropped with nothing in their place. The row says only 'Free. Unchanged'. Nothing gives winning a stake, or public recognition that lasts past the reset. Once a week, month or season closes, its final standings cannot be viewed at all. The Leaderboard has no way to pick a past period, seasons.standings is only shown as your own row, and 'Season standings ›' opens only the live season. A student who won last week or won the Season Final has nothing to show for it. That is below a prize contest.",
+  "fix": "Add a period stepper '‹ Week 38 ›' / '‹ Road to Sep 12 ›' to the Leaderboard (`?period=week&at=2026-W38`). Weeks and months are recomputed from sessions; seasons come from seasons.standings. Add a Champions section on Overview and Your rankings: the top 3 of every closed week and season on each board (Points, Over par, Climb, and one per level band), plus each Season Final's podium. Give a non-monetary permanent mark, such as a season-champion ring on the level badge and a 'Champion · Road to Oct 3' line on the board row and on Me. Acceptance: after a week closes, `GET /api/leaderboard?period=week&at=<last week>` returns its final ranks unchanged by this week's play."
+ },
+ {
+  "feature": "Global Leaderboard card, Overview E (row 2; C10 and §3.1 item 11)",
+  "why_not_way_better": "The override replaces v2's top 5 plus your row with '#1, a separator, then you ± 2'. That cuts #2–#5 from the preview. The reason given ('the same five names every week') is not that they are useless, and decision 4 says a useful stat is never cut and should be organised instead. Theirs is a global leaderboard card. Ours now shows only its leader.",
+  "fix": "Keep the top 5, then a separator, then you ± 2 with movement and gap. Keep par rows when fewer than 5 have played. Keep the chips Points · Over par · Climb. Change §3.1 item 11 to match."
+ },
+ {
+  "feature": "C11 Ratings by domain and skill (the Rating card and the Rating board's Domain select)",
+  "why_not_way_better": "The card shows an overall 'Contest rating 1,084 · Level 3' from learners.rating: contest answers only, K 32 then 12. Under it are four domain rows from P11's skill_ratings: every mode, K 32 then 16. These are two separate rating systems, so the overall can sit below all four of its own domain rows. On the Leaderboard, 'Rating' with a domain picked silently switches from the contest rating to the practice skill rating. That breaks design rule 5 ('one source per fact') and is the reverse of clearer.",
+  "fix": "Use one system. Either compute the overall rating as the n-weighted mean of the domain aggregates from skill_ratings, or keep the two ratings clearly apart: label them 'Contest rating' and 'Skill rating (all practice)', never draw the second as a breakdown of the first, and label the Rating board's domain view 'Skill rating'. Acceptance: the card's overall equals the weighted mean of its rows, or the two ratings carry different labels on every surface."
+ },
+ {
+  "feature": "C13 Rush (retakeable ranked mode, where the difficulty climbs with you)",
+  "why_not_way_better": "The climb runs on item ratings, and at launch those are P11's three priors (900 / 1100 / 1300). With 287 attempts, none is measured (n ≥ 20). So Rush has only three steps. A student rated about 1,300 or higher starts at the hardest value on question 1 and can never climb. The example 'Level 6 question' uses P11's L1–L7 item scale (1,300 = L6), while the badge beside it uses Compete's 1–10 ladder (1,300 = Level 5). One screen uses the word 'Level' for two different scales.",
+  "fix": "Give items a spread inside each tier at launch: a per-template prior from its surveyed first-try accuracy or its College Board source's difficulty, written by ratings.py. When the target passes the highest-rated item, cap it and show 'Top of the bank'. Label Rush items with P11's 'L6' code and never the student word 'Level', or map both onto one ladder. Acceptance: for a learner rated 1,600, the first 5 right answers in a run serve strictly rising item ratings, or the header reads 'Top of the bank'."
+ },
+ {
+  "feature": "C14 Word Sprint (Reading & Writing in Compete)",
+  "why_not_way_better": "This cannot be built as written. The sibling words.md rejects 'a daily words challenge in Compete, a daily sprint board' ('Tests and Compete stay Math'), and it keeps R&W items out of attempts and out of Compete. Its W16 Sprint lasts 60 or 120 s and scores right − wrong ÷ 3. C14's lasts 3 minutes and scores 10/20/30. C14 depends on S9 functions (`words.sprint_items`, `words.record_contest_miss`) that words.md never defines, and §3.2 lists no change to words.md. Even if built, a definition matched to four word tiles is their own vocab-quiz format with a timer. Words' W1 and W2 already generate SAT-form Words in Context and Transitions items, with a named trap on every wrong option, and C14 doesn't use them.",
+  "fix": "Add a words.md row to §3.2 that overrides its rejection and gives the one sprint rule: W16's run and scoring, reused with a board. Otherwise drop C14. Build the sprint from W1 and W2's SAT-form items, not definition tiles, so R&W contests train real item types, and give it a Traps line like the Math debrief. Define `words.sprint_items` and `words.record_contest_miss` in words.md with their owner, S9."
+ },
+ {
+  "feature": "C15 confirm step in the Season Final (adaptive test window)",
+  "why_not_way_better": "C15 runs the confirm step 'after hand-in and before the result'. The Final routes module 2 when module 1 is handed in, and the spec never says whether flagged right answers that are still unconfirmed count toward routing. If a confirm fails after routing, the student has sat a harder module 2 they did not earn, and the band and points are ambiguous. This is not buildable as written.",
+  "fix": "State the rule. Route on answers as given, with flags counted as right. Run module 1's confirms at the module break, on their own clock, before module 2 is built. A failed confirm then only rescores that slot, and the route stands. Show 'Route kept: decided before confirms' on the result. Acceptance: a Final with 2 flagged rights in module 1 confirms them before module 2 loads, and routing uses the as-given count."
+ },
+ {
+  "feature": "C17 Accommodated time (1.5× / 2×)",
+  "why_not_way_better": "The lobby row writes the same `test_timing` pref as Tests. A 504 or IEP student who set 1.5× for practice tests therefore enters every contest extended, and is silently taken off every public and contest board, class-contest boards included. The lobby shows '1.5× · 23:45 answer clock · Change' but never says what the choice does to placement. That breaks decision 4's 'confirmations of what will happen'. The spec also never says whether the class owner's results table and the class-scope boards include extended sittings, so a teacher may never see an accommodated student's result.",
+  "fix": "Show a consequence line on the lobby row: 'Extended time: placed among extended-time sittings (only you see where). Official: on the public board.' Before the first extended contest, show a one-time confirm sheet. Include extended sittings in the owner results table and on class-scope boards, with the timing visible only to the owner. Acceptance: a learner with test_timing x1.5 sees the consequence line on the lobby, and the owner's /results lists their sitting."
+ },
+ {
+  "feature": "C24 Compete key map",
+  "why_not_way_better": "On the contest page, `B` (board), `R` (review), `Y` (jump to my row) and `J`/`K` (row focus) clash with §2.8's Player keys. The contest page's Review is the challenge review, which is in the Player scope: `B` save, `R` report, `Y` history, `J`/`K` move. `F` (follow) is the reference key in the runner family. The file rejected `C` for exactly this kind of clash but missed these, so the map cannot be built as written.",
+  "fix": "Scope keys by focus region: Player keys apply while focus is inside a review item, board keys while focus is inside the board. Or pick free keys, for example `Shift+B` for the board and `Shift+Y` for my row. Write the result into §2.8 with the conflict resolved. Acceptance: with a review item focused on the contest page, `B` saves the question and does not jump to the board."
+ },
+ {
+  "feature": "C4 Season Final → your last week, and the test-day card",
+  "why_not_way_better": "The block assumes the student's SAT is the season's date. A student whose exam is Nov 7, or who has no exam date, sits the 'Road to Oct 3' Final and gets a 'Your last week' block with an eve rest on Oct 2. The block gives no rule for this case. The card's doors-time line depends on an open question ('wording per open question 10') that has no answer, so the card is not fully specified.",
+  "fix": "Show 'Your last week' only when exam_date equals the season's SAT date. Otherwise show 'Final focus: 3 traps · skip-first list', fed into next.stage for when that student's own taper starts, and keep the test-day card printable. Fix the doors line now ('Doors open by 7:45 AM; check your admission ticket'), editable later. Acceptance: with exam_date = Final + 42, the result panel has no eve-rest row and has the Final focus rows."
+ },
+ {
+  "feature": "C12 Trap of the week ('always live'; never repeats the last 4 themes)",
+  "why_not_way_better": "Whether this can be built is unverified. Every week needs 10 slots over at least 5 topics, from families with at least 10 slot-feasible templates per tier, and a no-repeat rule over 4 weeks needs at least 5 such families. U6 only guarantees that each family spans at least 3 topics, first match wins, and 'slip' is one of the 11. The spec gives no fallback when fewer than 5 families qualify, so acceptance 2 and 4 can fail on the shipped bank.",
+  "fix": "Have `python3 server/habits.py` print slot-feasible templates per family per tier and assert that at least 5 families qualify. If fewer qualify, shrink the no-repeat window to qualified − 1 and relax the topic floor to 3. Exclude `slip` as a theme. Acceptance on the shipped bank: 12 consecutive trap_theme weeks all build 10 slots."
+ },
+ {
+  "feature": "C7 Lobby warm-up versus the ladder's secrecy rule",
+  "why_not_way_better": "The ladder says 'Domains only, never the skill or template'. Warm up · 6 is drawn from 'the topic and tier of your 3 lowest-chance slots', and the result reads 'Warmed up on Circles · Q9 right'. So the warm-up reveals the skills of three slots before you start, which the lobby itself hides. The rules contradict each other.",
+  "fix": "Choose one rule. Either show every slot's skill on the ladder for everyone, which is fair and clearer, and drop 'never the skill', or draw the warm-up by domain and tier only and word the result 'Warmed up on Geometry & Trig · Q9 right'."
+ },
+ {
+  "feature": "C23 Badges with Go",
+  "why_not_way_better": "The Go map covers first-contest, daily-7, daily-30, perfect-ten, podium and trap-hunter. R25 and §2.13 folded those into Shell's tiered rules (first-contest becomes 'the Challenge rule at tier I'), so compete.ACHIEVEMENTS never declares them. The acceptance check ('Compete badges with have < next carry go') then skips half the map, and no owner is named for those Go targets.",
+  "fix": "Key the Go map by the ids in Shell's rules, or give S1 the whole Go map with S8 providing the targets (`compete.go_for(rule_id)`). Extend the acceptance check to every rule that started as a Compete badge."
+ },
+ {
+  "feature": "Rejected list: the 'Clean' glyph on board rows",
+  "why_not_way_better": "The glyph is rejected as 'noise'. Decision 4 allows leaving something out only when it helps no study, clarity or convenience, and never to look lighter. A marker for clean or confirmed sittings adds clarity and trust to a board that now confirms flagged answers.",
+  "fix": "Add a small 'confirmed n' / 'clean' mark as a legend-backed glyph in the Student cell, with a tooltip, plus a board legend line with counts ('31 clean · 6 with confirms'), or give a reason that meets decision 4."
+ }
+]

@@ -1,0 +1,7 @@
+[
+ {
+  "where": "/Users/workingmyassof/satbank/.claude/worktrees/wf_f6283862-332-11/satbank/topics/equivalent_expressions/families/constants.py, match_constant, shape factor_pair (line `off = (2,)`)",
+  "what": "When a*k == d, the middle coefficient a*k - d is 0 and the stem prints no middle term (for example seed 70 fmt=\"spr\": \"2y² − 18\" rewritten as (2y − 6)(y + c), key 3). The grid-in still names a typed 0 as \"reported the coefficient of the middle term\". The page shows no middle term, so the wording does not fit this question. A student who typed 0 (for example 'no y-term, so c = 0') is told they did something they could not have done. This is a doubtful entry and should be dropped. It also happens at seeds 752 and about 790.",
+  "fix": "In factor_pair, leave out index 3 when the middle coefficient is zero: `off = (2,) if a * k != d else (2, 3)`. The MCQ list stays unchanged."
+ }
+]

@@ -1,0 +1,94 @@
+{
+ "label": "skeptic 1: practice",
+ "key": "v2:e7b7e3092beac3a219e48d043a0f7f7283af1093e6b45864aae8bcddb43ec4cb",
+ "result": {
+  "pass": false,
+  "failures": [
+   {
+    "feature": "Difficulty pills, Question Score 1-7 and the Adaptive preference (#8, #9, #17), via P11 'For me' and rating levels",
+    "why_not_way_better": "The new-student default is broken by P11's own numbers. skill_ratings start at 1000 and item priors at 900/1100/1300, so E = 1/(1+10^((Ri-Rs)/400)) gives a fresh learner 64% on Easy, 36% on Medium and 15% on Hard. The default For me · Stretch (centre 0.70) picks the pair closest to 0.70, which is Easy every time, and the 0.05 x uses penalty cannot close a 0.34 gap across hundreds of easy pairs. With Ks=32 an easy right adds about +11.5 and shrinks as Rs rises, so a skill needs Rs of about 1160, roughly 20 straight Easy rights, before Stretch serves a Medium. Hard is effectively never served. A TopTierPrep switcher who scores 700 therefore gets all-Easy sets in every skill, which is worse than their E/M/H pills. Levels on day one are no better: unanswered types sit on their priors, so they fall on L2, L4 and L6 only, and only the few types moved by backfill reach L1/L3/L5/L7. The 7 cells are the 3 tiers relabelled, below their real 1-7 score. Acceptance P11-3 passes while serving all Easy, because 0.64 is within 0.15 of 0.70. Override #46's claim that 'levels:[1] with unmeasured:true returns 200' is not guaranteed.",
+    "fix": "(a) Cold start: in each skill, For me waits for 8 clean first tries, or for Check my level or the diagnostic. Until then the skill is served Standard with all tiers, and the strip reads 'For me starts after 8 answers here'. (b) Seed skill_ratings from what we already know: U5's skill estimate or the diagnostic if present, otherwise learners.current via Rs = 1100 + 1.2 x (MathScore - 530). A 700 student then starts near 1300, about 76% on Medium and 51% on Hard. (c) Seed item priors per template from the official items it maps to. Capture College Board's 1-7 score band for the 1,039 IDs in material/keys; band b sets the prior at the midpoint of level b's rating range, so L1-L7 are populated on day one. (d) Acceptance: a fresh learner with default settings, 10 questions over three skills, gets at least 3 Medium or Hard. A learner with current=700 gets at least 2 Hard. /api/bank lists at least one type at every level 1-7."
+   },
+   {
+    "feature": "Timed mode (#14) and Timer (#23), via P16 'Test pace = sum of the served budgets'",
+    "why_not_way_better": "This is not buildable as written. drill.py serves lazily: create() fixes the clock as count x 95, and _serve/next_question pick one question at a time. Zone, adaptive and review slots choose tiers after the start, so 'the sum of the served budgets' is unknown when seconds_left is set, yet P16's acceptance #2 checks it at the start. Nothing says what the clock does when a set grows: repairs (default Next), the final round (default on, up to +5), /more, Practise this trap (up to 3), the Learn ladder (+3), Twins of these, or P25's replacement. With the defaults on, a timed 10-question set often becomes 13-15 questions on a 10-question clock. The pace delta, 'N Hard left' and Time sinks are then measured against a clock that does not match the set.",
+    "fix": "At create, the picker commits a tier to every slot (tier_mix already does this). Clock = the sum of budget_ms for each planned slot's tier, rounded up to the minute. When a zone or adaptive step changes a slot's tier, the clock moves by the budget difference. Every added slot adds its own budget, with a visible line under the timer ('+1:05 for the repair'). The final round in a timed set is timed the same way. Acceptance: POST {timing:'pace', count:10} gives seconds_left equal to the sum of the planned budgets. After a first-try miss with repairs on, seconds_left rises by that repair's budget."
+   },
+   {
+    "feature": "Check (#39), via P7's split Check (Sure · Unsure · Guess)",
+    "why_not_way_better": "Enter and tap-again both file conf='sure', so a student who never touches the split tags every answer Sure. P7 then fires its confident-miss path on nearly every miss: the note 'You were sure, and it's wrong…', a forced repair even when repairs are set to later or end, first place in coach and _pick, the 'Fresh numbers on confident misses' pool and the 'Sure but wrong' filter. The file admits the problem ('with Sure on Enter, most misses would owe 3') but drops only the owing-3 rule. The misleading verdict copy and the meaningless priority stay, and its own open question on this is unresolved.",
+    "fix": "File conf='sure' only when Sure was chosen deliberately: a click on the Sure part, or an answer from an active tagger (someone who used Unsure or Guess on at least 10% of their last 50 first tries). Otherwise Enter and tap-again file conf=null ('unrated'). The confident-miss note, ranking, pool and filter read only explicit 'sure'. Calibration shows Unrated as its own bar. Acceptance: for a learner with no Unsure or Guess in their last 50, Enter on a wrong option files conf null, and the verdict has no 'You were sure' note."
+   },
+   {
+    "feature": "Explanation and the AI Explanations switch (#22), via P1 Steps",
+    "why_not_way_better": "The file itself measures our rationale at a median of 21 words, thinner than their Justification + Distractor Analysis, and relies on P1 to beat it. P1 is 'content grows template by template' with no launch floor: acceptance #1 only requires steps_coverage.py to print a line and exit 0, so v2 can ship with 0 templates covered. On every uncovered template the student gets the 21-word Short tab plus option lines, which is below their depth. P2's rung 2 (first step) also disappears on those templates, so 'Hint · 1 of 3' promises rungs that do not exist.",
+    "fix": "Make coverage a gate: steps_coverage.py exits non-zero below 50% of U8 weight, and P1 is not marked done until it passes. For every template without steps, Short becomes an audited Method paragraph of at least 40 words: the docstring's idea, this seed's rationale and the key's value. No explanation is then thinner than theirs. The hint button counts only the rungs this item actually has ('Hint · 1 of 2')."
+   },
+   {
+    "feature": "Calculator and the Show Desmos switch (#27), via P3 Desmos way",
+    "why_not_way_better": "The scorecard rates v2 at PARITY here, and P3 carries the whole WAY BETTER claim. But P3 is also 'content grows' with no floor (its acceptance only needs the coverage tool to exit 0), and it 'runs on the trial key' until a production Desmos key exists (open question 15). Desmos's demo key is for development, not production. As written, P3 can ship covering a handful of types, or be unshippable, which leaves the section at parity.",
+    "fix": "Set a launch floor: a Desmos way on every template in the six named families (systems, linear functions and equations in two variables, nonlinear functions and equations, inequalities, circle equations, two-variable data), asserted by desmos_coverage.py as a minimum count. Get the production key before launch. If either is missing, ship P3 behind a flag that stays off, and keep the scorecard at PARITY."
+   },
+   {
+    "feature": "Reference (#28), via P24 formula in context",
+    "why_not_way_better": "At launch every template 'resolves to at least its skill's list'. With only that default, the verdict line reads 'Formulas for Circles' and claims no specific formula, so the dialog cannot open at the entry this question used. The spec sets no count for per-template overrides, and acceptance #1 passes on the skill fallback alone. P24 can therefore ship as their sheet plus a skill heading, which is parity.",
+    "fix": "Require an explicit USES entry for every template: a list of ids, or [] for 'uses no sheet formula'. Acceptance asserts 386 explicit entries and that the verdict line never uses the skill fallback. This is a 386-row table, small effort."
+   },
+   {
+    "feature": "Bank toggle (#2): real College Board questions",
+    "why_not_way_better": "Theirs gives 1,921 official Math items in the app, filtered and tracked. Ours has none in the app, and P13 works only when the student brings an ID from College Board's site. Even then it covers about half: material/keys holds 1,039 official IDs and U2 maps 911 of them exactly. Roughly 900 of the 1,921 College Board Math IDs a student might paste read 'Not in our Math map yet', with no skill, no tier and no twin. The verdict's 'Theirs is used up after one pass' overstates the case: most students never exhaust 1,921 items.",
+    "fix": "(a) Build an ID index for every College Board Math question: ID to skill and difficulty, metadata only, taken from College Board's own bank listing. Every pasted Math ID then resolves at least to 'Close: twins of <skill> at <tier>'. (b) Give each SkillRow 'Official questions on College Board · N', which opens their bank filtered to that skill, plus a 'Paste what you missed there' field that feeds P13. Official practice then starts and ends in our builder. Acceptance: 20 random College Board Math IDs not in material/keys each return a twin set, not 'Not in our Math map yet'."
+   },
+   {
+    "feature": "Subject toggle, English and Writing | Math (#4)",
+    "why_not_way_better": "The scorecard itself marks this BELOW. Theirs serves 1,848 official and 1,315 of their own R&W questions; ours shows a Words panel and 'coming'. An R&W student keeps TopTierPrep. Decision 3 rules out the R&W bank for now, but the panel is still a dead end for R&W practice. A pasted R&W College Board ID reads 'Not in our Math map yet' (the file rejects 'Detecting Reading & Writing CB IDs'), and R&W misses made elsewhere cannot be recorded for later.",
+    "fix": "Stay within decision 3 and build it additively. The R&W panel lists the 8 R&W skills, each linked to College Board's official bank filtered to that skill. A Log it field (College Board ID or pasted text, skill, the letter picked) stores subject='rw' outside mistakes now; they show in Review and carry into the EBRW bank when it ships. A non-Math ID reads 'Reading & Writing question: logged for the R&W bank'. This row stays a failure until the EBRW bank exists; the fix removes the dead end."
+   },
+   {
+    "feature": "Bluebook Include | Exclude (#7)",
+    "why_not_way_better": "Their Exclude keeps Bluebook-test items out of practice, so a student's Bluebook tests stay unspoiled. Our Repeats line promises only that 'Twins of official questions never reproduce the official item', and that rejection (pinned params and stem equality) lives only in pool 'official'. Every template is pinned to official items in satbank/topics/*/sources.py, and ordinary _fresh draws random seeds over small parameter spaces (for example circles 2.8, degree_radian with deg=60, ask value). A normal practice set can therefore serve a College Board item's exact numbers. Nothing prevents it, and the page does not say so.",
+    "fix": "At warm-up, build a set of (template, params) from every Source's pinned call. _fresh rejects any card whose params match one, in every pool, with b.keep so the seed advances. The Repeats line adds: 'No practice question copies a College Board question.' Acceptance: for every Source, seeds 0-5000 through _fresh never yield its pinned params."
+   },
+   {
+    "feature": "Clear Session (#25): a clean redo",
+    "why_not_way_better": "Their Clear Session removes answers, annotations and attempts, so the redo is clean. Ours brings notes and highlights back 'on replay, on retake' (R6, and v2 acceptance #17 tests exactly that), and P21's type rule shows on every later question of the template. 'Start over with these exact questions' therefore reopens each question with the student's own highlights, notes ('it's C', 'x = 3'), strikes and rules on it. The redo is spoiled, and nothing turns this off, so their clean redo is lost.",
+    "fix": "The Retake and Rematch sheets get a 'Start clean: hide my highlights, notes, strikes and rules on this copy' checkbox, on by default for Retake. The server keeps everything, and the copy's ReviewSheet shows it again after Finish. Acceptance: with the note 'check sign' saved, a retake with Start clean on returns no note from /q until the set is finished."
+   },
+   {
+    "feature": "Annotate / Highlights & Notes (#32), via P21's rule tip and P8's Read-the-ask underline",
+    "why_not_way_better": "P21's tip shows 'on every later question of that template', and P8's dashed underline on 'questions in that skill', but neither says where it is switched off. UI.workspace is shared with the exam runner, the Daily Challenge and contests (R21), and practice.md's shared Challenge and End-mode rules list neither. As written, a student gets their own rule and a system underline on ranked challenge twins and in practice tests. The real test allows no such aid, and it gives some students an edge on the twin board that decision 1 exists to keep fair. P8's 'Last time: a slip' line and the 'Check anyway?' prompts have the same gap.",
+    "fix": "Add them to the shared rules. The rule tip, the Read-the-ask underline, the slip line and the Check-anyway prompts show only in instant or retry practice and in review. They never show in end mode before Finish, in tests, in the challenge, in contests or in U15's Test-like mode. Add a pref type_rules (default on). Acceptance: with a type rule saved on t, a challenge twin of t has no tip in the DOM."
+   },
+   {
+    "feature": "Bottom bar (#40), via P23's next-with-the-verdict",
+    "why_not_way_better": "answer() 'returns next: the next served question'. If that question is committed to served, then Practise this trap, Another like this, the Learn ladder, Twins of these, Skip or Exit after the verdict leave it served but never shown. It still counts toward 'served >= total', so a fixed set ends one question short or shows a phantom unanswered cell and a Check Your Work blank, and it is written to practice_seen. P23 does not say whether /more discards it, so the set's counts are undefined.",
+    "fix": "Treat next as a preview, not a served question: the server holds it in cfg.pending and commits it with the /time that follows Next. /more, a navigator jump, Skip, the final round and Exit discard it. Acceptance: answer, then POST /more {axis:'same'}. state.served contains no question the student was not shown, and total rises by exactly 1."
+   },
+   {
+    "feature": "Choosing an MCQ answer by key (A-D), the runner's key map (§2.10, following R22/§2.8)",
+    "why_not_way_better": "The section's keys follow §2.8, whose runner row binds A-D to choosing and also B to save and D to details. One key press cannot both pick a choice and save or open Details. practice.md adds V, W, T, U, Shift+G and Shift+Enter without fixing this, and v2 acceptance #29 ('pressing b selects B') contradicts B = save. The keyboard map is not buildable as written.",
+    "fix": "In the runner scope, move save to Z and details to X; both are free there. Update §2.8, the shortcuts sheet and override #39 to match. Acceptance: B selects choice B and saves nothing, Z toggles save, and X opens Details."
+   },
+   {
+    "feature": "Include Vocab Review preference (#47)",
+    "why_not_way_better": "Theirs is a learning preference that mixes vocabulary review into study. Ours is a quiet 'SAT words · 12 due' link in the summary. A link is at best equal to a switch, and it never puts a single review into the student's session, so the WAY BETTER verdict is not earned.",
+    "fix": "Add a builder setting 'Mix in due SAT words: Off · 2 per set · all due' (pref words_mix, default Off, EBRW list only per decision 2). It places S9's due word reviews at set breaks in UI.workspace quiz mode, files them to Words' schedule, and keeps them out of Math accuracy, mastery and the score line. The summary link stays. Acceptance: with words_mix=2 and 5 words due, 2 word cards are served, the attempts table gains no rows for them, and the Words due count drops by 2."
+   },
+   {
+    "feature": "Skill checkboxes and the type list (#6)",
+    "why_not_way_better": "§1.6 still says 'A skill with more than 12 types collapses behind Show all 36 types', and the upgrades leave it in place. That hides useful rows to save space, which decision 4 forbids, and the type layer is the main reason #6 is rated WAY BETTER.",
+    "fix": "Show every TypeRow when a skill is expanded, grouped under its skill-label sub-headers. Each sub-header is sticky inside the panel and carries its own count and select-all. Delete the 'Show all' line."
+   },
+   {
+    "feature": "Marked for Review and Saved filters (#11)",
+    "why_not_way_better": "R5 makes Mark (the flags table, per sitting) and Save (the saved table, kept for good) two separate pools, and P21 gives Seen before, Marked and Saved each an Exactly / Fresh twins seg. But §1.7 plus override #11 list no Marked or Saved row. Marked survives only as the 'Marked for review only' checkbox under Seen before, which reads attempts, not flags. The preset 'Marked · 6' is 'Seen before, Marked only'. There is no Saved row, preset or header link, so the builder cannot start saved questions, which is exactly their 'Saved Only' filter.",
+    "fix": "Add 'Marked for review · N' (flags, default Exactly) and 'Saved · N' (saved, default Fresh twins) as rows under Questions from, each with P21's seg. Add presets 'Marked · N' (pool marked) and 'Saved · N' (pool saved), and a header link 'Saved · N'. Remove the Marked checkbox under Seen before."
+   },
+   {
+    "feature": "Subject-aware building (decision 3), across the builder and session",
+    "why_not_way_better": "The file says budgets carry subject, but P16's budget_ms(template, tier) hard-codes Math's 65/95/126 s tier defaults, and state keeps pace: 95. The builder prefs (zone, review_mix, cover, two_passes, presets, calc and the rest) are flat keys with no subject, so Math defaults would carry over to R&W. §1.10 deep links and UI.parseSet have no subject. '~15 of 44' and 'covers ~21 of 44' assume Math's 44 questions. All of this is cheap to fix now and would need tearing out later, which decision 3 forbids.",
+    "fix": "Key tier budgets by subject, derived from each subject's MODULE_SECONDS and tier mix (Math 65/95/126). Take pace from the set's subject. Store builder prefs per subject (prefs.practice[subject]). Add a subject field to POST /api/drill, state and deep links (subject=math, the default). Take section size from blueprint[subject]. Acceptance: GET /api/drill/{id} carries subject, and PUT /api/me {prefs:{practice:{math:{zone:'warm'}}}} round-trips."
+   }
+  ]
+ }
+}

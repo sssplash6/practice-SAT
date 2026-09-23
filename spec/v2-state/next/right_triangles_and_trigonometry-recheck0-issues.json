@@ -1,0 +1,57 @@
+[
+ {
+  "where": "satbank/topics/right_triangles_and_trigonometry/families/sides.py:570-574 (special_perimeter spr branch)",
+  "what": "spr_mistakes keep values that cannot be typed. The audit misses them because kit.Surd exposes `.rational`, not `.is_rational`. Examples: 67√3, 201 + 67√3, 134√2 and 93√2/2 in all 81 grid-ins, and source 3.12 keeps 6√3, 18 + 6√3 and 12√2.",
+  "fix": "In the spr branch, keep only rational values: mistakes = [m for m in mistakes if m.value.rational] before gridin_mistakes."
+ },
+ {
+  "where": "sides.py:552 and 556 (special_perimeter double_leg / hyp_root2, isosceles ask=leg)",
+  "what": "2·leg (seed 8: 198 when the key is 99) is named 'doubled a leg, leaving the hypotenuse out'. That describes working out a perimeter, not a route to a leg. 35 grid-ins.",
+  "fix": "Drop double_leg, and hyp_root2, from the spr mistakes when ask != 'perimeter'."
+ },
+ {
+  "where": "sides.py:294 and 313 (rectangle_diagonal 'double')",
+  "what": "2·key is named 'doubled the side, as though the diagonal crossed two of them'. A student would need the answer first. 116 of 116 grid-ins.",
+  "fix": "Set pool['double'] = None in the spr branch."
+ },
+ {
+  "where": "ratios.py:222 and 242 (ratio_to_side hyp_minus_given)",
+  "what": "When the hypotenuse is asked, key − given is named 'subtracted the given leg from the hypotenuse', but the hypotenuse is the unknown (seed 3: 13 − 5 = 8). 30 grid-ins.",
+  "fix": "In spr, set pool['hyp_minus_given'] = None when ask == 'hyp'."
+ },
+ {
+  "where": "ratios.py:227-230 and 242 (ratio_to_side times_ratio/over_ratio)",
+  "what": "When the given ratio does not connect the given side and the asked side, 'multiplied/divided by the ratio where it should have divided/multiplied' is false. Seed 1: 2142 is the other leg, worked out correctly. 59 grid-ins.",
+  "fix": "In spr, keep times_ratio/over_ratio only when {given, ask} equals the ratio's own two sides (sin: opp,hyp; cos: adj,hyp; tan: opp,adj). Otherwise set them to None."
+ },
+ {
+  "where": "composite.py:77 and 99 (altitude_special ratio_one_two_three)",
+  "what": "The value is always BC/3, which is the 1:2:3 result only for some angle and segment combinations. With alpha=60, gamma=60, ask AD, 1:2:3 gives 4·BC/3 (seed 11: named 8, route gives 32). 13 grid-ins.",
+  "fix": "In spr, compute the 1:2:3 value for the asked segment (BDC short = BC/3 opposite 30°, long = 2BC/3; then AD = BD/2, 2BD or BD for alpha 30, 60 or 45). Keep the entry only when it equals BC/3, or drop it for alpha=60 with ask='ad'."
+ },
+ {
+  "where": "composite.py:152-160 and 176 (nested_similar)",
+  "what": "The pool is written for DE. When BE is asked, the reason says 'gave BE instead of the segment asked for' while the value is BD, so the student is told they gave the segment they were asked for (14 cases). When the asked segment is not DE, 'the corresponding side of the whole triangle' is wrong (49 cases) and 'scaled by the part cut off' = AC·DA/AB is not that route (82 cases). 'subtracted the cut' on ask=AC needs the key.",
+  "fix": "In spr, when ask != 'de', drop whole_leg, wrong_share and difference. When ask == 'be', drop the 'hypotenuse' entry, or rename it to name BD."
+ },
+ {
+  "where": "composite.py:230-238 and 256 (parallel_similar)",
+  "what": "'used the difference of the two parallel segments as the scale' has the value AE−BD itself, not a scaled length (source 3.11: 12). 72 cases. When the asked segment is not CE, 'gave CD, the corresponding side of the small triangle' is wrong (40 cases) and 'added the scale factor' = CD + k does not match (should be CB + k; 50 cases).",
+  "fix": "In spr, drop 'difference' always. Drop small and sum_scaled when ask != 'ce'."
+ },
+ {
+  "where": "similar.py:192 and 222 (similar_side times_sine / doubled)",
+  "what": "When the opposite leg is asked, '...instead of dividing by its cosine' names the wrong correct route (36 cases). 'doubled the given leg' has no route for a rational tangent (83 cases).",
+  "fix": "In spr, drop times_sine when ask == 'opposite', and drop 'doubled'."
+ },
+ {
+  "where": "similar.py:134-137 and 153 (similar_ratio sum_denominator / swapped_sum)",
+  "what": "When a tangent is asked, 'added the two given lengths for the hypotenuse' cannot lead to the answer, because a tangent never uses the hypotenuse (source 3.10: 50/57). 40 grid-ins.",
+  "fix": "In spr, drop sum_denominator and swapped_sum when ask_fn == 'tan'."
+ },
+ {
+  "where": "sides.py:60 and 70 (pythagoras half / double_sum); ratios.py:133 (trig_ratio hyp_over_sum)",
+  "what": "Doubtful routes: 'halved the longer leg' for a hypotenuse (50), 'doubled the sum of the legs, as though finding a perimeter' (50), and 'divided the hypotenuse by the sum of the two legs' for a sine or cosine (13).",
+  "fix": "Set these pool entries to None in the spr branches, since dropping a doubtful entry is preferred."
+ }
+]

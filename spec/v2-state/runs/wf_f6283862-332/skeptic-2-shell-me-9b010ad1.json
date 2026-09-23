@@ -1,0 +1,99 @@
+{
+ "label": "skeptic 2: shell-me",
+ "key": "v2:417b8ee31a5ecf7cb3bb29bd6112041b902ce4677d787bcb172ce5259b010ad1",
+ "result": {
+  "pass": false,
+  "failures": [
+   {
+    "feature": "Sign-in and password (theirs: Google sign-in, plus an optional password)",
+    "why_not_way_better": "We drop Google sign-in: it is still an open question (rebuild-v2 §3.1.9 line 2283, Part 5 Q5), and v2-decisions doesn't answer it. U19 says passkeys are 'faster than Google', but that only holds where the passkey is synced. Take a school Chromebook with the passkey on the student's iPhone and the phone not with them. The browser's hybrid QR needs the phone and Bluetooth. U20 needs the phone. A transfer code needs another signed-in device. That leaves the email code, which needs SMTP, and SMTP is still unconfirmed (§3.1.9 line 2282). Without it, codes only land in server/outbox/, so that student can't sign in at all, while theirs signs in with Google. U19's conditional mediation is also underspecified: shell-me lines 1290-1292 give only autocomplete='username webauthn', with no get({mediation:'conditional'}) call, no challenge fetched on load, and no refresh after the 5-minute challenge expiry. Acceptance 4 checks only the attribute.",
+    "fix": "1. Make SMTP a launch requirement. /api/health reports mail 'smtp'|'outbox', and the Email tab says why it is unavailable instead of dead-ending. 2. Add an optional 'Continue with Google' behind SATF_GOOGLE_CLIENT_ID. Verify the GIS ID token (RS256) with cryptography against Google's JWKS fetched with urllib. Bind by verified email to users.learner, with the same carry choice and a d: token. 3. Specify conditional UI: /signin/ load → POST /api/passkey/login/options → navigator.credentials.get({mediation:'conditional', publicKey}), refetched when the challenge expires. Acceptance: a virtual authenticator signs in through autofill."
+   },
+   {
+    "feature": "Profile name (theirs: the student's real Google name, free text)",
+    "why_not_way_better": "R12 (rebuild-v2 line 148) makes the one learners.name the public board name, under HANDLE_OK ^[A-Za-z0-9 _.\\-]{3,24}$, unique case-insensitively with a 409. Compete's copy says 'Don't use your full name' (line 8759). The result: José, Zoë, 李明, Jo and Al cannot enter their own name on Me, and a second 'Emma' gets 'Someone already has that name.' Me's H1, the menu header and the greeting show a public handle. Today's NAME_OK (server/app.py:435) accepts Unicode, so this is a regression from our own site as well as from theirs. There is also a contradiction: §3.1 identity says 'Names can't contain digits', but R12 allows digits.",
+    "fix": "Split learners.name from learners.handle. name is private: Unicode, 1-40 characters, not unique, used for Me's H1, the menu, the class display default and emails. handle is the board name under HANDLE_OK, unique. The identity card shows 'On boards: {handle}' with its own edit, next to board visibility. Validate each field on its own in PUT /api/me. Acceptance: PUT {name:'José'} → 200, and two learners can both be named 'Emma'."
+   },
+   {
+    "feature": "Avatar photo (theirs: upload, replace and remove a profile photo)",
+    "why_not_way_better": "Photo avatars are dropped. Part 5 Q6 and §3.1.9 line 2285 ('Confirm') are unanswered by the user. U22 offers 21 non-photo choices, which is an extra, not an equivalent of a personal photo. The privacy argument only covers uploading and showing a photo publicly.",
+    "fix": "Add 'Your photo', kept only on this device: downscaled to 256px WebP in IndexedDB and never uploaded. It shows only in the student's own chrome and on Me. Boards, classes and share views keep the glyph, initial or living mark. Remove confirms with 'Your initial will be shown instead'. Alternatively, get the user's decision on Q6 before shipping without photos."
+   },
+   {
+    "feature": "Study goals: target score (theirs: a 400-1600 total target)",
+    "why_not_way_better": "Me's Goals card and the U4 target popover edit only a 200-800 Math target (rebuild-v2 lines 1323-1331). R15 stores rw_now and rw_target, and Part 5 Q16 shows the 1600 total on Today and Plan, but Me never shows or edits the R&W part or a total. Their target modal is on the 1600 scale, the number colleges see. So the profile, the place theirs shows the goal, is less complete, and it disagrees with Today and Plan, which breaks 'one source per fact'.",
+    "fix": "The Target row reads 'Total 1400 = Math 700 + R&W 700 (your estimate)', and both parts are editable in the popover, writing target and rw_target. The Snapshot shows the latest total when outside_scores.rw exists. summary.goals is keyed by subject. Acceptance: PUT rw_target 700 → Me, Today and Plan all show 1400."
+   },
+   {
+    "feature": "Target popover 'What 700 takes: about 37 of 44' (U4 estimate.need)",
+    "why_not_way_better": "The number is wrong for any target above 580. need() only inverts _interpolate over a weighted fraction (shell-me lines 503-505). But server/scoring.py routes up only at ROUTE_UP_AT = 0.60 of module 1 (line 73) and caps the lower route at LOWER_ROUTE_CEILING = 580 (line 79). A student who gets 37 right with a weak module 1 is capped at 580. The copy promises a route that the scoring engine refuses. Also, ANCHORS top out at 780 for a perfect paper, so the slider's 800 isn't reachable in the model, yet acceptance 2 asserts need(800) = 44 of 44.",
+    "fix": "need(target) returns {right_of_44, m1_min, reachable}, where m1_min = ceil(0.6×22) = 14 when target > 580, and reachable states the model's ceiling. The copy becomes 'about 37 of 44, with at least 14 of 22 in module 1 to reach the harder module 2'. Acceptance: need(700).m1_min == 14, need(560).m1_min is null, and need(800).reachable is false with the ceiling named."
+   },
+   {
+    "feature": "Up next and Snapshot for a brand-new student (the 'no sign-up wall' claim)",
+    "why_not_way_better": "U1's new-student state (shell-me line 189), the Snapshot empty state (rebuild-v2 line 1309) and U5 all send new students to 'Take the diagnostic · 20 q'. The diagnostic's results return 403 {need:'signup'} until the student gives first name, last name and email (server/app.py:497; R38 keeps the gate, Part 5 Q8 is unanswered). So the first thing the chrome recommends is a sign-up wall. U19 also says a passkey 'counts as saved everywhere a verified email does', but the gate is keyed on sessions.user_id. A passkey-saved or already-saved student still gets the name-and-email form on every diagnostic.",
+    "fix": "While the gate exists, the new-student Up next item 1 is 'Start a module · 22 q' or Sharpen, with the diagnostic second. Add one account.saved(learner) (passkey or verified email). Any saved learner's diagnostic auto-binds sessions.user_id and skips the form. Acceptance: a passkey-only learner's diagnostic /results → 200 with no form."
+   },
+   {
+    "feature": "Saving through the diagnostic email under U21 device tokens",
+    "why_not_way_better": "§3.1.5 (line 2106) says the diagnostic verify link 'counts as saving'. U21 (shell-me lines 1425-1431) then refuses the a: code for a saved learner with 401 retired, and mints a d: token only for 'the saving browser' in the passkey and email account responses. The link is a GET /api/verify opened in the mail app's browser, usually the phone, with no X-Learner. The laptop that just sat the diagnostic still holds a:X. It is refused at once and shows 'This device was signed out from another device'. Getting back needs the email code (SMTP) or the phone. Any second browser that shared an unsaved a: code through a transfer is also cut off when the other one saves.",
+    "fix": "The diagnostic link only verifies the email and never retires a:. The account counts as saved only through §1's finish-on-the-device-that-asked flow: the 6-digit code typed on the laptop, or 'sign in on this device instead', and that flow mints the d: token. Acceptance: open the verify link with no X-Learner → a:X still works. Then the code on the laptop swaps it to d:, and only then is a:X refused."
+   },
+   {
+    "feature": "Shared-computer mode (U21: 'closing the browser ends it')",
+    "why_not_way_better": "The token lives in sessionStorage and stays valid until 12 h after last use (shell-me lines 1463-1471). Chrome and Firefox restore sessionStorage with session restore and with Reopen closed tab (Ctrl/Cmd+Shift+T). So on a library PC the next person can reopen the tab and act as the student, the exact case the mode exists for. A new tab (typed URL, or a rel=noopener link) also starts signed out, which breaks normal browsing mid-session.",
+    "fix": "session_only tokens idle-expire on the server after 15 minutes without a request. A visible page sends a heartbeat every 5 minutes, and last_seen is written on each heartbeat for session_only tokens. On pagehide, if BroadcastChannel shows no other open tab of that session, send a keepalive revoke. New tabs get the token handed over through BroadcastChannel. Acceptance: a session_only token idle for 16 minutes → 401, and a tab restored after that shows the retired banner."
+   },
+   {
+    "feature": "Sidebar height budget (U26) on a school Chromebook",
+    "why_not_way_better": "From 580 to 759px tall (a 1366×768 Chromebook shows about 657), Up next shrinks to the title and Start, and the Today card to one row. The reason, minutes, points, the due assignment and the registration line move into a tooltip or popover, or become a 7px dot (shell-me lines 1742-1770). v2-decisions item 4 says a useful stat or explanation is 'never cut, collapsed away or hidden to save space'; organise it instead. The scorecard's own promise ('says what to do next, why, how long, how many points') fails on the most common student laptop.",
+    "fix": "At Medium and Short heights, move the full Up next block and the full Today card out of the sidebar into a sticky strip at the top of main (two cells, full text and links). The sidebar keeps brand, Search, nav and the user card. Acceptance at 1366×657: the Up next reason and meta, and every Today card line, are visible without hovering, and every nav item stays in the viewport."
+   },
+   {
+    "feature": "Account menu: Keyboard shortcuts entry (U26)",
+    "why_not_way_better": "U26 removes the 'Keyboard shortcuts' menuitem to keep Sign out within 12 ArrowDowns (shell-me lines 1848-1851). End already reaches Sign out in one press, so the cut buys nothing. Mouse users lose the only clickable way into the ? sheet from the chrome. Decision 4 names shortcuts as something that belongs.",
+    "fix": "Keep 'Keyboard shortcuts (?)' as a menuitem in the Display group, and rely on Home/End for reach."
+   },
+   {
+    "feature": "Report attachments (theirs: up to 10 × 50 MB, GIF included)",
+    "why_not_way_better": "The server caps each file at 10 MB, and a GIF is sent as-is (rebuild-v2 lines 1166-1170). A 12-50 MB GIF screen capture that theirs accepts is refused with 'That GIF is over 10 MB.' This contradicts review change 8, 'at least as capable as theirs'.",
+    "fix": "Accept image/gif up to 50 MB, or convert it in the browser to animated WebP under 10 MB and fall back to 50 MB. Also accept short screen recordings (video/webm, video/mp4 up to 50 MB). Acceptance: a 40 MB GIF → 200."
+   },
+   {
+    "feature": "Words on Me, Help and the share view vs v2-decisions item 2",
+    "why_not_way_better": "Override 22 adds 'New words from: SAT words · Transitions (only these two)', but §2.7 (line 406) still defines words_from as a subset of math, sat and transitions with default [math]. The §3.2 R11 row doesn't change the default, so a builder ships an invalid default or a Math-language option. §2.7 also lists gloss ('underline math words') as edited on Me. Help's 'What does it cover?' says 'Reading & Writing not yet' (line 1703), and the share H1 is 'SAT Math progress', although Words (EBRW vocabulary) is the first R&W piece and has a tile on Me (R31).",
+    "fix": "words_from ∈ {sat, transitions}, default [sat, transitions], 422 on 'math'. Drop gloss from Me unless it glosses EBRW words. Help reads 'SAT Math (4 domains, 19 skills) and SAT Reading & Writing vocabulary in Words; R&W questions later'. The share H1 becomes 'Dana's SAT progress'."
+   },
+   {
+    "feature": "Subject-aware Me payloads (v2-decisions item 3)",
+    "why_not_way_better": "The upgrades say every new section payload is keyed by subject (shell-me lines 13-15), but U8's coverage {readiness, met, total, types} and U6's habits are flat. So are the base summary's score, domains and coverage. Achievements hard-code 19 skill badges, 4 domains and Explorer's 386 top tier. When R&W lands, Me, the share view and the class roster all have to be reshaped, which is the 'torn out' case decision 3 forbids.",
+    "fix": "Shape the summary as /api/me/summary?subject=math → {stats (cross-subject), subjects: {math: {score, domains, coverage, gains, pace, habits, levers}}}. Compute Explorer and domain-badge tiers from catalogue.by_topic for each subject. Acceptance: the summary has subjects.math and nothing Math-specific at the top level."
+   },
+   {
+    "feature": "Country rank line (U11) has no country control",
+    "why_not_way_better": "U11's blank state links 'Set a country' to /me/settings/#account (shell-me lines 891-894). §4.4 Account & devices and override 35 add no country row. Compete's spec puts the country select in a 'Me Boards block' (rebuild-v2 lines 8763 and 9075), but U26's 16-card Me list and override 18's layouts have no Boards card. So their Country Rank, which we claim to keep, can't be switched on. §1 'No location is collected' also contradicts learners.country.",
+    "fix": "Add a country select (blank by default, with the browser-region suggestion) to Settings › Account & devices, next to 'Show me on boards', or add the Boards card to U26's section list and the layout orders. Point U11's link at it. Reword §1 to 'No location is detected; a country is optional and set by you.'"
+   },
+   {
+    "feature": "Reminders at the preferred time (U18b quiet hours)",
+    "why_not_way_better": "Quiet hours are fixed at 21:30-7:00 (shell-me line 1232), while Settings offers any custom study time (rebuild-v2 line 1530). A student who studies at 22:00 never gets the reminder they asked for, and nothing says why.",
+    "fix": "Quiet hours never suppress the student's own chosen reminder; they only gate nudges such as the streak reminder. Settings shows the window and lets the student change it."
+   },
+   {
+    "feature": "Classes safety: 'Report this class' suspension (U27)",
+    "why_not_way_better": "Three reports from different students suspend new joins 'until admin reviews it' (shell-me lines 1909-1913), but who staffs admin is an open question (Part 5 Q7). Three pranksters can freeze a real teacher's class indefinitely, and the teacher isn't told.",
+    "fix": "Count only reporters who have been members for at least 3 days, apply suspension only to free-mail teachers, notify the teacher, and lift it automatically after 72 h without admin action while keeping the flag. Acceptance: three new-member reports don't suspend, and a suspension lifts at 72 h."
+   },
+   {
+    "feature": "Homework attachments (theirs: 'Attach file')",
+    "why_not_way_better": "Ours accepts up to 5 images, and only after finishing (rebuild-v2 line 1658). Theirs attaches a file during the homework. Working typed in a doc (a PDF) can't be attached.",
+    "fix": "Accept application/pdf up to 10 MB alongside images, and allow attaching while the assignment is in progress."
+   },
+   {
+    "feature": "Display settings: question text size",
+    "why_not_way_better": "The spec contradicts itself. §4.2 offers Question text 'Normal · Large' (line 1524), §2.7 defines text as small|normal|large, and U26 says 'Small text and System stay in Settings'. Small then has no control outside the runner.",
+    "fix": "Make it a seg Small · Normal · Large with the live serif preview line."
+   }
+  ]
+ }
+}
