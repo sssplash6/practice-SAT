@@ -17,9 +17,9 @@ grid-in value, an R&W trap id -- closes only on clean answers to questions that
 offered it again (R45, G3): a right answer on an item without that trap on
 offer counts for mastery and nothing else. An unnamed one (an unsure right, a
 filler slip, a grid-in miss naming nothing) closes on any clean answer to its
-template. After the fix come check-ins at 3, 10 and 30 days; the 10-day one is
-served on another template with the same trap when there is one, and passing
-the last two there closes it as 'transfer'. A miss on a due check-in reopens it
+template. After the fix come check-ins at 3, 10 and 30 days; the 10- and
+30-day ones are served on another template with the same trap when there is
+one, and passing both there closes it as 'transfer'. A miss on a due check-in reopens it
 as Relapsed. Every change is written to `trap_log` in the same transaction.
 """
 
@@ -567,8 +567,16 @@ def log_mistake(learner: str, template: str, topic: str, reason: str = "",
         return tid
 
 
+def related(reason: str | None = None):
+    """The templates offering a named misconception (R45, G3 rules 5 and 6):
+    with a norm (or a raw reason, folded by norm()), the templates offering it,
+    () when it recurs nowhere else; with nothing, the whole index."""
+    index = _related_index()
+    return index if reason is None else index.get(norm(reason), ())
+
+
 @lru_cache(maxsize=1)
-def related() -> dict[str, tuple[str, ...]]:
+def _related_index() -> dict[str, tuple[str, ...]]:
     """Templates sharing a concrete named misconception across sampled seeds."""
     index: dict[str, set[str]] = defaultdict(set)
     for template in practice.catalogue()["by_topic"].values():
@@ -586,10 +594,11 @@ def related() -> dict[str, tuple[str, ...]]:
 
 
 def checkin_template(t) -> str:
-    """Where a trap's next check-in is served: the 10-day one on another
-    template offering the same norm when one exists (R9, G3), else its own."""
-    if t["checks"] == 1:
-        others = [k for k in related().get(t["norm"], ()) if k != t["template"]]
+    """Where a trap's next check-in is served: the 10- and 30-day ones on
+    another template offering the same norm when one exists (R9, G3 rule 5:
+    passing both there is 'transfer'), else its own."""
+    if t["checks"] >= 1:
+        others = [k for k in related(t["norm"]) if k != t["template"]]
         if others:
             same_topic = [k for k in others if _topic_of(k) == t["topic"]]
             return (same_topic or others)[0]

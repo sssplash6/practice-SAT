@@ -182,16 +182,18 @@ def checks():
     # G3 check 4 / R9: the 10-day check-in on another type, closed as 'transfer'
     tr = "a:f4transfer"
     norm = progress.norm("used 10 instead of 20")
-    with patch.object(progress, "related", lambda: {norm: ("lin.evaluate", "lin.other")}):
+    with patch.object(progress, "_related_index", lambda: {norm: ("lin.evaluate", "lin.other")}):
+        assert progress.related("used 10 instead of 20") == ("lin.evaluate", "lin.other")
+        assert progress.related(norm) == ("lin.evaluate", "lin.other") and progress.related("nothing") == ()
         progress.record(tr, None, q(1), 1, when=at("2026-01-01"))
         for seed in (2, 3):
             progress.record(tr, None, q(seed), 0, when=at("2026-01-01", 14))
+        assert progress.due_rechecks(tr, "2026-01-04")[0]["serve"] == "lin.evaluate"
         progress.record(tr, None, q(4), 0, when=at("2026-01-04"))          # the 3-day check, same type
-        t = trap(tr)
-        assert t["checks"] == 1 and progress.checkin_template(t) == "lin.other"
-        assert progress.due_rechecks(tr, "2026-01-11")[0]["serve"] == "lin.other"
-        progress.record(tr, None, q(5, key="lin.other"), 0, when=at("2026-01-11"))
-        progress.record(tr, None, q(6, key="lin.other"), 0, when=at("2026-01-31"))
+        for day, seed in (("2026-01-11", 5), ("2026-01-31", 6)):          # each on the template served
+            serve = progress.due_rechecks(tr, day)[0]["serve"]
+            assert serve == "lin.other", (day, serve)
+            progress.record(tr, None, q(seed, key=serve), 0, when=at(day))
         t = trap(tr, template="lin.evaluate")
         assert t["checks"] == 3 and t["closed_how"] == "transfer", dict(t)
         assert progress.rechecks_passed(tr, "2026-01-01")["n"] == 3
