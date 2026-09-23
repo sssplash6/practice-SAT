@@ -109,18 +109,26 @@ def triangle_sum(rng: random.Random, seed: int, *, frame=None, a=None, b=None,
         "same": Mis("gave back the acute angle the question supplies", whole(a)),
         "right": Mis("gave the right angle rather than the remaining acute angle",
                      whole(90) if right else None),
-        "hundred": Mis("subtracted from 100 instead of from 90", whole(100 - a)),
-        "iso45": Mis("assumed the two acute angles of a right triangle are each 45 "
-                     "degrees", whole(a - 45) if right else None),
+        # 90 - a done by hand: borrowing a ten for the ones column and leaving
+        # the tens digit at 9 lands exactly 10 high, and only when there is a
+        # ones digit to borrow for
+        "hundred": Mis(f"borrowed a ten to subtract {a} from 90 but left the tens "
+                       "digit at 9",
+                       whole(100 - a) if right and a % 10 else None),
+        # a - 45 is what College Board printed beside 51 (source 1.12), but no
+        # route through a right triangle lands on it -- assuming 45 and 45 gives
+        # 45 -- so it stays an option there, unnamed, and is never offered or
+        # named anywhere else
+        "iso45": Mis("near-miss arithmetic slip", whole(a - 45) if right else None),
         "one_only": Mis("subtracted only one of the two given measures from 180 "
                         "degrees", whole(180 - a)),
         "other_only": Mis("subtracted only the other given measure from 180 "
                           "degrees", whole(180 - b)),
     }
     order = ["sum", "diff", "full", "right_rest", "one_only", "other_only",
-             "sum_right", "hundred"]
+             "sum_right"]
     if right:
-        order = ["same", "right", "sum", "hundred", "iso45", "one_only"]
+        order = ["same", "right", "sum", "hundred", "one_only"]
 
     ang = "∠" if style == "symbol" else "angle "
     tri = "△" if style == "symbol" else "triangle "
