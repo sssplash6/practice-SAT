@@ -15,23 +15,30 @@
      sheet used, so anyone who practised there keeps their history. */
   const LEARNER_KEY = 'satf.learner';
   let memo = null;
+  // the code is the whole of a learner's access, so it is not guessable
+  const mint = () => 'a:' + Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(36).padStart(2, '0')).join('');
+  // Kept in localStorage. Where site data is blocked it lasts the tab instead:
+  // sessionStorage, or failing that the tab's name, which outlives its page loads.
+  const STORES = ['localStorage', 'sessionStorage'];
+  const TAB = LEARNER_KEY + '=';
+  function keep(code) {
+    for (const store of STORES) {
+      try { window[store].setItem(LEARNER_KEY, code); return; } catch (_) {}
+    }
+    window.name = TAB + code;
+  }
   function learner() {
     if (memo) return memo;
-    try {
-      memo = localStorage.getItem(LEARNER_KEY);
-      if (!memo) {
-        // the code is the whole of a learner's access, so it is not guessable
-        memo = 'a:' + Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(36).padStart(2, '0')).join('');
-        localStorage.setItem(LEARNER_KEY, memo);
-      }
-    } catch (_) {
-      memo = memo || 'a:' + Math.random().toString(36).slice(2, 12);   // private window: this tab only
+    for (const store of STORES) {
+      try { memo = window[store].getItem(LEARNER_KEY); if (memo) return memo; } catch (_) {}
     }
+    memo = window.name.startsWith(TAB) ? window.name.slice(TAB.length) : mint();
+    keep(memo);
     return memo;
   }
   function useLearner(token) {
     memo = token;
-    try { localStorage.setItem(LEARNER_KEY, token); } catch (_) {}
+    keep(token);
   }
 
   /* ------------------------------------------------------------ the API */
