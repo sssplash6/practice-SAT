@@ -1,18 +1,66 @@
 /* ============================================================================
-   SAT Freshman -- the interface
+   SAT Freshman -- the interface (spec/rebuild-v2.md 2.1, 2.3, Shell 2.13)
 
-   Paper, graphite and one orange. Orange means "yours, live": what you picked,
-   what you are about to practise, the mistakes you still have. Orange fills
-   carry a near-black label, because white on #F18508 is 2.4:1 and fails.
+   Rules
+   1  Functionality first. Every control a student acts on has a visible text
+      label; legends carry counts, numbers carry units; a control that changes
+      how practice behaves has a one-line helper under it. An empty state shows
+      a dimmed sample row, says what will appear, and offers the smallest action
+      that fills it, with its cost (UI.empty).
+   2  One primary per region (a page header, a card, a sheet, a player, an
+      action bar): the filled orange .pill. Secondary is .btn (--tile-2, 40px,
+      radius 10, Archivo 600 14px, ink). Tertiary is .quiet. Hierarchy comes
+      from size and position.
+   3  Borders where they separate: 1px --line. Cards are --tile on paper,
+      radius 14 (--radius-card), padding 20-24 (--card-pad; 16 on a phone).
+   4  Orange is the only accent. It marks what is yours or live: the selection,
+      the key, the recommended action, your row, open-mistake dots, goal fills.
+      Orange fills carry --ink-deep text (white on #F18508 is 2.4:1). Status is
+      never colour alone: every state has a glyph and text. Destructive actions
+      are graphite behind a confirm sheet, never red.
+   5  One source per fact; each shows its working (UI.fact).
+   6  Nothing floats over content. The session and the test window have no chrome.
+   7  Nothing a student does is lost.
+   8  Four states per card: loading (cached copy, else static skeletons at final
+      size, no shimmer), error (inside the card, with Retry), new student (the
+      frame and its empty-state action stay), lots of history (paging, collapse).
+   9  Phone at 390px: 16px gutters, no horizontal page scroll, 44px touch targets
+      (--touch), sheets become bottom sheets, nothing hidden that desktop shows.
+   10 Motion is entry only; nothing loops. Page changes fade main for 120ms.
+      prefers-reduced-motion and html[data-motion="reduce"] turn all of it off.
+   11 Type: Archivo for UI; DM Mono (.mono) for counts, times, clocks and ids;
+      Source Serif 4 for question text at --q-size / --q-opt.
+   12 Copy: no emoji. "Question 7 of 22". Thousands separators. 1:12, 42h 10m.
+   13 Speed is measured (Check -> verdict 100ms, Next -> stem 50ms, CLS 0.02).
+   14 One question, one row (UI.questionActions). 15 Readable without sight.
 
-   Shapes by role. The pill is the one primary action on a screen and nothing
-   else is a pill. Tiles (10px) hold content. Circles are answer letters,
-   marks and the avatar. Nothing has a border by default -- fills separate.
+   Look: html[data-theme="dark"|"light"] (light is the default; head.js resolves
+   System), html[data-text="small"|"large"] (question text only),
+   html[data-motion="reduce"]. Breakpoints: phone < 760px, rail < 1100px.
 
-   Nothing narrates. A filled bar is mastery, an orange tile is selected, an
-   orange dot is an open mistake, and the words on a screen are its content.
+   Question states (2.3, R20, R35, R52, SR25): an element that shows one sets
+   data-status and reads these tokens; it never paints a state by itself.
+     --st-fill  solid fill (SVG points, legend swatches)
+     --st-bg    background: --st-fill, or the split / slash of mixed and voided
+     --st-edge, --st-edge-style   1.5px edge colour and style (transparent: none)
+     --st-fg    the number   --st-halo  text-shadow for the number (mixed)
+     --st-glyph the corner glyph (content: var(--st-glyph)), --st-mark its colour
+     --st-badge a second glyph (fixed since), drawn in --amber-deep
+     --st-flag  the flag notch colour on this fill
+   Values: correct incorrect mixed repaired fixed unanswered blank skipped
+   voided removed repeat not_reached answered, and the type states unmet met
+   ready. Overlays: data-flag (notch, top-right, 9px), data-saved (bookmark),
+   data-note (7px glyph, bottom-left), aria-current (--ring), data-filtered
+   (30% opacity; the component also takes it out of Tab), an open mistake is
+   an orange dot, being fixed is --hatch.
+   Difficulty: data-tier="easy|medium|hard" gives --lvl (tint), --lvl-ink,
+   --lvl-letter (E M H) and --lvl-n (bars filled, 1-3). Bars are ink on --mat.
+   Mastery: a bar (--m-track, --m-fill) plus UI.masteryWord and accuracy.
 
-   Motion is entry only, and prefers-reduced-motion switches it off.
+   Print: the shell, overlays, controls and every button are hidden, dark
+   prints light, state fills print exactly, rows never split. .no-print hides,
+   .print-only shows only on paper, .page-break starts a page, .keep never
+   splits, button.print-keep stays.
    ========================================================================== */
 
 :root {
@@ -20,7 +68,7 @@
 
   --paper:      #FFFFFF;
   --ink:        #3F3F3F;     /* the brand graphite */
-  --ink-deep:   #1E1E1E;     /* on an orange fill: 6.4:1 where graphite is 4.1 */
+  --ink-deep:   #1E1E1E;     /* the label on orange: 6.4:1 where graphite is 4.1 */
   --amber:      #F18508;     /* the brand orange, for fills */
   --amber-deep: #D97705;     /* 3.2:1 on paper, enough to carry an edge alone */
   --wash:       #FEF4E7;     /* orange at reading strength */
@@ -32,18 +80,133 @@
   --soft:       #8A847C;
   --faint:      #B7B1A8;
 
-  --font:  "Archivo", "Helvetica Neue", system-ui, sans-serif;   /* placeholder, see brand/BRAND.md */
+  --on-ink:     #FFFFFF;     /* a number or glyph on an --ink fill */
+  --track:      rgba(63, 63, 63, .1);
+  --backdrop:   rgba(40, 38, 34, .32);
+  --shadow-pop: 0 30px 80px -30px rgba(30, 30, 30, .45);
+  --ring:       0 0 0 2px var(--paper), 0 0 0 4px var(--ink);   /* current: 2px ink, 2px paper gap */
+  --hatch:      repeating-linear-gradient(-45deg, var(--amber) 0 1.5px, transparent 1.5px 5px);
+
+  /* difficulty tints, ascending; each carries its own text colour */
+  --lvl-easy: #FDEBD3;  --lvl-easy-ink: var(--ink-deep);
+  --lvl-med:  #F8BE7A;  --lvl-med-ink:  var(--ink-deep);
+  --lvl-hard: #F18508;  --lvl-hard-ink: var(--ink-deep);
+
+  /* mastery bar */
+  --m-track: var(--track);
+  --m-fill:  var(--ink);
+
+  /* question text, by prefs.text */
+  --q-size: 20px;
+  --q-opt:  18.5px;
+
+  --font:  "Archivo", "Helvetica Neue", system-ui, sans-serif;
   --mono:  "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+
+  --radius:      10px;       /* .btn, fields, tiles */
+  --radius-card: 14px;
+  --card-pad:    22px;
+  --touch:       44px;
 
   --ease:   cubic-bezier(.23, 1, .32, 1);
   --max:    1120px;
   --gutter: clamp(16px, 4vw, 40px);
   --bar:    64px;
 }
+:root[data-text="small"] { --q-size: 17px; --q-opt: 15.5px; }
+:root[data-text="large"] { --q-size: 23px; --q-opt: 21px; }
+@media (max-width: 759px) { :root { --card-pad: 16px; } }
 
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+/* dark (Shell 2.13); screen only, so paper always prints light */
+@media screen {
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+
+    --paper:      #1A1917;
+    --ink:        #ECE8E1;
+    --ink-deep:   #1E1E1E;   /* stays: it is the label on orange */
+    --amber:      #F18508;
+    --amber-deep: #F59B32;
+    --wash:       rgba(241, 133, 8, .13);
+    --wash-2:     rgba(241, 133, 8, .22);
+    --tile:       #242220;
+    --tile-2:     #2D2A27;
+    --mat:        #3A3631;
+    --line:       #34312C;
+    --soft:       #A39C92;
+    --faint:      #6E685F;
+
+    --on-ink:     #1A1917;
+    --track:      rgba(236, 232, 225, .14);
+    --backdrop:   rgba(0, 0, 0, .55);
+    --shadow-pop: 0 30px 80px -30px rgba(0, 0, 0, .85);
+
+    /* dark ramps up in brightness; the two darker tints take light text */
+    --lvl-easy: #4A3219;  --lvl-easy-ink: var(--ink);
+    --lvl-med:  #8A500B;  --lvl-med-ink:  var(--ink);
+    --lvl-hard: #F18508;  --lvl-hard-ink: var(--ink-deep);
+  }
+}
+
+/* ------------------------------------------------------------------ question states (2.3) */
+
+[data-status] {
+  --st-fill: var(--paper); --st-bg: var(--st-fill);
+  --st-edge: transparent;  --st-edge-style: solid;
+  --st-fg: var(--ink);     --st-halo: none;
+  --st-glyph: "";          --st-mark: var(--ink);  --st-badge: "";
+  --st-flag: var(--amber);
+}
+/* right on the first try: check, top-right */
+[data-status="correct"]     { --st-fill: var(--amber); --st-fg: var(--ink-deep); --st-mark: var(--ink-deep); --st-glyph: "\2713"; --st-flag: var(--ink-deep); }
+/* wrong: cross */
+[data-status="incorrect"]   { --st-fill: var(--ink); --st-fg: var(--on-ink); --st-mark: var(--on-ink); --st-glyph: "\2715"; }
+/* right on try 2 or 3 in retry mode: a diagonal split, tilde */
+[data-status="mixed"]       { --st-fill: var(--amber); --st-edge: var(--amber-deep); --st-glyph: "~";
+                              --st-bg: linear-gradient(135deg, var(--amber) 50%, var(--paper) 50%);
+                              --st-halo: 0 0 2px var(--paper), 0 0 2px var(--paper); }
+/* right on the repair after a miss: an ink cycle corner */
+[data-status="repaired"]    { --st-fill: var(--amber); --st-fg: var(--ink-deep); --st-mark: var(--ink-deep); --st-glyph: "\21BB"; --st-flag: var(--ink-deep); }
+/* wrong then, the mistake has closed since: cross plus a small amber check */
+[data-status="fixed"]       { --st-edge: var(--ink); --st-glyph: "\2715"; --st-badge: "\2713"; }
+/* not answered: never Incorrect (R35); en dash */
+[data-status="unanswered"],
+[data-status="blank"]       { --st-edge: var(--faint); --st-edge-style: dashed; --st-fg: var(--soft); --st-mark: var(--soft); --st-glyph: "\2013"; }
+/* skipped, can still be answered before Finish: guillemet */
+[data-status="skipped"]     { --st-edge: var(--soft); --st-edge-style: dashed; --st-glyph: "\BB"; }
+/* a contest question voided by leaving or copying: a diagonal ink slash */
+[data-status="voided"]      { --st-fg: var(--soft); --st-glyph: "\2298";
+                              --st-bg: linear-gradient(to top right, transparent calc(50% - .75px), var(--ink) calc(50% - .75px) calc(50% + .75px), transparent calc(50% + .75px)), var(--paper); }
+/* taken out of scoring by a key correction (SR25): dotted ink edge, circled minus */
+[data-status="removed"]     { --st-edge: var(--ink); --st-edge-style: dotted; --st-fg: var(--soft); --st-glyph: "\2296"; }
+/* an exact re-attempt, left out of mastery: outline only, equals */
+[data-status="repeat"]      { --st-fill: transparent; --st-edge: var(--ink); --st-glyph: "="; }
+/* a set ended with this on screen, left out of counts: dotted faint edge, middle dot */
+[data-status="not_reached"] { --st-edge: var(--faint); --st-edge-style: dotted; --st-fg: var(--soft); --st-mark: var(--soft); --st-glyph: "\B7"; }
+/* answered, no verdict shown (exam, end mode) */
+[data-status="answered"]    { --st-fill: var(--ink); --st-fg: var(--on-ink); --st-mark: var(--on-ink); --st-glyph: "\2013"; }
+/* question types (R52): unmet dashed, met --tile-2, ready ink with a check */
+[data-status="unmet"]       { --st-edge: var(--faint); --st-edge-style: dashed; --st-fg: var(--soft); --st-mark: var(--soft); --st-glyph: "\25CB"; }
+[data-status="met"]         { --st-fill: var(--tile-2); --st-glyph: "\25CF"; }
+[data-status="ready"]       { --st-fill: var(--ink); --st-fg: var(--on-ink); --st-mark: var(--on-ink); --st-glyph: "\2713"; }
+
+/* outside the active filter */
+[data-filtered] { opacity: .3; }
+
+/* difficulty: tint, its text, the corner letter and the bars filled */
+[data-tier="easy"]   { --lvl: var(--lvl-easy); --lvl-ink: var(--lvl-easy-ink); --lvl-letter: "E"; --lvl-n: 1; }
+[data-tier="medium"] { --lvl: var(--lvl-med);  --lvl-ink: var(--lvl-med-ink);  --lvl-letter: "M"; --lvl-n: 2; }
+[data-tier="hard"]   { --lvl: var(--lvl-hard); --lvl-ink: var(--lvl-hard-ink); --lvl-letter: "H"; --lvl-n: 3; }
+
+/* ------------------------------------------------------------------ base */
+
+*, *::before, *::after { box-sizing: border-box; }
+html {
+  -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
+  accent-color: var(--amber);                       /* native checkboxes, radios, progress */
+  scroll-padding-top: calc(var(--bar) + 8px);       /* anchors land below a sticky bar */
+}
 html, body { min-height: 100%; }
 body {
   margin: 0;
@@ -53,17 +216,49 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
-h1, h2, h3, p, figure, ol, ul { margin: 0; }
+h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, pre, ol, ul { margin: 0; }
+h1, h2, h3, h4, h5, h6 { text-wrap: balance; }
 ol, ul { padding: 0; list-style: none; }
-button, input, select { font: inherit; color: inherit; }
-button { -webkit-tap-highlight-color: transparent; }
+img, video { max-width: 100%; height: auto; }
+button, input, select, textarea { font: inherit; color: inherit; letter-spacing: inherit; }
+button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button:disabled { cursor: default; }
+textarea { resize: vertical; }
+fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+legend { padding: 0; }
+table { border-collapse: collapse; font-variant-numeric: tabular-nums; }
+th { text-align: left; font-weight: 600; }
+hr { height: 1px; margin: 0; border: 0; background: var(--line); }
+kbd, code, samp, pre { font-family: var(--mono); font-size: .92em; }
+mark { background: var(--wash-2); color: inherit; border-radius: 3px; }
+summary { cursor: pointer; }
 a { color: inherit; }
+a:not([class]) {
+  text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: var(--faint);
+  transition: text-decoration-color .16s var(--ease);
+}
+@media (hover: hover) and (pointer: fine) { a:not([class]):hover { text-decoration-color: var(--amber); } }
+::selection { background: var(--wash-2); }
+dialog { background: var(--paper); color: var(--ink); }
+dialog::backdrop { background: var(--backdrop); }
 [hidden] { display: none !important; }
+
 /* heard, not seen */
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-:where(a, button, input, select, [tabindex]):focus-visible {
+/* "Skip to content": the first Tab stop, seen only when focused */
+.skip {
+  position: fixed; left: 12px; top: 12px; z-index: 100;
+  padding: 10px 16px; border-radius: var(--radius);
+  background: var(--ink); color: var(--on-ink); font: 600 14px var(--font); text-decoration: none;
+  transform: translateY(calc(-100% - 24px));
+}
+.skip:focus { transform: none; }
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
   outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 6px;
 }
+main[tabindex="-1"]:focus { outline: none; }     /* the skip link's target */
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+@media screen { .print-only { display: none !important; } }
 
 /* ------------------------------------------------------------------ shell */
 
@@ -251,10 +446,10 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px var(
 .dots i.in { animation: pin .5s var(--ease) both; }
 .dots i.out { animation: out .38s var(--ease) forwards; }
 
-/* mastery: a track and an ink fill; never printed as a number */
-.mbar { position: relative; height: 3px; border-radius: 3px; overflow: hidden; background: rgba(63, 63, 63, .1); }
+/* mastery: a track and an ink fill, with UI.masteryWord and accuracy beside it (R37) */
+.mbar { position: relative; height: 3px; border-radius: 3px; overflow: hidden; background: var(--m-track); }
 .mbar > i {
-  position: absolute; inset: 0; background: var(--ink); border-radius: 3px;
+  position: absolute; inset: 0; background: var(--m-fill); border-radius: 3px;
   transform-origin: left center; transform: scaleX(var(--m, 0));
   transition: transform 1.1s var(--ease);
 }
@@ -294,7 +489,7 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px var(
 .q-table table { border-collapse: collapse; font: 400 16px/1.35 var(--serif); margin: 0 auto; }
 .q-table th, .q-table td { padding: 7px 14px; border: 1px solid var(--line); text-align: center; font-variant-numeric: tabular-nums; }
 .q-table th { font-weight: 600; background: var(--tile); }
-.q-stem { font: 400 20px/1.58 var(--serif); color: var(--ink); white-space: pre-line; text-wrap: pretty; }
+.q-stem { font: 400 var(--q-size)/1.58 var(--serif); color: var(--ink); white-space: pre-line; text-wrap: pretty; }
 
 .opts { margin-top: 26px; display: grid; gap: 10px; }
 .opt {
@@ -302,7 +497,7 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px var(
   display: grid; grid-template-columns: 30px minmax(0, 1fr); align-items: center; gap: 16px;
   padding: 13px 18px; border-radius: 10px;
   background: var(--tile); color: var(--ink);
-  font: 400 18.5px/1.4 var(--serif);
+  font: 400 var(--q-opt)/1.4 var(--serif);
   transition: background-color .16s var(--ease), box-shadow .16s var(--ease), opacity .22s var(--ease), transform .12s var(--ease);
 }
 .opt .l {
@@ -340,9 +535,8 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px var(
 dialog.sheet {
   border: 0; padding: 0; border-radius: 14px; max-width: min(640px, calc(100vw - 32px));
   width: 100%; background: var(--paper); color: var(--ink);
-  box-shadow: 0 30px 80px -30px rgba(30, 30, 30, .45);
+  box-shadow: var(--shadow-pop);
 }
-dialog.sheet::backdrop { background: rgba(40, 38, 34, .32); }
 .sheet-in { padding: 22px 24px 26px; }
 .sheet-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .x {
@@ -364,7 +558,7 @@ dialog.sheet::backdrop { background: rgba(40, 38, 34, .32); }
   width: min(420px, calc(100vw - 24px)); height: min(520px, calc(100vh - 110px));
   display: flex; flex-direction: column;
   background: var(--paper); border-radius: 12px; overflow: hidden;
-  box-shadow: 0 0 0 1px var(--line), 0 24px 60px -24px rgba(30, 30, 30, .5);
+  box-shadow: 0 0 0 1px var(--line), var(--shadow-pop);
 }
 .calc-bar {
   display: flex; align-items: center; justify-content: space-between;
@@ -384,6 +578,51 @@ dialog.sheet::backdrop { background: rgba(40, 38, 34, .32); }
 .rise-2 { animation-delay: .06s; }
 .rise-3 { animation-delay: .12s; }
 
+/* page changes: main fades for 120ms; the chrome is pinned above it, the rest swaps at once (G9) */
+@view-transition { navigation: auto; }
+main  { view-transition-name: main; }
+#bar  { view-transition-name: bar; }
+#tabs { view-transition-name: tabs; }
+.side { view-transition-name: side; }
+::view-transition-group(root), ::view-transition-old(root), ::view-transition-new(root),
+::view-transition-group(bar),  ::view-transition-old(bar),  ::view-transition-new(bar),
+::view-transition-group(tabs), ::view-transition-old(tabs), ::view-transition-new(tabs),
+::view-transition-group(side), ::view-transition-old(side), ::view-transition-new(side) { animation: none; }
+::view-transition-group(main), ::view-transition-old(main), ::view-transition-new(main) { animation-duration: 120ms; }
+
 @media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+:root[data-motion="reduce"] *, :root[data-motion="reduce"] *::before, :root[data-motion="reduce"] *::after {
+  animation-duration: .01ms !important; transition-duration: .01ms !important;
+}
+:root[data-motion="reduce"]::view-transition-group(*),
+:root[data-motion="reduce"]::view-transition-old(*),
+:root[data-motion="reduce"]::view-transition-new(*) { animation: none !important; }
+
+/* ------------------------------------------------------------------ print */
+
+@page { margin: 14mm 12mm; }                     /* fits A4 and Letter */
+@media print {
+  /* chrome, overlays, controls and every button: paper carries content only */
+  .bar, .nav, .tabs, .side, .rail, .pbar, .skip, .more, .palette,
+  .menu, .popover, .tip, .toast, .banner, .calc, dialog,
+  .seg, .switch, .chips, .counter, .otp, input[type="range"],
+  button:not(.print-keep), .pill, .btn, .quiet, .x, .no-print { display: none !important; }
+
+  body { background: none; }
+  main, .page { max-width: none !important; margin: 0 !important; padding: 0 !important; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+
+  /* a state is its fill: print it even with background graphics off */
+  [data-status], [data-status] *, [data-tier], .mbar, .mbar > i, .dot, .dots i, mark {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+
+  h1, h2, h3, h4, .card-head { break-after: avoid; }
+  tr, li, figure, svg, img, .keep { break-inside: avoid; }
+  thead { display: table-header-group; }
+  p { orphans: 3; widows: 3; }
+  .page-break { break-before: page; }
 }
