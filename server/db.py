@@ -273,7 +273,7 @@ LEARNER_TABLES = {
         "post_votes", "contest_members", "word_state", "word_reviews", "my_words",
         "skill_ratings", "trap_log", "due_days", "passkeys", "webauthn_challenges",
         "devices", "transfers", "week_goals", "push_subs", "champions", "rw_log",
-        "word_lists", "official_done")},
+        "word_lists", "official_done", "rank_snapshots")},
     "pairs": "learner=:l OR req_learner=:l",
     "follows": "learner=:l OR target=:l",
     "nudges": "sender=:l OR target=:l",
@@ -425,14 +425,18 @@ def ensure_learner(code: str) -> None:
         conn().commit()
 
 
-def new_code() -> str:
-    """A short invite code unique across the supported invite namespaces."""
-    alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"      # A-HJ-NP-Z2-9
+
+
+def new_code(length: int = 6, within: tuple[str, ...] = ("contests",)) -> str:
+    """A code from the unambiguous alphabet, unique in the `code` column of
+    every table in `within`: 6 characters for a contest invite (R4), 8 for
+    U21's transfer code (`new_code(8, ("transfers",))`, shown "K7P4 M2QX")."""
     for _ in range(100):
-        code = "".join(secrets.choice(alphabet) for _ in range(6))
-        if not one("SELECT 1 FROM contests WHERE code=?", code):
+        code = "".join(secrets.choice(CODE_ALPHABET) for _ in range(length))
+        if not any(one(f"SELECT 1 FROM {table} WHERE code=?", code) for table in within):
             return code
-    raise RuntimeError("could not mint a unique invite code")
+    raise RuntimeError("could not mint a unique code")
 
 
 def _rebuild_traps(c: sqlite3.Connection) -> None:
@@ -479,8 +483,8 @@ def _rebuild_traps(c: sqlite3.Connection) -> None:
 
 def _backfill_attempts(c: sqlite3.Connection) -> None:
     """stem, norm and offered for rows filed before those columns (0.3 ms a
-    regeneration). A template that no longer generates gets offered '[]', so
-    a restart does not try it again."""
+    regeneration). A template that no longer generates gets stem '' and
+    offered '[]', so a restart does not try it again."""
     pending = c.execute("SELECT id,template,seed,correct,reason,flagged,conf,stem,offered FROM attempts"
                         " WHERE stem IS NULL OR offered IS NULL"
                         " OR (norm IS NULL AND (correct=0 OR flagged=1))").fetchall()
@@ -495,8 +499,8 @@ def _backfill_attempts(c: sqlite3.Connection) -> None:
             offered = json.dumps(offered_of({"type": it.fmt, "reasons": list(it.reasons),
                                              "spr_reasons": [[m.reason, str(m.value)] for m in
                                                              getattr(it, "spr_mistakes", ())]}))
-        except Exception:
-            stem, offered = None, "[]"
+        except Exception:                   # '' and '[]' so a restart does not try it again
+            stem, offered = "", "[]"
         unsure = r["correct"] and (r["flagged"] or r["conf"] == "unsure")
         normalized = "~unsure" if unsure else (norm(r["reason"] or "") if not r["correct"] else None)
         c.execute("UPDATE attempts SET stem=COALESCE(stem,?), norm=?, offered=COALESCE(offered,?) WHERE id=?",

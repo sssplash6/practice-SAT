@@ -640,7 +640,7 @@ def carry(frm: str, to: str) -> int:
             c.execute(f"DELETE FROM {table} WHERE {' OR '.join(f'{col}=?' for col in cols)}", (frm,) * len(cols))
         c.execute("DELETE FROM follows WHERE learner=target")
         for table in ("practice_seen", "saved", "flags", "notes", "earned", "post_votes", "contest_members",
-                      "due_days", "week_goals", "word_lists", "champions"):
+                      "due_days", "week_goals", "word_lists", "champions", "rank_snapshots"):
             c.execute(f"UPDATE OR IGNORE {table} SET learner=? WHERE learner=?", (to, frm))
             c.execute(f"DELETE FROM {table} WHERE learner=?", (frm,))
         for s in c.execute("SELECT * FROM skill_ratings WHERE learner=?", (frm,)).fetchall():

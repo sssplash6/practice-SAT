@@ -360,6 +360,23 @@ def checks():
     except HTTPException as e:
         assert e.status_code == 403
     assert db.one("SELECT 1 FROM kv WHERE k='backfill:item_priors'") and db.one("SELECT 1 FROM kv WHERE k='backfill:ratings'")
+    # a row whose template no longer generates is backfilled once, not on every start
+    gone = add("attempts", learner="a:f4gone", template="gone.template", seed=1, topic="linear_functions",
+               difficulty="easy", fmt="mcq", correct=0, at=progress.now()).lastrowid
+    db._backfill_attempts(db.conn())
+    row = db.one("SELECT stem, offered FROM attempts WHERE id=?", gone)
+    assert (row["stem"], row["offered"]) == ("", "[]")
+    # R4 / U21: invite codes are 6 characters, transfer codes 8, unique in their tables
+    import re
+    assert re.fullmatch(r"[A-HJ-NP-Z2-9]{6}", db.new_code())
+    assert re.fullmatch(r"[A-HJ-NP-Z2-9]{8}", db.new_code(8, ("transfers",)))
+    with patch.object(db.secrets, "choice", lambda _alphabet: "K"):
+        add("transfers", code="KKKKKKKK", learner="a:f4code", expires=progress.now())
+        try:
+            db.new_code(8, ("transfers",))
+            raise AssertionError("a taken transfer code was minted again")
+        except RuntimeError:
+            pass
 
 
 def days_checks():
@@ -851,6 +868,7 @@ def carry():
     add("week_goals", learner=src, week="2026-W39", id="g1", kind="minutes", target=60, created=stamp)
     add("push_subs", id="carry-push", learner=src, endpoint="https://push.example/1", created=stamp)
     add("champions", kind="week", period="2026-W38", board="points", place=1, learner=src, value=90)
+    add("rank_snapshots", day=str(TODAY), board="points", learner=src, rank=3, value=90)
     add("rw_log", learner=src, at=stamp, source="task", domain="Craft and Structure", missed=2, of=10)
     add("word_lists", learner=src, name="mine", words="[]", created=stamp)
     add("official_done", learner=src, cb_id="84664a7c", pick="C", right=0, ms=1000, at=stamp)
