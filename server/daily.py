@@ -63,7 +63,7 @@ def challenge(day: str) -> list[dict]:
     row = db.one("SELECT questions FROM challenges WHERE day=?", day)
     if row:
         return json.loads(row["questions"])
-    spread = practice.interleave(dict(MIX))
+    spread = blueprint.spread(dict(MIX))
     slots = [(dom, tier, "spr" if i + 1 in SPR_AT else None)
              for i, (dom, tier) in enumerate(zip(spread, LADDER))]
     b = practice.Builder(f"challenge:{day}", set(), set())

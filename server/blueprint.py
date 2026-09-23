@@ -39,19 +39,33 @@ SPR_AT = (6, 7, 13, 14, 21, 22)
 SPR_PULL = 400         # a slot that wants a grid-in really wants one
 
 
+def spread(counts: dict[str, int]) -> list[str]:
+    """The domains laid over the positions, each spread evenly from first to last.
+
+    A module runs easiest to hardest, so where a domain sits decides how hard
+    its questions are. Taking whichever domain had most left (the practice
+    interleave) put the two small domains at the end, and every one of their
+    questions was hard. Here each domain's k-th slot aims for the middle of
+    the k-th equal stretch of the module, and the slots are dealt in that order.
+    """
+    n = sum(counts.values())
+    marks = sorted(((k + .5) * n / c, d) for d, c in counts.items() for k in range(c))
+    return [d for _, d in marks]
+
+
 def slots(form: str, module: int) -> list[tuple[str, str, str | None]]:
     """The (domain, difficulty, format) each position carries, in final order.
 
-    Difficulty is sorted -- a module runs easiest to hardest -- and the domains
-    are spread across the positions by the practice spreader, so the small ones
-    are not all used up early.
+    Difficulty is sorted -- a module runs easiest to hardest -- and each domain
+    is spread evenly across the positions, so every domain has easy, medium
+    and hard questions in proportion.
     """
     rank = {"easy": 0, "medium": 1, "hard": 2}
     ladder = sorted([t for t, n in TIERS[form].items() for _ in range(n)],
                     key=lambda t: rank[t])
-    spread = practice.interleave(dict(DOMAIN_SPLIT[module]))
+    spread_ = spread(dict(DOMAIN_SPLIT[module]))
     out = [(dom, tier, "spr" if i + 1 in SPR_AT else None)
-           for i, (dom, tier) in enumerate(zip(spread, ladder))]
+           for i, (dom, tier) in enumerate(zip(spread_, ladder))]
     assert len(out) == MODULE_SIZE, f"{form} module {module}: {len(out)} slots"
     return out
 
