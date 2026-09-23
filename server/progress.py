@@ -114,7 +114,7 @@ def board(learner: str) -> dict[str, dict]:
     last: dict[str, str] = {}
     count: Counter = Counter()
     for r in db.rows("SELECT topic, difficulty, correct, guess, at FROM attempts"
-                     " WHERE learner=? ORDER BY id DESC", learner):
+                     " WHERE learner=? AND repeat=0 AND disputed=0 AND void IS NULL ORDER BY id DESC", learner):
         count[r["topic"]] += 1
         last.setdefault(r["topic"], r["at"])
     for r in db.rows("SELECT topic, difficulty, correct, guess FROM attempts WHERE learner=?"
@@ -225,7 +225,9 @@ def record_paper(learner: str, session: str, questions: list[dict], answers: dic
         row = db.one("SELECT qstate FROM sessions WHERE id=?", session)
         qstate = json.loads(row["qstate"] or "{}") if row else {}
     if flagged is None:
-        flagged = {r["qid"] for r in db.rows("SELECT qid FROM flags WHERE learner=? AND session=?", learner,session)}
+        flagged = {r["qid"] for r in db.rows("SELECT f.qid FROM flags AS f JOIN sessions AS s ON s.id=f.session"
+                                              " WHERE f.learner=? AND f.session=? AND (s.finished IS NULL OR f.at<=s.finished)",
+                                              learner,session)}
     n = 0
     for q in questions:
         given = answers.get(q["id"])
@@ -289,7 +291,8 @@ def carry(frm: str, to: str) -> int:
         return 0
     c = db.conn()
     with c:
-        n = c.execute("SELECT COUNT(*) FROM attempts WHERE learner=?", (frm,)).fetchone()[0]
+        n = sum(c.execute(f"SELECT COUNT(*) FROM {table} WHERE learner=?", (frm,)).fetchone()[0]
+                for table in ("attempts","word_reviews","my_words"))
         for table in ("attempts", "sessions", "tries", "outside_scores", "plans", "posts",
                       "word_reviews", "my_words", "reports", "links"):
             c.execute(f"UPDATE {table} SET learner=? WHERE learner=?", (to, frm))
@@ -433,7 +436,7 @@ def days(learner: str, tz: int = 0, weeks: int = 2) -> dict:
         d["questions"] += 1
         d["right"] += int(bool(r["correct"]) and not r["disputed"])
         d["ms"] += min(max(r["ms"] or 0, 0), MS_CAP)
-    for r in db.rows("SELECT at,ms FROM word_reviews WHERE learner=? AND kind!='lookup'", learner):
+    for r in db.rows("SELECT at,ms FROM word_reviews WHERE learner=? AND COALESCE(kind,'')!='lookup'", learner):
         d = per[_local_day(r["at"], tz)]
         d["words"] += 1
         d["ms"] += min(max(r["ms"] or 0, 0), 60_000)

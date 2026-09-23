@@ -170,6 +170,50 @@ def _interpolate(x: float) -> float:
     return ANCHORS[-1][1]
 
 
+def fraction_for(score: float) -> dict:
+    """Invert the published heuristic anchors for the score explanation."""
+    if score >= ANCHORS[-1][1]:
+        return {"fraction": 1.0, "capped": score > ANCHORS[-1][1]}
+    if score <= ANCHORS[0][1]:
+        return {"fraction": 0.0, "capped": False}
+    for (x0,y0),(x1,y1) in zip(ANCHORS,ANCHORS[1:]):
+        if y0 <= score <= y1:
+            return {"fraction": x0+(score-y0)*(x1-x0)/(y1-y0), "capped": False}
+    raise AssertionError("unreachable score anchor")
+
+
+def accepted_forms(key: str) -> list[str]:
+    """Four-place truncation and rounding when the exact decimal will not fit."""
+    from decimal import Decimal, ROUND_DOWN, ROUND_HALF_UP
+    from fractions import Fraction
+    value = _value(str(key))
+    if value is None:
+        return []
+    if "/" in str(key):
+        try:
+            denominator = Fraction(str(key)).denominator
+            for prime in (2,5):
+                while denominator%prime==0:
+                    denominator//=prime
+            if denominator==1 and len(str(Decimal(Fraction(str(key)).numerator)/Decimal(Fraction(str(key)).denominator)).split(".")[-1])<=4:
+                return []
+        except (ValueError,ZeroDivisionError):
+            return []
+    elif "." not in str(key) or len(str(key).split(".",1)[1])<=4:
+        return []
+    x = Decimal(str(value))
+    forms = []
+    for mode in (ROUND_DOWN,ROUND_HALF_UP):
+        s = str(x.quantize(Decimal(".0001"),rounding=mode))
+        if s.startswith("0."):
+            s = s[1:]
+        elif s.startswith("-0."):
+            s = "-"+s[2:]
+        if s not in forms:
+            forms.append(s)
+    return forms
+
+
 def score(questions: list[dict], answers: dict) -> dict:
     """Mark the paper, and report per domain plus one wide band."""
     domains: dict[str, dict] = {}

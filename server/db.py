@@ -178,7 +178,7 @@ CREATE TABLE IF NOT EXISTS links (token TEXT PRIMARY KEY, learner TEXT, kind TEX
 CREATE TABLE IF NOT EXISTS pairs (code TEXT PRIMARY KEY, learner TEXT, created TEXT, expires TEXT, used TEXT, req_learner TEXT, req_device TEXT, req_answers INTEGER, state TEXT DEFAULT 'open');
 CREATE TABLE IF NOT EXISTS retired (code TEXT PRIMARY KEY, "into" TEXT, at TEXT);
 CREATE TABLE IF NOT EXISTS reports (id INTEGER PRIMARY KEY AUTOINCREMENT, learner TEXT, kind TEXT, source TEXT, session TEXT, qid TEXT, paper TEXT, word TEXT, template TEXT, seed INTEGER, category TEXT, title TEXT, answer TEXT, given TEXT, details TEXT, context TEXT, device TEXT, email TEXT, files TEXT, dispute INTEGER DEFAULT 0, at TEXT, status TEXT DEFAULT 'new', reply TEXT, replied TEXT, seen TEXT);
-CREATE TABLE IF NOT EXISTS sets (code TEXT PRIMARY KEY, owner TEXT, kind TEXT, session TEXT, items TEXT, cfg TEXT, title TEXT, show_score INTEGER DEFAULT 1, created TEXT, revoked TEXT);
+CREATE TABLE IF NOT EXISTS sets (code TEXT PRIMARY KEY, owner TEXT, kind TEXT, session TEXT, items TEXT, cfg TEXT, title TEXT, show_score INTEGER DEFAULT 1, show_name INTEGER DEFAULT 0, created TEXT, revoked TEXT);
 CREATE TABLE IF NOT EXISTS earned (learner TEXT, id TEXT, tier INTEGER, at TEXT, PRIMARY KEY(learner,id,tier));
 CREATE TABLE IF NOT EXISTS tries (learner TEXT, session TEXT, qid TEXT, n INTEGER, given TEXT, correct INTEGER, reason TEXT, ms INTEGER, at TEXT);
 CREATE TABLE IF NOT EXISTS outside_scores (id TEXT PRIMARY KEY, learner TEXT, day TEXT, math INTEGER, rw INTEGER, source TEXT, at TEXT);
@@ -202,10 +202,10 @@ CREATE TABLE IF NOT EXISTS word_reviews (id INTEGER PRIMARY KEY, learner TEXT, w
 CREATE TABLE IF NOT EXISTS my_words (id TEXT PRIMARY KEY, learner TEXT, word TEXT, meaning TEXT, pos TEXT, example TEXT, same TEXT, opposite TEXT, notes TEXT, list TEXT, source TEXT, created TEXT, updated TEXT);
 """
 
-LEARNER_TABLES = ("learners", "attempts", "sessions", "practice_seen", "traps", "saved",
+LEARNER_TABLES = ("users", "attempts", "sessions", "practice_seen", "traps", "saved",
                   "flags", "notes", "links", "pairs", "reports", "earned", "tries",
                   "outside_scores", "plans", "posts", "post_votes", "contest_members",
-                  "name_reports", "word_state", "word_reviews", "my_words")
+                  "word_state", "word_reviews", "my_words", "learners")
 
 _local = threading.local()
 
@@ -278,16 +278,16 @@ def _rebuild_traps(c: sqlite3.Connection) -> None:
     from .progress import norm
     old = list(c.execute("SELECT * FROM traps"))
     c.execute("DROP TABLE traps")
-    c.executescript("""
+    c.execute("""
       CREATE TABLE traps (
         id INTEGER PRIMARY KEY, learner TEXT NOT NULL, template TEXT NOT NULL,
         norm TEXT NOT NULL, reason TEXT NOT NULL, label TEXT NOT NULL, topic TEXT NOT NULL,
         hits INTEGER NOT NULL DEFAULT 1, owed INTEGER NOT NULL, opened TEXT NOT NULL,
         last TEXT NOT NULL, closed TEXT, closed_how TEXT, relapses INTEGER DEFAULT 0,
         seed INTEGER, session TEXT, due TEXT, checks INTEGER DEFAULT 0,
-        source TEXT, note TEXT, origin TEXT, UNIQUE(learner,template,norm));
-      CREATE INDEX traps_open ON traps(learner,closed);
+        source TEXT, note TEXT, origin TEXT, UNIQUE(learner,template,norm))
     """)
+    c.execute("CREATE INDEX traps_open ON traps(learner,closed)")
     merged = {}
     for r in old:
         key = (r["learner"], r["template"], norm(r["reason"]))
@@ -302,12 +302,14 @@ def _rebuild_traps(c: sqlite3.Connection) -> None:
         if r["last"] >= x["last"]:
             x.update({"last": r["last"], "reason": r["reason"], "label": r["label"], "topic": r["topic"]})
     for (learner, template, normalized), x in merged.items():
-        a = c.execute("SELECT seed,session FROM attempts WHERE learner=? AND template=?"
-                      " AND correct=0 ORDER BY at DESC,id DESC LIMIT 1", (learner, template)).fetchone()
-        c.execute("INSERT INTO traps(learner,template,norm,reason,label,topic,hits,owed,opened,last,closed,seed,session)"
-                  " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+        attempts = c.execute("SELECT seed,session,reason FROM attempts WHERE learner=? AND template=?"
+                             " AND correct=0 ORDER BY at DESC,id DESC", (learner, template)).fetchall()
+        a = next((r for r in attempts if norm(r["reason"] or "") == normalized), None)
+        c.execute("INSERT INTO traps(learner,template,norm,reason,label,topic,hits,owed,opened,last,closed,closed_how,seed,session)"
+                  " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                   (learner, template, normalized, x["reason"], x["label"], x["topic"],
                    x["hits"], x["owed"], x["opened"], x["last"], x["closed"],
+                   "fixed" if x["closed"] else None,
                    a["seed"] if a else None, a["session"] if a else None))
 
 
