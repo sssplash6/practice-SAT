@@ -1,0 +1,105 @@
+{
+ "label": "verify F4 r1",
+ "key": "v2:04b103cff9df00bc84663b297815c71ea8b5e7bb59e410886960b2cc92ec963b",
+ "result": {
+  "pass": false,
+  "evidence": "I checked out v2/f4 detached at d5961bb (4 commits on merge-base dc9873f) and made no edits or commits. The worktree is clean. I started the port 8014 server from here, then stopped it and deleted the scratch server/v2.db.\n\nWhat passes:\n(1) `PYTHONPATH=. python3 server/checks/f4.py` prints \"ok  F4 schema, traps, days, prefs, access and carry\". `PYTHONPATH=. python3 server/test_flow.py` exits 0 and prints \"all good\" (log: scratchpad/test_flow.log). Reading f4.py, it covers norm merging, repeat not moving mastery, unsure opening with owed 1, a relapse, check-ins at 3/10/30, streak 6 on 1111100, a module's minutes counted once, prefs 422 and merge, access() on a live module and today's challenge, and carry over LEARNER_TABLES. It does not cover the F4 acceptance lines that product.md override 27 appends, or G3 acceptance 7.\n(2) Migration. I built old.db with master's db.py (2 learners, 1 user, 2 sessions, 5 attempts, 4 traps, 2 saved, 1 practice_seen), copied it to server/v2.db and started uvicorn on 8014 with SATF_DB. Every count stayed the same except traps, 4 to 3: the two container_percent rows share a norm and merged as the spec says (hits 2, opened MIN, last MAX, latest reason, seed 5 and session drill1 from the latest wrong attempt). Stems and norms were backfilled. A second db.init() on a copy changed nothing.\n(3) Live endpoints on 8014:\n- PUT /api/me: prefs 422s name the key; merge works and only non-default keys are stored; board-name rules (422, 409, reserved, default-looking); exam date yesterday 422, today 200; minutes accepted without a plan; rw fields, country, avatar and board validated; extra fields 422.\n- GET /api/me/activity?weeks=26 returns 182 days; weeks=54 is 422.\n- POST /api/notes resolves (template, seed) on the server, gives 403 to another learner, 404 for an unknown qid, and 422 for 51 marks, a bad style or 1001 characters.\n- A retired code gets 401 on every request, GETs included.\n- POST /api/me/carry returned moved 4.\n- A drill answer filed norm, repeat, repair, flagged, guess and stem.\n(4) `git diff --stat master...HEAD` touches only the 10 files F4 owns: api_me, api_notes, checks/f4, db, deps, estimate, prefs, progress, satdates, scoring.\n(5) satdates.SAT_DATES matches collegeboard.org's 2026-27 and anticipated 2027-28 dates. No class tables and no sessions.assignment (decision 5).\n\nWhat fails: scratch probes (scratchpad/probe.py) reproduce defects in what was built. Separately, almost none of the F4 items the v2-upgrades files assign exist: 34 of the functions they name are absent (checked with hasattr), GET /api/prefs is 404, and ratings.py and cb_percentiles.json are missing. The branch was cut from dc9873f, before the upgrade files existed.",
+  "defects": [
+   {
+    "where": "server/progress.py record() (lines 176-194); server/checks/f4.py",
+    "what": "R45 / G3 close rule (product.md rule 4) is not built. A named trap closes on any clean answer on its template, whether or not the item offered the trap. Probe: miss lin.evaluate seed 1 on 'left out the constant term', then answer seeds 0 and 2 right (neither offers that reason); the trap goes owed 2 → 1 → 0 and closes. There is no attempts.offered column. The R9 transfer check-in (another template via progress.related, closed_how 'transfer') is missing. f4.py lacks the checks product.md override 27 appends (G3 checks 2 and 4) and G3 acceptance 7 (every kind reaches Fixed).",
+    "fix": "Add attempts.offered (norms offered, with backfill). Lower owed on a named trap (misconception, or grid-in with spr_mistakes) only when offered / spr_reasons hold its norm; keep the old rule for '~unsure', filler slip and ''. Serve the 10-day check-in on a related template and set closed_how='transfer'. Add these cases to f4.py."
+   },
+   {
+    "where": "server/progress.py record() (miss branch, lines 195-214)",
+    "what": "R9 says a miss on a due check-in reopens the trap as Relapsed. Here only a miss whose norm equals the trap's reopens it. Probe: a fixed trap with due 2026-01-06 is missed on 01-06 with another reason; a second trap opens and the fixed one stays fixed with its check still pending and relapses 0. tests.md R9 ('trap taken → Relapsed' on trap-test answers) is also not handled.",
+    "fix": "When a template has a closed trap whose check-in is due (and on trap-test / check-in answers), treat a miss on that template as a failed check: reopen it and add a relapse."
+   },
+   {
+    "where": "server/progress.py record() and carry()",
+    "what": "Compete's 'progress.record and carry' item and the §2.10 write-path hook are missing. (a) record never calls compete.rate via deps.part for ranked, unvoided contest answers. (b) carry keeps the target's rating even when the source has more rated answers (probe: source 1400 with 200 rated, target 1000 with 3 rated → target ends 1000/3). (c) After carry, two ranked sittings of one contest under the target stay ranked=1; spec: set ranked=0, unranked_why='repeat' on the second.",
+    "fix": "Call deps.part('compete','rate') after filing when sessions.contest is set, ranked and not void. In carry, keep the rating/rated of the side with more rated answers, and un-rank duplicate contest sittings afterwards."
+   },
+   {
+    "where": "server/progress.py carry()",
+    "what": "Plan §3.6.5: when both codes have an active plan, the target's stays active and the other's is archived. Probe: plans 'ps' (source) and 'pd' (target) both still have archived NULL after carry, so the learner has two active plans.",
+    "fix": "In carry, set archived=now() on the source's active plan when the target already has one."
+   },
+   {
+    "where": "server/estimate.py percentile() and _standard()",
+    "what": "sessions.number is treated as a paper id, but Tests §3.4.5 defines it as the learner's ordinal of test sittings; papers are kind 'mock' with mock_id 'P{n}'. Probe: a retake with number 2 is not reported as a repeat sitting and is compared only with other number-2 sittings (n=1). A paper sitting (mock_id P7) is ranked against all 21 sections. A standard module 1 can never be ranked because _standard only accepts mock/section/paper, though Tests lists per-kind percentiles for modules. tests.md R16 says sessions.ranked=1 replaces 'standard' for Combined and every percentile; the code ignores it.",
+    "fix": "Use each learner's first finished sitting of the same kind (and the same mock_id for papers) and sessions.ranked as the rankable flag. Filter by mock_id, not number, and allow module kinds."
+   },
+   {
+    "where": "server/progress.py days() (lines 446-465)",
+    "what": "R13 / Today §3.2.5 cap a sitting's elapsed time per module (a module at its clock + 60 s, untimed at 90 min each). The code caps the whole sitting. Probe: module 1 at 120 min plus module 2 at 10 min counts 72 minutes (spec 36 + 10 = 46); an untimed mock of 85 + 85 counts 90 (spec 170). Day rows also lack Today's per-day practice, tests and qotd {mcq, spr} fields.",
+    "fix": "Split mock elapsed time at module_started and cap each part. Add practice, tests and qotd counts to each day row."
+   },
+   {
+    "where": "server/deps.py access() (lines 48-83)",
+    "what": "R19 says same-day challenge items never leak. The check only reads the challenges row for the UTC date, but challenge days are learner-local (daily.today(tz)). Probe: an answered item of the 2026-09-24 challenge (already today in UTC+ zones) returns 'reveal'. Per-learner twin challenges (decision 1) and contest_items are not considered. The review.md §2.5 widening is not built: 'reveal' for a pair on the paper of any finished sitting of this learner, repeat=1 whenever access() is already 'reveal', cfg.key_printed, and attempts.revealed_at.",
+    "fix": "Treat every challenge day still 'today' somewhere (daily.today(-840) back to daily.today(720)), and live challenge/contest sessions, as protected. Add the finished-paper reveal and make record() set repeat from access()=='reveal'. Add revealed_at."
+   },
+   {
+    "where": "server/scoring.py accepted_forms()",
+    "what": "It always rounds to 4 decimal places, so keys with an integer part return forms that don't fit the grid: 7/3 → ['2.3333'] (6 characters), -7/3 → ['-2.3333'], 100/3 → ['33.3333']. grid_equal('2.333','7/3') is True and the grid takes 5 characters (6 with a minus), per QBank §3.3.5. QBank's version also lists the fraction and the leading-0 forms.",
+    "fix": "Truncate and round to fill 5 characters (6 with a minus) rather than to 4 decimals. Reconcile with QBank's list (fraction, with and without leading 0)."
+   },
+   {
+    "where": "server/progress.py",
+    "what": "QBank 'progress: coach reasons, … record_trap': record_trap(learner, q, reason, when) is not split out of record() (retry mode files later tries' trap hits through it). coach() returns no reasons {slug: {kind, traps, mastery, first_try_rate, since_days}}; its keys are only ahead, count, mistakes, topics, traps, why.",
+    "fix": "Extract record_trap from record() and add the per-topic reasons dict to coach()."
+   },
+   {
+    "where": "server/progress.py",
+    "what": "Plan 'trap rechecks' item: progress.due_rechecks(learner) and progress.rechecks_passed(learner, since) do not exist.",
+    "fix": "Add both, reading traps.due and checks."
+   },
+   {
+    "where": "server/progress.py norm() self-check (lines 57-59)",
+    "what": "Review §3.9.5 wants asserts on real items: context.container_percent's 10% and 50% seeds, circles.coterminal's two quarter-turn options, and the filler mapping to kind 'slip'. The asserts use made-up strings, and nothing maps a trap to its R9 kind (misconception, gridin, slip, unsure).",
+    "fix": "Assert on generate() output for those templates and add a trap-kind function covering R9 and R47's kinds."
+   },
+   {
+    "where": "server/api_me.py profile() and get_me()",
+    "what": "Shell §3.1.5 says profile() adds account {linked, email, since}; it is absent. review.md R1 wants /api/me.review = {open, due_left}; it returns {open, half}.",
+    "fix": "Add account from users, and due_left (check-ins due minus snoozed) to review."
+   },
+   {
+    "where": "server/api_notes.py",
+    "what": "QBank §3.3.5: 'Empty values delete the row.' A POST with note '' and marks [] leaves a notes row with '' and '[]' (probe). review.md's 'POST /api/notes takes an attempt id' and practice.md's notes.seed = −1 for type rules are not supported.",
+    "fix": "Delete the row when both are empty. Accept an attempt id, and a type-rule note with seed −1."
+   },
+   {
+    "where": "server/prefs.py",
+    "what": "The registry misses the upgrade §2.7 rows.\n- Defaults and values: words_from defaults to ['sat'] where shell-me R11, plan and words.md say [sat, transitions]. words_goal must be 0–40 or 'auto' (40 and 'auto' → 422). {key: null} to delete (shell-me R11) → 422.\n- Missing keys: mode, stage_auto, registered, quiet; prefs.practice[subject] (zone, review_mix, review_from, final_round, hints, cover, worked_first, two_passes, words_mix, presets); confidence, type_rules; repairs 'later'; second_look; review_minutes, snooze, saved_spaced; test_conditions, test_nudges, test_cover, test_predict, test_type_notes; test_timing x0.85; race_rail, contest_timing, contest_timing_seen; plan_auto_focus, plan_auto_drift; words_autonext, words_commit, words_method, words_relation, words_spread.\n- GET /api/prefs with labels and synonyms returns 404. prefs.MODE_SOURCES is missing.",
+    "fix": "Add every key listed in each upgrade file's §2.7 row with its values and defaults, null-to-delete, and GET /api/prefs."
+   },
+   {
+    "where": "server/db.py SCHEMA / LATER_COLUMNS / LEARNER_TABLES",
+    "what": "Schema the upgrades give F4 is not added.\n- attempts: conf, hints, miss_kind, offered, struck, cover, calc, diag, revealed_at, word.\n- New tables: skill_ratings, trap_log, due_days, passkeys, webauthn_challenges, devices, transfers, quarantine, week_goals, push_subs, cb_unknown, follows, rank_snapshots, nudges, champions, plan_snapshots, plan_events, rw_log, word_lists, word_suppress.\n- Other columns: tries.hints; pairs dir/token/approver/session_only; reports parent/check; outside_scores misses and subject; learners feed_seen/handle/swap_until; users.google_sub; saved.why; sessions.subject; papers.source; contests subject/series/round; plans.start_points; plan_days.gate; plan_overrides.trim; plan_marks minutes/note; plan_tasks type/subject; word_state hook/proven/placed; word_reviews template/seed/trap/conf/gap/subject/skill/domain/difficulty/attempt.\n- Indexes and constraints: word_reviews(template); contest_items unique on (contest, slot, qhash).\n- Backfills (offered, trap_log, ratings), db.NOT_SAMPLE and the 403 on sample: writes are missing.\n- LEARNER_TABLES omits sets (owner), contests (owner), name_reports and the plan child tables, and records no key column for them, so S1's export and delete would miss them. f4.py's carry check skips them.",
+    "fix": "Add each upgrade §2.5 table, column, index and backfill. Extend LEARNER_TABLES (with each table's key column) and carry to cover them."
+   },
+   {
+    "where": "server/estimate.py, server/progress.py, server/scoring.py, server/deps.py, server/satdates.py; missing server/ratings.py, tools/seed_ratings.py, server/data/cb_percentiles.json",
+    "what": "Upgrade-assigned F4 functions are all absent (hasattr probe):\n- estimate: gains, need, projection, route, ledger, mid, rescore, total, national, rescore_sitting, growth, calibration, time_cost, practice_delta.\n- progress: warmup_candidates, causes, cause_of, pace, due_forecast, recovery, calibration, types_met, steps_to, conf_active, remark.\n- scoring: entry_error, grid_diagnose.\n- deps.subject_of (G11 / R51).\n- ratings.update / odds / level (P11), and sessions.result.odds snapshotted at finish.\n- satdates registration deadlines (shell-me U17, today.md).\n- R57: attempts.word, and R&W answers filed through record.\n- official_done (G16).\n- board() evidence, trend and last 5, and the coach probe (shell-me).\n- days() spare days (shell-me R13 / U16).\n- The practice.md R8 clean rule (hints = 0 and conf != 'unsure'; hints > 0 counts half; guess exactly when conf = 'guess').\n- record_paper writing calc, offered and struck (tests.md).",
+    "fix": "Implement each as its upgrade file specifies, with the assert self-checks those sections require."
+   },
+   {
+    "where": "server/deps.py learner_of() (lines 29-35)",
+    "what": "shell-me U21 (builder F4) is not built: learner_of has no d: device tokens through the devices table and no 14-day swap window (learners.swap_until). LEARNER_OK accepts any 'd:…' string as a learner of its own. Separately, the base Shell §3.1.5 rule says only writes with a retired code get 401 and other GETs return empty data; learner_of returns 401 for every request (GET /api/me and GET /api/today both 401 in the live run). U21 may supersede this part.",
+    "fix": "Resolve d: tokens through devices (revoked or expired → 401 {retired: true}), and serve a: codes inside the swap window with X-Learner-Swap. Settle the GET behaviour for retired codes with S1 and F2."
+   },
+   {
+    "where": "server/progress.py log_mistake()",
+    "what": "Shell §3.1.5 says label = the reason, the note, or the skill. The code falls back to the topic slug (label = reason or topic) and ignores the note and skill.",
+    "fix": "Fall back to the note, then the template's skill, before the topic."
+   },
+   {
+    "where": "server/deps.py, server/estimate.py, server/progress.py (decision 3 / R51)",
+    "what": "No subject axis exists anywhere in F4's layer: no deps.subject_of, no sessions.subject or contests.subject, no subject parameter on estimate or progress readers, no 422 for an unknown subject. Decision 3 asks for subject-aware data where it costs little, and G11 defines the axis for F4.",
+    "fix": "Add deps.subject_of (template → topic → subject, default math) and the subject columns and parameters that G11 lists."
+   }
+  ]
+ }
+}

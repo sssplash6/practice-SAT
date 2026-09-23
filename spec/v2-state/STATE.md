@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-24T00:07:49+05:00
+# v2 build state -- 2026-09-24T01:48:04+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -6,8 +6,8 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 ## Branches
 
 - `v2/f0` at dc9873f, 0 commits ahead of master
-- `v2/f1` at 897e9a2, 0 commits ahead of master
-- `v2/f4` at 96fd6bc, 3 commits ahead of master
+- `v2/f1` at 09a4cf7, 6 commits ahead of master
+- `v2/f4` at e837e82, 13 commits ahead of master
 - `v2/t-bank` at 9403838, 0 commits ahead of master
 - `v2/t-bank-all` at f4bf864, 0 commits ahead of master
 - `v2/t-bank-area_and_volume` at 11402c0, 0 commits ahead of master
@@ -39,19 +39,34 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/t-bank-sample_statistics_and_margin_of_error` at 9403838, 0 commits ahead of master
 - `v2/t-bank-systems_of_linear_equations` at 90dd059, 0 commits ahead of master
 - `v2/t-bank-two_variable_data` at 4469303, 0 commits ahead of master
+- `v2/words-content` at 5128e28, 12 commits ahead of master
 
 ## Worktrees
 
-- `/Users/workingmyassof/satbank/.claude/worktrees/f4` on `v2/f4`: 5 uncommitted (saved in wip/f4/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/f4` on `v2/f4`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6beb6e4-66c-1` on `v2/f1`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_a8903963-411-1` on `detached d5961bb`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_a8903963-411-2` on `detached 59d383b`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_a8903963-411-3` on `detached 59d383b`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_a8903963-411-4` on `worktree-wf_a8903963-411-4`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6beb6e4-66c-1` on `detached 383c755`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6beb6e4-66c-2` on `detached 6930c4b`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6beb6e4-66c-3` on `detached 09a4cf7`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6beb6e4-66c-4` on `v2/f1`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/words` on `v2/words-content`: 0 uncommitted
 
 ## Workflow runs
+
+### wf_31f62ba7-6ae: 1 finished, 6 unfinished
+Unfinished when saved: author: adv1, author: adv2, author: adv3, author: roots, author: second, author: transitions
 
 ### wf_74c862ea-8a4: 2 finished, 0 unfinished
 
 ### wf_8c0945ee-c24: 51 finished, 10 unfinished
 Unfinished when saved: advantage: words, experience: words, judge: compete, judge: plan, judge: practice, judge: reports, judge: tests, judge: words, outcomes: review, outcomes: words
+
+### wf_a8903963-411: 3 finished, 1 unfinished
+Unfinished when saved: fix F4 r2
 
 ### wf_aca7fe38-327: 12 finished, 6 unfinished
 Unfinished when saved: fix: area_and_volume, fix: linear_equations_in_one_variable, fix: linear_functions, recheck: equivalent_expressions, recheck: linear_inequalities, verify: right_triangles_and_trigonometry
@@ -60,8 +75,8 @@ Unfinished when saved: fix: area_and_volume, fix: linear_equations_in_one_variab
 
 ### wf_c70c4702-929: 49 finished, 0 unfinished
 
-### wf_d6beb6e4-66c: 0 finished, 1 unfinished
-Unfinished when saved: build F1 1/5
+### wf_d6beb6e4-66c: 3 finished, 1 unfinished
+Unfinished when saved: build F1 4/5
 
 ### wf_f6283862-332: 36 finished, 6 unfinished
 Unfinished when saved: fix 1: plan, fix 1: right_triangles_and_trigonometry, fix 1: tests, fix 2: shell-me, recheck 2: nonlinear_equations_and_systems, recheck 2: two_variable_data

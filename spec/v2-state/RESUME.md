@@ -1,31 +1,36 @@
 # Resume here
 
-## Now (2026-09-24): building
+## Now: PAUSED 2026-09-24 by the user ("pause and save everything we are about to hit limits")
 
-Done since the last pause: the way-better pass (all 9 sections fixed once, no second check; class
-material stripped, commit 8f022f1), `v2/f0` merged (45b903e), `v2/t-bank-all` merged (897e9a2);
-master passes test_flow and all 19 bank topics. Steps 3 and 4a-c below are finished; do not re-run them.
+Nothing is running: the three workflows were stopped, every worktree's work is committed (checkpoint commits where an
+agent was cut off), and the checkpoint loop is stopped. Done before this: way-better pass, `v2/f0` and `v2/t-bank-all`
+merged into master (test_flow all good, 19/19 topics PASS). Do not re-run any of that.
 
-**The build** runs from `next/build.js` (args: `[{id, from?, unit?, round?, issues?}]`). Each task: unit
-builders in order on `v2/<task>` (worktree isolation) -> an independent verifier -> up to 3 fix rounds.
-I merge each passing task into master myself (Part 4.4), then launch the next wave.
-- **F1** design system: running, run `wf_d6beb6e4-66c` (task ww8sskbdh), launched with `[{id:'F1'}]`.
-  To restart after a pause: look at `git log master..v2/f1` and the saved results in `runs/wf_d6beb6e4-66c/`,
-  then relaunch with `unit: <first unfinished unit index>` or `from: 'verify'` / `from: 'fix', issues: <file>`.
-  Never resume it from its run ID.
-- **F4** data layer: built by another agent the user runs (branch `v2/f4`, from `v2/f0`, 4 commits, done
-  2026-09-24). Verifying here: run `wf_a8903963-411` (task w0regskfk), `[{id:'F4', from:'verify'}]`, with fix
-  rounds on the branch. When it passes: rebase on master and merge (it touches no file master changed).
-- **Words content** (`server/words/**`, `tools/build_words.py`; S9-owned), branch `v2/words-content`, worktree
-  `.claude/worktrees/words`. The other agent hit its limit after phase 1, classes and 316 draft core entries
-  (checkpoint 01d12ca). **Picked up here**: `next/words.js`, run `wf_31f62ba7-6ae` (task wc3xif9oh): a core agent
-  (normalize drafts into sat.json, consolidate classes, reach 400, write `server/words/_plan.json`), then 6 authors in
-  parallel (3 advanced batches, second senses + answer-choice, transitions + pairs, roots + foils + collections),
-  each committing its own files. Restart: `args {skipCore: true, only: [unfinished author ids]}` per `git log`.
-  Still to do after it: confusions (~700), fills + frames (~1,500, public-domain literature cut from real
-  Gutenberg texts, never from memory), fold parts/ into the final files, an independent accuracy check, merge.
-  The two-reviewer gate and the frequency corpus come later.
-- Then wave 1b: F2, F3, F5 (after F4), F6 (after F1 and F4). Then S1, S3-S10 (S2 dropped). Then I1.
+### On "continue"
+
+1. `python3 tools/v2_checkpoint.py --quiet`, then restart the loop (Bash, run_in_background):
+   `while true; do python3 tools/v2_checkpoint.py --quiet 2>>/tmp/v2-checkpoint.log; sleep 300; done`
+2. Remove stale workflow worktrees first (`git worktree list`; the `wf_*` ones are clean; `git worktree remove --force`
+   each, after checking `git -C <path> status --short` is empty). They hold branches (`v2/f1`) that new agents must switch to.
+3. Relaunch these three, each as its own Workflow call (never from a run ID):
+   - **F1** (design system): units 1-3 done on `v2/f1` (ui.css foundations, ui.css components, kit.js). Charts not started.
+     `Workflow({scriptPath: ".../spec/v2-state/next/build.js", args: [{id: "F1", unit: 3}]})` (unit is 0-based: 3 = charts,
+     then 404 + kit page, then verify and fix rounds).
+   - **F4** (data layer, built by the user's other agent): verify r1 failed (19 defects) -> fix r1 done -> verify r2
+     failed (17 defects, saved in `next/F4-verify2-issues.json`) -> fix r2 cut off, its edits committed as e837e82.
+     `args: [{id: "F4", from: "fix", round: 2, issues: "/Users/workingmyassof/satbank/spec/v2-state/next/F4-verify2-issues.json"}]`
+     That leaves one more fix round after verify r3. When it passes: rebase `v2/f4` on master, test_flow, merge.
+   - **Words content** (`next/words.js`, branch `v2/words-content`, worktree `.claude/worktrees/words`): the core agent
+     finished (sat.json normalized, classes consolidated, 400 core, `server/words/_plan.json`). Authors when stopped:
+     adv1 110 of ~200 committed, adv3 110 of ~200, roots 118 (check foils.json and collections.json, which it also owns),
+     adv2, second and transitions had committed nothing. `Workflow({scriptPath: ".../spec/v2-state/next/words.js",
+     args: {skipCore: true}})`: each author continues from its own committed file.
+     Still to do after it: confusions (~700), fills + frames (~1,500; literature cut from real Gutenberg texts, never
+     from memory), fold `parts/` into the final files, delete `_plan.json`, an independent accuracy check, merge.
+4. Then wave 1b: F2, F3, F5 (after F4), F6 (after F1 and F4); then S1, S3-S10 (S2 dropped); then I1.
+
+The build runs from `next/build.js` (args `[{id, from?, unit?, round?, issues?}]`): unit builders on `v2/<task>` ->
+independent verifier -> up to 3 fix rounds. I merge each passing task into master (Part 4.4).
 
 ## Resumed 2026-09-23: second check dropped
 

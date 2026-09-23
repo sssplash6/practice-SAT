@@ -1,0 +1,95 @@
+{
+ "label": "verify F4 r2",
+ "key": "v2:cc46dcc50bcf456a663bfcbfd231625de569c209c2140627972beda72d616f06",
+ "result": {
+  "pass": false,
+  "evidence": "Worktree /Users/workingmyassof/satbank/.claude/worktrees/wf_a8903963-411-3, detached at v2/f4 59d383b. I changed nothing and committed nothing. The tree is clean, and I deleted the scratch server/v2.db after stopping the server.\n\n1. Acceptance runs\n- `PYTHONPATH=. python3 server/test_flow.py` prints \"all good\", including \"ok  F4 schema, traps and check-ins, days, causes, pace, estimate, prefs, access and carry\".\n- `server/checks/f4.py` exits 0 when run on its own. So do the self-checks in `estimate.py` and `ratings.py`; every level holds at least 5% (8/19/14/10/18/18/11%).\n- I read f4.py. It covers norm merging, repeat not moving mastery, unsure with owed 1, a relapse, check-ins at 3/10/30, the rest-day streak, a module's minutes counted once, prefs 422 and merge, access() on a live test and today's challenge, carry of every LEARNER_TABLES table, and G3 checks 2, 4 and 7. Two of its asserts are weak (defects below).\n- Server on port 8014 (SATF_DB=server/v2.db), exercised with httpx:\n  - `/api/me`: unknown pref gives 422 \"prefs.colour is unknown\"; Shell 21 and Practice 18 bodies merge, and only non-default keys are stored.\n  - Exam date in the past gives 422, also checked with X-Tz. rw fields, minutes without a plan, and board/country/avatar validation all behave.\n  - Board names: reserved and short handles give 422; a duplicate handle gives 409.\n  - `/api/me/activity`: 182 days for 26 weeks; weeks=60 gives 422.\n  - A retired code gives 401 {retired:true}.\n  - A drill miss files norm, offered, stem and revealed_at, and opens a trap with owed 2.\n  - A live module item: access() is None. After finish it is 'reveal'. The 52-minute module counts once as 36 minutes (clock + 60 s).\n  - Today's challenge item: access() is None for its sitter and for another learner.\n  - `POST /api/notes` works on live and finished drill, module, challenge and diagnostic sittings; another learner gets 403, 1001 characters or a bad style gets 422.\n- Migration on an old database: I built one by running master's own test_flow against a kept file (265 attempts, 87 traps, 6 saved, 38 sessions), with a hand-added merge pair (one open, one closed). After F4's startup on a copy:\n  - attempts, saved, sessions, learners and practice_seen counts are unchanged.\n  - traps went 87 → 85 by designed norm merges. The hits sum is preserved (106 → 106) and open-if-any holds (84 → 83 open). The merged row has opened MIN, last MAX, owed MAX, the latest concrete reason, and seed 77 from the latest miss.\n  - stem, offered and norm were backfilled with 0 left null. trap_log was backfilled, and a second init is idempotent.\n  - A first-release database with `form_id NOT NULL` also migrates with its rows and columns intact.\n- SAT dates in satdates.py match College Board's page, checked with WebFetch.\n\n2. Items built as written (not listed as defects): the §2.5 tables, columns and indexes; §2.7 and every upgrade §2.7 row; R8, R11, R12/U29, R13, U16, R15, R16, R19; review.md V2/V8/V13/V18/V19; practice.md P6–P11 and P21; reports SR1/2/4/5/6/9/10/19; today T3/T6/T7/T8/T10/T12; tests X2/X8/X15/X16/X19; compete C3/C11/C13 tables and hooks; product G11/R57/G16; shell-me U2/U15/U17/U24; Compete's record and carry rules.\n\n3. `git diff --stat master...HEAD`:\n- Owned files: server/db.py, progress.py, prefs.py, estimate.py, satdates.py, scoring.py, deps.py, api_me.py, api_notes.py, checks/f4.py.\n- Four files outside that list, each assigned to F4 by the spec, so not counted as defects:\n  - `server/ratings.py` (product.md §4.3, practice.md §2.12)\n  - `tools/seed_ratings.py` (review.md V15)\n  - `server/data/cb_percentiles.json` (reports.md §2.5)\n  - a minimal R45 assert edit to `server/test_flow.py` (§2.11 allows it)\n\n4. v2-decisions: no class tables or fields (sessions.assignment, contests.grp and class tables are absent, and f4.py asserts it). words_from has no math. Subject-aware throughout. No conflict found.\n\nThe defects below fail item 2.",
+  "defects": [
+   {
+    "where": "server/progress.py checkin_template() / _pass_check() (product.md G3 rule 5, R45, R9)",
+    "what": "closed_how 'transfer' can never be reached in normal use. checkin_template() serves only the 10-day check-in (checks==1) on the related template; the 30-day one goes back to the trap's own template. But _pass_check requires 2 check_ok events on another template. I followed the served templates (3-day on own, 10-day on lin.other, 30-day on the served template, lin.evaluate): the trap ends checks=3, closed_how='fixed'. f4.py only reaches 'transfer' because it answers the 30-day check on lin.other by hand. This also contradicts progress.py's own docstring ('passing the last two there').",
+    "fix": "Serve both remaining check-ins (checks 1 and 2) on the related template in checkin_template, or set 'transfer' when the 10-day passed elsewhere and the rest pass. Change f4.py to answer on progress.due_rechecks()[..]['serve'] instead of a hard-coded template."
+   },
+   {
+    "where": "server/deps.py swap_middleware; needs server/app.py, which F4 does not own (shell-me.md U21, acceptance 4)",
+    "what": "swap_middleware is never installed. app.py has no app.middleware('http')(deps.swap_middleware), so SWAP is always None. Verified on port 8014: a saved learner with swap_until in the future gets 200 with no X-Learner-Swap header, and 0 device rows are minted. After the 14-day window, learner_of 401s every browser that still holds the a: code, and none of them ever received a d: token.",
+    "fix": "List the app.py change for its owner: add app.middleware('http')(deps.swap_middleware) after the routers. Or register the middleware through a registry that app.py already reads. Add a check that asserts the header over the real app."
+   },
+   {
+    "where": "server/db.py new_code() (shell-me.md U21 transfer code)",
+    "what": "U21's transfer code is '8 characters from the unambiguous alphabet A-HJ-NP-Z2-9 (db.new_code(), \"K7P4 M2QX\")'. db.new_code() always returns 6 characters and checks uniqueness only against contests.code, not transfers.code.",
+    "fix": "Give new_code a length argument (and namespaces) so S1 can mint 8-character codes unique across transfers.code, keeping 6 for contests."
+   },
+   {
+    "where": "server/progress.py record() fixed-event log and discard()/restore() (review.md V4, acceptance 4)",
+    "what": "trap_log.pts is never written when a trap closes: log(..., 'fixed', when, attempt) passes no pts. So 'select pts from trap_log where event=fixed' is NULL, and V4's 'Recovered ≈ +N pts' cannot be built. discard() and restore() also reuse pts to store the id of the event they undo, which clashes with its meaning as points.",
+    "fix": "At close, compute gain(t) × share (estimate.gains share rule, hidden while gains is None) and log it in pts. Store discard's back-reference in its own column or reuse attempt, not pts."
+   },
+   {
+    "where": "server/progress.py _confident_traps() (today.md T9 'the sure rule', F4; tests.md X11 / §3.2 today.md T9 row)",
+    "what": "A miss counts as 'sure' only when attempts.conf == 'sure'. Missing:\n- the inferred rule: a medium or hard question answered faster than 0.6 × the student's median for that tier;\n- the checks that it is not a guess and that cause_of says 'trap';\n- X11's unpredicted test misses.\nT9 acceptance 3 (a fast medium miss with guess=0 is in blind) fails.",
+    "fix": "Implement T9's rule in one function (e.g. progress.blind(learner)) and use it in coach/_confident_traps. Add an f4 check for the medium-fast, easy-fast and test-conf cases."
+   },
+   {
+    "where": "server/progress.py warmup_candidates() (practice.md P12: 'F4 (T3's progress.warmup_candidates gains marked)')",
+    "what": "The `marked` candidate kind is missing. P12 defines it as a question flagged 2 or more days ago whose template has no right first try since the flag. The function returns only checks, fading and keep_warm.",
+    "fix": "Add a `marked` list from flags joined with later first-try rights on the template, and count it in size."
+   },
+   {
+    "where": "server/progress.py record()/log_mistake() (§2.5: db.ensure_learner inserts the row on first write)",
+    "what": "ensure_learner is called only from PUT /api/me and prefs.put. Verified over HTTP: a new learner who answers a drill question still has 0 learners rows. Their rating DEFAULT 1000 / rated row does not exist while skill_ratings rows do.",
+    "fix": "Call db.ensure_learner(learner) inside record() and log_mistake(); it is cheap and already atomic-aware."
+   },
+   {
+    "where": "server/progress.py coach() reasons (QBank §3.3.5 'coach reasons')",
+    "what": "The spec lists reason kinds mistakes|new|weak|review|focus. The plan's Focus changes the score but never produces a 'focus' reason kind.",
+    "fix": "Set kind 'focus' when the topic's domain is on focus and no stronger kind applies."
+   },
+   {
+    "where": "server/progress.py related() (product.md R45 and G3 rules 5 and 6: 'progress.related(norm)')",
+    "what": "The spec calls progress.related(norm). The function takes no arguments and returns the whole index; related('used # instead of #') raises TypeError.",
+    "fix": "Accept an optional norm, returning the templates tuple for it (or the full map when called with no argument)."
+   },
+   {
+    "where": "server/api_notes.py put_note response (R6; Review §3.9.5 'the session page never sees' the template)",
+    "what": "POST /api/notes returns 'template' to the session page. That includes live tests and today's challenge (verified: a live challenge note returned template 'eqx.add_polys').",
+    "fix": "Drop template from the response for session/question_id writes, or return it only for attempt_id/type-rule writes on revealed items."
+   },
+   {
+    "where": "server/ratings.py structural_priors() (compete.md C13; review.md V15)",
+    "what": "The priors are a rank-based SPREAD per tier. They are not C13's formula (tier prior +50 for a grid-in, +25 for a figure or table, ±25 per rationale sentence from the median, clamped to ±150). They are not V15's signal either (measured first-try accuracy at n ≥ 5; tier shifted by P1 step count and format). The implemented measured threshold is n ≥ 20. The specs conflict, but what was built is neither.",
+    "fix": "Record the reconciliation in product.md's R-table, or implement C13's formula and use V15's n ≥ 5 measured rule in seed_ratings/write_priors, keeping the 5%-per-level assert."
+   },
+   {
+    "where": "server/progress.py days() (plan.md L10: Mark done minutes count toward the day's minutes under R13's own-task rule; plan_marks.minutes, plan.md §2.5)",
+    "what": "days() adds minutes only from plan_marks joined with plan_tasks (own tasks), using plan_tasks.minutes. plan_marks.minutes, the 'Did it elsewhere? 20 min' logged on a question task, is never read, so those minutes never count.",
+    "fix": "Add COALESCE(plan_marks.minutes, plan_tasks.minutes) for every done mark of the active plan."
+   },
+   {
+    "where": "F4 readers (practice.md P16 'F4 (fluency fields)')",
+    "what": "No per-type fluency data (Fluent / Right but slow / best_ms) is computed in any F4 module, and pace() is per topic only.",
+    "fix": "Add a per-template fluency reader (last 2 clean rights under budget; 3+ tries, 80%+ right, median over budget; best ms) that F5 and S4 can call with budget_ms."
+   },
+   {
+    "where": "server/data/cb_percentiles.json 'year' (reports.md SR5 copy '(College Board, {year})')",
+    "what": "'year' holds a sentence ('students who graduated in the past three school years (College Board's user group; page read 2026-09-24)'), not a year. estimate.national() passes it through, so the specified copy renders broken.",
+    "fix": "Store the report year (e.g. 2025) in 'year' and move the cohort text to 'note'."
+   },
+   {
+    "where": "server/checks/f4.py lines 279 and 379",
+    "what": "Line 279 asserts topic_mastery(d, ...) == topic_mastery(d, ...), which is always true, so V13's mastery rollback is not checked. Line 379 accepts streak >= 5 on weekdays instead of Shell's exact 'streak equals 6'. (I checked both behaviours separately and they are correct: rollback restores 0.393, and the streak is 6.)",
+    "fix": "Compare mastery after discard with the value before the discarded sitting. Assert streak == 6."
+   },
+   {
+    "where": "server/db.py _backfill_attempts()",
+    "what": "The docstring says a row whose template no longer generates gets offered '[]' so a restart skips it. But its stem stays NULL, and the pending query selects stem IS NULL, so the row regenerates on every startup (verified: still pending after the backfill).",
+    "fix": "Also set stem to '' for such rows, or drop 'stem IS NULL' from the pending query when offered is '[]'."
+   },
+   {
+    "where": "server/db.py LEARNER_TABLES / progress.carry (§2.5 S1 export and delete)",
+    "what": "rank_snapshots(day, board, learner, ...) is learner-keyed but absent from LEARNER_TABLES and carry. S1's delete ('0 rows for that learner in every listed table') would leave that learner's rank rows behind.",
+    "fix": "Add rank_snapshots to LEARNER_TABLES and carry, or document why snapshots are kept."
+   }
+  ]
+ }
+}
