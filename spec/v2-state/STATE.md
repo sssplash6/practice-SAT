@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-23T19:52:56+05:00
+# v2 build state -- 2026-09-23T23:56:17+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -6,21 +6,22 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 ## Branches
 
 - `v2/f0` at dc9873f, 9 commits ahead of master
+- `v2/f4` at 8dcd94f, 11 commits ahead of master
 - `v2/t-bank` at 9403838, 1 commits ahead of master
-- `v2/t-bank-all` at a6bc1b6, 46 commits ahead of master
+- `v2/t-bank-all` at f4bf864, 67 commits ahead of master
 - `v2/t-bank-area_and_volume` at 11402c0, 4 commits ahead of master
 - `v2/t-bank-circles` at 7f9dd2c, 2 commits ahead of master
 - `v2/t-bank-equivalent_expressions` at 719a0ac, 3 commits ahead of master
 - `v2/t-bank-evaluating_statistical_claims` at 9403838, 1 commits ahead of master
-- `v2/t-bank-fix-area_and_volume` at 8b45b2a, 47 commits ahead of master
+- `v2/t-bank-fix-area_and_volume` at be7c5f4, 48 commits ahead of master
 - `v2/t-bank-fix-equivalent_expressions` at 5bae662, 48 commits ahead of master
-- `v2/t-bank-fix-linear_equations_in_one_variable` at bb419a4, 47 commits ahead of master
+- `v2/t-bank-fix-linear_equations_in_one_variable` at bc7f7ec, 48 commits ahead of master
 - `v2/t-bank-fix-linear_equations_in_two_variables` at 343eb30, 49 commits ahead of master
-- `v2/t-bank-fix-linear_functions` at c7e62a3, 47 commits ahead of master
+- `v2/t-bank-fix-linear_functions` at c0808f5, 48 commits ahead of master
 - `v2/t-bank-fix-linear_inequalities` at 241b13d, 47 commits ahead of master
-- `v2/t-bank-fix-nonlinear_equations_and_systems` at ecf609a, 47 commits ahead of master
-- `v2/t-bank-fix-right_triangles_and_trigonometry` at d7a76c3, 47 commits ahead of master
-- `v2/t-bank-fix-systems_of_linear_equations` at 10364cf, 47 commits ahead of master
+- `v2/t-bank-fix-nonlinear_equations_and_systems` at c3e68b8, 48 commits ahead of master
+- `v2/t-bank-fix-right_triangles_and_trigonometry` at 33320c4, 49 commits ahead of master
+- `v2/t-bank-fix-systems_of_linear_equations` at 370df76, 48 commits ahead of master
 - `v2/t-bank-fix-two_variable_data` at 596dc6e, 47 commits ahead of master
 - `v2/t-bank-linear_equations_in_one_variable` at 6c76ede, 2 commits ahead of master
 - `v2/t-bank-linear_equations_in_two_variables` at bedb9bd, 3 commits ahead of master
@@ -40,6 +41,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 ## Worktrees
 
+- `/Users/workingmyassof/satbank/.claude/worktrees/f4` on `v2/f4`: 8 uncommitted (saved in wip/f4/)
 - `/Users/workingmyassof/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
 
 ## Workflow runs
@@ -51,6 +53,8 @@ Unfinished when saved: advantage: words, experience: words, judge: compete, judg
 
 ### wf_aca7fe38-327: 12 finished, 6 unfinished
 Unfinished when saved: fix: area_and_volume, fix: linear_equations_in_one_variable, fix: linear_functions, recheck: equivalent_expressions, recheck: linear_inequalities, verify: right_triangles_and_trigonometry
+
+### wf_c0d90d11-40f: 9 finished, 0 unfinished
 
 ### wf_c70c4702-929: 49 finished, 0 unfinished
 
