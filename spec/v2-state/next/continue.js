@@ -1,10 +1,9 @@
 export const meta = {
   name: 'v2-continue-2',
-  description: 'Resume after the pause: way-better fix and skeptic rounds from saved verdicts; grid-in final rechecks, then drop what still fails',
+  description: 'Resume the way-better fix and skeptic rounds from saved verdicts; grid-in review is complete',
   phases: [
     { title: 'Fix', detail: 'way-better fixers from the saved skeptic verdicts (also strip class material, decision 5)' },
     { title: 'Skeptic', detail: 'try to refute that each section is way better; merely equal fails' },
-    { title: 'Grid-in', detail: 'one final recheck where missing; templates that still fail lose their named mistakes' },
   ],
 }
 
@@ -140,18 +139,7 @@ top of the checkpoint (edit only satbank/topics/${t}/), prove MCQ identical to m
 spr_mistakes, and PYTHONPATH=. python3 -m satbank check --topic ${t} prints PASS. Commit on v2/t-bank-fix-${t}.
 Return what you changed and the evidence.`, { label: `fix (continued): ${t}`, phase: 'Grid-in', isolation: 'worktree' })
 
-const GI = [
-  { t: 'linear_inequalities', do: 'done' },
-  { t: 'equivalent_expressions', do: 'recheck' },
-  { t: 'linear_equations_in_two_variables', do: 'recheck' },
-  { t: 'nonlinear_equations_and_systems', do: 'recheck' },
-  { t: 'two_variable_data', do: 'recheck' },
-  { t: 'area_and_volume', do: 'drop' },
-  { t: 'linear_equations_in_one_variable', do: 'drop' },
-  { t: 'linear_functions', do: 'drop' },
-  { t: 'systems_of_linear_equations', do: 'drop' },
-  { t: 'right_triangles_and_trigonometry', do: 'fix-then-recheck' },
-]
+// All grid-in topics were checked and integrated at f4bf864. Do not rerun them.
 
 async function gridin(x) {
   const t = x.t
@@ -168,8 +156,5 @@ async function gridin(x) {
   return { topic: t, result: 'dropped failing templates', branch: `v2/t-bank-fix-${t}`, report: r }
 }
 
-const [wb, gi] = await Promise.all([
-  pipeline(WB, s => wayBetter(s)),
-  pipeline(GI, x => gridin(x)),
-])
-return { wayBetter: wb, gridin: gi }
+const wb = await pipeline(WB, s => wayBetter(s))
+return { wayBetter: wb }

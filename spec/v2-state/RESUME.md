@@ -1,5 +1,21 @@
 # Resume here
 
+## Grid-in review completed 2026-09-23
+
+The user narrowed this continuation to checking whether named grid-in mistakes
+describe wrong answers a student could actually produce. That review is complete.
+All ten topic fix branches were independently checked and merged into
+`v2/t-bank-all` at `f4bf864`. Doubtful templates now use the existing skill-level
+fallback instead of naming an unsupported mistake. The integrated bank has named
+mistakes on 146 of 202 grid-in templates.
+
+The full bank gate passes all 19 topics; `server/test_flow.py` says "all good".
+Across seeds 0-30, 14,988 generated MCQ items match `master` byte for byte;
+73 attempts fail identically in both trees (including unsupported forced formats).
+The old grid-in task list and merge instructions below are historical and must
+not be run again. The way-better pass, repo prep merge and site build have not
+resumed. The repository has no Git remote, so these commits could not be pushed.
+
 Paused on purpose by the user on 2026-09-23 ("save everything... make sure when i say continue, you can pick it up
 smoothly"). Nothing was running at the pause: every workflow and background waiter was stopped, every finished agent result
 is saved, and every partial edit is committed or on disk.
