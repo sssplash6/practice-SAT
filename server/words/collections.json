@@ -1,0 +1,67 @@
+{
+  "groups": [
+    {
+      "id": "rw",
+      "name": "Reading & Writing",
+      "collections": [
+        {
+          "id": "sat-core",
+          "name": "SAT core",
+          "kind": "collection",
+          "select": {"file": "sat", "collection": "sat-core"}
+        },
+        {
+          "id": "sat-advanced",
+          "name": "SAT advanced",
+          "kind": "collection",
+          "select": {"file": "sat", "collection": "sat-advanced"}
+        },
+        {
+          "id": "transitions",
+          "name": "Transitions",
+          "kind": "collection",
+          "select": {"file": "transitions"},
+          "view": "logic-map"
+        },
+        {
+          "id": "second-sense",
+          "name": "Second meanings",
+          "kind": "list",
+          "select": {"file": "sat", "lists": "second-sense"}
+        },
+        {
+          "id": "answer-choice",
+          "name": "Answer-choice language",
+          "kind": "list",
+          "select": {"file": "sat", "lists": "answer-choice"}
+        }
+      ]
+    },
+    {
+      "id": "roots",
+      "name": "Roots",
+      "collections": [
+        {
+          "id": "roots",
+          "name": "Roots",
+          "kind": "roots",
+          "select": {"file": "roots"},
+          "view": "root-tiles"
+        }
+      ]
+    },
+    {
+      "id": "mine",
+      "name": "Mine",
+      "own": true,
+      "collections": [
+        {
+          "id": "my-words",
+          "name": "My words",
+          "kind": "own",
+          "default": true
+        }
+      ]
+    }
+  ]
+}
