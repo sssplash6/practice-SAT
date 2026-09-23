@@ -12,7 +12,7 @@ import random
 from fractions import Fraction as F
 
 from ....exact import E
-from ....item import Item, ItemError, Mis, assemble_text
+from ....item import Item, ItemError, Mis, assemble_text, gridin_mistakes
 from ..common import (assemble_num, clean, count_word, listing, mean, median,
                       num_str, ordinal, plural, q, round_to, values_line)
 from .compare import ONE_TWO, one_two, one_two_options
@@ -27,7 +27,8 @@ def _num_item(rng, name, skill, difficulty, seed, stem, fmt, key, mistakes, rati
         if not key.is_rational:
             raise ItemError("a grid-in answer must be enterable as digits")
         return Item(name, skill, difficulty, seed, stem, "spr", key, key.gridin(),
-                    rationale, table=table, params=params)
+                    rationale, table=table, params=params,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble_num(key, mistakes, rng, places=places)
     return Item(name, skill, difficulty, seed, stem, "mcq", key, letter, rationale,
                 choices, reasons, latex, table=table, params=params)

@@ -12,7 +12,7 @@ import random
 from fractions import Fraction as F
 
 from ....exact import E
-from ....item import Item, ItemError, Mis, assemble_text
+from ....item import Item, ItemError, Mis, assemble_text, gridin_mistakes
 from ....plot import boxplot
 from ..charts import paired_boxplot
 from ..common import assemble_num, count_word, num_str, q
@@ -112,7 +112,8 @@ def box_read(rng: random.Random, seed: int, *, summary=None, ask=None, n=None,
                  f"{num_str(q(key))}.")
     if fmt == "spr":
         return Item(f"ovd.box.{ask}", "reading a box plot", "medium", seed, stem, "spr",
-                    key, key.gridin(), rationale, figure=figure, params=P)
+                    key, key.gridin(), rationale, figure=figure, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble_num(key, mistakes, rng)
     return Item(f"ovd.box.{ask}", "reading a box plot", "medium", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex, figure=figure,

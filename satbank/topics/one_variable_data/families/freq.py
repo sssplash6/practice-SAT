@@ -12,7 +12,7 @@ import random
 from fractions import Fraction as F
 
 from ....exact import E
-from ....item import Item, ItemError, Mis, assemble_text
+from ....item import Item, ItemError, Mis, assemble_text, gridin_mistakes
 from ..common import (assemble_num, clean, count_word, listing, mean, median,
                       midrange, mode, num_str, q, spread, values_line)
 
@@ -148,7 +148,8 @@ def freq_stat(rng: random.Random, seed: int, *, values=None, freqs=None, ask=Non
         if not key.is_rational:
             raise ItemError("a grid-in answer must be enterable as digits")
         return Item(f"ovd.freq.{ask}", "frequency table", "medium", seed, stem, "spr",
-                    key, key.gridin(), rationale, table=table, params=P)
+                    key, key.gridin(), rationale, table=table, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble_num(key, mistakes, rng)
     return Item(f"ovd.freq.{ask}", "frequency table", "medium", seed, stem, "mcq", key,
                 letter, rationale, choices, reasons, latex, table=table, params=P)
@@ -294,7 +295,7 @@ def freq_two_groups(rng: random.Random, seed: int, *, values=None, fa=None, fb=N
         if fmt == "spr":
             return Item("ovd.freq.median_gap", "comparing two frequency tables", "hard",
                         seed, stem, "spr", key, key.gridin(), rationale, table=table,
-                        params=P)
+                        params=P, spr_mistakes=gridin_mistakes(key, mistakes))
         choices, latex, reasons, letter = assemble_num(key, mistakes, rng)
         return Item("ovd.freq.median_gap", "comparing two frequency tables", "hard",
                     seed, stem, "mcq", key, letter, rationale, choices, reasons, latex,
