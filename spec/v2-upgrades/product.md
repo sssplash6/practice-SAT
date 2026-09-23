@@ -4,19 +4,23 @@ Written 2026-09-23 for `spec/rebuild-v2.md` Part 1, Part 2 (lines 1–648) and P
 10970–11183). It merges the three designers' product proposals (outcomes, experience, unfair
 advantage: 36 proposals and 46 parity gaps in `spec/v2-upgrades/_proposals/product.json`, cited
 as "outcomes #1" and so on, counting from 1) into one build-ready list. It is checked against
-`spec/toptierprep-teardown.md`, `ttp-notes.md`, the live walk in `ttp-live.md`, and the seven
-section upgrade files already written (`shell-me.md` U1–U28, `today.md` T1–T20, `practice.md`
-P1–P25, `tests.md` X1–X23, `reports.md` SR1–SR24, `plan.md` L1–L20, `compete.md` C1–C25).
+`spec/toptierprep-teardown.md`, `ttp-notes.md`, the live walk in `ttp-live.md`, and all nine
+section upgrade files (`shell-me.md` U1–U28, `today.md` T1–T20, `practice.md` P1–P25,
+`tests.md` X1–X23, `reports.md` SR1–SR24, `plan.md` L1–L20, `compete.md` C1–C27, `review.md`
+V1–V19, `words.md` W1–W22).
 
 * **What this file is.** The section files make each section way better. This file owns what no
   section owns: the signature features that cross every section, and the seams where the
-  section files disagree. It adds 14 upgrades (G1–G14) and 17 resolutions (R39–R55, numbered
+  section files disagree. It adds 16 upgrades (G1–G16) and 22 resolutions (R39–R60, numbered
   after Part 2's R1–R38 so every file can cite them).
 * **Precedence.** `spec/v2-decisions.md` wins over everything. Then this file's resolutions
-  (R39–R55) and G-upgrades, on the seams they name. Then each `spec/v2-upgrades/<section>.md`,
+  (R39–R60) and G-upgrades, on the seams they name. Then each `spec/v2-upgrades/<section>.md`,
   which wins over its Part 3 section. Then Part 2 (R1–R38 hold except where a section file or
-  R39–R55 names a line). §3 of this file lists every line that changes, in the plan and in the
+  R39–R60 names a line). §3 of this file lists every line that changes, in the plan and in the
   sibling files.
+* **No classes** (decision 5). Nothing here has teacher or student roles, classes, homework,
+  assignments, class codes, `/class/` or `/join/`. Friends compete through Compete's private
+  contests, an invite code or link that Compete owns (C18, C19).
 * **Never re-specified.** Where a sibling file already specifies a piece (Up next U1, points U4,
   levers U13, steps P1, the Desmos way P3, twins' axes P18, the instant check U3, causes T7),
   this file names it and only adds the cross-section rule.
@@ -44,12 +48,25 @@ P1–P25, `tests.md` X1–X23, `reports.md` SR1–SR24, `plan.md` L1–L20, `com
   * **Names.** The plan and the upgrade files name the one idea "same kind of question, new
     numbers" in at least 11 ways ("Another like this" 12, "Another one like this" 11, "Try one
     like this" 10, "Fresh versions" 15, "Try one now" 14, "New one like this" 8, "Practice
-    again" 8, …) and the exact replay, the fix and the parallel sitting in 7 more.
-  * **Three launchers for one day.** U1's time box (`source:'next', box`), T2's `Do them in
-    order`, and L8's `Start today` (plan tasks only, chained from `plan.next`) each start the
-    day with their own chain rule. v2 §3.6's task status ticks `fix` and `recheck` only from a
-    session tagged with that task, so a time box that fixes three mistakes leaves the plan's
-    Fix task `todo`.
+    again" 8, …) and the exact replay, the fix and the parallel sitting in 7 more. `review.md`
+    adds "Fresh one like this", "See one solved", "Learn it", "Redo these 5", "Keep warm · 3";
+    `words.md` adds "Same word, new text" and "Same trap, new word" as two direct keys, and
+    "Drill it".
+  * **Four launchers for one day.** U1's time box (`source:'next', box`), T2's `Do them in
+    order`, L8's `Start today` (plan tasks only, chained from `plan.next`) and V1's `Start
+    review · 10 min` (source `due`, made the primary of Today's `#mist` card) each start the day
+    with their own chain rule. T3's Warm-up row and V1's list both count check-ins, so two "due"
+    numbers on Today disagree. The plan's Words task (L4) and T2's Words row would show the same
+    words twice. v2 §3.6's task status ticks `fix` and `recheck` only from a session tagged with
+    that task, so a time box that fixes three mistakes leaves the plan's Fix task `todo`.
+  * **R&W items already exist.** `words.md` W1–W2 build `server/rw_items.py`: unlimited Words in
+    Context and Transitions items in the bank's Item shape, a named trap on every wrong option,
+    exact regeneration. As drafted they live only inside Words (`word_reviews`), outside drill,
+    Review, traps and `/api/types`.
+  * **Keys that change meaning.** Details is `D` in the runner (Part 2 §2.8), `I` in players;
+    `I` is "I'm guessing" in the runner and Guess in word quizzes; `Q` is the global quick
+    sheet; `Shift+T` is a menu in the runner and a direct action in Words; `V` is "see one
+    solved" in Review's pane.
   * **Clashes between the upgrade files.** `D` chooses option D and opens Details in the
     practice runner (Part 2 §2.8; `tests.md` fixed it in exam mode only). `source:'warmup'` is
     T3's spaced warm-up and also Compete's contest-lobby drill (`compete.md` §3.2). The cause
@@ -62,36 +79,36 @@ P1–P25, `tests.md` X1–X23, `reports.md` SR1–SR24, `plan.md` L1–L20, `com
 ## 1. Scorecard
 
 One row per TopTierPrep feature of the product as a whole. Section-level inventories are in
-each section file's scorecard; rows 38–44 point there. "v2 spec" is `spec/rebuild-v2.md` as
+each section file's scorecard; rows 38–46 point there. "v2 spec" is `spec/rebuild-v2.md` as
 written. "After these upgrades" includes the sibling files and this file.
 
 | # | Their feature | Their version | v2 spec | After these upgrades | Verdict |
 |---|---|---|---|---|---|
 | 1 | Price, tiers, quotas | Free: 1 exam attempt, 0 questions from their own bank, 5 new words a day, 1 AI plan a cycle. Pro $13.99, Elite $23.99 a month; usage meters on Subscription and Profile | Everything free; no plans, quotas, paywalls or upgrade prompts; the selling slots show the student's day | The slots they sell from start work: Up next in the sidebar (U1), readiness on Me (U8) | **WAY BETTER.** Everything they meter is unlimited, and nothing on screen sells. |
-| 2 | Sign-in | A Google sign-in wall before any page | No wall: anonymous-first, then an email code, pairing or the device code; Google is open question 5 | Passkeys in one tap (U19); a shared computer approved from the phone (U20); **Continue on your phone** carries the open page to a phone by QR (G12) | v2 PARITY for a returning student on a new device (slower than Google; email needs SMTP). **U19 + G12 → WAY BETTER.** |
+| 2 | Sign-in | A Google sign-in wall before any page | No wall: anonymous-first, then an email code, pairing or the device code; Google is open question 5 | **Google sign-in** (G15, R58) as well as passkeys (U19), both one tap, both linking to the same learner and carrying the anonymous work over; a shared computer approved from the phone (U20); **Continue on your phone** carries the open page to a phone by QR (G12) | v2 BELOW for a returning student on a new device (no Google; email needs SMTP). **G15 → WAY BETTER:** their one method with no wall in front of it, plus passkeys, phone approval and the page carried across. |
 | 3 | First visit | Wall, then empty cards: "Complete a full-length test to start tracking your score" (134 minutes) | New-student card frames; Up next offers the 20-question diagnostic, whose result waits behind a name-and-email step (R38) | **Start with 8** on Today, question 1 answered in place with no sign-up; afterwards every Today card is about the student; a live sample report (SR24) (G10) | v2 PARITY: the first useful result still cost 20 questions and a form. **G10 → WAY BETTER.** |
-| 4 | The one next action | None: plan CTA, QOTD, countdown and score compete | Today §3a's first-match Up next and the Today list | One queue on every page with `G N` (U1); a time box with question 1 on the page (T1); **Start today** over the whole Due list (G1) | **WAY BETTER.** |
-| 5 | Doing the day across sections | Dashboard → Full Plan → Start task → a QBank session that never ends → back → Mark done: about 12 clicks, 4 loads, 4 ticks for a 4-task day | Tasks tick from tagged sessions; summaries; finish responses carry `plan.next` | As drafted: 3 launchers with 3 chain rules, and Fix and Warm-up ticked only by their own tagged session. **G1**: one Start today over every Due row (plan, warm-up, words, day's questions, tests), one chain on every finish screen, and plan tasks tick from whatever did the work (R40, R41) | v2 WAY BETTER than theirs but inconsistent across files. **G1 → one loop:** 1 tap, then Enter between parts. |
-| 6 | Question sources | College Board Question Bank (1,921 Math) plus their own (3,867 Math): fixed pools that repeat; Free gets none of theirs | Unlimited questions from 386 verified templates; no official items (open question 17) | An official question, by ID or pasted text, becomes its type, named mistake and unlimited twins (U2, P13); readiness weighted by College Board's own mix (U8); each type's page lists the official IDs it was learned from (G7) | **WAY BETTER.** Their pool runs out and repeats; ours never does, and an official question is the way in, not the ceiling. |
-| 7 | Reading & Writing | R&W bank (1,848 official + 1,315 theirs), 4-module tests, an R&W question of the day | Math only; Words is R&W vocabulary (decision 2); optional R&W score fields | **G11**: one subject axis, so R&W is additive. Now: R&W vocabulary (Words, Word Sprint C14), Bluebook R&W sittings logged, R&W minutes and own tasks in the plan and streak, the 1600 total | **BELOW parity for R&W practice, by decision 3.** G11 closes what can be closed without a bank, and makes the bank a drop-in: no shared component assumes Math. |
-| 8 | Explanation | AI prose "Justification … Distractor Analysis", unverified, after answering only; the QOTD doesn't highlight the key | The key highlighted, a one-sentence rationale (median 21 words), every wrong option's named misconception | Steps on this question's numbers, checked against the key, with the step where your answer left the path (P1); a hint ladder (P2); Learn this type (T4, P2); the same verdict on every surface (G4); steps written in one audited pass (G14) | v2 BELOW on the key's explanation. **P1 + P2 + G4 + G14 → WAY BETTER.** |
-| 9 | Another question like this | None: retry the same item, or "More practice" to a list | "Another like this" on every surface under about 11 names; the repair is the same template on the next fresh seed | **Twin** (one verb, one key `T`, G2) that keeps your trap: a 60-seed walk offers it 98.4% of the time instead of about 56% (G3); axes easier, harder, grid-in, same setup (P18); same trap in other types (G3) | v2 WAY BETTER in kind, but its signature promise failed about 2 times in 5 and had 11 names. **G2 + G3 → the promise holds, under one name.** |
-| 10 | Mistake loop | toggleRedo exists in their API with no button; "Redo Questions 0"; nothing re-checked | Review: named mistakes, 2 clean answers close, check-ins at 3, 10 and 30 days | A mistake closes only on questions that offered its trap; the 10-day check-in comes on another type with the same trap where one exists (G3) | **WAY BETTER**; G3 makes "Fixed" true. |
+| 4 | The one next action | None: plan CTA, QOTD, countdown and score compete | Today §3a's first-match Up next and the Today list | One queue on every page with `G N` (U1); a time box with question 1 on the page (T1); **Start today** over the whole Due list, where Review's due list is one row (G1, R56). Today shows two starts, named apart (`Start today`, `Study 15 min`); every other start on the page is a row of the same list | **WAY BETTER.** One list, one count per fact (G6 checks `due today`). |
+| 5 | Doing the day across sections | Dashboard → Full Plan → Start task → a QBank session that never ends → back → Mark done: about 12 clicks, 4 loads, 4 ticks for a 4-task day | Tasks tick from tagged sessions; summaries; finish responses carry `plan.next` | As drafted: 4 launchers with 4 chain rules, check-ins counted in two rows, the words twice, and Fix and Warm-up ticked only by their own tagged session. **G1 + R56**: one Start today over every Due row (plan, review, words, the day's questions, tests, private contests closing today), one chain on every finish screen, and plan tasks tick from whatever did the work (R40, R41) | v2 WAY BETTER than theirs but inconsistent across files. **G1 → one loop:** 1 tap, then Enter between parts. |
+| 6 | Question sources | College Board Question Bank (1,921 Math) plus their own (3,867 Math): fixed pools that repeat; Free gets none of theirs | Unlimited questions from 386 verified templates; no official items (open question 17) | **Official questions on our answer pad** (G16, R59): a list of 1,039 official IDs we hold keys for, filtered by skill, tier and not yet done; each opens on College Board, is answered here, the wrong pick is named (92% of official wrong options resolve), the mistake opens and a trap-true Twin follows. Plus an official question by ID or pasted text becomes its type and unlimited twins (U2, P13); readiness weighted by College Board's own mix (U8); each type's page lists its official IDs (G7) | **WAY BETTER.** Their official workflow is kept, with a Solved filter, and every official miss gets a name, a mistake with check-ins and endless twins. Their own pool runs out and repeats; ours never does. |
+| 7 | Reading & Writing | R&W bank (1,848 official + 1,315 theirs; Words in Context 261 + 102, Transitions 194 + 10), 4-module tests, an R&W question of the day | Math only; Words is R&W vocabulary (decision 2); optional R&W score fields | **G11 + R57**: `rw_items` is the first `rw` bank. Words in Context and Transitions are unlimited, drillable from Practice (`/api/drill {subject:'rw'}`), listed in `/api/types?subject=rw`, and their misses are ordinary mistakes (Review, Fix n, check-ins, Twin). Also: Word Sprint (C14), logged Bluebook R&W scores and misses on those two skills, R&W minutes and tasks in the plan and streak, the 1600 total | **WAY BETTER on the two R&W skills we generate** (theirs: 567 fixed items with prose; ours: unlimited, every wrong option named). The other R&W skills wait for the bank (decisions 2 and 3) and land in the same routes with no rewrite. |
+| 8 | Explanation | AI prose "Justification … Distractor Analysis", unverified, after answering only; the QOTD doesn't highlight the key | The key highlighted, a one-sentence rationale (median 21 words), every wrong option's named misconception | Steps on this question's numbers, checked against the key, with the step where your answer left the path (P1); a hint ladder (P2); Learn this type (T4, P2); the same verdict on every surface (G4); steps written in one audited pass, **on every served template before launch** (G14's launch gate) | v2 BELOW on the key's explanation. **P1 + P2 + G4 + G14 → WAY BETTER** on every question at launch, not half of them. |
+| 9 | Another question like this | None: retry the same item, or "More practice" to a list | "Another like this" on every surface under about 11 names; the repair is the same template on the next fresh seed | **Twin** (one verb, one key `T`, its menu `Shift+T`, on every surface including Review and Words, G2) that keeps your trap: a 60-seed walk offers it 98.4% of the time instead of about 56% (G3); axes easier, harder, grid-in, same setup (P18); same trap in other types (G3); in Words, same word or same trap as menu items. A visible sublabel says what Twin means on touch screens and the first 3 uses | v2 WAY BETTER in kind, but its signature promise failed about 2 times in 5 and had 11 names. **G2 + G3 → the promise holds, under one name that explains itself.** |
+| 10 | Mistake loop | toggleRedo exists in their API with no button; "Redo Questions 0"; nothing re-checked | Review: named mistakes, 2 clean answers close, check-ins at 3, 10 and 30 days | A named mistake closes only on questions that offered its trap; unsure, slip and unnamed grid-in mistakes close on clean answers to their template, so every kind can reach Fixed; the 10-day check-in comes on another type with the same trap where one exists (G3) | **WAY BETTER**; G3 makes "Fixed" true for every kind. |
 | 11 | Score estimate | Only after a full 4-module test; floor sections dropped; red LOW CONFIDENCE with no way to raise it | R16: bands from sittings, confidence with its reason, trend | Points on the table (U4), projection (U9), practice delta (T10), what moves the band (X15, SR21) | **WAY BETTER** (siblings); R48 keeps one pricing rule. |
 | 12 | Pricing time | No point value anywhere; "Weakest first" | Mastery bars and accuracy | Every skill, mistake, habit and Up next row priced by one function in one chip, its arithmetic one tap away (U4, G5) | v2 PARITY. **U4 + G5 → WAY BETTER.** |
-| 13 | Numbers that agree | Profile streak 0 while the QOTD says 1; wizard target 1400, dashboard 0; gauge "25 Wrong" beside "0 Incorrect / 45 Unanswered"; "13% · 1-8 questions" | Rule 5: one source per fact | Levers on Me (U13); **G6**: every number on every page opens its working, with what was left out, and a gate proves each fact reads the same on every endpoint | v2 PARITY in practice: a rule nobody checks, working shown only on Me. **G6 → WAY BETTER.** |
+| 13 | Numbers that agree | Profile streak 0 while the QOTD says 1; wizard target 1400, dashboard 0; gauge "25 Wrong" beside "0 Incorrect / 45 Unanswered"; "13% · 1-8 questions" | Rule 5: one source per fact | Levers on Me (U13); **G6**: every number on every page carries a visible ⓘ on every device and opens its working, with what was left out, and a gate proves each fact (the due count included) reads the same on every endpoint | v2 PARITY in practice: a rule nobody checks, working shown only on Me. **G6 → WAY BETTER.** |
 | 14 | Search | None | Palette: pages, skills, 386 types, misconceptions, actions, parsed sets | Paste a question or an official ID (U2); change anything by typing (U24); open any type's page (G7) | **WAY BETTER.** |
 | 15 | Quick add | Draggable "Add your own word" button that covers Next | Quick sheet: quick question, log a mistake, add a word; never floats | Log a mistake by ID, pasted text or a Bluebook test (U2) | **WAY BETTER.** |
 | 16 | Report a problem | Modal (title, category, details, 10 × 50 MB images); the student never hears back | One modal, replies, bounded disputes, admin page | Key disputes answered by an independent solver in about a second, quarantine, one fix corrects everyone (U3); Report on every question surface, key `R` (G4, G2) | **WAY BETTER.** |
 | 17 | Share and export | `navigator.share` froze the page; shared sessions; "Share / Export Report" has no handler | Sets, progress link, calendar feed, print | Links send twins by default (U28, P22); repair packs (SR20) | **WAY BETTER.** |
 | 18 | Speed | Client-routed SPA; cards skeleton-load each visit; a fake plan-building screen | 14+ static pages, each reloading and fetching behind skeletons | Prerender and paint from cache (U23), one round trip per question (P23), and **G9**: the next question pre-rendered, view transitions, budgets measured before merge | v2 BELOW. **G9 → WAY BETTER, measured.** |
-| 19 | Phone | Desktop layout squeezed; tools at the top; the vocab button covers Next | 390 px rules, bottom sheets, 5 tabs | Chrome that fits (U26); one thumb-first runner for practice and tests (X6, R50) | **WAY BETTER.** |
-| 20 | Keyboard | Arrows in the report player; the overview ignores Esc | One registry and map, but `D` both chooses D and opens Details in the practice runner | One key per verb (`T` twin, `E` again exactly, `R` report on every question), Details on `Q`, `Z` undo, and a registry that refuses a duplicate key (G2, R43) | v2 PARITY with a clash. **G2 → WAY BETTER.** |
-| 21 | Accessibility | Figures are images with no text alternative, floated beside the text | Charts carry hidden tables; the bank's figures are unnamed `role="img"` SVGs | Figure descriptions generated from each item's numbers and checked, table headers, MathML kept, Read aloud (G8) | v2 PARITY (both silent on figures). **G8 → WAY BETTER.** |
+| 19 | Phone | Desktop layout squeezed; tools at the top; the vocab button covers Next | 390 px rules, bottom sheets, 5 tabs | Chrome that fits (U26); one thumb-first runner for practice and tests (X6, R50) with every tool a visible labelled button in a wrapping tools row, none in a menu | **WAY BETTER.** |
+| 20 | Keyboard | Arrows in the report player; the overview ignores Esc | One registry and map, but `D` both chooses D and opens Details in the practice runner | One key per action across runner, players and Words: `T` Twin, `Shift+T` its menu, `V` Details, `I` Guess, `E` again exactly (eliminate in a running set), `R` report, `Z` undo; a `/dev/` check that throws when a key means two actions in two scopes (G2, R43) | v2 PARITY with clashes. **G2 → WAY BETTER.** |
+| 21 | Accessibility | Figures are images with no text alternative, floated beside the text | Charts carry hidden tables; the bank's figures are unnamed `role="img"` SVGs | Figure descriptions generated from each item's numbers and checked on every figure template before launch, table headers, MathML kept, Read aloud as a visible tool (G8) | v2 PARITY (both silent on figures). **G8 → WAY BETTER.** |
 | 22 | Theme, text size, motion | None | Dark theme, three text sizes, reduced motion | Unchanged | **WAY BETTER.** |
 | 23 | Time zone | Calendar in UTC, so an evening's work lands on the wrong day | The learner's local day everywhere (X-Tz, R13) | Unchanged | **WAY BETTER.** |
 | 24 | Preferred study time | "Evening", used by nothing | Calendar download or feed with alarms | Reminders that say what is due, at the chosen time (U18) | **WAY BETTER.** |
-| 25 | Classes and homework | Hidden `/my-classes` and `/teacher` | `/class/` with codes and assignments | Reach-a-level homework, tailored questions (U27), class twins (X22), class contests (C18, C19) | **WAY BETTER.** |
+| 25 | Private play with people you know | Hidden `/my-classes` and `/teacher` routes; their only private play is inside those hidden pages | v2's groups (R4) | Dropped by decision 5: a separate platform covers group teaching, so nothing here has roles, codes or homework. Friends race through Compete's private contests: one invite code or link, a series board, rounds built from their open traps (C18, C19) | **WAY BETTER** for friends (a link, free, with a reason to come back every round). Group teaching is out of scope (decision 5). |
 | 26 | Contests and leaderboards | Tier-gated; empty on the days seen | Free Compete | `compete.md` C1–C25 | **WAY BETTER.** |
 | 27 | Achievements | 4 hard-coded tiles; View All has no handler | 43 tiered rules with progress | Go on every badge (U13, C23); the Fixed moment in every verdict (G4) | **WAY BETTER.** |
 | 28 | Streak | Two streaks that disagree | One study streak (R13) | Spare days (U16) | **WAY BETTER.** |
@@ -100,17 +117,19 @@ written. "After these upgrades" includes the sibling files and this file.
 | 31 | Timer and pace | Stopwatch that resets on reload; Timed or Untimed | Survives reload; 95 s pace | Budgets per tier and type, two passes (P16), a personal pace guide (X3) | **WAY BETTER.** |
 | 32 | Question details | ID, domain, skill, difficulty | Template, level, why, permalink | Plus **About this type**: the type's own page (G7) | **WAY BETTER.** |
 | 33 | Single-question page `/question/:key` | A route per item (seen in their bundle) | Permalink `?q=TEMPLATE:SEED` as a one-question drill | Links send twins (U28); a public page for each of the 386 types (G7) | **WAY BETTER.** |
-| 34 | Content trust | AI prose; keys unchecked; their plan generator failed 3 of 3 | Audited bank with a second solver; plan built on the server | Every new bank field audited before it ships (G14); disputes checked by the solver (U3) | **WAY BETTER.** |
-| 35 | Help and FAQ | Six billing questions | `/help/` with search and anchors | A "?" and a working popover beside every number (U13, G6) | **WAY BETTER.** |
+| 34 | Content trust | AI prose; keys unchecked; their plan generator failed 3 of 3 | Audited bank with a second solver; plan built on the server | Every new bank field audited before it ships (G14); disputes checked by the solver (U3); **the Words content audited too**: every definition and part of speech checked against WordNet, every frame's key and traps re-solved by a second method, mismatches in a human queue that must be empty before Words ships (G14) | **WAY BETTER** for Math and R&W alike. |
+| 35 | Help and FAQ | Six billing questions | `/help/` with search and anchors | A visible ⓘ beside every number, on every device, opening its working (U13, G6) | **WAY BETTER.** |
 | 36 | Toasts and undo | Generic toasts ("Task skipped") | Toasts with actions | An inbox and Undo on every reversible action (U25); `Z` undoes from any page (G2) | **WAY BETTER.** |
-| 37 | Empty and loading states | "No completed tests yet."; skeletons on every visit | A frame, a sentence and the filling action; static skeletons | Paint from cache (U23); **G12**: one dimmed sample row of what will appear, and the smallest filling action with its cost, run inside the card | v2 PARITY. **G12 → WAY BETTER.** |
+| 37 | Empty and loading states | "No completed tests yet."; skeletons on every visit | A frame, a sentence and the filling action; static skeletons | Paint from cache (U23); **G12**: one dimmed sample row of what will appear, and the smallest filling action with its cost, run inside the card, through one `UI.empty` on every card, Review's included (V16): `Start with 8` for a learner with no answers, an inline Twin otherwise | v2 PARITY. **G12 → WAY BETTER.** |
 | 38 | Dashboard (section) | Hero, QOTD, study time, plan CTA, score, countdown, recent tests | §3.2 | `today.md` T1–T20 | See `today.md` §1. |
 | 39 | Question Bank (section) | Builder with counts and filters; session with retries, Attempts, overview | §3.3 | `practice.md` P1–P25 | See `practice.md` §1. |
 | 40 | Practice tests and the runner (section) | Paper grid, start wizard, Bluebook-clone runner, Check Your Work | §3.4 | `tests.md` X1–X23 | See `tests.md` §1. |
 | 41 | Results and the score report (section) | Ring gauges, tiles, domain cards, question grid, review modal | §3.5 | `reports.md` SR1–SR24 | See `reports.md` §1. |
 | 42 | Study plan (section) | Four-step wizard; plan view recovered from their bundle | §3.6 | `plan.md` L1–L20 | See `plan.md` §1. |
 | 43 | Contests, rankings, leaderboards (section) | Contest list, rankings grid, leaderboard | §3.7 | `compete.md` C1–C25 | See `compete.md` §1. |
-| 44 | Vocabulary; profile and account (sections) | Library, flashcards, quizzes, My Words; profile cards | §3.8; §3.1 | Words upgrades when merged; `shell-me.md` U1–U28 | See those files. |
+| 44 | Vocabulary (section) | Library, flashcards, quizzes, My Words; 5 new words a day on Free | §3.8 | `words.md` W1–W22. Reconciled here: W1–W2's items are the `rw` bank (R57), so their misses are Review mistakes and their twins go through `UI.twin` (W1's two axes are menu items, R42, R43); W11's run is G1's Words part, one row with the plan's Words task (R56); W21's items are T14's two R&W slots; the Words content joins G14's audit | See `words.md` §1. |
+| 45 | Profile and account (section) | Profile cards, usage meters | §3.1 | `shell-me.md` U1–U28 | See `shell-me.md` §1. |
+| 46 | Redo, saved and marked (section) | A Redo toggle with no button; "Redo Questions 0" | §3.9 | `review.md` V1–V19. Reconciled here: V1's due list is one Due row (R56); its labels map to `UI.VERBS` (R42); "See one solved" is how `Learn this type` opens from a miss, freeing `V` (R43); V16 renders through `UI.empty` (G12); V19's sheet is G13's section 1 (R60) | See `review.md` §1. |
 
 ---
 
@@ -157,59 +176,99 @@ cross-section rule named in the last column.
 | unfair-advantage #8 first visit, 12 questions | **G10** (8 questions, no band) | R55 |
 | unfair-advantage #9 playbook and final week | T13, L19; one sheet: **G13** | none |
 | unfair-advantage #10 offline pack | Rejected | none |
-| unfair-advantage #11 paper versions for classes | Rejected | none |
+| unfair-advantage #11 paper versions with QR answer entry | Rejected (§4; its class use is void by decision 5) | none |
 | unfair-advantage #12 figures a screen reader can use | **G8**, G14 | none |
+| the Google sign-in gaps (outcomes, unfair-advantage) | **G15** | R58 |
+| the official-question gap (unfair-advantage) | **G16**: official IDs on our answer pad | R59 |
+| the R&W gaps (all three) | **G11**: `rw_items` as the first `rw` bank | R51, R57 |
 | parity gaps (all three) | mapped in the scorecard rows above, or listed in §4 | |
 
-### A. The seams: one decision where the upgrade files disagree (R39–R55)
+### A. The seams: one decision where the upgrade files disagree (R39–R60)
 
 These rows are appended to Part 2 §2.2 (§3.1 item 12). "Wins" names the text that is canonical.
 
 | # | topic | what disagreed | decision | owner |
 |---|---|---|---|---|
-| R39 | Precedence | Seven upgrade files each win over their own section, and some specify the same seam | `v2-decisions.md` > R39–R55 and G1–G14 of `product.md` (on the seams they name) > `v2-upgrades/<section>.md` > Part 3 > Part 2. A later upgrade file that needs a seam changed adds a row here in the same commit | I1 |
-| R40 | Starting the day | U1/T1 time box, T2 `Do them in order`, L8 `Start today` (plan tasks only, chained from `plan.next`, rail from `GET /api/plan/day`) | **Two starts, named apart.** `Start today` walks the Due list (`next.due`, T2's rows) in its order, one ordinary sitting per row, chained on the client by `UI.run` (G1); the rail reads `/api/today.due`. `Study N min` is U1's box, one mixed session. T2's button and L8's pill are both `Start today`; T1's pill `Start · 15 min` is `Study 15 min`. The challenge and contests are never started by the run | F2 (`UI.run`), S3, S7 |
-| R41 | Plan task done | v2 §3.6 ticks `fix` and `recheck` only from a session tagged with that task | A task is done by the work, from any source that day: `fix` when answers on its trap templates ≥ its count; `recheck` when every check-in due that day has been answered once (T2's warm-up rule); `focus` unchanged (attempts on its topics ≥ count). Tagged sessions still tick as before | S7 |
-| R42 | Action names | About 11 names for a twin, 7 for the other three ideas | **Six labels for four ideas** (G2): `Twin` (`Twin ×5`, `Twin this set`), `Twin test`, `Again, exactly`, `Fix n`, `Learn this type`. `UI.VERBS` holds each label, helper, glyph and key. `Rematch` (P19, C2) stays its own feature | F1, every page owner |
-| R43 | Keys | `D` chooses and opens Details in the practice runner; `U` is undo on Plan and "next unanswered" in the runner; players' `T` is "try one like this" | Runner: `D` only chooses; **Details `Q`**; **Report `R`** (both modes). Players and runner after a verdict: `T` Twin, `Shift+T` its menu. Global (pages with the shell): **`Z` undo** the last reversible change; Plan's `U` becomes `Z`. `UI.keys.register` throws in dev when a scope registers a key twice | F2, F3, S7 |
-| R44 | The twin control | T5's `UI.twinSheet`, P18's split button and `/more {axis}`, each consumed by S3, S6, S8, S10 | **One component `UI.twin(anchor, ctx)`** (F3): P18's split button and menu. Inside a running set it appends through `POST /api/drill/{id}/more`; everywhere else it opens T5's `UI.twinSheet` inline (R24). Consumers never build their own twin button | F3 |
-| R45 | Which twin | The repair and every "like this" path serve the next fresh seed, which drops the trap about 2 times in 5; any right answer on the template closes every trap on it | **Trap-true** (G3): every twin that follows a miss or a mistake carries `want` from the trap's norm (§2.6, 60 seeds, grid-in `spr_reasons` too). A clean answer lowers a trap's `owed` only when `attempts.offered` holds its norm (or the grid-in's `spr_reasons` do). R9's 10-day check-in uses another template with the same norm when `progress.related(norm)` has one | F5, F4 |
-| R46 | Drill source names | `warmup` is T3's spaced warm-up and also Compete's lobby drill | `warmup` means T3 only. Compete's lobby drill (C7) is `source:'prep'` (UI label stays "Warm up"). New: `start` (G10). `learn` (T4), `twin` and `try` (R24) unchanged | F5, S8 |
+| R39 | Precedence | Nine upgrade files each win over their own section, and some specify the same seam | `v2-decisions.md` > R39–R60 and G1–G16 of `product.md` (on the seams they name) > `v2-upgrades/<section>.md` > Part 3 > Part 2. A later upgrade file that needs a seam changed adds a row here in the same commit | I1 |
+| R40 | Starting the day | U1/T1 time box, T2 `Do them in order`, L8 `Start today` (plan tasks only, chained from `plan.next`, rail from `GET /api/plan/day`), V1 `Start review · 10 min` (Today's `#mist` primary) | **Two starts, named apart.** `Start today` walks the Due list (`next.due`, T2's rows with R56's review row) in its order, one ordinary sitting per row, chained on the client by `UI.run` (G1); the rail reads `/api/today.due`. `Study N min` is U1's box, one mixed session; after the day is done it reads `Keep going · N min`, and `Keep going` means the box and nothing else. T2's button and L8's pill are both `Start today`; T1's pill `Start · 15 min` is `Study 15 min`. V1's `Start review` is the review row's own start (R56), not a third launcher. The challenge and contests are never started by the run | F2 (`UI.run`), S3, S7, S10 |
+| R41 | Plan task done | v2 §3.6 ticks `fix` and `recheck` only from a session tagged with that task | A task is done by the work, from any source that day: `fix` when answers on its trap templates ≥ its count; `recheck` when every check-in due that day has been answered once (the review row's check-in items, R56); `focus` unchanged (attempts on its topics ≥ count); `words` by T2's words rule (due = 0, or a words run finished today). Tagged sessions still tick as before | S7 |
+| R42 | Action names | About 11 names for a twin, 7 for the other three ideas; `review.md` and `words.md` add more | **Six labels for four ideas** (G2): `Twin` (`Twin ×n`, `Twin this set`), `Twin test`, `Again, exactly`, `Fix n`, `Learn this type`. `UI.VERBS` holds each label, helper, sublabel, glyph and key; the sublabel shows under the button on coarse pointers and on the first 3 uses. §3.2 maps every `review.md` and `words.md` label (Fresh one like this, Try one now, Fresh versions, Redo these, Learn it, See one solved, Drill it, Same word, new text, …). `Rematch` (P19, C2) stays its own feature | F1, every page owner |
+| R43 | Keys | `D` chooses and opens Details in the practice runner; Details is `I` in players; `I` is Guess in the runner and in word quizzes; `Q` is the global quick sheet; `U` is undo on Plan; `Shift+T` is a menu in the runner and a direct action in Words; `V` is "see one solved" in Review's pane | **One key per action across scopes** (G2): `D` only chooses; **Details `V`** in the runner and every player; **Guess `I`** in the runner and word quizzes, unbound in players; **Report `R`** everywhere a question shows; `T` Twin and `Shift+T` its menu after a verdict in the runner, every player and Words; `Q` stays the global quick sheet; **`Z` undo** globally (Plan's `U` becomes `Z`). `UI.KEYS` declares each question action's key once; in `/dev/`, `UI.keys.register` throws when a scope binds a key twice, and when runner, player, pane or words scopes bind one key to two different actions, except the listed `E` (eliminate in a running set, Again elsewhere) and `O` (Note; Open word in Words, which has no note) | F2, F3, S7, S9, S10 |
+| R44 | The twin control | T5's `UI.twinSheet`, P18's split button and `/more {axis}`, W1's two direct twin keys, each consumed by S3, S6, S8, S9, S10 | **One component `UI.twin(anchor, ctx)`** (F3): P18's split button and menu. Inside a running set it appends through `POST /api/drill/{id}/more` (in a Words run, `POST /api/words/run/{id}/another`); everywhere else it opens T5's `UI.twinSheet` inline (R24). Its menu lists only the axes the item supports: for Words in Context `Same word, new text` and `Same trap, new word`, for Transitions `Same logic, new text` and `Same mix-up, new text`. Consumers never build their own twin button | F3, S9 |
+| R45 | Which twin | The repair and every "like this" path serve the next fresh seed, which drops the trap about 2 times in 5; any right answer on the template closes every trap on it | **Trap-true** (G3): every twin that follows a miss on a named trap carries `want` from the trap's norm (§2.6, 60 seeds, grid-in `spr_reasons` too, an R&W item's trap ids). For traps of kind misconception, and grid-in traps whose template has `spr_mistakes`, a clean answer lowers `owed` only when `attempts.offered` holds the norm (or the grid-in's `spr_reasons` do). Unsure, slip and unnamed grid-in traps (norm `~unsure`, a filler slip, or `''`) keep v2's rule: any clean answer on the template counts, and their twins are plain. R9's 10-day check-in uses another template with the same norm when `progress.related(norm)` has one | F5, F4 |
+| R46 | Drill source names | `warmup` is T3's spaced warm-up and also Compete's lobby drill | `warmup` means T3's warm-up only, which R56 makes the head of V1's `due` session: `{source:'warmup'}` is accepted as `{source:'due', count:5}` so U1's segment 1 and old bodies keep working. Compete's lobby drill (C7) is `source:'prep'` (UI label stays "Warm up"). New: `start` (G10), `due` (V1), `official` (G16). `learn` (T4), `twin` and `try` (R24) unchanged | F5, S8, S10 |
 | R47 | Causes of a miss | P8: six chips with `misread` its own cause; SR8: different labels, misread folded into slip, "Rushed" and "Ran long" added; X: `changed` | **Causes:** `trap`, `slip`, `misread`, `clock`, `entry`, `changed` (tests, automatic), `gap`, first match in T7's order with `changed` first on tests and a student-set `miss_kind` winning. **Chips (P8's six, exactly):** Fell for a trap · Slip: I knew it · Misread the question · Ran out of time · Entered it wrong (grid-ins) · Didn't know how to start. **Letters** for Colour by Cause: T S R C E A G. **R9 kinds:** trap → misconception; slip, misread, clock, entry, changed → slip; gap → unsure | F4, S4, S6 |
 | R48 | Pricing | Several proposals add a second points model | **Two functions, two looks.** Practice points on skills, mistakes and habits come only from U4's `estimate.gains`, shown as `≈ +6 pts` (never a range, never a score). A sitting's points come only from exact re-marking (`estimate.rescore`, `estimate.ledger`), shown without `≈` ("+12 on this section"). Nothing else prices points | F4, F1 |
 | R49 | The actions on a revealed question | P1, P2, P3, P18, P21, T5, U3, R23, SR16 each add actions on their own surfaces | **One row `UI.questionActions(host, q, ctx)`** (G4) in the verdict slot of every surface that reveals a question, with one order, one set of keys and one access rule | F3 |
-| R50 | The runner on a phone | X6 specifies gestures, footer Mark and the answer pad for the test window | X6 is `runner.js`, so it applies to the practice session too, with one guard: in instant feedback no swipe moves on before Check. The practice-only tools (Hint, Eliminate, Calculator, Desmos way, Read aloud) sit in the footer's `⋯` sheet under 760 px | F3 |
-| R51 | Subject | Each file says "payloads carry `subject`" in its own way | One axis (G11): `subject` is `math` or `rw`, derived template → topic → subject (no attempts column), default `math`, `?subject=` on every section endpoint, 422 for an unknown subject, `available:false` where no bank exists | F4, every owner |
+| R50 | The runner on a phone | X6 specifies gestures, footer Mark and the answer pad for the test window; a draft put Hint, Eliminate, Calculator, Desmos way and Read aloud in a `⋯` sheet | X6 is `runner.js`, so it applies to the practice session too, with one guard: in instant feedback no swipe moves on before Check. **No tool is in a menu** (decision 4, §2.1 rule 9): under 760 px the tools (Calculator, Reference, Eliminate, Hint, Desmos way, Read aloud, each where allowed) wrap into a visible **tools row** between the question and the footer, each a 44 px button with its icon and its text label; the row wraps to a second line rather than scroll or collapse | F3 |
+| R51 | Subject | Each file says "payloads carry `subject`" in its own way | One axis (G11): `subject` is `math` or `rw`, derived template → topic → subject (no subject column), default `math`, `?subject=` on every section endpoint, 422 for an unknown subject. `rw` has a bank for the skills `rw_items` generates (R57); a request for any other R&W skill, or an R&W test, returns `available:false` or 409 `no_bank` | F4, every owner |
 | R52 | Type states | outcomes: New/Learning/Learned/Kept/Proven; unfair-advantage: Proven; U8 and P14: unmet/met/ready | U8's **unmet · met · ready**, with the overlays open mistake, being fixed and due (P14), are the only type states. R37's words stay for skills | F1, S1, S4 |
 | R53 | Spaced returns | Proposals add `type_state`, `boxes`, `skill_memory`; `plan.md` cites a `type_memory` that `practice.md` rejected | T3's derived `progress.warmup_candidates` is the only schedule for types, R9's check-ins the only one for mistakes. No schedule table is added | F4 |
 | R54 | Confidence in practice | `plan.md` cites "P7's optional chips"; `practice.md` rejected chips | P7's split Check (`Enter` Sure, `Shift+Enter` Unsure, `I` Guess, a second tap = Sure) is the only practice input; nothing asks an extra tap | F3 |
-| R55 | A brand-new student | U1: "Take the diagnostic · 20 q"; T1: the coach's box; proposals: 8 or 12 placement questions | Up next row 0 for a learner with 0 answers is **Start with 8** (G10); the diagnostic is row 2. No practice score or band is shown from it (U4, T10) | F2, F5, S3, S4 |
+| R55 | A brand-new student | U1: "Take the diagnostic · 20 q"; T1: the coach's box; proposals: 8 or 12 placement questions; V16: "Try one now", then "Take the diagnostic" | Up next row 0 for a learner with 0 answers is **Start with 8** (G10); the diagnostic is row 2. Every empty state for a learner with 0 answers offers `Start with 8 · about 10 min` as its action (G12), Review's included. No practice score or band is shown from it (U4, T10) | F2, F5, S3, S4, S10 |
+| R56 | One Due list | V1's capped Due list (check-ins, relapsed, sure and wrong, half fixed, saved, marked, mistakes) and T3's Warm-up row both count check-ins; V1's `Start review` is a third primary on Today; the plan's Words task (L4) and T2's Words row list the same words; `Keep going` means U1's box in G1 and the coach's quick set in V1 | **V1's list is one Due row, kind `review`**, in place of T2's Warm-up row. `review.due` absorbs T3's candidates: its kinds are check-in, relapsed, sure, half, **fading** (T3's fading types), saved, marked, mistake, **keep_warm**, under V1's cap. `next.due` builds the row from `review.due`, so Up next's `checks` row, the Due list, Start today, Review's Due tab, Today's `#mist` card, the badge and the plan's recheck task read one list and one count. The plan's `recheck` task renders as that row and the plan's `words` task as the words row (each carries `task_id`, sits in PLAN and counts toward its `N of M`), never twice. Review's page pill and `#mist` start that row; while a run is on they read `Start review · part n of m` and start it with `run`. `Keep going` is the box only | F2 (`next.due`), S10 (`review.due`), S3, S7, S9 |
+| R57 | R&W items | `words.md` keeps `rw_items` inside Words (answers in `word_reviews`, not in attempts, drill, Review or `/api/types`); G11 said R&W had no bank; §4 rejected logging R&W mistakes | **`rw_items` is the first `rw` bank** (G11). Its templates (`rw.wic.*`, `rw.nearly.*`, `rw.tr.*`) are registered in the catalogue under topics `words-in-context` and `transitions`, subject `rw`. Every answer to a generated R&W item, from a Words run, a word sheet sample, T14's slots or a drill, is filed by `progress.record` as an ordinary attempt (new nullable `attempts.word`); a miss opens a trap of kind misconception with norm = W1's trap id (W2's `wrong_logic` pair for transitions). `word_reviews` keeps the word's schedule and links the attempt (`word_reviews.attempt`). `words.rw_answers` reads attempts. So Review, Fix n, check-ins, `UI.twin`, `UI.questionActions`, the type page and Results' R&W row work unchanged | F4, F5, S9 |
+| R58 | Sign-in | U19 passkeys only; Google left as open question 5 and rejected for now in §4 | **Google sign-in as well** (G15): Google Identity Services on `/signin/` and in the save nudge, one more method on the same learner as passkeys and email codes. The first link keeps the anonymous learner; signing in to an existing account carries the anonymous work over through the pairing `carry`. Passkeys stay first where a platform authenticator exists. Open question 5 is answered yes by default | S1 |
+| R59 | Official questions | P13 sends students to College Board's bank and back with a paste; §4 and open question 17 drop in-app official practice | **An official-questions session on our answer pad** (G16): IDs from `material/keys`, opened on College Board, answered here, the pick named through U2's map, a trap opened (source `outside`, origin `cb_qbank`) and a trap-true Twin next. No College Board text is ever served | S4, F5, U2's `types.py` |
+| R60 | Test-week sheets | G13's `/plan/?print=sheet`, V19's `/review/print.html?sheet=traps` and `/plan/?print=traps`, and V19's exam-week card with its own `Final check · 10` beside T13's final stretch and L19's eve task | **One sheet, one URL** (G13): V19's trap entries are its section 1; the two trap URLs redirect to `/plan/?print=sheet`. V19's Final check is a Due row (kind `final_check`) in T13's final stretch, not a card. V19's error log (`?sheet=log`) stays, as a different list | S7, S10, S3 |
 
 ### B. The day and the loop
 
 #### G1. Start today: one run through the whole Due list, and the plan ticks from whatever did the work
 
-*From: experience #1, unfair-advantage #3, outcomes #2; reconciles U1, T1, T2, L8, L9. Effort M.
-Builders: F2 (`UI.run` in `ui.js`), S3 (the Due list header, `/api/today.due`), S7 (the
-DayPanel pill, R41's done rules), S4 (session summary), S6 (report footer), S9 (the words run's
+*From: experience #1, unfair-advantage #3, outcomes #2; reconciles U1, T1, T2, T3, L4, L8, L9,
+V1, W11. Effort M. Builders: F2 (`UI.run` in `ui.js`, `next.due`), S3 (the Due list header,
+`/api/today.due`, `#mist`), S10 (`review.due` with T3's kinds, Review's pill), S7 (the DayPanel
+pill, R41's done rules), S4 (session summary), S6 (report footer), S9 (the words run's
 `then=run`), S5 (the lobby's `run`).*
 
 **Why.** A 4-task day costs about 12 clicks, 4 page loads and 4 manual ticks on theirs, and
-their QBank session never ends. As drafted, ours had three launchers that chained differently:
+their QBank session never ends. As drafted, ours had four launchers that chained differently:
 L8's walked plan tasks only, so Start today skipped the warm-up, the words and the day's
-questions; and a Study-15-minutes box that fixed three mistakes left the plan's Fix task
-`todo`. One run over the one list, and one done rule, make the whole site one loop.
+questions; V1's `Start review` was a third pill on Today; check-ins were counted in both the
+Warm-up row and Review's list, so the counts disagreed; the plan's Words task and the Words row
+listed the same words twice; and a Study-15-minutes box that fixed three mistakes left the
+plan's Fix task `todo`. One run over one list, one count per fact and one done rule make the
+whole site one loop.
 
 **Two starts, named apart (R40).**
 
 | start | label | what it does | where |
 |---|---|---|---|
-| The day | `Start today · 5 parts · 38 min`; mid-run `Continue today · part 2 of 5` | walks the undone Due rows (T2) in order, each its own ordinary sitting, chained | Today's Due list header (replaces `Do them in order`); Plan's DayPanel (L8); the sidebar Today card; the phone thumb bar (L8); palette "start today"; `/?run=1` |
-| Some minutes | `Study 15 min` with chips 5 · 15 · 30 · 45 · 60 | one mixed session sized to the time (U1's `box`, T1's blocks) | Today's `#next` (T1, region primary); the Up next popover chips (U1); palette "study 20" |
+| The day | `Start today · 5 parts · 38 min`; mid-run `Continue today · part 2 of 5` | walks the undone Due rows in order, each its own ordinary sitting, chained | Today's Due list header (replaces `Do them in order`); Plan's DayPanel (L8); the sidebar Today card; the phone thumb bar (L8); palette "start today"; `/?run=1` |
+| Some minutes | `Study 15 min` with chips 5 · 15 · 30 · 45 · 60; once the day is done, `Keep going · 15 min` | one mixed session sized to the time (U1's `box`, T1's blocks) | Today's `#next` (T1, region primary); the Up next popover chips (U1); Review's pill when nothing is due or open; palette "study 20" |
 
+* Today has exactly these two pills. Every other start on Today (`#mist`, a Due row's action,
+  a card's action) is a `.btn` that starts one Due row or one card's own set.
 * Start today is hidden when no row is undone; the Due header then reads `Day done · 42 of 40
-  min` and the pill is `Keep going · 15 min` (the box).
+  min` and the pill is `Keep going · 15 min` (the box). `Keep going` never names anything else.
 * On a rest day the pill reads `Practice anyway · 3 parts`.
+
+**One Due list (R56).** `next.due(learner, tz)` (F2) returns the rows, in T2's order without its
+class rows (decision 5):
+1. A running or out-of-time test.
+2. Plan tasks from `plan.today_summary` (fix, focus, test, custom, extra). The plan's `recheck`
+   task is the review row and the plan's `words` task is the words row, in this group, each with
+   its `task_id`, counted once in PLAN's `N of M`.
+3. **Review** (kind `review`, replaces T3's Warm-up row): `Review · 12 due · ~16 min · 3
+   check-ins · 2 fading · 2 sure and wrong`. Built from `review.due` (S10), whose kinds, in
+   order, are V1's check-in, relapsed, sure, half, then T3's **fading** types, then V1's saved,
+   marked, mistake, then T3's **keep_warm**, cut at V1's cap. `progress: {have: done, of:
+   today's list}`, `minutes` = V1's minutes. Its start is `{source:'due', box:
+   prefs.review_minutes}` (V1's session, which keeps T3's `hide_skill` and interleaving).
+4. Sweep (T13, final stretch) and **Final check** (R60, exam week).
+5. Words: `Words · 12 due · 5 new · ~6 min` (the plan task's label when one backs it), starting
+   W11's run; one row whether or not a plan exists.
+6. The day's questions (T14).
+7. The challenge.
+8. Private contests closing today (`compete.due_today`): `Friday five · 10 q · closes 9:00 PM`.
+
+**Review's pill and `#mist` start the review row.** Review's `Start review · 10 min` (V1) and
+Today's `#mist` card (a `.btn`, not a region primary) start row 3 with its own body. While a run
+is on (`/api/today.due.run.on`), both read `Start review · part 2 of 5` and start the row with
+`run`, so finishing it hands on to part 3. When nothing is due and nothing is open, Review's
+pill is the box, `Keep going · 10 min`; when the list is done but mistakes are open, it is
+`Fix 6 · 10 min` (V4's order).
 
 **The run (`UI.run`, F2, `ui.js`).**
 * `UI.run.start()`: reads `/api/today.due` (fresh), takes the first undone row whose kind is
@@ -226,34 +285,46 @@ questions; and a Study-15-minutes box that fixed three mistakes left the plan's 
 * State: the server's rows are the truth, so any device continues the same run. Only "Skip this
   part" is local: `sessionStorage satf.run = {day, skipped:[row key]}` (try/catch). Skipping
   moves on without marking the row; it stays undone on Today.
-* The day's questions: the run opens Today at `#qotd`; once both are answered, a `Continue
-  today` bar appears under them.
+* The day's questions: the run opens Today at `#qotd`; once every slot shown is answered, a
+  `Continue today` bar appears under them.
 * The end: T19's receipt (`/api/today.receipt`), with `Today's challenge · 10 q` when it is
   open (ranked starts keep their own lobby) and `Keep going · 15 min`.
 
 **R41: the plan ticks from any path (S7, §3.6 Task status).** `fix` is done when that day's
-answers on its trap templates, from any source, reach its count; `recheck` (shown as Warm-up)
-when every check-in due that day has been answered once; `focus` as v2 (attempts on its topics
-from any source). So the box, a Review mini-session, a twin sheet on Today and the run all tick
-the same plan.
+answers on its trap templates, from any source, reach its count; `recheck` (shown as the review
+row) when every check-in due that day has been answered once; `words` by T2's words rule; `focus`
+as v2 (attempts on its topics from any source). So the box, a Review session, a twin sheet on
+Today and the run all tick the same plan.
 
 **Data.** No new endpoint or column. `cfg.run` already exists (L8, §2.6). `/api/today.due.rows`
-already carries `start`, `progress` and `status` (T2). S9's run page accepts `then=run`; S5's
-lobby passes `run` into the sitting's cfg.
+already carries `start`, `progress`, `status` and `task_id` (T2); it adds `run: {on, part,
+parts}` (on when a session today has `cfg.run == <today>` and undone rows remain). S9's run page
+accepts `then=run`; S5's lobby passes `run` into the sitting's cfg. `review.due` (S10) takes
+T3's `progress.warmup_candidates` (F4) for its fading and keep-warm kinds; `/api/today.warmup`
+stays for T3's held rate and forecast.
 
 **Acceptance.**
-1. Learner `a:v2revprodrun` with a plan day (fix 4, focus 10), 2 check-ins due, 12 words due
-   and the QOTD unanswered: `/api/today.due.rows | map(.kind)` begins with two `plan` rows,
-   then `warmup`, then `words`, then the day's-questions row. Start today creates a session with `cfg.run == <today>` and
-   `cfg.task` equal to the fix task's id.
-2. Finishing it shows the interstitial naming "Focus"; after the focus part it names
-   "Warm-up"; after the warm-up the run opens `/words/run/?…&then=run`; the words run's end
+1. Learner `a:v2revprodrun` with a plan day (fix 4, focus 10, recheck, words), 2 check-ins
+   due, 2 fading types, `prefs.words_goal = 10`, 12 words due and the QOTD unanswered:
+   `/api/today.due.rows | map(.kind)` is `["plan","plan","review","words","qotd",…]`, with
+   exactly one `review`, no `warmup` and exactly one `words`; the review and words rows carry
+   the plan's recheck and words `task_id`s. Start today creates a session with
+   `cfg.run == <today>` and `cfg.task` equal to the fix task's id.
+2. `GET /api/review/due` → `len(items)` equals the review row's `progress.of`, `left` equals
+   `of - have`, and `/api/me.review.due_left` equals `left`.
+3. Finishing part 1 shows the interstitial naming "Focus"; after the focus part it names
+   "Review"; after the review part the run opens `/words/run/?…&then=run`; the words run's end
    shows the interstitial naming "Day's questions".
-3. A `Study 15 min` session that answers 4 questions on the fix task's trap templates:
-   `GET /api/plan` shows that fix task `done`, with no session tagged with it.
-4. The challenge row is never started by `UI.run.start()`; the receipt offers it.
-5. After part 1 on desktop, `/?run=1` on a second device paired to the learner starts part 2.
-6. `grep -rn "Do them in order" web/` is empty, and `#next`'s pill text starts "Study".
+4. A `Study 15 min` session that answers 4 questions on the fix task's trap templates:
+   `GET /api/plan` shows that fix task `done`, with no session tagged with it. Answering both
+   check-ins in it ticks the recheck task and the review row's two check-in items.
+5. The challenge row is never started by `UI.run.start()`; the receipt offers it.
+6. After part 1 on desktop, `/?run=1` on a second device paired to the learner starts part 2.
+7. Playwright at 1280 on `/`: exactly two `.pill` elements, one starting "Start today" and one
+   starting "Study"; `#mist`'s action is a `.btn`. With a run on and the review row next,
+   `/review/`'s pill reads "Start review · part 2 of".
+8. `grep -rn "Do them in order" web/` is empty; `grep -rn "Keep going" web/` matches only
+   `UI.run` and U1's box code.
 
 #### G10. The first ten minutes fill the whole product
 
@@ -317,54 +388,88 @@ real start` (S7).
 #### G2. One study vocabulary: six labels for four ideas, one glyph and one key each
 
 *From: experience #9, unfair-advantage #1 (point 4). Effort S. Builders: F1 (`UI.VERBS`,
-`UI.verb`), F2 (`UI.keys` duplicate check, `Z`), F3 (runner and player maps), every page owner
-(copy), I1 (the copy gate).*
+`UI.verb`, `UI.KEYS`), F2 (`UI.keys` checks, `Z`), F3 (runner and player maps), S9 (Words
+verdicts), S10 (Review's labels), every page owner (copy), I1 (the copy gate).*
 
 **Why.** Our signature is "the same kind of question with new numbers, whenever you want". With
-about 11 names for it and 7 more for its neighbours, a student never learns it as a habit.
-Theirs has two generic actions because a fixed bank can't do more. One vocabulary and one key
-make ours the reflex: `T` after any question, on any page.
+about 11 names for it and 7 more for its neighbours, plus Review's and Words' own, a student
+never learns it as a habit. Theirs has two generic actions because a fixed bank can't do more.
+One vocabulary and one key make ours the reflex: `T` after any question, on any page, Words
+included. "Twin" is a short coined word, so it always explains itself where a tooltip can't.
 
 **The verbs (`UI.VERBS`, F1 `kit.js`).**
 
-| id | label | means | helper (tooltip, `?` sheet, first use on a page) | key | glyph |
-|---|---|---|---|---|---|
-| `twin` | `Twin` · `Twin ×5` · `Twin ▾` | the same kind of question, new numbers, with your trap when you missed (G3) | "Same kind of question, new numbers. Counts toward mastery." | `T`, menu `Shift+T` | two offset squares |
-| `twin_set` | `Twin this set` | a set of the same types, new numbers | "The same question types, new numbers." | none | two offset squares |
-| `twin_test` | `Twin test` | a sitting with the same slots, new numbers, scored like any test (T16, X20) | "Same question types in the same places, new numbers, scored like any test." | none | two offset squares + clock |
-| `again` | `Again, exactly` | the same question | "The same question again. Doesn't move mastery." | `E` (players, lists; never in a running set, where `E` eliminates) | ↺ |
-| `fix` | `Fix n` | a set on open mistakes, each a twin that keeps its trap | "Two clean answers on questions with that trap close each mistake." | `F` on report and Review pages | ↻ (the Repaired mark, §2.3) |
-| `learn` | `Learn this type` | a worked example on reserved numbers, then three of your own (T4, P2) | "See one solved, then try three yourself. Counts toward mastery." | in the Twin menu | open book |
+| id | label | means | sublabel (visible, R42) | helper (tooltip, `?` sheet) | key | glyph |
+|---|---|---|---|---|---|---|
+| `twin` | `Twin` · `Twin ×n` · `Twin ▾` | the same kind of question, new numbers, with your trap when you missed (G3); in Words, a new text | `same kind, new numbers` (R&W: `same kind, new text`) | "Same kind of question, new numbers. Counts toward mastery." | `T`, menu `Shift+T` | two offset squares |
+| `twin_set` | `Twin this set` | a set of the same types, new numbers | `same types, new numbers` | "The same question types, new numbers." | none | two offset squares |
+| `twin_test` | `Twin test` | a sitting with the same slots, new numbers, scored like any test (T16, X20) | `same slots, new numbers` | "Same question types in the same places, new numbers, scored like any test." | none | two offset squares + clock |
+| `again` | `Again, exactly` | the same question | `the very same question` | "The same question again. Doesn't move mastery." | `E` (players, lists; never in a running set, where `E` eliminates) | ↺ |
+| `fix` | `Fix n` | a set on open mistakes, each a twin that keeps its trap | `your open mistakes` | "Two clean answers on questions with that trap close each mistake." | `F` on report and Review pages | ↻ (the Repaired mark, §2.3) |
+| `learn` | `Learn this type` | a worked example on reserved numbers, then three of your own (T4, P2); opened from a miss, the example sits beside your miss with your trap outlined (V11's sheet) | `one solved, then three` | "See one solved, then try three yourself. Counts toward mastery." | in the Twin menu | open book |
 
 * `UI.verb(id, {count, onClick, href})` renders a `.btn` (or the region's pill) with the glyph,
-  the label and a `title` that names the key.
+  the label, a `title` that names the key, and the sublabel as a second line
+  (`.verb-sub`, 12 px `--soft`, inside the 44 px target) when
+  `matchMedia('(pointer: coarse)').matches`, or when the learner has used that verb fewer than
+  3 times on this device (`localStorage satf.verbs.seen {id: n}`, +1 per click, try/catch; blocked
+  storage shows the sublabel). The `?` sheet lists every verb with its sublabel and helper.
 * Retired phrases (every surface, every file): "Another like this", "Another one like this",
-  "Try one like this", "Try one now", "Fresh one like this", "New one like this", "N more like
-  this", "Fresh versions", "Again · new questions", "Practice again", "Retake as a test",
-  "Retake as twin", "Redo these", "Fix these", "Drill it". A set of the same **topics** (not
-  types) reads plainly, `10 more · Circles`.
+  "Another" (as a twin button), "Try one like this", "Try one now", "Try one", "Fresh one like
+  this", "New one like this", "N more like this", "Fresh versions", "Again · new questions",
+  "Practice again", "Retake as a test", "Retake as twin", "Redo these", "Fix these", "Drill it",
+  "Learn it", "See one solved", "Now you: a new one", "Keep warm · n", "Another 10 min". A set
+  of the same **topics** (not types) reads plainly, `10 more · Circles`; a quiz of two
+  confusable words reads `Quiz the pair · 6`.
+* Words' axes are items in the Twin menu, not their own buttons (R44): `Same word, new text`,
+  `Same trap, new word`, and for Transitions `Same logic, new text`, `Same mix-up, new text`.
+  After a miss, plain `Twin` in Words is the same word in a new text with the picked trap on
+  offer (`another {like:'word', want_trap}`); after a right answer, the same word in a new text.
 
-**Keys (R43).**
-* Runner (practice session and test window): `D` only chooses D; **`Q` Details** (practice);
-  **`R` Report** (both modes; in exam mode R17's live categories); `T` / `Shift+T` Twin after a
-  verdict (practice, P18).
+**Keys (R43).** One table, `UI.KEYS` (F1), declares the key of every question action:
+`twin T`, `twin_menu Shift+T`, `details V`, `guess I`, `report R`, `save B`, `mark M`,
+`note O`, `history Y`, `desmos Shift+G`, `again E`, `fix F`.
+* Runner (practice session and test window): `D` only chooses D; **`V` Details** (practice);
+  **`I` I'm guessing** (practice); **`R` Report** (both modes; in exam mode R17's live
+  categories); `T` / `Shift+T` Twin and its menu after a verdict (practice, P18).
 * Players (report review, Review pane, challenge and contest review): `T` Twin, `Shift+T` its
-  menu; the rest of §2.8's player row stays.
-* Global (pages with the shell): **`Z`** presses the Undo of the most recent reversible toast
-  while it shows (U25). Plan's page `U` becomes `Z`.
-* `UI.keys.register(scope, map)` throws `Error('key T already in runner')` when `location.
-  pathname` starts `/dev/` and a scope registers a key twice; in production it logs once.
+  menu, **`V` Details** (was `I`); `I` is unbound; Review's `U` next not yet seen stays. V11's
+  "see one solved" is `Learn this type` in the Twin menu (from a miss it opens V11's
+  side-by-side sheet), so `V` is free for Details.
+* Words (flashcards and word quizzes): `I` guess, `T` Twin, `Shift+T` the Twin menu, `R`
+  Report, `O` open word, `W` hint.
+* Global (pages with the shell): `Q` stays the quick sheet everywhere, the runner included.
+  **`Z`** presses the Undo of the most recent reversible toast while it shows (U25). Plan's page
+  `U` becomes `Z`.
+* **Checks** (`UI.keys.register(scope, map)`, F2), in `/dev/` pages only (production logs
+  once):
+  * a scope that binds one key twice throws `Error('key T already in runner')`;
+  * **across scopes**: for scopes `runner`, `player`, `pane` and `words`, a key bound to a
+    `UI.KEYS` action must be that action's declared key, and a declared key must not be bound to
+    a different action, else it throws `Error('V is details in player but hint in words')`. The
+    exceptions are listed in `UI.KEYS.except`: `E` (eliminate in a running set) and `O` (Open
+    word in `words`, which has no note).
 
 **Acceptance.**
-1. `grep -rniE "another (one )?like this|try one (like this|now)|(fresh|new) one like this|[0-9]+ more like this|fresh versions|again · new questions|practice again|retake as (a test|twin)|redo these|fix these|drill it" web/`
-   is empty.
-2. `UI.VERBS` has `twin, twin_set, twin_test, again, fix, learn`, each with `label`, `helper`,
-   `icon`; every rendered `.verb` with a key has a `title` containing it.
-3. Practice runner at 1280: `D` selects option D and opens nothing; `Q` opens Details; `R`
-   opens `UI.report` with `ctx.question_id` set.
-4. Unsave a question, then press `Z` while the toast shows: `GET /api/saved` contains it again.
-5. On `/plan/`, `Z` undoes a skip; `U` does nothing.
-6. On `/dev/workspace.html`, registering `T` twice in scope `runner` throws.
+1. The copy gate (`tools/product_gates.py copy`, I1) runs
+   `grep -rniE "another (one )?like this|\btry one\b|(fresh|new) one like this|[0-9]+ more like this|fresh versions|again · new questions|practice again|retake as (a test|twin)|redo these|fix these|drill it|learn it\b|see one solved|now you: a new one|keep warm ·|another 10 min"`
+   over `web/` and over the change column of every §3.2 table in `spec/v2-upgrades/*.md`, and
+   both are empty.
+2. `UI.VERBS` has `twin, twin_set, twin_test, again, fix, learn`, each with `label`, `sub`,
+   `helper`, `icon`; every rendered `.verb` with a key has a `title` containing it.
+3. Playwright with `hasTouch` at 390: every `.verb` on `/`, `/review/` and a Words quiz verdict
+   shows a visible `.verb-sub`. At 1280 with a mouse, a fresh profile shows it on the first 3
+   Twin clicks and not on the 4th.
+4. Practice runner at 1280: `D` selects option D and opens nothing; `V` opens Details; `I`
+   toggles I'm guessing; `Q` opens the quick sheet; `R` opens `UI.report` with
+   `ctx.question_id` set. In the report player, `V` opens Details.
+5. A Words quiz verdict: `T` loads a new item with the same `word`; `Shift+T` opens the Twin
+   menu with `Same word, new text` and `Same trap, new word`, and loads nothing by itself.
+6. Unsave a question, then press `Z` while the toast shows: `GET /api/saved` contains it again.
+   On `/plan/`, `Z` undoes a skip; `U` does nothing.
+7. On `/dev/workspace.html`: registering `T` twice in scope `runner` throws; registering
+   Details on `Q` in `runner` while `player` has it on `V` throws; registering `E` as eliminate
+   in `runner` and Again in `player` does not.
 
 #### G3. Twins that keep your trap, and a mistake that closes only on questions that offered it
 
@@ -382,19 +487,27 @@ time (median 1 seed, 90th percentile 7), at about 0.26 ms a seed.
 1. **One mechanism: `want`** (§2.6). F5 raises its walk from 40 to 60 seeds, matches
    `progress.norm(reason)` of each MC option and each grid-in `spr_reasons` value, skips seeds
    the learner has attempts on, and starts from the learner's cursor for that template.
-2. **Every twin of a miss sets it.** With `want = {template: '^' + re.escape(norm) + '$'}` from
-   the trap: the repair after a miss (`drill._pick`'s `rep`), pools `redo` and `checks`,
-   `from_session` twins (T5, SR, X16), `like` (a missed day's question), `/more {axis:'same'}`
-   (P18), U28 links when the sender missed, the start set's repairs (G10), and `UI.twin` from
-   any surface. Compete's `rematch scope:'misses'` already does it (C2). After a right answer
-   there is no `want`: a plain twin.
+2. **Every twin of a miss on a named trap sets it.** With `want = {template: '^' +
+   re.escape(norm) + '$'}` from the trap: the repair after a miss (`drill._pick`'s `rep`), pools
+   `redo` and `checks`, `from_session` twins (T5, SR, X16), `like` (a missed day's question),
+   `/more {axis:'same'}` (P18), U28 links when the sender missed, the start set's repairs (G10),
+   the official pad's twin (G16), Words' `another` (as `want_trap`, R57), and `UI.twin` from any
+   surface. Compete's `rematch scope:'misses'` already does it (C2). After a right answer, and
+   for a trap with no named norm (rule 4's second group), there is no `want`: a plain twin.
 3. **Fallback.** Nothing in 60 seeds → the plain next seed, `feedback.trap_true = false`, and
    one line above the stem: `This type didn't offer that trap again; here's the closest.`
-4. **Close rule** (F4, `progress.record`, R9). A clean answer lowers a trap's `owed` only when
-   `attempts.offered` (P6) contains the trap's norm, or the grid-in item's `spr_reasons` do.
-   Other clean answers on the template count for mastery and nothing else. The verdict's next
-   step (P9) reads `This one didn't offer "used the diameter" · 1 still to close it` in that
-   case.
+4. **Close rule** (F4, `progress.record`, R9), by the trap's kind:
+   * **Named traps**: kind misconception (an MC reason, an R&W trap id), and grid-in traps
+     whose template has `spr_mistakes`. A clean answer lowers `owed` only when
+     `attempts.offered` (P6) contains the trap's norm, or the grid-in item's `spr_reasons` do.
+     Other clean answers on the template count for mastery and nothing else. The verdict's next
+     step (P9) reads `This one didn't offer "used the diameter" · 1 still to close it` in that
+     case.
+   * **Unnamed traps**: kind unsure (norm `~unsure`, including outside-logged ones from
+     `POST /api/mistakes/add`, U2), kind slip (a filler "near-miss arithmetic slip", or R47's
+     slip causes), and grid-in misses with no named value (norm `''`). These can never appear in
+     `offered`, so v2's rule holds: any clean answer on the template lowers `owed` (an unsure
+     owes 1, the others 2, R9).
 5. **Transfer check-in** (R9). The 10-day check-in is served from another template whose items
    offer the same norm when `progress.related(norm)` has one (about 72 norms recur across
    templates, 13 across topics), with `want` on it; otherwise the trap's own template. Passing
@@ -421,6 +534,14 @@ time (median 1 seed, 90th percentile 7), at about 0.26 ms a seed.
    repair's `spr_reasons` contain r.
 6. A forced fallback (monkeypatched walk of 0) → `feedback.trap_true == false`, and the stem
    line is shown.
+7. Every kind reaches Fixed (`server/checks/f4.py`): a flagged-right unsure trap closes after
+   one clean answer on its template (Part 3 Review acceptance 7); an outside-logged `~unsure`
+   trap closes after one; an unnamed grid-in trap (norm `''`) closes after two; a filler slip
+   trap closes after two, whatever `offered` holds. A misconception trap does not close on two
+   clean answers whose `offered` lacks its norm.
+8. An R&W miss picking a `too_strong` option opens a trap with norm `too_strong`; a twin of it
+   offers a `too_strong` option; a clean answer on an item with no `too_strong` option leaves
+   `owed` unchanged.
 
 #### G4. One question, one action row, on every surface
 
@@ -468,7 +589,9 @@ none (R19).
 **Surfaces and owners** (each calls `UI.questionActions` once): the practice verdict (S4), the
 report player (S6), the Review pane (S10), Today's twin sheet and questions of the day (S3), the
 challenge and contest review (S8), the type page example (G7, S4), the quick sheet's quick
-question (F2).
+question (F2), the verdict of a generated R&W item in a Words run or word sheet (S9, R57; the
+row adds W1's `Open word`, and Desmos way is absent), and the official pad's verdict (G16, S4;
+Save, Mark, Note and History are absent there, since the question is College Board's).
 
 **Acceptance.**
 1. `web/dev/workspace.html`: an MC miss revealed in practice, review, inline and pane modes gives
@@ -488,7 +611,7 @@ P14's map, S6's skill panel, S10's family strip, S7's Why, U2's match results).*
 **Why.** Everything we know about a question type is spread over a map popover, the Details
 popover, Learn it, the traps sheet, the history modal and the official-ID match. Theirs stops at
 29 skills with no lessons. One page per type, public and linkable, is where a student, a parent
-or a teacher sees what the type asks, one solved, every trap it sets, your record and the way in.
+or a tutor sees what the type asks, one solved, every trap it sets, your record and the way in.
 
 **Page** (`/types/?t=circles.arc`, S4, one column 760 px; wide screens add a right
 column for "You"):
@@ -520,7 +643,8 @@ the page); P14's map cell popover; the Log-a-mistake type rows; S6's skill panel
 family strip; S7's task Why; U2's match cards.
 
 **Acceptance.**
-1. For all 386 templates, `GET /api/types/{t}` is 200 and has `name`, `about` and `weight`.
+1. For all 386 Math templates and every registered R&W template (R57), `GET /api/types/{t}` is
+   200 and has `name`, `about`, `subject` and `weight`.
 2. No public payload contains `answer` except the example, whose `seed >= 900000`.
 3. Without `X-Learner` there is no `you` key; with one there is.
 4. Details → About this type on a practice question opens `/types/?t=<its template>`.
@@ -562,32 +686,46 @@ number and see the rows behind it trusts the advice built on it.
 to 20 keys) serves U13's `levers(learner, tz, keys)` to any page. Each lever: `{value, how, help,
 inputs:[…], excluded:[{label, n}], next, start?, same_on:[page]}`. Keys beyond U13's: `points`,
 `open_mistakes`, `band`, `percentile:<sid>`, `rank:<metric>:<period>` (from S8), `pace:<topic>`,
-`readiness`, `accuracy:<topic>:<days>`, `minutes:<today|week|month>`. Each calls the function the
+`readiness`, `accuracy:<topic>:<days>`, `minutes:<today|week|month>`, `due_today` (from
+`review.due`, R56). Each calls the function the
 page's own payload uses. `excluded` names what was left out: `14 exact repeats · 3 disputed · 4
 right guesses count half`.
 
-**Client.** `UI.fact(el, key)` (F1): a button with a dotted underline on hover-capable pointers
-(nothing on touch), opening a `UI.pop` (a bottom sheet under 760 px) with How · Your numbers ·
-Left out · What moves it · `Same number on: Today · Me · Results`. F2 delegates: any element
-with `data-fact="<key>"` opens it on click or Enter, so pages only add the attribute. Used on
-every stat tile, chip and meta: Today's hero chips, Me's tiles, nav-meta tooltips, score cards,
-skill rows, report tiles, Plan's stat tiles, your Compete row.
+**Client.** `UI.fact(el, key)` (F1): a button that shows its cue on every pointer type, so a
+student on a phone sees which numbers open: the value keeps a persistent 1 px dotted underline
+(`--soft`), and a small ⓘ glyph (DM Mono 11 px, `--soft`, `aria-hidden`) follows it. On
+`pointer: coarse` the button's hit area is at least 44 × 44 px (padding plus a `::after` hit
+box, no layout shift). It opens a `UI.pop` (a bottom sheet under 760 px) with How · Your
+numbers · Left out · What moves it · `Same number on: Today · Me · Results`. Its accessible name
+is `<label>: <value>, show how it's worked out`. F1's kit specifies the cue once; F2 delegates:
+any element with `data-fact="<key>"` gets the cue and opens on click or Enter, so pages only add
+the attribute. Used on every stat tile, chip and meta: Today's hero chips, Me's tiles, nav-meta
+tooltips, score cards, skill rows, report tiles, Plan's stat tiles, the Due header and the
+review row's count, Review's stat strip, your Compete row.
 
 **The gate (I1, `tools/product_gates.py facts`).** For three seeded learners (new, mid, heavy)
-it fetches `/api/shell`, `/api/today`, `/api/today/insights`, `/api/me/summary`, `/api/plan`,
-`/api/review/counts`, `/api/stats`, `/api/next` and compares a table of (fact, endpoint, JSON
-path): study streak, open mistakes, minutes today, target, exam date, points total, the top
+it fetches `/api/shell`, `/api/today`, `/api/today/insights`, `/api/me`, `/api/me/summary`,
+`/api/plan`, `/api/review/counts`, `/api/review/due`, `/api/stats`, `/api/next` and compares a
+table of (fact, endpoint, JSON path): study streak, open mistakes, **due today** (the review
+row's `progress.of` and `of - have`, `/api/review/due` `total` and `left`,
+`/api/review/counts.due_left`, `/api/me.review.due_left`, and Up next's `checks` count against
+the review row's check-in items), minutes today, target, exam date, points total, the top
 skill's points, one trap's points, the estimate band, active days. It exits non-zero naming the
 fact and both values. It runs in I1's walk.
 
 **Acceptance.**
-1. `GET /api/levers?keys=streak,open_mistakes` → both keys with `how` and non-empty `inputs`.
-2. On `/`, `/results/`, `/plan/` and `/compete/`, every `[data-fact]` opens a popover on Enter;
-   Esc closes it and returns focus.
-3. `accuracy:<topic>:30`'s `excluded` lists repeats and disputed answers with counts for a
+1. `GET /api/levers?keys=streak,open_mistakes,due_today` → each key with `how` and non-empty
+   `inputs`.
+2. On `/`, `/results/`, `/plan/`, `/review/` and `/compete/`, every `[data-fact]` opens a
+   popover on Enter; Esc closes it and returns focus.
+3. Playwright with `hasTouch` at 390 on the same pages: every `[data-fact]` renders its ⓘ cue
+   and a dotted underline with no hover, and its bounding box (with the hit box) is at least
+   44 px tall.
+4. `accuracy:<topic>:30`'s `excluded` lists repeats and disputed answers with counts for a
    learner who has both.
-4. The gate passes on the seeded learners; with the shell's streak patched to +1, it fails and
-   names `streak`.
+5. The gate passes on the seeded learners; with the shell's streak patched to +1, it fails and
+   names `streak`; with `/api/review/due` returning one extra item, it fails and names
+   `due today`.
 
 ### E. Reach and speed
 
@@ -611,20 +749,33 @@ by ear. Today 76 of 386 templates draw a figure, all unnamed.
   question N`.
 * **Math.** Every KaTeX call keeps `output: 'htmlAndMathml'` (KaTeX's default), so screen
   readers read MathML. F3's one render helper is the only caller.
-* **Read aloud.** A tool in the strip's `⋯` (practice, review, type pages) reads the plain stem,
-  then the figure's alt, then `A, …` through `UI.speak` (speechSynthesis), with a small spoken-
-  math map (π "pi", ² "squared", √ "the square root of", a/b "a over b", ≤ "is at most", −
-  "minus"). In the test window it appears only with `test_timing` x1.5 or x2, as Bluebook
-  offers text-to-speech only as an accommodation. `ponytail:` a 12-rule replacer, not MathSpeak;
-  move to Speech Rule Engine if students report misreads.
+* **Read aloud.** A visible, labelled tool in the question strip (icon plus `Read aloud`), on
+  every screen size, wherever it is allowed: practice, review players, the Review pane, type
+  pages, Words items and the official pad's list. Under 760 px it sits in R50's tools row, never
+  in a menu. It reads the plain stem, then the figure's alt, then `A, …` through `UI.speak`
+  (speechSynthesis), with a small spoken-math map (π "pi", ² "squared", √ "the square root of",
+  a/b "a over b", ≤ "is at most", − "minus"); while it speaks the button reads `Stop` (`aria-
+  pressed`). In the test window it appears only with `test_timing` x1.5 or x2, as Bluebook
+  offers text-to-speech only as an accommodation. Where `speechSynthesis` is missing the button
+  is absent. `ponytail:` a 12-rule replacer, not MathSpeak; move to Speech Rule Engine if
+  students report misreads.
+* **Phone tools row (R50, F3).** Under 760 px the runner renders `.tools-row` between the
+  question and the footer: Calculator, Reference, Eliminate, Hint, Desmos way and Read aloud,
+  each present only where its mode allows it, each a 44 px button with icon and text, wrapping to
+  a second line. The footer keeps Mark, Back and Check/Next (X6).
 
 **Acceptance.**
-1. `tools/bank_coverage.py` prints a `figure_alt` line (`n of 76 figure templates`), and the
-   audit passes for every topic committed.
+1. `tools/bank_coverage.py` prints a `figure_alt` line (`n of 76 figure templates`), the audit
+   passes for every topic committed, and G14's launch gate requires 76 of 76.
 2. Playwright on a figure question: `.q-figure[role=img]` has a non-empty `aria-label`; a table
    question has as many `th` as columns; a KaTeX stem contains a `math` element.
 3. With `speechSynthesis.speak` stubbed, Read aloud on a π stem passes text containing "pi".
-4. On `/test/` with `test_timing: 'official'`, no Read aloud control exists.
+4. On `/test/` with `test_timing: 'official'`, no Read aloud control exists; with x1.5 it is a
+   visible button.
+5. Practice runner at 390 with no menu or sheet open: Calculator, Eliminate, Hint, Desmos way
+   (on a type with a route) and Read aloud each match a visible `button` whose text contains its
+   label, each at least 44 px tall, and `document.documentElement.scrollWidth === 390`. No
+   `⋯` control exists in the runner footer.
 
 #### G9. Speed budgets, measured before merge
 
@@ -681,8 +832,18 @@ should be able to carry the open page to a phone in one scan.
 * `action`: the smallest filling action with its cost, `{label, cost, body | href, inline}`, e.g.
   `Answer 3 questions · about 4 min`. `inline: true` runs it inside the card (`UI.twinSheet` or an
   inline drill) and re-renders the card when done.
-* Used by every card's empty state (Today, Me, Review tabs, Results, Plan Progress, Compete
-  history, Words).
+* **The action follows the learner (R55).** With 0 answers, every empty state's action is
+  `Start with 8 · about 10 min` (`{source:'start'}`, G10), never "Take the diagnostic". With
+  answers, it is the card's own smallest set, labelled with `UI.VERBS` (usually `Twin`, inline).
+* Used by every card's empty state (Today, Me, Review's page and tabs, Results, Plan Progress,
+  Compete history, Words). No card builds its own empty panel.
+* **Review (V16) through `UI.empty`.** A new learner's Review: `sample` is V16's Example row
+  (a real reserved item from `GET /api/types/{t}/example`, tagged `Example`, opening the pane
+  read-only with every option's reason); `text` is `Your mistakes appear here, each named, with
+  what fixes it`; `action` is `Start with 8 · about 10 min`. A returning learner with nothing
+  open: the action is `Twin` inline on the coach's pick (V16's live row: a wrong answer makes the
+  first real Redo row appear without a reload). Empty Marked, Saved and History tabs use the same
+  call; an empty History modal offers `Twin` on its template.
 
 **Continue on your phone.** An account-menu row and the palette command `continue on phone`
 open a sheet that calls the existing `POST /api/pair` (Shell §5) and shows a QR (`qr.js`) of
@@ -699,100 +860,322 @@ otherwise it lands on `/`. No server change beyond the page.
 2. Its inline action answers 3 questions in the card and the card then lists the mistakes made.
 3. After pairing, `/pair/?c=…&go=/practice/session/?id=X` lands on that session; `go=//evil.example`
    and `go=/admin/reports/` land on `/`.
+4. A new code at 1280 on `/review/`: one `.empty-sample` tagged `Example`, and the action's label
+   starts "Start with 8"; no element's text contains "Take the diagnostic" or "Try one now". For a
+   learner with 5 answers and nothing open, the action is a `.verb` Twin that runs inline.
+
+#### G15. Sign-in in one tap on any device: Google as well as passkeys
+
+*From: the outcomes and unfair-advantage sign-in gaps; answers open question 5 (R58). Effort S.
+Builders: S1 (`server/api_account.py` route, `/signin/`, the save nudge, Settings), F4
+(`users.google_sub`).*
+
+**Why.** Theirs is Google in 2–3 taps on any device already signed in to Google. A passkey only
+helps once it is saved and synced; a student switching between a school Chromebook and an iPhone
+meets the browser's QR walk or an email code that needs SMTP. Google as one more method keeps
+their fastest path, without their wall, on top of everything ours adds.
+
+* **Where.** `/signin/`, the save nudge (U19's `Save your progress`), and Settings → Sign-in
+  methods. Order: `Use your passkey` first where
+  `PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()` is true, then `Continue
+  with Google`, then `Email me a code`, then `Pair with a device`.
+* **Client.** Google Identity Services (`https://accounts.google.com/gsi/client`, free), the
+  standard button, `ux_mode: 'popup'`, One Tap off (nothing appears unasked). It posts the ID
+  token credential to the server. Hidden when `GOOGLE_CLIENT_ID` is not configured.
+* **Server (S1).** `POST /api/auth/google {credential}`: verifies the token with Google's
+  `tokeninfo` endpoint (stdlib `urllib`), checks `aud == GOOGLE_CLIENT_ID`, `iss`, `exp` and
+  `email_verified`, then:
+  * the `sub` is new and this device's learner has no account: link it to this learner
+    (`users.google_sub`, and `users.email` when empty), so the anonymous work is the account;
+  * the `sub` belongs to an account: sign this device in to it, and carry this device's
+    anonymous learner into it with the pairing claim's `carry` when that learner has rows and
+    no account;
+  * a signed-in learner linking from Settings: attach the `sub`, 409 when another account has it.
+  * `ponytail:` one `tokeninfo` round trip per sign-in; verify locally against Google's keys if
+    sign-in volume grows.
+* **Data.** `users.google_sub TEXT UNIQUE` (§2.5). Export lists `google: true`; delete removes it.
+
+**Acceptance.**
+1. With `tokeninfo` stubbed to a valid payload for a new `sub`: `POST /api/auth/google` on an
+   anonymous learner with 12 attempts returns that learner, and `users.google_sub` is set.
+2. A second device, anonymous with 3 attempts, signing in with the same `sub`: afterwards the
+   account has 15 attempts.
+3. A payload with the wrong `aud`, `email_verified: false` or a past `exp` → 401, nothing linked.
+4. `/signin/` with `GOOGLE_CLIENT_ID` unset renders no Google button and no error; set, it
+   renders it after the passkey button on a device with a platform authenticator.
 
 ### F. The whole SAT and the bank
 
-#### G11. The subject axis: the full SAT is additive
+#### G11. The subject axis: the full SAT is additive, and R&W starts with a real bank
 
-*From: the Reading & Writing gaps of all three designers, decision 3. Effort S. Builders: F4
-(`deps.subject_of`, validation), every owner (their payloads and endpoints), S6 (the R&W row),
-S9 (Words skill tags), S7 (R&W tasks).*
+*From: the Reading & Writing gaps of all three designers, decisions 2 and 3; reconciles
+`words.md` W1, W2, W5, W19, W21 (R51, R57). Effort M. Builders: F4 (`deps.subject_of`,
+validation, `attempts.word`, `progress.record` for R&W), F5 (the catalogue registration, drill
+and `want` for `rw.*`), S9 (`rw_items` behind the catalogue, Words runs filing attempts,
+`words.rw_answers`), every owner (their payloads and endpoints), S6 (the R&W row), S7 (R&W
+tasks).*
 
 **Why.** Decision 3: Math-first now, the full SAT later, built so the expansion is additive.
-Every upgrade file says its payloads "carry `subject`", each in its own way. One contract now
-costs little; seven dialects would have to be torn out.
+Every upgrade file says its payloads "carry `subject`", each in its own way; one contract now
+costs little, seven dialects would have to be torn out. And `words.md` already builds an R&W
+generator in the bank's Item shape. Kept inside Words, it would be a second question system
+(its own mistake rows, twins and schedule) to tear out when the R&W bank lands, which decision
+3 rules out. Put behind the same catalogue, its items get everything a Math item gets today.
 
 **Contract (R51).**
-* `subject` is `math` or `rw`. `deps.subject_of(topic)` (F4) maps the 19 Math topics to `math`;
-  R&W topics join the same map with the R&W bank.
-* No `attempts.subject` column: a row's subject is template → topic → subject. Sessions carry
+* `subject` is `math` or `rw`. `deps.subject_of(topic)` (F4) maps the 19 Math topics to `math`
+  and `words-in-context` and `transitions` to `rw`; later R&W topics join the same map.
+* No subject column: a row's subject is template → topic → subject. Sessions carry
   `cfg.subject` (default `math`). Words runs, word reviews, R&W own tasks (L11), `rw_now` /
   `rw_target`, `outside_scores.rw` and `contests.subject` (C14) are `rw`.
-* Every section endpoint takes `?subject=`, default `math`; an unknown value → 422. Where no bank
-  exists: `/api/bank?subject=rw` and `/api/types?subject=rw` → 200 `{subject:'rw', available:
-  false}`; `POST /api/drill {subject:'rw'}` and `POST /api/mock/new {subject:'rw'}` → 409
+* Every section endpoint takes `?subject=`, default `math`; an unknown value → 422. Math readers
+  (mastery, U8 readiness, the estimate, boards, the Math coverage) filter to `math`, so R&W
+  attempts never move a Math number.
+* Where no bank exists: `/api/bank?subject=rw` lists the two generated skills with
+  `available: true` and every other R&W skill with `available: false`; `POST /api/drill
+  {subject:'rw', topics:['boundaries']}` and `POST /api/mock/new {subject:'rw'}` → 409
   `{reason:'no_bank'}`.
 * Shared components take labels from data (`UI.SUBJECT[subject].label`), never a literal "Math";
-  the runner keeps its empty passage region (tests.md); P15's subject switch stays hidden while
-  one subject has a bank.
+  the runner keeps its empty passage region and renders an R&W item's `text` in it (tests.md).
+  P15's subject switch shows once `rw` has a bank, so it shows now, with the two skills.
+
+**The first `rw` bank (R57).**
+* **Catalogue (F5).** `rw_items` templates register as catalogue entries: `rw.wic.<frame>` and
+  `rw.nearly.<entry>.<n>` under topic `words-in-context`, `rw.tr.<family>` under `transitions`,
+  skill and domain as College Board names them (Craft and Structure, Expression of Ideas), tiers
+  from each frame's `difficulty`. `catalogue.generate(template, seed, word=None)` dispatches
+  `rw.*` to `rw_items.item` or `rw_items.transition`; everything that serves questions calls it.
+* **Served like any question.** `GET /api/types?subject=rw` lists them with `available: true`
+  and their trap ids as reasons; `POST /api/drill {subject:'rw', topics:['words-in-context']}`
+  serves them in the practice runner (instant feedback, repairs, `want` over `traps[]`); the
+  type page (G7), Details and `UI.questionActions` work unchanged. A drill serves `word=None`,
+  so `(template, seed)` is the address; a Words run keyed on a word adds `word`.
+* **One answer record (F4).** Every answer to a generated R&W item (a Words run, a word sheet
+  sample, T14's two R&W slots, a drill) goes through `progress.record` into `attempts`, with new
+  nullable `attempts.word TEXT` (NULL for Math). `offered` holds the item's trap ids. A miss
+  opens a trap of kind misconception, norm = the picked option's W1 trap id (W2: `wrong_logic`
+  or `reversed_direction`), label from `traps.json`'s name, `subject` from the topic. So Review
+  lists it, `Fix n` and check-ins serve twins with `want_trap`, `progress.related(norm)` finds
+  the same trap across frames (`Same trap, new word`), and it closes by G3's rule 4.
+* **Words keeps its schedule.** `word_reviews` still holds the word's box and due date; a row
+  made from a generated item carries `attempt INTEGER` (the attempt's id) and its minutes count
+  once, through the attempt (R13). `words.rw_answers` (W1's one accessor) reads `attempts`, so
+  W5's trap profile, W7's proof ladder and W13 read the same rows as Review. W1's planned
+  INSERT…SELECT move is not needed: the rows are there from the first answer.
+* **Logging an R&W miss** (U2, W19): `POST /api/mistakes/log {template: 'rw.wic.<frame>' |
+  'rw.tr.<family>', reason: <trap id>, origin: 'bluebook' | 'cb_qbank'}` opens the same trap.
+  An R&W official ID resolves through P11's index to its skill; when the skill is one of the two,
+  it logs and serves 3 twins; otherwise it reads `Logged for the R&W bank`.
 
 **What students see now.**
-* Results gains a **Reading & Writing** row: Words (known, due, Word Sprint rating, C14), the
-  R&W skills Words practises (Words in Context, Transitions), logged Bluebook or official R&W
-  scores (`outside_scores`), and the 1600 total when both sections have a score (R16's
-  combined).
-* Today's study time and the streak already count Words (R13); Plan's R&W own tasks count toward
-  the day (L11).
+* Practice: a Reading & Writing seg with **Words in Context · unlimited** and **Transitions ·
+  unlimited**, each with its traps, a builder like Math's and the same runner.
+* Review: R&W mistakes beside Math ones, with a subject chip and a subject filter.
+* Results gains a **Reading & Writing** row: the two skills' accuracy and open traps from
+  `attempts`, Words (known, due, Word Sprint rating, C14), logged Bluebook or official R&W scores
+  (`outside_scores`), and the 1600 total when both sections have a score (R16's combined). No
+  R&W score is estimated from two skills (R48).
+* Today's study time and the streak count Words and R&W practice (R13); Plan's R&W own tasks and
+  the Words task count toward the day (L11, L4).
 
 **Acceptance.**
-1. `GET /api/bank?subject=rw` → 200 with `available == false`; `?subject=xx` → 422.
-2. `POST /api/drill {subject:'rw'}` → 409 `no_bank`.
-3. `GET /api/next`, `/api/today/insights` and `/api/plan` items carry `subject`.
-4. `grep -n "'Math'\|\"Math\"" web/assets/ui.js web/assets/kit.js web/assets/question.js web/assets/runner.js`
+1. `GET /api/bank?subject=rw` → 200, `words-in-context` and `transitions` with
+   `available == true`, and any other listed R&W skill `available == false`; `?subject=xx` →
+   422.
+2. `GET /api/types?subject=rw` lists every `rw.*` template with `subject == 'rw'`;
+   `POST /api/drill {subject:'rw', topics:['words-in-context'], count:5}` serves 5 items whose
+   `text` contains `____`; `POST /api/drill {subject:'rw', topics:['boundaries']}` → 409
+   `no_bank`.
+3. A wrong answer in a Words run on a generated item writes one `attempts` row (template `rw.*`,
+   `word` set) and one `word_reviews` row whose `attempt` is its id; `GET /api/review/redo`
+   lists a trap with `subject == 'rw'` and the trap's name as its label; `/api/today.study.today`
+   rose by the attempt's minutes once.
+4. After that miss, the learner's Math mastery, readiness and estimate payloads are unchanged.
+5. `GET /api/next`, `/api/today/insights` and `/api/plan` items carry `subject`.
+6. `grep -n "'Math'\|\"Math\"" web/assets/ui.js web/assets/kit.js web/assets/question.js web/assets/runner.js`
    returns only the `UI.SUBJECT` table.
-5. A learner with a logged R&W 610 and a Math band: Results shows the R&W row and a 1600 total.
+7. A learner with a logged R&W 610 and a Math band: Results shows the R&W row and a 1600 total.
 
-#### G13. One sheet before the test
+#### G13. One sheet before the test, and one final check
 
-*From: unfair-advantage #9. Effort S. Builders: S7 (the page, from L19's trap sheet), with data
-from P21, P16, P3, T7, T13.*
+*From: unfair-advantage #9; reconciles `review.md` V19, `plan.md` L19 and `today.md` T13 (R60).
+Effort S. Builders: S7 (the page and `GET /api/plan/sheet`), S10 (`review.trapsheet`, the
+redirect, the Due tab link), S3 and F2 (the Final check row), with data from P21, P16, P3, T7,
+T13.*
 
-**Why.** The last week's advice is spread over five places. One printable page of your own traps,
-rules, skips, Desmos types and grid-in slips is what a tutor would hand a student on the eve.
+**Why.** The last week's advice was spread over five places, and the drafts gave it three print
+URLs (`/plan/?print=sheet`, `/plan/?print=traps`, `/review/print.html?sheet=traps`) and two
+final-week flows (V19's exam-week card with its own `Final check · 10`, and T13's final stretch
+with L19's eve task). One printable page of your own traps, rules, skips, Desmos types and
+grid-in slips, and one final check in the Due list, is what a tutor would hand a student on the
+eve.
 
-* L19's trap sheet becomes **Your test-day sheet**, at `/plan/?print=sheet` (it works without a
-  plan), readable on a phone and printable (A4 or Letter, 11 pt; a second page when long; nothing
-  cut, ordered by value):
-  1. Your traps (L19's up to 10 entries, each with its worked example).
+* **Your test-day sheet**, at `/plan/?print=sheet` only (it works without a plan), readable on a
+  phone and printable (A4 or Letter, 11 pt; a second page when long; nothing cut, ordered by
+  value):
+  1. Your traps: `review.trapsheet(learner, n=10)` (V19's entries: U6's top habits, then the top
+     open or relapsed traps by points, each with label, hits and tell, a reserved example walked
+     for the trap with `Your trap` marked, the key and the rationale's first sentence, your rule
+     when one exists, and `dodged 4 of the last 5`). L19's `GET /api/plan/{id}/trapsheet`
+     returns the same list.
   2. Your rules (P21's type rules, by domain).
   3. Skip first: types whose median is over 1.5× the budget and first-try accuracy under 50%,
      top 5 by U8 weight (P16).
   4. Use Desmos on: types with a verified route where your hand median is over 60 s (P3).
   5. Grid-in rules you broke (T7's `entry` items, grouped by rule).
   6. The test-day checklist (T13).
-* Linked from T13's final stretch, L19's eve task (`Read your test-day sheet · 5 min`), Me, and
-  SR17's lobby briefing.
+* **One URL.** `/plan/?print=traps` and `/review/print.html?sheet=traps` answer with a redirect
+  to `/plan/?print=sheet#traps` (a 302 from the server, or `location.replace` where the page is
+  static). V19's error log (`/review/print.html?sheet=log`) stays: it is every open mistake, a
+  different list.
+* **Final check** (was V19's exam-week card): from 7 days before `exam_date`, a Due row of kind
+  `final_check` in T13's final stretch, `Final check · one fresh question per trap on your sheet
+  · 10 · ~16 min`, starting `{templates: the sheet's templates, count: 10, timing:'pace',
+  order:'mixed', source:'mistakes'}` with `want` per trap (G3). It is done once finished in the
+  last 7 days; the run walks it like any row. Review's Due tab shows one line `Your test-day
+  sheet` (a link) in the same week instead of a card.
+* Linked from T13's final stretch, L19's eve task (`Read your test-day sheet · 5 min`), Review's
+  Due tab, Me, and SR17's lobby briefing.
 
 **Acceptance.**
 1. `GET /api/plan/sheet` for a seeded learner returns six sections, each a list (empty lists
-   allowed) and no answer keys other than reserved-seed examples.
+   allowed) and no answer keys other than reserved-seed examples; section 1's templates equal
+   `GET /api/review/trapsheet`'s in order.
 2. `/plan/?print=sheet` renders for a learner with no plan.
+3. `/plan/?print=traps` and `/review/print.html?sheet=traps` end on `/plan/?print=sheet`.
+4. With `exam_date` 5 days away: `/api/today.due.rows` has one `final_check` row, and
+   `/review/` has no exam-week card; 9 days away, no such row.
 
-#### G14. One pass through the bank: every new field per family, audited, one coverage report
+#### G14. One pass through the bank: every new field per family, audited, one coverage report, and a launch gate
 
-*From: experience #2, unfair-advantage #4, #12; the T-bank asks of P1, P3, P4, P18 and G8. Effort
-L (it grows). Builder: T-bank.*
+*From: experience #2, unfair-advantage #4, #12; the T-bank asks of P1, P3, P4, P18 and G8; the
+Words content review (open question 2). Effort L. Builders: T-bank (the Math pass), S9 (the
+Words audit), I1 (the gate).*
 
 **Why.** Four upgrade files each ask T-bank for a field (grid-in mistakes, steps with the step
 each mistake breaks, the Desmos route, `ask` in params, figure descriptions). All of them live in
 the same 386 family files, so four tasks would collide, and a field that is not audited could
 teach a wrong step. One pass, topic by topic, adds every field to a family at once and proves it.
+Steps are what makes our explanation beat their prose, so they are not allowed to ship partial:
+at launch every question has them, or the explanation is a one-sentence rationale and we are at
+parity. The Words content (about 1,090 definitions, about 300 frames, sense features, trap tags)
+had no check beyond a verifier that re-derives from the same features, so a wrong feature
+passed.
 
 * **Fields**: `spr_mistakes` (spec), `steps` and `step_of_reason` (P1), `desmos` and
   `desmos_read` (P3), `ask` recorded in params (P18), `figure_alt` (G8).
-* **Order**: 19 commits, one per topic, by attempt volume × U8 weight (the heaviest first). Each
-  commit touches only that topic's files.
-* **Audit checks** (in `satbank/audit.py`, run by `python3 -m satbank check`, per field): no `spr_mistakes` value equals the key;
-  the last step's value equals the key (numeral or `norm_text`) and each step's numbers come from
-  params; `step_of_reason` indices are valid; the Desmos route, solved numerically from the same
-  expressions, lands on the key; `figure_alt` names every drawn label and given number.
+* **Launch fields**: `steps` with `step_of_reason` on every template (386 of 386, which is
+  100% of U8 weight), and `figure_alt` on every figure template (76 of 76). `spr_mistakes`,
+  `desmos` and `ask` ship partial and grow; the site never says those are missing (P1's rule).
+* **Order**: one commit per topic, heaviest first by attempt volume × U8 weight, each touching
+  only that topic's files and landing that topic's launch fields for all its templates (the
+  other fields in the same commit where ready, else a later commit for the same topic). T-bank
+  runs from wave 1a through wave 2. At the middle of wave 2, if `bank_coverage.py` shows under
+  60% of U8 weight with steps, T-bank splits into T-bank-a (Algebra, Advanced Math) and
+  T-bank-b (Problem-Solving & Data Analysis, Geometry & Trigonometry), each owning its topics'
+  family files; commits stay topic-scoped, so they never collide.
+* **Audit checks** (in `satbank/audit.py`, run by `python3 -m satbank check`, per field): no
+  `spr_mistakes` value equals the key; the last step's value equals the key (numeral or
+  `norm_text`) and each step's numbers come from params; `step_of_reason` indices are valid;
+  the Desmos route, solved numerically from the same expressions, lands on the key;
+  `figure_alt` names every drawn label and given number.
 * **Coverage**: `tools/bank_coverage.py` (replaces `tools/spr_coverage.py`) prints `n of N` per
-  field and per topic. The site never says a field is missing (P1's rule).
+  field, per topic and as a share of U8 weight. `--gate` exits 1 unless the launch fields are
+  complete and the audit passes. `tools/product_gates.py bank` runs it; I1 does not sign off
+  below it.
+* **The Words audit** (S9, `tools/words_audit.py`, stdlib, run by I1 before Words ships):
+  * **Definitions**: each entry's part of speech must be one WordNet gives the lemma, and its
+    definition must share at least one content lemma with a WordNet gloss or synonym of that
+    lemma (stop words removed). WordNet 3.1's database files (`material/wordnet/`, the WordNet
+    licence allows reuse with its notice) are parsed directly.
+  * **Frames, by a second method**: W1's verifier re-derives from the sense features, so this
+    check ignores them and uses WordNet relations. `classes.json` gains `seeds` (3–5 WordNet
+    lemmas per class, set by hand). For 20 seeds of every frame, the key must reach a seed of
+    the frame's class within 2 synonym, similar-to or hypernym hops; no distractor may share the
+    key's synset unless its trap is `too_strong`, `too_weak` or `connotation`; a `reversed`
+    distractor must reach an antonym of a seed within 2 hops. Transitions: each family's key and
+    distractors are checked against `logic` by a hand table of 70 transitions → logic,
+    independent of `logic_reasons`.
+  * **Queue**: every mismatch is written to `server/words/review_queue.json` (`{kind, id,
+    field, ours, wordnet}`). A reviewer either fixes the content or clears the item, signed in
+    `server/words/review_log.json` (`{id, verdict, reviewer, date}`). Words ships only with an
+    empty queue. The reviewer is named in open question 2 (default: the site owner).
+  * `ponytail:` WordNet overlap is a heuristic and flags some good entries; the human queue is
+    the check, the script only aims it.
 
 **Acceptance.**
-1. `python3 tools/bank_coverage.py` prints one line per field and exits 0.
+1. `python3 tools/bank_coverage.py` prints one line per field with its share of U8 weight and
+   exits 0; `--gate` exits 1 while any template lacks `steps` or `step_of_reason`, or any figure
+   template lacks `figure_alt`.
 2. `python3 -m satbank check --topic <topic>` passes after every topic commit.
-3. `git log --stat` on the T-bank branch: each commit's files are under one topic.
+3. `git log --stat` on the T-bank branches: each commit's files are under one topic.
+4. I1's walk: `tools/product_gates.py bank` exits 0 before sign-off.
+5. `python3 tools/words_audit.py` exits 0 on the shipped content with an empty queue. In a temp
+   copy where one entry's part of speech is changed to one WordNet lacks, or a frame's key is
+   swapped for a word in another class, it writes that item to the queue and exits 1.
+
+#### G16. Official questions on our answer pad
+
+*From: the unfair-advantage official gap; reconciles P13, U2 and open question 17 (R59). Effort
+M. Builders: S4 (`web/practice/official/**`, `api_practice.py`), F5 (the twin, through P13's
+search), F4 (`official_done`), U2's `types.py` (the map and reasons).*
+
+**Why.** A free TopTierPrep student's core practice is College Board's 1,921 official Math items
+in filtered QBank sessions with a Solved filter. We can't serve College Board text (content
+terms), and P13 only helps after the fact, with a paste. The pad keeps their whole workflow and
+adds what their QBank can't: the wrong pick named (2,186 of 2,367 official wrong options
+resolve, 92%), a mistake with check-ins, and a trap-true twin at once.
+
+**The list** (`/practice/official/`, linked from the builder's "Questions from", each SkillRow's
+`Official questions on College Board · 142`, the palette `official`, and P13's result list).
+* Rows are the 1,039 official IDs in `material/keys` (the ones we hold keys for): `84664a7c ·
+  Circles · Medium · MC` with the status `Not done` · `Solved` · `Missed · used the diameter` ·
+  `Missed, then twin right`.
+* Filters (a sticky bar): domain, skill, tier, format, status (`Not yet done` default · Missed ·
+  Solved · All), and `Only types built from official questions`. The header counts: `142 in
+  Circles · 38 done · 9 missed`.
+* `Start · 10` walks the filtered list in order, one ID at a time; progress per ID is kept, so
+  `Not yet done` resumes where the student stopped. Any row also opens on its own.
+
+**The pad** (one ID at a time, one column 760 px):
+* The ID in DM Mono 20 px with `Copy ID`, and `Open on College Board ↗`: a new tab on College
+  Board's free question bank, at the question where its URL accepts an ID, else at the bank with
+  the ID copied for its ID search. The page says `The question opens on College Board. Answer it
+  here.`
+* The answer pad, from the key file's format: `A · B · C · D` (44 px) for MC, or a grid-in field
+  with R34's entry rules; `Enter` checks. A quiet `Skip`.
+* The verdict, through `UI.questionActions` (G4): right → `Solved`; wrong → the key's letter or
+  value, and U2's `POST /api/types/match/pick {cb_id, letter | value}` → the named reason when
+  one resolves (`You picked C: used the diameter as the radius`), else `Not named yet` with U2's
+  paste-or-pick; the mistake opens (U2's log path, `source 'outside'`, `origin 'cb_qbank'`); the
+  primary is **Twin** (P13's search at the official tier, with `want` from the reason, G3),
+  answered inline before `Next ID`.
+* After a right answer on an ID with an exact map, `Twin` is a `.btn` for more on that type.
+
+**Server (S4, F4).**
+* `GET /api/official?domain=&skill=&tier=&status=&limit=&after=` → `{total, done, missed,
+  rows:[{cb_id, topic, skill, tier, format, status, reason?, template?}]}`, from
+  `material/keys` joined with U2's map and the learner's `official_done`.
+* `POST /api/official/answer {cb_id, pick, ms}` → `{right, key, reason, trap_id, twin:{body}}`.
+  The key is read from the key file and returned only after the pick. 404 for an ID not in
+  `material/keys`.
+* New learner table `official_done(learner, cb_id, pick, right, ms, at)`, PK `(learner, cb_id,
+  at)`, in `LEARNER_TABLES` and `carry`. Its `ms` (capped at 10 min) counts toward study time and
+  the study day (R13); it never counts toward mastery or the estimate, which read our own
+  questions. The twin's answers are ordinary attempts.
+* No response carries official stem, choice or explanation text (U2's rule and check).
+
+**Acceptance.**
+1. `GET /api/official?skill=<circles skill>` → `total` equals the circles IDs in
+   `material/keys`; no row contains a `stem`, `choices` or `text` key.
+2. `POST /api/official/answer` with a wrong letter on an ID whose wrong option resolves →
+   `reason` non-empty and a trap with `source == 'outside'`; the returned twin body served
+   offers that reason (G3).
+3. Afterwards `status == 'missed'` for that ID, `Not yet done` no longer lists it, and
+   `/api/today.study.today` rose by the answer's minutes.
+4. `POST /api/official/answer` for an ID outside `material/keys` → 404.
+5. At 390, the pad's four letter buttons, `Open on College Board` and `Copy ID` are on screen
+   without scrolling.
 
 ---
 
@@ -807,7 +1190,7 @@ Each entry quotes the current text, then gives the replacement or addition.
      for the site. `spec/rebuild.md` stays as the record of the first rebuild."
    * Append: "The upgrades that take each section past parity are in
      `spec/v2-upgrades/<section>.md`; the rules where sections meet are in
-     `spec/v2-upgrades/product.md` (G1–G14, R39–R55). `spec/v2-decisions.md` wins over all of
+     `spec/v2-upgrades/product.md` (G1–G16, R39–R60). `spec/v2-decisions.md` wins over all of
      them."
 
 2. **§1, the bar (lines 42–46).**
@@ -834,8 +1217,8 @@ Each entry quotes the current text, then gives the replacement or addition.
 
 5. **How to read this document (lines 81–82).**
    * Quote: "* Where two section specs disagree, **§2.2 Resolutions wins**."
-   * Add after that bullet: "* Where two upgrade files disagree, **R39–R55** (from
-     `v2-upgrades/product.md`, appended to §2.2) win. Order: `v2-decisions.md`, then R39–R55 and
+   * Add after that bullet: "* Where two upgrade files disagree, **R39–R60** (from
+     `v2-upgrades/product.md`, appended to §2.2) win. Order: `v2-decisions.md`, then R39–R60 and
      `product.md`'s G-upgrades on the seams they name, then each `v2-upgrades/<section>.md`,
      then Part 3, then Part 2."
 
@@ -847,9 +1230,9 @@ Each entry quotes the current text, then gives the replacement or addition.
 
 7. **§2.1 rule 5 (lines 108–110).**
    * Quote: "each comes from one server function and reads the same on every screen."
-   * Replace with: "each comes from one server function, reads the same on every screen, and
-     opens its working (`UI.fact`, `GET /api/levers`, G6). I1's facts gate checks it on every
-     endpoint."
+   * Replace with: "each comes from one server function, reads the same on every screen, shows
+     a visible ⓘ on every device and opens its working (`UI.fact`, `GET /api/levers`, G6). I1's
+     facts gate checks it on every endpoint, the due count included."
 
 8. **§2.1 rule 8 (lines 116–119).**
    * Quote: "loading (static skeletons at final size, no looping shimmer)"
@@ -865,7 +1248,8 @@ Each entry quotes the current text, then gives the replacement or addition.
 10. **§2.1 rule 12 (lines 127–128).**
     * Quote: "12. **Copy:** no emoji; the flame, trophy and marks are our icons."
     * Append to the rule: "Actions use `UI.VERBS` only: Twin, Twin this set, Twin test, Again,
-      exactly, Fix n, Learn this type (R42, G2); the retired phrases in G2 never appear."
+      exactly, Fix n, Learn this type (R42, G2), each with its visible sublabel on touch screens
+      and its first 3 uses; the retired phrases in G2 never appear."
 
 11. **§2.1, new rules after rule 12.**
     * Add: "13. **Speed is measured.** Check → verdict ≤ 100 ms p95; Next → next stem ≤ 50 ms with
@@ -874,16 +1258,22 @@ Each entry quotes the current text, then gives the replacement or addition.
     * Add: "14. **One question, one row.** Every surface that reveals a question uses
       `UI.questionActions` and the shared verdict slot (R49, G4)."
     * Add: "15. **Readable without sight.** Figures carry generated descriptions, tables real
-      headers, math MathML (G8)."
+      headers, math MathML; Read aloud is a visible tool wherever it is allowed (G8)."
 
 12. **§2.2 (after R38, line 174).**
-    * Append rows R39–R55 exactly as in §2 A of `v2-upgrades/product.md`.
+    * Append rows R39–R60 exactly as in §2 A of `v2-upgrades/product.md`.
+    * In R4, replace the decision with: "Void (decision 5). There are no classes; Compete's
+      private contests are an invite code or link that Compete owns (C18)."
+    * In R10, quote: "`word` and `confusion` (S9, `words.resolve_drill`), `assignment` (S2,
+      `classes.resolve_drill`)" → replace with: "`due` (S10, `review.resolve_drill`, V1, R56);
+      `rw.*` templates are served by F5 through the catalogue (R57), so Words needs no resolver"
 
 13. **§2.4, `kit.js` row (line 230).**
     * Quote: "`UI.ics(event)` (one event, or a daily repeating reminder) |"
     * Replace with: "`UI.ics(event)` (one event, or a daily repeating reminder). Product:
-      `UI.VERBS` and `UI.verb(id, opts)` (G2), `UI.pts(el, pts, key)` (G5), `UI.fact(el, key)`
-      (G6), `UI.empty(host, {sample, text, action})` (G12), `UI.SUBJECT` (G11) |"
+      `UI.VERBS`, `UI.verb(id, opts)` and `UI.KEYS` (G2), `UI.pts(el, pts, key)` (G5), `UI.fact(el,
+      key)` with its visible cue (G6), `UI.empty(host, {sample, text, action})` (G12),
+      `UI.SUBJECT` (G11) |"
 
 14. **§2.4, `question.js` row (line 232).**
     * Quote: "`UI.annotate(host, marks, {editable, onChange})` (7 styles, notes, notes rail,
@@ -896,37 +1286,44 @@ Each entry quotes the current text, then gives the replacement or addition.
 15. **§2.4, `runner.js` row (line 233).**
     * Quote: "runner key maps (§2.8) |"
     * Replace with: "runner key maps (§2.8); the next question pre-rendered while the verdict shows
-      (G9); X6's phone footer, gestures and answer pad for both modes (R50) |"
+      (G9); X6's phone footer, gestures and answer pad for both modes, and the visible tools row
+      under 760 px (R50) |"
 
 16. **§2.4, `ui.js` row (line 225).**
     * Quote: "`UI.SAT_DATES`, `UI.chip`, `UI.ref`, `NAV`, `SECTION`, `TOPICS` + aliases |"
     * Replace with: "`UI.SAT_DATES`, `UI.chip`, `UI.ref`, `NAV`, `SECTION`, `TOPICS` + aliases;
-      `UI.run` (`start`, `between`, `rail`, G1); `[data-fact]` delegation (G6); `Z` undo and the
-      duplicate-key check (R43); optimistic toggles (G9) |"
+      `UI.run` (`start`, `between`, `rail`, G1); `[data-fact]` delegation (G6); `Z` undo, the
+      duplicate-key check and the cross-scope key check (R43); optimistic toggles (G9) |"
 
 17. **§2.5, "Not added" (lines 296–302).**
     * Quote: "Dashboard's `plan_marks` (its own shape) and `learners.plan_started`."
     * Append: "Nor, from the upgrade proposals: `type_state`, `type_memory`, `boxes`,
       `skill_memory` (R53), `estimate_log` (no practice score, R48), offline-pack tables (§4 of
-      `product.md`). `traps.closed_how` gains the value `transfer` (G3)."
+      `product.md`). `traps.closed_how` gains the value `transfer` (G3). Added from `product.md`:
+      `attempts.word TEXT` and `word_reviews.attempt INTEGER` (R57), `users.google_sub TEXT
+      UNIQUE` (G15), the learner table `official_done(learner, cb_id, pick, right, ms, at)` (G16).
+      Removed by decision 5: every class, membership, assignment and class-code table."
 
 18. **§2.6, `want` row (line 328).**
     * Quote: "| `want` | {template: regex} | walk up to 40 seeds for an item where some option's
       reason matches (a mix-up drill, same-mistake-elsewhere) |"
     * Replace with: "| `want` | {template: regex} | walk up to 60 unseen seeds for an item where
-      some option's `progress.norm(reason)`, or a grid-in's `spr_reasons` value, matches. Set by
-      the server from the trap's norm on every twin of a miss: the repair, pools `redo` and
-      `checks`, `from_session` twins, `like`, `/more {axis:'same'}` and twin links (R45, G3); a
-      miss in 60 seeds serves the plain next seed with `trap_true: false` |"
+      some option's `progress.norm(reason)`, a grid-in's `spr_reasons` value, or an R&W item's trap
+      id matches. Set by the server from the trap's norm on every twin of a miss on a named trap:
+      the repair, pools `redo` and `checks`, `from_session` twins, `like`, `/more {axis:'same'}`,
+      twin links and the official pad's twin (R45, G3); unsure, slip and unnamed grid-in traps
+      get none; a miss in 60 seeds serves the plain next seed with `trap_true: false` |"
 
 19. **§2.6, `source` row (line 347).**
     * Quote: "| `source` | map, coach, plan, today, mistakes, review, quick, palette, assignment,
       outside, twin, try, word-example, words, worksheet, shared, qotd, spot |"
     * Replace with: "| `source` | map, coach, plan, today, mistakes, review, quick, palette,
-      assignment, outside, twin, try, word-example, words, worksheet, shared, qotd, spot, and
-      from the upgrade files: next, warmup (T3 only), learn, start (G10), prep (Compete's lobby
-      drill, R46), probe, habit, gauntlet, bluebook, official, sprint, rematch, finish, gain,
-      pace, fix, confirm, rush |"
+      outside, twin, try, words, worksheet, shared, qotd, spot, and from the upgrade files:
+      next, due (V1, R56; resolved by `review.resolve_drill` through R10's registry), warmup
+      (T3's warm-up, an alias of `due` with count 5, R46), learn, start (G10), prep (Compete's
+      lobby drill, R46), probe, habit, gauntlet, bluebook, official (P13, G16), sprint,
+      rematch, finish, gain, pace, fix, confirm, rush |". `assignment` is gone (decision 5);
+      `word-example` is gone (decision 2, `words.md`).
 
 20. **§2.6, drill feedback (lines 366–369).**
     * Quote: "trap ids opened or closed,"
@@ -935,30 +1332,39 @@ Each entry quotes the current text, then gives the replacement or addition.
 
 21. **§2.8, runner row (line 422).**
     * Quote: "`D` details"
-    * Replace with: "`Q` details (practice; `D` only chooses) · `R` report · `T` / `Shift+T`
-      twin and its menu after a verdict (practice)"
+    * Replace with: "`V` details (practice; `D` only chooses) · `R` report · `T` / `Shift+T`
+      twin and its menu after a verdict (practice)"; `I` I'm guessing stays.
 
 22. **§2.8, player row (line 423).**
     * Quote: "`T` try one like this"
     * Replace with: "`T` twin · `Shift+T` twin menu"
+    * Quote: "`I` details"
+    * Replace with: "`V` details"
+    * In the "Flashcards and word quizzes" row, append: "`I` guess · `T` twin · `Shift+T` twin
+      menu (after the verdict) · `R` report · `W` hint"
 
 23. **§2.8, global row (line 421).**
     * Quote: "`[` collapse the sidebar. `?` shortcuts"
     * Replace with: "`[` collapse the sidebar. `Z` undo the last reversible change (while its
-      toast shows). `?` shortcuts. A scope that registers a key twice throws in `/dev/` (R43)"
+      toast shows). `?` shortcuts. A scope that registers a key twice, or a question action on a
+      key other than its `UI.KEYS` key, throws in `/dev/` (R43)"
+    * Quote: "`K` Class · "
+    * Delete it (decision 5).
 
 24. **§2.9, new provider rows (after the T-bank row, line 449).**
     * Add:
-      * "| F1 | `UI.VERBS`, `UI.verb`, `UI.pts`, `UI.fact`, `UI.empty`, `UI.SUBJECT` | every page |"
-      * "| F2 | `UI.run` (G1), `[data-fact]` delegation, `Z`, `next.queue` kind `start` (G10) | S3, S4, S6, S7, S9 |"
-      * "| F3 | `UI.questionActions`, `UI.twin`, the verdict slot, figure/table/MathML markup | S3, S4, S6, S8, S10, the type page |"
-      * "| F4 | R45's close rule and transfer check-in, `deps.subject_of` (G11) | S10, S6, every owner |"
-      * "| F5 | `want` from the trap on every twin path (G3), `source:'start'` (G10), `GET /api/types/{t}` (G7) | S3, S4, S6, S8, S10, U28 |"
-      * "| S1 | `GET /api/levers` (G6), `go` on `/pair/` (G12) | every page, F2 |"
-      * "| S4 | `/types/?t=` (G7) | every question surface, palette, S6, S10, S7 |"
+      * "| F1 | `UI.VERBS`, `UI.verb`, `UI.KEYS`, `UI.pts`, `UI.fact`, `UI.empty`, `UI.SUBJECT` | every page |"
+      * "| F2 | `UI.run` (G1), `next.due` with R56's review row, `[data-fact]` delegation, `Z`, the key checks, `next.queue` kind `start` (G10) | S3, S4, S6, S7, S9, S10 |"
+      * "| F3 | `UI.questionActions`, `UI.twin`, the verdict slot, figure/table/MathML markup, the phone tools row (R50) | S3, S4, S6, S8, S9, S10, the type page, the official pad |"
+      * "| F4 | R45's close rule by kind and transfer check-in, `deps.subject_of` (G11), `attempts.word` and R&W answers through `progress.record` (R57), `official_done` (G16) | S10, S6, S9, S4, every owner |"
+      * "| F5 | `want` from the trap on every twin path (G3), `rw.*` templates through the catalogue (R57), `source:'start'` (G10), `GET /api/types/{t}` (G7) | S3, S4, S6, S8, S9, S10, U28 |"
+      * "| S1 | `GET /api/levers` (G6), `go` on `/pair/` (G12), `POST /api/auth/google` (G15) | every page, F2 |"
+      * "| S4 | `/types/?t=` (G7), `/practice/official/` and `/api/official` (G16) | every question surface, palette, S6, S10, S7 |"
       * "| S7 | R41's done rules, `GET /api/plan/sheet` (G13) | S3, F2 |"
+      * "| S9 | `rw_items` behind the catalogue, `words.rw_answers` over attempts (R57), `tools/words_audit.py` (G14) | F5, F4, S6, S10, I1 |"
+      * "| S10 | `review.due` with T3's kinds (R56), `review.trapsheet` for G13's section 1 | F2, S3, S7 |"
       * "| T-bank | G14's fields: `spr_mistakes`, `steps`, `step_of_reason`, `desmos`, `desmos_read`, `ask`, `figure_alt` | F5, F3 |"
-      * "| I1 | `tools/product_gates.py` (`perf`, `facts`, `copy`, `a11y`) | every merge in wave 3 |"
+      * "| I1 | `tools/product_gates.py` (`perf`, `facts`, `copy`, `a11y`, `bank`) and the Words audit's empty queue | every merge in wave 3 |"
 
 25. **§2.12 F1 acceptance (lines 548–551).**
     * Quote: "every chart renders its hidden table; `/nope/` shows the 404 page."
@@ -983,8 +1389,11 @@ Each entry quotes the current text, then gives the replacement or addition.
 29. **§2.13, new rows.**
     * Add: "| 3.3 Practice | "After a miss, the same template on a fresh seed" (repair) | the same
       template on the first unseen seed that offers the missed trap, within 60 (R45) | R45 |"
-    * Add: "| 3.1, 3.2, 3.3, 3.5, 3.9 | "two clean answers close it" | two clean answers on
-      questions that offered that trap | R45 |"
+    * Add: "| 3.1, 3.2, 3.3, 3.5, 3.9 | "two clean answers close it" | for a named trap, two
+      clean answers on questions that offered it; for unsure, slip and unnamed grid-in traps,
+      clean answers on the template, as before | R45 |"
+    * Add: "| 3.1, 3.2, 3.9 | the Warm-up row and Review's Due list, each with its own count | one
+      Due row, kind `review`, from `review.due` | R56 |"
     * Add: "| every section | a button or link reading a retired phrase (G2) | the `UI.VERBS` label
       for the same action | R42 |"
 
@@ -992,10 +1401,11 @@ Each entry quotes the current text, then gives the replacement or addition.
     * Quote: "wave 1a  F1 design system      F4 data layer      T-bank grid-in mistakes (runs on
       its own until done)"
     * Replace with: "wave 1a  F1 design system      F4 data layer      T-bank one pass (G14: runs
-      topic by topic until done, through wave 2)"
+      topic by topic through wave 2; splits into T-bank-a and T-bank-b at mid wave 2 when under
+      60% of U8 weight has steps)"
     * Quote: "wave 3   I1 integration and the full walk"
     * Replace with: "wave 3   I1 integration, the full walk and the product gates (perf, facts,
-      copy, a11y)"
+      copy, a11y, bank) and the Words audit"
 
 31. **§4.2, T-bank entry (lines 11026–11033).**
     * Quote: "**T-bank · Named grid-in mistakes in the bank** (wave 1a, port 8017)."
@@ -1005,20 +1415,24 @@ Each entry quotes the current text, then gives the replacement or addition.
       `practice.to_question` carries `spr_reasons`, `steps`, `step_of`, `desmos` and `figure_alt`
       (T-bank sends the change to the file's owner). Owns `satbank/item.py`, `satbank/audit.py`,
       `satbank/figures.py`, `satbank/plot.py`, `satbank/shapes.py`,
-      `satbank/topics/*/families/*.py`, `tools/bank_coverage.py`. Needs F0. Ships partial and
-      grows (open question 11)."
+      `satbank/topics/*/families/*.py`, `tools/bank_coverage.py`. Needs F0. The launch fields
+      (`steps` with `step_of_reason` on all 386 templates, `figure_alt` on all 76 figure
+      templates) are complete before I1 signs off; the others ship partial and grow (open
+      question 11)."
 
 32. **§4.2, S4 entry (lines 11084–11089).**
     * Quote: "`api_practice.py` (adds `/api/bank`, the session endpoints, `GET /api/drill`),
       `server/checks/s4.py`."
-    * Replace with: "`api_practice.py` (adds `/api/bank`, the session endpoints, `GET /api/drill`),
-      `web/types/**` (G7), `server/checks/s4.py`."
+    * Replace with: "`api_practice.py` (adds `/api/bank`, the session endpoints, `GET /api/drill`,
+      `/api/official`), `web/types/**` (G7), `web/practice/official/**` (G16),
+      `server/checks/s4.py`."
 
 33. **§4.2, I1 entry (lines 11129–11133).**
     * Quote: "checks that every nav link lands on a real page; finishes README and this file's
       State lines."
     * Replace with: "checks that every nav link lands on a real page; runs
-      `tools/product_gates.py` (`perf` G9, `facts` G6, `copy` G2, `a11y` G8) and owns it; applies
+      `tools/product_gates.py` (`perf` G9, `facts` G6, `copy` G2, `a11y` G8, `bank` G14) and owns
+      it; runs `tools/words_audit.py` and holds Words until its queue is empty (G14); applies
       the §3.2 lines of every `v2-upgrades` file with their owners; finishes README and this
       file's State lines."
 
@@ -1026,19 +1440,23 @@ Each entry quotes the current text, then gives the replacement or addition.
     * Add: "* New server modules from the upgrade files, one owner each: `server/next.py` and
       `web/sw.js` (F2, U1, U18), `server/habits.py` and `server/types.py` (F5, U2, U6),
       `server/ratings.py` (F4, P11), `server/push.py` and `web/link/**` (S1, U18, U20),
-      `server/today.py` (S3), `web/types/**` (S4, G7), `tools/product_gates.py` (I1)."
-    * Add: "* `v2-upgrades/product.md`'s R39–R55 table is shared by convention: a task that needs a
+      `server/today.py` (S3), `web/types/**` and `web/practice/official/**` (S4, G7, G16),
+      `tools/words_audit.py` (S9, G14), `tools/product_gates.py` (I1)."
+    * Add: "* `v2-upgrades/product.md`'s R39–R60 table is shared by convention: a task that needs a
       new seam decision adds a row there and in §2.2 in the same commit."
 
 35. **Part 5 (lines 11165–11183).**
     * Quote: "2. **Words.** Ship about 750 SAT words and 70 transitions now,"
-    * Replace the item with: "2. **Words.** Answered (decision 2): R&W vocabulary only. Still
-      open: who reads the definitions before launch?"
+    * Replace the item with: "2. **Words.** Answered (decision 2): R&W vocabulary only. The
+      definitions and frames go through G14's Words audit; a person clears its queue before
+      Words ships. Who? Default: the site owner, signing each item in
+      `server/words/review_log.json`."
     * Quote: "3. **Daily Challenge.** Each student gets twin questions"
     * Replace the item with: "3. **Daily Challenge.** Answered (decision 1): twins."
     * Quote: "5. **Sign-in.** Email codes need SMTP in production;"
-    * Replace the item with: "5. **Sign-in.** Passkeys (U19) give one-tap return without SMTP or
-      Google. Add Google sign-in as well?"
+    * Replace the item with: "5. **Sign-in.** Answered yes by default (G15, R58): Google sign-in
+      as one more method beside passkeys (U19), email codes and pairing. It needs a free Google
+      OAuth client id (`GOOGLE_CLIENT_ID`); without one the button is hidden."
     * Quote: "8. **Diagnostic gate.** Keep the name-and-email step before its result (default for
       now), or show it directly like every other sitting?"
     * Append: "G10 puts an 8-question start before the diagnostic, so the gate no longer meets a
@@ -1047,8 +1465,13 @@ Each entry quotes the current text, then gives the replacement or addition.
     * Quote: "11. **Grid-in mistakes.** Naming grid-in mistakes needs edits to up to 133 templates.
       Ship with partial coverage and grow (default)?"
     * Replace with: "11. **Bank fields.** G14 adds grid-in mistakes, steps, Desmos routes and
-      figure descriptions in one audited pass, topic by topic. Ship with partial coverage and
+      figure descriptions in one audited pass, topic by topic. Steps and figure descriptions are
+      complete at launch (G14's gate); grid-in mistakes, Desmos routes and `ask` ship partial and
       grow (default)?"
+    * Quote: "17. **Official replicas.**"
+    * Replace the item with: "17. **Official questions.** No College Board text is served. G16
+      lists the official IDs we hold keys for; the student opens each on College Board and
+      answers on our pad, and a miss becomes a named mistake and twins (R59)."
     * Add: "20. **Type pages in search engines.** `/types/?t=` pages are public (G7). Let search
       engines index them (default), or `noindex`?"
     * Add: "21. **Read aloud in tests.** Only with extended time (x1.5 or x2), as Bluebook treats
@@ -1056,25 +1479,58 @@ Each entry quotes the current text, then gives the replacement or addition.
 
 ### 3.2 In the sibling upgrade files (I1 applies them with the owners)
 
+`review.md` and `words.md` were being revised while this was written, so their rows quote the
+label and apply to **every occurrence** of it in that file, whatever sentence carries it.
+
 | file | quote | change | why |
 |---|---|---|---|
 | `today.md` T1 | "* **The pill** `Start · 15 min` (the region's primary)" | "* **The pill** `Study 15 min` (the region's primary)" | R40 |
 | `today.md` T2 | "A `.btn Do them in order` (shown with 2 or more undone rows) starts the first undone row." | "The header's primary `Start today · n parts · m min` (G1) starts the run over the undone rows." | R40 |
-| `today.md` T5 | "**Component.** `UI.twinSheet({body, recall, onDone})` (F3, `question.js`)." | Append: "Callers reach it through `UI.twin(anchor, ctx)` (R44); every twin body carries `want` from the trap when the source was a miss (R45)." | R44, R45 |
+| `today.md` T2 rows | "4. **Warm-up** (T3): `Warm-up · 5 questions · ~6 min · 3 check-ins due · 2 fading`" | "4. **Review** (kind `review`, R56): `Review · 12 due · ~16 min · 3 check-ins · 2 fading`, from `review.due` (V1's list with T3's fading and keep-warm kinds), started with `{source:'due', box: prefs.review_minutes}`; the plan's recheck task is this row" | R56 |
+| `today.md` T2 rows | "6. Words due: `12 words due · ~3 min` (`words.today_summary`), starting S9's review run." | "6. Words: `Words · 12 due · 5 new · ~6 min`, starting W11's run; the plan's `words` task (L4) is this row, with its `task_id`, never a second row" | R56 |
+| `today.md` T2 rows | rows 2 (class assignments) and 9 (group contests) | Already applied in today.md: row 2 is removed (decision 5); row 9 reads "Private contests closing today (`compete.due_today`): `Friday five · 10 q · closes 9:00 PM`" | decision 5 |
+| `today.md` T2 acceptance | "starts `[\"plan\",\"warmup\"]`" and "(`map(.kind)` has one `warmup`)" | "starts `[\"plan\",\"review\"]`" and "(`map(.kind)` has one `review` and no `warmup`); with a plan words task and `words_goal` 10, one `words`" | R56 |
+| `today.md` T3 | "* **The Due row**: `Warm-up · 5 questions · ~6 min · 3 check-ins due · 2 fading`" | "* **In the Due list**: T3's candidates are the check-in, fading and keep-warm kinds of the review row (R56); `{source:'warmup'}` is accepted as `{source:'due', count:5}`" | R56, R46 |
+| `today.md` T9 (and `review.md` §3.2 row "today T9 / R30") | "`#mist`'s primary is **Start review · 10 min**" | "`#mist`'s action is a `.btn` **Start review · 10 min** that starts the review row, with `12 due today`; while a run is on it reads `Start review · part n of m` (R56). Today's two pills are Start today and Study 15 min" | R40, R56 |
+| `today.md` T13 | the final stretch's Due rows | Add the **Final check** row (kind `final_check`) from 7 days out (G13, R60) | R60 |
+| `today.md` T5 | "**Component.** `UI.twinSheet({body, recall, onDone})` (F3, `question.js`)." | Append: "Callers reach it through `UI.twin(anchor, ctx)` (R44); every twin body carries `want` from the trap when the source was a miss on a named trap (R45)." | R44, R45 |
 | `today.md` T16 | "**`Retake as twin`**" | "**`Twin test`**" | R42 |
 | `shell-me.md` U1 | "* Brand-new student: "Take the diagnostic · 20 q", with a quiet "or one quick question"." | "* Brand-new student: row 0 `Start with 8 questions` (G10), row 2 the diagnostic." | R55 |
 | `shell-me.md` U13 | "* **Data.** `/api/me/summary.levers: {key: {how, help, inputs: [...], next, start?}}`." | Append: "The same function serves `GET /api/levers?keys=` to every page, with `excluded` and `same_on` (G6)." | G6 |
-| `plan.md` L8 | "* It starts the first undone counted question task with `run: '<today>'`." | "* It is G1's `Start today`: the first undone Due row (plan tasks first, then the warm-up, words and the day's questions) with `run: '<today>'`." | R40 |
+| `shell-me.md` U19 | the sign-in methods | Add Google sign-in after passkeys (G15) on `/signin/`, the save nudge and Settings | R58 |
+| `plan.md` L4 | the `words` task row | Append: "It is shown as Today's words row, not a second row (R56)." | R56 |
+| `plan.md` L8 | "* It starts the first undone counted question task with `run: '<today>'`." | "* It is G1's `Start today`: the first undone Due row (plan tasks first, then the review row, words and the day's questions) with `run: '<today>'`." | R40, R56 |
 | `plan.md` L8 | "Chaining is on the client, from the finish response's existing `plan.next`. The rail reads `GET /api/plan/day/{run}` (tasks with answered/total)." | "Chaining is on the client through `UI.run` over `/api/today.due` (G1); the rail reads the same rows." | R40 |
 | `plan.md` L12 | "* `X` done or not done; `S` skip or undo; `U` undo the last action;" | "* `X` done or not done; `S` skip or undo; `Z` undo the last action (global, R43);" | R43 |
+| `plan.md` L19 | the trap sheet and `/plan/?print=traps` | Section 1 of G13's sheet; `/plan/?print=traps` redirects to `/plan/?print=sheet#traps` | R60 |
 | `plan.md` §4 | "T3's warm-up and P12's `type_memory` already schedule retrieval." | "T3's warm-up already schedules retrieval (R53)." | R53 |
 | `plan.md` §4 | "P7's optional chips feed Fix's order (L4)." | "P7's split Check feeds Fix's order (L4, R54)." | R54 |
 | `practice.md` P18 | "* **Another like this** (`T`): the same trap with new numbers." | "* **Twin** (`T`): the same trap with new numbers, through `want` (R45)." | R42, R45 |
-| `practice.md` §3.2 §2.8 row | "`T` / `Shift+T` another like this and its axes" | "`T` / `Shift+T` Twin and its menu; `Q` Details; `R` Report" | R43 |
-| `tests.md` §3.1 item 49 | "In exam mode `D` only chooses D: Details isn't offered" | Append: "In practice mode too `D` only chooses; Details is `Q` (R43)." | R43 |
+| `practice.md` §3.2 §2.8 row | "`T` / `Shift+T` another like this and its axes" | "`T` / `Shift+T` Twin and its menu; `V` Details; `I` I'm guessing; `R` Report" | R43 |
+| `practice.md` P15 | the Reading & Writing seg | It lists Words in Context and Transitions as available skills with unlimited counts, served by `POST /api/drill {subject:'rw'}` (R57) | R57 |
+| `tests.md` §3.1 item 49 | "In exam mode `D` only chooses D: Details isn't offered" | Append: "In practice mode too `D` only chooses; Details is `V` (R43)." | R43 |
 | `reports.md` SR8 | "(Fell for it · Misread the question · Slip in the arithmetic · Didn't know how to start · Rushed · Ran long, then guessed)" | "(P8's six: Fell for a trap · Slip: I knew it · Misread the question · Ran out of time · Entered it wrong · Didn't know how to start)" | R47 |
 | `reports.md` SR8 | "fell for it → trap; misread, slip, rushed → slip; didn't know → gap; ran long → clock" | "each chip maps to its own cause (`misread` stays a cause, shown when non-zero); letters T S R C E A G" | R47 |
 | `compete.md` §3.2 §2.6 row | "Sources `rematch`, `warmup`, `confirm`, `rush`" | "Sources `rematch`, `prep`, `confirm`, `rush`" (C7's lobby drill; UI label stays "Warm up") | R46 |
+| `review.md` V1 | the Due list and its `Start review` pill | The list is Today's review row (R56): `review.due` adds T3's `fading` (after half fixed) and `keep_warm` (last) kinds under the same cap; the pill starts that row, and reads `Start review · part n of m` while a run is on | R56 |
+| `review.md` V1 | "**Keep going · 10 min** (the coach's set," | "**Keep going · 10 min** (U1's box, `{source:'next', box:10}`; `Keep going` means the box only)" | R40, R56 |
+| `review.md` V1 | "**Another 10 min**" | "**Fix n · 10 min**" (V4's order) when mistakes are open, else the box `Keep going · 10 min` | R42 |
+| `review.md` every occurrence | "Fresh one like this", "Another like this", "Try one", "Try one now", "Now you: a new one" | `Twin` (`T`), inline where the source was inline; in an empty state for a learner with 0 answers, `Start with 8 · about 10 min` | R42, R55 |
+| `review.md` every occurrence | "Fresh versions" (and "Fresh versions of selected · n", "Fresh versions · all n") | `Twin this set` (`Twin this set · 6 selected`, `Twin this set · all 14`) | R42 |
+| `review.md` every occurrence | "Redo these 5", "Fix these", "Fix on new numbers · n q" | `Fix n` (e.g. `Fix 5 · about +18 pts`) | R42 |
+| `review.md` every occurrence | "Learn it", "Keep warm · 3" | `Learn this type`; `Twin ×3` | R42 |
+| `review.md` V11 | "See one solved" (key `V`) | `Learn this type` (Twin menu, and a `.btn` in the pane after a miss) opens V11's side-by-side sheet: your miss beside a worked twin with your trap outlined, then T4's three; `V` is Details (R43) | R42, R43 |
+| `review.md` §3.2 §2.8 row | "`V` see one solved" | "`V` Details (as in every player, R43)" | R43 |
+| `review.md` V16 | the new-student panel and empty tabs | Rendered by `UI.empty(host, {sample, text, action})` (G12): the Example row is `sample`; the action is `Start with 8 · about 10 min` for 0 answers and an inline `Twin` otherwise; "Take the diagnostic" is not offered | R55, G12 |
+| `review.md` V19 | "print one list:" and "**Exam week** (from 7 days before `exam_date`): a card at the top of Due" | The trap sheet is section 1 of G13's `/plan/?print=sheet`; `/review/print.html?sheet=traps` redirects there. The exam-week card goes: Final check is Today's `final_check` Due row, and the Due tab shows one `Your test-day sheet` link | R60 |
+| `words.md` intro, W1 Data | "They are not in `attempts`, Practice, Tests, the estimate or Compete yet." | "They are the first `rw` bank (R57): registered in the catalogue, served by drill, filed in `attempts` (with `attempts.word`) by `progress.record`, a miss opening a trap with norm = the trap id; `word_reviews` keeps the word's schedule and links the attempt. They stay out of Tests and the estimate." | R57 |
+| `words.md` W1, W2 | "**Same word, new text** (`T`), **Same trap, new word** (`Shift+T`)" and "`T` gives the same logic in a new text; `Shift+T` the same pair of" | "**Twin** (`T`) through `UI.twin`, with `Same word, new text` and `Same trap, new word` (W2: `Same logic, new text`, `Same mix-up, new text`) in its menu (`Shift+T`)" | R42, R43, R44 |
+| `words.md` every occurrence | "another like this", "**Another**" (the sheet sample), "**Practise 10 in context**" | `Twin`; `Twin`; `Twin ×10` | R42 |
+| `words.md` every occurrence | "Drill it" on a trap (W5: "**Drill it · 10**"); "Drill it" on a pair | `Twin ×10`; `Quiz the pair · 6` | R42 |
+| `words.md` §3.2 §2.8 keys row | "`T` / `Shift+T` another like this (after the verdict)" | "`T` Twin · `Shift+T` the Twin menu (after the verdict) · `R` Report" | R43 |
+| `words.md` W1 | the content-review `ponytail:` note | "The content passes G14's Words audit (WordNet check, a second-method frame check, a human queue that is empty before Words ships)." | G14 |
+| `words.md` W19 | logging a missed official R&W question | Through `POST /api/mistakes/log {template: 'rw.*', reason: <trap id>}` into the same traps (R57) | R57 |
+
 
 ---
 
@@ -1100,9 +1556,9 @@ Each entry quotes the current text, then gives the replacement or addition.
   keys to the client lets anyone read them in devtools and farm the practice board (R3), and it
   needs back-dated answers; `shell-me.md` and `practice.md` rejected it. `UI.saveQueue` rides out
   brief drops.
-* **Paper versions for classes with QR answer entry** (unfair-advantage #11): rejected in
-  `shell-me.md`, `practice.md`, `plan.md` and `compete.md` until a teacher asks; the worksheet
-  prints and X22 gives each student a twin online.
+* **Paper versions with QR answer entry** (unfair-advantage #11): its class use is void
+  (decision 5), and the rest is covered: the worksheet prints with its key, and V18 files a
+  printed worksheet's answers at `/review/sheet/?id=`.
 * **A words interstitial every 10 minutes inside the Math session** (unfair-advantage #3):
   `today.md` rejected folding words into the Math runner; G1's run chains the words run as its
   own part.
@@ -1111,14 +1567,15 @@ Each entry quotes the current text, then gives the replacement or addition.
 * **Swipe-up on the tab bar and swipe to Next before Check** (experience #10): `shell-me.md`
   rejected the tab-bar gesture; R50 forbids moving on before Check in instant feedback.
 * **Haptics on every verdict** (experience #10): X6 keeps `vibrate(8)` for the long-press strike
-  only; a buzz on every answer is noise in class.
+  only; a buzz on every answer is noise in a quiet room.
 * **A `twin_tell` preference that shows the trap before the twin** (unfair-advantage #1, point
   6): T5's recall header already names it; one more switch for the same line.
 * **A 14-class habit taxonomy** (unfair-advantage #7): U6's 11 regex families tag every reason;
   `practice.md` and `reports.md` rejected a second taxonomy.
-* **Logging Reading & Writing mistakes before the R&W bank** (the unfair-advantage R&W gap): with
-  no bank there is no twin, fix or check-in, so it would be a notepad. G11 makes it additive for
-  when the bank lands.
+* **Logging R&W mistakes in skills we don't generate yet** (the unfair-advantage R&W gap): for
+  Words in Context and Transitions it is built (R57, G11), with twins, Fix and check-ins. For
+  the other R&W skills there is no twin, fix or check-in yet, so it would be a notepad; their
+  IDs read `Logged for the R&W bank` and join the same routes when the bank lands.
 * **A "Stretch zone" chance-of-success default from this file** (the outcomes Question Score
   gap): P11's zones already do it in the builder.
 * **"On track for 700?" as Me's opening verdict** (the experience profile gap): U10's outcome
@@ -1133,10 +1590,9 @@ Each entry quotes the current text, then gives the replacement or addition.
   off under reduced motion.
 * **Starting a test straight from a card into the lobby only** (the experience test-start gap):
   `tests.md` X1–X2 decide the start and lobby; this file doesn't re-specify a section's flow.
-* **Google sign-in now** (outcomes and unfair-advantage gaps): passkeys (U19) answer the one-tap
-  need; Google stays open question 5.
 * **Showing the diagnostic result without its gate** (experience and unfair-advantage gaps): open
   question 8 is the user's; G10 means a new student meets the gate later, and §3.1 item 35
   records the recommendation.
 * **An `official` pool serving College Board text** (the unfair-advantage official gap): content
-  terms (open question 17). IDs link to College Board's free source; twins do the practice.
+  terms (open question 17). G16 lists the IDs, opens each on College Board's free bank and does
+  the answering, naming and twins here.

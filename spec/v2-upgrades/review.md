@@ -13,7 +13,9 @@ build-ready list, V1–V19. The TopTierPrep inventory is §3.9.1, checked agains
   `plan.md` (L1–L20) are already written. Where they specify something Review shows, the
   upgrade here names it and does not specify it again. Where a proposal would build a second
   version of a sibling's model, this file uses the sibling's:
-  * spaced returns: T3's `progress.warmup_candidates` and R9's check-ins (3, 10, 30 days);
+  * spaced returns: one daily list, `review.due` (V1), which extends T3's
+    `progress.warmup_candidates` with the trap kinds, and R9's check-ins (3, 10, 30 days). T3's
+    Warm-up, T2's Due-list row and U1's review rows read it; there is no second daily model;
   * the cause of a miss: T7's `progress.causes` with P8's `attempts.miss_kind`;
   * confidence: P7's `attempts.conf` (the split Check) and T9's inferred "sure";
   * points: U4's `estimate.gains` and U1's `redo` formula (`gain(t) × share`);
@@ -26,6 +28,10 @@ build-ready list, V1–V19. The TopTierPrep inventory is §3.9.1, checked agains
   and R9 say. `practice.md` rejected "two different days" for the same reason this file does
   (§4): R9's 3-day check-in is the delayed proof. What changes is that the Fixed tab now says
   which fixes have held a check-in and which have not been tested yet (V10).
+* **Clean means unseen.** An answer is a repeat (`attempts.repeat = 1`: filed and shown, never
+  closing a mistake, passing a check-in or moving mastery, ratings or points) whenever the
+  student could already have read its key. V2 widens `progress.record`'s rule to cover blanks
+  from finished sittings and printed answer keys (V18).
 * **The bar.** A student who uses TopTierPrep today opens Review and wants to switch, because
   every miss is named, ordered by what it costs, brought back on new numbers until it holds, and
   the whole daily job fits in ten minutes and then ends. Parity is failure.
@@ -63,32 +69,34 @@ better. Where v2 was only at parity (or below), the verdict names the upgrade th
 
 | # | Their feature | Their version | v2 spec | After these upgrades | Verdict |
 |---|---|---|---|---|---|
-| 1 | Redo List filter (QBank builder) | A select, All / Redo only. `toggleRedo` exists in the API, but no screen calls it, so the list is always empty and Profile reads "Redo Questions 0". No page lists redo questions | A Review hub whose Redo tab lists every open mistake by its named misconception, with pips, a pane, fresh versions at the missed tier and `Redo all · 22` | A finite **Due today** list (check-ins, relapses, sure-and-wrong misses, half-fixed, saved, marked, then the costliest), capped to the student's day, started with **Start review · 10 min** and ending in "Done for today" (V1). Every row priced in points (V4) | **WAY BETTER already** (theirs is empty). V1 turns a 25-row backlog into a daily ten-minute job that ends. |
+| 1 | Redo List filter (QBank builder) | A select, All / Redo only. `toggleRedo` exists in the API, but no screen calls it, so the list is always empty and Profile reads "Redo Questions 0". No page lists redo questions | A Review hub whose Redo tab lists every open mistake by its named misconception, with pips, a pane, fresh versions at the missed tier and `Redo all · 22` | A **Due today** list frozen at local midnight (check-ins, relapses, sure-and-wrong, half fixed, saved, fading, marked, the costliest mistakes, keep warm), cut to what fits the minutes on **Start review · 10 min** at the student's own pace, with done rows kept and ticked, snoozes kept on the server, and "Done for today" when it is cleared (V1). One daily model for Review, Today and Up next. Every row priced in points (V4) | **WAY BETTER already** (theirs is empty). V1 turns a 25-row backlog into a daily job that fits the pill's minutes and provably ends (`left == 0` while more wait). |
 | 2 | Marked for Review filter = their saved list | All / Saved only: marking a QBank question is saving it (`toggleSaved`) | Two things (R5): Marked (a flag per sitting) and Saved (kept for good), each a tab | Marked opens with **Your instincts**: sure-and-wrong, lucky guesses, answer changes and what flags caught, across every sitting (V5). Saved becomes a spaced deck on new numbers (V3) | v2 PARITY: two lists instead of one. **V5 + V3 → WAY BETTER.** A flag says what it was worth; a save comes back until it is learned. |
 | 3 | Solved filter | All / Solved only / Unsolved only. The finite bank runs out of Unsolved; Solved only replays the same items | History selection → Fresh versions or Again, exactly, from any mode; never runs out | Sittings rematch on new numbers with Then vs Now (V13, P19); slow-right types get a speed set (V12) | **WAY BETTER already.** V13 makes the replay measure the skill, not memory of the item. |
-| 4 | Question Score 1–7 | A dual-thumb slider in the builder; never shown in Details | Review filters Easy / Medium / Hard only; Level `As missed · Any · Harder` by tier | A Level chip L1–L7 from P11's ratings (`rough` until 20 answers), `▃ Medium · L4` on every row and in the pane; Harder steps to P18's sibling when the type has one tier (V15) | v2 BELOW. **V15 → WAY BETTER.** A level that moves with every answer and says how sure it is, in every list. |
+| 4 | Question Score 1–7 | A dual-thumb slider in the builder; never shown in Details | Review filters Easy / Medium / Hard only; Level `As missed · Any · Harder` by tier | A Level chip L1–L7 from P11's ratings, seeded before launch by `tools/seed_ratings.py` from measured accuracy, steps and format so every level holds 5%+ of types; `▃ Medium · L4` on every row and in the pane; empty levels greyed with 0 and `rough` in the label until then; Harder steps to P18's sibling when the type has one tier (V15) | v2 BELOW. **V15 → WAY BETTER.** Seven real levels on launch day that move with every answer and say how sure they are, in every list. |
 | 5 | Mark for Review in a QBank session | A bookmark that fills blue; yellow cell in the Overview; the same as saving | A flag per sitting; a flagged answer is not clean; flagged and right opens an Unsure mistake | A mark comes back as a twin two days later (P12); each flag's history in Marked (V5) | **WAY BETTER already.** A flag changes what counts; theirs is a bookmark. |
 | 6 | Mark for Review in the exam runner | "Unmark" in yellow, a red For Review flag in the navigator, a FOR REVIEW card on Check Your Work | Flags on the server per sitting; they survive a reload and module 2 | Each flag's history: flagged at 0:40, came back 1×, changed C → A, never came back. Check Your Work adds "1 not revisited" (V5, S5 hook) and P20's clock line | v2 PARITY (it fixes our own bug). **V5 → WAY BETTER.** |
 | 7 | Flagged in the score report | All / R&W / Math / Flagged (n), orange corner dot, a "Flagged for review" chip | All · Wrong · Blank · Flagged (n), a corner flag, a legend entry | Over the grid: "Your flags caught 2 of your 7 misses". Across sittings: flag hit rate per topic, with advice (V5) | v2 PARITY. **V5 → WAY BETTER.** It says whether flagging is working for this student. |
-| 8 | Attempt History modal | One question in one session: `#1 ⊗ Incorrect · Option A · 00:22 · Sep 23, 11:35 AM`. "No attempts yet." | The whole question type, every source, with misconception, flag, time and Open, plus integrity rules | P9's trend head, plus a verdict chip (Fluent · Right but slow · Same trap twice · Getting faster) with one next step, and a "This mistake only" filter (V8) | **WAY BETTER already.** V8 tells the student what to do next. |
-| 9 | Unlimited retries, key hidden after a miss | Retry until right or open the explanation; accuracy means little | First try counts; the key and every option's misconception at once; the repair on new numbers | Test misses get **Review my misses**: try it again blind, name the mistake, see it, prove it on a twin (V2) | **WAY BETTER already.** V2 is the tutor's post-test routine, built in. |
-| 10 | Mixed status and the Question Overview | Mixed = wrong then right on the same item; Status · Difficulty views; ignores Esc | Repaired = right on a fresh repair; glyphs; legend always visible; Status · Difficulty | P20's Confidence, Traps and Time views; every repair a node in the mistake's story (V8) | **WAY BETTER already.** |
+| 8 | Attempt History modal | One question in one session, every try: `#1 ⊗ Incorrect · Option A · 00:22 · Sep 23, 11:35 AM`, `#2 Correct …`. "No attempts yet." | The whole question type, every source, with misconception, flag, time and Open, plus integrity rules; later tries only in the drill's state | P9's trend head, a verdict chip (Fluent · Right but slow · Same trap twice · Getting faster) with one next step, a "This mistake only" filter, and every try inside its answer (`▸ 2 tries`: pick, misconception and time of each), with Mixed as a result (V8) | v2 BELOW (no later tries). **V8 → WAY BETTER.** Every try they list, across the whole type, plus what to do next. |
+| 9 | Unlimited retries, key hidden after a miss | Retry until right or open the explanation; accuracy means little | First try counts; the key and every option's misconception at once; the repair on new numbers; but a saved blank from a finished test replayed exactly counted as clean | Clean means unseen: a blank from a finished sitting or a worksheet whose key was printed first files as a repeat (V2, V18). Test misses get the walk: try it again blind only while the key is unseen (`revealed_at`), name the mistake, see it, prove it on a twin (V2) | v2 had a hole. **V2 → WAY BETTER.** Every clean answer is honest, and the post-test routine is built in. |
+| 10 | Mixed status and the Question Overview | Mixed = wrong then right on the same item; Status · Difficulty views; ignores Esc | Repaired = right on a fresh repair; glyphs; legend always visible; Status · Difficulty. Review had no Mixed | Mixed kept as its own result in History, the Result filter, the summary, the sitting cells and the modal (V8), beside Repaired; P20's Confidence, Traps and Time views; every repair a node in the mistake's story (V8) | v2 BELOW in Review. **V8 → WAY BETTER.** Their status plus proof on new numbers. |
 | 11 | Per-question stopwatch | Counts up; a reload resets it; never analysed | Dwell time in tests too; History median, time column, Slowest sort | Time against each question's own budget everywhere; **Slow right** and **Rushed** filters; a Pace block with a Fluency sprint (V12, P16) | v2 PARITY in Review (stored and sorted). **V12 → WAY BETTER.** Right-but-slow becomes something to fix. |
-| 12 | Details popover | ID, domain, skill, difficulty; closes on an outside click only | Skill, difficulty, format, source and date inline; Details keeps the address and Copy link; Esc | Adds `L4 · rough`, time against budget and points at stake to the inline meta (V15, V12, V4) | **WAY BETTER already.** |
-| 13 | Saved Content card on Profile | Counts only: Saved Words / Redo Questions / Saved Questions | Me: `Open mistakes 25 · Marked 3 · Saved 14 · Fixed 40 · Answers 312`, each linking to its tab (plus shell-me's saved words and marked) | `12 due today · Start review`, `25 open ▼3 this week` with a 12-week sparkline, `Saved 14 · 4 due` (V1, V9, V3; S1 hook) | v2 PARITY. **V1 + V9 → WAY BETTER.** Each count has its direction and its next action. |
-| 14 | Review modal in the report | Hide answers persists across Next; Report; "1 of 49"; ←/→; no re-answer; no skill, difficulty or time | `UI.review` (R23) with per-option misconceptions, re-answerable Hide answers, Save, Mark, History, Share, Fresh one | **Review these 6 misses** starts the walk (V2); See one solved (V11); your path through the question (V8) | **WAY BETTER already.** |
-| 15 | Explanation depth | "Justification:" prose plus "Distractor Analysis:", one line per wrong option | A one-sentence rationale (median 21 words) plus every option's misconception | P1's steps on this question's numbers, with the step where the pick left the path; **See one solved**: a worked twin on new numbers with the student's own trap outlined (V11) | v2 BELOW in depth. **P1 + V11 → WAY BETTER.** Prose can't show which step went wrong, or an unseen example with the same trap. |
-| 16 | Moving through the review | ←/→ keys and "1 of 49" | ←/→ and J/K, `3 of 25`, a phone dialog | A result strip to jump, `N` next wrong, `U` next not yet seen, seen marks, prefetch, swipe, long-press to select, and the numbers visibly changing on "Fresh one" (V14) | v2 PARITY. **V14 → WAY BETTER.** |
-| 17 | Wrong-number chips on the Results list | Red chips per module ("2 3 4 5 6 7 +19"), not clickable | History sitting headers with actions, no per-question chips | Clickable result cells per sitting, each opening its question in the pane; **Walk these misses** (V13, V2) | v2 BELOW for scanning. **V13 → WAY BETTER.** |
+| 12 | Details popover | ID, domain, skill, difficulty; closes on an outside click only | Skill, difficulty, format, source and date inline; Details keeps the address and Copy link; Esc. No domain | The pane meta starts with the domain (`Geometry & Trig · Circles · Arc length · ▃ Medium · L4 · …`), and adds `L4 · rough`, time against budget and points at stake; History rows, Marked rows and the CSV carry the domain (V15, V12, V4) | v2 dropped their domain. **→ WAY BETTER.** Everything theirs shows, inline, plus level, time and points. |
+| 13 | Saved Content card on Profile | Counts only: Saved Words / Redo Questions / Saved Questions | Me: `Open mistakes 25 · Marked 3 · Saved 14 · Fixed 40 · Answers 312`, each linking to its tab (plus shell-me's saved words and marked) | `6 due today · Start review`, `25 open ▼3 this week` with a 12-week sparkline, `Saved 14 · 4 due`; the badge shows `6 due · 25 open`, both numbers on every device (V1, V9, V3; S1 hook) | v2 PARITY. **V1 + V9 → WAY BETTER.** Each count has its direction and its next action. |
+| 14 | Review modal in the report | Hide answers persists across Next; Report; "1 of 49"; ←/→; no re-answer; no skill, difficulty or time | `UI.review` (R23) with per-option misconceptions, re-answerable Hide answers, Save, Mark, History, Share, Fresh one | Two miss actions, each labelled with its effect: **Walk these misses · name each, then prove it** (V2) and **Fix on new numbers · n q · Then → Now** (V13); a New miss opens at What happened?; See one solved (V11); your path through the question (V8) | **WAY BETTER already.** |
+| 15 | Explanation depth | "Justification:" prose plus "Distractor Analysis:", one line per wrong option | A one-sentence rationale (median 21 words) plus every option's misconception | P1's steps on this question's numbers, with the step where the pick left the path, written first on the templates students miss most (Review demand × U8 weight); value lines per option where steps are not written yet; **See one solved**: a worked twin on new numbers with the student's own trap outlined (V11) | v2 BELOW in depth. **P1 + V11 → WAY BETTER once 80% of open traps sit on templates with steps** (S10's gate). Prose can't show which step went wrong, or an unseen example with the same trap. |
+| 16 | Moving through the review | ←/→ keys and "1 of 49" | ←/→ and J/K, `3 of 25`, a phone dialog | A result strip to jump whose cells fit the tab (answer results on History, Marked and Saved; status pips on Redo and Due; check-in states on Fixed), `N` next wrong, `U` next not yet seen, seen marks, prefetch, swipe, long-press to select, and the numbers visibly changing on "Fresh one" (V14) | v2 PARITY. **V14 → WAY BETTER.** |
+| 17 | Wrong-number chips on the Results list | Red chips per module ("2 3 4 5 6 7 +19"), wrong and blank together, not clickable | History sitting headers with actions, no per-question chips; blanks reach nothing in Review | Clickable cells per sitting from its paper, blanks dashed and openable; **Blanks · n · fresh twins**; the walk takes blanks as `Didn't answer` (V13, V2) | v2 BELOW for scanning. **V13 → WAY BETTER.** Every question they chip, clickable, and the blanks get worked too. |
 | 18 | Shared session | Share → `/question-bank/shared/:id`, "Start Practice"; `navigator.share` froze the page | A sets link (R18), Start exactly or fresh, the clipboard with a fallback field | **Ask for help** sends the question with the pick, the named mistake, the note and the type's record; twins keep the sharer's trap on offer (V17, P22) | v2 PARITY (the working version). **V17 → WAY BETTER.** |
-| 19 | Clear Session | Deletes the session's answers, notes and attempts to redo it | Again, exactly: a retake that deletes nothing | **Rematch** leads: the same types on new numbers, Then vs Now, retakes nested under the original; Again, exactly is kept as "tests memory" (V13, P19) | v2 PARITY. **V13 → WAY BETTER.** |
+| 19 | Clear Session | Deletes the session's answers, notes and attempts to redo it ("progress from other sessions is kept") | Again, exactly: a retake that deletes nothing; nothing takes a practice set's answers off the record | **Rematch** leads: the same types on new numbers, Then vs Now, retakes nested under the original; Again, exactly is kept as "tests memory"; **Discard this sitting's answers…** voids them with a confirm that states the counts, rolls back the traps they opened, and can be undone (V13, P19) | v2 dropped half of theirs. **V13 → WAY BETTER.** Both halves, and ours is reversible. |
 | 20 | Eliminations and annotations kept on the server | Per session, never shown in review | Kept (R6, R7); the pane shows only the pick and the key | **Your path**: struck options drawn struck, "You crossed out the right answer", answer changes with times, time against budget, confidence, highlights (V8) | v2 PARITY. **V8 → WAY BETTER.** |
-| 21 | My Words: Saved Words + Due Today | Two cards, spaced repetition for vocab only | Saved is a bookmark list; only fixed mistakes are spaced | Saved · Due today · Learned, on fresh numbers at 1, 3, 7 and 21 days (V3) | v2 PARITY. **V3 → WAY BETTER.** Their best pattern, applied to math, never showing a seen key. |
+| 21 | My Words: Saved Words + Due Today | Two cards, spaced repetition for vocab only | Saved is a bookmark list; only fixed mistakes are spaced | Saved · Due today · Learned, on fresh numbers at 1, 3, 7 and 21 days, with **Practise due** and **Fresh versions of selected** both always offered (V3) | v2 PARITY. **V3 → WAY BETTER.** Their best pattern, applied to math, never showing a seen key. |
 | 22 | Report from the review | A Report button | Report a problem (R17) | **Not what I did?** corrects the cause in one tap; **The label is wrong** files a label report, and the admin sees dispute rates per label (V6) | v2 PARITY. **V6 → WAY BETTER.** Every student's correction improves the bank. |
 | 23 | Share / Export Report | A dead button | History CSV | A Mistakes block in the parent/tutor progress link; a printable error log and trap sheet (V17, V19) | v2 PARITY. **V17 + V19 → WAY BETTER.** |
 | 24 | Reviewing mistakes at all | No review-mistakes flow, no session summary, no list of sessions (weakness #1) | The hub, the pane, the Sitting view | The walk (V2) and the daily queue (V1) | **WAY BETTER.** |
 | 25 | Empty states | "No attempts yet."; "No saved words match these filters" | A line per tab, and a three-line panel for a new student | A live example row made from a real item, and **Try one now**, whose miss becomes the first real row (V16) | v2 PARITY. **V16 → WAY BETTER.** The page shows itself instead of describing itself. |
-| 26 | Volume and Timed on every source | Volume 10 … All and Timed/Untimed apply to Redo, Marked and Solved | Only Redo's action bar has Level and Timed | Volume, Clock and Feedback on every tab's action bar, echoed in its summary (V15) | v2 BELOW. **V15 → WAY BETTER.** |
+| 26 | Volume and Timed on every source | Volume 10 / 20 / 30 / 40 / 50 / All and Timed/Untimed apply to Redo, Marked and Solved | Only Redo's action bar has Level and Timed | Volume `5 · 10 · 20 · 30 · 40 · 50 · All` plus any count, and Clock, on every tab; Feedback on Marked, Saved and History, while fixing tabs state `Instant · fixing set`; Due sized by its one minutes control, echoed in the bar (V15) | v2 BELOW. **V15 → WAY BETTER.** Every volume of theirs and any other, with no two controls sizing one set. |
+| 27 | One daily review (their Today's plan and My Words Due Today) | A plan list ticked by hand; vocab due on another page | Three overlapping daily lists: T2's Due row, T3's Warm-up and U1's box, each with its own chips and caps | One model: `review.due` extends T3's candidates; Today's Review row, U1's rows and box, Plan's recheck and `#mist` start the same body; one set of box chips; `/api/today.due`, `/api/me.review.due_left` and `/api/review/due.left` are one number (V1) | v2 had three. **V1 → WAY BETTER.** One "due" to clear, and every page agrees on it. |
+| 28 | Density (decision 4) | Filters behind an Advanced Filter panel | Phone options behind an Options disclosure; Redo groups folded after 8 rows; Readings capped at three; tile sub-lines dropped `unsure` and `not answered` | Phone options and secondary actions as visible wrapping rows; every group row shown, pages of 50; every qualifying Reading; `2 unsure` on OPEN and `3 not answered` on SAVED (V1, V5, §3.1 items 12, 22, 23) | v2 hid useful things. **→ WAY BETTER.** Nothing useful is behind a fold. |
 
 ---
 
@@ -103,8 +111,8 @@ Learner codes in the checks start `a:v2revreview`; `:PORT` is S10's 8030. Server
 
 **Desktop (≥ 1080 px)**, `max-width: var(--max)`:
 ```
-header      H1 Review · rule line                    [5 · 10 · 20 · All] [Start review · 10 min ▾]
-walk card   6 new misses from Section · Sep 21 · about 9 min        [Review them]   (when new > 0)
+header      H1 Review · rule line      [5 · 10 · 15 · 20 · 30 · 45 · 60 · All] [Start review · 10 min ▾]
+walk card   6 new misses from Section · Sep 21 · about 9 min   [Walk them · name each, then prove it]
 stat strip  DUE TODAY · OPEN · AT STAKE · MARKED · SAVED · FIXED          (6 tiles, one row)
 tabs        Due 12 · Redo 25 · Marked 3 · Saved 14 · History 312 · Fixed 40
 filter bar  Topic · Difficulty · Level · Format · Kind · Cause · Confidence · Habit · … · Sort · Search
@@ -117,8 +125,11 @@ bar (V6), habits strip (V7), Worth the most strip (V4); Marked → Your instinct
 Fixed → the ledger (V9) and the held line (V10).
 
 **Phone (390 px)**: header with the full-width pill and its duration seg above it; the walk
-card; tiles in a 2 × 3 grid; six tab segments sticky under the top bar; the list; the pane as a
-full-screen dialog; the action bar above the tab bar (v2 §11).
+card; tiles in a 2 × 3 grid; six tab segments sticky under the top bar; the tab's options block
+(not sticky, above the list): every option of the action bar as a wrapping row of controls, then
+the secondary actions as a visible wrapping row of buttons; the list; the pane as a full-screen
+dialog; the sticky action bar above the tab bar, holding the summary and the primary only
+(nothing sits behind an Options disclosure, decision 4).
 
 **Calls.** `GET /api/review/counts` paints the tiles and tab counts. The open tab's list
 endpoint and its head's endpoint run in parallel; a head's failure shows its own Retry and
@@ -128,12 +139,14 @@ leaves the list alone (§2.1 rule 8).
 
 ### A. The daily loop
 
-#### V1. Due today: one finite list, and Start review · 10 min as the page's main button
+#### V1. Due today: one frozen daily list, and Start review · 10 min as the page's main button
 
 *From: outcomes #1, experience #1, the outcomes "Redo all as a one-sitting backlog" gap, the
-stat-strip gaps of all three. Effort M. Builders: S10 (`review.due`, `review.resolve_drill`, the
-Due tab, the header), F5 (source `due` through the §2.6 registry), F2 (the nav badge), S3
-(Today's card uses the same pill), S4 (the summary for source `due`).*
+stat-strip gaps of all three, today.md T2 and T3, shell-me U1. Effort M. Builders: S10
+(`review.due`, `review.resolve_drill`, the Due tab, the header, `POST /api/review/snooze`), F4
+(`progress.warmup_candidates`, which `review.due` extends; the `due_days` table), F5 (source
+`due`, and `warmup` as its alias, through the §2.6 registry), F2 (the nav badge, U1's rows and
+box), S3 (Today's Review row and `#mist` card), S4 (the summary for source `due`).*
 
 **Why.** Spaced retrieval on new numbers, mixed across topics, is the most reliable gain in
 learning research, and a finite daily goal is what keeps a habit going. A 25-row backlog is
@@ -141,138 +154,206 @@ neither: students clear it in one sitting now and then, or never. Theirs has a D
 for vocab words only, and their math redo list is always empty. v2's `Redo all · 22 questions ·
 about 35 min` is their Redo filter made to work, still a backlog.
 
-**What is due** (`review.due(learner, tz, subject='math')`, S10, pure over the rows; one item
-per template, first reason wins), in this order:
+**One daily model.** The site has one spaced-review list, and this is it. `review.due` extends
+T3's `progress.warmup_candidates` (check-ins, fading types, keep warm) with the trap kinds
+below, in one order with one cap. Everything that offers "today's review" reads it and starts
+the same body (§3.2):
+* source `warmup` is an alias of `due` in the §2.6 registry. A body with `count` instead of
+  `box` takes that many items in the same order, so Plan's recheck task
+  (`{source:'warmup', task:…}`) keeps working;
+* T2's Warm-up row becomes the **Review** row, `Review · 6 · ~10 min · 3 check-ins · 2 fading`.
+  It counts in T2's `N of M done` and in its minutes left, and it is done when `left == 0`;
+* U1's `checks` and `redo` rows start `{source:'due', box: prefs.review_minutes}`, and U1's
+  box takes the undone items of today's list as its first segment (up to 3);
+* one set of time-box chips on every page that offers a box (Review, Today, U1's pop):
+  `5 · 10 · 15 · 20 · 30 · 45 · 60 min`, plus `All` on Review's header.
+
+`/api/today.due`'s Review row `left`, `/api/me.review.due_left` and `/api/review/due.left` are the
+same number, from the same function.
+
+**What is due** (`review.due(learner, tz, subject='math')`, S10; one item per template, first
+reason wins), in this order:
 1. **Check-in** — a fixed trap whose R9 `due` is today or earlier, most overdue first.
 2. **Relapsed** — an open trap with `relapses ≥ 1` whose latest miss came after its last fix.
-3. **Sure and wrong** — an open trap whose latest miss was sure (P7's `conf = 'sure'`, else
-   T9's inferred rule). V5 calls these blind spots.
+3. **Sure and wrong** — an open trap whose latest miss is a blind spot by V5's rule (P7's
+   `conf = 'sure'`, or T9's inferred rule when the answer was not rushed).
 4. **Half fixed** — an open trap owed 1.
 5. **Saved** — a saved question due by V3's schedule.
-6. **Marked** — P12's `marked` candidate (flagged 2+ days ago, no right first try since).
-7. **Mistake** — any other open trap whose last attempt on its template was on an earlier local
-   day, by U1's `redo` points, then hits.
+6. **Fading** — T3's fading types (no open trap, last counted clean right older than its
+   interval), by age ÷ interval.
+7. **Marked** — P12's `marked` candidate (flagged 2+ days ago, no right first try since).
+8. **Mistake** — any other open trap, by U1's `redo` points, then hits.
+9. **Keep warm** — T3's one Strong topic untouched for 10+ days (`prefs.keep_warm`).
 
-**The cap.** `cap = clamp(round(0.4 × minutes_per_day × 60 / 95), 6, 30)`, where
-`minutes_per_day` is `learners.minutes` (R15), else 30 (so 8 by default). The first `cap` items
-are today's list. The rest are shown as `14 more wait for later days` and are never counted as
-debt. An item is **done** for today when its template (for a flag, the flagged template) gets
-any first-try answer today. Items not done roll to the top of tomorrow, since they stay due.
+**The day is frozen.** On the first read of a local day (X-Tz), `review.due` computes the
+ordered keys from the attempts, traps, saved and flags rows as they stood at the learner's local
+midnight, and writes `due_days(learner, subject, day, keys TEXT JSON, PRIMARY KEY (learner,
+subject, day))` (§2.5; in `LEARNER_TABLES` and `carry`). Every later read that day uses that row:
+* **Today's list** is the first `cap` keys, plus any later key already done today.
+* An item is **done** when its template (for a flag, the flagged template) gets a counted
+  first-try answer today (not a repeat), right or wrong. A done item stays in its place with a ✓.
+* Nothing joins today's list after midnight. A trap opened today, a save made today and a
+  check-in falling due tomorrow wait for a later freeze.
+* **Waiting** = the frozen keys after the cap, shown as `14 more wait for later days` and never
+  counted as debt.
+* An undone item is due again at tomorrow's freeze, in its kind's place in the order above.
+* `left` = today's list − done − snoozed. So answering every item gives `left == 0` while
+  `waiting > 0`, and Done for today shows.
+* A missing row (a carried code, a cleared table) is rebuilt from the midnight state, so the list
+  is reproducible. `ponytail:` one row per learner per day; prune rows older than 14 days at
+  startup.
+
+**The cap: the list fits the minutes on the pill.** `median_s` = the learner's median seconds a
+question over 60 days (95 with under 20 timed answers).
+`cap = clamp(floor(prefs.review_minutes × 60 / median_s), 3, 60)`. The default 10 minutes at 95 s
+is 6 items, so **Start review · 10 min** covers exactly today's list. `All` (0) has no cap: every
+frozen key is on today's list and `waiting == 0`. Changing the minutes control re-cuts the same
+frozen order, and done items stay. `learners.minutes` (R15) sizes Today's goal, not the review.
 
 **The Due tab** (first tab, the default when `left > 0`; otherwise Redo).
 * **Today's card** at the top:
-  * a ring `0 / 12` (done / today's list), and kind chips with counts:
-    `3 check-ins · 1 relapsed · 2 sure and wrong · 2 half fixed · 2 saved · 1 marked · 1 mistake`;
-  * `about 16 min` (U1's rule: count × the learner's median seconds over 60 days, 95 by
-    default);
+  * a ring `0 / 6` (done / today's list), and kind chips with counts:
+    `3 check-ins · 1 relapsed · 1 sure and wrong · 1 half fixed`;
+  * `about 10 min` (items left × `median_s`);
   * a 7-day forecast strip (`UI.barChart`, one bar a day, today ringed): check-ins from T3's
     `progress.due_forecast` plus saved items from V3, the only kinds whose dates are fixed;
   * `14 more wait for later days` (DM Mono, `--soft`) when the cap cut the list.
 * **The list**: one row per item, 56 px, in the order above. Each row: the kind chip (the
   §2.3 glyph plus text: `Check-in ✓`, `Relapsed`, `Sure ✕`, `Half fixed ●○`, `Saved`,
-  `Marked`, `Mistake`), the label (Archivo 600 15), a DM Mono meta
-  `skill · ▃ Medium · ≈ 6 pts`, the why line (`Fixed Sep 20 · checking it holds`,
-  `You were sure · Sep 22`, `1 clean answer closes it`, `Saved Sep 20 · back after 3 days`),
-  and an `×` button (`aria-label="Not today: <label>"`). Done rows move to the bottom with a ✓
-  and a line-through on the why line. Clicking a row opens its question in the pane.
-* **Not today** reuses U1's snooze: `localStorage satf.next.snooze {key: YYYY-MM-DD}` with the
-  same key format, so a snooze in Up next or here hides the item in both on this device. The
-  client drops snoozed keys from the ring and the count. `ponytail:` per device, like U1; move
-  to the server if students ask for it to sync.
+  `Fading`, `Marked`, `Mistake`, `Keep warm`), the label (Archivo 600 15), a DM Mono meta
+  `domain · skill · ▃ Medium · ≈ 6 pts`, the why line (`Fixed Sep 20 · checking it holds`,
+  `You were sure · Sep 22`, `Fast answer · assumed sure · Sep 22`, `1 clean answer closes it`,
+  `Saved Sep 20 · back after 3 days`, `Right Sep 10 · fading`), and an `×` button
+  (`aria-label="Not today: <label>"`). A done row keeps its place with a ✓ and a line-through
+  on the why line. Clicking a row opens its question in the pane.
+* **Not today** is kept on the server, so every device and every count agrees:
+  * The `×` calls `POST /api/review/snooze {key}`, which writes `prefs.snooze {key:
+    YYYY-MM-DD}` (pruned of past days on every write, carried with prefs by
+    `progress.carry`).
+  * U1's "Not today" writes the same store instead of `localStorage` (§3.2), so one snooze
+    hides the item in Up next and here, on every device.
+  * A snoozed item leaves `left`, the badge, Today's Review row, Me and `#mist` for that local
+    day, and is due again at tomorrow's freeze.
+  * Snoozed rows stay at the end of the list, dimmed, reading `Not today · Undo`
+    (`{key, undo:true}`).
 
 **The header pill** (replaces v2's `Redo all · 22 questions`).
-* A `UI.seg` above it: `5 · 10 · 20 · All min`, default `prefs.review_minutes` (10). Changing it
-  saves the pref.
+* A `UI.seg` above it: `5 · 10 · 15 · 20 · 30 · 45 · 60 · All min`, default
+  `prefs.review_minutes` (10). Changing it saves the pref and re-cuts today's list. It is the
+  Due tab's only sizing control; the Due action bar echoes it (`6 questions · 10 min`, V15).
 * The split pill **Start review · 10 min** (`Shift+R` on this page). Its `▾` opens the preview
   sheet: `POST /api/drill/preview {source:'due', box:10}` returns T1's block shape, one row per
   template with its kind, label and `×` to drop it; `Start` at the bottom.
 * The meta line under it: `3 check-ins · 2 quick wins · closes up to 5 mistakes`, where quick
   wins are half-fixed traps and "closes up to" counts the items whose one clean answer closes a
   mistake (open items owed 1).
-* **All** is v2's Redo all: every open trap `max(owed)` times plus today's list, capped at 120,
-  labelled `All · 22 questions · about 35 min`.
+* **All** is v2's Redo all: every frozen key, then every open trap `max(owed)` times, capped at
+  120, labelled `All · 22 questions · about 35 min`.
 * Nothing due and nothing open: the pill reads **Keep going · 10 min** (the coach's set,
-  `source:'quick'`). Due done but mistakes open: **Another 10 min** on the open ones by points.
+  `source:'quick'`). Due done but mistakes open: **Another 10 min** on the open ones by points
+  (the waiting keys first).
 
-**The session.** `POST /api/drill {source:'due', box: 10 | null}`, resolved by
+**The session.** `POST /api/drill {source:'due', box: 5–60 | null}`, resolved by
 `review.resolve_drill(learner, body)` through the §2.6 registry (like `like` and `word`).
-* Segments in the list's order, one question per template (fresh seed at the tier of the latest
-  miss; a check-in at the highest proven tier, V10), then, if time remains, other open traps by
-  points, then P16's right-but-slow types. `order:'mixed'`: no two consecutive questions share a
-  topic when two or more topics are in play.
+* One question per undone item of today's list (fresh seed at the tier of the latest miss; a
+  check-in at the highest proven tier, V10). If the box has time left after them: the waiting
+  keys in order, then other open traps by points, then P16's right-but-slow types.
+* `order:'mixed'` reorders only inside today's list: no two consecutive questions share a topic
+  when two or more topics are in play. It never serves a waiting item before a listed one.
 * `cfg.hide_skill = true` (T3): the skill line reads `Mixed review` until Check, so the student
   has to recognise the method; the strip chip that says why an item was chosen (`From your
   Redo`, `Check-in`) shows only after answering.
 * Instant feedback and `repairs:'next'` always (U15: fixing drills show the key after each
-  answer). The box clock is U1's (`12:40 left of your 10`).
+  answer; the action bar says `Instant · fixing set`, V15). The box clock is U1's
+  (`12:40 left of your 10`).
 * It is an ordinary sitting (not inline), listed as "Review · 10 min" in Results, resumable.
 
-**End screen** (S4's summary for `source:'due'`): `Due today 12 of 12 done · Closed 4 · half
+**End screen** (S4's summary for `source:'due'`): `Due today 6 of 6 done · Closed 4 · half
 fixed 2 · relapsed 1 · open 25 → 21 · ≈ +12 pts recovered` (V4), the primary **Another 10 min**
-(the same body) and **Back to Review**.
+(the same body, which starts on the waiting keys) and **Back to Review**.
 
-**Done for today** (the Due tab and Today's card when `left == 0`): the ring full, `Done for
-today · 9 of 12 right · 2 fixed · 7 due tomorrow`, and **Another 10 min** as a `.btn`.
+**Done for today** (the Due tab, Today's Review row and `#mist` when `left == 0`): the ring full,
+`Done for today · 5 of 6 right · 2 fixed · 7 due tomorrow`, and **Another 10 min** as a `.btn`.
 
-**The badge.** The sidebar Review item, the phone top-bar chip and the menu-sheet footer cell
-show **today's due left** (hidden at 0), not the open count: a number a student can clear. The
-tooltip reads `12 due today · 25 open`. `/api/me.review` becomes `{open, due_left}` (§3.2).
+**The badge.** Both numbers, visible, with no tooltip-only figure (R1, §3.2):
+* the sidebar Review item's meta reads `6 due · 25 open` (`25 open` alone when nothing is left
+  today; nothing at 0 and 0);
+* the phone top-bar chip reads `6 · 25`, with `aria-label="6 due today, 25 open"`;
+* the menu-sheet footer cell reads `Review · 6 due · 25 open`.
+`/api/me.review` becomes `{open, due_left}` (§3.2).
 
 **Stat strip** (six tiles, one row at ≥ 1080 px, 2 × 3 on a phone):
 
 | label | number | sub line | opens |
 |---|---|---|---|
-| DUE TODAY | 12 | `3 check-ins · 6 mistakes · 2 saved · 1 marked`; a `Start` link | Due |
-| OPEN | 25 | `▼3 this week · 7 half fixed · 4 sure and wrong · 1 relapsed`, a 12-week sparkline (V9) | Redo |
+| DUE TODAY | 6 | `3 check-ins · 2 mistakes · 1 saved · 14 waiting`; a `Start` link | Due |
+| OPEN | 25 | `▼3 this week · 7 half fixed · 4 sure and wrong · 1 relapsed · 2 unsure`, a 12-week sparkline (V9) | Redo |
 | AT STAKE | ≈ 45 pts | `Circles ≈ 15 · Linear functions ≈ 10` (V4); under 30 answers `after 30 answers` | Redo, sort worth |
 | MARKED | 3 | `from 2 sittings · flags caught 24% of misses` (V5) | Marked |
-| SAVED | 14 | `4 due · 3 learned · 4 with notes` (V3) | Saved |
+| SAVED | 14 | `4 due · 3 learned · 4 with notes · 3 not answered` (V3) | Saved |
 | FIXED | 40 | `6 this week · 31 held a check-in` (V10) | Fixed |
 
 **States.** Loading: the card skeleton (ring, chips, 6 rows) at final size. Error in the due
 call: the card shows Retry; the tabs still work. New student: V16's panel. Storage blocked:
-snoozes are not kept (no banner beyond the shell's).
+nothing changes, since snoozes and the frozen list live on the server.
 
 **Data.**
-* `GET /api/review/due` → `{subject, cap, left, done, total, waiting, minutes, items: [{key,
-  kind, template, trap_id?, saved?: [template, seed], flag?: [session, qid], topic, label,
-  skill, tier, why, pts, since, done}], forecast: [{day, checks, saved}]}`. `key` is
-  `due:<kind>:<template>` (the snooze key).
+* `GET /api/review/due` → `{subject, day, cap, median_s, left, done, total, waiting, snoozed,
+  minutes, items: [{key, kind, template, trap_id?, saved?: [template, seed], flag?: [session,
+  qid], domain, topic, label, skill, tier, why, pts, since, done, snoozed}], forecast: [{day,
+  checks, saved}]}`. `key` is `due:<kind>:<template>` (the snooze key). `total` = today's list;
+  `waiting` = frozen keys after it.
+* `POST /api/review/snooze {key, undo?: bool}` → `{left}` (owner only; the key must be on today's
+  list or U1's queue).
 * `/api/review/counts` adds `due_left`, `due_total`, `waiting`, `blind`, `new`, `stake_total`,
   `open_week_delta`, `held`, `unchecked`.
-* `prefs.review_minutes`: 5 | 10 | 20 | 0 (0 = All), default 10 (§2.7, §3.2).
+* `prefs.review_minutes`: 5 | 10 | 15 | 20 | 30 | 45 | 60 | 0 (0 = All), default 10; `prefs.snooze
+  {key: day}` (§2.7, §3.2).
+* `due_days(learner, subject, day, keys TEXT JSON)` (§2.5).
 
-**Uses the rest of the site.** Today's `#mist` card (R30, T9) takes the same pill and the
-`12 due today` line. Up next's `checks` row stays (U1); finishing either clears both, because
-"due" is derived from attempts. The builder's "Questions from" gains **Today's review · 12 due**
-(`source:'due'`, S4). Plan's Rechecks task keeps T3's warm-up body.
+**Uses the rest of the site.** Today's Review row (T2, T3) and `#mist` card (R30, T9) show the
+same pill, `6 due today` and the same `left`. U1's `checks` and `redo` rows start the same body;
+finishing either clears both, because done is derived from today's attempts against one frozen
+list. The builder's "Questions from" gains **Today's review · 6 due** (`source:'due'`, S4). Plan's
+recheck task starts the alias `{source:'warmup', task:…}`, which is this list.
 
 **Acceptance.**
-1. A learner (`a:v2revreview1`) seeded with one trap fixed 4 days ago (R9 due), one relapsed
-   trap, one open trap whose latest miss has `conf='sure'`, one trap owed 1, one saved question
-   saved 2 days ago with no answer since, and 20 more open traps: `GET /api/review/due` has
-   `items[0..4].kind == ['check','relapsed','sure','half','saved']`, `cap == 8`, and `waiting
-   == total - 8`.
+1. A learner (`a:v2revreview1`) with no timed answers and `review_minutes` 10, seeded with one
+   trap fixed 4 days ago (R9 due), one relapsed trap, one open trap whose latest miss has
+   `conf='sure'`, one trap owed 1, one saved question saved 2 days ago with no answer since, and
+   20 more open traps: `GET /api/review/due` has `items[0..4].kind ==
+   ['check','relapsed','sure','half','saved']`, `cap == 6`, `total == 6` and `waiting` equal to
+   the frozen keys minus 6.
 2. `POST /api/drill {source:'due', box:10}` → `GET /api/drill/{id}` has `cfg.hide_skill ==
-   true` and `cfg.box == 10`; its first 5 served templates are those five items' templates, and
-   no two consecutive served questions share a topic.
-3. Answer the check-in item's question: a second `GET /api/review/due` shows it with `done ==
-   true`, and `left` is one lower. `GET /api/me` has `review.due_left` equal to `left`.
-4. With `learners.minutes = 60`: `cap == 15`. With 90: `cap == 23`. With nothing open and
+   true` and `cfg.box == 10`. Its first 5 served templates equal those five items' templates as a
+   set (in any order), and no two consecutive served questions share a topic.
+3. Answer the check-in item's question: a second `GET /api/review/due` shows it in the same
+   position with `done == true`, `left` one lower and `total` unchanged. `GET /api/me` has
+   `review.due_left == left`, and `/api/today.due`'s Review row has the same `left`.
+4. Answer every item on today's list, missing two of them: `left == 0`, `done == cap` and
+   `waiting > 0`, and `/review/` at 1280 shows Done for today. Then open a new trap in an
+   ordinary practice set: today's `items` are unchanged, and the next local day's list includes
+   it.
+5. `review_minutes` 20 → `cap == 12`; 5 → `cap == 3`; 0 → `waiting == 0`. With nothing open and
    nothing due: `items == []`, and `/review/` at 1280 shows the pill "Keep going · 10 min".
-5. Browser 1280: the `×` on a row hides it, and after a reload it stays hidden for that local
-   day; `localStorage['satf.next.snooze']` holds its key.
-6. Browser 390: six tab segments fit with `document.documentElement.scrollWidth === 390`, each
-   segment at least 44 px tall; the Due tab is selected when `left > 0`.
-7. `POST /api/drill/preview {source:'due', box:10, drop:['due:check:<t>']}` returns no block
+6. `POST /api/review/snooze {key}` for one item: `left` and `/api/me.review.due_left` drop by one.
+   In a second browser context with the same code, the row shows `Not today · Undo`, the badge
+   reads the lower number, and U1's queue leaves the item out. `{key, undo:true}` restores it.
+7. Browser 390: six tab segments fit with `document.documentElement.scrollWidth === 390`, each
+   segment at least 44 px tall; the Due tab is selected when `left > 0`; the sidebar meta at 1280
+   reads `6 due · 25 open` with no `title` tooltip needed to see either number.
+8. `POST /api/drill/preview {source:'due', box:10, drop:['due:check:<t>']}` returns no block
    with that key, and its minutes stay within 10 ± 3.
+9. `POST /api/drill {source:'warmup', count:5}` serves the first 5 items of today's list (as a
+   set); `/api/today.due` has one Review row and no separate Warm-up row.
 
 #### V2. Review my misses: try it again, name the mistake, see it, prove it on new numbers
 
 *From: unfair-advantage #1, outcomes #3, unfair-advantage #4 (the confirm), the experience
 "Not what I did?" gap, the unfair-advantage wrong-number-chips gap. Effort M. Builders: S10 (the
-walk page, the endpoints), F3 (`UI.review` mode `walk`), S6 (the report entry), S4 (the summary
-entry), S3 (Today's line).*
+walk page, the endpoints, `POST /api/review/seen`), F4 (`attempts.revealed_at`, the widened
+repeat rule in `progress.record`), F3 (`UI.review` mode `walk`, the reveal call), S6 (the report
+entry and its New-item dialog), S4 (the summary entry), S3 (Today's line).*
 
 **Why.** Test misses die unread in a report: TopTierPrep's report can't be re-answered, and
 nothing makes the student work the mistake afterwards (their weakness #1). Diagnosing an error
@@ -285,20 +366,34 @@ misconceptions as the choices, and a fresh twin as the proof.
 feedback was shown (a section, module, diagnostic or custom test, or an end-mode set) and that
 attempt's `diag` is null. New rows carry an ink dot and `New`. When any are New, a card sits at
 the top of Due and Redo: `6 new misses from Section · Sep 21 · about 9 min` with the pill
-**Review them**. Every entry point below opens the same walk:
-* the report (S6): `Review these 6 misses · about 9 min` beside Fix these;
-* an end-mode set's summary (S4);
-* Today's `#mist` card (S3): `4 new misses from Sep 21's section · Review them`;
-* each History sitting header: **Walk these misses** (V13);
-* a Redo selection: **Walk these** in the action bar.
+**Walk them · name each, then prove it**. Every entry point below opens the same walk, under the same label,
+**Walk these misses · name each, then prove it · ~9 min**:
+* the report (S6), beside **Fix on new numbers · 6 q · Then → Now** (V13); the two are the
+  report's only miss actions;
+* an end-mode set's summary (S4), with the same pair;
+* Today's `#mist` card (S3): `4 new misses from Sep 21's section · Walk them`;
+* each History sitting header (V13);
+* a Redo selection: **Walk these · 5 · ~8 min** in the action bar.
+
+**Key views are recorded.** "Has the student seen this key?" is a column, not a guess:
+`attempts.revealed_at TEXT` (§3.2, F4).
+* `progress.record` sets it at filing when the sitting shows the key after the answer (instant
+  feedback, and retry mode once the try is final).
+* Otherwise it stays null until `UI.review` reveals the item: the report's dialog with answers
+  shown, the pane, walk step 3, a History modal row, a share landing. Each reveal sends
+  `POST /api/review/seen {attempt_id}`, which sets `revealed_at` once (owner only).
+* The report's dialog shows answers by default (parity with theirs). There a New item opens at
+  **What happened?** with **Just show me**, as the pane does, and Just show me (or choosing an
+  answer to What happened?) reveals it and sets `revealed_at`. An item that is no longer New
+  opens revealed, which sets it too. With Hide answers on, nothing is revealed.
 
 **The walk** (`/review/walk/?id=<drill id>`, `UI.review(host, items, {mode:'walk'})`, F3). A
 rail at the top: `Mistake 3 of 6`, one result dot per mistake, **Back**, **Skip**. Enter moves to
 the next step. Each mistake runs up to four steps:
-1. **Try again** — only when the student has not seen this key (the New case). The exact
-   question in Hide-answers mode, their earlier pick tagged `You picked C`. Check files through
-   the walk drill; `progress.record` marks it a repeat, so it never counts. Skipped for misses
-   whose key was already shown.
+1. **Try again** — only while that attempt's `revealed_at` is null. The exact question in
+   Hide-answers mode, their earlier pick tagged `You picked C`. Check files through the walk
+   drill; `progress.record` marks it a repeat, so it never counts. A miss whose key was shown is
+   walked from step 2.
 2. **What happened?** — up to six plain sentences, shuffled, no letters:
    * the misconceptions behind the item's wrong options (usually 3, measured);
    * `Misread the question` · `A slip: I knew how` · `Didn't know how to start`.
@@ -306,12 +401,22 @@ the next step. Each mistake runs up to four steps:
    choice also sets P8's `miss_kind` (`misread`, `slip`, `gap`). A grid-in offers P4's named
    grid-in mistakes when the template has them, else the three general choices.
 3. **The trap** — the reveal: the key, every option's misconception line, P1's steps with the
-   step where the pick left the path, the rationale. A verdict line: `You called it`, or `Your
-   pick came from: used 180° for a whole circle`. Under the `Your pick ·` line, a quiet **Not
-   what I did?** (V6). Save, and **Write your rule** (V19) when the trap has 2+ hits.
+   step where the pick left the path (V11's option-value lines when the template has no steps),
+   the rationale. A verdict line: `You called it`, or `Your pick came from: used 180° for a whole
+   circle`. Under the `Your pick ·` line, a quiet **Not what I did?** (V6). Save, and **Write
+   your rule** (V19) when the trap has 2+ hits.
 4. **Prove it** — a fresh twin inline (`POST /api/drill/{id}/more {question_id, axis:'same'}`,
    P18) at the tier of the miss. A miss queues its repair (`Try the repair`); a clean answer
    fills a pip with the map bar's animation.
+
+**Blanks are walked too.** A walk over a sitting includes its unanswered questions (read from
+the session's paper, V13) after its misses, each tagged `Didn't answer`. A blank runs steps 2–4:
+* step 2 offers `Ran out of time` · `Didn't know how to start` · `Skipped it to come back and
+  never did`, stored on the walk item (`cfg.walk.items[i].diag`), since a blank has no attempts
+  row;
+* step 3 reveals through access `reveal` (the finished report already shows it);
+* step 4's twin is a new (template, seed), so its answer is clean.
+The end card counts them: `8 blanks · 5 proven on new numbers`.
 
 **End card.** `6 reviewed · you named 4 of 6 · 4 proven on new numbers · 2 still open · first
 check-ins Sep 26`, then **Walk the 2 still open** and **Done**. The Redo head then reads `You
@@ -322,26 +427,41 @@ a quiet **Just show me**, which files `diag = 'skip'` and reveals.
 
 **Phone.** One step per full-screen sheet, with a sticky footer `‹ · primary · ›`.
 
+**Clean means unseen** (`progress.record`, F4; §3.2). v2 sets `repeat = 1` only when an attempts
+row exists for (learner, template, seed). Blanks are never filed, yet a finished report shows
+their key. So `repeat = 1` also when:
+* the pair was on the paper of a finished sitting of this learner (any finished mock, module,
+  diagnostic, custom test, challenge or end-mode set), or is in a flags or saved row from one;
+* the pair was on a worksheet whose key was printed before its answers were entered (V18).
+Put simply: whenever `deps.access` would already have returned `reveal` before this answer. It
+is one `EXISTS` over `sessions.paper`, flags, saved and `cfg.key_printed`, checked in the same
+place as today's rule, so the drill, `record_paper`, QOTD and the challenge all get it.
+
 **Controls and states.**
 * Position survives a reload and another device: the walk drill's `cfg.walk {items, i, step}` is
   saved on each move (`POST /api/review/walk/{id}/at {i, step}`).
 * A live-test item → 409 from `deps.access` (R19); the walk never includes one.
 * A mistake that closed since (a clean answer elsewhere) shows `Fixed since` (§2.3) and skips
   to the next one.
-* Empty (no misses in that sitting): `No misses in this sitting.` with the sitting's report link.
+* Empty (no misses and no blanks in that sitting): `No misses in this sitting.` with the
+  sitting's report link.
 
 **Data.**
 * `attempts.diag TEXT`: a norm, or `misread` · `slip` · `gap` · `skip` (§3.2, F4). "You called
   it" = `diag == attempts.norm`. The self-diagnosis rate is SQL over `diag not in ('skip')`.
-* `POST /api/review/walk {session? | ids?: [trap id] | new?: true}` → `{id, n, minutes}`. It
-  creates an inline drill (`source:'review'`, R24) whose `cfg.walk.items` are `[{attempt, trap,
-  template, seed, try: bool}]`. Minutes = n × 1.5.
-* `POST /api/review/walk/{id}/at {i, step}` → `{ok}` (owner only).
+* `attempts.revealed_at TEXT` (§3.2, F4), set by `progress.record` or `POST /api/review/seen`.
+* `POST /api/review/walk {session? | ids?: [trap id] | new?: true}` → `{id, n, blanks,
+  minutes}`. It creates an inline drill (`source:'review'`, R24) whose `cfg.walk.items` are
+  `[{attempt?, trap?, template, seed, try: bool, blank?: true, diag?}]`. `try` is
+  `revealed_at is null`. Minutes = n × 1.5.
+* `POST /api/review/walk/{id}/at {i, step, diag?}` → `{ok}` (owner only; `diag` for a blank item).
 * `POST /api/review/why {attempt_id, diag?, kind?, guess?}` (owner only; the attempt must be
   wrong): sets `diag` once (a second `diag` is ignored, so the rate stays honest), `miss_kind`
   (P8's values) and `guess`. Returns `{called: bool, norm, label, cause}`.
-* `GET /api/review/item` returns `new: bool` and, for a New item, `diag_choices: [{id, text}]`
-  (norms and the three general ids, shuffled server-side with the attempt id as the seed).
+* `POST /api/review/seen {attempt_id}` → `{revealed_at}` (owner only; idempotent).
+* `GET /api/review/item` returns `new: bool`, `revealed: bool` and, for a New item,
+  `diag_choices: [{id, text}]` (norms and the three general ids, shuffled server-side with the
+  attempt id as the seed).
 
 **Acceptance.**
 1. A learner finishes a module with 3 wrong MC answers: `GET /api/review/redo?lens=new` lists 3
@@ -355,6 +475,14 @@ a quiet **Just show me**, which files `diag = 'skip'` and reveals.
 5. Browser 1280: the walk's step 2 shows between 3 and 6 choices and no letters; pressing `2`
    selects the second; Enter reveals the key. A reload returns to the same mistake and step.
 6. The Try again answer files `attempts.repeat == 1`; the trap's `owed` is unchanged.
+7. A practice miss with instant feedback has `revealed_at` set at filing, and its walk item has
+   `try == false`. A section miss opened in the report at 1280 shows What happened? first; after
+   Just show me its `revealed_at` is set, and a walk over that sitting skips Try again for it.
+8. Leave an item blank in a finished module, save it, re-serve it exactly (`{pool:'saved',
+   exact:true}`) and answer it right: `attempts.repeat == 1`, and the trap's `owed` and
+   `/api/map` topic mastery are unchanged. A fresh twin of it answered right has `repeat == 0`.
+9. A module with 2 misses and 3 blanks: the walk has `n == 5` with 3 items `blank == true`;
+   each blank starts at step 2 with the three blank choices.
 
 #### V3. Saved becomes a spaced deck on fresh numbers
 
@@ -378,8 +506,16 @@ T3 derives fading types). For each saved (template, seed):
 
 **The Saved tab head.** A seg `Questions 14 · Your rules 9` (Your rules is V19). Under
 Questions, three filter cards like their My Words: `Saved 14`, `Due today 4`, `Learned 3`; the
-selected card filters the list. The primary of the action bar becomes **Practise due · 4**:
-`{pool:'saved', ids, exact:false, each:1}` (P21: the Saved pool gives twins by default). With nothing due, the primary is **Fresh versions**.
+selected card filters the list. The action bar keeps both of Saved's fresh actions, so new
+numbers are always one tap away:
+* primary **Practise due · 4** (`{pool:'saved', ids: the due ones, exact:false, each:1}`; P21:
+  the Saved pool gives twins by default) when the Due today card is selected or nothing is
+  selected;
+* **Fresh versions of selected · 6**, always shown (the primary when a selection exists and the
+  Due today card is not selected), with `1 / 2 / 3 each`
+  (`{pool:'saved', ids: selection, exact:false, each}`);
+* **Again, exactly** (tests memory), secondary.
+With nothing due and nothing selected, the primary is **Fresh versions · all 14**.
 
 **Rows** add `due today` / `next Oct 2` / `Learned ✓` and `box 2 of 4` (4 small pips) to the
 meta line. The Status filter for Saved: `Due · Not due · Learned`.
@@ -409,6 +545,9 @@ instead, so there is one saved schedule (§3.2).
    `saved` row.
 6. Browser: Save, then tap `Got lucky` in the toast → `/api/review/redo?kind=unsure` gains the
    item.
+7. Browser 1280, Saved with 4 due: select 6 rows that are not due. The action bar shows
+   **Fresh versions of selected · 6** as the primary and **Practise due · 4** beside it; with
+   `2 each` the started drill serves 12 questions, none with a saved seed.
 
 ---
 
@@ -468,11 +607,17 @@ Knowing, topic by topic, when to trust a first answer and when to flag and retur
 skill. TopTierPrep counts flags and never relates them to results; their report overwrites
 changed answers.
 
-**Blind spots in Redo.** A trap whose latest miss was sure gets an ink `Sure ✕` chip. Sure is
-P7's `attempts.conf = 'sure'`; with no tag, T9's rule (not a guess, and faster than 0.6 × the
-learner's median for that tier), shown as `Sure ✕ (assumed)` in the tooltip. Redo gains the
-sort **Blind spots first**, the lens chip `Blind spots · 4` in the filter bar, the pane header
-line `You were sure`, and the action **Drill my blind spots** (`{pool:'redo', ids: blind,
+**Blind spots in Redo.** A trap whose latest miss was sure gets an ink `Sure ✕` chip. One rule
+decides "sure" everywhere (`review.blind(attempt)`, used by Due, Redo, the pane, History and the
+matrix), and **Rushed wins over an inferred sure**:
+* **tagged**: P7's `attempts.conf = 'sure'`;
+* **inferred**: no tag, not a guess, faster than 0.6 × the learner's median for that tier (T9's
+  rule), **and** `ms ≥ 25%` of P16's budget. Under 25% of the budget the miss is V12's Rushed,
+  never a blind spot, so a fast give-up is not read as certainty;
+* an inferred one reads `Sure ✕ (assumed)` on the chip itself, and the pane prints
+  `Fast answer · assumed sure`, never `You were sure` (that line is for tagged ones only).
+Redo gains the sort **Blind spots first**, the lens chip `Blind spots · 4` in the filter bar, the
+pane header line, and the action **Drill my blind spots** (`{pool:'redo', ids: blind,
 level:'as_missed'}`).
 
 **Your instincts** (a card at the top of Marked; a Since seg `30 days · 90 days · All`).
@@ -480,7 +625,8 @@ level:'as_missed'}`).
    count and a %, each a button opening History filtered (`?conf=sure&result=wrong`). Sure
    includes assumed ones, with `12 assumed` under the row. A footnote counts `untagged 40`.
    Headline: `Blind spots 14: sure and wrong` and `Lucky 5: unsure or guessed, but right`.
-2. **Readings**, at most three, each only with 10+ answers in its bucket and topic:
+2. **Readings**: every one that qualifies (10+ answers in its bucket and topic), most points at
+   stake first (V4), all shown:
    * sure-accuracy under 80% in a topic: `Linear functions: 5 sure but wrong. Check your work
      here before moving on.`;
    * unsure-accuracy 70% or more: `Circles: right 78% when you doubt yourself. Trust your first
@@ -519,14 +665,19 @@ it (budget 1:35) · came back 1× · changed C → A · right`, from `flags.at �
 **Acceptance.**
 1. Three wrong answers with `conf='sure'` and two right with `conf='unsure'`: `matrix.sure.wrong
    == 3`, `matrix.unsure.right == 2`, and each of the three traps has `blind == true`.
-2. A wrong answer with `conf` null, `guess = 0` and `ms` under 0.6 × the tier median is counted
-   in `matrix.sure.assumed` and flagged `blind`.
+2. A wrong answer with `conf` null, `guess = 0`, `ms` under 0.6 × the tier median and at least
+   25% of its budget (50 s on a medium question) is counted in `matrix.sure.assumed` and flagged
+   `blind`; the pane reads `Fast answer · assumed sure`. A 20-second untagged miss on a medium
+   question (budget 95 s) is in History's `result=rushed`, has `blind == false`, and is not in
+   Due's `sure` kind.
 3. A test with 4 flags, 2 of them shown only once: `flags.never == 2`; `GET /api/review/marked`
    rows for those carry `visits == 1`.
 4. `changes.net` equals `wr − rw` over tests in range, and `pts == round(net ×
    per_question / 5) × 5`.
 5. Browser: clicking the Sure × Wrong cell lands on History with `conf=sure&result=wrong` in the
    URL and only wrong rows.
+6. A learner with 5 topics that each qualify for a reading: `readings` has 5 entries, ordered by
+   points, and the card shows all 5.
 
 #### V6. Why you lose points: the cause of every miss, one bar, a fix per cause, and labels students can correct
 
@@ -622,7 +773,7 @@ show a fix, and never show the eliminations they store.
 
 **The log** (`trap_log`, F4, §3.2): `id INTEGER PRIMARY KEY, learner, template, norm, at, event,
 attempt INTEGER, pts INTEGER`. Events: `open` · `miss` · `pip` · `fixed` · `check_ok` ·
-`relapse` · `dismissed` · `restored` · `reopened`. `progress.record` and the mistake endpoints
+`relapse` · `dismissed` · `restored` · `reopened` · `discarded` (V13). `progress.record` and the mistake endpoints
 write it in the same transaction as the traps row. It is keyed by (learner, template, norm), not
 by trap id, so `progress.carry` only re-keys the learner. A one-off backfill writes `open` at
 `traps.opened` and `fixed` at `traps.closed` for existing rows.
@@ -641,7 +792,8 @@ days`. Fixed rows show the chain as a compact run of cells.
 * Answer changes in tests: `B → C · C → D` from `qstate.trail`, with `first answer: B (right)`
   when the first was right.
 * Time against budget: `2:52 · budget 1:35 · 1:17 over` (P16), or `0:12 · rushed`.
-* Confidence: `You said Sure` / `Unsure` / `Guess`, or `Sure (assumed)`.
+* Confidence: `You said Sure` / `Unsure` / `Guess`, or `Fast answer · assumed sure` (V5).
+* Every try, for a retry-mode answer: `Try 1 · C · 0:22 · Wrong` → `Try 2 · A · 0:41 · Right`.
 * The student's highlights and notes, read-only (R6, `UI.annotate`).
 * P9's `then` line when the student has since answered the type right.
 
@@ -654,11 +806,27 @@ days`. Fixed rows show the chain as a compact run of cells.
 * a `This mistake only` toggle that filters rows to one norm (the pane's trap), counted
   (`4 of 11`).
 
+**Every try, and Mixed** (their Attempt History lists each try; ours lists them inside the
+answer they belong to).
+* History items and `UI.history` rows carry `tries: [{given, given_label, correct, ms, at}]`,
+  read from the drill's served `tries` (retry mode, tries 2 and 3). The first try is still the
+  one that counts; the later tries are shown, never filed as attempts.
+* The result is **Mixed** when the first try was wrong and a later try was right, drawn as
+  R20's Mixed cell (the diagonal split with `~`). It is its own value in History's Result filter
+  (`result=mixed`), in the summary card (`Mixed 4`) and in the sitting cells (V13).
+* A Mixed or multi-try row has a `▸ 2 tries` toggle; expanded, it lists each try as `#1 · C ·
+  0:22 · Wrong · used 180° for a whole circle` (the misconception of each wrong pick) and
+  `#2 · A · 0:41 · Right`, with the time between them.
+* The pane's Your path shows the same run, and the History modal's summary row adds `mixed 1`.
+
 **Data.**
 * `GET /api/review/item` adds `story: [{at, event, attempt?, source, session?, qid?, result,
   pick?, pts?}]` (for a trap), `path: {struck, trail, first, ms, budget_ms, conf, conf_assumed,
   marks}`, and `summary: {days_to_fix, answers, held_days}`.
-* `GET /api/review/family` adds `verdict: {kind, text, start: {body} | href}` and takes `norm=`.
+* `GET /api/review/family` adds `verdict: {kind, text, start: {body} | href}` and takes `norm=`;
+  its attempts add `tries` and `result` may be `mixed`.
+* `GET /api/review/history` items add `tries` and `result: 'mixed'`; `result=mixed` filters;
+  `summary.mixed` counts them.
 
 **Acceptance.**
 1. A trap missed, repaired, answered clean and fixed: `select event from trap_log where
@@ -672,6 +840,10 @@ days`. Fixed rows show the chain as a compact run of cells.
    has `verdict.kind == 'same_trap'`; `&norm=<n>` returns only rows with that norm.
 5. Browser: clicking a timeline node loads that exact stem in the pane, and Back restores the
    timeline.
+6. A retry-mode practice answer wrong on try 1 and right on try 2: its History item has
+   `result == 'mixed'` and `tries.length == 2` with `tries[1].correct == true`; it is in
+   `result=mixed`; `summary.mixed == 1`; the attempts row is still wrong (the first try counts).
+   Browser: the row's `2 tries` toggle shows both picks with their times.
 
 #### V9. The ledger: mistakes made against mistakes fixed, week by week, and when the list reaches zero
 
@@ -704,7 +876,7 @@ minutes a day clears them by Nov 7.` The rate is the student's measured fixes ÷
 open count; FIXED's takes `6 this week`.
 
 **Me** (S1, §3.2): Saved & in progress's `Open mistakes 25` line becomes `Open mistakes 25 ▼3
-this week · 12 due today`, with **Start review · 10 min** and the sparkline.
+this week · 6 due today`, with **Start review · 10 min** and the sparkline.
 
 **Data.** `GET /api/review/ledger?weeks=12` → `{subject, weeks: [{week, opened, relapsed,
 fixed, open_end}], rate: {fixed_week, made_week, minutes_per_fix | null}, forecast: {zero_on |
@@ -754,7 +926,8 @@ tier reads `Fixed at Medium`.
 #### V11. Stuck mistakes go to Learn it, and "See one solved" puts a worked twin beside your miss
 
 *From: outcomes #6, unfair-advantage #6, today.md T4, practice.md P2. Effort S. Builders: S10
-(status, entry points), F5 (`GET /api/types/{t}/example?want=`), F3 (the side-by-side sheet).*
+(status, entry points, the steps gate), F5 (`GET /api/types/{t}/example?want=`), F3 (the
+side-by-side sheet, the value lines), T-bank (P1's steps in demand order, `tools/steps_queue.py`).*
 
 **Why.** Hammering a question type the student keeps failing repeats the error. Studying one
 worked instance, then solving with support fading, beats solving alone (worked-example and fading
@@ -778,6 +951,22 @@ desktop, full screen on a phone):
 * On a phone the two stack under a seg `You missed · Worked`.
 * It files nothing; the example seeds are never served in practice (T4, U2).
 
+**Steps first where students miss** (T-bank, P1; the depth row 15 of the scorecard rests on).
+One-sentence rationales (median 21 words) plus option labels are only level with their
+Justification and Distractor Analysis, so P1's steps are written in Review-demand order and the
+verdict waits for coverage:
+* **Order.** `tools/steps_queue.py` (T-bank) ranks templates without steps by
+  `Σ over learners of open traps on the template × U8's test weight of its skill`, from the live
+  db, and T-bank writes steps in that order, so the templates students actually miss get them
+  first. It prints the queue and the coverage figure below.
+* **Gate** (S10's acceptance, `server/checks/s10.py`): at least 80% of open traps across
+  learners sit on templates with steps before scorecard row 15 is claimed. Until then the row
+  reads `v2 BELOW, V11 pending coverage` in the release notes.
+* **Without steps.** On a template with no steps, the pane, walk step 3 and See one solved show
+  P1's option lines with values, one per option (`C · 14 · used the slope as the intercept`),
+  and the key's value line (`A · 9 · the key: 3 × 3`), with no Steps tab. The worked twin shows
+  the same lines on its own numbers.
+
 **Data.** F5's `GET /api/types/{t}/example` takes `want` (a norm) and `tier`: it walks the
 reserved seeds from 900000 (at most 40) for an item whose option reasons include that norm, and
 returns `trap_index` (§3.2).
@@ -789,6 +978,10 @@ returns `trap_index` (§3.2).
    returns `seed >= 900000` and a `trap_index` whose option reason normalises to the norm.
 3. Browser 1280: See one solved opens a sheet with two columns and exactly one outlined option in
    the right one; Now you closes it and shows a new question in the pane with a different stem.
+4. `server/checks/s10.py` computes the share of open traps on templates with P1 steps and fails
+   below 80%; `tools/steps_queue.py` lists templates without steps in non-increasing demand.
+5. The pane for a miss on a template without steps shows one value line per option plus the key's
+   value line, and no Steps tab.
 
 #### V12. Right but slow, and rushed: time as something to fix
 
@@ -802,8 +995,10 @@ never analysed; v2's Review only sorts by Slowest.
 * **Time against budget everywhere.** Every row that shows time shows it against P16's budget for
   that (template, tier): `1:12 · budget 1:35` on History rows and in the pane meta, ink when over,
   with a glyph and text, never colour alone.
-* **History's Result filter** gains `Slow right` (right, over budget) and `Rushed` (wrong, under
-  25% of budget). The summary card adds `Slow right 11 · 18 min over budget` and `Rushed 5`.
+* **History's Result filter** gains `Slow right` (right, over budget), `Rushed` (wrong, under
+  25% of budget) and `Mixed` (V8). The summary card adds `Slow right 11 · 18 min over budget`,
+  `Rushed 5` and `Mixed 4`. Rushed wins over an inferred sure: a rushed miss is never a blind
+  spot, in Due, Redo or the pane (V5).
 * **The Pace block** (History head): up to 5 of P16's Right-but-slow types, each `Area of a
   sector · your median 2:40 · budget 1:35 · right 88%`, with **Fluency sprint · 5 types** (P16's
   preset body over those templates) and, per row, **Speed drill · 8** (T8's).
@@ -821,37 +1016,103 @@ never analysed; v2's Review only sorts by Slowest.
 
 ### D. Again, done right
 
-#### V13. Rematch any sitting: clickable result cells, Then vs Now, and retakes nested under the original
+#### V13. Rematch any sitting, or take its answers off the record: cells with blanks, one fix action, Then vs Now, retakes nested
 
 *From: experience #7, the outcomes and experience sitting-retake gaps, the unfair-advantage
-wrong-number-chips gap, practice.md P19. Effort S. Builders: S10 (the Sitting view), S4 (P19's
-summary), S6 (`/api/history` returns `rematch_of`).*
+wrong-number-chips gap, practice.md P19, their Clear Session. Effort M. Builders: S10 (the
+Sitting view, `POST /api/session/{sid}/void` and `/unvoid`), F4 (trap roll-back from
+`trap_log`), F5 (`scope:'misses'` with `until_fixed`, `scope:'blanks'`, `from_session` as an
+alias), S4 (P19's summary, the summary's Discard), S6 (`/api/history` returns `rematch_of`, the
+report's two miss actions).*
 
-**Why.** Their Clear Session serves the same items again after deleting the record a student
-would compare against, so a second score measures memory. A rematch serves every slot's type,
-tier and format on new numbers in the original order, and Then → Now shows whether the skill
-moved.
+**Why.** Their Clear Session does two things: it serves the same items again, and it removes that
+session's answers from the record ("Your question-bank progress from other sessions is kept").
+The first measures memory, since the record a student would compare against is gone. A rematch
+serves every slot's type, tier and format on new numbers in the original order, and Then → Now
+shows whether the skill moved. The second is still needed: a set someone else answered on the
+student's code, one started by mistake, or one done with the notes open should not sit in
+mastery, Redo, the ledger and points forever. Discard does that, and can be undone.
 
 **Sitting header** (History, Group by Sitting):
-* `Practice · Linear functions, Percentages · Sep 23 14:02 · 9/12 · 14 min`, then a row of
-  `UI.cell`s, one per question (R20 glyphs, flag overlay), each a button that opens that question
-  in the pane with its misconception on hover or focus.
-* Primary **Rematch · same 12 types, new numbers** (`{rematch: sid}`, P19). Secondary
-  **Rematch my misses · 3** (`scope:'misses'`), **Rematch weak spots · 5** (`scope:'weak'`: misses
-  plus over-budget rights, §3.2), **Walk these misses** (V2), **Report / summary**.
-* Overflow: **Again, exactly (tests memory)**, **Fix the misses** (`from_session`).
-* **Nested retakes.** Rematches and exact retakes of a sitting nest under it, collapsed:
+* `Practice · Linear functions, Percentages · Sep 23 14:02 · 9/12 · 14 min · 3 blank`, then a row
+  of `UI.cell`s built from the session's paper (not only its attempts), one per question: R20
+  glyphs, the flag overlay, the Mixed cell for a right retry (V8), and a dashed Blank cell for
+  each unanswered question. Each is a button that opens that question in the pane (a blank
+  through access `reveal`, which a finished sitting grants) with its misconception on hover or
+  focus.
+* Primary **Rematch · same 12 types, new numbers · Then → Now** (`{rematch: sid}`, P19).
+* Two miss actions, each labelled with what it does, and no synonyms beside them:
+  * **Walk these misses · name each, then prove it · ~5 min** (V2; blanks included as
+    `Didn't answer`);
+  * **Fix on new numbers · 3 q · Then → Now** (`{rematch: sid, scope:'misses',
+    until_fixed:true}`): P19's misses rematch, where a slot answered wrong is served again on a
+    new seed (`repairs:'next'`) until its trap owes 0, at most 3 rounds a slot. Then → Now
+    compares the first round. Its `▾` offers **+ 2 slow rights** (`scope:'weak'`: misses plus
+    rights over P16's budget). `from_session: sid` becomes an alias of this body, so the old
+    Fix the misses and Rematch my misses are one action.
+* **Blanks · 3 · fresh twins** (`{rematch: sid, scope:'blanks'}`), shown when the sitting has
+  blanks: one fresh twin per blank template, at its tier, in order. The seeds are new, so the
+  answers are clean.
+* **Report / summary**.
+* Overflow: **Again, exactly (tests memory)** and **Discard this sitting's answers…**.
+* **Nested retakes.** Rematches and exact retakes of a sitting nest under it, as one summary line
   `Rematched ×2 · best 11/12 · Then 6 → Now 11`. Expanding shows each child's header.
 
 **The summary** is P19's Then → Now (aligned cells, flips, score and time before and after).
+
+**Discard this sitting's answers** (the History sitting header's overflow, and the session
+summary's ⋯, S4).
+* A confirm sheet states what will change: `Discard Practice · Sep 23 14:02? · 12 answers ·
+  2 mistakes opened · 1 fixed · can be undone`, with [Keep them] [Discard].
+* `POST /api/session/{sid}/void` (owner only; a drill or a finished test; 409 for a challenge or
+  contest entry, whose boards Compete rules, and for an unfinished test, which keeps v2's
+  `/discard`) sets `attempts.void = 'discarded'` on the session's rows. R8 already leaves void
+  rows out of mastery, accuracy and boards; ratings, points, Due, Redo counts, the ledger and
+  History's summary use the same `void is null` filter.
+* Traps roll back from `trap_log` (V8), newest first, over events whose `attempt` is in the
+  session:
+  * a trap whose only misses were in this session closes with `how = 'discarded'` (never Fixed,
+    in no list);
+  * a `pip` from the session is taken back (`owed + 1`); a `fixed` from it reopens the trap as
+    Open and drops its check-in schedule;
+  * a trap opened earlier and refreshed here keeps its earlier hits and loses this session's;
+  * each change writes a `trap_log` `discarded` event carrying the attempt id.
+* The rows stay in History with a `Discarded` chip (R20's voided glyph and text), left out of its
+  counts and filterable (`result=discarded`).
+* A 6 s toast offers Undo; the chip offers **Restore** at any time. `POST
+  /api/session/{sid}/unvoid` clears `void` and re-applies the discarded events in order
+  (`trap_log` `restored`).
+
+**Data.**
+* `/api/review/history?group=sitting` sittings add `cells: [{qid, n, result, flagged, blank?}]`,
+  `blanks: [{qid, template, seed}]`, `rematch_of`, `children`, `best` and `void`.
+* `POST /api/session/{sid}/void` → `{answers, traps_closed, pips_back, reopened}`; `POST
+  /api/session/{sid}/unvoid` → the same counts restored. Both owner only.
+* `trap_log.event` adds `discarded`; `traps.how` adds `discarded` (§3.2).
 
 **Acceptance.**
 1. After a rematch of sid, `/api/review/history?group=sitting` returns sid with `children:
    [<rematch id>]` and `best` set; the child is not a top-level sitting.
 2. `POST /api/drill {rematch: sid, scope:'weak'}` serves one fresh slot per first-try miss and
    per right answer over its budget, in the original order.
-3. Browser: a sitting header shows one cell per question; clicking cell 4 opens question 4 in the
-   pane.
+3. Browser: a sitting header shows one cell per question, blanks included and dashed; clicking
+   cell 4 opens question 4 in the pane.
+4. `POST /api/drill {rematch: sid, scope:'misses', until_fixed:true}` for a sitting with 2 misses:
+   a slot answered wrong is served again on a new seed until its trap's `owed == 0` or 3 rounds
+   pass. `POST /api/drill {from_session: sid}` creates the same body (`cfg.rematch == sid`,
+   `cfg.scope == 'misses'`, `cfg.until_fixed == true`).
+5. Browser 1280: the sitting header and the report each show exactly two miss actions, "Walk
+   these misses · name each, then prove it" and "Fix on new numbers · n q · Then → Now";
+   "Again, exactly (tests memory)" appears only in the overflow.
+6. A finished module with 3 blanks: its sitting has `blanks.length == 3` and 3 `blank` cells; a
+   blank cell opens its item with the key shown; `{rematch: sid, scope:'blanks'}` serves 3
+   questions on unseen seeds, and right answers file `repeat == 0`.
+7. A practice sitting with 12 answers that opened 2 traps (their only misses) and filled a pip on
+   a third: after `/void`, every attempt of the session has `void == 'discarded'`, the 2 traps
+   are in no Review list or count, the third's `owed` is one higher, `/api/map` mastery for the
+   topic equals its value before the sitting, and History lists the 12 rows with `Discarded`.
+   `/unvoid` restores the counts, the traps and the mastery exactly. `/void` on a challenge
+   sitting → 409.
 
 ---
 
@@ -865,11 +1126,21 @@ Effort S. Builders: F3 (`UI.review` pane, `UI.stemDiff`), S10 (prefetch, seen ma
 **Why.** Their review modal already has ←/→ and "1 of 49"; so does v2. The point of a review is
 the next mistake worth looking at, reached in one key, rendered instantly.
 
-* **Result strip** in the pane header: one `UI.cell` per row of the current list (up to 60, then
-  a `+140` cell that pages), the current one ringed; a click jumps. Rows opened this visit get a
-  small seen dot (sessionStorage, try/catch).
-* **Keys** (player scope, §2.8): `N` next wrong (already there), `U` next not yet seen this
-  visit. Prev/Next follow the list's sort (V4).
+* **Result strip** in the pane header: one cell per row of the current list (up to 60, then a
+  `+140` cell that pages), the current one ringed; a click jumps. Rows opened this visit get a
+  small seen dot (sessionStorage, try/catch). What a cell shows depends on what the tab's rows
+  are:
+
+  | tab | a row is | the cell |
+  |---|---|---|
+  | History, Marked, Saved | an answer | `UI.cell` with the row's R20 result (right, wrong, repaired, Mixed, repeat, blank; flag overlay) |
+  | Redo, Due | a mistake | a status cell drawn with `UI.pips`: Open ○○, Half fixed ●○, Relapsed, Stuck, Sure ✕; on Due a done item adds a ✓ and a snoozed one is dimmed |
+  | Fixed | a fixed mistake | the check-in state: Not checked yet (amber outline), Held 1 / 2 / all 3 ✓, Check due, Dismissed |
+
+  A legend under the strip names the cells of the open tab, with counts.
+* **Keys** (player scope, §2.8): `N` next wrong on the answer tabs (History, Marked, Saved); on
+  Redo, Due and Fixed, whose rows are not answers, `N` means next not yet seen, like `U`. `U`
+  next not yet seen this visit everywhere. Prev/Next follow the list's sort (V4).
 * **Prefetch.** The pane requests `/api/review/item` for the 2 rows before and after the current
   one and keeps the last 20 in memory, so a move paints in the same frame.
 * **Phone.** A horizontal swipe on the pane (over 60 px, under 30° from horizontal) moves Prev /
@@ -891,35 +1162,64 @@ the next mistake worth looking at, reached in one key, rendered instantly.
    at least one `mark.chg` exists when the numbers differ.
 4. Browser 390: a left swipe on the pane moves to the next row; a long-press on a row shows the
    action bar with `1 selected`.
+5. On Redo, every strip cell carries a status (`data-status` in `open|half|relapsed|stuck|sure`)
+   drawn with pips; on Fixed, a check-in state; on History, an answer result. On Redo, `N` from
+   row 1 after opening rows 1–3 goes to row 4.
 
 #### V15. One set of options on every action bar, and levels 1–7 in every list
 
 *From: the unfair-advantage Volume/Timed gap, the difficulty/Level gaps of all three. Effort S.
 Builders: S10 (the bars and filters), F5 (`level:'harder'` via siblings), F4 (`ratings.level`,
-P11).*
+P11, and the one-off `tools/seed_ratings.py`).*
 
-**Why.** TopTierPrep's builder applies Volume and Timed to its Redo, Marked and Solved pools and
-filters on a 1–7 score; v2's Review offers Level and Timed on Redo only, and three tiers.
+**Why.** TopTierPrep's builder applies Volume (10 / 20 / 30 / 40 / 50 / All) and Timed to its
+Redo, Marked and Solved pools and filters on a real 1–7 score; v2's Review offers Level and
+Timed on Redo only, and three tiers.
 
-* **Every action bar** (Due, Redo, Marked, Saved, History, Fixed) takes the same options, echoed
-  in its summary line (`12 selected · 10 questions · as missed · pace clock · instant`):
-  * **Volume** `10 · 20 · All` (cut by the tab's current sort);
+* **Every action bar** (Due, Redo, Marked, Saved, History, Fixed) takes the options below,
+  echoed in its summary line (`12 selected · 10 questions · as missed · pace clock · instant`):
+  * **Volume** `5 · 10 · 20 · 30 · 40 · 50 · All` plus a number field (1–120), cut by the tab's
+    current sort. Every one of their volumes is here, and any other count.
   * **Clock** `Off · Pace · Custom` with the minutes field (the builder's `clock` values; Pace is
     the sum of P16's budgets);
-  * **Feedback** `Instant · At the end` (end turns the set into a test-like retest);
+  * **Feedback** `Instant · At the end` on **Marked, Saved and History** only (end turns the set
+    into a test-like retest). Due, Redo and Fixed start fixing sets, which always show the key
+    after each answer (V1, U15); their bars show the fixed value as text,
+    `Instant · fixing set`, not a control;
   * **Level** `As missed · Any · Harder` on Redo and Fixed (v2's).
+* **Due has one sizing control**: the header's minutes seg (V1). The Due bar has no Volume; its
+  summary echoes the seg (`6 questions · 10 min · instant · fixing set`), and changing the seg
+  updates the bar.
 * **Harder** steps one tier up where the template has one, else to P18's sibling at the next tier
   (`blueprint.siblings(t, +1)`), else As missed; the summary says `3 can't go harder`.
 * **Level filter**: a chip `Level` with cells L1–L7 (P11's `ratings.level(template, tier)`), each
   counting this tab's rows, and `Include rough levels` (on). Rows and the pane meta read `▃ Medium
   · L4` or `L4 · rough`.
 
+**Seven real levels on launch day.** P11's priors put every Easy type at L2, Medium at L4 and
+Hard at L6, so with few answers the chip would be Easy / Medium / Hard renamed. Before launch,
+`tools/seed_ratings.py` (F4, run once, idempotent) sets `item_ratings` priors per (template,
+tier) from a stated signal:
+* measured first-try accuracy, where the (template, tier) has n ≥ 5 first tries in the db;
+* otherwise the tier prior, shifted by the template's P1 step count (more steps, harder) and by
+  format (SPR one step harder than MC at the same tier).
+It prints the level histogram and asserts that every level L1–L7 holds at least 5% of types
+(`server/checks/s10.py` runs the same assert). Until that assert holds, the Level chip shows
+empty levels greyed with `0`, and the chip's label reads `Level · rough`.
+
 **Acceptance.**
 1. Marked with Volume 10 over 14 rows: the started drill has `count == 10`, taken in the tab's
-   sort order.
+   sort order. Volume 40 over 60 rows → `count == 40`; the number field with 17 → `count == 17`.
 2. A one-tier medium template with a same-label hard sibling: `{pool:'redo', ids:[trap], level:
    'harder'}` serves the sibling at hard.
 3. `?levels=4,5` returns only rows whose (template, tier) rates L4 or L5.
+4. Browser 1280: the Redo, Due and Fixed bars have no Feedback control and read `Instant ·
+   fixing set`; the drills they start have `feedback == 'instant'`. Marked's bar with At the end
+   starts a drill with `feedback == 'end'`.
+5. The Due bar has no Volume control; after the header seg changes from 10 to 20, the bar's
+   summary reads `12 questions · 20 min`.
+6. After `tools/seed_ratings.py`, each of L1–L7 holds at least 5% of (template, tier) types, and
+   running it twice leaves `item_ratings` unchanged.
 
 #### V16. Empty states that show instead of tell
 
@@ -992,8 +1292,9 @@ notes stay private.
 #### V18. Paper that counts: a printed worksheet whose answers are filed
 
 *From: outcomes #11, unfair-advantage #8, v2 §16 and its open question, the Practice builder's
-worksheet (§3.3 "2.12 Print view"). Effort S. Builders: S10 (the answer sheet page), S4 (its print
-view, reused).*
+worksheet (§3.3 "2.12 Print view"). Effort S. Builders: S10 (the answer sheet page, its key
+page), S4 (its print view, reused, printed without the key), F4 (`cfg.key_printed` in the
+repeat rule, V2).*
 
 **Why.** v2's Review worksheet burns seeds and files nothing, so a miss on paper never reaches
 Redo. The Practice builder already makes a worksheet an end-mode set left In progress; Review
@@ -1002,14 +1303,23 @@ should use that, not a second printer.
 * **Print worksheet** (Redo, Saved, a selection) creates the builder's worksheet:
   `POST /api/drill {pool: <tab>, ids, exact:false, each: 1–3, feedback:'end', source:'worksheet'}`
   and opens S4's print view `/practice/session/?id=<sid>&print=1` (the header, numbered questions
-  with figures, entry boxes, the optional answer-key page with every option's misconception).
-  Its header adds `Enter answers: /review/sheet/?id=<sid>`.
+  with figures, entry boxes). Its header adds `Enter answers: /review/sheet/?id=<sid>`.
+* **The key comes after the answers.** A worksheet set prints without the answer-key page. The
+  key page (every answer, each option's misconception, the rationale) is offered on
+  `/review/sheet/` after Submit, as **Print the key**, and on the summary.
+  * A student (or tutor) who needs it earlier uses **Print the key now** on the answer sheet's
+    ⋯ menu. A confirm says `Answers entered after this won't count as clean`, and printing sets
+    `cfg.key_printed = <time>`.
+  * Every answer entered after `key_printed` files with `repeat = 1` (V2's rule): it is shown and
+    named, and a miss still opens or refreshes its trap, but no right answer closes a mistake,
+    passes a check-in or moves mastery. The summary says `Key printed first · 6 answers not
+    counted as clean`.
 * **Print another version** makes a new set on new seeds, for a second student or a second try.
 * **The answer sheet** (`/review/sheet/?id=<sid>`, S10): one row per number, A–D buttons or a
   grid-in field with the usual keystroke filter and preview, an optional `Minutes taken` field,
   and **Submit**. It posts each answer to `/api/drill/{id}/answer` (end mode, ms = minutes ÷ n),
-  then finishes the set, and lands on its summary. The seeds were unseen, so right answers are
-  clean, each miss is named and opens a trap, and pips fill.
+  then finishes the set, and lands on its summary. With the key unprinted the seeds were unseen,
+  so right answers are clean, each miss is named and opens a trap, and pips fill.
 * **Visible state.** Review's header shows `1 worksheet waiting for answers · Enter answers` while
   one is In progress.
 * This answers v2's open question: the seeds are consumed, and the answers are filed when entered.
@@ -1020,6 +1330,10 @@ should use that, not a second printer.
 2. Submitting the answer sheet with one wrong MC answer files 6 attempts (`select count(*) from
    attempts where session='<sid>'`), finishes the set, and opens one trap.
 3. `/review/` shows the waiting-worksheet line before submitting and not after.
+4. The print view of a worksheet set has no answer-key page. Print the key now, then submit: every
+   attempt of the set has `repeat == 1`, and no trap's `owed` falls. Without printing the key,
+   the same submission files `repeat == 0` rights. After Submit, Print the key opens the key page
+   and leaves the filed attempts unchanged.
 
 #### V19. Your traps sheet, your rules and an error log, for test week
 
@@ -1091,16 +1405,18 @@ as the resolution says; the replacements here are written on top of that reading
      → "- **Fixed**: closed by clean answers. It reads **Not checked yet** until its first R9
      check-in passes, then **Held 1 / 2 / all 3** (V10)."
    * After "- **Dismissed**: closed by the student. A later miss reopens it as Open, not Relapsed." add:
-     "- **New**: open, and its latest miss came from a sitting that showed no feedback and has not
-     been looked at (V2).
+     "- **New**: open, and its latest miss came from a sitting that showed no feedback and has no
+     diagnosis yet (`attempts.diag` null) (V2).
      - **Stuck**: open with hits ≥ 3 or relapses ≥ 1 (T4's rule); its primary is Learn it (V11).
      - **Sure ✕** (an overlay on any open status): the latest miss was sure (V5)."
 
 3. **§1 Navigation, the badge.**
    * Quote: "- Review carries a badge: an orange dot and the number of open mistakes, hidden at 0. It reads `/api/me`'s new `review.open`, so there is no extra request."
-     → "- Review carries a badge: an orange dot and the number of items due today and not yet done,
-     hidden at 0, with the tooltip `12 due today · 25 open`. It reads `/api/me`'s
-     `review.due_left`, so there is no extra request (V1)."
+     → "- Review carries a badge showing both numbers, with no tooltip-only figure: the sidebar
+     meta reads `6 due · 25 open` (an orange dot while due > 0; `25 open` alone when nothing is
+     left today; nothing at 0 and 0), the phone top-bar chip `6 · 25` (`aria-label="6 due today,
+     25 open"`), and the menu-sheet footer cell `Review · 6 due · 25 open`. It reads `/api/me`'s
+     `review.due_left` and `review.open`, so there is no extra request (V1)."
 
 4. **§1 URL state.**
    * Quote: "/review/?tab=redo|marked|saved|history|fixed"
@@ -1112,23 +1428,25 @@ as the resolution says; the replacements here are written on top of that reading
 
 5. **§1 Links in.**
    * Quote: "- The report's Mistakes block ('See all in Review')."
-     → "- The report's Mistakes block ('See all in Review'), and its **Review these n misses**,
-     which opens the walk (V2).
-     - An end-mode set's summary: **Review these n misses** (V2).
-     - Today's `#mist` card: **Start review · 10 min**, `12 due today`, and `n new misses ·
-     Review them` (V1, V2)."
+     → "- The report's Mistakes block ('See all in Review'), and its two miss actions, **Walk
+     these misses · name each, then prove it · ~9 min** (V2) and **Fix on new numbers · 6 q ·
+     Then → Now** (V13), which replaces its Fix these (`from_session` is its alias).
+     - An end-mode set's summary: the same two actions (V2, V13).
+     - Today's `#mist` card: **Start review · 10 min**, `6 due today`, and `n new misses ·
+     Walk them` (V1, V2)."
 
 6. **§2 Header row.**
    * Quote: "- Right: the primary pill **Redo all · 22 questions**, with a meta line under it: `11 question types · about 35 min`."
      and its three sub-bullets ("The number is the sum…", "The minutes come from `blueprint`
      pace.", "The button is hidden only when nothing is open.")
-     → "- Right: the duration seg `5 · 10 · 20 · All min` (`prefs.review_minutes`) above the split
-     pill **Start review · 10 min**, with the meta line `3 check-ins · 2 quick wins · closes up
+     → "- Right: the duration seg `5 · 10 · 15 · 20 · 30 · 45 · 60 · All min`
+     (`prefs.review_minutes`, the site's one set of box chips) above the split pill **Start
+     review · 10 min**, which covers exactly today's list (V1), with the meta line `3 check-ins · 2 quick wins · closes up
      to 5 mistakes` (V1). `All` keeps v2's count, the sum over open templates of the largest
      `owed`: `All · 22 questions · about 35 min`. With nothing due or open the pill reads **Keep
      going · 10 min**.
      - Under the header, when any miss is New: the walk card `6 new misses from Section · Sep 21
-     · about 9 min · Review them` (V2); from 7 days before the exam, the Exam week card (V19);
+     · about 9 min · Walk them · name each, then prove it` (V2); from 7 days before the exam, the Exam week card (V19);
      while a worksheet is In progress, `1 worksheet waiting for answers · Enter answers` (V18)."
 
 7. **§2 Stat strip.**
@@ -1163,8 +1481,8 @@ as the resolution says; the replacements here are written on top of that reading
      → "| Source | Practice / Today's review / Section / Module / Diagnostic / Challenge /
      Question of the day / Review / Shared set / Worksheet. | History, Marked, Saved |"
    * Quote: "| Result | Right / Wrong / Repaired / Repeat. | History |"
-     → "| Result | Right / Wrong / Repaired / Repeat / Slow right / Rushed / Changed (V12, V5) |
-     History |"
+     → "| Result | Right / Wrong / Repaired / Mixed / Repeat / Slow right / Rushed / Changed /
+     Discarded (V8, V12, V5, V13) | History |"
 
 10. **§2 Sort options.**
     * Quote: "- Redo: Most recent / Most missed / Closest to fixed / Oldest / Topic order."
@@ -1194,11 +1512,16 @@ as the resolution says; the replacements here are written on top of that reading
       type' groups rows that share a norm across templates (§14). Each group header has:"
     * Quote: "- `n open`,"
       → "- `n open · ≈ 20 pts · about 4 of 44 a test` (V4),"
+    * Quote: "A group with more than 8 rows shows 8, then a `Show 7 more` button."
+      → "A group shows every one of its rows (decision 4); the tab pages by 50 like the other
+      lists (`Load 50 more · 50 of 140`), and a group split by a page boundary continues under
+      its header on the next page."
 
 13. **§3 Row.**
     * Quote: "   - Line 2: DM Mono 12px soft, separated by dots: `skill · ▃ Medium · MC · missed 3× · last Sep 21 · Practice · picked C`."
-      → "   - Line 2: DM Mono 12px soft, separated by dots: `skill · ▃ Medium · L4 · MC · missed
-      3× · last Sep 21 · Practice · picked C · ≈ 6 pts` (V15, V4)."
+      → "   - Line 2: DM Mono 12px soft, separated by dots: `Geometry & Trig · skill · ▃ Medium ·
+      L4 · MC · missed 3× · last Sep 21 · Practice · picked C · ≈ 6 pts` (the domain first, V15,
+      V4)."
     * Quote: "4. The kind chip or status chip, if any."
       → "4. The kind chip or status chip, if any, plus `New` (V2), `Sure ✕` (V5), `Stuck` (V11)
       and the cause when it isn't a trap (V6). A Stuck row's action is **Learn it**."
@@ -1208,11 +1531,12 @@ as the resolution says; the replacements here are written on top of that reading
 
 14. **§3 Action bar, Redo.**
     * Quote: "  - **Timed**: the same clock toggle and minutes blank as the Practice builder."
-      → "  - **Volume**, **Clock** and **Feedback**, the same on every tab (V15). Harder uses
-      P18's sibling when the template has one tier."
+      → "  - **Volume** (`5 · 10 · 20 · 30 · 40 · 50 · All` and a number field) and **Clock**, the
+      same on every tab; Feedback reads `Instant · fixing set` as text, since Redo always shows
+      the key after each answer (V15). Harder uses P18's sibling when the template has one tier."
     * Quote: "- Secondary: **Print worksheet** (§16) and **Share** (§15)."
-      → "- Secondary: **Walk these** (V2), **Drill my blind spots** when the selection has any
-      (V5), **Print worksheet** (V18), **Ask for help** and **Share** (V17)."
+      → "- Secondary: **Walk these · n · ~m min** (V2), **Drill my blind spots** when the
+      selection has any (V5), **Print worksheet** (V18), **Ask for help** and **Share** (V17)."
 
 15. **§4 Marked.**
     * Quote: "**Calibration line** at the top: `You flagged 12 questions · 7 were right (58%)`, with the tip *'Most flags right: trust your first answer more. Most wrong: flag and come back.'* It only counts flags set during a sitting, meaning the flag time is earlier than the finish."
@@ -1233,25 +1557,38 @@ as the resolution says; the replacements here are written on top of that reading
       (picked C) · 2 tries · due today | next Oct 2 | Learned ✓ · box 2 of 4`, and the why tag
       (`Nice trick`, `Hard`) when set (V3),"
     * Quote: "- **Again, exactly** (primary)."
-      → "- **Practise due · n** (primary; **Fresh versions** when nothing is due), with `1 / 2 /
-      3 each` (V3, P21).
-      - **Again, exactly** (tests memory)."
+      → "- **Practise due · n**: the primary when the Due today card is selected or nothing is
+      selected (V3, P21).
+      - **Again, exactly** (tests memory), secondary."
     * Quote: "- **Fresh versions**, with `1 / 2 / 3 each`."
-      → removed (it is the primary above).
+      → "- **Fresh versions of selected · n**, with `1 / 2 / 3 each`, always shown; the primary
+      when rows are selected and the Due today card is not (V3). With nothing due and nothing
+      selected it reads **Fresh versions · all 14**."
 
 17. **§6 History.**
     * Quote: "- Repeats 6."
       → "- Repeats 6.
-      - Slow right 11 · 18 min over budget · Rushed 5 (V12)."
+      - Mixed 4 (V8).
+      - Slow right 11 · 18 min over budget · Rushed 5 (V12).
+      - Discarded 12, not counted (V13)."
     * After the summary card add: "**Pace block**: up to 5 right-but-slow types with Fluency
       sprint and Speed drill (V12)."
     * Quote: "- **Sitting header**: `Practice · Linear functions, Percentages · Sep 23 14:02 · 9/12 · 14 min`, with these buttons:"
       and its four sub-bullets
-      → V13's header: the result cells, **Rematch** (primary), **Rematch my misses**,
-      **Rematch weak spots**, **Walk these misses**, **Report / summary**; overflow **Again,
-      exactly (tests memory)** and **Fix the misses**; retakes nested under the original.
+      → V13's header: the result cells from the paper, blanks dashed; **Rematch · same n types,
+      new numbers · Then → Now** (primary); the two miss actions **Walk these misses · name each,
+      then prove it** and **Fix on new numbers · n q · Then → Now** (with `+ slow rights`);
+      **Blanks · n · fresh twins** when any; **Report / summary**; overflow **Again, exactly
+      (tests memory)** and **Discard this sitting's answers…**; retakes nested under the
+      original. The separate Fresh versions and Fix the misses buttons go (Fix on new numbers is
+      `from_session`).
     * Quote: "- the time spent (`1:12` or `—`),"
-      → "- the time spent against its budget (`1:12 · budget 1:35`, or `—`) (V12),"
+      → "- the time spent against its budget (`1:12 · budget 1:35`, or `—`) (V12),
+      - `▸ 2 tries` on a retry-mode answer, expanding to each try's pick and time (V8),"
+    * Quote: "- the topic glyph and skill,"
+      → "- the topic glyph, the domain and the skill,"
+    * Quote: "- **Download CSV**."
+      → "- **Download CSV**, whose rows carry `domain`, `tries` and `void` as well."
 
 18. **§7 Fixed.**
     * Quote: "**Stat line:** `40 fixed · 6 this week · median 2 days to fix · 3 relapsed · 2 dismissed`. Dismissed ones are not counted as fixed."
@@ -1267,20 +1604,25 @@ as the resolution says; the replacements here are written on top of that reading
 
 19. **§8 Question pane.**
     * Quote: "- a meta line: `Circles · Arc length · ▃ Medium · MC · Practice, Sep 21 14:02 · 1:12`, where the source is a link to the sitting's report or summary."
-      → "- a meta line: `Circles · Arc length · ▃ Medium · L4 · MC · Practice, Sep 21 14:02 ·
-      1:12 · budget 1:35 · ≈ 6 pts`, where the source is a link to the sitting's report or
+      → "- a meta line that starts with the domain, as the SAT score report and their Details
+      do: `Geometry & Trig · Circles · Arc length · ▃ Medium · L4 · MC · Practice, Sep 21 14:02
+      · 1:12 · budget 1:35 · ≈ 6 pts`, where the source is a link to the sitting's report or
       summary (V15, V12, V4).
-      - for a trap: the timeline (V8); for a blind spot: `You were sure` (V5); your rule under
-      the label when one exists (V19);
-      - a result strip, one cell per list row (V14)."
+      - for a trap: the timeline (V8); for a blind spot: `You were sure` when tagged, `Fast
+      answer · assumed sure` when inferred (V5); your rule under the label when one exists
+      (V19);
+      - a result strip, one cell per list row, whose cells follow V14's per-tab table (answer
+      results, mistake status pips, or check-in states)."
     * Quote: "  - The picked one starts with `Your pick ·`."
       → "  - The picked one starts with `Your pick ·` and ends with the quiet link **Not what I
       did?** (V6)."
     * Quote: "- A grid-in shows `You entered 12 · Answer 9`."
       → "- A grid-in shows `You entered 12 · Answer 9`.
-      - P1's steps, and **Your path**: struck options, answer changes, time against budget,
-      confidence, highlights (V8).
-      - A New item opens at V2's **What happened?** step, with **Just show me**."
+      - P1's steps (on a template without steps, one value line per option and the key's value
+      line, and no Steps tab, V11), and **Your path**: struck options, answer changes, every
+      try, time against budget, confidence, highlights (V8).
+      - A New item opens at V2's **What happened?** step, with **Just show me**; revealing an
+      item sends `POST /api/review/seen` (V2)."
     * Quote: "- primary **Fresh one like this**,"
       → "- primary **Fresh one like this** (**Learn it** for a Stuck trap), with **See one
       solved** beside it (V11); the swap animates only the numbers that change (V14),"
@@ -1289,25 +1631,28 @@ as the resolution says; the replacements here are written on top of that reading
 
 20. **§9 Attempt History modal.**
     * Quote: "**Summary row.** `seen 6 · right 3 · repaired 1 · repeats 1 · median 1:10`, then the open mistakes on this template, with their pips and labels."
-      → "**Summary row.** P9's trend line, then `seen 6 · right 3 · repaired 1 · repeats 1 ·
-      median 1:10`, then the open mistakes on this template, with their pips and labels, then
-      the verdict chip with its one next step and the `This mistake only` toggle (V8)."
+      → "**Summary row.** P9's trend line, then `seen 6 · right 3 · mixed 1 · repaired 1 ·
+      repeats 1 · median 1:10`, then the open mistakes on this template, with their pips and
+      labels, then the verdict chip with its one next step and the `This mistake only` toggle
+      (V8). Each row carries its tries: a retry-mode row expands to `#1 · C · 0:22 · Wrong` and
+      `#2 · A · 0:41 · Right`, and its result cell is R20's Mixed (V8)."
 
 21. **§10 Elsewhere.**
     * Quote: "- primary **Redo all · 22**, secondary **Open Review**."
-      → "- primary **Start review · 10 min** with `12 due today`, secondary **Open Review**, and
-      `n new misses · Review them` when any are New (V1, V2)."
+      → "- primary **Start review · 10 min** with `6 due today`, secondary **Open Review**, and
+      `n new misses · Walk them` when any are New (V1, V2)."
     * Quote: "**Me.** A Saved content card: `Open mistakes 25 · Marked 3 · Saved 14 · Fixed 40 · Answers 312`. Each number links to its tab."
-      → "**Me.** A Saved content card: `12 due today · Open mistakes 25 ▼3 this week · Marked 3
+      → "**Me.** A Saved content card: `6 due today · Open mistakes 25 ▼3 this week · Marked 3
       · Saved 14 · 4 due · Fixed 40 · Answers 312`, with **Start review · 10 min** and the
       12-week open-count sparkline (V1, V9, V3). Each number links to its tab."
     * Quote: "- A **Source** segmented control: `New | Redo 25 | Marked 3 | Saved 14 | Fixed (check) 2`."
-      → "- A **Source** segmented control: `New | Today's review 12 | Redo 25 | Marked 3 | Saved
+      → "- A **Source** segmented control: `New | Today's review 6 | Redo 25 | Marked 3 | Saved
       14 | Fixed (check) 2` (V1; practice.md's "Questions from" carries the same entries)."
     * Quote: "**Session summary.** Each 'Opened' and 'Fixed' line links to `/review/?open=trap:<id>`."
       → "**Session summary.** Each 'Opened' and 'Fixed' line links to `/review/?open=trap:<id>`.
-      A `source:'due'` set's summary is V1's end screen; an end-mode set's offers **Review these
-      n misses** (V2)."
+      A `source:'due'` set's summary is V1's end screen; an end-mode set's offers **Walk these
+      misses · name each, then prove it** and **Fix on new numbers · n q · Then → Now** (V2,
+      V13). Every summary's ⋯ has **Discard this sitting's answers…** (V13)."
 
 22. **§11 Phone.**
     * Quote: "- **Header.** The H1 at 28px, the helper line, and **Redo all · 22 questions** as a full-width pill."
@@ -1318,6 +1663,12 @@ as the resolution says; the replacements here are written on top of that reading
     * Quote: "- **Tabs.** Five equal segments, sticky under the top bar. Each segment has two lines: the label (Archivo 600 13px) and the count (DM Mono 12px)."
       → "- **Tabs.** Six equal segments, sticky under the top bar. Each segment has two lines: the
       label (Archivo 600 13px) and the count (DM Mono 12px)."
+    * Quote: "  - The primary button is full width. Level, Timed and the secondary actions sit behind an **Options** disclosure."
+      → "  - The sticky bar holds the summary and the full-width primary only. Every option
+      (Volume, Clock, Feedback where the tab has it, Level) sits in a non-sticky options block
+      at the top of the list as a wrapping row of controls, and the secondary actions (Walk
+      these, Drill my blind spots, Print worksheet, Ask for help, Share) as a visible wrapping
+      row of buttons under it. Nothing sits behind a disclosure (decision 4)."
     * Add: "- **Pane.** A horizontal swipe moves Prev / Next; a long-press on a row starts
       selection mode (V14)."
 
@@ -1330,6 +1681,8 @@ as the resolution says; the replacements here are written on top of that reading
       → "**Nothing left today.** V1's Done for today on the Due tab. **Nothing open at all, but
       history exists.** 'Nothing open. 40 fixed, 6 this week.' Then **Keep going · 10 min** (the
       coach set)."
+    * Quote: "- Groups collapse past 8 rows."
+      → "- Groups show every row; the tab pages by 50 (decision 4)."
 
 24. **§13 Keyboard.**
     * Quote: "- **Pane keys:** ←/→ Prev/Next, F fresh one, E again exactly, S save, M mark, H history, A hide/show answers."
@@ -1352,8 +1705,10 @@ as the resolution says; the replacements here are written on top of that reading
     * Quote: "**Print worksheet** on Redo and Saved opens `/review/print.html?…`: 1–3 fresh versions per selected template, numbered, with the stems, figures and choices, and space to work. The answers and each option's misconception are on the last page. It uses print CSS only."
       → "**Print worksheet** on Redo, Saved and any selection creates the Practice builder's
       worksheet set (`feedback:'end'`, `source:'worksheet'`, 1–3 fresh versions per template)
-      and opens its print view `/practice/session/?id=<sid>&print=1`, whose header adds
-      `Enter answers: /review/sheet/?id=<sid>` (V18)."
+      and opens its print view `/practice/session/?id=<sid>&print=1` without the key page, whose
+      header adds `Enter answers: /review/sheet/?id=<sid>` (V18). The key page (the answers and
+      each option's misconception) is offered after Submit; printing it earlier sets
+      `cfg.key_printed`, and answers entered after that file as repeats."
     * Quote: "The seeds are remembered as seen, so the worksheet never repeats in practice. The page says 'These answers are not filed. Practise online to count them.'"
       → "The seeds are served to that set, so they never repeat in practice. Answers entered on
       `/review/sheet/` are filed like online ones: misses are named and open traps, clean rights
@@ -1367,9 +1722,16 @@ as the resolution says; the replacements here are written on top of that reading
       Today' applied to math, and it cannot run dry."
     * Quote: "- **Printable fresh worksheet**: A tutor, parent or offline student gets a new worksheet every time, with answers and each option's misconception on the last page. A finite bank can only print the same pages."
       → "- **Printable fresh worksheet whose answers count**: A tutor, parent or offline student
-      gets a new worksheet every time, with answers and each option's misconception on the last
-      page, and the answers entered afterwards are filed and named (V18). A finite bank can only
-      print the same pages."
+      gets a new worksheet every time, and its answers are filed and named when entered, with the
+      key (answers and each option's misconception) printed after Submit so the clean rights are
+      honest (V18). A finite bank can only print the same pages."
+    * Quote: "- **Clean answers only: exact repeats never close a mistake or move mastery**: TopTierPrep's unlimited retries on the same question make accuracy meaningless. A Repeat is filed and shown; only an unseen (template, seed) answered without a flag counts as proof. Repaired is our better 'Mixed'."
+      → "- **Clean answers only: repeats never close a mistake or move mastery**: TopTierPrep's
+      unlimited retries on the same question make accuracy meaningless. A Repeat is filed and
+      shown; only an unseen (template, seed) answered without a flag counts as proof, and
+      'unseen' means the key could not have been read: no earlier answer, not on a finished
+      sitting's paper (blanks included), not on a worksheet whose key was printed first (V2,
+      V18). Repaired is our proof on new numbers, and Mixed (right on a retry) is shown too (V8)."
     * Append one line each for V1 (a finite daily review), V2 (name it before we name it), V3
       (saved as a spaced deck), V4 (points at stake), V5 (instincts), V6 (causes and label
       disputes), V8 (the story and your path), V9 (the ledger), V11 (a worked twin with your
@@ -1380,11 +1742,23 @@ as the resolution says; the replacements here are written on top of that reading
       → "Shares also refuse any pair from today's challenge until the day is over (every student
       gets the same ten question types in the same order, decision 1, so a shared twin would
       still pass the method around)."
+    * Quote: "  - 'reveal' when this learner has an attempts row for the pair, or the pair is in a flags or saved row whose session is a finished mock, module or diagnostic. A finished report already shows those blanks."
+      → "  - 'reveal' when this learner has an attempts row for the pair, or the pair is on the
+      paper of a finished sitting of this learner (mock, module, diagnostic, custom test,
+      challenge after its day, end-mode set), or in a flags or saved row from one. A finished
+      report already shows those blanks (V13's blank cells open through it)."
+    * Quote: "  progress.record itself sets repeat = EXISTS(an attempts row for the same learner, template, seed) before inserting, so the drill, record_paper, QOTD and the challenge all get it."
+      → "  progress.record itself sets repeat = 1 before inserting when access(learner, template,
+      seed) is already 'reveal' (an attempts row, or the pair on a finished sitting's paper, or
+      in a flags or saved row from one), or the answer comes from a worksheet set after its
+      `cfg.key_printed` (V2, V18), so the drill, record_paper, QOTD and the challenge all get it.
+      It also sets revealed_at = now when the sitting shows the key after the answer (V2)."
 
 30. **§3.9.5 Server: counts and /api/me.**
     * Quote: "  /api/me adds review: {open} for the nav badge, which the shell already fetches."
       → "  /api/me adds review: {open, due_left} for the nav badge, which the shell already
-      fetches (V1)."
+      fetches (V1). due_left is review.due's left (snoozes left out), the same number as
+      /api/today.due's Review row and /api/review/due.left."
     * Quote: "  /api/review/counts returns {open, half, relapsed, unsure, marked, marked_right, marked_during, saved, noted, saved_unanswered, fixed, fixed_week, median_days, dismissed, due, answers, redo_questions, redo_templates}. redo_questions = Σ over open templates of max(owed)."
       → the same list plus `subject, due_left, due_total, waiting, new, blind, stuck,
       stake_total, open_week_delta, held, unchecked, recovered_month, saved_due, learned,
@@ -1398,8 +1772,9 @@ as the resolution says; the replacements here are written on top of that reading
       (sure|unsure|guess|untagged), habit, lens (blind|new|stuck), q, sort
       (worth|blind|recent|hits|near|oldest|topic), group (topic|domain|habit|norm)."
     * Quote: "  - items: [{id, template, norm, label, reason, kind, skill, topic, name, domain, hits, owed, clean, status, relapses, opened, last, difficulty, fmt, seed, session, source, given, given_label, elsewhere}]. The item fields come from the trap's latest wrong attempts row, joined on (learner, template, norm)."
-      → the same fields plus `attempt` (that row's id), `pts`, `blind`, `conf`, `cause`, `new`,
-      `stuck`, `habit`, `level`, `level_rough`, `dodged_elsewhere`, `rule`.
+      → the same fields plus `attempt` (that row's id), `pts`, `blind`, `blind_assumed`, `conf`,
+      `cause`, `new`, `stuck`, `habit`, `level`, `level_rough`, `dodged_elsewhere`, `rule`. The
+      query pages by 50 (`cursor`), and `groups` count the whole result, not the page.
     * Quote: "  - groups: [{key, name, domain, count, questions}]"
       → "  - groups: [{key, name, domain, count, questions, pts, per_test, tell?}]"
 
@@ -1411,14 +1786,17 @@ as the resolution says; the replacements here are written on top of that reading
       due, learned, why` (V3)."
     * After the line that starts "  - fixed items:" add: "plus `held, tiers_proven, tiers_available, pts`; stats add
       `held, unchecked, recovered_month` (V10, V4)."
-    * After the line that starts "  - history items:" add: "items add `budget_ms, slow, rushed, conf, changed`; result
-      takes `slow|rushed|changed`; summary adds `slow {n, over_ms}, rushed`; the response adds
-      `pace: [types]` (V12); sittings add `cells, rematch_of, children, best` (V13)."
+    * After the line that starts "  - history items:" add: "items add `domain, budget_ms, slow,
+      rushed, conf, changed, tries, void`; result takes `mixed|slow|rushed|changed|discarded`;
+      summary adds `mixed, slow {n, over_ms}, rushed, discarded`; the response adds
+      `pace: [types]` (V8, V12); sittings add `cells, blanks, rematch_of, children, best, void`
+      (V13). Marked items and the CSV carry `domain` too."
 
 33. **§3.9.5 Server: item and family.**
     * Quote: "  - saved, note, flagged, address, access."
-      → "  - saved, note, flagged, address, access, and `new, diag_choices` (V2), `story, path,
-      summary` (V8), `level, level_rough, budget_ms, pts, rule` (V15, V12, V4, V19)."
+      → "  - saved, note, flagged, address, access, and `domain` (V15's meta), `new, revealed,
+      diag_choices` (V2), `story, path, summary, tries` (V8), `level, level_rough, budget_ms,
+      pts, rule` (V15, V12, V4, V19), `has_steps` and, without steps, `value_lines` (V11)."
     * After "It returns {template, skill, topic, summary, attempts: […], next}." add: "It also
       returns `verdict {kind, text, start}` and takes `norm=` (V8)."
 
@@ -1426,7 +1804,10 @@ as the resolution says; the replacements here are written on top of that reading
     * Quote: "  - saved gains note TEXT, session TEXT and qid TEXT."
       → "  - saved gains session TEXT, qid TEXT and why TEXT ('trick' | 'hard'); the note is in
       `notes` (R6).
-      - attempts gains diag TEXT (V2).
+      - attempts gains diag TEXT and revealed_at TEXT (V2).
+      - traps.how takes 'discarded' (V13).
+      - A new table due_days(learner, subject, day, keys TEXT JSON, PRIMARY KEY (learner,
+      subject, day)): today's frozen review order, written on the first read of the day (V1).
       - A new table trap_log(id INTEGER PRIMARY KEY, learner, template, norm, at, event,
       attempt INTEGER, pts INTEGER), indexed (learner, at) and (learner, template, norm), written
       with every traps change (V8)."
@@ -1447,18 +1828,23 @@ as the resolution says; the replacements here are written on top of that reading
       opens S4's print view; `/review/sheet/?id=` files the answers through that drill (V18)."
 
 37. **§3.9.5 Server: new endpoints.** After "- **Mistake actions**" add V1–V19's endpoints:
-    `GET /api/review/due`, `POST /api/drill {source:'due'}` through `review.resolve_drill`,
-    `POST /api/review/walk`, `POST /api/review/walk/{id}/at`, `POST /api/review/why`,
-    `GET /api/review/calibration`, `GET /api/review/ledger`, `GET /api/review/trapsheet`, each as
-    its upgrade specifies, all owner-only and subject-aware.
+    `GET /api/review/due`, `POST /api/review/snooze`, `POST /api/drill {source:'due'}` through
+    `review.resolve_drill`, `POST /api/review/walk`, `POST /api/review/walk/{id}/at`,
+    `POST /api/review/why`, `POST /api/review/seen`, `POST /api/session/{sid}/void` and
+    `/unvoid`, `GET /api/review/calibration`, `GET /api/review/ledger`,
+    `GET /api/review/trapsheet`, each as its upgrade specifies, all owner-only and
+    subject-aware.
 
 38. **§3.9.6 Files.** Add rows: `server/review.py` · S10; `web/review/walk/index.html` · S10;
-    `web/review/sheet/index.html` · S10. `web/review/print.html` stays S10's, for the trap sheet
-    and the error log only.
+    `web/review/sheet/index.html` · S10; `tools/seed_ratings.py` · F4 (V15);
+    `tools/steps_queue.py` · T-bank (V11). `web/review/print.html` stays S10's, for the trap
+    sheet and the error log only.
 
 39. **§3.9.7 Shared needs.** Add: `UI.review` mode `walk` and `UI.stemDiff` (F3); `trap_log` and
-    `attempts.diag` (F4); `GET /api/types/{t}/example?want=&tier=` (F5); `sets` `cfg.context` and
-    its landing, and the admin Labels view (F6); `qstate[qid].visits` (S5).
+    `attempts.diag`, `attempts.revealed_at`, `due_days`, the widened repeat rule and the
+    discard roll-back (F4); `GET /api/types/{t}/example?want=&tier=`, source `due` with the
+    `warmup` alias, `scope:'misses'` with `until_fixed`, `scope:'blanks'` (F5); `sets`
+    `cfg.context` and its landing, and the admin Labels view (F6); `qstate[qid].visits` (S5).
 
 40. **§3.9.8 Acceptance checks.**
     * Quote: "1. curl -s -H 'X-Learner: a:v2revacc1' localhost:8000/api/review/counts returns all zeros for a new code, /api/me has review.open == 0, and /review/ shows the new-student panel with 'Start practice'."
@@ -1478,29 +1864,33 @@ as the resolution says; the replacements here are written on top of that reading
 
 | where | change | upgrade |
 |---|---|---|
-| R1 | The Review badge (sidebar meta, phone top-bar chip, menu-sheet footer cell) shows today's due left, hidden at 0, tooltip `12 due today · 25 open`; `/api/me.review = {open, due_left}` | V1 |
+| R1 | The Review badge shows both numbers, with no tooltip-only figure: sidebar meta `6 due · 25 open` (`25 open` alone when nothing is left today), phone top-bar chip `6 · 25` with `aria-label="6 due today, 25 open"`, menu-sheet footer cell `Review · 6 due · 25 open`. `/api/me.review = {open, due_left}`; `due_left` leaves snoozed items out | V1 |
 | R7 | `qstate[qid].visits` (int), +1 each time the runner shows the question, sent with `POST /api/session/{sid}/state {question_id, visit:true}` | V5 |
+| R8 | `attempts.void` takes `'discarded'` (set by `POST /api/session/{sid}/void`, cleared by `/unvoid`). Every reader that R8 already filters (mastery, accuracy, boards) and also ratings, points, Due, Redo counts, the ledger and History's summary use `void is null` | V13 |
 | R9 | Every traps change also writes a `trap_log` row in the same transaction. A check-in draws at the highest tier with a clean right since the trap opened. Display: Fixed = `Not checked yet` until the first check passes | V8, V10 |
 | R18(a) | The progress view `/share/?t=` renders `review.progress_part(learner)` as a read-only Mistakes block | V17 |
 | R18(c) | `sets` kind `items` takes `cfg.context` (built server-side from the owner's attempts; `note` opt-in); the `/s/` landing reveals it after the visitor answers. A twin share from Review walks each seed (≤ 40, `want`) until the sharer's picked norm is on offer | V17 |
 | R24 | Sources `due` and `worksheet` are ordinary sittings (listed, resumable). The walk is an inline drill (`source:'review'`) | V1, V2, V18 |
-| §2.5 | New table `trap_log(id INTEGER PK, learner, template, norm, at, event, attempt INTEGER, pts INTEGER)`, indexes `(learner, at)` and `(learner, template, norm)`, in `LEARNER_TABLES` and `carry` (re-keyed by learner). Columns `attempts.diag TEXT`, `saved.why TEXT`. Startup backfill: `open` and `fixed` events from existing traps | V2, V3, V8 |
-| §2.6 | Source `due`, resolved by `review.resolve_drill` (S10) through the registry, with `box` (5–60 or null = All); its preview returns T1's `blocks` and takes `drop`. `rematch` takes `scope:'weak'` (misses plus rights over budget). `level:'harder'` falls back to `blueprint.siblings(t, +1)`. Pool `saved` feedback adds `saved_note`. `GET /api/types/{t}/example` takes `want` (a norm) and `tier`, walking ≤ 40 reserved seeds, and returns `trap_index` | V1, V3, V11, V13, V15 |
-| §2.7 | Keys: `review_minutes` (5 \| 10 \| 20 \| 0 = All; default 10; Review header, Settings) and `saved_spaced` (bool, default true; Settings, the Saved tab) | V1, V3 |
-| §2.8 | Player: `U` next not yet seen, `V` see one solved. Page scope `review`: `Shift+R` Start review. Walk: `1`–`6`, Enter | V1, V2, V11, V14 |
-| §2.9 | S10 provides `review.due`, `review.saved_due`, `review.trapsheet`, `review.progress_part`, `review.resolve_drill` → F2 (badge, U1 row 9), F5 (the resolver), S3 (`#mist`), S7 (the trap sheet), S1 (Me, the progress view). F5 provides the example `want` → S10, S7. F6 provides `cfg.context` and the admin Labels view. S5 provides `visits` | all |
-| shell-me U1 | Row 9 `saved` lists V3's due saved questions (`review.saved_due`) instead of "saved 7 or 21 days ago ±1 day"; its start body is unchanged | V3 |
-| shell-me §3.1 override 30 (Me, Saved & in progress) | The Open mistakes line reads `Open mistakes 25 ▼3 this week · 12 due today` with **Start review · 10 min** and the sparkline; Saved questions reads `Saved 14 · 4 due` | V1, V3, V9 |
-| today T9 / R30 | `#mist`'s primary is **Start review · 10 min** (`source:'due'`, `box: prefs.review_minutes`) with `12 due today`; a line `n new misses · Review them` opens the walk when any are New | V1, V2 |
-| practice P19 | `scope` adds `weak` (first-try misses plus rights over P16's budget, in order) | V13 |
+| §2.5 | New table `trap_log(id INTEGER PK, learner, template, norm, at, event, attempt INTEGER, pts INTEGER)`, indexes `(learner, at)` and `(learner, template, norm)`; events include `discarded`. New table `due_days(learner, subject, day, keys TEXT JSON, PRIMARY KEY (learner, subject, day))`. Both in `LEARNER_TABLES` and `carry` (re-keyed by learner). Columns `attempts.diag TEXT`, `attempts.revealed_at TEXT`, `saved.why TEXT`; `traps.how` takes `'discarded'`. Startup backfill: `open` and `fixed` events from existing traps | V1, V2, V3, V8, V13 |
+| §2.5 `progress.record` (F4) | `repeat = 1` whenever `access(learner, template, seed)` is already `reveal` before the answer (an attempts row, the pair on a finished sitting's paper, or in a flags or saved row from one), or the answer comes from a worksheet set after `cfg.key_printed`. `revealed_at = now` when the sitting shows the key after the answer. The access rule's `reveal` gains "on the paper of a finished sitting of this learner" | V2, V13, V18 |
+| §2.6 | Source `due`, resolved by `review.resolve_drill` (S10) through the registry, with `box` (5–60 or null = All) or `count`; source `warmup` is its alias. Its preview returns T1's `blocks` and takes `drop`. `rematch` takes `scope:'weak'` (misses plus rights over budget), `scope:'misses'` with `until_fixed:true` (a missed slot is served again on a new seed until its trap owes 0, at most 3 rounds) and `scope:'blanks'` (one fresh twin per blank template); `from_session: sid` is an alias of `{rematch: sid, scope:'misses', until_fixed:true}`. `level:'harder'` falls back to `blueprint.siblings(t, +1)`. Pool `saved` feedback adds `saved_note`. `GET /api/types/{t}/example` takes `want` (a norm) and `tier`, walking ≤ 40 reserved seeds, and returns `trap_index` | V1, V3, V11, V13, V15 |
+| §2.7 | Keys: `review_minutes` (5 \| 10 \| 15 \| 20 \| 30 \| 45 \| 60 \| 0 = All; default 10; Review header, Settings), `snooze` (`{key: YYYY-MM-DD}`, pruned of past days on write; written by Review's and U1's Not today) and `saved_spaced` (bool, default true; Settings, the Saved tab). The site's one set of time-box chips is `5 · 10 · 15 · 20 · 30 · 45 · 60 min` | V1, V3 |
+| §2.8 | Player: `U` next not yet seen, `V` see one solved; on lists whose rows are not answers (Redo, Due, Fixed), `N` also means next not yet seen. Page scope `review`: `Shift+R` Start review. Walk: `1`–`6`, Enter | V1, V2, V11, V14 |
+| §2.9 | S10 provides `review.due`, `review.saved_due`, `review.blind`, `review.trapsheet`, `review.progress_part`, `review.resolve_drill` → F2 (badge, U1's rows and box), F5 (the resolver), S3 (Today's Review row, `#mist`), S7 (the trap sheet, the recheck task), S1 (Me, the progress view). F4 provides `progress.warmup_candidates`, which `review.due` extends. F5 provides the example `want` → S10, S7. F6 provides `cfg.context` and the admin Labels view. S5 provides `visits` | all |
+| shell-me U1 | Row 9 `saved` lists V3's due saved questions (`review.saved_due`) instead of "saved 7 or 21 days ago ±1 day". The `checks` and `redo` rows start `{source:'due', box: prefs.review_minutes}`. The box's first segment is the undone items of `review.due` (up to 3) instead of its own check-ins. "Not today" writes the server's `prefs.snooze` through `POST /api/review/snooze` instead of `localStorage`. The box chips are the site's one set | V1, V3 |
+| shell-me §3.1 override 30 (Me, Saved & in progress) | The Open mistakes line reads `Open mistakes 25 ▼3 this week · 6 due today` with **Start review · 10 min** and the sparkline; Saved questions reads `Saved 14 · 4 due` | V1, V3, V9 |
+| today T2 / T3 | T2's Warm-up row becomes the **Review** row (`Review · 6 · ~10 min · 3 check-ins · 2 fading`), read from `review.due`; it counts in `N of M done` and the minutes left, and it is done when `left == 0`. T3's candidates are the Check-in, Fading and Keep warm kinds of `review.due`, and `{source:'warmup'}` is an alias of `due`. Today's box chips are the site's one set | V1 |
+| today T9 / R30 | `#mist`'s primary is **Start review · 10 min** (`source:'due'`, `box: prefs.review_minutes`) with `6 due today`; a line `n new misses · Walk them` opens the walk when any are New. T9's inferred "sure" also needs `ms ≥ 25%` of P16's budget (a faster miss is Rushed), through `review.blind` | V1, V2, V5 |
+| practice P11 | Priors come from `tools/seed_ratings.py` (measured first-try accuracy with n ≥ 5, else the tier prior shifted by P1 steps and format), asserting 5% or more of types in each of L1–L7 | V15 |
+| practice P19 | `scope` adds `weak` (first-try misses plus rights over P16's budget, in order), `misses` with `until_fixed`, and `blanks` (from the session's paper) | V13 |
 | practice P21 | `POST /api/notes` also takes `{attempt_id, scope:'type', note}`: the server resolves the template from the learner's own attempt (404 otherwise). Review lists rules in Saved's `Your rules` and prompts on close and at 2 hits | V19 |
-| practice §3.3 builder | "Questions from" gains **Today's review · 12 due** (`source:'due'`) | V1 |
+| practice §3.3 builder | "Questions from" gains **Today's review · 6 due** (`source:'due'`) | V1 |
+| practice P1 / T-bank | Steps are written in Review-demand order (`tools/steps_queue.py`: open traps across learners × U8 weight); without steps the pane shows one value line per option and the key's | V11 |
 | plan L19 | `GET /api/plan/{id}/trapsheet` returns `review.trapsheet(learner)` (read through `deps.part`); entries add `rule` and the dodge record | V19 |
-| S4 session | The summary for `source:'due'` is V1's end screen; an end-mode set's summary offers **Review these n misses** (V2); the print view's header adds `Enter answers: /review/sheet/?id=`; the Save toast carries V3's why chips | V1, V2, V3, V18 |
+| S4 session | The summary for `source:'due'` is V1's end screen; an end-mode set's summary offers **Walk these misses · name each, then prove it** and **Fix on new numbers · n q · Then → Now**; every summary's ⋯ has **Discard this sitting's answers…**; a worksheet's print view has no key page (the key prints after Submit) and its header adds `Enter answers: /review/sheet/?id=`; the Save toast carries V3's why chips | V1, V2, V3, V13, V18 |
 | S5 test window | Sends `visit:true`; Check Your Work's marked line adds `n not revisited` | V5 |
-| S6 report | **Review these n misses · about m min** beside Fix these; the line `Your flags caught 2 of your 7 misses` over the grid; `/api/history` returns `rematch_of` so retakes nest | V2, V5, V13 |
+| S6 report | Its two miss actions are **Walk these misses · name each, then prove it · ~m min** and **Fix on new numbers · n q · Then → Now** (replacing Review these and Fix these); the review dialog opens a New item at What happened? with Just show me and sends `POST /api/review/seen` on each reveal; the line `Your flags caught 2 of your 7 misses` over the grid; `/api/history` returns `rematch_of` so retakes nest | V2, V5, V13 |
 | F6 admin | `/admin/reports` gains a Labels view: per (template, norm), label reports and "Not what I did?" corrections, rate-sorted | V6 |
-
 ---
 
 ## 4. Rejected
@@ -1548,10 +1938,11 @@ as the resolution says; the replacements here are written on top of that reading
 * **A second, plan-less trap sheet** (experience #12, unfair-advantage #9 as written): one
   `review.trapsheet` feeds both Plan's and Review's print pages.
 * **Worksheet codes, QR marking, `/w/CODE` or `/p/CODE` pages, Versions A / B** (outcomes #11,
-  unfair-advantage #8): three siblings rejected QR entry until teachers ask. Every Print is already
-  a new version, and `/review/sheet/?id=` files the answers.
-* **A code checked once per learner for a whole class** (unfair-advantage #8): class homework is
-  U27's.
+  unfair-advantage #8): three siblings rejected QR entry. Every Print is already a new version,
+  and `/review/sheet/?id=` files the answers.
+* **A worksheet code checked once per learner for a group** (unfair-advantage #8): no classes,
+  homework or assignments (v2-decisions item 5). A student who wants a friend to take the same
+  worksheet shares it as a sets link (R18, V17), and each taker files their own answers.
 * **A bare `R` key for Start review** (experience #1): `R` is the player's Report key; `Shift+R`.
 * **20% control questions in the gauntlet** (unfair-advantage #3): U6 owns the gauntlet; P6's
   dodge counts in ordinary sets already measure the trap where it isn't forced.

@@ -8,11 +8,27 @@ proposals (outcomes, experience, unfair advantage) into one build-ready list.
   still hold, except the lines named in §3.2 "Outside the section".
 * **The bar.** A student who uses TopTierPrep today opens ours and wants to switch, because
   this area does more for their score and is nicer and faster to use. Parity is failure.
-* **Names.** Upgrades are U1–U28. Builders are Part 4's tasks (F1–F6, S1–S10, T-bank). New
-  server modules are assigned to one owner each.
-* **Subject-aware.** Per v2-decisions item 3, every new payload that is about a section
-  (points, pace, readiness, habits, the avatar's domains) is keyed by `subject` (`math` now).
-  A second subject is then additive.
+* **Names.** Upgrades are U1–U29 (U27 is removed: see below). Builders are Part 4's tasks
+  (F1–F6, S1, S3–S10, T-bank; S2 is removed). New server modules are assigned to one owner
+  each.
+* **No classes** (v2-decisions item 5). This file has no teacher or student roles, classes,
+  homework, assignments, class codes, `/class/` or `/join/` pages, class boards or rosters,
+  and no data or endpoints for them. Where friends compete together, that is Compete's
+  private contest: an invite code or link that Compete owns. The shell only shows what
+  Compete exposes (U1 row 2, U18, U25).
+* **Subject-aware.** Per v2-decisions item 3, every payload that is about a subject is keyed
+  by `subject` (`math` now), so a second subject is additive:
+  * `GET /api/me/summary?subject=math` returns
+    `{stats, goals, subjects: {math: {score, domains, coverage, gains, pace, habits, levers, ranks}}}`.
+    Only cross-subject facts sit at the top level: `stats` (study time, answers, streak,
+    spares, series), `goals` (U4) and the account. Every `summary.X` path below that is about
+    a subject means `summary.subjects.math.X`.
+  * `/api/shell.me.domains`, `estimate.gains`, `progress.pace`, `habits` and the atlas take
+    `subject`. Achievement tiers that count skills, domains or types (the 19 skill badges,
+    the domain badges, Explorer's top tier of 386) are computed from
+    `catalogue.by_topic(subject)`, never hard-coded.
+  * Acceptance: `GET /api/me/summary` has `subjects.math`, and no top-level key holds
+    `domains`, `coverage`, `gains`, `pace`, `habits` or a Math score.
 * **Facts measured for this file** (on the current bank, 2026-09-23):
   * `material/keys` holds 1,039 official Math items: 54% of the 1,921 in College Board's Math
     question bank (teardown). It is uneven: circles 32 of 67, area and volume 59 of 110. So
@@ -38,32 +54,32 @@ only at parity (or below), the verdict names the upgrade that fixes it.
 
 | # | Their feature | Their version | v2 spec | After these upgrades | Verdict |
 |---|---|---|---|---|---|
-| 1 | Sidebar and icon rail | ~220px sidebar, a toggle to a ~60px rail, stacked wordmark | 248px sidebar and 68px rail, `[`, tooltips carrying the meta and the shortcut, an overlay at 760–1099px. Its pinned stack was taller than a school laptop's window, so the nav got no room | An **Up next** block with Start under Search (U1); a play button on the rail; rail peek; a height budget that keeps every nav item on screen down to 580px tall, shrinking Up next and the Today card first (U26) | v2 BELOW theirs on a 1366×768 Chromebook (the nav scrolled out of sight). **U1 + U26 → WAY BETTER.** The chrome says what to do next, why, how long it takes and how many points it is worth, and starts it in one click (or `G N`) from every page. All ten items stay visible at 1366×657. |
-| 2 | Primary nav | 10 routes, no counts, one of them sells | 9 items with live metas: 12/28, ● 14, Resume, Test day, New, #4, 2 due | Adds a **Profile** item with the week's goals ("1/3"), an inbox dot (U25), an urgent dot on the Today tab (U1). Each fact shows once: the Plan meta names the next test day instead of repeating Today's count (U26) | **WAY BETTER already in v2.** Every item says what is waiting there, and nothing repeats. Theirs are ten silent labels. |
+| 1 | Sidebar and icon rail | ~220px sidebar, a toggle to a ~60px rail, stacked wordmark | 248px sidebar and 68px rail, `[`, tooltips carrying the meta and the shortcut, an overlay at 760–1099px. Its pinned stack was taller than a school laptop's window, so the nav got no room | An **Up next** block with Start under Search (U1); a play button on the rail; rail peek. A height budget keeps every nav item on screen down to 480px tall. Below 1100px tall, Up next and the Today card move, in full, to a **Now strip** at the top of the page instead of shrinking (U26) | v2 BELOW theirs on a 1366×768 Chromebook (the nav scrolled out of sight). **U1 + U26 → WAY BETTER.** At every height the chrome says what to do next, why, how long it takes and how many points it is worth, in full text with nothing behind a hover, and starts it in one click (or `G N`) from every page. All nine items stay visible at 1366×657. |
+| 2 | Primary nav | 10 routes, no counts, one of them sells | 9 items with live metas: 12/28, ● 14, Resume, Test day, New, #4, 2 due (the 9th was Class, now removed, decision 5) | Adds a **Profile** item with the week's goals ("1/3"), an inbox dot (U25), an urgent dot on the Today tab (U1). Each fact shows once: the Plan meta names the next test day instead of repeating Today's count (U26) | **WAY BETTER already in v2.** Nine items that each say what is waiting there, with nothing repeated. Theirs are ten silent labels, one of which sells. |
 | 3 | Active nav state | Grey-blue pill, bold label | `--wash`, 600 weight, a 3px orange bar, section mapping for sub-pages. Me mapped to the user card, since there was no Profile item | Me, Settings and Sign in map to the new Profile item. Me, Settings, Results and Help get a sticky section bar with scroll-spy, built from one `UI.shell({sections})` list that covers every card, at every width (U26) | v2 PARITY, and Me had no nav item. **U26 → WAY BETTER.** On Me (16 cards), Settings, Results and Help, any card is one click away without lengthening the sidebar. |
-| 4 | Upgrade card | "Upgrade to Pro · Unlimited tests & QBank" with a TRIAL badge | Today card: minutes and questions against the goal, streak, the due assignment, exam countdown | Adds spare-day flames (U16) and a registration deadline (U17). Drops the questions bar the Today item already shows. On shorter screens it shrinks to two rows, then one, and the full card stays in its tooltip and popover (U26). Up next sits above it (U1) | **WAY BETTER.** Their slot sells. Ours shows the student's own day and starts it, and fits the screen. |
-| 5 | User card | Avatar, name, role "User", chevron; badges Trialing / Teacher Seat | Avatar, name or handle, masked email or "Not saved yet" | A living-mark avatar that fills with domain mastery, which only the student, their classes and their progress links see (U22). An unread count (U25). "Shared computer · Sign out" (U21) | v2 PARITY. **U21 + U22 + U25 → WAY BETTER.** It says whether progress is safe, what is new, and how far each domain has come. |
-| 6 | User popover | Name and email, My Profile, Send feedback, Sign out (red); ignores Esc | A `role=menu` with Profile, Settings, Sign in, Pair, Class, Shortcuts, Help, Feedback, Sign out; Esc fixed | Adds the "Since you were last here" inbox: 3 rows and "See all" (U25). Adds Students on this device, on a family device (U21). Dark theme and Large text become `menuitemcheckbox` rows in the keyboard order (U26). Sign out is at most 12 ArrowDowns away | v2 PARITY: a bug fix plus links. **→ WAY BETTER.** Missed events are kept without pushing Sign out down a scrolling menu. Siblings switch in one tap without mixing their answers. |
+| 4 | Upgrade card | "Upgrade to Pro · Unlimited tests & QBank" with a TRIAL badge | Today card: minutes and questions against the goal, streak, exam countdown (v2's due-assignment line is removed, decision 5) | Adds spare-day flames (U16), a registration deadline (U17) and a private contest closing within 24 h (from Compete). Drops the questions bar the Today item already shows. Below 1100px tall the whole card moves to the Now strip at the top of the page, every line in full (U26). Up next sits beside it (U1) | **WAY BETTER.** Their slot sells. Ours shows the student's own day in full at every screen height, and starts it. |
+| 5 | User card | Avatar, name, role "User", chevron; badges Trialing / Teacher Seat | Avatar, name or handle, masked email or "Not saved yet" | The student's own name (any script, not the board handle, U29). A photo kept only on this device, or a living-mark avatar that fills with domain mastery, which only the student and their progress links see (U22). An unread count (U25). "Shared computer · Sign out" (U21) | v2 PARITY. **U21 + U22 + U25 + U29 → WAY BETTER.** Their name and photo, plus whether progress is safe, what is new, and how far each domain has come. |
+| 6 | User popover | Name and email, My Profile, Send feedback, Sign out (red); ignores Esc | A `role=menu` with Profile, Settings, Sign in, Pair, Shortcuts, Help, Feedback, Sign out; Esc fixed (v2's Class item is removed, decision 5) | Adds the "Since you were last here" inbox: 3 rows and "See all" (U25). Adds Students on this device, on a family device (U21). A Display group of `menuitemcheckbox` rows (Dark theme, Large text) plus **Keyboard shortcuts (?)**. Home and End jump to the first item and to Sign out (U26) | v2 PARITY: a bug fix plus links. **→ WAY BETTER.** Missed events are kept, display toggles work without leaving the page, and Sign out is one End press away however long the menu grows. Siblings switch in one tap without mixing their answers. |
 | 7 | Floating quick-add | A draggable "Add your own word" button that covers Next | Quick sheet (Q or the bolt): Quick question · Log a mistake · Add a word; never floats | Log a mistake takes a College Board question ID, pasted text or a whole Bluebook test, and names the mistake from the letter the student picked (U2). An ID we don't hold yet falls back to pasted text or a skill, never to an empty result. It is logged, and T-bank ingests the rest of the Question Bank so the map covers every Math ID. The sheet also offers a time-boxed start (U1) | **WAY BETTER.** Theirs captures a word. Ours turns a missed official question into its exact question type, its named misconception (92% of the official wrong options we hold resolve to one) and unlimited twins. It works by ID for the 1,039 IDs held today (54% of the Math bank; the ingest closes the rest), and by pasted text or skill for any other. |
-| 8 | Sign-in | Google only, and a wall before anything works | No wall. Email code, pairing, device code. Slower than Google on a new device; email needs SMTP. Every sign-in silently merged whatever answers the browser held | A passkey in 2 taps (U19). The phone approves a shared computer, with nothing typed on it (U20). A remembered email in 1 tap. `/signin/` opens on the method this device used last. When the device holds answers, the student chooses whether to add them. A shared computer, or answers over a day old, never adds by default (U19–U21) | v2 BELOW theirs for a returning student, and a library sign-in could merge a stranger's answers. **U19 + U20 → WAY BETTER.** Still no wall and no Google account needed. It is faster than Google, works without SMTP, resists phishing, and never mixes someone else's answers into yours. |
-| 9 | Password | Set / Change password (8+ characters, confirm) | None: email codes | Passkeys (U19) | **WAY BETTER.** Nothing to remember and nothing to leak. |
-| 10 | Sign out | Red Sign out in the popover and on the profile | Confirm dialogs. "Sign out everywhere else" rotates the one code | Every browser holds its own device key, including the one that saved, so the learner code stops being a password and the devices list is complete. A one-time transfer code replaces Show / Copy. Sign out drops that student from the device and revokes its key, even if the tab closes during Undo. A shared computer signs out at once and expires (U21) | v2 PARITY. **U21 → WAY BETTER.** A library computer can be signed out from your phone, the list shows every device that can act as you, and no other device is affected. |
-| 11 | Report modal | "Sent with your report" (UUID), Title 0/200, Category, Details 0/5000, 10 × 50 MB images; the student never hears back | (template, seed), a "named mistake doesn't fit" category, bounded disputes, replies, an admin page | "Answer key is wrong" is checked in about a second, two ways: a separate solver re-derives the numbers, and we compare how students who are Strong in the skill answer this question type. Only when both agree does the student get the named reason for their answer, worded as exactly what was checked. Wording, figure and option problems, and any disagreement, go to a person with the evidence. Matching reports merge ("me too"). One confirmed fix corrects every affected student. Bad questions are quarantined. No screenshot needed; a typo takes 2 taps (U3) | v2 PARITY in form. **U3 → WAY BETTER.** Most disputes become a lesson within seconds, without talking a student out of a real key error. Those reach a person with evidence, and the fix reaches everyone. |
+| 8 | Sign-in | Google only, and a wall before anything works | No wall. Email code, pairing, device code. Slower than Google on a new device; email needs SMTP. Every sign-in silently merged whatever answers the browser held | **Continue with Google** when the deploy sets `SATF_GOOGLE_CLIENT_ID` (U19b). A passkey in 2 taps, offered in the field's autofill (U19). The phone approves a shared computer, with nothing typed on it (U20). Email codes, with SMTP a launch requirement and `/api/health` stating the mail mode, so the Email tab never dead-ends (U19). A remembered email in 1 tap. `/signin/` opens on the method this device used last. When the device holds answers, the student chooses whether to add them. A shared computer, or answers over a day old, never adds by default (U19–U21) | v2 BELOW theirs for a returning student, and a library sign-in could merge a stranger's answers. **U19 + U19b + U20 → WAY BETTER.** Their one method (Google) is there, and so are four more: a school Chromebook signs in with the student's Google account, a synced passkey signs in from autofill, a phone approves a library PC, and email works on any device. Still no wall, and no one else's answers are mixed into yours. |
+| 9 | Password | Set / Change password (8+ characters, confirm) | None: email codes | Passkeys (U19), Google (U19b) | **WAY BETTER.** Nothing to remember and nothing to leak. |
+| 10 | Sign out | Red Sign out in the popover and on the profile | Confirm dialogs. "Sign out everywhere else" rotates the one code | Every browser holds its own device key, including the one that saved. Other browsers that held the old code swap to their own key on their next visit instead of being cut off, and the student can end the old code at once. A one-time transfer code replaces Show / Copy. Sign out drops that student from the device and revokes its key, even if the tab closes during Undo. A shared computer signs out at once, and its key dies 60 s after the last tab closes or after 15 idle minutes (U21) | v2 PARITY. **U21 → WAY BETTER.** A library computer can be signed out from your phone, reopening a closed tab there doesn't bring you back, the list shows every device that can act as you, and no other device is affected. |
+| 11 | Report modal | "Sent with your report" (UUID), Title 0/200, Category, Details 0/5000, 10 × 50 MB images; the student never hears back | (template, seed), a "named mistake doesn't fit" category, bounded disputes, replies, an admin page. Images capped at 10 MB each | "Answer key is wrong" is checked in about a second, two ways: a separate solver re-derives the numbers, and we compare how students who are Strong in the skill answer this question type. Only when both agree does the student get the named reason for their answer, worded as exactly what was checked. Wording, figure and option problems, and any disagreement, go to a person with the evidence. Matching reports merge ("me too"). One confirmed fix corrects every affected student. Bad questions are quarantined. No screenshot needed; a typo takes 2 taps. When a file helps: 10 files, GIFs and screen recordings up to 50 MB each, and a built-in **Record screen** (U3) | v2 PARITY in form, and BELOW theirs on file size. **U3 → WAY BETTER.** Most disputes become a lesson within seconds, without talking a student out of a real key error. Those reach a person with evidence, and the fix reaches everyone. Everything theirs attaches, ours attaches, plus video and a recorder. |
 | 12 | Send feedback (+ /feedback) | The same modal, with no context | The same, plus page context and replies | A breadcrumb of the last 10 actions (kept in memory, shown before sending). A public "Fixed from your reports" list (U3) | v2 PARITY. **U3 → WAY BETTER.** Bugs arrive reproducible, and students can see their reports change things. |
-| 13 | Toasts | Generic ("Task skipped / added …") | Generic, with actions; used for achievements, replies, assignments | An inbox keeps every missed toast. Undo on every reversible action. A welcome-back block. At most one sheet opens by itself a day, never over a link the student followed, and toasts wait until it closes (U25) | v2 PARITY. **U25 → WAY BETTER.** Nothing important vanishes after 4 seconds, a slip is one tap to undo, and coming back means one sheet, not a pile-up. |
+| 13 | Toasts | Generic ("Task skipped / added …") | Generic, with actions; used for achievements and replies | An inbox keeps every missed toast. Undo on every reversible action. A welcome-back block. At most one sheet opens by itself a day, never over a link the student followed, and toasts wait until it closes (U25) | v2 PARITY. **U25 → WAY BETTER.** Nothing important vanishes after 4 seconds, a slip is one tap to undo, and coming back means one sheet, not a pile-up. |
 | 14 | Profile layout | Left third / right two-thirds | The same split, 13 cards, a non-sticky left column, a phone order | A sticky section bar with scroll-spy at every width, and collapsible cards (U26). New cards: This week, Pace, Your habits, Test-day readiness. Learning preferences gains Words a day and Test timing (U15). Saved gains saved words and marked questions (§3.1 override 30) | v2 PARITY. **→ WAY BETTER.** It holds more and is faster to move through. |
 | 15 | Identity card and tiles | Avatar with a camera badge, name, email, a "Not set yet" pill, 2×2 tiles (Streak / Tests / Solved / Vocab); two streaks disagree | 2×4 tiles with sub-lines and links, goal pills, one streak | An outcome strip: score since you started, points on the table, fixes that held. Each tile gets a 14-day sparkline and a delta. Accuracy is first-try. Every figure opens how it is worked out, your numbers, and what moves it (U10, U13) | v2 PARITY: more volume counts. **U10 + U13 → WAY BETTER.** It says whether the score is moving and what moves it next. |
 | 16 | Streak | 0 on the profile and 1 on the question of the day; any missed day breaks it | One server value; planned rest days kept | Earned spare days: 1 per 7 study days in a row, up to 2, shown everywhere (U16) | **WAY BETTER.** One number, which a sick day cannot wipe out, and free. |
-| 17 | Rank snapshot | Global 128 and Country 43, with no contests played and no stated basis | Practice rank (right answers in the last 7 days) among everyone, the same exam date and each class; challenge lines | Adds movement since last week, the gap to the next place, and a Country line (their Country rank, which v2 dropped from Me). Adds a Climb rank among students who started near your band: the window widens until 20 are in it, and the card states it. Adds you against yourself from day 8 (U11) | v2 BELOW theirs: still ranks volume, and no Country rank. **U11 → WAY BETTER.** It rewards learning from launch week, gives every level a race it can win, keeps their Country rank, and states its terms. |
+| 17 | Rank snapshot | Global 128 and Country 43, with no contests played and no stated basis | Practice rank (right answers in the last 7 days) among everyone and the same exam date; challenge lines (v2's per-class lines are removed, decision 5) | Adds movement since last week, the gap to the next place, and a Country line (their Country rank, which v2 dropped from Me), with the country chosen right there or in Settings › Account & devices. Adds a Climb rank among students who started near your band: the window widens until 20 are in it, and the card states it. Adds you against yourself from day 8 (U11) | v2 BELOW theirs: still ranks volume, and no Country rank. **U11 → WAY BETTER.** It rewards learning from launch week, gives every level a race it can win, keeps their Country rank (one tap to switch on), and states its terms. |
 | 18 | Credits meters | Quota meters and Upgrade | "Question types met: 57 of 386" | Test-day readiness, weighted by how often each kind of question appears in College Board's own questions, with the type atlas (U8) | v2 PARITY: a raw count. **U8 → WAY BETTER.** Coverage tracks the questions the student will actually see, and the biggest gap is one click from practice. |
-| 19 | Saved content | Counts: Saved Words, Redo Questions, Saved Questions | Counts with Practise saved, Fix all, due assignments, In progress with Resume. It dropped their Saved Words | Saved words (Review them) and Marked for review (Practise marked) join the counts. Saved questions come back as fresh twins in Up next at 7 and 21 days (U1, §3.1 override 30) | v2 BELOW theirs (two of their three counts). **→ WAY BETTER.** All three of theirs, plus marked questions, and a bookmark list becomes spaced retrieval. |
-| 20 | Account block | Name and email editable inline, password, "Google connected", Sign out | Saved and unsaved states, Manage, Sign out | Passkeys list, a devices list that includes every browser that can act as you, and a recovery line: "You can sign in 2 ways" (U19, U21) | v2 PARITY. **→ WAY BETTER.** The student sees every place they are signed in, and that they can't be locked out. |
-| 21 | Avatar | Photo upload, replace, remove | An initial or one of 19 glyphs, all free to pick | Default: a living mark that fills with domain mastery, seen only by the student, their classes and their progress links. All 19 glyphs stay free from day one; reaching Strong adds a filled ring and a check to that glyph. Public boards show only the glyph or the initial (U22) | v2 BELOW theirs. **U22 → WAY BETTER.** 21 choices on day one, one of which says something true about the student, badges earned on top, no photo for minors, and no mastery on public boards. |
-| 22 | Study goals card | Target (not synced), exam date "N days remaining", Daily 2h, Weekly 12h, Preferred time (no effect) | Target and exam date synced and editable; daily and weekly bars; week dots; focus; preferred time → calendar | The target stated in questions, a projection to the exam, and week goals with history (U4, U9, U14) | v2 PARITY in facts. **→ WAY BETTER.** It says whether the target is realistic and what reaching it takes. |
-| 23 | Target score modal | States the wrong "current score"; a number input; Save disabled until you type | Slider, chips, "+100 from your latest band"; synced | "What 700 takes: about 37 of 44 right; you're near 31." A live pace tag, one tap to a date that makes the target Steady, and "Raise to 750?" once it is reached (U4) | v2 PARITY. **U4 → WAY BETTER.** |
+| 19 | Saved content | Counts: Saved Words, Redo Questions, Saved Questions | Counts with Practise saved, Fix all, In progress with Resume (v2's due assignments are removed, decision 5). It dropped their Saved Words | Saved words (Review them) and Marked for review (Practise marked) join the counts. Saved questions come back as fresh twins in Up next at 7 and 21 days (U1, §3.1 override 30) | v2 BELOW theirs (two of their three counts). **→ WAY BETTER.** All three of theirs, plus marked questions, and a bookmark list becomes spaced retrieval. |
+| 20 | Account block | Name and email editable inline, password, "Google connected", Sign out | Saved and unsaved states, Manage, Sign out. One name served as both the student's name and the public board name, under the board rule (no José, no 李明, no second Emma) | The student's own name in any script, private and not unique, apart from the board name, each editable inline (U29). "Google connected" when used (U19b). Passkeys list, a devices list that includes every browser that can act as you, and a recovery line: "You can sign in 3 ways" (U19, U21) | v2 BELOW theirs on the name (a regression from our own site). **U29 + U19b + U21 → WAY BETTER.** Their name and email editing, a separate board name that keeps the real name off public boards, and the student sees every place they are signed in and that they can't be locked out. |
+| 21 | Avatar | Photo upload, replace, remove | An initial or one of 19 glyphs, all free to pick | **Your photo, kept on this device only**: upload, replace and remove, downscaled to 256px and never uploaded. Or the living mark that fills with domain mastery, seen only by the student and their progress links. All 19 glyphs stay free from day one; reaching Strong adds a filled ring and a check to that glyph. Public boards show only the glyph or the initial (U22) | v2 BELOW theirs. **U22 → WAY BETTER.** Their photo, with no copy of a minor's face on any server, plus 21 more choices on day one, one of which says something true about the student, badges earned on top, and no photo or mastery on public boards. |
+| 22 | Study goals card | Target (not synced), exam date "N days remaining", Daily 2h, Weekly 12h, Preferred time (no effect) | Target and exam date synced and editable; daily and weekly bars; week dots; focus; preferred time → calendar. Math target only, while Today and Plan show a 1600 total | The target on their 1600 scale: "Total 1400 = Math 700 + R&W 700", both parts editable, the same figure on Me, Today and Plan. The Math part stated in questions and module-1 routing, a projection to the exam, and week goals with history (U4, U9, U14) | v2 BELOW theirs (no 1600 total on the profile). **→ WAY BETTER.** The number colleges see, and whether it is realistic and what reaching it takes. |
+| 23 | Target score modal | States the wrong "current score"; a number input; Save disabled until you type | Slider, chips, "+100 from your latest band"; synced | Total and both parts. "What 700 takes: about 37 of 44 right, with at least 14 of 22 in module 1 to reach the harder module 2; you're near 31." It names our model's ceiling (780) instead of promising 800. A live pace tag, one tap to a date that makes the target Steady, and "Raise to 750?" once it is reached (U4) | v2 PARITY. **U4 → WAY BETTER.** The target in right answers, with the routing it needs, on the 1600 scale. |
 | 24 | Exam date | A select that includes past dates; the wizard uses a free calendar | Upcoming official dates, Another date, No date yet | Each chip shows the registration and late deadlines, and a projected score when the projection is within ±80 (U9). A deadline banner stays until "Registered"; the deadline goes to the calendar (U17, U4) | v2 PARITY. **U17 → WAY BETTER.** It covers missed registration, the plainest way to miss the SAT altogether. |
 | 25 | Daily / weekly goal | "2 Hours" / "12 Hours", with bars | Bars and week dots (the plan's day rule) | Weekly goals chosen from evidence ("Fix the 4 open Circles mistakes", "Pass 6 check-ins") and a history of met weeks (U14) | v2 PARITY. **U14 → WAY BETTER.** |
-| 26 | Preferred time | "Evening", with no effect anywhere | Calendar download or subscribe, with alarms. Google Calendar ignores alarms in URL feeds, Apple strips them by default, and feed titles went stale between refreshes | Notifications on this device ship in the core build: "3 check-ins due · about 4 min", worked out at send time (U18b). For calendars: step-by-step alert setup for Google and Apple, an **Add to Google Calendar** recurring event that uses the student's own notifications, and feed events that open what is due now (U18a) | v2 PARITY in practice (mostly silent blocks). **U18 → WAY BETTER.** The reminder actually rings, on time, and says what it is for. |
+| 26 | Preferred time | "Evening", with no effect anywhere | Calendar download or subscribe, with alarms. Google Calendar ignores alarms in URL feeds, Apple strips them by default, and feed titles went stale between refreshes | Notifications on this device ship in the core build: "3 check-ins due · about 4 min", worked out at send time, at the time the student chose, whatever that time is. Quiet hours (shown and editable) only hold back extra nudges (U18b). For calendars: step-by-step alert setup for Google and Apple, an **Add to Google Calendar** recurring event that uses the student's own notifications, and feed events that open what is due now (U18a) | v2 PARITY in practice (mostly silent blocks). **U18 → WAY BETTER.** The reminder actually rings, on time, and says what it is for. |
 | 27 | Subject performance | A per-subject block, empty on a new account | 19 skills under 4 domains: bar, accuracy, mistake dots, Practise | Sorted by points on the table. Each skill states its evidence on one ladder: Not started, Not measured yet, rough, measured. It also shows its 14-day trend, its last 5 answers and a fading marker. A 12-question Sharpen probe (U4, U5) | v2 PARITY: a report card. **U4 + U5 → WAY BETTER.** A priced to-do list the student can trust. |
 | 28 | Score trend | A line chart with "Latest: N" | Range bars, target line, exam tick, click-through | A projection to the exam date once 3 sittings span 3 weeks, labelled "If this pace held". It is shrunk toward no change, its gains taper after 4 weeks, and it is widened by the fit's own scatter. Also the plan's pace line, and what changed between two sittings (U9) | v2 PARITY: a nicer chart of the past. **U9 → WAY BETTER.** It ties effort to results and looks forward, without promising a score that a couple of sittings can't support. |
 | 29 | Achievements | 4 hard-coded tiles; View All is dead | 43 tiered badges with progress, earned dates and rules | Go on every badge in progress starts the drill that advances it. New Trap-proof and week-goal ladders (U13, U6, U14) | **WAY BETTER already in v2.** |
@@ -71,13 +87,11 @@ only at parity (or below), the verdict names the upgrade that fixes it.
 | 31 | Recent activity | A list of sittings | A filtered feed of 10 kinds under day headers, paged | Each row shows its effect (mastery words moved, mistakes fixed and opened, about how many points) and offers Again · new numbers, or Follow up (U12) | v2 PARITY in kind: log lines. **U12 → WAY BETTER.** |
 | 32 | Subscription and billing | Header, plan status, usage meters, Pro $13.99 / Elite $23.99 cards, 7-day trial, payment history, /pricing | None: free | Nothing further | **WAY BETTER.** Everything is free, and each surface they sell from does study work: the Today card, Test-day readiness and Help. |
 | 33 | FAQ accordion | Six billing questions | /help/ with live search, anchors, copy-link | A "?" beside every number opens its answer in place, with the student's own numbers. The palette searches Help. A Fixed list (U13, U24, U3) | v2 PARITY in form. **→ WAY BETTER.** |
-| 34 | Classes (/my-classes) | Hidden; the teacher adds students | /class/ with a join code, class cards, assignments | Tailored questions and "Reach a level" homework (U27) | **WAY BETTER.** |
-| 35 | Homework runner | A full test or a QBank session, time limit, Attach file, Finish | Set, module or section; fresh per student or the same for everyone; attach working; Start / Resume / Review | "Reach a level" serves fresh questions until each skill reaches the target (with a cap). Tailored puts each student's own mistakes first (U27) | v2 PARITY in shape. **U27 → WAY BETTER.** It assigns an outcome, not a count. |
-| 36 | Teacher dashboard | Create a class, add students, assign, due dates; teachers are provisioned seats | Roster, per-question results, the class's named mistakes with "Assign a repair" | Adds how many questions each student needed to reach the level, and who is stuck on which named mistake (U27). Creating a class needs a verified email, even with a passkey. Joining students see "Ms. Rivera · verified @lincolnhs.org". Free-mail classes are capped at 40, and every class page has "Report this class" (U27) | **WAY BETTER**, and safe for minors: no anonymous adult can collect a class of students. |
-| 37 | Single-question route | /question/:key | Permalink `?q=TEMPLATE:SEED` | "Send to a friend" defaults to a twin (same type, the friend's own numbers), with a head-to-head result (U28) | v2 PARITY. **U28 → WAY BETTER.** Answers can't be passed along. |
-| 38 | Shared session links | /question-bank/shared/:id with a Start Practice landing | Sets, with owner results showing per-question right rates and the most common named mistake | A fresh-per-friend option (U28) | **WAY BETTER** (named mistakes in the owner's results). |
-| 39 | Canvas and look | Light grey canvas, white 18px cards; no display settings | Paper with bordered tile cards; dark theme, large question text, reduced motion | Instant pages: prerender on hover, and paint from cache. A prerendered page marks nothing as seen, opens no sheet or toast, and sends no write until it is actually opened (U23) | **WAY BETTER.** Display settings they lack, and pages that open with content instead of a skeleton, without breaking the "New" signals. |
-| 40 | Phone chrome | Not seen in the walk | A 56px top bar with Search, the Review chip, Quick and the menu; 5 tabs; a menu sheet whose daily rows sat about 700px down, below the fold | Tapping the tab bar's grip opens the menu sheet. Up next comes first. Review, Words, Compete, Class and Quick sit in a footer that is always on screen. The inbox shows 3 rows. A held tab offers shortcuts. The palette sits above the keyboard. The top bar fits 360px with a 3-digit count (U26, U1) | Theirs was not seen. v2 put the daily actions below the fold. **U26 → WAY BETTER.** Review is two taps from any page, on any phone, with no scrolling. |
+| 34 | Classes, homework and the teacher dashboard (/my-classes) | Hidden in theirs; a teacher adds students, assigns a test or a QBank session with a time limit and Attach file, and sees results | /class/ with a join code, assignments, a roster | **Not built here** (v2-decisions item 5: a separate platform runs classes). No classes, roles, homework, assignments, class codes or `/class/` and `/join/` pages. Friends who want to compete together use Compete's private contests, an invite code or link that Compete owns. A parent or tutor who wants to follow one student uses the progress link (`/share/`, R18a) | **Out of scope by decision.** Not scored against theirs. |
+| 35 | Single-question route | /question/:key | Permalink `?q=TEMPLATE:SEED` | "Send to a friend" defaults to a twin (same type, the friend's own numbers), with a head-to-head result (U28) | v2 PARITY. **U28 → WAY BETTER.** Answers can't be passed along. |
+| 36 | Shared session links | /question-bank/shared/:id with a Start Practice landing | Sets, with owner results showing per-question right rates and the most common named mistake | A fresh-per-friend option (U28) | **WAY BETTER** (named mistakes in the owner's results). |
+| 37 | Canvas and look | Light grey canvas, white 18px cards; no display settings | Paper with bordered tile cards; dark theme, large question text, reduced motion. Settings offered only Normal · Large, so the Small size had no control | Question text **Small · Normal · Large** with a live preview in Settings, and Dark theme and Large text in the account menu (U26). Instant pages: prerender on hover, and paint from cache. A prerendered page marks nothing as seen, opens no sheet or toast, and sends no write until it is actually opened (U23) | **WAY BETTER.** Display settings they lack, and pages that open with content instead of a skeleton, without breaking the "New" signals. |
+| 38 | Phone chrome | Not seen in the walk | A 56px top bar with Search, the Review chip, Quick and the menu; 5 tabs; a menu sheet whose daily rows sat about 700px down, below the fold | Tapping the tab bar's grip opens the menu sheet. Up next comes first. Review, Words, Compete and Quick sit in a footer that is always on screen. The inbox shows 3 rows. A held tab offers shortcuts. The palette sits above the keyboard. The top bar fits 360px with a 3-digit count (U26, U1) | Theirs was not seen. v2 put the daily actions below the fold. **U26 → WAY BETTER.** Review is two taps from any page, on any phone, with no scrolling. |
 
 ---
 
@@ -106,7 +120,7 @@ The kinds, in order. The first rows that apply are taken, de-duplicated by `key`
 | # | kind | when | title (example) | reason (example) | start |
 |---|---|---|---|---|---|
 | 1 | `resume` | an unfinished timed module or section with time left | "Resume module · 12/22 · 18 min left" | "Your clock is still running" | href `/test/?s=` |
-| 2 | `assignment` | a class assignment due within 24 h and not done (`deps.part('classes','due_soon')`) | "Period 3 · Circles · 10 q" | "Due tonight 23:59" | its start |
+| 2 | `contest` | a private contest the student joined (Compete's invite code or link) that closes within 24 h and they haven't finished (`deps.part('compete','closing_soon')`, which returns `[]` until S8 provides it) | "Sam's contest · 10 q" | "Closes tonight 23:59" | Compete's start href |
 | 3 | `plan` | today's unfinished counted plan tasks, in plan order (`deps.part('plan','today_summary')`) | "Plan · Circles, Percentages · 10 q" | "Today's plan: 2 of 4 done" | the task's drill body |
 | 4 | `checks` | fixed mistakes whose check-in is due today or earlier (R9 `traps.due`) | "Check-in: diameter vs radius (+2 more)" | "Fixed 10 days ago: checking it stuck" | `{pool:'checks', ids, count: min(3n, 9)}` |
 | 5 | `redo` | open mistakes, ranked by the skill's points at stake (U4) × hits | "Fix: Used the diameter as the radius" | "Caught you 3 times · ≈ 6 pts" | `{pool:'redo', ids:[id], count:3}` |
@@ -128,7 +142,7 @@ The kinds, in order. The first rows that apply are taken, de-duplicated by `key`
     misses and a gain of 20 gives ≈ 6.
   * `habit`: the sum over the habit's skills of `gain(s) × (the habit's misses in s ÷ all
     misses in s)`, over the same 60 days.
-  * Every other kind (`resume`, `assignment`, `plan`, `checks`, `probe`, `saved`, `warm`,
+  * Every other kind (`resume`, `contest`, `plan`, `checks`, `probe`, `saved`, `warm`,
     `untried`, `qotd`): `pts = null`, and the meta and reason leave the figure out.
   * `redo` and `habit` round to whole points and hide below 1. With `gains == null` (under 30
     answers) every `pts` is null.
@@ -166,15 +180,14 @@ The kinds, in order. The first rows that apply are taken, de-duplicated by `key`
   * A `›` button (`aria-label="More up next"`) opening a `UI.pop` with:
     * the next 5 items, each with Start and **Not today**;
     * a chip row: "Got time? 5 · 15 · 30 min".
-  * On shorter screens the block shrinks by U26's height budget: two lines (the title and
-    Start, then the meta and reason on one truncated line), then one 36px row (a play glyph,
-    the title and Start). The full text is always in the row's tooltip and in the `›`
-    popover.
+  * Below 1100px tall, and whenever the sidebar is the rail, the block leaves the sidebar
+    and renders in full, every line, in the Now strip at the top of the page (U26). It never
+    shrinks to a truncated line or a tooltip.
 * **Rail**: a 44px orange play button under the search icon. Its tooltip reads
   "Next: Check-in · diameter vs radius · 3 q · 4 min · G N".
 * **Phone**:
   * The first row of the menu sheet is Up next, with its Start and the time-box chips.
-  * The Today tab gets a 7px dot when item 1 is `urgent` (resume, an assignment due, a
+  * The Today tab gets a 7px dot when item 1 is `urgent` (resume, a contest closing, a
     check-in due).
 * **Keys and links**:
   * `G N` starts item 1 on any shell page.
@@ -186,7 +199,14 @@ The kinds, in order. The first rows that apply are taken, de-duplicated by `key`
 * **States**:
   * Loading: two skeleton lines.
   * Error: the block hides, and the nav still works.
-  * Brand-new student: "Take the diagnostic · 20 q", with a quiet "or one quick question".
+  * Brand-new student (0 answers). The first thing offered never ends in a sign-up form:
+    1. "Take a module · 22 q · 35 min", reason "Your first score band. No sign-up."
+       (href: S5's new-module start);
+    2. "Sharpen · 12 q · ~19 min", reason "Or a shorter start: find your weak skills" (row 7);
+    3. "Diagnostic · 20 q". While R38's sign-up gate exists, its reason reads "Asks for your
+       name and email to show results". For a saved learner (`account.saved`, U19) there is
+       no form, so the reason is "Your starting band in 20 questions".
+    A quiet "or one quick question" follows.
   * Day done (the Plan day rule) with nothing urgent: "Day done · Another? Probability · 10 q".
 
 **How it uses the rest of the site.**
@@ -219,6 +239,9 @@ The kinds, in order. The first rows that apply are taken, de-duplicated by `key`
 8. A learner whose plan today holds a check-ins task, with 2 check-ins due: `GET /api/next`
    has exactly one item whose start body has `pool == 'checks'`, and its reason contains
    "also in today's plan".
+9. A brand-new learner: `items[0].title` starts with "Take a module", and no item before the
+   diagnostic ends in a sign-up form. With `deps.part('compete','closing_soon')` absent,
+   `GET /api/next` still returns 200 and has no `contest` item.
 
 #### U2. Bring your misses: an ID, pasted text or a whole Bluebook test becomes named mistakes
 
@@ -356,7 +379,20 @@ distractors can answer one on the spot.
   grid-in field with its preview (F3). This replaces the 40-character box.
 * The "Don't count this against me" checkbox moves to the "send to a person" step below.
 * **Question reports** say "We have this exact question (circles/central_angle · seed 88213).
-  No screenshot needed." Images sit behind "Add images".
+  No screenshot needed." Files sit behind "Add files".
+* **Files** (changes R17's limits; at least what theirs takes, which is 10 × 50 MB):
+  * Up to 10 files: PNG, JPEG and WebP stills (downscaled in the browser to 2000px, 10 MB
+    cap after that), GIF sent as-is up to 50 MB, and screen recordings `video/webm` and
+    `video/mp4` up to 50 MB each. 200 MB per report in all.
+  * **Record screen** (where `navigator.mediaDevices.getDisplayMedia` and `MediaRecorder`
+    exist, so desktop browsers): one tap records up to 60 s as WebM with a visible
+    "Recording 0:12 · Stop", and the clip joins the list with its size. Nothing records
+    without the browser's own share prompt.
+  * Each file row shows its name, size and a remove ×. A file over its cap is refused in the
+    row with the reason ("This GIF is 62 MB. The limit is 50 MB.") before anything is sent.
+  * Server: the upload is streamed to `server/reports/{id}/` in chunks and stopped past the
+    type's cap (413 `{file, limit}`). Any other type → 415. The admin page plays videos and
+    GIFs inline.
 * **Typo or display** and **Figure or table wrong** send without details: Report → chip →
   Send, 2 taps.
 * **Me too**. When an open report exists on the same (template, seed), or on the same template
@@ -461,6 +497,8 @@ date, skill or page, a one-line change and the number of reports. No names.
 8. The same fixture with 20 Strong learners of whom 12 picked C's norm, against a base rate
    of 15% → `unsure` with `check.signal.strong == 0.6`, and the attempt has `disputed = 1`.
 9. `category: 'figure'` on any question → no lesson text in the response, and status `new`.
+10. A report with a 40 MB GIF → 200, and the file is on disk at its full size. A 20 MB
+    `video/webm` → 200. A 60 MB GIF → 413 naming the 50 MB limit. A `application/zip` → 415.
 
 ### B. Me: priced, measured, forward-looking
 
@@ -500,9 +538,18 @@ mislabelled percentages ("13% of test section, 1-8 questions").
 5. **Questions to Strong**: the smallest k right answers at the learner's current tier which,
    appended, lift `progress.mastery_of` past `STRONG`. It is stated as "at least k right".
 6. **Time**: k × the learner's median seconds on that skill (default 95).
-7. **Need** (`estimate.need(target)`): invert `_interpolate` to get F\*, then report
-   `right_of_44 ≈ round(44·F*)` against the learner's `round(44·F)`, and the 3 skills with the
-   largest gains as "where the missing ones are".
+7. **Need** (`estimate.need(target)`), which must agree with how `scoring.py` scores a
+   sitting:
+   * **Ceiling.** `_interpolate` tops out at 780 for a perfect paper (`ANCHORS`). A target
+     above 780 returns `{reachable: false, ceiling: 780, right_of_44: 44}`.
+   * **Right answers.** Otherwise invert `_interpolate` to get F\*, and report
+     `right_of_44 = ceil(44·F*)` against the learner's `round(44·F)`, with the 3 skills with
+     the largest gains as "where the missing ones are".
+   * **Routing.** `section_score` caps a lower-route band at `LOWER_ROUTE_CEILING` (580), and
+     `route_after` routes up only at `ROUTE_UP_AT` (0.60) of module 1. So for a target above
+     580, `m1_min = ceil(0.60 × 22) = 14` (read from the constants, never typed), else
+     `m1_min = null`.
+   * Returns `{target, reachable, ceiling, right_of_44, now_of_44, m1_min, where: [topic]}`.
 
 Returns `{subject, total, top3, skills: [{topic, gain, per_test (44·s_t, 1 decimal), accuracy,
 evidence, to_strong, minutes}]}`. With fewer than 30 answers it returns `null`. `S` itself is
@@ -523,9 +570,26 @@ never shown as a score: only its differences are. The score estimate stays R16's
 * Each row's evidence follows the one ladder in U5: no gain is shown below 5 answers, and a
   rough row's gain carries the "rough" tag.
 
+**The target is a 1600 total** (changes §3.3; R15 already stores `target`, `rw_now` and
+`rw_target`, and Today and Plan already show the total):
+* Me's Goals card Target row reads "Target **1400** = Math 700 + R&W 700 (your estimate)".
+  With no `rw_target` it reads "Math target 700 · Add your R&W target for a total".
+* The Snapshot's band line adds "SAT total 1130–1210 · R&W 610 (yours)" when `rw_now` is
+  set (or an added outside score carries R&W), in Today's wording.
+* `summary.goals = {total: {target, now_low, now_high} | null, subjects: {math: {target, band},
+  rw: {target, now, source: 'yours'}}}`. Me, Today and Plan all read it, so one edit shows
+  everywhere.
+
 **Target popover** (changes §3.3):
-* "What 700 takes: about 37 of 44 right. You're near 31. The 6 you're most likely missing are
-  in Circles, Probability and Nonlinear functions."
+* Two parts, each a slider 200–800 in tens with chips, and the total above them, live:
+  "Total 1400". Save sends `PUT /api/me {target, rw_target}` (and `rw_now` when changed).
+* **Math**: "What 700 takes: about 37 of 44 right, with at least 14 of 22 in module 1 to
+  reach the harder module 2. You're near 31. The 6 you're most likely missing are in
+  Circles, Probability and Nonlinear functions." For a target of 580 or less the module-1
+  clause is left out. Above 780: "Our score model tops out at 780 for a perfect paper; a
+  780 puts 800 inside your band." The helper links `/help/#routing`.
+* **R&W**: "Your R&W now" (a number or "Not sure") and the R&W target. The line reads "R&W
+  is your own estimate for now. Words is our first R&W piece; R&W practice comes later."
 * The live pace line from S7's `plan.pace(target, exam, estimate)`: "45 days · 31 study days ·
   about 22 points a week · Ambitious".
 * When the tag is Ambitious or harder, one chip moves the date: "Dec 5 makes it Steady".
@@ -554,9 +618,17 @@ Week goals word their suggestions with it (U14).
 2. `python3 server/estimate.py` passes asserts:
    * raising any single skill's accuracy never lowers S;
    * `gains` for a learner at 100% everywhere is all zeros;
-   * `need(800).right_of_44 == 44`.
+   * `need(700).m1_min == 14` and `need(560).m1_min is None`;
+   * `need(800).reachable is False` and `need(800).ceiling == 780`;
+   * for every target from 200 to 780 in tens, `scoring._interpolate(right_of_44 / 44) >=
+     target`, and `(right_of_44 − 1) / 44` falls short of it;
+   * `scoring.route_after(m1_min, 22) == 'upper'` and `route_after(m1_min − 1, 22) ==
+     'lower'`.
 3. A learner with 12 answers: `gains == null`, and the card shows "Answer 30 questions".
-4. The target popover for 700 contains the text "of 44" with an integer from 0 to 44.
+4. The target popover for 700 contains "of 44" with an integer from 0 to 44, and "14 of 22 in
+   module 1". For 560 it has no "module 1" text. For 800 it names 780.
+5. `PUT /api/me {target:700, rw_target:700}` → `summary.goals.total.target == 1400`, and
+   `/`, `/plan/` and `/me/` all render "1400".
 
 #### U5. Measured or rough: every skill says how far to trust it, and a 12-question Sharpen
 
@@ -594,7 +666,8 @@ in red with no way to fix it.
 * It starts `POST /api/drill {source:'probe', count:12}`. F5 picks the 4–6 rough skills with
   the highest `s_t × (1 − n/10)`, spreads the 12 across them with `adaptive: true` and
   `repairs: 'end'`, and orders them `mixed`.
-* A new student sees Sharpen and "Take the diagnostic · 20 q" side by side.
+* A new student sees "Take a module · 22 q" and Sharpen side by side, in U1's new-student
+  order (neither ends in a sign-up form).
 
 **Summary** (S4). After a probe, the summary's first block reads "What changed: Probability
 rough → Learning (the coach now includes it). Circles rough → Strong (the coach will skip
@@ -603,7 +676,7 @@ it)."
 **Coach** (F4). A rough skill gets one probe item group before the coach assigns it a full
 set (coach reason `probe`).
 
-**Data.** `/api/me/summary.domains[].skills[]` adds
+**Data.** `/api/me/summary.subjects.math.domains[].skills[]` adds
 `{evidence, trend14, last5: [1,0,1,1,0], fading, last}`.
 
 **Acceptance.**
@@ -684,7 +757,9 @@ The summary shows the tell above the results.
 * A new achievement ladder, Trap-proof (beaten in a new place 5 / 20 / 50), goes through R25.
 
 **Data.**
-* `/api/me/summary.habits: [{id, name, tell, misses, skills: [topic], trend}]`.
+* `/api/me/summary.subjects.math.habits: [{id, name, tell, misses, skills: [topic], trend}]`.
+  `habits.py` families carry a `subject` (all `math` today), so an R&W family list is
+  additive.
 * F5's `want` matcher also tests `progress.norm(reason)`, so a norm string (escaped) works as
   a regex: a one-line change.
 * The norm index (template → norms its distractors carry) is shared with Review's "same
@@ -789,7 +864,8 @@ counting). **Readiness** = Σ weight of the ready types.
 
 **Data.**
 * `GET /api/types` adds `weight` and `official` per template.
-* `/api/me/summary.coverage` becomes `{readiness, met, total, types: {template: {met, right, last, open}}}`.
+* `/api/me/summary.subjects.math.coverage` becomes `{readiness, met, total, types: {template: {met, right, last, open}}}`.
+  `GET /api/types?subject=math` scopes the weights, so they sum to 1 within a subject.
 
 **Acceptance.**
 1. `GET /api/types`: the weights sum to 1 (±1e-6). The circles weights sum to
@@ -836,7 +912,7 @@ ties effort to results.
 * **What changed**: hovering or focusing the gap between two adjacent sittings shows "Sep 12 →
   Sep 20: 212 questions · 3h 40m · 11 mistakes fixed · Circles → Strong · +40". It is computed
   by the server from `progress.days` and the traps closed between the two finish times
-  (`summary.score.gaps[]`). The biggest-gain gap is labelled once on the chart.
+  (`summary.subjects.math.score.gaps[]`). The biggest-gain gap is labelled once on the chart.
 * The chart's hidden table gains "Projected" and "Pace" rows.
 
 **Acceptance.**
@@ -871,7 +947,8 @@ ties effort to results.
 * ACCURACY is labelled **FIRST-TRY ACCURACY**. Its lever says repeats and retries are left
   out (R8), which is why it means something; theirs allows unlimited retries.
 * **Data**: `summary.stats.series: {answered, minutes, accuracy, fixed}` (14 values each) and
-  `summary.stats.delta`.
+  `summary.stats.delta`, cross-subject. The outcome strip's first two figures read
+  `subjects.math`.
 
 **Acceptance.** For a learner with 84 answers in the last 7 days and 0 in the 7 before, the
 ANSWERED tile's delta reads "▲ 84", and its sparkline has 14 points.
@@ -890,8 +967,21 @@ Each practice-rank line (§3.2) gains:
 
 A new line, **Country** (their Country Rank, kept): "United States **#14** of 96", shown when
 `learners.country` is set. It reads Compete's practice board with the Country scope (S8,
-R12), with the same movement and gap. When the country is blank: "Set a country to see your
-country rank" → `/me/settings/#account`.
+R12), with the same movement and gap. When the country is blank the line reads "Add your
+country to see your country rank", and **Add country** opens a small popover right there:
+* a searchable select of ISO 3166 countries (names from `Intl.DisplayNames`), blank by
+  default;
+* above it, one suggestion chip from the browser's region
+  (`new Intl.Locale(navigator.language).maximize().region`): "United States?". It is only a
+  suggestion; nothing is set until the student picks;
+* the helper "Shown on the Country board. Change or clear it in Settings › Account &
+  devices.";
+* Save sends `PUT /api/me {country}` (422 on a code outside ISO alpha-2), and the line
+  renders the rank at once.
+
+The same control sits in **Settings › Account & devices › Boards**, next to "Show me on
+boards" (R12's `learners.board`) and the board name (U29), with **Clear**. Nothing detects a
+location: the country is optional and set only by the student.
 
 A new line, **Climb**: "Started 440–600 · +90 · ahead of 74% of 212".
 * The cohort is learners whose first scored standard sitting's midpoint is near yours. The
@@ -917,7 +1007,9 @@ ago" on day 8). The estimate part appears only once both ends have a scored sitt
 3. With 19 learners holding a first sitting in all, `ranks.climb == null`.
 4. The gap line's number equals the next row's `right` minus yours, plus 1.
 5. With `country = 'US'` set → `ranks.country` exists and its `of` equals the US practice
-   board's size. With it blank → the "Set a country" line.
+   board's size. With it blank → the "Add your country" line, and choosing a country in its
+   popover sends `PUT /api/me {country}` and renders `#n of m` without a reload.
+   `PUT /api/me {country:'XX'}` → 422. Settings › Account & devices has the same select.
 6. A learner with 8 days of history → `ranks.self.days == 8`, and the line reads "You, 8
    days ago". With 7 days → `ranks.self == null`.
 
@@ -979,7 +1071,11 @@ what moves a bar stops grinding random questions. Theirs: Global Rank 128 with n
   * Hard right → a hard set;
   * a streak badge → a quick question.
   * `/api/me/achievements` adds `go: {label, body | href}`.
-* **Data.** `/api/me/summary.levers: {key: {how, help, inputs: [...], next, start?}}`.
+* **Data.** `/api/me/summary.subjects.math.levers: {key: {how, help, inputs: [...], next, start?}}`
+  for subject figures (mastery, readiness, band, points, rank); `summary.stats.levers` for the
+  cross-subject ones (streak, study time). Achievement tiers that count skills or types come
+  from `catalogue.by_topic(subject)`, so Explorer's top tier is the served type count, not a
+  typed 386.
 
 **Acceptance.**
 1. A learner at circles mastery 0.7 with 12 answers: `levers['skill:circles'].next` matches
@@ -1088,8 +1184,7 @@ Under a mode or stage, a key the student changes is stored even when it equals t
   and "Practise {skill}" links), Up next `skill` and `probe` rows, Sharpen, and the time box
   (`source: 'next'`, `box`).
 * **Always instant**: `redo`, `checks`, `habit`, `gauntlet`, `quick`, `inline` (R24), the
-  pacing and speed drills of U7 (they set their own clock), Reach-a-level homework, and the
-  week-goal drills. They keep `feedback: 'instant'`, `repairs: 'next'` and
+  pacing and speed drills of U7 (they set their own clock), and the week-goal drills. They keep `feedback: 'instant'`, `repairs: 'next'` and
   `rationale: 'miss'`, whatever the stage. A student who fixes a named mistake three weeks
   before the exam sees the key after each answer.
 * Tests and challenges are never governed; they have their own rules.
@@ -1226,10 +1321,20 @@ supports Web Push: the installed app, and desktop Chrome, Edge, Firefox and Safa
   student sets a preferred time (Plan step 3 or Settings). It is never shown on page load.
 * **Settings**: Settings › Study gets "Notify me on this device" (on iOS it needs the
   home-screen app; the row says so and links to `/help/#install`). Kinds, each a switch:
-  * study reminders (on);
+  * study reminders (on), sent at the student's own `study_time − remind`, whatever time
+    that is;
   * "one question keeps your streak" at 20:30 on an unfinished study day (off);
-  * class assignments (on).
-  Quiet hours are 21:30–7:00.
+  * "a private contest you joined closes in 3 hours" (on; only when Compete exposes
+    `closing_soon`).
+* **Quiet hours** hold back only the nudges the student didn't time themselves (the streak
+  nudge and the contest nudge; one that falls inside is sent at the window's end if still
+  relevant, or dropped). They **never** hold back the study reminder the student chose: a
+  22:00 study time rings at 22:00 less `remind`.
+  * A row under the kinds shows the window and edits it: "Quiet hours 21:30 – 7:00 ·
+    Change", two `<input type="time">` fields and Off. Stored in a new pref `quiet`
+    (`{from, to}` local times, or null for off; default `{from:'21:30', to:'07:00'}`).
+  * When the study time falls inside the window, the row says so: "Your 22:00 reminder still
+    rings. Quiet hours only hold back extra nudges."
 * **Service worker**: `web/sw.js` handles `push` and `notificationclick` only, with no fetch
   handler and no caching.
 * **Payload-less pushes**. The worker calls `POST /api/push/next {endpoint}` for the text,
@@ -1255,6 +1360,10 @@ supports Web Push: the installed app, and desktop Chrome, Edge, Firefox and Safa
    first Up next item. After that item is done, the next call names the new first item.
 5. (b) No page calls `Notification.requestPermission()` outside a click handler (a check
    greps `web/**` for the call and asserts each one sits in a listener).
+6. (b) With `study_time` 22:30, `remind` 10 and the default quiet hours, the scheduler (a
+   test clock) sends the study reminder at 22:20. The streak nudge due at 20:30 with quiet
+   hours `{from:'20:00', to:'07:00'}` is not sent inside the window.
+   `PUT /api/me {prefs:{quiet:{from:'23:00', to:'06:30'}}}` → 200, and `{from:'25:00'}` → 422.
 
 ### D. Identity and account
 
@@ -1274,7 +1383,7 @@ biometric.
   * It calls `navigator.credentials.create` with:
     * `rp.id` = the host of `SATF_BASE_URL`;
     * `user.id` = 16 random bytes stored per learner;
-    * `user.name` = the board handle or name;
+    * `user.name` = the student's name (U29), or the board name when the name is blank;
     * `residentKey: 'required'`, `userVerification: 'preferred'`, algorithms −7 and −257.
   * The client posts `response.getPublicKey()` (SPKI DER, so no CBOR parsing),
     `getPublicKeyAlgorithm()`, `getAuthenticatorData()`, `clientDataJSON` and the transports.
@@ -1287,11 +1396,37 @@ biometric.
     wins over it. With neither: **Passkey** when
     `isUserVerifyingPlatformAuthenticatorAvailable()` is true, otherwise **Use your phone**.
     An email-only student is taken straight to Email from their second visit on.
-  * Its field has `autocomplete="username webauthn"`, so saved passkeys appear in the
-    browser's autofill (conditional mediation). A **Sign in with a passkey** button calls
-    `get()` with no `allowCredentials`.
-  * A school Chromebook with no synced passkey gets the browser's own "Use a phone" QR, at no
-    cost to us.
+  * **Autofill (conditional mediation)**, fully specified:
+    1. The email field has `autocomplete="username webauthn"`.
+    2. On `/signin/` load, when `PublicKeyCredential.isConditionalMediationAvailable?.()`
+       resolves true, the page sends `POST /api/passkey/login/options {conditional: true}`
+       → `{challenge, rpId, timeout, expires}` and calls
+       `navigator.credentials.get({mediation: 'conditional', publicKey: {challenge, rpId,
+       allowCredentials: [], userVerification: 'preferred'}, signal})` with an
+       `AbortController`.
+    3. **Refresh.** 30 s before `expires` (the challenge's 5 minutes), and on
+       `visibilitychange` back to visible after it, the page aborts that request, fetches new
+       options and calls `get()` again. So a sign-in page left open for an hour still works
+       from autofill.
+    4. Picking a passkey from autofill posts the assertion to `POST /api/passkey/login`, as
+       the button does.
+    5. The **Sign in with a passkey** button first aborts the pending conditional request
+       (the browser allows one `get()` at a time), then calls a modal `get()` with no
+       `allowCredentials`.
+    6. `SATF_WEBAUTHN_TTL` (seconds, default 300) sets the challenge lifetime, so a test can
+       shorten it.
+  * A school Chromebook with no synced passkey gets the browser's own "Use a phone" QR, and
+    **Continue with Google** when the deploy has it (U19b), which is how most school
+    Chromebooks are already signed in.
+* **Email is a launch requirement, and says when it is off.**
+  * SMTP (`SATF_SMTP_*`) is on the production checklist in the README's run section. Without
+    it, codes land only in `server/outbox/`, which serves no student.
+  * `GET /api/health` adds `mail: 'smtp' | 'outbox'`.
+  * When `mail == 'outbox'`, the Email tab and "Save progress by email" don't offer a code
+    that will never arrive. They read "Email codes aren't switched on for this site yet.
+    Sign in with a passkey, your phone or Google, or use a transfer code from a signed-in
+    device.", with those as buttons, and the save nudge offers only the passkey (and Google).
+    Admin's header shows "Mail: outbox (codes are not sent)".
   * On a device not marked shared, the email tab remembers the last address (masked in
     `localStorage satf.lastEmail`): **Send a code to d•••@gmail.com**, in 1 tap.
 * **Server** (S1 `account.py`):
@@ -1310,10 +1445,10 @@ biometric.
   * Settings lists each passkey: "iCloud Keychain · created Sep 23 · last used today"
     [Remove].
   * Removing the last way to sign in asks for a confirm.
-  * The recovery line reads "You can sign in 2 ways: passkey, email". With one way only, it
-    shows an orange dot and "Add a passkey or email".
-* **The carry choice** (every sign-in path: passkey, phone approval, email code or link, and
-  the transfer code). It replaces v2's silent carry, because the browser may hold someone
+  * The recovery line reads "You can sign in 3 ways: passkey, email, Google" (Google only
+    when U19b is on). With one way only, it shows an orange dot and "Add a passkey or email".
+* **The carry choice** (every sign-in path: passkey, Google, phone approval, email code or
+  link, and the transfer code). It replaces v2's silent carry, because the browser may hold someone
   else's anonymous answers: a library computer, or a sibling's laptop.
   * When this device's own learner has 0 answers, nothing is asked.
   * Otherwise, after the account is known and before the reload, one step reads: "This
@@ -1331,8 +1466,18 @@ biometric.
     this device (U21), so nothing is lost.
   * The server never carries by default. Every sign-in endpoint takes `carry: true | false`
     and treats a missing value as false.
-* **Counts as saved.** A passkey counts as "saved" everywhere a verified email does, except one
-  thing: **creating a class needs a verified email** (R4 unchanged; U27 says why).
+* **Counts as saved: one function.** `account.saved(learner)` (S1) is true when the learner
+  has a passkey, a verified email (`users.learner` with a verified login) or a Google link
+  (U19b). Every "saved" test in the site calls it, never `sessions.user_id` or `users`
+  directly:
+  * the user card, the save nudge, the unsaved callout and the Leave-this-device dialog;
+  * a:-code retirement and the swap (U21);
+  * **the diagnostic's results gate** (R38, `server/app.py`'s `403 {need: 'signup'}`):
+    `results` returns 200 when `account.saved(learner)` holds. An email-saved learner's
+    diagnostic session gets `sessions.user_id` bound to their `users` row when it starts; a
+    passkey-only learner's stays null and is let through by `account.saved`. Either way no
+    name-and-email form is shown to a saved learner. The form stays for unsaved learners
+    while R38 keeps the gate (Part 5 question 8).
 * **Tables** (F4):
   * `passkeys(cred_id PK, learner, user_handle, spki BLOB, alg INTEGER, sign_count INTEGER, label, created, last_used)`;
   * `webauthn_challenges(challenge PK, learner, purpose, expires)`.
@@ -1346,9 +1491,15 @@ biometric.
    `{learner}`.
 2. The same login with a wrong origin → 400, a reused challenge → 400, and a bad signature
    → 401.
-3. After registering, `GET /api/account` shows `saved: true` without an email, and
-   `POST /api/classes` → 403 `{need: 'email'}`.
-4. The `/signin/` field has `autocomplete` containing `webauthn`.
+3. After registering, `GET /api/account` shows `saved: true` without an email. That
+   passkey-only learner finishes a diagnostic, and its results endpoint → 200 with no sign-up
+   form rendered. An unsaved learner's → 403 `{need: 'signup'}`.
+4. The `/signin/` field has `autocomplete` containing `webauthn`. In Chrome with a CDP
+   virtual authenticator (`WebAuthn.addVirtualAuthenticator`, internal, resident key, user
+   verification) holding a registered credential, loading `/signin/` sends one
+   `/api/passkey/login/options` with `conditional: true`, and completing the conditional
+   request signs in (`satf.learner` starts `d:`). With `SATF_WEBAUTHN_TTL=10`, a second
+   options call is sent before 10 s have passed.
 5. A sign-in with "This is a shared computer" ticked, on a device whose learner has 24
    answers, leaves the account's attempt count unchanged (`/api/me/summary` before and
    after), offers no Add, and leaves `localStorage satf.learner` unchanged.
@@ -1357,6 +1508,57 @@ biometric.
    `carry` field moves nothing.
 7. After an email-code sign-in, a fresh visit to `/signin/` (no hash) opens on the Email
    tab.
+8. `GET /api/health` has `mail`. With `SATF_SMTP_HOST` unset it is `'outbox'`, and the Email
+   tab shows the "aren't switched on" text with a Passkey button and no code form.
+
+#### U19b. Continue with Google, when the deploy has a client ID
+
+*From: the skeptic's sign-in finding (their only method, and how school Chromebooks are signed in). Effort S–M. Builders: S1 (`server/google.py`, `/signin/`, Settings), F4 (the `users.google_sub` column).*
+
+**Why.** A student on a school Chromebook is already signed in to Google, while their
+passkey may sit on a phone that isn't with them. Theirs signs in with Google in 2 taps. Ours
+offers the same, alongside passkeys, the phone and email, and never requires it.
+
+* **Off unless configured.** Everything here is hidden, and `/api/google*` → 404, while
+  `SATF_GOOGLE_CLIENT_ID` is unset. `GET /api/health` adds `google: true | false`.
+* **Where it shows**:
+  * `/signin/`: a full-width **Continue with Google** button above the tabs, on every tab;
+  * the save nudge and Settings › Account & devices: **Save with Google**, beside Save with a
+    passkey;
+  * Settings lists it as a way in: "Google · d•••@gmail.com · connected Sep 23" [Disconnect]
+    (the recovery-line rules of U19 apply: disconnecting the last way asks for a confirm).
+* **Client.** Google Identity Services (`https://accounts.google.com/gsi/client`) is loaded
+  only on `/signin/` and Settings, on demand. `google.accounts.id.initialize({client_id,
+  nonce, callback, ux_mode: 'popup', use_fedcm_for_prompt: true})` and `renderButton`. The
+  nonce comes from `POST /api/google/nonce` (single use, 5 minutes, stored in
+  `webauthn_challenges` with `purpose 'google'`). The callback posts
+  `POST /api/google {credential, nonce, carry, session_only}`.
+* **Server** (`server/google.py`, stdlib `urllib` and `cryptography`, no new dependency):
+  1. Fetch Google's JWKS (`https://www.googleapis.com/oauth2/v3/certs`), cached for the
+     response's `Cache-Control: max-age`, refetched once on an unknown `kid`.
+  2. Check the JWT header: `alg == 'RS256'` and a known `kid`. Verify the signature with
+     `RSAPublicNumbers(e, n)` and PKCS1v15-SHA256 over `header.payload`.
+  3. Check the claims: `iss` in `accounts.google.com` or `https://accounts.google.com`,
+     `aud == SATF_GOOGLE_CLIENT_ID`, `exp` in the future (60 s skew), `nonce` equal to an
+     unused one we issued, and `email_verified == true`.
+  4. **Bind.** Find the `users` row by `google_sub`, else by the lowercased verified email.
+     * Found: sign in to its learner (a `d:` token, U21), after the carry choice (U19).
+     * Not found: this is a save. This device's learner gets a `users` row with that email
+       (verified), `first` and `last` from `given_name` and `family_name` (or the email's
+       local part), and `google_sub`; the device swaps to a `d:` token (U21).
+  5. Store only `sub`, the email and the names. No Google token is kept.
+* **Tables** (F4): `users.google_sub TEXT UNIQUE`. `carry`, export and delete cover it.
+
+**Acceptance.**
+1. With `SATF_GOOGLE_CLIENT_ID` unset: `/api/google` → 404, and `/signin/` has no Google
+   button.
+2. `server/checks/s1.py` signs an ID token with a test RSA key and points the JWKS fetch at
+   it: a valid token → 200 with a credential starting `d:`. A wrong `aud` → 401, an expired
+   token → 401, `email_verified: false` → 401, and a reused nonce → 400.
+3. A token whose email matches an existing saved user signs in to that learner, with no
+   answers moved when `carry` is missing. A token with a new email saves this device's
+   learner: `account.saved` is then true, and a second sign-in with the same `sub` but a
+   changed email reaches the same learner.
 
 #### U20. Sign in a shared computer without typing on it: it shows a code, your phone approves
 
@@ -1420,27 +1622,47 @@ Siblings on one laptop mix answers into one code, which corrupts mastery, mistak
 coach's picks.
 
 **Device tokens.**
-* Every sign-in (passkey, phone approval, email code or link, transfer code) gives that
-  browser its own token, `d:` + 32 base-36 characters, never the learner code.
-* **Saving turns this browser into a device too.** On the first save (a passkey registered,
-  or an email verified), the same response mints a `d:` token for the saving browser
-  (`method 'save'`), and the client swaps `satf.learner` to it.
-  * From then on, the `a:` code is a non-secret learner id. `learner_of` no longer accepts it
-    as a credential for a saved learner: → 401 `{retired: true}`, whose banner offers Sign in.
-  * The save toast says so: "Saved. Other browsers sign in once with your passkey or email."
+* Every sign-in (passkey, Google, phone approval, email code or link, transfer code) gives
+  that browser its own token, `d:` + 32 base-36 characters, never the learner code.
+* **Saving turns every browser that holds the code into a device: a swap, never a cut-off.**
+  A save can finish somewhere else than the browser holding the answers: the diagnostic's
+  confirmation link (§3.1.5) opens in the phone's mail app with no `X-Learner`, and an
+  unsaved code may have been shared with a second browser by a transfer code. So:
+  * The saving request, when it carries the `a:` code, gets its `d:` token in the same
+    response (`method 'save'`), and the client swaps `satf.learner` to it.
+  * **The swap window.** For 14 days after the save (`learners.swap_until`), a request that
+    presents the saved learner's `a:` code is served normally, and its response carries
+    `X-Learner-Swap: d:…`, a new device token for that browser (`method 'swap'`,
+    labelled from its User-Agent). `UI.api` stores it and uses it from then on. That
+    browser appears in the devices list as "Chrome on Mac · moved to its own key Sep 23".
+  * **End the old code now** (Settings › Account & devices, and a line in the save toast's
+    detail) sets `swap_until = now`. After the window, or after that, `learner_of` refuses
+    the `a:` code for a saved learner: → 401 `{retired: true}`, whose banner offers Sign in.
+    From then on the `a:` code is a non-secret learner id.
+  * The diagnostic's confirmation link verifies the email and saves the account, and never
+    retires the `a:` code by itself: the laptop that sat the diagnostic keeps working and
+    swaps to its own key on its next request.
+  * The save toast says so: "Saved. Your other browsers move to their own key on their next
+    visit."
   * Before saving, the `a:` code is still the credential, because nothing else exists.
-* `deps.learner_of` resolves `a:` (unsaved learners only), and `d:` through
+  * `ponytail:` during the 14 days anyone holding the code can still get a key, exactly as
+    before saving, and each swap shows in the devices list. Shorten the window if the list
+    shows swaps the student doesn't recognise.
+* `deps.learner_of` resolves `a:` (unsaved learners, and saved ones inside the swap window),
+  and `d:` through
   `devices(token PK, learner, label, method, created, last_seen, session_only, expires, revoked)`,
   indexed on learner.
   * It is one primary-key lookup. `last_seen` is written at most every 10 minutes.
   * A revoked or expired token → 401 `{retired: true}` (the existing banner).
-* So for a saved learner the devices list is complete: every browser that can act as the
-  student has a row, and every row can be signed out.
+* So once the old code has ended, the devices list is complete: every browser that can act
+  as the student has a row, and every row can be signed out. Inside the swap window the list
+  says so under its heading: "Your old code still works until Oct 7 for browsers that
+  haven't visited since you saved · End it now".
 
 **Transfer code** (replaces the Device code's Show / Copy, §4.4).
 * **Move to another device** → `POST /api/transfer` → `{code, expires}`. The code is 8
-  characters from the class-code alphabet ("K7P4 M2QX"), single use, and expires in 10
-  minutes ("expires in 9:41").
+  characters from the unambiguous alphabet `A-HJ-NP-Z2-9` (`db.new_code()`, "K7P4 M2QX"),
+  single use, and expires in 10 minutes ("expires in 9:41").
 * On the other device, `/signin/#code` (under More) takes it:
   `POST /api/transfer/redeem {code, carry, session_only}`.
   * For a saved learner it mints that device a `d:` token, which appears in the list.
@@ -1456,16 +1678,38 @@ coach's picks.
   * "Safari on iPhone · 2h ago · signed in Sep 21 by passkey";
   * "Chrome on Windows · shared computer · expires in 11h".
   Each row has [Sign out].
-* **Sign out all other devices** revokes every other `d:` token, and that is all it needs to
-  do. Nothing is rotated, because `a:` no longer signs anyone in. `POST /api/account/rotate`
-  is not built.
+* **Sign out all other devices** revokes every other `d:` token and ends the old code's swap
+  window, and that is all it needs to do. Nothing is rotated, because `a:` then signs no one
+  in. `POST /api/account/rotate` is not built.
 
 **Shared computer.**
-* A checkbox on every `/signin/` tab. The token lives only in sessionStorage and expires 12 h
-  after last use. `satf.learner`, `satf.profiles`, `satf.lastEmail` and `satf.lastMethod`
-  are never written.
+* A checkbox on every `/signin/` tab. The token lives only in sessionStorage.
+  `satf.learner`, `satf.profiles`, `satf.lastEmail` and `satf.lastMethod` are never written.
 * The user card's second line reads "Shared computer · Sign out".
-* Closing the browser ends it.
+* **It ends on the server, not only in the tab**, because browsers restore sessionStorage
+  with session restore and Reopen closed tab (Ctrl/Cmd+Shift+T):
+  * **Idle expiry.** A `session_only` token dies after 15 minutes with no request, and after
+    12 h in all. For these tokens `last_seen` is written on every request (not every 10
+    minutes).
+  * **Heartbeat.** A visible shell page sends `POST /api/devices/this/ping` every 5 minutes
+    (a hidden tab sends none, so a tab left in the background dies at 15 minutes).
+  * **Closing.** On `pagehide`, the page sends a keepalive `POST /api/devices/this/leaving`,
+    which sets that token's `expires` to now + 60 s. The next page in the same tab, or any
+    other open tab of the session, pings at load and restores the 15-minute idle rule. So
+    moving between pages never signs the student out, and closing the last tab or the
+    browser kills the token within a minute.
+  * **New tabs.** A new tab (a typed URL, or a `rel=noopener` link) has empty
+    sessionStorage. It asks on a `BroadcastChannel('satf-session')` and waits up to 300 ms;
+    an open tab of the session replies with the token, which the new tab keeps in its own
+    sessionStorage. With no reply it starts signed out.
+  * A restored tab whose token has died gets 401 `{retired: true}` on its first request and
+    shows the banner "This shared-computer session has ended. Sign in again." It never
+    shows the student's data first: `UI.cached` copies are in the same sessionStorage and
+    are cleared on that 401 before painting.
+  * The user card's tooltip says it: "Shared computer: ends 15 minutes after you stop, or
+    about a minute after you close the browser."
+  * `ponytail:` a tab reopened within the 60 s grace comes back signed in. Shorten the grace
+    if a library reports it.
 * Switch student and the remembered email are hidden.
 * **Sign out is immediate**: no Undo. `DELETE /api/devices/this` is sent at once, and
   sessionStorage, including `UI.cached`'s copies, is cleared.
@@ -1507,11 +1751,18 @@ coach's picks.
 **Acceptance.**
 1. A passkey or email sign-in returns a `d:` token. `GET /api/devices` as the owner lists it.
    `DELETE /api/devices/{id}` → that token's next PUT gets 401 with `detail.retired == true`.
-2. A `session_only` token unused for 12 h → 401. A test sets `last_seen` back.
+2. A `session_only` token idle for 16 minutes → 401 `{retired: true}` (a test sets
+   `last_seen` back), and one used within 15 minutes but created 12 h ago → 401. After
+   `/leaving` with no ping for 61 s → 401; a ping within 60 s keeps it working. Two page
+   loads in a row in one tab (with the `pagehide` between them) keep the session. A tab
+   restored after the token died shows the "session has ended" banner and paints no cached
+   card.
 3. No response to a `d:` device contains the learner's `a:` code (a check greps every
    endpoint body in `server/checks/s1.py`).
 4. Browser A holds `a:X` and registers a passkey. Then A's `satf.learner` starts with `d:`,
-   `GET /api/devices` lists A, and `GET /api/shell` with `X-Learner: a:X` → 401
+   and `GET /api/devices` lists A. Browser B, which also holds `a:X`, calls `GET /api/shell`
+   → 200 with an `X-Learner-Swap` header starting `d:`, B's next call uses it, and the
+   devices list shows B. After **End the old code now**, `X-Learner: a:X` → 401
    `{retired: true}`.
 5. `POST /api/transfer` → `{code}`. Redeeming it on B gives a `d:` token that
    `GET /api/devices` lists. A second redeem → 410, and a redeem after 10 minutes → 410.
@@ -1524,17 +1775,39 @@ coach's picks.
    unsaved code exists.
 9. On a family device with two profiles, switching changes `X-Learner` on the next
    `/api/shell` call.
+10. The diagnostic's confirmation link, opened with no `X-Learner`, verifies the email:
+    `account.saved` becomes true, and the laptop's next request with `a:X` → 200 with a swap
+    header, never 401.
 
 #### U22. The living mark avatar, and glyphs with an earned ring
 
-*From: unfair-advantage #11, the outcomes and experience avatar gaps. Effort S. Builders: F1 (`UI.avatar`), F2 (`/api/shell.me.domains`), S1 (the picker), S8 (boards never carry the mark), S2 (rosters).*
+*From: unfair-advantage #11, the outcomes and experience avatar gaps, the skeptic's photo finding. Effort S. Builders: F1 (`UI.avatar`, `UI.localPhoto`), F2 (`/api/shell.me.domains`), S1 (the picker), S8 (boards never carry the mark).*
 
-**Why.** Their photo upload is a privacy risk for minors. Our 19-glyph picker says nothing
-true about the student. Ours stays photo-free, gives more choice than theirs on day one, and
-lets progress show where only the student and the people they chose can see it.
+**Why.** Students like seeing their own face on their profile, and theirs allows it. But a
+photo of a minor on a server, shown to others, is a privacy risk. Ours keeps the photo on
+the student's own device, where only they see it, gives more choice than theirs on day one,
+and lets progress show where only the student and the people they chose can see it.
 
-* **Choices, all free from day one**: the living mark (the default), the initial, and all 19
-  topic glyphs.
+* **Choices, all free from day one**: your photo (this device only), the living mark (the
+  default), the initial, and all 19 topic glyphs.
+* **Your photo, kept on this device** (`UI.localPhoto`, F1).
+  * The picker's first tile, "Your photo · this device only", opens a file input
+    (`accept="image/*"`, and on phones the camera through `capture="user"` as a second
+    button, "Take one").
+  * The browser centre-crops it square and downscales it to 256px through a canvas, then
+    `toBlob('image/webp', 0.85)` (JPEG where WebP encoding isn't available). It is stored
+    in IndexedDB (`satf` database, store `photo`, keyed by the learner id). **It is never
+    uploaded**: no endpoint accepts it, and `PUT /api/me` has no photo field.
+  * **Where it shows**: only this device's own chrome (the user card, the menu header, the
+    phone avatar) and Me's identity card. Everywhere else, and on the student's other
+    devices, the server's choice (living mark, glyph or initial) shows as usual. The picker
+    says so: "Only on this device. Boards and your progress link show your {glyph|initial}."
+  * **Replace**: pick another file. **Remove**: a confirm, "Remove your photo? Your
+    {living mark|initial|glyph} will be shown instead." [Remove] [Cancel].
+  * It is not offered on a shared computer. It is deleted on Sign out and on Remove from this
+    device (U21), and each family-device profile keeps its own.
+  * The photo is local, so the server's `avatar` stays the fallback: choosing the photo
+    doesn't change `learners.avatar`.
 * **The living mark.**
   * The mark's four rounded quadrants are the four domains: Algebra top-left, Advanced Math
     top-right, Problem-Solving and Data Analysis bottom-left, Geometry and Trigonometry
@@ -1552,12 +1825,11 @@ lets progress show where only the student and the people they chose can see it.
 
   | where | shows |
   |---|---|
-  | the student's own chrome, the menu, Me's identity card (72px, with a small legend) | the chosen avatar; the living mark with mastery |
-  | their classes (the teacher's roster and assignment detail) | the living mark with mastery (a roster of marks reads as a heat map) |
-  | their progress links (`/share/`) | the living mark with mastery |
-  | **public boards** (Compete, the challenge, practice ranks), and anywhere another student sees them | the chosen glyph (with its earned ring) or the initial. A student whose choice is the living mark shows their initial. `anon` and `hidden` students show the plain mark |
+  | the student's own chrome, the menu, Me's identity card (72px, with a small legend) | the photo on the device that holds it; otherwise the chosen avatar, and the living mark with mastery |
+  | their progress links (`/share/`) | the living mark with mastery (never the photo) |
+  | **public boards** (Compete, private contests, the challenge, practice ranks), and anywhere another student sees them | the chosen glyph (with its earned ring) or the initial. A student whose choice is the living mark shows their initial. `anon` and `hidden` students show the plain mark. Never the photo |
 
-  Mastery never leaves the student, their classes and their links. The boards' payloads carry
+  Mastery never leaves the student and their links. The boards' payloads carry
   `avatar: {kind: 'initial' | 'glyph' | 'plain', glyph?, ring?}` and never `domains`.
 * **Subject-aware.** `me.domains` is keyed by subject. With a second subject, the mark reads
   the subject in focus.
@@ -1571,8 +1843,55 @@ lets progress show where only the student and the people they chose can see it.
    board endpoint (`/api/compete/*` boards, the challenge board, practice ranks) for a board
    holding a learner whose avatar is the living mark, and finds no `domains` key and no
    mastery figure. That learner's row shows the initial.
-5. A class roster (`GET /api/classes/{id}/roster` as the teacher) carries `domains` for each
-   student.
+5. Choosing a 3 MB JPEG as the photo: the user card and Me show an `<img>` with a `blob:` URL
+   no larger than 256×256, the network log shows no request carrying image data, and a board
+   still shows the glyph or initial. Remove shows "Your … will be shown instead", and after
+   it IndexedDB `photo` has no entry for the learner. On a shared-computer sign-in the photo
+   tile is absent.
+
+#### U29. Your name, and a separate board name
+
+*From: the skeptic's profile-name finding. Effort S. Builders: F4 (the `learners.handle` column and validation), S1 (the identity card, Settings, `PUT /api/me`), S8 (boards read `handle`).*
+
+**Why.** R12 made the one `learners.name` the public board name, under Compete's rule
+(`HANDLE_OK`, 3–24 Latin characters, unique). So José, Zoë, 李明, Jo and Al couldn't enter
+their own name on Me, and a second Emma was told "Someone already has that name". Theirs
+shows the student's real name, and today's `NAME_OK` (`server/app.py`) accepts any script.
+The real name and the public name are two different things.
+
+* **Two fields** (changes R12):
+  * `learners.name`, **your name**: private. It uses today's `NAME_OK` (any script, no
+    digits, `@`, `<` or `>`), trimmed, 1–40 characters, not unique. It is shown only to the
+    student: Me's H1, the user card, the menu header, the greeting, the passkey's
+    `user.name`, emails, and the progress link's H1 ("Dana's SAT progress", which the
+    student chose to share).
+  * `learners.handle`, **your board name**: public. It uses Compete's `HANDLE_OK`
+    (`^[A-Za-z0-9 _.\-]{3,24}$`), unique case-insensitively (409 "Someone already has that
+    board name."), with the reserved and default-looking names refused (422). Null by
+    default, so boards show "Student 4F2A" until it is set. It is the only name boards,
+    private contests, the challenge and ranks ever show.
+  * This settles §3.1's contradiction: "Names can't contain digits" is the rule for your
+    name; board names may contain digits.
+* **The identity card** (§3.1): the H1 is your name, with a pencil for inline edit. Under it
+  a line reads "On boards: **Dana_R** · Change" (or "On boards: Student 4F2A · Choose a
+  board name"), next to the board visibility (Name · Anonymous · Hidden). The same pair sits
+  in Settings › Account & devices › Boards, with the country (U11).
+* **First time.** When a student sets a name and has no handle, the card offers one tap:
+  "Use Dana on boards too?" when the name passes `HANDLE_OK` and is free; otherwise it
+  suggests a free variant ("Dana_R", "Dana2") without setting it.
+* **`PUT /api/me`** validates each field on its own: `{name}` against `NAME_OK`, `{handle}`
+  against `HANDLE_OK` and uniqueness. An error names its field.
+* **Migration**: an existing `name` that passes `HANDLE_OK` is copied to `handle` (first
+  come keeps it; a clash leaves `handle` null), and `name` is kept as it is.
+
+**Acceptance.**
+1. `PUT /api/me {name:'José'}` → 200, and `{name:'李明'}` → 200. `{name:'Dana2'}` → 422
+   naming `name`.
+2. Two learners both `PUT {name:'Emma'}` → 200 each. Both `PUT {handle:'Emma'}` → the second
+   gets 409 naming `handle`.
+3. No board payload (the `server/checks/s8.py` sweep of U22) contains a learner's `name`;
+   rows show `handle` or "Student 4F2A".
+4. `/me/`'s H1 shows the name, and its "On boards" line shows the handle.
 
 ### E. Speed and reach
 
@@ -1663,7 +1982,7 @@ shown before committing and Undo after.
 *From: the experience toasts gap, the unfair-advantage Undo gap. Effort S. Builders: F2 (the menu inbox and the sheet), S1 (feed unread and seen), F4 (the `learners.feed_seen` column).*
 
 **Why.** In both products a missed toast is gone for good. Achievements, replies, corrections
-and new assignments matter enough to keep.
+and contest results matter enough to keep.
 
 * **Inbox.** The top of the account menu (and of the menu sheet) holds "Since you were last
   here · 3".
@@ -1672,13 +1991,15 @@ and new assignments matter enough to keep.
     lists them all under day headers. So the menu stays short, and Profile, Settings and Sign
     out stay a few keys away (U26).
   * Source: `GET /api/me/feed?unread=1&limit=3` (the count comes with it as `unread`).
-  * Kinds: achievements, report replies and checks, corrections (U3), new assignments, spare
-    days used (U16), week goals met (U14), stage changes (U15).
+  * Kinds: achievements, report replies and checks, corrections (U3), private-contest
+    results and closings from Compete, spare days used (U16), week goals met (U14), stage
+    changes (U15).
   * Unread dots, plus a count on the user card and the phone avatar.
   * Opening the menu or the list marks them read (`POST /api/me/feed/seen` →
     `learners.feed_seen = now`), through `UI.whenVisible` (U23).
 * **Welcome back.** After 2 or more **study days** in a row with no activity, the next clean
-  load offers what is waiting: check-ins due, assignments due, the streak and any spare, and
+  load offers what is waiting: check-ins due, a private contest closing, the streak and any
+  spare, and
   the pill **Pick up: {Up next title}**.
   * A study day is R13's: planned rest days (the active plan's days off, the exam's eve) and
     spare days (U16) don't count. Without a plan every day is a study day. So a Mon–Fri
@@ -1692,15 +2013,15 @@ and new assignments matter enough to keep.
     streak 12 kept with a spare"), and welcome-back is marked shown.
   * **Only on a clean load**: the URL has no query and no hash, the page is a shell section
     root (`/`, `/practice/`, `/review/`, `/tests/`, `/plan/`, `/results/`, `/me/`, `/words/`,
-    `/compete/`, `/class/`), and it is not prerendering. So `/?next=1` from a reminder or a
-    push, `/s/?c=` share links, `/join/?c=` class links, `?q=` question links, report links
+    `/compete/`), and it is not prerendering. So `/?next=1` from a reminder or a push,
+    `/s/?c=` share links, Compete's contest invite links, `?q=` question links, report links
     and every other deep link open straight to what was asked. A sheet held back that way
     opens on the day's next clean load.
   * While a sheet is open, toasts queue until it closes. At most 2 event toasts show on any
     load; the rest go straight to the inbox count.
   * Banners (§2.11) keep their one-at-a-time rule and never open a sheet.
 * **Undo on every reversible toast**, for 6 s:
-  * unsave, unmark, leave class, skip a plan task (S7), turn off a progress link, target or
+  * unsave, unmark, skip a plan task (S7), turn off a progress link, target or
     exam change, a palette command, sign out (8 s, U21; none on a shared computer).
   * Undo calls the inverse endpoint. `UI.toast(text, {undo})` already exists in kit.
 
@@ -1738,36 +2059,47 @@ rows about 700px down. The account menu put controls in a non-focusable header.
     "Exam day" and "Set up" are unchanged.
   * The **Today card** drops its questions bar whenever the Today item shows a count (always,
     with or without a plan). It keeps the streak and spares, minutes against the goal, the
-    due assignment, the registration line and the exam footer.
-* **Height budget** (replaces §2.2 item 6). The nav items are never scrolled and never cut.
-  Everything else shrinks around them in tiers chosen by viewport height, in CSS
-  (`@media (max-height: …)`, no measuring script). Worst case assumed: 10 items (with Class
-  and Profile), both group labels, and a Today card with every line.
+    registration line (U17), a private contest closing within 24 h (from Compete), and the
+    exam footer.
+* **Height budget** (replaces §2.2 item 6). The nav items are never scrolled and never cut,
+  and nothing is shrunk into a tooltip. Below 1100px tall, Up next and the Today card leave
+  the sidebar **whole** and move to the Now strip at the top of the page. Tiers are chosen
+  by viewport height in CSS (`@media (max-height: …)`, no measuring script). Worst case
+  assumed: all 9 items (with Profile), both group labels, and a Today card with every line.
 
   | tier | viewport height | brand | Search, Quick | Up next (U1) | nav rows | Today card | Help, Feedback | user card | total |
   |---|---|---|---|---|---|---|---|---|---|
-  | Tall | ≥ 1100px | 64 | two 40 rows | the full block, ≤ 150 | 40, labels 28 → 456 | the full card, ≤ 154 | two 36 rows | 56 | ≤ 1,088 |
-  | Medium | 760–1099 | 56 | one 40 row: Search, then a 40 square Quick | two lines → 56 | 38, labels 24 → 428 | two rows → 52 | 32px icons at the right of the user row | 56 | ≤ 736 |
-  | Short | 580–759 | 44 | one 36 row | one 36 row | 32, labels 18 → 356 | one 32 row | icons in the user row | 44 | ≤ 572 |
+  | Tall | ≥ 1100px | 64 | two 40 rows | the full block, ≤ 150 | 40, labels 28 → 416 | the full card, ≤ 170 | two 36 rows | 56 | ≤ 1,072 |
+  | Medium | 760–1099 | 56 | one 40 row: Search, then a 40 square Quick | in the Now strip | 38, labels 24 → 390 | in the Now strip | 32px icons at the right of the user row | 56 | ≤ 566 |
+  | Short | 480–759 | 44 | one 36 row | in the Now strip | 32, labels 18 → 324 | in the Now strip | icons in the user row | 44 | ≤ 460 |
 
   * The totals include the gaps: 8px in Tall and Medium, 4px in Short.
   * Order: in Tall it is brand, Search, Up next, Quick, the nav, the Today card, Help and
-    Feedback, then the user card. In Medium and Short, Search and Quick share one row above
-    Up next.
-  * **The Today card's two rows** (Medium): "🔥 6 · 1 spare · 18 of 45 min" with its 4px bar.
-    Then one line in this priority: the registration line (U17), the due assignment, the
-    exam footer.
-  * **The one row** (Short): "🔥 6 · 18/45 min · Nov 7 · 45 d", with a 7px orange dot when an
-    assignment is due or the registration window is open.
-  * In both, the tooltip carries the full card text, and a click opens the full card as a
-    `UI.pop`, with every line and link. Nothing is removed; it moves one click away.
-  * **Below 580px** (for example 125% zoom on a short laptop), the middle (Up next, the nav,
-    the Today row) scrolls as one region, the active item scrolled into view. The brand,
-    Search and the user card stay pinned.
+    Feedback, then the user card. In Medium and Short: brand, the Search and Quick row, the
+    nav, the user card.
+  * **Below 480px** (for example 150% zoom on a short laptop), the nav scrolls as one region,
+    the active item scrolled into view. The brand, Search and the user card stay pinned.
   * **The rail** follows the same rule. The mark is the expand toggle, since Today is already
-    `/`, which gives 18 targets. At 880px or taller they are 44px. At 620–879 they are 36px,
+    `/`, which gives 17 targets. At 880px or taller they are 44px. At 620–879 they are 36px,
     and Help and Feedback leave the rail (they are in the account menu). Below 620 the icon
     column scrolls.
+* **The Now strip** (`UI.nowStrip`, F2). It shows whenever the sidebar isn't showing both
+  full blocks: below 1100px tall, on the rail at any height, and in the 760–1099px-wide
+  overlay layout.
+  * It is the first row of `main`, above the section bar: two cells side by side
+    (`grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr)`), stacking when `main` is under
+    720px wide. About 112px tall.
+  * **UP NEXT cell**: U1's whole block (the title, the meta "3 q · 4 min · ≈ 6 pts", the
+    reason, **Start** with `G N`, and the `›` popover with 5 more and the time-box chips).
+  * **TODAY cell**: the whole Today card, every line as text with its links and lever
+    popovers: the streak with spare flames, minutes against the goal with its bar, the
+    registration line, the contest closing line, the exam footer.
+  * It scrolls with the page, so reading space is never taken while scrolling. Once it has
+    scrolled out of view, the sticky section bar (or a 36px sticky bar on a page without
+    sections) shows at its right end "Up next: {title} · Start", so Start stays one click
+    away.
+  * On `/`, Today (S3) renders `UI.nowStrip` as its own first block, so it is never drawn
+    twice. The session runner and the test window never show it.
 * **The section bar** (replaces v2's sub-links in the nav and the phone-only chip row).
   * A page with sections registers them: `UI.shell({sections: [{id, label}]})`. `UI.sections`
     renders them as a sticky bar at the top of `main`: `top: 0` on desktop, under the 56px top
@@ -1806,18 +2138,16 @@ rows about 700px down. The account menu put controls in a non-focusable header.
     system's own gestures.
   * **The menu sheet** (max-height 85vh) has two parts:
     * **A sticky footer, always on screen**: equal cells for Review (● 114), Words (12 due),
-      Compete (New / #4), Class (2 due; only in a class) and Quick. Each is 64px tall, with a
-      22px icon, an 11px label and an 11px DM Mono meta. At 360px each cell is at least 65px
-      wide. Review, our core surface, is two taps from any page, never a scroll.
+      Compete (New / #4) and Quick. Each is 64px tall, with a 22px icon, an 11px label and an
+      11px DM Mono meta. At 360px each cell is at least 82px wide. Review, our core surface, is two taps from any page, never a scroll.
     * **The scrolling body above it**, opened at the top:
       1. Up next with Start and the time-box chips (U1).
       2. "Since you were last here": at most 3 rows and See all (U25).
       3. The Today card.
       4. The account header (→ Profile, with the week goals), then Students on this device
          (a family device only, U21).
-      5. Settings, Save your progress (when unsaved), Sign in another device, Join or teach a
-         class, Help & FAQ, Send feedback, Dark theme, Large text, Sign out (or Leave this
-         device).
+      5. Settings, Save your progress (when unsaved), Sign in another device, Help & FAQ,
+         Send feedback, Dark theme, Large text, Sign out (or Leave this device).
   * **Hold a tab** for 450 ms (cancelled by 8px of movement; `-webkit-touch-callout: none`)
     to open a shortcut menu anchored above it:
     * Today: Up next, Question of the day, Daily challenge · New;
@@ -1839,22 +2169,31 @@ rows about 700px down. The account menu put controls in a non-focusable header.
     2. the unsaved callout, "Save your progress";
     3. Students on this device, on a family device only (U21);
     4. Profile (`G U`) · Settings (`G S`) · Sign in (unsaved only) · Sign in another device
-       (U20) · Join or teach a class · Help & FAQ · Send feedback;
+       (U20) · Help & FAQ · Send feedback;
     5. a `role="group"` named "Display" holding **Dark theme** and **Large text**, each a
-       `menuitemcheckbox` with `aria-checked`. Enter or Space toggles one without closing
-       the menu, and writes `theme` (`dark` / `light`) or `text` (`large` / `normal`). Small
-       text and System stay in Settings;
+       `menuitemcheckbox` with `aria-checked`, and **Keyboard shortcuts** with its `kbd`
+       "?" (a `menuitem` that closes the menu and opens the shortcuts sheet, the one clickable
+       way to it from the chrome). Enter or Space toggles a checkbox without closing the
+       menu, and writes `theme` (`dark` / `light`) or `text` (`large` / `normal`). Small text
+       and System stay in Settings (Question text is Small · Normal · Large there, §3.1
+       override 33);
     6. a `role="separator"`, then Sign out (or Leave this device).
-  * Keyboard shortcuts leaves the item list. The menu's foot reads "Press ? for keyboard
-    shortcuts" as plain text, and Help lists them. `?` still opens the sheet anywhere.
-  * For a saved learner with 20 unread items and no family device, that is 3 + 1 + 6 + 2
-    items before Sign out, so Sign out is 12 ArrowDowns from the first item (1 End).
+  * Reach: `Home` and `End` jump to the first item and to Sign out, and typing a letter moves
+    to the next item starting with it (the menu pattern's typeahead). So Sign out is one
+    `End` press away however many inbox rows there are. For a saved learner with 20 unread
+    items and no family device, ArrowDown takes 3 + 1 + 5 + 3 = 12 presses.
 
 **Acceptance.**
-1. **Height budget.** For a learner in a class (10 nav items), at 1366×657, 1440×790 and
-   1280×900: every nav item's `getBoundingClientRect()` lies inside the viewport, and the
-   sidebar's `scrollHeight == clientHeight`. At 1366×560 the middle region scrolls and the
-   active item is in view. At 1920×1100 the full Up next block and the full Today card show.
+1. **Height budget.** With all 9 nav items, at 1366×657, 1440×790, 1280×900 and 1280×500:
+   every nav item's `getBoundingClientRect()` lies inside the viewport, and the sidebar's
+   `scrollHeight == clientHeight`. At 1366×470 the nav region scrolls and the active item is
+   in view. At 1920×1100 the full Up next block and the full Today card are in the sidebar,
+   and no Now strip is drawn.
+1a. **Nothing behind a hover.** At 1366×657 on `/me/`, with a Today card that has every line
+   (spares, minutes, registration, a contest closing, the exam footer): the Now strip is in
+   the viewport, and the Up next reason, its meta and every Today card line are visible
+   text nodes (no `title` attribute or popover needed). After scrolling 1,000px, the section
+   bar shows "Up next:" and a Start button, and `G N` still starts item 1.
 2. With a plan, the Today card contains no "of 28 questions" text while the Today item reads
    "12/28", and the Plan item's meta never matches `^\d+ q$`.
 3. At 1280 on /me/: the Profile item has `aria-current="page"`, and the section bar has 16
@@ -1865,89 +2204,25 @@ rows about 700px down. The account menu put controls in a non-focusable header.
    the menu sheet. The Review cell lies inside the viewport without scrolling the sheet.
    `document.documentElement.scrollWidth <= innerWidth`, and the top bar's
    `scrollWidth <= clientWidth`. Holding Practice for 500 ms lists "Log a mistake".
-6. **Menu.** For a saved learner with 20 unread items, ArrowDown from the first item reaches
-   Sign out in at most 12 presses. Dark theme has `role="menuitemcheckbox"` and toggles with
-   Space while the menu stays open. The header has no focusable descendants.
+6. **Menu.** For a saved learner with 20 unread items, `End` from any item focuses Sign out,
+   and ArrowDown from the first item reaches it in 12 presses. Dark theme has
+   `role="menuitemcheckbox"` and toggles with Space while the menu stays open. Keyboard
+   shortcuts is a `menuitem` in the Display group, and activating it opens the `?` sheet.
+   The header has no focusable descendants.
 7. Collapsing Skills on /me/ survives a reload.
 8. At 390, `scrollWidth <= 390` on /me/ with every card collapsed and expanded.
 
-### F. Classes and sharing
+### F. Sharing
 
-#### U27. Classes: safe to run, Tailored questions and "Reach a level" homework
+#### U27. Removed: classes and homework
 
-*From: the outcomes classes gap (Tailored), unfair-advantage #7 (mastery homework), the skeptic's safeguarding finding. Effort M. Builders: S2 (`classes.py`, the class pages, `FREEMAIL`, the class report), F5 (drill fields `segments` and `until`), F6 (the `class` report flag in admin).*
-
-**Why.** Their homework is a fixed test or session: every student gets the same questions, and
-"done" means submitted, however many were wrong. A finite bank cannot give a struggling
-student 30 more fresh questions on one skill while a strong one stops after 8.
-
-**New assignment sheet (§7.2).**
-* **What** gains **Reach a level**, with:
-  * skills or question types (found by search);
-  * a target: Getting there | Strong;
-  * a cap: 20–80 questions (default 40);
-  * a due date.
-  Each student gets fresh adaptive questions (R33) until every chosen skill reaches the target
-  and no trap is open on those templates, or until the cap.
-* **Questions** gains **Tailored** (sets only), with the helper "Each student's set starts with
-  their own open mistakes on these skills, then their check-ins due, then types they haven't
-  met. Same count and due date for everyone."
-
-**Who can create a class** (safeguarding; the site is used by minors, and a class shows its
-teacher students' names, weekly practice, skills and named mistakes).
-* **A verified email is required**, whatever passkeys the account has.
-  `POST /api/classes` from a passkey-only saved account → 403 `{need: 'email'}`. The Teach a
-  class screen then reads "Teachers need a verified email, so students and parents know who
-  runs the class." [Add an email]. The same rule covers Compete's "Create a group" (R4).
-* **Students see who runs it.** The join preview (`/join/?c=`) and the class page read
-  "Ms. Rivera · verified @lincolnhs.org". The domain is the verified email's domain, never the
-  address. For a free-mail domain it reads "Ms. Rivera · verified gmail.com address".
-* **Free-mail classes are capped.** When the teacher's domain is in `FREEMAIL` (a constant in
-  `classes.py`: gmail.com, outlook.com, hotmail.com, yahoo.com, icloud.com, proton.me,
-  aol.com, gmx.com, and more), each class takes at most 40 students. The 41st join → 409
-  `{full: true}`, with "This class is full. Ask your teacher." A school domain has no cap.
-* **Report this class.** Every class page (student side) has a quiet "Report this class" link.
-  It opens `UI.report` in general mode with the class as context, the category "This class
-  worries me", and the helper "We'll look at it. Your teacher isn't told who reported." It
-  lands at the top of admin, flagged `class`. Three reports from different students
-  suspend new joins until admin reviews it.
-* `ponytail:` domain display plus the cap is the whole vetting. Add school-domain verification
-  (an admin-approved list) if a free-mail class is ever misused.
-
-**Student row.** "Circles → Strong · 2 of 3 skills there · ~12 more questions", with Resume.
-
-**Teacher detail.**
-* Per student:
-  * "Done in 14 q · 11 min";
-  * or "Stuck: 40 q, still Learning, 2 open: Used the diameter as the radius", with
-    [Assign a repair];
-  * for Tailored: "had 3 of their own mistakes · fixed 2".
-* A histogram of the questions each student needed.
-* The roster adds "questions to Strong" per student.
-
-**Data.**
-* `assignments.kind` adds `mastery`, with `cfg {topics | templates, level, cap}`.
-* `cfg.tailored = true` for sets.
-* F5 adds `until: {mastery: 0.4 | 0.8, cap}` (the session ends when every topic in `topics`
-  reaches it, or at `cap`).
-* F5 also adds `segments` (U1's field): Tailored uses
-  `[{pool:'redo', topics}, {pool:'checks', topics}, {pool:'untried', topics}, {pool:'new', topics}]`,
-  filled in order up to `count`.
-
-**Acceptance.**
-1. A mastery assignment (circles, Strong, cap 30): a student at mastery 0.82 with no open
-   circles traps sees Done after starting.
-2. A student at 0.3 gets questions until 30, then sees "Stuck".
-3. A Tailored 5-question set, for a student with 2 open circles traps, serves those 2
-   templates first.
-4. No teacher payload contains an email or an `a:` / `d:` code.
-5. A passkey-only saved account → `POST /api/classes` → 403 `{need: 'email'}`. After it
-   verifies an email → 200.
-6. The join preview's payload (`/join/?c=`) for a class whose teacher verified
-   `rivera@lincolnhs.org` has `teacher.domain == 'lincolnhs.org'` and no email field. A gmail.com teacher's class
-   refuses the 41st join with 409 `{full: true}`.
-7. Three "Report this class" reports from three learners → the class's next join → 409
-   `{suspended: true}`, and admin lists it flagged `class`.
+v2-decisions item 5 removes classes ("We have a separate platform for classes, drop it").
+The earlier U27 (Reach-a-level homework, Tailored sets, teacher detail, the verified-email
+rule for teachers, the free-mail cap, Report this class) is withdrawn with task S2, and so
+are its drill fields `until` and `cfg.tailored`, the `FREEMAIL` constant, the `class` report
+flag and `reports.class`. Nothing in this file depends on a class. Friends competing
+together use Compete's private contests (an invite code or link that Compete owns); a parent
+or tutor follows a student through the progress link (R18a, §6).
 
 #### U28. Question links send a twin
 
@@ -1996,12 +2271,15 @@ Each entry quotes the current text, then gives the replacement or addition.
    * Quote: "| **Signed in elsewhere** | another device adopts the saved code | email code,
      pairing code (approved on the first device), or the device code. …"
      → "| **Signed in elsewhere** | another device holds its own device token (`d:`, U21),
-     resolving to the saved learner | passkey (U19), phone approval (U20), email code, or a
-     one-time transfer code. When this device holds answers, the student chooses whether to
+     resolving to the saved learner | passkey (U19), Google when configured (U19b), phone
+     approval (U20), email code, or a one-time transfer code. When this device holds answers, the student chooses whether to
      add them (`progress.carry`); a shared computer, or answers over 24 h old, defaults to
      not adding (U19) |"
-   * Add after the Saved row: "Saving also gives the saving browser its own `d:` token. From
-     then on the `a:` code is a non-secret id that no longer signs anyone in (U21)."
+   * Add after the Saved row: "Saving also gives the saving browser its own `d:` token.
+     Every other browser holding the `a:` code swaps to its own `d:` token on its next visit
+     within 14 days; after that, or after End the old code now, the `a:` code is a
+     non-secret id that no longer signs anyone in (U21). `account.saved(learner)` is the one
+     test of saved (U19)."
    * Quote, in "Save to an email" step 5: "* It belongs to another code A:
      `progress.carry(this, A)`, the page adopts A (`UI.useLearner`) and reloads. Toast
      "Signed in as Dana · 24 answers moved here"."
@@ -2022,8 +2300,9 @@ Each entry quotes the current text, then gives the replacement or addition.
    * Append: "A saved account gets no dialog: the toast is "Signed out · Undo" (8 s). The `d:`
      token is revoked when the toast closes or on `pagehide` (a keepalive fetch), whichever
      comes first, and the student's `satf.profiles` entry is removed (U21). A
-     shared-computer sign-out is immediate, with no Undo. Shared-computer sign-ins also end
-     when the browser closes, or 12 h after last use."
+     shared-computer sign-out is immediate, with no Undo. A shared-computer token dies on the
+     server 15 minutes after its last request, about a minute after its last tab closes, and
+     12 h after sign-in at most (U21)."
    * Quote: "**Sign out everywhere else** (saved accounts only):" and its steps 1–3.
      → "**Sign out all other devices** revokes every other `d:` token (U21). Nothing is
      rotated: after saving, the `a:` code signs no one in."
@@ -2035,10 +2314,14 @@ Each entry quotes the current text, then gives the replacement or addition.
 
 5. **§1 "Privacy for minors".**
    * Quote: "* No photo upload: the avatar is an initial or one of our 19 topic glyphs."
-   * Replace with: "* No photo upload: the avatar is the living mark (U22), the initial, or
-     any of the 19 topic glyphs (all free; Strong adds a ring). The living mark, which shows
-     mastery, is seen only by the student, their classes and their progress links. Public
-     boards show the glyph or the initial."
+   * Replace with: "* No photo upload: a photo the student picks stays on their own device
+     (IndexedDB, 256px) and is never sent (U22). The server-side avatar is the living mark,
+     the initial, or any of the 19 topic glyphs (all free; Strong adds a ring). The living
+     mark, which shows mastery, is seen only by the student and their progress links. Public
+     boards show the glyph or the initial, and only the board name (U29)."
+   * Quote: "* No location is collected."
+     → "* No location is detected. A country is optional, blank by default, and set only by
+     the student, for the Country board (U11)."
 
 6. **§2.2, sidebar.**
    * Quote: "3. **Quick** (40px, `--wash`, ink text): a bolt, "Quick", and the `kbd` "Q"."
@@ -2048,11 +2331,15 @@ Each entry quotes the current text, then gives the replacement or addition.
      Compete. Plan's meta drops "28 q" and names the next test day ("Test Sat") (U26).
    * Quote: "6. Flexible space. On short viewports, items 4–5 scroll inside the sidebar and
      items 7–9 stay pinned."
-     → "6. **Height budget** (U26): the nav items never scroll. Up next, the Today card, Search
-     and Quick, and Help and Feedback shrink in three height tiers (≥ 1100, 760–1099,
-     580–759). Below 580px the middle scrolls as one region."
+     → "6. **Height budget** (U26): the nav items never scroll and nothing moves into a
+     tooltip. Three height tiers (≥ 1100, 760–1099, 480–759). Below 1100px tall, Up next and
+     the Today card move whole to the **Now strip** at the top of `main`; the sidebar keeps
+     the brand, Search and Quick, the nav and the user card. Below 480px the nav scrolls as
+     one region."
    * Section mapping: "| me, settings, signin | the user card (it takes the active
      background) |" → "| me, settings, signin | Profile |".
+   * Quote: "| **Class** | `/class/` | only when the student is in or teaches a class. …" →
+     delete the row (decision 5). PROGRESS is Results, Words, Compete, Profile.
 
 7. **§2.2 item 7, Today card.**
    * Quote: "* Header row: "TODAY" (k label), and on the right the flame icon and the streak
@@ -2063,8 +2350,12 @@ Each entry quotes the current text, then gives the replacement or addition.
      today".
    * Add after Bar 1: "* "Register for Nov 7 · 5 days left", inside the deadline window
      (U17)."
-   * Add: "On shorter screens the card is two rows, or one, with the full card in its tooltip
-     and a click-open popover (U26). Week goals show on the Profile item, not here (U14)."
+   * Quote: "* "Due: Period 3 · Circles · Fri", when an assignment is due within 3 days
+     (links to it)." → delete it (decision 5). Add in its place: "* "Sam's
+     contest closes tonight 23:59 · Start", when a private contest the student joined
+     closes within 24 h (from Compete's `closing_soon`)."
+   * Add: "Below 1100px tall the whole card, every line, moves to the Now strip at the top of
+     the page (U26). Week goals show on the Profile item, not here (U14)."
 
 8. **§2.3, rail.**
    * Quote: "* **Search, Quick, Help and Feedback** become icons with tooltips."
@@ -2089,18 +2380,19 @@ Each entry quotes the current text, then gives the replacement or addition.
      spacer (U26)."
    * Quote: "**Menu sheet**: a bottom sheet with a drag handle, max-height 85vh, 52px rows,
      grouped:" and its list 1–4.
+   * Quote: "**Class due**" in the dot list, and "or an assignment is due" on the avatar's
+     dot → delete both (decision 5).
    * Replace with a sheet in two parts:
      * **A sticky footer, always visible**: Review (● 14), Words (12 due), Compete (New /
-       #4), Class (2 due, if in one), Quick, as equal 64px cells.
+       #4), Quick, as equal 64px cells.
      * **The scrolling body**, opened at the top:
        1. Up next item 1 with Start, and the time-box chips (U1).
        2. "Since you were last here" (U25), when there is anything unread: at most 3 rows and
           See all.
        3. The Today card.
        4. The account header, then Students on this device (a family device only, U21).
-       5. Settings, Save your progress (when unsaved), Sign in another device, Join or teach
-          a class, Help & FAQ, Send feedback, Dark theme, Large text, Sign out (or Leave this
-          device).
+       5. Settings, Save your progress (when unsaved), Sign in another device, Help & FAQ,
+          Send feedback, Dark theme, Large text, Sign out (or Leave this device).
 
 10. **§2.6, account menu.**
     * Quote: "1. **Header** (not focusable):" → unchanged. It holds no controls.
@@ -2109,11 +2401,13 @@ Each entry quotes the current text, then gives the replacement or addition.
       family device only)."
     * Quote: "3. Profile (`G U`) · Settings (`G S`) … · Sign in (only when unsaved; →
       `/signin/`) · Pair a device · …"
-    * Replace "Pair a device" with "Sign in another device (U20)", and remove "Keyboard
-      shortcuts (`?`)". The menu's foot reads "Press ? for keyboard shortcuts" as plain text.
+    * Replace "Pair a device" with "Sign in another device (U20)", and delete "Join or teach
+      a class (→ `/class/`)" (decision 5). Move "Keyboard shortcuts (`?`)" into the Display
+      group below; it stays a clickable `menuitem`.
     * Insert before item 4 (the divider): "3a. A `role="group"` "Display" holding **Dark
-      theme** and **Large text** as `menuitemcheckbox` rows. Enter or Space toggles one
-      without closing the menu (U26)."
+      theme** and **Large text** as `menuitemcheckbox` rows, and **Keyboard shortcuts (?)**
+      as a `menuitem`. Enter or Space toggles a checkbox without closing the menu. `Home` and
+      `End` jump to the first item and to Sign out (U26)."
 
 11. **§2.7, quick sheet, Log a mistake.**
     * Quote: steps "1. **Which skill?**" through "5. **Add to my mistakes** (pill) sends POST
@@ -2141,6 +2435,7 @@ Each entry quotes the current text, then gives the replacement or addition.
 13. **§2.9, keyboard.**
     * Quote: "* `G` then `T` Today, `P` Practice, `M` Mistakes, `E` Tests, `L` Plan, `R`
       Results, `C` Challenge, `K` Class, `U` Profile, `S` Settings, `H` Help."
+    * Delete "`K` Class" (decision 5), here and in §2.8's global row (`K` stays free).
     * Append: "`G` then `N` starts Up next item 1."
 
 14. **§2.10, report.**
@@ -2156,7 +2451,11 @@ Each entry quotes the current text, then gives the replacement or addition.
       it" checkbox and the 5-dispute bound apply only to "send to a person".
     * Quote: "* **Images**: an "Add images" button, paste (⌘V) and drop."
     * Prefix with: "For a question report the box says "We have this exact question (…). No
-      screenshot needed." and images sit behind "Add images"."
+      screenshot needed." and files sit behind "Add files"."
+    * Replace its limits with U3's: up to 10 files; stills downscaled to 2000px and capped at
+      10 MB; GIF as-is and `video/webm` / `video/mp4` up to 50 MB each; 200 MB per report;
+      **Record screen** (60 s, desktop); each file row shows its size and a remove ×, and an
+      over-limit file is refused in the row before sending (413 / 415 on the server).
     * Quote: "Required for Bug and Other."
     * Append: "Typo or display and Figure or table wrong need no details."
     * Quote: "* A checkbox "Include device details" (on), with a **Show** disclosure listing
@@ -2187,10 +2486,13 @@ Each entry quotes the current text, then gives the replacement or addition.
     * Quote: "GET `/api/shell` once per page load."
     * Add these keys to the shell response (§3.1.5):
       * `next` (3), `goals`, `inbox` (unread count), `stage`, `pref_source`;
-      * `me.domains`, `me.avatar {kind, glyph?, ring?}`, `spares`;
+      * `me.name`, `me.handle` (U29), `me.domains` (keyed by subject), `me.avatar {kind,
+        glyph?, ring?}`, `spares`;
       * `registration {exam_date, register_by, late_by, registered}`;
-      * `device {method, session_only}` (the current token's row, for the user card's
-        "Shared computer" line and the last-method memory).
+      * `device {method, session_only, expires}` (the current token's row, for the user
+        card's "Shared computer" line and the last-method memory);
+      * `today` (the whole Today card, every line, including `contest` from Compete's
+        `closing_soon`), which the sidebar card and the Now strip both render (U26).
 
 17. **§2.14, install.**
     * Quote: "* No service worker: the API is the app, and there is nothing useful to serve
@@ -2218,8 +2520,11 @@ Each entry quotes the current text, then gives the replacement or addition.
       with scroll-spy (U26). Me registers it through `UI.shell({sections})`; the phone uses
       the same list."
     * Quote: "**Data**: **GET `/api/me/summary`** (one call) builds the page."
-    * Append: "It adds `gains`, `pace`, `habits`, `coverage.readiness`, `levers`, `week`,
-      `score.projection`, `score.gaps` and `stats.series`."
+    * Append: "It takes `?subject=` (default `math`) and returns `{stats, goals, subjects:
+      {math: {score, domains, coverage, gains, pace, habits, levers, ranks}}}`: cross-subject
+      facts (`stats` with `series`, `delta` and `levers`; `goals` with the 1600 total; `week`)
+      at the top, everything about a subject under `subjects.<subject>` (U4–U13, the
+      subject-aware rule at the top of this file)."
 
 19. **§3.1, identity card.**
     * Quote: "* **Avatar** 72px: the initial on paper, a chosen topic glyph, or the mark when
@@ -2230,9 +2535,23 @@ Each entry quotes the current text, then gives the replacement or addition.
       selected one has a 2px orange ring)."
       → "… "Living mark", "Initial", plus the 19 glyph tiles, all selectable. The selected
       tile has a 2px ink outline and "Selected" in its label, because the orange ring now
-      means earned. Unringed tiles read "Strong in {skill} adds the ring · 62%". A line
-      under the picker: "Boards show your glyph or initial. Only you, your classes and your
-      progress links see the living mark."
+      means earned. Unringed tiles read "Strong in {skill} adds the ring · 62%". The first
+      tile is "Your photo · this device only" (U22). A line under the picker: "Boards show
+      your glyph or initial. Only you and your progress links see the living mark, and only
+      this device sees your photo."
+    * Quote: "* Editing swaps in an inline field (24 characters max). Enter saves, Esc
+      cancels." → "… (40 characters max) edits your name (`learners.name`: any script, not
+      unique; U29) …"
+    * Quote: "* Errors inline: "Names can't contain digits, @, < or >." (the server's NAME_OK
+      rule)." → unchanged: it is your name's rule.
+    * Quote: "* Below it: "On boards: Dana" / "On boards: Student 4F2A" / "Not listed on
+      boards", with a link to change it." → "… "On boards: **Dana_R** · Change" edits the
+      board name (`learners.handle`, HANDLE_OK, unique; its own errors), beside the board
+      visibility (U29)."
+    * Quote: "* The role line, when in a class: "Student in Period 3" / "Teacher · 2
+      classes"." → delete it (decision 5).
+    * Quote: "* **Goal pills** (32px, paper): "Target 700" · …" → the pill reads "Target
+      1400" when an R&W target is set, else "Math target 700" (U4).
     * Quote: "* **Stat tiles**: a 2×3 grid of paper tiles (radius 10, padding 12)." (R31 made
       it 2×4.)
     * Insert before it: "* **Outcome strip** (U10): since you started · points on the table ·
@@ -2244,16 +2563,27 @@ Each entry quotes the current text, then gives the replacement or addition.
 
 20. **§3.2, Snapshot.**
     * Quote: "Each line has "Board" → `/challenge/#practice`."
+    * Delete the per-class practice-rank lines (decision 5).
+    * Add under the band: "SAT total 1130–1210 · R&W 610 (yours)" when `rw_now` is set (U4).
     * Append: "Each line adds its movement since last week and the gap to the next place.
       Add a **Country** line when `learners.country` is set (from Compete's Country board;
-      otherwise "Set a country to see your country rank"). Below them: the **Climb** line,
+      otherwise "Add your country to see your country rank", whose **Add country** popover
+      sets it in place, U11). Below them: the **Climb** line,
       whose cohort window widens (±40, ±80, ±160, everyone) until it holds 20 and is stated
       ("Started 440–600"), and **You, N days ago** from day 8 (U11)."
 
 21. **§3.3, Study goals.**
+    * Quote: "* **Target**:" and its first bullet (the 200–800 range bar).
+      → Add above the bar: "Target **1400** = Math 700 + R&W 700 (your estimate)", from
+      `summary.goals` (U4). The bar and its labels stay the Math part.
+    * Quote: "* Save sends `PUT /api/me {target}` and toasts "Saved · your plan uses 700
+      now"." → "… `PUT /api/me {target, rw_target}` (and `rw_now` when changed), toast
+      "Saved · your plan uses 1400 now". The popover has both parts (U4)."
     * Quote: "* the live line "+100 from your latest band";"
     * Append:
-      * "* "What 700 takes: about 37 of 44 right; you're near 31", with the 3 skills (U4);"
+      * "* "What 700 takes: about 37 of 44 right, with at least 14 of 22 in module 1 to reach
+        the harder module 2; you're near 31", with the 3 skills; above 780 it names the
+        model's 780 ceiling (U4);"
       * "* the pace line and tag from `plan.pace`, and the one-tap date that makes it Steady;"
       * "* "Raise to 750?" once reached."
     * Quote: "* **Edit** opens a popover with chips for the upcoming official dates, each with
@@ -2273,8 +2603,11 @@ Each entry quotes the current text, then gives the replacement or addition.
       defaults appear under Learning preferences"):
       * "| Words a day | seg Off · 5 · 10 · 20 (`words_goal`) | "New SAT Reading and Writing
         words in your plan each day. Off leaves words out." |"
-      * "| New words from | multi-toggle SAT words · Transitions (`words_from`) | — |" (only
-        these two: v2-decisions item 2, no Math-language deck).
+      * "| New words from | multi-toggle SAT words · Transitions (`words_from`, default both)
+        | — |". `words_from` ∈ {`sat`, `transitions`}, non-empty, default
+        `[sat, transitions]`; `math` → 422 (v2-decisions item 2, no Math-language deck).
+    * Delete `gloss` ("underline math words") from Me's rows. It no longer glosses anything a
+      Math question uses; Words (S9) decides whether an EBRW gloss returns, and where.
       * "| Test timing | seg Official · 1.5× · 2× · Untimed (`test_timing`) | "Used when a
         module or section starts. Only Official timing is scored as a real sitting would be."
         |"
@@ -2311,7 +2644,10 @@ Each entry quotes the current text, then gives the replacement or addition.
     * Quote: "* The earned date, "Sep 21"."
     * Append: "* In progress: **Go · {action}** (U13)."
     * Quote: "That is 43 in all."
-    * Replace with: "That is 43, plus Trap-proof (U6) and Every goal met (U14)."
+    * Replace with: "That is 43, plus Trap-proof (U6) and Every goal met (U14). Tiers that count
+      skills, domains or types (the skill badges, the domain badges, Explorer's top tier) are
+      computed from `catalogue.by_topic(subject)` per subject, so an R&W bank adds its own
+      badges without editing these."
 
 27. **§3.9, Activity.**
     * Quote: "A planned rest day with nothing done shows a faint centre dash."
@@ -2324,6 +2660,9 @@ Each entry quotes the current text, then gives the replacement or addition.
       n** (U12)."
     * Add to its filter: "**Unread** (`?feed=unread`), the full inbox that the menu's See all
       opens (U25)."
+    * Quote the row kind "| Assignment | "Period 3 · Circles · 8/10" | "on time" or "late" |
+      the report |" → delete it (decision 5). A finished private contest is Compete's
+      `contest` row.
 
 29. **§3.11, Question types met.**
     * Quote: the heading "###### 3.11 Question types met (where they show usage meters)" and
@@ -2343,7 +2682,9 @@ Each entry quotes the current text, then gives the replacement or addition.
         R5), from Review's counts (R31)."
     * Quote: "* "Open mistakes **14**", with **Fix all** (`/api/drill {mistakes: true}`)."
       → unchanged; the part order is Saved questions, Saved words, Marked for review, Open
-      mistakes, Assigned, In progress.
+      mistakes, In progress.
+    * Quote: "* "Assigned **2 due**" → `/class/`, for a student in a class." → delete it
+      (decision 5).
 
 31. **§3.13, Account.**
     * Quote: "* **Saved**: "Progress saved to dana@gmail.com · since Sep 23", with **Manage**
@@ -2363,11 +2704,21 @@ Each entry quotes the current text, then gives the replacement or addition.
     * Prefix with the Mode and "Follow my exam date" rows (U15).
     * Quote: "A "Reset practice defaults" quiet button ends the section."
     * Append: "Beside it, "Back to stage" clears every key marked Yours."
+    * **§4.2, Tools & display.** Quote: "* **Question text**: seg Normal · Large, with a live
+      serif preview line, "If 3x + 5 = 20, what is x?"" → "* **Question text**: seg Small ·
+      Normal · Large (`text`: small | normal | large, as §2.7 defines it), with the same live
+      serif preview line." Small sets `--q-size` 18px and `--q-opt` 17px. The account menu's
+      Large text checkbox toggles large ↔ normal (U26).
 
 34. **§4.3, Study.**
     * Quote: "* **Reminder**: seg None · 10 min before · 30 min before (default 10)."
-    * Append: "* **Notify me on this device** (U18b), with its kinds and quiet hours. It is in
+    * Append: "* **Notify me on this device** (U18b), with its kinds and the editable quiet
+      hours (`quiet`), which never hold back the study reminder the student chose. It is in
       the core build, and hidden only when `SATF_PUSH=off`."
+    * Quote: "* **Preferred study time**: seg Morning 7:00 · After school 16:00 · Evening 19:00 ·
+      Night 21:00, plus a custom time input." → unchanged, plus: when the chosen time falls
+      inside quiet hours, the line "Your 22:00 reminder still rings. Quiet hours only hold
+      back extra nudges." (U18b).
     * Quote: "* **Subscribe**: copies a `webcal://…/api/cal/{token}.ics` link."
     * Replace with: "* **Add to calendar** opens U18a's sheet: **Add to Google Calendar** (a
       recurring event through the render URL, so the student's own notifications apply),
@@ -2376,11 +2727,26 @@ Each entry quotes the current text, then gives the replacement or addition.
       and link to `/?next=1` (U18a)."
 
 35. **§4.4, Account & devices.**
+    * Quote: "* **Name** (a field and Save), with the board preview underneath."
+      → a **Boards** block, in this order (U29, U11):
+      * "* **Your name**: a field and Save (`name`, NAME_OK, any script, not unique). Shown
+        only to you."
+      * "* **Board name**: a field and Save (`handle`, HANDLE_OK, unique), with the board
+        preview underneath."
+      * "* **Show me on boards**" (unchanged, below).
+      * "* **Country**: a searchable select, blank by default, with the browser-region
+        suggestion chip and Clear. Helper: "Only for the Country board. We never detect
+        where you are.""
     * Quote: "**Email**, by state:"
     * Insert before it:
+      * "**Google** (U19b, only when configured): Save with Google or "Google ·
+        d•••@gmail.com · connected Sep 23" [Disconnect]."
       * "**Passkeys** (U19): Save with a passkey, the list, Remove."
-      * "**Devices** (U21): the list (including the browser that saved), Sign out, Sign out
-        all other devices, and the recovery line."
+      * "**Devices** (U21): the list (including the browser that saved and every browser that
+        swapped), Sign out, Sign out all other devices, **End the old code now** while the
+        swap window is open, and the recovery line."
+      * "**Email** in outbox mode (U19): "Email codes aren't switched on for this site yet.",
+        with Save with a passkey (and Google) as the buttons."
       * "**This is a family device** (U21): a switch, off by default. On, it shows Students
         on this device in the menu. Off, it revokes and removes the other students' entries,
         after warning about unsaved ones."
@@ -2397,6 +2763,8 @@ Each entry quotes the current text, then gives the replacement or addition.
       out] [Cancel]"
       → "* Saved → no dialog; the toast "Signed out · Undo" (U21), with the revoke sent on
       toast close or `pagehide`. On a shared computer, signed out at once with no Undo."
+    * §4.6: quote, in **Delete everything**: "class memberships, " → delete it (decision 5); add
+      "passkeys, devices, the Google link".
     * Quote: "**Sign out everywhere else** (saved only): confirm "Other devices will need to
       sign in again." → POST `/api/account/rotate`, then the toast "Other devices signed
       out"."
@@ -2411,7 +2779,11 @@ Each entry quotes the current text, then gives the replacement or addition.
       (hash `#passkey` / `#phone` / `#email` / `#code`; `#pair` is an alias of `#phone`).
       It opens on the tab this device used last (`satf.lastMethod`); with no memory and no
       hash, on Passkey when a platform authenticator exists, otherwise Use your phone. Every
-      tab has "This is a shared computer" (U21)."
+      tab has "This is a shared computer" (U21). Above the tabs, **Continue with Google**
+      when `SATF_GOOGLE_CLIENT_ID` is set (U19b). The page starts a conditional-mediation
+      passkey request on load and refreshes it before its challenge expires (U19). When
+      `/api/health.mail == 'outbox'`, the Email code tab shows U19's "aren't switched on"
+      text with the other ways as buttons, never a code form."
     * Quote: "* Line: "This device has 24 answers. They'll be added to the progress you sign in
       to." (Hidden at 0.)"
       → "* After the account is known, when this device has answers: "This device has 24
@@ -2431,25 +2803,21 @@ Each entry quotes the current text, then gives the replacement or addition.
       page (U20)."
 
 37. **§6, Shared view.**
+    * Quote: "* H1 "Dana's SAT Math progress", with "Shared by Dana · live · updated 14:02"."
+      → "* H1 "Dana's SAT progress", …", since Words (R&W vocabulary) is on it too. Its
+      subject cards render per `subjects` key (Math today), and a Words card (S9's
+      `words.me_stats`) joins them. "Dana" is the student's name (U29), which they chose to
+      share; the view never shows the photo (U22).
     * Quote: "* What keeps catching you (names and counts);"
     * Append: "* Your habits; This week; Test-day readiness (the atlas, read-only)."
 
-38. **§7.2, the New assignment table.**
-    * Quote: "| What | Practice set · Module (22 q · 35 min) · Full section (44 q · 70 min,
-      adaptive) |"
-      → "| What | Practice set · **Reach a level** (skills or types, Getting there or Strong,
-      cap 20–80) · Module (22 q · 35 min) · Full section (44 q · 70 min, adaptive) |"
-    * Quote: "| Questions | **Fresh for each student** (default; …) · **Same for everyone**
-      ("Good for going over them together") |"
-      → append "· **Tailored** ("Each student's own mistakes on these skills first")".
-    * Quote: "* **Per student**: status, right/asked, time, finished at, late, and attached
-      working."
-    * Append: "For Reach a level: questions needed, or Stuck with the named mistake. For
-      Tailored: own mistakes served and fixed. A histogram of questions needed (U27)."
-    * §7 (creating a class): "Teach a class needs a verified email; a passkey alone gets 403
-      `{need: 'email'}`. The join preview and class page show "Ms. Rivera · verified
-      @lincolnhs.org". Free-mail classes take at most 40 students. The student class page has
-      "Report this class" (U27)."
+38. **§7, Classes and homework: removed** (v2-decisions item 5). Delete §7 whole: its pages
+    (`/class/`, `/join/`, the teacher views), tables (classes, members, assignments), endpoints
+    (`/api/classes*`), `classes.resolve_drill` and the `assignment` drill field. Also delete,
+    elsewhere in §3.1: the Class nav item and its `K` key (overrides 6, 13), the role line
+    (19), the Assigned part (30), the Assignment activity row (28), "Join or teach a class"
+    (9, 10), class push reminders (U18), class memberships in Delete everything (35), the
+    class open questions in §3.1.9 (45), and the Class use of `qr.js` (it stays for U20's QR).
 
 39. **§8, Help.** Add these answers:
     * `#points` (how points on the table is worked out, with the invented-anchors caveat);
@@ -2457,7 +2825,14 @@ Each entry quotes the current text, then gives the replacement or addition.
       `#family`, `#reminders` (the per-platform alert steps of U18a), `#projection` (why it
       needs 3 sittings and says "If this pace held"), `#checks` (what the instant report check
       does and cannot see, U3);
-    * `#fixed` (the list from `GET /api/reports/fixed`).
+    * `#fixed` (the list from `GET /api/reports/fixed`);
+    * `#routing` (why a Math target above 580 needs at least 14 of 22 in module 1, and why
+      our model tops out at 780, U4), `#google` (U19b), `#photo` (why the photo stays on your
+      device, U22), `#names` (your name and your board name, U29), `#country` (U11),
+      `#shared` (how a shared-computer session ends, U21).
+    * Quote: "* What does it cover? (SAT Math: 4 domains, 19 skills. Reading & Writing not
+      yet.)" → "* What does it cover? (SAT Math: 4 domains, 19 skills, and SAT Reading &
+      Writing vocabulary in Words. R&W questions come later.)"
     * Every answer also goes into `web/help/answers.json` (U13, U24).
 
 40. **§9, the table.**
@@ -2471,9 +2846,9 @@ Each entry quotes the current text, then gives the replacement or addition.
       since {date}", disputes every learner's matching attempts, and posts a correction to
       each. **Stop serving** / **Release** writes `quarantine`. Me-too children are listed
       under their parent. Reports that came in as `unsure` with a Strong-student signal show
-      it ("strong 31% vs base 9%, n 24") and sort first (U3). Class reports are flagged
-      `class` (U27). The unknown College Board IDs list, the top 50 by count, feeds
-      `cb-ingest` (U2)."
+      it ("strong 31% vs base 9%, n 24") and sort first (U3). Report files show inline,
+      including GIFs and videos (U3). The unknown College Board IDs list, the top 50 by count,
+      feeds `cb-ingest` (U2). The header shows the mail mode from `/api/health` (U19)."
 
 42. **§11, component inventory.**
     * Quote: "* Features: `UI.report(ctx)`, `UI.quick()`, `UI.palette()`, `UI.keys.register(scope,
@@ -2499,16 +2874,24 @@ Each entry quotes the current text, then gives the replacement or addition.
       * `server/habits.py` (U6);
       * `week_goals` and `/api/me/week` (U14);
       * `passkeys` and `webauthn_challenges` (U19);
-      * `devices` and `learner_of` for `d:`, the save-time `d:` token, `a:` refused for
-        saved learners, `/api/transfer` and `/redeem` (U21);
+      * `devices` and `learner_of` for `d:`, the save-time `d:` token, the 14-day swap
+        (`learners.swap_until`, `X-Learner-Swap`), `a:` refused after it, `/api/transfer` and
+        `/redeem`, and for shared computers `/api/devices/this/ping` and `/leaving` with the
+        15-minute idle rule (U21);
+      * `account.saved(learner)`, and the diagnostic results gate reading it (U19);
       * `carry: bool` on every sign-in endpoint, default false (U19);
+      * `server/google.py`, `/api/google/nonce`, `/api/google` and `users.google_sub`, behind
+        `SATF_GOOGLE_CLIENT_ID` (U19b);
+      * `GET /api/health` `mail` and `google` (U19, U19b);
+      * `learners.handle` and the split name validation in `PUT /api/me` (U29);
       * `cb_unknown` and `GET /api/types` `cb` (U2);
-      * `reports.pick_rate` (U3);
-      * the class email rule, `FREEMAIL` cap and class reports (U27);
+      * `reports.pick_rate`, and the streamed report uploads with per-type caps (U3);
       * `push_subs` and `server/push.py` (U18);
       * `GET /api/prefs` (U24);
       * `feed?unread` and `/feed/seen` (U25);
-      * `/api/me/summary` additions (U4–U13).
+      * `/api/me/summary` additions and its `subjects` shape (U4–U13);
+      * the `quiet` pref and the scheduler rule that quiet hours never hold back the chosen
+        study reminder (U18b).
     * Quote: "GET /api/shell" (Returns:)
     * Add the keys listed in override 16.
 
@@ -2518,14 +2901,36 @@ Each entry quotes the current text, then gives the replacement or addition.
     * Quote: "19. Email: …"
     * Keep it, and add: "the passkey checks of U19."
     * Quote: "23. New learner a:v2revnew on /me/: …"
-    * Add: "the U1 block shows "Take the diagnostic"; Test-day readiness reads 0%; Pace and
-      Your habits show their empty states."
-    * Add the acceptance lists of U1–U28 as items 38 onward.
+    * Add: "the U1 block's first item is "Take a module · 22 q" (no sign-up form on the way);
+      Test-day readiness reads 0%; Pace and Your habits show their empty states."
+    * Quote: "4. At 390x844, document.documentElement.scrollWidth <= 390 on /, /me/,
+      /me/settings/, /help/, /signin/, /class/ and /share/?t=…." → drop `/class/`.
+    * Delete every class, join and assignment check (decision 5).
+    * Add the acceptance lists of U1–U29 (with U19b; U27 is removed) as items 38 onward.
 
 45. **§3.1.9, open questions.**
     * Quote: "- Is SMTP configured for production (SATF_SMTP_*)? …"
-    * Append: "Passkeys (U19) and phone approval (U20) make accounts work without SMTP; email
-      codes stay as one option."
+      → "Answered: SMTP is a launch requirement (the README's production checklist), and
+      `/api/health` reports `mail: 'smtp' | 'outbox'`. Until it is set, the Email tab says so
+      and offers passkeys, the phone, Google and transfer codes instead (U19)."
+    * Quote: "- Should we also offer Google sign-in? …"
+      → "Answered: yes, optional. **Continue with Google** ships behind
+      `SATF_GOOGLE_CLIENT_ID` (U19b): ID tokens verified with `cryptography` against Google's
+      JWKS, bound by verified email, storing only `sub`, the email and the names. The privacy
+      review covers exactly that list."
+    * Quote: "- Photo avatars are left out for minors' privacy (an initial or a topic glyph
+      only). Confirm."
+      → "Answered: a photo is offered, kept only on the student's device and never uploaded,
+      so there is nothing to review on the server; boards and share views never show it
+      (U22)."
+    * Quote: "- Age gate and consent: … before an under-13 student saves an email or joins a
+      class (COPPA)? For classes, is the teacher's school consent enough?"
+      → drop the class clauses (decision 5): "… before an under-13 student saves an email or
+      links Google?"
+    * Quote: "- Classes: should a teacher be vetted …" → delete (decision 5).
+    * Quote: "- Should the share view and the teacher roster show the names of open mistakes, or
+      only counts? …" → "- Should the share view show the names of open mistakes, or only
+      counts? …" (no roster, decision 5).
     * Quote: "- The practice rank uses right answers over a rolling 7 days, which rewards
       volume. …"
     * Append: "Answered by U11: the volume rank stays, and Climb ranks gain for students who
@@ -2541,22 +2946,24 @@ Each entry quotes the current text, then gives the replacement or addition.
 
 | where | change | upgrade |
 |---|---|---|
-| R1 | Unchanged (5 tabs). Add: the tab bar's grip button (no swipe) and hold shortcuts, Up next first in the menu sheet, and the daily rows (Review, Words, Compete, Class, Quick) in its always-visible footer. Desktop PROGRESS adds **Profile** (`G U`) after Compete | U1, U26 |
-| R4 | Unchanged: creating a class needs a **verified email** (a passkey alone is not enough). Add: the teacher's verified domain is shown to joining students; free-mail classes cap at 40; a class can be reported | U19, U27 |
+| R1 | Unchanged (5 tabs). Add: the tab bar's grip button (no swipe) and hold shortcuts, Up next first in the menu sheet, and the daily rows (Review, Words, Compete, Quick) in its always-visible footer. Desktop PROGRESS adds **Profile** (`G U`) after Compete; the Class item is gone (decision 5) | U1, U26 |
+| R4 | **Void** (v2-decisions item 5). No classes. Compete's private contests are an invite code or link that Compete owns; the shell reads only what Compete exposes (`deps.part('compete','closing_soon')` for U1 row 2, the Today card, U18 and U25), and nothing here creates, joins or lists them | U1, U18, U25 |
 | R9 | Check-ins due feed Up next row 4 and the push text (worked out at send time). Calendar feed titles stay generic, so they never go stale. A plan check-ins task and Up next row 4 are one item (de-duplicated by pool) | U1, U18 |
-| R11, §2.7 | New keys: `mode` (learn / build / test / custom, default learn), `stage_auto` (bool, true), `registered` (date or null). Under a mode or stage, a key the student sets is stored even when it equals the default; `{key: null}` deletes it. `GET /api/prefs` serves the registry. `prefs.MODE_SOURCES` names the drill sources the mode and stage govern (builder sets, Up next skill and probe rows, the time box); every other source keeps instant feedback and next repairs. `words_goal`, `words_from` (SAT words and transitions only) and `test_timing` gain "Me" in their "also edited in" column | U15, U17, U24 |
-| R12 | Board payloads carry `avatar {kind: initial \| glyph \| plain, glyph?, ring?}` and never `domains` or any mastery figure. A living-mark choice shows as the initial on boards | U22 |
+| R11, §2.7 | New keys: `mode` (learn / build / test / custom, default learn), `stage_auto` (bool, true), `registered` (date or null). Under a mode or stage, a key the student sets is stored even when it equals the default; `{key: null}` deletes it. `GET /api/prefs` serves the registry. `prefs.MODE_SOURCES` names the drill sources the mode and stage govern (builder sets, Up next skill and probe rows, the time box); every other source keeps instant feedback and next repairs. `words_goal`, `words_from` and `test_timing` gain "Me" in their "also edited in" column. `words_from` becomes a non-empty subset of `sat, transitions`, default `[sat, transitions]`, and `math` → 422 (v2-decisions item 2). `gloss` loses "Me" (it stays wherever S9 keeps it). `text` is small / normal / large, all three offered in Settings. New key `quiet` (`{from, to}` local times or null; default 21:30–07:00) | U15, U17, U18, U24 |
+| R12 | Board payloads carry `avatar {kind: initial \| glyph \| plain, glyph?, ring?}` and never `domains`, any mastery figure or a photo. A living-mark choice shows as the initial on boards. **Names split** (U29): `learners.name` is private (NAME_OK, any script, 1–40, not unique; Me, the menu, emails, the share view); `learners.handle` is the board name (HANDLE_OK, unique, 409; null shows "Student 4F2A"), and boards read only `handle`. The board name's rule allows digits; "Names can't contain digits" is only your name's rule. `learners.country` is set only by the student (U11) | U11, U22, U29 |
 | R13 | Spare days: 1 per 7 study days in a row, up to 2; a spent spare neither breaks nor extends the streak. "No activity" for welcome-back counts study days only | U16, U25 |
-| R16 | `estimate.py` adds `gains`, `need`, `projection`. The projection needs 3 sittings over 21 days, shrinks its slope by n/(n+3), tapers to at most 20 a week after week 4, and takes its cone from the residuals plus the band half-width | U4, U9 |
-| R17 | The instant check, in the order broken → remarked → forms → unsure → explained → unsure, with `reports.pick_rate` (the Strong-student signal) required for `explained`; stem, figure and option categories always go to a person. Me-too (`reports.parent`), accept, fixed list, quarantine; F4 adds `progress.remark(learner, attempt_id)` (re-mark, close the trap it alone opened). Class reports (`reports.class`) | U3, U27 |
+| R15 | Me's Goals card and target popover show and edit the 1600 total (`target` + `rw_target`, with `rw_now`), from one `summary.goals`, so Me, Today and Plan agree | U4 |
+| R16 | `estimate.py` adds `gains`, `need` (right answers of 44, `m1_min` from `ROUTE_UP_AT` above the 580 lower-route ceiling, and the 780 model ceiling), `projection`. The projection needs 3 sittings over 21 days, shrinks its slope by n/(n+3), tapers to at most 20 a week after week 4, and takes its cone from the residuals plus the band half-width | U4, U9 |
+| R17 | The instant check, in the order broken → remarked → forms → unsure → explained → unsure, with `reports.pick_rate` (the Strong-student signal) required for `explained`; stem, figure and option categories always go to a person. Me-too (`reports.parent`), accept, fixed list, quarantine; F4 adds `progress.remark(learner, attempt_id)` (re-mark, close the trap it alone opened). Files: up to 10; stills downscaled to 2000px and capped at 10 MB; GIF, `video/webm` and `video/mp4` up to 50 MB each; 200 MB a report; streamed with 413 / 415; Record screen | U3 |
+| R38 | The diagnostic's sign-up gate reads `account.saved(learner)`: a saved learner (passkey, verified email or Google) gets results with no form, and the confirmation link saves without retiring the `a:` code (U21's swap). Up next never makes the diagnostic a new student's first item while the gate exists | U1, U19, U21 |
 | R18(b) | Feed events are titled generically ("SAT Math · Up next · 25 min") and link `/?next=1`; deadline events keep specific titles. Add a Google Calendar render link with `recur=RRULE`, and a downloadable single recurring `.ics` with VALARM | U17, U18 |
 | R18(c) | `sets` `cfg.fresh` (a fresh seed per viewer) | U28 |
 | R25 | New ladders: Trap-proof 5/20/50; Every goal met 1/4/12 weeks | U6, U14 |
-| §2.5 | Tables: `passkeys`, `webauthn_challenges`, `devices`, `transfers(code PK, learner, expires, used)`, `quarantine`, `week_goals`, `push_subs`, `cb_unknown` (not learner-keyed). Columns: `pairs.dir / token / approver / session_only`, `reports.parent / check / class`, `outside_scores.misses`, `learners.feed_seen`; `traps.origin` adds `cb_qbank`. `LEARNER_TABLES` and `carry` include the new learner-keyed tables | U2, U3, U14, U18–U21, U25, U27 |
-| §2.6 | Fields: `segments` ([{pool, ids?, topics?, count}], filled in order), `box` (5–60 minutes), `until` ({mastery, cap}). Sources: `next`, `probe`, `habit`, `gauntlet`, `bluebook`. `want` also matches `progress.norm(reason)` | U1, U2, U5, U6, U27 |
-| §2.8 | Global: `G` then `N` starts Up next | U1 |
-| §2.9 | Providers: F2 `next.queue` → S3, S4, S6, S7; F2 `UI.whenVisible`, `UI.autoSheet`, `UI.sections` → every page; F4 `estimate.gains / need / projection`, `progress.pace` → S1, S3, S6, S7, F2; F5 `habits`, `types.match` → S1, F2, F3, S4, S10; T-bank `check.check_item` → F6; T-bank `cb-ingest` → F5; F4 `quarantine` → F5, S3, S5, S8; S8 `compete.climb` and the Country practice board → S1; S7 `plan.pace` → S1, F2; S9 `words.me_stats.saved` → S1 | all |
-| §2.12 F2 | F2 also owns `server/next.py`, `web/sw.js`. F5 owns `server/habits.py`, `server/types.py`. S1 owns `server/push.py` and `web/link/**` | U1, U2, U6, U18, U20 |
+| §2.5 | Tables: `passkeys`, `webauthn_challenges`, `devices`, `transfers(code PK, learner, expires, used)`, `quarantine`, `week_goals`, `push_subs`, `cb_unknown` (not learner-keyed). Columns: `pairs.dir / token / approver / session_only`, `reports.parent / check`, `outside_scores.misses`, `learners.feed_seen / handle / swap_until`, `users.google_sub`; `traps.origin` adds `cb_qbank`. No class tables (decision 5). `LEARNER_TABLES` and `carry` include the new learner-keyed tables | U2, U3, U14, U18–U21, U25, U29 |
+| §2.6 | Fields: `segments` ([{pool, ids?, topics?, count}], filled in order), `box` (5–60 minutes). Sources: `next`, `probe`, `habit`, `gauntlet`, `bluebook`. `want` also matches `progress.norm(reason)`. The `assignment` field and `classes.resolve_drill` are gone (decision 5) | U1, U2, U5, U6 |
+| §2.8 | Global: `G` then `N` starts Up next; `K` Class is deleted (decision 5) | U1 |
+| §2.9 | Providers: F2 `next.queue` → S3, S4, S6, S7; F2 `UI.whenVisible`, `UI.autoSheet`, `UI.sections` → every page; F4 `estimate.gains / need / projection`, `progress.pace` → S1, S3, S6, S7, F2; F5 `habits`, `types.match` → S1, F2, F3, S4, S10; T-bank `check.check_item` → F6; T-bank `cb-ingest` → F5; F4 `quarantine` → F5, S3, S5, S8; S8 `compete.climb`, the Country practice board and `closing_soon` (private contests the learner joined, closing within 24 h) → S1, F2, S3; S7 `plan.pace` → S1, F2; S9 `words.me_stats.saved` → S1 | all |
+| §2.12 F2 | F2 also owns `server/next.py`, `web/sw.js`, `UI.nowStrip`. F1 owns `UI.localPhoto`. F5 owns `server/habits.py`, `server/types.py`. S1 owns `server/push.py`, `server/google.py`, `account.saved` and `web/link/**`. S2 is removed | U1, U2, U6, U18–U22, U26 |
 
 ---
 
@@ -2568,14 +2975,9 @@ Each entry quotes the current text, then gives the replacement or addition.
 * **Practice confidence tagging on every question** (outcomes #6, most of it): most students
   won't tap Sure/Unsure/Guess each time, so the card would be empty. The data that already
   exists (guess flags, test confidence, strikes) feeds U7's "When you guess" line instead.
-* **Live class check on a projector** (experience #11, unfair-advantage #9): classroom
-  novelty for a secondary audience, with polling infrastructure. The assignment detail's
-  class-misconception ranking and "Assign a repair" cover the teaching loop without it; revisit
-  when a teacher asks.
-* **Printable per-student class packs with QR answer entry** (unfair-advantage #8): Review's
-  worksheet (S10) already prints. Per-student versions with QR marking wait for teacher demand.
-* **Per-question working with teacher comments** (experience homework gap): turns attachments
-  into a messaging feature; the existing attachment is enough.
+* **Classroom features** (a live class check on a projector, printable per-student class
+  packs, per-question working with teacher comments): classes are removed by v2-decisions
+  item 5, so these have nothing to attach to.
 * **A 4-digit PIN on shared-device profiles** (unfair-advantage): a PIN checked in the browser
   over localStorage is theatre. Shared-computer mode and per-device sign-out are the real
   protection.

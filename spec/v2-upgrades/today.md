@@ -54,9 +54,9 @@ dashboard (sidebar, Upgrade card, user card, floating word button) are scored in
 
 | # | Their feature | Their version | v2 spec | After these upgrades | Verdict |
 |---|---|---|---|---|---|
-| 1 | Hero banner | Blue banner: date eyebrow, time-of-day greeting with the full name, a decorative illustration. No facts, no action | Date eyebrow, greeting, `Add your name`, 4 chips (streak, minutes today, SAT in N days, plan N of M), each linking to its card | Adds a briefing line (yesterday's result, what came due, new homework or score, a skill that moved), a streak-at-risk line with a one-question action after 18:00, a Final stretch chip, and the day's receipt, open all day once earned (T19, T13) | v2 PARITY: the chips repeat numbers the cards show. **T19 → WAY BETTER.** The first line a returning student reads says what changed and what is owed, each fact is one tap from its action, and "All Done" becomes what the day achieved, points included, with one source for the points figure. |
+| 1 | Hero banner | Blue banner: date eyebrow, time-of-day greeting with the full name, a decorative illustration. No facts, no action | Date eyebrow, greeting, `Add your name`, 4 chips (streak, minutes today, SAT in N days, plan N of M), each linking to its card | Adds a briefing line (yesterday's result, what came due, a new score, a skill that moved), a streak-at-risk line with a one-question action after 18:00, a Final stretch chip, and the day's receipt, open all day once earned (T19, T13) | v2 PARITY: the chips repeat numbers the cards show. **T19 → WAY BETTER.** The first line a returning student reads says what changed and what is owed, each fact is one tap from its action, and "All Done" becomes what the day achieved, points included, with one source for the points figure. |
 | 2 | Single next action | None: the plan CTA, QOTD, countdown and score compete | Up next: running test, unfinished set, plan test day, or the coach's set with count and clock chips | One `Size` row offers time (5–60 min) or count (5 · 10 · 22 · coach · Endless), both visible, beside the Timed/Untimed clock and More options. A time box builds a points-ordered session and lists its blocks before Start. Any block can be dropped. Question 1 is already on the page (T1). A new skill starts with a worked example (T4) | Better than theirs already, but v2's chooser is their QBank builder's count and timer. **T1 → WAY BETTER.** The student states their time or their count, timed or not, and gets the best session that fits. No control is hidden. The first answer is 2 taps from landing (theirs: 6–8 taps and a page change). |
-| 3 | Today's Plan card | N of M completed, X min left (Y total), All Done badge, Full Plan, a checkbox per task, "Could not start task" toast | Today list: auto-ticked from real work, progress per row, Why, Skip / Undo, Move to… | **Due today**: homework, plan tasks, warm-up, words, the day's questions, the challenge and group contests in one list with one minute total. The site's own work ticks itself. The student's own tasks (their R&W study, a tutor session) have a real checkbox, and any plan task can be marked done from ⋯ for work done elsewhere. Done rows say what they achieved and offer the repair. Every finish screen hands you the next row (T2) | v2 BELOW theirs on one point: a student's own task could never turn done. **T2 → WAY BETTER.** Everything owed today is in one place. The site ticks what it can see, the student ticks what it can't, and the counts match /plan/. There are no trips back to the dashboard between items. |
+| 3 | Today's Plan card | N of M completed, X min left (Y total), All Done badge, Full Plan, a checkbox per task, "Could not start task" toast | Today list: auto-ticked from real work, progress per row, Why, Skip / Undo, Move to… | **Due today**: plan tasks, warm-up, words, the day's questions, the challenge and private contests in one list with one minute total. The site's own work ticks itself. The student's own tasks (their R&W study, a tutor session) have a real checkbox, and any plan task can be marked done from ⋯ for work done elsewhere. Done rows say what they achieved and offer the repair. Every finish screen hands you the next row (T2) | v2 BELOW theirs on one point: a student's own task could never turn done. **T2 → WAY BETTER.** Everything owed today is in one place. The site ticks what it can see, the student ticks what it can't, and the counts match /plan/. There are no trips back to the dashboard between items. |
 | 4 | "Why this task?" | Expands one `aiReason` sentence | A `Why` toggle with one line (the coach's reason) | Why gives numbers: open mistakes, recent accuracy, questions a section, ≈ points, minutes at your pace, and `See the evidence` (T2) | v2 PARITY. **T2 → WAY BETTER.** A claim the student can check, not a sentence. |
 | 5 | Skip / Undo / Move a task | Skip, Mark done, Undo, Move to a later day in the same week only | Skip / Undo skip, Move to any study day up to the eve (R14), automatic completion | Adds `Swap for: Circles` (the plan's alternatives) and `Mark done` for work done off the site. Every edit goes through S7's one `PATCH /api/plan/{id}/tasks/{task}` and applies at once with Undo (T2, T20) | **WAY BETTER already** (wider range, automatic done). T20 makes it instant. |
 | 6 | Two questions of the day | R&W left, Math right, the same for everyone | One MC and one grid-in Math, side by side | **Four slots**: Math multiple choice and grid-in, plus two R&W slots, **Words in Context** and **Transitions**. These are the SAT's own R&W item types, generated by Words (W1, W2), and every wrong option names its trap. The R&W key word appears nowhere on the site until you answer. Each slot has a twin, and the rationale is open after every answer (T14) | v2 BELOW theirs for a student who thinks in 1600: no R&W at all. **T14 → WAY BETTER.** Two R&W questions a day from two R&W domains (Craft and Structure, Expression of Ideas) against their one, plus both Math formats. Every miss ends on a right twin. Their passage question can come from any of the 4 domains; ours covers 2 until the R&W bank lands, when an `rw:mcq` passage slot is added with no change to the others (decision 3). |
@@ -82,7 +82,7 @@ dashboard (sidebar, Upgrade card, user card, floating word button) are scored in
 | 26 | Mistakes on the dashboard | None (their Redo list exists only in their API) | Mistakes card: named misconceptions, hits, owed pips, Fix, Try one now | By habit across skills with Drill this habit and the gauntlet; **blind spots** (sure and wrong on a medium or hard question) first, labelled the same way as the causes bar; a relapse offers Learn it; one twin sheet (T9, T5, T4) | **WAY BETTER already.** T9 fixes the habit, not the question. |
 | 27 | Spaced review | Only vocab "Due Today" (stayed 0 after grading) | Check-ins at 3/10/30 days live in Review | **Warm-up**: 5 spaced, mixed, unlabelled retrievals every day on fresh numbers, with a forecast on the calendar and a held rate (T3) | **WAY BETTER.** Theirs cannot re-test a Math question without showing the same numbers. |
 | 28 | Time insight | "Time Analysis" on Contest Rankings, empty; the QBank stopwatch resets on reload | Nothing on Today | **Pace**: a module at your pace against 35:00, the strip showing where the clock runs out, points lost to time, slow-but-right skills with a speed drill (T8) | v2 BELOW (nothing). **T8 → WAY BETTER.** |
-| 29 | Homework | `/my-classes` exists but is hidden from the sidebar and dashboard | §2.9 says Today shows assignments due first, but §3a/§3b never list them | A Due today row with its due time; overdue rows at the top; Up next leads with homework due within 24 h (T2) | v2 missed it. **T2 → WAY BETTER.** |
+| 29 | Homework | `/my-classes` exists but is hidden from the sidebar and dashboard | -- | Not built (decision 5: a separate platform has classes) | Out of scope by decision. |
 | 30 | Vocab due | A separate "Due Today N" card on My Words | Words tile (R30) | Words due is a row in Due today with its minutes, chained after the Math session (T2) | v2 PARITY. **T2 → WAY BETTER.** One list, one total. |
 | 31 | Daily challenge | Contests empty, answers revealed only after a contest ends | Card with top 5, time left, challenge streak, yesterday | After finishing: 10 slot squares against the field's % right, the field's top trap per slot, and a twin of each miss (T15) | **WAY BETTER.** |
 | 32 | Practice estimate | Practice page: "Math 200-280 · LOW CONFIDENCE" with no way to improve it | A band from any sitting | Evidence per domain and **Sharpen · 12 questions** where it's thin; the practice delta moves daily (T10) | **WAY BETTER.** Low confidence becomes a 19-minute action. |
@@ -274,13 +274,12 @@ summary's "Next" comes from `GET /api/next` (U1 chaining).
 
 #### T2. Due today: one list, one minute total, and each finish hands you the next
 
-*From: experience #2, outcomes Today-list gap, unfair-advantage Why and All-done gaps, the
-§2.9 assignment contract. Effort M. Builders: S3 (the list), F2 (`next.due`), S7
-(`plan.today_summary`, PATCH), S2 (`classes.due_soon`), S9 (`words.today_summary`), S8
-(`compete.due_today`), S4 / S6 / S9 / S8 / S2 (finish-screen chaining).*
+*From: experience #2, outcomes Today-list gap, unfair-advantage Why and All-done gaps. Effort M. Builders: S3 (the list), F2 (`next.due`), S7
+(`plan.today_summary`, PATCH), S9 (`words.today_summary`), S8
+(`compete.due_today`), S4 / S6 / S9 / S8 (finish-screen chaining).*
 
-**Why.** A student's day holds homework, plan tasks, reviews, words and the daily items.
-Theirs lists plan tasks only, ticked by hand, with vocab on another page and homework hidden.
+**Why.** A student's day holds plan tasks, reviews, words and the daily items.
+Theirs lists plan tasks only, ticked by hand, with vocab on another page.
 One list with one time total answers "what do I still owe today, and how long will it take?",
 and chaining the finish screens removes the trip back to the dashboard.
 
@@ -296,8 +295,7 @@ and chaining the finish screens removes the trip back to the dashboard.
     leaves them out.
 * **Rows, in this order**:
   1. A running or out-of-time test (v2's rules).
-  2. Class assignments due within 24 h, by due time: `Period 3 · Circles · 10 q · due 5:00 PM`.
-     Overdue ones (up to 7 days late) read `Overdue since Tue` in ink-bold and sit at the top.
+  2. (Removed: class assignments, decision 5. The numbering is kept because other files cite rows 4 to 9.)
   3. Plan tasks (fix, focus, test, custom, extra), from `plan.today_summary`. The plan's
      recheck task is rendered as the Warm-up row (T3), not twice. Its `qotd` and `challenge`
      tasks are rows 7 and 8, not twice.
@@ -307,7 +305,7 @@ and chaining the finish screens removes the trip back to the dashboard.
   6. Words due: `12 words due · ~3 min` (`words.today_summary`), starting S9's review run.
   7. The day's questions: `1 of 4` (`N` is the number of slots shown, T14).
   8. The challenge.
-  9. Group contests closing today: `Period 3 contest · 10 q · closes 9:00 PM`.
+  9. Private contests closing today (`compete.due_today`): `Friday five · 10 q · closes 9:00 PM`.
 * **A row** keeps v2's status box, title with type tag, meta, action and ⋯ menu, plus:
   * **your own task** (plan kind `custom`, tag `Your own`, e.g. `R&W reading · 30 min`): the
     status box is a real `input[type=checkbox]`, `aria-label` `Mark as done` / `Mark as not
@@ -322,7 +320,7 @@ and chaining the finish screens removes the trip back to the dashboard.
     the site can't see it (a Bluebook test, a tutor session). It sends the same PATCH, as
     /plan/'s task menu does. It counts toward the day's status and minutes, not toward
     question stats or mastery (Plan's rule for a manual mark);
-  * the minute estimate in DM Mono: a practice or assignment count × the learner's median
+  * the minute estimate in DM Mono: a practice count × the learner's median
     seconds, a word review 15 s (`words.minutes_today`), a test its clock, the challenge 16 min;
   * the due time when there is one;
   * **Why** (the `.quiet` toggle) with evidence: `Probability · 2 open mistakes · 48% right of
@@ -335,7 +333,7 @@ and chaining the finish screens removes the trip back to the dashboard.
 * Undone rows come first and done rows after them, each with its result. Nothing is folded
   away.
 * **Every finish screen offers the next row**: the practice summary (S4), the report (S6), the
-  words run end (S9), the contest result (S8) and the assignment finish (S2) show
+  words run end (S9), and the contest result (S8) show
   `Next due: Warm-up · 5 · ~6 min [Start]` and `Back to Today`. Enter starts it. The item comes
   from `GET /api/next` with the just-finished key excluded (U1), so there is one rule.
 
@@ -345,7 +343,6 @@ student's own tasks and a manual mark, for work the site can't see.
 * Any plan task marked done from ⋯: done (`marked`).
 * Day's questions: every slot shown is answered (`4 of 4`, or `2 of 2` while the R&W slots
   are absent; T14). This replaces v2's "both slots answered".
-* Homework: its assignment session is finished.
 * Warm-up: today's warm-up session is finished, or every check-in due today has been answered
   once.
 * Sweep: today's share answered.
@@ -361,7 +358,7 @@ student's own tasks and a manual mark, for work the site can't see.
   total}`. `own` is true for a plan task of kind `custom` (the checkbox), `marked` for a task
   done by a mark.
 * Sources are read through `deps.part`, so a missing module drops its rows quietly:
-  `classes.due_soon(learner, tz)`, `plan.today_summary`, `words.today_summary`,
+  `plan.today_summary`, `words.today_summary`,
   `compete.due_today(learner, tz)`.
 
 **Uses the rest of the site.** Every plan edit on Today uses S7's one
@@ -376,12 +373,12 @@ There is no Today-side mark table or endpoint (§3.1 entry 32). The sidebar's To
 shows the same `done / total` and minutes left.
 
 **Acceptance.**
-1. A learner in a class with an assignment due in 3 hours, a plan practice day and 2
-   check-ins due: `/api/today.due.rows|map(.kind)` starts `["assignment","plan","warmup"]`,
+1. A learner with a plan practice day and 2 check-ins due:
+   `/api/today.due.rows|map(.kind)` starts `["plan","warmup"]`,
    and `minutes_left` equals the sum of the undone rows' `minutes`.
 2. The plan's recheck task never appears as its own row (`map(.kind)` has one `warmup`).
-3. Finishing the assignment session turns its row `done` without any tick, and the S4 summary
-   shows "Next due: Plan".
+3. Finishing the plan's practice session turns its row `done` without any tick, and the S4
+   summary shows "Next due: Warm-up".
 4. A practice task that opened 1 trap: its done row has `.result.opened == 1` and the Fix
    button's body has `still_open: true`.
 5. Words module absent: no `words` row and no error; present with 12 due: the row reads
@@ -1482,7 +1479,7 @@ an "All Done" badge that marks completion, not outcome.
 
 * **Briefing line** under the heading (Archivo 15, ink-soft): up to 3 facts, most urgent first,
   each a link to its place:
-  * `Period 3's Circles set is due at 5:00 PM`;
+  * `Friday five closes at 9:00 PM` (a private contest you joined);
   * `2 mistakes you fixed 10 days ago are due a check-in`;
   * `Module on Sep 21: 520–600 · +40` (a sitting or outside score since the last study day);
   * `Yesterday: 42 of 45 min · 3 mistakes fixed · challenge #4 of 30` (or `Since Mon: …` when
@@ -1642,7 +1639,7 @@ Each entry quotes the current text, then gives the replacement or addition.
      plan · 60 min`, `Test day in your plan · 70 min` or `Rest day in your plan`."
    * Add: "Under it, the Size row `Size: Time 5 · 15 · 30 · 45 · 60 min or Count 5 · 10 · 22 ·
      {coach} · Endless`, both halves visible, one choice at a time (T1). Items 1–3 of §3a come
-     from `next.queue` (`resume`, `assignment`, `plan` test)."
+     from `next.queue` (`resume`, `plan` test)."
 
 10. **§3a item 4.**
     * Quote the block from "**4. The coach's set**" through "- **Start**: the pill. It sends
@@ -1701,7 +1698,7 @@ Each entry quotes the current text, then gives the replacement or addition.
     * Quote: "- **Day's questions**: both slots answered."
       → "- **Day's questions**: every slot shown answered."
     * Quote: "- **Challenge**: finished."
-    * Add after it the completion rules of T2 (own task, marked done, homework, warm-up, sweep,
+    * Add after it the completion rules of T2 (own task, marked done, warm-up, sweep,
       words, contest), and: "- Plan tasks of kind `qotd` and `challenge` are shown only as the
       ALSO DUE rows; PLAN's `N of M` is `plan.tasks_done` of `plan.tasks_counted`."
     * Quote the **Skip and Move** block from "- Both send `POST /api/plan/mark`." through "- If
@@ -2064,7 +2061,7 @@ Each entry quotes the current text, then gives the replacement or addition.
 |---|---|---|
 | shell-me U1 `next.queue` | Adds kind `resume` for an unfinished drill (v2 §3a item 2) and a plan test day as `plan` with `test`. Row 4 `checks` starts `{source:'warmup'}`. `next.due(learner, tz)` is the source of rows 1–4 and of Today's Due list. `next.stage` holds T13's modes (stretch, taper, eve, exam, after) and drops `new` for rare skills in the stretch | T2, T3, T13 |
 | shell-me U1 box | Segment 1 is `progress.warmup_candidates` (check-ins due, then fading), up to 3. The preview returns `blocks` with stable keys, and the body takes `drop` and `first`. The box options are 5–60 (Today offers 5, 15, 30, 45, 60). The preview and the drill take `box` or `count` (one of them) and `timed`: an untimed box is a soft limit, a timed box a hard countdown at 95 s a question | T1, T3 |
-| shell-me U1 chaining | Add the words run end (S9), the contest result (S8) and the assignment finish (S2) to the finish screens that show "Next: {title}" | T2 |
+| shell-me U1 chaining | Add the words run end (S9), and the contest result (S8) to the finish screens that show "Next: {title}" | T2 |
 | shell-me U23 | `UI.cached(path, {store:'local', until:'day'})`: localStorage keyed to the local date, dropped when it changes, same 200 KB cap and sign-out clearing | T20 |
 | R9 | Check-ins also feed `progress.due_forecast`; in the final stretch, pool `checks` with `sweep:true` selects traps closed in the last 90 days and not yet swept | T3, T13 |
 | R16 | `estimate.py` adds `practice_delta(learner, since)` (T10 from the latest sitting, T19 from local midnight), `time_cost(learner, pace)` (the one time-cost figure: `insights.pace.pts_lost` and the `gains` pace extra), `need(target).path` (the to-target work for `today.workload`) and `rescore(sid, positions)`; `gains` adds `tiers`, `extras`, `by_domain`. `per_question` is not built | T6, T7, T8, T10, T12, T16, T19 |
@@ -2074,7 +2071,7 @@ Each entry quotes the current text, then gives the replacement or addition.
 | §2.5 | No new tables. The warm-up, causes, habits' broken state and sweep are computed from existing rows. `kv` holds `preview_secret`, which F5 writes once at init | T1, T3, T7, T9, T13 |
 | §2.6 | Fields: `first {token, answer, ms}`, `drop [key]`, `box` (minutes) for `source:'next'` beside `count` and `timed`, `example` (bool), `sweep` (bool, pool checks). Sources: `warmup` (sets `cfg.hide_skill`), `learn`, `gain`, `pace`, `today`. The preview returns `blocks` and `first` for `source:'next'` | T1, T3, T4, T6, T8, T13, T17 |
 | §2.8 | Page scope `today`: `J`, `K`, `T` | T20 |
-| §2.9 | Providers: F4 `progress.causes`, `progress.warmup_candidates`, `progress.due_forecast` → S3, S7, S10; F2 `next.due`, `next.stage` → S3, S7; F3 `UI.twinSheet` → S3, S6, S8; S8 `compete.due_today` → S3; S2 `classes.due_soon` → S3 (already in U1); S9 `words.daily_item`, `words.record_daily` → S3; S6 `GET /api/session/{id}/compare?with=` → S3, S5; S7 preview `week` (7 days of `{date, kind, minutes, topics}`) → S3; S9 `rw_items.another(prev, like)` and W1's sample token and `POST /api/words/sample/answer` → S3 (R&W twins); F4 `estimate.time_cost`, `estimate.need(target).path`, `scoring.entry_error`, `progress.cause_of` → S3, S1 | all |
+| §2.9 | Providers: F4 `progress.causes`, `progress.warmup_candidates`, `progress.due_forecast` → S3, S7, S10; F2 `next.due`, `next.stage` → S3, S7; F3 `UI.twinSheet` → S3, S6, S8; S8 `compete.due_today` → S3; S9 `words.daily_item`, `words.record_daily` → S3; S6 `GET /api/session/{id}/compare?with=` → S3, S5; S7 preview `week` (7 days of `{date, kind, minutes, topics}`) → S3; S9 `rw_items.another(prev, like)` and W1's sample token and `POST /api/words/sample/answer` → S3 (R&W twins); F4 `estimate.time_cost`, `estimate.need(target).path`, `scoring.entry_error`, `progress.cause_of` → S3, S1 | all |
 | S7 Plan | The recheck task's start body is `{source:'warmup', task:'YYYY-MM-DD:recheck'}`. The Final phase's test days are Today's rehearsals. `skills[].gap` reads `estimate.gains`. `POST /api/plan/preview` returns `week`, and takes a draft with no `current` (it draws the week and returns `pace_tag: null`). `/api/today.plan` adds `start` (`plans.start`) and `weeks` (the `GET /api/plan` rows `{n, from, to, theme, tasks_planned, tasks_done}`), so Today's week header and theme are /plan/'s. Today sends the same `PATCH /api/plan/{id}/tasks/{task_id}` for Skip, Move, Mark done and the own-task checkbox; a manual mark on a generated task counts toward the day and minutes, not question stats (Plan's proposed rule, now used from Today too) | T2, T3, T6, T13, T18 |
 | S9 Words | The Words spec's math word of the day is not shown on Today (decision 2). `words.daily_item(day, 'wic')` and `(day, 'transition')` (W21) are T14's slots `rw:wic` and `rw:transition`, and I1's walk requires both. The WIC key word is drawn by `sha256('qotd:rw:wic:' + day)` over SAT words with at least 2 in-context frames; the transition's family and seed by `sha256('qotd:rw:transition:' + day)`. `GET /api/words/today.wic.word` is null until this learner has answered the item (Today and `/words/` share one record), and `/words/`'s Word of the day tile shows the item, never the word, until then. On Today, the Words tile's `Transition of the day · answer it` line (words.md override 42) becomes `Word and transition of the day · in the day's questions ↑`, linking to `#qotd`. `words.record_daily(learner, day, fmt, answer, ms)` files session `qotd:rw:{fmt}:{day}` | T14 |
 | S6 Results | `UI.sittingCard` takes extra lines (delta, causes, worth, time per module, total) and a chip menu; the compare endpoint | T16 |

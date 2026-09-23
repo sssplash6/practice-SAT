@@ -26,7 +26,22 @@ TopTierPrep inventory is §3.3.1, checked against `spec/toptierprep-teardown.md`
   new server function has one owner.
 * **Subject-aware.** Per v2-decisions item 3, new payloads that describe a section
   (`/api/bank`, points, budgets, the route check, look-alikes) carry `subject` (`math` now), so
-  a second subject is additive.
+  a second subject is additive. Concretely, and cheap now:
+  * `blueprint.SECTION[subject] = {questions, module_seconds, tiers}` (Math: 44, 2,100,
+    `TIERS`). Every "of 44" in this file prints `SECTION[subject].questions`, never a literal.
+  * Tier budgets are keyed by subject and derived from that subject's `module_seconds`, its
+    module-1 question count and tier mix, with the ratios 0.68 / 1.0 / 1.32 (Math: 65 / 95 /
+    126 s). `budget_ms(template, tier)` reads the template's subject, and a set's pace comes from
+    its own subject, never a literal 95.
+  * `POST /api/drill`, `/preview` and the set's state carry `subject` (default `math`); so do
+    the §1.10 deep links (`subject=math`) and `UI.parseSet`'s body.
+  * Builder prefs live per subject: `prefs.practice[subject] = {zone, review_mix, review_from,
+    final_round, cover, two_passes, hints, worked_first, words_mix, presets, …}`. Only keys that
+    describe the student rather than the subject stay flat (`confidence`, `type_rules`, `keys`).
+    U15's bundles write into `prefs.practice.math`.
+  * Acceptance: `GET /api/drill/{id}` carries `subject: 'math'`; `PUT /api/me
+    {prefs:{practice:{math:{zone:'warm'}}}}` round-trips through `GET /api/me`, and a flat
+    `prefs.zone` is read once at startup and moved there.
 * **Facts measured for this file** (current bank and db, 2026-09-23):
   * 386 templates. Rationales: median 21 words, at most 57. TopTierPrep's report explanation
     is a Justification paragraph plus one line per wrong option, so our explanation is
@@ -45,6 +60,16 @@ TopTierPrep inventory is §3.3.1, checked against `spec/toptierprep-teardown.md`
     `satbank.expr.agree` can compare expression options.
   * The db holds 287 attempts from 13 learners, 166 of them with `ms`. No (template, tier)
     has more than 12, so §3.3's measured levels (20+ first tries) would ship empty.
+  * `material/keys` holds 1,039 official Math IDs with a tier each (easy / medium / hard) and
+    no 1–7 score band. College Board's Question Bank listing shows, for every question, its ID,
+    section, domain, skill, difficulty and score band (1–7), without opening the question.
+  * Every template is pinned to official items in `satbank/topics/*/sources.py`, and many
+    parameter spaces are small, so an unguarded fresh seed can land on an official item's
+    exact numbers.
+  * Templates by topic, for the Desmos floor (P3): systems 20, linear functions 23, linear
+    equations in two variables 22, nonlinear functions 36, nonlinear equations and systems
+    32, linear inequalities 18, two-variable data 18, circle equations
+    (`circles.families.equation`) 6: 175 in all.
   * `scoring.ROUTE_UP_AT = 0.60`, `LOWER_ROUTE_CEILING = 580`. `blueprint.TIERS` is
     module 1 7 / 8 / 7, harder module 2 3 / 8 / 11, lower module 2 11 / 8 / 3.
     `MODULE_SECONDS` is 2,100.
@@ -59,52 +84,52 @@ or below, the verdict names the accepted upgrade that fixes it.
 | # | Their feature | Their version | v2 spec | After these upgrades | Verdict |
 |---|---|---|---|---|---|
 | 1 | One-screen builder | One screen, no page scroll; the skill list scrolls in its card; a fixed bar. 5 to 7 controls every visit | A scrolling page: presets with reasons, search, a skill tree with stats, 11 settings, Your sets, a fixed Action bar | A Ready row of Up next's first 3 sets plus "Again", each one tap. A command line ("circles hard 10 timed", Enter). Saved presets. Time boxes. Enter in the empty line starts Ready card 1 (P15) | v2 PARITY for speed: more capable, but slower for "10 hard circles". **P15 → WAY BETTER:** one tap or one line, with the full builder still below. |
-| 2 | Bank toggle (QB \| TTP) | 1,921 College Board Math items, each good for one pass, plus 3,867 of their own | No toggle; a line on where questions come from; replicas left out | Paste College Board IDs (or a whole list) and get unlimited twins at the official tier with the same traps. "Built from 11 official questions" chips, an official-only filter, an "Official questions you brought" tab (P13) | v2 BELOW. **P13 → WAY BETTER:** any official item a student missed becomes endless named-trap practice. Theirs is used up after one pass. |
+| 2 | Bank toggle (QB \| TTP) | 1,921 College Board Math items in the app, filtered and tracked, plus 3,867 of their own | No toggle; a line on where questions come from; replicas left out | Every College Board Math ID resolves: 911 exactly onto templates, the rest by skill, tier and band from the listing index. Paste IDs (or a whole list) and get unlimited twins at the official tier, with the same traps where the map is exact. Each SkillRow links to College Board's bank at that skill with a "Paste what you missed there" field. "Built from 11 official questions" chips, an official-only filter, an "Official questions you brought" tab. No practice question ever copies an official one (P13) | v2 BELOW. **P13 → WAY BETTER:** official practice starts and ends in our builder, and every official miss becomes endless practice at its tier. Theirs gives each item once, with no twin. |
 | 3 | Live "N questions" count | An inventory count that froze when a domain was unchecked | Live types and questions, "unlimited", ≈ minutes | "Covers ~21 of 44 questions on a Math section · works on ≈ +30 · ≈ 17 min for you" (P10, P16) | v2 PARITY: an inventory number. **P10 + P16 → WAY BETTER:** it says what the set is worth to this student and how long it takes them. |
-| 4 | Subject toggle | English and Writing \| Math | Math only; the eyebrow says SAT MATH | A "Math · Reading & Writing" seg. R&W lists the Words drills (EBRW words and transitions) with their counts and says the R&W bank is coming (P15) | v2 BELOW by scope. P15 means an R&W student never hits a dead end, and the builder is keyed by subject for the EBRW bank (decisions 2 and 3). Still below for R&W *questions* until that bank exists. |
+| 4 | Subject toggle | English and Writing \| Math | Math only; the eyebrow says SAT MATH | A "Math · Reading & Writing" seg. R&W lists the 10 R&W skills, each linked to College Board's official bank at that skill; a Log it form keeps R&W misses (ID or text, skill, letter) for the EBRW bank and Review; the Words drills (EBRW words and transitions) with their counts. The builder, prefs, budgets and deep links are keyed by subject (P15, header) | **Still BELOW for R&W questions until the EBRW bank exists** (decisions 2 and 3). P15 removes the dead end: an R&W student practises official questions, logs misses and reviews words from here, and nothing has to be torn out when the bank ships. |
 | 5 | Domain accordions | Check circle, name, count, chevron; no indeterminate state | Tri-state box, weight chip "35% · ~15 of 44", mastery bar and word, answered · first-try %, open mistakes, selected count | Adds "≈ +40 on the table" (P10), reviews due (P12) and "14 of 23 types ready" (P14) | **WAY BETTER already in v2.** The upgrades rank domains by what they are worth. |
-| 6 | Skill checkboxes with counts | A checkbox and an item count ("Linear functions 170 / 408") | Full name, types, tiers, grid-in count, mastery, record, open mistakes, last practised, SkillPanel stats, 386 TypeRows | Adds Worth, fluent types, reviews due, odds per type, Desmos and official chips, a Map view and Finish this skill (P10–P14, P16) | **WAY BETTER already in v2** (the type layer they lack). The upgrades make each row a priced to-do. |
-| 7 | Bluebook Include \| Exclude | Filters out items that also appear in Bluebook | A fixed lock line: "Never repeats" | A pool "Fresh numbers on mistakes I logged from outside": Bluebook and College Board misses (by ID, text or a whole test, U2) become twins (P13) | v2 PARITY: a static answer. **P13 → WAY BETTER:** Bluebook misses drive practice instead of being filtered out. |
-| 8 | Difficulty multi-select | Easy / Medium / Hard pills | Tier toggles with type counts, plus Adaptive (off by default) | "Standard · For me". For me offers Warm-up, Stretch or Challenge, aimed by the student's own odds on each type. Standard adds test-shaped mixes: "Like module 1 (7/8/7)" and "Like the harder module 2 (3/8/11)" (P11) | v2 PARITY. **P11 → WAY BETTER:** each question is aimed at this student's odds, and a 700-seeker can practise the tier mix of the module that decides their ceiling. |
-| 9 | Question Score 1–7 | A dual-thumb slider; opaque, and missing from Details | Seven level cells measured from 20+ first tries per (template, tier); none measured at launch | Levels from item ratings that move with every clean first try: they exist from the first answer, read "rough" until 20, and every type shows "your odds" (P11) | v2 BELOW at launch: 7 disabled cells. **P11 → WAY BETTER:** works on day one, says how sure it is, and adds odds. |
+| 6 | Skill checkboxes with counts | A checkbox and an item count ("Linear functions 170 / 408") | Full name, types, tiers, grid-in count, mastery, record, open mistakes, last practised, SkillPanel stats, 386 TypeRows, but a skill over 12 types collapsed behind "Show all" | Every TypeRow shown, under sticky skill-label sub-headers with counts and select-all. Adds Worth, fluent types, reviews due, odds per type, Desmos and official chips, a College Board link, a Map view and Finish this skill (P10–P14, P16) | **WAY BETTER** (the type layer they lack), now with nothing hidden (decision 4). The upgrades make each row a priced to-do. |
+| 7 | Bluebook Include \| Exclude | Filters out items that also appear in Bluebook, so a student's tests stay unspoiled | A fixed lock line: "Never repeats" | Every pool rejects a card with an official item's pinned numbers or wording, so no practice question copies a College Board question, and the Repeats line says so. A pool "Fresh numbers on mistakes I logged from outside": Bluebook and College Board misses (by ID, text or a whole test, U2) become twins (P13) | v2 BELOW: nothing stopped a random seed landing on an official item. **P13 → WAY BETTER:** their protection holds in every pool, and Bluebook misses drive practice instead of being filtered out. |
+| 8 | Difficulty multi-select | Easy / Medium / Hard pills | Tier toggles with type counts, plus Adaptive (off by default) | "Standard · For me". For me offers Warm-up, Stretch or Challenge, aimed by the student's own odds on each type, from ratings seeded by their score or a probe. Until a skill is placed (8 clean answers or Check my level) it serves the test's 7 / 8 / 7 mix, so nobody gets a run of Easy. Standard adds test-shaped mixes: "Like module 1 (7/8/7)" and "Like the harder module 2 (3/8/11)" (P11) | v2 PARITY. **P11 → WAY BETTER:** each question is aimed at this student's odds from day one without a cold-start trap, and a 700-seeker can practise the tier mix of the module that decides their ceiling. |
+| 9 | Question Score 1–7 | A dual-thumb slider; opaque, and missing from Details | Seven level cells measured from 20+ first tries per (template, tier); none measured at launch | Levels from item ratings whose priors are College Board's own 1–7 score bands for the official items each type maps to, moving with every clean first try. All seven levels hold types on day one; a level reads "rough" until 20; every type shows "your odds" (P11) | v2 BELOW at launch: 7 disabled cells. **P11 → WAY BETTER:** their scale on day one, then measured on our students, with how sure it is and the student's odds. |
 | 10 | Solved filter | All / Solved only / Unsolved only | Pools: New, Open mistakes, Due, Never tried, Seen before (Result any / missed / right / guessed; Marked; From) | Seen pools give fresh twins or exact replays (P21). Due comes from the warm-up schedule (P12). Result adds "Sure but wrong" (P7) | **WAY BETTER already in v2.** P21 makes a replay test the skill, not memory of the item. |
-| 11 | Marked for Review filter | All / Saved only (marking is saving) | Separate Marked and Saved pools (R5) | Marked stays exact, with Twins one tap away; Saved gives fresh twins by default (P21). A mark comes back as a fresh twin in the warm-up 2 days later (P12) | v2 PARITY. **P21 + P12 → WAY BETTER:** a mark does something even if the student never opens the list. |
+| 11 | Marked for Review filter | All / Saved only (marking is saving) | Separate Marked and Saved pools (R5), but the builder only had a "Marked only" checkbox that read attempts, and no Saved row | Rows "Marked for review · 6" (default Exactly) and "Saved · 9" (default Fresh twins) in Questions from, each with an Exactly / Fresh twins seg; presets for both and a Saved header link (P21). A mark comes back as a fresh twin in the warm-up 2 days later (P12) | v2 BELOW: no way to start saved questions. **P21 + P12 → WAY BETTER:** both lists start in one tap, twins test the skill, and a mark does something even if the student never opens the list. |
 | 12 | Redo list | `toggleRedo` in the API, no button; "Redo Questions 0" | Open-mistake pool with fresh numbers and named misconceptions; 2 clean answers close one | Confident misses first (P7); a final round re-asks every miss at the end of the set (P12); outside misses join (P13); any wrong option has "Practise this trap" (P1) | **WAY BETTER already in v2.** |
 | 13 | Volume | 10 / 20 / 30 / 40 / 50 / All | 5–50, ∞, Other (1–120) | "15 min · 30 min" time boxes sized from the student's own budgets; "Fit to today's plan" (P15) | v2 PARITY. **P15 → WAY BETTER:** a set fits the time the student has. |
-| 14 | Mode Timed \| Untimed | Timed allows 6 min a question (10 = 60:00) | Untimed / Test pace (flat 95 s) / Custom; pace alert at 1:35 | Per-type budgets (crowd median, or 65 / 95 / 126 s by tier). "0:48 / 1:05" on the stopwatch, a pace delta, fluency, two passes, time sinks, new bests (P16) | v2 PARITY: a better flat number. **P16 → WAY BETTER:** the clock trains the real 35-minute trade-offs one question at a time. |
+| 14 | Mode Timed \| Untimed | Timed allows 6 min a question (10 = 60:00) | Untimed / Test pace (flat 95 s) / Custom; pace alert at 1:35 | Per-type budgets (crowd median, or 65 / 95 / 126 s by tier). The clock is the sum of the planned slots' budgets, and every repair, twin or final-round question adds its own, shown as "+1:05 for the repair". "0:48 / 1:05" on the stopwatch, a pace delta, fluency, two passes, time sinks, new bests (P16) | v2 PARITY: a better flat number. **P16 → WAY BETTER:** the clock trains the real 35-minute trade-offs one question at a time and always matches the set. |
 | 15 | Start Practice Session | The primary button | The disabled reason as text; "Building…"; a preview | Enter from the command line or a Ready card (P15). The Action bar states worth and minutes (P10, P16) | **WAY BETTER already in v2:** it says why it can't start. |
 | 16 | Learning Preferences | Timed / Untimed, Adaptive / Fixed (no visible effect), AI Explanations, Show Desmos, Include Vocab Review | `learners.prefs` on the server, edited in the builder, More, Me and Settings; U15 modes | New keys: zone, review mix, final round, confidence, hints, solve first, worked first, two passes, presets (P2, P5, P7, P11, P12, P15, P16) | **WAY BETTER already in v2:** the settings work and follow the code. U15 moves them with the exam date. |
 | 17 | Adaptive preference | No visible effect in QBank | R33: step a tier after 2 first-try rights, down after a miss (off by default) | Zone targeting per type from odds is the default (P11). R33's step reaches a sibling template when the type has one tier (P18) | v2 PARITY, and R33's step does nothing on 327 one-tier types. **P11 + P18 → WAY BETTER.** |
-| 18 | Saved content counts | Profile counts: Saved Words / Redo / Saved Questions | Header links Mistakes · 4, Marked · 6, Your sets · 2 in progress | Adds reviews due with a 14-day forecast (P12) | **WAY BETTER already in v2:** the links start the work. |
+| 18 | Saved content counts | Profile counts: Saved Words / Redo / Saved Questions | Header links Mistakes · 4, Marked · 6, Your sets · 2 in progress | Adds Saved · 9 as a link that starts it (P21) and reviews due with a 14-day forecast (P12) | **WAY BETTER already in v2:** the links start the work. |
 | 19 | Session route | Resumable only by its URL; the sidebar stays | Resume banner, Your sets (In progress / Finished / Shared), position restored on any device | Adds Rematch and "Rematch in 3 days" (P19) | **WAY BETTER already in v2.** |
 | 20 | Go Back | A link back | Exit sheet: Keep for later / Pause / End and see summary | — | **WAY BETTER already in v2.** |
 | 21 | Details popover | ID, domain, skill, difficulty; closes on outside click only | ID with copy, type and its about line, level with n, why, you and this type, everyone, permalink; Esc | Adds your odds (after answering), "Modeled on College Board 84664a7c", the Desmos way, the formula used, your rule for the type (P11, P13, P3, P24, P21) | **WAY BETTER already in v2.** |
-| 22 | Explanation (and the AI Explanations switch) | Only after a check, replacing the card. The report version is a Justification plus one line per wrong option | Inline. A one-sentence rationale (median 21 words). Every option's misconception by default | Steps on this seed's numbers, with the step where the chosen answer left the path beside the right one; option lines with values and "Practise this trap" (P1). A hint ladder before giving up (P2). A Desmos-way tab (P3) | v2 BELOW in depth and at PARITY on per-option lines. **P1 + P2 + P3 → WAY BETTER:** it shows where *this* answer went wrong, in the student's numbers, and drills that trap. |
-| 23 | Timer (Hide; Review page; Submit module) | A countdown pill with Hide | Countdown or stopwatch with a caption, Hide kept, Pause, toasts | A pace delta per answer with "3 Hard left"; budgets per question (P16) | v2 PARITY in pacing. **P16 → WAY BETTER.** |
+| 22 | Explanation (and the AI Explanations switch) | Only after a check, replacing the card. The report version is a Justification plus one line per wrong option | Inline. A one-sentence rationale (median 21 words). Every option's misconception by default | Steps on this seed's numbers, with the step where the chosen answer left the path beside the right one, on at least 50% of the test by weight at launch (a gate). Every other template gets an audited Method paragraph of 40+ words. Option lines with values and "Practise this trap" (P1). A hint ladder that counts only the rungs the item has (P2). A Desmos-way tab (P3) | v2 BELOW in depth and at PARITY on per-option lines. **P1 + P2 + P3 → WAY BETTER:** never thinner than theirs anywhere, and on the common half it shows where *this* answer went wrong, in the student's numbers, and drills that trap. |
+| 23 | Timer (Hide; Review page; Submit module) | A countdown pill with Hide | Countdown or stopwatch with a caption, Hide kept, Pause, toasts | A pace delta per answer with "3 Hard left"; budgets per question; the clock grows with every added question and says by how much (P16) | v2 PARITY in pacing. **P16 → WAY BETTER.** |
 | 24 | Check Your Work | Timed sessions only | Every mode: tiles, grid, a note on skipped or unanswered | Triage in order: fill the blanks first (a blank scores like a wrong answer), then revisit Unsure answers, with the time left per question (P20) | v2 PARITY. **P20 → WAY BETTER:** it says what to do with the minutes left. |
-| 25 | Clear Session | Removes answers and serves the same items again | "Start over with these exact questions" | Rematch: the same types, tiers and order with new numbers, and a Then → Now table. The exact retake stays, labelled "tests memory" (P19) | v2 PARITY. **P19 → WAY BETTER:** the second score measures the skill. |
+| 25 | Clear Session | Removes answers, annotations and attempts, and serves the same items again | "Start over with these exact questions", which brought back the student's own notes and highlights | Rematch: the same types, tiers and order with new numbers, and a Then → Now table. The exact retake stays, labelled "tests memory". Both confirms carry "Start clean" (on for Retake), which hides highlights, notes, strikes and rules on the copy until Finish, keeping them on the server (P19) | v2 BELOW: the redo was spoiled. **P19 → WAY BETTER:** a clean redo like theirs without losing anything, and a rematch whose second score measures the skill. |
 | 26 | Share | `navigator.share` froze the page; a shared-session landing | Set shares with the sharer's results (right rate per question, top named mistake), name opt-in | Each taker gets their own twins by default (P22, U28) | **WAY BETTER already in v2** (the results). P22 stops answers being passed around. |
-| 27 | Calculator (and the Show Desmos switch) | Desmos in a floating panel, draggable and resizable | Dock, Float, phone sheet; state per set | "Show me in Desmos" loads this question's expressions after the verdict. What the student typed is saved. Right with vs without Desmos, per skill (P3) | v2 PARITY in capability. **P3 → WAY BETTER.** |
-| 28 | Reference | A modal with the formula-sheet image | The formula-sheet dialog | Opens at the formula this question used. "Not on the sheet: know it", with a drill of the types that use it (P24) | v2 PARITY. **P24 → WAY BETTER.** |
+| 27 | Calculator (and the Show Desmos switch) | Desmos in a floating panel, draggable and resizable | Dock, Float, phone sheet; state per set | "Show me in Desmos" loads this question's expressions after the verdict, on every one of the 175 templates in the six Desmos-heavy families at launch (a gate), on a production key. What the student typed is saved. Right with vs without Desmos, per skill (P3) | v2 PARITY in capability. **P3 → WAY BETTER** once its floor and production key are in; until both hold P3 ships dark and this row stays PARITY. |
+| 28 | Reference | A modal with the formula-sheet image | The formula-sheet dialog | Every template names the formulas it uses (386 explicit entries), so the dialog opens at this question's formula. "Not on the sheet: know it", with a drill of the types that use it (P24) | v2 PARITY. **P24 → WAY BETTER:** on every question, never a skill heading. |
 | 29 | Question number square | A blue square | Number, skill chip, type name, difficulty, Grid-in, Again | Adds zone, review, final-round and "Twin of CB …" chips (P11–P13) | **WAY BETTER already in v2.** |
 | 30 | Mark for Review | A bookmark, which is also their save | A flag per sitting (R5), Save separate | Marked questions come back as twins (P12, P21) | v2 PARITY for the flag. **P12 + P21 → WAY BETTER.** |
 | 31 | Eliminate | A mode toggle, ⊘ on each choice, saved to the server | Strike circles, Undo, Shift+A–D, saved, any device | Strikes are graded after the reveal ("You struck the key", "dodged: used the slope as the intercept"), strike accuracy in the summary, "You reliably rule out …" on the skill (P6) | v2 PARITY. **P6 → WAY BETTER:** only named distractors can grade an elimination. |
-| 32 | Annotate / Highlights & Notes | Annotate on passages; H&N in the exam | Seven styles plus notes, stored per (template, seed) | A rule can follow the type onto every later question of that template, and prints as a "My rules" sheet (P21). A "Read the ask" underline after misreads (P8) | v2 PARITY: exact seeds rarely come back. **P21 + P8 → WAY BETTER.** |
+| 32 | Annotate / Highlights & Notes | Annotate on passages; H&N in the exam | Seven styles plus notes, stored per (template, seed) | A rule can follow the type onto every later practice question of that template, and prints as a "My rules" sheet (P21). A "Read the ask" underline after misreads (P8). Both are study aids: never in tests, the challenge, contests, end mode or Test-like mode, and the rule tip has its own switch | v2 PARITY: exact seeds rarely come back. **P21 + P8 → WAY BETTER**, and test-like sittings stay fair. |
 | 33 | Report | 5,000 characters, 10 images, and no answer | `UI.report` (R17) | Key disputes answered inside the sheet by a second solver (U3). A broken question is voided in the rail and replaced in the set at once (P25) | v2 PARITY in form. **U3 + P25 → WAY BETTER.** |
 | 34 | Attempts / Attempt History | #, result, option, time | Each try with its named mistake; the type's last 20 first tries, each with Open | A trend head per type: ✕ ✕ ✓ ✓ ✓, median time 2:10 → 0:58, "ready · next return Oct 2"; "then vs now" on the verdict (P9) | **WAY BETTER already in v2.** |
 | 35 | Per-question stopwatch | Counts up; resets to 00:00 on reload | Survives reload, skip and leaving; pace alert at 1:35 | Measured against this question's budget, with your median tick and "New best on this type" (P16) | v2 PARITY in the alert. **P16 → WAY BETTER.** |
 | 36 | Stem rendering | KaTeX; an image floats beside the text (a bug) | Figure on its own row; Source Serif 20 px | Adds the "Read the ask" underline (P8) and the type-rule tip (P21) | **WAY BETTER already in v2** (the bug is fixed). |
 | 37 | MCQ layout | A 2×2 grid of cards | Rows; auto 2×2 for short choices | Cover the choices and solve first (P5) | v2 PARITY. **P5 → WAY BETTER:** a typed answer is diagnosed before the choices can sway it. |
 | 38 | SPR input and Answer Preview | Placeholder with examples; KaTeX preview; green when right | Rule line, validation, stacked preview with its decimal, accepted forms; named grid-in mistakes grow template by template | Named grid-in mistakes on 87 templates (half of all grid-ins) at launch, borrowed from the same seed's MC version (P4) | v2 PARITY at launch: the named part is nearly empty. **P4 → WAY BETTER.** |
-| 39 | Check | Green or red; the key never shown; unlimited retries; Mixed | Select then Check. Key, named mistake, repair. Retry names the mistake; first try counts | Check *is* the confidence: `Sure` · `Unsure` · `Guess` in the same one tap (P7). The cause of each miss, pre-filled (P8). The next step (P9) | **WAY BETTER already in v2.** P7 tags every answer at no extra cost. |
-| 40 | Bottom bar | Previous · "Question N of 10" · Check · Next; a round trip each | The same, with keys | One round trip: the next question comes back with the verdict. Tap the choice again for Sure; Enter, Enter (P23) | v2 PARITY. **P23 → WAY BETTER** (faster). |
+| 39 | Check | Green or red; the key never shown; unlimited retries; Mixed | Select then Check. Key, named mistake, repair. Retry names the mistake; first try counts | Check carries the confidence: `Check` · `Sure` · `Unsure` · `Guess` in the same one tap (P7). A plain Check or Enter files Unrated unless the student tags, so Sure always means Sure. The cause of each miss, pre-filled (P8). The next step (P9) | **WAY BETTER already in v2.** P7 tags answers at no extra cost without faking confidence. |
+| 40 | Bottom bar | Previous · "Question N of 10" · Check · Next; a round trip each | The same, with keys | One round trip: the next question comes back with the verdict as a preview, committed only when shown. Tap the choice again to check; Enter, Enter. `A–D` only choose; save is `Z`, details `X` (P23, §2.10) | v2 PARITY. **P23 → WAY BETTER** (faster, and the set's counts stay exact). |
 | 41 | Question Overview | Status \| Difficulty; ignores Esc | Status / Difficulty / Skill / Time, legends with counts, a current ring, Esc | Legend chips filter. Confidence and Traps views. "Twins of these". U jumps to the next unanswered (P20) | v2 PARITY: it only shows. **P20 → WAY BETTER.** |
 | 42 | No end | No summary, score or review | Summary: tiles, by skill / type / difficulty, time per question, mistakes, review list, NextActions | Points moved, calibration, causes, traps dodged, time sinks and passes, reviews held, final round, and a next set built from all of it (P6–P10, P12, P16) | **WAY BETTER already in v2.** The upgrades make it prescribe the next set. |
 | 43 | Reload | The stopwatch resets; a wrong pick shows as plain "selected" | Restores the verdict, stopwatch, strikes and notes | — | **WAY BETTER already in v2.** |
-| 44 | Homework (hidden) | `/my-classes`, `/teacher`; QBank-session assignments | Shared sets with results; Classes (Shell §7, U27) | Shared sets give each taker their own twins, with results per slot and per named mistake (P22) | **WAY BETTER** (theirs is hidden). |
+| 44 | Homework (hidden) | Class pages and QBank-session assignments, hidden in their app | Not built: no classes (decision 5, a separate platform has them) | Friends share a set by link; each taker gets their own twins, with results per slot and per named mistake (P22). Racing friends is Compete's invite-code private contest | **Out of scope (decision 5).** Sharing among friends is covered by P22. |
 | 45 | Public single question (hidden) | `/question/:key` | Permalink `?q=TEMPLATE:SEED` | "Send a twin" by default, with both results (U28, P22) | v2 PARITY. **U28 → WAY BETTER.** |
 | 46 | Floating vocab button | Covers Next | The quick sheet; nothing floats | — | **WAY BETTER already in v2** (R29). |
-| 47 | Include Vocab Review (preference) | A switch that mixes vocab review into study | Words is its own section; §2.9 adds math-word chips to the verdict | No math-word chips (decision 2). The summary offers "SAT words · 12 due" as a next action when reviews are due, and the R&W seg lists the Words drills (P15) | v2 PARITY. **P15 → WAY BETTER:** the review arrives as a counted next step instead of a hidden switch. |
+| 47 | Include Vocab Review (preference) | A switch that mixes vocab review into study | Words is its own section; §2.9 adds math-word chips to the verdict | No math-word chips (decision 2). "Mix in due SAT words: Off · 2 per set · All due" puts Words' due reviews into the set at breaks, filed to Words' schedule and kept out of Math numbers (P12). The summary offers "SAT words · 12 due" as a next action, and the R&W seg lists the Words drills (P15) | v2 PARITY. **P12 + P15 → WAY BETTER:** the same switch, with a chosen dose, reviews that move the real Words schedule, and a counted next step. |
 
 ---
 
@@ -121,10 +146,24 @@ Shared rules for every upgrade:
   Reserved seeds (900000 and up) are never served in practice (`_fresh` skips them), so their
   keys can always be shown.
 * **Challenge** (§2.13). Hints, Learn this type, twin axes, review slots, the final round, zone
-  targeting and Mix-up are off. Steps, the Desmos way, confidence, the cause chips and the
-  next-step line are allowed after answering.
+  targeting, Mix-up, word cards (P12) and the study aids below are off. Steps, the Desmos way,
+  confidence, the cause chips and the next-step line are allowed after answering.
 * **End mode.** Nothing on the verdict side shows before Finish. Confidence and Cover work
   while answering. Steps, causes and the Desmos way appear in the ReviewSheet after Finish.
+* **Study aids stay out of anything test-like.** `UI.workspace` is shared with the exam
+  runner, the Daily Challenge and contests (R21), so these four are gated in one place:
+  the type-rule tip (P21), the Read-the-ask underline (P8), the "Last time: a slip" line and
+  the "Check anyway?" prompts (P8, P16).
+  * They show only in instant or retry practice, and in review (the ReviewSheet, Review's
+    pane, the report player).
+  * They never show in end mode before Finish, in tests, in the Daily Challenge, in contests,
+    or in U15's Test-like mode.
+  * The server enforces it: `/q` and `next` omit `type_note`, `ask_span`, `slip_note` and
+    `check_anyway_ms` in those contexts, so nothing reaches the DOM.
+  * Pref `type_rules` (flat, default on) turns the rule tip off everywhere.
+  * Acceptance: with a type rule saved on t, a Daily Challenge twin of t has no
+    `.type-rule` element in the DOM, and its `/q` payload has no `type_note`. The same
+    question in an instant practice set shows the tip.
 * **Help counting.** Any answer given with help (a hint, the example open) stores
   `attempts.hints > 0`. It counts half toward mastery and is not clean (R8 amendment, §3.2),
   the same rule as a guess, kept in its own column so calibration (P7) stays clean.
@@ -161,11 +200,26 @@ also the second rung of the hint ladder (P2).
   * each `at` is in range;
   * when a Mis value is numeric, `wrong` contains that option's printed value
     (`item.numeral` on the tokens).
-* **Coverage.** `tools/steps_coverage.py` prints "n of 386 templates have worked steps · they
-  cover x% of the test by U8 weight · m distractors point at a step". Work runs in U8 weight
-  order (the most common official forms first). The first milestone is 50% of the weight.
+* **Coverage is a launch gate.** `tools/steps_coverage.py` prints "n of 386 templates have
+  worked steps · they cover x% of the test by U8 weight · m distractors point at a step · k
+  templates use a Method paragraph". It **exits non-zero while x < 50%**, and P1 is not marked
+  done until it exits 0. Work runs in U8 weight order (the most common official forms first),
+  so the gate is met by roughly the most common third of the templates.
 * **No fake steps.** A template without `steps` never shows its rationale cut into pieces
   (today.md rejected the same cut for hints: it is often nonsense or gives the answer away).
+* **A floor for every other template: the Method paragraph.** Where `steps` is empty, the
+  Short tab becomes **Method**, one paragraph of at least 40 words, built by
+  `item.method(item)` (T-bank) from three audited parts:
+  * the type's idea: the template docstring's first paragraph ("A line through two points:
+    slope is rise over run, then substitute one point to get the intercept.");
+  * this seed's rationale, with its numbers;
+  * the key's value: "Here that gives 18."
+  * The audit, on 200 seeds of every template without steps, asserts at least 40 words and
+    that the key's printed value appears. A template that falls short gets a `METHOD:`
+    paragraph in its docstring (T-bank authors it; about 3 sentences), which replaces the
+    first part.
+  * So no explanation of ours is thinner than their Justification plus Distractor Analysis:
+    the Method paragraph plus a named, valued line per wrong option.
 
 **Payload (F5).** `practice.to_question` stores `steps` (text list) and `step_of`. Feedback,
 when it can be revealed, adds `steps`, `diverge` (the chosen option's `at`, or the matched
@@ -175,7 +229,8 @@ grid-in mistake's), `wrong_step` and `option_steps` (an `at` per option).
 * **Header**: the type's name and its about line (the docstring's first sentence), so every
   explanation opens with the idea of the type.
 * **Tabs** (`UI.tabs`): **Steps** (the default when steps exist) · **Short** (the rationale) ·
-  **Desmos way** (P3, when present). Without steps it shows Short only, never an empty tab.
+  **Desmos way** (P3, when present). Without steps the first tab is **Method** (the paragraph
+  above) and there is no Steps tab, never an empty one.
 * **Steps**: numbered rows in Source Serif 17 px, with KaTeX, as a roving-tabindex list (↑ ↓
   move while it has focus; no letter keys, because `J` / `K` belong to the players and `K` to
   confidence in the runner, §2.8).
@@ -195,7 +250,8 @@ grid-in mistake's), `wrong_step` and `option_steps` (an `at` per option).
 print key page (§2.12) render the same card. The option line's reason links to its habit (U6).
 
 **Acceptance.**
-1. `python3 tools/steps_coverage.py` exits 0 and prints "of 386 templates have worked steps".
+1. `python3 tools/steps_coverage.py` prints "of 386 templates have worked steps" and exits 0
+   only when steps cover at least 50% of U8 weight (a run on a bank below it exits 1).
    `PYTHONPATH=. python3 -m satbank` passes 200 seeds of every template with steps.
 2. On a covered template, a wrong MC answer's feedback has non-empty `steps`, and `diverge`
    equals `option_steps[chosen]`. In end mode the answer response has no `steps`.
@@ -204,6 +260,8 @@ print key page (§2.12) render the same card. The option line's reason links to 
 4. "Practise this trap" on option C: the next served question has the same template, a new
    seed, and an option whose `progress.norm(reason)` equals C's norm.
 5. On a template without steps the explanation shows no Steps tab.
+6. For every template without steps, 200 seeds: `item.method(item)` has at least 40 words and
+   contains the key's printed value, and the explanation's first tab reads "Method".
 
 #### P2. Help before you give up, and Learn this type: rule out a trap, the first step, a worked twin, then the ladder
 
@@ -222,6 +280,10 @@ is, and only a generator can hand over a worked twin without spending a question
 contests; pref `hints`, default on).
 * A quiet `Hint · 1 of 3` button (key `W`) under the choices while the question is
   unanswered. After each rung it reads `Hint · 2 of 3`, then `Hint · 3 of 3`.
+* **The count is this item's own.** The payload carries `rungs` (the rungs this item really
+  has, in order), and the button counts only those: an MC item on a template without steps
+  reads `Hint · 1 of 2` (rule out a trap, then the worked twin); a grid-in without steps reads
+  `Hint · 1 of 1`. A rung that does not exist is never promised.
 * **Rung 1, Rule out a trap** (MC only). It strikes one named distractor and says why:
   `Struck C: that's what you get if you used the slope as the intercept.` It picks, in order:
   the norm of the learner's own open or past trap on this template; the crowd's top mistake
@@ -297,6 +359,8 @@ counted in total or accuracy.
    type twice", and `/more {ladder:true}` raises `total` by 3.
 6. `worked_first` on, a 5-question untimed set over 2 skills for a new learner: at most 2
    example cards are served.
+7. An MC question on a template without steps has `rungs == ['strike', 'example']`, and the
+   button reads "Hint · 1 of 2".
 
 #### P3. The Desmos way: one tap loads this question into the calculator, and we measure whether it helps
 
@@ -317,9 +381,14 @@ every item's exact equations.
 * **Audit**: when `look` is `intersection`, `zeros`, `value` or `vertex`, `point`'s relevant
   coordinate equals the key. A regression look checks that its `y1 ~ m x1 + b` row lists every
   table row.
-* **Coverage**: `tools/desmos_coverage.py` prints "n of 386 types have a Desmos way". First
-  families: systems, linear functions and equations in two variables, nonlinear functions and
-  equations, inequalities, circle equations, two-variable data.
+* **Coverage and the launch floor**: `tools/desmos_coverage.py` prints "n of 386 types have a
+  Desmos way · floor f of 175". The floor is **every template** in the six families where the
+  calculator changes the question: systems (20), linear functions and linear equations in two
+  variables (45), nonlinear functions and nonlinear equations and systems (68), linear
+  inequalities (18), circle equations (`circles.families.equation`, 6) and two-variable data
+  (18). Interpretation questions in those families get a `table` or `point` look (graph it,
+  read the value off the point), so none is exempt. The tool exits non-zero while any floor
+  template lacks `desmos`. Other topics grow after launch in U8 weight order.
 
 **After the verdict** (never before it; never in end mode before Finish):
 * The explanation's **Desmos way** tab lists the numbered expressions (read-only KaTeX) and the
@@ -348,12 +417,17 @@ every item's exact equations.
 A preset chip "Desmos drills · N types" opens the dock, uses instant feedback and starts those
 types.
 
-**Needs.** A production Desmos key (open question 15). Until then the walkthrough runs on the
-trial key already in use.
+**Needs, and the ship rule.** A production Desmos API key (open question 15), obtained
+before launch; the demo key is for development only. P3 sits behind the server flag
+`DESMOS_WAY` (off by default). I1 turns it on only when both hold: the production key is in
+the kv store, and `desmos_coverage.py` exits 0 on the floor. With the flag off, no payload
+carries `desmos`, the tab, chips, filter and preset are absent, and the scorecard row stays
+PARITY. The typed-expression capture (What you typed) does not need the flag.
 
 **Acceptance.**
-1. `python3 tools/desmos_coverage.py` exits 0. The audit passes 200 seeds of every template
-   with `desmos`.
+1. `python3 tools/desmos_coverage.py` exits 0 only when all 175 floor templates carry
+   `desmos` (removing one from a fixture makes it exit 1). The audit passes 200 seeds of every
+   template with `desmos`.
 2. A covered systems item's instant feedback has `desmos.exprs` with 2 entries. End-mode
    answers carry no `desmos`.
 3. Browser: Show me in Desmos → `Calc.getExpressions().length == 2` within 1 s. Back to my
@@ -361,6 +435,8 @@ trial key already in use.
 4. Type an expression while question 3 is on screen, then answer it: `attempts.calc == 1`, and
    the ReviewSheet lists it under "What you typed in Desmos".
 5. `POST /api/drill/preview {has:['desmos']}` counts only templates whose items carry `desmos`.
+6. With `DESMOS_WAY` off, a covered systems item's instant feedback has no `desmos`, and the
+   Desmos way tab is absent.
 
 #### P4. Named grid-in mistakes from day one, borrowed from the multiple-choice version
 
@@ -509,19 +585,30 @@ student already presses carries the answer's confidence.
 
 **Control (F3, instant and retry modes; the first try only).**
 * With pref `confidence = ask` (default), once a choice is selected or a valid grid-in is
-  typed, the footer's Check becomes a three-part split:
-  * `Check · Sure` (the orange pill, `Enter`);
+  typed, the footer's Check becomes a four-part split:
+  * `Check` (the orange pill, `Enter`; tapping the selected choice again, P23, is the same);
+  * `Sure` (.btn);
   * `Unsure` (.btn, `Shift+Enter`);
   * `Guess` (.quiet, `I`).
-  Each part submits. On a phone the split is full width, Sure at 60%. Tapping the selected
-  choice again (P23) is Sure.
-* The first 3 questions a learner ever answers show the helper "Check means you're sure. Not
-  sure? Tap Unsure." (`localStorage satf.conf.tip`, in try/catch).
+  Each part submits. On a phone the split is full width, Check at 40% and 20% each for the
+  others.
+* **Sure means Sure.** Only a deliberate choice files `sure`:
+  * a click or tap on the `Sure` part;
+  * or `Check` / Enter / tap-again from an **active tagger**: a learner who used Unsure or
+    Guess on at least 10% of their last 50 first tries (`progress.conf_active(learner)`, F4,
+    returned in the set's state). For them the pill reads `Check · Sure`, so it says what it
+    files.
+  * Everyone else's `Check`, Enter and tap-again send `conf:'auto'`, which the server files as
+    null, shown as **Unrated**. The client never decides; `answer()` resolves `auto`.
+* The first 3 questions a learner ever answers show the helper "Sure? Tap Sure. Not sure? Tap
+  Unsure. Check alone leaves it unrated." (`localStorage satf.conf.tip`, in try/catch).
 * End mode: `Save & next` splits the same way, and a question's confidence can change until
   Finish. Tests keep §3.4's chips (`qstate.conf`) with the same vocabulary.
 * `confidence = off`: a plain Check, `conf` null.
 
-**What each files** (`attempts.conf TEXT`: `sure` · `unsure` · `guess` · null).
+**What each files** (`attempts.conf TEXT`: `sure` · `unsure` · `guess` · null = unrated).
+Everything below that reads `sure` reads only an explicit `sure`; an unrated miss is an
+ordinary miss.
 * **Guess**: `guess = 1` (R8): counts half, closes nothing, opens the explanation.
 * **Unsure, right**: counts in full toward mastery but is not clean, and opens or refreshes an
   `~unsure` item owing 1: Review's rule for a flagged right (R8 and R9 amendments, §3.2).
@@ -533,15 +620,17 @@ student already presses carries the answer's confidence.
     with reason `confident` (derived from attempts, no new column);
   * the Why line on its return: "You were sure of this one and missed it (Sep 22)".
 
-**Summary: Calibration** (5 or more tagged answers). Three bars: "Sure 12 · 11 right (92%)",
-"Unsure 6 · 3 right (50%)", "Guess 2 · 1 right". One reading line when its bucket has 5+:
+**Summary: Calibration** (5 or more tagged answers). Four bars: "Sure 12 · 11 right (92%)",
+"Unsure 6 · 3 right (50%)", "Guess 2 · 1 right", and "Unrated 8 · 6 right" in `--soft`, which
+never enters a reading line. One reading line when its bucket has 5+:
 * Sure ≥ 90%: "Your Sure is reliable: on a test, don't re-check those; spend the time on
   Unsure."
 * Sure < 75%: "Your Sure was right 70%: slow down on questions that feel easy." Then the
   confident misses by name: "Sure on 3 wrong answers: used the slope as the intercept, …".
 * Unsure ≥ 85%: "Your Unsure answers were right 90%: trust yourself and move on."
-* When every answer in the last 50 was Sure: "You pressed Sure on every answer. Tap Unsure
-  when you're not certain, and this card shows whether your Sure can be trusted."
+* When more than half of this set is Unrated: "Most answers here are unrated. Tap Sure or
+  Unsure as you check, and this card shows whether your first read can be trusted on test
+  day."
 
 **Elsewhere.**
 * Builder "Questions from" gains "Fresh numbers on confident misses · 4 types" (`pool:'redo'`,
@@ -558,6 +647,11 @@ student already presses carries the answer's confidence.
 4. Browser: with a choice selected, `Shift+Enter` submits with `conf:'unsure'` (network log).
    With `prefs.confidence == 'off'`, the footer shows a single Check.
 5. A set with 6 Sure answers, 5 right: the summary shows "Sure 6 · 5 right (83%)".
+6. A learner with no Unsure or Guess in their last 50 first tries presses Enter on a wrong
+   option: `attempts.conf` is null, the verdict has no "You were sure" note, the coach reasons
+   gain no `confident`, and the Calibration card shows an Unrated bar.
+7. The same learner after 6 Unsure answers in their last 50 (12%): `conf_active` is true, the
+   pill reads "Check · Sure", and Enter files `conf == 'sure'`.
 
 #### P8. Why you missed: T7's cause on every miss, corrected in one tap, and a different fix for each
 
@@ -599,6 +693,9 @@ action):
   or U6's `different` family is the learner's top habit, questions in that skill get a dashed
   underline on the stem's question sentence (`q.ask_span`: the last sentence ending in "?",
   else the last sentence), until 5 clean answers in that skill.
+* The slip line, "Check anyway?" and the underline are study aids: they appear only where the
+  shared rule allows (instant or retry practice, and review), never in tests, the challenge,
+  contests, end mode before Finish or Test-like mode.
 * **Clock** → two passes (P16) turns on for the next timed set, and T8's speed drill.
 * **Entry** → T7's grid-in entry drill and the Grid-in rules popover.
 * **Gap** → **Learn this type** (P2).
@@ -717,21 +814,40 @@ challenge.
 #### P11. For me: difficulty aimed at your odds, levels that work from the first answer, test-shaped mixes, and "Check my level"
 
 *From: experience #10, unfair-advantage #5, outcomes #9 (skill probe), the Question Score,
-difficulty and adaptive gaps of all three. Effort M. Builders: F4 (`server/ratings.py`: item
-and skill updates, the `skill_ratings` table), F5 (the zone picker, `tier_mix`, the probe
+difficulty and adaptive gaps of all three. Effort M. Builders: T-bank (`cb-index`: College
+Board's listing metadata with score bands), F4 (`server/ratings.py`: item and skill updates,
+seeding, placement, the `skill_ratings` table), F5 (the zone picker, `tier_mix`, the probe
 staircase), S4 (the Difficulty control, chips, summary), S8 (its contest updates call the same
 function).*
 
 **Why.** Practice moves a score fastest at a success rate around 70% ("desirable difficulty").
 Their Question Score 1–7 is a fixed label, the same for every student, and their Adaptive
 preference does nothing. v2's measured levels need 20 first tries per (template, tier); no
-pair has more than 12, so every level cell would ship at 0. Ratings move with every answer and
-say how sure they are.
+pair has more than 12, so every level cell would ship at 0. Ratings start from College Board's
+own score bands and the student's own score, move with every answer and say how sure they
+are, and a skill is not aimed at until its odds are real (placement).
 
 **Model (`server/ratings.py`, F4).**
-* **Item**: `item_ratings(template, tier)` (§2.5), with priors 900 / 1100 / 1300 by tier.
-* **Learner**: `skill_ratings(learner, topic, rating REAL DEFAULT 1000, n INTEGER DEFAULT 0)`,
-  new, separate from `learners.rating` (Compete's single contest rating).
+* **Item**: `item_ratings(template, tier)` (§2.5). Its prior comes from the official items the
+  template maps to, and only falls back to the tier:
+  * T-bank task `cb-index` captures College Board's Question Bank listing into
+    `material/cb_index.json`: `{cb_id: {subject, domain, skill, tier, band}}` for every
+    question in the bank (metadata only, no stem, choices or key). `band` is College Board's
+    1–7 score band.
+  * The prior of (template, tier) = the mean of `MID[band]` over the official items U2's map
+    puts on it at that tier, where `MID` is the midpoint of level b's rating range below (L1
+    800 · L2 925 · L3 1037 · L4 1112 · L5 1187 · L6 1287 · L7 1400).
+  * A pair with no mapped official item keeps the tier prior 900 / 1100 / 1300.
+  * So levels 1–7 are populated on day one from College Board's own bands, and ratings then
+    move them.
+* **Learner**: `skill_ratings(learner, topic, rating REAL, n INTEGER DEFAULT 0, seed TEXT)`,
+  new, separate from `learners.rating` (Compete's single contest rating). A row is created on
+  first use with a **seeded** rating, the first of:
+  * U5's skill estimate or the diagnostic's for that topic (`seed 'probe'`);
+  * `learners.current` (the Math score the student started from): `Rs = 1100 + 1.2 ×
+    (current − 530)`, clamped to 700–1500 (`seed 'score'`). A 700 student starts at 1304:
+    about 76% on a Medium prior and 51% on a Hard one;
+  * otherwise 1000 (`seed 'none'`).
 * **Odds**: `E = 1 / (1 + 10^((Ri − Rs) / 400))`.
 * **Update**, on every clean first try (R8 clean: not a repeat, disputed, void, guess, helped
   or unsure) from practice, tests or contests:
@@ -740,8 +856,12 @@ say how sure they are.
   * `__main__` asserts: a right answer never lowers Rs; the two updates are symmetric in E.
 * **Backfill**: replays attempts in order at startup, once.
 * **Level** from Ri: L1 < 850 ≤ L2 < 1000 ≤ L3 < 1075 ≤ L4 < 1150 ≤ L5 < 1225 ≤ L6 < 1350 ≤ L7.
-  The priors land easy on L2, medium on L4, hard on L6. A level reads "rough" while nᵢ < 20
-  and "measured" after (U5's words).
+  The band priors spread the official-mapped types over all seven levels; the unmapped
+  fallback priors land easy on L2, medium on L4, hard on L6. A level reads "rough" while
+  nᵢ < 20 and "measured" after (U5's words).
+* **Placement** (per skill): a skill is *placed* once it has 8 clean first tries
+  (`skill_ratings.n ≥ 8`), or a Check my level, a U5 probe or the diagnostic has covered it
+  (`seed 'probe'`). The zone picker only aims at placed skills (Picker, below).
 
 **Builder: Difficulty** (replaces the LevelStrip block, §3.1 entry 12).
 * **Seg** "Standard · For me". For me is the default (pref `zone`, default `stretch`). U15's
@@ -757,8 +877,14 @@ say how sure they are.
 
 **Picker (F5).**
 * Order holds: repairs, then open traps, then review slots (P12), then zone.
-* Zone picks, among the selection's (template, tier) pairs (`kinds()`), the one with the
-  smallest `|odds − centre| + 0.05 × uses in this set`. Centres: 0.87, 0.70, 0.47.
+* **Cold start.** A slot whose skill is not placed is served Standard: all tiers, filled in
+  module 1's 7 / 8 / 7 proportions across the set's unplaced slots (the `tier_mix` rule
+  below). The strip chip reads `For me starts after 8 answers here · 5 to go` in place of the
+  zone name, and the builder's Difficulty helper lists the unplaced skills with **Check my
+  level** beside them. So a new learner, or a TopTierPrep switcher who scores 700, never gets a
+  run of Easy questions: they get the test's own mix until their odds are real.
+* Zone picks, among the placed selection's (template, tier) pairs (`kinds()`), the one with
+  the smallest `|odds − centre| + 0.05 × uses in this set`. Centres: 0.87, 0.70, 0.47.
   `ponytail:` a linear scan over at most 1,158 pairs per serve; index by topic if it shows in
   profiles.
 * `tier_mix` fills slot tiers in `blueprint.TIERS[...]` proportions (largest remainder, over the
@@ -787,17 +913,26 @@ say how sure they are.
 
 **Acceptance.**
 1. A fresh learner on the shipped db: every `/api/bank` type has `level` in 1..7 and `rough`
-   true. `POST /api/drill {topics:['linear_functions'], levels:[1], unmeasured:false}` (where
-   `unmeasured` now means rough) returns 409 naming 'level 1'.
+   true, and at least one type sits at each level 1–7. `POST /api/drill
+   {topics:['linear_functions'], levels:[1], unmeasured:false}` (where `unmeasured` now means
+   rough) returns 409 naming 'level 1'.
 2. After one clean first try on (t, tier), `item_ratings.n` has risen by 1 and `skill_ratings`
    has a row for the topic. A guessed or hinted answer changes neither.
-3. `POST /api/drill {topics:['circles'], zone:'stretch', count:5}`: each `q.odds` is within
-   0.15 of 0.70, or is the closest available in the selection (a check computes the minimum).
+3. A learner placed in circles (8 clean first tries): `POST /api/drill {topics:['circles'],
+   zone:'stretch', count:5}`: each `q.odds` is within 0.15 of 0.70, or is the closest
+   available in the selection (a check computes the minimum).
 4. `POST /api/drill {topics:['linear_functions','circles'], tier_mix:'module2_upper',
    count:22}` → 3 easy, 8 medium, 11 hard.
 5. `POST /api/drill {source:'probe', topics:['circles'], count:8}`: `cfg.feedback == 'end'`, and
    after a scripted right on slot 1 the next slot's tier is above slot 1's.
 6. `python3 server/ratings.py` exits 0.
+7. A fresh learner with default settings, 10 questions over three skills: at least 3 are
+   Medium or Hard, and the strip reads "For me starts after 8 answers here".
+8. A learner with `current = 700`: their new `skill_ratings` rows are created with `seed
+   'score'` and rating 1304. After 8 scripted answers per skill that leave each rating within
+   50 of 1304, a default 10-question set over two of those skills serves at least 2 Hard.
+9. Every item in `material/cb_index.json` has `band` in 1..7, and `item_ratings` priors for a
+   template mapped to band-7 items are at least 1350.
 
 #### P12. Retrieval: a final round, review slots in every set, and marks that come back
 
@@ -841,6 +976,25 @@ end mode, where misses become the Fix set, and in the challenge).
   mistake, and R9's 3-day check-in then tests whether it held.
 * The Action bar's line 2 says `final round on`.
 
+**Due SAT words in the set** (their "Include Vocab Review", done so it actually reviews).
+* Builder setting (in Mix in reviews) **Mix in due SAT words**: `Off · 2 per set · All due`
+  (pref `prefs.practice[subject].words_mix`, default Off). Decision 2: the EBRW word list and
+  transitions only, never math language.
+* Word cards go at set breaks: after questions 5, 10, 15 and so on, one per break, and any
+  left over after the last slot. Never in timed sets, end mode, tests, the challenge or
+  contests.
+* A word card is S9's due review in its ladder format (W7), rendered in `UI.workspace` quiz
+  mode. It sits in `served` with `kind:'word'`, like an example card: not a slot, not in
+  `total`, accuracy, mastery, the score line, the rail's counts or `attempts`.
+* Serving and grading are S9's: `words.due_items(learner, n)` returns public items with a
+  token; `POST /api/drill/{id}/word {token, answer, ms}` calls `words.grade_item`, which files
+  one `word_reviews` row and moves the word's box, exactly as a Words run would.
+* The rail shows a small `Aa` tick between segments for each word card. Summary: "SAT words ·
+  2 reviewed · 2 held", and the quiet "SAT words · 10 more due" action stays.
+* Acceptance: with `words_mix = 2` and 5 words due, a 10-question set serves exactly 2 word
+  cards (after questions 5 and 10); `attempts` gains no rows for them; after both are answered
+  right, `words.today_summary(...).due` has dropped by 2 and `total` is still 10.
+
 **Builder.**
 * **Questions from**: "Fresh numbers on types due for review" reads T3. Its helper reads "3
   due now · 5 more this week · next 14 days ▸"; the link opens a `UI.pop` with a 14-bar
@@ -875,8 +1029,11 @@ grouping).*
 **Why.** College Board's Question Bank and Bluebook are the most test-like practice there is,
 and students already use them. Their Question Bank tab serves each official item once; after
 that, "Redo" is the same memorised question. U2 already maps 911 official items exactly onto
-served templates, so any official question a student missed can become unlimited twins with
-the same traps at the same tier, without showing any College Board content.
+served templates, and P11's listing index covers the rest of College Board's bank by skill,
+tier and band, so any official question a student missed can become unlimited twins at the
+same tier (with the same traps where the map is exact), without showing any College Board
+content. Most students never exhaust 1,921 items; the point is that each official miss becomes
+endless practice aimed at the trap that caught them, which a fixed bank cannot offer.
 
 **Builder.**
 * **Search accepts IDs and pasted questions.**
@@ -886,10 +1043,18 @@ the same traps at the same tier, without showing any College Board content.
     `POST /api/types/match {text}`.
   * A TopTierPrep ID (`^\d{5,6}-[A-Z]{2}$`) reads "That's a TopTierPrep ID. Paste the question
     text instead."
+* **Every College Board ID resolves.** Besides U2's exact map (911 IDs onto templates), F5
+  reads P11's `material/cb_index.json`, which lists every question in College Board's bank
+  (about 1,900 Math) with its skill, tier and band. So a Math ID outside the exact map still
+  resolves to its skill and tier, and the twin search takes that skill's templates at that tier,
+  closest in item rating to the band's midpoint (P11's `MID`), with the text match (if the
+  student pasted text too) ranking them.
 * **Result list**, one row per ID: "84664a7c · Linear functions · Easy · A line from a table ·
-  Exact", "Close" (skill-level map plus the text match), or "Not in our Math map yet". Header
-  "3 of 3 found". A Seg "Twins of each: 1 · 3 · 5" (default 3). The pill **Practise twins · 9
-  questions**.
+  Exact", or "Close: twins of Linear functions at Medium" (the index), or, for a Reading &
+  Writing ID, "Reading & Writing question: logged for the R&W bank" (P15). "Not in our map" is
+  left only for an ID in neither the map nor the index, and then U2's paste-or-pick path runs.
+  Header "3 of 3 found". A Seg "Twins of each: 1 · 3 · 5" (default 3). The pill **Practise twins
+  · 9 questions**.
 * **Row actions** for a single match: **Practise 3 twins**; **See the traps** (P2); **Log it as
   a mistake** (U2's quick sheet, prefilled with the `cb_id`, asking for the letter picked).
 * **Questions from** gains "Fresh numbers on mistakes I logged from outside · 4" (`pool:'redo'`,
@@ -897,6 +1062,12 @@ the same traps at the same tier, without showing any College Board content.
   include / exclude.
 * **TypeRow chip** "Built from 11 official questions" (U8's `official` count). **Settings
   checkbox** "Only types built from official questions (N of 386)" sends `has: ['official']`.
+* **Official practice starts and ends in the builder.** Each SkillRow's panel carries
+  "Official questions on College Board · 142" (the index's count for that skill), which opens
+  College Board's own Question Bank in a new tab, filtered to that skill where their URL
+  allows, else at the bank with the skill named. Under it, a **Paste what you missed there**
+  field (IDs or text) feeds the result list above, so a student does an official set there and
+  turns every miss into twins here in one paste.
 * **Deep link** `/practice/?cb=84664a7c,06fc1726` presets the field; it never auto-starts.
 
 **Server (F5).** `POST /api/drill {pool:'official', ids:[cb_id ≤ 50], each: 1–5}`.
@@ -907,6 +1078,16 @@ the same traps at the same tier, without showing any College Board content.
   equals the reproduction's.
 * `q.why = {kind:'official', detail:'Twin of College Board question 84664a7c'}`;
   `cfg.official = [ids]`. No response carries official stem text (U2's rule and check).
+* An index-only ID gets `why.detail 'Close twin of College Board question 1a2b3c4d
+  (Linear functions, Medium)'`, so the student knows it is the skill and tier, not the exact
+  form.
+
+**No practice question copies a College Board question** (their Bluebook Exclude, for every
+pool). At warm-up F5 builds `PINNED`, the set of `(template, frozen params)` from every
+`Source`'s pinned call, and the normalised stems of those reproductions. `_fresh` rejects any
+card whose params or normalised stem match one, in every pool, source and set kind, and calls
+`b.keep` so the seed advances (a rejected seed is skipped, never re-tried). The Repeats line
+(§1.7 item 10) says so: "No practice question copies a College Board question."
 
 **Session.** Strip chip "Twin of CB 84664a7c". Details row "Modeled on: College Board 84664a7c
 (and 10 more of this type)".
@@ -928,6 +1109,14 @@ right rate ("9 of 12 now right on twins"), and **Practise again**. `GET /api/dri
 4. After finishing, `GET /api/drill` lists `official[0].cb_id == '23c5fcce'` with `twins == 3`.
 5. `POST /api/drill/preview {has:['official']}` counts only templates whose U8 `official` count
    is at least 1.
+6. 20 random Math IDs from `material/cb_index.json` that are not in `material/keys`: each
+   `POST /api/drill {pool:'official', ids:[id], each:3}` returns 3 questions in the index's
+   skill at the index's tier, and none reads "Not in our map".
+7. `python3 tools/pinned_check.py`: for every template with a `Source`, seeds 0–5000 through
+   `_fresh` never yield a params tuple or normalised stem in `PINNED` (a standalone check, a
+   few minutes; not in test_flow).
+8. Browser: a SkillPanel shows "Official questions on College Board ·" with a count, and
+   pasting two IDs into its field shows the result list.
 
 #### P14. The type map: all 386 question types as a map you fill in, and Finish this skill
 
@@ -1028,11 +1217,25 @@ presets show as chips after Custom, each with ⋯ Rename / Delete. **Copy link**
 deep link of the current settings.
 
 **Subject switch.** The page header's eyebrow becomes a seg: "Math · Reading & Writing".
-* Reading & Writing shows one panel: "No Reading & Writing question bank yet. These drills are
-  ready now:", then Words' drills with their counts (S9's `words.today_summary`: "SAT words ·
-  12 due", "Transitions · 70"), each with Start → `/words/`. Decision 2: SAT Reading & Writing
-  vocabulary only, no math-language deck.
-* Closing line: "Full Reading & Writing practice comes with the R&W bank."
+* Reading & Writing shows a panel with three parts, and no dead end:
+  1. **Practise official R&W questions now.** The 10 R&W skills under their 4 domains
+     (Information and Ideas: Central Ideas and Details, Inferences, Command of Evidence;
+     Craft and Structure: Words in Context, Text Structure and Purpose, Cross-Text
+     Connections; Expression of Ideas: Rhetorical Synthesis, Transitions; Standard English
+     Conventions: Boundaries, Form, Structure, and Sense), each row with its count from
+     `cb_index` ("Official on College Board · 212") opening College Board's bank filtered to
+     that skill where their URL allows.
+  2. **Log it** (a missed R&W question from there, Bluebook or a book): a College Board ID or
+     pasted text, the skill (pre-filled from the index for an ID), and the letter picked.
+     `POST /api/mistakes/log {subject:'rw', cb_id?, text?, skill, letter?}` stores it in the
+     same outside-mistakes store as Math (U2) with `subject 'rw'`, so it shows in Review's
+     Outside list now and becomes twins when the EBRW bank ships. A pasted R&W ID in the Math
+     search reads "Reading & Writing question: logged for the R&W bank" with this form open.
+  3. **Words drills ready now**: Words' drills with their counts (S9's
+     `words.today_summary`: "SAT words · 12 due", "Transitions · 70"), each with Start →
+     `/words/`. Decision 2: SAT Reading & Writing vocabulary only, no math-language deck.
+* Closing line: "R&W practice questions come with the R&W bank. What you log here is waiting
+  for it." This row stays below TopTierPrep until that bank exists.
 * `/api/bank` takes `?subject=math` and returns `subject`.
 * The practice summary's quiet actions add "SAT words · 12 due" when S9 reports due reviews.
 
@@ -1045,7 +1248,11 @@ deep link of the current settings.
 4. `PUT /api/me {prefs:{presets:[…9 items]}}` → 422 naming `presets`.
 5. With `GET /api/next` returning a `checks` item first, Enter in the empty command line opens
    a session whose `cfg.pool == 'checks'`.
-6. The Reading & Writing seg shows the Words panel and no skill tree.
+6. The Reading & Writing seg shows the 10 R&W skills with College Board links, the Log it
+   form and the Words drills, and no Math skill tree.
+7. `POST /api/mistakes/log {subject:'rw', cb_id:<an R&W ID from cb_index>, letter:'B'}` →
+   200; the entry lists in `GET /api/review/counts`' outside count with `subject 'rw'`, and
+   touches no Math mastery or trap.
 
 #### P16. Fair time budgets per question type: the stopwatch, fluency, time sinks and two passes
 
@@ -1061,8 +1268,10 @@ minutes a question trains the wrong pace, and their stopwatch resets on reload.
 **Budgets (F5).**
 * `budget_ms(template, tier)` is the crowd median of clean first-try rights when n ≥ 20,
   clamped to 0.6–1.6× the tier default.
-* Otherwise the tier default: **Easy 65 s · Medium 95 s · Hard 126 s**. On module 1's 7 / 8 / 7
-  mix that is 2,097 s of 2,100, so R34's 95 s average holds.
+* Otherwise the tier default of the template's subject: for Math **Easy 65 s · Medium 95 s ·
+  Hard 126 s**. On module 1's 7 / 8 / 7 mix that is 2,097 s of 2,100, so R34's 95 s average
+  holds. `TIER_BUDGET[subject]` is derived from `blueprint.SECTION[subject]` (the header's
+  subject rule), so R&W gets its own when it ships.
 * Served questions carry `budget_ms`. `/api/bank` types carry `{budget_ms, median_ms, best_ms,
   fluent, slow_right}`.
 
@@ -1070,8 +1279,25 @@ minutes a question trains the wrong pace, and their stopwatch resets on reload.
 * **QStopwatch**: "0:48 / 1:05", with a thin bar filling to the budget and a tick at the
   learner's median on this type. Past the budget it turns amber-deep and gets a dot (the pace
   alert moves from a flat 1:35 to the budget).
-* **Test pace** = the sum of the served budgets, rounded up to the minute. Helper: "16:00 for
-  these 10 · paced to each question's difficulty". T8's speed drill uses the same.
+* **Test pace: the clock is the plan's budget, and it follows the set.** `drill.py` serves
+  lazily, so the clock cannot be the sum of questions not yet chosen. Instead:
+  * At create, the picker commits a tier to every planned slot, `cfg.plan: [tier] × count`
+    (`tier_mix`, the cold-start mix and the zone's expected tier already decide this; a zone
+    slot plans the tier its odds pick at create time).
+  * `seconds_left` at start = the sum of `TIER_BUDGET[subject][tier]` over `cfg.plan`,
+    rounded up to the minute. Helper: "16:00 for these 10 · paced to each question's
+    difficulty". T8's speed drill uses the same.
+  * When the served question's budget differs from its slot's plan (the zone or R33's step
+    moves the tier, or the crowd median differs from the tier default), `seconds_left` moves
+    by the difference at serve time.
+  * **Every added slot adds its own budget**: a repair, the final round, `/more` on any axis,
+    Practise this trap, the Learn ladder's 3 slots, Twins of these, and P25's replacement.
+    Under the timer a line reads "+1:05 for the repair" for 3 s, and the RunBar's caption keeps
+    "incl. +3:10 added". The final round in a timed set is timed the same way.
+  * P25: a voided question gives back the time spent on it, and its replacement takes over the
+    slot's budget. A Learn example card pauses the clock while it is on screen.
+  * `cfg.clock_log: [{at, delta_ms, why}]` records each change, so the pace delta, "N Hard
+    left" and Time sinks are always measured against the clock the student actually had.
 * **RunBar pace delta** (timed sets): "1:10 ahead of pace · 3 Hard left" or "0:40 behind",
   from the answered budgets minus the time spent; updated per answer, not per second.
 * **Verdict word**: "Right · 0:48 · fluent", "Right · 2:10 · slow (budget 1:05)", "Incorrect ·
@@ -1111,12 +1337,17 @@ right ones", with **Slow down · 8**.
 **Acceptance.**
 1. A fresh db: a served medium question has `budget_ms == 95000`, a hard one 126000.
 2. `POST /api/drill {timing:'pace', count:10}`: `seconds_left` at start equals the sum of the
-   served budgets, rounded up to the minute.
+   planned budgets over `cfg.plan`, rounded up to the minute. After a first-try miss with
+   repairs `next`, `seconds_left` rises by that repair's `budget_ms / 1000`, and `clock_log`
+   has an entry with `why 'repair'`.
 3. Two clean rights on t, each under budget → the `/api/bank` type has `fluent == true`.
 4. Browser: a timed question left open for 1.5× its budget shows "Skip for now?".
 5. A right answer faster than the learner's `best_ms` on the type: the verdict contains "New
    best on this type".
 6. A set with one answer over 2× budget lists it under "Time sinks · 1".
+7. A timed 10-question set with 2 first-try misses (repairs `next`) and the final round
+   started: when the first final-round question is served, `seconds_left` equals the start
+   value, minus the time spent, plus the 2 repairs' and the 2 final-round slots' budgets.
 
 #### P17. Mix-up sets: look-alike types interleaved, so you learn which method applies
 
@@ -1237,6 +1468,22 @@ in 3 days** stores `cfg.rematch_due`; U1's queue shows it that day.
 **During.** After answering, the strip note reads "Rematch of question 4 · then ✕ 1:40". It
 never shows before answering, so it can't prime.
 
+**Start clean** (their Clear Session gives a clean redo; R6 would bring back the student's own
+highlights, notes like "it's C", strikes and type rules on a retake).
+* The Retake and Rematch confirm sheets (Your sets, MoreMenu, the summary) carry the checkbox
+  **Start clean: hide my highlights, notes, strikes and rules on this copy**. On by default for
+  Retake exact, off by default for Rematch (fresh seeds bring back only type rules).
+* It sends `clean: true` → `cfg.clean`. Nothing is deleted: while `cfg.clean` and the copy is
+  not finished, `/q`, `next` and state omit `note`, `marks` (highlights), `strikes`, `has_note`
+  and `type_note` carried from other sittings; anything the student adds on this copy shows as
+  usual.
+* After Finish, the copy's ReviewSheet shows everything again, the old notes marked "from
+  before".
+* Acceptance: with the note 'check sign' saved on a question, `POST /api/drill {retake: sid,
+  clean: true}`: `GET /api/drill/{new}/q/{same n}` returns no `note` until the set is finished,
+  and returns `note 'check sign'` after `finish`. Without `clean`, v2 acceptance #17 still
+  holds.
+
 **Summary: Then → Now.** Headline "Then 6 / 10 → Now 9 / 10 · 3 fixed · 0 slipped · 14 s faster
 per question". A table: # · type · then (status cell, time) · now (status cell, time) · change;
 a repeated misconception reads "same trap again". A paired bar chart of then-time against
@@ -1298,10 +1545,19 @@ twin tests the skill, and it counts. Notes keyed to an exact seed rarely come ba
 unlimited bank, so the student's own lessons die with the session. Writing the rule yourself
 (the generation effect) makes it stick, and the cue then follows the type onto new numbers.
 
-**Pools.** Every exact pool in "Questions from" (Seen before, Marked, Saved) gains a Seg
-"Exactly as they were · Fresh twins" (`exact: true | false`, §2.6).
-* Defaults: **Fresh twins** for Seen before and Saved (U1's saved row already uses
-  `exact:false`); **Exactly** for Marked, because the flag means "this one".
+**Pools.** R5 keeps two stores apart: Mark (the `flags` table, per sitting) and Save (the
+`saved` table, kept for good). The builder now starts from each, as its own row in
+"Questions from", next to Seen before:
+* **Questions I've seen · 212** (attempts), with Result and From sub-filters; the old "Marked
+  for review only" checkbox under it is removed, because it read attempts, not flags.
+* **Marked for review · 6** (`pool:'marked'`, from `flags`).
+* **Saved · 9** (`pool:'saved'`, from `saved`).
+* Each of the three carries a Seg "Exactly as they were · Fresh twins" (`exact: true |
+  false`, §2.6). Defaults: **Fresh twins** for Seen before and Saved (U1's saved row already
+  uses `exact:false`); **Exactly** for Marked, because the flag means "this one".
+* Presets `Marked · 6` (pool marked) and `Saved · 9` (pool saved); a header link `Saved · 9`
+  beside `Marked · 6`, which scrolls the builder to that row with it selected. Zero counts
+  show "· 0" and the row is disabled with its reason.
 * The exact helper reads "Exact replays test your memory of that question and don't move
   mastery."
 * The summary's quiet actions add **Twins of what I marked · 2**.
@@ -1317,6 +1573,10 @@ unlimited bank, so the student's own lessons die with the session. Writing the r
 * On every later question of that template, fresh seeds included, a collapsed tip above the
   stem: "Your rule · Sep 20: check the sign of the slope ▸", with "Still useful? Keep ·
   Remove". It does not count as help: it is the student's own knowledge.
+* It is a study aid (the shared rule): only in instant or retry practice and in review, never
+  in end mode before Finish, tests, the challenge, contests or Test-like mode, and never on a
+  Start clean copy (P19). Pref `type_rules` (default on) turns it off everywhere; the My note
+  popover links to it.
 * The worked example (P2) shows it under the steps. The TypeRow shows a rule glyph. Review (S10)
   lists rules beside saved notes.
 * **Print** (§2.12): a "My rules" sheet, one page grouped by domain, from the builder's
@@ -1327,8 +1587,13 @@ unlimited bank, so the student's own lessons die with the session. Writing the r
    seeds not in `saved`.
 2. A type rule on t, then a fresh t question: `GET /api/drill/{id}/q/{n}` returns
    `type_note == 'check the sign'`, and answering it leaves `attempts.hints == 0`.
-3. The Marked pool defaults to exact: its served (template, seed) equal the flagged ones.
+3. `POST /api/drill {pool:'marked'}` defaults to exact: its served (template, seed) equal the
+   rows of `flags`, not of `attempts`.
 4. `?print=rules` renders every type rule, grouped under 4 domain headings.
+5. `POST /api/drill/preview` returns counts for `marked` and `saved` separately, and the
+   builder shows both rows; the Seen-before row has no Marked checkbox.
+6. A type rule on t and `prefs.type_rules = false`: a fresh t question's `/q` has no
+   `type_note`.
 
 #### P22. Shared sets and question links send twins by default
 
@@ -1336,15 +1601,19 @@ unlimited bank, so the student's own lessons die with the session. Writing the r
 mechanism). Builders: F6 (`sets` `cfg.fresh` with slots), S4 (the share sheet, the results
 view).*
 
-**Why.** Identical questions let a group pass answers around, which is why the user chose twins
-for the Daily Challenge (v2-decisions 1). A tutor still sometimes wants one exact sheet.
+**Why.** Identical questions let friends pass answers around, which is why the user chose twins
+for the Daily Challenge (v2-decisions 1). Two friends comparing one exact sheet still want it
+as a choice. There are no classes, rosters or assignments here (decision 5): a share is a
+link, and anyone with it takes the set as themselves.
 
 * **Share this set** opens a sheet with a Seg "Twins for each person (default) · Exactly these
   questions". Twins → `POST /api/sets {kind:'set', cfg:{slots:[[template, tier, fmt]],
   fresh:true}}`; each taker gets their own seeds in the same order.
 * **Results aggregate per slot by type and named misconception**: "Slot 4 · Percent change ·
   14 / 22 · most common: used the new value as the base (5)". Each taker's summary adds "You vs
-  the group" per slot.
+  everyone who took it" per slot.
+* A set that friends want to race on the clock is Compete's private contest (an invite code
+  or link that Compete owns), linked from the share sheet as "Race friends on this instead".
 * **Question links**: U28's "Send a twin" is the default, "Exactly this question" second.
 
 **Acceptance.** Two learners take one twin code: the same templates in the same order with
@@ -1358,11 +1627,20 @@ different seeds. The owner's results list both takers with per-slot `right` and 
 **Why.** For them, Check and Next are each a round trip, and after a miss there are two more
 taps to open and close the explanation. The loop should feel instant.
 
-* **`answer()` returns `next`**: the next served question (public, no key), with repair, review,
-  final-round and zone logic applied, or null at the end. Next renders it without a request,
-  then sends `POST /time` for the new position. `/more`, a navigator jump and Skip still call
-  the server.
-* **Tap again to check** (touch): tapping the selected choice again checks it as Sure (P7),
+* **`answer()` returns `next`, as a preview**: the next question (public, no key), with repair,
+  review, final-round and zone logic applied, or null at the end. It is **not served yet**:
+  the server holds it in `cfg.pending` (its template, seed, tier and why), outside `served`,
+  `total` and `practice_seen`.
+  * Next renders it without a request, then sends `POST /time` for the new position; that
+    `/time` (or any `/q`, `/answer` or `/strike` naming its position) commits it to `served`
+    and `practice_seen`.
+  * `/more` (any axis, Practise this trap, the ladder, Twins of these), a navigator jump,
+    Skip, the final round's Start and Exit discard it. The next Next asks the server, which
+    picks again with the new state.
+  * So `served` only ever holds questions the student was shown, "served ≥ total" stays
+    true, and Check Your Work never lists a phantom blank.
+* **Tap again to check** (touch): tapping the selected choice again checks it, like `Check`
+  (`conf:'auto'`: Sure for an active tagger, else unrated; P7),
   with a 250 ms guard. The hint "Tap again to check" shows only in a learner's first 3
   questions ever (`localStorage satf.tap`).
 * **Desktop**: after the verdict, focus moves to Next, so A–D, Enter, Enter runs the loop.
@@ -1371,10 +1649,13 @@ taps to open and close the explanation. The loop should feel instant.
 **Acceptance.**
 1. Playwright network log: from Check to the next stem painting after Next, exactly one POST
    `/answer`, plus the fire-and-forget `/time`.
-2. Touch emulation: a second tap on the selected choice produces a verdict with `conf:'sure'`;
-   a double tap within 250 ms produces one answer.
+2. Touch emulation: a second tap on the selected choice produces a verdict with `conf:'auto'`
+   in the request (filed per P7's rule); a double tap within 250 ms produces one answer.
 3. The instant-mode payload of an unanswered question has no `answer`, `answer_index`,
    `reasons` or `steps`.
+4. Answer a question, then `POST /more {axis:'same'}`: `state.served` contains no question the
+   student was not shown, `total` rose by exactly 1, and `practice_seen` has no row for the
+   discarded preview's seed.
 
 #### P24. The reference sheet in context: which formula this used, and which ones aren't given
 
@@ -1391,20 +1672,22 @@ point, and their Reference modal is the same image for every question.
 * `KNOW`: what is not on the sheet (slope, point-slope, vertex form, discriminant, quadratic
   formula, circle equation, exponential growth, percent change, mean and median, distance and
   midpoint, SOH-CAH-TOA).
-* `USES = {skill: [ids]}`, with per-template overrides. At launch every template resolves to at
-  least its skill's list.
+* `USES = {template: [ids]}`: an **explicit entry for every one of the 386 templates**, a list
+  of `SHEET` / `KNOW` ids, or `[]` for "uses no formula". No skill-level fallback exists. It is
+  a 386-row table (T-bank, small effort), checked by the acceptance below.
 
 **After the reveal.** A line: "Used: V = πr²h · on the reference sheet (F)", or "Not on the
-sheet: (x − h)² + (y − k)² = r² · learn it". With only the skill-level default, it reads
-"Formulas for Circles" and claims no specific formula. `F` opens the Reference dialog scrolled
-to that entry, with a `--wash` highlight.
+sheet: (x − h)² + (y − k)² = r² · learn it", naming each formula the template uses. A
+template with `[]` shows no formula line. `F` opens the Reference dialog scrolled to that
+entry, with a `--wash` highlight.
 
 **SkillPanel.** A card "Not on the sheet: you must know", listing the skill's `KNOW` entries,
 each with **Drill it · 5** (`templates` whose `USES` include that id, 5 questions).
 
 **Acceptance.**
-1. `python3 -c "from satbank.formulas import USES, SHEET, KNOW; …"` asserts that all 386
-   templates resolve to at least one id.
+1. `python3 -c "from satbank.formulas import USES, SHEET, KNOW; …"` asserts that `USES` has
+   exactly 386 keys, equal to the registry's templates, that every id is in `SHEET` or `KNOW`,
+   and that no verdict line in a 386-template sample contains "Formulas for".
 2. After the reveal on a cylinder-volume template, the line contains "on the reference sheet",
    and the dialog's highlighted element has id `ref-cylinder`.
 3. "Drill it · 5" on the circle equation → 5 questions, each from a template whose `USES`
@@ -1449,6 +1732,9 @@ Each entry quotes the current text, then gives the replacement or the addition.
      repeated`, from /api/bank totals."
    * Add after it: "- A second meta line: `Math 560–640 · ≈ 120 points on the table` (P10),
      linking to Results, and the route line under it (P10)."
+   * Quote: "**Right**, three links:" Replace: "**Right**, four links:" and add after
+     "- `Marked · 6`, to /mistakes/#marked.": "- `Saved · 9`, which selects the Saved row in
+     Questions from and scrolls to it (P21)."
 2. **1.1 Desktop layout.** Quote: "3. Preset bar and coach line." Replace: "3. Ready row (P15),
    then the preset bar and coach line."
 3. **1.4 Preset bar.** Add rows to the table:
@@ -1460,7 +1746,10 @@ Each entry quotes the current text, then gives the replacement or the addition.
    * `Your top habit · …` (P6);
    * `Solve first · 10` (P5);
    * `Check 3 skills I haven't tried` (P11);
+   * `Saved · 9` (pool saved, Fresh twins; "0 saved") (P21);
    * the saved presets (P15).
+   * Quote: "| `Marked · 6` | pool = Seen before, Marked only | '0 marked' |" Replace: "|
+     `Marked · 6` | pool = Marked for review (flags), Exactly | '0 marked' |" (P21).
    * Quote: "A quiet `Reset` at the right end restores Coach's pick and your saved defaults."
    * Add: "`Save as preset` sits before it (P15)."
 4. **1.4 Coach line.**
@@ -1499,7 +1788,9 @@ Each entry quotes the current text, then gives the replacement or the addition.
    * "5. **Not on the sheet** card with Drill it (P24)";
    * "6. Buttons `Finish Circles · 14 questions` (P14), `Check my level · 8 questions` (P11),
      `Mix it up · 8` (P17)";
-   * "7. `You reliably rule out: …` (P6)".
+   * "7. `You reliably rule out: …` (P6)";
+   * "8. `Official questions on College Board · 142`, opening their bank at this skill, and the
+     `Paste what you missed there` field (P13)".
 10. **1.6 TypeRow.**
     * Quote: "- The level: `L4` when measured, or `L3–5 est.`."
     * Replace: "- The level from ratings: `L4`, or `L4 · rough (6)` (P11), and `your odds ~72%`."
@@ -1511,6 +1802,11 @@ Each entry quotes the current text, then gives the replacement or the addition.
       settings."
     * Replace: "- A quiet split `Try one ▾` (P18's axes), `See the traps` and `Learn this type`
       (P2), and ⋯ `Mix it up with look-alikes` (P17)."
+    * Quote: "A skill with more than 12 types collapses behind `Show all 36 types`." Replace
+      (decision 4: nothing useful is hidden to save space): "An expanded skill shows every
+      TypeRow, grouped under its skill-label sub-headers (e.g. `Arc length · 4 types`). Each
+      sub-header is sticky inside the SkillPanel while its rows scroll, and carries its count,
+      a tri-state select-all box and `3 ready · 1 open`. There is no Show-all line."
 11. **1.7 Settings, 1. Questions from.**
     * Quote: "- `Fresh numbers on types due for review · 5 types`. Helper: 'Types you got right
       more than 10 days ago, so they stay strong.'"
@@ -1522,9 +1818,15 @@ Each entry quotes the current text, then gives the replacement or the addition.
     * Quote: "- `Questions I've seen, exactly · 212`. Helper: 'The same questions again, exactly
       as they were.' Choosing it opens its sub-filters in place:"
     * Replace: "- `Questions I've seen · 212`, with a Seg `Fresh twins · Exactly as they were`
-      (P21; default Fresh twins, and Exactly when Marked only is ticked). Its sub-filters open
-      in place:"
-    * Its Result seg gains `Sure but wrong` (P7).
+      (P21; default Fresh twins). Its sub-filters open in place:"
+    * Its Result seg gains `Sure but wrong` (P7, explicit Sure only).
+    * Quote: "  - `Marked for review only · 6` (checkbox)." Delete it, and its helper line 'A marked
+      question you get right here leaves your Marked list…' moves to the new Marked row.
+    * Add rows after Seen before (P21): "- `Marked for review · 6` (flags), with the Seg
+      `Exactly as they were · Fresh twins`, default Exactly. Helper: 'A marked question you
+      get right here leaves your Marked list, unless you tick Keep marked on it.'" and "-
+      `Saved · 9` (saved), with the same Seg, default Fresh twins. Helper: 'Questions you saved
+      for good. Twins test the skill; Exactly replays the question.'"
 12. **1.7 Settings, 2. Questions.**
     * Quote: "- Options: `5 · 10 · 20 · 30 · 40 · 50 · ∞`, plus an `Other` input (1–120; Enter
       starts)."
@@ -1544,8 +1846,10 @@ Each entry quotes the current text, then gives the replacement or the addition.
 15. **1.7 Settings, 5. Timing.**
     * Quote: "- Test pace: 95 s a question. Helper: `16:00 for 10 questions · 1:35 each, like
       the test`."
-    * Replace: "- Test pace: each question's own budget (65 / 95 / 126 s by tier, or the crowd
-      median; P16). Helper: `16:00 for these 10 · paced to each question's difficulty`."
+    * Replace: "- Test pace: each question's own budget (65 / 95 / 126 s by tier for Math, or the
+      crowd median; P16). The clock starts at the sum of the planned slots' budgets and every
+      added question adds its own. Helper: `16:00 for these 10 · paced to each question's
+      difficulty · added questions add their time`."
     * Quote: "- Toggle `Pace alert on each question`, on by default when timed: the stopwatch
       turns amber-deep after 1:35."
     * Replace: "- Toggle `Pace alert on each question`, on by default when timed: the stopwatch
@@ -1563,13 +1867,14 @@ Each entry quotes the current text, then gives the replacement or the addition.
       Off`, meaning the repair (same trap, new numbers), default `Next question`. Checkbox
       `Final round: re-ask what I missed at the end, new numbers` (P12), on by default."
 18. **1.7 Settings, new 7a. Mix in reviews** (P12): `Off · 2 per set · 20%`, and `Only from the
-    skills I picked`.
+    skills I picked`. Then `Mix in due SAT words: Off · 2 per set · All due` with the helper
+    `12 due · reviewed at set breaks, filed to Words, never counted in Math` (P12, decision 2).
 19. **1.7 Settings, 8. Order.**
     * Quote: "**8. Order** (Seg): `Mixed · Grouped by skill · Easiest first`."
     * Replace: "**8. Order** (Seg): `Mixed · Grouped by skill · Easiest first · Mix-up` (P17).
       Mixed never serves 3 questions of one template in a row."
-20. **1.7 Settings, 10. Repeats.** Append: "Twins of official questions never reproduce the
-    official item (P13)."
+20. **1.7 Settings, 10. Repeats.** Append: "No practice question copies a College Board
+    question: every pool skips an official item's exact numbers and wording (P13)."
 21. **1.8 Action bar.**
     * Quote: "- Line 1, 600 15 px: `10 questions · 3 skills · 41 types · all levels · both
       formats`."
@@ -1588,12 +1893,16 @@ Each entry quotes the current text, then gives the replacement or the addition.
     * Tabs gain `Official questions you brought · 12` (P13).
     * Quote: "- Shared: 'Share a finished set to send the same questions to a friend or a class,
       and see how they did.'"
-    * Replace: "- Shared: 'Share a finished set so friends and classmates each get their own
-      twins of it, then see how they did.'"
+    * Replace: "- Shared: 'Share a finished set so friends each get their own twins of it, then
+      see how they did.'"
+    * The `Rematch` and `Retake exact` confirms carry P19's `Start clean` checkbox (on for
+      Retake, off for Rematch).
 23. **1.10 Deep links.** Add parameters `zone=warm|stretch|challenge|off`,
     `tier_mix=module1|module2_upper|module2_lower`, `box=5..60`, `review_mix=off|2|20`,
     `final_round=0|1`, `cover=off|hard|all`, `cb=ID,ID`, `habits=id,id`,
-    `has=desmos,official`, `order=mixup`, `rematch=SID`.
+    `has=desmos,official`, `order=mixup`, `rematch=SID`, `clean=0|1`, `pool=marked|saved`,
+    `words_mix=off|2|all`, and `subject=math` (the default; every link carries it, so
+    `UI.parseSet` and deep links stay valid when R&W ships).
 24. **2.2 RunBar, TimerBlock.** Add: "- Timed sets: a pace delta under the digits, `1:10 ahead of
     pace · 3 Hard left` (P16), updated per answer."
 25. **2.3 ProgressRail.**
@@ -1627,7 +1936,10 @@ Each entry quotes the current text, then gives the replacement or the addition.
       every rule below:"
     * Add paragraphs for: the **Hint** row (P2); **Cover choices** (P5); the **type-rule tip**
       above the stem (P21); the **Read the ask** underline (P8); **Watch for** in Learn's
-      question 1 (P2); **Tap again to check** (P23).
+      question 1 (P2); **Tap again to check** (P23); **word cards** in quiz mode (P12).
+    * Add the study-aid gate from §2's shared rules: the type-rule tip, the underline, the slip
+      line and "Check anyway?" render only when the payload carries them, and the server sends
+      them only in instant or retry practice and in review.
 29. **2.6 After each question.**
     * Quote: "- The Verdict reads `Correct · 0:48 · your average on this type 1:05`."
     * Replace: "- The Verdict reads `Correct · 0:48 · fluent (budget 1:05)` (P16), with `New best
@@ -1658,12 +1970,14 @@ Each entry quotes the current text, then gives the replacement or the addition.
 31. **2.7 RunFooter.**
     * Quote: "- `Check` (a pill), disabled until a choice or a valid entry."
     * Replace: "- `Check`, disabled until a choice or a valid entry. With `prefs.confidence =
-      ask` it is the split `Check · Sure` (Enter) · `Unsure` (Shift+Enter) · `Guess` (I) (P7)."
+      ask` it is the split `Check` (Enter; unrated unless the learner tags, then it reads
+      `Check · Sure`) · `Sure` · `Unsure` (Shift+Enter) · `Guess` (I) (P7)."
     * Quote: "- Next goes to the next served question, and at the frontier it asks the server
       for a new one."
     * Replace: "- Next goes to the next served question. At the frontier it renders the `next`
-      that came with the verdict (P23), and asks the server only after /more, a jump or a
-      skip. On the last slot with misses it offers the final round (P12)."
+      preview that came with the verdict and commits it with `/time` (P23), and asks the server
+      only after /more, a jump or a skip, which discard the preview. On the last slot with
+      misses it offers the final round (P12)."
     * Quote: "- an amber note, e.g. '2 skipped. They count as unanswered.';"
     * Add after it: "- the triage lines of P20 (blanks first, then Unsure, then marked, then time
       per question);"
@@ -1694,7 +2008,9 @@ Each entry quotes the current text, then gives the replacement or the addition.
       set with the same questions. This one stays in your history.' Then it sends {retake}."
     * Replace: "- `Rematch: same types, new numbers` (P19). - `Start over with these exact
       questions (tests memory)`. It confirms: 'Starts a new copy of this set with the same
-      questions. This one stays in your history.' Then it sends {retake}."
+      questions. This one stays in your history.', with the checkbox `Start clean: hide my
+      highlights, notes, strikes and rules on this copy` (on). Then it sends {retake, clean}
+      (P19)."
     * Checkbox items gain `Check asks how sure` (P7), `Hints` (P2), `Solve before seeing
       choices` (P5), `Two passes` (P16) and `Final round` (P12).
 37. **2.9 Calculator.**
@@ -1706,10 +2022,16 @@ Each entry quotes the current text, then gives the replacement or the addition.
     * Quote: "**Reference:** the formula-sheet dialog."
     * Replace: "**Reference:** the formula-sheet dialog, with an id on each entry. After the
       reveal it opens at the formula this question used, highlighted (P24)."
-39. **2.10 Keyboard.** The rows follow R22 (calculator G, reference F, confidence K).
+39. **2.10 Keyboard.** The rows follow R22 (calculator G, reference F, confidence K), with one
+    fix: §2.8's runner row binds `A–D` to choosing and also `B` to save and `D` to details, so
+    one key press would do two things. In the runner scope **save moves to `Z` and details to
+    `X`** (both free there); `A–D` only choose. §2.8, the `?` shortcuts sheet and this table
+    change together (§3.2).
+    * Quote: "| D | details |" Replace: "| X | details |". Add "| Z | save (R5's Save, kept
+      for good) |". The rows `C` and `R` already become `G` and `F` under R22.
     * Quote: "| Enter | Check, Next, or Save & next |"
-    * Replace: "| Enter | Check as Sure, Next, or Save & next |" and add "| Shift+Enter | Check as
-      Unsure (P7) |".
+    * Replace: "| Enter | Check (Sure for a learner who tags, else unrated), Next, or Save & next
+      |" and add "| Shift+Enter | Check as Unsure (P7) |".
     * Quote: "| I | I'm guessing |"
     * Replace: "| I | Check as Guess (P7) |"
     * Add: `V` cover choices (P5); `W` hint (P2); `T` another like this, `Shift+T` its axes
@@ -1776,18 +2098,31 @@ Each entry quotes the current text, then gives the replacement or the addition.
     * Quote: "  - due = the last first try was right, 10 or more days ago, and there is no open
       trap."
     * Replace: "  - due = T3's fading rule (`progress.warmup_candidates`), with no open trap (P12)."
-    * `answer()` accepts `conf`, `own`, `hints` and returns `next`, `budget`, `fluency`, `best`,
-      `next_step`, `then`, `offered`, `struck_key`, `cover`, `cause`, `steps`, `diverge`,
-      `wrong_step`, `option_steps`, `desmos`, `formula`.
-    * New endpoints: `POST /api/drill/{id}/hint`, `/why`, `/calc`; `/more` takes `axis`, `want`,
-      `n` and `ladder`; `GET /api/types/{t}/example` returns steps (U2's endpoint).
+    * `answer()` accepts `conf` (`sure` · `unsure` · `guess` · `auto`, resolved by P7's rule),
+      `own`, `hints` and returns `next` (a preview held in `cfg.pending`, P23), `budget`,
+      `fluency`, `best`, `next_step`, `then`, `offered`, `struck_key`, `cover`, `cause`,
+      `steps`, `diverge`, `wrong_step`, `option_steps`, `desmos` (only with `DESMOS_WAY` on),
+      `formula`, `rungs`.
+    * **drill.state**: `pace: 95` is replaced by `subject`, `plan` (the planned tier per slot),
+      `clock_log`, `conf_active` and a `budget_ms` on each served entry (P16, P7). `served`
+      entries gain `kind` (`question` · `example` · `word`). `can` gains `clean`. `/q` and state
+      omit the study aids outside instant or retry practice and review, and omit carried notes,
+      highlights, strikes and type rules on a `cfg.clean` copy until Finish (P19).
+    * `POST /api/drill` takes `subject` (default `math`), `clean`, `words_mix`, `pool:'marked'`
+      and `pool:'saved'`. `_fresh` skips `PINNED` cards in every pool (P13).
+    * New endpoints: `POST /api/drill/{id}/hint`, `/why`, `/calc`, `/word`; `/more` takes
+      `axis`, `want`, `n` and `ladder`; `GET /api/types/{t}/example` returns steps (U2's
+      endpoint).
     * `finish()` adds `calibration, causes, dodged, strikes, retrieval, final, mixup, probe,
       calc, covered, official, expected, passes, time_sinks, slots, helped`.
     * **Tables and columns** as in §3.2.
 45. **3.3.7 Shared needs.**
-    * `UI.workspace` adds: the Steps · Short · Desmos way tabs with the diverge compare; the
-      Hint row; modes `example`, `guided` and `cover`; the What happened? chips; the Read the
-      ask underline; the type-rule tip; tap again to check.
+    * `UI.workspace` adds: the Steps (or Method) · Short · Desmos way tabs with the diverge
+      compare; the Hint row counting the item's own rungs; modes `example`, `guided` and
+      `cover`; the What happened? chips; the Read the ask underline; the type-rule tip; tap
+      again to check; word cards in quiz mode. The study aids render only from payload fields
+      the server sends in practice and review, so the exam runner, the challenge and contests
+      never show them.
     * The runner footer (R21) adds the split Check (P7).
     * `UI.calc` adds `walkthrough` and capture. `UI.navigator` adds filters and the Confidence
       and Traps views. `UI.checkYourWork` adds `triage`. `UI.history` adds the trend head.
@@ -1795,12 +2130,16 @@ Each entry quotes the current text, then gives the replacement or the addition.
 46. **3.3.8 Acceptance checks.**
     * Replace #5 with: "Fresh learner, db as shipped: every /api/bank type has `level` 1..7 and
       `rough: true`. `POST /api/drill {topics:['linear_functions'], levels:[1],
-      unmeasured:false}` returns 409 naming 'level 1'. With `unmeasured:true` it returns 200."
+      unmeasured:false}` returns 409 naming 'level 1'. With `unmeasured:true` it returns 200
+      (guaranteed: P11's band priors put at least one type at every level, P11 check 1)."
     * Replace #6 with P11's check 2.
     * Replace #13 with: "`/more {axis:'same'}` raises `total` by 1, and the next served question
       has the same template and a different seed. `{axis:'grid'}` serves `fmt 'spr'`."
     * Replace #29's first sentence with: "Session: pressing 'b' selects B without submitting (no
-      .verdict visible). Enter submits with `conf:'sure'`."
+      .verdict visible) and saves nothing; `Z` toggles save and `X` opens Details. Enter
+      submits with `conf:'auto'`, filed as null for a learner who has not tagged (P7)."
+    * Amend #17: "… returns note 'check sign', unless the retake was made with `clean: true`,
+      in which case /q returns no note until the set is finished (P19)."
     * Append the acceptance checks of P1–P25.
 47. **3.3.9 Open questions.**
     * The levels question ("Levels: are the thresholds acceptable …") is answered by P11.
@@ -1810,28 +2149,37 @@ Each entry quotes the current text, then gives the replacement or the addition.
       replicas).
     * Add: "Citing College Board question IDs (never their content) on twins and in Details: OK
       under College Board's terms?"
-    * Add: "Default difficulty `For me · Stretch` instead of all tiers: OK?"
-    * Add: "Check as Sure on Enter (P7): is the one-tap default right, or should the first
-      week of a new learner start with `confidence: off`?"
+    * Add: "Default difficulty `For me · Stretch`, served as the test's 7 / 8 / 7 mix in each
+      skill until it is placed (8 clean first tries or a probe): OK?"
+    * Add: "Capturing College Board's Question Bank listing metadata (ID, skill, tier, score
+      band; no content) into `material/cb_index.json`, for P11's priors and P13's index: OK
+      under College Board's terms?"
+    * Add: "Active tagger at 10% Unsure or Guess in the last 50 first tries (P7): the right
+      threshold for Enter to mean Sure?"
+    * Open question 15 (the Desmos key) is no longer open: the production key is a launch
+      requirement for P3, which ships dark without it.
 
 ### 3.2 Outside the section (Part 2 and sibling lines these upgrades need; I1 applies them with the owners)
 
 | where | change | upgrade |
 |---|---|---|
 | R8 | A **clean answer** also needs `hints = 0` and `conf != 'unsure'`. A right answer with `hints > 0` counts half, like a guess. `guess = 1` exactly when `conf = 'guess'` | P2, P7 |
-| R9 | A right answer with `conf = 'unsure'` opens or refreshes an `~unsure` item owing 1 (Review's flagged-right rule). `progress.coach` and `_pick` rank traps whose latest wrong attempt has `conf = 'sure'` first. Kinds from `attempts.miss_kind`: trap → misconception; slip, misread, clock, entry → slip; gap → unsure | P7, P8 |
+| R9 | A right answer with `conf = 'unsure'` opens or refreshes an `~unsure` item owing 1 (Review's flagged-right rule). `progress.coach` and `_pick` rank traps whose latest wrong attempt has an explicit `conf = 'sure'` first (null, unrated, is an ordinary miss). Kinds from `attempts.miss_kind`: trap → misconception; slip, misread, clock, entry → slip; gap → unsure | P7, P8 |
 | R24 | Sources `finish`, `probe` (with topics) and Mix-up sets are ordinary sittings, as today.md lists `learn` | P11, P14, P17 |
-| R33 | Adaptive is Standard mode's option; its step uses `blueprint.siblings` when the template has one tier. `zone` (For me) is the default adaptivity, per type by odds | P11, P18 |
-| R34 | 95 s stays the module average. Per question the budget is 65 / 95 / 126 s by tier, or the crowd median; Test pace = the sum of the served budgets | P16 |
-| §2.5 | `attempts`: `conf TEXT`, `hints INTEGER NOT NULL DEFAULT 0`, `miss_kind TEXT`, `offered TEXT`, `struck TEXT`, `cover INTEGER NOT NULL DEFAULT 0`, `calc INTEGER NOT NULL DEFAULT 0`. `tries`: `hints INTEGER DEFAULT 0`. New table `skill_ratings(learner, topic, rating REAL DEFAULT 1000, n INTEGER DEFAULT 0; PK learner, topic)`, in `LEARNER_TABLES` and `carry` (keep the side with larger n). `notes.seed = −1` means a type rule. `item_ratings` is written by F4's `ratings.py` for every clean first try. Startup backfills: `offered`, ratings. No spaced-review table: T3 derives it | P2, P3, P5–P8, P11, P21 |
-| §2.6 | Fields: `zone` (off / warm / stretch / challenge), `tier_mix` (module1 / module2_upper / module2_lower), `review_mix`, `review_from`, `final_round` (bool), `has` ([desmos, official, steps]), `habits` (a list, source `habit`), `rematch` + `scope`, `per_q`, `pool:'official'` with `ids` = CB ids and `each`, `order:'mixup'`. Pool `review` = T3's fading types. Sources: `official`, `sprint`, `rematch`, `finish`; `probe` takes `topics`. `/more` takes `axis`, `want`, `n`, `ladder`. The answer body takes `conf`, `own`, `hints` | P2, P3, P6, P7, P11–P14, P16–P19 |
-| §2.7 | Keys: `zone` (stretch), `review_mix` (20), `review_from` (picked), `final_round` (true), `confidence` (ask \| off; ask), `hints` (true), `cover` (off), `worked_first` (true), `two_passes` (true), `presets` ([] ≤ 8). `repairs` values add `later`. U15 bundles: Learn `zone: stretch, repairs: next, final_round: true`; Build `zone: stretch, repairs: later, final_round: true`; Test-like `zone: off, confidence: ask, hints: false, two_passes: true` | P2, P5, P7, P11, P12, P15, P16 |
-| §2.8 | Runner: `Enter` checks as Sure, `Shift+Enter` as Unsure, `I` as Guess; `V` cover, `W` hint, `T` / `Shift+T` another like this and its axes, `U` next unanswered, `Shift+G` Desmos walkthrough. `K` stays the exam's confidence cycle | P2, P3, P5, P7, P18, P20 |
-| §2.9 | Providers: F4 `ratings.update / odds / level`, `estimate.route`, `progress.steps_to`, `progress.cause_of` → F5, S4, S1, S8. S8's contest rating calls `ratings.update` for its item side (one rule). F5 `blueprint.siblings`, `blueprint.lookalikes` → S4, S3 (T4), S8. F1 `UI.atlas` → S1 (U8), S4 (P14). F2 `UI.parseSet` → S4. T-bank `Item.steps`, `Item.desmos`, `satbank.formulas` → F5, F3. S7 `plan.today_summary().minutes_left` → S4. S9 `words.today_summary` → S4 | P1, P3, P8, P10, P11, P14, P15, P17, P18, P24 |
+| R33 | Adaptive is Standard mode's option; its step uses `blueprint.siblings` when the template has one tier. `zone` (For me) is the default adaptivity, per type by odds, once a skill is placed; before that the skill is served module 1's tier mix | P11, P18 |
+| R5 | Marked (flags) and Saved (saved) are each a pool in the builder (`pool:'marked'`, `pool:'saved'`), with their own presets and header links; the Seen-before "Marked only" checkbox is removed | P21 |
+| R6 | Notes and highlights come back on replay and retake, except on a copy made with `clean: true`, which hides them (and strikes and type rules) until Finish | P19 |
+| R21 | The shared `UI.workspace` renders the study aids (type-rule tip, Read-the-ask underline, slip line, Check anyway?) only from payload fields; the exam runner, the challenge and contests never send them | shared rules |
+| R34 | 95 s stays the module average. Per question the budget is 65 / 95 / 126 s by tier (Math; each subject derives its own from `blueprint.SECTION[subject]`), or the crowd median. Test pace starts at the sum of the planned slots' budgets (`cfg.plan`), moves when a served tier differs, and every added slot adds its own budget | P16 |
+| §2.5 | `attempts`: `conf TEXT`, `hints INTEGER NOT NULL DEFAULT 0`, `miss_kind TEXT`, `offered TEXT`, `struck TEXT`, `cover INTEGER NOT NULL DEFAULT 0`, `calc INTEGER NOT NULL DEFAULT 0`. `tries`: `hints INTEGER DEFAULT 0`. New table `skill_ratings(learner, topic, rating REAL, n INTEGER DEFAULT 0, seed TEXT; PK learner, topic)`, seeded on creation (P11), in `LEARNER_TABLES` and `carry` (keep the side with larger n). `notes.seed = −1` means a type rule. `item_ratings` is written by F4's `ratings.py` for every clean first try. Startup backfills: `offered`, ratings (priors from `material/cb_index.json` bands). The outside-mistakes store (U2) gains `subject TEXT NOT NULL DEFAULT 'math'`. No spaced-review table: T3 derives it | P2, P3, P5–P8, P11, P15, P21 |
+| §2.6 | Fields: `zone` (off / warm / stretch / challenge), `tier_mix` (module1 / module2_upper / module2_lower), `review_mix`, `review_from`, `final_round` (bool), `has` ([desmos, official, steps]), `habits` (a list, source `habit`), `rematch` + `scope`, `per_q`, `pool:'official'` with `ids` = CB ids and `each`, `order:'mixup'`. Pool `review` = T3's fading types. Sources: `official`, `sprint`, `rematch`, `finish`; `probe` takes `topics`. `/more` takes `axis`, `want`, `n`, `ladder`. Pools `marked` and `saved`. `subject` (default `math`), `clean` (bool), `words_mix` (off / 2 / all). The answer body takes `conf` (`sure` · `unsure` · `guess` · `auto`), `own`, `hints` | P2, P3, P6, P7, P11–P14, P16–P19, P21 |
+| §2.7 | Builder keys live per subject under `prefs.practice[subject]`: `zone` (stretch), `review_mix` (20), `review_from` (picked), `final_round` (true), `hints` (true), `cover` (off), `worked_first` (true), `two_passes` (true), `words_mix` (off), `presets` ([] ≤ 8). Flat keys: `confidence` (ask \| off; ask), `type_rules` (true). `repairs` values add `later`. U15 bundles (written into `prefs.practice.math`): Learn `zone: stretch, repairs: next, final_round: true`; Build `zone: stretch, repairs: later, final_round: true`; Test-like `zone: off, confidence: ask, hints: false, two_passes: true`, and no study aids | P2, P5, P7, P11, P12, P15, P16, P21 |
+| §2.8 | Runner: `A–D` only choose; save moves from `B` to `Z` and details from `D` to `X` (the Player scope's `A–D` pick while answers are hidden, so its save moves to `Z` too, one save key everywhere); the `?` sheet follows. `Enter` checks (Sure for an active tagger, else unrated), `Shift+Enter` as Unsure, `I` as Guess; `V` cover, `W` hint, `T` / `Shift+T` another like this and its axes, `U` next unanswered, `Shift+G` Desmos walkthrough. `K` stays the exam's confidence cycle | P2, P3, P5, P7, P18, P20 |
+| §2.9 | Providers: F4 `ratings.update / odds / level`, `estimate.route`, `progress.steps_to`, `progress.cause_of` → F5, S4, S1, S8. S8's contest rating calls `ratings.update` for its item side (one rule). F5 `blueprint.siblings`, `blueprint.lookalikes` → S4, S3 (T4), S8. F1 `UI.atlas` → S1 (U8), S4 (P14). F2 `UI.parseSet` → S4. T-bank `Item.steps`, `Item.desmos`, `satbank.formulas` → F5, F3. S7 `plan.today_summary().minutes_left` → S4. S9 `words.today_summary`, `words.due_items(learner, n)` and `words.grade_item(learner, token, answer, ms)` → S4 (word cards). T-bank `material/cb_index.json` → F4 (priors), F5 (P13 index), S4 (College Board counts) | P1, P3, P8, P10–P15, P17, P18, P24 |
 | §2.9 S4 hooks | "word chips in the verdict (`feedback.words`)" is not built: `words.of_reason` maps misconceptions to math-language words, and decision 2 ships no math-language deck. `UI.gloss` on stems stays only if the Words section keeps an EBRW gloss list | decision 2 |
 | §2.12 F4 | F4 owns `server/ratings.py` | P11 |
 | shell-me U1 | The queue gains a `rematch` row for `cfg.rematch_due ≤ today`. The builder's Ready row reads `GET /api/next?limit=3` | P15, P19 |
-| shell-me U2 | `GET /api/types/{t}/example` also returns key, reasons, steps and `step_of` (reserved seeds only) | P2 |
+| shell-me U2 | `GET /api/types/{t}/example` also returns key, reasons, steps and `step_of` (reserved seeds only). `types.py` also reads `material/cb_index.json`: an ID outside the exact map resolves to its skill and tier ("Close"), an R&W ID reads "Reading & Writing question: logged for the R&W bank", and `via: 'none'` is left for IDs in neither. `POST /api/mistakes/log` takes `subject` (`rw` stores the ID or text, skill and letter for the EBRW bank). The helper's coverage line counts the index | P2, P13, P15 |
 | shell-me U5 | `source:'probe'` also takes `topics:[t]` and `count: 8`: a staircase per skill with end-mode feedback | P11 |
 | shell-me U6 | Source `habit` takes `habits: [ids]` | P6 |
 | shell-me U7 | "When you guess" reads `attempts.conf = 'guess'` as well as `guess` | P7 |
@@ -1846,8 +2194,9 @@ Each entry quotes the current text, then gives the replacement or the addition.
 ## 4. Rejected
 
 * **Owing 3 clean answers after a Sure-and-wrong miss** (outcomes #1, unfair-advantage #6):
-  with Sure on Enter, most misses would owe 3 and Review's counts would swell. Ranking them
-  first and opening the explanation carries the urgency.
+  Review's counts would swell for active taggers, and R9's check-ins already test whether the
+  fix held. Ranking deliberate Sure misses first and opening the explanation carries the
+  urgency.
 * **Confidence chips beside Check** (experience #8, unfair-advantage #6): an extra optional tap,
   which shell-me and today.md already rejected. The split Check (P7) takes the same tap.
 * **"Sure · Think so · Guessing" wording and `conf` as 0/1/2 replacing `guess`**
@@ -1916,9 +2265,9 @@ Each entry quotes the current text, then gives the replacement or the addition.
 * **The level strip hidden behind "Advanced" until 30 types are measured** (experience #10):
   P11's levels work from day one, so nothing needs hiding (decision 4).
 * **Worksheet versions A–D, QR answer entry and a `/w/` page** (unfair-advantage #10): shell-me
-  and today.md rejected printed per-student packs with QR entry until teachers ask. P22 gives
-  each taker their own numbers online, and the worksheet already prints and can be answered
-  online.
+  and today.md rejected printed per-student packs with QR entry, and with no classes
+  (decision 5) there is no one handing them out. P22 gives each taker their own numbers
+  online, and the worksheet already prints and can be answered online.
 * **Shareable preset codes `?preset=CODE`** (unfair-advantage presets gap): "Copy link" gives
   the same thing from the existing deep link.
 * **The key shipped in the question payload, and offline answering with verdicts** (experience
@@ -1926,8 +2275,6 @@ Each entry quotes the current text, then gives the replacement or the addition.
   (P23) gets most of the speed; `UI.saveQueue` rides out brief drops.
 * **Desmos folders for the walkthrough** (experience #6): `getState` / `setState` restores the
   student's graph with the documented API.
-* **Detecting Reading & Writing CB IDs** (experience #1): the key files hold Math only, so an
-  unknown ID reads "Not in our Math map yet".
 * **A separate `official_map.json` / `official.json` build step** (experience #1,
   unfair-advantage #1): U2's `types.py` already builds the map at startup.
 * **A separate `quarantine.json`** (experience #11): U3's `quarantine` table is the one store.
