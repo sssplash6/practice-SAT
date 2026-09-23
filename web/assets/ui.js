@@ -17,22 +17,22 @@
   let memo = null;
   // the code is the whole of a learner's access, so it is not guessable
   const mint = () => 'a:' + Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(36).padStart(2, '0')).join('');
-  // Kept in localStorage. Where site data is blocked it lasts the tab instead:
-  // sessionStorage, or failing that the tab's name, which outlives its page loads.
+  // Kept in localStorage, or where that is refused, in sessionStorage for the
+  // tab. Nowhere else: window.name can be set by whichever page came before, so
+  // reading a code from it would let that page choose who this student is.
   const STORES = ['localStorage', 'sessionStorage'];
-  const TAB = LEARNER_KEY + '=';
+  let kept = false;                  // false: this code lasts one page load
   function keep(code) {
     for (const store of STORES) {
-      try { window[store].setItem(LEARNER_KEY, code); return; } catch (_) {}
+      try { window[store].setItem(LEARNER_KEY, code); kept = true; return; } catch (_) {}
     }
-    window.name = TAB + code;
   }
   function learner() {
     if (memo) return memo;
     for (const store of STORES) {
-      try { memo = window[store].getItem(LEARNER_KEY); if (memo) return memo; } catch (_) {}
+      try { memo = window[store].getItem(LEARNER_KEY); if (memo) { kept = true; return memo; } } catch (_) {}
     }
-    memo = window.name.startsWith(TAB) ? window.name.slice(TAB.length) : mint();
+    memo = mint();
     keep(memo);
     return memo;
   }
@@ -255,6 +255,10 @@
       tabs.setAttribute('aria-label', 'Sections');
       tabs.innerHTML = NAV.map(([id, href, label]) =>
         `<a href="${href}"${id === here ? ' aria-current="page"' : ''}>${svg(ICON[id], 22)}<span>${label}</span></a>`).join('');
+    }
+    if (learner() && !kept) {
+      const main = document.querySelector('main');
+      main && main.prepend(h('p', { class: 'error', style: 'margin-bottom:16px', text: 'This browser is blocking site data, so nothing here can be kept.' }));
     }
     paintMe();
   }
