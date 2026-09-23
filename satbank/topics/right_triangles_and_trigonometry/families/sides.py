@@ -447,6 +447,10 @@ def special_triangle(rng: random.Random, seed: int, *, alpha=None, given=None,
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("this answer cannot be entered in a grid-in")
+        # that route is 180 minus the marked other angle, which is this value
+        # only when both acute angles are 45
+        if ask.startswith("angle") and not (alpha == 45 and len(angle_marks) == 2):
+            pool["straight"] = None
         return Item("rtt.special_triangle", "special right triangles", "medium", seed,
                     stem, "spr", key, key.gridin(), rationale, figure=fig, params=P,
                     spr_mistakes=gridin_mistakes(key, pick(pool, wrongs)))
@@ -563,6 +567,8 @@ def special_perimeter(rng: random.Random, seed: int, *, shape=None, given=None,
             raise ItemError("this answer cannot be entered in a grid-in")
         answer = (f"{key.a.numerator}" if key.a.denominator == 1
                   else f"{key.a.numerator}/{key.a.denominator}")
+        if ask != "perimeter":          # its value is a whole perimeter
+            mistakes = [m for m in mistakes if m is not pool["legs_as_hyp"]]
         return Item("rtt.special_perimeter", "special right triangles", "hard", seed,
                     stem, "spr", key, answer, rationale, params=P,
                     spr_mistakes=gridin_mistakes(key, mistakes))

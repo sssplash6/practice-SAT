@@ -140,6 +140,12 @@ def trig_ratio(rng: random.Random, seed: int, *, hyp=None, leg=None, mode=None,
                  f"so {spoken} = {key.plain()}.")
     P = {"kind": "rtt_trig_ratio", "hyp": c, "leg": q_leg, "fn": fn, "at": at}
     if fmt == "spr":
+        # these work the third side out of c and q: triple mode labels all
+        # three, and third-side mode gives c and p, leaving q unknown
+        if mode in ("triple", "third_side"):
+            pool["diff_over_hyp"] = pool["sum_over_hyp"] = None
+        if mode == "triple":
+            pool["unit_leg"] = None
         return Item("rtt.trig_ratio", "trigonometric ratios", "medium", seed, stem,
                     "spr", key, key.gridin(), rationale, figure=fig, params=P,
                     spr_mistakes=gridin_mistakes(key, pick(pool, wrongs)))
@@ -483,6 +489,9 @@ def complement_ratio(rng: random.Random, seed: int, *, triple=None, swap=False,
          "ask": ask}
     mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
     if fmt == "spr":
+        # the difference is the third side only when both ratios use it
+        if (fn, ask) not in (("sin", "sin"), ("cos", "cos")):
+            mistakes = [m for m in mistakes if m is not pool["unreduced"]]
         return Item("rtt.complement_ratio", "cofunctions", "hard", seed, stem, "spr",
                     key, key.gridin(), rationale, params=P,
                     spr_mistakes=gridin_mistakes(key, mistakes))
