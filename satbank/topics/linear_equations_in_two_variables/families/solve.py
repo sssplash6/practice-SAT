@@ -14,7 +14,7 @@ from __future__ import annotations
 import random
 from fractions import Fraction as Q
 
-from ....item import Item, ItemError, Mis
+from ....item import Item, ItemError, Mis, gridin_mistakes
 from ..common import choose, dec, ex, numtext, q, std_text
 
 __all__ = ["substitute", "context_substitute", "mixture_solve"]
@@ -234,7 +234,8 @@ def substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, given
         if not keyx.is_rational or len(keyx.gridin()) > 6:
             raise ItemError("the answer does not fit a grid-in")
         return Item("le2.substitute", "substituting into a two-variable equation",
-                    "easy", seed, stem, "spr", keyx, keyx.gridin(), why, params=P)
+                    "easy", seed, stem, "spr", keyx, keyx.gridin(), why, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, mistakes))
     if len(mistakes) < 3:
         raise ItemError("these numbers leave too few of the named mistakes to choose "
                         "three distinct wrong answers from")
@@ -418,12 +419,13 @@ def context_substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=Non
     keyx = ex(key)
     if float(keyx) <= 0:
         raise ItemError("the quantity asked for must be positive")
+    named = _named(key, mistakes, d.get("whole", False))
     if d["fmt"] == "spr":
         if not keyx.is_rational or len(keyx.gridin()) > 6:
             raise ItemError("the answer does not fit a grid-in")
         return Item("le2.context_substitute", "writing and solving an equation",
-                    "medium", seed, stem, "spr", keyx, keyx.gridin(), why, params=P)
-    named = _named(key, mistakes, d.get("whole", False))
+                    "medium", seed, stem, "spr", keyx, keyx.gridin(), why, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, named))
     if len(named) < 3:
         raise ItemError("these numbers leave too few of the named mistakes to choose "
                         "three distinct wrong answers from")

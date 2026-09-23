@@ -15,7 +15,7 @@ from fractions import Fraction as Q
 from math import gcd
 
 from ....figures import coordinate_grid
-from ....item import Item, ItemError, Mis
+from ....item import Item, ItemError, Mis, gridin_mistakes
 from ..common import (MINUS, choose, coef_text, ex, lin_text, numtext, point_text, q,
                       sig, std_text, text_item)
 
@@ -239,7 +239,7 @@ def parallel_perpendicular(rng: random.Random, seed: int, *, form=None, relation
             raise ItemError("the slope does not fit a grid-in")
         return Item("le2.parallel_perpendicular", "a line parallel or perpendicular to "
                     "another", "medium", seed, stem, "spr", keyx, keyx.gridin(), why,
-                    params=P)
+                    params=P, spr_mistakes=gridin_mistakes(keyx, mistakes))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                              fillers="shift")
     return Item("le2.parallel_perpendicular", "a line parallel or perpendicular to "
@@ -312,12 +312,6 @@ def slope_two_points(rng: random.Random, seed: int, *, given=None, ask=None, x1=
     P = {"kind": "le2_two_points", "given": given, "ask": ask,
          "x1": [X1.numerator, X1.denominator], "y1": [Y1.numerator, Y1.denominator],
          "x2": [X2.numerator, X2.denominator], "y2": [Y2.numerator, Y2.denominator]}
-    fmt = fmt or ("mcq" if given == "intercepts" else "spr")
-    if fmt == "spr":
-        if not keyx.is_rational or len(keyx.gridin()) > 6:
-            raise ItemError("the slope does not fit a grid-in")
-        return Item("le2.slope_two_points", "a slope from two points", "medium", seed,
-                    stem, "spr", keyx, keyx.gridin(), why, figure=fig, params=P)
     rise, run = Y2 - Y1, X2 - X1
     mistakes = [Mis("inverted the slope, dividing the run by the rise", ex(1 / key)),
                 Mis("multiplied the two intercept values instead of dividing one by "
@@ -327,6 +321,13 @@ def slope_two_points(rng: random.Random, seed: int, *, given=None, ask=None, x1=
                 Mis("changed the sign of the slope", ex(-key)),
                 Mis("divided the run by the rise and changed the sign", ex(-1 / key))]
     mistakes = [m for m in mistakes if m.value is not None]
+    fmt = fmt or ("mcq" if given == "intercepts" else "spr")
+    if fmt == "spr":
+        if not keyx.is_rational or len(keyx.gridin()) > 6:
+            raise ItemError("the slope does not fit a grid-in")
+        return Item("le2.slope_two_points", "a slope from two points", "medium", seed,
+                    stem, "spr", keyx, keyx.gridin(), why, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, mistakes))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                              fillers="shift")
     return Item("le2.slope_two_points", "a slope from two points", "medium", seed, stem,
