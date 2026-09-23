@@ -54,20 +54,36 @@ def _retired() -> HTTPException:
     return HTTPException(401, {"retired": True, "into": None})
 
 
-def learner_of(x_learner: str | None) -> str:
+READS = ("GET", "HEAD", "OPTIONS")
+
+
+def is_retired(x_learner: str | None) -> bool:
+    """A code rotated away (`retired`): /api/shell answers {retired: true}."""
+    return bool(db.one("SELECT 1 FROM retired WHERE code=?", (x_learner or "").strip()))
+
+
+def learner_of(x_learner: str | None, write: bool | None = None) -> str:
     """The learner behind X-Learner. A `d:` token resolves through `devices`
     (revoked, expired or idle on a shared computer -> 401 retired). An `a:`
     code of a saved learner is served for 14 days after the save
     (`learners.swap_until`), each such browser getting its own device token,
-    and refused after. A retired code (rotated away) is 401 for every request:
-    U21 makes a dead credential a signed-out one everywhere."""
+    and refused after (U21: its data must not be served). A retired code
+    (rotated away, Shell §3.1.5) is 401 on writes only; a read gets that old
+    code's own, empty, data, and /api/shell asks is_retired(). `write`
+    defaults to the request's method, which swap_middleware records; with
+    no middleware a call is a read unless it came through writer_of."""
     v = (x_learner or "").strip()
     if not LEARNER_OK.match(v):
         raise HTTPException(400, "send your learner token in the X-Learner header")
     if v.startswith("d:"):
         return _device(v)
-    if db.one("SELECT 1 FROM retired WHERE code=?", v):
-        raise _retired()
+    if is_retired(v):
+        if write is None:
+            box = SWAP.get()
+            write = bool(box) and box.get("method", "GET") not in READS
+        if write:
+            raise _retired()
+        return v
     row = db.one("SELECT swap_until FROM learners WHERE id=?", v)
     if row and row["swap_until"]:
         if dt.datetime.now(dt.timezone.utc) >= _at(row["swap_until"]):
@@ -104,7 +120,7 @@ def mint_device(learner: str, method: str, label: str = "Browser", session_only:
 async def swap_middleware(request, call_next):
     """app.middleware('http')(deps.swap_middleware): hands learner_of a box and
     turns a minted swap token into the X-Learner-Swap header."""
-    box = {"label": _label(request.headers.get("user-agent", ""))}
+    box = {"label": _label(request.headers.get("user-agent", "")), "method": request.method}
     reset = SWAP.set(box)
     try:
         response = await call_next(request)
@@ -124,8 +140,8 @@ def _label(ua: str) -> str:
 
 def writer_of(x_learner: str | None) -> str:
     """learner_of for a write: a `sample:` learner (the live sample report) is
-    read-only (403)."""
-    learner = learner_of(x_learner)
+    read-only (403), and a retired code is 401."""
+    learner = learner_of(x_learner, write=True)
     if db.is_sample(learner):
         raise HTTPException(403, "the sample report is read-only")
     return learner
