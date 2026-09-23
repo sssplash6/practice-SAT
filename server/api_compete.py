@@ -7,7 +7,7 @@ import secrets
 
 from fastapi import APIRouter, Depends, Header, HTTPException
 
-from . import daily, db, drill
+from . import challenge, daily, db, drill
 from .deps import DATE_OK, LEARNER_OK, SECONDS_PER_QUESTION, learner_of, tz_of
 
 log = logging.getLogger("satf")
@@ -23,9 +23,9 @@ def get_challenge(x_learner: str | None = Header(default=None), x_tz: int = Depe
     learner = learner_of(x_learner)
     day = daily.today(x_tz)
     row = challenge_row(learner, day)
-    b = daily.board(day, learner, limit=5)
-    return {"day": day, "count": daily.CHALLENGE_SIZE,
-            "seconds": daily.CHALLENGE_SIZE * SECONDS_PER_QUESTION,
+    b = challenge.board(day, learner, limit=5)
+    return {"day": day, "count": challenge.CHALLENGE_SIZE,
+            "seconds": challenge.CHALLENGE_SIZE * SECONDS_PER_QUESTION,
             "session": row["id"] if row else None,
             "finished": bool(row and row["finished"]),
             "board": b}
@@ -38,7 +38,7 @@ def start_challenge(x_learner: str | None = Header(default=None), x_tz: int = De
     day = daily.today(x_tz)
     row = challenge_row(learner, day)
     if row is None:
-        qs = daily.challenge(day)
+        qs = challenge.challenge(day)
         sid = secrets.token_urlsafe(16)
         drill.create(learner, sid, list(dict.fromkeys(q["topic"] for q in qs)), len(qs), None, True,
                      "challenge", items=[[q["key"], q["seed"]] for q in qs],
@@ -56,4 +56,4 @@ def challenge_board(day: str | None = None, x_learner: str | None = Header(defau
     if day and not DATE_OK.match(day):
         raise HTTPException(422, "day is YYYY-MM-DD")
     me = x_learner.strip() if x_learner and LEARNER_OK.match(x_learner.strip()) else None
-    return daily.board(day or daily.today(x_tz), me)
+    return challenge.board(day or daily.today(x_tz), me)
