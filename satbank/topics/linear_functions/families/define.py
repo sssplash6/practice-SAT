@@ -496,11 +496,12 @@ def x_intercept(rng: random.Random, seed: int, *, m=None, b=None, given=None, fm
              ("divided without changing the sign", B / M),
              ("stepped one row too far along the table", key - M)]
     if fmt == "spr":
-        # the last slip needs a table to step along
-        named = wrong if given == "table" else wrong[:3]
+        # key - M is not one row along the table, whose rows step by 1 in x, so
+        # a grid-in never files a typed value under that slip
         return Item("lin.x_intercept", "the x-intercept of a line", "hard", seed, stem,
                     "spr", keyx, keyx.gridin(), rationale, table=table, params=P,
-                    spr_mistakes=gridin_mistakes(keyx, [Mis(r, ex(v)) for r, v in named]))
+                    spr_mistakes=gridin_mistakes(
+                        keyx, [Mis(r, ex(v)) for r, v in wrong[:3]]))
 
     if key.denominator != 1 or (B / M).denominator != 1:
         raise ItemError("every option must be a lattice point on the x-axis")

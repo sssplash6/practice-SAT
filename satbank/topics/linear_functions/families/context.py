@@ -477,6 +477,10 @@ def model_value(rng: random.Random, seed: int, *, ctx=None, direction=None, b=No
     keyx = ex(key)
     mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
+        # the third "given" slip is m*x - b when m >= 0, the start subtracted, not
+        # left out, so a typed value is never filed under it (m*x is the fourth)
+        if direction == "forward" and wrong == "given":
+            mistakes = mistakes[:2] + mistakes[3:]
         return Item("lin.model_value", "evaluating a linear model", "medium", seed, stem,
                     "spr", keyx, keyx.gridin(), rationale, params=P,
                     spr_mistakes=gridin_mistakes(keyx, mistakes))
@@ -540,11 +544,14 @@ def context_two_points(rng: random.Random, seed: int, *, ask=None, ctx=None, x1=
         mid = y1 + m * (Q(x1 + x2, 2) - x1)
         stem = d["text"].format(y1=year_text(x1), y2=year_text(x2), y3=year_text(x3),
                                 v1=numtext(y1), v2=numtext(y2))
-        mistakes = [Mis("stepped one unit too far from the nearer known point", key - m),
+        def slips(v):
+            """The slips around v, the value at x3."""
+            return [Mis("stepped one unit too far from the nearer known point", v - m),
                     Mis("stepped two units too far from the nearer known point",
-                        key - 2 * m),
+                        v - 2 * m),
                     Mis("evaluated the model halfway between the two given inputs", mid),
                     Mis("used the nearer reading unchanged", y1)]
+        mistakes = slips(key)
         rationale = (f"The rate of change is {numtext(m)} per unit, so the value at "
                      f"{numtext(x3)} is {numtext(raw)}.")
         P = {"kind": "lf_two_points_ctx", "ask": ask, "x1": x1, "x2": x2, "x3": x3,
@@ -554,9 +561,16 @@ def context_two_points(rng: random.Random, seed: int, *, ask=None, ctx=None, x1=
         fmt = fmt or ("spr" if rng.random() < 0.4 else "mcq")
         mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
         if fmt == "spr":
+            # a slip is worked from the unrounded value and typed as the stem asks,
+            # a whole number rounded half up; y1 is the nearer reading only when
+            # x3 is nearer x1 than x2
+            named = slips(raw)[:4 if abs(x3 - x1) < abs(x3 - x2) else 3]
+            if d["approx"]:
+                named = [Mis(r.reason, (r.value + Q(1, 2)) // 1) for r in named]
             return Item("lin.context_two_points", "a linear model from two readings",
                         "hard", seed, stem, "spr", keyx, keyx.gridin(), rationale,
-                        params=P, spr_mistakes=gridin_mistakes(keyx, mistakes))
+                        params=P, spr_mistakes=gridin_mistakes(
+                            keyx, [Mis(r.reason, ex(r.value)) for r in named]))
         choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                                    fillers="shift")
         return Item("lin.context_two_points", "a linear model from two readings", "hard",
