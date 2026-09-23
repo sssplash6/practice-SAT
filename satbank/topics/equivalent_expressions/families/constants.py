@@ -36,6 +36,9 @@ def match_constant(rng: random.Random, seed: int, *, shape=None, var=None, lette
                                  "expand_sub", "cubic_pair"])
     var = var or rng.choice(VARS)
     letter = letter or rng.choice([l for l in LETTERS if l != var])
+    # mistakes whose reason does not produce the value: a grid-in, which names
+    # the reason for a typed value, leaves them out
+    off = ()
 
     if shape == "factor_out":                        # c·v² + @v ≡ v(c·v + k)
         c = Q(rng.choice([2, 3, 4, 5, 6, 7]) if c is None else c)
@@ -76,6 +79,7 @@ def match_constant(rng: random.Random, seed: int, *, shape=None, var=None, lette
             Mis("reported the constant already inside the first bracket", E(d)),
             Mis("reported the coefficient of the middle term", E(a * k - d)),
         ]
+        off = (2,)                                   # that constant is −d
         why = (f"The two brackets multiply to "
                f"{poly(pc([-d * k, a * k - d, a]), var)} only when {letter} makes "
                f"the constant term {num(-d * k)}.")
@@ -123,6 +127,7 @@ def match_constant(rng: random.Random, seed: int, *, shape=None, var=None, lette
             Mis("used the middle coefficients rather than matching every term",
                 E(scale * b)),
         ]
+        off = (0, 2)       # scale·a is the given coefficient; the middle ratio is the key
         why = (f"Every coefficient of {lhs} is the matching coefficient of "
                f"{poly(pc([c, b, a]), var)} multiplied by the same number.")
         params = {"kind": "eqx_match_constant", "shape": "affine", "vars": [var],
@@ -151,6 +156,7 @@ def match_constant(rng: random.Random, seed: int, *, shape=None, var=None, lette
                 E(m * c)),
             Mis(f"changed the sign of {letter}", E(-k)),
         ]
+        off = (0, 1)               # the coefficient and the multiplier are negative
         why = (f"Expanding gathers the {var}-terms into "
                f"({num(m)} {MINUS} {num(e)}){letter} {MINUS} {num(e * d)}, and that "
                f"has to equal {num(gathered)}.")
@@ -179,6 +185,7 @@ def match_constant(rng: random.Random, seed: int, *, shape=None, var=None, lette
             Mis(f"multiplied {letter} by the leading coefficient of the second "
                 f"bracket", E(a * d * 2)),
         ]
+        off = (3,)                                   # that product is a·d, not 2ad
         why = (f"The leading term forces {letter} = {num(a)}, and the "
                f"{mono(1, [(var, 2)])}-term then forces {other} = {num(b)}.")
         params = {"kind": "eqx_match_constant", "shape": "cubic_pair", "var": var,
@@ -193,7 +200,8 @@ def match_constant(rng: random.Random, seed: int, *, shape=None, var=None, lette
             raise ItemError("that constant would not go into a grid-in")
         return Item("eqx.match_constant", "equivalent expressions", "medium", seed,
                     stem, "spr", ex, ex.gridin(), why, params=params,
-                    spr_mistakes=gridin_mistakes(ex, mistakes))
+                    spr_mistakes=gridin_mistakes(
+                        ex, [m for i, m in enumerate(mistakes) if i not in off]))
     good = [m for m in mistakes if m.value is not None]
     ch, tex, reasons, ltr = assemble(ex, good, rng, signed=True, fillers="shift")
     return Item("eqx.match_constant", "equivalent expressions", "hard", seed, stem,

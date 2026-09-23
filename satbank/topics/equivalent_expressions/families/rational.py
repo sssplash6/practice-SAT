@@ -233,7 +233,8 @@ def divide_remainder(rng: random.Random, seed: int, *, ask=None, var=None, frame
             raise ItemError("a negative answer would not go into a grid-in")
         return Item("eqx.divide_remainder", "rational expressions", "hard", seed,
                     stem, "spr", ex, ex.gridin(), why, params=params,
-                    spr_mistakes=gridin_mistakes(ex, mistakes))
+                    # 1 - r fits taking the divisor's root, not its constant
+                    spr_mistakes=gridin_mistakes(ex, mistakes[:2] + mistakes[3:]))
     ch, tex, reasons, ltr = assemble(ex, mistakes, rng, signed=True, fillers="shift")
     return Item("eqx.divide_remainder", "rational expressions", "hard", seed, stem,
                 "mcq", ex, ltr, why, ch, reasons, tex, params=params)
