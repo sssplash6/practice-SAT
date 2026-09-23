@@ -242,6 +242,9 @@ def square_equation(rng: random.Random, seed: int, *, shape=None, a=None, h=None
     P = {"kind": "nleq_square", "shape": shape, "a": _p(a), "h": _p(h), "k": _p(k),
          "spare": _p(spare), "ask": ask}
     pool = _strike(pool, [lo, hi], ask, key)
+    if fmt == "spr" and a != 4:
+        # dividing by a twice gives inner/a, which is inner/4 only when a is 4
+        del pool["quarter"]
     shifted = join(["x", mono(h, "")]) if h else "x"
     rationale = sent(f"The square is {num(inner)}, so {shifted} is {num(root)} or "
                      f"{num(-root)}, giving x = {num(hi)} and x = {num(lo)}.")
@@ -1231,6 +1234,9 @@ def product_roots_constant(rng: random.Random, seed: int, *, p=None, u=None, v=N
     }
     P = {"kind": "nleq_product_constant", "p": _p(p), "u": _p(u), "v": _p(v),
          "w": _p(w), "g": _p(g), "s": _p(s), "t": _p(t)}
+    if fmt == "spr":
+        # multiplying by u gives p/u², not p·u², so no typed answer comes from it
+        del pool["times_lead"]
     rationale = sent(f"The middle factor contributes {num(sq)} and {num(-sq)}, which "
                      f"cancel, and the last contributes {num(s / w)}; the first "
                      f"contributes {MINUS}p/{num(u)}, so {num(s / w)} {MINUS} "
