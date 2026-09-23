@@ -18,7 +18,8 @@ from fractions import Fraction as Q
 from ....exact import E
 from ....item import Item, ItemError, Mis, assemble_text
 from ..kit import (MINUS, ask_label, ask_value, choices, coef, dec, displayed,
-                   griddable, num, opt_dec, pick, point, q, sent, solved, std)
+                   griddable, gridin_pool, num, opt_dec, pick, point, q, sent,
+                   solved, std)
 
 __all__ = ["solve_standard", "solve_substitution", "solve_pair", "chunk"]
 
@@ -206,7 +207,10 @@ def solve_standard(rng: random.Random, seed: int, *, a1=None, b1=None, c1=None,
         if not griddable(key):
             raise ItemError("this answer could not be entered in the grid")
         return Item("sys.solve_standard", "solving a system", difficulty, seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, params=P)
+                    "spr", keyx, keyx.gridin(), rationale, params=P,
+                    # "instead of adding them" is only true when x + y is asked
+                    spr_mistakes=gridin_pool(keyx, pool,
+                                             () if ask == "sum" else ("swap",)))
     fmt_value = opt_dec if value_style == "dec" else None
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, fmt_value=fmt_value)
     return Item("sys.solve_standard", "solving a system", difficulty, seed, stem,
@@ -303,9 +307,13 @@ def solve_substitution(rng: random.Random, seed: int, *, e1=None, e2=None, ask=N
     if fmt == "spr":
         if not griddable(key):
             raise ItemError("this answer could not be entered in the grid")
+        # the question names a multiplier only when it asks for kx, and
+        # "instead of subtracting them" is only true when x − y is asked
+        drop = ((() if ask == "kx" else ("double_k", "k_only", "slope_times_k"))
+                + (() if ask == "diff" else ("other_sum",)))
         return Item("sys.solve_substitution", "solving a system by substitution",
                     difficulty, seed, stem, "spr", keyx, keyx.gridin(), rationale,
-                    params=P)
+                    params=P, spr_mistakes=gridin_pool(keyx, pool, drop))
     fmt_value = opt_dec if value_style == "dec" else None
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, fmt_value=fmt_value)
     return Item("sys.solve_substitution", "solving a system by substitution",

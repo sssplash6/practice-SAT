@@ -14,8 +14,8 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....item import Item, ItemError, Mis, assemble_text
-from ..kit import (MINUS, choices, coef, displayed, griddable, num, opt_dec,
-                   opt_pair, pick, q, sent, side, solved, std)
+from ..kit import (MINUS, choices, coef, displayed, griddable, gridin_pool, num,
+                   opt_dec, opt_pair, pick, q, sent, side, solved, std)
 
 __all__ = ["infinite_constant", "infinite_normalized", "no_solution_slope",
            "no_solution_gathered", "pick_no_solution", "other_equation",
@@ -70,7 +70,8 @@ def infinite_constant(rng: random.Random, seed: int, *, a=None, b=None, c=None,
         if not griddable(key):
             raise ItemError("this answer could not be entered in the grid")
         return Item("sys.infinite_constant", "infinitely many solutions", "easy", seed,
-                    stem, "spr", keyx, keyx.gridin(), rationale, params=P)
+                    stem, "spr", keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_pool(keyx, pool))
     ch, tex, why, letter_ = choices(keyx, pick(pool, wrongs), rng)
     return Item("sys.infinite_constant", "infinitely many solutions", "easy", seed,
                 stem, "mcq", keyx, letter_, rationale, ch, why, tex, params=P)
@@ -172,7 +173,8 @@ def infinite_normalized(rng: random.Random, seed: int, *, shape=None, p=None, r=
         if not griddable(key):
             raise ItemError("this answer could not be entered in the grid")
         return Item("sys.infinite_normalized", "infinitely many solutions", "medium",
-                    seed, stem, "spr", keyx, keyx.gridin(), rationale, params=P)
+                    seed, stem, "spr", keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_pool(keyx, pool))
     fmt_value = opt_dec if value_style == "dec" else None
     ch, tex, why, ltr = choices(keyx, pick(pool, wrongs), rng, fmt_value=fmt_value)
     return Item("sys.infinite_normalized", "infinitely many solutions", "medium", seed,
@@ -227,7 +229,8 @@ def no_solution_slope(rng: random.Random, seed: int, *, m=None, b1=None, b2=None
         if not griddable(key):
             raise ItemError("this answer could not be entered in the grid")
         return Item("sys.no_solution_slope", "no solution", "hard", seed, stem, "spr",
-                    keyx, keyx.gridin(), rationale, params=P)
+                    keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_pool(keyx, pool))
     fmt_value = opt_dec if value_style == "dec" else None
     ch, tex, why, ltr = choices(keyx, pick(pool, wrongs), rng, fmt_value=fmt_value)
     return Item("sys.no_solution_slope", "no solution", "hard", seed, stem, "mcq",
@@ -628,7 +631,7 @@ def unknown_coefficient(rng: random.Random, seed: int, *, shape=None, p1=None,
             raise ItemError("this answer could not be entered in the grid")
         return Item("sys.unknown_coefficient", "a constant inside a coefficient",
                     "hard", seed, stem, "spr", keyx, keyx.gridin(), rationale,
-                    params=P)
+                    params=P, spr_mistakes=gridin_pool(keyx, pool))
     ch, tex, why, ltr = choices(keyx, pick(pool, wrongs), rng)
     return Item("sys.unknown_coefficient", "a constant inside a coefficient", "hard",
                 seed, stem, "mcq", keyx, ltr, rationale, ch, why, tex, params=P)
