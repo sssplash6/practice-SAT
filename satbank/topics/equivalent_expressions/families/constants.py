@@ -80,7 +80,8 @@ def match_constant(rng: random.Random, seed: int, *, shape=None, var=None, lette
             Mis("reported the constant already inside the first bracket", E(d)),
             Mis("reported the coefficient of the middle term", E(a * k - d)),
         ]
-        off = (2,)                                   # that constant is −d
+        # that constant is −d; a zero middle coefficient prints no middle term to report
+        off = (2,) if a * k != d else (2, 3)
         why = (f"The two brackets multiply to "
                f"{poly(pc([-d * k, a * k - d, a]), var)} only when {letter} makes "
                f"the constant term {num(-d * k)}.")
