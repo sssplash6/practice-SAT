@@ -17,7 +17,7 @@ import random
 from fractions import Fraction as Q
 
 from ....exact import E
-from ....item import Item, ItemError, Mis, assemble_text
+from ....item import Item, ItemError, Mis, assemble_text, gridin_mistakes
 from ....plot import chart_curve, chart_scatter, chart_series
 from ..common import (ascending, assemble_num, cap_first, closest_guard, count_word,
                       listing, num_str, ordinal, pick, plural, q, separated, snap,
@@ -155,11 +155,12 @@ def point_read(rng: random.Random, seed: int, *, ctx=None, xs=None, ys=None,
     P = dict(kind="tvdata.point_read", xs=[str(q(v)) for v in xs],
              ys=[str(q(v)) for v in ys], j=j)
     stem = f"{intro} {ask}"
+    mistakes = pick(pool, order, wrongs)
     if fmt == "spr":
         return Item("tvdata.point_read", "reading a scatterplot", "easy", seed, stem,
                     "spr", E(key), E(key).gridin(), "Read the plotted point across to "
-                    "the vertical axis.", figure=fig, params=P)
-    mistakes = pick(pool, order, wrongs)
+                    "the vertical axis.", figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(E(key), mistakes))
     choices, latex, reasons, letter = assemble_num(key, mistakes, rng)
     separated(key, [q(c.replace("−", "-").replace(",", "")) for c in choices
                     if q(c.replace("−", "-").replace(",", "")) != key], d["ystep"])

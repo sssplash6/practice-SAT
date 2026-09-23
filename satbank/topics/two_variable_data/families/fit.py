@@ -15,7 +15,7 @@ import random
 from fractions import Fraction as Q
 
 from ....exact import E
-from ....item import Item, ItemError, Mis, assemble_text
+from ....item import Item, ItemError, Mis, assemble_text, gridin_mistakes
 from ....plot import chart_scatter, fmt_tick, ticks_between
 from ..common import (assemble_num, closest_guard, count_word, fit_scatter, num_str,
                       pick, q, regression, separated, snap, wiggle)
@@ -255,10 +255,11 @@ def predict_from_line(rng: random.Random, seed: int, *, ctx=None, m=None, b=None
              gap=str(q(round_to) if round_to is not None else prec),
              xs=[str(v) for v in xs], ys=[str(v) for v in ys])
     why = (f"The line of best fit passes {num_str(xq)} at about {num_str(key)}.")
+    mistakes = pick(pool, order, wrongs)
     if fmt == "spr":
         return Item("tvdata.predict_from_line", "line of best fit", "easy", seed, stem,
-                    "spr", E(key), E(key).gridin(), why, figure=fig, params=P)
-    mistakes = pick(pool, order, wrongs)
+                    "spr", E(key), E(key).gridin(), why, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(E(key), mistakes))
     choices, latex, reasons, letter = assemble_num(key, mistakes, rng,
                                                    suffix=d["suffix"])
     vals = [q(c.replace("−", "-").replace(",", "").rstrip("°FC")) for c in choices]
