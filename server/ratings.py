@@ -6,14 +6,25 @@ An item is a (template, tier); a learner has one rating per topic in
 a right answer are E = 1 / (1 + 10^((Ri - Rs) / 400)), and every clean first
 try moves both sides by the same surprise, S - E.
 
-Priors, so levels 1-7 mean something before anyone has answered:
-* measured, once a pair has 20 clean first tries: the answerers' mean skill
-  rating less 400 log10(p / (1 - p)), shrunk toward the tier by n / (n + 20);
-* otherwise structural, from what every Item already carries over 18 seeds:
-  the tier's value, +50 for a grid-in, +25 with a figure or table, and +25 per
-  rationale sentence above the tier's median (-25 below), within 150 of it.
-`ponytail:` College Board's own score bands (material/cb_index.json, T-bank's
-cb-index task) replace the structural prior once that file and U2's map exist.
+Priors, so levels 1-7 mean something before anyone has answered. Three
+specs set them and disagree (compete.md C13, review.md V15, practice.md P11);
+this is the reconciliation, and the one rule seed_ratings and startup share:
+* structural (C13's signal): each pair's score over 18 seeds is +50 for a
+  grid-in (V15's "SPR one step harder"), +25 with a figure or table, and +25
+  per rationale sentence above the tier's median (-25 below). Taken raw, as
+  C13 writes it, the bank's rationales are mostly one sentence and the scores
+  bunch: L1 and L3 get 0% and L5 3.5%, failing V15's 5%-per-level assert. So
+  the score only ranks a tier's pairs, and the rank places each in the tier's
+  SPREAD, which keeps C13's "within 150 of the tier" and ">= 8 distinct per
+  tier" and V15's ">= 5% of types at every level". V15's P1 step count is not
+  a field any Item has, so it is not used.
+* measured (V15's n >= 5 first tries, C13's formula and shrinkage): the
+  answerers' mean skill rating less 400 log10(p / (1 - p)), p clamped to
+  0.05-0.95, shrunk toward the structural prior by n / (n + 20), so 5 answers
+  move it a fifth of the way and 20 half.
+`ponytail:` College Board's own score bands (P11: material/cb_index.json,
+T-bank's cb-index task) replace the structural prior once that file and U2's
+map exist.
 """
 
 from __future__ import annotations
@@ -35,6 +46,7 @@ from . import db
 TIER_PRIOR = {"easy": 900.0, "medium": 1100.0, "hard": 1300.0}
 EDGES = (850, 1000, 1075, 1150, 1225, 1350)      # L1 < 850 <= L2 < 1000 ... <= L7
 MEASURED = 20                                     # answers before a level is "measured"
+PRIOR_FROM = 5                                    # first tries before they move a prior (V15)
 PLACED = 8                                        # clean first tries before a skill is aimed at
 SURVEY_SEEDS = 18
 
@@ -162,20 +174,21 @@ def histogram() -> dict[int, float]:
     return {lv: round(n / len(rows), 3) if rows else 0.0 for lv, n in counts.items()}
 
 
-def measured_prior(template: str, tier: str) -> float | None:
-    """From the clean first tries on the pair, once there are 20 of them."""
+def measured_prior(template: str, tier: str, toward: float | None = None) -> float | None:
+    """From the clean first tries on the pair, once there are 5 of them,
+    shrunk toward `toward` (the structural prior; the tier's by default)."""
     rows = db.rows("SELECT a.correct, COALESCE(s.rating, 1000) AS rs FROM attempts AS a"
                    " LEFT JOIN skill_ratings AS s ON s.learner=a.learner AND s.topic=a.topic"
                    " WHERE a.template=? AND a.difficulty=? AND a.repeat=0 AND a.guess=0 AND a.hints=0"
                    " AND a.void IS NULL AND a.disputed=0 AND COALESCE(a.conf,'')!='unsure'"
                    f" AND a.{db.NOT_SAMPLE}", template, tier)
     n = len(rows)
-    if n < MEASURED:
+    if n < PRIOR_FROM:
         return None
     p = min(0.95, max(0.05, sum(r["correct"] for r in rows) / n))
     raw = statistics.mean(r["rs"] for r in rows) - 400 * math.log10(p / (1 - p))
     w = n / (n + MEASURED)
-    return w * raw + (1 - w) * TIER_PRIOR.get(tier, 1100.0)
+    return w * raw + (1 - w) * (TIER_PRIOR.get(tier, 1100.0) if toward is None else toward)
 
 
 def write_priors() -> int:
@@ -184,7 +197,8 @@ def write_priors() -> int:
     priors = structural_priors()
     with db.atomic():
         for (t, tier), prior in priors.items():
-            prior = measured_prior(t, tier) or prior
+            measured = measured_prior(t, tier, prior)
+            prior = prior if measured is None else measured
             n += db.run("INSERT INTO item_ratings(template,tier,rating,n) VALUES (?,?,?,0)"
                         " ON CONFLICT(template,tier) DO UPDATE SET rating=excluded.rating"
                         " WHERE item_ratings.n=0", t, tier, prior).rowcount

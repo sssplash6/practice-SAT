@@ -2,6 +2,8 @@
 
     SATF_DB=server/v2.db PYTHONPATH=. python3 tools/seed_ratings.py
 
+Each prior is measured once the pair has 5 clean first tries, else structural
+(server/ratings.py's docstring has the rule and why it reconciles C13 and V15).
 Idempotent: a pair that has answers keeps its own rating, and a second run
 writes the same priors. Prints the level histogram and fails unless each of
 L1-L7 holds at least 5% of the types.
