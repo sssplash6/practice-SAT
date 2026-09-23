@@ -25,12 +25,16 @@
   .head .num { font-size: clamp(64px, 10vw, 104px); display: block; }
   .head .meta { display: block; margin-top: 10px; color: var(--ink); }
 
-  .task { margin-top: 30px; padding: 26px; border-radius: 14px; background: var(--wash); display: grid; gap: 20px; }
+  /* the day the calendar has chosen, today unless another is tapped: one row */
+  .task { margin-top: 26px; padding: 14px 14px 14px 18px; border-radius: 14px; background: var(--wash);
+          display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px; min-height: 72px; }
   .task.rest { background: var(--tile); }
-  .task .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .task .chip { background: var(--paper); }
-  .task-foot { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
-  .task .h2 { font-size: 22px; }
+  .task > .k { flex-basis: 100%; margin-bottom: -2px; }
+  .task .chips { display: flex; flex-wrap: wrap; gap: 6px; flex: 1 1 auto; }
+  .task .chip { background: var(--paper); height: 32px; font-size: 13.5px; }
+  .task .h2 { flex: 1 1 auto; }
+  .task .meta { color: var(--ink); white-space: nowrap; }
+  .task .pill { height: 44px; padding: 0 26px; }
 
   .cal { margin-top: 40px; }
   .cal .k { display: block; margin-bottom: 12px; }
@@ -49,6 +53,10 @@
   .mk.t.done { background: var(--ink); box-shadow: none; }
   .cell.today { box-shadow: inset 0 0 0 1.5px var(--ink); background: var(--paper); }
   .cell.exam { background: var(--amber); color: var(--ink-deep); font-weight: 600; }
+  button.cell { appearance: none; border: 0; padding: 0; cursor: pointer; transition: background-color .16s var(--ease); }
+  @media (hover: hover) and (pointer: fine) { button.cell:not(.exam):not([aria-pressed="true"]):hover { background: var(--tile-2); } }
+  .cell[aria-pressed="true"] { box-shadow: inset 0 0 0 1.5px var(--amber); background: var(--wash); color: var(--ink); }
+  .cell.exam[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--ink-deep); background: var(--amber); }
   .legend { margin-top: 14px; display: flex; gap: 18px; flex-wrap: wrap; font: 500 12px var(--mono); color: var(--soft); }
   .legend span { display: inline-flex; align-items: center; gap: 7px; }
   @media (max-width: 560px) { .head { grid-template-columns: 1fr; } .cell .d { top: 3px; left: 5px; font-size: 9.5px; } }
@@ -76,7 +84,7 @@
       <div><span class="num" id="left"></span><span class="meta" id="to"></span></div>
       <button type="button" class="quiet" id="change">Change</button>
     </div>
-    <section class="task rise rise-2" id="task" aria-label="Today"></section>
+    <section class="task rise rise-2" id="task" aria-live="polite"></section>
     <p class="error" id="err" hidden></p>
     <section class="cal rise rise-3" aria-label="Until the exam">
       <div class="grid7" id="cal"></div>
@@ -118,26 +126,8 @@
     $('#to').textContent = `${left === 1 ? 'day' : 'days'} · ${day(P.exam_date)}${P.target ? ` · ${P.target}` : ''}`;
 
     const done = Object.fromEntries((T.days.recent || []).map(d => [d.day, d.questions]));
-    const kind = kindOf(now, P);
-    const task = $('#task');
-    task.className = 'task rise rise-2' + (kind === 'rest' || kind === 'none' || kind === 'exam' ? ' rest' : '');
-    task.replaceChildren();
-    if (kind === 'practice') {
-      const c = T.coach;
-      const n = perDay(P.minutes);
-      task.append(h('div', { class: 'chips' }, c.topics.map(t => UI.chip(t))),
-        h('div', { class: 'task-foot' }, h('span', { class: 'meta', text: `${n} questions · ${minutesFor(n)} min` }), startBtn(() => api('/drill', { method: 'POST', body: { topics: c.topics, count: n, source: 'plan' } }), 'session')));
-    } else if (kind === 'test') {
-      const full = testOf(P.minutes) === 'section';
-      task.append(h('span', { class: 'h2', text: full ? 'Section' : 'Module' }),
-        h('div', { class: 'task-foot' }, h('span', { class: 'meta', text: full ? '44 questions · 70 min' : '22 questions · 35 min' }),
-          startBtn(() => api('/mock/new', { method: 'POST', body: { full } }), 'test')));
-    } else if (kind === 'exam') {
-      task.append(h('span', { class: 'h2', text: day(P.exam_date) }));
-    } else {
-      task.append(h('div', { class: 'task-foot' }, h('span', { class: 'h2', text: kind === 'none' ? 'Done' : 'Rest' }),
-        h('a', { class: 'quiet', href: '/practice/', text: 'Practice anyway' })));
-    }
+    chosen = todayIso;
+    paintTask(chosen);
 
     // until the exam, a week a row, Monday first; at most sixteen weeks shown
     const start = new Date(now); start.setDate(start.getDate() - dow(start));
@@ -148,8 +138,22 @@
       const s = iso(d);
       const k = kindOf(d, P);
       const past = s < todayIso;
-      const cell = h('div', { class: 'cell' + (s === todayIso ? ' today' : '') + (k === 'exam' ? ' exam' : '') + (past || k === 'none' ? ' past' : ''),
+      const open = !past && k !== 'none';            // today and every day ahead show their plan
+      const cell = h(open ? 'button' : 'div', { class: 'cell' + (s === todayIso ? ' today' : '') + (k === 'exam' ? ' exam' : '') + (past || k === 'none' ? ' past' : ''),
                              title: s }, h('span', { class: 'd', text: d.getDate() === 1 || s === iso(start) ? day(s) : String(d.getDate()) }));
+      if (open) {
+        Object.assign(cell, { type: 'button' });
+        cell.dataset.day = s;
+        cell.setAttribute('aria-pressed', String(s === chosen));
+        cell.setAttribute('aria-label', `${WEEKDAY[d.getDay()]} ${day(s)}, ${k}`);
+        cell.addEventListener('click', () => {
+          chosen = s;
+          $('#cal').querySelectorAll('button.cell').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.day === s)));
+          paintTask(s);
+          const r = $('#task').getBoundingClientRect();
+          if (r.top < 64 || r.bottom > innerHeight) $('#task').scrollIntoView({ block: 'center', behavior: UI.reduced() ? 'auto' : 'smooth' });
+        });
+      }
       if ((k === 'practice' || k === 'test') && (!past || done[s])) {     // a day gone by shows only what was done
         const mk = h('i', { class: `mk ${k === 'test' ? 't' : 'p'}${done[s] ? ' done' : ''}` });
         cell.append(mk);
@@ -158,6 +162,44 @@
     }
     $('#cal').replaceChildren(...cells);
     $('#legendTest').hidden = !testOf(P.minutes);
+  }
+
+  /* ---------------------------------------------------------- a day
+     Today's practice is the coach's pick. A day ahead gets the next set of
+     the coach's ranking, one set per practice day in order -- a forecast
+     from today's results, and the plan is redrawn from each day's. */
+  const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  let chosen = null;
+  function topicsFor(s) {
+    const ahead = T.coach.ahead && T.coach.ahead.length ? T.coach.ahead : [T.coach.topics];
+    let n = 0;
+    for (let d = at(todayIso); iso(d) < s; d.setDate(d.getDate() + 1)) if (kindOf(d, P) === 'practice') n++;
+    return ahead[n % ahead.length];
+  }
+  function paintTask(s) {
+    const d = at(s), isToday = s === todayIso;
+    let kind = kindOf(d, P);
+    if (isToday && kind === 'test' && T.tested) kind = 'practice';       // this week's test is done
+    const task = $('#task');
+    task.className = 'task' + (kind === 'practice' || kind === 'test' ? '' : ' rest');
+    task.replaceChildren(h('span', { class: 'k', text: isToday ? 'Today' : `${WEEKDAY[d.getDay()]} · ${day(s)}` }));
+    if (kind === 'practice') {
+      const topics = isToday ? T.coach.topics : topicsFor(s);
+      const n = perDay(P.minutes);
+      task.append(h('div', { class: 'chips' }, topics.map(t => UI.chip(t))),
+        h('span', { class: 'meta', text: `${n} questions · ${minutesFor(n)} min` }),
+        startBtn(() => api('/drill', { method: 'POST', body: { topics, count: n, source: 'plan' } }), 'session'));
+    } else if (kind === 'test') {
+      const full = testOf(P.minutes) === 'section';
+      task.append(h('span', { class: 'h2', text: full ? 'Section' : 'Module' }),
+        h('span', { class: 'meta', text: full ? '44 questions · 70 min' : '22 questions · 35 min' }),
+        startBtn(() => api('/mock/new', { method: 'POST', body: { full } }), 'test'));
+    } else if (kind === 'exam') {
+      task.append(h('span', { class: 'h2', text: 'SAT' }));
+    } else {
+      task.append(h('span', { class: 'h2', text: 'Rest' }));
+      if (isToday) task.append(h('a', { class: 'quiet', href: '/practice/', text: 'Practice anyway' }));
+    }
   }
 
   function startBtn(make, where) {
