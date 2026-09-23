@@ -127,6 +127,22 @@ because the stored forms carry no skill (now read off the item); the results
 chart shrank its labels to five pixels on a phone; the plan calendar marked
 days before the student existed.
 
+Then two independent reviews, one of the server and one of the pages, each
+reproducing what it found. Fixed, and checked in `test_flow.py`: Save could read
+an answer key before answering (a challenge's, a live test's, a diagnostic's
+past its gate); a challenge score could be forged through the test endpoints;
+test answers sent together overwrote each other, and a double tap or retried
+request filed an answer, a challenge sitting or a day's answer twice; a
+day's-question answer after midnight was marked against the next day's
+question; a saved set skipped its repairs; an impossible date or timezone was a
+500; and the fresh-section spread put the small domains only in the hard half.
+In the pages: a failed request froze the question, keys fired behind the
+reference sheet, Plan lost a typed date, verdicts were silent to screen
+readers, the iPhone grid-in keypad had no minus sign, and a double-click built
+two sittings. A background security check then caught the storage fallback
+reading the code from `window.name`, which another page could set; it was
+removed.
+
 Not built, as planned: vocabulary (no R&W bank) and comments. Not built, and
 not planned yet: contests beyond the daily challenge (`spec/rating.md` has the
 thinking). Known edges: after a carry, a day's challenge can show two sittings
