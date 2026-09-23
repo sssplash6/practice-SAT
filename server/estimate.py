@@ -539,6 +539,22 @@ def gains(learner: str, subject: str = "math") -> dict | None:
             "skills": skills, "tiers": tiers, "extras": extras, "by_domain": by_domain}
 
 
+def trap_pts(learner: str, template: str, normalized: str, topic: str) -> int | None:
+    """V4: a trap's points, gain(t) x share, where share is this trap's wrong
+    first tries over all wrong first tries in skill t in 60 days (U1). Whole
+    points; None below 1, and while gains is None (under 30 answers)."""
+    g = gains(learner)
+    gain = next((x["gain"] for x in g["skills"] if x["topic"] == topic), None) if g else None
+    if not gain:
+        return None
+    since = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=60)).isoformat()
+    wrong = db.rows("SELECT template, norm FROM attempts WHERE learner=? AND topic=? AND correct=0"
+                    " AND repeat=0 AND disputed=0 AND void IS NULL AND at>=?", learner, topic, since)
+    mine = sum(1 for r in wrong if r["template"] == template and r["norm"] == normalized)
+    pts = round(gain * mine / len(wrong)) if wrong else 0
+    return pts if pts >= 1 else None
+
+
 def need(target: int, learner: str | None = None) -> dict:
     """U4 step 7 (+ T12's path): what a Math target takes, in right answers of
     44, the module-1 route and the skill work."""

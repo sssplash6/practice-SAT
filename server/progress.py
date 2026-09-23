@@ -17,10 +17,11 @@ grid-in value, an R&W trap id -- closes only on clean answers to questions that
 offered it again (R45, G3): a right answer on an item without that trap on
 offer counts for mastery and nothing else. An unnamed one (an unsure right, a
 filler slip, a grid-in miss naming nothing) closes on any clean answer to its
-template. After the fix come check-ins at 3, 10 and 30 days; the 10-day one is
-served on another template with the same trap when there is one, and passing
-the last two there closes it as 'transfer'. A miss on a due check-in reopens it
-as Relapsed. Every change is written to `trap_log` in the same transaction.
+template. After the fix come check-ins at 3, 10 and 30 days; the 10-day and
+30-day ones are served on another template with the same trap when there is
+one, and passing both there closes it as 'transfer'. A miss on a due check-in
+reopens it as Relapsed. Every change is written to `trap_log` in the same
+transaction, a fix with the points it was worth (V4).
 """
 
 from __future__ import annotations
@@ -256,10 +257,11 @@ def _check_due(closed: str, checks: int) -> str | None:
 
 
 def log(learner: str, template: str, normalized: str, event: str, when: str,
-        attempt: int | None = None, pts: int | None = None) -> None:
-    """V8's trap log, written beside every traps change."""
-    db.run("INSERT INTO trap_log(learner,template,norm,at,event,attempt,pts) VALUES (?,?,?,?,?,?,?)",
-           learner, template, normalized, when, event, attempt, pts)
+        attempt: int | None = None, pts: int | None = None, undoes: int | None = None) -> None:
+    """V8's trap log, written beside every traps change. pts: what a fix was
+    worth when it closed (V4); undoes: the row a discard or restore undoes."""
+    db.run("INSERT INTO trap_log(learner,template,norm,at,event,attempt,pts,undoes) VALUES (?,?,?,?,?,?,?,?)",
+           learner, template, normalized, when, event, attempt, pts, undoes)
 
 
 def _reason_of(q: dict, given) -> tuple[str, str | None]:
@@ -421,6 +423,7 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
     miss_key = None if ok else norm(reason)
     day = when[:10]
     with db.atomic():
+        db.ensure_learner(learner)
         if once:
             cur = db.run(insert + f"SELECT {marks} WHERE NOT EXISTS"
                          " (SELECT 1 FROM attempts WHERE learner=? AND session=?)", *values, learner, session)
@@ -444,7 +447,9 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
                     db.run("UPDATE traps SET owed=0,closed=?,closed_how='fixed',last=?,due=?,checks=0 WHERE id=?",
                            when, when, _check_due(when, 0), t["id"])
                     log(learner, t["template"], t["norm"], "pip", when, attempt)
-                    log(learner, t["template"], t["norm"], "fixed", when, attempt)
+                    from . import estimate
+                    log(learner, t["template"], t["norm"], "fixed", when, attempt,
+                        estimate.trap_pts(learner, t["template"], t["norm"], t["topic"]))
                     closed.append(t["label"])
                     closed_ids.append(t["id"])
                 else:
@@ -550,6 +555,7 @@ def log_mistake(learner: str, template: str, topic: str, reason: str = "",
     label = label[:1].upper() + label[1:]
     normalized = norm(reason)
     with db.atomic():
+        db.ensure_learner(learner)
         t = db.one("SELECT id,closed,closed_how,relapses FROM traps WHERE learner=? AND template=? AND norm=?",
                    learner, template, normalized)
         if t:
@@ -567,8 +573,15 @@ def log_mistake(learner: str, template: str, topic: str, reason: str = "",
         return tid
 
 
+def related(normalized: str | None = None):
+    """The templates whose items offer this norm, when more than one does
+    (R45, G3); with no norm, the whole {norm: templates} index."""
+    index = _related_index()
+    return index if normalized is None else index.get(normalized, ())
+
+
 @lru_cache(maxsize=1)
-def related() -> dict[str, tuple[str, ...]]:
+def _related_index() -> dict[str, tuple[str, ...]]:
     """Templates sharing a concrete named misconception across sampled seeds."""
     index: dict[str, set[str]] = defaultdict(set)
     for template in practice.catalogue()["by_topic"].values():
@@ -586,10 +599,11 @@ def related() -> dict[str, tuple[str, ...]]:
 
 
 def checkin_template(t) -> str:
-    """Where a trap's next check-in is served: the 10-day one on another
-    template offering the same norm when one exists (R9, G3), else its own."""
-    if t["checks"] == 1:
-        others = [k for k in related().get(t["norm"], ()) if k != t["template"]]
+    """Where a trap's next check-in is served: the 3-day one on its own
+    template, the 10- and 30-day ones on another template offering the same
+    norm when one exists (R9, G3 rule 5), else its own."""
+    if t["checks"] >= 1:
+        others = [k for k in related(t["norm"]) if k != t["template"]]
         if others:
             same_topic = [k for k in others if _topic_of(k) == t["topic"]]
             return (same_topic or others)[0]
@@ -631,7 +645,7 @@ def carry(frm: str, to: str) -> int:
             c.execute(f"DELETE FROM {table} WHERE {' OR '.join(f'{col}=?' for col in cols)}", (frm,) * len(cols))
         c.execute("DELETE FROM follows WHERE learner=target")
         for table in ("practice_seen", "saved", "flags", "notes", "earned", "post_votes", "contest_members",
-                      "due_days", "week_goals", "word_lists", "champions"):
+                      "due_days", "week_goals", "word_lists", "champions", "rank_snapshots"):
             c.execute(f"UPDATE OR IGNORE {table} SET learner=? WHERE learner=?", (to, frm))
             c.execute(f"DELETE FROM {table} WHERE learner=?", (frm,))
         for s in c.execute("SELECT * FROM skill_ratings WHERE learner=?", (frm,)).fetchall():
@@ -699,7 +713,9 @@ def _days_since(at: str | None, today: dt.date) -> int:
 
 
 def _confident_traps(learner: str) -> dict[int, dict]:
-    """Open traps whose latest miss the student marked Sure (P7): blind spots."""
+    """Open traps whose latest miss the student marked Sure (P7). The coach
+    reads only the explicit tag (practice.md's R9 row: null is an ordinary
+    miss, P7 acceptance 6); T9's inferred blind spots are blind()."""
     out = {}
     for t in open_traps(learner):
         r = db.one("SELECT conf, at FROM attempts WHERE learner=? AND template=? AND norm=? AND correct=0"
@@ -756,10 +772,12 @@ def coach(learner: str, k: int = 3, count: int = 10, subject: str = "math") -> d
             kind = "mistakes"
         elif slug in due:
             kind = "check"
+        elif t["answered"] and t["evidence"] < 10:
+            kind = "probe"
+        elif focus.get(t["domain"]) == "focus":
+            kind = "focus"              # the plan's Focus lifted it (FOCUS_LIFT)
         elif not t["answered"]:
             kind = "new"
-        elif t["evidence"] < 10:
-            kind = "probe"
         elif t["mastery"] >= STRONG:
             kind = "review"
         else:
@@ -795,10 +813,12 @@ def coach(learner: str, k: int = 3, count: int = 10, subject: str = "math") -> d
         why = "mistakes"
     elif any(p in due for p in picks):
         why = "check"
-    elif not any(b[p]["answered"] for p in picks):
-        why = "new"
     elif any(reasons[p]["kind"] == "probe" for p in picks):
         why = "probe"
+    elif any(reasons[p]["kind"] == "focus" for p in picks):
+        why = "focus"
+    elif not any(b[p]["answered"] for p in picks):
+        why = "new"
     elif all(b[p]["mastery"] >= STRONG for p in picks):
         why = "review"
     else:
@@ -905,8 +925,10 @@ def days(learner: str, tz: int = 0, weeks: int = 2) -> dict:
     overrides = {r["day"]: r["off"] for r in db.rows("SELECT day,off FROM plan_overrides WHERE plan=?", plan_id)} if plan_id else {}
     frozen = {r["day"]: r["kind"] for r in db.rows("SELECT day,kind FROM plan_days WHERE plan=?", plan_id)} if plan_id else {}
     if plan_id:
-        for r in db.rows("SELECT m.day,t.minutes FROM plan_marks AS m JOIN plan_tasks AS t ON t.id=m.task"
-                         " WHERE t.plan=? AND m.status='done'", plan_id):
+        # R13's own-task rule: an own task's minutes, or the minutes a done
+        # question task says it took elsewhere (L10's "Did it elsewhere?")
+        for r in db.rows("SELECT m.day, COALESCE(m.minutes, t.minutes) AS minutes FROM plan_marks AS m"
+                         " LEFT JOIN plan_tasks AS t ON t.id=m.task WHERE m.plan=? AND m.status='done'", plan_id):
             try:
                 per[dt.date.fromisoformat(r["day"])]["ms"] += max(0, r["minutes"] or 0) * 60_000
             except ValueError:
@@ -1015,7 +1037,8 @@ def rechecks_passed(learner: str, since: str) -> dict:
 def warmup_candidates(learner: str, tz: int = 0, subject: str = "math") -> dict:
     """T3: what is due for a spaced return, in priority order: check-ins due
     (most overdue first), fading types (by age over interval), one Strong
-    topic to keep warm."""
+    topic to keep warm; and P12's marked: a question flagged 2 or more days
+    ago whose template has had no right first try since the flag."""
     today = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=tz)).date()
     checks = [c for c in due_rechecks(learner, today.isoformat()) if deps.subject_of(c["topic"]) == subject]
     open_templates = {t["template"] for t in open_traps(learner)}
@@ -1038,8 +1061,20 @@ def warmup_candidates(learner: str, tz: int = 0, subject: str = "math") -> dict:
         if strong:
             t = min(strong, key=lambda t: t["last"])
             keep = [{"kind": "keep_warm", "topic": t["topic"], "last": t["last"]}]
+    marked: dict[str, dict] = {}
+    for f in db.rows("SELECT f.* FROM flags AS f JOIN sessions AS x ON x.id=f.session WHERE f.learner=?"
+                     " AND (x.kind='drill' OR x.finished IS NOT NULL) ORDER BY f.at", learner):
+        if deps.subject_of(f["template"]) != subject or (today - _local_day(f["at"], tz)).days < 2:
+            continue
+        if db.one(f"SELECT 1 FROM attempts WHERE learner=? AND template=? AND at>? AND correct=1 AND flagged=0"
+                  f" AND {COUNTED}", learner, f["template"], f["at"]):
+            continue
+        marked.setdefault(f["template"], {"kind": "marked", "template": f["template"], "topic": f["topic"],
+                                          "seed": f["seed"], "session": f["session"], "qid": f["qid"],
+                                          "flagged": f["at"]})
     return {"subject": subject, "checks": checks, "fading": fading, "keep_warm": keep,
-            "size": len(checks) + len(fading) + len(keep)}
+            "marked": list(marked.values()),
+            "size": len(checks) + len(fading) + len(keep) + len(marked)}
 
 
 def due_forecast(learner: str, tz: int = 0, days: int = 14) -> list[dict]:
@@ -1116,6 +1151,87 @@ def cause_of(attempt: dict, ctx: dict | None = None) -> tuple[str, dict]:
     return "gap", evidence
 
 
+def _tier_medians(learner: str) -> dict[str, float]:
+    """The learner's median answer time per tier, over the answers R8 counts."""
+    per: dict[str, list] = defaultdict(list)
+    for r in db.rows("SELECT difficulty, COALESCE(ms, sms) AS spent FROM attempts WHERE learner=?"
+                     f" AND COALESCE(ms, sms) IS NOT NULL AND {COUNTED}", learner):
+        per[r["difficulty"]].append(r["spent"])
+    return {tier: statistics.median(v) for tier, v in per.items()}
+
+
+def _sitting(sid: str | None, cache: dict) -> dict:
+    """What T7 needs to know about the sitting an answer came from."""
+    if sid not in cache:
+        row = db.one("SELECT * FROM sessions WHERE id=?", sid) if sid else None
+        cfg = json.loads(row["cfg"] or "{}") if row and row["cfg"] else {}
+        test = bool(row) and row["kind"] in deps.TEST_KINDS
+        timed = bool(row) and (test and cfg.get("timing", "official") != "untimed" and cfg.get("timed", True)
+                               or cfg.get("timed") or cfg.get("clock") in ("pace", "custom"))
+        cache[sid] = {"row": row, "qstate": json.loads(row["qstate"] or "{}") if row and row["qstate"] else {},
+                      "timed": timed, "test": test}
+    return cache[sid]
+
+
+def _cause(learner: str, a: dict, sitting: dict, medians: dict) -> tuple[str, dict]:
+    """cause_of for one filed attempt, with its context built the one way
+    causes() and blind() share, so the causes bar and T9's card agree."""
+    history = [r["correct"] for r in db.rows(f"SELECT correct FROM attempts WHERE learner=? AND template=? AND id<?"
+                                             f" AND {COUNTED} ORDER BY id DESC LIMIT 5", learner, a["template"], a["id"])]
+    try:
+        spr = [[m.reason, str(m.value)] for m in getattr(_item(a["template"], a["seed"]), "spr_mistakes", ())]
+    except Exception:
+        spr = []
+    return cause_of(a, {"qstate": sitting["qstate"], "timed": sitting["timed"], "test": sitting["test"],
+                        "history": history, "median_easy_ms": medians.get("easy"),
+                        "key": _key_of(a["template"], a["seed"]), "spr_reasons": spr})
+
+
+def _sure_why(a: dict, sitting: dict, medians: dict) -> str | None:
+    """T9's 'sure' for a miss already known to be no guess and a trap:
+    'sure' (tagged, P7 or the test's qstate), 'fast' (a medium or hard
+    question in under 0.6x the learner's median for its tier; never an easy
+    one, which is T7's slip) or 'silent' (a test miss left out of the
+    predictions made in that sitting, X11)."""
+    qstate = sitting["qstate"] if isinstance(sitting["qstate"], dict) else {}
+    st = qstate.get(a.get("qid") or "") or {}
+    if a.get("conf") == "sure" or st.get("conf") == "sure":
+        return "sure"
+    spent = a["ms"] if a.get("ms") is not None else a.get("sms")
+    median = medians.get(a["difficulty"])
+    if a["difficulty"] in ("medium", "hard") and spent is not None and median and spent < 0.6 * median:
+        return "fast"
+    predicted = any(isinstance(v, dict) and v.get("predict") == "miss" for v in qstate.values())
+    if sitting["test"] and predicted and st.get("predict") != "miss" \
+            and "unsure" not in (a.get("conf"), st.get("conf")) and st.get("conf") != "guess":
+        return "silent"
+    return None
+
+
+def blind(learner: str, subject: str = "math") -> dict[int, dict]:
+    """T9's blind spots: open traps whose latest miss was sure -- not a guess
+    (R8), T7's cause `trap`, and `_sure_why`. Newest trap first, the order of
+    open_traps; each carries why, the attempt and its time."""
+    medians = _tier_medians(learner)
+    cache: dict = {}
+    out = {}
+    for t in open_traps(learner):
+        if deps.subject_of(t["topic"]) != subject:
+            continue
+        a = db.one("SELECT * FROM attempts WHERE learner=? AND template=? AND norm=? AND correct=0"
+                   " ORDER BY id DESC LIMIT 1", learner, t["template"], t["norm"])
+        if not a or a["guess"] or a["conf"] == "guess":
+            continue
+        a = dict(a)
+        sitting = _sitting(a["session"], cache)
+        if _cause(learner, a, sitting, medians)[0] != "trap":
+            continue
+        why = _sure_why(a, sitting, medians)
+        if why:
+            out[t["id"]] = {**t, "at": a["at"], "attempt": a["id"], "why": why}
+    return out
+
+
 def causes(learner: str, tz: int = 0, days: int = 14, session: str | None = None,
            subject: str = "math") -> dict:
     """Every wrong or blank first try R8 counts, sorted into one cause each."""
@@ -1124,37 +1240,18 @@ def causes(learner: str, tz: int = 0, days: int = 14, session: str | None = None
     rows = [dict(r) for r in db.rows(f"SELECT * FROM attempts WHERE learner=? AND {where} AND {COUNTED}"
                                      " AND correct=0 ORDER BY id", learner, *args)
             if deps.subject_of(r["topic"]) == subject]
-    easy = [r["ms"] for r in db.rows("SELECT ms FROM attempts WHERE learner=? AND difficulty='easy' AND ms IS NOT NULL"
-                                     f" AND {COUNTED}", learner)]
-    median_easy = statistics.median(easy) if easy else None
-    sittings = {}
+    medians = _tier_medians(learner)
+    sittings: dict = {}
 
     def sitting(sid):
-        if sid not in sittings:
-            row = db.one("SELECT * FROM sessions WHERE id=?", sid) if sid else None
-            cfg = json.loads(row["cfg"] or "{}") if row and row["cfg"] else {}
-            test = bool(row) and row["kind"] in deps.TEST_KINDS
-            timed = bool(row) and (test and cfg.get("timing", "official") != "untimed" and cfg.get("timed", True)
-                                   or cfg.get("timed") or cfg.get("clock") in ("pace", "custom"))
-            sittings[sid] = {"row": row, "qstate": json.loads(row["qstate"] or "{}") if row and row["qstate"] else {},
-                             "timed": timed, "test": test}
-        return sittings[sid]
+        return _sitting(sid, sittings)
 
     by = {c: 0 for c in CAUSES}
     items: dict[str, list] = {c: [] for c in CAUSES}
     per_q: dict[str, dict] = {}
     top_gap: Counter = Counter()
     for a in rows:
-        s = sitting(a["session"])
-        history = [r["correct"] for r in db.rows(f"SELECT correct FROM attempts WHERE learner=? AND template=? AND id<?"
-                                                 f" AND {COUNTED} ORDER BY id DESC LIMIT 5", learner, a["template"], a["id"])]
-        try:
-            spr = [[m.reason, str(m.value)] for m in getattr(_item(a["template"], a["seed"]), "spr_mistakes", ())]
-        except Exception:
-            spr = []
-        cause, ev = cause_of(a, {"qstate": s["qstate"], "timed": s["timed"], "test": s["test"],
-                                 "history": history, "median_easy_ms": median_easy,
-                                 "key": _key_of(a["template"], a["seed"]), "spr_reasons": spr})
+        cause, ev = _cause(learner, a, sitting(a["session"]), medians)
         by[cause] += 1
         if len(items[cause]) < 40:
             items[cause].append(a["id"])
@@ -1264,6 +1361,39 @@ def pace(learner: str, days: int = 60, subject: str = "math", only: str | None =
                          "blanks": blanks, "runs_out_at": runs_out, "strip": strip},
             "guess": {"n": len(guesses), "right": sum(r["correct"] for r in guesses)},
             "struck2": {"n": len(struck2), "right": sum(r["correct"] for r in struck2)}}
+
+
+TIER_BUDGET_MS = {"easy": 65_000, "medium": 95_000, "hard": 126_000}   # P16's Math tier defaults
+
+
+def fluency(learner: str, budget_ms=None, subject: str = "math") -> dict[str, dict]:
+    """P16, per template with timed first tries: Fluent (its last 2 clean
+    first-try rights each under budget), Right but slow (3+ first tries, 80%+
+    right, median right time over budget), best_ms (its fastest clean right)
+    and the medians. budget_ms(template, tier) is F5's; the tier default
+    otherwise."""
+    budget = budget_ms or (lambda _t, tier: TIER_BUDGET_MS.get(tier, 95_000))
+    per: dict[str, list] = defaultdict(list)
+    for r in db.rows(f"SELECT template, topic, difficulty, correct, flagged, guess, hints, conf,"
+                     f" COALESCE(ms, sms) AS spent FROM attempts WHERE learner=? AND {COUNTED}"
+                     " AND COALESCE(ms, sms) IS NOT NULL ORDER BY id", learner):
+        if deps.subject_of(r["topic"]) == subject:
+            per[r["template"]].append(r)
+    out = {}
+    for template, rs in per.items():
+        clean = [r for r in rs if r["correct"] and not (r["flagged"] or r["guess"] or r["hints"] or r["conf"] == "unsure")]
+        rights = [r["spent"] for r in rs if r["correct"]]
+        median_right = statistics.median(rights) if rights else None
+        tier = rs[-1]["difficulty"]
+        out[template] = {
+            "n": len(rs), "right": len(rights), "budget_ms": budget(template, tier),
+            "median_ms": int(statistics.median(r["spent"] for r in rs)),
+            "median_right_ms": None if median_right is None else int(median_right),
+            "best_ms": min((r["spent"] for r in clean), default=None),
+            "fluent": len(clean) >= 2 and all(r["spent"] < budget(template, r["difficulty"]) for r in clean[-2:]),
+            "slow_right": len(rs) >= 3 and len(rights) >= 0.8 * len(rs) and median_right is not None
+            and median_right > budget(template, tier)}
+    return out
 
 
 # ------------------------------------------------------------------ the report's readers
@@ -1434,13 +1564,13 @@ def discard(learner: str, sid: str) -> dict:
                 checks = max(0, t["checks"] - 1)
                 db.run("UPDATE traps SET checks=?, due=? WHERE id=?", checks,
                        _check_due(t["closed"], checks) if t["closed"] else None, t["id"])
-            log(learner, e["template"], e["norm"], "discarded", stamp, e["attempt"], e["id"])
+            log(learner, e["template"], e["norm"], "discarded", stamp, e["attempt"], undoes=e["id"])
     return out
 
 
 def restore(learner: str, sid: str) -> dict:
     """V13's Restore: clear the void and re-apply what discard() rolled back,
-    oldest first. The discarded rows name the event they undid (in pts)."""
+    oldest first. The discarded rows name the event they undid (undoes)."""
     ids = [r["id"] for r in db.rows("SELECT id FROM attempts WHERE learner=? AND session=? AND void='discarded'", learner, sid)]
     out = {"answers": len(ids), "traps_closed": 0, "pips_back": 0, "reopened": 0}
     if not ids:
@@ -1450,9 +1580,9 @@ def restore(learner: str, sid: str) -> dict:
     with db.atomic():
         db.run(f"UPDATE attempts SET void=NULL WHERE id IN ({marks})", *ids)
         for d in db.rows(f"SELECT d.*, e.event AS undid, e.at AS undid_at FROM trap_log AS d"
-                         f" JOIN trap_log AS e ON e.id=d.pts WHERE d.learner=? AND d.event='discarded'"
+                         f" JOIN trap_log AS e ON e.id=d.undoes WHERE d.learner=? AND d.event='discarded'"
                          f" AND d.attempt IN ({marks})"
-                         " AND NOT EXISTS (SELECT 1 FROM trap_log AS r WHERE r.event='restored' AND r.pts=d.id)"
+                         " AND NOT EXISTS (SELECT 1 FROM trap_log AS r WHERE r.event='restored' AND r.undoes=d.id)"
                          " ORDER BY e.id", learner, *ids):
             t = db.one("SELECT * FROM traps WHERE learner=? AND template=? AND norm=?", learner, d["template"], d["norm"])
             if not t:
@@ -1472,5 +1602,5 @@ def restore(learner: str, sid: str) -> dict:
             elif d["undid"] == "check_ok" and t["closed"]:
                 checks = min(3, t["checks"] + 1)
                 db.run("UPDATE traps SET checks=?, due=? WHERE id=?", checks, _check_due(t["closed"], checks), t["id"])
-            log(learner, d["template"], d["norm"], "restored", stamp, d["attempt"], d["id"])
+            log(learner, d["template"], d["norm"], "restored", stamp, d["attempt"], undoes=d["id"])
     return out
