@@ -148,6 +148,9 @@ def similar_ratio(rng: random.Random, seed: int, *, given_fn=None, given_at=None
     fmt = fmt or ("spr" if rng.random() < 0.4 else "mcq")
     mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
     if fmt == "spr":
+        if ask_fn == "tan":
+            mistakes = [m for m in mistakes if m not in
+                        (pool["sum_denominator"], pool["swapped_sum"])]
         return Item("rtt.similar_ratio", "similar right triangles", "hard", seed, stem,
                     "spr", key, key.gridin(), rationale, params=P,
                     spr_mistakes=gridin_mistakes(key, mistakes))
@@ -217,6 +220,9 @@ def similar_side(rng: random.Random, seed: int, *, tan=None, p=None, q=None, leg
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("a radical cannot be entered in a grid-in")
+        mistakes = [m_ for m_ in mistakes if m_ is not pool["doubled"]]
+        if ask == "opposite":
+            mistakes = [m_ for m_ in mistakes if m_ is not pool["times_sine"]]
         return Item("rtt.similar_side", "similar right triangles", "hard", seed, stem,
                     "spr", key, key.gridin(), rationale, params=P,
                     spr_mistakes=gridin_mistakes(key, mistakes))
