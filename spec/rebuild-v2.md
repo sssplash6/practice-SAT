@@ -11004,7 +11004,7 @@ when the wave ends.
 `web/assets/head.js` →F2, stubs `web/assets/kit.js` and `charts.js` →F1, `.gitignore`, the
 head block of every page (only the lines of the sweep), README's split, the first line of
 `spec/rebuild.md`. Needs nothing.
-State: not started.
+State: built on `v2/f0`, not merged yet.
 
 **F1 · Design system** (wave 1a, port 8011). Builds §2.1, §2.3, the F1 rows of §2.4,
 Shell §2.13 tokens and §11 CSS. Owns `web/assets/ui.css`, `kit.js`, `charts.js`,

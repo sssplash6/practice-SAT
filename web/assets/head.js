@@ -1,0 +1,2 @@
+// Theme, text size and motion from localStorage satf.look, applied before first paint.
+(function(){try{var l=JSON.parse(localStorage.getItem('satf.look')||'{}');var d=document.documentElement;l.theme&&l.theme!=='system'&&(d.dataset.theme=l.theme);l.theme==='system'&&(d.dataset.theme=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');l.text&&(d.dataset.text=l.text);l.motion&&(d.dataset.motion=l.motion)}catch(e){}})();

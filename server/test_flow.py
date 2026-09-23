@@ -286,6 +286,7 @@ def main() -> int:
 
         check_learner(c)
         check_integrity(c)
+        run_checks(c)
 
     # --- the marking itself, away from the wire -------------------------------
     assert scoring.is_correct({"type": "spr", "answer": "5776"}, "5,776")
@@ -779,6 +780,14 @@ def check_integrity(c) -> None:
                 {"current": 205}, {"tests": "hourly"}):
         assert c.put("/api/me", headers=F, json=bad).status_code == 422, bad
     print("ok  the plan keeps where you are, the test rhythm and focus per domain, and focus steers the coach")
+
+
+def run_checks(c) -> None:
+    """Every task's own checks, server/checks/<task>.py, each a check(c)."""
+    import importlib
+    for f in sorted((pathlib.Path(__file__).resolve().parent / "checks").glob("*.py")):
+        if f.stem != "__init__":
+            importlib.import_module(f"server.checks.{f.stem}").check(c)
 
 
 if __name__ == "__main__":

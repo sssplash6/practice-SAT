@@ -179,6 +179,7 @@ PYTHONPATH=. python3 server/test_flow.py           # the whole flow, end to end
 PYTHONPATH=. python3 tools/build_diagnostics.py    # the ten diagnostic forms
 PYTHONPATH=. python3 tools/build_mocks.py         # the seven shelf sections
 PYTHONPATH=. python3 tools/measure_mix.py          # how repetitive practice is
+SATF_DB=$PWD/server/v2.db PYTHONPATH=. python3 -m uvicorn server.app:app --port 8010   # a worktree's own server and database
 ```
 
 **The site** is one shell (`web/assets/ui.css`, `ui.js`) and these pages,
@@ -200,14 +201,51 @@ plan is `spec/rebuild.md`). The site before it is kept in `archive/site-v1/`.
 | `/me/` | a name for the board, and the device code | `/api/me`, `/api/me/carry` |
 | `/diagnostic/` | the diagnostic's door, its sign-up and the email confirmation | `/api/session/...` |
 
-**A learner is a code, not an account.** The browser mints twelve random
-bytes (`satf.learner` in localStorage) and sends them as `X-Learner` on every
-call; the server checks their shape and nothing else. Every answer
-(`attempts`), open mistake (`traps`), saved question, seen question and the
-profile hang off that code. Me shows it, and typed into another device it makes
-that device the same learner -- `/api/me/carry` first moves whatever the second
-device had done onto it, so switching loses nothing. The diagnostic's sign-up
-is still the only account.
+From the v2 rebuild on (`spec/rebuild-v2.md`), each task keeps one subsection
+below and edits only its own.
+
+### F0 · Repo prep
+
+**The app is a list of routers.** `server/app.py` keeps startup, `/api/health`,
+the cache header and the static mount. The endpoints are in one router per
+section: `api_tests.py` (sessions and mocks, and the paper helpers the others
+read a sitting through), `api_account.py` (sign-up, verify), `api_results.py`
+(results, history), `api_me.py`, `api_practice.py` (map, drill), `api_today.py`
+(today, the question of the day), `api_review.py` (mistakes, saved),
+`api_compete.py` (challenge) and `api_legacy.py` (`POST /api/practice`, frozen
+for the archive). `server/deps.py` has what they share: `learner_of`, `tz_of`,
+`mine()`, `session_or_404`, the validators, and `part(module, name)`, which is
+None while a module does not exist yet. `ROUTERS` in app.py names every router
+the plan has, each included before the static mount once its module exists,
+and `STARTUP` names the modules whose `init()` runs at startup, so a task adds
+a router or a migration without editing app.py.
+
+**A worktree has its own database**: `SATF_DB` is the sqlite file, and unset
+it is `server/satfreshman.db`.
+
+**Each task's checks** are `server/checks/<task>.py`, a `check(c)` that
+test_flow runs with its client after its own. `f0.py` checks the manifest and
+that every page carries the head.
+
+**Every page's head** loads `/assets/head.js`, which applies `satf.look` (theme,
+text size, motion) before first paint, links `/manifest.webmanifest` and the
+apple-touch icon, and sets theme-color. The pages that load `ui.js` load
+`kit.js` and `charts.js` after it. The icons are `mark.svg` on white at 192, 512
+and 180.
+
+### F1 · Design system
+
+Not built yet.
+
+### F2 · Shell
+
+Not built yet.
+
+### F3 · Question workspace and runner
+
+Not built yet.
+
+### F4 · Data layer
 
 **A wrong answer is a diagnosis.** Every wrong option in the bank names the
 mistake that produces it (`Item.reasons`), so a miss says which one, shows the
@@ -226,6 +264,13 @@ blueprint, then the weakest, then a strong topic unseen for ten days, never
 more than two from one domain. Every screen opens set to its pick, and the
 student can change it.
 
+**Grid-ins are marked by value** (`scoring.grid_equal`): the bank's own
+equality, plus the SAT's rule that a decimal filling the grid may be cut off or
+rounded at its last place, so 0.6666 and 0.6667 both match 2/3 and 0.66 does
+not.
+
+### F5 · Drill engine and bank catalogue
+
 **Nothing is used up.** A practice set generates each question when it is
 asked for, against the learner's history, and can be endless
 (`server/drill.py`). A section is built for its sitting by
@@ -233,16 +278,56 @@ asked for, against the learner's history, and can be endless
 1 earned -- from questions this learner has never been given. Fix these turns a
 sitting's misses into fresh questions on the same templates.
 
-**The day is the same for everyone** (`server/daily.py`). The question of the
-day and the daily challenge -- ten questions, easiest to hardest, two of them
-grid-ins -- are chosen from a hash of the date in the student's own timezone
-(`X-Tz`), and the challenge is stored once so everyone sits the same ten, once
-each. The board ranks by right answers, then time.
+**Practice is scheduled, not sampled.** A student picks topics on the map,
+or the coach does, and asks for a number of questions; `server/practice.py`
+fills every slot, one at a time as the set is played, by scoring a handful of
+candidates against what they have just seen and taking the least similar. Never repeating a question is the easy half. The
+hard half is that sixty questions from one subtopic can all be distinct and
+still feel like the same question sixty times, so sameness is counted on seven
+features at once -- template, skill, opening words, format, difficulty, whether
+there is a figure, and the shape of the answer -- each weighted by how much it
+shows and faded by how far back it was. A template used earlier in the same set
+is penalised on its own, so a set spreads over every template a topic has.
 
-**Grid-ins are marked by value** (`scoring.grid_equal`): the bank's own
-equality, plus the SAT's rule that a decimal filling the grid may be cut off or
-rounded at its last place, so 0.6666 and 0.6667 both match 2/3 and 0.66 does
-not.
+`tools/measure_mix.py` is the evidence. Across all nineteen topics at sixty
+questions each, the scheduler never repeats a template or an opening sentence
+back to back, uses every template the topic owns, and produces sixty distinct
+stems. Drawing at random instead loses up to fifteen of the sixty to duplicates
+and runs the same template four deep. Sets build in 9 to 260 ms.
+
+### F6 · Reports and question sets
+
+Not built yet.
+
+### T-bank · Named grid-in mistakes in the bank
+
+Not built yet.
+
+### S1 · Account, Me, Settings, Help
+
+**A learner is a code, not an account.** The browser mints twelve random
+bytes (`satf.learner` in localStorage) and sends them as `X-Learner` on every
+call; the server checks their shape and nothing else. Every answer
+(`attempts`), open mistake (`traps`), saved question, seen question and the
+profile hang off that code. Me shows it, and typed into another device it makes
+that device the same learner -- `/api/me/carry` first moves whatever the second
+device had done onto it, so switching loses nothing. The diagnostic's sign-up
+is still the only account.
+
+### S2 · Classes
+
+Not built yet.
+
+### S3 · Today
+
+**The question of the day is the same for everyone** (`server/daily.py`): it
+is chosen from a hash of the date in the student's own timezone (`X-Tz`).
+
+### S4 · Practice builder and session
+
+Not built yet.
+
+### S5 · Tests and the test window
 
 **Ten fixed forms, drawn at random.** A diagnostic is twenty questions: four
 domains, and from each of them one easy, two medium and two hard. That is not
@@ -265,17 +350,6 @@ than trusting it, along with the blueprint, the ordering and the gates.
 The clock is derived from the form's length at the real test's pace -- 35
 minutes for 22 math questions, so about 95 seconds each -- and counts from the
 session's start time on the server, so a reload is not free time.
-
-**What the report is allowed to claim.** The digital SAT is scored by item
-response theory over items calibrated on real test-takers, and no raw-to-scaled
-table exists or could. None of those parameters are public, so `scoring.py`
-uses an ordinal heuristic over the College Board's own easy/medium/hard labels
-and says so; calling it IRT would be the one false claim available. The real
-test reports a standard error near 20 points per section off ninety calibrated
-adaptive items. Twenty uncalibrated ones cannot beat that, so the result is a
-200-point band, and each domain gets a bar and a word rather than a number --
-which is also what the College Board's own report does, with its own warning
-that a four-item domain estimate can make a strong student look weak by chance.
 
 **Mock sections are the real shape.** The shelf holds seven, built by
 `tools/build_mocks.py` into `server/mocks.json`; the Tests page instead builds
@@ -318,26 +392,45 @@ and the routing threshold itself ("around the median" is all there is). What thi
 pretest items per module and scores the rest by item response theory. There is
 nothing to pretest here and no calibration to score with, so all 22 count.
 
-**Practice is scheduled, not sampled.** A student picks topics on the map,
-or the coach does, and asks for a number of questions; `server/practice.py`
-fills every slot, one at a time as the set is played, by scoring a handful of
-candidates against what they have just seen and taking the least similar. Never repeating a question is the easy half. The
-hard half is that sixty questions from one subtopic can all be distinct and
-still feel like the same question sixty times, so sameness is counted on seven
-features at once -- template, skill, opening words, format, difficulty, whether
-there is a figure, and the shape of the answer -- each weighted by how much it
-shows and faded by how far back it was. A template used earlier in the same set
-is penalised on its own, so a set spreads over every template a topic has.
-
-`tools/measure_mix.py` is the evidence. Across all nineteen topics at sixty
-questions each, the scheduler never repeats a template or an opening sentence
-back to back, uses every template the topic owns, and produces sixty distinct
-stems. Drawing at random instead loses up to fifteen of the sixty to duplicates
-and runs the same template four deep. Sets build in 9 to 260 ms.
-
 **The test window** (`web/test/`) is deliberately a copy of Bluebook's layout,
 because anything a student has to re-learn on test day is a cost we handed
 them. It keeps the brand orange for every highlight and nothing else.
+
+### S6 · Results and the score report
+
+**What the report is allowed to claim.** The digital SAT is scored by item
+response theory over items calibrated on real test-takers, and no raw-to-scaled
+table exists or could. None of those parameters are public, so `scoring.py`
+uses an ordinal heuristic over the College Board's own easy/medium/hard labels
+and says so; calling it IRT would be the one false claim available. The real
+test reports a standard error near 20 points per section off ninety calibrated
+adaptive items. Twenty uncalibrated ones cannot beat that, so the result is a
+200-point band, and each domain gets a bar and a word rather than a number --
+which is also what the College Board's own report does, with its own warning
+that a four-item domain estimate can make a strong student look weak by chance.
+
+### S7 · Plan
+
+Not built yet.
+
+### S8 · Compete
+
+**The daily challenge is the same for everyone** (`server/challenge.py`): ten
+questions, easiest to hardest, two of them grid-ins, chosen from a hash of the
+date in the student's own timezone and stored once, so everyone sits the same
+ten, once each. The board ranks by right answers, then time.
+
+### S9 · Words
+
+Not built yet.
+
+### S10 · Review
+
+Not built yet.
+
+### I1 · Integration and the walk
+
+Not built yet.
 
 ## Before a student sees this
 

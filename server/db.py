@@ -4,13 +4,15 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import pathlib
 import sqlite3
 import threading
 
 log = logging.getLogger("satf.db")
 
-DB_PATH = pathlib.Path(__file__).resolve().parent / "satfreshman.db"
+# SATF_DB points a worktree's server at its own file; the default is the dev database
+DB_PATH = pathlib.Path(os.environ.get("SATF_DB") or pathlib.Path(__file__).resolve().parent / "satfreshman.db")
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS users (

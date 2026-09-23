@@ -2,6 +2,7 @@ __pycache__/
 *.pyc
 .playwright-mcp/
 *.png
+!web/assets/*.png
 
 # The College Board source material: 74MB of PDFs and ~1,000 question images.
 # `tools/extract_material.py` rebuilds material/keys and material/items from
@@ -9,12 +10,16 @@ __pycache__/
 material/*.pdf
 material/items/
 
-# The serving layer's runtime state: a student database and the mail that had
-# nowhere to go. forms.json IS tracked -- the ten diagnostics are the product.
+# The serving layer's runtime state: a student database and any copy of it,
+# the mail that had nowhere to go, and the files attached to reports.
+# forms.json IS tracked -- the ten diagnostics are the product.
 server/*.db
 server/*.db-wal
 server/*.db-shm
+server/*.db-journal
+server/*.db.*
 server/outbox/
+server/reports/
 
 # v2 build checkpoints: work-in-progress snapshots are rewritten every few minutes
 spec/v2-state/wip/
