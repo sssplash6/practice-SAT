@@ -15,7 +15,7 @@ import random
 from fractions import Fraction as Q
 
 from ....exact import E, Exact
-from ....item import Item, ItemError, Mis, assemble, assemble_text
+from ....item import Item, ItemError, Mis, assemble, assemble_text, gridin_mistakes
 from ....shapes import UNITS, Unit
 from ..figures import right_triangle, trapezoid_logo
 from ..kit import (S0, Surd, assemble_surd, closest_only, exact_leg, pick,
@@ -177,14 +177,15 @@ def pythagoras(rng: random.Random, seed: int, *, mode=None, a=None, b=None,
     P = {"kind": "rtt_pythagoras", "mode": mode, "given": given_pair,
          "places": places if approximate else None}
 
+    mistakes = [Mis(m.reason, post(m.value)) for m in pick(pool, wrongs)
+                if m.value is not None]
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("this length cannot be entered in a grid-in")
         return Item("rtt.pythagoras", "the Pythagorean theorem", "easy", seed, stem,
-                    "spr", key, key.gridin(), rationale, figure=fig, params=P)
+                    "spr", key, key.gridin(), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
 
-    mistakes = [Mis(m.reason, post(m.value)) for m in pick(pool, wrongs)
-                if m.value is not None]
     fmt_value = (lambda v: places_text(float(v), places)) if approximate else None
     choices, latex, reasons, letter_ = assemble(key, mistakes, rng, fmt_value=fmt_value)
     if len(set(choices)) != 4:
@@ -308,7 +309,8 @@ def rectangle_diagonal(rng: random.Random, seed: int, *, short=None, long=None,
         if not key.is_rational:
             raise ItemError("this length cannot be entered in a grid-in")
         return Item("rtt.rectangle_diagonal", "rectangles and the theorem", "medium",
-                    seed, stem, "spr", key, key.gridin(), rationale, params=P)
+                    seed, stem, "spr", key, key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, pick(pool, wrongs)))
     choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("rtt.rectangle_diagonal", "rectangles and the theorem", "medium", seed,
                 stem, "mcq", key, letter, rationale, choices, reasons, latex, params=P)
@@ -445,8 +447,13 @@ def special_triangle(rng: random.Random, seed: int, *, alpha=None, given=None,
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("this answer cannot be entered in a grid-in")
+        # that route is 180 minus the marked other angle, which is this value
+        # only when both acute angles are 45
+        if ask.startswith("angle") and not (alpha == 45 and len(angle_marks) == 2):
+            pool["straight"] = None
         return Item("rtt.special_triangle", "special right triangles", "medium", seed,
-                    stem, "spr", key, key.gridin(), rationale, figure=fig, params=P)
+                    stem, "spr", key, key.gridin(), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, pick(pool, wrongs)))
     choices, latex, reasons, letter_ = assemble(key, pick(pool, wrongs), rng)
     return Item("rtt.special_triangle", "special right triangles", "medium", seed, stem,
                 "mcq", key, letter_, rationale, choices, reasons, latex, figure=fig,
@@ -554,14 +561,17 @@ def special_perimeter(rng: random.Random, seed: int, *, shape=None, given=None,
                   f"{asked} {key.plain()}.")
     P = {"kind": "rtt_special_perimeter", "shape": shape, "given": given,
          "value": [str(value.a), str(value.b), value.d], "ask": ask}
+    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
     if fmt == "spr":
         if not key.rational or float(key) <= 0:
             raise ItemError("this answer cannot be entered in a grid-in")
         answer = (f"{key.a.numerator}" if key.a.denominator == 1
                   else f"{key.a.numerator}/{key.a.denominator}")
+        if ask != "perimeter":          # its value is a whole perimeter
+            mistakes = [m for m in mistakes if m is not pool["legs_as_hyp"]]
         return Item("rtt.special_perimeter", "special right triangles", "hard", seed,
-                    stem, "spr", key, answer, rationale, params=P)
-    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
+                    stem, "spr", key, answer, rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble_surd(
         key, mistakes, rng, enforce_form=wrongs is None)
     return Item("rtt.special_perimeter", "special right triangles", "hard", seed, stem,
