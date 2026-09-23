@@ -242,15 +242,65 @@ def square_equation(rng: random.Random, seed: int, *, shape=None, a=None, h=None
     P = {"kind": "nleq_square", "shape": shape, "a": _p(a), "h": _p(h), "k": _p(k),
          "spare": _p(spare), "ask": ask}
     pool = _strike(pool, [lo, hi], ask, key)
-    if fmt == "spr" and a != 4:
-        # dividing by a twice gives inner/a, which is inner/4 only when a is 4
-        del pool["quarter"]
+    if fmt == "spr":
+        pool = _square_gridin(pool, ask, a, h, inner, root, lo, hi, key)
     shifted = join(["x", mono(h, "")]) if h else "x"
     rationale = sent(f"The square is {num(inner)}, so {shifted} is {num(root)} or "
                      f"{num(-root)}, giving x = {num(hi)} and x = {num(lo)}.")
     return _value_item("nleq.square_equation", "undoing a square", difficulty, seed,
                        stem, key, pool, wrongs, rng, rationale, P, fmt, signed,
                        sign_rule, forbid=[lo, hi] if ask in ANY_SOLUTION else ())
+
+
+def _asked_side(ask: str, centre, size):
+    """centre ± size, on the side of zero the question asks for.
+
+    A student asked for the negative solution reports the negative candidate
+    their slip gives; when it gives none, there is nothing they would type.
+    """
+    v = centre - size if ask == "negative" else centre + size
+    if (ask == "positive" and v <= 0) or (ask == "negative" and v >= 0):
+        return None
+    return v
+
+
+def _lone_roots(lo, hi) -> dict:
+    why = "reported one solution instead of their sum"
+    return {"one_hi": Mis(why, hi), "one_lo": Mis(why, lo)}
+
+
+def _square_gridin(pool: dict, ask: str, a, h, inner, root, lo, hi, key) -> dict:
+    """The square's grid-in mistakes, each worked through to THIS question.
+
+    Every slip swaps the square root for a wrong size, then undoes the shift on
+    the side the question asks for. A sum has no side: the two candidates stay
+    symmetric about −h whatever the size, so those slips still land on the key,
+    and only stopping at one root is wrong.
+    """
+    if ask == "sum":
+        return _lone_roots(lo, hi)
+    other = lo if key == hi else hi
+
+    def slip(name, size, centre=-h):
+        return Mis(pool[name].reason, _asked_side(ask, centre, size))
+
+    out = dict(pool,
+               constant=slip("constant", inner),
+               half_constant=slip("half_constant", inner / 2),
+               double_constant=slip("double_constant", 2 * inner),
+               quarter=slip("quarter", inner / 4),
+               half_root=slip("half_root", root / 2),
+               no_root=slip("no_root", inner),
+               root_only=slip("root_only", root, 0),
+               abs_other=Mis(pool["abs_other"].reason,
+                             abs(other) if other < 0 else None))
+    if a != 4:
+        # dividing by a twice gives inner/a, which is inner/4 only when a is 4
+        del out["quarter"]
+    # h − inner needs the root skipped as well as the order swapped, which the
+    # reason never says
+    del out["swap_shift"]
+    return out
 
 
 # -------------------------------------------------------- an absolute value
@@ -305,6 +355,8 @@ def absolute_equation(rng: random.Random, seed: int, *, a=1, b=0, h=None,
         "abs_other": Mis("lost the sign of the other solution", abs(lo)),
     }
     pool = _strike(pool, [lo, hi], ask, key)
+    if fmt == "spr":
+        pool = _absolute_gridin(pool, ask, a, b, h, k, lo, hi, key, reversed_inner)
     P = {"kind": "nleq_absolute", "a": _p(a), "b": _p(b), "h": _p(h), "k": _p(k),
          "bare": bool(bare), "ask": ask}
     head = (f"Gathering the two terms gives {num(a + b)} times the absolute value, so "
@@ -315,6 +367,31 @@ def absolute_equation(rng: random.Random, seed: int, *, a=1, b=0, h=None,
                        difficulty, seed, stem, key, pool, wrongs, rng, rationale,
                        P, fmt,
                        forbid=[lo, hi] if ask in ANY_SOLUTION else ())
+
+
+def _absolute_gridin(pool: dict, ask: str, a, b, h, k, lo, hi, key,
+                     reversed_inner: bool) -> dict:
+    """The absolute value's grid-in mistakes, each worked through to THIS question.
+
+    Dropping the bars still gives a root, so of the slips only skipping the
+    division by the coefficients leaves a wrong one: h ± k, on the side asked.
+    """
+    # |x − 4| and |4 − x| both print the 4 that h is; |x + 8| prints 8, not −8
+    shown = h if h and (h > 0 or reversed_inner) else None
+    if ask == "sum":
+        return dict(_lone_roots(lo, hi), k_itself=pool["k_itself"],
+                    shift_only=Mis(pool["shift_only"].reason, shown))
+    other = lo if key == hi else hi
+    out = dict(pool,
+               no_divide=Mis("never divided by the total of the two coefficients"
+                             if b else "never divided by the coefficient in front "
+                             "of the bars",
+                             _asked_side(ask, h, k) if a + b != 1 else None),
+               shift_only=Mis(pool["shift_only"].reason, shown),
+               abs_other=Mis(pool["abs_other"].reason,
+                             abs(other) if other < 0 else None))
+    del out["no_bars"], out["no_bars_neg"]
+    return out
 
 
 # ------------------------------------------------------------- a quadratic
@@ -368,6 +445,23 @@ def quadratic_solve(rng: random.Random, seed: int, *, a=None, b=None, c=None,
 
     pool = _strike(_quadratic_pool(na, nb, nc, roots, key, ask), roots or [], ask,
                    key)
+    if fmt == "spr":
+        # A grid-in is matched to the number typed, so a coefficient read off
+        # the page is the one printed, sign and all -- none when a bare x or a
+        # right-hand term hides it. On a sum the middle coefficient is named
+        # only through the sum's sign slip, b/a; elsewhere nothing is added.
+        sums = ask == "sum"
+        b_shown = b if b and not (ra or rb) and not sums else None
+        c_shown = c if c and not rc else None
+        pool.update(
+            # over a leading 1 there is no ratio, only b itself
+            b_over_a=Mis(pool["b_over_a"].reason,
+                         b_shown / a if b_shown and a != 1 else None),
+            b_itself=Mis(pool["b_itself"].reason,
+                         b_shown if b_shown and abs(b_shown) != 1 else None),
+            c_abs=Mis(pool["c_abs"].reason, c_shown),
+            c_half=Mis(pool["c_half"].reason, c_shown and c_shown / 2),
+            sum_sign=Mis(pool["sum_sign"].reason, nb / na if sums else None))
     P = {"kind": "nleq_quadratic", "a": _p(na), "b": _p(nb), "c": _p(nc),
          "ask": ask}
     if roots:
@@ -750,6 +844,10 @@ def shared_factor(rng: random.Random, seed: int, *, a=None, k=None, b=None, m=No
         "negate": Mis("moved the answer across the equals sign without changing its "
                       "sign", -key),
     }
+    if fmt == "spr":
+        # r1 + m is the sum of x = −k and x = m, what the right side alone gives
+        pool["no_ratio"] = Mis("set both brackets on the right equal to zero and "
+                               "ignored the left side", pool["no_ratio"].value)
     P = {"kind": "nleq_shared_factor", "a": _p(a), "b": _p(b), "k": _p(k),
          "m": _p(m), "ask": ask}
     rationale = sent(f"Taking everything to one side gives "
@@ -915,6 +1013,10 @@ def radical_equation(rng: random.Random, seed: int, *, shape=None, a=None, b=Non
         }
         ask = ask or "what_value"
         fmt = fmt or "spr"
+        if fmt == "spr":
+            # (c − b)/a solves ax + b = c: the square was never taken
+            pool["no_square"] = Mis("never squared the right-hand number",
+                                    pool["no_square"].value)
         stem = displayed(equation, ASKS[ask])
         P = {"kind": "nleq_radical", "shape": shape, "a": _p(a), "b": _p(b),
              "c": _p(c), "d": _p(0), "e": _p(0), "ask": ask}
@@ -1031,6 +1133,11 @@ def rational_linear(rng: random.Random, seed: int, *, p=None, a=None, b=None,
                       (-m - p * a) / p if p else None),
         "negate": Mis("solved for the wrong sign of x", -key),
     }
+    if fmt == "spr":
+        # (rb − m − a)/(p − r) solves px + a = r(x + b) − m
+        pool["drop_bracket"] = Mis("multiplied only the x in the bracket by the "
+                                   "number in front of it",
+                                   pool["drop_bracket"].value)
     P = {"kind": "nleq_rational_linear", "p": _p(p), "a": _p(a), "b": _p(b),
          "r": _p(r), "m": _p(m)}
     rationale = sent(f"Multiplying through by {den} gives "

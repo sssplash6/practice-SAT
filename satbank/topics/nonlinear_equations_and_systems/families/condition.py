@@ -258,12 +258,13 @@ def discriminant_constant(rng: random.Random, seed: int, *, a=None, b=None, c=No
         keyx = E(key)
         fmt = fmt or "spr"
         if fmt == "spr":
-            # key + d leaves D = −4ad, so it crosses twice only when ad < 0;
-            # file each value under the reason it actually lands on
-            cross, clear = (key + d, key - d) if a * d < 0 else (key - d, key + d)
-            named = dict(pool,
-                         two_solutions=Mis(pool["two_solutions"].reason, cross),
-                         no_solutions=Mis(pool["no_solutions"].reason, clear))
+            # key ± d is an offset no working produces, so a grid-in names
+            # neither; and with a > 0 there is no minus sign to lose
+            named = dict(pool)
+            del named["two_solutions"], named["no_solutions"]
+            if a > 0:
+                named["sign"] = Mis("set b² + 4ac = 0 instead of b² − 4ac = 0",
+                                    -key)
             return Item("nleq.discriminant_constant", "a condition on the "
                         "discriminant", difficulty, seed, sent(stem), "spr", keyx,
                         gridin(key), rationale, params=P,

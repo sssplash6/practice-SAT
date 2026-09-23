@@ -219,6 +219,10 @@ def isolate_sum(rng: random.Random, seed: int, *, target=None, coef=None,
         if not griddable(want) or want == 0:
             raise ItemError("that coefficient could not be entered in the grid")
         keyx = E(want)
+        if not extras:
+            # nothing is moved across, so no slip in moving it can be named
+            pool = {n: m for n, m in pool.items()
+                    if n not in ("negate_all", "negate_all_sign", "reversed")}
         return Item("nleq.isolate_sum", "rearranging a formula", difficulty, seed,
                     sent(stem), "spr", keyx, gridin(want), sent(story_text),
                     params=dict(P, ask="coefficient"),
