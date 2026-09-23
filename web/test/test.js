@@ -275,14 +275,17 @@
     paintCells();
   }
 
-  /* fire and forget: a dropped keystroke must not stall the student */
+  /* Fire and forget -- a dropped keystroke must not stall the student -- but
+     in order, one after another, so a later answer cannot land before an
+     earlier one, and finishing waits for the last of them. */
+  let sent = Promise.resolve();
   function post(qid, value) {
     if (!S.id || S.id === 'local') return;
-    fetch(`${API}/session/${S.id}/answer`, {
+    sent = sent.then(() => fetch(`${API}/session/${S.id}/answer`, {
       method: 'POST',
       headers: HDR(),
       body: JSON.stringify({ question_id: qid, answer: value }),
-    }).catch(() => {});
+    })).catch(() => {});
   }
 
   /* -------------------------------------------------------------- movement */
@@ -309,6 +312,7 @@
     }
 
     let done = {};
+    await sent;                          // the paper is marked with every answer in it
     try {
       const r = await fetch(`${API}/session/${S.id}/finish`, { method: 'POST', headers: HDR() });
       done = await r.json();

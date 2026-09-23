@@ -102,6 +102,7 @@ def public(q: dict) -> dict:
 
 
 FRESH = "new"               # a mock built for its sitting, not taken off the shelf
+DRILLS = ("drill", "challenge")     # answered one at a time through /api/drill, never as a paper
 
 
 def mock_module(row, module: int | None = None, route: str | None = None) -> list[dict]:
@@ -226,18 +227,21 @@ class Answer(BaseModel):
 @app.post("/api/session/{sid}/answer")
 def put_answer(sid: str, body: Answer) -> dict:
     row = session_or_404(sid)
+    if row["kind"] in DRILLS:
+        raise HTTPException(409, "a practice set is answered through /api/drill")
     if row["finished"]:
         raise HTTPException(409, "this test is already finished")
     if not any(q["id"] == body.question_id for q in questions_of(row)):
         raise HTTPException(400, "that question is not on this form")
 
-    answers = db.load_answers(row)
+    # one answer changed in place, so two sent together cannot undo each other
     if body.answer is None or body.answer == "":
-        answers.pop(body.question_id, None)
+        ok = db.clear_answer(sid, body.question_id)
     else:
-        answers[body.question_id] = body.answer
-    db.save_answers(sid, answers)
-    return {"saved": True, "answered": len(answers)}
+        ok = db.set_answer(sid, body.question_id, body.answer)
+    if not ok:
+        raise HTTPException(409, "this test is already finished")
+    return {"saved": True, "answered": len(db.load_answers(session_or_404(sid)))}
 
 
 @app.post("/api/session/{sid}/finish")
@@ -249,6 +253,8 @@ def finish(sid: str) -> dict:
     alone, as on the day, and there is no way back into module 1 afterwards.
     """
     row = session_or_404(sid)
+    if row["kind"] in DRILLS:
+        raise HTTPException(409, "a practice set is finished through /api/drill")
     if row["finished"]:
         return {"finished": row["finished"], "already": True}
 
@@ -257,15 +263,21 @@ def finish(sid: str) -> dict:
         m1 = mock_module(row, 1)
         right = sum(1 for q in m1 if scoring.is_correct(q, answers.get(q["id"])))
         route = scoring.route_after(right, len(m1))
+        questions = row["questions"]
         if row["mock_id"] == FRESH:
             # module 2 is made now, for the route module 1 earned and nothing
             # else, from questions this student has never been given
             built = json.loads(row["questions"])
             built["module2"] = fresh_module(row["learner"], "module2_" + route)
-            db.run("UPDATE sessions SET questions=? WHERE id=?",
-                   json.dumps(built, ensure_ascii=False), sid)
-        db.run("UPDATE sessions SET module=2, route=?, module1=?, module_started=? WHERE id=?",
-               route, json.dumps({"right": right, "asked": len(m1)}), now(), sid)
+            questions = json.dumps(built, ensure_ascii=False)
+        # The route and module 2 are set in one statement that only a paper
+        # still in module 1 matches, so a second finish sent at the same moment
+        # cannot route it again; it is told where the first one went.
+        if not db.run("UPDATE sessions SET module=2, route=?, module1=?, module_started=?, questions=?"
+                      " WHERE id=? AND COALESCE(module, 1)=1 AND finished IS NULL",
+                      route, json.dumps({"right": right, "asked": len(m1)}), now(), questions, sid).rowcount:
+            m = json.loads(session_or_404(sid)["module1"] or "{}")
+            return {"next_module": 2, "finished_module": 1, "right": m.get("right"), "asked": m.get("asked")}
         log.info("mock %s (%s): module 1 %d/%d -> %s module 2",
                  row["mock_id"], sid[:8], right, len(m1), route)
         return {"next_module": 2, "finished_module": 1,
@@ -279,10 +291,12 @@ def finish(sid: str) -> dict:
         result["route"] = row["route"]
         result["module1"] = json.loads(row["module1"] or "{}")
         result["estimate"] = scoring.section_score(result, row["route"])
-    db.run("UPDATE sessions SET finished=?, result=? WHERE id=?",
-           now(), json.dumps(result), sid)
+    # marked once: a second finish at the same moment finds it done and files nothing
+    if not db.run("UPDATE sessions SET finished=?, result=? WHERE id=? AND finished IS NULL",
+                  now(), json.dumps(result), sid).rowcount:
+        return {"finished": session_or_404(sid)["finished"], "already": True}
     # every answered question goes on the learner's map, whatever the mode
-    if row["learner"] and row["kind"] != "drill":
+    if row["learner"]:
         progress.record_paper(row["learner"], sid, marked, answers)
     log.info("session %s finished: %d/%d", sid[:8], result["right"], result["asked"])
     return {"finished": now(), "right": result["right"], "asked": result["asked"]}
@@ -663,12 +677,19 @@ class Save(BaseModel):
 
 @app.post("/api/saved")
 def save_question(body: Save, x_learner: str | None = Header(default=None)) -> dict:
-    """Keep a question to see again. It is stored as the triple that makes it."""
+    """Keep a question to see again. It is stored as the triple that makes it,
+    and a saved set serves it with its key -- so only a practice set's
+    questions can be kept, and a challenge's only once answered, or saving
+    would be a way to read a key before answering."""
     learner = learner_of(x_learner)
-    row = session_or_404(body.session)
-    q = next((x for x in questions_of(row) if x["id"] == body.question_id), None)
+    row = mine(session_or_404(body.session), learner)
+    q = None
+    if row["kind"] in DRILLS:
+        q = next((x for x in questions_of(row) if x["id"] == body.question_id), None)
     if q is None or "key" not in q:
         raise HTTPException(404, "no such question in that session")
+    if body.on and row["kind"] == "challenge" and body.question_id not in db.load_answers(row):
+        raise HTTPException(409, "answer it first")
     if body.on:
         db.run("INSERT OR IGNORE INTO saved (learner, template, seed, topic, at) VALUES (?,?,?,?,?)",
                learner, q["key"], q["seed"], q["topic"], now())
@@ -695,6 +716,14 @@ def mine(row, learner: str):
     if row["learner"] and row["learner"] != learner:
         raise HTTPException(403, "that session belongs to someone else")
     return row
+
+
+def drill_row(sid: str, learner: str):
+    """This learner's practice set or challenge sitting. A test is not one."""
+    row = session_or_404(sid)
+    if row["kind"] not in DRILLS:
+        raise HTTPException(404, "no such set")
+    return mine(row, learner)
 
 
 @app.post("/api/drill")
@@ -752,12 +781,12 @@ def new_drill(body: Drill, x_learner: str | None = Header(default=None)) -> dict
 
 @app.get("/api/drill/{sid}")
 def get_drill(sid: str, x_learner: str | None = Header(default=None)) -> dict:
-    return drill.state(mine(session_or_404(sid), learner_of(x_learner)))
+    return drill.state(drill_row(sid, learner_of(x_learner)))
 
 
 @app.post("/api/drill/{sid}/next")
 def drill_next(sid: str, x_learner: str | None = Header(default=None)) -> dict:
-    row = mine(session_or_404(sid), learner_of(x_learner))
+    row = drill_row(sid, learner_of(x_learner))
     if row["finished"]:
         raise HTTPException(409, "this set is finished")
     return drill.next_question(row)
@@ -771,7 +800,7 @@ class DrillAnswer(BaseModel):
 
 @app.post("/api/drill/{sid}/answer")
 def drill_answer(sid: str, body: DrillAnswer, x_learner: str | None = Header(default=None)) -> dict:
-    row = mine(session_or_404(sid), learner_of(x_learner))
+    row = drill_row(sid, learner_of(x_learner))
     if row["finished"]:
         raise HTTPException(409, "this set is finished")
     if body.answer is None or body.answer == "":
@@ -780,12 +809,14 @@ def drill_answer(sid: str, body: DrillAnswer, x_learner: str | None = Header(def
         return drill.answer(row, body.question_id, body.answer, body.ms)
     except KeyError:
         raise HTTPException(400, "that question is not in this set")
+    except drill.Closed as e:
+        raise HTTPException(409, str(e))
 
 
 @app.post("/api/drill/{sid}/finish")
 def drill_finish(sid: str, x_learner: str | None = Header(default=None)) -> dict:
     learner = learner_of(x_learner)
-    row = mine(session_or_404(sid), learner)
+    row = drill_row(sid, learner)
     out = drill.finish(row)
     out["next"] = progress.coach(learner, count=per_session(profile(learner)))
     return out
@@ -823,6 +854,7 @@ def get_qotd(x_learner: str | None = Header(default=None), x_tz: int = Header(de
 
 class Reply(BaseModel):
     answer: int | str
+    day: str | None = None      # the day it was shown; past midnight that is not today
 
 
 @app.post("/api/qotd")
@@ -831,12 +863,13 @@ def answer_qotd(body: Reply, x_learner: str | None = Header(default=None),
     """One answer a day. A second one is a double tap, and gets the first back."""
     learner = learner_of(x_learner)
     day = daily.today(x_tz)
+    if body.day is not None and body.day != day:
+        raise HTTPException(409, "that was another day's question")
     q = daily.question(day)
-    had = db.one("SELECT given FROM attempts WHERE learner=? AND session=?", learner, f"qotd:{day}")
-    if had:
+    if progress.record(learner, f"qotd:{day}", q, body.answer, once=True) is None:
+        had = db.one("SELECT given FROM attempts WHERE learner=? AND session=?", learner, f"qotd:{day}")
         given = int(had["given"]) if had["given"] is not None and had["given"].isdigit() else had["given"]
         return qotd_feedback(q, given, day)
-    progress.record(learner, f"qotd:{day}", q, body.answer)
     return qotd_feedback(q, body.answer, day)
 
 
@@ -869,7 +902,7 @@ def start_challenge(x_learner: str | None = Header(default=None), x_tz: int = He
         drill.create(learner, sid, list(dict.fromkeys(q["topic"] for q in qs)), len(qs), None, True,
                      "challenge", items=[[q["key"], q["seed"]] for q in qs],
                      kind="challenge", fixed=True, day=day)
-        row = session_or_404(sid)
+        row = challenge_row(learner, day)           # this start's, or one made at the same moment
         log.info("challenge %s started by %s", day, learner[:12])
     if row["finished"]:
         return {**drill.state(row), "done": True}

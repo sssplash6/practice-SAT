@@ -15,6 +15,7 @@ map, the coach and the mistakes list move as they go.
 
 from __future__ import annotations
 
+import datetime as dt
 import json
 import zlib
 from collections import Counter
@@ -25,9 +26,14 @@ from satbank.registry import generate, topic_of
 from . import blueprint, db, practice, progress, scoring
 
 MAX_FIXED = 120             # the longest set with a length
+GRACE = 15                  # seconds past a timed set's clock an answer may still arrive
 TIERS = ("easy", "medium", "hard")
 PUBLIC = ("id", "topic", "topic_name", "domain", "difficulty", "skill", "type",
           "stem", "choices", "latex", "figure", "table")
+
+
+class Closed(Exception):
+    """The set is finished, or its clock ran out: nothing more is filed."""
 
 
 def _cfg(row) -> dict:
@@ -164,9 +170,32 @@ def create(learner: str, sid: str, topics: list[str], count: int | None,
         "queue": list(queue or []), "items": [list(i) for i in (items or [])],
         "before": {t: progress.topic_mastery(learner, t) for t in every},
     }
-    db.run("INSERT INTO sessions (id, kind, learner, started, cfg, questions, day)"
-           " VALUES (?,?,?,?,?,?,?)",
-           sid, kind, learner, progress.now(), json.dumps(cfg), "[]", day)
+    row = (sid, kind, learner, progress.now(), json.dumps(cfg), "[]", day)
+    if day is None:
+        db.run("INSERT INTO sessions (id, kind, learner, started, cfg, questions, day)"
+               " VALUES (?,?,?,?,?,?,?)", *row)
+    else:
+        # A day's sitting exists once per learner. The check is inside the
+        # insert, so two starts at the same moment still make one; the caller
+        # reads back whichever was made.
+        db.run("INSERT INTO sessions (id, kind, learner, started, cfg, questions, day)"
+               " SELECT ?,?,?,?,?,?,? WHERE NOT EXISTS"
+               " (SELECT 1 FROM sessions WHERE kind=? AND learner=? AND day=?)", *row, kind, learner, day)
+
+
+def seconds_of(cfg: dict) -> int | None:
+    """A timed set's clock, at the real test's pace."""
+    if cfg.get("timed") and cfg.get("count"):
+        return cfg["count"] * blueprint.MODULE_SECONDS // blueprint.MODULE_SIZE
+    return None
+
+
+def overtime(row, cfg: dict) -> bool:
+    secs = seconds_of(cfg)
+    if not secs:
+        return False
+    began = dt.datetime.fromisoformat(row["started"])
+    return (dt.datetime.now(dt.timezone.utc) - began).total_seconds() > secs + GRACE
 
 
 def state(row) -> dict:
@@ -176,8 +205,7 @@ def state(row) -> dict:
     return {
         "id": row["id"], "mode": row["kind"], "topics": cfg.get("topics", []),
         "total": cfg.get("total"), "timed": cfg.get("timed", False),
-        "seconds": (cfg["count"] * blueprint.MODULE_SECONDS // blueprint.MODULE_SIZE)
-                   if cfg.get("timed") and cfg.get("count") else None,
+        "seconds": seconds_of(cfg),
         "started": row["started"], "finished": row["finished"],
         "answered": len(answers),
         "marks": [scoring.is_correct(q, answers[q["id"]]) for q in served if q["id"] in answers],
@@ -198,21 +226,32 @@ def next_question(row) -> dict:
     return {"question": public(q), "index": len(served), "total": cfg.get("total")}
 
 
+def _answers(sid: str) -> dict:
+    return json.loads(db.one("SELECT answers FROM sessions WHERE id=?", sid)["answers"] or "{}")
+
+
 def answer(row, qid: str, given, ms: int | None) -> dict:
-    cfg, served, answers = _cfg(row), _served(row), db.load_answers(row)
+    cfg, served = _cfg(row), _served(row)
     q = next((x for x in served if x["id"] == qid), None)
     if q is None:
         raise KeyError(qid)
-    if qid in answers:                                # a double tap, not a second try
-        given = answers[qid]
+    if overtime(row, cfg):
+        raise Closed("time is up")
+    # Claimed in one statement before anything is filed, so the same answer
+    # sent twice at once -- a double tap, a retried request -- files once.
+    if not db.set_answer(row["id"], qid, given, only_new=True):
+        answers = _answers(row["id"])
+        if qid not in answers:
+            raise Closed("this set is finished")
+        given = answers[qid]                          # a double tap, not a second try
         ok = scoring.is_correct(q, given)
-        return _feedback(q, given, ok, "", [], [], None, None, cfg, answers, served)
+        reason = (q.get("reasons") or [""] * 4)[given] if not ok and isinstance(given, int) and 0 <= given < 4 else ""
+        return _feedback(q, given, ok, reason, [], [], None, None, cfg, answers, served)
 
     before = progress.topic_mastery(row["learner"], q["topic"])
     filed = progress.record(row["learner"], row["id"], q, given, ms)
     after = progress.topic_mastery(row["learner"], q["topic"])
-    answers[qid] = given
-    db.save_answers(row["id"], answers)
+    answers = _answers(row["id"])
 
     # one repair per question: a missed repair stays an open mistake for later,
     # or a student who keeps missing would never reach the end of the set
@@ -248,8 +287,9 @@ def _feedback(q, given, ok, reason, opened, closed, before, after, cfg, answers,
 def finish(row) -> dict:
     cfg = _cfg(row)
     learner = row["learner"]
-    got = db.rows("SELECT topic, correct, reason, template FROM attempts WHERE session=? ORDER BY id",
-                  row["id"])
+    # one attempt per question, the first, whatever else reached the table
+    got = db.rows("SELECT topic, correct, reason, template, ms FROM attempts WHERE id IN"
+                  " (SELECT MIN(id) FROM attempts WHERE session=? GROUP BY qid) ORDER BY id", row["id"])
     names = progress.topics()
     per: dict[str, dict] = {}
     for a in got:
@@ -274,9 +314,9 @@ def finish(row) -> dict:
     result = {
         "mode": row["kind"], "asked": len(got), "right": sum(a["correct"] for a in got),
         "topics": topics_out, "opened": opened, "closed": closed,
-        "ms": sum(r["ms"] or 0 for r in db.rows("SELECT ms FROM attempts WHERE session=?", row["id"])),
+        "ms": sum(a["ms"] or 0 for a in got),
     }
     if not row["finished"]:
-        db.run("UPDATE sessions SET finished=?, result=? WHERE id=?",
+        db.run("UPDATE sessions SET finished=?, result=? WHERE id=? AND finished IS NULL",
                progress.now(), json.dumps(result), row["id"])
     return result

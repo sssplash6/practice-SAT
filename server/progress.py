@@ -101,19 +101,31 @@ def board(learner: str) -> dict[str, dict]:
 # ------------------------------------------------------------------ filing
 
 def record(learner: str, session: str | None, q: dict, given, ms: int | None = None,
-           when: str | None = None) -> dict:
-    """File one answer, and say what it did to the learner's open mistakes."""
+           when: str | None = None, once: bool = False) -> dict | None:
+    """File one answer, and say what it did to the learner's open mistakes.
+
+    once: the learner may have one answer in this session at all (the question
+    of the day). The check is inside the insert, so two at once file one, and
+    None means this one was not filed.
+    """
     when = when or now()
     ok = scoring.is_correct(q, given)
     reason = ""
     if not ok and q["type"] == "mcq" and isinstance(given, int) and 0 <= given < 4:
         reasons = q.get("reasons") or []
         reason = reasons[given] if given < len(reasons) else ""
-    db.run("INSERT INTO attempts (learner, session, qid, template, seed, topic, difficulty,"
-           " fmt, correct, reason, given, ms, at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
-           learner, session, q["id"], q["key"], q["seed"], q["topic"], q["difficulty"],
-           q["type"], int(ok), reason or None, None if given is None else str(given),
-           None if ms is None else int(ms), when)
+    values = (learner, session, q["id"], q["key"], q["seed"], q["topic"], q["difficulty"],
+              q["type"], int(ok), reason or None, None if given is None else str(given),
+              None if ms is None else int(ms), when)
+    insert = ("INSERT INTO attempts (learner, session, qid, template, seed, topic, difficulty,"
+              " fmt, correct, reason, given, ms, at) ")
+    if once:
+        if not db.run(insert + "SELECT ?,?,?,?,?,?,?,?,?,?,?,?,? WHERE NOT EXISTS"
+                      " (SELECT 1 FROM attempts WHERE learner=? AND session=?)",
+                      *values, learner, session).rowcount:
+            return None
+    else:
+        db.run(insert + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", *values)
 
     opened: list[str] = []
     closed: list[str] = []

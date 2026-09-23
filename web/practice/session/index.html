@@ -184,6 +184,7 @@
     m.style.setProperty('--m', (known || 0).toFixed(3));
     S.mbar = { el: mb, fill: m };
     $('#save').setAttribute('aria-pressed', String(S.saved.has(q.id)));
+    $('#save').hidden = S.st.mode === 'challenge';        // a challenge question is kept once answered
     S.shownAt = performance.now();
     paintProgress(false);
     scrollTo({ top: 0, behavior: 'instant' });
@@ -198,12 +199,14 @@
       fb = await api(`/drill/${id}/answer`, { method: 'POST', body: { question_id: S.q.id, answer: given, ms } });
     } catch (e) {
       S.busy = false;
+      if (e.status === 409) return finish();              // the set is over, or its clock ran out
       S.ctrl.unlock();
       $('#err').textContent = e.message; $('#err').hidden = false;
       return;
     }
     S.busy = false;
     $('#err').hidden = true;
+    $('#save').hidden = false;
     S.ctrl.reveal(fb);
     S.marks.push(fb.correct);
     const grew = fb.total !== null && S.total !== null && fb.total > S.total;
@@ -332,7 +335,11 @@
     const on = !S.saved.has(S.q.id);
     on ? S.saved.add(S.q.id) : S.saved.delete(S.q.id);
     $('#save').setAttribute('aria-pressed', String(on));
-    try { await api('/saved', { method: 'POST', body: { session: id, question_id: S.q.id, on } }); } catch (_) {}
+    try { await api('/saved', { method: 'POST', body: { session: id, question_id: S.q.id, on } }); }
+    catch (_) {                                           // not kept after all
+      on ? S.saved.delete(S.q.id) : S.saved.add(S.q.id);
+      $('#save').setAttribute('aria-pressed', String(!on));
+    }
   });
 
   document.addEventListener('keydown', e => {

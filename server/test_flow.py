@@ -285,6 +285,7 @@ def main() -> int:
         print("ok  a perfect lower module 2 still scores under a strong route")
 
         check_learner(c)
+        check_integrity(c)
 
     # --- the marking itself, away from the wire -------------------------------
     assert scoring.is_correct({"type": "spr", "answer": "5776"}, "5,776")
@@ -611,6 +612,133 @@ def check_learner(c) -> None:
     assert len(same) == 1 and same[0]["hits"] == 2, same
     assert not c.get("/api/mistakes", headers=OLD).json()["traps"]
     print("ok  taking another device's code carries this one's answers, mistakes and profile over")
+
+
+def at_once(*calls):
+    """Run the calls from separate threads released together, as two taps or
+    two retried requests arrive."""
+    import threading
+    gate = threading.Barrier(len(calls))
+    out = [None] * len(calls)
+
+    def run(i, fn):
+        gate.wait()
+        out[i] = fn()
+    threads = [threading.Thread(target=run, args=(i, fn)) for i, fn in enumerate(calls)]
+    [t.start() for t in threads]
+    [t.join() for t in threads]
+    return out
+
+
+def check_integrity(c) -> None:
+    """What a determined student could do with the API, and what two requests
+    at the same moment would do. Each of these was a reproduced defect."""
+    from server import blueprint, daily
+
+    # --- save cannot read a key: only practice sets, a challenge's once answered --
+    S = {"X-Learner": "a:savecheck"}
+    ch = c.post("/api/challenge/start", headers=S).json()
+    cur = stored(ch["id"])[-1]
+    body = {"session": ch["id"], "question_id": cur["id"], "on": True}
+    assert c.post("/api/saved", headers=S, json=body).status_code == 409, "saved an unanswered challenge question"
+    assert c.post("/api/saved", headers={"X-Learner": "a:someoneelse"}, json=body).status_code == 403
+    mock = c.post("/api/mock/new", headers=S, json={"full": False}).json()
+    assert c.post("/api/saved", headers=S, json={"session": mock["id"], "question_id": mock["questions"][0]["id"]}
+                  ).status_code == 404, "saved a question off a live test"
+    c.post(f"/api/drill/{ch['id']}/answer", headers=S, json={"question_id": cur["id"], "answer": keyed_answer(cur, True)})
+    assert c.post("/api/saved", headers=S, json=body).json()["saved"] is True
+    print("ok  save keeps only practice questions, a challenge's once answered, and only your own")
+
+    # --- a practice set is not a paper, and a paper is not a practice set ---------
+    assert c.post(f"/api/session/{ch['id']}/answer", json={"question_id": cur["id"], "answer": None}).status_code == 409
+    assert c.post(f"/api/session/{ch['id']}/finish").status_code == 409
+    assert c.get(f"/api/drill/{mock['id']}", headers=S).status_code == 404
+    assert c.post(f"/api/drill/{mock['id']}/answer", headers=S,
+                  json={"question_id": mock["questions"][0]["id"], "answer": 0}).status_code == 404
+    print("ok  the test endpoints refuse a practice set and the drill endpoints refuse a test")
+
+    # --- two answers to a test at once both land ---------------------------------
+    q1, q2 = mock["questions"][0]["id"], mock["questions"][1]["id"]
+    for _ in range(4):
+        at_once(lambda: c.post(f"/api/session/{mock['id']}/answer", json={"question_id": q1, "answer": 1}),
+                lambda: c.post(f"/api/session/{mock['id']}/answer", json={"question_id": q2, "answer": 2}))
+        got = c.get(f"/api/session/{mock['id']}").json()["answers"]
+        assert got.get(q1) == 1 and got.get(q2) == 2, got
+    print("ok  two answers sent to a test at the same moment are both kept")
+
+    # --- the same drill answer twice at once files once --------------------------
+    D = {"X-Learner": "a:doubletap"}
+    for _ in range(4):
+        d = c.post("/api/drill", headers=D, json={"topics": ["circles"], "count": 3}).json()
+        q = stored(d["id"])[0]
+        one = {"question_id": q["id"], "answer": keyed_answer(q, False)}
+        at_once(lambda: c.post(f"/api/drill/{d['id']}/answer", headers=D, json=one),
+                lambda: c.post(f"/api/drill/{d['id']}/answer", headers=D, json=one))
+        n = db.one("SELECT COUNT(*) n FROM attempts WHERE session=? AND qid=?", d["id"], q["id"])["n"]
+        assert n == 1, f"one answer filed {n} times"
+        assert c.post(f"/api/drill/{d['id']}/finish", headers=D).json()["asked"] == 1
+    print("ok  the same answer sent twice at once is filed once")
+
+    # --- one challenge sitting and one question-of-the-day answer, however many at once
+    for i in range(4):
+        L = {"X-Learner": f"a:twostarts{i}"}
+        at_once(lambda: c.post("/api/challenge/start", headers=L), lambda: c.post("/api/challenge/start", headers=L))
+        n = db.one("SELECT COUNT(*) n FROM sessions WHERE kind='challenge' AND learner=?", L["X-Learner"])["n"]
+        assert n == 1, f"two starts made {n} sittings"
+        at_once(lambda: c.post("/api/qotd", headers=L, json={"answer": 0}),
+                lambda: c.post("/api/qotd", headers=L, json={"answer": 1}))
+        n = db.one("SELECT COUNT(*) n FROM attempts WHERE learner=? AND session LIKE 'qotd:%'", L["X-Learner"])["n"]
+        assert n == 1, f"the day's question was answered {n} times"
+    print("ok  two starts make one challenge sitting, and two answers to the day's question file one")
+
+    # --- a timed set's clock holds on the server ---------------------------------
+    T = {"X-Learner": "a:overtime"}
+    ch = c.post("/api/challenge/start", headers=T).json()
+    db.run("UPDATE sessions SET started=? WHERE id=?", "2000-01-01T00:00:00+00:00", ch["id"])
+    cur = stored(ch["id"])[-1]
+    late = c.post(f"/api/drill/{ch['id']}/answer", headers=T, json={"question_id": cur["id"], "answer": 0})
+    assert late.status_code == 409 and "time" in late.json()["detail"], late.text
+    print("ok  a challenge answer after its clock ran out is refused")
+
+    # --- the day's question is marked against the day it was shown ----------------
+    Y = {"X-Learner": "a:yesterday"}
+    shown = c.get("/api/qotd", headers=Y).json()["day"]
+    assert c.post("/api/qotd", headers=Y, json={"answer": 0, "day": "2000-01-01"}).status_code == 409
+    assert c.post("/api/qotd", headers=Y, json={"answer": 0, "day": shown}).status_code == 200
+    print("ok  an answer to another day's question is refused rather than marked against today's")
+
+    # --- a saved set still repairs each miss before its next saved question -------
+    R = {"X-Learner": "a:savedrepair"}
+    d = c.post("/api/drill", headers=R, json={"topics": ["percentages"], "count": 3}).json()
+    for _ in range(3):
+        cur = stored(d["id"])[-1]
+        c.post("/api/saved", headers=R, json={"session": d["id"], "question_id": cur["id"], "on": True})
+        c.post(f"/api/drill/{d['id']}/answer", headers=R, json={"question_id": cur["id"], "answer": keyed_answer(cur, True)})
+        if c.post(f"/api/drill/{d['id']}/next", headers=R).json().get("done"):
+            break
+    again = c.post("/api/drill", headers=R, json={"saved": True}).json()
+    first = stored(again["id"])[0]
+    c.post(f"/api/drill/{again['id']}/answer", headers=R, json={"question_id": first["id"], "answer": keyed_answer(first, False)})
+    c.post(f"/api/drill/{again['id']}/next", headers=R)
+    second = stored(again["id"])[1]
+    assert second["repair"] and second["key"] == first["key"], "a saved set served its next item before the repair"
+    print("ok  in a saved set a miss is repaired before the next saved question")
+
+    # --- inputs that crashed the server are refused --------------------------------
+    B = {"X-Learner": "a:badinput"}
+    assert c.put("/api/me", headers=B, json={"exam_date": "2026-02-30"}).status_code == 422
+    assert c.get("/api/today", headers=B).status_code == 200
+    assert c.get("/api/qotd", headers={**B, "X-Tz": "99999999999"}).status_code == 422
+    assert c.get("/api/challenge", headers={**B, "X-Tz": "-9000"}).status_code == 422
+    print("ok  an impossible exam date and an impossible timezone are refused, not a 500")
+
+    # --- every domain has easy questions as well as hard ones ----------------------
+    from collections import Counter
+    for dom in blueprint.DOMAIN_SPLIT[1]:
+        tiers = Counter(t for d, t, _ in blueprint.slots("module1", 1) if d == dom)
+        assert tiers["easy"] and tiers["hard"], (dom, tiers)
+    assert len({d for d, t in zip(blueprint.spread(dict(daily.MIX)), daily.LADDER) if t == "easy"}) == 3
+    print("ok  module 1 gives every domain easy and hard questions, and the challenge spreads its easy ones")
 
 
 if __name__ == "__main__":

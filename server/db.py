@@ -239,3 +239,25 @@ def load_answers(row) -> dict:
 
 def save_answers(session_id: str, answers: dict) -> None:
     run("UPDATE sessions SET answers=? WHERE id=?", json.dumps(answers), session_id)
+
+
+# One answer written in place, in one statement, so two sent at once cannot
+# overwrite each other the way reading, changing and writing the whole dict
+# did. qid is always one of the session's own question ids, checked first.
+
+def set_answer(session_id: str, qid: str, value, only_new: bool = False) -> bool:
+    """False if the session has finished -- or, with only_new, if that
+    question already had an answer, which is how an answer is claimed once."""
+    path = f'$."{qid}"'
+    sql = ("UPDATE sessions SET answers = json_set(answers, ?, json(?))"
+           " WHERE id=? AND finished IS NULL")
+    args = [path, json.dumps(value), session_id]
+    if only_new:
+        sql += " AND json_extract(answers, ?) IS NULL"
+        args.append(path)
+    return run(sql, *args).rowcount == 1
+
+
+def clear_answer(session_id: str, qid: str) -> bool:
+    return run("UPDATE sessions SET answers = json_remove(answers, ?) WHERE id=? AND finished IS NULL",
+               f'$."{qid}"', session_id).rowcount == 1
