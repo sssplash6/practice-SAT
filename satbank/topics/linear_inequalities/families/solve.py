@@ -14,7 +14,7 @@ from __future__ import annotations
 import random
 
 from ....exact import E
-from ....item import Item, ItemError, Mis
+from ....item import Item, ItemError, Mis, gridin_mistakes
 from .kit import (FLIP, MINUS, Q, STRICT, band, dec, griddable, mixed, num,
                   rel, sent, side, term, text_choices)
 
@@ -155,15 +155,22 @@ def greatest_value(rng: random.Random, seed: int, *, m=None, k=None, y=None,
                  f"with {v} = {num(y)} the right side is {num(key)}, so the "
                  f"{want} value {u} can take is {num(key)}.")
     ex = E(key)
-    if fmt == "spr":
-        return Item("ineq.greatest_value", "the extreme value an inequality "
-                    "allows", "hard", seed, stem, "spr", ex, ex.gridin(),
-                    rationale, params=P)
     wrong = [Mis("used the other sign for the number of units subtracted",
                  E(m * y - sgn * k)),
              Mis("multiplied the two given numbers and stopped", E(m * y)),
              Mis(f"added {num(k)} to {v} before multiplying", E(m * (y + sgn * k))),
              Mis("used the value given for the other variable", E(y))]
+    if fmt == "spr":
+        # the option reasons above fit only one phrase each; a typed value is
+        # named for the phrase this stem used
+        did, to = ("added", "to") if sgn > 0 else ("subtracted", "from")
+        named = [Mis(f"used the other sign for the number of units {did}",
+                     wrong[0].value), wrong[1],
+                 Mis(f"{did} {num(k)} {to} {v} before multiplying",
+                     wrong[2].value), wrong[3]]
+        return Item("ineq.greatest_value", "the extreme value an inequality "
+                    "allows", "hard", seed, stem, "spr", ex, ex.gridin(),
+                    rationale, params=P, spr_mistakes=gridin_mistakes(ex, named))
     from .kit import value_choices
     ch, tex, wh, letter = value_choices(ex, wrong, rng)
     return Item("ineq.greatest_value", "the extreme value an inequality allows",

@@ -11,6 +11,7 @@ spelled out or abbreviated, and multiple-choice versus grid-in.
 
 from __future__ import annotations
 
+import math
 import random
 from fractions import Fraction
 
@@ -18,7 +19,7 @@ from ....exact import E, PI, Exact
 from ....item import Item, ItemError, Mis, assemble
 from ....shapes import SHAPES, UNITS, Shape, Unit, measure_phrase, unit_noun
 from ....verify import check
-from ..kit import attempt, decimal_text, pick
+from ..kit import attempt, decimal_text, gridin_wrongs, pick
 
 __all__ = ["forward", "inverse", "DIM_RANGE", "GIVEN_FORMS"]
 
@@ -471,16 +472,16 @@ def _finish(rng, seed, shape, measure, dims, key, stem, fmt, unit, extra_mis, te
     rationale = (f"{_formula_text(shape.key, measure)} with {detail} gives "
                  + (f"{exact_key.plain()}, so n = {key.plain()}." if ask_coefficient
                     else f"{exact_key.plain()}" + (f" ~= {key.plain()}." if approximate else ".")))
+    pool = {**extra_mis, **_forward_mistakes(shape.key, measure, dims)}
+    if post:
+        pool = {k: Mis(m.reason, post(m.value)) for k, m in pool.items()
+                if m.value is not None and (not ask_coefficient or m.value.pi_exp >= 1)}
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("grid-in answers must be enterable as digits")
         return Item(template, f"{shape.short} {measure.replace('_', ' ')}",
                     _difficulty(shape, measure), seed, stem, "spr", key,
                     key.gridin(), rationale, params=P)
-    pool = {**extra_mis, **_forward_mistakes(shape.key, measure, dims)}
-    if post:
-        pool = {k: Mis(m.reason, post(m.value)) for k, m in pool.items()
-                if m.value is not None and (not ask_coefficient or m.value.pi_exp >= 1)}
     mistakes = pick(pool, wrongs)
     choices, latex, reasons, letter = assemble(key, mistakes, rng,
                                                fmt_value=_with_unit(unit, measure, option_units))
@@ -657,6 +658,35 @@ def inverse(rng: random.Random, seed: int, *, shape_key=None, measure=None,
                               attempt(lambda: total / E(6))),
         }
     pool = {k: m for k, m in pool.items() if m.value is not None}
+    # A grid-in names only routes to its answer. Run backwards, the forward
+    # slips compute the given measure from the answer, so they stay out; with
+    # then_measure the student does run that formula, so they stay in.
+    routes = pool if then_measure else dict(pool)
+    if unknown == "r" and p == 1 and not then_measure:
+        # circumference / π stops at the diameter, as the p == 2 pool names
+        routes["diameter"] = Mis("gave the diameter instead of the radius", E(2) * key)
+    if not then_measure:
+        # Some pool entries fit an option's wording but not a typed answer to
+        # THIS question: a route through dimensions the stem never gives, a
+        # slip from another shape, or 1/key, which nobody types as a length.
+        routes.pop("invert_divide", None)
+        if (shape.key, measure) != ("square", "area"):
+            routes.pop("over_four", None)
+        if len(known) < 2 or coeff != math.prod(known.values(), start=E(1)):
+            routes.pop("multiply_known", None)
+        if list(known) != ["h"]:
+            routes.pop("subtract_coef", None)
+        if not known and measure == "perimeter":
+            routes["halve_measure"] = Mis("divided the perimeter by 2 instead of 4",
+                                          total / E(2))
+        elif not known or (flat and measure == "area"):
+            routes.pop("halve_measure", None)
+        if (shape.key, measure) == ("square", "area"):
+            routes["halve"] = Mis("halved the area instead of taking the square root",
+                                  total / E(2))
+        if shape.key == "triangle":
+            routes["divide_one"] = Mis("divided the area by the known dimension "
+                                       "without doubling", total / first_known)
     for k, m in _forward_mistakes(shape.key, then_measure or measure, dims).items():
         pool.setdefault(k, m)
     mistakes = pick(pool, wrongs)

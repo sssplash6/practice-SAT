@@ -227,7 +227,8 @@ def percent_of(rng: random.Random, seed: int, *, pct=None, n=None, frame=None,
     skill = "percent of a number"
     fmt = fmt or ("spr" if rng.random() < 0.22 else "mcq")
     if fmt == "spr":
-        return spr("pct.of", skill, difficulty, seed, stem, key, rationale, params=P)
+        return spr("pct.of", skill, difficulty, seed, stem, key, rationale,
+                   mistakes=mistakes, params=P)
     return mcq("pct.of", skill, difficulty, seed, stem, key, mistakes, rng, rationale,
                style=style, places=places, cents=cents, params=P)
 
@@ -307,7 +308,7 @@ def find_percent(rng: random.Random, seed: int, *, part=None, whole=None, frame=
     fmt = fmt or ("spr" if rng.random() < 0.3 else "mcq")
     if fmt == "spr":
         return spr("pct.find_percent", "a part as a percent", difficulty, seed, stem,
-                   key, rationale, params=P)
+                   key, rationale, mistakes=mistakes, params=P)
     return mcq("pct.find_percent", "a part as a percent", difficulty, seed, stem, key,
                mistakes, rng, rationale, style="percent", places=places, params=P)
 
@@ -424,7 +425,7 @@ def increase_decrease(rng: random.Random, seed: int, *, n=None, pct=None, up=Non
     fmt = fmt or ("spr" if rng.random() < 0.25 else "mcq")
     if fmt == "spr":
         return spr("pct.increase_decrease", "a percent change applied", difficulty, seed,
-                   stem, key, rationale, params=P)
+                   stem, key, rationale, mistakes=mistakes, params=P)
     return mcq("pct.increase_decrease", "a percent change applied", difficulty, seed,
                stem, key, mistakes, rng, rationale, style=style, places=places,
                cents=cents, params=P)
@@ -556,7 +557,7 @@ def reverse(rng: random.Random, seed: int, *, result=None, pct=None, frame=None,
     fmt = fmt or ("spr" if rng.random() < 0.25 else "mcq")
     if fmt == "spr":
         return spr("pct.reverse", "the whole from a part", difficulty, seed, stem, key,
-                   rationale, params=P)
+                   rationale, mistakes=mistakes, params=P)
     return mcq("pct.reverse", "the whole from a part", difficulty, seed, stem, key,
                mistakes, rng, rationale, style=style, places=places, signed=True,
                params=P)
@@ -637,7 +638,7 @@ def change(rng: random.Random, seed: int, *, old=None, new=None, frame=None, fmt
     fmt = fmt or ("spr" if rng.random() < 0.25 else "mcq")
     if fmt == "spr":
         return spr("pct.change", "percent change between two values", difficulty, seed,
-                   stem, key, rationale, params=P)
+                   stem, key, rationale, mistakes=mistakes, params=P)
     return mcq("pct.change", "percent change between two values", difficulty, seed, stem,
                key, mistakes, rng, rationale, style=style, places=places, params=P)
 
@@ -700,7 +701,7 @@ def multiplier(rng: random.Random, seed: int, *, n=None, pct=None, up=True, ask=
     fmt = fmt or ("spr" if rng.random() < 0.2 else "mcq")
     if fmt == "spr":
         return spr("pct.multiplier", "percent and multiplier", "medium", seed, stem, key,
-                   rationale, params=P)
+                   rationale, mistakes=mistakes, params=P)
     return mcq("pct.multiplier", "percent and multiplier", "medium", seed, stem, key,
                mistakes, rng, rationale, style=style, places=places, params=P)
 

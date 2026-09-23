@@ -18,13 +18,14 @@ import re
 from fractions import Fraction as Q
 
 from ...exact import E, Exact
-from ...item import ItemError, Mis, assemble, assemble_text, numeral
+from ...item import (ItemError, Mis, assemble, assemble_text, gridin_mistakes,
+                     numeral)
 
 __all__ = ["Q", "E", "MINUS", "PM", "ROOT", "q", "ex", "num", "dec", "sup",
            "mono", "join", "poly", "paren", "frac", "prod", "point", "setof",
            "sent", "displayed", "terminating", "griddable", "gridin", "choices",
            "pick", "eq", "signed_terms", "coef_times", "opt", "text_choices",
-           "cap"]
+           "cap", "gridin_pool"]
 
 MINUS = "−"        # the typeset minus the source prints
 PM = "±"
@@ -417,6 +418,21 @@ def text_choices(key: str, mistakes: list[Mis], rng: random.Random, variables=()
 def _rhs(option: str) -> str:
     """The side of a printed option that carries the mathematics."""
     return option.split(" = ", 1)[1] if " = " in option else option
+
+
+def gridin_pool(key, mistakes, forbid=()) -> list[Mis]:
+    """A grid-in's named wrong answers, from the pool its options are drawn from.
+
+    `forbid` is every value the question genuinely admits -- "one possible
+    solution" is answered by either root -- and none of those may be filed as a
+    mistake; `gridin_mistakes` then drops the key, repeats and missing values.
+    """
+    banned = [float(ex(v)) for v in forbid if v is not None]
+    kept = [Mis(m.reason, ex(m.value)) for m in mistakes if m.value is not None]
+    kept = [m for m in kept
+            if not any(abs(float(m.value) - b) <= 1e-9 * max(1.0, abs(b))
+                       for b in banned)]
+    return gridin_mistakes(ex(key), kept)
 
 
 def pick(pool: dict, wrongs: list | None) -> list[Mis]:

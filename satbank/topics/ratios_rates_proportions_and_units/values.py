@@ -21,7 +21,7 @@ from fractions import Fraction as Q
 
 from ...exact import Exact
 from ...expr import fmt_money
-from ...item import Item, ItemError, Mis, assemble, assemble_text
+from ...item import Item, ItemError, Mis, assemble, assemble_text, gridin_mistakes
 
 __all__ = ["Q", "q", "Num", "dec", "frac_text", "places_needed", "grid",
            "tidy", "snap", "sig", "root", "mcq", "spr", "text_mcq",
@@ -287,9 +287,8 @@ def _resolve_places(key: Q, vals: list[Q], style: str, places, cents) -> int | N
     return None
 
 
-def _options(key: Q, mistakes, rng: random.Random, style: str, places, cents,
-             unit: str, round_to):
-    """Assemble four options, then print them in one consistent surface form."""
+def _wrong(mistakes, round_to, style: str = "plain", unit: str = "") -> list[Mis]:
+    """The (reason, value) mistakes a student could give, rounded as the key is."""
     ms = []
     for reason, value in mistakes:
         if value is None:
@@ -302,6 +301,13 @@ def _options(key: Q, mistakes, rng: random.Random, style: str, places, cents,
             # student would ever pick; the next misconception takes its place
             continue
         ms.append(Mis(reason, Num(v, style, unit=unit)))
+    return ms
+
+
+def _options(key: Q, mistakes, rng: random.Random, style: str, places, cents,
+             unit: str, round_to):
+    """Assemble four options, then print them in one consistent surface form."""
+    ms = _wrong(mistakes, round_to, style, unit)
     choices, _, reasons, letter = assemble(Num(key, style, unit=unit), ms, rng)
     vals = [_parse(c, unit) for c in choices]
     if style == "frac":
@@ -338,16 +344,23 @@ def mcq(template: str, skill: str, difficulty: str, seed: int, stem: str, key,
 
 
 def spr(template: str, skill: str, difficulty: str, seed: int, stem: str, key,
-        rationale: str, *, params=None, table=None, figure=None) -> Item:
-    """A grid-in: no options, so the answer is the entry the student types."""
+        rationale: str, *, mistakes=(), round_to=None, params=None, table=None,
+        figure=None) -> Item:
+    """A grid-in: no options, so the answer is the entry the student types.
+
+    `mistakes` is the template's own (reason, value) list, the one its options
+    come from; `round_to` is passed only when the stem has the key rounded.
+    """
     key = q(key)
     if key <= 0:
         raise ItemError("a grid-in answer here has to be a positive amount")
     entry = grid(key)
     if len(entry.replace("-", "")) > 6:
         raise ItemError(f"{entry} does not fit the grid")
-    return Item(template, skill, difficulty, seed, tidy(stem), "spr", Num(key), entry,
-                tidy(rationale), figure=figure, table=table, params=params or {})
+    k = Num(key)
+    return Item(template, skill, difficulty, seed, tidy(stem), "spr", k, entry,
+                tidy(rationale), figure=figure, table=table, params=params or {},
+                spr_mistakes=gridin_mistakes(k, _wrong(mistakes, round_to)))
 
 
 def text_mcq(template: str, skill: str, difficulty: str, seed: int, stem: str,

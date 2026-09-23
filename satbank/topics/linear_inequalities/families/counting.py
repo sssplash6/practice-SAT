@@ -14,7 +14,7 @@ import random
 from fractions import Fraction as Q
 
 from ....exact import E
-from ....item import Item, ItemError, Mis
+from ....item import Item, ItemError, Mis, gridin_mistakes
 from .kit import (dec, griddable, money, num, plural, rel, sent,
                   value_choices)
 
@@ -238,9 +238,28 @@ def whole_number_bound(rng: random.Random, seed: int, *, scene=None, fee=None,
     if fmt == "spr":
         if not griddable(key):
             raise ItemError("this answer would not be enterable in a grid-in")
+        # a typed value is named only for what produced it: the tiered pool's
+        # savings-fraction values also drop the money earned or round the
+        # wrong way, the shortfall reasons would type dollars as hours, the
+        # trailer's fixed amount is a weight rather than a charge, and an
+        # exact quotient under ">" is the break-even count
+        if d.get("tiered"):
+            named = [pool[0], pool[3],
+                     Mis("left out the money already earned", pool[6].value)]
+        elif scene == "trailer":
+            named = [pool[0],
+                     Mis("left the trailer's weight out of the total",
+                         pool[1].value),
+                     Mis("left the trailer's weight out and rounded up",
+                         pool[2].value)]
+        else:
+            named = list(pool)
+        if op == ">" and key == edge + 1:
+            named[0] = Mis("counted the break-even number, where the two "
+                           "costs are equal", named[0].value)
         return Item("ineq.whole_number_bound", "a whole-number bound",
                     d["tier"], seed, stem, "spr", ex, ex.gridin(), rationale,
-                    params=P)
+                    params=P, spr_mistakes=gridin_mistakes(ex, named))
     ch, tex, wh, letter = value_choices(ex, [m for m in pool if m.value], rng)
     return Item("ineq.whole_number_bound", "a whole-number bound", d["tier"],
                 seed, stem, "mcq", ex, letter, rationale, ch, wh, tex, params=P)

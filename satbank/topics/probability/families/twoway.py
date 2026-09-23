@@ -200,13 +200,14 @@ def marginal(rng: random.Random, seed: int, *, scenario=None, cells=None, axis=N
     rationale = (f"{num:,} of the {N:,} {c.units} {sel.plural()}, so the probability "
                  f"is {key.plain()}.")
     table = T.printed(c, margins=margins)
+    mistakes = [(why, render(a, b, surface, places))
+                for why, (a, b) in pick(pool, order, wrongs) if b]
     if fmt == "spr":
         if not griddable(Q(num, N)):
             raise ItemError("this probability is not enterable in five characters")
         return spr("prob.two_way.marginal", "two-way table", tier, seed,
-                   stem + _GRID_NOTE, Q(num, N), rationale, params=P, table=table)
-    mistakes = [(why, render(a, b, surface, places))
-                for why, (a, b) in pick(pool, order, wrongs) if b]
+                   stem + _GRID_NOTE, Q(num, N), rationale, params=P, table=table,
+                   mistakes=mistakes)
     return mcq("prob.two_way.marginal", "two-way table", tier, seed, stem, key,
                mistakes, rng, rationale, params=P, table=table)
 
@@ -284,13 +285,14 @@ def joint(rng: random.Random, seed: int, *, scenario=None, cells=None, ri=None,
     rationale = (f"{num:,} of the {N:,} {c.units} {row.plural()} and "
                  f"{col.plural()}, so the probability is {key.plain()}.")
     table = T.printed(c, margins=margins)
+    mistakes = [(why, render(a, b, surface, places))
+                for why, (a, b) in pick(pool, order, wrongs) if b]
     if fmt == "spr":
         if not griddable(Q(num, N)):
             raise ItemError("this probability is not enterable in five characters")
         return spr("prob.two_way.joint", "two-way table", tier, seed,
-                   stem + _GRID_NOTE, Q(num, N), rationale, params=P, table=table)
-    mistakes = [(why, render(a, b, surface, places))
-                for why, (a, b) in pick(pool, order, wrongs) if b]
+                   stem + _GRID_NOTE, Q(num, N), rationale, params=P, table=table,
+                   mistakes=mistakes)
     return mcq("prob.two_way.joint", "two-way table", tier, seed, stem, key,
                mistakes, rng, rationale, params=P, table=table)
 
@@ -415,13 +417,13 @@ def _conditional(name, rng, seed, *, scenario, cells, ev_axis, ev_idx, cd_idx,
             f"{key.plain()}.")
     rationale = f"There are {den:,} {cd.g}, and {num:,} of them {ev.plural()}, {tail}"
     table = T.printed(c, margins=margins)
+    mistakes = [(why, render(a, b, surface, places))
+                for why, (a, b) in pick(pool, order, wrongs) if b]
     if fmt == "spr":
         if not griddable(Q(num, den)):
             raise ItemError("this probability is not enterable in five characters")
         return spr(name, "two-way table", tier, seed, stem + _GRID_NOTE,
-                   Q(num, den), rationale, params=P, table=table)
-    mistakes = [(why, render(a, b, surface, places))
-                for why, (a, b) in pick(pool, order, wrongs) if b]
+                   Q(num, den), rationale, params=P, table=table, mistakes=mistakes)
     item = mcq(name, "two-way table", tier, seed, stem, key, mistakes, rng,
                rationale, params=P, table=table)
     if approx:

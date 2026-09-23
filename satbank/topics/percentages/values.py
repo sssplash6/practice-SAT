@@ -20,7 +20,7 @@ import re
 from fractions import Fraction as Q
 
 from ...exact import MINUS, Exact
-from ...item import Item, ItemError, Mis, assemble, assemble_text
+from ...item import Item, ItemError, Mis, assemble, assemble_text, gridin_mistakes
 
 __all__ = ["Q", "q", "Num", "dec", "places_needed", "grid", "tidy", "snap",
            "mcq", "spr", "text_mcq", "pick", "unambiguous"]
@@ -267,12 +267,17 @@ def mcq(template: str, skill: str, difficulty: str, seed: int, stem: str, key,
 
 
 def spr(template: str, skill: str, difficulty: str, seed: int, stem: str, key,
-        rationale: str, *, params=None, table=None, figure=None) -> Item:
+        rationale: str, *, mistakes=(), params=None, table=None, figure=None) -> Item:
+    """A grid-in. `mistakes` is the same (why, value) list the mcq branch offers,
+    kept exact so a typed wrong answer can be matched to the reason behind it."""
     key = q(key)
     if key < 0:
         raise ItemError("a grid-in answer cannot be negative here")
+    named = gridin_mistakes(Num(key), [Mis(why, Num(value)) for why, value in mistakes
+                                       if value is not None])
     return Item(template, skill, difficulty, seed, tidy(stem), "spr", Num(key), grid(key),
-                tidy(rationale), figure=figure, table=table, params=params or {})
+                tidy(rationale), figure=figure, table=table, params=params or {},
+                spr_mistakes=named)
 
 
 def text_mcq(template: str, skill: str, difficulty: str, seed: int, stem: str,

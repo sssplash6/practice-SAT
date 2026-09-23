@@ -18,7 +18,8 @@ from fractions import Fraction as Q
 from ....exact import E
 from ....item import Item, ItemError, Mis, assemble_text
 from ..kit import (MINUS, ask_label, ask_value, choices, coef, dec, displayed,
-                   griddable, num, opt_dec, pick, point, q, sent, solved, std)
+                   griddable, gridin_pool, num, opt_dec, pick, point, q, sent,
+                   solved, std)
 
 __all__ = ["solve_standard", "solve_substitution", "solve_pair", "chunk"]
 
@@ -205,12 +206,48 @@ def solve_standard(rng: random.Random, seed: int, *, a1=None, b1=None, c1=None,
     if fmt == "spr":
         if not griddable(key):
             raise ItemError("this answer could not be entered in the grid")
+        # "instead of adding them" is only true when x + y is asked; the two
+        # divide slips assume the elimination left 2x or 2y and x or y is asked;
+        # halving the first equation only follows on the source items
+        drop = ("rhs1_half",) + (() if ask == "sum" else ("swap",))
+        if _eliminated(a1, b1, a2, b2) not in ((ask, 2), (ask, -2)):
+            drop += ("pre_divide", "over_divide")
+        # adding or reordering the equations is a slip only where subtracting
+        # them is the route (3.4); elsewhere adding may be the elimination
+        if ask != "k_sum":
+            drop += ("add_eqs", "neg_add_eqs", "wrong_order")
+        # "instead of eliminating an unknown" is false when that step eliminates one
+        if a1 == -a2 != 0 or b1 == -b2 != 0:
+            drop += ("rhs_sum",)
+        if a1 == a2 != 0 or b1 == b2 != 0:
+            drop += ("rhs_diff",)
+        # an expression in both has no "other" unknown: stopping at x is the slip
+        grid = pool
+        if ask not in ("x", "y"):
+            drop += ("other",)
+            grid = {"x_only": Mis("reported x on its own instead of the expression "
+                                  "asked for", x0), **pool}
         return Item("sys.solve_standard", "solving a system", difficulty, seed, stem,
                     "spr", keyx, keyx.gridin(), rationale, params=P)
     fmt_value = opt_dec if value_style == "dec" else None
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, fmt_value=fmt_value)
     return Item("sys.solve_standard", "solving a system", difficulty, seed, stem,
                 "mcq", keyx, letter, rationale, ch, why, tex, params=P)
+
+
+def _eliminated(a1, b1, a2, b2) -> tuple:
+    """The unknown `_story`'s first step leaves alone, and its coefficient."""
+    if b1 == b2 and b1 != 0:
+        return "x", a1 - a2
+    if b1 == -b2 and b1 != 0:
+        return "x", a1 + a2
+    if a1 == a2 and a1 != 0:
+        return "y", b1 - b2
+    if b1 == 0:
+        return "x", a1
+    if b2 == 0:
+        return "x", a2
+    return "x", a1 * b2 - a2 * b1
 
 
 def _story(a1, b1, c1, a2, b2, c2, x0, y0, ask, k, label, style="frac",
@@ -303,6 +340,58 @@ def solve_substitution(rng: random.Random, seed: int, *, e1=None, e2=None, ask=N
     if fmt == "spr":
         if not griddable(key):
             raise ItemError("this answer could not be entered in the grid")
+        # the question names a multiplier only when it asks for kx, and
+        # "instead of subtracting them" is only true when x − y is asked
+        drop = ((() if ask == "kx" else ("double_k", "k_only", "slope_times_k"))
+                + (() if ask == "diff" else ("other_sum",)))
+        # _sub_pool reads "the first equation" off whichever one is solved, so
+        # those entries hold only when it is e1; the x-coefficient only when e1
+        # is solved for y and shows one
+        if e1[0] != "solved":
+            drop += ("const1", "recip1", "recip_sum")
+        # an expression in both has no "other" unknown; x alone is the slip there
+        if ask not in ("x", "y", "kx"):
+            drop += ("other", "neg_other")
+        # a printed constant is no route to an expression's value, nor the
+        # x-coefficient except on x − y (2.23)
+        if ask not in ("x", "y"):
+            drop += ("const1", "neg_const2")
+        if ask not in ("x", "y", "diff"):
+            drop += ("slope1",)
+        if ask in ("x", "y"):
+            drop += ("x_only",)
+        # the reciprocal slips are source 2.15's, x where two lines through the
+        # origin cross; turning 1 or −1 upside down changes nothing
+        origin = ask == "x" and all(e[0] == "solved" and e[2] == "y" and q(e[4]) == 0
+                                    for e in (e1, e2))
+        ones = tuple(n for n in ("recip1", "recip2") if pool[n].value in (1, -1))
+        if not origin:
+            drop += ("recip1", "recip2", "recip_sum")
+        elif ones:
+            drop += ones + ("recip_sum",)
+        if e1[0] != "solved" or e1[2] != "y" or q(e1[3]) == 0:
+            drop += ("slope1", "slope_times_k")
+        if e2[0] != "solved" or q(e2[4]) >= 0:
+            drop += ("neg_const2",)
+        # these three are values of the unknown substitution leaves behind
+        solved_eq = e1 if e1[0] == "solved" else e2
+        if ask != ("x" if solved_eq[2] == "y" else "y"):
+            drop += ("sign_const", "subtract_sub", "numerator")
+        # and these are values of the asked unknown off the equation stating it:
+        # a substitution only if it names the other one, "adding it" only at 1·
+        own = next((e for e in (e1, e2) if e[0] == "solved" and e[2] == ask), None)
+        if own is None or q(own[3]) == 0:
+            drop += ("const_over", "const_minus", "drop_const")
+        elif q(own[3]) != q(own[1]):
+            drop += ("const_over", "const_minus")
+        # reading off the asked unknown's constant is a slip only when x or y is
+        # asked and the constant is printed as is; a grid-in names its equation
+        grid = {"x_only": pool["x_only"], **pool}
+        if ask not in ("x", "y") or own is None or q(own[1]) != 1:
+            drop += ("const_ask",)
+        else:
+            grid["const_ask"] = Mis(f"read the constant term of the equation for {ask} "
+                                    "as the answer", pool["const_ask"].value)
         return Item("sys.solve_substitution", "solving a system by substitution",
                     difficulty, seed, stem, "spr", keyx, keyx.gridin(), rationale,
                     params=P)

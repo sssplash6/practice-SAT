@@ -12,7 +12,7 @@ import random
 from fractions import Fraction as F
 
 from ....exact import E, PI, Exact
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ....shapes import UNITS
 from ..figures import circle_with_points
 from ..render import MINUS, pi_style
@@ -153,7 +153,8 @@ def arc(rng: random.Random, seed: int, *, mode=None, given=None, theta=None,
 
     if fmt == "spr":
         return Item("circles.arc", skill, "medium", seed, stem, "spr", key,
-                    _spr(key), rationale, figure=fig, params=P)
+                    _spr(key), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng, fmt_value=pi_style(style))
     return Item("circles.arc", skill, "medium", seed, stem, "mcq", key, letter,
                 rationale, choices, reasons, latex, figure=fig, params=P)
@@ -249,7 +250,8 @@ def arc_pair(rng: random.Random, seed: int, *, mode=None, minor=None, ratio=None
 
     if fmt == "spr":
         return Item("circles.arc_pair", "arcs of a circle", "medium", seed, stem, "spr",
-                    key, _spr(key), rationale, figure=fig, params=P)
+                    key, _spr(key), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng, fmt_value=pi_style(style))
     return Item("circles.arc_pair", "arcs of a circle", "medium", seed, stem, "mcq", key,
                 letter, rationale, choices, reasons, latex, figure=fig, params=P)
@@ -289,7 +291,8 @@ def arc_fraction(rng: random.Random, seed: int, *, r=None, frac=None, fmt=None,
          "den": frac.denominator, "length": float(length)}
     if fmt == "spr":
         return Item("circles.arc_fraction", "arc as a share of the circle", "hard", seed,
-                    stem, "spr", key, key.gridin(), rationale, params=P)
+                    stem, "spr", key, key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("circles.arc_fraction", "arc as a share of the circle", "hard", seed, stem,
                 "mcq", key, letter, rationale, choices, reasons, latex, params=P)
@@ -359,14 +362,16 @@ def arc_angle(rng: random.Random, seed: int, *, theta=None, ask=None, fmt=None,
         Mis("halved the arc that was given", given_arc / E(2)),
         Mis("took a quarter of the measure", key / E(4)),
     ]
-    # nothing on a circle measures more than a full turn, and no source item
-    # prints half a degree, so either would be crossed off without arithmetic
-    mistakes = [m for m in mistakes
-                if m.value is not None and m.value.is_integer and 0 < float(m.value) <= 360]
     P = {"kind": "circles_arc_angle", "theta": theta, "ask": ask}
     if fmt == "spr":
         return Item("circles.arc_angle", "arc measure", "easy", seed, stem, "spr", key,
-                    key.gridin(), rationale, params=P)
+                    key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
+    # nothing on a circle measures more than a full turn, and no source item
+    # prints half a degree, so either would be crossed off without arithmetic;
+    # a grid-in has no options to cross off, so it keeps them all
+    mistakes = [m for m in mistakes
+                if m.value is not None and m.value.is_integer and 0 < float(m.value) <= 360]
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     if any(float(c.replace(",", "").replace(MINUS, "-")) > 360 for c in choices):
         # a filler slipped past the named mistakes; no arc measures more than a
@@ -447,7 +452,8 @@ def chord_angle(rng: random.Random, seed: int, *, base=None, r=None, ask=None,
     P = {"kind": "circles_chord_angle", "base": base, "r": float(r), "ask": ask}
     if fmt == "spr":
         return Item("circles.chord_angle", "chords and central angles", "hard", seed, stem,
-                    "spr", key, _spr(key), rationale, figure=fig, params=P)
+                    "spr", key, _spr(key), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng, fmt_value=pi_style(style))
     return Item("circles.chord_angle", "chords and central angles", "hard", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex, figure=fig, params=P)
@@ -511,7 +517,8 @@ def sector(rng: random.Random, seed: int, *, r=None, theta=None, ask=None, fmt=N
          "area": float(area)}
     if fmt == "spr":
         return Item("circles.sector", "sector area", "medium", seed, stem, "spr", key,
-                    _spr(key), rationale, params=P)
+                    _spr(key), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng, fmt_value=pi_style(style))
     return Item("circles.sector", "sector area", "medium", seed, stem, "mcq", key, letter,
                 rationale, choices, reasons, latex, params=P)

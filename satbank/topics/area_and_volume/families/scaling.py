@@ -18,7 +18,7 @@ from ....exact import E, PI, Exact
 from ....figures import cylinder_rh, two_rectangles
 from ....item import Item, ItemError, Mis, assemble, assemble_text
 from ....shapes import UNITS, Unit, unit_noun
-from ..kit import decimal_text, pick
+from ..kit import decimal_text, gridin_wrongs, pick
 
 __all__ = ["similar_linear", "similar_area", "solid_scaling", "percent_change"]
 

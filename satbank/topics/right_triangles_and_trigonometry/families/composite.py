@@ -13,7 +13,7 @@ import random
 from fractions import Fraction as Q
 
 from ....exact import E, Exact
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ..figures import altitude_triangle, cut_right_triangle
 from ..kit import TRIPLES, pick, ratio_text
 
@@ -90,13 +90,15 @@ def altitude_special(rng: random.Random, seed: int, *, alpha=None, gamma=None,
     P = {"kind": "rtt_altitude_special", "alpha": alpha, "gamma": gamma,
          "side": float(bc), "ask": ask}
     fmt = fmt or ("spr" if rng.random() < 0.3 else "mcq")
+    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("a radical cannot be entered in a grid-in")
+        # BC/3 is not the 1:2:3 result for every marked angle and asked side.
+        mistakes = [m for m in mistakes if m is not pool["ratio_one_two_three"]]
         return Item("rtt.altitude_special", "altitudes and special triangles", "medium",
                     seed, stem, "spr", key, key.gridin(), rationale, figure=fig,
-                    params=P)
-    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
+                    params=P, spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("rtt.altitude_special", "altitudes and special triangles", "medium",
                 seed, stem, "mcq", key, letter, rationale, choices, reasons, latex,
@@ -167,12 +169,18 @@ def nested_similar(rng: random.Random, seed: int, *, triple=None, scale=None, cu
     P = {"kind": "rtt_nested_similar", "u": u, "v": v, "w": w, "t": t,
          "cut": float(da), "ask": ask}
     fmt = fmt or ("spr" if rng.random() < 0.4 else "mcq")
+    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("a radical cannot be entered in a grid-in")
+        if ask != "de":
+            mistakes = [m for m in mistakes if m not in
+                        (pool["whole_leg"], pool["wrong_share"], pool["difference"])]
+        if ask == "be":
+            mistakes = [m for m in mistakes if m is not pool["hypotenuse"]]
         return Item("rtt.nested_similar", "similar right triangles", "hard", seed, stem,
-                    "spr", key, key.gridin(), rationale, figure=fig, params=P)
-    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
+                    "spr", key, key.gridin(), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("rtt.nested_similar", "similar right triangles", "hard", seed, stem,
                 "mcq", key, letter, rationale, choices, reasons, latex, figure=fig,
@@ -246,12 +254,16 @@ def parallel_similar(rng: random.Random, seed: int, *, base=None, height=None,
                                                                k.denominator],
          "ask": ask}
     fmt = fmt or ("spr" if rng.random() < 0.4 else "mcq")
+    mistakes = [m_ for m_ in pick(pool, wrongs) if m_.value is not None]
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("a radical cannot be entered in a grid-in")
+        mistakes = [m_ for m_ in mistakes if m_ is not pool["difference"]]
+        if ask != "ce":
+            mistakes = [m_ for m_ in mistakes if m_ not in
+                        (pool["small"], pool["sum_scaled"])]
         return Item("rtt.parallel_similar", "similar right triangles", "hard", seed,
                     stem, "spr", key, key.gridin(), rationale, figure=fig, params=P)
-    mistakes = [m_ for m_ in pick(pool, wrongs) if m_.value is not None]
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("rtt.parallel_similar", "similar right triangles", "hard", seed, stem,
                 "mcq", key, letter, rationale, choices, reasons, latex, figure=fig,

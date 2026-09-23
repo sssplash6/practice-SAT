@@ -144,17 +144,18 @@ def freq_table(rng: random.Random, seed: int, *, scenario=None, counts=None, idx
     rationale = (f"{num:,} of the {N:,} {c.units} are {low}, so the "
                  f"probability is {key.plain()}.")
     table = _rows(c, cats, counts, total_row)
-    if fmt == "spr":
-        if not griddable(Q(num, N)):
-            raise ItemError("this probability is not enterable in five characters")
-        return spr("prob.freq_table", "frequency table", tier, seed,
-                   stem + " (Express your answer as a decimal or fraction, not as a "
-                   "percent.)", Q(num, N), rationale, params=P, table=table)
     prefer = [k for k in (f"cat{j}" for j in range(len(cats))) if k in pool] + \
              ["not", "over_others", "count_as_decimal"]
     mistakes = [(why, render(a, b, surface, places))
                 for why, (a, b) in pick(pool, wrongs or order_of(pool, prefer), wrongs)
                 if b]
+    if fmt == "spr":
+        if not griddable(Q(num, N)):
+            raise ItemError("this probability is not enterable in five characters")
+        return spr("prob.freq_table", "frequency table", tier, seed,
+                   stem + " (Express your answer as a decimal or fraction, not as a "
+                   "percent.)", Q(num, N), rationale, params=P, table=table,
+                   mistakes=mistakes)
     return mcq("prob.freq_table", "frequency table", tier, seed, stem, key, mistakes,
                rng, rationale, params=P, table=table)
 
@@ -235,14 +236,15 @@ def freq_grouped(rng: random.Random, seed: int, *, scenario=None, start=None,
     rows = [[head, chead]] + [[lab, f"{k:,}"] for lab, k in zip(labels, counts)]
     if total_row:
         rows.append(["Total", f"{N:,}"])
+    mistakes = [(why, ratio(x, y)) for why, (x, y) in
+                pick(pool, wrongs or order_of(pool, ["joint", "band",
+                                                     "complement_in"]), wrongs) if y]
     if fmt == "spr":
         if not griddable(Q(num, den)):
             raise ItemError("this probability is not enterable in five characters")
         return spr("prob.freq_grouped", "frequency table", tier, seed,
                    stem + " (Express your answer as a decimal or fraction, not as a "
-                   "percent.)", Q(num, den), rationale, params=P, table=rows)
-    mistakes = [(why, ratio(x, y)) for why, (x, y) in
-                pick(pool, wrongs or order_of(pool, ["joint", "band",
-                                                     "complement_in"]), wrongs) if y]
+                   "percent.)", Q(num, den), rationale, params=P, table=rows,
+                   mistakes=mistakes)
     return mcq("prob.freq_grouped", "frequency table", tier, seed, stem, key,
                mistakes, rng, rationale, params=P, table=rows)

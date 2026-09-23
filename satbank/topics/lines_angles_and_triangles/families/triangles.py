@@ -19,7 +19,7 @@ import random
 from fractions import Fraction
 
 from ....exact import E
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ..figures import Fig, P, direction, meet, polar, ray, triangle_pts
 from ..kit import deg, pick, plain, whole
 
@@ -52,7 +52,8 @@ def finish(name, skill, tier, seed, stem, key, mistakes, rng, rationale, *,
         if not key.is_rational:
             raise ItemError("this answer cannot be entered in a grid-in")
         return Item(name, skill, tier, seed, stem, "spr", key, key.gridin(),
-                    rationale, figure=figure, params=params)
+                    rationale, figure=figure, params=params,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     shown = shown or (deg if unit else plain)
     choices, latex, reasons, letter = assemble(key, mistakes, rng, fmt_value=shown)
     return Item(name, skill, tier, seed, stem, "mcq", key, letter, rationale,

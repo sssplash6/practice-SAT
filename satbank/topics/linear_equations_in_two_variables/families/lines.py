@@ -15,7 +15,7 @@ from fractions import Fraction as Q
 from math import gcd
 
 from ....figures import coordinate_grid
-from ....item import Item, ItemError, Mis
+from ....item import Item, ItemError, Mis, gridin_mistakes
 from ..common import (MINUS, choose, coef_text, ex, lin_text, numtext, point_text, q,
                       sig, std_text, text_item)
 
@@ -237,9 +237,27 @@ def parallel_perpendicular(rng: random.Random, seed: int, *, form=None, relation
     if fmt == "spr":
         if not keyx.is_rational or len(keyx.gridin()) > 6:
             raise ItemError("the slope does not fit a grid-in")
+        # the sum/diff/product extras are negative reciprocals: no parallel step
+        drop = ("sum", "diff", "product") if relation == "parallel" else ()
+        # a perpendicular extra is a wrong slope the student still turns correctly:
+        # the words name both steps, and the read coefficients get turned here
+        turned = {"sum": "added the y-intercept to the slope",
+                  "diff": "subtracted the slope from the y-intercept",
+                  "product": "multiplied the slope by the y-intercept",
+                  "coefx": "read the coefficient of x as the slope",
+                  "coefy": "read the coefficient of y as the slope",
+                  "negcoefx": "read the coefficient of x as the slope and changed its sign"}
+        named = []
+        for t, r, v in pool:
+            if t in drop or v is None:
+                continue
+            if relation == "perpendicular" and t in turned:
+                r = f"{turned[t]}, then took the negative reciprocal of that"
+                v = -1 / q(v) if t in ("coefx", "coefy", "negcoefx") else v
+            named.append(Mis(r, ex(q(v))))
         return Item("le2.parallel_perpendicular", "a line parallel or perpendicular to "
                     "another", "medium", seed, stem, "spr", keyx, keyx.gridin(), why,
-                    params=P)
+                    params=P, spr_mistakes=gridin_mistakes(keyx, named))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                              fillers="shift")
     return Item("le2.parallel_perpendicular", "a line parallel or perpendicular to "
@@ -312,12 +330,6 @@ def slope_two_points(rng: random.Random, seed: int, *, given=None, ask=None, x1=
     P = {"kind": "le2_two_points", "given": given, "ask": ask,
          "x1": [X1.numerator, X1.denominator], "y1": [Y1.numerator, Y1.denominator],
          "x2": [X2.numerator, X2.denominator], "y2": [Y2.numerator, Y2.denominator]}
-    fmt = fmt or ("mcq" if given == "intercepts" else "spr")
-    if fmt == "spr":
-        if not keyx.is_rational or len(keyx.gridin()) > 6:
-            raise ItemError("the slope does not fit a grid-in")
-        return Item("le2.slope_two_points", "a slope from two points", "medium", seed,
-                    stem, "spr", keyx, keyx.gridin(), why, figure=fig, params=P)
     rise, run = Y2 - Y1, X2 - X1
     mistakes = [Mis("inverted the slope, dividing the run by the rise", ex(1 / key)),
                 Mis("multiplied the two intercept values instead of dividing one by "
@@ -327,6 +339,19 @@ def slope_two_points(rng: random.Random, seed: int, *, given=None, ask=None, x1=
                 Mis("changed the sign of the slope", ex(-key)),
                 Mis("divided the run by the rise and changed the sign", ex(-1 / key))]
     mistakes = [m for m in mistakes if m.value is not None]
+    fmt = fmt or ("mcq" if given == "intercepts" else "spr")
+    if fmt == "spr":
+        if not keyx.is_rational or len(keyx.gridin()) > 6:
+            raise ItemError("the slope does not fit a grid-in")
+        # rise*run is not the product of anything the item prints (minus it, for
+        # intercepts), and a perpendicular ask moves what each flip of the key means
+        named = ([mistakes[0], mistakes[-2], mistakes[-1]] if ask == "slope" else
+                 [Mis("gave the given line's own slope", ex(M)),
+                  Mis("changed the sign of the slope without inverting it", ex(-M)),
+                  Mis("inverted the slope without changing its sign", ex(1 / M))])
+        return Item("le2.slope_two_points", "a slope from two points", "medium", seed,
+                    stem, "spr", keyx, keyx.gridin(), why, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, named))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                              fillers="shift")
     return Item("le2.slope_two_points", "a slope from two points", "medium", seed, stem,

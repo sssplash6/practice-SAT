@@ -16,9 +16,9 @@ state where it knew the mistake and printed something else.
 from __future__ import annotations
 
 from ...exact import MINUS, Exact
-from ...item import ItemError, Mis
+from ...item import ItemError, Mis, gridin_mistakes
 
-__all__ = ["pick", "attempt", "decimal_text", "signed"]
+__all__ = ["pick", "gridin_wrongs", "attempt", "decimal_text", "signed"]
 
 
 def pick(pool: dict[str, Mis], wrongs: list[str] | None) -> list[Mis]:
@@ -32,6 +32,12 @@ def pick(pool: dict[str, Mis], wrongs: list[str] | None) -> list[Mis]:
         if m is not None and m.value is not None:
             out.append(m)
     return out
+
+
+def gridin_wrongs(key, pool: dict[str, Mis]) -> list[Mis]:
+    """The pool's mistakes a grid-in can name. A grid-in takes digits, so a
+    wrong value in π or a root could never be typed and is left out."""
+    return gridin_mistakes(key, [m for m in pick(pool, None) if m.value.is_rational])
 
 
 def attempt(fn) -> Exact | None:

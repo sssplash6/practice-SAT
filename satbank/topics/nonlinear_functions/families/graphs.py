@@ -129,13 +129,6 @@ def graph_intercept(rng: random.Random, seed: int, *, shape=None, c=None, d=None
          "a": None if a is None else int(a),
          "base": None if base is None else int(base)}
 
-    if fmt == "spr":
-        frame = rng.randrange(len(INTERCEPT_SPR)) if frame is None else frame
-        stem = INTERCEPT_SPR[frame].format(what=what, n=name)
-        return value_item("nlfunc.graph_intercept", "a y-intercept read off a graph",
-                          "easy", seed, stem, q(y0), [], rng, P, why, fmt="spr",
-                          figure=fig)
-
     key = point(0, y0)
     pool = {
         "asymptote": ("read the horizontal line the curve approaches instead of the "
@@ -154,6 +147,17 @@ def graph_intercept(rng: random.Random, seed: int, *, shape=None, c=None, d=None
                  None if shape not in ("exp_asymptote", "exp_decay")
                  else pair(point(-1, round(fnc(-1))), -1, round(fnc(-1)))),
     }
+
+    if fmt == "spr":
+        frame = rng.randrange(len(INTERCEPT_SPR)) if frame is None else frame
+        stem = INTERCEPT_SPR[frame].format(what=what, n=name)
+        # a grid-in types the height alone: each misread point, by its y
+        typed = [Mis(m.reason, Q(*m.value[1][2:]))
+                 for m in pick(pool, ["asymptote", "origin", "left"])]
+        return value_item("nlfunc.graph_intercept", "a y-intercept read off a graph",
+                          "easy", seed, stem, q(y0), typed, rng, P, why, fmt="spr",
+                          figure=fig)
+
     order = ["asymptote", "origin", "swapped", "both", "asym_both", "left"]
     return text_item("nlfunc.graph_intercept", "a y-intercept read off a graph",
                      "easy", seed, INTERCEPT_MCQ, key, sig(0, y0),

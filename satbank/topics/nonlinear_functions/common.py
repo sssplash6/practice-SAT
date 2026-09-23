@@ -18,7 +18,7 @@ import re
 from fractions import Fraction as Q
 
 from ...exact import E, Exact
-from ...item import Item, ItemError, Mis, assemble, assemble_text
+from ...item import Item, ItemError, Mis, assemble, assemble_text, gridin_mistakes
 
 __all__ = ["MINUS", "Q", "q", "ex", "sup", "num", "dec", "power", "mono", "join",
            "signed", "linear_factor",
@@ -348,6 +348,8 @@ def value_item(template: str, skill: str, difficulty: str, seed: int, stem: str,
                fillers: str = "shift", figure=None, table=None) -> Item:
     """One numeric answer, as a grid-in or as four ordered options."""
     keyx = ex(key)
+    kept = Named(Mis(m.reason, ex(m.value)) for m in mistakes if m.value is not None)
+    kept.named = getattr(mistakes, "named", False)
     if fmt == "spr":
         try:
             entered = keyx.gridin()
@@ -356,13 +358,12 @@ def value_item(template: str, skill: str, difficulty: str, seed: int, stem: str,
         if len(entered.replace("-", "").replace(".", "").replace("/", "")) > 5:
             raise ItemError("a grid-in answer is at most five characters")
         return Item(template, skill, difficulty, seed, stem, "spr", keyx, entered,
-                    rationale, figure=figure, table=table, params=params)
+                    rationale, figure=figure, table=table, params=params,
+                    spr_mistakes=gridin_mistakes(keyx, kept))
     if fmt_value is None:
         # Exact.plain() writes a hyphen; the source typesets a minus sign, and
         # every option on this topic is a plain rational
         fmt_value = num
-    kept = Named(Mis(m.reason, ex(m.value)) for m in mistakes if m.value is not None)
-    kept.named = getattr(mistakes, "named", False)
     mistakes = kept
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, fmt_value=fmt_value,
                                              signed=signed, fillers=fillers)

@@ -13,7 +13,7 @@ import random
 from fractions import Fraction as Q
 
 from ....exact import E, Exact
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ..kit import TRIPLES, assemble_exact, exact_leg, pick, ratio_text
 
 __all__ = ["similar_ratio", "similar_side", "similar_sides_ratio"]
@@ -146,10 +146,13 @@ def similar_ratio(rng: random.Random, seed: int, *, given_fn=None, given_at=None
     P = {"kind": "rtt_similar_ratio", "given_fn": given_fn, "given_at": given_at,
          "p": p, "q": q, "ask_fn": ask_fn, "ask_at": ask_at}
     fmt = fmt or ("spr" if rng.random() < 0.4 else "mcq")
+    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
     if fmt == "spr":
+        if ask_fn == "tan":
+            mistakes = [m for m in mistakes if m not in
+                        (pool["sum_denominator"], pool["swapped_sum"])]
         return Item("rtt.similar_ratio", "similar right triangles", "hard", seed, stem,
                     "spr", key, key.gridin(), rationale, params=P)
-    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("rtt.similar_ratio", "similar right triangles", "hard", seed, stem,
                 "mcq", key, letter, rationale, choices, reasons, latex, params=P)
@@ -212,12 +215,16 @@ def similar_side(rng: random.Random, seed: int, *, tan=None, p=None, q=None, leg
     P = {"kind": "rtt_similar_side", "tan": [str(t.coef), t.rad], "leg": float(m),
          "ask": ask}
     fmt = fmt or ("spr" if rng.random() < 0.25 else "mcq")
+    mistakes = [m_ for m_ in pick(pool, wrongs) if m_.value is not None]
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("a radical cannot be entered in a grid-in")
+        mistakes = [m_ for m_ in mistakes if m_ is not pool["doubled"]]
+        if ask == "opposite":
+            mistakes = [m_ for m_ in mistakes if m_ is not pool["times_sine"]]
         return Item("rtt.similar_side", "similar right triangles", "hard", seed, stem,
-                    "spr", key, key.gridin(), rationale, params=P)
-    mistakes = [m_ for m_ in pick(pool, wrongs) if m_.value is not None]
+                    "spr", key, key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble_exact(
         key, mistakes, rng, strict=wrongs is None)
     return Item("rtt.similar_side", "similar right triangles", "hard", seed, stem,
@@ -268,10 +275,11 @@ def similar_sides_ratio(rng: random.Random, seed: int, *, triple=None, scale=Non
     P = {"kind": "rtt_similar_sides_ratio", "u": u, "v": v, "w": w, "t": t,
          "ask_fn": ask_fn, "at_T": at_T}
     fmt = fmt or ("spr" if rng.random() < 0.25 else "mcq")
+    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
     if fmt == "spr":
         return Item("rtt.similar_sides_ratio", "similar right triangles", "hard", seed,
-                    stem, "spr", key, key.gridin(), rationale, params=P)
-    mistakes = [m for m in pick(pool, wrongs) if m.value is not None]
+                    stem, "spr", key, key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("rtt.similar_sides_ratio", "similar right triangles", "hard", seed,
                 stem, "mcq", key, letter, rationale, choices, reasons, latex, params=P)

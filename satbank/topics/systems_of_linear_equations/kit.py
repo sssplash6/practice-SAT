@@ -16,12 +16,12 @@ import re
 from fractions import Fraction as Q
 
 from ...exact import E, Exact
-from ...item import ItemError, Mis, assemble
+from ...item import ItemError, Mis, assemble, gridin_mistakes
 
 __all__ = ["Q", "E", "MINUS", "q", "ex", "num", "dec", "money", "coef", "join",
            "std", "solved", "point", "opt_pair", "displayed", "sent", "choices",
            "griddable", "ASKS", "ask_label", "ask_value", "terminating",
-           "opt_dec", "pick", "side"]
+           "opt_dec", "pick", "gridin_pool", "side"]
 
 MINUS = "−"            # the typeset minus sign, as the source prints it
 GROUP_FROM = 1000           # the source writes 2,300 and 27,600 but not 881
@@ -252,6 +252,17 @@ def choices(key, mistakes: list[Mis], rng: random.Random, fmt_value=None):
     if shapes.count(shapes["ABCD".index(built[3])]) == 1:
         raise ItemError("the key would be the only option of its printed form")
     return built
+
+
+def gridin_pool(key, pool: dict, drop=()) -> list[Mis]:
+    """The whole pool as a grid-in names its wrong typed answers.
+
+    A grid-in shows no options, so every misconception counts, not just the three
+    a source printed. `drop` strikes entries whose wording does not fit this draw.
+    """
+    return gridin_mistakes(ex(key), [Mis(m.reason, ex(m.value))
+                                     for k, m in pool.items()
+                                     if k not in drop and m.value is not None])
 
 
 def pick(pool: dict, wrongs: list | None) -> list[Mis]:

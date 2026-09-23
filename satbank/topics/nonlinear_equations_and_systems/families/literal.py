@@ -25,7 +25,7 @@ from fractions import Fraction as Q
 from ....exact import E
 from ....item import Item, ItemError, Mis
 from ..kit import (MINUS, cap, coef_times, dec, displayed, eq, gridin,
-                   griddable, mono, num, paren, pick, prod, q, sent,
+                   griddable, gridin_pool, mono, num, paren, pick, prod, q, sent,
                    signed_terms, sup, text_choices)
 
 __all__ = ["isolate_sum", "isolate_bracket", "isolate_factor",
@@ -219,11 +219,32 @@ def isolate_sum(rng: random.Random, seed: int, *, target=None, coef=None,
         if not griddable(want) or want == 0:
             raise ItemError("that coefficient could not be entered in the grid")
         keyx = E(want)
+        if not extras:
+            # nothing is moved across, so no slip in moving it can be named
+            pool = {n: m for n, m in pool.items()
+                    if n not in ("negate_all", "negate_all_sign", "reversed")}
         return Item("nleq.isolate_sum", "rearranging a formula", difficulty, seed,
                     sent(stem), "spr", keyx, gridin(want), sent(story_text),
                     params=dict(P, ask="coefficient"))
     return _build("nleq.isolate_sum", difficulty, seed, stem, key, pool, wrongs,
                   rng, story_text, [target] + names, dict(P, ask="equation"))
+
+
+def _coefficients(pool: dict, letter: str) -> list[Mis]:
+    """The coefficient of `letter` each wrong rearrangement prints -- the number
+    a student who made that slip would grid. Read back from the printed side,
+    which is linear in `letter` wherever the grid-in is asked."""
+    from ....expr import ParseError, parse
+    out = []
+    for m in pool.values():
+        try:
+            f = parse(m.value.split(" = ", 1)[1], names=(letter,))
+            c = f(**{letter: 1}) - f(**{letter: 0})
+        except (ParseError, ZeroDivisionError, ValueError):
+            continue
+        # ponytail: float read-back, exact for denominators up to 10,000
+        out.append(Mis(m.reason, Q(c).limit_denominator(10_000)))
+    return out
 
 
 def _draw_sum(rng: random.Random):

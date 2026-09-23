@@ -10,7 +10,7 @@ from __future__ import annotations
 import random
 from fractions import Fraction as Q
 
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ...linear_functions.common import MINUS, choose, dec, ex, numtext, q
 from .define import _text_item
 
@@ -94,6 +94,10 @@ def affine_conversion(rng: random.Random, seed: int, *, ctx=0, delta=None, ask=N
                     Mis("substituted the change into the whole formula and kept the "
                         "constant term", scale * (s - delta) + t),
                     Mis("inverted the scale factor", delta * qd / p)]
+        # substituting the change for x gives F(delta) = (p/q)(delta - s) + t; the
+        # same with t dropped as well is no single route, so a grid-in names only
+        # the whole substitution
+        spr = [mistakes[0], Mis(mistakes[1].reason, scale * (delta - s) + t), mistakes[3]]
         rationale = (f"A change of {dec(delta, 2)} scales by {numtext(p)}/{numtext(qd)}, "
                      f"giving {dec(key, 2)}.")
         P = {"kind": "lf_affine", "ask": ask, "p": [p.numerator, p.denominator],
@@ -112,6 +116,9 @@ def affine_conversion(rng: random.Random, seed: int, *, ctx=0, delta=None, ask=N
                         (target + t) / scale + s),
                     Mis("left the shift out", (target - t) / scale),
                     Mis("inverted the scale factor", (target - t) * scale + s)]
+        # "the shift" is s, 273.15; the slip adds t, the constant term
+        spr = [Mis("added the constant term instead of subtracting it", mistakes[0].value)
+               ] + mistakes[1:]
         rationale = (f"({dec(target, 2)} {MINUS} {numtext(t)}) x {numtext(qd)}/{numtext(p)} + "
                      f"{numtext(s, 'dec')} = {numtext(key, 'dec')}.")
         P = {"kind": "lf_affine", "ask": ask, "p": [p.numerator, p.denominator],
@@ -120,12 +127,14 @@ def affine_conversion(rng: random.Random, seed: int, *, ctx=0, delta=None, ask=N
              "target": [target.numerator, target.denominator], "places": None}
         fmt = fmt or "spr"
     keyx = ex(key)
+    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
         if not keyx.is_rational or len(keyx.gridin()) > 8:
             raise ItemError("the answer does not fit a grid-in")
         return Item("lin.affine_conversion", "a scaled linear conversion", "hard", seed,
-                    stem, "spr", keyx, keyx.gridin(), rationale, params=P)
-    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
+                    stem, "spr", keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(
+                        keyx, [Mis(r.reason, ex(r.value)) for r in spr]))
     choices, latex, reasons, letter = choose(
         keyx, mistakes, rng, fmt_value=lambda v: dec(v, 2), signed=True, fillers="shift")
     return Item("lin.affine_conversion", "a scaled linear conversion", "hard", seed, stem,

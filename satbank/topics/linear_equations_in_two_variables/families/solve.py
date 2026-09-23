@@ -14,7 +14,7 @@ from __future__ import annotations
 import random
 from fractions import Fraction as Q
 
-from ....item import Item, ItemError, Mis
+from ....item import Item, ItemError, Mis, gridin_mistakes
 from ..common import choose, dec, ex, numtext, q, std_text
 
 __all__ = ["substitute", "context_substitute", "mixture_solve"]
@@ -26,20 +26,25 @@ def _article(text: str) -> str:
     return "an" if lead[:1] == "8" or lead[:2] == "11" or lead[:2] == "18" else "a"
 
 
-def _named(key, mistakes, whole=False):
+def _named(key, mistakes, whole=False, unique=False):
     """Drop the candidates that coincide with the key, repeat, or cannot be one.
 
     `whole=True` throws away a candidate that is not a whole number: when the
     answer counts boxes, a wrong option of 16.75 boxes is not a mistake any
     student makes, it is an option nobody would read twice.
+
+    `unique=True` (grid-ins) throws away a value two reasons both give: the typed
+    value cannot say which of the two routes the student took, so neither is named.
     """
     seen = {q(key)}
+    values = [q(v) for _, v in mistakes if v is not None]
     out = []
     for reason, value in mistakes:
         if value is None:
             continue
         v = q(value)
-        if v in seen or (whole and v.denominator != 1):
+        if (v in seen or (whole and v.denominator != 1)
+                or (unique and values.count(v) > 1)):
             continue
         seen.add(v)
         out.append(Mis(reason, ex(v)))
@@ -82,6 +87,10 @@ SUBST = [
          reversed=True, a=2, b=2, glo=3, ghi=40, tlo=3, thi=40, places=None, whole=True,
          stem="The equation {eq} gives the relationship between the side lengths a and "
               "b of a certain parallelogram. If a = {given}, what is the value of b?",
+         stated="gave the side length a the question already states",
+         total="halved the total without first taking off the two sides of length a",
+         left="took off the two sides of length a but never halved what was left",
+         less="took off only one side of length a before halving",
          why="A parallelogram has two sides of each length, so the two sides of length "
              "{given} use up {part} of the {c}, leaving {left} for the other pair."),
     # 4 -- the perimeter of a rug (1.29)
@@ -90,6 +99,10 @@ SUBST = [
          stem="The equation {eq} gives the perimeter of a rectangular rug that has "
               "length x, in feet, and width y, in feet. The width of the rug is {given} "
               "feet. What is the length, in feet, of the rug?",
+         stated="gave the width the question already states",
+         total="halved the perimeter without first taking off the two widths",
+         left="took off both widths but never halved what was left",
+         less="took off only one width before halving",
          why="The two widths of {given} feet take up {part} feet of the {c}-foot "
              "perimeter, and the remaining {left} feet is shared by the two lengths."),
     # 5 -- two kinds of tree in a preserve (1.32)
@@ -202,25 +215,33 @@ def substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, given
     else:
         part = coef_known * g
         left = C - part
+        # a grid-in student asked for a side or a count does not type the perimeter,
+        # the area or the 7 each tile covers without working anything out; the
+        # multiple-choice lists keep them as they print them
+        mcq = d["fmt"] == "mcq"
         mistakes = _named(key, [
-            (f"gave the number of {d.get('x1' if solve == 'y' else 'y1', 'items')} the "
+            (d.get("stated") or
+             f"gave the number of {d.get('x1' if solve == 'y' else 'y1', 'items')} the "
              f"question already states", g),
-            ("divided the total by what one of them accounts for without first taking "
-             "off the other kind", C / coef_ask),
-            ("took the other kind off the total but never divided by what one of them "
-             "accounts for", left),
-            ("subtracted the number of the other kind rather than what they account "
-             "for", (C - g) / coef_ask),
-            ("gave the total itself", C),
+            (d.get("total") or "divided the total by what one of them accounts for "
+             "without first taking off the other kind", C / coef_ask),
+            (d.get("left") or "took the other kind off the total but never divided by "
+             "what one of them accounts for", left),
+            (d.get("less") or "subtracted the number of the other kind rather than what "
+             "they account for", (C - g) / coef_ask),
+            ("gave the total itself", C if mcq else None),
             ("divided by the other kind's coefficient", left / coef_known),
             ("gave what one of them accounts for rather than how many there are",
-             coef_ask if coef_ask != 1 else None),
+             coef_ask if coef_ask != 1 and mcq else None),
             ("gave what one of the other kind accounts for",
-             coef_known if coef_known != 1 else None),
+             coef_known if coef_known != 1 and mcq else None),
             ("gave a number the passage mentions that the equation does not involve",
              acres if d.get("decoy") == "acres" else None),
+            # equal numbers halve the total only when each one counts 1; the
+            # multiple-choice lists keep it as they print it
             ("halved the total, as though the two kinds came in equal numbers",
-             C / 2)], d.get("whole"))
+             C / 2 if mcq or coef_ask == coef_known == 1 else None)],
+            d.get("whole"), unique=not mcq)
         why = d["why"].format(a=numtext(A, style, places),
                               b=numtext(coef_ask, style, places),
                               c=numtext(C, style, places), given=numtext(g),
@@ -234,7 +255,8 @@ def substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, given
         if not keyx.is_rational or len(keyx.gridin()) > 6:
             raise ItemError("the answer does not fit a grid-in")
         return Item("le2.substitute", "substituting into a two-variable equation",
-                    "easy", seed, stem, "spr", keyx, keyx.gridin(), why, params=P)
+                    "easy", seed, stem, "spr", keyx, keyx.gridin(), why, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, mistakes))
     if len(mistakes) < 3:
         raise ItemError("these numbers leave too few of the named mistakes to choose "
                         "three distinct wrong answers from")
@@ -270,7 +292,8 @@ CONTEXT = [
               "hour for the first x hours. He then completed the trip, driving at an "
               "average speed of {b} miles per hour for the remaining y hours. If x = "
               "{given}, what is the value of y ?",
-         swap=True, asked="hours at the second speed", known="hours at the first speed",
+         swap=True, speeds=True, asked="hours at the second speed",
+         known="hours at the first speed",
          why="{given} hours at {a} miles per hour covers {part} miles, so {left} miles "
              "of the {c} are left to drive at {b} miles per hour."),
     # 3 -- calories from two activities, quoted per half hour (2.4)
@@ -365,6 +388,15 @@ def context_substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=Non
                         ("left the bicycling out of the total", C / A),
                         ("used the half-hour figure for the hiking only",
                          (C - B * g) / ah)] + mistakes
+        if d.get("speeds"):
+            # speeds and hours, not counts and prices; taking hours off miles is no
+            # route anyone takes, and nor is typing a speed as the hours without
+            # working anything out, so the entries that do are left out
+            mistakes = [(f"gave the number of {known} the question already states", g),
+                        ("gave the miles left rather than the hours they take", left),
+                        ("divided the whole trip by the second speed without taking off "
+                         "the miles already driven", C / A),
+                        ("gave the miles driven at the first speed", B * g)]
         P = {"kind": "le2_context", "shape": shape, "a": [A.numerator, A.denominator],
              "b": [B.numerator, B.denominator], "c": [C.numerator, C.denominator],
              "given": [g.numerator, g.denominator]}
@@ -418,12 +450,13 @@ def context_substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=Non
     keyx = ex(key)
     if float(keyx) <= 0:
         raise ItemError("the quantity asked for must be positive")
+    named = _named(key, mistakes, d.get("whole", False), unique=d["fmt"] == "spr")
     if d["fmt"] == "spr":
         if not keyx.is_rational or len(keyx.gridin()) > 6:
             raise ItemError("the answer does not fit a grid-in")
         return Item("le2.context_substitute", "writing and solving an equation",
-                    "medium", seed, stem, "spr", keyx, keyx.gridin(), why, params=P)
-    named = _named(key, mistakes, d.get("whole", False))
+                    "medium", seed, stem, "spr", keyx, keyx.gridin(), why, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, named))
     if len(named) < 3:
         raise ItemError("these numbers leave too few of the named mistakes to choose "
                         "three distinct wrong answers from")

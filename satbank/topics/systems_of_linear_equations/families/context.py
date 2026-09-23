@@ -13,7 +13,8 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....item import Item, ItemError, Mis
-from ..kit import MINUS, choices, coef, dec, griddable, money, num, pick, q, sent
+from ..kit import (MINUS, choices, coef, dec, griddable, gridin_pool, money, num,
+                   pick, q, sent)
 
 __all__ = ["purchase_solve", "relation_pair", "two_rates"]
 
@@ -39,7 +40,7 @@ COUNT_VALUE = [
               "incorrect answers from twice the number of correct answers. If a "
               "player answered {n} questions and obtained a score of {t}, how many "
               "questions did the player answer correctly?", currency=False,
-         cents=False, fixed=True, per="points an answer is worth",
+         cents=False, fixed=True, per="point value",
          each="kind of answer", kinds="kinds of answer"),
     dict(key="cinema", ask="spend_first", spr=True,
          text="A movie theater sells two types of tickets, adult tickets for {p} and "
@@ -191,6 +192,17 @@ def purchase_solve(rng: random.Random, seed: int, *, shape=None, scene=None, n=N
     if spr:
         if not griddable(key):
             raise ItemError("this answer could not be entered in the grid")
+        # trivia never prints its −1
+        grid, drop = pool, ("price2", "total_over_price2") if d.get("fixed") else ()
+        if ask == "spend_first":
+            # a dollar answer: the adult count is not "the other kind", ticket
+            # counts (n/2, t/p, t/q) and dollars less tickets are not dollars,
+            # a slip of one ticket is not a slip of one dollar, and the child
+            # price is no adult spending; stopping at the count is the slip
+            grid = {"count": Mis(f"found the number of the first {each} and stopped "
+                                 f"before multiplying by its {per}", x0), **pool}
+            drop = ("other", "half_count", "off_by_one_up", "off_by_one_down",
+                    "total_over_price1", "total_over_price2", "no_price", "price2")
         return Item("sys.purchase_solve", "a system from a purchase", "medium", seed,
                     stem, "spr", keyx, keyx.gridin(), rationale, params=P)
     fmt_value = None
@@ -270,7 +282,11 @@ def relation_pair(rng: random.Random, seed: int, *, scene=None, k=None, d=None,
         if not griddable(key):
             raise ItemError("this answer could not be entered in the grid")
         return Item("sys.relation_pair", "a multiple and a total", "hard", seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, params=P)
+                    "spr", keyx, keyx.gridin(), rationale, params=P,
+                    # the rest of the pool is worded for a stated difference
+                    spr_mistakes=gridin_pool(keyx, pool, () if s["link"] == "difference"
+                                             else ("gap", "mult_gap", "half_gap",
+                                                   "over_k")))
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng)
     return Item("sys.relation_pair", "a multiple and a total", "medium", seed, stem,
                 "mcq", keyx, letter, rationale, ch, why, tex, params=P)
