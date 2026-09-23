@@ -83,6 +83,14 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
     allowed = set(cfg.get("difficulty") or TIERS)
     learner = row["learner"]
 
+    # the same trap with new numbers, before anything else is asked -- even the
+    # next saved question -- and a difficulty filter never blocks it
+    rep = cfg.pop("repair", None)
+    if rep:
+        card = _fresh(b, rep, None)
+        if card:
+            return card, True
+
     # a saved question, served again exactly
     while cfg.get("items"):
         template, seed = cfg["items"].pop(0)
@@ -90,13 +98,6 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
             return practice.Card.of(template, seed, generate(template, seed), topic_of(template)), False
         except Exception:
             continue
-
-    # the same trap with new numbers; a difficulty filter never blocks a repair
-    rep = cfg.pop("repair", None)
-    if rep:
-        card = _fresh(b, rep, None)
-        if card:
-            return card, True
 
     # templates queued by a report or the mistakes list
     while cfg.get("queue"):
