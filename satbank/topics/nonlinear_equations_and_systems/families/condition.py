@@ -18,9 +18,9 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....item import Item, ItemError, Mis
-from ..kit import (MINUS, choices, dec, displayed, eq, gridin, griddable, join,
-                   mono, num, paren, pick, poly, q, sent, signed_terms, sup,
-                   text_choices)
+from ..kit import (MINUS, choices, dec, displayed, eq, gridin, griddable,
+                   gridin_pool, join, mono, num, paren, pick, poly, q, sent,
+                   signed_terms, sup, text_choices)
 
 __all__ = ["count_real_solutions", "count_system_solutions",
            "symbolic_intersections", "discriminant_constant", "tangent_constant",
@@ -258,9 +258,16 @@ def discriminant_constant(rng: random.Random, seed: int, *, a=None, b=None, c=No
         keyx = E(key)
         fmt = fmt or "spr"
         if fmt == "spr":
+            # key + d leaves D = −4ad, so it crosses twice only when ad < 0;
+            # file each value under the reason it actually lands on
+            cross, clear = (key + d, key - d) if a * d < 0 else (key - d, key + d)
+            named = dict(pool,
+                         two_solutions=Mis(pool["two_solutions"].reason, cross),
+                         no_solutions=Mis(pool["no_solutions"].reason, clear))
             return Item("nleq.discriminant_constant", "a condition on the "
                         "discriminant", difficulty, seed, sent(stem), "spr", keyx,
-                        gridin(key), rationale, params=P)
+                        gridin(key), rationale, params=P,
+                        spr_mistakes=gridin_pool(keyx, named.values()))
         ch, tex, why, letter_ = choices(keyx, pick(pool, wrongs), rng, guard=wrongs is None)
         return Item("nleq.discriminant_constant", "a condition on the discriminant",
                     difficulty, seed, sent(stem), "mcq", keyx, letter_, rationale,
@@ -458,7 +465,8 @@ def tangent_point(rng: random.Random, seed: int, *, a=None, b=None, c=None, m=No
     keyx = E(key)
     if fmt == "spr":
         return Item("nleq.tangent_point", "a line touching a parabola", difficulty,
-                    seed, sent(stem), "spr", keyx, gridin(key), rationale, params=P)
+                    seed, sent(stem), "spr", keyx, gridin(key), rationale, params=P,
+                    spr_mistakes=gridin_pool(keyx, pool.values()))
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, guard=wrongs is None)
     return Item("nleq.tangent_point", "a line touching a parabola", difficulty, seed,
                 sent(stem), "mcq", keyx, letter, rationale, ch, why, tex, params=P)

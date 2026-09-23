@@ -24,8 +24,8 @@ from fractions import Fraction as Q
 from ....exact import E
 from ....item import Item, ItemError, Mis
 from ..kit import (MINUS, PM, ROOT, cap, choices, displayed, eq, gridin,
-                   griddable, join, mono, num, paren, pick, poly, q, sent, setof,
-                   sup, text_choices)
+                   griddable, gridin_pool, join, mono, num, paren, pick, poly, q,
+                   sent, setof, sup, text_choices)
 
 __all__ = ["square_equation", "absolute_equation", "quadratic_solve",
            "quadratic_formula", "factored_equation", "shared_factor",
@@ -111,7 +111,8 @@ def _value_item(template: str, skill: str, difficulty: str, seed: int, stem: str
         if not griddable(key):
             raise ItemError("that answer could not be entered in the grid")
         return Item(template, skill, difficulty, seed, sent(stem), "spr", keyx,
-                    gridin(key), sent(rationale), params=params)
+                    gridin(key), sent(rationale), params=params,
+                    spr_mistakes=gridin_pool(keyx, pool.values(), forbid))
     # a source item reproduces the option set College Board printed, whatever
     # surface it has; a free draw has to earn its four
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, signed=signed,
@@ -241,6 +242,9 @@ def square_equation(rng: random.Random, seed: int, *, shape=None, a=None, h=None
     P = {"kind": "nleq_square", "shape": shape, "a": _p(a), "h": _p(h), "k": _p(k),
          "spare": _p(spare), "ask": ask}
     pool = _strike(pool, [lo, hi], ask, key)
+    if fmt == "spr" and a != 4:
+        # dividing by a twice gives inner/a, which is inner/4 only when a is 4
+        del pool["quarter"]
     shifted = join(["x", mono(h, "")]) if h else "x"
     rationale = sent(f"The square is {num(inner)}, so {shifted} is {num(root)} or "
                      f"{num(-root)}, giving x = {num(hi)} and x = {num(lo)}.")
@@ -1230,6 +1234,9 @@ def product_roots_constant(rng: random.Random, seed: int, *, p=None, u=None, v=N
     }
     P = {"kind": "nleq_product_constant", "p": _p(p), "u": _p(u), "v": _p(v),
          "w": _p(w), "g": _p(g), "s": _p(s), "t": _p(t)}
+    if fmt == "spr":
+        # multiplying by u gives p/u², not p·u², so no typed answer comes from it
+        del pool["times_lead"]
     rationale = sent(f"The middle factor contributes {num(sq)} and {num(-sq)}, which "
                      f"cancel, and the last contributes {num(s / w)}; the first "
                      f"contributes {MINUS}p/{num(u)}, so {num(s / w)} {MINUS} "
