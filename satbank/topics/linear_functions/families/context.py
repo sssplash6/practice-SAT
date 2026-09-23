@@ -492,9 +492,7 @@ def model_value(rng: random.Random, seed: int, *, ctx=None, direction=None, b=No
     mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
         return Item("lin.model_value", "evaluating a linear model", "medium", seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, params=P,
-                    spr_mistakes=gridin_mistakes(
-                        keyx, [Mis(r.reason, ex(r.value)) for r in spr]))
+                    "spr", keyx, keyx.gridin(), rationale, params=P)
     if P.get("money"):
         fmt_value = money
     elif direction == "forward" and d.get("places") and not d.get("approx"):

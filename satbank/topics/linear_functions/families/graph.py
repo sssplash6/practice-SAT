@@ -161,8 +161,7 @@ def graph_read(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, x=Non
                 and abs(float(r.value) - float(key)) >= tol]
     if fmt == "spr":
         return Item("lin.graph_read", skill, difficulty, seed, stem, "spr", keyx,
-                    keyx.gridin(), rationale, figure=fig, params=P,
-                    spr_mistakes=gridin_mistakes(keyx, apart(spr)))
+                    keyx.gridin(), rationale, figure=fig, params=P)
     mistakes = apart(mistakes)
     fmt_value = money if d.get("money") else None
     if d.get("money"):
