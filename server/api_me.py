@@ -9,14 +9,15 @@ import re
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import db, drill, prefs, progress, satdates
-from .deps import (DATE_OK, DAYS_OK, HANDLE_OK, LEARNER_OK, NAME_OK, SECONDS_PER_QUESTION, TARGETS,
-                   learner_of, now, part, tz_of, writer_of)
+from . import db, drill, prefs, progress
+from .deps import (DATE_OK, DAYS_OK, LEARNER_OK, NAME_OK, SECONDS_PER_QUESTION, TARGETS,
+                   learner_of, now, part, tz_of)
 
 router = APIRouter()
 
 FOCUS_STATES = ("focus", "normal", "strong")
 MAX_FOCUS = 2               # of four domains, as theirs allow four of eight
+BOARD_NAME = re.compile(r"^[\w .-]{3,24}$", re.UNICODE)
 RESERVED = {"admin", "administrator", "moderator", "sat", "sat freshman", "college board",
             "anonymous", "student", "support", "staff", "teacher", "system"}
 COUNTRIES = set((
@@ -30,21 +31,9 @@ COUNTRIES = set((
 ).split())
 
 
-def account(learner: str) -> dict:
-    """Shell §3.1.5: is this learner saved, under which email, since when."""
-    user = db.one("SELECT email, verified, google_sub, created FROM users WHERE learner=?"
-                  " ORDER BY verified DESC, created LIMIT 1", learner)
-    passkey = db.one("SELECT created FROM passkeys WHERE learner=? ORDER BY created LIMIT 1", learner)
-    linked = bool(passkey) or bool(user and (user["verified"] or user["google_sub"]))
-    since = min([x for x in (user["created"] if user else None, passkey["created"] if passkey else None) if x],
-                default=None)
-    return {"linked": linked, "email": user["email"] if user and user["email"] else None,
-            "since": since if linked else None}
-
-
-def profile(learner: str, tz: int = 0) -> dict:
+def profile(learner: str) -> dict:
     row = db.one("SELECT * FROM learners WHERE id=?", learner)
-    base = {"id": learner, "name": None, "handle": None, "exam_date": None, "target": None,
+    base = {"id": learner, "name": None, "exam_date": None, "target": None,
             "minutes": None, "days": None, "current": None, "tests": None, "focus": None,
             "avatar": None, "board": "name", "country": "", "rw_now": None,
             "rw_target": None, "plan": None, "plan_draft": None}
@@ -53,21 +42,8 @@ def profile(learner: str, tz: int = 0) -> dict:
     out["plan_draft"] = json.loads(out["plan_draft"]) if out["plan_draft"] else None
     out["board"] = out["board"] or "name"
     out["country"] = out["country"] or ""
-    out["prefs"], out["pref_source"], out["stage"] = prefs.resolve(learner, tz)
-    out["account"] = account(learner)
+    out["prefs"] = prefs.get(learner)
     return out
-
-
-def due_left(learner: str, tz: int, p: dict) -> int:
-    """R1 / V1: today's review items not yet done or snoozed. Review's own
-    count when S10 has built it; until then, check-ins due less snoozed."""
-    due = part("review", "due")
-    if due:
-        return due(learner, tz)["left"]
-    today = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=tz)).date().isoformat()
-    snoozed = {k for k, day in (p.get("snooze") or {}).items() if day == today}
-    return sum(1 for c in progress.due_rechecks(learner, today)
-               if f"due:check:{c['template']}" not in snoozed)
 
 
 def per_session(p: dict) -> int:
@@ -85,7 +61,7 @@ def per_session(p: dict) -> int:
 @router.get("/api/me")
 def get_me(x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
     learner = learner_of(x_learner)
-    p = profile(learner, x_tz)
+    p = profile(learner)
     week_ago=(dt.datetime.now(dt.timezone.utc)-dt.timedelta(days=7)).isoformat()
     today=(dt.datetime.now(dt.timezone.utc)-dt.timedelta(minutes=x_tz)).date().isoformat()
     words=db.one("SELECT SUM(box>=4) AS known, COUNT(*) AS studied, SUM(saved) AS saved,"
@@ -93,12 +69,8 @@ def get_me(x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_
     reviews=db.one("SELECT COUNT(*) AS n FROM word_reviews WHERE learner=? AND at>=?",learner,week_ago)
     review=db.one("SELECT COUNT(*) AS open, SUM(owed=1) AS half FROM traps"
                   " WHERE learner=? AND closed IS NULL",learner)
-    registration = satdates.registration(p["exam_date"], p["prefs"].get("registered"),
-                                         dt.date.fromisoformat(today))
-    return {"profile": p, "prefs": p["prefs"], "pref_source": p["pref_source"], "stage": p["stage"],
-            "days": progress.days(learner, x_tz), "registration": registration,
-            "review":{"open":review["open"],"half":review["half"] or 0,
-                      "due_left":due_left(learner, x_tz, p["prefs"])},
+    return {"profile": p, "prefs": p["prefs"], "days": progress.days(learner, x_tz),
+            "review":{"open":review["open"],"half":review["half"] or 0},
             "words": {"known":words["known"] or 0,"studied":words["studied"] or 0,
                       "saved":words["saved"] or 0,"reviews_week":reviews["n"],"due":words["due"] or 0}}
 
@@ -111,8 +83,7 @@ def activity(weeks: int = Query(default=26, ge=1, le=53),
 
 class Me(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    name: str | None = Field(default=None, max_length=40)     # yours: private, any script (U29)
-    handle: str | None = Field(default=None, max_length=24)   # your board name: public, unique
+    name: str | None = Field(default=None, max_length=24)
     exam_date: str | None = None
     target: int | None = None
     minutes: int | None = None
@@ -128,30 +99,28 @@ class Me(BaseModel):
     prefs: dict | None = None
 
 
-def _check_handle(learner: str, handle: str) -> str:
-    """U29 / R12: HANDLE_OK, not reserved or default-looking (422), unique
-    case-insensitively (409), each error naming `handle`."""
-    h = " ".join(handle.strip().split())
-    if not HANDLE_OK.fullmatch(h) or h.casefold() in RESERVED or re.fullmatch(r"student[ ._-]*[0-9a-f]{3,}", h, re.I):
-        raise HTTPException(422, "handle must be 3–24 letters, digits, spaces, _, . or - and cannot be reserved")
-    if db.one("SELECT 1 FROM learners WHERE id!=? AND lower(handle)=lower(?)", learner, h):
-        raise HTTPException(409, "handle: someone already has that board name")
-    return h
-
-
 @router.put("/api/me")
 def put_me(body: Me, x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
-    learner = writer_of(x_learner)
+    learner = learner_of(x_learner)
     got = body.model_dump(exclude_unset=True)
     pref_change = got.pop("prefs", None)
     if pref_change is not None:
         prefs.validate(pref_change)
     if "name" in got and got["name"] is not None:
         got["name"] = " ".join(got["name"].strip().split()) or None
-        if got["name"] and (not NAME_OK.fullmatch(got["name"]) or len(got["name"]) > 40):
-            raise HTTPException(422, "name: 1–40 characters, no digits, @, < or >")
-    if got.get("handle") is not None:
-        got["handle"] = _check_handle(learner, got["handle"])
+        if got["name"]:
+            n = got["name"]
+            # Earlier profiles accepted two-letter names. Keep them private
+            # for learners with existing answers; public board names stay 3–24.
+            private_short = (len(n)==2 and re.fullmatch(r"[\w.-]{2}",n) and
+                             got.get("board") != "name" and
+                             db.one("SELECT 1 FROM attempts WHERE learner=? LIMIT 1",learner))
+            if private_short:
+                got["board"]="hidden"
+            if not private_short and (not BOARD_NAME.fullmatch(n) or n.casefold() in RESERVED or re.fullmatch(r"student[ ._-]*[0-9a-f]{3,}", n, re.I)):
+                raise HTTPException(422, "name must be 3–24 letters, digits, spaces, _, . or - and cannot be reserved")
+            if any(r["name"] and r["name"].casefold() == n.casefold() for r in db.rows("SELECT name FROM learners WHERE id!=? AND name IS NOT NULL",learner)):
+                raise HTTPException(409, "that board name is taken")
     if got.get("exam_date"):
         try:
             if not DATE_OK.match(got["exam_date"]):
@@ -177,6 +146,10 @@ def put_me(body: Me, x_learner: str | None = Header(default=None), x_tz: int = D
             raise HTTPException(422, f"{key} is a Reading and Writing score, 200 to 800 in tens")
     if got.get("board") is not None and got["board"] not in ("name","anon","hidden"):
         raise HTTPException(422, "board is name, anon or hidden")
+    if got.get("board")=="name" and "name" not in got:
+        existing=db.one("SELECT name FROM learners WHERE id=?",learner)
+        if existing and existing["name"] and not BOARD_NAME.fullmatch(existing["name"]):
+            raise HTTPException(422, "set a 3–24 character board name before listing it")
     if got.get("avatar") is not None and got["avatar"] not in progress.topics():
         raise HTTPException(422, "avatar must be a topic slug")
     if got.get("country") is not None:
@@ -202,13 +175,7 @@ def put_me(body: Me, x_learner: str | None = Header(default=None), x_tz: int = D
             prefs.put(learner,pref_change)
         if mirror and changed:
             mirror(learner,changed)
-    return {"profile": profile(learner, x_tz)}
-
-
-@router.get("/api/prefs")
-def prefs_registry() -> list[dict]:
-    """U24: every key with its label, group, values, helper and synonyms."""
-    return prefs.listing()
+    return {"profile": profile(learner)}
 
 
 class Carry(BaseModel):
@@ -219,7 +186,7 @@ class Carry(BaseModel):
 def carry(body: Carry, x_learner: str | None = Header(default=None)) -> dict:
     """Bring another code's progress into this one, so switching a device to
     another device's code keeps what both have done."""
-    to = writer_of(x_learner)
+    to = learner_of(x_learner)
     frm = body.learner.strip()
     if not LEARNER_OK.match(frm):
         raise HTTPException(400, "that is not a learner code")
