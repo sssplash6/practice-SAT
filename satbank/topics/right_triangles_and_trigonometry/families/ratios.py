@@ -148,8 +148,7 @@ def trig_ratio(rng: random.Random, seed: int, *, hyp=None, leg=None, mode=None,
             pool["unit_leg"] = None
         pool["hyp_over_sum"] = None     # no route to a sine or cosine runs through it
         return Item("rtt.trig_ratio", "trigonometric ratios", "medium", seed, stem,
-                    "spr", key, key.gridin(), rationale, figure=fig, params=P,
-                    spr_mistakes=gridin_mistakes(key, pick(pool, wrongs)))
+                    "spr", key, key.gridin(), rationale, figure=fig, params=P)
     choices, latex, reasons, letter_ = assemble(key, pick(pool, wrongs), rng)
     return Item("rtt.trig_ratio", "trigonometric ratios", "medium", seed, stem, "mcq",
                 key, letter_, rationale, choices, reasons, latex, figure=fig, params=P)

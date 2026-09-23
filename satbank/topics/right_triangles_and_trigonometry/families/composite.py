@@ -263,8 +263,7 @@ def parallel_similar(rng: random.Random, seed: int, *, base=None, height=None,
             mistakes = [m_ for m_ in mistakes if m_ not in
                         (pool["small"], pool["sum_scaled"])]
         return Item("rtt.parallel_similar", "similar right triangles", "hard", seed,
-                    stem, "spr", key, key.gridin(), rationale, figure=fig, params=P,
-                    spr_mistakes=gridin_mistakes(key, mistakes))
+                    stem, "spr", key, key.gridin(), rationale, figure=fig, params=P)
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("rtt.parallel_similar", "similar right triangles", "hard", seed, stem,
                 "mcq", key, letter, rationale, choices, reasons, latex, figure=fig,
