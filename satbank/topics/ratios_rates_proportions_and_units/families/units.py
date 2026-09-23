@@ -198,7 +198,7 @@ def convert(rng: random.Random, seed: int, *, n=None, factor=None, op=None,
     fmt = fmt or ("spr" if rng.random() < 0.3 else "mcq")
     if fmt == "spr":
         return spr("rr.convert", skill, difficulty, seed, stem, key, rationale,
-                   params=P)
+                   mistakes=mistakes, params=P)
     return mcq("rr.convert", skill, difficulty, seed, stem, key, mistakes, rng,
                rationale, style=style, round_to=Q(1, 1000) if style != "frac" else None,
                params=P)
@@ -255,7 +255,7 @@ def convert_chain(rng: random.Random, seed: int, *, n=None, f1=None, f2=None,
     fmt = fmt or ("spr" if rng.random() < 0.5 else "mcq")
     if fmt == "spr":
         return spr("rr.convert_chain", "a conversion in two steps", "medium", seed,
-                   stem, key, rationale, params=P)
+                   stem, key, rationale, mistakes=mistakes, params=P)
     return mcq("rr.convert_chain", "a conversion in two steps", "medium", seed, stem,
                key, mistakes, rng, rationale, params=P)
 
@@ -345,7 +345,7 @@ def pop_density(rng: random.Random, seed: int, *, ask="area", density=None,
     fmt = fmt or ("spr" if ask == "area" and rng.random() < 0.35 else "mcq")
     if fmt == "spr":
         return spr("rr.pop_density", skill, difficulty, seed, stem, key, rationale,
-                   params=P)
+                   mistakes=mistakes, params=P)
     return mcq("rr.pop_density", skill, difficulty, seed, stem, key, mistakes, rng,
                rationale, params=P)
 
@@ -507,7 +507,7 @@ def cube_density(rng: random.Random, seed: int, *, ask="mass", frame=None,
     fmt = fmt or ("spr" if rng.random() < 0.4 else "mcq")
     if fmt == "spr":
         return spr("rr.cube_density", skill, "hard", seed, stem, key, rationale,
-                   params=P)
+                   mistakes=mistakes, round_to=round_to, params=P)
     return mcq("rr.cube_density", skill, "hard", seed, stem, key, mistakes, rng,
                rationale, places=places, round_to=round_to, params=P)
 

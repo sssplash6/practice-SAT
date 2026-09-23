@@ -153,7 +153,8 @@ def partner(rng: random.Random, seed: int, *, a=None, b=None, n=None,
                  f"{dec(key, 0)}.")
     fmt = fmt or ("spr" if rng.random() < 0.2 else "mcq")
     if fmt == "spr":
-        return spr("rr.partner", skill, difficulty, seed, stem, key, rationale, params=P)
+        return spr("rr.partner", skill, difficulty, seed, stem, key, rationale,
+                   mistakes=mistakes, params=P)
     return mcq("rr.partner", skill, difficulty, seed, stem, key, mistakes, rng,
                rationale, params=P)
 
@@ -224,7 +225,7 @@ def equivalent(rng: random.Random, seed: int, *, first=None, c=None, d=None,
     fmt = fmt or ("spr" if rng.random() < 0.45 else "mcq")
     if fmt == "spr":
         return spr("rr.equivalent", skill, "medium", seed, stem, key, rationale,
-                   params=P)
+                   mistakes=mistakes, params=P)
     return mcq("rr.equivalent", skill, "medium", seed, stem, key, mistakes, rng,
                rationale, params=P)
 
@@ -276,7 +277,7 @@ def table_constant(rng: random.Random, seed: int, *, ratio=None, xs=None,
     fmt = fmt or ("spr" if rng.random() < 0.2 else "mcq")
     if fmt == "spr":
         return spr("rr.table_constant", "a constant ratio in a table", "easy", seed,
-                   stem, key, rationale, params=P, table=rows)
+                   stem, key, rationale, mistakes=mistakes, params=P, table=rows)
     return mcq("rr.table_constant", "a constant ratio in a table", "easy", seed,
                stem, key, mistakes, rng, rationale, params=P, table=rows)
 
@@ -697,7 +698,7 @@ def chain_unknown(rng: random.Random, seed: int, *, c=None, first=None,
     fmt = fmt or ("spr" if rng.random() < 0.5 else "mcq")
     if fmt == "spr":
         return spr("rr.chain_unknown", "a constant between two ratios", "hard", seed,
-                   stem, key, rationale, params=P)
+                   stem, key, rationale, mistakes=mistakes, params=P)
     return mcq("rr.chain_unknown", "a constant between two ratios", "hard", seed,
                stem, key, mistakes, rng, rationale, params=P)
 
@@ -746,7 +747,7 @@ def repeated_factor(rng: random.Random, seed: int, *, total=None, years=None,
     fmt = fmt or ("spr" if rng.random() < 0.5 else "mcq")
     if fmt == "spr":
         return spr("rr.repeated_factor", "a repeated factor run backwards", "hard",
-                   seed, stem, key, rationale, params=P)
+                   seed, stem, key, rationale, mistakes=mistakes, params=P)
     return mcq("rr.repeated_factor", "a repeated factor run backwards", "hard", seed,
                stem, key, mistakes, rng, rationale, params=P)
 

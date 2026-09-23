@@ -213,7 +213,7 @@ def unit_rate(rng: random.Random, seed: int, *, frame=None, total=None, per=None
     fmt = fmt or ("spr" if rng.random() < 0.25 else "mcq")
     if fmt == "spr":
         return spr("rr.unit_rate", skill, difficulty, seed, stem, key, rationale,
-                   params=P)
+                   mistakes=mistakes, params=P)
     return mcq("rr.unit_rate", skill, difficulty, seed, stem, key, mistakes, rng,
                rationale, style=style, round_to=round_to, params=P)
 
@@ -363,7 +363,8 @@ def rate_convert(rng: random.Random, seed: int, *, frame=None, value=None,
     fmt = fmt or ("spr" if rng.random() < 0.35 else "mcq")
     if fmt == "spr":
         return spr("rr.rate_convert", skill, difficulty, seed, stem, key, rationale,
-                   params=P)
+                   mistakes=mistakes, params=P,
+                   round_to=Q(1, 10 ** places) if places is not None else None)
     return mcq("rr.rate_convert", skill, difficulty, seed, stem, key, mistakes, rng,
                rationale, places=places, unit=unit, params=P)
 
@@ -476,7 +477,7 @@ def rate_product(rng: random.Random, seed: int, *, frame=None, first=None,
     fmt = fmt or ("spr" if rng.random() < 0.3 else "mcq")
     if fmt == "spr":
         return spr("rr.rate_product", skill, difficulty, seed, stem, key, rationale,
-                   params=P)
+                   mistakes=mistakes, params=P)
     return mcq("rr.rate_product", skill, difficulty, seed, stem, key, mistakes, rng,
                rationale, params=P)
 
@@ -583,7 +584,8 @@ def gap(rng: random.Random, seed: int, *, frame=None, base=None, low=None,
                  f"{dec(low, places_needed(low))}) = {dec(key, places_needed(key, 3))}.")
     fmt = fmt or ("spr" if rng.random() < 0.3 else "mcq")
     if fmt == "spr":
-        return spr("rr.gap", skill, difficulty, seed, stem, key, rationale, params=P)
+        return spr("rr.gap", skill, difficulty, seed, stem, key, rationale,
+                   mistakes=mistakes, params=P)
     return mcq("rr.gap", skill, difficulty, seed, stem, key, mistakes, rng,
                rationale, params=P)
 
@@ -795,7 +797,7 @@ def exchange_fee(rng: random.Random, seed: int, *, amount=None, rate=None,
     fmt = fmt or ("spr" if rng.random() < 0.15 else "mcq")
     if fmt == "spr":
         return spr("rr.exchange_fee", "a rate applied and then a fee taken off",
-                   "easy", seed, stem, key, rationale, params=P)
+                   "easy", seed, stem, key, rationale, mistakes=mistakes, params=P)
     return mcq("rr.exchange_fee", "a rate applied and then a fee taken off", "easy",
                seed, stem, key, mistakes, rng, rationale, style="money", cents=True,
                params=P)
