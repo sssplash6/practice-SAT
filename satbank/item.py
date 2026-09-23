@@ -83,12 +83,14 @@ def gridin_mistakes(key, mistakes: list[Mis]) -> list[Mis]:
     """The mistakes a grid-in can name: a value, not the key, first of its value.
 
     Compared by value, as a typed answer is matched, so 1/2 and 0.5 are one
-    wrong answer. What this drops is what the audit refuses.
+    wrong answer. A value that cannot be typed into the grid -- 31 pi, 4 root 97 --
+    can never match what a student enters, so it is dropped too. What this
+    drops is what the audit refuses.
     """
     out: list[Mis] = []
     seen = [float(key)]
     for m in mistakes:
-        if m.value is None:
+        if m.value is None or not getattr(m.value, "is_rational", True):
             continue
         v = float(m.value)
         if any(abs(v - o) <= 1e-9 * max(1.0, abs(v), abs(o)) for o in seen):

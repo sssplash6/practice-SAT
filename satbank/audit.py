@@ -143,6 +143,8 @@ def _structure(item: Item) -> None:
         for m in item.spr_mistakes:
             if m.value is None:
                 raise AuditError(f"grid-in mistake {m.reason!r} has no value")
+            if not getattr(m.value, "is_rational", True):
+                raise AuditError(f"grid-in mistake {m.reason!r} cannot be typed: {m.value.plain()}")
             v = float(m.value)
             if any(close(v, o, 1e-9) for o in seen):
                 raise AuditError(f"grid-in mistake {m.reason!r} is "
