@@ -31,11 +31,11 @@ TRAPS = {
     "everyday", "topical", "wrong_logic", "reversed_direction",
 }
 MINIMUMS = {
-    2: {"classes": 140, "traps": 9, "sat_core": 380},
-    3: {"sat_advanced": 570, "second_sense": 90, "answer_choice": 80},
-    4: {"transitions": 75, "pairs": 150},
-    5: {"confusions": 650, "roots": 75, "foils": 55},
-    6: {"frames": 1400},
+    2: {"classes": 150, "traps": 9, "sat_core": 400},
+    3: {"sat_advanced": 600, "second_sense": 100, "answer_choice": 90},
+    4: {"transitions": 80, "pairs": 150},
+    5: {"confusions": 700, "roots": 80, "foils": 60},
+    6: {"frames": 1500},
 }
 
 
@@ -86,6 +86,9 @@ def check_words(data: dict[str, list | dict], errors: list[str]) -> None:
             require(bool(entry.get(field)), f"{label}: missing {field}", errors)
         require(len(entry.get("short", "")) <= 60, f"{label}: short exceeds 60 characters", errors)
         require(bool(entry.get("examples") or entry.get("cloze")), f"{label}: no example or cloze", errors)
+        for example in entry.get("examples", []):
+            require(isinstance(example, str) and bool(re.search(r"\[\[[^\[\]]+\]\]", example)),
+                    f"{label}: example has no highlighted word", errors)
         require(entry.get("pos") in {"n.", "v.", "adj.", "adv.", "phrase."}, f"{label}: invalid pos", errors)
         require(entry.get("tier") in {"core", "advanced"}, f"{label}: invalid tier", errors)
         require(entry.get("level") in {"easy", "medium", "hard"}, f"{label}: invalid level", errors)
@@ -100,7 +103,10 @@ def check_words(data: dict[str, list | dict], errors: list[str]) -> None:
         require(isinstance(entry.get("lists"), list) and isinstance(entry.get("uses"), list),
                 f"{label}: lists and uses must be arrays", errors)
         require(entry.get("value") in (1, 2, 3), f"{label}: invalid value", errors)
-        require(len(entry.get("same", [])) >= 2, f"{label}: fewer than 2 same", errors)
+        same = entry.get("same", [])
+        require(isinstance(same, list) and len(same) >= 2 and
+                all(isinstance(s, str) and s.strip() for s in same),
+                f"{label}: fewer than 2 valid same", errors)
         require(bool(entry.get("opposite")) or entry.get("no_opposite") is True,
                 f"{label}: no opposite or no_opposite", errors)
         require(bool(entry.get("lookalikes")), f"{label}: no confusion with tell", errors)
@@ -114,6 +120,9 @@ def check_words(data: dict[str, list | dict], errors: list[str]) -> None:
             require(len(entry.get("nearly", [])) >= 3, f"{label}: second sense needs 3 nearly texts", errors)
         require("freq_band" in entry or (ROOT / "tools/data/freq.txt").exists(),
                 f"{label}: no frequency source or override", errors)
+        if "freq_band" in entry:
+            require(type(entry["freq_band"]) is int and 1 <= entry["freq_band"] <= 5,
+                    f"{label}: invalid freq_band", errors)
 
 
 def check_reference_data(data: dict[str, list | dict], errors: list[str]) -> None:
@@ -123,6 +132,11 @@ def check_reference_data(data: dict[str, list | dict], errors: list[str]) -> Non
         label = c.get("id", "class")
         require(bool(c.get("id") and c.get("dimension")), f"{label}: missing id or dimension", errors)
         require(c.get("opposite") in ids, f"{label}: unknown opposite", errors)
+    opposite_by_id = {c.get("id"): c.get("opposite") for c in classes if isinstance(c, dict)}
+    require(len(opposite_by_id) == len(classes), "classes: duplicate id", errors)
+    for class_id, opposite in opposite_by_id.items():
+        require(opposite_by_id.get(opposite) == class_id,
+                f"{class_id}: opposite is not reciprocal", errors)
     traps = rows(data["traps"])
     require({t.get("id") for t in traps if isinstance(t, dict)} <= TRAPS,
             "traps: unknown trap id", errors)
@@ -167,14 +181,17 @@ def check_later(data: dict[str, list | dict], phase: int, errors: list[str], war
     frames = rows(data["frames"])
     counts = {
         "classes": len(rows(data["classes"])), "traps": len(rows(data["traps"])),
-        "sat_core": sum(w.get("tier") == "core" for w in sat),
-        "sat_advanced": sum(w.get("tier") == "advanced" for w in sat),
+        "sat_core": sum(w.get("tier") == "core" and not w.get("second_sense") for w in sat),
+        "sat_advanced": sum(w.get("tier") == "advanced" and not w.get("second_sense") for w in sat),
         "second_sense": sum(bool(w.get("second_sense")) for w in sat),
         "answer_choice": sum("answer-choice" in w.get("lists", []) for w in sat),
         "transitions": len(transitions), "pairs": len(pairs),
         "confusions": len(rows(data["confusions"])), "roots": len(rows(data["roots"])),
         "foils": len(rows(data["foils"])), "frames": len(frames),
     }
+    if phase >= 2:
+        require({t.get("id") for t in rows(data["traps"])} == TRAPS,
+                "traps: expected exactly the nine W1 trap kinds", errors)
     for gate_phase, minimums in MINIMUMS.items():
         for name, minimum in minimums.items():
             if counts[name] < minimum:
