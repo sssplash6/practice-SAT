@@ -225,8 +225,7 @@ def isolate_sum(rng: random.Random, seed: int, *, target=None, coef=None,
                     if n not in ("negate_all", "negate_all_sign", "reversed")}
         return Item("nleq.isolate_sum", "rearranging a formula", difficulty, seed,
                     sent(stem), "spr", keyx, gridin(want), sent(story_text),
-                    params=dict(P, ask="coefficient"),
-                    spr_mistakes=gridin_pool(keyx, _coefficients(pool, syms[0][1])))
+                    params=dict(P, ask="coefficient"))
     return _build("nleq.isolate_sum", difficulty, seed, stem, key, pool, wrongs,
                   rng, story_text, [target] + names, dict(P, ask="equation"))
 

@@ -856,6 +856,13 @@ def shared_factor(rng: random.Random, seed: int, *, a=None, k=None, b=None, m=No
                      f"{paren(join(['x', mono(-m, '')]))}] = 0, so "
                      f"x = {gridin(r1).replace('-', MINUS)} or "
                      f"x = {gridin(r2).replace('-', MINUS)}.")
+    if fmt == "spr":
+        if not griddable(key):
+            raise ItemError("that answer could not be entered in the grid")
+        keyx = E(q(key))
+        return Item("nleq.shared_factor", "a factor on both sides", difficulty,
+                    seed, sent(stem), "spr", keyx, gridin(key), sent(rationale),
+                    params=P)
     return _value_item("nleq.shared_factor", "a factor on both sides", difficulty,
                        seed, stem, key, pool, wrongs, rng, rationale, P, fmt)
 
