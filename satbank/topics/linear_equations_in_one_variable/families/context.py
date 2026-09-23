@@ -14,7 +14,7 @@ from math import gcd
 
 from ....exact import E
 from ....item import Item, ItemError, Mis, assemble_text
-from .kit import article, choices, dec, money, num, plainly, sent
+from .kit import article, choices, dec, money, num, plainly, sent, spr_mistakes
 
 __all__ = ["context_solve", "model_count_mix", "model_context",
            "expression_in_terms", "interpret_coefficient", "percent_original"]
@@ -229,11 +229,6 @@ def context_solve(rng: random.Random, seed: int, *, scene=None, fmt=None, **kw) 
     rationale = (f"The sentence gives {u} = {plainly(total)}, where u is the unknown, "
                  f"so u = {plainly(key)}.")
     ex = E(key)
-    if fmt == "spr":
-        if ex.coef.denominator > 1000:
-            raise ItemError("this grid-in answer would not be enterable")
-        return Item("lin1.context_solve", "linear equation in context", "medium", seed,
-                    sent(s["stem"]), "spr", ex, ex.gridin(), rationale, params=P)
     mistakes = [Mis(why, E(Q(v))) for why, v in s.get("extra", [])]
     mistakes += [
         Mis("added the fixed amount instead of subtracting it", E((total + k) / m)),
@@ -243,6 +238,12 @@ def context_solve(rng: random.Random, seed: int, *, scene=None, fmt=None, **kw) 
         Mis("divided the total by the rate without removing the fixed amount",
             E(total / m)),
     ]
+    if fmt == "spr":
+        if ex.coef.denominator > 1000:
+            raise ItemError("this grid-in answer would not be enterable")
+        return Item("lin1.context_solve", "linear equation in context", "medium", seed,
+                    sent(s["stem"]), "spr", ex, ex.gridin(), rationale, params=P,
+                    spr_mistakes=spr_mistakes(ex, mistakes))
     # a count, a price and a length of time are positive, and an option orders
     # of magnitude away from the answer is crossed out without any algebra
     lo, hi = key / 25, key * 25

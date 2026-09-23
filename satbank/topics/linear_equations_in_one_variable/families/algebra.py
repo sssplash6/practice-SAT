@@ -20,7 +20,7 @@ from ....exact import E
 from ....item import Item, ItemError, Mis
 from . import forms
 from .kit import (VARS, choices, dec, eq_of, griddable, num, over, paren,
-                  pick, sent, side, sign_join, term)
+                  pick, sent, side, sign_join, spr_mistakes, term)
 
 __all__ = ["solve", "distribute", "then_value", "chunk", "reciprocal"]
 
@@ -246,7 +246,8 @@ def _build_solve(rng, seed, shape, p, var, frame, fmt, decimal, mistakes,
     ex = E(key)
     if fmt == "spr":
         return Item(template, skill, difficulty, seed, stem, "spr", ex,
-                    ex.gridin(), rationale, params=P)
+                    ex.gridin(), rationale, params=P,
+                    spr_mistakes=spr_mistakes(ex, mistakes))
     fv = (lambda v: dec(v.coef)) if dec_opts else None
     ch, tex, why, letter = choices(ex, mistakes, rng, fmt_value=fv)
     return Item(template, skill, difficulty, seed, stem, "mcq", ex, letter,
@@ -328,11 +329,12 @@ def then_value(rng: random.Random, seed: int, *, shape=None, var=None, m=None, k
          "m": float(m), "k": float(k)}
     rationale = (f"{eq} gives {var} = {num(x0)}, so {expr} = {num(key)}.")
     ex = E(key)
+    mistakes = _then_mistakes(p, shape, A, C, x0, m, k, expr, var)
     if fmt == "spr":
         return Item("lin1.then_value", "linear equation", "easy", seed, stem, "spr",
-                    ex, ex.gridin(), rationale, params=P)
-    ch, tex, why, letter = choices(ex, _then_mistakes(p, shape, A, C, x0, m, k, expr, var),
-                                   rng)
+                    ex, ex.gridin(), rationale, params=P,
+                    spr_mistakes=spr_mistakes(ex, mistakes))
+    ch, tex, why, letter = choices(ex, mistakes, rng)
     return Item("lin1.then_value", "linear equation", "medium", seed, stem, "mcq",
                 ex, letter, rationale, ch, why, tex, params=P)
 
@@ -446,11 +448,12 @@ def chunk(rng: random.Random, seed: int, *, shape=None, var=None, ask=None, a=No
                  f"{inner} = {num(u)}"
                  + ("." if asked == inner else f", and {asked} = {num(key)}."))
     ex = E(key)
+    mistakes = _chunk_mistakes(ask, u, v0, c, coef, d, e, shape, wrong_coef, var, inner)
     if fmt == "spr":
         return Item("lin1.chunk", "linear equation", "medium", seed, stem, "spr",
-                    ex, ex.gridin(), rationale, params=P)
-    ch, tex, why, letter = choices(
-        ex, _chunk_mistakes(ask, u, v0, c, coef, d, e, shape, wrong_coef, var, inner), rng)
+                    ex, ex.gridin(), rationale, params=P,
+                    spr_mistakes=spr_mistakes(ex, mistakes))
+    ch, tex, why, letter = choices(ex, mistakes, rng)
     return Item("lin1.chunk", "linear equation", "medium", seed, stem, "mcq", ex,
                 letter, rationale, ch, why, tex, params=P)
 
@@ -508,15 +511,16 @@ def reciprocal(rng: random.Random, seed: int, *, var=None, a=None, b=None, c=Non
     P = {"kind": "lin1_reciprocal", "a": float(a), "b": float(b), "c": float(c)}
     rationale = f"{eq} gives {var} = {num(x)}, so {asked} = {num(key)}."
     ex = E(key)
-    if fmt == "spr":
-        return Item("lin1.reciprocal", "linear equation", "medium", seed, stem, "spr",
-                    ex, ex.gridin(), rationale, params=P)
     mistakes = [Mis(f"inverted the quotient and reported {var} over the numerator", x / c),
                 Mis(f"used the given value in place of {var}", c / b),
                 Mis(f"used the denominator in place of {var}", c / a),
                 Mis(f"reported {var} rather than the quotient asked for", x),
                 Mis("multiplied the two given numbers into the numerator", c * b),
                 Mis("divided the two given numbers the wrong way round", b / a)]
+    if fmt == "spr":
+        return Item("lin1.reciprocal", "linear equation", "medium", seed, stem, "spr",
+                    ex, ex.gridin(), rationale, params=P,
+                    spr_mistakes=spr_mistakes(ex, mistakes))
     ch, tex, why, letter = choices(ex, mistakes, rng)
     return Item("lin1.reciprocal", "linear equation", "medium", seed, stem, "mcq", ex,
                 letter, rationale, ch, why, tex, params=P)
