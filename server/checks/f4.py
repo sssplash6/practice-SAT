@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import math
 import pathlib
 import sqlite3
 import tempfile
@@ -182,19 +183,39 @@ def checks():
     # G3 check 4 / R9: the 10-day check-in on another type, closed as 'transfer'
     tr = "a:f4transfer"
     norm = progress.norm("used 10 instead of 20")
-    with patch.object(progress, "related", lambda: {norm: ("lin.evaluate", "lin.other")}):
+    with patch.object(progress, "_related_index", lambda: {norm: ("lin.evaluate", "lin.other")}):
+        assert progress.related(norm) == ("lin.evaluate", "lin.other") and progress.related("nothing") == ()
+        assert progress.related() == {norm: ("lin.evaluate", "lin.other")}
         progress.record(tr, None, q(1), 1, when=at("2026-01-01"))
         for seed in (2, 3):
             progress.record(tr, None, q(seed), 0, when=at("2026-01-01", 14))
-        progress.record(tr, None, q(4), 0, when=at("2026-01-04"))          # the 3-day check, same type
-        t = trap(tr)
-        assert t["checks"] == 1 and progress.checkin_template(t) == "lin.other"
-        assert progress.due_rechecks(tr, "2026-01-11")[0]["serve"] == "lin.other"
-        progress.record(tr, None, q(5, key="lin.other"), 0, when=at("2026-01-11"))
-        progress.record(tr, None, q(6, key="lin.other"), 0, when=at("2026-01-31"))
+        first = progress.due_rechecks(tr, "2026-01-04")[0]
+        assert first["serve"] == "lin.evaluate"                           # the 3-day check, same type
+        progress.record(tr, None, q(4, key=first["serve"]), 0, when=at(first["due"]))
+        for seed, stage in ((5, 2), (6, 3)):                              # the 10- and 30-day ones, as served
+            t = trap(tr)
+            c = progress.due_rechecks(tr, t["due"])[0]
+            assert c["serve"] == "lin.other" == progress.checkin_template(t), c
+            progress.record(tr, None, q(seed, key=c["serve"]), 0, when=at(c["due"]))
+            assert trap(tr)["checks"] == stage
         t = trap(tr, template="lin.evaluate")
         assert t["checks"] == 3 and t["closed_how"] == "transfer", dict(t)
         assert progress.rechecks_passed(tr, "2026-01-01")["n"] == 3
+    # the same trap answered on its own type at 10 days holds, but as 'fixed'
+    own = "a:f4owntype"
+    with patch.object(progress, "_related_index", lambda: {norm: ("lin.evaluate", "lin.other")}):
+        progress.record(own, None, q(1), 1, when=at("2026-01-01"))
+        for seed, day in ((2, "2026-01-01"), (3, "2026-01-01"), (4, "2026-01-04"), (5, "2026-01-11")):
+            progress.record(own, None, q(seed), 0, when=at(day, 14))
+        progress.record(own, None, q(6, key="lin.other"), 0, when=at("2026-01-31"))
+        assert (trap(own)["checks"], trap(own)["closed_how"]) == (3, "fixed")
+
+    # §2.5: the first write makes the learners row (rating DEFAULT 1000, rated 0)
+    progress.record("a:f4firstwrite", None, q(1), 0)
+    row = db.one("SELECT rating, rated FROM learners WHERE id=?", "a:f4firstwrite")
+    assert row and (row["rating"], row["rated"]) == (1000, 0)
+    progress.log_mistake("a:f4firstlog", "lin.evaluate", "linear_functions", note="outside")
+    assert db.one("SELECT 1 FROM learners WHERE id=?", "a:f4firstlog")
 
     # R8 / V2: access() already 'reveal' makes a repeat; a printed key does too
     v = "a:f4repeat"
@@ -226,6 +247,14 @@ def checks():
     db.run("UPDATE learners SET current=700 WHERE id=?", "a:f4seeded")
     s = ratings.skill("a:f4seeded", "circles")
     assert (round(s["rating"]), s["seed"]) == (1304, "score")
+    for i in range(4):
+        add("attempts", learner=f"a:f4prior{i}", template="circles.prior", seed=i, topic="circles",
+            difficulty="medium", fmt="mcq", correct=1, at=at(TODAY))
+    assert ratings.measured_prior("circles.prior", "medium") is None
+    add("attempts", learner="a:f4prior4", template="circles.prior", seed=4, topic="circles",
+        difficulty="medium", fmt="mcq", correct=1, at=at(TODAY))
+    raw = 1000 - 400 * math.log10(0.95 / 0.05)                                     # 5 of 5 right, clamped
+    assert abs(ratings.measured_prior("circles.prior", "medium", 1200.0) - (0.2 * raw + 0.8 * 1200)) < 1e-6
 
     # §2.10: a ranked contest answer calls compete.rate; a voided one does not
     calls = []
@@ -269,17 +298,41 @@ def checks():
     add("sessions", id="f4-d0", kind="drill", learner=d, started=at(TODAY), cfg="{}")
     add("sessions", id="f4-d1", kind="drill", learner=d, started=at(TODAY), cfg="{}")
     progress.record(d, "f4-d0", q(1, key="lin.keep"), 1)              # opened earlier, refreshed below
+    progress.record(d, "f4-d0", q(4, key="lin.right"), 0)
+    m_d0 = progress.topic_mastery(d, "linear_functions")
     progress.record(d, "f4-d1", q(2, key="lin.keep"), 1)
     progress.record(d, "f4-d1", q(3, key="lin.only"), 1)              # opened only here
-    m_before = progress.topic_mastery(d, "linear_functions")
+    m_d1 = progress.topic_mastery(d, "linear_functions")
+    assert m_d1 != m_d0
     out = progress.discard(d, "f4-d1")
     assert out["answers"] == 2 and out["traps_closed"] == 1
     assert trap(d, template="lin.only")["closed_how"] == "discarded"
     assert trap(d, template="lin.keep")["hits"] == 1
-    assert progress.topic_mastery(d, "linear_functions") == progress.topic_mastery(d, "linear_functions")
+    assert progress.topic_mastery(d, "linear_functions") == m_d0
     progress.restore(d, "f4-d1")
     assert trap(d, template="lin.only")["closed"] is None and trap(d, template="lin.keep")["hits"] == 2
-    assert progress.topic_mastery(d, "linear_functions") == m_before
+    assert progress.topic_mastery(d, "linear_functions") == m_d1
+    undo = db.rows("SELECT pts, undoes FROM trap_log WHERE learner=? AND event IN ('discarded','restored')", d)
+    assert undo and all(r["pts"] is None and r["undoes"] for r in undo)
+
+    # V4: a fix logs what it was worth, gain(t) x share
+    pv = "a:f4points"
+    old = at(TODAY - dt.timedelta(days=3))
+    for i in range(30):
+        add("attempts", learner=pv, template="prob.x" if i % 5 else "prob.t", seed=100 + i, topic="probability",
+            difficulty="medium", fmt="mcq", correct=int(i % 4 == 0), at=old,
+            norm=None if i % 4 == 0 else progress.norm("used 10 instead of 20"))
+    progress.record(pv, None, q(1, key="prob.t", topic="probability"), 1)
+    for seed in (2, 3):
+        progress.record(pv, None, q(seed, key="prob.t", topic="probability"), 0)
+    assert trap(pv)["closed_how"] == "fixed"
+    gain = next(x["gain"] for x in estimate.gains(pv)["skills"] if x["topic"] == "probability")
+    wrong = db.rows("SELECT template, norm FROM attempts WHERE learner=? AND topic='probability' AND correct=0", pv)
+    mine = sum(1 for r in wrong if r["template"] == "prob.t" and r["norm"] == trap(pv)["norm"])
+    want = round(gain * mine / len(wrong))
+    assert want >= 1 and db.one("SELECT pts FROM trap_log WHERE learner=? AND event='fixed' ORDER BY id DESC",
+                                pv)["pts"] == want
+    assert estimate.trap_pts("a:f4progress", "lin.evaluate", "x", "linear_functions") is None   # under 30 answers
 
     # U3: remarking an answer right closes the trap it alone opened
     rm = "a:f4remark"
@@ -338,6 +391,15 @@ def checks():
     assert not next(c for c in legacy.execute("PRAGMA table_info(sessions)") if c["name"] == "form_id")["notnull"]
     legacy.close()
 
+    gone = add("attempts", learner="a:f4gone", template="gone.template", seed=1, topic="linear_functions",
+               difficulty="easy", fmt="mcq", correct=1, at=at(TODAY)).lastrowid
+    db._backfill_attempts(db.conn())
+    row = db.one("SELECT stem, offered FROM attempts WHERE id=?", gone)
+    assert (row["stem"], row["offered"]) == ("", "[]")
+    assert not db.one("SELECT 1 FROM attempts WHERE id=? AND (stem IS NULL OR offered IS NULL"
+                      " OR (norm IS NULL AND (correct=0 OR flagged=1)))", gone)
+    assert "rank_snapshots" in db.LEARNER_TABLES and "undoes" in {r["name"] for r in db.rows("PRAGMA table_info(trap_log)")}
+
     # the upgrades' schema: every column and table F4 adds
     cols = lambda t: {r["name"] for r in db.rows(f"PRAGMA table_info({t})")}  # noqa: E731
     assert {"conf", "hints", "miss_kind", "offered", "struck", "cover", "calc", "diag", "revealed_at",
@@ -376,7 +438,7 @@ def days_checks():
             difficulty="easy", fmt="mcq", correct=1, at=at(day))
     ledger = progress.days(learner, 0, 26)
     assert ledger["best_streak"] == 6 and len(ledger["days"]) == 182
-    assert ledger["streak"] == 6 or (TODAY.weekday() < 5 and ledger["streak"] >= 5)
+    assert ledger["streak"] == 6, ledger["streak"]
 
     learner = "a:f4minutes"
     finish = dt.datetime.now(dt.timezone.utc).replace(microsecond=0)
@@ -402,6 +464,16 @@ def days_checks():
         started=(finish - dt.timedelta(minutes=170)).isoformat(),
         module_started=(finish - dt.timedelta(minutes=85)).isoformat(), finished=finish.isoformat())
     assert progress.days(untimed)["minutes_total"] == 170
+    # L10 / R13: a done own task counts its minutes; a done question task the
+    # minutes it says it took elsewhere; a done question task with none, nothing
+    pm = "a:f4marks"
+    db.ensure_learner(pm)
+    db.run("UPDATE learners SET plan='f4-pm' WHERE id=?", pm)
+    add("plan_tasks", id="f4-own", plan="f4-pm", day=str(TODAY), title="Read a chapter", minutes=15)
+    add("plan_marks", plan="f4-pm", day=str(TODAY), task="f4-own", status="done")
+    add("plan_marks", plan="f4-pm", day=str(TODAY), task=f"{TODAY}:practice", status="done", minutes=20)
+    add("plan_marks", plan="f4-pm", day=str(TODAY), task=f"{TODAY}:words", status="done")
+    assert progress.days(pm)["minutes_total"] == 35
     # Today's day rows: practice, tests and the day's questions
     row = progress.days(split)["recent"][-1]
     assert row["tests"] == 1 and row["practice"] == 0
@@ -449,6 +521,27 @@ def days_checks():
         due=str(TODAY + dt.timedelta(days=4)), checks=1)
     forecast = progress.due_forecast(wu, 0, 14)
     assert next(f for f in forecast if f["day"] == str(TODAY + dt.timedelta(days=4)))["checks"] == 1
+    mk = "a:f4marked"
+    add("sessions", id="f4-mk", kind="drill", learner=mk, started=at(TODAY - dt.timedelta(days=5)), cfg="{}")
+    for template, seed, back in (("circles.arc", 1, 3), ("lin.evaluate", 2, 3), ("lin.slope", 3, 1)):
+        add("flags", learner=mk, session="f4-mk", qid=f"q{seed}", template=template, seed=seed,
+            topic=progress._topic_of(template), at=at(TODAY - dt.timedelta(days=back)))
+    add("attempts", learner=mk, template="lin.evaluate", seed=9, topic="linear_functions", difficulty="easy",
+        fmt="mcq", correct=1, at=at(TODAY - dt.timedelta(days=1)))            # a right first try since that flag
+    cand = progress.warmup_candidates(mk)
+    assert [m["template"] for m in cand["marked"]] == ["circles.arc"] and cand["marked"][0]["kind"] == "marked"
+    assert cand["size"] == len(cand["checks"]) + len(cand["fading"]) + len(cand["keep_warm"]) + 1
+    fl = "a:f4fluency"
+    for i, (template, ms, ok) in enumerate((("circles.fl", 50000, 1), ("circles.fl", 60000, 1),
+                                            ("circles.slow", 200000, 1), ("circles.slow", 210000, 1),
+                                            ("circles.slow", 190000, 1))):
+        add("attempts", learner=fl, template=template, seed=i, topic="circles", difficulty="medium", fmt="mcq",
+            correct=ok, ms=ms, at=at(TODAY, 1 + i))
+    f = progress.fluency(fl)
+    assert f["circles.fl"]["fluent"] and f["circles.fl"]["best_ms"] == 50000 and not f["circles.fl"]["slow_right"]
+    assert f["circles.slow"]["slow_right"] and not f["circles.slow"]["fluent"]
+    loose = progress.fluency(fl, lambda _t, _tier: 300000)
+    assert loose["circles.slow"]["fluent"] and not loose["circles.slow"]["slow_right"]
 
 
 def causes_checks():
@@ -525,6 +618,38 @@ def causes_checks():
     assert progress.coach(sure)["reasons"]["circles"]["kind"] == "confident"
     cal = progress.calibration(sure)
     assert cal["conf"]["sure"]["wrong"] == 1 and cal["sure_wrong"]
+    # T9 / X11: blind spots are sure misses, told or inferred
+    bl = "a:f4blind"
+    for i in range(5):
+        for tier in ("easy", "medium"):
+            add("attempts", learner=bl, template="circles.base", seed=900 + i + (10 if tier == "easy" else 0),
+                topic="circles", difficulty=tier, fmt="mcq", correct=1, ms=100000, at=at(TODAY, 1))
+    med = lambda n, key: {**q(n, key=key, topic="circles"), "difficulty": "medium"}  # noqa: E731
+    progress.record(bl, None, med(1, "circles.fast"), 1, ms=20000)             # medium, under 0.6 x median
+    progress.record(bl, None, q(2, key="circles.easyfast", topic="circles"), 1, ms=1000)   # easy: a slip, never blind
+    progress.record(bl, None, med(3, "circles.guess"), 1, ms=20000, conf="guess")
+    progress.record(bl, None, med(4, "circles.slow"), 1, ms=150000)
+    progress.record(bl, None, med(5, "circles.filler"), 3, ms=20000)          # fast, but T7 says slip, not trap
+    add("sessions", id="f4-bl-test", kind="module", learner=bl, started=at(TODAY), finished=at(TODAY, 2),
+        qstate=json.dumps({"t1": {"conf": "sure"}, "t2": {"predict": "miss"}, "t3": {}}))
+    progress.record(bl, "f4-bl-test", {**q(6, key="circles.testsure", topic="circles"), "id": "t1"}, 1,
+                    ms=150000, conf="sure")
+    progress.record(bl, "f4-bl-test", {**med(7, "circles.spotted"), "id": "t2"}, 1, ms=150000)
+    progress.record(bl, "f4-bl-test", {**med(8, "circles.silent"), "id": "t3"}, 1, ms=150000)
+    got = progress.blind(bl)
+    whys = {t["template"]: t["why"] for t in got.values()}
+    assert whys == {"circles.fast": "fast", "circles.testsure": "sure", "circles.silent": "silent"}, whys
+    cache, medians = {}, progress._tier_medians(bl)
+    for t in got.values():
+        a = dict(db.one("SELECT * FROM attempts WHERE id=?", t["attempt"]))
+        assert progress._cause(bl, a, progress._sitting(a["session"], cache), medians)[0] == "trap"
+    # QBank §3.3.5: the plan's Focus is a coach reason of its own
+    fo = "a:f4focus"
+    db.ensure_learner(fo)
+    db.run("UPDATE learners SET focus=? WHERE id=?", json.dumps({"Geometry and Trigonometry": "focus"}), fo)
+    co = progress.coach(fo)
+    kinds = [co["reasons"][p]["kind"] for p in co["topics"]]              # at most two from one domain
+    assert co["why"] == "focus" and kinds == ["focus", "focus", "new"], co["reasons"]
 
 
 def estimate_checks():
@@ -566,7 +691,7 @@ def estimate_checks():
     for table in data["tables"].values():
         vals = [rank(table[k]) for k in sorted(table, key=int)]
         assert vals == sorted(vals)
-    assert data["source"] and data["year"]
+    assert data["source"] and isinstance(data["year"], int) and 2024 <= data["year"] <= TODAY.year
     nat = estimate.national(520, 660)
     assert nat["low_pct"] == data["tables"]["math"]["520"] and nat["high_pct"] == data["tables"]["math"]["660"]
 
@@ -728,15 +853,16 @@ def routes(client):
     note = client.post("/api/notes", headers=h, json={"session": "notes-f4", "question_id": "q96",
                                                        "note": "Remember the sign", "marks": [{"style": "underline", "note": "This phrase"}]})
     assert note.status_code == 200, note.text
+    assert "template" not in note.json()
     assert db.one("SELECT note FROM notes WHERE learner=? AND template=? AND seed=?",
                   "a:f4prefs", "lin.evaluate", 96)["note"] == "Remember the sign"
     assert client.post("/api/notes", headers={"X-Learner": "a:f4other"}, json={"session": "notes-f4", "question_id": "q96"}).status_code == 403
     gone = client.post("/api/notes", headers=h, json={"session": "notes-f4", "question_id": "q96", "note": "", "marks": []})
-    assert gone.json()["deleted"] and not db.one("SELECT 1 FROM notes WHERE learner=? AND seed=96", "a:f4prefs")
+    assert gone.json()["deleted"] and "template" not in gone.json() and not db.one("SELECT 1 FROM notes WHERE learner=? AND seed=96", "a:f4prefs")
     progress.record("a:f4prefs", None, q(97), 1)
     aid = db.one("SELECT id FROM attempts WHERE learner=? AND seed=97", "a:f4prefs")["id"]
     rule = client.post("/api/notes", headers=h, json={"attempt_id": aid, "scope": "type", "note": "check the sign"})
-    assert rule.status_code == 200 and db.one("SELECT note FROM notes WHERE learner=? AND template='lin.evaluate' AND seed=-1",
+    assert rule.status_code == 200 and rule.json()["template"] == "lin.evaluate" and db.one("SELECT note FROM notes WHERE learner=? AND template='lin.evaluate' AND seed=-1",
                                               "a:f4prefs")["note"] == "check the sign"
     assert client.post("/api/notes", headers={"X-Learner": "a:f4other"},
                        json={"attempt_id": aid, "scope": "type", "note": "x"}).status_code == 404
@@ -762,8 +888,32 @@ def routes(client):
     finally:
         deps.SWAP.reset(reset)
     assert deps.learner_of(box["token"]) == "a:f4saved"
+    # over HTTP: the header reaches the browser and its token works (shell-me U21 acceptance 4)
+    from fastapi import FastAPI
+    from server import api_me
+    mini = FastAPI()
+    mini.middleware("http")(deps.swap_middleware)
+    mini.include_router(api_me.router)
+    installed = any(getattr(m, "kwargs", {}).get("dispatch") is deps.swap_middleware for m in app.user_middleware)
+    for c in (TestClient(mini),) + ((client,) if installed else ()):
+        r = c.get("/api/me", headers={"X-Learner": "a:f4saved", "User-Agent": "Mozilla/5.0 (Macintosh; Mac OS X) Chrome/120"})
+        swapped = r.headers.get("X-Learner-Swap", "")
+        assert r.status_code == 200 and swapped.startswith("d:"), r.headers
+        assert c.get("/api/me", headers={"X-Learner": swapped}).json()["profile"]["id"] == "a:f4saved"
+        assert db.one("SELECT label, method FROM devices WHERE token=?", swapped)["method"] == "swap"
+    if not installed:
+        print("PENDING  app.py does not install deps.swap_middleware (its owner adds"
+              " app.middleware('http')(deps.swap_middleware)); checked on a mini app instead")
     db.run("UPDATE learners SET swap_until=? WHERE id=?", progress.now(), "a:f4saved")
     assert client.get("/api/me", headers={"X-Learner": "a:f4saved"}).status_code == 401
+    # U21's transfer code: 8 characters of A-HJ-NP-Z2-9, unique across contests and transfers
+    code = db.new_code(8)
+    assert len(code) == 8 and set(code) <= set(db.CODE_ALPHABET) and not set(code) & set("IO01")
+    assert len(db.new_code()) == 6
+    add("transfers", code="AAAAAAAA", learner="a:f4saved", expires=progress.now())
+    picks = iter("A" * 8 + "B" * 8)
+    with patch.object(db.secrets, "choice", lambda _alphabet: next(picks)):
+        assert db.new_code(8) == "BBBBBBBB"
 
 
 def integrity():
@@ -852,6 +1002,7 @@ def carry():
     add("rw_log", learner=src, at=stamp, source="task", domain="Craft and Structure", missed=2, of=10)
     add("word_lists", learner=src, name="mine", words="[]", created=stamp)
     add("official_done", learner=src, cb_id="84664a7c", pick="C", right=0, ms=1000, at=stamp)
+    add("rank_snapshots", day=str(TODAY), board="points", learner=src, rank=3, value=40)
     add("follows", learner=src, target="a:f4friend", at=stamp)
     add("nudges", sender=src, target="a:f4friend", contest="c1", round=1, at=stamp)
     add("sets", code="CARRYSET", owner=src, kind="set", created=stamp)
