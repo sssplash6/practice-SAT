@@ -437,7 +437,7 @@ def days_checks():
         add("attempts", learner=learner, template="lin.evaluate", seed=100 + i, topic="linear_functions",
             difficulty="easy", fmt="mcq", correct=1, at=at(day))
     ledger = progress.days(learner, 0, 26)
-    assert ledger["best_streak"] == 6 and len(ledger["days"]) == 182
+    assert ledger["best_streak"] == ledger["best"] == 6 and len(ledger["days"]) == 182
     assert ledger["streak"] == 6, ledger["streak"]
 
     learner = "a:f4minutes"
@@ -906,6 +906,24 @@ def routes(client):
               " app.middleware('http')(deps.swap_middleware)); checked on a mini app instead")
     db.run("UPDATE learners SET swap_until=? WHERE id=?", progress.now(), "a:f4saved")
     assert client.get("/api/me", headers={"X-Learner": "a:f4saved"}).status_code == 401
+    # Shell §3.1.5: a rotated-away code is 401 on writes, reads get its own
+    # empty data, and /api/shell can tell (is_retired)
+    add("retired", code="a:f4rotated", into="a:f4device", at=progress.now())
+    got = client.get("/api/me", headers={"X-Learner": "a:f4rotated"})
+    assert got.status_code == 200 and got.json()["profile"]["id"] == "a:f4rotated", got.text
+    r = client.put("/api/me", headers={"X-Learner": "a:f4rotated"}, json={"minutes": 30})
+    assert r.status_code == 401 and r.json()["detail"] == {"retired": True, "into": None}, r.text
+    assert client.post("/api/notes", headers={"X-Learner": "a:f4rotated"}, json={"attempt_id": 1}).status_code == 401
+    assert deps.is_retired("a:f4rotated") and not deps.is_retired("a:f4device")
+    for method, refused in (("GET", False), ("POST", True), ("DELETE", True)):
+        reset = deps.SWAP.set({"label": "Browser", "method": method})
+        try:
+            deps.learner_of("a:f4rotated")
+            assert not refused, method
+        except HTTPException as e:
+            assert refused and e.status_code == 401, method
+        finally:
+            deps.SWAP.reset(reset)
     # U21's transfer code: 8 characters of A-HJ-NP-Z2-9, unique across contests and transfers
     code = db.new_code(8)
     assert len(code) == 8 and set(code) <= set(db.CODE_ALPHABET) and not set(code) & set("IO01")
@@ -1007,6 +1025,10 @@ def carry():
     add("nudges", sender=src, target="a:f4friend", contest="c1", round=1, at=stamp)
     add("sets", code="CARRYSET", owner=src, kind="set", created=stamp)
     add("contests", id="carry-own", owner=src, kind="private", created=stamp)
+    add("retired", code="a:f4carryold", into=src, at=stamp)
+    for sid, who, day, hour in (("carry-ch-a", src, TODAY, 1), ("carry-ch-b", dst, TODAY, 2),
+                                ("carry-ch-c", src, TODAY - dt.timedelta(days=1), 3)):
+        add("sessions", id=sid, kind="challenge", learner=who, day=str(day), started=at(TODAY, hour), ranked=1)
     assert progress.carry(src, dst) == 3
     for table, where in db.LEARNER_TABLES.items():
         found = lambda who: db.conn().execute(f"SELECT 1 FROM {table} WHERE {where}", {"l": who}).fetchone()  # noqa: E731
@@ -1020,6 +1042,9 @@ def carry():
     assert db.one("SELECT archived FROM plans WHERE id='carry-plan-dst'")["archived"] is None
     ranked = {r["id"]: (r["ranked"], r["unranked_why"]) for r in db.rows("SELECT * FROM sessions WHERE contest='c1'")}
     assert ranked == {"carry-contest-a": (1, None), "carry-contest-b": (0, "repeat")}, ranked
+    ranked = {r["id"]: (r["ranked"], r["unranked_why"]) for r in db.rows("SELECT * FROM sessions WHERE id LIKE 'carry-ch-%'")}
+    assert ranked == {"carry-ch-a": (1, None), "carry-ch-b": (0, "repeat"), "carry-ch-c": (1, None)}, ranked
+    assert db.one('SELECT "into" FROM retired WHERE code=?', "a:f4carryold")["into"] == dst
 
 
 def check(client):

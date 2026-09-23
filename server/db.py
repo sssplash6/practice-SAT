@@ -280,6 +280,7 @@ LEARNER_TABLES = {
     "nudges": "sender=:l OR target=:l",
     "name_reports": "target=:l OR reporter=:l",
     "sets": "owner=:l", "contests": "owner=:l",
+    "retired": 'code=:l OR "into"=:l',          # carry moves "into"; a code once retired stays retired
     **{t: _PLAN for t in ("plan_days", "plan_overrides", "plan_tasks", "plan_marks",
                           "plan_snapshots", "plan_events")},
     "learners": "id=:l",

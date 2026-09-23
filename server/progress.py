@@ -622,7 +622,7 @@ def carry(frm: str, to: str) -> int:
     set and takes the rest from the other code; the contest rating and each
     skill rating come from whichever side has more rated answers; the target's
     active plan stays active and the other is archived; and a contest sat under
-    both codes keeps only its first ranked sitting.
+    both codes keeps only its first ranked sitting, as does a challenge day.
     """
     if frm == to:
         return 0
@@ -679,13 +679,16 @@ def carry(frm: str, to: str) -> int:
             else:
                 c.execute("UPDATE traps SET learner=? WHERE id=?", (to, s["id"]))
         c.execute("DELETE FROM pairs WHERE learner=? OR req_learner=?", (frm, frm))
-        # one ranked sitting per contest: the first stays, later ones are repeats
-        for r in c.execute("SELECT contest FROM sessions WHERE learner=? AND contest IS NOT NULL AND ranked=1"
-                           " GROUP BY contest HAVING COUNT(*)>1", (to,)).fetchall():
-            keep = c.execute("SELECT id FROM sessions WHERE learner=? AND contest=? AND ranked=1"
-                             " ORDER BY started,id LIMIT 1", (to, r["contest"])).fetchone()["id"]
-            c.execute("UPDATE sessions SET ranked=0, unranked_why='repeat' WHERE learner=? AND contest=?"
-                      " AND ranked=1 AND id!=?", (to, r["contest"], keep))
+        c.execute('UPDATE retired SET "into"=? WHERE "into"=?', (to, frm))
+        # one ranked sitting per contest (per day for a daily one) and per
+        # challenge day (decision 1's twins): the first stays, later ones are repeats
+        seen: set = set()
+        for x in c.execute("SELECT id, COALESCE(contest,'~challenge') AS k, COALESCE(day,'') AS d FROM sessions"
+                           " WHERE learner=? AND ranked=1 AND (contest IS NOT NULL OR (kind='challenge' AND day IS NOT NULL))"
+                           " ORDER BY started,id", (to,)).fetchall():
+            if (x["k"], x["d"]) in seen:
+                c.execute("UPDATE sessions SET ranked=0, unranked_why='repeat' WHERE id=?", (x["id"],))
+            seen.add((x["k"], x["d"]))
         s = c.execute("SELECT * FROM learners WHERE id=?", (frm,)).fetchone()
         t = c.execute("SELECT * FROM learners WHERE id=?", (to,)).fetchone()
         if s and t:
@@ -985,7 +988,7 @@ def days(learner: str, tz: int = 0, weeks: int = 2) -> dict:
     recent = [line(today - dt.timedelta(days=back)) for back in range(13, -1, -1)]
     calendar = [line(today - dt.timedelta(days=back)) for back in range(weeks * 7 - 1, -1, -1)]
     own_words = db.one("SELECT COUNT(*) AS n FROM my_words WHERE learner=?", learner)["n"]
-    return {"today": today.isoformat(), "streak": run, "best_streak": best, "spares": bank,
+    return {"today": today.isoformat(), "streak": run, "best": best, "best_streak": best, "spares": bank,
             "active_days": sum(active(d) for d in per),
             "minutes_total": round(sum(v["ms"] for v in per.values()) / 60_000),
             "recent": recent, "days": calendar,
