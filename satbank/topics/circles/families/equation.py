@@ -13,7 +13,7 @@ import random
 from fractions import Fraction as F
 
 from ....exact import E, Exact
-from ....item import Item, ItemError, Mis, assemble, assemble_text
+from ....item import Item, ItemError, Mis, assemble, assemble_text, gridin_mistakes
 from ..figures import circle_on_grid
 from ....expr import sign_join
 from ..render import (MINUS, coef_term, general_equation, num, point, radical,
@@ -108,7 +108,8 @@ def equation_read(rng: random.Random, seed: int, *, form=None, h=None, k=None,
              "rhs": rhs, "ask": "radius", "symbolic": True}
         if fmt == "spr":
             return Item("circles.equation_read", "the equation of a circle", "hard", seed,
-                        stem, "spr", key, key.gridin(), rationale, params=P)
+                        stem, "spr", key, key.gridin(), rationale, params=P,
+                        spr_mistakes=gridin_mistakes(key, mistakes))
         choices, latex, reasons, letter = assemble(key, mistakes, rng, fmt_value=radical)
         return Item("circles.equation_read", "the equation of a circle", "hard", seed, stem,
                     "mcq", key, letter, rationale, choices, reasons, latex, params=P)
@@ -215,7 +216,8 @@ def equation_read(rng: random.Random, seed: int, *, form=None, h=None, k=None,
         if not key.is_rational:
             raise ItemError("an irrational radius cannot be entered in a grid-in")
         return Item("circles.equation_read", "the equation of a circle", "medium", seed,
-                    stem, "spr", key, key.gridin(), rationale, params=P)
+                    stem, "spr", key, key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng, fmt_value=radical)
     return Item("circles.equation_read", "the equation of a circle", "medium", seed, stem,
                 "mcq", key, letter, rationale, choices, reasons, latex, params=P)
@@ -332,7 +334,8 @@ def equation_write(rng: random.Random, seed: int, *, h=None, k=None, r=None,
          "ask": "coefficient", "coef": coef}
     if fmt == "spr":
         return Item("circles.equation_write", "the equation of a circle", "hard", seed,
-                    stem, "spr", key, key.gridin(), rationale, params=P)
+                    stem, "spr", key, key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, _sign_safe(key, mistakes), rng,
                                                signed=True, fillers="shift")
     return Item("circles.equation_write", "the equation of a circle", "hard", seed, stem,
@@ -381,7 +384,8 @@ def point_on(rng: random.Random, seed: int, *, mode=None, h=None, k=None, r=None
              "axis": axis, "side": side}
         if fmt == "spr":
             return Item("circles.point_on", "points on a circle", "medium", seed, stem,
-                        "spr", key, key.gridin(), rationale, params=P)
+                        "spr", key, key.gridin(), rationale, params=P,
+                        spr_mistakes=gridin_mistakes(key, mistakes))
         choices, latex, reasons, letter = assemble(key, _sign_safe(key, mistakes), rng,
                                                    signed=True, fillers="shift")
         return Item("circles.point_on", "points on a circle", "medium", seed, stem, "mcq",
@@ -606,7 +610,8 @@ def transform(rng: random.Random, seed: int, *, mode=None, h=None, k=None, r2=No
              "dir": direction, "shift": shift, "ask": "rhs", "times": times}
         if fmt == "spr":
             return Item("circles.transform", "transforming a circle", "hard", seed, stem,
-                        "spr", key, key.gridin(), rationale, figure=fig, params=P)
+                        "spr", key, key.gridin(), rationale, figure=fig, params=P,
+                        spr_mistakes=gridin_mistakes(key, mistakes))
         choices, latex, reasons, letter = assemble(key, mistakes, rng, fmt_value=radical)
         return Item("circles.transform", "transforming a circle", "hard", seed, stem, "mcq",
                     key, letter, rationale, choices, reasons, latex, figure=fig, params=P)
@@ -635,7 +640,8 @@ def transform(rng: random.Random, seed: int, *, mode=None, h=None, k=None, r2=No
          "scale": scale, "ask": "rhs"}
     if fmt == "spr":
         return Item("circles.transform", "transforming a circle", "hard", seed, stem, "spr",
-                    key, key.gridin(), rationale, params=P)
+                    key, key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng, fmt_value=radical)
     return Item("circles.transform", "transforming a circle", "hard", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex, params=P)

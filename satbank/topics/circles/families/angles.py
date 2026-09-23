@@ -12,7 +12,7 @@ import random
 from fractions import Fraction as F
 
 from ....exact import E, PI, Exact
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ..figures import circle_with_points
 from ..render import MINUS, num as printed, pi_back, pi_style
 
@@ -115,7 +115,8 @@ def degree_radian(rng: random.Random, seed: int, *, mode=None, deg=None, num=Non
         if not key.is_rational:
             raise ItemError("a radian measure with pi in it cannot be gridded in")
         return Item("circles.degree_radian", skill, "medium", seed, stem, "spr", key,
-                    key.gridin(), rationale, params=P)
+                    key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng, fmt_value=pi_style(style))
     return Item("circles.degree_radian", skill, "medium", seed, stem, "mcq", key, letter,
                 rationale, choices, reasons, latex, params=P)
@@ -174,7 +175,8 @@ def unit_circle_angle(rng: random.Random, seed: int, *, a=None, b=None, ask=None
         if not key.is_rational:
             raise ItemError("a radian answer with pi in it cannot be gridded in")
         return Item("circles.unit_circle_angle", "central angles", "medium", seed, stem,
-                    "spr", key, key.gridin(), rationale, figure=fig, params=P)
+                    "spr", key, key.gridin(), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng, fmt_value=pi_style(style))
     return Item("circles.unit_circle_angle", "central angles", "medium", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex, figure=fig, params=P)
