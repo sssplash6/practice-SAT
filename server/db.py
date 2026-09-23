@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import pathlib
+import re
 import secrets
 import sqlite3
 import threading
@@ -170,6 +171,43 @@ LATER_COLUMNS = (
     ("attempts", "sms", "INTEGER"), ("attempts", "void", "TEXT"),
     ("attempts", "stem", "TEXT"),
     ("saved", "session", "TEXT"), ("saved", "qid", "TEXT"),
+    # the upgrades (spec/v2-upgrades/*.md §3.2 rows); tables created in
+    # EXTRA_SCHEMA are altered too, because it runs before this list
+    ("attempts", "conf", "TEXT"),                               # sure | unsure | guess | null
+    ("attempts", "hints", "INTEGER NOT NULL DEFAULT 0"),
+    ("attempts", "miss_kind", "TEXT"),                          # the student's own cause (P8)
+    ("attempts", "offered", "TEXT"),                            # JSON norms of the named options shown (P6)
+    ("attempts", "struck", "TEXT"),                             # JSON indices struck before answering
+    ("attempts", "cover", "INTEGER NOT NULL DEFAULT 0"),
+    ("attempts", "calc", "INTEGER NOT NULL DEFAULT 0"),
+    ("attempts", "diag", "TEXT"), ("attempts", "revealed_at", "TEXT"),
+    ("attempts", "word", "TEXT"),                               # an R&W item's word (R57)
+    ("attempts", "source", "TEXT"),                             # 'second' for a second look
+    ("tries", "hints", "INTEGER DEFAULT 0"),
+    ("pairs", "dir", "TEXT"), ("pairs", "token", "TEXT"), ("pairs", "approver", "TEXT"),
+    ("pairs", "session_only", "INTEGER DEFAULT 0"),
+    ("reports", "parent", "INTEGER"), ("reports", '"check"', "TEXT"),
+    ("outside_scores", "misses", "TEXT"), ("outside_scores", "subject", "TEXT NOT NULL DEFAULT 'math'"),
+    ("learners", "feed_seen", "TEXT"), ("learners", "handle", "TEXT"),
+    ("learners", "swap_until", "TEXT"),
+    ("users", "google_sub", "TEXT"),
+    ("saved", "why", "TEXT"),
+    ("sessions", "subject", "TEXT NOT NULL DEFAULT 'math'"),
+    ("papers", "source", "TEXT"),
+    ("contests", "subject", "TEXT DEFAULT 'math'"), ("contests", "series", "TEXT"),
+    ("contests", "round", "INTEGER"),
+    ("contest_items", "slot", "INTEGER"), ("contest_items", "qhash", "TEXT"),
+    ("plans", "start_points", "TEXT"), ("plan_days", "gate", "INTEGER DEFAULT 0"),
+    ("plan_overrides", "trim", "INTEGER DEFAULT 0"),
+    ("plan_marks", "minutes", "INTEGER"), ("plan_marks", "note", "TEXT"),
+    ("plan_tasks", "type", "TEXT DEFAULT 'other'"), ("plan_tasks", "subject", "TEXT DEFAULT 'math'"),
+    ("word_state", "hook", "TEXT"), ("word_state", "proven", "INTEGER"),
+    ("word_state", "placed", "INTEGER"),
+    ("word_reviews", "template", "TEXT"), ("word_reviews", "seed", "INTEGER"),
+    ("word_reviews", "trap", "TEXT"), ("word_reviews", "conf", "TEXT"),
+    ("word_reviews", "gap", "TEXT"), ("word_reviews", "subject", "TEXT"),
+    ("word_reviews", "skill", "TEXT"), ("word_reviews", "domain", "TEXT"),
+    ("word_reviews", "difficulty", "TEXT"), ("word_reviews", "attempt", "INTEGER"),
 )
 
 EXTRA_SCHEMA = """
@@ -201,12 +239,58 @@ CREATE TABLE IF NOT EXISTS kv (k TEXT PRIMARY KEY, v TEXT);
 CREATE TABLE IF NOT EXISTS word_state (learner TEXT, word TEXT, box INTEGER DEFAULT 0, due TEXT, reps INTEGER DEFAULT 0, lapses INTEGER DEFAULT 0, right INTEGER DEFAULT 0, wrong INTEGER DEFAULT 0, saved INTEGER DEFAULT 0, first TEXT, last TEXT, lastday TEXT, lastwrong TEXT, PRIMARY KEY(learner,word));
 CREATE TABLE IF NOT EXISTS word_reviews (id INTEGER PRIMARY KEY, learner TEXT, word TEXT, session TEXT, mode TEXT, kind TEXT, correct INTEGER, given TEXT, confusion TEXT, box_before INTEGER, due_before TEXT, ms INTEGER, at TEXT);
 CREATE TABLE IF NOT EXISTS my_words (id TEXT PRIMARY KEY, learner TEXT, word TEXT, meaning TEXT, pos TEXT, example TEXT, same TEXT, opposite TEXT, notes TEXT, list TEXT, source TEXT, created TEXT, updated TEXT);
+CREATE TABLE IF NOT EXISTS skill_ratings (learner TEXT, topic TEXT, rating REAL, n INTEGER DEFAULT 0, seed TEXT, PRIMARY KEY(learner,topic));
+CREATE TABLE IF NOT EXISTS trap_log (id INTEGER PRIMARY KEY, learner TEXT, template TEXT, norm TEXT, at TEXT, event TEXT, attempt INTEGER, pts INTEGER);
+CREATE TABLE IF NOT EXISTS due_days (learner TEXT, subject TEXT, day TEXT, keys TEXT, PRIMARY KEY(learner,subject,day));
+CREATE TABLE IF NOT EXISTS passkeys (cred_id TEXT PRIMARY KEY, learner TEXT, user_handle TEXT, spki BLOB, alg INTEGER, sign_count INTEGER, label TEXT, created TEXT, last_used TEXT);
+CREATE TABLE IF NOT EXISTS webauthn_challenges (challenge TEXT PRIMARY KEY, learner TEXT, purpose TEXT, expires TEXT);
+CREATE TABLE IF NOT EXISTS devices (token TEXT PRIMARY KEY, learner TEXT, label TEXT, method TEXT, created TEXT, last_seen TEXT, session_only INTEGER DEFAULT 0, expires TEXT, revoked TEXT);
+CREATE TABLE IF NOT EXISTS transfers (code TEXT PRIMARY KEY, learner TEXT, expires TEXT, used TEXT);
+CREATE TABLE IF NOT EXISTS quarantine (template TEXT, seed INTEGER, at TEXT, note TEXT, released TEXT, PRIMARY KEY(template,seed));
+CREATE TABLE IF NOT EXISTS week_goals (learner TEXT, week TEXT, id TEXT, kind TEXT, params TEXT, target INTEGER, created TEXT, done_at TEXT, PRIMARY KEY(learner,week,id));
+CREATE TABLE IF NOT EXISTS push_subs (id TEXT PRIMARY KEY, learner TEXT, endpoint TEXT UNIQUE, p256dh TEXT, auth TEXT, kinds TEXT, created TEXT, last_sent TEXT);
+CREATE TABLE IF NOT EXISTS cb_unknown (cb_id TEXT PRIMARY KEY, first TEXT, last TEXT, n INTEGER DEFAULT 0);
+CREATE TABLE IF NOT EXISTS follows (learner TEXT, target TEXT, at TEXT, auto INTEGER DEFAULT 0, week TEXT, PRIMARY KEY(learner,target));
+CREATE TABLE IF NOT EXISTS rank_snapshots (day TEXT, board TEXT, learner TEXT, rank INTEGER, value REAL, PRIMARY KEY(day,board,learner));
+CREATE TABLE IF NOT EXISTS nudges (sender TEXT, target TEXT, contest TEXT, round INTEGER, at TEXT, PRIMARY KEY(sender,target,contest,round));
+CREATE TABLE IF NOT EXISTS champions (kind TEXT, period TEXT, board TEXT, place INTEGER, learner TEXT, value REAL, band TEXT, PRIMARY KEY(kind,period,board,place,learner));
+CREATE TABLE IF NOT EXISTS plan_snapshots (plan TEXT, made_on TEXT, days TEXT, PRIMARY KEY(plan,made_on));
+CREATE TABLE IF NOT EXISTS plan_events (id INTEGER PRIMARY KEY, plan TEXT, at TEXT, kind TEXT, field TEXT, from_v TEXT, to_v TEXT, text TEXT, day TEXT);
+CREATE TABLE IF NOT EXISTS rw_log (id INTEGER PRIMARY KEY, learner TEXT, at TEXT, source TEXT, ref TEXT, domain TEXT, missed INTEGER, "of" INTEGER);
+CREATE TABLE IF NOT EXISTS word_lists (learner TEXT, name TEXT, words TEXT, created TEXT, PRIMARY KEY(learner,name));
+CREATE TABLE IF NOT EXISTS word_suppress (frame TEXT, word TEXT, why TEXT, at TEXT, PRIMARY KEY(frame,word));
+CREATE TABLE IF NOT EXISTS official_done (learner TEXT, cb_id TEXT, pick TEXT, "right" INTEGER, ms INTEGER, at TEXT, PRIMARY KEY(learner,cb_id,at));
 """
 
-LEARNER_TABLES = ("users", "attempts", "sessions", "practice_seen", "traps", "saved",
-                  "flags", "notes", "links", "pairs", "reports", "earned", "tries",
-                  "outside_scores", "plans", "posts", "post_votes", "contest_members",
-                  "word_state", "word_reviews", "my_words", "learners")
+# Every learner-keyed table and how its rows are found, for S1's export and
+# delete and for progress.carry: the value is a WHERE clause over :l.
+# Iterating it gives the table names, as the old tuple did.
+_PLAN = "plan IN (SELECT id FROM plans WHERE learner=:l)"
+LEARNER_TABLES = {
+    **{t: "learner=:l" for t in (
+        "users", "attempts", "sessions", "practice_seen", "traps", "saved", "flags", "notes",
+        "links", "reports", "earned", "tries", "outside_scores", "plans", "posts",
+        "post_votes", "contest_members", "word_state", "word_reviews", "my_words",
+        "skill_ratings", "trap_log", "due_days", "passkeys", "webauthn_challenges",
+        "devices", "transfers", "week_goals", "push_subs", "champions", "rw_log",
+        "word_lists", "official_done")},
+    "pairs": "learner=:l OR req_learner=:l",
+    "follows": "learner=:l OR target=:l",
+    "nudges": "sender=:l OR target=:l",
+    "name_reports": "target=:l OR reporter=:l",
+    "sets": "owner=:l", "contests": "owner=:l",
+    **{t: _PLAN for t in ("plan_days", "plan_overrides", "plan_tasks", "plan_marks",
+                          "plan_snapshots", "plan_events")},
+    "learners": "id=:l",
+}
+
+# Sample learners ("sample:…", the live sample report) are never compared
+# with real ones: every cross-learner query adds this, and writes are refused.
+NOT_SAMPLE = "learner NOT LIKE 'sample:%'"
+
+
+def is_sample(learner: str | None) -> bool:
+    return bool(learner) and learner.startswith("sample:")
 
 _local = threading.local()
 
@@ -230,6 +314,17 @@ def transaction():
         _local.atomic = False
 
 
+@contextmanager
+def atomic():
+    """transaction(), or the one already open: for helpers such as
+    progress.record that callers may run inside a bigger write."""
+    if getattr(_local, "atomic", False):
+        yield conn()
+    else:
+        with transaction() as c:
+            yield c
+
+
 def conn() -> sqlite3.Connection:
     """One connection per thread: sqlite objects do not cross threads."""
     c = getattr(_local, "c", None)
@@ -245,15 +340,15 @@ def conn() -> sqlite3.Connection:
 def init() -> None:
     c = conn()
     c.executescript(SCHEMA)
+    c.executescript(EXTRA_SCHEMA)
     for table, column, decl in LATER_COLUMNS:
         have = {r["name"] for r in c.execute(f"PRAGMA table_info({table})")}
-        if column not in have:
+        if column.strip('"') not in have:
             c.execute(f"ALTER TABLE {table} ADD COLUMN {column} {decl}")
     _relax_form_id(c)
     c.commit()
     with transaction():
         _rebuild_traps(c)
-    c.executescript(EXTRA_SCHEMA)
     c.executescript("""
       CREATE INDEX IF NOT EXISTS attempts_at_learner ON attempts(learner,at);
       CREATE INDEX IF NOT EXISTS attempts_at ON attempts(at);
@@ -272,9 +367,55 @@ def init() -> None:
       CREATE INDEX IF NOT EXISTS my_words_learner ON my_words(learner);
       CREATE INDEX IF NOT EXISTS flags_learner_session ON flags(learner,session);
       CREATE INDEX IF NOT EXISTS plans_learner_archived ON plans(learner,archived);
+      CREATE INDEX IF NOT EXISTS word_reviews_template ON word_reviews(template);
+      CREATE UNIQUE INDEX IF NOT EXISTS contest_items_slot ON contest_items(contest,slot,qhash);
+      CREATE UNIQUE INDEX IF NOT EXISTS pairs_token ON pairs(token);
+      CREATE UNIQUE INDEX IF NOT EXISTS users_google_sub ON users(google_sub);
+      CREATE INDEX IF NOT EXISTS trap_log_at ON trap_log(learner,at);
+      CREATE INDEX IF NOT EXISTS trap_log_trap ON trap_log(learner,template,norm);
+      CREATE INDEX IF NOT EXISTS devices_learner ON devices(learner);
+      CREATE INDEX IF NOT EXISTS official_done_learner ON official_done(learner,at);
     """)
     _backfill_attempts(c)
     c.commit()
+    _once(c, "backfill:trap_log", _backfill_trap_log)
+    _once(c, "backfill:handle", _backfill_handles)
+    from . import ratings
+    ratings.backfill()
+
+
+def _once(c: sqlite3.Connection, flag: str, fn) -> None:
+    """A one-off data migration, remembered in kv so a restart skips it."""
+    if c.execute("SELECT 1 FROM kv WHERE k=?", (flag,)).fetchone():
+        return
+    with transaction():
+        fn(c)
+        c.execute("INSERT OR REPLACE INTO kv(k,v) VALUES (?,?)",
+                  (flag, datetime.now(timezone.utc).isoformat(timespec="seconds")))
+
+
+def _backfill_trap_log(c: sqlite3.Connection) -> None:
+    """`open` at opened and `fixed` at closed for traps made before the log."""
+    for t in c.execute("SELECT * FROM traps").fetchall():
+        c.execute("INSERT INTO trap_log(learner,template,norm,at,event) VALUES (?,?,?,?,?)",
+                  (t["learner"], t["template"], t["norm"], t["opened"], "open"))
+        if t["closed"] and t["closed_how"] in ("fixed", "transfer"):
+            c.execute("INSERT INTO trap_log(learner,template,norm,at,event) VALUES (?,?,?,?,?)",
+                      (t["learner"], t["template"], t["norm"], t["closed"], "fixed"))
+
+
+HANDLE_OK = re.compile(r"^[A-Za-z0-9 _.\-]{3,24}$")
+
+
+def _backfill_handles(c: sqlite3.Connection) -> None:
+    """U29: a name that passes the board-name rule becomes the board name; the
+    first learner to hold it keeps it, and a clash leaves the handle null."""
+    taken = {r["handle"].casefold() for r in c.execute("SELECT handle FROM learners WHERE handle IS NOT NULL")}
+    for r in c.execute("SELECT id,name FROM learners WHERE handle IS NULL AND name IS NOT NULL"
+                       " ORDER BY created,id").fetchall():
+        if HANDLE_OK.fullmatch(r["name"]) and r["name"].casefold() not in taken:
+            taken.add(r["name"].casefold())
+            c.execute("UPDATE learners SET handle=? WHERE id=?", (r["name"], r["id"]))
 
 
 def ensure_learner(code: str) -> None:
@@ -337,19 +478,29 @@ def _rebuild_traps(c: sqlite3.Connection) -> None:
 
 
 def _backfill_attempts(c: sqlite3.Connection) -> None:
-    pending = c.execute("SELECT id,template,seed,correct,reason,flagged FROM attempts"
-                        " WHERE stem IS NULL OR (norm IS NULL AND (correct=0 OR flagged=1))").fetchall()
+    """stem, norm and offered for rows filed before those columns (0.3 ms a
+    regeneration). A template that no longer generates gets offered '[]', so
+    a restart does not try it again."""
+    pending = c.execute("SELECT id,template,seed,correct,reason,flagged,conf,stem,offered FROM attempts"
+                        " WHERE stem IS NULL OR offered IS NULL"
+                        " OR (norm IS NULL AND (correct=0 OR flagged=1))").fetchall()
     if not pending:
         return
     from satbank.registry import generate
-    from .progress import norm
+    from .progress import norm, offered_of
     for r in pending:
         try:
-            stem = generate(r["template"], r["seed"]).stem[:200]
+            it = generate(r["template"], r["seed"])
+            stem = it.stem[:200]
+            offered = json.dumps(offered_of({"type": it.fmt, "reasons": list(it.reasons),
+                                             "spr_reasons": [[m.reason, str(m.value)] for m in
+                                                             getattr(it, "spr_mistakes", ())]}))
         except Exception:
-            stem = None
-        normalized = "~unsure" if r["correct"] and r["flagged"] else (norm(r["reason"] or "") if not r["correct"] else None)
-        c.execute("UPDATE attempts SET stem=COALESCE(stem,?), norm=? WHERE id=?", (stem, normalized, r["id"]))
+            stem, offered = None, "[]"
+        unsure = r["correct"] and (r["flagged"] or r["conf"] == "unsure")
+        normalized = "~unsure" if unsure else (norm(r["reason"] or "") if not r["correct"] else None)
+        c.execute("UPDATE attempts SET stem=COALESCE(stem,?), norm=?, offered=COALESCE(offered,?) WHERE id=?",
+                  (stem, normalized, offered, r["id"]))
 
 
 def _relax_form_id(c: sqlite3.Connection) -> None:

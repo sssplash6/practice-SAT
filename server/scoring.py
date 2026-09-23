@@ -28,6 +28,9 @@ and why the copy says where to practise next rather than what you are bad at.
 from __future__ import annotations
 
 import math
+import re
+from decimal import ROUND_DOWN, ROUND_HALF_UP, Decimal
+from fractions import Fraction
 
 from satbank.item import norm_text, numeral
 
@@ -182,36 +185,140 @@ def fraction_for(score: float) -> dict:
     raise AssertionError("unreachable score anchor")
 
 
+def _exact(text) -> Fraction | None:
+    """A typed or keyed number as an exact rational: 2/3, 0.125, -7, 1.5e0 no."""
+    t = str(text or "").strip().replace("−", "-").replace(",", "").replace(" ", "").lstrip("+")
+    if not t:
+        return None
+    try:
+        return Fraction(t)
+    except (ValueError, ZeroDivisionError):
+        return None
+
+
+def _grid_cap(text: str) -> int:
+    """The grid holds 5 characters, 6 with a leading minus."""
+    return 6 if text.startswith("-") else 5
+
+
+def _fill(value: Fraction, places: int, rounding: str) -> str:
+    """value (>= 0) cut or rounded at `places` decimal places."""
+    d = Decimal(value.numerator) / Decimal(value.denominator)
+    return str(d.quantize(Decimal(1).scaleb(-places), rounding=rounding))
+
+
 def accepted_forms(key: str) -> list[str]:
-    """Four-place truncation and rounding when the exact decimal will not fit."""
-    from decimal import Decimal, ROUND_DOWN, ROUND_HALF_UP
-    from fractions import Fraction
-    value = _value(str(key))
+    """Up to 5 ways to grid the key that grid_equal accepts: the fraction, then
+    the decimal -- exact when it ends in time, else truncated and rounded to
+    fill the grid (5 characters, 6 with a minus) -- without and with the
+    leading 0. 2/3 -> 2/3, .6666, .6667, 0.666, 0.667; 7/3 -> 7/3, 2.333."""
+    value = _exact(key)
     if value is None:
         return []
-    if "/" in str(key):
-        try:
-            denominator = Fraction(str(key)).denominator
-            for prime in (2,5):
-                while denominator%prime==0:
-                    denominator//=prime
-            if denominator==1 and len(str(Decimal(Fraction(str(key)).numerator)/Decimal(Fraction(str(key)).denominator)).split(".")[-1])<=4:
-                return []
-        except (ValueError,ZeroDivisionError):
-            return []
-    elif "." not in str(key) or len(str(key).split(".",1)[1])<=4:
-        return []
-    x = Decimal(str(value))
-    forms = []
-    for mode in (ROUND_DOWN,ROUND_HALF_UP):
-        s = str(x.quantize(Decimal(".0001"),rounding=mode))
-        if s.startswith("0."):
-            s = s[1:]
-        elif s.startswith("-0."):
-            s = "-"+s[2:]
-        if s not in forms:
+    forms: list[str] = []
+
+    def add(s: str) -> None:
+        if s not in forms and len(s) <= _grid_cap(s) and grid_equal(s, str(key)):
             forms.append(s)
-    return forms
+
+    sign = "-" if value < 0 else ""
+    a = abs(value)
+    whole = a.numerator // a.denominator
+    if a.denominator == 1:
+        add(f"{sign}{whole}")
+        return forms
+    add(f"{value.numerator}/{value.denominator}")
+    exact = Decimal(a.numerator) / Decimal(a.denominator)
+    ends = Fraction(exact) == a
+    for head in (("", "0") if whole == 0 else (str(whole),)):
+        places = _grid_cap(sign) - len(sign) - len(head) - 1
+        if places < 1:
+            continue
+        digits = str(exact).split(".", 1)[1] if "." in str(exact) else ""
+        if ends and len(digits) <= places:
+            add(f"{sign}{head}.{digits}")
+            continue
+        for rounding in (ROUND_DOWN, ROUND_HALF_UP):
+            q = str(exact.quantize(Decimal(1).scaleb(-places), rounding=rounding))
+            add(f"{sign}{head}.{q.split('.', 1)[1]}" if q.split(".")[0] == str(whole) else sign + q)
+    return forms[:5]
+
+
+def entry_error(given: str, key: str) -> str | None:
+    """T7's entry cause, exact equivalence only.
+
+    'form': the value is the key's, written the way the grid refuses: a mixed
+    number (1 1/2 for 3/2) or more than 5 characters (6 with a minus).
+    'early': a decimal that stops short -- a point, no slash, at least two
+    significant digits, fewer characters than the grid holds -- equal to the
+    key truncated or rounded at its own number of places (.66 or .67 for 2/3,
+    1.2 for 1.25). A nearby number is never entry.
+    """
+    g = (given or "").strip().replace("−", "-")
+    kv = _exact(key)
+    if not g or kv is None or grid_equal(g, str(key)):
+        return None
+    mixed = re.fullmatch(r"(-?)(\d+)\s+(\d+)/(\d+)", g)
+    if mixed and int(mixed[4]):
+        whole = int(mixed[2]) + Fraction(int(mixed[3]), int(mixed[4]))
+        return "form" if (-whole if mixed[1] else whole) == kv else None
+    gv = _exact(g)
+    if gv is None:
+        return None
+    if gv == kv and len(g.replace(" ", "")) > _grid_cap(g):
+        return "form"
+    body = g.lstrip("-")
+    if "." in body and "/" not in body and len(g) < _grid_cap(g):
+        digits = body.replace(".", "").lstrip("0")
+        places = len(body.split(".", 1)[1])
+        if len(digits) >= 2 and places and gv != kv:
+            cut = Fraction(_fill(abs(kv), places, ROUND_DOWN))
+            near = Fraction(_fill(abs(kv), places, ROUND_HALF_UP))
+            if (gv < 0) == (kv < 0) and abs(gv) in (cut, near):
+                return "early"
+    return None
+
+
+def grid_diagnose(given: str, key: str, spr_reasons=None) -> dict | None:
+    """SR10: why a typed grid-in failed, first match; None when it is simply a
+    different value, not a named mistake."""
+    g = (given or "").strip().replace("−", "-")
+    kv, gv = _exact(key), _exact(g)
+    if not g or kv is None or grid_equal(g, str(key)):
+        return None
+    shown = " or ".join(accepted_forms(key)[:2]) or str(key)
+    err = entry_error(g, key)
+    if err == "form":
+        return {"kind": "form", "text": f"Right value, in a form the grid refuses: enter {shown}."}
+    if gv is not None and kv and (err == "early" or (abs(gv - kv) <= abs(kv) / 100
+                                                     and "." in g and "/" not in g and len(g) < _grid_cap(g))):
+        decimals = [f for f in accepted_forms(key) if "/" not in f][:2]
+        return {"kind": "short", "text": f"Right value, too few digits: {key} needs {' or '.join(decimals) or shown}."}
+    if gv is not None:
+        if kv and gv == -kv:
+            return {"kind": "sign", "text": "Right size, wrong sign."}
+        if kv and gv in (kv * 100, kv / 100):
+            return {"kind": "percent", "text": "Off by a factor of 100: percent and decimal mixed up."}
+        if kv and gv in (kv * 10, kv / 10):
+            return {"kind": "ten", "text": "Off by a factor of 10: check the place value."}
+    for item in spr_reasons or ():
+        if isinstance(item, (list, tuple)) and len(item) >= 2 and grid_equal(g, str(item[1])):
+            return {"kind": "named", "text": str(item[0])}
+    return None
+
+
+assert accepted_forms("2/3") == ["2/3", ".6666", ".6667", "0.666", "0.667"]
+assert accepted_forms("7/3") == ["7/3", "2.333"] and accepted_forms("-7/3") == ["-7/3", "-2.333"]
+assert accepted_forms("100/3") == ["100/3", "33.33"] and accepted_forms("1/8") == ["1/8", ".125", "0.125"]
+assert accepted_forms("12") == ["12"] and all(grid_equal(f, "2/3") for f in accepted_forms("2/3"))
+for g in (".66", "0.66", ".67"):
+    assert entry_error(g, "2/3") == "early", g
+assert entry_error("1.2", "1.25") == "early" and entry_error("1 1/2", "3/2") == "form"
+assert [entry_error(g, k) for g, k in (("455", "460"), ("154", "150"), (".7", "2/3"), ("3", "3.5"),
+                                       (".6667", "2/3"))] == [None] * 5
+assert grid_diagnose("0.66", "2/3")["kind"] == "short" and grid_diagnose("1 1/2", "3/2")["kind"] == "form"
+assert grid_diagnose("-7", "7")["kind"] == "sign" and grid_diagnose("45", "0.45")["kind"] == "percent"
+assert grid_diagnose("12", "8") is None
 
 
 def score(questions: list[dict], answers: dict) -> dict:
