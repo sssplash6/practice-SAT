@@ -22,6 +22,7 @@ from __future__ import annotations
 import datetime as dt
 import json
 import math
+import re
 from collections import Counter, defaultdict
 
 from . import db, practice, scoring
@@ -39,6 +40,22 @@ MS_CAP = 10 * 60 * 1000     # an answer left open over lunch is not ten hours of
 BLUEPRINT = {"Algebra": 0.35, "Advanced Math": 0.35,
              "Problem-Solving and Data Analysis": 0.15, "Geometry and Trigonometry": 0.15}
 DOMAINS = tuple(BLUEPRINT)
+
+_NUMBER = re.compile(r"[-−]?\d[\d.,/]*")
+
+
+def norm(reason: str) -> str:
+    """Fold numeric variants of a misconception into one trap.
+
+    Some distractors in one item already share a norm (for example degree vs
+    radian and the two reversed percentages); latest concrete wording wins.
+    """
+    return " ".join(_NUMBER.sub("#", (reason or "").lower()).split())
+
+
+assert norm("Container 10% of 50") == norm("Container 50% of 10")
+assert norm("divided by 360/90 instead of 180") == norm("divided by 90/360 instead of 180")
+assert norm("near-miss arithmetic slip") == "near-miss arithmetic slip"
 
 
 def now() -> str:
@@ -157,15 +174,15 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
         # a grid-in names no mistake, so it is filed under what it was testing
         label = reason or practice.skill_of(q) or q.get("topic_name") or q["topic"]
         label = label[:1].upper() + label[1:]
-        if db.one("SELECT 1 FROM traps WHERE learner=? AND template=? AND reason=?",
-                  learner, q["key"], reason):
-            db.run("UPDATE traps SET hits=hits+1, owed=?, last=?, closed=NULL, label=?"
-                   " WHERE learner=? AND template=? AND reason=?",
-                   OWED, when, label, learner, q["key"], reason)
+        if db.one("SELECT 1 FROM traps WHERE learner=? AND template=? AND norm=?",
+                  learner, q["key"], norm(reason)):
+            db.run("UPDATE traps SET hits=hits+1, owed=?, last=?, closed=NULL, label=?, reason=?"
+                   " WHERE learner=? AND template=? AND norm=?",
+                   OWED, when, label, reason, learner, q["key"], norm(reason))
         else:
-            db.run("INSERT INTO traps (learner, template, reason, label, topic, hits, owed,"
-                   " opened, last) VALUES (?,?,?,?,?,?,?,?,?)",
-                   learner, q["key"], reason, label, q["topic"], 1, OWED, when, when)
+            db.run("INSERT INTO traps (learner, template, norm, reason, label, topic, hits, owed,"
+                   " opened, last) VALUES (?,?,?,?,?,?,?,?,?,?)",
+                   learner, q["key"], norm(reason), reason, label, q["topic"], 1, OWED, when, when)
         opened.append(label)
     return {"correct": ok, "reason": reason, "opened": opened, "closed": closed}
 
@@ -193,28 +210,60 @@ def carry(frm: str, to: str) -> int:
     until both would have closed it. The target's profile keeps what it has
     set and takes the rest from the other code.
     """
+    if frm == to:
+        return 0
     c = db.conn()
     with c:
         n = c.execute("SELECT COUNT(*) FROM attempts WHERE learner=?", (frm,)).fetchone()[0]
-        c.execute("UPDATE attempts SET learner=? WHERE learner=?", (to, frm))
-        # ponytail: two sittings of one day's challenge can end up under one code; the board shows both
-        c.execute("UPDATE sessions SET learner=? WHERE learner=?", (to, frm))
-        c.execute("UPDATE traps AS t SET hits = t.hits + s.hits, owed = MAX(t.owed, s.owed),"
-                  " last = MAX(t.last, s.last),"
-                  " closed = CASE WHEN t.closed IS NULL OR s.closed IS NULL THEN NULL"
-                  "          ELSE MAX(t.closed, s.closed) END"
-                  " FROM traps AS s WHERE t.learner=? AND s.learner=?"
-                  " AND s.template = t.template AND s.reason = t.reason", (to, frm))
-        c.execute("UPDATE learners AS t SET"
-                  " name = COALESCE(t.name, s.name), exam_date = COALESCE(t.exam_date, s.exam_date),"
-                  " target = COALESCE(t.target, s.target), minutes = COALESCE(t.minutes, s.minutes),"
-                  " days = COALESCE(t.days, s.days), current = COALESCE(t.current, s.current),"
-                  " tests = COALESCE(t.tests, s.tests), focus = COALESCE(t.focus, s.focus), updated = ?"
-                  " FROM learners AS s WHERE t.id=? AND s.id=?", (now(), to, frm))
-        for table in ("practice_seen", "saved", "traps"):
+        for table in ("attempts", "sessions", "tries", "outside_scores", "plans", "posts",
+                      "word_reviews", "my_words", "reports", "links"):
+            c.execute(f"UPDATE {table} SET learner=? WHERE learner=?", (to, frm))
+        c.execute("UPDATE users SET learner=? WHERE learner=?", (to, frm))
+        c.execute("UPDATE sets SET owner=? WHERE owner=?", (to, frm))
+        c.execute("UPDATE contests SET owner=? WHERE owner=?", (to, frm))
+        c.execute("UPDATE OR IGNORE name_reports SET target=? WHERE target=?", (to, frm))
+        c.execute("UPDATE OR IGNORE name_reports SET reporter=? WHERE reporter=?", (to, frm))
+        c.execute("DELETE FROM name_reports WHERE target=? OR reporter=?", (frm, frm))
+        for table in ("practice_seen", "saved", "flags", "notes", "earned", "post_votes", "contest_members"):
             c.execute(f"UPDATE OR IGNORE {table} SET learner=? WHERE learner=?", (to, frm))
             c.execute(f"DELETE FROM {table} WHERE learner=?", (frm,))
-        c.execute("UPDATE OR IGNORE learners SET id=? WHERE id=?", (to, frm))
+        for s in c.execute("SELECT * FROM word_state WHERE learner=?", (frm,)).fetchall():
+            t = c.execute("SELECT * FROM word_state WHERE learner=? AND word=?", (to, s["word"])).fetchone()
+            if t:
+                c.execute("UPDATE word_state SET box=?,reps=?,right=?,wrong=?,lapses=?,saved=?,due=?,first=?,last=? WHERE learner=? AND word=?",
+                          (max(t["box"], s["box"]), *(t[k]+s[k] for k in ("reps", "right", "wrong", "lapses")),
+                           max(t["saved"], s["saved"]), min(x for x in (t["due"],s["due"]) if x) if t["due"] or s["due"] else None,
+                           min(x for x in (t["first"],s["first"]) if x) if t["first"] or s["first"] else None,
+                           max(x for x in (t["last"],s["last"]) if x) if t["last"] or s["last"] else None,
+                           to, s["word"]))
+            else:
+                c.execute("UPDATE word_state SET learner=? WHERE learner=? AND word=?", (to, frm, s["word"]))
+        c.execute("DELETE FROM word_state WHERE learner=?", (frm,))
+        for s in c.execute("SELECT * FROM traps WHERE learner=?", (frm,)).fetchall():
+            t = c.execute("SELECT * FROM traps WHERE learner=? AND template=? AND norm=?", (to,s["template"],s["norm"])).fetchone()
+            if t:
+                recent = s if s["last"] >= t["last"] else t
+                c.execute("UPDATE traps SET hits=?,owed=?,opened=?,last=?,closed=?,reason=?,label=?,topic=?,seed=?,session=?,relapses=?,checks=?,due=? WHERE id=?",
+                          (t["hits"]+s["hits"],max(t["owed"],s["owed"]),min(t["opened"],s["opened"]),
+                           max(t["last"],s["last"]),None if t["closed"] is None or s["closed"] is None else max(t["closed"],s["closed"]),
+                           *(recent[k] for k in ("reason","label","topic","seed","session")),t["relapses"]+s["relapses"],
+                           max(t["checks"],s["checks"]),recent["due"],t["id"]))
+                c.execute("DELETE FROM traps WHERE id=?", (s["id"],))
+            else:
+                c.execute("UPDATE traps SET learner=? WHERE id=?", (to,s["id"]))
+        c.execute("DELETE FROM pairs WHERE learner=? OR req_learner=?", (frm,frm))
+        s = c.execute("SELECT * FROM learners WHERE id=?", (frm,)).fetchone()
+        t = c.execute("SELECT * FROM learners WHERE id=?", (to,)).fetchone()
+        if s and t:
+            cols = ("name","exam_date","target","minutes","days","current","tests","focus","avatar","board","country","rw_now","rw_target","plan","plan_draft")
+            for key in cols:
+                if t[key] is None and s[key] is not None:
+                    c.execute(f"UPDATE learners SET {key}=? WHERE id=?", (s[key],to))
+            sp, tp = json.loads(s["prefs"] or "{}"), json.loads(t["prefs"] or "{}")
+            c.execute("UPDATE learners SET prefs=?,ach_seen=MAX(COALESCE(ach_seen,''),?),updated=? WHERE id=?",
+                      (json.dumps({**sp,**tp}),s["ach_seen"] or "",now(),to))
+        elif s:
+            c.execute("UPDATE learners SET id=? WHERE id=?", (to,frm))
         c.execute("DELETE FROM learners WHERE id=?", (frm,))
     return n
 

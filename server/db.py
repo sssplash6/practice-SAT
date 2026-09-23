@@ -6,8 +6,10 @@ import json
 import logging
 import os
 import pathlib
+import secrets
 import sqlite3
 import threading
+from datetime import datetime, timezone
 
 log = logging.getLogger("satf.db")
 
@@ -139,10 +141,71 @@ LATER_COLUMNS = (
     ("sessions", "module_started", "TEXT"), # the live module's clock, not the session's
     ("sessions", "cfg", "TEXT"),            # a drill's settings and its moving parts
     ("sessions", "day", "TEXT"),            # a challenge's date
+    ("sessions", "qstate", "TEXT DEFAULT '{}'"),
+    ("sessions", "paused_at", "TEXT"), ("sessions", "paused_ms", "INTEGER DEFAULT 0"),
+    ("sessions", "pauses", "INTEGER DEFAULT 0"), ("sessions", "abandoned", "TEXT"),
+    ("sessions", "number", "INTEGER"), ("sessions", "note", "TEXT"),
+    ("sessions", "shared_from", "TEXT"), ("sessions", "contest", "TEXT"),
+    ("sessions", "ranked", "INTEGER DEFAULT 1"), ("sessions", "points", "INTEGER"),
+    ("sessions", "secs", "INTEGER"), ("sessions", "unranked_why", "TEXT"),
     ("learners", "current", "INTEGER"),     # the Math score the student starts the plan from
     ("learners", "tests", "TEXT"),          # "weekly" (the default) or "daily"
     ("learners", "focus", "TEXT"),          # JSON: domain -> "focus" or "strong"; the rest are normal
+    ("learners", "avatar", "TEXT"), ("learners", "prefs", "TEXT"),
+    ("learners", "board", "TEXT"), ("learners", "country", "TEXT"),
+    ("learners", "ach_seen", "TEXT"), ("learners", "rw_now", "INTEGER"),
+    ("learners", "rw_target", "INTEGER"), ("learners", "plan", "TEXT"),
+    ("learners", "plan_draft", "TEXT"), ("learners", "rating", "REAL DEFAULT 1000"),
+    ("learners", "rated", "INTEGER DEFAULT 0"),
+    ("users", "learner", "TEXT"), ("users", "login_token", "TEXT"),
+    ("users", "login_code", "TEXT"), ("users", "login_for", "TEXT"),
+    ("users", "login_sent", "TEXT"), ("users", "login_tries", "INTEGER DEFAULT 0"),
+    ("users", "last_login", "TEXT"),
+    ("attempts", "norm", "TEXT"), ("attempts", "repeat", "INTEGER NOT NULL DEFAULT 0"),
+    ("attempts", "repair", "INTEGER NOT NULL DEFAULT 0"),
+    ("attempts", "flagged", "INTEGER NOT NULL DEFAULT 0"),
+    ("attempts", "guess", "INTEGER NOT NULL DEFAULT 0"),
+    ("attempts", "disputed", "INTEGER NOT NULL DEFAULT 0"),
+    ("attempts", "sms", "INTEGER"), ("attempts", "void", "TEXT"),
+    ("attempts", "stem", "TEXT"),
+    ("saved", "session", "TEXT"), ("saved", "qid", "TEXT"),
 )
+
+EXTRA_SCHEMA = """
+CREATE TABLE IF NOT EXISTS flags (learner TEXT, session TEXT, qid TEXT, template TEXT, seed INTEGER, topic TEXT, at TEXT, PRIMARY KEY(learner,session,qid));
+CREATE TABLE IF NOT EXISTS notes (learner TEXT, template TEXT, seed INTEGER, note TEXT, marks TEXT, at TEXT, PRIMARY KEY(learner,template,seed));
+CREATE TABLE IF NOT EXISTS links (token TEXT PRIMARY KEY, learner TEXT, kind TEXT, created TEXT, revoked TEXT, views INTEGER DEFAULT 0, last_view TEXT);
+CREATE TABLE IF NOT EXISTS pairs (code TEXT PRIMARY KEY, learner TEXT, created TEXT, expires TEXT, used TEXT, req_learner TEXT, req_device TEXT, req_answers INTEGER, state TEXT DEFAULT 'open');
+CREATE TABLE IF NOT EXISTS retired (code TEXT PRIMARY KEY, "into" TEXT, at TEXT);
+CREATE TABLE IF NOT EXISTS reports (id INTEGER PRIMARY KEY AUTOINCREMENT, learner TEXT, kind TEXT, source TEXT, session TEXT, qid TEXT, paper TEXT, word TEXT, template TEXT, seed INTEGER, category TEXT, title TEXT, answer TEXT, given TEXT, details TEXT, context TEXT, device TEXT, email TEXT, files TEXT, dispute INTEGER DEFAULT 0, at TEXT, status TEXT DEFAULT 'new', reply TEXT, replied TEXT, seen TEXT);
+CREATE TABLE IF NOT EXISTS sets (code TEXT PRIMARY KEY, owner TEXT, kind TEXT, session TEXT, items TEXT, cfg TEXT, title TEXT, show_score INTEGER DEFAULT 1, created TEXT, revoked TEXT);
+CREATE TABLE IF NOT EXISTS earned (learner TEXT, id TEXT, tier INTEGER, at TEXT, PRIMARY KEY(learner,id,tier));
+CREATE TABLE IF NOT EXISTS tries (learner TEXT, session TEXT, qid TEXT, n INTEGER, given TEXT, correct INTEGER, reason TEXT, ms INTEGER, at TEXT);
+CREATE TABLE IF NOT EXISTS outside_scores (id TEXT PRIMARY KEY, learner TEXT, day TEXT, math INTEGER, rw INTEGER, source TEXT, at TEXT);
+CREATE TABLE IF NOT EXISTS plans (id TEXT PRIMARY KEY, learner TEXT, name TEXT, cfg TEXT, start TEXT, tz INTEGER, start_mastery TEXT, created TEXT, updated TEXT, archived TEXT, result TEXT, drift_seen TEXT);
+CREATE TABLE IF NOT EXISTS plan_days (plan TEXT, day TEXT, kind TEXT, minutes INTEGER, test TEXT, phase TEXT, tasks TEXT, PRIMARY KEY(plan,day));
+CREATE TABLE IF NOT EXISTS plan_overrides (plan TEXT, day TEXT, minutes INTEGER, off INTEGER DEFAULT 0, test TEXT, topics TEXT, PRIMARY KEY(plan,day));
+CREATE TABLE IF NOT EXISTS plan_tasks (id TEXT PRIMARY KEY, plan TEXT, day TEXT, repeat TEXT, title TEXT, minutes INTEGER, created TEXT, removed TEXT);
+CREATE TABLE IF NOT EXISTS plan_marks (plan TEXT, day TEXT, task TEXT, status TEXT, to_day TEXT, at TEXT, PRIMARY KEY(plan,day,task));
+CREATE TABLE IF NOT EXISTS papers (n INTEGER PRIMARY KEY, week TEXT UNIQUE, label TEXT, built TEXT, questions TEXT);
+CREATE TABLE IF NOT EXISTS posts (id INTEGER PRIMARY KEY, paper INTEGER, learner TEXT, name TEXT, at TEXT, edited TEXT, parent INTEGER, about TEXT, text TEXT, helpful INTEGER DEFAULT 0, reports INTEGER DEFAULT 0, hidden INTEGER DEFAULT 0);
+CREATE TABLE IF NOT EXISTS post_votes (post INTEGER, learner TEXT, kind TEXT, PRIMARY KEY(post,learner,kind));
+CREATE TABLE IF NOT EXISTS contests (id TEXT PRIMARY KEY, kind TEXT, title TEXT, owner TEXT, code TEXT UNIQUE, opens TEXT, closes TEXT, count INTEGER, seconds INTEGER, spec TEXT, questions TEXT, created TEXT);
+CREATE TABLE IF NOT EXISTS contest_items (contest TEXT, template TEXT, seed INTEGER, PRIMARY KEY(contest,template,seed));
+CREATE TABLE IF NOT EXISTS contest_members (contest TEXT, learner TEXT, joined TEXT, PRIMARY KEY(contest,learner));
+CREATE TABLE IF NOT EXISTS item_ratings (template TEXT, tier TEXT, rating REAL, n INTEGER, PRIMARY KEY(template,tier));
+CREATE TABLE IF NOT EXISTS name_reports (target TEXT, reporter TEXT, at TEXT, PRIMARY KEY(target,reporter));
+CREATE TABLE IF NOT EXISTS seasons (id TEXT PRIMARY KEY, opens TEXT, closes TEXT, standings TEXT, closed TEXT);
+CREATE TABLE IF NOT EXISTS kv (k TEXT PRIMARY KEY, v TEXT);
+CREATE TABLE IF NOT EXISTS word_state (learner TEXT, word TEXT, box INTEGER DEFAULT 0, due TEXT, reps INTEGER DEFAULT 0, lapses INTEGER DEFAULT 0, right INTEGER DEFAULT 0, wrong INTEGER DEFAULT 0, saved INTEGER DEFAULT 0, first TEXT, last TEXT, lastday TEXT, lastwrong TEXT, PRIMARY KEY(learner,word));
+CREATE TABLE IF NOT EXISTS word_reviews (id INTEGER PRIMARY KEY, learner TEXT, word TEXT, session TEXT, mode TEXT, kind TEXT, correct INTEGER, given TEXT, confusion TEXT, box_before INTEGER, due_before TEXT, ms INTEGER, at TEXT);
+CREATE TABLE IF NOT EXISTS my_words (id TEXT PRIMARY KEY, learner TEXT, word TEXT, meaning TEXT, pos TEXT, example TEXT, same TEXT, opposite TEXT, notes TEXT, list TEXT, source TEXT, created TEXT, updated TEXT);
+"""
+
+LEARNER_TABLES = ("learners", "attempts", "sessions", "practice_seen", "traps", "saved",
+                  "flags", "notes", "links", "pairs", "reports", "earned", "tries",
+                  "outside_scores", "plans", "posts", "post_votes", "contest_members",
+                  "name_reports", "word_state", "word_reviews", "my_words")
 
 _local = threading.local()
 
@@ -167,7 +230,101 @@ def init() -> None:
         if column not in have:
             c.execute(f"ALTER TABLE {table} ADD COLUMN {column} {decl}")
     _relax_form_id(c)
+    _rebuild_traps(c)
+    c.executescript(EXTRA_SCHEMA)
+    c.executescript("""
+      CREATE INDEX IF NOT EXISTS attempts_at_learner ON attempts(learner,at);
+      CREATE INDEX IF NOT EXISTS attempts_at ON attempts(at);
+      CREATE INDEX IF NOT EXISTS attempts_pair ON attempts(learner,template,seed);
+      CREATE INDEX IF NOT EXISTS attempts_qid ON attempts(session,qid);
+      CREATE INDEX IF NOT EXISTS users_learner ON users(learner);
+      CREATE INDEX IF NOT EXISTS users_login_token ON users(login_token);
+      CREATE INDEX IF NOT EXISTS sessions_mock_finished ON sessions(mock_id,finished);
+      CREATE INDEX IF NOT EXISTS sessions_abandoned ON sessions(learner,abandoned);
+      CREATE INDEX IF NOT EXISTS sessions_contest_rank ON sessions(contest,ranked,points DESC,secs);
+      CREATE INDEX IF NOT EXISTS sessions_learner_contest ON sessions(learner,contest);
+      CREATE INDEX IF NOT EXISTS reports_learner_at ON reports(learner,at);
+      CREATE INDEX IF NOT EXISTS posts_paper_parent ON posts(paper,parent,at);
+      CREATE INDEX IF NOT EXISTS word_state_due ON word_state(learner,due);
+      CREATE INDEX IF NOT EXISTS word_reviews_at ON word_reviews(learner,at);
+      CREATE INDEX IF NOT EXISTS my_words_learner ON my_words(learner);
+      CREATE INDEX IF NOT EXISTS flags_learner_session ON flags(learner,session);
+      CREATE INDEX IF NOT EXISTS plans_learner_archived ON plans(learner,archived);
+    """)
+    _backfill_attempts(c)
     c.commit()
+
+
+def ensure_learner(code: str) -> None:
+    conn().execute("INSERT OR IGNORE INTO learners(id,created) VALUES (?,?)",
+                   (code, datetime.now(timezone.utc).isoformat(timespec="seconds")))
+    conn().commit()
+
+
+def new_code() -> str:
+    """A short invite code unique across the supported invite namespaces."""
+    alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    for _ in range(100):
+        code = "".join(secrets.choice(alphabet) for _ in range(6))
+        if not one("SELECT 1 FROM contests WHERE code=?", code):
+            return code
+    raise RuntimeError("could not mint a unique invite code")
+
+
+def _rebuild_traps(c: sqlite3.Connection) -> None:
+    have = {r["name"] for r in c.execute("PRAGMA table_info(traps)")}
+    if "id" in have:
+        return
+    from .progress import norm
+    old = list(c.execute("SELECT * FROM traps"))
+    c.execute("DROP TABLE traps")
+    c.executescript("""
+      CREATE TABLE traps (
+        id INTEGER PRIMARY KEY, learner TEXT NOT NULL, template TEXT NOT NULL,
+        norm TEXT NOT NULL, reason TEXT NOT NULL, label TEXT NOT NULL, topic TEXT NOT NULL,
+        hits INTEGER NOT NULL DEFAULT 1, owed INTEGER NOT NULL, opened TEXT NOT NULL,
+        last TEXT NOT NULL, closed TEXT, closed_how TEXT, relapses INTEGER DEFAULT 0,
+        seed INTEGER, session TEXT, due TEXT, checks INTEGER DEFAULT 0,
+        source TEXT, note TEXT, origin TEXT, UNIQUE(learner,template,norm));
+      CREATE INDEX traps_open ON traps(learner,closed);
+    """)
+    merged = {}
+    for r in old:
+        key = (r["learner"], r["template"], norm(r["reason"]))
+        x = merged.get(key)
+        if x is None:
+            merged[key] = dict(r)
+            continue
+        x["hits"] += r["hits"]
+        x["owed"] = max(x["owed"], r["owed"])
+        x["opened"] = min(x["opened"], r["opened"])
+        x["closed"] = None if x["closed"] is None or r["closed"] is None else max(x["closed"], r["closed"])
+        if r["last"] >= x["last"]:
+            x.update({"last": r["last"], "reason": r["reason"], "label": r["label"], "topic": r["topic"]})
+    for (learner, template, normalized), x in merged.items():
+        a = c.execute("SELECT seed,session FROM attempts WHERE learner=? AND template=?"
+                      " AND correct=0 ORDER BY at DESC,id DESC LIMIT 1", (learner, template)).fetchone()
+        c.execute("INSERT INTO traps(learner,template,norm,reason,label,topic,hits,owed,opened,last,closed,seed,session)"
+                  " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                  (learner, template, normalized, x["reason"], x["label"], x["topic"],
+                   x["hits"], x["owed"], x["opened"], x["last"], x["closed"],
+                   a["seed"] if a else None, a["session"] if a else None))
+
+
+def _backfill_attempts(c: sqlite3.Connection) -> None:
+    pending = c.execute("SELECT id,template,seed,correct,reason,flagged FROM attempts"
+                        " WHERE stem IS NULL OR (norm IS NULL AND (correct=0 OR flagged=1))").fetchall()
+    if not pending:
+        return
+    from satbank.registry import generate
+    from .progress import norm
+    for r in pending:
+        try:
+            stem = generate(r["template"], r["seed"]).stem[:200]
+        except Exception:
+            stem = None
+        normalized = "~unsure" if r["correct"] and r["flagged"] else (norm(r["reason"] or "") if not r["correct"] else None)
+        c.execute("UPDATE attempts SET stem=COALESCE(stem,?), norm=? WHERE id=?", (stem, normalized, r["id"]))
 
 
 def _relax_form_id(c: sqlite3.Connection) -> None:
@@ -179,30 +336,20 @@ def _relax_form_id(c: sqlite3.Connection) -> None:
     cols = {r["name"]: r for r in c.execute("PRAGMA table_info(sessions)")}
     if not cols or not cols.get("form_id", {})["notnull"]:
         return
-    keep = [n for n in ("id", "kind", "form_id", "questions", "learner",
-                        "started", "finished", "answers", "result", "user_id")
-            if n in cols]
-    names = ", ".join(keep)
-    c.executescript(f"""
-      PRAGMA foreign_keys=OFF;
-      CREATE TABLE sessions_new (
-        id        TEXT PRIMARY KEY,
-        kind      TEXT NOT NULL DEFAULT 'diagnostic',
-        form_id   INTEGER,
-        questions TEXT,
-        learner   TEXT,
-        started   TEXT NOT NULL,
-        finished  TEXT,
-        answers   TEXT NOT NULL DEFAULT '{{}}',
-        result    TEXT,
-        user_id   TEXT REFERENCES users(id)
-      );
-      INSERT INTO sessions_new ({names}) SELECT {names} FROM sessions;
-      DROP TABLE sessions;
-      ALTER TABLE sessions_new RENAME TO sessions;
-      CREATE INDEX IF NOT EXISTS sessions_user ON sessions(user_id);
-      PRAGMA foreign_keys=ON;
-    """)
+    # Preserve every added column; a fixed base-column copy silently lost
+    # mock routing, timers, and qstate on older installations.
+    import re
+    ddl = c.execute("SELECT sql FROM sqlite_master WHERE type='table' AND name='sessions'").fetchone()[0]
+    ddl = re.sub(r"\bform_id\s+INTEGER\s+NOT\s+NULL\b", "form_id INTEGER", ddl, flags=re.I)
+    ddl = re.sub(r"^CREATE TABLE\s+(?:IF NOT EXISTS\s+)?[\"`]?sessions[\"`]?",
+                 "CREATE TABLE sessions_new", ddl, count=1, flags=re.I)
+    names = ", ".join(cols)
+    c.executescript("PRAGMA foreign_keys=OFF;")
+    c.execute(ddl)
+    c.execute(f"INSERT INTO sessions_new ({names}) SELECT {names} FROM sessions")
+    c.execute("DROP TABLE sessions")
+    c.execute("ALTER TABLE sessions_new RENAME TO sessions")
+    c.executescript("CREATE INDEX IF NOT EXISTS sessions_user ON sessions(user_id); PRAGMA foreign_keys=ON;")
     log.info("rebuilt sessions so a practice set can exist without a form")
 
 
