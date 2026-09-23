@@ -733,15 +733,16 @@ def repeated_factor(rng: random.Random, seed: int, *, total=None, years=None,
     P = {"kind": "rr_repeated_factor", "total": float(total), "years": years,
          "factor": factor}
     mistakes = [
-        (f"counted {years + 1} years rather than the {years} between the two dates",
+        (f"counted {_years(years + 1)} rather than the {years} between the two dates",
          total / factor ** (years + 1)),
-        (f"counted {years - 1} years", total / factor ** max(years - 1, 1)),
-        (f"multiplied the {years} years by {factor} instead of using {factor} as a "
+        (f"counted {_years(years - 1)} rather than the {years} between the two dates",
+         total / factor ** max(years - 1, 1)),
+        (f"multiplied the {_years(years)} by {factor} instead of using {factor} as a "
          "repeated factor", total / (factor * years)),
         (f"divided by {factor} once", total / factor),
     ]
     rationale = (f"From January 1, {start_year} to January 1, {start_year + years} "
-                 f"is {years} years, and the money was multiplied by {factor} in "
+                 f"is {_years(years)}, and the money was multiplied by {factor} in "
                  f"each of them: x × {factor}{_sup(years)} = {dec(total, 0)}, so "
                  f"x = {dec(total, 0)} ÷ {factor ** years} = {dec(key, 0)}.")
     fmt = fmt or ("spr" if rng.random() < 0.5 else "mcq")
@@ -750,6 +751,10 @@ def repeated_factor(rng: random.Random, seed: int, *, total=None, years=None,
                    seed, stem, key, rationale, mistakes=mistakes, params=P)
     return mcq("rr.repeated_factor", "a repeated factor run backwards", "hard", seed,
                stem, key, mistakes, rng, rationale, params=P)
+
+
+def _years(n: int) -> str:
+    return f"{n} year" if n == 1 else f"{n} years"
 
 
 _SUPS = "⁰¹²³⁴⁵⁶⁷⁸⁹"
