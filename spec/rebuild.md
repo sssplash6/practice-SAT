@@ -1,3 +1,5 @@
+> Superseded by `spec/rebuild-v2.md`, the plan and the state from 2026-09-23 on; this file is the record of the first rebuild.
+
 # The rebuild
 
 Started 2026-09-23, from the TopTierPrep teardown (`spec/toptierprep-teardown.md`)
