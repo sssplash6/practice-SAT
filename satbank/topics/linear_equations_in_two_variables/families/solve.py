@@ -26,20 +26,25 @@ def _article(text: str) -> str:
     return "an" if lead[:1] == "8" or lead[:2] == "11" or lead[:2] == "18" else "a"
 
 
-def _named(key, mistakes, whole=False):
+def _named(key, mistakes, whole=False, unique=False):
     """Drop the candidates that coincide with the key, repeat, or cannot be one.
 
     `whole=True` throws away a candidate that is not a whole number: when the
     answer counts boxes, a wrong option of 16.75 boxes is not a mistake any
     student makes, it is an option nobody would read twice.
+
+    `unique=True` (grid-ins) throws away a value two reasons both give: the typed
+    value cannot say which of the two routes the student took, so neither is named.
     """
     seen = {q(key)}
+    values = [q(v) for _, v in mistakes if v is not None]
     out = []
     for reason, value in mistakes:
         if value is None:
             continue
         v = q(value)
-        if v in seen or (whole and v.denominator != 1):
+        if (v in seen or (whole and v.denominator != 1)
+                or (unique and values.count(v) > 1)):
             continue
         seen.add(v)
         out.append(Mis(reason, ex(v)))
@@ -210,9 +215,10 @@ def substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, given
     else:
         part = coef_known * g
         left = C - part
-        # in 2a + 2b = c (the `reversed`, grid-in-only contexts) the 2 counts sides;
-        # it is not what one side accounts for, so no student gives it for that
-        sides = d.get("reversed")
+        # a grid-in student asked for a side or a count does not type the perimeter,
+        # the area or the 7 each tile covers without working anything out; the
+        # multiple-choice lists keep them as they print them
+        mcq = d["fmt"] == "mcq"
         mistakes = _named(key, [
             (d.get("stated") or
              f"gave the number of {d.get('x1' if solve == 'y' else 'y1', 'items')} the "
@@ -223,19 +229,19 @@ def substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, given
              "what one of them accounts for", left),
             (d.get("less") or "subtracted the number of the other kind rather than what "
              "they account for", (C - g) / coef_ask),
-            ("gave the total itself", C),
+            ("gave the total itself", C if mcq else None),
             ("divided by the other kind's coefficient", left / coef_known),
             ("gave what one of them accounts for rather than how many there are",
-             coef_ask if coef_ask != 1 and not sides else None),
+             coef_ask if coef_ask != 1 and mcq else None),
             ("gave what one of the other kind accounts for",
-             coef_known if coef_known != 1 and not sides else None),
+             coef_known if coef_known != 1 and mcq else None),
             ("gave a number the passage mentions that the equation does not involve",
              acres if d.get("decoy") == "acres" else None),
             # equal numbers halve the total only when each one counts 1; the
             # multiple-choice lists keep it as they print it
             ("halved the total, as though the two kinds came in equal numbers",
-             C / 2 if d["fmt"] == "mcq" or coef_ask == coef_known == 1 else None)],
-            d.get("whole"))
+             C / 2 if mcq or coef_ask == coef_known == 1 else None)],
+            d.get("whole"), unique=not mcq)
         why = d["why"].format(a=numtext(A, style, places),
                               b=numtext(coef_ask, style, places),
                               c=numtext(C, style, places), given=numtext(g),
@@ -384,10 +390,9 @@ def context_substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=Non
                          (C - B * g) / ah)] + mistakes
         if d.get("speeds"):
             # speeds and hours, not counts and prices; taking hours off miles is no
-            # route anyone takes, so the two entries that do are left out
+            # route anyone takes, and nor is typing a speed as the hours without
+            # working anything out, so the entries that do are left out
             mistakes = [(f"gave the number of {known} the question already states", g),
-                        ("gave the second speed as the number of hours", A),
-                        ("gave the first speed", B),
                         ("gave the miles left rather than the hours they take", left),
                         ("divided the whole trip by the second speed without taking off "
                          "the miles already driven", C / A),
@@ -445,7 +450,7 @@ def context_substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=Non
     keyx = ex(key)
     if float(keyx) <= 0:
         raise ItemError("the quantity asked for must be positive")
-    named = _named(key, mistakes, d.get("whole", False))
+    named = _named(key, mistakes, d.get("whole", False), unique=d["fmt"] == "spr")
     if d["fmt"] == "spr":
         if not keyx.is_rational or len(keyx.gridin()) > 6:
             raise ItemError("the answer does not fit a grid-in")
