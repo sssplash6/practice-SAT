@@ -240,8 +240,20 @@ def whole_number_bound(rng: random.Random, seed: int, *, scene=None, fee=None,
             raise ItemError("this answer would not be enterable in a grid-in")
         # a typed value is named only for what produced it: the tiered pool's
         # savings-fraction values also drop the money earned or round the
-        # wrong way, and an exact quotient under ">" is the break-even count
-        named = pool[:1] + pool[3:] if d.get("tiered") else list(pool)
+        # wrong way, the shortfall reasons would type dollars as hours, the
+        # trailer's fixed amount is a weight rather than a charge, and an
+        # exact quotient under ">" is the break-even count
+        if d.get("tiered"):
+            named = [pool[0], pool[3],
+                     Mis("left out the money already earned", pool[6].value)]
+        elif scene == "trailer":
+            named = [pool[0],
+                     Mis("left the trailer's weight out of the total",
+                         pool[1].value),
+                     Mis("left the trailer's weight out and rounded up",
+                         pool[2].value)]
+        else:
+            named = list(pool)
         if op == ">" and key == edge + 1:
             named[0] = Mis("counted the break-even number, where the two "
                            "costs are equal", named[0].value)

@@ -152,16 +152,24 @@ def _solve_mistakes(shape: str, p: dict, A: Q, C: Q, key: Q) -> dict[str, Mis]:
     return {n: m for n, m in M if m.value is not None}
 
 
-def _dist_mistakes(shape: str, p: dict, A: Q, C: Q, key: Q) -> list[Mis]:
-    """The extra ways a bracket goes wrong, on top of the ordinary ones."""
+def _dist_mistakes(shape: str, p: dict, A: Q, C: Q, key: Q,
+                   gridin: bool = False) -> list[Mis]:
+    """The extra ways a bracket goes wrong, on top of the ordinary ones.
+
+    `gridin` leaves out d - c: subtracting the bare number inside the
+    parentheses is the half-distributed route, which divides by the combined
+    coefficient and is already named as `part`; stopped before that division
+    it is two slips, not one.
+    """
     g = lambda k, d=0: Q(p.get(k, d))                                   # noqa: E731
     M: list[Mis] = []
     part = _partial(shape, p)          # coefficient distributed to the first term only
     if shape == "sum_left":
-        M += [Mis("forgot to divide by the combined coefficient of the unknown", C),
-              Mis("subtracted the number inside the parentheses from the total instead "
-                  "of the product", g("d") - g("c")),
-              Mis("reported the combined coefficient of the unknown rather than its value", A),
+        M += [Mis("forgot to divide by the combined coefficient of the unknown", C)]
+        if not gridin:
+            M.append(Mis("subtracted the number inside the parentheses from the total "
+                         "instead of the product", g("d") - g("c")))
+        M += [Mis("reported the combined coefficient of the unknown rather than its value", A),
               Mis("multiplied only the unknown by the coefficient outside the "
                   "parentheses", part)]
     elif shape == "paren_right":
@@ -246,8 +254,7 @@ def _build_solve(rng, seed, shape, p, var, frame, fmt, decimal, mistakes,
     ex = E(key)
     if fmt == "spr":
         return Item(template, skill, difficulty, seed, stem, "spr", ex,
-                    ex.gridin(), rationale, params=P,
-                    spr_mistakes=spr_mistakes(ex, mistakes))
+                    ex.gridin(), rationale, params=P)
     fv = (lambda v: dec(v.coef)) if dec_opts else None
     ch, tex, why, letter = choices(ex, mistakes, rng, fmt_value=fv)
     return Item(template, skill, difficulty, seed, stem, "mcq", ex, letter,
@@ -267,7 +274,20 @@ def solve(rng: random.Random, seed: int, *, shape=None, var=None, frame=None,
     key = C / A
     if key == 0:
         raise ItemError("a zero solution makes half the distractors collapse")
-    mistakes = pick(_solve_mistakes(shape, p, A, C, key), wrongs)
+    pool = _solve_mistakes(shape, p, A, C, key)
+    if fmt == "spr":
+        # A grid-in names the slip behind a typed value, so a slip the printed
+        # equation leaves no room for is left out: -key is no sign error where
+        # no term crosses the equals sign, and q/4 prints no numerator to use.
+        skip = set()
+        if shape == "over" or (shape == "standard" and not Q(p.get("b", 0))
+                               and not Q(p.get("c", 0))):
+            skip.add("sign_flip")
+        if shape == "over" and Q(p["a"]) == 1:
+            skip |= {"add_numerator", "over_numerator"}
+        pool = {n: m for n, m in pool.items() if n not in skip}
+        wrongs = wrongs and [w for w in wrongs if w not in skip]
+    mistakes = pick(pool, wrongs)
     if fmt == "spr" and not griddable(key):
         raise ItemError("this grid-in answer would not be enterable")
     return _build_solve(rng, seed, shape, p, var, frame, fmt, decimal, mistakes,
@@ -290,7 +310,7 @@ def distribute(rng: random.Random, seed: int, *, shape=None, var=None, frame=Non
         raise ItemError("a zero solution makes half the distractors collapse")
     if fmt == "spr" and not griddable(key, loose=decimal):
         raise ItemError("this grid-in answer would not be enterable")
-    mistakes = _dist_mistakes(shape, p, A, C, key)
+    mistakes = _dist_mistakes(shape, p, A, C, key, gridin=fmt == "spr")
     return _build_solve(rng, seed, shape, p, var, frame, fmt, decimal, mistakes,
                         f"lin1.distribute.{shape}", "medium", "linear equation",
                         "lin1_distribute")
@@ -329,11 +349,12 @@ def then_value(rng: random.Random, seed: int, *, shape=None, var=None, m=None, k
          "m": float(m), "k": float(k)}
     rationale = (f"{eq} gives {var} = {num(x0)}, so {expr} = {num(key)}.")
     ex = E(key)
-    mistakes = _then_mistakes(p, shape, A, C, x0, m, k, expr, var)
     if fmt == "spr":
+        named = _then_gridin(p, shape, A, x0, m, k, expr, var, term(m, var, decimal))
         return Item("lin1.then_value", "linear equation", "easy", seed, stem, "spr",
                     ex, ex.gridin(), rationale, params=P,
-                    spr_mistakes=spr_mistakes(ex, mistakes))
+                    spr_mistakes=spr_mistakes(ex, named))
+    mistakes = _then_mistakes(p, shape, A, C, x0, m, k, expr, var)
     ch, tex, why, letter = choices(ex, mistakes, rng)
     return Item("lin1.then_value", "linear equation", "medium", seed, stem, "mcq",
                 ex, letter, rationale, ch, why, tex, params=P)
@@ -377,6 +398,49 @@ def _then_mistakes(p, shape, A, C, x0, m, k, expr, var) -> list[Mis]:
              Mis("reported the number on the right side of the equation", D),
              Mis("left the constant term out of the expression", m * x0),
              Mis("changed the sign of the whole expression", -(m * x0 + k))]
+    return [mm for mm in M if mm.value is not None]
+
+
+def _then_gridin(p, shape, A, x0, m, k, expr, var, mterm) -> list[Mis]:
+    """`_then_mistakes` for a grid-in, where each reason has to be the route to
+    its value, since a typed answer is matched to it.
+
+    `x0 + k` drops the coefficient, so it says so. Dividing the number on the
+    right by the ratio undoes the shortcut only when the asked expression is
+    that multiple of the given side (k*A == m*b), and scaling it by the ratio
+    is the slip that keeps the equation's constant in. The expression's
+    constant goes the way it prints. Adding the ratio, squaring the
+    coefficient and negating the whole answer are no route anyone takes.
+    """
+    D = _shown_rhs(shape, p)
+    r = m / A if A else None
+    b = Q(p.get("b", 0))
+    named_x0 = Mis(f"solved for {var} but the question asked for {expr}", x0)
+    no_coef = Mis(f"dropped the coefficient and used {var} in place of {mterm}", x0 + k)
+    no_const = Mis("left the constant term out of the expression", m * x0)
+    rhs = Mis("reported the number on the right side of the equation", D)
+    if k == 0 and r is not None and r != 1:
+        M = [Mis("multiplied the unknown by the ratio of the two coefficients "
+                 "instead of by the new one", r * x0),
+             Mis("scaled the number on the right by the ratio of the coefficients "
+                 "without first removing the constant", D * r if D is not None else None),
+             named_x0, rhs]
+    elif r is not None and r != 1 and b == 0:
+        M = [no_coef, no_const, named_x0, rhs]
+    elif r is not None and r != 1:
+        multiple = D is not None and k * A == m * b
+        M = [named_x0,
+             Mis("divided the number on the right by the ratio instead of "
+                 "multiplying by it", D / r if multiple else None),
+             no_coef, no_const]
+    else:
+        M = [named_x0, no_coef,
+             Mis("applied the constant of the asked expression to the number on the "
+                 "right without first removing the equation's own constant",
+                 D + k if D is not None else None),
+             Mis("subtracted the constant instead of adding it" if k > 0 else
+                 "added the constant instead of subtracting it", m * x0 - k),
+             rhs, no_const]
     return [mm for mm in M if mm.value is not None]
 
 
@@ -448,11 +512,12 @@ def chunk(rng: random.Random, seed: int, *, shape=None, var=None, ask=None, a=No
                  f"{inner} = {num(u)}"
                  + ("." if asked == inner else f", and {asked} = {num(key)}."))
     ex = E(key)
-    mistakes = _chunk_mistakes(ask, u, v0, c, coef, d, e, shape, wrong_coef, var, inner)
     if fmt == "spr":
+        named = _chunk_gridin(ask, asked, u, v0, c, coef, d, a, b, wrong_coef, var, inner)
         return Item("lin1.chunk", "linear equation", "medium", seed, stem, "spr",
                     ex, ex.gridin(), rationale, params=P,
-                    spr_mistakes=spr_mistakes(ex, mistakes))
+                    spr_mistakes=spr_mistakes(ex, named))
+    mistakes = _chunk_mistakes(ask, u, v0, c, coef, d, e, shape, wrong_coef, var, inner)
     ch, tex, why, letter = choices(ex, mistakes, rng)
     return Item("lin1.chunk", "linear equation", "medium", seed, stem, "mcq", ex,
                 letter, rationale, ch, why, tex, params=P)
@@ -489,6 +554,41 @@ def _chunk_mistakes(ask, u, v0, c, coef, d, e, shape, wrong_coef, var, inner):
     return [m for m in M if m.value is not None and m.value != 0]
 
 
+def _chunk_gridin(ask, asked, u, v0, c, coef, d, a, b, wrong_coef, var, inner):
+    """`_chunk_mistakes` for a grid-in, each value from the numbers as printed.
+
+    The bracket prints as (v + 7) or (v - 7), so the number inside it is |c|,
+    and which way it moves follows that sign. Only a one-slip route to the
+    asked quantity is named: stopping short of it or going past it, reading
+    off the bracket's number, moving that number the wrong way or subtracting
+    the wrong way round, and combining the two coefficients the wrong way --
+    carried on to the unknown when that is asked, and left out when the asked
+    product prints the right coefficient itself.
+    """
+    printed = Mis("reported the number printed inside the parentheses", abs(c))
+    if ask == "chunk":
+        M = [Mis(f"solved for {var} but the question asked for {inner}", v0), printed]
+    elif ask == "var":
+        M = [Mis(f"stopped at {inner} instead of solving for {var}", u), printed,
+             Mis("added the number inside the parentheses instead of subtracting it"
+                 if c > 0 else
+                 "subtracted the number inside the parentheses instead of adding it",
+                 u + c)]
+        if c > 0:                                   # v + 7 = u, taken as 7 - u
+            M.append(Mis("subtracted the wrong way round, taking the value of the "
+                         "bracket from the number inside it", -v0))
+    else:
+        M = [Mis("reported the number already on the right side", d),
+             Mis(f"solved for {var} but the question asked for {asked}", v0),
+             Mis(f"stopped at {inner} instead of the whole product", u)]
+    if wrong_coef and ask != "term":
+        adds = abs(coef) == abs(a) + abs(b)         # the printed coefficients add
+        M.append(Mis("subtracted the two coefficients instead of adding them" if adds
+                     else "added the two coefficients instead of subtracting them",
+                     d / wrong_coef if ask == "chunk" else d / wrong_coef - c))
+    return [m for m in M if m.value != 0]
+
+
 # ---------------------------------------------------------------- RECIPROCAL
 
 def reciprocal(rng: random.Random, seed: int, *, var=None, a=None, b=None, c=None,
@@ -511,16 +611,18 @@ def reciprocal(rng: random.Random, seed: int, *, var=None, a=None, b=None, c=Non
     P = {"kind": "lin1_reciprocal", "a": float(a), "b": float(b), "c": float(c)}
     rationale = f"{eq} gives {var} = {num(x)}, so {asked} = {num(key)}."
     ex = E(key)
-    mistakes = [Mis(f"inverted the quotient and reported {var} over the numerator", x / c),
-                Mis(f"used the given value in place of {var}", c / b),
-                Mis(f"used the denominator in place of {var}", c / a),
-                Mis(f"reported {var} rather than the quotient asked for", x),
-                Mis("multiplied the two given numbers into the numerator", c * b),
-                Mis("divided the two given numbers the wrong way round", b / a)]
+    named = [Mis(f"inverted the quotient and reported {var} over the numerator", x / c),
+             Mis(f"used the given value in place of {var}", c / b),
+             Mis(f"used the denominator in place of {var}", c / a),
+             Mis(f"reported {var} rather than the quotient asked for", x),
+             Mis("multiplied the two given numbers into the numerator", c * b)]
     if fmt == "spr":
         return Item("lin1.reciprocal", "linear equation", "medium", seed, stem, "spr",
                     ex, ex.gridin(), rationale, params=P,
-                    spr_mistakes=spr_mistakes(ex, mistakes))
+                    spr_mistakes=spr_mistakes(ex, named))
+    # b/a is x solved by dividing and then reported as x: two slips, so it is
+    # an option here but not a grid-in's named mistake
+    mistakes = named + [Mis("divided the two given numbers the wrong way round", b / a)]
     ch, tex, why, letter = choices(ex, mistakes, rng)
     return Item("lin1.reciprocal", "linear equation", "medium", seed, stem, "mcq", ex,
                 letter, rationale, ch, why, tex, params=P)

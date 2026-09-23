@@ -239,7 +239,22 @@ def parallel_perpendicular(rng: random.Random, seed: int, *, form=None, relation
             raise ItemError("the slope does not fit a grid-in")
         # the sum/diff/product extras are negative reciprocals: no parallel step
         drop = ("sum", "diff", "product") if relation == "parallel" else ()
-        named = [Mis(r, ex(q(v))) for t, r, v in pool if t not in drop and v is not None]
+        # a perpendicular extra is a wrong slope the student still turns correctly:
+        # the words name both steps, and the read coefficients get turned here
+        turned = {"sum": "added the y-intercept to the slope",
+                  "diff": "subtracted the slope from the y-intercept",
+                  "product": "multiplied the slope by the y-intercept",
+                  "coefx": "read the coefficient of x as the slope",
+                  "coefy": "read the coefficient of y as the slope",
+                  "negcoefx": "read the coefficient of x as the slope and changed its sign"}
+        named = []
+        for t, r, v in pool:
+            if t in drop or v is None:
+                continue
+            if relation == "perpendicular" and t in turned:
+                r = f"{turned[t]}, then took the negative reciprocal of that"
+                v = -1 / q(v) if t in ("coefx", "coefy", "negcoefx") else v
+            named.append(Mis(r, ex(q(v))))
         return Item("le2.parallel_perpendicular", "a line parallel or perpendicular to "
                     "another", "medium", seed, stem, "spr", keyx, keyx.gridin(), why,
                     params=P, spr_mistakes=gridin_mistakes(keyx, named))

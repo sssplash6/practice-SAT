@@ -177,6 +177,10 @@ def pythagoras(rng: random.Random, seed: int, *, mode=None, a=None, b=None,
     P = {"kind": "rtt_pythagoras", "mode": mode, "given": given_pair,
          "places": places if approximate else None}
 
+    if fmt == "spr" and mode == "hypotenuse":
+        # neither halving a leg nor a perimeter is a route a student takes to a
+        # hypotenuse, and a grid-in only names a mistake the student made
+        pool["half"] = pool["double_sum"] = None
     mistakes = [Mis(m.reason, post(m.value)) for m in pick(pool, wrongs)
                 if m.value is not None]
     if fmt == "spr":
@@ -308,6 +312,7 @@ def rectangle_diagonal(rng: random.Random, seed: int, *, short=None, long=None,
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("this length cannot be entered in a grid-in")
+        pool["double"] = None           # doubling the side needs the side first
         return Item("rtt.rectangle_diagonal", "rectangles and the theorem", "medium",
                     seed, stem, "spr", key, key.gridin(), rationale, params=P,
                     spr_mistakes=gridin_mistakes(key, pick(pool, wrongs)))
@@ -452,8 +457,7 @@ def special_triangle(rng: random.Random, seed: int, *, alpha=None, given=None,
         if ask.startswith("angle") and not (alpha == 45 and len(angle_marks) == 2):
             pool["straight"] = None
         return Item("rtt.special_triangle", "special right triangles", "medium", seed,
-                    stem, "spr", key, key.gridin(), rationale, figure=fig, params=P,
-                    spr_mistakes=gridin_mistakes(key, pick(pool, wrongs)))
+                    stem, "spr", key, key.gridin(), rationale, figure=fig, params=P)
     choices, latex, reasons, letter_ = assemble(key, pick(pool, wrongs), rng)
     return Item("rtt.special_triangle", "special right triangles", "medium", seed, stem,
                 "mcq", key, letter_, rationale, choices, reasons, latex, figure=fig,
@@ -567,8 +571,13 @@ def special_perimeter(rng: random.Random, seed: int, *, shape=None, given=None,
             raise ItemError("this answer cannot be entered in a grid-in")
         answer = (f"{key.a.numerator}" if key.a.denominator == 1
                   else f"{key.a.numerator}/{key.a.denominator}")
-        if ask != "perimeter":          # its value is a whole perimeter
-            mistakes = [m for m in mistakes if m is not pool["legs_as_hyp"]]
+        if ask != "perimeter":
+            # a whole perimeter, and two ways of working one out: none of them
+            # is a route to a single side
+            pool["legs_as_hyp"] = pool["double_leg"] = pool["hyp_root2"] = None
+        # a Surd has `.rational`, not the `.is_rational` the shared filter reads,
+        # so a radical that cannot be typed is dropped here
+        mistakes = [m for m in pick(pool, wrongs) if m.value.rational]
         return Item("rtt.special_perimeter", "special right triangles", "hard", seed,
                     stem, "spr", key, answer, rationale, params=P,
                     spr_mistakes=gridin_mistakes(key, mistakes))

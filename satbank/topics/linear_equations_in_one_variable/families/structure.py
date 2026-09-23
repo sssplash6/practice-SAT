@@ -117,6 +117,7 @@ def identity_constant(rng: random.Random, seed: int, *, shape=None, var=None,
     var = var or rng.choice(VARS)
     letter = letter or rng.choice([l for l in CONSTS if l != var])
     fmt = fmt or ("spr" if rng.random() < 0.5 else "mcq")
+    added = None                                # an option no grid-in names
 
     if shape == "same_coef":                    # a*v + L = a*v + c
         a = Q(rng.randint(2, 15) if a is None else a)
@@ -140,10 +141,13 @@ def identity_constant(rng: random.Random, seed: int, *, shape=None, var=None,
         eq = eq_of(side(a, b, var), f"{letter}({side(1, c, var)})")
         detail = f"{letter} is a constant"
         P = {"a": float(a), "b": float(b), "c": float(c), "d": 1.0, "f": 1.0, "g": 0.0}
+        # b/c + a is 2a, both readings of the coefficient summed: an option,
+        # but no route a grid-in's typed answer can be put down to
+        added = Mis("divided the constant term by the number inside the "
+                    "parentheses and then added", b / c + a if c else None)
         mistakes = [Mis("reported the constant term instead of the coefficient", b),
                     Mis("reported the number inside the parentheses", c),
-                    Mis("divided the constant term by the number inside the "
-                        "parentheses and then added", b / c + a if c else None),
+                    added,
                     Mis("added the two numbers on the left", a + b),
                     Mis("changed the sign of the coefficient", -a)]
     else:                                       # (a*v + b)/d - L/f = g(v - c)
@@ -182,8 +186,7 @@ def identity_constant(rng: random.Random, seed: int, *, shape=None, var=None,
         if ex.coef.denominator > 1000:
             raise ItemError("this grid-in answer would not be enterable")
         return Item("lin1.identity_constant", "solution set", "medium", seed, stem,
-                    "spr", ex, ex.gridin(), rationale, params=P,
-                    spr_mistakes=spr_mistakes(ex, mistakes))
+                    "spr", ex, ex.gridin(), rationale, params=P)
     ch, tex, why, letter_ = choices(ex, [m for m in mistakes if m.value is not None], rng)
     return Item("lin1.identity_constant", "solution set", "medium", seed, stem, "mcq",
                 ex, letter_, rationale, ch, why, tex, params=P)
@@ -232,6 +235,14 @@ def no_solution_constant(rng: random.Random, seed: int, *, shape=None, var=None,
                     # leaving the key alone.
                     Mis("carried the right-hand value across the equals sign and "
                         "then set the parentheses equal to it", c - d)]
+        # The parentheses print (L - 7) or (L + 7), and a student works with
+        # the 7 on the page, so a grid-in names the first three from |c|: for
+        # c < 0 the signed c turns each of them into another slip. Dividing by
+        # a 1 changes nothing, so that d is left to "reported the right-hand value".
+        pc = abs(c)
+        gridin = [Mis(mistakes[0].reason, d / pc if pc not in (0, 1) else None),
+                  Mis(mistakes[1].reason, pc + d),
+                  Mis(mistakes[2].reason, d - pc)] + mistakes[3:]
     else:                                       # a(L*v + b) = (p/q)v + d
         a = Q(rng.randint(2, 9) if a is None else a)
         b = Q(rng.choice([i for i in range(-20, 21) if i]) if b is None else b)
@@ -252,6 +263,7 @@ def no_solution_constant(rng: random.Random, seed: int, *, shape=None, var=None,
                         "dividing by it", p * a / q),
                     Mis("inverted the fraction", q / (p * a) if p else None),
                     Mis("used the constant term instead of the coefficient", b)]
+        gridin = mistakes
 
     stem = sent(f"{eq} In the given equation, {detail}. If the equation has no "
                 f"solution, what is the value of {letter}?")
@@ -264,7 +276,7 @@ def no_solution_constant(rng: random.Random, seed: int, *, shape=None, var=None,
             raise ItemError("this grid-in answer would not be enterable")
         return Item("lin1.no_solution_constant", "solution set", "hard", seed, stem,
                     "spr", ex, ex.gridin(), rationale, params=P,
-                    spr_mistakes=spr_mistakes(ex, mistakes))
+                    spr_mistakes=spr_mistakes(ex, gridin))
     ch, tex, why, ltr = choices(ex, [m for m in mistakes if m.value is not None], rng)
     return Item("lin1.no_solution_constant", "solution set", "hard", seed, stem, "mcq",
                 ex, ltr, rationale, ch, why, tex, params=P)

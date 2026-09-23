@@ -146,9 +146,9 @@ def trig_ratio(rng: random.Random, seed: int, *, hyp=None, leg=None, mode=None,
             pool["diff_over_hyp"] = pool["sum_over_hyp"] = None
         if mode == "triple":
             pool["unit_leg"] = None
+        pool["hyp_over_sum"] = None     # no route to a sine or cosine runs through it
         return Item("rtt.trig_ratio", "trigonometric ratios", "medium", seed, stem,
-                    "spr", key, key.gridin(), rationale, figure=fig, params=P,
-                    spr_mistakes=gridin_mistakes(key, pick(pool, wrongs)))
+                    "spr", key, key.gridin(), rationale, figure=fig, params=P)
     choices, latex, reasons, letter_ = assemble(key, pick(pool, wrongs), rng)
     return Item("rtt.trig_ratio", "trigonometric ratios", "medium", seed, stem, "mcq",
                 key, letter_, rationale, choices, reasons, latex, figure=fig, params=P)
@@ -237,6 +237,13 @@ def ratio_to_side(rng: random.Random, seed: int, *, triple=None, swap=False, sca
          "given": given, "ask": ask}
     fmt = fmt or ("spr" if rng.random() < 0.3 else "mcq")
     if fmt == "spr":
+        if ask == "hyp":                # the hypotenuse is the unknown
+            pool["hyp_minus_given"] = None
+        # multiplying where one should divide needs a ratio that joins the side
+        # given to the side asked for
+        if {given, ask} != set({"sin": ("opp", "hyp"), "cos": ("adj", "hyp"),
+                                "tan": ("opp", "adj")}[fn]):
+            pool["times_ratio"] = pool["over_ratio"] = None
         return Item("rtt.ratio_to_side", "trigonometric ratios", "medium", seed, stem,
                     "spr", key, key.gridin(), rationale, figure=fig, params=P,
                     spr_mistakes=gridin_mistakes(key, pick(pool, wrongs)))

@@ -112,6 +112,10 @@ def graph_read(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, x=Non
                         x / key if key != 0 else None),
                     Mis("gave the input rather than the value read off the graph", x),
                     Mis("left out the starting amount", m * x)]
+        # the vertical axis is drawn at the frame's left edge, x0, where the line
+        # reads m*x0 + b; and x/key needs the key itself, so it is no route to a
+        # wrong answer a student types
+        spr = [Mis(mistakes[0].reason, m * x0 + b)] + mistakes[1:2] + mistakes[3:]
         # a value taken off the picture is read to within a fraction of a
         # gridline, so an option that sits nearer the key than half a gridline
         # is not a wrong answer -- it is the same reading printed twice
@@ -140,6 +144,7 @@ def graph_read(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, x=Non
                             q(2)),
                         Mis("halved the rate", m / 2),
                         Mis("read the rise over five units without dividing", 5 * m)]
+        spr = mistakes
         # a rate is two such readings divided by the distance between them, so
         # what the picture can separate shrinks with the run
         tol = gridline / (2 * float(x1 - x0)) if x1 != x0 else gridline
@@ -151,12 +156,13 @@ def graph_read(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, x=Non
 
     keyx = ex(key)
     fmt = fmt or "mcq"
-    mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None
+    def apart(ms):
+        return [Mis(r.reason, ex(r.value)) for r in ms if r.value is not None
                 and abs(float(r.value) - float(key)) >= tol]
     if fmt == "spr":
         return Item("lin.graph_read", skill, difficulty, seed, stem, "spr", keyx,
-                    keyx.gridin(), rationale, figure=fig, params=P,
-                    spr_mistakes=gridin_mistakes(keyx, mistakes))
+                    keyx.gridin(), rationale, figure=fig, params=P)
+    mistakes = apart(mistakes)
     fmt_value = money if d.get("money") else None
     if d.get("money"):
         P["money"] = True

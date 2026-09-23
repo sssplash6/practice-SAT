@@ -410,6 +410,9 @@ def table_facts(rng: random.Random, seed: int, *, m=None, b=None, xs=None, x0=No
                     Mis("gave b without its sign", abs(b)),
                     Mis("subtracted the second input instead of b", m - xs[1]),
                     Mis("gave a alone", m)]
+    # when b >= 0 there is no sign to leave off: the a - b slip gives b itself
+    spr = [Mis(f"gave b instead of a {MINUS} b", r.value)
+           if r.reason == "gave b without its sign" and b >= 0 else r for r in mistakes]
     P = {"kind": "lf_table_facts", "ask": ask, "m": [m.numerator, m.denominator],
          "b": [b.numerator, b.denominator],
          "xs": [[v.numerator, v.denominator] for v in xs],
@@ -421,8 +424,7 @@ def table_facts(rng: random.Random, seed: int, *, m=None, b=None, xs=None, x0=No
     mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
         return Item("lin.table_facts", "reading a linear table", "medium", seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, table=table, params=P,
-                    spr_mistakes=gridin_mistakes(keyx, mistakes))
+                    "spr", keyx, keyx.gridin(), rationale, table=table, params=P)
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                                fillers="shift")
     return Item("lin.table_facts", "reading a linear table", "medium", seed, stem, "mcq",

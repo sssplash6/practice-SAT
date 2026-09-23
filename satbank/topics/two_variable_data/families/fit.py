@@ -265,12 +265,27 @@ def predict_from_line(rng: random.Random, seed: int, *, ctx=None, m=None, b=None
         # key's own rounding and a gridline is the chart's, not the options'
         typed = q(round_to) if round_to is not None else prec
         spr_pool = pool_at(step, typed, typed)
-        if not q(d["x0"]) <= xq / 2 <= q(d["x1"]):
-            # half the x is off the chart: nothing there to read
-            spr_pool["half_x"] = (spr_pool["half_x"][0], None)
+        x0, x1 = q(d["x0"]), q(d["x1"])
+        read_at = {"x_left": xq - xstep, "x_right": xq + xstep, "x_left2": xq - 2 * xstep,
+                   "x_right2": xq + 2 * xstep, "half_x": xq / 2, "at_end": xb,
+                   "at_start": xa}
+        for k, (r, v) in spr_pool.items():
+            x = read_at.get(k)
+            if x is not None and not (x0 <= x <= x1 and y0 <= m * x + b <= y1):
+                v = None  # the line is not drawn at that x: nothing to read
+            if v is not None and not y0 <= q(v) <= y1:
+                v = None  # off the y-axis: no gridline there to read
+            spr_pool[k] = (r, v)
+        named = gridin_mistakes(E(key), pick(spr_pool, order, wrongs))
+        if d.get("no_line"):
+            # no line is drawn: a trend eyeballed a gridline off is an estimate,
+            # not a misread, so only a plotted point is named, and not one whose
+            # value a misread would also have given
+            named = [Mis(n.reason.replace("instead of the line", "instead of the trend"),
+                         n.value) for n in named if "plotted point" in n.reason]
         return Item("tvdata.predict_from_line", "line of best fit", "easy", seed, stem,
                     "spr", E(key), E(key).gridin(), why, figure=fig, params=P,
-                    spr_mistakes=gridin_mistakes(E(key), pick(spr_pool, order, wrongs)))
+                    spr_mistakes=named)
     mistakes = pick(pool, order, wrongs)
     choices, latex, reasons, letter = assemble_num(key, mistakes, rng,
                                                    suffix=d["suffix"])

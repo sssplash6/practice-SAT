@@ -107,7 +107,10 @@ def _scene(rng: random.Random, scene: str, kw: dict) -> dict:
                 f"at the beginning of the study?")
         return {"stem": stem, "m": Q(1), "k": rate * days, "total": total, "dec": True,
                 "extra": [("added a day's growth instead of subtracting it",
-                           total + rate * days)]}
+                           total + rate * days)],
+                "gridin_extra": [("added the total growth instead of subtracting it",
+                                  total + rate * days)],
+                "fixed": "found the total growth and stopped"}
 
     if scene == "museum":
         per = g("per", rng.randint(5, 30))
@@ -203,7 +206,8 @@ def _scene(rng: random.Random, scene: str, kw: dict) -> dict:
             f"What is the length, in inches, of the third side?")
     return {"stem": stem, "m": Q(1), "k": 2 * leg, "total": perim,
             "extra": [("subtracted only one of the congruent sides", perim - leg),
-                      ("halved the perimeter and subtracted a side", perim / 2 - leg)]}
+                      ("halved the perimeter and subtracted a side", perim / 2 - leg)],
+            "fixed": "added the two congruent sides and stopped"}
 
 
 def context_solve(rng: random.Random, seed: int, *, scene=None, fmt=None, **kw) -> Item:
@@ -242,8 +246,7 @@ def context_solve(rng: random.Random, seed: int, *, scene=None, fmt=None, **kw) 
         if ex.coef.denominator > 1000:
             raise ItemError("this grid-in answer would not be enterable")
         return Item("lin1.context_solve", "linear equation in context", "medium", seed,
-                    sent(s["stem"]), "spr", ex, ex.gridin(), rationale, params=P,
-                    spr_mistakes=spr_mistakes(ex, mistakes))
+                    sent(s["stem"]), "spr", ex, ex.gridin(), rationale, params=P)
     # a count, a price and a length of time are positive, and an option orders
     # of magnitude away from the answer is crossed out without any algebra
     lo, hi = key / 25, key * 25
@@ -253,6 +256,41 @@ def context_solve(rng: random.Random, seed: int, *, scene=None, fmt=None, **kw) 
     ch, tex, why, letter = choices(ex, usable, rng, fmt_value=fv)
     return Item("lin1.context_solve", "linear equation in context", "medium", seed,
                 sent(s["stem"]), "mcq", ex, letter, rationale, ch, why, tex, params=P)
+
+
+def _context_gridin(s: dict, m: Q, k: Q, total: Q) -> list[Mis]:
+    """The option pool for a grid-in, each value what its reason does to the
+    numbers the page prints.
+
+    The pool works in the signed m*u + k = total. The page prints a coupon or
+    the expenses as an amount taken off (k < 0), and a candle or a bin as a
+    start that goes down (m < 0), so here those read the way the page does.
+    A scene may name its fixed amount when the page never prints it as one
+    number. A count, a price or a time is positive, so a route that lands at
+    or below zero is not one a student types as the answer.
+    """
+    M = [Mis(why, E(Q(v))) for why, v in s.get("gridin_extra", s.get("extra", []))]
+    if m < 0:                                   # start - r*u = left
+        r = -m
+        M += [Mis("added the amount left to the starting amount instead of "
+                  "subtracting it", E((k + total) / r)),
+              Mis("reported the starting amount given in the problem", E(k)),
+              Mis("reported the amount left given in the problem", E(total)),
+              Mis("found the amount used up but did not turn it into hours",
+                  E(k - total)),
+              Mis("worked out the time for the amount left instead of the amount "
+                  "used up", E(total / r))]
+    else:
+        M += [Mis("added the fixed amount instead of subtracting it" if k > 0 else
+                  "subtracted the fixed amount instead of adding it back",
+                  E((total + k) / m)),
+              Mis(s.get("fixed", "reported the fixed amount given in the problem"),
+                  E(abs(k)) if k else None),
+              Mis("reported the total given in the problem", E(total)),
+              Mis("forgot to divide by the rate", E(total - k)),
+              Mis("divided the total by the rate without removing the fixed amount",
+                  E(total / m))]
+    return [x for x in M if x.value is not None and float(x.value) > 0]
 
 
 # ------------------------------------------- which equation models the counts

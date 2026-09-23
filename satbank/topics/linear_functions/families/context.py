@@ -410,6 +410,8 @@ def model_value(rng: random.Random, seed: int, *, ctx=None, direction=None, b=No
                     Mis("halved the remaining amount before dividing", (total - b) / (2 * m)),
                     Mis("subtracted the rate instead of dividing by it", total - b - m),
                     Mis("divided the fixed amount by the rate instead", q(round(b / m)))]
+        spr = [Mis(mistakes[0].reason, total / m)] + mistakes[1:3] + [
+            Mis(mistakes[3].reason, b / m)]
         rationale = (f"{numtext(total)} = {numtext(b)} + {numtext(m)}x gives "
                      f"x = {numtext(key)}.")
         P = {"kind": "lf_model_value", "direction": direction,
@@ -460,6 +462,18 @@ def model_value(rng: random.Random, seed: int, *, ctx=None, direction=None, b=No
                      ("left out the starting amount", m * x)]
         mistakes = [Mis(r, q(round(v)) if d.get("approx") else v)
                     for r, v in cands if v is not None]
+        # a grid-in slip is rounded as a student rounds, half up, and in
+        # b - 0.21x the sign slip adds the change, so it is named as added. The
+        # third "given" slip is m*x - b when m >= 0, the start subtracted, not
+        # left out, so a typed value is never filed under it (m*x is the fourth)
+        spr = []
+        for i, (r, v) in enumerate(cands):
+            if v is None or (wrong == "given" and i == 2):
+                continue
+            if m < 0:
+                r = r.replace("subtracted", "added").replace("instead of adding",
+                                                             "instead of subtracting")
+            spr.append(Mis(r, (v + Q(1, 2)) // 1 if d.get("approx") else v))
         rationale = (f"{numtext(b, 'dec')} + {numtext(m, 'dec')}({numtext(x, 'dec')}) = "
                      f"{numtext(raw, 'dec')}"
                      + (f", which is closest to {numtext(key)}." if d.get("approx")
@@ -477,13 +491,8 @@ def model_value(rng: random.Random, seed: int, *, ctx=None, direction=None, b=No
     keyx = ex(key)
     mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
-        # the third "given" slip is m*x - b when m >= 0, the start subtracted, not
-        # left out, so a typed value is never filed under it (m*x is the fourth)
-        if direction == "forward" and wrong == "given":
-            mistakes = mistakes[:2] + mistakes[3:]
         return Item("lin.model_value", "evaluating a linear model", "medium", seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, params=P,
-                    spr_mistakes=gridin_mistakes(keyx, mistakes))
+                    "spr", keyx, keyx.gridin(), rationale, params=P)
     if P.get("money"):
         fmt_value = money
     elif direction == "forward" and d.get("places") and not d.get("approx"):
@@ -563,8 +572,14 @@ def context_two_points(rng: random.Random, seed: int, *, ask=None, ctx=None, x1=
         if fmt == "spr":
             # a slip is worked from the unrounded value and typed as the stem asks,
             # a whole number rounded half up; y1 is the nearer reading only when
-            # x3 is nearer x1 than x2
-            named = slips(raw)[:4 if abs(x3 - x1) < abs(x3 - x2) else 3]
+            # x3 is nearer x1 than x2. A step too far goes on past x3, away from
+            # the nearer point, and with neither point nearer there is no step
+            near1, near2 = abs(x3 - x1) < abs(x3 - x2), abs(x3 - x2) < abs(x3 - x1)
+            away = (1 if x3 > (x1 if near1 else x2) else -1) * m
+            named = slips(raw)[2:4 if near1 else 3]
+            if near1 or near2:
+                named = [Mis(r.reason, raw + k * away) for k, r in
+                         ((1, slips(raw)[0]), (2, slips(raw)[1]))] + named
             if d["approx"]:
                 named = [Mis(r.reason, (r.value + Q(1, 2)) // 1) for r in named]
             return Item("lin.context_two_points", "a linear model from two readings",
