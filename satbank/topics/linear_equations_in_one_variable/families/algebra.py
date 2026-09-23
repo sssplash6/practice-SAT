@@ -152,15 +152,21 @@ def _solve_mistakes(shape: str, p: dict, A: Q, C: Q, key: Q) -> dict[str, Mis]:
     return {n: m for n, m in M if m.value is not None}
 
 
-def _dist_mistakes(shape: str, p: dict, A: Q, C: Q, key: Q) -> list[Mis]:
-    """The extra ways a bracket goes wrong, on top of the ordinary ones."""
+def _dist_mistakes(shape: str, p: dict, A: Q, C: Q, key: Q,
+                   gridin: bool = False) -> list[Mis]:
+    """The extra ways a bracket goes wrong, on top of the ordinary ones.
+
+    A grid-in names the mistake behind the exact value typed, so it leaves out
+    a value that needs a second, unnamed slip to reach.
+    """
     g = lambda k, d=0: Q(p.get(k, d))                                   # noqa: E731
     M: list[Mis] = []
     part = _partial(shape, p)          # coefficient distributed to the first term only
     if shape == "sum_left":
         M += [Mis("forgot to divide by the combined coefficient of the unknown", C),
+              # d - c, never divided by A
               Mis("subtracted the number inside the parentheses from the total instead "
-                  "of the product", g("d") - g("c")),
+                  "of the product", None if gridin else g("d") - g("c")),
               Mis("reported the combined coefficient of the unknown rather than its value", A),
               Mis("multiplied only the unknown by the coefficient outside the "
                   "parentheses", part)]
@@ -290,7 +296,7 @@ def distribute(rng: random.Random, seed: int, *, shape=None, var=None, frame=Non
         raise ItemError("a zero solution makes half the distractors collapse")
     if fmt == "spr" and not griddable(key, loose=decimal):
         raise ItemError("this grid-in answer would not be enterable")
-    mistakes = _dist_mistakes(shape, p, A, C, key)
+    mistakes = _dist_mistakes(shape, p, A, C, key, gridin=fmt == "spr")
     return _build_solve(rng, seed, shape, p, var, frame, fmt, decimal, mistakes,
                         f"lin1.distribute.{shape}", "medium", "linear equation",
                         "lin1_distribute")
@@ -448,7 +454,8 @@ def chunk(rng: random.Random, seed: int, *, shape=None, var=None, ask=None, a=No
                  f"{inner} = {num(u)}"
                  + ("." if asked == inner else f", and {asked} = {num(key)}."))
     ex = E(key)
-    mistakes = _chunk_mistakes(ask, u, v0, c, coef, d, e, shape, wrong_coef, var, inner)
+    mistakes = _chunk_mistakes(ask, u, v0, c, coef, d, e, shape, wrong_coef, var, inner,
+                               gridin=fmt == "spr")
     if fmt == "spr":
         return Item("lin1.chunk", "linear equation", "medium", seed, stem, "spr",
                     ex, ex.gridin(), rationale, params=P,
@@ -458,7 +465,9 @@ def chunk(rng: random.Random, seed: int, *, shape=None, var=None, ask=None, a=No
                 letter, rationale, ch, why, tex, params=P)
 
 
-def _chunk_mistakes(ask, u, v0, c, coef, d, e, shape, wrong_coef, var, inner):
+def _chunk_mistakes(ask, u, v0, c, coef, d, e, shape, wrong_coef, var, inner,
+                    gridin=False):
+    """A grid-in leaves out a value its reason alone does not reach."""
     adds = (v0 - c, u + c) if c < 0 else (u + c, v0 - c)
     M: list[Mis] = []
     if ask == "chunk":
@@ -478,13 +487,14 @@ def _chunk_mistakes(ask, u, v0, c, coef, d, e, shape, wrong_coef, var, inner):
               Mis(f"solved for {var} but the question asked for {paren(coef, inner)}", v0),
               Mis("added the number inside the parentheses to the answer", coef * u - c),
               Mis(f"stopped at {inner} instead of the whole product", u)]
-    if wrong_coef:
+    if wrong_coef and not (gridin and ask != "chunk"):   # d / wrong_coef is the bracket
         mixed = Mis("subtracted the two coefficients instead of adding them"
                     if shape == "two_left" else
                     "added the two coefficients instead of subtracting them",
                     d / wrong_coef)
         M.insert(2, mixed) if ask == "var" else M.append(mixed)
-    M += [Mis("expanded the brackets but dropped the products of the constants", d),
+    M += [Mis("expanded the brackets but dropped the products of the constants",
+              None if gridin and ask != "term" else d),  # neither bracket nor unknown
           Mis("divided by one coefficient only", d / coef if coef else None)]
     return [m for m in M if m.value is not None and m.value != 0]
 

@@ -238,17 +238,19 @@ def context_solve(rng: random.Random, seed: int, *, scene=None, fmt=None, **kw) 
         Mis("divided the total by the rate without removing the fixed amount",
             E(total / m)),
     ]
+    # a count, a price and a length of time are positive: where the model's rate
+    # or fixed amount is negative, a mistake's value has the wrong sign
+    positive = [x for x in mistakes if x.value is not None and x.value.coef > 0]
     if fmt == "spr":
         if ex.coef.denominator > 1000:
             raise ItemError("this grid-in answer would not be enterable")
         return Item("lin1.context_solve", "linear equation in context", "medium", seed,
                     sent(s["stem"]), "spr", ex, ex.gridin(), rationale, params=P,
-                    spr_mistakes=spr_mistakes(ex, mistakes))
-    # a count, a price and a length of time are positive, and an option orders
-    # of magnitude away from the answer is crossed out without any algebra
+                    spr_mistakes=spr_mistakes(ex, positive))
+    # and an option orders of magnitude away from the answer is crossed out
+    # without any algebra
     lo, hi = key / 25, key * 25
-    usable = [x for x in mistakes
-              if x.value is not None and lo <= Q(x.value.coef) <= hi]
+    usable = [x for x in positive if lo <= Q(x.value.coef) <= hi]
     fv = (lambda v: money(v.coef)) if s.get("money") else None
     ch, tex, why, letter = choices(ex, usable, rng, fmt_value=fv)
     return Item("lin1.context_solve", "linear equation in context", "medium", seed,
