@@ -14,7 +14,7 @@ import random
 import math
 
 from ....exact import E
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ..render import MINUS, Q, join, mono, num, pc, poly, sent
 from .kit import FRAME_NAMES, Slip, frame_stem, text_item
 
@@ -232,7 +232,9 @@ def divide_remainder(rng: random.Random, seed: int, *, ask=None, var=None, frame
         if key < 0:
             raise ItemError("a negative answer would not go into a grid-in")
         return Item("eqx.divide_remainder", "rational expressions", "hard", seed,
-                    stem, "spr", ex, ex.gridin(), why, params=params)
+                    stem, "spr", ex, ex.gridin(), why, params=params,
+                    # 1 - r fits taking the divisor's root, not its constant
+                    spr_mistakes=gridin_mistakes(ex, mistakes[:2] + mistakes[3:]))
     ch, tex, reasons, ltr = assemble(ex, mistakes, rng, signed=True, fillers="shift")
     return Item("eqx.divide_remainder", "rational expressions", "hard", seed, stem,
                 "mcq", ex, ltr, why, ch, reasons, tex, params=params)
