@@ -113,8 +113,10 @@
     if (item.given === null || item.given === undefined || item.given === '') {
       $('#dq').querySelector('.verdict').prepend(h('p', { class: 'note', text: 'Not answered' }));
     }
+    const had = document.activeElement;
     $('#prev').disabled = i === 0;
     $('#nextq').disabled = i === R.review.length - 1;
+    if (had && had.disabled) (had.id === 'nextq' ? $('#prev') : $('#nextq')).focus();   // keep focus on the pair
   }
   $('#prev').addEventListener('click', () => open(cur - 1));
   $('#nextq').addEventListener('click', () => { open(cur + 1); });
@@ -196,7 +198,7 @@
         const q = r.review[i];
         const blank = q.given === null || q.given === undefined || q.given === '';
         const c = h('button', { type: 'button', class: 'cell ' + (q.correct ? 'ok' : blank ? '' : 'no'), text: String(i - a + 1),
-                                'aria-label': `Question ${i - a + 1}` });
+                                'aria-label': `Question ${i - a + 1}, ${q.correct ? 'right' : blank ? 'not answered' : 'wrong'}` });
         c.addEventListener('click', () => open(i));
         cells.push(c);
         row.append(c);

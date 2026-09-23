@@ -66,7 +66,9 @@
       location.href = report;
     } catch (ex) {
       $('#go').removeAttribute('aria-busy');
-      fail(ex.status === 422 ? 'That email did not look right.' : ex.status === 409 ? 'Finish the test first.' : 'Something went wrong.');
+      // a name the server refuses says so; a 422 with no words of its own is the email
+      const said = ex.data && typeof ex.data.detail === 'string' ? UI.cap(ex.data.detail) + '.' : null;
+      fail(ex.status === 422 ? said || 'That email did not look right.' : ex.status === 409 ? 'Finish the test first.' : 'Something went wrong.');
     }
   });
 })();

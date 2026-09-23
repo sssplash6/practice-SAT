@@ -124,8 +124,11 @@
       s('rect', { class: 'band' + (last ? ' last' : ''), x: x(i) - bw / 2, width: bw, y: y(p.estimate.high),
                   height: Math.max(2, y(p.estimate.low) - y(p.estimate.high)), rx: 5 }, g);
       s('circle', { class: 'mid' + (last ? ' last' : ''), cx: mids[i][0], cy: mids[i][1], r: last ? 5.5 : 4 }, g);
-      const t = s('text', { class: 'xl', x: x(i), y: H - 8, 'text-anchor': 'middle' }, g);
-      t.textContent = day(p.finished);
+      // a date label is about 40px wide, so a narrow chart labels every few, the newest always
+      if ((pts.length - 1 - i) % Math.ceil(44 / step) === 0) {
+        const t = s('text', { class: 'xl', x: x(i), y: H - 8, 'text-anchor': 'middle' }, g);
+        t.textContent = day(p.finished);
+      }
     });
     host.replaceChildren(g);
   }

@@ -130,9 +130,9 @@
   function paintProgress(grew) {
     const host = $('#progress');
     const n = S.total === null ? null : S.total;
-    if (n === null) {
+    if (n === null || n > 24) {          // endless, or too many segments to see on a phone
       const right = S.marks.filter(Boolean).length;
-      host.replaceChildren(h('div', { class: 'count', text: `${right} / ${S.marks.length}` }));
+      host.replaceChildren(h('div', { class: 'count', text: n === null ? `${right} / ${S.marks.length}` : `${S.marks.length} / ${n}` }));
       return;
     }
     const segs = [];
@@ -142,7 +142,8 @@
       if (grew && i === n - 1) seg.classList.add('add');
       segs.push(seg);
     }
-    host.replaceChildren(h('div', { class: 'prog', 'aria-label': `${S.marks.length} of ${n}` }, segs));
+    host.replaceChildren(h('div', { class: 'prog', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': String(n),
+                                    'aria-valuenow': String(S.marks.length), 'aria-label': 'Progress' }, segs));
   }
 
   /* ---------------------------------------------------------- the clock */
@@ -197,10 +198,12 @@
       fb = await api(`/drill/${id}/answer`, { method: 'POST', body: { question_id: S.q.id, answer: given, ms } });
     } catch (e) {
       S.busy = false;
+      S.ctrl.unlock();
       $('#err').textContent = e.message; $('#err').hidden = false;
       return;
     }
     S.busy = false;
+    $('#err').hidden = true;
     S.ctrl.reveal(fb);
     S.marks.push(fb.correct);
     const grew = fb.total !== null && S.total !== null && fb.total > S.total;
@@ -299,14 +302,16 @@
       box.append(h('div', { class: 'upnext' }, nx.topics.map(t => UI.chip(t)),
                    h('span', { class: 'meta', text: `${nx.count} questions · ${UI.minutesFor(nx.count)} min` })));
       const keep = h('button', { type: 'button', class: 'pill', text: 'Keep going' });
+      const failed = h('p', { class: 'error', hidden: true });
       keep.addEventListener('click', async () => {
         keep.setAttribute('aria-busy', 'true');
         try {
           const d = await api('/drill', { method: 'POST', body: { topics: nx.topics, count: nx.count, source: 'coach' } });
           location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`;
-        } catch (e) { keep.removeAttribute('aria-busy'); }
+        } catch (e) { keep.removeAttribute('aria-busy'); failed.textContent = e.message; failed.hidden = false; }
       });
       actions.append(keep, h('a', { class: 'quiet', href: '/practice/', text: 'Map' }));
+      box.after(failed);
     } else {
       actions.append(h('a', { class: 'pill', href: '/practice/', text: 'Map' }));
     }
@@ -332,12 +337,13 @@
 
   document.addEventListener('keydown', e => {
     if (e.metaKey || e.ctrlKey || e.altKey || !S.q || S.ended) return;
+    if (document.querySelector('dialog[open]') || e.target.closest('.calc')) return;   // the sheet or the calculator has the keys
     if (e.target.matches('input, textarea') && e.key !== 'Enter') return;
     const k = e.key.toLowerCase();
     if (S.ctrl && !S.ctrl.answered() && S.q.type === 'mcq') {
       const i = 'abcd'.indexOf(k) >= 0 ? 'abcd'.indexOf(k) : '1234'.indexOf(k);
       if (i >= 0 && k.length === 1) { e.preventDefault(); S.ctrl.choose(i); }
-    } else if (e.key === 'Enter' && !$('#nextRow').hidden && e.target.id !== 'next') {
+    } else if (e.key === 'Enter' && !$('#nextRow').hidden && !e.target.closest('button, a')) {   // a focused control does its own job
       e.preventDefault(); next();
     }
   });
@@ -350,7 +356,11 @@
     S.total = S.st.total;
     S.marks = S.st.marks || [];
     if (S.st.mode === 'challenge') document.title = 'Challenge · SAT Freshman';
-    if (S.st.finished) { S.ended = true; const r = await api(`/drill/${id}/finish`, { method: 'POST' }); return summary(r); }
+    if (S.st.finished) {
+      S.ended = true;
+      try { return summary(await api(`/drill/${id}/finish`, { method: 'POST' })); }
+      catch (e) { $('#err').textContent = e.message; $('#err').hidden = false; return; }
+    }
     startClock();
     if (S.st.question) show(S.st.question);
     else next();

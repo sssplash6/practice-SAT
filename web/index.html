@@ -197,10 +197,17 @@
     const ctrl = UI.question($('#qbox'), d.question, {
       onAnswer: async given => {
         try {
-          const fb = await api('/qotd', { method: 'POST', body: { answer: given } });
+          // the day it was shown, so an answer sent after midnight is not marked against the next one
+          const fb = await api('/qotd', { method: 'POST', body: { answer: given, day: d.day } });
           ctrl.reveal(fb);
           $('#qcrowd').textContent = crowd(fb.crowd);
-        } catch (e) { $('#qcrowd').textContent = e.message; }
+          UI.me(true);
+          $('#week').lastElementChild?.querySelector('i')?.classList.add('on');
+        } catch (e) {
+          if (e.status === 409) { api('/qotd').then(paintQotd).catch(() => {}); return; }   // a new day, a new question
+          ctrl.unlock();
+          $('#qcrowd').textContent = e.message;
+        }
       },
     });
     if (d.mine) { ctrl.reveal(d.mine); $('#qcrowd').textContent = crowd(d.mine.crowd); }

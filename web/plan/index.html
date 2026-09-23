@@ -172,32 +172,44 @@
     return b;
   }
 
-  /* ---------------------------------------------------------- the setup */
-  function choice(host, values, label, pick, on) {
-    host.replaceChildren(...values.map(v => {
-      const b = h('button', { type: 'button', 'aria-pressed': String(on(v)), text: label(v) });
-      b.addEventListener('click', () => { pick(v); paintSetup(); });
+  /* ---------------------------------------------------------- the setup
+     Built once; a choice only changes what is pressed, so focus stays put and
+     a date being typed is not thrown away. */
+  const DAYNAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const groups = [];
+  function choice(host, values, label, pick, on, name) {
+    const buttons = values.map((v, i) => {
+      const b = h('button', { type: 'button', text: label(v) });
+      if (name) b.setAttribute('aria-label', name(v, i));
+      b.addEventListener('click', () => { pick(v); refresh(); });
       return b;
-    }));
+    });
+    host.replaceChildren(...buttons);
+    groups.push(() => buttons.forEach((b, i) => b.setAttribute('aria-pressed', String(on(values[i])))));
+  }
+  function refresh() {
+    groups.forEach(g => g());
+    $('#save').disabled = !form.exam || form.exam < todayIso;
   }
   function paintSetup() {
     $('#setup').hidden = false;
     $('#plan').hidden = true;
+    groups.length = 0;
     const upcoming = SAT_DATES.filter(d => d > todayIso);
     const dates = $('#dates');
-    choice(dates, upcoming, d => day(d) + (d.slice(0, 4) !== todayIso.slice(0, 4) ? ` ’${d.slice(2, 4)}` : ''),
-           v => { form.exam = v; }, v => form.exam === v);
     const other = h('input', { class: 'field', type: 'date', min: todayIso, value: form.exam && !upcoming.includes(form.exam) ? form.exam : '', 'aria-label': 'Another date' });
-    other.addEventListener('change', () => { form.exam = other.value || null; paintSetup(); });
+    choice(dates, upcoming, d => day(d) + (d.slice(0, 4) !== todayIso.slice(0, 4) ? ` ’${d.slice(2, 4)}` : ''),
+           v => { form.exam = v; other.value = ''; }, v => form.exam === v);
+    other.addEventListener('change', () => { form.exam = other.value || null; refresh(); });
     dates.append(other);
     choice($('#mins'), MINS, v => String(v), v => { form.minutes = v; }, v => form.minutes === v);
     choice($('#wk'), [0, 1, 2, 3, 4, 5, 6], i => LET[i], i => {
       const a = form.days.split('');
       a[i] = a[i] === '1' ? '0' : '1';
       if (a.includes('1')) form.days = a.join('');
-    }, i => form.days[i] === '1');
+    }, i => form.days[i] === '1', i => DAYNAMES[i]);
     choice($('#target'), TARGETS, v => String(v), v => { form.target = form.target === v ? null : v; }, v => form.target === v);
-    $('#save').disabled = !form.exam;
+    refresh();
   }
   $('#setup').addEventListener('submit', async e => {
     e.preventDefault();
@@ -215,7 +227,8 @@
   });
 
   (async () => {
-    try { T = await api('/today'); } catch (_) { return; }
+    try { T = await api('/today'); }
+    catch (_) { $('#serr').textContent = 'The server is not answering.'; $('#serr').hidden = false; $('#setup').hidden = false; $('#save').disabled = true; return; }
     P = T.profile;
     if (UI.plan.set(P) && P.exam_date >= todayIso) paintPlan();
     else {

@@ -33,6 +33,7 @@
       <div class="row"><input class="field" id="name" maxlength="24" autocomplete="nickname" aria-label="Name">
         <button type="submit" class="quiet" style="margin:0">Save</button></div>
       <p class="ok" id="nameOk" hidden>Saved</p>
+      <p class="error" id="nameErr" hidden></p>
     </form>
 
     <div><span class="k">This device</span>
@@ -70,13 +71,14 @@
 
   $('#nameForm').addEventListener('submit', async e => {
     e.preventDefault();
+    $('#nameErr').hidden = true;
     try {
       const r = await api('/me', { method: 'PUT', body: { name: $('#name').value.trim() || null } });
       paintAv(r.profile.name);
       UI.me(true);
       $('#nameOk').hidden = false;
       setTimeout(() => { $('#nameOk').hidden = true; }, 1600);
-    } catch (err) { $('#err').textContent = err.message; $('#err').hidden = false; }
+    } catch (err) { $('#nameErr').textContent = err.message; $('#nameErr').hidden = false; }
   });
 
   // the code is the learner: using another device's code makes this browser

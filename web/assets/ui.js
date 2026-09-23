@@ -315,8 +315,9 @@
     host.append(h('div', { class: 'q-stem', text: q.stem || '' }));
 
     const verdict = h('div', { class: 'verdict', hidden: true });
+    const status = h('p', { class: 'sr', role: 'status' });
     let answered = false;
-    const api_ = { answered: () => answered, reveal, choose: null };
+    const api_ = { answered: () => answered, reveal, choose: null, unlock: () => {} };
 
     if (q.type === 'mcq') {
       const list = h('ol', { class: 'opts' });
@@ -338,9 +339,12 @@
       api_.choose = pick;
       api_.buttons = buttons;
       api_.list = list;
+      // the answer did not reach the server, so it can be given again
+      api_.unlock = () => { answered = false; buttons.forEach(b => b.classList.remove('picked')); list.classList.remove('done'); };
     } else {
-      const input = h('input', { class: 'field', type: 'text', inputmode: 'decimal', autocomplete: 'off',
-                                 spellcheck: 'false', maxlength: '6', 'aria-label': 'Your answer',
+      // no inputmode: a phone's decimal pad has no minus sign and no slash
+      const input = h('input', { class: 'field', type: 'text', autocomplete: 'off', autocapitalize: 'off',
+                                 autocorrect: 'off', spellcheck: 'false', maxlength: '6', 'aria-label': 'Your answer',
                                  placeholder: '' });
       const go = h('button', { type: 'button', class: 'pill', text: 'Check', disabled: true });
       const preview = h('p', { class: 'preview' });
@@ -364,9 +368,10 @@
       api_.input = input;
       api_.wrap = wrap;
       api_.preview = preview;
-      setTimeout(() => { if (matchMedia('(hover: hover)').matches) input.focus({ preventScroll: true }); }, 60);
+      api_.unlock = () => { answered = false; input.readOnly = false; go.hidden = false; input.focus(); };
+      setTimeout(() => { if (!answered && matchMedia('(hover: hover)').matches) input.focus({ preventScroll: true }); }, 60);
     }
-    host.append(verdict);
+    host.append(verdict, status);
 
     function reveal(fb, { open } = {}) {
       answered = true;
@@ -383,6 +388,11 @@
         if (!fb.correct) {
           api_.preview.replaceWith(h('p', { class: 'grid-key' }, h('b', { text: String(fb.answer).replace(/-/g, '−') })));
         } else api_.preview.textContent = '';
+      }
+      status.textContent = fb.correct ? 'Right' : `Wrong. The answer is ${String(fb.answer).replace(/-/g, '−')}`;
+      if (q.type === 'mcq') {
+        api_.buttons[fb.answer_index]?.append(h('span', { class: 'sr', text: ', the answer' }));
+        if (!fb.correct && Number.isInteger(fb.given)) api_.buttons[fb.given]?.append(h('span', { class: 'sr', text: ', your answer' }));
       }
       verdict.replaceChildren();
       if (!fb.correct && fb.mistake) verdict.append(h('p', { class: 'mistake', text: fb.mistake }));
