@@ -13,11 +13,12 @@ I merge each passing task into master myself (Part 4.4), then launch the next wa
   To restart after a pause: look at `git log master..v2/f1` and the saved results in `runs/wf_d6beb6e4-66c/`,
   then relaunch with `unit: <first unfinished unit index>` or `from: 'verify'` / `from: 'fix', issues: <file>`.
   Never resume it from its run ID.
-- **F4** data layer: **taken by another agent the user runs** (worktree `.claude/worktrees/f4`, branch `v2/f4`,
-  branched from `v2/f0`). Do not build it. When the user says it is done: add an F4 entry to TASKS in
-  build.js and run it with `from: 'verify'`, then rebase on master and merge.
-- **Words content** (`server/words/*.json`, `tools/build_words.py`; S9-owned files): offered to the other agent
-  on branch `v2/words-content`. Ask the user before building it.
+- **F4** data layer: built by another agent the user runs (branch `v2/f4`, from `v2/f0`, 4 commits, done
+  2026-09-24). Verifying here: run `wf_a8903963-411` (task w0regskfk), `[{id:'F4', from:'verify'}]`, with fix
+  rounds on the branch. When it passes: rebase on master and merge (it touches no file master changed).
+- **Words content** (`server/words/**`, `tools/build_words.py`; S9-owned): **given to the other agent** on branch
+  `v2/words-content` (worktree `.claude/worktrees/words`), in phases. Do not build it. S9 starts from it; verify
+  and merge each phase the user reports done.
 - Then wave 1b: F2, F3, F5 (after F4), F6 (after F1 and F4). Then S1, S3-S10 (S2 dropped). Then I1.
 
 ## Resumed 2026-09-23: second check dropped

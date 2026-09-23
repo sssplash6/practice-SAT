@@ -34,8 +34,22 @@ spec/v2-upgrades/*.md (grep -n "F1" spec/v2-upgrades/*.md; product.md's cross-fi
 (Esc closes and returns focus; arrow keys in seg, tabs, menus and listboxes); every chart renders its hidden table; /nope/ shows the
 404 page. Also: all 14 existing pages still load with no console errors and look intact; test_flow prints "all good".`,
   },
+  // F4 was built outside this script by another agent (branch v2/f4, from v2/f0); run it with from: 'verify'.
+  F4: {
+    title: 'F4 · Data layer', port: 8014,
+    spec: `spec/rebuild-v2.md: §2.5 schema (line 243), §2.7 preferences (371), §2.12 F4 (584), Part 4.2 F4 (11013) with every Part 3
+item it lists, the resolutions it builds in Part 2 (R5-R9, R11-R13, R15, R16, R19; lines 130-175), and every item assigned to F4 in
+spec/v2-upgrades/*.md (grep -n "F4" spec/v2-upgrades/*.md; product.md's cross-file overrides too). No class tables or fields
+(decision 5).`,
+    owns: 'server/db.py, progress.py, prefs.py, estimate.py, satdates.py, scoring.py, deps.py, api_me.py, api_notes.py, server/checks/f4.py',
+    units: [],
+    accept: `§2.12 F4's acceptance, run as server/checks/f4.py and checked by reading it (norm merging, repeat not moving mastery, unsure
+opening with owed 1, a relapse, check-ins at 3/10/30, days() with a rest-day plan (streak 6), a module's minutes counted once, prefs
+422 and merge, access() on a live test item and today's challenge item, carry of every table), plus every server item Part 4.2
+lists for F4, each exercised against a server on port 8014. Migrations run on a copy of an old database (make one from master's
+schema with some attempts, traps and saved rows) without losing a row. test_flow prints "all good".`,
+  },
 }
-
 const CONTEXT = t => `
 PROJECT: ${REPO} -- "SAT Freshman", a free SAT prep website (FastAPI + sqlite in server/, static pages in web/). We are building
 v2 from spec/rebuild-v2.md (Part 2 foundations, Part 3 section specs, Part 4 tasks). spec/v2-upgrades/<section>.md upgrades each
