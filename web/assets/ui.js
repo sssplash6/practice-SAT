@@ -210,8 +210,10 @@
       if (s > p.exam_date) return 'none';
       const eve = new Date(p.exam_date + 'T12:00:00'); eve.setDate(eve.getDate() - 1);
       if (s === plan.iso(eve) || p.days[plan.dow(d)] !== '1') return 'rest';   // the day before is off
+      if (!plan.testOf(p.minutes)) return 'practice';                        // no test fits the day
+      if (p.tests === 'daily') return 'test';                                // a test every study day
       for (let k = plan.dow(d) + 1; k < 7; k++) if (p.days[k] === '1') return 'practice';
-      return plan.testOf(p.minutes) ? 'test' : 'practice';                   // the week's last study day
+      return 'test';                                                         // the week's last study day
     },
   };
 

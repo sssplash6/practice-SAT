@@ -137,6 +137,9 @@ LATER_COLUMNS = (
     ("sessions", "module_started", "TEXT"), # the live module's clock, not the session's
     ("sessions", "cfg", "TEXT"),            # a drill's settings and its moving parts
     ("sessions", "day", "TEXT"),            # a challenge's date
+    ("learners", "current", "INTEGER"),     # the Math score the student starts the plan from
+    ("learners", "tests", "TEXT"),          # "weekly" (the default) or "daily"
+    ("learners", "focus", "TEXT"),          # JSON: domain -> "focus" or "strong"; the rest are normal
 )
 
 _local = threading.local()

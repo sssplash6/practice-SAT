@@ -761,6 +761,25 @@ def check_integrity(c) -> None:
     assert len({d for d, t in zip(blueprint.spread(dict(daily.MIX)), daily.LADDER) if t == "easy"}) == 3
     print("ok  module 1 gives every domain easy and hard questions, and the challenge spreads its easy ones")
 
+    # --- the plan's four steps are kept, checked, and steer the coach -------------
+    F = {"X-Learner": "a:planfocus"}
+    plain = c.get("/api/map", headers=F).json()["coach"]["topics"]
+    geo = [t for t, v in TOPIC_DOMAIN.items() if v == "Geometry and Trigonometry"]
+    assert not set(plain) & set(geo), "a new learner starts on the big domains"
+    got = c.put("/api/me", headers=F, json={"current": 520, "target": 700, "tests": "daily", "minutes": 120,
+                                           "focus": {"Geometry and Trigonometry": "focus", "Algebra": "strong",
+                                                     "Advanced Math": "normal"}}).json()["profile"]
+    assert got["current"] == 520 and got["tests"] == "daily" and got["minutes"] == 120
+    assert got["focus"] == {"Geometry and Trigonometry": "focus", "Algebra": "strong"}, got["focus"]
+    steered = c.get("/api/map", headers=F).json()["coach"]
+    assert set(steered["topics"]) & set(geo), steered["topics"]
+    assert steered["count"] == 76, "two hours a day is 76 questions at the test's pace"
+    for bad in ({"focus": {"Algebra": "focus", "Advanced Math": "focus", "Geometry and Trigonometry": "focus"}},
+                {"focus": {"Reading": "focus"}}, {"focus": {"Algebra": "maybe"}},
+                {"current": 205}, {"tests": "hourly"}):
+        assert c.put("/api/me", headers=F, json=bad).status_code == 422, bad
+    print("ok  the plan keeps where you are, the test rhythm and focus per domain, and focus steers the coach")
+
 
 if __name__ == "__main__":
     try:

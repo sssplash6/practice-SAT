@@ -531,18 +531,24 @@ DATE_OK = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 DAYS_OK = re.compile(r"^[01]{7}$")
 
 
+FOCUS_STATES = ("focus", "normal", "strong")
+MAX_FOCUS = 2               # of four domains, as theirs allow four of eight
+
+
 def profile(learner: str) -> dict:
     row = db.one("SELECT * FROM learners WHERE id=?", learner)
     base = {"id": learner, "name": None, "exam_date": None, "target": None,
-            "minutes": None, "days": None}
-    return {**base, **({k: row[k] for k in base} if row else {})}
+            "minutes": None, "days": None, "current": None, "tests": None, "focus": None}
+    out = {**base, **({k: row[k] for k in base} if row else {})}
+    out["focus"] = json.loads(out["focus"]) if out["focus"] else {}
+    return out
 
 
 def per_session(p: dict) -> int:
     """How many questions a study day's minutes hold, at the real test's pace."""
     if not p.get("minutes"):
         return 10
-    return max(5, min(60, round(p["minutes"] * 60 / SECONDS_PER_QUESTION)))
+    return max(5, min(drill.MAX_FIXED, round(p["minutes"] * 60 / SECONDS_PER_QUESTION)))
 
 
 @app.get("/api/me")
@@ -557,6 +563,9 @@ class Me(BaseModel):
     target: int | None = None
     minutes: int | None = None
     days: str | None = None
+    current: int | None = None          # where the plan starts from
+    tests: str | None = None            # "weekly" or "daily"
+    focus: dict[str, str] | None = None # domain -> focus / normal / strong
 
 
 @app.put("/api/me")
@@ -580,6 +589,18 @@ def put_me(body: Me, x_learner: str | None = Header(default=None)) -> dict:
         raise HTTPException(422, "minutes is between 5 and 240")
     if got.get("days") and not DAYS_OK.match(got["days"]):
         raise HTTPException(422, "days is seven 0s and 1s, Monday first")
+    if got.get("current") is not None and got["current"] not in TARGETS:
+        raise HTTPException(422, "current is a Math score, 200 to 800 in tens")
+    if got.get("tests") is not None and got["tests"] not in ("weekly", "daily"):
+        raise HTTPException(422, "tests is weekly or daily")
+    if got.get("focus") is not None:
+        domains = set(progress.DOMAINS)
+        if any(d not in domains or v not in FOCUS_STATES for d, v in got["focus"].items()):
+            raise HTTPException(422, "focus maps a domain to focus, normal or strong")
+        if sum(v == "focus" for v in got["focus"].values()) > MAX_FOCUS:
+            raise HTTPException(422, f"at most {MAX_FOCUS} domains on focus")
+        # normal is the default and is not stored
+        got["focus"] = json.dumps({d: v for d, v in got["focus"].items() if v != "normal"}) or None
     if not db.one("SELECT 1 FROM learners WHERE id=?", learner):
         db.run("INSERT INTO learners (id, created) VALUES (?,?)", learner, now())
     for k, v in got.items():

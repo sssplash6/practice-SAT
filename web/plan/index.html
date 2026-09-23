@@ -10,22 +10,75 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
-  /* Three answers make a plan: when the exam is, how long a study day is, and
-     which days they are. What to practise comes from the results, and the
-     plan is recomputed from today every time it is opened, so a missed day
-     never piles up behind the next one. One test day a week, on the last
-     study day, sized to the day. */
-  .setup { display: grid; gap: 30px; max-width: 760px; }
-  .setup .k { display: block; margin-bottom: 8px; }
+  /* A plan is four questions -- where you are, where you're going, the time
+     you have, what to focus on -- and a calendar drawn from them, redrawn from
+     today every time it is opened so a missed day never piles up. What each
+     practice day holds comes from the results; focus steers it. */
+
+  /* ---- the wizard */
+  .wiz { max-width: 860px; }
+  .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-bottom: 34px; }
+  .steps button {
+    appearance: none; border: 0; cursor: pointer; width: 100%; text-align: left;
+    display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px;
+    background: var(--tile); color: var(--soft); font: 600 14px var(--font);
+    transition: background-color .16s var(--ease), color .16s var(--ease);
+  }
+  .steps b { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+             font: 700 12px var(--font); box-shadow: inset 0 0 0 1.5px currentColor; }
+  .steps button[aria-current="step"] { background: var(--wash); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .steps button.done { color: var(--ink); }
+  .steps button.done b { background: var(--ink); color: var(--paper); box-shadow: none; }
+  @media (hover: hover) and (pointer: fine) { .steps button:not([aria-current="step"]):hover { background: var(--tile-2); } }
+  @media (max-width: 720px) { .steps span { display: none; } .steps button { justify-content: center; } }
+
+  .step { display: grid; gap: 26px; }
+  .block { display: grid; gap: 10px; }
+  .block > .k { display: block; }
+  .big { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .big .num { font-size: clamp(56px, 9vw, 88px); }
+  .big .to { font: 800 30px var(--font); color: var(--faint); }
+  .gain { font: 700 14px var(--font); padding: 6px 12px; border-radius: 999px; background: var(--wash-2); color: var(--ink-deep); align-self: center; }
+  .ends { display: flex; justify-content: space-between; font: 500 12px var(--mono); color: var(--soft); }
+  /* the target on the same 200-800 scale, orange from where you are to where you're going */
+  #tgt::-webkit-slider-runnable-track { background: linear-gradient(to right, var(--mat) var(--a), var(--amber) var(--a) var(--p), var(--mat) var(--p)); }
+  #tgt::-moz-range-progress { background: none; }
   .dates { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 2px; }
   .dates input { width: auto; height: 38px; padding: 0 10px; font: 500 14px var(--font); margin-left: 8px; }
-  .wk button { min-width: 40px; }
+  .dayrow { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .dayrow input { flex: 1 1 220px; max-width: 380px; }
+  .dayrow .meta { color: var(--ink); }
+  .wk button { min-width: 42px; }
+  .choices button:disabled { color: var(--mat); cursor: default; }
 
+  .doms { display: grid; gap: 8px; }
+  .drow { display: grid; grid-template-columns: minmax(0, 1fr) 150px auto; gap: 18px; align-items: center;
+          padding: 12px 12px 12px 18px; border-radius: 12px; background: var(--tile); }
+  .drow .nm { font: 600 15px var(--font); }
+  .drow .mb { display: grid; gap: 5px; }
+  .drow .mb .meta { font-size: 11.5px; }
+  .seg { display: inline-flex; padding: 3px; border-radius: 10px; background: var(--paper); gap: 2px; }
+  .seg button { appearance: none; border: 0; cursor: pointer; padding: 7px 13px; border-radius: 8px; background: none;
+                font: 600 13.5px var(--font); color: var(--soft); transition: background-color .16s var(--ease), color .16s var(--ease); }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+  .seg button[data-v="focus"][aria-pressed="true"] { background: var(--amber); color: var(--ink-deep); }
+  .seg button:disabled { opacity: .35; cursor: default; }
+  @media (max-width: 620px) { .drow { grid-template-columns: minmax(0, 1fr) auto; } .drow .mb { grid-column: 1 / -1; grid-row: 2; } }
+  .glance { border-radius: 14px; background: var(--wash); padding: 18px 20px; display: grid; gap: 9px; }
+  .glance .k { display: block; margin-bottom: 2px; }
+  .glance p { display: flex; justify-content: space-between; gap: 16px; font: 500 14.5px var(--font); color: var(--soft); }
+  .glance p b { font-weight: 600; color: var(--ink); text-align: right; }
+  .wiz-foot { margin-top: 34px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .wiz-foot .quiet { margin: 0; }
+  .wiz-foot .pill { margin-left: auto; }
+
+  /* ---- the plan */
   .head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: end; }
   .head .num { font-size: clamp(64px, 10vw, 104px); display: block; }
   .head .meta { display: block; margin-top: 10px; color: var(--ink); }
+  .head .meta + .meta { margin-top: 4px; color: var(--soft); }
 
-  /* the day the calendar has chosen, today unless another is tapped: one row */
+  /* the day the calendar has chosen, today unless another is tapped */
   .task { margin-top: 26px; padding: 14px 14px 14px 18px; border-radius: 14px; background: var(--wash);
           display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px; min-height: 72px; }
   .task.rest { background: var(--tile); }
@@ -35,16 +88,16 @@
   .task .h2 { flex: 1 1 auto; }
   .task .meta { color: var(--ink); white-space: nowrap; }
   .task .pill { height: 44px; padding: 0 26px; }
+  .task .then { flex-basis: 100%; display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px;
+                padding-top: 10px; box-shadow: 0 -1px 0 var(--wash-2); }
 
   .cal { margin-top: 40px; }
-  .cal .k { display: block; margin-bottom: 12px; }
   .grid7 { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
   .dh { font: 500 10.5px var(--mono); color: var(--soft); text-align: center; padding-bottom: 4px; }
   .cell { height: 64px; border-radius: 10px; background: var(--tile); position: relative;
           display: grid; place-items: center; font: 500 11px var(--mono); color: var(--soft); }
   @media (max-width: 560px) { .cell { height: 46px; } }
   .cell.past { background: none; }
-  .cell.none { background: none; }
   .cell .d { position: absolute; top: 6px; left: 8px; }
   .mk { width: 10px; height: 10px; display: block; }
   .mk.p { border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink); }
@@ -66,22 +119,78 @@
 <header id="bar"></header>
 
 <main class="page">
-  <form class="setup rise" id="setup" hidden>
-    <div><span class="k">Exam</span>
-      <div class="choices dates" id="dates" role="group" aria-label="Exam date"></div></div>
-    <div><span class="k">Minutes a day</span>
-      <div class="choices" id="mins" role="group" aria-label="Minutes a day"></div></div>
-    <div><span class="k">Days</span>
-      <div class="choices wk" id="wk" role="group" aria-label="Study days"></div></div>
-    <div><span class="k">Target</span>
-      <div class="choices" id="target" role="group" aria-label="Target Math score"></div></div>
-    <div><button type="submit" class="pill" id="save">Save</button></div>
+  <section class="wiz rise" id="setup" hidden>
+    <ol class="steps" id="steps">
+      <li><button type="button" data-step="0"><b>1</b><span>Where you are</span></button></li>
+      <li><button type="button" data-step="1"><b>2</b><span>Where you're going</span></button></li>
+      <li><button type="button" data-step="2"><b>3</b><span>Time you have</span></button></li>
+      <li><button type="button" data-step="3"><b>4</b><span>What to focus on</span></button></li>
+    </ol>
+
+    <div class="step" data-step="0">
+      <h1 class="h1">Where you are</h1>
+      <div class="block">
+        <span class="k">Math</span>
+        <div class="big"><span class="num" id="curN">500</span></div>
+        <input type="range" id="cur" min="200" max="800" step="10" aria-label="Your Math score now">
+        <div class="ends"><span>200</span><span>800</span></div>
+        <p class="meta" id="curFrom"></p>
+      </div>
+    </div>
+
+    <div class="step" data-step="1" hidden>
+      <h1 class="h1">Where you're going</h1>
+      <div class="block">
+        <span class="k">Target</span>
+        <div class="big"><span class="num" id="gNow">500</span><span class="to">→</span><span class="num" id="gTo">600</span><span class="gain" id="gPlus">+100</span></div>
+        <input type="range" id="tgt" min="200" max="800" step="10" aria-label="Target Math score">
+        <div class="ends"><span>200</span><span>800</span></div>
+      </div>
+      <div class="block">
+        <span class="k">Exam</span>
+        <div class="choices dates" id="dates" role="group" aria-label="Exam date"></div>
+        <p class="meta" id="pace"></p>
+      </div>
+    </div>
+
+    <div class="step" data-step="2" hidden>
+      <h1 class="h1">Time you have</h1>
+      <div class="block">
+        <span class="k">A day</span>
+        <div class="choices" id="mins" role="group" aria-label="Time a day"></div>
+      </div>
+      <div class="block">
+        <span class="k">Days a week</span>
+        <div class="dayrow"><input type="range" id="dpw" min="1" max="7" step="1" aria-label="Days a week"><span class="meta" id="dpwT"></span></div>
+        <div class="choices wk" id="wk" role="group" aria-label="Study days"></div>
+      </div>
+      <div class="block">
+        <span class="k">Tests</span>
+        <div class="choices" id="tests" role="group" aria-label="Tests">
+          <button type="button" data-v="weekly">Each week</button>
+          <button type="button" data-v="daily">Every study day</button>
+        </div>
+        <p class="meta" id="testsT"></p>
+      </div>
+    </div>
+
+    <div class="step" data-step="3" hidden>
+      <h1 class="h1">What to focus on</h1>
+      <p class="meta" id="fcount"></p>
+      <div class="doms" id="doms"></div>
+      <section class="glance" id="glance" aria-label="Your plan at a glance"></section>
+    </div>
+
     <p class="error" id="serr" hidden></p>
-  </form>
+    <div class="wiz-foot">
+      <button type="button" class="quiet" id="back">Back</button>
+      <button type="button" class="pill" id="next">Next</button>
+    </div>
+  </section>
 
   <div id="plan" hidden>
     <div class="head rise">
-      <div><span class="num" id="left"></span><span class="meta" id="to"></span></div>
+      <div><span class="num" id="left"></span><span class="meta" id="to"></span><span class="meta" id="rhythm"></span></div>
       <button type="button" class="quiet" id="change">Change</button>
     </div>
     <section class="task rise rise-2" id="task" aria-live="polite"></section>
@@ -98,32 +207,57 @@
 <script>
 (() => {
   'use strict';
-  const { api, h, day, minutesFor, $ } = UI;
+  const { api, h, day, band, minutesFor, snap, $ } = UI;
   UI.shell();
 
   // the published administrations, 2026-27
   const SAT_DATES = ['2026-10-03', '2026-11-07', '2026-12-05', '2027-03-13', '2027-05-01', '2027-06-05'];
-  const MINS = [15, 30, 45, 60, 90];
-  const TARGETS = [550, 600, 650, 700, 750, 800];
+  const MINS = [15, 30, 45, 60, 90, 120, 180, 240];
   const LET = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+  const DAYNAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+  const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const KIND = { mock: 'Section', module: 'Module', diagnostic: 'Diagnostic' };
   const { iso, dow, testOf } = UI.plan;
+  const kindOf = UI.plan.dayOf;
   const at = s => new Date(s + 'T12:00:00');
   const todayIso = iso(new Date());
 
-  let P = null, T = null;
-  const form = { exam: null, minutes: 30, days: '1111100', target: null };
+  let P = null, T = null, M = [];         // the profile, today's payload, the map's topics
 
-  /* ---------------------------------------------------------- the plan */
-  function perDay(minutes) { return Math.max(5, Math.min(60, Math.round(minutes * 60 / 95))); }
-  const kindOf = UI.plan.dayOf;
+  const perDay = minutes => Math.max(5, Math.min(120, Math.round(minutes * 60 / 95)));
+  const testMin = minutes => testOf(minutes) === 'section' ? 70 : 35;
+  const chipLabel = m => m < 60 ? `${m}m` : `${+(m / 60).toFixed(1)}h`;
+  const span = m => m < 60 ? `${m}m` : (m % 60 ? `${Math.floor(m / 60)}h ${m % 60}m` : `${m / 60}h`);
+  const nDays = d => [...d].filter(x => x === '1').length;
+  const daysTo = s => Math.max(0, Math.round((at(s) - at(todayIso)) / 86400000));
+  const shortOf = Object.fromEntries(UI.DOMAINS);
+  const testName = minutes => testOf(minutes) === 'section' ? 'Section · 44 questions · 70 min' : 'Module · 22 questions · 35 min';
 
+  function startBtn(make, where, cls = 'pill') {
+    const b = h('button', { type: 'button', class: cls, text: 'Start' });
+    b.addEventListener('click', async () => {
+      b.setAttribute('aria-busy', 'true');
+      try {
+        const s = await make();
+        location.href = where === 'test' ? `/test/?s=${encodeURIComponent(s.id)}` : `/practice/session/?id=${encodeURIComponent(s.id)}`;
+      } catch (e) { b.removeAttribute('aria-busy'); $('#err').textContent = e.message; $('#err').hidden = false; }
+    });
+    return b;
+  }
+
+  /* ========================================================== the plan */
   function paintPlan() {
     $('#setup').hidden = true;
     $('#plan').hidden = false;
     const exam = at(P.exam_date), now = at(todayIso);
     const left = Math.round((exam - now) / 86400000);
     $('#left').textContent = left;
-    $('#to').textContent = `${left === 1 ? 'day' : 'days'} · ${day(P.exam_date)}${P.target ? ` · ${P.target}` : ''}`;
+    const gain = P.current && P.target ? ` · ${P.current} → ${P.target}` : P.target ? ` · ${P.target}` : '';
+    $('#to').textContent = `${left === 1 ? 'day' : 'days'} · ${day(P.exam_date)}${gain}`;
+    const focus = Object.entries(P.focus || {}).filter(([, v]) => v === 'focus').map(([d]) => shortOf[d] || d);
+    $('#rhythm').textContent = `${nDays(P.days)} days a week · ${chipLabel(P.minutes)} a day · `
+      + (testOf(P.minutes) ? (P.tests === 'daily' ? 'a test every study day' : 'a test each week') : 'no tests')
+      + (focus.length ? ` · focus ${focus.join(', ')}` : '');
 
     const done = Object.fromEntries((T.days.recent || []).map(d => [d.day, d.questions]));
     chosen = todayIso;
@@ -142,7 +276,7 @@
       const cell = h(open ? 'button' : 'div', { class: 'cell' + (s === todayIso ? ' today' : '') + (k === 'exam' ? ' exam' : '') + (past || k === 'none' ? ' past' : ''),
                              title: s }, h('span', { class: 'd', text: d.getDate() === 1 || s === iso(start) ? day(s) : String(d.getDate()) }));
       if (open) {
-        Object.assign(cell, { type: 'button' });
+        cell.type = 'button';
         cell.dataset.day = s;
         cell.setAttribute('aria-pressed', String(s === chosen));
         cell.setAttribute('aria-label', `${WEEKDAY[d.getDay()]} ${day(s)}, ${k}`);
@@ -155,8 +289,7 @@
         });
       }
       if ((k === 'practice' || k === 'test') && (!past || done[s])) {     // a day gone by shows only what was done
-        const mk = h('i', { class: `mk ${k === 'test' ? 't' : 'p'}${done[s] ? ' done' : ''}` });
-        cell.append(mk);
+        cell.append(h('i', { class: `mk ${k === 'test' ? 't' : 'p'}${done[s] ? ' done' : ''}` }));
       } else if (k === 'exam') cell.append(h('span', { text: 'SAT' }));
       cells.push(cell);
     }
@@ -167,8 +300,8 @@
   /* ---------------------------------------------------------- a day
      Today's practice is the coach's pick. A day ahead gets the next set of
      the coach's ranking, one set per practice day in order -- a forecast
-     from today's results, and the plan is redrawn from each day's. */
-  const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+     from today's results, and the plan is redrawn from each day's. A test day
+     long enough for more than its test keeps the rest for practice. */
   let chosen = null;
   function topicsFor(s) {
     const ahead = T.coach.ahead && T.coach.ahead.length ? T.coach.ahead : [T.coach.topics];
@@ -176,24 +309,29 @@
     for (let d = at(todayIso); iso(d) < s; d.setDate(d.getDate() + 1)) if (kindOf(d, P) === 'practice') n++;
     return ahead[n % ahead.length];
   }
+  function practiceRow(topics, minutes, cls) {
+    const n = perDay(minutes);
+    return [h('div', { class: 'chips' }, topics.map(t => UI.chip(t))),
+            h('span', { class: 'meta', text: `${n} questions · ${minutesFor(n)} min` }),
+            startBtn(() => api('/drill', { method: 'POST', body: { topics, count: n, source: 'plan' } }), 'session', cls)];
+  }
   function paintTask(s) {
     const d = at(s), isToday = s === todayIso;
     let kind = kindOf(d, P);
-    if (isToday && kind === 'test' && T.tested) kind = 'practice';       // this week's test is done
+    if (isToday && kind === 'test' && T.tested) kind = 'practice';       // the day's test is done
+    const topics = isToday ? T.coach.topics : topicsFor(s);
     const task = $('#task');
     task.className = 'task' + (kind === 'practice' || kind === 'test' ? '' : ' rest');
     task.replaceChildren(h('span', { class: 'k', text: isToday ? 'Today' : `${WEEKDAY[d.getDay()]} · ${day(s)}` }));
     if (kind === 'practice') {
-      const topics = isToday ? T.coach.topics : topicsFor(s);
-      const n = perDay(P.minutes);
-      task.append(h('div', { class: 'chips' }, topics.map(t => UI.chip(t))),
-        h('span', { class: 'meta', text: `${n} questions · ${minutesFor(n)} min` }),
-        startBtn(() => api('/drill', { method: 'POST', body: { topics, count: n, source: 'plan' } }), 'session'));
+      task.append(...practiceRow(topics, P.minutes));
     } else if (kind === 'test') {
       const full = testOf(P.minutes) === 'section';
       task.append(h('span', { class: 'h2', text: full ? 'Section' : 'Module' }),
         h('span', { class: 'meta', text: full ? '44 questions · 70 min' : '22 questions · 35 min' }),
         startBtn(() => api('/mock/new', { method: 'POST', body: { full } }), 'test'));
+      const rest = P.minutes - testMin(P.minutes);
+      if (rest >= 15) task.append(h('div', { class: 'then' }, ...practiceRow(topics, rest, 'quiet')));
     } else if (kind === 'exam') {
       task.append(h('span', { class: 'h2', text: 'SAT' }));
     } else {
@@ -202,84 +340,206 @@
     }
   }
 
-  function startBtn(make, where) {
-    const b = h('button', { type: 'button', class: 'pill', text: 'Start' });
-    b.addEventListener('click', async () => {
-      b.setAttribute('aria-busy', 'true');
-      try {
-        const s = await make();
-        location.href = where === 'test' ? `/test/?s=${encodeURIComponent(s.id)}` : `/practice/session/?id=${encodeURIComponent(s.id)}`;
-      } catch (e) { b.removeAttribute('aria-busy'); $('#err').textContent = e.message; $('#err').hidden = false; }
-    });
-    return b;
-  }
+  /* ========================================================== the wizard
+     Four questions, one screen each. Each opens set from the results where
+     there are any, and the draft is kept for the tab, so a reload loses
+     nothing. The screens are built once; a choice only changes what shows as
+     chosen, so focus stays where it is. */
+  let step = 0, W = null;
 
-  /* ---------------------------------------------------------- the setup
-     Built once; a choice only changes what is pressed, so focus stays put and
-     a date being typed is not thrown away. */
-  const DAYNAMES = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-  const groups = [];
-  function choice(host, values, label, pick, on, name) {
+  function domainMastery() {
+    const out = {};
+    UI.DOMAINS.forEach(([dom]) => {
+      const ts = M.filter(t => t.domain === dom && t.answered);
+      out[dom] = ts.length ? { m: ts.reduce((a, t) => a + t.mastery, 0) / ts.length, n: ts.reduce((a, t) => a + t.answered, 0) } : null;
+    });
+    return out;
+  }
+  function focusFromResults() {
+    const m = domainMastery(), f = {};
+    const worked = Object.entries(m).filter(([, v]) => v).sort((a, b) => a[1].m - b[1].m);
+    if (worked.length && worked[0][1].m < .8) f[worked[0][0]] = 'focus';
+    worked.forEach(([d, v]) => { if (v.m >= .8) f[d] = 'strong'; });
+    return f;
+  }
+  function draft() {
+    const saved = snap.get('plan-draft');
+    if (saved) return saved;
+    const s = T.score;
+    const now = P.current || (s ? Math.round((s.low + s.high) / 20) * 10 : 500);
+    return {
+      current: now,
+      target: Math.max(now, P.target || Math.min(800, now + 100)),
+      exam: P.exam_date && P.exam_date > todayIso ? P.exam_date : (SAT_DATES.find(d => d > todayIso) || null),
+      minutes: P.minutes || 60, days: P.days || '1111100', tests: P.tests || 'weekly',
+      focus: Object.keys(P.focus || {}).length ? { ...P.focus } : focusFromResults(),
+    };
+  }
+  const keep = () => snap.set('plan-draft', W);
+
+  // one group of choices, built once; state is painted by refresh()
+  function group(host, values, label, on, pick, name) {
     const buttons = values.map((v, i) => {
       const b = h('button', { type: 'button', text: label(v) });
       if (name) b.setAttribute('aria-label', name(v, i));
-      b.addEventListener('click', () => { pick(v); refresh(); });
+      b.addEventListener('click', () => { pick(v); keep(); refresh(); });
       return b;
     });
     host.replaceChildren(...buttons);
-    groups.push(() => buttons.forEach((b, i) => b.setAttribute('aria-pressed', String(on(values[i])))));
+    painters.push(() => buttons.forEach((b, i) => b.setAttribute('aria-pressed', String(on(values[i])))));
+    return buttons;
   }
+  const painters = [];
+
+  function build() {
+    painters.length = 0;
+    // 1 -- where you are
+    $('#cur').oninput = e => { W.current = +e.target.value; if (W.target < W.current) W.target = W.current; keep(); refresh(); };
+    // 2 -- where you're going
+    $('#tgt').oninput = e => { W.target = Math.max(W.current, +e.target.value); keep(); refresh(); };
+    const upcoming = SAT_DATES.filter(d => d > todayIso);
+    const other = h('input', { class: 'field', type: 'date', min: todayIso, 'aria-label': 'Another date' });
+    group($('#dates'), upcoming, d => day(d) + (d.slice(0, 4) !== todayIso.slice(0, 4) ? ` ’${d.slice(2, 4)}` : ''),
+          d => W.exam === d, d => { W.exam = d; other.value = ''; });
+    other.value = W.exam && !upcoming.includes(W.exam) ? W.exam : '';
+    other.addEventListener('change', () => { W.exam = other.value || null; keep(); refresh(); });
+    $('#dates').append(other);
+    // 3 -- time you have
+    group($('#mins'), MINS, chipLabel, m => W.minutes === m, m => {
+      W.minutes = m;
+      if (!testOf(m)) W.tests = 'weekly';
+    });
+    group($('#wk'), [0, 1, 2, 3, 4, 5, 6], i => LET[i], i => W.days[i] === '1', i => {
+      const a = W.days.split('');
+      a[i] = a[i] === '1' ? '0' : '1';
+      if (a.includes('1')) W.days = a.join('');
+    }, i => DAYNAMES[i]);
+    $('#dpw').oninput = e => {
+      // more days are added from Monday on, fewer are taken from Sunday back
+      const n = +e.target.value, a = W.days.split('');
+      for (let i = 0; i < 7 && nDays(a.join('')) < n; i++) a[i] = '1';
+      for (let i = 6; i >= 0 && nDays(a.join('')) > n; i--) a[i] = '0';
+      W.days = a.join(''); keep(); refresh();
+    };
+    const tb = [...$('#tests').querySelectorAll('button')];
+    tb.forEach(b => b.onclick = () => { W.tests = b.dataset.v; keep(); refresh(); });
+    painters.push(() => tb.forEach(b => {
+      b.setAttribute('aria-pressed', String(W.tests === b.dataset.v));
+      b.disabled = b.dataset.v === 'daily' && !testOf(W.minutes);
+    }));
+    // 4 -- what to focus on
+    const dm = domainMastery();
+    $('#doms').replaceChildren(...UI.DOMAINS.map(([dom, short]) => {
+      const fill = h('i');
+      fill.style.setProperty('--m', (dm[dom] ? dm[dom].m : 0).toFixed(3));
+      const seg = h('div', { class: 'seg', role: 'group', 'aria-label': short });
+      const buttons = [['focus', 'Focus'], ['normal', 'Normal'], ['strong', 'Strong']].map(([v, label]) => {
+        const b = h('button', { type: 'button', 'data-v': v, text: label });
+        b.addEventListener('click', () => { if (v === 'normal') delete W.focus[dom]; else W.focus[dom] = v; keep(); refresh(); });
+        seg.append(b);
+        return b;
+      });
+      painters.push(() => {
+        const nf = Object.values(W.focus).filter(x => x === 'focus').length;
+        buttons.forEach(b => {
+          const state = W.focus[dom] || 'normal';
+          b.setAttribute('aria-pressed', String(state === b.dataset.v));
+          b.disabled = b.dataset.v === 'focus' && state !== 'focus' && nf >= 2;
+        });
+      });
+      return h('div', { class: 'drow' }, h('span', { class: 'nm', text: short }),
+        h('div', { class: 'mb' }, h('span', { class: 'mbar' }, fill),
+          h('span', { class: 'meta', text: dm[dom] ? `${dm[dom].n} answered` : 'Not started' })),
+        seg);
+    }));
+  }
+
+  const fill = el => el.style.setProperty('--p', ((el.value - el.min) / ((el.max - el.min) || 1) * 100) + '%');
   function refresh() {
-    groups.forEach(g => g());
-    $('#save').disabled = !form.exam || form.exam < todayIso;
+    painters.forEach(p => p());
+    // 1
+    $('#cur').value = W.current;
+    $('#curN').textContent = W.current;
+    const s = T.score;
+    if (s) $('#curFrom').textContent = `Latest · ${band(s)} · ${KIND[s.kind] || 'Test'} · ${day(s.at)}`;
+    else $('#curFrom').replaceChildren(h('a', { class: 'link', href: '/diagnostic/', text: 'Take the diagnostic' }));
+    // 2
+    $('#tgt').value = W.target;
+    $('#tgt').style.setProperty('--a', ((W.current - 200) / 600 * 100) + '%');
+    $('#gNow').textContent = W.current;
+    $('#gTo').textContent = W.target;
+    const plus = W.target - W.current;
+    $('#gPlus').textContent = `+${plus}`;
+    const left = W.exam ? daysTo(W.exam) : 0;
+    const weekly = plus > 0 && left ? Math.max(1, Math.round(plus / (left / 7))) : 0;
+    $('#pace').textContent = W.exam ? `${left} ${left === 1 ? 'day' : 'days'}${weekly ? ` · about ${weekly} points a week` : ''}` : '';
+    // 3
+    const nd = nDays(W.days);
+    $('#dpw').value = nd;
+    ['#cur', '#tgt', '#dpw'].forEach(sel => fill($(sel)));
+    $('#dpwT').textContent = `${nd} ${nd === 1 ? 'day' : 'days'} · ${span(nd * W.minutes)} a week`;
+    $('#testsT').textContent = testOf(W.minutes) ? testName(W.minutes) : 'A module takes 35 min';
+    // 4
+    const nf = Object.values(W.focus).filter(x => x === 'focus').length;
+    const ns = Object.values(W.focus).filter(x => x === 'strong').length;
+    $('#fcount').textContent = `${nf}/2 focus · ${ns} strong`;
+    const names = v => UI.DOMAINS.filter(([d]) => W.focus[d] === v).map(([, sh]) => sh).join(', ') || '—';
+    const row = (k, v) => h('p', {}, h('span', { text: k }), h('b', { text: v }));
+    $('#glance').replaceChildren(h('span', { class: 'k', text: 'At a glance' }),
+      row('Score', `${W.current} → ${W.target} · +${plus}`),
+      row('Exam', W.exam ? `${day(W.exam)} · ${left} days` : '—'),
+      row('Pace', weekly ? `about ${weekly} points a week` : '—'),
+      row('Study', `${nd} ${nd === 1 ? 'day' : 'days'} a week · ${chipLabel(W.minutes)} a day`),
+      row('Tests', testOf(W.minutes) ? `${W.tests === 'daily' ? 'Every study day' : 'Each week'} · ${testOf(W.minutes) === 'section' ? 'Section' : 'Module'}` : 'None'),
+      row('Focus', names('focus')), row('Strong', names('strong')));
+    // the steps and the way on
+    $('#steps').querySelectorAll('button').forEach((b, i) => {
+      b.setAttribute('aria-current', i === step ? 'step' : 'false');
+      b.classList.toggle('done', i < step);
+    });
+    document.querySelectorAll('.step').forEach((el, i) => { el.hidden = i !== step; });
+    $('#back').hidden = step === 0;
+    $('#next').textContent = step < 3 ? 'Next' : (UI.plan.set(P) ? 'Save plan' : 'Create plan');
+    $('#next').disabled = step >= 1 && !(W.exam && W.exam > todayIso);
   }
-  function paintSetup() {
+
+  function openWizard(to = 0) {
+    W = draft();
+    step = to;
     $('#setup').hidden = false;
     $('#plan').hidden = true;
-    groups.length = 0;
-    const upcoming = SAT_DATES.filter(d => d > todayIso);
-    const dates = $('#dates');
-    const other = h('input', { class: 'field', type: 'date', min: todayIso, value: form.exam && !upcoming.includes(form.exam) ? form.exam : '', 'aria-label': 'Another date' });
-    choice(dates, upcoming, d => day(d) + (d.slice(0, 4) !== todayIso.slice(0, 4) ? ` ’${d.slice(2, 4)}` : ''),
-           v => { form.exam = v; other.value = ''; }, v => form.exam === v);
-    other.addEventListener('change', () => { form.exam = other.value || null; refresh(); });
-    dates.append(other);
-    choice($('#mins'), MINS, v => String(v), v => { form.minutes = v; }, v => form.minutes === v);
-    choice($('#wk'), [0, 1, 2, 3, 4, 5, 6], i => LET[i], i => {
-      const a = form.days.split('');
-      a[i] = a[i] === '1' ? '0' : '1';
-      if (a.includes('1')) form.days = a.join('');
-    }, i => form.days[i] === '1', i => DAYNAMES[i]);
-    choice($('#target'), TARGETS, v => String(v), v => { form.target = form.target === v ? null : v; }, v => form.target === v);
+    build();
     refresh();
   }
-  $('#setup').addEventListener('submit', async e => {
-    e.preventDefault();
-    if (!form.exam) return;
+  function go(to) { step = Math.max(0, Math.min(3, to)); refresh(); scrollTo({ top: 0, behavior: 'instant' }); }
+  $('#steps').addEventListener('click', e => { const b = e.target.closest('button'); if (b) go(+b.dataset.step); });
+  $('#back').addEventListener('click', () => go(step - 1));
+  $('#next').addEventListener('click', async () => {
+    if (step < 3) return go(step + 1);
+    const b = $('#next');
+    b.setAttribute('aria-busy', 'true');
+    $('#serr').hidden = true;
     try {
-      const r = await api('/me', { method: 'PUT', body: { exam_date: form.exam, minutes: form.minutes, days: form.days, target: form.target } });
+      const focus = Object.fromEntries(UI.DOMAINS.map(([d]) => [d, W.focus[d] || 'normal']));
+      const r = await api('/me', { method: 'PUT', body: { current: W.current, target: W.target, exam_date: W.exam,
+        minutes: W.minutes, days: W.days, tests: W.tests, focus } });
+      snap.set('plan-draft', null);
       P = r.profile;
-      T = await api('/today');
+      T = await api('/today');                       // the coach, now steered by the focus
+      b.removeAttribute('aria-busy');
       paintPlan();
-    } catch (err) { $('#serr').textContent = err.message; $('#serr').hidden = false; }
+      scrollTo({ top: 0, behavior: 'instant' });
+    } catch (err) { b.removeAttribute('aria-busy'); $('#serr').textContent = err.message; $('#serr').hidden = false; }
   });
-  $('#change').addEventListener('click', () => {
-    Object.assign(form, { exam: P.exam_date, minutes: P.minutes || 30, days: P.days || '1111100', target: P.target });
-    paintSetup();
-  });
+  $('#change').addEventListener('click', () => { snap.set('plan-draft', null); openWizard(0); });
 
+  /* ---------------------------------------------------------- boot */
   (async () => {
-    try { T = await api('/today'); }
-    catch (_) { $('#serr').textContent = 'The server is not answering.'; $('#serr').hidden = false; $('#setup').hidden = false; $('#save').disabled = true; return; }
+    try { [T, M] = await Promise.all([api('/today'), api('/map').then(m => m.topics)]); }
+    catch (_) { $('#serr').textContent = 'The server is not answering.'; $('#serr').hidden = false; $('#setup').hidden = false; $('#next').disabled = true; return; }
     P = T.profile;
-    if (UI.plan.set(P) && P.exam_date >= todayIso) paintPlan();
-    else {
-      form.exam = SAT_DATES.find(d => d > todayIso) || null;
-      if (P.minutes) form.minutes = P.minutes;
-      if (P.days) form.days = P.days;
-      if (P.target) form.target = P.target;
-      paintSetup();
-    }
+    if (UI.plan.set(P) && P.exam_date >= todayIso && !snap.get('plan-draft')) paintPlan();
+    else openWizard(0);
   })();
 })();
 </script>

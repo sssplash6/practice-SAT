@@ -20,6 +20,7 @@ seed, exists to give them the chance to do.
 from __future__ import annotations
 
 import datetime as dt
+import json
 import math
 from collections import Counter, defaultdict
 
@@ -29,6 +30,7 @@ DIFF_W = {"easy": 1.0, "medium": 2.0, "hard": 3.0}
 DECAY = 0.93        # each answer further back counts this much less
 WINDOW = 40         # answers per topic that still count
 EVIDENCE = 10.0     # answers for the bar to trust about two thirds of what it sees
+FOCUS_LIFT = 40.0   # what the plan's Focus adds to a domain's topics, and Strong takes off
 OWED = 2            # clean answers on the template that close a mistake
 STRONG = 0.8        # past this a topic is kept warm rather than worked on
 MS_CAP = 10 * 60 * 1000     # an answer left open over lunch is not ten hours of study
@@ -206,7 +208,8 @@ def carry(frm: str, to: str) -> int:
         c.execute("UPDATE learners AS t SET"
                   " name = COALESCE(t.name, s.name), exam_date = COALESCE(t.exam_date, s.exam_date),"
                   " target = COALESCE(t.target, s.target), minutes = COALESCE(t.minutes, s.minutes),"
-                  " days = COALESCE(t.days, s.days), updated = ?"
+                  " days = COALESCE(t.days, s.days), current = COALESCE(t.current, s.current),"
+                  " tests = COALESCE(t.tests, s.tests), focus = COALESCE(t.focus, s.focus), updated = ?"
                   " FROM learners AS s WHERE t.id=? AND s.id=?", (now(), to, frm))
         for table in ("practice_seen", "saved", "traps"):
             c.execute(f"UPDATE OR IGNORE {table} SET learner=? WHERE learner=?", (to, frm))
@@ -232,9 +235,13 @@ def coach(learner: str, k: int = 3, count: int = 10) -> dict:
     """
     b = board(learner)
     today = dt.datetime.now(dt.timezone.utc).date()
+    # the plan's own say: a domain on focus comes up more, a strong one less
+    row = db.one("SELECT focus FROM learners WHERE id=?", learner)
+    focus = json.loads(row["focus"]) if row and row["focus"] else {}
     scored = []
     for slug, t in b.items():
         s = 100.0 * min(len(t["traps"]), 3)
+        s += {"focus": FOCUS_LIFT, "strong": -FOCUS_LIFT}.get(focus.get(t["domain"]), 0.0)
         if not t["answered"]:
             s += 60.0 * BLUEPRINT.get(t["domain"], 0.15) / 0.35
         else:
