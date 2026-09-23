@@ -7,6 +7,7 @@ import json
 import pathlib
 import sqlite3
 import tempfile
+from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
@@ -27,6 +28,16 @@ def q(seed: int) -> dict:
 
 
 def checks():
+    for table in ("classes","members","assignments","attachments"):
+        assert not db.one("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",table)
+    assert "assignment" not in {r["name"] for r in db.rows("PRAGMA table_info(sessions)")}
+    try:
+        with db.transaction():
+            db.run("INSERT INTO learners(id,created) VALUES (?,?)","a:f4rollback",progress.now())
+            raise RuntimeError("simulate a failed multi-field write")
+    except RuntimeError:
+        pass
+    assert not db.one("SELECT 1 FROM learners WHERE id=?","a:f4rollback")
     assert progress.norm("Used 10 instead of 20") == progress.norm("Used 30 instead of 40")
     p = "a:f4progress"
     start = "2026-01-01T12:00:00+00:00"
@@ -43,9 +54,12 @@ def checks():
         progress.record(p,None,q(seed),0,when=day+"T12:00:00+00:00")
     t=db.one("SELECT * FROM traps WHERE learner=?",p)
     assert t["closed_how"]=="fixed" and t["due"]=="2026-01-07" and t["checks"]==0
-    for seed,day,due,stage in ((5,"2026-01-07","2026-01-17",1),
-                                (6,"2026-01-17","2026-02-16",2),
-                                (7,"2026-02-16",None,3)):
+    progress.record(p,None,q(40),0,when="2026-01-05T12:00:00+00:00")
+    early=db.one("SELECT due,checks FROM traps WHERE learner=?",p)
+    assert (early["due"],early["checks"])==("2026-01-07",0)
+    for seed,day,due,stage in ((5,"2026-01-07","2026-01-14",1),
+                                (6,"2026-01-14","2026-02-03",2),
+                                (7,"2026-02-03",None,3)):
         progress.record(p,None,q(seed),0,when=day+"T12:00:00+00:00")
         t=db.one("SELECT * FROM traps WHERE learner=?",p)
         assert (t["due"],t["checks"])==(due,stage)
@@ -75,6 +89,20 @@ def checks():
     assert len(merged)==1 and merged[0]["hits"]==5 and merged[0]["closed"] is None
     assert merged[0]["seed"]==77 and merged[0]["reason"]=="used 30 instead of 40"
     legacy.close()
+    legacy=sqlite3.connect(":memory:")
+    legacy.row_factory=sqlite3.Row
+    legacy.executescript("""
+      CREATE TABLE sessions(id TEXT PRIMARY KEY,kind TEXT,form_id INTEGER NOT NULL,
+        started TEXT NOT NULL,finished TEXT,answers TEXT,result TEXT,user_id TEXT,
+        qstate TEXT,mock_id TEXT);
+      INSERT INTO sessions(id,kind,form_id,started,qstate,mock_id)
+        VALUES('old-session','mock',2,'2026-01-01','{"q1":{"ms":3000}}','1.3');
+    """)
+    db._relax_form_id(legacy)
+    kept=legacy.execute("SELECT qstate,mock_id FROM sessions WHERE id='old-session'").fetchone()
+    assert kept["mock_id"]=="1.3" and json.loads(kept["qstate"])["q1"]["ms"]==3000
+    assert not next(c for c in legacy.execute("PRAGMA table_info(sessions)") if c["name"]=="form_id")["notnull"]
+    legacy.close()
 
     # Six study weekdays across a weekend; planned rest days preserve the run.
     learner="a:f4streak"
@@ -101,10 +129,17 @@ def checks():
     assert progress.days(learner)["minutes_total"]==10
     db.run("UPDATE attempts SET ms=180000 WHERE learner=?",learner)
     assert progress.days(learner)["minutes_total"]==3
+    paper_learner="a:f4paper"
+    add("sessions",id="paper-time",kind="paper",learner=paper_learner,
+        started=(finish-dt.timedelta(minutes=100)).isoformat(),finished=finish.isoformat(),
+        cfg=json.dumps({"timing":"x2"}))
+    assert progress.days(paper_learner)["minutes_total"]==100
 
 
 def routes(client):
     h={"X-Learner":"a:f4prefs"}
+    fresh=client.get("/api/me",headers={"X-Learner":"a:f4fresh"}).json()
+    assert fresh["prefs"]["words_from"]==["sat"]
     assert client.put("/api/me",headers=h,json={"prefs":{"bogus":True}}).status_code==422
     assert client.put("/api/me",headers=h,json={"prefs":{"theme":"nope"}}).status_code==422
     a=client.put("/api/me",headers=h,json={"prefs":{"theme":"dark","words_from":["sat","transitions"]}})
@@ -117,6 +152,20 @@ def routes(client):
     assert client.put("/api/me",headers=h,json={"country":"XX"}).status_code==422
     assert client.put("/api/me",headers=h,json={"name":"Ada F4"}).status_code==200
     assert client.put("/api/me",headers={"X-Learner":"a:f4other"},json={"name":"ada f4"}).status_code==409
+    def failed_mirror(_learner, _fields):
+        raise RuntimeError("plan mirror failed")
+    with patch("server.api_me.part", return_value=failed_mirror):
+        try:
+            client.put("/api/me",headers=h,json={"target":700,"prefs":{"theme":"light"}})
+            raise AssertionError("the injected mirror failure was not reached")
+        except RuntimeError:
+            pass
+    rolled_back=client.get("/api/me",headers=h).json()["profile"]
+    assert rolled_back["target"] is None and rolled_back["prefs"]["theme"]=="dark"
+    me=client.get("/api/me",headers=h).json()
+    assert me["review"]["open"]==0
+    activity=client.get("/api/me/activity?weeks=26",headers=h)
+    assert activity.status_code==200 and len(activity.json()["days"])==182
     add("sessions",id="notes-f4",kind="drill",learner="a:f4prefs",started=progress.now(),
         questions=json.dumps([q(96)]))
     note=client.post("/api/notes",headers=h,json={"session":"notes-f4","question_id":"q96",
@@ -138,7 +187,8 @@ def scores():
     e=estimate.estimate(learner)
     assert e["latest"]["kind"]=="outside" and e["mean3"]==620
     assert e["combined"] and e["confidence"]["level"]=="high"
-    assert estimate.percentile("score-f4-1")["ranked"] is False
+    assert estimate.percentile("score-f4-2")["why"]=="too few sittings"
+    assert estimate.percentile("score-f4-1")["why"]=="repeat sitting"
     assert satdates.SAT_DATES==tuple(sorted(satdates.SAT_DATES))
     assert scoring.accepted_forms("1/8")==[]
 

@@ -9,6 +9,7 @@ import pathlib
 import secrets
 import sqlite3
 import threading
+from contextlib import contextmanager
 from datetime import datetime, timezone
 
 log = logging.getLogger("satf.db")
@@ -210,6 +211,25 @@ LEARNER_TABLES = ("users", "attempts", "sessions", "practice_seen", "traps", "sa
 _local = threading.local()
 
 
+@contextmanager
+def transaction():
+    """Keep a multi-row write atomic even when helpers call run()."""
+    c = conn()
+    if getattr(_local, "atomic", False):
+        raise RuntimeError("nested database transaction")
+    c.execute("BEGIN IMMEDIATE")
+    _local.atomic = True
+    try:
+        yield c
+    except BaseException:
+        c.rollback()
+        raise
+    else:
+        c.commit()
+    finally:
+        _local.atomic = False
+
+
 def conn() -> sqlite3.Connection:
     """One connection per thread: sqlite objects do not cross threads."""
     c = getattr(_local, "c", None)
@@ -230,7 +250,9 @@ def init() -> None:
         if column not in have:
             c.execute(f"ALTER TABLE {table} ADD COLUMN {column} {decl}")
     _relax_form_id(c)
-    _rebuild_traps(c)
+    c.commit()
+    with transaction():
+        _rebuild_traps(c)
     c.executescript(EXTRA_SCHEMA)
     c.executescript("""
       CREATE INDEX IF NOT EXISTS attempts_at_learner ON attempts(learner,at);
@@ -258,7 +280,8 @@ def init() -> None:
 def ensure_learner(code: str) -> None:
     conn().execute("INSERT OR IGNORE INTO learners(id,created) VALUES (?,?)",
                    (code, datetime.now(timezone.utc).isoformat(timespec="seconds")))
-    conn().commit()
+    if not getattr(_local, "atomic", False):
+        conn().commit()
 
 
 def new_code() -> str:
@@ -346,12 +369,21 @@ def _relax_form_id(c: sqlite3.Connection) -> None:
     ddl = re.sub(r"^CREATE TABLE\s+(?:IF NOT EXISTS\s+)?[\"`]?sessions[\"`]?",
                  "CREATE TABLE sessions_new", ddl, count=1, flags=re.I)
     names = ", ".join(cols)
-    c.executescript("PRAGMA foreign_keys=OFF;")
-    c.execute(ddl)
-    c.execute(f"INSERT INTO sessions_new ({names}) SELECT {names} FROM sessions")
-    c.execute("DROP TABLE sessions")
-    c.execute("ALTER TABLE sessions_new RENAME TO sessions")
-    c.executescript("CREATE INDEX IF NOT EXISTS sessions_user ON sessions(user_id); PRAGMA foreign_keys=ON;")
+    c.commit()
+    c.execute("PRAGMA foreign_keys=OFF")
+    try:
+        c.execute("BEGIN IMMEDIATE")
+        c.execute(ddl)
+        c.execute(f"INSERT INTO sessions_new ({names}) SELECT {names} FROM sessions")
+        c.execute("DROP TABLE sessions")
+        c.execute("ALTER TABLE sessions_new RENAME TO sessions")
+        c.execute("CREATE INDEX IF NOT EXISTS sessions_user ON sessions(user_id)")
+        c.commit()
+    except BaseException:
+        c.rollback()
+        raise
+    finally:
+        c.execute("PRAGMA foreign_keys=ON")
     log.info("rebuilt sessions so a practice set can exist without a form")
 
 
@@ -383,7 +415,8 @@ def rows(sql: str, *args) -> list[sqlite3.Row]:
 
 def run(sql: str, *args) -> sqlite3.Cursor:
     cur = conn().execute(sql, args)
-    conn().commit()
+    if not getattr(_local, "atomic", False):
+        conn().commit()
     return cur
 
 

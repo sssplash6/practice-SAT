@@ -117,8 +117,6 @@ def board(learner: str) -> dict[str, dict]:
                      " WHERE learner=? AND repeat=0 AND disputed=0 AND void IS NULL ORDER BY id DESC", learner):
         count[r["topic"]] += 1
         last.setdefault(r["topic"], r["at"])
-    for r in db.rows("SELECT topic, difficulty, correct, guess FROM attempts WHERE learner=?"
-                     " AND repeat=0 AND disputed=0 AND void IS NULL ORDER BY id DESC", learner):
         if len(recent[r["topic"]]) < WINDOW:
             recent[r["topic"]].append((r["difficulty"], r["correct"] * (0.5 if r["guess"] else 1)))
     traps: dict[str, list] = defaultdict(list)
@@ -180,8 +178,10 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
         for t in db.rows("SELECT id, label, owed, closed, due, checks FROM traps"
                          " WHERE learner=? AND template=? AND (closed IS NULL OR due IS NOT NULL)", learner, q["key"]):
             if t["closed"] is not None:
+                if when[:10] < t["due"]:
+                    continue
                 checks = min(3, t["checks"] + 1)
-                due = (dt.date.fromisoformat(when[:10]) + dt.timedelta(days=(10,30)[checks-1])).isoformat() if checks < 3 else None
+                due = (dt.date.fromisoformat(t["closed"][:10]) + dt.timedelta(days=(10,30)[checks-1])).isoformat() if checks < 3 else None
                 db.run("UPDATE traps SET checks=?,due=?,last=? WHERE id=?", checks,due,when,t["id"])
                 continue
             left = t["owed"] - 1
@@ -431,26 +431,41 @@ def days(learner: str, tz: int = 0, weeks: int = 2) -> dict:
     """One local-day ledger for questions, words, finished sittings and plan work."""
     weeks = max(1, min(53, int(weeks)))
     per: dict[dt.date, dict] = defaultdict(lambda: {"questions": 0, "right": 0, "words": 0, "ms": 0})
-    for r in db.rows("SELECT at,ms,correct,disputed FROM attempts WHERE learner=?", learner):
+    timed_sessions = set()
+    for r in db.rows("SELECT session,at,ms,correct,disputed FROM attempts WHERE learner=?", learner):
         d = per[_local_day(r["at"], tz)]
         d["questions"] += 1
         d["right"] += int(bool(r["correct"]) and not r["disputed"])
         d["ms"] += min(max(r["ms"] or 0, 0), MS_CAP)
+        if r["session"] and r["ms"] is not None:
+            timed_sessions.add(r["session"])
     for r in db.rows("SELECT at,ms FROM word_reviews WHERE learner=? AND COALESCE(kind,'')!='lookup'", learner):
         d = per[_local_day(r["at"], tz)]
         d["words"] += 1
         d["ms"] += min(max(r["ms"] or 0, 0), 60_000)
-    for r in db.rows("SELECT id,kind,started,finished,cfg FROM sessions WHERE learner=?"
-                     " AND finished IS NOT NULL AND kind IN ('mock','module','diagnostic','custom')", learner):
-        timed = db.one("SELECT 1 FROM attempts WHERE learner=? AND session=? AND ms IS NOT NULL LIMIT 1", learner,r["id"])
-        if timed:
+    for r in db.rows("SELECT * FROM sessions WHERE learner=?"
+                     " AND finished IS NOT NULL AND kind IN ('mock','module','diagnostic','custom','paper','section')", learner):
+        if r["id"] in timed_sessions:
             continue
         elapsed = max(0, int((dt.datetime.fromisoformat(r["finished"]) - dt.datetime.fromisoformat(r["started"])).total_seconds()))
         cfg = json.loads(r["cfg"] or "{}")
-        cap = 5400 if cfg.get("timing") == "untimed" else (4260 if r["kind"] == "mock" else 2160)
+        timing = cfg.get("timing","official")
+        factor = {"x1.5":1.5,"x2":2}.get(timing,1)
+        if timing == "untimed":
+            cap = 5400
+        elif r["kind"] in ("mock","paper","section"):
+            cap = round(2 * 2100 * factor + 120)
+        elif r["kind"] == "module":
+            cap = round(2100 * factor + 60)
+        else:
+            questions = json.loads(r["questions"] or "[]")
+            size = len(questions) if isinstance(questions,list) and questions else (20 if r["kind"]=="diagnostic" else 22)
+            cap = round((cfg.get("minutes") or size * 95 / 60) * 60 * factor + 60)
         per[_local_day(r["finished"], tz)]["ms"] += min(elapsed, cap) * 1000
         per[_local_day(r["finished"], tz)]["finished"] = True
     plan = db.one("SELECT plan,days,exam_date FROM learners WHERE id=?", learner)
+    overrides = {r["day"]:r["off"] for r in db.rows("SELECT day,off FROM plan_overrides WHERE plan=?",plan["plan"])} if plan and plan["plan"] else {}
+    frozen = {r["day"]:r["kind"] for r in db.rows("SELECT day,kind FROM plan_days WHERE plan=?",plan["plan"])} if plan and plan["plan"] else {}
     if plan and plan["plan"]:
         for r in db.rows("SELECT m.day,t.minutes FROM plan_marks AS m JOIN plan_tasks AS t ON t.id=m.task"
                          " WHERE t.plan=? AND m.status='done'", plan["plan"]):
@@ -465,12 +480,10 @@ def days(learner: str, tz: int = 0, weeks: int = 2) -> dict:
             return False
         if plan["exam_date"] and d == dt.date.fromisoformat(plan["exam_date"]) - dt.timedelta(days=1):
             return True
-        override = db.one("SELECT off FROM plan_overrides WHERE plan=? AND day=?", plan["plan"],d.isoformat())
-        if override and override["off"]:
+        if overrides.get(d.isoformat()):
             return True
-        frozen = db.one("SELECT kind FROM plan_days WHERE plan=? AND day=?", plan["plan"],d.isoformat())
-        if frozen:
-            return frozen["kind"] in ("rest","off","eve")
+        if d.isoformat() in frozen:
+            return frozen[d.isoformat()] in ("rest","off","eve")
         return bool(plan["days"] and len(plan["days"]) == 7 and plan["days"][d.weekday()] == "0")
 
     def active(d: dt.date) -> bool:

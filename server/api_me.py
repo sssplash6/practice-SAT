@@ -6,7 +6,7 @@ import datetime as dt
 import json
 import re
 
-from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field
 
 from . import db, drill, prefs, progress
@@ -67,9 +67,18 @@ def get_me(x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_
     words=db.one("SELECT SUM(box>=4) AS known, COUNT(*) AS studied, SUM(saved) AS saved,"
                  " SUM(due<=?) AS due FROM word_state WHERE learner=?",today,learner)
     reviews=db.one("SELECT COUNT(*) AS n FROM word_reviews WHERE learner=? AND at>=?",learner,week_ago)
+    review=db.one("SELECT COUNT(*) AS open, SUM(owed=1) AS half FROM traps"
+                  " WHERE learner=? AND closed IS NULL",learner)
     return {"profile": p, "prefs": p["prefs"], "days": progress.days(learner, x_tz),
+            "review":{"open":review["open"],"half":review["half"] or 0},
             "words": {"known":words["known"] or 0,"studied":words["studied"] or 0,
                       "saved":words["saved"] or 0,"reviews_week":reviews["n"],"due":words["due"] or 0}}
+
+
+@router.get("/api/me/activity")
+def activity(weeks: int = Query(default=26, ge=1, le=53),
+             x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+    return progress.days(learner_of(x_learner),x_tz,weeks)
 
 
 class Me(BaseModel):
@@ -154,15 +163,18 @@ def put_me(body: Me, x_learner: str | None = Header(default=None), x_tz: int = D
             raise HTTPException(422, f"at most {MAX_FOCUS} domains on focus")
         # normal is the default and is not stored
         got["focus"] = json.dumps({d: v for d, v in got["focus"].items() if v != "normal"}) or None
-    db.ensure_learner(learner)
-    for k, v in got.items():
-        db.run(f"UPDATE learners SET {k}=?, updated=? WHERE id=?", v, now(), learner)
-    if pref_change is not None:
-        prefs.put(learner,pref_change)
     changed = {k:v for k,v in got.items() if k in ("exam_date","target","minutes","days","current","tests","focus","rw_now","rw_target")}
+    if "focus" in changed:
+        changed["focus"] = json.loads(changed["focus"] or "{}")
     mirror = part("plan","mirror")
-    if mirror and changed:
-        mirror(learner,changed)
+    with db.transaction():
+        db.ensure_learner(learner)
+        for k, v in got.items():
+            db.run(f"UPDATE learners SET {k}=?, updated=? WHERE id=?", v, now(), learner)
+        if pref_change is not None:
+            prefs.put(learner,pref_change)
+        if mirror and changed:
+            mirror(learner,changed)
     return {"profile": profile(learner)}
 
 

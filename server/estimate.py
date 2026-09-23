@@ -94,6 +94,11 @@ def percentile(sid: str) -> dict:
     band = result.get("estimate") or {}
     if not band:
         return {"ranked":False,"pct":None,"n":0,"why":"unscored"}
+    earlier = db.rows("SELECT * FROM sessions WHERE learner=? AND kind=? AND finished IS NOT NULL"
+                      " AND (finished<? OR (finished=? AND id<?)) ORDER BY finished,id",
+                      row["learner"],row["kind"],row["finished"],row["finished"],sid)
+    if any(_standard(x) and (row["number"] is None or x["number"]==row["number"]) for x in earlier):
+        return {"ranked":False,"pct":None,"n":0,"why":"repeat sitting"}
     peers = []
     for x in db.rows("SELECT * FROM sessions WHERE kind=? AND finished IS NOT NULL"
                      " AND learner IS NOT NULL ORDER BY finished,id",row["kind"]):
