@@ -16,9 +16,15 @@ I merge each passing task into master myself (Part 4.4), then launch the next wa
 - **F4** data layer: built by another agent the user runs (branch `v2/f4`, from `v2/f0`, 4 commits, done
   2026-09-24). Verifying here: run `wf_a8903963-411` (task w0regskfk), `[{id:'F4', from:'verify'}]`, with fix
   rounds on the branch. When it passes: rebase on master and merge (it touches no file master changed).
-- **Words content** (`server/words/**`, `tools/build_words.py`; S9-owned): **given to the other agent** on branch
-  `v2/words-content` (worktree `.claude/worktrees/words`), in phases. Do not build it. S9 starts from it; verify
-  and merge each phase the user reports done.
+- **Words content** (`server/words/**`, `tools/build_words.py`; S9-owned), branch `v2/words-content`, worktree
+  `.claude/worktrees/words`. The other agent hit its limit after phase 1, classes and 316 draft core entries
+  (checkpoint 01d12ca). **Picked up here**: `next/words.js`, run `wf_31f62ba7-6ae` (task wc3xif9oh): a core agent
+  (normalize drafts into sat.json, consolidate classes, reach 400, write `server/words/_plan.json`), then 6 authors in
+  parallel (3 advanced batches, second senses + answer-choice, transitions + pairs, roots + foils + collections),
+  each committing its own files. Restart: `args {skipCore: true, only: [unfinished author ids]}` per `git log`.
+  Still to do after it: confusions (~700), fills + frames (~1,500, public-domain literature cut from real
+  Gutenberg texts, never from memory), fold parts/ into the final files, an independent accuracy check, merge.
+  The two-reviewer gate and the frequency corpus come later.
 - Then wave 1b: F2, F3, F5 (after F4), F6 (after F1 and F4). Then S1, S3-S10 (S2 dropped). Then I1.
 
 ## Resumed 2026-09-23: second check dropped
