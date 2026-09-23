@@ -115,11 +115,13 @@ def triangle_sum(rng: random.Random, seed: int, *, frame=None, a=None, b=None,
         "hundred": Mis(f"borrowed a ten to subtract {a} from 90 but left the tens "
                        "digit at 9",
                        whole(100 - a) if right and a % 10 else None),
-        # a - 45 is what College Board printed beside 51 (source 1.12), but no
-        # route through a right triangle lands on it -- assuming 45 and 45 gives
-        # 45 -- so it stays an option there, unnamed, and is never offered or
-        # named anywhere else
-        "iso45": Mis("near-miss arithmetic slip", whole(a - 45) if right else None),
+        # the two acute angles sit either side of 45: a is a - 45 above it, so
+        # the other is that far below. Stopping at the difference lands on
+        # a - 45 (College Board printed 6 beside 51 in source 1.12). Kept out of
+        # the default order; only 1.12 asks for it.
+        "iso45": Mis(f"found how far {a}° is from 45° and stopped, instead of "
+                     "taking that difference off the other 45°",
+                     whole(a - 45) if right and a > 45 else None),
         "one_only": Mis("subtracted only one of the two given measures from 180 "
                         "degrees", whole(180 - a)),
         "other_only": Mis("subtracted only the other given measure from 180 "
