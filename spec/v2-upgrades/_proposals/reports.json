@@ -1,0 +1,583 @@
+{
+ "outcomes": {
+  "proposals": [
+   {
+    "title": "Second look: re-answer your misses blind before the answers unlock",
+    "what": "WHAT THE STUDENT DOES: after a test they re-work the questions they got wrong or were unsure of, untimed and without seeing the answers, before anything is revealed. The report then says whether each miss was a knowledge gap or a slip.\n\nWHEN AND WHAT IT LOOKS LIKE:\n- Applies to mock, module and diagnostic, and to drills run with feedback at the end. Practice with instant feedback has already shown its keys, so it is excluded.\n- On the first visit the hero shows the band, the delta and the route line as specced. Beside them sit a primary \"Second look · 17 questions · untimed · about 15 min\" and a quiet \"Skip · show answers now\".\n- While a second look is pending, the grid, player and mistakes show only neutral cells and hide every key. For the owner, deps.access returns 'kept' for the sitting's keys.\n\nWHICH QUESTIONS ARE IN THE SET:\n- every Incorrect and Unanswered question;\n- every flagged question;\n- every conf 'unsure' or 'guess' question;\n- right answers made in under 0:30;\n- random right answers, topped up to 20% of the set (at least 2), so a question being in the set does not give away that it was wrong.\n\nHOW IT RUNS:\n- The set is served in sitting order in UI.workspace exam mode: calculator and reference on, no clock, per-question time recorded.\n- The original pick is hidden, behind a \"Show what I picked\" toggle that is off by default.\n\nWHAT IT SHOWS AFTER:\n- One result line: \"9 of 13 misses fixed on second look (execution) · 4 still wrong (concept) · 1 right answer changed (shaky)\".\n- A second band on the gauge, drawn as a hollow outline: \"With time and care: 580–720 · the 60-point gap is execution, not knowledge\".\n- The keys then unlock, and the player opens at the first still-wrong question.\n- Grid cells gain a cause corner: C concept, E execution, ~ shaky.\n\nHOW IT FILES:\n- Second-look answers file as repeat=1 (R8), so mastery stays honest.\n- A still-wrong answer on a named misconception adds a hit and marks the trap 'confirmed'.\n- A fixed answer marks it 'execution'. Review's kind filter and Fix read this.\n- Skipping records state 'skipped'. The report then works as specced, and causes fall back to rules (see the Points ledger).\n- A prefs key second_look (default on) can turn the step off.\n\nWHY THE SCORE MOVES:\n- Trying again before seeing the answer (pretesting and generation) makes the correction stick.\n- It sorts every miss by its real cause without asking the student to judge themselves.\n- It answers the most important study decision: learn content, or train pacing and care. Those need completely different practice.",
+    "beats": "TopTierPrep's Hide answers only hides the key box. You cannot re-answer, nothing is recorded, and nothing tells a slip from a concept gap. Their review shows the key at once, so the chance to try again cold is gone.",
+    "effort": "M",
+    "needs": "Server (S6 with S5):\n- sessions.qstate[qid].second {given, correct, ms} and _session.second {state: pending|done|skipped, at}.\n- POST /api/session/{sid}/second {question_id, answer, ms} and /second/finish.\n- results gains second {state, set, fixed, still, broke, estimate}, from scoring.score re-run on the merged answers with section_score on the same route.\n\nOther work:\n- deps.access (F4/R19) honours the pending lock.\n- F3 UI.review has a 'locked' mode.\n- F4 prefs key second_look.\n- The Review section (S10) reads trap cause 'execution' | 'confirmed'."
+   },
+   {
+    "title": "Points ledger: where the points went, and the cheapest ones to win back",
+    "what": "WHAT THE STUDENT DOES: studies the misses worth the most points per minute first, not whatever feels hard. They see exactly which questions separate them from their target.\n\nHOW EACH MISS IS VALUED: flip it to correct and re-run scoring.section_score on the same route. The value is computed on the unrounded centre (_interpolate) so single questions don't round to 0; totals are rounded to 10. For Module 1 misses the report also tests the 60% cut. When flipping would cross it, the row says \"1 more right in M1 would have earned the harder Module 2 (ceiling 580 → 800)\" and names the cheapest M1 misses that would have done it.\n\nHOW EACH MISS GETS ONE CAUSE, first match wins:\n1. Changed: right → wrong in the trail.\n2. Time: a blank, or a wrong answer in the last 90 s of a module made in under 0:30.\n3. Execution: fixed on the Second look, the filler 'near-miss arithmetic slip', or a rushed wrong answer under 0:30.\n4. Guess: conf 'guess'.\n5. Concept: everything else with a named misconception, or a grid-in miss.\n\nWHAT IT SHOWS (region #ledger, placed right after the hero):\n- One stacked bar: \"140 points left on the table · Concept 60 · Execution 45 · Time 25 · Changed 10\". Each segment is a review filter.\n- A \"Win back first\" table, one row per skill or misconception. Columns:\n  - points available;\n  - estimated minutes to fix;\n  - points per 10 min.\n- How the minutes are estimated: the median number of clean questions learners needed to close traps on that template, times its median time. Fallback: 3 questions × 1:35, doubled for concept misses.\n- \"Most students at your level get this\" tag: shown when the first-try rate on that (template, tier), among learners whose band overlaps yours, is 75% or more with n ≥ 20. Those rows sort to the top.\n- A \"Path to target\" line: \"4 questions from 700 on this section\". It picks the fewest misses, greedily by value per cost, and lists them as chips (M2 Q4 easy · slip, M1 Q7 …) that open the player.\n- The top 3 rows replace the generic coach pick in Up next: \"Start: Circles · +30 · ~12 min\".\n\nWHY THE SCORE MOVES:\n- Study time is the binding constraint. Ranking by points per minute stops students grinding hard questions while easy and medium points leak.\n- A countable \"4 questions from 700\" goal is far more actionable and motivating than a band and a domain word.",
+    "beats": "TopTierPrep's domain cards give a % and a 7-segment bar with mislabelled copy. The API returns a per-domain domainScore their UI never shows. Nothing links a single miss to points, and nothing ranks what to fix. The v2 spec's what-if only flips easy misses, all at once.",
+    "effort": "M",
+    "needs": "F4 (scoring.py and server/estimate.py):\n- scoring.marginal(questions, answers, route) -> per-qid value and a route_cross flag. It is deterministic and costs about 44 cheap re-scores.\n- results gains ledger {total, by_cause, rows [{key, kind, points, minutes, qids, unexpected}], path {target, qids}}.\n- A daily-cached template fix-cost table from traps and attempts.\n\nFrom other sections:\n- First-try rates per (template, tier) from Practice's measured levels (S4).\n- Second-look causes (proposal 1).\n- The target from profile."
+   },
+   {
+    "title": "Recovery plan: every test schedules its own spaced, interleaved follow-up and proves the points came back",
+    "what": "WHAT THE STUDENT DOES: the follow-up to a test becomes four steps spread over a week, and they can watch its points come back. It replaces one blocked \"Fix these\" run.\n\nWHERE IT SHOWS:\n- The report header's primary becomes a split \"Start recovery · 4 steps\". Its menu keeps every Fix variant from the spec.\n- A step strip sits under the header: done steps ✓, the current step orange, future steps dated.\n\nTHE FOUR STEPS:\n1. **Today: Second look** (proposal 1).\n2. **Today or tomorrow: Repair set.**\n   - Concept misses go through the worked-example ladder (proposal 5).\n   - Execution misses become timed twins at 1:35 each.\n   - Time misses become a 6-question timed run at the pace they missed.\n   - Everything is interleaved across skills, never grouped by skill.\n3. **Day +3: Check-in.**\n   - One fresh twin per miss type.\n   - About 30% of the items are templates the student got right, so lucky rights get checked too.\n   - No hints. This is the same trap check-in as R9's 3-day step, so there is no double schedule.\n4. **Day +7: Mini retest.**\n   - 10–15 questions under test rules: the missed and unsure templates on fresh seeds.\n   - It ends in a verdict: \"Recovered 11 of 13 miss types · +70 of 140 points (est.)\".\n\nTHE RECOVERED METER:\n- The hero shows \"+70 of 140 recovered\".\n- It sums the ledger values of misses whose trap closed cleanly and passed its check-in, and updates live whenever the student reopens the report.\n\nOTHER SCREENS:\n- The steps appear as Plan tasks and in Today's up-next chain.\n- Results sitting cards show \"Recovery 2/4 · check-in Sep 26\".\n- If the student ignores it, the steps slide once. After 14 days they fold into Review's normal redo list.\n\nWHY THE SCORE MOVES:\n- Spacing and interleaving are the most robust findings for durable math skill.\n- \"Fix all 13 now\" feels like mastery, but the fix fades before test day.\n- The day +7 retest gives the proof that keeps a student practising.",
+    "beats": "TopTierPrep has nothing after the report: no redo flow, no schedule, and their QBank sessions never end. The v2 spec's Fix these is one blocked run with no follow-up and no proof.",
+    "effort": "M",
+    "needs": "S7 (Plan):\n- plan.add_task(kind 'recovery', session, step, due).\n\nS3 (Today):\n- The next-thing chain reads due recovery steps.\n\nF5 (the drill body):\n- The drill body gains order:'interleave'.\n- It gains pool 'redo' limited to one sitting's traps.\n\nF4:\n- The R9 check-in schedule is reused, with the traps.session link.\n\nS5 (Tests):\n- Custom test from a sitting's misses, under test rules.\n\nS6:\n- results.recovery {steps [{n, kind, due, done, sid}], recovered, total}.\n- traps.points stored when a trap opens, taken from the ledger."
+   },
+   {
+    "title": "Guided debrief on first open: four screens, five minutes, while the test is fresh",
+    "what": "WHAT THE STUDENT DOES: the first time a finished test's report opens, the student is walked through the four things that matter. Otherwise they would read the number and close the tab.\n\nTHE FOUR CARDS (a full-width stepper):\n1. **Score**: the hero, the delta and the route line.\n2. **Second look**: proposal 1, started inline.\n3. **Where your points went**: the ledger bar, the top 3 win-backs and the Path to target.\n4. **Your recovery**: the 4 steps with dates, [Add to plan] and [Start the repair set now].\n\nHOW IT BEHAVES:\n- \"Skip to full report\" is always visible, and each card has Back/Next.\n- It is shown once per sitting (_session.debrief_seen is set on the server, so it follows the learner code).\n- Later visits open the full report, with a one-line summary bar on top: \"Second look done · 140 on the table · recovery 1/4\".\n- On a phone each card is a full screen with the primary action in thumb reach.\n- The shared read-only view never shows the debrief.\n\nWHY THE SCORE MOVES:\n- The minutes right after a test are when the student can still recall their own reasoning. Reworking and reviewing then gives the best feedback.\n- The v2 report has 12 regions. Without a path, most students look only at the band.",
+    "beats": "TopTierPrep's report is a static page of rings, tiles and a colour grid with no sequence and no next step. The v2 spec improves every region but leaves the student to find the useful ones.",
+    "effort": "S",
+    "needs": "S6 (the report page):\n- The stepper is a composition of existing regions.\n- _session.debrief_seen in qstate.\n\nOther proposals:\n- Proposals 1 to 3 supply cards 2 to 4.\n\nF1:\n- The UI.sheet/stepper kit."
+   },
+   {
+    "title": "Worked-example ladder in the player for concept misses",
+    "what": "WHAT THE STUDENT DOES: on a concept miss, instead of jumping straight to a fresh twin at full difficulty, they climb a short ladder. It sits in the same inline tile, and the spec's twin becomes rung 3.\n\nTHE RUNGS:\n1. **See one solved.**\n   - A fresh seed of the same template, rendered solved: the stem, the key marked, the seed's own rationale.\n   - The option that the student's misconception produces with these new numbers is tagged: \"Your mistake gives 184 here\".\n   - This works because every seed has its own reasons[] and rationale.\n   - Nothing is filed.\n2. **Your turn, with a hint.**\n   - A second fresh seed.\n   - A \"Hint\" button reveals the template's optional hint field. The fallback is the first clause of that seed's rationale, then \"Watch for: <your misconception>\".\n   - A right answer after a hint files as guess=1: half credit, and it does not close the trap (R8).\n3. **On your own**: the specced twin, which can close the trap.\n4. **Spot the trap** (Review's), optional.\n\nHOW PROGRESS SHOWS:\n- Progress dots in the tile.\n- The rung reached is stored per miss.\n- The Mistakes list shows \"Rung 2 of 3\".\n- Execution misses skip straight to rung 3, timed.\n\nWHY THE SCORE MOVES:\n- The worked-example effect: studying a solved example and then solving a similar one teaches novices more than solving alone.\n- Fading support then builds independence.\n- Seeing your own mistake produce a specific wrong option on new numbers trains you to recognise the trap.",
+    "beats": "TopTierPrep offers one long prose explanation of the same item and cannot produce another like it. The v2 spec's inline twin asks the student to succeed cold on the thing they just showed they don't understand.",
+    "effort": "M",
+    "needs": "F3 (UI.workspace):\n- A 'solved' inline render of any (template, seed).\n\nF5 (the drill body):\n- source 'twin' with a first item flagged solved:true (served, never filed).\n\nThe bank:\n- An optional Item.hint.\n- The fallback splits the rationale.\n\nF4:\n- The guess flag half-credit (R8).\n\nS6:\n- The rung per trap is stored in the traps or notes JSON."
+   },
+   {
+    "title": "Confidence calibration and the 'sure but wrong' list",
+    "what": "WHAT THE STUDENT DOES:\n- Sees which misconceptions they actually hold (they were sure, and wrong) and fixes those first.\n- Learns whether to trust their gut on test day.\n\nIT FILLS A HOLE:\n- Tests (§3.4.7) says the report must render confidence calibration, but §3.5 specifies no region for it.\n- Tests' Sure / Unsure / Guess tags are off by default; when they are off, flags stand in.\n\nTHE REGION (#calib):\n- A 3×2 table: rows Sure / Unsure / Guess, columns Right / Wrong.\n- Each row gives a count and %, e.g. \"Sure 26 · 23 right (88%)\".\n- A verdict line, for example:\n  - \"Your sure answers are trustworthy. Unsure ones were right 64% of the time, so answer and move on rather than sinking time.\"\n  - \"You were sure of 3 wrong answers: these are beliefs, not slips.\"\n- Guesses are compared with chance: \"right 31%, chance 25%\".\n\nIN MISTAKES AND RECOVERY:\n- A new first group, \"Sure and wrong · 3\", sits above Open.\n- Those misconceptions enter the recovery plan at rung 1, and get an extra check-in at day 10.\n\nWHEN TAGS ARE OFF:\n- Flagged counts as unsure.\n- A one-tap \"Turn on confidence tags for your next test\" writes the prefs key, with the helper \"One tap per question. Shows which mistakes you're sure of.\"\n\nON RESULTS:\n- A calibration trend across sittings: sure accuracy 88% → 93%.\n- The unsure rate per skill. A skill where most answers are unsure is not yet fluent, even when they are right.\n\nWHY THE SCORE MOVES:\n- The hypercorrection effect: errors made with high confidence, once corrected with feedback, are the ones corrected most durably, but only if they are surfaced.\n- Well-calibrated students spend test time on unsure questions instead of re-checking sure ones.",
+    "beats": "TopTierPrep has flags and a Flagged (n) filter and nothing more: no confidence, no calibration, no idea which errors are beliefs. The v2 report spec leaves out the calibration that Tests collects.",
+    "effort": "S",
+    "needs": "S5 (Tests):\n- qstate[qid].conf.\n\nS6 (results):\n- results gains calibration {sure {right, n}, unsure, guess, untagged, flagged}.\n- The review item gains conf.\n\nS10 (Review):\n- Use the same function as Review's flag calibration, so the numbers match.\n\nF4 (prefs):\n- The prefs key for confidence tags already exists."
+   },
+   {
+    "title": "Clock replay, skip-and-return what-if, and a fluency map",
+    "what": "WHAT THE STUDENT DOES: trains pacing as a skill. They see where they fell behind, and they practise their slow skills at the right speed.\n\nON THE REPORT, a clock replay per module in #pace:\n- A step line of question reached against elapsed module time (0–35:00), over the ideal 95 s/question diagonal.\n- Visits back to flagged questions are drawn as return loops.\n- Markers: \"Behind from Q12 · 4:10 behind at Q18\".\n- A \"Starved\" callout when long wrong solves came just before rushed or blank ones: \"M2 Q19 took 4:12 and was wrong; Q20–22 got 0:40 between them\".\n- A skip-and-return what-if: \"Leaving Q19 at 2:00 frees 2:12 for Q20–22 (easy): est. +20 points\". It uses the ledger values, with a flat 60% success assumed on the freed questions, and is labelled \"est.\".\n- A blank policy line: \"2 blanks: a guess on each is worth ~+5 points on average; never leave one\".\n\nON RESULTS, a fluency map (#fluency): a 2×2 of the 19 skills.\n- Accuracy (y, split at 70%) against relative pace (x): the median of ms divided by the expected time for the difficulty (easy 60 s, medium 95 s, hard 130 s), over the last 40 answers.\n- Each quadrant has a named drill with the right timing:\n  - Slow and right → \"Fluency drill\" at timing custom:80.\n  - Fast and wrong → \"Slow down\": untimed, with the rule card \"re-read what it asks\".\n  - Slow and wrong → \"Learn it\": the worked-example ladder.\n  - Fast and right → \"Keep warm\".\n\nWHY THE SCORE MOVES:\n- Easy and medium blanks at the end of a module are the most common avoidable loss on the digital SAT, and pacing can be trained.\n- A slow skill that is accurate needs speed work. A fast skill that is inaccurate needs slowing down. One generic drill fixes neither.",
+    "beats": "TopTierPrep's report has no time per question at all. Their contest 'Time analysis' (average seconds by difficulty) was empty. The v2 spec's bar chart and 'rushed / long' chips describe the time but don't show the cascade or prescribe the fix.",
+    "effort": "M",
+    "needs": "S5 (the runner):\n- Records the visit path: qstate._session.path [[qid, ms_left_on_enter]], capped at 200, sent with /state.\n\nF5 (the drill body):\n- timing 'custom:N' already exists.\n\nF4 (progress):\n- Per-topic median relative pace.\n\nS6:\n- results gains pace {path, behind_at, starved [...], skip_whatif}.\n- /api/stats gains fluency [{topic, acc, rel_pace, n}].\n\nOther proposals:\n- The ledger values (proposal 2)."
+   },
+   {
+    "title": "Paired retest report: same question types, slot by slot",
+    "what": "WHAT THE STUDENT DOES: after a \"Retake as a test\" (the spec's parallel form, cfg.like), they see a real before-and-after measurement, not just another report.\n\nTHE REGION (#pair) on the retest's report:\n- Heading: \"Compared with Section #7 · same 44 question types\".\n- A two-row strip per module: then above, now below, joined slot by slot.\n- Pair states:\n  - ✕→✓ Improved (orange)\n  - ✓→✕ Slipped (graphite)\n  - ✕→✕ Still missing\n  - ✓→✓\n- Counts: \"Improved 9 · Slipped 2 · Still 4\".\n- Per-skill deltas that can be attributed to the student, because the templates match.\n- A verdict line: \"520–660 → 590–730 · 9 of your 13 miss types are now right\".\n- Module 2 is paired only when the route matched; otherwise it says \"Different Module 2 (you routed up this time)\" — which is itself the headline.\n- Clicking a pair opens both questions side by side in the player.\n\nELSEWHERE:\n- The Results chart joins paired sittings with a bracket.\n- The recovery plan's day +7 step can be \"Retake in 7 days\" for sections.\n\nWHY THE SCORE MOVES:\n- A new random section mixes improvement up with how hard that form happened to be. A slot-matched pair isolates the student's change.\n- Seeing the exact question types you missed now right is the strongest reinforcement to keep practising.\n- \"Slipped\" catches forgetting early.",
+    "beats": "TopTierPrep's papers are fixed and their attempts capped. A retake repeats the same questions, which tests memory, and they show no comparison at all. The v2 spec builds the parallel form but reports it like any other sitting.",
+    "effort": "S",
+    "needs": "S5/F5 (the parallel form):\n- cfg.like and blueprint.draw_matching, already specced.\n- Store the slot map cfg.pairs [[new_qid, src_qid]].\n\nS6 (results):\n- results gains pair {with, seq, slots [{n, module, before, after, template}], skills [{topic, before, after}]}.\n\nF1 (charts):\n- The UI.scoreChart bracket."
+   },
+   {
+    "title": "Error families: the habits behind your misconceptions, across skills",
+    "what": "THE PROBLEM: the bank has about 882 distinct normalised misconception labels over 386 templates, measured by sampling one seed per template. Review merges only identical norms (79 recur). Habits hide across skills.\n\nTHE FAMILY LAYER: a one-off mapping file, satbank/families.json {norm → family}, built by keyword rules plus a manual pass. test_flow asserts that every reason in the catalogue maps. About 12 families:\n- Sign or direction\n- Wrong operation (added vs subtracted, multiplied vs divided)\n- Stopped a step early (answered an intermediate value)\n- Answered a different quantity than asked\n- Formula part swapped (radius/diameter, area/perimeter)\n- Percent and decimal\n- Order swapped (coordinates, ratio, x/y)\n- Misread a graph or table\n- Units and rates\n- Counting solutions or cases\n- Statistics interpretation\n- Arithmetic slip\n\nON THE REPORT: a \"Habits\" strip under Mistakes: \"3 of your 11 misconceptions are 'Stopped a step early', in 3 skills\". Each family chip filters the review.\n\nON RESULTS (#habits):\n- Family counts over the last 5 sittings, with a trend.\n- A \"Habit drill\" per family: fresh items across templates whose distractors belong to that family (the drill 'want' field matched by family).\n- The family's checking routine shown as a rule card before each item, e.g. \"Before you choose: re-read the last line and underline what is asked.\"\n\nWHY THE SCORE MOVES:\n- Habits carry across topics. Fixing \"stopped a step early\" once pays off in every skill, and per-template repair can't reach that.\n- Naming the habit lets the student install one checking routine instead of 20 separate fixes.",
+    "beats": "TopTierPrep's Distractor Analysis is prose on one item, with no aggregation and no idea which errors recur. The v2 spec counts ×3 on one exact misconception but never groups across skills.",
+    "effort": "L",
+    "needs": "The bank:\n- families.json plus a check.\n\nF5 (the drill body):\n- The drill body 'want' accepts {family}.\n\nS6 (results):\n- results.mistakes[].family.\n- /api/stats habits.\n\nS10 (Review):\n- Review's kind and group filters gain family.\n\nContent effort:\n- Classifying about 880 labels, mostly by rule."
+   },
+   {
+    "title": "Your rules, and a briefing before the next test",
+    "what": "WHAT THE STUDENT DOES: after reviewing a miss, they write down, in a few words, what they will do differently. Right before the next test, they get their own lessons back.\n\nIN THE PLAYER:\n- A one-line prompt under the explanation: \"Next time I will…\".\n- Three suggested rules, from the error family (proposal 9) or from generic ones: \"Check what the question asks before choosing\", \"Write the sign on its own line\".\n- Or free text, up to 140 characters.\n- The rule is saved as that template's note (the R6 notes store), so it also shows wherever that question type reappears.\n\nTHE BRIEFING (in the Tests lobby before Begin, and in the Today card on test day), \"Your briefing from Section #7\":\n- up to 5 rules;\n- 2 pacing facts from the clock replay: \"You fell behind at Q12; aim to be at Q11 by 17:00\";\n- 1 answer-change fact: \"Changes cost 1 question last time; change only with a reason\".\n\nON THE NEXT TWIN:\n- The next twin of that template shows the rule above the stem, on rung 2 only.\n\nWHY THE SCORE MOVES:\n- Self-explanation and \"when X, I do Y\" plans are among the most effective study habits.\n- A briefing just before a test brings the lesson back at the moment it is needed.",
+    "beats": "TopTierPrep carries nothing from one sitting to the next. Their notes live only on exam highlights, and their lobby is a fullscreen prompt.",
+    "effort": "S",
+    "needs": "F4:\n- The R6 notes store (api_notes).\n\nS6:\n- GET /api/session/{sid}/briefing: rules, pace facts, change facts.\n\nS5 (Tests):\n- A lobby hook that reads the last scored sitting's briefing.\n\nOther proposals:\n- Families (proposal 9) for the suggestions, with a generic fallback."
+   },
+   {
+    "title": "Points recovered this week: momentum that ties daily practice to the score",
+    "what": "WHAT THE STUDENT DOES: sees every day that ordinary practice is winning back points, even though scores only move after a test.\n\nON RESULTS (#momentum, above Totals):\n- \"This week: +35 points recovered · 5 mistakes closed · 2 check-ins passed\".\n- Each closed trap adds back the ledger value of the miss that opened it. Practice-opened traps use the average section value of their difficulty. Every figure is labelled est.\n- A weekly goal ring: \"Close 5 this week: 3/5\", set from Settings.\n- \"Next check-in: tomorrow · 4 questions · 6 min\", with Start.\n- Personal records:\n  - fastest median time on a skill;\n  - the longest clean run;\n  - the most traps closed in a day.\n\nON THE SCORE CHART:\n- Between sittings, the gap is annotated with the effort in it: \"34 closed · 6 h\", so effort and the score change sit side by side.\n\nWHY THE SCORE MOVES: daily practice only lasts when effort visibly pays. Closed mistakes and recovered points are progress the student can see every day.",
+    "beats": "TopTierPrep's Score Overview is empty until a full four-module test. Their streaks disagree between Profile and QOTD, and their achievements are four hard-coded tiles with a dead View All. The v2 totals are all-time counters (questions, accuracy) that barely move day to day.",
+    "effort": "S",
+    "needs": "F4 (the traps table):\n- traps.points, stored when a trap opens.\n\nF4 (progress):\n- progress.stats gains week {recovered, closed, checks_passed} and records.\n- The weekly goal pref key (prefs.py).\n\nS9/S10:\n- The next check-in comes from the R9 schedule.\n\nF1 (charts):\n- UI.scoreChart gap annotations."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Percentile and Ranked pill",
+    "spec_says": "\"62% of students here scored at or below you on their first section (148 students)\", with a Ranked / Not ranked pill and a 20-student floor.",
+    "why_only_parity": "TopTierPrep's bundle shows the same line (\"N% scored at or below you on their first attempt\", ranked only). It is a vanity number and tells the student nothing to do.",
+    "upgrade": "Add an improvement percentile, \"Your +90 since your first section beats 81% of students' first-to-second change\", which rewards progress and is fair to low starters. Add a cohort path: \"Students who started near 520–660 and reached 700 closed about 34 mistakes and sat 5 sections over 6 weeks\". Both are computed from sessions and traps, shown only when n ≥ 20."
+   },
+   {
+    "feature": "Count-up numbers",
+    "spec_says": "Numbers count up over 600 ms on first paint.",
+    "why_only_parity": "Theirs count up too. Motion from 0 carries no information.",
+    "upgrade": "Count from the previous same-kind sitting's value to this one, with a +4 / −2 delta chip. The animation then shows the change. Reduced motion shows the final value and the delta at once."
+   },
+   {
+    "feature": "Summary tiles (Correct / Incorrect / Unanswered / Accuracy)",
+    "spec_says": "Eight descriptive tiles with sub-lines (\"70% of 44\", \"9 still open\").",
+    "why_only_parity": "The first four are theirs, and all eight describe the past rather than the gap.",
+    "upgrade": "Each count tile gains a comparison line against the previous same-kind sitting and against the target: \"Correct 31 · need 36 for 700\", from the ledger's Path to target. Unanswered gains the expected value of a guess: \"a guess each: ~+5 points on average\"."
+   },
+   {
+    "feature": "Domain performance cards",
+    "spec_says": "%, right/asked, a 7-segment difficulty-weighted level bar, share of the section, a delta, and 'Missed most'.",
+    "why_only_parity": "Same shape as theirs (%, a 7-segment level bar, section share), with the copy fixed. It still says how a domain went, not what it is worth.",
+    "upgrade": "Order the cards by points available (the ledger total per domain) and print \"+40 points available · ~25 min\" on each. Replace 'Missed most' with the domain's top win-back row and a Start button. Show the domainScore-equivalent (scaled points lost) that their API has and never shows."
+   },
+   {
+    "feature": "Hide answers",
+    "spec_says": "A persistent mode. A pick reveals locally ('B · wrong again') without filing anything.",
+    "why_only_parity": "Theirs persists across Next too. Ours adds a local pick, but the result is thrown away, so the retrieval practice leaves no record.",
+    "upgrade": "Make hidden-mode picks a recorded second pass (proposal 1's qstate.second). Show a running tally, \"Hidden run: 4 of 6 right this time\". Mark 'fixed on second look' misses as execution in the ledger and in Review, filed as repeat=1 so mastery stays honest."
+   },
+   {
+    "feature": "Your answer / Correct answer boxes",
+    "spec_says": "Boxes for every format: 'Not answered', and 'Also accepted' for grid-ins.",
+    "why_only_parity": "They have YOUR ANSWER / CORRECT ANSWER boxes. For a grid-in miss neither says why the typed value was wrong.",
+    "upgrade": "Diagnose each grid-in miss against the key. Checks:\n- sign flipped (−key): \"Right size, wrong sign\";\n- ×100 or ÷100: \"Entered a percent as a whole number\";\n- within 1% but too short: \"Right value, too few digits for the grid (.666 or .667 needed)\", using grid_equal;\n- equals the template's spr_mistakes value: that named misconception;\n- none of these: a plain 'different value'.\nEntry-rule misses are filed as execution in the ledger."
+   },
+   {
+    "feature": "Explanation card",
+    "spec_says": "A --tile card headed 'Explanation' with the rationale, plus every wrong option's misconception.",
+    "why_only_parity": "Their 'Justification + Distractor Analysis' covers the same ground in prose. Ours is better labelled, but it is still one explanation of one item.",
+    "upgrade": "Under the explanation, add 'See it on new numbers': a fresh seed rendered solved (rung 1 of the worked-example ladder), with the option the student's own misconception produces tagged. A second example is what turns an explanation into a transferable method."
+   },
+   {
+    "feature": "Details popover",
+    "spec_says": "Question ID (template · seed) with Copy, plus domain, skill, difficulty, format, time and position.",
+    "why_only_parity": "Theirs shows the ID, domain, skill and difficulty. Adding time and position is marginal.",
+    "upgrade": "Add the measured level 1–7 and the first-try rate (\"41% of students get this type right first time\"), which their popover omits even though they have a 1–7 Question Score. Add the student's record on the type (\"You: 1 of 4\") and the ledger value (\"Worth ~12 points here\")."
+   },
+   {
+    "feature": "Current estimate with confidence and trend (Results)",
+    "spec_says": "'Math 540–680' from the last 3 scored sittings, a High/Medium/Low pill with its reason, a ±20 trend chip. Empty: 'Your first test gives you an estimate.'",
+    "why_only_parity": "Their Practice card already has an estimate, a confidence level with a reason, and a trend {direction, delta}. Like theirs, ours is empty until a test is taken, which is their weakness #4.",
+    "upgrade": "Add a practice estimate from topic mastery × BLUEPRINT weights and the measured item levels, labelled \"From practice · low confidence\", shown before any test. After tests, add a practice-vs-test gap line: \"Practice says 560–700, tests say 520–660: the 40-point gap is timing; see Pace\". Add \"What would raise confidence\" as a one-tap action (\"Sit one full section · 70 min\")."
+   },
+   {
+    "feature": "Accuracy and average time by difficulty and format",
+    "spec_says": "Easy/Medium/Hard and MC/Grid-in rows with right/answered, %, a bar, and 'avg 0:58'.",
+    "why_only_parity": "It is their contest 'Time analysis: average seconds per answered question, by difficulty', shown on every sitting. It is descriptive, with no prescription.",
+    "upgrade": "Turn it into the fluency map (proposal 7): relative pace against the expected time per difficulty, crossed with accuracy per skill. Each quadrant launches its drill with the right timing (custom:80 fluency, untimed slow-down, worked-example learn)."
+   },
+   {
+    "feature": "Report a problem",
+    "spec_says": "A 'Sent with your report' box, a prefilled title, the category list, details and screenshots, and a 'Reported' tag afterwards (R17).",
+    "why_only_parity": "Theirs has the same modal. Ours adds categories and replies, but the sitting's score ignores a disputed key.",
+    "upgrade": "While a 'Wrong answer key' or 'Two answers are right' dispute is open, show the item as 'Disputed' and leave it out of the sitting's estimate, the ledger and the percentile (R8's disputed flag, applied to the sitting score too). When a dispute is upheld, rescore automatically. The report and the chart then show \"Rescored after a key fix: +10\"."
+   },
+   {
+    "feature": "Per-module grids and Colour by",
+    "spec_says": "Status cells with glyphs, and Colour by Status | Difficulty | Time.",
+    "why_only_parity": "Their grid shows status and their QBank overview offers Difficulty. Ours adds glyphs and Time, but still not why each miss happened.",
+    "upgrade": "Add Colour by Cause (Concept / Execution / Time / Changed / Guess, from the ledger and the second look), with a legend and counts. Every cell's hover or aria-label gets its point value (\"M2 Q4, incorrect, execution, ~10 points\")."
+   },
+   {
+    "feature": "Results list review cards (wrong-question chips)",
+    "spec_says": "Per-module ✕ chips, score, delta, duration, 'still open', and Review / Fix · 7 buttons.",
+    "why_only_parity": "Their card has per-module wrong chips and Review. Ours links the chips and adds a score, but a finished sitting still ends at Fix.",
+    "upgrade": "Chips carry the cause glyph. The card shows the recovery state (\"Recovery 2/4 · +70 of 140 recovered · check-in Sep 26\"), and its action becomes the next recovery step instead of Fix. Paired retests show \"vs Section #7: improved 9\"."
+   },
+   {
+    "feature": "Score over time chart",
+    "spec_says": "Bands with a midpoint dot, a trend line, a target line, an estimate zone, tooltips, and range/kind filters.",
+    "why_only_parity": "Their Profile Score Trend is the same idea. Ours is richer, but it only plots outcomes.",
+    "upgrade": "Annotate the gap between two sittings with the effort in it (\"34 mistakes closed · 6 h · 212 questions\"), so the student sees effort turn into score. Draw paired retests with a bracket, and let a point open a 'what changed' popover listing the skills that moved."
+   },
+   {
+    "feature": "Flagged filter and Flagged tile",
+    "spec_says": "'Flagged 3 · 2 of them wrong', and a Flagged filter.",
+    "why_only_parity": "Theirs has Flagged (n) and a flag legend. Counting flags is not a lesson.",
+    "upgrade": "Show a flag verdict (Review's flag calibration, the same function): \"Flagged 3 · 1 right · returning to flags changed 1 wrong to right\". Say what flagging was worth this sitting in points, and fold it into the calibration region (proposal 6)."
+   },
+   {
+    "feature": "Share / export and print",
+    "spec_says": "A read-only share link, Print / Save as PDF of the report, CSV, and a tutor progress link.",
+    "why_only_parity": "It makes their dead Share/Export button work, but it exports only the past.",
+    "upgrade": "Add 'Print a fix sheet': fresh seeds of every miss type (1 or 2 each), answer key and each option's misconception on the last page, using Review's worksheet builder. The tutor's link shows the ledger and recovery progress, not only scores."
+   }
+  ]
+ },
+ "experience": {
+  "proposals": [
+   {
+    "title": "Where your points went: a points ledger on every scored sitting",
+    "what": "Server: /api/session/{sid}/results gains a `ledger` for mock, module and diagnostic sittings, built by a pure function scoring.ledger(questions, answers, route) that sits next to section_score. It returns three things:\n- per_q[qid].pts: the midpoint gain if that one miss alone had been right. It re-runs score() and section_score() on the same route and rounds to 5.\n- buckets: misses flipped cumulatively, easy, then medium, then hard, then blanks, with each bucket's gain, plus route_cap (uncapped high minus 580, when capped). By construction the buckets and route_cap add up exactly to the all-right midpoint minus your midpoint.\n- route_savers: when Module 1 is at most 2 right short of ceil(0.6 x asked), the M1 misses ranked easiest first.\n\nReport:\n- Under the gauge, a horizontal waterfall bar: \"All right on this route 710-790 -> easy misses -35 -> medium -50 -> hard -40 -> blanks -15 -> you 520-660\". Each segment is a button that filters the review to that bucket.\n- A route line: \"Module 1: 13/22 (59%). One more right would have sent you to the harder Module 2 and lifted the 580 cap (up to +80).\" Route-saver cells get a small up-arrow marker.\n- Every mistake row, table row and player header shows \"about -15 pts\". The table gets a sortable Points column, and Mistakes sorting gains \"Most points\" (the default for tests).\n- Domain cards show \"-60 pts\" and sort by it.\n- The primary Fix pill becomes \"Win back about 60 pts · 9 questions · 14 min\". It orders misses by points per expected minute (pts / max(avg_ms, 60 s)) and caps the set at prefs.minutes. The existing ⌄ variants stay, plus \"Everything · 13\".\n\nResults overview: a \"Gap to target, decomposed\" card beside the estimate. It averages the last 3 scored sittings' ledgers by bucket and by domain, e.g. \"Target 700 · 40 above your estimate. Easy slips 20 · Advanced Math hard 25 · blanks 10\", with a Start button per row that drills those sittings' misses in that bucket.\n\n\"How this is estimated\" says it is our easy 1 / medium 2 / hard 3 weighting.",
+    "beats": "Their report gives \"Total Score 420/1600 · 4 of 49 correct\". Their plan's \"Score gap\" tile is a bare \"1000 now, 1400 target\". Their API returns a per-domain domainScore that no screen shows. Nothing tells a student which questions cost what. The v2 spec's what-if line covers one tier only. This prices every miss, explains the routing cap in points, and turns Fix into the highest-payoff 14 minutes in one tap. On theirs, finding the cheapest points is impossible.",
+    "effort": "M",
+    "needs": "F4: scoring.py ledger() with an assert check in server/checks/s6.py (the buckets sum to ceiling minus midpoint, every pts >= 0). S6: api_results field. F4: estimate.py for the gap card. R11: prefs.minutes. F5: the drill body (§2.6) must accept an ordered `only` list and keep its order."
+   },
+   {
+    "title": "Second look: re-answer every miss before the key shows, and separate slips from gaps",
+    "what": "Opening a miss:\n- The first time an Incorrect or Unanswered question opens in the player (from Review mistakes, a cell, a mistake row or a chip), it opens in Second look.\n- The key mark, your old pick, the answer boxes, the reasons and the explanation are hidden. A header chip reads \"Second look · no clock\".\n- A–D / 1–4 pick and Enter checks. A grid-in uses the normal field.\n\nChecking:\n- Check files an attempt through R21's review mode with repeat=1 (left out of mastery, R8) and source 'second-look', then reveals everything.\n- The verdict line reads \"Right on a second look: a slip\", or \"Wrong again · same trap: <label>\", or \"Wrong again · a different trap: <label>\".\n- A quiet \"Just show me\" (key V) reveals without filing.\n\nStorage and counts:\n- Each look is stored per (learner, session, qid) as {at, second: right|wrong|skipped, reason}.\n- The report gets a tile \"Second look · 5 slips · 6 gaps · 2 to go\" and Show filters Slips / Gaps. Mistake rows get a Slip or Gap chip.\n- A gap sets the trap kind to misconception; a slip sets R9's 'slip' kind.\n\nActions:\n- Fix ⌄ gains \"Gaps only · 6\" (a teaching set) and \"Slips, timed · 5\" (paced at 1:35, to train care under time).\n- The player shows \"Looked at 7 of 13\".\n- Hide answers (H) stays for correct questions.",
+    "beats": "Their Hide answers hides the key, but you still cannot re-answer. So a student never learns whether a miss was not knowing or rushing. The v2 spec's hidden pick files nothing, and it contradicts R21, where a re-answer files a repeat. Ours turns every review step into retrieval practice plus a diagnosis. Thirteen misses take about 26 keystrokes: a letter and Enter each.",
+    "effort": "M",
+    "needs": "F3: UI.review review-mode re-answer (R21); the §1.13 line \"without filing anything\" goes. F4: attempts source plus repeat (R8), and a `looks` table (or post-finish qstate). F4: R9 trap kinds. S6: results fields and filters."
+   },
+   {
+    "title": "Debrief first: three takeaways, a jump bar, and mistakes before the analysis",
+    "what": "New section order:\n- header\n- hero (gauge plus ledger bar)\n- Takeaways\n- Mistakes\n- Question review\n- tiles · modules · domains · skills · difficulty & format · pace · changes · how you answered\n- Up next\n\nTakeaways: three cards from a server `debrief[]`, rule-based and ranked by points at stake. Examples:\n- \"Biggest leak: Linear inequalities · 3 misses · about 40 pts · the same trap twice\" [Fix 3]\n- \"Pace: 3 rushed misses in Module 2's last 6 minutes · about 20 pts\" [Paced set]\n- \"Win: Geometry 7/7, up from 4/7 on Section #6\"\nOther rules: near the route cut, 2 or more right-to-wrong changes, 2 or more sure-but-wrong, surprise misses. Each card has one primary action and a quiet \"Put in tomorrow's plan\".\n\nJump bar: sticky under the page bar once the hero scrolls away. It reads \"Score · Mistakes 13 · Questions 44 · Time · Skills · Changes 5\", and scroll-spy marks the current section.\n- Keys 1–6 jump, R opens the player on the first miss, F runs Fix.\n- On a phone it is one \"Jump to ▾\" select next to the sticky primary. Nothing scrolls sideways.\n\nReview progress: a \"Reviewed 7 of 13\" meter (from Second look) in the Mistakes heading and on the sittings card. Today can show \"Finish reviewing Section #7 · 6 left\".",
+    "beats": "Theirs runs gauges -> tiles -> domains -> grid. The only way into a question is to scroll to the grid and click a square, and there is no misses-only filter (All / R&W / Math / Flagged). The v2 spec puts Mistakes 10th of 12 sections, below pace and answer changes, which is thousands of pixels down at 390px. Ours says what happened and what to do above the fold, reaches any section in one tap or key, and remembers how far review got.",
+    "effort": "M",
+    "needs": "The ledger (proposal 1) and looks (proposal 2). S6: debrief rules in api_results.py. S7: POST /api/plan/{id}/tasks must accept a drill reference (today it takes only title and minutes). F2: a UI.keys page scope."
+   },
+   {
+    "title": "An error log that fills itself: a cause on every miss, one tap to correct, trended over time",
+    "what": "Each miss gets a pre-filled cause from evidence. The first match wins:\n1. Ran out of time: a blank in a module whose clock hit 0.\n2. Changed away from right: the trail holds the key before the final answer.\n3. Crossed out the key: qstate.struck includes it.\n4. Rushed: under 30 s.\n5. Slip: right on the second look.\n6. Grid-in entry: grid_equal fails but the value is the key before rounding or within 1% of it (0.66 for 2/3).\n7. Guess: conf = Guess.\n8. Misconception: a named distractor, and the second look was wrong.\n9. Didn't know: everything else.\n\nPlayer:\n- A chip under the status chip reads \"Cause: Rushed (auto) ▾\".\n- One tap offers Careless · Misread · Didn't know · Ran out of time · Calculator · Other. Keys: C, then 1–6.\n- \"auto\" drops once confirmed.\n\nReport: a \"Why you missed\" stacked bar (13 misses by cause, with P1 points). Each segment is a filter.\n\nResults: \"Why you miss, over time\", one 100% stacked bar per scored sitting (last 10), with a line such as \"Careless misses fell from 45% to 20% since Sep 13\".\n\nFix by cause:\n- Careless or Rushed -> a paced set\n- Didn't know -> that skill's practice\n- Grid-in entry -> the grid-in rules card plus 5 grid-ins\n- Ran out of time -> a pacing drill of the module's last-third question types\n\nThe CSV includes the cause.",
+    "beats": "TopTierPrep records no cause, and its review payload has no time, skill or difficulty to infer one from. Tutors make students keep this log by hand in a spreadsheet. Ours is prefilled from the answer trail, time, eliminations, confidence and the second look, and correcting it costs one tap.",
+    "effort": "M",
+    "needs": "S5: qstate trail, struck, conf and ms, plus the module clock end. Proposal 2's looks. F4: a cause column on the looks table. scoring.grid_equal plus a near-value check. S6: the /api/stats aggregate."
+   },
+   {
+    "title": "Crowd context on every question: surprise misses, and how long the right answers took",
+    "what": "Data: every review item gains crowd {n, right_rate, median_ms_right, reason_share[]} from drill.levels(). It counts first tries only, leaves guesses out, and needs n >= 20. Below that it reads \"Not enough students yet · 12 so far\".\n\nPlayer:\n- The header reads \"74% of students get this type right · they take 1:05\".\n- Under your wrong option: \"31% of students who miss it pick this one too\".\n\nReview:\n- Show gains \"Surprise misses · 4\" (right_rate >= 70% and you missed) and \"Hard for everyone · 3\" (right_rate <= 35%).\n- Colour by gains Crowd.\n- The table gets a sortable Students right column.\n- Mistakes sorting gains \"Surprise first\".\n\nElsewhere:\n- Takeaways use surprise misses: \"4 misses most students get right: the cheapest points here\".\n- The difficulty and format rows show \"You 2:24 · students who got them right 1:50\".",
+    "beats": "Their per-question payload has no difficulty, skill or time, let alone a crowd rate. Their only crowd figure is \"People took 1.6k\" on a paper card. The v2 spec shows crowd % only on the daily challenge. Every question here is a (template, tier) that many students answer, so each miss can be placed as a slip or as hard for everyone.",
+    "effort": "S",
+    "needs": "F5: drill.levels() (already specified in Practice's server changes) plus median_ms of right first tries. S6: the results join. Open question 12's n >= 20 threshold."
+   },
+   {
+    "title": "Before and after, slot by slot: compare a retake (or any two sittings)",
+    "what": "Retakes:\n- A sitting built by \"Retake as a test\" (cfg.like) gets \"Compared with Section #7\" right under the hero.\n- Each module shows two 22-cell strips stacked, slot i paired with the source's slot i (same template, new numbers).\n- Filter chips: \"Fixed 6 (✕→✓) · Slipped 2 (✓→✕) · Still missing 3 · Same trap again 2\", plus the band delta and \"-0:40 per question on average\".\n- Clicking a pair opens the player split into then (read-only) and now.\n- A retake fix counts on the source report as \"closed on the retake\".\n\nAny sitting:\n- ⋯ -> \"Compare with…\" lists same-kind sittings (?vs=).\n- With no shared templates, it compares domain and skill rows: right/asked then and now, with ▲▼.\n\nResults: sittings cards get a select checkbox. Pick 2 and a Compare bar appears.",
+    "beats": "A TopTierPrep retake re-serves the identical paper with keys the student has already seen, and nothing compares two attempts. The v2 spec offers a midpoint delta and per-domain deltas only. A parallel form is the honest answer to \"did I get better at these question types?\", and only a generator can build one.",
+    "effort": "M",
+    "needs": "S5: the twin test (POST /api/mock/new {like}) keeps slot order in cfg. S6: a results `compare {with, slots[{n, then, now, then_reason, now_reason, dms}]}` and ?vs=. F3: a UI.review split view (or two stacked question bodies)."
+   },
+   {
+    "title": "How you answered: confidence, eliminations, away time and notes (the design §3.5 owes Tests)",
+    "what": "A report section for tests. With no data it shows one line: \"Turn on confidence tags for your next test\", linked to the test prefs.\n\nCalibration: a 3×2 grid, Sure / Unsure / Guess × Right / Wrong, with counts. Every cell is a filter.\n- \"Sure but wrong · 3\": the misconceptions you believe, named and pinned to the top of Mistakes.\n- \"Guessed right · 2\": points you don't own yet, added to Fix, with \"Without them: 500–640\" from the ledger.\n- \"Your sure answers were right 88% of the time\".\n\nEliminations:\n- \"You crossed out the right answer 2× (M1 Q9, M2 Q3)\", as chips.\n- In the player, struck options render struck, as they were in the test.\n\nAway: \"Left the test window 3× · 1:40 total\", with the question each time.\n\nNotes and highlights render read-only in the player through UI.annotate, with a notes rail and a Has note filter.\n\nResults: a calibration trend (% of sure answers right, per sitting).",
+    "beats": "TopTierPrep has no confidence tags, and its eliminations are saved to the server but never shown back. In our plan, Tests collects conf, struck, away and notes, and §2.9 says S6 renders them, but §3.5 never designs any of it, so the data would be collected and dropped.",
+    "effort": "S",
+    "needs": "S5: qstate {conf, struck, away} and prefs.test_confidence. F3: UI.annotate read-only. F4: notes (R6). Proposal 1 for the band without lucky guesses."
+   },
+   {
+    "title": "Clock replay: where each module's 35 minutes went",
+    "what": "Per module, a horizontal timeline from 0:00 to 35:00:\n- One lane of blocks in visit order: width is time and fill is final status. Revisits sit in a second lane.\n- Markers: flag set, answer change (↺), a dashed pace curve (where 1:35 a question would have put you, shaded ahead or behind), and the clock end.\n- Hover or tap: \"M2 Q14 · 3:10 · 2nd visit · changed C → B\". A click opens the player.\n\nAuto summary lines:\n- \"4:30 behind pace by Q15, with 2:10 for the last 7\"\n- \"Skip-and-return worked 3 times\"\n- \"2 blanks were never opened\"\n\nOn a phone the lane runs vertically. The per-question pace bars stay as the sorted view.",
+    "beats": "Their report has no time at all, and their per-question stopwatch resets on reload. The v2 spec's pace bars show how long each question took, but not the order, the revisits, or the moment the student fell behind. That order is the exam strategy a timed module tests.",
+    "effort": "L",
+    "needs": "S5: the runner logs visits in qstate._session.visits [[qid, t_in, t_out]], capped at about 400, through the existing /state queue. F1: a lane renderer in charts.js. S6: results passthrough."
+   },
+   {
+    "title": "Instant key re-check inside Report a problem",
+    "what": "When the category is \"Wrong answer key\", \"Two answers are right\" or \"No right answer\", the dialog calls GET /api/report/check?session=&qid= before Send.\n\nServer: it regenerates (template, seed) and runs satbank.audit.audit(item), the template's independent solver. For a grid-in it also runs grid_equal on the student's entry.\n\nWhat the dialog shows:\n- Solver agrees: \"Re-checked just now by an independent solver: D (73 ≤ t ≤ 111)\", plus the rationale's key line.\n- Grid-in entry refused: \"Your 0.66 isn't accepted. The grid fits 4 characters, so 2/3 goes in as .6666 or .6667.\"\n- Solver fails: \"Our solver disagrees with this key. It's pulled while we check.\" The (template, seed) goes on a hold list that deps.access (R19) consults, so nobody else is served it.\n\nSend stays available (\"Still think it's wrong? A person reads every report\"), and the stored report carries the check result for the admin.",
+    "beats": "Their report form sends an exam ID and nothing comes back. The v2 dialog is defined as at least as capable as theirs (R17), which is parity. Every template here ships an independent solver (audit.py per topic), so most key disputes are answered in a second, and a genuinely bad key is pulled for everyone at once.",
+    "effort": "S",
+    "needs": "F6: a UI.report hook. F4 or F6: an endpoint calling satbank.audit. A holds list read by deps.access (R19). A check column on the reports table."
+   },
+   {
+    "title": "Quick-peek sittings and keyboard triage on Results",
+    "what": "Peek: a sitting card expands in place (click, Space, or the chevron) to a mini report:\n- the band and ledger bar\n- 4 domain bars\n- M1/M2 status strips, where each cell opens the player as a dialog over Results\n- the Reviewed n/m meter\n- the slip/gap counts\n- Fix and Review\n\nKeys: J/K move between cards, Space peeks, Enter opens the report, F fixes, X selects for Compare.\n\nFilters add \"Not reviewed yet\" and \"Has skill ▾\" (sittings that included Circles).\n\nWeek group headers carry a summary line: \"This week · 3 sittings · 128 questions · 6h 10m · +40\".",
+    "beats": "Their list cards show no score, and their wrong-number chips are plain spans, so reaching a missed question takes Review -> scroll -> click a square. The v2 spec makes chips links, but every sitting still costs a full page load. Here, triaging five sittings takes keystrokes, not page loads.",
+    "effort": "M",
+    "needs": "S6: UI.sittingCard (results-ui.js); /api/history adds reviewed and ledger buckets (R26). F3: the UI.review dialog reused on /results/."
+   },
+   {
+    "title": "An earned reveal: the score moment and real milestones",
+    "what": "The reveal plays only on the first open after Finish (?fresh=1 on the runner's redirect). The hero runs once, in about 1.2 s, each step landing after the one before:\n1. The gauge sweeps from 200 to the band.\n2. The midpoint tick drops.\n3. The delta chip lands (\"+90 vs Section #6\").\n4. Up to 2 milestone stamps appear, each shown only the first time it is true and recorded in R25's earned table: \"New best band\", \"First time routed to the harder Module 2\", \"Target reached\", \"Every easy question right\", \"3 mistakes closed in this set\", \"Fastest full section\".\n\nEach stamp links to its evidence. Revisits render static, prefers-reduced-motion shows the final state at once, nothing loops, and a sitting with no milestone just shows its band.",
+    "beats": "Theirs counts every number up on every visit, so the motion carries no meaning. Their achievements are 4 hard-coded tiles with no earned state, and View All has no handler. Ours celebrates only what is true and new.",
+    "effort": "S",
+    "needs": "S1: the R25 achievements engine (or a small milestones check in S6). F4: estimate.best. F1: a UI.gauge animation hook. S4/S5: the Finish redirect adds fresh=1."
+   },
+   {
+    "title": "Retry sheet and tutor packet from any sitting",
+    "what": "Retry sheet:\n- ⋯ -> \"Print a retry sheet\" (key P) opens Review's /review/print.html with this sitting's misses, or the active filter, or Gaps only.\n- Each miss becomes 1, 2 or 3 fresh twins (a select), labelled \"Retry 1 (from M1 Q7)\", with space to work.\n- An answer page follows, with every option's misconception. The seeds are marked seen.\n\nTutor packet: ⋯ -> \"Tutor packet\" prints the report's print layout (hero, ledger, domains, mistakes with causes) followed by the retry sheet, as one job.",
+    "beats": "Their Share / Export Report button has no click handler. The v2 spec prints the report itself. A finite bank can only reprint the questions already answered; ours prints new questions with the same traps every time.",
+    "effort": "S",
+    "needs": "S10: Review §16 print.html accepts {session, qids, n}. F5: drill source 'worksheet'. R19: access rules."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Total score /1600",
+    "spec_says": "A Math-only 200–800 gauge with the caption \"Reading and Writing is not on SAT Freshman yet\". Self-reported R&W is left as an open question.",
+    "why_only_parity": "This one falls below parity: their centre card shows Total Score 420/1600, and ours shows less.",
+    "upgrade": "Show \"Total estimate 1,170–1,310\" when an R&W score exists (learners.rw_now or S3 /api/scores, R15), labelled \"R&W 650 · you entered Sep 12 · Bluebook\", with the gap to the total target. When there is none, put a one-number \"Add your R&W score\" field (200–800) inline in the hero. The Results chart plots totals when they are available."
+   },
+   {
+    "feature": "Percentile and the Ranked pill",
+    "spec_says": "\"62% of students here scored at or below you on their first section (148 students)\", a Ranked or \"Not ranked · retake #3\" pill, hidden under 20.",
+    "why_only_parity": "It is their concept and their rule: \"N% scored at or below you on their first attempt\" and \"Practice test — not ranked\". We add only the count.",
+    "upgrade": "A distribution strip: a dot histogram of first sittings in 20-point bins, with your band shaded, so the % has a picture. Rank retakes against the same retake number (\"vs other students' 3rd section: 71%\"), so no sitting is a dead end. Once sourced, add College Board's national user percentile range for the band, with its source and year."
+   },
+   {
+    "feature": "Count-up numbers",
+    "spec_says": "Numbers count up over 600 ms on first paint, once per load.",
+    "why_only_parity": "Theirs count up on load too.",
+    "upgrade": "Animate only on the first view after Finish and render static on revisits, with the earned milestone stamps (proposal: earned reveal)."
+   },
+   {
+    "feature": "Domain cards",
+    "spec_says": "Name, %, \"11 of 15 correct\", a 7-segment level bar, share of the section, delta and focus.",
+    "why_only_parity": "It is their 2×2 card (%, 7-segment bar, count) with the copy fixed. It still says nothing about score impact, and their unused domainScore has no equivalent either.",
+    "upgrade": "Show points lost from the ledger (\"-60 pts · most of your gap\") and sort by it. Put difficulty glyphs on the per-question strip. One tap expands the card inline to its skills (right/asked, open traps) with \"Fix this domain\"."
+   },
+   {
+    "feature": "Question grid and legend",
+    "spec_says": "Per-module status cells with glyphs, a legend with counts, filters, and Colour by Status | Difficulty | Time.",
+    "why_only_parity": "The object is still their per-module coloured squares with a legend. Only the filters are richer.",
+    "upgrade": "Add Colour by Points lost and Crowd. Shift-click or drag selects several cells (long-press on a phone), and an action bar reads \"4 selected · Fix · Save · Retry sheet · Compare\". The spec's \"Just the 4 shown\" becomes any selection."
+   },
+   {
+    "feature": "Hide answers",
+    "spec_says": "The mode persists across Previous/Next with an \"Answers hidden\" chip, and a pick reveals locally without filing anything.",
+    "why_only_parity": "Theirs also persists across Next with the same chip. The local pick is the only addition, it files nothing, and it contradicts R21 (a re-answer files a repeat).",
+    "upgrade": "Make Second look the default first open of every miss, filed as a repeat and feeding slips vs gaps and review progress. Keep Hide answers for self-testing correct questions."
+   },
+   {
+    "feature": "Your answer / Correct answer boxes and the explanation",
+    "spec_says": "Boxes for every format (\"Not answered\" when blank), an explanation card, and each wrong option's misconception.",
+    "why_only_parity": "Their modal has YOUR ANSWER / CORRECT ANSWER boxes and a one-line Distractor Analysis for every option. Named misconceptions are the only difference.",
+    "upgrade": "One comparison row: \"What you did\" (your pick's misconception) next to \"What works\" (the rationale's first sentence). Grid-in diagnosis where computable: \"equals the key before rounding\", \"sign flipped\", \"off by a factor of 10\". A \"Same mistake in other question types\" line from Review's family API (79 misconceptions recur across templates), with \"Practise the family\"."
+   },
+   {
+    "feature": "Details popover",
+    "spec_says": "Question ID (template · seed) with Copy, domain, skill, difficulty, format, time, sitting, position.",
+    "why_only_parity": "Theirs lists QUESTION ID, DOMAIN, SKILL and DIFFICULTY. Ours adds only time and position.",
+    "upgrade": "Add the measured level 1–7 from drill.levels() (their Question Score, which they never show), the crowd right-rate and median time, \"Modelled on College Board item <Item.source_id>\", and \"Copy link to this exact question\" (the R19 permalink /practice/session/?q=T:S), so a tutor or friend gets the same numbers."
+   },
+   {
+    "feature": "Report a problem",
+    "spec_says": "\"At least as capable as theirs\": a Sent-with box, title and details counters, categories, screenshots (10 under R17) and a Reported chip.",
+    "why_only_parity": "It is defined against theirs, and the shape is the same.",
+    "upgrade": "An instant independent-solver re-check for key disputes (proposal), and a status that comes back into the Reported tag (\"Checked: key confirmed\" / \"Fixed for every future seed\")."
+   },
+   {
+    "feature": "Estimate card on Results",
+    "spec_says": "\"Math 540–680\", a High/Medium/Low pill with a reason, a trend chip (±20), latest, best, target and exam date.",
+    "why_only_parity": "Their Practice-catalog summary is exactly {range, confidence {level, label, reason}, trend {direction, delta}, headline}.",
+    "upgrade": "Say what would raise the confidence and offer it (\"One more full section → High · Start 70 min\"). Include outside scores, marked as such (R16's mean3 already counts them). Draw a projection cone to the exam date from the last 30 days' trend, labelled as a projection and hidden with fewer than 3 sittings."
+   },
+   {
+    "feature": "Score-over-time chart",
+    "spec_says": "Bands, trend line, target line, estimate zone, tooltip, range and kind filters.",
+    "why_only_parity": "It beats their Score Trend (\"Latest: 0\") in form, but it plots only our own sittings, while switchers arrive with Bluebook and official scores.",
+    "upgrade": "Plot outside scores from S3 /api/scores (Bluebook, PSAT, official SAT) as hollow diamonds with their source. Add an underlay of study minutes between sittings (\"6h 20m between #6 and #7\") so effort and score read together. Clicking two points opens Compare."
+   },
+   {
+    "feature": "Sittings list cards",
+    "spec_says": "Relative time, kind and seq, score and delta, duration, wrong and blank chips per module linking to #q=, Review and Fix, pages of 20, week groups.",
+    "why_only_parity": "It is their review card (per-module chips plus Review) with a score added and the chips made links. Each sitting is still a full page visit.",
+    "upgrade": "Quick-peek in place, J/K/Space/Enter/F/X keys, a \"Not reviewed yet\" filter, a Has-skill filter and week summary lines (proposal)."
+   },
+   {
+    "feature": "Empty states (new student)",
+    "spec_says": "\"Nothing finished yet.\" with a Practise pill. The estimate reads \"Your first test gives you an estimate.\" with Full section and One module buttons.",
+    "why_only_parity": "Theirs: \"No completed exams yet. Complete a practice test to see your results here.\" and \"Complete a practice test to see your score overview.\" The idea is the same.",
+    "upgrade": "\"See a sample report\": a read-only demo of a real seeded sitting under a \"Sample\" strip, every control live, so a new or switching student sees the value before committing 70 minutes. \"Add a score you already have\" seeds the chart. A 12-minute \"Quick check · 8 questions\" produces a small real report today."
+   },
+   {
+    "feature": "Accuracy and time by difficulty (their contest time analysis)",
+    "spec_says": "Easy/Medium/Hard and Multiple choice/Grid-in rows: right/answered, %, bar, average time.",
+    "why_only_parity": "Theirs: \"Average seconds per answered question, by difficulty\". Same measure.",
+    "upgrade": "Compare each row with the median time of students who got that tier right, and put points on the leak: \"Easy: you 0:58 vs 0:45 · 3 rushed misses · about -20 pts\". Each row is a filter."
+   },
+   {
+    "feature": "Loading",
+    "spec_says": "Static skeletons at real sizes, aria-busy on main.",
+    "why_only_parity": "Load-then-paint with count-up is what theirs does. Skeletons are table stakes.",
+    "upgrade": "Zero wait. While \"Finishing…\" shows, the runner prefetches /results into sessionStorage, so the report paints instantly and then revalidates. The player preloads the next question in the filter, so ←/→ never waits."
+   },
+   {
+    "feature": "Review navigation on a phone",
+    "spec_says": "A full-viewport dialog, a bottom bar with Previous / position / Next, and keys on desktop. The hint row is hidden on touch.",
+    "why_only_parity": "On a phone it is their modal's Previous/Next buttons.",
+    "upgrade": "Swipe left/right within the filter, with an edge-safe zone so tables and figures still scroll. Swipe down on the header closes. \"Try one like this\" and \"Next miss\" sit in the bottom bar's thumb zone. A light snap, off under reduced motion."
+   },
+   {
+    "feature": "Report header",
+    "spec_says": "An eyebrow with the kind and seq, then date, minutes and Timed/Untimed.",
+    "why_only_parity": "Theirs: \"PRACTICE TEST REVIEW · Paper #47 · date\". The information is the same.",
+    "upgrade": "Condition chips from cfg and qstate (Timed · 1.5× · calculator off · paused 2× · left window 3×). Deltas and ranks compare only like conditions (\"vs Section #6, also timed\"). An inline sitting note (\"tired, after school\") editable in place and shown on the sittings card."
+   }
+  ]
+ },
+ "advantage": {
+  "proposals": [
+   {
+    "title": "Where your points went: points per miss by cause, a route-cliff line and a live what-if",
+    "what": "SERVER: results gains `points`. For each miss i, gain_i = the section midpoint with only i flipped to the key, minus the actual midpoint. It re-runs scoring.score + section_score on the same route: 44 pure calls, a few ms. For a lower route it adds route_gap {m1_right, needed: 14 of 22 (ROUTE_UP_AT 0.6), short_by, cap: 580}, and gains past the cap read 0 with capped:true. Each miss gets one cause, the first rule that matches, derived when the report is read and never stored: TIME (blank, not reached, or answered in the module's last 10% of the clock in under 30 s); SLIP (right on Second look (proposal 3); before a second look, 'likely slip' = easy or medium, under 45 s, and a measured level of 3 or lower when one exists); TRAP (the pick names a misconception); GAP (the rest: an unnamed grid-in miss, or still wrong on second look). New POST /api/session/{sid}/whatif {flip:[qid]} returns {estimate, capped}. Module 2 is never re-routed, and the reply says so. HERO: under the gauge, one stacked bar 'Lost about 180 points' in four labelled segments, e.g. Time 40 (3) · Slips 55 (5) · Traps 65 (4) · Gaps 20 (1). Clicking a segment sets the review filter cause=<x> and scrolls to it. Helper: 'Points on the band's midpoint, using this report's own scoring (easy 1, medium 2, hard 3).' Route-cliff line, when route=lower and short_by ≤ 3: '1 more right in Module 1 would have earned the harder Module 2 and lifted the 580 cap. Your easiest Module 1 misses: M1 Q3 · M1 Q9', each chip opening the player. EVERYWHERE: every miss shows its gain ('≈ +19 pts') in the grid tooltip, the mistakes row, a 'Worth' table column (sortable) and the player header. WHAT-IF MODE: a toolbar toggle 'What if…'. While it is on, clicking a miss cell marks it with a ghost ✓, and the gauge redraws after a 150 ms debounce. Presets: 'Flip my slips' · 'Flip easy misses' · 'Flip time losses' · Reset. The spec's single whatif sentence becomes the 'Flip easy misses' preset.",
+    "beats": "TopTierPrep shows one score, counts, and a domainScore their UI never prints. Nothing says what each miss cost or why it was lost, and they cannot: their payload has no time, no skill and no misconception per option. Adaptive routing, the most misunderstood part of the digital SAT, is never explained. Ours turns a report into a price list of recoverable points.",
+    "effort": "M",
+    "needs": "scoring.py stays pure and reusable (F4). Per-question ms from qstate (R7, S5 runner) for the TIME cause. Proposal 3 for confirmed slips. drill.levels() measured level (Practice §levels) is optional. UI.gauge redraw hook (F1 charts.js). A cause filter in the review filter bar."
+   },
+   {
+    "title": "A living report: Prove it, recovered points and 'this section today'",
+    "what": "RULE (one server function, used by results and history): a miss is Recovered when the student's latest clean answer (R8) on the same template, after the sitting finished, is right, and its trap is closed or has ≥ 2 clean rights since. It is Slipping when that latest clean answer is wrong. This is one query over the sitting's templates, sharing the `history` query. RESULTS gains recovery {recovered:[qid], slipping:[qid], open:[qid], points_recovered, points_open, now_estimate}. now_estimate re-runs scoring with the recovered misses flipped. HERO: a second ghost band on the gauge labelled 'Today ≈ 570–710', captioned 'Rescored with what you have proven since, on these same question types. Not a new test.' Chip: 'Recovered 9 of 13 · +50 pts · 4 still open (60 pts)'. ACTIONS: a split primary 'Prove it · 13' beside Fix these. Prove it starts Tests' custom test {source:'misses', from_session:sid}: fresh seeds of each missed template, 95 s each, no feedback until hand-in, cfg.parent=sid. When it finishes, its report links back ('Proven 9 of 13 → Section #7 rescored'), and the proven cells take the Fixed-since token (§2.3), now driven by proof and not only by a trap closing. TIMELINE under the hero, from attempts and traps: 'Sep 23 sat · Sep 24 fixed 5 · Sep 26 proved 4 of 6 · Oct 1 slipped 1'. OVERVIEW: each sitting card gets a recovery ring 'Recovered 9/13'. Its wrong chips turn to a ✓ badge when recovered. The sittings sort gains 'Most points still open'. /api/history items add points_open, so Today can say 'Section #7 has 60 points still open'.",
+    "beats": "Their report is a static photo of one day. Proving a fix needs a new question of the same type, and their finite papers can only re-show an item whose key the student has already seen, which tests memory. Nothing on their site shows that past mistakes have been dealt with.",
+    "effort": "M",
+    "needs": "R8 clean answers and repeat filtering (F4), traps with closed/owed (R9), Tests' custom test from misses (S5, §3.4 custom queue), cfg.parent on child sittings (R24/F5), the Fixed-since status token (F1), and points from proposal 1."
+   },
+   {
+    "title": "Second look before the answers: tells a slip from a gap, then a fresh twin",
+    "what": "TRIGGER: a finished mock, module or diagnostic with misses whose answers have not been viewed. A banner above the hero: 'Second look · 13 misses · answers still hidden · about 12 min' [Start second look] [Show answers]. UI.review MODE 'second': only the misses, in order. The key, the reasons, the explanation and the status are hidden. Your first pick shows struck, labelled 'Your first answer', and cannot be picked. Blanks can be answered, and grid-ins take a new entry. A per-question clock runs. FILING: each answer is filed as a repeat (R8: no mastery, closes nothing) and stored in qstate[qid].second = {answer, correct, ms} through POST /api/session/{sid}/state. KEEPING IT CLEAN: qstate[qid].seen_key is set the first time UI.review shows that question with answers visible. Those questions are left out, and the banner says '11 of 13 still unseen'. END SUMMARY: 'Right on a second look 5 → slips (you knew it) · Same answer again 4 · A different wrong answer 2 (a second trap) · Still blank 2'. Next rung: [Fresh twin of the 8 still wrong], a twin drill (source twin, each 1) played inline. Then: 'Right on a twin 3 → it clicked once you looked again · Wrong on a twin 5 → learn it', with 'Practise this skill' per row. The results feed proposal 1 (confirmed slips), a 'Second look' table column (✓/✕/–), the history rows and the player tag 'Right on a second look'.",
+    "beats": "Their Hide answers cannot re-answer at all. Our spec's hidden-mode pick files nothing, so the evidence is thrown away. Nobody tells a careless miss from a real gap, and a real gap from 'learned it once shown'. The twin rung is impossible with a finite bank.",
+    "effort": "M",
+    "needs": "qstate JSON gains second and seen_key (R7 column, F4; no new column). The UI.review 'second' mode (F3). The twin drill source (F5, R24). R8 repeat filing. It resolves the conflict with R21, where review re-answers file a repeat."
+   },
+   {
+    "title": "Best value next: points per minute for each skill, a forecast, and one tap to plan it",
+    "what": "SERVER: `gains` per topic. results covers this sitting; /api/stats covers the mean over the last 3 scored sittings. Each topic has {points_lost (the sum of proposal 1's gains for its misses), open_traps, fix_rate (the share of this learner's traps in the topic closed within 7 days, falling back to the site-wide rate), minutes_to_fix (median clean answers to close a trap × this learner's average ms in the topic), value = points_lost × fix_rate ÷ minutes_to_fix}. REPORT section 'Best value next', after Mistakes, and an OVERVIEW card beside the estimate. Rows are sorted by value. Each row: the topic glyph and name · '≈ +25 pts a section' · '3 open mistakes · about 18 min' · a value bar · [Fix these 3] (drill {mistakes:true, topics:[slug]}) · a quiet 'Practise skill'. FORECAST line: 'Fix the top 3: about 590–730, and your target 700 falls inside it'. It re-runs scoring on the latest section with those topics' misses flipped, weighted by fix_rate and rounded to 10. A time line: 'At your 40 min a day (prefs.minutes), that is about 2 study days before Oct 3.' When a plan exists, [Add to plan] puts one fix task per top-3 skill on the next study days through Plan's task API, and the row then reads 'In your plan · Thu'. Helper: 'From this site's scoring and your own fix speed. It is a guide to order, not a promise.'",
+    "beats": "TopTierPrep's plan weights weak areas from what the student says, and their generator failed 3 times out of 3. Their report never prices a skill or estimates the time to fix it. Ours ranks by points actually lost and by the student's own measured fix speed, which needs per-question weights, named traps and fresh items.",
+    "effort": "M",
+    "needs": "Proposal 1's gains. Trap open/close timestamps (R9, F4). prefs.minutes and exam_date (R11/R15). Plan task create/patch (S7, R14). /api/stats (S6). estimate.py for the target and band (R16)."
+   },
+   {
+    "title": "Your trap pattern across question types, with a trap drill",
+    "what": "The report gains a 'Trap pattern' section above Mistakes when some normalised misconception (the R9 `norm`) has ≥ 2 hits in this sitting or ≥ 3 all time. It groups misses across templates and topics. Each row shows: the concrete label; 'Changed the sign of the slope ×3 · in Linear functions, Systems, Lines (3 question types)'; the question refs as chips; 'also in 4 question types you haven't met' (from a bank index); and [Trap drill · 10]. TRAP DRILL: fresh MC items from any template whose options contain that norm, found by a seed walk (Review's spot and 'Practise across all' engine), with instant feedback. A right answer on an item that offered the trap counts as a clean answer toward every open trap with that norm. THE OVERVIEW's 'Top misconceptions' (spec 2.8) groups by norm across templates, not by template, and shows 'in 3 question types'. BANK INDEX: template → set of norms, built once by surveying seeds (as blueprint.survey does) and cached to a JSON file. PHASE 2: a curated map of about 20 families over the norms (sign, reciprocal, half/double, wrong base for a percent, wrong axis, radius/diameter, units), so the panel can say 'Sign errors ×5 across 4 skills'.",
+    "beats": "Their 'Distractor Analysis' is prose inside one item. Nothing links one mistake to another, so they cannot say 'you keep doing this'. A finite bank cannot produce 10 new questions that all contain the same trap.",
+    "effort": "M",
+    "needs": "attempts.norm and traps.norm (R8/R9, F4). The template→norms index (T-bank or F4). Review's cross-template drill and spot engine (S10), exposed as drill pool 'norm' (F5, §2.6). The family map is content work, later."
+   },
+   {
+    "title": "How well you judged yourself: confidence, flags, changes and time away",
+    "what": "A report section 'Judgement' for tests, and for drills with confidence tags on. It consumes data the Tests runner already sends but the report spec never shows. (1) A 3×2 matrix, Sure / Unsure / Guess × Right / Wrong, with counts, each cell a filter. 'Sure and wrong · 3: the most urgent. You believed these traps', listing each named misconception with [Fix]. 'Guessed and right · 2: counted, but not learned; added to Review as Unsure' (R9 kind unsure). (2) Flags: 'Flagged 5 · went back to 4 · changed 2, both wrong → right · 1 flagged and left wrong'. An advice line picked by rule: flags that paid off → 'Keep flagging and coming back'; flags never revisited ≥ 2 → 'Leave 3 minutes at the end for your flags'. (3) Answer changes (spec 1.10 moves here) with all-time first-instinct data: 'When you change an answer you end up right 62% of the time (21 changes)'. (4) Away: 'Left the test window 3 times · 2:10' from qstate._session. Empty state with tags off: 'Turn on confidence tags in test settings to see how well you judge your answers', with the toggle (prefs).",
+    "beats": "TopTierPrep counts flags and nothing more: no confidence, no change trail, no away time. Only a bank whose distractors are labelled can name the misconception a student was sure of. Tests §3.4.4 promises this calibration 'in the report', and the report spec never shows it.",
+    "effort": "S",
+    "needs": "qstate conf, trail, first, changes and _session away_ms/away_n (R7; the S5 runner sends them). prefs.confidence (R11). The traps 'unsure' kind (R9). The flags table (R5)."
+   },
+   {
+    "title": "Pace map and speed sets built from your slow question types",
+    "what": "Replaces spec 1.9. (a) A per-question dot plot: x = question order with a gap between M1 and M2, y = seconds, each dot drawn in its status glyph. Each question has a short reference tick at the median time other students take on that template (n ≥ 20, else 95 s). (b) Under it, a cumulative-clock line per module against the even-pace line, annotated 'fell behind at M2 Q14' and 'blanks start here'. Four quadrant chips, each a filter with a count: Banked (right, under the median), Time sink (right, over 1.5× the median), Rushed (wrong, under 0.5× the median), Stuck (wrong, over 1.5× the median). Line: 'Time sinks cost 6:20. At median pace you would have reached your 2 blanks.' [Speed set · 8]: fresh twins of the time-sink types, each timed at that type's median, with instant feedback. Its summary shows your time against the target per question. [Careful set · 3]: the rushed-miss types, untimed, with a confirm-before-submit step. Phone: the dot plot scales to 358px and the clock line stacks under it.",
+    "beats": "Their report has no time per question at all. Their only time analysis is an empty contest chart of average seconds by difficulty. A speed set on the same question type with new numbers needs an unlimited bank, and a per-type time benchmark needs every answer recorded.",
+    "effort": "M",
+    "needs": "qstate ms (R7, S5). A per-template median ms aggregate over attempts.ms, cached with drill.levels() crowd stats (Practice §levels). A per-question target time in the drill body (F5, §2.6 timing) and the practice session (S4). UI.barChart or a dot variant (F1 charts.js)."
+   },
+   {
+    "title": "Then vs now: question-by-question comparison of parallel sittings",
+    "what": "When a sitting was built as a parallel form (Tests' kind 'twin' twin_of, or the report's 'Retake as a test'), the report gains a 'Compared with Section #6' section. There is one row per slot (M1 Q1…M2 Q22): skill, difficulty, the then and now status cells, and time then → now. Summary chips, each a filter: Improved 8 (✕→✓) · Held 27 · Slipped 2 (✓→✕) · Still missing 5. Slipped rows come first, since they are the surprise. The header delta is explained: '+60: 8 improved (+95 pts), 2 slipped (−35)', using proposal 1's gains. For a sitting that is not parallel, a 'Compare with…' picker lists earlier sittings and compares on shared templates only ('19 question types appear in both'). Opening a row opens UI.review in a two-up mode with both versions side by side: same type, different numbers, your two answers.",
+    "beats": "Their papers are different fixed forms, so nothing can be compared item by item, and resitting the same paper measures memory. 'Did I actually get better at these question types?' is only answerable with parallel forms on demand.",
+    "effort": "M",
+    "needs": "One parallel-form contract: use Tests' POST /api/mock/new {kind:'twin', twin_of} and drop the report's duplicate {like}. A slot map stored in cfg (S5). A results `compare` field (S6). A UI.review two-up mode (F3)."
+   },
+   {
+    "title": "Measured difficulty and 'should-have-had' misses",
+    "what": "For each template: the share right on first clean attempts across all learners, and the measured level 1–7, both from drill.levels() (the Practice spec's single function, n ≥ 20). Shown in: the player header ('Level 3 · 81% of students get this type right'); Details ('measured from 212' or 'not measured yet · 8 so far'); a table column; and a 'Colour by: Level' grid view that uses the §2.3 tints with the level number. Filter chips: 'Should-have-had · 4' (misses on types that ≥ 75% of students get right) and 'Hard wins · 3' (rights on types under 35%). Hero line: '4 of your misses are on types most students get right: the cheapest points in this report.' Below n = 20 only the College Board tier shows, never a guessed level.",
+    "beats": "Their Details show a fixed Easy/Medium/Hard label. Their Question Score 1–7 is only a builder filter, is opaque, and appears on no report. Ours is measured from real first tries and says how many it is measured from.",
+    "effort": "S",
+    "needs": "drill.levels() and its crowd rate (Practice §3.3.5, cached 10 min). First-clean-attempt filtering (R8). Filter bar chips (F1)."
+   },
+   {
+    "title": "Question-type coverage map on /results/",
+    "what": "A section 'Question types · 185 of 386 met · 142 proven', 19 skill rows grouped by domain. Each row has one small cell per template: not met (outline), met (tile), open mistake (orange dot), proven (orange fill: the last 2 clean answers right), slipping (graphite, last clean answer wrong). Each state has a glyph and a legend with counts. Hover or tap shows the type name, measured level, 'your record 4/5 · last Sep 22' and [5 like this]. Clicking starts a 5-question twin set of that type. Controls: Show all / not met / open / proven, and [Practise 10 types you haven't met] (drill pool 'untried'). The Questions tile's sub-line gains 'types met 185/386'. Phone: cells wrap at 12px with 44px hit areas through row-level tap targets that open a sheet listing that skill's types.",
+    "beats": "TopTierPrep counts questions solved out of a finite pool (1,921 Math), which says nothing about what has been covered. We can show the whole space of question types the SAT samples, and fill any gap on demand.",
+    "effort": "M",
+    "needs": "/api/bank types (Practice, 386 templates with names). A per-template attempts aggregate for the learner (F4). Drill pools 'untried' and types (F5). The share view must honour ?share= (R18)."
+   },
+   {
+    "title": "Instant key checker on reports, and automatic rescoring when a question is fixed",
+    "what": "CHECKER: in UI.report, the categories 'Wrong answer key', 'Two answers are right' and 'No right answer' call POST /api/report/check {session, question_id}. The server regenerates the item from (template, seed), runs satbank audit (the independent re-derivation every shipped item already passes), and checks numerically that no distractor equals the key. Within a second the dialog shows: 'Our checker re-derived the key independently: D (73 ≤ t ≤ 111). Each other option comes from a named mistake: A …, B …, C …', then [Send anyway]. A failed check marks the report high priority for admins. RESCORE: when an admin resolves a report as 'key fixed' (the template changed), a job regenerates every stored (template, seed) in finished sittings. If the stem and choices are unchanged, the stored answer is re-marked against the new key. If the item changed, the question is voided (the ⊘ token, left out of scoring). Attempts and traps are corrected. Affected reports show a strip: 'M1 Q7 was corrected on Oct 2 after a report. This sitting was rescored: 520–660 → 530–670.' The reporter sees 'Your report fixed this question type for every future student' in Settings › Your reports. Old grid-in misses are renamed the same way when a template gains spr_mistakes.",
+    "beats": "Their report modal sends an exam ID into silence, and a fixed paper cannot correct past scores. Every one of our items is re-derivable and addressed exactly, so the fix reaches every past sitting and the student hears about it.",
+    "effort": "L",
+    "needs": "The F6 report system and admin (R17). satbank audit callable at runtime. A template version tag in the bank (T-bank). A rescore job over sessions.questions (F4/S6). The Voided token (F1). spr_mistakes (T-bank, open question 11) for renaming grid-ins."
+   },
+   {
+    "title": "Repair pack: the report printed with fresh practice and a key",
+    "what": "The ⋯ menu gains 'Print repair pack', which also works on a shared read-only link so a tutor or parent can print it. Page 1: the hero, points by cause and Best value next. Then, per miss: the original question regenerated exactly, your answer, the key, the misconception and the explanation. Then 'Fresh practice': 1–3 twins per miss (a select, default 2) with space to work. Last page: the key, with every option's misconception. Print CSS only, with page breaks never splitting a question. The seeds are remembered as seen. Footer: 'These answers are not filed. Enter them online: <short link>', which opens the pack as an end-mode practice set that files answers and can close traps.",
+    "beats": "Their 'Share / Export Report' button has no handler. A printed paper from a finite bank is the same paper every time, while ours is new every print and targets exactly this sitting's traps.",
+    "effort": "S",
+    "needs": "Review's GET /api/review/worksheet (S10), called with ids from the session. The R19 access() rule. Print conventions in ui.css (F1). Share tokens (R18) for the tutor path."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Section score gauge",
+    "spec_says": "A 240° arc from 200 to 800 with this sitting's band, the previous band as a ghost and a target tick; the centre band and the caption.",
+    "why_only_parity": "It is their ring gauge with extra ticks. It is still a static picture of one sitting, with nothing on what the score could be.",
+    "upgrade": "Draw the 'Today' ghost band (rescored with proven fixes, proposal 2) and the lost-points stack by cause (proposal 1) on the same gauge. On first paint, animate from the previous band to this one."
+   },
+   {
+    "feature": "Count-up numbers",
+    "spec_says": "Numbers count up over 600 ms on first paint.",
+    "why_only_parity": "Theirs count up from zero too. The motion carries no information.",
+    "upgrade": "Count from the previous same-kind sitting's value to this one (480 → 520), and let a '+40' chip land when it ends. With no previous sitting, show the final values without motion."
+   },
+   {
+    "feature": "Percentile and Ranked pill",
+    "spec_says": "The in-site percentile of first sittings of the same kind, hidden below 20 ('8 so far'), plus the Ranked / Not ranked pill.",
+    "why_only_parity": "It is the same concept as theirs ('N% scored at or below you on their first attempt'). With our current user count (12 learners in the db) it will read 'needs 20' for months, so in practice it is worse.",
+    "upgrade": "Add two numbers that work from day one. (1) A per-skill percentile over first clean attempts on the same templates across every kind of sitting ('On Linear inequalities you beat 78% of students · 212'). Every student meets the same 386 types, so n builds quickly. (2) College Board's published national user percentile for the band midpoint, with source and year (spec open question), labelled 'national, from College Board's table'."
+   },
+   {
+    "feature": "Total /1600",
+    "spec_says": "Math only by default; decision 16 adds a self-reported R&W score to show a total.",
+    "why_only_parity": "At best it matches their Total Score card, which only fills after a full test.",
+    "upgrade": "Show the total with provenance: 'Total ≈ 1170–1310 · Math measured here · R&W 650 self-reported (Bluebook, Sep 12)'. Hatch the R&W part, warn when the R&W figure is over 60 days old, and offer 'Update R&W' in place. Keep it subject-aware so a future EBRW bank swaps self-reported for measured."
+   },
+   {
+    "feature": "Summary tiles",
+    "spec_says": "Eight tiles of counts: Correct, Incorrect, Unanswered, Accuracy, Time, Per question, Flagged, Changed.",
+    "why_only_parity": "Their four count tiles plus four more counts. Counts alone don't say what to do.",
+    "upgrade": "Each count tile carries its cost in points ('Incorrect 11 · −130 pts'; 'Unanswered 2 · −25 pts · a guess costs nothing'). Add a 'Recovered' tile ('50 of 155 pts since'), which is one reason to reopen an old report."
+   },
+   {
+    "feature": "Domain cards",
+    "spec_says": "%, right/asked, a 7-segment level bar, a per-question strip, the SAT share, a delta and 'Missed most'.",
+    "why_only_parity": "It is their 2×2 domain grid with the copy fixed. They even return a domainScore the UI never shows.",
+    "upgrade": "Each card adds points lost in the domain and its best-value skill ('−55 pts · fix Linear inequalities first, +25'). Add a weight check: 'Algebra is 35% of the SAT and 48% of your lost points.'"
+   },
+   {
+    "feature": "Question review filters",
+    "spec_says": "Show All/Incorrect/Unanswered/Correct/Flagged/Saved/Changed, plus Module, Domain, Topic, Difficulty, Format and Time selects, Colour by and View.",
+    "why_only_parity": "More of the same attribute filters as their All / R&W / Math / Flagged. They slice by property, not by what to do next.",
+    "upgrade": "Add action filters: cause (Slip / Trap / Gap / Time, proposal 1), 'Should-have-had' (types most students get right, proposal 9), Recovered / Still open (proposal 2) and 'Sure and wrong' (proposal 6). Add a 'Worth most' sort by points."
+   },
+   {
+    "feature": "Per-module grid and Colour by",
+    "spec_says": "Status cells with glyphs and a legend; Colour by Status | Difficulty | Time.",
+    "why_only_parity": "Their grid plus their QBank Status | Difficulty overview.",
+    "upgrade": "Add Colour by Points lost and Measured level, and a Recovered-since overlay. A hover card shows the cell's point value, its cause, the measured % right and a one-tap 'Try one like this'."
+   },
+   {
+    "feature": "Hide answers in the player",
+    "spec_says": "Hide answers persists across Previous/Next, the options become pickable, and a pick 'reveals locally without filing anything'.",
+    "why_only_parity": "Theirs also hides and persists. Our re-pick throws the evidence away, and it contradicts R21 ('review re-answer files a repeat').",
+    "upgrade": "File hidden-mode picks as repeats (R8), store them in qstate[qid].second, and use them for Second look (proposal 3): the slip/gap classification, the 'Second look' column and history rows."
+   },
+   {
+    "feature": "Distractor analysis in the review body",
+    "spec_says": "Under every wrong option its misconception, open by default, with the picked one first.",
+    "why_only_parity": "Theirs prints one line per wrong option in 'Distractor Analysis'. A label instead of prose is about as dense.",
+    "upgrade": "Add under each option data only we have: how often students who miss this type pick it ('41% of misses · 180', grouped by template and misconception); whether you have fallen for it before ('your 3rd time · also in Systems'); and a one-tap 'Spot this trap', a fresh twin whose options contain the same misconception (Review's spot engine)."
+   },
+   {
+    "feature": "Details popover",
+    "spec_says": "Question ID template·seed with Copy, domain, skill, difficulty, format, time, sitting and position.",
+    "why_only_parity": "Their Details popover shows the same ID, domain, skill and difficulty, and we add time.",
+    "upgrade": "Add the measured level 1–7 and % right from all students ('measured from 212'); the median time on this type against yours; 'Modelled on official question <source_id>' where the template has one; and 'Copy link to a fresh one', a permalink that serves a twin, so it can be shared without spoiling the key."
+   },
+   {
+    "feature": "Attempt history ('Earlier on this question type')",
+    "spec_says": "The last 5 attempts on the same template from other sittings: date, result, trap picked, time.",
+    "why_only_parity": "Their per-item Attempt History (#, result, option, time, timestamp), widened to the template. It is still a list of rows.",
+    "upgrade": "Show the trajectory: a mini strip of result and time for this type over time ('1:40 → 0:52 · 3 right in a row since'). Include twins and Prove-it answers after this sitting, and end with the Recovered / Slipping verdict (proposal 2)."
+   },
+   {
+    "feature": "Report a problem",
+    "spec_says": "'Sent with your report' box, title with counter, categories, details, screenshots, 'Reported' tag.",
+    "why_only_parity": "Their modal has the same box, title, categories, details and attachments. Neither closes the loop.",
+    "upgrade": "Instant checker: regenerate and audit the item and show the independent re-derivation before sending. Rescore past sittings when a key is fixed, with a strip on affected reports and a 'your report fixed this' reply (proposal 11)."
+   },
+   {
+    "feature": "Current estimate with confidence and trend",
+    "spec_says": "'Math 540–680', a confidence pill with its reason and a trend chip, plus latest, best, target and exam date.",
+    "why_only_parity": "Their Estimated Score card has the same three parts: range, confidence {level, label, reason}, trend {direction, delta}.",
+    "upgrade": "Add 'what raises confidence' as an action ('One more full section → High · Start'). Add a forecast to the exam date and 'If you fix your top 3 skills: ≈ 590–730' from Best value next (proposal 4). Add 'Today ≈' rescoring from proven fixes."
+   },
+   {
+    "feature": "Score over time chart",
+    "spec_says": "Bands with midpoints, a trend line, a dashed target, an estimate zone, tooltips, range and kind filters.",
+    "why_only_parity": "Their Profile Score Trend chart, drawn richer. It shows that the score moved, not why.",
+    "upgrade": "Annotate each gap between points with what happened in between ('+3 h 10 m · 34 mistakes closed · Circles now Strong'), and add a dotted forecast cone to the exam date from the recent rate."
+   },
+   {
+    "feature": "Sitting cards with wrong-question chips",
+    "spec_says": "Chips per module (blanks dashed, clickable), score, delta, duration, 'still open', Review and Fix.",
+    "why_only_parity": "Their card has per-module wrong chips and Review. We fix their bugs (dead chips, no score) but show the same thing.",
+    "upgrade": "A recovery ring per card ('Recovered 9/13 · 60 pts still open'). Chips flip to a ✓ badge when recovered. A sort and filter 'Most points still open', so the list becomes a to-do list (proposal 2)."
+   },
+   {
+    "feature": "Accuracy and time by difficulty and format",
+    "spec_says": "Easy/Medium/Hard and MC/Grid-in rows: right/answered, %, a bar and average time.",
+    "why_only_parity": "Their contest Time Analysis ('average seconds per answered question, by difficulty'), moved to every sitting.",
+    "upgrade": "Benchmark each row and each question against other students' median time on the same templates and against the 95 s pace. Add a 'Time sinks' list of slow-but-right types with a Speed set (proposal 7)."
+   },
+   {
+    "feature": "Totals tiles on /results/",
+    "spec_says": "Questions, Accuracy, Study time, Tests, Streak, Mistakes.",
+    "why_only_parity": "Their profile tiles (Streak / Tests / Solved / Vocab) with windows stated.",
+    "upgrade": "Add 'Question types 185/386 met · 142 proven', a count only a type-addressed bank has, linking to the coverage map (proposal 10). Mistakes shows 'fixed this week' beside open."
+   },
+   {
+    "feature": "Challenge crowd %",
+    "spec_says": "Crowd from first attempts grouped by (template, seed) across the day's challenge sessions: 'A 12% · B 41% · C 9% · D 38%'.",
+    "why_only_parity": "It matches their per-contest stats, and v2-decisions #1 (twin challenges: each student gets their own numbers) breaks it: no two students share a seed, so option letters never line up.",
+    "upgrade": "Group by template and by misconception norm: '41% right · \"forgot to halve\" 31% · \"added base and height\" 12%'. The same query then serves every question type in every report, not only challenges."
+   },
+   {
+    "feature": "Report header",
+    "spec_says": "Kind, seq, date, time, minutes and Timed/Untimed.",
+    "why_only_parity": "Their 'PRACTICE TEST REVIEW · Paper #47 · date', plus a sequence number.",
+    "upgrade": "State the conditions that affect the score's validity: 'Official timing · calculator on · paused 0 · away 0:40 · extended time off'. Add a badge 'Counts toward your estimate', or 'Practice only: paused twice / 1.5× time', from Tests' pause and extended-time data."
+   }
+  ]
+ }
+}

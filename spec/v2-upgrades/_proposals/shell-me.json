@@ -1,0 +1,639 @@
+{
+ "outcomes": {
+  "proposals": [
+   {
+    "title": "Up next in the chrome: one button and one key on every page, with a reason",
+    "what": "SERVER: new server/next.py queue(learner, tz, limit=6) returns [{key, kind, title, reason, minutes, pts, drill (a §2.6 body) | href, urgent}]. The first match wins, in this order:\n(1) a running timed test with time left: Resume;\n(2) a class assignment due within 24 h;\n(3) today's unfinished plan tasks, in plan order (plan.today_summary);\n(4) check-ins due today (R9 pool 'checks', 3 q each), with the reason 'Fixed 10 days ago: checking it stuck';\n(5) confident errors (proposal 6), then open mistakes ranked by points on the table (proposal 3);\n(6) the coach's weakest skill;\n(7) a Strong skill untouched for 10+ days (keep_warm);\n(8) untried types in the skill worth the most points.\nToday §3a calls this function instead of keeping its own first-match rule, and the palette's Suggested group reads it too, so there is one source. /api/shell.next carries the first 3 items.\n\nSIDEBAR: a 72px 'UP NEXT' block directly under Search and Quick. It holds:\n- the title (600 14.5), e.g. 'Check-in: diameter vs radius';\n- a DM Mono meta, '3 q · 4 min · ≈6 pts';\n- a 13px --soft reason line;\n- a filled orange Start pill;\n- a '›' that opens a popover with the next 5 items, each with Start and 'Not today' (snoozed until tomorrow in localStorage satf.next.snooze, keyed by item key).\nRail: a 44px orange play button whose tooltip carries the title and reason.\n\nKEY: N starts item 1 on any shell page. Page scope wins, so on Words N stays 'add a word'.\n\nPHONE: item 1 is the first row of the menu sheet, and the Today tab gets a dot when item 1 is urgent (a due check-in, an assignment due, or a running test).\n\nCHAINING: the practice summary (S4), the report page (S6) and the quick sheet's close each make 'Next: {title}' their primary, read from the same queue. A student can go check-in → mistake → weak skill without going back to a menu.\n\nSTUDENT DOES: never decides what to study; presses N.\nMOVES THE SCORE BECAUSE: self-directed students over-practise the skills they like and skip rechecks. This order puts spaced check-ins and the most expensive mistakes first, so spacing and error correction actually happen, and it removes the minutes of choosing that often end a session before it starts.",
+    "beats": "TopTierPrep's sidebar is ten silent labels, and their dashboard has no single next action (teardown weakness 3). Their plan generator failed 3 times out of 3 in the live walk, so the one place that could say what to do is broken. Ours says what, why, how long and how many points, on every page, one key away, and chains after every session.",
+    "effort": "M",
+    "needs": "S7 plan.today_summary; F4 R9 traps.due/checks and shell resume; S2 assignments due; proposal 3 (points) and 6 (confident errors) for ordering, which degrade to coach order until they land; S3 Today §3a switches to next.queue; S4 and S6 summary primary hook; F2 sidebar block, rail button, menu row and the N key in UI.keys."
+   },
+   {
+    "title": "Habits: your misconceptions grouped across skills, each with a drill that trains the catch",
+    "what": "SERVER: new server/habits.py with about 11 families, each {id, name, tell, regex, overrides}:\n- answered a different quantity than asked;\n- gave the whole (or the rest) instead of the part;\n- flipped a sign or direction;\n- inverted a ratio, rate or slope;\n- squares and roots;\n- percent handling;\n- units and conversions;\n- mixed up two formulas (radius/diameter, area/perimeter, 180/360);\n- read the wrong row, axis or point;\n- stopped a step early or went a step too far;\n- arithmetic slip.\nThe families are tagged at startup over blueprint.survey's reasons per template. A sample survey (8 seeds per template) found 2,251 distinct reasons: 827 'instead of / gave the' reasons across all 19 topics, 159 whole-vs-part across 18, 134 sign across 13, and 46 inversions across 12. The overrides dict fixes misfiles. `python3 server/habits.py` asserts that every family spans ≥ 3 topics and prints the reasons left untagged. A trap's or a wrong attempt's habit is computed from its reason, so the schema doesn't change.\n\nME: a 'Your habits' card after 'What keeps catching you' shows the top 3 habits by misses in the last 60 days. Each row has:\n- the name (600 15);\n- '11 misses across 5 skills', with skill chips;\n- the trend, last 30 days vs the 30 before ('↓ 4 fewer');\n- the one-sentence tell ('Before you pick, reread the last line: what exactly is asked?');\n- 'Drill this habit · 8'.\n\nDRILL: POST /api/drill {templates: the templates that have a reason in the family, the student's missed ones first, ≤ 120; want: {template: family_regex}; count 8; order 'mixed'; source 'habit'}. Every question has an option built on that habit, across different skills, interleaved. The student practises spotting the trap, not a topic.\n\nELSEWHERE:\n- A wrong answer's verdict (S4, F3) carries a chip 'Habit: answered a different quantity' that links to the card.\n- Up next adds a habit drill when one habit is ≥ 25% of the last 20 misses.\n- The share view shows habits to a tutor.\n\nSTUDENT DOES: learns one check ('reread what is asked') and rehearses it across contexts, instead of fixing 11 separate mistakes on 11 question types.\nMOVES THE SCORE BECAUSE: one habit costs points in every domain. Interleaved practice at telling traps apart across skills transfers better than repeating one type in a block, and on test day the tell is one check the student can run on any question.",
+    "beats": "None -- they lack it. TopTierPrep's explanations are prose ('Distractor Analysis') and their options carry no misconception label, so they cannot count a misconception, let alone group one across skills. Their profile tiles are Streak/Tests/Solved/Vocab.",
+    "effort": "M",
+    "needs": "F5: blueprint.survey keeps the reasons per template (already specified), plus a habit tag in blueprint.kinds(); the drill's `want` over many templates (§2.6 has it). F3/S4: the verdict chip. S10: Review can group by habit. Later, T-bank's stable misconception tags (Part 5 open question 18) replace the regex tagging."
+   },
+   {
+    "title": "Points on the table: every skill priced in SAT points",
+    "what": "SERVER: F4 adds progress.points(learner). For each of the 19 skills:\npts = expected questions on one 44-question section × the student's miss rate × points per question.\n- Expected questions: the BLUEPRINT domain share × the skill's share within its domain, from a fixed constant built from College Board Question Bank counts per skill (e.g. Linear functions 170 of Algebra's 615; the teardown lists them all).\n- Miss rate: 1 − recent accuracy at a test-like mix of difficulty, pulled toward the domain mean while evidence is under 10 answers.\n- Points per question: the slope of scoring.ANCHORS at the student's band, about 13 between 480 and 620 and about 14 above.\nIt returns {topic, pts, per_test, miss_rate, evidence}.\n\nME SKILLS CARD:\n- A seg sort, 'By points on the table · By domain', defaulting to points.\n- Each row adds '≈ 18 pts' in DM Mono and 'about 3 questions a test · you miss 45%'.\n- Header: 'About 60 points on the table · your top 3 skills hold 34'.\n- Footer pill: 'Practise the top 3 · 10'.\n\nTARGET POPOVER: states the target in questions: '700 ≈ 37 of 44 right; you're near 31. The 6 you're most likely missing are in Circles, Probability and Nonlinear functions.'\n\nELSEWHERE: Up next, the palette's Skills group and the coach's tie-breaks order by pts. A Help anchor, 'How points on the table is worked out', states the caveat 'an estimate; bands are ±70'.\n\nSTUDENT DOES: spends the next hour on the skill worth the most points, not on the one that feels weakest.\nMOVES THE SCORE BECAUSE: a skill with 1 question a test at 30% accuracy is worth less than one with 4 questions at 70%. Pricing both in points makes that trade-off visible, and working by marginal points is the fastest route to a higher scaled score.",
+    "beats": "TopTierPrep's domain cards read '13% · 13% of test section, 1-8 questions' (confusing copy, per the live walk). Their per-question payload has no skill, and their Subject Performance block is empty on a new account. Nothing tells a TopTierPrep student where the points are.",
+    "effort": "M",
+    "needs": "F4 progress.points plus the R16 band; one constant table of per-skill test shares; F2 palette order; S7 and the coach may weight by it; S6 Results can show the same column."
+   },
+   {
+    "title": "Log a mistake, rebuilt: paste the question, or log a whole Bluebook test",
+    "what": "(A) PASTE. The first field of the quick sheet's Log a mistake tab is 'Paste or type the question'. POST /api/types/match {text}:\n- strips the numbers and single-letter variables, then tokenises;\n- ranks templates by TF-IDF cosine against fingerprints built at startup from the survey's 18 stems per template (stdlib Counter and math, no new dependency);\n- returns the top 4 {template, skill, score, example}.\nThey render as 'Like this one?' cards, each showing a generated example from the reserved 900000+ seeds. The student taps one, or chooses 'None of these' and falls back to the specified skill → type path. Then come 'What went wrong?' (that type's reasons) and 'Where was it?'.\n\n(B) A WHOLE TEST. A 'Log a Bluebook test' tab:\n1. Date and score, which go through S3's add_outside_score onto the trend.\n2. Two 22-cell grids (Module 1, Module 2). The student taps each question they missed and gives it a skill from a compact 19-chip picker (Bluebook's review lists each question's skill).\n3. Submit builds a 'Bluebook follow-up' set: 2 fresh questions per missed skill, drawn from that skill's types the student has missed before or never met.\nMisses in that set open named traps as usual, and the set becomes Up next's first item.\n\n(C) FIX PATH for every logged mistake:\n1. The example, with the chosen misconception's option highlighted as 'this is the trap', and the rationale.\n2. One fresh repair question.\n3. The R9 check-ins at 3, 10 and 30 days.\n\nSTUDENT DOES: turns every official practice test and school worksheet into drilled mistakes in under a minute, without having to learn our taxonomy.\nMOVES THE SCORE BECAUSE: official tests are the most test-like practice there is, but most students read the score and move on. Turning each miss into a named, spaced repair keeps what the test taught. Matching by text removes the classifying step that stops students logging at all, and the follow-up set names the exact misconception behind a miss logged only by skill.",
+    "beats": "TopTierPrep's floating button captures only vocabulary words ('Add your own word'), and it covers Next in QBank sessions. Nothing on TopTierPrep takes in a Bluebook test or a Math miss from outside the site.",
+    "effort": "M",
+    "needs": "F5 /api/types, /api/types/{t}/example and /api/mistakes/log (already specified), plus a new /api/types/match and the survey stems kept per template; S3 add_outside_score; F4 R9 check-ins; F2 quick sheet tabs (R29); S10 Review's 'Logged by you · Bluebook' chip."
+   },
+   {
+    "title": "Pace profile: where your minutes go, and the drill that fixes each case",
+    "what": "SERVER: F4 adds progress.pace(learner). Over the last 60 days, per skill with ≥ 5 timed answers: the median seconds on right answers and the accuracy. It reads attempts.ms from practice and the tests' qstate ms, which record_paper carries into attempts.ms (R7).\nIt also returns a module forecast: the sum of each skill's median time over a blueprint-mixed 22-question module, e.g. 'At your pace a module takes 38:40 of 35:00: about 3 questions left blank.'\n\nME PACE CARD: a 2×2 quadrant chart. x is median time against the 1:35 pace; y is accuracy against the student's own mean. Each skill is a labelled glyph dot, with a hidden data table. Each quadrant has a label and one action:\n- Slow and right, 'You know it, slowly': Speed drill, 8 questions at 70 s each (custom clock) on that skill.\n- Fast and wrong, 'Rushing': Careful set, 8 untimed, with the top habit's tell (proposal 2) shown above each stem.\n- Slow and wrong, 'Time sink': the skill joins a 'Skip and come back' list for test day, read by Tests' test-day checklist and the runner's pace guide. Offer 'Learn it untimed · 8'.\n- Fast and right, 'Banked': keep warm.\nThe header carries the forecast and a pill, 'Pacing drill · half a module (11 q · 17:25)', at SAT pace with a blueprint mix.\n\nSTUDENT DOES: runs speed drills on the skills they know but solve slowly, and walks into the test knowing which kinds of question to skip first.\nMOVES THE SCORE BECAUSE: in a timed module, a 3-minute solve costs two other questions. Accuracy gains are wasted if the student can't finish, and pacing can only be trained once the student sees, per skill, where the minutes go.",
+    "beats": "TopTierPrep records time only per attempt inside a QBank session (the Attempt History modal). Its 'Time analysis' card exists only for contests and was empty. Its score report payload carries no time at all. Nothing tells a TopTierPrep student whether they would finish a module.",
+    "effort": "M",
+    "needs": "F4 R7 (test ms into attempts); F1 a quadrant scatter in charts.js; F5 drill timed/minutes; S5 test-day checklist and pace guide read the skip list; proposal 2 tells."
+   },
+   {
+    "title": "Calibration: the mistakes you make while sure",
+    "what": "DATA: attempts.guess (practice 'I'm guessing', R8) and qstate.conf (the tests' Sure/Unsure/Guess). Add a prefs key `confidence`, default off, so practice can tag Sure/Unsure/Guess in the workspace strip (K, already in the runner map).\n\nME CARD 'When you're sure': three bars, each with n, for example Sure 84% right (212), Unsure 58% (64), Guess 29% (31, chance 25%). Each bar gets one generated advice line when it applies:\n- Unsure accuracy ≥ 55%: 'Your unsure answers are usually right. On test day, answer and move on.'\n- Guess accuracy ≤ 30%: 'Your guesses are at chance. Eliminate two first: your strikes were on wrong options 88% of the time' (from qstate.struck, when present).\n\nCONFIDENT ERRORS: misconceptions chosen while Sure, or in practice while not marked a guess, at least twice. Example: 'Used the diameter as the radius · chosen sure 3 times'. Each has 'Fix · 3' (a trap drill) and ranks first among mistakes in Up next. The summary's stats add sure_right, unsure_right and guess_right.\n\nSTUDENT DOES: gives extra attention to the few errors they believe are right, and stops re-working unsure answers that are usually correct.\nMOVES THE SCORE BECAUSE: a confident error is the one a student never double-checks on test day. It is also the easiest to correct once shown (the hypercorrection effect). Calibrated students spend review time and test-day checking time where it pays.",
+    "beats": "TopTierPrep has no confidence input anywhere, and its QBank allows unlimited retries, which makes its accuracy meaningless (teardown weakness 2).",
+    "effort": "M",
+    "needs": "F4 R8 guess column and the summary aggregates; S5 and F3 conf in qstate and a practice confidence toggle in the strip; F4 prefs key `confidence`; proposal 1 ordering."
+   },
+   {
+    "title": "Time-boxed start: 'I have 5 / 15 / 30 minutes'",
+    "what": "WHERE: the sidebar Today card, the quick sheet header and the phone menu sheet's Up next row all get a chip row, 'Got time? 5 · 15 · 30 min'. The palette parses '15 min', '15m' and 'half hour'.\n\nSERVER: POST /api/drill {source: 'next', minutes: 15, timed: from the stage (proposal 8)}. It sets count = floor(minutes × 60 / 95). The set is filled from next.queue in order: check-ins due, confident errors, the mistakes worth the most points, one weak skill, one keep-warm skill. practice.interleave orders it so no two consecutive questions share a skill.\n\nSESSION: a box clock reads '12:40 left of your 15'. At zero the current question finishes, then the summary shows with Up next as its primary.\n\nSTUDENT DOES: uses the 10 minutes before class or on the bus on the right mix, instead of skipping the day.\nMOVES THE SCORE BECAUSE: short, frequent, interleaved retrieval of due material beats occasional long blocks. A correctly sized session one tap away means more study days, and every minute goes to what is due.",
+    "beats": "TopTierPrep's QBank volume choice is 10/20/30/40/50/All, with no link to time and no mix. Its daily goal ('2 Hours') gives no way to spend 10 minutes well.",
+    "effort": "S",
+    "needs": "Proposal 1's next.queue; F5 drill source 'next' that fills from the queue (practice.interleave already exists); F2 chips and palette parsing; proposal 8 for the clock."
+   },
+   {
+    "title": "Practice settings that follow your stage, from learning to test conditions",
+    "what": "PREF: a new key `stage_auto`, default true once an exam date exists. The stage comes from the plan's phase (plan_days.phase), or from days to the exam when there is no plan:\n- Learn (> 42 days): untimed, instant feedback, repairs next, rationale on miss, adaptive tiers.\n- Build (42 to 21 days): SAT pace clock on sets, instant feedback, grid-in share at the test's level.\n- Test (21 to 7 days): SAT pace, feedback at the end on mixed sets of 10 or more, repairs at the end, a module each week.\n- Final week: check-ins and open mistakes only, no new types, one full section 3 to 5 days out, nothing new on the eve.\n\nUI.prefs() returns each value with its source, 'stage' or 'yours'. On the Learning preferences card and in Settings › Practice, each row the stage sets reads 'Set by your stage: Build · 34 days to Nov 7', with Change. Change pins that key as 'yours' and adds a 'Back to stage' reset.\n\nBANNER: on the day the stage changes: 'Test stage starts today: sets now run at SAT pace with the key at the end.' [Why?] opens Help.\n\nSTUDENT DOES: practises under test conditions in the final weeks without having to remember to switch, and learns with immediate feedback early on.\nMOVES THE SCORE BECAUSE: immediate feedback speeds early learning. Timed practice with delayed feedback in the final weeks builds the pacing and unaided retrieval the test demands. Most self-studiers never make the switch.",
+    "beats": "TopTierPrep's Learning Preferences are static selects (Practice Mode Timed/Untimed, Difficulty Adaptive/Fixed), and its plan data model has no phase. A TopTierPrep student in the final week practises exactly as in week one unless they change a select by hand.",
+    "effort": "S",
+    "needs": "F4 prefs.py key stage_auto and the stage resolution; S7 plan phase in /api/shell.plan; S4 and S5 already read the merged prefs; S1 row captions."
+   },
+   {
+    "title": "Monday review and this week's goals",
+    "what": "THE SHEET: on the first shell page load of the student's week (prefs.week_start), a sheet 'Your week' opens. It can be dismissed and reopened from Me.\n\nLAST WEEK, as receipts:\n- questions answered;\n- minutes against the plan;\n- mistakes fixed;\n- check-ins passed and relapsed;\n- skills that moved up a word ('Circles: Getting there → Strong');\n- the habit that fell the most;\n- the estimate change, if the student sat a test.\n\nTHIS WEEK: pick up to 3 goals from 5 suggestions built from the data, each with a why and 'about N min'. For example:\n- 'Fix the 4 open Circles mistakes (≈ 12 pts)'\n- 'Pass all 6 check-ins due this week'\n- 'Get Probability to Getting there (about 25 more answers)'\n- 'Take a module on Saturday'\n- 'Keep answered-a-different-quantity to 2 misses or fewer'\nA custom goal can be made from the same kinds, with a number.\n\nDATA: a new table week_goals(learner, week, id, kind, params JSON, target, created, done_at). Progress is computed on the server from attempts, traps and sessions, and /api/shell.goals returns [{title, have, target, done}].\n\nSHOWN IN:\n- the sidebar Today card, as 'Week goals 1 / 3' with pips;\n- a 'This week' card at the top of Me's right column;\n- the share view, for a parent;\n- a toast when a goal completes.\nNew achievement: weeks with every goal met, 1 / 4 / 12.\n\nSTUDENT DOES: every Monday, sees last week's evidence and commits to 1 to 3 specific, checkable goals.\nMOVES THE SCORE BECAUSE: specific short-term goals and tracking progress against them reliably increase follow-through (the goal-setting and progress-monitoring research). The review tells the student which effort actually moved skills.",
+    "beats": "TopTierPrep's Study Goals are long-range numbers (Target, 'Daily 2 Hours', 'Weekly 12 Hours'), and the target isn't even synced between the wizard, dashboard and profile. There is no weekly review.",
+    "effort": "M",
+    "needs": "F4 schema (week_goals); S1 server; S7 the plan's week minutes; S10 check-in counts; proposals 2 and 3 for the suggestion wording; F2 Today card pips and the weekly sheet; R25 the new achievement."
+   },
+   {
+    "title": "Precision you can see, and a 12-question Sharpen check",
+    "what": "SKILL ROWS: when a skill has fewer than 10 answers behind it (the evidence count board() already has), its mastery bar gets a faint uncertainty extension and the row reads 'rough · 4 answers'. Otherwise it reads 'measured · 26 answers'. /api/me/summary adds evidence per skill.\n\nSKILLS CARD HEADER: '7 skills are still rough. Sharpen · 12 questions · ~19 min'. The button sends POST /api/drill {source: 'probe', topics: the 4 to 6 rough skills ranked by test share × uncertainty, count 12, adaptive true, feedback 'end', repairs 'end'}.\n\nSUMMARY (S4): says what changed. 'Probability: rough → Learning (the coach now includes it). Circles: rough → Strong (the coach will skip it).'\n\nCOACH AND UP NEXT: a rough skill gets one probe before it is assigned a full set. A new student's Skills card offers Sharpen and the diagnostic side by side.\n\nSTUDENT DOES: spends 19 minutes measuring before weeks of practice, and can trust the coach's picks.\nMOVES THE SCORE BECAUSE: coaching is only as good as its measurement. With a wrong picture of weak and strong, sessions go to skills the student already knows while real gaps go unmet. Probing the least-measured, highest-weight skills gets the most information per question.",
+    "beats": "TopTierPrep's 'Difficulty Level: Adaptive' has no visible model behind it. Its estimate shows 'LOW CONFIDENCE' in red with no way to fix it, and its subject block is empty until tests are taken.",
+    "effort": "M",
+    "needs": "F4 evidence in board() and in the summary; F5 source 'probe' with feedback 'end'; S4 the summary's 'what changed' block; F4 the coach reads evidence."
+   },
+   {
+    "title": "Every number says how to move it",
+    "what": "WHAT OPENS: every stat on Me, the Today card and the nav tooltips opens a UI.pop popover on tap or focus: streak, accuracy, mastery bars, types met, rank, band, points on the table and check-ins.\n\nTHE POPOVER has three parts:\n1. How it's worked out: one line, plus a link to its Help anchor.\n2. Your numbers: the inputs behind it, e.g. 'last 10 Circles answers: 7 right, 3 of them hard'.\n3. What moves it: the next threshold, computed on the server, with a Start button where there is one to start.\n\nWHAT MOVES IT, per number:\n- Mastery: '2 more right on medium or hard reaches Strong'. Found by simulating answers appended to mastery_of until the next UI.masteryWord boundary; it is a pure function, so this is cheap.\n- Streak: 'Answer 1 today to make it 7'.\n- Types met: '4 unmet in Circles · Practise unmet'.\n- Rank: '12 more right this week passes #127'.\n- Band: 'A module with 2 more right moves the band about 30'.\n\n/api/me/summary adds levers {key: {how, inputs, next, drill?}}.\n\nSTUDENT DOES: sees the concrete next step behind every number, and taps it.\nMOVES THE SCORE BECAUSE: a goal feels reachable when the gap is small and stated (the goal-gradient effect). A student who knows exactly what moves a bar stops grinding random questions.",
+    "beats": "TopTierPrep's numbers come unexplained: Global Rank 128 with no contests played and no stated basis, a 7-segment domain bar with confusing copy, 'LOW CONFIDENCE' with no reason, and a target modal that states the wrong current score.",
+    "effort": "S",
+    "needs": "F4 pure functions (mastery_of, days, practice_rank) for the simulations; F1 UI.pop; S1 summary levers; S8 the rank gap."
+   },
+   {
+    "title": "Reminders that say what is due",
+    "what": "(A) CALENDAR, ships first. The subscribed feed (R18b, served live from plan.py) titles each study-day event from the plan and the queue, e.g. 'SAT Math · 3 check-ins + Circles · 25 min'. Its DESCRIPTION lists the due items and a link to /?next=1, which starts Up next. Future days use the plan's forecast; today uses the live queue.\n\n(B) PUSH, on the installed app, opt-in. Settings › Study gets 'Remind me on this device'. It needs:\n- a service worker, web/sw.js, handling push and notificationclick only, with no caching;\n- VAPID keys in env (SATF_VAPID_*);\n- a table push_subs(learner, endpoint, keys JSON, created);\n- a 5-minute asyncio loop that sends at study_time − remind, only on study days that aren't done yet.\nThe message reads '3 check-ins due · about 4 min', and a tap opens /?next=1. At most one a day, with a Stop action.\n\nSTUDENT DOES: comes back on the day the check-ins are due, not whenever they remember.\nMOVES THE SCORE BECAUSE: spacing only works if the due day is met. A specific, small, time-stated nudge ('4 min') beats a generic alarm.",
+    "beats": "TopTierPrep's 'Preferred Time: Evening' has no effect anywhere (teardown), and it sends no reminders at all.",
+    "effort": "L",
+    "needs": "S7 the cal feed builder in plan.py reads next.queue; F2 registers the service worker, reversing Shell §2.14's 'no service worker' for push only; a new dependency (pywebpush), or aes128gcm with cryptography; iOS needs the home-screen install; no SMTP needed."
+   },
+   {
+    "title": "Offline pack for the bus",
+    "what": "GETTING THE PACK: on the installed app only, the menu sheet has 'Save 30 questions for offline', and the pack refreshes nightly while online. GET /api/pack?n=30 returns practice items from next.queue with keys and rationales. Every item passes deps.access, so never a live-test item and never today's challenge. The pack lives in IndexedDB.\n\nOFFLINE: the practice session runs from the pack in practice mode with instant feedback. Answers queue in UI.saveQueue with their original `at` and ms, and replay on reconnect. The server re-grades each answer from (template, seed) and ignores the client's verdict, and progress.record accepts a client `at` up to 7 days old.\n\nTHE SHELL: shows 'Offline · 22 questions saved · Practise' in place of the offline error banner.\n\nSTUDENT DOES: practises in dead time without a signal (commute, lunch).\nMOVES THE SCORE BECAUSE: it adds short retrieval sessions every week. Phones are where students study, and a dropped connection currently ends practice.",
+    "beats": "None -- they lack it. TopTierPrep needs a live connection and a Google login for every question.",
+    "effort": "L",
+    "needs": "The service worker from proposal 12, extended to cache; F5 /api/pack; F3 the workspace grades from the pack's key; F4 record accepts a client `at`; R19 deps.access; UI.saveQueue."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Sidebar and rail navigation",
+    "spec_says": "§2.2–2.3: a 248px sidebar that collapses to a 68px rail (toggle or [); grouped links with metas (counts, New, Resume, #rank); an active pill.",
+    "why_only_parity": "Theirs has the same shape: a ~220px sidebar, a toggle to a ~60px rail, an active pill. Our badges say what is waiting, but both still hand the student a list of places and leave the choice to them.",
+    "upgrade": "Put Up next (proposal 1) at the top of the sidebar and rail: title, reason, minutes and points. N starts it on every page, and every session end chains into it."
+   },
+   {
+    "feature": "Account popover",
+    "spec_says": "§2.6: avatar, name, email or 'This device only', role line; Profile, Settings, Sign in, Pair, Join a class, Shortcuts, Help, Send feedback, Sign out. Esc closes it.",
+    "why_only_parity": "Theirs has avatar, name, email, My Profile, Send feedback and Sign out. Fixing Esc and adding links is housekeeping; it does nothing for studying.",
+    "upgrade": "Profiles on a shared device: 'Switch student' keeps up to 4 learner codes in localStorage satf.profiles, each with avatar, name and today's minutes. One-tap switch with no sign-out, plus 'Add a student' and Remove. Siblings or a tutor's laptop stop mixing answers into one code, which would otherwise corrupt mastery, mistakes and the coach's picks. Add a 'Saved · synced 2 min ago' line."
+   },
+   {
+    "feature": "Sign-in on a new device",
+    "spec_says": "§1 and §5: a 6-digit email code (needs SMTP, open question 5), a pairing code approved on the first device, and a device code.",
+    "why_only_parity": "Theirs is Google one-tap. Ours is safer and has no wall, but a returning student on a new device switches to the mail app and types 6 digits, roughly 30–60 s, so it is no faster than theirs. Without SMTP, email doesn't work at all.",
+    "upgrade": "Passkeys (WebAuthn). 'Save with a passkey' registers a platform credential in a new table passkeys(id, learner, public_key, sign_count, label, created). On a new device, sign-in is one Face ID or fingerprint tap, synced through iCloud Keychain or Google Password Manager. No SMTP, phishing-proof, and email codes stay as recovery. It needs py_webauthn, or about 150 lines of ES256 verification with cryptography."
+   },
+   {
+    "feature": "Identity card stat tiles",
+    "spec_says": "§3.1 + R31: a 2×4 grid (Streak, Answered, Accuracy, Study time, Tests, Mistakes fixed, Words, Rating), each with a sub-line and a link.",
+    "why_only_parity": "Theirs is 2×2: Streak/Tests/Solved/Vocab. Ours has more tiles, but they are the same kind: volume counts that say how much was done, not whether the score is moving.",
+    "upgrade": "Lead with outcome tiles: SINCE YOU STARTED ('+80 · 480–560 → 560–640', first scored sitting to the current estimate), POINTS ON THE TABLE ('≈ 60 · top 3 skills 34') and CHECK-INS PASSED ('12 of 14 still fixed'). Volume moves to the sub-lines. Every tile opens its 'what moves it' popover (proposal 11)."
+   },
+   {
+    "feature": "Avatar",
+    "spec_says": "§3.1: an initial or one of 19 topic glyphs; no photo, for minors' privacy.",
+    "why_only_parity": "Theirs uploads a photo. Ours is a privacy-safe stand-in for the same feature, and just as inert.",
+    "upgrade": "Earned glyphs: a skill's glyph unlocks as an avatar when that skill reaches Strong, and a domain frame when every skill in the domain is Strong. The picker shows locked glyphs with 'Reach Strong in Circles', so the avatar shows mastery and gives a reason to finish a skill."
+   },
+   {
+    "feature": "Performance Snapshot ranks",
+    "spec_says": "§3.2 + R3: practice rank by right answers over a rolling 7 days, among everyone, the same exam date, and each class.",
+    "why_only_parity": "Theirs is Global and Country rank. Ours picks a better cohort on stated terms but still ranks volume (open question 12). Grinding easy questions wins, and a weaker student who is improving fast sits near the bottom.",
+    "upgrade": "A growth rank: among students who started in the same band (first scored sitting ±40) and sit the same exam date, rank by estimated points gained, or mastery gained, over 30 days. 'You've improved faster than 72% of students who started at 480–560.' Shown at n ≥ 20 (R16's rule), with right answers kept as a second metric. It rewards learning, not volume, and gives every level a race it can win."
+   },
+   {
+    "feature": "Study goals: target, exam date and countdown",
+    "spec_says": "§3.3: a target bar with '+100 to go'; a target popover (slider, chips); an exam-date popover of upcoming dates with 'in N days'; a countdown bar; daily and weekly goal bars; week dots; preferred time.",
+    "why_only_parity": "Theirs has Target, Exam date with 'N days remaining', Daily, Weekly and Preferred time. Ours is synced and editable, which fixes their bugs, but it states the same facts: a number and days left, never whether that is realistic or what reaching it takes.",
+    "upgrade": "(a) A projection: 'At your recent rate (+12 a week) you reach ~660 by Nov 7. 700 needs +15 min a day, or fixing Circles and Probability (≈ 35 pts)', using Plan's pace tag. (b) The target in questions: '700 ≈ 37 of 44 right; you're near 31.' (c) Each exam-date chip shows the projected score on that date ('Dec 5 · ~690'), so choosing a date means choosing a realistic outcome."
+   },
+   {
+    "feature": "Skills (their subject performance)",
+    "spec_says": "§3.5: 19 skills under 4 domains, each with a mastery bar, answered, accuracy, open-mistake dots and Practise; strongest and weakest in the header.",
+    "why_only_parity": "Theirs is a per-subject performance block. Ours is more detailed but still a report card in syllabus order: it says where the student is weak, not what the weakness costs or how far the bar can be trusted.",
+    "upgrade": "Sort by points on the table (proposal 3). Add a precision whisker with 'rough · 4 answers' and the Sharpen probe (proposal 10), a 14-day trend arrow per skill, and a 'fading' marker on Strong skills untouched for 10+ days, with 'Keep warm · 3'."
+   },
+   {
+    "feature": "Score trend",
+    "spec_says": "§3.6: a range bar per sitting, a target line, an exam tick, tooltips and click-through to the report.",
+    "why_only_parity": "Theirs is a line chart with 'Latest'. Ours is a better chart of the same thing: past scores.",
+    "upgrade": "(a) A projection cone from the latest estimate to the exam date, from the last 30 days' slope and plan adherence, with the target line inside it. (b) 'What changed' between two sittings: select the gap and read 'Between Sep 12 and Sep 20: 214 questions, 9 mistakes fixed, Circles → Strong, whole-vs-part habit down 5'. It ties effort to results, which keeps students practising."
+   },
+   {
+    "feature": "Learning preferences",
+    "spec_says": "§3.4 + §4.1: questions per set, clock, difficulty, explanations and the calculator button, inline and saved instantly, mirrored in Settings.",
+    "why_only_parity": "Theirs has Practice Mode Timed/Untimed, Difficulty Adaptive/Fixed and toggles. Ours has more controls of the same kind: static defaults the student sets once and rarely revisits.",
+    "upgrade": "Stage-aware defaults (proposal 8): each row reads 'Set by your stage: Build · 34 days' with Change, and the rows move to test conditions as the exam nears, so learn mode turns into test mode on time."
+   },
+   {
+    "feature": "Recent activity",
+    "spec_says": "§3.10: a filtered feed under day headers (sets, tests, challenge, question of the day, mistakes fixed or logged, achievements, report replies), paged 20 at a time.",
+    "why_only_parity": "Theirs lists sittings ('Custom Set · 2 Modules · 8h ago'). Ours lists more kinds of event, but each row is still a log line: what was done, not what it changed.",
+    "upgrade": "Each session row shows its effect: 'Circles: Learning → Getting there · 2 mistakes fixed · 1 opened · ≈ +4 pts'. A 'Follow up' action runs that session's still-open misses as fresh twins, and a new filter, 'Had an effect', joins the chips."
+   },
+   {
+    "feature": "Saved & in progress",
+    "spec_says": "§3.12: the saved count with Practise saved, open mistakes with Fix all, assignments due, and up to 3 In progress rows with Resume.",
+    "why_only_parity": "Theirs shows counts of Saved Words, Redo Questions and Saved Questions. Ours adds actions, but a saved question still waits until the student remembers it.",
+    "upgrade": "Saved questions resurface as fresh twins 7 and 21 days after saving, as Up next items ('Saved Sep 2 · try a fresh one'). A bookmark list becomes spaced retrieval."
+   },
+   {
+    "feature": "Report a problem: the form",
+    "spec_says": "§2.10 + R17: a context box with (template, seed), summary 0/200, category chips, details 0/5000, 10 downscaled images, reply-to and drafts. Disputes are bounded (5 open) and answered by a person in /admin/reports.",
+    "why_only_parity": "Theirs is the same form: context box, Title 0/200, Category, Details 0/5000, 10 images. Ours adds disputes and replies, but 'Answer key is wrong' still waits for a person, and most such reports come from a misconception, not a key error.",
+    "upgrade": "An instant check on 'Answer key is wrong': the server re-runs the item's audit from (template, seed) and replies in the modal within a second. 'Re-derived independently: 5π/3 (check passed). Your answer 10π/3 is what you get using 180° for a whole circle.' A grid-in reply shows the accepted forms and the grid-in mistake the answer matches. 'I still think it's wrong' sends it on with the audit result attached. Most disputes become a learning moment in seconds, and real key errors reach the admin with evidence."
+   },
+   {
+    "feature": "Send feedback (general)",
+    "spec_says": "§2.10 general mode: a summary, Bug / Idea / Confusing / Other, details, images and device details, with replies under Your reports.",
+    "why_only_parity": "Theirs is the same modal without item context. The student still has to describe what they were doing.",
+    "upgrade": "Attach a breadcrumb automatically, behind the same Show disclosure: the last 10 shell actions (page, button, API path and status), kept in memory only, plus the question on screen as (template, seed). Add a 'Fixed because you reported' list in Help, so students see their reports change things and keep sending them."
+   },
+   {
+    "feature": "The usage-meter slot (Question types met)",
+    "spec_says": "§3.11 + §9: '57 of 386 question types', with domain and topic bars and 'Practise types I haven't met'.",
+    "why_only_parity": "It swaps their usage meters for a coverage meter, but a raw count weighs a rare type the same as one on every test, so '57 of 386' says little about readiness.",
+    "upgrade": "Weight coverage by how often a type appears on the test: 'Types that make up 80% of test questions: 41 of 60 met', with 'Meet the next most common type' first. The raw count moves to a second line, so coverage tracks the questions the student will actually see."
+   },
+   {
+    "feature": "Classes: assign, due dates, attach working",
+    "spec_says": "§7: join by code; set, module or section assignments, fresh per student or the same for all; due dates, late status and attachments; a roster; a class misconception ranking; 'Assign a repair to these 9'.",
+    "why_only_parity": "Their bundle has create class, add students, assign, due dates and Attach file. Fresh numbers stop copying, but every student still gets the same content.",
+    "upgrade": "A third Questions option, 'Tailored': on the assigned skills, each student's set starts with their own open traps and due check-ins, then their least-met types, then fresh questions, with one count and due date for everyone. The teacher's detail shows 'had 3 of their own mistakes · fixed 2' per student, so one assignment does the right work for 24 different students."
+   }
+  ]
+ },
+ "experience": {
+  "proposals": [
+   {
+    "title": "Save progress and sign in with a passkey: one tap, no email, no password, no Google",
+    "what": "Screens: Settings › Account & devices, the 50-answer save nudge, the account-menu callout and /signin/.\n\nSaving:\n- A new primary button, \"Save with a passkey\". The OS sheet names the method: Face ID, fingerprint or Windows Hello.\n- It calls navigator.credentials.create with:\n  - rp.id = the site host;\n  - user.id = 16 random bytes stored against the learner;\n  - user.name = the board handle or name;\n  - residentKey required, userVerification preferred, algs -7 and -257.\n- It then POSTs /api/passkey/register with clientDataJSON, response.getPublicKey() (SPKI DER, so no CBOR parsing), getPublicKeyAlgorithm() and transports.\n- Toast: \"Saved. This passkey signs you in wherever your passwords sync.\"\n- The nudge becomes \"Save with Face ID\" (one tap), with \"Use email instead\" as the quiet option.\n\nSigning in:\n- The first tab on /signin/ is Passkey.\n- The email field has autocomplete=\"username webauthn\", so the passkey appears in the browser's autofill list (conditional mediation). One tap plus the biometric signs you in. A \"Sign in with a passkey\" button does the same.\n- The server:\n  - checks a single-use challenge (5 minutes, stored server-side);\n  - checks the origin, rpIdHash = sha256(rp_id) in authData[0:32] and the UP flag;\n  - verifies the signature over authData || sha256(clientDataJSON) with `cryptography` (ECDSA-SHA256 or RSA-PKCS1v15-SHA256);\n  - only logs a non-increasing sign_count (synced passkeys send 0);\n  - then runs the existing carry and adopt path. Toast: \"Signed in as Dana · 24 answers moved here\".\n- A school Chromebook with no synced passkey gets the browser's own \"Use a phone\" QR (hybrid transport). We need no extra code for that.\n\nManaging passkeys:\n- Settings lists each one: \"iCloud Keychain · created Sep 23 · last used today\", with [Remove].\n- Removing the last way to sign in brings up a confirm.\n- A passkey counts as \"saved\" everywhere a saved email does, including creating a class.\n\nEmail codes and pairing stay as fallbacks.",
+    "beats": "TopTierPrep's /auth is Google only. On a new device that means Continue with Google, choose the account, then a password and 2FA: at least 3 taps plus typing. It needs a Google account for a minor, and many school-managed Google accounts block third-party sign-in. Ours is 2 taps (the autofill row, then the biometric) with no third party. Saving is where the spec itself falls short: the v2 email path is 5 steps across two apps (type the email, send, open mail, read the code, type it). The passkey is 1 tap, and it works with no SMTP, so the open question 'is SMTP configured?' stops blocking accounts.",
+    "effort": "M",
+    "needs": "- S1 server/account.py: register and login endpoints (options plus verify).\n- F4 tables: passkeys(cred_id PK, learner, user_handle, spki BLOB, alg, sign_count, label, created, last_used) and webauthn_challenges(challenge PK, learner, purpose, expires).\n- `cryptography` is installed locally (46.0.4) but must be added to the deploy.\n- HTTPS and a fixed RP ID (the production host; localhost works in dev).\n- progress.carry, export and delete-everything must cover passkeys.\n- R4's rule 'creating a class needs a saved email' becomes 'saved: passkey or verified email'.\n- The /signin/ and Settings pages (S1)."
+   },
+   {
+    "title": "'Answer key is wrong' is answered in a second: the generator re-solves the question",
+    "what": "The question comes from what the server stored for that attempt, (template, seed).\n\nIn UI.report:\n- \"Answer key is wrong\" now asks \"Which answer do you get?\" as A–D chips, or as the grid-in field with its live preview. This replaces the 40-character text box.\n- For question reports the modal says \"We have this exact question. No screenshot needed.\"\n\nPOST /api/report now returns {id, check}:\n- The server regenerates the Item from the stored (template, seed).\n- It reruns satbank/check.py's structural and prose checks on it and recomputes the key with the template's solver.\n- It compares the student's answer. Four outcomes:\n  - (a) A grid-in that scoring.grid_equal accepts but that was marked wrong. This is a marking bug. The attempt is re-marked right at once, the trap closes, the report becomes 'Fixed (automatic)' and admin is notified. Copy: \"You were right. 0.6667 is accepted, so this now counts as right.\"\n  - (b) A grid-in refused by the entry rule. Copy: \"Your 0.66 is too short. Grid-ins accept 2/3, .6666 or .6667 (the fourth-digit rule).\" The accepted forms are listed.\n  - (c) A multiple-choice pick with a named reason. Copy: \"Checked: the key is B (12). C is what you get if you used the diameter as the radius.\" The rationale steps follow.\n  - (d) The structural check fails on this seed. Copy: \"You found a broken question.\" The attempt is excluded for good (disputed = 1), the seed goes into bad_seeds so the Builder never serves it again, and the template is flagged at the top of the admin list.\n- After (b) or (c) the modal offers two buttons:\n  - \"That makes sense\" closes the report as 'Checked, no change'. No dispute is kept and none of the 5 slots is used.\n  - \"Still wrong: send to a person\" keeps the spec's human dispute.\n\nAfterwards:\n- The question's Report button reads \"Checked\", and the outcome appears in Your reports.\n- In a live sitting nothing is checked or revealed. When the sitting ends, the check runs and a toast says \"Report #123 checked\".",
+    "beats": "With TopTierPrep's report modal 'the student never sees what happens to a report': a wrong-key report disappears. The v2 spec adds a human queue, but who staffs it is an open question. Ours resolves most disputes in about a second and names the exact mistake. It re-marks real marking bugs itself and pulls broken seeds for every student. Only a generator with a solver and a verifier can do this.",
+    "effort": "M",
+    "needs": "- F6 server/reports.py: the check step, the automatic statuses and a bad_seeds table.\n- A public check_item(item) wrapper over satbank/check.py's _structure and _prose (the bank owner).\n- scoring.grid_equal plus the accepted-forms helper from the Results section.\n- F5: practice.Builder skips bad_seeds.\n- R19 deps.access gates the key reveal.\n- F6 report.js: the UI.report changes."
+   },
+   {
+    "title": "Pages that are ready when you click: prerendering plus paint-from-cache",
+    "what": "Prerendering:\n- Every shell page's head gets one inline speculation-rules block, next to the theme snippet.\n- It prerenders same-origin links at moderate eagerness (hover or pointerdown).\n- It excludes /practice/session/*, /test/*, /signin/*, /link/*, /admin/*, /api/* and any link marked data-noprerender.\n\nPaint from cache:\n- UI.api gets UI.cached(path).\n- It paints the last sessionStorage copy of the page's main GET at once, the same pattern satf.shell uses.\n- It then revalidates, and re-renders only if a hash of the JSON changed.\n- Each page's cache is capped at 200 KB and cleared on sign-out or a change of learner.\n\nNo side effects before activation:\n- While document.prerendering is true, pages make GET calls only.\n- Any POST at load waits for the 'prerenderingchange' event.\n- F0 adds a check that greps page scripts for load-time POSTs.\n\nOther warming: hovering the sidebar also fetches the palette index (/api/types) once per session.\n\nPerformance budget, as an acceptance check:\n- Chrome at 1280: after a 200 ms hover, clicking a nav item paints real content, not a skeleton, within 100 ms of activationStart.\n- Safari and Firefox load normally, but the cached content is painted within 50 ms of DOMContentLoaded.",
+    "beats": "TopTierPrep is a React SPA whose routes mount first and fetch afterwards, so sections open on skeletons. Their comments modal opens with a skeleton and then loads, and their plan builder plays a fake progress screen. Ours shows real content on click, with no framework and no service worker.",
+    "effort": "S",
+    "needs": "- F2 ui.js: the UI.api cache and a boot sequence that is safe to prerender.\n- F0: the head snippet on every page.\n- S3–S10: each section page keeps its load-time requests GET-only, or guards them.\n- No server changes."
+   },
+   {
+    "title": "Where your points are: skills ranked by the score they would add",
+    "what": "On /me/, the Skills card header gets a switch: \"By points | By domain\". By points is the default once the student has 30 or more answers.\n\nEach row, sorted by estimated gain:\n- the glyph and the name;\n- a horizontal bar whose length is the gain, labelled \"+30 est.\";\n- \"52% right now · about 5 of 44 in a section\";\n- open-mistake dots;\n- Practise (prefs.set_length at the coach's tier).\n\nThe top row is tagged \"Most points\".\n\nHow the gain is computed, on the server, with the same model the score uses:\n- Section fraction = Σ over topics of (blueprint share × weighted accuracy).\n- Weighted accuracy uses scoring.WEIGHT over the last 60 undisputed answers per topic, pulled toward the global mean when a topic has fewer than 10.\n- gain = scoring._interpolate(the fraction with this skill at 80%) − _interpolate(the fraction now), rounded to 10.\n- A skill with fewer than 5 answers reads \"Not measured yet · try 5\".\n\nCopy:\n- Helper: \"Estimated with our score model: how far your Math band would move if this skill reached 80%.\" It links to Help #points.\n- Footer: \"Your top 3 add about +70\", with [Practise them · 15 q], one mixed set.\n\nThe same component is used on /results/ and the share view.",
+    "beats": "TopTierPrep's subject performance is empty on a new account. Their domain cards read '13% · 13% of test section, 1-8 questions', which really means 1 of 8 right. Their per-question data carries no skill at all. They show percentages. We tell the student where the next 30 points are and start that set in one click.",
+    "effort": "M",
+    "needs": "- F4 server/estimate.py: whatif_skills(learner), reusing scoring.WEIGHT, _interpolate and the blueprint shares.\n- /api/me/summary: domains[].skills[].gain.\n- F1 kit: UI.skillRow gets a gain slot.\n- S6 Results reuses the component.\n- S1: the Help answer.\n- The README must say the scale anchors are invented (scoring.py already does)."
+   },
+   {
+    "title": "Next, from any page: the Today card becomes a one-click launcher (G N)",
+    "what": "The pill:\n- The sidebar Today card, and the card in the phone menu sheet, end with a full-width pill filled from /api/shell.next.\n- It shows the first of these that applies:\n  - \"Resume module · 12/22 · 18 min left\";\n  - the first unfinished plan task: \"Start · Circles, Percentages · 10 q\";\n  - the coach's pick: \"Start · Probability · 10 q\";\n  - \"Answer today's question\".\n- Clicking it POSTs that item's start body and goes straight into the session, with no stop at Today.\n\nOther ways in:\n- On the rail, hovering the Today ring shows a play glyph, and clicking it starts the same thing. Tooltip: \"Next: Circles · 10 q · G N\".\n- The global key is G then N. The palette's first Suggested row is the same item.\n- The session summary's primary button is \"Next: …\" from the same source. A plan day then runs as: G N, answer, Enter on Next, repeat.\n\nWhen the Plan section's day rule says the day is done, the pill turns quiet: \"Day done · Another set?\" (the coach's pick).",
+    "beats": "In the slot where this card sits, TopTierPrep's sidebar shows an 'Upgrade to Pro' card. Starting today's plan task there takes Dashboard, then the Today's Plan card, then the task, then Start: 3 clicks from any other page, and only when their plan builds (it failed 3 times out of 3). Ours is 1 click or 2 keys from every page, and moving from set to set needs no page in between.",
+    "effort": "S",
+    "needs": "- /api/shell adds next {title, detail, kind, start {path, body}}. It comes from S7's plan.today_summary() (the first unfinished counted task), then resume, then progress.coach.\n- F2: the shell renders it.\n- S4: the session summary uses the same next.\n- R22: the §2.8 key map adds G N."
+   },
+   {
+    "title": "Sign in a shared computer without typing on it: it shows a code, your phone approves",
+    "what": "On the new device:\n- /signin/ opens on \"Use your phone\".\n- It shows a 180px QR of /link/?r=<32-character request token>, the same request as 6 digits (\"482 913\", DM Mono 32), \"Expires in 4:59\" and its own label (\"Chrome on Windows\").\n- A checkbox, \"This is a shared computer\", makes the sign-in last for this session only.\n\nOn the phone:\n- Either scan the QR with the camera (it opens /link/?r=), or go to Menu › Sign in another device and type the 6 digits.\n- The phone reads \"Sign in Chrome on Windows as Dana? It asked 20 s ago. Only do this for a screen in front of you.\" [Sign in] [Not me].\n\nFinishing:\n- The computer polls /api/link/{r} every 2 s.\n- On approval it carries in its own answers, adopts the account and shows \"Signed in as Dana\".\n- On Not me it reads \"Your phone said no.\"\n- If the phone's browser has no learner (on iOS the camera opens Safari, whose storage is separate from the home-screen app), /link/ reads: \"Open SAT Freshman on your phone, then Menu › Sign in another device, and type 482 913.\"\n\nThe spec's four-step pairing (A shows a code, B types it, A allows, B confirms) stays only as a fallback.\n\nSecurity:\n- The code names the device that is asking. A guessed code can only let someone in if the owner confirms it on their own phone.\n- Tokens are single use and last 10 minutes.\n- The spec's per-IP limits still apply.",
+    "beats": "On a library or school computer, TopTierPrep means typing a Google email, password and 2FA code on a shared machine. The v2 spec's pairing takes 4 steps across two devices, plus typing 6 digits on the new one. Ours is 2 taps on the phone and nothing typed on the shared computer.",
+    "effort": "M",
+    "needs": "- S1 server/account.py: request, status, approve and deny endpoints.\n- F4: a sign-in request table (token, code, device, answers, created, expires, state, approver), or pairs with a direction column.\n- S1: the /link/ page.\n- qr.js (already in the spec).\n- F2: the menu item.\n- It uses P9's device tokens if they are built; otherwise it adopts the learner code as the spec does."
+   },
+   {
+    "title": "Change anything by typing it: goals and settings as palette commands",
+    "what": "Commands:\n- The palette parses commands and shows them as a composed first row with the current and new value:\n  - \"target 700\" → \"Target: 650 → 700 · about 22 points a week · Ambitious\";\n  - \"exam dec 5\" → \"Exam: Nov 7 → Sat, Dec 5 · in 73 days\";\n  - also \"timer off\", \"clock pace\", \"set 22\", \"hard\", \"adaptive\", \"grid\", \"explanations always\", \"dark\", \"text large\", \"keys off\" and \"week sunday\".\n\nSettings by name:\n- Every pref in the registry is searchable by its label and synonyms (\"calculator\", \"stopwatch\", \"font size\"), and shows its current value.\n- Enter flips a switch, or opens that setting's segmented control inside the row; the arrow keys pick a value.\n\nActions: sign out, save progress, pair, copy share link, download my data, report a bug.\n\nApplying a change:\n- It sends PUT /api/me and closes the palette.\n- A toast confirms, for example \"Target 700 · Undo\". Undo puts the previous value back.\n\nOne list for every surface: GET /api/prefs returns [{key, label, values: [{v, label}], helper, synonyms}], cached per deploy. Settings, Me's inline preferences and the palette all render from it.",
+    "beats": "To change the target on TopTierPrep you go to the Dashboard, tap the pencil, type and Save Score, and the new target never reaches their profile. Changing practice mode or difficulty means going to Profile, finding Learning Preferences and opening a select. Ours is ⌘K, type, Enter from any page. The pace shows before you commit, and Undo is there after.",
+    "effort": "S",
+    "needs": "- F4 prefs.py: labels and synonyms, served at GET /api/prefs.\n- F2: the palette parser.\n- S7: plan.pace(target, exam, estimate), for the preview.\n- R15: the target and exam_date validation."
+   },
+   {
+    "title": "A streak one sick day can't break: earned spare days, free",
+    "what": "The rule, in progress.days (R13):\n- Every 7 study days in a row banks one spare day, up to 2. Planned rest days stay neutral, as specified.\n- If a day with no study was not a planned rest day and a spare is banked, the spare is used automatically, the streak carries on, and the day is marked spare_used.\n\nWhere it shows:\n- The flame tooltip and the Today card header read \"6 days · 1 spare\". Each banked spare adds a small outlined flame beside the count, so the state is shown by an icon, not colour alone.\n- The morning after a spare is used, a toast: \"Yesterday used a spare day. Streak 12 kept.\" [See] → /me/#activity.\n- On the heatmap, a day that used a spare shows a hollow ring, with the tooltip \"Tue, Sep 22 · spare day used · streak kept\".\n- The profile's STREAK tile sub-line: \"best 19 · 1 spare banked\".\n- Help: \"What is a spare day?\". The streak achievement text says spares count.",
+    "beats": "TopTierPrep's streak says 0 on the profile and 1 on the question of the day, and any missed day breaks it. The v2 spec fixes the disagreement and keeps planned rest days, but a student still loses a 40-day streak to one fever. Duolingo sells streak freezes. Ours are earned by studying, cost nothing, and follow one rule on every screen.",
+    "effort": "S",
+    "needs": "- F4 progress.days: spares, a spare_used flag per day, best_streak.\n- /api/me/activity: the spare flag.\n- F2: the shell tooltip and toast.\n- S1: the heatmap copy.\n- The achievements streak rule reads the same function."
+   },
+   {
+    "title": "See every signed-in device and sign one out; a shared-computer mode",
+    "what": "Device tokens:\n- Every new sign-in (email code, pairing, passkey, phone approval) gives that browser its own device token, 'd:' + 32 base-36 characters, instead of handing over the learner code.\n- app.py learner_of resolves 'a:' codes as today, and resolves 'd:' tokens through devices(token PK, learner, label, method, created, last_seen, session_only, revoked). That is one primary-key lookup, and last_seen is written at most every 10 minutes.\n\nThe Devices table in Settings › Account & devices:\n- \"Chrome on Mac · this device · active now\";\n- \"Safari on iPhone · 2h ago · signed in Sep 21 by passkey\";\n- \"Chrome on Windows · shared computer · expires in 11h\".\n- Each row has [Sign out]. That device gets the retired banner on its next call.\n- \"Sign out all other devices\" revokes every other token. Rotating the 'a:' code is kept for when the code itself leaked.\n\nShared computer:\n- A checkbox on /signin/.\n- The token lives only in sessionStorage and expires 12 h after its last use.\n- The user card's second line reads \"Shared computer · Sign out\".\n\nThe copyable device code is no longer offered as the way to move progress. It moves under Advanced.",
+    "beats": "TopTierPrep has a plain Sign out for the current device and no device list, so a session left on a library computer stays signed in. The v2 spec can only rotate the one shared code, which signs out every device at once, and it still treats a copyable code as the credential. Ours shows where you are signed in and signs out one device in one click.",
+    "effort": "M",
+    "needs": "- F4: the devices table, indexed on learner.\n- F0: the app.py learner_of change.\n- S1 account.py: every flow mints tokens.\n- progress.carry moves devices.learner; delete-everything removes the rows.\n- UI.learner accepts d: tokens.\n- test_flow: a revoked token → 401 retired."
+   },
+   {
+    "title": "Thumb-first phone chrome: hold a tab for shortcuts, swipe up for everything",
+    "what": "Hold a tab:\n- Holding any bottom tab for 450 ms opens a bottom-anchored shortcut menu with counts. Moving 8 px cancels it, and -webkit-touch-callout is off.\n- The shortcuts:\n  - Today: \"Next: Circles · 10 q\", \"Question of the day\", \"Daily challenge · New\".\n  - Practice: \"Quick question\", \"Log a mistake\", \"Review · 14 open\", \"Saved · 3\", \"Words · 12 due\".\n  - Tests: \"Resume module · 12/22\", \"New module · 22 q\", \"Full section\", \"Diagnostic\".\n  - Plan: today's tasks.\n  - Results: \"Latest report · Module · Sep 20\", \"Skills\".\n- Every item is also in the menu sheet, for keyboard and screen-reader users.\n\nSwipe up:\n- A swipe up on the tab bar, or a tap on its 24px grip, opens the menu sheet.\n- The most used rows (Review, Words, Compete, Quick) sit in the sheet's bottom half.\n\nPalette on the phone:\n- The input is pinned just above the keyboard (visualViewport).\n- Results run bottom-up, so the best match is nearest the thumb.\n\nThe Quick sheet puts Check and Another in a 56px bottom action bar.\n\nFirst phone visit only: a hint above the tabs, \"Hold a tab for shortcuts\", gone after the first hold or a tap on ×.\n\nThe top bar and the 5 tabs are unchanged (R1, R29).",
+    "beats": "There is nothing to compare: the teardown never saw TopTierPrep's phone layout. This beats the v2 spec's own phone chrome. It puts Search, the Review chip, Quick and the menu in the top strip, which is the hardest reach on a 6-inch phone, so reaching Review, Words or Compete (places a student goes every day) means a stretch to the top-right corner and then a second tap.",
+    "effort": "M",
+    "needs": "- F2 shell: tab hold, the grip, the phone palette layout.\n- F1 kit: UI.pop with bottom anchoring.\n- The counts already come from /api/shell.\n- No change to R1."
+   },
+   {
+    "title": "Live class: run a set on the projector and see why each wrong answer happened",
+    "what": "Starting:\n- The teacher view adds \"Run live\" on any same-for-everyone assignment, or on a new 5–10 question set (skills or question types, and a difficulty).\n- Students in the class see a shell banner, \"Period 3 is live · Join\" (from /api/shell.live).\n- Joining opens a minimal runner with no shell, showing only the current question.\n\nThe teacher's screen, built for a projector:\n- The question at 28px, \"18 of 24 answered\", and one bar per option with its count.\n- After Reveal, each wrong option shows its named misconception: \"C · 9 · Used the diameter as the radius\".\n- Controls sit at the bottom: Reveal, Next, End. Keys: Space reveals, → moves on.\n- The projector never shows a student's name, only counts.\n\nStudents see their own verdict and the rationale at Reveal.\n\nThe end screen:\n- Misconceptions across the set, ranked by students affected, with \"Assign a repair to these 9\" (the spec's repair endpoint).\n- The sitting goes into each student's history as an assignment.\n\nLive state comes from polling GET /api/classes/{id}/live every 2 s, with no websockets.",
+    "beats": "TopTierPrep's /teacher dashboard is hidden and exists only in their code. It creates classes and assigns homework with due dates: fixed work, marked afterwards, scores only. Ours runs the lesson live and shows why students got it wrong while the class is still in the room. Only a bank that names the misconception behind every wrong option can do that.",
+    "effort": "M",
+    "needs": "- S2 server/classes.py: a live table (class, assignment, question index, state, started). Answers reuse attempts, with one session per student.\n- F3: the workspace gets a 'live' mode (exam mode without navigation).\n- F1 charts.js: UI.spread.\n- F2: the shell banner."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Sign-in page (their /auth)",
+    "spec_says": "/signin/ has three tabs: Email code · Pairing code · Device code. Email codes expire in 30 minutes; pairing needs approval on the first device.",
+    "why_only_parity": "No sign-up wall beats theirs on a first visit. Coming back on a new device is slower than theirs, though:\n- by email: type the address, send, switch to mail, read, switch back, type 6 digits (about 7 steps);\n- by pairing: 4 steps across two devices.\nGoogle takes 2–3 taps.",
+    "upgrade": "- Passkey first (proposal 1): the autofill row plus a biometric, 2 taps.\n- The phone approves the new device (proposal 6).\n- Email: on a device not marked shared, remember the last address, so the banner offers 'Send a code to d•••@gmail.com' in 1 tap."
+   },
+   {
+    "feature": "Account menu / user popover",
+    "spec_says": "A 300px role=menu: Profile, Settings, Sign in, Pair, Class, Shortcuts, Help, Feedback, Sign out. Esc closes it and focus returns.",
+    "why_only_parity": "Theirs has the same core list (Profile, Send feedback, Sign out). Fixing their Esc bug is correctness, not an advantage.",
+    "upgrade": "- A 'Switch student' section for family devices:\n  - up to 4 learners remembered on the device (satf.learners: token, name, avatar), each row with today's streak;\n  - one tap switches (UI.useLearner and a reload), with a toast 'Now Maya';\n  - 'Add another student' starts a fresh anonymous learner;\n  - hidden on shared-computer sign-ins.\n- Theme (Light/Dark) and text size (A/A+) toggles inline in the menu header."
+   },
+   {
+    "feature": "Sign out",
+    "spec_says": "A confirm dialog for saved accounts; the unsaved-device warning dialog otherwise.",
+    "why_only_parity": "The same 2–3 clicks and the same result as their Sign out.",
+    "upgrade": "- Saved accounts sign out with no dialog. An 8 s 'Signed out · Undo' toast appears, and the old credential is held in memory until it closes.\n- Shared-computer sign-ins end when the browser closes and after 12 h idle (proposal 9).\n- Unsaved devices keep the warning dialog."
+   },
+   {
+    "feature": "Sidebar collapse to icon rail",
+    "spec_says": "The toggle or [ collapses the sidebar to a 68px rail with badges, tooltips and the Today ring.",
+    "why_only_parity": "Collapsing to a rail is their mechanism. Only the badges are new.",
+    "upgrade": "Peek: resting the pointer on the rail for 400 ms, or holding [, opens the full sidebar as an overlay without changing satf.rail. It closes when the pointer leaves or the key is released, so the rail never costs the badges' text."
+   },
+   {
+    "feature": "Account block",
+    "spec_says": "Saved: 'Progress saved to email · since', Manage, Sign out. Unsaved: Save progress, Pair a device, Share, Leave this device.",
+    "why_only_parity": "It shows the same facts as their Account card: email, connected sign-in, sign out.",
+    "upgrade": "- The Devices list with per-device sign-out (proposal 9) and the Passkeys list (proposal 1), each with last used.\n- A recovery line: 'You can sign in 2 ways: passkey, email', or, with an orange dot, 'Only one way to sign in. Add a passkey or email.' A student then knows they can't be locked out."
+   },
+   {
+    "feature": "Avatar management",
+    "spec_says": "An initial or any of the 19 topic glyphs. No photo, for minors' privacy.",
+    "why_only_parity": "Below theirs: they allow a photo. A picker of 19 glyphs, all free to choose, says nothing about the student.",
+    "upgrade": "Earned avatars:\n- A topic glyph unlocks when that skill's badge is earned (mastery at or above STRONG).\n- The 4 domain badges unlock an outer ring.\n- A locked tile reads 'Reach Strong in Circles · 62%', with a bar.\nThe avatar on boards and class rosters then says something true about the student, and it stays photo-free."
+   },
+   {
+    "feature": "Profile stat tiles",
+    "spec_says": "A 2×4 grid: Streak, Answered, Accuracy, Study time, Tests, Mistakes fixed, Words, Rating. Each has a value, a sub-line and a link.",
+    "why_only_parity": "The same idea as their 2×2 (Streak, Tests, Solved, Vocab), with more tiles. It is still a snapshot with no direction.",
+    "upgrade": "- Each tile gets a 14-day sparkline (24px, no axis).\n- Each gets a delta against the previous period, as an arrow glyph and text: '▲ 5 pts', '▲ 84', '▼ 40m'.\n- A profile-wide range switch, 7 days · 30 days · All (?range=, /api/me/summary?range=), re-scopes the tiles, Skills, What keeps catching you and Recent activity."
+   },
+   {
+    "feature": "Performance snapshot ranks",
+    "spec_says": "'Everyone #128 of 2,410', 'Sitting Nov 7 #4 of 37', one line per class, and the challenge's week rank.",
+    "why_only_parity": "A rank and a total, the same form as their Global and Country Rank (with fairer groups).",
+    "upgrade": "- Movement since last week ('▲ 3', from a stored weekly snapshot).\n- The gap to the next place: '7 right answers to pass #3', from the neighbouring board row.\n- Each student's best skill rank this week ('#6 in Circles'), so weaker students can lead somewhere.\n- Every line opens the board scrolled to 'you'."
+   },
+   {
+    "feature": "Target score quick edit",
+    "spec_says": "A popover with a 200–800 slider in steps of 10, chips 600–800, '+100 from your latest band', and Save.",
+    "why_only_parity": "Their Set Target Score modal (number input, range bar, disabled Save) without their wrong 'current score'.",
+    "upgrade": "- As the slider moves, the popover shows Plan's PaceLine and PaceTag: '45 days · 31 study days · about 22 points a week · Ambitious'.\n- When the tag is Ambitious or above, one tap moves the date: 'Dec 5 makes it Steady'.\n- Once the target is reached, it offers 'Raise to 750?'."
+   },
+   {
+    "feature": "Exam date picker",
+    "spec_says": "Chips for the upcoming official dates, each with 'in N days', plus Another date and No date yet.",
+    "why_only_parity": "Their select of official dates, minus the past ones.",
+    "upgrade": "- Each chip carries the registration and late-registration deadlines: 'Register by Oct 23 · late Oct 27'.\n- A 'Registered' tick is stored on learners. In the deadline's last week, until it is ticked, the Today card reads 'Register for Nov 7 · 5 days left'.\n- 'Add deadline to calendar' uses UI.ics(event).\n- The deadlines live in server/satdates.py, checked against the College Board."
+   },
+   {
+    "feature": "Learning preferences on the profile",
+    "spec_says": "Five inline rows (Questions per set, Clock, Difficulty, Explanations, Calculator), each saved instantly.",
+    "why_only_parity": "The same number and kind of controls as theirs (Practice mode, Difficulty, three toggles).",
+    "upgrade": "Modes above the rows, each setting a documented bundle of prefs in one tap:\n- Learn: instant feedback, explanations always open, untimed, repairs right after a miss.\n- Test-like: feedback at the end, SAT pace, calculator docked.\n- Speed: 5 questions in 6 minutes, instant feedback.\n- Custom.\nA mode shows a preview, 'Your next set: 10 questions · SAT pace 16 min · key after each', and an Undo. Editing any row switches to Custom."
+   },
+   {
+    "feature": "Subject performance (Skills card)",
+    "spec_says": "Four domains with skill rows: mastery bar, answered, accuracy, open-mistake dots, Practise; strongest and weakest in the header.",
+    "why_only_parity": "A bar and a percentage per skill is what their block is meant to show (theirs is empty).",
+    "upgrade": "- Sort by estimated points to gain (proposal 4).\n- Each skill row gets a strip of its last 5 answers (✓ ✕), so a recent slide shows instead of being averaged away."
+   },
+   {
+    "feature": "Score trend",
+    "spec_says": "A range bar per sitting, the target as a dashed line, an exam tick, a tooltip, and a click through to the report.",
+    "why_only_parity": "Their Score Trend chart with 'Latest', drawn better.",
+    "upgrade": "- Hovering or focusing the gap between two sittings shows what happened in between: 'Sep 12 → Sep 20: 212 questions · 3h 40m · 11 mistakes fixed · +40'. It is computed from progress.days and the traps closed between the two finish times.\n- The biggest-gain gap is labelled on the chart once.\nIt ties effort to score, which no chart of theirs does."
+   },
+   {
+    "feature": "Report modal fields",
+    "spec_says": "Title 0/200, category chips, details 0/5000, 10 images downscaled in the browser, reply-to, drafts, disputes.",
+    "why_only_parity": "Field for field, it is their modal.",
+    "upgrade": "- Question reports say 'We have this exact question (circles/central_angle · seed 88213). No screenshot needed.' Images move behind 'Add images'.\n- Typo, Figure and Display send without details, so a report takes 2 taps (Report, a chip, Send).\n- Answer key is wrong asks for the option and gets the instant check (proposal 2)."
+   },
+   {
+    "feature": "Send feedback (general)",
+    "spec_says": "The same modal in general mode: Bug / Idea / Confusing / Other, with page context.",
+    "why_only_parity": "Theirs is the same modal without the item context.",
+    "upgrade": "- /help/#fixed, 'Fixed from your reports': the last 30 reports marked Fixed, each with category, skill or page, date and a one-line change.\n- The Thanks screen links to it, so students see that reports change things."
+   },
+   {
+    "feature": "Toasts",
+    "spec_says": "Bottom-left, up to 3 stacked, with actions. Used for achievements, report replies and new assignments.",
+    "why_only_parity": "They have generic toasts too, and in both products a missed toast is gone.",
+    "upgrade": "- 'Since you were last here' at the top of the account menu, with an unread count: achievements, replies, new assignments, rank changes and spare days used. It holds the last 20 items from /api/me/feed, with unread dots.\n- After 2 or more days away, it opens once as a sheet whose pill is 'Pick up: …' (proposal 5's next)."
+   },
+   {
+    "feature": "Help / FAQ (their subscription FAQ)",
+    "spec_says": "/help/ with live search, sections as <details>, anchors and copy-link buttons.",
+    "why_only_parity": "An FAQ accordion, the same form as their billing FAQ, with better content.",
+    "upgrade": "- UI.help(id): '?' buttons beside the band, the mastery bar, the streak, the open-mistake dot, the rank and every preference row. Each opens its answer in a popover without leaving the page.\n- The palette searches Help: 'why band' shows the answer inline, and Enter opens /help/#band."
+   },
+   {
+    "feature": "Log a mistake (their add-your-own-word button)",
+    "spec_says": "Skill chips → question-type rows with Show an example → an optional reason → an optional where → Add to my mistakes.",
+    "why_only_parity": "Below theirs in step count: 5–7 steps against their 3 (tap, type the word, Add).",
+    "upgrade": "- Search first: one field over the 386 types and the misconception labels (the palette index), each result with a one-line stem preview.\n- Enter logs it, with the origin remembered (satf.quick.origin). Toast: 'Logged · Practise now · 3', with [Add what went wrong].\n- The skill chips stay as a way to browse.\n- The palette logs from anywhere: 'log central angle'.\nThat is 4 keystrokes on a desktop and 3 taps on a phone."
+   },
+   {
+    "feature": "Homework attachments (their Attach file)",
+    "spec_says": "After finishing, attach up to 5 images of working (downscaled, with remove).",
+    "why_only_parity": "Their 'Attach file'.",
+    "upgrade": "- The student is asked per missed question: 'Add working for Q3 · Q7'. Each image attaches to that question.\n- The teacher sees it beside the student's pick and its named misconception, and can reply per question.\n- The student sees 'Ms. Rivera commented on Q7' in the inbox."
+   },
+   {
+    "feature": "Profile length on the phone",
+    "spec_says": "Thirteen cards in one column, in a fixed order.",
+    "why_only_parity": "One long scroll, like theirs.",
+    "upgrade": "- A sticky chip row under the identity card (Goals · Skills · Trend · Mistakes · Badges · Activity · Settings) highlights the card in view.\n- Each card's header collapses it to a one-line summary ('Skills · weakest Probability 41%'). The state is kept in localStorage."
+   },
+   {
+    "feature": "Daily and weekly goal",
+    "spec_says": "Daily and weekly bars, 7 day dots and the preferred time.",
+    "why_only_parity": "Their 'Daily 2 Hours / Weekly 12 Hours' with progress bars.",
+    "upgrade": "- Goal history: 'Met 4 of the last 6 weeks', as 6 mini bars, with the best week named.\n- A missed week says by how much and on which days, from progress.days."
+   }
+  ]
+ },
+ "advantage": {
+  "proposals": [
+   {
+    "title": "Bring any missed question here: a College Board ID or pasted text becomes its question type, your named mistake, and unlimited twins",
+    "what": "ENTRY POINTS. (1) Quick sheet › Log a mistake opens on one field, 'Question ID or paste the question'. The spec's four-step skill/type/misconception picker becomes the fallback link 'Pick by skill instead'. (2) Palette: a query matching ^[0-9a-f]{8}$, or any paste longer than 60 characters, puts a matcher row first, e.g. 'College Board 23c5fcce · Circles · Arc length from circumference', with the actions Practise 5 like it · Log as a mistake. (3) A 'Bring your misses' sheet under Profile › Saved & in progress. It takes up to 200 IDs with any separators and returns a table: ID · skill · question type · Matched / Not in our set. Buttons: [Add 23 to my mistakes] and [Practise all · 2 each].\n\nMATCHING. An ID is an exact match: material/keys cb_id → topic Source → Source.build(Random(0)).template. That covers 1,030 official Math items, built once at startup. Pasted text goes through a stdlib TF-IDF cosine match, with numbers masked to '#', over the stems of the 1,030 official transcripts plus the survey's 18 generated stems per template. The sheet shows the top 3 as cards. Each card has a match word (Exact / Close / Possible) and one generated example from the reserved seed range 900000+, shown with no key, so the student can tap 'This one'.\n\nNAMING THE MISTAKE. The sheet then asks 'Which answer did you pick?': A–D, or the value for a grid-in. For an ID or an Exact text match, the server compares the official option at that letter with the reproduced item's choices and returns that option's named misconception. On the current bank, 2,183 of the 2,367 official wrong options (92%) are reproduced with a named reason; I measured this. Otherwise the sheet lists the template's surveyed reasons to choose from. 'Add to my mistakes' opens the trap with source 'outside' and origin cb_qbank / school / bluebook / book / other, and offers [Practise now · 3] with fresh numbers.\n\nThe official item itself is never shown, only its type and our generated twins.",
+    "beats": "TopTierPrep's only capture tool is 'Add your own word'. A Math question missed in their Question Bank can only be retried: the same question, with the answer already known. Their Redo list has no UI, and nothing from outside their site can be brought in. Ours turns any missed official question into its exact question type. It names the misconception behind the letter the student picked, then drills that type with new numbers until two clean answers close it. A finite bank has no 'type' to map an outside question onto. Pasted stem text also covers their own Question Bank items, whose IDs are in their own format.",
+    "effort": "M",
+    "needs": "- A startup map (in blueprint.survey or a new server/types.py): cb_id → template, plus the TF-IDF index built from material/keys and material/transcripts. The transcripts are used only as an index and never served (College Board terms).\n- GET /api/types/match?id= and POST {text} → top 3 {template, topic, skill, score, via}.\n- POST /api/types/match/pick {cb_id|template, letter|value} → {reason}.\n- /api/mistakes/log accepts cb_id and letter.\n- POST /api/mistakes/import {ids ≤ 200}, rate-limited.\n- traps.origin gains 'cb_qbank' (F4).\n- Review (S10) renders 'Logged by you · College Board 23c5fcce'.\n- Palette hook (F2)."
+   },
+   {
+    "title": "Score path: where your next points come from, skill by skill",
+    "what": "PLACEMENT. A 'Where +80 comes from' list under the Target row in Profile › Goals. The same payload feeds Plan's GainCard, the Results skill rows and a palette action, 'Where are my points?'.\n\nTHE MATHS: one server function, estimate.gains(learner).\n- Start from the section blueprint: blueprint.slots for module 1 and for the expected route.\n- For each topic and tier, take the learner's recent first-try accuracy, shrunk toward their overall accuracy by EVIDENCE.\n- That gives an expected difficulty-weighted fraction (scoring.WEIGHT), which scoring's ANCHORS turn into a scaled score.\n- Gain for a topic = the expected score with that topic at Strong-level accuracy, minus the expected score now.\n- Questions to Strong = the smallest k right answers that lift progress.mastery_of past STRONG. This is a stated lower bound.\n- Time = k × the learner's median seconds per question on that topic.\n\nTHE LIST.\n- Rows are ranked by points per minute. Each shows the glyph, the skill, the mastery word, 'about +20', 'at least 12 right · ~20 min' and [Practise].\n- Footer: 'Top 3 together: about +45 → 605–685', with a [Do the top 3] pill that queues one set over those three skills.\n- The Target popover adds 'What 700 takes: about 38 of 44 on the upper route · Algebra 14/15 · Advanced Math 13/15 · PSDA 6/7 · Geometry 5/7'.\n- Every figure says 'about', and 'How this is worked out' links to /help/#points.\n- Under 30 answers: 'Answer 30 questions and this shows where your points are.', with the coach's set.",
+    "beats": "TopTierPrep's Score Progress shows 0 until a full four-module test, and their target modal quotes the wrong current score. Their plan promises 'about 200 points per week' without saying where the points come from. Their domain cards read '13% of test section, 1-8 questions', which is mislabelled. Nothing on their site tells a student which skill is worth the most points, or how many questions it will take.",
+    "effort": "M",
+    "needs": "- estimate.py (R16, F4) gains gains().\n- scoring.py: WEIGHT, ANCHORS and the route rule. blueprint.py: TIERS and DOMAIN_SPLIT. progress: mastery_of and STRONG.\n- Per-tier accuracy from attempts, leaving out repeat and disputed rows (R8).\n- Plan (S7) and Results (S6) read the same payload.\n- A Help anchor, #points."
+   },
+   {
+    "title": "Trap gauntlet: a set built from your own misconceptions, planted in question types where you have never met them",
+    "what": "ENTRY POINTS. A header pill 'Trap gauntlet · 10' on Profile › What keeps catching you, plus a palette action and a Review hook.\n\nHOW IT BUILDS THE SET. Ten questions, and in every one the tempting wrong option is one of the student's own named misconceptions.\n- Misconceptions come from their traps' norms, open or fixed in the last 60 days, ranked by hits × recency.\n- Each is placed in a question type where the student has never met that misconception, to test transfer. When there are none, it falls back to fresh numbers in the same types.\n\nDURING AND AFTER.\n- Nothing is flagged during the set.\n- The summary groups by misconception, e.g. 'Used the diameter as the radius · caught you 3× in Circles · beaten in 3 of 4 new places', then each place with ✓ or ✕ (cylinder volume ✓, sector area ✕).\n- A miss opens a trap on the new template, like any miss.\n- A 'Trap-proof' achievement ladder: beaten in 5 / 20 / 50 new places.\n- Empty: 'Miss a few questions first: the gauntlet is built from your own mistakes.'",
+    "beats": "None; they lack it. Their bank names no misconceptions, so it cannot find a student's mistake inside a question they have never seen. Their Redo list (API only) replays the same question, whose answer the student already knows.",
+    "effort": "S",
+    "needs": "- A norm index at startup: for each template, the norms its distractors carry (blueprint.survey reasons through the R9 normaliser). Shared with Review's 'same mistake elsewhere'.\n- Drill source 'gauntlet', built on the existing `want` field, which walks up to 40 seeds for an option whose reason matches (F5).\n- Trap norms (R9, F4).\n- An achievement rule (S1)."
+   },
+   {
+    "title": "Reports answered in seconds by the independent solver, and one confirmed fix corrects every affected student",
+    "what": "1. INSTANT CHECK. When a student sends 'Answer key is wrong' where the answer has already been revealed, the server regenerates (template, seed) and reruns satbank.audit, the independent solver every item already passed. It compares the student's 'What answer do you get?' with the key and with each option's value.\n   - If they agree, the success screen reads: 'Double-checked: a second solver, written separately from the question, also gets B = 12. Your 18 is option C: Used the diameter as the radius.' It offers [That explains it], which closes the report as Checked, no change, and withdraws the dispute, and [Keep it open for a person].\n   - Otherwise it reads: 'We couldn't confirm this automatically. A person will check it.', and the report goes to the top of the admin queue.\n2. ME TOO. When an open report exists on the same (template, seed), or the same template and category, the modal shows 'Reported by 2 others · Being checked' and offers [Add me to it] instead of a duplicate.\n3. ONE FIX FOR EVERYONE. Admin 'Key was wrong' marks every attempt on that (template, seed) as disputed for good. With 'Whole template', it marks every attempt on the template since a chosen date.\n   - It closes the traps that only those attempts opened.\n   - Each affected learner gets a feed item and a toast: 'A question you answered on Sep 21 had a wrong key. It no longer counts against you.'\n4. QUARANTINE. Admin 'Stop serving this template' writes quarantine(template, at, note).\n   - The builder, drill, blueprint fills and the question of the day skip the template until it is released.\n   - The type atlas shows it as 'Being fixed'.\n5. FIXED LIST. /help/#fixed lists the fixes that came from reports: date, skill, what was wrong and how many reports. No names.",
+    "beats": "TopTierPrep's report modal sends into silence: the student never sees an outcome. A wrong key in a fixed bank keeps costing every student who meets it, and pulling the question shrinks the bank. Ours answers most key disputes in about a second with a reason the student can verify. One confirmed fix corrects every student's record at once, and a quarantined type is covered by the other types in its skill.",
+    "effort": "M",
+    "needs": "- F6: reports.py and the admin page.\n- satbank.audit and Item.params (both exist).\n- attempts.disputed (R8) and traps (R9), from F4.\n- A quarantine table (F4), read by practice.Builder, drill.py (F5), the blueprint fills and daily.py.\n- Feed kind 'correction' (S1).\n- deps.access (R19), so a report made mid-test gets no instant check until the sitting ends."
+   },
+   {
+    "title": "Save and sign in with a passkey: one tap, no email, no password, no SMTP",
+    "what": "SAVING.\n- Settings › Account puts 'Save with a passkey' first when PublicKeyCredential and a user-verifying platform authenticator are available. The email code stays as the alternative.\n- The save nudge and the menu callout offer the same one-tap save.\n\nSIGNING IN.\n- /signin/ gets a first tab, 'Passkey', with one button: 'Sign in with a passkey'. It calls navigator.credentials.get with no allowCredentials (discoverable credentials), so the browser lists this site's passkeys or offers its own phone-QR hand-off.\n- The email field also carries autocomplete=\"webauthn\" for conditional UI.\n\nSERVER.\n- POST /api/passkey/register/options: user.id is 16 random bytes stored per learner, user.name is the board handle, residentKey is required.\n- POST /api/passkey/register: attestation format 'none'. Check the clientDataJSON type, challenge and origin, the rpIdHash, and the UP/UV flags. Store the credential id and COSE public key.\n- POST /api/passkey/auth/options, then POST /api/passkey/auth: verify the ES256 or RS256 signature and the sign count, then progress.carry(this, owner) → {learner}.\n- Table passkeys(id, learner, public_key, alg, sign_count, created, last_used, label).\n\nMANAGING THEM.\n- Settings lists each passkey, e.g. 'iPhone · created Sep 23 · last used today', with Remove.\n- Sign out everywhere else re-points passkeys to the new code.\n- 'Print a recovery card' opens a print page with the device code as a QR and as text, plus 'Keep it at home. Anyone with it can use your progress.'",
+    "beats": "TopTierPrep puts a Google-only wall in front of everything. School-managed Google accounts often block third-party sign-in, and a student without a Google account can't get in at all. Ours saves in about two seconds with no email and no password. It is phishing-proof, and the student's platform syncs it across their own devices. It also works without SMTP, which settles the spec's first open question: without SMTP, email codes only reach server/outbox.",
+    "effort": "M",
+    "needs": "- An HTTPS origin and a fixed rp_id (the host of SATF_BASE_URL).\n- Verification uses the already-installed cryptography 46, so no new dependency: about 120 lines of CBOR/COSE parsing for format 'none' plus ES256/RS256 checks. Adding py_webauthn is the alternative.\n- account.py (S1), the rotate/retired flow and progress.carry.\n- A passkeys table (F4)."
+   },
+   {
+    "title": "Type atlas and test-day readiness, weighted by how often each kind of question appears in College Board's own questions",
+    "what": "THE ATLAS. Profile's 'Question types met' becomes a grid of 386 cells in 19 skill rows, grouped under the 4 domains. Cells are 14px.\n- Cell states: unmet (dashed outline), met (tile-2), strong on that type (ink), open mistake (orange dot), being fixed (hatched, from quarantine). A legend with counts sits beside it.\n- Hover or focus shows: 'Central angle from an arc · met 6 · right 5 · last Sep 21 · behind 9 official questions'.\n- A click opens a mini sheet with a generated example (reserved seed, no key), Practise 5 of this type, and Log a mistake on it.\n\nREADINESS. The header reads 'Test-day readiness 71%'. It is the share of official-question frequency covered by types the student has met and answered right at least twice.\n- A type's weight is the number of official items that template reproduces (1,030 in all). Types with none take their topic's mean.\n- Helper: 'Weighted by how often each kind of question appears in College Board's own questions.'\n\nACTIONS. [Practise my biggest unmet types] runs prefs.set_length unmet templates, highest weight first. Each skill row has 'Practise unmet'. When every type is met: 'Every type met.'",
+    "beats": "TopTierPrep's profile shows credit meters (usage limits) and 'Solved 57 Qs', a volume count that says nothing about coverage. Their bank is a set of questions, not types, so it cannot tell a student which kinds of question they have never met before test day.",
+    "effort": "M",
+    "needs": "- GET /api/types (survey) gains a weight per template: the count of topic.sources whose build lands on it, computed at startup.\n- summary.coverage becomes per template: met, right, strong.\n- The quarantine table from the reports proposal.\n- UI.cell and UI.legend (F1).\n- The drill `unseen` and `templates` fields (F5)."
+   },
+   {
+    "title": "Mastery homework: assign an outcome, not a question count",
+    "what": "THE ASSIGNMENT. Class › New assignment › What gains 'Reach a level', beside Practice set · Module · Section.\n- Fields: skills or question types (found by search), a target (Getting there / Strong), a cap of 20–80 questions (default 40), and a due date.\n- Each student gets fresh questions, adaptive per R33, until every chosen skill reaches the target and no trap is open on those templates, or until the cap.\n\nSTUDENT ROW. 'Circles → Strong · 2 of 3 skills there · ~12 more questions', with Resume.\n\nTEACHER DETAIL.\n- Per student: 'Done in 14 q · 11 min', or 'Stuck: 40 q, still Learning, 2 open traps: Used the diameter as the radius'.\n- Actions: [Nudge] (an in-app notice) and [Assign a repair].\n- A histogram of the questions each student needed shows who needs a reteach.\n- Today and Plan show the assignment as '~N more'.",
+    "beats": "TopTierPrep's homework is a fixed practice test or Question Bank session. Every student gets the same questions, and 'done' means submitted, however many were wrong. A finite bank cannot give a struggling student 30 more fresh questions on one skill while a strong student stops after 8.",
+    "effort": "M",
+    "needs": "- classes.py (S2): assignments.kind 'mastery' with cfg {topics|templates, level, cap}.\n- A drill stop condition, `until: {mastery, cap}` (F5).\n- progress.topic_mastery and traps (F4).\n- Today (S3) and Plan (S7) read GET /api/assignments."
+   },
+   {
+    "title": "Printable class packs: a different version for each student, answers entered by QR, and a key that names every wrong option",
+    "what": "THE STUDENT PAGES. Class › assignment › [Print pack] prints one page set per student, headed with the name, class and due date.\n- Each version draws fresh seeds on the same templates and tiers.\n- A corner QR opens /class/?answers=<aid>&v=<version>. The student, or the teacher on a phone, types the letters and values; they are marked on the spot and filed as that student's attempts (source 'assignment', flagged paper).\n\nTHE KEY PACKET. One grid per version: Q1…Qn keys, and for every wrong option its misconception ('B · used the diameter as the radius'). A hand-marked page therefore also yields named mistakes.\n\nOPTIONS. 'Same for everyone' prints one version. Printing uses print CSS and window.print() only.",
+    "beats": "TopTierPrep's homework is online only and identical for every student. 'Attach file' is a photo upload that nobody marks. Nothing can be printed, and a printed page from a fixed bank would be the same page for everyone.",
+    "effort": "M",
+    "needs": "- Review's worksheet endpoint (/api/review/worksheet, S10), generalised to per-member seeds: /api/classes/{id}/assignments/{aid}/pack.\n- deps.access (R19).\n- An answer-sheet mode of UI.workspace (F3).\n- Attempts filed with ms NULL.\n- A print stylesheet (F1)."
+   },
+   {
+    "title": "Live class check: an exit ticket where every student gets their own numbers and the board shows which misconceptions the room is hitting",
+    "what": "SETUP. Teacher › class › [Live check]. Pick question types (search) and 3–5 questions.\n\nPROJECTOR SCREEN.\n- A large join code and QR, and a counter: '18 of 24 in'.\n- Each student gets fresh twins in an inline runner: the same templates, with their own numbers.\n- The teacher screen polls every 3 s and shows, per question, bars for right / wrong / not yet, plus the named misconceptions hit, ranked ('7 · Used the base angle as the central angle').\n\nTEACHER ACTIONS.\n- [Show an example] projects a separate seed of the same template, worked through with its rationale.\n- [Send a repair to the 7] queues each of those students a twin aimed at that misconception.\n\nWHEN IT ENDS. The check is kept as an ordinary assignment record, with per-student results and the class misconception list.",
+    "beats": "TopTierPrep has no live mode. Generic classroom quiz tools show one shared question, so answers travel across desks, and they name no misconceptions. Ours can't be copied, because every student's numbers differ, and it tells the teacher what to reteach before the bell.",
+    "effort": "L",
+    "needs": "- classes (S2): assignment kind 'live' with started and ended.\n- A poll endpoint, GET /api/classes/{id}/live (no websockets).\n- UI.spread (F1).\n- The drill `want` field for repairs (F5)."
+   },
+   {
+    "title": "Week in review: what moved last week, and this week's three priorities, one tap from starting",
+    "what": "THE SHEET. On the first shell load of a new week (by prefs.week_start), a sheet opens: 'Your week, Sep 14–20'. It shows:\n- Study time against the goal, as a bar.\n- Questions answered and first-try accuracy, each with its change from the week before.\n- Mistakes fixed, and new ones by name.\n- Skills that moved ('Circles Learning → Getting there').\n- The band, if a sitting was scored, and the streak.\n\nTHIS WEEK'S THREE. Three priorities from Score path plus due check-ins, each with Start, and a [Start the first] pill.\n\nHISTORY. Past weeks are kept at /me/#weeks.\n\nOPTIONAL EMAIL. With SMTP set and a share link on, a switch 'Email this to my parent or tutor every Monday' sends the same summary.",
+    "beats": "TopTierPrep has no weekly summary. The profile's Recent Activity lists sittings only, and the dashboard calendar shows one month of study time, drawn in UTC.",
+    "effort": "S",
+    "needs": "- progress.days (R13).\n- /api/me/summary gains week and prev_week blocks.\n- The feed (§3.10) and estimate.gains (the Score path proposal).\n- The prefs.week_start key.\n- mail.send_week for the email option (M, with SMTP)."
+   },
+   {
+    "title": "Living mark avatar: the four petals of our mark fill with the student's mastery in the four domains",
+    "what": "THE DESIGN. The mark's four rounded quadrants stand for the four domains: Algebra top-left, Advanced Math top-right, PSDA bottom-left, Geometry & Trig bottom-right.\n- Each quadrant fills orange from the centre outward in proportion to that domain's mastery: 0 is a --mat outline, Strong is solid orange.\n- It is redrawn from /api/shell.\n- It is the default avatar; the initial and the 19 glyphs stay as choices.\n- The aria-label and tooltip read 'Algebra Strong · Advanced Math Learning · …'.\n\nWHERE IT SHOWS. The user card, the menu, the identity card (72px, with a small legend), the class roster (a roster of marks reads as a class heat map) and the share view. Boards show the plain mark for 'anon' and 'hidden' students.",
+    "beats": "TopTierPrep's avatar is a photo upload or initials. A photo is a privacy risk for minors, and neither says anything about the student. Ours involves no photo and shows progress at a glance.",
+    "effort": "S",
+    "needs": "- mark.svg geometry.\n- /api/shell.me gains 4 domain mastery numbers.\n- UI.avatar (F1 kit).\n- Compete boards (S8) respect board visibility for the avatar."
+   },
+   {
+    "title": "Reminders that know what is due (Web Push for the installed app)",
+    "what": "SETTINGS. Settings › Study › 'Notify me on this device'. On iOS this needs the installed app; on Android and desktop, any browser.\n\nWHAT IS SENT.\n- At the preferred time on study days: '45 min today · 3 check-ins due · Circles repair waiting', opening / with Up next.\n- At 20:30 on a study day with nothing done: 'One question keeps your 6-day streak', opening the quick sheet.\n- Class: 'New from Period 3, due Fri'.\n- Quiet hours default to 21:30–7:00, with a switch per kind.\n\nSERVER.\n- A table push_subs(learner, endpoint, p256dh, auth, kinds, created).\n- A one-minute in-process asyncio tick finds reminders due by learner timezone and study time.\n- It sends payload-less Web Push, signed as a VAPID ES256 JWT with cryptography. The service worker then fetches /api/push/next to build the text.",
+    "beats": "TopTierPrep's 'Preferred time: Evening' does nothing anywhere. The spec's calendar alarm can't say what is due and can't skip a day that is already done.",
+    "effort": "L",
+    "needs": "- A notification-only service worker, /sw.js, with no caching.\n- VAPID keys in env, and HTTPS.\n- Prefs keys for push kinds and quiet hours (F4 prefs.py).\n- Plan's today_summary (S7) and the shell data.\n- The manifest (§2.14)."
+   },
+   {
+    "title": "Offline pack: 30 questions downloaded for the bus, synced and marked by the server afterwards",
+    "what": "DOWNLOADING. Phone menu and Settings: 'Download 30 for offline'. The server returns 30 items from the coach's pick plus due repairs, with keys, reasons and rationales, and stores them in IndexedDB. The pack's seeds are marked seen, so they are never served again.\n\nPLAYING OFFLINE. While the offline banner shows, the quick sheet and the practice session run from the pack with instant feedback.\n\nSYNCING. Answers queue as (template, seed, choice, ms, at) and go up on reconnect through POST /api/offline/sync. The server re-marks each one from (template, seed) and never trusts the client's marking. Client times are accepted only within the last 7 days.",
+    "beats": "TopTierPrep needs a connection for every question, and a reload loses the question timer and the wrong-answer state. A commute, a flight or bad school Wi-Fi is dead time on theirs.",
+    "effort": "L",
+    "needs": "- A service worker that caches the shell pages and ui.js. This reverses the spec's 'no service worker'.\n- Drill source 'offline'.\n- deps.access 'kept' semantics (R19).\n- progress.record takes a bounded client `at` (F4)."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Collapsible sidebar / rail and active nav state",
+    "spec_says": "A 248px sidebar that `[` collapses to a 68px rail with tooltips. The active item gets --wash, weight 600 and a 3px orange bar.",
+    "why_only_parity": "TopTierPrep has the same collapsible sidebar and a pill active state. The badges are new, but the structure and the active state are the same.",
+    "upgrade": "On long pages (Profile's 13 cards, Settings' 6 sections, Results, Help), the active item expands into sub-links for that page's sections, with scroll-spy: Profile › Goals · Skills · Trend · Traps · Achievements · Activity. Any card is then one click away from anywhere. On the rail, the sub-links appear in the tooltip menu."
+   },
+   {
+    "feature": "Their upgrade-card slot, which becomes our Today card",
+    "spec_says": "Passive bars for minutes and questions, a due assignment and the exam countdown. The card links to /plan/.",
+    "why_only_parity": "It fills the same slot with progress bars, but a student can't act on anything in it. Today's Up next exists only on /.",
+    "upgrade": "The card's first row is Today's Up next item, e.g. 'Next: 2 check-ins · Circles · 4 min' or 'Resume module · 12/22 · 18 min left', with a Start pill. G N starts it from any page, and the rail shows it as a play button. /api/shell.next reuses Today's up-next selector (S3), so the chrome and / always show the same pick."
+   },
+   {
+    "feature": "User card popover / account menu",
+    "spec_says": "Name, email and role, then Profile, Settings, Sign in, Pair, Class, shortcuts, Help, Feedback and Sign out. Their Esc bug is fixed.",
+    "why_only_parity": "Same contents as theirs (avatar, name, email, My Profile, Send feedback, Sign out) plus a few links. Fixing their bug is still parity.",
+    "upgrade": "'Switch student' for shared devices: siblings, school labs, a tutor's tablet. Up to 5 learner codes are kept in satf.profiles, each with its name and living avatar, and each can have an optional 4-digit PIN kept on the device. Switching re-points UI.learner and reloads. 'Leave this device' works per profile. On theirs, changing student means a full Google sign-out and sign-in."
+   },
+   {
+    "feature": "Their floating add-your-own-word button, which becomes our quick sheet",
+    "spec_says": "Three tabs: Quick question (the coach's pick), Log a mistake (a 4-step skill → type → misconception → where picker), Add a word.",
+    "why_only_parity": "The capture tab copies their add-your-own-word. The 4-step picker is slower than their single field, and the sheet ignores whatever question is on screen.",
+    "upgrade": "Make it context-aware. Opened from a page that shows a question outside the players (the QOTD, a feed row, the share view, a Help example), its first tab is 'Twin of this': same template, fresh seed, and `want` set to the misconception picked there. Log a mistake opens on one field, 'Question ID or paste the question', with the 4-step picker as the fallback (proposal 1)."
+   },
+   {
+    "feature": "Sign-in page (/signin/, their /auth)",
+    "spec_says": "Tabs for email code, pairing code and device code. No passwords.",
+    "why_only_parity": "It matches their /auth plus their optional email/password, and it is still a type-your-email flow. Email codes depend on SMTP, which may not be configured.",
+    "upgrade": "Passkey first: a one-tap tab with conditional UI and the browser's phone-QR hand-off, plus a printable recovery card (proposal 5)."
+   },
+   {
+    "feature": "Account block",
+    "spec_says": "Saved: the email, Manage, Sign out. Unsaved: Save, Pair, Share, Leave this device.",
+    "why_only_parity": "Theirs lists name, email, password and 'Google connected', then Sign out. Ours is the same list with a different credential.",
+    "upgrade": "A 'Devices using your progress' list. Each device that sent this code gets a row: a label from the first request's user agent, last seen, and answers from it (e.g. 'Chrome on Windows · Sep 12'). A student who spots a library computer can use 'Sign out everywhere else'. The data is a devices(learner, id, label, first, last, answers) table fed by an X-Device random id header."
+   },
+   {
+    "feature": "Avatar management",
+    "spec_says": "An initial, or one of the 19 topic glyphs. No photo.",
+    "why_only_parity": "It is below theirs (they allow a photo). A glyph picker is a smaller version of their avatar management.",
+    "upgrade": "The living mark avatar (proposal 11): the four petals fill with the four domains' mastery. Privacy-safe, and it shows progress at a glance."
+   },
+   {
+    "feature": "Profile identity stat tiles",
+    "spec_says": "A 2×4 grid: Streak, Answered, Accuracy, Study time, Tests, Mistakes fixed, Words, Rating. Each has a sub-line and a link.",
+    "why_only_parity": "Their Streak/Tests/Solved/Vocab pattern with more tiles, still counting lifetime totals.",
+    "upgrade": "Each tile shows the change against the previous 7 days (▲ 12%) and a 14-day sparkline. ACCURACY is labelled 'first-try accuracy', leaves out repeats, and its helper says why: unlimited retries make accuracy meaningless, as they do on theirs. Each click opens a filtered view, e.g. Accuracy → Results skills sorted by accuracy change."
+   },
+   {
+    "feature": "Performance Snapshot ranks",
+    "spec_says": "A practice rank by right answers in the last 7 days, among everyone, the same exam date, and each class. Plus the challenge lines.",
+    "why_only_parity": "A volume leaderboard, like their global and country ranks, only with its terms stated. A 480 student grinding easy questions outranks a 700 student; the spec itself leaves this open.",
+    "upgrade": "Add a 'Climb rank': points gained since the first scored sitting, among students whose first band midpoint was within ±40 of yours. For example: 'Started near 520: +90, ahead of 74% of 212'. It shows only when n ≥ 20. Add a self-benchmark line too: 'vs you 30 days ago: +60 · 2 skills to Strong'."
+   },
+   {
+    "feature": "Target score quick edit",
+    "spec_says": "A 200–800 slider with chips, '+100 from your latest band', and Save, synced with Plan.",
+    "why_only_parity": "Their Set Target Score modal has the same number, bar and Save. We only fix their sync bug and their wrong current score.",
+    "upgrade": "A reality check inside the popover:\n- 'What 700 takes: about 38 of 44 on the upper route', split by domain (Algebra 14/15 · Advanced Math 13/15 · PSDA 6/7 · Geometry 5/7).\n- 'At your last 4 weeks' pace (+12 a week) you'd reach about 660 by Nov 7. 700 needs about +20 a week, roughly 55 min a day', with one click to 'Set 45 → 55 min'.\nIt uses Score path's estimate.gains and Plan's pace."
+   },
+   {
+    "feature": "Exam date picker",
+    "spec_says": "Upcoming official dates with 'in N days', Another date, No date yet.",
+    "why_only_parity": "Their select also lists the official dates. Ours only drops the past ones.",
+    "upgrade": "Each chip carries the registration deadline, the late deadline and the score-release date, e.g. 'Nov 7 · register by Oct 23 · scores ~Nov 20'. Choosing a date adds those as events in the calendar feed. Seven days before the deadline, a banner asks 'Registered for Nov 7?' [Yes] [Not yet], and Not yet links to the College Board's registration page. The dates live in server/satdates.py, with the date they were last checked."
+   },
+   {
+    "feature": "Score trend on the profile",
+    "spec_says": "Range bars per sitting, a target line, an exam tick, tooltips, and a click through to the report.",
+    "why_only_parity": "Their Score Trend line with 'Latest: N'. Ours is a nicer chart of the same data.",
+    "upgrade": "Draw the plan's pace line from the start to the target on the exam date. Add a projected band on the exam date from the recent trend (estimate.py), widening with distance and labelled 'At this pace: 640–700 on Nov 7'. The gap between the pace line and the projection is the headline."
+   },
+   {
+    "feature": "Subject performance (Skills card)",
+    "spec_says": "19 skill rows: mastery bar, answered count, accuracy, open-mistake dots, Practise.",
+    "why_only_parity": "Their per-subject performance block, made finer. It is still a report card.",
+    "upgrade": "Each row adds 'points at stake' from Score path ('about +15'). The default sort is 'points at stake', with weakest and A–Z as options, so the list reads as a to-do."
+   },
+   {
+    "feature": "Question types met, in their credit-meter slot",
+    "spec_says": "'57 of 386 question types' with a bar, domain rows that expand to topics, and 'Practise types I haven't met'.",
+    "why_only_parity": "It swaps their usage meter for a coverage meter: the same bar with n/max, on an unweighted count.",
+    "upgrade": "The type atlas with test-day readiness weighted by frequency in official questions (proposal 6)."
+   },
+   {
+    "feature": "Achievements",
+    "spec_says": "43 tiered badges with progress and earned dates. View all lists each rule and its tier ladder.",
+    "why_only_parity": "The content goes well beyond theirs, but the tiles are still trophies to look at.",
+    "upgrade": "Every in-progress tile gets a Go action that starts the exact drill that advances it: 'Circles II · 2 clean answers to go → Practise 3', 'Explorer · 7 types to 100 → Practise unmet 7'. View all sorts by closest to the next tier by default."
+   },
+   {
+    "feature": "Learning preferences",
+    "spec_says": "Inline rows: Questions per set, Clock, Difficulty (Adaptive/Mixed/Easy/Medium/Hard), Explanations, Calculator.",
+    "why_only_parity": "Their inline preferences card (Practice Mode, Difficulty Adaptive/Fixed, toggles), with more options.",
+    "upgrade": "1. A presets row, Learn · Test-like · Sprint, sets several keys at once and prints a one-line diff, e.g. 'Test-like: SAT pace, feedback at the end, repairs at the end'.\n2. Adaptive steps up per question type (a template goes up a tier after 2 first-try rights on it), and the type atlas shows each type's current tier. Adaptive stops being a black box; theirs is an unexplained select."
+   },
+   {
+    "feature": "Recent activity feed",
+    "spec_says": "A filtered feed under day headers. Rows link to reports, challenges and mistakes.",
+    "why_only_parity": "Theirs lists sittings with a chevron. Ours has more kinds, but the rows are still links for looking back.",
+    "upgrade": "Each row gets one action only a generated bank can offer:\n- practice, quick and assignment rows: 'Again · new numbers' (same templates and tiers, fresh seeds);\n- mistake rows: 'Twin';\n- challenge rows: 'Re-run as practice with new numbers'."
+   },
+   {
+    "feature": "Help, in place of their billing FAQ",
+    "spec_says": "A static FAQ with search and deep links, written from the README's facts.",
+    "why_only_parity": "It is a static FAQ like theirs. The topics are about studying rather than billing.",
+    "upgrade": "Answers read the student's own data where it applies:\n- 'Why did my score stop at 580?' shows 'Your Sep 20 module: 12/22 in module 1 → lower route (14 opens the upper)'.\n- 'How does a mistake close?' lists the student's 3 traps closest to closing, with Practise.\n- 'Do rest days break my streak?' shows their last rest day and 'streak kept'.\nWhen there is no data, the generic text shows."
+   },
+   {
+    "feature": "Report modal and Send feedback",
+    "spec_says": "Up to 10 downscaled images, a title counter, categories by context, (template, seed) context, bounded disputes, and Your reports with replies.",
+    "why_only_parity": "Most of the anatomy is theirs (image cap, title counter, categories, details counter). Only the reply loop is new.",
+    "upgrade": "An instant independent-solver check, 'me too' merging, a fix that corrects every affected student, template quarantine, and a public Fixed list (proposal 4)."
+   },
+   {
+    "feature": "Public single-question route (/q/ permalink)",
+    "spec_says": "/q/?t=&s= (R19 permalink) opens exactly that question for anyone. The key is held on the server.",
+    "why_only_parity": "It is their /question/:key.",
+    "upgrade": "'Send to a friend' defaults to a twin link: same type, with the friend's own numbers. An optional head-to-head card follows ('You: right in 1:12 · Sam: right in 0:58'). Answers can't be passed along because the numbers differ. Exact mode stays for tutors."
+   },
+   {
+    "feature": "Classes: student list and homework runner",
+    "spec_says": "Join by code. Assignments are a set, module or section, fresh or the same for everyone. Attach your working. Start / Resume / Review.",
+    "why_only_parity": "Same shape as their /my-classes and homework runner (full test or Question Bank session, time limit, Attach file, Finish). 'Attach your working' copies their Attach file.",
+    "upgrade": "Mastery homework that assigns an outcome rather than a count (proposal 7). Printable per-student packs whose answers go in by QR (proposal 8), so paper working gets marked instead of sitting as an unmarked photo."
+   },
+   {
+    "feature": "Teacher dashboard",
+    "spec_says": "Roster table, assignments, per-question results, and the class misconception list with 'Assign a repair to these 9'.",
+    "why_only_parity": "The roster, assignments and due dates are their /teacher. Only the misconception tab goes beyond it.",
+    "upgrade": "A live class check with per-student fresh twins and a live misconception spread (proposal 9). The roster gains 'questions needed to reach Strong' per student, from mastery homework."
+   },
+   {
+    "feature": "Toasts",
+    "spec_says": "UI.toast(text, {action, href, ms}): Saved, Copied, Code sent, Signed out, achievements, replies, assignments.",
+    "why_only_parity": "The same generic toasts as their 'Task skipped / added / updated / removed'.",
+    "upgrade": "Every reversible action's toast carries Undo for 6 s, run on the server as the inverse call: unsave, unmark, leave class, skip a plan task, remove a share link, unlink email within its grace period. kit's UI.toast already takes `undo`; the shell should use it everywhere."
+   }
+  ]
+ }
+}

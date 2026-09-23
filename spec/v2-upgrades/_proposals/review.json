@@ -1,0 +1,510 @@
+{
+ "outcomes": {
+  "proposals": [
+   {
+    "title": "Today's review: one spaced, interleaved, blind queue that never piles up",
+    "what": "A new first tab on /review/: `Today 12 · Redo 25 · Marked 3 · Saved 14 · History 312 · Fixed 40`. Each local day (X-Tz), the server builds a due list from five ladders, all on fresh seeds:\n(a) first proofs: mistakes not answered since they opened;\n(b) second proofs: mistakes whose first clean answer came on an earlier day (see proposal 2);\n(c) check-ins on fixed mistakes (R9: 3, 10 and 30 days);\n(d) saved questions on their own ladder of 1, 3, 7, 21 and 60 days, where a clean answer moves up a rung and a miss drops to rung 1 and opens a mistake;\n(e) slow-right question types (proposal 5).\n\nSize and order: the cap is 40% of the student's daily minutes (learners.minutes), at least 6 and at most 30 questions. Priority runs relapsed, then confident misses (proposal 4), then overdue, then due. The list is then interleaved so no two questions in a row share a topic. One slot in four is a 'cover' question of new material from progress.coach, so a redo question cannot be spotted as one. No card says 'your mistake' until after Check.\n\nCard at the top of the tab:\n- a ring `0 / 12` and the chips `5 first tries · 3 second tries · 2 check-ins · 2 saved`,\n- `about 16 min` and the primary **Start today's review**,\n- a 7-day forecast strip with a bar and count per day, today highlighted,\n- the rule line: 'Each mistake comes back on new numbers until you get it right on two different days.'\n\nWhen finished: `Done for today · 9 of 12 right · 2 mistakes fixed · 7 due tomorrow`, with the ring full. Unanswered items roll to the top of tomorrow. Anything over the cap waits and is never shown as debt. The nav badge becomes 'due today', not total open. Today's Review card and Plan's Rechecks task read the same list.\n\nWhat the student does differently: one 15-minute review every day, instead of now and then clearing a 25-row backlog in one sitting. Why it moves the score: spaced retrieval on new numbers, mixed across topics, is the most reliable gain in learning research (spread-out practice beats practice crammed into one sitting, and mixing topics trains choosing the method). Cover questions remove the 'this is the arc one' cue that the real test never gives. A finite daily goal is what keeps a habit going.",
+    "beats": "TopTierPrep has a 'Due Today' list only for vocab words. Their math redo list is always empty (toggleRedo has no button, and Profile reads 'Redo Questions 0'), and 'Solved Only' repeats the same finite items. Our v2 spec spaces only fixed mistakes; the rest is a backlog cleared with 'Redo all · 22'.",
+    "effort": "L",
+    "needs": "- GET /api/review/due, plus a pool 'due' in the §2.6 drill body (F5).\n- saved gains stage INTEGER and due TEXT (F4).\n- traps.proved_at from proposal 2 (F4).\n- learners.minutes (R15).\n- progress.coach for the cover questions.\n- /api/me review.due for the badge (amends R1's open-count badge).\n- Today #mist (S3) and Plan Rechecks (S7) read the same endpoint."
+   },
+   {
+    "title": "Proof that sticks: a mistake closes only on two different days, never right after reading its label",
+    "what": "This changes what closes a trap (R8/R9).\n- **Pip 1** can be earned any time, including on the repair question straight after the miss (Repaired).\n- **Pip 2** counts only when both hold:\n  - it comes on a later local day than pip 1 (traps.proved_at, X-Tz calendar day);\n  - it was not answered in the Review pane within 10 minutes of the student viewing that trap's label or rationale. Pane answers of that kind file attempts.primed = 1, fill no second pip, and show 'Practice. The proof comes tomorrow.'\n\nPip states: ○○ Open → ●○ `Back tomorrow · Sep 24` → ●● Fixed → check-ins at 3, 10 and 30 days (R9).\n\nOther changes:\n- drill._pick skips a trap whose proved_at is today.\n- The Redo queue asks each template at most once a day, so the header reads `Redo all · 11 questions · about 18 min`, not 22.\n- Session feedback copy (S4): 'Right: 1 of 2. It comes back tomorrow on new numbers.'\n- The Fixed stat line adds `proved over a median 2 days`.\n- Migration: traps closed today stay closed, and their first check-in is due tomorrow.\n\nWhat the student does differently: they can no longer 'fix' a mistake in five minutes by spotting the trap they just read about. They have to recall the method after some forgetting has set in. Why it moves the score: success in the same session right after feedback measures short-term memory. A right answer after a delay is what predicts test-day performance. It also keeps Fixed honest, so the list reflects what the student will actually get right in March.",
+    "beats": "TopTierPrep's 'Mixed' is wrong-then-right on the same item seconds apart, with unlimited retries. The v2 spec lets a trap close within one session: the repair counts as a clean answer, and practice's _pick asks the topic's open trap again within 3 or 4 questions. In the seeded dev database, all 10 closed traps closed within 30 minutes of opening.",
+    "effort": "S",
+    "needs": "- F4: traps.proved_at TEXT, attempts.primed INTEGER, and the progress.record rule change.\n- R9's wording amended.\n- counts.redo_questions becomes Σ open templates × 1 per day.\n- drill._pick change (F5 → S4) and the S4 feedback copy.\n- One test_flow assert: two right answers on one day leave owed = 1."
+   },
+   {
+    "title": "Name your own mistake before we name it, plus an inbox for test misses",
+    "what": "Every new miss enters Redo as `New · not reviewed` (an ink dot). That includes misses from sections, modules and the diagnostic, where no feedback was shown during the test. The tab head reads `6 new misses to look at · about 4 min`, with **Look at new misses**, which steps through them in the pane.\n\nFor each miss:\n1. The pane shows the question with the student's pick marked and the key hidden.\n2. It asks **What happened?** with 4 to 6 choices, shuffled and shown as plain sentences:\n   - the misconception behind their pick,\n   - the misconceptions behind the item's other wrong options,\n   - 'Misread what was asked', 'Arithmetic slip / rushed' and 'Didn't know how to start'.\n3. After the tap, the pane reveals the key and the per-option lines, with a verdict: `You called it`, or `Your pick came from: used 180 degrees for a whole circle`.\n4. Then **Fresh one like this** (practice only; see proposal 2) and **Next miss**.\n\nKeys: 1–6 to choose, Enter to reveal. The Redo head and the calibration panel show 'You named your own mistake 11 of 17 times (65%)', also per topic. The self-tags that are not misconceptions become Redo filters: Rushed feeds proposal 5, and Didn't know how to start sends the trap to the worked-example step of proposal 6. Grid-ins use spr_mistakes when the template has them (R9), and otherwise only the three general choices.\n\nWhat the student does differently: they diagnose each error in about 15 seconds instead of glancing at a label, and test misses stop dying unread in a report. Why it moves the score: studies of self-explanation and of studying wrong worked examples (e.g. McLaren et al.) show that students who analyse their errors outperform, on delayed tests, students who were only shown the correction. Being able to name a trap is what lets a student catch it mid-solve on test day.",
+    "beats": "TopTierPrep's 'Distractor Analysis' is passive prose inside one explanation. Their report cannot be re-answered, and their QBank hides the key after a miss. The v2 pane shows the label at once and gives the student nothing to do.",
+    "effort": "M",
+    "needs": "- A diagnoses(learner, attempt_id, choice, ok, at) table (F4) and traps.reviewed.\n- POST /api/review/diagnose {attempt_id, choice}, which returns the reveal payload through access() 'reveal' (R19).\n- A diagnose step in UI.review mode 'pane' (F3).\n- spr_mistakes from the QBank bank task.\n- A test_flow assert that the key is not returned before the diagnosis is posted."
+   },
+   {
+    "title": "Confident misses first: calibration across every sitting",
+    "what": "Every answer gets a confidence level:\n- 'guess': practice's I'm guessing, or the Tests Guess tag;\n- 'unsure': flagged, or the Unsure tag;\n- 'sure': the Sure tag, or unflagged and within pace. The inferred case is shown as `sure (assumed)`.\n\nRedo changes:\n- Rows get a confidence glyph.\n- **Confident misses first** becomes the default sort.\n- A stat tile reads `CONFIDENT MISSES 4 · you didn't know you didn't know`.\n- A confident miss carries a `Sure ✕` chip until it is fixed, and leads Today's review.\n\nThe Marked tab's calibration line becomes a panel:\n- a 3×2 grid (Sure / Unsure / Guess × Right / Wrong) with counts and percentages;\n- a table per topic;\n- rules generated from thresholds: sure-accuracy under 80% in a topic gives 'Linear functions: 5 sure-but-wrong. Check your work here before moving on.' Unsure-accuracy over 70% gives 'Circles: you're right 78% of the time you doubt yourself. Trust your first answer.'\n\nWhat the student does differently: they work first on the errors they would never have flagged on test day, and learn topic by topic when to trust themselves and when to re-check. Why it moves the score: the hypercorrection effect (Butterfield & Metcalfe) means high-confidence errors, once corrected, are remembered better than low-confidence ones. Unflagged errors never get a second look in Bluebook, so they are pure point loss. A calibrated student spends the last minutes of a module on the right questions.",
+    "beats": "TopTierPrep counts flags (the red For Review flag, the orange dot) and never relates them to correctness. The v2 spec's calibration is one ratio over flags only, and Tests' calibration is per sitting inside one report.",
+    "effort": "M",
+    "needs": "- attempts.guess and attempts.flagged (R8).\n- attempts.conf, filled from qstate.conf (R7, S5) and from an optional Sure / Unsure chip in the practice session (S4, behind a pref).\n- GET /api/review/calibration → {grid, topics, rules}, computed in SQL.\n- The pace targets from proposal 5 for the inferred 'sure'."
+   },
+   {
+    "title": "Slow but right: the pace list and speed-up sets",
+    "what": "A new Redo kind, `Slow` (clock glyph), computed from data. A template is slow when the student's last 2 right answers on it were both over its tier target, or over twice the student's own median. The tier targets are easy 65s, medium 95s and hard 125s, which gives about 2,090s for a 7/8/7 module against its 2,100s (R34). A row reads `Area of a sector · right 3× · median 2:40 · target 1:35`. Wrong answers given in under 25s get a `Rushed` chip and the rule 'Slow down on these: 4 misses in under 25 s'.\n\n**Speed up** (action bar and pane) builds fresh versions with a target bar on the question strip: it fills orange until the target, then ink, with no hard cutoff. A right answer under target fills a pip, and 2 pips on different days (proposal 2) clear the item.\n\nThe History modal and the pane's family strip gain a time sparkline per try with the target line, e.g. `2:40 → 1:52 → 1:21`. A tile reads `SLOW RIGHT 6 · about 9 min over pace per module`.\n\nWhat the student does differently: they drill the question types that eat their clock, against a visible target, until those types are fast as well as right. Why it moves the score: every minute over pace on a timed module is a question at the end that is rushed, guessed or never reached. Speed on routine types frees time and working memory for the hard ones, and today's mastery bars count slow-right as simply right, which hides the loss.",
+    "beats": "TopTierPrep has a per-question stopwatch that resets on reload and is never analysed; nothing in their product talks about pace. The v2 Review only offers a 'Slowest' sort on History.",
+    "effort": "M",
+    "needs": "- attempts.ms in every mode (R7).\n- PACE = {easy: 65, medium: 95, hard: 125} in blueprint.py, and one function progress.slow(learner) that Plan's slow-skill rule (S7) also reads.\n- Trap kind 'slow' with norm '~slow' (F4).\n- Drill cfg target_ms, rendered on the runner strip (F3, S4)."
+   },
+   {
+    "title": "Stuck mistakes get a faded ladder: worked, then hinted, then solo",
+    "what": "A trap missed 3 or more times, or relapsed, gets the status `Stuck`, and its redo becomes a ladder. Each step uses a fresh seed:\n1. **Worked.** The question is shown with the key highlighted, the rationale and every option's misconception. The task is 'Tap the option that comes from your mistake', then 'Got it'.\n2. **Hinted.** A fresh version with a 'Watch for: used 180 degrees for a whole circle' line above the stem. A right answer fills a hollow step, not a pip, and is filed as attempts.scaffold = 1, which is neither clean nor counted toward mastery.\n3. **Solo.** An ordinary fresh question inside Today's review, where a right answer is pip 1.\n\nA miss at any step goes back one step. The pane shows the three steps with the current one ringed. 'Didn't know how to start' from proposal 3 also starts a trap at step 1.\n\nWhat the student does differently: they stop hammering a question type they keep failing. Instead they study one worked instance, answer one with a hint, then go solo. Why it moves the score: worked-example and fading research (Sweller; Renkl & Atkinson) shows that learners who keep failing gain more from studying worked examples first, and that fading from worked to independent beats problem solving alone. Repeated failure with no new information only repeats the error.",
+    "beats": "TopTierPrep offers only unlimited retries on the same item, or reading its one explanation. The v2 spec serves another fresh seed of the same trap forever, however many times it is missed.",
+    "effort": "M",
+    "needs": "- attempts.scaffold INTEGER, excluded from clean answers and mastery (F4, extends R8).\n- traps.stage, 0 to 3.\n- Drill cfg scaffold: 'worked' | 'hint' (F5), rendered by UI.workspace (F3).\n- Step 1 reuses the Spot-the-trap walk (POST /api/review/spot)."
+   },
+   {
+    "title": "Habits: the handful of mistakes behind dozens of rows",
+    "what": "Redo's Group by gains **Habit** (`Topic | Domain | Mistake type | Habit`). A panel on the Redo head reads, for example: 'Your top habits: Reported the wrong quantity · 9 misses in 6 topics; Halved or doubled · 5 in 3 topics; Sign flip · 4 in 3 topics'.\n\nThere are about 10 habits: the wrong quantity asked for, sign, reciprocal or inverse, square vs root, half or double (radius vs diameter included), percent base, added vs multiplied, units, stopped one step early, off by one.\n\nEach habit card has:\n- a strip of its misses over time and the topics they came from,\n- a one-line test-day check, e.g. 'Before you pick: underline what the question asks for',\n- **Drill this habit**: an interleaved set of fresh items across its templates whose options include one of its traps (list 'related', generalised from a norm to a habit).\n\nThe mapping lives in server/habits.py: regex rules over the norm, with a bank-side Mis.habit tag overriding them where set. I measured it: over 12 seeds per template there are 2,524 distinct normalised reasons. Crude rules already match 1,187 of them (47%), and 'wrong quantity' alone covers 559 norms across all 19 topics.\n\nWhat the student does differently: they fix one root habit with one self-check that works in every topic, instead of working through 25 separate labels. Why it moves the score: the same error pattern recurs across topics, and a named general check transfers. Mixing topics trains recognising the habit in a new setting, which is what the SAT demands.",
+    "beats": "TopTierPrep names no misconceptions at all. The v2 spec's 'same mistake elsewhere' matches only identical normalised text (79 norms), which misses most patterns that cross topics.",
+    "effort": "L",
+    "needs": "- server/habits.py: the rules plus an lru_cached index built like progress.related.\n- Optional Mis.habit in satbank/item.py (bank owner; this extends the open Mis.tag question).\n- Drill pool 'related' accepting {habit} (F5).\n- The habit copy is owned here."
+   },
+   {
+    "title": "Worth most first: rank mistakes by how often they appear on the test",
+    "what": "A new sort, **Worth most**, which is the default on Redo. It ranks by expected questions lost: how often the topic appears on the test, times the student's miss rate on that template's last 5 answers, weighted by tier.\n- Topic frequency comes from blueprint: the published 15/15/7/7 domain split per 44 questions, divided among topics by skill counts.\n- Group headers show `≈ 4 questions a test`; row meta shows `costs ≈ 0.6 questions a test`.\n- The Most-missed strip becomes `Worth most: these 5 cost about 2.4 questions a test → Redo these 5`.\n- An optional points line, `≈ +20 points at your level`, uses the slope of the student's current estimate (R16). It is hidden when the estimate's confidence is low.\n\nWhat the student does differently: with limited time, they fix first the mistakes the real test asks about most. Why it moves the score: a trap in Linear functions (about 4 questions a test) costs more than one in Probability (about 1). Ordering by test frequency times miss rate gives the most points per minute of review.",
+    "beats": "TopTierPrep's redo list has no order, and it is empty. The v2 Most-missed strip ranks by hit count, which favours whatever the student happened to practise most.",
+    "effort": "S",
+    "needs": "- A TOPIC_SHARE constant in blueprint.py.\n- The miss rate from attempts.\n- estimate.py's slope for the optional points line (R16).\n- sort=worth on GET /api/review/redo."
+   },
+   {
+    "title": "Your rulebook: write the rule when a mistake closes, and get it back on test eve",
+    "what": "When a mistake reaches Fixed, the pane and the session summary line ask, optionally: 'Write the rule in your own words'. The field takes 140 characters, with a placeholder drawn from the label (e.g. 'A whole circle is 360°, not 180°'). It is stored in traps.note (R9).\n- The rule shows after the student answers each check-in ('Your rule: …'), and it stays editable.\n- The Fixed tab gets a `List | Rulebook` toggle. Rulebook lists the rules grouped by habit or topic, each with one fresh mini example.\n- **Print my rulebook** uses print CSS.\n- Today's test-day checklist (the last 7 days) links 'Read your rulebook: 18 rules, about 6 min'.\n\nWhat the student does differently: they write one line for each mistake they fix, and reread their own 20-odd rules the night before the test. Why it moves the score: the generation effect means explanations a student produces are remembered better than ones they read. A short personal list is the most useful final review there is, and no generic cheat sheet can match it.",
+    "beats": "TopTierPrep's notes live only on exam highlights, and their Saved Content card is three counts. The v2 spec puts notes only on saved questions.",
+    "effort": "S",
+    "needs": "- traps.note (R9, already planned).\n- The notes store (R6) for saved questions.\n- print.html reuse (S10).\n- The Today test-day checklist link (S3)."
+   },
+   {
+    "title": "Burn-down and forecast: watch the backlog shrink toward the exam date",
+    "what": "The Fixed tab head gets a 12-week chart: for each week, a pair of bars (opened vs fixed) and a line for the open count. Beside it:\n- a forecast: 'At your pace (8 fixed a week, 5 opened), open mistakes reach 0 on Oct 30, 8 days before your SAT.' Or: 'That lands after your SAT. 5 more minutes a day clears them by Nov 7.'\n- the relapse rate, `3 of 40 relapsed (8%)`, and the median days to fix.\n\nOn Mondays, Today shows a recap line: 'Last week: 9 fixed, 2 relapsed, 5 new.' Me's Saved content card shows the open-count sparkline.\n\nWhat the student does differently: they see their net progress, and get a concrete minutes-per-day target tied to their exam date. Why it moves the score: visible progress toward a dated goal keeps students practising. Tying the backlog to the exam turns a vague list into a plan, and the student can see it working.",
+    "beats": "TopTierPrep never shows what was fixed; Profile's 'Redo Questions 0' is the whole story. The v2 spec has a one-line stat.",
+    "effort": "S",
+    "needs": "- SQL over traps.opened and traps.closed by X-Tz week.\n- learners.exam_date and minutes (R15).\n- A chart in the dataviz tokens (F1).\n- The Today recap line (S3)."
+   },
+   {
+    "title": "Grade a paper worksheet in 30 seconds, so offline work counts",
+    "what": "The printable worksheet (§16) carries a short code and a QR on each page. Its answer page, `/review/print/?w=CODE`, has one row per number: A–D buttons, or a grid-in field with the usual keystroke filter, plus an optional 'minutes spent' box.\n\nSubmitting files each answer through progress.record with source 'worksheet'. The seeds are fresh and unseen, so right answers are clean. ms is the total divided by n. Mistakes are named and opened, and pips fill, exactly as online. The worksheet footer says 'Grade it at …/w/CODE' instead of 'These answers are not filed'.\n\nWhat the student does differently: they do a worksheet on the bus or in study hall and get the same named-mistake feedback and credit as online. Why it moves the score: more retrieval practice without a screen, and none of it is lost. Today the spec's worksheet uses up seeds and files nothing, so a miss on paper never reaches Redo.",
+    "beats": "TopTierPrep has no printable practice at all. The v2 worksheet says 'These answers are not filed'.",
+    "effort": "S",
+    "needs": "- sets (R18) with kind 'worksheet', or a worksheets(code, learner, items, at) table.\n- POST /api/review/worksheet/{code}/grade, owner only, once per code.\n- Source 'worksheet' already exists in §2.6."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Redo all / Fix all as a one-sitting backlog",
+    "spec_says": "`Redo all · 22 questions` queues each template max(owed) times in one set, all templates once before a second round. The repair right after a miss counts as a clean answer.",
+    "why_only_parity": "It is TopTierPrep's 'Redo Only' filter, made to work: a list worked through in one sitting. A trap can close within minutes of opening, on recognition of the label just read.",
+    "upgrade": "Today's queue (proposal 1) plus closing on two different days (proposal 2): one answer per template per day, mixed with cover questions, so 'Fixed' means the student recalled it after a delay."
+   },
+   {
+    "feature": "Marked tab and Mark for review (flags)",
+    "spec_says": "A flag per sitting. The Marked tab is grouped by sitting with pick → key and time. The calibration line reads 'You flagged 12 · 7 were right (58%)'.",
+    "why_only_parity": "It is TopTierPrep's Mark for Review / FOR REVIEW / Flagged (n), kept after the session, plus one ratio. Nothing says what a flag was for, or whether going back paid off.",
+    "upgrade": "- A one-tap flag reason in both runners (Between two · Too long · Guessing · Check later), stored in flags.why, and Marked grouped by reason.\n- A 'flag lab' across sittings from qstate.first and changes: flags returned to, answers changed wrong→right vs right→wrong, the net gain per flag, and a rule per topic.\n- Flagged items go into Today's review.\n- The confidence grid of proposal 4 replaces the single ratio."
+   },
+   {
+    "feature": "Saved tab",
+    "spec_says": "Rows with a 280-character note; Again, exactly / Fresh versions / Share / Print / Unsave; pages of 50.",
+    "why_only_parity": "It is TopTierPrep's 'Saved Only' pool with a list view. A bookmark drawer that never comes back to the student is forgotten, and their own vocab 'Due Today' already beats it for words.",
+    "upgrade": "- Saved becomes a spaced deck on fresh numbers (ladder 1/3/7/21/60 days, proposal 1), with `Saved · 3 due` on the tab.\n- The note shows as 'Your hint' after the student answers.\n- A one-tap reason at save time (Nice trick · Hard · Got lucky · Ask a tutor): 'Got lucky' opens an Unsure mistake, and 'Ask a tutor' drafts a help share."
+   },
+   {
+    "feature": "Attempt History modal",
+    "spec_says": "A table of every try on the whole template (date, source, difficulty, result, misconception, time, flag), with summary counts and Open.",
+    "why_only_parity": "Wider in scope, but still TopTierPrep's row log ('#1 ⊗ Incorrect · Option A · 00:22'). The student has to read the rows to work out whether they are improving.",
+    "upgrade": "- A header chart of the question type's tries: result cells over time, a time line and the pace target.\n- A computed verdict ('Fluent: right and under 1:35 on the last 3', 'Getting slower', 'Same trap twice').\n- A next-step button tied to the verdict: Speed up (proposal 5), Worked example (proposal 6) or Check in."
+   },
+   {
+    "feature": "Hide answers with re-answer",
+    "spec_says": "Hide answers hides the key, the option lines and the rationale, stays on across Next, and 'Check' re-answers the exact item, filed as a Repeat.",
+    "why_only_parity": "It is their Hide answers plus a retry on the same item the student just saw solved, which tests recognition memory. It is filed as a Repeat precisely because it proves nothing.",
+    "upgrade": "Hide answers becomes 'Quiz me'. Prev/Next turns into a retrieval run in which each item is swapped for a fresh twin by default, so the answers are clean evidence; the exact item is available on request. The header counts `Quiz: 7 of 12 right`, and misses open mistakes as usual."
+   },
+   {
+    "feature": "Most-missed strip",
+    "spec_says": "Up to 5 chips ordered by ×hits, then 'Redo these 5'.",
+    "why_only_parity": "It ranks by what happened most, not by what costs the most points: list thinking at TopTierPrep's level.",
+    "upgrade": "Worth-most ordering (proposal 8): test frequency × miss rate, shown as `≈ 0.6 questions a test` per row and `these 5 cost ≈ 2.4 questions a test`."
+   },
+   {
+    "feature": "Sitting retake: 'Again, exactly' (their Solved Only and Clear Session)",
+    "spec_says": "History's Sitting headers lead with 'Again, exactly' as a clean retake that deletes nothing, then Fresh versions and Fix the misses.",
+    "why_only_parity": "An exact retake is their re-practice of the same finite items, minus the deletion. Scores on remembered items inflate, and the retake teaches little.",
+    "upgrade": "- **Retake on new numbers** is the primary everywhere.\n- 'Again, exactly' moves to an overflow menu with 'Won't count: you've seen these'.\n- Add **Retake only what I missed or was slow on** (misses plus proposal 5's slow items, on fresh seeds)."
+   },
+   {
+    "feature": "Time per question in tests and History",
+    "spec_says": "The runner sends dwell ms, and History shows a median, a 'Slowest' sort and time per row.",
+    "why_only_parity": "TopTierPrep also records time per try (their stopwatch). Ours is only stored and sorted, so no practice changes because of it.",
+    "upgrade": "Slow-right becomes a Redo kind with speed-up sets against tier targets of 65, 95 and 125 s, plus Rushed chips for misses under 25 s and time sparklines (proposal 5)."
+   },
+   {
+    "feature": "Mixed status → Repaired",
+    "spec_says": "Right on the repair question after a miss is 'Repaired', and it counts as a clean answer toward closing.",
+    "why_only_parity": "It is TopTierPrep's Mixed on new numbers, answered seconds after reading the rationale, so the evidence is equally short-term.",
+    "upgrade": "Repaired fills pip 1 only. Pip 2 must come on a later day and blind (proposal 2), and a trap still failing after 3 misses moves to the worked → hinted → solo ladder (proposal 6)."
+   },
+   {
+    "feature": "Difficulty filter and Level",
+    "spec_says": "Easy / Medium / Hard pills, and Level As missed | Any | Harder by tier.",
+    "why_only_parity": "Their builder has a finer Question Score 1–7 slider; three tiers is coarser than theirs.",
+    "upgrade": "Show the per-(template, tier) rating that Compete calibrates from everyone's answers as a 1–7 band on each row, with a range filter. 'As missed' draws within ±1 band of the miss, and 'Harder' steps up by band rather than by tier."
+   },
+   {
+    "feature": "Share (their shared session, working)",
+    "spec_says": "POST /api/shares, a /s/ landing page, Start exactly or fresh. Nothing about the visitor is shown to the sharer.",
+    "why_only_parity": "It is TopTierPrep's shared session with the navigator.share freeze removed.",
+    "upgrade": "- **Ask for help** on a single mistake: a read-only link showing the question, the student's pick, the misconception, their note and their history on that question type, so a tutor sees the pattern and not just one miss.\n- For set shares, an opt-in results view for the sharer (R18 /results): the misconception spread among takers, e.g. '3 of 5 fell for used 180°'."
+   },
+   {
+    "feature": "Stat strip, tab counts and Me's Saved content card",
+    "spec_says": "Counts for open, marked, saved, fixed and check-ins due, each linking to its tab.",
+    "why_only_parity": "Their Profile's Saved Content card is counts (Saved Words / Redo Questions / Saved Questions). Ours are more counts, with links.",
+    "upgrade": "Each tile shows its 7-day change and one next action (e.g. `Open 25 ▼6 this week`, `Due today 12 · Start`). Me's card shows the burn-down sparkline and the zero-date forecast (proposal 11)."
+   },
+   {
+    "feature": "Flagged filter in the report",
+    "spec_says": "Grid filters All · Wrong · Blank · Flagged (n), a corner flag and a legend entry.",
+    "why_only_parity": "TopTierPrep has exactly All / R&W / Math / Flagged (n) with a flagged dot.",
+    "upgrade": "Each flagged cell shows what the student did with the flag (changed ✓ / changed ✕ / kept), and the legend sums it: `Flags: 4 · 2 changed · +1 net` (from qstate.first and changes). A link opens the cross-sitting flag lab in Marked."
+   },
+   {
+    "feature": "Review hub builder sources (their Redo / Marked / Solved selects)",
+    "spec_says": "Practice builder Source: New | Redo | Marked | Saved | Fixed (check), with Exactly | Fresh versions and a live count.",
+    "why_only_parity": "It is their three builder selects, with the count bug fixed.",
+    "upgrade": "Add the Sources **Due today** (proposal 1), **Slow** (proposal 5), **Confident misses** (proposal 4) and **Habit** (proposal 7). Each shows a one-line why ('Due today: 5 second tries, 2 check-ins, about 16 min'), so the builder says why a set matters and not only what it contains."
+   }
+  ]
+ },
+ "experience": {
+  "proposals": [
+   {
+    "title": "Review in 10 minutes: one ranked, time-boxed queue as the page's main button",
+    "what": "The /review/ header's main button changes from 'Redo all · 22 questions · about 35 min' to a split pill **Start review · 10 min**, with a duration control `5 · 10 · 20 · All` above it. The choice is stored as a new pref, `review_minutes`, default 10. Under the pill, a live line says what the queue holds, e.g. `3 check-ins · 4 quick wins · 5 most-missed · closes up to 7 mistakes`. Tapping that line opens a UI.sheet with the exact queue, one row per question type (label, pips, why it was chosen). Each row has an X to drop it, and the sheet has Start at the bottom. The server builds the queue in `progress.review_queue(learner, minutes)`, in this order: (1) check-ins due, oldest first; (2) relapsed traps; (3) half-fixed traps, where owed = 1 and one clean answer closes each ('quick wins'); (4) blind spots (proposal 2); (5) open traps by points at stake (proposal 3), then by hits; (6) saved items due (proposal 9). The number of questions is floor(minutes*60/95), using the R34 pace. Each template is served at most once per round. Start sends `POST /api/drill {pool:'queue', minutes, source:'review'}`. The end screen reads `Closed 4 · half fixed 2 · relapsed 1 · open 25 → 21`, with **Another 10 min** and **Back to Review**. Today's #mist card (R30) uses the same pill. On /review/, the key R starts it. On a phone, the pill is full width with the duration control above it. When nothing is due, the line reads `Nothing due. 10 min of your most-missed instead`.",
+    "beats": "It beats TopTierPrep's Redo List (All/Redo Only). Nothing ever fills their redo list: toggleRedo has no button, and Profile reads 'Redo Questions 0'. Their closest route is the QBank builder: open Advanced Filter, set Solved to Solved Only, then Start. That takes 4 steps and returns right and wrong answers alike, on the same numbers, in no useful order. Ours is 1 tap from Today or Review. It fits the time the student has, it is ordered by what closes mistakes fastest, and it says in advance how many mistakes the session can close.",
+    "effort": "M",
+    "needs": "F5: a new drill pool 'queue' with `minutes` (§2.6). R9 check-ins (due, checks). R34 pace. Proposals 2, 3 and 9 feed the ranking but are optional: without them it falls back to hits. S3: Today's #mist card uses the same pill. F4: the prefs key review_minutes."
+   },
+   {
+    "title": "Blind spots: find the answers you were sure of but got wrong, across every sitting",
+    "what": "At the top of the Marked tab, a **Confidence** panel. It has three parts.\n\n(a) A 2×2 grid over every answer in the date filter. Rows are Sure / Unsure, where Unsure means the answer was flagged, marked guess=1, or tagged Unsure or Guess in a test. Columns are Right / Wrong. Each cell shows a count and a %, and a click opens History with that filter (`?confidence=sure&result=wrong`). The headline reads `Blind spots 14: wrong with no flag or guess` and `Lucky 5: unsure but right`.\n\n(b) **Answer changes** across every test, from qstate.first against the final answer: `12 changes · 7 wrong→right · 3 right→wrong · 2 wrong→wrong · net +4`. The tip depends on the sign: net > 0 'Your second looks pay; keep flagging and returning', net < 0 'Your first answer is usually better; change only with a new reason'.\n\n(c) **Flags you came back to**, from qstate.trail: `18 flagged · 11 revisited · 7 never revisited (4 of them wrong)`.\n\nIn Redo, a trap whose latest miss was not flagged, not a guess and not tagged Unsure gets a `Blind spot` chip. Redo also gains the sort `Blind spots first` and the Kind filter value Blind spot, and the queue in proposal 1 ranks blind spots above other open mistakes. For such a trap, the pane header adds `You were sure`.\n\nServer: `GET /api/review/calibration?since=&until=` returns {matrix:{sure_right, sure_wrong, unsure_right, unsure_wrong}, changes:{n, wr, rw, ww}, flags:{n, revisited, never, never_wrong}}, computed in SQL from attempts (flagged, guess), flags and sessions.qstate. /api/review/redo items gain `blind: bool`.",
+    "beats": "It beats TopTierPrep's report 'Flagged (n)' filter and their Mark for Review. They only count flags per report. They store no confidence, overwrite changed answers, and never connect a flag to its result or to a return visit. The Report section (S6) shows calibration for one sitting; Review adds it up over every test and every practice answer, then turns it into a priority. A sure-and-wrong answer is the mistake a student will not recheck on test day.",
+    "effort": "M",
+    "needs": "R8: attempts.flagged and guess. R7 / S5: qstate conf, first, changes and trail. The flags table (R5). S6's per-sitting panel, sharing the same wording and tips. The Kind filter in UI.filterBar."
+   },
+   {
+    "title": "Points at stake on every topic group, and a total in the header",
+    "what": "Every Redo group header shows `≈ 20 pts at stake`, and a new header stat reads `Open mistakes: about 60 points at stake`. `progress.stake(learner, topic)` works it out as q × miss × slope, rounded to 5:\n- q = the topic's questions per 44-question section (blueprint.DOMAIN_SPLIT's 35/35/15/15, split across a domain's topics by the same weights as the builder's `mix: blueprint`);\n- miss = 1 − clean accuracy on the topic over the last 30 answers that are not repeats;\n- slope = scaled Math points per raw question near the student's estimate (from scoring.ANCHORS at estimate.mean3, R16; 600 when there is no estimate).\n\nIt is shown only when the topic has at least 5 answers; otherwise the header reads `not enough answers yet`. An (i) popover gives the arithmetic in plain words: `About 3 Circles questions a test × you miss 45% × about 14 points each`. Group sort gains `Most points at stake`, which is the default when an estimate exists. After a Review session or a redo set, the summary shows the change for each topic touched: `Circles: at stake 20 → 10 pts`. /api/review/counts returns `stake_total` and each group returns `stake`.",
+    "beats": "TopTierPrep has nothing like it: their redo list has no order and no screen, and their report's domain cards print 'X% of test section, 1-8 questions', which students cannot read. No SAT prep product tells a student what an open mistake costs in points. The figure turns a list of 25 into a clear first choice, and it moves every time they fix one.",
+    "effort": "M",
+    "needs": "estimate.py (R16) for the slope point. Topic shares from server/blueprint.py. Clean accuracy per topic with the R8 filters (repeat, disputed, void). Group data and counts from S10's endpoints. Proposal 1 uses it for ranking."
+   },
+   {
+    "title": "Mistake profile: the habits behind your mistakes, across topics",
+    "what": "Two new views:\n- a **Profile** card above the Redo list, shown once the student has 10 or more misses;\n- `Group by: Habit` in Redo.\n\nThe card has horizontal bars for these habit families:\n- Answered a different quantity (solved for the other unknown, gave the whole instead of the remaining part, stopped a step early),\n- Swapped the operation (added instead of multiplied),\n- Sign slip,\n- Flipped a ratio or reciprocal,\n- Wrong percent base,\n- Powers and roots,\n- Units and conversions,\n- Misremembered a formula,\n- Counting and off-by-one,\n- Arithmetic slip (the filler),\n- Grid-in.\n\nEach bar shows the family's share of misses in the last 60 days, its count, and an arrow against the 60 days before. Under it is one line of advice, written once per family. For example, 'Answered a different quantity: before choosing, reread the last sentence of the question.' Each bar has **Drill this habit · 8**. That builds fresh items across all topics whose options include a misconception from the family, walking at most 40 seeds per template.\n\nTag data, measured today: 386 templates give 2,271 distinct normalised reasons. A keyword pass classifies about half of them: answered-a-different-quantity 478, powers and roots 152, operation swap 145, sign 144, reciprocal or swap 120, percent 118, counting 76, units 67. The rest are tagged once in `satbank/habits.json` (norm → family) and reviewed by the bank owner. `satbank check` fails when a norm has no family. The server adds `progress.habit(norm)`. Me §3.7 'What keeps catching you' can show the top habit too.",
+    "beats": "It beats TopTierPrep's 'Distractor Analysis', which is prose inside one explanation, per question, and never added up. They cannot know that a student keeps solving for the wrong quantity in circles, systems and percentages. The spec's 'same mistake elsewhere' covers exact matches only (79 recurring norms); habits cover all 2,271 and find the test-taking habit that loses points in every topic.",
+    "effort": "L",
+    "needs": "A bank-side tag file (the T-bank owner, tied to open question 18's Mis.tag). The related pool accepts `family` in place of a norm (F5). The progress.habit lookup (F4). charts.js horizontal bars. The advice lines are written once, one per family."
+   },
+   {
+    "title": "Each mistake's history, and a rule in the student's own words",
+    "what": "When the pane opens a trap (`open=trap:<id>`), a horizontal timeline sits under the header. It has one dot per event from a new `trap_log(trap, at, event, session, seed)` table ('miss', 'repair', 'clean', 'fixed', 'check_ok', 'check_miss', 'relapse', 'dismissed'). Each dot has its glyph (✕ ↻ ✓), its date and a source chip, so the student can read the whole history, for example 'missed Sep 12 in practice, missed again Sep 15 in Section M1, clean Sep 18 and Sep 21, fixed, check-in passed Sep 24'. Tapping a dot opens that exact question.\n\nUnder the timeline is **Your rule**: a 120-character field (placeholder 'e.g. Subtract the given arc, don't halve'), saved on blur to traps.note (R9). It prompts with one line when hits ≥ 2 or after a relapse: 'Missed twice. Write the rule in your own words.' The rule comes back only after answering, never before:\n- in the practice session's feedback when a miss opens or refreshes this trap, or any trap with the same norm on another template: `Your rule: …`;\n- after a check-in is answered;\n- on the traps sheet (proposal 11).\n\nThe rows show a note glyph when a rule exists.",
+    "beats": "TopTierPrep has no mistake object at all, so a mistake cannot have a history or a note; their notes live only on exam highlights. Writing the fix in their own words makes the student recall it, and it comes back at the moment the same mistake happens again, which no competitor can do because none knows it is the same mistake.",
+    "effort": "S",
+    "needs": "A trap_log table (F4 §2.5, written in progress.record and in the close, reopen and check paths). traps.note (R9). An S4 feedback hook to print the rule. UI.review pane layout (F3)."
+   },
+   {
+    "title": "Saved questions become a spaced deck: 'Due today', always on fresh numbers",
+    "what": "The Saved tab opens with two cards, as on TopTierPrep's My Words: `Saved 14` and `Due today 4`. Each saved row gets a box (0–4) and a due date:\n- saving sets due = tomorrow;\n- a clean answer on a fresh version of its template moves it up a box, due in 1, 3, 7 and then 21 days;\n- a miss sends it back to box 0, due tomorrow, and opens or refreshes the trap as usual;\n- a clean answer in box 4 marks it `Learned`. It stays saved, is no longer due, and shows a check.\n\n**Practise due · 4** serves one fresh version per due item. The row meta adds `due today` / `next Oct 2` / `Learned`, and the Status filter gains Due / Not due / Learned. Today's card and the queue in proposal 1 include saved items that are due. Settings adds `saved_spaced` (default on), so a student who only wants bookmarks can turn scheduling off.",
+    "beats": "It beats TopTierPrep's 'Saved Questions', which is only a count in Profile with no list and no way to practise, and their spaced repetition, which exists only for vocabulary. We apply their best pattern to Math, and because every review is on fresh numbers, a due card never shows an answer the student has already seen.",
+    "effort": "M",
+    "needs": "F4: saved.box and saved.due columns (§2.5). F5: pool 'saved' with `due:true` and fresh versions. prefs key saved_spaced (§2.7). S3: Today's card. The proposal 1 queue."
+   },
+   {
+    "title": "Retake any sitting and see then vs now, question by question",
+    "what": "'Again, exactly' and 'Fresh versions' on a History sitting header (and the report's retake) start the drill with `retake: sid` or `again: sid` (R10). The drill stores the parent sitting's id in its cfg. Its finish summary adds a **Then vs Now** block:\n- two rows of result cells aligned by position (by template for fresh versions), with 'then' above 'now';\n- a count of flips: `Fixed 3 · still wrong 1 · new miss 1 · right both times 7`;\n- the score `9/12 → 11/12` and the time `14 min → 11 min`.\n\nClicking a column opens both questions in the pane side by side, then's pick against now's pick. In History, a sitting header gains `Retaken ×2 · best 11/12`, and its retakes nest under it, collapsed. Nothing is deleted. Exact retakes file as repeats (so mastery is honest), but the comparison still shows.",
+    "beats": "It beats TopTierPrep's Clear Session, whose confirmation reads 'This removes answers, annotations, and attempts from this session'. To redo a set there, a student has to destroy the record they would compare against. Ours takes 1 tap, keeps everything, and shows exactly what improved.",
+    "effort": "S",
+    "needs": "S4 session summary. R26 /api/history returns retake_of and nests retakes. The drill cfg stores retake/again (F5). UI.cell and the legend (F1)."
+   },
+   {
+    "title": "Mistake ledger: mistakes made vs fixed, week by week",
+    "what": "Between the stat strip and the tabs sits a 12-week chart (UI.barChart, stacked, with role=img and a hidden data table):\n- graphite bars below the axis for mistakes opened, with the relapse part hatched;\n- amber bars above for mistakes fixed;\n- an ink line for the open count at the end of each week.\n\nThe legend carries counts. Hovering or tapping a week shows a tooltip `Sep 15–21 · 9 made · 12 fixed · open 28 → 25`; clicking opens Fixed or History for that week (since/until). A headline above the chart reads `This week: fixed 12, made 9, net −3` and `median days to fix 2 → 1.5 (last 4 weeks)`. One earned line appears only when fixed > made for the week: 'You're fixing them faster than you make them.' A phone shows 8 weeks and fits the width with no scroll. With under 2 weeks of data, the chart is replaced by a single line. Server: `GET /api/review/ledger?weeks=12` returns [{week, opened, relapsed, fixed, open_end}] from trap_log, in the X-Tz local week.",
+    "beats": "TopTierPrep shows no mistake data anywhere; the only related number, 'Redo Questions 0' in Profile, is a count of a list nothing fills. Ours makes progress on mistakes visible week by week, which gives a student a reason to come back that a backlog count does not.",
+    "effort": "M",
+    "needs": "trap_log (F4, shared with proposal 5). charts.js UI.barChart with a stack below the axis and a line overlay (F1). S1's Me card can reuse the sparkline."
+   },
+   {
+    "title": "Time sinks: right but slow answers, and a drill to get faster",
+    "what": "A right answer whose time is over 2 × 95 s (the R34 pace) gets a `Slow` overlay in History. The Result filter gains `Slow right`, and the History summary adds `Slow right 11 · 18 min over pace`. A **Pace** card on the History tab shows each topic's median time against the 95 s pace line (UI.barChart {pace}), sorted by how far over pace it is. Each bar has **Beat your time · 5**, which starts `POST /api/drill {templates: that topic's 5 slowest, each:1, timing:'pace', source:'review'}`. Each question shows a 95 s ring, and the end screen reads `median 2:40 → 1:35 on these types`. In the pane, the time line reads `2:52 · 1:17 over pace`, and the History modal's rows colour time against pace (glyph + text, not colour alone). Queries: attempts.ms from every mode (R7 fills tests).",
+    "beats": "It beats TopTierPrep's per-question stopwatch, which measures time and then throws it away: a reload resets it, and their report has no time per question. Nobody turns 'right but slow' into practice, yet on a timed SAT a right answer that took three minutes costs the two questions after it.",
+    "effort": "M",
+    "needs": "attempts.ms for tests (R7, S5). UI.barChart pace option (F1). The runner's per-question ring for timing 'pace' (S4, F3)."
+   },
+   {
+    "title": "'Fresh one like this' shows the numbers changing, not a new question",
+    "what": "In the pane (and the session's repair question), 'Fresh one like this' (key T) does not clear the question and redraw it. The stem stays in place, and only the tokens that differ between the old and new stem (numbers, variable letters, names) change: old fades to new in 220 ms with an amber underline that stays for 1.2 s. Figures cross-fade, and the choices re-render. For a student's first 3 uses, a caption reads `Same question type, new numbers`. Implementation: split both stems on /(\\d[\\d.,/]*|\\s+)/, diff them with LCS (stems are at most about 400 characters), and wrap changed tokens in <mark class=chg>. Under reduced motion the swap is instant and the underline still shows. 'Again, exactly' reads `Exactly as you saw it` and changes nothing.",
+    "beats": "It beats TopTierPrep's retry, which can only show the same question again because their bank is finite, so a retry tests memory. Ours shows the promise 'same trap, new numbers' happening in front of the student, and teaches that the skill is the structure, not the answer.",
+    "effort": "S",
+    "needs": "UI.review pane and the inline drill (F3). Nothing on the server."
+   },
+   {
+    "title": "Ask for help: share a question together with what you picked and why it was wrong",
+    "what": "The pane's Share menu gains **Ask for help**. It creates a sets row of kind 'items' with `cfg.context {pick, mistake, note, source, when}`, with two opt-in checkboxes: Include my answer (on) and Include my note (off). It copies `/s/?c=CODE`. The landing page:\n- shows the question with answers hidden and a **Try it** button (a one-question drill for the visitor);\n- then reveals `Your friend picked C: halved the circumference instead of subtracting the given arc`, the note if included, and the key and rationale.\n\nSelecting rows in Redo and pressing `Ask for help · 5` makes one link carrying each item's context. The sharer's Share menu shows counts only: `Opened 2 · tried 1` (from R18's owner-only results).",
+    "beats": "It beats TopTierPrep's Share, which calls navigator.share and froze the page, and which, even when it works, shares a bare session. No product sends what went wrong along with the question. A tutor or friend sees in one screen exactly what to explain.",
+    "effort": "S",
+    "needs": "F6 sets (R18) with cfg.context. The access() reveal check (R19). The /s/ landing (F6). The Share menu in the pane (F3)."
+   },
+   {
+    "title": "Traps sheet for test week: every trap and your rule on one page",
+    "what": "`/review/print.html?sheet=traps` (plus a readable phone view) lists the 20 most-hit traps, open or fixed in the last 60 days, grouped by topic. Each entry has:\n- the label and hits,\n- 'The right move': a fresh example's one-line rationale,\n- the student's rule (proposal 6),\n- a 3-line mini example, stem only, with the answers on the last lines.\n\nThe title reads `Your traps · Sep 23 · 20 of 31`. It prints with print CSS only, on 1–2 pages. It is linked from the Review header's overflow menu, and from Plan's test-day checklist (7 days or fewer left) as 'Read your traps sheet'.",
+    "beats": "TopTierPrep has nothing like it, because their bank cannot name what a student falls for. This gives a student one page of their own mistakes to read the night before the SAT.",
+    "effort": "S",
+    "needs": "S10 redo/fixed data. traps.note (proposal 6). Generating fresh examples (the worksheet path). A link in S7's Plan checklist."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Mark for review in tests, the report's Flagged (n) filter, and the Marked tab rows",
+    "spec_says": "Flags persist on the server per sitting (the flags table). The navigator and Check Your Work read them, and the report adds Flagged (n) with the corner flag. Marked rows show the pick → key, the time and a result cell, and a calibration line reads 'flagged 12 · 7 right'.",
+    "why_only_parity": "TopTierPrep already has a For Review flag in the runner, a FOR REVIEW card, a Flagged (n) filter with a legend count, and a 'Flagged for review' chip in the review modal. Keeping what they already keep, and listing it with pick → key, is the same information shown in a new place.",
+    "upgrade": "Give each flag its full history from qstate. The Marked row meta reads `flagged at 0:40 · came back 1× · changed C→A · right`. A `Never revisited` chip, and a line `Flags you never came back to: 4 (2 wrong)`. A live line in Check Your Work before submit, `2 flagged not revisited` (an S5 hook). The totals feed the Confidence panel (proposal 2)."
+   },
+   {
+    "feature": "Attempt History modal",
+    "spec_says": "A modal covering the whole template: a summary (seen / right / repaired / repeats / median) and table rows with date, source, difficulty, result, misconception, time, flag, and Open.",
+    "why_only_parity": "It is still TopTierPrep's shape, a table of tries with Close. It has more rows, but the student reads it the same way, and nothing shows whether they are improving on this kind of question.",
+    "upgrade": "A trend strip on top: one dot per attempt along a time axis, with the time spent as the height, the 95 s pace line, and the result as the dot's glyph, plus `last 5: 3/5 → 5/5` and `median 2:10 → 1:20`. Each row shows that seed's numbers from Item.params (`θ=150°, C=192`), so the student can see which numbers tripped them. A `This mistake only` filter by norm."
+   },
+   {
+    "feature": "Hide answers in the review",
+    "spec_says": "Hide answers is remembered and stays on across Next. A single question can be re-answered through Check, which files a Repeat.",
+    "why_only_parity": "TopTierPrep's Hide answers also stays on across Next. Re-answering one question at a time is still a manual step per question, not a way to test yourself on the whole set.",
+    "upgrade": "**Retest blind** on any list or sitting: a Marked group header, the report's Wrong filter, or a Redo selection. Answers are hidden and each item is answered in turn in the pane (A–D, then Enter), filing Repeats. A closing tally reads `Retest: 6 of 8 right now (were 1 of 8)`, and the ones still wrong are offered as `Redo these 2 · fresh`."
+   },
+   {
+    "feature": "Moving through the review (Prev/Next, position, the phone pane)",
+    "spec_says": "←/→ and J/K, a `3 of 25` position, and on a phone a full-screen dialog with a ‹ Fresh one like this › footer.",
+    "why_only_parity": "TopTierPrep's review modal already has ←/→ keys and a '1 of 49' position.",
+    "upgrade": "A small result strip in the pane header, with one cell per list row, the current one ringed and a click to jump; `N` goes to the next wrong answer, `U` to the next unanswered one. Prefetch the 2 items before and after the current one (LRU of 20), so a move renders in the same frame. On a phone, a horizontal swipe moves Prev/Next with the card sliding, and a long press on a row starts selection mode instead of relying on the 24px checkboxes."
+   },
+   {
+    "feature": "Practice builder sources (Redo / Marked / Saved)",
+    "spec_says": "A Source control `New | Redo | Marked | Saved | Fixed` with Exactly / Fresh versions. The topic, difficulty and clock filters apply, and a live count shows.",
+    "why_only_parity": "TopTierPrep's builder already has Redo List, Marked for Review (Saved Only) and Solved selects. Ours works and adds Fresh versions, but it is still either/or: a set is new questions or redo, never both.",
+    "upgrade": "**Mix in my mistakes** on the New source: `Off · 1 in 5 · 1 in 3` (pref `mix_redo`, default 1 in 5). The drill mixes due check-ins, half-fixed traps and open traps from the chosen topics into new questions. Each such question is labelled `From your Redo` on the strip, with public(q).why. Students fix mistakes inside ordinary practice without having to choose a mode."
+   },
+   {
+    "feature": "Share a question or a set",
+    "spec_says": "A working share link through sets (R18), a /s/ landing page with Start / Fresh versions, the clipboard with a fallback field, and never navigator.share.",
+    "why_only_parity": "This is what TopTierPrep's shared session was built for: Share → link → a 'Start Practice' landing. A share that does not freeze fixes their bug; it does not beat the feature.",
+    "upgrade": "Ask for help carries what the student picked and the named mistake (proposal 11). An opt-in **Compare**: when both people have finished the same exact set, each sees the other's result strip side by side, with the mistake each fell for per question. The sharer sees `Opened 3 · finished 2`."
+   },
+   {
+    "feature": "Redoing a session (their Clear Session vs our 'Again, exactly')",
+    "spec_says": "History's Sitting header offers 'Again, exactly', a clean retake that deletes nothing, plus Fresh versions and Fix the misses.",
+    "why_only_parity": "It does what Clear Session does, let a student redo a set clean. Keeping the history is better housekeeping, but what the student sees is the same: the set again.",
+    "upgrade": "A Then vs Now block on the retake's summary: aligned result cells, flip counts, score and time before and after, and both picks side by side. Retakes nest under the original with 'best 11/12' (proposal 7)."
+   },
+   {
+    "feature": "Saved list vs their My Words (Saved + Due Today)",
+    "spec_says": "A Saved tab with notes, filters, Again exactly and Fresh versions. The spaced 'due' schedule applies only to fixed mistakes' check-ins.",
+    "why_only_parity": "TopTierPrep's My Words pairs Saved with Due Today. Our Saved tab is a list of bookmarks, the same shape as their Saved Words list.",
+    "upgrade": "Boxes and due dates on saved questions: 1/3/7/21 days, reviewed on fresh numbers, a miss sends it back to box 0, and box 4 marks it Learned. A `Due today n` card and Practise due; Today and the queue pick them up (proposal 9)."
+   },
+   {
+    "feature": "Saved-content counts on Me",
+    "spec_says": "The card reads `Open mistakes 25 · Marked 3 · Saved 14 · Fixed 40 · Answers 312`, and each number links to its tab.",
+    "why_only_parity": "TopTierPrep's Saved Content card is exactly a set of counts (Saved Words / Redo Questions / Saved Questions). Adding links is the least that would make it useful.",
+    "upgrade": "Each count gets its next action and its direction. `Open 25 (−3 this week) · Review 10 min`. `Saved 14 · 4 due · Practise due`. `Fixed 40 · 2 check-ins due`. A 12-week sparkline of open mistakes from the ledger (proposal 8)."
+   },
+   {
+    "feature": "Time per question",
+    "spec_says": "Dwell ms is recorded in tests. History has a time column, a Slowest sort and a median; the pane meta shows `1:12`.",
+    "why_only_parity": "TopTierPrep records time per attempt (the stopwatch, and '00:22' in Attempt History). Showing a number per row matches theirs.",
+    "upgrade": "Time against pace everywhere (`1:17 over pace`), a Slow-right state and filter, per-topic pace bars, and a Beat your time drill with before/after medians (proposal 9)."
+   },
+   {
+    "feature": "Eliminations and annotations saved on the server",
+    "spec_says": "R6 notes and highlights come back wherever the exact question appears; strikes are kept in qstate.",
+    "why_only_parity": "TopTierPrep also saves eliminations and annotations on the server per session. Bringing them back is parity.",
+    "upgrade": "The pane draws the options the student struck as struck. When the key was struck, it names the pattern: `You crossed out the right answer (A) before picking C`. This adds a Redo filter `Struck the key` and a count in the Confidence panel (`Struck the key 3×`). Only a product that keeps strikes per question and knows the key can show it."
+   },
+   {
+    "feature": "Report a problem from the review",
+    "spec_says": "The pane's actions include Report a problem (UI.report, R17).",
+    "why_only_parity": "TopTierPrep's review modal has a [Report] button.",
+    "upgrade": "`Not what I did?` under the 'Your pick ·' line. It opens a small menu of the other named misconceptions known for this template (from the norm index), plus Something else and I guessed. Choosing one relabels this student's trap (its norm) or marks the answer as a guess, so it is no longer a Blind spot. It also files a `reports` row of kind 'label' for the bank owner. Every student's mistake names become more accurate, and the bank gets feedback on each label."
+   },
+   {
+    "feature": "Difficulty in Review's filters, meta and Level control",
+    "spec_says": "Easy / Medium / Hard as the filter, a 3-bar glyph, and Level `As missed | Any | Harder` by tier.",
+    "why_only_parity": "TopTierPrep's builder filters by a finer 1–7 Question Score. Three tiers are coarser than theirs, so this merely matches their basic pills.",
+    "upgrade": "Show the measured level wherever one exists (`▃ Medium · M4`, as §2.3 already allows). Add a 1–7 Level filter in Review (dual UI.scoreSlider, the builder's `levels`). Make `Harder` step up one measured level within the tier before it moves up a tier."
+   },
+   {
+    "feature": "Empty states",
+    "spec_says": "A line of text per tab and per modal ('No attempts yet. This is your first question of this kind.', 'Flag a question in practice or a test and it waits here.'), plus the new-student panel.",
+    "why_only_parity": "TopTierPrep's empty states are text lines too ('No attempts yet.', 'No saved words match these filters').",
+    "upgrade": "Every empty tab shows a live example built from a real generated item: a sample Redo row with pips and a misconception, tagged `Example`, which opens read-only in the pane with every option's reason. Next to it, a `Try one now` inline question (the quick sheet's Quick question), so the first miss lands right there. An empty History modal offers 'Try one now' on that template."
+   }
+  ]
+ },
+ "advantage": {
+  "proposals": [
+   {
+    "title": "Guided review: 'Review my misses', three steps per mistake",
+    "what": "A player at /review/walk/?list=redo&since=today (or any selection from any tab). Entry points: the session summary and report ('Review these 6 misses · about 9 min'), Today's Review card ('Yesterday's misses · 4'), the Review header, and each History sitting header. Each mistake runs three steps in the UI.review pane at full width. (1) TRY AGAIN: the exact missed question in Hide-answers mode, with a faint 'You picked C last time' tag; Check files a Repeat, which never counts. (2) THE TRAP: the key, every option's misconception line and the rationale, a callout 'What happened: <label>', the 'Was this your mistake?' confirm (proposal 4), Save and Note. (3) PROVE IT: an inline fresh question on the same template at the tier of the miss. A miss queues the repair ('Try the repair'); a clean answer fills a pip. A rail at the top reads 'Mistake 3 of 6', with one result dot per mistake, plus Back and Skip; Enter moves to the next step. The walk is a drill with cfg.inline and cfg.walk, and its position is kept on the server, so a reload or another device resumes at the same step. End card: '6 reviewed · 4 proven on new numbers · 2 still open · check-ins from Sep 26', then [Walk the 2 still open] and [Done]. Phone: the same three steps, one full-screen sheet each, with a sticky footer ‹ · primary · ›.",
+    "beats": "TopTierPrep has no review-mistakes flow at all (weakness #1 in the teardown). Their report modal lets a student look at a question but never re-answer it, and nothing makes them practise the mistake afterwards. This is the routine a tutor runs after a test, built from our pieces: re-attempt, the named trap, then proof on new numbers, which a finite bank cannot supply.",
+    "effort": "M",
+    "needs": "UI.review pane mode, the inline drill and re-answerable Hide answers (F3, R23); drill lists 'items' and 'templates' with cfg.inline (F5, R10, R24); hooks on the session summary (S4), the report (S6) and Today's #mist card (S3, R30). No new tables: the walk state lives in the drill's cfg."
+   },
+   {
+    "title": "Points at stake: every open mistake priced in SAT points",
+    "what": "The server adds progress.stake(learner) and returns stake_pts on every redo item and group, plus a total. The estimate per trap multiplies four factors. (a) Expected slots per 44-question section: the domain's count from blueprint.DOMAIN_SPLIT (15/15/7/7), divided by the topics in that domain, times the template's share of its topic. (b) Exposure: the share of the template's seeds whose options contain the norm, from the related index (§14). (c) Fall rate: (hits+1)/(template attempts × exposure + 2). (d) Points per raw question at the student's estimate: the difference in the scoring curve at the raw score ±1 around estimate.mean3, or 500 with a 'rough' tag when there is no estimate. Values are rounded to 5 and capped per topic at slots × slope × (1 − accuracy). UI: each Redo row shows DM Mono '+10 pts' on the right; the header meta reads 'Open mistakes cost about 40–60 points a section'; the default sort is 'Points at stake'; the most-missed strip becomes 'Worth the most: Redo these 5 · about +30 pts'; the stat strip gets an AT STAKE tile. A 'How this is worked out' disclosure on the open row reads 'shows up in ~1.1 of 44 questions · you fall for it 2 of 3 times · each question is worth ~10 points at 560'. The Fixed tab gains 'Recovered ≈ +30 pts this month', taken from each trap's stake when it closed. The number is hidden until the student has 30 answers or a scored sitting.",
+    "beats": "None of TopTierPrep's lists are ordered by value: their Redo filter is empty and unranked, and their domain cards give a confusing percentage. Pricing a mistake needs a labelled misconception, how often that option appears (only known because we generate the options), and the student's own fall rate across seeds. A student sees which ten minutes of redo are worth the most points.",
+    "effort": "M",
+    "needs": "estimate.py mean3 (F4, R16), the scoring curve (scoring._interpolate), blueprint.DOMAIN_SPLIT, the related index (§14), attempts.norm (R8). No new column: exposure comes from the cached index, not from regenerating each attempt."
+   },
+   {
+    "title": "Trap gauntlet: sets where every question carries one of your own misconceptions",
+    "what": "'Trap gauntlet · 12' sits on the Redo header, on Today's Review card, and as a Source in the Practice builder. For each of the learner's open and check-due norms, the server takes the templates where that norm appears (the related index) and walks fresh seeds, at most 40 each (about 10 ms), until the four options contain the norm. It interleaves them so that no two in a row share a topic. It mixes in 20% control questions containing none of the student's traps, so a student cannot learn that 'the trap is always there'. Options: length 10/20, the clock off or at test pace (95 s a question), feedback instant or at the end. Nothing during play shows which option is the trap. Summary: 'You met 14 of your traps · dodged 11 · fell for 3', then one row per trap met (✓ dodged / ✕ fell, with the question number to open). A dodge on the trap's own template is an ordinary clean answer and fills a pip. A dodge on another template counts toward 'Dodged in 3 question types', shown on the Redo row and in the pane's Same-mistake-elsewhere line.",
+    "beats": "TopTierPrep's Redo and Marked filters can only re-serve items the student has already seen, and their distractors carry no labels, so they cannot choose questions by which wrong options they contain. This is 'drills built from a student's own misconception profile', testing transfer across question types, and it never runs out.",
+    "effort": "M",
+    "needs": "The related index (§14); drill list 'related' extended from one norm to a set of norms plus control items (F5, R10); attempts.norm (R8); the session summary shows traps met and dodged (S4). The same seed walk as Spot the trap."
+   },
+   {
+    "title": "Why you missed it: an automatic cause per miss, confirmed in one tap",
+    "what": "progress.record gives every wrong answer a cause, stored in attempts.cause with traps.cause_src 'auto'|'you'. The rules: a filler option means Slip; flagged or 'I'm guessing' means Unsure; ms below max(20 s, 35% of this learner's median on the template) means Rushed; otherwise it is Concept (the named misconception). The pane and the guided review ask 'Was this your mistake? <label>' with [Yes, that's it] and [No, I…]. No opens radio rows: Misread the question · Arithmetic slip · Guessed · Ran out of time · the item's other labelled misconceptions · Something else (80 characters). Slip, Rushed and Misread need 1 clean answer to close; Concept needs 2. The Redo header shows a 'Why you lose points' stacked bar with a legend and counts ('Concept 14 · Rushed 5 · Slip 4 · Misread 2 · Unsure 2'). Each segment filters the list, and each has a remedy button. Concept → Redo. Rushed → 'Slow-down set': fresh versions where Check unlocks after 30 s under a 'Re-read what is asked' line. Slip → 'Check-your-work set': after picking, a one-line estimate prompt comes before Check. Misread → a set where the question sentence of the stem is shown and tapped first. Unsure → Worked twin (proposal 6). Every 'No' is counted per (template, norm), and /admin/reports lists labels disputed by at least 15% of 20 or more learners.",
+    "beats": "TopTierPrep's 'Distractor Analysis' is prose, and with unlimited retries they cannot tell which pick came first, so they cannot separate a concept error from a slip or a rushed read. Our labelled options, the filler tag, the time per answer and the flags make the cause computable, and the student's confirmation also tells us which labels in the bank are wrong.",
+    "effort": "M",
+    "needs": "attempts.cause and traps.cause_src (F4, §2.5); guess and flagged (R8); ms on all attempts (R7); drill cfg modes 'slow', 'estimate' and 'misread' (F5, S4); the label-dispute view in the reports admin (F6, R17)."
+   },
+   {
+    "title": "Instinct report: what your flags, first answers and blind spots are worth",
+    "what": "A card at the top of Marked, plus an INSTINCT tile on the stat strip, covering the last 30 days. Block 1 is a flag matrix, 2×2 with counts, each cell a button that filters History or Redo: Flagged & right ('could have moved on'), Flagged & wrong ('good catch'), Not flagged & wrong, labelled **Blind spots** ('you didn't know you didn't know'), and Not flagged & right. Block 2 is answer changes, from qstate.trail in tests and from selection changes before Check in practice: 'Changed 17 answers: right→wrong 9 · wrong→right 4 · wrong→wrong 4. Your first answer was worth +5 questions ≈ +40 pts', with a split per topic. Block 3 is flag hit rate per topic: 'Your flags catch 30% of your Circles misses; flag more there.' Redo also gets a lens and sort, 'Blind spots first': wrong, not flagged, not guessed, and answered at or under the median time. It comes with [Drill my blind spots], which serves fresh versions at the tier of the miss. The spec's calibration line becomes Block 1's top sentence.",
+    "beats": "TopTierPrep counts flags and never says what they were worth. Their report overwrites answers, so they cannot know about second-guessing, and without time per answer they cannot find confident misses. This teaches the test-day skill of when to trust yourself, measured on the student's own data.",
+    "effort": "M",
+    "needs": "The flags table (R5), qstate trail and changes (R7), selection-change logging in UI.workspace practice mode (F3), guess (R8), ms. Aggregates go on /api/review/marked (calibration becomes an object) and /api/review/redo?lens=blind."
+   },
+   {
+    "title": "Worked twin: 'See one solved' on new numbers, then 'Now you'",
+    "what": "In the pane and in step 2 of the guided review, a button 'See one solved' sits beside 'Fresh one like this'. GET /api/review/worked?template=&tier= walks to an unseen seed that is not in today's challenge, marks it seen in practice_seen, and returns it with the answer, the rationale and the reasons. Nothing is filed, and History lists it as 'Viewed · worked'. At 1280 the pane shows two columns. Left: 'You missed', the original with your pick. Right: 'Worked · new numbers', with the key and rationale open, and the option carrying the same misconception as your pick outlined, labelled 'Same trap as your C: <label>. Here it gives 36.' Under both is [Now you: a new one], the inline fresh drill, so the order is example → attempt. On a phone the two stack, with a segmented You missed | Worked control.",
+    "beats": "TopTierPrep can only show the same item's explanation again, after which re-answering it tests memory. A worked example on different numbers followed by a fresh attempt needs an unlimited bank, and pointing at the same trap on new numbers needs labelled distractors.",
+    "effort": "S",
+    "needs": "generate plus practice_seen (the worked seed is burned, so revealing its key is safe); deps.access to exclude the day's challenge (R19); UI.review pane (F3)."
+   },
+   {
+    "title": "Speed repair: right answers that cost too much time",
+    "what": "A 'Slow rights' lens on History and Redo selects right answers whose ms is over 2 × the 95 s pace, or over 1.5 × the crowd median for the template when n ≥ 20. Header: '18 slow rights in 30 days · about 21 min over pace'. The rows are grouped by template: 'Circles · Arc length · your median 2:40 · pace 1:35 · crowd 1:50'. [Speed repair] serves fresh versions of those templates. Each question shows a target clock, max(pace, 80% of your median), as a draining bar. Beating it twice in a row lowers the target by 15 s, down to the pace. A template is 'Up to speed' after 2 right answers on pace, which shows as a status in the Fixed tab. A wrong answer is filed normally and opens a trap; an over-target right is filed as right, with 'over target' in History.",
+    "beats": "TopTierPrep shows a stopwatch that resets on reload and never uses it. A speed drill on a finite bank turns into memorising answers, while fresh numbers keep it about technique. On the SAT, a right answer that takes 3 minutes costs points on the questions after it.",
+    "effort": "M",
+    "needs": "ms on every attempt, tests included (R7, R8); the crowd median from drill.levels (the QBank section); a per-question target clock in the runner shell (F3, S4); drill cfg 'speed' with a per-template target (F5)."
+   },
+   {
+    "title": "Paper that counts: printed worksheets whose answers still get filed",
+    "what": "Print worksheet (§16) gains a 6-character sheet code, stored as a sets row of kind 'paper' with its items (R18). The printed header carries 'Check your answers at satfreshman/p/ABC234'. The options: Answer key on the last page (on/off; off for self-testing and tutors), Versions A / B (two seed sets on the same templates, for students sitting side by side), and 1–3 per mistake. /p/CODE shows a bubble grid, A–D per number or a grid-in field, with an optional 'Minutes taken'. Submitting files each answer through a drill with source 'paper'. Because the seeds are unseen they are clean attempts, so traps open or close, each miss is named, and a summary shows. A code can be checked once per learner, and a tutor who prints for a class has each student enter under their own code. This answers the open question on worksheet seeds: the seeds are consumed, and the answers are filed when entered.",
+    "beats": "TopTierPrep has no printables, and a finite bank would print the same pages every time. Paper practice normally never reaches the study record; here it does, with the misconception named for every wrong bubble.",
+    "effort": "M",
+    "needs": "The sets table (F6, R18); the worksheet endpoint (§16); drill list 'share' or 'items' with source 'paper' (F5); deps.access (R19); print CSS."
+   },
+   {
+    "title": "My trap sheet and the exam-week pack",
+    "what": "/review/sheet/ is one printable page, and a phone view, of the student's top 8 misconceptions by points at stake (or by hits before there is an estimate). Each entry has the label, the fix in one line (the first sentence of a fresh example's rationale), a tiny fresh example (the stem, then 'trap: 48 · key: 24'), the student's record ('dodged 4 of the last 5') and the topic glyph. Header: 'Read this before your test · Sat, Oct 3'. From 7 days before learners.exam_date, Today and Review show an 'Exam week' card with [Your trap sheet] and [Final check: one fresh question per trap · 8 questions · 12 min], the last one timed at test pace. The sheet regenerates its examples on every visit.",
+    "beats": "TopTierPrep has no personal summary of mistakes, and generic cheat sheets are not about the student's own errors. This is the student's own misconception profile on one page, with never-seen examples, for the morning of the test.",
+    "effort": "S",
+    "needs": "Points at stake (proposal 2) or hits; generate plus the related index; exam_date (R15); print CSS; a hook on Today's #mist card (S3)."
+   },
+   {
+    "title": "Evidence timeline: the life of each mistake, every step openable",
+    "what": "For a trap, the pane gains a 'Proof' timeline built from the attempts rows with its template and norm, plus the trap's fields. Example: 'Sep 12 · Section #7 · Q14 · picked C = 48 · Wrong (Concept)' → 'Sep 12 · Repair · 24 ✓ new numbers' → 'Sep 14 · Practice · ✓ clean · Fixed' → 'Sep 17 · Check-in 1 ✓' → 'Sep 24 · Check-in 2 due'. Each node uses UI.resultCell and opens that exact (template, seed) in the pane, and Back returns to the timeline. A summary line reads 'Fixed in 2 days with 3 answers · held 10 days'. Fixed rows show the chain as a compact run of cells. Relapses appear as a graphite node ('Sep 30 · Relapsed · picked B').",
+    "beats": "TopTierPrep's Attempt History covers one item in one session, and they never show that a mistake was fixed. A timeline that goes from the miss to proof on new numbers, and then to spaced checks, only exists because every question has an address and every miss a norm.",
+    "effort": "S",
+    "needs": "/api/review/family with a trap filter (attempts by learner, template and norm); trap fields due, checks and relapses (R9); UI.resultCell (F1)."
+   },
+   {
+    "title": "Proven-at ladder: difficulty that adapts per question type",
+    "what": "Each trap carries rungs Easy · Medium · Hard, only those that drill._tiers_of has for its template. A rung is proven by a clean right at that tier after the trap opened. Fixed rows show 'Proven ▁✓ ▃✓ ▅○' with [Prove it at Hard] (one fresh Hard, inline). The Redo Level control gains 'Climb': start at the tier of the miss, step up after each clean right until Hard, step down after a miss (R33's rule applied per template). A trap that closed below the top rung is labelled 'Fixed at Medium', and its check-ins draw at the highest proven tier, so a check tests the level actually reached.",
+    "beats": "TopTierPrep's redo has no link to difficulty, and their 1–7 score is only a filter. Here difficulty follows the student within one question type, which needs several tiers of the same template on fresh seeds.",
+    "effort": "S",
+    "needs": "_tiers_of and attempts.difficulty; traps.proven (a small bitmask column, F4); drill level 'climb' (F5); R33."
+   }
+  ],
+  "parity_gaps": [
+   {
+    "feature": "Mark for review on the question strip (practice and exam runner)",
+    "spec_says": "A flag toggle (aria-pressed, orange when on) stored in the flags table per sitting, which survives a reload and module 2.",
+    "why_only_parity": "TopTierPrep has the same toggle, and its flags reach their report. Persistence only fixes our own bug in test.js.",
+    "upgrade": "Let a flag carry a reason. A second tap on the flag, or Shift+M, gives three chips: Unsure · Guessed · Come back. The reason is stored in flags.why. Check your work lists 'Come back' first with its dwell time, the Marked tab groups by reason, and calibration works per reason ('your Unsure flags are right 70%: trust them more'). Setting or clearing a flag stays one tap."
+   },
+   {
+    "feature": "The report's Flagged filter, corner flag and legend",
+    "spec_says": "Filters All · Wrong · Blank · Flagged (n), with a corner flag on cells and 'Flagged for review (n)' in the legend.",
+    "why_only_parity": "It is TopTierPrep's All / R&W / Math / Flagged (n) with an orange dot, one to one.",
+    "upgrade": "Split flagged by outcome ('Flagged · 3 right · 2 wrong') and add a 'Blind spots (n)' filter: wrong, not flagged, fast. Add a 'Changed answers (n)' filter from qstate. Over the grid, one line: 'Your flags caught 2 of your 7 misses.'"
+   },
+   {
+    "feature": "Check your work FOR REVIEW card",
+    "spec_says": "The card reads the flags from the server.",
+    "why_only_parity": "It is the same card TopTierPrep and Bluebook have.",
+    "upgrade": "Tie the card to the clock: '3 flagged · 6:10 left · about 2:00 each'. Order flagged questions by reason and dwell ('Come back' and the longest first). A cell tagged 'Guessed' gets a small ? so the student revisits the most likely flips first. This goes through the Tests owner (S5)."
+   },
+   {
+    "feature": "Difficulty filter and Details (TopTierPrep's Question Score 1–7)",
+    "spec_says": "The Review filters offer only Easy / Medium / Hard, and Details holds only the address and Copy link.",
+    "why_only_parity": "It is below parity: TopTierPrep filters on a 1–7 score, and our own Practice builder has measured Levels 1–7, but Review ignores them.",
+    "upgrade": "Add a Level chip to Review's filter bar using the QBank's measured levels ('measured from 42' or 'estimated'). The inline meta reads '▃ Medium · Level 5 · 41% of students right', and Redo's 'Harder' steps to the next measured level instead of only the next tier."
+   },
+   {
+    "feature": "Question Overview views (Status | Difficulty)",
+    "spec_says": "The legend becomes Unanswered / Right / Wrong / Repaired / Flagged / Current, with a Status | Difficulty toggle.",
+    "why_only_parity": "TopTierPrep has the same two views; Repaired is our name for their Mixed.",
+    "upgrade": "Add a Time view: cells shaded against the 1:35 pace, with the seconds printed. Add a Traps view: after answering, cells whose options contained one of the student's open misconceptions get a dot ('3 questions here had your traps; you dodged 2'). Both come from data only we have."
+   },
+   {
+    "feature": "Saved content card on Me",
+    "spec_says": "'Open mistakes 25 · Marked 3 · Saved 14 · Fixed 40 · Answers 312', each linking to its tab.",
+    "why_only_parity": "TopTierPrep's Profile card shows the same kind of counts. Links are the only difference.",
+    "upgrade": "Show movement and value: '25 open (−4 this week) · 6 fixed this week · ≈ 50 pts at stake · 2 check-ins due', with [Redo the top 5] inline."
+   },
+   {
+    "feature": "Share a set (§15)",
+    "spec_says": "POST /api/shares and a /s/ landing with Start (the exact items) or Fresh versions. Nothing about visitors is ever shown. (This conflicts with R18, which unifies shares into sets with /s/?c= and an owner-only results endpoint. R18 should win.)",
+    "why_only_parity": "TopTierPrep has shared sessions with a 'Start Practice' landing. Theirs freezes the page, but ours is the working version of the same feature.",
+    "upgrade": "Make it 'Challenge a friend'. With the opt-in show_score/show_name from R18, a visitor who finishes sees 'You 7/8 · Sam 5/8 on these questions' and which traps each person fell for. Add 'Fresh for each friend': every visitor gets their own seeds on the same templates, drawn so the same misconceptions appear among the options, so classmates cannot pass keys around. The sharer gets a results list with trap counts per question."
+   },
+   {
+    "feature": "Eliminations and answer changes kept on the server",
+    "spec_says": "R7 stores struck options and the trail in qstate, but the Review pane shows only the pick and the key.",
+    "why_only_parity": "TopTierPrep also saves eliminations and also never shows them in review.",
+    "upgrade": "The pane replays 'Your path': the options the student struck are drawn struck, with answer changes ('B → C at 1:10'), dwell time, and their highlights and notes (R6). The student sees when they had the right answer and changed away from it."
+   },
+   {
+    "feature": "Prev / Next in the review view",
+    "spec_says": "Prev/Next through the current list with J/K and ←/→, and '3 of 25'.",
+    "why_only_parity": "TopTierPrep's review modal has ← → and '1 of 49'.",
+    "upgrade": "Mark rows already opened this visit with a seen marker, and add 'Next unreviewed'. When the list is sorted by points at stake, Next follows the value order, so pressing → always goes to the most valuable mistake not yet reviewed."
+   },
+   {
+    "feature": "Wrong-number chips per sitting",
+    "spec_says": "History's sitting headers carry Again, exactly / Fresh versions / Fix the misses / Report, but no chips per question.",
+    "why_only_parity": "It is below parity in scanning: TopTierPrep's cards list the wrong numbers ('2 3 4 5 6 7 +19'), even though theirs cannot be clicked.",
+    "upgrade": "Put clickable result cells for each question in the sitting header. Each opens that question in the pane and shows the misconception on focus or hover. Add [Walk these misses], which starts the guided review."
+   },
+   {
+    "feature": "Export (History CSV)",
+    "spec_says": "A Download CSV button on the History summary card.",
+    "why_only_parity": "TopTierPrep has a 'Share / Export Report' button; it is dead. A CSV is simply the working version of the same idea.",
+    "upgrade": "Add a read-only Review page to the R18 progress link, for a tutor or parent: redo with stakes, the cause mix, the fixed log and the trap sheet. Add a printable 'Error log': for each mistake, the question, the pick, the named misconception, its one-line fix and its status."
+   },
+   {
+    "feature": "Volume and Timed options when practising from a list",
+    "spec_says": "Only Redo's action bar has Level and Timed. Marked, Saved and History offer only Exactly / Fresh and 1–3 each.",
+    "why_only_parity": "It is below parity: TopTierPrep's builder applies Volume 10–All and Timed/Untimed to every source (Redo, Marked, Solved).",
+    "upgrade": "Give every tab's action bar one option set: Volume (10 / 20 / All, cut by points at stake or by recency), Clock (off / test pace / custom), and Feedback (instant / at the end like a test). These are the Practice builder's modes, echoed in the summary line."
+   },
+   {
+    "feature": "Report a problem from the review view",
+    "spec_says": "The pane reuses the Session's Report dialog.",
+    "why_only_parity": "TopTierPrep's review modal has a Report button.",
+    "upgrade": "Add a quiet 'This label is wrong' link beside each misconception line. It opens UI.report with the category 'Wrong mistake label' and (template, seed, option) filled in. It also takes the 'No' answers from 'Was this your mistake?', so the bank owner gets per-label dispute rates instead of free-text reports."
+   },
+   {
+    "feature": "Empty state for a new student",
+    "spec_says": "A three-line panel (Redo / Marked / Saved, each explained), then Start practice and Take the diagnostic.",
+    "why_only_parity": "TopTierPrep's dashed empty state also explains what goes there and points to where to get it.",
+    "upgrade": "Make the page show itself: an inline fresh question under 'See how Review works'. A wrong answer creates the first redo row live, with its named misconception and pips; a right one shows 'This is what a clean answer looks like' and offers a flag-and-answer to create an Unsure. The new student leaves with one real entry and knows how the page works."
+   }
+  ]
+ }
+}
