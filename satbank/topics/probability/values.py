@@ -29,7 +29,7 @@ import re
 from fractions import Fraction as Q
 
 from ...exact import MINUS, Exact
-from ...item import Item, ItemError, Mis, assemble, assemble_text
+from ...item import Item, ItemError, Mis, assemble, assemble_text, gridin_mistakes
 
 __all__ = ["Q", "q", "PVal", "ratio", "reduced", "decimal", "percent", "count",
            "grid", "griddable", "snap", "unambiguous", "places_needed", "dec",
@@ -300,12 +300,16 @@ def mcq(template: str, skill: str, difficulty: str, seed: int, stem: str,
 
 
 def spr(template: str, skill: str, difficulty: str, seed: int, stem: str,
-        value, rationale: str, *, params: dict, table=None, figure=None) -> Item:
-    """A grid-in. `grid` refuses anything the answer field cannot hold."""
+        value, rationale: str, *, params: dict, table=None, figure=None,
+        mistakes=()) -> Item:
+    """A grid-in. `grid` refuses anything the answer field cannot hold.
+    `mistakes` is the (reason, value) list the multiple-choice path offers."""
     entry = grid(value)
+    key = PVal(q(value), entry)
     return Item(template, skill, difficulty, seed, tidy(stem), "spr",
-                PVal(q(value), entry), entry, tidy(rationale),
-                figure=figure, table=table, params=params)
+                key, entry, tidy(rationale),
+                figure=figure, table=table, params=params,
+                spr_mistakes=gridin_mistakes(key, [Mis(w, v) for w, v in mistakes]))
 
 
 def text_mcq(template: str, skill: str, difficulty: str, seed: int, stem: str,
