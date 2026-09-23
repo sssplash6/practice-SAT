@@ -27,7 +27,10 @@ merged into master (test_flow all good, 19/19 topics PASS). Do not re-run any of
      args: {skipCore: true}})`: each author continues from its own committed file.
      Still to do after it: confusions (~700), fills + frames (~1,500; literature cut from real Gutenberg texts, never
      from memory), fold `parts/` into the final files, delete `_plan.json`, an independent accuracy check, merge.
-4. Then wave 1b: F2, F3, F5 (after F4), F6 (after F1 and F4); then S1, S3-S10 (S2 dropped); then I1.
+4. Bank flaws seen 2026-09-24 (fix in satbank/topics, gate must stay PASS, MCQ output unchanged):
+   `rr.repeated_factor` reason reads "counted 1 years"; `pct.table_share` grid-in stem mentions a table it does not show;
+   `lat.triangle_sum` names "subtracted from 100 instead of from 90" and "assumed both acute angles are 45", both doubtful.
+5. Then wave 1b: F2, F3, F5 (after F4), F6 (after F1 and F4); then S1, S3-S10 (S2 dropped); then I1.
 
 The build runs from `next/build.js` (args `[{id, from?, unit?, round?, issues?}]`): unit builders on `v2/<task>` ->
 independent verifier -> up to 3 fix rounds. I merge each passing task into master (Part 4.4).
