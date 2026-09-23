@@ -385,11 +385,13 @@ def check_learner(c) -> None:
     coach = c.get("/api/map", headers=H).json()["coach"]
     assert "percentages" in coach["topics"] and coach["why"] == "mistakes", coach
 
-    # two clean answers on that template close it
+    # clean answers on questions that offer the trap close it (R45: a named
+    # trap is lowered only by a question that offered it again)
     c.post(f"/api/drill/{sid}/answer", headers=H,
            json={"question_id": nx["question"]["id"], "answer": keyed_answer(again, True)})
     m = c.get("/api/mistakes", headers=H).json()
-    assert m["traps"] and m["traps"][0]["owed"] == 1
+    norm = m["traps"][0]["norm"]
+    assert m["traps"] and m["traps"][0]["owed"] == (1 if norm in progress.offered_of(again) else 2)
     fix = c.post("/api/drill", headers=H, json={"mistakes": True}).json()
     assert fix["total"] == 2
     for _ in range(2):
@@ -397,8 +399,10 @@ def check_learner(c) -> None:
         c.post(f"/api/drill/{fix['id']}/answer", headers=H,
                json={"question_id": cur["id"], "answer": keyed_answer(cur, True)})
         c.post(f"/api/drill/{fix['id']}/next", headers=H)
-    assert not c.get("/api/mistakes", headers=H).json()["traps"], "two clean answers did not close it"
-    print("ok  the map and coach point at the open mistake, and two clean answers close it")
+    offers = [norm in progress.offered_of(x) for x in [again] + stored(fix["id"])[:2]]
+    left = c.get("/api/mistakes", headers=H).json()["traps"]
+    assert (not left) == (sum(offers) >= 2), "the close rule ignored what was on offer"
+    print("ok  the map and coach point at the open mistake, and clean answers that offer it close it")
 
     # finishing reports the topics moved and what was closed
     for _ in range(3):
