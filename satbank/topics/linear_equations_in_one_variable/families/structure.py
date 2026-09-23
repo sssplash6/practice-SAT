@@ -16,7 +16,7 @@ from fractions import Fraction as Q
 from ....exact import E
 from ....item import Item, ItemError, Mis, assemble_text
 from .kit import (VARS, choices, dec, eq_of, num, paren, sent, side,
-                  sign_join, term)
+                  sign_join, spr_mistakes, term)
 
 __all__ = ["count_solutions", "identity_constant", "no_solution_constant",
            "identity_pair", "no_solution_conditions", "zero_chunk",
@@ -182,7 +182,8 @@ def identity_constant(rng: random.Random, seed: int, *, shape=None, var=None,
         if ex.coef.denominator > 1000:
             raise ItemError("this grid-in answer would not be enterable")
         return Item("lin1.identity_constant", "solution set", "medium", seed, stem,
-                    "spr", ex, ex.gridin(), rationale, params=P)
+                    "spr", ex, ex.gridin(), rationale, params=P,
+                    spr_mistakes=spr_mistakes(ex, mistakes))
     ch, tex, why, letter_ = choices(ex, [m for m in mistakes if m.value is not None], rng)
     return Item("lin1.identity_constant", "solution set", "medium", seed, stem, "mcq",
                 ex, letter_, rationale, ch, why, tex, params=P)
@@ -262,7 +263,8 @@ def no_solution_constant(rng: random.Random, seed: int, *, shape=None, var=None,
         if ex.coef.denominator > 1000:
             raise ItemError("this grid-in answer would not be enterable")
         return Item("lin1.no_solution_constant", "solution set", "hard", seed, stem,
-                    "spr", ex, ex.gridin(), rationale, params=P)
+                    "spr", ex, ex.gridin(), rationale, params=P,
+                    spr_mistakes=spr_mistakes(ex, mistakes))
     ch, tex, why, ltr = choices(ex, [m for m in mistakes if m.value is not None], rng)
     return Item("lin1.no_solution_constant", "solution set", "hard", seed, stem, "mcq",
                 ex, ltr, rationale, ch, why, tex, params=P)

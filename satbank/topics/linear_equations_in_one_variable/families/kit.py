@@ -15,11 +15,11 @@ from fractions import Fraction as Q
 
 from ....exact import E, Exact
 from ....expr import fmt_frac, fmt_num
-from ....item import ItemError, Mis, assemble, hands_the_key_over
+from ....item import ItemError, Mis, assemble, gridin_mistakes, hands_the_key_over
 
 __all__ = ["Q", "E", "num", "dec", "term", "side", "paren", "eq_of", "frame_stem",
-           "choices", "pick", "sent", "money", "over", "sign_join", "VARS",
-           "FRAMES", "griddable", "plainly", "article"]
+           "choices", "spr_mistakes", "pick", "sent", "money", "over", "sign_join",
+           "VARS", "FRAMES", "griddable", "plainly", "article"]
 
 VARS = ["x", "n", "p", "t", "w", "y", "m", "z", "q", "j"]
 
@@ -283,3 +283,8 @@ def choices(key: Exact, mistakes: list[Mis], rng: random.Random, fmt_value=None)
     if hands_the_key_over(built[0], built[3]):
         raise ItemError("the printed options would hand the key over")
     return built
+
+
+def spr_mistakes(key: Exact, mistakes: list[Mis]) -> list[Mis]:
+    """The options' own misconceptions, as a grid-in's named wrong answers."""
+    return gridin_mistakes(key, [_exact(m) for m in mistakes])
