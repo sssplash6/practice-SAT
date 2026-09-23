@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-24T01:48:04+05:00
+# v2 build state -- 2026-09-24T04:23:35+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -45,14 +45,6 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 - `/Users/workingmyassof/satbank/.claude/worktrees/f4` on `v2/f4`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_a8903963-411-1` on `detached d5961bb`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_a8903963-411-2` on `detached 59d383b`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_a8903963-411-3` on `detached 59d383b`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_a8903963-411-4` on `worktree-wf_a8903963-411-4`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6beb6e4-66c-1` on `detached 383c755`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6beb6e4-66c-2` on `detached 6930c4b`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6beb6e4-66c-3` on `detached 09a4cf7`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6beb6e4-66c-4` on `v2/f1`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/words` on `v2/words-content`: 0 uncommitted
 
 ## Workflow runs

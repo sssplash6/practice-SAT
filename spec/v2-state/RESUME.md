@@ -1,10 +1,15 @@
 # Resume here
 
-## Now: PAUSED 2026-09-24 by the user ("pause and save everything we are about to hit limits")
+## Now: RUNNING (resumed 2026-09-24 04:23)
 
-Nothing is running: the three workflows were stopped, every worktree's work is committed (checkpoint commits where an
-agent was cut off), and the checkpoint loop is stopped. Done before this: way-better pass, `v2/f0` and `v2/t-bank-all`
-merged into master (test_flow all good, 19/19 topics PASS). Do not re-run any of that.
+- build.js run `wf_d6bde851-f95` (task wlzjrhc30), args `[{id:'F1', unit:3}, {id:'F4', from:'fix', round:2, issues:
+  next/F4-verify2-issues.json}, {id:'BANK'}]`. BANK = the three bank flaws (item 4 below), on branch `v2/bank`.
+- words.js run `wf_a586fef6-d3a` (task wy41ffafn), args `{skipCore: true}`: the 6 authors continue from their files.
+- Checkpoint loop running (task b2bucxp7g). Stale `wf_*` worktrees were removed at 04:23.
+- A second scheduled resume fires at 09:23 (session-only): it checks what is live and relaunches only what stopped.
+If this run is cut off: work out each task's position from `git log master..v2/<task>` and `runs/<run id>/`, then relaunch
+with the same args shape as below (F1 `unit` = first unbuilt unit; F4/BANK `from:'verify'` or `from:'fix'` with the
+newest saved verdict's defects; words `only:[unfinished authors]`).
 
 ### On "continue"
 

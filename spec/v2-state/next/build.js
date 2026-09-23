@@ -34,6 +34,26 @@ spec/v2-upgrades/*.md (grep -n "F1" spec/v2-upgrades/*.md; product.md's cross-fi
 (Esc closes and returns focus; arrow keys in seg, tabs, menus and listboxes); every chart renders its hidden table; /nope/ shows the
 404 page. Also: all 14 existing pages still load with no console errors and look intact; test_flow prints "all good".`,
   },
+  BANK: {
+    title: 'BANK · three question-bank flaws', port: 8019,
+    spec: `satbank/ (templates generate Items; wrong values come from Mis(reason, value) lists; Item.spr_mistakes names grid-in
+mistakes, filtered by satbank.item.gridin_mistakes and enforced by satbank/audit.py). Find each template with
+satbank.registry.templates() and generate(name, seed).`,
+    owns: 'satbank/topics/*/families/*.py for the three templates below only (not satbank/item.py or satbank/audit.py)',
+    units: [
+      `Fix these, seen in generated items on master: (1) rr.repeated_factor: a reason reads "counted 1 years" (fix the grammar for
+every count, e.g. "counted 1 year"). (2) pct.table_share: the grid-in stem says "The table summarizes..." -- check whether the item
+carries its table in a field the site renders; if it does, this is not a flaw and you change nothing; if not, fix the item so its
+table is present. (3) lat.triangle_sum: the named mistakes "subtracted from 100 instead of from 90" and "assumed the two acute angles
+of a right triangle are each 45 degrees" (value 28 for angle D = 73) -- recompute each from the stem; keep a mistake only if it is a
+real route a student takes to that exact value, otherwise remove it. Wrong-answer VALUES of multiple-choice items must not change
+(reason text may). PYTHONPATH=. python3 -m satbank check must print PASS for every topic.`,
+    ],
+    accept: `The three flaws are fixed (or shown not to be flaws, with evidence); for seeds 0-80 of every template in the touched topics,
+multiple-choice stems, choices, answers and option values are identical to master (only reason text may differ, and only in the three
+templates); PYTHONPATH=. python3 -m satbank check prints PASS for all 19 topics; PYTHONPATH=. python3 server/test_flow.py prints
+"all good".`,
+  },
   // F4 was built outside this script by another agent (branch v2/f4, from v2/f0); run it with from: 'verify'.
   F4: {
     title: 'F4 · Data layer', port: 8014,
