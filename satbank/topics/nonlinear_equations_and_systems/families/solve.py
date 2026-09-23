@@ -24,8 +24,8 @@ from fractions import Fraction as Q
 from ....exact import E
 from ....item import Item, ItemError, Mis
 from ..kit import (MINUS, PM, ROOT, cap, choices, displayed, eq, gridin,
-                   griddable, join, mono, num, paren, pick, poly, q, sent, setof,
-                   sup, text_choices)
+                   griddable, gridin_pool, join, mono, num, paren, pick, poly, q,
+                   sent, setof, sup, text_choices)
 
 __all__ = ["square_equation", "absolute_equation", "quadratic_solve",
            "quadratic_formula", "factored_equation", "shared_factor",
@@ -111,7 +111,8 @@ def _value_item(template: str, skill: str, difficulty: str, seed: int, stem: str
         if not griddable(key):
             raise ItemError("that answer could not be entered in the grid")
         return Item(template, skill, difficulty, seed, sent(stem), "spr", keyx,
-                    gridin(key), sent(rationale), params=params)
+                    gridin(key), sent(rationale), params=params,
+                    spr_mistakes=gridin_pool(keyx, pool.values(), forbid))
     # a source item reproduces the option set College Board printed, whatever
     # surface it has; a free draw has to earn its four
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, signed=signed,

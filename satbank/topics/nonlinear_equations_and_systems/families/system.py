@@ -23,8 +23,9 @@ from fractions import Fraction as Q
 
 from ....exact import E
 from ....item import Item, ItemError, Mis
-from ..kit import (MINUS, ROOT, choices, displayed, eq, gridin, griddable, join,
-                   mono, num, paren, pick, poly, q, sent, sup, text_choices)
+from ..kit import (MINUS, ROOT, choices, displayed, eq, gridin, griddable,
+                   gridin_pool, join, mono, num, paren, pick, poly, q, sent, sup,
+                   text_choices)
 
 __all__ = ["curve_line_system", "sum_product", "secant_slope"]
 
@@ -263,9 +264,11 @@ def curve_line_system(rng: random.Random, seed: int, *, curve=None, line=None,
     if fmt == "spr":
         if not griddable(key.p):
             raise ItemError("that answer could not be entered in the grid")
+        # the near_* entries are neighbours offered as options, not mistakes
+        named = [m for n, m in pool.items() if not n.startswith("near_")]
         return Item("nleq.curve_line_system", "a line meeting a curve", difficulty,
                     seed, sent(stem), "spr", keyx, gridin(key.p), rationale,
-                    params=P)
+                    params=P, spr_mistakes=gridin_pool(keyx, named, admits))
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng,
                                    sign_rule=sign_rule, guard=wrongs is None,
                                    forbid=admits)
@@ -730,8 +733,10 @@ def sum_product(rng: random.Random, seed: int, *, total=None, product=None,
     if fmt == "spr":
         if not griddable(key):
             raise ItemError("that answer could not be entered in the grid")
+        # x may be either number, so the other one is a right answer here
         return Item("nleq.sum_product", "a sum and a product", difficulty, seed,
-                    sent(stem), "spr", keyx, gridin(key), rationale, params=P)
+                    sent(stem), "spr", keyx, gridin(key), rationale, params=P,
+                    spr_mistakes=gridin_pool(keyx, pool.values(), [lo, hi]))
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, guard=wrongs is None)
     return Item("nleq.sum_product", "a sum and a product", difficulty, seed,
                 sent(stem), "mcq", keyx, letter, rationale, ch, why, tex, params=P)
@@ -782,7 +787,8 @@ def secant_slope(rng: random.Random, seed: int, *, a=1, b=0, c=None, x1=None,
         if not griddable(key):
             raise ItemError("that answer could not be entered in the grid")
         return Item("nleq.secant_slope", "the slope of a secant", difficulty, seed,
-                    sent(stem), "spr", keyx, gridin(key), rationale, params=P)
+                    sent(stem), "spr", keyx, gridin(key), rationale, params=P,
+                    spr_mistakes=gridin_pool(keyx, pool.values()))
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, guard=wrongs is None)
     return Item("nleq.secant_slope", "the slope of a secant", difficulty, seed,
                 sent(stem), "mcq", keyx, letter, rationale, ch, why, tex, params=P)
