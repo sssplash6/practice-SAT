@@ -1,0 +1,792 @@
+[
+  {
+    "id": "support",
+    "dimension": "How a claim is supported or weakened",
+    "opposite": "undermine"
+  },
+  {
+    "id": "undermine",
+    "dimension": "How a claim is supported or weakened",
+    "opposite": "support"
+  },
+  {
+    "id": "affirm",
+    "dimension": "How a statement is accepted or rejected",
+    "opposite": "deny"
+  },
+  {
+    "id": "deny",
+    "dimension": "How a statement is accepted or rejected",
+    "opposite": "affirm"
+  },
+  {
+    "id": "confirm",
+    "dimension": "How evidence settles a claim",
+    "opposite": "refute"
+  },
+  {
+    "id": "refute",
+    "dimension": "How evidence settles a claim",
+    "opposite": "confirm"
+  },
+  {
+    "id": "clarify",
+    "dimension": "How understandable an idea becomes",
+    "opposite": "obscure"
+  },
+  {
+    "id": "obscure",
+    "dimension": "How understandable an idea becomes",
+    "opposite": "clarify"
+  },
+  {
+    "id": "show",
+    "dimension": "How much information is made visible",
+    "opposite": "hide"
+  },
+  {
+    "id": "hide",
+    "dimension": "How much information is made visible",
+    "opposite": "show"
+  },
+  {
+    "id": "reveal",
+    "dimension": "How much is disclosed",
+    "opposite": "conceal"
+  },
+  {
+    "id": "conceal",
+    "dimension": "How much is disclosed",
+    "opposite": "reveal"
+  },
+  {
+    "id": "explain",
+    "dimension": "How a subject becomes understandable",
+    "opposite": "confound"
+  },
+  {
+    "id": "confound",
+    "dimension": "How a subject becomes understandable",
+    "opposite": "explain"
+  },
+  {
+    "id": "praise",
+    "dimension": "How merit is judged",
+    "opposite": "criticize"
+  },
+  {
+    "id": "criticize",
+    "dimension": "How merit is judged",
+    "opposite": "praise"
+  },
+  {
+    "id": "approve",
+    "dimension": "How an action is judged",
+    "opposite": "disapprove"
+  },
+  {
+    "id": "disapprove",
+    "dimension": "How an action is judged",
+    "opposite": "approve"
+  },
+  {
+    "id": "admire",
+    "dimension": "How a person or achievement is regarded",
+    "opposite": "scorn"
+  },
+  {
+    "id": "scorn",
+    "dimension": "How a person or achievement is regarded",
+    "opposite": "admire"
+  },
+  {
+    "id": "respect",
+    "dimension": "How much regard is shown",
+    "opposite": "disparage"
+  },
+  {
+    "id": "disparage",
+    "dimension": "How much regard is shown",
+    "opposite": "respect"
+  },
+  {
+    "id": "trust",
+    "dimension": "How much confidence is placed in a source",
+    "opposite": "distrust"
+  },
+  {
+    "id": "distrust",
+    "dimension": "How much confidence is placed in a source",
+    "opposite": "trust"
+  },
+  {
+    "id": "credible",
+    "dimension": "How believable a claim seems",
+    "opposite": "dubious"
+  },
+  {
+    "id": "dubious",
+    "dimension": "How believable a claim seems",
+    "opposite": "credible"
+  },
+  {
+    "id": "certain",
+    "dimension": "How settled a conclusion is",
+    "opposite": "uncertain"
+  },
+  {
+    "id": "uncertain",
+    "dimension": "How settled a conclusion is",
+    "opposite": "certain"
+  },
+  {
+    "id": "cautious",
+    "dimension": "How carefully risks are weighed",
+    "opposite": "reckless"
+  },
+  {
+    "id": "reckless",
+    "dimension": "How carefully risks are weighed",
+    "opposite": "cautious"
+  },
+  {
+    "id": "careful",
+    "dimension": "How much attention is given to detail",
+    "opposite": "careless"
+  },
+  {
+    "id": "careless",
+    "dimension": "How much attention is given to detail",
+    "opposite": "careful"
+  },
+  {
+    "id": "precise",
+    "dimension": "How exact a statement is",
+    "opposite": "vague"
+  },
+  {
+    "id": "vague",
+    "dimension": "How exact a statement is",
+    "opposite": "precise"
+  },
+  {
+    "id": "explicit",
+    "dimension": "How directly an idea is stated",
+    "opposite": "implicit"
+  },
+  {
+    "id": "implicit",
+    "dimension": "How directly an idea is stated",
+    "opposite": "explicit"
+  },
+  {
+    "id": "direct",
+    "dimension": "How immediately a message is conveyed",
+    "opposite": "indirect"
+  },
+  {
+    "id": "indirect",
+    "dimension": "How immediately a message is conveyed",
+    "opposite": "direct"
+  },
+  {
+    "id": "simple",
+    "dimension": "How many parts or steps an idea has",
+    "opposite": "complex"
+  },
+  {
+    "id": "complex",
+    "dimension": "How many parts or steps an idea has",
+    "opposite": "simple"
+  },
+  {
+    "id": "novel",
+    "dimension": "How new an idea seems",
+    "opposite": "familiar"
+  },
+  {
+    "id": "familiar",
+    "dimension": "How new an idea seems",
+    "opposite": "novel"
+  },
+  {
+    "id": "original",
+    "dimension": "How far an approach departs from custom",
+    "opposite": "conventional"
+  },
+  {
+    "id": "conventional",
+    "dimension": "How far an approach departs from custom",
+    "opposite": "original"
+  },
+  {
+    "id": "inventive",
+    "dimension": "How independently an idea was developed",
+    "opposite": "derivative"
+  },
+  {
+    "id": "derivative",
+    "dimension": "How independently an idea was developed",
+    "opposite": "inventive"
+  },
+  {
+    "id": "flexible",
+    "dimension": "How readily an approach changes",
+    "opposite": "rigid"
+  },
+  {
+    "id": "rigid",
+    "dimension": "How readily an approach changes",
+    "opposite": "flexible"
+  },
+  {
+    "id": "inclusive",
+    "dimension": "How broadly participation is allowed",
+    "opposite": "exclusive"
+  },
+  {
+    "id": "exclusive",
+    "dimension": "How broadly participation is allowed",
+    "opposite": "inclusive"
+  },
+  {
+    "id": "broad",
+    "dimension": "How wide a scope is",
+    "opposite": "narrow"
+  },
+  {
+    "id": "narrow",
+    "dimension": "How wide a scope is",
+    "opposite": "broad"
+  },
+  {
+    "id": "general",
+    "dimension": "How particular a statement is",
+    "opposite": "specific"
+  },
+  {
+    "id": "specific",
+    "dimension": "How particular a statement is",
+    "opposite": "general"
+  },
+  {
+    "id": "similar",
+    "dimension": "How closely things resemble each other",
+    "opposite": "different"
+  },
+  {
+    "id": "different",
+    "dimension": "How closely things resemble each other",
+    "opposite": "similar"
+  },
+  {
+    "id": "consistent",
+    "dimension": "How well statements agree over time",
+    "opposite": "inconsistent"
+  },
+  {
+    "id": "inconsistent",
+    "dimension": "How well statements agree over time",
+    "opposite": "consistent"
+  },
+  {
+    "id": "coherent",
+    "dimension": "How well parts fit together",
+    "opposite": "incoherent"
+  },
+  {
+    "id": "incoherent",
+    "dimension": "How well parts fit together",
+    "opposite": "coherent"
+  },
+  {
+    "id": "orderly",
+    "dimension": "How organized a process is",
+    "opposite": "chaotic"
+  },
+  {
+    "id": "chaotic",
+    "dimension": "How organized a process is",
+    "opposite": "orderly"
+  },
+  {
+    "id": "stable",
+    "dimension": "How steadily a condition persists",
+    "opposite": "unstable"
+  },
+  {
+    "id": "unstable",
+    "dimension": "How steadily a condition persists",
+    "opposite": "stable"
+  },
+  {
+    "id": "permanent",
+    "dimension": "How long a condition lasts",
+    "opposite": "temporary"
+  },
+  {
+    "id": "temporary",
+    "dimension": "How long a condition lasts",
+    "opposite": "permanent"
+  },
+  {
+    "id": "frequent",
+    "dimension": "How often an event occurs",
+    "opposite": "rare"
+  },
+  {
+    "id": "rare",
+    "dimension": "How often an event occurs",
+    "opposite": "frequent"
+  },
+  {
+    "id": "abundant",
+    "dimension": "How much is available",
+    "opposite": "scarce"
+  },
+  {
+    "id": "scarce",
+    "dimension": "How much is available",
+    "opposite": "abundant"
+  },
+  {
+    "id": "sufficient",
+    "dimension": "How fully a need is met",
+    "opposite": "insufficient"
+  },
+  {
+    "id": "insufficient",
+    "dimension": "How fully a need is met",
+    "opposite": "sufficient"
+  },
+  {
+    "id": "complete",
+    "dimension": "How much of a whole is present",
+    "opposite": "partial"
+  },
+  {
+    "id": "partial",
+    "dimension": "How much of a whole is present",
+    "opposite": "complete"
+  },
+  {
+    "id": "important",
+    "dimension": "How much something matters",
+    "opposite": "trivial"
+  },
+  {
+    "id": "trivial",
+    "dimension": "How much something matters",
+    "opposite": "important"
+  },
+  {
+    "id": "increase",
+    "dimension": "How an amount changes",
+    "opposite": "decrease"
+  },
+  {
+    "id": "decrease",
+    "dimension": "How an amount changes",
+    "opposite": "increase"
+  },
+  {
+    "id": "accelerate",
+    "dimension": "How a rate changes",
+    "opposite": "slow"
+  },
+  {
+    "id": "slow",
+    "dimension": "How a rate changes",
+    "opposite": "accelerate"
+  },
+  {
+    "id": "expand",
+    "dimension": "How a scope or size changes",
+    "opposite": "contract"
+  },
+  {
+    "id": "contract",
+    "dimension": "How a scope or size changes",
+    "opposite": "expand"
+  },
+  {
+    "id": "amplify",
+    "dimension": "How strong an effect becomes",
+    "opposite": "diminish"
+  },
+  {
+    "id": "diminish",
+    "dimension": "How strong an effect becomes",
+    "opposite": "amplify"
+  },
+  {
+    "id": "strengthen",
+    "dimension": "How firmly something holds",
+    "opposite": "weaken"
+  },
+  {
+    "id": "weaken",
+    "dimension": "How firmly something holds",
+    "opposite": "strengthen"
+  },
+  {
+    "id": "strong",
+    "dimension": "How much force or influence something has",
+    "opposite": "weak"
+  },
+  {
+    "id": "weak",
+    "dimension": "How much force or influence something has",
+    "opposite": "strong"
+  },
+  {
+    "id": "improve",
+    "dimension": "How a condition changes in quality",
+    "opposite": "worsen"
+  },
+  {
+    "id": "worsen",
+    "dimension": "How a condition changes in quality",
+    "opposite": "improve"
+  },
+  {
+    "id": "advance",
+    "dimension": "How something moves toward a goal",
+    "opposite": "retreat"
+  },
+  {
+    "id": "retreat",
+    "dimension": "How something moves toward a goal",
+    "opposite": "advance"
+  },
+  {
+    "id": "change",
+    "dimension": "Whether a condition shifts or endures",
+    "opposite": "continuity"
+  },
+  {
+    "id": "continuity",
+    "dimension": "Whether a condition shifts or endures",
+    "opposite": "change"
+  },
+  {
+    "id": "create",
+    "dimension": "Whether something comes into being or is lost",
+    "opposite": "destroy"
+  },
+  {
+    "id": "destroy",
+    "dimension": "Whether something comes into being or is lost",
+    "opposite": "create"
+  },
+  {
+    "id": "preserve",
+    "dimension": "How well something is maintained",
+    "opposite": "erode"
+  },
+  {
+    "id": "erode",
+    "dimension": "How well something is maintained",
+    "opposite": "preserve"
+  },
+  {
+    "id": "combine",
+    "dimension": "Whether parts are brought together",
+    "opposite": "separate"
+  },
+  {
+    "id": "separate",
+    "dimension": "Whether parts are brought together",
+    "opposite": "combine"
+  },
+  {
+    "id": "unite",
+    "dimension": "Whether people or parts become one",
+    "opposite": "divide"
+  },
+  {
+    "id": "divide",
+    "dimension": "Whether people or parts become one",
+    "opposite": "unite"
+  },
+  {
+    "id": "converge",
+    "dimension": "Whether paths draw together or apart",
+    "opposite": "diverge"
+  },
+  {
+    "id": "diverge",
+    "dimension": "Whether paths draw together or apart",
+    "opposite": "converge"
+  },
+  {
+    "id": "cooperate",
+    "dimension": "How parties work with or against each other",
+    "opposite": "oppose"
+  },
+  {
+    "id": "oppose",
+    "dimension": "How parties work with or against each other",
+    "opposite": "cooperate"
+  },
+  {
+    "id": "agree",
+    "dimension": "Whether positions align",
+    "opposite": "disagree"
+  },
+  {
+    "id": "disagree",
+    "dimension": "Whether positions align",
+    "opposite": "agree"
+  },
+  {
+    "id": "comply",
+    "dimension": "How a demand is answered",
+    "opposite": "resist"
+  },
+  {
+    "id": "resist",
+    "dimension": "How a demand is answered",
+    "opposite": "comply"
+  },
+  {
+    "id": "accept",
+    "dimension": "Whether a proposal is taken up",
+    "opposite": "reject"
+  },
+  {
+    "id": "reject",
+    "dimension": "Whether a proposal is taken up",
+    "opposite": "accept"
+  },
+  {
+    "id": "permit",
+    "dimension": "Whether an action is allowed",
+    "opposite": "prohibit"
+  },
+  {
+    "id": "prohibit",
+    "dimension": "Whether an action is allowed",
+    "opposite": "permit"
+  },
+  {
+    "id": "restrict",
+    "dimension": "How much freedom is allowed",
+    "opposite": "liberate"
+  },
+  {
+    "id": "liberate",
+    "dimension": "How much freedom is allowed",
+    "opposite": "restrict"
+  },
+  {
+    "id": "encourage",
+    "dimension": "Whether an action is urged or deterred",
+    "opposite": "discourage"
+  },
+  {
+    "id": "discourage",
+    "dimension": "Whether an action is urged or deterred",
+    "opposite": "encourage"
+  },
+  {
+    "id": "attract",
+    "dimension": "Whether something draws others near",
+    "opposite": "repel"
+  },
+  {
+    "id": "repel",
+    "dimension": "Whether something draws others near",
+    "opposite": "attract"
+  },
+  {
+    "id": "benefit",
+    "dimension": "How an effect changes welfare",
+    "opposite": "harm"
+  },
+  {
+    "id": "harm",
+    "dimension": "How an effect changes welfare",
+    "opposite": "benefit"
+  },
+  {
+    "id": "protect",
+    "dimension": "How vulnerable something is left",
+    "opposite": "expose"
+  },
+  {
+    "id": "expose",
+    "dimension": "How vulnerable something is left",
+    "opposite": "protect"
+  },
+  {
+    "id": "honest",
+    "dimension": "How faithfully information is represented",
+    "opposite": "deceptive"
+  },
+  {
+    "id": "deceptive",
+    "dimension": "How faithfully information is represented",
+    "opposite": "honest"
+  },
+  {
+    "id": "objective",
+    "dimension": "How fairly evidence is weighed",
+    "opposite": "biased"
+  },
+  {
+    "id": "biased",
+    "dimension": "How fairly evidence is weighed",
+    "opposite": "objective"
+  },
+  {
+    "id": "friendly",
+    "dimension": "How warmly others are treated",
+    "opposite": "hostile"
+  },
+  {
+    "id": "hostile",
+    "dimension": "How warmly others are treated",
+    "opposite": "friendly"
+  },
+  {
+    "id": "generous",
+    "dimension": "How willingly resources are shared",
+    "opposite": "stingy"
+  },
+  {
+    "id": "stingy",
+    "dimension": "How willingly resources are shared",
+    "opposite": "generous"
+  },
+  {
+    "id": "humble",
+    "dimension": "How a person regards their own status",
+    "opposite": "arrogant"
+  },
+  {
+    "id": "arrogant",
+    "dimension": "How a person regards their own status",
+    "opposite": "humble"
+  },
+  {
+    "id": "calm",
+    "dimension": "How settled a mood is",
+    "opposite": "agitated"
+  },
+  {
+    "id": "agitated",
+    "dimension": "How settled a mood is",
+    "opposite": "calm"
+  },
+  {
+    "id": "intense",
+    "dimension": "How forceful an experience is",
+    "opposite": "mild"
+  },
+  {
+    "id": "mild",
+    "dimension": "How forceful an experience is",
+    "opposite": "intense"
+  },
+  {
+    "id": "logical",
+    "dimension": "How well reasoning follows evidence",
+    "opposite": "irrational"
+  },
+  {
+    "id": "irrational",
+    "dimension": "How well reasoning follows evidence",
+    "opposite": "logical"
+  },
+  {
+    "id": "timely",
+    "dimension": "How promptly something occurs",
+    "opposite": "delayed"
+  },
+  {
+    "id": "delayed",
+    "dimension": "How promptly something occurs",
+    "opposite": "timely"
+  },
+  {
+    "id": "formal",
+    "dimension": "How strictly conventions are followed",
+    "opposite": "informal"
+  },
+  {
+    "id": "informal",
+    "dimension": "How strictly conventions are followed",
+    "opposite": "formal"
+  },
+  {
+    "id": "public",
+    "dimension": "How openly information is shared",
+    "opposite": "private"
+  },
+  {
+    "id": "private",
+    "dimension": "How openly information is shared",
+    "opposite": "public"
+  },
+  {
+    "id": "persuade",
+    "dimension": "Whether someone is moved toward an action",
+    "opposite": "dissuade"
+  },
+  {
+    "id": "dissuade",
+    "dimension": "Whether someone is moved toward an action",
+    "opposite": "persuade"
+  },
+  {
+    "id": "true",
+    "dimension": "Whether a statement matches the facts",
+    "opposite": "false"
+  },
+  {
+    "id": "false",
+    "dimension": "Whether a statement matches the facts",
+    "opposite": "true"
+  },
+  {
+    "id": "cause",
+    "dimension": "Whether an event is brought about or stopped",
+    "opposite": "prevent"
+  },
+  {
+    "id": "prevent",
+    "dimension": "Whether an event is brought about or stopped",
+    "opposite": "cause"
+  },
+  {
+    "id": "include",
+    "dimension": "Whether something is part of an account",
+    "opposite": "omit"
+  },
+  {
+    "id": "omit",
+    "dimension": "Whether something is part of an account",
+    "opposite": "include"
+  },
+  {
+    "id": "efficient",
+    "dimension": "How much effort an outcome requires",
+    "opposite": "inefficient"
+  },
+  {
+    "id": "inefficient",
+    "dimension": "How much effort an outcome requires",
+    "opposite": "efficient"
+  },
+  {
+    "id": "useful",
+    "dimension": "How well something serves a purpose",
+    "opposite": "useless"
+  },
+  {
+    "id": "useless",
+    "dimension": "How well something serves a purpose",
+    "opposite": "useful"
+  }
+]
