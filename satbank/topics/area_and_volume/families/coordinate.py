@@ -131,9 +131,11 @@ def triangle_from_points(rng: random.Random, seed: int, *, fmt=None, pts=None,
         "box_minus": Mis("subtracted the bounding rectangle from the triangle", box - key),
     }
     if fmt == "spr":
+        routes = {**pool, "box_minus": Mis("gave the area of the rectangle outside the "
+                                           "triangle", box - key)}
         return Item("GEO.coord.triangle_area", "area in the plane", "hard", seed, stem, "spr",
                     key, key.gridin(), rationale, figure=fig, params=P,
-                    spr_mistakes=gridin_wrongs(key, pool))
+                    spr_mistakes=gridin_wrongs(key, routes))
     choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng,
                                                fmt_value=decimal_text)
     return Item("GEO.coord.triangle_area", "area in the plane", "hard", seed, stem, "mcq", key,
@@ -215,9 +217,13 @@ def square_on_axes(rng: random.Random, seed: int, *, fmt="mcq", a=None, b=None,
 
     P = {"kind": "square_diagonals", "a": a, "b": b, "ask": ask}
     if fmt == "spr":
+        routes = dict(pool)
+        if ask == "side":       # 2 x side is what the full diagonals give, not one of them
+            routes["full_diagonal"] = Mis("used the full diagonals in the Pythagorean "
+                                          "theorem", E(2) * side)
         return Item("GEO.coord.quad_diagonals", "area in the plane", "medium", seed, stem,
                     "spr", key, key.gridin(), rationale, figure=fig, params=P,
-                    spr_mistakes=gridin_wrongs(key, pool))
+                    spr_mistakes=gridin_wrongs(key, routes))
     choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.coord.quad_diagonals", "area in the plane", "medium", seed, stem, "mcq",
                 key, letter, rationale, choices, reasons, latex, figure=fig, params=P)

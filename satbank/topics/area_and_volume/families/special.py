@@ -482,9 +482,16 @@ def circle_convert(rng: random.Random, seed: int, *, given=None, ask=None, r=Non
     if fmt == "spr":
         if not key.is_rational:
             raise ItemError("grid-in must be numeric")
+        # doubling the wrong way is a slip only where the route doubles or halves:
+        # the radius is doubled to a diameter, a diameter is halved to a radius
+        routes = dict(pool)
+        if ask != "diameter":
+            routes.pop("quarter")
+        if not (ask == "radius" and given in ("diameter", "circumference")):
+            routes.pop("quadruple")
         return Item("GEO.circle.convert", "circle measures", "medium", seed, stem, "spr", key,
                     key.gridin(), rationale, params=P,
-                    spr_mistakes=gridin_wrongs(key, pool))
+                    spr_mistakes=gridin_wrongs(key, routes))
     choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.circle.convert", "circle measures", "medium", seed, stem, "mcq", key,
                 letter, rationale, choices, reasons, latex, params=P)
