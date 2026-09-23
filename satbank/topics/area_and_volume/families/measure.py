@@ -658,6 +658,13 @@ def inverse(rng: random.Random, seed: int, *, shape_key=None, measure=None,
                               attempt(lambda: total / E(6))),
         }
     pool = {k: m for k, m in pool.items() if m.value is not None}
+    # A grid-in names only routes to its answer. Run backwards, the forward
+    # slips compute the given measure from the answer, so they stay out; with
+    # then_measure the student does run that formula, so they stay in.
+    routes = pool if then_measure else dict(pool)
+    if unknown == "r" and p == 1 and not then_measure:
+        # circumference / π stops at the diameter, as the p == 2 pool names
+        routes["diameter"] = Mis("gave the diameter instead of the radius", E(2) * key)
     for k, m in _forward_mistakes(shape.key, then_measure or measure, dims).items():
         pool.setdefault(k, m)
     mistakes = pick(pool, wrongs)
@@ -674,7 +681,7 @@ def inverse(rng: random.Random, seed: int, *, shape_key=None, measure=None,
             raise ItemError("grid-in answers must be enterable as digits")
         return Item(template, skill, _difficulty(shape, measure), seed, stem, "spr",
                     key, key.gridin(), rationale, params=P,
-                    spr_mistakes=gridin_wrongs(key, pool))
+                    spr_mistakes=gridin_wrongs(key, routes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng,
                                                fmt_value=decimal_text)
     return Item(template, skill, _difficulty(shape, measure), seed, stem, "mcq", key,
