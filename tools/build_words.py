@@ -58,6 +58,23 @@ def rows(value: list | dict, key: str = "entries") -> list:
     return value if isinstance(value, list) else value.get(key, [])
 
 
+def load_parts(data: dict[str, list | dict], errors: list[str]) -> None:
+    """Parallel authors write parts/sat_*.json and parts/classes_*.json; they join the main lists."""
+    for name in ("sat", "classes"):
+        merged = list(rows(data[name]))
+        for path in sorted((CONTENT / "parts").glob(f"{name}_*.json")):
+            try:
+                value = json.loads(path.read_text(encoding="utf-8"))
+            except (ValueError, OSError) as exc:
+                errors.append(f"{path.relative_to(ROOT)}: {exc}")
+                continue
+            if not isinstance(value, (list, dict)):
+                errors.append(f"{path.relative_to(ROOT)}: expected a JSON array or object")
+                continue
+            merged += rows(value)
+        data[name] = merged
+
+
 def require(condition: bool, message: str, errors: list[str]) -> None:
     if not condition:
         errors.append(message)
@@ -189,6 +206,11 @@ def check_later(data: dict[str, list | dict], phase: int, errors: list[str], war
         "confusions": len(rows(data["confusions"])), "roots": len(rows(data["roots"])),
         "foils": len(rows(data["foils"])), "frames": len(frames),
     }
+    members = Counter(w.get("class") for w in sat if not w.get("second_sense"))
+    for class_id, n in sorted(members.items()):
+        if n < 3:
+            (errors if phase >= 3 else warnings).append(
+                f"{class_id}: {n} of 3 member words (a trap family needs several intensities)")
     if phase >= 2:
         require({t.get("id") for t in rows(data["traps"])} == TRAPS,
                 "traps: expected exactly the nine W1 trap kinds", errors)
@@ -230,10 +252,16 @@ def check_later(data: dict[str, list | dict], phase: int, errors: list[str], war
                 require(slug in sat_slugs and related.get("split", "").replace("|", "").casefold()
                         == word.casefold() and bool(related.get("gloss")),
                         f"{root.get('id', 'root')}: invalid split for {slug}", errors)
+        dictionary = Path("/usr/share/dict/words")
+        known = ({w.strip().casefold() for w in dictionary.read_text(errors="ignore").splitlines()}
+                 if dictionary.exists() else set())
+        if not dictionary.exists():
+            warnings.append("foils: /usr/share/dict/words is absent, so foils were checked against the library only")
         for foil in rows(data["foils"]):
             name = foil if isinstance(foil, str) else foil.get("word", "")
             require(bool(name) and name.casefold() not in sat_heads,
                     f"foil {name!r}: duplicates a library word", errors)
+            require(name.casefold() not in known, f"foil {name!r}: is a dictionary word", errors)
     if phase >= 6:
         by_word: dict[str, list[dict]] = defaultdict(list)
         by_class: Counter = Counter()
@@ -278,6 +306,7 @@ def main() -> int:
     errors: list[str] = []
     warnings: list[str] = []
     data = {name: load(name, errors) for name in FILES}
+    load_parts(data, errors)
     check_reference_data(data, errors)
     check_words(data, errors)
     counts = check_later(data, PHASE, errors, warnings)
