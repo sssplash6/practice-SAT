@@ -204,8 +204,7 @@ def purchase_solve(rng: random.Random, seed: int, *, shape=None, scene=None, n=N
             drop = ("other", "half_count", "off_by_one_up", "off_by_one_down",
                     "total_over_price1", "total_over_price2", "no_price", "price2")
         return Item("sys.purchase_solve", "a system from a purchase", "medium", seed,
-                    stem, "spr", keyx, keyx.gridin(), rationale, params=P,
-                    spr_mistakes=gridin_pool(keyx, grid, drop))
+                    stem, "spr", keyx, keyx.gridin(), rationale, params=P)
     fmt_value = None
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, fmt_value=fmt_value)
     return Item("sys.purchase_solve", "a system from a purchase", "medium", seed,
