@@ -1,5 +1,11 @@
 # Resume here
 
+## Resumed 2026-09-23: second check dropped
+
+The user: "remember that we are dropping check2". The way-better pass now applies each section's saved verdict once, with no
+further skeptic rounds (`next/continue.js`). today had its fix already. After it returns: the class-cleanup check, merge `v2/f0`
+then `v2/t-bank-all` into master, then the build (step 4 c-d below).
+
 ## Grid-in review completed 2026-09-23
 
 The user narrowed this continuation to checking whether named grid-in mistakes

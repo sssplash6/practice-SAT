@@ -1,6 +1,6 @@
 export const meta = {
   name: 'v2-continue-2',
-  description: 'Resume the way-better fix and skeptic rounds from saved verdicts; grid-in review is complete',
+  description: 'Finish the way-better pass: each section applies its saved verdict once (no second check); grid-in is complete',
   phases: [
     { title: 'Fix', detail: 'way-better fixers from the saved skeptic verdicts (also strip class material, decision 5)' },
     { title: 'Skeptic', detail: 'try to refute that each section is way better; merely equal fails' },
@@ -84,16 +84,12 @@ assignment or class-code element from the file (decision 5), replacing Compete's
 contests where they are referenced. Update the scorecard verdicts to match. Write the file a section at a time, saving as you
 go. Return a short list of what you changed.`, { label: `fix ${round}: ${id}`, phase: 'Fix' })
 
+// The user dropped the second check: each section applies the fix its last saved verdict calls for,
+// once, and stops. No further skeptic rounds. (today already had its fix, so it has nothing left.)
 async function wayBetter(s) {
-  let round = s.round
-  if (s.fix) { await fix(s.id, s.fix, round); round++ }
-  for (; round <= 3; round++) {
-    const v = await skeptic(s.id, round)
-    if (!v || v.pass || !v.failures.length) return { id: s.id, pass: !!v, round }
-    await fix(s.id, v.failures, round)
-  }
-  const last = await skeptic(s.id, 'final')
-  return { id: s.id, pass: !!(last && last.pass), round: 'final', open: last ? last.failures : null }
+  if (!s.fix) return { id: s.id, result: 'already fixed; no further check' }
+  const changed = await fix(s.id, s.fix, s.round)
+  return { id: s.id, result: 'fixed from its saved verdict', changed }
 }
 
 // ------------------------------------------------------------------ grid-in (capped: no more fix rounds)
