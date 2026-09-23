@@ -72,6 +72,7 @@
      marks     .cell .cell-grid .sw .legend .strip .atlas .pips .dbars .heat .trend
      overlays  dialog.sheet dialog.more .menu .popover [role=option] .tip .toasts .banner
                dialog.palette .calc
+     kit       .checks .filters-sec .date-form .skill-row .countdown .fact-pop .avatar.mark
    Where a page still defines one of these names itself (.seg, .cell, .tip, .legend,
    .stat, .card), the shared rule is written so the page's own rule wins until the
    page is rebuilt.
@@ -1724,6 +1725,9 @@ dialog.more::backdrop { background: var(--backdrop); }
 .tip .m, .tip .meta { font: 500 12px var(--mono); color: var(--soft); }
 .tip .kbd { margin-left: 4px; }
 
+/* kit.js puts the toasts in the top layer (popover="manual"), so they show over an open
+   sheet: undo the UA's [popover] box first, and let the .toasts rules below place it */
+.toasts:where([popover]) { top: auto; right: auto; margin: 0; padding: 0; border: 0; background: none; color: inherit; overflow: visible; height: auto; }
 /* toasts (UI.toast): <div class="toasts" aria-live="polite"> holding up to 3 .toast
    (.toast-t text, an .act button such as Undo, the .x). Bottom-left on desktop, clear of
    the sidebar; bottom-centre above the tabs on a phone. */
@@ -1826,6 +1830,83 @@ dialog.palette[open] { display: flex; flex-direction: column; animation: pop .16
 }
 .calc-host { flex: 1; min-height: 0; }
 .calc-note { padding: 18px; color: var(--soft); font-size: 14px; }
+
+/* ------------------------------------------------------------------ kit pieces (kit.js)
+
+   Markup kit.js makes that has no group above. */
+
+/* a focused sheet, popover or listbox shows its focus on the item inside it, not the box */
+dialog.sheet:focus-visible, .popover:focus-visible, .menu:focus-visible { outline: none; }
+
+/* the checkbox list of a multi dropdown and the filters sheet: domain rows are tri-state,
+   their skills indented under them; Select all and Clear at the foot */
+.checks { display: grid; min-width: min(280px, calc(100vw - 48px)); }
+.checks > .check { min-height: 36px; }
+.checks > .check.sub { padding-left: 28px; }
+.checks > .check .n { margin-left: auto; padding-left: 12px; }
+.checks-foot { display: flex; gap: 20px; margin-top: 8px; padding: 10px 12px 2px; border-top: 1px solid var(--line); }
+.dd-pop { padding: 10px 12px; }
+.filters-search { flex: 1 1 200px; max-width: 320px; }
+.filters-sec + .filters-sec { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+.date-form { display: grid; gap: 6px; min-width: 220px; }
+.date-form .pill { margin-top: 8px; justify-self: start; }
+.date-range { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.exam-dates { max-width: min(460px, calc(100vw - 16px)); }
+.table .empty-cell { padding: 22px 12px; color: var(--soft); text-align: left; }
+
+/* a skill row (UI.skillRow): the glyph and name, the mastery bar with its word and accuracy
+   (R37), then the open-mistake dots and Practise. In Today's points card (.gain) it adds the
+   figure, a 0-100 track (an ink tick at your accuracy, an amber tick at 80%) and two meta lines. */
+.skill-row {
+  display: grid; grid-template-columns: minmax(150px, 1.2fr) minmax(160px, 1.4fr) auto; align-items: center; gap: 6px 18px;
+  padding: 12px 0; border-top: 1px solid var(--line);
+}
+.skill-name { display: inline-flex; align-items: center; gap: 10px; min-width: 0; font: 600 14.5px/1.3 var(--font); color: var(--ink); text-decoration: none; }
+.skill-name .glyph { width: 20px; height: 20px; color: var(--ink); }
+@media (hover: hover) and (pointer: fine) { a.skill-name:hover span { text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 3px; } }
+.skill-m { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 6px 10px; }
+.skill-m .mbar { grid-column: 1 / -1; }
+.skill-word { font: 600 13px var(--font); }
+.skill-side { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px 12px; }
+.skill-open { display: inline-flex; align-items: center; gap: 6px; }
+.skill-row.gain { grid-template-columns: minmax(150px, 1fr) 84px minmax(150px, 1.2fr) auto; }
+.skill-row.gain .skill-m { grid-column: 1; }
+.skill-gain { grid-column: 2; grid-row: 1 / span 2; font: 600 18px var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.skill-track-wrap { grid-column: 3; display: grid; gap: 5px; }
+.skill-track { position: relative; height: 4px; border-radius: 2px; background: var(--mat); }
+.skill-track > i { position: absolute; top: -4px; bottom: -4px; left: calc(var(--t, 0) * 100%); width: 2px; margin-left: -1px; border-radius: 1px; background: var(--ink); }
+.skill-track > i.goal { background: var(--amber); }
+.skill-track-wrap .meta, .skill-meta, .skill-tiers { font-size: 11px; }
+.skill-row.gain .skill-meta, .skill-row.gain .skill-tiers { grid-column: 3; }
+.skill-row.gain .skill-side { grid-column: 4; grid-row: 1 / span 3; }
+@media (max-width: 759px) {
+  .skill-row, .skill-row.gain { grid-template-columns: minmax(0, 1fr) auto; }
+  .skill-row > * { grid-column: 1 / -1 !important; grid-row: auto !important; }
+  .skill-row.gain > .skill-name { grid-column: 1 !important; }
+  .skill-row.gain > .skill-gain { grid-column: 2 !important; grid-row: 1 !important; }
+  .skill-row .skill-side { justify-content: flex-start; }
+}
+
+/* a countdown in boxes (UI.countdown {boxes}): DD HH MM SS, each labelled */
+.countdown { display: flex; gap: 10px; }
+.countdown > span { display: grid; justify-items: center; gap: 4px; min-width: 52px; padding: 8px 6px; border-radius: var(--radius); background: var(--tile); }
+.countdown .num { font: 500 28px/1 var(--mono); letter-spacing: -.02em; }
+
+/* a number's working (UI.fact): the value, How it's worked out, Your numbers, Left out,
+   What moves it, and where else the same number shows */
+.fact-pop { width: min(380px, calc(100vw - 16px)); }
+.fact-v { font: 500 24px/1.1 var(--mono); font-variant-numeric: tabular-nums; margin-bottom: 4px; }
+.fact-sec { margin-top: 14px; display: grid; gap: 5px; justify-items: start; }
+.fact-sec ul { display: grid; gap: 3px; font-size: 13.5px; }
+.fact-sec li::before { content: "\00B7  "; color: var(--soft); }
+.fact-same { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--line); }
+
+/* the living mark as an avatar (U22): the four quadrants fill orange with each domain's mastery */
+.avatar.mark { background: none; }
+.avatar > svg.mark-live { width: 100%; height: 100%; display: block; }
+/* a check-in due swatch for legends: the atlas's small clock */
+.sw[data-due]:not([data-status]) { background: var(--paper); border-radius: 50%; box-shadow: inset 0 0 0 1.25px var(--ink); }
+.sw[data-due]:not([data-status])::after { content: ""; width: 1px; height: 5px; margin-top: -3px; background: var(--ink); }
 
 /* ------------------------------------------------------------------ motion */
 
