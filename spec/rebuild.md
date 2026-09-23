@@ -148,3 +148,40 @@ not planned yet: contests beyond the daily challenge (`spec/rating.md` has the
 thinking). Known edges: after a carry, a day's challenge can show two sittings
 under one code; difficulty is still the inherited label; the UI face is a
 placeholder until the brand face is known.
+
+## Enrichment (2026-09-23, same day)
+
+The user, on seeing it: "we degraded... I think you overfocused on getting it
+minimalistic. Check the whole thing and try to enrich it... functionality over
+minimalism, because it is a study platform." The look stays ours and copy
+still does not narrate, but no feature is cut for looks. Against the teardown,
+section by section, in this order:
+
+1. **Plan**: their four-step wizard, Math-only. Where you are (current score);
+   where you're going (target, exam date, the gain and points a week); time you
+   have (30 min to 4 h a day, days a week kept in step with the weekdays, a test
+   every study day); what to focus on (each domain Focus / Normal / Strong, at
+   most two on Focus, set from results by default). Focus steers the coach
+   everywhere.
+2. **Results**: a skill opens its stats (mastery, answered, right, by
+   difficulty, the recent run, open mistakes, last worked) with Practice, which
+   opens the map with only that skill picked. Study time, accuracy by
+   difficulty, sittings filtered by kind.
+3. **Test window** in the practice session's look, with Bluebook's behaviour:
+   the navigator, Check Your Work before a module is handed in, mark for
+   review, strike out a choice, directions, a timer that hides, calculator,
+   reference; an unfinished test can be resumed from Tests.
+4. **Today**: a greeting with the date, study time today and this month,
+   recent tests, the target beside the score.
+5. **Practice**: each skill's answered count and accuracy on its tile;
+   where the questions come from (new, my mistakes, saved); multiple choice,
+   grid-in or both.
+6. **Session**: difficulty and the skill on each question, strike-out, a
+   stopwatch, going back over answered questions, reporting a problem, hiding
+   the clock.
+7. **Report**: correct / incorrect / unanswered / accuracy / time tiles,
+   review filters, a skill breakdown.
+8. **Mistakes**: the saved questions themselves, and the mistakes fixed.
+9. **Challenge**: week, month and all-time boards; your challenge stats and
+   history.
+10. **Me**: stats, achievements, practice preferences, recent activity.
