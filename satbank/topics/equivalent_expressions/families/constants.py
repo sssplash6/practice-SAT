@@ -57,6 +57,7 @@ def match_constant(rng: random.Random, seed: int, *, shape=None, var=None, lette
                 f"number inside the parentheses", E(k - 2 * c)),
             Mis("multiplied the two numbers in the factored form", E(c * k)),
         ]
+        off = (1, 2)                 # 2c and k − 2c are labels, not routes to the letter
         why = (f"{rhs} multiplies out to "
                f"{join([mono(c, [(var, 2)]), mono(k, [(var, 1)])])}, so "
                f"{letter}{var} has to be {mono(k, [(var, 1)])}.")
@@ -105,6 +106,7 @@ def match_constant(rng: random.Random, seed: int, *, shape=None, var=None, lette
             Mis("divided the constant by the new numerator instead of by the "
                 "coefficient", E(m * k / (a / m))),
         ]
+        off = (2,)                   # the new numerator plays no part in finding the letter
         why = (f"Dividing the numerator and the denominator by {num(m)} turns "
                f"{lhs} into {num(a / m)} over {join([mono(1, [(var, 1)]), mono(k, [])])}.")
         params = {"kind": "eqx_match_constant", "shape": "affine", "vars": [var],
@@ -156,7 +158,9 @@ def match_constant(rng: random.Random, seed: int, *, shape=None, var=None, lette
                 E(m * c)),
             Mis(f"changed the sign of {letter}", E(-k)),
         ]
-        off = (0, 1)               # the coefficient and the multiplier are negative
+        # the coefficient and the multiplier are negative; matching the constant
+        # terms holds no letter, so it yields no value
+        off = (0, 1, 2)
         why = (f"Expanding gathers the {var}-terms into "
                f"({num(m)} {MINUS} {num(e)}){letter} {MINUS} {num(e * d)}, and that "
                f"has to equal {num(gathered)}.")
