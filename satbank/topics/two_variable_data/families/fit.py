@@ -15,7 +15,7 @@ import random
 from fractions import Fraction as Q
 
 from ....exact import E
-from ....item import Item, ItemError, Mis, assemble_text
+from ....item import Item, ItemError, Mis, assemble_text, gridin_mistakes
 from ....plot import chart_scatter, fmt_tick, ticks_between
 from ..common import (assemble_num, closest_guard, count_word, fit_scatter, num_str,
                       pick, q, regression, separated, snap, wiggle)
@@ -204,37 +204,42 @@ def predict_from_line(rng: random.Random, seed: int, *, ctx=None, m=None, b=None
 
     ys = [p[1] for p in pts]
     xstep = q(d["xstep"])
-    pool = {
-        "one_low": ("read the line one gridline below where it crosses",
-                    E(key - gap)),
-        "one_high": ("read the line one gridline above where it crosses",
-                     E(key + gap)),
-        "two_low": ("read the line two gridlines below where it crosses",
-                    E(key - 2 * gap)),
-        "two_high": ("read the line two gridlines above where it crosses",
-                     E(key + 2 * gap)),
-        "x_left": ("read the line one gridline to the left of the given x-value",
-                   E(_snap(m * (xq - xstep) + b, prec))),
-        "x_right": ("read the line one gridline to the right of the given x-value",
-                    E(_snap(m * (xq + xstep) + b, prec))),
-        "x_left2": ("read the line two gridlines to the left of the given x-value",
-                    E(_snap(m * (xq - 2 * xstep) + b, prec))),
-        "x_right2": ("read the line two gridlines to the right of the given x-value",
-                     E(_snap(m * (xq + 2 * xstep) + b, prec))),
-        "half_x": ("halved the given x-value before reading the line",
-                   E(_snap(m * xq / 2 + b, gap))),
-        "at_end": ("read the line where the data ends instead of at the given x-value",
-                   E(_snap(m * xb + b, gap))),
-        "at_start": ("read the line where the data starts instead of at the given "
-                     "x-value", E(_snap(m * xa + b, gap))),
-        "point_high": ("read the highest plotted point instead of the line",
-                       E(_snap(max(ys), gap))),
-        "point_low": ("read the lowest plotted point instead of the line",
-                      E(_snap(min(ys), gap))),
-        "near_point": ("read the plotted point nearest the given x-value instead of "
-                       "the line",
-                       E(_snap(min(pts, key=lambda p: abs(p[0] - xq))[1], gap))),
-    }
+
+    def pool_at(off, fine, near):
+        # off: what one gridline up or down is; fine/near: what each misread is
+        # rounded to. Options sit on the option grid, a typed answer on the key's.
+        return {
+            "one_low": ("read the line one gridline below where it crosses",
+                        E(key - off)),
+            "one_high": ("read the line one gridline above where it crosses",
+                         E(key + off)),
+            "two_low": ("read the line two gridlines below where it crosses",
+                        E(key - 2 * off)),
+            "two_high": ("read the line two gridlines above where it crosses",
+                         E(key + 2 * off)),
+            "x_left": ("read the line one gridline to the left of the given x-value",
+                       E(_snap(m * (xq - xstep) + b, fine))),
+            "x_right": ("read the line one gridline to the right of the given x-value",
+                        E(_snap(m * (xq + xstep) + b, fine))),
+            "x_left2": ("read the line two gridlines to the left of the given x-value",
+                        E(_snap(m * (xq - 2 * xstep) + b, fine))),
+            "x_right2": ("read the line two gridlines to the right of the given "
+                         "x-value", E(_snap(m * (xq + 2 * xstep) + b, fine))),
+            "half_x": ("halved the given x-value before reading the line",
+                       E(_snap(m * xq / 2 + b, near))),
+            "at_end": ("read the line where the data ends instead of at the given "
+                       "x-value", E(_snap(m * xb + b, near))),
+            "at_start": ("read the line where the data starts instead of at the given "
+                         "x-value", E(_snap(m * xa + b, near))),
+            "point_high": ("read the highest plotted point instead of the line",
+                           E(_snap(max(ys), near))),
+            "point_low": ("read the lowest plotted point instead of the line",
+                          E(_snap(min(ys), near))),
+            "near_point": ("read the plotted point nearest the given x-value instead "
+                           "of the line",
+                           E(_snap(min(pts, key=lambda p: abs(p[0] - xq))[1], near))),
+        }
+    pool = pool_at(gap, prec, gap)
     order = ["one_low", "one_high", "two_high", "two_low", "x_left", "x_right",
              "point_high", "at_end", "half_x", "near_point", "point_low", "at_start"]
 
@@ -256,8 +261,16 @@ def predict_from_line(rng: random.Random, seed: int, *, ctx=None, m=None, b=None
              xs=[str(v) for v in xs], ys=[str(v) for v in ys])
     why = (f"The line of best fit passes {num_str(xq)} at about {num_str(key)}.")
     if fmt == "spr":
+        # a typed answer is matched exactly, so each misread is taken to the
+        # key's own rounding and a gridline is the chart's, not the options'
+        typed = q(round_to) if round_to is not None else prec
+        spr_pool = pool_at(step, typed, typed)
+        if not q(d["x0"]) <= xq / 2 <= q(d["x1"]):
+            # half the x is off the chart: nothing there to read
+            spr_pool["half_x"] = (spr_pool["half_x"][0], None)
         return Item("tvdata.predict_from_line", "line of best fit", "easy", seed, stem,
-                    "spr", E(key), E(key).gridin(), why, figure=fig, params=P)
+                    "spr", E(key), E(key).gridin(), why, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(E(key), pick(spr_pool, order, wrongs)))
     mistakes = pick(pool, order, wrongs)
     choices, latex, reasons, letter = assemble_num(key, mistakes, rng,
                                                    suffix=d["suffix"])
