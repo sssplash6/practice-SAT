@@ -4,11 +4,12 @@ All of it is read off `attempts` and `traps`, so it can be recomputed at any
 time, and a change to the rules below changes every student's map at once
 instead of leaving a stored number behind.
 
-Mastery is a weighted share of recent answers in a topic. A hard question
-counts three times an easy one, each answer counts a little less than the one
-after it, and a prior of a few unanswered questions sits in the denominator so
-one lucky answer is not a full bar. It is a practice gauge, not a score, which
-is why the map draws it as a bar and never prints it as a number.
+Mastery is how right the recent answers in a topic are -- a hard question
+counting three times an easy one, each answer a little less than the one after
+it -- times how much there is to go on, which grows with the number of answers
+and never quite reaches one. So one lucky answer is a sliver of the bar, not a
+third of it. It is a practice gauge, not a score, which is why the map draws it
+as a bar and never prints it as a number.
 
 A mistake is the misconception the picked option names, filed against the
 template it came from. It stays open until the student answers that template
@@ -19,6 +20,7 @@ seed, exists to give them the chance to do.
 from __future__ import annotations
 
 import datetime as dt
+import math
 from collections import Counter, defaultdict
 
 from . import db, practice, scoring
@@ -26,7 +28,7 @@ from . import db, practice, scoring
 DIFF_W = {"easy": 1.0, "medium": 2.0, "hard": 3.0}
 DECAY = 0.93        # each answer further back counts this much less
 WINDOW = 40         # answers per topic that still count
-PRIOR = 4.0         # two medium questions' worth of nothing, in the denominator
+EVIDENCE = 10.0     # answers for the bar to trust about two thirds of what it sees
 OWED = 2            # clean answers on the template that close a mistake
 STRONG = 0.8        # past this a topic is kept warm rather than worked on
 MS_CAP = 10 * 60 * 1000     # an answer left open over lunch is not ten hours of study
@@ -48,14 +50,23 @@ def topics() -> dict:
 # ------------------------------------------------------------------ mastery
 
 def mastery_of(answers: list[tuple[str, int]]) -> float:
-    """answers: newest first, as (difficulty, correct)."""
+    """answers: newest first, as (difficulty, correct).
+
+    Weighted accuracy times 1 - e^(-n/10): one answer, however right, is a
+    tenth of the way; ten are about two thirds; thirty are nearly all of it.
+    (Dividing by the weights plus a small prior made one answer a third of
+    the bar, and kept a perfect record from ever passing 0.87.)
+    """
+    recent = answers[:WINDOW]
     num = den = 0.0
-    for k, (diff, ok) in enumerate(answers[:WINDOW]):
+    for k, (diff, ok) in enumerate(recent):
         w = DIFF_W.get(diff, 2.0) * (DECAY ** k)
         den += w
         if ok:
             num += w
-    return round(num / (den + PRIOR), 3) if den else 0.0
+    if not den:
+        return 0.0
+    return round(num / den * (1 - math.exp(-len(recent) / EVIDENCE)), 3)
 
 
 def topic_mastery(learner: str, topic: str) -> float:
@@ -236,16 +247,23 @@ def coach(learner: str, k: int = 3, count: int = 10) -> dict:
         scored.append((s, slug))
     scored.sort(key=lambda p: (-p[0], p[1]))
 
-    # at most two from any one domain, so a session is never one chapter
-    picks: list[str] = []
-    per_domain: Counter = Counter()
-    for _, slug in scored:
-        if per_domain[b[slug]["domain"]] >= 2:
-            continue
-        picks.append(slug)
-        per_domain[b[slug]["domain"]] += 1
-        if len(picks) == k:
-            break
+    # The whole ranking dealt into sets of k, at most two from any one domain
+    # so a session is never one chapter. The first set is today's; a plan
+    # gives the rest to its coming practice days, in order.
+    ahead: list[list[str]] = []
+    left = [slug for _, slug in scored]
+    while left:
+        cut: list[str] = []
+        per_domain: Counter = Counter()
+        for slug in left:
+            if per_domain[b[slug]["domain"]] < 2:
+                cut.append(slug)
+                per_domain[b[slug]["domain"]] += 1
+                if len(cut) == k:
+                    break
+        left = [x for x in left if x not in cut]
+        ahead.append(cut)
+    picks = ahead[0] if ahead else []
 
     if any(b[p]["traps"] for p in picks):
         why = "mistakes"
@@ -255,7 +273,7 @@ def coach(learner: str, k: int = 3, count: int = 10) -> dict:
         why = "review"
     else:
         why = "weak"
-    return {"topics": picks, "count": count, "why": why,
+    return {"topics": picks, "ahead": ahead, "count": count, "why": why,
             "mistakes": sum(len(b[p]["traps"]) for p in picks),
             "traps": {p: len(b[p]["traps"]) for p in picks}}
 

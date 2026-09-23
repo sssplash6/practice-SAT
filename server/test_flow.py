@@ -332,6 +332,8 @@ def keyed_answer(q: dict, right: bool):
 def check_learner(c) -> None:
     """The rebuild's half: drills, mistakes, the map, the coach, fresh sections."""
     H = {"X-Learner": "a:flowcheck01"}
+    global TOPIC_DOMAIN
+    TOPIC_DOMAIN = {slug: t.domain for slug, t in practice.catalogue()["topics"].items()}
 
     # --- identity is required and checked for shape ----------------------------
     assert c.get("/api/map").status_code == 400, "a map with no learner"
@@ -339,7 +341,14 @@ def check_learner(c) -> None:
     blank = c.get("/api/map", headers=H).json()
     assert len(blank["topics"]) == 19, len(blank["topics"])
     assert all(t["mastery"] == 0 and not t["traps"] for t in blank["topics"])
+    # one answer is a sliver of the bar; a long clean run nearly fills it
+    assert 0.05 < progress.mastery_of([("medium", 1)]) < 0.15
+    assert progress.mastery_of([("medium", 1)] * 30) > 0.9
+    assert progress.mastery_of([("medium", 0)] + [("medium", 1)] * 9) < progress.mastery_of([("medium", 1)] * 10)
     assert len(blank["coach"]["topics"]) == 3 and blank["coach"]["why"] == "new"
+    ahead = blank["coach"]["ahead"]
+    assert ahead[0] == blank["coach"]["topics"] and sorted(t for a in ahead for t in a) == sorted(t["topic"] for t in blank["topics"])
+    assert all(max(__import__("collections").Counter(TOPIC_DOMAIN[t] for t in a).values()) <= 2 for a in ahead)
     print("ok  a new learner has 19 empty topics and a coach pick of 3")
 
     # --- a drill: one question at a time, nothing given away ---------------------
