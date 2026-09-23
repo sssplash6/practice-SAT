@@ -192,15 +192,20 @@ def purchase_solve(rng: random.Random, seed: int, *, shape=None, scene=None, n=N
     if spr:
         if not griddable(key):
             raise ItemError("this answer could not be entered in the grid")
+        # trivia never prints its −1
+        grid, drop = pool, ("price2", "total_over_price2") if d.get("fixed") else ()
+        if ask == "spend_first":
+            # a dollar answer: the adult count is not "the other kind", ticket
+            # counts (n/2, t/p, t/q) and dollars less tickets are not dollars,
+            # a slip of one ticket is not a slip of one dollar, and the child
+            # price is no adult spending; stopping at the count is the slip
+            grid = {"count": Mis(f"found the number of the first {each} and stopped "
+                                 f"before multiplying by its {per}", x0), **pool}
+            drop = ("other", "half_count", "off_by_one_up", "off_by_one_down",
+                    "total_over_price1", "total_over_price2", "no_price", "price2")
         return Item("sys.purchase_solve", "a system from a purchase", "medium", seed,
                     stem, "spr", keyx, keyx.gridin(), rationale, params=P,
-                    # a dollar answer: the adult count is not "the other kind",
-                    # half the tickets is not dollars, and a slip of one ticket
-                    # is not a slip of one dollar; trivia never prints its −1
-                    spr_mistakes=gridin_pool(keyx, pool, (
-                        "other", "half_count", "off_by_one_up", "off_by_one_down")
-                        if ask == "spend_first" else ("price2", "total_over_price2")
-                        if d.get("fixed") else ()))
+                    spr_mistakes=gridin_pool(keyx, grid, drop))
     fmt_value = None
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, fmt_value=fmt_value)
     return Item("sys.purchase_solve", "a system from a purchase", "medium", seed,
