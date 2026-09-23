@@ -21,4 +21,9 @@ disagree, this file wins. Builders read it alongside the plan and `spec/v2-upgra
    whatnot." A useful feature, stat, control, filter, panel or explanation is never cut,
    collapsed away or hidden to save space or look lighter. Pages may be as long and as dense
    as the functionality needs; organise it (sections, tabs, sticky bars, tables) rather than
-   remove it. The only test for leaving something out is that it does not help a student.
+   remove it. Something belongs if it helps a student study, OR if it makes the site clearer,
+   more straightforward or more convenient to use (the user, same day: "not only if it helps to
+   study, but even if it makes things clear, straightforward, and very convenient to use") --
+   shortcuts, previews, confirmations of what will happen, visible state, counts, legends,
+   explanations of a number, one-tap ways to the next step. The only reason to leave something
+   out is that it does none of these.
