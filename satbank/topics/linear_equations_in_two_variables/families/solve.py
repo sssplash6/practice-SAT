@@ -82,6 +82,7 @@ SUBST = [
          reversed=True, a=2, b=2, glo=3, ghi=40, tlo=3, thi=40, places=None, whole=True,
          stem="The equation {eq} gives the relationship between the side lengths a and "
               "b of a certain parallelogram. If a = {given}, what is the value of b?",
+         stated="gave the side length a the question already states",
          why="A parallelogram has two sides of each length, so the two sides of length "
              "{given} use up {part} of the {c}, leaving {left} for the other pair."),
     # 4 -- the perimeter of a rug (1.29)
@@ -90,6 +91,7 @@ SUBST = [
          stem="The equation {eq} gives the perimeter of a rectangular rug that has "
               "length x, in feet, and width y, in feet. The width of the rug is {given} "
               "feet. What is the length, in feet, of the rug?",
+         stated="gave the width the question already states",
          why="The two widths of {given} feet take up {part} feet of the {c}-foot "
              "perimeter, and the remaining {left} feet is shared by the two lengths."),
     # 5 -- two kinds of tree in a preserve (1.32)
@@ -202,8 +204,12 @@ def substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, given
     else:
         part = coef_known * g
         left = C - part
+        # in 2a + 2b = c (the `reversed`, grid-in-only contexts) the 2 counts sides;
+        # it is not what one side accounts for, so no student gives it for that
+        sides = d.get("reversed")
         mistakes = _named(key, [
-            (f"gave the number of {d.get('x1' if solve == 'y' else 'y1', 'items')} the "
+            (d.get("stated") or
+             f"gave the number of {d.get('x1' if solve == 'y' else 'y1', 'items')} the "
              f"question already states", g),
             ("divided the total by what one of them accounts for without first taking "
              "off the other kind", C / coef_ask),
@@ -214,9 +220,9 @@ def substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, given
             ("gave the total itself", C),
             ("divided by the other kind's coefficient", left / coef_known),
             ("gave what one of them accounts for rather than how many there are",
-             coef_ask if coef_ask != 1 else None),
+             coef_ask if coef_ask != 1 and not sides else None),
             ("gave what one of the other kind accounts for",
-             coef_known if coef_known != 1 else None),
+             coef_known if coef_known != 1 and not sides else None),
             ("gave a number the passage mentions that the equation does not involve",
              acres if d.get("decoy") == "acres" else None),
             ("halved the total, as though the two kinds came in equal numbers",

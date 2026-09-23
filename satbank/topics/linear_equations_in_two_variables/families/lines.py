@@ -237,9 +237,12 @@ def parallel_perpendicular(rng: random.Random, seed: int, *, form=None, relation
     if fmt == "spr":
         if not keyx.is_rational or len(keyx.gridin()) > 6:
             raise ItemError("the slope does not fit a grid-in")
+        # the sum/diff/product extras are negative reciprocals: no parallel step
+        drop = ("sum", "diff", "product") if relation == "parallel" else ()
+        named = [Mis(r, ex(q(v))) for t, r, v in pool if t not in drop and v is not None]
         return Item("le2.parallel_perpendicular", "a line parallel or perpendicular to "
                     "another", "medium", seed, stem, "spr", keyx, keyx.gridin(), why,
-                    params=P, spr_mistakes=gridin_mistakes(keyx, mistakes))
+                    params=P, spr_mistakes=gridin_mistakes(keyx, named))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                              fillers="shift")
     return Item("le2.parallel_perpendicular", "a line parallel or perpendicular to "
@@ -325,9 +328,15 @@ def slope_two_points(rng: random.Random, seed: int, *, given=None, ask=None, x1=
     if fmt == "spr":
         if not keyx.is_rational or len(keyx.gridin()) > 6:
             raise ItemError("the slope does not fit a grid-in")
+        # rise*run is not the product of anything the item prints (minus it, for
+        # intercepts), and a perpendicular ask moves what each flip of the key means
+        named = ([mistakes[0], mistakes[-2], mistakes[-1]] if ask == "slope" else
+                 [Mis("gave the given line's own slope", ex(M)),
+                  Mis("changed the sign of the slope without inverting it", ex(-M)),
+                  Mis("inverted the slope without changing its sign", ex(1 / M))])
         return Item("le2.slope_two_points", "a slope from two points", "medium", seed,
                     stem, "spr", keyx, keyx.gridin(), why, figure=fig, params=P,
-                    spr_mistakes=gridin_mistakes(keyx, mistakes))
+                    spr_mistakes=gridin_mistakes(keyx, named))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                              fillers="shift")
     return Item("le2.slope_two_points", "a slope from two points", "medium", seed, stem,
