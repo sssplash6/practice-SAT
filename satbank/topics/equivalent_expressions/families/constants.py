@@ -12,7 +12,7 @@ from __future__ import annotations
 import random
 
 from ....exact import E
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ..render import MINUS, Q, dec, join, mono, num, pc, poly, sent
 from .kit import Slip
 
@@ -192,7 +192,8 @@ def match_constant(rng: random.Random, seed: int, *, shape=None, var=None, lette
         if not _griddable(Q(key)) or key < 0:
             raise ItemError("that constant would not go into a grid-in")
         return Item("eqx.match_constant", "equivalent expressions", "medium", seed,
-                    stem, "spr", ex, ex.gridin(), why, params=params)
+                    stem, "spr", ex, ex.gridin(), why, params=params,
+                    spr_mistakes=gridin_mistakes(ex, mistakes))
     good = [m for m in mistakes if m.value is not None]
     ch, tex, reasons, ltr = assemble(ex, good, rng, signed=True, fillers="shift")
     return Item("eqx.match_constant", "equivalent expressions", "hard", seed, stem,
