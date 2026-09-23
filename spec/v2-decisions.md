@@ -33,5 +33,5 @@ disagree, this file wins. Builders read it alongside the plan and `spec/v2-upgra
    and no data or endpoints for them. Anything elsewhere in the plan or the upgrades that
    depends on classes goes too. Compete keeps private contests, but not through classes: a
    private contest is an invite code or link that Compete owns (friends competing together),
-   with no teacher or homework features. Resolution 3 of the plan ("Compete's groups are the
+   with no teacher or homework features. Resolution R4 of the plan ("Compete's groups are the
    same thing as classes") is void.
