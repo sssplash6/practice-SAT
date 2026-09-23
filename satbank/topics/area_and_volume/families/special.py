@@ -14,9 +14,9 @@ from fractions import Fraction
 
 from ....exact import E, PI, Exact
 from ....figures import triangle_xyz
-from ....item import Item, ItemError, Mis, assemble, assemble_text, gridin_mistakes
+from ....item import Item, ItemError, Mis, assemble, assemble_text
 from ....shapes import SHAPES, UNITS, Unit, measure_phrase, unit_noun
-from ..kit import decimal_text, pick
+from ..kit import decimal_text, gridin_wrongs, pick
 
 __all__ = ["expression_measure", "symbolic_volume", "remaining_volume",
            "combined_area", "missing_side", "container_percent"]
@@ -484,7 +484,7 @@ def circle_convert(rng: random.Random, seed: int, *, given=None, ask=None, r=Non
             raise ItemError("grid-in must be numeric")
         return Item("GEO.circle.convert", "circle measures", "medium", seed, stem, "spr", key,
                     key.gridin(), rationale, params=P,
-                    spr_mistakes=gridin_mistakes(key, pick(pool, None)))
+                    spr_mistakes=gridin_wrongs(key, pool))
     choices, latex, reasons, letter = assemble(key, pick(pool, wrongs), rng)
     return Item("GEO.circle.convert", "circle measures", "medium", seed, stem, "mcq", key,
                 letter, rationale, choices, reasons, latex, params=P)
