@@ -208,6 +208,7 @@ LATER_COLUMNS = (
     ("word_reviews", "gap", "TEXT"), ("word_reviews", "subject", "TEXT"),
     ("word_reviews", "skill", "TEXT"), ("word_reviews", "domain", "TEXT"),
     ("word_reviews", "difficulty", "TEXT"), ("word_reviews", "attempt", "INTEGER"),
+    ("trap_log", "undoes", "INTEGER"),      # a discarded / restored row: the trap_log id it undoes (V13)
 )
 
 EXTRA_SCHEMA = """
@@ -273,7 +274,7 @@ LEARNER_TABLES = {
         "post_votes", "contest_members", "word_state", "word_reviews", "my_words",
         "skill_ratings", "trap_log", "due_days", "passkeys", "webauthn_challenges",
         "devices", "transfers", "week_goals", "push_subs", "champions", "rw_log",
-        "word_lists", "official_done")},
+        "word_lists", "official_done", "rank_snapshots")},
     "pairs": "learner=:l OR req_learner=:l",
     "follows": "learner=:l OR target=:l",
     "nudges": "sender=:l OR target=:l",
@@ -380,6 +381,7 @@ def init() -> None:
     c.commit()
     _once(c, "backfill:trap_log", _backfill_trap_log)
     _once(c, "backfill:handle", _backfill_handles)
+    _once(c, "backfill:trap_log_undoes", _backfill_undoes)
     from . import ratings
     ratings.backfill()
 
@@ -404,6 +406,13 @@ def _backfill_trap_log(c: sqlite3.Connection) -> None:
                       (t["learner"], t["template"], t["norm"], t["closed"], "fixed"))
 
 
+def _backfill_undoes(c: sqlite3.Connection) -> None:
+    """discard()/restore() rows once kept the id they undo in pts, which is a
+    trap's points (V4); it moves to its own column."""
+    c.execute("UPDATE trap_log SET undoes=pts, pts=NULL WHERE event IN ('discarded','restored')"
+              " AND undoes IS NULL AND pts IS NOT NULL")
+
+
 HANDLE_OK = re.compile(r"^[A-Za-z0-9 _.\-]{3,24}$")
 
 
@@ -425,14 +434,18 @@ def ensure_learner(code: str) -> None:
         conn().commit()
 
 
-def new_code() -> str:
-    """A short invite code unique across the supported invite namespaces."""
-    alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"     # A-HJ-NP-Z2-9: no I, O, 0 or 1
+
+
+def new_code(length: int = 6) -> str:
+    """A code from the unambiguous alphabet, unique across every code
+    namespace (contest invites and U21's 8-character transfer codes), so a
+    code typed in one box can never mean something in another."""
     for _ in range(100):
-        code = "".join(secrets.choice(alphabet) for _ in range(6))
-        if not one("SELECT 1 FROM contests WHERE code=?", code):
+        code = "".join(secrets.choice(CODE_ALPHABET) for _ in range(length))
+        if not one("SELECT 1 FROM contests WHERE code=? UNION ALL SELECT 1 FROM transfers WHERE code=?", code, code):
             return code
-    raise RuntimeError("could not mint a unique invite code")
+    raise RuntimeError("could not mint a unique code")
 
 
 def _rebuild_traps(c: sqlite3.Connection) -> None:
@@ -479,8 +492,8 @@ def _rebuild_traps(c: sqlite3.Connection) -> None:
 
 def _backfill_attempts(c: sqlite3.Connection) -> None:
     """stem, norm and offered for rows filed before those columns (0.3 ms a
-    regeneration). A template that no longer generates gets offered '[]', so
-    a restart does not try it again."""
+    regeneration). A template that no longer generates gets stem '' and
+    offered '[]', so a restart does not try it again."""
     pending = c.execute("SELECT id,template,seed,correct,reason,flagged,conf,stem,offered FROM attempts"
                         " WHERE stem IS NULL OR offered IS NULL"
                         " OR (norm IS NULL AND (correct=0 OR flagged=1))").fetchall()
@@ -496,7 +509,7 @@ def _backfill_attempts(c: sqlite3.Connection) -> None:
                                              "spr_reasons": [[m.reason, str(m.value)] for m in
                                                              getattr(it, "spr_mistakes", ())]}))
         except Exception:
-            stem, offered = None, "[]"
+            stem, offered = "", "[]"
         unsure = r["correct"] and (r["flagged"] or r["conf"] == "unsure")
         normalized = "~unsure" if unsure else (norm(r["reason"] or "") if not r["correct"] else None)
         c.execute("UPDATE attempts SET stem=COALESCE(stem,?), norm=?, offered=COALESCE(offered,?) WHERE id=?",
