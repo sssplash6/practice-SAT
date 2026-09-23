@@ -361,7 +361,7 @@
   }
   function layer({ el, trigger, kind, restore, onClose }) {
     const L = {
-      el, trigger, kind, open: true, reposition: () => {},
+      el, trigger, kind, restore, open: true, reposition: () => {},
       close(o = {}) {
         if (!L.open) return;
         const i = layers.indexOf(L);
@@ -420,6 +420,8 @@
   /* ------------------------------------------------------------ sheet */
   function sheet(o = {}) {
     const opener = doc.activeElement;
+    // opened from inside a popover or menu, which closes as focus moves: return to its trigger
+    const backup = (layers.find(L => L.el.contains(opener)) || {}).restore;
     const tid = uid('t');
     const d = h('dialog', { class: 'sheet' + (o.className ? ' ' + o.className : ''), 'data-size': o.size || null,
       'aria-labelledby': o.title ? tid : null, 'aria-label': o.title ? null : (o.label || 'Dialog'), tabindex: '-1' });
@@ -487,7 +489,8 @@
 
     d.addEventListener('close', () => {
       d.remove();
-      if (opener && opener.isConnected && typeof opener.focus === 'function') opener.focus({ preventScroll: true });
+      const back = opener && opener.isConnected ? opener : backup;
+      if (back && back.isConnected && typeof back.focus === 'function') back.focus({ preventScroll: true });
       if (o.onClose) o.onClose(value);
       resolve(value);
     });
@@ -897,7 +900,7 @@
     const el = h('div', { class: 'tablist', role: 'tablist', 'aria-label': o.label || null });
     const fromUrl = o.param ? new URLSearchParams(location.search).get(o.param) : null;
     const ok = id => list.some(t => t.id === id && !t.disabled);
-    let value = [o.value, fromUrl].find(ok) ?? (list.find(t => !t.disabled) || {}).id;
+    let value = [fromUrl, o.value].find(ok) ?? (list.find(t => !t.disabled) || {}).id;     // a deep link wins
     const panelOf = t => typeof t.panel === 'string' ? doc.getElementById(t.panel) : t.panel || null;
     const btns = list.map(t => {
       const b = h(t.href ? 'a' : 'button', { role: 'tab', id: t.tabId || uid('tab'), type: t.href ? null : 'button', href: t.href || null,
