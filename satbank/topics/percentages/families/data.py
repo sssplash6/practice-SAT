@@ -231,7 +231,7 @@ def table_share(rng: random.Random, seed: int, *, scenario=None, counts=None, as
     fmt = fmt or ("spr" if ask == "ratio" and rng.random() < 0.6 else "mcq")
     if fmt == "spr":
         return spr("pct.table_share", "a percent read from a table", difficulty, seed,
-                   stem, key, rationale, params=P, table=table)
+                   stem, key, rationale, mistakes=mistakes, params=P, table=table)
     return mcq("pct.table_share", "a percent read from a table", difficulty, seed, stem,
                key, mistakes, rng, rationale, style=style, places=places, params=P,
                table=table)
@@ -327,7 +327,7 @@ def percent_table(rng: random.Random, seed: int, *, survey=None, pcts=None, tota
     fmt = fmt or ("spr" if rng.random() < 0.2 else "mcq")
     if fmt == "spr":
         return spr("pct.percent_table", "a count from a table of percents", "easy", seed,
-                   stem, key, rationale, params=P, table=table)
+                   stem, key, rationale, mistakes=mistakes, params=P, table=table)
     return mcq("pct.percent_table", "a count from a table of percents", "easy", seed,
                stem, key, mistakes, rng, rationale, params=P, table=table)
 
@@ -539,7 +539,7 @@ def _finish_series(rng, seed, stem, key, mistakes, rationale, P, table, fmt, pla
     fmt = fmt or ("spr" if rng.random() < 0.3 else "mcq")
     if fmt == "spr":
         return spr("pct.series", "a percent across a series", difficulty, seed, stem, key,
-                   rationale, params=P, table=table, figure=figure)
+                   rationale, mistakes=mistakes, params=P, table=table, figure=figure)
     return mcq("pct.series", "a percent across a series", difficulty, seed, stem, key,
                mistakes, rng, rationale, style=style, places=places, params=P, table=table,
                figure=figure)

@@ -187,7 +187,7 @@ def compound_share(rng: random.Random, seed: int, *, pcts=None, base=None, ask=N
     fmt = fmt or ("spr" if ask == "count" and rng.random() < 0.5 else "mcq")
     if fmt == "spr":
         return spr("pct.compound_share", "a percent of a percent", difficulty, seed, stem,
-                   key, rationale, params=P)
+                   key, rationale, mistakes=mistakes, params=P)
     return mcq("pct.compound_share", "a percent of a percent", difficulty, seed, stem,
                key, mistakes, rng, rationale, style=style, places=places, params=P)
 
@@ -327,7 +327,7 @@ def successive(rng: random.Random, seed: int, *, start=None, pcts=None, ups=None
     fmt = fmt or ("spr" if rng.random() < 0.2 else "mcq")
     if fmt == "spr":
         return spr("pct.successive", "two changes in a row", difficulty, seed, stem, key,
-                   rationale, params=P)
+                   rationale, mistakes=mistakes, params=P)
     return mcq("pct.successive", "two changes in a row", difficulty, seed, stem, key,
                mistakes, rng, rationale, style=style, places=places, cents=cents, params=P)
 
@@ -415,7 +415,7 @@ def two_step(rng: random.Random, seed: int, *, pct1=None, up1=None, pct2=None, u
     fmt = fmt or ("spr" if rng.random() < 0.45 else "mcq")
     if fmt == "spr":
         return spr("pct.two_step", "a chain of two percent relations", "hard", seed, stem,
-                   key, rationale, params=P)
+                   key, rationale, mistakes=mistakes, params=P)
     return mcq("pct.two_step", "a chain of two percent relations", "hard", seed, stem,
                key, mistakes, rng, rationale, style=style, places=places, params=P)
 
@@ -466,7 +466,7 @@ def markup_discount(rng: random.Random, seed: int, *, cost=None, markup=None,
     fmt = fmt or ("spr" if rng.random() < 0.4 else "mcq")
     if fmt == "spr":
         return spr("pct.markup_discount", "markup then discount", "hard", seed, stem, key,
-                   rationale, params=P)
+                   rationale, mistakes=mistakes, params=P)
     return mcq("pct.markup_discount", "markup then discount", "hard", seed, stem, key,
                mistakes, rng, rationale, style="money", places=places, cents=cents,
                params=P)
@@ -508,7 +508,7 @@ def repeated_rate(rng: random.Random, seed: int, *, units=None, pct=None, months
     fmt = fmt or ("spr" if rng.random() < 0.2 else "mcq")
     if fmt == "spr":
         return spr("pct.repeated_rate", "a rate repeated over a period", "medium", seed,
-                   stem, key, rationale, params=P)
+                   stem, key, rationale, mistakes=mistakes, params=P)
     return mcq("pct.repeated_rate", "a rate repeated over a period", "medium", seed, stem,
                key, mistakes, rng, rationale, params=P)
 
@@ -590,7 +590,7 @@ def remainder_total(rng: random.Random, seed: int, *, pcts=None, left=None, ask=
     fmt = fmt or ("spr" if rng.random() < 0.45 else "mcq")
     if fmt == "spr":
         return spr("pct.remainder_total", "a total from the leftover share", "hard", seed,
-                   stem, key, rationale, params=P)
+                   stem, key, rationale, mistakes=mistakes, params=P)
     return mcq("pct.remainder_total", "a total from the leftover share", "hard", seed,
                stem, key, mistakes, rng, rationale, params=P)
 
