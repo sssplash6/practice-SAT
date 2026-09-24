@@ -1,21 +1,23 @@
 # Resume here
 
-## Now: RUNNING (checked 2026-09-24 09:23; both 04:23 runs were still live)
+## Now: RUNNING (updated 2026-09-24 10:30)
 
-- **BANK merged** into master (the bank-flaws merge commit): "1 year" grammar and triangle reasons fixed; pct.table_share was not a flaw.
-- **F4 repaired, then re-verified.** My pause checkpoint e837e82 had reverted F4. The round-2 fixer undid it (cded2f0) on a side
-  branch because the old `.claude/worktrees/f4` worktree held `v2/f4`, so verifications r3 and r4 checked the reverted state.
-  `v2/f4` was fast-forwarded to the real head d9b35e7 (fix rounds 1-3), the worktree and side branches were removed, and
-  build.js now forbids side branches. New run `wf_7aaa2f6c-3ad` (task w9hkas2j1): `[{id:'F4', from:'verify', round:2}]`,
-  so up to 2 more fix rounds. The saved r3/r4 issue files describe the reverted state; ignore them.
-- **F1**: all 5 units built on `v2/f1`; verify r1 running inside run `wf_d6bde851-f95` (task wlzjrhc30).
-- **Words**: words2.js run `wf_609b5aa4-27c` (task wf5hy4nl6): setup and confusions done, frames1-4 running; then fold and check.
+**Check policy changed (the user agreed):** one independent check, one fix, merge. Leftovers go to
+`spec/v2-state/followups/<task>.json` for the section that uses them or I1. Only content tasks (`rounds: 2`) get two rounds.
+build.js implements it (blocker vs followup severity; pass = no blockers).
+
+- Merged into master: `v2/bank` (bank flaws), `v2/f4` (data layer; its leftovers in `followups/F4.json`), and the F4 swap
+  middleware in app.py (7eafbe9). Dev DB backed up as `server/satfreshman.db.bak-20260924-1020` before the F4 merge.
+- **F1**: check r1 found 17 defects; fix r1 running in run `wf_d6bde851-f95` (task wlzjrhc30). Under the new policy F1 merges
+  after this fix: a background waiter (b5l21n742) reports when it ends; then stop that run before it starts check r2, run
+  test_flow and the page-load check, save the leftovers to `followups/F1.json`, and merge `v2/f1`.
+- **Then wave 1b**: F2 and F3 and F6 through build.js (add their TASKS entries from Part 4.2 and §2.12). F5 is the user's
+  other agent's (branch `v2/f5`, now to be rebased on master).
+- **Words**: words2.js run `wf_609b5aa4-27c` (task wf5hy4nl6): frames 2-4 done, frames1 finishing, then fold and check.
 - Checkpoint loop running (task b2bucxp7g).
-- **F5 drill engine: given to the user's other agent** (2026-09-24), worktree `.claude/worktrees/f5`, branch `v2/f5` from
-  `v2/f4`, 4 parts, port 8015. Do not build it. When the user says "F5 done": add F5 to build.js TASKS and run
-  `from:'verify'`; rebase on master after F4 merges, then merge. Next backend-only job for them: F6's server half.
-If cut off: F1 `[{id:'F1', from:'verify'}]` (or `from:'fix'` with the newest verdict); F4 as above; words2
-`{from:'author', only:[unfinished frames ids]}`, then fold and check.
+- **F5 drill engine: the user's other agent** (worktree `.claude/worktrees/f5`, branch `v2/f5`). Do not build it. When the user
+  says "F5 done": add F5 to TASKS, run `from:'verify'`, merge. Their next backend-only job: F6's server half.
+If cut off: F1 `[{id:'F1', from:'fix', issues:<saved r1 defects>}]` then merge; words2 `{from:'author', only:['frames1']}`.
 
 ### On "continue"
 

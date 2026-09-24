@@ -1,0 +1,95 @@
+{
+ "label": "verify F1 r1",
+ "key": "v2:3ca2210c3e5a386983db0d5737956eeaf4970bf78829963371a450102f90747f",
+ "result": {
+  "pass": false,
+  "evidence": "I checked out v2/f1 detached at d47d851 (git switch --detach v2/f1). The worktree was clean and I made no edits or commits. `git diff --stat master...HEAD` shows only the five owned files: web/404.html, web/assets/charts.js, web/assets/kit.js, web/assets/ui.css and web/dev/kit.html. `PYTHONPATH=. python3 server/test_flow.py` printed \"all good\". The server ran on port 8011 with server/v2.db and is now stopped. All browser checks used the headless shell, with scripts kept in the scratchpad under f1v/.\n\nWhat passed:\n- **Kit page (walk.py):** /dev/kit.html has no console or page errors at 1280 and 390 in light and dark, and scrollWidth equals the viewport width in all four. All 19 chart instances render role=img (role=grid for the calendar and heatmap), an aria summary and a hidden table with rows.\n- **Keyboard (keys.py):** in all four configurations, sheets and confirms close on Esc and focus returns to the opener. The same holds for the popover, listbox, menu, dropdown, UI.examDate, dialog.more, dialog.palette and the reference sheet. Arrow keys work in seg (disabled options skipped), tabs (Home and End too), menus (Home and End too) and listboxes. The calendar also takes PageUp, PageDown and T, and the heatmap and band chart take arrows. UI.fact opens on Enter and Esc returns focus. Toasts stop at 3 with aria-live polite. Under 760px sheets are bottom sheets (radius 16 16 0 0, a handle, 90vh).\n- **404:** /nope/ and /practice/nope/x?y=1 return 404 with \"That page does not exist.\", the path, Today and Practice, in both themes and widths. The only failed request is the page itself.\n- **Tokens and classes:** the dark tokens match Shell §2.13. Every §2.4 and Shell §11 class exists. Every master class and token is kept, and the light token values are unchanged.\n- **Spec sizes:** .btn is 40px, radius 10, Archivo 600 14px, --tile-2. Cards are radius 14 with padding 22 (16 on a phone). The question size tokens are right, and masteryWord uses the 0.4 and 0.8 thresholds.\n- **Existing pages (pages.py):** the 14 pages were diffed with branch assets against master assets served by route interception. They look intact, and / at 390 no longer scrolls sideways (472px on master).\n\nWhat failed is listed in `defects`, most important first:\n- **UI.pts** computes as 400 15px Archivo in ink.\n- **View transitions:** the new rule throws an uncaught page error on ordinary navigations. A plain / to /practice/ click hit it in 3 of 5 runs and 1 of 6 runs, and 5 of 6 with Google Fonts blocked. /diagnostic/signup.html hit it in 2 of 5, and a report URL that redirects hit it in 2 of 5 (that report page also logs a 409 on master). Master assets gave 0 of 5.\n- **Guarded sheet:** pressing Esc three times drops the sheet and its draft, and choosing Cancel then leaves focus on BODY (guard2.py and guard3.py reproduce it every time).\n- **Copy gate:** kit.js line 2049 matches a retired phrase.\n- **Touch targets at 390:** touch.py lists many controls under 44px.\n\nThe rest are visible label collisions, an empty-state gap and labelling and copy slips.\n\nNeeded from other owners:\n- F2 (head.js): register pagereveal and pageswap handlers that catch the viewTransition promise rejections before first render.\n- S6 (results-ui.js): UI.sittingCard's grouping by (subject, module), which reports.md assigns to F1.",
+  "defects": [
+   {
+    "where": "web/assets/ui.css line 1244 (button[data-fact]) against line 1249 (.pts); product.md G5",
+    "what": "UI.pts chips are meant to be DM Mono 12px in --soft, but they render as Archivo 15px in ink on every page. `button[data-fact] { font: inherit; color: inherit }` (specificity 0,1,1) overrides `.pts` (0,1,0), and pts() always builds a button with data-fact. Computed style in the kit: font '400 15px Archivo', color rgb(63,63,63). The skill-row gain chip is affected too.",
+    "fix": "Wrap the reset as `:where(button[data-fact]) {...}`, or raise the chip rule to `button.pts, .pts { font: 500 12px var(--mono); color: var(--soft) }`."
+   },
+   {
+    "where": "web/assets/ui.css line 2293 (`@view-transition { navigation: auto; }`); §2.12 F1 acceptance (existing pages load with no console errors); product.md G9",
+    "what": "Same-origin navigations now throw uncaught page errors: 'Transition was aborted because of invalid state. ViewTransition opt-in disabled', and 'Transition was skipped. Navigation aborted' when a second navigation interrupts the first. Clicking Practice on / hit it in 3 of 5 runs and 1 of 6 runs, and 5 of 6 when fonts.googleapis.com is unreachable. The /diagnostic/signup.html redirect hit it in 2 of 5. The same steps with master assets gave 0 errors.",
+    "fix": "Handle the transition promises. Add `addEventListener('pagereveal', e => { const t = e.viewTransition; if (t) { t.ready.catch(()=>{}); t.finished.catch(()=>{}); } })` and the same for 'pageswap'. pagereveal must run before first render, so it belongs in head.js (F2): list it as a change request. kit.js can cover pageswap now."
+   },
+   {
+    "where": "web/assets/kit.js sheet(): the 'cancel' listener and tryClose (about lines 470 and 500); §2.4 'Esc; focus returns'; rule 7",
+    "what": "The guard on a sheet can be bypassed with Esc. Open 'Sheet · guard', then press Esc (the confirm opens), Esc (the confirm cancels) and Esc again. Chromium ignores the second preventDefault on 'cancel' without user activation and closes the guarded dialog natively, so only 'Discard the draft?' is left. Choosing Cancel ('keep') then leaves nothing open, so the draft is lost, and focus lands on BODY. It reproduced in 3 of 3 runs (guard2.py, guard3.py).",
+    "fix": "Catch Escape on keydown inside the dialog: preventDefault stops the close request, then call tryClose(). Or, in the 'close' listener, when the close did not come from apiObj.close and a guard exists, call showModal() again and run the guard."
+   },
+   {
+    "where": "web/assets/kit.js line 2049 (VERBS.learn.helper); product.md G2 acceptance 1 (the copy gate over web/)",
+    "what": "The helper 'See one solved, then try three yourself.' matches the retired-phrase regex `see one solved`. The grep that must come back empty returns kit.js line 2049, so I1's copy gate fails. The wording comes verbatim from G2's own table, which contradicts the gate.",
+    "fix": "Reword the helper without the retired phrase, for example 'A worked example on new numbers, then three of your own. Counts toward mastery.'"
+   },
+   {
+    "where": "web/assets/ui.css: .quiet (line 821), .seg options (line 944, `calc(var(--ctl) - 6px)`), .table th button (line 1184), .cal-d, .cell.sm, .strip buttons, .atlas cells, .heat-c, .ibtn, .choices, legend filter buttons, input[type=range]; §2.1 rule 9",
+    "what": "At 390 with a touch pointer, many controls are below the 44px touch target. Measured sizes:\n- .quiet: 34px tall\n- seg options: 38px\n- legend filter buttons: 40px\n- table sort buttons: 17x17\n- calendar days: 34x34\n- .cell.sm: 28px\n- pickable UI.strip cells: 16x16\n- UI.atlas cells: 16x16\n- heatmap cells: 14x14\n- .ibtn: 36x36\n- .choices: 36x38\n- range inputs: 28px tall",
+    "fix": "Under `(max-width: 759px), (pointer: coarse)`, give .quiet, seg options, .ibtn, .choices, legend and sort buttons a min-height (and min-width where needed) of var(--touch). For the dense grids (strip, atlas, heat, cal-d, cell.sm), add a centred ::before hit box of at least 44px, as [data-fact] already does."
+   },
+   {
+    "where": "web/assets/charts.js: lineChart band and end labels, barChart reference label, quadrant zone names, clockLane lane label (seen in web/dev/kit.html at 1280 and 390)",
+    "what": "Labels collide with the drawing:\n- lineChart: the line runs through 'Level 3', and the '1,318' end label sits on the dashed series.\n- barChart: 'Goal 40 min' is drawn over bars.\n- quadrant: a dot covers 'You know it, slowly · 2'.\n- clockLane: 'First visits' sits under a mark.\nThe builder acknowledged these and left them.",
+    "fix": "Give each label a paper halo (paint-order stroke) and nudge it clear of points, or move band, goal and zone labels outside the plot area when they collide."
+   },
+   {
+    "where": "web/dev/kit.html navigator demo (x-nav, x-nav-legend); web/assets/kit.js cell() aria-label; §2.3 and rule 15",
+    "what": "In the navigator's Difficulty view, the legend under the grid still shows the Status keys (Correct 12, Incorrect 4...) instead of Easy, Medium and Hard with counts. Separately, UI.cell's aria-label ('Question 1, Correct') leaves out the tier and measured level, so the Difficulty view's E, M and H letters and level numbers reach sighted users only.",
+    "fix": "When the view switches, swap the kit legend to ['easy','medium','hard'] with counts. In cell(), append the tier word and level (for example 'Easy, level 1') to the aria-label when o.tier or o.level is set."
+   },
+   {
+    "where": "web/assets/charts.js: UI.spread and UI.stackBar summaries; UI.barChart and UI.spark summary wording; §2.1 rules 1 and 12",
+    "what": "Empty data produces broken summaries with no empty-state text: UI.spread(host, []) reads 'How everyone answered: .' and UI.stackBar(host, []) reads 'Split: .'. Singular counts are wrong elsewhere: 'Bar chart, 1 bars' and 'over 1 points'.",
+    "fix": "Add empty-state text (what will appear, as other charts do with 'nothing yet'), and pluralise the counts."
+   },
+   {
+    "where": "web/assets/charts.js UI.scale aria summary; rule 12",
+    "what": "On the 400–1600 scale the summary reads 'target 1400' with no thousands separator, while the visible ticks read '1,400'.",
+    "fix": "Format every number in the scale's summary with fnum."
+   },
+   {
+    "where": "web/assets/kit.js examDate() (line 1355); shell-me U17",
+    "what": "Each date prints 'register by <date>' even after that date has passed. The kit's Oct 10 row reads 'register by Sep 20' on Sep 24.",
+    "fix": "When register_by < today, print 'late registration by <late_by>' or 'registration closed' instead."
+   },
+   {
+    "where": "web/assets/kit.js mmss(); §2.1 rule 12",
+    "what": "UI.mmss(3725) returns '62:05'. Times past an hour, such as a 70-minute section's elapsed time, should read 1:02:05.",
+    "fix": "Add hours when sec >= 3600: h:mm:ss."
+   },
+   {
+    "where": "web/dev/kit.html line 763 (the empty band chart demo); web/assets/kit.js empty(); product.md G12 and R55",
+    "what": "The kit's canonical empty chart offers 'Start the diagnostic · 35 min', but R55 says a new learner's empty states offer 'Start with 8 · about 10 min'. UI.empty exposes empty.START but does not apply the new-learner rule itself, so every caller must remember it.",
+    "fix": "Use UI.empty.START in the kit demo. Optionally, when the learner has 0 answers, default the action to START inside UI.empty."
+   },
+   {
+    "where": "web/dev/kit.html line 817 ('Sheet · m, a form' demo); spec/v2-decisions.md decision 5",
+    "what": "The 'Where' seg offers ['Bluebook', 'Paper', 'Class']. 'Class' reads as the dropped classes feature, and the spec's origin values are school, bluebook, official, book and other.",
+    "fix": "Use 'School' (and 'Book' or 'Official' if wanted) instead of 'Class'."
+   },
+   {
+    "where": "web/assets/ui.css .side-sub (the sidebar user card, shown in the kit frame at 1280)",
+    "what": "'1,284 answered' is clipped to '1,284 answ' with no visible ellipsis, so the text is cut mid-word. The computed style has overflow hidden and text-overflow ellipsis, but the ellipsis does not render.",
+    "fix": "Make .side-sub display:block with min-width:0 in its grid cell so the ellipsis applies, or let the line wrap."
+   },
+   {
+    "where": "web/assets/charts.js heatmap() summary against opts.stats; web/dev/kit.html line 785; rule 5",
+    "what": "The heatmap contradicts itself. Its visible stats row reads 'Active days 131 · Study time 42h 10m', while its own aria summary for the same chart reads '137 active days, 71h 49m'. The summary always recounts from the day rows, even when stats from progress.days are passed.",
+    "fix": "When opts.stats is given, build the summary from it (or label the recount as '26 weeks'), and make the kit fixture consistent."
+   },
+   {
+    "where": "web/assets/ui.css tabs (seen with UI.tabs in web/dev/kit.html at 390); §2.1 rule 9",
+    "what": "At 390 the tab strip scrolls sideways and the last tab is clipped to 'Shar'. Rule 9 asks that nothing desktop shows is hidden on a phone; it should wrap or stack instead.",
+    "fix": "Let the tab list wrap on a phone, or show a visible overflow cue and scroll the selected tab into view."
+   },
+   {
+    "where": "spec/v2-upgrades/reports.md cross-file row 'F1 | ... UI.sittingCard groups chips by (subject, module)'",
+    "what": "UI.sittingCard is not built. It lives in S6's results-ui.js, which F1 does not own, and the builder's return did not list it as a request to another owner.",
+    "fix": "Add it to F1's return as a change request for S6: UI.sittingCard groups chips by (subject, module) using UI.qlabel."
+   }
+  ]
+ }
+}

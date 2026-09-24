@@ -1,0 +1,70 @@
+{
+ "label": "verify F4 r2",
+ "key": "v2:42851dc4282dc2b47175d6b07838ab9ec1e20039080f23d88594a9403545b265",
+ "result": {
+  "pass": false,
+  "evidence": "Branch v2/f4 checked out detached at d9b35e7 (22 commits on master's merge base dc9873f). The tree was clean when I finished, the server on 8014 was stopped, and server/v2.db was removed.\n\nWhat passed:\n- `PYTHONPATH=. python3 server/checks/f4.py` ends \"ok  F4 schema, traps and check-ins, days, causes, pace, estimate, prefs, access and carry\". It also prints one PENDING line: app.py does not install deps.swap_middleware.\n- `server/test_flow.py` prints \"all good\".\n- `python3 server/estimate.py` prints \"estimate ok\". `python3 server/ratings.py` prints \"ratings ok\", with 121/171/163 distinct priors per tier and every level L1–L7 at 5% or more.\n- Migration: I built old.db with master's code (git archive master into the scratchpad): 3 learners, 115 attempts, 67 traps including two numeric variants of one reason, 15 saved, 6 sessions, a users row. Running the branch's db.init() on a backup copy lost no row in users, sessions, practice_seen, learners, attempts or saved. Traps went 67 → 66 by norm: hits summed, owed MAX, open if either row was open, seed 42 and session from the latest wrong attempt, reason = the latest text. Every attempt got stem, offered and norm. trap_log was backfilled, handles too (a second 'Sam' gets null), and a second init took 0.00 s.\n- HTTP probes on 8014:\n  - a first drill answer creates the learners row;\n  - retired code: GET 200, PUT /api/me 401 {retired:true, into:null}, notes 401;\n  - every PUT /api/me rule I tried (prefs 422 naming the key, merge storing only non-defaults, exam_date past or impossible, X-Tz zone, rw fields, board, country, avatar, minutes, tests, handle 409/422, name);\n  - activity weeks=26 gives 182 rows, weeks=54 gives 422; GET /api/prefs returns 66 keys;\n  - an exact saved replay files repeat=1 and mastery stays unchanged;\n  - today's challenge item: access None before and after answering and for another learner;\n  - live mock item: access None; notes on it return no template;\n  - record_paper takes qstate ms and conf, reads flags, and snapshots result.odds; the mock's minutes are counted once;\n  - an answer at 23:30 UTC lands on the next local day with X-Tz -120;\n  - /api/me/carry leaves 0 source rows in every LEARNER_TABLES table.\n- satdates matches the College Board dates page, including March 6, 2027 and the anticipated 2027–28 dates. cb_percentiles.json values match College Board's SAT user percentile page (spot-checked math, rw and total).\n- Nothing in the owned files contradicts decisions 1–5: no class tables, words_from has no math deck, twin challenge days are protected and carried.\n\n`git diff --stat master...HEAD` shows 14 files. ratings.py, data/cb_percentiles.json and tools/seed_ratings.py are assigned to F4 by the upgrade files; test_flow.py is not.\n\nFailures I reproduced myself are listed in defects.",
+  "defects": [
+   {
+    "where": "server/deps.py learner_of + server/app.py (Shell 'app.py learner_of: retired codes'; shell-me.md U21 acceptance 4)",
+    "what": "Retired codes are refused only on routes that call writer_of (/api/me, /api/notes). The read/write split depends on swap_middleware recording the request method, and app.py never installs it. On 8014, a retired code got 200 from POST /api/drill, and its drill answer was filed (1 attempts row under the retired code). The same missing line means U21's swap never sends X-Learner-Swap and never mints a device token (f4.py prints PENDING). Once swap_until passes, every browser still on the a: code is locked out.",
+    "fix": "List the one-line change for F0 (app.py: app.middleware('http')(deps.swap_middleware)). Until it lands, keep F4's retired and swap rules marked as not done, and re-run the drill-write probe on 8014 afterwards."
+   },
+   {
+    "where": "server/api_me.py POST /api/me/carry (reports.md SR24: the sample 'can't be added to or claimed'; db.NOT_SAMPLE writes refused)",
+    "what": "Any learner can claim the live sample report. POST /api/me/carry {learner:'sample:report'} from a:probethief1 returned 200 {moved:1}. The sample's attempts went from 1 to 0, and sessions 'sample-section' now belongs to the thief.",
+    "fix": "Refuse (403) a carry whose source is db.is_sample(frm). Also guard progress.carry itself against sample: codes on either side."
+   },
+   {
+    "where": "server/progress.py days() word_reviews query (R13; words.md §3.2 override: 'days() excludes modes lookup, sort and placement from review counts')",
+    "what": "The filter is COALESCE(kind,'')!='lookup'. But lookups are word_reviews.mode='lookup' (§3.9 schema, POST /api/words/lookup), and the sort and placement modes are not excluded at all. Probe: 12 rows with mode lookup/placement/sort and no other activity gave words=12, 10 minutes and streak 1, so a day of lookups counts as a study day.",
+    "fix": "Filter on mode: COALESCE(mode,'') NOT IN ('lookup','sort','placement'). Add an f4.py assert with lookup, sort and placement rows."
+   },
+   {
+    "where": "server/progress.py record(), the transfer check-in loop (R9 'A miss on a due check reopens it as Relapsed'; product.md G3 rule 5 'A miss there reopens it as Relapsed')",
+    "what": "On the 10- or 30-day check-in served on another template (checkin_template → lin.other, whose item offers the norm), picking a different wrong option does nothing. The trap stays closed_how 'fixed' with relapses 0, checks 1 and the same due date, so a failed check-in has no effect and the next clean answer passes it. On the trap's own template, any miss on a due check-in relapses, so the two paths disagree.",
+    "fix": "In the transfer loop, when the item offers t['norm'], the check-in is due, the answer is wrong and check is False, relapse the trap (as the own-template branch does), recording 'on' the other template. Add the case to f4.py."
+   },
+   {
+    "where": "server/api_notes.py _pair (R6: POST /api/notes 'from any sitting kind')",
+    "what": "The note path calls api_tests.marked_questions/questions_of. For kinds they don't handle, that falls through to FORMS[row['form_id']] and raises KeyError: None. On 8014, POST /api/notes returned 500 for sessions of kind spot, custom, words and section (R36 and Tests' new kinds) that carry their questions.",
+    "fix": "Resolve the question with deps.paper_of(row), which prefers sessions.questions (flatten dict papers as progress._paper does), and return 404 rather than 500 when nothing matches."
+   },
+   {
+    "where": "server/deps.py _protected() (R19 access, called by progress.record on every answer)",
+    "what": "Every access() call runs 'SELECT * FROM sessions WHERE questions LIKE %\"template\"% AND (...)' over every learner's sessions, so every filed answer pays for a full scan of all sessions' questions JSON. Measured record() cost with other learners' finished drills on file (5 KB questions each): 6.9 ms at 1,000 sessions, 67 ms at 10,000 and 203 ms at 30,000. It grows linearly with the whole site.",
+    "fix": "Narrow first with indexed predicates, then JSON-match only the few candidates: challenge sittings with day IN live_days(), plus unfinished challenge or contest sittings, via an index on sessions(kind, day) or (contest, finished). Or check contest_items / a challenge-items lookup instead of LIKE over every row."
+   },
+   {
+    "where": "server/api_me.py put_me (R15 exam_date rule; days validation)",
+    "what": "PUT /api/me {exam_date:''} and {days:''} both return 200 and store '' (the profile then shows exam_date '' and days ''). The validation runs only 'if got.get(...)', so an empty string skips it. It is neither a date on or after today nor a null clear.",
+    "fix": "Treat '' as invalid (422 naming the field), or normalise it to None before validating."
+   },
+   {
+    "where": "server/progress.py carry(), trap merge and word_lists (§2.5 carry merge rules; words.md 'carry also moves word_lists')",
+    "what": "(1) When the target's copy of a trap is fixed and the source's is open, the merged row is open (closed NULL) but keeps closed_how 'fixed' and due '2026-09-13'. (2) Same-named word_lists use UPDATE OR IGNORE and then DELETE, so the source's words are lost. Probe: 'mine'=[abate] carried into 'mine'=[candid] leaves [candid].",
+    "fix": "When the merged trap is open, set closed_how=NULL, due=NULL, checks=0. For word_lists with the same name, union the words JSON instead of dropping the source's list."
+   },
+   {
+    "where": "server/test_flow.py (task rule: change no file you do not own; check 3)",
+    "what": "The F4 branch edits server/test_flow.py (12 lines). It rewrites the 'two clean answers close it' assertion into '(not left) == (sum(offers) >= 2)' to fit R45. test_flow.py is not in F4's owned list or in any upgrade file's F4 assignment.",
+    "fix": "Revert the edit, and list the needed test_flow change (product.md item 29's amended 'two clean answers close it' check) for test_flow.py's owner."
+   },
+   {
+    "where": "server/checks/f4.py (today.md T7 acceptance: 'In server/checks/f4.py, one seeded learner')",
+    "what": "Several T7 acceptance asserts are missing: '455' to '460' gives by.entry == 0; an unnamed grid-in miss on a 4-of-5 template is slip; an unnamed grid-in miss answered in 3 minutes on a new template is gap; a fast named easy pick is trap. My own probe found the behaviour correct, but the acceptance asserts aren't in the check.",
+    "fix": "Add those four asserts to causes_checks()."
+   },
+   {
+    "where": "server/progress.py log_mistake (product.md G3 rule 4 and check 7: 'an outside-logged ~unsure trap closes after one'; U2 'I don't know')",
+    "what": "log_mistake has no way to open an unsure trap. The only route is reason='~unsure', which stores and labels the trap '~unsure'. f4.py's G3 check 7 fakes the case with a raw UPDATE of norm and owed instead of calling a real path.",
+    "fix": "Add an unsure flag to log_mistake (norm '~unsure', owed 1, label 'Unsure'), and assert it in f4.py through that call."
+   },
+   {
+    "where": "server/estimate.py growth() (tests.md X15: 'compares the first ranked section's midpoint with mean3')",
+    "what": "growth() uses the mean of the last 3 ranked sections for the learner and for each peer. It does not use R16's mean3, which covers the last up to 3 scored sittings within 45 days, outside scores included.",
+    "fix": "Use estimate(learner)['mean3'] (and each peer's mean3) against the first ranked section's midpoint. Otherwise record the deviation in the spec's R-table."
+   }
+  ]
+ }
+}

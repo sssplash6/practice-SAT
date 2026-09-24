@@ -1,6 +1,6 @@
 export const meta = {
   name: 'v2-build',
-  description: 'Build v2 foundation and section tasks: unit builders on the task branch, an independent verifier, up to 3 fix rounds',
+  description: 'Build v2 tasks: unit builders on the task branch, one independent check, one fix, then ready to merge',
   phases: [
     { title: 'Build', detail: 'one agent per unit, in order, committing on v2/<task>' },
     { title: 'Verify', detail: 'independent verifier tries to refute that the task is done' },
@@ -35,7 +35,7 @@ spec/v2-upgrades/*.md (grep -n "F1" spec/v2-upgrades/*.md; product.md's cross-fi
 404 page. Also: all 14 existing pages still load with no console errors and look intact; test_flow prints "all good".`,
   },
   BANK: {
-    title: 'BANK · three question-bank flaws', port: 8019,
+    title: 'BANK · three question-bank flaws', port: 8019, rounds: 2,
     spec: `satbank/ (templates generate Items; wrong values come from Mis(reason, value) lists; Item.spr_mistakes names grid-in
 mistakes, filtered by satbank.item.gridin_mistakes and enforced by satbank/audit.py). Find each template with
 satbank.registry.templates() and generate(name, seed).`,
@@ -99,7 +99,9 @@ RULES:
 
 const VERDICT = { type: 'object', properties: {
   pass: { type: 'boolean' }, evidence: { type: 'string' },
-  defects: { type: 'array', items: { type: 'object', properties: { where: { type: 'string' }, what: { type: 'string' }, fix: { type: 'string' } }, required: ['where', 'what', 'fix'] } },
+  defects: { type: 'array', items: { type: 'object', properties: {
+    where: { type: 'string' }, what: { type: 'string' }, fix: { type: 'string' },
+    severity: { type: 'string', enum: ['blocker', 'followup'] } }, required: ['where', 'what', 'fix', 'severity'] } },
 }, required: ['pass', 'evidence', 'defects'] }
 
 const unit = (t, i) => agent(`${CONTEXT(t)}
@@ -108,39 +110,47 @@ Earlier units are committed on the branch; later units are other agents' jobs, s
 upgrades. Commit as you go. Return what you built, the commits, and anything left undone or needed from another owner.`,
   { label: `build ${t.id} ${i + 1}/${t.units.length}`, phase: 'Build', isolation: 'worktree' })
 
+// Check policy (the user, 2026-09-24): one check, one fix, merge. Leftovers go on a follow-up list for the section that uses
+// them or for I1. A task sets rounds: 2 only when it puts content in front of students (questions, definitions).
 const verify = (t, round) => agent(`${CONTEXT(t)}
 You are the VERIFIER, not the builder: do not fix anything and do not commit. Run git switch --detach v2/${t.id.toLowerCase()}.
-Try to REFUTE that ${t.title} is done. Check, with evidence you ran yourself:
-1. ${t.accept}
-2. Every requirement of the spec sections above and every upgrade assigned to ${t.id} in spec/v2-upgrades/*.md is built as
-   written (go item by item; missing, partial, vague or visibly broken fails).
-3. Nothing outside the owned files changed: git diff --stat master...HEAD.
-4. Nothing contradicts spec/v2-decisions.md.
-Report every defect with the file and the item it violates. Default to pass=false if unsure.`,
+Check, with evidence you ran yourself:
+1. The task's own check file (server/checks/${t.id.toLowerCase()}.py) if it exists, and PYTHONPATH=. python3 server/test_flow.py.
+2. ${t.accept}
+3. A SAMPLE of 15 requirements from the spec sections above and the upgrades assigned to ${t.id} (pick across the whole list and
+   say which), built as written.
+4. Nothing outside the owned files changed (git diff --stat master...HEAD), and nothing contradicts spec/v2-decisions.md.
+Mark each defect severity "blocker" (a failing check, broken or unsafe behaviour, data loss, a security hole, a contradiction of
+the decisions, or something another task needs now) or "followup" (anything else). pass = no blockers.`,
   { label: `verify ${t.id} r${round}`, phase: 'Verify', schema: VERDICT, isolation: 'worktree' })
 
 const fix = (t, defects, round) => agent(`${CONTEXT(t)}
 A verifier found defects in ${t.title}. ${typeof defects === 'string' ? `Read them from ${defects}.` : `DEFECTS: ${JSON.stringify(defects)}`}
-An earlier fixer may have been cut off part way: check the branch first and do not redo what is fixed. Fix every defect in the
-files you own (list any that need another owner), commit as you go, and return what you changed.`,
+An earlier fixer may have been cut off part way: check the branch first and do not redo what is fixed. Fix every blocker, and
+every followup that is small, in the files you own (list any that need another owner). Then run the task's check file and
+test_flow; both must pass. Commit as you go, and return what you changed and which defects are left.`,
   { label: `fix ${t.id} r${round}`, phase: 'Fix', isolation: 'worktree' })
 
 async function run(a) {
   const t = { ...TASKS[a.id], id: a.id }
   const out = { id: a.id, branch: `v2/${a.id.toLowerCase()}`, units: [], rounds: [] }
+  const max = t.rounds || 1
   let round = a.round || 1
-  let defects = a.issues || null
   if (!a.from || a.from === 'build') {
     for (let i = a.unit || 0; i < t.units.length; i++) out.units.push(await unit(t, i))
   }
-  if (a.from === 'fix') await fix(t, defects, round++)
+  if (a.from === 'fix') { out.fixes = [await fix(t, a.issues, round)]; out.result = 'fixed; ready to merge (leftovers in the fix report)'; return out }
   for (;;) {
     const v = await verify(t, round)
     out.rounds.push(v)
     if (!v) { out.result = 'verifier died'; return out }
-    if (v.pass) { out.result = 'passed'; return out }
-    if (round >= 4) { out.result = 'still failing after 3 fix rounds'; out.defects = v.defects; return out }
-    await fix(t, v.defects, round++)
+    const blockers = (v.defects || []).filter(d => d.severity === 'blocker')
+    out.followups = (v.defects || []).filter(d => d.severity !== 'blocker')
+    if (!blockers.length) { out.result = 'passed; ready to merge'; return out }
+    const r = await fix(t, v.defects, round)
+    out.fixes = [...(out.fixes || []), r]
+    if (round >= max) { out.result = 'fixed once; ready to merge (leftovers in the fix report)'; return out }
+    round++
   }
 }
 
