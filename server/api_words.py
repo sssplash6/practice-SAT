@@ -16,6 +16,7 @@ import json
 import random
 import re
 import secrets
+import statistics
 import unicodedata
 from collections import Counter, defaultdict
 from functools import lru_cache
@@ -78,7 +79,12 @@ def _make_item(learner: str, slug: str, kind: str, seed: int,
             return words.order_item(seed)
     if kind in {"decode", "rootshare"}:
         roots = words.content()["index"]["words"].get(slug, {}).get("roots", [])
-        return words.root_item(seed, kind, roots[0] if roots else None)
+        for root in [*roots, None]:
+            try:
+                return words.root_item(seed, kind, root)
+            except ValueError:
+                continue
+        raise HTTPException(409, "no root family can supply this item")
     if kind in {"incontext", "nearly", "transition", "precise"}:
         for offset in range(30):
             template = words.choose_template(slug, learner=learner, seed=seed + offset, seen=seen)
@@ -224,6 +230,35 @@ def _placement(learner: str, seed: int) -> list[dict]:
     return chosen
 
 
+def _route_check(questions: list[dict], seed: int) -> None:
+    """Raise the second half one difficulty step after a strong first six."""
+    rng = random.Random(seed)
+    data = words.content()
+    used = {q.get("template") for q in questions}
+    for q in questions[6:12]:
+        target = {"easy": "medium", "medium": "hard", "hard": "hard"}.get(q.get("difficulty"), "hard")
+        transition = q["kind"] == "transition"
+        pool = ([p for p in data["pairs"].values() if p.get("difficulty", "medium") == target]
+                if transition else [f for f in data["frames"].values() if f["difficulty"] == target])
+        rng.shuffle(pool)
+        for row in pool:
+            template = ("rw.tr." if transition else "rw.wic.") + row["id"]
+            if template in used or not words._servable(row) or words._suppressed(row["id"]):
+                continue
+            slug = rng.choice(row["fits"] if transition else row["keys"])
+            try:
+                raised = words.item(template, rng.randrange(2**31), slug)
+            except ValueError:
+                continue
+            if q["kind"] == "precise":
+                raised["kind"] = "precise"
+            raised["item_id"] = q["item_id"]
+            used.add(template)
+            q.clear()
+            q.update(raised)
+            break
+
+
 @router.get("/api/words")
 def get_words(days: int = 14, x_learner: str | None = Header(default=None),
               x_tz: int = Depends(tz_of)) -> dict:
@@ -249,8 +284,8 @@ def insights(x_learner: str | None = Header(default=None), x_tz: int = Depends(t
                    r["at"] >= (words.local_day(x_tz) - dt.timedelta(days=7)).isoformat())
     return {"traps": trap_rows, "logic": logic, "open": {"traps": opens, "logic": open_logic},
             "gaps": {"word": gaps["word"], "reading": gaps["reading"]},
-            "calibration": words.calibration(learner), "recall": {"pct": None, "n": 0, "by_box": {}, "scale": 1},
-            "finish": {"left": {}, "chips": []}}
+            "calibration": words.calibration(learner), "recall": words.recall(learner, x_tz),
+            "finish": words.finish_metrics(learner, x_tz)}
 
 
 @router.get("/api/words/today")
@@ -318,6 +353,10 @@ def create_run(body: dict, x_learner: str | None = Header(default=None),
     elif source in {"trap", "logic", "readgap"}:
         rng = random.Random(seed)
         value = str(deck.get("value") or "")
+        if source == "trap" and value in {"too_strong", "too_weak"} and not any(
+                words._servable(frame) and frame["need"].get("pins") == "intensity"
+                for frame in words.content()["frames"].values()):
+            raise HTTPException(409, "no reviewed frame pins the intensity needed for that trap")
         if source == "logic":
             needed, sep, picked = value.partition(">")
             if not sep:
@@ -398,7 +437,7 @@ def create_run(body: dict, x_learner: str | None = Header(default=None),
         elif q["kind"] == "transition" and relation_on:
             choices = list(dict.fromkeys(q["option_logics"]))
             stage_rng.shuffle(choices)
-            q["step"] = "relation"
+            q["step"] = "logic"
             q["predictions"] = choices
             q["prediction_answer"] = choices.index(q["logic_needed"])
     cfg = {"mode": mode, "deck": deck, "formats": formats, "count": len(questions),
@@ -512,6 +551,16 @@ def _summary(row, questions: list[dict], answers: dict, cfg: dict) -> dict:
               "skipped": skips, "schedule": schedule, "by_kind": dict(by_kind),
               "mixups": [{"confusion": k, "kind": k, "n": n} for k, n in mixups.items()],
               "next": {"source": "due", "count": 10, "mode": "cards"}}
+    pace = {}
+    for kind in by_kind:
+        times = [answers[q["item_id"]].get("ms") for q in questions if q["kind"] == kind and
+                 answers.get(q["item_id"], {}).get("ms") is not None]
+        pace[kind] = {"median_ms": int(statistics.median(times)) if times else None,
+                      "target_ms": 71_000}
+    result["pace"] = pace
+    result["rushed_misses"] = [q["word"] for q in questions if
+                                answers.get(q["item_id"], {}).get("correct") is False and
+                                (answers[q["item_id"]].get("ms") or 10**9) < 8_000]
     if cfg["mode"] == "sprint":
         score = round(right - (len(graded) - right) / 3, 2)
         previous = db.one("SELECT MAX(json_extract(result,'$.score')) best FROM sessions"
@@ -525,13 +574,22 @@ def _summary(row, questions: list[dict], answers: dict, cfg: dict) -> dict:
         fa = false_yes / 12
         band_result = []
         n_est = 0
+        variance = 0.0
+        checks = [(q, answers[q["item_id"]]) for q in questions if q["kind"] == "placement_check"
+                  and q["item_id"] in answers]
+        overall = sum(bool(a["correct"]) for _, a in checks) / len(checks) if checks else 1.0
         for band in sorted({q["band"] for q in real}):
             sample = [q for q in real if q["band"] == band]
             hit = sum(answers.get(q["item_id"], {}).get("choice") == "yes" for q in sample) / max(1, len(sample))
-            rate = max(0, (hit - fa) / max(.001, 1 - fa))
+            band_checks = [a for q, a in checks if q["band"] == band]
+            accuracy = (sum(bool(a["correct"]) for a in band_checks) / len(band_checks)
+                        if band_checks else overall)
+            rate = max(0, (hit - fa) / max(.001, 1 - fa)) * accuracy
             size = sum((w["tier"] + ":" + w["level"]) == band for w in words.content()["sat"])
-            band_result.append({"band": band, "rate": round(rate, 3), "n": round(size * rate), "size": size})
+            band_result.append({"band": band, "rate": round(rate, 3), "n": round(size * rate),
+                                "size": size, "check_accuracy": round(accuracy, 3)})
             n_est += round(size * rate)
+            variance += (1.96 * (rate * (1 - rate) / max(1, len(sample))) ** .5 * size) ** 2
             if rate >= .9:
                 sampled = {q["word"] for q in sample}
                 for w in words.content()["sat"]:
@@ -539,7 +597,8 @@ def _summary(row, questions: list[dict], answers: dict, cfg: dict) -> dict:
                         words.place(learner, w["slug"], "probably")
         probable = db.one("SELECT COUNT(*) n FROM word_state WHERE learner=? AND placed=2", learner)["n"]
         claimed = db.one("SELECT COUNT(*) n FROM word_state WHERE learner=? AND placed=1", learner)["n"]
-        result.update(estimate={"n": n_est, "lo": max(0, n_est - 40), "hi": n_est + 40,
+        spread = round(variance ** .5)
+        result.update(estimate={"n": n_est, "lo": max(0, n_est - spread), "hi": n_est + spread,
                                 "bands": band_result, "caution": false_yes},
                       claimed_n=claimed, probable_n=probable,
                       caution=f"You said yes to {false_yes} of 12 made-up words, so we counted cautiously" if false_yes else None)
@@ -561,14 +620,16 @@ def answer_run(sid: str, body: dict, x_learner: str | None = Header(default=None
     learner = _learner(x_learner)
     with db.atomic():
         row = _row(sid, learner)
-        if row["finished"]:
-            raise HTTPException(409, "this Words run is finished")
         questions, answers, cfg = _current(row)
         qid = body.get("item_id")
         q = next((q for q in questions if q["item_id"] == qid), None)
         if q is None:
             raise HTTPException(400, "that item is not in this Words run")
-        if q.get("step") in {"predict", "relation"} and not q.get("stage_done"):
+        if qid in answers and not body.get("regrade"):
+            return {**answers[qid], "next": _next(questions, answers), "already": True}
+        if row["finished"]:
+            raise HTTPException(409, "this Words run is finished")
+        if q.get("step") in {"predict", "logic"} and not q.get("stage_done"):
             prediction = body.get("prediction", body.get("answer"))
             if isinstance(prediction, int) and not isinstance(prediction, bool):
                 if not 0 <= prediction < len(q["predictions"]):
@@ -580,8 +641,6 @@ def answer_run(sid: str, body: dict, x_learner: str | None = Header(default=None
             q["stage_done"] = True
             db.run("UPDATE sessions SET questions=? WHERE id=?", json.dumps(questions), sid)
             return {"item": words.public_item(q, qid), "step": "choices"}
-        if qid in answers and not body.get("regrade"):
-            return {**answers[qid], "next": _next(questions, answers), "already": True}
         if body.get("regrade"):
             old = answers.get(qid)
             if not old or not old.get("review_id"):
@@ -615,6 +674,25 @@ def answer_run(sid: str, body: dict, x_learner: str | None = Header(default=None
                 if q["kind"] == "sort" and choice == "unsure":
                     db.run("UPDATE word_state SET saved=1 WHERE learner=? AND word=?", learner, q["word"])
                 verdict = {"correct": None, "choice": choice, **placed}
+            if q["kind"] == "placement" and not q.get("foil") and choice == "yes":
+                yes_n = 1 + sum(a.get("choice") == "yes" and
+                                next((x for x in questions if x["item_id"] == aid), {}).get("kind") == "placement"
+                                and not next((x for x in questions if x["item_id"] == aid), {}).get("foil")
+                                for aid, a in answers.items())
+                if yes_n % 3 == 0:
+                    probe = words.quiz_item(q["word"], "word2meaning",
+                                            random.Random(hashlib.sha256(f"{sid}:{yes_n}".encode()).digest()), learner)
+                    probe.update(kind="placement_check", band=q["band"],
+                                 item_id=f"w{len(questions)+1}")
+                    questions.insert(questions.index(q) + 1, probe)
+        elif q["kind"] == "placement_check":
+            right, index, given = _choice(q, answer)
+            words._review_row(db.conn(), learner, q["word"], sid, "placement", "placement_check",
+                              right, given, words.state(learner, q["word"])["box"],
+                              words.state(learner, q["word"])["due"], ms,
+                              dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds"), attempt=0)
+            verdict = {"correct": right, "answer_index": q["answer_index"], "given": given,
+                       "reasons": q["reasons"], "band": q["band"], "word": q["word"], "ms": ms}
         elif q["kind"] == "order":
             if not isinstance(answer, list) or len(answer) != 4:
                 raise HTTPException(422, "order all four words")
@@ -657,11 +735,15 @@ def answer_run(sid: str, body: dict, x_learner: str | None = Header(default=None
                                   template=q.get("template"), seed=q.get("seed") if q.get("template") else None,
                                   gap=gap, hinted=bool(body.get("hinted")), at=body.get("at"))
             verdict.update(answer_index=q.get("answer_index"), reasons=q.get("reasons"),
-                           traps=q.get("traps"), trap=trap, spans=q.get("spans", []),
+                           traps=q.get("traps"), trap=trap, given=given, gap=gap,
+                           spans=q.get("spans", []),
                            needs=q.get("needs"), spelling=spelling, ms=ms,
                            logic_needed=q.get("logic_needed"),
                            logic_picked=q.get("option_logics", [None] * 4)[index] if index is not None else None,
                            relation=q.get("relation"), back=q.get("back") if q["kind"] == "commit" else None)
+            if q.get("template"):
+                verdict["pick_split"] = words.pick_split(q["template"])
+                words.crowd_guard(q["template"])
             if q["kind"] in {"card", "fix"} and not ok and not q.get("requeue_n"):
                 clone = {**q, "item_id": f"w{len(questions)+1}", "requeue_n": 1}
                 pos = min(len(questions), questions.index(q) + 4)
@@ -670,6 +752,11 @@ def answer_run(sid: str, body: dict, x_learner: str | None = Header(default=None
         if not db.set_answer(sid, qid, verdict, only_new=True):
             raise HTTPException(409, "this item was already answered")
         answers[qid] = verdict
+        if cfg["mode"] == "check" and len(answers) == 6 and all(f"w{i}" in answers for i in range(1, 7)):
+            cfg["route"] = "upper" if sum(bool(answers[f"w{i}"].get("correct")) for i in range(1, 7)) >= 5 else "lower"
+            if cfg["route"] == "upper":
+                _route_check(questions, int.from_bytes(hashlib.sha256(sid.encode()).digest()[:8], "big") + 6)
+            db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(cfg), sid)
         if q.get("template"):
             db.run("UPDATE sessions SET questions=? WHERE id=?", json.dumps(questions), sid)
         elif len(questions) != len(json.loads(row["questions"] or "[]")):
@@ -683,6 +770,21 @@ def answer_run(sid: str, body: dict, x_learner: str | None = Header(default=None
         if cfg["mode"] == "check" and remaining is not None:
             return {"filed": True, "next": remaining, "total": len(answers)}
         return verdict
+
+
+@router.post("/api/words/run/{sid}/also-fits")
+def also_fits(sid: str, body: dict, x_learner: str | None = Header(default=None)) -> dict:
+    learner = _learner(x_learner)
+    row = _row(sid, learner)
+    questions, answers, _ = _current(row)
+    qid = body.get("item_id")
+    q = next((item for item in questions if item["item_id"] == qid), None)
+    if not q or qid not in answers or not q.get("template"):
+        raise HTTPException(409, "answer a generated item before reporting it")
+    choice = body.get("choice", answers[qid].get("given"))
+    if choice not in q.get("choices", []) or choice == q["choices"][q["answer_index"]]:
+        raise HTTPException(422, "report one of this item's wrong options")
+    return words.report_fit(q["template"], choice, learner)
 
 
 @router.post("/api/words/run/{sid}/finish")
@@ -756,6 +858,30 @@ def grade_print(sid: str, body: dict, x_learner: str | None = Header(default=Non
             break
         answer_run(sid, {"item_id": q["item_id"], "answer": answer}, x_learner, x_tz)
     return finish_run(sid, x_learner)
+
+
+@router.get("/api/words/run/{sid}/key")
+def print_key(sid: str, x_learner: str | None = Header(default=None)) -> dict:
+    row = _row(sid, _learner(x_learner))
+    questions, _, cfg = _current(row)
+    if cfg.get("mode") != "print":
+        raise HTTPException(409, "this is not a worksheet")
+    return {"id": sid, "answers": [{"item_id": q["item_id"],
+            "letter": "ABCD"[q["answer_index"]] if q.get("answer_index") is not None else None,
+            "reasons": q.get("reasons"), "meaning": words.entry(q["word"], row["learner"])["short"]}
+            for q in questions]}
+
+
+@router.post("/api/words/run/{sid}/new-version")
+def new_version(sid: str, x_learner: str | None = Header(default=None),
+                x_tz: int = Depends(tz_of)) -> dict:
+    row = _row(sid, _learner(x_learner))
+    questions, _, cfg = _current(row)
+    if cfg.get("mode") != "print":
+        raise HTTPException(409, "this is not a worksheet")
+    return create_run({"mode": "print", "deck": {"source": "words",
+                       "words": [q["word"] for q in questions]},
+                       "formats": cfg["formats"], "count": len(questions)}, x_learner, x_tz)
 
 
 def _normal(text: str) -> str:
@@ -980,16 +1106,28 @@ def share_list(name: str, x_learner: str | None = Header(default=None)) -> dict:
 def outside(body: dict, x_learner: str | None = Header(default=None)) -> dict:
     learner = _learner(x_learner)
     choices = body.get("choices")
-    if not isinstance(choices, list) or len(choices) != 4 or any(not isinstance(x, str) for x in choices):
-        raise HTTPException(422, "send four word choices")
+    if (not isinstance(choices, list) or len(choices) != 4 or
+            any(not isinstance(x, str) or not x.strip() for x in choices) or
+            len({_normal(x) for x in choices}) != 4):
+        raise HTTPException(422, "send four distinct word choices")
     key, picked = body.get("key"), body.get("picked")
     if key not in choices or picked not in choices or key == picked:
         raise HTTPException(422, "key and picked must be different choices")
     lookup = _matches()
-    key_slug, pick_slug = lookup.get(_normal(key)), lookup.get(_normal(picked))
-    k, p = words.entry(key_slug) if key_slug else None, words.entry(pick_slug) if pick_slug else None
+    found = {}
+    for option in choices:
+        slug = lookup.get(_normal(option))
+        if not slug:
+            existing = db.one("SELECT id FROM my_words WHERE learner=? AND lower(word)=lower(?)",
+                              learner, option)
+            slug = existing["id"] if existing else add_own(
+                {"word": option, "meaning": "Add a meaning", "source": "Outside Words question"},
+                x_learner).get("id")
+        found[option] = slug
+    key_slug, pick_slug = found[key], found[picked]
+    k, p = words.entry(key_slug, learner), words.entry(pick_slug, learner)
     trap = "not_classified"
-    if k and p:
+    if k and p and not (k.get("own") or p.get("own")):
         if k.get("logic") and p.get("logic") and k["logic"] != p["logic"]:
             trap = "wrong_logic"
         elif k.get("class") == p.get("class") and k.get("polarity") == p.get("polarity"):
@@ -1003,14 +1141,14 @@ def outside(body: dict, x_learner: str | None = Header(default=None)) -> dict:
         else:
             trap = "topical"
     name = str(body.get("label") or "Bluebook · missed question")[:30]
-    slugs = [s for s in (key_slug, pick_slug) if s]
+    slugs = list(dict.fromkeys(found.values()))
     old = db.one("SELECT words FROM word_lists WHERE learner=? AND name=?", learner, name)
     if old:
         slugs = list(dict.fromkeys(json.loads(old["words"]) + slugs))
         db.run("UPDATE word_lists SET words=? WHERE learner=? AND name=?", json.dumps(slugs), learner, name)
     else:
         add_list({"name": name, "words": slugs}, x_learner)
-    for slug in slugs:
+    for slug in (key_slug, pick_slug):
         s = words.state(learner, slug)
         s["saved"] = 1
         s["due"] = words.local_day().isoformat()
@@ -1022,10 +1160,10 @@ def outside(body: dict, x_learner: str | None = Header(default=None)) -> dict:
                           "outside", "outside", False, picked, 0, None, None, stamp,
                           trap=trap, attempt=0)
     run = None
-    if key_slug:
+    if key_slug and trap in words.content()["traps"]:
         try:
-            run = create_run({"mode": "quiz", "deck": {"source": "words", "words": slugs},
-                              "formats": ["incontext"], "count": 3}, x_learner)
+            run = create_run({"mode": "quiz", "deck": {"source": "trap", "value": trap},
+                              "formats": ["incontext"], "count": 3}, x_learner, 0)
         except HTTPException:
             pass
     return {"trap": trap, "list": name, "run": run}
@@ -1254,7 +1392,7 @@ def word_detail(slug: str, x_learner: str | None = Header(default=None),
               and v["slug"] != slug]
     journey = [{"at": r["at"], "kind": r["kind"], "correct": r["correct"],
                 "box_before": r["box_before"], "due_before": r["due_before"],
-                "trap": r["trap"]} for r in reviews]
+                "given": r["given"], "trap": r["trap"]} for r in reviews]
     return {**w, "state": s, "measured": words._measured(slug) if slug in data["entries"] else None,
             "other_senses": others, "confusions": conflicts, "roots": roots, "shades": shades,
             "journey": journey, "record": {"reviews": {"n": len(reviews),
