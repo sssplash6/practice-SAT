@@ -46,3 +46,23 @@ def check(c) -> None:
     assert s["words"] == {"due": 12} and s["new"]["achievements"] == [{"id": "x"}], "a part merges in"
     assert s["plan"]["per_session"] == 28 and logged.called, "a failing part is logged and the rest stands"
     print("ok  /api/shell: every key, one streak, resume, retired codes, and parts merged (a broken one skipped)")
+
+    # F6's reports.shell() lands as report_replies and `report`, never over newest_report
+    def reports(module, name):
+        if module == "reports" and name == "shell":
+            return lambda learner: {"newest_report": {"id": 7, "unread": True}, "report_replies": 1}
+        return None
+    with patch.object(api_shell, "part", reports):
+        s2 = c.get("/api/shell", headers=H).json()
+    assert s2["report_replies"] == 1 and s2["report"] == {"id": 7, "unread": True}
+    assert s2["newest_report"] == s["newest_report"], "the newest sitting stays Results' New dot"
+    assert all(isinstance(v, bool) for v in s["has"].values()) and {"next", "pair", "match", "question"} <= set(s["has"])
+
+    # the palette's index: every type once, reasons as [norm, label?], gzipped when asked
+    r = c.get("/api/shell/catalog", headers={"Accept-Encoding": "gzip"})
+    cat = r.json()
+    assert r.status_code == 200 and set(cat) == {"types", "cb"}
+    if api_shell.part("api_bank", "types"):           # F5's catalogue is on this branch
+        tpl = [t[0] for t in cat["types"]]
+        assert len(tpl) == len(set(tpl)) > 300 and all(len(t) == 5 and all(1 <= len(x) <= 2 for x in t[3]) for t in cat["types"])
+    print("ok  /api/shell: F6's report hook, has, and the slim type catalogue")

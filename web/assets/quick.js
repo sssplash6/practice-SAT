@@ -99,6 +99,7 @@
     const acts = h('div', { style: 'display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px', hidden: true });
     el.append(top, boxes, body, acts);
     const another = btn('Another', { cls: 'pill', kbd: 'Enter', onClick: () => next() });
+    const checkSlot = h('span', { style: 'display: contents' });     // a grid-in's Check, in the bottom bar (U26)
     const practise = btn('Practise', { cls: 'quiet', onClick: e => busy(e.currentTarget, async () => {
       if (!q) return;
       await finish();
@@ -111,7 +112,7 @@
     const paintTally = () => { tally.textContent = answered ? `${plural(answered, 'answered', 'answered')} · ${fmt(right)} right` : ''; };
     function loadingState() {
       body.replaceChildren(UI.skel ? UI.skel(null, 'lines:3') : h('p', { class: 'help', text: 'Loading…' }));
-      acts.hidden = true; another.hidden = true;
+      acts.hidden = true; another.hidden = true; checkSlot.replaceChildren();
     }
     function failed(e) {
       body.replaceChildren(h('p', { text: e && e.offline ? 'Can’t reach SAT Freshman.' : 'Couldn’t get a question.' }),
@@ -159,6 +160,8 @@
       } else {
         ctrl = UI.question(body, q, { onAnswer: given => { send(given).then(f => { if (f) reveal(f); }); } });
         const line = body.querySelector('.q-skill');           // the header above says it
+        const check = body.querySelector('.grid-in > .pill');
+        if (check) checkSlot.append(check);
         if (line) line.remove();
       }
       if (ctrl && ctrl.focus) ctrl.focus();
@@ -208,6 +211,7 @@
       if (f.opened && f.opened.length) kids.push(h('span', { class: 'help', style: 'align-self: center; margin: 0', text: 'Added to your mistakes. Another brings the same trap with new numbers.' }));
       acts.replaceChildren(...kids);
       acts.hidden = false;
+      checkSlot.replaceChildren();
       another.hidden = false;
       if (!doc.activeElement || doc.activeElement === doc.body || !sheet.el.contains(doc.activeElement)) another.focus({ preventScroll: true });
     }
@@ -229,7 +233,7 @@
       keys[L] = { does: 'Choose', run };
       keys[String(i + 1)] = { does: 'Choose', run, hidden: true };
     });
-    return { el, foot: [practise, another], keys, start: () => { if (!sid) start(); },
+    return { el, foot: [practise, checkSlot, another], keys, start: () => { if (!sid) start(); },
       get answered() { return answered; }, get right() { return right; }, finish, get topic() { return q && q.topic; } };
   }
 
