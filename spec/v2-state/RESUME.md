@@ -8,11 +8,11 @@ build.js implements it (blocker vs followup severity; pass = no blockers).
 
 - Merged into master: `v2/bank` (bank flaws), `v2/f4` (data layer; its leftovers in `followups/F4.json`), and the F4 swap
   middleware in app.py (7eafbe9). Dev DB backed up as `server/satfreshman.db.bak-20260924-1020` before the F4 merge.
-- **F1**: check r1 found 17 defects; fix r1 running in run `wf_d6bde851-f95` (task wlzjrhc30). Under the new policy F1 merges
-  after this fix: a background waiter (b5l21n742) reports when it ends; then stop that run before it starts check r2, run
-  test_flow and the page-load check, save the leftovers to `followups/F1.json`, and merge `v2/f1`.
-- **Then wave 1b**: F2 and F3 and F6 through build.js (add their TASKS entries from Part 4.2 and §2.12). F5 is the user's
-  other agent's (branch `v2/f5`, now to be rebased on master).
+- **F1 merged** (ffda717; leftovers in `followups/F1.json`). test_flow's R45 counting now also lets unnamed traps close
+  on any clean answer (a00ea8c); 8/8 runs all good.
+- **Wave 1b running**: build.js run `wf_cafefb42-928` (task wy8hd4xcp), `[{id:'F2'},{id:'F3'},{id:'F6'}]`, 4 units each,
+  then one check and one fix. Restart: `{id, unit:<first unbuilt>}` or `{id, from:'verify'}` per `git log master..v2/<id>`.
+  When each is ready: save leftovers to `followups/<id>.json`, run test_flow, merge.
 - **Words**: words2.js run `wf_609b5aa4-27c` (task wf5hy4nl6): frames 2-4 done, frames1 finishing, then fold and check.
 - Checkpoint loop running (task b2bucxp7g).
 - **F5 drill engine: the user's other agent** (worktree `.claude/worktrees/f5`, branch `v2/f5`). Do not build it. When the user

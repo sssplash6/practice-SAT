@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-24T10:29:45+05:00
+# v2 build state -- 2026-09-24T10:34:47+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -7,7 +7,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 - `v2/bank` at e9c6f3c, 0 commits ahead of master
 - `v2/f0` at dc9873f, 0 commits ahead of master
-- `v2/f1` at b417976, 30 commits ahead of master
+- `v2/f1` at b417976, 0 commits ahead of master
 - `v2/f4` at 2d419ba, 0 commits ahead of master
 - `v2/f5` at 5d84ccb, 3 commits ahead of master
 - `v2/t-bank` at 9403838, 0 commits ahead of master
@@ -41,7 +41,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/t-bank-sample_statistics_and_margin_of_error` at 9403838, 0 commits ahead of master
 - `v2/t-bank-systems_of_linear_equations` at 90dd059, 0 commits ahead of master
 - `v2/t-bank-two_variable_data` at 4469303, 0 commits ahead of master
-- `v2/words-content` at bae5179, 92 commits ahead of master
+- `v2/words-content` at e1e9aa4, 93 commits ahead of master
 
 ## Worktrees
 
@@ -51,10 +51,13 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_7aaa2f6c-3ad-1` on `detached d9b35e7`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_7aaa2f6c-3ad-2` on `detached 566eabc`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_7aaa2f6c-3ad-3` on `detached 566eabc`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-1` on `worktree-wf_cafefb42-928-1`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-2` on `worktree-wf_cafefb42-928-2`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-1` on `detached 9ba1209`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-10` on `detached d47d851`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-11` on `detached d47d851`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-12` on `v2/f1`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-12` on `detached b417976`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-13` on `detached b417976`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-2` on `detached c6c60ad`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-3` on `detached eef858a`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-4` on `detached eef858a`: 0 uncommitted
@@ -63,15 +66,15 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-7` on `detached e9c6f3c`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-8` on `detached d9b35e7`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-9` on `detached e837e82`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/words` on `v2/words-content`: 1 uncommitted (saved in wip/words/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/words` on `v2/words-content`: 0 uncommitted
 
 ## Workflow runs
 
 ### wf_31f62ba7-6ae: 1 finished, 6 unfinished
 Unfinished when saved: author: adv1, author: adv2, author: adv3, author: roots, author: second, author: transitions
 
-### wf_609b5aa4-27c: 5 finished, 1 unfinished
-Unfinished when saved: author: frames1
+### wf_609b5aa4-27c: 6 finished, 1 unfinished
+Unfinished when saved: fold parts into final files
 
 ### wf_74c862ea-8a4: 2 finished, 0 unfinished
 
@@ -93,8 +96,11 @@ Unfinished when saved: fix: area_and_volume, fix: linear_equations_in_one_variab
 
 ### wf_c70c4702-929: 49 finished, 0 unfinished
 
-### wf_d6bde851-f95: 11 finished, 1 unfinished
-Unfinished when saved: fix F1 r1
+### wf_cafefb42-928: 0 finished, 2 unfinished
+Unfinished when saved: build F2 1/4, build F3 1/4
+
+### wf_d6bde851-f95: 12 finished, 1 unfinished
+Unfinished when saved: verify F1 r2
 
 ### wf_d6beb6e4-66c: 3 finished, 1 unfinished
 Unfinished when saved: build F1 4/5
