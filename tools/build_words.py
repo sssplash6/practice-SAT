@@ -62,23 +62,6 @@ def rows(value: list | dict, key: str = "entries") -> list:
     return value if isinstance(value, list) else value.get(key, [])
 
 
-def load_parts(data: dict[str, list | dict], errors: list[str]) -> None:
-    """Parallel authors write parts/{sat,classes,frames}_*.json; they join the main lists."""
-    for name in ("sat", "classes", "frames"):
-        merged = list(rows(data[name]))
-        for path in sorted((CONTENT / "parts").glob(f"{name}_*.json")):
-            try:
-                value = json.loads(path.read_text(encoding="utf-8"))
-            except (ValueError, OSError) as exc:
-                errors.append(f"{path.relative_to(ROOT)}: {exc}")
-                continue
-            if not isinstance(value, (list, dict)):
-                errors.append(f"{path.relative_to(ROOT)}: expected a JSON array or object")
-                continue
-            merged += rows(value)
-        data[name] = merged
-
-
 def require(condition: bool, message: str, errors: list[str]) -> None:
     if not condition:
         errors.append(message)
@@ -323,7 +306,7 @@ def trap_options(frame: dict, key: dict, by_pos: dict[str, list[dict]], opposite
 
 def check_frames(data: dict[str, list | dict], pools: set[str], phase: int,
                  errors: list[str], warnings: list[str]) -> None:
-    """W1 frames: frames.json plus parts/frames_*.json.
+    """W1 frames (frames.json).
 
     A frame is {id, stem: complete | nearly, subject, text, need: {class, polarity, lo, hi, pos,
     pattern}, needs, difficulty, reviewed: null | {by, date}, source?}. The text has exactly one
@@ -431,7 +414,6 @@ def main() -> int:
     errors: list[str] = []
     warnings: list[str] = []
     data = {name: load(name, errors) for name in FILES}
-    load_parts(data, errors)
     check_reference_data(data, errors)
     check_words(data, errors)
     counts = check_later(data, PHASE, errors, warnings)
