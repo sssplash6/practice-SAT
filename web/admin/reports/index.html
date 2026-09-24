@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Reports admin · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* Shell §10, U3, V6, W18, U2: the reports inbox behind SATF_ADMIN_TOKEN. The token is
+     asked once and kept in sessionStorage; every call sends it as X-Admin. */
+  .ad { display: grid; grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .ad-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 20px; }
+  .ad-head h1 { font: 800 30px/1.1 var(--font); letter-spacing: -.02em; margin: 0; }
+  .ad-head .meta { font-size: 12.5px; }
+  .ad-head .grow { flex: 1 1 auto; }
+  .ad .stats { --cols: 5; --cols-phone: 2; }
+  .ad-gate { max-width: 420px; display: grid; gap: 12px; }
+  .ad-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  .ad-row .field { flex: 1 1 200px; min-width: 0; }
+  .ad-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  .ad-filters select.field, .ad-filters input.field { width: auto; min-width: 170px; flex: 0 1 220px; height: var(--ctl); font-size: 14.5px; }
+  .ad-flag { display: grid; gap: 8px; }
+  .ad-sum { font: 500 14.5px/1.35 var(--font); color: var(--ink); }
+  .ad-sub { display: block; margin-top: 2px; font: 500 12px var(--mono); color: var(--soft); }
+  .ad-more { justify-self: start; }
+  .ad-msg { font: 400 14.5px/1.5 var(--font); color: var(--ink); }
+  .ad-cols { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .ad-sec { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; min-width: 0; }
+  .ad-scroll { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+  .ad-fold > summary { cursor: pointer; padding: 6px 0; }
+  .ad-fold[open] > summary { margin-bottom: 6px; }
+  .ad-sec > .k { margin: 0; }
+  .ad-text { white-space: pre-wrap; font: 400 15px/1.55 var(--font); color: var(--ink); overflow-wrap: anywhere; }
+  .ad-dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 3px 14px; margin: 0;
+    font: 400 12.5px/1.5 var(--mono); overflow-wrap: anywhere; }
+  .ad-dl dt { color: var(--soft); }
+  .ad-dl dd { margin: 0; min-width: 0; }
+  .ad-dl ol { margin: 0; padding-left: 18px; }
+  .ad-files { display: flex; flex-wrap: wrap; gap: 10px; }
+  .ad-files figure { margin: 0; display: grid; gap: 4px; max-width: 100%; }
+  .ad-files img, .ad-files video { display: block; max-width: min(100%, 360px); max-height: 260px; border-radius: var(--radius); background: var(--tile); }
+  .ad-files figcaption { font: 500 12px var(--mono); color: var(--soft); }
+  .aq { display: grid; gap: 12px; padding: 16px 18px; border-radius: var(--radius-card); background: var(--tile); }
+  .aq-stem { font: 400 17px/1.55 var(--serif); color: var(--ink); white-space: pre-wrap; }
+  .aq-fig { color: var(--ink); overflow-x: auto; }
+  .aq-fig svg { max-width: 100%; height: auto; }
+  .aq table { border-collapse: collapse; font: 400 14px/1.4 var(--font); }
+  .aq td, .aq th { border: 1px solid var(--line); padding: 4px 10px; }
+  .aq-opts { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .aq-opts li { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 2px 10px; padding: 8px 10px; border-radius: var(--radius); background: var(--paper); }
+  .aq-opts li[data-key] { box-shadow: inset 0 0 0 1.5px var(--amber); background: var(--wash); }
+  .aq-opts b { font: 600 14px var(--mono); }
+  .aq-opts .t { font: 400 15.5px/1.45 var(--serif); }
+  .aq-opts .r { grid-column: 2; font: 400 13px/1.4 var(--font); color: var(--soft); }
+  .aq-opts li[data-key] .r { color: var(--ink); font-weight: 600; }
+  .aq-why { font: 400 15px/1.55 var(--serif); color: var(--ink); }
+  .ad-act { display: grid; gap: 14px; padding: 16px 18px; border-radius: var(--radius-card); box-shadow: inset 0 0 0 1px var(--line); }
+  .ad-kids { display: grid; gap: 8px; }
+  .ad-kid { padding: 10px 12px; border-radius: var(--radius); background: var(--tile); font: 400 14px/1.45 var(--font); }
+  .ad-check { padding: 12px 14px; border-radius: var(--radius); background: var(--wash); display: grid; gap: 6px; font: 400 14.5px/1.5 var(--font); }
+  .ad-check ul { margin: 0; padding-left: 18px; font: 400 12.5px/1.5 var(--mono); }
+  @media (min-width: 980px) { .ad-cols { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; } }
+  @media (max-width: 759px) { .ad-head h1 { font-size: 24px; } .ad-filters select.field, .ad-filters input.field { flex: 1 1 100%; } }
+</style>
+</head>
+<body data-page="admin">
+<main class="page">
+  <div class="ad" id="root"></div>
+</main>
+
+<script src="/assets/kit.js"></script>
+<script>
+(() => {
+  'use strict';
+  const root = document.getElementById('root');
+  const KEY = 'satf.admin';
+  const tok = {
+    get() { try { return sessionStorage.getItem(KEY) || ''; } catch (_) { return ''; } },
+    set(v) { try { if (v) sessionStorage.setItem(KEY, v); else sessionStorage.removeItem(KEY); } catch (_) {} },
+  };
+  function h(tag, attrs = {}, ...kids) {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs || {})) {
+      if (v === null || v === undefined || v === false) continue;
+      if (k === 'class') e.className = v;
+      else if (k === 'text') e.textContent = v;
+      else if (k.startsWith('on') && typeof v === 'function') e.addEventListener(k.slice(2), v);
+      else e.setAttribute(k, v === true ? '' : v);
+    }
+    for (const k of kids.flat(3)) if (k !== null && k !== undefined && k !== false) e.append(k instanceof Node ? k : String(k));
+    return e;
+  }
+  const btn = (label, onclick, cls = 'btn sm') => h('button', { type: 'button', class: cls, onclick }, label);
+  const badge = (text, cls = '') => h('span', { class: `badge ${cls}`.trim(), text });
+  const pct = x => (x === null || x === undefined ? '—' : `${Math.round(100 * x)}%`);
+  const bytes = n => (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`);
+  const fmtDay = d => (d ? UI.date(d) : '—');
+  const n = (k, word) => `${UI.num(k)} ${word}${k === 1 ? '' : 's'}`;
+
+  class Off extends Error {}
+  async function A(path, o = {}) {
+    const r = await fetch('/api/admin' + path, { method: o.method || 'GET',
+      headers: { 'X-Admin': tok.get(), 'content-type': 'application/json' },
+      body: o.body === undefined ? undefined : JSON.stringify(o.body) });
+    if (r.status === 404 && /^\/reports(\?|$)/.test(path)) throw new Off('off');
+    if (r.status === 403) { tok.set(''); gate('That token isn’t right.'); throw new Error('wrong admin token'); }
+    let data = null;
+    try { data = await r.json(); } catch (_) {}
+    if (!r.ok) {
+      const d = data && data.detail;
+      throw Object.assign(new Error(typeof d === 'string' ? d : d ? JSON.stringify(d) : `HTTP ${r.status}`), { status: r.status });
+    }
+    return data;
+  }
+  const errBox = (host, e, retry) => UI.cardError ? UI.cardError(host, retry, e.message) : host.replaceChildren(h('p', { class: 'field-err', text: e.message }));
+
+  /* ------------------------------------------------------------ the token, asked once */
+  function gate(msg) {
+    const f = h('input', { class: 'field', type: 'password', autocomplete: 'current-password', 'aria-label': 'Admin token', placeholder: 'SATF_ADMIN_TOKEN' });
+    const err = h('p', { class: 'field-err', role: 'alert', hidden: !msg, text: msg || '' });
+    const go = () => { if (!f.value.trim()) return; tok.set(f.value.trim()); start(); };
+    f.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+    root.replaceChildren(h('div', { class: 'ad-head' }, h('h1', { text: 'Reports' })),
+      h('div', { class: 'ad-gate' }, h('label', { class: 'label', text: 'Admin token' }), h('div', { class: 'ad-row' }, f, btn('Open', go, 'pill sm')), err,
+        h('p', { class: 'help', text: 'Kept for this tab only. It is the value of SATF_ADMIN_TOKEN on the server.' })));
+    f.focus();
+  }
+
+  /* ------------------------------------------------------------ the page */
+  let meta = null;           // the last list response: labels, statuses, counts, mail
+  let tabsApi = null;
+  let listState = { status: '', category: '', kind: '', template: '' };
+  const panels = {};
+
+  async function start() {
+    if (!tok.get()) return gate();
+    root.replaceChildren(h('div', { class: 'ad-head' }, h('h1', { text: 'Reports' })), h('div', {}, UI.skel(null, 'table:6')));
+    try { meta = await A('/reports?limit=1'); }
+    catch (e) {
+      if (e instanceof Off) {
+        root.replaceChildren(h('div', { class: 'ad-head' }, h('h1', { text: 'Reports' })),
+          h('p', { class: 'ad-msg', text: 'Reports admin is off on this server. Set SATF_ADMIN_TOKEN and restart it.' }));
+        return;
+      }
+      if (e.message !== 'wrong admin token') errBox(root, e, start);
+      return;
+    }
+    const head = h('div', { class: 'ad-head' },
+      h('div', { class: 'grow' }, h('h1', { text: 'Reports' }),
+        h('p', { class: 'meta', text: `Mail: ${meta.mail || 'outbox'} · new-report notices ${meta.reports_to ? 'on (SATF_REPORTS_TO)' : 'off: SATF_REPORTS_TO is unset'}` })),
+      btn('Forget the token', () => { tok.set(''); gate(); }, 'quiet'));
+    const counts = meta.counts || {};
+    const stats = h('div', { class: 'stats' }, ...Object.entries(meta.statuses).map(([k, label]) =>
+      h('button', { type: 'button', class: 'stat', onclick: () => { listState.status = k; tabsApi.set('reports'); if (reportsView.seg) reportsView.seg.set(k, true); loadList(); } },
+        h('span', { class: 'stat-k', text: label }), h('span', { class: 'stat-v', text: UI.num(counts[k] || 0) }))),
+      h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: 'All' }),
+        h('span', { class: 'stat-v', text: UI.num(Object.values(counts).reduce((a, b) => a + b, 0)) })));
+    const tabHost = h('div');
+    for (const id of ['reports', 'labels', 'stopped', 'words', 'cb', 'lookup']) panels[id] = h('div', { id: `p-${id}`, class: 'ad', role: 'tabpanel' });
+    root.replaceChildren(head, stats, tabHost, ...Object.values(panels));
+    tabsApi = UI.tabs(tabHost, [
+      { id: 'reports', label: 'Reports', panel: panels.reports },
+      { id: 'labels', label: 'Mistake labels', panel: panels.labels },
+      { id: 'stopped', label: 'Stopped serving', panel: panels.stopped },
+      { id: 'words', label: 'Word distractors', panel: panels.words },
+      { id: 'cb', label: 'Unknown College Board IDs', panel: panels.cb },
+      { id: 'lookup', label: 'Question lookup', panel: panels.lookup },
+    ], { param: 'view', label: 'Admin views', onChange: v => show(v) });
+    show(tabsApi.value);
+    const m = location.hash.match(/r=(\d+)/);
+    if (m) detail(+m[1]);
+  }
+  // a pasted #r=123 link opens that report
+  addEventListener('hashchange', () => {
+    const m = location.hash.match(/r=(\d+)/);
+    if (m && meta && !UI.sheet.top()) detail(+m[1]);
+  });
+  const shown = new Set();
+  function show(v) {
+    if (shown.has(v)) return;
+    shown.add(v);
+    ({ reports: reportsView, labels: labelsView, stopped: stoppedView, words: wordsView, cb: cbView, lookup: lookupView })[v]();
+  }
+
+  /* ------------------------------------------------------------ reports: flagged, then the list */
+  let table = null, rows = [], next = null;
+  const flagHost = h('div', { class: 'ad-flag' });
+  const listHost = h('div');
+  const moreBtn = btn('Load older', () => loadList(true), 'btn sm ad-more');
+  function reportsView() {
+    const P = panels.reports;
+    const cat = h('select', { class: 'field', 'aria-label': 'Category' }, h('option', { value: '', text: 'Every category' }),
+      Object.entries(meta.labels).map(([k, v]) => h('option', { value: k, text: v })));
+    const kind = h('select', { class: 'field', 'aria-label': 'Kind' }, h('option', { value: '', text: 'Every kind' }),
+      ['question', 'word', 'sitting', 'paper', 'catalog', 'page'].map(k => h('option', { value: k, text: k[0].toUpperCase() + k.slice(1) })));
+    const tpl = h('input', { class: 'field', type: 'search', placeholder: 'Template, e.g. circle.convert', 'aria-label': 'Template', spellcheck: 'false' });
+    const statusHost = h('div', { class: 'ad-scroll' });
+    const seg = UI.seg(statusHost, [{ value: '', label: 'All' }, ...Object.entries(meta.statuses).map(([value, label]) => ({ value, label }))],
+      { value: listState.status, label: 'Status', onChange: v => { listState.status = v; loadList(); } });
+    let t = 0;
+    cat.addEventListener('change', () => { listState.category = cat.value; loadList(); });
+    kind.addEventListener('change', () => { listState.kind = kind.value; loadList(); });
+    tpl.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { listState.template = tpl.value.trim(); loadList(); }, 300); });
+    reportsView.seg = seg;
+    P.replaceChildren(flagHost, h('div', { class: 'ad-sec' }, h('p', { class: 'k', text: 'Every report, newest first' }),
+      h('div', { class: 'ad-filters' }, statusHost, cat, kind, tpl,
+        btn('Clear', () => { Object.assign(listState, { status: '', category: '', kind: '', template: '' }); seg.set('', true); cat.value = kind.value = tpl.value = ''; loadList(); }, 'quiet')),
+      listHost, moreBtn));
+    loadList();
+  }
+  const COLS = [
+    { key: 'id', label: '#', num: true, render: r => `#${r.id}` },
+    { key: 'category_label', label: 'Category', render: r => h('span', {}, r.category_label,
+      r.dispute ? h('span', {}, ' ', badge('Dispute', 'ink')) : r.disputed ? h('span', {}, ' ', badge('Not counted', 'soft')) : null) },
+    { key: 'summary', label: 'Summary', render: r => h('span', { class: 'ad-sum' }, r.summary || '—',
+      r.children ? h('span', {}, ' ', badge(`+${r.children} me too`)) : null, r.files ? h('span', {}, ' ', badge(`${r.files} file${r.files > 1 ? 's' : ''}`, 'soft')) : null) },
+    { key: 'context_chip', label: 'About', render: r => h('span', {}, r.context_chip,
+      r.template ? h('span', { class: 'ad-sub', text: `${r.template} · ${r.seed}` }) : h('span', { class: 'ad-sub', text: r.kind })) },
+    { key: 'check', label: 'Check', render: r => r.pending ? 'held till the end' : r.awaiting ? `${r.check} · student deciding` : r.signal || r.check || '—' },
+    { key: 'status', label: 'Status', render: r => meta.statuses[r.status] || r.status },
+    { key: 'at', label: 'Age', num: true, render: r => UI.relTime(r.at) },
+  ];
+  async function loadList(more) {
+    const q = new URLSearchParams(Object.entries(listState).filter(([, v]) => v));
+    q.set('limit', '50');
+    if (more && next) q.set('before', next);
+    if (!more) listHost.replaceChildren(UI.skel(null, 'table:6'));
+    let got;
+    try { got = await A('/reports?' + q); }
+    catch (e) { if (!(e instanceof Off)) errBox(listHost, e, () => loadList(more)); return; }
+    meta = { ...meta, ...got };
+    next = got.next;
+    rows = more ? rows.concat(got.items) : got.items;
+    moreBtn.hidden = !next;
+    drawFlagged(got.flagged || []);
+    if (!more || !table) {
+      listHost.replaceChildren();
+      table = UI.table(listHost, COLS, rows, { label: 'Reports', compact: true, onRow: r => detail(r.id),
+        empty: Object.values(listState).some(Boolean) ? 'No report matches these filters.' : 'No reports yet.' });
+    } else table.update(rows);
+  }
+  function drawFlagged(list) {
+    flagHost.replaceChildren();
+    if (!list.length) return;
+    const why = r => r.check === 'broken' ? badge('Broken', 'ink') : r.why === 'signal' ? badge('Strong-student signal', 'ink')
+      : r.dispute ? badge('Dispute') : r.check === 'unsure' ? badge('Unsure') : badge('Sent to a person');
+    flagHost.append(h('p', { class: 'k', text: `Waiting for a person · ${list.length}` }));
+    UI.table(flagHost, [
+      { key: 'rank', label: 'Why', render: r => h('span', {}, why(r), r.signal ? h('span', { class: 'ad-sub', text: r.signal }) : null) },
+      ...COLS.filter(c => ['id', 'category_label', 'summary', 'context_chip', 'at'].includes(c.key)),
+    ], list, { label: 'Waiting for a person', compact: true, onRow: r => detail(r.id) });
+  }
+
+  /* ------------------------------------------------------------ the question, regenerated */
+  function qView(q) {
+    if (!q) return null;
+    if (q.error) return h('p', { class: 'field-err', text: `Can’t regenerate it: ${typeof q.error === 'string' ? q.error : JSON.stringify(q.error)}` });
+    const el = h('div', { class: 'aq' });
+    el.append(h('p', { class: 'meta', text: [q.template, `seed ${q.seed}`, q.skill, q.difficulty, q.fmt === 'mcq' ? 'multiple choice' : 'grid-in', q.source_id && `from ${q.source_id}`].filter(Boolean).join(' · ') }));
+    if (q.quarantined) el.append(h('p', {}, badge('Stopped serving', 'ink')));
+    el.append(h('p', { class: 'aq-stem', text: q.stem }));
+    if (q.figure) { const f = h('div', { class: 'aq-fig' }); f.innerHTML = q.figure; el.append(f); }   // the bank's own SVG
+    if (q.table && q.table.length) {
+      el.append(h('table', {}, h('thead', {}, h('tr', {}, q.table[0].map(c => h('th', { text: c })))),
+        h('tbody', {}, q.table.slice(1).map(r => h('tr', {}, r.map(c => h('td', { text: c })))))));
+    }
+    if (q.fmt === 'mcq') {
+      el.append(h('ol', { class: 'aq-opts' }, q.choices.map((c, i) => {
+        const L = 'ABCD'[i], key = L === q.answer;
+        return h('li', { 'data-key': key ? '' : null }, h('b', { text: L }), h('span', { class: 't', text: c }),
+          h('span', { class: 'r', text: key ? 'Key' : q.reasons[i] || 'no named mistake' }));
+      })));
+    } else {
+      el.append(h('p', { class: 'ad-msg' }, h('b', { text: 'Key: ' }), q.answer, q.key && q.key !== q.answer ? ` (exact ${q.key})` : ''));
+      if (q.spr_mistakes && q.spr_mistakes.length) {
+        el.append(h('ol', { class: 'aq-opts' }, q.spr_mistakes.map(([reason, value]) => h('li', {}, h('b', { text: '✕' }), h('span', { class: 't', text: value }), h('span', { class: 'r', text: reason })))));
+      }
+    }
+    el.append(h('p', { class: 'k', text: 'Rationale' }), h('p', { class: 'aq-why', text: q.rationale }));
+    el.append(h('p', { class: 'meta', text: `Audit: ${q.audit}${q.problems && q.problems.length ? ` · checks: ${q.problems.join('; ')}` : ' · checks: none failed'}` }));
+    return el;
+  }
+  function dl(obj, order) {
+    const d = h('dl', { class: 'ad-dl' });
+    for (const k of order || Object.keys(obj)) {
+      const v = obj[k];
+      if (v === null || v === undefined || v === '' || (Array.isArray(v) && !v.length)) continue;
+      const shown = Array.isArray(v) && v.length && typeof v[0] === 'object'
+        ? h('ol', {}, v.map(x => h('li', { text: Object.values(x).filter(y => y !== null && y !== undefined).join(' · ') })))
+        : typeof v === 'object' ? JSON.stringify(v) : String(v);
+      d.append(h('dt', { text: k }), h('dd', {}, shown));
+    }
+    return d;
+  }
+  async function fileEl(f) {
+    const cap = h('figcaption', { text: `${f.name} · ${bytes(f.size)}` });
+    try {
+      const r = await fetch(f.url, { headers: { 'X-Admin': tok.get() } });
+      if (!r.ok) throw new Error(r.status);
+      const url = URL.createObjectURL(await r.blob());
+      const media = f.type.startsWith('video/') ? h('video', { src: url, controls: true, preload: 'metadata' }) : h('img', { src: url, alt: f.name });
+      return h('figure', {}, h('a', { href: url, target: '_blank', rel: 'noopener' }, media), cap);
+    } catch (_) { return h('figure', {}, h('p', { class: 'field-err', text: 'Couldn’t load this file.' }), cap); }
+  }
+
+  /* ------------------------------------------------------------ one report */
+  async function detail(id) {
+    history.replaceState(history.state, '', `${location.pathname}${location.search}#r=${id}`);
+    const s = UI.sheet({ title: `Report #${id}`, size: 'l', body: b => b.append(UI.skel(null, 'lines:6')),
+      onClose: () => history.replaceState(history.state, '', location.pathname + location.search) });
+    let r;
+    try { r = await A(`/reports/${id}`); }
+    catch (e) { s.body.replaceChildren(); errBox(s.body, e, () => { s.close(); detail(id); }); return; }
+    s.setTitle(`#${r.id} · ${r.category_label}`);
+    const left = h('div', { class: 'ad-sec' });
+    const right = h('div', { class: 'ad-sec' });
+    left.append(h('p', { class: 'meta', text: [meta.statuses[r.status] || r.status, UI.date(r.at, 'long'), `${r.kind} from ${r.source}`,
+      `learner …${r.learner}`, r.parent ? `joined to #${r.parent}` : null].filter(Boolean).join(' · ') }));
+    left.append(h('p', { class: 'ad-sum', text: r.title || '—' }));
+    if (r.details) left.append(h('p', { class: 'ad-text', text: r.details }));
+    if (r.answer || r.given) left.append(h('p', { class: 'meta', text: [r.answer && `They get: ${r.answer}`, r.given && `They answered: ${r.given}`].filter(Boolean).join(' · ') }));
+    if (r.email) left.append(h('p', { class: 'meta' }, 'Reply to: ', h('a', { class: 'link', href: `mailto:${r.email}`, text: r.email })));
+    const chk = r.check || {};
+    if (chk.outcome) {
+      const c = h('div', { class: 'ad-check' }, h('p', { class: 'k', text: `Instant check · ${chk.outcome}${chk.why ? ` (${chk.why})` : ''}` }));
+      if (chk.text) c.append(h('p', { text: chk.text }));
+      if (chk.signal) c.append(h('p', { class: 'meta', text: chk.signal.n
+        ? `strong ${pct(chk.signal.strong)} vs base ${pct(chk.signal.base)} · ${chk.signal.n_strong} strong of ${chk.signal.n} first tries`
+        : 'no other first tries on this template yet' }));
+      if (chk.pick || chk.solver) c.append(h('p', { class: 'meta', text: [chk.pick && `pick ${chk.pick}`, chk.solver && `solver ${chk.solver}`, chk.reason && `reason: ${chk.reason}`].filter(Boolean).join(' · ') }));
+      if (chk.problems && chk.problems.length) c.append(h('ul', {}, chk.problems.map(p => h('li', { text: p }))));
+      left.append(c);
+    } else if (r.context && r.context.pending) left.append(h('p', { class: 'help', text: 'Sent from a live sitting: checked when it ends.' }));
+    if (r.files && r.files.length) {
+      const fs = h('div', { class: 'ad-files' });
+      left.append(h('p', { class: 'k', text: `Files · ${r.files.length}` }), fs);
+      Promise.all(r.files.map(fileEl)).then(els => fs.append(...els));
+    }
+    if (r.children && r.children.length) {
+      left.append(h('p', { class: 'k', text: `Me too · ${r.children.length}` }), h('div', { class: 'ad-kids' }, r.children.map(c =>
+        h('div', { class: 'ad-kid' }, h('span', { class: 'meta', text: `#${c.id} · ${UI.date(c.at)} · learner …${c.learner}${c.answer ? ` · gets ${c.answer}` : ''}` }),
+          h('br'), c.title || '', c.details ? h('span', { class: 'ad-text', text: `\n${c.details}` }) : null))));
+    }
+    if (r.corrections) left.append(h('p', { class: 'meta', text: `${r.corrections} learner${r.corrections > 1 ? 's' : ''} got a correction from this report` }));
+    const fold = (label, body, open) => h('details', { class: 'ad-fold', open }, h('summary', { class: 'k', text: label }), body);
+    left.append(fold('Context', dl(r.context || {}), false));
+    if (r.device && Object.keys(r.device).length) left.append(fold('Device and last actions', dl(r.device), true));
+
+    if (r.question) right.append(h('p', { class: 'k', text: 'The question, regenerated' }), qView(r.question));
+    right.prepend(actions(r, s));
+    s.body.replaceChildren(h('div', { class: 'ad-cols' }, left, right));
+  }
+
+  function actions(r, s) {
+    const box = h('div', { class: 'ad-act' });
+    let status = r.status;
+    const segHost = h('div');
+    UI.seg(segHost, Object.entries(meta.statuses).map(([value, label]) => ({ value, label })), { value: status, label: 'Status',
+      onChange: v => { status = v; note.hidden = v !== 'fixed'; } });
+    const reply = h('textarea', { class: 'field', rows: '4', maxlength: '5000', placeholder: 'Your answer to the student', 'aria-label': 'Reply' });
+    reply.value = r.reply || '';
+    const noteF = h('input', { class: 'field', maxlength: '200', placeholder: 'One line for Help › Fixed, e.g. “Figure relabelled”', 'aria-label': 'Fixed note' });
+    noteF.value = (r.context && r.context.fixed_note) || '';
+    const note = h('div', { class: 'ad-sec', hidden: status !== 'fixed' }, h('label', { class: 'label', text: 'Fixed note' }), noteF);
+    const err = h('p', { class: 'field-err', role: 'alert', hidden: true });
+    const save = async (extra = {}) => {
+      err.hidden = true;
+      const body = { status, reply: reply.value.trim() !== (r.reply || '') ? reply.value : null, ...extra };
+      if (status === 'fixed') body.fixed_note = noteF.value;
+      try {
+        const out = await A(`/reports/${r.id}`, { method: 'PUT', body });
+        const c = out.corrected;
+        UI.toast(c ? `Corrected: ${n(c.attempts, 'attempt')} of ${n(c.learners, 'learner')}, ${n(c.sittings, 'sitting')} re-scored` : `Report #${r.id} saved`);
+        s.close();
+        loadList();
+        detail(r.id);
+      } catch (e) { err.textContent = e.message; err.hidden = false; }
+    };
+    box.append(h('div', { class: 'ad-sec' }, h('p', { class: 'label', text: 'Status' }), segHost),
+      h('div', { class: 'ad-sec' }, h('label', { class: 'label', text: 'Reply' }), reply,
+        h('p', { class: 'help', text: r.email ? `Shows under Settings › Your reports as unread, and is emailed to ${r.email}.` : 'Shows under Settings › Your reports as unread.' })),
+      note, h('div', { class: 'ad-row' }, btn('Save', () => save(), 'pill sm')), err);
+
+    if (r.template) {
+      // the key: right, or wrong for this seed or for every seed since a date (U3's one fix)
+      const since = h('input', { class: 'field', type: 'date', 'aria-label': 'Since', value: new Date(Date.parse(r.at) - 180 * 864e5).toISOString().slice(0, 10) });
+      let scope = 'one';
+      const scopeHost = h('div');
+      UI.seg(scopeHost, [{ value: 'one', label: `Just this question (seed ${r.seed})` }, { value: 'template', label: 'Every seed of this template since' }],
+        { value: scope, label: 'Scope', onChange: v => { scope = v; sinceRow.hidden = v !== 'template'; } });
+      const sinceRow = h('div', { class: 'ad-row', hidden: true }, h('label', { class: 'label', text: 'Since' }), since);
+      const wrong = btn('Key was wrong', async () => {
+        const ok = await UI.confirm({ title: 'Key was wrong', confirm: 'Correct it for everyone', destructive: true,
+          text: scope === 'one' ? `Every learner’s answers to ${r.template} seed ${r.seed} stop counting, the mistakes only they opened close, finished sittings holding it are re-scored, and each learner gets a correction in their inbox.`
+            : `Every learner’s answers to any seed of ${r.template} since ${fmtDay(since.value)} stop counting, the mistakes only they opened close, finished sittings are re-scored, and each learner gets a correction in their inbox.` });
+        if (ok) save({ dispute_outcome: 'key_wrong', scope, since: scope === 'template' ? since.value : null, status: status === 'new' ? 'fixed' : status });
+      });
+      const right = btn('Key was right', () => save({ dispute_outcome: 'key_right', status: status === 'new' ? 'no_change' : status }));
+      box.append(h('div', { class: 'ad-sec' }, h('p', { class: 'label', text: 'The key' }),
+        h('p', { class: 'help', text: r.dispute || (r.context && r.context.disputed && r.context.disputed.length)
+          ? 'This answer doesn’t count while it is open. Key was right counts it again and reopens the mistake it closed.'
+          : 'Key was right keeps everything as it is. Key was wrong corrects every student.' }),
+        h('div', { class: 'ad-scroll' }, scopeHost), sinceRow, h('div', { class: 'ad-row' }, wrong, right)));
+      // stop serving this seed or the whole template, or release it
+      const stopNote = h('input', { class: 'field', maxlength: '300', placeholder: 'Why, for the log', 'aria-label': 'Note' });
+      const stopped = h('div', { class: 'ad-row' });
+      const stop = async seed => {
+        try {
+          await A('/quarantine', { method: 'POST', body: { template: r.template, seed, note: stopNote.value || `report #${r.id}` } });
+          UI.toast(seed === null ? `Stopped serving every seed of ${r.template}` : `Stopped serving ${r.template} seed ${seed}`);
+          drawStopped();
+        } catch (e) { err.textContent = e.message; err.hidden = false; }
+      };
+      const drawStopped = async () => {
+        let list = [];
+        try { list = (await A('/quarantine')).filter(x => x.template === r.template && !x.released); } catch (_) {}
+        stopped.replaceChildren(...list.map(x => h('span', { class: 'ad-row' }, badge(x.whole ? 'Every seed stopped' : `Seed ${x.seed} stopped`, 'ink'),
+          btn('Release', async () => { await A('/quarantine/release', { method: 'POST', body: { template: x.template, seed: x.seed } }); UI.toast('Released'); drawStopped(); }, 'quiet'))));
+      };
+      box.append(h('div', { class: 'ad-sec' }, h('p', { class: 'label', text: 'Stop serving' }),
+        h('p', { class: 'help', text: 'Practice, drills, tests and the daily questions skip it until it is released.' }),
+        stopNote, h('div', { class: 'ad-row' }, btn(`This seed (${r.seed})`, () => stop(r.seed)), btn('Every seed of this template', () => stop(null))), stopped));
+      drawStopped();
+    }
+    return box;
+  }
+
+  /* ------------------------------------------------------------ V6: mistake labels students dispute */
+  function labelsView() {
+    const P = panels.labels;
+    const minL = h('input', { class: 'field', type: 'number', min: '1', value: '20', 'aria-label': 'At least this many learners' });
+    const rate = h('input', { class: 'field', type: 'number', min: '1', max: '100', value: '15', 'aria-label': 'Rate, percent' });
+    const host = h('div');
+    const load = async () => {
+      host.replaceChildren(UI.skel(null, 'table:5'));
+      try {
+        const list = await A(`/labels?min_learners=${+minL.value || 20}&rate=${(+rate.value || 15) / 100}`);
+        host.replaceChildren();
+        UI.table(host, [
+          { key: 'flagged', label: 'Flag', render: x => x.flagged ? badge('Fix the label', 'ink') : '' },
+          { key: 'template', label: 'Template', render: x => h('span', { class: 'mono', text: x.template }) },
+          { key: 'reason', label: 'The label', render: x => x.reason || x.norm },
+          { key: 'learners', label: 'Fell for it', num: true },
+          { key: 'disputed', label: 'Said it’s wrong', num: true },
+          { key: 'rate', label: 'Rate', num: true, render: x => pct(x.rate) },
+          { key: 'look', label: '', sort: false, render: x => btn('See it', () => { tabsApi.set('lookup'); show('lookup'); lookup.t.value = x.template; lookup.s.value = '1'; lookup.go(); }, 'quiet') },
+        ], list, { label: 'Mistake labels', compact: true, sortable: true, empty: 'No label disputes yet: a "The named mistake doesn’t fit" report or a "Not what I did?" correction lands here.' });
+      } catch (e) { errBox(host, e, load); }
+    };
+    P.replaceChildren(h('p', { class: 'help', text: 'Per template and mistake: how many learners fell for it, and how many said the label is wrong (a report, or a "Not what I did?" correction). Flagged at the rate below among at least this many learners.' }),
+      h('div', { class: 'ad-filters' }, h('label', { class: 'label', text: 'Learners at least' }), minL, h('label', { class: 'label', text: 'Rate %' }), rate, btn('Refresh', load)), host);
+    load();
+  }
+
+  /* ------------------------------------------------------------ quarantine */
+  function stoppedView() {
+    const P = panels.stopped;
+    const host = h('div');
+    const t = h('input', { class: 'field', placeholder: 'Template', 'aria-label': 'Template', spellcheck: 'false' });
+    const sd = h('input', { class: 'field', type: 'number', min: '0', placeholder: 'Seed (empty: every seed)', 'aria-label': 'Seed' });
+    const nt = h('input', { class: 'field', maxlength: '300', placeholder: 'Why', 'aria-label': 'Note' });
+    const err = h('p', { class: 'field-err', role: 'alert', hidden: true });
+    const load = async () => {
+      host.replaceChildren(UI.skel(null, 'table:4'));
+      try {
+        const list = await A('/quarantine');
+        host.replaceChildren();
+        UI.table(host, [
+          { key: 'template', label: 'Template', render: x => h('span', { class: 'mono', text: x.template }) },
+          { key: 'seed', label: 'Seed', render: x => x.whole ? 'every seed' : String(x.seed) },
+          { key: 'note', label: 'Note' },
+          { key: 'at', label: 'Stopped', render: x => fmtDay(x.at) },
+          { key: 'released', label: 'Released', render: x => x.released ? fmtDay(x.released)
+            : btn('Release', async () => { await A('/quarantine/release', { method: 'POST', body: { template: x.template, seed: x.seed } }); UI.toast('Released'); load(); }, 'quiet') },
+        ], list, { label: 'Stopped serving', compact: true, empty: 'Nothing is stopped. Broken questions found by a report land here on their own.' });
+      } catch (e) { errBox(host, e, load); }
+    };
+    const stop = async () => {
+      err.hidden = true;
+      try {
+        await A('/quarantine', { method: 'POST', body: { template: t.value.trim(), seed: sd.value === '' ? null : +sd.value, note: nt.value } });
+        t.value = sd.value = nt.value = '';
+        load();
+      } catch (e) { err.textContent = e.message; err.hidden = false; }
+    };
+    P.replaceChildren(h('div', { class: 'ad-filters' }, t, sd, nt, btn('Stop serving', stop, 'pill sm')), err, host);
+    load();
+  }
+
+  /* ------------------------------------------------------------ W18: word distractors the crowd guard pulled */
+  function wordsView() {
+    const P = panels.words;
+    const host = h('div');
+    const load = async () => {
+      host.replaceChildren(UI.skel(null, 'table:4'));
+      try {
+        const list = await A('/words/suppressed');
+        host.replaceChildren();
+        UI.table(host, [
+          { key: 'frame', label: 'Frame', render: x => h('span', { class: 'mono', text: x.frame }) },
+          { key: 'word', label: 'Distractor', render: x => x.word === '*' ? 'the whole frame' : x.word },
+          { key: 'why', label: 'Why' },
+          { key: 'at', label: 'Pulled', render: x => fmtDay(x.at) },
+          { key: 'act', label: '', sort: false, render: x => btn('Unsuppress', async () => {
+            await A('/words/unsuppress', { method: 'POST', body: { frame: x.frame, word: x.word } }); UI.toast('Back in service'); load(); }, 'quiet') },
+        ], list, { label: 'Word distractors', compact: true, empty: 'No distractor has been pulled. Two "Another choice also fits" reports, or a 40% split among strong students, pull one.' });
+      } catch (e) { errBox(host, e, load); }
+    };
+    P.replaceChildren(h('p', { class: 'help', text: 'A pulled frame is not served until a person re-reviews it in the words build.' }), host);
+    load();
+  }
+
+  /* ------------------------------------------------------------ U2: unknown College Board IDs */
+  function cbView() {
+    const P = panels.cb;
+    const host = h('div');
+    const load = async () => {
+      host.replaceChildren(UI.skel(null, 'table:4'));
+      try {
+        const list = await A('/cb_unknown');
+        host.replaceChildren();
+        const keys = list.length ? Object.keys(list[0]) : ['id', 'n', 'last'];
+        UI.table(host, keys.map(k => ({ key: k, label: k, num: typeof (list[0] || {})[k] === 'number' })), list,
+          { label: 'Unknown College Board IDs', compact: true, sortable: true, empty: 'Every College Board ID students brought is known.' });
+      } catch (e) { errBox(host, e, load); }
+    };
+    P.replaceChildren(h('p', { class: 'help', text: 'The top 50 IDs students typed that the bank doesn’t know, for cb-ingest.' }), host);
+    load();
+  }
+
+  /* ------------------------------------------------------------ any question by its address */
+  const lookup = {};
+  function lookupView() {
+    const P = panels.lookup;
+    const t = lookup.t = h('input', { class: 'field', placeholder: 'Template, e.g. circle.convert', 'aria-label': 'Template', spellcheck: 'false' });
+    const sd = lookup.s = h('input', { class: 'field', type: 'number', min: '0', placeholder: 'Seed', 'aria-label': 'Seed' });
+    const host = h('div');
+    const go = lookup.go = async () => {
+      if (!t.value.trim() || sd.value === '') return;
+      host.replaceChildren(UI.skel(null, 'lines:5'));
+      try { host.replaceChildren(qView(await A(`/question?t=${encodeURIComponent(t.value.trim())}&s=${+sd.value}`))); }
+      catch (e) { errBox(host, e, go); }
+    };
+    [t, sd].forEach(f => f.addEventListener('keydown', e => { if (e.key === 'Enter') go(); }));
+    P.replaceChildren(h('div', { class: 'ad-filters' }, t, sd, btn('Show', go, 'pill sm')), host);
+  }
+
+  start();
+})();
+</script>
+</body>
+</html>
