@@ -72,7 +72,8 @@
   const fmtN = n => (UI.num ? UI.num(n) : String(n));
   let seq = 0;
   const uid = p => `r${p}${++seq}`;
-  const typing = el => !!el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
+  // a read-only field (a grid-in once it is checked) takes no typing, so the keys move on from it
+  const typing = el => !!el && (el.isContentEditable || el.tagName === 'SELECT' || (/^(INPUT|TEXTAREA)$/.test(el.tagName) && !el.readOnly && !el.disabled));
 
   /* icons: question.js's set where it has one, these for the rest (24px strokes in currentColor) */
   const L = 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
@@ -2931,7 +2932,7 @@
     nextB.addEventListener('click', () => next());
     missB.addEventListener('click', () => nextMiss());
     twinFoot.addEventListener('click', () => act('twin'));
-    const hint = coarse() ? null : h('p', { class: 'rv-hint meta', text: second ? 'A–D pick · Enter checks · K how sure · H just show me · → skip' : walk ? '1–6 choose · Enter next step · ← → move' : '← → move · N next miss · H hide · T twin · Esc close' });
+    const hint = coarse() ? null : h('p', { class: 'rv-hint meta', text: second ? 'A–D pick · Enter checks · K how sure · H just show me · → skip' : walk ? '1–6 choose · Enter next step · ← → move' : `← → move · ${o.nKey === 'unseen' ? 'N next not seen' : 'N next miss'} · H hide · T twin${asDialog ? ' · Esc close' : ''}` });
     foot.append(h('div', { class: 'rv-fl' }, prevB), h('div', { class: 'rv-fm' }, posEl, missB, twinFoot), h('div', { class: 'rv-fr' }, nextB));
     root.append(live, top, scroll, foot);
     if (hint) scroll.append(hint);
@@ -3256,12 +3257,23 @@
         onReanswer: (a, right) => {
           it._local = true;
           root.classList.remove('rv-hide');
-          call('reanswer', it, a, right);
+          if (on.reanswer) call('reanswer', it, a, right);
+          else if (pane && owner && q.template && q.seed !== undefined) fileRepeat(q, a);
           markSeen(it);
         },
         onNotMine: (on.why || UI.report) && owner ? (anchor) => notMine(anchor, it) : null,
         onSpot: on.spot ? () => call('spot', it) : null,
       });
+    }
+
+    // Review 8: in the pane a re-answer while hidden is filed, as a Repeat, through a 1-question drill (the report's player files nothing)
+    async function fileRepeat(q, a) {
+      try {
+        const d = await UI.api('/drill', { method: 'POST', body: { list: 'items', ids: [[q.template, q.seed]], count: 1, source: 'review' } });
+        const q2 = d.question || (await UI.api(`/drill/${encodeURIComponent(d.id)}`)).question;
+        if (q2) await UI.api(`/drill/${encodeURIComponent(d.id)}/answer`, { method: 'POST', body: { question_id: q2.id, answer: a } });
+        say('Filed as a repeat');
+      } catch (_) { say('Not filed: checked here only'); }
     }
 
     /* the question header: skill, difficulty, time, tags, the status chip, odds, cause, the mistake */
@@ -3965,11 +3977,11 @@
       if (inField && e.key !== 'Enter') return;
       const key = e.key.length === 1 ? e.key.toUpperCase() : e.key;
       const done = () => e.preventDefault();
-      // the question takes its own keys first: picks while hidden, and Second look's and the walk's check
+      // the question takes its own keys first: What happened?'s 1–6, picks while hidden, and Second look's and the walk's check
+      const wh = !inField && col.querySelector('.rv-what');
+      if (wh && /^[1-6]$/.test(e.key)) { if (wh._pick(+e.key - 1)) done(); return; }
       if (walk && !inField) {
         const s = cur ? stepOf(cur) : 0;
-        const wh = col.querySelector('.rv-what');
-        if (s === 2 && wh && /^[1-6]$/.test(e.key)) { if (wh._pick(+e.key - 1)) done(); return; }
         if (s === 1 && ws && ws.key(e)) { done(); return; }
         if (e.key === 'Enter' && !(t && t.closest && t.closest('button, a'))) { done(); walkNext(); return; }
       }

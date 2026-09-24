@@ -380,7 +380,7 @@
       if (path.startsWith('/review/family')) {
         const p = new URLSearchParams(path.split('?')[1]);
         const rows = Array.from({ length: p.get('cursor') ? 3 : 8 }, (_, i) => ({ id: 900 - i, at: `2026-09-${String(24 - i).padStart(2, '0')}T1${i}:05:00`, source: i % 2 ? 'practice' : 'section', sitting: i % 2 ? 'Practice set #45' : 'Section #7', href: '#',
-          tier: ['easy', 'medium', 'hard'][i % 3], result: ['wrong', 'right', 'repaired', 'mixed', 'right', 'repeat', 'wrong', 'right'][i % 8], given_label: 'C', mistake: i % 4 === 0 ? 'gave the diameter instead' : '', norm: i % 4 === 0 ? 'n1' : 'n2',
+          tier: ['easy', 'medium', 'hard'][i % 3], result: ['wrong', 'right', 'repaired', 'mixed', 'right', 'repeat', 'wrong', 'right'][i % 8], given_label: 'C', mistake: i % 4 === 0 && i % 8 !== 4 ? 'gave the diameter instead' : '', norm: i % 4 === 0 ? 'n1' : 'n2',
           ms: 40000 + i * 9000, flagged: i === 2, seed: i === 1 ? 1 : 10 + i, template: 'circle.convert', openable: true,
           tries: i === 3 ? [{ given_label: 'C', correct: false, ms: 22000, reason: 'gave the diameter instead' }, { given_label: 'B', correct: true, ms: 41000 }] : null }))
           .filter(r => !p.get('norm') || r.norm === p.get('norm'));
@@ -404,6 +404,7 @@
       closed: (it, f) => log('closed trap', it.q.id, f.closed), done: s => log('done', s), close: (i, x) => { log('player closed at', i, x); },
       startSecond: () => log('start second look'), showNow: it => Object.assign({}, make(it.n - 1), { seen: true }),
     };
+    if (rmode === 'pane') delete on.reanswer;                      // the pane files a hidden re-answer itself, through the fake /drill
     if (rmode === 'second') on.seen = async it => { log('seen (just show me)', it.q.id); await wait(100); return make(it.n - 1); };
     $('#main').hidden = true;
     const page = document.createElement('main');
