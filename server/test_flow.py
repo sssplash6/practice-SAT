@@ -389,24 +389,22 @@ def check_learner(c) -> None:
     c.post(f"/api/drill/{sid}/answer", headers=H,
            json={"question_id": nx["question"]["id"], "answer": keyed_answer(again, True)})
     # R45: a clean answer counts toward closing only when the item offered the same named trap.
-    # ponytail: until F5's repairs and fix drills always offer it, count what was offered; F5 restores the strict asserts.
     m = c.get("/api/mistakes", headers=H).json()
     assert m["traps"]
     trap = m["traps"][0]["norm"]
     # an unnamed trap (a grid-in miss naming nothing) closes on any clean answer to its template
-    counts = lambda q: not trap or trap in progress.UNNAMED or trap in progress.offered_of(q)
-    owed = 2 - counts(again)
-    assert m["traps"][0]["owed"] == owed, (m["traps"][0], progress.offered_of(again))
+    assert trap in progress.UNNAMED or trap in progress.offered_of(again)
+    assert m["traps"][0]["owed"] == 1, (m["traps"][0], progress.offered_of(again))
     fix = c.post("/api/drill", headers=H, json={"mistakes": True}).json()
     assert fix["total"] == 2
     for _ in range(2):
         cur = stored(fix["id"])[-1]
-        owed -= counts(cur)
+        assert trap in progress.UNNAMED or trap in progress.offered_of(cur)
         c.post(f"/api/drill/{fix['id']}/answer", headers=H,
                json={"question_id": cur["id"], "answer": keyed_answer(cur, True)})
         c.post(f"/api/drill/{fix['id']}/next", headers=H)
     left = c.get("/api/mistakes", headers=H).json()["traps"]
-    assert (not left) if owed <= 0 else (left and left[0]["owed"] == owed), "clean answers on offered items did not close it"
+    assert not left, "the repair and fix drill did not close the mistake"
     print("ok  the map and coach point at the open mistake, and two clean answers close it")
 
     # finishing reports the topics moved and what was closed
@@ -605,7 +603,7 @@ def check_learner(c) -> None:
 
     # --- a timed set runs on the minutes the student set, endless ones too ------------
     C = {"X-Learner": "a:ownclock"}
-    assert c.post("/api/drill", headers=C, json={"topics": ["circles"], "count": 37, "timed": True}).json()["seconds"] == 37 * 2100 // 22
+    assert c.post("/api/drill", headers=C, json={"topics": ["circles"], "count": 37, "timed": True}).json()["seconds"] == 37 * 95  # R34
     assert c.post("/api/drill", headers=C, json={"topics": ["circles"], "count": 37, "timed": True,
                                                 "minutes": 3}).json()["seconds"] == 180
     sprint = c.post("/api/drill", headers=C, json={"topics": ["circles"], "count": None, "timed": True, "minutes": 5}).json()

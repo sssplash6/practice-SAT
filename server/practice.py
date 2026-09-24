@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import functools
 import hashlib
+import json
 import logging
 import re
 import zlib
@@ -130,6 +131,12 @@ def stem_hash(stem: str) -> str:
     return hashlib.sha1(stem.encode("utf-8")).hexdigest()[:16]
 
 
+def question_hash(item) -> str:
+    """Identity of the whole rendered question, including a figure's numbers."""
+    data = (item.stem, list(item.choices), item.figure, item.table)
+    return hashlib.sha1(json.dumps(data, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
+
+
 # ------------------------------------------------------------------ ordering
 
 def interleave(basket: dict[str, int]) -> list[str]:
@@ -172,10 +179,14 @@ def penalty(card: Card, recent: list[Card], used: dict[str, int]) -> float:
 class Builder:
     """Holds the walk through the seed space for one learner."""
 
-    def __init__(self, learner: str, seen: set[tuple[str, int]], seen_stems: set[str]):
+    def __init__(self, learner: str, seen: set[tuple[str, int]], seen_stems: set[str],
+                 dedupe: str = "stem"):
         self.learner = learner
         self.seen = set(seen)
         self.seen_stems = set(seen_stems)
+        if dedupe not in ("stem", "question"):
+            raise ValueError("dedupe is stem or question")
+        self.dedupe = dedupe
         self.cursor: dict[str, int] = {}
         # Seven templates are offered per slot and one is taken, so six items
         # were generated to be thrown away. Held here instead, they are the
@@ -222,8 +233,9 @@ class Builder:
             except Exception:
                 log.exception("template %s failed at seed %d", key, seed)
                 return None
-            if stem_hash(item.stem) in self.seen_stems:
-                continue                      # distinct seeds, same question
+            signature = question_hash(item) if self.dedupe == "question" else stem_hash(item.stem)
+            if signature in self.seen_stems:
+                continue
             self.cursor[key] = k
             return Card.of(key, seed, item, topic)
         self.cursor[key] = k
@@ -231,7 +243,8 @@ class Builder:
 
     def keep(self, card: Card) -> None:
         self.seen.add((card.key, card.seed))
-        self.seen_stems.add(stem_hash(card.item.stem))
+        self.seen_stems.add(question_hash(card.item) if self.dedupe == "question"
+                            else stem_hash(card.item.stem))
         self.stash.pop(card.key, None)
 
 
@@ -297,10 +310,37 @@ def skill_of(q: dict) -> str | None:
     return _skill(q["key"], q["seed"]) if "key" in q else None
 
 
+@functools.lru_cache(maxsize=4096)
+def _mc_for_spr(key: str, seed: int):
+    try:
+        return generate(key, seed, fmt="mcq")
+    except Exception:
+        return None
+
+
+def spr_reasons(key: str, seed: int, item) -> list[list[str]]:
+    """Named grid-in values, with a same-parameter MC version as a fallback."""
+    own = getattr(item, "spr_reasons", None)
+    if own:
+        return [list(x) for x in own]
+    mistakes = getattr(item, "spr_mistakes", None)
+    if mistakes:
+        return [[m.reason, str(m.value)] for m in mistakes if getattr(m, "reason", None)
+                and getattr(m, "value", None) is not None]
+    if item.fmt != "spr":
+        return []
+    mc = _mc_for_spr(key, seed)
+    if mc is None or mc.key != item.key or mc.params != item.params:
+        return []
+    return [[reason, value] for reason, value in zip(mc.reasons, mc.choices) if reason]
+
+
 def to_question(card: Card, n: int) -> dict:
     """The stored form: everything, key included. Stripped before it is served."""
     topics = catalogue()["topics"]
     it = card.item
+    steps = getattr(it, "steps", ()) or ()
+    step_of = getattr(it, "step_of", ()) or ()
     return {
         "id": f"p{n:03d}",
         "key": card.key,
@@ -319,4 +359,14 @@ def to_question(card: Card, n: int) -> dict:
         "answer": it.answer,
         "rationale": it.rationale,
         "reasons": list(it.reasons),
+        "spr_reasons": spr_reasons(card.key, card.seed, it),
+        "filler": [not bool(reason) for reason in it.reasons],
+        "steps": [getattr(step, "text", str(step)) for step in steps],
+        "step_of": [dict(s) if isinstance(s, dict) else
+                    ({"at": getattr(s, "at", None), "wrong": getattr(s, "wrong", None)} if s else None)
+                    for s in step_of],
+        "desmos": getattr(it, "desmos", None),
+        "figure_alt": getattr(it, "figure_alt", None),
+        "ask": getattr(it, "ask", None),
+        "text": getattr(it, "text", None),
     }
