@@ -596,7 +596,7 @@
 
       // empty: the frame, a ghost band and the action
       if (!pts.length) {
-        const cx = L + plotW / 2, m = (lo + hi) / 2, g = (hi - lo) / 12;
+        const cx = L + 16, m = lo + (hi - lo) * .7, g = (hi - lo) / 12;   // clear of the centred note and its button
         sv('rect', { class: 'ch-ghost', x: r1(cx - 7), width: 14, y: r1(y(m + g)), height: r1(y(m - g) - y(m + g)), rx: 4 }, svg);
       }
       const oldSvg = plot.querySelector(':scope > svg');
@@ -870,24 +870,39 @@
         if (animate && !still()) b.classList.add('grow');
         track.append(b);
       } else if (est !== null) track.append(h('i', { class: 'scale-est', style: `left:${r1(at(est))}%` }));
-      if (start !== null) { track.append(h('i', { class: 'scale-tick start', style: `left:${r1(at(start))}%` })); lab(botRow, start, `Start ${start}`, 'start'); }
+      if (start !== null) { track.append(h('i', { class: 'scale-tick start', style: `left:${r1(at(start))}%` })); lab(botRow, start, `Start ${fnum(start)}`, 'start'); }
       ticks.forEach(t => { track.append(h('i', { class: 'scale-tick', style: `left:${r1(at(t.value))}%` })); lab(botRow, t.value, t.label ?? String(t.value)); });
       if (dot !== null) track.append(h('i', { class: 'scale-dot', style: `left:${r1(at(dot))}%` }));
-      if (tgt !== null) { track.append(h('i', { class: 'scale-tick target', style: `left:${r1(at(tgt))}%` })); lab(topRow, tgt, opts.targetLabel ?? String(tgt), 'target'); }
+      if (tgt !== null) { track.append(h('i', { class: 'scale-tick target', style: `left:${r1(at(tgt))}%` })); lab(topRow, tgt, opts.targetLabel ?? fnum(tgt), 'target'); }
       if (hist && isNum(+hist.avg)) lab(topRow, hist.avg, `avg ${Math.round(hist.avg)}`, 'avg');
       let bandLab = null;
       if (band && opts.label) { bandLab = h('span', { class: 'scale-l band', style: `left:${r1(at((band.low + band.high) / 2))}%`, text: fband(band.low, band.high) }); topRow.append(bandLab); }
       // the ends, unless a tick label sits on them
       const near = v => [start, tgt, ...ticks.map(t => +t.value)].some(x => x !== null && Math.abs(at(x) - at(v)) < 9);
-      if (!near(lo)) botRow.append(h('span', { class: 'scale-l end lo', text: String(lo) }));
-      if (!near(hi)) botRow.append(h('span', { class: 'scale-l end hi', text: String(hi) }));
+      if (!near(lo)) botRow.append(h('span', { class: 'scale-l end lo', text: fnum(lo) }));
+      if (!near(hi)) botRow.append(h('span', { class: 'scale-l end hi', text: fnum(hi) }));
       vis.append(topRow, track, botRow);
+      unclash = () => {
+        // the band's numbers win the top row; a target that would touch them drops under the track, the average hides
+        const tl = topRow.querySelector('.target');
+        if (tl && tl.parentNode !== topRow) topRow.append(tl);
+        topRow.querySelectorAll('.scale-l').forEach(e => { e.hidden = false; });
+        const rs = [...topRow.querySelectorAll('.scale-l.band')].map(e => e.getBoundingClientRect());
+        for (const e of [tl, topRow.querySelector('.avg')]) {
+          if (!e) continue;
+          const r = e.getBoundingClientRect();
+          if (!r.width) return;
+          if (rs.some(p => r.left < p.right + 8 && r.right > p.left - 8)) { if (e === tl) botRow.append(e); else e.hidden = true; }
+          else rs.push(r);
+        }
+      };
       const summary = [`Scale ${lo} to ${hi}`, band && `${opts.bandLabel || 'band'} ${fband(band.low, band.high)}`, !band && est !== null && `estimate ${Math.round(est)}`,
         prev && `previous ${fband(prev.low, prev.high)}`, tgt !== null && `target ${tgt}`, start !== null && `plan start ${start}`,
         dot !== null && `now ${dot}`, ...ticks.map(t => `${t.label || 'mark'} ${t.value}`),
         hist && `${sum(hist.counts)} ranked sittings${isNum(+hist.avg) ? `, average ${Math.round(hist.avg)}` : ''}`].filter(Boolean).join('; ') + '.';
       vis.setAttribute('aria-label', summary);
       el.replaceChildren(vis);
+      unclash();
       el.append(dataTable(summary, ['Mark', 'Value'], [
         band && [opts.bandLabel || 'Band', fband(band.low, band.high)], !band && est !== null && ['Estimate', Math.round(est)],
         prev && ['Previous', fband(prev.low, prev.high)], tgt !== null && ['Target', tgt], start !== null && ['Plan start', start],
@@ -905,7 +920,9 @@
         requestAnimationFrame(step);
       }
     }
+    let unclash = () => {};
     draw(!!opts.animate);
+    if (window.ResizeObserver) new ResizeObserver(() => unclash()).observe(el);
     return { el, set(o2 = {}) { Object.assign(opts, o2); draw(!!o2.animate); } };
   }
 
@@ -1187,7 +1204,7 @@
           const r = D.get(d), p = P.get(d);
           if (!out && r) { totMin += n0(r.minutes); totQ += n0(r.questions ?? r.answered); if (n0(r.questions ?? r.answered) || n0(r.minutes)) activeDays++; }
           const blank = out || (planLook() && !inPlan(d));
-          if (blank) { row.append(h('span', { role: 'gridcell', class: 'cal-d blank' + (out ? ' out' : ''), 'aria-hidden': out ? 'true' : null }, out && !planLook() ? h('span', { class: 'cal-n', text: String(toDate(d).getDate()) }) : null)); continue; }
+          if (blank) { row.append(h('span', { role: 'gridcell', class: 'cal-d blank' + (out ? ' out' : ''), 'aria-hidden': out ? 'true' : null }, !(out && planLook()) ? h('span', { class: 'cal-n', text: String(toDate(d).getDate()) }) : null)); continue; }
           const exam = mk.exam && iso(mk.exam) === d;
           const hl = planLook() ? 0 : heatLevel(opts.metric, r, opts.goal);
           const q = n0(r && (r.questions ?? r.answered));
@@ -1574,13 +1591,17 @@
       const xOf = v => L + tX(v) * plotW, yOf = v => T + (H - T - B) * (1 - clamp(v, 0, 1));
       const svg = svgRoot(W, H, '');
       const xr = xOf(opts.xRef), yr = yOf(yRef()), nm = names();
+      const boxes = [];                               // placed text, which a dot's label keeps clear of
+      const textBox = (x, base, text, anchor, px = 11) => { const w = textW(text, px); const x0 = anchor === 'end' ? x - w : x; boxes.push([x0, base - 10, x0 + w, base + 3]); };
       const counts = {};
       P.forEach(p => { counts[quad(p)] = (counts[quad(p)] || 0) + 1; });
       // quadrant tints and names with counts
       [['fast_right', L, T, xr - L, yr - T], ['slow_right', xr, T, W - R - xr, yr - T], ['fast_wrong', L, yr, xr - L, H - B - yr], ['slow_wrong', xr, yr, W - R - xr, H - B - yr]].forEach(([k, x, yy, w, hh]) => {
         sv('rect', { x: r1(x), y: r1(yy), width: r1(Math.max(0, w)), height: r1(Math.max(0, hh)), class: `q-zone ${k}` }, svg);
         const right = k.startsWith('slow');
-        tx(svg, right ? x + w - 6 : x + 6, k.endsWith('right') ? yy + 13 : yy + hh - 7, `${nm[k]} · ${counts[k] || 0}`, { 'text-anchor': right ? 'end' : 'start', class: 'ch-lab q-name' });
+        const zx = right ? x + w - 6 : x + 6, zy = k.endsWith('right') ? yy + 13 : yy + hh - 7, zt = `${nm[k]} · ${counts[k] || 0}`;
+        tx(svg, zx, zy, zt, { 'text-anchor': right ? 'end' : 'start', class: 'ch-lab q-name' });
+        textBox(zx, zy, zt, right ? 'end' : 'start');
       });
       const grid = sv('g', { class: 'ch-grid' }, svg);
       [0, .25, .5, .75, 1].forEach(v => { sv('line', { x1: L, x2: W - R, y1: r1(yOf(v)), y2: r1(yOf(v)) }, grid); tx(grid, L - 6, yOf(v) + 3.5, pct(v), { 'text-anchor': 'end', class: 'ch-ytick' }); });
@@ -1589,11 +1610,16 @@
       tx(svg, W - R, H - 3, opts.xLabel || (opts.x === 'ratio' ? 'time ÷ budget' : 'median time on right answers'), { 'text-anchor': 'end', class: 'ch-lab' });
       sv('line', { x1: r1(xr), x2: r1(xr), y1: T, y2: H - B, class: 'q-ref' }, svg);
       sv('line', { x1: L, x2: W - R, y1: r1(yr), y2: r1(yr), class: 'q-ref' }, svg);
-      tx(svg, xr + 4, T - 8, opts.xRefLabel || (opts.x === 'ratio' ? 'on budget' : `test pace ${fmmss(opts.xRef)}`), { class: 'ch-lab' });
-      tx(svg, L + 4, yr - 4, opts.yRefLabel || `${opts.yRef === undefined ? 'your mean' : 'line'} ${pct(yRef())}`, { class: 'ch-lab' });
-      // dots with their labels; a label that would collide is left to the tooltip and the table
-      const boxes = [];
-      P.forEach(p => {
+      const xl = opts.xRefLabel || (opts.x === 'ratio' ? 'on budget' : `test pace ${fmmss(opts.xRef)}`);
+      tx(svg, xr + 4, T - 8, xl, { class: 'ch-lab' });
+      textBox(xr + 4, T - 8, xl, 'start');
+      const yl = opts.yRefLabel || (opts.yRef === undefined ? `your mean ${pct(yRef())}` : `${pct(yRef())} right`);
+      tx(svg, L + 4, yr - 4, yl, { class: 'ch-lab' });
+      textBox(L + 4, yr - 4, yl, 'start');
+      // dots with their labels; a label that would touch another dot or label is left to the tooltip and the table
+      const dots = P.map(p => { const x = xOf(p.x), yy = yOf(p.y); return [x - 10, yy - 10, x + 10, yy + 10]; });
+      const hits = (a, b) => !(a[2] < b[0] || a[0] > b[2] || a[3] < b[1] || a[1] > b[3]);
+      P.forEach((p, i) => {
         const x = xOf(p.x), yy = yOf(p.y);
         if (p.topic && UI.glyph) {
           const g = UI.glyph(p.topic);
@@ -1607,8 +1633,8 @@
           const bx = anchor === 'start' ? lx : lx - w;
           if (bx < L || bx + w > W - R) continue;
           const box = [bx, yy - 7, bx + w, yy + 7];
-          if (boxes.some(b => !(box[2] < b[0] || box[0] > b[2] || box[3] < b[1] || box[1] > b[3]))) continue;
-          boxes.push(box, [x - 10, yy - 10, x + 10, yy + 10]);
+          if (boxes.some(b => hits(box, b)) || dots.some((d, j) => j !== i && hits(box, d))) continue;
+          boxes.push(box);
           tx(svg, lx, yy + 4, lab, { 'text-anchor': anchor, class: 'q-lab' });
           break;
         }
