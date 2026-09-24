@@ -24,8 +24,8 @@
   .dev { max-width: 1120px; margin: 0 auto; padding: 20px var(--gutter) 120px; }
   .dev-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin-bottom: 16px; }
   .dev-controls { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 12px 16px; padding: 16px; border-radius: var(--radius-card); background: var(--tile); }
-  .dev-controls label { display: grid; gap: 4px; font: 600 12.5px var(--font); }
-  .dev-controls select { height: 40px; border-radius: 10px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); padding: 0 10px; font: 500 14px var(--font); }
+  .dev-controls label { display: grid; gap: 4px; min-width: 0; font: 600 12.5px var(--font); }
+  .dev-controls select { width: 100%; min-width: 0; height: 40px; border-radius: 10px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); padding: 0 10px; font: 500 14px var(--font); }
   .dev-checks { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; grid-column: 1 / -1; font: 500 13px var(--font); }
   .dev-checks label { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
   .dev-main { display: grid; grid-template-columns: minmax(0, 700px) minmax(0, 1fr); gap: 28px; margin-top: 22px; align-items: start; }
@@ -175,7 +175,8 @@
     if (q.id === 'w1') Object.assign(fb, { trap: !right && Number.isInteger(a) ? q.trap[a] : null, spans: q.spans, needs: q.needs, crowd: q.crowd });
     if (q.steps) Object.assign(fb, { steps: q.steps, option_steps: q.option_steps, type_name: q.name, about: q.about, desmos: q.desmos,
       diverge: !right && Number.isInteger(a) ? q.option_steps[a] : null, wrong_step: !right && Number.isInteger(a) ? q.wrong_steps[a] : null });
-    if ($('#rich').checked && q.id !== 'w1') {
+    // a worked example files no attempt (T4): no mastery, habit, repair or crowd lines
+    if ($('#rich').checked && q.id !== 'w1' && !(meta && meta.example)) {
       Object.assign(fb, {
         budget_ms: 95000, fluency: right && meta && meta.ms < 95000 ? 'fluent' : null,
         mastery: q.topic ? { topic: q.topic, before: 0.42, after: right ? 0.51 : 0.38 } : null,
@@ -215,7 +216,7 @@
       if (/\/drill\/dv\d+\/answer$/.test(path)) return Object.assign(feedback(twQ, o.body.answer, o.body), { repair_next: !isRight(twQ, o.body.answer) });
       if (/\/drill\/dv\d+\/next$/.test(path)) return { question: nextTwin() };
       if (/\/drill\/dv\d+\/(more|finish)$/.test(path)) return { ok: true };
-      if (path.startsWith('/types/')) { const ex = Object.assign(JSON.parse(JSON.stringify(FX[4])), { id: 'ex', seed: 900003 }); return { question: ex, feedback: feedback(ex, null, {}), trap_index: 2 }; }
+      if (path.startsWith('/types/')) { const ex = Object.assign(JSON.parse(JSON.stringify(FX[4])), { id: 'ex', seed: 900003 }); return { question: ex, feedback: feedback(ex, null, { example: true }), trap_index: 2 }; }
       if (path.startsWith('/review/family')) {
         const p = new URLSearchParams(path.split('?')[1]);
         const rows = Array.from({ length: p.get('cursor') ? 3 : 8 }, (_, i) => ({ id: 900 - i, at: `2026-09-${String(24 - i).padStart(2, '0')}T1${i}:05:00`, source: i % 2 ? 'practice' : 'section', sitting: i % 2 ? 'Practice set #45' : 'Section #7', href: '#',
@@ -421,7 +422,7 @@
     page.id = 'rvPage';
     page.innerHTML = `<div class="dev-h"><h1 class="h1">Review player · ${rmode}</h1><span class="dev-self" id="self"></span><a class="quiet" href="?">← Workspace</a></div>
       <div class="dev-tools" id="rvCells" role="group" aria-label="Open at"></div>
-      <div class="dev-tools" style="margin-top:10px"><label class="meta">Filter <select id="rvFilter"><option value="all">All</option><option value="miss">Incorrect + unanswered</option></select></label>
+      <div class="dev-tools" style="margin-top:10px"><label class="meta">Filter <select id="rvFilter" class="field sm" style="width: auto"><option value="all">All</option><option value="miss">Incorrect + unanswered</option></select></label>
       <button type="button" class="btn sm" id="rvOpen">Open the player</button><button type="button" class="btn sm" id="rvHist">Attempt history</button><button type="button" class="quiet" id="rvClear">Clear log</button></div>
       <div class="dev-main"><div class="dev-q" id="rvHost"></div><aside class="dev-side"><pre class="dev-log" id="rvLog" aria-live="off"></pre></aside></div>`;
     document.body.append(page);
@@ -469,8 +470,8 @@
     let state = null;
     if ($('#keep').checked) { try { state = JSON.parse(localStorage.getItem(stateKey()) || 'null'); } catch (_) {} }
     const prefs = { first_tap: $('#firstTap').checked, option_reasons: $('#reasons').checked, open_explanations: $('#openX').checked, confidence: $('#conf').value };
-    const reviewFb = (mode === 'review' || mode === 'example') ? feedback(q, q.type === 'spr' ? '5/4' : (keyOf(q) + 1) % q.choices.length, { ms: 72000, conf: null, try: 1 }) : null;
-    if (mode === 'example' && reviewFb) { reviewFb.given = null; reviewFb.correct = null; }
+    const reviewFb = mode === 'review' ? feedback(q, q.type === 'spr' ? '5/4' : (keyOf(q) + 1) % q.choices.length, { ms: 72000, conf: null, try: 1 })
+      : mode === 'example' ? Object.assign(feedback(q, null, { example: true }), { correct: null, given: null }) : null;
     const opts = {
       mode, feedback: fbMode && fbMode !== 'hidden' ? fbMode : 'instant', prefs, confActive: $('#active').checked, state,
       fb: reviewFb, hidden, toolbar: $('#toolbar').checked, pad: $('#pad').checked || undefined, formNudge: true,
@@ -495,7 +496,7 @@
         const key = keyOf(q);
         if (n === 0 && q.type !== 'spr') { const c = q.reasons.findIndex((r, i) => r && i !== key); return { rung: 1, kind: 'strike', choice: c, reason: q.reasons[c] }; }
         if (n <= 1 && q.steps) return { rung: 2, kind: 'step', step: q.steps[0] };
-        return { rung: 3, kind: 'example', example: { question: Object.assign({}, FX[0], { id: 'ex' }), feedback: feedback(FX[0], null, {}) } };
+        return { rung: 3, kind: 'example', example: { question: Object.assign({}, FX[0], { id: 'ex' }), feedback: feedback(FX[0], null, { example: true }) } };
       } : null,
       onOwn: async own => {
         log('onOwn', own); await wait(200);
@@ -560,7 +561,7 @@
   card('Grid-in · a named miss', grid, { mode: 'practice', fb: feedback(grid, '5/4', { ms: 61000, try: 1 }), actions: Object.assign({ surface: 'runner' }, actions) });
   card('Grid-in · right, with accepted forms', grid, { mode: 'practice', fb: feedback(grid, '.625', { ms: 41000, try: 1 }) });
   card('Quiz · Words in Context, a miss', quiz, { mode: 'quiz', head: quiz.head, fb: feedback(quiz, 1, { ms: 12000 }) });
-  card('Worked example', mcq, { mode: 'example', fb: Object.assign(feedback(mcq, null, {}), { correct: null, given: null }), onDone: () => log('your turn') });
+  card('Worked example', mcq, { mode: 'example', fb: Object.assign(feedback(mcq, null, { example: true }), { correct: null, given: null }), onDone: () => log('your turn') });
 
   // G4 check 1: the four cards above give one action row, label for label
   const rows = [...$('#gallery').children].slice(0, 4).map(c => [...c.querySelectorAll('.q-actions button')].map(b => b.textContent.trim()).filter(Boolean).join(' | '));
