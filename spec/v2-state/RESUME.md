@@ -19,7 +19,9 @@ build.js implements it (blocker vs followup severity; pass = no blockers).
   restored; checks/f5.py and test_flow pass). One check + one fix running: run `wf_e6cc0b6f-9c8` (task wyrhxcy7s),
   `[{id:'F5', from:'verify'}]`. Then leftovers to `followups/F5.json` and merge.
 - **The other agent's next jobs** (light, backend, own branches; never v2/f5): `v2/satdates` MERGED (197b54a,
-  spot-checked against College Board) and `v2/bank-lint` (read-only tools/lint_bank.py, findings list).
+  spot-checked against College Board) and `v2/bank-lint` MERGED (3ad7b8e: tools/lint_bank.py, 1,969 raw
+  findings). Triage running: run `wf_cffc089e-e95` (task wml2xho3z), 5 read-only agents; the real flaws become a fix
+  list (a candidate job for the other agent).
 If cut off: F1 `[{id:'F1', from:'fix', issues:<saved r1 defects>}]` then merge; words2 `{from:'author', only:['frames1']}`.
 
 ### On "continue"
