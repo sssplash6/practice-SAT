@@ -1753,9 +1753,11 @@
     if (it) barEl.append(h('span', { class: 'sections-next' }, 'Up next: ', h('b', { text: it.title }), startBtn(it)));
     const chips = barEl.querySelectorAll(':scope > a').length;
     barEl.hidden = !chips && !it;
-    // without chips the bar takes no room until it sticks
-    barEl.style.marginBottom = chips ? '' : '-52px';
+    // without chips the bar takes no room until it sticks: one Start's height, pulled up by it
+    barEl.style.minHeight = chips ? '' : '40px';
     barEl.style.visibility = chips || barEl.classList.contains('stuck') ? '' : 'hidden';
+    if (chips || barEl.hidden) barEl.style.marginBottom = '';
+    else if (!barEl.classList.contains('stuck')) barEl.style.marginBottom = `-${barEl.offsetHeight}px`;
   }
   function observeStuck() {
     if (!barEl || !sentinel || typeof IntersectionObserver !== 'function') return;
