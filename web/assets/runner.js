@@ -67,6 +67,8 @@
   };
   const mmss = s => { s = Math.max(0, Math.round(s || 0)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
   const msx = ms => mmss((ms || 0) / 1000);
+  // time left reads as the clock shows it, rounded up: a clock on 16:00 never pauses on 15:59
+  const mmssLeft = s => mmss(Math.ceil((s || 0) - 1e-6));
   const toast = (t, o) => (UI.toast ? UI.toast(t, o) : null);
   const plural = (n, one, many) => `${n} ${n === 1 ? one : (many || one + 's')}`;
   const fmtN = n => (UI.num ? UI.num(n) : String(n));
@@ -676,7 +678,7 @@
     }
     function draw() {
       const t = tally(list);
-      meta.textContent = [o.meta, o.left !== null && o.left !== undefined && o.timed !== false ? `${mmss(o.left)} left` : null].filter(Boolean).join(' · ');
+      meta.textContent = [o.meta, o.left !== null && o.left !== undefined && o.timed !== false ? `${mmssLeft(o.left)} left` : null].filter(Boolean).join(' · ');
       tiles.style.setProperty('--cols', String(tileDefs().length));
       tiles.replaceChildren(...tileDefs().map(([k, label, n]) => {
         const b = h('button', { type: 'button', class: 'stat', 'aria-pressed': String(tileFilter === k), 'data-tile': k },
@@ -739,7 +741,7 @@
         const todo = queueList().length || blanks.length;
         const keep = o.training ? 180 : 0;
         const per = todo ? Math.max(0, (o.left - keep) / todo) : 0;
-        lines.append(h('p', { class: 'cyw-pace', text: [`${mmss(o.left)} left`, keep ? `keep ${mmss(keep)} for checking` : null, todo ? `about ${per >= 60 ? mmss(per) : Math.round(per) + ' s'} for each ${blanks.length ? 'unanswered question' : 'of these'}` : null].filter(Boolean).join(' · ') }));
+        lines.append(h('p', { class: 'cyw-pace', text: [`${mmssLeft(o.left)} left`, keep ? `keep ${mmss(keep)} for checking` : null, todo ? `about ${per >= 60 ? mmss(per) : Math.round(per) + ' s'} for each ${blanks.length ? 'unanswered question' : 'of these'}` : null].filter(Boolean).join(' · ') }));
       }
       if (saving && saving.size) {
         const offline = saving.state === 'offline';
@@ -2403,7 +2405,7 @@
       qArea.hidden = true;
       rail.hidden = true;
       const resume = h('button', { type: 'button', class: 'pill', text: 'Resume', onclick: () => resumeRun() });
-      screenEl.replaceChildren(h('div', { class: 'rn-paused' }, h('p', { class: 'k', text: 'Paused' }), h('p', { class: 'rn-paused-t mono', text: `${mmss(timerApi.left)} left` }), h('p', { class: 'meta', text: 'The questions are hidden while the clock is stopped.' }), resume));
+      screenEl.replaceChildren(h('div', { class: 'rn-paused' }, h('p', { class: 'k', text: 'Paused' }), h('p', { class: 'rn-paused-t mono', text: `${mmssLeft(timerApi.left)} left` }), h('p', { class: 'meta', text: 'The questions are hidden while the clock is stopped.' }), resume));
       screenEl.hidden = false;
       [fLeft, fMid, fRight].forEach(x => { x.hidden = true; });
       resume.focus();

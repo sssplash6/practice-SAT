@@ -78,7 +78,8 @@ figure.q-figure { margin: 4px 0 18px; }
 .ws .opt { grid-template-columns: 30px minmax(0, 1fr) auto; row-gap: 2px; }
 .ws .opt .l { grid-row: 1 / span 2; }
 .ws .opt .t { grid-column: 2; grid-row: 1; min-width: 0; overflow-wrap: anywhere; }
-.ws .opt .t.tex { overflow-x: auto; overflow-y: hidden; }
+/* the scroll sits inside the text cell: a scroll container as the grid item has no height floor, and the letter's span then pads a second row */
+.ws .opt .t.tex > .katex { display: block; overflow-x: auto; overflow-y: hidden; }
 .ws .opt .mk { grid-column: 3; grid-row: 1 / span 2; font: 700 15px var(--font); color: var(--ink); }
 .ws .opt.ok .mk { color: var(--amber-deep); }
 .ws .opt .opt-cap { grid-column: 2; grid-row: 2; font: 600 10.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
@@ -93,9 +94,10 @@ figure.q-figure { margin: 4px 0 18px; }
   .ws .opts.two { grid-template-columns: 1fr 1fr; }
 }
 
-.opt-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 8px; }
+/* the gap is the strike's own margin, so a row with no strike or Undo showing keeps the full width */
+.opt-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
 .opt-row > .opt { grid-column: 1; }
-.opt-row > .strike, .opt-row > .undo { grid-column: 2; grid-row: 1; }
+.opt-row > .strike, .opt-row > .undo { grid-column: 2; grid-row: 1; margin-left: 8px; }
 .opt-row > .opt-why, .opt-row > .opt-crowd { grid-column: 1 / -1; }
 .strike {
   appearance: none; border: 0; background: none; cursor: pointer; padding: 0;
@@ -217,7 +219,7 @@ figure.q-figure { margin: 4px 0 18px; }
 .v-head.ok .v-glyph { background: var(--amber); color: var(--ink-deep); }
 .v-head.no .v-glyph { background: var(--ink); color: var(--on-ink); }
 .v-head.blank .v-glyph { box-shadow: inset 0 0 0 1.5px var(--faint); outline: 1.5px dashed var(--faint); outline-offset: -1.5px; box-shadow: none; color: var(--soft); }
-.v-bit { font: 500 13px var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; }
+.v-bit { font: 500 13px var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; white-space: pre-wrap; }   /* a flex item drops its leading space */
 .v-mastery { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; font: 500 13.5px var(--font); color: var(--ink); }
 .v-mastery .glyph { width: 18px; height: 18px; }
 .v-mastery .mbar { width: 120px; flex: none; }
@@ -231,8 +233,9 @@ figure.q-figure { margin: 4px 0 18px; }
 .abox.no { box-shadow: inset 0 0 0 1.5px var(--ink); background: var(--paper); }
 .abox.blank { outline: 1.5px dashed var(--faint); outline-offset: -1.5px; background: var(--paper); }
 
-.v-fixed { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 6px; font: 500 14.5px/1.4 var(--font); color: var(--ink); }
-.v-fixed svg { color: var(--amber-deep); flex: none; }
+/* inline, so the trap and its counts run on after "Fixed" and wrap as a sentence */
+.v-fixed { font: 500 14.5px/1.4 var(--font); color: var(--ink); }
+.v-fixed svg { color: var(--amber-deep); vertical-align: -3px; margin-right: 6px; }
 .v-fixed b { font-weight: 700; }
 .v-fixed.pop { animation: fixedin .2s var(--ease) both; }
 @keyframes fixedin { from { transform: scale(.96); opacity: 0; } }
@@ -289,7 +292,7 @@ figure.q-figure { margin: 4px 0 18px; }
 .q-actions .btn svg { width: 16px; height: 16px; }
 .split { display: inline-flex; align-items: stretch; }
 .split > :first-child { border-top-right-radius: 0; border-bottom-right-radius: 0; }
-.split > .split-caret { border-top-left-radius: 0; border-bottom-left-radius: 0; padding: 0 8px; margin-left: 1px; min-width: 32px; justify-content: center; }
+.split > .split-caret { border-top-left-radius: 0; border-bottom-left-radius: 0; padding: 0 8px; margin-left: 1px; min-width: 32px; justify-content: center; height: auto; }   /* as tall as a verb with its second line */
 .split.primary > .split-caret { box-shadow: inset 1px 0 0 rgba(30, 30, 30, .18); margin-left: 0; }
 
 /* the split Check (P7) */
@@ -519,7 +522,7 @@ html.has-runner, html.has-runner body { background: var(--paper); }
 .rn-again::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); }
 .rn-qtools { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 2px; }
 .rn-qstrip .rn-qtools { flex: 1 1 100%; padding-left: 34px; }
-.rn-qtools .tool { flex-direction: row; gap: 6px; min-height: 36px; min-width: 0; padding: 0 8px; font: 600 12.5px var(--font); }
+.rn-qtools .tool { flex-direction: row; gap: 5px; min-height: 36px; min-width: 0; padding: 0 6px; font: 600 12.5px var(--font); }   /* seven tools fit one row at 700 */
 .rn-qtools .tool svg { width: 18px; height: 18px; }
 .rn-qtools .tool.has svg { color: var(--amber-deep); }
 .rn-qtools .rn-mark[aria-pressed="true"] { background: var(--wash); box-shadow: none; }
@@ -605,13 +608,15 @@ html.has-runner, html.has-runner body { background: var(--paper); }
 a.rn-who { font-weight: 500; font-size: 13px; }
 
 /* the navigator (UI.navigator), in a popover over the footer or a bottom sheet */
-.popover.rn-navpop { width: 420px; max-width: calc(100vw - 32px); max-height: 70dvh; padding: 18px 20px 20px; border-radius: 14px; }
-.rn-exam .popover.rn-navpop, .popover.rn-navpop:has(.navp.exam) { width: 560px; }
+.popover.rn-navpop { width: 440px; max-width: calc(100vw - 32px); max-height: 70dvh; padding: 18px 20px 20px; border-radius: 14px; }
+/* :where keeps this under the phone sheet's width: 100% */
+.rn-exam .popover.rn-navpop, .popover.rn-navpop:where(:has(.navp.exam)) { width: 560px; }
 .navp { display: grid; gap: 12px; }
 .navp-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .navp-title { font: 700 15px/1.3 var(--font); }
-.navp-views .seg { max-width: 100%; }
-.navp-views .seg > button { padding: 0 10px; font-size: 13px; }
+/* the six views stay one row: it scrolls sideways before it wraps */
+.navp-views .seg { max-width: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+.navp-views .seg > button { flex: none; padding: 0 9px; font-size: 13px; }
 .navp-chips { gap: 8px 14px; }
 .navp-chips .sw { flex: none; }
 .navp-chips button > svg, .navp-chips button > .glyph { width: 16px; height: 16px; }
@@ -695,7 +700,7 @@ mark.hl[data-note]::after, [data-hl][data-hl-note]::after {
 .annotating mark.hl, .annotating [data-hl] { cursor: pointer; }
 .annotating .q-stem, .annotating .q-table, .annotating .opt .t { cursor: text; }
 .annotating .ws .opt, .annotating .ws .opt .t { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; }
-.popover.hl-bar { padding: 8px; max-width: min(640px, calc(100vw - 16px)); }
+.popover.hl-bar { padding: 8px; max-width: min(700px, calc(100vw - 16px)); }
 .hl-bar-in { display: grid; gap: 8px; }
 .hl-sw { display: flex; flex-wrap: wrap; gap: 4px; }
 .hl-b {
@@ -887,6 +892,7 @@ html.rv-open { overflow: hidden; }
 /* before the key: What happened? (V2), held back (SR3), Second look (SR3), the walk (V2) */
 .rv-pre { display: grid; gap: 10px; }
 .rv-pre:empty { display: none; }
+.rv-pre > .rv-tag { justify-self: start; }   /* a chip, not a bar */
 .rv-pre + .qbody { margin-top: 16px; }
 .rv-post:empty { display: none; }
 .rv-post { margin-top: 20px; }
@@ -1071,7 +1077,9 @@ html[data-motion="reduce"] :is(.rv-item.rv-slide-l, .rv-item.rv-slide-r, mark.ch
   .rn-qstrip { padding: 6px; }
   .rn-qleft { flex-basis: 100%; }
   .rn-type { max-width: 40vw; }
-  .rn-qstrip .rn-qtools { padding-left: 0; justify-content: space-between; }
+  .rn-qstrip .rn-qtools { padding-left: 0; justify-content: space-between; flex-wrap: nowrap; }
+  /* seven tools in one row, icon over a label that may take two lines */
+  .rn-qstrip .rn-qtools .tool { flex: 1 1 0; max-width: 72px; padding: 2px 1px; white-space: normal; text-align: center; line-height: 1.15; }
   .rn-qhead .rn-mark { display: none; }
   .rn-qhead .tool { min-height: 44px; min-width: 44px; padding: 0 8px; justify-content: center; }
   .rn-qhead .tool .tl { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -1101,8 +1109,6 @@ html[data-motion="reduce"] :is(.rv-item.rv-slide-l, .rv-item.rv-slide-r, mark.ch
   .rn-saved:not([data-state="offline"]):not([data-state="error"]) { display: none; }
   .rn-falt { flex: 1 1 100%; }
   .popover.rn-navpop:not(.anchored) { width: 100%; max-width: none; padding: 22px 16px calc(16px + env(safe-area-inset-bottom, 0px)); border-radius: 16px 16px 0 0; }
-  .navp-views .seg { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
-  .navp-views .seg > button { padding: 0 9px; }
   .rn-notepop { width: auto; }
   .navp-grid, .navp.exam .navp-grid { --cols: 6; --cell: 48px; --cell-gap: 8px; }
   .cyw-tiles .stat-v { font-size: 32px; }

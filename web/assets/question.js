@@ -159,6 +159,8 @@
   function tex(el, plain, latex) {
     el.textContent = plain ?? '';
     if (!latex || latex === plain) return el;
+    // a thousands comma is part of the number, not punctuation: 1{,}225, never "1, 225"
+    latex = String(latex).replace(/(\d),(?=\d{3}(?!\d))/g, '$1{,}');
     const go = k => { try { el.innerHTML = k.renderToString(latex, { throwOnError: false, output: 'htmlAndMathml' }); el.classList.add('tex'); } catch (_) {} };
     if (window.katex) go(window.katex); else katex().then(go, () => {});
     return el;
