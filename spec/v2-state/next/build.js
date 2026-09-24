@@ -54,6 +54,58 @@ multiple-choice stems, choices, answers and option values are identical to maste
 templates); PYTHONPATH=. python3 -m satbank check prints PASS for all 19 topics; PYTHONPATH=. python3 server/test_flow.py prints
 "all good".`,
   },
+  F2: {
+    title: 'F2 · Shell', port: 8012,
+    spec: `spec/rebuild-v2.md: §2.12 F2 (line 553), Part 4.2 F2 (11035), the Shell spec §2 in Part 3.1 (lines 653-2294) except §2.10,
+R1, R22, R29, §2.4's F2 rows (213), §2.8 keyboard (413), §2.10 registries (462), and every item assigned to F2 in
+spec/v2-upgrades/*.md (grep -n "F2" spec/v2-upgrades/*.md; product.md too). Use F1's merged ui.css and kit.js components (read the
+kit.js header and /dev/kit.html) instead of writing new ones. No Class nav item, no class toasts (decision 5). Also finish F1's
+view-transition follow-up in head.js (spec/v2-state/followups/F1.json).`,
+    owns: 'web/assets/ui.js, head.js, quick.js, palette.js, qr.js, server/api_shell.py, server/checks/f2.py',
+    units: [
+      'head.js (theme, text size and motion before first paint, and F1\'s view-transition follow-up) and the ui.js core: UI.learner, UI.useLearner, UI.api (X-Learner, X-Tz, offline and retired handling), UI.prefs / UI.prefRow, theme apply, the UI.keys registry and shortcuts sheet, the skip link; server/api_shell.py with /api/shell and the §2.10 parts registry.',
+      'The shell chrome: sidebar, rail, phone top bar and 5 tabs, menu sheet, account menu, section mapping (R1), the Today card and nav metas from /api/shell, on every page.',
+      'Banners (retired, offline with backoff, storage blocked, first visit, save nudge), achievement and reply toasts, the quick sheet with its three tabs (R29), the palette with parsing and aliases ("circles hard 5 timed"), and qr.js (vendored MIT encoder).',
+      'server/checks/f2.py covering §2.12 F2\'s acceptance, then walk every page at 1280 and 390 in light and dark with a new and a seeded learner, and fix what is broken.',
+    ],
+    accept: `§2.12 F2's acceptance: Shell acceptance items on the sidebar, rail, phone tabs and menu, /api/shell keys, account-menu keyboard,
+palette, quick sheet, offline banner and theme (as amended by §2.13); every page loads with no console errors at 1280 and 390;
+test_flow prints "all good".`,
+  },
+  F3: {
+    title: 'F3 · Question workspace and runner', port: 8013,
+    spec: `spec/rebuild-v2.md: §2.12 F3 (line 564), Part 4.2 F3 (11041), R21, R23, §2.4's F3 rows (213), §2.8's runner key maps (413);
+QBank §2 in Part 3.3 (lines 3348-4779), Tests §1 and §4.3-4.8 in Part 3.4 (4780-6054), Report §1.13 in Part 3.5 (6055-7045) and
+Review §8-9 in Part 3.9 (10030-10969); every item assigned to F3 in spec/v2-upgrades/*.md (grep -n "F3"; product.md too). The user
+wants one test format everywhere, based on the practice session ("the practice one is the best"). Use F1's merged ui.css and kit.js.`,
+    owns: 'web/assets/question.js, web/assets/runner.js, web/assets/runner.css, web/dev/workspace.html',
+    units: [
+      'question.js: UI.workspace (R21) in every mode (practice instant / retry / end, exam, review, quiz, inline), select-then-Check, strike and Undo, the SPR field, the check flow in the three feedback modes, tools and the calculator.',
+      'runner.js and runner.css: UI.runner (the shell shared by the practice session and the test window): sticky top bar, progress rail, question strip, navigator with its views, footer, Check your work, timer, highlights and notes, calculator dock and phone sheet, the key map of §2.8.',
+      'The review player, pane and history (Report §1.13, Review §8-9), with Hide answers persisting across Next.',
+      'web/dev/workspace.html driving every mode with fixture questions (MC, grid-in, figure, table); walk it at 1280 and 390 in light and dark and fix what is broken.',
+    ],
+    accept: `§2.12 F3's acceptance: the dev page drives every mode with fixture questions (MC, grid-in, figure, table) at 1280 and 390:
+select then Check, strike and Undo, highlight and reload-restore through a fake store, navigator views and Esc, Check your work tiles
+adding up, calculator dock and phone sheet, the review player's Hide answers persisting across Next, and the key map of §2.8.
+test_flow prints "all good".`,
+  },
+  F6: {
+    title: 'F6 · Reports and question sets', port: 8016,
+    spec: `spec/rebuild-v2.md: §2.12 F6 (line 605), Part 4.2 F6 (11056), R17, R18(c), Shell §2.10 and §10 in Part 3.1 (lines 653-2294)
+and its "server/reports.py" items, the sets parts of QBank ("Shares"), Tests ("Share a test") and Review ("Shares"); every item
+assigned to F6 in spec/v2-upgrades/*.md (grep -n "F6"; product.md too). The tables are F4's (merged): use them, do not change db.py.
+Use F1's merged ui.css and kit.js for the modal and pages.`,
+    owns: 'server/reports.py, server/sets.py, server/mail.py, web/assets/report.js, web/admin/reports/index.html, web/s/index.html, tools/reports.py, server/checks/f6.py',
+    units: [
+      'Server: reports.py (POST /api/report with up to 10 files on disk under server/reports/{id}/, the 10 MB cap, 10 an hour and 20 a day per learner, bounded disputes, GET /api/reports with replies, the admin endpoints behind SATF_ADMIN_TOKEN), mail.py and tools/reports.py.',
+      'sets.py: POST /api/sets, GET /api/sets/{code} (public summary, no stems), /results (owner only, per-question right rates and the most common named mistake), DELETE (410 after), all through deps.access; and the /s/ landing page.',
+      'report.js (UI.report(ctx) with every context and the category union of R17; mid-test reports hide marking and key disputes) and web/admin/reports/index.html.',
+      'server/checks/f6.py covering §2.12 F6\'s acceptance.',
+    ],
+    accept: `§2.12 F6's acceptance: Shell's report and admin acceptance items; QBank's and Tests' share items read through sets (a second
+learner gets identical stems; the public summary has no stems; results 403 for others; revoked -> 410). test_flow prints "all good".`,
+  },
   // F4 was built outside this script by another agent (branch v2/f4, from v2/f0); run it with from: 'verify'.
   F4: {
     title: 'F4 · Data layer', port: 8014,
