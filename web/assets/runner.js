@@ -2255,7 +2255,8 @@
     function history() {
       const qq = q();
       if (on.history) return emit('history', at, qq);
-      if (UI.history) return UI.history({ session: sid, question_id: qq.id, template: qq.template });
+      if (UI.history) return UI.history({ session: sid, question_id: qq.id, template: qq.template, skill: qq.name,
+        lock: exam || (challenge && !(ws && ws.answered())) ? 'live' : ws && ws.answered() ? null : 'answer' });
       return false;
     }
     function openDetails() {
@@ -3132,6 +3133,7 @@
       if (ws && ws.restart) ws.restart();
       if (hint) col.append(hint);
       scroll.scrollTop = 0;
+      if (dlg && !dlg.contains(doc.activeElement)) col.focus({ preventScroll: true });
       if (dir && !still()) { b.el.classList.add('rv-slide-' + dir); }
       if (!hidden && !second && !walk && it.q && !heldBack(it) && !(it.new && it.diag_choices && !it._revealed)) markSeen(it);
       seenNow.add(keyOf(it));
@@ -3219,6 +3221,7 @@
         return b;
       }
       b.ws = reviewWs(qb, it, b);
+      if (it.marks && it.marks.length) annotate(b.ws.el, it.marks, { readonly: true });   // SR9, R6: the sitting's highlights, read-only
       return b;
     }
     function rebuild() { if (!cur) return; pre = null; const keepAt = at; at = -1; go(keepAt); }
@@ -3264,7 +3267,7 @@
       if (q.level) bits.push(`L${q.level}`);
       bits.push(q.type === 'spr' ? 'Grid-in' : 'Multiple choice');
       if (it.ms) bits.push(`${msx(it.ms)}${it.budget_ms ? ` · budget ${msx(it.budget_ms)}` : ''}`);
-      if (it.worth !== undefined && it.worth !== null && it.worth > 0) bits.push(h('span', { class: 'rv-worth', text: `≈ +${Math.round(it.worth)}` }));
+      if (it.worth !== undefined && it.worth !== null && it.worth > 0) bits.push(h('span', { class: 'rv-worth', text: `≈ +${Math.round(it.worth)} pts` }));
       if (pane && it.sitting) bits.push(it.sitting.href ? h('a', { class: 'qlink', href: it.sitting.href, text: it.sitting.label }) : it.sitting.label);
       const l2 = h('div', { class: 'rv-h2' });
       bits.forEach((x, i) => { if (i) l2.append(h('span', { class: 'rv-dot', 'aria-hidden': 'true', text: '·' })); l2.append(x instanceof Node ? x : h('span', { text: x })); });
@@ -3310,7 +3313,8 @@
           const owed = m.owed ?? 2, of = m.of ?? 2;
           if (UI.pips) line.append(UI.pips(owed, of));
           const word = m.status === 'relapsed' ? `Relapsed${m.relapses > 1 ? ' ×' + m.relapses : ''}` : m.status === 'stuck' ? 'Stuck' : m.status === 'half' ? 'Half fixed' : 'Open mistake';
-          line.append(h('b', { text: ` ${word}` }), ` · ${owed} clean answer${owed === 1 ? '' : 's'} to close`, m.hits ? ` · hit ${m.hits}× all time` : '', m.label && pane ? ` · ${m.label}` : '');
+          line.append(h('b', { text: ` ${word}` }), pane ? ` · ${of - owed} of ${of} clean answers` : ` · ${owed} clean answer${owed === 1 ? '' : 's'} to close`,
+            m.hits ? ` · hit ${m.hits}× all time` : '', m.label && pane ? ` · ${m.label}` : '');
         }
         head.append(line);
       }
@@ -3522,7 +3526,12 @@
         box.append(c);
       });
       if (items.length > 60) box.append(h('button', { type: 'button', class: 'cell rv-more', 'aria-label': `${items.length - 60} more`, onclick: () => go(60) }, h('span', { class: 'n', text: `+${items.length - 60}` })));
-      return box;
+      if (!UI.legend) return box;
+      const counts = {};
+      items.forEach(x => { const st = (x.strip && x.strip.status) || x.status; counts[st] = (counts[st] || 0) + 1; });
+      const wrap = h('div', { class: 'rv-rstrip-w' }, box);
+      UI.legend(wrap, [...Object.keys(counts).map(kk => ({ key: kk, label: RV_WORD[kk] || cap(kk) })), 'current'], counts, { label: 'What the cells show' });
+      return wrap;
     }
 
     /* the action row (G4, R49) plus the player's and the pane's own */
@@ -3543,19 +3552,32 @@
       if (!onx.again && q.template && q.seed !== undefined) onx.again = () => startInline(it, b, { body: it.again_body || { list: 'items', ids: [[q.template, q.seed]], count: 1, source: 'review' }, caption: 'The very same question', again: true });
       if (!onx.report) onx.report = () => report(it);
       const trapMiss = miss(it) && (!it.cause || ['trap', 'gap'].includes(it.cause.cause) || (it.mistake && ['stuck', 'relapsed'].includes(it.mistake.status)));
+      const stuck = !!(it.mistake && it.mistake.status === 'stuck');
       const ctx = Object.assign({ axes: o.axes, subject: q.subject }, base, {
         surface: pane ? 'pane' : 'player', session: it.session || o.session, question_id: q.id, template: q.template, seed: q.seed,
-        trap_id: it.trap_id || (it.mistake && it.mistake.trap_id) || null, live: false, revealed: true, missed: miss(it), fb,
+        trap_id: it.trap_id || (it.mistake && it.mistake.trap_id) || null, live: false, revealed: true, missed: miss(it) && !stuck, fb,
         saved: !!it.saved, marked: !!(it.flag || it.marked), rule: it.rule, hasNote: !!it.note, body: twinBody(it),
         inline: to => startInline(it, b, to), onSolved: trapMiss && q.template ? () => solved(it, b) : null, on: onx,
       });
       UI.questionActions(slot, q, ctx);
       const extra = h('div', { class: 'q-actions rv-extra', role: 'group', 'aria-label': 'More for this question' });
       const slug = q.topic;
+      // V11: a stuck trap is learned, not hammered: Learn it leads, the twin follows
+      if (stuck && q.template) {
+        const lb = UI.verb ? UI.verb('learn', { primary: true, sm: true }) : h('button', { type: 'button', class: 'pill sm', text: 'Learn this type' });
+        lb.addEventListener('click', async () => {
+          if (on.learn) return call('learn', [it]);
+          lb.setAttribute('aria-busy', 'true');
+          try { const d = await UI.api('/drill', { method: 'POST', body: { source: 'learn', templates: [q.template], example: true, count: 3 } }); location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`; }
+          catch (e) { lb.removeAttribute('aria-busy'); toast((e && e.message) || 'That didn’t start. Try again.'); }
+        });
+        slot.prepend(h('div', { class: 'q-actions rv-lead' }, lb));
+      }
+      if (pane && trapMiss && q.template) extra.append(h('button', { type: 'button', class: 'btn sm', text: 'See one solved', onclick: () => solved(it, b) }));
       if (!pane && slug) extra.append(h('a', { class: 'btn sm', href: `/practice/?topics=${encodeURIComponent(slug)}` }, 'Practise this skill'));
+      if (on.share) extra.append(h('button', { type: 'button', class: 'btn sm', text: 'Share', title: 'Send a question like this', onclick: () => call('share', it) }));
       if (pane) {
         if (on.spot && q.type !== 'spr') extra.append(h('button', { type: 'button', class: 'btn sm', text: 'Spot the trap', onclick: () => call('spot', it) }));
-        if (on.share) extra.append(h('button', { type: 'button', class: 'btn sm', text: 'Share', onclick: () => call('share', it) }));
         if (on.help) extra.append(h('button', { type: 'button', class: 'btn sm', text: 'Ask for help', onclick: () => call('help', it) }));
         const menuItems = [];
         if (on.addRedo && it.status === 'correct') menuItems.push({ label: 'Add to Redo', onClick: () => call('addRedo', it) });
@@ -3588,7 +3610,7 @@
       }
       const capN = ls.get('satf.review.swapcap', 0) || 0;
       const run = UI.twinInline(pane && !to.again ? b.qb : b.twinHost, {
-        body: to.body || twinBody(it), axis: to.axis, prefs: o.prefs, prepend: pane && !to.again,
+        body: to.body || twinBody(it), axis: to.axis, prefs: o.prefs, prepend: pane && !to.again, finish: !pane,
         caption: to.caption || (pane && capN >= 3 ? false : 'Same question type, new numbers'),
         backLabel: pane ? 'Back to the question you missed' : 'Back to the original',
         onBack: () => (pane ? rebuild() : b.el.scrollIntoView({ block: 'start', behavior: still() ? 'auto' : 'smooth' })),
@@ -3630,7 +3652,7 @@
           left.hidden = true;
         }
         bd.append(wrap);
-      }, actions: [{ label: 'Now you: a new one', primary: true, onClick: () => { setTimeout(() => startInline(it, b, { body: twinBody(it) }), 0); } }] });
+      }, actions: [{ label: pane ? 'Now you: a new one' : 'Your turn', primary: true, onClick: () => { setTimeout(() => startInline(it, b, { body: twinBody(it) }), 0); } }] });
       const lw = h('div'), rw = h('div');
       left.append(lw); right.append(rw);
       UI.workspace(lw, q, { mode: 'review', fb, bar: false, head: false });
@@ -3638,7 +3660,7 @@
       const ti = Number.isInteger(ex.trap_index) ? ex.trap_index : null;
       if (ti !== null) {
         const row = rw.querySelectorAll('.opt-row')[ti];
-        if (row) row.classList.add('rv-trapout');
+        if (row) { row.classList.add('rv-trapout'); const cp = row.querySelector('.opt-cap'); if (cp) cp.textContent = `Your mistake gives ${(exQ.choices || [])[ti] ?? 'this'} here`; }
         const why = g !== null && fb.reasons ? fb.reasons[g] : fb.mistake;
         right.append(h('p', { class: 'rv-trapline' }, h('b', { text: `Same trap as your ${letterOf(q, g) || 'answer'}` }), why ? `: ${why}. ` : '. ',
           `Here it gives ${(exQ.choices || [])[ti] ?? ''}.`));
@@ -3684,7 +3706,7 @@
         row('Your odds', od && od.you !== undefined ? `${Math.round(od.you * 100)}%${d.ratings ? `: ${d.ratings}` : ''}` : null),
         row('Students', cr && cr.n >= 20 && cr.rate !== undefined ? `${Math.round(cr.rate * 100)}% of ${fmtN(cr.n)} get this type right` : od && od.avg ? `About ${Math.round(od.avg * 100)}% get this type right (estimated)` : null),
         row('You on this type', d.you || (it.family && it.family.seen ? `${it.family.right ?? 0} of ${it.family.seen} right` : null)),
-        row('Worth here', it.worth ? `≈ +${Math.round(it.worth)}` : null),
+        row('Worth here', it.worth ? `≈ +${Math.round(it.worth)} pts` : null),
         row('Modelled on', d.cb ? `College Board question ${d.cb}` : null),
         row('Link to a fresh one', fresh ? copy(fresh, 'Link copied: it opens a new question like this one') : null),
         row('Link to exactly this question', exact ? copy(exact, pane ? 'Link copied (it opens only for you)' : 'Link copied') : null));
@@ -3708,7 +3730,7 @@
     }
     // the action row's buttons, reached by key
     function act(id) {
-      const row = col.querySelector('.q-actions:not(.rv-extra)');
+      const row = col.querySelector('.ws-actions .q-actions:not(.rv-extra):not(.rv-lead)');
       if (!row || hidden && !(cur && cur._local)) return false;
       const sel = { twin: '.split.twin > :first-child', twin_menu: '.split.twin .split-caret', again: '.qa-again, [data-verb="again"]', history: '.qa-history' }[id];
       const b = sel && row.querySelector(sel);
@@ -3918,7 +3940,8 @@
     /* ---------------- keys (2.8's player map, R43; SR3 and V2's own) */
     const onKey = e => {
       if (dead || o.keys === false || e.defaultPrevented || e.isComposing || e.metaKey || e.ctrlKey || e.altKey) return;
-      if (!asDialog && UI.sheet && UI.sheet.top && UI.sheet.top()) return;
+      const topM = UI.sheet && UI.sheet.top ? UI.sheet.top() : null;
+      if (asDialog ? topM !== dlg : !!topM) return;                  // a sheet over the player takes the keys
       const t = e.target;
       if (t && t.closest && t.closest('[role=menu], [role=listbox], .popover, .calc')) return;
       const inField = typing(t);
@@ -3957,7 +3980,7 @@
       if (!f) return;
       if (f() !== false) done();
     };
-    (dlg || doc).addEventListener('keydown', onKey);
+    doc.addEventListener('keydown', onKey);                        // on the document: focus can land on body when a node it sat on is replaced
 
     /* ---------------- swipe (SR16, V14): left and right move within the filter, down on the header closes */
     (() => {
@@ -3988,7 +4011,7 @@
       twinRuns.forEach(r => { try { r.finish(); } catch (_) {} });
       if (ws) { try { ws.destroy(); } catch (_) {} }
       if (dlg && UI.calc && UI.calc.isOpen) UI.calc.close();
-      (dlg || doc).removeEventListener('keydown', onKey);
+      doc.removeEventListener('keydown', onKey);
       removeEventListener('popstate', onPop);
       if (pushed && how !== 'pop') { ignorePop = true; try { history.back(); } catch (_) {} }
       if (dlg) { try { dlg.close(); } catch (_) {} dlg.remove(); doc.documentElement.classList.remove('rv-open'); }

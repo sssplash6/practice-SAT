@@ -863,6 +863,9 @@ html.rv-open { overflow: hidden; }
 
 /* the result strip (V14) and the story of a mistake (V8) */
 .rv-rstrip { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.rv-rstrip-w { display: grid; gap: 8px; }
+.rv-rstrip-w .legend { font-size: 12px; }
+.rv-lead { margin-bottom: 8px; }
 .rv-rstrip .cell { --cell: 26px; }
 .rv-rstrip .cell[data-seen]::before { content: ""; position: absolute; left: 50%; bottom: -5px; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: var(--soft); }
 .rv-rstrip .cell.has-pips .n { display: none; }

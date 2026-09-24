@@ -1831,6 +1831,7 @@
       finally { again.removeAttribute('aria-busy'); }
     });
     function finish() {
+      if (o.finish === false) return;                            // Review 8: the pane's drills are never finished
       if (sid && answered && !closedDone) { closedDone = true; api(`/drill/${encodeURIComponent(sid)}/finish`, { method: 'POST' }).catch(() => {}); }
     }
     load();
