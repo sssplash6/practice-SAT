@@ -1,0 +1,2484 @@
+{
+ "about": "Transitions for SAT Reading & Writing (W2). logic_reasons[needed][picked] explains a wrong pick; {word} is the picked transition. also_reads lists logics in which a word can also read correctly, so it is never offered as a wrong option in a family of that logic.",
+ "logics": [
+  {
+   "id": "contrast",
+   "name": "Contrast",
+   "test": "Does sentence 2 differ from or push against sentence 1?"
+  },
+  {
+   "id": "concession",
+   "name": "Concession",
+   "test": "Does sentence 2 hold even though sentence 1 points the other way, or grant a point against the claim?"
+  },
+  {
+   "id": "cause-effect",
+   "name": "Cause and effect",
+   "test": "Is sentence 2 a result of, or a conclusion drawn from, sentence 1?"
+  },
+  {
+   "id": "addition",
+   "name": "Addition",
+   "test": "Does sentence 2 add another point in the same direction about the same subject?"
+  },
+  {
+   "id": "example",
+   "name": "Example",
+   "test": "Is sentence 2 one specific case of sentence 1's general claim?"
+  },
+  {
+   "id": "sequence",
+   "name": "Sequence",
+   "test": "Does sentence 2 only come next, earlier or at the same time, with no cause stated?"
+  },
+  {
+   "id": "clarification",
+   "name": "Clarification and emphasis",
+   "test": "Does sentence 2 restate, sharpen or strengthen sentence 1?"
+  },
+  {
+   "id": "similarity",
+   "name": "Similarity",
+   "test": "Does sentence 2 show a different case that works the same way?"
+  },
+  {
+   "id": "conclusion",
+   "name": "Conclusion",
+   "test": "Does sentence 2 sum up or judge everything that came before?"
+  }
+ ],
+ "confusable": [
+  [
+   "concession",
+   "contrast"
+  ],
+  [
+   "cause-effect",
+   "sequence"
+  ],
+  [
+   "example",
+   "addition"
+  ],
+  [
+   "clarification",
+   "example"
+  ],
+  [
+   "similarity",
+   "addition"
+  ],
+  [
+   "conclusion",
+   "cause-effect"
+  ]
+ ],
+ "logic_reasons": {
+  "contrast": {
+   "concession": "“{word}” says sentence 2 holds in spite of sentence 1, but nothing in sentence 1 argues against it; the two sentences simply differ: that is contrast (“In contrast”, “However”).",
+   "cause-effect": "“{word}” presents sentence 2 as a result of sentence 1; here sentence 2 differs from or opposes sentence 1: that is contrast (“However”, “In contrast”).",
+   "addition": "“{word}” adds another point of the same kind; here sentence 2 differs from or opposes sentence 1: that is contrast (“However”, “In contrast”).",
+   "example": "“{word}” introduces a specific case of sentence 1's claim; here sentence 2 differs from or opposes sentence 1: that is contrast (“However”, “In contrast”).",
+   "sequence": "“{word}” only places sentence 2 in time relative to sentence 1; here sentence 2 differs from or opposes sentence 1: that is contrast (“However”, “In contrast”).",
+   "clarification": "“{word}” restates or strengthens sentence 1; here sentence 2 differs from or opposes sentence 1: that is contrast (“However”, “In contrast”).",
+   "similarity": "“{word}” says sentence 2 is a different case that works like sentence 1; here sentence 2 differs from or opposes sentence 1: that is contrast (“However”, “In contrast”).",
+   "conclusion": "“{word}” sums up the points before it; here sentence 2 differs from or opposes sentence 1: that is contrast (“However”, “In contrast”)."
+  },
+  "concession": {
+   "contrast": "“{word}” only sets two ideas against each other; here sentence 2 holds in spite of sentence 1, or grants a point against the claim: that is concession (“Nevertheless”, “Admittedly”).",
+   "cause-effect": "“{word}” presents sentence 2 as a result of sentence 1; here sentence 2 holds even though sentence 1 points the other way, or grants a point against the claim: that is concession (“Nevertheless”, “Admittedly”).",
+   "addition": "“{word}” adds another point of the same kind; here sentence 2 holds even though sentence 1 points the other way, or grants a point against the claim: that is concession (“Nevertheless”, “Admittedly”).",
+   "example": "“{word}” introduces a specific case of sentence 1's claim; here sentence 2 holds even though sentence 1 points the other way, or grants a point against the claim: that is concession (“Nevertheless”, “Admittedly”).",
+   "sequence": "“{word}” only places sentence 2 in time relative to sentence 1; here sentence 2 holds even though sentence 1 points the other way, or grants a point against the claim: that is concession (“Nevertheless”, “Admittedly”).",
+   "clarification": "“{word}” restates or strengthens sentence 1; here sentence 2 holds even though sentence 1 points the other way, or grants a point against the claim: that is concession (“Nevertheless”, “Admittedly”).",
+   "similarity": "“{word}” says sentence 2 is a different case that works like sentence 1; here sentence 2 holds even though sentence 1 points the other way, or grants a point against the claim: that is concession (“Nevertheless”, “Admittedly”).",
+   "conclusion": "“{word}” sums up the points before it; here sentence 2 holds even though sentence 1 points the other way, or grants a point against the claim: that is concession (“Nevertheless”, “Admittedly”)."
+  },
+  "cause-effect": {
+   "contrast": "“{word}” signals a contrast between the two sentences; here sentence 2 follows from sentence 1 as its result: that is cause and effect (“Therefore”, “As a result”).",
+   "concession": "“{word}” says sentence 2 holds in spite of sentence 1; here sentence 2 follows from sentence 1 as its result: that is cause and effect (“Therefore”, “As a result”).",
+   "addition": "“{word}” adds another point of the same kind; here sentence 2 follows from sentence 1 as its result: that is cause and effect (“Therefore”, “As a result”).",
+   "example": "“{word}” introduces a specific case of sentence 1's claim; here sentence 2 follows from sentence 1 as its result: that is cause and effect (“Therefore”, “As a result”).",
+   "sequence": "“{word}” only says sentence 2 comes later in time; here sentence 1 is the reason sentence 2 is so: that is cause and effect (“Therefore”, “As a result”).",
+   "clarification": "“{word}” restates or strengthens sentence 1; here sentence 2 follows from sentence 1 as its result: that is cause and effect (“Therefore”, “As a result”).",
+   "similarity": "“{word}” says sentence 2 is a different case that works like sentence 1; here sentence 2 follows from sentence 1 as its result: that is cause and effect (“Therefore”, “As a result”).",
+   "conclusion": "“{word}” sums up several points, but sentence 2 is the direct result of sentence 1: that is cause and effect (“Therefore”, “As a result”)."
+  },
+  "addition": {
+   "contrast": "“{word}” signals a contrast between the two sentences; here sentence 2 adds another point in the same direction: that is addition (“Moreover”, “In addition”).",
+   "concession": "“{word}” says sentence 2 holds in spite of sentence 1; here sentence 2 adds another point in the same direction: that is addition (“Moreover”, “In addition”).",
+   "cause-effect": "“{word}” presents sentence 2 as a result of sentence 1; here sentence 2 adds another point in the same direction: that is addition (“Moreover”, “In addition”).",
+   "example": "“{word}” introduces an instance of sentence 1, but sentence 2 is a separate point, not a case of it: that is addition (“Moreover”, “In addition”).",
+   "sequence": "“{word}” only places sentence 2 in time relative to sentence 1; here sentence 2 adds another point in the same direction: that is addition (“Moreover”, “In addition”).",
+   "clarification": "“{word}” restates or strengthens sentence 1; here sentence 2 adds another point in the same direction: that is addition (“Moreover”, “In addition”).",
+   "similarity": "“{word}” compares two different cases, but sentence 2 adds another point about the same one: that is addition (“Moreover”, “In addition”).",
+   "conclusion": "“{word}” sums up the points before it; here sentence 2 adds another point in the same direction: that is addition (“Moreover”, “In addition”)."
+  },
+  "example": {
+   "contrast": "“{word}” signals a contrast between the two sentences; here sentence 2 is one specific case of sentence 1's general claim: that is example (“For example”, “For instance”).",
+   "concession": "“{word}” says sentence 2 holds in spite of sentence 1; here sentence 2 is one specific case of sentence 1's general claim: that is example (“For example”, “For instance”).",
+   "cause-effect": "“{word}” presents sentence 2 as a result of sentence 1; here sentence 2 is one specific case of sentence 1's general claim: that is example (“For example”, “For instance”).",
+   "addition": "“{word}” adds a separate point; here sentence 2 is one instance of the general claim in sentence 1: that is example (“For example”, “For instance”).",
+   "sequence": "“{word}” only places sentence 2 in time relative to sentence 1; here sentence 2 is one specific case of sentence 1's general claim: that is example (“For example”, “For instance”).",
+   "clarification": "“{word}” restates sentence 1 or makes it stronger; here sentence 2 moves from the general claim to one specific case: that is example (“For example”, “For instance”).",
+   "similarity": "“{word}” says sentence 2 is a different case that works like sentence 1; here sentence 2 is one specific case of sentence 1's general claim: that is example (“For example”, “For instance”).",
+   "conclusion": "“{word}” sums up the points before it; here sentence 2 is one specific case of sentence 1's general claim: that is example (“For example”, “For instance”)."
+  },
+  "sequence": {
+   "contrast": "“{word}” signals a contrast between the two sentences; here sentence 2 is simply the next step in time: that is sequence (“Subsequently”, “Then”).",
+   "concession": "“{word}” says sentence 2 holds in spite of sentence 1; here sentence 2 is simply the next step in time: that is sequence (“Subsequently”, “Then”).",
+   "cause-effect": "“{word}” claims sentence 1 caused sentence 2, but the text gives no such link; sentence 2 is only the next step in time: that is sequence (“Subsequently”, “Then”).",
+   "addition": "“{word}” adds another point of the same kind; here sentence 2 is simply the next step in time: that is sequence (“Subsequently”, “Then”).",
+   "example": "“{word}” introduces a specific case of sentence 1's claim; here sentence 2 is simply the next step in time: that is sequence (“Subsequently”, “Then”).",
+   "clarification": "“{word}” restates or strengthens sentence 1; here sentence 2 is simply the next step in time: that is sequence (“Subsequently”, “Then”).",
+   "similarity": "“{word}” says sentence 2 is a different case that works like sentence 1; here sentence 2 is simply the next step in time: that is sequence (“Subsequently”, “Then”).",
+   "conclusion": "“{word}” sums up the points before it; here sentence 2 is simply the next step in time: that is sequence (“Subsequently”, “Then”)."
+  },
+  "clarification": {
+   "contrast": "“{word}” signals a contrast between the two sentences; here sentence 2 restates or strengthens sentence 1: that is clarification (“In other words”, “In fact”).",
+   "concession": "“{word}” says sentence 2 holds in spite of sentence 1; here sentence 2 restates or strengthens sentence 1: that is clarification (“In other words”, “In fact”).",
+   "cause-effect": "“{word}” presents sentence 2 as a result of sentence 1; here sentence 2 restates or strengthens sentence 1: that is clarification (“In other words”, “In fact”).",
+   "addition": "“{word}” adds another point of the same kind; here sentence 2 restates or strengthens sentence 1: that is clarification (“In other words”, “In fact”).",
+   "example": "“{word}” introduces one case among many, but sentence 2 restates or sharpens sentence 1 itself: that is clarification (“In other words”, “That is”).",
+   "sequence": "“{word}” only places sentence 2 in time relative to sentence 1; here sentence 2 restates or strengthens sentence 1: that is clarification (“In other words”, “In fact”).",
+   "similarity": "“{word}” says sentence 2 is a different case that works like sentence 1; here sentence 2 restates or strengthens sentence 1: that is clarification (“In other words”, “In fact”).",
+   "conclusion": "“{word}” sums up the points before it; here sentence 2 restates or strengthens sentence 1: that is clarification (“In other words”, “In fact”)."
+  },
+  "similarity": {
+   "contrast": "“{word}” signals a contrast between the two sentences; here sentence 2 turns to a different case that works the same way: that is similarity (“Similarly”, “Likewise”).",
+   "concession": "“{word}” says sentence 2 holds in spite of sentence 1; here sentence 2 turns to a different case that works the same way: that is similarity (“Similarly”, “Likewise”).",
+   "cause-effect": "“{word}” presents sentence 2 as a result of sentence 1; here sentence 2 turns to a different case that works the same way: that is similarity (“Similarly”, “Likewise”).",
+   "addition": "“{word}” adds another point about the same case; here sentence 2 turns to a different case that works the same way: that is similarity (“Similarly”, “Likewise”).",
+   "example": "“{word}” introduces a specific case of sentence 1's claim; here sentence 2 turns to a different case that works the same way: that is similarity (“Similarly”, “Likewise”).",
+   "sequence": "“{word}” only places sentence 2 in time relative to sentence 1; here sentence 2 turns to a different case that works the same way: that is similarity (“Similarly”, “Likewise”).",
+   "clarification": "“{word}” restates or strengthens sentence 1; here sentence 2 turns to a different case that works the same way: that is similarity (“Similarly”, “Likewise”).",
+   "conclusion": "“{word}” sums up the points before it; here sentence 2 turns to a different case that works the same way: that is similarity (“Similarly”, “Likewise”)."
+  },
+  "conclusion": {
+   "contrast": "“{word}” signals a contrast between the two sentences; here sentence 2 sums up everything before it: that is conclusion (“In sum”, “Overall”).",
+   "concession": "“{word}” says sentence 2 holds in spite of sentence 1; here sentence 2 sums up everything before it: that is conclusion (“In sum”, “Overall”).",
+   "cause-effect": "“{word}” treats sentence 2 as the result of the point just before it; here sentence 2 sums up everything before it: that is conclusion (“In sum”, “Overall”).",
+   "addition": "“{word}” adds another point of the same kind; here sentence 2 sums up everything before it: that is conclusion (“In sum”, “Overall”).",
+   "example": "“{word}” introduces a specific case of sentence 1's claim; here sentence 2 sums up everything before it: that is conclusion (“In sum”, “Overall”).",
+   "sequence": "“{word}” only places sentence 2 in time relative to sentence 1; here sentence 2 sums up everything before it: that is conclusion (“In sum”, “Overall”).",
+   "clarification": "“{word}” restates or strengthens sentence 1; here sentence 2 sums up everything before it: that is conclusion (“In sum”, “Overall”).",
+   "similarity": "“{word}” says sentence 2 is a different case that works like sentence 1; here sentence 2 sums up everything before it: that is conclusion (“In sum”, “Overall”)."
+  }
+ },
+ "entries": [
+  {
+   "slug": "however",
+   "word": "however",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "contrast",
+   "topics": [
+    "contrast"
+   ],
+   "meaning": "Signals that the next sentence differs from or goes against the one before it.",
+   "short": "signals a contrast or a turn",
+   "examples": [
+    "Early astronomers assumed that comets drifted through Earth's upper air. [[However]], Tycho Brahe's measurements placed the comet of 1577 far beyond the Moon.",
+    "Most of the novel's chapters are narrated by the daughter. The final chapter, [[however]], is told from her mother's point of view."
+   ],
+   "same": [
+    "in contrast",
+    "on the other hand"
+   ],
+   "lookalikes": [
+    {
+     "word": "nevertheless",
+     "tell": "However only sets two ideas against each other; nevertheless says the second holds in spite of the first."
+    }
+   ],
+   "also_reads": [
+    "concession"
+   ]
+  },
+  {
+   "slug": "in-contrast",
+   "word": "in contrast",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "contrast",
+   "topics": [
+    "contrast"
+   ],
+   "meaning": "Introduces something that differs sharply from what was just described.",
+   "short": "sets up a difference between two things",
+   "examples": [
+    "Frogs of this species lay their eggs in standing water. [[In contrast]], the related salamanders bury their eggs in damp soil.",
+    "Northern factories relied on wage labor. [[In contrast]], the Southern economy depended on enslaved workers."
+   ],
+   "same": [
+    "by contrast",
+    "however"
+   ],
+   "lookalikes": [
+    {
+     "word": "nevertheless",
+     "tell": "In contrast compares two different things; nevertheless keeps one point standing despite another."
+    }
+   ]
+  },
+  {
+   "slug": "by-contrast",
+   "word": "by contrast",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "contrast",
+   "topics": [
+    "contrast"
+   ],
+   "meaning": "Introduces a second thing that is being compared with the first and found to be different.",
+   "short": "compared with that, differently",
+   "examples": [
+    "The painter's early portraits use muted browns and grays. [[By contrast]], her late landscapes blaze with orange and violet.",
+    "Deep-ocean water barely changes temperature over a year. [[By contrast]], surface water can swing by several degrees."
+   ],
+   "same": [
+    "in contrast",
+    "conversely"
+   ],
+   "lookalikes": [
+    {
+     "word": "by the same token",
+     "tell": "By contrast points to a difference; by the same token points to a sameness."
+    }
+   ]
+  },
+  {
+   "slug": "conversely",
+   "word": "conversely",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "hard",
+   "logic": "contrast",
+   "topics": [
+    "contrast"
+   ],
+   "meaning": "Introduces the reverse case: the same relationship, but running the other way.",
+   "short": "in the reverse case",
+   "examples": [
+    "When interest rates rise, borrowing tends to fall. [[Conversely]], when rates drop, households borrow more.",
+    "Warm water holds less dissolved oxygen than cold water. [[Conversely]], cold water can hold more."
+   ],
+   "same": [
+    "in contrast",
+    "by contrast"
+   ],
+   "lookalikes": [
+    {
+     "word": "consequently",
+     "tell": "Conversely flips the relationship around; consequently gives the result of what came before."
+    }
+   ]
+  },
+  {
+   "slug": "on-the-other-hand",
+   "word": "on the other hand",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "contrast",
+   "topics": [
+    "contrast"
+   ],
+   "meaning": "Introduces a second side or a different point of view, often weighed against the first.",
+   "short": "presents the other side",
+   "examples": [
+    "The new reading of the diary settles the question of its date. [[On the other hand]], it leaves the author's identity as uncertain as before.",
+    "Solar farms need large areas of open land. Rooftop panels, [[on the other hand]], use space that is already built on."
+   ],
+   "same": [
+    "however",
+    "in contrast"
+   ],
+   "lookalikes": [
+    {
+     "word": "in addition",
+     "tell": "On the other hand weighs a different side; in addition piles on one more point on the same side."
+    }
+   ],
+   "also_reads": [
+    "concession"
+   ]
+  },
+  {
+   "slug": "on-the-contrary",
+   "word": "on the contrary",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "contrast",
+   "topics": [
+    "contrast"
+   ],
+   "meaning": "Rejects the idea just denied and states that the opposite is true.",
+   "short": "the opposite is true",
+   "examples": [
+    "The critic did not find the ending sentimental. [[On the contrary]], she praised its restraint.",
+    "The drought did not wipe out the lichen colonies. [[On the contrary]], several of them spread onto newly bare rock."
+   ],
+   "same": [
+    "rather",
+    "instead"
+   ],
+   "lookalikes": [
+    {
+     "word": "in contrast",
+     "tell": "On the contrary follows a denial and asserts its opposite; in contrast compares two different things."
+    }
+   ],
+   "also_reads": [
+    "clarification"
+   ]
+  },
+  {
+   "slug": "instead",
+   "word": "instead",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "contrast",
+   "topics": [
+    "contrast"
+   ],
+   "meaning": "Introduces what happened or is true in place of the thing just ruled out.",
+   "short": "in place of that",
+   "examples": [
+    "The committee did not adopt the proposal. [[Instead]], it asked for a smaller trial run.",
+    "The poet avoids naming her grief directly. [[Instead]], she describes the empty chair at the table."
+   ],
+   "same": [
+    "rather",
+    "on the contrary"
+   ],
+   "lookalikes": [
+    {
+     "word": "however",
+     "tell": "Instead replaces something that was ruled out; however just marks a contrast."
+    }
+   ]
+  },
+  {
+   "slug": "rather",
+   "word": "rather",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "contrast",
+   "topics": [
+    "contrast"
+   ],
+   "meaning": "Corrects the previous statement by giving the more accurate one in its place.",
+   "short": "more accurately, in place of that",
+   "examples": [
+    "The fossil does not belong to an early bird. [[Rather]], it belongs to a small feathered dinosaur.",
+    "The treaty was not a victory for either side. [[Rather]], it was an exhausted compromise."
+   ],
+   "same": [
+    "instead",
+    "on the contrary"
+   ],
+   "lookalikes": [
+    {
+     "word": "rather than",
+     "tell": "Rather opening a sentence corrects what came before; rather than inside a sentence compares two options."
+    }
+   ]
+  },
+  {
+   "slug": "in-comparison",
+   "word": "in comparison",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "contrast",
+   "topics": [
+    "contrast"
+   ],
+   "meaning": "Introduces a second thing measured against the first, usually to show how much they differ.",
+   "short": "measured against that",
+   "examples": [
+    "The Amazon carries about a fifth of the world's river water to the sea. [[In comparison]], the Mississippi carries barely one percent.",
+    "The first printing of the novel sold eight hundred copies. [[In comparison]], the paperback edition sold two million."
+   ],
+   "same": [
+    "by contrast",
+    "in contrast"
+   ],
+   "lookalikes": [
+    {
+     "word": "in the same way",
+     "tell": "In comparison sets two things side by side to show a difference; in the same way says they match."
+    }
+   ]
+  },
+  {
+   "slug": "nevertheless",
+   "word": "nevertheless",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "concession",
+   "topics": [
+    "concession"
+   ],
+   "meaning": "Says that the next point is still true even though the previous one seems to work against it.",
+   "short": "in spite of that",
+   "examples": [
+    "The expedition's maps contained serious errors. [[Nevertheless]], they guided settlers across the plains for decades.",
+    "The drug caused mild headaches in some patients. [[Nevertheless]], most chose to continue the treatment."
+   ],
+   "same": [
+    "nonetheless",
+    "even so"
+   ],
+   "lookalikes": [
+    {
+     "word": "however",
+     "tell": "Nevertheless says the point survives the objection; however only marks a contrast."
+    }
+   ]
+  },
+  {
+   "slug": "nonetheless",
+   "word": "nonetheless",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "concession",
+   "topics": [
+    "concession"
+   ],
+   "meaning": "Says that something holds true despite what was just said.",
+   "short": "even so, despite that",
+   "examples": [
+    "The sample size was small. [[Nonetheless]], the results matched those of much larger studies.",
+    "Critics dismissed the play as too long. It was [[nonetheless]] a success at the box office."
+   ],
+   "same": [
+    "nevertheless",
+    "still"
+   ],
+   "lookalikes": [
+    {
+     "word": "consequently",
+     "tell": "Nonetheless means despite that; consequently means because of that."
+    }
+   ]
+  },
+  {
+   "slug": "still",
+   "word": "still",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "concession",
+   "topics": [
+    "concession"
+   ],
+   "meaning": "At the start of a sentence, says the next point holds even after what was just admitted.",
+   "short": "even so",
+   "examples": [
+    "The theory could not explain every observation. [[Still]], it accounted for far more than its rivals.",
+    "The village had lost half its population. [[Still]], the weekly market went on."
+   ],
+   "same": [
+    "even so",
+    "nevertheless"
+   ],
+   "lookalikes": [
+    {
+     "word": "still (continuing)",
+     "tell": "Still opening a sentence means even so; still inside it means continuing, as in still raining."
+    }
+   ]
+  },
+  {
+   "slug": "even-so",
+   "word": "even so",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "concession",
+   "topics": [
+    "concession"
+   ],
+   "meaning": "Admits the truth of what came before but says the next point holds anyway.",
+   "short": "despite that",
+   "examples": [
+    "The factory's new filters removed most of the soot. [[Even so]], residents continued to report breathing problems.",
+    "The memoir leaves out whole years of the author's life. [[Even so]], historians rely on it heavily."
+   ],
+   "same": [
+    "still",
+    "nonetheless"
+   ],
+   "lookalikes": [
+    {
+     "word": "even though",
+     "tell": "Even so opens a new sentence after the admitted point; even though joins the admitted point inside one sentence."
+    }
+   ]
+  },
+  {
+   "slug": "admittedly",
+   "word": "admittedly",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "concession",
+   "topics": [
+    "concession"
+   ],
+   "meaning": "Introduces a point the writer grants, often a weakness in their own argument.",
+   "short": "it must be granted that",
+   "examples": [
+    "The new vaccine is remarkably effective. [[Admittedly]], it must be stored at extremely low temperatures.",
+    "The biography is the best account of the senator's career. [[Admittedly]], it says little about his early years."
+   ],
+   "same": [
+    "granted",
+    "to be sure"
+   ],
+   "lookalikes": [
+    {
+     "word": "accordingly",
+     "tell": "Admittedly concedes a point against the claim; accordingly gives a fitting result."
+    }
+   ]
+  },
+  {
+   "slug": "granted",
+   "word": "granted",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "hard",
+   "logic": "concession",
+   "topics": [
+    "concession"
+   ],
+   "meaning": "At the start of a sentence, concedes that a point is true before the writer's main claim.",
+   "short": "it is true that",
+   "examples": [
+    "The survey reached only three hundred households. [[Granted]], that is a small sample for a city of this size.",
+    "The treaty's terms were harsh. [[Granted]], the defeated side had begun the war."
+   ],
+   "same": [
+    "admittedly",
+    "to be sure"
+   ],
+   "lookalikes": [
+    {
+     "word": "guaranteed",
+     "tell": "Granted concedes a point; guaranteed promises that something will happen."
+    }
+   ]
+  },
+  {
+   "slug": "regardless",
+   "word": "regardless",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "concession",
+   "topics": [
+    "concession"
+   ],
+   "meaning": "Says that what follows happens or holds no matter what was just said.",
+   "short": "no matter that, anyway",
+   "examples": [
+    "The forecast called for heavy rain on the day of the launch. [[Regardless]], the engineers kept to the schedule.",
+    "The painting's attribution remains disputed. [[Regardless]], it is among the museum's most visited works."
+   ],
+   "same": [
+    "nevertheless",
+    "all the same"
+   ],
+   "lookalikes": [
+    {
+     "word": "irregardless",
+     "tell": "Regardless is standard English; irregardless is a nonstandard form the SAT treats as an error."
+    }
+   ]
+  },
+  {
+   "slug": "that-said",
+   "word": "that said",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "concession",
+   "topics": [
+    "concession"
+   ],
+   "meaning": "Accepts what was just said and then adds a limitation or a point in the other direction.",
+   "short": "having admitted that",
+   "examples": [
+    "The museum's new wing is striking to look at. [[That said]], its galleries are too dim for the paintings they hold.",
+    "The model predicts rainfall well in most regions. [[That said]], it performs poorly in mountainous areas."
+   ],
+   "same": [
+    "even so",
+    "at the same time"
+   ],
+   "lookalikes": [
+    {
+     "word": "that is",
+     "tell": "That said qualifies what came before; that is restates it more exactly."
+    }
+   ]
+  },
+  {
+   "slug": "all-the-same",
+   "word": "all the same",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "hard",
+   "logic": "concession",
+   "topics": [
+    "concession"
+   ],
+   "meaning": "Says that something remains true in spite of what was just described.",
+   "short": "in spite of that",
+   "examples": [
+    "The expedition failed to reach the pole. [[All the same]], its maps of the coastline were used for a century.",
+    "The novelist disliked the film version of her book. [[All the same]], she attended its premiere."
+   ],
+   "same": [
+    "nevertheless",
+    "even so"
+   ],
+   "lookalikes": [
+    {
+     "word": "in the same way",
+     "tell": "All the same means despite that; in the same way means similarly."
+    }
+   ]
+  },
+  {
+   "slug": "despite-this",
+   "word": "despite this",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "concession",
+   "topics": [
+    "concession"
+   ],
+   "meaning": "Introduces something that happened or holds even though the previous point worked against it.",
+   "short": "even though that was so",
+   "examples": [
+    "The bridge's design was considered risky by many engineers. [[Despite this]], the city approved its construction.",
+    "The poet received almost no recognition during her lifetime. [[Despite this]], she wrote nearly two thousand poems."
+   ],
+   "same": [
+    "in spite of this",
+    "nevertheless"
+   ],
+   "lookalikes": [
+    {
+     "word": "because of this",
+     "tell": "Despite this means the next point holds against the odds; because of this means it follows as a result."
+    }
+   ]
+  },
+  {
+   "slug": "in-spite-of-this",
+   "word": "in spite of this",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "concession",
+   "topics": [
+    "concession"
+   ],
+   "meaning": "Introduces something that holds or happens even though the previous point pushed against it.",
+   "short": "even though that was so",
+   "examples": [
+    "Funding for the observatory was cut by half. [[In spite of this]], its staff catalogued more stars than ever before.",
+    "The strike lasted only three days. [[In spite of this]], it changed the city's labor laws."
+   ],
+   "same": [
+    "despite this",
+    "nonetheless"
+   ],
+   "lookalikes": [
+    {
+     "word": "in light of this",
+     "tell": "In spite of this means despite it; in light of this means because of it."
+    }
+   ]
+  },
+  {
+   "slug": "to-be-sure",
+   "word": "to be sure",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "hard",
+   "logic": "concession",
+   "topics": [
+    "concession"
+   ],
+   "meaning": "Concedes a point, often before the writer turns back to the main claim.",
+   "short": "admittedly, certainly",
+   "examples": [
+    "The reform did not end poverty in the region. [[To be sure]], it was never meant to do so on its own.",
+    "The composer's late symphonies are uneven. [[To be sure]], they contain some of his finest passages."
+   ],
+   "same": [
+    "admittedly",
+    "granted"
+   ],
+   "lookalikes": [
+    {
+     "word": "to be precise",
+     "tell": "To be sure concedes a point; to be precise sharpens a statement."
+    }
+   ]
+  },
+  {
+   "slug": "at-the-same-time",
+   "word": "at the same time",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "concession",
+   "topics": [
+    "concession"
+   ],
+   "meaning": "Introduces a point that must be weighed against the one just made; it can also mean simultaneously.",
+   "short": "while that is true, also",
+   "examples": [
+    "The law protected workers from the worst abuses. [[At the same time]], it made small workshops expensive to run.",
+    "The novel mocks the town's snobbery. [[At the same time]], it treats its characters with real affection."
+   ],
+   "same": [
+    "that said",
+    "even so"
+   ],
+   "lookalikes": [
+    {
+     "word": "simultaneously",
+     "tell": "Simultaneously only means at the same moment; at the same time can also mean while that is true."
+    }
+   ],
+   "also_reads": [
+    "contrast",
+    "sequence"
+   ]
+  },
+  {
+   "slug": "therefore",
+   "word": "therefore",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "cause-effect",
+   "topics": [
+    "cause-effect"
+   ],
+   "meaning": "Introduces a result or a conclusion that follows from what came before.",
+   "short": "as a result, so",
+   "examples": [
+    "The fossil lies beneath a layer of volcanic ash dated to 3.2 million years ago. It is [[therefore]] older than the eruption.",
+    "The letter mentions the fire of 1871. It [[therefore]] cannot have been written earlier."
+   ],
+   "same": [
+    "thus",
+    "consequently"
+   ],
+   "lookalikes": [
+    {
+     "word": "furthermore",
+     "tell": "Therefore gives a result of the point before; furthermore adds another point."
+    }
+   ]
+  },
+  {
+   "slug": "thus",
+   "word": "thus",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "cause-effect",
+   "topics": [
+    "cause-effect"
+   ],
+   "meaning": "Introduces what follows as a result or a logical conclusion.",
+   "short": "as a result, therefore",
+   "examples": [
+    "The enzyme breaks down only one kind of sugar. [[Thus]], bacteria that lack it cannot feed on that sugar.",
+    "The council controlled the harbor and the roads. It [[thus]] controlled nearly all trade into the city."
+   ],
+   "same": [
+    "therefore",
+    "hence"
+   ],
+   "lookalikes": [
+    {
+     "word": "thereby",
+     "tell": "Thus opens a result or conclusion; thereby means by that means, inside a sentence, as in thereby reducing costs."
+    }
+   ]
+  },
+  {
+   "slug": "consequently",
+   "word": "consequently",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "cause-effect",
+   "topics": [
+    "cause-effect"
+   ],
+   "meaning": "Introduces something that happened because of what was just described.",
+   "short": "as a result",
+   "examples": [
+    "The river's course shifted several miles west. [[Consequently]], the old port town was left without access to the water.",
+    "The chemical breaks down quickly in sunlight. [[Consequently]], it rarely builds up in surface water."
+   ],
+   "same": [
+    "as a result",
+    "therefore"
+   ],
+   "lookalikes": [
+    {
+     "word": "subsequently",
+     "tell": "Consequently says one thing caused the next; subsequently only says it came later."
+    }
+   ],
+   "also_reads": [
+    "sequence"
+   ]
+  },
+  {
+   "slug": "as-a-result",
+   "word": "as a result",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "cause-effect",
+   "topics": [
+    "cause-effect"
+   ],
+   "meaning": "Introduces an effect of what was just described.",
+   "short": "because of that",
+   "examples": [
+    "Wolves were reintroduced to the park in 1995. [[As a result]], elk stopped grazing along the riverbanks.",
+    "The printing press made books far cheaper to produce. [[As a result]], literacy spread rapidly across Europe."
+   ],
+   "same": [
+    "consequently",
+    "as a consequence"
+   ],
+   "lookalikes": [
+    {
+     "word": "in the end",
+     "tell": "As a result names an effect of the previous point; in the end names a final outcome, however it came about."
+    }
+   ],
+   "also_reads": [
+    "sequence"
+   ]
+  },
+  {
+   "slug": "as-a-consequence",
+   "word": "as a consequence",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "cause-effect",
+   "topics": [
+    "cause-effect"
+   ],
+   "meaning": "Introduces a result of what was just described.",
+   "short": "as a result",
+   "examples": [
+    "The glacier retreated rapidly after 1900. [[As a consequence]], the valley's streams now run dry by late summer.",
+    "The author's letters were burned after her death. [[As a consequence]], much of her private life remains unknown."
+   ],
+   "same": [
+    "as a result",
+    "consequently"
+   ],
+   "lookalikes": [
+    {
+     "word": "in consequence of",
+     "tell": "As a consequence opens a sentence that gives a result; in consequence of names the cause."
+    }
+   ],
+   "also_reads": [
+    "sequence"
+   ]
+  },
+  {
+   "slug": "hence",
+   "word": "hence",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "hard",
+   "logic": "cause-effect",
+   "topics": [
+    "cause-effect"
+   ],
+   "meaning": "Introduces a conclusion or result drawn from what came before.",
+   "short": "for this reason, therefore",
+   "examples": [
+    "The pigment appears only in paintings made after 1850. [[Hence]], the portrait cannot be the early work its owner claims.",
+    "Heat escapes more slowly through double-paned glass. [[Hence]], such windows lower heating costs."
+   ],
+   "same": [
+    "therefore",
+    "thus"
+   ],
+   "lookalikes": [
+    {
+     "word": "henceforth",
+     "tell": "Hence means therefore; henceforth means from now on."
+    }
+   ]
+  },
+  {
+   "slug": "accordingly",
+   "word": "accordingly",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "hard",
+   "logic": "cause-effect",
+   "topics": [
+    "cause-effect"
+   ],
+   "meaning": "Introduces an action or result that fits, or responds to, what was just described.",
+   "short": "in response, so",
+   "examples": [
+    "Surveys showed that most riders traveled before dawn. [[Accordingly]], the transit agency added early-morning trains.",
+    "The soil at the site was highly acidic. [[Accordingly]], the farmers planted crops that tolerate acid."
+   ],
+   "same": [
+    "therefore",
+    "consequently"
+   ],
+   "lookalikes": [
+    {
+     "word": "according to",
+     "tell": "Accordingly means in response or as a result; according to means as stated by."
+    }
+   ]
+  },
+  {
+   "slug": "for-this-reason",
+   "word": "for this reason",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "cause-effect",
+   "topics": [
+    "cause-effect"
+   ],
+   "meaning": "Introduces what follows because of the reason just given.",
+   "short": "because of that",
+   "examples": [
+    "The manuscript is written in a code the author invented. [[For this reason]], scholars have been unable to read most of it.",
+    "Owls' feathers have soft, fringed edges that break up the flow of air. [[For this reason]], owls fly almost silently."
+   ],
+   "same": [
+    "because of this",
+    "therefore"
+   ],
+   "lookalikes": [
+    {
+     "word": "for example",
+     "tell": "For this reason gives a result of what came before; for example gives an instance of it."
+    }
+   ]
+  },
+  {
+   "slug": "because-of-this",
+   "word": "because of this",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "cause-effect",
+   "topics": [
+    "cause-effect"
+   ],
+   "meaning": "Introduces a result of what was just said.",
+   "short": "as a result",
+   "examples": [
+    "The island has no native mammals that hunt birds. [[Because of this]], several of its bird species lost the ability to fly.",
+    "The senator's speech was printed in every major newspaper. [[Because of this]], its phrases were soon repeated across the country."
+   ],
+   "same": [
+    "for this reason",
+    "as a result"
+   ],
+   "lookalikes": [
+    {
+     "word": "despite this",
+     "tell": "Because of this gives a result; despite this gives something that holds against the odds."
+    }
+   ]
+  },
+  {
+   "slug": "otherwise",
+   "word": "otherwise",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "cause-effect",
+   "topics": [
+    "cause-effect"
+   ],
+   "meaning": "Introduces what would happen if the condition just described were not met.",
+   "short": "if not, or else",
+   "examples": [
+    "The seeds must be kept completely dry. [[Otherwise]], they will rot before planting season.",
+    "Engineers had to reinforce the tower's base. [[Otherwise]], it would have continued to lean."
+   ],
+   "same": [
+    "or else"
+   ],
+   "lookalikes": [
+    {
+     "word": "other than",
+     "tell": "Otherwise means if not; other than means except for."
+    }
+   ]
+  },
+  {
+   "slug": "moreover",
+   "word": "moreover",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "addition",
+   "topics": [
+    "addition"
+   ],
+   "meaning": "Adds a further point, usually one that strengthens the argument already being made.",
+   "short": "adds a further, supporting point",
+   "examples": [
+    "The new battery charges in under ten minutes. [[Moreover]], it holds its charge twice as long as older models.",
+    "The historian's account is well documented. [[Moreover]], it is supported by letters discovered after its publication."
+   ],
+   "same": [
+    "furthermore",
+    "in addition"
+   ],
+   "lookalikes": [
+    {
+     "word": "similarly",
+     "tell": "Moreover adds another point about the same subject; similarly shows that a different subject behaves alike."
+    }
+   ]
+  },
+  {
+   "slug": "furthermore",
+   "word": "furthermore",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "addition",
+   "topics": [
+    "addition"
+   ],
+   "meaning": "Adds another point in the same direction as the one before.",
+   "short": "in addition, also",
+   "examples": [
+    "The proposed dam would flood three villages. [[Furthermore]], it would block the river's salmon runs.",
+    "The novel's plot is gripping. [[Furthermore]], its descriptions of the city are exact enough to serve as a map."
+   ],
+   "same": [
+    "moreover",
+    "additionally"
+   ],
+   "lookalikes": [
+    {
+     "word": "therefore",
+     "tell": "Furthermore adds a point; therefore draws a result from the point before."
+    }
+   ]
+  },
+  {
+   "slug": "in-addition",
+   "word": "in addition",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "addition",
+   "topics": [
+    "addition"
+   ],
+   "meaning": "Adds another fact or point to those already given.",
+   "short": "also, as well",
+   "examples": [
+    "The museum's collection includes over two thousand textiles. [[In addition]], it holds the region's largest archive of weavers' notebooks.",
+    "The treatment reduced swelling in most patients. [[In addition]], it shortened their recovery time."
+   ],
+   "same": [
+    "additionally",
+    "moreover"
+   ],
+   "lookalikes": [
+    {
+     "word": "in addition to",
+     "tell": "In addition opens a sentence that adds a point; in addition to joins two things inside one sentence."
+    }
+   ]
+  },
+  {
+   "slug": "additionally",
+   "word": "additionally",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "addition",
+   "topics": [
+    "addition"
+   ],
+   "meaning": "Adds another fact or point to the one before.",
+   "short": "also, in addition",
+   "examples": [
+    "The coral reef shelters hundreds of fish species. [[Additionally]], it protects the nearby coast from storm waves.",
+    "The reform lowered taxes on farmland. [[Additionally]], it abolished the tolls on rural roads."
+   ],
+   "same": [
+    "in addition",
+    "furthermore"
+   ],
+   "lookalikes": [
+    {
+     "word": "accordingly",
+     "tell": "Additionally adds a point; accordingly gives a response or result."
+    }
+   ]
+  },
+  {
+   "slug": "besides",
+   "word": "besides",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "addition",
+   "topics": [
+    "addition"
+   ],
+   "meaning": "Adds a further point, often one that settles the matter.",
+   "short": "and also, anyway",
+   "examples": [
+    "The committee rejected the plan as too expensive. [[Besides]], the site it proposed was already protected parkland.",
+    "The poet refused the invitation because she disliked travel. [[Besides]], she had a manuscript due that month."
+   ],
+   "same": [
+    "moreover",
+    "what's more"
+   ],
+   "lookalikes": [
+    {
+     "word": "beside",
+     "tell": "Besides means in addition; beside means next to."
+    }
+   ]
+  },
+  {
+   "slug": "further.addition",
+   "word": "further",
+   "sense": "adding a point",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "hard",
+   "logic": "addition",
+   "topics": [
+    "addition"
+   ],
+   "meaning": "At the start of a sentence, adds another point in support of the argument.",
+   "short": "in addition, moreover",
+   "examples": [
+    "The study found that the plants grew faster in the treated soil. [[Further]], their roots were noticeably longer.",
+    "The law restricted who could vote. [[Further]], it made registration offices open only on weekdays."
+   ],
+   "same": [
+    "furthermore",
+    "moreover"
+   ],
+   "lookalikes": [
+    {
+     "word": "farther",
+     "tell": "Further here adds a point; farther refers to physical distance."
+    }
+   ]
+  },
+  {
+   "slug": "whats-more",
+   "word": "what's more",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "addition",
+   "topics": [
+    "addition"
+   ],
+   "meaning": "Adds a further point, often a stronger or more surprising one.",
+   "short": "on top of that",
+   "examples": [
+    "The newly discovered frog is smaller than a fingernail. [[What's more]], it can change color in seconds.",
+    "The mayor's plan cut the city's debt in two years. [[What's more]], it did so without raising taxes."
+   ],
+   "same": [
+    "moreover",
+    "besides"
+   ],
+   "lookalikes": [
+    {
+     "word": "as well as",
+     "tell": "What's more opens a new sentence with an extra point; as well as joins two items inside one sentence."
+    }
+   ]
+  },
+  {
+   "slug": "for-example",
+   "word": "for example",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "example",
+   "topics": [
+    "example"
+   ],
+   "meaning": "Introduces a specific case that shows the general point just made.",
+   "short": "introduces a specific case",
+   "examples": [
+    "Many desert plants store water in their tissues. [[For example]], a large saguaro cactus can hold more than a ton of water.",
+    "Several colonial newspapers mocked the new tax. [[For example]], one Boston paper printed its announcement inside a black mourning border."
+   ],
+   "same": [
+    "for instance",
+    "to illustrate"
+   ],
+   "lookalikes": [
+    {
+     "word": "in fact",
+     "tell": "For example gives one case of a general claim; in fact strengthens or corrects the claim itself."
+    }
+   ]
+  },
+  {
+   "slug": "for-instance",
+   "word": "for instance",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "example",
+   "topics": [
+    "example"
+   ],
+   "meaning": "Introduces one particular case of the general point just made.",
+   "short": "as one case",
+   "examples": [
+    "Some birds use tools to find food. [[For instance]], New Caledonian crows shape twigs into hooks to pull insects from bark.",
+    "The poet often borrows the rhythms of hymns. In \"Night Watch,\" [[for instance]], each stanza follows a familiar church meter."
+   ],
+   "same": [
+    "for example",
+    "to illustrate"
+   ],
+   "lookalikes": [
+    {
+     "word": "in the first place",
+     "tell": "For instance gives a case of the claim; in the first place gives the first reason in a list."
+    }
+   ]
+  },
+  {
+   "slug": "specifically",
+   "word": "specifically",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "example",
+   "topics": [
+    "example"
+   ],
+   "meaning": "Narrows a general statement down to the exact case or detail meant.",
+   "short": "to name the exact case",
+   "examples": [
+    "The treaty changed the border in the north. [[Specifically]], it gave the river valley to the neighboring state.",
+    "The researchers tracked one change in the birds' behavior. [[Specifically]], they measured how early each morning the males began to sing."
+   ],
+   "same": [
+    "in particular",
+    "for example"
+   ],
+   "lookalikes": [
+    {
+     "word": "especially",
+     "tell": "Specifically names the exact case meant; especially stresses one case above others."
+    }
+   ]
+  },
+  {
+   "slug": "in-particular",
+   "word": "in particular",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "example",
+   "topics": [
+    "example"
+   ],
+   "meaning": "Singles out one especially important case of the general point just made.",
+   "short": "especially, above all others",
+   "examples": [
+    "The novel's minor characters are vividly drawn. The landlady, [[in particular]], steals every scene she appears in.",
+    "Several industries depended on the canal. Coal mining, [[in particular]], could not have grown without it."
+   ],
+   "same": [
+    "specifically",
+    "for example"
+   ],
+   "lookalikes": [
+    {
+     "word": "in general",
+     "tell": "In particular narrows to one case; in general widens to the usual pattern."
+    }
+   ]
+  },
+  {
+   "slug": "to-illustrate",
+   "word": "to illustrate",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "example",
+   "topics": [
+    "example"
+   ],
+   "meaning": "Introduces an example chosen to make the general point clearer.",
+   "short": "to show this with an example",
+   "examples": [
+    "Small changes in wording can shift how people answer a survey. [[To illustrate]], more respondents supported \"aid to the poor\" than \"welfare,\" though the programs were identical.",
+    "The author builds suspense through delay. [[To illustrate]], the letter that explains everything is mentioned in chapter two but not opened until chapter twenty."
+   ],
+   "same": [
+    "for example",
+    "for instance"
+   ],
+   "lookalikes": [
+    {
+     "word": "to clarify",
+     "tell": "To illustrate brings in an example; to clarify restates the point more plainly."
+    }
+   ]
+  },
+  {
+   "slug": "then",
+   "word": "then",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces the next step or event in order.",
+   "short": "next, after that",
+   "examples": [
+    "The technicians first sealed the samples in glass tubes. [[Then]], they heated the tubes to 400 degrees.",
+    "Stanton read the declaration aloud to the convention. [[Then]], the delegates debated it paragraph by paragraph."
+   ],
+   "same": [
+    "next",
+    "afterward"
+   ],
+   "lookalikes": [
+    {
+     "word": "than",
+     "tell": "Then refers to order in time; than is used in comparisons, as in taller than."
+    }
+   ]
+  },
+  {
+   "slug": "next",
+   "word": "next",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces the step or event that comes right after the one just described.",
+   "short": "right after that",
+   "examples": [
+    "The team first mapped the cave's entrance. [[Next]], they lowered sensors into the deepest shaft.",
+    "The printer set each page in lead type. [[Next]], he inked the type and pressed damp paper onto it."
+   ],
+   "same": [
+    "then",
+    "subsequently"
+   ],
+   "lookalikes": [
+    {
+     "word": "finally",
+     "tell": "Next introduces the following step; finally introduces the last one."
+    }
+   ]
+  },
+  {
+   "slug": "subsequently",
+   "word": "subsequently",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces something that happened later, after the event just described.",
+   "short": "afterward, later",
+   "examples": [
+    "Tu Youyou isolated artemisinin from a traditional herbal remedy in 1972. [[Subsequently]], the compound became a standard treatment for malaria.",
+    "The poem first appeared in a small magazine. It was [[subsequently]] reprinted in newspapers across the country."
+   ],
+   "same": [
+    "later",
+    "afterward"
+   ],
+   "lookalikes": [
+    {
+     "word": "consequently",
+     "tell": "Subsequently only says it came later; consequently says it was caused by what came before."
+    }
+   ]
+  },
+  {
+   "slug": "afterward",
+   "word": "afterward",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces something that happened after the event just described.",
+   "short": "after that, later",
+   "examples": [
+    "The delegates signed the treaty in a small chapel. [[Afterward]], they walked together to the town square.",
+    "The divers photographed the wreck for three days. [[Afterward]], they mapped its position with sonar."
+   ],
+   "same": [
+    "later",
+    "subsequently"
+   ],
+   "lookalikes": [
+    {
+     "word": "afterword",
+     "tell": "Afterward means later; an afterword is a closing section of a book."
+    }
+   ]
+  },
+  {
+   "slug": "thereafter",
+   "word": "thereafter",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "hard",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces what happened from that point on, after the event just described.",
+   "short": "from then on, after that",
+   "examples": [
+    "The observatory opened in 1897. [[Thereafter]], it recorded the weather every hour for more than a century.",
+    "The author's first novel was rejected by nine publishers. [[Thereafter]], she published only under a pen name."
+   ],
+   "same": [
+    "afterward",
+    "subsequently"
+   ],
+   "lookalikes": [
+    {
+     "word": "therefore",
+     "tell": "Thereafter means after that in time; therefore means as a result."
+    }
+   ]
+  },
+  {
+   "slug": "later",
+   "word": "later",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces something that happened at a time after the event just described.",
+   "short": "at a later time",
+   "examples": [
+    "The young botanist collected the plant on a riverbank in Peru. [[Later]], it was named in her honor.",
+    "The song was first performed at a small church gathering. [[Later]], it became an anthem of the civil rights movement."
+   ],
+   "same": [
+    "afterward",
+    "subsequently"
+   ],
+   "lookalikes": [
+    {
+     "word": "latter",
+     "tell": "Later means afterward in time; latter means the second of two things named."
+    }
+   ]
+  },
+  {
+   "slug": "eventually",
+   "word": "eventually",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces what happened in the end, after a long time or a series of events.",
+   "short": "after a long time, in the end",
+   "examples": [
+    "The seedlings struggled in the thin soil for years. [[Eventually]], they formed a dense forest.",
+    "The inventor's early engines kept breaking down. [[Eventually]], one ran for a full hour."
+   ],
+   "same": [
+    "in time",
+    "finally"
+   ],
+   "lookalikes": [
+    {
+     "word": "ultimately",
+     "tell": "Eventually marks when something happened, after a long while; ultimately can also mean at the most basic level."
+    }
+   ],
+   "also_reads": [
+    "conclusion"
+   ]
+  },
+  {
+   "slug": "finally",
+   "word": "finally",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces the last step in a process, the last event in a series, or the last point in a list.",
+   "short": "as the last step",
+   "examples": [
+    "The crew poured the concrete and let it cure for a month. [[Finally]], they removed the wooden forms.",
+    "Negotiations dragged on through the winter. [[Finally]], in April, both sides agreed to the terms."
+   ],
+   "same": [
+    "lastly",
+    "eventually"
+   ],
+   "lookalikes": [
+    {
+     "word": "finely",
+     "tell": "Finally means last or at last; finely means in small pieces or with delicacy."
+    }
+   ],
+   "also_reads": [
+    "addition",
+    "conclusion"
+   ]
+  },
+  {
+   "slug": "previously",
+   "word": "previously",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces something that happened before the event or time just described.",
+   "short": "before that, earlier",
+   "examples": [
+    "The painting now hangs in the national gallery. [[Previously]], it had spent a century in a private collection.",
+    "Today the region grows mostly soybeans. [[Previously]], its farms had produced wheat."
+   ],
+   "same": [
+    "earlier",
+    "before that"
+   ],
+   "lookalikes": [
+    {
+     "word": "presently",
+     "tell": "Previously means before; presently means now or soon."
+    }
+   ]
+  },
+  {
+   "slug": "earlier",
+   "word": "earlier",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces something that happened before the event just described.",
+   "short": "before that",
+   "examples": [
+    "The spacecraft reached Jupiter in 2016. [[Earlier]], it had swung past Earth to gain speed.",
+    "The novel ends with the heroine leaving the city. [[Earlier]], she had sworn she would never go."
+   ],
+   "same": [
+    "previously",
+    "before that"
+   ],
+   "lookalikes": [
+    {
+     "word": "early",
+     "tell": "Earlier as a transition means before that; early means near the beginning of a period."
+    }
+   ]
+  },
+  {
+   "slug": "meanwhile",
+   "word": "meanwhile",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces something happening at the same time as the event just described, often somewhere else.",
+   "short": "at the same time",
+   "examples": [
+    "Engineers spent the spring testing the rocket's engines. [[Meanwhile]], the astronauts trained in a desert far to the west.",
+    "The general waited outside the city for reinforcements. [[Meanwhile]], the defenders were quietly rebuilding the walls."
+   ],
+   "same": [
+    "in the meantime",
+    "simultaneously"
+   ],
+   "lookalikes": [
+    {
+     "word": "afterward",
+     "tell": "Meanwhile means during the same time; afterward means after it."
+    }
+   ],
+   "also_reads": [
+    "contrast",
+    "similarity"
+   ]
+  },
+  {
+   "slug": "simultaneously",
+   "word": "simultaneously",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces something that happens at exactly the same time as what was just described.",
+   "short": "at the same moment",
+   "examples": [
+    "The main telescope photographed the flare in visible light. [[Simultaneously]], a satellite recorded it in X-rays.",
+    "The two orchestras began playing on the same downbeat. [[Simultaneously]], the lights in the hall went dark."
+   ],
+   "same": [
+    "at once",
+    "meanwhile"
+   ],
+   "lookalikes": [
+    {
+     "word": "similarly",
+     "tell": "Simultaneously means at the same time; similarly means in a like way."
+    }
+   ]
+  },
+  {
+   "slug": "in-the-meantime",
+   "word": "in the meantime",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces what happens during the time before a later event.",
+   "short": "while waiting for that",
+   "examples": [
+    "The new bridge will not open until next year. [[In the meantime]], a ferry carries commuters across the river.",
+    "The committee delayed its final vote until autumn. [[In the meantime]], members toured the proposed site."
+   ],
+   "same": [
+    "meanwhile"
+   ],
+   "lookalikes": [
+    {
+     "word": "in the end",
+     "tell": "In the meantime means during the wait; in the end means when it is all over."
+    }
+   ]
+  },
+  {
+   "slug": "initially",
+   "word": "initially",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "sequence",
+   "topics": [
+    "sequence"
+   ],
+   "meaning": "Introduces what was true or happened at first, before a later change.",
+   "short": "at first",
+   "examples": [
+    "The lichen now covers the entire rock face. [[Initially]], it grew only in the shaded cracks.",
+    "The composer's opera is now performed worldwide. [[Initially]], it closed after a single night."
+   ],
+   "same": [
+    "at first",
+    "originally"
+   ],
+   "lookalikes": [
+    {
+     "word": "initiative",
+     "tell": "Initially means at first; initiative means the drive to begin things."
+    }
+   ]
+  },
+  {
+   "slug": "that-is",
+   "word": "that is",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "clarification",
+   "topics": [
+    "clarification"
+   ],
+   "meaning": "Introduces a restatement that makes the previous idea more exact or easier to understand.",
+   "short": "to put it more exactly",
+   "examples": [
+    "The species is endemic to the island. [[That is]], it lives nowhere else on Earth.",
+    "The vote was unanimous. [[That is]], not one delegate objected."
+   ],
+   "same": [
+    "in other words",
+    "put differently"
+   ],
+   "lookalikes": [
+    {
+     "word": "that said",
+     "tell": "That is restates the point; that said qualifies it."
+    }
+   ]
+  },
+  {
+   "slug": "in-other-words",
+   "word": "in other words",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "clarification",
+   "topics": [
+    "clarification"
+   ],
+   "meaning": "Introduces a simpler or clearer way of saying what was just said.",
+   "short": "to say it more simply",
+   "examples": [
+    "The treaty gave neither nation control of the strait. [[In other words]], the waterway remained open to all ships.",
+    "The infection was asymptomatic in nearly half of cases. [[In other words]], many infected people never felt sick."
+   ],
+   "same": [
+    "that is",
+    "put differently"
+   ],
+   "lookalikes": [
+    {
+     "word": "for example",
+     "tell": "In other words says the same idea again; for example gives one case of it."
+    }
+   ]
+  },
+  {
+   "slug": "in-fact",
+   "word": "in fact",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "clarification",
+   "topics": [
+    "clarification"
+   ],
+   "meaning": "Introduces a statement that strengthens, sharpens or corrects the one before it.",
+   "short": "actually, even more so",
+   "examples": [
+    "The comet was bright enough to see without a telescope. [[In fact]], observers in Chile reported it in daylight.",
+    "Many readers assume the poem is about grief. [[In fact]], it was written for the poet's wedding."
+   ],
+   "same": [
+    "indeed",
+    "actually"
+   ],
+   "lookalikes": [
+    {
+     "word": "for example",
+     "tell": "In fact strengthens or corrects the claim itself; for example offers one case of it."
+    }
+   ],
+   "also_reads": [
+    "contrast",
+    "example",
+    "addition",
+    "conclusion"
+   ]
+  },
+  {
+   "slug": "indeed",
+   "word": "indeed",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "clarification",
+   "topics": [
+    "clarification"
+   ],
+   "meaning": "Confirms and strengthens the point just made, often with a stronger statement.",
+   "short": "confirms and strengthens the point",
+   "examples": [
+    "The new reactor design was far safer than the old one. [[Indeed]], in ten years of testing it never once overheated.",
+    "The novelist was famous for her privacy. [[Indeed]], she refused every interview she was offered."
+   ],
+   "same": [
+    "in fact",
+    "certainly"
+   ],
+   "lookalikes": [
+    {
+     "word": "instead",
+     "tell": "Indeed confirms the point; instead replaces it with something else."
+    }
+   ],
+   "also_reads": [
+    "example",
+    "addition",
+    "conclusion"
+   ]
+  },
+  {
+   "slug": "put-differently",
+   "word": "put differently",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "clarification",
+   "topics": [
+    "clarification"
+   ],
+   "meaning": "Introduces the same idea expressed another way.",
+   "short": "to say it another way",
+   "examples": [
+    "The glacier loses more ice each summer than it gains each winter. [[Put differently]], it is shrinking year by year.",
+    "The court ruled that the law applied only to future contracts. [[Put differently]], existing agreements were untouched."
+   ],
+   "same": [
+    "in other words",
+    "that is"
+   ],
+   "lookalikes": [
+    {
+     "word": "differently",
+     "tell": "Put differently restates the idea; differently alone just means in another way."
+    }
+   ]
+  },
+  {
+   "slug": "in-effect",
+   "word": "in effect",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "hard",
+   "logic": "clarification",
+   "topics": [
+    "clarification"
+   ],
+   "meaning": "Introduces what the situation amounts to in practice, whatever it is called.",
+   "short": "in practice, as it works out",
+   "examples": [
+    "The law set a fine of one dollar for each violation. [[In effect]], it allowed factories to pollute freely.",
+    "The king kept his title but gave all decisions to the council. [[In effect]], the council ruled the country."
+   ],
+   "same": [
+    "in essence",
+    "in practice"
+   ],
+   "lookalikes": [
+    {
+     "word": "as a result",
+     "tell": "In effect restates what the situation amounts to; as a result names a new effect that follows."
+    }
+   ],
+   "also_reads": [
+    "cause-effect"
+   ]
+  },
+  {
+   "slug": "in-essence",
+   "word": "in essence",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "hard",
+   "logic": "clarification",
+   "topics": [
+    "clarification"
+   ],
+   "meaning": "Introduces the basic, central point of what was just described.",
+   "short": "at its core, basically",
+   "examples": [
+    "The lengthy report recommends dozens of specific changes. [[In essence]], it asks the agency to publish its data.",
+    "The critic's review praises the actors, the sets and the music. [[In essence]], she calls the production a triumph."
+   ],
+   "same": [
+    "in effect",
+    "basically"
+   ],
+   "lookalikes": [
+    {
+     "word": "in sum",
+     "tell": "In essence names the core of one statement; in sum pulls together several points."
+    }
+   ],
+   "also_reads": [
+    "conclusion"
+   ]
+  },
+  {
+   "slug": "similarly",
+   "word": "similarly",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "similarity",
+   "topics": [
+    "similarity"
+   ],
+   "meaning": "Introduces a different case that works the same way as the one just described.",
+   "short": "in a like way",
+   "examples": [
+    "Honeybees perform a dance that tells other bees where to find nectar. [[Similarly]], some ant species lay scent trails that lead nestmates to food.",
+    "Dickens published his novels in weekly installments. [[Similarly]], many of his rivals released their books chapter by chapter."
+   ],
+   "same": [
+    "likewise",
+    "in the same way"
+   ],
+   "lookalikes": [
+    {
+     "word": "simultaneously",
+     "tell": "Similarly means in a like way; simultaneously means at the same time."
+    }
+   ]
+  },
+  {
+   "slug": "likewise",
+   "word": "likewise",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "similarity",
+   "topics": [
+    "similarity"
+   ],
+   "meaning": "Says that the next case matches the one just described.",
+   "short": "in the same way, also",
+   "examples": [
+    "The first colonists relied on the river for transport. [[Likewise]], the later mill owners built beside it to power their machines.",
+    "Tree rings record years of drought. [[Likewise]], layers of lake mud preserve a record of past rainfall."
+   ],
+   "same": [
+    "similarly",
+    "in the same way"
+   ],
+   "lookalikes": [
+    {
+     "word": "likely",
+     "tell": "Likewise means similarly; likely means probably."
+    }
+   ],
+   "also_reads": [
+    "addition"
+   ]
+  },
+  {
+   "slug": "in-the-same-way",
+   "word": "in the same way",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "similarity",
+   "topics": [
+    "similarity"
+   ],
+   "meaning": "Introduces a case that follows the same pattern as the one just described.",
+   "short": "just as that did",
+   "examples": [
+    "A vaccine trains the immune system by showing it a harmless piece of a virus. [[In the same way]], fire drills prepare workers for a real emergency.",
+    "Chaucer's pilgrims each tell a tale on the road to Canterbury. [[In the same way]], the travelers in the modern novel take turns telling stories."
+   ],
+   "same": [
+    "similarly",
+    "likewise"
+   ],
+   "lookalikes": [
+    {
+     "word": "all the same",
+     "tell": "In the same way means similarly; all the same means in spite of that."
+    }
+   ]
+  },
+  {
+   "slug": "in-a-similar-way",
+   "word": "in a similar way",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "similarity",
+   "topics": [
+    "similarity"
+   ],
+   "meaning": "Introduces another case that works much like the one just described.",
+   "short": "much as that did",
+   "examples": [
+    "Some lizards shed their tails to escape predators. [[In a similar way]], certain crabs can drop a claw when seized.",
+    "The early suffrage movement spread through local reading clubs. [[In a similar way]], the temperance movement grew through church groups."
+   ],
+   "same": [
+    "similarly",
+    "in the same way"
+   ],
+   "lookalikes": [
+    {
+     "word": "in a sense",
+     "tell": "In a similar way compares two cases; in a sense qualifies how true a statement is."
+    }
+   ]
+  },
+  {
+   "slug": "by-the-same-token",
+   "word": "by the same token",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "hard",
+   "logic": "similarity",
+   "topics": [
+    "similarity"
+   ],
+   "meaning": "Says that the same reasoning that applies to the first case applies to the next one too.",
+   "short": "for the same reason, equally",
+   "examples": [
+    "Regulators require that a new drug be tested for safety before it is sold. [[By the same token]], critics argue, a new pesticide should be tested before it is sprayed on crops.",
+    "A writer who takes bold risks will sometimes fail badly. [[By the same token]], a scientist who pursues unlikely ideas must expect many dead ends."
+   ],
+   "same": [
+    "similarly",
+    "likewise"
+   ],
+   "lookalikes": [
+    {
+     "word": "by contrast",
+     "tell": "By the same token applies the same reasoning to a new case; by contrast points to a difference."
+    }
+   ]
+  },
+  {
+   "slug": "in-sum",
+   "word": "in sum",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "conclusion",
+   "topics": [
+    "conclusion"
+   ],
+   "meaning": "Introduces a brief statement that pulls together the points made before.",
+   "short": "to sum up",
+   "examples": [
+    "The treatment lowered blood pressure, reduced hospital visits and cost less than the standard drug. [[In sum]], it outperformed the existing option on every measure.",
+    "The letters reveal the senator's doubts, his debts and his quarrels with party leaders. [[In sum]], they show a far more troubled man than his speeches suggest."
+   ],
+   "same": [
+    "in summary",
+    "to sum up"
+   ],
+   "lookalikes": [
+    {
+     "word": "in addition",
+     "tell": "In sum pulls the earlier points together; in addition adds one more."
+    }
+   ]
+  },
+  {
+   "slug": "in-summary",
+   "word": "in summary",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "conclusion",
+   "topics": [
+    "conclusion"
+   ],
+   "meaning": "Introduces a short restatement of the main points.",
+   "short": "to sum up the main points",
+   "examples": [
+    "The new trains are faster, quieter and cheaper to run than the old ones. [[In summary]], the upgrade has paid off.",
+    "The poems share a setting, a speaker and a set of recurring images. [[In summary]], they read as a single long work."
+   ],
+   "same": [
+    "in sum",
+    "to sum up"
+   ],
+   "lookalikes": [
+    {
+     "word": "in short",
+     "tell": "In summary restates several main points; in short compresses one point into a brief statement."
+    }
+   ]
+  },
+  {
+   "slug": "in-conclusion",
+   "word": "in conclusion",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "conclusion",
+   "topics": [
+    "conclusion"
+   ],
+   "meaning": "Introduces the closing statement of an argument or discussion.",
+   "short": "to close the argument",
+   "examples": [
+    "The data show rising temperatures, earlier springs and shrinking ice. [[In conclusion]], the region's climate is warming quickly.",
+    "The play's staging, casting and pacing all work against its script. [[In conclusion]], this production fails its source."
+   ],
+   "same": [
+    "in sum",
+    "to sum up"
+   ],
+   "lookalikes": [
+    {
+     "word": "in consequence",
+     "tell": "In conclusion closes an argument; in consequence means as a result."
+    }
+   ]
+  },
+  {
+   "slug": "overall",
+   "word": "overall",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "conclusion",
+   "topics": [
+    "conclusion"
+   ],
+   "meaning": "Introduces a judgment about something taken as a whole, after its parts have been discussed.",
+   "short": "taken as a whole",
+   "examples": [
+    "A few chapters of the history drag, and its maps are hard to read. [[Overall]], though, it is the best account of the war.",
+    "Rainfall rose in some provinces and fell in others. [[Overall]], the country received about the same amount as usual."
+   ],
+   "same": [
+    "on the whole",
+    "all in all"
+   ],
+   "lookalikes": [
+    {
+     "word": "above all",
+     "tell": "Overall judges the whole; above all singles out the most important part."
+    }
+   ],
+   "also_reads": [
+    "concession"
+   ]
+  },
+  {
+   "slug": "in-short",
+   "word": "in short",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "conclusion",
+   "topics": [
+    "conclusion"
+   ],
+   "meaning": "Introduces a brief summary of what was just explained at greater length.",
+   "short": "to put it briefly",
+   "examples": [
+    "The bridge was over budget, two years late and closed for repairs within months. [[In short]], the project was a failure.",
+    "The novel's narrator lies about her age, her past and her motives. [[In short]], she cannot be trusted."
+   ],
+   "same": [
+    "in brief",
+    "in sum"
+   ],
+   "lookalikes": [
+    {
+     "word": "shortly",
+     "tell": "In short means to put it briefly; shortly means soon."
+    }
+   ],
+   "also_reads": [
+    "clarification"
+   ]
+  },
+  {
+   "slug": "in-the-end",
+   "word": "in the end",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "conclusion",
+   "topics": [
+    "conclusion"
+   ],
+   "meaning": "Introduces the final outcome or the final judgment after everything else is considered.",
+   "short": "finally, when all is done",
+   "examples": [
+    "The council debated the tower's design for three years. [[In the end]], it approved the original plan.",
+    "The heroine weighs duty against love for most of the novel. [[In the end]], she chooses neither."
+   ],
+   "same": [
+    "ultimately",
+    "finally"
+   ],
+   "lookalikes": [
+    {
+     "word": "in the meantime",
+     "tell": "In the end means when it is all over; in the meantime means while waiting."
+    }
+   ],
+   "also_reads": [
+    "sequence",
+    "cause-effect",
+    "concession"
+   ]
+  },
+  {
+   "slug": "all-in-all",
+   "word": "all in all",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "conclusion",
+   "topics": [
+    "conclusion"
+   ],
+   "meaning": "Introduces an overall judgment after the details have been weighed.",
+   "short": "considering everything",
+   "examples": [
+    "The festival was crowded and one stage lost power. [[All in all]], organizers called it their most successful year.",
+    "The experiment had some setbacks, but most of its predictions held. [[All in all]], the team considered it a success."
+   ],
+   "same": [
+    "overall",
+    "on the whole"
+   ],
+   "lookalikes": [
+    {
+     "word": "all the same",
+     "tell": "All in all sums up; all the same means in spite of that."
+    }
+   ],
+   "also_reads": [
+    "concession"
+   ]
+  },
+  {
+   "slug": "ultimately",
+   "word": "ultimately",
+   "pos": "adv.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "conclusion",
+   "topics": [
+    "conclusion"
+   ],
+   "meaning": "Introduces the final result or the most basic point, after everything else is considered.",
+   "short": "in the end, at bottom",
+   "examples": [
+    "The two nations negotiated over the border for a decade. [[Ultimately]], they agreed to let an international court decide.",
+    "The essay discusses style, structure and sources. [[Ultimately]], though, its argument rests on a single letter."
+   ],
+   "same": [
+    "in the end",
+    "finally"
+   ],
+   "lookalikes": [
+    {
+     "word": "eventually",
+     "tell": "Ultimately can mean at the most basic level; eventually only means after a long time."
+    }
+   ],
+   "also_reads": [
+    "sequence",
+    "cause-effect",
+    "concession"
+   ]
+  },
+  {
+   "slug": "on-the-whole",
+   "word": "on the whole",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "medium",
+   "logic": "conclusion",
+   "topics": [
+    "conclusion"
+   ],
+   "meaning": "Introduces a general judgment that holds for most of what was described, despite exceptions.",
+   "short": "generally, taken together",
+   "examples": [
+    "Some of the colony's settlers suffered through the first winters. [[On the whole]], the colony prospered.",
+    "Critics disagreed about the director's choices in several scenes. [[On the whole]], they praised the film."
+   ],
+   "same": [
+    "overall",
+    "all in all"
+   ],
+   "lookalikes": [
+    {
+     "word": "on the other hand",
+     "tell": "On the whole sums up the general picture; on the other hand introduces the other side."
+    }
+   ],
+   "also_reads": [
+    "concession"
+   ]
+  },
+  {
+   "slug": "to-sum-up",
+   "word": "to sum up",
+   "pos": "phrase.",
+   "also": [],
+   "collection": "transitions",
+   "level": "easy",
+   "logic": "conclusion",
+   "topics": [
+    "conclusion"
+   ],
+   "meaning": "Introduces a short summary of the points just made.",
+   "short": "to summarize",
+   "examples": [
+    "The site has fresh water, good soil and a natural harbor. [[To sum up]], it was an ideal place for a settlement.",
+    "The poet cuts every extra word, avoids rhyme and ends lines mid-thought. [[To sum up]], her style is spare and restless."
+   ],
+   "same": [
+    "in sum",
+    "in summary"
+   ],
+   "lookalikes": [
+    {
+     "word": "to some extent",
+     "tell": "To sum up summarizes the points; to some extent limits how far a claim holds."
+    }
+   ]
+  }
+ ]
+}
