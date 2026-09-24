@@ -1,0 +1,124 @@
+{
+ "label": "verify F5 r1",
+ "key": "v2:5d3f97e656c3c1c1219d750f85545a6d32d5618c641eb59c4bbbd93046df88e8",
+ "result": {
+  "pass": false,
+  "evidence": "Branch v2/f5 checked out detached at da11286. The worktree is clean. I made no edits and no commits, and I stopped my server on port 8015. It used a scratch DB, never port 8000 or satfreshman.db.\n\n1. Own checks\n- `PYTHONPATH=. python3 server/checks/f5.py` printed \"ok  F5 pools, aliases, filters, preview, types, feedback and inline history\".\n- `PYTHONPATH=. python3 server/test_flow.py` exited 0 and printed \"all good\" on 3 runs in a row. test_flow also runs checks/f5.py.\n\n2. Live run on port 8015 (scratchpad/live.py, live2-5.py, redos.py)\nPassed:\n- Every §2.6 pool resolves and serves a question carrying `why`: new, redo, checks, review, untried, seen, saved, marked, history, items, set, related. The aliases do too: list=redo/fixed/templates/share/marked/saved/history/items/related, mistakes, saved:true, recheck, unseen, share, trap, difficulty:'adaptive', format:'grid', fmt:'mix', from_session, retake, again, item.\n- Preview creates no session. It returns pools {new, mistakes, review, untried, seen{any, missed, right, guessed, marked}}, `questions` is null when fresh, and minutes are count×95 s.\n- Empty redo, checks, recheck, saved and marked return reasons no_open_mistakes / no_checks_due / pool_empty in preview and 409 on create. 15 invalid bodies each return 422, including assignment and contest.\n- QBank 3 passes: 5 × lin.evaluate with distinct seeds. QBank 4 passes: tiers hard gives all hard. QBank 5: levels [1] with unmeasured:false returns 409 naming \"level 1\"; with unmeasured:true it returns 200 and every item is easy.\n- The want-regex set serves trap_true items that offer the norm, and a repair keeps the want.\n- Exact unseen items are refused by access() with 403, and so are reserved 900000+ seeds.\n- twin, try, word-example, review and spot set cfg.inline and are absent from /api/history. A normal drill is listed. A quick set with 0 answers is deleted.\n- R45 in plain (non-adaptive) sets: 3 trials on lin.evaluate and pct.change. Each time the repair offered the trap, owed went to 1, both mistakes:true items offered it, and the trap closed.\n- /api/types returns 386 entries with no answers. The example seed is ≥900000. mistakes/log opens a source-outside trap, files no attempt, and returns 422 for a bad template or reason.\n\nFailed:\n- 11 of 12 adaptive or `source:'start'` sets got stuck with 409 \"named_mistake_unavailable\" after a named miss, and every retry also returned 409. 6 of 6 non-adaptive sets were fine.\n- An adaptive templates:['lin.evaluate'] set was \"exhausted\" after 2 of 8 questions.\n- A 409 on the first question left 3 empty unfinished sessions (pool checks, `questions='[]'`).\n- A want regex `^(\\w+\\s?)*!$` froze the whole server: the request got no response in 20 s, then /api/health also timed out, and the process sat at 93% CPU for 8 minutes until I killed it.\n- After 47 in-app misses, the first POST /api/mistakes/log returned 429.\n- The QBank 2 preview reason was \"filters_removed_all\", with no mention of grid-in.\n- A timed 10-question set got 954 s, not 950.\n- {from_session, only:['nope']} returned 422, not 409.\n- A twin's cfg.parent was None.\n- ramp or pace with count:null returned 200.\n- The example has no trap_index.\n\n3. Sample of 15 requirements, with verdicts\n1. §2.6 every pool and alias: built.\n2. §2.6 preview makes no writes and returns counts: built.\n3. §2.6 \"validated before anything is created\": broken (empty sittings are left behind).\n4. count null = endless: built.\n5. spr_share: partly. 0.5 gave 3 grid-ins in 10.\n6. exclude: built in the code; the live test could not confirm it (seeds differ per learner).\n7. G3 60-seed want walk and a repair that keeps want: built. The rule-3 fallback is not.\n8. R24 inline flags and quick-set deletion: built.\n9. R33 adaptive: broken.\n10. R34 95 s a question: off (954 s for 10).\n11. Report only/each/scope/twin: each and scope:'all' are built; the only-409 and parent rules are not.\n12. Review level as_missed/harder: not built (the value is stored but never used).\n13. Plan task regex and recheck 409: built.\n14. Shell POST /api/mistakes/log: built, but the rate limit is wrong.\n15. G7 GET /api/types/{t} and U8 weight: mostly built. crowd_share, and you.state/due/caught/dodged, are missing. Two small ones also hold: R46 warmup maps to source due with count 5, and G10 start defaults are built (but hit the R33 bug).\n\n4. Scope and decisions\n- `git diff --stat master...HEAD` touches only the owned files: api_bank, api_practice, blueprint, checks/f5, drill, practice, plus test_flow's check_learner asserts.\n- Nothing contradicts v2-decisions: assignment returns 422, no classes, and the body is subject-aware (math/rw).\n- One conflict with a file F5 does not own: api_practice.py adds a second GET /api/history that shadows S6's route in api_results.py, because api_practice's router is registered first.",
+  "defects": [
+   {
+    "where": "server/drill.py _fresh (adaptive check, ~lines 696-699) and _pick repair path (~738)",
+    "what": "R33: the adaptive tier check also applies to the repair after a miss. After a miss the skill steps down to a tier the repair's template or norm has none of, so _fresh returns None and _pick raises 409 named_mistake_unavailable. cfg.repair is never saved as popped, so every later /next also returns 409 and the sitting is dead. Live, 11 of 12 adaptive or source:'start' sets stuck after the first named miss. That includes every 'Start with 8' set, the first thing a new student sees.",
+    "fix": "Do not apply adaptive_state to repairs or queued trap items. Otherwise, clamp the adaptive tier to the template's tiers ∩ the allowed tiers before filtering. Add an adaptive-with-a-miss case to checks/f5.py.",
+    "severity": "blocker"
+   },
+   {
+    "where": "server/drill.py answer() adaptive step (~1003-1016) with _fresh",
+    "what": "R33 steps up to a tier the template does not have. POST /api/drill {templates:['lin.evaluate'], adaptive:true, count:8}, where lin.evaluate is easy only, returns done/exhausted after 2 of 8 questions.",
+    "fix": "Step only within the selected tiers that the template (or skill) actually has, or move to blueprint.siblings as G10 says. Never let the adaptive state make the pool empty.",
+    "severity": "blocker"
+   },
+   {
+    "where": "server/drill.py _pick (_empty('named_mistake_unavailable') at ~743, 772, 787) and create()/api_practice.new_drill",
+    "what": "This contradicts R45/G3 rule 3 (nothing in 60 seeds → plain next seed, trap_true=false). A named trap its template no longer offers raises 409 in the middle of a redo, checks or fix set, which then cannot continue. This happens with stale norms after bank edits, or a tier filter. On create, the session row is inserted before the first question is served, so the 409 leaves an empty unfinished sitting. That breaks §2.6's 'validated before anything is created' (3 such rows observed live).",
+    "fix": "Fall back to a plain seed with trap_true=false instead of raising. Serve the first question before inserting the session, or delete the row when the first serve fails.",
+    "severity": "blocker"
+   },
+   {
+    "where": "server/drill.py resolve() want validation (~429-438) and _offers()",
+    "what": "Denial of service (ReDoS): any X-Learner can send a client-supplied `want` regex, and it runs against every reason on up to 60-600 seeds. POST /api/drill {templates:['pct.change'], want:{'pct.change':'^(\\\\w+\\\\s?)*!$'}} froze the whole server. Python's re holds the GIL, so /api/health also timed out, and the process sat at 93% CPU for 8 minutes until killed.",
+    "fix": "Accept want values only as norms and build '^'+re.escape(norm)+'$' on the server, or reject patterns with nested quantifiers. Never run a client regex unbounded.",
+    "severity": "blocker"
+   },
+   {
+    "where": "server/api_bank.py log_mistake rate limit",
+    "what": "The 30-a-day limit counts every trap_log 'open'/'miss' event, in-app practice included. A student with 30 or more misses today gets 429 on their first outside log (observed live: 47 in-app events → 429). F2's Log a mistake depends on this endpoint.",
+    "fix": "Count only outside logs, for example traps or trap_log rows with source='outside' for this learner today.",
+    "severity": "blocker"
+   },
+   {
+    "where": "server/drill.py resolve() final filter (~535-537) and preview()",
+    "what": "QBank acceptance 2 fails. Preview {topics:['evaluating_statistical_claims'], formats:['spr']} returns reason 'filters_removed_all', which does not contain 'grid-in'. The builder's disabled-Start reason needs to name the empty format.",
+    "fix": "When the formats filter is what empties the selection, return a reason that names it, for example 'no_grid-in_questions' or 'No grid-in questions in these skills'.",
+    "severity": "blocker"
+   },
+   {
+    "where": "server/drill.py seconds_of (~933)",
+    "what": "R34: a timed set with no minutes gets count*2100//22, so 10 questions get 954 s instead of 950. The challenge uses the same path.",
+    "fix": "Use count * (blueprint.MODULE_SECONDS // blueprint.MODULE_SIZE).",
+    "severity": "followup"
+   },
+   {
+    "where": "server/drill.py _pool from_session branch (~146-147)",
+    "what": "Report acceptance 7: {from_session, only:['nope']} returns 422, but the spec says 409 'nothing to practise'.",
+    "fix": "Return 409 when `only` picks nothing.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/drill.py resolve() cfg['parent']",
+    "what": "The Report spec says drill.create stores cfg.parent = from_session for source 'twin'. It stays None, so S6's results.twins.n cannot count twins.",
+    "fix": "Set cfg.parent to body.parent, or failing that from_session, when source is 'twin'.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/drill.py _pick redo/checks queue",
+    "what": "Review's level as_missed|any|harder (the tier of the trap's latest miss, one tier up for harder) is validated and stored but never used when serving.",
+    "fix": "Pass the trap's miss tier (or the next tier or sibling for harder) as `allowed` in the redo/checks _fresh call.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/drill.py resolve()",
+    "what": "QBank rule not built: order 'ramp' and timing 'pace' with count null should return 400, but both return 200.",
+    "fix": "Reject ramp and pace for endless sets.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/drill.py _pool 'set'",
+    "what": "A revoked set returns 409 set_unavailable, but QBank 15 expects 410. {share: code} gives a second learner fresh seeds, not the identical stems QBank 15 and F6 expect, and exact:true would return 403 through access().",
+    "fix": "Return 410 when revoked. Agree with F4/F6 on an access rule that lets a set code re-serve its exact items.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/api_practice.py history_without_inline",
+    "what": "A duplicate GET /api/history, registered before api_results (S6), shadows S6's route. Anything S6 builds in api_results.history will silently never run. This is a change needed in a file F5 does not own.",
+    "fix": "S6 puts the R24 filter (cfg.inline, 0 answered) into api_results.history, and F5/S4 delete the shadow route.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/api_bank.py /api/bank",
+    "what": "F5 added /api/bank, which Part 4.2 gives to S4 in api_practice.py. Its shape {subject, topics, types} lacks QBank 1's totals/domains/skills.",
+    "fix": "Leave /api/bank to S4, or give it QBank's shape; do not keep two owners.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/api_bank.py example() and type_detail()",
+    "what": "Review V11: the example with ?want= returns no trap_index (S10 acceptance 2). G7: reasons lack crowd_share, and `you` lacks state, due, caught and dodged.",
+    "fix": "Add trap_index (the index of the option whose reason norm matches want), crowd_share from levels(), and the missing you fields.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/drill.py _pick spr_share weighting",
+    "what": "spr_share 0.5 on linear_functions served 3 grid-ins in 10.",
+    "fix": "Choose the candidate format before ranking, or widen the candidate walk when the target format is missing.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/drill.py _feedback end mode",
+    "what": "With feedback 'end' the response still carries `mistake`, plus correct, opened and mastery. QBank 7 requires no answer, answer_index, rationale, mistake or reasons.",
+    "fix": "Pop mistake (and the other verdict fields) in end mode, or leave it to S4 but note it.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/drill.py _pool checks",
+    "what": "R45 rule 5 is not built: the check-in should use another template with the same norm when progress.related(norm) has one. Checks always serve the trap's own template.",
+    "fix": "For pool checks, queue a related template with want set on it.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/drill.py resolve() item",
+    "what": "R19: a permalink {item:'t:seed'} for an unseen catalogue item returns 403 question_not_accessible. R19 says the permalink serves any catalogue item not in today's challenge.",
+    "fix": "Exempt `item` from the access() gate, except for live-test and today's-challenge items.",
+    "severity": "followup"
+   }
+  ]
+ }
+}

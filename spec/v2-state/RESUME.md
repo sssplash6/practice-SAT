@@ -1,28 +1,36 @@
 # Resume here
 
-## Now: RUNNING (updated 2026-09-24 10:30)
+## Now: RUNNING (saved 2026-09-24 for a context reset; nothing was stopped)
 
-**Check policy changed (the user agreed):** one independent check, one fix, merge. Leftovers go to
-`spec/v2-state/followups/<task>.json` for the section that uses them or I1. Only content tasks (`rounds: 2`) get two rounds.
-build.js implements it (blocker vs followup severity; pass = no blockers).
+**Check policy (agreed with the user):** one independent check, one fix, merge. Leftovers go to
+`spec/v2-state/followups/<task>.json`. Only content tasks (`rounds: 2`) get two rounds.
 
-- Merged into master: `v2/bank` (bank flaws), `v2/f4` (data layer; its leftovers in `followups/F4.json`), and the F4 swap
-  middleware in app.py (7eafbe9). Dev DB backed up as `server/satfreshman.db.bak-20260924-1020` before the F4 merge.
-- **F1 merged** (ffda717; leftovers in `followups/F1.json`). test_flow's R45 counting now also lets unnamed traps close
-  on any clean answer (a00ea8c); 8/8 runs all good.
-- **Wave 1b running**: build.js run `wf_cafefb42-928` (task wy8hd4xcp), `[{id:'F2'},{id:'F3'},{id:'F6'}]`, 4 units each,
-  then one check and one fix. Restart: `{id, unit:<first unbuilt>}` or `{id, from:'verify'}` per `git log master..v2/<id>`.
-  When each is ready: save leftovers to `followups/<id>.json`, run test_flow, merge.
-- **Words**: words2.js run `wf_609b5aa4-27c` (task wf5hy4nl6): frames 2-4 done, frames1 finishing, then fold and check.
-- Checkpoint loop running (task b2bucxp7g).
-- **F5**: built by the user's other agent, reported done 2026-09-24 (branch `v2/f5`, rebased on master, strict R45 asserts
-  restored; checks/f5.py and test_flow pass). One check + one fix running: run `wf_e6cc0b6f-9c8` (task wyrhxcy7s),
-  `[{id:'F5', from:'verify'}]`. Then leftovers to `followups/F5.json` and merge.
-- **The other agent's next jobs** (light, backend, own branches; never v2/f5): `v2/satdates` MERGED (197b54a,
-  spot-checked against College Board) and `v2/bank-lint` MERGED (3ad7b8e: tools/lint_bank.py, 1,969 raw
-  findings). Triage running: run `wf_cffc089e-e95` (task wml2xho3z), 5 read-only agents; the real flaws become a fix
-  list (a candidate job for the other agent).
-If cut off: F1 `[{id:'F1', from:'fix', issues:<saved r1 defects>}]` then merge; words2 `{from:'author', only:['frames1']}`.
+**Merged into master:** way-better upgrades, v2/f0, v2/t-bank-all, v2/bank, v2/f4 (+ swap middleware 7eafbe9, R45 test
+counting a00ea8c), v2/f1 (ffda717), v2/satdates (197b54a), v2/bank-lint (3ad7b8e). Dev DB backup:
+`server/satfreshman.db.bak-20260924-1020`.
+
+**Live background work** (check each with its journal under
+`~/.claude/projects/-Users-workingmyassof-satbank/<session>/subagents/workflows/<run>/journal.jsonl`; finished results are
+also copied to `spec/v2-state/runs/<run>/` by the checkpoint loop):
+| run | task id | what | when it returns |
+|---|---|---|---|
+| `wf_cafefb42-928` | wy8hd4xcp | build.js `[{id:'F2'},{id:'F3'},{id:'F6'}]`: 4 units each, then one check + one fix | per task: save leftovers to `followups/<id>.json`, test_flow, merge `v2/<id>` |
+| `wf_e6cc0b6f-9c8` | wyrhxcy7s | build.js `[{id:'F5', from:'verify'}]`: check done, fix running | leftovers to `followups/F5.json`, test_flow 3x, merge `v2/f5` |
+| `wf_609b5aa4-27c` | wf5hy4nl6 | words2.js: frames, confusions, fold, 2 checks all done; the fix round running | run `tools/build_words.py`, merge `v2/words-content` (S9 builds on it) |
+| `wf_cffc089e-e95` | wml2xho3z | bank-lint triage, 5 read-only agents | turn the real flaws into a fix task (offer it to the user's other agent), tighten tools/lint_bank.py |
+| checkpoint loop | b2bucxp7g | tools/v2_checkpoint.py every 5 min | keep running |
+
+**If any of these died** (no notification, journal stale for 20+ minutes): its worktree's uncommitted work is snapshotted in
+`spec/v2-state/wip/<worktree>/` (diff.patch + untracked.tar); read `git log master..v2/<task>`, then relaunch:
+build.js `{id, unit:<first unbuilt 0-based>}` / `{id, from:'verify'}` / `{id, from:'fix', issues:<saved defects file>}`;
+words2.js `{from:'check'}` (or `{from:'fold'}`). Never resume from a run ID. Before committing another worktree's changes,
+confirm they are real (not stale files after the branch moved elsewhere; see memory interruption-proof-workflows).
+
+**The user's other agent** (backend-only helper): built F4 and F5, verified SAT dates, wrote the bank lint. It is idle
+now; its next job is the bank-lint fix list once triage returns. It must never touch `v2/f5` again.
+
+**Next after wave 1b merges:** wave 2, the nine sections S1, S3-S10 (S2 dropped) in parallel through build.js (add TASKS
+entries from Part 4.2), then I1 integration. Offer backend-only pieces of wave 2 to the other agent.
 
 ### On "continue"
 
