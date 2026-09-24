@@ -2,12 +2,17 @@
 
 from __future__ import annotations
 
+import datetime as dt
+import json
 import logging
 import secrets
+import statistics
+from collections import Counter
 
 from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi.responses import RedirectResponse
 
-from . import challenge, daily, db, drill
+from . import blueprint, challenge, compete, daily, db, deps, drill, prefs, practice, progress
 from .deps import DATE_OK, LEARNER_OK, SECONDS_PER_QUESTION, learner_of, tz_of
 
 log = logging.getLogger("satf")
@@ -57,3 +62,566 @@ def challenge_board(day: str | None = None, x_learner: str | None = Header(defau
         raise HTTPException(422, "day is YYYY-MM-DD")
     me = x_learner.strip() if x_learner and LEARNER_OK.match(x_learner.strip()) else None
     return challenge.board(day or daily.today(x_tz), me)
+
+
+def _viewer(x_learner: str | None) -> str | None:
+    return learner_of(x_learner) if x_learner else None
+
+
+def _sitting(cid: str, learner: str):
+    return db.one("SELECT * FROM sessions WHERE contest=? AND learner=? ORDER BY started DESC LIMIT 1", cid, learner)
+
+
+def _meta(row, learner: str | None, tz: int = 0) -> dict:
+    now = compete._iso(compete._now())
+    own = _sitting(row["id"], learner) if learner else None
+    if own and own["finished"]:
+        compete.finish_contest(own)
+        own = db.one("SELECT * FROM sessions WHERE id=?", own["id"])
+    entries = compete.board(row["id"], learner, limit=1)
+    all_scores = [r["points"] for r in db.rows("SELECT points FROM sessions WHERE contest=?"
+                                                  " AND ranked=1 AND finished IS NOT NULL AND points IS NOT NULL",
+                                                  row["id"])]
+    slots = (compete._json(row["spec"], {}) or {}).get("slots", [])
+    own_result = compete._json(own["result"], {}) if own else {}
+    expected = (own_result or {}).get("par") or compete.par(learner, slots)
+    ladder = [{"slot": n, "topic": practice.topic_of(key),
+               "skill": blueprint.kinds()[key]["skill"],
+               "tier": tier, "format": fmt, "chance": expected["cells"][n - 1]["chance"],
+               **({"template": key} if own else {})}
+              for n, (key, tier, fmt) in enumerate(slots, 1)]
+    me = {"session": own["id"] if own else None,
+          "status": "finished" if own and own["finished"] else "progress" if own else "new",
+          "answered": len(compete._json(own["answers"], {}) or {}) if own else 0,
+          "clock": compete.clock(own) if own else None,
+          "result": compete._json(own["result"], {}) if own else None,
+          "ranked": bool(own["ranked"]) if own else None,
+          "why": own["unranked_why"] if own else None,
+          "par": {k: v for k, v in expected.items() if k not in ("cells", "sd")}}
+    if own:
+        flags = (compete._json(own["cfg"], {}) or {}).get("flags", {})
+        me["confirm"] = {"due": sum(f.get("status") == "pending" for f in flags.values()),
+                         "next": (compete._json(own["cfg"], {}) or {}).get("confirm_active")}
+    if len(all_scores) >= 10:
+        lower = expected["base"] - expected["sd"]
+        upper = expected["base"] + expected["sd"]
+        me["forecast"] = {"lo": 1 + sum(score > upper for score in all_scores),
+                          "hi": 1 + sum(score > lower for score in all_scores), "of": len(all_scores)}
+    else:
+        me["forecast"] = None
+    entrants = None
+    if row["kind"] == "private" and learner in compete.private_members(row["id"]):
+        entrants = [{**compete._identity(person, learner),
+                     "status": "finished" if (s := _sitting(row["id"], person)) and s["finished"]
+                     else "progress" if s else "new"} for person in compete.private_members(row["id"])]
+    status = "upcoming" if row["opens"] > now else "closed" if row["closes"] <= now else "live"
+    if row["kind"] == "daily":
+        status = "live" if row["id"] == "daily-" + compete.local_day(tz).isoformat() else "closed"
+    return {"id": row["id"], "kind": row["kind"], "title": row["title"],
+            "subject": row["subject"], "opens": row["opens"], "closes": row["closes"],
+            "count": row["count"], "seconds": row["seconds"],
+            "spec": compete._json(row["spec"], {}), "ladder": ladder,
+            "status": status,
+            "field": {"players": entries["players"],
+                      "sitting_now": db.one("SELECT COUNT(*) AS n FROM sessions WHERE contest=?"
+                                            " AND finished IS NULL", row["id"])["n"],
+                      "median_points": statistics.median(all_scores) if all_scores else None,
+                      "best": max(all_scores) if all_scores else None},
+            "me": me, "entrants": entrants,
+            "series": row["series"], "round": row["round"]}
+
+
+@router.get("/api/compete")
+def compete_home(x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+    learner = learner_of(x_learner)
+    contests = compete.ensure(tz=x_tz)
+    daily_row = compete.contest("daily", x_tz)
+    now = compete._iso(compete._now())
+    ranked = compete.rank_snapshot(learner, x_tz)
+    next_sat = next((d for d in compete.SAT_DATES if d >= compete.local_day(x_tz).isoformat()), None)
+    profile = db.one("SELECT rated FROM learners WHERE id=?", learner)
+    return {"daily": _meta(daily_row, learner, x_tz),
+            "live": sum(c["opens"] <= now < c["closes"] for c in contests),
+            "upcoming": sum(c["opens"] > now for c in contests),
+            "me": {**ranked, "challenge_streak": compete.challenge_streak(learner, x_tz)["current"],
+                   "played": db.one("SELECT COUNT(*) AS n FROM sessions WHERE learner=? AND contest IS NOT NULL"
+                                    " AND finished IS NOT NULL", learner)["n"]},
+            "season": {"closes": next_sat,
+                       "name": "Road to " + dt.date.fromisoformat(next_sat).strftime("%b %-d") if next_sat else None},
+            "board_preview": compete.leaderboard(learner=learner, limit=5),
+            "next_badges": [b for b in compete.evaluate(learner) if not b["earned"]][:3],
+            "private": compete.due_today(learner, x_tz), "sat_dates": compete.SAT_DATES}
+
+
+@router.get("/api/contests")
+def list_contests(status: str = "live", offset: int = 0, limit: int = 20,
+                  x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+    learner = learner_of(x_learner)
+    if status not in ("live", "upcoming", "finished", "private"):
+        raise HTTPException(422, "invalid contest status")
+    compete.ensure(tz=x_tz)
+    now = compete._iso(compete._now())
+    rows = db.rows("SELECT * FROM contests ORDER BY opens DESC")
+    rows = [r for r in rows if (r["opens"] <= now < r["closes"] if status == "live" else
+                               r["opens"] > now if status == "upcoming" else
+                               bool(_sitting(r["id"], learner)) if status == "finished" else
+                               r["kind"] == "private" and learner in compete.private_members(r["id"]))]
+    return {"contests": [_meta(r, learner, x_tz) for r in rows[max(0, offset):max(0, offset) + min(limit, 50)]],
+            "total": len(rows)}
+
+
+@router.post("/api/contests")
+def create_contest(body: dict, x_learner: str | None = Header(default=None)) -> dict:
+    return compete.create_private(learner_of(x_learner), body)
+
+
+@router.post("/api/join")
+def join_contest(body: dict, x_learner: str | None = Header(default=None)) -> dict:
+    code = str(body.get("code", ""))
+    return {"kind": "contest", **compete.join_private(learner_of(x_learner), code)}
+
+
+@router.get("/api/contest/daily")
+def daily_contest(x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+    return _meta(compete.contest("daily", x_tz), _viewer(x_learner), x_tz)
+
+
+def _start(cid: str, learner: str, tz: int) -> dict:
+    contest = compete.contest(cid, tz)
+    if contest["opens"] > compete._iso(compete._now()) and contest["kind"] != "daily":
+        raise HTTPException(409, "contest has not opened")
+    if contest["kind"] == "private" and learner not in compete.private_members(contest["id"]):
+        raise HTTPException(403, "join this contest first")
+    old = _sitting(contest["id"], learner)
+    if old and (not old["finished"] or contest["kind"] not in ("sprint", "rush")):
+        state = ({**drill.state(old), **drill.next_question(old)} if old["kind"] == "challenge"
+                 and not old["finished"] else {})
+        return {"session": old["id"], "runner": "test" if old["kind"] == "module" else "session",
+                "clock": compete.clock(db.one("SELECT * FROM sessions WHERE id=?", old["id"])), **state}
+    spec = compete._json(contest["spec"], {}) or {}
+    if contest["kind"] in ("weekly", "final"):
+        questions = compete.twin_questions(learner, contest["id"], spec["slots"])
+        sid = secrets.token_urlsafe(16)
+        expected = compete.par(learner, spec["slots"])
+        db.run("INSERT INTO sessions(id,kind,learner,started,questions,answers,contest,subject,cfg,module,result)"
+               " VALUES (?,?,?,?,?,'{}',?,?,?,1,?)", sid, "module", learner, compete._iso(compete._now()),
+               json.dumps({"module1": questions}), contest["id"], contest["subject"],
+               json.dumps({"timed": True, "contest": contest["id"], "par": expected}), json.dumps({"par": expected}))
+        return {"session": sid, "runner": "test", "clock": {"left": contest["seconds"]}}
+    if spec.get("twin"):
+        qs = compete.twin_questions(learner, contest["id"], spec["slots"])
+    else:
+        qs = compete._json(contest["questions"], []) or []
+        if not qs:
+            qs = compete.twin_questions("contest:" + contest["id"], contest["id"], spec["slots"])
+            db.run("UPDATE contests SET questions=? WHERE id=? AND questions IS NULL", json.dumps(qs), contest["id"])
+    sid = secrets.token_urlsafe(16)
+    topics = list(dict.fromkeys(q["topic"] for q in qs))
+    drill.create(learner, sid, topics, len(qs), None, False, "challenge",
+                 items=[[q["key"], q["seed"]] for q in qs], kind="challenge", fixed=True)
+    timing = prefs.get(learner).get("contest_timing", "follow")
+    if timing == "follow":
+        timing = prefs.get(learner).get("test_timing", "official")
+    multiplier = {"official": 1, "x1.5": 1.5, "x2": 2}.get(timing, 1)
+    cfg = json.loads(db.one("SELECT cfg FROM sessions WHERE id=?", sid)["cfg"])
+    expected = compete.par(learner, spec["slots"])
+    cfg.update({"contest": contest["id"], "seconds": round(contest["seconds"] * multiplier),
+                "timing": timing, "tz": tz, "timed": False, "fixed": True,
+                "feedback": spec.get("reveal", "each"), "par": expected})
+    db.run("UPDATE sessions SET contest=?,cfg=?,subject=? WHERE id=?", contest["id"],
+           json.dumps(cfg), contest["subject"], sid)
+    db.run("UPDATE sessions SET result=? WHERE id=?", json.dumps({"par": expected}), sid)
+    row = db.one("SELECT * FROM sessions WHERE id=?", sid)
+    first = drill.next_question(row)
+    return {"session": sid, "runner": "session",
+            "clock": compete.clock(db.one("SELECT * FROM sessions WHERE id=?", sid)), **first}
+
+
+@router.post("/api/contest/daily/start")
+def daily_start(x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+    return _start("daily", learner_of(x_learner), x_tz)
+
+
+@router.get("/api/leaderboard")
+def public_leaderboard(metric: str = "points", period: str = "week", scope: str = "all",
+                       subject: str = "math", domain: str | None = None, offset: int = 0,
+                       limit: int = 50, find: str | None = None,
+                       x_learner: str | None = Header(default=None)) -> dict:
+    return compete.leaderboard(metric, period, scope, learner=_viewer(x_learner), subject=subject,
+                               domain=domain, offset=offset, limit=limit, find=find)
+
+
+@router.get("/api/compete/me")
+def compete_me(x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+    learner = learner_of(x_learner)
+    return {**compete.rank_snapshot(learner, x_tz), "badges": compete.evaluate(learner),
+            "streak": compete.challenge_streak(learner, x_tz),
+            "boards": {p: compete.leaderboard(period=p, learner=learner)["you"]
+                       for p in ("week", "month", "season", "all")}}
+
+
+@router.get("/api/compete/history")
+def compete_history(kind: str | None = None, offset: int = 0, limit: int = 20,
+                    x_learner: str | None = Header(default=None)) -> dict:
+    learner = learner_of(x_learner)
+    rows = db.rows("SELECT s.*,c.kind AS contest_kind,c.title FROM sessions s JOIN contests c ON c.id=s.contest"
+                   " WHERE s.learner=? AND s.finished IS NOT NULL ORDER BY s.finished DESC", learner)
+    rows = [r for r in rows if not kind or r["contest_kind"] == kind]
+    return {"history": [{"id": r["contest"], "session": r["id"], "kind": r["contest_kind"],
+                         "title": r["title"], "finished": r["finished"], "points": r["points"],
+                         "ranked": bool(r["ranked"]), "why": r["unranked_why"],
+                         "result": compete._json(r["result"], {})} for r in rows[offset:offset + min(limit, 50)]],
+            "total": len(rows)}
+
+
+@router.post("/api/compete/nudge")
+def compete_nudge(body: dict, x_learner: str | None = Header(default=None)) -> dict:
+    return compete.nudge(learner_of(x_learner), str(body.get("member", "")), str(body.get("contest", "")))
+
+
+@router.post("/api/drill/{sid}/void")
+def flag_drill(sid: str, body: dict, x_learner: str | None = Header(default=None)) -> dict:
+    return compete.flag(sid, learner_of(x_learner), str(body.get("question_id", "")),
+                        str(body.get("why", "")), float(body.get("secs", 0)))
+
+
+@router.post("/api/drill/{sid}/confirm")
+def confirm_drill(sid: str, body: dict, x_learner: str | None = Header(default=None)) -> dict:
+    return compete.confirm_next(sid, learner_of(x_learner), body.get("answer"))
+
+
+@router.post("/api/session/{sid}/void")
+def flag_test(sid: str, body: dict, x_learner: str | None = Header(default=None)) -> dict:
+    return compete.flag(sid, learner_of(x_learner), str(body.get("question_id", "")),
+                        str(body.get("why", "")), float(body.get("secs", 0)))
+
+
+@router.post("/api/session/{sid}/confirm")
+def confirm_test(sid: str, body: dict, x_learner: str | None = Header(default=None)) -> dict:
+    return compete.confirm_next(sid, learner_of(x_learner), body.get("answer"))
+
+
+@router.post("/api/report-name")
+def report_name(body: dict, x_learner: str | None = Header(default=None)) -> dict:
+    reporter = learner_of(x_learner)
+    pid = str(body.get("pid", ""))
+    target = next((r["id"] for r in db.rows("SELECT id FROM learners") if compete._pid(r["id"]) == pid), None)
+    if not target or target == reporter:
+        raise HTTPException(404, "student not found")
+    qualified = db.one("SELECT 1 FROM sessions WHERE learner=? AND contest IS NOT NULL"
+                       " AND ranked=1 AND finished IS NOT NULL", reporter)
+    if not qualified:
+        return {"filed": False, "reason": "finish a ranked contest first"}
+    db.run("INSERT OR IGNORE INTO name_reports(target,reporter,at) VALUES (?,?,?)",
+           target, reporter, compete._iso(compete._now()))
+    count = db.one("SELECT COUNT(*) AS n FROM name_reports WHERE target=?", target)["n"]
+    if count >= 3:
+        db.run("UPDATE learners SET name=NULL,handle=NULL WHERE id=?", target)
+    return {"filed": True, "count": count}
+
+
+@router.patch("/api/contest/{cid}")
+def edit_private(cid: str, body: dict, x_learner: str | None = Header(default=None)) -> dict:
+    learner = learner_of(x_learner)
+    row = compete.contest(cid)
+    if row["kind"] != "private" or row["owner"] != learner:
+        raise HTTPException(403, "only the creator can change settings")
+    if set(body) != {"title"} and set(body) != {"extend"} and set(body) != {"close"}:
+        raise HTTPException(422, "change title, extend or close")
+    if "title" in body:
+        title = str(body["title"]).strip()
+        if not 3 <= len(title) <= 60:
+            raise HTTPException(422, "title must be 3–60 characters")
+        db.run("UPDATE contests SET title=? WHERE id=? OR series=?", title, row["series"] or cid,
+               row["series"] or cid)
+    elif body.get("extend"):
+        root = row["series"] or cid
+        for r in db.rows("SELECT id,closes FROM contests WHERE id=? OR series=?", root, root):
+            until = dt.datetime.fromisoformat(r["closes"]) + dt.timedelta(hours=24)
+            db.run("UPDATE contests SET closes=? WHERE id=?", compete._iso(until), r["id"])
+    elif body.get("close"):
+        db.run("UPDATE contests SET closes=? WHERE id=?", compete._iso(compete._now()), cid)
+    return {"id": cid, "updated": True}
+
+
+@router.delete("/api/contest/{cid}")
+def delete_private(cid: str, x_learner: str | None = Header(default=None)) -> dict:
+    learner = learner_of(x_learner)
+    row = compete.contest(cid)
+    if row["kind"] != "private" or row["owner"] != learner:
+        raise HTTPException(403, "only the creator can delete this contest")
+    if db.one("SELECT 1 FROM sessions WHERE contest=?", cid):
+        raise HTTPException(409, "a started contest cannot be deleted")
+    root = row["series"] or cid
+    if db.one("SELECT 1 FROM sessions WHERE contest IN (SELECT id FROM contests WHERE id=? OR series=?)",
+              root, root):
+        raise HTTPException(409, "a started series cannot be deleted")
+    db.run("DELETE FROM contest_members WHERE contest=?", root)
+    db.run("DELETE FROM contests WHERE id=? OR series=?", root, root)
+    return {"deleted": True}
+
+
+@router.delete("/api/contest/{cid}/members/{pid}")
+def remove_private_member(cid: str, pid: str, x_learner: str | None = Header(default=None)) -> dict:
+    learner = learner_of(x_learner)
+    row = compete.contest(cid)
+    if row["kind"] != "private" or row["owner"] != learner:
+        raise HTTPException(403, "only the creator can remove entrants")
+    target = next((m for m in compete.private_members(cid) if compete._pid(m) == pid), None)
+    if not target or target == learner:
+        raise HTTPException(404, "entrant not found")
+    db.run("DELETE FROM contest_members WHERE contest=? AND learner=?", row["series"] or cid, target)
+    return {"removed": True}
+
+
+@router.get("/api/contest/{cid}/board")
+def contest_board(cid: str, scope: str = "all", offset: int = 0, limit: int = 50,
+                  view: str | None = None, sort: str = "points",
+                  x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+    row = compete.contest(cid, x_tz)
+    if view == "series":
+        return compete.series_board(row["series"] or row["id"], sort, _viewer(x_learner))
+    return compete.board(row["id"], _viewer(x_learner), scope, offset, limit)
+
+
+@router.get("/api/contest/{cid}/review")
+def contest_review(cid: str, x_learner: str | None = Header(default=None),
+                   x_tz: int = Depends(tz_of)) -> dict:
+    learner = learner_of(x_learner)
+    row = compete.contest(cid, x_tz)
+    sitting = _sitting(row["id"], learner)
+    if (not sitting or not sitting["finished"]) and row["closes"] > compete._iso(compete._now()):
+        raise HTTPException(403, "answers open after you finish or the contest closes")
+    if not sitting:
+        return {"items": []}
+    answers = compete._json(sitting["answers"], {}) or {}
+    items = []
+    for slot, q in enumerate(compete._questions(sitting), 1):
+        access = deps.access(learner, q["key"], q["seed"])
+        # F4 protects every live contest item globally. A finished twin is
+        # safe to show to the learner who just answered that exact form.
+        own_finished_twin = bool(sitting["finished"] and
+                                 (compete._json(row["spec"], {}) or {}).get("twin"))
+        if access != "reveal" and not own_finished_twin:
+            continue
+        attempts = db.one("SELECT * FROM attempts WHERE session=? AND qid=?", sitting["id"], q["id"])
+        field = _slot_field(row["id"], slot)
+        items.append({"question": q, "given": answers.get(q["id"]),
+                      "correct": bool(attempts["correct"]) if attempts else False,
+                      "field": field})
+    return {"items": items}
+
+
+def _slot_field(cid: str, slot: int) -> dict:
+    sittings = db.rows("SELECT id,questions,answers FROM sessions WHERE contest=?"
+                       " AND finished IS NOT NULL AND ranked=1", cid)
+    counts: Counter = Counter()
+    times = []
+    for sitting in sittings:
+        qs = compete._questions(sitting)
+        if len(qs) < slot:
+            continue
+        q = qs[slot - 1]
+        attempt = db.one("SELECT correct,reason,void,sms FROM attempts WHERE session=? AND qid=?"
+                         " ORDER BY id LIMIT 1", sitting["id"], q["id"])
+        if attempt is None:
+            counts["skip"] += 1
+        elif attempt["void"]:
+            counts["void"] += 1
+        elif attempt["correct"]:
+            counts["right"] += 1
+        else:
+            counts["wrong:" + progress.norm(attempt["reason"] or "Other mistake")] += 1
+        if attempt and attempt["sms"] is not None:
+            times.append(attempt["sms"])
+    n = sum(counts.values())
+    if not n:
+        return {"players": 0, "right": 0, "skipped": 0, "voided": 0, "mistakes": [],
+                "shares": {"right": 0, "skipped": 0, "voided": 0}, "median_ms": None}
+    mistakes = [{"norm": key[6:], "label": key[6:], "share": value / n, "count": value}
+                for key, value in counts.items() if key.startswith("wrong:")]
+    mistakes.sort(key=lambda x: -x["count"])
+    return {"players": n, "right": counts["right"] / n, "skipped": counts["skip"] / n,
+            "voided": counts["void"] / n, "mistakes": mistakes,
+            "shares": {"right": counts["right"] / n, "skipped": counts["skip"] / n,
+                       "voided": counts["void"] / n,
+                       **{m["norm"]: m["share"] for m in mistakes}},
+            "median_ms": statistics.median(times) if times else None}
+
+
+@router.get("/api/contest/{cid}/grid")
+def contest_grid(cid: str, offset: int = 0, limit: int = 50,
+                 x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+    learner = learner_of(x_learner)
+    row = compete.contest(cid, x_tz)
+    own = _sitting(row["id"], learner)
+    if (not own or not own["finished"]) and row["closes"] > compete._iso(compete._now()):
+        raise HTTPException(403, "grid opens after you finish or the contest closes")
+    board = compete.board(row["id"], learner, offset=offset, limit=limit)
+    sessions = {compete._pid(s["learner"]): s for s in db.rows(
+        "SELECT * FROM sessions WHERE contest=? AND finished IS NOT NULL AND ranked=1"
+        " ORDER BY points ASC, finished DESC", row["id"])}
+    marks = []
+    for entry in board["entries"]:
+        session = sessions.get(entry["pid"])
+        slots = []
+        if session:
+            for q in compete._questions(session):
+                a = db.one("SELECT correct,void FROM attempts WHERE session=? AND qid=? ORDER BY id LIMIT 1",
+                           session["id"], q["id"])
+                slots.append("void" if a and a["void"] else "right" if a and a["correct"] else
+                             "wrong" if a else "skip")
+        marks.append({"pid": entry["pid"], "name": entry["name"], "rank": entry["rank"],
+                      "you": entry["you"], "marks": slots})
+    footer = []
+    for slot in range(1, row["count"] + 1):
+        field = _slot_field(row["id"], slot)
+        footer.append({"slot": slot, "right_share": field["right"], "median_ms": field["median_ms"],
+                       "top": field["mistakes"][0] if field["mistakes"] else None})
+    by_norm: Counter = Counter()
+    for field in footer:
+        if field["top"]:
+            by_norm[field["top"]["norm"]] += field["top"]["count"]
+    return {"id": row["id"], "rows": marks, "footer": footer,
+            "where": [{"norm": norm, "label": norm, "fell": n, "of": board["players"]}
+                      for norm, n in by_norm.most_common(3)], "next_offset": board["next_offset"]}
+
+
+@router.get("/api/contest/{cid}/traps")
+def contest_traps(cid: str, x_learner: str | None = Header(default=None),
+                  x_tz: int = Depends(tz_of)) -> dict:
+    row = compete.contest(cid, x_tz)
+    gathered: Counter = Counter()
+    for slot in range(1, row["count"] + 1):
+        for item in _slot_field(row["id"], slot)["mistakes"]:
+            gathered[item["norm"]] += item["count"]
+    return {"traps": [{"norm": n, "label": n, "fell": v} for n, v in gathered.most_common(5)]}
+
+
+@router.get("/api/contest/{cid}/compare/{pid}")
+def contest_compare(cid: str, pid: str, x_learner: str | None = Header(default=None),
+                    x_tz: int = Depends(tz_of)) -> dict:
+    learner = learner_of(x_learner)
+    row = compete.contest(cid, x_tz)
+    own = _sitting(row["id"], learner)
+    if not own or not own["finished"]:
+        raise HTTPException(403, "finish your sitting first")
+    peer = next((s for s in db.rows("SELECT * FROM sessions WHERE contest=? AND finished IS NOT NULL"
+                                      " AND ranked=1", row["id"]) if compete._pid(s["learner"]) == pid), None)
+    if not peer or compete._identity(peer["learner"], learner)["anon"]:
+        raise HTTPException(404, "student not found")
+    def marks(session):
+        return [bool(a["correct"]) if (a := db.one("SELECT correct FROM attempts WHERE session=? AND qid=?",
+                                                   session["id"], q["id"])) else None
+                for q in compete._questions(session)]
+    yours, theirs = marks(own), marks(peer)
+    return {"you": yours, "them": theirs, "both": sum(a and b for a, b in zip(yours, theirs)),
+            "only_you": sum(a and not b for a, b in zip(yours, theirs)),
+            "only_them": sum(b and not a for a, b in zip(yours, theirs)),
+            "neither": sum(not a and not b for a, b in zip(yours, theirs))}
+
+
+@router.get("/api/contest/{cid}/debrief")
+def contest_debrief(cid: str, x_learner: str | None = Header(default=None),
+                     x_tz: int = Depends(tz_of)) -> dict:
+    learner = learner_of(x_learner)
+    row = compete.contest(cid, x_tz)
+    sitting = _sitting(row["id"], learner)
+    if not sitting or not sitting["finished"]:
+        raise HTTPException(403, "finish your sitting first")
+    compete.finish_contest(sitting)
+    sitting = db.one("SELECT * FROM sessions WHERE id=?", sitting["id"])
+    lost: Counter = Counter()
+    by_norm: Counter = Counter()
+    per = []
+    for q in compete._questions(sitting):
+        a = db.one("SELECT * FROM attempts WHERE session=? AND qid=? ORDER BY id LIMIT 1",
+                   sitting["id"], q["id"])
+        worth = {"easy": 10, "medium": 20, "hard": 30}.get(q["difficulty"], 20)
+        cause = "right" if a and a["correct"] and not a["void"] else "void" if a and a["void"] else \
+                "wrong" if a else "skip"
+        if cause != "right":
+            lost[cause] += worth
+            if a and a["reason"]:
+                by_norm[progress.norm(a["reason"])] += worth
+        per.append({"slot": len(per) + 1, "cause": cause, "lost": 0 if cause == "right" else worth,
+                    "budget_ms": q.get("budget_ms"), "ms": a["sms"] if a else None})
+    b = compete.board(row["id"], learner, limit=1)
+    return {"subject": row["subject"], "max": sum({"easy": 10, "medium": 20, "hard": 30}.get(q["difficulty"], 20)
+                                                  for q in compete._questions(sitting)) + 10,
+            "points": sitting["points"], "rank": (b["you"] or {}).get("rank"),
+            "players": b["players"], "lost": dict(lost), "by_norm": dict(by_norm), "slots": per}
+
+
+@router.post("/api/contest/{cid}/rematch")
+def contest_rematch(cid: str, body: dict, x_learner: str | None = Header(default=None),
+                     x_tz: int = Depends(tz_of)) -> dict:
+    learner = learner_of(x_learner)
+    row = compete.contest(cid, x_tz)
+    sitting = _sitting(row["id"], learner)
+    if not sitting or not sitting["finished"]:
+        raise HTTPException(409, "finish your contest first")
+    when = body.get("when", "later")
+    if when not in ("now", "later"):
+        raise HTTPException(422, "when must be now or later")
+    if when == "later":
+        due = (compete.local_day(x_tz) + dt.timedelta(days=2)).isoformat()
+        cfg = json.loads(sitting["cfg"] or "{}")
+        cfg["rematch_due"] = due
+        db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(cfg), sitting["id"])
+        return {"due": due}
+    missed = [q["key"] for q in compete._questions(sitting) if (a := db.one(
+        "SELECT correct FROM attempts WHERE session=? AND qid=?", sitting["id"], q["id"])) and not a["correct"]]
+    if not missed:
+        raise HTTPException(409, "no missed questions to rematch")
+    sid = drill.create(learner, {"templates": missed, "count": len(missed), "source": "rematch"})
+    return {"session": sid}
+
+
+@router.post("/api/contest/{cid}/warmup")
+def contest_warmup(cid: str, x_learner: str | None = Header(default=None),
+                   x_tz: int = Depends(tz_of)) -> dict:
+    learner = learner_of(x_learner)
+    row = compete.contest(cid, x_tz)
+    if _sitting(row["id"], learner):
+        raise HTTPException(409, "warm up before you start the contest")
+    slots = (compete._json(row["spec"], {}) or {}).get("slots", [])
+    expected = compete.par(learner, slots)
+    weakest = sorted(zip(expected["cells"], slots), key=lambda pair: pair[0]["chance"])[:3]
+    excluded = {slot[0] for slot in slots}
+    topics = list(dict.fromkeys(practice.topic_of(slot[0]) for _, slot in weakest))
+    tiers = list(dict.fromkeys(slot[1] for _, slot in weakest))
+    names = [name for topic in topics for name in practice.catalogue()["by_topic"].get(topic, ())
+             if name not in excluded]
+    if not names:
+        raise HTTPException(409, "no separate warm-up questions in these skills")
+    sid = drill.create(learner, {"templates": names, "tiers": tiers, "count": 6,
+                                 "source": "warmup", "feedback": "each"})
+    sitting = db.one("SELECT cfg FROM sessions WHERE id=?", sid)
+    cfg = json.loads(sitting["cfg"])
+    cfg["warmup_for"] = row["id"]
+    db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(cfg), sid)
+    return {"session": sid, "topics": topics}
+
+
+@router.get("/api/contest/{cid}")
+def get_contest(cid: str, code: str | None = None, x_learner: str | None = Header(default=None),
+                x_tz: int = Depends(tz_of)) -> dict:
+    if code:
+        matched = db.one("SELECT id FROM contests WHERE code=?", code.upper())
+        if not matched:
+            raise HTTPException(404, "contest not found")
+        cid = matched["id"]
+    return _meta(compete.contest(cid, x_tz), _viewer(x_learner), x_tz)
+
+
+@router.post("/api/contest/{cid}/start")
+def start_contest(cid: str, x_learner: str | None = Header(default=None),
+                  x_tz: int = Depends(tz_of)) -> dict:
+    return _start(cid, learner_of(x_learner), x_tz)
+
+
+@router.get("/challenge/")
+@router.get("/challenge")
+def challenge_redirect() -> RedirectResponse:
+    return RedirectResponse("/compete/contest/?id=daily", status_code=307)
