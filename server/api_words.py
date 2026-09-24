@@ -238,14 +238,24 @@ def _route_check(questions: list[dict], seed: int) -> None:
     for q in questions[6:12]:
         target = {"easy": "medium", "medium": "hard", "hard": "hard"}.get(q.get("difficulty"), "hard")
         transition = q["kind"] == "transition"
-        pool = ([p for p in data["pairs"].values() if p.get("difficulty", "medium") == target]
-                if transition else [f for f in data["frames"].values() if f["difficulty"] == target])
+        if transition:
+            pool = [p for p in data["pairs"].values()
+                    if p.get("difficulty") == target or
+                    (not p.get("difficulty") and any(data["entries"][slug]["level"] == target
+                                                     for slug in p["fits"]))]
+        else:
+            pool = [f for f in data["frames"].values() if f["difficulty"] == target]
         rng.shuffle(pool)
         for row in pool:
             template = ("rw.tr." if transition else "rw.wic.") + row["id"]
             if template in used or not words._servable(row) or words._suppressed(row["id"]):
                 continue
-            slug = rng.choice(row["fits"] if transition else row["keys"])
+            if transition:
+                keys = (row["fits"] if row.get("difficulty") else
+                        [slug for slug in row["fits"] if data["entries"][slug]["level"] == target])
+            else:
+                keys = row["keys"]
+            slug = rng.choice(keys)
             try:
                 raised = words.item(template, rng.randrange(2**31), slug)
             except ValueError:

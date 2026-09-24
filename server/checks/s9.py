@@ -208,6 +208,9 @@ def test_runs(client: TestClient) -> None:
         assert filed.get("filed") is True
     route = json.loads(db.one("SELECT cfg FROM sessions WHERE id=?", checked["id"])["cfg"])
     assert route["route"] == "upper"
+    routed = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", checked["id"])["questions"])
+    up = {"easy": "medium", "medium": "hard", "hard": "hard"}
+    assert [q["difficulty"] for q in routed[6:12]] == [up[q["difficulty"]] for q in check_q[6:12]]
 
 
 def test_placement_and_own(client: TestClient) -> None:

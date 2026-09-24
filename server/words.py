@@ -991,7 +991,7 @@ def item(template: str, seed: int, word: str | None = None,
                     if other == logic else reasons_map[logic][other].replace("{word}", w["word"]))
                    for w, other in options]
         return {"template": template, "skill": "Transitions", "domain": "Expression of Ideas",
-                "difficulty": pair.get("difficulty", "medium"), "seed": seed, "word": slug,
+                "difficulty": pair.get("difficulty") or key.get("level", "medium"), "seed": seed, "word": slug,
                 "kind": "transition", "stem": "Which choice completes the text with the most logical transition?",
                 "text": passage, "choices": [w["word"] for w, _ in options],
                 "answer_index": next(i for i, (_, l) in enumerate(options) if l == logic),
