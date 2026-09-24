@@ -294,7 +294,7 @@ CONTEXT = [
               "{given}, what is the value of y ?",
          swap=True, speeds=True, asked="hours at the second speed",
          known="hours at the first speed",
-         why="{given} hours at {a} miles per hour covers {part} miles, so {left} miles "
+         why="{given} {hr} at {a} miles per hour covers {part} miles, so {left} miles "
              "of the {c} are left to drive at {b} miles per hour."),
     # 3 -- calories from two activities, quoted per half hour (2.4)
     dict(shape="counts", fmt="mcq", per30=True, alo=50, ahi=300, glo=1, ghi=4,

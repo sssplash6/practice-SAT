@@ -16,7 +16,7 @@ from fractions import Fraction as Q
 from math import gcd
 
 from ....figures import coordinate_grid
-from ....item import Item, ItemError, Mis
+from ....item import Item, ItemError, Mis, unit_word
 from ....plot import line_graph, scatter
 from ..common import (MINUS, choose, coef_text, dec, ex, lin_text, numtext, q, sig,
                       std_text, text_item)
@@ -175,7 +175,7 @@ COMBO = [
               "total of ${c}, how many pounds of lemons did he purchase?",
          why="Spent on lemons alone the ${c} buys {yi} pounds, so a pound of "
              "tangerines costs what {ratio} pounds of lemons cost; {x} pounds of "
-             "tangerines uses up {used} pounds' worth."),
+             "tangerines uses up {used} {used_unit} worth."),
     # 1 -- which equation the drawn line represents (2.17)
     dict(ask="equation", xlabel="Number of T-shirts", ylabel="Number of sweatshirts",
          xlo=40, xhi=120, ylo=20, yhi=60, xstep=5, ystep=5, cmax=2400,
@@ -240,7 +240,8 @@ def graph_combinations(rng: random.Random, seed: int, *, ctx=None, xi=None, yi=N
         stem = d["stem"].format(c=numtext(C), x=numtext(X))
         why = d["why"].format(c=numtext(C), yi=numtext(YI), x=numtext(X),
                               key=numtext(key), ratio=numtext(pa / pb),
-                              used=numtext(YI - key))
+                              used=numtext(YI - key),
+                              used_unit=unit_word(YI - key, "pound's", "pounds'"))
         keyx = ex(key)
         mistakes = [Mis("took the pounds of tangerines straight off the lemons, as "
                         "though a pound of each cost the same", ex(YI - X)),

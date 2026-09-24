@@ -15,7 +15,7 @@ from __future__ import annotations
 import random
 from fractions import Fraction as Q
 
-from ....item import ItemError
+from ....item import ItemError, unit_word
 from ..values import (decimal, griddable, mcq, percent, pick, ratio, reduced,
                       roll_fmt, spr, unambiguous)
 from .simple import art, exact_decimal, order_of
@@ -213,12 +213,13 @@ def freq_grouped(rng: random.Random, seed: int, *, scenario=None, start=None,
     total_row = rng.random() < 0.4 if total_row is None else total_row
     fmt = roll_fmt(rng, fmt)
 
+    band = sum(counts[cut:cut2])
     pool = {
         "joint": (f"divided by all {N:,} {units} instead of by the {den:,} at or "
                   f"above {a}", (num, N)),
-        "band": (f"divided by the {sum(counts[cut:cut2]):,} {units} below {b} "
+        "band": (f"divided by the {band:,} {unit_word(band, unit, units)} below {b} "
                  f"instead of by the {den:,} at or above {a}",
-                 (num, sum(counts[cut:cut2]))),
+                 (num, band)),
         "complement_in": (f"counted the {units} that fall below {b} rather than the "
                           f"ones at or above it", (den - num, den)),
         "reverse": (f"divided by the {num:,} at or above {b} instead of by the "

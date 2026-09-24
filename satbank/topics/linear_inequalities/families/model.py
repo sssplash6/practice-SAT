@@ -13,7 +13,7 @@ from __future__ import annotations
 import random
 
 from ....exact import E
-from ....item import Item, ItemError, Mis
+from ....item import Item, ItemError, Mis, unit_word
 from .kit import (FLIP, MINUS, Q, WORD, dec, num, rel, sent, side, term,
                   text_choices)
 
@@ -260,7 +260,8 @@ def _two_group(rng, var, kw):
             f"during this event?")
     P = {"n1": float(n1), "n2": float(n2), "gap": float(gap),
          "total": float(total), "op": op, "var": var}
-    rationale = (f"A ticket before the event costs {num(gap)} dollars more than "
+    rationale = (f"A ticket before the event costs {num(gap)} "
+                 f"{unit_word(gap, 'dollar', 'dollars')} more than "
                  f"one during it, so it costs {var} + {num(gap)} dollars, and "
                  f"the two groups together raise {up}, which must be "
                  f"{WORD[op]} {num(total)}, so {key}.")

@@ -19,7 +19,7 @@ from __future__ import annotations
 
 import random
 
-from ....item import Item, ItemError
+from ....item import Item, ItemError, unit_word
 from ..values import (Q, dec, mcq, places_needed, q, sig, snap, spr, text_mcq,
                       unambiguous)
 
@@ -648,18 +648,19 @@ def growth_table(rng: random.Random, seed: int, *, fast=None, slow=None,
          snap(d_fast, 1) - snap(d_slow, 1)),
         ("rounded each diameter up to the next tenth of an inch instead of to "
          "the nearest one", _ceil(d_fast, Q(1, 10)) - _ceil(d_slow, Q(1, 10))),
-        (f"gave the growth of the {fast.lower()} alone, never subtracting the "
-         f"{slow.lower()}", Q(years) / gf),
+        (f"gave the growth of the {_common(fast)} alone, never subtracting the "
+         f"{_common(slow)}", Q(years) / gf),
         ("divided the years by the difference of the two growth factors",
          Q(years) / (gs - gf)),
         ("read the growth factors as inches of growth a year rather than years "
          "per inch of diameter", years * (gs - gf)),
     ]
     rationale = (f"A growth factor of g means g years for each inch of diameter, "
-                 f"so a tree gains 1 ÷ g inch a year: the {fast.lower()} gains "
+                 f"so a tree gains 1 ÷ g inch a year: the {_common(fast)} gains "
                  f"{years} ÷ {dec(gf, places_needed(gf))} = "
-                 f"{dec(years / gf, places_needed(years / gf, 3))} inches in "
-                 f"{years} years and the {slow.lower()} gains "
+                 f"{dec(years / gf, places_needed(years / gf, 3))} "
+                 f"{unit_word(years / gf, 'inch', 'inches')} in "
+                 f"{years} years and the {_common(slow)} gains "
                  f"{dec(years / gs, places_needed(years / gs, 3))}, a difference "
                  f"of about {dec(key, 1)} inches; the starting diameter is the "
                  f"same for both and cancels.")
@@ -675,7 +676,11 @@ def _ceil(v, step) -> Q:
 
 
 def _an(name: str) -> str:
-    return ("an " if name[0].lower() in "aeiou" else "a ") + name.lower()
+    return ("an " if name[0].lower() in "aeiou" else "a ") + _common(name)
+
+
+def _common(name: str) -> str:
+    return name if name.startswith("American") else name.lower()
 
 
 _WORDS = {2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven",

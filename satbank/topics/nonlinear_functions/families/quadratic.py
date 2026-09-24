@@ -13,7 +13,7 @@ from __future__ import annotations
 import random
 from fractions import Fraction as Q
 
-from ....item import ItemError, Mis
+from ....item import ItemError, Mis, unit_word
 from ..common import (MINUS, dec, factored, fn, linear_factor, num, pair, pick,
                       point, poly_text, q, sig, signed, sup, text_item,
                       value_item)
@@ -416,7 +416,7 @@ FIT_VALUE = ("A quadratic function models the height, in feet, of an object abov
              "the ground {t} seconds after being launched?")
 FIT_EQUATION = ("A machine launches a softball from ground level. The softball "
                 "reaches a maximum height of {k} meters above the ground at {h} "
-                "seconds and hits the ground at {g} seconds. Which equation "
+                "{h_unit} and hits the ground at {g} {g_unit}. Which equation "
                 "represents the height above ground h, in meters, of the softball t "
                 "seconds after it is launched?")
 FIT_POINTS = ("The total distance d, in meters, traveled by an object moving in a "
@@ -490,7 +490,9 @@ def quad_fit(rng: random.Random, seed: int, *, mode=None, y0=None, k=None, h=Non
                          pair(f"h = {MINUS}{num(-a)}t² + {dec(k)}", -a, 0, k)),
         }
         order = ["plain_ground", "plain_max", "swapped", "no_shift"]
-        stem = FIT_EQUATION.format(k=dec(k), h=dec(h), g=dec(g))
+        stem = FIT_EQUATION.format(k=dec(k), h=dec(h), g=dec(g),
+                                   h_unit=unit_word(h, "second", "seconds"),
+                                   g_unit=unit_word(g, "second", "seconds"))
         why = (f"The vertex is ({dec(h)}, {dec(k)}) and the curve returns to the "
                f"ground at t = {dec(g)}, which needs a coefficient of {num(a)}.")
         P = {"kind": "nlf_quad_fit", "mode": mode, "a": [a.numerator, a.denominator],

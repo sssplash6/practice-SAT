@@ -24,6 +24,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from fractions import Fraction as Q
 
+from ...item import unit_word
 from .values import dec, places_needed
 
 __all__ = ["Scene", "SCENES", "MEAN_SCENES", "PCT_SCENES", "TABLE_SCENES",
@@ -76,7 +77,9 @@ class Scene:
         return dec(v, p)
 
     def one(self, v) -> str:
-        return self.num(v) + self.unit
+        unit = (unit_word(v, self.unit[:-1], self.unit)
+                if self.unit in (" miles", " hours") else self.unit)
+        return self.num(v) + unit
 
     def pair(self, lo, hi) -> str:
         if self.unit_each:

@@ -19,7 +19,7 @@ import random
 from fractions import Fraction as Q
 
 from ....exact import E, Exact
-from ....item import Item, ItemError, Mis, assemble_text
+from ....item import Item, ItemError, Mis, assemble_text, unit_word
 from ..figures import Fig, P, along, dist, meet, polar, ray, triangle_pts
 from ..kit import dec, pick, plain, snap, unambiguous, whole
 from .triangles import cosd, finish, sind
@@ -283,16 +283,20 @@ def shadow(rng: random.Random, seed: int, *, h1=None, s1=None, s2=None, story=No
 
     if story == "monument":
         stem = (f"At a certain time and day, {tall[0]} casts a shadow that is {s1} "
-                f"feet long. At the same time, {short[0]} casts a shadow that is {s2} "
-                f"feet long. Given that {tall[1]} is approximately {h1} feet tall, "
+                f"{unit_word(s1, 'foot', 'feet')} long. At the same time, {short[0]} "
+                f"casts a shadow that is {s2} {unit_word(s2, 'foot', 'feet')} long. "
+                f"Given that {tall[1]} is approximately {h1} "
+                f"{unit_word(h1, 'foot', 'feet')} tall, "
                 f"which of the following is closest to the height, in feet, of "
                 f"{short[1]}?")
         skill = "similar triangles in a shadow problem"
     else:
         stem = (f"Two nearby trees are perpendicular to the ground, which is flat. "
-                f"One of these trees is {h1} feet tall and has a shadow that is {s1} "
-                f"feet long. At the same time, the shadow of the other tree is {s2} "
-                f"feet long. How tall, in feet, is the other tree?")
+                f"One of these trees is {h1} {unit_word(h1, 'foot', 'feet')} tall and "
+                f"has a shadow that is {s1} {unit_word(s1, 'foot', 'feet')} long. "
+                f"At the same time, the shadow of the other tree is {s2} "
+                f"{unit_word(s2, 'foot', 'feet')} long. How tall, in feet, is the "
+                f"other tree?")
         skill = "similar triangles in a shadow problem"
     if story == "monument" and not closest:
         raise ItemError("that story only makes sense as a closest-to item")
