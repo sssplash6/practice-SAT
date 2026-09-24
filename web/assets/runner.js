@@ -2824,16 +2824,19 @@
               owner      the viewer owns the sitting (writes offered; default true)
               session, title, sitting {subjects}, hash (dialog: #q= and Back, default true),
               nKey       'miss' (default) | 'unseen' (Review's Redo, Due, Fixed tabs)
-              actions    extra UI.questionActions ctx (axes, siblings, on {save, mark, note, again, share})
-              prefs, drill (the walk's drill id), proveBody(item), twinBody(item)
+              actions    extra UI.questionActions ctx (axes, siblings, on {note, again, ...}); Save and Mark
+                         live in the top bar (on.save, on.mark), so the row leaves them out
+              prefs, axes, proveBody(item) (the walk's step 4), twinBody(item), step (the walk's resume),
+              checkins (the walk's end card), keys (false: the page drives it), phoneDialog (pane: false
+              keeps a phone in the page), listKey (the seen-this-visit set), historyOpen(row)
               on         load(i), show(i, item), close(i), seen(item), reanswer(item, answer, right),
                          why(item, {diag | kind | guess}) -> {called, label}, rule(item, text | null),
                          second(item, answer, {conf, ms}) -> fb, walkAnswer(item, answer, meta) -> fb,
                          at(i, step, diag), story(item, node) -> item, related(item), spot(item),
                          share(item), help(item), addRedo(item), dismiss(item), startSecond(), showNow(item),
                          example(item) -> {question, feedback, trap_index}, twins(items), learn(items),
-                         closed(item, fb), report(item), history(item), save(item, on), mark(item, on),
-                         done(summary)
+                         closed(item, fb), report(item, extra), history(item), save(item, on), mark(item, on),
+                         note(item), twinAnswer(item, fb, n), again(items) (the walk's still-open), done(summary)
      player {el, at, item, ws, go(i), next(), prev(), nextMiss(), hide(on), update(i, patch),
              setItems(items), setFilter(f, label), close(), destroy()}
      UI.review.at(items) -> index for the page's #q= hash, or -1 */
@@ -2902,7 +2905,7 @@
     const t0 = performance.now();
 
     /* ---------------- the frame: the practice session's layout (60px top bar, 700px column, bottom bar) */
-    const root = h('div', { class: `rv rv-${mode}${asDialog ? ' rv-dlg-in' : ''}` });
+    const root = h('div', { class: `rv rv-${mode}${asDialog ? ' rv-dlg-in' : ''}${pane && asDialog ? ' rv-postop' : ''}` });
     const live = h('p', { class: 'sr', role: 'status', 'aria-live': 'polite' });
     const say = t => { live.textContent = ''; setTimeout(() => { live.textContent = t; }, 30); };
     const top = h('header', { class: 'rv-top' });
@@ -3010,7 +3013,7 @@
     const miss = it => RV_MISS.has(it.status);
     function paintNav() {
       navEl.replaceChildren();
-      if (pane && !asDialog) return;
+      if (pane) { if (asDialog) navEl.append(h('span', { class: 'rv-navtext', text: posText() })); return; }   // V14's strip is in the header
       if (pair || walk) {
         const it = items[at] || {};
         navEl.append(h('span', { class: 'rv-navtext', text: walk ? `Mistake ${at + 1} of ${items.length}` : `Pair ${at + 1} of ${items.length}${it.change ? ' · ' + cap(String(it.change).replace(/_/g, ' ')) : ''}` }));
@@ -3052,6 +3055,7 @@
       }
     }
     const label = it => (UI.qlabel ? UI.qlabel(it, o.sitting) : `Q${it.n}`);
+    function posText() { const i = k(); return i < 0 ? `${at + 1} of ${items.length}` : `${i + 1} of ${order.length}${filterLabel ? ' ' + filterLabel : ''}`; }
     function paintFoot() {
       const i = k();
       prevB.disabled = i <= 0;
@@ -3059,7 +3063,7 @@
       if (walk || second) nextB.querySelector('span').textContent = second ? (cur && cur._second ? 'Next' : 'Skip this one') : 'Next step';
       if (second) nextB.className = (cur && cur._second ? 'pill sm' : 'quiet') + ' rv-next';
       if (walk) prevB.querySelector('span').textContent = 'Back';
-      posEl.textContent = i < 0 ? `${at + 1} of ${items.length}` : `${i + 1} of ${order.length}${filterLabel ? ' ' + filterLabel : ''}`;
+      posEl.textContent = posText();
       missB.hidden = !!(filter || second || walk || pair) || !items.some((x, j) => j !== at && (o.nKey === 'unseen' ? !seenNow.has(keyOf(x)) : miss(x)));
       twinFoot.hidden = !(phone() && cur && cur.q && !hidden && !second && !walk && !pair);
     }
@@ -3105,7 +3109,7 @@
     async function show(dir) {
       const i = at;
       let it = items[i];
-      twinRuns.forEach(r => { try { r.finish(); } catch (_) {} });
+      twinRuns.forEach(r => { try { r.destroy(); } catch (_) {} });
       twinRuns = [];
       if (it.stub && on.load) {
         col.replaceChildren(skeleton());
@@ -3126,7 +3130,7 @@
       if (ws) { try { ws.destroy(); } catch (_) {} ws = null; }
       const fromPre = !!(pre && pre.i === i && pre.hidden === hidden && !walk && !second && !pair);
       const b = fromPre ? pre.b : build(it);
-      pre = null;
+      if (fromPre) pre = null; else dropPre();
       if (fromPre && b.head && it.q) fillHead(b.head, it);           // the strip and position were drawn for the item before
       col.replaceChildren(b.el);
       ws = b.ws;
@@ -3135,7 +3139,7 @@
       scroll.scrollTop = 0;
       if (dlg && !dlg.contains(doc.activeElement)) col.focus({ preventScroll: true });
       if (dir && !still()) { b.el.classList.add('rv-slide-' + dir); }
-      if (!hidden && !second && !walk && it.q && !heldBack(it) && !(it.new && it.diag_choices && !it._revealed)) markSeen(it);
+      if (!hidden && keyShown(it)) markSeen(it);
       seenNow.add(keyOf(it));
       try { sessionStorage.setItem(SEENKEY, JSON.stringify([...seenNow].slice(-400))); } catch (_) {}
       syncAll();
@@ -3169,9 +3173,12 @@
       if (nx === undefined || walk || second || pair || dead) return;
       setTimeout(() => {
         if (dead || order[k() + 1] !== nx || items[nx].stub || (pre && pre.i === nx)) return;
+        dropPre();
         pre = { i: nx, hidden, b: build(items[nx]) };
       }, 60);
     }
+    // the key is on screen: not held back, not waiting on What happened?, past the walk's first steps, not a Second look
+    const keyShown = it => !!(it && it.q && !pair && !second && !heldBack(it) && !(it.new && it.diag_choices && !it._revealed) && !(walk && stepOf(it) < 3));
     function markSeen(it) {
       if (it.seen === false || it.revealed === false) { it.seen = true; it.revealed = true; call('seen', it); }
     }
@@ -3224,7 +3231,9 @@
       if (it.marks && it.marks.length) annotate(b.ws.el, it.marks, { readonly: true });   // SR9, R6: the sitting's highlights, read-only
       return b;
     }
-    function rebuild() { if (!cur) return; pre = null; const keepAt = at; at = -1; go(keepAt); }
+    // a rendered-ahead item that will not be shown gives back its listeners
+    function dropPre() { if (pre && pre.b.ws) { try { pre.b.ws.destroy(); } catch (_) {} } pre = null; }
+    function rebuild() { if (!cur) return; dropPre(); const keepAt = at; at = -1; go(keepAt); }
     function replace(it, got) {
       const i = items.indexOf(it);
       if (i < 0) return;
@@ -3551,6 +3560,7 @@
       if (!onx.history) onx.history = () => openHistory(it);
       if (!onx.again && q.template && q.seed !== undefined) onx.again = () => startInline(it, b, { body: it.again_body || { list: 'items', ids: [[q.template, q.seed]], count: 1, source: 'review' }, caption: 'The very same question', again: true });
       if (!onx.report) onx.report = () => report(it);
+      if (on.note && !onx.note) onx.note = () => call('note', it);
       const trapMiss = miss(it) && (!it.cause || ['trap', 'gap'].includes(it.cause.cause) || (it.mistake && ['stuck', 'relapsed'].includes(it.mistake.status)));
       const stuck = !!(it.mistake && it.mistake.status === 'stuck');
       const ctx = Object.assign({ axes: o.axes, subject: q.subject }, base, {
@@ -3672,10 +3682,10 @@
     function hide(on2) {
       hidden = !!on2;
       if (pane) ls.set(HKEY, hidden);
-      pre = null;
+      dropPre();
       if (cur) cur._local = false;
       if (ws && ws.setHidden && !heldBack(cur || {})) ws.setHidden(hidden);
-      if (!hidden && cur && cur.q && !heldBack(cur)) markSeen(cur);
+      if (!hidden && keyShown(cur)) markSeen(cur);
       syncAll();
       say(hidden ? 'Answers hidden. Pick an answer to check yourself.' : 'Answers shown');
     }
@@ -3719,7 +3729,7 @@
       const ctx = Object.assign({ kind: 'question', source: o.source || 'review', session: it.session || o.session, question_id: q.id, template: q.template, seed: q.seed,
         revealed: !hidden, live: false, title: `${label(it)} · ${(UI.TOPIC && UI.TOPIC[q.topic] || {}).short || q.topic_name || ''}`,
         given: it.fb ? it.fb.given : null }, extra);
-      if (UI.report) { markSeen(it); return UI.report(ctx); }
+      if (UI.report) { if (!hidden && keyShown(it)) markSeen(it); return UI.report(ctx); }
       toast('Reports open here soon. Use Send feedback in the menu for now.');
       return null;
     }
@@ -3890,7 +3900,7 @@
       return walkEnd();
     }
     function walkEnd() {
-      twinRuns.forEach(r => { try { r.finish(); } catch (_) {} });
+      twinRuns.forEach(r => { try { r.destroy(); } catch (_) {} });
       if (ws) { ws.destroy(); ws = null; }
       const n = items.length;
       const named = items.filter(x => x._called && x._called.called).length;
@@ -4008,8 +4018,9 @@
     function close(how) {
       if (dead) return;
       dead = true;
-      twinRuns.forEach(r => { try { r.finish(); } catch (_) {} });
+      twinRuns.forEach(r => { try { r.destroy(); } catch (_) {} });
       if (ws) { try { ws.destroy(); } catch (_) {} }
+      dropPre();
       if (dlg && UI.calc && UI.calc.isOpen) UI.calc.close();
       doc.removeEventListener('keydown', onKey);
       removeEventListener('popstate', onPop);
@@ -4030,9 +4041,9 @@
       get ws() { return ws; },
       get hidden() { return hidden; },
       go, next, prev, nextMiss, hide, close, destroy: () => close('destroy'),
-      update(i, patch) { if (!items[i]) return; items[i] = rvPrep(Object.assign({}, items[i], patch, { _rv: false }), i); pre = null; if (i === at) rebuild(); else syncAll(); },
-      setItems(list, i) { items = (list || []).map(rvPrep); computeOrder(); pre = null; at = Math.max(0, Math.min(items.length - 1, i ?? at)); rebuild(); },
-      setFilter(f, lab) { filter = f || null; filterLabel = lab || ''; computeOrder(); pre = null; if (!order.includes(at)) go(order[0]); else syncAll(); },
+      update(i, patch) { if (!items[i]) return; items[i] = rvPrep(Object.assign({}, items[i], patch, { _rv: false }), i); dropPre(); if (i === at) rebuild(); else syncAll(); },
+      setItems(list, i) { items = (list || []).map(rvPrep); computeOrder(); dropPre(); at = Math.max(0, Math.min(items.length - 1, i ?? at)); rebuild(); },
+      setFilter(f, lab) { filter = f || null; filterLabel = lab || ''; computeOrder(); dropPre(); if (!order.includes(at)) go(order[0]); else syncAll(); },
     };
   }
   review.at = rvAt;

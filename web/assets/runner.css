@@ -810,7 +810,8 @@ html.rv-open { overflow: hidden; }
 .rv-prev { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; }
 .rv-prev:disabled, .rv-next:disabled { opacity: .4; cursor: default; }
 .rv-next { gap: 6px; }
-.rv-pos { white-space: nowrap; }
+.rv-pos, .rv-miss { white-space: nowrap; }
+.rv-postop .rv-pos { display: none; }
 .rv-hint { margin: 26px 0 0; text-align: center; font-size: 11.5px; }
 @media (hover: none) { .rv-hint { display: none; } }
 
