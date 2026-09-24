@@ -1140,10 +1140,12 @@
         el.append(h('span', { class: 'filters-keep filters-search' }, inp));
         ctl[f.key] = () => { if (doc.activeElement !== inp) inp.value = state[f.key] || ''; };
       } else if (f.type === 'pills') {
-        const c = chips(null, f.options, { multi: true, value: state[f.key], label: f.label, onChange: v => change(f.key, v) });
+        const nOf = x => (counts[f.key] && counts[f.key][x.value] !== undefined ? counts[f.key][x.value] : x.n);
+        const opts = f.options.map(normOpt);
+        const c = chips(null, opts.map(x => ({ ...x, n: nOf(x) })), { multi: true, value: state[f.key], label: f.label, onChange: v => change(f.key, v) });
         if (keep) c.el.classList.add('filters-keep');
         el.append(c.el);
-        ctl[f.key] = () => c.set(state[f.key], true);
+        ctl[f.key] = () => { c.set(state[f.key], true); opts.forEach(x => c.count(x.value, nOf(x))); };   // the same counts as the phone sheet
       } else {
         const isDate = f.type === 'date';
         const d = dropdown(null, { label: f.label || (isDate ? 'Date' : ''), options: isDate ? DATE_OPTS : f.options, groups: f.groups,
@@ -1315,7 +1317,7 @@
     const el = h('div', { class: 'thumbs', role: 'group', 'aria-label': o.groupLabel || 'Images' }, add, input);
     const status = h('p', { class: 'sr', role: 'status' });
     el.append(status);
-    const draw = () => { add.hidden = files.length >= max; status.textContent = `${files.length} of ${max} images`; if (o.onChange) o.onChange([...files]); };
+    const draw = (emit = true) => { add.hidden = files.length >= max; status.textContent = `${files.length} of ${max} images`; if (emit && o.onChange) o.onChange([...files]); };
     async function take(list) {
       for (const f of [...list]) {
         if (files.length >= max) { toast(`Up to ${max} images`); break; }
@@ -1344,7 +1346,7 @@
       if (fs.length) { e.preventDefault(); take(fs); }
     };
     queueMicrotask(() => { pasteRoot = o.pasteTarget || el.closest('dialog, form') || doc; pasteRoot.addEventListener('paste', onPaste); });
-    draw();
+    draw(false);                 // building it is not a change
     put(host, el);
     return { el, files: () => files.map(x => x.file), clear() { files.splice(0).forEach(x => { URL.revokeObjectURL(x.url); x.fig.remove(); }); draw(); }, add: take };
   }
@@ -1414,17 +1416,25 @@
   }
 
   /* ------------------------------------------------------------ tile, meter, skeleton, card error */
+  // the count runs once, when the tile first shows; until then a screen reader reads the real
+  // number (the moving one is aria-hidden) and printing finishes it, so nothing reads 0
+  const counting = new Set();
+  addEventListener('beforeprint', () => counting.forEach(f => f()));
   function countUp(el, to, fmt) {
     if (still() || !Number.isInteger(to) || to <= 0 || typeof IntersectionObserver !== 'function') { el.textContent = fmt(to); return; }
-    el.textContent = fmt(0);
+    const shown = h('span', { 'aria-hidden': 'true', text: fmt(0) });
+    el.replaceChildren(shown, h('span', { class: 'sr', text: fmt(to) }));
+    const done = () => { io.disconnect(); counting.delete(done); el.textContent = fmt(to); };
+    counting.add(done);
     const io = new IntersectionObserver(es => {
       if (!es.some(e => e.isIntersecting)) return;
       io.disconnect();
+      counting.delete(done);
       const t0 = performance.now();
       const step = t => {
         const k = Math.min(1, (t - t0) / 600);
-        el.textContent = fmt(Math.round(to * (1 - Math.pow(1 - k, 3))));
-        if (k < 1) requestAnimationFrame(step);
+        if (k < 1) { shown.textContent = fmt(Math.round(to * (1 - Math.pow(1 - k, 3)))); requestAnimationFrame(step); }
+        else el.textContent = fmt(to);
       };
       requestAnimationFrame(step);
     });
@@ -1547,8 +1557,10 @@
     if (o.caption) tbl.append(h('caption', { text: o.caption }));
     const thead = h('thead'), tbody = h('tbody');
     const tr = h('tr');
+    const lastStick = cols.map(c => !!c.stick).lastIndexOf(true);      // the pinned edge carries the shadow
+    const stickCls = (c, i) => [c.stick && (i ? 'stick-2' : 'stick'), c.stick && (c.stickLast || i === lastStick) && 'stick-last'];
     const ths = cols.map((c, i) => {
-      const th = h('th', { scope: 'col', class: [c.num && 'n', c.stick && (i ? 'stick-2' : 'stick'), c.stickLast && 'stick-last'].filter(Boolean).join(' ') || null, style: c.width ? `width: ${c.width}px` : null });
+      const th = h('th', { scope: 'col', class: [c.num && 'n', ...stickCls(c, i)].filter(Boolean).join(' ') || null, style: c.width ? `width: ${c.width}px` : null });
       if (c.sort !== false && (c.sort || o.sortable)) {
         const b = h('button', { type: 'button' }, c.label);
         b.addEventListener('click', () => sortBy(c.key, sort && sort.key === c.key && sort.dir === 'asc' ? 'desc' : (sort && sort.key === c.key ? 'asc' : (c.num ? 'desc' : 'asc'))));
@@ -1590,7 +1602,7 @@
         const row = h('tr', { class: o.you && o.you(r) ? 'you' : null });
         cols.forEach((c, i) => {
           const v = c.render ? c.render(r) : val(c, r);
-          row.append(h(c.header ? 'th' : 'td', { class: [c.num && 'n', c.stick && (i ? 'stick-2' : 'stick'), c.stickLast && 'stick-last'].filter(Boolean).join(' ') || null,
+          row.append(h(c.header ? 'th' : 'td', { class: [c.num && 'n', ...stickCls(c, i)].filter(Boolean).join(' ') || null,
             scope: c.header ? 'row' : null, title: c.cellTitle ? c.cellTitle(r) : null },
             v instanceof Node ? v : (v === null || v === undefined || v === '' ? '—' : (typeof v === 'number' ? num(v) : String(v)))));
         });
@@ -1605,6 +1617,9 @@
       edges();
     }
     function edges() {
+      // the second pinned column starts where the first one ends
+      const s1 = tbl.querySelector('thead th.stick');
+      if (s1 && s1.offsetWidth) wrap.style.setProperty('--stick-1', `${s1.offsetWidth}px`);
       const max = wrap.scrollWidth - wrap.clientWidth;
       wrap.classList.toggle('more-l', wrap.scrollLeft > 1);
       wrap.classList.toggle('more-r', wrap.scrollLeft < max - 1);
