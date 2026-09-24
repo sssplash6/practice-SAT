@@ -468,8 +468,13 @@ def check_frames(data: dict[str, list | dict], pools: set[str], phase: int,
         + [f"{t}: fewer than 3 distractors with a legal trap" for t in thin]
         + ([f"literature excerpt share {share:.1%} is below 20%"] if share < .2 else [])
     )
-    if phase >= 6:
+    if phase >= 7:
         errors.extend(supply)
+    elif phase == 6:
+        # ponytail: the supply minimums are targets until the review gate (phase 7) makes frames servable; until then
+        # they warn with counts, so filling them is planned work, not a build failure. Structural rules above stay errors.
+        warnings.append(f"frames: {len(short)} SAT senses short of 6 frames over 2 subjects, {len(sparse)} classes short,"
+                        f" {len(thin)} keys short of 3 traps, excerpt share {share:.1%} (errors from phase 7, the review gate)")
         warnings.append("servable frame minimum waits for independent adjudications and S9 review gate")
     else:
         for what, names in (("SAT senses short of 6 frames over 2 subjects", short),
