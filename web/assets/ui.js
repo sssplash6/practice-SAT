@@ -1215,7 +1215,7 @@
   const nextTip = it => `Next: ${it.title}${nextMeta(it) ? ' · ' + nextMeta(it) : ''}${it.reason ? ' · ' + it.reason : ''}`;
 
   /* ---- the sidebar and the rail */
-  let sideEl = null, pbarEl = null, tabsEl = null, scrimEl = null, overlay = null, here = '', shellOpts = {};
+  let sideEl = null, pbarEl = null, tabsEl = null, scrimEl = null, overlay = null, here = '';
   const refs = { items: {}, tabs: {} };
   const layoutMode = () => media(W_PHONE) ? 'phone' : media(W_SIDE) && sget(LS(), 'satf.rail') !== '1' ? 'side' : 'rail';
   function tip(el, text, kbd) {
@@ -1248,11 +1248,11 @@
     const markEl = railNow
       ? h('button', { type: 'button', class: 'side-mark ibtn', style: '--ib: var(--rt, 44px)', 'aria-label': 'Expand sidebar', 'aria-expanded': 'false', html: mark(26) }, word)
       : h('a', { class: 'side-mark', href: '/', 'aria-label': 'SAT Freshman, Today', html: mark(26) }, word);
-    if (railNow) { markEl.addEventListener('click', () => toggle(true)); tip(markEl, 'Expand sidebar', '['); }
+    if (railNow) { markEl.addEventListener('click', toggle); tip(markEl, 'Expand sidebar', '['); }
     const wide = media(W_SIDE);
     const label = overlay ? (wide ? 'Keep sidebar open' : 'Close sidebar') : 'Collapse sidebar';
     const tog = h('button', { type: 'button', class: 'ibtn side-toggle', 'aria-label': label, 'aria-expanded': String(!railNow) }, icon('panel'));
-    tog.addEventListener('click', () => toggle(true));
+    tog.addEventListener('click', toggle);
     tip(tog, () => overlay ? label : 'Collapse', '[');
     box.replaceChildren(markEl, tog);
     paintSide(shellData);                // metas take their rail or full form
@@ -1716,24 +1716,22 @@
 
   /* ---- the Now strip (U26): Up next and the Today card at the top of main, every line as
      text, wherever the sidebar is not showing both in full (ui.css decides by media query) */
-  let stripEl = null;
-  function nowStrip(host, o = {}) {
+  const strips = [];                     // the shell's, or the one Today places itself
+  function nowStrip(host) {
     const el = h('section', { class: 'now-strip', 'aria-label': 'Up next and today' });
-    const paint = d => {
+    el._paint = d => {
       const nb = nextBlock(d), card = todayCard(d);
-      const phone = media(W_PHONE);
       // the phone keeps its Today card in the menu sheet, one tap away
-      el.replaceChildren(...(nb.hidden ? [] : [nb]), ...(phone ? [] : [card]));
+      el.replaceChildren(...(nb.hidden ? [] : [nb]), ...(media(W_PHONE) ? [] : [card]));
       el.style.gridTemplateColumns = el.children.length === 1 ? 'minmax(0, 1fr)' : '';
       el.hidden = !el.children.length;
     };
-    el._paint = paint;
-    paint(shellData);
+    el._paint(shellData);
     if (host) host.prepend(el);
-    if (!o.quiet) onShell(d => paint(d));
+    strips.push(el);
     return el;
   }
-  const paintStrip = () => { if (stripEl && stripEl._paint) stripEl._paint(shellData); };
+  const paintStrip = () => strips.forEach(el => el._paint(shellData));     // every shell paint and layout change
 
   /* ---- the section bar (U26): UI.sections([{id, label}]) renders a page's cards as chips,
      sticky at the top of main, with scroll-spy; "Up next: ... · Start" shows at its end once
@@ -1904,7 +1902,6 @@
     if (typeof o === 'string') o = { page: o };
     if (shellOn) { if (o.sections) sections(o.sections); return; }
     shellOn = true;
-    shellOpts = o;
     const pg = o.page || page();
     here = SECTION[pg] || pg;
     keys.chrome = true;
@@ -1920,7 +1917,7 @@
       if (!main.id) main.id = 'main';
       sectionBar();
       main.prepend(sentinel, barEl);
-      if (o.now !== false && !doc.querySelector('.now-strip')) { stripEl = nowStrip(null, { quiet: true }); sentinel.before(stripEl); }
+      if (o.now !== false && !doc.querySelector('.now-strip')) sentinel.before(nowStrip(null));
       if (o.sections) sections(o.sections); else paintBarNext();
     }
     if (!storable && UI.banner) UI.banner('storage', 'This browser is blocking site data, so progress can’t be kept here.',
@@ -1934,7 +1931,7 @@
       if (shellData) return;
       paintSide(null);
       sideEl.querySelectorAll('.nextup, .side-day').forEach(e => { e.hidden = true; });
-      if (stripEl) stripEl.hidden = true;
+      strips.forEach(el => { el.hidden = true; });
       if (refs.chip) refs.chip.hidden = true;
       Object.values(refs.tabs).forEach(a => a.querySelectorAll('.dot, .sr').forEach(x => x.remove()));
     };
