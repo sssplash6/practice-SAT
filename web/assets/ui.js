@@ -1928,7 +1928,18 @@
     for (const q of [W_SIDE, W_PHONE]) { try { matchMedia(q).addEventListener('change', layout); } catch (_) {} }
     layout();
     onShell(paintAll);
-    if (!shellAsked) refresh();
+    // no shell data at all: Up next and the Today card leave, the nav still works (Shell 2.12)
+    // (and a retired code: nothing of that student stays painted)
+    const gone = () => {
+      if (shellData) return;
+      paintSide(null);
+      sideEl.querySelectorAll('.nextup, .side-day').forEach(e => { e.hidden = true; });
+      if (stripEl) stripEl.hidden = true;
+      if (refs.chip) refs.chip.hidden = true;
+      Object.values(refs.tabs).forEach(a => a.querySelectorAll('.dot, .sr').forEach(x => x.remove()));
+    };
+    (shellAsked || refresh()).then(gone, gone);
+    addEventListener('satf:retired', gone);
     if (doc.prerendering) whenVisible(() => { if (shellData) paintAll(shellData); });
     const qs = new URLSearchParams(location.search);
     if (qs.has('feedback')) whenVisible(feedback);
