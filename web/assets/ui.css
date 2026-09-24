@@ -519,10 +519,9 @@ body.has-rail { padding-left: var(--rail-w); }
 }
 .side-user .avatar { grid-row: 1 / 3; background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); }
 .side-name { font: 600 14px/1.25 var(--font); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.side-sub {
-  display: flex; align-items: center; gap: 5px; min-width: 0;
-  font: 500 12px/1.3 var(--mono); color: var(--soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
+/* the sub line wraps rather than cutting a word: beside the foot icons (medium height) its column is ~70px */
+.side-sub { display: block; min-width: 0; font: 500 12px/1.3 var(--mono); color: var(--soft); }
+.side-sub > :is(svg, i, .dot) { display: inline-block; vertical-align: -1px; margin-right: 5px; }
 .side-user > svg { grid-column: 3; grid-row: 1 / 3; width: 16px; height: 16px; color: var(--soft); }
 .side-user[aria-expanded="true"] { background: var(--tile-2); }
 @media (hover: hover) and (pointer: fine) {
