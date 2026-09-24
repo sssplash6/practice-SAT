@@ -149,6 +149,28 @@ def check_reference_data(data: dict[str, list | dict], errors: list[str]) -> Non
                 f"{t.get('id', 'trap')}: incomplete trap", errors)
 
 
+def check_collections(data: dict[str, list | dict], errors: list[str]) -> None:
+    """collections.json tiles select their members by rule; each tile's count must match its rule,
+    and every SAT entry, transition and root must sit in a collection or roots tile."""
+    value = data["collections"]
+    groups = value.get("groups", []) if isinstance(value, dict) else []
+    covered: dict[str, set] = defaultdict(set)
+    for tile in (t for g in groups for t in g.get("collections", [])):
+        rule = tile.get("select")
+        if rule is None:
+            continue
+        members = [r.get("slug") or r.get("id") for r in rows(data.get(rule.get("file"), []))
+                   if all(r.get(k) == v or (isinstance(r.get(k), list) and v in r[k])
+                          for k, v in rule.items() if k != "file")]
+        require(bool(members) and tile.get("count") == len(members),
+                f"collections {tile.get('id')}: count {tile.get('count')} but its select matches {len(members)}", errors)
+        if tile.get("kind") in {"collection", "roots"}:
+            covered[rule.get("file")].update(members)
+    for name in ("sat", "transitions", "roots"):
+        missing = [r.get("slug") or r.get("id") for r in rows(data[name]) if (r.get("slug") or r.get("id")) not in covered[name]]
+        require(not missing, f"collections: {len(missing)} {name} rows in no collection, e.g. {missing[:5]}", errors)
+
+
 def legal_key(word: dict, need: dict) -> bool:
     return (
         word.get("class") == need.get("class")
@@ -415,6 +437,7 @@ def main() -> int:
     warnings: list[str] = []
     data = {name: load(name, errors) for name in FILES}
     check_reference_data(data, errors)
+    check_collections(data, errors)
     check_words(data, errors)
     counts = check_later(data, PHASE, errors, warnings)
     check_frames(data, check_fills(data, errors), PHASE, errors, warnings)
