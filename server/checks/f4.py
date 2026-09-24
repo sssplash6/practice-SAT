@@ -587,6 +587,26 @@ def causes_checks():
     assert last in got["items"]["trap"], got["items"]
     assert all(db.one("SELECT learner FROM attempts WHERE id=?", i)["learner"] == c
                for ids in got["items"].values() for i in ids if isinstance(i, int))
+    # T7 acceptance 1: a nearby number is never entry ("455" for 460)
+    e0 = "a:f4entry0"
+    progress.record(e0, None, spr(1, key="f4.grid460", answer="460"), "455", ms=180000)
+    with patch.object(progress, "_key_of", lambda _t, _s: "460"):
+        by = progress.causes(e0)["by"]
+    assert by["entry"] == 0 and by["gap"] == 1, by
+    # T7 acceptance 3: an unnamed grid-in miss on a 4-of-5 template is a slip, on a
+    # new template after 3 minutes a gap; a fast named easy pick is a trap
+    sl = "a:f4slip"
+    for s in range(30, 35):
+        item = real("le2.slope_of_line", s)
+        assert item["type"] == "spr"
+        progress.record(sl, None, item, ans(item, s != 34), ms=60000)
+    progress.record(sl, None, real("le2.slope_of_line", 35), "-999", ms=60000)
+    progress.record(sl, None, real("coord.circle_3pt", 0), "-999", ms=180000)
+    got = progress.causes(sl)
+    ids = {(r["template"], r["seed"]): r["id"] for r in
+           db.rows("SELECT id, template, seed FROM attempts WHERE learner=? AND correct=0", sl)}
+    assert ids[("le2.slope_of_line", 35)] in got["items"]["slip"], got["items"]
+    assert ids[("coord.circle_3pt", 0)] in got["items"]["gap"], got["items"]
     # a timed module finished with 3 blanks: 3 clock
     t = "a:f4clock"
     paper = [real("lin.evaluate", 900 + i, f"m1q{i:02d}") for i in range(1, 5)]
@@ -659,6 +679,9 @@ def causes_checks():
                     ms=150000, conf="sure")
     progress.record(bl, "f4-bl-test", {**med(7, "circles.spotted"), "id": "t2"}, 1, ms=150000)
     progress.record(bl, "f4-bl-test", {**med(8, "circles.silent"), "id": "t3"}, 1, ms=150000)
+    fast_easy = db.one("SELECT id FROM attempts WHERE learner=? AND template='circles.easyfast'", bl)["id"]
+    assert fast_easy in progress.causes(bl)["items"]["trap"]                 # fast and easy, but named: a trap
+    assert any(t["template"] == "circles.easyfast" for t in progress.open_traps(bl))   # T9 lists it
     got = progress.blind(bl)
     whys = {t["template"]: t["why"] for t in got.values()}
     assert whys == {"circles.fast": "fast", "circles.testsure": "sure", "circles.silent": "silent"}, whys
