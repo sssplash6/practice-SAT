@@ -446,8 +446,20 @@ def walk(b, base, http, sql) -> None:
         pg.wait_for_selector("[role=menu]")
         assert "Log a mistake" in pg.inner_text("[role=menu]")
         ctx.close()
-    print("ok  phone: no sideways scroll, the five tabs, the menu sheet's rows, the Review chip only with open mistakes;"
-          " at 390 and 360 the grip's sheet shows Review, and holding Practice lists Log a mistake")
+    # Shell 5: once every trap closes, the sidebar's Review meta and the phone chip both leave
+    sql.execute("UPDATE traps SET closed = '2026-01-01T00:00:00+00:00' WHERE learner=? AND closed IS NULL", (A,))
+    sql.commit()
+    for w in (1280, 390):
+        ctx = context(A, w, 844)
+        pg = page(ctx)
+        go(pg, "/plan/")
+        if w == 1280:
+            assert meta(pg, "review") == "", meta(pg, "review")
+        else:
+            assert not pg.is_visible(".pbar-chip"), pg.inner_text(".pbar-chip")
+        ctx.close()
+    print("ok  phone: no sideways scroll, the five tabs, the menu sheet's rows, the Review chip only with open mistakes"
+          " (both it and the Review meta leave once every trap closes); at 390 and 360 the grip's sheet shows Review, and holding Practice lists Log a mistake")
 
     # ---- Shell 12: the quick sheet (Q), a sitting only once answered, never Resume
     QL = code()
@@ -537,6 +549,34 @@ def walk(b, base, http, sql) -> None:
     if not f5:                             # without F5 a quick question has no topic to draw from: a 400, shown as Retry
         errors[:] = [e for e in errors if not ("400 (Bad Request)" in e and e.endswith("/api/drill"))]
     print("ok  offline: the banner and Retry now, and the nav still navigates")
+
+    # ---- every page at 1280 and 390, light and dark, a new and a seeded learner: the chrome is
+    # there (or, on the runner, the test and the kit, absent), nothing scrolls sideways, the theme
+    # holds, and no console errors
+    import pathlib
+    web = pathlib.Path(__file__).resolve().parents[2] / "web"
+    paths = sorted("/" + "".join(x + "/" for x in f.parent.relative_to(web).parts) for f in web.glob("**/index.html"))
+    paths += ["/diagnostic/signup.html", "/diagnostic/verified.html", "/dev/kit.html", "/nope/"]
+    bare = {"/practice/session/", "/test/", "/dev/kit.html"}
+    for L in (NEW, A):
+        own = api(L, "POST", "/api/drill", {"topics": ["circles"], "count": 3})["id"]
+        for theme in ("light", "dark"):
+            api(L, "PUT", "/api/me", {"prefs": {"theme": theme}})
+            for w, hgt in ((1280, 900), (390, 844)):
+                ctx = context(L, w, hgt)
+                pg = page(ctx)
+                for path in paths:
+                    url = path + (f"?id={own}" if path == "/practice/session/" else "")
+                    go(pg, url) if path not in bare else pg.goto(base + url, wait_until="networkidle")
+                    tag = (L == A and "seeded" or "new", theme, w, path)
+                    assert pg.evaluate("document.documentElement.scrollWidth <= innerWidth"), tag
+                    chrome = pg.is_visible("#bar nav.side" if w > 760 else "#bar .pbar") and (w > 760 or pg.is_visible("#tabs"))
+                    assert chrome != (path in bare), (tag, "the shell's chrome")
+                    # ponytail: /test/ keeps its 41 hard-coded colours until its owner converts them (Shell 2.13)
+                    if path != "/test/":
+                        assert pg.evaluate("getComputedStyle(document.body).backgroundColor") == (DARK if theme == "dark" else LIGHT), tag
+                ctx.close()
+    print(f"ok  {len(paths)} pages at 1280 and 390, light and dark, new and seeded: the chrome, no sideways scroll, the theme")
 
     assert not errors, errors[:8]
     print("ok  no console errors on the way")
