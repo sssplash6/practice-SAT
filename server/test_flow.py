@@ -603,7 +603,7 @@ def check_learner(c) -> None:
 
     # --- a timed set runs on the minutes the student set, endless ones too ------------
     C = {"X-Learner": "a:ownclock"}
-    assert c.post("/api/drill", headers=C, json={"topics": ["circles"], "count": 37, "timed": True}).json()["seconds"] == 37 * 2100 // 22
+    assert c.post("/api/drill", headers=C, json={"topics": ["circles"], "count": 37, "timed": True}).json()["seconds"] == 37 * 95  # R34
     assert c.post("/api/drill", headers=C, json={"topics": ["circles"], "count": 37, "timed": True,
                                                 "minutes": 3}).json()["seconds"] == 180
     sprint = c.post("/api/drill", headers=C, json={"topics": ["circles"], "count": None, "timed": True, "minutes": 5}).json()

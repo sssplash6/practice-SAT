@@ -142,6 +142,27 @@ def _source_questions(learner: str, sid: str) -> list[dict]:
     return [q for q in raw if isinstance(q, dict) and "key" in q]
 
 
+def _locked(learner: str, cfg: dict, template: str, seed: int) -> bool:
+    """R19: an exact item needs access(); a set code or a permalink is its own
+    grant, but never to a live test's item or today's challenge."""
+    if cfg.get("granted"):
+        return deps._protected(learner, template, seed)
+    return deps.access(learner, template, seed) is None
+
+
+def _miss_tier(learner: str, trap: dict, serve: str, level: str) -> str | None:
+    """Review's level for redo and checks: the tier of the trap's latest miss,
+    one up for 'harder' when the template has it, None for 'any'."""
+    if level == "any":
+        return None
+    row = db.one("SELECT difficulty FROM attempts WHERE learner=? AND template=? AND correct=0"
+                 " ORDER BY (norm=?) DESC, id DESC LIMIT 1", learner, trap["template"], trap["norm"])
+    tier = row["difficulty"] if row else None
+    if level == "harder" and tier in TIERS[:-1] and TIERS[TIERS.index(tier) + 1] in _tiers_of(serve):
+        tier = TIERS[TIERS.index(tier) + 1]
+    return tier if tier in _tiers_of(serve) else None
+
+
 def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], dict[str, str]]:
     pool, ids = cfg["pool"], cfg.get("ids")
     queue: list[str] = []
@@ -154,8 +175,8 @@ def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], d
         only = body.get("only")
         if only is not None:
             only = _list(only, "only")
-            if any(not isinstance(qid, str) or qid not in {q["id"] for q in questions} for qid in only):
-                _invalid("only", "unknown question id")
+            if any(not isinstance(qid, str) for qid in only):
+                _invalid("only", "expected question ids")
         for q in questions:
             if only is not None and q["id"] not in only:
                 continue
@@ -175,7 +196,7 @@ def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], d
             if a and a["norm"] and not a["norm"].startswith("~"):
                 cfg["want"].setdefault(q["key"], "^" + re.escape(a["norm"]) + "$")
         if not queue:
-            _empty("nothing_was_missed" if body.get("scope", "misses") == "misses" else "pool_empty")
+            _empty("nothing to practise")
         return queue, items, why
     if pool == "new":
         return queue, items, why
@@ -188,11 +209,14 @@ def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], d
             allowed = set(str(x) for x in _list(ids, "ids"))
             traps = [t for t in traps if str(t["id"]) in allowed]
         for t in traps:
-            queue.append(t["template"])
-            cfg.setdefault("trap_queue", []).append({"template": t["template"], "norm": t["norm"]})
-            why[t["template"]] = "open mistake" if pool == "redo" else "check-in due"
+            # R45 rule 5: a later check-in is served on another template with the same norm
+            serve = progress.checkin_template(t) if pool == "checks" else t["template"]
+            queue.append(serve)
+            cfg.setdefault("trap_queue", []).append({"template": serve, "norm": t["norm"],
+                                                     "tier": _miss_tier(learner, t, serve, cfg["level"])})
+            why[serve] = "open mistake" if pool == "redo" else "check-in due"
             if t.get("norm") and not str(t["norm"]).startswith("~"):
-                cfg["want"].setdefault(t["template"], "^" + re.escape(t["norm"]) + "$")
+                cfg["want"].setdefault(serve, "^" + re.escape(t["norm"]) + "$")
         if not queue:
             _empty("no_open_mistakes" if pool == "redo" else "no_checks_due")
     elif pool == "review":
@@ -223,11 +247,11 @@ def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], d
                 args += wanted
         selected_qids = None
         if body.get("from_session"):
-            questions = _source_questions(learner, body["from_session"])
+            _source_questions(learner, body["from_session"])
             if body.get("only") is not None:
                 selected_qids = _list(body["only"], "only")
-                if any(not isinstance(qid, str) or qid not in {q["id"] for q in questions} for qid in selected_qids):
-                    _invalid("only", "unknown question id")
+                if any(not isinstance(qid, str) for qid in selected_qids):
+                    _invalid("only", "expected question ids")
             sql += " AND session=?"
             args.append(body["from_session"])
         if body.get("result") in {"missed", "right"}:
@@ -263,8 +287,11 @@ def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], d
         if not isinstance(code, str):
             _invalid("ids", "a set code is required")
         row = db.one("SELECT items,revoked FROM sets WHERE code=?", code)
-        if not row or row["revoked"]:
+        if not row:
             _empty("set_unavailable")
+        if row["revoked"]:
+            raise HTTPException(410, {"reason": "set_revoked"})
+        cfg["granted"] = True
         raw = json.loads(row["items"] or "[]")
         items = [[x["template"], x["seed"]] if isinstance(x, dict) else list(x) for x in raw]
         _pairs(items, "ids")
@@ -298,7 +325,7 @@ def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], d
         if queue and not items:
             _invalid("exact", "this pool has no exact question addresses")
         for t, seed in items:
-            if deps.access(learner, t, seed) is None:
+            if _locked(learner, cfg, t, seed):
                 raise HTTPException(403, {"reason": "question_not_accessible", "template": t, "seed": seed})
     else:
         queue += [t for t, _ in items]
@@ -458,7 +485,10 @@ def resolve(learner: str, body: dict) -> dict:
         if name in body:
             _choices(body[name], name, options)
     timing = body.get("timing", "custom" if body.get("timed") and minutes else "legacy_pace" if body.get("timed") else "off")
-    exact_default = pool in {"seen", "history", "saved", "marked"}
+    if count is None and (body.get("order") == "ramp" or timing == "pace"):
+        raise HTTPException(400, {"field": "count", "reason": "an endless set has no end to ramp or pace to"})
+    # a shared set serves its identical items (QBank 15)
+    exact_default = pool in {"seen", "history", "saved", "marked", "set"}
     cfg = {"topics": topics, "templates": templates, "count": count, "total": count,
            "tiers": tiers, "difficulty": tiers, "formats": formats, "levels": level_filter,
            "unmeasured": body.get("unmeasured", True), "adaptive": adaptive,
@@ -469,7 +499,9 @@ def resolve(learner: str, body: dict) -> dict:
            "feedback": body.get("feedback", "instant"), "repairs": body.get("repairs", "next"),
            "source": source, "subject": subject, "inline": source in INLINE,
            "want": dict(want), "exclude": exclude, "turn": 0, "fixed": False,
-           "task": body.get("task"), "parent": body.get("parent"), "run": body.get("run"),
+           "task": body.get("task"), "run": body.get("run"),
+           # a twin counts on its parent (R24, S6's results.twins)
+           "parent": body.get("parent") or (body.get("from_session") if source == "twin" else None),
            "from_session": body.get("from_session"), "only": body.get("only"),
            "scope": body.get("scope", "misses"), "still_open": body.get("still_open", False)}
     cfg["plan"] = _pace_plan(tiers, count)
@@ -484,6 +516,9 @@ def resolve(learner: str, body: dict) -> dict:
             cfg["exact"] = True
         except (AttributeError, ValueError):
             _invalid("item", "use template:seed")
+        if t not in names:
+            _invalid("item", "unknown template")
+        cfg["granted"] = True           # R19's permalink: any catalogue item, live ones excepted
     if body.get("retake"):
         cfg["ids"] = [[q["key"], q["seed"]] for q in _source_questions(learner, body["retake"])]
         cfg["exact"] = True
@@ -769,7 +804,7 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
     while cfg.get("items"):
         template, seed = cfg["items"].pop(0)
         try:
-            if cfg.get("exact") and deps.access(learner, template, seed) is None and row["kind"] != "challenge":
+            if cfg.get("exact") and row["kind"] != "challenge" and _locked(learner, cfg, template, seed):
                 continue
             card = practice.Card.of(template, seed, generate(template, seed), topic_of(template))
             if card.item.difficulty not in allowed or card.item.fmt not in cfg.get("formats", ("mcq", "spr")):
@@ -789,8 +824,14 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
         target_cfg = {**cfg, "want": target_want}
         if target:
             target_cfg["adaptive_state"] = {}
-        card = _fresh(b, template, allowed, target_cfg, required_norm=norm,
-                      prefer_mcq=bool(target and not norm))
+        card = None
+        if target and target.get("tier") in allowed:
+            card = _fresh(b, template, {target["tier"]}, target_cfg, required_norm=norm,
+                          prefer_mcq=not norm)
+            if card and norm and not card.trap_true:
+                card = None             # the named trap at any tier beats its tier
+        card = card or _fresh(b, template, allowed, target_cfg, required_norm=norm,
+                              prefer_mcq=bool(target and not norm))
         if card:
             return card, cfg.get("pool") in ("redo", "checks")
 
@@ -853,17 +894,24 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
         # sessions do not open on the same one
         salt = row["id"]
         ranked = sorted(pool, key=lambda t: (used[t], zlib.crc32(f"{salt}:{t}".encode())))
+        wanted_share = cfg.get("spr_share")
+        spr_count = sum(q.get("type") == "spr" for q in served)
+        target_spr = wanted_share is not None and spr_count < round((len(served) + 1) * wanted_share)
+        # spr_share picks the slot's format first, so the candidates carry it
+        walks = [cfg]
+        if wanted_share is not None and len(cfg.get("formats", ())) == 2:
+            walks.insert(0, {**cfg, "formats": ["spr" if target_spr else "mcq"]})
         cards = []
-        for template in ranked:
-            card = _fresh(b, template, allowed, cfg)
-            if card:
-                cards.append(card)
-            if len(cards) >= practice.CANDIDATES:
+        for walk in walks:
+            for template in ranked:
+                card = _fresh(b, template, allowed, walk)
+                if card:
+                    cards.append(card)
+                if len(cards) >= practice.CANDIDATES:
+                    break
+            if cards:
                 break
         if cards:
-            wanted_share = cfg.get("spr_share")
-            spr_count = sum(q.get("type") == "spr" for q in served)
-            target_spr = wanted_share is not None and spr_count < round((len(served) + 1) * wanted_share)
             return min(cards, key=lambda c: practice.penalty(c, recent, dict(used)) +
                        3 * len(blueprint.kinds()[c.key]["reasons"]) +
                        (400 if wanted_share is not None and (c.item.fmt == "spr") != target_spr else 0)), False
@@ -966,7 +1014,7 @@ def seconds_of(cfg: dict) -> int | None:
     if cfg.get("seconds"):
         return cfg["seconds"]
     if cfg.get("count"):
-        return cfg["count"] * blueprint.MODULE_SECONDS // blueprint.MODULE_SIZE
+        return cfg["count"] * (blueprint.MODULE_SECONDS // blueprint.MODULE_SIZE)   # R34: 95 s each
     return None
 
 
@@ -1119,8 +1167,7 @@ def _feedback(q, given, ok, reason, opened, closed, before, after, cfg, answers,
         out["answer_index"] = "ABCD".index(q["answer"]) if q["type"] == "mcq" else None
         out["rationale"] = q["rationale"]
     else:
-        for key in ("reasons", "filler", "steps", "diverge", "wrong_step", "option_steps", "desmos"):
-            out.pop(key, None)
+        out = {k: out[k] for k in ("given", "skill", "budget_ms", "saved_note", "total", "answered")}
     return out
 
 

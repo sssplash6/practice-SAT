@@ -163,6 +163,78 @@ def fallback_checks(client):
     assert logged.status_code == 200, logged.text
 
 
+def served_of(sid):
+    return json.loads(db.one("SELECT questions FROM sessions WHERE id=?", sid)["questions"])
+
+
+def miss_at(learner, template, tier):
+    """File a named MC miss on the first seed of this tier; the trap it opened."""
+    q = next(x for x in (question(template, s) for s in range(400))
+             if x["difficulty"] == tier and x["type"] == "mcq" and progress.offered_of(x))
+    wrong = next(i for i, r in enumerate(q["reasons"]) if r and i != "ABCD".index(q["answer"]))
+    progress.record(learner, None, q, wrong, 30000)
+    return next(t for t in progress.open_traps(learner) if t["template"] == template)
+
+
+def followup_checks(client):
+    # R34: 95 s a question
+    timed = request(client, {"topics": ["linear_functions"], "count": 10, "timed": True})
+    assert timed["seconds"] == 950, timed["seconds"]
+    # QBank: an endless set has no ramp or pace
+    for body in ({"order": "ramp"}, {"timing": "pace"}):
+        request(client, {"topics": ["linear_functions"], "count": None, **body}, expect=400)
+    # Report 7: an only that picks nothing is 409; a twin keeps its parent
+    request(client, {"from_session": "f5-fixture", "only": ["nope"]}, expect=409)
+    twin = request(client, {"from_session": "f5-fixture", "scope": "all", "source": "twin", "count": 1})
+    assert json.loads(db.one("SELECT cfg FROM sessions WHERE id=?", twin["id"])["cfg"])["parent"] == "f5-fixture"
+    # Review's level: the redo is served at the miss's tier, or one up for harder
+    trap = miss_at("a:f5level", "measure.inverse", "hard")
+    fix = request(client, {"pool": "redo", "ids": [trap["id"]], "count": 1}, learner="a:f5level")
+    assert served_of(fix["id"])[0]["difficulty"] == "hard"
+    trap = miss_at("a:f5harder", "measure.inverse", "easy")
+    fix = request(client, {"pool": "redo", "ids": [trap["id"]], "level": "harder", "count": 1},
+                  learner="a:f5harder")
+    assert served_of(fix["id"])[0]["difficulty"] == "medium"
+    # R45 rule 5: a later check-in goes to another template with the same norm
+    norm, keys = next(iter(progress.related().items()))
+    q = next(x for x in (question(keys[0], s) for s in range(400)) if norm in progress.offered_of(x))
+    t = progress.record_trap("a:f5transfer", q, next(r for r in q["reasons"] if r and progress.norm(r) == norm),
+                             progress.now())
+    db.run("UPDATE traps SET closed=?,closed_how='fixed',due=?,checks=1,owed=0 WHERE id=?",
+           progress.now(), dt.date.today().isoformat(), t["id"])
+    check = request(client, {"pool": "checks", "ids": [t["id"]], "count": 1}, learner="a:f5transfer")
+    assert served_of(check["id"])[0]["key"] != keys[0]
+    # QBank 15: a second learner gets the set's identical item; a revoked set is 410
+    got = served_of(request(client, {"share": "F5SET", "count": 1}, learner="a:f5second")["id"])[0]
+    assert [got["key"], got["seed"]] == json.loads(db.one("SELECT items FROM sets WHERE code='F5SET'")["items"])[0]
+    db.run("INSERT INTO sets(code,owner,kind,items,created,revoked) VALUES ('F5GONE','a:f5pool','set',?,?,?)",
+           db.one("SELECT items FROM sets WHERE code='F5SET'")["items"], progress.now(), progress.now())
+    request(client, {"share": "F5GONE"}, learner="a:f5second", expect=410)
+    # R19: a permalink serves an unseen catalogue item
+    item = request(client, {"item": "measure.inverse:12345"}, learner="a:f5permalink")
+    assert served_of(item["id"])[0]["seed"] == 12345 and item["total"] == 1
+    # spr_share 0.5: half the set is grid-in
+    half = request(client, {"topics": ["linear_functions"], "spr_share": .5, "count": 10}, learner="a:f5half")
+    answer_all(client, half["id"], "a:f5half")
+    kinds = [x["type"] for x in served_of(half["id"])]
+    assert kinds.count("spr") == 5, kinds
+    # QBank 7: feedback 'end' tells nothing of the verdict
+    end = request(client, {"topics": ["linear_functions"], "feedback": "end", "count": 2}, learner="a:f5end")
+    q = served_of(end["id"])[0]
+    said = client.post(f"/api/drill/{end['id']}/answer", headers={"X-Learner": "a:f5end"},
+                       json={"question_id": q["id"], "answer": 0 if q["type"] == "mcq" else "1"}).json()
+    assert not {"answer", "answer_index", "rationale", "mistake", "reasons", "correct"} & set(said), said
+    # V11 and G7: the example names the trap's option; reasons carry crowd_share; you has state and P6
+    norm = next(iter(blueprint.kinds()["lin.evaluate"]["reasons"]))
+    example = client.get("/api/types/lin.evaluate/example", params={"want": norm}).json()
+    if example["trap_true"]:
+        assert progress.norm(example["question"]["reasons"][example["trap_index"]]) == norm
+    detail = client.get("/api/types/measure.inverse", headers={"X-Learner": "a:f5level"}).json()
+    assert all("crowd_share" in r for r in detail["reasons"])
+    assert detail["you"]["state"] == "open" and sum(detail["you"]["caught"].values()) == 1
+    assert {"due", "dodged", "median_ms"} <= set(detail["you"])
+
+
 def checks(client):
     learner = "a:f5pool"
     q, trap, check = fixtures()
@@ -278,6 +350,7 @@ def checks(client):
                        json={"template": "bad.template"}).status_code == 422
     trap_true_checks(client)
     fallback_checks(client)
+    followup_checks(client)
 
 
 def check(client):
