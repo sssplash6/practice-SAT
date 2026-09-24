@@ -8,7 +8,7 @@ codes, the parts registry, a quick sitting never offered as Resume (Shell 12).
 runs the browser half against its own server (default port 8012, a scratch database) in
 headless Chromium: the sidebar and section mapping, the rail, the 900px overlay, the phone
 tabs and menu sheet, the Review and Today metas, the account-menu keyboard, the palette,
-the quick sheet, theme, the offline banner, labels, the skip link and Esc (Shell 1-6, 10-12,
+the quick sheet, theme, the offline, retired and storage banners, labels, the skip link and Esc (Shell 1-6, 10-12,
 22, 32, 36), with no console errors on the way. Parts that need F5's drill engine (the
 palette's tiers and types, the quick sheet's own sitting) run when /api/types is served.
 """
@@ -549,6 +549,31 @@ def walk(b, base, http, sql) -> None:
     if not f5:                             # without F5 a quick question has no topic to draw from: a 400, shown as Retry
         errors[:] = [e for e in errors if not ("400 (Bad Request)" in e and e.endswith("/api/drill"))]
     print("ok  offline: the banner and Retry now, and the nav still navigates")
+
+    # ---- Shell 2.11: a retired code and refused localStorage get their banners; without the
+    # shell's figures nothing reads as that student's (no 0-day streak, no blank user card).
+    # No error hooks: the pages' own calls answer 401 to a retired code.
+    GONE = code()
+    sql.execute("INSERT OR IGNORE INTO retired(code, \"into\", at) VALUES (?, NULL, 'now')", (GONE,))
+    sql.commit()
+    for w in (1280, 390):
+        ctx = context(GONE, w, 844)
+        pg = ctx.new_page()
+        pg.goto(base + "/practice/", wait_until="networkidle")
+        pg.wait_for_selector(".banner:has-text('This device was signed out from another device.')")
+        if w < 760:
+            assert not pg.is_visible(".pbar .streak") and not pg.is_visible(".pbar-chip"), "no streak without figures"
+        else:
+            assert pg.inner_text(".side-user .side-name") == "Account" and not pg.is_visible(".now-strip")
+        ctx.close()
+        ctx = b.new_context(viewport={"width": w, "height": 844}, has_touch=w < 760, is_mobile=w < 760)
+        ctx.add_init_script("Object.defineProperty(window, 'localStorage', { get() { throw new DOMException('no', 'SecurityError') } })")
+        pg = ctx.new_page()
+        pg.goto(base + "/practice/", wait_until="networkidle")
+        pg.wait_for_selector(".banner:has-text('This browser is blocking site data')")
+        assert "How to fix" in pg.inner_text(".banner")
+        ctx.close()
+    print("ok  banners: a retired code, and refused localStorage (sessionStorage keeps a tab only); no figures painted without data")
 
     # ---- every page at 1280 and 390, light and dark, a new and a seeded learner: the chrome is
     # there (or, on the runner, the test and the kit, absent), nothing scrolls sideways, the theme

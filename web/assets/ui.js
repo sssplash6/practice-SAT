@@ -75,8 +75,9 @@
   };
   const LS = () => store('localStorage'), SS = () => store('sessionStorage');
   const media = q => { try { return matchMedia(q).matches; } catch (_) { return false; } };
-  // false when both stores refuse (the storage-blocked banner, Shell 2.11)
-  const storable = [LS, SS].some(s => sput(s(), 'satf.t', '1') && sput(s(), 'satf.t', null));
+  // false when localStorage refuses (the storage-blocked banner, Shell 2.11): sessionStorage
+  // alone keeps the code for this tab only, so closing it would lose the progress
+  const storable = sput(LS(), 'satf.t', '1') && sput(LS(), 'satf.t', null);
 
   /* ------------------------------------------------------------ identity (Shell 1, U21)
      The credential is the whole of a learner's access, so a minted code is not guessable.
@@ -1566,7 +1567,7 @@
     if (!u) return;
     const me = (d && d.me) || {};
     u.querySelector('.avatar').replaceWith(avatarOf(d, 34));
-    u.querySelector('.side-name').textContent = me.label || (d ? 'You' : '');
+    u.querySelector('.side-name').textContent = me.label || (d ? 'You' : 'Account');   // no data (offline, retired): a neutral name, never a blank card
     const sub = u.querySelector('.side-sub');
     const sharedPc = d && d.device && d.device.session_only;
     const unread = (d && d.inbox) || 0;
@@ -1591,7 +1592,8 @@
     const search = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Search' }, icon('search'));
     search.addEventListener('click', () => UI.palette());
     const chip = h('a', { class: 'pbar-chip', href: '/review/', hidden: true, 'aria-current': here === 'review' ? 'page' : null });
-    const streak = h('a', { class: 'streak', href: '/me/#activity', style: 'min-height: 40px; padding: 0 2px' }, flame(16), h('span', { text: '0' }));
+    // hidden until the shell's figures arrive, so no data never reads as a 0-day streak
+    const streak = h('a', { class: 'streak', href: '/me/#activity', hidden: true, style: 'min-height: 40px; padding: 0 2px' }, flame(16), h('span', { text: '' }));
     const quick = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Quick question or log a mistake' }, icon('bolt'));
     quick.addEventListener('click', () => UI.quick());
     const meBtn = h('button', { type: 'button', class: 'ibtn pbar-me', 'aria-label': 'Menu', 'aria-haspopup': 'dialog' }, h('span', { class: 'avatar' }));
@@ -1613,6 +1615,7 @@
     chip.replaceChildren(...(due ? [dot(), `${cap99(due)}${open ? ' · ' + cap99(open) : ''}`] : [dot(), cap99(open)]));
     chip.setAttribute('aria-label', `Review: ${[due ? `${fmt(due)} due today` : null, open ? `${fmt(open)} open` : null].filter(Boolean).join(', ')}`);
     const st = refs.streak;
+    st.hidden = false;
     st.classList.toggle('on', (d.streak || 0) > 0);
     st.querySelector('span').textContent = fmt(d.streak || 0);
     st.setAttribute('aria-label', `Streak: ${streakText(d)}`);
@@ -2101,6 +2104,7 @@
       sideEl.querySelectorAll('.nextup, .side-day').forEach(e => { e.hidden = true; });
       strips.forEach(el => { el.hidden = true; });
       if (refs.chip) refs.chip.hidden = true;
+      if (refs.streak) refs.streak.hidden = true;
       Object.values(refs.tabs).forEach(a => a.querySelectorAll('.dot, .sr').forEach(x => x.remove()));
     };
     (shellAsked || refresh()).then(gone, gone);
