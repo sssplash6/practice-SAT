@@ -22,6 +22,9 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
   says "S9 server done": add an S9S TASKS entry (owns words.py, api_words.py, checks/s9.py, build_words.py index)
   and run it `from:'verify'` (a feature: one check + one fix), then merge.
 - NEXT after F2 and F3 merge: wave 2 (S1, S3-S10), TASKS entries from Part 4.2; S9's pages build on v2/s9-server.
+- **The other agent's queue** is in `spec/v2-state/HELPER-TASKS.md` (paste-ready): 1. finish the S9 Words server,
+  2. the S7 Plan server, 3. the S8 Compete server. Server halves he takes are NOT built here; my wave-2 tasks for
+  those sections build only the pages. When he reports one done: TASKS entry, `from:'verify'`, merge.
 
 ### On "continue"
 
