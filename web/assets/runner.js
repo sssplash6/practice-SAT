@@ -156,14 +156,19 @@
     };
     // thresholds already behind us when the clock loads are not announced again
     const passed = new Set(timed ? warns.filter(w => base >= 0 && base <= w) : []);
+    let unhid = timed && base <= 300;
+    // a jump (a resync, a test) announces only the lowest threshold it crossed
+    const jumped = s => { const hit = warns.filter(w => s <= w && !passed.has(w)); hit.slice(0, -1).forEach(w => passed.add(w)); };
     function paint() {
       const raw = secs();
       const s = timed ? Math.ceil(raw - 1e-6) : Math.floor(raw);
       if (timed) {
+        // the hidden clock unhides once at 5:00 (Tests 4.3)
+        if (s <= 300 && !unhid && !paused) { unhid = true; if (hidden && o.unhide !== false) hide(false); }
+        jumped(s);
         for (const w of warns) {
           if (s <= w && !passed.has(w)) {
             passed.add(w);
-            if (w === 300 && hidden && o.unhide !== false) hide(false);
             const text = w >= 60 && w % 60 === 0 ? `${plural(w / 60, 'minute')} left` : `${w} seconds left`;
             toast(text, { ms: 6000 });
             if (o.onWarn) o.onWarn(w, text);
@@ -699,7 +704,6 @@
         b.dataset.i = i;
         if (c.status === 'future') b.disabled = true;
         if (show === 'time') b.append(h('span', { class: 'c-sub', text: c.ms ? msx(c.ms) : '0:00', 'aria-hidden': 'true' }));
-        if (queueList().includes(i)) b.dataset.queued = '';
         return b;
       }));
       roving(grid, list.findIndex(c => c.current));
@@ -1654,7 +1658,7 @@
       sunkShown = false;
       nudge(null);
       ls.set(`satf.pos.${sid}`, i);
-      paintQ(); paintRail(); syncFoot(); renderToolsRow(); sprHelp();
+      paintQ(); paintRail(); syncFoot(); renderToolsRow(); sprHelp(); paceDelta();
       if (navApi) navApi.update(cells, at);
       if (!slot.hidden) paintSlot();
       col.scrollTop = 0;
@@ -2282,7 +2286,7 @@
         items2.push({ label: 'Keyboard shortcuts', kbd: '?', onClick: () => shortcuts() });
         const size = doc.documentElement.dataset.text || ls.get('satf.textsize', 'normal') || 'normal';
         items2.push({ group: 'Text size' });
-        [['small', 'A− small'], ['normal', 'A normal'], ['large', 'A+ large']].forEach(([v, lab]) => items2.push({ label: lab, radio: true, checked: size === v, onClick: () => textSize(v) }));
+        [['small', 'A− small'], ['normal', 'A normal'], ['large', 'A+ large']].forEach(([v, lab]) => items2.push({ label: lab, radio: 'text', checked: size === v, onClick: () => textSize(v) }));
         if (training) {
           if (o.pace) items2.push(pref('test_pace', 'Pace guide', o.pace && prefs.test_pace !== false));
           items2.push(pref('test_confidence', 'Confidence tags', cfg.conf));
@@ -2308,7 +2312,7 @@
         items2.push({ label: 'Check asks how sure', checked: prefs.confidence !== 'off', onClick: () => { prefs.confidence = prefs.confidence === 'off' ? 'ask' : 'off'; emit('pref', 'confidence', prefs.confidence); applyPref('confidence'); } });
         if (cfg.calc) {
           items2.push({ group: 'Calculator opens' });
-          [['closed', 'Closed'], ['dock', 'Docked'], ['float', 'Floating']].forEach(([v, lab]) => items2.push({ label: lab, radio: true, checked: (prefs.calc_mode || 'closed') === v, onClick: () => { prefs.calc_mode = v; emit('pref', 'calc_mode', v); } }));
+          [['closed', 'Closed'], ['dock', 'Docked'], ['float', 'Floating']].forEach(([v, lab]) => items2.push({ label: lab, radio: 'calc', checked: (prefs.calc_mode || 'closed') === v, onClick: () => { prefs.calc_mode = v; emit('pref', 'calc_mode', v); } }));
         }
         if (coarse()) items2.push({ head: h('p', { class: 'help', text: 'Hold an option to cross it out (not while highlighting)' }) });
         items2.push({ separator: true });
@@ -2446,7 +2450,7 @@
         const elapsed = dur - timerApi.left;
         const planned = cells.reduce((a, c, i) => a + (c.status === 'answered' ? (b[i] || 0) : 0), 0);
         const d = planned - elapsed;
-        timerApi.delta(`${d >= 0 ? '+' : ''}${mmss(Math.abs(d))} ${d >= 0 ? 'ahead' : 'behind'}`);
+        timerApi.delta(Math.abs(d) < 5 ? 'on pace' : `${d >= 0 ? '+' : ''}${mmss(Math.abs(d))} ${d >= 0 ? 'ahead' : 'behind'}`);
         // checkpoint toasts after Q7 and Q14
         [7, 14].forEach(k => {
           if (cps.has(k) || at < k) return;
@@ -2463,7 +2467,7 @@
         if (answeredish(c.status) && c.status !== 'future') d += (+c.budget_ms || budgetAt(i)) - msAt(i);
         else if (c.tier === 'hard') hard++;
       });
-      const txt = `${mmss(Math.abs(d) / 1000)} ${d >= 0 ? 'ahead of pace' : 'behind'}${hard ? ` · ${hard} Hard left` : ''}`;
+      const txt = `${Math.abs(d) < 5000 ? 'on pace' : `${mmss(Math.abs(d) / 1000)} ${d >= 0 ? 'ahead of pace' : 'behind'}`}${hard ? ` · ${hard} Hard left` : ''}`;
       timerApi.delta(txt);
     }
     if (cfg.pace) { const pt = setInterval(() => { paceDelta(); if (view === 'q') paintRail(); }, 5000); cleanups.push(() => clearInterval(pt)); }
