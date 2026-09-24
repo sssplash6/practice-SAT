@@ -232,7 +232,7 @@ def conclusion(rng: random.Random, seed: int, *, ctx=None, n=None, weeks=None,
     beyond = (f"generalized past {d['frame']}, the group the {d['unit']} were "
               f"selected from"
               if at_random else
-              f"generalized from {d['unit']} who were not selected at random, so "
+              f"generalized from {d['unit']} not selected at random, so "
               f"the conclusion reaches only the {d['unit']} in the study")
     wrong = []
     for name in picked:

@@ -390,9 +390,10 @@ def _conditional(name, rng, seed, *, scenario, cells, ev_axis, ev_idx, cd_idx,
         pool[f"over_other{i}"] = (f"divided by the count for {other.label} instead of "
                                   f"by the total for the {cd.g}",
                                   (num, T.count(meet(o, G))))
-        pool[f"diff{i}"] = (f"subtracted the two counts in the given group instead of "
-                            f"using one of them",
-                            (abs(num - T.count(meet(o, G))), den))
+        if not set(other.idx) <= set(ev.idx):
+            pool[f"diff{i}"] = (f"subtracted the two counts in the given group instead of "
+                                f"using one of them",
+                                (abs(num - T.count(meet(o, G))), den))
     for i, other in enumerate(c.cols if ev_axis == "row" else c.rows):
         if other.idx == cd.idx:
             continue

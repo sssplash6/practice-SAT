@@ -199,11 +199,13 @@ def from_table(rng: random.Random, seed: int, *, m=None, b=None, xs=None, x0=Non
                  for r, v in cands if v != 0]
     else:
         key = f"{lhs} = {lin_text(m, b, var, coef)}"
-        wrong_style = wrong_style or "outputs"
+        wrong_style = wrong_style or ("outputs" if xs[0] == 0 else "fit_first")
         outputs = [Mis("read two of the table's outputs as the slope and the y-intercept",
                        pair(f"{lhs} = {lin_text(u, v, var, coef)}", u, v))
                    for u, v in [(ys[0], ys[1]), (ys[-1], ys[0]), (ys[1], ys[-1])]]
-        fitted = [Mis("fitted the first row only, using the step in x as the slope",
+        fitted = [Mis("fitted the first row only, using the step in x as the slope"
+                      if s0 == step else
+                      "fitted the first row only, without checking the other rows",
                       pair(f"{lhs} = {lin_text(s0, ys[0] - s0 * xs[0], var, coef)}",
                            s0, ys[0] - s0 * xs[0]))
                   for s0 in (step, step + 1) if s0 != m and s0 != 0]

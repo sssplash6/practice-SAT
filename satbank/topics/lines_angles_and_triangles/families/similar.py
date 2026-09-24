@@ -223,6 +223,7 @@ def shadow(rng: random.Random, seed: int, *, h1=None, s1=None, s2=None, story=No
            wrongs=None) -> Item:
     """Two upright objects and the sun: the shadows are in the same ratio as the
     heights, because the two triangles are similar."""
+    free_dimensions = h1 is None and s1 is None and s2 is None
     story = story or rng.choice(["monument", "trees"])
     if story == "monument":
         h1 = h1 or 10 * rng.randrange(6, 60)
@@ -234,6 +235,18 @@ def shadow(rng: random.Random, seed: int, *, h1=None, s1=None, s2=None, story=No
         s2 = s2 or rng.randrange(1, 20)
     if min(h1, s1, s2) <= 0 or s2 >= s1:
         raise ItemError("the second object must be the shorter of the two")
+    if h1 == s1:
+        if not free_dimensions:
+            raise ItemError("equal height and shadow make the answer the other shadow")
+        # Reject the equal-height draw and redraw its free height. For exact
+        # tree questions, keep the resulting second height a whole number.
+        heights = (range(6, 41) if story == "trees" else
+                   (10 * n for n in range(6, 60)))
+        choices = [height for height in heights if height != s1 and
+                   (closest or (height * s2) % s1 == 0)]
+        if not choices:
+            raise ItemError("no nondegenerate height keeps a whole-number answer")
+        h1 = rng.choice(choices)
     exact = Q(h1 * s2, s1)
     tall = tuple(tall or rng.choice(TALL))
     short = tuple(short or rng.choice(SHORT))

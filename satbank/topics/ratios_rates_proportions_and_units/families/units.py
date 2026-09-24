@@ -416,6 +416,8 @@ def cube_density(rng: random.Random, seed: int, *, ask="mass", frame=None,
         round_to = Q(1, 10 ** places)
     elif ask == "mass":
         edge = q(edge) if edge is not None else q(rng.randrange(2, 32)) / 10
+        if edge == 1:
+            raise ItemError("a unit edge makes the mass equal the density")
         if frame == "solid":
             solid, munit, vunit, eunit, eunits = ctx or rng.choice(SOLIDS)
             density = q(density) if density is not None else q(rng.randrange(120, 1200))
@@ -473,6 +475,8 @@ def cube_density(rng: random.Random, seed: int, *, ask="mass", frame=None,
         opening, sitesword, stuff = ctx or rng.choice(SAMPLES)
         sites = int(sites) if sites is not None else rng.randrange(8, 60)
         edge = q(edge) if edge is not None else q(rng.randrange(10, 60)) / 10
+        if edge == 1:
+            raise ItemError("a unit edge collapses the density mistakes")
         mass = q(mass) if mass is not None else q(rng.randrange(20, 900)) / 100
         if edge <= 0 or mass <= 0:
             raise ItemError("an edge and a mass are both positive")

@@ -443,8 +443,8 @@ def model_value(rng: random.Random, seed: int, *, ctx=None, direction=None, b=No
         if wrong == "given":
             cands = [("gave the starting amount instead of the total", b),
                      ("gave the rate instead of the total", m),
-                     ("left out the starting amount",
-                      m * x if m < 0 else m * x - b),
+                     ("subtracted the starting amount instead of adding it",
+                      m * x - b),
                      ("left out the starting amount", m * x),
                      ("subtracted the change instead of adding it", b - m * x)]
         elif wrong == "scale":

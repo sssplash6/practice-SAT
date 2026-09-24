@@ -181,7 +181,7 @@ CHANGE_CTX = [
                "and at {gap}-minute intervals thereafter.",
          ask="During which of the following {gap}-minute intervals does the temperature "
              "of the coffee decrease at the greatest average rate?",
-         label="Between {a} and {b} minutes", direction="down",
+         label="Between {a} and {b} minutes", direction="down", cooling=True,
          xlabel="Time since cup was removed from heat source (minutes)",
          ylabel="Temperature (°F)", kindly="scatter", gap=10, lo=70, hi=200,
          xstep=2, xlabel_every=1, ystep=20, ylabel_every=1),
@@ -236,6 +236,8 @@ def interval_change(rng: random.Random, seed: int, *, ctx=None, values=None,
     x0 = (1_990 + rng.randrange(0, 20) if d.get("year") else 0) if x0 is None else x0
     xs = [q(x0) + q(gap) * i for i in range(n)]
     moves = [q(values[i + 1]) - q(values[i]) for i in range(n - 1)]
+    if d.get("cooling") and any(move > 0 for move in moves):
+        raise ItemError("coffee left to cool cannot warm between readings")
 
     if d["direction"] == "down":
         score = [-m for m in moves]
@@ -244,6 +246,8 @@ def interval_change(rng: random.Random, seed: int, *, ctx=None, values=None,
     else:
         score = [abs(m) for m in moves]
     best = max(range(n - 1), key=lambda i: score[i])
+    if d["direction"] != "either" and score[best] <= 0:
+        raise ItemError("nothing on the chart moves in the asked direction")
     if offer is None:
         rest = [i for i in range(n - 1) if i != best]
         rng.shuffle(rest)
@@ -256,8 +260,10 @@ def interval_change(rng: random.Random, seed: int, *, ctx=None, values=None,
         return d["label"].format(a=show(xs[i]), b=show(xs[i + 1]))
 
     key = label(best)
+    worst = min((i for i in offer if i != best), key=lambda i: score[i])
     wrong = [Mis("read the interval that moves furthest the other way"
-                 if score[i] < 0 else
+                 if i == worst and score[i] < 0 else
+                 "read an interval that moves the other way" if score[i] < 0 else
                  "read an interval whose reading moves less than the answer's",
                  label(i)) for i in offer if i != best]
     choices, reasons, letter = assemble_text(key, wrong, rng)
@@ -272,11 +278,21 @@ def interval_change(rng: random.Random, seed: int, *, ctx=None, values=None,
     P = dict(kind="tvdata.interval_change", values=[str(q(v)) for v in values],
              xs=[str(x) for x in xs], offer=list(offer), direction=d["direction"],
              labels=[label(i) for i in range(n - 1)])
+    change = abs(moves[best])
+    # An opposite-direction move can be larger in absolute size while still
+    # being irrelevant to a question about the greatest rise or fall.
+    misleading_distance = (d["direction"] != "either" and
+                            any(abs(moves[i]) >= change for i in offer if i != best))
+    if misleading_distance:
+        verb = "rises" if d["direction"] == "up" else "falls"
+        rationale = (f"Over that interval the reading {verb} by {num_str(change)}, "
+                     f"more than over any other interval offered.")
+    else:
+        rationale = (f"Over that interval the reading moves by {num_str(change)}, "
+                     f"further than over any other interval offered.")
     return Item("tvdata.interval_change", "reading a scatterplot", "easy", seed,
                 f"{intro} {d['ask'].format(gap=num_str(gap))}", "mcq", E(0), letter,
-                f"Over that interval the reading moves by "
-                f"{num_str(abs(moves[best]))}, further than over any other interval "
-                f"offered.",
+                rationale,
                 choices, reasons, list(choices), figure=fig, params=P)
 
 
