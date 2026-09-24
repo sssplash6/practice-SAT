@@ -204,11 +204,10 @@
 
     const go = exact => busy(exact === false ? fresh : start, async () => {
       err.hidden = true;
-      const body = { pool: 'set', ids: s.code, source: 'shared', show_name: name.on };
+      const body = { show_name: name.on };
       if (exact === false) body.exact = false;
-      if (s.help && s.count === 1) { body.count = 1; }
       try {
-        const d = await api('/drill', { method: 'POST', body });
+        const d = await api(`/sets/${encodeURIComponent(s.code)}/start`, { method: 'POST', body });
         if (s.help && s.count === 1 && d.question) return inline(s, d, extra, card);
         location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`;
       } catch (e) { fail(err, e); }

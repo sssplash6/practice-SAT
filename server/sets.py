@@ -24,7 +24,8 @@ named mistake from GET /api/sets/{code}/results; DELETE stops the link (410).
 Hooks for the engines: serve(code, learner, fresh) is what a start serves
 (POST /api/drill {pool:'set', ids: code}, and the tests' shared start), and
 link(sid, code, show_name) marks the taker's session (sessions.shared_from),
-which is how takers are found. peers(sid, learner) is a taker's comparison
+which is how takers are found. POST /api/sets/{code}/start does both for the
+/s/ landing. peers(sid, learner) is a taker's comparison
 (Tests' peers, Practice's "You vs everyone who took it").
 """
 
@@ -440,9 +441,11 @@ def post_set(body: SetIn, x_learner: str | None = Header(default=None)) -> dict:
 # ------------------------------------------------------------------ takers
 
 def _takers(code: str) -> list:
-    # ponytail: sessions.shared_from has no index (db.py is F4's); add one when sets are busy
-    return db.rows("SELECT * FROM sessions WHERE shared_from=? AND abandoned IS NULL"
-                   " AND learner NOT LIKE 'sample:%' ORDER BY started", code)
+    # ponytail: sessions.shared_from has no index (db.py is F4's); add one when sets are busy.
+    # The cfg match finds a POST /api/drill {pool:'set'} start the engine never link()ed.
+    return db.rows("SELECT * FROM sessions WHERE (shared_from=? OR CASE WHEN json_valid(cfg) THEN"
+                   " json_extract(cfg,'$.pool')='set' AND json_extract(cfg,'$.ids')=? END)"
+                   " AND abandoned IS NULL AND learner NOT LIKE 'sample:%' ORDER BY started", code, code)
 
 
 def _firsts(sid: str) -> dict:
@@ -575,11 +578,14 @@ def summary(set_row, viewer: str | None = None) -> dict:
             out["yours"] = {"session": r["id"], "kind": r["kind"], "finished": r["finished"],
                             "right": p["right"], "asked": p["asked"]}
         if cfg.get("context"):
+            # a twin (a fresh share, or "Fresh versions instead") is matched by position
+            slots = [_marks(r, set_row, items, True) for r in mine]
             ctx = []
             for n, it in enumerate(items, 1):
-                # released once this visitor has answered the question themselves
-                if it.get("ctx") and db.one("SELECT 1 FROM attempts WHERE learner=? AND template=? AND seed=?",
-                                            viewer, it["template"], it["seed"]):
+                # released once this visitor has answered the question, or its twin, themselves
+                if it.get("ctx") and (any(m[n - 1] for m in slots) or db.one(
+                        "SELECT 1 FROM attempts WHERE learner=? AND template=? AND seed=?",
+                        viewer, it["template"], it["seed"])):
                     ctx.append({"n": n, **it["ctx"]})
             if ctx:
                 out["context"] = ctx
@@ -767,6 +773,34 @@ def link(sid: str, code: str, show_name: bool = False) -> None:
     cfg = _json(row["cfg"], {}) or {}
     cfg.update({"share": _code(code), "show_name": bool(show_name)})
     db.run("UPDATE sessions SET shared_from=?, cfg=? WHERE id=?", _code(code), json.dumps(cfg), sid)
+
+
+class StartIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    exact: bool | None = None           # False: "Fresh versions instead"
+    show_name: bool = False
+
+
+@router.post("/api/sets/{code}/start")
+def start(code: str, body: StartIn, x_learner: str | None = Header(default=None)) -> dict:
+    """The landing's start: serve(), a drill of exactly those questions, link().
+    Answers the way POST /api/drill does. A test starts from Tests' sheet."""
+    # ponytail: F6's own start until POST /api/drill {pool:'set'} calls serve() and link()
+    from . import drill
+    learner = deps.writer_of(x_learner)
+    if _live(code)["kind"] in ("words", "test"):
+        raise HTTPException(422, "a word list opens on its page, a test from Tests")
+    got = serve(code, learner, True if body.exact is False else None)
+    pairs, c = got["items"], got["cfg"]
+    sid = secrets.token_urlsafe(16)
+    drill.create(learner, sid, list(dict.fromkeys(_topic(t) for t, _ in pairs)), len(pairs), None,
+                 c["timed"], "shared", items=pairs, minutes=(c["seconds"] or 0) // 60 or None)
+    row = deps.session_or_404(sid)
+    db.run("UPDATE sessions SET cfg=? WHERE id=?",
+           json.dumps({**(_json(row["cfg"], {}) or {}), "feedback": c["feedback"]}), sid)
+    link(sid, got["code"], body.show_name)
+    first = drill.next_question(deps.session_or_404(sid))
+    return {**drill.state(deps.session_or_404(sid)), **first}
 
 
 def peers(sid: str, learner: str) -> dict | None:
