@@ -106,6 +106,19 @@ Use F1's merged ui.css and kit.js for the modal and pages.`,
     accept: `§2.12 F6's acceptance: Shell's report and admin acceptance items; QBank's and Tests' share items read through sets (a second
 learner gets identical stems; the public summary has no stems; results 403 for others; revoked -> 410). test_flow prints "all good".`,
   },
+  // F5 was built outside this script by the user's other agent (branch v2/f5, rebased on master); run it with from: 'verify'.
+  F5: {
+    title: 'F5 · Drill engine and bank catalogue', port: 8015,
+    spec: `spec/rebuild-v2.md: §2.6 the drill body (line 316), §2.12 F5 (592), Part 4.2 F5 (11046) with every Part 3 item it lists,
+R10, R24, R33, R34 (Part 2, lines 130-175), R45 (repairs and fix drills serve items that offer the trap), and every item assigned to
+F5 in spec/v2-upgrades/*.md (grep -n "F5"; product.md too). No class or assignment pools (decision 5).`,
+    owns: 'server/drill.py, practice.py, blueprint.py, api_practice.py, api_bank.py, server/checks/f5.py (and the check_learner asserts in test_flow)',
+    units: [],
+    accept: `§2.12 F5's acceptance in server/checks/f5.py (every pool and alias in §2.6, preview counts and 409 reasons, templates-only and
+want-regex sets, exact items refused by access(), inline drills absent from /api/history, QBank's "templates", "tiers" and "levels"
+items), each exercised against a server on port 8015; repairs and {mistakes: true} drills offer the trap; test_flow prints "all good"
+on 3 runs in a row.`,
+  },
   // F4 was built outside this script by another agent (branch v2/f4, from v2/f0); run it with from: 'verify'.
   F4: {
     title: 'F4 · Data layer', port: 8014,

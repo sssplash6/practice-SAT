@@ -1,0 +1,75 @@
+{
+ "label": "check 2",
+ "key": "v2:9410c1fac984d995e1c4b734d3a53665922e50d94fbd7f453c82f13f8c7787d8",
+ "result": {
+  "pass": false,
+  "evidence": "This was a read-only check of the worktree at 1fb15f5 (branch v2/words-content). server/rw_items.py does not exist yet, so I wrote a generator in the scratchpad (gen.py) that follows W1. For each legal key it takes three distractors, each with a legal trap, in the spec's preference order (lookalike, too_strong/too_weak, connotation, reversed, topical). It keeps the (class, polarity, intensity) triples distinct and never uses an option that appears in the text. It uses the same legal_key and trap rules as tools/build_words.py.\n\nSample (seed 20260924): 120 random frames, giving 208 items (one item per legal key, at most 4 keys per frame), and 80 random confusions. I read every item as a student would. Output is in scratchpad/sample.txt.\n\n**Frames: systematic failures.**\n- About 11 of the 120 frames have at least one legal key that does not fit the text, so the item's key is wrong.\n- About 17 of the 120 frames produce items where a second option fits as well as the key. In most of these the extra option is a too_strong or too_weak neighbor from the same class, or a \"lookalike\" that is really a near-synonym.\n- Two whole-library measurements back this up:\n  - 12.5% of 9,104 generated items (one per frame and key over all 5,182 frames) carry a distractor that sat.json lists as the key's synonym (`same` list). By trap: 567 too_strong, 521 too_weak, 87 lookalike.\n  - 67 need-tuples in frames.json are shared by frames whose `needs` lines name different senses and admit more than one key. They cover 528 frames. For example, all 24 frames with need (acquire, 0, 3, 3, v., verb-object) admit attain, derive, glean, assume, realize and contract as keys, whether the frame is about catching an illness, taking on a duty or gathering information.\n- Where a frame's key and distractors do fit, the texts are natural, SAT-like, 1 to 3 sentences, and the clue usually decides the blank.\n\n**Excerpts.**\n- All 13 sampled literature excerpts match the Gutenberg plain text exactly, with the blanked word restored. I fetched each book with curl. The sources and years are right.\n- The only difference found: f1-abandon-19 closes the quotation after \"Heathcliff.\" where the original goes on. That is an acceptable cut.\n- I also checked every excerpt that had a local Gutenberg copy: 476 of 476 match exactly. 71 others had no local copy and were not checked.\n\n**Confusions.** 75 of the 80 tells are correct and useful. Defects are listed below. 11 confusions name plain words that are not library entries, which confusions.json's `about` note allows.\n\n**Context.** adjudications.json does not exist and every frame has `reviewed: null`. So by the spec's own review gate, no frame can be served yet. The build passes only because the servable-frame minimum is reported as a warning, not an error.",
+  "defects": [
+   {
+    "where": "server/words/frames.json: need tags shared across senses (67 need-tuples, 528 frames), e.g. f1-acquire-01..36, f1-create-22..33, f3-inconsistent-25..36, cause/0/3/3 verb-result (21 frames), bestow/0/3/3, implicit/0/2/2",
+    "what": "A frame's need tags (class, polarity, lo, hi, pos, pattern) are identical across frames whose `needs` lines name different senses, so every sense in the class counts as a legal key. In the sample: f1-acquire-28 ('many sailors would ____ scurvy') admits attain, derive, glean, assume.take_on and realize.achieve, and the key=attain item has no correct option. f3-inconsistent-36 (Hardy excerpt 'grasped the ____ truth') admits controversial, discordant, incompatible and incongruous, and only paradoxical fits.",
+    "fix": "Split these classes by sense, or give each frame an explicit `keys` allow-list checked by the build. Re-tag the 528 frames so that only the senses their `needs` line names are legal."
+   },
+   {
+    "where": "server/words/frames.json: f1-bestow-09, f3-implicit-23, f1-create-27",
+    "what": "Some legal keys break the frame's grammar or collocation. f1-bestow-09 '____ its highest honor on X': grant and tender.offer do not take 'on'. The bestow distractor, labeled too_strong, is the most natural answer. f3-implicit-23 '____ to his defeat': intimate.suggest cannot take 'to'. f1-create-27 'Lewis Carroll liked to ____ new words': construct, fashion.make and generate are weak, and the too_strong distractor 'originate' fits as well as they do.",
+    "fix": "Limit keys per frame (see the first defect). Let a frame name the preposition or collocation its blank needs, so bestow (not grant) is the key before 'on'."
+   },
+   {
+    "where": "server/words/frames.json: f1-accidental-08, f2-erroneous-06, f2-ominous-05, f4-slight-03, f4-vivid-30, f4-vivid-28 (nearly)",
+    "what": "Even where a frame has a single `needs` line, a legal key can fail the text. 'the applause was inadvertent' (the clue is about spontaneity). 'Her conviction was entirely illusory': illusory does not fit, spurious is weak, and the specious lookalike fits as well. 'a rumbling that they called dismal' (the needs line says threatening). 'The difference in weight is nominal'. The vivid class puts vivid (lifelike) and captivating (charming) next to moving and poignant at intensity 4, so frames whose clue is 'bringing many to tears' accept vivid and captivating as keys.",
+    "fix": "Remove inadvertent, illusory/spurious, dismal, nominal, vivid and captivating from these frames' keys by re-tagging, or move those words to a different class or intensity. Add each frame's accepted keys to the review sheet."
+   },
+   {
+    "where": "server/words/frames.json + distractor rule (build_words.trap_options and W1): f1-consistent-10, f1-chaotic-11, f4-vivid-10, f4-slight-03, f2-scrutinize-02, f1-certain-16, f1-credulous-02, f2-streamline-03, f2-hinder-03, f4-subordinate-07, f1-comply-13, f2-perennial-02, f3-protect-20, f2-galvanize-01",
+    "what": "Same-class too_strong and too_weak distractors fit the text, because the clue does not fix the degree. Examples:\n- 'data are ____ with the theory' accepts compatible and congruent.\n- 'The scene at the harbor was ____' accepts tumultuous.\n- 'Her ____ description of the eruption' accepts evocative and riveting.\n- 'difference … is ____: only a laboratory scale can detect it' accepts slight and marginal.\n- 'reviewers must ____ the paper's methods in detail' accepts analyze.\n- '____ proof of the abuses' accepts definitive.\n- 'Early audiences were ____' accepts gullible.\n- 'helps ____ the review' accepts facilitate.\n- impede vs obstruct: their shorts are nearly identical.\n- 'subordinate to its main purpose' fits.\n- 'pressured to adhere to the fashions' fits.\n- Moby-Dick 'is perpetual as sunlight' fits.\n\nThe spec lets a word from the key's `same` list be a too_strong or too_weak distractor, and 12.5% of all generated items carry such a synonym.",
+    "fix": "Offer a same-class too_strong or too_weak distractor only when the frame marks that its clue fixes the intensity (for example need.pins='intensity'). Never offer a word from the key's `same` list, or a word whose `same` list contains the key, unless that flag is set. Otherwise prefer reversed, connotation or topical traps."
+   },
+   {
+    "where": "server/words/sat.json `lookalikes` used as W1 lookalike traps: protect→preserve, negligible→subtle, slight→subtle, spurious→specious, denote→connote",
+    "what": "The `lookalikes` field holds near-synonyms, not look-alike words, and they fit the blank. f3-protect-08 'to ____ the rights of the minority' accepts preserve. f4-slight-03 key=negligible accepts subtle. f2-denote-04 'a lit candle … is used to ____ that someone inside is still waiting': nothing in the clue makes denote beat connote, and a symbol in a novel is usually said to connote. The trap's check line ('Which of the similar-looking words…') would be wrong for these.",
+    "fix": "Keep only form-alike words in `lookalikes`, or leave out any lookalike whose class matches or neighbors the need class. Rewrite f2-denote-04 so the clue says the meaning is literal or explicit, or change its key."
+   },
+   {
+    "where": "tools/build_words.py trap_options (and the W1 rule it copies)",
+    "what": "The synonym guard checks only the key's `same` list. In 93 generated items the key is in the distractor's `same` list but not the other way round (87 lookalike, 6 topical), so a synonym passes as a lookalike or topical trap.",
+    "fix": "Treat `same` as symmetric in the distractor rule, or have the build require the two lists to agree."
+   },
+   {
+    "where": "server/words/sat.json class/intensity scales: examine (cogitate, peruse, deem, appraise, analyze, probe, scrutinize), serious (dignified, earnest, staid, somber), conventional (orthodox, archaic), frugal (economical, frugal), playful (humorous, whimsical), address (field, approach, intervene)",
+    "what": "Within these classes, intensity orders words that differ in meaning, not in strength. The generated reasons would teach false things: 'Too strong' for peruse against cogitate, earnest against dignified (f4-serious-12), archaic against orthodox (f1-conventional-14), frugal against economical prose (f2-economical-03), whimsical against playful (f3-playful-26) and intervene against field (f1-address-13), and 'Too weak' for deem against probe (f2-scrutinize-02).",
+    "fix": "Put on one intensity ladder only words that differ in degree. Give different-meaning neighbors their own class, or label them topical."
+   },
+   {
+    "where": "server/words/frames.json f3-persuade-17 (Thackeray, Vanity Fair), f4-wordy-15 (Forster, A Room with a View)",
+    "what": "The clue does not decide the key. In f3-persuade-17 the clue 'when it is only a comedy that the reader pays his money to witness' gives no sign of gentleness or flattery, so the coerce distractor fits too. coerce is also labeled a lookalike of cajole, which it is not. In f4-wordy-15, '[[it was an easy topic]]' does not separate garrulous from verbose (too_weak) or prolix (too_strong).",
+    "fix": "Move the [[clue]] onto words that force the key, or leave out same-class neighbors for these excerpts."
+   },
+   {
+    "where": "server/words/frames.json f4-reveal-26",
+    "what": "'he wrote “colour” the English way in a letter supposedly signed by a Virginian' gives no date. Before Webster's spelling reforms (1806–1828), Virginians also wrote 'colour', so the premise is not true in general.",
+    "fix": "Date the forged letter after about 1830, or use an anachronism that holds without a date."
+   },
+   {
+    "where": "server/words/confusions.json compete~contend",
+    "what": "The tell says 'contend is struggling with a difficulty, or arguing a position', which implies contend does not mean competing for a prize. But 'contend for the title' does mean compete, and that is exactly what this pair confuses.",
+    "fix": "Say that contend can mean compete ('contend for a prize'), and give the difference in its other two senses."
+   },
+   {
+    "where": "server/words/confusions.json breach~rupture; server/words/sat.json rupture",
+    "what": "The pos does not match. breach is n., the rupture entry is v., and the tell defines rupture as a noun ('a rupture is a sudden bursting apart').",
+    "fix": "Word the tell to match the entries' pos, or make the rupture entry a noun."
+   },
+   {
+    "where": "server/words/sat.json shorts: vivacious/animated ('lively and spirited'), bolster/buttress ('strengthen with support'), obstruct/impede ('block or get in the way of' / 'block or slow down')",
+    "what": "Pairs that have a confusion row carry identical or nearly identical shorts. The tile and gloss cannot tell them apart, and when both appear as options the reasons cannot either.",
+    "fix": "Rewrite the shorts so each carries its tell's difference."
+   },
+   {
+    "where": "server/words/frames.json excerpt source metadata (outside the sample)",
+    "what": "Minor inconsistencies:\n- Middlemarch is dated 1871 on 2 frames and 1872 on 17.\n- Moby-Dick is titled two ways ('Moby-Dick' and 'Moby-Dick; or, The Whale').\n- Tolstoy and Dumas excerpts quote English translations but carry the original-language year and no translator.",
+    "fix": "Standardize the titles and years. For translations, add the translator and use the translation's year."
+   }
+  ]
+ }
+}
