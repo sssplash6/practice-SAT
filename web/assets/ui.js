@@ -22,7 +22,8 @@
                                     the JSON changed (U23); UI.cached.clear()
      UI.whenVisible(fn)             now, or once a prerendered page is shown (U23)
      UI.refresh() (alias UI.me(true)), UI.onShell(fn(shell, fromCache)), UI.shellData()
-                                    GET /api/shell, painted from sessionStorage satf.shell first
+                                    GET /api/shell, painted from sessionStorage satf.shell first;
+                                    it sets UI.answered and UI.SAT_DATES
      UI.me(fresh)                   GET /api/me, once per page
      UI.prefs() -> Promise          every pref, defaults merged; UI.prefs.now(), UI.prefs.set()
      UI.prefRow(host, key, {label, helper, onChange})   one settings row that saves instantly
@@ -311,6 +312,8 @@
     if (d && d.retired) { retired(); return; }
     shellData = d;
     UI.answered = d.answered;
+    // upcoming official dates with their deadlines, for every date picker (R15)
+    if (Array.isArray(d.dates)) UI.SAT_DATES = d.dates.map(x => ({ date: x.day, ...x }));
     shellSubs.slice().forEach(fn => { try { fn(d, fromCache); } catch (e) { console.error(e); } });
   }
   function refresh() {
