@@ -151,7 +151,8 @@ RULES:
   redo or discard them. Never create another branch for this task, and never move the branch with update-ref or branch -f.
   If git says the branch is already checked out in another worktree: if git -C <that worktree> status --short is empty, run
   git -C <that worktree> switch --detach and switch here; otherwise cd into that worktree and continue its work there. When you
-  finish, commit and run git switch --detach so the branch is free.
+  finish, commit everything (leave no uncommitted file) and run git switch --detach so the branch is free. Before every
+  commit, check that git branch --show-current prints v2/<task>: never commit on a detached HEAD.
 - Commit on that branch after each finished piece of work (a file, a component group), with a real message ending with the line
   "${SIGN}". Never push. Never merge. Never touch master or the main working tree at ${REPO} (work only in your worktree).
 - Do not edit spec/rebuild-v2.md (other agents cite its line numbers).
