@@ -335,10 +335,10 @@ def _roman(rng, kw):
 # ------------------------------------------------- which table of pairs
 
 TABLE_FRAMES = [
-    "{q}\nFor which of the following tables are all the values of x and their "
-    "corresponding values of y solutions to the given inequality?",
-    "{q}\nEach of the following tables lists three values of x and their "
-    "corresponding values of y. For which table is every pair a solution to "
+    "{q}\nFor which of the following lists of ordered pairs (x, y) are all "
+    "three pairs solutions to the given inequality?",
+    "{q}\nEach of the following lists gives three ordered pairs (x, y). "
+    "For which list is every pair a solution to "
     "the given inequality?",
 ]
 

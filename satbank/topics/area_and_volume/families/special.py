@@ -511,7 +511,7 @@ def formula_solve(rng: random.Random, seed: int, *, a=None, b=None, volume=None,
     key = E(Fraction(round(exact * 100), 100))
     P = {"kind": "formula_solve", "a": a, "b": b, "volume": volume}
     vessel = rng.choice(["glass", "vase", "tumbler", "beaker"])
-    stem = (f"The {vessel} pictured above can hold a maximum volume of {volume} cubic "
+    stem = (f"A {vessel} can hold a maximum volume of {volume} cubic "
             f"centimeters"
             + (f", which is approximately {ounces} fluid ounces" if ounces else "")
             + f". Its volume is given by Volume = {a}πk³⁄{b}, where k is the "

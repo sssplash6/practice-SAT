@@ -261,8 +261,8 @@ def which_table(rng: random.Random, seed: int, *, form=None, m=None, b=None, A=N
                         "wall of commas, not a table")
     key = _pairs(XS, ys)
     ks = sig("pairs", *XS, *ys)
-    stem = eq + "\nWhich table gives three values of x and their corresponding values " \
-                "of y for the given equation?"
+    stem = eq + "\nWhich of the following lists of ordered pairs (x, y) gives " \
+                "three solutions to the given equation?"
     return text_item("le2.which_table", "matching a table to an equation", "medium",
                      seed, stem, key, ks, wrong, rng, P, why)
 
