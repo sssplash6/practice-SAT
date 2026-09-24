@@ -505,6 +505,15 @@ def days_checks():
             difficulty="easy", fmt="mcq", correct=1, at=at(TODAY - dt.timedelta(days=4 - i)))
     assert progress.days(nosp)["streak"] == 1
 
+    # words.md §3.2: lookups, sorts and placements are not reviews, so no study day
+    wl = "a:f4lookups"
+    for i, mode in enumerate(("lookup", "sort", "placement") * 4):
+        add("word_reviews", learner=wl, word=f"w{i}", mode=mode, kind="card", correct=1, ms=50000, at=at(TODAY, 1))
+    got = progress.days(wl)
+    assert (got["recent"][-1]["words"], got["minutes_total"], got["streak"]) == (0, 0, 0), got["recent"][-1]
+    add("word_reviews", learner=wl, word="w99", mode="cards", kind="card", correct=1, ms=60000, at=at(TODAY, 1))
+    assert progress.days(wl)["recent"][-1]["words"] == 1
+
     # T3: counted rights, intervals, candidates and the forecast
     wu = "a:f4warmup"
     old = TODAY - dt.timedelta(days=3)

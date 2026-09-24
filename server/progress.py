@@ -916,7 +916,9 @@ def days(learner: str, tz: int = 0, weeks: int = 2) -> dict:
             d["practice"] += 1
         if sid and r["ms"] is not None:
             timed_sessions.add(sid)
-    for r in db.rows("SELECT at,ms,attempt FROM word_reviews WHERE learner=? AND COALESCE(kind,'')!='lookup'", learner):
+    # words.md §3.2: a lookup, a sort or a placement answer is not a review
+    for r in db.rows("SELECT at,ms,attempt FROM word_reviews WHERE learner=?"
+                     " AND COALESCE(mode,'') NOT IN ('lookup','sort','placement')", learner):
         d = per[_local_day(r["at"], tz)]
         d["words"] += 1
         if r["attempt"] is None:                    # a generated item's minutes count through its attempt
