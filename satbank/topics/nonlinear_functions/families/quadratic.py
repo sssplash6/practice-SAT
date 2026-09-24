@@ -237,7 +237,9 @@ def vertex_value(rng: random.Random, seed: int, *, form=None, ask=None, name=Non
     }
     order = ["product", "one_zero", "flip_first", "printed_average", "sum"]
     why = (f"The zeros are {num(r1)} and {num(r2)}, so the vertex is halfway between "
-           f"them at x = {num(mid)}.")
+           f"them at x = {num(mid)}"
+           + (f", where {name}(x) = ({num(mid - r1)})({num(mid - r2)}) = {num(key)}."
+              if ask == "value" else "."))
     P = {"kind": "nlf_vertex", "form": form, "ask": ask,
          "r1": [r1.numerator, r1.denominator], "r2": [r2.numerator, r2.denominator]}
     stem = (VERTEX_MIN2.format(n=name, rule=rule) if ask == "value"

@@ -191,8 +191,9 @@ def divide_remainder(rng: random.Random, seed: int, *, ask=None, var=None, frame
             Slip("left the divisor's constant out of the remainder altogether",
                  (q0, c)),
         ]
-        why = (f"{poly(pc([c, b, 1]), var)} is ({den})({_lin(1, q0, var)}) + "
-               f"{num(rem)}, and only {num(rem)} is left over.")
+        rem_sign = "+" if rem > 0 else MINUS
+        why = (f"{poly(pc([c, b, 1]), var)} is ({den})({_lin(1, q0, var)}) "
+               f"{rem_sign} {num(abs(rem))}, and only {num(rem)} is left over.")
         frame = frame or rng.choice(["which_of_expressions", "which_expressions",
                                      "which_of", "which"])
         stem = frame_stem(frame, expr)
@@ -216,7 +217,8 @@ def divide_remainder(rng: random.Random, seed: int, *, ask=None, var=None, frame
     key = 1 + s
     ex = E(key)
     why = (f"{top} is ({den})({_lin(1, s, var)}), so dividing by {den} leaves "
-           f"{_lin(1, s, var)}.")
+           f"{_lin(1, s, var)}: {n1} = 1 and {n2} = {num(s)}, so "
+           f"{n1} + {n2} = {num(key)}.")
     mistakes = [
         Mis(f"reported {n2} on its own", E(s)),
         Mis(f"reported {n1} on its own", E(1)),

@@ -561,8 +561,13 @@ def context_two_points(rng: random.Random, seed: int, *, ask=None, ctx=None, x1=
                     Mis("evaluated the model halfway between the two given inputs", mid),
                     Mis("used the nearer reading unchanged", y1)]
         mistakes = slips(key)
-        rationale = (f"The rate of change is {numtext(m)} per unit, so the value at "
-                     f"{numtext(x3)} is {numtext(raw)}.")
+        at = year_text(x3) if d["years"] else f"${numtext(x3)}"
+        per = "year" if d["years"] else "dollar"
+        asked = "the value of x to the nearest whole number" if d["approx"] else \
+                "the demand"
+        rationale = (f"The rate of change is {numtext(m)} per {per}, so the model's "
+                     f"value at {at} is {numtext(raw)}, and {asked} is "
+                     f"{numtext(key)}.")
         P = {"kind": "lf_two_points_ctx", "ask": ask, "x1": x1, "x2": x2, "x3": x3,
              "y1": [y1.numerator, y1.denominator], "y2": [y2.numerator, y2.denominator],
              "approx": bool(d["approx"])}

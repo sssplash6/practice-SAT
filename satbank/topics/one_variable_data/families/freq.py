@@ -99,9 +99,11 @@ def freq_stat(rng: random.Random, seed: int, *, values=None, freqs=None, ask=Non
             "median_itself": Mis("reported the median instead of the difference", E(med)),
         }
         question = ask_phrase or ("How much greater is the mean of the set of data than "
-                                  "the median?")
+                                  "the median?" if mu > med else
+                                  "What is the difference between the mean and median?")
         rationale = (f"The {n} values total {num_str(sum(data, F(0)))}, so the mean is "
-                     f"{num_str(mu)}; the middle value is {num_str(med)}.")
+                     f"{num_str(mu)}; the middle value is {num_str(med)}, so the "
+                     f"difference is {num_str(mu - med)}.")
     else:
         key = E(clean({"mean": mu, "median": med, "range": spread(data),
                        "mode": _mode_or_fail(data)}[ask]))
