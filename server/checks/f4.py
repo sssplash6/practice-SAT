@@ -859,6 +859,15 @@ def routes(client):
     assert client.post("/api/notes", headers={"X-Learner": "a:f4other"}, json={"session": "notes-f4", "question_id": "q96"}).status_code == 403
     gone = client.post("/api/notes", headers=h, json={"session": "notes-f4", "question_id": "q96", "note": "", "marks": []})
     assert gone.json()["deleted"] and "template" not in gone.json() and not db.one("SELECT 1 FROM notes WHERE learner=? AND seed=96", "a:f4prefs")
+    # R6: a note from any sitting kind that carries its questions; a paper with none is 404, not 500
+    for kind, paper, qid in (("spot", [q(90)], "q90"), ("custom", [q(91)], "q91"), ("words", [q(92)], "q92"),
+                             ("section", {"module1": [q(93)], "module2": [q(94)]}, "q94")):
+        add("sessions", id=f"notes-{kind}", kind=kind, learner="a:f4prefs", started=progress.now(), questions=json.dumps(paper))
+        r = client.post("/api/notes", headers=h, json={"session": f"notes-{kind}", "question_id": qid, "note": "x"})
+        assert r.status_code == 200 and "template" not in r.json(), (kind, r.text)
+    add("sessions", id="notes-empty", kind="spot", learner="a:f4prefs", started=progress.now())
+    assert client.post("/api/notes", headers=h, json={"session": "notes-empty", "question_id": "q1", "note": "x"}).status_code == 404
+    assert client.post("/api/notes", headers=h, json={"session": "notes-spot", "question_id": "q404", "note": "x"}).status_code == 404
     progress.record("a:f4prefs", None, q(97), 1)
     aid = db.one("SELECT id FROM attempts WHERE learner=? AND seed=97", "a:f4prefs")["id"]
     rule = client.post("/api/notes", headers=h, json={"attempt_id": aid, "scope": "type", "note": "check the sign"})

@@ -8,8 +8,7 @@ import json
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel, Field
 
-from . import db
-from .api_tests import marked_questions, questions_of
+from . import db, progress
 from .deps import now, session_or_404, writer_of
 
 router = APIRouter()
@@ -39,11 +38,12 @@ def _pair(learner: str, body: Note) -> tuple[str, int]:
     row = session_or_404(body.session)
     if row["learner"] != learner:
         raise HTTPException(403, "that session belongs to someone else")
-    questions = marked_questions(row) if row["finished"] else questions_of(row)
-    q = next((item for item in questions if item.get("id") == body.question_id), None)
-    if not q or "key" not in q:
+    # any sitting kind: its stored paper (both modules of a section), else the form's
+    q = next((item for item in progress._paper(row) if item.get("id") == body.question_id), None)
+    template = q and (q.get("key") or q.get("template"))
+    if not template or not isinstance(q.get("seed"), int):
         raise HTTPException(404, "no such question in that session")
-    return q["key"], q["seed"]
+    return template, q["seed"]
 
 
 @router.post("/api/notes")
