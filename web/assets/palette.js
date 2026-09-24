@@ -171,10 +171,10 @@
     return out;
   }
 
-  function skillRows(toks) {
+  function skillRows(toks, only) {
     const topics = new Map(((data.map && data.map.topics) || []).map(t => [t.topic, t]));
     const all = UI.TOPICS.map(t => ({ t, also: `${t.slug.replace(/_/g, ' ')} ${(UI.ALIASES[t.slug] || []).join(' ')}` }));
-    const hit = toks.length ? best(all, toks, x => x.t.short, 19) : all;
+    const hit = only ? all.filter(x => only.includes(x.t.slug)) : toks.length ? best(all, toks, x => x.t.short, 19) : all;
     return hit.map(({ t }) => {
       const m = topics.get(t.slug) || {}, open = (m.traps || []).length, n = setLength();
       const meta = h('span', { style: 'display: inline-flex; align-items: center; gap: 10px' },
@@ -191,16 +191,20 @@
     });
   }
 
+  // types named by the words typed; a skill alone ("circles") lists that skill's types
+  function typeMatches(toks, parse, n) {
+    if (!parse.unknown.length && parse.body.topics) return data.types.list.filter(t => parse.body.topics.includes(t.topic)).slice(0, n);
+    return best(data.types.list.map(t => ({ ...t, also: t.about })), parse.unknown.length ? parse.unknown : toks, x => x.name, n);
+  }
   function typeRows(toks, parse, cap_) {
     if (!data.types) return [{ label: 'Loading question types…', disabled: true }];
     const set = {};
     ['tiers', 'adaptive', 'timed', 'formats', 'feedback'].forEach(k => { if (parse.body[k] !== undefined) set[k] = parse.body[k]; });
     const count = typedCount(toks) && parse.body.count ? parse.body.count : 5;
-    const q = parse.unknown.length ? parse.unknown : toks;
-    const rows = best(data.types.list, q, x => x.name, cap_);
+    const rows = typeMatches(toks, parse, cap_);
     return rows.map(t => {
       const body = { templates: [t.template], count, source: 'palette', ...set };
-      return { ...drillRow(t.name, body, { sub: (UI.TOPIC[t.topic] || {}).short, icon: UI.glyph(t.topic), meta: `Practise this type · ${count}` }),
+      return { ...drillRow(t.name, body, { sub: [(UI.TOPIC[t.topic] || {}).short, t.about].filter(Boolean).join(' · '), icon: UI.glyph(t.topic), meta: `Practise this type · ${count}` }),
         alt: () => go(`/types/?t=${encodeURIComponent(t.template)}`) };
     });
   }
@@ -408,7 +412,7 @@
         return [['Suggested', suggested()], ['Recent', recent], ['Skills', skillRows([])], ['Pages', pageRows()], ['Actions', actionRows()]];
       }
       const types = typeRows(toks, parse, typeCap);
-      const more = data.types && typeCap < 50 && best(data.types.list, parse.unknown.length ? parse.unknown : toks, x => x.name, 50).length > typeCap;
+      const more = data.types && typeCap < 50 && typeMatches(toks, parse, 50).length > typeCap;
       if (more) types.push({ label: 'Show more question types', icon: icon('chev', 18), keep: true, run: () => { typeCap = 50; paint(); } });
       const pages = ['Pages', best(pageRows(), toks, r => r.label, 6)], actions = ['Actions', best(actionRows(), toks, r => r.label, 8)];
       // a page or action named by what was typed ("test", "settings") comes before the bank's rows
@@ -417,7 +421,7 @@
       return [
         ['', composed(parse, toks)],
         ['Commands', goalCommands(toks).concat(prefCommands(toks))],
-        ['Skills', skillRows(toks)],
+        ['Skills', !parse.unknown.length && parse.body.topics ? skillRows(toks, parse.body.topics) : skillRows(toks)],
         ...early,
         ['Question types', types],
         // every word a set word ("hard", "grid"): the misconceptions that contain it are noise

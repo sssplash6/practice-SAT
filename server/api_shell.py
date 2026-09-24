@@ -258,14 +258,17 @@ CB_BANK = 1921
 @lru_cache(maxsize=1)
 def _catalog() -> tuple[bytes, bytes]:
     """The palette's and the quick sheet's index: every question type as
-    [template, name, topic, [[norm, label?], ...]] (the label only where it
-    differs), plus cb {known, bank}. /api/types is ~700 KB with levels and
+    [template, name, topic, [[norm, label?], ...], about] (the label only where
+    it differs; about is the type's own line, since 127 types share 32 skill
+    names), plus cb {known, bank}. /api/types is ~700 KB with levels and
     budgets; this is ~260 KB, ~50 KB gzipped, and fixed per deploy."""
     types = part("api_bank", "types")
     rows = []
     for t in (types() if types else []):
+        about = " ".join(str(t.get("about") or "").split())
         rows.append([t["template"], t["name"], t["topic"],
-                     [[r["norm"]] if r["label"] == r["norm"] else [r["norm"], r["label"]] for r in t["reasons"]]])
+                     [[r["norm"]] if r["label"] == r["norm"] else [r["norm"], r["label"]] for r in t["reasons"]],
+                     "" if about.lower().rstrip(".") == t["name"].lower() else about])
     official = part("api_bank", "_official")
     try:
         known = len(official()) if official else None

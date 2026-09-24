@@ -144,7 +144,8 @@
     }
     async function show(question) {
       q = question; fb = null; ctrl = null;
-      chipHost.replaceChildren(...[UI.chip(q.topic), q.skill ? h('span', { class: 'help', style: 'margin: 0', text: cap(q.skill) }) : null,
+      const same = q.skill && words(q.skill).join(' ') === words(short(q.topic)).join(' ');
+      chipHost.replaceChildren(...[UI.chip(q.topic), q.skill && !same ? h('span', { class: 'help', style: 'margin: 0', text: cap(q.skill) }) : null,
         q.repair ? h('span', { class: 'badge', text: 'Again · new numbers' }) : null].filter(Boolean));
       practise.replaceChildren(`Practise ${short(q.topic)} · ${setLength() ? fmt(setLength()) : 'endless'}`);
       practise.hidden = false;
@@ -307,7 +308,7 @@
       if (!cat) return [];
       const toks = words(text);
       const hit = (s) => { const ws = words(s); return toks.every(t => ws.some(w => w.startsWith(t))); };
-      const byName = cat.list.filter(t => hit(t.name)).slice(0, 5);
+      const byName = cat.list.filter(t => hit(`${t.name} ${t.about}`)).slice(0, 5);
       const byReason = cat.list.filter(t => !byName.includes(t) && t.reasons.some(r => hit(r.label))).slice(0, 5 - Math.min(5, byName.length));
       return byName.concat(byReason).map(t => ({ template: t.template, topic: t.topic, via: 'label' }));
     }
@@ -318,7 +319,9 @@
       field.placeholder = 'Paste the question text here';
       field.focus();
     }
-    const nameOf = t => { const x = cat && cat.list.find(y => y.template === t); return x ? x.name : cap(String(t).split('.').pop().replace(/_/g, ' ')); };
+    const typeOf = t => (cat && cat.list.find(y => y.template === t)) || null;
+    const nameOf = t => { const x = typeOf(t); return x ? x.name : cap(String(t).split('.').pop().replace(/_/g, ' ')); };
+    const aboutOf = t => { const x = typeOf(t); return x && x.about ? h('span', { class: 'help', style: 'flex-basis: 100%; margin: 0', text: x.about }) : null; };
     function cards(rows, byId) {
       if (!rows.length) {
         results.replaceChildren(h('p', { class: 'help', text: 'No close match. Try other words, or pick by skill.' }),
@@ -330,7 +333,7 @@
         const card = h('div', { style: 'padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 10px' });
         const exHost = h('div');
         card.append(h('div', { style: 'display: flex; flex-wrap: wrap; align-items: center; gap: 8px' },
-          word ? h('span', { class: 'badge', text: word }) : null, UI.chip(r.topic), h('b', { text: nameOf(r.template), style: 'font-weight: 600' })),
+          word ? h('span', { class: 'badge', text: word }) : null, UI.chip(r.topic), h('b', { text: nameOf(r.template), style: 'font-weight: 600' }), aboutOf(r.template)),
         exHost,
         h('div', { style: 'display: flex; gap: 8px; margin-top: 10px' },
           btn('This one', { cls: 'pill sm', onClick: () => chosen({ template: r.template, topic: r.topic, cb_id: r.via === 'id' ? r.cb_id : null, via: r.via }) })));
@@ -387,7 +390,7 @@
         });
         rows.append(h('div', { style: 'padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px' },
           h('div', { style: 'display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px' },
-            h('span', { style: 'font-weight: 600; min-width: 0' }, t.name),
+            h('span', { style: 'font-weight: 600; min-width: 0' }, t.name, t.about ? h('span', { class: 'help', style: 'display: block; margin: 2px 0 0; font-weight: 400', text: t.about }) : null),
             h('span', { style: 'display: flex; gap: 6px' }, show,
               btn('This one', { cls: 'pill sm', onClick: () => chosen({ template: t.template, topic: t.topic, via: 'pick' }) }))),
           exHost));
@@ -410,7 +413,8 @@
       const head = h('div', { style: 'display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 14px; border-radius: 12px; background: var(--wash)' },
         UI.chip(pick.topic), h('b', { text: nameOf(pick.template), style: 'font-weight: 600' }),
         pick.cb_id ? h('span', { class: 'mono help', style: 'margin: 0', text: pick.cb_id }) : null,
-        h('span', { style: 'margin-left: auto' }, btn('Change', { cls: 'quiet', onClick: () => { st.picked = null; oneQuestion(); } })));
+        h('span', { style: 'margin-left: auto' }, btn('Change', { cls: 'quiet', onClick: () => { st.picked = null; oneQuestion(); } })),
+        aboutOf(pick.template));
       const ex = examples.get(pick.template);
       const spr = ex && ex.question && ex.question.type === 'spr';
       // which answer did you pick?

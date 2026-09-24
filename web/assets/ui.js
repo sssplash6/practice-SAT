@@ -56,7 +56,7 @@
      UI.parseSet(text, {count, types, source}) -> {body, chips, unknown, text, any, box}
                                     "circles hard 5 timed" -> a POST /api/drill body
      UI.types() -> Promise {list, byTopic, cb}   the 386 question types with their named
-                                    mistakes, from /api/shell/catalog (sessionStorage satf.types)
+                                    mistakes, from /api/shell/catalog (sessionStorage satf.types.2)
      UI.boxChips(onTile, [minutes])  "Got time? 5 · 10 · 15 … min", each starting a time box
    Kept for the pages until they are rebuilt: UI.question, UI.calc, UI.ref, UI.plan,
    UI.snap, the topics and glyphs.
@@ -620,20 +620,20 @@
   }
 
   /* ------------------------------------------------------------ the question-type index
-     GET /api/shell/catalog once a session (sessionStorage satf.types): the palette's and the
+     GET /api/shell/catalog once a session (sessionStorage satf.types.2): the palette's and the
      quick sheet's 386 types with their named mistakes. */
   let typesAsked = null;
   function types() {
     if (!typesAsked) {
       typesAsked = (async () => {
         let raw = null;
-        try { raw = JSON.parse(sget(SS(), 'satf.types') || 'null'); } catch (_) {}
+        try { raw = JSON.parse(sget(SS(), 'satf.types.2') || 'null'); } catch (_) {}
         if (!raw || !Array.isArray(raw.types)) {
           raw = await api('/shell/catalog', { quiet: true });
-          sput(SS(), 'satf.types', JSON.stringify(raw));
+          sput(SS(), 'satf.types.2', JSON.stringify(raw));
         }
-        const list = raw.types.map(([template, name, topic, rs]) =>
-          ({ template, name, topic, reasons: rs.map(([norm, label]) => ({ norm, label: label || norm })) }));
+        const list = raw.types.map(([template, name, topic, rs, about]) =>
+          ({ template, name, topic, about: about || '', reasons: rs.map(([norm, label]) => ({ norm, label: label || norm })) }));
         const byTopic = {};
         list.forEach(x => (byTopic[x.topic] = byTopic[x.topic] || []).push(x));
         return { list, byTopic, cb: raw.cb || {} };
