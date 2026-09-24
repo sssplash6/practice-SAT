@@ -15,7 +15,11 @@ import datetime as dt
 import json
 import logging
 
+import gzip
+from functools import lru_cache
+
 from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi.responses import Response
 
 from . import challenge, daily, db, progress, satdates
 from .api_me import due_left, per_session, profile
@@ -173,7 +177,7 @@ def shell(learner: str, tz: int, token: str) -> dict:
                       "rank": b["you"]["rank"] if b["you"] else None, "players": b["players"]},
         "resume": _resume(learner),
         "newest_report": _newest_report(learner),
-        "report_replies": 0,
+        "report_replies": 0, "report": None,
         "new": {"achievements": []},
         "next": [],
         "goals": [],
@@ -187,7 +191,7 @@ def shell(learner: str, tz: int, token: str) -> dict:
     if queue:
         out["next"] = queue(learner, tz, limit=3)[:3]
     for name in PARTS:
-        fn = part(name, "shell_part")
+        fn = part(name, "shell_part") or ADAPT.get(name, lambda: None)()
         if fn is None:
             continue
         try:
@@ -195,6 +199,22 @@ def shell(learner: str, tz: int, token: str) -> dict:
         except Exception:                   # one broken part must not take the nav down
             log.exception("shell_part of %s failed", name)
     return out
+
+
+def _reports_part():
+    """F6 names its hook reports.shell(learner) -> {newest_report, report_replies}.
+    Its newest_report is a report, and ours is the newest sitting (Results' New
+    dot), so it is renamed `report` here rather than merged over ours."""
+    fn = part("reports", "shell")
+    if fn is None:
+        return None
+    def shell_part(learner: str, tz: int) -> dict:
+        r = fn(learner)
+        return {"report_replies": r.get("report_replies", 0), "report": r.get("newest_report")}
+    return shell_part
+
+
+ADAPT = {"reports": _reports_part}
 
 
 @router.get("/api/shell")
@@ -210,3 +230,39 @@ def get_shell(x_learner: str | None = Header(default=None), x_tz: int = Depends(
             return {"retired": True}
         raise
     return shell(learner, x_tz, (x_learner or "").strip())
+
+
+# ponytail: College Board's Math question bank size from the teardown (2026-09); F5's
+# GET /api/types is meant to serve it as cb.bank, and this follows it when it does
+CB_BANK = 1921
+
+
+@lru_cache(maxsize=1)
+def _catalog() -> tuple[bytes, bytes]:
+    """The palette's and the quick sheet's index: every question type as
+    [template, name, topic, [[norm, label?], ...]] (the label only where it
+    differs), plus cb {known, bank}. /api/types is ~700 KB with levels and
+    budgets; this is ~260 KB, ~50 KB gzipped, and fixed per deploy."""
+    types = part("api_bank", "types")
+    rows = []
+    for t in (types() if types else []):
+        rows.append([t["template"], t["name"], t["topic"],
+                     [[r["norm"]] if r["label"] == r["norm"] else [r["norm"], r["label"]] for r in t["reasons"]]])
+    official = part("api_bank", "_official")
+    try:
+        known = len(official()) if official else None
+    except Exception:                       # the keys are optional material
+        log.exception("counting official ids failed")
+        known = None
+    body = json.dumps({"types": rows, "cb": {"known": known, "bank": CB_BANK}},
+                      separators=(",", ":"), ensure_ascii=False).encode()
+    return body, gzip.compress(body, 6)
+
+
+@router.get("/api/shell/catalog")
+def catalog(accept_encoding: str | None = Header(default=None)) -> Response:
+    body, packed = _catalog()
+    head = {"Cache-Control": "public, max-age=600", "Vary": "Accept-Encoding"}
+    if "gzip" in (accept_encoding or ""):
+        return Response(packed, media_type="application/json", headers={**head, "Content-Encoding": "gzip"})
+    return Response(body, media_type="application/json", headers=head)
