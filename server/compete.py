@@ -160,12 +160,12 @@ def contest(cid: str, tz: int = 0):
     return row
 
 
-def twin_questions(learner: str, cid: str, slots: list[list]) -> list[dict]:
+def twin_questions(learner: str, cid: str, slots: list[list], start_slot: int = 1) -> list[dict]:
     """Same types and order for everyone, with a unique rendered item per slot."""
     seen, _ = db.seen_for(learner)
     b = practice.Builder(learner, seen, set(), dedupe="question")
     out = []
-    for i, (key, tier, fmt) in enumerate(slots, 1):
+    for i, (key, tier, fmt) in enumerate(slots, start_slot):
         used = {r["qhash"] for r in db.rows("SELECT qhash FROM contest_items WHERE contest=? AND slot=?",
                                              cid, i)}
         card = None
@@ -192,8 +192,6 @@ def twin_questions(learner: str, cid: str, slots: list[list]) -> list[dict]:
         question = practice.to_question(card, i)
         question["id"] = f"c{i:02d}"
         out.append(question)
-    db.remember(learner, [{"key": q["key"], "seed": q["seed"],
-                           "stem_hash": practice.stem_hash(q["stem"])} for q in out], _iso(_now()))
     return out
 
 
@@ -206,17 +204,96 @@ def clock(row) -> dict:
     if isinstance(questions, dict):
         questions = questions.get("module1", []) + questions.get("module2", [])
     answers = _json(row["answers"], {}) or {}
-    open_question = next((q for q in reversed(questions) if q["id"] not in answers), None)
-    running = bool(open_question and not row["finished"] and open_question.get("served"))
+    open_question = questions[-1] if questions and questions[-1]["id"] not in answers else None
+    started = None
+    if open_question:
+        seen = db.one("SELECT at FROM practice_seen WHERE learner=? AND template=? AND seed=?",
+                      row["learner"], open_question["key"], open_question["seed"])
+        started = open_question.get("served") or (seen["at"] if seen else None)
+    running = bool(open_question and not row["finished"] and started)
     if running:
-        used += max(0, round((_now() - dt.datetime.fromisoformat(open_question["served"])).total_seconds() * 1000))
+        used += max(0, round((_now() - dt.datetime.fromisoformat(started)).total_seconds() * 1000))
     return {"used": round(used / 1000), "left": max(0, (seconds or 0) - math.ceil(used / 1000)),
             "running": running}
 
 
+def par(learner: str | None, slots: list[list], at: str | None = None,
+        *, rating: float | None = None) -> dict:
+    """Expected points from calibrated item odds, frozen when a sitting starts."""
+    profile = db.one("SELECT rating,rated FROM learners WHERE id=?", learner) if learner else None
+    current = rating if rating is not None else (profile["rating"] if profile and profile["rating"] else 1000)
+    if learner and rating is None:
+        cutoff = (_now() - dt.timedelta(days=30)).isoformat()
+        recent = [(_json(r["result"], {}) or {}).get("rating_after") for r in db.rows(
+            "SELECT result FROM sessions WHERE learner=? AND started>=? AND result IS NOT NULL", learner, cutoff)]
+        peak = max((x for x in recent if x is not None), default=current)
+        current = max(current, peak - 100)
+    expected = base = speed = variance = 0.0
+    rough = bool(learner and (not profile or (profile["rated"] or 0) < 30))
+    cells = []
+    for key, tier, _fmt in slots:
+        item_rating, n = ratings.item(key, tier)
+        odds = 1 / (1 + 10 ** ((item_rating - current) / 400))
+        worth = {"easy": 10, "medium": 20, "hard": 30}[tier]
+        budget = {"easy": 65000, "medium": 95000, "hard": 126000}[tier]
+        times = db.one("SELECT COUNT(*) AS n,SUM(CASE WHEN sms<=? THEN 1 ELSE 0 END) AS fast"
+                       " FROM attempts WHERE template=? AND difficulty=? AND correct=1"
+                       " AND repeat=0 AND disputed=0 AND void IS NULL AND sms IS NOT NULL",
+                       budget, key, tier)
+        paced = (times["fast"] or 0) / times["n"] if times["n"] else .75
+        expected += odds
+        base += odds * worth
+        speed += odds * paced
+        variance += odds * (1 - odds) * worth * worth
+        rough |= n < 30
+        cells.append({"template": key, "tier": tier, "chance": round(odds, 2)})
+    return {"base": round(base / 5) * 5, "right": round(expected, 1),
+            "points": round(base + 5 * speed + 10), "rating": round(current),
+            "rough": bool(rough), "sd": round(math.sqrt(variance), 1), "cells": cells}
+
+
+def field_line(template: str, tier: str, cid: str, slot: int, rating: float = 1000) -> dict:
+    people = db.rows("SELECT s.id,s.questions FROM sessions s WHERE s.contest=?"
+                     " AND s.ranked=1 AND s.finished IS NOT NULL", cid)
+    seen = []
+    for row in people:
+        qs = _json(row["questions"], []) or []
+        if isinstance(qs, dict):
+            qs = qs.get("module1", []) + qs.get("module2", [])
+        if len(qs) >= slot:
+            a = db.one("SELECT correct FROM attempts WHERE session=? AND qid=?", row["id"], qs[slot - 1]["id"])
+            if a:
+                seen.append(a["correct"])
+    if len(seen) >= 5:
+        return {"source": "contest", "share": round(sum(seen) / len(seen), 3), "n": len(seen)}
+    type_rows = db.one("SELECT COUNT(*) AS n,SUM(correct) AS right FROM attempts"
+                       " WHERE template=? AND difficulty=? AND repeat=0 AND disputed=0 AND void IS NULL",
+                       template, tier)
+    if type_rows["n"] >= 20:
+        return {"source": "type", "share": round(type_rows["right"] / type_rows["n"], 3),
+                "n": type_rows["n"]}
+    item_rating, _ = ratings.item(template, tier)
+    chance = 1 / (1 + 10 ** ((item_rating - rating) / 400))
+    return {"source": "expected", "share": round(chance, 3), "n": None,
+            "level": ratings.level_of(rating)}
+
+
 def rate(learner: str, sid: str, question: dict, right: bool, when: str | None = None) -> None:
-    row = db.one("SELECT s.*,c.spec FROM sessions s JOIN contests c ON c.id=s.contest WHERE s.id=?", sid)
+    row = db.one("SELECT s.*,c.spec,c.opens,c.closes,c.kind AS contest_kind"
+                 " FROM sessions s JOIN contests c ON c.id=s.contest WHERE s.id=?", sid)
     if not row or not (_json(row["spec"], {}) or {}).get("rated") or not row["ranked"]:
+        return
+    cfg = _json(row["cfg"], {}) or {}
+    if question.get("id") in cfg.get("flags", {}):
+        return
+    in_window = (local_day(cfg.get("tz", 0), dt.datetime.fromisoformat(row["started"])).isoformat()
+                 == row["contest"][6:]) if row["contest_kind"] == "daily" else (
+                     row["opens"] <= row["started"] <= row["closes"])
+    if not in_window:
+        return
+    if row["contest_kind"] not in ("sprint", "rush") and db.one(
+            "SELECT 1 FROM sessions WHERE contest=? AND learner=? AND id!=? AND finished IS NOT NULL"
+            " AND ranked=1", row["contest"], learner, sid):
         return
     db.run("INSERT INTO learners(id,created) VALUES (?,?) ON CONFLICT(id) DO NOTHING", learner, when or _iso(_now()))
     profile = db.one("SELECT rating,rated FROM learners WHERE id=?", learner)
@@ -253,6 +330,8 @@ def finish_contest(row) -> dict:
     attempts = {r["qid"]: r for r in db.rows("SELECT * FROM attempts WHERE session=? ORDER BY id", row["id"])}
     qs = _questions(row)
     base = pace = right = wrong = skipped = voided = fast = 0
+    timing = (_json(row["cfg"], {}) or {}).get("timing", "official")
+    multiplier = {"official": 1, "x1.5": 1.5, "x2": 2}.get(timing, 1)
     for q in qs:
         given = answers.get(q["id"])
         attempt = attempts.get(q["id"])
@@ -262,16 +341,19 @@ def finish_contest(row) -> dict:
         if not attempt:
             skipped += 1
             continue
-        if attempt["void"]:
+        flag = (_json(row["cfg"], {}) or {}).get("flags", {}).get(q["id"], {})
+        if attempt["void"] or (flag and flag.get("status") != "confirmed"):
             voided += 1
             continue
         if attempt["correct"]:
             right += 1
             base += {"easy": 10, "medium": 20, "hard": 30}.get(q["difficulty"], 20)
-            budget = q.get("budget_ms") or 95_000
-            if contest_row["kind"] != "sprint" and attempt["sms"] is not None and attempt["sms"] <= budget:
+            budget = (q.get("budget_ms") or {"easy": 65_000, "medium": 95_000,
+                                              "hard": 126_000}.get(q["difficulty"], 95_000)) * multiplier
+            elapsed = attempt["sms"] if attempt["sms"] is not None else attempt["ms"]
+            if contest_row["kind"] not in ("sprint", "rush") and elapsed is not None and elapsed <= budget:
                 pace += 5
-            if attempt["sms"] is not None and attempt["sms"] < 4000:
+            if elapsed is not None and elapsed < 4000:
                 fast += 1
         else:
             wrong += 1
@@ -282,7 +364,11 @@ def finish_contest(row) -> dict:
         used = min(contest_row["seconds"], max(0, round((dt.datetime.fromisoformat(row["finished"] or _iso(_now())) -
                                                          dt.datetime.fromisoformat(row["started"])).total_seconds())))
     ranked, why = True, None
-    if not contest_row["opens"] <= row["started"] <= contest_row["closes"]:
+    cfg = _json(row["cfg"], {}) or {}
+    in_window = (local_day(cfg.get("tz", 0), dt.datetime.fromisoformat(row["started"])).isoformat()
+                 == row["contest"][6:]) if contest_row["kind"] == "daily" else (
+                     contest_row["opens"] <= row["started"] <= contest_row["closes"])
+    if not in_window:
         ranked, why = False, "ghost"
     elif contest_row["kind"] not in ("sprint", "rush", "words") and db.one(
             "SELECT 1 FROM sessions WHERE contest=? AND learner=? AND id!=? AND ranked=1 AND finished IS NOT NULL",
@@ -294,9 +380,80 @@ def finish_contest(row) -> dict:
     result.update({"right": right, "wrong": wrong, "skipped": skipped, "voided": voided,
                    "asked": len(qs), "points": points,
                    "points_parts": {"base": base, "pace": pace, "finish": finish_bonus}})
+    par_data = result.get("par") or (_json(row["cfg"], {}) or {}).get("par")
+    if par_data:
+        result["par"] = par_data
+        result["net"] = base - par_data["base"]
+    result["confirmed"] = sum(f.get("status") == "confirmed" for f in
+                              (_json(row["cfg"], {}) or {}).get("flags", {}).values())
     db.run("UPDATE sessions SET points=?,secs=?,ranked=?,unranked_why=?,result=? WHERE id=?",
            points, used, int(ranked), why, json.dumps(result), row["id"])
     return result
+
+
+def flag(sid: str, learner: str, qid: str, why: str, secs: float = 0) -> dict:
+    if why not in ("left", "blur", "copyleave", "paste", "pagehide", "fast") or not 0 <= secs <= 3600:
+        raise HTTPException(422, "invalid flag")
+    row = db.one("SELECT * FROM sessions WHERE id=? AND learner=?", sid, learner)
+    if not row or not row["contest"] or row["finished"]:
+        raise HTTPException(404, "contest sitting not found")
+    q = next((q for q in _questions(row) if q["id"] == qid), None)
+    if not q:
+        raise HTTPException(404, "question not found")
+    spec = _json(db.one("SELECT spec FROM contests WHERE id=?", row["contest"])["spec"], {}) or {}
+    if not spec.get("strict"):
+        return {"flagged": False}
+    cfg = _json(row["cfg"], {}) or {}
+    flags = cfg.setdefault("flags", {})
+    flags.setdefault(qid, {"why": why, "secs": secs, "status": "pending"})
+    db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(cfg), sid)
+    return {"flagged": True, "question_id": qid, "why": why}
+
+
+def confirm_next(sid: str, learner: str, answer=None) -> dict:
+    row = db.one("SELECT * FROM sessions WHERE id=? AND learner=?", sid, learner)
+    if not row or not row["contest"]:
+        raise HTTPException(404, "contest sitting not found")
+    cfg = _json(row["cfg"], {}) or {}
+    flags = cfg.get("flags", {})
+    original = _questions(row)
+    if not all(q["id"] in (_json(row["answers"], {}) or {}) for q in original):
+        raise HTTPException(409, "finish the original questions first")
+    active = cfg.get("confirm_active")
+    if active and answer is not None:
+        q = active["question"]
+        from . import scoring as scorer
+        clean = scorer.is_correct(q, answer)
+        progress.record(learner, sid, q, answer, None)
+        flags[active["of"]]["status"] = "confirmed" if clean else "failed"
+        if not clean:
+            db.run("UPDATE attempts SET void=? WHERE session=? AND qid=?", flags[active["of"]]["why"],
+                   sid, active["of"])
+        cfg.pop("confirm_active", None)
+    elif active:
+        from .drill import public
+        return {"question": public(active["question"]), "of": active["of"], "due": True}
+    pending = [q for q in original if q["id"] in flags and flags[q["id"]]["status"] == "pending"
+               and (a := db.one("SELECT correct FROM attempts WHERE session=? AND qid=?", sid, q["id"]))
+               and a["correct"]]
+    if len(pending) > 5:
+        for q in pending[5:]:
+            flags[q["id"]]["status"] = "failed"
+        pending = pending[:5]
+    if not pending:
+        cfg["flags"] = flags
+        db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(cfg), sid)
+        return {"due": False, "confirmed": sum(f["status"] == "confirmed" for f in flags.values())}
+    target = pending[0]
+    slot = next(i for i, q in enumerate(original, 1) if q["id"] == target["id"])
+    question = twin_questions(learner, row["contest"], [[target["key"], target["difficulty"], target["type"]]],
+                              start_slot=len(original) + slot)[0]
+    question["id"] = f"confirm:{target['id']}"
+    cfg["flags"] = flags
+    cfg["confirm_active"] = {"of": target["id"], "question": question}
+    db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(cfg), sid)
+    from .drill import public
+    return {"question": public(question), "of": target["id"], "due": True}
 
 
 def state_extra(row) -> dict:
@@ -318,12 +475,11 @@ def _pid(learner: str) -> str:
 def _identity(learner: str, viewer: str | None = None) -> dict:
     profile = db.one("SELECT name,handle,board,rating,rated,country FROM learners WHERE id=?", learner)
     board_mode = profile["board"] if profile else "name"
-    hidden = board_mode == "hidden"
-    anon = board_mode == "anon"
+    anon = board_mode in ("anon", "hidden")
     name = profile["handle"] or profile["name"] if profile else None
-    name = challenge.handle(learner, None if anon else name)
-    return {"pid": _pid(learner), "name": name if not hidden or learner == viewer else "Anonymous",
-            "anon": hidden, "level": ratings.level_of(profile["rating"] or 1000) if profile else 1,
+    name = challenge.handle(learner, name)
+    return {"pid": _pid(learner), "name": name if not anon or learner == viewer else "Anonymous",
+            "anon": anon, "level": ratings.level_of(profile["rating"] or 1000) if profile else 1,
             "country": profile["country"] if profile else None}
 
 
@@ -351,15 +507,30 @@ def board(cid: str, me: str | None = None, scope: str = "all", offset: int = 0,
         if previous is None or (row["points"] or 0) > (previous["points"] or 0):
             best[row["learner"]] = row
     entries = []
+    extended_entries = []
+    marks = Counter()
     for learner, row in best.items():
         ident = _identity(learner, me)
         result = _json(row["result"], {}) or {}
-        entries.append({**ident, "learner": learner, "points": row["points"] or 0,
+        flags = (_json(row["cfg"], {}) or {}).get("flags", {})
+        mark = ("clean" if not flags else "confirmed" if all(f.get("status") == "confirmed"
+                                                           for f in flags.values()) else None)
+        if mark:
+            marks[mark] += 1
+        entry = {**ident, "learner": learner, "points": row["points"] or 0,
+                        "net": result.get("net"),
                         "right": result.get("right", 0), "asked": result.get("asked", contest_row["count"]),
                         "secs": row["secs"], "finished": row["finished"], "you": learner == me,
-                        "session": row["id"]})
+                        "session": row["id"], "mark": mark,
+                        "n": len(flags) if mark == "confirmed" else 0}
+        if contest_row["kind"] != "private" and (_json(row["cfg"], {}) or {}).get("timing") in ("x1.5", "x2"):
+            extended_entries.append(entry)
+        else:
+            entries.append(entry)
     _rank(entries)
+    _rank(extended_entries)
     mine = next((e for e in entries if e["you"]), None)
+    extended_mine = next((e for e in extended_entries if e["you"]), None)
     if scope == "country" and me:
         own_country = (_identity(me).get("country"))
         entries = [e for e in entries if e["country"] == own_country] if own_country else []
@@ -370,8 +541,9 @@ def board(cid: str, me: str | None = None, scope: str = "all", offset: int = 0,
         level = _identity(me)["level"]
         entries = [e for e in entries if e["level"] == level]
     elif scope == "extended":
-        entries = [e for e in entries if db.one("SELECT 1 FROM sessions WHERE id=? AND cfg LIKE '%x1.%'",
-                                                 e["session"] or "")]
+        return {"id": contest_row["id"], "players": len(extended_entries), "entries": [],
+                "you": {"extended": {"rank": extended_mine["rank"], "of": len(extended_entries)}}
+                if extended_mine else None, "mine": None, "next_offset": None, "pars": [], "marks": {}}
     elif scope == "near" and mine:
         center = next(i for i, e in enumerate(entries) if e["you"])
         start = max(0, min(center - 5, len(entries) - 11))
@@ -390,8 +562,23 @@ def board(cid: str, me: str | None = None, scope: str = "all", offset: int = 0,
             entry.pop("session", None)
     if mine:
         mine = {k: v for k, v in mine.items() if k not in ("learner", "finished")}
+    elif extended_mine:
+        mine = {"extended": {"rank": extended_mine["rank"], "of": len(extended_entries)}}
+    slots = (_json(contest_row["spec"], {}) or {}).get("slots", [])
+    par_rows = []
+    if slots and contest_row["kind"] not in ("sprint", "rush", "words"):
+        for level, midpoint in ((3, 1025), (5, 1325), (7, 1625), (9, 1925)):
+            expected = par(None, slots, rating=midpoint)
+            par_rows.append({"level": level, "right": expected["right"],
+                             "points": expected["points"], "rough": expected["rough"]})
+        if me:
+            own_level = _identity(me)["level"]
+            if own_level not in (3, 5, 7, 9):
+                expected = par(me, slots)
+                par_rows.append({"level": own_level, "right": expected["right"],
+                                 "points": expected["points"], "rough": expected["rough"]})
     return {"id": contest_row["id"], "players": players, "entries": page, "you": mine,
-            "mine": mine, "next_offset": next_offset, "pars": []}
+            "mine": mine, "next_offset": next_offset, "pars": par_rows, "marks": dict(marks)}
 
 
 def _period_bounds(period: str, at: dt.date | None = None) -> tuple[str | None, str | None]:
@@ -445,7 +632,9 @@ def leaderboard(metric: str = "points", period: str = "week", scope: str = "all"
                 continue
             amount = row["points"] or 0
             if metric == "net":
-                amount -= (_json(row["result"], {}) or {}).get("par", {}).get("base", 0)
+                if row["contest_kind"] in ("sprint", "rush", "words"):
+                    continue
+                amount = (_json(row["result"], {}) or {}).get("net", 0)
             if row["contest_kind"] == "sprint":
                 key = (row["learner"], row["contest"])
                 old = sprint_best.get(key, 0)
@@ -499,7 +688,9 @@ def leaderboard(metric: str = "points", period: str = "week", scope: str = "all"
                         "finished": finished.get(person), "you": person == learner})
     if metric == "net":
         entries = [e for e in entries if (db.one("SELECT rated FROM learners WHERE id=?", e["learner"]) or
-                                          {"rated": 0})["rated"] >= 30]
+                                          {"rated": 0})["rated"] >= 30 and db.one(
+            "SELECT COUNT(*) AS n FROM sessions WHERE learner=? AND contest IS NOT NULL"
+            " AND finished IS NOT NULL AND ranked=1", e["learner"])["n"] >= 3]
     _rank(entries, "value")
     mine = next((e for e in entries if e["you"]), None)
     if scope == "near" and mine:
@@ -623,7 +814,8 @@ def create_private(learner: str, body: dict) -> dict:
     minutes = body.get("minutes")
     if minutes is not None and (not isinstance(minutes, int) or not 5 <= minutes <= 70):
         raise HTTPException(422, "minutes must be 5–70")
-    duration = body.get("duration", "day")
+    duration = body.get("duration", {1: "hour", 24: "day", 72: "3days", 168: "week"}.get(
+        body.get("open_for"), "day"))
     lengths = {"hour": 3600, "day": 86400, "3days": 3 * 86400, "week": 7 * 86400}
     if duration not in lengths:
         raise HTTPException(422, "duration must be hour, day, 3days or week")
@@ -655,15 +847,16 @@ def create_private(learner: str, body: dict) -> dict:
     fmt = body.get("format", "both")
     if fmt not in ("both", "mcq", "spr"):
         raise HTTPException(422, "invalid format")
-    twin = bool(body.get("twins", False))
+    twin = bool(body.get("twins", body.get("twin", False)))
     reveal = body.get("reveal", "each")
     if reveal not in ("each", "end"):
         raise HTTPException(422, "invalid reveal")
     now = _now()
     base = "p-" + secrets.token_hex(5)
-    code = secrets.token_hex(3).upper()
+    alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+    code = "".join(secrets.choice(alphabet) for _ in range(6))
     while db.one("SELECT 1 FROM contests WHERE code=?", code):
-        code = secrets.token_hex(3).upper()
+        code = "".join(secrets.choice(alphabet) for _ in range(6))
     for number in range(1, rounds + 1):
         cid = base if number == 1 else f"{base}-r{number}"
         delta = dt.timedelta(days=(number - 1) * (7 if every == "week" else 1))
