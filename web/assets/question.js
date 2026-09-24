@@ -33,7 +33,7 @@
                      onReanswer(answer, correct), onNext, onDone, onReveal(fb), onChange(state)
      ws    {el, q, key(e), check(conf), select(i), choose(i), strike(i, on, by), eliminate(on),
             cover(on), hint(), skip(), reveal(fb), unlock(), answered(), canCheck(), value(),
-            state(), setHidden(on), tools(), renderTools(host), focus(), destroy()}
+            state(), setHidden(on), tools(), renderTools(host), focus(), restart(), destroy()}
    UI.splitCheck(host, {confidence, active, save, onSubmit(conf)}) -> {el, set({enabled, save, firstTry})}
    UI.questionActions(host, q, ctx) -> {el, run(id), has(id)}        G4, R49
    UI.twin(host, ctx) -> {el, run(axis, n), menu()}                   R44, P18
@@ -41,7 +41,8 @@
    UI.pad(field, {onKey}) -> el                                       X6
    UI.calc  {open(o), close, toggle, isOpen, mode, engine, dock(host), sitting(id), onChange(fn),
              onOpen(fn), walkthrough(desmos), setMode(m)}             Desmos, else scientific (item 74)
-   UI.tex(el, plain, latex)   UI.katex()   UI.spr {parse, preview, clean, cap, RULE, repeatingCut}
+   UI.tex(el, plain, latex)   UI.katex()   UI.spr {parse, preview, clean, cap, RULE, repeatingCut, directions()}
+   UI.qicon(name, size) -> svg                                        this file's icons, for runner.js
    UI.readAloud(q, onEnd)     UI.sciEval(src, deg, ans)
    ========================================================================== */
 
@@ -257,6 +258,7 @@
         h('thead', {}, h('tr', {}, ['Answer', 'Accepted', 'Not accepted'].map(t => h('th', { scope: 'col', text: t })))),
         h('tbody', {}, EXAMPLES.map(r => h('tr', {}, r.map(c => h('td', { text: c })))))));
   }
+  spr.directions = directions;
 
   /* ------------------------------------------------------------ read aloud (G8) */
   // ponytail: a 12-rule replacer, not MathSpeak; move to Speech Rule Engine if students report misreads
@@ -1524,6 +1526,8 @@
       get hidden() { return S.hidden; },
       set annotating(v) { o.annotating = typeof v === 'function' ? v : () => !!v; },
       elapsed,
+      // a pre-rendered question (G9) starts its clock when it is shown, not when it was built
+      restart() { S.shownAt = performance.now(); S.awayMs = 0; S.awayAt = doc.hidden ? performance.now() : null; },
       focus() {
         const target = mc ? (rows.find(r => r.b.tabIndex === 0) || rows[0] || {}).b : field;
         if (target) target.focus({ preventScroll: true });
@@ -2182,7 +2186,7 @@
   /* ------------------------------------------------------------ export */
   Object.assign(UI, {
     workspace, question, splitCheck, questionActions, twin, twinSheet, pad, calc, tex, katex, spr, readAloud, sciEval,
-    workspaceSelfTest: selfTest,
+    workspaceSelfTest: selfTest, qicon: icon,
   });
   if (location.pathname.startsWith('/dev/')) {
     const r = selfTest();

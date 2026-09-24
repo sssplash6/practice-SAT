@@ -47,6 +47,7 @@
     <h1 class="h1">Question workspace</h1>
     <span class="meta">UI.workspace in every mode, with fixture questions and a fake server</span>
     <span class="dev-self" id="self"></span>
+    <span class="meta">The runner: <a href="?view=runner&amp;rmode=practice">practice</a> · <a href="?view=runner&amp;rmode=practice&amp;timed=1">timed</a> · <a href="?view=runner&amp;rmode=retry">retry</a> · <a href="?view=runner&amp;rmode=end">end</a> · <a href="?view=runner&amp;rmode=challenge">challenge</a> · <a href="?view=runner&amp;rmode=exam">test-day</a> · <a href="?view=runner&amp;rmode=training">training</a></span>
   </div>
 
   <div class="dev-controls" id="controls">
@@ -103,6 +104,7 @@
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/question.js"></script>
+<script src="/assets/runner.js"></script>
 <script>
 (() => {
   'use strict';
@@ -193,6 +195,114 @@
   }
   const wait = ms => new Promise(r => setTimeout(r, ms));
   const tries = new Map();
+
+  /* ---------------------------------------------------------------- the runner (UI.runner), on a fake server
+     ?view=runner&rmode=practice|retry|end|exam|training|challenge  [&minutes=6] [&n=10] [&endless=1]
+     Marks, notes, strikes, answers and the stopwatch go to a fake store in localStorage
+     (dev.run.<rmode>), so a reload restores them the way the server would. */
+  if (url.get('view') === 'runner') {
+    const rmode = url.get('rmode') || 'practice';
+    const exam = rmode === 'exam' || rmode === 'training';
+    const KEYR = `dev.run.${rmode}`;
+    const store = (() => { try { return JSON.parse(localStorage.getItem(KEYR) || '{}'); } catch (_) { return {}; } })();
+    store.q = store.q || {};
+    const keep = () => { try { localStorage.setItem(KEYR, JSON.stringify(store)); } catch (_) {} };
+    const base = FX.filter(q => q.id !== 'w1');
+    const n = +(url.get('n') || (exam ? 12 : 10));
+    const TIERS = ['easy', 'medium', 'hard'];
+    const qAt = i => {
+      const b = base[i % base.length];
+      const q = JSON.parse(JSON.stringify(b));
+      q.id = `${exam ? 'm1q' : 'q'}${String(i + 1).padStart(2, '0')}`;
+      q.number = i + 1;
+      q.budget_ms = { easy: 65000, medium: 95000, hard: 126000 }[q.difficulty] || 95000;
+      if (!exam && i === 3) { q.repair = true; q.repair_of = 1; }
+      return q;
+    };
+    const saved = id => store.q[id] || (store.q[id] = {});
+    const itemAt = i => {
+      const q = qAt(i), s = saved(q.id);
+      const it = { q, marks: s.marks || [], note: s.note || '', saved: !!s.saved, scratch: s.scratch || null, attempts: i % 3 === 0 ? 2 : 0,
+        state: s.state || null, why: exam ? null : q.why || (i % 2 ? 'Your least-practised type in Circles' : 'A type you have never tried') };
+      if (s.fb) it.fb = s.fb;
+      return it;
+    };
+    const cells = Array.from({ length: n }, (_, i) => {
+      const q = qAt(i), s = saved(q.id);
+      const c = { tier: q.difficulty, level: i % 4 ? 3 + (i % 4) : null, topic: q.topic, topic_name: q.skill, budget_ms: q.budget_ms,
+        flag: !!s.flag, note: !!(s.note || (s.marks || []).some(m => m.note)), ms: s.ms || 0, conf: s.conf || null };
+      if (exam) c.status = s.answer !== undefined && s.answer !== null ? 'answered' : 'unanswered';
+      else c.status = s.fb ? (s.fb.correct ? 'correct' : 'incorrect') : s.skipped ? 'skipped' : (i <= Object.keys(store.q).length ? 'unanswered' : 'future');
+      return c;
+    });
+    if (!exam) { const served = cells.findIndex(c => c.status === 'future'); if (served === 0) cells[0].status = 'unanswered'; }
+    const minutes = +(url.get('minutes') || (exam ? 35 : rmode === 'challenge' ? 12 : 16));
+    const qs = UI.saveQueue(`dev-${rmode}`, async (item, stamps) => {
+      await wait(300);
+      if (url.get('fail') === '1') { const e = new Error('offline'); e.offline = true; throw e; }
+      log('queue sent', item.kind, item.qid, item.body, stamps);
+    }, { el: () => (run && run.timer && run.timer.left != null ? (minutes * 60 - run.timer.left) * 1000 : 0) });
+    let run = null;
+    const host = document.createElement('div');
+    document.body.append(host);
+    $('#main').hidden = true;
+    const on = {
+      load: async (i, how) => { await wait(120); log('load', i, how); return itemAt(i); },
+      check: async (i, a, meta) => {
+        log('check', i, a, meta);
+        await wait(180);
+        const q = qAt(i), s = saved(q.id);
+        if (meta.save) { s.answer = a; s.state = { selected: Number.isInteger(a) ? a : null, value: typeof a === 'string' ? a : '', saved: a }; keep(); return true; }
+        if (rmode === 'retry') {
+          s.tries = (s.tries || 0) + 1;
+          if (!isRight(q, a) && s.tries < 3 && !meta.show) { keep(); return { correct: false, final: false, mistake: Number.isInteger(a) ? q.reasons[a] : null, tries_left: 3 - s.tries }; }
+        }
+        const fb = feedback(q, meta.show ? null : a, meta, rmode === 'retry' ? { try: s.tries } : {});
+        s.fb = fb; keep();
+        // G9: the next question comes back with the verdict and is rendered before Next
+        if (i + 1 < n && run) run.preload(i + 1, itemAt(i + 1));
+        return fb;
+      },
+      select: (i, a, meta) => { const q = qAt(i), s = saved(q.id); s.answer = a; s.state = { selected: Number.isInteger(a) ? a : null, value: typeof a === 'string' ? a : '' }; keep(); if (exam) qs.answer(q.id, a, meta.made_left); log('select', i, a, meta); },
+      time: (i, ms, why) => { const s = saved(qAt(i).id); s.ms = (s.ms || 0) + ms; keep(); log('time', i, ms, why); },
+      strike: (i, k, v, by, struck) => { const s = saved(qAt(i).id); s.state = Object.assign({}, s.state, { struck }); keep(); log('strike', i, k, v, by); },
+      mark: async (i, v) => { await wait(120); saved(qAt(i).id).flag = v; keep(); log('mark', i, v); },
+      save: async (i, v) => { await wait(120); saved(qAt(i).id).saved = v; keep(); log('save', i, v); },
+      note: async (i, t) => { await wait(120); saved(qAt(i).id).note = t; keep(); log('note', i, t); },
+      marks: (i, m) => { saved(qAt(i).id).marks = m; keep(); log('marks', i, m); },
+      conf: (i, v) => { saved(qAt(i).id).conf = v; keep(); log('conf', i, v); },
+      scratch: (i, d) => { saved(qAt(i).id).scratch = d; keep(); log('scratch', i, JSON.stringify(d).length + ' bytes'); },
+      state: (i, p) => { if (exam) qs.state(qAt(i).id, p); log('state', i, p); },
+      skip: (i, meta) => { saved(qAt(i).id).skipped = true; keep(); log('skip', i, meta); },
+      exit: how => { log('exit', how); UI.toast && UI.toast(`Exit: ${how}`); },
+      finish: how => { log('finish', how); UI.toast && UI.toast('Finished: the page would show the summary or hand in'); },
+      pause: async () => { await wait(100); log('pause'); },
+      resume: async () => { await wait(100); log('resume'); },
+      timeUp: () => { log('time up'); run.screen(Object.assign(document.createElement('div'), { className: 'rn-paused', innerHTML: '<p class="k">Time’s up</p><p>Every answer you gave is saved.</p>' })); },
+      twins: l => log('twins of', l), fix: (label, l) => log('fix', label, l),
+      pref: (k, v) => log('pref', k, v), away: a => log('away', a), nudge: x => log('nudge', x), view: (v, i) => log('view', v, i),
+      discard: () => log('discard'), show: i => log('show', i),
+    };
+    const o = {
+      mode: exam ? 'exam' : 'practice', feedback: ['retry', 'end'].includes(rmode) ? rmode : 'instant', sid: `dev-${rmode}`,
+      title: exam ? 'Math · Module 1 of 2' : rmode === 'challenge' ? 'Daily challenge' : 'Circles + 3', short: 'M1',
+      cells, total: url.get('endless') === '1' ? null : n, clock: rmode === 'challenge' || exam || url.get('timed') === '1' ? { secondsLeft: minutes * 60 } : { elapsed: 0 },
+      pausable: rmode === 'practice' && url.get('timed') === '1', challenge: rmode === 'challenge', conditions: exam ? (rmode === 'training' ? 'training' : 'test_day') : null,
+      confidence: rmode === 'training', pace: rmode === 'training' ? { budget_s: cells.map(c => c.budget_ms / 1000), reserve_s: 180, duration_s: minutes * 60 } : null,
+      items: exam ? cells.map((_, i) => itemAt(i)) : null, who: exam ? 'Ana' : null, queue: exam ? qs : null,
+      prefs: { confidence: 'ask', calc_mode: 'closed' }, confActive: false,
+      workspace: { formNudge: true, onHint: async () => { await wait(150); return { rung: 1, kind: 'step', step: 'Start from what the question gives you.' }; }, coverTool: !exam },
+      actions: exam ? null : { axes: ['easier', 'grid'], body: { topics: ['circles'], source: 'twin' }, more: async (axis) => log('twin /more', axis),
+        on: { save: async v => log('save (verdict)', v), note: () => {}, history: () => log('history'), report: () => log('report') } },
+      guardLeave: exam && url.get('guard') === '1', mainId: 'rnMain', on,
+    };
+    run = UI.runner(host, o);
+    window.devRun = run;
+    window.devQueue = qs;
+    const rt = UI.workspaceSelfTest();
+    if (!rt.ok) console.error('self-test', rt);
+    return;
+  }
 
   /* ---------------------------------------------------------------- the playground */
   let ws = null;
