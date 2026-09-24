@@ -13,9 +13,11 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
   revived, gate 19/19; the lint now reports 16 findings: 11 low-yield templates, 5 filler-majority notes) and `v2/f6`
   (33b1627; the test_flow label-threshold failure was a test-isolation bug, fixed by the other agent). F6's fixer left
   a drill.py change for S4 (use sets.serve for pool 'set'): in `followups/F6.json`.
-- RUNNING: build.js run `wf_c64d3f6b-2ea` (task wqb68afx6) `[{id:'F2', unit:3}, {id:'F3', unit:2}]`, then one check +
-  one fix each. Checkpoint loop: task blqxdkt2a. Restart if cut off: F2 `{id:'F2', unit:3}` or `from:'verify'`;
-  F3 `{id:'F3', unit:<first unbuilt>}` per `git log master..v2/f3`.
+- PAUSED 2026-09-24 23:59 for usage limits (nothing running; checkpoint loop stopped). On "continue": restart the
+  checkpoint loop, then relaunch build.js with `[{id:'F2', from:'verify'}, {id:'F3', unit:3}]`.
+  F2: all 4 units built (tip 9811bca); its check r1 was cut off, so it re-runs (one check + one fix, then merge).
+  F3: units 1-3 built; unit 4 (dev/workspace.html plus fixes it made in question.js, runner.js and runner.css) was in
+  progress, checkpoint 2f4d1d0; then one check + one fix, then merge.
 - **S9 server** (`v2/s9-server`, worktree `.claude/worktrees/s9-server`, the other agent's): parts 1-2 done (content
   index + proof-based review core; gated item generation), part 3 (api_words.py) checkpointed at 91021b1, part 4
   (checks/s9.py) not started; ~2,400 lines. **The other agent finishes it** (the user, 2026-09-24): do not build it here. When the user
