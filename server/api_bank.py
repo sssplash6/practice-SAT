@@ -7,7 +7,9 @@ import difflib
 import json
 import pathlib
 import re
+import statistics
 import zlib
+from collections import Counter
 from functools import lru_cache
 
 from fastapi import APIRouter, Header, HTTPException
@@ -72,22 +74,6 @@ def types(topic: str | None = None, subject: str = "math") -> list[dict]:
         raise HTTPException(422, {"field": "subject", "reason": "math or rw"})
     return [_type(t, e) for t, e in blueprint.kinds().items()
             if (topic is None or e["topic"] == topic) and deps.subject_of(e["topic"]) == subject]
-
-
-@router.get("/api/bank")
-def bank(subject: str = "math") -> dict:
-    if subject not in ("math", "rw"):
-        raise HTTPException(422, {"field": "subject", "reason": "math or rw"})
-    cat = practice.catalogue()
-    topics = [{"topic": slug, "name": topic.name, "domain": topic.domain,
-               "available": bool(cat["by_topic"].get(slug)),
-               "types": len(cat["by_topic"].get(slug, ()))}
-              for slug, topic in cat["topics"].items() if deps.subject_of(slug) == subject]
-    if subject == "rw" and not topics:
-        topics = [{"topic": slug, "name": name, "domain": domain, "available": False, "types": 0}
-                  for slug, name, domain in (("words-in-context", "Words in Context", "Craft and Structure"),
-                                             ("transitions", "Transitions", "Expression of Ideas"))]
-    return {"subject": subject, "topics": topics, "types": types(subject=subject)}
 
 
 def _match_id(cbid: str) -> dict | None:
@@ -180,7 +166,9 @@ def example(template: str, want: str | None = None, tier: str | None = None) -> 
     if nearest is None:
         raise HTTPException(409, {"reason": "no_example"})
     q = practice.to_question(nearest, 1)
-    return {"template": template, "seed": nearest.seed, "question": q,
+    trap_index = next((i for i, r in enumerate(q["reasons"]) if r and progress.norm(r) == progress.norm(want)),
+                      None) if want and q["type"] == "mcq" else None
+    return {"template": template, "seed": nearest.seed, "question": q, "trap_index": trap_index,
             "trap_true": not want or drill._offers(nearest, "^" + re.escape(want) + "$")}
 
 
@@ -195,14 +183,34 @@ def type_detail(template: str, x_learner: str | None = Header(default=None)) -> 
     out["siblings"] = {"easier": blueprint.siblings(template, -1),
                        "harder": blueprint.siblings(template, 1)}
     out["related"] = blueprint.lookalikes(template)
+    misses = {r["norm"]: r["n"] for r in db.rows("SELECT norm, COUNT(*) n FROM attempts WHERE template=?"
+                                                 " AND correct=0 AND repeat=0 GROUP BY norm", template)}
+    total = sum(misses.values())
+    for reason in out["reasons"]:           # shown only once 20 misses are in
+        reason["crowd_share"] = round(misses.get(reason["norm"], 0) / total, 3) if total >= 20 else None
     if x_learner:
         learner = deps.learner_of(x_learner)
-        attempts = db.rows("SELECT correct,ms FROM attempts WHERE learner=? AND template=? ORDER BY id",
-                           learner, template)
+        attempts = db.rows("SELECT correct,ms,norm,offered,repeat,at FROM attempts WHERE learner=?"
+                           " AND template=? ORDER BY id", learner, template)
         traps = [t for t in progress.open_traps(learner) if t["template"] == template]
+        firsts = [a for a in attempts if not a["repeat"]]
+        right_ms = [a["ms"] for a in attempts if a["correct"] and a["ms"] is not None]
+        caught, dodged = Counter(), Counter()     # P6: chosen, or on offer and not chosen
+        for a in attempts:
+            chosen = a["norm"] if not a["correct"] else None
+            if chosen in entry["reasons"]:
+                caught[chosen] += 1
+            dodged.update(n for n in json.loads(a["offered"] or "[]") if n != chosen)
+        old = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=10)).isoformat()
         out["you"] = {"seen": len(attempts), "right": sum(a["correct"] for a in attempts),
-                      "open": [t["id"] for t in traps], "median_ms": None,
-                      "budget_ms": out["budget_ms"], "rule": None}
+                      # U8: ready is met and right on the first try at least twice
+                      "state": "open" if traps else "ready" if sum(a["correct"] for a in firsts) >= 2
+                               else "met" if attempts else "unmet",
+                      "due": bool(firsts and firsts[-1]["correct"] and firsts[-1]["at"] <= old and not traps),
+                      "open": [t["id"] for t in traps],
+                      "median_ms": int(statistics.median(right_ms)) if right_ms else None,
+                      "budget_ms": out["budget_ms"], "rule": None,
+                      "caught": dict(caught), "dodged": dict(dodged)}
     return out
 
 
