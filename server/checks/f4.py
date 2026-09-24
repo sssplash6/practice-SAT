@@ -201,6 +201,19 @@ def checks():
         t = trap(tr, template="lin.evaluate")
         assert t["checks"] == 3 and t["closed_how"] == "transfer", dict(t)
         assert progress.rechecks_passed(tr, "2026-01-01")["n"] == 3
+    # G3 rule 5: a different wrong pick on that check-in, served elsewhere, relapses it too
+    rl = "a:f4transfermiss"
+    elsewhere = ["", "used 10 instead of 20", "flipped the sign", progress.FILLER]
+    with patch.object(progress, "_related_index", lambda: {norm: ("lin.evaluate", "lin.other")}):
+        progress.record(rl, None, q(1), 1, when=at("2026-01-01"))
+        for seed, day in ((2, "2026-01-01"), (3, "2026-01-01"), (4, "2026-01-04")):
+            progress.record(rl, None, q(seed), 0, when=at(day, 14))
+        t = trap(rl)
+        assert t["checks"] == 1 and progress.checkin_template(t) == "lin.other"
+        got = progress.record(rl, None, q(5, elsewhere, key="lin.other"), 2, when=at(t["due"]))
+        t = trap(rl, template="lin.evaluate")
+        assert (t["closed"], t["closed_how"], t["relapses"], t["checks"]) == (None, None, 1, 0), dict(t)
+        assert got["relapsed"] and got["relapsed"][0]["on"] == "lin.other", got["relapsed"]
     # the same trap answered on its own type at 10 days holds, but as 'fixed'
     own = "a:f4owntype"
     with patch.object(progress, "_related_index", lambda: {norm: ("lin.evaluate", "lin.other")}):

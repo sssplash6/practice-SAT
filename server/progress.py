@@ -463,8 +463,10 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
             elif not ok and miss_key != t["norm"] and not check:
                 relapsed.append(_relapse(t, when, attempt))
 
-        # R9's transfer check-in: another template offering a fixed trap's norm
-        if offered and (clean or miss_key in offered):
+        # R9's transfer check-in: another template offering a fixed trap's norm.
+        # A miss there reopens it as on its own template: its own pick always,
+        # any other wrong pick unless this is a trap test (G3 rule 5)
+        if offered and (clean or not ok):
             marks_n = ",".join("?" for _ in offered)
             for t in db.rows("SELECT * FROM traps WHERE learner=? AND template!=? AND closed IS NOT NULL"
                              " AND closed_how IN ('fixed','transfer') AND due IS NOT NULL AND checks>=1"
@@ -473,7 +475,7 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
                     continue
                 if clean:
                     checked.append(_pass_check(t, when, attempt, elsewhere=True))
-                elif miss_key == t["norm"]:
+                elif not ok and (miss_key == t["norm"] or not check):
                     relapsed.append({**_relapse(t, when, attempt), "on": q["key"]})
 
         if not ok or unsure:
