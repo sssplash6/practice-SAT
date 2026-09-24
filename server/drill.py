@@ -17,19 +17,24 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import pathlib
+import re
+import secrets
 import zlib
 from collections import Counter
 from types import SimpleNamespace
 
+from fastapi import HTTPException
 from satbank.registry import generate, topic_of
 
-from . import blueprint, db, practice, progress, scoring
+from . import blueprint, db, deps, practice, progress, scoring
 
 MAX_FIXED = 120             # the longest set with a length
 GRACE = 15                  # seconds past a timed set's clock an answer may still arrive
 TIERS = ("easy", "medium", "hard")
 PUBLIC = ("id", "topic", "topic_name", "domain", "difficulty", "skill", "type",
-          "stem", "choices", "latex", "figure", "table")
+          "stem", "choices", "latex", "figure", "table", "text", "seen", "why",
+          "trap_true", "type_note", "ask_span")
 
 
 class Closed(Exception):
@@ -53,6 +58,410 @@ def public(q: dict) -> dict:
     out = {k: q[k] for k in PUBLIC if k in q}
     out["repair"] = bool(q.get("repair"))
     return out
+
+
+# One resolver is used by preview and creation. It does not write a session or
+# reserve a seed; in particular, a failed request leaves no empty sitting.
+POOLS = {"new", "redo", "checks", "review", "untried", "seen", "saved",
+         "marked", "history", "items", "set", "related", "official"}
+SOURCES = {"map", "coach", "plan", "today", "mistakes", "review", "quick",
+           "palette", "outside", "twin", "try", "word-example", "words",
+           "worksheet", "shared", "qotd", "spot", "start", "due", "warmup",
+           "learn", "next", "prep", "probe", "habit", "gauntlet", "finish",
+           "official", "challenge", "rematch", "test", "result"}
+INLINE = {"twin", "try", "word-example", "review", "spot"}
+FIELDS = {"topics", "templates", "exclude", "want", "count", "tiers", "levels",
+          "unmeasured", "formats", "spr_share", "adaptive", "order", "mix", "pool",
+          "list", "ids", "exact", "each", "level", "result", "marked", "from",
+          "from_session", "only", "scope", "still_open", "until_fixed", "retake",
+          "again", "item", "timed", "minutes", "timing", "feedback", "repairs",
+          "source", "task", "parent", "like", "word", "confusion", "contest",
+          "unseen", "trap", "format", "fmt", "difficulty", "saved", "share",
+          "mistakes", "recheck", "subject", "first", "drop", "run", "box",
+          "habit", "topics_from", "zone", "budget_ms", "has", "item"}
+
+
+def _invalid(field: str, detail: str = "invalid value") -> None:
+    raise HTTPException(422, {"field": field, "reason": detail})
+
+
+def _empty(reason: str) -> None:
+    raise HTTPException(409, {"reason": reason})
+
+
+def _list(value, field, *, maximum=120) -> list:
+    if not isinstance(value, list) or len(value) > maximum:
+        _invalid(field, f"expected a list of at most {maximum}")
+    return value
+
+
+def _choices(value, field, choices: set[str], *, many=False):
+    if many:
+        value = _list(value, field)
+        if not value or any(not isinstance(v, str) or v not in choices for v in value):
+            _invalid(field, f"choose from {', '.join(sorted(choices))}")
+        return list(dict.fromkeys(value))
+    if not isinstance(value, str) or value not in choices:
+        _invalid(field, f"choose from {', '.join(sorted(choices))}")
+    return value
+
+
+def _pairs(value, field) -> list[list]:
+    rows = _list(value, field)
+    if any(not isinstance(p, (list, tuple)) or len(p) != 2 or
+           not isinstance(p[0], str) or not isinstance(p[1], int) or p[1] < 0
+           for p in rows):
+        _invalid(field, "expected [template, seed] pairs")
+    return [list(p) for p in rows]
+
+
+def _source_questions(learner: str, sid: str) -> list[dict]:
+    row = db.one("SELECT * FROM sessions WHERE id=?", sid)
+    if not row or row["learner"] != learner:
+        raise HTTPException(404, "no such session")
+    if not row["finished"] and row["kind"] == "diagnostic":
+        raise HTTPException(403, "finish and sign up before fixing this diagnostic")
+    if not row["finished"]:
+        _empty("finish_that_sitting_first")
+    raw = json.loads(row["questions"] or "[]")
+    if isinstance(raw, dict):
+        raw = [q for v in raw.values() if isinstance(v, list) for q in v]
+    return [q for q in raw if isinstance(q, dict) and "key" in q]
+
+
+def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], dict[str, str]]:
+    pool, ids = cfg["pool"], cfg.get("ids")
+    queue: list[str] = []
+    items: list[list] = []
+    why: dict[str, str] = {}
+    if pool == "new":
+        return queue, items, why
+    if pool in {"redo", "checks"}:
+        today = dt.datetime.now(dt.timezone.utc).date().isoformat()
+        traps = progress.open_traps(learner) if pool == "redo" else [dict(r) for r in db.rows(
+            "SELECT * FROM traps WHERE learner=? AND closed IS NOT NULL AND due<=? AND checks<3",
+            learner, today)]
+        if ids is not None:
+            allowed = set(str(x) for x in _list(ids, "ids"))
+            traps = [t for t in traps if str(t["id"]) in allowed]
+        for t in traps:
+            queue.append(t["template"])
+            why[t["template"]] = "open mistake" if pool == "redo" else "check-in due"
+            if t.get("norm") and not str(t["norm"]).startswith("~"):
+                cfg["want"].setdefault(t["template"], "^" + re.escape(t["norm"]) + "$")
+        if not queue:
+            _empty("no_open_mistakes" if pool == "redo" else "no_checks_due")
+    elif pool == "review":
+        cutoff = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=10)).isoformat()
+        queue = [r["template"] for r in db.rows(
+            "SELECT DISTINCT a.template FROM attempts a WHERE a.learner=? AND a.correct=1"
+            " AND a.at<=? AND NOT EXISTS (SELECT 1 FROM traps t WHERE t.learner=a.learner"
+            " AND t.template=a.template AND t.closed IS NULL)", learner, cutoff)]
+        why.update((t, "due for review") for t in queue)
+    elif pool == "untried":
+        counts = {r["template"]: r["n"] for r in db.rows(
+            "SELECT template, COUNT(*) n FROM attempts WHERE learner=? GROUP BY template", learner)}
+        all_t = [t for ts in practice.catalogue()["by_topic"].values() for t in ts]
+        queue = [t for t in all_t if t not in counts]
+        if not queue:
+            least = min(counts.values(), default=0)
+            queue = [t for t in all_t if counts.get(t, 0) == least]
+        why.update((t, "not tried" if t not in counts else "least answered") for t in queue)
+    elif pool in {"seen", "history"}:
+        sql = "SELECT * FROM attempts WHERE learner=?"
+        args: list = [learner]
+        if pool == "history" and ids is not None:
+            wanted = _list(ids, "ids")
+            if any(not isinstance(i, int) for i in wanted):
+                _invalid("ids", "history uses attempt ids")
+            if wanted:
+                sql += " AND id IN (" + ",".join("?" for _ in wanted) + ")"
+                args += wanted
+        selected_qids = None
+        if body.get("from_session"):
+            questions = _source_questions(learner, body["from_session"])
+            if body.get("only") is not None:
+                selected_qids = _list(body["only"], "only")
+                if any(not isinstance(qid, str) or qid not in {q["id"] for q in questions} for qid in selected_qids):
+                    _invalid("only", "unknown question id")
+            sql += " AND session=?"
+            args.append(body["from_session"])
+        if body.get("result") in {"missed", "right"}:
+            sql += " AND correct=?"
+            args.append(int(body["result"] == "right"))
+        elif body.get("result") == "guessed":
+            sql += " AND guess=1"
+        if body.get("from") == "tests":
+            sql += " AND session IN (SELECT id FROM sessions WHERE kind IN ('diagnostic','module','section','mock','custom'))"
+        elif body.get("from") == "practice":
+            sql += " AND session IN (SELECT id FROM sessions WHERE kind='drill')"
+        if body.get("marked"):
+            sql += " AND EXISTS (SELECT 1 FROM flags f WHERE f.learner=attempts.learner AND f.template=attempts.template AND f.seed=attempts.seed)"
+        if body.get("still_open"):
+            sql += " AND EXISTS (SELECT 1 FROM traps t WHERE t.learner=attempts.learner"
+            " AND t.template=attempts.template AND t.closed IS NULL)"
+        for r in db.rows(sql + " ORDER BY id DESC LIMIT 500", *args):
+            if selected_qids is not None and r["qid"] not in selected_qids:
+                continue
+            if body.get("scope") == "blanks" and r["given"] not in (None, ""):
+                continue
+            items.append([r["template"], r["seed"]])
+    elif pool == "saved":
+        items = [[r["template"], r["seed"]] for r in db.rows(
+            "SELECT template,seed FROM saved WHERE learner=? ORDER BY at DESC", learner)]
+    elif pool == "marked":
+        items = [[r["template"], r["seed"]] for r in db.rows(
+            "SELECT template,seed FROM flags WHERE learner=? ORDER BY at DESC", learner)]
+    elif pool == "items":
+        items = _pairs(ids or [], "ids")
+    elif pool == "set":
+        code = ids or body.get("share")
+        if not isinstance(code, str):
+            _invalid("ids", "a set code is required")
+        row = db.one("SELECT items,revoked FROM sets WHERE code=?", code)
+        if not row or row["revoked"]:
+            _empty("set_unavailable")
+        raw = json.loads(row["items"] or "[]")
+        items = [[x["template"], x["seed"]] if isinstance(x, dict) else list(x) for x in raw]
+        _pairs(items, "ids")
+    elif pool == "related":
+        norm = ids if isinstance(ids, str) else None
+        if not norm:
+            _invalid("ids", "a mistake norm is required")
+        related = progress.related(norm)
+        queue = [x["template"] if isinstance(x, dict) else x for x in related]
+        cfg["want"].update({t: "^" + re.escape(norm) + "$" for t in queue})
+    elif pool == "official":
+        wanted = _list(ids or [], "ids", maximum=50)
+        if not wanted or any(not isinstance(x, str) for x in wanted):
+            _invalid("ids", "use 1–50 College Board ids")
+        found = {}
+        root = pathlib.Path(__file__).resolve().parent.parent / "material" / "keys"
+        for path in root.glob("*.json"):
+            data = json.loads(path.read_text())
+            for entry in data.get("items", []):
+                if entry.get("cb_id") in wanted:
+                    found[entry["cb_id"]] = data.get("slug", path.stem)
+        if set(wanted) - set(found):
+            _invalid("ids", "unknown College Board id")
+        for cbid in wanted:
+            names = practice.catalogue()["by_topic"].get(found[cbid], ())
+            if not names:
+                _empty("no_bank")
+            queue.append(names[0])
+            why[names[0]] = f"like official question {cbid}"
+    if cfg.get("exact"):
+        if queue and not items:
+            _invalid("exact", "this pool has no exact question addresses")
+        for t, seed in items:
+            if deps.access(learner, t, seed) is None:
+                raise HTTPException(403, {"reason": "question_not_accessible", "template": t, "seed": seed})
+    else:
+        queue += [t for t, _ in items]
+        items = []
+    if not queue and not items:
+        _empty("pool_empty")
+    return queue, items, why
+
+
+def resolve(learner: str, body: dict) -> dict:
+    """Validate every drill field, resolve aliases and materialize the pool."""
+    if not isinstance(body, dict):
+        _invalid("body", "expected an object")
+    unknown = set(body) - FIELDS
+    if unknown:
+        _invalid(sorted(unknown)[0], "unknown field")
+    if "assignment" in body:
+        _invalid("assignment", "classes are not part of this product")
+    body = dict(body)
+    for name, module in (("like", "daily"), ("word", "words"), ("confusion", "words")):
+        if name in body:
+            resolver = deps.part(module, "resolve_drill")
+            if resolver is None:
+                raise HTTPException(501, {"reason": f"{module}_resolver_unavailable"})
+            body = resolver(learner, body)
+    if "list" in body and "pool" in body and body["list"] != body["pool"]:
+        _invalid("list", "conflicts with pool")
+    aliases = {"mistakes": "redo", "fixed": "checks", "templates": "new", "share": "set"}
+    pool = aliases.get(body.get("pool", body.get("list", "new")), body.get("pool", body.get("list", "new")))
+    if body.get("mistakes"):
+        pool = "redo"
+    if body.get("saved"):
+        pool = "saved"
+        body.setdefault("exact", True)
+    if body.get("recheck"):
+        pool = "checks"
+    if body.get("unseen"):
+        pool = "untried"
+    if body.get("share"):
+        pool = "set"
+    if body.get("trap"):
+        trap = body["trap"]
+        if not isinstance(trap, dict) or not isinstance(trap.get("template"), str):
+            _invalid("trap", "expected template and reason")
+        row = db.one("SELECT id FROM traps WHERE learner=? AND template=? AND closed IS NULL"
+                     " ORDER BY last DESC LIMIT 1", learner, trap["template"])
+        pool = "redo"
+        body["ids"] = [row["id"]] if row else []
+    if body.get("from_session") and pool == "new":
+        pool = "seen"
+        body.setdefault("result", "missed" if body.get("scope", "misses") == "misses" else "any")
+    if body.get("item") or body.get("retake"):
+        pool = "items"
+    pool = _choices(pool, "pool", POOLS)
+    subject = _choices(body.get("subject", "math"), "subject", {"math", "rw"})
+    source = _choices(body.get("source", "map"), "source", SOURCES)
+    cat = practice.catalogue()
+    topics = _list(body.get("topics", []), "topics")
+    if any(not isinstance(t, str) for t in topics):
+        _invalid("topics")
+    topics = list(dict.fromkeys(topics))
+    if any(t not in cat["by_topic"] for t in topics):
+        _empty("no_bank") if subject == "rw" else _invalid("topics", "unknown topic")
+    templates = _list(body.get("templates", []), "templates")
+    if any(not isinstance(t, str) or t not in {n for v in cat["by_topic"].values() for n in v} for t in templates):
+        _invalid("templates", "unknown template")
+    templates = list(dict.fromkeys(templates))
+    if len(templates) > 120 or any(deps.subject_of(topic_of(t)) != subject for t in templates):
+        _invalid("templates", "too many templates or wrong subject")
+    count = body.get("count", 10)
+    if count is not None and (type(count) is not int or not 1 <= count <= MAX_FIXED):
+        _invalid("count", "use 1–120 or null")
+    tiers = body.get("tiers", body.get("difficulty", list(TIERS)))
+    adaptive = body.get("adaptive", False)
+    if tiers == "adaptive" or (isinstance(tiers, list) and "adaptive" in tiers):
+        adaptive, tiers = True, [x for x in tiers if x != "adaptive"] if isinstance(tiers, list) else list(TIERS)
+        tiers = tiers or list(TIERS)
+    if isinstance(tiers, str):
+        tiers = [tiers]
+    tiers = _choices(tiers, "tiers", set(TIERS), many=True)
+    fmt = body.get("formats", body.get("format", body.get("fmt", ["mcq", "spr"])))
+    if isinstance(fmt, str):
+        fmt = {"both": ["mcq", "spr"], "mix": ["mcq", "spr"], "grid": ["spr"],
+               "mcq": ["mcq"], "spr": ["spr"]}.get(fmt, [fmt])
+    formats = _choices(fmt, "formats", {"mcq", "spr"}, many=True)
+    levels = _list(body.get("levels", list(range(1, 8))), "levels", maximum=7)
+    if not levels or any(type(n) is not int or n not in range(1, 8) for n in levels):
+        _invalid("levels", "use levels 1–7")
+    for field in ("adaptive", "unmeasured", "exact", "timed", "marked", "still_open"):
+        if field in body and type(body[field]) is not bool:
+            _invalid(field, "expected true or false")
+    each = body.get("each", 1)
+    if type(each) is not int or not 1 <= each <= 5:
+        _invalid("each", "use 1–5")
+    minutes = body.get("minutes")
+    if minutes is not None and (type(minutes) is not int or not 1 <= minutes <= 180):
+        _invalid("minutes", "use 1–180")
+    share = body.get("spr_share", .5 if body.get("format") == "mix" else None)
+    if share is not None and (type(share) not in (float, int) or not 0 <= share <= 1):
+        _invalid("spr_share", "use 0–1")
+    want = body.get("want", {})
+    if not isinstance(want, dict):
+        _invalid("want", "expected {template: regex}")
+    for t, pattern in want.items():
+        if t not in {n for v in cat["by_topic"].values() for n in v} or not isinstance(pattern, str) or len(pattern) > 500:
+            _invalid("want", "unknown template or invalid regex")
+        try:
+            re.compile(pattern)
+        except re.error:
+            _invalid("want", "invalid regex")
+    exclude = _pairs(body.get("exclude", []), "exclude")
+    for name, options in (("level", {"as_missed", "any", "harder"}),
+                          ("result", {"any", "missed", "right", "guessed"}),
+                          ("from", {"both", "practice", "tests"}),
+                          ("scope", {"misses", "all", "blanks"}),
+                          ("order", {"mixed", "grouped", "ramp", "given", "mixup"}),
+                          ("mix", {"even", "blueprint"}),
+                          ("timing", {"off", "pace", "custom"}),
+                          ("feedback", {"instant", "retry", "end"}),
+                          ("repairs", {"next", "end", "off"})):
+        if name in body:
+            _choices(body[name], name, options)
+    timing = body.get("timing", "custom" if body.get("timed") and minutes else "pace" if body.get("timed") else "off")
+    exact_default = pool in {"seen", "history", "saved", "marked", "items", "set"}
+    cfg = {"topics": topics, "templates": templates, "count": count, "total": count,
+           "tiers": tiers, "difficulty": tiers, "formats": formats, "levels": levels,
+           "unmeasured": body.get("unmeasured", True), "adaptive": adaptive,
+           "spr_share": share, "order": body.get("order", "mixed"), "mix": body.get("mix", "even"),
+           "pool": pool, "ids": body.get("ids"), "exact": body.get("exact", exact_default),
+           "each": each, "level": body.get("level", "as_missed"),
+           "timing": timing, "timed": timing != "off", "seconds": minutes * 60 if timing == "custom" and minutes else None,
+           "feedback": body.get("feedback", "instant"), "repairs": body.get("repairs", "next"),
+           "source": source, "subject": subject, "inline": source in INLINE,
+           "want": dict(want), "exclude": exclude, "turn": 0, "fixed": False,
+           "task": body.get("task"), "parent": body.get("parent"), "run": body.get("run"),
+           "from_session": body.get("from_session"), "only": body.get("only"),
+           "scope": body.get("scope", "misses"), "still_open": body.get("still_open", False)}
+    if body.get("item"):
+        try:
+            t, seed = body["item"].rsplit(":", 1)
+            cfg["ids"] = [[t, int(seed)]]
+            cfg["exact"] = True
+        except (AttributeError, ValueError):
+            _invalid("item", "use template:seed")
+    if body.get("retake"):
+        cfg["ids"] = [[q["key"], q["seed"]] for q in _source_questions(learner, body["retake"])]
+        cfg["exact"] = True
+    if body.get("again"):
+        row = db.one("SELECT cfg FROM sessions WHERE id=? AND learner=?", body["again"], learner)
+        if not row:
+            raise HTTPException(404, "no such session")
+        old = json.loads(row["cfg"] or "{}")
+        for key in ("topics", "templates", "tiers", "formats", "pool", "source", "count"):
+            if key not in body and key in old:
+                cfg[key] = old[key]
+    queue, items, why = _pool(learner, cfg, body)
+    if cfg["templates"]:
+        queue = [t for t in queue if t in cfg["templates"]]
+        items = [p for p in items if p[0] in cfg["templates"]]
+    if cfg["topics"]:
+        queue = [t for t in queue if topic_of(t) in cfg["topics"]]
+        items = [p for p in items if topic_of(p[0]) in cfg["topics"]]
+    if queue or items:
+        cfg["queue"], cfg["items"] = queue, items
+        cfg["why"] = why
+        if "count" not in body and pool != "new":
+            cfg["count"] = cfg["total"] = min(MAX_FIXED, (len(queue) + len(items)) * each)
+    elif pool != "new":
+        _empty("filters_removed_all")
+    else:
+        cfg["queue"], cfg["items"], cfg["why"] = [], [], why
+    selected = cfg["templates"] or [t for topic in cfg["topics"] for t in cat["by_topic"].get(topic, ())]
+    selected += cfg["queue"] + [t for t, _ in cfg["items"]]
+    if not selected and source == "quick":
+        pick = progress.coach(learner, count=1)
+        cfg["topics"] = pick.get("topics", [])[:1]
+        selected = [t for topic in cfg["topics"] for t in cat["by_topic"].get(topic, ())]
+    if not selected and source in {"coach", "today", "next", "start"}:
+        pick = progress.coach(learner, k=4 if source == "start" else 3, count=count or 10)
+        cfg["topics"] = pick.get("topics", [])
+        selected = [t for topic in cfg["topics"] for t in cat["by_topic"].get(topic, ())]
+    if not selected:
+        _empty("no_bank" if subject == "rw" else "no_templates")
+    if not any(deps.subject_of(topic_of(t)) == subject for t in selected):
+        _empty("no_bank")
+    if not any(any(d in cfg["tiers"] and f in cfg["formats"] for d, f in blueprint.abilities().get(t, ())) for t in selected):
+        _empty("filters_removed_all")
+    if not cfg["topics"]:
+        cfg["topics"] = list(dict.fromkeys(topic_of(t) for t in selected))
+    cfg["before"] = {t: progress.topic_mastery(learner, t) for t in {topic_of(t) for t in selected}}
+    return cfg
+
+
+def preview(learner: str, body: dict) -> dict:
+    """The same resolver as create, with no session or seen-item writes."""
+    try:
+        cfg = resolve(learner, body)
+    except HTTPException as e:
+        if e.status_code == 409:
+            return {"available": False, "count": 0, "templates": 0, "reason": e.detail["reason"]}
+        raise
+    names = set(cfg["templates"] or [t for topic in cfg["topics"] for t in practice.catalogue()["by_topic"].get(topic, ())])
+    names.update(cfg["queue"])
+    names.update(t for t, _ in cfg["items"])
+    return {"available": True, "count": cfg["count"], "templates": len(names),
+            "exact": len(cfg["items"]), "pool": cfg["pool"], "topics": len({topic_of(t) for t in names}),
+            "cfg": {k: cfg[k] for k in ("source", "subject", "formats", "tiers", "levels", "timing")}}
 
 
 # ------------------------------------------------------------------ building
@@ -156,13 +565,22 @@ def _serve(row, cfg: dict, served: list[dict]) -> dict | None:
 
 # ------------------------------------------------------------------ the session
 
-def create(learner: str, sid: str, topics: list[str], count: int | None,
-           difficulty: list[str] | None, timed: bool, source: str,
+def create(learner: str, sid: str | dict, topics: list[str] | None = None,
+           count: int | None = None, difficulty: list[str] | None = None,
+           timed: bool = False, source: str = "map",
            queue: list[str] | None = None, items: list[list] | None = None,
            kind: str = "drill", fixed: bool = False, day: str | None = None,
-           minutes: int | None = None) -> None:
+           minutes: int | None = None) -> str | None:
     """A fixed set (the challenge) is the same for everyone, so it has no
     repairs and never grows; the answer is still shown after each question."""
+    if isinstance(sid, dict):
+        cfg = resolve(learner, sid)
+        new_sid = secrets.token_urlsafe(16)
+        db.run("INSERT INTO sessions (id,kind,learner,started,cfg,questions,subject)"
+               " VALUES (?,?,?,?,?,'[]',?)", new_sid, "drill", learner, progress.now(),
+               json.dumps(cfg), cfg["subject"])
+        return new_sid
+    topics = topics or []
     every = set(topics) | {topic_of(t) for t in (queue or [])} | {topic_of(t) for t, _ in (items or [])}
     cfg = {
         "topics": topics, "count": count, "total": count,
@@ -184,6 +602,7 @@ def create(learner: str, sid: str, topics: list[str], count: int | None,
         db.run("INSERT INTO sessions (id, kind, learner, started, cfg, questions, day)"
                " SELECT ?,?,?,?,?,?,? WHERE NOT EXISTS"
                " (SELECT 1 FROM sessions WHERE kind=? AND learner=? AND day=?)", *row, kind, learner, day)
+    return None
 
 
 def seconds_of(cfg: dict) -> int | None:
