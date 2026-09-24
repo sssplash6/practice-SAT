@@ -246,9 +246,15 @@ def test_placement_and_own(client: TestClient) -> None:
     assert "____" in words.quiz_item(own["id"], "cloze", random.Random(3), learner)["text"]
     assert client.delete(f"/api/words/mine/{own['id']}", headers={"X-Learner": code()}).status_code == 404
     assert ok(client.post("/api/words/lists/match", json={"text": "mitigate\nubiquitous\nzzqx"}))["missing"] == ["zzqx"]
-    use(client, learner, "/api/words/lists", {"name": "S9", "words": ["mitigate", "bolster"]})
-    assert ok(client.post("/api/words/lists/S9/share", headers=h))["available"] is False
+    use(client, learner, "/api/words/lists", {"name": "S9", "words": ["mitigate", "bolster", own["id"]]})
+    shared = ok(client.post("/api/words/lists/S9/share", headers=h))
+    assert shared["available"] and len(shared["code"]) == 8 and shared["count"] == 3
+    public = ok(client.get(f"/api/sets/{shared['code']}", headers={"X-Learner": code()}))
+    assert public["kind"] == "words" and public["title"] == "S9"
+    assert public["words"][:2] == [{"slug": "mitigate"}, {"slug": "bolster"}]
+    assert public["words"][2]["word"] == "Fzzle" and public["words"][2]["own"]
     assert client.delete(f"/api/words/mine/{own['id']}", headers=h).status_code == 200
+    assert ok(client.get(f"/api/sets/{shared['code']}"))["words"][2]["meaning"] == "a made up test word"
 
 
 def test_daily_print_offline(client: TestClient) -> None:
