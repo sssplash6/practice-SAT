@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Workspace · SAT Freshman</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<script>
+  // ?theme=dark|light wins over the saved look, so a headless walk opens either theme
+  (() => { const t = new URLSearchParams(location.search).get('theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/assets/runner.css">
+<style>
+  /* the dev page's own layout; everything inside .dev-q is question.js and runner.css */
+  body { background: var(--paper); }
+  .dev { max-width: 1120px; margin: 0 auto; padding: 20px var(--gutter) 120px; }
+  .dev-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin-bottom: 16px; }
+  .dev-controls { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 12px 16px; padding: 16px; border-radius: var(--radius-card); background: var(--tile); }
+  .dev-controls label { display: grid; gap: 4px; font: 600 12.5px var(--font); }
+  .dev-controls select { height: 40px; border-radius: 10px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); padding: 0 10px; font: 500 14px var(--font); }
+  .dev-checks { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; grid-column: 1 / -1; font: 500 13px var(--font); }
+  .dev-checks label { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
+  .dev-main { display: grid; grid-template-columns: minmax(0, 700px) minmax(0, 1fr); gap: 28px; margin-top: 22px; align-items: start; }
+  .dev-q { min-width: 0; }
+  .dev-side { position: sticky; top: 16px; display: grid; gap: 12px; min-width: 0; }
+  .dev-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+  .dev-log { max-height: 60vh; overflow: auto; margin: 0; padding: 12px; border-radius: var(--radius); background: var(--tile); font: 400 11.5px/1.5 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .dev-gal { margin-top: 48px; }
+  .dev-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); gap: 20px; margin-top: 14px; }
+  .dev-card { padding: 18px; border-radius: var(--radius-card); box-shadow: inset 0 0 0 1px var(--line); min-width: 0; }
+  .dev-card > .k { margin-bottom: 12px; }
+  .dev-self { font: 500 12.5px var(--mono); }
+  @media (max-width: 999px) { .dev-main { grid-template-columns: minmax(0, 1fr); } .dev-side { position: static; } }
+</style>
+</head>
+<body>
+<main class="dev" id="main">
+  <div class="dev-h">
+    <h1 class="h1">Question workspace</h1>
+    <span class="meta">UI.workspace in every mode, with fixture questions and a fake server</span>
+    <span class="dev-self" id="self"></span>
+  </div>
+
+  <div class="dev-controls" id="controls">
+    <label>Question <select id="fx"></select></label>
+    <label>Mode <select id="mode">
+      <option value="practice:instant">Practice · after each (instant)</option>
+      <option value="practice:retry">Practice · after I retry</option>
+      <option value="practice:end">Practice · at the end (end)</option>
+      <option value="exam">Exam (test window)</option>
+      <option value="review">Review</option>
+      <option value="review:hidden">Review · answers hidden</option>
+      <option value="quiz">Quiz (Words)</option>
+      <option value="inline">Inline (Today, sheets)</option>
+      <option value="example">Worked example</option>
+    </select></label>
+    <label>Confidence <select id="conf"><option value="ask">Ask (split Check)</option><option value="off">Off (one Check)</option></select></label>
+    <label>Answer <select id="outcome"><option value="auto">As picked</option><option value="wrong">Force wrong</option></select></label>
+    <div class="dev-checks">
+      <label><input type="checkbox" id="firstTap"> Answer on first tap</label>
+      <label><input type="checkbox" id="reasons" checked> Every option's mistake</label>
+      <label><input type="checkbox" id="openX"> Always open explanations</label>
+      <label><input type="checkbox" id="active"> Active tagger</label>
+      <label><input type="checkbox" id="toolbar" checked> Tools row</label>
+      <label><input type="checkbox" id="pad"> Answer pad</label>
+      <label><input type="checkbox" id="hints" checked> Hints</label>
+      <label><input type="checkbox" id="rich" checked> Rich feedback</label>
+      <label><input type="checkbox" id="keep" checked> Restore state on reload</label>
+      <label><input type="checkbox" id="nodesmos"> No Desmos key (scientific)</label>
+    </div>
+  </div>
+
+  <div class="dev-main">
+    <div class="dev-q" id="q"></div>
+    <aside class="dev-side">
+      <div class="dev-tools">
+        <button type="button" class="btn sm" id="reset">Reset</button>
+        <button type="button" class="btn sm" id="hide">Hide answers</button>
+        <button type="button" class="btn sm" id="dock">Calculator dock here</button>
+        <button type="button" class="quiet" id="clear">Clear log</button>
+      </div>
+      <div id="dockHost" style="height: 460px; display: none;"></div>
+      <pre class="dev-log" id="log" aria-live="off"></pre>
+    </aside>
+  </div>
+
+  <section class="dev-gal" aria-labelledby="galh">
+    <h2 class="h2" id="galh">Reveals</h2>
+    <p class="meta">The same verdict slot in each mode; an MC miss gives the same action row everywhere (G4 check 1).</p>
+    <div class="dev-grid" id="gallery"></div>
+  </section>
+</main>
+
+<script type="application/json" id="fixtures">[{"id": "p001", "template": "circle.convert", "seed": 1, "topic": "area_and_volume", "difficulty": "medium", "skill": "circle measures", "type": "mcq", "stem": "A circle has a diameter of 32 inches. What is the radius, in inches, of the circle?", "choices": ["4", "16", "32", "64"], "latex": ["4", "16", "32", "64"], "figure": null, "table": null, "answer": "B", "rationale": "From diameter = 32, the radius is 16, so the radius is 16.", "reasons": ["halved when the value should have been doubled", "", "gave the diameter instead", "doubled when the value should have been halved"], "accepted": null, "spr_reasons": null}, {"id": "p002", "template": "circles.arc_pair", "seed": 2, "topic": "circles", "difficulty": "medium", "skill": "arcs of a circle", "type": "mcq", "stem": "The circle above has center O, the length of arc XDP is 2π inches, and x = 144. What is the length, in inches, of arc XYP?", "choices": ["2π", "5π/2", "3π", "5π"], "latex": ["2π", "5π/2", "3π", "5π"], "figure": "<svg viewBox=\"0 0 216 216\" width=\"216\" height=\"216\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.ax{stroke:currentColor;stroke-width:1.4;fill:none}.gr{stroke:currentColor;stroke-width:.5;opacity:.28}.pt{fill:currentColor}.sg{stroke:currentColor;stroke-width:1.4;fill:none}.lb{fill:currentColor;font:11px ui-sans-serif,system-ui,sans-serif}.it{fill:currentColor;font:italic 13px ui-serif,Georgia,serif}<\/style><circle class=\"ax\" cx=\"108\" cy=\"108\" r=\"76\"/><line class=\"sg\" x1=\"108\" y1=\"108\" x2=\"179.42\" y2=\"82.01\"/><line class=\"sg\" x1=\"108\" y1=\"108\" x2=\"34.94\" y2=\"87.05\"/><path class=\"sg\" d=\"M129.61,100.13 A23,23 0 0 0 85.89,101.66\"/><text class=\"it\" x=\"106.67\" y=\"74.02\" text-anchor=\"middle\">x°<\/text><circle class=\"pt\" cx=\"108\" cy=\"108\" r=\"2.6\"/><text class=\"it\" x=\"108.59\" y=\"128.99\" text-anchor=\"middle\">O<\/text><circle class=\"pt\" cx=\"179.42\" cy=\"82.01\" r=\"3.4\"/><text class=\"it\" x=\"187.87\" y=\"82.93\" text-anchor=\"start\">X<\/text><circle class=\"pt\" cx=\"110.65\" cy=\"183.95\" r=\"3.4\"/><text class=\"it\" x=\"110.97\" y=\"204.95\" text-anchor=\"middle\">Y<\/text><circle class=\"pt\" cx=\"34.94\" cy=\"87.05\" r=\"3.4\"/><text class=\"it\" x=\"26.29\" y=\"88.57\" text-anchor=\"end\">P<\/text><circle class=\"pt\" cx=\"105.35\" cy=\"32.05\" r=\"3.4\"/><text class=\"it\" x=\"105.03\" y=\"20.05\" text-anchor=\"middle\">D<\/text><\/svg>", "table": null, "answer": "C", "rationale": "The given arc is 144/360 of the circle, so the circumference is 5π and the rest of the circle is 5π − 2π = 3π.", "reasons": ["gave the arc that was already given", "halved the circumference instead of subtracting the given arc", "", "gave the whole circumference instead of the remaining arc"], "accepted": null, "spr_reasons": null}, {"id": "p003", "template": "esc.generalize_table", "seed": 0, "topic": "evaluating_statistical_claims", "difficulty": "hard", "skill": "evaluating a statistical claim", "type": "mcq", "stem": "A physiotherapist wanted to study the relationship between the number of therapy sessions a patient attends and the number of weeks a patient spends recovering. For the study, the physiotherapist selected 78 patients at random from all the patients at a certain clinic. The table displays the information for the 48 patients in the sample who recovered in at least 4 weeks. Which of the following is the largest population to which the results of the study can be generalized?", "choices": ["All patients at the clinic who attended 15 or more sessions", "All patients at the clinic", "The 48 patients in the sample who recovered in at least 4 weeks", "The 78 patients in the sample"], "latex": ["All patients at the clinic who attended 15 or more sessions", "All patients at the clinic", "The 48 patients in the sample who recovered in at least 4 weeks", "The 78 patients in the sample"], "figure": null, "table": [["Weeks recovering", "6 to 14 sessions", "15 or more sessions", "Total"], ["4 to 6 weeks", "11", "5", "16"], ["More than 6 weeks", "4", "28", "32"], ["Total", "15", "33", "48"]], "answer": "B", "rationale": "The patients were selected at random from all patients at the clinic, so the results reach that population and no wider one.", "reasons": ["named a population the sample can speak for, but not the largest one it can speak for", "", "read the table as the study, and applied the result only to the part of the sample the table reports", "stopped at the patients who were measured, although selecting them at random earns the population they were drawn from"], "accepted": null, "spr_reasons": null}, {"id": "p004", "template": "circles.arc_fraction", "seed": 2, "topic": "circles", "difficulty": "hard", "skill": "arc as a share of the circle", "type": "spr", "stem": "On a circle with radius 2, arc XY has length 5π/2. What fraction of the circumference of the circle is the length of arc XY ?", "choices": [], "latex": [], "figure": null, "table": null, "answer": "5/8", "rationale": "The circumference is 2π(2) = 4π, so the arc is 5π/2 ÷ 4π = 5/8 of it.", "reasons": [], "accepted": ["5/8", ".625", "0.625"], "spr_reasons": [["compared the arc with half the circumference", "5/4"], ["compared the arc with twice the circumference", "5/16"], ["gave the share the rest of the circle takes up", "3/8"]]}, {"id": "p005", "template": "circle.convert", "seed": 0, "topic": "area_and_volume", "difficulty": "medium", "skill": "circle measures", "type": "mcq", "stem": "A circle has a diameter of 70 centimeters. What is the circumference, in centimeters, of the circle?", "choices": ["35", "70π", "280π", "1,225π"], "latex": ["35", "70\\pi", "280\\pi", "1,225\\pi"], "figure": null, "table": null, "answer": "B", "rationale": "From diameter = 70, the radius is 35, so the circumference is 70π.", "reasons": ["gave the radius instead", "", "doubled when the value should have been halved", "gave the area instead"], "accepted": null, "spr_reasons": null}]</script>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script src="/assets/question.js"></script>
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const FX = JSON.parse($('#fixtures').textContent);
+
+  // fixtures the bank has no shape for yet: steps and a Desmos way (P1, P3), and a Words item (W1)
+  const convert = FX.find(q => q.template === 'circle.convert' && q.choices.length && q.choices[0] === '4');
+  if (convert) Object.assign(convert, {
+    name: 'Diameter and radius', about: 'A circle’s radius is half its diameter.',
+    steps: ['The diameter is given: $d = 32$.', 'The radius is half of it: $r = d \\div 2$.', '$32 \\div 2 = 16$, so the radius is 16 inches.'],
+    option_steps: [1, null, 0, 1], wrong_steps: ['32 ÷ 8 = 4', null, 'r = 32', '32 × 2 = 64'],
+    desmos: { exprs: [{ latex: 'd=32' }, { latex: 'r=\\frac{d}{2}' }], note: 'Type the diameter, then r = d/2: Desmos shows r = 16.', bounds: { left: -5, right: 40, bottom: -5, top: 40 } },
+    rungs: ['strike', 'step', 'example'], watch_for: ['doubling instead of halving', 'giving the diameter'],
+    why: 'Open mistake: gave the diameter instead · 1 of 2 clean answers left',
+  });
+  FX.forEach((q, i) => { q.number = i + 1; });
+  const quiz = {
+    id: 'w1', type: 'mcq', number: FX.length + 1, template: 'rw.wic.findings',
+    stem: 'The committee’s findings did not support the senator’s claim; if anything, the data seemed to ____ it.',
+    choices: ['undermine', 'bolster', 'overstate', 'celebrate'], latex: [], answer: 'A',
+    reasons: ['fits: “did not support” calls for a word that weakens the claim', 'the opposite: “did not support” rules out strengthening', 'too strong: the data weaken the claim, they don’t exaggerate it', 'wrong tone: nothing in the text praises the claim'],
+    trap: [null, 'opposite', 'too_strong', 'tone'], rationale: 'The clue “did not support” and “if anything” point to weakening the claim, so undermine fits.',
+    spans: null, needs: 'to weaken or contradict', head: { label: 'Words in Context · Science' },
+    crowd: { n: 140, options: [0.52, 0.31, 0.11, 0.06], text: '52% right · 31% chose a word that means the opposite' },
+  };
+  const clueAt = quiz.stem.indexOf('did not support');
+  quiz.spans = [{ start: clueAt, end: clueAt + 'did not support'.length, kind: 'clue' }];
+  FX.push(quiz);
+  const LABEL = q => q.id === 'w1' ? 'Words in Context (quiz)' : `${q.number} · ${q.template} · ${q.type === 'spr' ? 'grid-in' : 'MC'}${q.figure ? ' · figure' : ''}${q.table ? ' · table' : ''}${q.latex && q.latex.some((l, i) => l !== q.choices[i]) ? ' · KaTeX' : ''}`;
+  FX.forEach((q, i) => $('#fx').append(new Option(LABEL(q), String(i))));
+
+  /* the dev page's controls survive a reload */
+  const KEY = 'dev.ws';
+  const saved = (() => { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (_) { return {}; } })();
+  const url = new URLSearchParams(location.search);
+  ['fx', 'mode', 'conf', 'outcome'].forEach(id => { const v = url.get(id) ?? saved[id]; if (v !== undefined && v !== null) $('#' + id).value = v; });
+  ['firstTap', 'reasons', 'openX', 'active', 'toolbar', 'pad', 'hints', 'rich', 'keep', 'nodesmos'].forEach(id => { const v = url.has(id) ? url.get(id) === '1' : saved[id]; if (typeof v === 'boolean') $('#' + id).checked = v; });
+  const keepCtl = () => { const o = {}; ['fx', 'mode', 'conf', 'outcome'].forEach(id => { o[id] = $('#' + id).value; }); ['firstTap', 'reasons', 'openX', 'active', 'toolbar', 'pad', 'hints', 'rich', 'keep', 'nodesmos'].forEach(id => { o[id] = $('#' + id).checked; }); try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (_) {} };
+  if ($('#nodesmos').checked) UI.DESMOS_KEY = '';
+
+  const log = (...a) => { const line = a.map(x => typeof x === 'string' ? x : JSON.stringify(x)).join(' '); $('#log').textContent = `${line}\n${$('#log').textContent}`.slice(0, 20000); };
+
+  /* ---------------------------------------------------------------- a fake server */
+  const LET = 'ABCDE';
+  const clean = s => String(s ?? '').replace(/[−–]/g, '-');
+  const keyOf = q => q.type === 'spr' ? q.answer : LET.indexOf(q.answer);
+  function isRight(q, a) {
+    if ($('#outcome').value === 'wrong') return false;
+    if (q.type !== 'spr') return a === keyOf(q);
+    const p = UI.spr.parse(a), k = UI.spr.parse(q.answer);
+    return (q.accepted || []).map(clean).includes(clean(a)) || (p.ok && k.ok && Math.abs(p.value - k.value) < 1e-9);
+  }
+  function feedback(q, a, meta, extra = {}) {
+    const right = isRight(q, a);
+    const key = keyOf(q);
+    const fb = {
+      correct: right, given: a, answer: q.answer, answer_index: q.type === 'spr' ? null : key,
+      rationale: q.rationale, reasons: q.type === 'spr' ? [] : q.reasons.map((r, i) => (i === key && q.id !== 'w1') ? null : r),
+      accepted: q.accepted || null, ms: meta && meta.ms, conf: meta && meta.conf,
+    };
+    if (q.type !== 'spr' && !right && Number.isInteger(a)) fb.mistake = q.reasons[a] || null;
+    if (q.type === 'spr' && !right) {
+      const hit = (q.spr_reasons || []).find(([, v]) => { const p = UI.spr.parse(a), w = UI.spr.parse(v); return p.ok && w.ok && Math.abs(p.value - w.value) < 1e-9; });
+      if (hit) fb.mistake = hit[0];
+    }
+    if (q.id === 'w1') Object.assign(fb, { trap: !right && Number.isInteger(a) ? q.trap[a] : null, spans: q.spans, needs: q.needs, crowd: q.crowd });
+    if (q.steps) Object.assign(fb, { steps: q.steps, option_steps: q.option_steps, type_name: q.name, about: q.about, desmos: q.desmos,
+      diverge: !right && Number.isInteger(a) ? q.option_steps[a] : null, wrong_step: !right && Number.isInteger(a) ? q.wrong_steps[a] : null });
+    if ($('#rich').checked && q.id !== 'w1') {
+      Object.assign(fb, {
+        budget_ms: 95000, fluency: right && meta && meta.ms < 95000 ? 'fluent' : null,
+        mastery: q.topic ? { topic: q.topic, before: 0.42, after: right ? 0.51 : 0.38 } : null,
+        crowd: { n: 212, first_rate: 0.58, top: { label: (q.reasons || []).find(Boolean) || 'left out the constant term', share: 0.41 },
+          options: q.type === 'spr' ? null : [0.18, 0.58, 0.17, 0.07] },
+        next_step: right ? 'Circles: 2 more first-try rights at Medium or Hard → Strong' : null,
+        then: right ? 'Sep 12 on this type: C, gave the diameter instead, 2:40 · today: right, 0:48' : null,
+        closed: right ? [{ label: 'gave the diameter instead', hits: 3, since: '2026-09-12', days: 6, questions: 5 }] : [],
+        opened: !right && fb.mistake ? [{ label: fb.mistake }] : [],
+        repair_next: !right, cause: !right ? { kind: 'trap', why: 'You picked an option that names a trap.' } : null,
+        habit: !right ? { name: 'answered a different quantity', tell: 'The question asks for one thing; the option gives another it passes through.', href: '/me/#habits' } : null,
+        formula: [{ text: 'C = 2πr', on_sheet: true, id: 'ref-circle' }, { text: '(x − h)² + (y − k)² = r²', on_sheet: false }],
+        twice: !right && meta && meta.try === 1, unmarked: right, rule_prompt: !right ? `Write your rule for ${q.name || 'this type'}` : null,
+        ...extra,
+      });
+    }
+    return fb;
+  }
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const tries = new Map();
+
+  /* ---------------------------------------------------------------- the playground */
+  let ws = null;
+  const stateKey = () => `dev.ws.state.${$('#fx').value}.${$('#mode').value}`;
+  function mount() {
+    keepCtl();
+    const q = JSON.parse(JSON.stringify(FX[+$('#fx').value]));
+    const [mode, fbMode] = $('#mode').value.split(':');
+    const hidden = fbMode === 'hidden';
+    tries.set(q.id, 0);
+    let state = null;
+    if ($('#keep').checked) { try { state = JSON.parse(localStorage.getItem(stateKey()) || 'null'); } catch (_) {} }
+    const prefs = { first_tap: $('#firstTap').checked, option_reasons: $('#reasons').checked, open_explanations: $('#openX').checked, confidence: $('#conf').value };
+    const reviewFb = (mode === 'review' || mode === 'example') ? feedback(q, q.type === 'spr' ? '5/4' : (keyOf(q) + 1) % q.choices.length, { ms: 72000, conf: null, try: 1 }) : null;
+    if (mode === 'example' && reviewFb) { reviewFb.given = null; reviewFb.correct = null; }
+    const opts = {
+      mode, feedback: fbMode && fbMode !== 'hidden' ? fbMode : 'instant', prefs, confActive: $('#active').checked, state,
+      fb: reviewFb, hidden, toolbar: $('#toolbar').checked, pad: $('#pad').checked || undefined, formNudge: true,
+      head: q.head, coverTool: mode === 'practice' || mode === 'inline' || mode === 'exam',
+      onCheck: async (a, meta) => {
+        log('onCheck', { answer: a, ...meta });
+        await wait(250);
+        if (meta.save) return true;
+        if (fbMode === 'retry') {
+          const n = tries.get(q.id) + 1; tries.set(q.id, n);
+          if (!isRight(q, a) && n < 3 && !meta.show) return { correct: false, final: false, mistake: Number.isInteger(a) ? q.reasons[a] : null, tries_left: 3 - n };
+          return feedback(q, meta.show ? null : a, meta, { try: n });
+        }
+        return feedback(q, a, meta);
+      },
+      onShowAnswer: async () => { log('onShowAnswer'); return feedback(q, null, { ms: ws.elapsed() }, { shown: true }); },
+      onSelect: a => log('onSelect', a), onEnter: () => log('onEnter (exam: next question)'),
+      onStrike: (i, on, by) => log('onStrike', { i, on, by }), onSkip: (id, m) => log('onSkip', id, m),
+      onHint: $('#hints').checked ? async () => {
+        await wait(200);
+        const n = ws.state().hints;
+        const key = keyOf(q);
+        if (n === 0 && q.type !== 'spr') { const c = q.reasons.findIndex((r, i) => r && i !== key); return { rung: 1, kind: 'strike', choice: c, reason: q.reasons[c] }; }
+        if (n <= 1 && q.steps) return { rung: 2, kind: 'step', step: q.steps[0] };
+        return { rung: 3, kind: 'example', example: { question: Object.assign({}, FX[0], { id: 'ex' }), feedback: feedback(FX[0], null, {}) } };
+      } : null,
+      onOwn: async own => {
+        log('onOwn', own); await wait(200);
+        const i = q.choices.findIndex(c => UI.spr.parse(String(c).replace(/,/g, '')).ok && Math.abs(UI.spr.parse(String(c).replace(/,/g, '')).value - UI.spr.parse(own).value) < 1e-9);
+        if (i < 0) return { cover: 'none' };
+        return Object.assign(feedback(q, i, { ms: ws.elapsed() }), { cover: i === keyOf(q) ? 'key' : 'distractor' });
+      },
+      onCover: x => log('onCover', x), onCause: k => log('onCause', k), onTrap: async i => { log('onTrap', i); await wait(150); },
+      onLadder: () => log('onLadder'), onKeepMarked: on => log('onKeepMarked', on), onRule: async (a, t) => { log('onRule', a, t); await wait(150); },
+      onReanswer: (a, right) => log('onReanswer', a, right), onDone: () => log('onDone: your turn'),
+      onNext: mode === 'inline' || mode === 'quiz' ? () => { log('onNext'); mount(); } : null,
+      onReveal: fb => log('onReveal', { correct: fb.correct, given: fb.given }),
+      onChange: s => { if ($('#keep').checked) { try { localStorage.setItem(stateKey(), JSON.stringify({ selected: s.selected, value: s.value, struck: s.struck, eliminate: s.eliminate, hints: s.hints, own: s.own })); } catch (_) {} } },
+      actions: {
+        session: 'dev', surface: mode === 'review' ? 'player' : mode === 'inline' ? 'inline' : 'runner', axes: ['easier', 'harder', 'grid', 'ask'], siblings: { harder: 'another Circles type (arc length)' },
+        more: async (axis, n) => log('twin /more', { axis, n }),
+        on: { save: async v => log('save', v), mark: async v => log('mark', v), note: () => log('note'), history: () => log('history'), again: () => log('again, exactly'), report: () => log('report') },
+      },
+    };
+    if (ws) ws.destroy();
+    ws = UI.workspace($('#q'), q, opts);
+    log(`mounted ${q.id} in ${$('#mode').value}`);
+  }
+  window.devWs = () => ws;
+
+  // the runner's key map, in small: the page passes keys to ws.key first (2.8)
+  document.addEventListener('keydown', e => {
+    if (!ws || e.defaultPrevented || document.querySelector('dialog[open]')) return;
+    if (ws.key(e)) { e.preventDefault(); return; }
+    if (e.key === 'g' || e.key === 'G') { if (!e.target.closest('input, textarea')) { UI.calc.toggle(); e.preventDefault(); } }
+  });
+
+  ['fx', 'mode', 'conf', 'outcome', 'firstTap', 'reasons', 'openX', 'active', 'toolbar', 'pad', 'hints', 'rich'].forEach(id => $('#' + id).addEventListener('change', () => mount()));
+  $('#keep').addEventListener('change', keepCtl);
+  $('#nodesmos').addEventListener('change', () => { keepCtl(); location.reload(); });
+  $('#reset').addEventListener('click', () => { try { localStorage.removeItem(stateKey()); } catch (_) {} mount(); });
+  $('#hide').addEventListener('click', () => { if (ws) { ws.setHidden(!ws.hidden); log('hidden', ws.hidden); } });
+  $('#dock').addEventListener('click', () => { const d = $('#dockHost'); d.style.display = 'block'; UI.calc.dock(d); UI.calc.open({ mode: 'dock' }); });
+  $('#clear').addEventListener('click', () => { $('#log').textContent = ''; });
+
+  /* ---------------------------------------------------------------- the gallery: one miss, every surface */
+  function card(title, q, opts) {
+    const c = document.createElement('div');
+    c.className = 'dev-card';
+    const k = document.createElement('p'); k.className = 'k'; k.textContent = title;
+    const host = document.createElement('div');
+    c.append(k, host);
+    $('#gallery').append(c);
+    UI.workspace(host, q, Object.assign({ prefs: { confidence: 'ask' }, toolbar: false }, opts));
+    return c;
+  }
+  const actions = { session: 'dev', axes: ['easier', 'grid'], on: { save: async () => {}, mark: async () => {}, note: () => {}, history: () => {}, again: () => {}, report: () => {} } };
+  const mcq = FX[0], grid = FX.find(q => q.type === 'spr');
+  const miss = feedback(mcq, 2, { ms: 72000, try: 1 });
+  // G4 check 1: one ctx, four modes, one row (the row depends on ctx, never on the workspace mode)
+  const one = Object.assign({ surface: 'player' }, actions);
+  card('Practice · a miss (instant)', mcq, { mode: 'practice', fb: miss, actions: one });
+  card('Review · the same miss', mcq, { mode: 'review', fb: miss, actions: one });
+  card('Inline · the same miss', mcq, { mode: 'inline', fb: miss, actions: one });
+  card('Pane · the same miss', mcq, { mode: 'review', fb: miss, actions: one });
+  card('Grid-in · a named miss', grid, { mode: 'practice', fb: feedback(grid, '5/4', { ms: 61000, try: 1 }), actions: Object.assign({ surface: 'runner' }, actions) });
+  card('Grid-in · right, with accepted forms', grid, { mode: 'practice', fb: feedback(grid, '.625', { ms: 41000, try: 1 }) });
+  card('Quiz · Words in Context, a miss', quiz, { mode: 'quiz', head: quiz.head, fb: feedback(quiz, 1, { ms: 12000 }) });
+  card('Worked example', mcq, { mode: 'example', fb: Object.assign(feedback(mcq, null, {}), { correct: null, given: null }), onDone: () => log('your turn') });
+
+  const r = UI.workspaceSelfTest();
+  $('#self').textContent = r.ok ? 'self-test: ok' : `self-test failed: ${JSON.stringify(r)}`;
+  mount();
+})();
+</script>
+</body>
+</html>
