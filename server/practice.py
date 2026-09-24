@@ -310,6 +310,31 @@ def skill_of(q: dict) -> str | None:
     return _skill(q["key"], q["seed"]) if "key" in q else None
 
 
+@functools.lru_cache(maxsize=4096)
+def _mc_for_spr(key: str, seed: int):
+    try:
+        return generate(key, seed, fmt="mcq")
+    except Exception:
+        return None
+
+
+def spr_reasons(key: str, seed: int, item) -> list[list[str]]:
+    """Named grid-in values, with a same-parameter MC version as a fallback."""
+    own = getattr(item, "spr_reasons", None)
+    if own:
+        return [list(x) for x in own]
+    mistakes = getattr(item, "spr_mistakes", None)
+    if mistakes:
+        return [[m.reason, str(m.value)] for m in mistakes if getattr(m, "reason", None)
+                and getattr(m, "value", None) is not None]
+    if item.fmt != "spr":
+        return []
+    mc = _mc_for_spr(key, seed)
+    if mc is None or mc.key != item.key or mc.params != item.params:
+        return []
+    return [[reason, value] for reason, value in zip(mc.reasons, mc.choices) if reason]
+
+
 def to_question(card: Card, n: int) -> dict:
     """The stored form: everything, key included. Stripped before it is served."""
     topics = catalogue()["topics"]
@@ -334,6 +359,7 @@ def to_question(card: Card, n: int) -> dict:
         "answer": it.answer,
         "rationale": it.rationale,
         "reasons": list(it.reasons),
+        "spr_reasons": spr_reasons(card.key, card.seed, it),
         "filler": [not bool(reason) for reason in it.reasons],
         "steps": [getattr(step, "text", str(step)) for step in steps],
         "step_of": [dict(s) if isinstance(s, dict) else

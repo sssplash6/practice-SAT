@@ -100,7 +100,7 @@ def _match_id(cbid: str) -> dict | None:
     same_tier = [t for t in names if found.get("tier") in {tier for tier, _ in blueprint.abilities().get(t, ())}]
     template = (same_tier or names)[zlib.crc32(cbid.encode()) % len(same_tier or names)]
     return {"template": template, "topic": found["topic"],
-            "skill": blueprint.kinds()[template]["skill"], "score": 1.0,
+            "skill": blueprint.kinds()[template]["skill"], "score": .4,
             "via": "id", "example": f"/api/types/{template}/example", "cb_id": cbid}
 
 
@@ -188,7 +188,9 @@ def example(template: str, want: str | None = None, tier: str | None = None) -> 
 def type_detail(template: str, x_learner: str | None = Header(default=None)) -> dict:
     entry = _known(template)
     out = _type(template, entry)
-    out["official"] = [id for id, row in _official().items() if row["topic"] == entry["topic"]]
+    # material/keys identifies an official item's topic, not its precise
+    # generated template. The type page must not claim a stronger mapping.
+    out["official"] = []
     out["has"] = {"steps": False, "desmos": False}
     out["siblings"] = {"easier": blueprint.siblings(template, -1),
                        "harder": blueprint.siblings(template, 1)}

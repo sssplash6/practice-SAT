@@ -121,7 +121,7 @@ def _source_questions(learner: str, sid: str) -> list[dict]:
     row = db.one("SELECT * FROM sessions WHERE id=?", sid)
     if not row or row["learner"] != learner:
         raise HTTPException(404, "no such session")
-    if not row["finished"] and row["kind"] == "diagnostic":
+    if row["kind"] == "diagnostic" and not row["user_id"]:
         raise HTTPException(403, "finish and sign up before fixing this diagnostic")
     if not row["finished"]:
         _empty("finish_that_sitting_first")
@@ -305,6 +305,8 @@ def resolve(learner: str, body: dict) -> dict:
         _invalid(sorted(unknown)[0], "unknown field")
     if "assignment" in body:
         _invalid("assignment", "classes are not part of this product")
+    if "contest" in body:
+        _invalid("contest", "contest is set by the server")
     body = dict(body)
     for name, module in (("like", "daily"), ("word", "words"), ("confusion", "words")):
         if name in body:
@@ -324,9 +326,22 @@ def resolve(learner: str, body: dict) -> dict:
         body.setdefault("count", 8)
         body.setdefault("adaptive", True)
         body.setdefault("feedback", "end")
-    if "list" in body and "pool" in body and body["list"] != body["pool"]:
-        _invalid("list", "conflicts with pool")
+    if body.get("again"):
+        row = db.one("SELECT cfg FROM sessions WHERE id=? AND learner=?", body["again"], learner)
+        if not row:
+            raise HTTPException(404, "no such session")
+        old = json.loads(row["cfg"] or "{}")
+        for key in ("topics", "templates", "count", "tiers", "levels", "unmeasured",
+                    "formats", "spr_share", "adaptive", "order", "mix", "pool", "source",
+                    "timing", "feedback", "repairs", "each"):
+            if key not in body and key in old:
+                body[key] = old[key]
+        body.setdefault("exact", False)
     aliases = {"mistakes": "redo", "fixed": "checks", "templates": "new", "share": "set"}
+    if "list" in body and "pool" in body and aliases.get(body["list"], body["list"]) != aliases.get(body["pool"], body["pool"]):
+        _invalid("list", "conflicts with pool")
+    if body.get("list") == "templates" and body.get("ids") is not None:
+        body.setdefault("templates", body["ids"])
     pool = aliases.get(body.get("pool", body.get("list", "new")), body.get("pool", body.get("list", "new")))
     if body.get("mistakes"):
         pool = "redo"
@@ -345,7 +360,9 @@ def resolve(learner: str, body: dict) -> dict:
         if not isinstance(trap, dict) or not isinstance(trap.get("template"), str):
             _invalid("trap", "expected template and reason")
         row = db.one("SELECT id FROM traps WHERE learner=? AND template=? AND closed IS NULL"
-                     " ORDER BY last DESC LIMIT 1", learner, trap["template"])
+                     " AND (? IS NULL OR norm=?) ORDER BY last DESC LIMIT 1", learner,
+                     trap["template"], progress.norm(trap["reason"]) if trap.get("reason") else None,
+                     progress.norm(trap["reason"]) if trap.get("reason") else None)
         pool = "redo"
         body["ids"] = [row["id"]] if row else []
     if body.get("from_session") and pool == "new":
@@ -357,6 +374,9 @@ def resolve(learner: str, body: dict) -> dict:
     pool = _choices(pool, "pool", POOLS)
     subject = _choices(body.get("subject", "math"), "subject", {"math", "rw"})
     source = _choices(body.get("source", "map"), "source", SOURCES)
+    if body.get("task") is not None and (not isinstance(body["task"], str) or not re.fullmatch(
+            r"\d{4}-\d{2}-\d{2}:(fix|recheck|focus|extra|test)", body["task"])):
+        _invalid("task", "use YYYY-MM-DD:fix|recheck|focus|extra|test")
     cat = practice.catalogue()
     topics = _list(body.get("topics", []), "topics")
     if any(not isinstance(t, str) for t in topics):
@@ -428,7 +448,7 @@ def resolve(learner: str, body: dict) -> dict:
         if name in body:
             _choices(body[name], name, options)
     timing = body.get("timing", "custom" if body.get("timed") and minutes else "legacy_pace" if body.get("timed") else "off")
-    exact_default = pool in {"seen", "history", "saved", "marked", "items", "set"}
+    exact_default = pool in {"seen", "history", "saved", "marked"}
     cfg = {"topics": topics, "templates": templates, "count": count, "total": count,
            "tiers": tiers, "difficulty": tiers, "formats": formats, "levels": level_filter,
            "unmeasured": body.get("unmeasured", True), "adaptive": adaptive,
@@ -457,14 +477,6 @@ def resolve(learner: str, body: dict) -> dict:
     if body.get("retake"):
         cfg["ids"] = [[q["key"], q["seed"]] for q in _source_questions(learner, body["retake"])]
         cfg["exact"] = True
-    if body.get("again"):
-        row = db.one("SELECT cfg FROM sessions WHERE id=? AND learner=?", body["again"], learner)
-        if not row:
-            raise HTTPException(404, "no such session")
-        old = json.loads(row["cfg"] or "{}")
-        for key in ("topics", "templates", "tiers", "formats", "pool", "source", "count"):
-            if key not in body and key in old:
-                cfg[key] = old[key]
     queue, items, why = _pool(learner, cfg, body)
     if source == "due" and pool == "new" and not cfg["templates"] and not cfg["topics"]:
         due = progress.warmup_candidates(learner, subject=subject)
@@ -529,13 +541,29 @@ def preview(learner: str, body: dict) -> dict:
         cfg = resolve(learner, body)
     except HTTPException as e:
         if e.status_code == 409:
-            return {"available": False, "count": 0, "templates": 0, "reason": e.detail["reason"]}
+            return {"available": False, "servable": False, "count": 0, "templates": 0,
+                    "types": 0, "questions": 0, "reason": e.detail["reason"]}
         raise
     names = set(cfg["templates"] or [t for topic in cfg["topics"] for t in practice.catalogue()["by_topic"].get(topic, ())])
     names.update(cfg["queue"])
     names.update(t for t, _ in cfg["items"])
-    return {"available": True, "count": cfg["count"], "templates": len(names),
-            "exact": len(cfg["items"]), "pool": cfg["pool"], "topics": len({topic_of(t) for t in names}),
+    counts = {"new": len(names), "mistakes": len(progress.open_traps(learner)),
+              "review": db.one("SELECT COUNT(DISTINCT template) n FROM attempts WHERE learner=? AND correct=1",
+                               learner)["n"],
+              "untried": sum(not db.one("SELECT 1 FROM attempts WHERE learner=? AND template=?", learner, t)
+                             for t in names),
+              "saved": db.one("SELECT COUNT(*) n FROM saved WHERE learner=?", learner)["n"],
+              "marked": db.one("SELECT COUNT(*) n FROM flags WHERE learner=?", learner)["n"]}
+    seen_rows = db.rows("SELECT correct,guess FROM attempts WHERE learner=?", learner)
+    counts["seen"] = {"any": len(seen_rows), "missed": sum(not r["correct"] for r in seen_rows),
+                      "right": sum(r["correct"] for r in seen_rows),
+                      "guessed": sum(r["guess"] for r in seen_rows), "marked": counts["marked"]}
+    count = cfg["count"]
+    return {"available": True, "servable": True, "count": count, "templates": len(names),
+            "types": len(names), "questions": count if cfg["exact"] else None,
+            "minutes": None if count is None else round((cfg.get("seconds") or count * 95) / 60, 1),
+            "pools": counts, "exact": len(cfg["items"]), "pool": cfg["pool"],
+            "topics": len({topic_of(t) for t in names}),
             "cfg": {k: cfg[k] for k in ("source", "subject", "formats", "tiers", "levels", "timing")}}
 
 
@@ -605,8 +633,7 @@ def _offers(card: practice.Card, regex: str) -> bool:
     except re.error:
         return False
     reasons = list(getattr(card.item, "reasons", ()))
-    reasons += [getattr(m, "reason", "") for m in getattr(card.item, "spr_mistakes", ())]
-    reasons += [str(x) for x in getattr(card.item, "spr_reasons", ())]
+    reasons += [x[0] for x in practice.spr_reasons(card.key, card.seed, card.item)]
     return any(pattern.search(r or "") or pattern.search(progress.norm(r or "")) for r in reasons)
 
 
@@ -745,6 +772,7 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
             spr_count = sum(q.get("type") == "spr" for q in served)
             target_spr = wanted_share is not None and spr_count < round((len(served) + 1) * wanted_share)
             return min(cards, key=lambda c: practice.penalty(c, recent, dict(used)) +
+                       3 * len(blueprint.kinds()[c.key]["reasons"]) +
                        (400 if wanted_share is not None and (c.item.fmt == "spr") != target_spr else 0)), False
     return None, False
 
