@@ -33,8 +33,20 @@
                                     opens the ? sheet; UI.keys.label(combo)
      UI.ROUTES, UI.start(item), UI.nextItems()   where G-keys go; start an Up next item
      UI.skip()                      the skip link, first on every page with a <main>
-   Kept for the pages until they are rebuilt: the old top bar (UI.shell), UI.question,
-   UI.calc, UI.ref, UI.plan, UI.snap, the topics and glyphs.
+   The chrome (Shell 2-2.6, R1, U1, U25, U26):
+     UI.shell(page | {page, sections, now})   the sidebar, rail and overlay, the phone top bar,
+                                    tabs, grip and hold menus, the Now strip and the section bar,
+                                    every meta from /api/shell; UI.shell.toggle() is [
+     UI.NAV, UI.SECTION             the nine items and the page -> item mapping
+     UI.nowStrip(host)              Up next and the Today card as a block (Today places its own
+                                    and passes {now: false})
+     UI.sections([{id, label}])     the section bar's chips, with scroll-spy
+     UI.menuSheet(trigger)          the phone's menu sheet; UI.accountMenu() the account items
+     UI.signOut()                   sign out (saved: Undo for 8 s; shared computer: at once) or,
+                                    unsaved, the Leave this device dialog
+     UI.quick, UI.palette, UI.report  load quick.js, palette.js, report.js on first use
+   Kept for the pages until they are rebuilt: UI.question, UI.calc, UI.ref, UI.plan,
+   UI.snap, the topics and glyphs.
    ========================================================================== */
 
 (() => {
@@ -410,6 +422,30 @@
     clock:    `<circle cx="12" cy="13.6" r="7.3" ${L} stroke-width="1.5"/><path d="M9.8 3.2h4.4M12 3.2v3.1M18.2 6.9l1.2-1.2" ${L} stroke-width="1.5"/><path class="hand" d="M12 13.6V9.4" ${L}/>`,
     arrow:    `<path d="M5 12h13M13 6.5l5.5 5.5-5.5 5.5" ${L}/>`,
     trophy:   `<path d="M8 4.5h8v4a4 4 0 0 1-8 0zM8 6H5.5a2.5 2.5 0 0 0 2.6 3.5M16 6h2.5a2.5 2.5 0 0 1-2.6 3.5M12 12.5V16M8.5 19.5h7M9.5 19.5c0-2 1-3.5 2.5-3.5s2.5 1.5 2.5 3.5" ${L}/>`,
+    // the shell's (Shell 11)
+    review:   `<path d="M5.5 12a6.5 6.5 0 1 0 2-4.7" ${L}/><path d="M7.5 3.8v3.7h3.7" ${L}/>`,
+    words:    `<path d="M5 18.5 9.5 5.5h1L15 18.5M6.8 13.5h6.4" ${L}/><path d="M16 9.5h4M16 13.5h4" ${L}/>`,
+    profile:  `<circle cx="12" cy="8.5" r="3.6" ${L}/><path d="M5 19.5c1.2-3.3 3.9-5 7-5s5.8 1.7 7 5" ${L}/>`,
+    search:   `<circle cx="10.5" cy="10.5" r="6" ${L}/><path d="M15 15l4.5 4.5" ${L} stroke-width="1.8"/>`,
+    bolt:     `<path d="M13 3.5 6 13.5h5.5l-1 7 7-10H12z" ${L}/>`,
+    help:     `<circle cx="12" cy="12" r="8" ${L}/><path d="M9.8 9.6a2.3 2.3 0 1 1 3.2 2.1c-.6.3-1 .8-1 1.5v.4" ${L}/><circle cx="12" cy="16.6" r=".9" fill="currentColor"/>`,
+    chat:     `<path d="M5 6.5h14v9H10l-4 3v-3H5z" ${L}/>`,
+    chev:     `<path d="M9 6l6 6-6 6" ${L}/>`,
+    panel:    `<rect x="4" y="5" width="16" height="14" rx="2.5" ${L}/><path d="M9.5 5v14" ${L}/>`,
+    play:     `<path d="M8 5.5v13l10-6.5z" fill="currentColor"/>`,
+    settings: `<path d="M5 7h8.5M17.5 7H19M5 12h2.5M11.5 12H19M5 17h8.5M17.5 17H19" ${L}/><circle cx="15.5" cy="7" r="2" ${L}/><circle cx="9.5" cy="12" r="2" ${L}/><circle cx="15.5" cy="17" r="2" ${L}/>`,
+    signin:   `<path d="M14 4.5h3.5a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H14" ${L}/><path d="M10 8l4 4-4 4M14 12H4.5" ${L}/>`,
+    signout:  `<path d="M10 4.5H6.5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2H10" ${L}/><path d="M15 8l4 4-4 4M19 12H9.5" ${L}/>`,
+    devices:  `<rect x="3.5" y="6" width="12" height="9" rx="1.5" ${L}/><path d="M2.5 18.5h14" ${L}/><rect x="17.5" y="9" width="4" height="10" rx="1.2" ${L}/>`,
+    moon:     `<path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z" ${L}/>`,
+    text:     `<path d="M3.5 18l4.5-12h1L13.5 18M5.2 14h6.6M15 18l2.6-7h.8L21 18M15.8 15.8h4.4" ${L}/>`,
+    keyboard: `<rect x="3" y="6.5" width="18" height="11" rx="2" ${L}/><path d="M7 10.5h.5M10.5 10.5h.5M14 10.5h.5M17 10.5h.5M8 14.2h8" ${L} stroke-width="1.8"/>`,
+    save:     `<path d="M7.5 18.5a4 4 0 0 1-.6-7.95 5.5 5.5 0 0 1 10.7 1.2A3.5 3.5 0 0 1 17 18.5z" ${L}/><path d="M12 16.2v-5M9.8 13.2 12 11l2.2 2.2" ${L}/>`,
+    users:    `<circle cx="9" cy="9" r="3" ${L}/><path d="M3.5 18.5c.9-2.8 3-4.2 5.5-4.2s4.6 1.4 5.5 4.2" ${L}/><circle cx="16.5" cy="9.5" r="2.4" ${L}/><path d="M16 14.3c2.1 0 3.8 1.2 4.5 3.7" ${L}/>`,
+    plus:     `<path d="M12 5v14M5 12h14" ${L} stroke-width="1.8"/>`,
+    bell:     `<path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 2h-14z" ${L}/><path d="M10 20.5a2 2 0 0 0 4 0" ${L}/>`,
+    dot:      `<circle cx="12" cy="12" r="4" fill="var(--amber)"/>`,
+    check:    `<path d="M5 12.5l4.5 4.5L19 7.5" ${L} stroke-width="1.8"/>`,
   };
 
   /* ------------------------------------------------------------ topics
@@ -841,10 +877,11 @@
   register('global', {
     ...Object.fromEntries(G.map(([k, id, name]) => [`G ${k}`, { does: `Go to ${name}`, run: goTo(ROUTES[id]), when: chrome }])),
     'G N': { does: 'Start Up next', run: () => { startNext(); }, when: chrome },
-    Q: { does: 'Quick question · Log a mistake · Add a word', run: () => UI.quick(), when: () => typeof UI.quick === 'function' && page() !== 'test' },
+    // the quick sheet is absent where there is no shell: the session, the test window (R29)
+    Q: { does: 'Quick question · Log a mistake · Add a word', run: () => UI.quick(), when: () => typeof UI.quick === 'function' && chrome() },
     'Mod+K': { does: 'Search', run: () => UI.palette(), when: () => typeof UI.palette === 'function' && chrome() },
     '/': { does: 'Search', run: () => UI.palette(), when: () => typeof UI.palette === 'function' && chrome() },
-    '[': { does: 'Collapse or expand the sidebar', run: () => UI.shell.toggle(), when: () => chrome() && typeof (UI.shell && UI.shell.toggle) === 'function' },
+    '[': { does: 'Collapse or expand the sidebar · hold to peek', run: e => bracket(e), when: () => chrome() && !!sideEl },
     Z: { does: 'Undo the last change', run: () => (UI.toast && UI.toast.undo ? UI.toast.undo() : false) },
     '?': { does: 'Keyboard shortcuts', run: () => keysSheet() },
   });
@@ -894,61 +931,1035 @@
   });
 
   /* ------------------------------------------------------------ the shell
-     The old top bar and phone tabs, kept until the sidebar lands; it reads /api/shell. */
+     (Shell 2-2.6, R1; shell-me U1, U13, U14, U16, U17, U21, U25, U26; review.md R1 badge)
+     UI.shell(page | {page, sections, now}) renders the chrome of every page but the session
+     and the test window. Into <header id="bar">: the sidebar <nav class="side"> (248px from
+     1100px wide; the 68px rail below it, or when collapsed with [ or the toggle, kept in
+     localStorage satf.rail; the rail opens the full sidebar over a scrim, and peeks it on a
+     400 ms rest or a held [), and the phone top bar .pbar. Into <nav id="tabs">: the five
+     phone tabs, their grip (the menu sheet) and 450 ms hold menus. Into <main>: the Now strip
+     and the section bar. Every figure is /api/shell's, painted from its cached copy first;
+     markup and classes are ui.css's shell contract (F1). */
   const NAV = [
-    ['today', '/', 'Today'],
-    ['practice', '/practice/', 'Practice'],
-    ['tests', '/tests/', 'Tests'],
-    ['plan', '/plan/', 'Plan'],
-    ['results', '/results/', 'Results'],
+    { id: 'today', href: '/', label: 'Today', key: 'T', icon: 'today', tab: true, group: 'Study' },
+    { id: 'practice', href: '/practice/', label: 'Practice', key: 'P', icon: 'practice', tab: true, group: 'Study' },
+    { id: 'review', href: '/review/', label: 'Review', key: 'M', icon: 'review', group: 'Study' },
+    { id: 'words', href: '/words/', label: 'Words', key: 'W', icon: 'words', group: 'Study' },
+    { id: 'tests', href: '/tests/', label: 'Tests', key: 'E', icon: 'tests', tab: true, group: 'Study' },
+    { id: 'plan', href: '/plan/', label: 'Plan', key: 'L', icon: 'plan', tab: true, group: 'Study' },
+    { id: 'results', href: '/results/', label: 'Results', key: 'R', icon: 'results', tab: true, group: 'Progress' },
+    { id: 'compete', href: '/compete/', label: 'Compete', key: 'C', icon: 'trophy', group: 'Progress' },
+    { id: 'me', href: '/me/', label: 'Profile', key: 'U', icon: 'profile', group: 'Progress' },
   ];
-  const SECTION = { session: 'practice', mistakes: 'practice', report: 'results', challenge: 'today', diagnostic: 'tests' };
+  // the section mapping (Shell 2.2, R1, U26): a page's data-page, and the item it lights
+  const SECTION = { session: 'practice', mistakes: 'review', report: 'results', challenge: 'compete',
+    diagnostic: 'tests', test: 'tests', settings: 'me', signin: 'me', link: 'me', pair: 'me' };
+  const W_SIDE = '(min-width: 1100px)', W_PHONE = '(max-width: 759px)';
+  const DAYS3 = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const fmt = n => Number(n || 0).toLocaleString('en-US');
+  const cap99 = n => n > 999 ? '999+' : fmt(n);
+  const plural = (n, one, many = one + 's') => `${fmt(n)} ${n === 1 ? one : many}`;
+  const icon = (name, size = 20) => { const t = doc.createElement('template'); t.innerHTML = svg(ICON[name] || '', size); return t.content.firstElementChild; };
+  const dot = () => h('i', { class: 'dot', 'aria-hidden': 'true' });
+  const shown = el => !!el && el.offsetWidth > 1;
+  const lget = (k, d) => { try { const v = JSON.parse(sget(LS(), k) || 'null'); return v === null ? d : v; } catch (_) { return d; } };
+  const lput = (k, v) => sput(LS(), k, v === null ? null : JSON.stringify(v));
 
-  function shell() {
-    const page = doc.body.dataset.page || '';
-    const here = SECTION[page] || page;
+  /* ---- what each figure says */
+  const planOf = d => d && d.plan && plan.set(d.plan) ? d.plan : null;
+  function dayKind(d) {                  // test | practice | rest | exam | none, for today
+    const p = planOf(d);
+    return p ? plan.dayOf(new Date(), p) : null;
+  }
+  function nextTest(d) {                 // "Sat": the next test day within 7 days
+    const p = planOf(d);
+    if (!p) return null;
+    if (p.next_test) return DAYS3[new Date(p.next_test + 'T12:00:00').getDay()];
+    const t = new Date();
+    for (let i = 1; i <= 7; i++) {
+      t.setDate(t.getDate() + 1);
+      const k = plan.dayOf(t, p);
+      if (k === 'test') return DAYS3[t.getDay()];
+      if (k === 'exam' || k === 'none') return null;
+    }
+    return null;
+  }
+  function dayDone(d) {                  // the Plan section's day rule when it is here (S7)
+    const t = d.today || {};
+    if (typeof t.done === 'boolean') return t.done;
+    if (typeof plan.doneOf === 'function' && planOf(d)) { try { return !!plan.doneOf(d.plan, t); } catch (_) {} }
+    return !!(t.goal && t.goal.questions && t.questions >= t.goal.questions);
+  }
+  const testResume = d => d.resume && d.resume.kind !== 'drill' ? d.resume : null;
+  const seenReport = () => sget(LS(), 'satf.seen.report');
+  const reportNew = d => !!d.newest_report && d.newest_report !== seenReport();
+  function reviewCounts(d) {
+    const r = d.review || {};
+    return { due: r.due_left || 0, open: r.open ?? d.mistakes ?? 0 };
+  }
+  const goalsDone = d => (d.goals || []).filter(g => g.done).length;
+
+  // one meta per nav item: {text, node, rail: 'count' | 'dot', count, tip, ring}
+  function metaOf(id, d) {
+    const t = d.today || {};
+    switch (id) {
+      case 'today': {
+        const goal = t.goal && t.goal.questions;
+        const ring = goal ? Math.min(1, (t.questions || 0) / goal) : null;
+        if (dayDone(d)) return { node: [icon('check', 14), 'Done'], say: 'Done', tip: 'Today’s plan is done', ring: 1 };
+        if (!t.questions) return goal ? { tip: `0 of ${plural(goal, 'question')} today`, ring: 0 } : null;
+        return { text: goal ? `${fmt(t.questions)}/${fmt(goal)}` : fmt(t.questions), ring,
+                 tip: goal ? `${fmt(t.questions)} of ${plural(goal, 'question')} today` : `${plural(t.questions, 'question')} today` };
+      }
+      case 'practice': {
+        const r = d.resume && d.resume.kind === 'drill' ? d.resume : null;
+        return r ? { node: h('span', { class: 'badge', text: 'Resume' }), say: 'Resume', rail: 'dot',
+                     tip: `Resume your set${r.total ? ` · ${fmt(r.answered)}/${fmt(r.total)}` : ''}` } : null;
+      }
+      case 'review': {
+        const { due, open } = reviewCounts(d);
+        if (!due && !open) return null;
+        const long = [due ? `${fmt(due)} due today` : null, open ? `${fmt(open)} open` : null].filter(Boolean).join(' · ');
+        return { node: due ? `${cap99(due)} due${open ? ` · ${cap99(open)} open` : ''}` : [dot(), `${cap99(open)} open`],
+                 rail: 'count', count: cap99(due || open), tip: long };
+      }
+      case 'words': {
+        const n = (d.words && d.words.due) || 0;
+        return n ? { text: `${cap99(n)} due`, rail: 'dot', tip: `${plural(n, 'word')} due` } : null;
+      }
+      case 'tests': {
+        const r = testResume(d);
+        if (r) {
+          const left = r.seconds_left ? ` · ${mmss(r.seconds_left)} left` : r.paused ? ' · paused' : '';
+          return { node: h('span', { class: 'badge', text: 'Resume' }), say: 'Resume', rail: 'dot',
+                   tip: `Resume ${(UI.KIND && UI.KIND[r.kind] || r.kind).toLowerCase()} · ${fmt(r.answered)}/${fmt(r.total)}${left}` };
+        }
+        return dayKind(d) === 'test' && !d.tested_today ? { text: 'Test day', rail: 'dot', tip: 'Today is a test day in your plan' } : null;
+      }
+      case 'plan': {
+        const k = dayKind(d);
+        if (!planOf(d) || k === 'none') return { text: 'Set up', tip: 'No plan yet: set one up in 3 steps' };
+        if (k === 'exam') return { text: 'Exam day', tip: 'Today is the SAT. Good luck.' };
+        if (k === 'rest') return { text: 'Rest', tip: 'A rest day in your plan: your streak is safe' };
+        if (k === 'test') return { text: 'Test day', tip: 'Today is a test day in your plan' };
+        const nt = nextTest(d);
+        return nt ? { text: `Test ${nt}`, tip: `Your next test day is ${nt}` } : null;
+      }
+      case 'results':
+        return reportNew(d) ? { node: [dot(), 'New'], say: 'New', rail: 'dot', tip: 'A new report since you last looked' } : null;
+      case 'compete': {
+        const c = d.challenge || {};
+        if (c.done) return c.rank ? { text: `#${fmt(c.rank)}`, tip: `Today’s challenge: #${fmt(c.rank)} of ${fmt(c.players)}` } : { text: 'Done', tip: 'Today’s challenge is done' };
+        if (c.started) return { text: 'Resume', rail: 'dot', tip: 'Today’s challenge: started, not finished' };
+        return { text: 'New', rail: 'dot', tip: 'Today’s challenge: not played yet' };
+      }
+      case 'me': {
+        const g = d.goals || [];
+        if (!g.length) return null;
+        const tip = h('span', {}, h('b', { text: `This week · ${goalsDone(d)} of ${g.length} goals` }),
+          ...g.map(x => h('span', { style: 'display: block' }, `${x.done ? '●' : '○'} ${x.title}`,
+            x.target ? h('span', { class: 'm', text: ` · ${fmt(Math.min(x.have || 0, x.target))}/${fmt(x.target)}` }) : null)));
+        return { text: `${goalsDone(d)}/${g.length}`, tip };
+      }
+    }
+    return null;
+  }
+
+  /* ---- the Today card (Shell 2.2 item 7, U16, U17, U26): the sidebar's, the Now strip's
+     and the menu sheet's. Figures open their working (U13, kit's [data-fact]). */
+  const flame = (size, spare) => { const e = icon('flame', size); if (spare) e.querySelector('.flame').removeAttribute('class'); return e; };
+  function streakText(d) {
+    const sp = d.spares || 0;
+    return `${plural(d.streak || 0, 'day')}${sp ? ` · ${plural(sp, 'spare')}` : ''}`;
+  }
+  function examLine(d) {
+    const e = d.today && d.today.exam;
+    if (!e || e.days < 0) return null;
+    const when = e.days === 0 ? 'Exam today' : e.days === 1 ? 'Exam tomorrow' : `Exam in ${fmt(e.days)} days`;
+    return `${when} · ${UI.date ? UI.date(e.date) : day(e.date)}`;
+  }
+  function regLine(d) {
+    const r = d.registration;
+    if (!r) return null;
+    const on = UI.date ? UI.date(r.day) : day(r.day);
+    return r.late ? `Late registration for ${on} · until ${UI.date ? UI.date(r.late_by) : day(r.late_by)}`
+      : `Register for ${on} · ${r.days_left ? plural(r.days_left, 'day') + ' left' : 'last day'}`;
+  }
+  function contestLines(d) {
+    return ((d.today && d.today.contest) || []).map(c => ({
+      text: `${c.title || 'Your contest'} closes ${c.when || c.closes_label || (c.closes ? 'at ' + String(c.closes).slice(11, 16) : 'soon')}`,
+      href: c.href || '/compete/' }));
+  }
+  function cardLines(d) {                // the card as text: the rail ring's tooltip
+    const t = d.today || {}, goal = t.goal;
+    return [`Today · streak ${streakText(d)}`,
+      !d.answered ? 'Nothing yet today' : goal && goal.minutes ? `Study time ${fmt(t.minutes)} of ${fmt(goal.minutes)} min` : `${fmt(t.minutes)} min today`,
+      regLine(d), ...contestLines(d).map(c => c.text), examLine(d)].filter(Boolean);
+  }
+  function todayCard(d, o = {}) {
+    const card = h('div', { class: 'side-day' });
+    if (!d) {
+      card.append(h('div', { class: 'side-day-head' }, h('span', { class: 'k', text: 'Today' })));
+      if (UI.skel) card.append(UI.skel(null, 'lines:2'));
+      return card;
+    }
+    const t = d.today || {}, goal = t.goal, streak = d.streak || 0;
+    const st = h('button', { type: 'button', class: 'streak' + (streak > 0 ? ' on' : ''), 'data-fact': 'streak',
+      'data-fact-label': 'Streak', 'data-fact-value': streakText(d) },
+      flame(16), h('span', { text: o.compact ? plural(streak, 'day') : streakText(d) }),
+      // one small outlined flame per banked spare (U16); the narrow sidebar card says it with these
+      Array.from({ length: d.spares || 0 }, () => flame(12, true)),
+      o.compact && d.spares ? h('span', { class: 'sr', text: ` · ${plural(d.spares, 'spare')}` }) : null);
+    st.style.whiteSpace = 'nowrap';
+    card.append(h('div', { class: 'side-day-head' }, h('a', { class: 'k', href: '/plan/', text: 'Today', style: 'text-decoration: none' }), st));
+    if (!d.answered && !t.minutes) {
+      card.append(h('p', { text: 'Nothing yet today' }));
+      if (!goal) card.append(h('a', { class: 'link', href: '/plan/', text: 'Set a daily goal' }));
+    } else if (goal && goal.minutes && UI.meter) {
+      const m = UI.meter(card, { label: 'Study time', value: t.minutes || 0, max: goal.minutes, unit: 'min' });
+      const n = m.el.querySelector('.meter-n');
+      if (n) Object.assign(n.dataset, { fact: 'minutes:today', factLabel: 'Study time today', factValue: n.textContent });
+    } else {
+      card.append(h('p', {}, h('button', { type: 'button', 'data-fact': 'minutes:today', 'data-fact-label': 'Study time today',
+        text: `${fmt(t.minutes)} min today` })));
+      if (!goal) card.append(h('a', { class: 'link', href: '/plan/', text: 'Set a daily goal' }));
+    }
+    const reg = regLine(d);
+    if (reg) card.append(h('a', { class: 'link', href: 'https://satsuite.collegeboard.org/sat/registration', target: '_blank', rel: 'noopener' }, reg, ' ↗'));
+    contestLines(d).forEach(c => card.append(h('p', {}, c.text, ' · ', h('a', { class: 'link', href: c.href, text: 'Start' }))));
+    const ex = examLine(d);
+    if (ex) card.append(h('a', { class: 'side-day-foot', href: '/plan/', text: ex, style: 'text-decoration: none' }));
+    // the rail's form: minutes against the goal as an orange arc, the streak inside
+    const ring = h('a', { class: 'ring', href: '/plan/', style: `--p: ${goal && goal.minutes ? Math.min(1, (t.minutes || 0) / goal.minutes) : 0}; text-decoration: none`,
+      'aria-label': cardLines(d).join('. '), text: String(streak) });
+    card.append(ring);
+    if (UI.tooltip) UI.tooltip(ring, () => sideEl && sideEl.classList.contains('rail') ? h('span', {}, ...cardLines(d).map(x => h('span', { style: 'display: block', text: x }))) : '');
+    return card;
+  }
+
+  /* ---- Up next (U1): the sidebar block, the Now strip cell, the menu sheet's first row */
+  const BOXES = [5, 10, 15, 20, 30, 45, 60];        // one set of time boxes everywhere (review.md V1)
+  function nextMeta(it) {
+    const n = it.start && it.start.body && (it.start.body.count || it.start.body.n);
+    return [it.detail || (n ? `${fmt(n)} q` : null), it.minutes ? `${fmt(it.minutes)} min` : null,
+      it.pts >= 1 ? `≈ ${fmt(Math.round(it.pts))} pts` : null].filter(Boolean).join(' · ');
+  }
+  function snooze(it) {
+    const s = lget('satf.next.snooze', {}) || {};
+    const today = localDay();
+    for (const k in s) if (s[k] !== today) delete s[k];
+    s[it.key] = today;
+    lput('satf.next.snooze', s);
+    if (shellData) takeShell(shellData, false);
+  }
+  async function go(btn, it) {
+    if (btn.getAttribute('aria-busy') === 'true') return;
+    btn.setAttribute('aria-busy', 'true');
+    try { await start(it); }
+    catch (e) { btn.removeAttribute('aria-busy'); if (UI.toast && !e.offline) UI.toast('Couldn’t start it. Try again.'); }
+  }
+  const startBtn = (it, label = 'Start', kbd) => {
+    const b = h(it.href ? 'a' : 'button', { class: 'pill sm', href: it.href || null, type: it.href ? null : 'button' }, label, kbd ? keycaps(kbd) : null);
+    if (!it.href) b.addEventListener('click', () => go(b, it));
+    return b;
+  };
+  // on a --tile surface (the menu sheet) the chips go paper and scroll sideways in one row
+  function boxChips(onTile) {
+    return h('div', { class: 'chips', role: 'group', 'aria-label': 'Got time? Start a time box',
+      style: onTile ? 'flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-top: 4px' : null },
+      h('span', { class: 'help', text: 'Got time?', style: 'margin: 0 4px 0 0; align-self: center; flex: none' }),
+      BOXES.map(m => { const b = h('button', { type: 'button', text: `${m} min`, style: onTile ? 'background: var(--paper)' : null });
+        b.addEventListener('click', () => go(b, { start: { path: '/drill', body: { source: 'next', box: m } } }));
+        return b; }));
+  }
+  function morePop(trigger) {
+    if (!UI.pop) return;
+    const list = h('div', { style: 'display: grid; gap: 10px; min-width: 260px; max-width: 340px' });
+    const fill = items => {
+      list.replaceChildren(h('span', { class: 'k', text: 'Up next' }));
+      if (!items.length) list.append(h('p', { class: 'help', text: 'Nothing else is up next right now.' }));
+      items.forEach((it, i) => list.append(h('div', { style: 'display: grid; gap: 2px; padding-top: 8px; border-top: 1px solid var(--line)' },
+        h('b', { text: it.title, style: 'font-weight: 600' }), h('span', { class: 'nextup-m', text: nextMeta(it) }),
+        it.reason ? h('span', { class: 'nextup-r', text: it.reason }) : null,
+        h('div', { style: 'display: flex; gap: 6px; margin-top: 6px' }, startBtn(it, i ? 'Start' : 'Start now'),
+          h('button', { type: 'button', class: 'quiet', text: 'Not today', onclick: () => { snooze(it); pop.close(); } })))));
+      list.append(boxChips());
+    };
+    fill(nextItems());
+    const pop = UI.pop(trigger, list, { label: 'More up next' });
+    // the five after the first come from GET /api/next (U1); the shell carries three
+    api('/next?limit=6', { quiet: true }).then(r => {
+      const snoozed = lget('satf.next.snooze', {}) || {}, today = localDay();
+      if (r && Array.isArray(r.items) && list.isConnected) { fill(r.items.filter(x => snoozed[x.key] !== today)); pop && pop.reposition && pop.reposition(); }
+    }, () => {});
+  }
+  function nextBlock(d, o = {}) {
+    const el = h('div', { class: 'nextup' });
+    if (!d) {                             // loading: two skeleton lines
+      el.append(h('span', { class: 'k', text: 'Up next' }));
+      if (UI.skel) el.append(UI.skel(null, 'lines:2'));
+      return el;
+    }
+    const it = nextItems()[0];
+    if (!it) { el.hidden = true; return el; }        // nothing, or an error: the block hides
+    el.append(h('span', { class: 'k', text: 'Up next' }), h('span', { class: 'nextup-t', text: it.title }));
+    const meta = nextMeta(it);
+    if (meta) el.append(h('span', { class: 'nextup-m', text: meta }));
+    if (it.reason) el.append(h('span', { class: 'nextup-r', text: it.reason }));
+    const more = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'More up next', 'aria-haspopup': 'dialog' }, icon('chev', 18));
+    more.addEventListener('click', () => morePop(more));
+    el.append(h('div', { class: 'nextup-go' }, startBtn(it, 'Start', o.kbd === false ? null : 'G N'), more));
+    if (o.boxes) el.append(boxChips(true));
+    return el;
+  }
+  const nextTip = it => `Next: ${it.title}${nextMeta(it) ? ' · ' + nextMeta(it) : ''}${it.reason ? ' · ' + it.reason : ''}`;
+
+  /* ---- the sidebar and the rail */
+  let sideEl = null, pbarEl = null, tabsEl = null, scrimEl = null, overlay = null, here = '', shellOpts = {};
+  const refs = { items: {}, tabs: {} };
+  const layoutMode = () => media(W_PHONE) ? 'phone' : media(W_SIDE) && sget(LS(), 'satf.rail') !== '1' ? 'side' : 'rail';
+  function tip(el, text, kbd) {
+    if (!UI.tooltip) return;
+    UI.tooltip(el, () => {
+      const t = typeof text === 'function' ? text() : text;
+      if (!t) return '';
+      return kbd ? h('span', {}, t, ' ', keycaps(kbd)) : t;
+    });
+  }
+  function navItem(n) {
+    const a = h('a', { class: 'side-item', href: n.href, 'data-id': n.id, 'aria-current': n.id === here ? 'page' : null },
+      icon(n.icon), h('span', { class: 'side-text', text: n.label }), h('span', { class: 'side-meta' }));
+    refs.items[n.id] = { el: a, meta: null };
+    // the rail's tooltip: name, meta, shortcut; the expanded sidebar's: what the meta stands for
+    tip(a, () => {
+      const m = refs.items[n.id].meta;
+      const rail = !shown(a.querySelector('.side-text'));
+      if (!rail) return m && m.tip ? m.tip : '';
+      const t = m && m.tip;
+      return t instanceof Node ? h('span', {}, h('b', { text: n.label }), t) : `${n.label}${t ? ' · ' + t : ''}`;
+    }, `G ${n.key}`);
+    return a;
+  }
+  function brand() {
+    const box = sideEl.querySelector('.side-brand');
+    const railNow = sideEl.classList.contains('rail');
+    const word = h('span', { class: 'side-word', html: 'SAT<br>Freshman' });
+    // on the rail the mark is the expand toggle, since Today is already a nav item (U26)
+    const markEl = railNow
+      ? h('button', { type: 'button', class: 'side-mark ibtn', style: '--ib: var(--rt, 44px)', 'aria-label': 'Expand sidebar', 'aria-expanded': 'false', html: mark(26) }, word)
+      : h('a', { class: 'side-mark', href: '/', 'aria-label': 'SAT Freshman, Today', html: mark(26) }, word);
+    if (railNow) { markEl.addEventListener('click', () => toggle(true)); tip(markEl, 'Expand sidebar', '['); }
+    const wide = media(W_SIDE);
+    const label = overlay ? (wide ? 'Keep sidebar open' : 'Close sidebar') : 'Collapse sidebar';
+    const tog = h('button', { type: 'button', class: 'ibtn side-toggle', 'aria-label': label, 'aria-expanded': String(!railNow) }, icon('panel'));
+    tog.addEventListener('click', () => toggle(true));
+    tip(tog, () => overlay ? label : 'Collapse', '[');
+    box.replaceChildren(markEl, tog);
+    paintSide(shellData);                // metas take their rail or full form
+  }
+  function buildSide() {
+    const search = h('button', { type: 'button', class: 'side-search', 'aria-label': 'Search' }, icon('search', 18),
+      h('span', { class: 'side-text', text: 'Search' }), keycaps('Mod+K'));
+    search.addEventListener('click', () => UI.palette());
+    tip(search, () => shown(search.querySelector('.side-text')) ? '' : 'Search', 'Mod+K');
+    const quick = h('button', { type: 'button', class: 'side-quick', 'aria-label': 'Quick question, log a mistake or add a word' }, icon('bolt', 18),
+      h('span', { class: 'side-text', text: 'Quick' }), keycaps('Q'));
+    quick.addEventListener('click', () => UI.quick());
+    tip(quick, () => shown(quick.querySelector('.side-text')) ? '' : 'Quick question · Log a mistake · Add a word', 'Q');
+    const play = h('a', { class: 'side-play', href: '#', 'aria-label': 'Start Up next', hidden: true }, icon('play', 18));
+    play.addEventListener('click', e => { e.preventDefault(); const it = nextItems()[0]; if (it) go(play, it); });
+    tip(play, () => { const it = nextItems()[0]; return it ? nextTip(it) : ''; }, 'G N');
+    const groups = ['Study', 'Progress'].map(g => {
+      const id = `side-${g.toLowerCase()}`;
+      return h('div', { class: 'side-group', role: 'group', 'aria-labelledby': id },
+        h('span', { class: 'side-label', id, text: g }), NAV.filter(n => n.group === g).map(navItem));
+    });
+    const help = h('a', { href: '/help/', 'aria-current': here === 'help' ? 'page' : null }, icon('help', 18), h('span', { class: 'side-text', text: 'Help & FAQ' }));
+    const fb = h('button', { type: 'button' }, icon('chat', 18), h('span', { class: 'side-text', text: 'Send feedback' }));
+    fb.addEventListener('click', feedback);
+    tip(help, () => shown(help.querySelector('.side-text')) ? '' : 'Help & FAQ', 'G H');
+    tip(fb, () => shown(fb.querySelector('.side-text')) ? '' : 'Send feedback');
+    const user = h('button', { type: 'button', class: 'side-user', 'aria-haspopup': 'menu', 'aria-expanded': 'false' }, h('span', { class: 'avatar' }), h('span', { class: 'side-name', text: '' }),
+      h('span', { class: 'side-sub', text: '' }), icon('chev', 16));
+    menuTrigger(user);
+    tip(user, () => {
+      const d = shellData || {};
+      if (d.device && d.device.session_only) return 'Shared computer: ends 15 minutes after you stop, or about a minute after you close the browser.';
+      return shown(user.querySelector('.side-name')) ? '' : `${(d.me && d.me.label) || 'You'} · account`;
+    });
+    sideEl = h('nav', { class: 'side', 'aria-label': 'Main' },
+      h('div', { class: 'side-brand' }), search, h('div', { class: 'nextup' }), play, quick,
+      h('div', { class: 'side-nav' }, groups), h('div', { class: 'side-day' }),
+      h('div', { class: 'side-foot' }, help, fb), user);
+    Object.assign(refs, { search, quick, play, user });
+    // close the overlay when a link in it is followed; peek on a 400 ms rest (U26)
+    sideEl.addEventListener('click', e => { if (overlay && e.target.closest('a[href]')) closeOverlay(); });
+    let rest = 0;
+    sideEl.addEventListener('pointerenter', e => {
+      if (e.pointerType !== 'mouse' || !sideEl.classList.contains('rail')) return;
+      clearTimeout(rest); rest = setTimeout(() => openOverlay('peek'), 400);
+    });
+    sideEl.addEventListener('pointerleave', () => {
+      clearTimeout(rest);
+      // a menu or popover opened from the peek keeps it open
+      if (overlay === 'peek' && !sideEl.querySelector('.side-user[aria-expanded="true"], .nextup [aria-expanded="true"]')) closeOverlay();
+    });
+    return sideEl;
+  }
+
+  function layout() {
+    if (!sideEl) return;
+    if (overlay) closeOverlay(false);
+    const m = layoutMode();
+    sideEl.classList.toggle('rail', m !== 'side');
+    doc.body.classList.toggle('has-side', m === 'side');
+    doc.body.classList.toggle('has-rail', m !== 'side');
+    brand();
+    observeStuck();
+    paintStrip();
+  }
+  function openOverlay(how) {
+    if (overlay || !sideEl.classList.contains('rail') || media(W_PHONE)) return;
+    overlay = how;
+    sideEl.classList.remove('rail');
+    sideEl.classList.add('open');
+    scrimEl = h('div', { class: 'scrim', 'aria-hidden': 'true' });
+    scrimEl.addEventListener('click', () => closeOverlay());
+    sideEl.before(scrimEl);
+    brand();
+    if (how !== 'peek') sideEl.querySelector('.side-toggle').focus({ preventScroll: true });
+  }
+  function closeOverlay(focus = true) {
+    if (!overlay) return;
+    const had = sideEl.contains(doc.activeElement);
+    overlay = null;
+    if (scrimEl) scrimEl.remove();
+    scrimEl = null;
+    sideEl.classList.remove('open');
+    sideEl.classList.add('rail');
+    brand();
+    if (focus && had) { const b = sideEl.querySelector('.side-mark'); if (b) b.focus({ preventScroll: true }); }
+  }
+  // the toggle and [: collapse or expand (1100px wide and up), or open the overlay (760-1099)
+  function toggle() {
+    if (!sideEl || media(W_PHONE)) return;
+    const wide = media(W_SIDE);
+    if (overlay) { if (wide) { sput(LS(), 'satf.rail', null); layout(); } else closeOverlay(); return; }
+    if (wide) { sput(LS(), 'satf.rail', sideEl.classList.contains('rail') ? null : '1'); layout(); focusToggle(); return; }
+    openOverlay('toggle');
+  }
+  const focusToggle = () => { const b = sideEl.querySelector(sideEl.classList.contains('rail') ? '.side-mark' : '.side-toggle'); if (b && sideEl.contains(doc.activeElement)) b.focus({ preventScroll: true }); };
+  // [ taps toggle; held 300 ms on the rail it peeks until released (U26)
+  let brHeld = 0, brPeek = false;
+  function bracket(e) {
+    if (e.repeat) return;
+    brPeek = false;
+    clearTimeout(brHeld);
+    if (sideEl.classList.contains('rail') && !overlay) brHeld = setTimeout(() => { brPeek = true; openOverlay('peek'); }, 300);
+    const up = ev => {
+      if (ev.key !== '[') return;
+      removeEventListener('keyup', up, true);
+      clearTimeout(brHeld);
+      if (brPeek) closeOverlay(false); else toggle();
+    };
+    addEventListener('keyup', up, true);
+  }
+  addEventListener('keydown', e => {
+    if (e.key !== 'Escape' || !overlay || doc.querySelector('.menu, .popover, dialog[open]')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    closeOverlay();
+  }, true);
+
+  function paintSide(d) {
+    if (!sideEl) return;
+    const rail = sideEl.classList.contains('rail');
+    for (const n of NAV) {
+      const r = refs.items[n.id], m = d ? metaOf(n.id, d) : null;
+      r.meta = m;
+      const slot = r.el.querySelector('.side-meta');
+      // on the rail a meta is an orange count bubble or a 7px dot (ui.css); its words stay for
+      // screen readers, and the tooltip carries them in full
+      if (!m) slot.replaceChildren();
+      else if (rail && m.rail === 'count') slot.replaceChildren(h('span', { 'aria-hidden': 'true', text: m.count }), h('span', { class: 'sr', text: m.tip }));
+      else if (rail && m.rail === 'dot') slot.replaceChildren(m.say || m.text || '');
+      else slot.replaceChildren(...[].concat(m.node || m.text || []));
+      if (m && m.rail) slot.dataset.rail = m.rail; else delete slot.dataset.rail;
+      if (n.id === 'today') {
+        if (m && m.ring !== null && m.ring !== undefined) { r.el.dataset.ring = ''; r.el.style.setProperty('--p', m.ring); }
+        else { delete r.el.dataset.ring; r.el.style.removeProperty('--p'); }
+      }
+    }
+    const nb = sideEl.querySelector('.nextup');
+    nb.replaceWith(nextBlock(d));
+    const it = d && nextItems()[0];
+    refs.play.hidden = !it;
+    if (it) refs.play.setAttribute('aria-label', `Start Up next: ${it.title}`);
+    sideEl.querySelector('.side-day').replaceWith(todayCard(d, { compact: true }));
+    paintUser(d);
+  }
+  function paintUser(d) {
+    const u = refs.user;
+    if (!u) return;
+    const me = (d && d.me) || {};
+    u.querySelector('.avatar').replaceWith(avatarOf(d, 34));
+    u.querySelector('.side-name').textContent = me.label || (d ? 'You' : '');
+    const sub = u.querySelector('.side-sub');
+    const sharedPc = d && d.device && d.device.session_only;
+    const unread = (d && d.inbox) || 0;
+    if (!d) sub.textContent = '';
+    else if (sharedPc) sub.replaceChildren('Shared computer · Sign out');
+    else if (me.linked) sub.replaceChildren(me.email_masked || 'Saved');
+    else sub.replaceChildren(dot(), 'Not saved yet');
+    const old = u.querySelector('.badge.n');
+    if (old) old.remove();
+    if (unread) u.querySelector('.side-name').append(' ', h('span', { class: 'badge n', text: cap99(unread), 'aria-label': `${plural(unread, 'unread item')}` }));
+    u.setAttribute('aria-label', `${me.label || 'You'}${d && !me.linked && !sharedPc ? ', not saved yet' : ''}${unread ? `, ${plural(unread, 'unread item')}` : ''}, account menu`);
+  }
+  function avatarOf(d, size) {
+    const me = (d && d.me) || {}, a = me.avatar || {};
+    if (!UI.avatar || !d) return h('span', { class: 'avatar' + (size >= 40 ? ' lg' : ''), html: mark(size >= 40 ? 22 : 16, 'var(--soft)') });
+    return UI.avatar({ name: me.name || me.label, avatar: a.kind === 'glyph' ? a.glyph : a.kind === 'initial' ? 'initial' : 'mark',
+      ring: a.ring, domains: me.domains && me.domains.math, self: true, learner: learner() }, size);
+  }
+
+  /* ---- the phone: the top bar, the five tabs, the grip and the hold menus (Shell 2.4, U26) */
+  function buildPbar() {
+    const search = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Search' }, icon('search'));
+    search.addEventListener('click', () => UI.palette());
+    const chip = h('a', { class: 'pbar-chip', href: '/review/', hidden: true, 'aria-current': here === 'review' ? 'page' : null });
+    const streak = h('a', { class: 'streak', href: '/me/#activity', style: 'min-height: 40px; padding: 0 2px' }, flame(16), h('span', { text: '0' }));
+    const quick = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Quick question or log a mistake' }, icon('bolt'));
+    quick.addEventListener('click', () => UI.quick());
+    const meBtn = h('button', { type: 'button', class: 'ibtn pbar-me', 'aria-label': 'Menu', 'aria-haspopup': 'dialog' }, h('span', { class: 'avatar' }));
+    meBtn.addEventListener('click', () => menuSheet(meBtn));
+    pbarEl = h('div', { class: 'pbar' },
+      h('a', { class: 'pbar-mark', href: '/', 'aria-label': 'SAT Freshman, Today', html: mark(26) }),
+      search, h('span', { class: 'pbar-grow' }), chip, streak, quick, meBtn);
+    Object.assign(refs, { chip, streak, meBtn });
+    const onScroll = () => pbarEl.classList.toggle('scrolled', scrollY > 4);
+    addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    return pbarEl;
+  }
+  function paintPbar(d) {
+    if (!pbarEl || !d) return;
+    const { due, open } = reviewCounts(d);
+    const chip = refs.chip;
+    chip.hidden = !due && !open;
+    chip.replaceChildren(...(due ? [dot(), `${cap99(due)}${open ? ' · ' + cap99(open) : ''}`] : [dot(), cap99(open)]));
+    chip.setAttribute('aria-label', `Review: ${[due ? `${fmt(due)} due today` : null, open ? `${fmt(open)} open` : null].filter(Boolean).join(', ')}`);
+    const st = refs.streak;
+    st.classList.toggle('on', (d.streak || 0) > 0);
+    st.querySelector('span').textContent = fmt(d.streak || 0);
+    st.setAttribute('aria-label', `Streak: ${streakText(d)}`);
+    const me = refs.meBtn, unread = d.inbox || 0, c = d.challenge || {};
+    me.replaceChildren(avatarOf(d, 32));
+    if (unread) me.append(h('span', { class: 'badge n', text: cap99(unread), style: 'position: absolute; top: -2px; right: -4px; box-shadow: 0 0 0 2px var(--paper)' }));
+    else if (!c.started) me.append(dot());
+    me.setAttribute('aria-label', `Menu${unread ? `, ${plural(unread, 'unread item')}` : !c.started ? ', today’s challenge is new' : ''}`);
+  }
+  function buildTabs(tabs) {
+    tabs.className = 'tabs';
+    tabs.setAttribute('aria-label', 'Sections');
+    const grip = h('button', { type: 'button', class: 'tabs-grip', 'aria-label': 'Open menu', 'aria-haspopup': 'dialog' });
+    grip.addEventListener('click', () => menuSheet(grip));
+    tabs.replaceChildren(grip, ...NAV.filter(n => n.tab).map(n => {
+      const a = h('a', { href: n.href, 'aria-current': n.id === here ? 'page' : null }, icon(n.icon, 22), h('span', { text: n.label }));
+      refs.tabs[n.id] = a;
+      holdable(a, n.id);
+      return a;
+    }));
+    tabsEl = tabs;
+    whenVisible(hint);
+  }
+  function paintTabs(d) {
+    if (!tabsEl || !d) return;
+    const it = nextItems()[0], k = dayKind(d);
+    const want = {
+      today: (it && it.urgent) || ((k === 'practice' || k === 'test') && !dayDone(d)) ? (it && it.urgent ? `Up next: ${it.title}` : 'Today’s plan is waiting') : null,
+      tests: metaOf('tests', d) && metaOf('tests', d).tip,
+      results: reportNew(d) ? 'A new report' : null,
+    };
+    for (const [id, a] of Object.entries(refs.tabs)) {
+      a.querySelectorAll('.dot, .sr').forEach(x => x.remove());
+      if (want[id]) a.append(dot(), h('span', { class: 'sr', text: `, ${want[id]}` }));
+    }
+  }
+  // hold a tab for 450 ms (8px of movement cancels) to open its shortcuts (U26)
+  function holdable(a, id) {
+    let timer = 0, x0 = 0, y0 = 0, fired = false;
+    a.addEventListener('pointerdown', e => {
+      if (e.button > 0) return;
+      fired = false; x0 = e.clientX; y0 = e.clientY;
+      clearTimeout(timer);
+      timer = setTimeout(() => { fired = true; holdMenu(a, id); }, 450);
+    });
+    a.addEventListener('pointermove', e => { if (Math.hypot(e.clientX - x0, e.clientY - y0) > 8) clearTimeout(timer); });
+    ['pointerup', 'pointercancel', 'pointerleave'].forEach(k => a.addEventListener(k, () => clearTimeout(timer)));
+    a.addEventListener('click', e => { if (fired) { e.preventDefault(); fired = false; } });
+    a.addEventListener('contextmenu', e => e.preventDefault());
+  }
+  function holdItems(id) {
+    const d = shellData || {}, it = nextItems()[0], { due, open } = reviewCounts(d);
+    const c = d.challenge || {}, r = testResume(d);
+    const nx = it ? { label: 'Up next', sub: it.title, icon: 'play', onClick: () => go(refs.tabs.today, it) } : null;
+    switch (id) {
+      case 'today': return [nx, { label: 'Question of the day', icon: 'today', href: '/#qotd' },
+        { label: 'Daily challenge', icon: 'trophy', href: '/compete/contest/?id=daily', meta: c.done ? (c.rank ? `#${c.rank}` : 'Done') : c.started ? 'Resume' : 'New' }];
+      case 'practice': return [{ label: 'Quick question', icon: 'bolt', onClick: () => UI.quick('question') },
+        { label: 'Log a mistake', icon: 'plus', onClick: () => UI.quick('mistake') },
+        { label: 'Review', icon: 'review', href: '/review/', meta: due || open ? cap99(due || open) : undefined },
+        { label: 'Saved', icon: 'bookmark', href: '/review/?tab=saved', meta: d.saved ? cap99(d.saved) : undefined },
+        { label: 'Words', icon: 'words', href: '/words/', meta: d.words && d.words.due ? `${cap99(d.words.due)} due` : undefined }];
+      case 'tests': return [r ? { label: `Resume ${(UI.KIND && UI.KIND[r.kind] || r.kind).toLowerCase()}`, icon: 'play', href: r.href, meta: `${r.answered}/${r.total}` } : null,
+        { label: 'New module', icon: 'tests', href: '/tests/#module' }, { label: 'Full section', icon: 'tests', href: '/tests/#section' },
+        { label: 'Diagnostic', icon: 'tests', href: '/diagnostic/' }];
+      case 'plan': return [{ label: 'Today’s tasks', icon: 'plan', href: '/plan/#today', meta: metaOf('plan', d) ? metaOf('plan', d).text : undefined },
+        { label: 'This week', icon: 'plan', href: '/plan/#week' }];
+      case 'results': return [d.newest_report ? { label: 'Latest report', icon: 'results', href: `/results/report/?id=${encodeURIComponent(d.newest_report)}`, meta: reportNew(d) ? 'New' : undefined } : null,
+        { label: 'Skills', icon: 'results', href: '/results/#skills' }];
+    }
+    return [];
+  }
+  function holdMenu(a, id) {
+    lput('satf.hint.hold', 1);
+    const h0 = doc.querySelector('.tabs-hint');
+    if (h0) h0.remove();
+    if (navigator.vibrate) try { navigator.vibrate(10); } catch (_) {}
+    if (UI.menu) UI.menu(a, holdItems(id).filter(Boolean), { label: `${NAV.find(n => n.id === id).label} shortcuts` });
+  }
+  function hint() {
+    if (!tabsEl || lget('satf.hint.hold', 0) || !media(W_PHONE)) return;
+    const x = h('button', { type: 'button', class: 'x', 'aria-label': 'Dismiss' }, icon('x', 16));
+    const el = h('div', { class: 'tabs-hint', role: 'note' }, 'Hold a tab for shortcuts', x);
+    x.addEventListener('click', () => { lput('satf.hint.hold', 1); el.remove(); });
+    doc.body.append(el);
+  }
+
+  /* ---- the account menu (Shell 2.6, U21, U25, U26): valid menu ARIA, from kit's UI.menu */
+  let feed = null;                       // "Since you were last here": the first 3 unread (S1)
+  function loadFeed(d) {
+    if (!d || !d.inbox) { feed = null; return; }
+    if (feed && feed.for === d.inbox) return;
+    feed = { for: d.inbox, items: [] };
+    api('/me/feed?unread=1&limit=3', { quiet: true }).then(r => { if (feed && r) feed.items = (r.items || r.feed || []).slice(0, 3); }, () => {});
+  }
+  function markSeen() {
+    if (!shellData || !shellData.inbox) return;
+    whenVisible(() => api('/me/feed/seen', { method: 'POST', quiet: true }).then(() => refresh(), () => {}));
+  }
+  const family = () => !shared && sget(LS(), 'satf.family') === '1';
+  const profiles = () => { const p = lget('satf.profiles', []); return Array.isArray(p) ? p : []; };
+  function keepProfile(d) {              // this device's students (U21), on a family device only
+    if (!d || !d.me || shared || (!family() && !profiles().length)) return;
+    const list = profiles(), me = learner(), i = list.findIndex(p => p.cred === me);
+    const entry = { ...(i >= 0 ? list[i] : {}), cred: me, name: d.me.label, saved: !!d.me.linked, answers: d.answered };
+    if (i >= 0) list[i] = entry; else if (family()) list.push(entry); else return;
+    lput('satf.profiles', list.slice(0, 4));
+  }
+  function studentsItems() {
+    const list = profiles().filter(p => p.cred !== learner() && (family() || p.parked));
+    if (!family() && !list.length) return [];
+    const out = [{ group: 'Students on this device' }];
+    list.forEach(p => out.push({ label: p.name || 'Student', icon: 'users', sub: `${plural(p.answers || 0, 'answer')} · ${p.saved ? 'saved' : 'not saved'}`,
+      onClick: () => { useLearner(p.cred, { session: false }); flash(`Now ${p.name || 'this student'}`); location.reload(); } }));
+    if (family() && profiles().length < 4) out.push({ label: 'Add a student', icon: 'plus', onClick: () => {
+      keepProfile(shellData);
+      freshLearner();
+      flash('A new student on this device');
+      location.href = '/';
+    } });
+    return out;
+  }
+  function head(d, avatarSize = 40) {
+    const me = (d && d.me) || {}, f = doc.createDocumentFragment();
+    const sharedPc = d && d.device && d.device.session_only;
+    f.append(avatarOf(d, avatarSize), h('b', { text: me.label || 'You' }),
+      h('span', { class: 'meta', text: me.linked ? (me.email || me.email_masked || 'Saved') : 'This device only' }));
+    if (sharedPc) f.append(h('span', { class: 'meta', text: 'Shared computer · ends when you close the browser' }));
+    else if (d && d.goals && d.goals.length) f.append(h('span', { class: 'meta', text: `This week · ${goalsDone(d)} of ${plural(d.goals.length, 'goal')}` }));
+    return f;
+  }
+  const isDark = () => doc.documentElement.dataset.theme === 'dark';
+  function lookItem(label, iconName, checked, change) {
+    return { label, icon: iconName, checked, onClick: (on, e) => {
+      const b = e && e.currentTarget;
+      prefs.set(change(on)).catch(() => {
+        if (b) b.setAttribute('aria-checked', String(!on));
+        if (UI.toast) UI.toast('Not saved. Try again.');
+      });
+    } };
+  }
+  function accountItems() {
+    const d = shellData || {}, me = d.me || {}, saved = !!me.linked;
+    const items = [{ head: head(d) }];
+    if (d.inbox) {
+      items.push({ group: `Since you were last here · ${cap99(d.inbox)}` });
+      ((feed && feed.items) || []).forEach(x => items.push({ label: x.title || x.text || 'New', icon: 'bell',
+        sub: x.at && UI.relTime ? UI.relTime(x.at) : undefined, href: x.href || '/me/?feed=unread#recent' }));
+      items.push({ label: `See all (${fmt(d.inbox)})`, icon: 'bell', href: '/me/?feed=unread#recent' });
+      markSeen();
+    }
+    if (!saved && !shared) items.push({ label: 'Save your progress', sub: 'So clearing this browser can’t lose it', icon: 'dot', href: '/me/settings/#account' });
+    items.push(...studentsItems());
+    items.push({ separator: true },
+      { label: 'Profile', icon: 'profile', href: '/me/', kbd: 'G U' },
+      { label: d.report_replies ? ['Settings ', dot(), h('span', { class: 'sr', text: `, ${plural(d.report_replies, 'unread reply', 'unread replies')}` })] : 'Settings',
+        icon: 'settings', href: '/me/settings/', kbd: 'G S' });
+    if (!saved) items.push({ label: 'Sign in', icon: 'signin', href: '/signin/' });
+    items.push({ label: 'Sign in another device', icon: 'devices', href: '/link/' },
+      { label: 'Help & FAQ', icon: 'help', href: '/help/', kbd: 'G H' },
+      { label: 'Send feedback', icon: 'chat', onClick: feedback },
+      { group: 'Display' },
+      lookItem('Dark theme', 'moon', isDark(), on => ({ theme: on ? 'dark' : 'light' })),
+      lookItem('Large text', 'text', lookNow.text === 'large', on => ({ text: on ? 'large' : 'normal' })),
+      { label: 'Keyboard shortcuts', icon: 'keyboard', kbd: '?', onClick: () => keysSheet() },
+      { separator: true },
+      saved || shared ? { label: 'Sign out', icon: 'signout', onClick: signOut } : { label: 'Leave this device…', icon: 'signout', onClick: leave });
+    return items;
+  }
+  // kit's menu labels a group with a .menu-label; wrap each group's rows in role=group (U26)
+  function groupRows(el) {
+    el.querySelectorAll('.menu-label').forEach((lab, i) => {
+      const id = `acct-g${i}`;
+      lab.id = id;
+      const g = h('div', { role: 'group', 'aria-labelledby': id });
+      const rows = [];
+      for (let n = lab.nextElementSibling; n && n.matches('[role^="menuitem"]'); n = n.nextElementSibling) rows.push(n);
+      lab.before(g);
+      g.append(lab, ...rows);
+    });
+  }
+  function menuTrigger(btn) {
+    const open = last => {
+      if (!UI.menu) return;
+      const res = UI.menu(btn, accountItems(), { wide: true, label: 'Account', last });
+      if (res) groupRows(res.el);
+    };
+    btn.addEventListener('click', () => open(false));
+    btn.addEventListener('keydown', e => {
+      if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && btn.getAttribute('aria-expanded') !== 'true') { e.preventDefault(); open(e.key === 'ArrowUp'); }
+    });
+  }
+
+  /* ---- the phone's menu sheet (Shell 2.4, U26): a scrolling body and a footer always on screen */
+  function menuSheet(trigger) {
+    const d = shellData, me = (d && d.me) || {}, saved = !!me.linked;
+    const dlg = h('dialog', { class: 'more', 'aria-label': 'Menu' });
+    const row = (label, iconName, o = {}) => {
+      const el = h(o.href ? 'a' : 'button', { class: 'more-row', href: o.href || null, type: o.href ? null : 'button',
+        'aria-current': o.current ? 'page' : null }, icon(iconName, 22), h('span', { text: label }), o.meta ? h('span', { class: 'more-meta' }, ...[].concat(o.meta)) : null);
+      if (o.onClick) el.addEventListener('click', () => { dlg.close(); o.onClick(); });
+      return el;
+    };
+    const swRow = (label, iconName, checked, change) => {
+      const sw = UI.switch ? UI.switch(null, { checked, ariaLabel: label, onChange: on => prefs.set(change(on)).catch(e => {
+        if (UI.toast) UI.toast('Not saved. Try again.');
+        throw e;                           // the switch flips back
+      }) }) : null;
+      return h('div', { class: 'more-row' }, icon(iconName, 22), h('span', { text: label }), sw && sw.el);
+    };
+    const body = h('div', { class: 'more-body' });
+    const nb = nextBlock(d, { kbd: false, boxes: true });
+    body.append(h('div', { style: 'height: 14px', 'aria-hidden': 'true' }));
+    if (!nb.hidden) body.append(nb);
+    if (d && d.inbox) {
+      const g = h('div', { class: 'more-group', role: 'group', 'aria-label': 'Since you were last here' },
+        h('span', { class: 'k', text: `Since you were last here · ${cap99(d.inbox)}`, style: 'padding: 6px 4px 2px' }));
+      ((feed && feed.items) || []).forEach(x => g.append(row(x.title || x.text || 'New', 'bell', { href: x.href || '/me/?feed=unread#recent' })));
+      g.append(row(`See all (${fmt(d.inbox)})`, 'bell', { href: '/me/?feed=unread#recent' }));
+      body.append(g);
+      markSeen();
+    }
+    body.append(todayCard(d));
+    const acct = h('a', { class: 'more-head', href: '/me/', 'aria-current': here === 'me' ? 'page' : null }, head(d));
+    body.append(acct);
+    const st = studentsItems();
+    if (st.length) body.append(h('div', { class: 'more-group', role: 'group', 'aria-label': 'Students on this device' },
+      st.filter(x => !x.group).map(x => row(x.label, x.icon, { onClick: x.onClick, meta: x.sub }))));
+    body.append(h('div', { class: 'more-group' },
+      row('Settings', 'settings', { href: '/me/settings/', current: here === 'me' && page() === 'settings', meta: d && d.report_replies ? dot() : null }),
+      !saved && !shared ? row('Save your progress', 'save', { href: '/me/settings/#account', meta: dot() }) : null,
+      !saved ? row('Sign in', 'signin', { href: '/signin/' }) : null,
+      row('Sign in another device', 'devices', { href: '/link/' }),
+      row('Help & FAQ', 'help', { href: '/help/', current: here === 'help' }),
+      row('Send feedback', 'chat', { onClick: feedback })),
+      h('div', { class: 'more-group' },
+        swRow('Dark theme', 'moon', isDark(), on => ({ theme: on ? 'dark' : 'light' })),
+        swRow('Large text', 'text', lookNow.text === 'large', on => ({ text: on ? 'large' : 'normal' })),
+        saved || shared ? row('Sign out', 'signout', { onClick: signOut }) : row('Leave this device…', 'signout', { onClick: leave })));
+    // the footer: Review, Words, Compete and Quick, two taps from any page
+    const cell = (label, iconName, o = {}) => {
+      const el = h(o.href ? 'a' : 'button', { href: o.href || null, type: o.href ? null : 'button', 'aria-current': o.current ? 'page' : null,
+        'aria-label': o.aria || null }, icon(iconName, 22), h('span', { text: label }), o.meta ? h('span', { class: 'more-meta' }, ...[].concat(o.meta)) : null);
+      if (o.onClick) el.addEventListener('click', () => { dlg.close(); o.onClick(); });
+      return el;
+    };
+    const rc = d ? reviewCounts(d) : { due: 0, open: 0 };
+    const cm = d ? metaOf('compete', d) : null, wm = d ? metaOf('words', d) : null;
+    const foot = h('div', { class: 'more-foot' },
+      cell('Review', 'review', { href: '/review/', current: here === 'review',
+        meta: rc.due ? `${cap99(rc.due)} due · ${cap99(rc.open)} open` : rc.open ? [dot(), `${cap99(rc.open)} open`] : null,
+        aria: `Review${rc.due ? `, ${fmt(rc.due)} due today` : ''}${rc.open ? `, ${fmt(rc.open)} open` : ''}` }),
+      cell('Words', 'words', { href: '/words/', current: here === 'words', meta: wm ? wm.text : null }),
+      cell('Compete', 'trophy', { href: '/compete/', current: here === 'compete', meta: cm ? cm.text : null }),
+      cell('Quick', 'bolt', { onClick: () => UI.quick() }));
+    dlg.append(body, foot);
+    dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('close', () => { dlg.remove(); if (trigger && trigger.isConnected) trigger.focus({ preventScroll: true }); });
+    doc.body.append(dlg);
+    dlg.showModal();
+    body.scrollTop = 0;
+    return dlg;
+  }
+
+  /* ---- the Now strip (U26): Up next and the Today card at the top of main, every line as
+     text, wherever the sidebar is not showing both in full (ui.css decides by media query) */
+  let stripEl = null;
+  function nowStrip(host, o = {}) {
+    const el = h('section', { class: 'now-strip', 'aria-label': 'Up next and today' });
+    const paint = d => {
+      const nb = nextBlock(d), card = todayCard(d);
+      const phone = media(W_PHONE);
+      // the phone keeps its Today card in the menu sheet, one tap away
+      el.replaceChildren(...(nb.hidden ? [] : [nb]), ...(phone ? [] : [card]));
+      el.style.gridTemplateColumns = el.children.length === 1 ? 'minmax(0, 1fr)' : '';
+      el.hidden = !el.children.length;
+    };
+    el._paint = paint;
+    paint(shellData);
+    if (host) host.prepend(el);
+    if (!o.quiet) onShell(d => paint(d));
+    return el;
+  }
+  const paintStrip = () => { if (stripEl && stripEl._paint) stripEl._paint(shellData); };
+
+  /* ---- the section bar (U26): UI.sections([{id, label}]) renders a page's cards as chips,
+     sticky at the top of main, with scroll-spy; "Up next: ... · Start" shows at its end once
+     the Now strip has scrolled away, on pages with sections or without */
+  let barEl = null, sentinel = null, stuckIO = null, spyIO = null;
+  function sectionBar() {
+    if (barEl) return barEl;
+    barEl = h('nav', { class: 'sections', 'aria-label': 'On this page' });
+    sentinel = h('div', { 'aria-hidden': 'true', style: 'height: 1px; margin-bottom: -1px' });
+    return barEl;
+  }
+  function paintBarNext() {
+    if (!barEl) return;
+    const old = barEl.querySelector('.sections-next');
+    if (old) old.remove();
+    const it = shellData && nextItems()[0];
+    if (it) barEl.append(h('span', { class: 'sections-next' }, 'Up next: ', h('b', { text: it.title }), startBtn(it)));
+    const chips = barEl.querySelectorAll(':scope > a').length;
+    barEl.hidden = !chips && !it;
+    // without chips the bar takes no room until it sticks
+    barEl.style.marginBottom = chips ? '' : '-52px';
+    barEl.style.visibility = chips || barEl.classList.contains('stuck') ? '' : 'hidden';
+  }
+  function observeStuck() {
+    if (!barEl || !sentinel || typeof IntersectionObserver !== 'function') return;
+    if (stuckIO) stuckIO.disconnect();
+    const top = media(W_PHONE) ? 56 : 0;
+    stuckIO = new IntersectionObserver(([e]) => {
+      barEl.classList.toggle('stuck', !e.isIntersecting && e.boundingClientRect.top < top + 1);
+      paintBarNext();
+    }, { rootMargin: `-${top + 1}px 0px 0px 0px` });
+    stuckIO.observe(sentinel);
+  }
+  function sections(list) {
+    sectionBar();
+    barEl.querySelectorAll(':scope > a').forEach(a => a.remove());
+    if (spyIO) spyIO.disconnect();
+    const chips = (list || []).map(s => {
+      const a = h('a', { href: `#${s.id}`, text: s.label, 'data-for': s.id });
+      a.addEventListener('click', e => {
+        const card = doc.getElementById(s.id);
+        if (!card) return;
+        e.preventDefault();
+        card.dispatchEvent(new CustomEvent('satf:open', { bubbles: true }));     // a collapsed card opens (S1)
+        card.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+        const h2 = card.querySelector('h2') || card;
+        if (!h2.hasAttribute('tabindex')) h2.tabIndex = -1;
+        h2.focus({ preventScroll: true });
+        try { history.replaceState(history.state, '', `#${s.id}`); } catch (_) {}
+        current(a);
+      });
+      return a;
+    });
+    barEl.prepend(...chips);
+    const current = a => {
+      chips.forEach(c => c.toggleAttribute('aria-current', false));
+      if (!a) return;
+      a.setAttribute('aria-current', 'true');
+      if (barEl.scrollWidth > barEl.clientWidth) barEl.scrollTo({ left: Math.max(0, a.offsetLeft - 16), behavior: reduced() ? 'auto' : 'smooth' });
+    };
+    if (chips.length && typeof IntersectionObserver === 'function') {
+      spyIO = new IntersectionObserver(es => es.forEach(e => {
+        if (e.isIntersecting) current(chips.find(c => c.dataset.for === e.target.id));
+      }), { rootMargin: '-64px 0px -66% 0px' });
+      (list || []).forEach(s => { const el = doc.getElementById(s.id); if (el) spyIO.observe(el); });
+    }
+    paintBarNext();
+    return barEl;
+  }
+
+  /* ---- signing out (Shell 1, U21) */
+  const KEEP = new Set(['satf.look', 'satf.rail', 'satf.family', 'satf.profiles', 'satf.undo', 'satf.flash', 'satf.hint.hold']);
+  function forget(cred) {                // this learner off this browser; the device's own keys stay
+    for (const s of [LS(), SS()]) {
+      try {
+        if (!s) continue;
+        for (let i = s.length - 1; i >= 0; i--) { const k = s.key(i); if (k && k.startsWith('satf.') && !KEEP.has(k)) s.removeItem(k); }
+      } catch (_) {}
+    }
+    const list = profiles().filter(p => p.cred !== cred);
+    lput('satf.profiles', list.length ? list : null);
+    memo = null; shellData = null;
+  }
+  function revoke(cred) {
+    if (!/^d:/.test(cred || '')) return;
+    try { fetch('/api/devices/this', { method: 'DELETE', keepalive: true, headers: { ...headers(), 'X-Learner': cred } }).catch(() => {}); } catch (_) {}
+  }
+  function flash(text, o = {}) { sput(SS(), 'satf.flash', JSON.stringify({ text, ...o })); }
+  function signOut() {
+    const cred = learner();
+    if (shared) {                        // a shared computer: at once, no Undo
+      revoke(cred);
+      try { const s = SS(); if (s) for (let i = s.length - 1; i >= 0; i--) { const k = s.key(i); if (k && k.startsWith('satf.')) s.removeItem(k); } } catch (_) {}
+      shared = false; memo = null;
+      flash('Signed out');
+      location.href = '/';
+      return;
+    }
+    const entry = profiles().find(p => p.cred === cred) || null;
+    sput(SS(), 'satf.undo', JSON.stringify({ cred, entry, until: Date.now() + 8000 }));
+    forget(cred);
+    flash('Signed out', { undo: true });
+    location.href = '/';
+  }
+  // on the page after Sign out: 8 s of Undo; the revoke goes when that ends or on pagehide
+  function pendingSignOut() {
+    let u = null;
+    try { u = JSON.parse(sget(SS(), 'satf.undo') || 'null'); } catch (_) {}
+    if (!u || !u.cred) return null;
+    const send = () => { if (!sget(SS(), 'satf.undo')) return; sput(SS(), 'satf.undo', null); revoke(u.cred); };
+    const left = u.until - Date.now();
+    if (left <= 0) { send(); return null; }
+    const timer = setTimeout(send, left);
+    addEventListener('pagehide', send);
+    return { left, undo: () => {
+      clearTimeout(timer);
+      removeEventListener('pagehide', send);
+      sput(SS(), 'satf.undo', null);
+      useLearner(u.cred, { session: false });
+      if (u.entry) lput('satf.profiles', [...profiles().filter(p => p.cred !== u.cred), u.entry]);
+      location.reload();
+    } };
+  }
+  function leave() {                     // an unsaved device: say what is lost first (Shell 4.4)
+    if (!UI.sheet) return;
+    const code = learner();
+    const masked = code.slice(0, 2) + '•'.repeat(Math.max(0, code.length - 6)) + code.slice(-4);
+    UI.sheet({ title: 'Leave this device?', size: 's',
+      body: b => {
+        b.append(h('p', { text: 'This device’s progress isn’t saved to an email. If you sign out, this browser forgets it.' }),
+          h('p', { class: 'help', text: 'Keep this code to bring it back by hand:' }),
+          h('p', { style: 'display: flex; align-items: center; gap: 10px; flex-wrap: wrap' }, h('code', { class: 'mono', text: masked }),
+            h('button', { type: 'button', class: 'btn sm', text: 'Copy', onclick: () => UI.copyText ? UI.copyText(code, { toast: 'Copied' }) : null })));
+      },
+      actions: [{ label: 'Cancel', quiet: true },
+        { label: 'Sign out anyway', ink: true, onClick: () => { forget(code); freshLearner(); flash('Signed out'); location.href = '/'; return false; } },
+        { label: 'Save to email first', primary: true, href: '/me/settings/#account' }] });
+  }
+
+  /* ---- feedback, the palette and the quick sheet load on first use (F6's report.js, and
+     quick.js / palette.js) */
+  const loading = {};
+  function need(file) {
+    return loading[file] || (loading[file] = new Promise((resolve, reject) => {
+      const sc = doc.createElement('script');
+      sc.src = `/assets/${file}.js`;
+      sc.onload = resolve;
+      sc.onerror = () => { delete loading[file]; reject(new Error(`${file}.js`)); };
+      doc.head.append(sc);
+    }));
+  }
+  function lazy(name, file) {
+    if (typeof UI[name] === 'function') return;
+    const stub = (...a) => need(file).then(() => {
+      if (UI[name] === stub) throw new Error(`${file}.js has no UI.${name}`);
+      return UI[name](...a);
+    }).catch(e => { console.warn(e); if (UI.toast) UI.toast('Couldn’t open that. Try again.'); });
+    UI[name] = stub;
+  }
+  lazy('quick', 'quick'); lazy('palette', 'palette'); lazy('report', 'report');
+  const feedback = () => UI.report({ kind: 'page', source: location.pathname + location.search });
+
+  /* ---- UI.shell */
+  let shellOn = false;
+  function shell(o = {}) {
+    if (typeof o === 'string') o = { page: o };
+    if (shellOn) { if (o.sections) sections(o.sections); return; }
+    shellOn = true;
+    shellOpts = o;
+    const pg = o.page || page();
+    here = SECTION[pg] || pg;
     keys.chrome = true;
     const bar = $('#bar');
     if (bar) {
-      bar.className = 'bar';
-      bar.innerHTML = `<div class="bar-in">
-        <a class="brand" href="/" aria-label="SAT Freshman, today">${mark(26)}</a>
-        <nav class="nav" aria-label="Sections">${NAV.map(([id, href, label]) =>
-          `<a href="${href}"${id === here ? ' aria-current="page"' : ''}>${label}</a>`).join('')}</nav>
-        <div class="bar-end">
-          <a class="streak" id="streak" href="/results/" aria-label="Streak" hidden>${svg(ICON.flame, 16)}<span></span></a>
-          <a class="avatar" id="avatar" href="/me/" aria-label="Me"></a>
-        </div></div>`;
-      const onScroll = () => bar.classList.toggle('scrolled', scrollY > 4);
-      addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
+      bar.className = '';
+      bar.replaceChildren(buildSide(), buildPbar());
     }
     const tabs = $('#tabs');
-    if (tabs) {
-      tabs.className = 'tabs';
-      tabs.setAttribute('aria-label', 'Sections');
-      tabs.innerHTML = NAV.map(([id, href, label]) =>
-        `<a href="${href}"${id === here ? ' aria-current="page"' : ''}>${svg(ICON[id], 22)}<span>${label}</span></a>`).join('');
+    if (tabs) buildTabs(tabs);
+    const main = doc.querySelector('main');
+    if (main) {
+      if (!main.id) main.id = 'main';
+      sectionBar();
+      main.prepend(sentinel, barEl);
+      if (o.now !== false && !doc.querySelector('.now-strip')) { stripEl = nowStrip(null, { quiet: true }); sentinel.before(stripEl); }
+      if (o.sections) sections(o.sections); else paintBarNext();
     }
-    if (!storable) {
-      const main = doc.querySelector('main');
-      main && main.prepend(h('p', { class: 'error', style: 'margin-bottom:16px', text: 'This browser is blocking site data, so nothing here can be kept.' }));
-    }
-    const av = $('#avatar');
-    if (av) av.innerHTML = mark(16, 'var(--soft)');
-    onShell(paintBar);
+    if (!storable && UI.banner) UI.banner('storage', 'This browser is blocking site data, so progress can’t be kept here.',
+      [{ label: 'How to fix', href: '/help/#storage' }], { sys: true });
+    for (const q of [W_SIDE, W_PHONE]) { try { matchMedia(q).addEventListener('change', layout); } catch (_) {} }
+    layout();
+    onShell(paintAll);
     if (!shellAsked) refresh();
-  }
-  function paintBar(d) {
-    const av = $('#avatar'), st = $('#streak');
-    if (av && d.me && d.me.name) av.textContent = d.me.name.trim()[0].toUpperCase();
-    if (st) {
-      st.hidden = !d.answered;
-      st.classList.toggle('on', d.streak > 0);
-      st.querySelector('span').textContent = d.streak;
-      st.setAttribute('aria-label', `${d.streak} day streak`);
+    if (doc.prerendering) whenVisible(() => { if (shellData) paintAll(shellData); });
+    const qs = new URLSearchParams(location.search);
+    if (qs.has('feedback')) whenVisible(feedback);
+    if (qs.get('next') === '1') {         // ?next=1 starts Up next item 1 once (U1, U18)
+      qs.delete('next');
+      try { history.replaceState(history.state, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (_) {}
+      whenVisible(startNext);
     }
   }
+  shell.toggle = toggle;
+  function paintAll(d) {
+    // Results or a report shown: its newest sitting has been seen (satf.seen.report)
+    if (here === 'results' && d.newest_report && !doc.prerendering) sput(LS(), 'satf.seen.report', d.newest_report);
+    keepProfile(d);
+    loadFeed(d);
+    paintSide(d);
+    paintPbar(d);
+    paintTabs(d);
+    paintStrip();
+    paintBarNext();
+  }
+
+  // a toast carried over a page change: "Signed out · Undo", "Now Maya"
+  function flashed() {
+    let f = null;
+    try { f = JSON.parse(sget(SS(), 'satf.flash') || 'null'); } catch (_) {}
+    sput(SS(), 'satf.flash', null);
+    const pend = pendingSignOut();
+    if (!f || !UI.toast) return;
+    if (f.undo && pend) UI.toast(f.text, { undo: pend.undo, ms: pend.left });
+    else UI.toast(f.text);
+  }
+  if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', flashed); else setTimeout(flashed);
 
   /* ------------------------------------------------------------ a question
      Renders one question into host. Stems and options are plain Unicode from
@@ -1173,7 +2184,9 @@
     learner, useLearner, freshLearner, shared: () => shared, stored: () => storable, ready,
     api, cached, whenVisible, refresh, onShell, shellData: () => shellData, me, prefs, prefRow, look,
     keys, ROUTES, start, nextItems, skip,
+    NAV, SECTION, shell, nowStrip, sections, menuSheet, accountMenu: accountItems,
+    signOut: () => (shellData && shellData.me && shellData.me.linked) || shared ? signOut() : leave(),
     h, s, svg, mark, ICON, TOPICS, TOPIC, DOMAINS, glyph, chip,
-    question, calc, ref, shell, snap, mmss, minutesFor, day, cap, band, reduced, plan, $,
+    question, calc, ref, snap, mmss, minutesFor, day, cap, band, reduced, plan, $,
   });
 })();
