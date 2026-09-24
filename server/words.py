@@ -26,14 +26,14 @@ HERE = Path(__file__).with_name("words")
 INDEX = Path(__file__).with_name("words_index.json")
 INTERVALS = {1: 1, 2: 3, 3: 7, 4: 16, 5: 35}
 PROOF_KINDS = frozenset({"incontext", "nearly", "transition", "precise"})
-SELF_KINDS = frozenset({"cards", "self", "sort", "placement", "sheet-grade"})
+SELF_KINDS = frozenset({"card", "cards", "self", "sort", "placement", "sheet-grade"})
 ACHIEVEMENTS = [{"id": f"words-{n}", "kind": "words_known", "target": n}
                 for n in (50, 250, 1000)]
-RW_TO_ATTEMPTS = """INSERT INTO attempts(learner,session,qid,template,seed,topic,difficulty,fmt,correct,reason,given,ms,at)
-SELECT learner, session, 'rw:' || id, template, seed,
+RW_TO_ATTEMPTS = """INSERT INTO attempts(learner,session,qid,template,seed,topic,difficulty,fmt,correct,reason,given,conf,ms,at)
+SELECT learner, session, 'w' || id, template, seed,
 CASE skill WHEN 'Transitions' THEN 'rw.transitions' ELSE 'rw.words_in_context' END,
-difficulty, 'mcq', correct, trap, given, ms, at FROM word_reviews
-WHERE subject='rw' AND template IS NOT NULL AND attempt=1"""
+difficulty, 'mcq', correct, trap, given, conf, ms, at FROM word_reviews
+WHERE subject='rw' AND template IS NOT NULL AND correct IS NOT NULL"""
 
 
 def _load(name: str):
@@ -65,10 +65,13 @@ def init() -> None:
     c = db.conn()
     additions = {
         "word_state": {"proven": "TEXT", "placed": "INTEGER DEFAULT 0", "hook": "TEXT",
-                       "pending_know": "TEXT", "thought_at": "TEXT", "looked_at": "TEXT"},
+                       "pending_know": "TEXT", "thought_at": "TEXT", "looked_at": "TEXT",
+                       "stubborn_right_day": "TEXT", "stubborn_cleared": "TEXT",
+                       "sentence_history": "TEXT"},
         "word_reviews": {"template": "TEXT", "seed": "INTEGER", "trap": "TEXT", "conf": "TEXT",
                          "gap": "TEXT", "subject": "TEXT", "skill": "TEXT", "domain": "TEXT",
-                         "difficulty": "TEXT", "attempt": "INTEGER DEFAULT 1"},
+                         "difficulty": "TEXT", "attempt": "INTEGER DEFAULT 1",
+                         "state_before": "TEXT"},
     }
     for table, columns in additions.items():
         have = {r["name"] for r in c.execute(f"PRAGMA table_info({table})")}
@@ -126,13 +129,15 @@ def state(learner: str, slug: str) -> dict:
                                   "saved": 0, "first": None, "last": None, "lastday": None,
                                   "lastwrong": None, "proven": None, "placed": 0,
                                   "hook": None, "pending_know": None, "thought_at": None,
-                                  "looked_at": None}
+                                  "looked_at": None, "stubborn_right_day": None,
+                                  "stubborn_cleared": None, "sentence_history": None}
 
 
 def _upsert_state(c, s: dict) -> None:
     fields = ("learner", "word", "box", "due", "reps", "lapses", "right", "wrong", "saved",
               "first", "last", "lastday", "lastwrong", "proven", "placed", "hook",
-              "pending_know", "thought_at", "looked_at")
+              "pending_know", "thought_at", "looked_at", "stubborn_right_day",
+              "stubborn_cleared", "sentence_history")
     c.execute(f"INSERT INTO word_state({','.join(fields)}) VALUES ({','.join('?' for _ in fields)}) "
               f"ON CONFLICT(learner,word) DO UPDATE SET "
               + ",".join(f"{f}=excluded.{f}" for f in fields if f not in ("learner", "word")),
@@ -168,18 +173,20 @@ def _review_row(c, learner: str, slug: str, session: str | None, mode: str, kind
                 correct: bool | None, given: str | None, box_before: int, due_before: str | None,
                 ms: int | None, at: str, *, template: str | None = None, seed: int | None = None,
                 trap: str | None = None, conf: str | None = None, gap: str | None = None,
-                attempt: int = 1) -> int:
+                attempt: int = 1, state_before: dict | None = None) -> int:
     word = entry(slug, learner) or {}
     skill = "Transitions" if word.get("collection") == "transitions" else "Words in Context"
     subject = "rw" if template else None
     return c.execute("INSERT INTO word_reviews(learner,word,session,mode,kind,correct,given,confusion,"
-                     "box_before,due_before,ms,at,template,seed,trap,conf,gap,subject,skill,domain,difficulty,attempt)"
-                     " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                     "box_before,due_before,ms,at,template,seed,trap,conf,gap,subject,skill,domain,difficulty,attempt,state_before)"
+                     " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                      (learner, slug, session, mode, kind, None if correct is None else int(correct),
                       given, trap, box_before, due_before, ms, at, template, seed, trap, conf,
                       gap, subject, skill if subject else None,
-                      word.get("subjects", [None])[0] if subject else None,
-                      word.get("level") if subject else None, attempt)).lastrowid
+                      ("Expression of Ideas" if skill == "Transitions" else "Craft and Structure")
+                      if subject else None,
+                      word.get("level") if subject else None, attempt,
+                      json.dumps(state_before) if state_before else None)).lastrowid
 
 
 def grade(learner: str, word: str, ok: bool, mode: str = "cards", kind: str = "cards",
@@ -194,12 +201,14 @@ def grade(learner: str, word: str, ok: bool, mode: str = "cards", kind: str = "c
     day = local_day(tz, stamp)
     with db.atomic() as c:
         s = state(learner, word)
+        prior = s.copy()
+        was_stubborn = int(s["lapses"] or 0) >= 4
         before, due_before = int(s["box"] or 0), s["due"]
         early = bool(due_before and due_before > day.isoformat())
         lastday = s["lastday"] == day.isoformat()
         self_grade = kind in SELF_KINDS or kind == "cards"
         proof = kind in PROOF_KINDS or (word.startswith("u:") and kind in {"meaning2word", "typed"})
-        passive = mode in {"sprint", "order", "lookup", "outside"} or kind == "order"
+        passive = mode in {"sprint", "order", "lookup", "outside"} or kind in {"order", "rootshare"}
         after = before
         promoted = False
         if passive:
@@ -208,6 +217,7 @@ def grade(learner: str, word: str, ok: bool, mode: str = "cards", kind: str = "c
         elif not ok:
             after = 1
             s["proven"] = None
+            s["stubborn_right_day"] = None
             s["lapses"] = int(s["lapses"] or 0) + 1
             s["lastwrong"] = stamp
             s["due"] = day.isoformat()
@@ -223,9 +233,13 @@ def grade(learner: str, word: str, ok: bool, mode: str = "cards", kind: str = "c
             promoted = True
             s["placed"] = 0
             s["proven"] = day.isoformat()
-            s["due"] = _due(day, after, learner)
+            s["due"] = _due(day, after, learner, stubborn=was_stubborn)
+        elif kind == "decode" and before == 0:
+            after = 1
+            promoted = True
+            s["due"] = _due(day, after, learner, stubborn=was_stubborn)
         elif self_grade and before >= 3:
-            s["due"] = (day + dt.timedelta(days=2)).isoformat() if before == 3 else _due(day, before, learner)
+            s["due"] = (day + dt.timedelta(days=2)).isoformat() if before == 3 else _due(day, before, learner, stubborn=was_stubborn)
             s["pending_know"] = stamp
         elif before >= 3 and not proof:
             # Recognition quizzes cannot certify a high-box word.
@@ -233,7 +247,7 @@ def grade(learner: str, word: str, ok: bool, mode: str = "cards", kind: str = "c
         else:
             after = min(5, 2 if before == 0 else before + 1)
             promoted = after > before
-            s["due"] = _due(day, after, learner)
+            s["due"] = _due(day, after, learner, stubborn=was_stubborn)
             if after >= 4 and proof:
                 s["proven"] = day.isoformat()
         if after >= 4 and not s.get("proven"):
@@ -242,6 +256,16 @@ def grade(learner: str, word: str, ok: bool, mode: str = "cards", kind: str = "c
         if ok and not self_grade and not passive:
             s["thought_at"] = None
             s["pending_know"] = None
+            if was_stubborn:
+                if s.get("stubborn_right_day") and s["stubborn_right_day"] != day.isoformat():
+                    after = 2
+                    s["proven"] = None
+                    s["due"] = _due(day, after, learner, stubborn=True)
+                    s["lapses"] = 0
+                    s["stubborn_cleared"] = stamp
+                    s["stubborn_right_day"] = None
+                else:
+                    s["stubborn_right_day"] = day.isoformat()
         if ok and self_grade:
             s["pending_know"] = stamp
         s["box"] = after
@@ -254,7 +278,8 @@ def grade(learner: str, word: str, ok: bool, mode: str = "cards", kind: str = "c
         _upsert_state(c, s)
         review_id = _review_row(c, learner, word, session, mode, kind, ok, given,
                                 before, due_before, ms, stamp, template=template, seed=seed,
-                                trap=confusion, conf=conf, gap=gap, attempt=attempt)
+                                trap=confusion, conf=conf, gap=gap, attempt=attempt,
+                                state_before=prior)
     status = ("Prove it in context to make it Known" if after == 3 and not s.get("proven")
               else "Known" if after >= 4 else "Again today" if not ok
               else "Early review" if early else "Back " + (s["due"] or "soon"))
@@ -271,6 +296,7 @@ def place(learner: str, slug: str, choice: str, tz: int = 0, *, at: str | None =
     day = local_day(tz, stamp)
     with db.atomic() as c:
         s = state(learner, slug)
+        prior = s.copy()
         before, due_before = s["box"], s["due"]
         if choice in {"yes", "know"}:
             s["box"] = 3
@@ -290,10 +316,10 @@ def place(learner: str, slug: str, choice: str, tz: int = 0, *, at: str | None =
         s["first"] = s["first"] or stamp
         s["last"] = stamp
         _upsert_state(c, s)
-        _review_row(c, learner, slug, None, "placement", "sort", None, choice,
-                    before, due_before, None, stamp, attempt=0)
+        review_id = _review_row(c, learner, slug, None, "placement", "sort", None, choice,
+                                before, due_before, None, stamp, attempt=0, state_before=prior)
     return {"word": slug, "box": {"before": before, "after": s["box"]}, "due": s["due"],
-            "claimed": s["box"] == 3, "placed": s["placed"]}
+            "claimed": s["box"] == 3, "placed": s["placed"], "review_id": review_id}
 
 
 def word_reviews(learner: str, slug: str | None = None) -> list[dict]:
@@ -303,6 +329,17 @@ def word_reviews(learner: str, slug: str | None = None) -> list[dict]:
         sql += " AND word=?"
         args.append(slug)
     return [dict(r) for r in db.rows(sql + " ORDER BY id", *args)]
+
+
+def restore_review(learner: str, slug: str, review_id: int) -> None:
+    """Undo only a word's latest grade before replacing it in the same request."""
+    with db.atomic() as c:
+        latest = c.execute("SELECT id,state_before FROM word_reviews WHERE learner=? AND word=?"
+                           " ORDER BY id DESC LIMIT 1", (learner, slug)).fetchone()
+        if not latest or latest["id"] != review_id or not latest["state_before"]:
+            raise HTTPException(409, "this grade has a newer review")
+        _upsert_state(c, json.loads(latest["state_before"]))
+        c.execute("DELETE FROM word_reviews WHERE id=?", (review_id,))
 
 
 def rw_answers(learner: str | None = None, since: str | None = None,
@@ -321,6 +358,9 @@ def calibration(learner: str) -> dict:
     pending: dict[str, bool] = {}
     n = held = 0
     for review in word_reviews(learner):
+        if review["mode"] == "placement" and review["given"] in {"yes", "know"}:
+            pending[review["word"]] = True
+            continue
         if review["correct"] is None:
             continue
         if review["mode"] in {"cards", "sort", "placement", "sheet-grade"} and review["correct"]:
@@ -350,7 +390,8 @@ def _flags(learner: str, slug: str, s: dict, day: dt.date) -> dict:
     thought = bool(s.get("thought_at") and (day - local_day(0, s["thought_at"])).days <= 30
                    and (not last_right or last_right["at"] < s["thought_at"]))
     misses = db.one("SELECT COUNT(*) n FROM word_reviews WHERE learner=? AND word=? AND correct=0"
-                    " AND at>=?", learner, slug, (day - dt.timedelta(days=14)).isoformat())["n"]
+                    " AND at>=?", learner, slug,
+                    max((day - dt.timedelta(days=14)).isoformat(), s.get("stubborn_cleared") or ""))["n"]
     return {"is_due": bool(s["due"] and s["due"] <= day.isoformat()),
             "missed": missed, "thought": thought,
             "stubborn": int(s["lapses"] or 0) >= 4 or misses >= 3,
@@ -431,7 +472,8 @@ def deck(learner: str, source: str, value=None, n: int = 20, tz: int = 0,
     elif source == "due":
         rows = [w for w in rows if w["is_due"]]
     elif source == "new":
-        rows = [w for w in rows if not w["state"] and not w["placed"]]
+        rows = [w for w in rows if int((w["state"] or {}).get("box") or 0) == 0
+                and w["placed"] != 2]
     elif source == "saved":
         rows = [w for w in rows if w["saved"]]
     elif source in {"missed", "thought", "stubborn", "looked_up"}:
@@ -440,26 +482,42 @@ def deck(learner: str, source: str, value=None, n: int = 20, tz: int = 0,
         rows = [w for w in rows if w["own"]]
     elif source == "today":
         due = [w for w in rows if w["is_due"]]
-        fresh = [w for w in rows if not w["state"]]
-        rows = due + fresh[:max(0, lib["counts"]["goal"] - lib["counts"]["new_today"])]
+        missed = [w for w in rows if w["missed"] and w not in due][:3]
+        extra_transitions = [w for w in rows if w["collection"] == "transitions" and
+                             w not in due and w not in missed][:3]
+        assigned = {w["slug"] for w in due + missed + extra_transitions}
+        fresh = [w for w in rows if not w["state"] and w["slug"] not in assigned]
+        rows = due + missed + extra_transitions + fresh[:max(0, lib["counts"]["goal"] - lib["counts"]["new_today"])]
     else:
         raise HTTPException(422, "unknown word deck")
-    rows.sort(key=lambda w: (not w["is_due"], -int(w["saved"]),
-                             0 if w["collection"] == "sat-core" else 1,
-                             -int((entry(w["slug"], learner) or {}).get("value", 1)), w["word"].casefold()))
+    if source == "today":
+        rows.sort(key=lambda w: (0 if w["stubborn"] and w["is_due"] else
+                                 1 if w["is_due"] and not w["claimed"] and w["placed"] != 2 else
+                                 2 if w["is_due"] else 3 if w["missed"] else
+                                 4 if w["collection"] == "transitions" else 5,
+                                 w["state"]["due"] if w["state"] and w["state"]["due"] else "9999",
+                                 w["word"].casefold()))
+    else:
+        rows.sort(key=lambda w: (not w["is_due"], -int(w["saved"]),
+                                 0 if w["collection"] == "sat-core" else 1,
+                                 -int((entry(w["slug"], learner) or {}).get("value", 1)), w["word"].casefold()))
     return [w["slug"] for w in rows[:max(0, min(n, 200))]]
 
 
 def today_summary(learner: str, tz: int = 0) -> dict:
     lib = library(learner, tz)
     c = lib["counts"]
-    proofs = sum(w["claimed"] and w["is_due"] for w in lib["words"])
+    proofs = sum((w["claimed"] or w["placed"] == 2) and w["is_due"] for w in lib["words"])
     goal = c["goal"]
     new_left = max(0, goal - c["new_today"])
     minutes = round((c["due"] * 10 + new_left * 25) / 60, 1)
+    title = f"Today's words · {c['due']} due · {minutes:g} min"
+    reason = f"{c['due']} come back today · {proofs} are proofs"
     return {"due": c["due"], "proofs": proofs, "new_goal": goal,
             "new_today": c["new_today"], "minutes": minutes,
-            "done": c["due"] == 0 and new_left == 0, "goal": goal}
+            "done": c["due"] == 0 and new_left == 0, "goal": goal,
+            "title": title, "reason": reason,
+            "start": {"path": "/api/words/run", "body": {"mode": "mix", "deck": {"source": "today"}}}}
 
 
 def minutes_today(learner: str, tz: int = 0) -> float:
@@ -483,7 +541,8 @@ def of_reason(template: str, reason: str) -> dict | None:
 
 def gloss_index() -> dict:
     return {"v": 1, "words": [{"slug": w["slug"], "word": w["word"], "short": w["short"],
-                               "also": w.get("also", [])} for w in content()["entries"].values()]}
+                               "also": w.get("also", [])} for w in content()["entries"].values()],
+            "common": content()["index"].get("common", [])}
 
 # ------------------------------------------------------------------ generated Reading & Writing items
 
@@ -733,10 +792,12 @@ def new_sentence(learner: str, slug: str, reps: int | None = None) -> dict | Non
     w = entry(slug, learner)
     if not w or slug.startswith("u:"):
         return None
-    reps = int(state(learner, slug)["reps"] if reps is None else reps)
+    s = state(learner, slug)
+    history = json.loads(s.get("sentence_history") or "[]")
+    reps = int(s["reps"] if reps is None else reps)
     previous = [r["template"] for r in rw_answers(learner) if r["word"] == slug]
-    seen = set(previous)
-    last = previous[-1] if previous else None
+    seen = set(previous) | {r["template"] for r in history}
+    last = history[-1]["template"] if history else previous[-1] if previous else None
     avoid = (content()["pairs"][last[6:]]["subject"] if last and last.startswith("rw.tr.")
              else content()["frames"][last[7:]]["subject"] if last and last.startswith("rw.wic.")
              else None)
@@ -749,6 +810,10 @@ def new_sentence(learner: str, slug: str, reps: int | None = None) -> dict | Non
     except ValueError:
         return None
     text = generated["text"].replace("____", w["word"], 1)
+    history.append({"template": template, "seed": seed})
+    s["sentence_history"] = json.dumps(history[-30:])
+    with db.atomic() as c:
+        _upsert_state(c, s)
     return {"template": template, "seed": seed, "text": text,
             "subject": generated["subject"], "source": generated.get("source")}
 
@@ -849,5 +914,174 @@ def public_item(generated: dict, item_id: str | None = None) -> dict:
     """One public shape; never serialize keys or trap reasons before a verdict."""
     allowed = ("kind", "stem", "text", "choices", "head", "step", "predictions", "source")
     out = {k: generated[k] for k in allowed if k in generated}
+    if generated.get("step") in {"predict", "relation"} and not generated.get("stage_done"):
+        out.pop("choices", None)
+    if generated.get("kind") in {"card", "fix", "learn"}:
+        out["word"] = generated.get("word")
+        out["back"] = generated.get("back")
+        if generated.get("picks"):
+            out["picks"] = generated["picks"]
     out["item_id"] = item_id or generated.get("item_id")
     return out
+
+# ------------------------------------------------------------------ shared daily Reading & Writing items
+
+def daily_item(day: str, fmt: str) -> dict | None:
+    """The sole deterministic chooser for both Words and Today's R&W slots."""
+    if fmt not in {"wic", "transition"}:
+        raise ValueError("daily format must be wic or transition")
+    digest = hashlib.sha256(f"qotd:rw:{fmt}:{day}".encode()).digest()
+    data = content()
+    if fmt == "wic":
+        eligible = sorted(w["slug"] for w in data["sat"] if
+                          len([ident for ident in data["index"]["words"][w["slug"]]["frames"]
+                               if _servable(data["frames"][ident]) and not _suppressed(ident)]) >= 6)
+        if not eligible:
+            return None
+        for offset in range(min(40, len(eligible))):
+            slug = eligible[(int.from_bytes(digest[:8], "big") + offset) % len(eligible)]
+            frames = [ident for ident in data["index"]["words"][slug]["frames"]
+                      if _servable(data["frames"][ident]) and not _suppressed(ident)]
+            ident = frames[int.from_bytes(digest[8:16], "big") % len(frames)]
+            seed = int.from_bytes(digest[16:24], "big")
+            try:
+                generated = item("rw.wic." + ident, seed, slug)
+                generated["item_id"] = f"rw:wic:{day}"
+                return generated
+            except ValueError:
+                continue
+        return None
+    families = sorted(p["id"] for p in data["pairs"].values()
+                      if _servable(p) and not _suppressed(p["id"]))
+    if not families:
+        return None
+    for offset in range(min(40, len(families))):
+        ident = families[(int.from_bytes(digest[:8], "big") + offset) % len(families)]
+        seed = int.from_bytes(digest[8:16], "big")
+        try:
+            generated = item("rw.tr." + ident, seed)
+            generated["item_id"] = f"rw:transition:{day}"
+            return generated
+        except ValueError:
+            continue
+    return None
+
+
+def record_daily(learner: str, day: str, fmt: str, answer: int | str,
+                 ms: int | None = None, conf: str | None = None, tz: int = 0) -> dict:
+    generated = daily_item(day, fmt)
+    if not generated:
+        raise HTTPException(409, "no reviewed daily item is available")
+    session = f"qotd:rw:{fmt}:{day}"
+    with db.atomic():
+        previous = db.one("SELECT * FROM word_reviews WHERE learner=? AND session=? ORDER BY id LIMIT 1",
+                          learner, session)
+        if previous:
+            return {"correct": bool(previous["correct"]), "given": previous["given"],
+                    "answer_index": generated["answer_index"],
+                    "word": generated["word"], "reasons": generated["reasons"],
+                    "traps": generated["traps"], "already": True}
+        if day != local_day(tz).isoformat():
+            raise HTTPException(409, "that daily item is no longer today")
+        chosen = ("ABCD".index(answer.upper()) if isinstance(answer, str) and
+                  answer.upper() in "ABCD" else answer)
+        if not isinstance(chosen, int) or not 0 <= chosen <= 3:
+            raise HTTPException(422, "answer must be an option from 0 to 3")
+        ok = chosen == generated["answer_index"]
+        verdict = grade(learner, generated["word"], ok, "daily", generated["kind"], ms,
+                        session, generated["traps"][chosen], tz,
+                        given=str(chosen), conf=conf, template=generated["template"],
+                        seed=generated["seed"])
+    return {**verdict, "given": chosen, "answer_index": generated["answer_index"],
+            "word": generated["word"], "reasons": generated["reasons"],
+            "traps": generated["traps"], "spans": generated["spans"], "already": False}
+
+
+def order_item(seed: int, family: str | None = None) -> dict:
+    data = content()
+    rng = _rng("rw.order." + (family or "any"), seed)
+    families = defaultdict(list)
+    for w in data["sat"]:
+        families[w["class"]].append(w)
+    eligible = {name: group for name, group in families.items()
+                if len({w["intensity"] for w in group}) >= 4}
+    if family and family not in eligible:
+        raise ValueError("this family has no four-step ladder")
+    name = family or rng.choice(sorted(eligible))
+    by_strength = defaultdict(list)
+    for w in eligible[name]:
+        by_strength[w["intensity"]].append(w)
+    levels = rng.sample(sorted(by_strength), 4)
+    picked = [rng.choice(by_strength[level]) for level in levels]
+    key = [w["slug"] for w in sorted(picked, key=lambda x: x["intensity"])]
+    rng.shuffle(picked)
+    return {"template": "rw.order." + name, "seed": seed, "kind": "order",
+            "word": key[0], "stem": "Put these words in order from weakest to strongest.",
+            "text": data["classes"][name]["dimension"],
+            "choices": [w["word"] for w in picked],
+            "option_slugs": [w["slug"] for w in picked], "answer_order": key,
+            "reasons": [f"“{w['word']}” is at strength {w['intensity']}." for w in picked]}
+
+
+def root_item(seed: int, kind: str = "decode", root_id: str | None = None) -> dict:
+    data = content()
+    rng = _rng("rw.root." + (root_id or "any"), seed)
+    roots = [r for r in data["roots"].values() if len(r["words"]) >= 3]
+    root = data["roots"].get(root_id) if root_id else rng.choice(roots)
+    if not root or len(root["words"]) < 3:
+        raise ValueError("root has too few family words")
+    if kind == "rootshare":
+        family = rng.sample(root["words"], 3)
+        others = rng.sample([r for r in roots if r["id"] != root["id"]], 3)
+        choices = [root, *others]
+        rng.shuffle(choices)
+        return {"kind": "rootshare", "word": family[0]["slug"],
+                "stem": "Which root do these words share?",
+                "text": ", ".join(data["entries"][w["slug"]]["word"] for w in family),
+                "choices": [r["forms"][0] for r in choices],
+                "answer_index": choices.index(root),
+                "reasons": [f"{r['forms'][0]} means {r['meaning']}." for r in choices],
+                "traps": [None if r == root else "wrong_root" for r in choices]}
+    related = rng.choice(root["words"])
+    key = data["entries"][related["slug"]]
+    family_slugs = {x["slug"] for x in root["words"]}
+    others = [w for w in data["sat"] if w["slug"] not in family_slugs and
+              .6 <= len(w["short"]) / max(1, len(key["short"])) <= 1.4]
+    rng.shuffle(others)
+    chosen, seen = [], {key["short"]}
+    for w in others:
+        if w["short"] not in seen:
+            chosen.append(w)
+            seen.add(w["short"])
+        if len(chosen) == 3:
+            break
+    options = [key, *chosen]
+    rng.shuffle(options)
+    return {"kind": "decode", "word": key["slug"],
+            "stem": "What does this word most likely mean?",
+            "text": key["word"], "parts": related["split"],
+            "choices": [w["short"] for w in options], "answer_index": options.index(key),
+            "reasons": [f"“{w['word']}” means {w['short']}." for w in options],
+            "traps": [None if w == key else "wrong_root" for w in options]}
+
+
+def open_traps(learner: str) -> list[str]:
+    misses = [r for r in rw_answers(learner) if r["correct"] == 0 and r["trap"]]
+    recent = misses[-20:]
+    counts = Counter(r["trap"] for r in recent)
+    return [kind for kind, n in counts.most_common()
+            if n >= 3 and n / max(1, len(recent)) >= .25]
+
+
+def logic_pairs(learner: str) -> list[dict]:
+    transition_by_word = {w["word"].casefold(): w["logic"] for w in content()["transitions"]}
+    counts = Counter()
+    for r in rw_answers(learner):
+        if r["skill"] != "Transitions" or r["correct"] != 0:
+            continue
+        ident = r["template"][6:]
+        pair = content()["pairs"].get(ident)
+        picked = transition_by_word.get((r["given"] or "").casefold())
+        if pair and picked and picked != pair["logic"]:
+            counts[(pair["logic"], picked)] += 1
+    return [{"needed": a, "picked": b, "n": n} for (a, b), n in counts.most_common()]
