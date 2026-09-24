@@ -795,6 +795,15 @@ def estimate_checks():
     assert estimate.project([(dt.date(2026, 9, 1), 500), (dt.date(2026, 9, 15), 560)], dt.date(2026, 11, 7), 70) is None
     # X15: growth needs 20 peers; calibration pairs an outside score with a nearby section
     assert estimate.growth(learner) is None
+    grow = "a:f4grow"
+    for sid, who, back, low in [("f4-grow-1", grow, 60, 440), ("f4-grow-2", grow, 20, 520), ("f4-grow-3", grow, 10, 560)] + \
+            [(f"f4-gpeer-{i}-{n}", f"a:f4gpeer{i}", back, low) for i in range(20) for n, back, low in ((1, 60, 440), (2, 5, 460))]:
+        stamp = at(TODAY - dt.timedelta(days=back))
+        add("sessions", id=sid, kind="mock", learner=who, started=stamp, finished=stamp,
+            result=json.dumps({"estimate": {"low": low, "high": low + 80}}))
+    add("outside_scores", id="f4-grow-bb", learner=grow, day=str(TODAY), math=620, source="bluebook", at=progress.now())
+    # mean3 = (620 + 600 + 560) / 3 -> 590, so +110 from 480; each peer 500 - 480 = +20
+    assert estimate.growth(grow) == {"since_first": 110, "first": 480, "n": 20, "pct": 100}, estimate.growth(grow)
     add("outside_scores", id="bb-f4", learner=learner, day=str(TODAY - dt.timedelta(days=1)), math=610,
         source="bluebook", at=progress.now())
     assert estimate.calibration(learner)["pairs"][0]["inside"] is True

@@ -133,13 +133,18 @@ def _sittings(learner: str, subject: str = "math") -> list[dict]:
     return sorted(out, key=lambda x: (x["at"], str(x["id"])), reverse=True)
 
 
+def _mean3(items: list[dict]) -> int | None:
+    """R16: the last up to 3 scored sittings within 45 days, outside scores included."""
+    recent = [x for x in items if (dt.date.today() - dt.date.fromisoformat(x["at"][:10])).days <= 45][:3]
+    return _round10(sum(x["mid"] for x in recent) / len(recent)) if recent else None
+
+
 def estimate(learner: str, subject: str = "math") -> dict:
     items = _sittings(learner, subject)
     latest = items[0] if items else None
     previous = items[1] if len(items) > 1 else None
     best = max(items, key=lambda x: x["mid"]) if items else None
-    recent = [x for x in items if (dt.date.today() - dt.date.fromisoformat(x["at"][:10])).days <= 45][:3]
-    mean3 = _round10(sum(x["mid"] for x in recent) / len(recent)) if recent else None
+    mean3 = _mean3(items)
     standard = [x for x in items if x["standard"] and x["kind"] in SECTION_KINDS]
     last3 = standard[:3]
     combined = None
@@ -758,23 +763,30 @@ def _path(sid: str, target: int) -> list[str] | None:
 
 
 def growth(learner: str) -> dict | None:
-    """X15: since the first ranked section, against learners who started
-    within 40 points and have sat two or more (n >= 20)."""
+    """X15: mean3 against the first ranked section's midpoint, among learners
+    whose first ranked section was within 40 points and who have sat two or
+    more ranked sections (n >= 20)."""
     def firsts() -> dict[str, list[float]]:
         out: dict[str, list[float]] = defaultdict(list)
         for x in db.rows(f"SELECT * FROM sessions WHERE finished IS NOT NULL AND kind IN ('mock','section','paper')"
                          f" AND {db.NOT_SAMPLE} ORDER BY finished,id"):
             e = (json.loads(x["result"] or "{}").get("estimate") or {}) if x["result"] else {}
-            if _standard(x) and e.get("low") is not None:
+            if _standard(x) and _subject(x) == "math" and e.get("low") is not None:
                 out[x["learner"]].append((e["low"] + e["high"]) / 2)
         return out
     seq = firsts()
     mine = seq.get(learner)
-    if not mine or len(mine) < 2:
+    now3 = _mean3(_sittings(learner)) if mine and len(mine) >= 2 else None
+    if now3 is None:
         return None
-    my_gain = statistics.mean(mine[-3:]) - mine[0]
-    peers = [statistics.mean(s[-3:]) - s[0] for k, s in seq.items()
-             if k != learner and len(s) >= 2 and abs(s[0] - mine[0]) <= 40]
+    my_gain = now3 - mine[0]
+    peers = []
+    for k, s in seq.items():
+        if k != learner and len(s) >= 2 and abs(s[0] - mine[0]) <= 40:
+            # ponytail: one read per nearby peer; keep mean3 on learners if peers grow into thousands
+            m3 = _mean3(_sittings(k))
+            if m3 is not None:
+                peers.append(m3 - s[0])
     if len(peers) < 20:
         return None
     return {"since_first": round(my_gain), "first": mine[0], "n": len(peers),
