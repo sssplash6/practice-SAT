@@ -162,8 +162,9 @@
     // before Up next exists (U1's next.py): the day's own starts
     const s = UI.shellData() || {}, out = [];
     const coach = data.map && data.map.coach && data.map.coach.topics;
+    const cn = (data.map && data.map.coach && data.map.coach.count) || setLength();   // the plan's per-session count, as Today starts it
     if (coach && coach.length) out.push(drillRow(`Today’s set · ${coach.map(t => (UI.TOPIC[t] || {}).short || t).join(', ')}`,
-      { topics: coach, count: setLength(), source: 'coach' }, { sub: qn(setLength()), icon: icon('today', 18) }));
+      { topics: coach, count: cn, source: 'coach' }, { sub: qn(cn), icon: icon('today', 18) }));
     if (s.mistakes) out.push(drillRow(`Fix all mistakes (${fmt(s.mistakes)})`, { pool: 'redo', source: 'palette' }, { icon: icon('review', 18) }));
     if (s.resume) out.push({ label: s.resume.kind === 'drill' ? 'Resume your set' : `Resume ${s.resume.kind}`, sub: s.resume.total ? `${fmt(s.resume.answered)}/${fmt(s.resume.total)}` : null,
       icon: icon('play', 18), run: () => go(s.resume.href) });
