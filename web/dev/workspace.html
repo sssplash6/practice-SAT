@@ -48,6 +48,7 @@
     <span class="meta">UI.workspace in every mode, with fixture questions and a fake server</span>
     <span class="dev-self" id="self"></span>
     <span class="meta">The runner: <a href="?view=runner&amp;rmode=practice">practice</a> · <a href="?view=runner&amp;rmode=practice&amp;timed=1">timed</a> · <a href="?view=runner&amp;rmode=retry">retry</a> · <a href="?view=runner&amp;rmode=end">end</a> · <a href="?view=runner&amp;rmode=challenge">challenge</a> · <a href="?view=runner&amp;rmode=exam">test-day</a> · <a href="?view=runner&amp;rmode=training">training</a></span>
+    <span class="meta">The review player: <a href="?view=review&amp;rmode=dialog">report dialog</a> · <a href="?view=review&amp;rmode=dialog&amp;n=44">44 questions</a> · <a href="?view=review&amp;rmode=pane">Review pane</a> · <a href="?view=review&amp;rmode=second">second look</a> · <a href="?view=review&amp;rmode=walk">walk</a> · <a href="?view=review&amp;rmode=pair">then vs now</a> · <a href="?view=review&amp;rmode=history">attempt history</a></span>
   </div>
 
   <div class="dev-controls" id="controls">
@@ -314,6 +315,133 @@
     window.devQueue = qs;
     const rt = UI.workspaceSelfTest();
     if (!rt.ok) console.error('self-test', rt);
+    return;
+  }
+
+  /* ---------------------------------------------------------------- the review player (UI.review, UI.history), on a fake server
+     ?view=review&rmode=dialog|pane|second|walk|pair|history  [&n=12]  (#q=m1-7 opens the dialog there)
+     The twin, Again exactly, See one solved and the history go through UI.api, answered here. */
+  if (url.get('view') === 'review') {
+    const rmode = url.get('rmode') || 'dialog';
+    const base = FX.filter(q => q.id !== 'w1');
+    const n = +(url.get('n') || (rmode === 'pane' ? 8 : 12));
+    const PAT = ['incorrect', 'correct', 'unanswered', 'incorrect', 'correct', 'correct', 'incorrect', 'mixed', 'correct', 'incorrect', 'correct', 'fixed'];
+    const DIAG = [{ id: 'n1', text: 'Gave the diameter instead of the radius' }, { id: 'n2', text: 'Doubled when the value should have been halved' }, { id: 'misread', text: 'Misread the question' }, { id: 'slip', text: 'A slip: I knew how' }, { id: 'gap', text: 'Didn’t know how to start' }];
+    const qOf = (i, id) => { const q = JSON.parse(JSON.stringify(base[i % base.length])); q.id = id || `r${i + 1}`; q.number = i + 1; q.level = 3 + (i % 4); return q; };
+    const wrongOf = q => q.type === 'spr' ? '5/4' : (keyOf(q) + 1) % q.choices.length;
+    const make = i => {
+      const q = qOf(i);
+      const status = PAT[i % PAT.length];
+      const miss = status !== 'correct';
+      const given = status === 'correct' || status === 'mixed' ? keyOf(q) : status === 'unanswered' ? null : wrongOf(q);
+      const ms = 38000 + (i * 7919) % 120000;
+      const fb = feedback(q, given, { ms, try: 1 });
+      if (status === 'mixed') fb.correct = false;
+      if (q.type !== 'spr' && miss) fb.crowd = Object.assign({}, fb.crowd, { option_share: q.choices.map((_, j) => (j === keyOf(q) ? null : [0.5, 0.3, 0.2][j % 3])) });
+      if (q.type === 'spr' && miss && given) fb.diagnosis = { kind: 'ten', text: 'Off by a factor of 2: check which part of the circle the question asks for.' };
+      return {
+        q, fb, n: i + 1, module: n > 22 ? (i < 22 ? 1 : 2) : 1, status, flag: i % 5 === 0, ms, budget_ms: { easy: 65000, medium: 95000, hard: 126000 }[q.difficulty] || 95000,
+        worth: miss ? 8 + (i % 6) * 2 : 0, saved: i === 4, reported: i === 6 ? 'checking' : null, changed: i === 3 ? [1, wrongOf(q)] : null,
+        cause: miss && given !== null ? { cause: i % 3 ? 'trap' : 'slip', auto: true, evidence: ['0:18 on it', '4 of your last 5 on this type right'] } : status === 'unanswered' ? { cause: 'clock', auto: true } : null,
+        odds: { you: miss ? 0.82 : 0.64, at: 'sitting', avg: 0.61 }, crowd: i % 2 ? { n: 212, rate: 0.74, median_ms_right: 65000, level: 4 } : { n: 6, level: 4, rough: true },
+        mistake: miss ? (status === 'fixed' ? { status: 'fixed', fixed_at: '2026-09-24', label: fb.mistake } : { status: i % 4 ? 'open' : 'half', owed: i % 4 ? 2 : 1, of: 2, hits: 3, label: fb.mistake || 'a named mistake', trap_id: 500 + i }) : null,
+        tries: status === 'mixed' ? [{ given_label: 'A', correct: false, reason: 'halved when the value should have been doubled', ms: 22000 }, { given_label: 'B', correct: true, ms: 41000, hints: 1 }] : null,
+        path: q.type === 'spr' ? { ms, budget_ms: 95000, conf: miss ? 'sure' : null } : { struck: miss ? [(keyOf(q) + 2) % 4] : [], trail: i === 3 ? [1, wrongOf(q)] : null, first: i === 3 ? { correct: true, given: 1 } : null, ms, budget_ms: 95000, conf: i === 0 ? 'sure' : null },
+        family: i % 6 === 5 ? { seen: 0 } : { seen: 6, right: 3, repaired: 1, recent: [{ result: 'wrong', ms: 100000, at: '2026-09-12' }, { result: 'wrong', ms: 84000, at: '2026-09-14' }, { result: 'right', ms: 71000, at: '2026-09-18' }, { result: 'repaired', ms: 60000, at: '2026-09-20' }, { result: miss ? 'wrong' : 'right', ms, at: '2026-09-23', current: true }, { result: 'right', ms: 52000, at: '2026-09-24' }], line: '1:40 → 0:52 · 3 right in a row since', verdict: miss ? 'Recovered Sep 26' : null },
+        elsewhere: miss && i % 2 === 0 ? [{ skill: 'Circle measures' }, { skill: 'Arc length' }, { skill: 'Sector area' }] : null,
+        sitting: { label: 'Section #7 · Sep 23', href: '#' }, session: 'dev-sitting', tell: 'Reread the last line: is this the final quantity?', norm: 'n1', attempt_id: 100 + i, seen: false,
+        new: rmode === 'pane' && i === 0, diag_choices: DIAG, try: rmode === 'walk' && i !== 1, blank: status === 'unanswered',
+        story: rmode === 'pane' && miss ? [{ at: '2026-09-12', event: 'miss', source: 'Section #7 · Q14', label: 'picked C · Wrong (trap)', attempt: 1 }, { at: '2026-09-12', event: 'pip', source: 'Repair ↻', label: 'new numbers' }, { at: '2026-09-14', event: 'fixed', source: 'Practice', label: 'clean · Fixed' }, { at: '2026-09-17', event: 'check_ok', source: 'Check-in 1', label: '✓' }, { at: '2026-09-24', event: 'due', source: 'Check-in 2', label: 'due' }] : null,
+        summary: rmode === 'pane' && miss ? { days_to_fix: 2, answers: 3, held_days: 10 } : null,
+        strip: rmode === 'pane' && miss ? { status: 'incorrect', owed: i % 4 ? 2 : 1, of: 2, label: 'open' } : null,
+        details: { you: '1 of 4 right', cb: '06469-DC', ratings: 'your Circles rating 1180 against this type’s 1020' },
+        links: { fresh: `${location.origin}/q/?t=${q.template}`, exact: `${location.origin}/practice/session/?q=${q.template}:${q.seed}` },
+      };
+    };
+    let items = Array.from({ length: n }, (_, i) => make(i));
+    if (rmode === 'second' || rmode === 'walk') items = items.filter(x => x.status !== 'correct' && x.status !== 'fixed');
+    if (rmode === 'second') items.forEach(x => { x.fb = { given: x.fb.given }; });          // held back: no key, no reasons
+    /* the fake server behind the inline twin, See one solved and the history */
+    const twins = FX.filter(q => q.template === 'circle.convert');
+    let tw = 0, twQ = null;
+    const realApi = UI.api;
+    UI.api = async (path, o = {}) => {
+      const m = o.method || 'GET';
+      log('api', m, path, o.body || '');
+      await wait(140);
+      if (m === 'POST' && path === '/drill') { twQ = Object.assign(JSON.parse(JSON.stringify(twins[++tw % twins.length])), { id: `tw${tw}` }); return { id: `dv${tw}`, question: twQ }; }
+      if (m === 'GET' && /^\/drill\/dv\d+$/.test(path)) return { question: twQ };
+      if (/\/drill\/dv\d+\/answer$/.test(path)) return Object.assign(feedback(twQ, o.body.answer, o.body), { repair_next: !isRight(twQ, o.body.answer) });
+      if (/\/drill\/dv\d+\/more$/.test(path)) return { ok: true };
+      if (/\/drill\/dv\d+\/next$/.test(path)) { twQ = Object.assign(JSON.parse(JSON.stringify(twins[++tw % twins.length])), { id: `tw${tw}` }); return { question: twQ }; }
+      if (/\/drill\/dv\d+\/finish$/.test(path)) return { ok: true };
+      if (path.startsWith('/types/')) { const ex = Object.assign(JSON.parse(JSON.stringify(FX[4])), { id: 'ex', seed: 900003 }); return { question: ex, feedback: feedback(ex, null, {}), trap_index: 2 }; }
+      if (path.startsWith('/review/family')) {
+        const p = new URLSearchParams(path.split('?')[1]);
+        const rows = Array.from({ length: p.get('cursor') ? 3 : 8 }, (_, i) => ({ id: 900 - i, at: `2026-09-${String(24 - i).padStart(2, '0')}T1${i}:05:00`, source: i % 2 ? 'practice' : 'section', sitting: i % 2 ? 'Practice set #45' : 'Section #7', href: '#',
+          tier: ['easy', 'medium', 'hard'][i % 3], result: ['wrong', 'right', 'repaired', 'mixed', 'right', 'repeat', 'wrong', 'right'][i % 8], given_label: 'C', mistake: i % 4 === 0 ? 'gave the diameter instead' : '', norm: i % 4 === 0 ? 'n1' : 'n2',
+          ms: 40000 + i * 9000, flagged: i === 2, seed: i === 1 ? 1 : 10 + i, template: 'circle.convert', openable: true,
+          tries: i === 3 ? [{ given_label: 'C', correct: false, ms: 22000, reason: 'gave the diameter instead' }, { given_label: 'B', correct: true, ms: 41000 }] : null }))
+          .filter(r => !p.get('norm') || r.norm === p.get('norm'));
+        return { template: 'circle.convert', name: 'Diameter and radius', summary: { seen: p.get('norm') ? rows.length : 11, right: 5, mixed: 1, repaired: 1, repeats: 1, median_ms: 70000 },
+          trend: { first: ['wrong', 'wrong', 'right', 'right', 'right'], median_first: 130000, median_last: 58000, ready: 'Ready · back in your warm-up Oct 2' },
+          open: [{ trap_id: 7, label: 'gave the diameter instead', owed: 1, of: 2 }], verdict: { kind: 'same_trap', text: 'Same trap twice', start: { body: { source: 'learn', templates: ['circle.convert'] } } },
+          attempts: rows, next: p.get('cursor') ? null : 'c1' };
+      }
+      if (path.startsWith('/review/item')) return { question: FX[0], answer: FX[0].answer, reasons: FX[0].reasons, rationale: FX[0].rationale };
+      return realApi(path, o);
+    };
+    const on = {
+      seen: it => log('seen', it.q.id), reanswer: (it, a, right) => log('reanswer', it.q.id, a, right), show: (i, it) => log('show', i, it.q && it.q.id),
+      why: async (it, b) => { log('why', it.q.id, b); await wait(150); return { called: b.diag === it.norm, label: it.fb.mistake || 'gave the diameter instead', cause: b.kind || null }; },
+      rule: async (it, t) => { log('rule', t); await wait(120); }, save: async (it, v) => { log('save', it.q.id, v); await wait(120); }, mark: async (it, v) => { log('mark', it.q.id, v); await wait(120); },
+      second: async (it, a, m) => { log('second', it.q.id, a, m); await wait(200); const f = feedback(it.q, a, m); return f; },
+      walkAnswer: async (it, a, m) => { log('walk try', it.q.id, a); await wait(150); return feedback(it.q, a, m); },
+      seenSecond: null, at: (i, s, d) => log('at', i, s, d), story: async () => { await wait(100); return make(1); },
+      related: it => log('related', it.q.id), spot: it => log('spot', it.q.id), share: it => log('share', it.q.id), help: it => log('help', it.q.id),
+      addRedo: it => log('add to redo', it.q.id), dismiss: it => log('dismiss', it.q.id), twins: l => log('twins of', l.length), learn: l => log('learn', l.length),
+      closed: (it, f) => log('closed trap', it.q.id, f.closed), done: s => log('done', s), close: (i, x) => { log('player closed at', i, x); },
+      startSecond: () => log('start second look'), showNow: it => Object.assign({}, make(it.n - 1), { seen: true }),
+    };
+    if (rmode === 'second') on.seen = async it => { log('seen (just show me)', it.q.id); await wait(100); return make(it.n - 1); };
+    $('#main').hidden = true;
+    const page = document.createElement('main');
+    page.className = 'dev';
+    page.id = 'rvPage';
+    page.innerHTML = `<div class="dev-h"><h1 class="h1">Review player · ${rmode}</h1><span class="dev-self" id="self"></span><a class="quiet" href="?">← Workspace</a></div>
+      <div class="dev-tools" id="rvCells" role="group" aria-label="Open at"></div>
+      <div class="dev-tools" style="margin-top:10px"><label class="meta">Filter <select id="rvFilter"><option value="all">All</option><option value="miss">Incorrect + unanswered</option></select></label>
+      <button type="button" class="btn sm" id="rvOpen">Open the player</button><button type="button" class="btn sm" id="rvHist">Attempt history</button><button type="button" class="quiet" id="rvClear">Clear log</button></div>
+      <div class="dev-main"><div class="dev-q" id="rvHost"></div><aside class="dev-side"><pre class="dev-log" id="rvLog" aria-live="off"></pre></aside></div>`;
+    document.body.append(page);
+    $('#log').id = 'logOld';
+    $('#rvLog').id = 'log';
+    $('#rvClear').addEventListener('click', () => { $('#log').textContent = ''; });
+    const filt = () => ($('#rvFilter').value === 'miss' ? { filter: (it) => it.status === 'incorrect' || it.status === 'unanswered', filterLabel: 'incorrect or blank' } : {});
+    let player = null;
+    const open = at => {
+      if (player && rmode !== 'pane') player.destroy();
+      if (rmode === 'pair') {
+        const pairs = items.slice(0, 8).map((x, i) => ({ then: x, now: make(i + 1), change: ['fixed', 'slipped', 'still_missing', 'held'][i % 4] }));
+        player = UI.review(null, pairs, { mode: 'pair', at, on });
+      } else player = UI.review(rmode === 'pane' ? $('#rvHost') : null, items, Object.assign({ mode: rmode, at, on, session: 'dev-sitting', title: rmode === 'dialog' ? 'Section #7 · Sep 23' : null,
+        axes: ['easier', 'harder', 'grid'], owner: true }, filt()));
+      window.devPlayer = player;
+      return player;
+    };
+    items.forEach((x, i) => {
+      const b = UI.cell ? UI.cell(x.status, x.n, { flag: x.flag || null, onClick: () => open(i) }) : Object.assign(document.createElement('button'), { textContent: x.n, onclick: () => open(i) });
+      $('#rvCells').append(b);
+    });
+    $('#rvOpen').addEventListener('click', () => open(0));
+    $('#rvFilter').addEventListener('change', () => { if (player && player.setFilter) { const f = filt(); player.setFilter(f.filter, f.filterLabel); } });
+    $('#rvHist').addEventListener('click', e => UI.history({ template: 'circle.convert', skill: 'Diameter and radius', seed: 1, norm: 'n1' }));
+    window.devItems = items;
+    const rt = UI.workspaceSelfTest();
+    $('#self').textContent = rt.ok ? 'self-test: ok' : `self-test failed: ${JSON.stringify(rt)}`;
+    if (rmode === 'history') UI.history({ template: 'circle.convert', skill: 'Diameter and radius', seed: 1, norm: 'n1' });
+    else if (rmode === 'pane') open(0);
+    else { const h0 = UI.review.at(items); open(h0 >= 0 ? h0 : 0); }
     return;
   }
 
