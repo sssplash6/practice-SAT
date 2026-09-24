@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Not found · SAT Freshman</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* StaticFiles serves this for any path with no page, so every URL here is absolute */
+  .lost { max-width: 34rem; padding-top: clamp(24px, 10vh, 96px); display: grid; gap: 14px; justify-items: start; }
+  .lost .path { overflow-wrap: anywhere; }
+  .lost-go { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+</style>
+</head>
+<body data-page="">
+<a class="skip" href="#main">Skip to content</a>
+<header id="bar"></header>
+<main class="page" id="main" tabindex="-1">
+  <section class="lost" aria-labelledby="lost-h">
+    <p class="k">404 · not found</p>
+    <h1 class="h1" id="lost-h">That page does not exist.</h1>
+    <p class="meta path" id="lost-path" hidden></p>
+    <div class="lost-go">
+      <a class="pill sm" href="/">Today</a>
+      <a class="btn" href="/practice/">Practice</a>
+    </div>
+  </section>
+</main>
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script>
+  (() => {
+    const p = document.getElementById('lost-path');
+    let path = location.pathname;
+    try { path = decodeURI(path); } catch (_) {}         // a malformed %-escape shows as typed
+    p.textContent = path + location.search;
+    p.hidden = location.pathname === '/404.html';
+    if (window.UI && UI.shell) UI.shell();
+  })();
+</script>
+</body>
+</html>
