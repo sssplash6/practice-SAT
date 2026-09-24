@@ -236,7 +236,7 @@
   }
 
   /* ------------------------------------------------------------ UI.saveQueue (Tests 4.9, X1) */
-  const SUM = new Set(['ms', 'ref_ms', 'ref_n', 'away_ms', 'away_n', 'open_ms']);
+  const SUM = new Set(['ms', 'ref_ms']);          // deltas; everything else is the latest value
   function saveQueue(sid, send, o = {}) {
     const KEY = `satf.pending.${sid}`, SKEY = `satf.pendstate.${sid}`;
     const pid = Math.random().toString(36).slice(2, 10);
@@ -362,6 +362,7 @@
     cells.forEach(c => {
       if (c.status === 'future') return;
       t.served++;
+      if (c.status === 'voided') { t.by.voided = (t.by.voided || 0) + 1; return; }     // P25: counted as neither
       if (c.status === 'skipped') t.skipped++;
       else if (answeredish(c.status)) t.answered++;
       else t.unanswered++;
@@ -553,7 +554,7 @@
       const opts = {
         flag: c.flag || null, note: c.note || null, saved: c.saved || null, current: i === current,
         tier: view === 'difficulty' ? c.tier : null, level: view === 'difficulty' ? c.level : null,
-        over: view === 'time' && overBudget(c, exam ? o.pace_ms * 2 : o.pace_ms) ? true : null,
+        over: view === 'time' && (exam ? c.ms > 2 * (c.budget_ms || o.pace_ms || 95000) : overBudget(c, o.pace_ms)) ? true : null,
         open: view === 'traps' && trapOf(c) ? true : null,
         filtered: ok ? null : true, label: cellLabel(c, i, exam),
       };
@@ -1491,7 +1492,7 @@
       if (tab === 'ref') countRef();
     }
     function closeSlot(byUser) {
-      if (byUser && slotTab === 'spr') ls.set('satf.sprhelp', 'closed');
+      if (byUser && slotTab === 'spr') ls.set(`satf.sprhelp.${sid}`, 'closed');
       slot.hidden = true;
       if (slotTab === 'ref') stopRef();
       slotTab = null;
@@ -1517,7 +1518,8 @@
     }
     // X9: the runner counts each question's reference opens and time
     let refAt = null;
-    function countRef() { if (at < 0) return; refAt = { i: at, t: performance.now() }; saveState(at, { ref_n: 1 }); }
+    const refN = new Map();
+    function countRef() { if (at < 0) return; refAt = { i: at, t: performance.now() }; refN.set(at, (refN.get(at) || 0) + 1); saveState(at, { ref_n: refN.get(at) }); }
     function stopRef() { if (!refAt) return; saveState(refAt.i, { ref_ms: Math.round(performance.now() - refAt.t) }); refAt = null; }
     function toggleRef(o2 = {}) {
       if (!cfg.ref) return false;
@@ -1675,7 +1677,8 @@
       ls.set(`satf.pos.${sid}`, i);
       paintQ(); paintRail(); syncFoot(); renderToolsRow(); sprHelp(); paceDelta();
       if (navApi) navApi.update(cells, at);
-      if (!slot.hidden) paintSlot();
+      if (!slot.hidden && slotTab === 'spr' && isMc()) closeSlot();
+      else if (!slot.hidden) paintSlot();
       col.scrollTop = 0;
       if (!p || p.scroll !== false) window.scrollTo({ top: 0, behavior: 'auto' });
       const f = doc.activeElement;
@@ -1686,7 +1689,7 @@
     function sprHelp() {
       if (!exam || isMc() || !ws) return;
       if (innerWidth >= 1180) {
-        if (ls.get('satf.sprhelp', 'open') !== 'closed' && (slot.hidden || slotTab !== 'spr') && slot.hidden) openSlot('spr');
+        if (ls.get(`satf.sprhelp.${sid}`, 'open') !== 'closed' && slot.hidden) openSlot('spr');
         return;
       }
       // narrower: a disclosure under the field, open until the student closes it
@@ -2533,7 +2536,7 @@
     if (o.fullscreen && doc.fullscreenEnabled) {
       const fs = () => {
         if (doc.fullscreenElement || view === 'done') return;
-        if (UI.banner) UI.banner('fullscreen', 'You left fullscreen.', [{ label: 'Return to fullscreen', onClick: () => { try { doc.documentElement.requestFullscreen(); } catch (_) {} } }], { host: top.parentNode === root ? null : null, dismiss: true });
+        if (UI.banner) UI.banner('fullscreen', 'You left fullscreen.', [{ label: 'Return to fullscreen', onClick: () => { try { doc.documentElement.requestFullscreen(); } catch (_) {} } }], { dismiss: true });
       };
       doc.addEventListener('fullscreenchange', fs);
       cleanups.push(() => doc.removeEventListener('fullscreenchange', fs));
@@ -2615,7 +2618,13 @@
       ArrowRight: { does: 'Next', run: () => { if (view !== 'q' || !canForward()) return false; next(); } },
       N: { does: 'Navigator', run: () => (view === 'q' || view === 'review' ? (toggleNav(), undefined) : false) },
       G: { does: 'Calculator', run: () => (toggleCalc() ? undefined : false) },
-      F: { does: 'Reference (formula sheet)', run: () => (cfg.ref ? (toggleRef(), undefined) : false) },
+      F: { does: 'Reference (formula sheet)', run: () => {
+        if (!cfg.ref) return false;
+        // P24: after the reveal, at the formula this question used
+        const f = ((items.get(at) || {}).fb || {}).formula;
+        const id = Array.isArray(f) ? (f.find(x => x && x.on_sheet && x.id) || {}).id : null;
+        toggleRef(id ? { highlight: id } : {});
+      } },
       L: { does: exam ? 'Highlights & Notes' : 'Highlight', run: () => (view === 'q' && toggleAnnotate() ? undefined : false) },
       H: { does: 'Hide or show the timer', run: () => (timerApi ? (timerApi.hide(!timerApi.hidden), undefined) : false) },
       'Shift+R': { does: 'Check your work', run: () => (view === 'q' ? (openReview(), undefined) : false) },
@@ -2629,6 +2638,7 @@
       } },
     };
     if (cfg.scratch) tmap['Shift+L'] = { does: 'Scratch', run: () => (view === 'q' && toggleScratch() ? undefined : false) };
+    if (!(UI.keys && UI.keys.register)) tmap['?'] = { does: 'Keyboard shortcuts', run: () => { shortcuts(); } };   // ui.js binds ? globally once it has UI.keys
     if (cfg.pause && o.clock) tmap.P = { does: 'Pause', run: () => (view === 'q' ? (pause(), undefined) : false) };
     const keyRegs = [{ map: qmap }, { map: tmap }];
     const regs = [];
