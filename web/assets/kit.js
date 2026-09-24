@@ -430,13 +430,18 @@
       o.dismiss === false ? null : xBtn('Close', () => tryClose()));
     let resolve;
     const closed = new Promise(r => { resolve = r; });
-    let value;
+    let value, closing = false, guarding = false;
     const apiObj = { el: d, body: bodyEl, foot: null, closed,
-      close(v) { value = v; if (d.open) d.close(); },
+      close(v) { value = v; closing = true; if (d.open) d.close(); },
       busy(on) { d.querySelectorAll('.sheet-foot > :is(button, a)').forEach(b => { if (on) b.setAttribute('aria-busy', 'true'); else b.removeAttribute('aria-busy'); }); },
       setTitle(t) { head.firstChild.textContent = t; } };
     const tryClose = async v => {
-      if (o.guard) { let ok = false; try { ok = await o.guard(); } catch (_) {} if (ok === false) return; }
+      if (o.guard) {
+        if (guarding) return;
+        guarding = true;
+        let ok = false; try { ok = await o.guard(); } catch (_) {} finally { guarding = false; }
+        if (ok === false) return;
+      }
       apiObj.close(v);
     };
     d.append(head, bodyEl);
@@ -465,7 +470,10 @@
       d.append(foot);
     }
 
-    // Esc (and the Android back gesture, which modal dialogs get natively) asks first
+    // Esc (and the Android back gesture, which modal dialogs get natively) asks first. Esc is
+    // caught on keydown: Chromium honours only one prevented 'cancel' per user activation, so a
+    // second Esc would otherwise close a guarded sheet natively.
+    d.addEventListener('keydown', e => { if (e.key !== 'Escape' || e.defaultPrevented) return; e.preventDefault(); if (o.dismiss !== false) tryClose(); });
     d.addEventListener('cancel', e => { e.preventDefault(); if (o.dismiss !== false) tryClose(); });
     // the backdrop: a click outside the box
     d.addEventListener('click', e => {
@@ -488,6 +496,13 @@
     head.style.touchAction = 'none';
 
     d.addEventListener('close', () => {
+      // a native close that skipped 'cancel' (a repeated back gesture): reopen, then ask
+      if (!closing && (o.guard || o.dismiss === false)) {
+        d.showModal();
+        (o.focus && o.focus.isConnected ? o.focus : d).focus({ preventScroll: true });
+        if (o.dismiss !== false) tryClose();
+        return;
+      }
       d.remove();
       const back = opener && opener.isConnected ? opener : backup;
       if (back && back.isConnected && typeof back.focus === 'function') back.focus({ preventScroll: true });
