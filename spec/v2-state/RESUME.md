@@ -1,19 +1,18 @@
 # Resume here
 
-## Now: RUNNING (resumed 2026-09-24 04:23)
+## Now: RUNNING (checked 2026-09-24 09:23; both 04:23 runs were still live)
 
-- build.js run `wf_d6bde851-f95` (task wlzjrhc30), args `[{id:'F1', unit:3}, {id:'F4', from:'fix', round:2, issues:
-  next/F4-verify2-issues.json}, {id:'BANK'}]`. BANK = the three bank flaws (item 4 below), on branch `v2/bank`.
-- words.js: FINISHED 2026-09-24 (run `wf_a586fef6-d3a`): 1,242 senses (469 core, 671 advanced, 102 second), 179
-  answer-choice, 80 transitions, 153 pair families, 119 roots, 64 foils, 194 classes; validator exit 0.
-- words2.js run `wf_609b5aa4-27c` (task wf5hy4nl6): setup (fills + frame loader + waste family) -> 4 frame authors by
-  class group + a confusions author -> fold parts into the final files -> 2 independent accuracy checks -> one fix round.
-  Restart: `args {from: 'author', only: [unfinished ids]}`, `{from: 'fold'}` or `{from: 'check'}` per git log.
-- Checkpoint loop running (task b2bucxp7g). Stale `wf_*` worktrees were removed at 04:23.
-- A second scheduled resume fires at 09:23 (session-only): it checks what is live and relaunches only what stopped.
-If this run is cut off: work out each task's position from `git log master..v2/<task>` and `runs/<run id>/`, then relaunch
-with the same args shape as below (F1 `unit` = first unbuilt unit; F4/BANK `from:'verify'` or `from:'fix'` with the
-newest saved verdict's defects; words `only:[unfinished authors]`).
+- **BANK merged** into master (the bank-flaws merge commit): "1 year" grammar and triangle reasons fixed; pct.table_share was not a flaw.
+- **F4 repaired, then re-verified.** My pause checkpoint e837e82 had reverted F4. The round-2 fixer undid it (cded2f0) on a side
+  branch because the old `.claude/worktrees/f4` worktree held `v2/f4`, so verifications r3 and r4 checked the reverted state.
+  `v2/f4` was fast-forwarded to the real head d9b35e7 (fix rounds 1-3), the worktree and side branches were removed, and
+  build.js now forbids side branches. New run `wf_7aaa2f6c-3ad` (task w9hkas2j1): `[{id:'F4', from:'verify', round:2}]`,
+  so up to 2 more fix rounds. The saved r3/r4 issue files describe the reverted state; ignore them.
+- **F1**: all 5 units built on `v2/f1`; verify r1 running inside run `wf_d6bde851-f95` (task wlzjrhc30).
+- **Words**: words2.js run `wf_609b5aa4-27c` (task wf5hy4nl6): setup and confusions done, frames1-4 running; then fold and check.
+- Checkpoint loop running (task b2bucxp7g).
+If cut off: F1 `[{id:'F1', from:'verify'}]` (or `from:'fix'` with the newest verdict); F4 as above; words2
+`{from:'author', only:[unfinished frames ids]}`, then fold and check.
 
 ### On "continue"
 

@@ -1,0 +1,107 @@
+[
+ {
+  "where": "branch v2/f4, commit e837e82 (all owned files)",
+  "what": "The checkpoint commit set the branch back to d5961bb's tree (git diff d5961bb HEAD is empty). It deletes server/ratings.py, server/data/cb_percentiles.json and tools/seed_ratings.py, and drops about 4,400 lines of upgrade and fix-round work that was in commits 6aee941 to 59d383b. The defects below follow from that.",
+  "fix": "Restore the 59d383b tree (for example `git checkout 59d383b -- server tools/seed_ratings.py` on v2/f4, then commit), apply the 17 fixes in spec/v2-state/next/F4-verify2-issues.json, and verify again."
+ },
+ {
+  "where": "server/deps.py learner_of (Shell 3.1.5 'app.py learner_of: retired codes')",
+  "what": "Every request with a retired code gets 401, reads included: GET /api/me on 8014 returned 401 {retired:true}. The spec gives 401 only on writes (POST/PUT/DELETE), {retired:true} from /api/shell, and says other GETs return their data as usual.",
+  "fix": "Give learner_of a writer/reader split (writer_of for writes) so only writes 401 on a retired code, and let GETs through."
+ },
+ {
+  "where": "server/progress.py record() and log_mistake() (§2.5 db.ensure_learner)",
+  "what": "The first write does not create the learners row. Over HTTP, a new learner's drill answer left 0 learners rows; record() and log_mistake() called directly left none either.",
+  "fix": "Call db.ensure_learner(learner) in record() and log_mistake()."
+ },
+ {
+  "where": "server/deps.py access() (R19, Review 'access rule', §2.12 acceptance)",
+  "what": "Only the UTC-date row in the challenges table is checked. A New York learner (X-Tz 240) who answered c01 of their own challenge day (2026-09-23) gets access()='reveal' at 00:03 UTC on 09-24, so a same-day challenge item leaks. Contests and twin challenge sittings, finished papers, and every challenge day still live in some zone are not checked either.",
+  "fix": "Protect every challenge day that is still live anywhere (UTC-12 to UTC+14), plus contest items and unfinished challenge or contest sittings. Add a check that uses X-Tz."
+ },
+ {
+  "where": "server/progress.py record() close rule (product.md R45, G3 rule 4, added F4 acceptance: G3 check 2)",
+  "what": "There is no attempts.offered column and no rule by kind: any clean answer on the template lowers owed. In my probe, a right answer on an item without the trap's norm dropped owed from 2 to 1. G3 check 2 and G3 check 7 (every kind reaches Fixed; an outside-logged ~unsure trap owes 1) are missing from checks/f4.py.",
+  "fix": "Add attempts.offered and store the offered norms. Lower owed on named traps only when offered (or spr_reasons) holds the norm. Assert G3 checks 2 and 7 in f4.py."
+ },
+ {
+  "where": "server/progress.py record() check-ins (R9, product.md G3 rule 5, added F4 acceptance: G3 check 4)",
+  "what": "There is no transfer check-in and no closed_how='transfer'; the 10-day check-in is never served from progress.related(norm). A miss on a due check-in that picks a different option leaves the trap Fixed (relapses 0), although R9 says a miss on a due check reopens it as Relapsed.",
+  "fix": "Serve the remaining check-ins from a related template and set closed_how='transfer'. Treat any miss on a due check-in item as a relapse. Assert G3 check 4 in f4.py."
+ },
+ {
+  "where": "server/progress.py record() repeat (review.md 'Clean means unseen', §3.2 row for §2.5 progress.record)",
+  "what": "repeat is set only when an attempts row exists. An item already 'reveal' through a finished sitting's saved or flag row (or a worksheet after cfg.key_printed) is filed with repeat=0: my probe returned repeat False with access()=='reveal'.",
+  "fix": "Set repeat=1 when access() is already 'reveal' before the answer, or when cfg.key_printed applies. Set revealed_at too."
+ },
+ {
+  "where": "server/progress.py related() (Review 'related', R45: progress.related(norm))",
+  "what": "It takes no argument: related('used # instead of #') raises TypeError.",
+  "fix": "Accept an optional norm and return that norm's templates tuple; with no argument, return the full index."
+ },
+ {
+  "where": "server/progress.py coach() (QBank 'progress: coach reasons ... record_trap')",
+  "what": "There is no reasons {slug: {kind mistakes|new|weak|review|focus, traps, mastery, first_try_rate, since_days}} and no record_trap(learner, q, reason, when). coach() returns only a single 'why', and 'focus' can never appear.",
+  "fix": "Add the reasons map with a focus kind, and split record_trap out of record()."
+ },
+ {
+  "where": "server/progress.py (Review 'progress.norm' asserts, R9 kinds, product.md R47)",
+  "what": "There is no kind mapping (misconception / gridin / slip / unsure) and no cause rule (trap, slip, misread, clock, entry, changed, gap). The norm asserts use literal strings, not context.container_percent seeds or circles.coterminal, and they do not check that the filler maps to kind 'slip'.",
+  "fix": "Add kind_of and cause_of/causes, and asserts over the real templates as the Review spec lists them."
+ },
+ {
+  "where": "server/progress.py days() (Today 3.2.5 'progress.days')",
+  "what": "Per-day rows have only day, questions, right, words, minutes and rest. Today's practice, tests and qotd {mcq, spr} are missing.",
+  "fix": "Add practice, tests and qotd counts to each day row."
+ },
+ {
+  "where": "server/api_me.py profile() (Shell 'GET/PUT /api/me: new fields')",
+  "what": "The profile has no account {linked, email, since}. The 59d383b version had account(); it was lost in the revert.",
+  "fix": "Restore account() in profile()."
+ },
+ {
+  "where": "server/api_me.py put_me name rule (R12)",
+  "what": "The 'private_short' exception accepts a 2-letter name for any learner with answers and silently sets board='hidden': PUT {name:'Jo'} for a:oldlearner1 returned 200 with board hidden. R12 requires 3–24 characters (422 otherwise), and no silent board change.",
+  "fix": "Return 422 for names outside 3–24 and do not change board implicitly (keep any legacy name only if it is already stored)."
+ },
+ {
+  "where": "server/estimate.py percentile() (R16)",
+  "what": "It uses sessions.number as a paper id, but number is the learner's sitting count (spec line 5823). A learner's second standard mock (number=2) is not seen as a repeat ('too few sittings' in my probe), and peers are limited to other learners' Nth sittings.",
+  "fix": "Detect repeats by any earlier standard sitting of the kind, and match papers by the paper id (cfg or mock_id), not number."
+ },
+ {
+  "where": "server/progress.py carry() (Plan 'learners: plan and plan_draft', Compete 'progress.record and progress.carry')",
+  "what": "When both codes have an active plan, neither is archived (two unarchived plans). The rating of the side with more rated answers is not kept (the target's 1000 and 2 rated won over the source's 1400 and 300). A second ranked sitting of one contest is not set to ranked=0 with unranked_why='repeat'. record() never calls compete.rate() for rated contests.",
+  "fix": "Archive the source's active plan, keep the rating and rated count of the side with more rated answers, un-rank duplicate contest sittings, and call compete.rate through deps.part."
+ },
+ {
+  "where": "server/db.py schema (every §3.2 / §2.5 row for F4 in spec/v2-upgrades/*.md)",
+  "what": "These are missing:\n- attempts columns: conf, hints, miss_kind, offered, struck, cover, calc, diag, revealed_at, word, source\n- tries.hints\n- pairs columns: dir, token, approver, session_only\n- reports.parent\n- outside_scores columns: misses, subject\n- learners columns: feed_seen, handle, swap_until\n- users.google_sub\n- tables: skill_ratings, trap_log, devices, transfers, quarantine, week_goals, cb_unknown, official_done, push_subs, passkeys, due_days, and compete.md's follows, rank_snapshots, nudges, champions\n- sessions.subject and contests.subject",
+  "fix": "Restore the 59d383b LATER_COLUMNS and EXTRA_SCHEMA entries (without any class tables), with their backfills and carry coverage."
+ },
+ {
+  "where": "server/estimate.py, progress.py, scoring.py, deps.py, prefs.py, satdates.py (upgrade providers assigned to F4)",
+  "what": "These are absent (hasattr False):\n- estimate: gains, need, projection, rescore, ledger, route, time_cost, practice_delta, total, national, calibration, growth, rescore_sitting\n- progress: warmup_candidates, causes, cause_of, due_forecast, conf_active, steps_to, pace, remark, recovery, types_met\n- scoring: entry_error, grid_diagnose\n- deps: subject_of (R51), mint_device and the devices path (U21)\n- prefs: the registry with labels, synonyms, stage and presets, and GET /api/prefs\n- satdates: deadlines and the 'registered' pref\n- db.NOT_SAMPLE and refusal of sample: writes",
+  "fix": "Restore these from 59d383b and apply the verify-2 fixes."
+ },
+ {
+  "where": "server/ratings.py, server/data/cb_percentiles.json, tools/seed_ratings.py (product.md §4.3: ratings.py is F4's, P11; reports.md §2.5 data file; review.md V15)",
+  "what": "All three were deleted by e837e82. The ratings model (update, odds, level), the national percentile table and the item-rating priors do not exist.",
+  "fix": "Restore them, and fix structural_priors to follow C13's formula as verify-2 found."
+ },
+ {
+  "where": "server/checks/f4.py (§2.12 F4 acceptance as amended by product.md item 27, and the f4 asserts in today.md, reports.md and shell-me.md)",
+  "what": "It covers only the base acceptance. Missing:\n- G3 checks 2 and 4, and G3 check 7 (every kind reaches Fixed)\n- the T3 interval asserts (2, 5, 12, 30, 30)\n- the entry_error and grid_diagnose asserts\n- the cb_percentiles 61/61/121-key validation\n- any access() test with X-Tz or live challenge days",
+  "fix": "Restore the 59d383b f4.py and add the missing asserts."
+ },
+ {
+  "where": "server/deps.py and server/db.py subject handling (v2-decisions item 3, product.md R51 / G11)",
+  "what": "The data is not subject-aware: no subject column on sessions, outside_scores or contests, no deps.subject_of, and estimate() takes no subject. That goes against decision 3 (build so the full-SAT expansion is additive) as R51 assigns it to F4.",
+  "fix": "Restore deps.subject_of and subject_param and the subject columns with default 'math', and give estimate a subject argument."
+ },
+ {
+  "where": "server/db.py LEARNER_TABLES (§2.5, used by S1's export and delete)",
+  "what": "It leaves out tables keyed by owner, not learner: sets.owner, contests.owner, and name_reports (target and reporter). S1's export and delete, driven by this tuple, would miss those rows.",
+  "fix": "Export a map from each table to its learner key columns, or add the owner-keyed tables with the column to match on."
+ }
+]

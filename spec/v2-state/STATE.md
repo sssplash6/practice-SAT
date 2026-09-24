@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-24T05:08:43+05:00
+# v2 build state -- 2026-09-24T09:24:28+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -7,7 +7,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 - `v2/bank` at e9c6f3c, 3 commits ahead of master
 - `v2/f0` at dc9873f, 0 commits ahead of master
-- `v2/f1` at 29d4d3e, 9 commits ahead of master
+- `v2/f1` at d47d851, 17 commits ahead of master
 - `v2/f4` at e837e82, 13 commits ahead of master
 - `v2/f4-fix2` at c6c60ad, 20 commits ahead of master
 - `v2/f4-fix3` at d9b35e7, 22 commits ahead of master
@@ -42,14 +42,15 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/t-bank-sample_statistics_and_margin_of_error` at 9403838, 0 commits ahead of master
 - `v2/t-bank-systems_of_linear_equations` at 90dd059, 0 commits ahead of master
 - `v2/t-bank-two_variable_data` at 4469303, 0 commits ahead of master
-- `v2/words-content` at 88ff375, 30 commits ahead of master
+- `v2/words-content` at 56ff668, 74 commits ahead of master
 
 ## Worktrees
 
 - `/Users/workingmyassof/satbank/.claude/worktrees/f4` on `v2/f4`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-1` on `detached 9ba1209`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-10` on `v2/f1`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-10` on `detached d47d851`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-11` on `detached d47d851`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-2` on `detached c6c60ad`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-3` on `detached eef858a`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-4` on `detached eef858a`: 0 uncommitted
@@ -65,13 +66,15 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 ### wf_31f62ba7-6ae: 1 finished, 6 unfinished
 Unfinished when saved: author: adv1, author: adv2, author: adv3, author: roots, author: second, author: transitions
 
+### wf_609b5aa4-27c: 2 finished, 4 unfinished
+Unfinished when saved: author: frames1, author: frames2, author: frames3, author: frames4
+
 ### wf_74c862ea-8a4: 2 finished, 0 unfinished
 
 ### wf_8c0945ee-c24: 51 finished, 10 unfinished
 Unfinished when saved: advantage: words, experience: words, judge: compete, judge: plan, judge: practice, judge: reports, judge: tests, judge: words, outcomes: review, outcomes: words
 
-### wf_a586fef6-d3a: 5 finished, 1 unfinished
-Unfinished when saved: author: transitions
+### wf_a586fef6-d3a: 6 finished, 0 unfinished
 
 ### wf_a8903963-411: 3 finished, 1 unfinished
 Unfinished when saved: fix F4 r2
@@ -83,8 +86,8 @@ Unfinished when saved: fix: area_and_volume, fix: linear_equations_in_one_variab
 
 ### wf_c70c4702-929: 49 finished, 0 unfinished
 
-### wf_d6bde851-f95: 9 finished, 1 unfinished
-Unfinished when saved: build F1 5/5
+### wf_d6bde851-f95: 10 finished, 1 unfinished
+Unfinished when saved: verify F1 r1
 
 ### wf_d6beb6e4-66c: 3 finished, 1 unfinished
 Unfinished when saved: build F1 4/5

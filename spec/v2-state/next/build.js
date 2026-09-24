@@ -83,8 +83,10 @@ If you need a change in a file you do not own, do not make it; list it in your r
 RULES:
 - You are in your own git worktree. First: git switch v2/${t.id.toLowerCase()} 2>/dev/null || git switch -c v2/${t.id.toLowerCase()} master.
   Then git log --oneline master..HEAD and git status: continue from any predecessor's commits and uncommitted edits, never
-  redo or discard them. If git says the branch is already checked out in another worktree, cd into that worktree and work
-  there instead: it holds your predecessor's work. When you finish, commit and run git switch --detach so the branch is free.
+  redo or discard them. Never create another branch for this task, and never move the branch with update-ref or branch -f.
+  If git says the branch is already checked out in another worktree: if git -C <that worktree> status --short is empty, run
+  git -C <that worktree> switch --detach and switch here; otherwise cd into that worktree and continue its work there. When you
+  finish, commit and run git switch --detach so the branch is free.
 - Commit on that branch after each finished piece of work (a file, a component group), with a real message ending with the line
   "${SIGN}". Never push. Never merge. Never touch master or the main working tree at ${REPO} (work only in your worktree).
 - Do not edit spec/rebuild-v2.md (other agents cite its line numbers).
