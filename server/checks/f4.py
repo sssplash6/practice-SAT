@@ -125,8 +125,9 @@ def checks():
     progress.record(k, None, q(1), 0, flagged=True)                       # an unsure right owes 1
     progress.record(k, None, q(2, other), 0)
     assert trap(k, norm="~unsure")["closed_how"] == "fixed"
-    progress.log_mistake(k, "lin.slope", "linear_functions", reason="", note="I guessed", source="outside")
-    db.run("UPDATE traps SET norm='~unsure', owed=1 WHERE learner=? AND template='lin.slope'", k)
+    progress.log_mistake(k, "lin.slope", "linear_functions", note="I don't know", source="outside", unsure=True)
+    t = trap(k, template="lin.slope")
+    assert (t["norm"], t["owed"], t["label"]) == ("~unsure", 1, "Unsure"), dict(t)
     progress.record(k, None, q(3, other, key="lin.slope"), 0)
     assert trap(k, template="lin.slope")["closed_how"] == "fixed"
     progress.record(k, None, spr(1), "7")                                 # a grid-in naming nothing: norm ''

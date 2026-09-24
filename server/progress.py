@@ -540,22 +540,23 @@ def record_paper(learner: str, session: str, questions: list[dict], answers: dic
 
 def log_mistake(learner: str, template: str, topic: str, reason: str = "",
                 source: str = "outside", note: str | None = None,
-                origin: str | None = None, when: str | None = None) -> int:
+                origin: str | None = None, when: str | None = None, unsure: bool = False) -> int:
     """Put an outside mistake in the same repair queue as answered questions.
-    Its label is the reason, else the note, else the template's skill."""
+    Its label is the reason, else the note, else the template's skill.
+    unsure: U2's "I don't know", an Unsure trap that one clean answer closes."""
     if db.is_sample(learner):
         raise HTTPException(403, "the sample report is read-only")
     when = when or now()
-    reason = (reason or "")[:80]
+    reason = "~unsure" if unsure else (reason or "")[:80]
     skill = None
     if not reason and not note:
         try:
             skill = practice._skill(template, 0)
         except Exception:
             skill = None
-    label = reason or (note or "")[:80] or skill or topic
+    label = "Unsure" if unsure else reason or (note or "")[:80] or skill or topic
     label = label[:1].upper() + label[1:]
-    normalized = norm(reason)
+    normalized = "~unsure" if unsure else norm(reason)
     with db.atomic():
         db.ensure_learner(learner)
         t = db.one("SELECT id,closed,closed_how,relapses FROM traps WHERE learner=? AND template=? AND norm=?",
