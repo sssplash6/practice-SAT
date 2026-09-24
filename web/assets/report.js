@@ -384,7 +384,8 @@ dialog.sheet.rp { max-width: min(560px, calc(100vw - 32px)); }
     : c.day ? `${c.source}|${c.day}|${c.question_id || ''}` : null);
   const SENT = new Map();                 // question -> report id, for this page load
   const KEPT = new Map();                 // context key -> its files, kept across a close
-  const wire = c => ({ kind: c.kind, source: c.source || 'page', session: c.session || null,
+  // the server takes a source id (a-z, _); anything else, such as a path, is a page
+  const wire = c => ({ kind: c.kind, source: /^[a-z_]{1,20}$/.test(c.source || '') ? c.source : 'page', session: c.session || null,
     question_id: c.question_id || null, day: c.day || null, template: c.template || null,
     seed: c.seed === undefined || c.seed === null || c.seed === '' ? null : Number(c.seed),
     word: c.word || null, paper: c.paper === undefined || c.paper === null ? null : String(c.paper), page: c.page || null });

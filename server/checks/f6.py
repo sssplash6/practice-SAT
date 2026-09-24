@@ -891,6 +891,10 @@ def browser() -> None:
                 box, sheet = modal(d, {"source": "drill", "session": drill_sid, "question_id": dq["id"]})
                 assert "marked wrong" in box and "circle.convert" in box and "Answer key is wrong" in sheet, box
 
+                # Send feedback the way the shell calls it (a path as the source) is a page report
+                box, sheet = modal(v, {"kind": "page", "source": "/plan/?x=1"})
+                assert "/s/" in box and "Send feedback" in sheet and "Bug" in sheet, (box, sheet)
+
                 # W20: the landing lists both words
                 pg = page_as(v)
                 pg.goto(f"{base}/s/?c={words}")
