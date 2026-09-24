@@ -67,7 +67,8 @@
    UI.spread(host, options, {n, label, noun})
      options: [{label, text, share | n, key, pick, reason}]
    UI.quadrant(host, points, {x: seconds | ratio, xRef, y: accuracy, yRef, log, xMin,
-       xMax, names {slow_right, fast_wrong, slow_wrong, fast_right}, onPick, list, action,
+       xMax, names {slow_right, fast_wrong, slow_wrong, fast_right}, onPick, list, action(point, q),
+       actions {q: {label, href | onClick(points)}} | fn(q, count),
        height, label})
      points: [{id, label, topic, x, y (0-1), n, href}]
    UI.spark(host, series, {label, w, h, format, ref})
@@ -607,7 +608,7 @@
       const sameDay = pts.map(p => pts.filter(q => iso(q.at) === iso(p.at)).length > 1);
       pts.forEach((p, i) => {
         const g = gaps.find(x => x.a === p);
-        const hw = clamp((g ? slot - 16 : slot) / 2, 10, 22);
+        const hw = Math.min(22, Math.max(2, (g && slot >= 30 ? slot - 16 : slot) / 2));
         const tip = pointTip(p, sameDay[i]);
         items.push({
           _p: p, x: xs[i] - hw, y: T - 4, w: hw * 2, h: H - T - B + 4, label: tip, tip, action: 'Open report',
@@ -663,7 +664,7 @@
     function footer(pts, f) {
       if (pts) lastFoot = { pts, f }; else if (lastFoot) ({ pts, f } = lastFoot); else return;
       foot.replaceChildren();
-      if (opts.projection === null && examT0()) foot.append(h('p', { class: 'chart-note', text: opts.noProjection || 'Three modules over three weeks start a projection.' }));
+      if (opts.projection === null) foot.append(h('p', { class: 'chart-note', text: opts.noProjection || 'Three modules over three weeks start a projection.' }));
       if (opts.legend === false || f.mini || !pts.length) return;
       const k = x => pts.filter(p => bandKind(p) === x).length;
       const items = [
@@ -684,7 +685,6 @@
         foot.append(b);
       }
     }
-    const examT0 = () => opts.exam || (opts.projection && opts.projection.to);
 
     const sz = sized(plot, draw);
     function set(p, o2) {
@@ -1628,6 +1628,15 @@
         h('span', { class: 'quad-n', text: p.label }), h('span', { class: 'mono', text: `${fxv(p.x)} · ${pct(p.y)}` }),
         h('span', { class: 'quad-chip', 'data-q': quad(p), text: nm[quad(p)] }), opts.action ? opts.action(p, quad(p)) : null)));
       foot.replaceChildren();
+      if (opts.actions) {
+        foot.append(h('div', { class: 'quad-acts' }, ['fast_right', 'slow_right', 'fast_wrong', 'slow_wrong'].map(k => {
+          const a = typeof opts.actions === 'function' ? opts.actions(k, counts[k] || 0) : opts.actions[k];
+          if (!a) return null;
+          const btn = a instanceof Node ? a : h(a.href ? 'a' : 'button', { class: 'btn sm', href: a.href || null, type: a.href ? null : 'button',
+            disabled: !a.href && !(counts[k] || 0) || null, onclick: a.onClick ? () => a.onClick(P.filter(p => quad(p) === k)) : null }, a.label);
+          return h('div', { class: 'quad-act', 'data-q': k }, h('span', { class: 'quad-an' }, nm[k], h('b', { text: String(counts[k] || 0) })), btn);
+        })));
+      }
     }
     function views() {
       ctl.replaceChildren();
