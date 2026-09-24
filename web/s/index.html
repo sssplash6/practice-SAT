@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Shared · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* One link, four kinds (R18(c)): Review questions (with the sharer's context
+     when they asked for help) and word lists land here; a practice set goes on
+     to Practice's shared-set banner and a test to the Tests start sheet. The
+     sharer lands on their results. */
+  .sx { max-width: 780px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .sx-head { display: grid; gap: 8px; }
+  .sx-head .meta { font-size: 12.5px; }
+  .sx .stats { --cols: 4; --cols-phone: 2; }
+  .sx-line { font: 400 15px/1.5 var(--font); color: var(--ink); text-wrap: pretty; }
+  .sx-soft { font: 400 13px/1.45 var(--font); color: var(--soft); }
+  .sx-mix { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  .sx-mix > span { display: inline-flex; align-items: center; gap: 6px; font: 500 12.5px var(--mono); color: var(--soft); }
+  .sx-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+  .sx-link { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .sx-link .field { flex: 1 1 260px; min-width: 0; font: 500 14px var(--mono); }
+  .sx-help { padding: 16px 18px; border-radius: var(--radius); background: var(--wash); box-shadow: inset 2px 0 0 var(--amber); display: grid; gap: 8px; }
+  .sx-help blockquote { margin: 0; font: 400 15px/1.5 var(--serif); color: var(--ink); }
+  .sx-help .meta { font-size: 12px; }
+  .sx-q { display: grid; gap: 14px; }
+  .sx-steps { margin: 0; padding-left: 22px; list-style: decimal; display: grid; gap: 6px; font: 400 14.5px/1.5 var(--font); color: var(--ink); }
+  .sx-words { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .sx-words li { display: grid; grid-template-columns: minmax(120px, 190px) minmax(0, 1fr); gap: 4px 16px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+  .sx-words b { font: 700 15px var(--font); display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+  .sx-st { font: 500 11.5px var(--mono); color: var(--soft); }
+  .sx-words span { font: 400 14.5px/1.45 var(--font); color: var(--ink); }
+  .sx-words i { font-style: normal; color: var(--soft); }
+  .sx-mark { font: 600 14px var(--mono); }
+  .sx-gone { display: grid; gap: 14px; max-width: 560px; }
+  .sx-code { display: flex; gap: 8px; max-width: 420px; }
+  .sx-code .field { font: 500 16px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  @media (max-width: 759px) {
+    .sx-words li { grid-template-columns: minmax(0, 1fr); }
+    .sx-acts .pill { flex: 1 1 100%; }
+  }
+</style>
+</head>
+<body data-page="share">
+<header id="bar"></header>
+
+<main class="page">
+  <div class="sx" id="root"></div>
+</main>
+
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script>
+(() => {
+  'use strict';
+  const { api, h, $ } = UI;
+  UI.shell();
+
+  const root = $('#root');
+  const params = new URL(location.href).searchParams;
+  const code = (params.get('c') || params.get('id') || '').trim();
+  const many = (n, one, more) => `${UI.num(n)} ${n === 1 ? one : (more || one + 's')}`;
+  const pct = x => x === null || x === undefined ? '—' : `${Math.round(x * 100)}%`;
+  const FEEDBACK = { instant: 'after each question', retry: 'after a second try', end: 'at the end' };
+  const TIER = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
+  const word = w => w.word || (w.slug || '').split('.')[0];
+
+  function stat(k, v, sub) {
+    return h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: k }),
+      h('span', { class: 'stat-v', text: v }), sub ? h('span', { class: 'stat-sub', text: sub }) : null);
+  }
+  function errLine() { return h('p', { class: 'error', hidden: true, role: 'alert' }); }
+  function fail(line, e) { line.textContent = e.message || 'Something went wrong. Try again.'; line.hidden = false; }
+  async function busy(btn, fn) {
+    btn.setAttribute('aria-busy', 'true');
+    try { return await fn(); } finally { btn.removeAttribute('aria-busy'); }
+  }
+  const put = (...kids) => root.replaceChildren(...kids);
+
+  if (!code) { askCode(); return; }
+  load();
+
+  async function load() {
+    put(h('div', { class: 'card' }, UI.skel(null, 'card:4')));
+    let s;
+    try {
+      s = await api(`/sets/${encodeURIComponent(code)}`);
+    } catch (e) {
+      if (e.status === 410) {           // stopped: the sharer still has their results
+        try { return owner(null, await api(`/sets/${encodeURIComponent(code)}/results`)); } catch (_) {}
+      }
+      return gone(e);
+    }
+    document.title = `${s.title} · SAT Freshman`;
+    // R18(c): a practice set lands on Practice's shared-set banner, a test on the Tests start sheet
+    if (s.kind === 'test' && !s.mine) { location.replace(`/tests/?shared=${encodeURIComponent(s.code)}`); return; }
+    if (s.kind === 'set' && !s.mine) { location.replace(`/practice/?share=${encodeURIComponent(s.code)}`); return; }
+    if (s.mine) return owner(s);
+    if (s.kind === 'words') return words(s);
+    return visitor(s);
+  }
+
+  /* ------------------------------------------------------------ no link, or a dead one */
+  function codeForm() {
+    const f = h('input', { class: 'field', maxlength: '8', autocomplete: 'off', spellcheck: 'false', 'aria-label': 'Code', placeholder: 'K7Q2M9XA' });
+    const go = h('button', { type: 'submit', class: 'btn', text: 'Open' });
+    const form = h('form', { class: 'sx-code' }, f, go);
+    form.addEventListener('submit', e => { e.preventDefault(); if (f.value.trim()) location.href = `/s/?c=${encodeURIComponent(f.value.trim())}`; });
+    return form;
+  }
+  function askCode() {
+    put(h('div', { class: 'sx-gone rise' },
+      h('h1', { class: 'h1', text: 'Open a shared link' }),
+      h('p', { class: 'sx-line', text: 'Type the 8-character code from the link a friend sent you.' }),
+      codeForm()));
+  }
+  function gone(e) {
+    if (e.status !== 404 && e.status !== 410) {
+      const card = h('div', { class: 'card' });
+      put(card);
+      UI.cardError(card, load, 'Couldn’t open this link. Check your connection and try again.');
+      return;
+    }
+    put(h('div', { class: 'sx-gone rise' },
+      h('h1', { class: 'h1', text: e.status === 410 ? 'Whoever shared this has stopped sharing it.' : 'That link doesn’t lead to anything.' }),
+      h('p', { class: 'sx-line', text: e.status === 410
+        ? 'Ask them for a new link, or practise the same skills on your own.'
+        : 'Check it was copied whole, or ask whoever sent it for a new one.' }),
+      h('div', { class: 'sx-acts' }, h('a', { class: 'pill sm', href: '/practice/', text: 'Practise on your own' })),
+      h('p', { class: 'k', text: 'Have another code?' }), codeForm()));
+  }
+
+  /* ------------------------------------------------------------ the visitor */
+  function facts(s) {
+    const box = h('div', { class: 'stats' },
+      stat('Questions', UI.num(s.count), s.fresh ? 'your own numbers' : 'exactly as shared'),
+      stat('Topics', UI.num(s.topics.length), s.topics.slice(0, 2).map(t => t.name).join(', ') + (s.topics.length > 2 ? ' …' : '')),
+      stat('Time', `${UI.num(s.minutes)} min`, s.timed ? 'timed' : 'about, untimed'),
+      stat('Answers', { instant: 'Instantly', retry: '2nd try', end: 'At end' }[s.feedback] || 'Instantly',
+        FEEDBACK[s.feedback] ? `shown ${FEEDBACK[s.feedback]}` : ''));
+    const mix = h('div', { class: 'sx-mix', 'aria-label': 'Difficulty mix' },
+      ...['easy', 'medium', 'hard'].filter(t => s.tiers[t]).map(t => h('span', {}, UI.dbars(t), `${s.tiers[t]}`)),
+      s.formats.spr ? h('span', { text: `${many(s.formats.spr, 'grid-in')}` }) : null);
+    const topics = h('div', { class: 'chips', 'aria-label': 'Topics' },
+      ...s.topics.map(t => h('a', { href: `/practice/?topic=${encodeURIComponent(t.topic)}` }, t.name, h('span', { class: 'n', text: String(t.n) }))));
+    return [box, mix, topics];
+  }
+
+  function who(s) { return s.by || 'your friend'; }
+
+  async function nameBox() {
+    const input = h('input', { type: 'checkbox' });
+    const label = h('label', { class: 'check' }, input, 'Show my name to the person who shared this');
+    const wrap = h('div', {}, label);
+    try {
+      const m = await UI.me();
+      if (!m.profile || !m.profile.name) {
+        input.disabled = true;
+        wrap.append(h('p', { class: 'help' }, 'Set a board name on ', h('a', { href: '/me/', text: 'Me' }), ' first.'));
+      }
+    } catch (_) {}
+    return { el: wrap, get on() { return input.checked && !input.disabled; } };
+  }
+
+  async function visitor(s) {
+    const name = await nameBox();
+    const err = errLine();
+    const start = h('button', { type: 'button', class: 'pill', text: s.help && s.count === 1 ? 'Try it' : 'Start this set' });
+    const fresh = !s.fresh ? h('button', { type: 'button', class: 'quiet', text: 'Fresh versions instead' }) : null;
+    const eyebrow = s.help ? 'Asked for help' : 'Shared questions';
+    const line = s.help
+      ? `${s.by || 'A friend'} is stuck on ${s.count === 1 ? 'this one' : 'these'}. Try ${s.count === 1 ? 'it' : 'them'} yourself first; then you’ll see what they picked and why.`
+      : s.fresh
+        ? `The same kinds of question as ${s.by ? s.by + '’s' : 'theirs'}, in the same order, with your own numbers.`
+        : `The exact questions ${who(s)} shared. You see each answer ${FEEDBACK[s.feedback] || 'after each question'}.`;
+    const social = s.taken
+      ? `Taken by ${UI.num(s.taken)}` + (s.avg_right !== null && s.avg_right !== undefined ? ` · average ${UI.num(s.avg_right)} / ${s.count}` : '')
+      : 'Nobody has finished it yet.';
+    const card = h('section', { class: 'card sx rise', 'aria-label': s.title },
+      h('div', { class: 'sx-head' },
+        h('span', { class: 'k', text: eyebrow }),
+        h('h1', { class: 'h1', text: s.title }),
+        h('p', { class: 'meta', text: [`from ${who(s)}`, UI.date(s.created), social].join(' · ') })),
+      ...facts(s),
+      h('p', { class: 'sx-line', text: line }),
+      name.el,
+      h('p', { class: 'sx-soft', text: 'Uses the sharer’s questions and settings, not yours. What you answer counts on your own map.' }),
+      h('div', { class: 'sx-acts' }, start, fresh),
+      err);
+    const extra = h('div', { class: 'sx' });
+    put(card, extra);
+    if (s.yours) yours(s, extra);
+    if (s.context) extra.append(helpCard(s, s.context));
+
+    const go = exact => busy(exact === false ? fresh : start, async () => {
+      err.hidden = true;
+      const body = { pool: 'set', ids: s.code, source: 'shared', show_name: name.on };
+      if (exact === false) body.exact = false;
+      if (s.help && s.count === 1) { body.count = 1; }
+      try {
+        const d = await api('/drill', { method: 'POST', body });
+        if (s.help && s.count === 1 && d.question) return inline(s, d, extra, card);
+        location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`;
+      } catch (e) { fail(err, e); }
+    });
+    start.addEventListener('click', () => go());
+    if (fresh) fresh.addEventListener('click', () => go(false));
+  }
+
+  function yours(s, host) {
+    const y = s.yours;
+    const acts = h('div', { class: 'sx-acts' });
+    const card = h('section', { class: 'card line', 'aria-label': 'Your go' },
+      h('div', { class: 'card-head' }, h('h2', { text: y.finished ? `You got ${y.right} of ${y.asked}` : `You’ve answered ${y.asked} of ${s.count}` }),
+        h('span', { class: 'meta', text: y.finished ? UI.relTime(y.finished) : 'in progress' })),
+      acts);
+    const open = h('a', { class: y.finished ? 'btn' : 'pill sm', href: `/practice/session/?id=${encodeURIComponent(y.session)}`, text: y.finished ? 'Open your set' : 'Resume' });
+    acts.append(open);
+    if (y.finished) {
+      const cmp = h('button', { type: 'button', class: 'pill sm', text: 'See how you compare' });
+      acts.prepend(cmp);
+      cmp.addEventListener('click', () => busy(cmp, async () => {
+        try { card.append(compare(await api(`/sets/${encodeURIComponent(s.code)}/compare`))); cmp.remove(); }
+        catch (e) { const l = errLine(); card.append(l); fail(l, e); }
+      }));
+    }
+    host.prepend(card);
+  }
+
+  function mark(m) {
+    if (m === null || m === undefined) return h('span', { class: 'sx-mark', 'aria-label': 'Not answered', text: '–' });
+    const ok = typeof m === 'object' ? m.correct : !!m;
+    return h('span', { class: 'sx-mark', 'aria-label': ok ? 'Right' : 'Wrong', text: ok ? '✓' : '✕' });
+  }
+
+  function compare(p) {
+    const box = h('div', { class: 'sx', style: 'margin-top: 16px' });
+    if (p.locked) { box.append(h('p', { class: 'sx-soft', text: 'Finish your set to compare.' })); return box; }
+    box.append(h('p', { class: 'k', text: 'Question by question' }));
+    UI.table(box, [
+      { key: 'n', label: 'Q', num: true },
+      { key: 'type_name', label: 'Type', render: r => h('span', {}, r.type_name || '—', h('br'), h('span', { class: 'meta', text: r.topic_name })) },
+      { key: 'you', label: 'You', render: r => mark(r.you) },
+      { key: 'rate', label: 'Everyone', num: true, render: r => r.asked ? `${pct(r.rate)} of ${r.asked}` : '—' },
+      { key: 'top', label: 'Most common mistake', render: r => r.top_mistake ? `${r.top_mistake.label} (${r.top_mistake.count})` : '—' },
+    ], p.slots, { label: 'Question by question', compact: true });
+    box.append(h('p', { class: 'k', text: 'Everyone who took it' }));
+    UI.table(box, [
+      { key: 'name', label: 'Who', render: r => r.you ? 'You' : (r.name || 'Someone') + (r.owner ? ' (shared it)' : '') },
+      { key: 'right', label: 'Right', num: true, render: r => `${r.right} / ${r.asked}` },
+      ...(p.show_score ? [{ key: 'band', label: 'Score', num: true, render: r => r.band ?? '—' }] : []),
+      { key: 'marks', label: 'Each question', render: r => h('span', {}, ...r.marks.map(mark)) },
+    ], p.people, { label: 'Everyone who took it', compact: true, you: r => r.you });
+    return box;
+  }
+
+  function helpCard(s, ctxs) {
+    const name = s.by || 'Your friend';
+    const box = h('section', { class: 'card', 'aria-label': `What ${name} did` },
+      h('div', { class: 'card-head' }, h('h2', { text: `What ${name} did` })));
+    for (const c of ctxs) {
+      const said = c.correct
+        ? `${name} got this right with ${c.pick}, and still wanted a second look.`
+        : `${name} picked ${c.pick}` + (c.mistake ? `: ${c.mistake}.` : '.');
+      box.append(h('div', { class: 'sx-help', style: 'margin-top: 10px' },
+        ctxs.length > 1 ? h('span', { class: 'k', text: `Question ${c.n}` }) : null,
+        h('p', { class: 'sx-line', text: said }),
+        c.note ? h('blockquote', { text: `“${c.note}”` }) : null,
+        h('p', { class: 'meta', text: [c.source, UI.date(c.when),
+          c.family ? `${many(c.family.seen, 'answer')} on this type, ${UI.num(c.family.right)} right` : null].filter(Boolean).join(' · ') })));
+    }
+    return box;
+  }
+
+  function inline(s, d, host, card) {
+    const qhost = h('div', { class: 'sx-q' });
+    const after = h('div', { class: 'sx' });
+    const panel = h('section', { class: 'card line', 'aria-label': 'The question' }, qhost, after);
+    card.hidden = true;
+    host.prepend(panel);
+    const t0 = performance.now();
+    const q = UI.question(qhost, d.question, {
+      onAnswer: async given => {
+        let fb;
+        try {
+          fb = await api(`/drill/${encodeURIComponent(d.id)}/answer`, { method: 'POST',
+            body: { question_id: d.question.id, answer: given, ms: Math.round(performance.now() - t0) } });
+        } catch (e) { q.unlock(); const l = errLine(); after.replaceChildren(l); fail(l, e); return; }
+        q.reveal(fb);                      // the verdict, the key and the rationale
+        after.replaceChildren(
+          fb.steps && fb.steps.length ? h('ol', { class: 'sx-steps', 'aria-label': 'Step by step' },
+            ...fb.steps.map(t => h('li', { text: t }))) : null);
+        api(`/drill/${encodeURIComponent(d.id)}/finish`, { method: 'POST' }).catch(() => {});
+        try {
+          const again = await api(`/sets/${encodeURIComponent(s.code)}`);
+          if (again.context) after.append(helpCard(s, again.context));
+        } catch (_) {}
+        after.append(h('div', { class: 'sx-acts' },
+          h('a', { class: 'btn', href: `/practice/?topic=${encodeURIComponent(d.question.topic || '')}`, text: 'Practise this skill' })));
+      },
+    });
+  }
+
+  /* ------------------------------------------------------------ a word list (W20) */
+  async function words(s, host = null) {
+    const list = h('ol', { class: 'sx-words' });
+    const err = errLine();
+    const slugs = s.words.filter(w => w.slug).map(w => w.slug);
+    const own = s.words.filter(w => w.own);
+    const acts = h('div', { class: 'sx-acts' });
+    const card = h('section', { class: 'card sx rise', 'aria-label': s.title },
+      h('div', { class: 'sx-head' },
+        h('span', { class: 'k', text: 'Word list' }),
+        h('h1', { class: 'h1', text: s.title }),
+        h('p', { class: 'meta', text: [many(s.count, 'word'), `from ${who(s)}`, UI.date(s.created)].join(' · ') })),
+      list, s.mine ? null : acts, err);
+    if (host) host.append(card); else put(card);
+    let lib = {};
+    try {
+      const d = await api('/words');
+      for (const w of (d.words || d || [])) if (w.slug) lib[w.slug] = w;
+    } catch (_) { lib = {}; }
+    // the visitor's own status per word (W20): Known is box 4 or higher (W7)
+    const status = e => !e.slug || !(e.slug in lib) ? null : !e.state ? 'New to you' : e.state.box >= 4 ? 'Known' : 'Learning';
+    list.replaceChildren(...s.words.map(w => {
+      const e = w.own ? w : (lib[w.slug] || {});
+      const meaning = e.meaning || e.short || e.definition || '';
+      const st = s.mine || w.own ? null : status(e);
+      return h('li', {}, h('b', {}, e.word || word(w), st ? h('span', { class: 'sx-st', text: st }) : null),
+        h('span', {}, e.pos ? h('i', { text: `${e.pos} · ` }) : null, meaning || (w.own ? '' : 'Open it in Words for its meaning.')));
+    }));
+    if (s.mine) return;
+    const mine = s.words.filter(w => w.slug && lib[w.slug]).map(w => lib[w.slug]);
+    if (mine.length) {
+      const known = mine.filter(e => e.state && e.state.box >= 4).length, fresh = mine.filter(e => !e.state).length;
+      card.querySelector('.sx-head').append(h('p', { class: 'sx-line', text: `${UI.num(known)} known · ${UI.num(fresh)} new to you` }));
+    }
+    const add = h('button', { type: 'button', class: 'pill', text: 'Add to my words' });
+    const quiz = h('button', { type: 'button', class: 'btn', text: 'Quiz them now' });
+    const print = h('button', { type: 'button', class: 'quiet', text: 'Print a worksheet' });
+    acts.append(add, quiz, print);
+    add.addEventListener('click', () => busy(add, async () => {
+      err.hidden = true;
+      try {
+        await api('/words/lists', { method: 'POST', body: { name: s.title, words: slugs, own } });
+        UI.toast(`Added ${many(s.count, 'word')} to your words`, { href: '/words/' });
+      } catch (e) { fail(err, e); }
+    }));
+    const run = (btn, mode, page) => busy(btn, async () => {
+      err.hidden = true;
+      try {
+        const d = await api('/words/run', { method: 'POST', body: { mode, deck: { source: 'words', value: slugs } } });
+        location.href = `${page}?id=${encodeURIComponent(d.id)}`;
+      } catch (e) { fail(err, e); }
+    });
+    quiz.addEventListener('click', () => run(quiz, 'quiz', '/words/run/'));
+    print.addEventListener('click', () => run(print, 'print', '/words/print/'));
+  }
+
+  /* ------------------------------------------------------------ the sharer */
+  function linkRow(s) {
+    const url = location.origin + s.url;
+    const field = h('input', { class: 'field', readonly: true, value: url, 'aria-label': 'Link' });
+    field.addEventListener('focus', () => field.select());
+    const copy = h('button', { type: 'button', class: 'btn', text: 'Copy' });
+    copy.addEventListener('click', () => UI.copyText(url, { toast: 'Link copied' }).then(ok => { if (!ok) field.select(); }));
+    const row = h('div', { class: 'sx-link' }, field, copy);
+    if (navigator.share) {                 // only ever from this tap (R18(c))
+      const more = h('button', { type: 'button', class: 'quiet', text: 'More ways to share' });
+      more.addEventListener('click', () => navigator.share({ title: s.title, url }).catch(() => {}));
+      row.append(more);
+    }
+    return row;
+  }
+
+  async function owner(s, res = null) {
+    const stopped = !s || (res && res.revoked);
+    const title = s ? s.title : res.title;
+    const kind = s ? s.kind : res.kind;
+    const err = errLine();
+    const head = h('div', { class: 'sx-head' },
+      h('span', { class: 'k', text: stopped ? 'You stopped sharing this' : 'You shared this' }),
+      h('h1', { class: 'h1', text: title }),
+      h('p', { class: 'meta', text: [kind === 'words' ? many((s || res).count, 'word') : many((s || res).count, 'question'),
+        (s ? s.fresh : res.fresh) ? 'twins: everyone gets their own numbers' : kind === 'words' ? null : 'exact questions',
+        UI.date((s || res).created)].filter(Boolean).join(' · ') }));
+    const card = h('section', { class: 'card sx rise', 'aria-label': title }, head);
+    if (!stopped) {
+      card.append(linkRow(s), h('p', { class: 'sx-soft', text: kind === 'words'
+        ? 'Anyone with the link sees these words and their meanings, and can add them to their own.'
+        : (s.fresh ? 'Anyone with the link gets the same kinds of question in the same order, with their own numbers, so answers can’t be passed around. '
+                   : 'Anyone with the link gets these exact questions and sees no answer until they’ve given theirs. ')
+          + 'You’ll see how each of them did here.' }));
+    }
+    const board = h('div', { class: 'sx' });
+    card.append(board, err);
+    put(card);
+    if (kind === 'words') { if (s) words({ ...s, mine: true }, board); }
+    else {
+      board.append(UI.skel(null, 'table:4'));
+      try { res = res || await api(`/sets/${encodeURIComponent(code)}/results`); board.replaceChildren(...results(res)); }
+      catch (e) { UI.cardError(board, () => owner(s), 'Couldn’t load how people did.'); }
+    }
+    if (!stopped) {
+      const stop = h('button', { type: 'button', class: 'quiet', text: 'Stop sharing' });
+      card.append(h('div', { class: 'sx-acts' }, stop));
+      stop.addEventListener('click', async () => {
+        const yes = await UI.confirm({ title: 'Stop sharing this?', destructive: true, confirm: 'Stop sharing',
+          text: 'The link stops working for everyone. What people already did stays here for you.' });
+        if (!yes) return;
+        busy(stop, async () => {
+          try {
+            await api(`/sets/${encodeURIComponent(code)}`, { method: 'DELETE' });
+            UI.toast('Stopped sharing');
+            load();
+          } catch (e) { fail(err, e); }
+        });
+      });
+    }
+  }
+
+  function results(r) {
+    const out = [h('div', { class: 'stats' },
+      stat('Opened', UI.num(r.opened), 'people who followed the link'),
+      stat('Tried', UI.num(r.tried), 'answered at least one'),
+      stat('Finished', UI.num(r.taken)),
+      stat('Average', r.avg_right === null ? '—' : `${UI.num(r.avg_right)} / ${r.count}`, r.you ? `you: ${r.you.right} / ${r.you.asked}` : ''))];
+    if (!r.takers.length) {
+      out.push(h('p', { class: 'sx-line', text: 'Nobody has answered yet. Send the link; each person’s answers show up here, question by question.' }));
+    }
+    out.push(h('p', { class: 'k', text: 'Question by question' }));
+    const qs = h('div');
+    UI.table(qs, [
+      { key: 'n', label: 'Q', num: true },
+      { key: 'type_name', label: 'Type', render: q => h('span', {}, q.type_name || q.template, h('br'), h('span', { class: 'meta', text: q.topic_name })) },
+      { key: 'difficulty', label: 'Level', render: q => q.difficulty ? UI.dbars(q.difficulty) : '—' },
+      { key: 'rate', label: 'Right', num: true, render: q => q.asked ? `${q.right} / ${q.asked} · ${pct(q.rate)}` : '—' },
+      { key: 'median_ms', label: 'Median right', num: true, render: q => q.median_ms ? UI.mmss(q.median_ms / 1000) : '—' },
+      { key: 'top', label: 'Most common mistake', render: q => q.top_wrong
+        ? `${q.top_wrong.given ? q.top_wrong.given + ': ' : ''}${q.top_wrong.reason} (${q.top_wrong.count})` : '—' },
+      { key: 'you', label: 'You', render: q => mark(q.you ? q.you.correct : null) },
+    ], r.questions, { label: 'Question by question', compact: true, sortable: true });
+    out.push(qs);
+    if (r.takers.length) {
+      out.push(h('p', { class: 'k', text: 'Everyone who took it' }));
+      const ts = h('div');
+      UI.table(ts, [
+        { key: 'name', label: 'Who', render: t => t.name || 'Someone' },
+        { key: 'right', label: 'Right', num: true, render: t => `${t.right} / ${t.asked}` },
+        { key: 'ms', label: 'Time', num: true, render: t => t.ms ? UI.mmss(t.ms / 1000) : '—' },
+        { key: 'marks', label: 'Each question', render: t => h('span', {}, ...t.marks.map(mark)) },
+        { key: 'at', label: 'When', render: t => t.finished ? UI.relTime(t.finished) : 'in progress' },
+      ], r.takers, { label: 'Everyone who took it', compact: true });
+      out.push(ts);
+      out.push(h('p', { class: 'sx-soft', text: 'Names show only for people who chose to show theirs.' }));
+    }
+    return out;
+  }
+})();
+</script>
+</body>
+</html>
