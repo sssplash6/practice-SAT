@@ -486,7 +486,12 @@ def _owner_marks(set_row, items: list[dict], fresh: bool) -> list[dict | None] |
         src = db.one("SELECT * FROM sessions WHERE id=?", set_row["session"])
         return _marks(src, set_row, items, fresh) if src else None
     if all(it.get("seed") is None for it in items):
-        return None
+        # U28's question link names only the template: the sharer's row is their
+        # latest answer on it before sharing ("You: right in 1:12 · Sam: ...")
+        if len(items) != 1:
+            return None
+        return [_mark(db.one("SELECT * FROM attempts WHERE learner=? AND template=? AND at<=? ORDER BY id DESC LIMIT 1",
+                             set_row["owner"], items[0]["template"], set_row["created"]))]
     return [_mark(db.one("SELECT * FROM attempts WHERE learner=? AND template=? AND seed=? ORDER BY id LIMIT 1",
                          set_row["owner"], it["template"], it["seed"])) if it.get("seed") is not None else None
             for it in items]

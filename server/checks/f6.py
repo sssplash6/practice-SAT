@@ -559,6 +559,7 @@ def sets_twins(c) -> None:
     assert px[0] == py[0] == "lin.evaluate" and px[1] != py[1]
     res = c.get(f"/api/sets/{one['code']}/results", headers=hdr(owner)).json()
     assert [(t["right"], t["asked"]) for t in res["takers"]] == [(1, 1), (0, 1)] and all(t["ms"] for t in res["takers"])
+    assert (res["you"]["right"], res["you"]["asked"]) == (0, 1), res.get("you")    # the sharer's own miss on lin.evaluate
     print("ok  F6 sets: twins per slot with the sharer's trap, results per slot, a question link's twin")
 
 
