@@ -471,12 +471,18 @@ def labels(c) -> None:
     row = db.one("SELECT category, template, seed FROM reports WHERE id=?", got["id"])
     a = attempt(L, sid, q)
     assert tuple(row) == ("label", a["template"], a["seed"]) and "check" not in got, dict(row)
-    for i in range(19):                         # 19 more fell for it; 2 said it was a misread
+    # L, plus any earlier check's learner who fell for the same trap on this template
+    base = db.one(f"SELECT COUNT(DISTINCT learner) AS n FROM attempts WHERE template=? AND norm=? AND correct=0"
+                  f" AND {db.NOT_SAMPLE}", t, norm)["n"]
+    total = base + 19
+    misread = -(-15 * total // 100) - 1         # with L's report, just reaching 15%
+    for i in range(19):                         # 19 more fell for it; a few said it was a misread
         db.run("INSERT INTO attempts(learner,template,seed,topic,difficulty,fmt,correct,reason,norm,miss_kind,at,repeat)"
                " VALUES (?,?,?,?,?,?,0,?,?,?,?,0)", f"a:f6lbl-crowd{i}", t, 600 + i, it["topic"], it["difficulty"],
-               "mcq", it["reasons"][k], norm, "misread" if i < 2 else None, deps.now())
+               "mcq", it["reasons"][k], norm, "misread" if i < misread else None, deps.now())
     view = next(x for x in c.get("/api/admin/labels", headers=H).json() if (x["template"], x["norm"]) == (t, norm))
-    assert (view["learners"], view["disputed"], view["rate"], view["flagged"]) == (20, 3, 0.15, True), view
+    assert (view["learners"], view["disputed"], view["rate"], view["flagged"]) == (
+        total, misread + 1, round((misread + 1) / total, 3), True), view
     assert view["reason"] == it["reasons"][k]
     os.environ.pop("SATF_ADMIN_TOKEN", None)
     print("ok  F6 reports: V6 label reports and corrections in the admin Labels view")
