@@ -1,4 +1,4 @@
-"""F6 acceptance: reports (R17, Shell §2.10 and §10, U3, V6, X10, SR19).
+"""F6 acceptance: reports (R17, Shell §2.10 and §10, U3, V6, X10, SR19) and question sets (R18(c), P22, U28, V17, W20, X22).
 Run alone with PYTHONPATH=. python3 server/checks/f6.py, or inside test_flow."""
 
 from __future__ import annotations
@@ -9,9 +9,10 @@ import pathlib
 import tempfile
 from unittest.mock import patch
 
+from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
-from server import db, deps, mail, progress, reports
+from server import db, deps, mail, progress, reports, sets
 from server.app import app
 
 PNG = b"\x89PNG\r\n\x1a\n" + b"\0" * 64
@@ -350,6 +351,268 @@ def admin_bits(c) -> None:
     print("ok  F6 reports: admin files, question, quarantine, mail notice, delete_files")
 
 
+# ------------------------------------------------------------------ sets (R18(c), P22, U28, V17, W20, X22)
+
+SECRET = ("stem", "choices", "answer", "rationale", "reasons", "seed", "template", "ctx", "context", "pick")
+
+
+def hdr(learner: str) -> dict:
+    return {"X-Learner": learner}
+
+
+def named(learner: str, name: str) -> str:
+    db.run("INSERT OR REPLACE INTO learners(id,name,created) VALUES (?,?,?)", learner, name, deps.now())
+    return learner
+
+
+def pick(q: dict, right: bool, norm: str | None = None):
+    """What a student would send: the key, or a wrong option that names a mistake."""
+    if q["type"] != "mcq":
+        return q["answer"] if right else "-999"
+    k = "ABCD".index(q["answer"])
+    if right:
+        return k
+    opts = [i for i, r in enumerate(q["reasons"]) if i != k and r]
+    if norm:
+        opts = [i for i in opts if progress.norm(q["reasons"][i]) == norm] or opts
+    return opts[0] if opts else (k + 1) % 4
+
+
+def run_drill(c, learner: str, pairs, right=(), want=None) -> str:
+    """A drill of exact items answered over HTTP, then finished: right where the
+    question's position (0-based) is in `right`, else a named wrong option."""
+    from server import drill
+    sid = f"f6-drill-{fresh('d')}"
+    drill.create(learner, sid, list(dict.fromkeys(sets._topic(t) for t, _ in pairs)), len(pairs),
+                 None, False, "shared", items=[list(p) for p in pairs])
+    n = 0
+    while True:
+        nxt = c.post(f"/api/drill/{sid}/next", headers=hdr(learner)).json()
+        if nxt.get("done") or not nxt.get("question"):
+            break
+        q = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", sid)["questions"])[-1]
+        body = {"question_id": q["id"], "ms": 40000 + 1000 * n,
+                "answer": pick(q, q.get("repair") or n in right, (want or {}).get(n))}
+        assert c.post(f"/api/drill/{sid}/answer", headers=hdr(learner), json=body).status_code == 200
+        n += 0 if q.get("repair") else 1
+    assert c.post(f"/api/drill/{sid}/finish", headers=hdr(learner)).status_code == 200
+    return sid
+
+
+def take(c, learner: str, code: str, right=(), show_name: bool = False, twins=None, want=None) -> tuple[str, list]:
+    """A visitor's start the way the engines make it: serve(), a drill, link()."""
+    got = sets.serve(code, learner, twins)
+    sid = run_drill(c, learner, got["items"], right, want)
+    sets.link(sid, code, show_name)
+    return sid, got["items"]
+
+
+def make(c, learner: str, body: dict, code: int = 200) -> dict:
+    r = c.post("/api/sets", headers=hdr(learner), json=body)
+    assert r.status_code == code, (r.status_code, r.text[:300], body)
+    return r.json()
+
+
+def stems(sid: str) -> list[str]:
+    return [q["stem"] for q in json.loads(db.one("SELECT questions FROM sessions WHERE id=?", sid)["questions"])
+            if not q.get("repair")]
+
+
+def public_ok(got: dict) -> None:
+    text = json.dumps(got)
+    assert not any(f'"{k}"' in text for k in SECRET), text[:400]
+
+
+def sets_exact(c) -> None:
+    owner, b = named(fresh("so"), "Maya"), named(fresh("sb"), "Sam")
+    pairs = [("lin.evaluate", 40), ("circle.convert", 40), ("circle.convert", 41)]
+    sid = run_drill(c, owner, pairs, right={0, 2})
+    made = make(c, owner, {"kind": "set", "session": sid})
+    code = made["code"]
+    assert sets.CODE_OK.match(code) and made["url"] == f"/s/?c={code}" and made["count"] == 3, made
+    assert make(c, owner, {"kind": "set", "session": sid})["code"] == code        # the same set, the same link
+    make(c, b, {"kind": "set", "session": sid}, code=403)                         # someone else's set
+    pub = c.get(f"/api/sets/{code}").json()
+    public_ok(pub)
+    assert (pub["count"], pub["by"], pub["fresh"], pub["mine"]) == (3, "Maya", False, False), pub
+    assert {t["name"] for t in pub["topics"]} == {"Linear functions", "Circles"} or len(pub["topics"]) == 2, pub
+    assert c.get(f"/api/sets/{code.lower()}").status_code == 200
+    assert c.get("/api/sets/ZZZZZZZZ").status_code == 404 and c.get("/api/sets/nope").status_code == 404
+    assert c.get(f"/api/sets/{code}", headers=hdr(owner)).json()["mine"] is True
+
+    # a second learner gets identical stems, and the owner sees how they did
+    c.get(f"/api/sets/{code}", headers=hdr(b))
+    tb, served = take(c, b, code, right={0}, show_name=True)
+    assert served == [list(p) for p in pairs] and stems(tb) == stems(sid), (served, pairs)
+    mine = c.get(f"/api/sets/{code}", headers=hdr(b)).json()
+    assert mine["yours"]["session"] == tb and mine["yours"]["finished"] and mine["yours"]["right"] == 1, mine
+    assert c.get(f"/api/sets/{code}/results", headers=hdr(b)).status_code == 403
+    res = c.get(f"/api/sets/{code}/results", headers=hdr(owner)).json()
+    assert (res["taken"], res["tried"], res["opened"]) == (1, 1, 1), res
+    q2 = res["questions"][1]
+    assert (q2["right"], q2["asked"], q2["rate"]) == (0, 1, 0.0) and q2["type_name"], q2
+    it = reports._from_bank("circle.convert", 40)
+    wrong_i = pick(it, False)
+    assert q2["top_wrong"] == {"reason": it["reasons"][wrong_i], "norm": progress.norm(it["reasons"][wrong_i]),
+                               "count": 1, "given": "ABCD"[wrong_i]}, q2
+    t0 = res["takers"][0]
+    assert (t0["name"], t0["marks"], t0["right"], t0["asked"]) == ("Sam", [1, 0, 0], 1, 3), t0
+    assert res["you"]["marks"] == [1, 0, 1] and res["questions"][0]["you"]["correct"] is True, res["you"]
+    # the taker's comparison: labels, never a raw answer
+    peers = c.get(f"/api/sets/{code}/compare", headers=hdr(b)).json()
+    assert [p["name"] for p in peers["people"]] == ["Maya", "Sam"] and peers["people"][1]["you"], peers
+    assert '"given"' not in json.dumps(peers) and peers["slots"][1]["you"] is False, peers
+    assert peers["people"][1]["marks"][1]["mistake"] == it["reasons"][wrong_i], peers["people"][1]
+    assert sets.peers(sid, owner)["people"][0]["you"] is True        # the sharer's own report lists them too
+    assert c.get(f"/api/sets/{code}/compare", headers=hdr(fresh("sx"))).status_code == 403
+    listed = c.get("/api/sets", headers=hdr(owner)).json()
+    assert listed[0]["code"] == code and (listed[0]["opened"], listed[0]["taken"]) == (1, 1), listed[0]
+
+    # revoke: only the owner; then 410 everywhere public, and the owner keeps the results
+    assert c.delete(f"/api/sets/{code}", headers=hdr(b)).status_code == 403
+    assert c.delete(f"/api/sets/{code}", headers=hdr(owner)).json()["revoked"]
+    assert c.get(f"/api/sets/{code}").status_code == 410
+    assert c.get(f"/api/sets/{code}/compare", headers=hdr(b)).status_code == 410
+    try:
+        sets.serve(code, fresh("sy"))
+        raise AssertionError("a revoked set was served")
+    except HTTPException as e:
+        assert e.status_code == 410
+    assert c.get(f"/api/sets/{code}/results", headers=hdr(owner)).json()["revoked"]
+    assert make(c, owner, {"kind": "set", "session": sid})["code"] != code      # a new link after stopping
+    print("ok  F6 sets: exact share, identical stems, public summary, results, peers, revoke 410")
+
+
+def sets_items(c) -> None:
+    owner, v = named(fresh("io"), "Ana"), fresh("iv")
+    # today's challenge is never shared, even by someone who answered it
+    from server import challenge, daily
+    ch = challenge.challenge(daily.today(0))[0]
+    sitting(owner, ch["key"], ch["seed"], given=0)
+    got = make(c, owner, {"kind": "items", "items": [[ch["key"], ch["seed"]]]}, code=409)
+    assert got["detail"]["reason"] == "not_shareable", got
+    make(c, owner, {"kind": "items", "items": [["circle.convert", 45]]}, code=409)       # never shown to them
+    make(c, owner, {"kind": "items", "items": [["circle.convert", s] for s in range(41)]}, code=422)
+    make(c, owner, {"kind": "items", "items": [["circle.convert", 45]], "cfg": {"bogus": 1}}, code=422)
+
+    # V17: ask for help with a miss; the context waits until the visitor has answered it
+    q = reports._from_bank("circle.convert", 42)
+    miss = pick(q, False)
+    sitting(owner, "circle.convert", 42, given=miss)
+    db.run("INSERT OR REPLACE INTO notes(learner,template,seed,note,at) VALUES (?,?,?,?,?)",
+           owner, "circle.convert", 42, "I mixed up radius and diameter", deps.now())
+    help_ = make(c, owner, {"kind": "items", "items": [["circle.convert", 42]], "cfg": {"context": True}})
+    before = c.get(f"/api/sets/{help_['code']}", headers=hdr(v)).json()
+    public_ok(before)
+    assert before["help"] is True and before["count"] == 1, before
+    take(c, v, help_["code"], right={0})
+    after = c.get(f"/api/sets/{help_['code']}", headers=hdr(v)).json()["context"][0]
+    assert (after["pick"], after["mistake"], after["correct"]) == ("ABCD"[miss], q["reasons"][miss], False), after
+    assert "note" not in after and after["family"]["seen"] >= 1, after
+    with_note = make(c, owner, {"kind": "items", "items": [["circle.convert", 42]],
+                                "cfg": {"context": True, "note": True}})
+    assert with_note["code"] != help_["code"]
+    take(c, v, with_note["code"], right={0})
+    got = c.get(f"/api/sets/{with_note['code']}", headers=hdr(v)).json()["context"][0]
+    assert got["note"] == "I mixed up radius and diameter", got
+    assert "radius and diameter" not in json.dumps(c.get(f"/api/sets/{help_['code']}", headers=hdr(v)).json())
+    # "Fresh versions instead": the same template on the visitor's own numbers
+    twin = sets.serve(help_["code"], fresh("iw"), True)
+    assert twin["items"][0][0] == "circle.convert" and twin["items"][0][1] != 42 and not twin["exact"], twin
+    print("ok  F6 sets: Review items through access(), today's challenge 409, help context after answering")
+
+
+def sets_twins(c) -> None:
+    owner = named(fresh("to"), "Lee")
+    pairs = [("circle.convert", 40), ("circle.convert", 41), ("lin.evaluate", 41)]
+    norms = []
+    for t, s in pairs:
+        q = reports._from_bank(t, s)
+        k = pick(q, False)
+        sitting(owner, t, s, given=k)
+        norms.append(progress.norm(q["reasons"][k]))
+    made = make(c, owner, {"kind": "set", "items": [list(p) for p in pairs], "cfg": {"fresh": True}})
+    slots = json.loads(db.one("SELECT cfg FROM sets WHERE code=?", made["code"])["cfg"])["slots"]
+    assert [s[3] for s in slots] == norms, slots
+    a, b = fresh("ta"), fresh("tb")
+    got_a, got_b = sets.serve(made["code"], a), sets.serve(made["code"], b)
+    assert [t for t, _ in got_a["items"]] == [t for t, _ in got_b["items"]] == [t for t, _ in pairs]
+    assert all(x[1] != y[1] for x, y in zip(got_a["items"], got_b["items"])), (got_a, got_b)
+    assert all(tuple(x) not in pairs for x in got_a["items"])
+    for (t, s), norm, (_, s0) in zip(got_a["items"], norms, pairs):
+        item = sets._item(t, s)
+        assert item.difficulty == sets._item(t, s0).difficulty and norm in sets._norms(item), (t, s, norm)
+    ta, _ = take(c, a, made["code"], right={0, 1}, want=dict(enumerate(norms)))
+    tb, _ = take(c, b, made["code"], right={0}, want=dict(enumerate(norms)))
+    res = c.get(f"/api/sets/{made['code']}/results", headers=hdr(owner)).json()
+    assert [t["marks"] for t in res["takers"]] == [[1, 1, 0], [1, 0, 0]], res["takers"]
+    assert [(q["right"], q["asked"]) for q in res["questions"]] == [(2, 2), (1, 2), (0, 2)], res["questions"]
+    top = res["questions"][2]["top_wrong"]
+    assert top["norm"] == norms[2] and top["count"] == 2 and "given" not in top, top
+    assert all(t["name"] is None for t in res["takers"]), res["takers"]        # nobody chose to be named
+
+    # U28: a question link sends a twin
+    one = make(c, owner, {"kind": "set", "cfg": {"templates": ["lin.evaluate"], "count": 1, "fresh": True}})
+    x, y = fresh("tx"), fresh("ty")
+    sx, (px,) = take(c, x, one["code"], right={0})
+    sy, (py,) = take(c, y, one["code"])
+    assert px[0] == py[0] == "lin.evaluate" and px[1] != py[1]
+    res = c.get(f"/api/sets/{one['code']}/results", headers=hdr(owner)).json()
+    assert [(t["right"], t["asked"]) for t in res["takers"]] == [(1, 1), (0, 1)] and all(t["ms"] for t in res["takers"])
+    print("ok  F6 sets: twins per slot with the sharer's trap, results per slot, a question link's twin")
+
+
+def sets_test(c) -> None:
+    from server import api_tests
+    owner, v = named(fresh("xo"), "Ana"), fresh("xv")
+    qs = [reports._from_bank("circle.convert", s) | {"id": f"m{s}"} for s in (50, 51, 52)]
+    sid = f"f6-module-{fresh('m')}"
+    db.run("INSERT INTO sessions(id,kind,questions,learner,started,finished,answers,cfg) VALUES (?,?,?,?,?,?,?,?)",
+           sid, "module", json.dumps({"module1": qs}), owner, deps.now(), deps.now(), "{}", "{}")
+    progress.record_paper(owner, sid, api_tests.marked_questions(deps.session_or_404(sid)), {})
+    made = make(c, owner, {"kind": "test", "session": sid, "show_score": False})
+    pub = c.get(f"/api/sets/{made['code']}").json()
+    public_ok(pub)
+    assert (pub["kind_label"], pub["modules"], pub["minutes"], pub["show_score"]) == ("Module", [3], 35, False), pub
+    exact = sets.serve(made["code"], v)
+    assert exact["items"] == [["circle.convert", s] for s in (50, 51, 52)] and exact["modules"] == [1, 1, 1]
+    twins = make(c, owner, {"kind": "test", "session": sid, "cfg": {"fresh": True}})
+    a, b = sets.serve(twins["code"], fresh("xa")), sets.serve(twins["code"], fresh("xb"))
+    tiers = [sets._item(t, s).difficulty for t, s in exact["items"]]
+    for got in (a, b):
+        assert [sets._item(t, s).difficulty for t, s in got["items"]] == tiers
+    assert all(x[1] != y[1] for x, y in zip(a["items"], b["items"]))
+    live = f"f6-module-{fresh('m')}"
+    db.run("INSERT INTO sessions(id,kind,questions,learner,started,answers,cfg) VALUES (?,?,?,?,?,?,?)",
+           live, "module", json.dumps({"module1": qs}), owner, deps.now(), "{}", "{}")
+    make(c, owner, {"kind": "test", "session": live}, code=409)             # not finished
+    drill_sid, _ = sitting(owner, "circle.convert", 53, given=0)
+    make(c, owner, {"kind": "test", "session": drill_sid}, code=422)        # a practice set is kind 'set'
+    make(c, owner, {"kind": "test"}, code=422)
+    ch, _ = sitting(owner, "circle.convert", 54, given=0, kind="challenge")
+    make(c, owner, {"kind": "set", "session": ch}, code=409)                # challenge sets are not shared
+    print("ok  F6 sets: a finished test shared exactly or as twins slot by slot, refusals")
+
+
+def sets_words(c) -> None:
+    owner = fresh("wo")
+    made = make(c, owner, {"kind": "words", "items": ["mitigate", "bolster", "Mitigate"]})
+    pub = c.get(f"/api/sets/{made['code']}").json()
+    assert pub["words"] == [{"slug": "mitigate"}, {"slug": "bolster"}] and pub["count"] == 2, pub
+    assert c.get(f"/api/sets/{made['code']}/results", headers=hdr(owner)).status_code == 409
+    db.run("INSERT INTO my_words(id,learner,word,meaning,created) VALUES (?,?,?,?,?)",
+           "w1", owner, "quixotic", "idealistic to the point of being impractical", deps.now())
+    own = make(c, owner, {"kind": "words", "items": ["own:w1"]})
+    assert c.get(f"/api/sets/{own['code']}").json()["words"][0]["word"] == "quixotic"
+    make(c, owner, {"kind": "words", "items": ["own:nope"]}, code=404)
+    make(c, owner, {"kind": "words", "items": ["<script>"]}, code=422)
+    # the sample is read-only, and links are capped per hour
+    make(c, "sample:f6", {"kind": "words", "items": ["mitigate"]}, code=403)
+    with patch.object(sets, "PER_HOUR", 2):
+        make(c, owner, {"kind": "words", "items": ["candid"]}, code=429)
+    print("ok  F6 sets: word lists, own words copied, sample read-only, 30 links an hour")
+
+
 def check(client) -> None:
     keep = reports.FILES
     with tempfile.TemporaryDirectory(prefix="satf-f6-") as path:
@@ -360,6 +623,11 @@ def check(client) -> None:
             disputes(client)
             instant(client)
             admin_bits(client)
+            sets_exact(client)
+            sets_items(client)
+            sets_twins(client)
+            sets_test(client)
+            sets_words(client)
         finally:
             reports.FILES = keep
             os.environ.pop("SATF_ADMIN_TOKEN", None)
