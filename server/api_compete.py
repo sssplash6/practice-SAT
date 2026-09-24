@@ -187,6 +187,14 @@ def daily_contest(x_learner: str | None = Header(default=None), x_tz: int = Depe
 
 
 def _start(cid: str, learner: str, tz: int) -> dict:
+    # Two devices starting together must claim one sitting. Every insert and
+    # its twin allocations happen under SQLite's single immediate writer.
+    compete.contest(cid, tz)
+    with db.atomic():
+        return _start_locked(cid, learner, tz)
+
+
+def _start_locked(cid: str, learner: str, tz: int) -> dict:
     contest = compete.contest(cid, tz)
     if contest["opens"] > compete._iso(compete._now()) and contest["kind"] != "daily":
         raise HTTPException(409, "contest has not opened")
@@ -277,6 +285,21 @@ def compete_history(kind: str | None = None, offset: int = 0, limit: int = 20,
 @router.post("/api/compete/nudge")
 def compete_nudge(body: dict, x_learner: str | None = Header(default=None)) -> dict:
     return compete.nudge(learner_of(x_learner), str(body.get("member", "")), str(body.get("contest", "")))
+
+
+@router.post("/api/follows")
+def follow_student(body: dict, x_learner: str | None = Header(default=None)) -> dict:
+    return compete.follow(learner_of(x_learner), str(body.get("pid", "")))
+
+
+@router.delete("/api/follows/{pid}")
+def unfollow_student(pid: str, x_learner: str | None = Header(default=None)) -> dict:
+    return compete.unfollow(learner_of(x_learner), pid)
+
+
+@router.get("/api/compete/rivals")
+def compete_rivals(x_learner: str | None = Header(default=None)) -> dict:
+    return compete.rivals(learner_of(x_learner))
 
 
 @router.post("/api/drill/{sid}/void")

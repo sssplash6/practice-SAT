@@ -116,10 +116,17 @@ def ensure(at: dt.datetime | None = None, tz: int = 0) -> list[dict]:
     at = at or _now()
     local = local_day(tz, at)
     for day in (local, local + dt.timedelta(days=1)):
-        if db.one("SELECT 1 FROM contests WHERE id=?", "daily-" + day.isoformat()):
+        cid = "daily-" + day.isoformat()
+        previous = db.one("SELECT spec FROM contests WHERE id=?", cid)
+        if previous:
+            old_spec = _json(previous["spec"], {}) or {}
+            if not old_spec.get("twin"):
+                old_spec.update({"slots": _daily_slots(day), "twin": True,
+                                 "strict": True, "rated": True})
+                db.run("UPDATE contests SET spec=? WHERE id=?", json.dumps(old_spec), cid)
             continue
         end = dt.datetime.combine(day + dt.timedelta(days=1), dt.time(12), dt.timezone.utc)
-        _insert("daily-" + day.isoformat(), "daily", "Daily Challenge",
+        _insert(cid, "daily", "Daily Challenge",
                 dt.datetime.combine(day, dt.time(), dt.timezone.utc), end,
                 _daily_slots(day), 950)
     monday = at.date() - dt.timedelta(days=at.weekday())
@@ -306,6 +313,9 @@ def rate(learner: str, sid: str, question: dict, right: bool, when: str | None =
     result.setdefault("rating_before", before)
     result["rating_after"] = after
     db.run("UPDATE sessions SET result=? WHERE id=?", json.dumps(result), sid)
+    cfg.setdefault("rating_before", before)
+    cfg["rating_after"] = after
+    db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(cfg), sid)
 
 
 def _questions(row) -> list[dict]:
@@ -377,6 +387,10 @@ def finish_contest(row) -> dict:
     elif fast > 5:
         ranked, why = False, "fast"
     result = _json(row["result"], {}) or {}
+    saved_cfg = _json(row["cfg"], {}) or {}
+    for field in ("rating_before", "rating_after"):
+        if field in saved_cfg:
+            result[field] = saved_cfg[field]
     result.update({"right": right, "wrong": wrong, "skipped": skipped, "voided": voided,
                    "asked": len(qs), "points": points,
                    "points_parts": {"base": base, "pace": pace, "finish": finish_bonus}})
@@ -476,7 +490,7 @@ def _identity(learner: str, viewer: str | None = None) -> dict:
     profile = db.one("SELECT name,handle,board,rating,rated,country FROM learners WHERE id=?", learner)
     board_mode = profile["board"] if profile else "name"
     anon = board_mode in ("anon", "hidden")
-    name = profile["handle"] or profile["name"] if profile else None
+    name = profile["handle"] if profile else None
     name = challenge.handle(learner, name)
     return {"pid": _pid(learner), "name": name if not anon or learner == viewer else "Anonymous",
             "anon": anon, "level": ratings.level_of(profile["rating"] or 1000) if profile else 1,
@@ -585,7 +599,9 @@ def _period_bounds(period: str, at: dt.date | None = None) -> tuple[str | None, 
     d = at or _now().date()
     if period == "all":
         return None, None
-    if period == "week":
+    if period == "7d":
+        start, end = d - dt.timedelta(days=6), d + dt.timedelta(days=1)
+    elif period == "week":
         start = d - dt.timedelta(days=d.weekday())
         end = start + dt.timedelta(days=7)
     elif period == "month":
@@ -601,7 +617,7 @@ def _period_bounds(period: str, at: dt.date | None = None) -> tuple[str | None, 
         previous = max((x for x in dates if x < next_date), default=next_date - dt.timedelta(days=90))
         start, end = previous + dt.timedelta(days=1), next_date + dt.timedelta(days=1)
     else:
-        raise HTTPException(422, "period must be week, month, season, year or all")
+        raise HTTPException(422, "period must be 7d, week, month, season, year or all")
     return start.isoformat(), end.isoformat()
 
 
@@ -614,6 +630,8 @@ def leaderboard(metric: str = "points", period: str = "week", scope: str = "all"
         raise HTTPException(422, "unknown leaderboard metric")
     if subject not in ("math", "rw") or sort not in ("value", "change"):
         raise HTTPException(422, "subject or sort is invalid")
+    if domain and metric == "rating":
+        raise HTTPException(400, {"error": "domain applies to metric=skill"})
     date = dt.date.fromisoformat(at) if at and len(at) == 10 else None
     start, end = _period_bounds(period, date)
     rows = db.rows("SELECT s.*,c.kind AS contest_kind,c.subject AS contest_subject FROM sessions s"
@@ -649,14 +667,14 @@ def leaderboard(metric: str = "points", period: str = "week", scope: str = "all"
                 values[row["learner"]] = max(values[row["learner"]], (band["low"] + band["high"]) / 2)
                 finished[row["learner"]] = max(finished.get(row["learner"], ""), row["finished"])
     if metric in ("right", "skill"):
-        if metric == "skill" and not domain:
-            raise HTTPException(422, "skill rating needs a domain")
         if metric == "skill":
-            grouped: dict[str, list[float]] = defaultdict(list)
-            for r in db.rows("SELECT learner,topic,rating FROM skill_ratings"):
-                if ratings and progress.topics().get(r["topic"]) and progress.topics()[r["topic"]].domain == domain:
-                    grouped[r["learner"]].append(r["rating"])
-            values = {person: round(sum(v) / len(v)) for person, v in grouped.items()}
+            grouped: dict[str, list[tuple[float, int]]] = defaultdict(list)
+            for r in db.rows("SELECT learner,topic,rating,n FROM skill_ratings"):
+                topic = progress.topics().get(r["topic"])
+                if topic and (not domain or topic.domain == domain):
+                    grouped[r["learner"]].append((r["rating"], r["n"]))
+            values = {person: round(sum(r * n for r, n in cells) / sum(n for _, n in cells))
+                      for person, cells in grouped.items() if sum(n for _, n in cells) >= 15}
         else:
             values.clear()
             for a in db.rows("SELECT learner,topic,correct,at FROM attempts WHERE repeat=0 AND disputed=0"
@@ -670,6 +688,9 @@ def leaderboard(metric: str = "points", period: str = "week", scope: str = "all"
     if metric == "rating":
         values = {r["id"]: round(r["rating"] or 1000) for r in db.rows("SELECT id,rating,rated FROM learners")
                   if r["rated"]}
+    climb_window = None
+    if metric == "climb":
+        values, climb_window = _climb_cohort(learner)
     entries = []
     own_country = _identity(learner).get("country") if learner else None
     own_level = _identity(learner)["level"] if learner else None
@@ -709,7 +730,50 @@ def leaderboard(metric: str = "points", period: str = "week", scope: str = "all"
     return {"metric": metric, "period": period, "scope": scope, "subject": subject,
             "players": players, "entries": page, "podium": page[:3] if offset == 0 else [],
             "you": mine, "next_offset": offset + len(page) if offset + len(page) < players else None,
-            "resets_at": end, "nearest_nonempty": None}
+            "resets_at": end, "nearest_nonempty": None, "window": climb_window}
+
+
+def _midpoint(result: dict) -> float | None:
+    band = result.get("estimate") or result.get("band") or {}
+    if isinstance(band, dict) and band.get("low") is not None and band.get("high") is not None:
+        return (band["low"] + band["high"]) / 2
+    return None
+
+
+def _climb_cohort(learner: str | None) -> tuple[dict[str, float], int | None]:
+    sittings: dict[str, list[float]] = defaultdict(list)
+    for row in db.rows("SELECT learner,result FROM sessions WHERE finished IS NOT NULL"
+                       " AND kind IN ('module','mock','diagnostic') ORDER BY finished"):
+        midpoint = _midpoint(_json(row["result"], {}) or {})
+        if midpoint is not None:
+            sittings[row["learner"]].append(midpoint)
+    if len(sittings) < 20:
+        return {}, None
+    first = sittings.get(learner, [None])[0] if learner else None
+    window = None
+    if first is not None:
+        for width in (40, 80, 160):
+            if sum(abs(v[0] - first) <= width for v in sittings.values()) >= 20:
+                window = width
+                break
+    chosen = {person: v for person, v in sittings.items()
+              if window is None or first is None or abs(v[0] - first) <= window}
+    return {person: round(statistics.mean(v[-3:]) - v[0], 1) for person, v in chosen.items()}, window
+
+
+def climb(learner: str) -> dict | None:
+    values, window = _climb_cohort(learner)
+    if learner not in values:
+        return None
+    ranked = sorted(values.items(), key=lambda pair: (-pair[1], pair[0]))
+    rank = 1 + sum(value > values[learner] for value in values.values())
+    first = db.rows("SELECT result FROM sessions WHERE learner=? AND finished IS NOT NULL"
+                    " AND kind IN ('module','mock','diagnostic') ORDER BY finished LIMIT 1", learner)
+    start = _midpoint(_json(first[0]["result"], {}) or {}) if first else None
+    return {"rank": rank, "of": len(ranked), "window": window,
+            "lo": start - window if start is not None and window else None,
+            "hi": start + window if start is not None and window else None,
+            "gain": values[learner]}
 
 
 def evaluate(learner: str) -> list[dict]:
@@ -762,7 +826,26 @@ def rank_snapshot(learner: str, tz: int = 0) -> dict:
     rating = profile["rating"] if profile else 1000
     return {"week": (week["you"] or {}).get("rank"), "all": (all_time["you"] or {}).get("rank"),
             "country": (country["you"] or {}).get("rank"), "rating": round(rating or 1000),
-            "level": ratings.level_of(rating or 1000), "provisional": (profile["rated"] or 0) < 30 if profile else True}
+            "level": ratings.level_of(rating or 1000), "provisional": (profile["rated"] or 0) < 30 if profile else True,
+            "climb": climb(learner)}
+
+
+def ranks(learner: str) -> dict:
+    snapshot = rank_snapshot(learner)
+    practice_board = leaderboard("right", "7d", learner=learner)
+    country_board = leaderboard("right", "7d", "country", learner=learner)
+    snapshot["practice"] = practice_board["you"]
+    snapshot["practice_country"] = country_board["you"]
+    return snapshot
+
+
+def test_rank(sid: str) -> dict | None:
+    row = db.one("SELECT learner,result,finished FROM sessions WHERE id=?", sid)
+    if not row or not row["finished"]:
+        return None
+    board = leaderboard("test", "month", learner=row["learner"])
+    return {"rank": (board["you"] or {}).get("rank"), "of": board["players"],
+            "climb": climb(row["learner"])}
 
 
 def due_today(learner: str, tz: int = 0) -> list[dict]:
@@ -776,6 +859,11 @@ def due_today(learner: str, tz: int = 0) -> list[dict]:
                       row["id"], learner):
             out.append({"id": row["id"], "title": row["title"], "closes": row["closes"]})
     return out
+
+
+def closing_soon(learner: str) -> list[dict]:
+    end = _iso(_now() + dt.timedelta(hours=24))
+    return [item for item in due_today(learner) if item["closes"] <= end]
 
 
 def shell_part(learner: str, tz: int = 0) -> dict:
@@ -859,9 +947,10 @@ def create_private(learner: str, body: dict) -> dict:
         code = "".join(secrets.choice(alphabet) for _ in range(6))
     for number in range(1, rounds + 1):
         cid = base if number == 1 else f"{base}-r{number}"
-        delta = dt.timedelta(days=(number - 1) * (7 if every == "week" else 1))
+        round_seconds = 86400 if every == "day" else 7 * 86400 if every == "week" else lengths[duration]
+        delta = dt.timedelta(seconds=(number - 1) * round_seconds)
         opens = now + delta
-        closes = opens + dt.timedelta(seconds=lengths[duration])
+        closes = opens + dt.timedelta(seconds=round_seconds)
         slots = _private_slots(cid, names, count, tiers, fmt)
         spec = {"slots": slots, "twin": twin, "rated": False, "strict": bool(body.get("strict")),
                 "reveal": reveal, "source": source if number > 1 else ("skills" if source == "our_traps" else source),
@@ -940,6 +1029,7 @@ def series_streak(series: str) -> dict:
 
 def nudge(sender: str, target: str, cid: str) -> dict:
     row = contest(cid)
+    target = person_of(target) or target
     if row["kind"] != "private" or sender == target or sender not in private_members(cid) or target not in private_members(cid):
         raise HTTPException(403, "both learners must be entrants")
     if db.one("SELECT 1 FROM nudges WHERE sender=? AND target=? AND contest=? AND round=?",
@@ -948,3 +1038,68 @@ def nudge(sender: str, target: str, cid: str) -> dict:
     db.run("INSERT INTO nudges(sender,target,contest,round,at) VALUES (?,?,?,?,?)",
            sender, target, row["series"] or cid, row["round"] or 1, _iso(_now()))
     return {"sent": True}
+
+
+def person_of(pid: str) -> str | None:
+    return next((r["id"] for r in db.rows("SELECT id FROM learners") if _pid(r["id"]) == pid), None)
+
+
+def follow(learner: str, pid: str) -> dict:
+    target = person_of(pid)
+    if not target or target == learner:
+        raise HTTPException(404, "student not found")
+    profile = db.one("SELECT board FROM learners WHERE id=?", target)
+    if profile and profile["board"] in ("anon", "hidden"):
+        raise HTTPException(403, "this student is not public")
+    n = db.one("SELECT COUNT(*) AS n FROM follows WHERE learner=?", learner)["n"]
+    if n >= 50 and not db.one("SELECT 1 FROM follows WHERE learner=? AND target=?", learner, target):
+        raise HTTPException(409, "follow limit is 50")
+    db.run("INSERT OR IGNORE INTO follows(learner,target,at) VALUES (?,?,?)", learner, target, _iso(_now()))
+    return {"pid": pid, "following": True}
+
+
+def unfollow(learner: str, pid: str) -> dict:
+    target = person_of(pid)
+    if target:
+        db.run("DELETE FROM follows WHERE learner=? AND target=?", learner, target)
+    return {"pid": pid, "following": False}
+
+
+def h2h(learner: str, target: str, season: str | None = None) -> dict:
+    start, end = _period_bounds("season", dt.date.fromisoformat(season) if season else None)
+    a = b = ties = 0
+    common = db.rows("SELECT x.contest,x.points AS ap,y.points AS bp FROM sessions x"
+                     " JOIN sessions y ON y.contest=x.contest AND y.learner=? AND y.finished IS NOT NULL"
+                     " AND y.ranked=1 WHERE x.learner=? AND x.finished IS NOT NULL AND x.ranked=1",
+                     target, learner)
+    for row in common:
+        c = db.one("SELECT closes FROM contests WHERE id=?", row["contest"])
+        if not c or (start and c["closes"][:10] < start) or (end and c["closes"][:10] >= end):
+            continue
+        a += row["ap"] > row["bp"]
+        b += row["bp"] > row["ap"]
+        ties += row["ap"] == row["bp"]
+    return {"you": a, "them": b, "ties": ties}
+
+
+def rivals(learner: str) -> dict:
+    own = db.one("SELECT rating FROM learners WHERE id=?", learner)
+    rating = own["rating"] if own and own["rating"] else 1000
+    followed = {r["target"] for r in db.rows("SELECT target FROM follows WHERE learner=?", learner)}
+    candidates = []
+    for row in db.rows("SELECT id,rating,board FROM learners WHERE id!=? AND rated>0", learner):
+        if row["board"] in ("anon", "hidden") or abs((row["rating"] or 1000) - rating) > 200:
+            continue
+        ident = _identity(row["id"], learner)
+        if row["id"] in followed:
+            ident["following"] = True
+        common = db.one("SELECT MAX(a.finished) AS at FROM sessions a JOIN sessions b"
+                        " ON b.contest=a.contest WHERE a.learner=? AND b.learner=?"
+                        " AND a.finished IS NOT NULL AND b.finished IS NOT NULL", learner, row["id"])
+        ident["last_shared"] = common["at"]
+        ident["h2h"] = h2h(learner, row["id"])
+        candidates.append(ident)
+    candidates.sort(key=lambda x: x["pid"])
+    candidates.sort(key=lambda x: x["last_shared"] or "", reverse=True)
+    candidates.sort(key=lambda x: not x.get("following"))
+    return {"rivals": candidates[:10]}
