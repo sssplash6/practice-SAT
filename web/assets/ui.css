@@ -982,6 +982,11 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px var(
 .tablist [aria-selected="true"] .n { background: var(--wash-2); }
 .tablist [role="tab"]:disabled { color: var(--faint); cursor: default; }
 @media (hover: hover) and (pointer: fine) { .tablist [role="tab"]:not(:disabled):hover { color: var(--ink); } }
+/* a phone wraps the tabs rather than hiding the last ones off the edge (rule 9); each row keeps its line */
+@media (max-width: 759px) {
+  .tablist { flex-wrap: wrap; overflow: visible; gap: 0; box-shadow: none; }
+  .tablist [role="tab"] { flex: 1 0 auto; justify-content: center; box-shadow: inset 0 -1px 0 var(--line); }
+}
 
 /* an on/off setting (UI.switch): button.switch role=switch aria-checked; the knob carries a
    check when on, so the state is never colour alone. Its label sits beside it. */
