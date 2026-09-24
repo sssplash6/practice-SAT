@@ -11,15 +11,27 @@ import hashlib
 import hmac
 import json
 import math
+import os
+import pathlib
 import secrets
 import statistics
+import sys
+import threading
+import time
 from collections import Counter, defaultdict
 
 from fastapi import HTTPException
 
-from . import blueprint, challenge, db, deps, practice, progress, ratings, satdates, scoring
+if __name__ == "__main__" and not __package__:
+    sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent.parent))
+    from server import blueprint, challenge, db, deps, practice, progress, ratings, satdates, scoring
+else:
+    from . import blueprint, challenge, db, deps, practice, progress, ratings, satdates, scoring
 
 SAT_DATES = satdates.SAT_DATES
+SUPPLY_PATH = pathlib.Path(__file__).resolve().parent / "cache" / "twin_supply.json"
+_SUPPLY: dict | None = None
+_SUPPLY_THREAD: threading.Thread | None = None
 ACHIEVEMENTS = [
     {"id": "pace-setter", "name": "Pace setter", "rule": "10 contest answers at SAT pace"},
     {"id": "top-ten", "name": "Top ten", "rule": "Place in a contest's top ten"},
@@ -64,6 +76,90 @@ def init() -> None:
     c.execute("UPDATE sessions SET contest='daily-'||day WHERE kind='challenge' AND day IS NOT NULL"
               " AND contest IS NULL")
     c.commit()
+    global _SUPPLY_THREAD
+    if _SUPPLY_THREAD is None and not _read_supply():
+        _SUPPLY_THREAD = threading.Thread(target=_survey_background, daemon=True, name="twin-supply")
+        _SUPPLY_THREAD.start()
+
+
+def _bank_hash() -> str:
+    root = pathlib.Path(__file__).resolve().parent.parent / "satbank"
+    digest = hashlib.sha256()
+    for path in sorted(root.rglob("*.py")):
+        digest.update(str(path.relative_to(root)).encode())
+        digest.update(path.read_bytes())
+    return digest.hexdigest()[:16]
+
+
+def _read_supply() -> dict | None:
+    global _SUPPLY
+    if _SUPPLY is not None:
+        return _SUPPLY
+    if not SUPPLY_PATH.exists():
+        return None
+    try:
+        found = json.loads(SUPPLY_PATH.read_text())
+    except (ValueError, OSError):
+        return None
+    if found.get("bank") != _bank_hash():
+        return None
+    _SUPPLY = found
+    return found
+
+
+def survey_supply() -> dict:
+    """Build the long-range twin variety cache, stopping each pair at 1,000."""
+    pairs = {}
+    names = blueprint.kinds()
+    for name, info in names.items():
+        for tier in sorted({t for t, _ in info["kinds"]}):
+            seen = set()
+            for seed in range(3000):
+                try:
+                    item = practice.generate(name, seed)
+                except Exception:
+                    continue
+                if item.difficulty == tier:
+                    seen.add(practice.question_hash(item))
+                    if len(seen) == 1000:
+                        break
+            pairs[f"{name}|{tier}"] = len(seen)
+    found = {"bank": _bank_hash(), "pairs": pairs}
+    SUPPLY_PATH.parent.mkdir(parents=True, exist_ok=True)
+    tmp = SUPPLY_PATH.with_suffix(".tmp")
+    tmp.write_text(json.dumps(found, sort_keys=True))
+    tmp.replace(SUPPLY_PATH)
+    global _SUPPLY
+    _SUPPLY = found
+    return found
+
+
+def _survey_background() -> None:
+    try:
+        # Let startup and the first request finish before the CPU-heavy survey.
+        time.sleep(30)
+        survey_supply()
+    except Exception:
+        import logging
+        logging.getLogger("satf").exception("twin supply survey failed")
+
+
+def supply_need(kind: str) -> int:
+    cutoff = _iso(_now() - dt.timedelta(days=30))
+    fields = db.rows("SELECT c.id,COUNT(DISTINCT s.learner) AS n FROM contests c"
+                     " JOIN sessions s ON s.contest=c.id WHERE c.kind=? AND s.ranked=1"
+                     " AND s.finished>=? GROUP BY c.id", kind, cutoff)
+    largest = max((r["n"] for r in fields), default=0)
+    return min(1000, max(100, 2 * largest))
+
+
+def pool(kind: str, tier: str, *, need: int | None = None) -> list[str]:
+    threshold = need or supply_need(kind)
+    known = _read_supply()
+    names = blueprint.kinds()
+    return sorted(name for name, info in names.items() if any(t == tier for t, _ in info["kinds"])
+                  and ((known["pairs"].get(f"{name}|{tier}", 0) >= threshold) if known
+                       else info["variety"] >= 15))
 
 
 def local_day(tz: int = 0, at: dt.datetime | None = None) -> dt.date:
@@ -79,10 +175,24 @@ def _insert(cid: str, kind: str, title: str, opens: dt.datetime, closes: dt.date
            len(slots), seconds, json.dumps(spec), _iso(_now()), subject)
 
 
+def _supply_shapes(kind: str) -> dict[str, set[tuple[str, str]]]:
+    allowed = {tier: set(pool(kind, tier)) for tier in ("easy", "medium", "hard")}
+    return {name: {(tier, fmt) for tier, fmt in shapes if name in allowed[tier]}
+            for name, shapes in blueprint.abilities().items()}
+
+
 def _daily_slots(day: dt.date) -> list[list]:
-    # The existing builder fixes a fair domain and tier mix. Its keys are the
-    # canonical types; new entrants get their own whole-question variants.
-    return [[q["key"], q["difficulty"], q["type"]] for q in challenge.challenge(day.isoformat())]
+    # A separate canonical form keeps the legacy identical /api/challenge
+    # sitting readable while the new Daily deals each entrant a fresh twin.
+    domains = blueprint.spread(dict(challenge.MIX))
+    slots = [(domain, tier, "spr" if i + 1 in challenge.SPR_AT else None)
+             for i, (domain, tier) in enumerate(zip(domains, challenge.LADDER))]
+    shapes = _supply_shapes("daily")
+    b = practice.Builder("contest:daily:" + day.isoformat(), set(), set(), dedupe="question")
+    cards = blueprint.fill(slots, blueprint.by_domain(), b, shapes, log=lambda *_: None)
+    if len(cards) != 10 or any(card.key not in pool("daily", card.item.difficulty) for card in cards):
+        raise HTTPException(409, "daily twin supply is too small")
+    return [[card.key, card.item.difficulty, card.item.fmt] for card in cards]
 
 
 def _sprint_slots(week: str) -> list[list]:
@@ -95,10 +205,13 @@ def _sprint_slots(week: str) -> list[list]:
     slots = []
     for i in range(60):
         tier = "easy" if i < 4 else "medium" if i < 12 or i % 2 == 0 else "hard"
-        available = [n for n in ordered if (tier, "mcq") in blueprint.kinds()[n]["kinds"]]
+        supplied = set(pool("sprint", tier))
+        available = [n for n in ordered if n in supplied and (tier, "mcq") in blueprint.kinds()[n]["kinds"]]
         if not available:
-            available = [n for n in ordered if any(t == tier for t, _ in blueprint.kinds()[n]["kinds"])]
-        name = available[i % len(available)] if available else ordered[i % len(ordered)]
+            available = [n for n in ordered if n in supplied and any(t == tier for t, _ in blueprint.kinds()[n]["kinds"])]
+        if not available:
+            raise HTTPException(409, "sprint twin supply is too small")
+        name = available[i % len(available)]
         fmt = "mcq" if (tier, "mcq") in blueprint.kinds()[name]["kinds"] else "spr"
         slots.append([name, tier, fmt])
     return slots
@@ -106,8 +219,12 @@ def _sprint_slots(week: str) -> list[list]:
 
 def _module_slots(form: str, module: int, salt: str) -> list[list]:
     b = practice.Builder("contest:" + salt, set(), set(), dedupe="question")
+    kind = "final" if salt.startswith("final-") else "weekly"
     cards = blueprint.fill(blueprint.slots(form, module), blueprint.by_domain(), b,
-                           blueprint.abilities(), log=lambda *_: None)
+                           _supply_shapes(kind), log=lambda *_: None)
+    if len(cards) != blueprint.MODULE_SIZE or any(card.key not in pool(kind, card.item.difficulty)
+                                                  for card in cards):
+        raise HTTPException(409, "module twin supply is too small")
     return [[c.key, c.item.difficulty, c.item.fmt] for c in cards]
 
 
