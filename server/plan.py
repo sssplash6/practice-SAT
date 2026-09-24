@@ -115,7 +115,8 @@ def validate(body: dict, learner: str, tz: int = 0, base: dict | None = None) ->
                "test_size": "module", "test_day": None, "clock": "auto", "time": "18:00",
                "focus": {}, "skills": {}, "extras": {"recheck": True, "qotd": False, "challenge": False},
                "booked": False, "rw_current": None, "rw_target": None, "rw_minutes": 0,
-               "measure": False, "ramp": None, "place": None, "checkpoints": "every_2nd"}
+               "measure": False, "ramp": None, "place": None, "checkpoints": "every_2nd",
+               "rehearsal_at": "08:30"}
     if profile and not base:
         default.update({k: profile[k] for k in ("current", "target", "exam_date", "minutes", "days", "tests")
                         if profile[k] is not None})
@@ -158,6 +159,8 @@ def validate(body: dict, learner: str, tz: int = 0, base: dict | None = None) ->
         raise HTTPException(422, "test_day must be Monday=0 through Sunday=6")
     if cfg["time"] is not None and (not isinstance(cfg["time"], str) or not TIME.fullmatch(cfg["time"])):
         raise HTTPException(422, "time must be HH:MM")
+    if not isinstance(cfg["rehearsal_at"], str) or not TIME.fullmatch(cfg["rehearsal_at"]):
+        raise HTTPException(422, "rehearsal_at must be HH:MM")
     if cfg["place"] is not None and (not isinstance(cfg["place"], str) or len(cfg["place"]) > 30):
         raise HTTPException(422, "place is at most 30 characters")
     for field, allowed, cap in (("focus", DOMAINS, 2), ("skills", TOPICS, 6)):
@@ -189,6 +192,8 @@ def validate(body: dict, learner: str, tz: int = 0, base: dict | None = None) ->
         raise HTTPException(422, "rw_minutes must be 0, 15, 30, 45 or 60")
     if cfg["checkpoints"] not in ("every", "every_2nd", "off"):
         raise HTTPException(422, "checkpoints must be every, every_2nd or off")
+    if type(cfg["booked"]) is not bool:
+        raise HTTPException(422, "booked must be boolean")
     if cfg["ramp"] is not None:
         start_m = cfg["ramp"].get("from") if isinstance(cfg["ramp"], dict) else cfg["ramp"]
         if type(start_m) is not int or not 5 <= start_m <= cfg["minutes"]:
@@ -499,13 +504,29 @@ def pin_schedule(learner: str, cfg: dict, start: dt.date, through: dt.date,
         d += dt.timedelta(days=1)
     limit = min(len(days), math.floor(.3 * slots))
     out: dict[str, list[dict]] = {}
-    if not days or not limit:
-        return out
-    # Two dated samples prove the plan covered a cell; the card reports any
-    # shortfall rather than claiming coverage from one accidental item.
-    ordered = [key for cell in cells for key in (cell, cell)]
-    for day, (topic, tier) in zip(days[:limit], ordered[:limit]):
-        out[day.isoformat()] = [{"topic": topic, "tier": tier, "count": 2}]
+    if days and limit:
+        # Two dated samples prove the plan covered a cell; the card reports any
+        # shortfall rather than claiming coverage from one accidental item.
+        ordered = [key for cell in cells for key in (cell, cell)]
+        for day, (topic, tier) in zip(days[:limit], ordered[:limit]):
+            out[day.isoformat()] = [{"topic": topic, "tier": tier, "count": 2}]
+    # Keep-warm samples occupy focus-set slots, but do not consume the coverage
+    # pin cap. One per week after the automatic promotion keeps the proof fresh.
+    promoted = [(topic, raw) for topic, raw in (cfg.get("skills") or {}).items()
+                if isinstance(raw, dict) and raw.get("state") == "strong" and raw.get("by") == "auto"]
+    for topic, raw in promoted:
+        weeks_seen: set[str] = set()
+        d = start
+        while d <= min(through, exam - dt.timedelta(days=2)):
+            monday = (d - dt.timedelta(days=d.weekday())).isoformat()
+            kind, _, minutes = kind_of(cfg, start, d, _override(pid, d) if pid else None,
+                                       (lambda x: _override(pid, x)) if pid else None)
+            if (d.isoformat() > raw.get("since", "") and monday not in weeks_seen and
+                    kind == "practice" and minutes >= 15):
+                out.setdefault(d.isoformat(), []).append({"topic": topic, "tier": "medium",
+                                                         "count": 2, "why": "keep"})
+                weeks_seen.add(monday)
+            d += dt.timedelta(days=1)
     return out
 
 
@@ -575,6 +596,10 @@ def _why(learner: str, topics: list[str], cfg: dict, gains: dict | None, gate: b
                         "href": f"/review/?open=trap:{trap['id']}"})
         if _state(cfg, topic) == "focus":
             out.append({"text": f"{b.get('name', topic)} is on Focus", "href": "/plan/?tab=progress"})
+        raw = (cfg.get("skills") or {}).get(topic)
+        if isinstance(raw, dict) and raw.get("slipping"):
+            out.append({"text": f"{b.get('name', topic)} is slipping · back to Normal until {raw.get('since')}",
+                        "href": f"/results/?skill={topic}"})
     if gate:
         out.append({"text": "Below the route: Math tops out at 580 until module 1 reaches 14 of 22",
                     "href": "/me/#route"})
@@ -685,11 +710,12 @@ def _check_for(learner: str, row, day: dt.date, topics: list[str], budget: int) 
         return None
     monday = day - dt.timedelta(days=day.weekday())
     week = [monday + dt.timedelta(days=n) for n in range(7)]
+    topic = focused[0]
+    allocated = allocate(learner, cfg, dt.date.fromisoformat(row["start"]), week[-1], row["id"])
     study = [d for d in week if d >= dt.date.fromisoformat(row["start"]) and
-             plan_kind(cfg, row, d) in ("practice", "test")]
+             topic in allocated.get(d.isoformat(), []) and plan_kind(cfg, row, d) in ("practice", "test")]
     if not study or day not in (study[0], study[-1]):
         return None
-    topic = focused[0]
     before = next((db.one("SELECT * FROM sessions WHERE learner=? AND cfg LIKE ? ORDER BY started LIMIT 1",
                           learner, f'%{d.isoformat()}:check:{topic}%')
                    for d in study[:-1] if d < day), None)
@@ -751,7 +777,7 @@ def _checkpoint(learner: str, cfg: dict, start: dt.date, day: dt.date) -> dict |
         a = next((s for s in reversed(scored) if s["at"][:10] >= (start - dt.timedelta(days=14)).isoformat()), None)
     if not a:
         return None
-    b = next((s for s in scored if s["at"][:10] >= (start + dt.timedelta(days=14)).isoformat()
+    b = next((s for s in reversed(scored) if s["at"][:10] >= (start + dt.timedelta(days=14)).isoformat()
               and s["id"] != a["id"] and s["kind"] == "module"), None)
     index = n if rule == "every" else n // 2
     base = b if b and index % 2 == 0 else a
@@ -860,8 +886,9 @@ def build_day(learner: str, row, day: dt.date, topics: list[str] | None = None,
                                                     " AND conf='sure' ORDER BY id DESC LIMIT 80", learner)}
         traps.sort(key=lambda t: (-int(t["template"] in sure), -t["hits"], t["last"]))
         if gate:
-            traps.sort(key=lambda t: db.one("SELECT difficulty FROM attempts WHERE learner=? AND template=?"
-                                            " ORDER BY id DESC LIMIT 1", learner, t["template"])["difficulty"] == "hard")
+            traps.sort(key=lambda t: (db.one("SELECT difficulty FROM attempts WHERE learner=? AND template=?"
+                                             " ORDER BY id DESC LIMIT 1", learner, t["template"]) or
+                                      {"difficulty": "medium"})["difficulty"] == "hard")
         target = min(2 * len({t["template"] for t in traps}), max(4, round(.3 * q)))
         target += target % 2
         if left >= 4:
@@ -874,8 +901,13 @@ def build_day(learner: str, row, day: dt.date, topics: list[str] | None = None,
             left -= take
         else:
             cut.append({"kind": "fix", "count": target, "to": "next study day"})
-    learn_topic = next((t for t in focus_topics if b[t]["answered"] < 5 or
-                        (ph == "Build" and b[t]["mastery"] < .35)), None)
+    hard_skips = {parts[1] for mark in db.rows("SELECT note FROM plan_marks WHERE plan=? AND status='skipped'"
+                                                " AND note LIKE 'too_hard:%'", pid)
+                  if (parts := (mark["note"] or "").split(":")) and len(parts) == 3
+                  and parts[2] == day.isoformat()}
+    learn_topic = next((t for t in focus_topics if t in hard_skips), None) or next(
+        (t for t in focus_topics if b[t]["answered"] < 5 or
+         (ph == "Build" and b[t]["mastery"] < .35)), None)
     if learn_topic and not measuring and day not in _taper_dates(cfg) and left - reserve >= 4:
         tasks.append(_task(day, "learn", f"Learn it · {b[learn_topic]['name']}", 3, 4 * s / 60,
                            {"source": "learn", "topics": [learn_topic], "example": True, "count": 3},
@@ -965,6 +997,68 @@ def _sessions(learner: str) -> list[dict]:
     return out
 
 
+def _test_band(task: dict, session: dict) -> dict | None:
+    result = _json(session.get("result"), {}) or {}
+    band = result.get("estimate") or {}
+    if not isinstance(band, dict) or band.get("low") is None or band.get("high") is None:
+        return None
+    low, high = band["low"], band["high"]
+    aim = task.get("aim")
+    verdict = "beat" if aim is not None and low >= aim else "under" if aim is not None and high < aim else "within"
+    return {"mid": round((low + high) / 2), "low": low, "high": high, "verdict": verdict}
+
+
+def _module_questions(session: dict) -> list[dict]:
+    questions = _json(session.get("questions"), {}) or {}
+    if isinstance(questions, dict):
+        questions = questions.get("module1", [])
+    return questions if isinstance(questions, list) else []
+
+
+def checkpoints_of(learner: str, row) -> list[dict]:
+    """Compare finished twin module-1 slots with their stored baseline form."""
+    sittings = _sessions(learner)
+    by_id = {s["id"]: s for s in sittings}
+    out = []
+    for current in sittings:
+        base = by_id.get(current["config"].get("twin_of"))
+        if not base or not current["finished"] or not base["finished"]:
+            continue
+        if not row["start"] <= current["finished"][:10] <= cfg_of(row)["exam_date"]:
+            continue
+        current_qs, base_qs = _module_questions(current), _module_questions(base)
+        if len(current_qs) != 22 or len(base_qs) != 22:
+            continue
+        answers = _json(current["answers"], {}) or {}
+        base_answers = _json(base["answers"], {}) or {}
+        counts = Counter()
+        slots = []
+        for index, (was, now) in enumerate(zip(base_qs, current_qs), 1):
+            before = scoring.is_correct(was, base_answers.get(was["id"]))
+            after = scoring.is_correct(now, answers.get(now["id"]))
+            change = ("held" if after else "slipped") if before else ("fixed" if after else "still_missed")
+            template = now.get("key") or now.get("template")
+            practised = db.one("SELECT COUNT(*) AS n FROM attempts WHERE learner=? AND template=?"
+                               " AND at>? AND at<? AND session!=?",
+                               learner, template, base["finished"], current["started"], current["id"])["n"] if template else 0
+            counts[change] += 1
+            if practised:
+                counts[change + "_practised"] += 1
+            slots.append({"n": index, "qid": now["id"], "baseline_qid": was["id"],
+                          "topic": now.get("topic") or now.get("topic_name"),
+                          "tier": now.get("difficulty"), "template": template,
+                          "change": change, "practised": bool(practised), "practice_count": practised})
+        old_band = (_json(base["result"], {}) or {}).get("estimate") or {}
+        new_band = (_json(current["result"], {}) or {}).get("estimate") or {}
+        fix = [s["qid"] for s in slots if s["change"] in ("slipped", "still_missed")]
+        out.append({"subject": "math", "session": current["id"], "baseline": base["id"],
+                    "baseline_band": old_band, "band": new_band, "slots": slots,
+                    "counts": {key: counts[key] for key in ("fixed", "held", "slipped", "still_missed")},
+                    "fix": {"from_session": current["id"], "only": fix, "each": 2,
+                            "sibling": True, "source": "twin", "task": f"{today(row['tz'] or 0)}:extra"}})
+    return out
+
+
 def _task_status(learner: str, pid: str, day: dt.date, task: dict,
                  sessions: list[dict], tz: int) -> dict:
     out = dict(task)
@@ -1000,6 +1094,8 @@ def _task_status(learner: str, pid: str, day: dt.date, task: dict,
             result = _json(s["result"], {}) or {}
             out["result"] = {"right": result.get("right", result.get("correct", 0)),
                              "asked": result.get("asked", len(answers)), "ms": result.get("ms")}
+            if task["kind"] == "test":
+                out["result"].update(_test_band(task, s) or {})
     if task["kind"] == "focus" and out["status"] == "todo" and task.get("topics"):
         marks = ",".join("?" for _ in task["topics"])
         count = db.one(f"SELECT COUNT(*) AS n FROM attempts WHERE learner=? AND topic IN ({marks})"
@@ -1008,9 +1104,14 @@ def _task_status(learner: str, pid: str, day: dt.date, task: dict,
             out["status"] = "done"
             out["answered"] = count
     if task["kind"] == "test" and out["status"] == "todo":
-        if any(s["kind"] in deps.TEST_KINDS and s["finished"] and
-               _local_of(s["finished"], tz) == day.isoformat() for s in sessions):
+        same_day = next((s for s in reversed(sessions) if s["kind"] in deps.TEST_KINDS and s["finished"] and
+                         _local_of(s["finished"], tz) == day.isoformat()), None)
+        if same_day:
             out["status"] = "done"
+            out["session"] = same_day["id"]
+            band = _test_band(task, same_day)
+            if band:
+                out["result"] = band
     return out
 
 
@@ -1337,10 +1438,112 @@ def words_focus_goal(learner: str, cfg: dict, before: dict | None = None) -> int
     return None
 
 
+def _check_receipt(session: dict | None) -> dict | None:
+    if not session:
+        return None
+    result = _json(session.get("result"), {}) or {}
+    attempts = db.rows("SELECT correct,COALESCE(ms,sms) AS spent FROM attempts WHERE session=?"
+                       " AND repeat=0 AND disputed=0 AND void IS NULL", session["id"])
+    return {"sid": session["id"], "right": result.get("right", sum(a["correct"] for a in attempts)),
+            "of": result.get("asked", len(attempts)),
+            "ms": sum(a["spent"] or 0 for a in attempts)}
+
+
+def checks_of(learner: str, row) -> list[dict]:
+    """Before/After evidence and the 12-answer proof ladder, by focus skill."""
+    sessions = []
+    for s in db.rows("SELECT * FROM sessions WHERE learner=? AND cfg LIKE '%:check:%' ORDER BY started", learner):
+        cfg = _json(s["cfg"], {}) or {}
+        match = re.fullmatch(r"(\d{4}-\d{2}-\d{2}):check:([a-z_]+)", cfg.get("task") or "")
+        if match and row["start"] <= match.group(1) <= cfg_of(row)["exam_date"]:
+            sessions.append((dict(s), cfg, match.group(1), match.group(2)))
+    groups: dict[tuple[str, str], dict] = {}
+    for session, cfg, day, topic in sessions:
+        d = dt.date.fromisoformat(day)
+        week = (d - dt.timedelta(days=d.weekday())).isoformat()
+        group = groups.setdefault((week, topic), {"subject": "math", "topic": topic, "week": week,
+                                                  "before": None, "after": None})
+        group["after" if cfg.get("rematch") else "before"] = _check_receipt(session)
+    out = []
+    focused = [t for t in TOPICS if _state(cfg_of(row), t) == "focus"]
+    for topic in focused:
+        if not any(t == topic for _, t in groups):
+            groups[(row["start"], topic)] = {"subject": "math", "topic": topic, "week": row["start"],
+                                             "before": None, "after": None}
+    for (week, topic), entry in sorted(groups.items()):
+        answers = db.rows("SELECT correct FROM attempts WHERE learner=? AND topic=? AND repeat=0"
+                          " AND disputed=0 AND void IS NULL AND difficulty IN ('medium','hard')"
+                          " ORDER BY id DESC LIMIT 12", learner, topic)
+        right = sum(a["correct"] for a in answers)
+        recent = {"right": right, "of": len(answers)}
+        before, after = entry["before"], entry["after"]
+        passed = bool(len(answers) >= 12 and
+                      ((after and before and after["right"] >= 3 and after["ms"] <= before["ms"]
+                        and right >= 9) or
+                       (right >= 11 and not progress.open_traps(learner, topic))))
+        result = ("passed" if passed else "learn" if after and after["right"] <= 1 else
+                  "again" if after else None)
+        out.append({**entry, "recent": recent, "result": result})
+    return out
+
+
+def auto_focus(learner: str, row, checks: list[dict]) -> tuple[dict | None, list[dict]]:
+    """Move a proved skill to Strong, then give its focus place to real points."""
+    from . import prefs
+    cfg = cfg_of(row)
+    settings = prefs.get(learner, row["tz"] or 0)
+    banners = []
+    changed = False
+    for topic, raw in list((cfg.get("skills") or {}).items()):
+        if (not isinstance(raw, dict) or raw.get("state") != "strong" or raw.get("pin")):
+            continue
+        answers = db.rows("SELECT correct FROM attempts WHERE learner=? AND topic=? AND repeat=0"
+                          " AND disputed=0 AND void IS NULL AND difficulty IN ('medium','hard')"
+                          " ORDER BY id DESC LIMIT 12", learner, topic)
+        if len(answers) < 12 or sum(a["correct"] for a in answers) > 7:
+            continue
+        until = (today(row["tz"] or 0) + dt.timedelta(days=7)).isoformat()
+        cfg["skills"][topic] = {"state": "normal", "by": "auto", "since": until, "slipping": True}
+        banners.append({"kind": "slipping", "topic": topic,
+                        "text": f"{topic} is slipping · back to Normal until {until}"})
+        event(row["id"], "auto", f"{topic} is slipping · 7 of 12 or fewer · Normal until {until}",
+              field="skills", before=raw, after=cfg["skills"][topic])
+        changed = True
+    for check in checks:
+        topic = check["topic"]
+        raw = cfg.get("skills", {}).get(topic)
+        state = raw.get("state") if isinstance(raw, dict) else raw
+        if check["result"] != "passed" or state != "focus" or (isinstance(raw, dict) and raw.get("pin")):
+            continue
+        if not settings.get("plan_auto_focus", True):
+            banners.append({"kind": "graduated", "topic": topic,
+                            "text": f"{topic} passed its check; move it to Strong?"})
+            continue
+        skills = cfg.setdefault("skills", {})
+        skills[topic] = {"state": "strong", "by": "auto", "since": today(row["tz"] or 0).isoformat()}
+        weights, _ = _values(learner, cfg)
+        next_topic = next((t for t in sorted(TOPICS, key=lambda t: (-weights[t], t))
+                           if t != topic and _state(cfg, t) == "normal" and
+                           not (isinstance(skills.get(t), dict) and
+                                skills[t].get("since", "") > today(row["tz"] or 0).isoformat())), None)
+        if next_topic:
+            skills[next_topic] = {"state": "focus", "by": "auto", "since": today(row["tz"] or 0).isoformat()}
+        event(row["id"], "auto", f"{topic} passed its check; next focus: {next_topic or 'none'}",
+              field="skills", before=topic, after=next_topic)
+        changed = True
+    if changed:
+        db.run("UPDATE plans SET cfg=?,updated=? WHERE id=?", json.dumps(cfg), deps.now(), row["id"])
+        row = db.one("SELECT * FROM plans WHERE id=?", row["id"])
+    return row if changed else None, banners
+
+
 def _changes(row, local_day: str) -> dict:
     rs = [dict(r) for r in db.rows("SELECT id,at,kind,text,day FROM plan_events WHERE plan=? ORDER BY at DESC,id DESC LIMIT 100", row["id"])]
     counts = dict(Counter(r["kind"] for r in rs))
-    return {"since": row["start"], "today": [{"text": r["text"], "day": r["day"],
+    previous = db.one("SELECT made_on FROM plan_snapshots WHERE plan=? AND made_on<?"
+                      " ORDER BY made_on DESC LIMIT 1", row["id"], local_day)
+    return {"since": previous["made_on"] if previous else row["start"],
+            "today": [{"text": r["text"], "day": r["day"],
                                                    "cause": r["kind"], "event": r["id"]}
                                                   for r in rs if _local_of(r["at"], row["tz"] or 0) == local_day],
             "counts": counts}
@@ -1356,25 +1559,85 @@ def snapshot(learner: str, row, days: list[dict]) -> None:
     local = today(row["tz"] or 0).isoformat()
     if db.one("SELECT 1 FROM plan_snapshots WHERE plan=? AND made_on=?", row["id"], local):
         return
-    future = [{"day": d["date"], "kind": d["kind"], "tasks": [
+    future = [{"day": d["date"], "kind": d["kind"], "minutes": d["minutes"],
+               "test": d["test"], "phase": d["phase"], "tasks": [
         {"id": t["id"], "kind": t["kind"], "topics": t["topics"], "count": t["count"]} for t in d["tasks"]]}
         for d in days if local <= d["date"] < (today(row["tz"] or 0) + dt.timedelta(days=14)).isoformat()]
-    old = db.one("SELECT days FROM plan_snapshots WHERE plan=? ORDER BY made_on DESC LIMIT 1", row["id"])
+    old = db.one("SELECT made_on,days FROM plan_snapshots WHERE plan=? ORDER BY made_on DESC LIMIT 1", row["id"])
     before = {d["day"]: d for d in _json(old["days"], []) or []} if old else {}
     with db.atomic() as c:
         c.execute("INSERT OR IGNORE INTO plan_snapshots(plan,made_on,days) VALUES (?,?,?)",
                   (row["id"], local, json.dumps(future)))
         if old:
+            since = old["made_on"] + "T00:00:00"
+            for trap in c.execute("SELECT label,opened,closed FROM traps WHERE learner=?"
+                                  " AND (opened>? OR closed>?)", (learner, since, since)):
+                action = "opened" if trap["opened"] > since else "fixed"
+                c.execute("INSERT INTO plan_events(plan,at,kind,text) VALUES (?,?,?,?)",
+                          (row["id"], deps.now(), "mistake", f"{trap['label']} {action}"))
+            for sitting in c.execute("SELECT id,finished FROM sessions WHERE learner=? AND finished>?"
+                                     " AND kind IN ('diagnostic','module','mock','section','paper')", (learner, since)):
+                c.execute("INSERT INTO plan_events(plan,at,kind,text) VALUES (?,?,?,?)",
+                          (row["id"], deps.now(), "sitting", f"Scored sitting {sitting['id']}"))
+            previous_phase = phase(dt.date.fromisoformat(row["start"]),
+                                   dt.date.fromisoformat(cfg_of(row)["exam_date"]),
+                                   dt.date.fromisoformat(old["made_on"]))
+            current_phase = phase(dt.date.fromisoformat(row["start"]),
+                                  dt.date.fromisoformat(cfg_of(row)["exam_date"]), today(row["tz"] or 0))
+            if current_phase != previous_phase:
+                c.execute("INSERT INTO plan_events(plan,at,kind,text) VALUES (?,?,?,?)",
+                          (row["id"], deps.now(), "phase", f"{current_phase} starts"))
             for d in future:
                 prior = before.get(d["day"])
-                if prior and prior["tasks"] != d["tasks"]:
+                if prior and prior != d:
+                    edit = c.execute("SELECT text FROM plan_events WHERE plan=? AND kind='edit'"
+                                     " AND (day=? OR day IS NULL) AND at>=? ORDER BY id DESC LIMIT 1",
+                                     (row["id"], d["day"], since)).fetchone()
+                    if prior["kind"] != d["kind"] and d["kind"] == "off":
+                        line = f"{dt.date.fromisoformat(d['day']):%a} off"
+                    elif prior.get("test") != d.get("test"):
+                        line = f"{d['day']} {prior.get('test') or 'practice'} → {d.get('test') or 'practice'}"
+                    else:
+                        line = f"{d['day']} re-dealt from your answers"
                     c.execute("INSERT INTO plan_events(plan,at,kind,text,day) VALUES (?,?,?,?,?)",
-                              (row["id"], deps.now(), "auto", f"{d['day']} changed after your latest work", d["day"]))
+                              (row["id"], deps.now(), "edit" if edit else "auto", line, d["day"]))
+        c.execute("DELETE FROM plan_snapshots WHERE plan=? AND made_on<?",
+                  (row["id"], (today(row["tz"] or 0) - dt.timedelta(days=60)).isoformat()))
 
 
 def _summary(row, days: list[dict] | None = None) -> dict:
     cfg = cfg_of(row)
     exam = dt.date.fromisoformat(cfg["exam_date"])
+    if days is None:
+        frozen = db.rows("SELECT day,kind,minutes FROM plan_days WHERE plan=? ORDER BY day", row["id"])
+        ledger = {d["day"]: d for d in progress.days(row["learner"], row["tz"] or 0, 53)["days"]}
+        record_days = [{"date": d["day"], "kind": d["kind"], "minutes": d["minutes"],
+                        "minutes_done": ledger.get(d["day"], {}).get("minutes", 0),
+                        "status": "done" if ledger.get(d["day"], {}).get("minutes", 0) >= .8 * d["minutes"]
+                        else "partial" if ledger.get(d["day"], {}).get("minutes", 0) else "missed"}
+                       for d in frozen]
+    else:
+        record_days = days
+    study = [d for d in record_days if d["kind"] in ("practice", "test") and
+             d["date"] <= today(row["tz"] or 0).isoformat()]
+    by_dow = []
+    for weekday in range(7):
+        chosen = [d for d in study if dt.date.fromisoformat(d["date"]).weekday() == weekday]
+        by_dow.append(round(100 * sum(d["status"] in ("done", "partial", "made_up") for d in chosen) /
+                            len(chosen)) if chosen else 0)
+    events = [dict(e) for e in db.rows("SELECT at,text FROM plan_events WHERE plan=? ORDER BY id DESC LIMIT 3", row["id"])]
+    result = _json(row["result"], None)
+    fixed = db.one("SELECT COUNT(*) AS n,SUM(relapses) AS relapsed FROM traps WHERE learner=? AND opened>=?"
+                   " AND opened<=? AND closed IS NOT NULL", row["learner"], row["start"], cfg["exam_date"])
+    record = {"hours": round(sum(d["minutes_done"] for d in study) / 60, 1),
+              "days_pct": round(100 * sum(d["status"] in ("done", "partial", "made_up") for d in study) /
+                                len(study)) if study else 0,
+              "by_dow": by_dow, "start_mid": cfg.get("current"),
+              "end_mid": (result or {}).get("math"), "result": result,
+              "fixed": fixed["n"] or 0, "relapsed": fixed["relapsed"] or 0,
+              "checks_passed": progress.rechecks_passed(row["learner"], row["start"])["n"],
+              "best_weekday": max(range(7), key=lambda n: by_dow[n]),
+              "changes": db.one("SELECT COUNT(*) AS n FROM plan_events WHERE plan=?", row["id"])["n"]}
     return {"id": row["id"], "name": row["name"],
             "status": "finished" if row["result"] else "archived" if row["archived"] else "active",
             "built": row["created"], "start": row["start"], "exam": cfg["exam_date"],
@@ -1382,7 +1645,9 @@ def _summary(row, days: list[dict] | None = None) -> dict:
             "tasks_done": sum(d["tasks_done"] for d in days) if days else 0,
             "adherence": round(sum(d["status"] in ("done", "made_up") for d in days) /
                                max(1, sum(d["kind"] in ("practice", "test") for d in days)), 3) if days else 0,
-            "result": _json(row["result"], None)}
+            "result": result, "total_target": cfg["target"] + cfg["rw_target"] if cfg.get("rw_target") else None,
+            "total_result": sum(result.get(k, 0) for k in ("math", "rw")) if result else None,
+            "record": record, "recent_events": events}
 
 
 def _bank(learner: str) -> dict:
@@ -1400,6 +1665,147 @@ def _bank(learner: str) -> dict:
         except TypeError:
             pass
     return out
+
+
+def rhythm_of(learner: str, tz: int = 0) -> dict:
+    recent = progress.days(learner, tz, 4)["days"][-28:]
+    active = [d for d in recent if d["questions"] or d["words"] or d["tests"] or d["minutes"]]
+    by_dow = []
+    for weekday in range(7):
+        dates = [d for d in recent if dt.date.fromisoformat(d["day"]).weekday() == weekday]
+        worked = [d for d in dates if d in active]
+        by_dow.append({"studied": len(worked), "of": len(dates),
+                       "median_min": round(statistics.median([d["minutes"] for d in worked])) if worked else 0})
+    return {"weeks": 4, "days_per_week": round(len(active) / 4, 1),
+            "median_min": round(statistics.median([d["minutes"] for d in active])) if active else None,
+            "weekly_min": round(sum(d["minutes"] for d in active) / 4),
+            "by_dow": by_dow, "active_days": len(active)}
+
+
+def _progress_extra(learner: str, row, days: list[dict], checks: list[dict]) -> dict:
+    """Evidence behind Progress; every minute and answer comes from learner rows."""
+    start = row["start"]
+    cutoff14 = (today(row["tz"] or 0) - dt.timedelta(days=14)).isoformat()
+    attempts = [dict(r) for r in db.rows("SELECT topic,correct,at,COALESCE(ms,sms) AS spent,conf,difficulty"
+                                        " FROM attempts WHERE learner=? AND repeat=0 AND disputed=0"
+                                        " AND void IS NULL ORDER BY at,id", learner)]
+    gained = estimate.gains(learner)
+    gain_of = {x["topic"]: x["gain"] for x in gained["skills"]} if gained else {}
+    fixed = Counter(r["topic"] for r in db.rows("SELECT topic FROM traps WHERE learner=?"
+                                                   " AND closed IS NOT NULL AND closed>=?", learner, start))
+    bought = []
+    for topic in TOPICS:
+        rows = [r for r in attempts if r["topic"] == topic]
+        inside = [r for r in rows if r["at"][:10] >= start]
+        minutes = round(sum(min(max(r["spent"] or 0, 0), 600_000) for r in inside) / 60_000, 1)
+        if minutes < 10:
+            continue
+        before_rows = [r for r in rows if r["at"][:10] < start][-20:] or inside[:20]
+        before_ids = {id(r) for r in before_rows}
+        after_rows = [r for r in inside if id(r) not in before_ids][-20:]
+        before = {"right": sum(r["correct"] for r in before_rows), "of": len(before_rows)}
+        after = {"right": sum(r["correct"] for r in after_rows), "of": len(after_rows)}
+        minutes14 = round(sum(min(max(r["spent"] or 0, 0), 600_000) for r in inside
+                              if r["at"][:10] >= cutoff14) / 60_000, 1)
+        not_moving = bool(minutes14 >= 60 and len(before_rows) == len(after_rows) == 20 and
+                          after["right"] - before["right"] < 2)
+        bought.append({"topic": topic, "subject": "math", "minutes": minutes, "minutes_14d": minutes14,
+                       "before": before, "after": after, "not_moving": not_moving,
+                       "fixed": fixed[topic],
+                       "check": next((c for c in reversed(checks) if c["topic"] == topic), None),
+                       "claimed": gain_of.get(topic)})
+    bought.sort(key=lambda r: (-r["minutes"], r["topic"]))
+    period = min(60, max(1, (today(row["tz"] or 0) - dt.date.fromisoformat(start)).days + 1))
+    causes = progress.causes(learner, row["tz"] or 0, days=period)
+    confidence = {}
+    for label in ("sure", "unsure", "guess"):
+        group = [r for r in attempts if r["at"][:10] >= start and r["conf"] == label]
+        confidence[label] = {"right": sum(r["correct"] for r in group), "of": len(group),
+                             "accuracy": round(sum(r["correct"] for r in group) / len(group), 3) if group else None}
+    split = Counter()
+    done = Counter()
+    for d in days:
+        for task in d["tasks"]:
+            if task["kind"] in ("focus", "map", "check", "learn", "pace"):
+                for topic in task.get("topics", []):
+                    domain = estimate.DOMAIN_OF.get(topic)
+                    if domain:
+                        share = task["minutes"] / max(1, len(task["topics"]))
+                        split[domain] += share
+                        if task["status"] in ("done", "marked", "made_up"):
+                            done[domain] += share
+    points_by_domain = Counter()
+    if gained:
+        points_by_domain.update({x["domain"]: x["gain"] for x in gained["by_domain"]})
+    split_domain = [{"domain": domain, "minutes_planned": round(split[domain], 1),
+                     "minutes_done": round(done[domain], 1),
+                     "time_share": round(split[domain] / max(1, sum(split.values())), 3),
+                     "points_share": round(points_by_domain[domain] / max(1, sum(points_by_domain.values())), 3)}
+                    for domain in DOMAINS]
+    return {"bought": bought, "causes": causes, "calibration": confidence,
+            "skill_pace": progress.pace(learner), "split_domain": split_domain,
+            "changes_counts": dict(Counter(r["kind"] for r in db.rows(
+                "SELECT kind FROM plan_events WHERE plan=?", row["id"]))) }
+
+
+def _verdict_levers(learner: str, row, days: list[dict], score_pace: dict | None) -> tuple[dict, list[dict], dict]:
+    cfg = cfg_of(row)
+    exam = dt.date.fromisoformat(cfg["exam_date"])
+    local = today(row["tz"] or 0)
+    weeks_left = max(1 / 7, (exam - local).days / 7)
+    recent = estimate._mean3(estimate._sittings(learner))
+    baseline = recent or cfg.get("current") or 520
+    needs = round((min(cfg["target"], 780) - baseline) / weeks_left, 1)
+    projected = estimate.projection(learner, exam)
+    made = projected["slope_used"] if projected else None
+    verdict = {"math": {"kind": "on_pace" if made is not None and made >= needs else
+                         "behind" if made is not None else "unmeasured",
+                        "made_per_week": made, "needs_per_week": needs,
+                        "mean": recent, "projection": projected}}
+    future = [d for d in days if d["date"] >= local.isoformat() and d["kind"] in ("practice", "test")]
+    available = round(sum(d["minutes"] for d in future))
+    path = (estimate.need(cfg["target"], learner).get("path") or {})
+    required = path.get("minutes") if path.get("reachable") else None
+
+    def capacity(minutes: int, study_days: int, needed: int | None) -> dict:
+        gap = minutes - needed if needed is not None else None
+        return {"study_days": study_days, "hours_available": round(minutes / 60, 1),
+                "minutes_available": minutes, "hours_needed": round(needed / 60, 1) if needed is not None else None,
+                "fits": gap >= 0 if gap is not None else None,
+                "spare_h": round(max(0, gap) / 60, 1) if gap is not None else None,
+                "short_h": round(max(0, -gap) / 60, 1) if gap is not None else None}
+
+    workload = capacity(available, len(future), required)
+    if required is not None and required > available and future:
+        workload["suggest_minutes"] = min(240, cfg["minutes"] + math.ceil((required - available) / len(future) / 5) * 5)
+    levers = []
+    if cfg["minutes"] <= 225:
+        effect = capacity(available + len(future) * 15, len(future), required)
+        levers.append({"kind": "minutes", "label": f"Add 15 min a day · {len(future)} days",
+                       "patch": {"minutes": cfg["minutes"] + 15},
+                       "effect": {"needs_per_week": needs, **effect}})
+    if "0" in cfg["days"]:
+        weekday = cfg["days"].index("0")
+        changed = cfg["days"][:weekday] + "1" + cfg["days"][weekday + 1:]
+        added = sum((local + dt.timedelta(days=n)).weekday() == weekday
+                    for n in range((exam - local).days))
+        effect = capacity(available + added * cfg["minutes"], len(future) + added, required)
+        levers.append({"kind": "days", "label": f"Add {('Mon','Tue','Wed','Thu','Fri','Sat','Sun')[weekday]}",
+                       "patch": {"days": changed}, "effect": {"needs_per_week": needs,
+                       **effect}})
+    if not cfg.get("booked"):
+        later = next((d for d in satdates.upcoming(local) if d > cfg["exam_date"]), None)
+        if later:
+            later_weeks = max(1 / 7, (dt.date.fromisoformat(later) - local).days / 7)
+            later_date = dt.date.fromisoformat(later)
+            extra_days = sum(cfg["days"][(exam + dt.timedelta(days=n)).weekday()] == "1"
+                             for n in range(1, (later_date - exam).days))
+            effect = capacity(available + extra_days * cfg["minutes"], len(future) + extra_days, required)
+            levers.append({"kind": "date", "label": f"Move to {later}",
+                           "patch": {"exam_date": later},
+                           "effect": {"needs_per_week": round((min(cfg["target"], 780) - baseline) / later_weeks, 1),
+                                      **effect}})
+    return verdict, levers[:3], workload
 
 
 def propose(learner: str, tz: int = 0) -> dict:
@@ -1508,6 +1914,13 @@ def payload(learner: str, tz: int = 0, pid: str | None = None, *, shared: bool =
                "bank": _bank(learner), "proposal": propose(learner, tz)}
         return out
     cfg = cfg_of(row)
+    if not shared:
+        from . import prefs
+        booked = prefs.get(learner, tz).get("registered") == cfg["exam_date"]
+        if cfg.get("booked") != booked:
+            cfg["booked"] = booked
+            db.run("UPDATE plans SET cfg=? WHERE id=?", json.dumps(cfg), row["id"])
+            row = db.one("SELECT * FROM plans WHERE id=?", row["id"])
     if cfg.get("measure") and cfg.get("current") is None and not shared:
         measured = next((s for s in reversed(estimate._sittings(learner))
                          if s["at"] >= row["start"] and s["kind"] in deps.TEST_KINDS), None)
@@ -1522,6 +1935,13 @@ def payload(learner: str, tz: int = 0, pid: str | None = None, *, shared: bool =
                 event(row["id"], "auto", f"Starting score set to {current} from your diagnostic",
                       field="current", after=current)
             row = db.one("SELECT * FROM plans WHERE id=?", row["id"])
+    checks = checks_of(learner, row)
+    banners = []
+    if not shared:
+        changed, banners = auto_focus(learner, row, checks)
+        if changed:
+            row = changed
+            cfg = cfg_of(row)
     freeze(learner, row, tz)
     start, exam = dt.date.fromisoformat(row["start"]), dt.date.fromisoformat(cfg["exam_date"])
     allocation = allocate(learner, cfg, start, exam, row["id"])
@@ -1537,6 +1957,8 @@ def payload(learner: str, tz: int = 0, pid: str | None = None, *, shared: bool =
     stats = _stats(learner, row, days, ledger)
     pace, suggest = _pace_suggest(learner, row)
     domains, skills = _domains_skills(learner, cfg, row, days)
+    progress_extra = _progress_extra(learner, row, days, checks)
+    verdict, levers, workload = _verdict_levers(learner, row, days, pace)
     last7 = [d for d in days if (today(tz) - dt.timedelta(days=7)).isoformat() <= d["date"] < local
              and d["kind"] in ("practice", "test")]
     behind = None
@@ -1547,6 +1969,22 @@ def payload(learner: str, tz: int = 0, pid: str | None = None, *, shared: bool =
             chips = (15, 30, 45, 60, 90, 120, 150, 180, 240)
             behind = {"planned": len(last7), "done": done, "avg_minutes": avg,
                       "suggest_minutes": next((x for x in chips if x >= max(15, avg)), 240)}
+    if behind:
+        recent28 = [d for d in days if (today(tz) - dt.timedelta(days=28)).isoformat() <= d["date"] < local
+                    and d["kind"] in ("practice", "test")]
+        fixes = [{"kind": "shorter", "label": f"Fit to {behind['suggest_minutes']} min",
+                  "patch": {"minutes": behind["suggest_minutes"]}}]
+        for weekday in range(7):
+            sample = [d for d in recent28 if dt.date.fromisoformat(d["date"]).weekday() == weekday]
+            missed = sum(d["status"] == "missed" for d in sample)
+            if len(sample) >= 2 and missed >= 2 and missed >= len(sample) / 2:
+                day_minutes = list(cfg.get("day_minutes") or [None] * 7)
+                day_minutes[weekday] = 15
+                fixes.append({"kind": "weekday", "weekday": weekday,
+                              "label": f"Make {('Mon','Tue','Wed','Thu','Fri','Sat','Sun')[weekday]} 15 min",
+                              "patch": {"day_minutes": day_minutes}})
+        behind["fixes"] = fixes
+        behind["text"] = f"{len(last7) - done} study days missed · catch up in 15 min"
     if local > cfg["exam_date"]:
         state = "after"
     elif local == cfg["exam_date"]:
@@ -1556,6 +1994,16 @@ def payload(learner: str, tz: int = 0, pid: str | None = None, *, shared: bool =
     else:
         state = "active"
     active = {**_summary(row, days), "cfg": cfg}
+    registered = satdates.registration(cfg["exam_date"], cfg["exam_date"] if cfg.get("booked") else None,
+                                       today(tz))
+    if registered and not cfg.get("booked"):
+        banners.append({"kind": "registration", "date": cfg["exam_date"], "data": registered})
+    if suggest:
+        old_needs = verdict["math"]["needs_per_week"]
+        new_needs = round((min(cfg["target"], 780) - suggest["current"]) /
+                          max(1 / 7, (exam - today(tz)).days / 7), 1)
+        suggest["preview"] = f"Start from {suggest['current']} · needs +{new_needs} a week instead of +{old_needs}"
+        banners.append({"kind": "drift", "suggest": suggest})
     out = {"active": active, "plans": [_summary(p, days if p["id"] == row["id"] else None) for p in plans],
            "draft": _json(draft["plan_draft"], None) if draft else None, "bank": _bank(learner),
            "score": {"math": {"start": cfg["current"], "target": cfg["target"], "sittings": _sittings(learner)},
@@ -1566,15 +2014,23 @@ def payload(learner: str, tz: int = 0, pid: str | None = None, *, shared: bool =
            "sittings": _sittings(learner), "days": days, "weeks": _week_days(days),
            "today": current, "stats": stats, "domains": domains, "skills": skills,
            "rw_domains": rw_domains(learner, cfg, days),
-           "gaps": {}, "phases": PHASES, "pace": pace, "suggest": suggest, "behind": behind,
+           "gaps": {}, "phases": PHASES, "pace": {"math": pace}, "suggest": suggest, "behind": behind,
            "state": state, "points": {"math": _points(learner, row)},
            "projection": {"math": estimate.projection(learner, cfg["exam_date"])},
            "coverage": _coverage(learner, cfg, days, _gate(learner, cfg, row["id"])),
            "map": {"on": sum(progress.board(learner)[t]["answered"] < 6 for t in TOPICS) > 5,
                    "measured": sum(progress.board(learner)[t]["answered"] >= 6 for t in TOPICS),
                    "of": 19, "done_at": None},
-           "changes": _changes(row, local), "checks": [], "focus_history": [],
-           "habits": [], "banners": [], "rhythm": {}}
+           "changes": _changes(row, local), "checks": checks_of(learner, row),
+           "focus_history": [dict(e) for e in db.rows("SELECT at,text,from_v,to_v FROM plan_events"
+                                                      " WHERE plan=? AND kind='auto' AND field='skills' ORDER BY id DESC",
+                                                      row["id"])],
+           "habits": [], "banners": banners, "rhythm": rhythm_of(learner, tz),
+           "verdict": verdict, "levers": levers, "workload": workload,
+           "bought": progress_extra["bought"], "causes": progress_extra["causes"],
+           "calibration": progress_extra["calibration"], "skill_pace": progress_extra["skill_pace"],
+           "split_domain": progress_extra["split_domain"],
+           "changes_counts": progress_extra["changes_counts"], "checkpoints": checkpoints_of(learner, row)}
     if shared:
         out.pop("draft", None)
         out.pop("proposal", None)
@@ -1656,11 +2112,12 @@ def calendar(learner: str, row, tz: int | None = None) -> str:
                                       _override(row["id"], day), lambda d: _override(row["id"], d))
         if kind not in ("practice", "test"):
             continue
-        hh, mm = map(int, (cfg.get("time") or "18:00").split(":"))
+        rehearsal = day in _rehearsal_dates(cfg, dt.date.fromisoformat(row["start"]))
+        hh, mm = map(int, (cfg["rehearsal_at"] if rehearsal else cfg.get("time") or "18:00").split(":"))
         begin = dt.datetime.combine(day, dt.time(hh, mm))
-        end = begin + dt.timedelta(minutes=minutes)
+        end = begin + dt.timedelta(minutes=90 if rehearsal else minutes)
         topics = allocation.get(day.isoformat(), [])
-        summary = f"SAT Math · {test.title()} test" if test else f"SAT Math · {minutes} min · {', '.join(topics)}"
+        summary = "SAT Math · Dress rehearsal" if rehearsal else f"SAT Math · {test.title()} test" if test else f"SAT Math · {minutes} min · {', '.join(topics)}"
         lines += ["BEGIN:VEVENT", f"UID:plan-{row['id']}-{day.isoformat()}@satfreshman",
                   f"DTSTAMP:{stamp}", f"DTSTART:{begin:%Y%m%dT%H%M%S}",
                   f"DTEND:{end:%Y%m%dT%H%M%S}", f"SUMMARY:{_ics_escape(summary)}"]

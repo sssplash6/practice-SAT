@@ -94,7 +94,9 @@ def get_plan(x_learner: str | None = Header(default=None), x_tz: int = Depends(d
 def get_progress(x_learner: str | None = Header(default=None), x_tz: int = Depends(deps.tz_of)) -> dict:
     full = plan.payload(_reader(x_learner), x_tz)
     return {key: full.get(key) for key in ("active", "stats", "domains", "skills", "rw_domains", "coverage", "points",
-                                          "projection", "pace", "score", "changes", "checks", "checkpoints")}
+                                          "projection", "pace", "score", "changes", "checks", "checkpoints",
+                                          "bought", "causes", "calibration", "skill_pace", "split_domain",
+                                          "changes_counts", "weeks", "verdict", "workload")}
 
 
 @router.get("/api/plan/day/{day}")
@@ -170,6 +172,8 @@ def create(body: dict, x_learner: str | None = Header(default=None),
         for task in custom:
             _insert_custom(c, pid, task)
         _mirror(c, learner, pid, cfg)
+        if cfg["booked"]:
+            prefs.put(learner, {"registered": cfg["exam_date"]})
         if word_goal is not None:
             prefs.put(learner, {"words_goal": word_goal})
         c.execute("UPDATE learners SET plan_draft=NULL WHERE id=?", (learner,))
@@ -182,8 +186,9 @@ def patch_plan(pid: str, body: dict, x_learner: str | None = Header(default=None
     learner = _writer(x_learner)
     row = _active(learner, pid)
     plan.freeze(learner, row, x_tz)
-    cfg = plan.validate(body, learner, x_tz, plan.cfg_of(row))
-    word_goal = plan.words_focus_goal(learner, cfg, plan.cfg_of(row))
+    before = plan.cfg_of(row)
+    cfg = plan.validate(body, learner, x_tz, before)
+    word_goal = plan.words_focus_goal(learner, cfg, before)
     name = body.get("name", row["name"])
     if not isinstance(name, str) or not name.strip() or len(name) > 40:
         raise HTTPException(422, "name must be 1–40 characters")
@@ -191,9 +196,13 @@ def patch_plan(pid: str, body: dict, x_learner: str | None = Header(default=None
         c.execute("UPDATE plans SET name=?,cfg=?,updated=? WHERE id=?",
                   (name.strip(), json.dumps(cfg), deps.now(), pid))
         _mirror(c, learner, pid, cfg)
+        if "booked" in body:
+            prefs.put(learner, {"registered": cfg["exam_date"] if cfg["booked"] else None})
         if word_goal is not None:
             prefs.put(learner, {"words_goal": word_goal})
-        plan.event(pid, "edit", "Plan settings changed", field=",".join(sorted(body)))
+        field = next(iter(body)) if len(body) == 1 else ",".join(sorted(body))
+        plan.event(pid, "edit", "Plan settings changed", field=field,
+                   before=before.get(field), after=cfg.get(field))
     return plan.payload(learner, x_tz)
 
 
@@ -226,6 +235,9 @@ def patch_task(pid: str, tid: str, body: dict,
         raise HTTPException(404, "task not found on day")
     if "status" in body and body["status"] not in ("done", "skipped", "todo"):
         raise HTTPException(422, "status must be done, skipped or todo")
+    reason = body.get("reason")
+    if reason is not None and (body.get("status") != "skipped" or reason not in ("no_time", "too_hard", "know")):
+        raise HTTPException(422, "skip reason must be no_time, too_hard or know")
     if ("title" in body or "type" in body or ("minutes" in body and "status" not in body)) and own is None:
         raise HTTPException(422, "only your own task can change title or minutes")
     changes = {}
@@ -245,6 +257,33 @@ def patch_task(pid: str, tid: str, body: dict,
             raise HTTPException(422, "to must be a study day with enough time")
         if task is None:
             raise HTTPException(404, "task not found on day")
+    if reason == "no_time" and not target:
+        for offset in range(1, 366):
+            candidate = day + dt.timedelta(days=offset)
+            if candidate >= dt.date.fromisoformat(plan.cfg_of(row)["exam_date"]) - dt.timedelta(days=1):
+                break
+            kind, _, _ = plan.kind_of(plan.cfg_of(row), dt.date.fromisoformat(row["start"]), candidate,
+                                       plan._override(pid, candidate))
+            if kind in ("practice", "test"):
+                target = candidate
+                break
+        if not target:
+            raise HTTPException(409, "no later study day to move this task")
+    if reason == "too_hard" and task and task.get("topics"):
+        topic = body.get("topic") or next((t for t in task["topics"] if
+                                            plan._state(plan.cfg_of(row), t) == "focus"), task["topics"][0])
+        if topic not in task["topics"]:
+            raise HTTPException(422, "topic must be on this task")
+        allocation = plan.allocate(learner, plan.cfg_of(row), dt.date.fromisoformat(row["start"]),
+                                   dt.date.fromisoformat(plan.cfg_of(row)["exam_date"]), pid)
+        follow = next((date for date in sorted(allocation) if date > day.isoformat() and
+                       topic in allocation[date]), None)
+        reason = f"too_hard:{topic}:{follow}" if follow else "too_hard"
+    if reason == "know":
+        if not task or not task.get("topics"):
+            raise HTTPException(422, "test-out needs a skill task")
+        return {**_days(learner, row, [day]), "test_out": {"topics": task["topics"], "count": 8,
+                "tiers": ["medium", "hard"], "timing": "pace", "task": f"{day}:check:{task['topics'][0]}"}}
     swap = body.get("swap")
     if swap is not None:
         swap = [swap] if isinstance(swap, str) else swap
@@ -265,7 +304,7 @@ def patch_task(pid: str, tid: str, body: dict,
                           " ON CONFLICT(plan,day,task) DO UPDATE SET status=excluded.status,to_day=NULL,"
                           "at=excluded.at,minutes=excluded.minutes,note=excluded.note",
                           (pid, day.isoformat(), tid, body["status"], None, deps.now(),
-                           minutes, body.get("where") or body.get("reason")))
+                           minutes, body.get("where") or reason))
         if target:
             c.execute("INSERT INTO plan_marks(plan,day,task,status,to_day,at,note) VALUES (?,?,?,?,?,?,?)"
                       " ON CONFLICT(plan,day,task) DO UPDATE SET status=excluded.status,to_day=excluded.to_day,"
@@ -413,6 +452,16 @@ def duplicate(pid: str, x_learner: str | None = Header(default=None)) -> dict:
         cfg["exam_date"] = next(iter(d for d in satdates.upcoming(plan.today(row["tz"] or 0))
                                          if d > plan.today(row["tz"] or 0).isoformat()),
                                 (plan.today(row["tz"] or 0) + dt.timedelta(days=90)).isoformat())
+    record = plan._summary(row)["record"]
+    if row["result"]:
+        result = json.loads(row["result"])
+        cfg["current"] = result.get("math", cfg.get("current"))
+        cfg["rw_current"] = result.get("rw", cfg.get("rw_current"))
+    day_minutes = list(cfg.get("day_minutes") or [None] * 7)
+    for weekday, pct in enumerate(record["by_dow"]):
+        if pct < 50 and cfg["days"][weekday] == "1":
+            day_minutes[weekday] = 15
+    cfg["day_minutes"] = day_minutes
     draft = {"step": 1, "fields": cfg, "updated": deps.now(), "from": pid}
     db.run("UPDATE learners SET plan_draft=? WHERE id=?", json.dumps(draft), learner)
     return {"draft": draft}
