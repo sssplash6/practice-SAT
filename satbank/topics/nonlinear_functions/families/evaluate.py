@@ -49,6 +49,8 @@ def evaluate(rng: random.Random, seed: int, *, form=None, name=None, frame=None,
         n = int(n if n is not None else rng.choice([2, 3, 3, 4]))
         k = q(k if k is not None else rng.randint(2, 40))
         x0 = q(x0 if x0 is not None else rng.randint(2, 5))
+        if n == 2 and x0 == 2:
+            raise ItemError("squaring and doubling agree at 2")
         rule = fn(name, "x", f"{power('x', n)} + {num(k)}")
         key = x0 ** n + k
         pool = {

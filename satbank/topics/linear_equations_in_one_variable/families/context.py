@@ -175,8 +175,8 @@ def _scene(rng: random.Random, scene: str, kw: dict) -> dict:
         return {"stem": stem, "m": -rate, "k": start, "total": left,
                 "extra": [("found the extra hours after the first reading instead of "
                            "the total", t2 - t1),
-                          ("used the first reading as the starting amount",
-                           (mid - left) / rate)]}
+                          ("added the first reading's hours on top of the total",
+                           t2 + t1)]}
 
     if scene == "flags":
         total = g("total", rng.randint(15, 60))

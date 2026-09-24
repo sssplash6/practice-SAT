@@ -769,6 +769,8 @@ def secant_slope(rng: random.Random, seed: int, *, a=1, b=0, c=None, x1=None,
         raise ItemError("two points on the same vertical line have no slope")
     y1, y2 = a * x1 * x1 + b * x1 + c, a * x2 * x2 + b * x2 + c
     key = (y2 - y1) / (x2 - x1)
+    if fmt == "mcq" and key == 0:
+        raise ItemError("a zero slope collapses the sign mistakes")
     curve = eq("y", poly((c, b, a)))
     stem = sent(f"In the xy-plane, the graph of {curve} intersects line p at "
                 f"({num(x1)}, a) and ({num(x2)}, b), where a and b are constants. "
