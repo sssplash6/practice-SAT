@@ -1,0 +1,73 @@
+{
+ "task": "F4",
+ "merged": "2026-09-24",
+ "verified_defects": [
+  {
+   "where": "server/deps.py learner_of + server/app.py (Shell 'app.py learner_of: retired codes'; shell-me.md U21 acceptance 4)",
+   "what": "Retired codes are refused only on routes that call writer_of (/api/me, /api/notes). The read/write split depends on swap_middleware recording the request method, and app.py never installs it. On 8014, a retired code got 200 from POST /api/drill, and its drill answer was filed (1 attempts row under the retired code). The same missing line means U21's swap never sends X-Learner-Swap and never mints a device token (f4.py prints PENDING). Once swap_until passes, every browser still on the a: code is locked out.",
+   "fix": "List the one-line change for F0 (app.py: app.middleware('http')(deps.swap_middleware)). Until it lands, keep F4's retired and swap rules marked as not done, and re-run the drill-write probe on 8014 afterwards."
+  },
+  {
+   "where": "server/api_me.py POST /api/me/carry (reports.md SR24: the sample 'can't be added to or claimed'; db.NOT_SAMPLE writes refused)",
+   "what": "Any learner can claim the live sample report. POST /api/me/carry {learner:'sample:report'} from a:probethief1 returned 200 {moved:1}. The sample's attempts went from 1 to 0, and sessions 'sample-section' now belongs to the thief.",
+   "fix": "Refuse (403) a carry whose source is db.is_sample(frm). Also guard progress.carry itself against sample: codes on either side."
+  },
+  {
+   "where": "server/progress.py days() word_reviews query (R13; words.md §3.2 override: 'days() excludes modes lookup, sort and placement from review counts')",
+   "what": "The filter is COALESCE(kind,'')!='lookup'. But lookups are word_reviews.mode='lookup' (§3.9 schema, POST /api/words/lookup), and the sort and placement modes are not excluded at all. Probe: 12 rows with mode lookup/placement/sort and no other activity gave words=12, 10 minutes and streak 1, so a day of lookups counts as a study day.",
+   "fix": "Filter on mode: COALESCE(mode,'') NOT IN ('lookup','sort','placement'). Add an f4.py assert with lookup, sort and placement rows."
+  },
+  {
+   "where": "server/progress.py record(), the transfer check-in loop (R9 'A miss on a due check reopens it as Relapsed'; product.md G3 rule 5 'A miss there reopens it as Relapsed')",
+   "what": "On the 10- or 30-day check-in served on another template (checkin_template → lin.other, whose item offers the norm), picking a different wrong option does nothing. The trap stays closed_how 'fixed' with relapses 0, checks 1 and the same due date, so a failed check-in has no effect and the next clean answer passes it. On the trap's own template, any miss on a due check-in relapses, so the two paths disagree.",
+   "fix": "In the transfer loop, when the item offers t['norm'], the check-in is due, the answer is wrong and check is False, relapse the trap (as the own-template branch does), recording 'on' the other template. Add the case to f4.py."
+  },
+  {
+   "where": "server/api_notes.py _pair (R6: POST /api/notes 'from any sitting kind')",
+   "what": "The note path calls api_tests.marked_questions/questions_of. For kinds they don't handle, that falls through to FORMS[row['form_id']] and raises KeyError: None. On 8014, POST /api/notes returned 500 for sessions of kind spot, custom, words and section (R36 and Tests' new kinds) that carry their questions.",
+   "fix": "Resolve the question with deps.paper_of(row), which prefers sessions.questions (flatten dict papers as progress._paper does), and return 404 rather than 500 when nothing matches."
+  },
+  {
+   "where": "server/deps.py _protected() (R19 access, called by progress.record on every answer)",
+   "what": "Every access() call runs 'SELECT * FROM sessions WHERE questions LIKE %\"template\"% AND (...)' over every learner's sessions, so every filed answer pays for a full scan of all sessions' questions JSON. Measured record() cost with other learners' finished drills on file (5 KB questions each): 6.9 ms at 1,000 sessions, 67 ms at 10,000 and 203 ms at 30,000. It grows linearly with the whole site.",
+   "fix": "Narrow first with indexed predicates, then JSON-match only the few candidates: challenge sittings with day IN live_days(), plus unfinished challenge or contest sittings, via an index on sessions(kind, day) or (contest, finished). Or check contest_items / a challenge-items lookup instead of LIKE over every row."
+  },
+  {
+   "where": "server/api_me.py put_me (R15 exam_date rule; days validation)",
+   "what": "PUT /api/me {exam_date:''} and {days:''} both return 200 and store '' (the profile then shows exam_date '' and days ''). The validation runs only 'if got.get(...)', so an empty string skips it. It is neither a date on or after today nor a null clear.",
+   "fix": "Treat '' as invalid (422 naming the field), or normalise it to None before validating."
+  },
+  {
+   "where": "server/progress.py carry(), trap merge and word_lists (§2.5 carry merge rules; words.md 'carry also moves word_lists')",
+   "what": "(1) When the target's copy of a trap is fixed and the source's is open, the merged row is open (closed NULL) but keeps closed_how 'fixed' and due '2026-09-13'. (2) Same-named word_lists use UPDATE OR IGNORE and then DELETE, so the source's words are lost. Probe: 'mine'=[abate] carried into 'mine'=[candid] leaves [candid].",
+   "fix": "When the merged trap is open, set closed_how=NULL, due=NULL, checks=0. For word_lists with the same name, union the words JSON instead of dropping the source's list."
+  },
+  {
+   "where": "server/test_flow.py (task rule: change no file you do not own; check 3)",
+   "what": "The F4 branch edits server/test_flow.py (12 lines). It rewrites the 'two clean answers close it' assertion into '(not left) == (sum(offers) >= 2)' to fit R45. test_flow.py is not in F4's owned list or in any upgrade file's F4 assignment.",
+   "fix": "Revert the edit, and list the needed test_flow change (product.md item 29's amended 'two clean answers close it' check) for test_flow.py's owner."
+  },
+  {
+   "where": "server/checks/f4.py (today.md T7 acceptance: 'In server/checks/f4.py, one seeded learner')",
+   "what": "Several T7 acceptance asserts are missing: '455' to '460' gives by.entry == 0; an unnamed grid-in miss on a 4-of-5 template is slip; an unnamed grid-in miss answered in 3 minutes on a new template is gap; a fast named easy pick is trap. My own probe found the behaviour correct, but the acceptance asserts aren't in the check.",
+   "fix": "Add those four asserts to causes_checks()."
+  },
+  {
+   "where": "server/progress.py log_mistake (product.md G3 rule 4 and check 7: 'an outside-logged ~unsure trap closes after one'; U2 'I don't know')",
+   "what": "log_mistake has no way to open an unsure trap. The only route is reason='~unsure', which stores and labels the trap '~unsure'. f4.py's G3 check 7 fakes the case with a raw UPDATE of norm and owed instead of calling a real path.",
+   "fix": "Add an unsure flag to log_mistake (norm '~unsure', owed 1, label 'Unsure'), and assert it in f4.py through that call."
+  },
+  {
+   "where": "server/estimate.py growth() (tests.md X15: 'compares the first ranked section's midpoint with mean3')",
+   "what": "growth() uses the mean of the last 3 ranked sections for the learner and for each peer. It does not use R16's mean3, which covers the last up to 3 scored sittings within 45 days, outside scores included.",
+   "fix": "Use estimate(learner)['mean3'] (and each peer's mean3) against the first ranked section's midpoint. Otherwise record the deviation in the spec's R-table."
+  }
+ ],
+ "fixer_report": "I fixed 10 of the 12 defects in F4's own files. The other two need changes in files I don't own: the middleware line in `app.py`, and the test_flow check I put back. Because of that second one, `test_flow.py` fails about 1 run in 4 at line 392. It passed on 7 of the 9 runs that got that far.\n\nBranch `v2/f4` has 12 new commits (32e3fae..566eabc). Nothing is pushed or merged, and HEAD is now detached in the worktree `/Users/workingmyassof/satbank/.claude/worktrees/wf_7aaa2f6c-3ad-2`.\n\n**Needs another owner**\n1. **F0, `server/app.py`:** add `app.middleware(\"http\")(deps.swap_middleware)`. Until that line is in, the site sends no `X-Learner-Swap`, mints no device token, and still accepts writes from retired codes on routes that call `learner_of`. On 8014, `POST /api/drill` with a retired code still returns 200. `f4.py` prints PENDING for both the swap and the retired-write rules, so keep them marked not done. I ran `f4.py` with the middleware added and every check passed with no PENDING, including `POST /api/drill` returning 401.\n2. **Owner of `server/test_flow.py`:** I restored it to master's version, as the verifier asked (commit 32e3fae). Its \"two clean answers close it\" check (lines 388-401) now only passes when the random repair items happen to offer the trap, because of R45. It needs product.md item 29's amended check, which is the hunk F4 had before. That hunk passed \"all good\" when I re-applied it for a test run. Note that the spec (rebuild-v2 §Checks) says the task whose change breaks a test_flow assert edits it, so the spec and the ownership rule disagree here.\n3. **Owner of `POST /api/mistakes/add`:** for U2's \"I don't know\", call `progress.log_mistake(..., unsure=True)`.\n\n**Fixed in F4's files** (each has an assert in `server/checks/f4.py`)\n- **`deps._protected` speed** (`deps.py`, `db.py`): the site-wide scan is replaced by three indexed queries, plus four new indexes. Filing an answer took 62 ms at 30,000 sessions before and takes 0.3 ms now at any size. The check asserts no query plan scans.\n- **Notes** (`api_notes.py`): the question now comes from the sitting's stored paper, so spot, custom, words and section sittings return 200. A question it can't find returns 404 instead of 500.\n- **Carry** (`progress.py`): a `sample:` code on either side is refused with 403. On 8014 the thief probe gets 403 and the sample's sitting stays with the sample. A trap still open on either side stays open after the merge, with no fixed status, due date or check-ins. Lists with the same name keep both sides' words.\n- **`days()`**: now filters on `mode NOT IN ('lookup','sort','placement')`, so a day of lookups no longer counts as a study day.\n- **Transfer check-in**: any wrong answer on a due check-in served on another template now relapses the trap, marked as on that template. The one exception is a different wrong pick on a trap test.\n- **`log_mistake(unsure=True)`**: opens an Unsure trap (norm `~unsure`, owed 1, label \"Unsure\"). The G3 check 7 now goes through this call instead of editing the row directly.\n- **`PUT /api/me`**: an empty `exam_date` or `days` now returns 422 naming the field. Sending null still clears it.\n- **`estimate.growth()`**: now uses R16's `mean3` for the learner and each peer. It reads each nearby peer's sittings separately, marked with a `ponytail:` note in case peers ever number in the thousands.\n- **T7 checks added**: \"455\" for 460 is not an entry error. An unnamed grid-in miss is a slip on a template the learner usually gets right, and a gap on a new template after 3 minutes. A fast named pick on an easy question is a trap, and it shows in the open traps.\n\n`PYTHONPATH=. python3 server/checks/f4.py` passes, and the 8014 probes behave as listed. I stopped the server afterwards.",
+ "pending": [
+  "F5: repairs and fix drills must serve items that offer the trap (R45); then restore the strict owed asserts in test_flow check_learner"
+ ],
+ "resolved": [
+  "app.py installs deps.swap_middleware (master, 2026-09-24): f4.py passes with no PENDING"
+ ]
+}

@@ -98,6 +98,10 @@ async def revalidate(request, call_next):
     return response
 
 
+# retired codes may read but not write, and a minted device token rides back as X-Learner-Swap
+app.middleware("http")(deps.swap_middleware)
+
+
 for name in ROUTERS:
     router = deps.part(name, "router")
     if router is not None:
