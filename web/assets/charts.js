@@ -129,6 +129,29 @@
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} },
   };
   const textW = (s, px = 11) => String(s).length * px * 0.62;       // DM Mono is about 0.6em a glyph
+  // labels keep clear of the drawing: the first candidate [x, baseline, anchor] whose text box
+  // meets no obstacle box [x0, y0, x1, y1] (placed labels join obs), else null
+  function clearOf(cands, text, obs, px = 11) {
+    const w = textW(text, px);
+    for (const [x, y, a] of cands) {
+      const x0 = a === 'end' ? x - w : a === 'middle' ? x - w / 2 : x;
+      const b = [x0 - 2, y - px, x0 + w + 2, y + 3];
+      if (!obs.some(o => o[0] < b[2] && o[2] > b[0] && o[1] < b[3] && o[3] > b[1])) { obs.push(b); return [x, y, a]; }
+    }
+    return null;
+  }
+  // a polyline as boxes every few px, so a label can keep off the line as well as its dots
+  function lineBoxes(pts, r = 5, step = 6) {
+    const out = [];
+    pts.forEach(([x, y], i) => {
+      if (i) {
+        const [ax, ay] = pts[i - 1], n = Math.floor(Math.hypot(x - ax, y - ay) / step);
+        for (let k = 1; k < n; k++) { const px = ax + (x - ax) * k / n, py = ay + (y - ay) * k / n; out.push([px - r, py - r, px + r, py + r]); }
+      }
+      out.push([x - r, y - r, x + r, y + r]);
+    });
+    return out;
+  }
 
   /* dates: local days at noon, so a day never slips across midnight */
   const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -953,8 +976,8 @@
       const stacked = opts.stacked || opts.norm || D.length > 0 || S.length === 1;
       const H = opts.height ?? (phone() ? 140 : 160);
       const mini = H < 90;
-      const L = mini ? 2 : 36, R = mini ? 2 : 8, T = mini ? 4 : 14, B = mini ? (opts.labels === false ? 4 : 14) : 20;
-      const plotW = W - L - R;
+      const R = mini ? 2 : 8, T = mini ? 4 : 14, B = mini ? (opts.labels === false ? 4 : 14) : 20;
+      let L = mini ? 2 : 36;
       const upOf = r => (stacked ? sum(S.map(s => val(r, s.key))) : Math.max(0, ...S.map(s => val(r, s.key))));
       const downOf = r => sum(D.map(s => val(r, s.key)));
       const pace = opts.pace === undefined || opts.pace === null ? null : typeof opts.pace === 'object' ? opts.pace : { value: +opts.pace };
@@ -967,6 +990,10 @@
       const span = (maxUp || 0) + dn || 1;
       const y0 = T + (H - T - B) * (maxUp / span);
       const yv = v => y0 - (H - T - B) * (v / span);
+      const ticks = opts.norm ? [0, 50, 100] : [0, maxUp / 2, maxUp];
+      const tickText = v => (opts.norm ? `${v}%` : fmt(v));
+      if (!mini) L = Math.max(L, 10 + Math.max(0, ...ticks.filter(Boolean).map(v => textW(tickText(v), 10.5)), dn ? textW(fmt(dn), 10.5) : 0));
+      const plotW = W - L - R;
       const slot = plotW / Math.max(n, 1);
       const k = stacked ? 1 : S.length;
       const bw = Math.max(2, Math.min(24, (slot - 2) * (stacked ? .64 : .8) / k));
@@ -974,10 +1001,9 @@
       const hf = hatch(svg);
       const grid = sv('g', { class: 'ch-grid' }, svg);
       if (!mini) {
-        const ticks = opts.norm ? [0, 50, 100] : [0, maxUp / 2, maxUp];
         ticks.forEach(v => {
           sv('line', { x1: L, x2: W - R, y1: r1(yv(v)), y2: r1(yv(v)) }, grid);
-          if (v) tx(grid, L - 6, yv(v) + 3.5, opts.norm ? `${v}%` : fmt(v), { 'text-anchor': 'end', class: 'ch-ytick' });
+          if (v) tx(grid, L - 6, yv(v) + 3.5, tickText(v), { 'text-anchor': 'end', class: 'ch-ytick' });
         });
         if (dn) { sv('line', { x1: L, x2: W - R, y1: r1(yv(-dn)), y2: r1(yv(-dn)) }, grid); tx(grid, L - 6, yv(-dn) + 3.5, fmt(dn), { 'text-anchor': 'end', class: 'ch-ytick' }); }
       }
@@ -1044,9 +1070,13 @@
         if (pts.length > 1) sv('polyline', { class: 'ch-line', points: pts.map(p => p.map(r1).join(',')).join(' ') }, svg);
         pts.forEach(([x, yy]) => sv('circle', { cx: r1(x), cy: r1(yy), r: 3.5, class: 'ch-dot thin' }, svg));
       }
+      const paceLab = pace && (pace.label || `Pace ${fmt(pace.value)}`);
       if (pace && isNum(pace.value)) {
-        sv('line', { x1: L, x2: W - R, y1: r1(yv(pace.value)), y2: r1(yv(pace.value)), class: 'ch-pace' }, svg);
-        if (!mini) tx(svg, W - R, yv(pace.value) - 4, pace.label || `Pace ${fmt(pace.value)}`, { 'text-anchor': 'end', class: 'ch-lab' });
+        const yp = yv(pace.value);
+        sv('line', { x1: L, x2: W - R, y1: r1(yp), y2: r1(yp), class: 'ch-pace' }, svg);
+        const bars = data.map((r, i) => [cx(i) - slot / 2 + 1, Math.min(yv(Math.max(opts.norm && upOf(r) ? 100 : upOf(r), n0(r.planned))), y0) - 4, cx(i) + slot / 2 - 1, y0 + (downOf(r) ? yv(-downOf(r)) - y0 : 0)]);
+        const at = mini ? null : clearOf([[W - R, yp - 4, 'end'], [W - R, yp + 13, 'end'], [L + 4, yp - 4, 'start'], [L + 4, yp + 13, 'start']].filter(([, y]) => y > 10 && y < H - B), paceLab, bars);
+        if (at) tx(svg, at[0], at[1], paceLab, { 'text-anchor': at[2], class: 'ch-lab' });
       }
       // x labels
       if (opts.labels !== false && B > 8) {
@@ -1096,6 +1126,7 @@
         opts.planned && data.some(r => n0(r.planned) > 0) && { key: 'bar-plan', label: opts.plannedLabel || 'Planned', n: fmt(sum(data.map(r => r.planned))) },
         lineK && { key: 'line', label: lineK.label },
         data.some(r => isNum(+r.budget)) && { key: 'pace', label: 'Budget' },
+        pace && isNum(pace.value) && { key: 'pace', label: paceLab },
         ...[...new Set(data.map(r => r.status).filter(Boolean))].map(st => ({ swatch: h('i', { class: 'sw', 'data-status': st, 'aria-hidden': 'true' }), label: labelOf(st), n: data.filter(r => r.status === st).length })),
       ].filter(Boolean);
       if (opts.legend !== false && keyItems.length && !mini) foot.append(chartKey(keyItems));
@@ -1461,8 +1492,8 @@
       const H = opts.height ?? 120;
       const mini = H < 90;
       const all = S.flatMap(s => s.points);
-      const L = mini ? 4 : 40, R = mini ? 6 : 14, T = mini ? 6 : 10, B = mini ? 6 : 20;
-      const plotW = W - L - R;
+      const R = mini ? 6 : 14, T = mini ? 6 : 10, B = mini ? 6 : 20;
+      let L = mini ? 4 : 40;
       const xsAll = [...new Set(all.map(p => p.x))].sort((a, b) => a - b);
       const x0 = xsAll[0] ?? 0, x1 = xsAll[xsAll.length - 1] ?? 1;
       const xOf = x => L + (xsAll.length > 1 ? (x - x0) / (x1 - x0) : .5) * plotW;
@@ -1473,14 +1504,21 @@
       if (opts.min === undefined && !opts.log && !opts.bands) { const pad = (hi - lo) * .08; lo -= pad; hi += pad; }
       const t = v => (opts.log ? (Math.log(Math.max(v, 1e-9)) - Math.log(lo)) / (Math.log(hi) - Math.log(lo)) : (v - lo) / (hi - lo));
       const yOf = v => T + (H - T - B) * (opts.invert ? t(clamp(v, lo, hi)) : 1 - t(clamp(v, lo, hi)));
+      const gv = opts.grid || (() => { const m = niceMax((hi - lo) / 3); const out = []; for (let v = Math.ceil(lo / m) * m; v <= hi; v += m) out.push(v); return out; })();
+      if (!mini) L = Math.max(L, 10 + Math.max(0, ...gv.map(v => textW(fy(v), 10.5))));
+      const plotW = W - L - R;
       const svg = svgRoot(W, H, '');
+      // every series as boxes, and the labels to draw over them once the lines are down
+      const obs = mini ? [] : S.flatMap(s => lineBoxes(s.points.map(p => [xOf(p.x), yOf(p.y)])));
+      const labels = [], bandReq = [];
       (opts.bands || []).forEach((b, i) => {
         const ya = yOf(clamp(+b.from, lo, hi)), yb = yOf(clamp(+b.to, lo, hi));
-        sv('rect', { x: L, width: plotW, y: r1(Math.min(ya, yb)), height: r1(Math.abs(yb - ya)), class: 'ch-stripe' + (i % 2 ? ' alt' : '') }, svg);
-        if (!mini && b.label && Math.abs(yb - ya) > 12) tx(svg, L + 4, Math.min(ya, yb) + 11, b.label, { class: 'ch-lab' });
+        const top = Math.min(ya, yb), bot = Math.max(ya, yb);
+        sv('rect', { x: L, width: plotW, y: r1(top), height: r1(bot - top), class: 'ch-stripe' + (i % 2 ? ' alt' : '') }, svg);
+        if (mini || !b.label || bot - top <= 12) return;
+        bandReq.push([[[L + 4, top + 11, 'start'], [W - R - 4, top + 11, 'end'], [L + 4, bot - 4, 'start'], [W - R - 4, bot - 4, 'end'], [L + plotW / 2, top + 11, 'middle']], b.label]);
       });
       const grid = sv('g', { class: 'ch-grid' }, svg);
-      const gv = opts.grid || (() => { const m = niceMax((hi - lo) / 3); const out = []; for (let v = Math.ceil(lo / m) * m; v <= hi; v += m) out.push(v); return out; })();
       let lastY = null;
       if (!mini) [...gv].sort((a, b) => yOf(a) - yOf(b)).forEach(v => { sv('line', { x1: L, x2: W - R, y1: r1(yOf(v)), y2: r1(yOf(v)) }, grid); if (lastY === null || yOf(v) - lastY >= 12) { tx(grid, L - 6, yOf(v) + 3.5, fy(v), { 'text-anchor': 'end', class: 'ch-ytick' }); lastY = yOf(v); } });
       (opts.annotate || []).forEach(a => {
@@ -1501,14 +1539,22 @@
         });
         const lp = s.points[s.points.length - 1];
         if (!mini && (s.you || j === 0) && opts.endLabel !== false) {
-          const lab = fy(lp.y);
-          const x = xOf(lp.x);
-          tx(svg, x + textW(lab) + 8 > W ? x - 8 : x + 7, yOf(lp.y) - 7, lab, { 'text-anchor': x + textW(lab) + 8 > W ? 'end' : 'start', class: 'ch-lab ch-end' });
+          const lab = fy(lp.y), x = xOf(lp.x), y = yOf(lp.y), fits = x + textW(lab) + 8 <= W;
+          const c = [-7, 15, 25, -17].flatMap(dy => [[x + 7, y + dy, 'start'], [x - 8, y + dy, 'end']]).filter(([, yy, a]) => (a === 'end' || fits) && yy > 10 && yy < H - B + 4);
+          labels.push([clearOf(c, lab, obs) || c[0], lab, 'ch-lab ch-end']);
         }
       });
+      // the values first, then the band names in what room is left
+      bandReq.forEach(([c, text]) => labels.push([clearOf(c, text, obs) || c[0], text, 'ch-lab']));
+      labels.forEach(([[x, y, a], text, cls]) => tx(svg, x, y, text, { 'text-anchor': a, class: cls }));
       if (!mini && xsAll.length) {
         const every = Math.max(1, Math.ceil((Math.max(...xsAll.map(x => textW(fx(x), 10.5))) + 10) / Math.max(1, plotW / xsAll.length)));
-        xsAll.forEach((x, i) => { if ((xsAll.length - 1 - i) % every) return; tx(svg, xOf(x), H - 5, fx(x), { 'text-anchor': xsAll.length > 1 && i === 0 && xOf(x) < L + 20 ? 'start' : 'middle', class: 'ch-xtick' }); });
+        xsAll.forEach((x, i) => {
+          if ((xsAll.length - 1 - i) % every) return;
+          const half = textW(fx(x), 10.5) / 2;
+          const a = xsAll.length > 1 && i === 0 && xOf(x) - half < 0 ? 'start' : xOf(x) + half > W ? 'end' : 'middle';
+          tx(svg, a === 'start' ? Math.max(0, xOf(x) - half) : a === 'end' ? W : xOf(x), H - 5, fx(x), { 'text-anchor': a, class: 'ch-xtick' });
+        });
       }
       const summary = all.length ? `${opts.label || 'Line chart'}: ` + S.map(s => {
         if (!s.points.length) return `${s.label}, no points`;
@@ -1604,13 +1650,17 @@
       const textBox = (x, base, text, anchor, px = 11) => { const w = textW(text, px); const x0 = anchor === 'end' ? x - w : x; boxes.push([x0, base - 10, x0 + w, base + 3]); };
       const counts = {};
       P.forEach(p => { counts[quad(p)] = (counts[quad(p)] || 0) + 1; });
-      // quadrant tints and names with counts
+      const dots = P.map(p => { const x = xOf(p.x), yy = yOf(p.y); return [x - 10, yy - 10, x + 10, yy + 10]; });
+      // quadrant tints and names with counts; a name takes the zone's outer corner, else another corner clear of the dots
       [['fast_right', L, T, xr - L, yr - T], ['slow_right', xr, T, W - R - xr, yr - T], ['fast_wrong', L, yr, xr - L, H - B - yr], ['slow_wrong', xr, yr, W - R - xr, H - B - yr]].forEach(([k, x, yy, w, hh]) => {
         sv('rect', { x: r1(x), y: r1(yy), width: r1(Math.max(0, w)), height: r1(Math.max(0, hh)), class: `q-zone ${k}` }, svg);
-        const right = k.startsWith('slow');
-        const zx = right ? x + w - 6 : x + 6, zy = k.endsWith('right') ? yy + 13 : yy + hh - 7, zt = `${nm[k]} · ${counts[k] || 0}`;
-        tx(svg, zx, zy, zt, { 'text-anchor': right ? 'end' : 'start', class: 'ch-lab q-name' });
-        textBox(zx, zy, zt, right ? 'end' : 'start');
+        const right = k.startsWith('slow'), top = k.endsWith('right'), zt = `${nm[k]} · ${counts[k] || 0}`;
+        const sx = [right ? [x + w - 6, 'end'] : [x + 6, 'start'], right ? [x + 6, 'start'] : [x + w - 6, 'end']];
+        const sy = top ? [yy + 13, yy + hh - 7] : [yy + hh - 7, yy + 13];
+        const c = [[sx[0][0], sy[0], sx[0][1]], [sx[0][0], sy[1], sx[0][1]], [sx[1][0], sy[0], sx[1][1]], [sx[1][0], sy[1], sx[1][1]]];
+        const [zx, zy, za] = clearOf(c, zt, [...dots, ...boxes]) || c[0];
+        tx(svg, zx, zy, zt, { 'text-anchor': za, class: 'ch-lab q-name' });
+        textBox(zx, zy, zt, za);
       });
       const grid = sv('g', { class: 'ch-grid' }, svg);
       [0, .25, .5, .75, 1].forEach(v => { sv('line', { x1: L, x2: W - R, y1: r1(yOf(v)), y2: r1(yOf(v)) }, grid); tx(grid, L - 6, yOf(v) + 3.5, pct(v), { 'text-anchor': 'end', class: 'ch-ytick' }); });
@@ -1626,7 +1676,6 @@
       tx(svg, L + 4, yr - 4, yl, { class: 'ch-lab' });
       textBox(L + 4, yr - 4, yl, 'start');
       // dots with their labels; a label that would touch another dot or label is left to the tooltip and the table
-      const dots = P.map(p => { const x = xOf(p.x), yy = yOf(p.y); return [x - 10, yy - 10, x + 10, yy + 10]; });
       const hits = (a, b) => !(a[2] < b[0] || a[0] > b[2] || a[3] < b[1] || a[1] > b[3]);
       P.forEach((p, i) => {
         const x = xOf(p.x), yy = yOf(p.y);
@@ -1836,8 +1885,16 @@
         else if (m.kind === 'change') label(u(m.t), vert ? lanes.first[0] - 10 : lanes.first[0] - 4, '↺', { 'text-anchor': 'middle', class: 'ch-glyph' }, svg);
         else if (m.kind === 'end') line(u(m.t ?? dur), 12, u(m.t ?? dur), 82, { class: 'ch-exam' }, svg);
       });
-      label(u(0), vert ? lanes.first[0] + 13 : 12, vert ? '' : 'First visits', { class: 'ch-lab' }, svg);
-      if (!vert) { label(u(0) + 2, lanes.again[0] + 11, 'Again', { class: 'ch-lab' }, svg); }
+      if (!vert) {
+        // the lane names keep clear of the marks above the lane and of the revisits in theirs
+        const f0 = lanes.first[0], a0 = lanes.again[0];
+        const mk = (opts.marks || []).map(m => { const x = u(m.kind === 'end' ? m.t ?? dur : m.t); return m.kind === 'end' ? [x - 1, 12, x + 1, 82] : [x - 5, f0 - 13, x + 5, f0 - 1]; });
+        const firstAt = clearOf([[u(0), 12, 'start'], ...mk.map(b => [b[2] + 6, 12, 'start']).sort((a, b) => a[0] - b[0]), [u(dur), 12, 'end']], 'First visits', mk) || [u(0), 12, 'start'];
+        tx(svg, firstAt[0], firstAt[1], 'First visits', { 'text-anchor': firstAt[2], class: 'ch-lab' });
+        const again = blocks.filter(b => b.nth > 1).map(b => [u(b.a), a0, u(b.b), a0 + lanes.again[1]]);
+        const againAt = clearOf([[u(0) + 2, a0 + 11, 'start'], [u(dur) - 2, a0 + 11, 'end']], 'Again', again) || [u(0) + 2, a0 + 11, 'start'];
+        tx(svg, againAt[0], againAt[1], 'Again', { 'text-anchor': againAt[2], class: 'ch-lab' });
+      }
       const used = V.length ? Math.max(...V.map(v => v[2])) : 0;
       const qn = new Set(V.map(v => v[0])).size;
       const revisits = V.length - qn;
