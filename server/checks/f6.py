@@ -537,6 +537,10 @@ def run_drill(c, learner: str, pairs, right=(), want=None) -> str:
     sid = f"f6-drill-{fresh('d')}"
     drill.create(learner, sid, list(dict.fromkeys(sets._topic(t) for t, _ in pairs)), len(pairs),
                  None, False, "shared", items=[list(p) for p in pairs])
+    return answer_all(c, learner, sid, right, want)
+
+
+def answer_all(c, learner: str, sid: str, right=(), want=None) -> str:
     n = 0
     while True:
         nxt = c.post(f"/api/drill/{sid}/next", headers=hdr(learner)).json()
@@ -552,11 +556,34 @@ def run_drill(c, learner: str, pairs, right=(), want=None) -> str:
 
 
 def take(c, learner: str, code: str, right=(), show_name: bool = False, twins=None, want=None) -> tuple[str, list]:
-    """A visitor's start the way the engines make it: serve(), a drill, link()."""
-    got = sets.serve(code, learner, twins)
-    sid = run_drill(c, learner, got["items"], right, want)
-    sets.link(sid, code, show_name)
-    return sid, got["items"]
+    """A visitor's start from the landing, over HTTP, answered and finished."""
+    body = {"show_name": show_name, **({"exact": False} if twins else {})}
+    r = c.post(f"/api/sets/{code}/start", headers=hdr(learner), json=body)
+    assert r.status_code == 200 and r.json()["question"], (r.status_code, r.text[:300])
+    sid = answer_all(c, learner, r.json()["id"], right, want)
+    assert db.one("SELECT shared_from FROM sessions WHERE id=?", sid)["shared_from"] == code
+    return sid, served(sid)
+
+
+def served(sid: str) -> list:
+    return [[q["key"], q["seed"]] for q in json.loads(db.one("SELECT questions FROM sessions WHERE id=?", sid)["questions"])
+            if not q.get("repair")]
+
+
+def via_drill(c, learner: str, code: str, status: int = 200) -> str | None:
+    """POST /api/drill {pool:'set'}, once F5's drill serves through sets.serve() and
+    link() (it takes show_name then); None before that."""
+    from server import drill
+    if "show_name" not in getattr(drill, "FIELDS", ()):
+        return None
+    r = c.post("/api/drill", headers=hdr(learner), json={"pool": "set", "ids": code, "source": "shared",
+                                                          "show_name": False})
+    assert r.status_code == status, (r.status_code, r.text[:300])
+    if status != 200:
+        return None
+    sid = r.json()["id"]
+    assert db.one("SELECT shared_from FROM sessions WHERE id=?", sid)["shared_from"] == code
+    return answer_all(c, learner, sid)
 
 
 def make(c, learner: str, body: dict, code: int = 200) -> dict:
@@ -620,6 +647,10 @@ def sets_exact(c) -> None:
     assert c.get(f"/api/sets/{code}/compare", headers=hdr(fresh("sx"))).status_code == 403
     listed = c.get("/api/sets", headers=hdr(owner)).json()
     assert listed[0]["code"] == code and (listed[0]["opened"], listed[0]["taken"]) == (1, 1), listed[0]
+    # QBank 15 through the engine itself: Practice's banner starts with POST /api/drill {pool:'set'}
+    d = via_drill(c, fresh("sd"), code)
+    if d:
+        assert stems(d) == stems(sid) and c.get(f"/api/sets/{code}").json()["taken"] == 2
 
     # revoke: only the owner; then 410 everywhere public, and the owner keeps the results
     assert c.delete(f"/api/sets/{code}", headers=hdr(b)).status_code == 403
@@ -669,9 +700,19 @@ def sets_items(c) -> None:
     got = c.get(f"/api/sets/{with_note['code']}", headers=hdr(v)).json()["context"][0]
     assert got["note"] == "I mixed up radius and diameter", got
     assert "radius and diameter" not in json.dumps(c.get(f"/api/sets/{help_['code']}", headers=hdr(v)).json())
-    # "Fresh versions instead": the same template on the visitor's own numbers
-    twin = sets.serve(help_["code"], fresh("iw"), True)
-    assert twin["items"][0][0] == "circle.convert" and twin["items"][0][1] != 42 and not twin["exact"], twin
+    # "Fresh versions instead": the same template on the visitor's own numbers, and the
+    # sharer's context once the twin is answered; a fresh help share the same way
+    w = fresh("iw")
+    _, got = take(c, w, help_["code"], right={0}, twins=True)
+    assert got[0][0] == "circle.convert" and got[0][1] != 42, got
+    assert c.get(f"/api/sets/{help_['code']}", headers=hdr(w)).json()["context"][0]["pick"] == "ABCD"[miss]
+    twin_help = make(c, owner, {"kind": "items", "items": [["circle.convert", 42]],
+                                "cfg": {"context": True, "fresh": True}})
+    w2 = fresh("iw2")
+    assert "context" not in c.get(f"/api/sets/{twin_help['code']}", headers=hdr(w2)).json()
+    _, got = take(c, w2, twin_help["code"])
+    ctx = c.get(f"/api/sets/{twin_help['code']}", headers=hdr(w2)).json()["context"][0]
+    assert got[0][1] != 42 and ctx["mistake"] == q["reasons"][miss], (got, ctx)
     print("ok  F6 sets: Review items through access(), today's challenge 409, help context after answering")
 
 
@@ -713,6 +754,12 @@ def sets_twins(c) -> None:
     res = c.get(f"/api/sets/{one['code']}/results", headers=hdr(owner)).json()
     assert [(t["right"], t["asked"]) for t in res["takers"]] == [(1, 1), (0, 1)] and all(t["ms"] for t in res["takers"])
     assert (res["you"]["right"], res["you"]["asked"]) == (0, 1), res.get("you")    # the sharer's own miss on lin.evaluate
+    d = via_drill(c, fresh("tz"), one["code"])                   # a slot-only set through the engine: a twin
+    if d:
+        assert served(d)[0][0] == "lin.evaluate" and c.get(f"/api/sets/{one['code']}").json()["taken"] == 3
+    d = via_drill(c, fresh("tw"), made["code"])                  # never the sharer's own seeds
+    if d:
+        assert not {tuple(x) for x in served(d)} & set(pairs), served(d)
     print("ok  F6 sets: twins per slot with the sharer's trap, results per slot, a question link's twin")
 
 
@@ -742,6 +789,7 @@ def sets_test(c) -> None:
     make(c, owner, {"kind": "test", "session": live}, code=409)             # not finished
     drill_sid, _ = sitting(owner, "circle.convert", 53, given=0)
     make(c, owner, {"kind": "test", "session": drill_sid}, code=422)        # a practice set is kind 'set'
+    assert c.post(f"/api/sets/{made['code']}/start", headers=hdr(v), json={}).status_code == 422   # Tests starts it
     make(c, owner, {"kind": "test"}, code=422)
     ch, _ = sitting(owner, "circle.convert", 54, given=0, kind="challenge")
     make(c, owner, {"kind": "set", "session": ch}, code=409)                # challenge sets are not shared
@@ -754,6 +802,8 @@ def sets_words(c) -> None:
     pub = c.get(f"/api/sets/{made['code']}").json()
     assert pub["words"] == [{"slug": "mitigate"}, {"slug": "bolster"}] and pub["count"] == 2, pub
     assert c.get(f"/api/sets/{made['code']}/results", headers=hdr(owner)).status_code == 409
+    assert c.post(f"/api/sets/{made['code']}/start", headers=hdr(fresh("wv")), json={}).status_code == 422
+    via_drill(c, fresh("wv"), made["code"], status=422)
     db.run("INSERT INTO my_words(id,learner,word,meaning,created) VALUES (?,?,?,?,?)",
            "w1", owner, "quixotic", "idealistic to the point of being impractical", deps.now())
     own = make(c, owner, {"kind": "words", "items": ["own:w1"]})
@@ -905,6 +955,12 @@ def browser() -> None:
                 pg.wait_for_selector("text=Try it")
                 text = pg.inner_text("body")
                 assert q["reasons"][pick(q, False)] not in text and q["rationale"][:40] not in text, text[:400]
+                # ... then Try it serves it here, and answering it shows what Maya picked
+                pg.get_by_role("button", name="Try it", exact=True).click()
+                pg.click(f"button.opt[data-i='{pick(q, True)}']")
+                pg.wait_for_selector("text=What Maya did")
+                assert f"Maya picked {'ABCD'[pick(q, False)]}" in pg.inner_text("body")
+                assert api.get(f"/sets/{items}").json()["tried"] == 1
                 # R18(c): a practice set forwards to Practice's banner; a stopped link says so
                 pg.goto(f"{base}/s/?c={practice_set}")
                 pg.wait_for_url(f"**/practice/?share={practice_set}")
