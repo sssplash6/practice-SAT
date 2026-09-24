@@ -118,6 +118,14 @@ def contexts(c) -> None:
     ctx = json.loads(db.one("SELECT context FROM reports WHERE id=?", got["id"])["context"])
     assert (ctx["template"], ctx["seed"], ctx["marked"]) == ("circle.convert", 40, "wrong"), ctx
     assert "answer" not in json.dumps(got) and got.get("thanks")
+    pv = c.get("/api/reports/context", params={"source": "drill", "session": sid, "question_id": q["id"],
+                                               "category": "Answer key is wrong"}, headers={"X-Learner": a}).json()
+    assert (pv["kind"], pv["box"]["marked"], pv["category"], pv["title"]) == (
+        "question", "wrong", "key_wrong", f"{pv['box']['topic_name']} · Question 1"), pv
+    assert pv["allowed"][0] == "key_wrong" and pv["open_disputes"] == 0
+    assert (pv["similar"]["open"], pv["similar"]["mine"]) == (0, True), pv["similar"]     # the report just sent
+    page = c.get("/api/reports/context", params={"page": "/plan/"}, headers={"X-Learner": a}).json()
+    assert page["kind"] == "page" and page["allowed"] == list(reports.GENERAL) and page["box"] == {"page": "/plan/"}
 
     # the question of the day, answered
     day = c.get("/api/qotd", headers={"X-Learner": a}).json()
@@ -147,6 +155,11 @@ def contexts(c) -> None:
     body = {"kind": "question", "source": "test", "session": sid, "question_id": q["id"]}
     post(c, m, {**body, "category": "key_wrong"}, code=409)
     post(c, m, {**body, "category": "key_wrong", "dispute": True}, code=409)
+    # the modal's preview: the student's own answer for "Include my answer", no marking, no key, no me too
+    pv = c.get("/api/reports/context", params={**body, "category": "key_wrong"}, headers={"X-Learner": m}).json()
+    assert pv["box"]["given"] == "A" and pv["box"]["live"] and "marked" not in pv["box"], pv["box"]
+    assert "key_wrong" not in pv["allowed"] and pv["category"] is None and pv["similar"] is None
+    assert not {"answer", "correct", "rationale", "reasons"} & set(pv["box"]), pv["box"]
     held = post(c, m, {**body, "category": "figure"})
     assert "check" not in held and "marked" not in db.one("SELECT context FROM reports WHERE id=?", held["id"])["context"]
     listed = c.get("/api/reports", headers={"X-Learner": m}).json()

@@ -581,6 +581,11 @@ def _context(learner: str, kind: str, body: ReportIn, tz: int) -> tuple[dict, di
     return ctx, q, attempt
 
 
+def _kind_of(body: ReportIn) -> str:
+    return body.kind or ("question" if body.session and body.question_id or body.template
+                         or body.source in ("qotd", "challenge") else "page")
+
+
 def _chip(kind: str, ctx: dict) -> str:
     if ctx.get("template"):
         return ctx.get("skill") or ctx.get("topic_name") or ctx["template"]
@@ -703,8 +708,7 @@ def create(learner: str, body: ReportIn, files, tz: int = 0) -> dict:
         if parent is None or parent["status"] not in OPEN:
             raise HTTPException(409, "that report is closed; send a new one")
         category = category or parent["category"]
-    kind = body.kind or ("question" if body.session and body.question_id or body.template
-                         or body.source in ("qotd", "challenge") else "page")
+    kind = _kind_of(body)
     ctx, q, attempt = _context(learner, kind, body, tz)
     if parent is not None and parent["template"] and parent["template"] != ctx.get("template"):
         raise HTTPException(409, "that report is about another question")
@@ -1012,7 +1016,10 @@ def similar(session: str | None = None, qid: str | None = None, day: str | None 
     except ValidationError as e:
         raise HTTPException(422, json.loads(e.json(include_url=False))) from None
     q, _, _ = _question(learner, body, x_tz)
-    t, s, cat = q["key"], q["seed"], category_of(category)
+    return _similar(learner, q["key"], q["seed"], category_of(category))
+
+
+def _similar(learner: str, t: str, s: int, cat: str | None) -> dict:
     roots = db.rows("SELECT * FROM reports WHERE parent IS NULL AND kind!='correction' AND status IN ('new','checking')"
                     " AND template=? AND (seed=? OR (category=? AND at>=?)) ORDER BY seed=? DESC, id",
                     t, s, cat or "", _ago(days=30), s)
@@ -1048,9 +1055,50 @@ def categories() -> dict:
     return {"labels": LABELS,
             "kinds": {k: {"revealed": list(v), "live": list(LIVE if k == "question" else v)} for k, v in KINDS.items()},
             "person": sorted(PERSON), "needs_details": sorted(NEEDS_DETAILS), "statuses": STATUSES,
-            "limits": {"files": MAX_FILES, "types": CAPS, "total": MAX_TOTAL, "per_hour": PER_HOUR,
-                       "per_day": PER_DAY, "disputes": OPEN_DISPUTES, "title": 200, "details": 5000,
-                       "answer": 40, "downscale": 2000, "record_seconds": 60}}
+            "limits": LIMITS}
+
+
+LIMITS = {"files": MAX_FILES, "types": CAPS, "total": MAX_TOTAL, "per_hour": PER_HOUR, "per_day": PER_DAY,
+          "disputes": OPEN_DISPUTES, "title": 200, "details": 5000, "answer": 40, "downscale": 2000,
+          "record_seconds": 60}
+# what the modal's "Sent with this" box may show: never the key, and marking only once shown
+BOX = ("template", "seed", "topic_name", "skill", "difficulty", "fmt", "subject", "qid", "session", "revealed",
+       "live", "day", "sitting_kind", "n", "of", "given", "marked", "word", "paper", "paper_label", "sitting", "page")
+
+
+@router.get("/api/reports/context")
+def report_context(kind: str | None = None, source: str = "page", session: str | None = None,
+                   question_id: str | None = None, day: str | None = None, template: str | None = None,
+                   seed: int | None = None, word: str | None = None, paper: str | None = None,
+                   page: str | None = None, category: str | None = None,
+                   x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+    """What a report from here would send, resolved the way POST /api/report
+    resolves it (the modal's "Sent with this" box), the categories open now,
+    the reply-to email on file, the open disputes and, outside a live
+    sitting, me too. The student's own answer comes back so the box can offer
+    "Include my answer"; the key and hidden marking never do."""
+    learner = deps.learner_of(x_learner)
+    try:
+        body = ReportIn(kind=kind, source=source, session=session, question_id=question_id, day=day,
+                        template=template, seed=seed, word=word, paper=paper, page=page, include_answer=True)
+    except ValidationError as e:
+        raise HTTPException(422, json.loads(e.json(include_url=False))) from None
+    kind = _kind_of(body)
+    ctx, _, _ = _context(learner, kind, body, x_tz)
+    allowed = list(_allowed(kind, ctx))
+    cat = category_of(category)
+    email = (db.one("SELECT email FROM reports WHERE learner=? AND email IS NOT NULL ORDER BY id DESC LIMIT 1", learner)
+             or db.one("SELECT email FROM users WHERE learner=? AND email IS NOT NULL"
+                       " ORDER BY verified DESC, created LIMIT 1", learner))
+    out = {"kind": kind, "chip": _chip(kind, ctx), "box": {k: ctx[k] for k in BOX if ctx.get(k) is not None},
+           "allowed": allowed, "category": cat if cat in allowed else None,
+           "title": f"{ctx['topic_name']} · Question {ctx['n']}" if ctx.get("n") and ctx.get("topic_name") else None,
+           "email": email["email"] if email else None, "open_disputes": open_disputes(learner),
+           "labels": LABELS, "person": sorted(PERSON), "needs_details": sorted(NEEDS_DETAILS), "limits": LIMITS,
+           "similar": None}
+    if ctx.get("template") and not ctx.get("live"):
+        out["similar"] = _similar(learner, ctx["template"], ctx["seed"], out["category"])
+    return out
 
 
 def shell(learner: str) -> dict:
