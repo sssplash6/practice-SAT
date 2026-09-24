@@ -155,6 +155,7 @@
   const fmmss = s => (UI.mmss ? UI.mmss(s) : `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, '0')}`);
   const fband = (lo, hi) => (lo === hi ? fnum(lo) : `${fnum(lo)}–${fnum(hi)}`);
   const pct = v => `${Math.round(v * 100)}%`;
+  const plural = (n, word) => `${fnum(n)} ${word}${n === 1 ? '' : 's'}`;
   const hm = t => { const d = toDate(t); return `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`; };
   const kindName = k => (UI.KIND && UI.KIND[k]) || ({ mock: 'Section', module: 'Module', diagnostic: 'Diagnostic', outside: 'Added score' })[k] || (k ? k[0].toUpperCase() + k.slice(1) : 'Sitting');
   const glyphOf = st => (UI.STATES && UI.STATES[st] && UI.STATES[st].glyph) || '';
@@ -310,14 +311,15 @@
     }
     return `M${p.join(' L')} Z`;
   }
+  const emptyAct = a => (a ? h(a.href ? 'a' : 'button', { class: 'btn sm', href: a.href || null, type: a.href ? null : 'button', onclick: a.onClick || null }, a.label) : null);
   function emptyNote(plot, e = {}, def) {
     const old = plot.querySelector(':scope > .chart-empty');
     if (old) old.remove();
     if (!e) return;
-    const a = e.action;
-    const act = a ? h(a.href ? 'a' : 'button', { class: 'btn sm', href: a.href || null, type: a.href ? null : 'button', onclick: a.onClick || null }, a.label) : null;
-    plot.append(h('div', { class: 'chart-empty' }, h('p', { text: e.text || def }), act));
+    plot.append(h('div', { class: 'chart-empty' }, h('p', { text: e.text || def }), emptyAct(e.action)));
   }
+  // the same, in flow, for a chart with no plot to lay it over (spread, stackBar)
+  const emptyBlock = (e = {}, def) => h('div', { class: 'empty' }, h('p', { class: 'empty-text', text: e.text || def }), emptyAct(e.action));
   function note(el, cls, text) {
     let p = el.querySelector(`:scope > .${cls}`);
     if (!text) { if (p) p.remove(); return; }
@@ -896,10 +898,10 @@
           else rs.push(r);
         }
       };
-      const summary = [`Scale ${lo} to ${hi}`, band && `${opts.bandLabel || 'band'} ${fband(band.low, band.high)}`, !band && est !== null && `estimate ${Math.round(est)}`,
-        prev && `previous ${fband(prev.low, prev.high)}`, tgt !== null && `target ${tgt}`, start !== null && `plan start ${start}`,
-        dot !== null && `now ${dot}`, ...ticks.map(t => `${t.label || 'mark'} ${t.value}`),
-        hist && `${sum(hist.counts)} ranked sittings${isNum(+hist.avg) ? `, average ${Math.round(hist.avg)}` : ''}`].filter(Boolean).join('; ') + '.';
+      const summary = [`Scale ${fnum(lo)} to ${fnum(hi)}`, band && `${opts.bandLabel || 'band'} ${fband(band.low, band.high)}`, !band && est !== null && `estimate ${fnum(est)}`,
+        prev && `previous ${fband(prev.low, prev.high)}`, tgt !== null && `target ${fnum(tgt)}`, start !== null && `plan start ${fnum(start)}`,
+        dot !== null && `now ${fnum(dot)}`, ...ticks.map(t => `${t.label || 'mark'} ${fnum(t.value)}`),
+        hist && `${plural(sum(hist.counts), 'ranked sitting')}${isNum(+hist.avg) ? `, average ${fnum(hist.avg)}` : ''}`].filter(Boolean).join('; ') + '.';
       vis.setAttribute('aria-label', summary);
       el.replaceChildren(vis);
       unclash();
@@ -1059,7 +1061,7 @@
       }
       const total = sum(data.map(upOf));
       const maxR = data.reduce((m, r) => (!m || upOf(r) > upOf(m) ? r : m), null);
-      const summary = n ? [`${opts.label || 'Bar chart'}, ${n} bars`, S.length === 1 && !opts.norm && `total ${fmt(total)}`,
+      const summary = n ? [`${opts.label || 'Bar chart'}, ${plural(n, 'bar')}`, S.length === 1 && !opts.norm && `total ${fmt(total)}`,
         maxR && upOf(maxR) > 0 && !opts.norm && `highest ${rowName(maxR)} at ${fmt(upOf(maxR))}`,
         S.length > 1 && S.map(s => `${s.label} ${fmt(sum(data.map(r => val(r, s.key))))}`).join(', '),
         D.length && D.map(s => `${s.label} ${fmt(sum(data.map(r => val(r, s.key))))}`).join(', '),
@@ -1399,7 +1401,12 @@
         const c = cells.find(x => x.dataset.day === to);
         if (c) c.focus();
       });
-      const summary = `Activity, ${weeks} weeks to ${fdate(end)}: ${activeDays} active day${activeDays === 1 ? '' : 's'}, ${fnum(questions)} questions, ${fdur(minutes)}. Colour by questions a day: none, 1 to 9, 10 to 24, 25 to 49, 50 or more.`;
+      // the stats row, when given, is the one source for these facts (rule 5); else the grid's own count
+      const st = opts.stats;
+      const facts = st ? [isNum(+st.active_days) && plural(+st.active_days, 'active day'), isNum(+st.streak) && `current streak ${fnum(st.streak)}`,
+        isNum(+(st.best ?? st.best_streak)) && `best ${fnum(st.best ?? st.best_streak)}`, isNum(+(st.minutes ?? st.minutes_total)) && `study time ${fdur(st.minutes ?? st.minutes_total)}`].filter(Boolean)
+        : [plural(activeDays, 'active day'), plural(questions, 'question'), fdur(minutes)];
+      const summary = `Activity, ${weeks} weeks to ${fdate(end)}${st ? '. ' + cap1(facts.join(', ')) : `: ${facts.join(', ')}`}. Colour by questions a day: none, 1 to 9, 10 to 24, 25 to 49, 50 or more.`;
       grid.setAttribute('aria-label', `Activity, ${weeks} weeks`);
       const parts = [];
       if (opts.range && !phone() && UI.seg) {
@@ -1419,7 +1426,6 @@
           vals.some(r => r.rest && !n0(r.questions ?? r.answered)) ? h('span', { class: 'heat-k' }, h('i', { class: 'heat-c', 'data-rest': '' }), 'rest day') : null,
           vals.some(r => r.spare_used) ? h('span', { class: 'heat-k' }, h('i', { class: 'heat-c', 'data-spare': '' }), 'spare day') : null));
       } else parts.push(h('span', { class: 'sr', role: 'img', 'aria-label': summary }));
-      const st = opts.stats;
       if (st) parts.push(h('p', { class: 'heat-stats' }, [
         isNum(+st.active_days) && `Active days ${fnum(st.active_days)}`, isNum(+st.streak) && `Current streak ${fnum(st.streak)}`,
         isNum(+(st.best ?? st.best_streak)) && `Best ${fnum(st.best ?? st.best_streak)}`, isNum(+(st.minutes ?? st.minutes_total)) && `Study time ${fdur(st.minutes ?? st.minutes_total)}`,
@@ -1507,7 +1513,7 @@
       const summary = all.length ? `${opts.label || 'Line chart'}: ` + S.map(s => {
         if (!s.points.length) return `${s.label}, no points`;
         const a = s.points[0], b = s.points[s.points.length - 1];
-        return `${s.label} from ${fy(a.y)} (${fx(a.x)}) to ${fy(b.y)} (${fx(b.x)}), ${s.points.length} points`;
+        return `${s.label} from ${fy(a.y)} (${fx(a.x)}) to ${fy(b.y)} (${fx(b.x)}), ${plural(s.points.length, 'point')}`;
       }).join('; ') + '.' : `${opts.label || 'Line chart'}: nothing yet.`;
       svg.setAttribute('aria-label', summary);
       const old = plot.querySelector(':scope > svg');
@@ -1558,9 +1564,11 @@
           h('span', { class: 'spread-v', text: pct(x.share) }),
           (x.reason || tags.some(Boolean)) ? h('span', { class: 'spread-why' }, tags, !x.key && x.reason ? h('span', { text: x.reason }) : null) : null));
       });
-      const summary = `${opts.label || 'How everyone answered'}${total ? `, ${fnum(total)} ${opts.noun || 'answers'}` : ''}: ` +
-        rows.map(x => `${x.label ?? x.text} ${pct(x.share)}${x.key ? ' (right)' : x.reason ? ` (${x.reason})` : ''}${x.pick ? ', your pick' : ''}`).join('; ') + '.';
+      const summary = rows.length ? `${opts.label || 'How everyone answered'}${total ? `, ${fnum(total)} ${opts.noun || 'answers'}` : ''}: ` +
+        rows.map(x => `${x.label ?? x.text} ${pct(x.share)}${x.key ? ' (right)' : x.reason ? ` (${x.reason})` : ''}${x.pick ? ', your pick' : ''}`).join('; ') + '.'
+        : `${opts.label || 'How everyone answered'}: nothing yet.`;
       vis.setAttribute('aria-label', summary);
+      if (!rows.length) { el.replaceChildren(vis, emptyBlock(opts.empty, 'How everyone answered shows here once others answer this question.')); return; }
       el.replaceChildren(vis, dataTable(summary, ['Option', 'Share', 'Answers', 'Misconception'],
         rows.map(x => [`${x.label ?? ''}${x.text ? ` ${x.text}` : ''}${x.key ? ' (right)' : ''}${x.pick ? ' (your pick)' : ''}`.trim(), pct(x.share), isNum(+x.n) ? fnum(x.n) : '', x.key ? '' : x.reason || ''])));
     }
@@ -1686,7 +1694,7 @@
     const v = (series || []).map(x => (typeof x === 'object' && x ? +(x.value ?? x.y) : +x)).filter(isNum);
     const labels = (series || []).map((x, i) => (typeof x === 'object' && x && (x.day || x.label) ? (x.day ? fdate(x.day) : x.label) : `#${i + 1}`));
     const w = o.w ?? 60, hh = o.h ?? 20, f = o.format || fnum;
-    const summary = v.length ? `${o.label || 'Trend'}: ${f(v[0])} to ${f(v[v.length - 1])} over ${v.length} ${o.noun || 'points'}; low ${f(Math.min(...v))}, high ${f(Math.max(...v))}.` : `${o.label || 'Trend'}: nothing yet.`;
+    const summary = v.length ? `${o.label || 'Trend'}: ${f(v[0])} to ${f(v[v.length - 1])} over ${o.noun ? `${fnum(v.length)} ${o.noun}` : plural(v.length, 'point')}; low ${f(Math.min(...v))}, high ${f(Math.max(...v))}.` : `${o.label || 'Trend'}: nothing yet.`;
     const el = h('span', { class: 'spark' });
     const s = sv('svg', { viewBox: `0 0 ${w} ${hh}`, width: w, height: hh, role: 'img', 'aria-label': summary, focusable: 'false' }, el);
     if (v.length > 1) {
@@ -1722,7 +1730,8 @@
         return d;
       }));
       if (!on.length) bar.append(h('span', { class: 'sb-seg empty', style: 'flex-grow:1' }));
-      const summary = `${opts.label || 'Split'}${total ? `, ${fmt(total)} in all` : ''}: ${segs.map(s => `${lab(s)}${total ? `, ${Math.round(s.value / total * 100)}%` : ''}`).join('; ')}.`;
+      const summary = on.length ? `${opts.label || 'Split'}${total ? `, ${fmt(total)} in all` : ''}: ${segs.map(s => `${lab(s)}${total ? `, ${Math.round(s.value / total * 100)}%` : ''}`).join('; ')}.`
+        : `${opts.label || 'Split'}: nothing yet.`;
       bar.setAttribute('aria-label', summary);
       const wrap = h('div', { class: 'sb-wrap' }, bar);
       if (opts.onPick && on.length) {
@@ -1749,7 +1758,7 @@
         return h('li', { class: s.value ? null : 'off' }, sw, h('span', { text: s.label }), h('b', { text: fmt(s.value) }),
           isNum(+s.n) && s.n !== null ? h('span', { class: 'sb-n', text: `(${fnum(s.n)})` }) : null);
       }));
-      el.replaceChildren(wrap, key || '', dataTable(summary, ['Part', opts.valueLabel || 'Value', opts.noun ? cap1(opts.noun) : 'Count', 'Share'],
+      el.replaceChildren(wrap, on.length ? '' : emptyBlock(opts.empty, 'Nothing counted yet.'), segs.length ? key || '' : '', dataTable(summary, ['Part', opts.valueLabel || 'Value', opts.noun ? cap1(opts.noun) : 'Count', 'Share'],
         segs.map(s => [s.label, fmt(s.value), isNum(+s.n) && s.n !== null ? fnum(s.n) : '', total ? `${Math.round(s.value / total * 100)}%` : ''])));
       requestAnimationFrame(fit);
     }
@@ -1833,7 +1842,7 @@
       const qn = new Set(V.map(v => v[0])).size;
       const revisits = V.length - qn;
       const nameOf = q => (items[q] && items[q].label) || q;
-      const summary = V.length ? `${opts.label || 'Clock replay'}: ${qn} questions in ${V.length} visits (${revisits} revisit${revisits === 1 ? '' : 's'}), ${fmmss(used / 1000)} of ${fmmss(dur / 1000)} used${behindAt ? `; first more than a minute behind pace at ${nameOf(behindAt.q)}, by ${fmmss(behindAt.by / 1000)}` : ''}.` : `${opts.label || 'Clock replay'}: visit order was not recorded for this sitting.`;
+      const summary = V.length ? `${opts.label || 'Clock replay'}: ${plural(qn, 'question')} in ${plural(V.length, 'visit')} (${revisits} revisit${revisits === 1 ? '' : 's'}), ${fmmss(used / 1000)} of ${fmmss(dur / 1000)} used${behindAt ? `; first more than a minute behind pace at ${nameOf(behindAt.q)}, by ${fmmss(behindAt.by / 1000)}` : ''}.` : `${opts.label || 'Clock replay'}: visit order was not recorded for this sitting.`;
       svg.setAttribute('aria-label', summary);
       const old = plot.querySelector(':scope > svg');
       if (old) old.replaceWith(svg); else plot.prepend(svg);

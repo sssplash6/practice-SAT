@@ -788,7 +788,9 @@
       return { day: d, kind, state, minutes: kind === 'test' ? 70 : kind === 'practice' ? 40 : 0, tasks: kind === 'practice' ? { done: i < 12 ? 2 : 0, of: 3 } : null, own: i === 3, phase: i === 20 ? 'Sharpen' : null, phase_start: i === 20 }; });
     UI.calendar(host, { look: 'plan', plan, marks: { start: D(-12), end: D(44), exam: D(44), today: D(0) }, min: D(-12), max: D(44), legend: true, onPick: d => say(d) });
   });
-  demo('UI.heatmap', 'c-heat', host => UI.heatmap(host, days, { weeks: 26, stats: { active_days: 131, streak: 6, best: 19, minutes: 2530 }, legend: true, onPick: d => say(d) }));
+  // the stats row counts the same days the grid draws, as progress.days would
+  demo('UI.heatmap', 'c-heat', host => UI.heatmap(host, days, { weeks: 26, legend: true, onPick: d => say(d),
+    stats: { active_days: days.filter(d => d.questions).length, streak: 6, best: 19, minutes: days.reduce((m, d) => m + d.minutes, 0) } }));
   demo('UI.lineChart', 'c-line', host => {
     let r = 1000;
     const pts = Array.from({ length: 14 }, (_, i) => ({ day: D(i * 4 - 56), y: (r += ri(-30, 60)) }));
