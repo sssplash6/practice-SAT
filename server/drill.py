@@ -895,7 +895,8 @@ def answer(row, qid: str, given, ms: int | None) -> dict:
         given = answers[qid]                          # a double tap, not a second try
         ok = scoring.is_correct(q, given)
         reason = (q.get("reasons") or [""] * 4)[given] if not ok and isinstance(given, int) and 0 <= given < 4 else ""
-        return _feedback(q, given, ok, reason, [], [], None, None, cfg, answers, served)
+        return _feedback(q, given, ok, reason, [], [], None, None, cfg, answers, served,
+                         learner=row["learner"])
 
     before = progress.topic_mastery(row["learner"], q["topic"])
     filed = progress.record(row["learner"], row["id"], q, given, ms)
@@ -930,27 +931,60 @@ def answer(row, qid: str, given, ms: int | None) -> dict:
             cfg["total"] += 1
     _save(row["id"], cfg, served)
     return _feedback(q, given, filed["correct"], filed["reason"], filed["opened"],
-                     filed["closed"], before, after, cfg, answers, served)
+                     filed["closed"], before, after, cfg, answers, served, filed=filed,
+                     learner=row["learner"])
 
 
-def _feedback(q, given, ok, reason, opened, closed, before, after, cfg, answers, served) -> dict:
+def _feedback(q, given, ok, reason, opened, closed, before, after, cfg, answers, served,
+              filed: dict | None = None, learner: str | None = None) -> dict:
     run = 0
     for x in reversed([x for x in served if x["id"] in answers]):
         if not scoring.is_correct(x, answers[x["id"]]):
             break
         run += 1
     mistake = reason[:1].upper() + reason[1:] if reason else None
-    return {
+    family = {"seen": 0, "right": 0}
+    if learner:
+        row = db.one("SELECT COUNT(*) seen,COALESCE(SUM(correct),0) n_right FROM attempts"
+                     " WHERE learner=? AND template=?", learner, q["key"])
+        family = {"seen": row["seen"], "right": row["n_right"]}
+    option = q.get("step_of") or []
+    chosen = option[given] if q.get("type") == "mcq" and isinstance(given, int) and 0 <= given < len(option) else None
+    out = {
         "correct": ok, "given": given,
-        "answer": q["answer"],
-        "answer_index": "ABCD".index(q["answer"]) if q["type"] == "mcq" else None,
         "mistake": mistake,
-        "rationale": q["rationale"],
         "skill": q.get("skill"),
         "opened": opened, "closed": closed,
+        "opened_ids": (filed or {}).get("opened_ids", []),
+        "closed_ids": (filed or {}).get("closed_ids", []),
+        "checked": (filed or {}).get("checked", []),
+        "relapsed": (filed or {}).get("relapsed", []),
+        "not_offered": (filed or {}).get("not_offered", []),
+        "reasons": [r or None for r in q.get("reasons", ())],
+        "filler": q.get("filler", []),
+        "family": family,
+        "flagged": (filed or {}).get("flagged", False),
+        "repeat": (filed or {}).get("repeat", False),
+        "trap_true": q.get("trap_true"),
+        "steps": q.get("steps", []),
+        "diverge": chosen.get("at") if isinstance(chosen, dict) else None,
+        "wrong_step": chosen.get("wrong") if isinstance(chosen, dict) else None,
+        "option_steps": [s.get("at") if isinstance(s, dict) else None for s in option],
+        "desmos": q.get("desmos"),
+        "figure_alt": q.get("figure_alt"),
+        "budget_ms": q.get("budget_ms"),
+        "saved_note": "Saved for another look" if cfg.get("pool") == "saved" else None,
         "mastery": None if before is None else {"topic": q["topic"], "before": before, "after": after},
         "total": cfg.get("total"), "answered": len(answers), "streak": run,
     }
+    if cfg.get("feedback", "instant") != "end":
+        out["answer"] = q["answer"]
+        out["answer_index"] = "ABCD".index(q["answer"]) if q["type"] == "mcq" else None
+        out["rationale"] = q["rationale"]
+    else:
+        for key in ("reasons", "filler", "steps", "diverge", "wrong_step", "option_steps", "desmos"):
+            out.pop(key, None)
+    return out
 
 
 def finish(row) -> dict:

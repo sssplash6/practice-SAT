@@ -11,6 +11,8 @@ for each, and the README the sources.
 
 from __future__ import annotations
 
+from collections import Counter
+
 from . import practice
 
 MODULE_SIZE = 22
@@ -91,14 +93,92 @@ def survey(names: list[str], seeds: int = 18) -> dict[str, set[tuple[str, str]]]
 
 
 _CAN: dict[str, set[tuple[str, str]]] = {}
+_KINDS: dict[str, dict] = {}
+
+
+def kinds() -> dict[str, dict]:
+    """Catalogue survey: output shapes, labels, reasons and whole-item variety."""
+    if _KINDS:
+        return _KINDS
+    from satbank.registry import templates
+    from . import progress
+    cat = practice.catalogue()
+    for name, fn in templates().items():
+        shapes: set[tuple[str, str]] = set()
+        labels: Counter = Counter()
+        reasons: dict[str, str] = {}
+        seen: set[str] = set()
+        asks: set[str] = set()
+        for seed in range(18):
+            try:
+                item = practice.generate(name, seed)
+            except Exception:
+                continue
+            shapes.add((item.difficulty, item.fmt))
+            labels[item.skill] += 1
+            seen.add(practice.question_hash(item))
+            if getattr(item, "params", None) and item.params.get("ask"):
+                asks.add(str(item.params["ask"]))
+            for reason in list(item.reasons) + [getattr(m, "reason", "") for m in getattr(item, "spr_mistakes", ())]:
+                if reason:
+                    reasons.setdefault(progress.norm(reason), reason)
+        label = labels.most_common(1)[0][0] if labels else name
+        doc = (fn.__doc__ or "").strip().split("\n\n", 1)[0].strip()
+        _KINDS[name] = {"kinds": shapes, "labels": labels, "skill": label,
+                        "about": doc or label, "reasons": reasons,
+                        "variety": len(seen), "axes": {"grid"} if any(f == "spr" for _, f in shapes) else set(),
+                        "ask": sorted(asks), "topic": practice.topic_of(name),
+                        "domain": cat["topics"][practice.topic_of(name)].domain}
+        if len(asks) > 1:
+            _KINDS[name]["axes"].add("ask")
+    _CAN.update({name: value["kinds"] for name, value in _KINDS.items()})
+    return _KINDS
 
 
 def abilities() -> dict[str, set[tuple[str, str]]]:
     """The survey of every template, made once per process."""
     if not _CAN:
-        cat = practice.catalogue()
-        _CAN.update(survey(sorted(n for v in cat["by_topic"].values() for n in v)))
+        kinds()
     return _CAN
+
+
+def lookalikes(template: str, k: int = 3) -> list[str]:
+    data = kinds()
+    if template not in data:
+        return []
+    here = set(data[template]["reasons"])
+    topic = data[template]["topic"]
+    scored = []
+    for other, info in data.items():
+        if other == template:
+            continue
+        common = len(here & set(info["reasons"]))
+        if common >= (1 if info["topic"] == topic else 2):
+            scored.append((info["topic"] != topic, -common, other))
+    return [x[2] for x in sorted(scored)[:k]]
+
+
+def siblings(template: str, step: int) -> list[str]:
+    """Adjacent tier alternatives, preferring the same template and skill."""
+    if step not in (-1, 1):
+        raise ValueError("step is -1 or 1")
+    data = kinds()
+    if template not in data:
+        return []
+    current = {t for t, _ in data[template]["kinds"]}
+    targets = {("easy", "medium", "hard")[("easy", "medium", "hard").index(t) + step]
+               for t in current if 0 <= ("easy", "medium", "hard").index(t) + step < 3}
+    if any(t in targets for t, _ in data[template]["kinds"]):
+        return [template]
+    topic = data[template]["topic"]
+    skill = data[template]["skill"]
+    norms = set(data[template]["reasons"])
+    candidates = []
+    for other, info in data.items():
+        if other == template or info["topic"] != topic or not any(t in targets for t, _ in info["kinds"]):
+            continue
+        candidates.append((info["skill"] != skill, -len(norms & set(info["reasons"])), other))
+    return [x[2] for x in sorted(candidates)]
 
 
 def by_domain() -> dict[str, list[str]]:

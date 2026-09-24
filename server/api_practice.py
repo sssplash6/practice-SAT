@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 
 from fastapi import APIRouter, Header, HTTPException
@@ -48,6 +49,27 @@ def drill_preview(body: dict, x_learner: str | None = Header(default=None)) -> d
     return drill.preview(learner_of(x_learner), body)
 
 
+@router.get("/api/history")
+def history_without_inline(x_learner: str | None = Header(default=None)) -> dict:
+    """R24's list rule, registered before the legacy history route."""
+    learner = learner_of(x_learner)
+    out = []
+    for row in db.rows("SELECT id,kind,mock_id,started,finished,result,cfg FROM sessions"
+                       " WHERE learner=? AND finished IS NOT NULL ORDER BY finished DESC LIMIT 300", learner):
+        cfg = json.loads(row["cfg"] or "{}")
+        result = json.loads(row["result"] or "{}")
+        if cfg.get("inline") or result.get("asked", 0) == 0:
+            continue
+        out.append({"id": row["id"], "kind": row["kind"], "started": row["started"],
+                    "finished": row["finished"], "right": result.get("right"),
+                    "asked": result.get("asked"), "estimate": result.get("estimate"),
+                    "topics": [t["topic"] for t in result.get("topics", ())] or cfg.get("topics", []),
+                    "label": "Quick questions" if cfg.get("source") == "quick" else None})
+        if len(out) >= 200:
+            break
+    return {"sessions": out}
+
+
 @router.get("/api/drill/{sid}")
 def get_drill(sid: str, x_learner: str | None = Header(default=None)) -> dict:
     return drill.state(drill_row(sid, learner_of(x_learner)))
@@ -86,6 +108,10 @@ def drill_answer(sid: str, body: DrillAnswer, x_learner: str | None = Header(def
 def drill_finish(sid: str, x_learner: str | None = Header(default=None)) -> dict:
     learner = learner_of(x_learner)
     row = drill_row(sid, learner)
+    cfg = json.loads(row["cfg"] or "{}")
+    if cfg.get("source") == "quick" and not db.load_answers(row):
+        db.run("DELETE FROM sessions WHERE id=? AND learner=?", sid, learner)
+        return {"deleted": True}
     out = drill.finish(row)
     out["next"] = progress.coach(learner, count=per_session(profile(learner)))
     return out

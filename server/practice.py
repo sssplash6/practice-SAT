@@ -314,6 +314,8 @@ def to_question(card: Card, n: int) -> dict:
     """The stored form: everything, key included. Stripped before it is served."""
     topics = catalogue()["topics"]
     it = card.item
+    steps = getattr(it, "steps", ()) or ()
+    step_of = getattr(it, "step_of", ()) or ()
     return {
         "id": f"p{n:03d}",
         "key": card.key,
@@ -332,4 +334,13 @@ def to_question(card: Card, n: int) -> dict:
         "answer": it.answer,
         "rationale": it.rationale,
         "reasons": list(it.reasons),
+        "filler": [not bool(reason) for reason in it.reasons],
+        "steps": [getattr(step, "text", str(step)) for step in steps],
+        "step_of": [dict(s) if isinstance(s, dict) else
+                    ({"at": getattr(s, "at", None), "wrong": getattr(s, "wrong", None)} if s else None)
+                    for s in step_of],
+        "desmos": getattr(it, "desmos", None),
+        "figure_alt": getattr(it, "figure_alt", None),
+        "ask": getattr(it, "ask", None),
+        "text": getattr(it, "text", None),
     }
