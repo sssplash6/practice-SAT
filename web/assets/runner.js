@@ -1578,7 +1578,15 @@
         onCheck: async (a, meta) => {
           meta.ms = Math.round(msAt(i));
           if (Number.isFinite(timerApi && timerApi.left)) meta.made_left = Math.round(timerApi.left);
-          return emit('check', i, a, meta);
+          const r = await emit('check', i, a, meta);
+          // end mode: Save & next, however it was pressed
+          if (meta.save && endMode) setTimeout(() => {
+            if (dead || at !== i || view !== 'q') return;
+            cells[i].status = 'answered';
+            paintRail();
+            if (last()) finish(); else go(i + 1, 'next');
+          }, 0);
+          return r;
         },
         onSelect: a => { selected(i, a); call('onSelect', a); },
         onEnter: () => { call('onEnter'); next(); },
@@ -1799,13 +1807,13 @@
       const el = Math.max(0, (o.pace.duration_s || dur) - left);
       let cum = 0, pos = n;
       for (let i = 0; i < n; i++) { cum += b[i]; if (cum > el) { pos = i; break; } }
-      const tick = h('i', { class: 'rn-tick', style: `--at:${pos}`, 'aria-hidden': 'true', title: `Pace: question ${pos + 1}` });
-      segs.append(tick);
+      // each tick sits at the left edge of its segment (or past the last one)
+      const put = (k, el) => { const sg = segs.children[Math.min(k, segs.children.length - 1)]; if (!sg) return; if (k >= segs.children.length) el.classList.add('end'); sg.append(el); };
+      put(pos, h('i', { class: 'rn-tick', title: `Pace: question ${Math.min(pos + 1, n)}` }));
       [7, 14].forEach(k => {
         if (k >= n) return;
         const by = b.slice(0, k).reduce((a, x) => a + x, 0);
-        const leftBy = (o.pace.duration_s || dur) - by;
-        segs.append(h('i', { class: 'rn-tick cp', style: `--at:${k}`, title: `By Q${k + 1}: ${mmss(leftBy)} left`, 'aria-hidden': 'true' }));
+        put(k, h('i', { class: 'rn-tick cp', title: `By Q${k + 1}: ${mmss((o.pace.duration_s || dur) - by)} left` }));
       });
     }
     function syncFoot() {
@@ -1902,13 +1910,7 @@
     }
     async function submit(conf) {
       if (!ws || view !== 'q') return;
-      const i = at;
-      const ok = await ws.check(conf);
-      if (endMode && ok && at === i && !dead) {
-        cells[i].status = 'answered';
-        paintRail();
-        if (last()) finish(); else go(i + 1, 'next');
-      }
+      await ws.check(conf);
     }
     function skip(i, meta) {
       if (!cells[i] || (ws && ws.answered())) return;
@@ -2126,8 +2128,11 @@
       footAlt.hidden = false;
       cyw.el.querySelector('.cyw-foot') && cyw.el.querySelector('.cyw-foot').remove();
       window.scrollTo({ top: 0 });
+      // focus on Go through when there is a queue, so Enter starts it (X5); else the heading
+      const go1 = cyw.el.querySelector('.cyw-go:not(:disabled)');
       const hd = cyw.el.querySelector('h1');
-      if (hd) { hd.tabIndex = -1; hd.focus({ preventScroll: true }); }
+      if (go1) go1.focus({ preventScroll: true });
+      else if (hd) { hd.tabIndex = -1; hd.focus({ preventScroll: true }); }
       emit('view', 'review', at);
       // X5 pass 2 starts when the student first opens review
     }
