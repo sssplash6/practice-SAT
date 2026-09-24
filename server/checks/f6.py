@@ -1,5 +1,6 @@
 """F6 acceptance: reports (R17, Shell §2.10 and §10, U3, V6, X10, SR19) and question sets (R18(c), P22, U28, V17, W20, X22).
-Run alone with PYTHONPATH=. python3 server/checks/f6.py, or inside test_flow."""
+Run alone with PYTHONPATH=. python3 server/checks/f6.py, or inside test_flow; add --browser for the pages
+(headless Chrome against a server on port 8016 over a throwaway database)."""
 
 from __future__ import annotations
 
@@ -766,6 +767,20 @@ def sets_words(c) -> None:
     print("ok  F6 sets: word lists, own words copied, sample read-only, 30 links an hour")
 
 
+def static() -> None:
+    """Decision 5 (no classes) across F6's files, and R18(c)'s one navigator.share, behind a tap."""
+    root = pathlib.Path(__file__).resolve().parents[2]
+    files = ["server/reports.py", "server/sets.py", "server/mail.py", "tools/reports.py", "web/assets/report.js",
+             "web/admin/reports/index.html", "web/s/index.html"]
+    for f in files:
+        text = (root / f).read_text()
+        hits = [w for w in ("teacher", "assignment", "homework", "/class/", "/join/") if w in text.lower()]
+        assert not hits, (f, hits)
+        for i in [i for i in range(len(text)) if text.startswith("navigator.share(", i)]:
+            assert "More ways to share" in text[max(0, i - 300):i] and "click" in text[max(0, i - 120):i], (f, i)
+    print("ok  F6: no classes in its files; navigator.share only from a tap on More ways to share")
+
+
 def check(client) -> None:
     keep = reports.FILES
     with tempfile.TemporaryDirectory(prefix="satf-f6-") as path:
@@ -784,15 +799,138 @@ def check(client) -> None:
             sets_twins(client)
             sets_test(client)
             sets_words(client)
+            static()
         finally:
             reports.FILES = keep
             os.environ.pop("SATF_ADMIN_TOKEN", None)
 
 
+# ------------------------------------------------------------------ the pages, in a browser (--browser)
+
+CHROME = ("/Users/workingmyassof/Library/Caches/ms-playwright/chromium_headless_shell-1243/"
+          "chrome-headless-shell-mac-arm64/chrome-headless-shell")
+PORT = 8016
+
+
+def browser() -> None:
+    """Shell 15's modal in a live sitting, the /s/ landing and the admin page,
+    in headless Chrome against a server on port 8016 over a throwaway database."""
+    import socket
+    import subprocess
+    import sys
+    import time
+
+    import httpx
+    from playwright.sync_api import sync_playwright
+
+    root = pathlib.Path(__file__).resolve().parents[2]
+    base = f"http://127.0.0.1:{PORT}"
+    with tempfile.TemporaryDirectory(prefix="satf-f6web-") as path:
+        env = {**os.environ, "SATF_DB": f"{path}/f6-web.db", "SATF_REPORTS": f"{path}/reports",
+               "SATF_ADMIN_TOKEN": "f6-admin", "PYTHONPATH": str(root)}
+        env.pop("SATF_SMTP_HOST", None)
+        env.pop("SATF_REPORTS_TO", None)
+        with socket.socket() as sock:              # someone else's server here would answer for ours
+            assert sock.connect_ex(("127.0.0.1", PORT)) != 0, f"port {PORT} is in use"
+        srv = subprocess.Popen([sys.executable, "-m", "uvicorn", "server.app:app", "--port", str(PORT)],
+                               cwd=root, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        try:
+            for _ in range(150):
+                try:
+                    if httpx.get(base + "/api/health").status_code == 200:
+                        break
+                except httpx.HTTPError:
+                    pass
+                time.sleep(0.1)
+            else:
+                raise AssertionError(f"no server on {PORT}")
+            db.DB_PATH = pathlib.Path(env["SATF_DB"])
+            api = httpx.Client(base_url=base + "/api")
+
+            # the fixtures: a live mock, a finished drill miss, four sets and one report
+            m, d, o, v = fresh("wm"), fresh("wd"), named(fresh("wo"), "Maya"), fresh("wv")
+            live, lq = sitting(m, "circle.convert", 41, kind="mock", finished=False)
+            db.run("UPDATE sessions SET answers=? WHERE id=?", json.dumps({lq["id"]: 0}), live)
+            drill_sid, dq = sitting(d, "circle.convert", 40, given=wrong(reports._from_bank("circle.convert", 40)))
+            q = reports._from_bank("circle.convert", 42)
+            sitting(o, "circle.convert", 42, given=pick(q, False))
+            new = lambda body: api.post("/sets", headers=hdr(o), json=body).json()["code"]  # noqa: E731
+            words = new({"kind": "words", "items": ["mitigate", "bolster"]})
+            items = new({"kind": "items", "items": [["circle.convert", 42]], "cfg": {"context": True}})
+            practice_set = new({"kind": "set", "items": [["circle.convert", 42]]})
+            gone = new({"kind": "items", "items": [["circle.convert", 42]], "title": "stopped"})
+            assert api.delete(f"/sets/{gone}", headers=hdr(o)).status_code == 200
+            rid = api.post("/report", headers=hdr(d), data={"data": json.dumps(
+                {"kind": "page", "category": "idea", "title": "a browser report"})}).json()["id"]
+
+            errors: list[str] = []
+            with sync_playwright() as p:
+                b = p.chromium.launch(executable_path=CHROME)
+
+                def page_as(learner: str):
+                    ctx = b.new_context(viewport={"width": 1280, "height": 900})
+                    ctx.add_init_script(f"localStorage.setItem('satf.learner', {json.dumps(learner)})")
+                    pg = ctx.new_page()
+                    pg.on("pageerror", lambda e: errors.append(f"{pg.url}: {e}"))
+                    return pg
+
+                def modal(learner: str, rctx: dict):
+                    pg = page_as(learner)
+                    pg.goto(base + "/s/")
+                    pg.add_script_tag(url="/assets/report.js")
+                    pg.evaluate("c => { UI.report(c); }", rctx)
+                    pg.wait_for_selector("dialog.rp .rp-box:not([aria-hidden])")
+                    return pg.inner_text("dialog.rp .rp-box"), pg.inner_text("dialog.rp")
+
+                # Shell 15 / X10: in the test window the box shows no marking, and "Remind me" comes first
+                box, sheet = modal(m, {"source": "test", "session": live, "question_id": lq["id"]})
+                assert "marked" not in box.lower(), box
+                assert "Remind me after" in sheet and "Answer key is wrong" not in sheet, sheet
+                assert "The clock keeps running" in sheet, sheet
+                # after the verdict it does, and the key can be disputed
+                box, sheet = modal(d, {"source": "drill", "session": drill_sid, "question_id": dq["id"]})
+                assert "marked wrong" in box and "circle.convert" in box and "Answer key is wrong" in sheet, box
+
+                # W20: the landing lists both words
+                pg = page_as(v)
+                pg.goto(f"{base}/s/?c={words}")
+                pg.wait_for_selector("text=bolster")
+                assert "mitigate" in pg.inner_text("body")
+                # V17: a help link hides the question's answers and the sharer's pick until the visitor answers
+                pg.goto(f"{base}/s/?c={items}")
+                pg.wait_for_selector("text=Try it")
+                text = pg.inner_text("body")
+                assert q["reasons"][pick(q, False)] not in text and q["rationale"][:40] not in text, text[:400]
+                # R18(c): a practice set forwards to Practice's banner; a stopped link says so
+                pg.goto(f"{base}/s/?c={practice_set}")
+                pg.wait_for_url(f"**/practice/?share={practice_set}")
+                pg.goto(f"{base}/s/?c={gone}")
+                pg.wait_for_selector("text=Whoever shared this has stopped sharing it.")
+
+                # §10: the admin asks for the token once, then lists the report
+                pg = page_as(v)
+                pg.goto(base + "/admin/reports/")
+                pg.fill("input[type=password]", "f6-admin")
+                pg.keyboard.press("Enter")
+                pg.wait_for_selector(f"text=#{rid}")
+                assert pg.evaluate("sessionStorage.length") >= 1
+                b.close()
+            real = [e for e in errors if "/practice/" not in e]      # Practice's page is S4's
+            assert not real, real
+            print("ok  F6 pages: no marking in a live report, the /s/ landing, forwards, stopped links, the admin")
+        finally:
+            srv.terminate()
+            srv.wait(10)
+
+
 if __name__ == "__main__":
+    import sys
     os.environ.pop("SATF_SMTP_HOST", None)
     with tempfile.TemporaryDirectory(prefix="satf-f6db-") as path:
         db.DB_PATH = pathlib.Path(path) / "f6-check.db"
         mail.OUTBOX = pathlib.Path(path) / "outbox"
-        with TestClient(app) as client:
-            check(client)
+        if "--browser" in sys.argv:
+            browser()
+        else:
+            with TestClient(app) as client:
+                check(client)
