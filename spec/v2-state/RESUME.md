@@ -3,7 +3,9 @@
 ## Now: RUNNING (saved 2026-09-24 for a context reset; nothing was stopped)
 
 **Check policy (agreed with the user):** one independent check, one fix, merge. Leftovers go to
-`spec/v2-state/followups/<task>.json`. Only content tasks (`rounds: 2`) get two rounds.
+`spec/v2-state/followups/<task>.json`. Only content tasks (`rounds: 2`) get two rounds. **Small or data-only tasks
+(`inline: true`, and every job of the user's other agent that is not a feature) get my inline check instead of a check
+agent:** run the task's own checks, test_flow, the gate if the bank changed, and a spot check of its evidence or sources.
 
 **Merged into master:** way-better upgrades, v2/f0, v2/t-bank-all, v2/bank, v2/f4 (+ swap middleware 7eafbe9, R45 test
 counting a00ea8c), v2/f1 (ffda717), v2/satdates (197b54a), v2/bank-lint (3ad7b8e), v2/f5 (22b1532; leftovers in `followups/F5.json`), v2/words-content (99774c2; fix round stopped after ~55 min

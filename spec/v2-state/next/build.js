@@ -176,7 +176,8 @@ Earlier units are committed on the branch; later units are other agents' jobs, s
 upgrades. Commit as you go. Return what you built, the commits, and anything left undone or needed from another owner.`,
   { label: `build ${t.id} ${i + 1}/${t.units.length}`, phase: 'Build', isolation: 'worktree' })
 
-// Check policy (the user, 2026-09-24): one check, one fix, merge. Leftovers go on a follow-up list for the section that uses
+// Check policy (the user, 2026-09-24): one check, one fix, merge; small or data-only tasks set inline: true and get the
+// main session's inline check instead of a check agent. Leftovers go on a follow-up list for the section that uses
 // them or for I1. A task sets rounds: 2 only when it puts content in front of students (questions, definitions).
 const verify = (t, round) => agent(`${CONTEXT(t)}
 You are the VERIFIER, not the builder: do not fix anything and do not commit. Run git switch --detach v2/${t.id.toLowerCase()}.
@@ -206,6 +207,8 @@ async function run(a) {
   if (!a.from || a.from === 'build') {
     for (let i = a.unit || 0; i < t.units.length; i++) out.units.push(await unit(t, i))
   }
+  // small or data-only tasks (inline: true) skip the check agent: the main session checks them inline (the user, 2026-09-24)
+  if (t.inline) { out.result = 'built; inline check by the main session, then merge'; return out }
   if (a.from === 'fix') { out.fixes = [await fix(t, a.issues, round)]; out.result = 'fixed; ready to merge (leftovers in the fix report)'; return out }
   for (;;) {
     const v = await verify(t, round)
