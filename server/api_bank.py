@@ -227,7 +227,9 @@ def log_mistake(body: MistakeLog, x_learner: str | None = Header(default=None)) 
     if body.reason and progress.norm(body.reason) not in entry["reasons"]:
         raise HTTPException(422, {"field": "reason", "reason": "not offered by this type"})
     today = dt.datetime.now(dt.timezone.utc).date().isoformat()
-    n = db.one("SELECT COUNT(*) n FROM trap_log WHERE learner=? AND event IN ('open','miss') AND at>=?",
+    # outside logs only: in-app misses always carry their attempt id
+    n = db.one("SELECT COUNT(*) n FROM (SELECT DISTINCT template,norm,at FROM trap_log WHERE learner=?"
+               " AND attempt IS NULL AND event IN ('open','miss','reopened','relapse') AND at>=?)",
                learner, today)["n"]
     if n >= 30:
         raise HTTPException(429, {"reason": "outside_mistake_limit"})

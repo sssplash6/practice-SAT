@@ -110,6 +110,59 @@ def trap_true_checks(client):
         client.post(f"/api/drill/{fix['id']}/next", headers={"X-Learner": unnamed}).raise_for_status()
 
 
+def answer_all(client, sid, learner, miss=lambda i: False, limit=40):
+    """Answer until done (a named wrong pick where miss(i)); every /next must be 200."""
+    headers = {"X-Learner": learner}
+    for i in range(limit):
+        q = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", sid)["questions"])[-1]
+        if q["type"] == "mcq":
+            right = "ABCD".index(q["answer"])
+            wrong = next((k for k, r in enumerate(q["reasons"]) if r and k != right), (right + 1) % 4)
+        else:
+            right, wrong = q["answer"], "-99999"
+        client.post(f"/api/drill/{sid}/answer", headers=headers,
+                    json={"question_id": q["id"], "answer": wrong if miss(i) else right}).raise_for_status()
+        nxt = client.post(f"/api/drill/{sid}/next", headers=headers)
+        assert nxt.status_code == 200, (i, nxt.text)
+        if nxt.json().get("done"):
+            return i + 1, nxt.json()
+    raise AssertionError("never finished")
+
+
+def fallback_checks(client):
+    # R33: an adaptive set with a named miss keeps going through its repair.
+    start = request(client, {"source": "start"}, learner="a:f5start")
+    n, done = answer_all(client, start["id"], "a:f5start", miss=lambda i: i == 0)
+    assert n == 9 and not done.get("exhausted"), (n, done)
+    # A step up to a tier the only template lacks never empties the pool.
+    up = request(client, {"templates": ["lin.evaluate"], "adaptive": True, "count": 8}, learner="a:f5up")
+    n, done = answer_all(client, up["id"], "a:f5up")
+    assert n == 8 and not done.get("exhausted"), (n, done)
+    # G3 rule 3: a named trap its template no longer offers → the plain seed.
+    stale = question("lin.evaluate", 5)
+    gone = "read the graph of a different function"
+    assert progress.named(progress.norm(gone)) and progress.norm(gone) not in blueprint.kinds()["lin.evaluate"]["reasons"]
+    progress.record_trap("a:f5stale", stale, gone, progress.now())
+    fix = request(client, {"mistakes": True}, learner="a:f5stale")
+    assert fix["question"]["trap_true"] is False
+    # A client want is a norm, never a regex that runs (ReDoS).
+    request(client, {"templates": ["pct.change"], "want": {"pct.change": "^(\\w+\\s?)*!$"}}, expect=422)
+    # The builder names the empty format; nothing is created for it.
+    before = db.one("SELECT COUNT(*) n FROM sessions")["n"]
+    body = {"topics": ["evaluating_statistical_claims"], "formats": ["spr"]}
+    assert "grid-in" in request(client, body, preview=True)["reason"]
+    request(client, body, expect=409)
+    assert db.one("SELECT COUNT(*) n FROM sessions")["n"] == before
+    # Only outside logs count toward the 30-a-day limit.
+    busy = "a:f5busy"
+    for seed in range(31):
+        progress.record_trap(busy, question("lin.evaluate", seed), f"reason {seed}", progress.now(),
+                             attempt=seed + 1)
+    logged = client.post("/api/mistakes/log", headers={"X-Learner": busy},
+                         json={"template": "lin.evaluate", "origin": "book"})
+    assert logged.status_code == 200, logged.text
+
+
 def checks(client):
     learner = "a:f5pool"
     q, trap, check = fixtures()
@@ -224,6 +277,7 @@ def checks(client):
     assert client.post("/api/mistakes/log", headers={"X-Learner": "a:f5outside"},
                        json={"template": "bad.template"}).status_code == 422
     trap_true_checks(client)
+    fallback_checks(client)
 
 
 def check(client):

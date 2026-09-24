@@ -117,6 +117,17 @@ def _pairs(value, field) -> list[list]:
     return [list(p) for p in rows]
 
 
+# A client's want is a mistake's norm, bare or as '^escaped$'. Only literal text
+# is accepted and the regex is rebuilt here, so no client pattern ever runs
+# (a nested quantifier would hold the GIL and stall the whole server).
+_LITERAL = re.compile(r"\^?((?:\\\W|[^\\.^$*+?{}\[\]()|])+)\$?", re.S)
+
+
+def want_regex(value) -> str | None:
+    m = _LITERAL.fullmatch(value) if isinstance(value, str) and len(value) <= 500 else None
+    return "^" + re.escape(re.sub(r"\\(\W)", r"\1", m[1])) + "$" if m else None
+
+
 def _source_questions(learner: str, sid: str) -> list[dict]:
     row = db.one("SELECT * FROM sessions WHERE id=?", sid)
     if not row or row["learner"] != learner:
@@ -428,14 +439,12 @@ def resolve(learner: str, body: dict) -> dict:
         formats = ["spr"]
     want = body.get("want", {})
     if not isinstance(want, dict):
-        _invalid("want", "expected {template: regex}")
-    for t, pattern in want.items():
-        if t not in {n for v in cat["by_topic"].values() for n in v} or not isinstance(pattern, str) or len(pattern) > 500:
-            _invalid("want", "unknown template or invalid regex")
-        try:
-            re.compile(pattern)
-        except re.error:
-            _invalid("want", "invalid regex")
+        _invalid("want", "expected {template: norm}")
+    names = {n for v in cat["by_topic"].values() for n in v}
+    for t, pattern in list(want.items()):
+        want[t] = want_regex(pattern)
+        if t not in names or want[t] is None:
+            _invalid("want", "unknown template, or not a mistake's norm ('^' + re.escape(norm) + '$')")
     exclude = _pairs(body.get("exclude", []), "exclude")
     for name, options in (("level", {"as_missed", "any", "harder"}),
                           ("result", {"any", "missed", "right", "guessed"}),
@@ -527,14 +536,19 @@ def resolve(learner: str, body: dict) -> dict:
     if not any(deps.subject_of(topic_of(t)) == subject for t in selected):
         _empty("no_bank")
     rated = levels()
-    selected = [t for t in selected if any(
-        d in cfg["tiers"] and f in cfg["formats"] and
-        rated.get((t, d), {}).get("level") in cfg["levels"] and
-        (cfg["unmeasured"] or not rated.get((t, d), {}).get("rough", True))
-        for d, f in blueprint.abilities().get(t, ()))]
-    if not selected:
+
+    def fits(t, formats):
+        return any(d in cfg["tiers"] and f in formats and
+                   rated.get((t, d), {}).get("level") in cfg["levels"] and
+                   (cfg["unmeasured"] or not rated.get((t, d), {}).get("rough", True))
+                   for d, f in blueprint.abilities().get(t, ()))
+    kept = [t for t in selected if fits(t, cfg["formats"])]
+    if not kept:
+        if any(fits(t, ("mcq", "spr")) for t in selected):     # the format alone emptied it
+            _empty("no_grid-in_questions" if cfg["formats"] == ["spr"] else "no_multiple-choice_questions")
         _empty("level " + ", ".join(map(str, cfg["levels"])) + " unavailable"
                if body.get("levels") else "filters_removed_all")
+    selected = kept
     if not cfg["topics"]:
         cfg["topics"] = list(dict.fromkeys(topic_of(t) for t in selected))
     cfg["before"] = {t: progress.topic_mastery(learner, t) for t in {topic_of(t) for t in selected}}
@@ -663,11 +677,16 @@ def _fresh(b: practice.Builder, template: str, allowed: set[str] | None,
     cfg = cfg or {}
     topic = topic_of(template)
     wanted = cfg.get("want", {}).get(template)
-    fallback = None
+    fallback = stepped = False
     survey = levels() if cfg.get("levels") else {}
-    # A named repair or fix may not quietly become a plain question: F4 only
-    # lowers owed when the actual served form offers that norm. Ordinary want
-    # requests retain the 60-seed fallback and trap_true=False contract.
+    formats = cfg.get("formats", ("mcq", "spr"))
+    states = cfg.get("adaptive_state") or {}
+    # R33's tier, clamped to what this template can serve under these filters
+    reachable = [d for d in TIERS if (not allowed or d in allowed) and any(
+        t == d and (f in formats or required_norm or prefer_mcq) for t, f in blueprint.abilities().get(template, ()))]
+    # A named repair or fix walks further for a served form that offers its norm
+    # (F4 only lowers owed then); failing that, the plain seed with trap_true
+    # False, as for any want (G3 rule 3), so a set never stops on it.
     for _ in range(600 if required_norm else 60 if wanted else 24):
         card = b.draw(template, topic)
         if card is None:
@@ -686,16 +705,18 @@ def _fresh(b: practice.Builder, template: str, allowed: set[str] | None,
             card = alternate
         tier = card.feats["difficulty"]
         measured = survey.get((template, tier), {})
-        if allowed and tier not in allowed or (card.item.fmt not in cfg.get("formats", ("mcq", "spr"))
+        if allowed and tier not in allowed or (card.item.fmt not in formats
                                                   and not (required_norm or prefer_mcq)) \
                 or (cfg.get("levels") and measured.get("level") not in cfg["levels"]) \
                 or (cfg.get("unmeasured") is False and measured.get("rough", True)) \
                 or [template, card.seed] in cfg.get("exclude", ()):
             b.keep(card)
             continue
-        adaptive = cfg.get("adaptive_state", {}).get(card.item.skill)
-        if adaptive and tier != adaptive.get("tier"):
+        state = states.get(card.item.skill)
+        if state and reachable and tier != min(
+                reachable, key=lambda d: abs(TIERS.index(d) - TIERS.index(state["tier"]))):
             b.keep(card)
+            stepped = True
             continue
         if wanted and not _offers(card, wanted):
             b.keep(card)
@@ -703,12 +724,16 @@ def _fresh(b: practice.Builder, template: str, allowed: set[str] | None,
             continue
         card.trap_true = bool(wanted)
         return card
-    if wanted and fallback and not required_norm:
+    if (wanted or required_norm) and fallback:
+        # G3 rule 3: nothing offered the trap, so the plain next seed, trap_true false
         plain = {**cfg, "want": {t: v for t, v in cfg.get("want", {}).items() if t != template}}
-        card = _fresh(b, template, allowed, plain)
+        card = _fresh(b, template, allowed, plain, prefer_mcq=prefer_mcq)
         if card:
             card.trap_true = False
         return card
+    if stepped:                     # the adaptive tier never empties the pool
+        return _fresh(b, template, allowed, {**cfg, "adaptive_state": {}},
+                      required_norm=required_norm, prefer_mcq=prefer_mcq)
     return None
 
 
@@ -734,13 +759,11 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
         target_want = {t: v for t, v in cfg.get("want", {}).items() if t != rep_key}
         if want:
             target_want[rep_key] = want
-        target = {**cfg, "want": target_want}
+        target = {**cfg, "want": target_want, "adaptive_state": {}}
         card = _fresh(b, rep_key, None, target, required_norm=norm,
                       prefer_mcq=not norm)
         if card:
             return card, True
-        if norm:
-            _empty("named_mistake_unavailable")
 
     # a saved question, served again exactly
     while cfg.get("items"):
@@ -764,12 +787,12 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
         if norm:
             target_want[template] = "^" + re.escape(norm) + "$"
         target_cfg = {**cfg, "want": target_want}
+        if target:
+            target_cfg["adaptive_state"] = {}
         card = _fresh(b, template, allowed, target_cfg, required_norm=norm,
                       prefer_mcq=bool(target and not norm))
         if card:
             return card, cfg.get("pool") in ("redo", "checks")
-        if norm:
-            _empty("named_mistake_unavailable")
 
     # An endless mistakes set keeps working on its open traps after the
     # initial queue; each named question still has to offer its target.
@@ -779,12 +802,10 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
             target_want = {t: v for t, v in cfg.get("want", {}).items() if t != trap["template"]}
             if norm:
                 target_want[trap["template"]] = "^" + re.escape(norm) + "$"
-            card = _fresh(b, trap["template"], allowed, {**cfg, "want": target_want},
+            card = _fresh(b, trap["template"], allowed, {**cfg, "want": target_want, "adaptive_state": {}},
                           required_norm=norm, prefer_mcq=not norm)
             if card:
                 return card, False
-            if norm:
-                _empty("named_mistake_unavailable")
 
     if cfg.get("source") == "start" and len(served) < 4:
         domain = ("Algebra", "Advanced Math", "Problem-Solving and Data Analysis",
@@ -815,6 +836,11 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
             index = min(len(served) * len(allowed) // max(cfg.get("count") or 10, 1), len(allowed) - 1)
             target = sorted(allowed, key=TIERS.index)[index]
             pool = [t for t in pool if target in _tiers_of(t)] or pool
+        states = cfg.get("adaptive_state") or {}
+        if states:          # R33: a skill stepped past a template's tiers moves to one that has it
+            kinds = blueprint.kinds()
+            pool = [t for t in pool if kinds[t]["skill"] not in states
+                    or states[kinds[t]["skill"]]["tier"] in _tiers_of(t)] or pool
 
         # an open mistake in this topic is asked before anything new
         for trap in progress.open_traps(learner, topic):
@@ -895,6 +921,16 @@ def create(learner: str, sid: str | dict, topics: list[str] | None = None,
         db.run("INSERT INTO sessions (id,kind,learner,started,cfg,questions,subject)"
                " VALUES (?,?,?,?,?,'[]',?)", new_sid, "drill", learner, progress.now(),
                json.dumps(cfg), cfg["subject"])
+        # the first question is served here, so a set that cannot serve one
+        # leaves no empty sitting behind (§2.6)
+        try:
+            first = next_question(db.one("SELECT * FROM sessions WHERE id=?", new_sid))
+        except BaseException:
+            db.run("DELETE FROM sessions WHERE id=?", new_sid)
+            raise
+        if not first.get("question"):
+            db.run("DELETE FROM sessions WHERE id=?", new_sid)
+            _empty("pool_empty")
         return new_sid
     topics = topics or []
     every = set(topics) | {topic_of(t) for t in (queue or [])} | {topic_of(t) for t, _ in (items or [])}
@@ -1001,7 +1037,12 @@ def answer(row, qid: str, given, ms: int | None) -> dict:
     # one repair per question: a missed repair stays an open mistake for later,
     # or a student who keeps missing would never reach the end of the set
     if cfg.get("adaptive") and not q.get("repair"):
-        options = [t for t in TIERS if t in cfg.get("tiers", TIERS)]
+        # R33 steps within the selected tiers this skill actually has here
+        names = cfg.get("templates") or [t for topic in cfg.get("topics", ())
+                                         for t in practice.catalogue()["by_topic"].get(topic, ())]
+        have = _tiers_of(q["key"]).union(*(_tiers_of(t) for t in names
+                                           if blueprint.kinds().get(t, {}).get("skill") == q["skill"]))
+        options = [t for t in TIERS if t in cfg.get("tiers", TIERS) and t in have] or [q["difficulty"]]
         state = cfg.setdefault("adaptive_state", {}).setdefault(q["skill"],
                    {"tier": q["difficulty"], "rights": 0})
         current = state["tier"] if state["tier"] in options else q["difficulty"]
