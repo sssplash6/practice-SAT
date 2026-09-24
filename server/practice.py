@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import functools
 import hashlib
+import json
 import logging
 import re
 import zlib
@@ -130,6 +131,12 @@ def stem_hash(stem: str) -> str:
     return hashlib.sha1(stem.encode("utf-8")).hexdigest()[:16]
 
 
+def question_hash(item) -> str:
+    """Identity of the whole rendered question, including a figure's numbers."""
+    data = (item.stem, list(item.choices), item.figure, item.table)
+    return hashlib.sha1(json.dumps(data, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
+
+
 # ------------------------------------------------------------------ ordering
 
 def interleave(basket: dict[str, int]) -> list[str]:
@@ -172,10 +179,14 @@ def penalty(card: Card, recent: list[Card], used: dict[str, int]) -> float:
 class Builder:
     """Holds the walk through the seed space for one learner."""
 
-    def __init__(self, learner: str, seen: set[tuple[str, int]], seen_stems: set[str]):
+    def __init__(self, learner: str, seen: set[tuple[str, int]], seen_stems: set[str],
+                 dedupe: str = "stem"):
         self.learner = learner
         self.seen = set(seen)
         self.seen_stems = set(seen_stems)
+        if dedupe not in ("stem", "question"):
+            raise ValueError("dedupe is stem or question")
+        self.dedupe = dedupe
         self.cursor: dict[str, int] = {}
         # Seven templates are offered per slot and one is taken, so six items
         # were generated to be thrown away. Held here instead, they are the
@@ -222,8 +233,9 @@ class Builder:
             except Exception:
                 log.exception("template %s failed at seed %d", key, seed)
                 return None
-            if stem_hash(item.stem) in self.seen_stems:
-                continue                      # distinct seeds, same question
+            signature = question_hash(item) if self.dedupe == "question" else stem_hash(item.stem)
+            if signature in self.seen_stems:
+                continue
             self.cursor[key] = k
             return Card.of(key, seed, item, topic)
         self.cursor[key] = k
@@ -231,7 +243,8 @@ class Builder:
 
     def keep(self, card: Card) -> None:
         self.seen.add((card.key, card.seed))
-        self.seen_stems.add(stem_hash(card.item.stem))
+        self.seen_stems.add(question_hash(card.item) if self.dedupe == "question"
+                            else stem_hash(card.item.stem))
         self.stash.pop(card.key, None)
 
 
