@@ -1,0 +1,254 @@
+{
+ "plural": {
+  "check": "1_plural",
+  "total": 15,
+  "real_count": 15,
+  "real": [
+   {
+    "template": "le2.context_substitute",
+    "seeds": "29 (also 97, 110, 125, 230, 259)",
+    "what": "The rationale opens with \"1 hours at 65 miles per hour covers 65 miles\". The drive context (CONTEXT #2) hard-codes \"hours\" in its why-string, even though the function already computes hr = \"hour\" if g == 1 else \"hours\" and passes it to why.format.",
+    "fix": "satbank/topics/linear_equations_in_two_variables/families/solve.py:297: change why=\"{given} hours at {a} miles per hour...\" to why=\"{given} {hr} at {a} miles per hour...\". Optionally reword it so the sentence does not start with a numeral, e.g. \"Driving {given} {hr} at ...\"."
+   },
+   {
+    "template": "nlfunc.quad_feature",
+    "seeds": "25 (also 92, 190, 213, 245, 283)",
+    "what": "In vertex mode, k is drawn with rng.randint(1, 9). When k = 1, the key option, the start_k distractor and the rationale all print \"1 inches\" (\"minimum height was 1 inches above the ground\", \"least height is 1 inches\"). The lint only caught the rationale, because it does not scan options.",
+    "fix": "satbank/topics/nonlinear_functions/families/interpret.py:507-531 (vertex mode): build the unit word once, inch_k = \"inch\" if k == 1 else \"inches\", and use it in the key (line 515), the start_k option (line 521) and the why-string (line 530). h is 2-9, so the h-based strings are fine. The lazier fix is k = rng.randint(2, 9), but that changes every seed's output."
+   },
+   {
+    "template": "prob.freq_grouped",
+    "seeds": "12, 38, 40 (also 54, 87, 137, 158, 160, 185, 196, 255, 257, 286)",
+    "what": "The \"band\" distractor reason reads \"divided by the 1 students/presidents/trees below 60 ...\". The band count sum(counts[cut:cut2]) can be 1 because counts are randint(1, 15), and the reason always uses the plural `units`. It appears in MCQ reasons and in grid-in reasons.",
+    "fix": "satbank/topics/probability/families/freq.py:219-221: set band = sum(counts[cut:cut2]) and use f\"divided by the {band:,} {unit if band == 1 else units} below {b} ...\". The singular `unit` is already unpacked from GROUPED at line 193. The other counts (den, N) are always 2 or more."
+   },
+   {
+    "template": "rr.growth_table",
+    "seeds": "33 (also 71, 180, 222)",
+    "what": "The rationale says \"the american elm gains 4 ÷ 4 = 1 inches in 4 years\" when years equals the growth factor. It also has a second, off-check flaw: fast.lower() and slow.lower() lowercase the proper adjective, printing \"american elm\" in both the stem (through _an) and the rationale.",
+    "fix": "satbank/topics/ratios_rates_proportions_and_units/families/rates.py:655-657: change the unit to f\"{'inch' if years == gf else 'inches'} in {years} years\". Separately, stop lowercasing proper nouns in _an() and the rationale, e.g. a helper _common(n) that returns n if n.startswith(\"American\") else n.lower()."
+   },
+   {
+    "template": "rr.mix_statement",
+    "seeds": "14, 22, 28, 32, 36, 48 (also 67, 74, 79, 102, 108, 112, 121, 143, 146, ...)",
+    "what": "When |again - first| == 1, the \"kept the difference\" distractor prints \"1 ounces/grams/kilograms\" twice: in its reason (\"changed by 1 ounces\") and in the option shown to students (\"1 ounces less than the amount of red paint ...\"). The same reason also has an agreement error, \"so the peanuts was changed by 1 too\" (two = \"peanuts\").",
+    "fix": "satbank/topics/ratios_rates_proportions_and_units/families/ratios.py:486-493: set u = unit[:-1] if abs(again - first) == 1 else unit (ounces, grams and kilograms all singularize by dropping the s) and use {grew} {u} in both the reason and the option string. Reword the tail to f\"so the {two} changed by {grew} too\", which avoids was/were."
+   },
+   {
+    "template": "sstat.interpret_mean",
+    "seeds": "41 (also 102, 141, 176, 177, 192; the hours scene at 131, 158, 197, 225, 233, 245, 299)",
+    "what": "The stem reads \"margin of error of 1 miles\" or \"margin of error of 1 hours\". Scene.one() always appends the plural unit.",
+    "fix": "satbank/topics/sample_statistics_and_margin_of_error/world.py:78-79: Scene.one becomes s = self.num(v); u = self.unit[:-1] if s == \"1\" and self.unit in (\" miles\", \" hours\") else self.unit; return s + u. pair() is unaffected: its only unit follows hi, and hi is always above 1."
+   },
+   {
+    "template": "sys.purchase_solve",
+    "seeds": "27, 44 (also 139, 142, 282)",
+    "what": "The coins scene prints \"each dime is worth 1 cents\". The deeper flaw is that the coins scene draws random coin values: p = randint(2, 20) and q = randint(1, 20) give \"Each nickel is worth 18 cents and each dime is worth 1 cents\", which is false about real coins. A student sees nonsense even when the plural is right.",
+    "fix": "satbank/topics/systems_of_linear_equations/families/context.py:50-54 and 83-87: pin the real values. Change `fixed` from a flag to the pair, trivia fixed=(2, -1) and coins fixed=(5, 10), and in purchase_solve write `if d.get(\"fixed\"): p, qq = map(Q, d[\"fixed\"])`. With 5 and 10 cents, the \"1 cents\" case cannot occur."
+   },
+   {
+    "template": "lat.shadow",
+    "seeds": "3, 22, 36, 37, 47 (also 53, 77, 87, 103, 109, ...)",
+    "what": "This one was MISSED by the current lint. The stem says \"the shadow of the other tree is 1 feet long\". PLURAL only matches words ending in s, so the irregular plural \"feet\" is never checked.",
+    "fix": "satbank/topics/lines_angles_and_triangles/families/similar.py:273 and 281: write {s2} {'foot' if s2 == 1 else 'feet'} long (same for s1 and h1 if they can be 1)."
+   },
+   {
+    "template": "nlfunc.interpret_value",
+    "seeds": "16 (also 63, 73, 120, 145, 201, 207, 222, 249, 281)",
+    "what": "This one was MISSED by the current lint, which does not scan options. When t = 1, the KEY option reads \"The height of the object 1 seconds after being thrown ... is 16 feet.\" The \"speed\" distractor also has \"1 seconds\", and the swap distractor has \"is 1 feet\". The \"times\" distractor's \"approximately 1 times as great\" is grammatical but reads oddly.",
+    "fix": "satbank/topics/nonlinear_functions/families/interpret.py:91-100: pass singular-aware words into the templates, e.g. {t} {sec_t} and {v} {ft_v}, where sec_t = 'second' if t == 1 else 'seconds' and ft_v = 'foot' if v == 1 else 'feet'. Apply the same to the swap and times keys."
+   },
+   {
+    "template": "circles.arc / circles.arc_pair",
+    "seeds": "arc 64, 213, 218, 291; arc_pair 186, 267 (all past seed 49)",
+    "what": "The stem says \"length of arc MN is 1 centimeters\", \"length of 1 inches\" or \"length of 1 feet\".",
+    "fix": "satbank/topics/circles/families/arc.py:33-43: make _amount use unit.noun when text == \"1\", e.g. f\" {unit.noun if text == '1' else unit.many()}\". shapes.Unit already carries the singular noun."
+   },
+   {
+    "template": "ineq.model_one_var",
+    "seeds": "97, 110, 125, 152, 157, 259 (past seed 49)",
+    "what": "The rationale says \"A ticket before the event costs 1 dollars more than one during it\".",
+    "fix": "satbank/topics/linear_inequalities/families/model.py:263: write {'dollar' if gap == 1 else 'dollars'}, or use kit.plural(gap, 'dollar')."
+   },
+   {
+    "template": "le2.graph_combinations / lin1.context_solve / nlfunc.quad_fit / rr.dimension_shift",
+    "seeds": "graph_combinations 159; context_solve 260; quad_fit 55, 247, 293; dimension_shift 282 (all past seed 49)",
+    "what": "graph_combinations: \"uses up 1 pounds' worth\". context_solve: \"an average of 1 centimeters per day\". quad_fit: \"at 1 seconds\". dimension_shift: the rationale has \"= 1 units in the length\" and the key option is \"It must decrease by 1 units.\", and the upside-down distractor can print 1 too.",
+    "fix": "Choose the singular when the printed value is 1: graphs.py:178 {used} pound(s)'; linear_equations_in_one_variable/families/context.py:104 centimeter(s); quad_fit's seconds string; ratios.py:418-440 a local u(v) = 'unit' if v == 1 else 'units' for size, change and change/ratio. Root-cause option: move le2 common.plural(n, one, many) into satbank/item.py and have every template use it (4 topic-local copies already exist)."
+   }
+  ],
+  "false_positives": "None of the 15 findings in tools/lint_bank.out.txt is a false positive. Every one is a real \\\"1 <plural>\\\" that a student sees. Scanning seeds 0-299, with options included, turned up these latent false-positive patterns, which the lint will hit once options are scanned or more seeds are run. (1) The 1 is the last term of an expression, so the plural is correct: rtt.cofunction_angles \\\"the measure of angle N is x + 1 degrees\\\" (seeds 134, 178, 184). (2) The 1 is the subject of a verb missing from PLURAL_EXCEPTIONS: circles.equation_read \\\"= 1 defines a circle\\\" (170), nleq.radical_equation \\\"only x = −1 satisfies\\\" (218, 222), ovd.freq_choose \\\"1 appears 3 times\\\" (249). (3) The multiplier \\\"1 times as great\\\" (nlfunc.interpret_value options), which is acceptable math English. The existing exceptions already absorb hundreds of \\\"1 is / 1 as / 1 costs / 1 gives\\\" hits. The lint also has false NEGATIVES. It skips options, so it missed the flawed KEY of nlfunc.interpret_value (seed 16) and only caught quad_feature and mix_statement through their rationales and reasons. Its \\\\w*s pattern skips irregular plurals, so it missed lat.shadow \\\"1 feet long\\\" at seeds 3, 22, 36, 37 and 47. And range(50) hides eight more flawed templates that first appear past seed 49.",
+  "lint_fix": "tools/lint_bank.py, three edits.\n(1) Line 37:\nPLURAL = re.compile(r\\\"(?<![\\\\d.−-])(?<![+−-]\\\\s)\\\\b1\\\\s+([a-z][a-z-]*s|feet|people|children|men|women)\\\\b\\\", re.I)\nThe added lookbehinds skip a 1 that is negative (\\\"−1 degrees\\\") or the last term of a sum or difference (\\\"x + 1 degrees\\\"). \\\"= 1 inches\\\" and \\\"× 2 = 1 units\\\" still match. The alternation adds the irregular plurals.\n(2) PLURAL_EXCEPTIONS: add \\\"appears\\\", \\\"defines\\\", \\\"satisfies\\\", \\\"times\\\".\n(3) In scan(), after the grid-in line: grammar_parts.extend((f\\\"option {i + 1}\\\", o) for i, o in enumerate(item.choices)). Leave table rows out: joining cells with spaces can create false \\\"1 <word>s\\\" pairs, and the scan found no table hits.\nVerified from a scratch copy (repo untouched). At seeds 0-49 the tightened check keeps all 15 current findings and adds lat.shadow (3, 22, 36, 37, 47) and nlfunc.interpret_value (16), with 0 false positives. At seeds 0-299 it reports 20 templates, all real, with 0 false positives; every false positive above is gone. Optional: range(50) -> range(300) in main() for this check, which surfaces circles.arc, circles.arc_pair, ineq.model_one_var, le2.graph_combinations, lin1.context_solve, nlfunc.quad_fit, rr.dimension_shift and the hours scene of sstat.interpret_mean."
+ },
+ "generation": {
+  "check": "generation_error: 55 findings (rows) across 11 templates. Here `total` counts rows and `real_count` counts templates. All 55 are the same ItemError, \"no valid item after 60 attempts\". None comes from a forced format: the lint calls generate(name, seed) with no kwargs, each of these templates uses `seed` only as a label, and every format choice is drawn per attempt. Every flagged seed generates once it gets more attempts: all of them at attempts=200, except nearest_row seeds 5, 14 and 25, which needed 1000. So no seed is truly dead. The cause is rejection sampling. Each template draws its parameters independently over ranges where only 1.7 to 7.8% of draws pass its own validity rules, so P(all 60 draws fail) is between 0.8% and 35%. That matches the observed failure counts. Students never see an error, because server/practice.py:219, drill.py and daily.py catch ItemError and move to the next seed. The cost is wasted draws (worst case 41 ms for nearest_row) and seeds that silently vanish. lat.shadow is worse: half its draws are spent on a branch that can never pass with default settings, so its closest-to variant is never served.",
+  "total": 55,
+  "real_count": 11,
+  "real": [
+   {
+    "template": "lat.shadow (satbank/topics/lines_angles_and_triangles/families/similar.py:221)",
+    "seeds": "10, 32, 35, 39",
+    "what": "3.7% of draws pass. (1) story is drawn 50/50 as 'monument' or 'trees', but closest defaults to False and the monument story raises 'that story only makes sense as a closest-to item'. So the registry never serves the closest-to variant (0 of 300 seeds), which is the format of College Board item 1.5. (2) In the trees story, h1 in [6,40], s1 in [2,20] and s2 in [1,19] are drawn independently. s2 >= s1 in 24% of draws, and h1*s2/s1 is not a whole number in 64%. Turning the monument branch on as it stands exposes latent bugs. 3% of those draws round to a key of 0 ft (check_shadow raises 'key points at 0'). A 'utility pole' can be 450 ft tall. The rationale prints h = 1125/19.",
+    "fix": "Trees: `s1 = s1 or rng.randrange(2, 21); s2 = s2 or rng.randrange(1, s1); g = s1 // math.gcd(s1, s2); h1 = h1 or g * rng.randrange(-(-6 // g), 40 // g + 1)`, so h1*s2/s1 is always whole. Monument: set `closest = closest or story == 'monument'`, add `if closest and exact < 2 * step: raise ItemError(...)`, and cap h1 for the short TALL objects (or drop the utility pole). Measured: 98.9% of draws pass, and audit passes. If the variant isn't wanted, the lazy alternative is `story = story or 'trees'`, since sources.py passes story='monument' explicitly."
+   },
+   {
+    "template": "lat.vertical_similar (similar.py:510)",
+    "seeds": "4, 6, 9, 22, 30, 38",
+    "what": "3.0% of draws pass. wx is drawn from [20,160] without regard to wq and xq, so 35% of draws fail the triangle inequality. yq is drawn from [20,120] without regard to the others, so in 62% of draws YZ = wx*yq/wq or ZQ = xq*yq/wq has a denominator above 4.",
+    "fix": "`wx = wx or rng.randrange(max(20, abs(wq - xq) + 1), min(161, wq + xq))`; `yq = yq or rng.choice([y for y in range(20, 121) if Q(xq*y, wq).denominator <= 4 and Q(wx*y, wq).denominator <= 4])`. Measured 88.8% pass. What still fails is figure-label collisions, which is fine."
+   },
+   {
+    "template": "nleq.product_roots_constant (satbank/topics/nonlinear_equations_and_systems/families/solve.py:1298)",
+    "seeds": "2, 8, 20, 32, 33, 39, 43, 49",
+    "what": "2.6% of draws pass. For the last factor wx^2 - sx + 6p to split, s^2 - 24wp must be a positive perfect square. Only 47 of the 1,440 triples (w in 1..5, s in the 12-value list, p in 1..24) do this. 97% of draws die at 'the last factor has no two printable roots'.",
+    "fix": "Build a module-level `LAST = [(w, s, p) for w in (1,2,3,4,5) for s in (6,8,9,10,12,14,15,16,18,20,21,24) for p in range(1, 25) if (r := _roots(w, -s, 6 * p)) and len(r) == 2]`. When p, w and s are all None and t == 6, draw `w, s, p = rng.choice(LAST)`. Measured 85% pass. The rest fail on 'two factors share a root', which is correct."
+   },
+   {
+    "template": "nleq.rational_combine (solve.py:1238)",
+    "seeds": "5",
+    "what": "4.9% of draws pass. The cleared quadratic (A-B)x^2 + (Bh-C)x - Ch has x = -h as a root only when A = 2B, and x = h only when Ah = 2C. A in [2,14] and B in [1,12] are drawn independently, so 83% of draws have irrational roots and 4% have no excluded root.",
+    "fix": "`B = rng.randint(1, 7) if B is None else q(B); A = 2 * B if A is None else q(A)`. The quadratic then factors as (x + h)(Bx - C), with roots -h and C/B, the same shape as source 3.19 (A=4, B=2). Measured 94.6% pass."
+   },
+   {
+    "template": "nleq.rational_quadratic (solve.py:1156)",
+    "seeds": "11, 17, 22, 39, 40",
+    "what": "5.0% of draws pass. In shape 'cross', x^2 + bx - n needs b^2 + 4n to be a perfect square, and b in [-12,12] with n in [2,300] drawn independently gives one only 5% of the time. Also, shape defaults to 'cross', so the 1/(x+h)^2 = k shape (source 3.3) is never drawn, although it passes 100% of the time when forced.",
+    "fix": "Draw the roots instead: `r1, r2 = rng.randint(1, 20), -rng.randint(1, 20); b, n = -(r1 + r2), -r1 * r2`, rejecting only when |b| > 12 or n is outside [2, 300]. Measured 100% pass. Also set `shape = shape or rng.choice(['cross', 'square'])` so the second shape is reachable."
+   },
+   {
+    "template": "nleq.sum_product (satbank/topics/nonlinear_equations_and_systems/families/system.py:713)",
+    "seeds": "13, 33, 40",
+    "what": "4.1% of draws pass. total in [5,30] and product in [4,200] are drawn independently. In 57% of draws product >= total^2/4, so no real pair exists. In 39% the discriminant is not a perfect square.",
+    "fix": "Draw the two numbers: `lo, hi = sorted(rng.sample(range(1, 30), 2))`, keep only 5 <= lo+hi <= 30 and 4 <= lo*hi <= 200, then set total = lo + hi and product = lo * hi. Measured 100% pass."
+   },
+   {
+    "template": "prob.two_way.nearest_row (satbank/topics/probability/families/derived.py:220)",
+    "seeds": "0, 3, 4, 5, 12, 14, 23, 25, 26, 30, 33, 36, 39, 46",
+    "what": "1.7% of draws pass, the worst of the 11: 35% of seeds use up all 60 draws. setup() picks from all 22 TWO_WAY scenarios, but only 3 (grove, penguins, sports) have 4 or more rows. So 86% of draws die at 'this question needs four rows to make four options'.",
+    "fix": "Before setup, add `scenario = scenario or rng.choice([k for k in sorted(TWO_WAY) if len(ctx(k).rows) >= 4])`. Measured 11.5% pass. The remaining rejections are the item's own clear-winner rule, and P(a seed uses up 60 draws) falls from 35% to 0.07%."
+   },
+   {
+    "template": "rr.table_unit_price (satbank/topics/ratios_rates_proportions_and_units/families/rates.py:697)",
+    "seeds": "18, 22",
+    "what": "4.2% of draws pass. a1, a2 in [2,19] and c1, c2 in [5,98] cents are drawn independently, so in 94% of draws the reduced ratio (c1*a2)/(c2*a1) has a term above 12 ('a ratio this unwieldy').",
+    "fix": "Draw a1, a2 and c2, then pick c1 from the prices that work: `ok = [c for c in range(5, 99) if (r := Q(c * a2, c2 * a1)) != 1 and max(r.numerator, r.denominator) <= 12]`, raise ItemError if ok is empty, then `c1 = Q(rng.choice(ok), 100)`. Measured 46% pass."
+   },
+   {
+    "template": "rtt.parallel_similar (satbank/topics/right_triangles_and_trigonometry/families/composite.py:192)",
+    "seeds": "3, 4, 15, 17, 26, 30, 37, 38, 47",
+    "what": "2.0% of draws pass. The docstring says the legs are a Pythagorean pair, but m and n are drawn independently from [2,40], and only 38 of the 1,521 pairs have a whole hypotenuse. 97% of draws die at 'the small triangle's hypotenuse is not a whole number'.",
+    "fix": "Build a module-level `PAIRS = [(m, n) for m in range(2, 41) for n in range(2, 41) if math.isqrt(m*m + n*n) ** 2 == m*m + n*n]`. When base and height are None, draw `m, n = rng.choice(PAIRS)`. Measured 76.7% pass. The rest fail on shape and label-collision guards."
+   },
+   {
+    "template": "sstat.count_claim (satbank/topics/sample_statistics_and_margin_of_error/families/interpret.py:303)",
+    "seeds": "25",
+    "what": "7.8% of draws pass. size is drawn in steps of 100 without regard to n and k: in 45% of draws size*k/n is not whole, and in 47% size/k is not whole.",
+    "fix": "After drawing n and k: `sizes = [z for z in range(s0, s1 + 1, sstep) if z * k % n == 0 and z % k == 0 and z // k != z * k // n]`, raise ItemError if sizes is empty, then `size = rng.choice(sizes)`. Measured 47% pass."
+   },
+   {
+    "template": "sys.unknown_coefficient (satbank/topics/systems_of_linear_equations/families/structure.py:548)",
+    "seeds": "40, 42",
+    "what": "5.9% of draws pass. In shape pair_ab, c1 and c2 in [20,120] are drawn independently, so in 46% of draws (c2 - p2*x0)/k or (c1 - by)/x0 is not whole. In shape shared_y, c1 and c2 in [-400,400] are drawn independently, so in 44% of draws x0 = (c2-c1)/(p2-p1) or the key is not whole. In a further 4%, p1 == p2.",
+    "fix": "pair_ab: `c2 = rng.choice([c for c in range(20, 121) if (c - p2*x0) % k == 0])`, then `c1 = rng.choice([c for c in range(20, 121) if (c - by) % x0 == 0 and c != by])`. shared_y: `p1, p2 = rng.sample([i for i in range(-6, 7) if i], 2)`, and choose c2 from the values c1 + (p2-p1)*x (x an integer, within ±400) for which c1 - p1*x is a nonzero multiple of k*y0. Measured 89% pass."
+   }
+  ],
+  "false_positives": "One pattern covers all 55 rows. The lint reports a seed that used up the registry's 60-draw retry budget as if it were a broken item. That is wrong for three reasons. First, every flagged seed generates with a larger budget (attempts=200, or 1000 for nearest_row seeds 5, 14 and 25), so no seed is dead. Second, the app never shows these to a student: server/practice.py:219 catches ItemError and skips the seed, and drill.py and daily.py do the same. Third, the finding belongs to the template, not the seed. One template with a 2% pass rate shows up as 6 to 14 per-seed rows whose seed numbers are just noise. No finding was a forced format: the lint passes no fmt or kwargs, and no template picks a branch from the seed. There is one latent lint bug. scan() runs inside the same try, so a crash in the lint's own checks would also be printed as generation_error. It did not happen in this run.",
+  "lint_fix": "This was tested on a scratch copy. Only generation_error rows change: 0 generation_error rows and 11 low_yield rows, one per template. The row carries the dead-seed list and the top rejection reason, and that reason names the parameter range at fault. The whole run takes 7.5 s. Changes to tools/lint_bank.py:\n\n(1) Change the import to `from satbank.item import ItemError, numeral`, add `import random`, and add \"low_yield\" to CHECKS after \"generation_error\".\n\n(2) Add two helpers:\n```python\ndef survives(name, seed):\n    try:\n        generate(name, seed, attempts=2000)\n        return True\n    except ItemError:\n        return False\n\ndef rejections(name, seed):\n    fn, why = templates()[name], Counter()\n    for i in range(60):\n        try:\n            fn(random.Random(seed * 1_000_003 + i), seed)\n        except Exception as exc:  # noqa: BLE001\n            why[str(exc)] += 1\n    return \"; \".join(f\"{n}× {r}\" for r, n in why.most_common(2))\n```\nrejections() replays the registry's exact 60 draws for that seed.\n\n(3) In main, add `exhausted = {}` and replace the try block with:\n```python\ntry:\n    item = generate(name, seed)\nexcept ItemError as exc:\n    if \"no valid item\" in str(exc) and survives(name, seed):\n        exhausted.setdefault(name, []).append(seed)\n    else:\n        report(\"generation_error\", f\"{type(exc).__name__}: {exc}\")\n    continue\nexcept Exception as exc:\n    report(\"generation_error\", f\"{type(exc).__name__}: {exc}\")\n    continue\nscan(item, report)\n```\n\n(4) After the seed loop, if name is in exhausted, append one row per template:\n`findings.append((name, seeds[0], \"low_yield\", snippet(f\"{len(seeds)}/50 seeds use up 60 draws (seeds {seeds}); \" + rejections(name, seeds[0]))))`\n\nReal flaws still come through. A seed that is genuinely dead (still failing at 2000 draws, which has probability of about 1e-15 at the lowest pass rate here), an AuditError, or any other exception stays a generation_error. A template that wastes most of its draws still shows up once as low_yield, with the reason. Moving scan() out of the try stops lint crashes being reported as generation errors. Optionally, flag low_yield only when the replay's pass rate is below 10%."
+ },
+ "visuals": {
+  "check": "missing_table, missing_figure, missing_graph",
+  "total": 1008,
+  "real_count": 65,
+  "real": [
+   {
+    "template": "le2.which_table",
+    "seeds": "all 50 (checked 0, 1, 2; the lint flags 0-49)",
+    "what": "The stem asks 'Which table gives three values of x and their corresponding values of y for the given equation?' but the item has table=None and figure=None. The options print as text pair lists such as '(1, -27), (2, 5), (3, 37)'. The site (web/assets/ui.js question() and web/test/test.js) renders only q.figure (SVG) and q.table, and it sets options as plain text, so the student sees no table anywhere. The maths is still solvable, but the stem names something that is not on the screen.",
+    "fix": "satbank/topics/linear_equations_in_two_variables/families/tables.py:264: change the stem to eq + \"\\nWhich of the following lists gives three values of x and their corresponding values of y for the given equation?\" (or '...which set of ordered pairs (x, y)...'). Fuller alternative, since the source items 1.19/1.33/3.14 show tables: after text_item returns, set item.table to one row per letter A-D in the final choice order, using the pattern already in tvdata.nonlinear_table (satbank/topics/two_variable_data/families/models.py:348-359). text_item already accepts table=, but the choice order is only known after assemble_text, so the table has to be set on the returned Item."
+   },
+   {
+    "template": "ovd.freq_choose",
+    "seeds": "flagged: 3,5,7,14,17,18,20,28,31,33,35,36,40,46,47 ('Which frequency table correctly represents the data listed?'); NOT flagged but same flaw: 0,1,2,6,8,9,10,12,13,15,21,24,26,29,30,32,34,37,38,39,41,44,45,48,49 ('Each of the following frequency tables represents a data set.'). 40 of 50 seeds in total",
+    "what": "The stem refers to frequency tables, but table=None and each option is a text line like '20 (frequency 8), 40 (frequency 8), ...'. No table is rendered. The lint misses the 25 plural seeds because the regex \\btable\\b does not match 'tables'.",
+    "fix": "satbank/topics/one_variable_data/families/freq.py:421: change the default to 'Which of the following correctly lists each value in the data and its frequency?'. freq.py:458: change it to 'Each of the following lists the values in a data set and their frequencies. Which data set has the greatest mean?'. As with which_table, the fuller fix is to render the four frequency tables as item.table rows A-D in the style of tvdata.nonlinear_table."
+   },
+   {
+    "template": "ineq.point_solution",
+    "seeds": "1,5,8,11,21,29,30,34,37,38,42,45 (12 of 50). The lint does not flag these at all",
+    "what": "TABLE_FRAMES[0] reads 'For which of the following tables are all the values of x and their corresponding values of y solutions...', but table=None and the options are pair lists like '(3, 5), (7, 27), (10, 39)'. The lint misses these only because 'tables' is plural. TABLE_FRAMES[1] ('Each of the following tables lists... For which table...') has the same wording problem.",
+    "fix": "satbank/topics/linear_inequalities/families/points.py:337-343: in both frames, change 'tables' to 'lists of ordered pairs (x, y)' and 'For which table' to 'For which list'. The alternative is to render the options as an A-D item.table as in tvdata.nonlinear_table."
+   },
+   {
+    "template": "context.formula_solve",
+    "seeds": "all 50 (seed 0: 'The glass pictured above can hold a maximum volume of 580 cubic centimeters...'). The lint does not flag these at all",
+    "what": "Every seed points at 'The {vessel} pictured above', but figure=None and table=None, so no picture is shown. The formula and volume are given in words, so the item can be solved, but it points at a missing figure. This is a lint false negative: the check only looks for the word 'figure'.",
+    "fix": "satbank/topics/area_and_volume/families/special.py:514: change f\"The {vessel} pictured above can hold...\" to f\"A {vessel} can hold...\" (the vessel is never used for anything except its name). The alternative is to attach an SVG of the vessel to figure=."
+   }
+  ],
+  "false_positives": "None of the 936 missing_graph findings and none of the 7 missing_figure findings is a real flaw. (1) missing_graph covers 26 templates: circles.point_on, circles.equation_read, le2.equivalent_system, le2.slope_of_line, le2.intercepts, le2.point_on_line, le2.table_line, lin.from_points, lin.parameter_intercept, lin.x_intercept, lin.y_intercept, lin.interpret_x_intercept, lin.define_line, nleq.secant_slope, nleq.symbolic_intersections, nlfunc.exp_two_points, nlfunc.exp_rewrite, nlfunc.quad_must_be_true, nlfunc.quad_feature, nlfunc.quad_fit, nlfunc.vertex_symmetry, nlfunc.vertex_value, nlfunc.x_intercept, nlfunc.y_intercept, nlfunc.interpret_initial and sys.all_solutions. Every one uses the standard SAT wording that defines a graph in words: 'the graph of <equation or function> in the xy-plane', 'the graph of the equation above', 'the graphs of these equations', 'lies on the graph of each equation', 'If y = f(x) is graphed...'. Some then refer back to it as 'this graph', 'the other x-intercept of the graph?' or 'the y-intercept of the graph in this context'. No picture is needed, and I found no graph mention anywhere in the bank that points at an unrendered picture. Items that do say 'The graph shows...' (for example nlfunc.quad_feature seed 2) carry a figure. (2) missing_figure: all 7 findings are le2.interpret_coefficient seeds 21,29,30,37,38,45,49, 'Figure A and figure B are both regular polygons...'. Here 'figure A/B' is a word label for a shape and the text is complete. (3) missing_table: all 65 findings are real (le2.which_table 50, ovd.freq_choose 15). The table check's problem is missed flaws, not false alarms: it misses plural 'tables' (25 more ovd.freq_choose seeds, 12 ineq.point_solution seeds). The figure check also misses 'pictured' (context.formula_solve, 50 seeds).",
+  "lint_fix": "In tools/lint_bank.py scan(), replace the three lines that test the lowercased `stem` with these checks on the original item.stem. The figure rule needs case to spot 'figure A':\n\nTABLE_WORD = re.compile(r\"\\btables?\\b\", re.I)\nFIGURE_WORD = re.compile(r\"\\b(?i:figures?)\\b(?!\\s+[A-Z]\\b)|\\b(?i:pictured|diagram)\\b\")   # 'figure A' names a shape; 'pictured' points at one\nGRAPH_WORD = re.compile(r\"\\bgraphs?\\b\", re.I)\nGRAPH_DEFINED = re.compile(r\"\\bgraphs?\\s+of\\b|\\bgraphed\\b\", re.I)   # the graph is given in words\nGRAPH_POINTED = re.compile(r\"\\bgraphs?\\s+(?:shown|above|below|shows?)\\b|\\bshown\\s+in\\s+the\\s+graph\\b|\\bgraphs?\\s+of\\b[^.?]*\\b(?:is|are)\\s+shown\\b|\\bfollowing\\s+graphs\\b\", re.I)   # ...unless it then points at a picture\n\n    if TABLE_WORD.search(item.stem) and not item.table: report(\"missing_table\", item.stem)\n    if FIGURE_WORD.search(item.stem) and not item.figure: report(\"missing_figure\", item.stem)\n    if not item.figure and GRAPH_WORD.search(item.stem) and (GRAPH_POINTED.search(item.stem) or not GRAPH_DEFINED.search(item.stem)):\n        report(\"missing_graph\", item.stem)\n\nI checked this against all templates at seeds 0-49. missing_graph falls from 936 to 0. missing_figure falls from 7 false findings to 50 real ones (context.formula_solve). missing_table goes from 65 to 102, all real (le2.which_table 50, ovd.freq_choose 40, ineq.point_solution 12). A test harness in the scratchpad also asserts that the new rules still flag 'The graph shows...', 'The graph of y = f(x) is shown.', 'Which of the following graphs could be the graph of...', 'In the figure...', 'The glass pictured above...' and 'following frequency tables' when no visual is present. It asserts they do not flag 'the graph of y = 2x + 1', 'is graphed... of the graph?', 'Figure A and figure B', or a 'graph shows' stem that has a figure. The harness is /private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/proposed.py; run it with PYTHONPATH=. python3 from the repo root. Once the four templates above are fixed, all three checks should report 0."
+ },
+ "rationale": {
+  "check": "rationale_final_number_mismatch",
+  "total": 390,
+  "real_count": 132,
+  "real": [
+   {
+    "template": "nleq.shared_factor",
+    "seeds": "47 of 50: 0-28, 30-38, 40-43, 45-49 (not 29, 39, 44: there the other root is 0, so the sum equals the root that is printed)",
+    "what": "The stem asks for the sum of the solutions (the default ask). The rationale stops at 'so x = −6 or x = −49/3' and never adds them. The key is −67/3 and appears nowhere. The 'divided_out' and 'bracket_only' named mistakes are exactly 'reported one root', so ending on a lone root works against the lesson.",
+    "fix": "satbank/topics/nonlinear_equations_and_systems/families/solve.py, around line 853. Add one shared helper and use it in shared_factor, absolute_equation and square_equation: `def _combined(ask, key): return {\"sum\": f\", and their sum is {num(key)}\", \"product\": f\", and their product is {num(key)}\"}.get(ask, \"\")`. Then end shared_factor's rationale with `x = {r2}{_combined(ask, key)}.` A pick-one ask (positive, which, one_possible) gets \"\" because it already lists the root. Seed 0 would then read '...so x = −6 or x = −49/3, and their sum is −67/3.'"
+   },
+   {
+    "template": "nleq.absolute_equation",
+    "seeds": "ask=sum only: 2, 3, 5, 14, 16, 19, 23, 26, 28, 31, 37, 38, 41, 42, 43",
+    "what": "'What is the sum of the solutions' is answered with '...so x = 16 or x = −8.' The sum (8) is never stated. The other 25 flags on this template are one_possible/positive asks and are false positives.",
+    "fix": "solve.py around line 364: `...so x = {num(hi)} or x = {num(lo)}{_combined(ask, key)}.` (same helper as shared_factor)."
+   },
+   {
+    "template": "nleq.square_equation",
+    "seeds": "ask=sum only: 5, 12, 20, 27, 28, 30, 37, 42, 45",
+    "what": "The sum ask ends on 'giving x = 11 and x = −11' and never says the sum is 0. In seed 12 the sum (2) equals a root only by coincidence. The other 27 flags on this template (positive/which/one_possible) are false positives.",
+    "fix": "solve.py around line 248: `giving x = {num(hi)} and x = {num(lo)}{_combined(ask, key)}.`"
+   },
+   {
+    "template": "eqx.divide_remainder",
+    "seeds": "coef_sum shape, all 21: 1, 3, 4, 5, 11, 13, 15, 16, 17, 19, 21, 22, 23, 25, 27, 28, 33, 42, 43, 45, 49",
+    "what": "The stem asks for a + k. The rationale stops at 'dividing by j + 7 leaves j + 8'. It never says a = 1, k = 8, a + k = 9, and in 18 of 21 seeds the key appears nowhere.",
+    "fix": "satbank/topics/equivalent_expressions/families/rational.py around line 221: `why = (f\"{top} is ({den})({_lin(1, s, var)}), so dividing by {den} leaves {_lin(1, s, var)}: {n1} = 1 and {n2} = {num(s)}, so {n1} + {n2} = {num(key)}.\")`. Separate flaw in the expression branch (line ~192): `+ {num(rem)}` prints '(w + 2)(w + 2) + −13' (seed 2) when rem < 0. Use the sign/abs form that `show` already uses."
+   },
+   {
+    "template": "lin.context_two_points",
+    "seeds": "predict ask, all 15: 3, 4, 7, 14, 18, 22, 25, 28, 31, 33, 35, 36, 40, 46, 47",
+    "what": "'To the nearest whole number, what is x?' ends on the unrounded fraction ('the value at 2,025 is 8351/25'). It never gives the rounded key 334. It also prints the year with a thousands separator ('2,025'; unflagged seed 20 shows '2,017' too) and says 'per unit' for a rate per year. In the MCQ branch the distractors are unrounded fractions ('7,912/25', '8,131/25') under a nearest-whole-number stem, so they can be dismissed on sight.",
+    "fix": "satbank/topics/linear_functions/families/context.py around line 559: `at = year_text(x3) if d[\"years\"] else \"$\" + numtext(x3); per = \"year\" if d[\"years\"] else \"dollar\"; end = f\", which rounds to {numtext(key)}\" if d[\"approx\"] and raw != key else \"\"; rationale = f\"The rate of change is {numtext(m)} per {per}, so the value in {at} is about {numtext(raw, 'dec', 2)}{end}.\"` (seed 3: '...in 2025 is about 334.04, which rounds to 334.'). In the MCQ path, build the options from `slips(raw)` and round each one with `(v + Q(1, 2)) // 1` when d['approx'], as the SPR path already does."
+   },
+   {
+    "template": "ovd.mean_totals",
+    "seeds": "combined mode, all 12: 1, 2, 6, 9, 26, 30, 32, 39, 44, 45, 48, 49",
+    "what": "'What is the mean of data set C?' ends on 'so all 104 values total 2,054.' The division by 104 and the mean 19.75 are never stated.",
+    "fix": "satbank/topics/one_variable_data/families/means.py around line 313: `T = num_str(n1 * m1 + n2 * m2); rationale = f\"The two data sets total {num_str(n1 * m1)} and {num_str(n2 * m2)}, so all {n1 + n2} values total {T}, and the mean is {T} ÷ {n1 + n2} = {num_str(q(key.coef))}.\"`. Separate flaw: seed 9's grid-in key '4067/125' is 8 characters and does not fit the grid. Refuse keys that fail a griddable() check, as shared_factor does."
+   },
+   {
+    "template": "ovd.freq_stat",
+    "seeds": "mean_minus_median ask, all 6: 1, 13, 18, 29, 41, 42",
+    "what": "'How much greater is the mean than the median?' ends on 'the mean is 19.08; the middle value is 19.' The difference 0.08 is never stated. In seed 29 the mean equals the median, so the key is 0, which is an odd answer to 'how much greater'.",
+    "fix": "satbank/topics/one_variable_data/families/freq.py around line 103: append `, so the mean is {num_str(mu - med)} greater` (or `{num_str(mu)} − {num_str(med)} = {num_str(mu - med)}`) to the rationale. At line 85, tighten `if mu < med` to `if mu <= med` so a zero difference is redrawn."
+   },
+   {
+    "template": "nlfunc.vertex_value",
+    "seeds": "factored form, ask=value: 21, 34, 45",
+    "what": "'What is the minimum value of g(x) = (x − 2)(x − 16)?' stops at 'the vertex is halfway between them at x = 9.' The value −49 is never computed. The other 3 flags (vertex form, location ask) are false positives.",
+    "fix": "satbank/topics/nonlinear_functions/families/quadratic.py around line 238: when ask == 'value', append `, where {name}(x) = ({num(mid - r1)})({num(mid - r2)}) = {num(key)}` (seed 21: '...at x = 9, where g(x) = (7)(−7) = −49.')."
+   },
+   {
+    "template": "le2.substitute",
+    "seeds": "pianist 'solved' context: 4, 27, 28, 40 (46 of 50 seeds share the flaw; see lint_fix)",
+    "what": "The rationale ends '...a session of 20 minutes carries 20 times 0.2.' It never says 4 pieces, and 'carries' reads oddly. Every other SUBST context has the same shape and states no answer ('the birch trees make up whatever the 573 maple trees do not'; tiles, rug, sweaters, boxes, reptiles). The lint misses those only because they end in words, not numbers.",
+    "fix": "satbank/topics/linear_equations_in_two_variables/families/solve.py. In the pianist entry (line ~74), use why='...so a session of {given} minutes covers {given} × {a} = {key} pieces.' and pass `key=numtext(key)` into the `d[\"why\"].format(...)` call (line ~200). For the other contexts, one change in substitute() covers every entry: add a closing clause that names the asked count, e.g. `why += f\" That leaves {numtext(key)} {d['y1' if solve == 'y' else 'x1']}.\"` (wording to taste)."
+   }
+  ],
+  "false_positives": "258 of the 390 findings are false positives, in 8 templates. Each one states the correct answer in the concluding clause, just not as the last number.\n(1) The clause lists every solution or both variables and the answer is one of them:\n- sys.purchase_solve: 26 ('so x = 25 and y = 4')\n- sys.relation_pair: 39 ('the second is 375 and the first is 1,875')\n- sys.solve_standard: 12\n- nleq.rational_quadratic: 21 ('x = −18 or x = 16' for the negative solution)\n- eqx.factor_constant: 16 ('b is 4 or 13' for the smallest)\n- nleq.absolute_equation: 25 (one_possible/positive)\n- nleq.square_equation: 27 (positive/which/one_possible)\n- nlfunc.vertex_value: 3 (location ask, 'x = −6, where g(x) = −8')\n(2) A label follows the answer:\n- nlfunc.graph_context: 39, a year ('12,000 employees in 2004')\n- tvdata.slope_scaled: 50, a unit count ('11 × 8 = 88 for each 8')\nI spot-checked the math in every family and found no rationale that reaches a wrong value. Other flaws seen along the way, outside this check:\n- sys.solve_standard seed 4 says 'multiplying by 3 and 9 … taking one from the other' when the y-coefficients have opposite signs, which needs adding; the printed −6x = 48 is right.\n- nleq.shared_factor with k = 0 (seeds 29, 39, 44) prints '5(x) = 6(x − 12)(x)' and '(x)[…]'.",
+  "lint_fix": "In tools/lint_bank.py, keep the last-number trigger but add one exemption to last_number_disagrees(), after the existing isclose return. Pass when any number in the concluding clause equals the answer. The clause is the text after the last so/thus/therefore/hence/giving. Skip the exemption when the stem asks to combine values, where a listed root can equal the sum by coincidence. Add these next to FINAL_TAIL:\nCLAUSE_START = re.compile(r\"\\b(?:so|thus|therefore|hence|giving)\\b|^\", re.I)\nCOMBINE_ASK = re.compile(r\"\\b(?:sum|product|difference)\\b|\\bhow much (?:greater|less|more)\\b|\\bvalue of \\w+ ?[+−-] ?\\w+\", re.I)\nAnd add this in last_number_disagrees() before the final return:\n    if not COMBINE_ASK.search(item.stem):\n        clause = item.rationale[list(CLAUSE_START.finditer(item.rationale))[-1].end():]\n        if any(math.isclose(v, expected, rel_tol=1e-5, abs_tol=1e-5) for v in (numeral(m.group().strip()) for m in NUMBER.finditer(clause)) if v is not None):\n            return None\nI ran a patched copy (scratchpad/rfnm/lint_new.py; tools/ untouched). The check drops from 390 to exactly the 132 real findings above, the 8 false-positive templates go to 0, and every other check's rows are byte-identical (total 1969 to 1711). The COMBINE_ASK guard matters: without it, 5 real seeds would be hidden by coincidence (square_equation 12, divide_remainder 13/22/33, and one more). 'how many fewer' is left out of the guard on purpose, or slope_scaled would flag again.\nThe opposite gap: the CONCLUSION/FINAL_TAIL gating hides real flaws of the same kind. le2.substitute has 46 seeds whose rationale never states the answer, and the check catches 4. A separate check, rationale_omits_answer (the answer value appears nowhere among the rationale's numbers, % scaled, with no tail or conclusion gating), finds 1,206 addresses across 44 templates. Many look like a deliberate house style of stopping one step before the last arithmetic, e.g. tvdata.residual ('the line predicts about 12.0 there'). Adding it is a policy call, so I did not fold it into this check."
+ }
+}
