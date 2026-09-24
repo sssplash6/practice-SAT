@@ -455,14 +455,26 @@ def walk(b, base, http, sql) -> None:
     pg = page(ctx)
     go(pg, "/")
     if f5:
+        # closed while its question is still loading, then again once it shows: no sitting either time
+        slow = """on => { window._f = window._f || fetch; window.fetch = on ? (u, o) => /\\/api\\/drill$/.test(String(u))
+            ? _f(u, o).then(r => new Promise(ok => setTimeout(() => ok(r), 800))) : _f(u, o) : _f }"""
+        for early in (True, False):
+            pg.evaluate(slow, early)       # the page sees its question 800 ms late
+            with pg.expect_response(lambda r: r.url.endswith("/api/drill") and r.request.method == "POST") as drew:
+                pg.keyboard.press("q")
+            if early:
+                pg.wait_for_selector("dialog[open] .skel")
+                with pg.expect_response(lambda r: r.url.endswith("/finish")) as fin:
+                    pg.keyboard.press("Escape")
+            else:
+                pg.wait_for_selector("dialog[open] .opts, dialog[open] .grid-in input", timeout=10000)
+                with pg.expect_response(lambda r: r.url.endswith("/finish")) as fin:
+                    pg.keyboard.press("Escape")
+            rows = sql.execute("SELECT id, cfg FROM sessions WHERE learner=? AND json_extract(cfg, '$.source')='quick'", (QL,)).fetchall()
+            assert drew.value.ok and fin.value.json() == {"deleted": True} and not rows, ("closing with no answer leaves no quick sitting", early, rows)
+            pg.wait_for_timeout(300)
         pg.keyboard.press("q")
-        pg.wait_for_selector("dialog[open] .opts, dialog[open] .grid-in input, dialog[open] [role=radiogroup]", timeout=10000)
-        pg.keyboard.press("Escape")
-        pg.wait_for_timeout(700)
-        n = sql.execute("SELECT COUNT(*) FROM sessions WHERE learner=? AND json_extract(cfg, '$.source')='quick'", (QL,)).fetchone()[0]
-        assert n == 0, "closing with no answer leaves no quick sitting"
-        pg.keyboard.press("q")
-        pg.wait_for_selector("dialog[open] .opts, dialog[open] .grid-in input, dialog[open] [role=radiogroup]", timeout=10000)
+        pg.wait_for_selector("dialog[open] .opts, dialog[open] .grid-in input", timeout=10000)
         before = pg.inner_text("dialog[open]")
         if pg.query_selector("dialog[open] .grid-in input"):
             pg.fill("dialog[open] .grid-in input", "1")
@@ -486,8 +498,9 @@ def walk(b, base, http, sql) -> None:
         pg.wait_for_timeout(400)
         assert not pg.query_selector("dialog[open]"), f"Q does nothing on {path}"
     ctx.close()
-    print(f"ok  quick sheet{': Q opens a question, Another loads the next, history says Quick questions, never Resume;' if f5 else ' (its sitting: F5 not here);'}"
-          " no Quick and no Q on the session and the test")
+    said = (": closed mid-load or unanswered it leaves no sitting; Q opens a question, Another loads the next,"
+            " history says Quick questions, never Resume;") if f5 else " (its sitting: F5 not here);"
+    print(f"ok  quick sheet{said} no Quick and no Q on the session and the test")
 
     # ---- Shell 22: theme; a fresh page is light; Dark from the account menu; no light flash
     ctx = context(NEW)

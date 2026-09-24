@@ -107,7 +107,7 @@
     }).catch(() => UI.toast && UI.toast('Couldn’t start it. Try again.')) });
     another.hidden = true;
     practise.hidden = true;
-    let sid = null, q = null, ctrl = null, answered = 0, right = 0, t0 = 0, fb = null, finished = false, loading = false;
+    let sid = null, q = null, ctrl = null, answered = 0, right = 0, t0 = 0, fb = null, finished = false, loading = false, starting = null;
 
     const paintTally = () => { tally.textContent = answered ? `${plural(answered, 'answered', 'answered')} · ${fmt(right)} right` : ''; };
     function loadingState() {
@@ -125,9 +125,9 @@
       if (Array.isArray(p.tiers) && p.tiers.length && p.tiers.length < 3) b.tiers = p.tiers;
       if (Array.isArray(p.formats) && p.formats.length === 1) b.formats = p.formats;
       try {
-        const r = await UI.api('/drill', { method: 'POST', body: b });
+        const r = await (starting = UI.api('/drill', { method: 'POST', body: b }));
         sid = r.id;
-        await show(r.question);
+        if (!finished) await show(r.question);
       } catch (e) { failed(e); }
       finally { loading = false; }
     }
@@ -216,8 +216,10 @@
       if (!doc.activeElement || doc.activeElement === doc.body || !sheet.el.contains(doc.activeElement)) another.focus({ preventScroll: true });
     }
     async function finish(keepalive = true) {
-      if (!sid || finished) return;
+      if (finished || (!sid && !starting)) return;
       finished = true;
+      // closed while the question was loading: that sitting still ends (with no answer, the server drops it)
+      if (!sid) { try { sid = (await starting).id; } catch (_) { return; } }
       try { await UI.api(`/drill/${encodeURIComponent(sid)}/finish`, { method: 'POST', keepalive, quiet: true }); } catch (_) {}
     }
     const keys = {
