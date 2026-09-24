@@ -11,6 +11,9 @@
 - **F1**: all 5 units built on `v2/f1`; verify r1 running inside run `wf_d6bde851-f95` (task wlzjrhc30).
 - **Words**: words2.js run `wf_609b5aa4-27c` (task wf5hy4nl6): setup and confusions done, frames1-4 running; then fold and check.
 - Checkpoint loop running (task b2bucxp7g).
+- **F5 drill engine: given to the user's other agent** (2026-09-24), worktree `.claude/worktrees/f5`, branch `v2/f5` from
+  `v2/f4`, 4 parts, port 8015. Do not build it. When the user says "F5 done": add F5 to build.js TASKS and run
+  `from:'verify'`; rebase on master after F4 merges, then merge. Next backend-only job for them: F6's server half.
 If cut off: F1 `[{id:'F1', from:'verify'}]` (or `from:'fix'` with the newest verdict); F4 as above; words2
 `{from:'author', only:[unfinished frames ids]}`, then fold and check.
 
