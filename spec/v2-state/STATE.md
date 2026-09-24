@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-24T16:12:31+05:00
+# v2 build state -- 2026-09-24T18:23:02+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -7,7 +7,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 - `v2/bank` at e9c6f3c, 0 commits ahead of master
 - `v2/bank-lint` at f168c9f, 0 commits ahead of master
-- `v2/bank-lint-fix` at 033fa1a, 5 commits ahead of master
+- `v2/bank-lint-fix` at 033fa1a, 0 commits ahead of master
 - `v2/f0` at dc9873f, 0 commits ahead of master
 - `v2/f1` at b417976, 0 commits ahead of master
 - `v2/f2` at bb6a2e1, 20 commits ahead of master
@@ -15,6 +15,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/f4` at 2d419ba, 0 commits ahead of master
 - `v2/f5` at 6e3d219, 0 commits ahead of master
 - `v2/f6` at d51dbcc, 18 commits ahead of master
+- `v2/s9-server` at 91021b1, 3 commits ahead of master
 - `v2/satdates` at 141f815, 0 commits ahead of master
 - `v2/t-bank` at 9403838, 0 commits ahead of master
 - `v2/t-bank-all` at f4bf864, 0 commits ahead of master
@@ -52,38 +53,11 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 ## Worktrees
 
 - `/Users/workingmyassof/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/f6` on `v2/f6`: 1 uncommitted (saved in wip/f6/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/s9-server` on `v2/s9-server`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_7aaa2f6c-3ad-1` on `detached d9b35e7`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_7aaa2f6c-3ad-2` on `detached 566eabc`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_7aaa2f6c-3ad-3` on `detached 566eabc`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-1` on `detached fb3f147`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-10` on `detached 372267a`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-11` on `detached 47c0cb9`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-12` on `detached d51dbcc`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-13` on `detached bb6a2e1`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-2` on `detached 78f896a`: 1 uncommitted (saved in wip/wf_cafefb42-928-2/)
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-3` on `detached 45ec3de`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-4` on `detached d475fe1`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-5` on `detached 317ee8c`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-6` on `detached 7057bae`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-7` on `detached 344449d`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-8` on `detached 372267a`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-9` on `detached 5a8c251`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-1` on `detached 9ba1209`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-10` on `detached d47d851`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-11` on `detached d47d851`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-12` on `detached b417976`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-13` on `detached b417976`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-2` on `detached c6c60ad`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-3` on `detached eef858a`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-4` on `detached eef858a`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-5` on `detached e837e82`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-6` on `detached e9c6f3c`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-7` on `detached e9c6f3c`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-8` on `detached d9b35e7`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-9` on `detached e837e82`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_e6cc0b6f-9c8-1` on `detached da11286`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_e6cc0b6f-9c8-2` on `detached 6e3d219`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_c64d3f6b-2ea-1` on `v2/f2`: 2 uncommitted (saved in wip/wf_c64d3f6b-2ea-1/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_c64d3f6b-2ea-2` on `v2/f3`: 0 uncommitted
 
 ## Workflow runs
 
@@ -110,6 +84,9 @@ Unfinished when saved: fix F4 r2
 Unfinished when saved: fix: area_and_volume, fix: linear_equations_in_one_variable, fix: linear_functions, recheck: equivalent_expressions, recheck: linear_inequalities, verify: right_triangles_and_trigonometry
 
 ### wf_c0d90d11-40f: 9 finished, 0 unfinished
+
+### wf_c64d3f6b-2ea: 0 finished, 2 unfinished
+Unfinished when saved: build F2 4/4, build F3 3/4
 
 ### wf_c70c4702-929: 49 finished, 0 unfinished
 

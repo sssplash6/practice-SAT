@@ -8,26 +8,19 @@ agent's non-feature jobs) get my inline check. Fixers fix only the listed defect
 Merged into master so far: planning and upgrades, v2/f0, v2/t-bank-all, v2/bank, v2/f4 (+ swap middleware), v2/f1,
 v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (dfe3544).
 
-### To do on "continue", in order
-1. Restart the checkpoint loop (Bash, run_in_background):
-   `while true; do python3 tools/v2_checkpoint.py --quiet 2>>/tmp/v2-checkpoint.log; sleep 300; done`
-   Remove stale `wf_*` worktrees after confirming each is clean (`git worktree list`, `git -C <wt> status --short`);
-   `wf_cafefb42-928-2` holds only the old unit-1 stray edit, already saved as `scratchpad/f3-wt2-workspace.patch`.
-2. **F6** (reports and sets): built, checked (4 defects in `next/F6-verify1-issues.json`), fix r1 done, own
-   checks/f6.py passes, BUT test_flow fails: `AssertionError: {'template': 'circles.degree_radian', ..., 'learners': 21,
-   'disputed': 3, 'rate': 0.143, 'flagged': False}` (a disputed key at 14% of 21 learners is not flagged). Find which
-   side is wrong (F6's reports.py dispute rule vs the test's expectation, see R17 / Shell §2.10), fix the smallest
-   thing on v2/f6, re-run test_flow 3x, save leftovers to `followups/F6.json`, merge.
-3. **Other agent's lint fixes groups 1-5**: done on `v2/bank-lint-fix` (tip 033fa1a or later). Inline check: satbank
-   check PASS 19/19, test_flow all good, and a dump of generate(t, s) for seeds 0-199 of every touched template on
-   master vs the branch showing numbers unchanged for every seed that generates on master (only generation fallbacks
-   may add items for seeds that failed). Then merge.
-4. **Relaunch wave 1b**: `Workflow({scriptPath: ".../spec/v2-state/next/build.js", args: [{id:'F2', unit:3},
-   {id:'F3', unit:2}]})`. F2: units 1-3 done; unit 4 (checks/f2.py + the page walk) was in progress, checkpoint bb6a2e1.
-   F3: units 1-2 done (question.js, runner.js); unit 3 (review player) was in progress, checkpoint 47c0cb9; unit 4
-   (dev/workspace.html) after it. Then each gets one check + one fix; merge each when ready.
-5. After F2, F3 and F6 merge: wave 2, the nine sections (S1, S3-S10), with TASKS entries from Part 4.2; offer the
-   other agent the S9 Words server half (words.py, api_words.py, checks/s9.py) and other backend-only halves.
+### Status after the resume (2026-09-24 evening)
+- MERGED: `v2/bank-lint-fix` groups 1-5 (ced6514; inline check: 21,800 items keep their numbers, 111 dead seeds
+  revived, gate 19/19; the lint now reports 16 findings: 11 low-yield templates, 5 filler-majority notes) and `v2/f6`
+  (33b1627; the test_flow label-threshold failure was a test-isolation bug, fixed by the other agent). F6's fixer left
+  a drill.py change for S4 (use sets.serve for pool 'set'): in `followups/F6.json`.
+- RUNNING: build.js run `wf_c64d3f6b-2ea` (task wqb68afx6) `[{id:'F2', unit:3}, {id:'F3', unit:2}]`, then one check +
+  one fix each. Checkpoint loop: task blqxdkt2a. Restart if cut off: F2 `{id:'F2', unit:3}` or `from:'verify'`;
+  F3 `{id:'F3', unit:<first unbuilt>}` per `git log master..v2/f3`.
+- **S9 server** (`v2/s9-server`, worktree `.claude/worktrees/s9-server`, the other agent's): parts 1-2 done (content
+  index + proof-based review core; gated item generation), part 3 (api_words.py) checkpointed at 91021b1, part 4
+  (checks/s9.py) not started; ~2,400 lines. Ask the user whether the other agent continues it or build.js finishes it
+  (then add an S9S TASKS entry with units 3-4 and one check + one fix).
+- NEXT after F2 and F3 merge: wave 2 (S1, S3-S10), TASKS entries from Part 4.2; S9's pages build on v2/s9-server.
 
 ### On "continue"
 
