@@ -3109,6 +3109,12 @@
     async function show(dir) {
       const i = at;
       let it = items[i];
+      if (!it || (it.stub && !on.load)) {
+        cur = null;
+        col.replaceChildren(h('p', { class: 'meta rv-none', text: it ? 'This question isn’t available.' : 'Nothing to review here.' }));
+        syncAll();
+        return;
+      }
       twinRuns.forEach(r => { try { r.destroy(); } catch (_) {} });
       twinRuns = [];
       if (it.stub && on.load) {
