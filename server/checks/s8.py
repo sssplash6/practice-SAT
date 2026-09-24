@@ -16,7 +16,7 @@ import sys
 
 from fastapi.testclient import TestClient
 
-from server import compete, db, practice
+from server import blueprint, compete, db, practice
 from server.app import app
 
 
@@ -175,6 +175,34 @@ def run() -> None:
         print("S8 checks passed")
 
 
+def supply() -> None:
+    with TestClient(app):
+        if not compete._read_supply():
+            print("Surveying up to 3,000 seeds per template and tier; this may take several minutes.")
+            compete.survey_supply()
+        for domain, names in blueprint.by_domain().items():
+            for tier in ("easy", "medium", "hard"):
+                for fmt in ("mcq", "spr"):
+                    passing = set(compete.pool("daily", tier, need=1000))
+                    count = sum(name in passing and (tier, fmt) in blueprint.abilities()[name]
+                                for name in names)
+                    print(f"{domain}\t{tier}\t{fmt}\t{count}")
+                    assert count >= 3, (domain, tier, fmt, count)
+
+
+def simulate(n: int) -> None:
+    with TestClient(app):
+        row = compete.contest("daily", 0)
+        slots = compete._json(row["spec"], {})["slots"]
+        for i in range(n):
+            questions = compete.twin_questions(learner(f"sim{i}"), row["id"], slots)
+            assert [q["key"] for q in questions] == [cell[0] for cell in slots]
+        rows = db.rows("SELECT slot,qhash,COUNT(*) AS n FROM contest_items WHERE contest=?"
+                       " GROUP BY slot,qhash HAVING COUNT(*)>1", row["id"])
+        assert not rows, rows
+        print(f"simulated {n} entrants without whole-question collisions")
+
+
 def check(client: TestClient) -> None:
     # test_flow has its own scratch DB and intentionally rewrites a Daily.
     # Exercise S8 on the dedicated database in a fresh process instead.
@@ -188,4 +216,10 @@ def check(client: TestClient) -> None:
 
 
 if __name__ == "__main__":
-    run()
+    if "--supply" in sys.argv:
+        supply()
+    elif "--simulate" in sys.argv:
+        at = sys.argv.index("--simulate")
+        simulate(int(sys.argv[at + 1]))
+    else:
+        run()
