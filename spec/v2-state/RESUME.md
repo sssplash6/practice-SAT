@@ -18,8 +18,9 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
   F3 `{id:'F3', unit:<first unbuilt>}` per `git log master..v2/f3`.
 - **S9 server** (`v2/s9-server`, worktree `.claude/worktrees/s9-server`, the other agent's): parts 1-2 done (content
   index + proof-based review core; gated item generation), part 3 (api_words.py) checkpointed at 91021b1, part 4
-  (checks/s9.py) not started; ~2,400 lines. Ask the user whether the other agent continues it or build.js finishes it
-  (then add an S9S TASKS entry with units 3-4 and one check + one fix).
+  (checks/s9.py) not started; ~2,400 lines. **The other agent finishes it** (the user, 2026-09-24): do not build it here. When the user
+  says "S9 server done": add an S9S TASKS entry (owns words.py, api_words.py, checks/s9.py, build_words.py index)
+  and run it `from:'verify'` (a feature: one check + one fix), then merge.
 - NEXT after F2 and F3 merge: wave 2 (S1, S3-S10), TASKS entries from Part 4.2; S9's pages build on v2/s9-server.
 
 ### On "continue"
