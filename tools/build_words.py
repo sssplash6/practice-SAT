@@ -514,11 +514,24 @@ def build_index(data: dict[str, list | dict]) -> dict:
         by_word[word["slug"]]["prior"] = round(sum(levels) / 3, 4)
     for word in transitions:
         by_word[word["slug"]]["prior"] = values[word["level"]]
+    # The pinned frequency file has not landed with this content batch. Use
+    # the authored passages and examples as a deterministic interim common
+    # vocabulary, so paste matching can still ignore ordinary passage words.
+    texts = ([f["text"] for f in rows(data["frames"])] +
+             [p["s1"] for p in rows(data["pairs"])] +
+             [s for p in rows(data["pairs"]) for s in p["s2"]] +
+             [s for w in entries for s in w.get("examples", [])])
+    common_counts = Counter(w.casefold() for text in texts
+                            for w in re.findall(r"[A-Za-zÀ-ž]+", text) if len(w) >= 2)
+    library_forms = {s.casefold() for w in entries
+                     for s in (w["word"], *w.get("also", []))}
+    common = [w for w, _ in common_counts.most_common()
+              if w not in library_forms][:10_000]
     source = {name: hashlib.sha256(json.dumps(data[name], ensure_ascii=False, sort_keys=True)
                                    .encode()).hexdigest() for name in FILES if name != "adjudications"}
     return {"v": 1, "sources": source, "counts": {"sat": len(sat), "transitions": len(transitions),
             "frames": len(rows(data["frames"])), "pairs": len(rows(data["pairs"]))},
-            "words": by_word}
+            "words": by_word, "common": common}
 
 
 def main() -> int:
