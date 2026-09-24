@@ -557,7 +557,8 @@ def walk(b, base, http, sql) -> None:
     web = pathlib.Path(__file__).resolve().parents[2] / "web"
     paths = sorted("/" + "".join(x + "/" for x in f.parent.relative_to(web).parts) for f in web.glob("**/index.html"))
     paths += ["/diagnostic/signup.html", "/diagnostic/verified.html", "/dev/kit.html", "/nope/"]
-    bare = {"/practice/session/", "/test/", "/dev/kit.html"}
+    # the runner, the test window, the kit, and staff pages (F6's /admin/reports/ loads no ui.js)
+    bare = {"/practice/session/", "/test/", "/dev/kit.html"} | {x for x in paths if x.startswith("/admin/")}
     for L in (NEW, A):
         own = api(L, "POST", "/api/drill", {"topics": ["circles"], "count": 3})["id"]
         for theme in ("light", "dark"):
