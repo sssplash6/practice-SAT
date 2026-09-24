@@ -85,7 +85,8 @@ def basics(c) -> None:
     cats = c.get("/api/reports/categories").json()
     assert "key_wrong" not in cats["kinds"]["question"]["live"] and cats["limits"]["files"] == 10
 
-    # files: 11 -> 400, 11 MB PNG -> 413, a GIF -> 200 on disk, zip -> 415, 51 MB GIF -> 413 at 50 MB
+    # files: 11 -> 400, 11 MB PNG -> 413, zip -> 415; U3 10: a 40 MB GIF and a 20 MB webm -> 200
+    # at full size on disk, a 60 MB GIF -> 413 naming 50 MB
     b = fresh("files")
     base = {"kind": "page", "category": "display", "page": "/"}
     post(c, b, base, [(f"{i}.png", PNG, "image/png") for i in range(11)], code=400)
@@ -93,12 +94,14 @@ def basics(c) -> None:
     assert big["detail"] == {"file": "big.png", "limit": 10 * MB}, big
     post(c, b, base, [("a.zip", ZIP, "application/zip")], code=415)
     post(c, b, base, [("fake.png", ZIP, "image/png")], code=415)            # the bytes decide, not the label
-    huge = post(c, b, base, [("huge.gif", GIF + b"\0" * (51 * MB), "image/gif")], code=413)
-    assert huge["detail"]["limit"] == 50 * MB
-    ok = post(c, b, base, [("g.gif", GIF + b"\0" * (12 * MB), "image/gif"), ("r.webm", WEBM, "video/webm")])
+    huge = post(c, b, base, [("huge.gif", GIF + b"\0" * (60 * MB), "image/gif")], code=413)
+    assert huge["detail"] == {"file": "huge.gif", "limit": 50 * MB}, huge["detail"]
+    ok = post(c, b, base, [("g.gif", GIF + b"\0" * (40 * MB), "image/gif"),
+                           ("r.webm", WEBM + b"\0" * (20 * MB), "video/webm")])
     files = json.loads(db.one("SELECT files FROM reports WHERE id=?", ok["id"])["files"])
     assert [f["type"] for f in files] == ["image/gif", "video/webm"]
-    assert (reports.FILES / str(ok["id"]) / "1.gif").stat().st_size == len(GIF) + 12 * MB
+    assert (reports.FILES / str(ok["id"]) / "1.gif").stat().st_size == len(GIF) + 40 * MB
+    assert (reports.FILES / str(ok["id"]) / "2.webm").stat().st_size == len(WEBM) + 20 * MB
     assert not db.one("SELECT 1 FROM reports WHERE learner=? AND id!=?", b, ok["id"]), "refused uploads left rows"
 
     # 10 an hour, then 429
@@ -177,7 +180,24 @@ def contexts(c) -> None:
     assert ex["check"]["outcome"] in ("unsure", "explained"), ex
     post(c, m, {"kind": "question", "source": "review", "template": "circle.convert", "seed": 4242,
                 "category": "figure"}, code=403)
-    print("ok  F6 reports: context resolved on the server for drill, qotd, challenge and a live mock")
+
+    # a sitting: its kind, date and band, from the sitting itself
+    db.run("UPDATE sessions SET result=? WHERE id=?", json.dumps({"estimate": {"low": 520, "high": 600}}), sid)
+    pv = c.get("/api/reports/context", params={"kind": "sitting", "session": sid}, headers={"X-Learner": m}).json()
+    st = pv["box"]["sitting"]
+    assert (st["kind"], st["band"], st["finished"], pv["allowed"]) == ("mock", "520–600", True, list(reports.GENERAL)), pv
+    got = post(c, m, {"kind": "sitting", "source": "report", "session": sid, "category": "confusing"})
+    assert db.one("SELECT kind, session FROM reports WHERE id=?", got["id"])["session"] == sid
+    post(c, fresh("other"), {"kind": "sitting", "session": sid, "category": "confusing"}, code=403)
+
+    # a word (W18): "Another choice also fits" is a one-tap two_right; a key dispute isn't a word's
+    w = fresh("word")
+    got = post(c, w, {"kind": "word", "source": "words", "word": "mitigate", "category": "Another choice also fits"})
+    row = db.one("SELECT kind, category, word FROM reports WHERE id=?", got["id"])
+    assert tuple(row) == ("word", "two_right", "mitigate") and got.get("thanks"), dict(row)
+    post(c, w, {"kind": "word", "word": "mitigate", "category": "key_wrong"}, code=422)
+    post(c, w, {"kind": "word", "category": "definition"}, code=422)                  # say which word
+    print("ok  F6 reports: context resolved on the server for drill, qotd, challenge, a live mock, a sitting, a word")
 
 
 def disputes(c) -> None:
@@ -195,8 +215,22 @@ def disputes(c) -> None:
         if i == 5:
             got = post(c, d, body, code=409)
             assert "5 answers waiting" in got["detail"], got
+            post(c, d, {**body, "dispute": False})          # the report itself still goes to a person
             break
+        if i == 0:
+            topic = lambda: next(t for t in c.get("/api/map", headers={"X-Learner": d}).json()["topics"]  # noqa: E731
+                                 if t["topic"] == q["topic"])
+            act = lambda: c.get("/api/me/activity", headers={"X-Learner": d}).json()                    # noqa: E731
+            blank = next(t for t in c.get("/api/map", headers={"X-Learner": fresh("blank")}).json()["topics"]
+                         if t["topic"] == q["topic"])
+            before, minutes = topic(), act()
+            assert before["answered"] == 1 and before["accuracy"] == 0, before
         got = post(c, d, body)
+        if i == 0:
+            # Shell 16: the topic's mastery ignores the disputed answer; the day's minutes don't move
+            after = topic()
+            assert (after["answered"], after["mastery"], after["accuracy"]) == (0, blank["mastery"], None), after
+            assert act() == minutes
         assert got["check"]["outcome"] == "unsure" and got.get("disputed"), got      # thin: nobody strong yet
         assert db.one("SELECT disputed FROM attempts WHERE id=?", a["id"])["disputed"] == 1
         rids.append(got["id"])
@@ -211,6 +245,8 @@ def disputes(c) -> None:
     os.environ["SATF_ADMIN_TOKEN"] = "f6-admin"
     H = {"X-Admin": "f6-admin"}
     assert c.get("/api/admin/reports", headers={"X-Admin": "nope"}).status_code == 403
+    thin = c.get(f"/api/admin/reports/{rids[1]}", headers=H).json()     # U3 7: thin is never explained
+    assert (thin["status"], thin["check_outcome"], thin["check"]["why"]) == ("new", "unsure", "thin"), thin
     listing = c.get("/api/admin/reports", headers=H).json()
     assert got["id"] in [x["id"] for x in listing["flagged"]] and listing["mail"] in ("smtp", "outbox")
     put = c.put(f"/api/admin/reports/{got['id']}", headers=H,
@@ -249,6 +285,8 @@ def instant(c) -> None:
     assert attempt(e, sid, q)["disputed"] == 0
     r = c.post(f"/api/reports/{got['id']}/accept", headers={"X-Learner": e}).json()
     assert r["status"] == "no_change"
+    listed = {x["id"]: x for x in c.get("/api/reports", headers={"X-Learner": e}).json()}
+    assert listed[got["id"]]["status"] == "no_change" and reports.open_disputes(e) == 0   # no dispute slot used
 
     # the Strong-student signal: 12 of 20 strong pick D's norm
     it = reports._from_bank("circle.equal_area_square", 1)
