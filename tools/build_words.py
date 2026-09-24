@@ -16,7 +16,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "server" / "words"
-PHASE = 1
+PHASE = 6  # phases 1-6 are errors; the review gate (servable frames) and freq.txt come later
 FILES = (
     "classes", "traps", "sat", "transitions", "pairs", "confusions",
     "roots", "foils", "collections", "fills", "frames", "adjudications",
@@ -336,7 +336,7 @@ def check_frames(data: dict[str, list | dict], pools: set[str], phase: int,
     the singular), at least one [[clue]] that decides the blank, and {slot}s from fills.json.
     An excerpt frame is cut exactly from a text published before 1929: source is {author, title,
     year, word}, word is the original blanked word (a legal key), and it has no slots.
-    Structure rules are errors now; the supply minimums are warnings until the frames phase (6).
+    Structure rules are always errors; the supply minimums are errors from the frames phase (6).
     """
     sat = [w for w in rows(data["sat"]) if isinstance(w, dict)]
     opposite = {c.get("id"): c.get("opposite") for c in rows(data["classes"]) if isinstance(c, dict)}
