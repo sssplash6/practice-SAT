@@ -19,6 +19,7 @@ __all__ = ["templates", "topic_of", "generate", "generate_many"]
 
 _TEMPLATES: dict[str, Callable] = {}
 _OWNER: dict[str, str] = {}
+FALLBACK_ATTEMPTS = 2_000
 
 
 def templates() -> dict[str, Callable]:
@@ -48,15 +49,22 @@ def generate(name: str, seed: int, attempts: int = 60, verify: bool = True, **kw
     quietly. Pass verify=False only to measure the cost of the check.
     """
     fn = templates()[name]
-    for i in range(attempts):
-        try:
-            item = fn(random.Random(seed * 1_000_003 + i), seed, **kw)
-        except (ItemError, ValueError, ZeroDivisionError, KeyError, StopIteration):
-            continue
-        if verify:
-            audit(item)
-        return item
-    raise ItemError(f"{name}: no valid item after {attempts} attempts (seed {seed})")
+    # A request with explicit parameters keeps its caller's retry limit. The
+    # extra range is only for ordinary bank seeds that exhausted all 60 draws.
+    fallback = attempts == 60 and not kw
+    phases = (range(attempts), range(attempts, FALLBACK_ATTEMPTS)) if fallback \
+        else (range(attempts),)
+    for phase in phases:
+        for i in phase:
+            try:
+                item = fn(random.Random(seed * 1_000_003 + i), seed, **kw)
+            except (ItemError, ValueError, ZeroDivisionError, KeyError, StopIteration):
+                continue
+            if verify:
+                audit(item)
+            return item
+    limit = FALLBACK_ATTEMPTS if fallback else attempts
+    raise ItemError(f"{name}: no valid item after {limit} attempts (seed {seed})")
 
 
 def generate_many(n: int, seed0: int = 0, names: list[str] | None = None,
