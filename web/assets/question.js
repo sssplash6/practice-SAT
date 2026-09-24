@@ -1027,6 +1027,8 @@
         const forms = (fb.accepted || [fb.answer]).map(x => spr.clean(x));
         const pv = spr.parse(a), kv = spr.parse(fb.answer);
         right = forms.includes(spr.clean(a)) || (pv.ok && kv.ok && Math.abs(pv.value - kv.value) < 1e-9);
+        fieldWrap.classList.toggle('ok', right);
+        fieldWrap.classList.toggle('no', !right);
       }
       const was = fb.correct === true;
       const shown = mc ? LETTERS[a] : minus(a);
@@ -1037,11 +1039,13 @@
     }
     function setHidden(on) {
       S.hidden = !!on;
-      if (on) { showLocal(''); S.selected = null; if (field) { field.value = ''; S.value = ''; onValue(); } }
+      // hidden means hidden to every reader: no key or pick classes (the pick's strike), labels or status text left behind
+      if (on) { showLocal(''); S.selected = null; status.textContent = ''; if (mc) markRows(null, null, ''); if (field) { field.value = ''; S.value = ''; fieldWrap.classList.remove('ok', 'no'); onValue(); } }
       else if (S.fb) {
         S.selected = givenIndex(S.fb.given);
         if (mc) { markRows(keyIndex(S.fb), S.selected, 'Your answer'); optionLines(S.fb); }
         if (field && S.fb.given != null) field.value = minus(S.fb.given);
+        if (fieldWrap) { fieldWrap.classList.toggle('ok', S.fb.correct === true); fieldWrap.classList.toggle('no', S.fb.correct === false); }
       }
       paint();
     }
@@ -1112,8 +1116,8 @@
           filler ? 'a nearby value, not tied to a specific mistake' : cap1(reason),
           mine && fb.pick_note ? h('span', { class: 'opt-why-note', text: ` · ${fb.pick_note}` }) : null,
           share !== null && share !== undefined ? h('span', { class: 'opt-why-share', text: ` · ${pct(share)}% of students who miss it pick this one` }) : null);
-        // V6: the student corrects the label on their own pick
-        if (mine && o.onNotMine) line.append(' ', h('button', { type: 'button', class: 'qlink opt-notmine', 'aria-haspopup': 'menu', text: 'Not what I did?', onclick: e => o.onNotMine(e.currentTarget, i) }));
+        // V6: the student corrects the label on their own filed pick (not a local pick made while hidden)
+        if (mine && pick === undefined && o.onNotMine) line.append(' ', h('button', { type: 'button', class: 'qlink opt-notmine', 'aria-haspopup': 'menu', text: 'Not what I did?', onclick: e => o.onNotMine(e.currentTarget, i) }));
         const acts = h('span', { class: 'opt-why-acts' });
         if (mine && !filler && o.onSpot) acts.append(quiet('Spot this trap', () => o.onSpot(i)));          // SR11
         if (!filler && i !== key && fb.steps && fb.option_steps && Number.isInteger(fb.option_steps[i])) {
