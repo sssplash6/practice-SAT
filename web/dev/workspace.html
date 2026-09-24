@@ -340,7 +340,7 @@
       if (q.type !== 'spr' && miss) fb.crowd = Object.assign({}, fb.crowd, { option_share: q.choices.map((_, j) => (j === keyOf(q) ? null : [0.5, 0.3, 0.2][j % 3])) });
       if (q.type === 'spr' && miss && given) fb.diagnosis = { kind: 'ten', text: 'Off by a factor of 2: check which part of the circle the question asks for.' };
       return {
-        q, fb, n: i + 1, module: n > 22 ? (i < 22 ? 1 : 2) : 1, status, flag: i % 5 === 0, ms, budget_ms: { easy: 65000, medium: 95000, hard: 126000 }[q.difficulty] || 95000,
+        q, fb, n: n > 22 ? (i % 22) + 1 : i + 1, module: n > 22 ? (i < 22 ? 1 : 2) : 1, status, flag: i % 5 === 0, ms, budget_ms: { easy: 65000, medium: 95000, hard: 126000 }[q.difficulty] || 95000,
         worth: miss ? 8 + (i % 6) * 2 : 0, saved: i === 4, reported: i === 6 ? 'checking' : null, changed: i === 3 ? [1, wrongOf(q)] : null,
         cause: miss && given !== null ? { cause: i % 4 === 3 ? 'slip' : 'trap', auto: true, evidence: ['0:18 on it', '4 of your last 5 on this type right'] } : status === 'unanswered' ? { cause: 'clock', auto: true } : null,
         odds: { you: miss ? 0.82 : 0.64, at: 'sitting', avg: 0.61 }, crowd: i % 2 ? { n: 212, rate: 0.74, median_ms_right: 65000, level: 4 } : { n: 6, level: 4, rough: true },

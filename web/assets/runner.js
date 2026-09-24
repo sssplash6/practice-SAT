@@ -3974,6 +3974,7 @@
       if (t && t.closest && t.closest('[role=menu], [role=listbox], .popover, .calc')) return;
       const inField = typing(t);
       if (e.key === 'Escape') { if (asDialog) { e.preventDefault(); close(); } return; }
+      try { if (UI.prefs && UI.prefs.now && (UI.prefs.now() || {}).keys === false) return; } catch (_) {}   // §2.8: shortcuts off (Esc aside)
       if (inField && e.key !== 'Enter') return;
       const key = e.key.length === 1 ? e.key.toUpperCase() : e.key;
       const done = () => e.preventDefault();
