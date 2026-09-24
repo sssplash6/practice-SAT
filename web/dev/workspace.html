@@ -197,11 +197,48 @@
   const wait = ms => new Promise(r => setTimeout(r, ms));
   const tries = new Map();
 
+  /* the fake server behind the history (every view) and, in the players, the inline twin and See one solved;
+     the playground's and the runner's twins go to the real /api/drill */
+  function fakeApi(drill) {
+    const twins = FX.filter(q => q.template === 'circle.convert');
+    let tw = 0, twQ = null;
+    const realApi = UI.api;
+    const nextTwin = () => { twQ = Object.assign(JSON.parse(JSON.stringify(twins[++tw % twins.length])), { id: `tw${tw}` }); return twQ; };
+    UI.api = async (path, o = {}) => {
+      const m = o.method || 'GET';
+      const mine = path.startsWith('/review/') || path.startsWith('/types/') || path === '/mistakes/add' || (path === '/saved' && m === 'PATCH') || (drill && path.startsWith('/drill'));
+      if (!mine) return realApi(path, o);
+      log('api', m, path, o.body || '');
+      await wait(140);
+      if (m === 'POST' && path === '/drill') return { id: `dv${tw + 1}`, question: nextTwin() };
+      if (m === 'GET' && /^\/drill\/dv\d+$/.test(path)) return { question: twQ };
+      if (/\/drill\/dv\d+\/answer$/.test(path)) return Object.assign(feedback(twQ, o.body.answer, o.body), { repair_next: !isRight(twQ, o.body.answer) });
+      if (/\/drill\/dv\d+\/next$/.test(path)) return { question: nextTwin() };
+      if (/\/drill\/dv\d+\/(more|finish)$/.test(path)) return { ok: true };
+      if (path.startsWith('/types/')) { const ex = Object.assign(JSON.parse(JSON.stringify(FX[4])), { id: 'ex', seed: 900003 }); return { question: ex, feedback: feedback(ex, null, {}), trap_index: 2 }; }
+      if (path.startsWith('/review/family')) {
+        const p = new URLSearchParams(path.split('?')[1]);
+        const rows = Array.from({ length: p.get('cursor') ? 3 : 8 }, (_, i) => ({ id: 900 - i, at: `2026-09-${String(24 - i).padStart(2, '0')}T1${i}:05:00`, source: i % 2 ? 'practice' : 'section', sitting: i % 2 ? 'Practice set #45' : 'Section #7', href: '#',
+          tier: ['easy', 'medium', 'hard'][i % 3], result: ['wrong', 'right', 'repaired', 'mixed', 'right', 'repeat', 'wrong', 'right'][i % 8], given_label: 'C', mistake: i % 4 === 0 && i % 8 !== 4 ? 'gave the diameter instead' : '', norm: i % 4 === 0 ? 'n1' : 'n2',
+          ms: 40000 + i * 9000, flagged: i === 2, seed: i === 1 ? 1 : 10 + i, template: 'circle.convert', openable: true,
+          tries: i === 3 ? [{ given_label: 'C', correct: false, ms: 22000, reason: 'gave the diameter instead' }, { given_label: 'B', correct: true, ms: 41000 }] : null }))
+          .filter(r => !p.get('norm') || r.norm === p.get('norm'));
+        return { template: 'circle.convert', name: 'Diameter and radius', summary: { seen: p.get('norm') ? rows.length : 11, right: 5, mixed: 1, repaired: 1, repeats: 1, median_ms: 70000 },
+          trend: { first: ['wrong', 'wrong', 'right', 'right', 'right'], median_first: 130000, median_last: 58000, ready: 'Ready · back in your warm-up Oct 2' },
+          open: [{ trap_id: 7, label: 'gave the diameter instead', owed: 1, of: 2 }], verdict: { kind: 'same_trap', text: 'Same trap twice', start: { body: { source: 'learn', templates: ['circle.convert'] } } },
+          attempts: rows, next: p.get('cursor') ? null : 'c1' };
+      }
+      if (path.startsWith('/review/item')) return { question: FX[0], answer: FX[0].answer, reasons: FX[0].reasons, rationale: FX[0].rationale };
+      return { ok: true };
+    };
+  }
+
   /* ---------------------------------------------------------------- the runner (UI.runner), on a fake server
      ?view=runner&rmode=practice|retry|end|exam|training|challenge  [&minutes=6] [&n=10] [&endless=1]
      Marks, notes, strikes, answers and the stopwatch go to a fake store in localStorage
      (dev.run.<rmode>), so a reload restores them the way the server would. */
   if (url.get('view') === 'runner') {
+    fakeApi(false);
     const rmode = url.get('rmode') || 'practice';
     const exam = rmode === 'exam' || rmode === 'training';
     const KEYR = `dev.run.${rmode}`;
@@ -363,37 +400,7 @@
     let items = Array.from({ length: n }, (_, i) => make(i));
     if (rmode === 'second' || rmode === 'walk') items = items.filter(x => x.status !== 'correct' && x.status !== 'fixed');
     if (rmode === 'second') items.forEach(x => { x.fb = { given: x.fb.given }; });          // held back: no key, no reasons
-    /* the fake server behind the inline twin, See one solved and the history */
-    const twins = FX.filter(q => q.template === 'circle.convert');
-    let tw = 0, twQ = null;
-    const realApi = UI.api;
-    UI.api = async (path, o = {}) => {
-      const m = o.method || 'GET';
-      log('api', m, path, o.body || '');
-      await wait(140);
-      if (m === 'POST' && path === '/drill') { twQ = Object.assign(JSON.parse(JSON.stringify(twins[++tw % twins.length])), { id: `tw${tw}` }); return { id: `dv${tw}`, question: twQ }; }
-      if (m === 'GET' && /^\/drill\/dv\d+$/.test(path)) return { question: twQ };
-      if (/\/drill\/dv\d+\/answer$/.test(path)) return Object.assign(feedback(twQ, o.body.answer, o.body), { repair_next: !isRight(twQ, o.body.answer) });
-      if (/\/drill\/dv\d+\/more$/.test(path)) return { ok: true };
-      if (/\/drill\/dv\d+\/next$/.test(path)) { twQ = Object.assign(JSON.parse(JSON.stringify(twins[++tw % twins.length])), { id: `tw${tw}` }); return { question: twQ }; }
-      if (/\/drill\/dv\d+\/finish$/.test(path)) return { ok: true };
-      if (path.startsWith('/types/')) { const ex = Object.assign(JSON.parse(JSON.stringify(FX[4])), { id: 'ex', seed: 900003 }); return { question: ex, feedback: feedback(ex, null, {}), trap_index: 2 }; }
-      if (path.startsWith('/review/family')) {
-        const p = new URLSearchParams(path.split('?')[1]);
-        const rows = Array.from({ length: p.get('cursor') ? 3 : 8 }, (_, i) => ({ id: 900 - i, at: `2026-09-${String(24 - i).padStart(2, '0')}T1${i}:05:00`, source: i % 2 ? 'practice' : 'section', sitting: i % 2 ? 'Practice set #45' : 'Section #7', href: '#',
-          tier: ['easy', 'medium', 'hard'][i % 3], result: ['wrong', 'right', 'repaired', 'mixed', 'right', 'repeat', 'wrong', 'right'][i % 8], given_label: 'C', mistake: i % 4 === 0 && i % 8 !== 4 ? 'gave the diameter instead' : '', norm: i % 4 === 0 ? 'n1' : 'n2',
-          ms: 40000 + i * 9000, flagged: i === 2, seed: i === 1 ? 1 : 10 + i, template: 'circle.convert', openable: true,
-          tries: i === 3 ? [{ given_label: 'C', correct: false, ms: 22000, reason: 'gave the diameter instead' }, { given_label: 'B', correct: true, ms: 41000 }] : null }))
-          .filter(r => !p.get('norm') || r.norm === p.get('norm'));
-        return { template: 'circle.convert', name: 'Diameter and radius', summary: { seen: p.get('norm') ? rows.length : 11, right: 5, mixed: 1, repaired: 1, repeats: 1, median_ms: 70000 },
-          trend: { first: ['wrong', 'wrong', 'right', 'right', 'right'], median_first: 130000, median_last: 58000, ready: 'Ready · back in your warm-up Oct 2' },
-          open: [{ trap_id: 7, label: 'gave the diameter instead', owed: 1, of: 2 }], verdict: { kind: 'same_trap', text: 'Same trap twice', start: { body: { source: 'learn', templates: ['circle.convert'] } } },
-          attempts: rows, next: p.get('cursor') ? null : 'c1' };
-      }
-      if (path === '/mistakes/add' || (path === '/saved' && m === 'PATCH')) return { ok: true };
-      if (path.startsWith('/review/item')) return { question: FX[0], answer: FX[0].answer, reasons: FX[0].reasons, rationale: FX[0].rationale };
-      return realApi(path, o);
-    };
+    fakeApi(true);
     const on = {
       seen: it => log('seen', it.q.id), reanswer: (it, a, right) => log('reanswer', it.q.id, a, right), show: (i, it) => log('show', i, it.q && it.q.id),
       why: async (it, b) => { log('why', it.q.id, b); await wait(150); return { called: b.diag === it.norm, label: it.fb.mistake || 'gave the diameter instead', cause: b.kind || null }; },
@@ -450,6 +457,7 @@
   }
 
   /* ---------------------------------------------------------------- the playground */
+  fakeApi(false);
   let ws = null;
   const stateKey = () => `dev.ws.state.${$('#fx').value}.${$('#mode').value}`;
   function mount() {
