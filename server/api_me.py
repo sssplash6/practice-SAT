@@ -152,7 +152,7 @@ def put_me(body: Me, x_learner: str | None = Header(default=None), x_tz: int = D
             raise HTTPException(422, "name: 1–40 characters, no digits, @, < or >")
     if got.get("handle") is not None:
         got["handle"] = _check_handle(learner, got["handle"])
-    if got.get("exam_date"):
+    if got.get("exam_date") is not None:           # "" is no date: null clears it
         try:
             if not DATE_OK.match(got["exam_date"]):
                 raise ValueError
@@ -166,7 +166,7 @@ def put_me(body: Me, x_learner: str | None = Header(default=None), x_tz: int = D
         raise HTTPException(422, "target is a Math score, 200 to 800 in tens")
     if got.get("minutes") is not None and not 5 <= got["minutes"] <= 240:
         raise HTTPException(422, "minutes is between 5 and 240")
-    if got.get("days") and not DAYS_OK.match(got["days"]):
+    if got.get("days") is not None and not DAYS_OK.match(got["days"]):
         raise HTTPException(422, "days is seven 0s and 1s, Monday first")
     if got.get("current") is not None and got["current"] not in TARGETS:
         raise HTTPException(422, "current is a Math score, 200 to 800 in tens")

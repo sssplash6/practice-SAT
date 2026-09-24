@@ -855,6 +855,10 @@ def routes(client):
     assert r.status_code == 409 and "handle" in r.text
     assert client.put("/api/me", headers=h, json={"handle": "Student 4f2a"}).status_code == 422
     assert client.put("/api/me", headers=h, json={"country": "XX"}).status_code == 422
+    for field in ("exam_date", "days"):                                    # "" is neither a value nor a clear
+        r = client.put("/api/me", headers=h, json={field: ""})
+        assert r.status_code == 422 and field in r.text, (field, r.text)
+        assert client.put("/api/me", headers=h, json={field: None}).json()["profile"][field] is None
 
     def failed_mirror(_learner, _fields):
         raise RuntimeError("plan mirror failed")
