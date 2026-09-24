@@ -393,13 +393,15 @@ def check_learner(c) -> None:
     m = c.get("/api/mistakes", headers=H).json()
     assert m["traps"]
     trap = m["traps"][0]["norm"]
-    owed = 2 - (trap in progress.offered_of(again))
+    # an unnamed trap (a grid-in miss naming nothing) closes on any clean answer to its template
+    counts = lambda q: not trap or trap in progress.UNNAMED or trap in progress.offered_of(q)
+    owed = 2 - counts(again)
     assert m["traps"][0]["owed"] == owed, (m["traps"][0], progress.offered_of(again))
     fix = c.post("/api/drill", headers=H, json={"mistakes": True}).json()
     assert fix["total"] == 2
     for _ in range(2):
         cur = stored(fix["id"])[-1]
-        owed -= trap in progress.offered_of(cur)
+        owed -= counts(cur)
         c.post(f"/api/drill/{fix['id']}/answer", headers=H,
                json={"question_id": cur["id"], "answer": keyed_answer(cur, True)})
         c.post(f"/api/drill/{fix['id']}/next", headers=H)
