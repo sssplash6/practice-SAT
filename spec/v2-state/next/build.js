@@ -16,6 +16,35 @@ const REPO = '/Users/workingmyassof/satbank'
 const SIGN = 'Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>'
 const SHELL = '/Users/workingmyassof/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell'
 
+// A wave-2 section: its spec pointers, upgrade file and owned files; five units from server to a walked page.
+function section(id, name, port, builds, upgrades, owns) {
+  const t = {
+    title: `${id} · ${name}`, port,
+    spec: `spec/rebuild-v2.md: Part 4.2 ${id} (from line 11062), which builds ${builds}; the resolutions and contracts of Part 2
+(§2.2 R1-R38, §2.9 contracts, §2.10 registries, §2.13 amended checks); and spec/v2-upgrades/${upgrades}.md (its accepted upgrades and
+overrides win over the section spec). Use the merged foundations instead of writing your own: F1's ui.css, kit.js and charts.js (read
+the kit.js header and /dev/kit.html), F2's shell (ui.js, UI.api, UI.prefs, UI.keys), F3's UI.workspace, UI.runner and UI.review,
+F4's progress/estimate/prefs/deps.access, F5's drill body, F6's UI.report and sets. Another section's helper you need is called through
+deps.part (server) or \`UI.x && UI.x(...)\` (client) so it degrades until that section lands.`,
+    owns,
+    units: [
+      `Server: every endpoint and module function this section owns (the section's server items and the §2.9 contracts it provides),
+with validation at the boundary.`,
+      `server/checks/${id.toLowerCase()}.py covering every server acceptance item of the section (as amended by §2.13 and the upgrade
+file). Make it pass.`,
+      `The main page(s) of the section: layout, data wiring and every primary action, built from the kit and the shell, at 1280 and 390.`,
+      `The rest of the section's screens: sheets, menus, empty, loading and error states, the phone layout, keyboard support, and the
+upgrade file's remaining page items.`,
+      `Walk every page of the section at 1280 and 390, in light and dark, with a new learner and a seeded one (answers, mistakes, a
+test, a plan), in a headless browser; fix what is broken; no console errors; test_flow still "all good".`,
+    ],
+    accept: `The section's acceptance list in Part 3 (as amended by §2.13 and spec/v2-upgrades/${upgrades}.md): its server items via
+server/checks/${id.toLowerCase()}.py, and its page items walked at 1280 and 390 with a new and a seeded learner, no console errors;
+test_flow prints "all good".`,
+  }
+  return { [id]: t }
+}
+
 const TASKS = {
   F1: {
     title: 'F1 · Design system', port: 8011,
@@ -119,6 +148,33 @@ want-regex sets, exact items refused by access(), inline drills absent from /api
 items), each exercised against a server on port 8015; repairs and {mistakes: true} drills offer the trap; test_flow prints "all good"
 on 3 runs in a row.`,
   },
+  // ---- wave 2: the sections (built on the merged foundations F0-F6). Server halves the user's other agent builds
+  // (S7, S8, S9 servers) are not here; their pages-only tasks are added when those servers merge.
+  ...section('S1', 'Account, Me, Settings, Help', 8021, `Part 3.1 §1, §3, §4, §5, §6, §8 and §9 (lines 653-2294; §2, §7 and
+§10 are not yours: the shell is F2's, classes are dropped, §10 is F6's), R25, R31, Compete §9's Me Boards block, Words' Me items,
+Review's Saved content card, Tests' test defaults`, 'shell-me',
+    'server/account.py, api_account.py, api_profile.py, achievements.py, mail.py, web/me/**, web/signin/**, web/pair/**, web/share/**, web/help/**, web/diagnostic/signup.html, web/diagnostic/verified.html, server/checks/s1.py'),
+  ...section('S3', 'Today', 8023, `Part 3.2 in full (lines 2295-3347), R27 (the questions of the day), R30 (the Review card and
+Words tile), and the Today items of Review §10, Words §11 and Compete §9`, 'today',
+    'web/index.html, server/api_today.py, server/daily.py, server/checks/s3.py'),
+  ...section('S4', 'Practice builder and session', 8024, `Part 3.3 in full (lines 3348-4779; components from F3, report and sets
+from F6, the body from F5), Compete §8 for the practice session (R28), Review §10's session strip, Words' session hooks, Plan's session
+summary; also F6's drill.py follow-up (pool 'set' through sets.serve, in spec/v2-state/followups/F6.json)`, 'practice',
+    'web/practice/**, server/drill.py, server/practice.py, server/api_practice.py, server/checks/s4.py'),
+  ...section('S5', 'Tests and the test window', 8025, `Part 3.4 in full (lines 4780-6054; runner components from F3), Compete §8
+for the test window, the Weekly Module and Season Final starts, Review's flags in the runner, Shell's UI.learner and token rules for
+web/test/ (R32), QBank's "shelf sections and diagnostic forms remember what they serve". One test format everywhere, based on the
+practice session (the user: "the practice one is the best")`, 'tests',
+    'web/tests/**, web/test/**, web/diagnostic/index.html, server/api_tests.py, server/papers.py, server/blueprint.py, server/mocks.json, server/forms.json, tools/moderate.py, server/checks/s5.py'),
+  ...section('S6', 'Results and the score report', 8026, `Part 3.5 in full (lines 6055-7045; the player from F3, the report dialog
+from F6), R26, R35, the report's parts of Tests (?q=, peers, notes, confidence, away, changes), Words (redirect), Compete (contest rows,
+Ranked pill) and Review (Flagged filter); also the follow-ups in spec/v2-state/followups/F1.json (UI.sittingCard) and F5.json (move
+the R24 history filter into api_results.history so S4 can delete F5's shadow GET /api/history). A skill on Results opens its stats and
+starts Practice on only that skill (the user's request)`, 'reports',
+    'web/results/**, server/api_results.py, web/assets/results-ui.js, server/checks/s6.py'),
+  ...section('S10', 'Review', 8030, `Part 3.9 in full (lines 10030-10969; components from F3, traps logic from F4, sets from F6), R2,
+R5's endpoints`, 'review',
+    'web/review/**, web/mistakes/**, server/api_review.py, server/checks/s10.py'),
   // F4 was built outside this script by another agent (branch v2/f4, from v2/f0); run it with from: 'verify'.
   F4: {
     title: 'F4 · Data layer', port: 8014,
