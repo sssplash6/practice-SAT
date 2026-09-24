@@ -384,7 +384,7 @@
     <div class="kit-sub"><h2 class="h2">UI.toast · UI.banner</h2><span class="meta">three at most; Undo for 6s</span></div>
     <div class="kit-row" id="x-toasts"></div>
     <div id="x-banner-host" style="margin-top: 14px"></div>
-    <div class="kit-sub"><h2 class="h2">dialog.more · dialog.palette · .calc</h2><span class="meta">the phone menu sheet, the command palette, the calculator</span></div>
+    <div class="kit-sub"><h2 class="h2">dialog.more · dialog.palette · .calc</h2><span class="meta">the phone menu sheet, the command palette, the calculator, the reference sheet</span></div>
     <div class="kit-row" id="x-big"></div>
   </section>
 
@@ -507,6 +507,7 @@
       label: 'Motion', value: root.dataset.motion || '',
       onChange: v => { if (v) root.dataset.motion = v; else delete root.dataset.motion; },
     });
+    host.append(el('button', { class: 'btn sm', type: 'button', text: 'Print', title: 'The print conventions: no chrome, light, rows kept whole', onclick: () => print() }));
   });
   demo('sections', null, () => {
     const nav = el('nav', { class: 'sections', 'aria-label': 'On this page' });
@@ -887,6 +888,7 @@
       calc.querySelector('button').addEventListener('click', () => b.click());
       document.body.append(calc); b.setAttribute('aria-pressed', 'true');
     });
+    if (UI.ref && UI.ref.open) btn(host, '.ref · the reference sheet', () => UI.ref.open());
   });
 
   /* ------------------------------------------------------------ shell */
