@@ -1,0 +1,959 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Kit · SAT Freshman</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<script>
+  // ?theme=dark|light wins over the saved look, so a link (or a headless walk) opens either theme
+  (() => { const t = new URLSearchParams(location.search).get('theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* the kit page's own layout; every component below is ui.css, kit.js or charts.js */
+  .kit-bar { position: sticky; top: 0; z-index: 30; background: var(--paper); box-shadow: 0 1px 0 var(--line); }
+  .kit-bar-in { max-width: var(--max); margin: 0 auto; padding: 10px var(--gutter); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; }
+  .kit-bar-in .side-mark { margin-right: auto; }
+  .kit-look { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  .kit-look .help:empty { display: none; }
+  .kit-toc { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+  .kit-toc .sections { top: 0; position: relative; margin: 0; }
+  @media (max-width: 759px) { .kit-bar { position: static; } }      /* two rows of controls would eat the screen */
+  .kit-sec { padding: 28px 0 8px; scroll-margin-top: 72px; }
+  .kit-sec > .h1 { margin-bottom: 18px; }
+  .kit-sub { margin: 26px 0 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+  .kit-sub .meta { font-size: 12px; }
+  .kit-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; }
+  .kit-row + .kit-row { margin-top: 12px; }
+  .kit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+  .kit-grid.two { grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); }
+  .kit-stack { display: grid; gap: 14px; }
+  .kit-col { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+  .kit-col > .full { align-self: stretch; }
+  .kit-col > .help { margin-top: -6px; }
+
+  .kit-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .kit-sw { display: grid; grid-template-columns: 36px minmax(0, 1fr); align-items: center; gap: 4px 10px; }
+  .kit-sw i { grid-row: 1 / 3; width: 36px; height: 36px; border-radius: 8px; box-shadow: inset 0 0 0 1px var(--line); }
+  .kit-sw b { font: 600 13px var(--font); overflow-wrap: anywhere; }
+  .kit-sw span { font: 500 11px var(--mono); color: var(--soft); overflow-wrap: anywhere; }
+
+  .kit-marks { display: flex; flex-wrap: wrap; gap: 14px 10px; }
+  .kit-marks > div { display: grid; justify-items: center; gap: 6px; width: 76px; text-align: center; }
+  .kit-marks .meta { font-size: 11px; line-height: 1.25; }
+  .kit-av { display: grid; justify-items: center; gap: 6px; }
+  .kit-av .meta { font-size: 11px; }
+
+  .kit-type > * + * { margin-top: 10px; }
+  .kit-q { max-width: 680px; }
+
+  /* the shell frames: a transform makes each the containing block of its fixed children */
+  .kit-frame { position: relative; transform: translateZ(0); overflow: hidden; border-radius: var(--radius-card); box-shadow: 0 0 0 1px var(--line); background: var(--paper); }
+  .kit-frame.desk { height: 640px; }
+  .kit-frame.desk.side-in { padding-left: var(--side-w); }
+  .kit-frame.desk.rail-in { padding-left: var(--rail-w); }
+  .kit-frame .kit-main { height: 100%; overflow: auto; padding: 20px; }
+  .kit-frame.phone { width: min(390px, 100%); height: 640px; margin-inline: auto; padding-top: 56px; }
+  .kit-frame.bar-only { height: auto; }
+  .kit-frame.bar-only .bar { position: relative; }
+  @media (max-width: 759px) { .kit-desk-only { display: none; } }
+  @media (min-width: 760px) { .kit-phone-only { display: none; } }
+
+  /* Data tables: the hidden table of every chart, shown for checking */
+  .kit-data .chart-data { position: static; width: auto; height: auto; overflow: auto; clip-path: none; white-space: normal; margin-top: 12px; }
+  .kit-data .chart-data table { font: 400 12px/1.4 var(--mono); }
+  .kit-data .chart-data :is(th, td) { padding: 3px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+  .kit-data .chart-data caption { text-align: left; font: 600 12px var(--font); color: var(--soft); padding-bottom: 4px; }
+
+  .kit-fmt td:first-child { font: 500 12.5px var(--mono); color: var(--soft); }
+  .kit-fmt td:last-child { font: 500 13px var(--mono); }
+  .kit-broke { margin-top: 10px; }
+  .kit-foot { margin: 48px 0 0; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="kit-bar">
+  <div class="kit-bar-in">
+    <a class="side-mark" href="/" id="kit-mark"><span class="side-word">Kit</span></a>
+    <div class="kit-look" id="kit-look"></div>
+  </div>
+</header>
+
+<main class="page" id="main" tabindex="-1">
+  <p class="help" id="kit-broken" hidden></p>
+
+  <!-- ================================================================ tokens -->
+  <section class="kit-sec" id="tokens" aria-labelledby="h-tokens">
+    <h1 class="h1" id="h-tokens">Tokens</h1>
+    <div class="kit-swatches" id="x-swatches"></div>
+
+    <div class="kit-sub"><h2 class="h2">Type</h2><span class="meta">Archivo · DM Mono · Source Serif 4</span></div>
+    <div class="kit-type">
+      <p class="k">.k · Up next</p>
+      <p class="h1">.h1 · One thing to do today</p>
+      <p class="h2">.h2 · A card title</p>
+      <p class="h3">.h3 · A row title</p>
+      <p class="num" style="font-size: 56px">1,240</p>
+      <p class="meta">.meta · 3 q · 4 min · ≈ 6 pts</p>
+      <div><label class="label" for="kit-t-f">.label · A form label</label><p class="help">.help · The one-line helper under a control that changes how practice behaves.</p></div>
+      <p class="q-stem">.q-stem · If 3x + 7 = 22, what is the value of x?</p>
+      <p>Body 15px with <a href="#tokens">a plain link</a>, <a class="link" href="#tokens">.link</a>, <mark>mark</mark>, <kbd>G</kbd><kbd>N</kbd>, <code>code</code> and <span class="mono">.mono 1:12 · 42h 10m</span>.</p>
+      <p class="note">.note · Logged by you</p>
+      <p class="error">.error · This browser is blocking site data.</p>
+      <input class="sr" id="kit-t-f" tabindex="-1" aria-hidden="true">
+    </div>
+  </section>
+
+  <!-- ================================================================ question states -->
+  <section class="kit-sec" id="states" aria-labelledby="h-states">
+    <h1 class="h1" id="h-states">Question states</h1>
+    <div class="kit-sub"><h2 class="h2">UI.cell · every state</h2><span class="meta">data-status</span></div>
+    <div class="kit-marks" id="x-cells"></div>
+    <div class="kit-sub"><h2 class="h2">Overlays</h2><span class="meta">data-flag · data-note · data-open · data-fixing · data-over · aria-current · data-filtered</span></div>
+    <div class="kit-marks" id="x-overlays"></div>
+    <div class="kit-sub"><h2 class="h2">Sizes</h2><span class="meta">.sm 28 · 40 · .lg 48</span></div>
+    <div class="kit-row" id="x-sizes"></div>
+    <div class="kit-sub"><h2 class="h2">UI.legend</h2><span class="meta">counts on every key</span></div>
+    <div id="x-legend"></div>
+    <div class="kit-sub"><h2 class="h2">A navigator</h2><span class="meta">.cell-grid, a filtering legend, Colour by</span></div>
+    <div class="card kit-stack">
+      <div class="kit-row" id="x-nav-ctl"></div>
+      <div class="cell-grid" id="x-nav"></div>
+      <div id="x-nav-legend"></div>
+    </div>
+    <div class="kit-sub"><h2 class="h2">UI.dbars · difficulty</h2></div>
+    <div class="kit-row" id="x-dbars"></div>
+    <div class="kit-sub"><h2 class="h2">UI.strip</h2><span class="meta">static · pickable with a marker · .fit</span></div>
+    <div class="kit-stack" id="x-strips"></div>
+    <div class="kit-sub"><h2 class="h2">UI.pips</h2><span class="meta">clean answers given of owed</span></div>
+    <div class="kit-row" id="x-pips"></div>
+    <div class="kit-sub"><h2 class="h2">UI.atlas · the type map</h2><span class="meta">unmet · met · ready, open, fixing, due; the second row selects</span></div>
+    <div class="card"><div id="x-atlas"></div><div id="x-atlas-sel"></div></div>
+    <div class="kit-sub"><h2 class="h2">Mastery</h2><span class="meta">.mbar + UI.masteryWord + accuracy</span></div>
+    <div class="kit-stack" id="x-mastery" style="max-width: 420px"></div>
+  </section>
+
+  <!-- ================================================================ controls -->
+  <section class="kit-sec" id="controls" aria-labelledby="h-controls">
+    <h1 class="h1" id="h-controls">Controls</h1>
+    <div class="kit-sub"><h2 class="h2">Buttons</h2><span class="meta">.pill primary · .btn secondary · .quiet tertiary · .ibtn</span></div>
+    <div class="kit-row">
+      <button class="pill" type="button">Start</button>
+      <button class="pill sm" type="button">Start · 8 q</button>
+      <button class="pill sm" type="button">Resume <kbd class="kbd">G</kbd><kbd class="kbd">N</kbd></button>
+      <button class="pill sm" type="button" disabled>Disabled</button>
+      <button class="pill sm" type="button" aria-busy="true">Busy</button>
+    </div>
+    <div class="kit-row">
+      <button class="btn" type="button">Secondary</button>
+      <button class="btn" type="button">Review <span class="n">14</span></button>
+      <button class="btn sm" type="button">Small</button>
+      <button class="btn icon" type="button" aria-label="Search" id="x-btn-icon"></button>
+      <button class="btn ink" type="button">Delete for good</button>
+      <button class="btn" type="button" aria-pressed="true">Pressed</button>
+      <button class="btn" type="button" disabled>Disabled</button>
+      <button class="quiet" type="button">Quiet</button>
+      <a class="link" href="#controls">.link</a>
+    </div>
+    <div class="kit-row" id="x-ibtns"></div>
+    <div class="card kit-row" style="margin-top: 12px">
+      <span class="meta">On a card:</span>
+      <button class="pill sm" type="button">Start</button>
+      <button class="btn" type="button">Secondary</button>
+      <button class="btn sm" type="button">Small</button>
+      <button class="quiet" type="button">Quiet</button>
+    </div>
+    <div class="pill wide" style="margin-top: 12px" role="presentation">.pill.wide</div>
+
+    <div class="kit-sub"><h2 class="h2">UI.verb · the six study verbs</h2><span class="meta">UI.VERBS; the sublabel shows on a coarse pointer and the first three uses</span></div>
+    <div class="kit-row" id="x-verbs"></div>
+    <div class="kit-row" id="x-verbs-2"></div>
+    <div class="table-wrap" style="margin-top: 14px"><table class="table compact" id="x-verbs-table" style="min-width: 720px"><thead><tr><th>id</th><th>label</th><th>sub</th><th>helper</th><th>key</th></tr></thead><tbody></tbody></table></div>
+
+    <div class="kit-sub"><h2 class="h2">UI.seg</h2><span class="meta">radiogroup · arrows move and select · a disabled option says why</span></div>
+    <div class="kit-col" id="x-segs"></div>
+    <div class="kit-sub"><h2 class="h2">UI.chips · .choices</h2></div>
+    <div class="kit-col" id="x-chips"></div>
+    <div class="choices" id="x-choices" role="group" aria-label="Questions">
+      <button type="button" aria-pressed="false">5</button><button type="button" aria-pressed="true">10</button><button type="button" aria-pressed="false">22</button><button type="button" aria-pressed="false">44</button>
+    </div>
+
+    <div class="kit-sub"><h2 class="h2">UI.tabs</h2><span class="meta">arrows move and select · counts · a disabled tab</span></div>
+    <div class="card">
+      <div id="x-tabs"></div>
+      <div id="x-tab-a" style="padding-top: 16px"><p>Redo: the questions you got wrong, newest first.</p></div>
+      <div id="x-tab-b" style="padding-top: 16px"><p>Saved: questions you kept.</p></div>
+      <div id="x-tab-c" style="padding-top: 16px"><p>Notes: everything you wrote.</p></div>
+    </div>
+
+    <div class="kit-sub"><h2 class="h2">UI.switch · .pref rows</h2><span class="meta">a failed save flips it back</span></div>
+    <div class="kit-row" id="x-switches"></div>
+    <div id="x-prefs" style="max-width: 720px; margin-top: 12px"></div>
+
+    <div class="kit-sub"><h2 class="h2">Fields</h2><span class="meta">.field · select · textarea + UI.counter · invalid · .check · UI.triCheck</span></div>
+    <div class="kit-grid">
+      <div><label class="label" for="f1">Your name</label><input class="field" id="f1" placeholder="First name" autocomplete="off"><p class="help">Shown on boards when you choose to.</p></div>
+      <div><label class="label" for="f2">Exam</label><select class="field" id="f2"><option>November 7</option><option>December 5</option><option>No date yet</option></select></div>
+      <div><label class="label" for="f3">Target score</label><input class="field" id="f3" type="number" value="1600" aria-invalid="true" aria-describedby="f3e"><p class="field-err" id="f3e">Pick a score from 400 to 1600.</p></div>
+      <div><label class="label" for="f4">Small</label><input class="field sm" id="f4" value="field.sm"></div>
+      <div><label class="label" for="f5">Disabled</label><input class="field" id="f5" value="Can’t change this" disabled></div>
+      <div><label class="label" for="f6">Date</label><input class="field" id="f6" type="date"></div>
+      <div style="grid-column: 1 / -1"><label class="label" for="f7">A note</label><textarea class="field" id="f7" maxlength="220">I keep adding the constant instead of subtracting it.</textarea></div>
+      <div class="card"><label class="label" for="f8">On a card</label><input class="field" id="f8" placeholder="Fields sit on paper here"></div>
+    </div>
+    <div class="kit-row" style="margin-top: 12px" id="x-checks">
+      <label class="check"><input type="checkbox" checked> Timed <span class="n">35 min</span></label>
+      <label class="check"><input type="radio" name="kit-r" checked> Instant</label>
+      <label class="check"><input type="radio" name="kit-r"> At the end</label>
+      <label class="check"><input type="checkbox" disabled> Disabled</label>
+    </div>
+
+    <div class="kit-sub"><h2 class="h2">UI.otp · range · UI.scoreSlider</h2></div>
+    <div class="kit-grid">
+      <div><span class="label">Six-digit code</span><div id="x-otp"></div><p class="help">Type 123456 to see it complete, anything else to see it refused.</p></div>
+      <div><label class="label" for="x-range">Questions a day · <span id="x-range-v" class="mono">20</span></label><input type="range" id="x-range" min="5" max="60" step="5" value="20"></div>
+      <div><span class="label">Target</span><div id="x-score"></div></div>
+    </div>
+
+    <div class="kit-sub"><h2 class="h2">UI.dropdown · UI.filterBar</h2><span class="meta">listbox or checkboxes; a “Filters · n” sheet under 760px</span></div>
+    <div class="kit-row" id="x-dds"></div>
+    <div id="x-filters" style="margin-top: 14px"></div>
+    <p class="meta" id="x-filters-out" style="margin-top: 8px"></p>
+
+    <div class="kit-sub"><h2 class="h2">UI.images · UI.examDate</h2><span class="meta">paste, drop or pick; stills downscaled</span></div>
+    <div class="kit-grid">
+      <div id="x-images"></div>
+      <div><span class="label">SAT date</span><button class="btn dd" type="button" id="x-exam" aria-haspopup="listbox"><span class="dd-k">SAT</span><span class="dd-v"></span></button></div>
+    </div>
+
+    <div class="kit-sub"><h2 class="h2">UI.actionBar · UI.selbar</h2><span class="meta">sticky at the foot while something is selected</span></div>
+    <div class="kit-row"><button class="btn" type="button" id="x-sel-toggle">Select 4</button></div>
+    <div id="x-selbar"></div>
+  </section>
+
+  <!-- ================================================================ cards and data -->
+  <section class="kit-sec" id="data" aria-labelledby="h-data">
+    <h1 class="h1" id="h-data">Cards and data</h1>
+    <div class="kit-grid two">
+      <article class="card">
+        <div class="card-head"><span class="k">This week</span><h2>Study time</h2><span class="meta">4h 10m of 5h</span><div class="card-act"><button class="btn sm" type="button">Details</button></div></div>
+        <p>A card is --tile on paper, radius 14, padding 22 (16 on a phone).</p>
+        <div class="card-foot"><button class="pill sm" type="button">Start</button><button class="quiet" type="button">Later</button></div>
+      </article>
+      <article class="card line">
+        <div class="card-head"><h2>.card.line</h2><span class="meta">paper with an edge, for a card on a tile</span></div>
+        <p>Use it where a card sits on a tile.</p>
+      </article>
+      <article class="card" id="x-fold">
+        <div class="card-head"><h2>Collapsing</h2><div class="card-act"><button class="ibtn card-fold" type="button" aria-expanded="true" aria-label="Collapse" id="x-fold-b"></button></div></div>
+        <p class="card-sum">3 skills · 2 open mistakes</p>
+        <p>.card[data-collapsed] keeps its head and a one-line .card-sum.</p>
+      </article>
+      <article class="card" id="x-err">
+        <div class="card-head"><h2>UI.cardError</h2></div>
+      </article>
+    </div>
+
+    <div class="kit-sub"><h2 class="h2">UI.skel · loading</h2><span class="meta">static, at the final size, no shimmer</span></div>
+    <div class="kit-grid" id="x-skel"></div>
+
+    <div class="kit-sub"><h2 class="h2">UI.tile · .stats</h2><span class="meta">count-up once; a filter, a link, a fact; missing reads —</span></div>
+    <div class="stats" id="x-tiles"></div>
+
+    <div class="kit-sub"><h2 class="h2">UI.meter</h2><span class="meta">goal fill orange · .ink · a tick · done · .lg</span></div>
+    <div class="kit-grid" id="x-meters"></div>
+
+    <div class="kit-sub"><h2 class="h2">.badge · .kbd · .ring · .chip · .dots</h2></div>
+    <div class="kit-row">
+      <span class="badge">Resume</span><span class="badge n">3</span><span class="badge ink">Live</span><span class="badge soft">Example</span><span class="badge line">Logged by you · Bluebook</span><span class="badge lg">Recommended</span>
+    </div>
+    <div class="kit-row">
+      <kbd class="kbd">G</kbd><kbd class="kbd">N</kbd> <kbd class="kbd">Shift</kbd><kbd class="kbd">T</kbd> <kbd class="kbd lg">?</kbd>
+      <span class="ring" style="--p: .4">4</span><span class="ring" style="--p: 1; --rs: 44px">✓</span>
+      <span id="x-chip"></span>
+      <span class="dots" aria-label="3 open mistakes"><i></i><i></i><i></i></span><span class="dot"></span>
+      <span class="panel" style="padding: 8px 12px">.panel</span>
+    </div>
+
+    <div class="kit-sub"><h2 class="h2">UI.table</h2><span class="meta">sortable headers · your row · a wide table scrolls on its own with pinned columns</span></div>
+    <div id="x-table"></div>
+    <div id="x-table-wide" style="margin-top: 16px"></div>
+    <div id="x-table-empty" style="margin-top: 16px"></div>
+
+    <div class="kit-sub"><h2 class="h2">UI.empty</h2><span class="meta">a dimmed sample row, what will appear, the smallest action with its cost</span></div>
+    <div class="card" id="x-empty"></div>
+
+    <div class="kit-sub"><h2 class="h2">UI.pts · UI.fact</h2><span class="meta">Tab to a number and press Enter to open its working</span></div>
+    <div class="kit-row" id="x-facts"></div>
+
+    <div class="kit-sub"><h2 class="h2">UI.avatar</h2><span class="meta">initial · topic glyph · earned ring · the living mark · plain · sizes</span></div>
+    <div class="kit-row" id="x-avatars"></div>
+
+    <div class="kit-sub"><h2 class="h2">UI.skillRow</h2><span class="meta">mastery word and accuracy; the points card's .gain form</span></div>
+    <div id="x-skills"></div>
+
+    <div class="kit-sub"><h2 class="h2">UI.countdown · .thumbs</h2></div>
+    <div class="kit-row"><span id="x-count-boxes"></span><span class="mono" id="x-count-text"></span></div>
+    <ul class="thumbs" style="margin-top: 14px" id="x-thumbs"></ul>
+  </section>
+
+  <!-- ================================================================ a question -->
+  <section class="kit-sec" id="question" aria-labelledby="h-question">
+    <h1 class="h1" id="h-question">A question</h1>
+    <div class="kit-grid two">
+      <div class="kit-q">
+        <div class="q-skill" id="x-qskill"><span>Linear equations</span><span class="again">Again</span></div>
+        <div class="q-table"><table><thead><tr><th>x</th><th>1</th><th>2</th><th>3</th></tr></thead><tbody><tr><th>f(x)</th><td>10</td><td>13</td><td>16</td></tr></tbody></table></div>
+        <p class="q-stem">The table shows three values of the linear function f. Which equation defines f?</p>
+        <ol class="opts">
+          <li><button class="opt" type="button"><span class="l">A</span><span class="t">f(x) = 3x + 7</span></button></li>
+          <li><button class="opt picked" type="button"><span class="l">B</span><span class="t">f(x) = 7x + 3</span></button></li>
+          <li><button class="opt" type="button"><span class="l">C</span><span class="t">f(x) = 10x</span></button></li>
+          <li><button class="opt" type="button"><span class="l">D</span><span class="t">f(x) = x + 9</span></button></li>
+        </ol>
+      </div>
+      <div class="kit-q">
+        <div class="q-fig"><svg width="220" height="120" viewBox="0 0 220 120" role="img" aria-label="A right triangle with legs 6 and 8"><path d="M20 100 H180 V20 Z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M168 100 V88 H180" fill="none" stroke="currentColor"/><text x="100" y="116" font-size="13" fill="currentColor" text-anchor="middle">8</text><text x="192" y="64" font-size="13" fill="currentColor">6</text></svg></div>
+        <p class="q-stem">What is the length of the hypotenuse?</p>
+        <ol class="opts done">
+          <li><button class="opt" type="button"><span class="l">A</span><span class="t">7</span></button></li>
+          <li><button class="opt no" type="button"><span class="l">B</span><span class="t">14</span></button></li>
+          <li><button class="opt ok" type="button"><span class="l">C</span><span class="t">10</span></button></li>
+          <li><button class="opt" type="button"><span class="l">D</span><span class="t">48</span></button></li>
+        </ol>
+        <div class="verdict">
+          <p class="mistake">Added the legs instead of using a² + b² = c²</p>
+          <p class="why">6² + 8² = 36 + 64 = 100, so the hypotenuse is √100 = 10.</p>
+        </div>
+      </div>
+      <div class="kit-q">
+        <p class="q-stem">What value of x satisfies 2x − 5 = 3?</p>
+        <div class="grid-in"><input class="field" aria-label="Your answer" value="4"><button class="pill sm" type="button">Check</button></div>
+        <p class="preview">= 4</p>
+        <div class="grid-in no" style="margin-top: 12px"><input class="field" aria-label="Your answer" value="-1" readonly></div>
+        <p class="grid-key">Answer: <b>4</b></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ charts -->
+  <section class="kit-sec" id="charts" aria-labelledby="h-charts">
+    <h1 class="h1" id="h-charts">Charts</h1>
+    <div class="kit-row" id="x-data-ctl"></div>
+    <div class="kit-stack" style="margin-top: 16px">
+      <div class="card"><div class="card-head"><h2>UI.bandChart</h2><span class="meta">target, exam, estimate, projection, a gap, filters</span></div><div id="c-band"></div></div>
+      <div class="kit-grid two">
+        <div class="card"><div class="card-head"><h2>projection: null</h2><span class="meta">the “three modules” line</span></div><div id="c-band-null"></div></div>
+        <div class="card"><div class="card-head"><h2>Mini trend · empty</h2><span class="meta">height under 110</span></div><div id="c-band-mini"></div><div id="c-band-empty" style="margin-top: 16px"></div></div>
+        <div class="card"><div class="card-head"><h2>UI.gauge</h2></div><div id="c-gauge"></div></div>
+        <div class="card"><div class="card-head"><h2>UI.scale</h2><span class="meta">with the score spread</span></div><div id="c-scale"></div><div id="c-scale-2" style="margin-top: 16px"></div></div>
+        <div class="card"><div class="card-head"><h2>UI.barChart</h2><span class="meta">stacked, planned, pace</span></div><div id="c-bar"></div></div>
+        <div class="card"><div class="card-head"><h2>UI.barChart</h2><span class="meta">seconds per question against a budget</span></div><div id="c-bar-2"></div></div>
+        <div class="card"><div class="card-head"><h2>UI.calendar · heat</h2></div><div id="c-cal"></div></div>
+        <div class="card"><div class="card-head"><h2>UI.calendar · plan</h2></div><div id="c-cal-plan"></div></div>
+      </div>
+      <div class="card"><div class="card-head"><h2>UI.heatmap</h2></div><div id="c-heat"></div></div>
+      <div class="kit-grid two">
+        <div class="card"><div class="card-head"><h2>UI.lineChart</h2><span class="meta">rating with level bands</span></div><div id="c-line"></div></div>
+        <div class="card"><div class="card-head"><h2>UI.spread</h2></div><div id="c-spread"></div></div>
+        <div class="card"><div class="card-head"><h2>UI.quadrant</h2></div><div id="c-quad"></div></div>
+        <div class="card"><div class="card-head"><h2>UI.stackBar · UI.spark</h2></div><div id="c-stack"></div><p style="margin-top: 16px">Accuracy this week <span id="c-spark"></span> 78%</p></div>
+        <div class="card"><div class="card-head"><h2>UI.clockLane</h2></div><div id="c-lane"></div></div>
+        <div class="card"><div class="card-head"><h2>UI.dotStrip</h2></div><div id="c-dots"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================ overlays -->
+  <section class="kit-sec" id="overlays" aria-labelledby="h-overlays">
+    <h1 class="h1" id="h-overlays">Overlays</h1>
+    <p class="help">Esc closes any of them and focus goes back to the button that opened it. Arrow keys move in menus and listboxes.</p>
+    <div class="kit-sub"><h2 class="h2">UI.sheet · UI.confirm</h2><span class="meta">a bottom sheet under 760px; drag the handle down to close</span></div>
+    <div class="kit-row" id="x-sheets"></div>
+    <div class="kit-sub"><h2 class="h2">UI.pop · UI.menu · UI.tooltip</h2></div>
+    <div class="kit-row" id="x-pops"></div>
+    <p class="help" id="x-pops-out"></p>
+    <div class="kit-sub"><h2 class="h2">UI.toast · UI.banner</h2><span class="meta">three at most; Undo for 6s</span></div>
+    <div class="kit-row" id="x-toasts"></div>
+    <div id="x-banner-host" style="margin-top: 14px"></div>
+    <div class="kit-sub"><h2 class="h2">dialog.more · dialog.palette · .calc</h2><span class="meta">the phone menu sheet, the command palette, the calculator</span></div>
+    <div class="kit-row" id="x-big"></div>
+  </section>
+
+  <!-- ================================================================ shell -->
+  <section class="kit-sec" id="shell" aria-labelledby="h-shell">
+    <h1 class="h1" id="h-shell">Shell</h1>
+    <p class="help">The sidebar and the rail show from 760px wide; the phone bar and tabs under 760px. Up next and the Today card leave the sidebar for the Now strip under 1100px tall.</p>
+    <div class="kit-sub kit-desk-only"><h2 class="h2">.side · .now-strip · .sections</h2></div>
+    <div class="kit-frame desk side-in kit-desk-only" id="x-frame-side"></div>
+    <div class="kit-sub kit-desk-only"><h2 class="h2">.side.rail</h2><span class="meta">metas become a count bubble or a dot; the Today ring</span></div>
+    <div class="kit-frame desk rail-in kit-desk-only" id="x-frame-rail"></div>
+    <div class="kit-sub kit-desk-only"><h2 class="h2">.side.open · .scrim</h2><span class="meta">760 to 1099px wide, and the rail peek</span></div>
+    <div class="kit-frame desk kit-desk-only" id="x-frame-open"></div>
+    <div class="kit-sub kit-phone-only"><h2 class="h2">.pbar · .tabs · .tabs-grip</h2></div>
+    <div class="kit-frame phone kit-phone-only" id="x-frame-phone"></div>
+    <div class="kit-sub"><h2 class="h2">.bar</h2><span class="meta">the top bar of pages not yet on the v2 shell</span></div>
+    <div class="kit-frame bar-only" id="x-frame-bar"></div>
+  </section>
+
+  <!-- ================================================================ formatters -->
+  <section class="kit-sec" id="formats" aria-labelledby="h-formats">
+    <h1 class="h1" id="h-formats">Formatters and vocabulary</h1>
+    <div class="kit-grid two">
+      <div class="table-wrap"><table class="table compact kit-fmt" id="x-fmt"><thead><tr><th>call</th><th>gives</th></tr></thead><tbody></tbody></table></div>
+      <div class="kit-stack">
+        <div class="table-wrap"><table class="table compact kit-fmt" id="x-kind"><thead><tr><th>UI.KIND</th><th>label</th></tr></thead><tbody></tbody></table></div>
+        <div class="table-wrap"><table class="table compact kit-fmt" id="x-keys"><thead><tr><th>UI.KEYS</th><th>key</th></tr></thead><tbody></tbody></table></div>
+        <div class="kit-row" id="x-fmt-act"></div>
+      </div>
+    </div>
+    <p class="meta kit-foot">web/dev/kit.html · ui.css, kit.js, charts.js</p>
+  </section>
+</main>
+
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script src="/assets/charts.js"></script>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const root = document.documentElement;
+  const broken = [];
+  // each demo draws alone: one that throws says so in place and in the header, the rest still draw
+  function demo(name, host, fn) {
+    try { fn(host && $(host)); }
+    catch (e) {
+      console.error(`kit: ${name}`, e);
+      broken.push(name);
+      const h = host && $(host);
+      if (h) h.append(UI.cardError(null, null, `${name} threw: ${e.message}`));
+    }
+  }
+  const el = (tag, attrs = {}, ...kids) => {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (v === null || v === undefined || v === false) continue;
+      if (k === 'class') e.className = v; else if (k === 'text') e.textContent = v; else if (k === 'html') e.innerHTML = v;
+      else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else e.setAttribute(k, v === true ? '' : v);
+    }
+    e.append(...kids.flat().filter(k => k !== null && k !== undefined && k !== false));
+    return e;
+  };
+  const say = t => UI.toast(t);
+  const svg = (name, size = 20) => UI.svg && UI.ICON && UI.ICON[name] ? UI.svg(UI.ICON[name], size) : '';
+  const S = 'fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"';
+  const EXTRA = {
+    search: `<circle cx="10.5" cy="10.5" r="6" ${S}/><path d="M15 15l4.5 4.5" ${S}/>`,
+    bolt: `<path d="M13 3.5 6 13.5h5.5l-1 7 7-10H12z" ${S}/>`,
+    review: `<path d="M5.5 12a6.5 6.5 0 1 0 2-4.7" ${S}/><path d="M7.5 3.8v3.7h3.7" ${S}/>`,
+    words: `<path d="M5 18.5 9.5 5.5h1L15 18.5M6.8 13.5h6.4" ${S}/><path d="M16 9.5h4M16 13.5h4" ${S}/>`,
+    help: `<circle cx="12" cy="12" r="8" ${S}/><path d="M9.8 9.6a2.3 2.3 0 1 1 3.2 2.1c-.6.3-1 .8-1 1.5v.4" ${S}/><circle cx="12" cy="16.6" r=".9" fill="currentColor"/>`,
+    chat: `<path d="M5 6.5h14v9H10l-4 3v-3H5z" ${S}/>`,
+    chev: `<path d="M9 6l6 6-6 6" ${S}/>`,
+    down: `<path d="M6 9l6 6 6-6" ${S}/>`,
+    menu: `<path d="M5 7h14M5 12h14M5 17h14" ${S}/>`,
+    panel: `<rect x="4" y="5" width="16" height="14" rx="2.5" ${S}/><path d="M9.5 5v14" ${S}/>`,
+    play: `<path d="M8 5.5v13l10-6.5z" fill="currentColor"/>`,
+    plus: `<path d="M12 5v14M5 12h14" ${S}/>`,
+  };
+  const ic = (name, size = 20) => EXTRA[name] ? `<svg width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${EXTRA[name]}</svg>` : svg(name, size);
+
+  // days are local 'YYYY-MM-DD'
+  const iso = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const D = n => { const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + n); return iso(d); };
+  // a seeded random, so the kit draws the same numbers every load
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+  const ri = (a, b) => a + Math.floor(rnd() * (b - a + 1));
+
+  // the working behind a number (G6): /api/levers answered here, so every fact opens its full shape
+  const realApi = UI.api;
+  UI.api = (path, o) => {
+    if (path.startsWith('/levers')) return new Promise(r => setTimeout(() => r({ levers: new Proxy({}, { get: (_, key) => ({
+      value: undefined, how: 'Right answers on questions that offered this trap, weighted toward the last 30 days. Guesses count half.',
+      inputs: [{ label: 'Answered', value: '84' }, { label: 'Right the first time', value: '61' }, { label: 'Last 30 days', value: '38 of 44' }],
+      excluded: [{ n: 3, label: 'repeats' }, { n: 1, label: 'disputed answer' }],
+      next: 'Eight right in a row on hard questions would move it to Strong.',
+      start: { label: 'Start 8 · about 10 min', href: '#data' },
+      help: 'mastery', same_on: ['today', 'results', 'me'], key,
+    }) }) }), 250));
+    if (path.startsWith('/drill')) return Promise.reject(new Error('The kit starts nothing'));
+    return realApi ? realApi(path, o) : Promise.reject(new Error('no api'));
+  };
+
+  /* ------------------------------------------------------------ the look */
+  demo('look', 'kit-look', host => {
+    $('kit-mark').prepend(el('span', { html: UI.mark ? UI.mark(26) : '' }).firstChild || '');
+    const q = new URLSearchParams(location.search);
+    const setParam = (k, v) => { q.set(k, v); history.replaceState(null, '', `${location.pathname}?${q}${location.hash}`); };
+    UI.seg(host, [{ value: 'light', label: 'Light' }, { value: 'dark', label: 'Dark' }], {
+      label: 'Theme', value: root.dataset.theme === 'dark' ? 'dark' : 'light',
+      onChange: v => { root.dataset.theme = v; setParam('theme', v); paintSwatches(); },
+    });
+    UI.seg(host, [{ value: 'small', label: 'Aa−' }, { value: '', label: 'Aa' }, { value: 'large', label: 'Aa+' }], {
+      label: 'Question text size', value: root.dataset.text || '',
+      onChange: v => { if (v) root.dataset.text = v; else delete root.dataset.text; },
+    });
+    UI.seg(host, [{ value: '', label: 'Motion' }, { value: 'reduce', label: 'Still' }], {
+      label: 'Motion', value: root.dataset.motion || '',
+      onChange: v => { if (v) root.dataset.motion = v; else delete root.dataset.motion; },
+    });
+  });
+  demo('sections', null, () => {
+    const nav = el('nav', { class: 'sections', 'aria-label': 'On this page' });
+    const secs = [...document.querySelectorAll('.kit-sec')];
+    secs.forEach(s => nav.append(el('a', { href: `#${s.id}`, text: s.querySelector('.h1').textContent })));
+    document.querySelector('.kit-bar').append(el('div', { class: 'kit-toc' }, nav));
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      nav.querySelectorAll('a').forEach(a => a.setAttribute('aria-current', String(a.hash === `#${e.target.id}`)));
+    }), { rootMargin: '-30% 0px -60% 0px' });
+    secs.forEach(s => io.observe(s));
+  });
+
+  /* ------------------------------------------------------------ tokens */
+  const TOKENS = ['paper', 'ink', 'ink-deep', 'amber', 'amber-deep', 'wash', 'wash-2', 'tile', 'tile-2', 'mat', 'line', 'soft', 'faint',
+    'on-ink', 'knob', 'track', 'backdrop', 'lvl-easy', 'lvl-med', 'lvl-hard', 'm-track', 'm-fill'];
+  function paintSwatches() {
+    const cs = getComputedStyle(root);
+    $('x-swatches').replaceChildren(...TOKENS.map(t => el('div', { class: 'kit-sw' },
+      el('i', { style: `background: var(--${t})` }), el('b', { text: `--${t}` }), el('span', { text: cs.getPropertyValue(`--${t}`).trim() }))));
+  }
+  demo('tokens', 'x-swatches', paintSwatches);
+
+  /* ------------------------------------------------------------ question states */
+  const STATE_KEYS = ['correct', 'incorrect', 'mixed', 'repaired', 'fixed', 'unanswered', 'blank', 'skipped', 'voided', 'removed',
+    'repeat', 'not_reached', 'answered', 'future', 'unmet', 'met', 'ready'];
+  const mark = (c, label) => el('div', {}, c, el('span', { class: 'meta', text: label }));
+  demo('UI.cell', 'x-cells', host => STATE_KEYS.forEach((k, i) => host.append(mark(UI.cell(k, i + 1, { onClick: () => say(`Question ${i + 1}: ${UI.STATES[k].label}`) }), UI.STATES[k].label))));
+  demo('overlays', 'x-overlays', host => {
+    [['incorrect', { flag: true }, 'Flagged'], ['correct', { flag: true }, 'Flagged, right'], ['correct', { note: true }, 'Has note'],
+      ['incorrect', { open: true }, 'Open mistake'], ['incorrect', { fixing: true }, 'Being fixed'], ['correct', { over: true }, 'Over its time'],
+      ['correct', { current: true }, 'Current'], ['incorrect', { filtered: true }, 'Filtered out'],
+      ['incorrect', { flag: true, note: true, open: true }, 'Flag, note, open'], ['fixed', { note: true }, 'Fixed, note']]
+      .forEach(([k, o, label], i) => host.append(mark(UI.cell(k, i + 1, o), label)));
+  });
+  demo('sizes', 'x-sizes', host => ['sm', '', 'lg'].forEach(s => ['correct', 'incorrect', 'mixed'].forEach((k, i) => host.append(UI.cell(k, i + 7, { size: s || null, flag: i === 1 })))));
+  demo('UI.legend', 'x-legend', host => {
+    UI.legend(host, STATE_KEYS.slice(0, 13), { correct: 12, incorrect: 5, mixed: 2, repaired: 1, fixed: 3, unanswered: 1, blank: 0, skipped: 1, voided: 0, removed: 1, repeat: 2, not_reached: 1, answered: 0 });
+    UI.legend(host, ['flag', 'note', 'saved', 'open', 'fixing', 'current', 'over', 'due', 'easy', 'medium', 'hard'], { flag: 3, note: 2, saved: 4, open: 5, fixing: 1, over: 2, due: 3, easy: 8, medium: 9, hard: 5 }, { label: 'Overlays' });
+  });
+  demo('navigator', 'x-nav', host => {
+    const qs = Array.from({ length: 22 }, (_, i) => ({ n: i + 1, status: ['correct', 'correct', 'incorrect', 'correct', 'mixed', 'correct', 'unanswered', 'correct', 'incorrect', 'skipped', 'correct'][i % 11],
+      tier: ['easy', 'medium', 'hard'][i % 3], level: (i % 7) + 1, flag: i === 4 || i === 13, note: i === 8 }));
+    const cells = qs.map(q => UI.cell(q.status, q.n, { tier: q.tier, level: q.level, flag: q.flag, note: q.note, current: q.n === 7, onClick: () => say(`Question ${q.n}`) }));
+    host.append(...cells);
+    const counts = {};
+    qs.forEach(q => { counts[q.status] = (counts[q.status] || 0) + 1; });
+    UI.seg($('x-nav-ctl'), [{ value: 'status', label: 'Status' }, { value: 'difficulty', label: 'Difficulty' }], {
+      label: 'Colour by', onChange: v => { if (v === 'difficulty') host.dataset.colour = 'difficulty'; else delete host.dataset.colour; } });
+    UI.legend($('x-nav-legend'), ['correct', 'incorrect', 'mixed', 'unanswered', 'skipped', 'flag'], { ...counts, flag: 2 }, {
+      label: 'Show only', onFilter: (k, on, all) => cells.forEach((c, i) => {
+        const q = qs[i], hit = !all.length || all.some(a => a === 'flag' ? q.flag : q.status === a);
+        if (hit) { c.removeAttribute('data-filtered'); c.removeAttribute('tabindex'); } else { c.setAttribute('data-filtered', ''); c.tabIndex = -1; }
+      }) });
+  });
+  demo('UI.dbars', 'x-dbars', host => { ['easy', 'medium', 'hard'].forEach(t => host.append(UI.dbars(t))); host.append(UI.dbars('hard', { bare: true })); });
+  demo('UI.strip', 'x-strips', host => {
+    const marks = Array.from({ length: 22 }, (_, i) => ({ status: ['correct', 'incorrect', 'correct', 'mixed', 'correct', 'repaired', 'unanswered', 'correct', 'fixed', 'correct', 'skipped'][i % 11], flag: i === 3, open: i === 1, fixing: i === 12 }));
+    UI.strip(host, marks);
+    UI.strip(host, marks.map((m, i) => ({ ...m, current: i === 6 })), { marker: 11, onPick: i => say(`Question ${i + 1}`) });
+    UI.strip(host, Array.from({ length: 44 }, (_, i) => ['correct', 'incorrect', 'correct', 'correct', 'not_reached'][i % 5]), { fit: true });
+  });
+  demo('UI.pips', 'x-pips', host => [[2, 2], [1, 2], [0, 2], [2, 3]].forEach(([owed, of]) => host.append(el('span', { class: 'kit-row' }, UI.pips(owed, of), el('span', { class: 'meta', text: `owed ${owed} of ${of}` })))));
+  demo('UI.atlas', 'x-atlas', host => {
+    const types = (n, off) => Array.from({ length: n }, (_, i) => ({ template: `t${off + i}`, label: `Type ${off + i}`, status: ['ready', 'met', 'unmet', 'met', 'ready', 'unmet'][(i + off) % 6],
+      open: i % 7 === 2, fixing: i % 9 === 4, due: i % 8 === 5 }));
+    UI.atlas(host, types(23, 1), { label: 'Linear equations: 8 of 23 ready', onPick: t => say(t.label), tip: t => `${t.label} · ${t.status}` });
+    const sel = UI.selbar($('x-atlas-sel'), { actions: [{ label: 'Practise these', primary: true, onClick: n => say(`Practise ${n}`) }], onClear: () => at.clear() });
+    const at = UI.atlas(host, types(30, 30), { label: 'Circles', selectable: true, onSelect: s => sel.update(s.length) });
+  });
+  demo('mastery', 'x-mastery', host => [[null, 0], [0.2, 12], [0.55, 40], [0.86, 96]].forEach(([m, n]) => host.append(el('div', { class: 'skill-m' },
+    el('span', { class: 'mbar', role: 'img', 'aria-label': `Mastery: ${UI.masteryWord(m, n)}` }, el('i', { style: `--m: ${m || 0}` })),
+    el('span', { class: 'skill-word', text: UI.masteryWord(m, n) }), el('span', { class: 'meta', text: n ? `${Math.round((m || 0) * 100)}% right of ${n}` : 'no answers yet' })))));
+
+  /* ------------------------------------------------------------ controls */
+  demo('icons', 'x-ibtns', host => {
+    $('x-btn-icon').innerHTML = ic('search', 18);
+    host.append(el('button', { class: 'ibtn', type: 'button', 'aria-label': 'Calculator', html: ic('calc') }),
+      el('button', { class: 'ibtn', type: 'button', 'aria-label': 'Reference', 'aria-pressed': 'true', html: ic('ref') }),
+      el('button', { class: 'ibtn', type: 'button', 'aria-label': 'Bookmark', disabled: true, html: ic('bookmark') }),
+      el('span', { class: 'meta', text: '.ibtn · pressed · disabled' }));
+  });
+  demo('UI.verb', 'x-verbs', host => {
+    Object.keys(UI.VERBS).forEach(id => host.append(UI.verb(id, { onClick: () => say(UI.VERBS[id].helper) })));
+    const two = $('x-verbs-2');
+    two.append(UI.verb('twin', { primary: true, onClick: () => say('Twin') }), UI.verb('twin', { count: 3, onClick: () => say('Twin ×3') }),
+      UI.verb('fix', { count: 4, sm: true, onClick: () => say('Fix 4') }), UI.verb('twin', { subject: 'rw', sm: true }), UI.verb('learn', { href: '#controls' }));
+    $('x-verbs-table').tBodies[0].append(...Object.entries(UI.VERBS).map(([id, v]) => el('tr', {},
+      el('td', { class: 'mono', text: id }), el('td', { text: v.label }), el('td', { text: v.sub }), el('td', { text: v.helper }), el('td', { class: 'n', text: v.key || '—' }))));
+  });
+  demo('UI.seg', 'x-segs', host => {
+    UI.seg(host, [{ value: 'instant', label: 'Instant', n: 12 }, { value: 'retry', label: 'Retry' }, { value: 'end', label: 'At the end' }], { label: 'Feedback', onChange: v => say(`Feedback: ${v}`) });
+    UI.seg(host, [{ value: 'easy', label: 'Easy' }, { value: 'medium', label: 'Medium' }, { value: 'hard', label: 'Hard', disabled: true, why: 'unlocks after 2 first-try rights on Medium' }], { label: 'Difficulty', value: 'medium' });
+    UI.seg(host, [{ value: 'alg', label: 'Algebra', n: 34 }, { value: 'adv', label: 'Advanced', n: 28 }, { value: 'psda', label: 'Data', n: 19 }, { value: 'geo', label: 'Geometry', n: 13 }], { label: 'Domains', multi: true, value: ['alg', 'geo'] });
+    UI.seg(host, ['10', '22', '44'], { label: 'Length', full: true });
+  });
+  demo('UI.chips', 'x-chips', host => {
+    UI.chips(host, [{ value: 'all', label: 'All', n: 94 }, { value: 'open', label: 'Open', n: 14 }, { value: 'fixed', label: 'Fixed', n: 80 }, { value: 'relapsed', label: 'Relapsed', n: 0, disabled: true, why: 'none yet' }], { label: 'Mistakes' });
+    document.querySelectorAll('#x-choices button').forEach(b => b.addEventListener('click', () => document.querySelectorAll('#x-choices button').forEach(x => x.setAttribute('aria-pressed', String(x === b)))));
+  });
+  demo('UI.tabs', 'x-tabs', host => UI.tabs(host, [{ id: 'redo', label: 'Redo', panel: 'x-tab-a' }, { id: 'saved', label: 'Saved', panel: 'x-tab-b' }, { id: 'notes', label: 'Notes', panel: 'x-tab-c' }, { id: 'shared', label: 'Shared', disabled: true }],
+    { label: 'Review', counts: { redo: 14, saved: 6, notes: 0 }, param: 'tab' }));
+  demo('UI.switch', 'x-switches', host => {
+    UI.switch(host, { label: 'Timer', checked: true });
+    UI.switch(host, { label: 'Fails to save, flips back', onChange: () => new Promise((_, no) => setTimeout(() => { no(new Error('offline')); say('Couldn’t save. Put it back.'); }, 400)) });
+    UI.switch(host, { label: 'Disabled', disabled: true });
+  });
+  demo('.pref', 'x-prefs', host => {
+    const row = (k, help, ctl, state) => el('div', { class: 'pref' }, el('span', { class: 'pref-k', text: k }), help && el('p', { class: 'help', text: help }), el('div', { class: 'pref-ctl' }, state, ctl));
+    host.append(row('Show every option’s mistake', 'After you answer, each wrong option says which mistake leads to it.', UI.switch(null, { checked: true, ariaLabel: 'Show every option’s mistake' }).el, el('span', { class: 'pref-state', text: 'Saved' })));
+    const s = el('div');
+    UI.seg(s, [{ value: 'small', label: 'Small' }, { value: 'default', label: 'Default' }, { value: 'large', label: 'Large' }], { label: 'Question text', value: 'default' });
+    host.append(row('Question text', 'Only the question and its options change size.', s, el('span', { class: 'pref-state err', text: 'Not saved: offline' })));
+    host.append(row('Weekly email', null, UI.switch(null, { ariaLabel: 'Weekly email' }).el));
+  });
+  demo('UI.counter · UI.triCheck', 'x-checks', host => {
+    UI.counter($('f7'), 220);
+    UI.triCheck(host, { label: 'Algebra', mixed: true, n: 34 });
+  });
+  demo('UI.otp', 'x-otp', host => {
+    const o = UI.otp(host, code => { if (code === '123456') say('Code 123456 accepted'); else { o.invalid(); say('That code didn’t work'); } }, { label: 'Six-digit code' });
+  });
+  demo('range', 'x-range', r => {
+    const paint = () => { r.style.setProperty('--p', `${(r.value - r.min) / (r.max - r.min) * 100}%`); $('x-range-v').textContent = r.value; };
+    r.addEventListener('input', paint); paint();
+  });
+  demo('UI.scoreSlider', 'x-score', host => UI.scoreSlider(host, { min: 400, max: 1600, step: 10, value: 1350, label: 'Target score' }));
+  const SKILLS = [{ label: 'Algebra', options: [{ value: 'linear_functions', label: 'Linear functions' }, { value: 'systems_of_linear_equations', label: 'Systems of equations' }, { value: 'linear_inequalities', label: 'Linear inequalities' }] },
+    { label: 'Geometry and Trigonometry', options: [{ value: 'circles', label: 'Circles' }, { value: 'right_triangles_and_trigonometry', label: 'Right triangles' }] }];
+  demo('UI.dropdown', 'x-dds', host => {
+    UI.dropdown(host, { label: 'Sort', options: [{ value: 'new', label: 'Newest' }, { value: 'old', label: 'Oldest' }, { value: 'missed', label: 'Most missed' }], default: 'new', plain: true });
+    UI.dropdown(host, { label: 'Skill', groups: SKILLS, counts: { linear_functions: 14, systems_of_linear_equations: 9, linear_inequalities: 4, circles: 7, right_triangles_and_trigonometry: 3 } });
+    UI.dropdown(host, { label: 'Skills', multi: true, groups: SKILLS, value: ['circles'], counts: { linear_functions: 14, circles: 7 } });
+  });
+  demo('UI.filterBar', 'x-filters', host => UI.filterBar(host, [
+    { key: 'q', label: 'Search', type: 'search' },
+    { key: 'skill', label: 'Skill', type: 'multi', groups: SKILLS },
+    { key: 'tier', label: 'Difficulty', type: 'pills', options: [{ value: 'easy', label: 'Easy' }, { value: 'medium', label: 'Medium' }, { value: 'hard', label: 'Hard' }], counts: { easy: 8, medium: 21, hard: 6 } },
+    { key: 'when', label: 'When', type: 'date' },
+    { key: 'sort', label: 'Sort', type: 'sort', options: [{ value: 'new', label: 'Newest' }, { value: 'missed', label: 'Most missed' }] },
+  ], { onChange: s => { $('x-filters-out').textContent = JSON.stringify(s); } }));
+  demo('UI.images', 'x-images', host => UI.images(host, { max: 4, maxBytes: 10e6, maxEdge: 2000, groupLabel: 'Screenshots', onChange: f => say(`${f.length} image${f.length === 1 ? '' : 's'}`) }));
+  demo('UI.examDate', 'x-exam', b => {
+    let cur = D(44);
+    const draw = () => { b.querySelector('.dd-v').textContent = cur ? UI.date(cur) : 'No date yet'; };
+    const dates = [{ date: D(16), study_days: 13, per_week: 90, register_by: D(-4), projected: 1280 }, { date: D(44), study_days: 38, tag: 'Steady', register_by: D(16), late_by: D(24), projected: 1350 },
+      { date: D(72), study_days: 62, register_by: D(44), projected: 1410 }, { date: D(135), study_days: 118 }];
+    b.addEventListener('click', () => UI.examDate(b, { value: cur, dates, onSave: v => { cur = v; draw(); say(v ? `SAT on ${UI.date(v, 'long')}` : 'No date'); } }));
+    draw();
+  });
+  demo('UI.actionBar', 'x-selbar', host => {
+    const bar = UI.actionBar(host, { actions: [{ label: n => `Twin ${n}`, primary: true, onClick: n => say(`Twin ${n}`) }, { label: 'Save', onClick: () => say('Saved') }, { label: 'Clear', quiet: true, onClick: () => bar.set(null) }] });
+    $('x-sel-toggle').addEventListener('click', () => bar.set('4 selected', 4));
+  });
+
+  /* ------------------------------------------------------------ cards and data */
+  demo('fold', 'x-fold', card => {
+    const b = $('x-fold-b');
+    b.innerHTML = ic('down', 18);
+    b.addEventListener('click', () => { const on = !card.hasAttribute('data-collapsed'); card.toggleAttribute('data-collapsed', on); b.setAttribute('aria-expanded', String(!on)); b.setAttribute('aria-label', on ? 'Expand' : 'Collapse'); });
+  });
+  demo('UI.cardError', 'x-err', card => UI.cardError(card, () => new Promise((_, no) => setTimeout(() => no(new Error('offline')), 500)), 'Couldn’t load your week.'));
+  demo('UI.skel', 'x-skel', host => ['lines:3', 'card:3', 'rows:3', 'table:3', 'chart:120', 'cells:12', 'tile', 'num', 'pill', 'circle:44', { w: 180, h: 24, r: 12 }].forEach(s => {
+    const c = el('div', { class: 'card' }, el('p', { class: 'meta', style: 'margin-bottom: 8px', text: typeof s === 'string' ? s : JSON.stringify(s) }));
+    UI.skel(c, s); host.append(c);
+  }));
+  demo('UI.tile', 'x-tiles', host => {
+    UI.tile(host, { label: 'Answered', value: 1284, sub: 'since June', spark: [4, 9, 6, 12, 10, 15, 18], delta: 84 });
+    UI.tile(host, { label: 'Accuracy', value: 78, unit: '%', sub: 'last 30 days', fact: 'accuracy' });
+    UI.tile(host, { label: 'Open mistakes', value: 14, filter: true, pressed: true, sub: 'tap to filter', onClick: on => say(on ? 'Filtered to open' : 'Filter off') });
+    UI.tile(host, { label: 'Study time', value: '42h 10m', href: '#charts', sub: 'this month' });
+    UI.tile(host, { label: 'Best score', value: null, missing: 'after your first test' });
+    UI.tile(host, { label: 'Streak', value: 6, unit: 'days', delta: 0 });
+  });
+  demo('UI.meter', 'x-meters', host => {
+    UI.meter(host, { label: 'Today', value: 18, max: 45, unit: 'min' });
+    UI.meter(host, { label: 'Questions', value: 22, max: 20, unit: 'q' });
+    UI.meter(host, { label: 'First-try accuracy', value: 62, max: 100, text: '62% · goal 80%', ink: true, tick: 80 });
+    UI.meter(host, { label: 'This week', value: 190, max: 300, unit: 'min', lg: true });
+  });
+  demo('chip', 'x-chip', host => { if (UI.chip) host.append(UI.chip('circles')); });
+  demo('UI.table', 'x-table', host => {
+    const rows = [{ rank: 1, name: 'Maya R.', right: 412, acc: .91, time: 38 }, { rank: 2, name: 'Student 4F2A', right: 398, acc: .88, time: 41 }, { rank: 3, name: 'You', right: 377, acc: .84, time: 44, you: true }, { rank: 4, name: 'Jon', right: 355, acc: .8, time: 36 }];
+    UI.table(host, [{ key: 'rank', label: '#', num: true, sort: true }, { key: 'name', label: 'Name', sort: true }, { key: 'right', label: 'Right', num: true, sort: true, render: r => UI.num(r.right) },
+      { key: 'acc', label: 'Accuracy', num: true, sort: true, render: r => `${Math.round(r.acc * 100)}%` }, { key: 'time', label: 'Per question', num: true, render: r => UI.mmss(r.time) }],
+      rows, { sort: { key: 'rank', dir: 'asc' }, you: r => r.you, caption: 'Right answers, last 7 days', label: 'Leaderboard', hover: true, onRow: r => say(r.name) });
+  });
+  demo('UI.table wide', 'x-table-wide', host => {
+    const cols = [{ key: 'q', label: 'Q', stick: true }, { key: 'skill', label: 'Skill', stick: true }];
+    for (let i = 1; i <= 12; i++) cols.push({ key: `a${i}`, label: `Try ${i}`, num: true });
+    const rows = Array.from({ length: 5 }, (_, r) => { const o = { q: `Q${r + 1}`, skill: ['Circles', 'Linear functions', 'Ratios', 'Systems', 'Percentages'][r] }; for (let i = 1; i <= 12; i++) o[`a${i}`] = UI.mmss(ri(20, 180)); return o; });
+    UI.table(host, cols, rows, { label: 'Times per try, scrolls sideways', compact: true });
+  });
+  demo('UI.table empty', 'x-table-empty', host => UI.table(host, [{ key: 'a', label: 'Date' }, { key: 'b', label: 'Score', num: true }], [], { empty: 'No added scores yet.' }));
+  demo('UI.empty', 'x-empty', host => {
+    const sample = () => { const d = el('div'); UI.skillRow(d, { topic: 'linear_functions', name: 'Linear functions', mastery: .62, answered: 24, right: 17, open: 2 }); return d; };
+    UI.empty(host, { sample, text: 'Your skills appear here once you’ve answered a few questions, each with how strong it is and what to do next.',
+      action: { ...UI.empty.START, onClick: () => say('Would start 8 questions') } });
+  });
+  demo('UI.pts · UI.fact', 'x-facts', host => {
+    const a = el('span'); UI.pts(a, 6, 'pts:linear_functions');
+    const b = el('span'); UI.pts(b, -3, 'pts:circles');
+    const c = el('span', { text: 'null → ' }); const c2 = el('span'); UI.pts(c2, null); c.append(c2, el('span', { class: 'meta', text: '(hidden)' }));
+    const f = el('span', { class: 'mono', text: '78%' }); UI.fact(f, 'accuracy', { label: 'Accuracy' });
+    const g = el('span', { class: 'mono', 'data-fact': 'estimate', 'data-fact-label': 'Your estimate', text: '1,240–1,310' });
+    host.append(a, b, c, f, g);
+  });
+  demo('UI.avatar', 'x-avatars', host => {
+    const a = (p, size, label) => el('div', { class: 'kit-av' }, UI.avatar(p, size), el('span', { class: 'meta', text: label }));
+    host.append(a({ name: 'Maya', public: true }, 34, 'initial'), a({ name: 'Maya', avatar: 'circles' }, 40, 'topic'), a({ name: 'Maya', avatar: 'linear_functions', ring: true }, 40, 'earned'),
+      a({ name: 'Maya' }, 40, 'mark, new'), a({ name: 'Maya', avatar: 'mark', domains: { algebra: .85, advanced: .5, psda: .3, geometry: .1 } }, 40, 'mark'), a({ name: 'Maya', board: 'anon' }, 40, 'plain'),
+      a({ name: 'Maya', avatar: 'mark', domains: { algebra: .9, advanced: .7, psda: .6, geometry: .4 } }, 72, '.xl mark'), a({ name: 'Jon', public: true }, 72, '.xl initial'));
+  });
+  demo('UI.skillRow', 'x-skills', host => {
+    UI.skillRow(host, { topic: 'linear_functions', name: 'Linear functions', mastery: .86, answered: 96, right: 81, pts: 4 }, { practise: { onClick: s => say(`Practise ${s.name}`) } });
+    UI.skillRow(host, { topic: 'circles', name: 'Circles', mastery: .32, answered: 22, right: 11, open: 3, evidence: 6 }, { practise: { count: 8, onClick: s => say(`Practise ${s.name}`) } });
+    UI.skillRow(host, { topic: 'nonlinear_functions', name: 'Nonlinear functions', mastery: null, answered: 0 }, { practise: { label: 'Start · 5', onClick: s => say(`Start ${s.name}`) } });
+    UI.skillRow(host, { topic: 'systems_of_linear_equations', name: 'Systems of equations', mastery: .55, answered: 40, right: 25, gain: 18, to: .8, per_test: 3, need_right: 6, minutes: 25, tiers: { easy: [9, 10], medium: [11, 20], hard: [5, 10] } }, { practise: { onClick: s => say(`Practise ${s.name}`) } });
+  });
+  demo('UI.countdown', 'x-count-boxes', host => {
+    UI.countdown(host, new Date(Date.now() + 3 * 864e5 + 5 * 36e5 + 17 * 6e4).toISOString(), { boxes: true, label: 'Until the SAT' });
+    UI.countdown($('x-count-text'), new Date(Date.now() + 12 * 6e4 + 30e3).toISOString(), { label: 'Time left' });
+  });
+  demo('.thumbs', 'x-thumbs', host => {
+    const pic = c => `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" fill="${c}"/><path d="M8 50 26 30l12 12 8-8 10 16z" fill="#fff" opacity=".7"/></svg>`)}`;
+    ['#F18508', '#3F3F3F'].forEach((c, i) => host.append(el('li', {}, el('img', { src: pic(c), alt: `Screenshot ${i + 1}` }), el('button', { class: 'x', type: 'button', 'aria-label': `Remove screenshot ${i + 1}`, html: ic('x', 12) }))));
+    host.append(el('li', { style: 'background: none' }, el('button', { class: 'thumbs-add', type: 'button', html: `${ic('plus', 18)}<span>Add</span>` })));
+  });
+  demo('q-skill', 'x-qskill', host => { if (UI.glyph) host.prepend(UI.glyph('linear_functions')); });
+
+  /* ------------------------------------------------------------ charts */
+  demo('data tables', 'x-data-ctl', host => {
+    UI.switch(host, { label: 'Show each chart’s data table', onChange: on => document.body.classList.toggle('kit-data', on) });
+  });
+  const sittings = [
+    { id: 's1', day: D(-60), low: 480, high: 540, kind: 'diagnostic', label: 'Diagnostic', right: 18, asked: 44 },
+    { id: 's2', day: D(-45), low: 510, high: 570, kind: 'mock', seq: 1, right: 24, asked: 44, detail: '24/44 · easier M2' },
+    { id: 's3', day: D(-38), low: 520, high: 580, kind: 'module', seq: 2, right: 14, asked: 22 },
+    { id: 's4', day: D(-30), value: 560, kind: 'outside', outside: 'Bluebook' },
+    { id: 's5', day: D(-21), low: 550, high: 610, kind: 'mock', seq: 3, right: 31, asked: 44, detail: '31/44 · harder M2' },
+    { id: 's6', day: D(-9), low: 580, high: 630, kind: 'mock', seq: 4, right: 34, asked: 44 },
+    { id: 's7', day: D(-2), low: 600, high: 650, kind: 'paper', seq: 5, right: 36, asked: 44, label: 'Paper #5' },
+  ];
+  demo('UI.bandChart', 'c-band', host => UI.bandChart(host, sittings, {
+    target: 700, exam: D(44), estimate: { low: 600, high: 660 }, filters: true, legend: true,
+    projection: { low: 630, high: 710, mid: 670, to: D(44), label: 'At this pace' },
+    gaps: [{ from: 's5', to: 's6', questions: 212, minutes: 340, fixed: 9, delta: 25 }],
+    onPick: p => say(`${p.label || p.id}: ${p.low}–${p.high}`), label: 'Math section scores' }));
+  demo('UI.bandChart null', 'c-band-null', host => UI.bandChart(host, sittings.slice(0, 2), { target: 700, projection: null, label: 'Math section scores' }));
+  demo('UI.trend', 'c-band-mini', host => UI.trend(host, sittings, { height: 90, label: 'Math trend' }));
+  demo('UI.bandChart empty', 'c-band-empty', host => UI.bandChart(host, [], { height: 140, empty: { text: 'Your first test puts a band here.', action: { label: 'Start the diagnostic · 35 min', onClick: () => say('Would start the diagnostic') } } }));
+  demo('UI.gauge', 'c-gauge', host => UI.gauge(host, { band: { low: 600, high: 650 }, target: 700, previous: { low: 560, high: 610, label: 'Section #4' }, today: { low: 590, high: 650 }, subject: 'math', sub: 'Math · Section #5', caption: 'Your band moved up 40 since the last section.' }));
+  demo('UI.scale', 'c-scale', host => {
+    const counts = Array.from({ length: 31 }, (_, i) => Math.round(60 * Math.exp(-((i - 15) ** 2) / 40)));
+    UI.scale(host, { band: { low: 600, high: 650 }, target: 700, start: 510, previous: { low: 560, high: 610 }, label: '600–650',
+      hist: { counts, min: 200, bin: 20, avg: 520, you: 620 } });
+    UI.scale($('c-scale-2'), { band: { low: 1240, high: 1310 }, target: 1400, min: 400, max: 1600, compact: true, label: '1,240–1,310' });
+  });
+  demo('UI.barChart', 'c-bar', host => UI.barChart(host, Array.from({ length: 14 }, (_, i) => ({ day: D(i - 13), practice: ri(0, 40), tests: i % 5 === 2 ? 35 : 0, words: ri(0, 12), planned: 45, today: i === 13 })), {
+    series: [{ key: 'practice', label: 'Practice', look: 'ink' }, { key: 'tests', label: 'Tests', look: 'amber' }, { key: 'words', label: 'Words', look: 'soft' }],
+    stacked: true, planned: true, pace: { value: 40, label: 'Goal 40 min' }, unit: 'min', labels: 'weekday', legend: true, onPick: r => say(r.day), label: 'Study time, 14 days' }));
+  demo('UI.barChart budget', 'c-bar-2', host => UI.barChart(host, Array.from({ length: 22 }, (_, i) => ({ key: `q${i + 1}`, label: `${i + 1}`, value: ri(30, 190), budget: 95, status: ['correct', 'incorrect', 'correct', 'mixed'][i % 4] })), {
+    unit: 's', budget: 95, labels: 'label', label: 'Seconds per question', onPick: r => say(`Question ${r.label}`) }));
+  const days = Array.from({ length: 182 }, (_, i) => { const q = rnd() < .25 ? 0 : ri(4, 40); return { day: D(i - 181), questions: q, right: Math.round(q * (.6 + rnd() * .35)), minutes: Math.round(q * 1.4), fixed: q ? ri(0, 3) : 0, rest: q === 0 && i % 7 === 6 }; });
+  demo('UI.calendar', 'c-cal', host => UI.calendar(host, { days, marks: { exam: D(44), today: D(0) }, goal: 40, metrics: true, legend: true, max: D(60), onPick: d => say(d) }));
+  demo('UI.calendar plan', 'c-cal-plan', host => {
+    const plan = Array.from({ length: 56 }, (_, i) => { const d = D(i - 12), dow = new Date(`${d}T12:00`).getDay();
+      const kind = i === 55 ? 'eve' : dow === 6 ? 'test' : dow === 0 ? 'rest' : 'practice';
+      const state = i < 12 ? ['done', 'done', 'partial', 'missed', 'done', 'skipped', 'madeup'][i % 7] : 'future';
+      return { day: d, kind, state, minutes: kind === 'test' ? 70 : kind === 'practice' ? 40 : 0, tasks: kind === 'practice' ? { done: i < 12 ? 2 : 0, of: 3 } : null, own: i === 3, phase: i === 20 ? 'Sharpen' : null, phase_start: i === 20 }; });
+    UI.calendar(host, { look: 'plan', plan, marks: { start: D(-12), end: D(44), exam: D(44), today: D(0) }, min: D(-12), max: D(44), legend: true, onPick: d => say(d) });
+  });
+  demo('UI.heatmap', 'c-heat', host => UI.heatmap(host, days, { weeks: 26, stats: { active_days: 131, streak: 6, best: 19, minutes: 2530 }, legend: true, onPick: d => say(d) }));
+  demo('UI.lineChart', 'c-line', host => {
+    let r = 1000;
+    const pts = Array.from({ length: 14 }, (_, i) => ({ day: D(i * 4 - 56), y: (r += ri(-30, 60)) }));
+    UI.lineChart(host, [{ key: 'you', label: 'Your rating', points: pts, you: true }, { key: 'top', label: 'Top 10%', dashed: true, points: pts.map((p, i) => ({ day: p.day, y: 1320 + i * 4 })) }],
+      { bands: [{ from: 900, to: 1100, label: 'Level 3' }, { from: 1100, to: 1300, label: 'Level 4' }, { from: 1300, to: 1500, label: 'Level 5' }], x: 'time', onPick: p => say(`${p.y}`), label: 'Rating' });
+  });
+  demo('UI.spread', 'c-spread', host => UI.spread(host, [
+    { label: 'A', text: 'x = 3', share: .12, reason: 'Divided before subtracting' },
+    { label: 'B', text: 'x = 5', share: .61, key: true },
+    { label: 'C', text: 'x = 7', share: .2, pick: true, reason: 'Added 7 instead of subtracting it' },
+    { label: 'D', text: 'x = 15', share: .07, reason: 'Stopped at 3x = 15' }], { n: 1284, noun: 'students', label: 'How students answered' }));
+  demo('UI.quadrant', 'c-quad', host => UI.quadrant(host, Array.from({ length: 12 }, (_, i) => ({ id: `t${i}`, label: ['Circles', 'Linear functions', 'Ratios', 'Systems', 'Percentages', 'Probability', 'Area', 'Inequalities', 'Exponents', 'Quadratics', 'Right triangles', 'Units'][i], topic: 'circles', x: ri(30, 200), y: .3 + rnd() * .7, n: ri(5, 40) })),
+    { x: 'seconds', xRef: 95, y: 'accuracy', yRef: .7, onPick: p => say(p.label), actions: { slow_wrong: { label: 'Practise these', onClick: ps => say(`Practise ${ps.length}`) } }, label: 'Speed and accuracy by skill' }));
+  demo('UI.stackBar', 'c-stack', host => UI.stackBar(host, [{ key: 'alg', label: 'Algebra', value: 34 }, { key: 'adv', label: 'Advanced Math', value: 28 }, { key: 'psda', label: 'Data', value: 19 }, { key: 'geo', label: 'Geometry', value: 13, hatch: true }], { unit: 'q', noun: 'questions', legend: true, onPick: s => say(s.label), label: 'Questions by domain' }));
+  demo('UI.spark', 'c-spark', host => UI.spark(host, [61, 64, 70, 66, 72, 75, 78], { label: 'Accuracy', format: v => `${v}%` }));
+  demo('UI.clockLane', 'c-lane', host => {
+    const order = Array.from({ length: 12 }, (_, i) => `q${i + 1}`), items = {}, budgets = {}, visits = [];
+    let t = 0;
+    order.forEach((q, i) => { items[q] = { label: `Q${i + 1}`, status: ['correct', 'incorrect', 'correct', 'mixed', 'correct', 'unanswered'][i % 6], flag: i === 4, changed: i === 1 }; budgets[q] = 95e3; const d = ri(40, 170) * 1e3; visits.push([q, t, t + d]); t += d; });
+    visits.push(['q5', t, t + 50e3]);
+    UI.clockLane(host, visits, { items, budgets, order, duration: 35 * 6e4, marks: [{ t: visits[4][1] + 20e3, kind: 'flag', qid: 'q5' }, { t: visits[1][1] + 60e3, kind: 'change', qid: 'q2' }, { t: t + 50e3, kind: 'end' }], onPick: q => say(q), label: 'Module 1 timeline' });
+  });
+  demo('UI.dotStrip', 'c-dots', host => UI.dotStrip(host, Array.from({ length: 31 }, (_, i) => Math.round(40 * Math.exp(-((i - 14) ** 2) / 30))), { min: 200, bin: 20, band: { low: 600, high: 650 }, you: 620, avg: 500, noun: 'students', label: 'Scores this week' }));
+
+  /* ------------------------------------------------------------ overlays */
+  const btn = (host, label, fn, cls = 'btn') => { const b = el('button', { class: cls, type: 'button', text: label }); b.addEventListener('click', () => fn(b)); host.append(b); return b; };
+  demo('UI.sheet', 'x-sheets', host => {
+    btn(host, 'Sheet · s', () => UI.sheet({ title: 'Skip today?', size: 's', body: 'Your plan moves this set to tomorrow.', actions: [{ label: 'Keep it' }, { label: 'Skip', primary: true, onClick: () => say('Skipped') }] }));
+    btn(host, 'Sheet · m, a form', () => UI.sheet({ title: 'Log a mistake', size: 'm', body: b => {
+      b.append(el('label', { class: 'label', for: 'kit-s1', text: 'What happened' }), el('textarea', { class: 'field', id: 'kit-s1', maxlength: '200', placeholder: 'I forgot to flip the sign' }));
+      UI.counter(b.querySelector('textarea'), 200);
+      const s = el('div', { style: 'margin-top: 14px' }); UI.seg(s, ['Bluebook', 'Paper', 'Class'], { label: 'Where' }); b.append(s);
+    }, actions: [{ label: 'Cancel' }, { label: 'Save', primary: true, kbd: 'Enter', onClick: () => say('Logged') }] }));
+    btn(host, 'Sheet · l, long', () => UI.sheet({ title: 'All entry rules', size: 'l', body: b => b.append(...Array.from({ length: 24 }, (_, i) => el('p', { style: 'margin-bottom: 12px', text: `${i + 1}. Enter a fraction as 3/4, never as a mixed number. Up to 5 characters for a positive answer, 6 for a negative one.` }))) }));
+    btn(host, 'Sheet · guard', () => UI.sheet({ title: 'A draft', size: 'm', guard: () => UI.confirm({ title: 'Discard the draft?', confirm: 'Discard', destructive: true }), body: 'Closing asks first.' }));
+    btn(host, 'Confirm', async () => say(`Confirm: ${await UI.confirm({ title: 'Start a new plan?', text: 'Your current plan stays in history.', confirm: 'Start' })}`));
+    btn(host, 'Confirm · destructive', async () => say(`Destructive: ${await UI.confirm({ title: 'Delete this note?', text: 'It can’t be brought back.', confirm: 'Delete', destructive: true })}`));
+    btn(host, 'Confirm · input', async () => say(`Input: ${await UI.confirm({ title: 'Name this set', confirm: 'Save', input: { label: 'Name', value: 'Circles, hard', maxlength: 40 } })}`));
+  });
+  demo('UI.pop', 'x-pops', host => {
+    const out = t => { $('x-pops-out').textContent = t; };
+    btn(host, 'Popover', b => UI.pop(b, (p, res) => [el('p', { class: 'h3', text: 'Two clean answers close it' }), el('p', { class: 'help', text: 'A clean answer is right, first try, not a repeat, not flagged and not a guess.' }), el('button', { class: 'btn sm', type: 'button', text: 'Got it', style: 'margin-top: 10px', onclick: () => res.close() })], { label: 'How mistakes close' }));
+    btn(host, 'Listbox', b => UI.pop(b, [{ group: 'Algebra', options: [{ value: 'lf', label: 'Linear functions', meta: '14', sub: '3 open mistakes' }, { value: 'sy', label: 'Systems of equations', meta: '9' }] }, { group: 'Geometry', options: [{ value: 'ci', label: 'Circles', meta: '7' }, { value: 'rt', label: 'Right triangles', meta: '3', disabled: true }] }],
+      { role: 'listbox', label: 'Skill', value: 'sy', onPick: v => out(`Picked ${v}`) }));
+    const m = btn(host, 'Menu', () => {});
+    UI.menu.bind(m, () => [{ group: 'This question' }, { label: 'Twin', icon: 'twin', kbd: 'T', onClick: () => out('Twin') }, { label: 'Save', icon: 'bookmark', kbd: 'B', sub: 'Keep it in Review', onClick: () => out('Save') },
+      { label: 'Copy link', icon: 'copy', meta: '⌘C', onClick: () => out('Copy') }, { separator: true }, { label: 'Show every option’s mistake', checked: true, onClick: () => out('Toggle') },
+      { group: 'Text' }, { label: 'Small', checked: false, radio: 'size' }, { label: 'Default', checked: true, radio: 'size' }, { label: 'Large', checked: false, radio: 'size' }, { separator: true },
+      { label: 'Report a problem', icon: 'chat', kbd: 'R', disabled: true }], { label: 'Question actions' });
+    const t = btn(host, 'Tooltip', () => out('Tooltips never hold the only copy of a fact'));
+    UI.tooltip(t, 'Hover or focus shows this', { kbd: '?' });
+    const ib = el('button', { class: 'ibtn', type: 'button', 'aria-label': 'Calculator', html: ic('calc') }); host.append(ib); UI.tooltip(ib, 'Calculator', { kbd: 'Shift+G' });
+  });
+  demo('UI.toast', 'x-toasts', host => {
+    btn(host, 'Toast', () => UI.toast('Saved to Review'));
+    btn(host, 'Toast · action', () => UI.toast('Plan updated', { action: { label: 'Open', href: '#overlays' } }));
+    btn(host, 'Toast · undo', () => UI.toast('Removed from Saved', { undo: () => say('Put back') }));
+    btn(host, 'Four toasts', () => ['One', 'Two', 'Three', 'Four: the first leaves'].forEach(t => UI.toast(t)));
+    const bh = $('x-banner-host');
+    btn(host, 'Banner · notice', () => UI.banner('first', 'Welcome. Start with 8 questions and your plan builds itself.', [{ label: 'Start with 8', primary: true, onClick: () => say('Would start') }, { label: 'Not now', quiet: true, dismiss: true }], { host: bh, dismiss: true }));
+    btn(host, 'Banner · offline', () => UI.banner('offline', 'You’re offline. Answers are kept and sent when you’re back.', [{ label: 'Retry', onClick: () => say('Retrying') }], { host: bh }));
+    btn(host, 'Clear banners', () => { UI.banner.clear('first'); UI.banner.clear('offline'); }, 'quiet');
+  });
+  demo('big overlays', 'x-big', host => {
+    btn(host, 'dialog.more', () => {
+      const d = el('dialog', { class: 'more', 'aria-label': 'Menu' });
+      d.innerHTML = `<div class="more-body">
+        <div class="nextup"><span class="k">Up next</span><span class="nextup-t">Fix 3 mistakes in Circles</span><span class="nextup-m">3 q · 4 min · ≈ 6 pts</span><div class="nextup-go"><a class="pill" href="#shell">Start</a></div></div>
+        <a class="more-head" href="#shell"><span class="avatar">M</span><b>Maya</b><span class="meta">Exam in 44 days</span><span class="meta">Profile and settings</span></a>
+        <div class="more-group">
+          <a class="more-row" href="#shell">${ic('review', 22)}Review<span class="more-meta"><i class="dot"></i> 14</span></a>
+          <a class="more-row" href="#shell">${ic('words', 22)}Words<span class="more-meta">12 due</span></a>
+          <a class="more-row" href="#shell">${ic('trophy', 22)}Compete<span class="badge">New</span></a>
+        </div>
+        <div class="more-group"><a class="more-row" href="#shell">${ic('help', 22)}Help and FAQ</a><button class="more-row" type="button" data-x>${ic('x', 22)}Close</button></div>
+      </div>
+      <div class="more-foot"><a href="#shell" aria-current="page">${ic('review', 22)}Review<span class="more-meta">14</span></a><a href="#shell">${ic('words', 22)}Words<span class="more-meta">12</span></a><a href="#shell">${ic('trophy', 22)}Compete</a><button type="button">${ic('bolt', 22)}Quick</button></div>`;
+      d.querySelector('[data-x]').addEventListener('click', () => d.close());
+      d.addEventListener('click', e => { if (e.target === d) d.close(); });
+      d.addEventListener('close', () => d.remove());
+      document.body.append(d); d.showModal();
+    });
+    btn(host, 'dialog.palette', () => {
+      const d = el('dialog', { class: 'palette', 'aria-label': 'Search' });
+      d.innerHTML = `<div class="palette-q">${ic('search')}<input aria-label="Search" placeholder="Search pages, skills, question types" value="circ"></div>
+        <div class="palette-list" role="listbox" aria-label="Results">
+          <div class="palette-group">Skills</div>
+          <div role="option" aria-selected="true" id="kp1"><span><b>Circ</b>les</span><span class="mbar"><i style="--m: .4"></i></span><span class="opt-meta">Getting there</span><kbd class="kbd">Enter</kbd></div>
+          <div class="palette-sub"><button class="btn sm" type="button">Practise · 10</button><button class="btn sm" type="button">Learn this type</button></div>
+          <div class="palette-group">Question types</div>
+          <div role="option" aria-selected="false" id="kp2"><span>Arc length from a central angle (<b>circ</b>les)</span><span class="opt-meta">4 open</span></div>
+          <div role="option" aria-selected="false" id="kp3"><span>Equation of a <b>circ</b>le from its centre</span></div>
+        </div>
+        <div class="palette-foot"><span><kbd class="kbd">↑</kbd><kbd class="kbd">↓</kbd> move</span><span><kbd class="kbd">Enter</kbd> open</span><span><kbd class="kbd">Tab</kbd> actions</span><span><kbd class="kbd">Esc</kbd> close</span></div>`;
+      if (UI.glyph) d.querySelector('#kp1').prepend(UI.glyph('circles'));
+      d.addEventListener('click', e => { if (e.target === d) d.close(); });
+      d.addEventListener('close', () => d.remove());
+      document.body.append(d); d.showModal(); d.querySelector('input').focus();
+    });
+    let calc = null;
+    btn(host, '.calc', b => {
+      if (calc) { calc.remove(); calc = null; b.setAttribute('aria-pressed', 'false'); return; }
+      calc = el('div', { class: 'calc', role: 'dialog', 'aria-label': 'Calculator' });
+      calc.innerHTML = `<div class="calc-bar">Calculator<button class="ibtn" type="button" aria-label="Close calculator">${ic('x', 18)}</button></div><div class="calc-host"><p class="calc-note">Desmos loads here during a test. It keeps its state for the sitting.</p></div>`;
+      calc.querySelector('button').addEventListener('click', () => b.click());
+      document.body.append(calc); b.setAttribute('aria-pressed', 'true');
+    });
+  });
+
+  /* ------------------------------------------------------------ shell */
+  const nextup = `<div class="nextup"><span class="k">Up next</span><span class="nextup-t">Fix 3 mistakes in Circles</span><span class="nextup-m">3 q · 4 min · ≈ 6 pts</span><span class="nextup-r">Two of them came back this week.</span>
+    <div class="nextup-go"><a class="pill" href="#shell">Start <kbd class="kbd">G</kbd><kbd class="kbd">N</kbd></a><button class="ibtn" type="button" aria-label="Five more">${ic('chev', 18)}</button></div></div>`;
+  const today = `<a class="side-day" href="#shell"><div class="side-day-head"><span class="k">Today</span><span class="streak on">${svg('flame', 16)}<span>6</span></span></div>
+    <div class="meter"><span class="meter-k">Study time</span><span class="meter-n">18 of 45 min</span><div class="meter-bar"><i style="--p: .4"></i></div></div>
+    <div class="meter"><span class="meter-k">Questions</span><span class="meter-n">12 of 20</span><div class="meter-bar"><i style="--p: .6"></i></div></div>
+    <span class="side-day-foot">Exam in 44 days · ${UI.date(D(44))}</span><span class="ring" style="--p: .4">40</span></a>`;
+  const item = (id, label, meta, cur, rail) => `<a class="side-item" href="#shell"${cur ? ' aria-current="page"' : ''}${id === 'today' ? ' data-ring style="--p: .4"' : ''}>${ic(id)}<span class="side-text">${label}</span>${meta ? `<span class="side-meta"${rail ? ` data-rail="${rail}"` : ''}>${meta}</span>` : ''}</a>`;
+  const side = cls => `<nav class="side ${cls}" aria-label="Sections">
+    <div class="side-brand"><a class="side-mark" href="#shell">${UI.mark ? UI.mark(26) : ''}<span class="side-word">SAT<br>Freshman</span></a><button class="ibtn side-toggle" type="button" aria-label="Collapse the sidebar">${ic('panel')}</button></div>
+    <button class="side-search" type="button">${ic('search', 18)}<span class="side-text">Search</span><kbd class="kbd">/</kbd></button>
+    ${nextup}<a class="side-play" href="#shell" aria-label="Up next: Fix 3 mistakes in Circles">${ic('play', 18)}</a>
+    <button class="side-quick" type="button">${ic('bolt', 18)}<span class="side-text">Quick</span><kbd class="kbd">Q</kbd></button>
+    <div class="side-nav"><div class="side-group"><span class="side-label">Study</span>
+      ${item('today', 'Today', '18m', true)}${item('practice', 'Practice')}${item('review', 'Review', '<i class="dot"></i>14', false, 'count')}${item('words', 'Words', '12 due', false, 'dot')}${item('tests', 'Tests')}${item('plan', 'Plan', 'Day 23')}</div>
+      <div class="side-group"><span class="side-label">Progress</span>${item('results', 'Results', '1,240')}${item('trophy', 'Compete', 'New', false, 'dot')}</div></div>
+    ${today}
+    <div class="side-foot"><a href="#shell">${ic('help', 18)}<span class="side-text">Help and FAQ</span></a><button type="button">${ic('chat', 18)}<span class="side-text">Send feedback</span></button></div>
+    <button class="side-user" type="button" aria-expanded="false" aria-label="Maya, account"><span class="avatar">M</span><span class="side-name">Maya</span><span class="side-sub">1,284 answered</span>${ic('chev', 16)}</button>
+  </nav>`;
+  const mainIn = `<div class="kit-main"><div class="now-strip">${nextup}${today}</div>
+    <nav class="sections stuck" aria-label="On this page"><a href="#shell" aria-current="true">Overview</a><a href="#shell">Skills</a><a href="#shell">Tests</a><a href="#shell">Time</a><span class="sections-next">Up next: <b>Fix 3 mistakes</b><a class="pill sm" href="#shell">Start</a></span></nav>
+    <div class="card"><div class="card-head"><h2>Main content</h2></div><div class="skel line"></div><div class="skel line"></div><div class="skel line" style="width: 60%"></div></div></div>`;
+  demo('.side', 'x-frame-side', f => { f.innerHTML = side('') + mainIn; });
+  demo('.side.rail', 'x-frame-rail', f => { f.innerHTML = side('rail') + mainIn; });
+  demo('.side.open', 'x-frame-open', f => { f.innerHTML = `<div class="scrim"></div>${side('open')}` + mainIn.replace('kit-main', 'kit-main" style="padding-left: 88px'); });
+  demo('.pbar', 'x-frame-phone', f => {
+    f.innerHTML = `<header class="pbar scrolled"><a class="pbar-mark" href="#shell" aria-label="Today">${UI.mark ? UI.mark(26) : ''}</a><span class="pbar-grow"></span>
+      <a class="pbar-chip" href="#shell" aria-label="Review, 14 open mistakes"><i class="dot"></i>14</a>
+      <button class="ibtn" type="button" aria-label="Search">${ic('search')}</button><button class="ibtn" type="button" aria-label="Quick">${ic('bolt')}</button>
+      <a class="pbar-me" href="#shell" aria-label="Menu"><span class="avatar">M</span><i class="dot"></i></a></header>
+      <div class="kit-main"><div class="now-strip">${nextup}</div><div class="card"><div class="skel line"></div><div class="skel line" style="width: 60%"></div></div></div>
+      <div class="tabs-hint">Hold a tab for shortcuts<button class="x" type="button" aria-label="Dismiss">${ic('x', 16)}</button></div>
+      <nav class="tabs" aria-label="Sections"><button class="tabs-grip" type="button" aria-label="Open the menu"></button>
+        ${[['today', 'Today'], ['practice', 'Practice'], ['tests', 'Tests'], ['plan', 'Plan'], ['results', 'Results']].map(([id, l], i) => `<a href="#shell"${i === 0 ? ' aria-current="page"' : ''}>${svg(id, 22)}<span>${l}</span>${i === 3 ? '<i class="dot"></i>' : ''}</a>`).join('')}</nav>`;
+  });
+  demo('.bar', 'x-frame-bar', f => {
+    f.innerHTML = `<header class="bar scrolled"><div class="bar-in"><a class="brand" href="#shell" aria-label="Today">${UI.mark ? UI.mark(26) : ''}</a>
+      <nav class="nav" aria-label="Sections"><a href="#shell" aria-current="page">Today</a><a href="#shell">Practice</a><a href="#shell">Tests</a><a href="#shell">Plan</a><a href="#shell">Results</a></nav>
+      <div class="bar-end"><a class="streak on" href="#shell">${svg('flame', 16)}<span>6</span></a><a class="avatar" href="#shell">M</a></div></div></header>`;
+  });
+
+  /* ------------------------------------------------------------ formatters */
+  demo('formatters', 'x-fmt', t => {
+    const now = Date.now();
+    const rows = [['UI.dur(12)', UI.dur(12)], ['UI.dur(2530)', UI.dur(2530)], ['UI.mmss(72)', UI.mmss(72)], ['UI.mmss(3725)', UI.mmss(3725)], ['UI.num(12840)', UI.num(12840)],
+      ['UI.date(d)', UI.date(D(44))], ['UI.date(d, \'long\')', UI.date(D(44), 'long')], ['UI.date(d, \'eyebrow\')', UI.date(D(44), 'eyebrow')],
+      ['UI.relTime(−3 min)', UI.relTime(new Date(now - 18e4))], ['UI.relTime(−2 days)', UI.relTime(new Date(now - 1728e5))],
+      ['UI.qlabel(\'m2-7\')', UI.qlabel('m2-7')], ['UI.qlabel(\'rw-m1-3\', true)', UI.qlabel('rw-m1-3', true)], ['UI.masteryWord(.83, 40)', UI.masteryWord(.83, 40)],
+      ['UI.SUBJECT.rw.label', UI.SUBJECT.rw.label]];
+    t.tBodies[0].append(...rows.map(([a, b]) => el('tr', {}, el('td', { text: a }), el('td', { text: String(b) }))));
+    $('x-kind').tBodies[0].append(...Object.entries(UI.KIND).map(([k, v]) => el('tr', {}, el('td', { text: k }), el('td', { text: v }))),
+      el('tr', {}, el('td', { text: 'label({kind:\'module\', module:2})' }), el('td', { text: UI.KIND.label({ kind: 'module', module: 2 }) })));
+    $('x-keys').tBodies[0].append(...Object.entries(UI.KEYS).map(([k, v]) => el('tr', {}, el('td', { text: k }), el('td', {}, ...String(v).split('+').map(c => el('kbd', { class: 'kbd', text: c }))))));
+    const act = $('x-fmt-act');
+    btn(act, 'UI.copyText', () => UI.copyText('https://satfreshman.com/s/?c=K7M2QX', { toast: 'Link copied' }));
+    btn(act, 'UI.ics · the SAT', () => {
+      const text = UI.ics({ title: 'SAT', start: D(44), description: 'Bring your admission ticket.' });
+      const a = el('a', { href: URL.createObjectURL(new Blob([text], { type: 'text/calendar' })), download: 'sat.ics' }); a.click(); URL.revokeObjectURL(a.href);
+    });
+  });
+
+  if (broken.length) { const b = $('kit-broken'); b.hidden = false; b.className = 'card-err'; b.textContent = `Broken: ${broken.join(', ')}`; }
+  window.KIT = { broken };
+})();
+</script>
+</body>
+</html>
