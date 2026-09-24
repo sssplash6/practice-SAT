@@ -137,7 +137,8 @@ def shell(learner: str, tz: int, token: str) -> dict:
     if has_plan:
         kind = "exam" if p["exam_date"] == d["today"] else "rest" if line["rest"] else "practice"
         plan = {"exam_date": p["exam_date"], "minutes": p["minutes"], "days": p["days"], "tests": p["tests"],
-                "per_session": per_session(p), "target": p["target"], "kind": kind, "done": None}
+                "per_session": per_session(p), "target": p["target"], "kind": kind, "done": None,
+                "next_test": None}          # the next test day within 7 days, from the plan part (S7)
     tested = any(progress._local_day(r["finished"], tz) == today
                  for r in db.rows("SELECT finished FROM sessions WHERE learner=? AND finished IS NOT NULL"
                                   f" AND kind IN ({','.join('?' for _ in TEST_KINDS)})", learner, *TEST_KINDS))
@@ -153,7 +154,8 @@ def shell(learner: str, tz: int, token: str) -> dict:
     out = {
         "me": {"name": p["name"], "handle": p["handle"], "label": p["name"] or p["handle"] or challenge.handle(learner, None),
                "avatar": _avatar(learner, p["avatar"], board), "domains": domains, "board": p["board"],
-               "linked": acct["linked"], "email_masked": mask(acct["email"]), "since": acct["since"]},
+               "linked": acct["linked"], "email": acct["email"] if acct["linked"] else None,
+               "email_masked": mask(acct["email"]), "since": acct["since"]},
         "answered": answered,
         "streak": d["streak"], "best_streak": d["best_streak"], "spares": d["spares"],
         "today": {"day": d["today"], "questions": line["questions"], "right": line["right"],
