@@ -624,6 +624,8 @@ def carry(frm: str, to: str) -> int:
     active plan stays active and the other is archived; and a contest sat under
     both codes keeps only its first ranked sitting, as does a challenge day.
     """
+    if db.is_sample(frm) or db.is_sample(to):
+        raise HTTPException(403, "the sample report can't be added to or claimed")
     if frm == to:
         return 0
     stamp = now()
@@ -644,6 +646,12 @@ def carry(frm: str, to: str) -> int:
                 c.execute(f"UPDATE OR IGNORE {table} SET {col}=? WHERE {col}=?", (to, frm))
             c.execute(f"DELETE FROM {table} WHERE {' OR '.join(f'{col}=?' for col in cols)}", (frm,) * len(cols))
         c.execute("DELETE FROM follows WHERE learner=target")
+        # a list named on both sides keeps both sides' words (words.md W19)
+        for s in c.execute("SELECT name, words FROM word_lists WHERE learner=?", (frm,)).fetchall():
+            t = c.execute("SELECT words FROM word_lists WHERE learner=? AND name=?", (to, s["name"])).fetchone()
+            if t:
+                both = list(dict.fromkeys(json.loads(t["words"] or "[]") + json.loads(s["words"] or "[]")))
+                c.execute("UPDATE word_lists SET words=? WHERE learner=? AND name=?", (json.dumps(both), to, s["name"]))
         for table in ("practice_seen", "saved", "flags", "notes", "earned", "post_votes", "contest_members",
                       "due_days", "week_goals", "word_lists", "champions", "rank_snapshots"):
             c.execute(f"UPDATE OR IGNORE {table} SET learner=? WHERE learner=?", (to, frm))
@@ -670,11 +678,15 @@ def carry(frm: str, to: str) -> int:
             t = c.execute("SELECT * FROM traps WHERE learner=? AND template=? AND norm=?", (to, s["template"], s["norm"])).fetchone()
             if t:
                 recent = s if s["last"] >= t["last"] else t
-                c.execute("UPDATE traps SET hits=?,owed=?,opened=?,last=?,closed=?,reason=?,label=?,topic=?,seed=?,session=?,relapses=?,checks=?,due=? WHERE id=?",
+                shut = t["closed"] is not None and s["closed"] is not None
+                # open on either side stays open, with no fix or check-ins to show
+                c.execute("UPDATE traps SET hits=?,owed=?,opened=?,last=?,closed=?,closed_how=?,reason=?,label=?,topic=?,"
+                          "seed=?,session=?,relapses=?,checks=?,due=? WHERE id=?",
                           (t["hits"] + s["hits"], max(t["owed"], s["owed"]), min(t["opened"], s["opened"]),
-                           max(t["last"], s["last"]), None if t["closed"] is None or s["closed"] is None else max(t["closed"], s["closed"]),
+                           max(t["last"], s["last"]), max(t["closed"], s["closed"]) if shut else None,
+                           t["closed_how"] if shut else None,
                            *(recent[k] for k in ("reason", "label", "topic", "seed", "session")), t["relapses"] + s["relapses"],
-                           max(t["checks"], s["checks"]), recent["due"], t["id"]))
+                           max(t["checks"], s["checks"]) if shut else 0, recent["due"] if shut else None, t["id"]))
                 c.execute("DELETE FROM traps WHERE id=?", (s["id"],))
             else:
                 c.execute("UPDATE traps SET learner=? WHERE id=?", (to, s["id"]))

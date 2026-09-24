@@ -877,6 +877,11 @@ def routes(client):
                        json={"attempt_id": aid, "scope": "type", "note": "x"}).status_code == 404
     assert client.put("/api/me", headers={"X-Learner": "sample:f4"}, json={"name": "Sam"}).status_code == 403
     assert client.get("/api/me", headers={"X-Learner": "sample:f4"}).status_code == 200
+    # SR24: the live sample report can't be claimed by carrying it
+    add("sessions", id="f4-sample-sitting", kind="section", learner="sample:report", started=progress.now())
+    r = client.post("/api/me/carry", headers={"X-Learner": "a:f4thief"}, json={"learner": "sample:report"})
+    assert r.status_code == 403, r.text
+    assert db.one("SELECT learner FROM sessions WHERE id='f4-sample-sitting'")["learner"] == "sample:report"
     # U21: device tokens, revocation, idle shared computers and the swap window
     token = deps.mint_device("a:f4device", "passkey", "Chrome on Mac")
     assert client.get("/api/me", headers={"X-Learner": token}).json()["profile"]["id"] == "a:f4device"
@@ -1036,7 +1041,10 @@ def carry():
     add("push_subs", id="carry-push", learner=src, endpoint="https://push.example/1", created=stamp)
     add("champions", kind="week", period="2026-W38", board="points", place=1, learner=src, value=90)
     add("rw_log", learner=src, at=stamp, source="task", domain="Craft and Structure", missed=2, of=10)
-    add("word_lists", learner=src, name="mine", words="[]", created=stamp)
+    add("word_lists", learner=src, name="mine", words='["abate"]', created=stamp)
+    add("word_lists", learner=dst, name="mine", words='["candid"]', created=stamp)
+    add("traps", learner=dst, template="lin.evaluate", norm="error", reason="error", label="Error", topic="linear_functions",
+        owed=0, opened=stamp, last=stamp, closed=stamp, closed_how="fixed", due="2026-09-13", checks=1)
     add("official_done", learner=src, cb_id="84664a7c", pick="C", right=0, ms=1000, at=stamp)
     add("rank_snapshots", day=str(TODAY), board="points", learner=src, rank=3, value=40)
     add("follows", learner=src, target="a:f4friend", at=stamp)
@@ -1063,6 +1071,15 @@ def carry():
     ranked = {r["id"]: (r["ranked"], r["unranked_why"]) for r in db.rows("SELECT * FROM sessions WHERE id LIKE 'carry-ch-%'")}
     assert ranked == {"carry-ch-a": (1, None), "carry-ch-b": (0, "repeat"), "carry-ch-c": (1, None)}, ranked
     assert db.one('SELECT "into" FROM retired WHERE code=?', "a:f4carryold")["into"] == dst
+    assert json.loads(db.one("SELECT words FROM word_lists WHERE learner=? AND name='mine'", dst)["words"]) == ["candid", "abate"]
+    t = trap(dst, template="lin.evaluate", norm="error")                    # open under the source: open, no fix shown
+    assert (t["closed"], t["closed_how"], t["due"], t["checks"], t["owed"]) == (None, None, None, 0, 2), dict(t)
+    for a, b in (("sample:report", dst), (dst, "sample:report")):
+        try:
+            progress.carry(a, b)
+            raise AssertionError(f"carried {a} into {b}")
+        except HTTPException as e:
+            assert e.status_code == 403
 
 
 def check(client):
