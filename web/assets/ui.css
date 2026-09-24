@@ -201,8 +201,8 @@
 [data-status="blank"]       { --st-edge: var(--faint); --st-edge-style: dashed; --st-fg: var(--soft); --st-mark: var(--soft); --st-glyph: "\2013"; }
 /* skipped, can still be answered before Finish: guillemet */
 [data-status="skipped"]     { --st-edge: var(--soft); --st-edge-style: dashed; --st-glyph: "\BB"; }
-/* a contest question voided by leaving or copying: a diagonal ink slash */
-[data-status="voided"]      { --st-fg: var(--soft); --st-glyph: "\2298";
+/* a contest question voided by leaving or copying: a diagonal ink slash; a faint edge keeps it a box */
+[data-status="voided"]      { --st-fg: var(--soft); --st-glyph: "\2298"; --st-edge: var(--faint);
                               --st-bg: linear-gradient(to top right, transparent calc(50% - .75px), var(--ink) calc(50% - .75px) calc(50% + .75px), transparent calc(50% + .75px)), var(--paper); }
 /* taken out of scoring by a key correction (SR25): dotted ink edge, circled minus */
 [data-status="removed"]     { --st-edge: var(--ink); --st-edge-style: dotted; --st-fg: var(--soft); --st-glyph: "\2296"; }
@@ -390,9 +390,9 @@ main[tabindex="-1"]:focus { outline: none; }     /* the skip link's target */
   content: ""; position: absolute; left: 50%; top: 7px; width: 28px; height: 4px; margin-left: -14px;
   border-radius: 2px; background: var(--faint);
 }
-/* "Hold a tab for shortcuts", once, above the tabs */
+/* "Hold a tab for shortcuts", once, above the tabs; centred by margins, since rise animates transform */
 .tabs-hint {
-  position: fixed; z-index: 31; left: 50%; transform: translateX(-50%);
+  position: fixed; z-index: 31; left: 0; right: 0; width: max-content; max-width: calc(100% - 32px); margin-inline: auto;
   bottom: calc(64px + 18px + env(safe-area-inset-bottom, 0px));
   display: flex; align-items: center; gap: 4px; padding: 5px 5px 5px 12px; border-radius: 10px;
   background: var(--ink); color: var(--on-ink); font: 500 13px var(--font); white-space: nowrap;
@@ -1014,9 +1014,10 @@ input[type="range"]:focus-visible::-moz-range-thumb { box-shadow: 0 0 0 2px var(
 .pref-ctl { grid-column: 2; grid-row: 1 / span 2; display: flex; align-items: center; gap: 12px; justify-self: end; }
 .pref-state { font: 500 12px var(--mono); color: var(--soft); white-space: nowrap; }
 .pref-state.err { color: var(--ink); }
+/* a row whose control is a switch (with or without its "Saved") keeps it at the right */
 @media (max-width: 759px) {
-  .pref:not(:has(.pref-ctl > .switch:only-child)) { grid-template-columns: minmax(0, 1fr); }
-  .pref:not(:has(.pref-ctl > .switch:only-child)) .pref-ctl { grid-column: 1; grid-row: auto; justify-self: stretch; flex-wrap: wrap; margin-top: 8px; }
+  :is(.pref:not(:has(> .pref-ctl > .switch)), .pref:has(> .pref-ctl > :not(.switch):not(.pref-state))) { grid-template-columns: minmax(0, 1fr); }
+  :is(.pref:not(:has(> .pref-ctl > .switch)), .pref:has(> .pref-ctl > :not(.switch):not(.pref-state))) .pref-ctl { grid-column: 1; grid-row: auto; justify-self: stretch; flex-wrap: wrap; margin-top: 8px; }
 }
 
 /* radio chips (UI.chips): button[aria-pressed] or label > input; each may carry a count */
@@ -1357,8 +1358,8 @@ button[data-fact] { appearance: none; border: 0; background: none; padding: 0; f
 .sw.lg { --sw: 20px; font-size: 10px; }
 
 .strip { display: flex; flex-wrap: wrap; align-items: center; gap: 3px; }
-.strip.fit { flex-wrap: nowrap; gap: 2px; }
-.strip.fit > [data-status] { flex: 1 1 0; width: auto; min-width: 0; max-width: 24px; }
+.strip.fit { flex-wrap: nowrap; gap: 2px; min-width: 0; }      /* min-width: a grid or flex parent may shrink it to fit */
+.strip.fit > [data-status] { flex: 1 1 0; width: auto; min-width: 0; max-width: 24px; overflow: hidden; }
 .strip > button[data-status], .strip > a[data-status] { cursor: pointer; transition: transform .12s var(--ease); }
 @media (hover: hover) and (pointer: fine) { .strip > button[data-status]:hover, .strip > a[data-status]:hover { transform: translateY(-1px); } }
 /* the type map (UI.atlas; U8, P14): a skill's question types as 16px cells (.sm 14px on Me),
@@ -1481,7 +1482,7 @@ figure.chart svg text.ch-xtick.on { fill: var(--ink); font-weight: 600; }
 .ch-grid line, .ch-grid-l { stroke: var(--line); stroke-width: 1; }
 .ch-base { stroke: var(--faint); stroke-width: 1; }
 .ch-tick, .ch-pace-t { stroke: var(--faint); stroke-width: 1; }
-.ch-zone { fill: var(--wash); }
+.ch-zone { fill: color-mix(in srgb, var(--amber) 18%, transparent); }   /* --wash vanishes on a --tile card */
 .ch-cone { fill: var(--mat); opacity: .8; }
 .ch-cone-mid { stroke: var(--ink); stroke-width: 1; stroke-dasharray: 3 3; opacity: .55; fill: none; }
 .ch-pace { stroke: var(--ink); stroke-width: 1.5; stroke-dasharray: 6 4; opacity: .7; fill: none; }
@@ -2212,7 +2213,8 @@ dialog.sheet:focus-visible, .popover:focus-visible, .menu:focus-visible { outlin
    (R37), then the open-mistake dots and Practise. In Today's points card (.gain) it adds the
    figure, a 0-100 track (an ink tick at your accuracy, an amber tick at 80%) and two meta lines. */
 .skill-row {
-  display: grid; grid-template-columns: minmax(150px, 1.2fr) minmax(160px, 1.4fr) auto; align-items: center; gap: 6px 18px;
+  /* the side is a share of the row, not its content, so the bars of a list of rows line up */
+  display: grid; grid-template-columns: minmax(150px, 1.2fr) minmax(160px, 1.4fr) minmax(max-content, 1fr); align-items: center; gap: 6px 18px;
   padding: 12px 0; border-top: 1px solid var(--line);
 }
 .skill-name { display: inline-flex; align-items: center; gap: 10px; min-width: 0; font: 600 14.5px/1.3 var(--font); color: var(--ink); text-decoration: none; }
