@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-24T15:28:20+05:00
+# v2 build state -- 2026-09-24T16:12:31+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -7,14 +7,14 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 - `v2/bank` at e9c6f3c, 0 commits ahead of master
 - `v2/bank-lint` at f168c9f, 0 commits ahead of master
-- `v2/bank-lint-fix` at 549df45, 0 commits ahead of master
+- `v2/bank-lint-fix` at 033fa1a, 5 commits ahead of master
 - `v2/f0` at dc9873f, 0 commits ahead of master
 - `v2/f1` at b417976, 0 commits ahead of master
-- `v2/f2` at 30b55fd, 13 commits ahead of master
-- `v2/f3` at 7057bae, 8 commits ahead of master
+- `v2/f2` at bb6a2e1, 20 commits ahead of master
+- `v2/f3` at 47c0cb9, 14 commits ahead of master
 - `v2/f4` at 2d419ba, 0 commits ahead of master
 - `v2/f5` at 6e3d219, 0 commits ahead of master
-- `v2/f6` at 372267a, 16 commits ahead of master
+- `v2/f6` at d51dbcc, 18 commits ahead of master
 - `v2/satdates` at 141f815, 0 commits ahead of master
 - `v2/t-bank` at 9403838, 0 commits ahead of master
 - `v2/t-bank-all` at f4bf864, 0 commits ahead of master
@@ -58,7 +58,9 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_7aaa2f6c-3ad-3` on `detached 566eabc`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-1` on `detached fb3f147`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-10` on `detached 372267a`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-11` on `v2/f3`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-11` on `detached 47c0cb9`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-12` on `detached d51dbcc`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-13` on `detached bb6a2e1`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-2` on `detached 78f896a`: 1 uncommitted (saved in wip/wf_cafefb42-928-2/)
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-3` on `detached 45ec3de`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-4` on `detached d475fe1`: 0 uncommitted
@@ -66,7 +68,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-6` on `detached 7057bae`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-7` on `detached 344449d`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-8` on `detached 372267a`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-9` on `v2/f2`: 1 uncommitted (saved in wip/wf_cafefb42-928-9/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-9` on `detached 5a8c251`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-1` on `detached 9ba1209`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-10` on `detached d47d851`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-11` on `detached d47d851`: 0 uncommitted
@@ -111,8 +113,8 @@ Unfinished when saved: fix: area_and_volume, fix: linear_equations_in_one_variab
 
 ### wf_c70c4702-929: 49 finished, 0 unfinished
 
-### wf_cafefb42-928: 8 finished, 3 unfinished
-Unfinished when saved: build F2 3/4, build F3 3/4, verify F6 r1
+### wf_cafefb42-928: 11 finished, 2 unfinished
+Unfinished when saved: build F2 4/4, build F3 3/4
 
 ### wf_cffc089e-e95: 5 finished, 0 unfinished
 

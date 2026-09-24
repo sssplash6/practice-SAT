@@ -1,0 +1,26 @@
+[
+ {
+  "where": "server/drill.py _pool, pool == 'set' (F5 -> S4's file, on master), against F6's hooks sets.serve and sets.link",
+  "what": "The drill reads sets.items directly and never calls sets.serve or sets.link. Tested on the merged tree:\n- Takers who start with POST /api/drill {pool:'set'} get no shared_from, so GET /api/sets/{code} shows taken 0 and the owner's results list no takers. QBank acceptance 15 (as amended) and §2.12 F6's 'read through sets' fail.\n- A twin (U28 slot-only) set returns 422 'expected [template, seed] pairs'.\n- A fresh or twin share of a session serves the sharer's exact seeds, so answers can be passed around. This defeats P22/X22 and decision 1's reasoning.\n- A words set returns 500 (KeyError 'template').\n- cfg.granted skips the owner access re-check and the quarantine skip that serve() does.",
+  "fix": "For the other agent, who owns drill.py:\n- In pool == 'set', call sets.serve(code, learner, True if body.get('exact') is False else None) and use its 'items' pairs. Keep granted, since serve() already re-checked access and skipped removed items. Let its 404/410/409 through, and return 422 for kind 'words'.\n- Add 'show_name' to FIELDS.\n- Once the session row exists, call sets.link(new_sid, code, bool(body.get('show_name'))).\n- Do the same in Tests' shared start (S5, POST /api/mock/new {kind:'shared'}).\n\nF6-side stopgap in its own files: POST /api/sets/{code}/start (serve() + the legacy drill.create(..., items=) + link()), or _takers also matching json_extract(cfg,'$.pool')='set' AND json_extract(cfg,'$.ids')=code.",
+  "severity": "blocker"
+ },
+ {
+  "where": "web/s/index.html visitor() go(): the body of POST /api/drill",
+  "what": "The landing's Start this set, Try it and Fresh versions instead send {pool:'set', ids, source:'shared', show_name, count?}. On master, F5's drill refuses this with 422 {field:'show_name', reason:'unknown field'}. On the v2/f6 branch alone it returns 400 'pick at least one topic'. So no Review share or V17 help link can be started from /s/, and V17 acceptance 1 ('after a second learner answers through the landing') cannot pass.",
+  "fix": "Don't send show_name to /api/drill. Either send it to an F6 start endpoint that calls sets.link, or wait for drill.py to accept it (defect 1). Add a --browser step that clicks Try it on a help link and waits for the question, then for the sharer's context.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/checks/f6.py take() / sets_exact, and browser()",
+  "what": "The share checks stand in for the engine with sets.serve + drill.create + sets.link instead of calling POST /api/drill {pool:'set'}. The browser check stops before clicking Try it. That is why both integration failures above passed all checks.",
+  "fix": "Once the drill hook lands, make sets_exact start the second learner with POST /api/drill {pool:'set', ids: code} and assert GET /api/sets/{code} taken == 1. In --browser, click Try it.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/sets.py summary(), the cfg.context release",
+  "what": "A help share's context is released only once the visitor has an attempt on the exact (template, seed). A help share with cfg.fresh serves a twin seed, so the visitor never sees 'Your friend picked C...'.",
+  "fix": "When cfg.fresh is set, release item n's context once the visitor has answered slot n in their linked session (match by position, as _marks does), not by the exact address.",
+  "severity": "followup"
+ }
+]

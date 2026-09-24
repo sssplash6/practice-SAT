@@ -1,43 +1,33 @@
 # Resume here
 
-## Now: RUNNING (saved 2026-09-24 for a context reset; nothing was stopped)
+## Now: PAUSED for usage limits (2026-09-24, evening). Nothing is running; all work is committed.
 
-**Check policy (agreed with the user):** one independent check, one fix, merge. Leftovers go to
-`spec/v2-state/followups/<task>.json`. Only content tasks (`rounds: 2`) get two rounds. **Small or data-only tasks
-(`inline: true`, and every job of the user's other agent that is not a feature) get my inline check instead of a check
-agent:** run the task's own checks, test_flow, the gate if the bank changed, and a spot check of its evidence or sources.
+Policy: features get one independent check + one fix; content two rounds; small or data-only tasks (and the other
+agent's non-feature jobs) get my inline check. Fixers fix only the listed defects. See memory check-policy.
 
-**Merged into master:** way-better upgrades, v2/f0, v2/t-bank-all, v2/bank, v2/f4 (+ swap middleware 7eafbe9, R45 test
-counting a00ea8c), v2/f1 (ffda717), v2/satdates (197b54a), v2/bank-lint (3ad7b8e), v2/f5 (22b1532; leftovers in `followups/F5.json`), v2/words-content (99774c2; fix round stopped after ~55 min
-for scope creep; frame supply warns until the review gate; leftovers in `followups/words.json`). Bank-lint triage done
-(`followups/bank-lint-triage.json`, all 5 checks), handed to the other agent. Dev DB backup:
-`server/satfreshman.db.bak-20260924-1020`.
+Merged into master so far: planning and upgrades, v2/f0, v2/t-bank-all, v2/bank, v2/f4 (+ swap middleware), v2/f1,
+v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (dfe3544).
 
-**Live background work** (check each with its journal under
-`~/.claude/projects/-Users-workingmyassof-satbank/<session>/subagents/workflows/<run>/journal.jsonl`; finished results are
-also copied to `spec/v2-state/runs/<run>/` by the checkpoint loop):
-| run | task id | what | when it returns |
-|---|---|---|---|
-| `wf_cafefb42-928` | wy8hd4xcp | build.js `[{id:'F2'},{id:'F3'},{id:'F6'}]`: 4 units each, then one check + one fix | per task: save leftovers to `followups/<id>.json`, test_flow, merge `v2/<id>` |
-| checkpoint loop | b2bucxp7g | tools/v2_checkpoint.py every 5 min | keep running |
-
-**If any of these died** (no notification, journal stale for 20+ minutes): its worktree's uncommitted work is snapshotted in
-`spec/v2-state/wip/<worktree>/` (diff.patch + untracked.tar); read `git log master..v2/<task>`, then relaunch:
-build.js `{id, unit:<first unbuilt 0-based>}` / `{id, from:'verify'}` / `{id, from:'fix', issues:<saved defects file>}`;
-words2.js `{from:'check'}` (or `{from:'fold'}`). Never resume from a run ID. Before committing another worktree's changes,
-confirm they are real (not stale files after the branch moved elsewhere; see memory interruption-proof-workflows).
-
-**The user's other agent** (backend-only helper): built F4 and F5, verified SAT dates, wrote the bank lint. Its current job:
-`v2/bank-lint-fix` groups 1-5 (plural, visuals, rationale, generation fallback, lint tightening) from
-`followups/bank-lint-triage.json`; numbers must not change for seeds that generate on master. Group 6 (reasons,
-degenerate draws) is MERGED (dfe3544). Its next job after that: S9 Words server half (words.py, api_words.py,
-checks/s9.py), leaving the Words UI to wave 2.
-- **F3 incident (fixed):** the runner unit committed on a detached HEAD in worktree wf_cafefb42-928-6 because unit 1
-  left an uncommitted file that kept `v2/f3` busy. `v2/f3` was re-attached with `git switch -C v2/f3` there (8 commits).
-  build.js now forbids detached commits. If F3's later units show no runner.js, check `git log v2/f3` first. It must never touch `v2/f5` again.
-
-**Next after wave 1b merges:** wave 2, the nine sections S1, S3-S10 (S2 dropped) in parallel through build.js (add TASKS
-entries from Part 4.2), then I1 integration. Offer backend-only pieces of wave 2 to the other agent.
+### To do on "continue", in order
+1. Restart the checkpoint loop (Bash, run_in_background):
+   `while true; do python3 tools/v2_checkpoint.py --quiet 2>>/tmp/v2-checkpoint.log; sleep 300; done`
+   Remove stale `wf_*` worktrees after confirming each is clean (`git worktree list`, `git -C <wt> status --short`);
+   `wf_cafefb42-928-2` holds only the old unit-1 stray edit, already saved as `scratchpad/f3-wt2-workspace.patch`.
+2. **F6** (reports and sets): built, checked (4 defects in `next/F6-verify1-issues.json`), fix r1 done, own
+   checks/f6.py passes, BUT test_flow fails: `AssertionError: {'template': 'circles.degree_radian', ..., 'learners': 21,
+   'disputed': 3, 'rate': 0.143, 'flagged': False}` (a disputed key at 14% of 21 learners is not flagged). Find which
+   side is wrong (F6's reports.py dispute rule vs the test's expectation, see R17 / Shell §2.10), fix the smallest
+   thing on v2/f6, re-run test_flow 3x, save leftovers to `followups/F6.json`, merge.
+3. **Other agent's lint fixes groups 1-5**: done on `v2/bank-lint-fix` (tip 033fa1a or later). Inline check: satbank
+   check PASS 19/19, test_flow all good, and a dump of generate(t, s) for seeds 0-199 of every touched template on
+   master vs the branch showing numbers unchanged for every seed that generates on master (only generation fallbacks
+   may add items for seeds that failed). Then merge.
+4. **Relaunch wave 1b**: `Workflow({scriptPath: ".../spec/v2-state/next/build.js", args: [{id:'F2', unit:3},
+   {id:'F3', unit:2}]})`. F2: units 1-3 done; unit 4 (checks/f2.py + the page walk) was in progress, checkpoint bb6a2e1.
+   F3: units 1-2 done (question.js, runner.js); unit 3 (review player) was in progress, checkpoint 47c0cb9; unit 4
+   (dev/workspace.html) after it. Then each gets one check + one fix; merge each when ready.
+5. After F2, F3 and F6 merge: wave 2, the nine sections (S1, S3-S10), with TASKS entries from Part 4.2; offer the
+   other agent the S9 Words server half (words.py, api_words.py, checks/s9.py) and other backend-only halves.
 
 ### On "continue"
 
