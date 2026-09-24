@@ -2068,7 +2068,7 @@
     twin_test: { label: 'Twin test', sub: 'same slots, new numbers', helper: 'Same question types in the same places, new numbers, scored like any test.', key: null, icon: svgHTML(ICON.twin_test) },
     again:     { label: 'Again, exactly', sub: 'the very same question', helper: 'The same question again. Doesn’t move mastery.', key: 'E', icon: svgHTML(ICON.again) },
     fix:       { label: 'Fix', sub: 'your open mistakes', helper: 'Two clean answers on questions with that trap close each mistake.', key: 'F', icon: svgHTML(ICON.fix) },
-    learn:     { label: 'Learn this type', sub: 'one solved, then three', helper: 'See one solved, then try three yourself. Counts toward mastery.', key: null, icon: svgHTML(ICON.learn) },
+    learn:     { label: 'Learn this type', sub: 'one solved, then three', helper: 'A worked example on new numbers, then three of your own. Counts toward mastery.', key: null, icon: svgHTML(ICON.learn) },
   };
   const KEYS = { twin: 'T', twin_menu: 'Shift+T', details: 'V', guess: 'I', report: 'R', save: 'B', mark: 'M', note: 'O', history: 'Y', desmos: 'Shift+G', again: 'E', fix: 'F' };
   Object.defineProperty(KEYS, 'except', { enumerable: false, value: { E: 'eliminate in a running set', O: 'Open word in words, which has no note' } });
