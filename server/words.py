@@ -80,6 +80,8 @@ def init() -> None:
                 c.execute(f"ALTER TABLE {table} ADD COLUMN {column} {declaration}")
     c.execute("CREATE INDEX IF NOT EXISTS word_reviews_template ON word_reviews(template)")
     c.execute("CREATE INDEX IF NOT EXISTS word_reviews_learner_word ON word_reviews(learner,word,id)")
+    c.execute("CREATE TABLE IF NOT EXISTS word_fit_reports (frame TEXT NOT NULL, word TEXT NOT NULL,"
+              " learner TEXT NOT NULL, at TEXT NOT NULL, PRIMARY KEY(frame,word,learner))")
     c.commit()
     content()
 
@@ -149,19 +151,17 @@ def _exam(learner: str) -> dt.date | None:
     return dt.date.fromisoformat(row["exam_date"]) if row and row["exam_date"] else None
 
 
-def _due(day: dt.date, box: int, learner: str, *, stubborn: bool = False) -> str:
+def _due(day: dt.date, box: int, learner: str, *, word: str = "", reps: int = 0,
+         stubborn: bool = False) -> str:
     interval = INTERVALS[box]
     if stubborn:
         interval = {1: 1, 2: 2, 3: 5}.get(box, interval)
-    from .deps import part
-    scale = part("prefs", "get")
-    pref = scale(learner) if scale else {}
-    factor = float(pref.get("words_scale", 1) or 1)
+    factor = recall(learner)["scale"]
     interval = max(1, round(interval * max(.5, min(2, factor))))
     if interval >= 3:
-        # Stable fuzz: the same learner, word and review day always get the same interval.
+        # Stable fuzz spreads words reviewed together across adjacent due days.
         interval = max(1, interval + round(interval * ((int.from_bytes(
-            hashlib.sha256(f"{learner}:{day}:{box}".encode()).digest()[:2], "big") / 65535) * .2 - .1)))
+            hashlib.sha256(f"{learner}:{word}:{reps}:{box}".encode()).digest()[:2], "big") / 65535) * .2 - .1)))
     due = day + dt.timedelta(days=interval)
     exam = _exam(learner)
     if exam and due >= exam:
@@ -215,8 +215,9 @@ def grade(learner: str, word: str, ok: bool, mode: str = "cards", kind: str = "c
             if not ok:
                 s["lastwrong"] = stamp
         elif not ok:
-            after = 1
+            after = 0 if int(s.get("placed") or 0) == 2 else 1
             s["proven"] = None
+            s["placed"] = 0
             s["stubborn_right_day"] = None
             s["lapses"] = int(s["lapses"] or 0) + 1
             s["lastwrong"] = stamp
@@ -233,13 +234,13 @@ def grade(learner: str, word: str, ok: bool, mode: str = "cards", kind: str = "c
             promoted = True
             s["placed"] = 0
             s["proven"] = day.isoformat()
-            s["due"] = _due(day, after, learner, stubborn=was_stubborn)
+            s["due"] = _due(day, after, learner, word=word, reps=int(s["reps"] or 0), stubborn=was_stubborn)
         elif kind == "decode" and before == 0:
             after = 1
             promoted = True
-            s["due"] = _due(day, after, learner, stubborn=was_stubborn)
+            s["due"] = _due(day, after, learner, word=word, reps=int(s["reps"] or 0), stubborn=was_stubborn)
         elif self_grade and before >= 3:
-            s["due"] = (day + dt.timedelta(days=2)).isoformat() if before == 3 else _due(day, before, learner, stubborn=was_stubborn)
+            s["due"] = (day + dt.timedelta(days=2)).isoformat() if before == 3 else _due(day, before, learner, word=word, reps=int(s["reps"] or 0), stubborn=was_stubborn)
             s["pending_know"] = stamp
         elif before >= 3 and not proof:
             # Recognition quizzes cannot certify a high-box word.
@@ -247,7 +248,7 @@ def grade(learner: str, word: str, ok: bool, mode: str = "cards", kind: str = "c
         else:
             after = min(5, 2 if before == 0 else before + 1)
             promoted = after > before
-            s["due"] = _due(day, after, learner, stubborn=was_stubborn)
+            s["due"] = _due(day, after, learner, word=word, reps=int(s["reps"] or 0), stubborn=was_stubborn)
             if after >= 4 and proof:
                 s["proven"] = day.isoformat()
         if after >= 4 and not s.get("proven"):
@@ -260,7 +261,7 @@ def grade(learner: str, word: str, ok: bool, mode: str = "cards", kind: str = "c
                 if s.get("stubborn_right_day") and s["stubborn_right_day"] != day.isoformat():
                     after = 2
                     s["proven"] = None
-                    s["due"] = _due(day, after, learner, stubborn=True)
+                    s["due"] = _due(day, after, learner, word=word, reps=int(s["reps"] or 0), stubborn=True)
                     s["lapses"] = 0
                     s["stubborn_cleared"] = stamp
                     s["stubborn_right_day"] = None
@@ -280,12 +281,15 @@ def grade(learner: str, word: str, ok: bool, mode: str = "cards", kind: str = "c
                                 before, due_before, ms, stamp, template=template, seed=seed,
                                 trap=confusion, conf=conf, gap=gap, attempt=attempt,
                                 state_before=prior)
-    status = ("Prove it in context to make it Known" if after == 3 and not s.get("proven")
+    status = ("Hinted · no box up" if hinted and ok else
+              "Guessed · review tomorrow" if conf == "guess" and ok else
+              "Prove it in context to make it Known" if after == 3 and not s.get("proven")
               else "Known" if after >= 4 else "Again today" if not ok
               else "Early review" if early else "Back " + (s["due"] or "soon"))
     return {"correct": bool(ok), "word": word, "box": {"before": before, "after": after},
             "due": s["due"], "early": early, "proven": s.get("proven"), "claimed": after == 3 and not s.get("proven"),
-            "status": status, "review_id": review_id, "requeued": not ok and not passive}
+            "status": status, "review_id": review_id, "requeued": not ok and not passive,
+            "hinted": hinted, "guessed": conf == "guess"}
 
 
 def place(learner: str, slug: str, choice: str, tz: int = 0, *, at: str | None = None) -> dict:
@@ -372,6 +376,55 @@ def calibration(learner: str) -> dict:
     return {"pct": round(100 * held / n) if n else None, "n": n}
 
 
+def recall(learner: str, tz: int = 0) -> dict:
+    """Measure only scheduled reviews; early answers and placement do not tune intervals."""
+    rows = db.rows("SELECT correct,box_before,due_before,at,kind,mode FROM word_reviews"
+                   " WHERE learner=? AND correct IS NOT NULL ORDER BY id DESC LIMIT 500", learner)
+    due = [dict(r) for r in rows if r["box_before"] and r["due_before"] and
+           r["due_before"] <= local_day(tz, r["at"]).isoformat() and
+           r["mode"] not in {"sprint", "outside", "placement", "sort", "lookup", "order"} and
+           r["kind"] not in {"order", "rootshare"}]
+    last50 = due[:50]
+    pct = round(100 * sum(r["correct"] for r in last50) / len(last50)) if last50 else None
+    by_box = {}
+    for box in range(1, 6):
+        group = [r for r in due if r["box_before"] == box and
+                 r["at"] >= (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=30)).isoformat()]
+        by_box[str(box)] = {"n": len(group), "pct": round(100 * sum(r["correct"] for r in group) / len(group))
+                            if group else None}
+    scale = (1.2 if len(last50) == 50 and pct is not None and pct > 95 else
+             .8 if len(last50) == 50 and pct is not None and pct < 80 else 1)
+    return {"pct": pct, "n": len(last50), "by_box": by_box, "scale": scale}
+
+
+def simulate(learner: str, goal: int, days: int = 45, *, lapse_override: float | None = None) -> dict:
+    """Expected review load from the five review intervals, independent of storage."""
+    if goal < 0 or days < 1:
+        raise ValueError("goal and days must be nonnegative")
+    if lapse_override is None:
+        recent = db.rows("SELECT correct FROM word_reviews WHERE learner=? AND correct IS NOT NULL"
+                         " AND mode NOT IN ('sprint','placement','sort','outside','lookup')"
+                         " ORDER BY id DESC LIMIT 50", learner)
+        lapse = 1 - sum(r["correct"] for r in recent) / len(recent) if recent else .2
+    else:
+        lapse = lapse_override
+    # Each day's new cohort contributes to future visits, with a miss returning tomorrow.
+    due = [0.0] * (days + 40)
+    for day in range(days):
+        due[day + 3] += goal
+        for box, offset in ((2, 3), (3, 7), (4, 16), (5, 35)):
+            if day + offset < len(due):
+                due[day + offset] += goal * ((1 - lapse) ** max(0, box - 2))
+    load = round(sum(due[7:21]) / 14) if days >= 21 else round(sum(due[:days]) / days)
+    return {"goal": goal, "load_2w": load, "minutes": round(load * 10 / 60, 1),
+            "lapse": round(lapse, 3)}
+
+
+def _simulate_selfcheck() -> None:
+    assert simulate("selfcheck", 0, lapse_override=.2)["load_2w"] == 0
+    assert simulate("selfcheck", 20, lapse_override=.2)["load_2w"] > simulate("selfcheck", 5, lapse_override=.2)["load_2w"]
+
+
 def _measured(slug: str) -> dict:
     prior = content()["index"]["words"][slug]["prior"]
     rows = db.rows("SELECT correct FROM word_reviews WHERE word=? AND subject='rw'"
@@ -392,9 +445,14 @@ def _flags(learner: str, slug: str, s: dict, day: dt.date) -> dict:
     misses = db.one("SELECT COUNT(*) n FROM word_reviews WHERE learner=? AND word=? AND correct=0"
                     " AND at>=?", learner, slug,
                     max((day - dt.timedelta(days=14)).isoformat(), s.get("stubborn_cleared") or ""))["n"]
+    context = db.rows("SELECT correct FROM word_reviews WHERE learner=? AND word=?"
+                      " AND kind IN ('incontext','nearly','transition') ORDER BY id DESC LIMIT 20",
+                      learner, slug)
     return {"is_due": bool(s["due"] and s["due"] <= day.isoformat()),
             "missed": missed, "thought": thought,
             "stubborn": int(s["lapses"] or 0) >= 4 or misses >= 3,
+            "hard_for_you": int(s["lapses"] or 0) >= 2 or thought or int(s.get("placed") or 0) == -1 or
+            (len(context) >= 2 and sum(r["correct"] for r in context) / len(context) < .5),
             "looked_up": bool(s.get("looked_at") and (day - local_day(0, s["looked_at"])).days <= 30
                               and int(s["box"] or 0) < 4)}
 
@@ -440,7 +498,16 @@ def library(learner: str, tz: int = 0, days: int = 14) -> dict:
     prefs_get = part("prefs", "get")
     prefs = prefs_get(learner, tz) if prefs_get else {}
     goal = prefs.get("words_goal", 10)
-    counts["goal"] = 10 if goal == "auto" else goal
+    counts["goal"] = (finish_metrics(learner, tz)["chips"][-1]["daily"] if goal == "auto" and _exam(learner)
+                      else 10 if goal == "auto" else goal)
+    history = Counter(local_day(tz, r["at"]).isoformat() for r in db.rows(
+        "SELECT at FROM word_reviews WHERE learner=? AND correct IS NOT NULL"
+        " AND mode NOT IN ('placement','sort','lookup','outside','sprint','order')"
+        " AND at>=?", learner, (day - dt.timedelta(days=14)).isoformat()))
+    daily = sorted(history.get((day - dt.timedelta(days=i)).isoformat(), 0) for i in range(1, 15))
+    median = (daily[6] + daily[7]) / 2
+    debt = {"due": counts["due"], "spread": (counts["due"] + 3) // 4,
+            "median": median} if counts["due"] > max(60, 2 * median) else None
     forecast = [{"day": (day + dt.timedelta(days=i)).isoformat(),
                  "n": sum(1 for s in states.values() if s["due"] == (day + dt.timedelta(days=i)).isoformat())}
                 for i in range(max(1, min(days, 120)))]
@@ -450,14 +517,22 @@ def library(learner: str, tz: int = 0, days: int = 14) -> dict:
             members = [w for w in words if w["collection"] == coll["id"] or coll["id"] in w["lists"]]
             coll["known"] = sum(int((w["state"] or {}).get("box") or 0) >= 4 and bool(w["proven"]) for w in members)
             coll["due"] = sum(w["is_due"] for w in members)
+    counts["mistakes"] = counts["missed"]
+    counts["lookedup"] = counts["looked_up"]
     return {"today": day.isoformat(), "groups": groups, "words": words,
-            "counts": dict(counts), "forecast": forecast}
+            "counts": dict(counts), "forecast": forecast, "debt": debt,
+            "estimate": estimate(learner)}
 
 
 def deck(learner: str, source: str, value=None, n: int = 20, tz: int = 0,
          words: list[str] | None = None) -> list[str]:
     lib = library(learner, tz)
     rows = lib["words"]
+    def overdue(row: dict) -> float:
+        s = row["state"] or {}
+        if not s.get("due"):
+            return 0.0
+        return (local_day(tz) - dt.date.fromisoformat(s["due"])).days / max(1, INTERVALS.get(int(s.get("box") or 0), 1))
     if source in {"words", "selection"}:
         allowed = set(words or [])
         rows = [w for w in rows if w["slug"] in allowed]
@@ -474,19 +549,56 @@ def deck(learner: str, source: str, value=None, n: int = 20, tz: int = 0,
     elif source == "new":
         rows = [w for w in rows if int((w["state"] or {}).get("box") or 0) == 0
                 and w["placed"] != 2]
+        from .deps import part
+        pref_get = part("prefs", "get")
+        allowed_from = (pref_get(learner, tz) if pref_get else {}).get("words_from", ["sat", "transitions"])
+        rows = [w for w in rows if w["own"] or
+                ("transitions" in allowed_from if w["collection"] == "transitions" else "sat" in allowed_from)]
+        exam = _exam(learner)
+        if exam and (exam - local_day(tz)).days <= 10:
+            rows = [w for w in rows if entry(w["slug"], learner).get("tier") != "advanced"]
     elif source == "saved":
         rows = [w for w in rows if w["saved"]]
-    elif source in {"missed", "thought", "stubborn", "looked_up"}:
+    elif source in {"missed", "thought", "stubborn", "looked_up", "hard_for_you"}:
         rows = [w for w in rows if w[source]]
+    elif source == "atrisk":
+        exam = _exam(learner)
+        if not exam:
+            return []
+        rows = [w for w in rows if (w["state"] or {}).get("box") and
+                retention(w["state"], exam) < .8]
+    elif source == "root":
+        related = {r["slug"] for r in content()["roots"].get(value, {}).get("words", [])}
+        rows = [w for w in rows if w["slug"] in related]
     elif source == "mine":
         rows = [w for w in rows if w["own"]]
     elif source == "today":
         due = [w for w in rows if w["is_due"]]
+        due.sort(key=overdue, reverse=True)
         missed = [w for w in rows if w["missed"] and w not in due][:3]
         extra_transitions = [w for w in rows if w["collection"] == "transitions" and
                              w not in due and w not in missed][:3]
         assigned = {w["slug"] for w in due + missed + extra_transitions}
-        fresh = [w for w in rows if not w["state"] and w["slug"] not in assigned]
+        fresh = [w for w in rows if int((w["state"] or {}).get("box") or 0) == 0 and
+                 w["placed"] != 2 and w["slug"] not in assigned]
+        from .deps import part
+        prefs_get = part("prefs", "get")
+        pref = prefs_get(learner, tz) if prefs_get else {}
+        allowed_from = pref.get("words_from", ["sat", "transitions"])
+        fresh = [w for w in fresh if w["own"] or
+                 ("transitions" in allowed_from if w["collection"] == "transitions" else "sat" in allowed_from)]
+        spread = pref.get("words_spread")
+        if lib["debt"] and spread and spread >= local_day(tz).isoformat():
+            due = due[:lib["debt"]["spread"]]
+            fresh = []
+            extra_transitions = []
+        exam = _exam(learner)
+        probable = [w for w in due if w["placed"] == 2]
+        proof_goal = (max(1, min(8, (len(probable) + max(1, (exam - local_day(tz)).days - 10) - 1) //
+                              max(1, (exam - local_day(tz)).days - 10))) if exam else 2)
+        due = [w for w in due if w["placed"] != 2] + probable[:proof_goal]
+        if exam and (exam - local_day(tz)).days <= 10:
+            fresh = [w for w in fresh if entry(w["slug"], learner).get("tier") != "advanced"]
         rows = due + missed + extra_transitions + fresh[:max(0, lib["counts"]["goal"] - lib["counts"]["new_today"])]
     else:
         raise HTTPException(422, "unknown word deck")
@@ -495,7 +607,7 @@ def deck(learner: str, source: str, value=None, n: int = 20, tz: int = 0,
                                  1 if w["is_due"] and not w["claimed"] and w["placed"] != 2 else
                                  2 if w["is_due"] else 3 if w["missed"] else
                                  4 if w["collection"] == "transitions" else 5,
-                                 w["state"]["due"] if w["state"] and w["state"]["due"] else "9999",
+                                 -overdue(w),
                                  w["word"].casefold()))
     else:
         rows.sort(key=lambda w: (not w["is_due"], -int(w["saved"]),
@@ -510,17 +622,35 @@ def today_summary(learner: str, tz: int = 0) -> dict:
     proofs = sum((w["claimed"] or w["placed"] == 2) and w["is_due"] for w in lib["words"])
     goal = c["goal"]
     new_left = max(0, goal - c["new_today"])
-    minutes = round((c["due"] * 10 + new_left * 25) / 60, 1)
+    recent = db.rows("SELECT kind,ms FROM word_reviews WHERE learner=? AND correct IS NOT NULL"
+                     " AND ms BETWEEN 1000 AND 60000 ORDER BY id DESC LIMIT 200", learner)
+    def pace(card: bool, fallback: int) -> int:
+        values = sorted(r["ms"] for r in recent if (r["kind"] in {"card", "fix", "cards"}) == card)
+        return values[len(values)//2] if len(values) >= 20 else fallback
+    card_ms, quiz_ms = pace(True, 10_000), pace(False, 20_000)
+    minutes = round((max(0, c["due"] - proofs) * card_ms + proofs * quiz_ms + new_left * 25_000) / 60_000, 1)
     title = f"Today's words · {c['due']} due · {minutes:g} min"
     reason = f"{c['due']} come back today · {proofs} are proofs"
+    finished = db.one("SELECT 1 FROM sessions WHERE learner=? AND kind='words' AND finished IS NOT NULL"
+                      " AND json_extract(cfg,'$.mode')='mix' AND substr(finished,1,10)=? LIMIT 1",
+                      learner, local_day(tz).isoformat())
     return {"due": c["due"], "proofs": proofs, "new_goal": goal,
             "new_today": c["new_today"], "minutes": minutes,
-            "done": c["due"] == 0 and new_left == 0, "goal": goal,
+            "done": bool(finished) or (c["due"] == 0 and new_left == 0), "goal": goal,
             "title": title, "reason": reason,
+            "preview": {"fix": sum(w["is_due"] and w["stubborn"] for w in lib["words"]),
+                        "due": max(0, c["due"] - proofs), "proofs": proofs,
+                        "new": new_left, "transitions": 3},
             "start": {"path": "/api/words/run", "body": {"mode": "mix", "deck": {"source": "today"}}}}
 
 
 def minutes_today(learner: str, tz: int = 0) -> float:
+    # A default preference alone does not enroll an untouched learner in Words;
+    # reserve study time once a plan or a Words review actually exists.
+    enrolled = db.one("SELECT plan FROM learners WHERE id=?", learner)
+    active = db.one("SELECT 1 FROM word_reviews WHERE learner=? LIMIT 1", learner)
+    if not active and not (enrolled and enrolled["plan"]):
+        return 0.0
     return today_summary(learner, tz)["minutes"]
 
 
@@ -529,9 +659,67 @@ def me_stats(learner: str, tz: int = 0) -> dict:
     week = (local_day(tz) - dt.timedelta(days=7)).isoformat()
     reviews_week = db.one("SELECT COUNT(*) n FROM word_reviews WHERE learner=? AND at>=?"
                           " AND correct IS NOT NULL AND mode NOT IN ('sprint','outside','order')", learner, week)["n"]
-    return {"known": c["known"], "claimed": c["claimed"],
+    return {"known": c["known"], "claimed": c["claimed"], "estimate": estimate(learner),
             "studied": c["learning"] + c["known"], "saved": c["saved"],
             "reviews_week": reviews_week, "due": c["due"]}
+
+
+def estimate(learner: str) -> dict:
+    latest = db.one("SELECT result,finished FROM sessions WHERE kind='words' AND learner=?"
+                    " AND json_extract(cfg,'$.mode')='placement' AND finished IS NOT NULL"
+                    " ORDER BY finished DESC LIMIT 1", learner)
+    if not latest:
+        return {"n": 0, "lo": 0, "hi": 0, "at": None, "delta_30": 0}
+    out = (json.loads(latest["result"] or "{}").get("estimate") or {}).copy()
+    out.update(at=latest["finished"], delta_30=0)
+    return out
+
+
+def retention(s: dict, exam: dt.date) -> float:
+    """Estimated chance this reviewed word is recalled on the exam date."""
+    if not s.get("last") or not s.get("box"):
+        return 0.0
+    t = max(0, (exam - local_day(0, s["last"])).days)
+    h = INTERVALS.get(int(s["box"]), 1) * (.8 ** int(s.get("lapses") or 0))
+    return 2 ** (-t / max(.1, h))
+
+
+def finish_metrics(learner: str, tz: int = 0) -> dict:
+    """Exam forecast and goal choices for Words, Plan, and Me."""
+    exam = _exam(learner)
+    today = local_day(tz)
+    states = {r["word"]: dict(r) for r in db.rows("SELECT * FROM word_state WHERE learner=?", learner)}
+    sat = content()["sat"]
+    left = {tier: sum(1 for w in sat if w["tier"] == tier and
+                      int(states.get(w["slug"], {}).get("box") or 0) < 4)
+            for tier in ("core", "advanced")}
+    logic = {w["logic"] for w in content()["transitions"] if
+             int(states.get(w["slug"], {}).get("box") or 0) < 4}
+    left["logics"] = len(logic)
+    if not exam:
+        return {"left": left, "chips": [], "at_risk": 0, "likely": 0,
+                "forecast_to_exam": [], "exam": None}
+    days = max(0, (exam - today).days)
+    total = left["core"] + left["logics"]
+    auto = min(40, max(5, (total + max(1, days - 10) - 1) // max(1, days - 10)))
+    chips = []
+    for goal in (0, 5, 10, 15, 20, 30, "auto"):
+        g = auto if goal == "auto" else goal
+        forecast = simulate(learner, g)
+        chips.append({"goal": goal, "daily": g,
+                      "core_done": (today + dt.timedelta(days=(left["core"] + g - 1) // g)).isoformat()
+                      if g else None,
+                      "advanced_done": (today + dt.timedelta(days=(left["core"] + left["advanced"] + g - 1) // g)).isoformat()
+                      if g else None,
+                      "load_2w": forecast["load_2w"], "minutes": forecast["minutes"]})
+    studied = [s for s in states.values() if int(s.get("box") or 0) > 0]
+    likely = sum(retention(s, exam) >= .8 for s in studied)
+    weeks = [{"week": (today + dt.timedelta(days=7 * i)).isoformat(),
+              "n": sum(bool(s.get("due") and today + dt.timedelta(days=7*i) <=
+                       dt.date.fromisoformat(s["due"]) < today + dt.timedelta(days=7*(i+1))
+                       ) for s in studied)} for i in range((days + 6) // 7)]
+    return {"left": left, "chips": chips, "at_risk": len(studied) - likely,
+            "likely": likely, "forecast_to_exam": weeks, "exam": exam.isoformat(), "days": days}
 
 
 def of_reason(template: str, reason: str) -> dict | None:
@@ -552,6 +740,62 @@ def _servable(row: dict) -> bool:
 
 def _suppressed(frame: str) -> bool:
     return bool(db.one("SELECT 1 FROM word_suppress WHERE frame=? AND word='*'", frame))
+
+
+def suppress(frame: str, word: str, why: str) -> None:
+    """Pull the whole frame until an editor reviews the questionable choice."""
+    stamp = _stamp()
+    with db.atomic() as c:
+        c.execute("INSERT OR IGNORE INTO word_suppress(frame,word,why,at) VALUES (?,?,?,?)",
+                  (frame, word, why, stamp))
+        c.execute("INSERT OR IGNORE INTO word_suppress(frame,word,why,at) VALUES (?,?,?,?)",
+                  (frame, "*", why, stamp))
+
+
+def report_fit(template: str, choice: str, learner: str) -> dict:
+    ident = template.removeprefix("rw.wic.").removeprefix("rw.tr.")
+    if ident not in content()["frames"] and ident not in content()["pairs"]:
+        raise HTTPException(404, "unknown Words item")
+    with db.atomic() as c:
+        c.execute("INSERT OR IGNORE INTO word_fit_reports(frame,word,learner,at) VALUES (?,?,?,?)",
+                  (ident, choice, learner, _stamp()))
+        count = c.execute("SELECT COUNT(*) FROM word_fit_reports WHERE frame=? AND word=?",
+                          (ident, choice)).fetchone()[0]
+        if count >= 2:
+            suppress(ident, choice, "two learners reported another fitting choice")
+    return {"reports": count, "suppressed": count >= 2}
+
+
+def crowd_guard(template: str) -> None:
+    """Check first tries by strong learners for a misleading distractor."""
+    ident = template.removeprefix("rw.wic.").removeprefix("rw.tr.")
+    reviews = rw_answers(template=template)
+    first = {}
+    for row in reviews:
+        first.setdefault(row["learner"], row)
+    strong = []
+    for row in first.values():
+        recent = db.rows("SELECT correct FROM word_reviews WHERE learner=? AND subject='rw'"
+                         " AND kind IN ('incontext','nearly','transition') ORDER BY id DESC LIMIT 30",
+                         row["learner"])
+        if len(recent) >= 8 and sum(r["correct"] for r in recent) / len(recent) >= .8:
+            strong.append(row)
+    if len(strong) < 8:
+        return
+    counts = Counter(r["given"] for r in strong if r["correct"] == 0 and r["given"])
+    for choice, n in counts.items():
+        if n >= 4 and n / len(strong) >= .4:
+            suppress(ident, choice, "strong learner pick split")
+
+
+def pick_split(template: str) -> dict | None:
+    first = {}
+    for row in rw_answers(template=template):
+        first.setdefault(row["learner"], row)
+    if len(first) < 20:
+        return None
+    counts = Counter(r["given"] for r in first.values() if r["given"])
+    return {"n": len(first), "choices": dict(counts)}
 
 
 def _rng(template: str, seed: int, word: str | None = None) -> random.Random:
@@ -666,7 +910,7 @@ def item(template: str, seed: int, word: str | None = None,
             if w["pos"] != key["pos"] or w["slug"] == slug or _appears(w, passage):
                 continue
             kind = _trap(frame, key, w)
-            if kind and w["slug"] not in suppressed:
+            if kind and w["slug"] not in suppressed and w["word"] not in suppressed:
                 candidates.append((w, kind))
         rng.shuffle(candidates)
         candidates.sort(key=lambda pair: (0 if pair[1] == want_trap else 1,
@@ -722,11 +966,12 @@ def item(template: str, seed: int, word: str | None = None,
         spans += [{**s, "start": s["start"] + len(s1) + 1,
                    "end": s["end"] + len(s1) + 1, "kind": "idea"} for s in second_spans]
         logic = pair["logic"]
+        suppressed = {r["word"] for r in db.rows("SELECT word FROM word_suppress WHERE frame=?", ident)}
         excluded = {logic, *pair.get("compatible", [])}
         candidates: dict[str, list[dict]] = defaultdict(list)
         for transition in data["transitions"]:
             other = transition["logic"]
-            if other not in excluded and logic not in transition.get("also_reads", []) and not _appears(transition, passage):
+            if other not in excluded and logic not in transition.get("also_reads", []) and not _appears(transition, passage) and transition["slug"] not in suppressed and transition["word"] not in suppressed:
                 candidates[other].append(transition)
         preferred = [b if a == logic else a for a, b in data["transition_data"]["confusable"]
                      if a == logic or b == logic]
@@ -871,6 +1116,9 @@ def quiz_item(word: str, kind: str, rng: random.Random,
         examples = target.get("examples", [])
         raw = rng.choice(examples) if examples else ""
         text = re.sub(r"\[\[[^\[\]]+\]\]", "____", raw, count=1)
+        if "____" not in text and target.get("own"):
+            text = re.sub(r"(?<!\w)" + re.escape(target["word"]) + r"(?!\w)",
+                          "____", raw, count=1, flags=re.I)
         if "____" not in text:
             raise ValueError("word has no usable cloze")
     else:
@@ -914,7 +1162,7 @@ def public_item(generated: dict, item_id: str | None = None) -> dict:
     """One public shape; never serialize keys or trap reasons before a verdict."""
     allowed = ("kind", "stem", "text", "choices", "head", "step", "predictions", "source")
     out = {k: generated[k] for k in allowed if k in generated}
-    if generated.get("step") in {"predict", "relation"} and not generated.get("stage_done"):
+    if generated.get("step") in {"predict", "logic"} and not generated.get("stage_done"):
         out.pop("choices", None)
     if generated.get("kind") in {"card", "fix", "learn"}:
         out["word"] = generated.get("word")
