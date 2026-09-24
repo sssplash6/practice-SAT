@@ -8,7 +8,7 @@ from server import api_shell, db
 
 KEYS = {"me", "streak", "best_streak", "today", "plan", "tested_today", "mistakes", "saved", "challenge", "resume",
         "newest_report", "report_replies", "new", "prefs", "pref_source", "stage", "next", "goals", "inbox",
-        "registration", "device", "dates", "spares", "review", "words", "answered"}
+        "registration", "device", "dates", "spares", "review", "words", "answered", "has", "report"}
 
 
 def check(c) -> None:

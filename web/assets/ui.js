@@ -57,7 +57,7 @@
                                     "circles hard 5 timed" -> a POST /api/drill body
      UI.types() -> Promise {list, byTopic, cb}   the 386 question types with their named
                                     mistakes, from /api/shell/catalog (sessionStorage satf.types)
-     UI.boxChips()                  "Got time? 5 · 10 · 15 … min", each starting a time box
+     UI.boxChips(onTile, [minutes])  "Got time? 5 · 10 · 15 … min", each starting a time box
    Kept for the pages until they are rebuilt: UI.question, UI.calc, UI.ref, UI.plan,
    UI.snap, the topics and glyphs.
    ========================================================================== */
@@ -350,6 +350,8 @@
     shellAsked.catch(() => {});
     return shellAsked;
   }
+  // another section's route or file exists (/api/shell.has): ask nothing that would 404
+  const has = name => !!(shellData && shellData.has && shellData.has[name]);
   const onShell = fn => { shellSubs.push(fn); if (shellData) fn(shellData, false); return () => { const i = shellSubs.indexOf(fn); if (i >= 0) shellSubs.splice(i, 1); }; };
   doc.addEventListener('visibilitychange', () => {
     if (doc.visibilityState === 'visible' && shellAsked && Date.now() - shellAt > 15000) refresh();
@@ -1325,11 +1327,11 @@
     return b;
   };
   // on a --tile surface (the menu sheet) the chips go paper and scroll sideways in one row
-  function boxChips(onTile) {
+  function boxChips(onTile, list = BOXES) {
     return h('div', { class: 'chips', role: 'group', 'aria-label': 'Got time? Start a time box',
       style: onTile ? 'flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-top: 4px' : null },
       h('span', { class: 'help', text: 'Got time?', style: 'margin: 0 4px 0 0; align-self: center; flex: none' }),
-      BOXES.map(m => { const b = h('button', { type: 'button', text: `${m} min`, style: onTile ? 'background: var(--paper)' : null });
+      list.map(m => { const b = h('button', { type: 'button', text: `${m} min`, style: onTile ? 'background: var(--paper)' : null });
         b.addEventListener('click', () => go(b, { start: { path: '/drill', body: { source: 'next', box: m } } }));
         return b; }));
   }
@@ -1349,7 +1351,7 @@
     fill(nextItems());
     const pop = UI.pop(trigger, list, { label: 'More up next' });
     // the five after the first come from GET /api/next (U1); the shell carries three
-    api('/next?limit=6', { quiet: true }).then(r => {
+    if (has('next')) api('/next?limit=6', { quiet: true }).then(r => {
       const snoozed = lget('satf.next.snooze', {}) || {}, today = localDay();
       if (r && Array.isArray(r.items) && list.isConnected) { fill(r.items.filter(x => snoozed[x.key] !== today)); pop && pop.reposition && pop.reposition(); }
     }, () => {});
@@ -2208,14 +2210,14 @@
       const name = a.text || `${a.label || a.name || a.title || a.id}${a.tier > 1 && ROMAN[a.tier] ? ' · ' + ROMAN[a.tier] : ''}`;
       show(`Achievement · ${name}`, { icon: a.glyph && TOPIC[a.glyph] ? glyph(a.glyph) : 'trophy', action: { label: 'See', href: '/me/#achievements' } });
     });
-    if (ach.length) api('/me/achievements/seen', { method: 'POST', quiet: true, body: { ids: ach.map(a => a.id) } }).catch(() => {});
+    if (ach.length && has('achievements_seen')) api('/me/achievements/seen', { method: 'POST', quiet: true, body: { ids: ach.map(a => a.id) } }).catch(() => {});
     const n = d.report_replies || 0, rep = d.report;
     const key = `r:${n}:${rep ? rep.id : ''}`;
     if (n > 0 && !seen.includes(key)) {
       mark(key);
       show(n === 1 && rep && rep.unread ? `Report #${rep.id} answered` : `${plural(n, 'report')} answered`,
         { icon: 'chat', action: { label: 'Read', href: '/me/settings/#reports' } });
-      api('/reports/seen', { method: 'POST', quiet: true }).catch(() => {});
+      if (has('reports_seen')) api('/reports/seen', { method: 'POST', quiet: true }).catch(() => {});
     }
   }
 
@@ -2453,7 +2455,7 @@
   Object.assign(UI, {
     learner, useLearner, freshLearner, shared: () => shared, stored: () => storable, ready,
     api, cached, whenVisible, refresh, onShell, shellData: () => shellData, me, prefs, prefRow, look,
-    keys, ROUTES, start, nextItems, skip, need, types, parseSet, ALIASES, boxChips, feedback,
+    keys, ROUTES, start, nextItems, skip, need, has, types, parseSet, ALIASES, boxChips, feedback,
     NAV, SECTION, shell, nowStrip, sections, menuSheet, accountMenu: accountItems,
     signOut: () => (shellData && shellData.me && shellData.me.linked) || shared ? signOut() : leave(),
     h, s, svg, mark, ICON, TOPICS, TOPIC, DOMAINS, glyph, chip,

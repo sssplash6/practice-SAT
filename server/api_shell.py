@@ -16,9 +16,10 @@ import json
 import logging
 
 import gzip
+import pathlib
 from functools import lru_cache
 
-from fastapi import APIRouter, Depends, Header, HTTPException
+from fastapi import APIRouter, Depends, Header, HTTPException, Request
 from fastapi.responses import Response
 
 from . import challenge, daily, db, progress, satdates
@@ -217,8 +218,25 @@ def _reports_part():
 ADAPT = {"reports": _reports_part}
 
 
+# What the chrome may call: another section's route or file, present or not yet. The
+# client asks nothing that would 404 (a 404 is a console error on every page).
+HAS_ROUTES = {"next": "/api/next", "pair": "/api/pair", "share": "/api/share", "feed": "/api/me/feed",
+              "achievements_seen": "/api/me/achievements/seen", "reports_seen": "/api/reports/seen",
+              "match": "/api/types/match", "log": "/api/mistakes/log", "example": "/api/types/{template}/example",
+              "outside": "/api/outside/misses", "scores": "/api/scores"}
+HAS_FILES = {"help": "help/answers.json", "question": "assets/question.js", "words": "assets/words-ui.js",
+             "report": "assets/report.js"}
+WEB = pathlib.Path(__file__).resolve().parent.parent / "web"
+
+
+@lru_cache(maxsize=4)
+def _has(app) -> dict:
+    paths = {getattr(r, "path", None) for r in app.routes}
+    return {**{k: p in paths for k, p in HAS_ROUTES.items()}, **{k: (WEB / f).is_file() for k, f in HAS_FILES.items()}}
+
+
 @router.get("/api/shell")
-def get_shell(x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+def get_shell(request: Request, x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
     """{retired: true} in place of the data for a rotated-away code, a
     revoked or expired device token, or an ended shared-computer session."""
     if is_retired(x_learner):
@@ -229,7 +247,7 @@ def get_shell(x_learner: str | None = Header(default=None), x_tz: int = Depends(
         if e.status_code == 401 and isinstance(e.detail, dict) and e.detail.get("retired"):
             return {"retired": True}
         raise
-    return shell(learner, x_tz, (x_learner or "").strip())
+    return {**shell(learner, x_tz, (x_learner or "").strip()), "has": _has(request.app)}
 
 
 # ponytail: College Board's Math question bank size from the teardown (2026-09); F5's
