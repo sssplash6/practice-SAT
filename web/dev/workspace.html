@@ -337,6 +337,7 @@
       const ms = 38000 + (i * 7919) % 120000;
       const fb = feedback(q, given, { ms, try: 1 });
       if (status === 'mixed') fb.correct = false;
+      if (i === 4) fb.saved_note = { text: 'halve the diameter before anything else', at: '2026-09-20' };
       if (q.type !== 'spr' && miss) fb.crowd = Object.assign({}, fb.crowd, { option_share: q.choices.map((_, j) => (j === keyOf(q) ? null : [0.5, 0.3, 0.2][j % 3])) });
       if (q.type === 'spr' && miss && given) fb.diagnosis = { kind: 'ten', text: 'Off by a factor of 2: check which part of the circle the question asks for.' };
       return {

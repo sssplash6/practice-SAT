@@ -1210,6 +1210,9 @@
       // 4. the next step, then vs now, the formula, everyone, and offers
       if (fb.next_step) v.append(h('p', { class: 'v-line v-next', text: fb.next_step }));
       if (fb.then) v.append(h('p', { class: 'v-line v-then', text: fb.then }));
+      // V3: a fresh version from the Saved pool brings back the note on the saved one
+      const sn = typeof fb.saved_note === 'string' ? { text: fb.saved_note } : fb.saved_note;
+      if (sn && sn.text) v.append(h('p', { class: 'v-line v-snote' }, h('b', { text: `Your note on the saved one${sn.at ? ' · ' + (UI.date ? UI.date(sn.at, 'short') : sn.at) : ''}: ` }), sn.text));
       (fb.formula || []).forEach(f => v.append(formulaLine(f)));
       if (fb.crowd && fb.crowd.first_rate !== undefined && (fb.crowd.n === undefined || fb.crowd.n >= 20)) {
         const top = fb.crowd.top;
