@@ -822,7 +822,7 @@
     btn(host, 'Sheet · m, a form', () => UI.sheet({ title: 'Log a mistake', size: 'm', body: b => {
       b.append(el('label', { class: 'label', for: 'kit-s1', text: 'What happened' }), el('textarea', { class: 'field', id: 'kit-s1', maxlength: '200', placeholder: 'I forgot to flip the sign' }));
       UI.counter(b.querySelector('textarea'), 200);
-      const s = el('div', { style: 'margin-top: 14px' }); UI.seg(s, ['Bluebook', 'Paper', 'Class'], { label: 'Where' }); b.append(s);
+      const s = el('div', { style: 'margin-top: 14px' }); UI.seg(s, ['School', 'Bluebook', 'Official', 'Book', 'Other'], { label: 'Where' }); b.append(s);
     }, actions: [{ label: 'Cancel' }, { label: 'Save', primary: true, kbd: 'Enter', onClick: () => say('Logged') }] }));
     btn(host, 'Sheet · l, long', () => UI.sheet({ title: 'All entry rules', size: 'l', body: b => b.append(...Array.from({ length: 24 }, (_, i) => el('p', { style: 'margin-bottom: 12px', text: `${i + 1}. Enter a fraction as 3/4, never as a mixed number. Up to 5 characters for a positive answer, 6 for a negative one.` }))) }));
     btn(host, 'Sheet · guard', () => UI.sheet({ title: 'A draft', size: 'm', guard: () => UI.confirm({ title: 'Discard the draft?', confirm: 'Discard', destructive: true }), body: 'Closing asks first.' }));
