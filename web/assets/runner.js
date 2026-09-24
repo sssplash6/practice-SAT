@@ -29,6 +29,9 @@
    UI.scratch(host, {data, editable, onChange(data), onDone}) -> {el, bar, typed, data(), editable, set, destroy()}
    UI.refDock(host, {highlight}) -> {el, highlight(id), filter(q), focus()}     ids ref-circle ... ref-180
    UI.directions(first) -> sheet       UI.between(host, opts)       UI.predictSheet(cells, opts)
+   UI.review(host, items, {mode: dialog | pane | second | walk | pair, at, filter, hidden, on, ...}) -> player
+       R23: the report's player, the Review pane, Second look, Then vs now, the walk (see review() below)
+   UI.history({template} | {session, question_id}, {load, onOpen}) -> sheet   R23: the attempt history
    cells: [{n, status, flag, note, saved, tier, level, topic, topic_name, ms, budget_ms, conf,
             trap, voided, current}]   status is a UI.STATES key (answered, unanswered, correct, ...)
    ========================================================================== */
@@ -2794,6 +2797,1368 @@
   }
 
   /* ------------------------------------------------------------ export */
-  Object.assign(UI, { runner, timer, saveQueue, navigator: navPanel, checkYourWork, annotate, scratch, refDock, directions: directionsSheet, between, predictSheet, rdp });
+  /* ------------------------------------------------------------ UI.review (R23)
+     One player for a finished question: the report's dialog (Report 1.13), the Review pane
+     (Review 8), Second look (SR3), Then vs now (SR7) and the walk (V2). Pure client: the page
+     passes items and callbacks and files nothing itself; the inline twin and Again exactly run
+     through UI.twinInline (R24's inline drill).
+
+     UI.review(host, items, opts) -> player
+       items  [{q, fb, n, module, subject, status, flag, saved, marked, reported, changed, ms, budget_ms,
+               worth, conf, cause {cause, auto, evidence}, odds {you, at, avg}, crowd {n, rate,
+               median_ms_right, level, rough}, mistake {status, owed, of, hits, fixed_at, label,
+               relapses}, tries [{given_label, correct, reason, ms, hints}], path {struck, trail, first,
+               ms, budget_ms, conf, conf_assumed}, marks, note, rule, tell, family {seen, right, mixed,
+               repaired, recent [{result, ms, at, current}], line, verdict}, elsewhere [{skill}],
+               story [{at, event, source, result, label, attempt}], summary {days_to_fix, answers,
+               held_days}, challenge {rate, n, slot, top {label, share}}, sitting {label, href, at},
+               new, diag_choices [{id, text}], seen, try, blank, session, attempt_id, trap_id, norm,
+               links {fresh, exact}, details {...rows}, twin_body, again_body, strip}]
+              A flat review row ({...question, given, answer, reasons, rationale, correct}) works too;
+              an item without q is loaded through on.load(i). pair mode: [{then, now, change, label}].
+       opts   mode       dialog (default) | pane | second | walk | pair
+              at         the index to open (UI.review.at(items) reads #q=m1-7)
+              filter     [indices] | fn(item, i); filterLabel ('incorrect' → "7 of 11 incorrect")
+              hidden     start with answers hidden (the pane remembers it per viewer: satf.review.hidden)
+              owner      the viewer owns the sitting (writes offered; default true)
+              session, title, sitting {subjects}, hash (dialog: #q= and Back, default true),
+              nKey       'miss' (default) | 'unseen' (Review's Redo, Due, Fixed tabs)
+              actions    extra UI.questionActions ctx (axes, siblings, on {save, mark, note, again, share})
+              prefs, drill (the walk's drill id), proveBody(item), twinBody(item)
+              on         load(i), show(i, item), close(i), seen(item), reanswer(item, answer, right),
+                         why(item, {diag | kind | guess}) -> {called, label}, rule(item, text | null),
+                         second(item, answer, {conf, ms}) -> fb, walkAnswer(item, answer, meta) -> fb,
+                         at(i, step, diag), story(item, node) -> item, related(item), spot(item),
+                         share(item), help(item), addRedo(item), dismiss(item), startSecond(), showNow(item),
+                         example(item) -> {question, feedback, trap_index}, twins(items), learn(items),
+                         closed(item, fb), report(item), history(item), save(item, on), mark(item, on),
+                         done(summary)
+     player {el, at, item, ws, go(i), next(), prev(), nextMiss(), hide(on), update(i, patch),
+             setItems(items), setFilter(f, label), close(), destroy()}
+     UI.review.at(items) -> index for the page's #q= hash, or -1 */
+  const RV_WORD = { correct: 'Correct', incorrect: 'Incorrect', unanswered: 'Not answered', blank: 'Not answered', fixed: 'Incorrect · fixed since',
+    mixed: 'Right on a later try', repaired: 'Repaired', skipped: 'Skipped', voided: 'Voided', removed: 'Removed from scoring', repeat: 'Repeat', answered: 'Answered' };
+  const RV_MISS = new Set(['incorrect', 'unanswered', 'blank', 'fixed', 'mixed', 'skipped']);
+  const RV_REPORTED = { true: 'Reported', checking: 'Reported · being checked', confirmed: 'Checked: key confirmed', fixed: 'Fixed after a report', disputed: 'Disputed · being checked' };
+  const RV_CAUSES = [['trap', 'Fell for a trap'], ['slip', 'Slip: I knew it'], ['misread', 'Misread the question'], ['clock', 'Ran out of time'], ['entry', 'Entered it wrong'], ['gap', 'Didn’t know how to start']];
+  const RV_CAUSE_WORD = { trap: 'Trap', slip: 'Slip', misread: 'Misread', clock: 'Clock', entry: 'Entry', gap: 'Gap', changed: 'Changed' };
+  const RULES = ['Reread what the question asks before choosing', 'Write the sign on its own line', 'Estimate first: does the answer fit?'];
+  const QF = ['id', 'type', 'stem', 'choices', 'latex', 'figure', 'figure_alt', 'table', 'topic', 'topic_name', 'skill', 'name', 'about', 'difficulty', 'level', 'template', 'seed', 'subject', 'number', 'repair'];
+  const FBF = ['correct', 'given', 'answer', 'answer_index', 'reasons', 'rationale', 'accepted', 'steps', 'method', 'option_steps', 'diverge', 'wrong_step', 'about',
+    'type_name', 'crowd', 'diagnosis', 'mistake', 'desmos', 'formula', 'then', 'filler', 'pick_note'];
+  const LET = 'ABCDE';
+  const letterOf = (q, g) => (g === null || g === undefined || g === '' ? null : Number.isInteger(g) ? LET[g] : String(g).replace(/-/g, '−'));
+  const cap = t => (t ? t[0].toUpperCase() + t.slice(1) : '');
+  function rvPrep(it, i) {
+    if (!it) return { n: i + 1, status: 'unanswered', stub: true };
+    if (it._rv) return it;
+    const x = Object.assign({}, it, { _rv: true });
+    if (x.then || x.now) return x;                                           // a pair
+    if (!x.q && (x.stem || x.choices)) {
+      x.q = {};
+      QF.forEach(k => { if (it[k] !== undefined) x.q[k] = it[k]; });
+      if (!x.fb && (it.answer !== undefined || it.answer_index !== undefined)) { x.fb = {}; FBF.forEach(k => { if (it[k] !== undefined) x.fb[k] = it[k]; }); }
+    }
+    x.stub = !x.q;
+    x.n = x.n ?? x.number ?? (x.q && x.q.number) ?? i + 1;
+    if (!x.status) {
+      const f = x.fb || {};
+      x.status = f.correct === true ? 'correct' : f.given === null || f.given === undefined || f.given === '' ? 'unanswered' : 'incorrect';
+    }
+    return x;
+  }
+  const rvAddr = it => (UI.qlabel && UI.qlabel.addr ? UI.qlabel.addr(it) : `${it.subject || 'math'}-${it.module ? `m${it.module}-` : ''}${it.n}`);
+  function rvAt(items) {
+    const m = String(location.hash || '').match(/^#q=(?:(math|rw)-)?(?:m(\d+)-)?(\d+)$/i);
+    if (!m) return -1;
+    const subject = (m[1] || 'math').toLowerCase(), module = m[2] ? +m[2] : null, n = +m[3];
+    return (items || []).findIndex((it, i) => {
+      const x = rvPrep(it, i);
+      return (x.subject || 'math') === subject && (x.module ?? null) === module && +x.n === n;
+    });
+  }
+  const heldBack = it => !it.fb || ((it.fb.answer === null || it.fb.answer === undefined) && !Number.isInteger(it.fb.answer_index));
+
+  function review(host, input, o = {}) {
+    const mode = o.mode || 'dialog';
+    const pane = mode === 'pane', second = mode === 'second', walk = mode === 'walk', pair = mode === 'pair';
+    const on = o.on || {};
+    const call = (name, ...a) => { const f = on[name]; if (typeof f !== 'function') return undefined; try { return f(...a); } catch (e) { console.error(e); return undefined; } };
+    const owner = o.owner !== false;
+    const HKEY = 'satf.review.hidden';
+    let items = (input || []).map(rvPrep);
+    let filter = o.filter || null, filterLabel = o.filterLabel || '';
+    let order = [];
+    let at = Math.max(0, Math.min(items.length - 1, Number.isInteger(o.at) && o.at >= 0 ? o.at : 0));
+    let hidden = !walk && !second && !pair && !!(o.hidden ?? (pane ? ls.get(HKEY, false) : false));
+    let ws = null, dead = false, pushed = false, ignorePop = false, twinRuns = [], pre = null, cur = null;
+    const seenNow = new Set();
+    const SEENKEY = `satf.review.seen.${o.session || o.listKey || 'list'}`;
+    try { (JSON.parse(sessionStorage.getItem(SEENKEY) || '[]') || []).forEach(k => seenNow.add(k)); } catch (_) {}
+    const keyOf = it => (it.q ? `${it.q.template || it.q.id}:${it.q.seed ?? it.n}` : `n${it.n}`);
+    const opener = doc.activeElement;
+    const asDialog = !pane || (phone() && o.phoneDialog !== false);
+    const t0 = performance.now();
+
+    /* ---------------- the frame: the practice session's layout (60px top bar, 700px column, bottom bar) */
+    const root = h('div', { class: `rv rv-${mode}${asDialog ? ' rv-dlg-in' : ''}` });
+    const live = h('p', { class: 'sr', role: 'status', 'aria-live': 'polite' });
+    const say = t => { live.textContent = ''; setTimeout(() => { live.textContent = t; }, 30); };
+    const top = h('header', { class: 'rv-top' });
+    const closeB = asDialog ? h('button', { type: 'button', class: 'rv-close', 'aria-label': 'Close', title: 'Close (Esc)' }, icon('x', 20), h('span', { class: 'rv-close-l', text: 'Close' })) : null;
+    if (closeB) closeB.addEventListener('click', () => close());
+    const navEl = h('div', { class: 'rv-nav' });
+    const toolsEl = h('div', { class: 'rv-tools', role: 'toolbar', 'aria-label': 'Tools' });
+    const scroll = h('div', { class: 'rv-scroll' });
+    const col = h('div', { class: 'rv-col', tabindex: '-1' });
+    // a phone keeps the top bar to Close and the navigator; the tools wrap at the top of the column and scroll away (R50)
+    const toolsOnTop = !phone();
+    top.append(h('div', { class: 'rv-left' }, closeB, o.title ? h('span', { class: 'rv-title', text: o.title }) : null), navEl);
+    if (toolsOnTop) top.append(toolsEl);
+    if (!toolsOnTop) { toolsEl.classList.add('rv-tools-col'); scroll.append(toolsEl); }
+    scroll.append(col);
+    const foot = h('footer', { class: 'rv-foot' });
+    const prevB = h('button', { type: 'button', class: 'quiet rv-prev', title: 'Previous (← or K)' }, icon('left', 18), h('span', { text: 'Previous' }));
+    const posEl = h('span', { class: 'rv-pos meta', 'aria-live': 'polite' });
+    const missB = h('button', { type: 'button', class: 'quiet rv-miss', title: 'Next miss (N)', text: o.nKey === 'unseen' ? 'Next not seen' : 'Next miss' });
+    const twinFoot = h('button', { type: 'button', class: 'btn sm rv-twinfoot', title: 'Twin (T)' }, icon('twin', 16), h('span', { text: pane ? 'Fresh one like this' : 'Twin' }));
+    const nextB = h('button', { type: 'button', class: 'pill sm rv-next', title: 'Next (→ or J)' }, h('span', { text: 'Next' }), icon('right', 18));
+    prevB.addEventListener('click', () => prev());
+    nextB.addEventListener('click', () => next());
+    missB.addEventListener('click', () => nextMiss());
+    twinFoot.addEventListener('click', () => act('twin'));
+    const hint = coarse() ? null : h('p', { class: 'rv-hint meta', text: second ? 'A–D pick · Enter checks · K how sure · H just show me · → skip' : walk ? '1–6 choose · Enter next step · ← → move' : '← → move · N next miss · H hide · T twin · Esc close' });
+    foot.append(h('div', { class: 'rv-fl' }, prevB), h('div', { class: 'rv-fm' }, posEl, missB, twinFoot), h('div', { class: 'rv-fr' }, nextB));
+    root.append(live, top, scroll, foot);
+    if (hint) scroll.append(hint);
+    let dlg = null;
+    if (asDialog) {
+      dlg = h('dialog', { class: 'rv-dlg', 'aria-label': o.title || (second ? 'Second look' : walk ? 'Walk your misses' : pair ? 'Then and now' : 'Question review') });
+      dlg.append(root);
+      dlg.addEventListener('cancel', e => { e.preventDefault(); close(); });
+      doc.body.append(dlg);
+      dlg.showModal();
+      doc.documentElement.classList.add('rv-open');
+    } else if (host) host.replaceChildren(root);
+
+    /* ---------------- tools */
+    const tool = (id, label, ic, key, run) => {
+      const b = h('button', { type: 'button', class: 'tool rv-tool', 'data-tool': id, title: key ? `${label} (${key})` : label, 'aria-keyshortcuts': key || null },
+        icon(ic, 20), h('span', { class: 'tl', text: label }));
+      b.addEventListener('click', e => run(e, b));
+      return b;
+    };
+    const detB = tool('details', 'Details', 'info', 'V', () => details());
+    const hideB = tool('hide', 'Hide answers', 'eye', 'H', () => (second ? justShow() : hide(!hidden)));
+    const saveB = tool('save', 'Save', 'bookmark', 'B', () => toggle('save'));
+    const markB = tool('mark', 'Mark', 'flag', 'M', () => toggle('mark'));
+    const calcB = tool('calc', 'Calculator', 'calc', 'G', () => calcToggle());
+    const refB = tool('ref', 'Reference', 'ref', 'F', () => refOpen());
+    const repB = tool('report', 'Report', 'report', 'R', () => report(cur));
+    repB.setAttribute('aria-label', 'Report a problem with this question');
+    if (second) hideB.querySelector('.tl').textContent = 'Just show me';
+    const toolList = (pair ? [detB] : walk ? [detB, on.save ? saveB : null, calcB, refB, repB] : [detB, hideB, on.save ? saveB : null, on.mark ? markB : null, calcB, refB, repB]).filter(Boolean);
+    toolsEl.append(...toolList);
+
+    function calcToggle() {
+      if (!UI.calc) return;
+      if (UI.calc.isOpen) UI.calc.close(); else UI.calc.open({ mode: phone() ? 'sheet' : 'float' });
+      setTimeout(syncTools, 0);
+    }
+    let refApi = null;
+    function refOpen() {
+      if (refApi && refApi.sheet && refApi.sheet.el.open) { refApi.sheet.close(); return; }
+      const f = cur && cur.fb && cur.fb.formula;
+      const id = Array.isArray(f) ? (f.find(x => x && x.on_sheet && x.id) || {}).id : null;
+      refApi = refSheet(!hidden ? id : null);              // P24: at the formula this question used, once the answer shows
+    }
+    function syncTools() {
+      const it = cur || {};
+      hideB.setAttribute('aria-pressed', String(hidden && !second));
+      if (!second) {
+        hideB.querySelector('.tl').textContent = hidden ? 'Show answers' : 'Hide answers';
+        hideB.replaceChild(icon(hidden ? 'eyeoff' : 'eye', 20), hideB.querySelector('svg'));
+      }
+      saveB.setAttribute('aria-pressed', String(!!it.saved));
+      saveB.querySelector('.tl').textContent = it.saved ? 'Saved' : 'Save';
+      markB.setAttribute('aria-pressed', String(!!(it.flag || it.marked)));
+      markB.querySelector('.tl').textContent = it.flag || it.marked ? 'Marked' : 'Mark';
+      calcB.setAttribute('aria-pressed', String(!!(UI.calc && UI.calc.isOpen)));
+      [detB, hideB, saveB, markB, repB].forEach(b => { b.disabled = !it.q && !pair; });
+    }
+    async function toggle(kind) {
+      const it = cur;
+      if (!it || !it.q) return;
+      const f = kind === 'save' ? 'saved' : 'flag';
+      const v = !it[f];
+      it[f] = v;
+      if (kind === 'mark') it.marked = v;
+      syncTools(); paintHead();
+      try { await call(kind, it, v); toast(kind === 'save' ? (v ? 'Saved' : 'Removed from Saved') : (v ? 'Marked' : 'Unmarked')); }
+      catch (_) { it[f] = !v; if (kind === 'mark') it.marked = !v; syncTools(); paintHead(); toast('Not saved. Try again.'); }
+    }
+
+    /* ---------------- order, position and the navigator */
+    function computeOrder() {
+      order = items.map((_, i) => i).filter(i => !filter || (Array.isArray(filter) ? filter.includes(i) : filter(items[i], i)));
+      if (!order.length) order = items.map((_, i) => i);
+    }
+    computeOrder();
+    if (!order.includes(at) && !(Number.isInteger(o.at) && o.at >= 0)) at = order[0] ?? 0;
+    const k = () => order.indexOf(at);
+    const miss = it => RV_MISS.has(it.status);
+    function paintNav() {
+      navEl.replaceChildren();
+      if (pane && !asDialog) return;
+      if (pair || walk) {
+        const it = items[at] || {};
+        navEl.append(h('span', { class: 'rv-navtext', text: walk ? `Mistake ${at + 1} of ${items.length}` : `Pair ${at + 1} of ${items.length}${it.change ? ' · ' + cap(String(it.change).replace(/_/g, ' ')) : ''}` }));
+        if (walk) navEl.append(walkDots(), h('button', { type: 'button', class: 'quiet rv-skip', text: 'Skip', title: 'Skip this mistake', onclick: () => walkSkip() }));
+        return;
+      }
+      if (items.length <= 24) {
+        const segs = h('div', { class: 'rn-segs rv-segs', role: 'group', 'aria-label': 'Questions' });
+        items.forEach((it, i) => {
+          const st = second && it._second ? (it._second.correct ? 'correct' : 'incorrect') : it.status;
+          const b = h('button', { type: 'button', class: 'rn-seg', 'data-i': i, 'data-status': st, 'data-flag': it.flag ? '' : null,
+            'aria-current': i === at ? 'true' : null, tabindex: i === at ? '0' : '-1', 'data-filtered': order.includes(i) ? null : '',
+            'aria-label': `${label(it)}, ${(RV_WORD[st] || st || '').toLowerCase()}${it.flag ? ', flagged' : ''}` });
+          segs.append(b);
+        });
+        segs.addEventListener('click', e => { const b = e.target.closest('[data-i]'); if (b) go(+b.dataset.i); });
+        segs.addEventListener('keydown', e => {
+          const bs = [...segs.querySelectorAll('.rn-seg')], i = bs.indexOf(doc.activeElement);
+          const j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: bs.length - 1 }[e.key];
+          if (i < 0 || j === undefined) return;
+          e.preventDefault(); e.stopPropagation();
+          const nx = bs[Math.max(0, Math.min(bs.length - 1, j))];
+          bs.forEach(b => { b.tabIndex = b === nx ? 0 : -1; }); nx.focus();
+        });
+        navEl.append(segs);
+      } else {
+        const it = items[at] || {};
+        const pill = h('button', { type: 'button', class: 'rv-navpill', 'aria-haspopup': 'dialog', title: 'All questions' },
+          h('span', { text: `${label(it)} · ${at + 1} of ${items.length}` }), icon('down', 16));
+        pill.addEventListener('click', () => {
+          if (!UI.pop) return;
+          const cells = items.map((x, i) => ({ n: x.n, status: x.status, flag: x.flag, tier: x.q && x.q.difficulty, level: x.q && x.q.level, topic: x.q && x.q.topic, ms: x.ms, current: i === at }));
+          let p = null;
+          const nav = navPanel(null, cells, { title: 'Questions', current: at, views: ['status', 'difficulty', 'skill', 'time'], onPick: i => { if (p) p.close(); go(i); } });
+          p = UI.pop(pill, h('div', { class: 'rv-navpop' }, nav.el), { label: 'Questions' });
+          setTimeout(() => nav.focus(), 0);
+        });
+        navEl.append(pill);
+      }
+    }
+    const label = it => (UI.qlabel ? UI.qlabel(it, o.sitting) : `Q${it.n}`);
+    function paintFoot() {
+      const i = k();
+      prevB.disabled = i <= 0;
+      nextB.disabled = walk || second ? false : i < 0 || i >= order.length - 1;
+      if (walk || second) nextB.querySelector('span').textContent = second ? (cur && cur._second ? 'Next' : 'Skip this one') : 'Next step';
+      if (second) nextB.className = (cur && cur._second ? 'pill sm' : 'quiet') + ' rv-next';
+      if (walk) prevB.querySelector('span').textContent = 'Back';
+      posEl.textContent = i < 0 ? `${at + 1} of ${items.length}` : `${i + 1} of ${order.length}${filterLabel ? ' ' + filterLabel : ''}`;
+      missB.hidden = !!(filter || second || walk || pair) || !items.some((x, j) => j !== at && (o.nKey === 'unseen' ? !seenNow.has(keyOf(x)) : miss(x)));
+      twinFoot.hidden = !(phone() && cur && cur.q && !hidden && !second && !walk && !pair);
+    }
+
+    /* ---------------- moving */
+    function go(i, dir) {
+      if (dead || i < 0 || i >= items.length) return false;
+      if (i === at && ws) return true;
+      at = i;
+      show(dir);
+      return true;
+    }
+    function next() {
+      if (walk) return walkNext();
+      const i = k();
+      if (second && cur && !cur._second) cur._skipped = true;
+      if (i >= 0 && i < order.length - 1) return go(order[i + 1], 'l');
+      if (second) return endCard();
+      return false;
+    }
+    function prev() {
+      if (walk) return walkBack();
+      const i = k();
+      return i > 0 ? go(order[i - 1], 'r') : false;
+    }
+    function nextMiss() {
+      const n = items.length;
+      for (let d = 1; d < n; d++) {
+        const j = (at + d) % n;
+        const x = items[j];
+        if (o.nKey === 'unseen' ? !seenNow.has(keyOf(x)) : miss(x)) return go(j, 'l');
+      }
+      say(o.nKey === 'unseen' ? 'Every one is seen' : 'No other misses');
+      return false;
+    }
+    function nextUnseen() {
+      for (let d = 1; d < items.length; d++) { const j = (at + d) % items.length; if (!seenNow.has(keyOf(items[j]))) return go(j, 'l'); }
+      say('Every one is seen');
+      return false;
+    }
+
+    /* ---------------- show */
+    async function show(dir) {
+      const i = at;
+      let it = items[i];
+      twinRuns.forEach(r => { try { r.finish(); } catch (_) {} });
+      twinRuns = [];
+      if (it.stub && on.load) {
+        col.replaceChildren(skeleton());
+        cur = it; syncAll();
+        try {
+          const got = await on.load(i);
+          if (dead || at !== i) return;
+          if (got) { items[i] = it = rvPrep(Object.assign({}, got, { n: it.n }), i); }
+        } catch (e) {
+          if (dead || at !== i) return;
+          col.replaceChildren(h('div', { class: 'rv-err' }, h('p', { class: 'error', text: 'Couldn’t load this question.' }),
+            h('button', { type: 'button', class: 'btn sm', text: 'Try again', onclick: () => show(dir) })));
+          return;
+        }
+      }
+      cur = it;
+      it._local = false;
+      if (ws) { try { ws.destroy(); } catch (_) {} ws = null; }
+      const fromPre = !!(pre && pre.i === i && pre.hidden === hidden && !walk && !second && !pair);
+      const b = fromPre ? pre.b : build(it);
+      pre = null;
+      if (fromPre && b.head && it.q) fillHead(b.head, it);           // the strip and position were drawn for the item before
+      col.replaceChildren(b.el);
+      ws = b.ws;
+      if (ws && ws.restart) ws.restart();
+      if (hint) col.append(hint);
+      scroll.scrollTop = 0;
+      if (dir && !still()) { b.el.classList.add('rv-slide-' + dir); }
+      if (!hidden && !second && !walk && it.q && !heldBack(it) && !(it.new && it.diag_choices && !it._revealed)) markSeen(it);
+      seenNow.add(keyOf(it));
+      try { sessionStorage.setItem(SEENKEY, JSON.stringify([...seenNow].slice(-400))); } catch (_) {}
+      syncAll();
+      if (asDialog && o.hash !== false && !pair && !walk && it.q) setHash(it);
+      call('show', i, it);
+      say(`${label(it)}${it.q ? ', ' + (hidden && !second ? 'answers hidden' : (RV_WORD[it.status] || '').toLowerCase()) : ''}`);
+      prefetch();
+    }
+    function syncAll() {
+      paintNav(); paintFoot(); syncTools();
+      root.classList.toggle('rv-hide', hidden && !second && !walk && !(cur && cur._local));
+      // before the reveal (a new miss, a held-back key, the walk's first steps, Second look) the header names no mistake
+      const before = !!(cur && cur.q && !pair && ((second && !cur._second) || (walk && stepOf(cur) < 3) || (!second && !walk && (heldBack(cur) || (cur.new && cur.diag_choices && !cur._revealed)))));
+      root.classList.toggle('rv-before', before);
+    }
+    function skeleton() {
+      const s = h('div', { class: 'rv-skel', 'aria-busy': 'true' });
+      if (UI.skel) { UI.skel(s, 'line'); UI.skel(s, 'lines:3'); UI.skel(s, 'rows:4'); } else s.append(h('p', { class: 'meta', text: 'Loading…' }));
+      return s;
+    }
+    // SR16: the neighbours in the filter load ahead, and the next one renders ahead (KaTeX, figures)
+    function prefetch() {
+      const i = k();
+      [1, -1, 2, -2].forEach(d => {
+        const j = order[i + d];
+        if (j === undefined || !items[j].stub || !on.load || items[j]._loading) return;
+        items[j]._loading = true;
+        Promise.resolve(on.load(j)).then(got => { if (got && !dead) items[j] = rvPrep(Object.assign({}, got, { n: items[j].n }), j); }).catch(() => { items[j]._loading = false; });
+      });
+      const nx = order[i + 1];
+      if (nx === undefined || walk || second || pair || dead) return;
+      setTimeout(() => {
+        if (dead || order[k() + 1] !== nx || items[nx].stub || (pre && pre.i === nx)) return;
+        pre = { i: nx, hidden, b: build(items[nx]) };
+      }, 60);
+    }
+    function markSeen(it) {
+      if (it.seen === false || it.revealed === false) { it.seen = true; it.revealed = true; call('seen', it); }
+    }
+    function setHash(it) {
+      const url = `${location.pathname}${location.search}#q=${rvAddr(it)}`;
+      try {
+        if (!pushed) { history.pushState({ rv: true }, '', url); pushed = true; }
+        else history.replaceState({ rv: true }, '', url);
+      } catch (_) {}
+    }
+    const onPop = () => {
+      if (ignorePop) { ignorePop = false; return; }
+      if (!/^#q=/.test(location.hash)) { pushed = false; close('pop'); return; }
+      const i = rvAt(items);
+      if (i >= 0 && i !== at) go(i);
+    };
+    if (asDialog && o.hash !== false) addEventListener('popstate', onPop);
+
+    /* ---------------- one item: head and body */
+    function build(it) {
+      if (pair) return buildPair(it);
+      const el = h('article', { class: 'rv-item', 'data-status': null });
+      const head = h('div', { class: 'rv-qhead' });
+      const preEl = h('div', { class: 'rv-pre' });
+      const qb = h('div', { class: 'qbody' });
+      const post = h('div', { class: 'rv-post' });
+      const twinHost = h('div', { class: 'rv-twinhost' });
+      el.append(head, preEl, qb, post, twinHost);
+      el._head = head;
+      const b = { el, ws: null, head, pre: preEl, qb, post, twinHost };
+      if (!it.q) return b;
+      fillHead(head, it);
+      if (walk) { walkBody(it, b); return b; }
+      if (second) { secondBody(it, b); return b; }
+      if (heldBack(it)) {
+        b.ws = UI.workspace(qb, it.q, { mode: 'review', fb: null, bar: false, head: false });
+        preEl.append(h('div', { class: 'rv-held' },
+          h('p', {}, h('b', { text: 'Answer held back for your second look. ' }), 'Work it cold first: it tells a slip from a gap.'),
+          h('div', { class: 'rv-held-acts' },
+            on.startSecond ? h('button', { type: 'button', class: 'pill sm', text: 'Start second look', onclick: () => call('startSecond') }) : null,
+            on.showNow ? h('button', { type: 'button', class: 'quiet', text: 'Show me now', onclick: async () => { const got = await call('showNow', it); if (got) { replace(it, got); } } }) : null)));
+        return b;
+      }
+      if (it.new && it.diag_choices && !it._revealed) {           // V2: a new miss opens at What happened?
+        b.ws = UI.workspace(qb, it.q, { mode: 'review', fb: null, bar: false, head: false });
+        post.append(whatHappened(it, () => { it._revealed = true; rebuild(); }));
+        return b;
+      }
+      b.ws = reviewWs(qb, it, b);
+      return b;
+    }
+    function rebuild() { if (!cur) return; pre = null; const keepAt = at; at = -1; go(keepAt); }
+    function replace(it, got) {
+      const i = items.indexOf(it);
+      if (i < 0) return;
+      items[i] = rvPrep(Object.assign({}, it, got, { _rv: false, n: it.n }), i);
+      if (i === at) rebuild();
+    }
+    function reviewWs(qb, it, b) {
+      const q = it.q;
+      const path = it.path || {};
+      return UI.workspace(qb, q, {
+        mode: 'review', fb: it.fb, hidden, bar: false, head: false, prefs: Object.assign({ option_reasons: true }, o.prefs || {}),
+        state: Array.isArray(path.struck) && path.struck.length ? { struck: path.struck } : null,
+        actions: (slot, fb) => { slot.before(afterBlocks(it, fb)); actionRow(slot, it, fb, b); },
+        onReanswer: (a, right) => {
+          it._local = true;
+          root.classList.remove('rv-hide');
+          call('reanswer', it, a, right);
+          markSeen(it);
+        },
+        onNotMine: (on.why || UI.report) && owner ? (anchor) => notMine(anchor, it) : null,
+        onSpot: on.spot ? () => call('spot', it) : null,
+      });
+    }
+
+    /* the question header: skill, difficulty, time, tags, the status chip, odds, cause, the mistake */
+    function fillHead(head, it) {
+      head.replaceChildren();
+      const q = it.q;
+      const t = UI.TOPIC && UI.TOPIC[q.topic];
+      const l1 = h('div', { class: 'rv-h1' });
+      const skill = h('span', { class: 'rv-skill' }, glyphOf(q.topic),
+        pane && t && t.dshort ? h('span', { class: 'rv-dom', text: t.dshort + ' · ' }) : null,
+        h('span', { text: t ? t.short : q.topic_name || q.topic || '' }),
+        q.name || q.skill ? h('span', { class: 'rv-type', text: q.name || q.skill }) : null);
+      l1.append(h('span', { class: 'rv-n', text: label(it) }), skill);
+      const st = it.status;
+      l1.append(h('span', { class: 'rv-status rv-keyed', 'data-status': st }, h('span', { class: 'rv-glyph', 'aria-hidden': 'true', text: (UI.STATES && UI.STATES[st] && UI.STATES[st].glyph) || '' }), RV_WORD[st] || cap(st || '')));
+      const bits = [];
+      if (q.difficulty) bits.push(UI.dbars ? UI.dbars(q.difficulty) : h('span', { text: cap(q.difficulty) }));
+      if (q.level) bits.push(`L${q.level}`);
+      bits.push(q.type === 'spr' ? 'Grid-in' : 'Multiple choice');
+      if (it.ms) bits.push(`${msx(it.ms)}${it.budget_ms ? ` · budget ${msx(it.budget_ms)}` : ''}`);
+      if (it.worth !== undefined && it.worth !== null && it.worth > 0) bits.push(h('span', { class: 'rv-worth', text: `≈ +${Math.round(it.worth)}` }));
+      if (pane && it.sitting) bits.push(it.sitting.href ? h('a', { class: 'qlink', href: it.sitting.href, text: it.sitting.label }) : it.sitting.label);
+      const l2 = h('div', { class: 'rv-h2' });
+      bits.forEach((x, i) => { if (i) l2.append(h('span', { class: 'rv-dot', 'aria-hidden': 'true', text: '·' })); l2.append(x instanceof Node ? x : h('span', { text: x })); });
+      head.append(l1, l2);
+      const tags = h('div', { class: 'rv-tags' });
+      const tag = (text, cls) => tags.append(h('span', { class: 'rv-tag' + (cls ? ' ' + cls : ''), text }));
+      if (second) tag(`Second look · ${order.indexOf(items.indexOf(it)) + 1} of ${order.length} · no clock`, 'on');
+      if (it.flag || it.marked) tag(pane ? 'Flagged' : 'Flagged in test', 'flag');
+      if (q.repair || it.again) tag('Again');
+      if (it.changed) tag(`Changed ${Array.isArray(it.changed) ? it.changed.map(x => letterOf(q, x)).join(' → ') : it.changed}`, 'rv-keyed');
+      if (it.reported) tag(RV_REPORTED[it.reported] || RV_REPORTED.true);
+      if (it.new && !it._revealed) tag('New', 'on');
+      if (it.saved) tag('Saved');
+      tags.append(h('span', { class: 'rv-tag rv-hidechip', text: 'Answers hidden' }));
+      head.append(tags);
+      // SR12: the level, your odds and how students do, working on day one
+      const od = it.odds, cr = it.crowd;
+      const oddsBits = [];
+      if (q.level || (cr && cr.level)) oddsBits.push(`L${q.level || cr.level}`);
+      if (od && od.you !== undefined && od.you !== null) oddsBits.push(`your odds ${od.at === 'now' ? 'now' : 'were'} ${Math.round(od.you * 100)}%`);
+      if (cr && cr.rough) oddsBits.push(`rough (${cr.n})`);
+      let students = null;
+      if (cr && cr.n >= 20 && cr.rate !== undefined && cr.rate !== null) students = `${Math.round(cr.rate * 100)}% of ${fmtN(cr.n)} students get this type right${cr.median_ms_right ? ` · they take ${msx(cr.median_ms_right)}` : ''}${it.ms ? ` · you ${msx(it.ms)}` : ''}`;
+      else if (od && od.avg) students = `About ${Math.round(od.avg * 100)}% of students get this type right (estimated)${it.ms ? ` · you ${msx(it.ms)}` : ''}`;
+      if (oddsBits.length || students) head.append(h('p', { class: 'rv-odds' }, oddsBits.join(' · '), oddsBits.length && students ? ' · ' : '', students || ''));
+      // SR8: the cause of a miss, one tap to correct
+      if (miss(it) && it.cause && it.cause.cause && !second) {
+        const cb = h('button', { type: 'button', class: 'chip rv-cause rv-keyed', 'aria-haspopup': 'menu' },
+          h('span', { text: `Cause: ${RV_CAUSE_WORD[it.cause.cause] || cap(it.cause.cause)}${it.cause.auto ? ' (auto)' : ''}` }), icon('down', 14));
+        if (owner && on.why && UI.menu) cb.addEventListener('click', () => UI.menu(cb, [
+          ...(it.cause.evidence ? [{ head: h('p', { class: 'help', text: [].concat(it.cause.evidence).join(' · ') }) }] : []),
+          ...RV_CAUSES.filter(([kk]) => kk !== 'entry' || q.type === 'spr').map(([kk, lab]) => ({ label: lab, radio: 'cause', checked: it.cause.cause === kk, onClick: () => setCause(it, kk) })),
+        ], { label: 'What happened?' }));
+        else cb.disabled = true;
+        head.append(h('div', { class: 'rv-causerow' }, cb));
+      }
+      // the mistake behind it: open with pips, or fixed
+      const m = it.mistake;
+      if (m && m.status) {
+        const line = h('p', { class: 'rv-mistake rv-keyed' });
+        if (m.status === 'fixed') line.append(icon('check', 16), h('b', { text: `Fixed${m.fixed_at ? ' ' + (UI.date ? UI.date(m.fixed_at, 'short') : m.fixed_at) : ''}` }), m.label ? ` · ${m.label}` : '');
+        else {
+          const owed = m.owed ?? 2, of = m.of ?? 2;
+          if (UI.pips) line.append(UI.pips(owed, of));
+          const word = m.status === 'relapsed' ? `Relapsed${m.relapses > 1 ? ' ×' + m.relapses : ''}` : m.status === 'stuck' ? 'Stuck' : m.status === 'half' ? 'Half fixed' : 'Open mistake';
+          line.append(h('b', { text: ` ${word}` }), ` · ${owed} clean answer${owed === 1 ? '' : 's'} to close`, m.hits ? ` · hit ${m.hits}× all time` : '', m.label && pane ? ` · ${m.label}` : '');
+        }
+        head.append(line);
+      }
+      if (it.path && (it.path.conf === 'sure' || it.path.conf_assumed) && miss(it)) head.append(h('p', { class: 'rv-blind rv-keyed', text: it.path.conf_assumed ? 'Fast answer · assumed sure' : 'You were sure' }));
+      if (it.rule) head.append(h('p', { class: 'rv-rule' }, h('b', { text: 'Your rule: ' }), it.rule));
+      if (pane && it.story && it.story.length) head.append(timeline(it));
+      if (pane && items.length > 1) head.append(resultStrip());
+    }
+    function paintHead() { const el = col.querySelector('.rv-item'); if (el && el._head && cur && cur.q) fillHead(el._head, cur); }
+    async function setCause(it, kind) {
+      const was = it.cause;
+      it.cause = { cause: kind, auto: false };
+      paintHead();
+      try { await call('why', it, { kind }); say('Saved'); }
+      catch (_) { it.cause = was; paintHead(); toast('Not saved. Try again.'); }
+    }
+    // V6: the student corrects the named mistake on their own pick
+    function notMine(anchor, it) {
+      if (!UI.menu) return;
+      const send = async body => {
+        try { const r = await call('why', it, body); if (r && r.cause) it.cause = { cause: r.cause, auto: false }; paintHead(); toast('Thanks. Your mistakes list uses this now.'); }
+        catch (_) { toast('Not saved. Try again.'); }
+      };
+      UI.menu(anchor, [
+        { label: 'I guessed', onClick: () => send({ guess: true }) },
+        { label: 'Misread the question', onClick: () => send({ kind: 'misread' }) },
+        { label: 'A slip: I knew how', onClick: () => send({ kind: 'slip' }) },
+        { label: 'Ran out of time', onClick: () => send({ kind: 'clock' }) },
+        { label: 'Didn’t know how to start', onClick: () => send({ kind: 'gap' }) },
+        { separator: true },
+        { label: 'The label is wrong', onClick: () => report(it, { category: 'Wrong mistake label', option: Number.isInteger(it.fb && it.fb.given) ? it.fb.given : null }) },
+      ], { label: 'Not what I did?' });
+    }
+    // V2: name the mistake before the key shows
+    function whatHappened(it, done) {
+      const box = h('section', { class: 'rv-what', 'aria-label': 'What happened?' });
+      const g = it.fb ? it.fb.given : it.given;
+      box.append(h('p', { class: 'rv-what-h' }, h('b', { text: 'What happened?' }), g !== null && g !== undefined ? ` You picked ${letterOf(it.q, g)}.` : it.blank ? ' You didn’t answer this one.' : ''));
+      const list = h('ol', { class: 'rv-what-l' });
+      (it.diag_choices || []).slice(0, 6).forEach((c, i) => {
+        const b = h('button', { type: 'button', class: 'rv-what-c', 'data-k': String(i + 1) }, h('span', { class: 'kbd', text: String(i + 1) }), h('span', { text: c.text }));
+        b.addEventListener('click', () => choose(c.id, b));
+        list.append(h('li', {}, b));
+      });
+      const skip = h('button', { type: 'button', class: 'quiet rv-what-skip', text: walk ? 'Skip this step' : 'Just show me' });
+      skip.addEventListener('click', () => choose('skip', skip));
+      box.append(list, skip);
+      async function choose(id, btn) {
+        box.querySelectorAll('button').forEach(x => { x.disabled = true; });
+        btn.setAttribute('aria-busy', 'true');
+        let r = null;
+        try { r = await call('why', it, { diag: id }); } catch (_) { r = null; }
+        it._called = r && r.called !== undefined ? r : { called: false, label: it.fb && it.fb.mistake };
+        it._diag = id;
+        it.new = false;
+        done(id, r);
+      }
+      box._pick = i => { const b = list.querySelectorAll('.rv-what-c')[i]; if (b && !b.disabled) b.click(); return !!b; };
+      return box;
+    }
+
+    /* blocks under the explanation, above the action row */
+    function afterBlocks(it, fb) {
+      const box = h('div', { class: 'rv-after' });
+      const q = it.q;
+      const wrong = fb.correct === false && fb.given !== null && fb.given !== undefined;
+      if (it._called && it._diag && it._diag !== 'skip') {
+        box.append(h('p', { class: 'rv-called' }, it._called.called ? h('b', { text: 'You called it.' }) : [h('b', { text: 'Your pick came from: ' }), it._called.label || (fb.mistake || '')]));
+      }
+      // SR17: Next time I will… (the owner, on a miss)
+      if (owner && on.rule && miss(it) && !second && (!walk || (it.mistake && it.mistake.hits >= 2))) box.append(ruleBlock(it));
+      // SR25: every try in a practice set
+      if (it.tries && it.tries.length > 1) {
+        const p = h('p', { class: 'rv-tries' }, h('b', { text: 'Tries in this set: ' }));
+        it.tries.forEach((tr, i) => {
+          if (i) p.append(' → ');
+          p.append(h('span', { class: 'rv-try' + (tr.correct ? ' ok' : ' no') }, `${tr.correct ? '✓' : '✕'} ${tr.given_label ?? letterOf(q, tr.given) ?? '–'}`,
+            !tr.correct && tr.reason ? ` · ${tr.reason}` : '', tr.ms ? ` · ${msx(tr.ms)}` : '', tr.hints ? ` · ${tr.hints} hint${tr.hints === 1 ? '' : 's'}` : ''));
+        });
+        box.append(p);
+      }
+      // V8: your path through the question
+      const pt = it.path;
+      if (pt) {
+        const lines = [];
+        const key = Number.isInteger(fb.answer_index) ? fb.answer_index : LET.indexOf(fb.answer);
+        const struck = pt.struck || [];
+        if (struck.includes(key) && key >= 0) lines.push(h('p', { class: 'rv-path-key', text: `You crossed out the right answer (${LET[key]})${wrong ? ` before picking ${letterOf(q, fb.given)}` : ''}` }));
+        else if (struck.length) lines.push(h('p', { text: `You crossed out ${struck.map(i => LET[i]).join(', ')}` }));
+        if (pt.trail && pt.trail.length > 1) lines.push(h('p', { text: `${pt.trail.map(x => letterOf(q, x)).join(' → ')}${pt.first && pt.first.correct ? ` · first answer: ${letterOf(q, pt.first.given ?? pt.trail[0])} (right)` : ''}` }));
+        const ms = pt.ms ?? it.ms, bud = pt.budget_ms ?? it.budget_ms;
+        if (ms && bud) lines.push(h('p', { text: ms > bud ? `${msx(ms)} · budget ${msx(bud)} · ${msx(ms - bud)} over` : wrong && ms < bud / 2 ? `${msx(ms)} · rushed` : `${msx(ms)} · budget ${msx(bud)}` }));
+        if (pt.conf) lines.push(h('p', { text: `You said ${cap(pt.conf)}` }));
+        if (lines.length) box.append(h('section', { class: 'rv-path', 'aria-label': 'Your path' }, h('p', { class: 'k', text: 'Your path' }), ...lines));
+      }
+      if (it.note) box.append(h('p', { class: 'rv-note' }, h('b', { text: 'Your note: ' }), it.note));
+      // SR16, Review 8: this question type over time
+      box.append(familyBlock(it));
+      // Review 8: the same misconception on other types
+      if (it.elsewhere && it.elsewhere.length) {
+        const names = it.elsewhere.map(x => x.skill || x.name || x.template);
+        box.append(h('p', { class: 'rv-else' }, `Also a trap in ${it.elsewhere.length} other question type${it.elsewhere.length === 1 ? '' : 's'}: ${names.slice(0, 4).join(', ')}${names.length > 4 ? ', …' : ''}`,
+          on.related ? [' ', h('button', { type: 'button', class: 'btn sm', text: `Practise across all ${it.elsewhere.length + 1}`, onclick: () => call('related', it) })] : null));
+      }
+      // SR12: the challenge's crowd, by slot and misconception
+      const c = it.challenge;
+      if (c && c.n) box.append(h('p', { class: 'rv-crowd' }, `${Math.round(c.rate * 100)}% of ${fmtN(c.n)} got ${c.slot ? `slot ${c.slot}` : 'this'} right`,
+        c.top && c.top.label ? ` · most picked: ${c.top.label}${c.top.share !== undefined ? ` (${Math.round(c.top.share * 100)}%)` : ''}` : ''));
+      return box;
+    }
+    function familyBlock(it) {
+      const f = it.family;
+      const box = h('section', { class: 'rv-family', 'aria-label': 'This question type over time' });
+      box.append(h('p', { class: 'k', text: pane ? 'This kind of question' : 'This question type over time' }));
+      if (!f || !f.seen) { box.append(h('p', { class: 'meta', text: 'First time on this question type.' })); return box; }
+      box.append(h('p', { class: 'rv-fam-sum', text: [`seen ${f.seen}`, `right ${f.right ?? 0}`, f.mixed ? `mixed ${f.mixed}` : null, f.repaired ? `repaired ${f.repaired}` : null].filter(Boolean).join(' · ') }));
+      const recent = (f.recent || []).slice(-10);
+      if (recent.length) {
+        const row = h('div', { class: 'rv-fam-cells', role: 'list', 'aria-label': 'Every attempt, oldest first' });
+        recent.forEach(r => {
+          const st = r.result === 'right' ? 'correct' : r.result === 'wrong' ? 'incorrect' : r.result || r.status || 'answered';
+          const c = UI.cell ? UI.cell(st, '', { static: true, current: !!r.current, size: 'sm', label: `${(RV_WORD[st] || st)}${r.at ? ', ' + (UI.date ? UI.date(r.at, 'short') : r.at) : ''}${r.ms ? ', ' + msx(r.ms) : ''}${r.current ? ', this sitting' : ''}` })
+            : h('span', { class: 'cell', 'data-status': st });
+          row.append(h('span', { class: 'rv-fam-c', role: 'listitem' }, c, h('span', { class: 'rv-fam-t', 'aria-hidden': 'true', text: r.ms ? msx(r.ms) : '' })));
+        });
+        box.append(row);
+      }
+      if (f.line || f.verdict) box.append(h('p', { class: 'rv-fam-line' }, f.line || '', f.line && f.verdict ? ' · ' : '', f.verdict ? h('b', { text: typeof f.verdict === 'string' ? f.verdict : f.verdict.text }) : ''));
+      const hb = h('button', { type: 'button', class: 'btn sm', title: 'Attempt history (Y)' }, icon('history', 16), `History (${f.seen})`);
+      hb.addEventListener('click', () => openHistory(it));
+      box.append(hb);
+      return box;
+    }
+    function ruleBlock(it) {
+      const box = h('section', { class: 'rv-rulebox', 'aria-label': 'Next time I will' });
+      const fid = uid('rvr');
+      const draw = () => {
+        box.replaceChildren();
+        if (it.rule) {
+          box.append(h('p', {}, h('b', { text: 'Your rule: ' }), it.rule, ' ',
+            h('button', { type: 'button', class: 'quiet', text: 'Edit', onclick: () => { const r = it.rule; it.rule = null; draw(); const f = box.querySelector('input'); if (f) { f.value = r; f.focus(); } } }), ' ',
+            h('button', { type: 'button', class: 'quiet', text: 'Delete', onclick: () => save(null) })));
+          return;
+        }
+        const inp = h('input', { id: fid, class: 'field sm', type: 'text', maxlength: '140', placeholder: 'When I see … I will …' });
+        const sug = h('div', { class: 'rv-rule-sug' });
+        [it.tell, ...RULES].filter(Boolean).slice(0, 3).forEach(s => sug.append(h('button', { type: 'button', class: 'chip', text: s, onclick: () => { inp.value = s; inp.focus(); } })));
+        const sv = h('button', { type: 'button', class: 'btn sm', text: 'Save rule', onclick: () => save(inp.value.trim()) });
+        inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sv.click(); } });
+        box.append(h('label', { class: 'label', for: fid, text: 'Next time I will…' }), sug, h('div', { class: 'v-rule-row' }, inp, sv));
+        if (UI.counter) box.append(UI.counter(inp, 140));
+      };
+      async function save(text) {
+        if (text === '') return;
+        const was = it.rule;
+        it.rule = text || null;
+        draw();
+        try { await call('rule', it, text || null); toast(text ? 'Saved: it shows on this question type from now on' : 'Rule deleted'); paintHead(); }
+        catch (_) { it.rule = was; draw(); toast('Not saved. Try again.'); }
+      }
+      draw();
+      return box;
+    }
+    // V8: the story of a mistake, one node per event
+    function timeline(it) {
+      const box = h('section', { class: 'rv-story rv-keyed', 'aria-label': 'The story of this mistake' });
+      const row = h('ol', { class: 'rv-story-l' });
+      it.story.forEach(nd => {
+        const st = nd.result === 'right' || nd.event === 'fixed' || nd.event === 'check_ok' || nd.event === 'pip' ? 'correct'
+          : nd.event === 'relapse' ? 'incorrect' : nd.result === 'wrong' || nd.event === 'miss' || nd.event === 'open' ? 'incorrect' : nd.event === 'due' ? 'future' : 'answered';
+        const txt = [nd.at ? (UI.date ? UI.date(nd.at, 'short') : nd.at) : null, nd.source, nd.label].filter(Boolean).join(' · ');
+        const inner = [UI.cell ? UI.cell(st, '', { static: true, size: 'sm' }) : null, h('span', { class: 'rv-story-t', text: txt })].filter(Boolean);
+        const li = h('li', { class: 'rv-story-n' + (nd.event === 'relapse' ? ' relapse' : '') });
+        if (nd.attempt && on.story) {
+          const b = h('button', { type: 'button', class: 'rv-story-b' }, inner);
+          b.addEventListener('click', async () => {
+            const got = await call('story', it, nd);
+            if (!got) return;
+            const back = h('button', { type: 'button', class: 'quiet', text: 'Back to the timeline', onclick: () => rebuild() });
+            const x = rvPrep(got, at);
+            const sub = build(x);
+            col.replaceChildren(h('div', { class: 'rv-sub' }, back), sub.el);
+            if (ws) ws.destroy();
+            ws = sub.ws;
+          });
+          li.append(b);
+        } else li.append(...inner);
+        row.append(li);
+      });
+      box.append(row);
+      const s = it.summary;
+      if (s && (s.days_to_fix !== undefined || s.held_days !== undefined)) {
+        box.append(h('p', { class: 'meta', text: [s.days_to_fix !== undefined ? `Fixed in ${s.days_to_fix} day${s.days_to_fix === 1 ? '' : 's'}${s.answers ? ` with ${s.answers} answers` : ''}` : null, s.held_days ? `held ${s.held_days} days` : null].filter(Boolean).join(' · ') }));
+      }
+      return box;
+    }
+    // V14: one cell per row of the list, the current one ringed; rows opened this visit get a dot
+    function resultStrip() {
+      const box = h('div', { class: 'rv-rstrip', role: 'group', 'aria-label': 'Every row in this list' });
+      const shown = items.slice(0, 60);
+      shown.forEach((x, i) => {
+        const s = x.strip || {};
+        const st = s.status || x.status;
+        const lab = `${label(x)}, ${s.label || RV_WORD[st] || st}${seenNow.has(keyOf(x)) ? ', seen' : ''}`;
+        const c = UI.cell ? UI.cell(st, i + 1, { current: i === at, flag: x.flag || null, size: 'sm', label: lab, onClick: () => go(i) })
+          : h('button', { type: 'button', class: 'cell', 'data-status': st, 'aria-label': lab, onclick: () => go(i) });
+        if (s.owed !== undefined && UI.pips) { c.classList.add('has-pips'); c.append(UI.pips(s.owed, s.of || 2)); }
+        if (seenNow.has(keyOf(x))) c.dataset.seen = '';
+        box.append(c);
+      });
+      if (items.length > 60) box.append(h('button', { type: 'button', class: 'cell rv-more', 'aria-label': `${items.length - 60} more`, onclick: () => go(60) }, h('span', { class: 'n', text: `+${items.length - 60}` })));
+      return box;
+    }
+
+    /* the action row (G4, R49) plus the player's and the pane's own */
+    function twinBody(it) {
+      if (o.twinBody) return o.twinBody(it);
+      if (it.twin_body) return it.twin_body;
+      const q = it.q;
+      if (pane) return { list: 'templates', ids: [q.template], count: 1, source: 'review', want: it.norm || undefined };
+      if (it.session || o.session) return { from_session: it.session || o.session, only: [q.id], each: 5, source: 'twin' };
+      return { templates: [q.template], source: 'twin' };
+    }
+    function actionRow(slot, it, fb, b) {
+      const q = it.q;
+      const base = o.actions || {};
+      const onx = Object.assign({}, base.on || {});
+      delete onx.save; delete onx.mark;                            // the top bar holds Save and Mark (B, M), so one control owns each state
+      if (!onx.history) onx.history = () => openHistory(it);
+      if (!onx.again && q.template && q.seed !== undefined) onx.again = () => startInline(it, b, { body: it.again_body || { list: 'items', ids: [[q.template, q.seed]], count: 1, source: 'review' }, caption: 'The very same question', again: true });
+      if (!onx.report) onx.report = () => report(it);
+      const trapMiss = miss(it) && (!it.cause || ['trap', 'gap'].includes(it.cause.cause) || (it.mistake && ['stuck', 'relapsed'].includes(it.mistake.status)));
+      const ctx = Object.assign({ axes: o.axes, subject: q.subject }, base, {
+        surface: pane ? 'pane' : 'player', session: it.session || o.session, question_id: q.id, template: q.template, seed: q.seed,
+        trap_id: it.trap_id || (it.mistake && it.mistake.trap_id) || null, live: false, revealed: true, missed: miss(it), fb,
+        saved: !!it.saved, marked: !!(it.flag || it.marked), rule: it.rule, hasNote: !!it.note, body: twinBody(it),
+        inline: to => startInline(it, b, to), onSolved: trapMiss && q.template ? () => solved(it, b) : null, on: onx,
+      });
+      UI.questionActions(slot, q, ctx);
+      const extra = h('div', { class: 'q-actions rv-extra', role: 'group', 'aria-label': 'More for this question' });
+      const slug = q.topic;
+      if (!pane && slug) extra.append(h('a', { class: 'btn sm', href: `/practice/?topics=${encodeURIComponent(slug)}` }, 'Practise this skill'));
+      if (pane) {
+        if (on.spot && q.type !== 'spr') extra.append(h('button', { type: 'button', class: 'btn sm', text: 'Spot the trap', onclick: () => call('spot', it) }));
+        if (on.share) extra.append(h('button', { type: 'button', class: 'btn sm', text: 'Share', onclick: () => call('share', it) }));
+        if (on.help) extra.append(h('button', { type: 'button', class: 'btn sm', text: 'Ask for help', onclick: () => call('help', it) }));
+        const menuItems = [];
+        if (on.addRedo && it.status === 'correct') menuItems.push({ label: 'Add to Redo', onClick: () => call('addRedo', it) });
+        if (on.dismiss && it.mistake && it.mistake.status && it.mistake.status !== 'fixed') {
+          menuItems.push({ label: 'Dismiss', onClick: async () => {
+            const ok = UI.confirm ? await UI.confirm({ title: 'Dismiss this mistake?', text: 'Remove this mistake without fixing it? It stays in your history.', confirm: 'Dismiss', destructive: true }) : true;
+            if (ok) call('dismiss', it);
+          } });
+        }
+        if (menuItems.length && UI.menu) {
+          const mb = h('button', { type: 'button', class: 'btn sm icon', 'aria-label': 'More actions', 'aria-haspopup': 'menu' }, icon('more', 16));
+          mb.addEventListener('click', () => UI.menu(mb, menuItems, { label: 'More actions' }));
+          extra.append(mb);
+        }
+      }
+      if (extra.children.length) slot.append(extra);
+    }
+    // R23: the twin (and Again, exactly) answered in the player; the pane swaps the numbers in place (V14)
+    function startInline(it, b, to) {
+      if (!b || !b.el.isConnected) b = { el: col.querySelector('.rv-item'), qb: col.querySelector('.qbody'), twinHost: col.querySelector('.rv-twinhost') };
+      const existing = twinRuns.find(r => r._axis === (to.axis || 'same') && r._again === !!to.again && r.el.isConnected);
+      if (existing && !pane) { existing.el.scrollIntoView({ block: 'start', behavior: still() ? 'auto' : 'smooth' }); return existing; }
+      twinRuns.forEach(r => { try { r.destroy(); } catch (_) {} });
+      twinRuns = [];
+      const oldStem = it.q.stem;
+      let stem = null;
+      if (pane && !to.again && ws) {
+        stem = ws.el.querySelector('.q-stem');
+        ws.el.hidden = true;
+      }
+      const capN = ls.get('satf.review.swapcap', 0) || 0;
+      const run = UI.twinInline(pane && !to.again ? b.qb : b.twinHost, {
+        body: to.body || twinBody(it), axis: to.axis, prefs: o.prefs, prepend: pane && !to.again,
+        caption: to.caption || (pane && capN >= 3 ? false : 'Same question type, new numbers'),
+        backLabel: pane ? 'Back to the question you missed' : 'Back to the original',
+        onBack: () => (pane ? rebuild() : b.el.scrollIntoView({ block: 'start', behavior: still() ? 'auto' : 'smooth' })),
+        wsOpts: stem ? (q, n) => (n === 0 && UI.stemDiff ? { stemEl: stem, spans: UI.stemDiff(oldStem, q.stem) } : {}) : null,
+        onAnswer: (fb, q, n) => {
+          if (pane && !to.again) ls.set('satf.review.swapcap', capN + 1);
+          const m = it.mistake;
+          if (m && m.status && m.status !== 'fixed' && fb.correct && !fb.repeat) { m.owed = Math.max(0, (m.owed ?? 2) - 1); if (m.owed === 0) { m.status = 'fixed'; m.fixed_at = new Date().toISOString(); } paintHead(); }
+          if (fb.closed && fb.closed.length) call('closed', it, fb);
+          call('twinAnswer', it, fb, n);
+        },
+      });
+      run._axis = to.axis || 'same';
+      run._again = !!to.again;
+      twinRuns.push(run);
+      if (!pane || to.again) setTimeout(() => run.el.scrollIntoView({ block: 'start', behavior: still() ? 'auto' : 'smooth' }), 30);
+      return run;
+    }
+    // SR16, V11: See one solved first: your miss beside a worked twin with your trap outlined
+    async function solved(it, b) {
+      if (!UI.sheet) return;
+      let ex = null;
+      const q = it.q, fb = it.fb || {};
+      const norm = it.norm || null;
+      try {
+        ex = on.example ? await on.example(it)
+          : await UI.api(`/types/${encodeURIComponent(q.template)}/example?${new URLSearchParams(Object.assign({}, norm ? { want: norm } : {}, q.difficulty ? { tier: q.difficulty } : {}))}`);
+      } catch (e) { toast((e && e.message) || 'No worked example for this type yet.'); return; }
+      if (!ex) return;
+      const exQ = ex.question || ex, exFb = Object.assign({}, ex.feedback || ex, { correct: null, given: null });
+      const g = Number.isInteger(fb.given) ? fb.given : null;
+      const left = h('div', { class: 'rv-solved-col qbody' }, h('p', { class: 'k', text: 'You missed' }));
+      const right = h('div', { class: 'rv-solved-col qbody' }, h('p', { class: 'k', text: 'Worked · new numbers' }));
+      const wrap = h('div', { class: 'rv-solved' }, left, right);
+      let seg = null;
+      const s = UI.sheet({ title: 'See one solved', size: 'full', className: 'rv-solved-sheet', body: bd => {
+        if (phone() && UI.seg) {
+          seg = UI.seg(bd, [{ value: 'miss', label: 'You missed' }, { value: 'worked', label: 'Worked' }], { value: 'worked', label: 'Show', onChange: v => { left.hidden = v !== 'miss'; right.hidden = v !== 'worked'; } });
+          left.hidden = true;
+        }
+        bd.append(wrap);
+      }, actions: [{ label: 'Now you: a new one', primary: true, onClick: () => { setTimeout(() => startInline(it, b, { body: twinBody(it) }), 0); } }] });
+      const lw = h('div'), rw = h('div');
+      left.append(lw); right.append(rw);
+      UI.workspace(lw, q, { mode: 'review', fb, bar: false, head: false });
+      UI.workspace(rw, exQ, { mode: 'example', fb: exFb, bar: false, head: false });
+      const ti = Number.isInteger(ex.trap_index) ? ex.trap_index : null;
+      if (ti !== null) {
+        const row = rw.querySelectorAll('.opt-row')[ti];
+        if (row) row.classList.add('rv-trapout');
+        const why = g !== null && fb.reasons ? fb.reasons[g] : fb.mistake;
+        right.append(h('p', { class: 'rv-trapline' }, h('b', { text: `Same trap as your ${letterOf(q, g) || 'answer'}` }), why ? `: ${why}. ` : '. ',
+          `Here it gives ${(exQ.choices || [])[ti] ?? ''}.`));
+      }
+      return s;
+    }
+
+    /* ---------------- Hide answers: a mode, kept across Previous and Next */
+    function hide(on2) {
+      hidden = !!on2;
+      if (pane) ls.set(HKEY, hidden);
+      pre = null;
+      if (cur) cur._local = false;
+      if (ws && ws.setHidden && !heldBack(cur || {})) ws.setHidden(hidden);
+      if (!hidden && cur && cur.q && !heldBack(cur)) markSeen(cur);
+      syncAll();
+      say(hidden ? 'Answers hidden. Pick an answer to check yourself.' : 'Answers shown');
+    }
+
+    /* ---------------- Details (V) */
+    function details() {
+      const it = cur;
+      if (!it || !UI.pop) return;
+      if (pair) return;
+      const q = it.q || {};
+      const d = it.details || {};
+      const t = UI.TOPIC && UI.TOPIC[q.topic];
+      const row = (kk, v) => (v ? [h('dt', { text: kk }), h('dd', {}, v)] : []);
+      const idText = q.template ? `${q.template} · ${q.seed ?? ''}`.trim() : q.id || '';
+      const copy = (text, msg) => h('button', { type: 'button', class: 'quiet sm', text: 'Copy', onclick: () => (UI.copyText ? UI.copyText(text, { toast: msg }) : null) });
+      const exact = (it.links && it.links.exact) || (q.template ? (pane ? `${location.origin}/review/?open=q:${q.template}:${q.seed ?? ''}` : `${location.origin}/practice/session/?q=${encodeURIComponent(q.template)}:${q.seed ?? ''}`) : null);
+      const fresh = it.links && it.links.fresh;
+      const od = it.odds, cr = it.crowd;
+      const dl = h('dl', { class: 'rn-details' },
+        row('Question ID', h('span', {}, h('span', { class: 'mono', text: idText }), ' ', idText ? copy(idText, 'Copied') : null)),
+        row('Domain', t ? t.domain : null),
+        row('Skill', [t ? t.short : q.topic_name || q.topic || '', q.name || q.skill ? ` · ${q.name || q.skill}` : ''].join('')),
+        row('Difficulty', q.difficulty ? `${cap(q.difficulty)}${q.level ? ` · level ${q.level} of 7` : ''}${cr && cr.n ? (cr.rough ? ` · rough · ${cr.n} answers` : ` · measured from ${fmtN(cr.n)} answers`) : ''}` : null),
+        row('Format', q.type === 'spr' ? 'Grid-in (student-produced response)' : 'Multiple choice'),
+        row('Time on it', it.ms ? `${msx(it.ms)}${it.budget_ms ? ` · budget ${msx(it.budget_ms)}` : ''}` : null),
+        row('Sitting', it.sitting ? (it.sitting.href ? h('a', { class: 'qlink', href: it.sitting.href, text: it.sitting.label }) : it.sitting.label) : o.title || null),
+        row('Position', label(it)),
+        row('Your odds', od && od.you !== undefined ? `${Math.round(od.you * 100)}%${d.ratings ? `: ${d.ratings}` : ''}` : null),
+        row('Students', cr && cr.n >= 20 && cr.rate !== undefined ? `${Math.round(cr.rate * 100)}% of ${fmtN(cr.n)} get this type right` : od && od.avg ? `About ${Math.round(od.avg * 100)}% get this type right (estimated)` : null),
+        row('You on this type', d.you || (it.family && it.family.seen ? `${it.family.right ?? 0} of ${it.family.seen} right` : null)),
+        row('Worth here', it.worth ? `≈ +${Math.round(it.worth)}` : null),
+        row('Modelled on', d.cb ? `College Board question ${d.cb}` : null),
+        row('Link to a fresh one', fresh ? copy(fresh, 'Link copied: it opens a new question like this one') : null),
+        row('Link to exactly this question', exact ? copy(exact, pane ? 'Link copied (it opens only for you)' : 'Link copied') : null));
+      UI.pop(detB, h('div', { class: 'rn-detpop' }, h('div', { class: 'popover-head', text: 'Details' }), dl), { label: 'Details' });
+    }
+    function report(it, extra = {}) {
+      if (!it || !it.q) return;
+      if (on.report) return call('report', it, extra);
+      const q = it.q;
+      const ctx = Object.assign({ kind: 'question', source: o.source || 'review', session: it.session || o.session, question_id: q.id, template: q.template, seed: q.seed,
+        revealed: !hidden, live: false, title: `${label(it)} · ${(UI.TOPIC && UI.TOPIC[q.topic] || {}).short || q.topic_name || ''}`,
+        given: it.fb ? it.fb.given : null }, extra);
+      if (UI.report) { markSeen(it); return UI.report(ctx); }
+      toast('Reports open here soon. Use Send feedback in the menu for now.');
+      return null;
+    }
+    function openHistory(it) {
+      if (on.history) return call('history', it);
+      const q = it.q || {};
+      return historySheet(q.template ? { template: q.template, skill: q.name || q.skill, seed: q.seed, norm: it.norm } : { session: it.session || o.session, question_id: q.id }, { onOpen: o.historyOpen });
+    }
+    // the action row's buttons, reached by key
+    function act(id) {
+      const row = col.querySelector('.q-actions:not(.rv-extra)');
+      if (!row || hidden && !(cur && cur._local)) return false;
+      const sel = { twin: '.split.twin > :first-child', twin_menu: '.split.twin .split-caret', again: '.qa-again, [data-verb="again"]', history: '.qa-history' }[id];
+      const b = sel && row.querySelector(sel);
+      if (b) { b.click(); return true; }
+      if (id === 'history' && cur) { openHistory(cur); return true; }
+      return false;
+    }
+
+    /* ---------------- Second look (SR3): re-answer the misses cold, then see the key */
+    let conf = null;
+    const cold = q => Object.assign({}, q, { watch_for: null, ask_span: null, slip_line: null, check_anyway: null, rungs: null });
+    function secondBody(it, b) {
+      const q = it.q;
+      const first = it.fb ? it.fb.given : it.given;
+      const shownPick = h('p', { class: 'rv-firstpick', hidden: true, text: first !== null && first !== undefined ? `You picked ${letterOf(q, first)} the first time` : 'You left it blank the first time' });
+      const tog = h('button', { type: 'button', class: 'quiet', 'aria-expanded': 'false', text: 'Show what I picked' });
+      tog.addEventListener('click', () => { shownPick.hidden = !shownPick.hidden; tog.setAttribute('aria-expanded', String(!shownPick.hidden)); tog.textContent = shownPick.hidden ? 'Show what I picked' : 'Hide what I picked'; });
+      const watch = h('span', { class: 'rv-watch meta', 'aria-hidden': 'true' });
+      const tick = () => { if (!watch.isConnected) return; watch.textContent = ws && ws.elapsed ? msx(ws.elapsed()) : ''; setTimeout(tick, 1000); };
+      setTimeout(tick, 0);
+      const confRow = h('div', { class: 'choices rv-conf', role: 'group', 'aria-label': 'How sure are you? (K)' });
+      [['sure', 'Sure'], ['unsure', 'Unsure'], ['guess', 'Guess']].forEach(([v, lab]) => {
+        const x = h('button', { type: 'button', 'data-v': v, 'aria-pressed': String(conf === v), text: lab });
+        x.addEventListener('click', () => { conf = conf === v ? null : v; paintConf(); });
+        confRow.append(x);
+      });
+      b.pre.append(h('div', { class: 'rv-2row' }, tog, watch), shownPick);
+      if (it._second) {
+        b.ws = UI.workspace(b.qb, q, { mode: 'review', fb: Object.assign({}, it._second.fb), bar: false, head: false });
+        if (!it._second.shown) b.pre.append(verdictLine(it));
+        return;
+      }
+      b.ws = UI.workspace(b.qb, cold(q), {
+        mode: 'practice', feedback: 'instant', prefs: { confidence: 'off', option_reasons: true, open_explanations: true }, coverTool: false, readAloud: false, head: false,
+        onCheck: async (a, m) => {
+          const fb = await on.second(it, a, { conf, ms: m.ms });
+          if (!fb) return null;
+          it._second = { answer: a, correct: !!fb.correct, conf, fb: Object.assign({ given: a }, fb) };
+          it.seen = true;
+          setTimeout(() => { b.pre.append(verdictLine(it)); paintNav(); paintFoot(); }, 0);
+          return Object.assign({ given: a }, fb);
+        },
+      });
+      b.qb.after(confRow);
+    }
+    function paintConf() { col.querySelectorAll('.rv-conf [data-v]').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.v === conf))); }
+    function verdictLine(it) {
+      const s = it._second, fb = s.fb || {};
+      const first = it.fb ? it.fb.given : it.given;
+      const lab = fb.mistake || (fb.reasons && Number.isInteger(s.answer) ? fb.reasons[s.answer] : null);
+      const text = fb.verdict || (s.correct ? (s.conf === 'guess' ? 'Right, but a guess: counted as a gap' : 'Right on a second look: you knew this (a slip)')
+        : s.answer === first ? `The same answer again: a trap you believe${lab ? ' · ' + lab : ''}` : `A different wrong answer · ${lab || 'not a named mistake'}`);
+      return h('p', { class: 'rv-2v' + (s.correct ? ' ok' : ''), role: 'status' }, h('b', { text }));
+    }
+    async function justShow() {
+      const it = cur;
+      if (!it || !it.q || it._second) return;
+      let got = null;
+      try { got = await (on.seen ? on.seen(it) : null); } catch (_) { got = null; }
+      it._shown = true;
+      it._second = { answer: null, correct: false, shown: true, fb: Object.assign({}, it.fb || {}, got && got.fb ? got.fb : got || {}) };
+      rebuild();
+    }
+    function endCard() {
+      const all = items;
+      const looked = all.filter(x => x._second && !x._second.shown);
+      const slips = looked.filter(x => x._second.correct && x._second.conf !== 'guess').length;
+      const gaps = looked.filter(x => x._second.correct && x._second.conf === 'guess').length;
+      const same = looked.filter(x => !x._second.correct && x._second.answer === (x.fb ? x.fb.given : x.given)).length;
+      const other = looked.filter(x => !x._second.correct).length - same;
+      const blank = all.filter(x => !x._second && (x.status === 'unanswered' || x.status === 'blank')).length;
+      const still2 = all.filter(x => !(x._second && x._second.correct));
+      if (ws) { ws.destroy(); ws = null; }
+      cur = null;
+      const box = h('section', { class: 'rv-end', 'aria-label': 'Second look done' },
+        h('p', { class: 'k', text: 'Second look' }),
+        h('p', { class: 'rv-end-sum', text: [`Right on a second look ${slips} (slips)`, gaps ? `Right on a guess ${gaps} (gaps)` : null, `Same trap again ${same}`, `A different wrong answer ${other}`, blank ? `Still blank ${blank}` : null].filter(Boolean).join(' · ') }),
+        h('div', { class: 'rv-end-acts' },
+          still2.length && on.twins ? h('button', { type: 'button', class: 'btn', text: `Twins of the ${still2.length} still wrong`, onclick: () => call('twins', still2) }) : null,
+          on.learn ? h('button', { type: 'button', class: 'btn', text: 'Learn it · the gap types', onclick: () => call('learn', still2) }) : null,
+          h('button', { type: 'button', class: 'quiet', text: 'See the full report', onclick: () => close() })));
+      col.replaceChildren(box);
+      nextB.disabled = true;
+      call('done', { slips, gaps, same, other, blank });
+    }
+
+    /* ---------------- the walk (V2): try again, what happened, the trap, prove it */
+    const steps = new Map();
+    const stepOf = it => steps.get(it) || (it.try && !it.blank ? 1 : 2);
+    if (walk && Number.isInteger(o.step) && items[at]) steps.set(items[at], o.step);
+    function walkDots() {
+      const d = h('span', { class: 'rv-walkdots', 'aria-hidden': 'true' });
+      items.forEach((x, i) => d.append(h('i', { 'data-on': i === at ? '' : null, 'data-done': x._proven ? '' : x._walked ? 'half' : null })));
+      return d;
+    }
+    function walkBody(it, b) {
+      const s = stepOf(it);
+      const q = it.q;
+      const title = { 1: 'Try again', 2: 'What happened?', 3: 'The trap', 4: 'Prove it' }[s];
+      b.pre.append(h('p', { class: 'rv-step' }, h('span', { class: 'meta', text: `Step ${s} of 4` }), ' ', h('b', { text: title }), it.blank ? h('span', { class: 'rv-tag', text: 'Didn’t answer' }) : null));
+      const g = it.fb ? it.fb.given : it.given;
+      if (s === 1) {
+        if (g !== null && g !== undefined) b.pre.append(h('p', { class: 'rv-tag', text: `You picked ${letterOf(q, g)}` }));
+        b.ws = UI.workspace(b.qb, cold(q), {
+          mode: 'practice', feedback: 'instant', prefs: { confidence: 'off' }, coverTool: false, readAloud: false, head: false,
+          onCheck: async (a, m) => {
+            try { it._try = await (on.walkAnswer ? on.walkAnswer(it, a, m) : null); } catch (_) { it._try = null; }
+            setStep(it, 2);
+            return undefined;
+          },
+        });
+      } else if (s === 2) {
+        b.ws = UI.workspace(b.qb, q, { mode: 'review', fb: null, bar: false, head: false });
+        const wh = whatHappened(it, id => { setStep(it, 3, id); });
+        b.post.append(wh);
+        b._what = wh;
+      } else if (s === 3) {
+        b.ws = reviewWs(b.qb, it, b);
+        markSeen(it);
+        it._walked = true;
+      } else {
+        b.ws = UI.workspace(b.qb, q, { mode: 'review', fb: it.fb, bar: false, head: false });
+        b.ws.el.classList.add('rv-dim');
+        const run = UI.twinInline(b.twinHost, {
+          body: o.proveBody ? o.proveBody(it) : { list: 'templates', ids: [q.template], count: 1, source: 'review', tier: q.difficulty, want: it.norm || undefined },
+          caption: 'Prove it on new numbers', session: false,
+          onAnswer: fb => { if (fb.correct) it._proven = true; paintNav(); },
+        });
+        twinRuns.push(run);
+        setTimeout(() => run.el.scrollIntoView({ block: 'start', behavior: still() ? 'auto' : 'smooth' }), 30);
+      }
+    }
+    function setStep(it, s, diag) {
+      steps.set(it, s);
+      call('at', at, s, diag);
+      rebuild();
+    }
+    function walkNext() {
+      const it = items[at];
+      if (!it) return false;
+      const s = stepOf(it);
+      if (s === 1) { setStep(it, 2); return true; }
+      if (s === 2) { const w = col.querySelector('.rv-what-skip'); if (w) w.click(); return true; }
+      if (s === 3) { setStep(it, 4); return true; }
+      if (at < items.length - 1) { at++; call('at', at, stepOf(items[at])); show('l'); return true; }
+      return walkEnd();
+    }
+    function walkBack() {
+      const it = items[at];
+      const s = stepOf(it);
+      if (s > (it.try && !it.blank ? 1 : 2)) { setStep(it, s - 1); return true; }
+      if (at > 0) { at--; show('r'); return true; }
+      return false;
+    }
+    function walkSkip() {
+      if (at < items.length - 1) { at++; call('at', at, stepOf(items[at])); show('l'); return true; }
+      return walkEnd();
+    }
+    function walkEnd() {
+      twinRuns.forEach(r => { try { r.finish(); } catch (_) {} });
+      if (ws) { ws.destroy(); ws = null; }
+      const n = items.length;
+      const named = items.filter(x => x._called && x._called.called).length;
+      const proven = items.filter(x => x._proven).length;
+      const blanks = items.filter(x => x.blank).length;
+      const open = items.filter(x => !x._proven);
+      const box = h('section', { class: 'rv-end', 'aria-label': 'Walk done' },
+        h('p', { class: 'k', text: 'Walk done' }),
+        h('p', { class: 'rv-end-sum', text: [`${n} reviewed`, `you named ${named} of ${n - blanks}`, `${proven} proven on new numbers`, `${open.length} still open`, blanks ? `${blanks} blanks` : null, o.checkins ? `first check-ins ${o.checkins}` : null].filter(Boolean).join(' · ') }),
+        h('div', { class: 'rv-end-acts' },
+          open.length && on.again ? h('button', { type: 'button', class: 'btn', text: `Walk the ${open.length} still open`, onclick: () => call('again', open) }) : null,
+          h('button', { type: 'button', class: 'pill sm', text: 'Done', onclick: () => close() })));
+      col.replaceChildren(box);
+      nextB.disabled = true;
+      call('done', { n, named, proven, open: open.length, blanks });
+      return true;
+    }
+
+    /* ---------------- Then vs now (SR7): two bodies side by side, both read-only */
+    function buildPair(p) {
+      const el = h('article', { class: 'rv-item rv-pairwrap' });
+      const grid = h('div', { class: 'rv-pairgrid' });
+      el.append(grid);
+      const out = { el, ws: null, extra: [] };
+      [['Then', p.then], ['Now', p.now]].forEach(([lab, x0]) => {
+        if (!x0) { grid.append(h('div', { class: 'qbody rv-pair-col' }, h('p', { class: 'k', text: lab }), h('p', { class: 'meta', text: 'Not in this sitting' }))); return; }
+        const x = rvPrep(x0, 0);
+        const g = x.fb ? x.fb.given : null;
+        const colEl = h('div', { class: 'qbody rv-pair-col' },
+          h('p', { class: 'rv-pair-h' }, h('b', { text: lab }), x.sitting ? ` · ${x.sitting.label}` : '', ` · ${g === null || g === undefined ? 'not answered' : `you picked ${letterOf(x.q, g)}`}`, x.ms ? ` · ${msx(x.ms)}` : '',
+            h('span', { class: 'rv-status', 'data-status': x.status }, RV_WORD[x.status] || x.status)));
+        const wsHost = h('div');
+        colEl.append(wsHost);
+        grid.append(colEl);
+        if (x.q) {
+          const w = heldBack(x) ? UI.workspace(wsHost, x.q, { mode: 'review', fb: null, bar: false, head: false }) : UI.workspace(wsHost, x.q, { mode: 'review', fb: x.fb, bar: false, head: false });
+          if (heldBack(x)) colEl.append(h('p', { class: 'meta', text: 'Hidden until your second look' }));
+          out.extra.push(w);
+          if (!out.ws) out.ws = w;
+        }
+      });
+      const w0 = out.ws;
+      if (w0) { const d = w0.destroy; w0.destroy = () => { out.extra.forEach(w => { if (w !== w0) try { w.destroy(); } catch (_) {} }); d(); }; }
+      return out;
+    }
+
+    /* ---------------- keys (2.8's player map, R43; SR3 and V2's own) */
+    const onKey = e => {
+      if (dead || o.keys === false || e.defaultPrevented || e.isComposing || e.metaKey || e.ctrlKey || e.altKey) return;
+      if (!asDialog && UI.sheet && UI.sheet.top && UI.sheet.top()) return;
+      const t = e.target;
+      if (t && t.closest && t.closest('[role=menu], [role=listbox], .popover, .calc')) return;
+      const inField = typing(t);
+      if (e.key === 'Escape') { if (asDialog) { e.preventDefault(); close(); } return; }
+      if (inField && e.key !== 'Enter') return;
+      const key = e.key.length === 1 ? e.key.toUpperCase() : e.key;
+      const done = () => e.preventDefault();
+      // the question takes its own keys first: picks while hidden, and Second look's and the walk's check
+      if (walk && !inField) {
+        const s = cur ? stepOf(cur) : 0;
+        const wh = col.querySelector('.rv-what');
+        if (s === 2 && wh && /^[1-6]$/.test(e.key)) { if (wh._pick(+e.key - 1)) done(); return; }
+        if (s === 1 && ws && ws.key(e)) { done(); return; }
+        if (e.key === 'Enter' && !(t && t.closest && t.closest('button, a'))) { done(); walkNext(); return; }
+      }
+      if (second && ws && !(cur && cur._second)) {
+        if (key === 'K' && !e.shiftKey) { const ord = [null, 'sure', 'unsure', 'guess']; conf = ord[(ord.indexOf(conf) + 1) % ord.length]; paintConf(); done(); return; }
+        if (ws.key(e)) { done(); return; }
+      }
+      if (inField) return;
+      if (hidden && !second && !walk && ws && !(cur && cur._local) && ws.key(e)) { done(); return; }
+      if (e.key === 'Enter' && second && cur && cur._second && !(t && t.closest && t.closest('button, a'))) { done(); next(); return; }
+      if (e.shiftKey) {
+        if (key === 'T' && act('twin_menu')) done();
+        return;
+      }
+      const map = {
+        ArrowLeft: prev, ArrowRight: next, J: next, K: second ? null : prev,
+        N: () => (o.nKey === 'unseen' ? nextUnseen() : nextMiss()), U: nextUnseen,
+        H: () => (second ? justShow() : walk || pair ? false : hide(!hidden)),
+        T: () => act('twin'), E: () => act('again'), Y: () => act('history') || (cur && cur.q ? openHistory(cur) : false),
+        B: () => (on.save && !pair ? toggle('save') : false), M: () => (on.mark && !pair ? toggle('mark') : false), V: () => (pair ? false : details()),
+        R: () => (pair ? false : report(cur)), G: calcToggle, F: refOpen,
+      };
+      const f = map[key];
+      if (!f) return;
+      if (f() !== false) done();
+    };
+    (dlg || doc).addEventListener('keydown', onKey);
+
+    /* ---------------- swipe (SR16, V14): left and right move within the filter, down on the header closes */
+    (() => {
+      let s = null;
+      scroll.addEventListener('pointerdown', e => {
+        if (e.pointerType !== 'touch') return;
+        if (e.clientX < 24 || e.clientX > innerWidth - 24) return;
+        if (e.target.closest('.q-table, .q-figure, .tex, .table-wrap, input, textarea, .calc, .rv-segs, .twin-tile')) return;
+        s = { x: e.clientX, y: e.clientY };
+      });
+      scroll.addEventListener('pointerup', e => {
+        if (!s) return;
+        const dx = e.clientX - s.x, dy = e.clientY - s.y;
+        s = null;
+        if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * Math.tan(Math.PI / 6)) return;
+        if (dx < 0) next(); else prev();
+      });
+      scroll.addEventListener('pointercancel', () => { s = null; });
+      let t0y = null;
+      top.addEventListener('pointerdown', e => { if (e.pointerType === 'touch' && asDialog && !e.target.closest('button')) t0y = e.clientY; });
+      top.addEventListener('pointerup', e => { if (t0y !== null && e.clientY - t0y > 80) close(); t0y = null; });
+    })();
+
+    /* ---------------- close */
+    function close(how) {
+      if (dead) return;
+      dead = true;
+      twinRuns.forEach(r => { try { r.finish(); } catch (_) {} });
+      if (ws) { try { ws.destroy(); } catch (_) {} }
+      if (dlg && UI.calc && UI.calc.isOpen) UI.calc.close();
+      (dlg || doc).removeEventListener('keydown', onKey);
+      removeEventListener('popstate', onPop);
+      if (pushed && how !== 'pop') { ignorePop = true; try { history.back(); } catch (_) {} }
+      if (dlg) { try { dlg.close(); } catch (_) {} dlg.remove(); doc.documentElement.classList.remove('rv-open'); }
+      else root.remove();
+      call('close', at, { ms: Math.round(performance.now() - t0) });
+      if (asDialog && opener && opener.isConnected && typeof opener.focus === 'function') opener.focus({ preventScroll: true });
+    }
+
+    /* ---------------- start */
+    show();
+    if (dlg) (col.querySelector('.rv-what-c') || col).focus({ preventScroll: true });
+    return {
+      el: root,
+      get at() { return at; },
+      get item() { return cur; },
+      get ws() { return ws; },
+      get hidden() { return hidden; },
+      go, next, prev, nextMiss, hide, close, destroy: () => close('destroy'),
+      update(i, patch) { if (!items[i]) return; items[i] = rvPrep(Object.assign({}, items[i], patch, { _rv: false }), i); pre = null; if (i === at) rebuild(); else syncAll(); },
+      setItems(list, i) { items = (list || []).map(rvPrep); computeOrder(); pre = null; at = Math.max(0, Math.min(items.length - 1, i ?? at)); rebuild(); },
+      setFilter(f, lab) { filter = f || null; filterLabel = lab || ''; computeOrder(); pre = null; if (!order.includes(at)) go(order[0]); else syncAll(); },
+    };
+  }
+  review.at = rvAt;
+
+  /* ------------------------------------------------------------ UI.history (R23; Review 9, P9, V8)
+     The whole question type, on every set of numbers: a sheet (560px; full screen on a phone).
+     UI.history(ctx, o) -> sheet api
+       ctx  {template} | {session, question_id}, plus skill, seed (this question), norm (the pane's
+            trap: the This mistake only toggle), lock: 'answer' (before answering in practice:
+            rows show, Open waits) | 'live' (a live test or an unanswered challenge: nothing opens)
+       o    load(params) -> family   default GET /api/review/family?template= | ?session=&question_id=
+                                     [&norm=][&cursor=]
+            onOpen(row)              the Review pane loads the row; default a read-only review sheet
+                                     from GET /api/review/item?template=&seed=
+       family {template, skill, name, summary {seen, right, mixed, repaired, repeats, median_ms},
+               trend {first: ['wrong', 'right', ...], median_first, median_last, ready},
+               open [{trap_id, label, owed, of}], verdict {kind, text, label, start {body} | href},
+               attempts [{id, at, source, sitting, href, tier, result, given_label, mistake, norm, ms,
+                          flagged, seed, template, tries [{given_label, correct, ms, reason}], openable}],
+               next} */
+  const H_RESULT = { right: ['correct', 'Right'], wrong: ['incorrect', 'Wrong'], repaired: ['repaired', 'Repaired'], repeat: ['repeat', 'Repeat'], mixed: ['mixed', 'Mixed'], blank: ['blank', 'Blank'] };
+  const H_VERDICT = { same_trap: 'Learn it', slow: 'Speed drill · 8', fluent: 'Keep warm · 3', faster: 'Another like this', held: 'Check in now' };
+  function historySheet(ctx = {}, o = {}) {
+    if (!UI.sheet) return null;
+    if (ctx.lock === 'live') { toast('After the test'); return null; }
+    let rows = [], next = null, fam = null, onlyNorm = false, allSeen = null, loading = false;
+    const headEl = h('div', { class: 'hist-head' });
+    const bodyEl = h('div', { class: 'hist-body', 'aria-busy': 'true' });
+    const moreB = h('button', { type: 'button', class: 'btn sm hist-more', text: 'Load more', hidden: true });
+    moreB.addEventListener('click', () => load(true));
+    const sheet = UI.sheet({ title: `History · ${ctx.skill || 'this question type'}`, size: 'm', className: 'hist-sheet', body: b => {
+      b.append(h('p', { class: 'meta hist-sub', text: 'This kind of question, on every set of numbers.' }));
+      if (ctx.lock === 'answer') b.append(h('p', { class: 'help hist-lock', text: 'Open after you answer: reading a solved one first would make this answer unclean.' }));
+      b.append(headEl, bodyEl, moreB);
+      if (UI.skel) UI.skel(bodyEl, 'rows:5');
+    } });
+    const params = cursor => {
+      const p = {};
+      if (ctx.template) p.template = ctx.template; else { p.session = ctx.session; p.question_id = ctx.question_id; }
+      if (onlyNorm && ctx.norm) p.norm = ctx.norm;
+      if (cursor) p.cursor = cursor;
+      return p;
+    };
+    async function load(more) {
+      if (loading) return;
+      loading = true;
+      moreB.setAttribute('aria-busy', 'true');
+      try {
+        const p = params(more ? next : null);
+        const d = o.load ? await o.load(p) : await UI.api(`/review/family?${new URLSearchParams(p)}`);
+        fam = more ? Object.assign({}, fam, { next: d.next }) : d;
+        rows = more ? rows.concat(d.attempts || []) : (d.attempts || []);
+        next = d.next || null;
+        if (!onlyNorm && d.summary) allSeen = d.summary.seen;
+        if (!more && (d.skill || d.name) && sheet.setTitle) sheet.setTitle(`History · ${d.name || d.skill}`);
+        draw();
+      } catch (e) {
+        bodyEl.removeAttribute('aria-busy');
+        const msg = e && e.status === 409 ? 'After the test: its questions stay closed until then.' : 'Couldn’t load this history.';
+        bodyEl.replaceChildren(h('p', { class: 'error', text: msg }), e && e.status === 409 ? null : h('button', { type: 'button', class: 'btn sm', text: 'Try again', onclick: () => load(more) }));
+      } finally { loading = false; moreB.removeAttribute('aria-busy'); }
+    }
+    function draw() {
+      bodyEl.removeAttribute('aria-busy');
+      headEl.replaceChildren();
+      const s = fam.summary || {};
+      // P9: the type's trend in one line
+      const tr = fam.trend;
+      if (tr && tr.first && tr.first.length) {
+        const g = h('span', { class: 'hist-trend', 'aria-label': `First tries: ${tr.first.map(x => (x === 'right' || x === true ? 'right' : 'wrong')).join(', ')}` });
+        tr.first.forEach(x => g.append(h('span', { class: 'hist-g ' + (x === 'right' || x === true ? 'ok' : 'no'), 'aria-hidden': 'true', text: x === 'right' || x === true ? '✓' : '✕' })));
+        headEl.append(h('p', { class: 'hist-trendline' }, g, tr.median_first && tr.median_last ? ` · median ${msx(tr.median_first)} → ${msx(tr.median_last)}` : '', tr.ready ? ` · ${tr.ready}` : ''));
+      }
+      headEl.append(h('p', { class: 'hist-sum meta', text: [`seen ${s.seen ?? rows.length}`, `right ${s.right ?? 0}`, s.mixed ? `mixed ${s.mixed}` : null, s.repaired ? `repaired ${s.repaired}` : null,
+        s.repeats ? `repeats ${s.repeats}` : null, s.median_ms ? `median ${msx(s.median_ms)}` : null].filter(Boolean).join(' · ') }));
+      (fam.open || []).forEach(m => headEl.append(h('p', { class: 'hist-open' }, UI.pips ? UI.pips(m.owed ?? 2, m.of ?? 2) : null, ' ', m.label)));
+      // V8: a verdict with its one next step, and This mistake only
+      const v = fam.verdict;
+      if (v && v.text) {
+        const btn = v.start || v.href ? h(v.href ? 'a' : 'button', { class: 'btn sm', type: v.href ? null : 'button', href: v.href || null, text: v.label || H_VERDICT[v.kind] || 'Start' }) : null;
+        if (btn && v.start && v.start.body) btn.addEventListener('click', async () => {
+          btn.setAttribute('aria-busy', 'true');
+          try { const d = await UI.api('/drill', { method: 'POST', body: v.start.body }); location.href = `/practice/session/?id=${encodeURIComponent(d.id)}`; }
+          catch (e) { btn.removeAttribute('aria-busy'); toast((e && e.message) || 'That didn’t start.'); }
+        });
+        headEl.append(h('p', { class: 'hist-verdict' }, h('span', { class: 'chip on', text: v.text }), ' ', btn));
+      }
+      if (ctx.norm) {
+        const id = uid('hn');
+        const cb = h('input', { type: 'checkbox', id, checked: onlyNorm ? true : null });
+        cb.addEventListener('change', () => { onlyNorm = cb.checked; load(false); });
+        headEl.append(h('label', { class: 'check-inline hist-only', for: id }, cb, ' This mistake only', onlyNorm && allSeen !== null ? h('span', { class: 'meta', text: ` · ${s.seen ?? rows.length} of ${allSeen}` }) : null));
+      }
+      if (!rows.length) {
+        bodyEl.replaceChildren(h('p', { class: 'hist-empty', text: 'No attempts yet. This is your first question of this kind.' }));
+        moreB.hidden = true;
+        return;
+      }
+      const tb = h('tbody');
+      const tbl = h('table', { class: 'table compact hist-t' },
+        h('caption', { class: 'sr', text: 'Every attempt on this question type, newest first' }),
+        h('thead', {}, h('tr', {}, ['#', 'When and where', 'Difficulty', 'Result and mistake', 'Time', ''].map(c => h('th', { scope: 'col', text: c })))), tb);
+      rows.forEach((r, i) => {
+        const [st, word] = H_RESULT[r.result] || [r.result || 'answered', cap(r.result || '')];
+        const mine = ctx.seed !== undefined && ctx.seed !== null && r.seed === ctx.seed && (!ctx.template || r.template === undefined || r.template === ctx.template);
+        const can = r.openable !== false && ctx.lock !== 'answer';
+        const openB = h('button', { type: 'button', class: 'quiet sm', text: 'Open', disabled: can ? null : true, title: can ? `Open this exact question` : 'Open after you answer' });
+        openB.addEventListener('click', () => open(r));
+        const when = r.at ? `${UI.date ? UI.date(r.at, 'short') : r.at}${/T\d/.test(r.at) ? ' ' + new Date(r.at).toTimeString().slice(0, 5) : ''}` : '';
+        const res = h('td', { class: 'hist-res' },
+          h('span', { class: 'hist-res1' }, UI.cell ? UI.cell(st, '', { static: true, size: 'sm', flag: r.flagged || null }) : null,
+            h('span', { text: `${word}${r.given_label && st !== 'correct' && st !== 'repaired' ? ` · picked ${r.given_label}` : ''}${r.flagged ? ' · flagged' : ''}` })),
+          r.mistake ? h('span', { class: 'hist-mis', text: r.mistake }) : null);
+        const tr2 = h('tr', { class: mine ? 'hist-this' : null },
+          h('td', { class: 'mono', text: String(i + 1) }),
+          h('td', {}, h('span', { class: 'hist-when mono', text: when }), mine ? h('span', { class: 'rv-tag', text: 'this question' }) : null,
+            h('span', { class: 'hist-src' }, r.href ? h('a', { class: 'qlink', href: r.href, text: r.sitting || cap(r.source || '') }) : r.sitting || cap(r.source || ''))),
+          h('td', {}, r.tier && UI.dbars ? UI.dbars(r.tier) : cap(r.tier || '')),
+          res,
+          h('td', { class: 'mono', text: r.ms ? msx(r.ms) : '—' }),
+          h('td', {}, openB));
+        tb.append(tr2);
+        // V8: every try inside the answer it belongs to
+        if (r.tries && r.tries.length > 1) {
+          const sub = h('tr', { class: 'hist-tries', hidden: true }, h('td', { colspan: '6' }, h('ol', {}, r.tries.map((x, j) => h('li', { text: `#${j + 1} · ${x.given_label ?? '–'} · ${x.ms ? msx(x.ms) : '—'} · ${x.correct ? 'Right' : 'Wrong'}${!x.correct && x.reason ? ' · ' + x.reason : ''}` })))));
+          const tg = h('button', { type: 'button', class: 'quiet sm hist-tg', 'aria-expanded': 'false', text: `▸ ${r.tries.length} tries` });
+          tg.addEventListener('click', () => { sub.hidden = !sub.hidden; tg.setAttribute('aria-expanded', String(!sub.hidden)); tg.textContent = `${sub.hidden ? '▸' : '▾'} ${r.tries.length} tries`; });
+          res.append(tg);
+          tb.append(sub);
+        }
+      });
+      bodyEl.replaceChildren(h('div', { class: 'table-wrap hist-wrap' }, tbl));
+      moreB.hidden = !next;
+    }
+    async function open(r) {
+      if (o.onOpen) { sheet.close(); return o.onOpen(r); }
+      if (ctx.onOpen) { sheet.close(); return ctx.onOpen(r); }
+      let d = null;
+      try { d = await UI.api(`/review/item?${new URLSearchParams({ template: r.template || ctx.template, seed: r.seed })}`); }
+      catch (e) { toast((e && e.message) || 'That question is not open to you.'); return null; }
+      const q = d.question || d;
+      const fb = { correct: r.result === 'right' || r.result === 'repaired', given: r.given ?? null, answer: d.answer, answer_index: d.answer_index, reasons: d.reasons, rationale: d.rationale, accepted: d.accepted, steps: d.steps, about: d.about };
+      return UI.sheet({ title: `${q.name || ctx.skill || 'Question'} · ${r.at ? (UI.date ? UI.date(r.at, 'short') : r.at) : ''}`, size: 'l', className: 'hist-q', body: b => { UI.workspace(b, q, { mode: 'review', fb, bar: false }); } });
+    }
+    load(false);
+    return sheet;
+  }
+
+  Object.assign(UI, { runner, timer, saveQueue, navigator: navPanel, checkYourWork, annotate, scratch, refDock, directions: directionsSheet, between, predictSheet, rdp,
+    review, history: historySheet });
   if (location.pathname.startsWith('/dev/') && !rdp.__test()) console.error('runner.js self-test failed: rdp');
 })();
