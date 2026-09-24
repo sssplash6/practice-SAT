@@ -7,6 +7,7 @@ requirements are reported as warnings so authors can run this after every batch.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -485,6 +486,41 @@ def check_frames(data: dict[str, list | dict], pools: set[str], phase: int,
             warnings.append(f"frames: literature excerpt share {share:.1%} of 20% (phase 6)")
 
 
+def build_index(data: dict[str, list | dict]) -> dict:
+    """The compact, reproducible lookup used by the Words server.
+
+    A frame's review status is kept here as data, never inferred from its
+    presence. Unreviewed material remains unavailable in production.
+    """
+    sat = rows(data["sat"])
+    transitions = rows(data["transitions"])
+    entries = sat + transitions
+    by_word = {w["slug"]: {"frames": [], "confusions": [], "roots": []} for w in entries}
+    for frame in rows(data["frames"]):
+        for slug in frame["keys"]:
+            by_word[slug]["frames"].append(frame["id"])
+    for confusion in rows(data["confusions"]):
+        for slug in confusion["words"]:
+            if slug in by_word:
+                by_word[slug]["confusions"].append(confusion["id"])
+    for root in rows(data["roots"]):
+        for related in root["words"]:
+            by_word[related["slug"]]["roots"].append(root["id"])
+    values = {"easy": .8, "medium": .6, "hard": .4}
+    for word in sat:
+        freq = "easy" if word["freq_band"] <= 2 else "medium" if word["freq_band"] == 3 else "hard"
+        value = "easy" if word["value"] == 3 else "medium" if word["value"] == 2 else "hard"
+        levels = (values[freq], values[value], values[word["level"]])
+        by_word[word["slug"]]["prior"] = round(sum(levels) / 3, 4)
+    for word in transitions:
+        by_word[word["slug"]]["prior"] = values[word["level"]]
+    source = {name: hashlib.sha256(json.dumps(data[name], ensure_ascii=False, sort_keys=True)
+                                   .encode()).hexdigest() for name in FILES if name != "adjudications"}
+    return {"v": 1, "sources": source, "counts": {"sat": len(sat), "transitions": len(transitions),
+            "frames": len(rows(data["frames"])), "pairs": len(rows(data["pairs"]))},
+            "words": by_word}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--review", action="store_true", help="list frames awaiting adjudication")
@@ -506,6 +542,11 @@ def main() -> int:
         print("WARNING:", message)
     for message in errors:
         print("ERROR:", message, file=sys.stderr)
+    if not errors and not args.review:
+        path = ROOT / "server" / "words_index.json"
+        path.write_text(json.dumps(build_index(data), ensure_ascii=False, sort_keys=True,
+                                   separators=(",", ":")) + "\n", encoding="utf-8")
+        print(f"Words index: {path.relative_to(ROOT)}")
     return 1 if errors else 0
 
 
