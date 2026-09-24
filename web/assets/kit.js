@@ -98,6 +98,13 @@
   const UI = window.UI = window.UI || {};
   const doc = document;
 
+  // G9: a page change that gets skipped or interrupted rejects its transition's promises; keep
+  // them off the console. The inbound side (pagereveal) fires before this file runs, so head.js
+  // owns it; an inbound transition still running is caught through activeViewTransition.
+  const quietVT = t => { if (t) [t.ready, t.finished, t.updateCallbackDone].forEach(p => p && p.catch(() => {})); };
+  addEventListener('pageswap', e => quietVT(e.viewTransition));
+  quietVT(doc.activeViewTransition);
+
   /* ------------------------------------------------------------ helpers */
   let seq = 0;
   const uid = p => `k${p}${++seq}`;
