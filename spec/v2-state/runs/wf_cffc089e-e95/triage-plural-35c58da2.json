@@ -1,0 +1,85 @@
+{
+ "label": "triage: plural",
+ "key": "v2:ba0e21dfd6ab6c03a6bb3efb1f8c38dc91eb919f26b03b4b0d49b32635c58da2",
+ "result": {
+  "check": "1_plural",
+  "total": 15,
+  "real_count": 15,
+  "real": [
+   {
+    "template": "le2.context_substitute",
+    "seeds": "29 (also 97, 110, 125, 230, 259)",
+    "what": "The rationale opens with \"1 hours at 65 miles per hour covers 65 miles\". The drive context (CONTEXT #2) hard-codes \"hours\" in its why-string, even though the function already computes hr = \"hour\" if g == 1 else \"hours\" and passes it to why.format.",
+    "fix": "satbank/topics/linear_equations_in_two_variables/families/solve.py:297: change why=\"{given} hours at {a} miles per hour...\" to why=\"{given} {hr} at {a} miles per hour...\". Optionally reword it so the sentence does not start with a numeral, e.g. \"Driving {given} {hr} at ...\"."
+   },
+   {
+    "template": "nlfunc.quad_feature",
+    "seeds": "25 (also 92, 190, 213, 245, 283)",
+    "what": "In vertex mode, k is drawn with rng.randint(1, 9). When k = 1, the key option, the start_k distractor and the rationale all print \"1 inches\" (\"minimum height was 1 inches above the ground\", \"least height is 1 inches\"). The lint only caught the rationale, because it does not scan options.",
+    "fix": "satbank/topics/nonlinear_functions/families/interpret.py:507-531 (vertex mode): build the unit word once, inch_k = \"inch\" if k == 1 else \"inches\", and use it in the key (line 515), the start_k option (line 521) and the why-string (line 530). h is 2-9, so the h-based strings are fine. The lazier fix is k = rng.randint(2, 9), but that changes every seed's output."
+   },
+   {
+    "template": "prob.freq_grouped",
+    "seeds": "12, 38, 40 (also 54, 87, 137, 158, 160, 185, 196, 255, 257, 286)",
+    "what": "The \"band\" distractor reason reads \"divided by the 1 students/presidents/trees below 60 ...\". The band count sum(counts[cut:cut2]) can be 1 because counts are randint(1, 15), and the reason always uses the plural `units`. It appears in MCQ reasons and in grid-in reasons.",
+    "fix": "satbank/topics/probability/families/freq.py:219-221: set band = sum(counts[cut:cut2]) and use f\"divided by the {band:,} {unit if band == 1 else units} below {b} ...\". The singular `unit` is already unpacked from GROUPED at line 193. The other counts (den, N) are always 2 or more."
+   },
+   {
+    "template": "rr.growth_table",
+    "seeds": "33 (also 71, 180, 222)",
+    "what": "The rationale says \"the american elm gains 4 ÷ 4 = 1 inches in 4 years\" when years equals the growth factor. It also has a second, off-check flaw: fast.lower() and slow.lower() lowercase the proper adjective, printing \"american elm\" in both the stem (through _an) and the rationale.",
+    "fix": "satbank/topics/ratios_rates_proportions_and_units/families/rates.py:655-657: change the unit to f\"{'inch' if years == gf else 'inches'} in {years} years\". Separately, stop lowercasing proper nouns in _an() and the rationale, e.g. a helper _common(n) that returns n if n.startswith(\"American\") else n.lower()."
+   },
+   {
+    "template": "rr.mix_statement",
+    "seeds": "14, 22, 28, 32, 36, 48 (also 67, 74, 79, 102, 108, 112, 121, 143, 146, ...)",
+    "what": "When |again - first| == 1, the \"kept the difference\" distractor prints \"1 ounces/grams/kilograms\" twice: in its reason (\"changed by 1 ounces\") and in the option shown to students (\"1 ounces less than the amount of red paint ...\"). The same reason also has an agreement error, \"so the peanuts was changed by 1 too\" (two = \"peanuts\").",
+    "fix": "satbank/topics/ratios_rates_proportions_and_units/families/ratios.py:486-493: set u = unit[:-1] if abs(again - first) == 1 else unit (ounces, grams and kilograms all singularize by dropping the s) and use {grew} {u} in both the reason and the option string. Reword the tail to f\"so the {two} changed by {grew} too\", which avoids was/were."
+   },
+   {
+    "template": "sstat.interpret_mean",
+    "seeds": "41 (also 102, 141, 176, 177, 192; the hours scene at 131, 158, 197, 225, 233, 245, 299)",
+    "what": "The stem reads \"margin of error of 1 miles\" or \"margin of error of 1 hours\". Scene.one() always appends the plural unit.",
+    "fix": "satbank/topics/sample_statistics_and_margin_of_error/world.py:78-79: Scene.one becomes s = self.num(v); u = self.unit[:-1] if s == \"1\" and self.unit in (\" miles\", \" hours\") else self.unit; return s + u. pair() is unaffected: its only unit follows hi, and hi is always above 1."
+   },
+   {
+    "template": "sys.purchase_solve",
+    "seeds": "27, 44 (also 139, 142, 282)",
+    "what": "The coins scene prints \"each dime is worth 1 cents\". The deeper flaw is that the coins scene draws random coin values: p = randint(2, 20) and q = randint(1, 20) give \"Each nickel is worth 18 cents and each dime is worth 1 cents\", which is false about real coins. A student sees nonsense even when the plural is right.",
+    "fix": "satbank/topics/systems_of_linear_equations/families/context.py:50-54 and 83-87: pin the real values. Change `fixed` from a flag to the pair, trivia fixed=(2, -1) and coins fixed=(5, 10), and in purchase_solve write `if d.get(\"fixed\"): p, qq = map(Q, d[\"fixed\"])`. With 5 and 10 cents, the \"1 cents\" case cannot occur."
+   },
+   {
+    "template": "lat.shadow",
+    "seeds": "3, 22, 36, 37, 47 (also 53, 77, 87, 103, 109, ...)",
+    "what": "This one was MISSED by the current lint. The stem says \"the shadow of the other tree is 1 feet long\". PLURAL only matches words ending in s, so the irregular plural \"feet\" is never checked.",
+    "fix": "satbank/topics/lines_angles_and_triangles/families/similar.py:273 and 281: write {s2} {'foot' if s2 == 1 else 'feet'} long (same for s1 and h1 if they can be 1)."
+   },
+   {
+    "template": "nlfunc.interpret_value",
+    "seeds": "16 (also 63, 73, 120, 145, 201, 207, 222, 249, 281)",
+    "what": "This one was MISSED by the current lint, which does not scan options. When t = 1, the KEY option reads \"The height of the object 1 seconds after being thrown ... is 16 feet.\" The \"speed\" distractor also has \"1 seconds\", and the swap distractor has \"is 1 feet\". The \"times\" distractor's \"approximately 1 times as great\" is grammatical but reads oddly.",
+    "fix": "satbank/topics/nonlinear_functions/families/interpret.py:91-100: pass singular-aware words into the templates, e.g. {t} {sec_t} and {v} {ft_v}, where sec_t = 'second' if t == 1 else 'seconds' and ft_v = 'foot' if v == 1 else 'feet'. Apply the same to the swap and times keys."
+   },
+   {
+    "template": "circles.arc / circles.arc_pair",
+    "seeds": "arc 64, 213, 218, 291; arc_pair 186, 267 (all past seed 49)",
+    "what": "The stem says \"length of arc MN is 1 centimeters\", \"length of 1 inches\" or \"length of 1 feet\".",
+    "fix": "satbank/topics/circles/families/arc.py:33-43: make _amount use unit.noun when text == \"1\", e.g. f\" {unit.noun if text == '1' else unit.many()}\". shapes.Unit already carries the singular noun."
+   },
+   {
+    "template": "ineq.model_one_var",
+    "seeds": "97, 110, 125, 152, 157, 259 (past seed 49)",
+    "what": "The rationale says \"A ticket before the event costs 1 dollars more than one during it\".",
+    "fix": "satbank/topics/linear_inequalities/families/model.py:263: write {'dollar' if gap == 1 else 'dollars'}, or use kit.plural(gap, 'dollar')."
+   },
+   {
+    "template": "le2.graph_combinations / lin1.context_solve / nlfunc.quad_fit / rr.dimension_shift",
+    "seeds": "graph_combinations 159; context_solve 260; quad_fit 55, 247, 293; dimension_shift 282 (all past seed 49)",
+    "what": "graph_combinations: \"uses up 1 pounds' worth\". context_solve: \"an average of 1 centimeters per day\". quad_fit: \"at 1 seconds\". dimension_shift: the rationale has \"= 1 units in the length\" and the key option is \"It must decrease by 1 units.\", and the upside-down distractor can print 1 too.",
+    "fix": "Choose the singular when the printed value is 1: graphs.py:178 {used} pound(s)'; linear_equations_in_one_variable/families/context.py:104 centimeter(s); quad_fit's seconds string; ratios.py:418-440 a local u(v) = 'unit' if v == 1 else 'units' for size, change and change/ratio. Root-cause option: move le2 common.plural(n, one, many) into satbank/item.py and have every template use it (4 topic-local copies already exist)."
+   }
+  ],
+  "false_positives": "None of the 15 findings in tools/lint_bank.out.txt is a false positive. Every one is a real \\\"1 <plural>\\\" that a student sees. Scanning seeds 0-299, with options included, turned up these latent false-positive patterns, which the lint will hit once options are scanned or more seeds are run. (1) The 1 is the last term of an expression, so the plural is correct: rtt.cofunction_angles \\\"the measure of angle N is x + 1 degrees\\\" (seeds 134, 178, 184). (2) The 1 is the subject of a verb missing from PLURAL_EXCEPTIONS: circles.equation_read \\\"= 1 defines a circle\\\" (170), nleq.radical_equation \\\"only x = −1 satisfies\\\" (218, 222), ovd.freq_choose \\\"1 appears 3 times\\\" (249). (3) The multiplier \\\"1 times as great\\\" (nlfunc.interpret_value options), which is acceptable math English. The existing exceptions already absorb hundreds of \\\"1 is / 1 as / 1 costs / 1 gives\\\" hits. The lint also has false NEGATIVES. It skips options, so it missed the flawed KEY of nlfunc.interpret_value (seed 16) and only caught quad_feature and mix_statement through their rationales and reasons. Its \\\\w*s pattern skips irregular plurals, so it missed lat.shadow \\\"1 feet long\\\" at seeds 3, 22, 36, 37 and 47. And range(50) hides eight more flawed templates that first appear past seed 49.",
+  "lint_fix": "tools/lint_bank.py, three edits.\n(1) Line 37:\nPLURAL = re.compile(r\\\"(?<![\\\\d.−-])(?<![+−-]\\\\s)\\\\b1\\\\s+([a-z][a-z-]*s|feet|people|children|men|women)\\\\b\\\", re.I)\nThe added lookbehinds skip a 1 that is negative (\\\"−1 degrees\\\") or the last term of a sum or difference (\\\"x + 1 degrees\\\"). \\\"= 1 inches\\\" and \\\"× 2 = 1 units\\\" still match. The alternation adds the irregular plurals.\n(2) PLURAL_EXCEPTIONS: add \\\"appears\\\", \\\"defines\\\", \\\"satisfies\\\", \\\"times\\\".\n(3) In scan(), after the grid-in line: grammar_parts.extend((f\\\"option {i + 1}\\\", o) for i, o in enumerate(item.choices)). Leave table rows out: joining cells with spaces can create false \\\"1 <word>s\\\" pairs, and the scan found no table hits.\nVerified from a scratch copy (repo untouched). At seeds 0-49 the tightened check keeps all 15 current findings and adds lat.shadow (3, 22, 36, 37, 47) and nlfunc.interpret_value (16), with 0 false positives. At seeds 0-299 it reports 20 templates, all real, with 0 false positives; every false positive above is gone. Optional: range(50) -> range(300) in main() for this check, which surfaces circles.arc, circles.arc_pair, ineq.model_one_var, le2.graph_combinations, lin1.context_solve, nlfunc.quad_fit, rr.dimension_shift and the hours scene of sstat.interpret_mean."
+ }
+}

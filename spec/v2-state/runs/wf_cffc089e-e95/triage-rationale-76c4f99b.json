@@ -1,0 +1,67 @@
+{
+ "label": "triage: rationale",
+ "key": "v2:ca1a7fa2a6fc8e86ffa86d3163aee5d3b12f117ce47a65752b94a8c776c4f99b",
+ "result": {
+  "check": "rationale_final_number_mismatch",
+  "total": 390,
+  "real_count": 132,
+  "real": [
+   {
+    "template": "nleq.shared_factor",
+    "seeds": "47 of 50: 0-28, 30-38, 40-43, 45-49 (not 29, 39, 44: there the other root is 0, so the sum equals the root that is printed)",
+    "what": "The stem asks for the sum of the solutions (the default ask). The rationale stops at 'so x = −6 or x = −49/3' and never adds them. The key is −67/3 and appears nowhere. The 'divided_out' and 'bracket_only' named mistakes are exactly 'reported one root', so ending on a lone root works against the lesson.",
+    "fix": "satbank/topics/nonlinear_equations_and_systems/families/solve.py, around line 853. Add one shared helper and use it in shared_factor, absolute_equation and square_equation: `def _combined(ask, key): return {\"sum\": f\", and their sum is {num(key)}\", \"product\": f\", and their product is {num(key)}\"}.get(ask, \"\")`. Then end shared_factor's rationale with `x = {r2}{_combined(ask, key)}.` A pick-one ask (positive, which, one_possible) gets \"\" because it already lists the root. Seed 0 would then read '...so x = −6 or x = −49/3, and their sum is −67/3.'"
+   },
+   {
+    "template": "nleq.absolute_equation",
+    "seeds": "ask=sum only: 2, 3, 5, 14, 16, 19, 23, 26, 28, 31, 37, 38, 41, 42, 43",
+    "what": "'What is the sum of the solutions' is answered with '...so x = 16 or x = −8.' The sum (8) is never stated. The other 25 flags on this template are one_possible/positive asks and are false positives.",
+    "fix": "solve.py around line 364: `...so x = {num(hi)} or x = {num(lo)}{_combined(ask, key)}.` (same helper as shared_factor)."
+   },
+   {
+    "template": "nleq.square_equation",
+    "seeds": "ask=sum only: 5, 12, 20, 27, 28, 30, 37, 42, 45",
+    "what": "The sum ask ends on 'giving x = 11 and x = −11' and never says the sum is 0. In seed 12 the sum (2) equals a root only by coincidence. The other 27 flags on this template (positive/which/one_possible) are false positives.",
+    "fix": "solve.py around line 248: `giving x = {num(hi)} and x = {num(lo)}{_combined(ask, key)}.`"
+   },
+   {
+    "template": "eqx.divide_remainder",
+    "seeds": "coef_sum shape, all 21: 1, 3, 4, 5, 11, 13, 15, 16, 17, 19, 21, 22, 23, 25, 27, 28, 33, 42, 43, 45, 49",
+    "what": "The stem asks for a + k. The rationale stops at 'dividing by j + 7 leaves j + 8'. It never says a = 1, k = 8, a + k = 9, and in 18 of 21 seeds the key appears nowhere.",
+    "fix": "satbank/topics/equivalent_expressions/families/rational.py around line 221: `why = (f\"{top} is ({den})({_lin(1, s, var)}), so dividing by {den} leaves {_lin(1, s, var)}: {n1} = 1 and {n2} = {num(s)}, so {n1} + {n2} = {num(key)}.\")`. Separate flaw in the expression branch (line ~192): `+ {num(rem)}` prints '(w + 2)(w + 2) + −13' (seed 2) when rem < 0. Use the sign/abs form that `show` already uses."
+   },
+   {
+    "template": "lin.context_two_points",
+    "seeds": "predict ask, all 15: 3, 4, 7, 14, 18, 22, 25, 28, 31, 33, 35, 36, 40, 46, 47",
+    "what": "'To the nearest whole number, what is x?' ends on the unrounded fraction ('the value at 2,025 is 8351/25'). It never gives the rounded key 334. It also prints the year with a thousands separator ('2,025'; unflagged seed 20 shows '2,017' too) and says 'per unit' for a rate per year. In the MCQ branch the distractors are unrounded fractions ('7,912/25', '8,131/25') under a nearest-whole-number stem, so they can be dismissed on sight.",
+    "fix": "satbank/topics/linear_functions/families/context.py around line 559: `at = year_text(x3) if d[\"years\"] else \"$\" + numtext(x3); per = \"year\" if d[\"years\"] else \"dollar\"; end = f\", which rounds to {numtext(key)}\" if d[\"approx\"] and raw != key else \"\"; rationale = f\"The rate of change is {numtext(m)} per {per}, so the value in {at} is about {numtext(raw, 'dec', 2)}{end}.\"` (seed 3: '...in 2025 is about 334.04, which rounds to 334.'). In the MCQ path, build the options from `slips(raw)` and round each one with `(v + Q(1, 2)) // 1` when d['approx'], as the SPR path already does."
+   },
+   {
+    "template": "ovd.mean_totals",
+    "seeds": "combined mode, all 12: 1, 2, 6, 9, 26, 30, 32, 39, 44, 45, 48, 49",
+    "what": "'What is the mean of data set C?' ends on 'so all 104 values total 2,054.' The division by 104 and the mean 19.75 are never stated.",
+    "fix": "satbank/topics/one_variable_data/families/means.py around line 313: `T = num_str(n1 * m1 + n2 * m2); rationale = f\"The two data sets total {num_str(n1 * m1)} and {num_str(n2 * m2)}, so all {n1 + n2} values total {T}, and the mean is {T} ÷ {n1 + n2} = {num_str(q(key.coef))}.\"`. Separate flaw: seed 9's grid-in key '4067/125' is 8 characters and does not fit the grid. Refuse keys that fail a griddable() check, as shared_factor does."
+   },
+   {
+    "template": "ovd.freq_stat",
+    "seeds": "mean_minus_median ask, all 6: 1, 13, 18, 29, 41, 42",
+    "what": "'How much greater is the mean than the median?' ends on 'the mean is 19.08; the middle value is 19.' The difference 0.08 is never stated. In seed 29 the mean equals the median, so the key is 0, which is an odd answer to 'how much greater'.",
+    "fix": "satbank/topics/one_variable_data/families/freq.py around line 103: append `, so the mean is {num_str(mu - med)} greater` (or `{num_str(mu)} − {num_str(med)} = {num_str(mu - med)}`) to the rationale. At line 85, tighten `if mu < med` to `if mu <= med` so a zero difference is redrawn."
+   },
+   {
+    "template": "nlfunc.vertex_value",
+    "seeds": "factored form, ask=value: 21, 34, 45",
+    "what": "'What is the minimum value of g(x) = (x − 2)(x − 16)?' stops at 'the vertex is halfway between them at x = 9.' The value −49 is never computed. The other 3 flags (vertex form, location ask) are false positives.",
+    "fix": "satbank/topics/nonlinear_functions/families/quadratic.py around line 238: when ask == 'value', append `, where {name}(x) = ({num(mid - r1)})({num(mid - r2)}) = {num(key)}` (seed 21: '...at x = 9, where g(x) = (7)(−7) = −49.')."
+   },
+   {
+    "template": "le2.substitute",
+    "seeds": "pianist 'solved' context: 4, 27, 28, 40 (46 of 50 seeds share the flaw; see lint_fix)",
+    "what": "The rationale ends '...a session of 20 minutes carries 20 times 0.2.' It never says 4 pieces, and 'carries' reads oddly. Every other SUBST context has the same shape and states no answer ('the birch trees make up whatever the 573 maple trees do not'; tiles, rug, sweaters, boxes, reptiles). The lint misses those only because they end in words, not numbers.",
+    "fix": "satbank/topics/linear_equations_in_two_variables/families/solve.py. In the pianist entry (line ~74), use why='...so a session of {given} minutes covers {given} × {a} = {key} pieces.' and pass `key=numtext(key)` into the `d[\"why\"].format(...)` call (line ~200). For the other contexts, one change in substitute() covers every entry: add a closing clause that names the asked count, e.g. `why += f\" That leaves {numtext(key)} {d['y1' if solve == 'y' else 'x1']}.\"` (wording to taste)."
+   }
+  ],
+  "false_positives": "258 of the 390 findings are false positives, in 8 templates. Each one states the correct answer in the concluding clause, just not as the last number.\n(1) The clause lists every solution or both variables and the answer is one of them:\n- sys.purchase_solve: 26 ('so x = 25 and y = 4')\n- sys.relation_pair: 39 ('the second is 375 and the first is 1,875')\n- sys.solve_standard: 12\n- nleq.rational_quadratic: 21 ('x = −18 or x = 16' for the negative solution)\n- eqx.factor_constant: 16 ('b is 4 or 13' for the smallest)\n- nleq.absolute_equation: 25 (one_possible/positive)\n- nleq.square_equation: 27 (positive/which/one_possible)\n- nlfunc.vertex_value: 3 (location ask, 'x = −6, where g(x) = −8')\n(2) A label follows the answer:\n- nlfunc.graph_context: 39, a year ('12,000 employees in 2004')\n- tvdata.slope_scaled: 50, a unit count ('11 × 8 = 88 for each 8')\nI spot-checked the math in every family and found no rationale that reaches a wrong value. Other flaws seen along the way, outside this check:\n- sys.solve_standard seed 4 says 'multiplying by 3 and 9 … taking one from the other' when the y-coefficients have opposite signs, which needs adding; the printed −6x = 48 is right.\n- nleq.shared_factor with k = 0 (seeds 29, 39, 44) prints '5(x) = 6(x − 12)(x)' and '(x)[…]'.",
+  "lint_fix": "In tools/lint_bank.py, keep the last-number trigger but add one exemption to last_number_disagrees(), after the existing isclose return. Pass when any number in the concluding clause equals the answer. The clause is the text after the last so/thus/therefore/hence/giving. Skip the exemption when the stem asks to combine values, where a listed root can equal the sum by coincidence. Add these next to FINAL_TAIL:\nCLAUSE_START = re.compile(r\"\\b(?:so|thus|therefore|hence|giving)\\b|^\", re.I)\nCOMBINE_ASK = re.compile(r\"\\b(?:sum|product|difference)\\b|\\bhow much (?:greater|less|more)\\b|\\bvalue of \\w+ ?[+−-] ?\\w+\", re.I)\nAnd add this in last_number_disagrees() before the final return:\n    if not COMBINE_ASK.search(item.stem):\n        clause = item.rationale[list(CLAUSE_START.finditer(item.rationale))[-1].end():]\n        if any(math.isclose(v, expected, rel_tol=1e-5, abs_tol=1e-5) for v in (numeral(m.group().strip()) for m in NUMBER.finditer(clause)) if v is not None):\n            return None\nI ran a patched copy (scratchpad/rfnm/lint_new.py; tools/ untouched). The check drops from 390 to exactly the 132 real findings above, the 8 false-positive templates go to 0, and every other check's rows are byte-identical (total 1969 to 1711). The COMBINE_ASK guard matters: without it, 5 real seeds would be hidden by coincidence (square_equation 12, divide_remainder 13/22/33, and one more). 'how many fewer' is left out of the guard on purpose, or slope_scaled would flag again.\nThe opposite gap: the CONCLUSION/FINAL_TAIL gating hides real flaws of the same kind. le2.substitute has 46 seeds whose rationale never states the answer, and the check catches 4. A separate check, rationale_omits_answer (the answer value appears nowhere among the rationale's numbers, % scaled, with no tail or conclusion gating), finds 1,206 addresses across 44 templates. Many look like a deliberate house style of stopping one step before the last arithmetic, e.g. tvdata.residual ('the line predicts about 12.0 there'). Adding it is a policy call, so I did not fold it into this check."
+ }
+}

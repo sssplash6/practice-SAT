@@ -6,7 +6,7 @@
 `spec/v2-state/followups/<task>.json`. Only content tasks (`rounds: 2`) get two rounds.
 
 **Merged into master:** way-better upgrades, v2/f0, v2/t-bank-all, v2/bank, v2/f4 (+ swap middleware 7eafbe9, R45 test
-counting a00ea8c), v2/f1 (ffda717), v2/satdates (197b54a), v2/bank-lint (3ad7b8e). Dev DB backup:
+counting a00ea8c), v2/f1 (ffda717), v2/satdates (197b54a), v2/bank-lint (3ad7b8e), v2/f5 (22b1532; leftovers in `followups/F5.json`). Dev DB backup:
 `server/satfreshman.db.bak-20260924-1020`.
 
 **Live background work** (check each with its journal under
@@ -15,7 +15,6 @@ also copied to `spec/v2-state/runs/<run>/` by the checkpoint loop):
 | run | task id | what | when it returns |
 |---|---|---|---|
 | `wf_cafefb42-928` | wy8hd4xcp | build.js `[{id:'F2'},{id:'F3'},{id:'F6'}]`: 4 units each, then one check + one fix | per task: save leftovers to `followups/<id>.json`, test_flow, merge `v2/<id>` |
-| `wf_e6cc0b6f-9c8` | wyrhxcy7s | build.js `[{id:'F5', from:'verify'}]`: check done, fix running | leftovers to `followups/F5.json`, test_flow 3x, merge `v2/f5` |
 | `wf_609b5aa4-27c` | wf5hy4nl6 | words2.js: frames, confusions, fold, 2 checks all done; the fix round running | run `tools/build_words.py`, merge `v2/words-content` (S9 builds on it) |
 | `wf_cffc089e-e95` | wml2xho3z | bank-lint triage, 5 read-only agents | turn the real flaws into a fix task (offer it to the user's other agent), tighten tools/lint_bank.py |
 | checkpoint loop | b2bucxp7g | tools/v2_checkpoint.py every 5 min | keep running |
@@ -26,8 +25,9 @@ build.js `{id, unit:<first unbuilt 0-based>}` / `{id, from:'verify'}` / `{id, fr
 words2.js `{from:'check'}` (or `{from:'fold'}`). Never resume from a run ID. Before committing another worktree's changes,
 confirm they are real (not stale files after the branch moved elsewhere; see memory interruption-proof-workflows).
 
-**The user's other agent** (backend-only helper): built F4 and F5, verified SAT dates, wrote the bank lint. It is idle
-now; its next job is the bank-lint fix list once triage returns. It must never touch `v2/f5` again.
+**The user's other agent** (backend-only helper): built F4 and F5, verified SAT dates, wrote the bank lint. Its current job:
+`v2/bank-lint-fix` (the triage fix list in `followups/bank-lint-triage.json`; numbers must not change for seeds that
+generate on master). The repeated-reason triage is still running; send its fixes as a follow-up task. It must never touch `v2/f5` again.
 
 **Next after wave 1b merges:** wave 2, the nine sections S1, S3-S10 (S2 dropped) in parallel through build.js (add TASKS
 entries from Part 4.2), then I1 integration. Offer backend-only pieces of wave 2 to the other agent.

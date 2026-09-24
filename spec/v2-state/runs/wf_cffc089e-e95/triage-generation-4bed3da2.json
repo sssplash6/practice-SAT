@@ -1,0 +1,79 @@
+{
+ "label": "triage: generation",
+ "key": "v2:f9da7d08362750b80456c2727f88f0e1354975f54d03ea5ba65c270d4bed3da2",
+ "result": {
+  "check": "generation_error: 55 findings (rows) across 11 templates. Here `total` counts rows and `real_count` counts templates. All 55 are the same ItemError, \"no valid item after 60 attempts\". None comes from a forced format: the lint calls generate(name, seed) with no kwargs, each of these templates uses `seed` only as a label, and every format choice is drawn per attempt. Every flagged seed generates once it gets more attempts: all of them at attempts=200, except nearest_row seeds 5, 14 and 25, which needed 1000. So no seed is truly dead. The cause is rejection sampling. Each template draws its parameters independently over ranges where only 1.7 to 7.8% of draws pass its own validity rules, so P(all 60 draws fail) is between 0.8% and 35%. That matches the observed failure counts. Students never see an error, because server/practice.py:219, drill.py and daily.py catch ItemError and move to the next seed. The cost is wasted draws (worst case 41 ms for nearest_row) and seeds that silently vanish. lat.shadow is worse: half its draws are spent on a branch that can never pass with default settings, so its closest-to variant is never served.",
+  "total": 55,
+  "real_count": 11,
+  "real": [
+   {
+    "template": "lat.shadow (satbank/topics/lines_angles_and_triangles/families/similar.py:221)",
+    "seeds": "10, 32, 35, 39",
+    "what": "3.7% of draws pass. (1) story is drawn 50/50 as 'monument' or 'trees', but closest defaults to False and the monument story raises 'that story only makes sense as a closest-to item'. So the registry never serves the closest-to variant (0 of 300 seeds), which is the format of College Board item 1.5. (2) In the trees story, h1 in [6,40], s1 in [2,20] and s2 in [1,19] are drawn independently. s2 >= s1 in 24% of draws, and h1*s2/s1 is not a whole number in 64%. Turning the monument branch on as it stands exposes latent bugs. 3% of those draws round to a key of 0 ft (check_shadow raises 'key points at 0'). A 'utility pole' can be 450 ft tall. The rationale prints h = 1125/19.",
+    "fix": "Trees: `s1 = s1 or rng.randrange(2, 21); s2 = s2 or rng.randrange(1, s1); g = s1 // math.gcd(s1, s2); h1 = h1 or g * rng.randrange(-(-6 // g), 40 // g + 1)`, so h1*s2/s1 is always whole. Monument: set `closest = closest or story == 'monument'`, add `if closest and exact < 2 * step: raise ItemError(...)`, and cap h1 for the short TALL objects (or drop the utility pole). Measured: 98.9% of draws pass, and audit passes. If the variant isn't wanted, the lazy alternative is `story = story or 'trees'`, since sources.py passes story='monument' explicitly."
+   },
+   {
+    "template": "lat.vertical_similar (similar.py:510)",
+    "seeds": "4, 6, 9, 22, 30, 38",
+    "what": "3.0% of draws pass. wx is drawn from [20,160] without regard to wq and xq, so 35% of draws fail the triangle inequality. yq is drawn from [20,120] without regard to the others, so in 62% of draws YZ = wx*yq/wq or ZQ = xq*yq/wq has a denominator above 4.",
+    "fix": "`wx = wx or rng.randrange(max(20, abs(wq - xq) + 1), min(161, wq + xq))`; `yq = yq or rng.choice([y for y in range(20, 121) if Q(xq*y, wq).denominator <= 4 and Q(wx*y, wq).denominator <= 4])`. Measured 88.8% pass. What still fails is figure-label collisions, which is fine."
+   },
+   {
+    "template": "nleq.product_roots_constant (satbank/topics/nonlinear_equations_and_systems/families/solve.py:1298)",
+    "seeds": "2, 8, 20, 32, 33, 39, 43, 49",
+    "what": "2.6% of draws pass. For the last factor wx^2 - sx + 6p to split, s^2 - 24wp must be a positive perfect square. Only 47 of the 1,440 triples (w in 1..5, s in the 12-value list, p in 1..24) do this. 97% of draws die at 'the last factor has no two printable roots'.",
+    "fix": "Build a module-level `LAST = [(w, s, p) for w in (1,2,3,4,5) for s in (6,8,9,10,12,14,15,16,18,20,21,24) for p in range(1, 25) if (r := _roots(w, -s, 6 * p)) and len(r) == 2]`. When p, w and s are all None and t == 6, draw `w, s, p = rng.choice(LAST)`. Measured 85% pass. The rest fail on 'two factors share a root', which is correct."
+   },
+   {
+    "template": "nleq.rational_combine (solve.py:1238)",
+    "seeds": "5",
+    "what": "4.9% of draws pass. The cleared quadratic (A-B)x^2 + (Bh-C)x - Ch has x = -h as a root only when A = 2B, and x = h only when Ah = 2C. A in [2,14] and B in [1,12] are drawn independently, so 83% of draws have irrational roots and 4% have no excluded root.",
+    "fix": "`B = rng.randint(1, 7) if B is None else q(B); A = 2 * B if A is None else q(A)`. The quadratic then factors as (x + h)(Bx - C), with roots -h and C/B, the same shape as source 3.19 (A=4, B=2). Measured 94.6% pass."
+   },
+   {
+    "template": "nleq.rational_quadratic (solve.py:1156)",
+    "seeds": "11, 17, 22, 39, 40",
+    "what": "5.0% of draws pass. In shape 'cross', x^2 + bx - n needs b^2 + 4n to be a perfect square, and b in [-12,12] with n in [2,300] drawn independently gives one only 5% of the time. Also, shape defaults to 'cross', so the 1/(x+h)^2 = k shape (source 3.3) is never drawn, although it passes 100% of the time when forced.",
+    "fix": "Draw the roots instead: `r1, r2 = rng.randint(1, 20), -rng.randint(1, 20); b, n = -(r1 + r2), -r1 * r2`, rejecting only when |b| > 12 or n is outside [2, 300]. Measured 100% pass. Also set `shape = shape or rng.choice(['cross', 'square'])` so the second shape is reachable."
+   },
+   {
+    "template": "nleq.sum_product (satbank/topics/nonlinear_equations_and_systems/families/system.py:713)",
+    "seeds": "13, 33, 40",
+    "what": "4.1% of draws pass. total in [5,30] and product in [4,200] are drawn independently. In 57% of draws product >= total^2/4, so no real pair exists. In 39% the discriminant is not a perfect square.",
+    "fix": "Draw the two numbers: `lo, hi = sorted(rng.sample(range(1, 30), 2))`, keep only 5 <= lo+hi <= 30 and 4 <= lo*hi <= 200, then set total = lo + hi and product = lo * hi. Measured 100% pass."
+   },
+   {
+    "template": "prob.two_way.nearest_row (satbank/topics/probability/families/derived.py:220)",
+    "seeds": "0, 3, 4, 5, 12, 14, 23, 25, 26, 30, 33, 36, 39, 46",
+    "what": "1.7% of draws pass, the worst of the 11: 35% of seeds use up all 60 draws. setup() picks from all 22 TWO_WAY scenarios, but only 3 (grove, penguins, sports) have 4 or more rows. So 86% of draws die at 'this question needs four rows to make four options'.",
+    "fix": "Before setup, add `scenario = scenario or rng.choice([k for k in sorted(TWO_WAY) if len(ctx(k).rows) >= 4])`. Measured 11.5% pass. The remaining rejections are the item's own clear-winner rule, and P(a seed uses up 60 draws) falls from 35% to 0.07%."
+   },
+   {
+    "template": "rr.table_unit_price (satbank/topics/ratios_rates_proportions_and_units/families/rates.py:697)",
+    "seeds": "18, 22",
+    "what": "4.2% of draws pass. a1, a2 in [2,19] and c1, c2 in [5,98] cents are drawn independently, so in 94% of draws the reduced ratio (c1*a2)/(c2*a1) has a term above 12 ('a ratio this unwieldy').",
+    "fix": "Draw a1, a2 and c2, then pick c1 from the prices that work: `ok = [c for c in range(5, 99) if (r := Q(c * a2, c2 * a1)) != 1 and max(r.numerator, r.denominator) <= 12]`, raise ItemError if ok is empty, then `c1 = Q(rng.choice(ok), 100)`. Measured 46% pass."
+   },
+   {
+    "template": "rtt.parallel_similar (satbank/topics/right_triangles_and_trigonometry/families/composite.py:192)",
+    "seeds": "3, 4, 15, 17, 26, 30, 37, 38, 47",
+    "what": "2.0% of draws pass. The docstring says the legs are a Pythagorean pair, but m and n are drawn independently from [2,40], and only 38 of the 1,521 pairs have a whole hypotenuse. 97% of draws die at 'the small triangle's hypotenuse is not a whole number'.",
+    "fix": "Build a module-level `PAIRS = [(m, n) for m in range(2, 41) for n in range(2, 41) if math.isqrt(m*m + n*n) ** 2 == m*m + n*n]`. When base and height are None, draw `m, n = rng.choice(PAIRS)`. Measured 76.7% pass. The rest fail on shape and label-collision guards."
+   },
+   {
+    "template": "sstat.count_claim (satbank/topics/sample_statistics_and_margin_of_error/families/interpret.py:303)",
+    "seeds": "25",
+    "what": "7.8% of draws pass. size is drawn in steps of 100 without regard to n and k: in 45% of draws size*k/n is not whole, and in 47% size/k is not whole.",
+    "fix": "After drawing n and k: `sizes = [z for z in range(s0, s1 + 1, sstep) if z * k % n == 0 and z % k == 0 and z // k != z * k // n]`, raise ItemError if sizes is empty, then `size = rng.choice(sizes)`. Measured 47% pass."
+   },
+   {
+    "template": "sys.unknown_coefficient (satbank/topics/systems_of_linear_equations/families/structure.py:548)",
+    "seeds": "40, 42",
+    "what": "5.9% of draws pass. In shape pair_ab, c1 and c2 in [20,120] are drawn independently, so in 46% of draws (c2 - p2*x0)/k or (c1 - by)/x0 is not whole. In shape shared_y, c1 and c2 in [-400,400] are drawn independently, so in 44% of draws x0 = (c2-c1)/(p2-p1) or the key is not whole. In a further 4%, p1 == p2.",
+    "fix": "pair_ab: `c2 = rng.choice([c for c in range(20, 121) if (c - p2*x0) % k == 0])`, then `c1 = rng.choice([c for c in range(20, 121) if (c - by) % x0 == 0 and c != by])`. shared_y: `p1, p2 = rng.sample([i for i in range(-6, 7) if i], 2)`, and choose c2 from the values c1 + (p2-p1)*x (x an integer, within ±400) for which c1 - p1*x is a nonzero multiple of k*y0. Measured 89% pass."
+   }
+  ],
+  "false_positives": "One pattern covers all 55 rows. The lint reports a seed that used up the registry's 60-draw retry budget as if it were a broken item. That is wrong for three reasons. First, every flagged seed generates with a larger budget (attempts=200, or 1000 for nearest_row seeds 5, 14 and 25), so no seed is dead. Second, the app never shows these to a student: server/practice.py:219 catches ItemError and skips the seed, and drill.py and daily.py do the same. Third, the finding belongs to the template, not the seed. One template with a 2% pass rate shows up as 6 to 14 per-seed rows whose seed numbers are just noise. No finding was a forced format: the lint passes no fmt or kwargs, and no template picks a branch from the seed. There is one latent lint bug. scan() runs inside the same try, so a crash in the lint's own checks would also be printed as generation_error. It did not happen in this run.",
+  "lint_fix": "This was tested on a scratch copy. Only generation_error rows change: 0 generation_error rows and 11 low_yield rows, one per template. The row carries the dead-seed list and the top rejection reason, and that reason names the parameter range at fault. The whole run takes 7.5 s. Changes to tools/lint_bank.py:\n\n(1) Change the import to `from satbank.item import ItemError, numeral`, add `import random`, and add \"low_yield\" to CHECKS after \"generation_error\".\n\n(2) Add two helpers:\n```python\ndef survives(name, seed):\n    try:\n        generate(name, seed, attempts=2000)\n        return True\n    except ItemError:\n        return False\n\ndef rejections(name, seed):\n    fn, why = templates()[name], Counter()\n    for i in range(60):\n        try:\n            fn(random.Random(seed * 1_000_003 + i), seed)\n        except Exception as exc:  # noqa: BLE001\n            why[str(exc)] += 1\n    return \"; \".join(f\"{n}× {r}\" for r, n in why.most_common(2))\n```\nrejections() replays the registry's exact 60 draws for that seed.\n\n(3) In main, add `exhausted = {}` and replace the try block with:\n```python\ntry:\n    item = generate(name, seed)\nexcept ItemError as exc:\n    if \"no valid item\" in str(exc) and survives(name, seed):\n        exhausted.setdefault(name, []).append(seed)\n    else:\n        report(\"generation_error\", f\"{type(exc).__name__}: {exc}\")\n    continue\nexcept Exception as exc:\n    report(\"generation_error\", f\"{type(exc).__name__}: {exc}\")\n    continue\nscan(item, report)\n```\n\n(4) After the seed loop, if name is in exhausted, append one row per template:\n`findings.append((name, seeds[0], \"low_yield\", snippet(f\"{len(seeds)}/50 seeds use up 60 draws (seeds {seeds}); \" + rejections(name, seeds[0]))))`\n\nReal flaws still come through. A seed that is genuinely dead (still failing at 2000 draws, which has probability of about 1e-15 at the lowest pass rate here), an AuditError, or any other exception stays a generation_error. A template that wastes most of its draws still shows up once as low_yield, with the reason. Moving scan() out of the try stops lint crashes being reported as generation errors. Optionally, flag low_yield only when the replay's pass rate is below 10%."
+ }
+}

@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-24T11:18:11+05:00
+# v2 build state -- 2026-09-24T14:33:02+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -10,10 +10,10 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/f0` at dc9873f, 0 commits ahead of master
 - `v2/f1` at b417976, 0 commits ahead of master
 - `v2/f2` at fb3f147, 5 commits ahead of master
-- `v2/f3` at 86fa2b2, 0 commits ahead of master
+- `v2/f3` at 78f896a, 1 commits ahead of master
 - `v2/f4` at 2d419ba, 0 commits ahead of master
-- `v2/f5` at da11286, 5 commits ahead of master
-- `v2/f6` at ac2b3c6, 4 commits ahead of master
+- `v2/f5` at 6e3d219, 8 commits ahead of master
+- `v2/f6` at d475fe1, 6 commits ahead of master
 - `v2/satdates` at 141f815, 0 commits ahead of master
 - `v2/t-bank` at 9403838, 0 commits ahead of master
 - `v2/t-bank-all` at f4bf864, 0 commits ahead of master
@@ -46,20 +46,22 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/t-bank-sample_statistics_and_margin_of_error` at 9403838, 0 commits ahead of master
 - `v2/t-bank-systems_of_linear_equations` at 90dd059, 0 commits ahead of master
 - `v2/t-bank-two_variable_data` at 4469303, 0 commits ahead of master
-- `v2/words-content` at 1fb15f5, 97 commits ahead of master
+- `v2/words-content` at c72c223, 99 commits ahead of master
 
 ## Worktrees
 
-- `/Users/workingmyassof/satbank/.claude/worktrees/f5` on `v2/f5`: 0 uncommitted
+- `/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/f5v` on `detached 6e3d219`: 1 uncommitted (saved in wip/f5v/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/f5` on `v2/f5`: 4 uncommitted (saved in wip/f5/)
 - `/Users/workingmyassof/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_7aaa2f6c-3ad-1` on `detached d9b35e7`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_7aaa2f6c-3ad-2` on `detached 566eabc`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_7aaa2f6c-3ad-3` on `detached 566eabc`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-1` on `detached fb3f147`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-2` on `v2/f3`: 3 uncommitted (saved in wip/wf_cafefb42-928-2/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-2` on `v2/f3`: 1 uncommitted (saved in wip/wf_cafefb42-928-2/)
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-3` on `detached 45ec3de`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-4` on `v2/f6`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-5` on `v2/f2`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-5` on `v2/f2`: 1 uncommitted (saved in wip/wf_cafefb42-928-5/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_cafefb42-928-6` on `detached 6e79e0d`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-1` on `detached 9ba1209`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-10` on `detached d47d851`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-11` on `detached d47d851`: 0 uncommitted
@@ -74,8 +76,8 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-8` on `detached d9b35e7`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-9` on `detached e837e82`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_e6cc0b6f-9c8-1` on `detached da11286`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_e6cc0b6f-9c8-2` on `v2/f5`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/words` on `v2/words-content`: 1 uncommitted (saved in wip/words/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_e6cc0b6f-9c8-2` on `detached 6e3d219`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/words` on `v2/words-content`: 0 uncommitted
 
 ## Workflow runs
 
@@ -105,11 +107,11 @@ Unfinished when saved: fix: area_and_volume, fix: linear_equations_in_one_variab
 
 ### wf_c70c4702-929: 49 finished, 0 unfinished
 
-### wf_cafefb42-928: 2 finished, 3 unfinished
-Unfinished when saved: build F2 2/4, build F3 1/4, build F6 2/4
+### wf_cafefb42-928: 3 finished, 3 unfinished
+Unfinished when saved: build F2 2/4, build F3 2/4, build F6 2/4
 
-### wf_cffc089e-e95: 0 finished, 5 unfinished
-Unfinished when saved: triage: generation, triage: plural, triage: rationale, triage: reasons, triage: visuals
+### wf_cffc089e-e95: 4 finished, 1 unfinished
+Unfinished when saved: triage: reasons
 
 ### wf_d6bde851-f95: 12 finished, 1 unfinished
 Unfinished when saved: verify F1 r2
@@ -117,8 +119,7 @@ Unfinished when saved: verify F1 r2
 ### wf_d6beb6e4-66c: 3 finished, 1 unfinished
 Unfinished when saved: build F1 4/5
 
-### wf_e6cc0b6f-9c8: 1 finished, 1 unfinished
-Unfinished when saved: fix F5 r1
+### wf_e6cc0b6f-9c8: 2 finished, 0 unfinished
 
 ### wf_f6283862-332: 36 finished, 6 unfinished
 Unfinished when saved: fix 1: plan, fix 1: right_triangles_and_trigonometry, fix 1: tests, fix 2: shell-me, recheck 2: nonlinear_equations_and_systems, recheck 2: two_variable_data
