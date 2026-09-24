@@ -18,8 +18,8 @@ build.js implements it (blocker vs followup severity; pass = no blockers).
 - **F5**: built by the user's other agent, reported done 2026-09-24 (branch `v2/f5`, rebased on master, strict R45 asserts
   restored; checks/f5.py and test_flow pass). One check + one fix running: run `wf_e6cc0b6f-9c8` (task wyrhxcy7s),
   `[{id:'F5', from:'verify'}]`. Then leftovers to `followups/F5.json` and merge.
-- **The other agent's next jobs** (light, backend, own branches; never v2/f5): `v2/satdates` (verify SAT dates in
-  server/satdates.py against College Board) and `v2/bank-lint` (read-only tools/lint_bank.py, findings list).
+- **The other agent's next jobs** (light, backend, own branches; never v2/f5): `v2/satdates` MERGED (197b54a,
+  spot-checked against College Board) and `v2/bank-lint` (read-only tools/lint_bank.py, findings list).
 If cut off: F1 `[{id:'F1', from:'fix', issues:<saved r1 defects>}]` then merge; words2 `{from:'author', only:['frames1']}`.
 
 ### On "continue"
