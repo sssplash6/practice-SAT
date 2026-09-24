@@ -12,7 +12,7 @@ from unittest.mock import patch
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
-from server import db, deps, mail, progress, reports, sets
+from server import db, deps, estimate, mail, progress, reports, sets
 from server.app import app
 
 PNG = b"\x89PNG\r\n\x1a\n" + b"\0" * 64
@@ -402,6 +402,106 @@ def admin_bits(c) -> None:
     print("ok  F6 reports: admin files, question, quarantine, mail notice, delete_files")
 
 
+def rescoring(c) -> None:
+    """SR19: a broken or remarked question re-scores the finished sitting that
+    holds it; an open dispute changes nothing in the score."""
+    from satbank.registry import templates
+    from server import api_tests
+    r = fresh("rsc")
+    pool = [t for t in templates() if t.startswith("lin.")][:6]
+    spr_seed = next(s for s in range(7100, 7300) if reports._from_bank("circles.degree_radian", s)["type"] == "spr")
+    paper, answers = [], {}
+    for i in range(44):
+        t, s = ("circles.degree_radian", spr_seed) if i == 43 else (pool[i % len(pool)], 7000 + i)
+        q = reports._from_bank(t, s) | {"id": f"m{'1' if i < 22 else '2l'}q{i % 22 + 1:02d}"}
+        paper.append(q)
+        answers[q["id"]] = pick(q, i % 3 != 0)
+    sid = f"f6-mock-{fresh('m')}"
+    db.run("INSERT INTO sessions(id,kind,mock_id,route,questions,learner,started,finished,answers,cfg,result)"
+           " VALUES (?,?,?,?,?,?,?,?,?,?,?)", sid, "mock", "new", "lower",
+           json.dumps({"module1": paper[:22], "module2": paper[22:]}), r, deps.now(), deps.now(),
+           json.dumps(answers), "{}", json.dumps({}))
+    progress.record_paper(r, sid, api_tests.marked_questions(deps.session_or_404(sid)), answers)
+    base = estimate.rescore(sid)
+    db.run("UPDATE sessions SET result=? WHERE id=?", json.dumps({"estimate": {"low": base["low"], "high": base["high"]}}), sid)
+    result = lambda: json.loads(db.one("SELECT result FROM sessions WHERE id=?", sid)["result"])  # noqa: E731
+    body = {"kind": "question", "source": "report", "session": sid, "category": "key_wrong"}
+
+    # 1: broken -> removed from scoring, one rescored entry, and the reply says so
+    with patch.object(reports, "check_item", lambda item: ["the stem asks for the diameter"]):
+        got = post(c, r, {**body, "question_id": "m1q04"})
+    assert got["check"]["outcome"] == "broken", got
+    res = result()
+    assert [(x["qid"], x["how"], x["report"]) for x in res["rescored"]] == [("m1q04", "removed", got["id"])], res
+    assert res["removed"] == ["m1q04"] and res["estimate"]["low"] is not None
+    mine = {x["id"]: x for x in c.get("/api/reports", headers={"X-Learner": r}).json()}
+    assert "re-scored 1 sitting." in mine[got["id"]]["outcome_text"], mine[got["id"]]
+
+    # 2: a grid-in marked wrong that today's rules accept counts right, and the band doesn't fall
+    db.run("UPDATE attempts SET correct=0 WHERE session=? AND qid='m2lq22'", sid)
+    before = result()["estimate"]
+    got = post(c, r, {**body, "question_id": "m2lq22"})
+    assert got["check"]["outcome"] == "remarked" and got["status"] == "fixed", got
+    res = result()
+    assert res["rescored"][-1]["how"] == "remarked" and res["remarked"] == ["m2lq22"], res["rescored"]
+    assert res["estimate"]["low"] + res["estimate"]["high"] >= before["low"] + before["high"]
+
+    # 3: an open dispute leaves the estimate as it was
+    before = result()
+    got = post(c, r, {**body, "question_id": "m1q07", "dispute": True})
+    assert got.get("disputed") and got["check"]["outcome"] == "unsure", got
+    assert result() == before
+    print("ok  F6 reports: SR19 re-scoring (broken removed, remarked right), an open dispute leaves the score")
+
+
+def labels(c) -> None:
+    """V6: 'The label is wrong' files the attempt's address; the Labels view
+    counts it with the 'Not what I did?' corrections, flagged at 15% of 20."""
+    H = {"X-Admin": "f6-admin"}
+    os.environ["SATF_ADMIN_TOKEN"] = "f6-admin"
+    t = "circles.degree_radian"
+    it = reports._from_bank(t, 26)
+    k = pick(it, False)
+    norm = progress.norm(it["reasons"][k])
+    L = fresh("lbl")
+    sid, q = sitting(L, t, 26, given=k)
+    got = post(c, L, {"kind": "question", "source": "drill", "session": sid, "question_id": q["id"],
+                      "category": "Wrong mistake label", "answer": "ABCD"[k]})
+    row = db.one("SELECT category, template, seed FROM reports WHERE id=?", got["id"])
+    a = attempt(L, sid, q)
+    assert tuple(row) == ("label", a["template"], a["seed"]) and "check" not in got, dict(row)
+    for i in range(19):                         # 19 more fell for it; 2 said it was a misread
+        db.run("INSERT INTO attempts(learner,template,seed,topic,difficulty,fmt,correct,reason,norm,miss_kind,at,repeat)"
+               " VALUES (?,?,?,?,?,?,0,?,?,?,?,0)", f"a:f6lbl-crowd{i}", t, 600 + i, it["topic"], it["difficulty"],
+               "mcq", it["reasons"][k], norm, "misread" if i < 2 else None, deps.now())
+    view = next(x for x in c.get("/api/admin/labels", headers=H).json() if (x["template"], x["norm"]) == (t, norm))
+    assert (view["learners"], view["disputed"], view["rate"], view["flagged"]) == (20, 3, 0.15, True), view
+    assert view["reason"] == it["reasons"][k]
+    os.environ.pop("SATF_ADMIN_TOKEN", None)
+    print("ok  F6 reports: V6 label reports and corrections in the admin Labels view")
+
+
+def terminal() -> None:
+    """tools/reports.py answers from a terminal through the admin's own functions."""
+    import contextlib
+    import importlib.util
+    import io
+    spec = importlib.util.spec_from_file_location("f6_cli", pathlib.Path(__file__).resolve().parents[2] / "tools" / "reports.py")
+    cli = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cli)
+    rid = reports.create(fresh("cli"), reports.ReportIn(kind="page", category="idea", title="dark mode please"), [])["id"]
+    out = io.StringIO()
+    with contextlib.redirect_stdout(out):
+        assert cli.main(["list", "--status", "new"]) == 0
+        assert cli.main(["reply", str(rid), "Done, thanks", "--status", "fixed", "--note", "Dark mode"]) == 0
+        assert cli.main(["item", "circle.convert", "8"]) == 0
+        assert cli.main(["labels"]) == 0
+    assert f"#{rid}" in out.getvalue() and '"audit": "ok"' in out.getvalue()
+    row = db.one("SELECT status, reply FROM reports WHERE id=?", rid)
+    assert tuple(row) == ("fixed", "Done, thanks"), dict(row)
+    print("ok  F6 reports: tools/reports.py lists, replies, regenerates and prints labels")
+
+
 # ------------------------------------------------------------------ sets (R18(c), P22, U28, V17, W20, X22)
 
 SECRET = ("stem", "choices", "answer", "rationale", "reasons", "seed", "template", "ctx", "context", "pick")
@@ -498,6 +598,7 @@ def sets_exact(c) -> None:
     mine = c.get(f"/api/sets/{code}", headers=hdr(b)).json()
     assert mine["yours"]["session"] == tb and mine["yours"]["finished"] and mine["yours"]["right"] == 1, mine
     assert c.get(f"/api/sets/{code}/results", headers=hdr(b)).status_code == 403
+    assert c.get(f"/api/sets/{code}").json()["taken"] == 1                     # Practice 15, public
     res = c.get(f"/api/sets/{code}/results", headers=hdr(owner)).json()
     assert (res["taken"], res["tried"], res["opened"]) == (1, 1, 1), res
     q2 = res["questions"][1]
@@ -675,6 +776,9 @@ def check(client) -> None:
             disputes(client)
             instant(client)
             admin_bits(client)
+            rescoring(client)
+            labels(client)
+            terminal()
             sets_exact(client)
             sets_items(client)
             sets_twins(client)
