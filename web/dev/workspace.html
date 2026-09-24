@@ -389,6 +389,7 @@
           open: [{ trap_id: 7, label: 'gave the diameter instead', owed: 1, of: 2 }], verdict: { kind: 'same_trap', text: 'Same trap twice', start: { body: { source: 'learn', templates: ['circle.convert'] } } },
           attempts: rows, next: p.get('cursor') ? null : 'c1' };
       }
+      if (path === '/mistakes/add' || (path === '/saved' && m === 'PATCH')) return { ok: true };
       if (path.startsWith('/review/item')) return { question: FX[0], answer: FX[0].answer, reasons: FX[0].reasons, rationale: FX[0].rationale };
       return realApi(path, o);
     };

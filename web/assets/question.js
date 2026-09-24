@@ -1688,7 +1688,9 @@
     }
     const dz = ctx.desmos || fb.desmos;
     if (!liveNow && dz && dz.exprs) put('desmos', btn('Desmos way', 'graph', { id: 'desmos', key: K.desmos || 'Shift+G' }, () => calc.walkthrough(dz)));
-    if (!liveNow && on.save) put('save', toggle('save', 'Save', 'Saved', 'bookmark', K.save || 'B', ctx.saved, on.save));
+    // V3: a save asks why, in one optional 5 s toast (the player's top-bar Save does the same)
+    const saveThen = async v => { const r = await on.save(v); if (v) savedToast(q, { text: 'Saved to Review', revealed: ctx.revealed !== false, onNote: on.note || null, onAsk: on.help || null, onWhy: on.savedWhy || null, onLucky: on.lucky || null }); return r; };
+    if (!liveNow && on.save) put('save', toggle('save', 'Save', 'Saved', 'bookmark', K.save || 'B', ctx.saved, saveThen));
     if (on.mark && (ctx.session || ctx.inSitting)) put('mark', toggle('mark', 'Mark', 'Marked', 'flag', K.mark || 'M', ctx.marked, on.mark));
     if (on.note) put('note', btn(ctx.rule ? 'My rule' : ctx.hasNote ? 'My note' : 'Note', 'note', { id: 'note', key: K.note || 'O' }, () => on.note()));
     if (!liveNow) {
@@ -2280,9 +2282,38 @@
   sciEval.__test = [['2^10', 1024], ['sin(30)', 0.5], ['2+3*4', 14], ['(2+3)*4', 20], ['-3^2', -9], ['2^-1', 0.5], ['√16', 4], ['√(2)*√(2)', 2],
     ['2π', 2 * Math.PI], ['cos(60)+1', 1.5], ['asin(0.5)', 30], ['10/4', 2.5], ['3(2+1)', 9], ['ln(e)', 1], ['log(1000)', 3], ['2*-3', -6], ['-2*3', -6], ['2sin30', 1]];
 
+  /* ------------------------------------------------------------ the Save toast (Review V3): why you saved it, optional
+     UI.savedToast(q, {text, onWhy(kind), onLucky(), onAsk(), onNote()}) -> the toast, 5 s:
+     Saved · Nice trick · Hard · Got lucky · Ask a tutor · Note. Tapping nothing stores nothing.
+     Defaults: why -> PATCH /api/saved {template, seed, why}; Got lucky -> POST /api/mistakes/add {template, seed}.
+     Got lucky shows once the key has shown (revealed); Ask a tutor and Note only with their hook. */
+  function savedToast(q, o = {}) {
+    const text = o.text || 'Saved';
+    if (!q || !q.template || q.seed === undefined || q.seed === null) return toast(text);
+    const row = h('span', { class: 'saved-why' }, h('span', { class: 'saved-why-t', text }));
+    const body = { template: q.template, seed: q.seed };
+    let t = null;
+    const chip = (label, run, done) => {
+      const b = h('button', { type: 'button', class: 'chip', text: label });
+      b.addEventListener('click', async () => {
+        if (t) t.close();
+        try { await run(); if (done) toast(done); } catch (e) { toast((e && e.message) || 'Not saved. Try again.'); }
+      });
+      row.append(b);
+    };
+    const why = kind => (o.onWhy ? o.onWhy(kind) : api('/saved', { method: 'PATCH', body: Object.assign({ why: kind }, body) }));
+    chip('Nice trick', () => why('trick'), 'Noted');
+    chip('Hard', () => why('hard'), 'Noted');
+    if (o.revealed !== false) chip('Got lucky', () => (o.onLucky ? o.onLucky() : api('/mistakes/add', { method: 'POST', body })), 'In Redo: one clean answer closes it');
+    if (o.onAsk) chip('Ask a tutor', () => o.onAsk());
+    if (o.onNote) chip('Note', () => o.onNote());
+    t = toast(row, { ms: 5000 });
+    return t;
+  }
+
   /* ------------------------------------------------------------ export */
   Object.assign(UI, {
-    workspace, question, splitCheck, questionActions, twin, twinSheet, twinInline, stemDiff, pad, calc, tex, katex, spr, readAloud, sciEval,
+    workspace, question, splitCheck, questionActions, twin, twinSheet, twinInline, stemDiff, pad, calc, tex, katex, spr, readAloud, sciEval, savedToast,
     workspaceSelfTest: selfTest, qicon: icon,
   });
   if (location.pathname.startsWith('/dev/')) {

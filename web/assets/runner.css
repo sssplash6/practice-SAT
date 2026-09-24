@@ -965,6 +965,12 @@ mark.chg { background: none; color: inherit; text-decoration: underline 2px var(
 .rv-skel { display: grid; gap: 14px; }
 .rv-err { display: grid; gap: 10px; justify-items: start; margin-top: 20px; }
 
+/* the Save toast's why chips (UI.savedToast, Review V3) */
+.saved-why { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.saved-why-t { margin-right: 4px; font-weight: 600; }
+.saved-why .chip { min-height: 32px; }
+@media (pointer: coarse) { .saved-why .chip { min-height: 44px; } }
+
 /* ------------------------------------------------------------------ the attempt history (UI.history, Review 9) */
 
 dialog.sheet.hist-sheet { max-width: min(560px, calc(100vw - 32px)); }

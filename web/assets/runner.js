@@ -2830,14 +2830,16 @@
               prefs, axes, proveBody(item) (the walk's step 4), twinBody(item), step (the walk's resume),
               checkins (the walk's end card), keys (false: the page drives it), phoneDialog (pane: false
               keeps a phone in the page), listKey (the seen-this-visit set), historyOpen(row)
-              on         load(i), show(i, item), close(i), seen(item), reanswer(item, answer, right),
+              on         load(i), show(i, item), close(i), seen(item), reanswer(item, answer, right) (without it
+                         the pane files a hidden re-answer as a Repeat through a 1-question drill),
                          why(item, {diag | kind | guess}) -> {called, label}, rule(item, text | null),
                          second(item, answer, {conf, ms}) -> fb, walkAnswer(item, answer, meta) -> fb,
                          at(i, step, diag), story(item, node) -> item, related(item), spot(item),
                          share(item), help(item), addRedo(item), dismiss(item), startSecond(), showNow(item),
                          example(item) -> {question, feedback, trap_index}, twins(items), learn(items),
                          closed(item, fb), report(item, extra), history(item), save(item, on), mark(item, on),
-                         note(item), twinAnswer(item, fb, n), again(items) (the walk's still-open), done(summary)
+                         note(item), twinAnswer(item, fb, n), again(items) (the walk's still-open), done(summary),
+                         savedWhy(item, 'trick' | 'hard'), lucky(item) (the Save toast's chips, V3; default the API)
      player {el, at, item, ws, go(i), next(), prev(), nextMiss(), hide(on), update(i, patch),
              setItems(items), setFilter(f, label), close(), destroy()}
      UI.review.at(items) -> index for the page's #q= hash, or -1 */
@@ -2999,7 +3001,12 @@
       it[f] = v;
       if (kind === 'mark') it.marked = v;
       syncTools(); paintHead();
-      try { await call(kind, it, v); toast(kind === 'save' ? (v ? 'Saved' : 'Removed from Saved') : (v ? 'Marked' : 'Unmarked')); }
+      try {
+        await call(kind, it, v);
+        if (kind === 'save' && v && owner && UI.savedToast) UI.savedToast(it.q, { revealed: keyShown(it) || !!it._local, onWhy: on.savedWhy ? kk => call('savedWhy', it, kk) : null, onLucky: on.lucky ? () => call('lucky', it) : null,
+          onAsk: on.help ? () => call('help', it) : null, onNote: on.note ? () => call('note', it) : null });
+        else toast(kind === 'save' ? (v ? 'Saved' : 'Removed from Saved') : (v ? 'Marked' : 'Unmarked'));
+      }
       catch (_) { it[f] = !v; if (kind === 'mark') it.marked = !v; syncTools(); paintHead(); toast('Not saved. Try again.'); }
     }
 
