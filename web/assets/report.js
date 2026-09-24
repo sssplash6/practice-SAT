@@ -213,7 +213,8 @@ dialog.sheet.rp { max-width: min(560px, calc(100vw - 32px)); }
     const off = -new Date().getTimezoneOffset();
     const d = { browser: a.browser, os: a.os, viewport: `${innerWidth}×${innerHeight}`,
                 timezone: `${tz}${tz ? ' ' : ''}(UTC${off >= 0 ? '+' : '−'}${Math.floor(Math.abs(off) / 60)}${Math.abs(off) % 60 ? ':' + String(Math.abs(off) % 60).padStart(2, '0') : ''})`,
-                app: hl.version || hl.build || null, url: location.href, actions: TRAIL.map(x => ({ ...x })) };
+                app: hl.version || hl.build || null, url: location.href.replace(/=([A-Za-z0-9:_-]{16,})/g, '=…'),
+                actions: TRAIL.map(x => ({ ...x })) };
     if (!d.app) delete d.app;
     return d;
   }
