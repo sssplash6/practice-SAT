@@ -26,6 +26,10 @@ LOGICS = {
     "contrast", "concession", "cause-effect", "addition", "example",
     "sequence", "clarification", "similarity", "conclusion",
 }
+POS = {"n.", "v.", "adj.", "adv.", "phrase."}
+LEVELS = {"easy", "medium", "hard"}
+SLOT = re.compile(r"\{([a-z_]+)\}")
+CLUE = re.compile(r"\[\[([^\[\]]+)\]\]")
 TRAPS = {
     "reversed", "too_strong", "too_weak", "connotation", "lookalike",
     "everyday", "topical", "wrong_logic", "reversed_direction",
@@ -59,8 +63,8 @@ def rows(value: list | dict, key: str = "entries") -> list:
 
 
 def load_parts(data: dict[str, list | dict], errors: list[str]) -> None:
-    """Parallel authors write parts/sat_*.json and parts/classes_*.json; they join the main lists."""
-    for name in ("sat", "classes"):
+    """Parallel authors write parts/{sat,classes,frames}_*.json; they join the main lists."""
+    for name in ("sat", "classes", "frames"):
         merged = list(rows(data[name]))
         for path in sorted((CONTENT / "parts").glob(f"{name}_*.json")):
             try:
@@ -106,7 +110,7 @@ def check_words(data: dict[str, list | dict], errors: list[str]) -> None:
         for example in entry.get("examples", []):
             require(isinstance(example, str) and bool(re.search(r"\[\[[^\[\]]+\]\]", example)),
                     f"{label}: example has no highlighted word", errors)
-        require(entry.get("pos") in {"n.", "v.", "adj.", "adv.", "phrase."}, f"{label}: invalid pos", errors)
+        require(entry.get("pos") in POS, f"{label}: invalid pos", errors)
         require(entry.get("tier") in {"core", "advanced"}, f"{label}: invalid tier", errors)
         require(entry.get("level") in {"easy", "medium", "hard"}, f"{label}: invalid level", errors)
         require(entry.get("class") in classes, f"{label}: unknown class", errors)
@@ -262,41 +266,162 @@ def check_later(data: dict[str, list | dict], phase: int, errors: list[str], war
             require(bool(name) and name.casefold() not in sat_heads,
                     f"foil {name!r}: duplicates a library word", errors)
             require(name.casefold() not in known, f"foil {name!r}: is a dictionary word", errors)
-    if phase >= 6:
-        by_word: dict[str, list[dict]] = defaultdict(list)
-        by_class: Counter = Counter()
-        seen_texts: set[str] = set()
-        for frame in frames:
-            label = frame.get("id", "frame")
-            need = frame.get("need", {})
-            require(frame.get("subject") in SUBJECTS and frame.get("stem") in {"complete", "nearly"}
-                    and all(k in need for k in ("class", "polarity", "lo", "hi", "pos", "pattern"))
-                    and "reviewed" in frame and "____" in frame.get("text", "")
-                    and "[[" in frame.get("text", ""), f"{label}: malformed or prematurely reviewed", errors)
-            unfilled = re.sub(r"\{[^{}]+\}", "{slot}", frame.get("text", ""))
-            require(unfilled not in seen_texts, f"{label}: duplicate unfilled text", errors)
-            seen_texts.add(unfilled)
-            by_class[need.get("class")] += 1
-            candidates = [w for w in sat if legal_key(w, need)]
-            require(bool(candidates), f"{label}: no legal SAT key", errors)
-            for word in candidates:
-                by_word[word["slug"]].append(frame)
-            check_review_gate({**frame, "keys": [w["slug"] for w in candidates]},
-                              rows(data["adjudications"]), errors)
-        for entry in sat:
-            candidates = by_word[entry["slug"]]
-            require(len(candidates) >= 6, f"{entry['slug']}: fewer than 6 legal frames", errors)
-            require(len({f["subject"] for f in candidates}) >= 2,
-                    f"{entry['slug']}: legal frames cover fewer than 2 subjects", errors)
-        for class_id in {c.get("id") for c in rows(data["classes"])}:
-            require(by_class[class_id] >= 6,
-                    f"{class_id}: fewer than 6 frames", errors)
-        literature = [f for f in frames if f.get("subject") == "literature"]
-        excerpt = [f for f in literature if f.get("source")]
-        share = len(excerpt) / len(literature) if literature else 0
-        require(share >= .2, f"literature excerpt share {share:.1%} is below 20%", errors)
-        warnings.append("servable frame minimum waits for independent adjudications and S9 review gate")
     return counts
+
+
+def check_fills(data: dict[str, list | dict], errors: list[str]) -> set[str]:
+    """fills.json is {about, pools: {name: [value, ...]}}: W1's slot pools, 40 or more distinct values each."""
+    fills = data["fills"]
+    pools = fills.get("pools", {}) if isinstance(fills, dict) else {}
+    require(isinstance(pools, dict) and bool(pools), "fills: no pools", errors)
+    for name, values in pools.items():
+        require(bool(SLOT.fullmatch("{" + name + "}")), f"fills {name!r}: pool name must be lowercase a-z and _", errors)
+        good = isinstance(values, list) and all(
+            isinstance(v, str) and v.strip() and not re.search(r"[{}\[\]]|__", v) for v in values)
+        require(good, f"fills {name}: every value must be a plain non-empty string", errors)
+        if good:
+            require(len(set(values)) == len(values), f"fills {name}: duplicate value", errors)
+            require(len(values) >= 40, f"fills {name}: {len(values)} of 40 values", errors)
+    for pair in rows(data["pairs"]):
+        for text in [pair.get("s1", ""), *pair.get("s2", [])]:
+            for slot in set(SLOT.findall(text)) - set(pools):
+                errors.append(f"{pair.get('id', 'pair')}: unknown slot {{{slot}}}")
+    return set(pools)
+
+
+def trap_options(frame: dict, key: dict, by_pos: dict[str, list[dict]], opposite: dict) -> int:
+    """Distinct (class, polarity, intensity) distractors for this key that carry a legal W1 trap, up to 3."""
+    need = frame["need"]
+    looks = {look.get("word", "").casefold() for look in key.get("lookalikes", []) if isinstance(look, dict)}
+    same = {s.casefold() for s in key.get("same", [])}
+    other = opposite.get(need["class"])
+    seen = {(key["class"], key["polarity"], key["intensity"])}
+    for word in by_pos.get(need["pos"], []):
+        triple = (word.get("class"), word.get("polarity"), word.get("intensity"))
+        if triple in seen or legal_key(word, need):
+            continue
+        kinds = set()
+        if triple[0] == other:
+            kinds.add("reversed")
+        if triple[0] == need["class"]:
+            if triple[1] == need["polarity"]:
+                kinds.add("too_strong" if triple[2] > need["hi"] else "too_weak" if triple[2] < need["lo"] else "")
+            elif triple[1] == -need["polarity"] != 0:
+                kinds.add("connotation")
+        if word.get("word", "").casefold() in looks:
+            kinds.add("lookalike")
+        if frame.get("subject") in word.get("subjects", []) and triple[0] not in {need["class"], other}:
+            kinds.add("topical")
+        if word.get("word", "").casefold() in same:
+            kinds &= {"too_strong", "too_weak", "connotation"}
+        if kinds - {""}:
+            seen.add(triple)
+            if len(seen) > 3:
+                break
+    return len(seen) - 1
+
+
+def check_frames(data: dict[str, list | dict], pools: set[str], phase: int,
+                 errors: list[str], warnings: list[str]) -> None:
+    """W1 frames: frames.json plus parts/frames_*.json.
+
+    A frame is {id, stem: complete | nearly, subject, text, need: {class, polarity, lo, hi, pos,
+    pattern}, needs, difficulty, reviewed: null | {by, date}, source?}. The text has exactly one
+    ____ where the key goes in its headword form (a verb blank takes the base form, a noun blank
+    the singular), at least one [[clue]] that decides the blank, and {slot}s from fills.json.
+    An excerpt frame is cut exactly from a text published before 1929: source is {author, title,
+    year, word}, word is the original blanked word (a legal key), and it has no slots.
+    Structure rules are errors now; the supply minimums are warnings until the frames phase (6).
+    """
+    sat = [w for w in rows(data["sat"]) if isinstance(w, dict)]
+    opposite = {c.get("id"): c.get("opposite") for c in rows(data["classes"]) if isinstance(c, dict)}
+    patterns = {p for w in sat for p in w.get("pattern", [])}
+    by_pos: dict[str, list[dict]] = defaultdict(list)
+    for word in sat:
+        by_pos[word.get("pos")].append(word)
+    adjudications = rows(data["adjudications"])
+    ids: set[str] = set()
+    texts: set[str] = set()
+    by_word: dict[str, list[str]] = defaultdict(list)
+    by_class: Counter = Counter()
+    thin: list[str] = []
+    literature = excerpts = 0
+    for frame in rows(data["frames"]):
+        if not isinstance(frame, dict):
+            errors.append("frames: each frame must be an object")
+            continue
+        label = frame.get("id") or "frame"
+        text = frame.get("text", "") if isinstance(frame.get("text"), str) else ""
+        need = frame.get("need") if isinstance(frame.get("need"), dict) else {}
+        require(isinstance(frame.get("id"), str) and bool(frame["id"]) and frame["id"] not in ids,
+                f"{label}: missing or duplicate id", errors)
+        ids.add(label)
+        require(frame.get("stem") in {"complete", "nearly"}, f"{label}: stem must be complete or nearly", errors)
+        require(frame.get("subject") in SUBJECTS, f"{label}: subject must be one of {sorted(SUBJECTS)}", errors)
+        require(re.findall(r"_+", text) == ["____"] and not re.search(r"[A-Za-z0-9]____|____[A-Za-z0-9]", text),
+                f"{label}: text needs exactly one free-standing ____ (headword form, no suffix)", errors)
+        bare = CLUE.sub("", text)
+        require(bool(CLUE.search(text)) and "[[" not in bare and "]]" not in bare and
+                not any("____" in c for c in CLUE.findall(text)),
+                f"{label}: text needs a well-formed [[clue]] that does not contain the blank", errors)
+        slots = set(SLOT.findall(text))
+        require(slots <= pools, f"{label}: unknown slot {sorted(slots - pools)}", errors)
+        require(not re.search(r"[{}]", SLOT.sub("", text)), f"{label}: stray brace in text", errors)
+        require(isinstance(frame.get("needs"), str) and bool(frame["needs"].strip()), f"{label}: missing needs", errors)
+        require(frame.get("difficulty") in LEVELS, f"{label}: difficulty must be easy, medium or hard", errors)
+        require("reviewed" in frame and (frame["reviewed"] is None or isinstance(frame["reviewed"], dict)),
+                f"{label}: reviewed must be present, null or {{by, date}}", errors)
+        lo, hi = need.get("lo"), need.get("hi")
+        valid = (need.get("class") in opposite and need.get("polarity") in (-1, 0, 1)
+                 and type(lo) is int and type(hi) is int and 1 <= lo <= hi <= 5
+                 and need.get("pos") in POS and need.get("pattern") in patterns)
+        require(valid, f"{label}: need must be {{class (classes.json), polarity -1/0/1, 1 <= lo <= hi <= 5, "
+                       f"pos, pattern (one used by an SAT entry)}}", errors)
+        unfilled = SLOT.sub("{slot}", text)
+        require(unfilled not in texts, f"{label}: same text as another frame apart from its slots", errors)
+        texts.add(unfilled)
+        keys = [w for w in sat if legal_key(w, need)] if valid else []
+        require(not valid or bool(keys), f"{label}: no SAT sense is a legal key for its need", errors)
+        source = frame.get("source")
+        if source is not None:
+            require(isinstance(source, dict) and all(isinstance(source.get(k), str) and source[k].strip()
+                                                     for k in ("author", "title", "word"))
+                    and type(source.get("year")) is int and source["year"] < 1929,
+                    f"{label}: source must be {{author, title, year before 1929, word}}", errors)
+            require(not slots, f"{label}: an excerpt frame cannot have slots", errors)
+            if isinstance(source, dict) and keys:
+                require(str(source.get("word", "")).casefold() in {w["word"].casefold() for w in keys},
+                        f"{label}: the excerpt's blanked word is not a legal key", errors)
+        check_review_gate({**frame, "keys": [w["slug"] for w in keys]}, adjudications, errors)
+        if not valid:
+            continue
+        by_class[need["class"]] += 1
+        literature += frame.get("subject") == "literature"
+        excerpts += frame.get("subject") == "literature" and source is not None
+        for key in keys:
+            by_word[key["slug"]].append(frame.get("subject"))
+            if trap_options(frame, key, by_pos, opposite) < 3:
+                thin.append(f"{label}/{key['slug']}")
+
+    short = [s["slug"] for s in sat if len(by_word[s["slug"]]) < 6 or len(set(by_word[s["slug"]])) < 2]
+    sparse = sorted(c for c in opposite if by_class[c] < 6)
+    share = excerpts / literature if literature else 0
+    supply = (
+        [f"{slug}: a legal key in fewer than 6 frames or in only one subject" for slug in short]
+        + [f"{c}: fewer than 6 frames" for c in sparse]
+        + [f"{t}: fewer than 3 distractors with a legal trap" for t in thin]
+        + ([f"literature excerpt share {share:.1%} is below 20%"] if share < .2 else [])
+    )
+    if phase >= 6:
+        errors.extend(supply)
+        warnings.append("servable frame minimum waits for independent adjudications and S9 review gate")
+    else:
+        for what, names in (("SAT senses short of 6 frames over 2 subjects", short),
+                            ("classes short of 6 frames", sparse), ("frame keys short of 3 traps", thin)):
+            if names:
+                warnings.append(f"frames: {len(names)} {what} (phase 6), e.g. {', '.join(names[:5])}")
+        if share < .2:
+            warnings.append(f"frames: literature excerpt share {share:.1%} of 20% (phase 6)")
 
 
 def main() -> int:
@@ -310,6 +435,7 @@ def main() -> int:
     check_reference_data(data, errors)
     check_words(data, errors)
     counts = check_later(data, PHASE, errors, warnings)
+    check_frames(data, check_fills(data, errors), PHASE, errors, warnings)
     if args.review:
         for frame in rows(data["frames"]):
             if frame.get("reviewed") is None:
