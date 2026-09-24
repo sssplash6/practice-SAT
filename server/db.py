@@ -362,6 +362,10 @@ def init() -> None:
       CREATE INDEX IF NOT EXISTS sessions_abandoned ON sessions(learner,abandoned);
       CREATE INDEX IF NOT EXISTS sessions_contest_rank ON sessions(contest,ranked,points DESC,secs);
       CREATE INDEX IF NOT EXISTS sessions_learner_contest ON sessions(learner,contest);
+      CREATE INDEX IF NOT EXISTS sessions_kind_day ON sessions(kind,day);
+      CREATE INDEX IF NOT EXISTS sessions_kind_open ON sessions(kind,finished);
+      CREATE INDEX IF NOT EXISTS sessions_open_contest ON sessions(finished,contest);
+      CREATE INDEX IF NOT EXISTS contest_items_pair ON contest_items(template,seed);
       CREATE INDEX IF NOT EXISTS reports_learner_at ON reports(learner,at);
       CREATE INDEX IF NOT EXISTS posts_paper_parent ON posts(paper,parent,at);
       CREATE INDEX IF NOT EXISTS word_state_due ON word_state(learner,due);

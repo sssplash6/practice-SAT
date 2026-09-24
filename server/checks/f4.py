@@ -965,6 +965,15 @@ def integrity():
     add("flags", learner=learner, session="live-f4", qid="q91", template="lin.evaluate", seed=91,
         topic="linear_functions", at=progress.now())
     assert deps.access(learner, "lin.evaluate", 91) == "reveal"
+    # R19 at scale: every answer's access() reads only indexed slices of the site's sittings
+    seen, real_rows, real_one = [], db.rows, db.one
+    with patch.object(db, "rows", lambda sql, *a: seen.append((sql, a)) or real_rows(sql, *a)), \
+            patch.object(db, "one", lambda sql, *a: seen.append((sql, a)) or real_one(sql, *a)):
+        deps.access(learner, "lin.evaluate", 4242)
+    for sql, a in seen:
+        if "learner=?" not in sql:
+            plan = " ".join(r["detail"] for r in real_rows("EXPLAIN QUERY PLAN " + sql, *a))
+            assert "SCAN" not in plan, (sql, plan)
 
 
 def carry():

@@ -217,10 +217,15 @@ def _protected(learner: str, template: str, seed: int) -> bool:
     for row in db.rows(f"SELECT questions FROM challenges WHERE day IN ({marks})", *days):
         if _has_pair(json.loads(row["questions"]), template, seed):
             return True
+    # indexed narrowing first (sessions_kind_day, sessions_kind_open,
+    # sessions_open_contest), so only the few live sittings are JSON-matched
     quoted = f'%"{template}"%'
-    for row in db.rows("SELECT * FROM sessions WHERE questions LIKE ? AND ((kind='challenge' AND"
-                       f" day IN ({marks})) OR (finished IS NULL AND abandoned IS NULL AND"
-                       " (kind='challenge' OR contest IS NOT NULL)))", quoted, *days):
+    for row in db.rows(f"SELECT questions FROM sessions WHERE kind='challenge' AND day IN ({marks})"
+                       " AND questions LIKE ? UNION ALL"
+                       " SELECT questions FROM sessions WHERE kind='challenge' AND finished IS NULL"
+                       " AND abandoned IS NULL AND questions LIKE ? UNION ALL"
+                       " SELECT questions FROM sessions WHERE finished IS NULL AND contest IS NOT NULL"
+                       " AND abandoned IS NULL AND questions LIKE ?", *days, quoted, quoted, quoted):
         if _has_pair(json.loads(row["questions"]), template, seed):
             return True
     stamp = now()
