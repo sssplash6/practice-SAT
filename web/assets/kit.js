@@ -220,7 +220,11 @@
     const m = Math.max(0, Math.round(min)), hr = Math.floor(m / 60), r = m % 60;
     return hr ? (r ? `${hr}h ${r}m` : `${hr}h`) : `${r}m`;
   }
-  const mmss = sec => { sec = Math.max(0, Math.round(sec || 0)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); };
+  const mmss = sec => {
+    sec = Math.max(0, Math.round(sec || 0));
+    const p2 = n => String(n).padStart(2, '0');
+    return sec >= 3600 ? `${Math.floor(sec / 3600)}:${p2(Math.floor(sec / 60) % 60)}:${p2(sec % 60)}` : `${Math.floor(sec / 60)}:${p2(sec % 60)}`;
+  };
   const num = n => n === null || n === undefined || n === '' || isNaN(n) ? '—' : Number(n).toLocaleString('en-US', { maximumFractionDigits: 1 });
   function relTime(d) {
     if (d === null || d === undefined || d === '') return '—';
@@ -1381,6 +1385,12 @@
       .filter(d => d && d.date >= today).sort((a, b) => a.date < b.date ? -1 : 1);
     const rec = src.find(d => d.tag === 'Steady' && (!cur || d.date > cur));
     const inDays = d => { const n = dayDiff(today, d); return n === 0 ? 'today' : n === 1 ? 'tomorrow' : `in ${fmtN(n)} days`; };
+    // a deadline that has passed moves on to the late one, then to closed
+    const registration = d => {
+      if (d.register_by && d.register_by >= today) return [`register by ${date(d.register_by)}`, d.late_by && `late ${date(d.late_by)}`];
+      if (d.late_by && d.late_by >= today) return [`late registration by ${date(d.late_by)}`];
+      return d.register_by || d.late_by ? ['registration closed'] : [];
+    };
     const save = async v => {
       try { if (o.onSave) await o.onSave(v); }
       catch (_) { toast('Couldn’t save the date. Try again.'); }
@@ -1390,8 +1400,8 @@
       label: `${date(d.date)} · ${DOW[toDate(d.date).getDay()].slice(0, 3)}`,
       sub: [inDays(d.date), d.study_days !== undefined && d.study_days !== null && `${fmtN(d.study_days)} study days`,
         d.per_week !== undefined && d.per_week !== null && `+${fmtN(d.per_week)} a week`, d.tag,
-        d.register_by && `register by ${date(d.register_by)}`, d.late_by && `late ${date(d.late_by)}`,
-        d.projected !== undefined && d.projected !== null && `~${d.projected}`].filter(Boolean).join(' · '),
+        ...registration(d),
+        d.projected !== undefined && d.projected !== null && `~${fmtN(d.projected)}`].filter(Boolean).join(' · '),
       meta: d === rec ? h('span', { class: 'badge', text: 'Recommended' }) : null,
     }));
     options.push({ value: '__other', label: 'Another date…' }, { value: '__none', label: cur ? 'Remove date' : 'No date yet' });

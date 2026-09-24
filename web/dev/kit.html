@@ -661,7 +661,7 @@
   demo('UI.examDate', 'x-exam', b => {
     let cur = D(44);
     const draw = () => { b.querySelector('.dd-v').textContent = cur ? UI.date(cur) : 'No date yet'; };
-    const dates = [{ date: D(16), study_days: 13, per_week: 90, register_by: D(-4), projected: 1280 }, { date: D(44), study_days: 38, tag: 'Steady', register_by: D(16), late_by: D(24), projected: 1350 },
+    const dates = [{ date: D(16), study_days: 13, per_week: 90, register_by: D(-4), late_by: D(4), projected: 1280 }, { date: D(44), study_days: 38, tag: 'Steady', register_by: D(16), late_by: D(24), projected: 1350 },
       { date: D(72), study_days: 62, register_by: D(44), projected: 1410 }, { date: D(135), study_days: 118 }];
     b.addEventListener('click', () => UI.examDate(b, { value: cur, dates, onSave: v => { cur = v; draw(); say(v ? `SAT on ${UI.date(v, 'long')}` : 'No date'); } }));
     draw();
