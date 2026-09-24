@@ -68,6 +68,12 @@ def require(condition: bool, message: str, errors: list[str]) -> None:
         errors.append(message)
 
 
+def form_alike(a: str, b: str) -> bool:
+    """Alike in form: similar letters overall, or a shared start or ending of three letters or more."""
+    a, b = a.casefold(), b.casefold()
+    return (SequenceMatcher(None, a, b).ratio() >= .5 or a[:3] == b[:3] or a[-3:] == b[-3:])
+
+
 def check_words(data: dict[str, list | dict], errors: list[str], warnings: list[str]) -> None:
     entries = rows(data["sat"])
     classes = {c.get("id") for c in rows(data["classes"]) if isinstance(c, dict)}
@@ -121,8 +127,7 @@ def check_words(data: dict[str, list | dict], errors: list[str], warnings: list[
         for look in entry.get("lookalikes", []):
             require(isinstance(look, dict) and bool(look.get("word")) and bool(look.get("tell")),
                     f"{label}: lookalike missing word or tell", errors)
-            if isinstance(look, dict) and SequenceMatcher(None, str(word).casefold(),
-                                                          str(look.get("word", "")).casefold()).ratio() < .5:
+            if isinstance(look, dict) and not form_alike(str(word), str(look.get("word", ""))):
                 unlike.append(f"{slug}>{look.get('word')}")
         if "answer-choice" in entry.get("lists", []):
             require(bool(entry.get("uses")), f"{label}: answer-choice entry missing uses", errors)
