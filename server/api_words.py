@@ -1097,9 +1097,13 @@ def share_list(name: str, x_learner: str | None = Header(default=None)) -> dict:
     if not row:
         raise HTTPException(404, "list not found")
     create = part("sets", "create")
-    if create is None:
+    set_input = part("sets", "SetIn")
+    if create is None or set_input is None:
         return {"available": False, "code": None, "reason": "sharing is not available yet"}
-    return create(learner, {"kind": "words", "items": json.loads(row["words"]), "name": name})
+    slugs = ["own:" + slug if slug.startswith("u:") else slug
+             for slug in json.loads(row["words"])]
+    shared = create(learner, set_input(kind="words", items=slugs, title=name))
+    return {"available": True, **shared}
 
 
 @router.post("/api/words/outside")
