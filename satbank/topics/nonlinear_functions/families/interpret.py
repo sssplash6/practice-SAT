@@ -13,7 +13,7 @@ from __future__ import annotations
 import random
 from fractions import Fraction as Q
 
-from ....item import ItemError, Mis
+from ....item import ItemError, Mis, unit_word
 from ..common import (MINUS, dec, num, pair, pick, poly_text, q, sig,
                       text_item, value_item, year)
 from ..figures import context_curve
@@ -88,16 +88,16 @@ VALUE_CTX = [
               "straight up in the air can be modeled by the function h(x) = "
               "{MINUS}16x² + {b}x + {a}. Based on the model, which of the following "
               "statements best interprets the equation h({t}) = {v}?",
-         key="The height of the object {t} seconds after being thrown straight up in "
-             "the air is {v} feet.",
+         key="The height of the object {t} {sec_t} after being thrown straight up in "
+             "the air is {v} {ft_v}.",
          wrong={
-             "swap": "The height of the object {v} seconds after being thrown "
-                     "straight up in the air is {t} feet.",
-             "times": "The height of the object {v} seconds after being thrown "
-                      "straight up in the air is approximately {t} times as great as "
+             "swap": "The height of the object {v} {sec_v} after being thrown "
+                     "straight up in the air is {t} {ft_t}.",
+             "times": "The height of the object {v} {sec_v} after being thrown "
+                      "straight up in the air is approximately {t} {times_t} as great as "
                       "its initial height.",
-             "speed": "The speed of the object {t} seconds after being thrown straight "
-                      "up in the air is approximately {v} feet per second."},
+             "speed": "The speed of the object {t} {sec_t} after being thrown straight "
+                      "up in the air is approximately {v} {ft_v} per second."},
          things=["an object"]),
 ]
 
@@ -122,6 +122,11 @@ def interpret_value(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, 
             raise ItemError("the printed height must be positive and land on a cent")
         f = dict(t=dec(tt), v=dec(v), a=num(a), b=num(b), MINUS=MINUS, thing=thing,
                  who=who, cap=num(cap), half="")
+        f.update(sec_t=unit_word(tt, "second", "seconds"),
+                 sec_v=unit_word(v, "second", "seconds"),
+                 ft_t=unit_word(tt, "foot", "feet"),
+                 ft_v=unit_word(v, "foot", "feet"),
+                 times_t=unit_word(tt, "time", "times"))
         vnum, tnum = v, tt
         inputs = {"a": [q(a).numerator, q(a).denominator],
                   "b": [q(b).numerator, q(b).denominator]}
@@ -512,13 +517,14 @@ def quad_feature(rng: random.Random, seed: int, *, mode=None, a=None, b=None, c=
         cap = int(cap if cap is not None else rng.choice([8, 10, 12]))
         if h >= cap:
             raise ItemError("the vertex must lie inside the stated interval")
-        key = f"The metal ball's minimum height was {num(k)} inches above the ground."
+        inch_k = unit_word(k, "inch", "inches")
+        key = f"The metal ball's minimum height was {num(k)} {inch_k} above the ground."
         pool = {
             "min_h": ("read the vertex's x-coordinate as the height",
                       pair(f"The metal ball's minimum height was {num(h)} inches above "
                            f"the ground.", "min", h)),
             "start_k": ("read the vertex as the starting height",
-                        pair(f"The metal ball's height was {num(k)} inches above the "
+                        pair(f"The metal ball's height was {num(k)} {inch_k} above the "
                              f"ground when it started moving.", "start", k)),
             "start_h": ("read the vertex's x-coordinate as a starting height",
                         pair(f"The metal ball's height was {num(h)} inches above the "
@@ -527,7 +533,7 @@ def quad_feature(rng: random.Random, seed: int, *, mode=None, a=None, b=None, c=
         order = ["min_h", "start_k", "start_h"]
         stem = FEATURE_VERTEX.format(frac=f"1/{den}", MINUS=MINUS, h=num(h), k=num(k),
                                      cap=num(cap))
-        why = (f"The square is never negative, so the least height is {num(k)} inches, "
+        why = (f"The square is never negative, so the least height is {num(k)} {inch_k}, "
                f"reached {num(h)} seconds in.")
         P = {"kind": "nlf_quad_feature", "mode": mode, "h": h, "k": k, "den": den}
         return text_item("nlfunc.quad_feature", "what a vertex means in context",

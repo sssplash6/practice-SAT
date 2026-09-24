@@ -12,7 +12,7 @@ import random
 from fractions import Fraction as Q
 
 from ....exact import E
-from ....item import Item, ItemError, Mis
+from ....item import Item, ItemError, Mis, unit_word
 from ..kit import (MINUS, choices, coef, dec, griddable, gridin_pool, money, num,
                    pick, q, sent)
 
@@ -95,7 +95,15 @@ def purchase_solve(rng: random.Random, seed: int, *, shape=None, scene=None, n=N
             raise ItemError("the story would need a fraction of an item")
         key = {"first": x0, "second": y0, "spend_first": p * x0}[ask]
         show = (lambda v: money(v, 2 if d["cents"] else 0)) if d["currency"] else num
-        stem = sent(d["text"].format(p=show(p), q=show(qq), n=num(n), t=show(t)))
+        wording = d["text"]
+        if d["key"] == "coins" and (p, qq) != (Q(5), Q(10)):
+            wording = ("A jar holds only bronze tokens and silver tokens. Each bronze "
+                       "token is worth {p} {p_unit} and each silver token is worth "
+                       "{q} {q_unit}. The jar holds {n} tokens worth {t} cents "
+                       "altogether. How many silver tokens are in the jar?")
+        stem = sent(wording.format(p=show(p), q=show(qq), n=num(n), t=show(t),
+                                   p_unit=unit_word(p, "cent", "cents"),
+                                   q_unit=unit_word(qq, "cent", "cents")))
         per, each, kinds = d["per"], d["each"], d["kinds"]
         pool = {
             "half_count": Mis(f"split the total evenly between the two {kinds}",

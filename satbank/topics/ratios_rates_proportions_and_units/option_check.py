@@ -382,14 +382,14 @@ def check_similar_rect(item) -> str:
                    "the width that keeps the ratio")
 
 
-SHIFT = re.compile(r"It must (increase|decrease) by ([\d,.]+) units\.")
+SHIFT = re.compile(r"It must (increase|decrease) by ([\d,.]+) units?\.")
 
 
 def check_dimension_shift(item) -> str:
     """One side changes; how the other must change, said in a sentence."""
     m = only(r"ratio of its length to its width is ([\d,]+) to ([\d,]+)\. If the "
              r"(length|width) of the rectangular region (increases|decreases) by "
-             r"([\d,.]+) units, how must the (length|width) change", item.stem)
+             r"([\d,.]+) units?, how must the (length|width) change", item.stem)
     length, width = num(m.group(1)), num(m.group(2))
     moved, way, change, other = m.group(3), m.group(4), num(m.group(5)), m.group(6)
     if moved == other:

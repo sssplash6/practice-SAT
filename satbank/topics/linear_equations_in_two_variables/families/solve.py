@@ -14,7 +14,7 @@ from __future__ import annotations
 import random
 from fractions import Fraction as Q
 
-from ....item import Item, ItemError, Mis, gridin_mistakes
+from ....item import Item, ItemError, Mis, gridin_mistakes, unit_word
 from ..common import choose, dec, ex, numtext, q, std_text
 
 __all__ = ["substitute", "context_substitute", "mixture_solve"]
@@ -72,7 +72,7 @@ SUBST = [
               "x-minute practice session. How many pieces did the pianist practice if "
               "the session lasted {given} minutes?",
          why="The equation counts {a} of a piece for every minute at the piano, so a "
-             "session of {given} minutes carries {given} times {a}."),
+             "session of {given} minutes covers {given} × {a} = {key} {pieces}."),
     # 2 -- sweaters and shirts (1.14)
     dict(xv="x", yv="y", solve="y", fmt="mcq", display=False, inline=True, order="desc",
          alo=10, ahi=60, glo=2, ghi=9, tlo=2, thi=9, places=None, step=10, whole=True,
@@ -211,7 +211,9 @@ def substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, given
             ("inverted the rate, treating it as minutes per piece", 1 / A),
             ("divided by the rate instead of multiplying by it", g / A),
             ("read the rate as one piece for the whole session", 1)], d.get("whole"))
-        why = d["why"].format(a=numtext(A, style, places), given=numtext(g))
+        why = d["why"].format(a=numtext(A, style, places), given=numtext(g),
+                               key=numtext(key),
+                               pieces=unit_word(key, "piece", "pieces"))
     else:
         part = coef_known * g
         left = C - part
@@ -247,6 +249,7 @@ def substitute(rng: random.Random, seed: int, *, ctx=None, a=None, b=None, given
                               c=numtext(C, style, places), given=numtext(g),
                               part=numtext(part, style, places),
                               left=numtext(left, style, places))
+        why += f" Therefore, the requested number is {numtext(key)}."
 
     P = {"kind": "le2_substitute", "form": d.get("form", "standard"), "solve": solve,
          "a": [A.numerator, A.denominator], "b": [B.numerator, B.denominator],
@@ -294,7 +297,7 @@ CONTEXT = [
               "{given}, what is the value of y ?",
          swap=True, speeds=True, asked="hours at the second speed",
          known="hours at the first speed",
-         why="{given} hours at {a} miles per hour covers {part} miles, so {left} miles "
+         why="{given} {hr} at {a} miles per hour covers {part} miles, so {left} miles "
              "of the {c} are left to drive at {b} miles per hour."),
     # 3 -- calories from two activities, quoted per half hour (2.4)
     dict(shape="counts", fmt="mcq", per30=True, alo=50, ahi=300, glo=1, ghi=4,

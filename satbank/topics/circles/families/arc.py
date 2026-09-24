@@ -41,7 +41,8 @@ def _in_units(noun: str, unit) -> str:
 
 
 def _amount(text: str, unit) -> str:
-    return f"{text}{_unit_words(unit)}"
+    return (f"{text} {unit.noun if text == '1' else unit.many()}"
+            if unit else text)
 
 
 def _place(rng: random.Random, theta: int) -> dict:

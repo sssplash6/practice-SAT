@@ -310,8 +310,10 @@ def mean_totals(rng: random.Random, seed: int, *, mode=None, n=None, m1=None, m2
         ask_phrase or f"What is the mean, in {unit}, of data set {cn}?")
     P = {"kind": "ovd_mean_totals", "mode": "combined", "n1": int(n1), "n2": int(n2),
          "m1": float(m1), "m2": float(m2)}
+    total = n1 * m1 + n2 * m2
     rationale = (f"The two data sets total {num_str(n1 * m1)} and {num_str(n2 * m2)}, "
-                 f"so all {n1 + n2} values total {num_str(n1 * m1 + n2 * m2)}.")
+                 f"so all {n1 + n2} values total {num_str(total)}, and the mean is "
+                 f"{num_str(total)} ÷ {n1 + n2} = {num_str(q(key.coef))}.")
     return _num_item(rng, "ovd.mean.combined", "combining two data sets", "hard", seed,
                      stem, fmt or "spr", key, mistakes, rationale, P, places=places)
 

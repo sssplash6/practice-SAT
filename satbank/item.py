@@ -13,7 +13,14 @@ from fractions import Fraction
 from .exact import E, Exact
 
 __all__ = ["Item", "Mis", "assemble", "assemble_text", "ItemError", "numeral",
-           "norm_text", "shortlist", "hands_the_key_over", "gridin_mistakes"]
+           "norm_text", "shortlist", "hands_the_key_over", "gridin_mistakes",
+           "unit_word"]
+
+
+def unit_word(value, one: str, many: str) -> str:
+    """Choose a unit from the printed quantity, including fractions and decimals."""
+    printed = str(value).replace(",", "").replace("−", "-")
+    return one if abs(Fraction(printed)) == 1 else many
 
 SUPERSCRIPT = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
 

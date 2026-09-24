@@ -26,7 +26,7 @@ from __future__ import annotations
 import random
 
 from ....expr import Poly, fmt_frac
-from ....item import Item, ItemError
+from ....item import Item, ItemError, unit_word
 from ..values import Q, dec, mcq, places_needed, q, spr, text_mcq
 
 __all__ = ["partner", "equivalent", "table_constant", "simplify", "similar_rect",
@@ -418,30 +418,34 @@ def dimension_shift(rng: random.Random, seed: int, *, length=None, width=None,
     word = "increases" if up else "decreases"
     stem = (f"For a certain rectangular region, the ratio of its length to its "
             f"width is {dec(length, 0)} to {dec(width, 0)}. If the {moved} of the "
-            f"rectangular region {word} by {dec(change, 0)} units, how must the "
+            f"rectangular region {word} by {dec(change, 0)} "
+            f"{unit_word(change, 'unit', 'units')}, how must the "
             f"{other} change to maintain this ratio?")
     P = {"kind": "rr_dimension_shift", "length": float(length),
          "width": float(width), "change": float(change), "up": up, "moved": moved}
     same = "increase" if up else "decrease"
     opposite = "decrease" if up else "increase"
     size = dec(shift, places_needed(shift))
-    key = f"It must {same} by {size} units."
+    key = f"It must {same} by {size} {unit_word(shift, 'unit', 'units')}."
     wrong = [
         ("scaled by the right factor but sent the other side the wrong way",
-         f"It must {opposite} by {size} units."),
+         f"It must {opposite} by {size} {unit_word(shift, 'unit', 'units')}."),
         ("changed the other side by the same number of units, comparing the "
          "sides by subtraction rather than by their ratio",
-         f"It must {same} by {dec(change, 0)} units."),
+         f"It must {same} by {dec(change, 0)} {unit_word(change, 'unit', 'units')}."),
         ("did both: the same number of units, and the wrong direction",
-         f"It must {opposite} by {dec(change, 0)} units."),
+         f"It must {opposite} by {dec(change, 0)} {unit_word(change, 'unit', 'units')}."),
         (f"used the ratio upside down, {dec(width, 0)} to {dec(length, 0)}",
          f"It must {same} by "
-         f"{dec(change / ratio, places_needed(change / ratio))} units."),
+         f"{dec(change / ratio, places_needed(change / ratio))} "
+         f"{unit_word(change / ratio, 'unit', 'units')}."),
     ]
     rationale = (f"The ratio holds only if both sides scale by the same factor: "
                  f"the {other} is {fmt_frac(ratio)} of the {moved}, so a change "
-                 f"of {dec(change, 0)} units in the {moved} needs "
-                 f"{fmt_frac(ratio)} × {dec(change, 0)} = {size} units in the "
+                 f"of {dec(change, 0)} {unit_word(change, 'unit', 'units')} "
+                 f"in the {moved} needs "
+                 f"{fmt_frac(ratio)} × {dec(change, 0)} = {size} "
+                 f"{unit_word(shift, 'unit', 'units')} in the "
                  f"{other}, in the same direction.")
     return text_mcq("rr.dimension_shift", "a ratio kept while a side changes",
                     "medium", seed, stem, key, wrong, rng, rationale, params=P)
@@ -485,13 +489,14 @@ def mix_statement(rng: random.Random, seed: int, *, first=None, second=None,
     key = f"{factor} times the amount of {one} used in the second batch"
     grew = dec(again - first, places_needed(abs(again - first))) if again > first \
         else dec(first - again, places_needed(abs(again - first)))
+    grew_unit = unit_word(abs(again - first), unit[:-1], unit)
     more = "more than" if again > first else "less than"
     wrong = [
         (f"used the same amount as the {one}, as though the ratio were one to one",
          f"Exactly {dec(again, 0)} {unit}"),
         (f"kept the difference rather than the ratio: the {one} changed by {grew} "
-         f"{unit}, so the {two} was changed by {grew} too",
-         f"{grew} {unit} {more} the amount of {two} used in the first batch"),
+         f"{grew_unit}, so the {two} changed by {grew} too",
+         f"{grew} {grew_unit} {more} the amount of {two} used in the first batch"),
         ("applied the scale factor to the wrong quantity",
          f"{factor} times the amount of {two} used in the first batch"),
         ("scaled by the ratio upside down",

@@ -110,7 +110,8 @@ def rr_dimension_shift(p: dict):
         else (p["width"] / p["length"])
     shift = ratio * p["change"]
     way = "increase" if p["up"] else "decrease"
-    return f"It must {way} by {_short(shift)} units."
+    unit = "unit" if math.isclose(abs(shift), 1.0) else "units"
+    return f"It must {way} by {_short(shift)} {unit}."
 
 
 def rr_mix_statement(p: dict):

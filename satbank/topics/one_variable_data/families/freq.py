@@ -99,9 +99,11 @@ def freq_stat(rng: random.Random, seed: int, *, values=None, freqs=None, ask=Non
             "median_itself": Mis("reported the median instead of the difference", E(med)),
         }
         question = ask_phrase or ("How much greater is the mean of the set of data than "
-                                  "the median?")
+                                  "the median?" if mu > med else
+                                  "What is the difference between the mean and median?")
         rationale = (f"The {n} values total {num_str(sum(data, F(0)))}, so the mean is "
-                     f"{num_str(mu)}; the middle value is {num_str(med)}.")
+                     f"{num_str(mu)}; the middle value is {num_str(med)}, so the "
+                     f"difference is {num_str(mu - med)}.")
     else:
         key = E(clean({"mean": mu, "median": med, "range": spread(data),
                        "mode": _mode_or_fail(data)}[ask]))
@@ -418,8 +420,8 @@ def freq_choose(rng: random.Random, seed: int, *, ask=None, values=None, freqs=N
                 _table_text(vals, [sum(fs[i:]) for i in range(len(fs))])),
         ]
         stem = (values_line(data) + "\n" +
-                (ask_phrase or "Which frequency table correctly represents the data "
-                 "listed?"))
+                (ask_phrase or "Which of the following correctly lists each value "
+                 "in the data and its frequency?"))
         rationale = ", ".join(f"{num_str(v)} appears {int(c)} times"
                               for v, c in zip(vals, fs)) + "."
         P = {"kind": "ovd_freq_choose", "ask": ask, "data": [float(x) for x in data],
@@ -452,12 +454,12 @@ def freq_choose(rng: random.Random, seed: int, *, ask=None, values=None, freqs=N
             Mis("gives the greatest value its largest frequency, but gives the least "
                 "value the same one, so its mean is still the middle value",
                 _table_text(vals, cup_a)),
-            Mis("holds the most values of any table, chosen by comparing totals rather "
+            Mis("holds the most values of any list, chosen by comparing totals rather "
                 "than means", _table_text(vals, cup_b)),
         ]
-        stem = (ask_phrase or "Each of the following frequency tables represents a data "
-                "set. Which data set has the greatest mean?")
-        rationale = ("Only one table gives the larger values the larger frequencies; "
+        stem = (ask_phrase or "Each of the following lists the values in a data set "
+                "and their frequencies. Which data set has the greatest mean?")
+        rationale = ("Only one list gives the larger values the larger frequencies; "
                      f"its mean is {num_str(means[0])}, against "
                      f"{listing([num_str(m) for m in means[1:]])} for the others.")
         P = {"kind": "ovd_freq_choose", "ask": ask, "values": [float(v) for v in vals],

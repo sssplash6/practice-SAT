@@ -13,7 +13,7 @@ from fractions import Fraction as Q
 from math import gcd
 
 from ....exact import E
-from ....item import Item, ItemError, Mis, assemble_text
+from ....item import Item, ItemError, Mis, assemble_text, unit_word
 from .kit import article, choices, dec, money, num, plainly, sent, spr_mistakes
 
 __all__ = ["context_solve", "model_count_mix", "model_context",
@@ -101,7 +101,8 @@ def _scene(rng: random.Random, scene: str, kw: dict) -> dict:
                 f"recorded the height of a {plant} plant at the beginning of a study and "
                 f"the height of the plant each day for the next {num(days)} days. The "
                 f"scientist found that the height of the plant increased by an average "
-                f"of {dec(rate)} centimeters per day for the {num(days)} days. If the "
+                f"of {dec(rate)} {unit_word(rate, 'centimeter', 'centimeters')} per day "
+                f"for the {num(days)} days. If the "
                 f"height of the plant on the last day of the study was {dec(total)} "
                 f"centimeters, what was the height, in centimeters, of the {plant} plant "
                 f"at the beginning of the study?")

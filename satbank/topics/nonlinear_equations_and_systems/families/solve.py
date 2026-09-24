@@ -81,6 +81,12 @@ ASKS = {
 }
 
 
+def _combined(ask: str, key) -> str:
+    """Close a two-root explanation with the quantity the stem requests."""
+    return {"sum": f", and their sum is {num(key)}",
+            "product": f", and their product is {num(key)}"}.get(ask, "")
+
+
 # The asks that any solution answers. "Which of the following is a solution"
 # is true of every root, so no root may be offered as a distractor; "the
 # positive solution" singles one out, and there the other root is a fair wrong
@@ -246,7 +252,8 @@ def square_equation(rng: random.Random, seed: int, *, shape=None, a=None, h=None
         pool = _square_gridin(pool, ask, a, h, inner, root, lo, hi, key)
     shifted = join(["x", mono(h, "")]) if h else "x"
     rationale = sent(f"The square is {num(inner)}, so {shifted} is {num(root)} or "
-                     f"{num(-root)}, giving x = {num(hi)} and x = {num(lo)}.")
+                     f"{num(-root)}, giving x = {num(hi)} and x = {num(lo)}"
+                     f"{_combined(ask, key)}.")
     return _value_item("nleq.square_equation", "undoing a square", difficulty, seed,
                        stem, key, pool, wrongs, rng, rationale, P, fmt, signed,
                        sign_rule, forbid=[lo, hi] if ask in ANY_SOLUTION else ())
@@ -362,7 +369,8 @@ def absolute_equation(rng: random.Random, seed: int, *, a=1, b=0, h=None,
     head = (f"Gathering the two terms gives {num(a + b)} times the absolute value, so "
             if b else "")
     rationale = sent(cap(f"{head}the quantity inside the bars is {num(m)} or "
-                         f"{num(-m)}, so x = {num(hi)} or x = {num(lo)}."))
+                         f"{num(-m)}, so x = {num(hi)} or x = {num(lo)}"
+                         f"{_combined(ask, key)}."))
     return _value_item("nleq.absolute_equation", "an absolute-value equation",
                        difficulty, seed, stem, key, pool, wrongs, rng, rationale,
                        P, fmt,
@@ -855,7 +863,7 @@ def shared_factor(rng: random.Random, seed: int, *, a=None, k=None, b=None, m=No
                      f"[{num(a)} {MINUS} {num(b)}"
                      f"{paren(join(['x', mono(-m, '')]))}] = 0, so "
                      f"x = {gridin(r1).replace('-', MINUS)} or "
-                     f"x = {gridin(r2).replace('-', MINUS)}.")
+                     f"x = {gridin(r2).replace('-', MINUS)}{_combined(ask, key)}.")
     if fmt == "spr":
         if not griddable(key):
             raise ItemError("that answer could not be entered in the grid")
