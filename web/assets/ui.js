@@ -1378,7 +1378,7 @@
   const nextTip = it => `Next: ${it.title}${nextMeta(it) ? ' · ' + nextMeta(it) : ''}${it.reason ? ' · ' + it.reason : ''}`;
 
   /* ---- the sidebar and the rail */
-  let sideEl = null, pbarEl = null, tabsEl = null, scrimEl = null, overlay = null, here = '';
+  let sideEl = null, pbarEl = null, tabsEl = null, scrimEl = null, overlay = null, here = '', rest = 0;
   const refs = { items: {}, tabs: {} };
   const layoutMode = () => media(W_PHONE) ? 'phone' : media(W_SIDE) && sget(LS(), 'satf.rail') !== '1' ? 'side' : 'rail';
   function tip(el, text, kbd) {
@@ -1457,7 +1457,6 @@
     Object.assign(refs, { search, quick, play, user });
     // close the overlay when a link in it is followed; peek on a 400 ms rest (U26)
     sideEl.addEventListener('click', e => { if (overlay && e.target.closest('a[href]')) closeOverlay(); });
-    let rest = 0;
     sideEl.addEventListener('pointerenter', e => {
       if (e.pointerType !== 'mouse' || !sideEl.classList.contains('rail')) return;
       clearTimeout(rest); rest = setTimeout(() => openOverlay('peek'), 400);
@@ -1482,6 +1481,7 @@
     paintStrip();
   }
   function openOverlay(how) {
+    clearTimeout(rest);                  // a click or [ beats the pending peek, and Esc then stays closed
     if (overlay || !sideEl.classList.contains('rail') || media(W_PHONE)) return;
     overlay = how;
     sideEl.classList.remove('rail');

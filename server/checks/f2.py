@@ -193,7 +193,8 @@ def walk(b, base, http, sql) -> None:
 
     def page(ctx):
         pg = ctx.new_page()
-        pg.on("console", lambda m: m.type == "error" and "404 (Not Found)" not in m.text and errors.append(f"{pg.url}: {m.text}"))
+        pg.on("console", lambda m: m.type == "error" and "404 (Not Found)" not in m.text
+              and errors.append(f"{pg.url}: {m.text} {m.location.get('url', '')}"))
         pg.on("pageerror", lambda e: errors.append(f"{pg.url}: {e}"))
         return pg
 
@@ -209,6 +210,9 @@ def walk(b, base, http, sql) -> None:
 
     js_rows = """() => [...document.querySelectorAll('.side > .side-search, .side > .side-quick, .side-item, .side-foot > *, .side > .side-user')]
         .filter(e => e.offsetWidth).map(e => e.matches('.side-user') ? 'user' : e.querySelector('.side-text').textContent)"""
+    def settle(pg):
+        pg.wait_for_function("() => document.getAnimations().every(a => a.playState !== 'running')")
+
     meta = lambda pg, id: pg.eval_on_selector(f".side-item[data-id={id}] .side-meta", "e => e.textContent.trim()")
 
     # A: a 45-minute plan, 12 answered today (3 of them wrong), a finished section
@@ -430,6 +434,7 @@ def walk(b, base, http, sql) -> None:
         assert pg.evaluate("[document.documentElement.scrollWidth <= innerWidth, document.querySelector('.pbar').scrollWidth <= document.querySelector('.pbar').clientWidth]") == [True, True], w
         pg.click(".tabs-grip")
         pg.wait_for_selector("dialog.more[open]")
+        settle(pg)                         # the sheet slides up; measure where it comes to rest
         assert pg.eval_on_selector("dialog.more .more-foot a[href='/review/']", "e => { const r = e.getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight && r.left >= 0 && r.right <= innerWidth }"), w
         pg.keyboard.press("Escape")
         pg.wait_for_timeout(250)
@@ -473,7 +478,8 @@ def walk(b, base, http, sql) -> None:
         hist = api(QL, "GET", "/api/history")["sessions"]
         assert [x.get("label") for x in hist] == ["Quick questions"], hist
         assert api(QL, "GET", "/api/shell")["resume"] is None
-    for path in (f"/practice/session/?id={sid}", "/test/"):
+    own = api(QL, "POST", "/api/drill", {"topics": ["circles"], "count": 3})["id"]
+    for path in (f"/practice/session/?id={own}", "/test/"):
         go(pg, path)
         assert not pg.query_selector(".side, .side-quick, [aria-label^='Quick']"), path
         pg.keyboard.press("q")
@@ -493,14 +499,13 @@ def walk(b, base, http, sql) -> None:
     with pg.expect_response(lambda r: r.url.endswith("/api/me") and r.request.method == "PUT"):
         pg.click("[role=menu] [role=menuitemcheckbox]:has-text('Dark theme')")
     assert pg.evaluate("getComputedStyle(document.body).backgroundColor") == DARK
+    pg = ctx.new_page()                    # no error hooks: the page's own script needs the aborted ui.js
     pg.route("**/assets/ui.js", lambda r: r.abort())
     pg.route("**/assets/kit.js", lambda r: r.abort())
     pg.goto(base + "/practice/", wait_until="load")
     assert pg.evaluate("document.documentElement.dataset.theme") == "dark", "head.js sets the theme before first paint"
     assert pg.evaluate("getComputedStyle(document.body).backgroundColor") == DARK
     assert pg.get_attribute("meta[name=theme-color]", "content") == "#1A1917"
-    pg.unroute("**/assets/ui.js")
-    pg.unroute("**/assets/kit.js")
     assert api(NEW, "GET", "/api/me")["profile"]["prefs"]["theme"] == "dark"
     ctx.close()
     print("ok  theme: light by default, Dark from the menu is saved, and head.js paints it before ui.js runs")
@@ -516,6 +521,8 @@ def walk(b, base, http, sql) -> None:
         pg.click(".side-item[data-id=plan]")
     ctx.close()
     errors[:] = [e for e in errors if "ERR_FAILED" not in e and "Failed to fetch" not in e]
+    if not f5:                             # without F5 a quick question has no topic to draw from: a 400, shown as Retry
+        errors[:] = [e for e in errors if not ("400 (Bad Request)" in e and e.endswith("/api/drill"))]
     print("ok  offline: the banner and Retry now, and the nav still navigates")
 
     assert not errors, errors[:8]
