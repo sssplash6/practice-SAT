@@ -826,7 +826,10 @@ def estimate_checks():
             result=json.dumps({"estimate": {"low": low, "high": low + 80}}))
     add("outside_scores", id="f4-grow-bb", learner=grow, day=str(TODAY), math=620, source="bluebook", at=progress.now())
     # mean3 = (620 + 600 + 560) / 3 -> 590, so +110 from 480; each peer 500 - 480 = +20
-    assert estimate.growth(grow) == {"since_first": 110, "first": 480, "n": 20, "pct": 100}, estimate.growth(grow)
+    # (test_flow's own learners may add peers, so n and pct are bounds)
+    g = estimate.growth(grow)
+    assert g and (g["since_first"], g["first"]) == (110, 480) and g["n"] >= 20, g
+    assert g["pct"] >= 100 * 20 // g["n"], g
     add("outside_scores", id="bb-f4", learner=learner, day=str(TODAY - dt.timedelta(days=1)), math=610,
         source="bluebook", at=progress.now())
     assert estimate.calibration(learner)["pairs"][0]["inside"] is True
