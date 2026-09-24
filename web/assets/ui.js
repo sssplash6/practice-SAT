@@ -44,7 +44,20 @@
      UI.menuSheet(trigger)          the phone's menu sheet; UI.accountMenu() the account items
      UI.signOut()                   sign out (saved: Undo for 8 s; shared computer: at once) or,
                                     unsaved, the Leave this device dialog
-     UI.quick, UI.palette, UI.report  load quick.js, palette.js, report.js on first use
+     UI.quick, UI.palette, UI.report, UI.continueOnPhone   load quick.js, palette.js,
+                                    report.js, qr.js on first use; UI.need(file) loads any
+     Banners (Shell 2.11, U15, U17, U19): retired and offline from UI.api, storage blocked,
+                                    then one of registration deadline, stage change, first
+                                    visit (satf.first), save nudge (satf.nudge, 7 days)
+     Event toasts (Shell 2.11, U25): achievements and report replies from fresh shell data,
+                                    at most 2 a load, each once a tab (satf.toasted), marked seen
+   Search and quick (Shell 2.7, 2.8, P15):
+     UI.ALIASES                     the words that also name a skill, beside TOPICS
+     UI.parseSet(text, {count, types, source}) -> {body, chips, unknown, text, any, box}
+                                    "circles hard 5 timed" -> a POST /api/drill body
+     UI.types() -> Promise {list, byTopic, cb}   the 386 question types with their named
+                                    mistakes, from /api/shell/catalog (sessionStorage satf.types)
+     UI.boxChips()                  "Got time? 5 · 10 · 15 … min", each starting a time box
    Kept for the pages until they are rebuilt: UI.question, UI.calc, UI.ref, UI.plan,
    UI.snap, the topics and glyphs.
    ========================================================================== */
@@ -479,6 +492,154 @@
     ['circles', 'Circles', 'dotcircle', 3],
   ].map(([slug, short, shape, d]) => ({ slug, short, shape, domain: DOMAINS[d][0], dshort: DOMAINS[d][1] }));
   const TOPIC = Object.fromEntries(TOPICS.map(t => [t.slug, t]));
+
+  /* ------------------------------------------------------------ aliases and the set parser
+     (Shell 2.8, practice.md P15). Skills match on a word prefix of their names or on these
+     aliases; the first six rows are Shell 2.8's table, the rest are words students type. */
+  const ALIASES = {
+    nonlinear_functions: ['quadratic', 'quadratics', 'exponential', 'parabola', 'vertex'],
+    right_triangles_and_trigonometry: ['trig', 'trigonometry', 'sin', 'cos', 'tan', 'sohcahtoa', 'pythagorean'],
+    circles: ['arc', 'arcs', 'sector', 'radian', 'radians', 'chord'],
+    ratios_rates_proportions_and_units: ['ratio', 'rate', 'unit', 'units', 'proportion', 'proportions'],
+    sample_statistics_and_margin_of_error: ['margin', 'sample', 'inference'],
+    evaluating_statistical_claims: ['claim', 'claims', 'study', 'experiment'],
+    percentages: ['percent'],
+    probability: ['chance', 'odds'],
+    linear_inequalities: ['inequality', 'inequalities'],
+    systems_of_linear_equations: ['system', 'systems'],
+    linear_functions: ['slope', 'intercept'],
+    equivalent_expressions: ['factor', 'factoring', 'expand', 'polynomial', 'polynomials'],
+    one_variable_data: ['mean', 'median', 'histogram', 'outlier', 'deviation'],
+    two_variable_data: ['scatter', 'scatterplot', 'regression'],
+    lines_angles_and_triangles: ['angle', 'angles', 'triangle', 'triangles', 'parallel', 'transversal'],
+  };
+  const words = s => String(s || '').toLowerCase().replace(/&/g, ' and ').replace(/[‐-―-]/g, ' ')
+    .replace(/[^a-z0-9∞\s]/g, ' ').split(/\s+/).filter(Boolean);
+  let PHRASES = null;
+  function phrases() {                    // every way to name a skill, longest first
+    if (!PHRASES) {
+      PHRASES = TOPICS.flatMap(t => [t.short, t.slug.replace(/_/g, ' '), ...(ALIASES[t.slug] || [])]
+        .map(n => ({ w: words(n), slug: t.slug })));
+      PHRASES.sort((a, b) => b.w.length - a.w.length);
+    }
+    return PHRASES;
+  }
+  const wordHit = (tok, w) => tok === w || (tok.length >= 3 && w.startsWith(tok));
+  // the skills named at tokens[i..]: {slug, n} for the longest unambiguous phrase
+  function skillAt(toks, i) {
+    let best = null, len = 0, clash = false;
+    for (const p of phrases()) {
+      if (p.w.length < len) break;
+      if (i + p.w.length > toks.length || !p.w.every((w, k) => wordHit(toks[i + k], w))) continue;
+      if (!best || p.w.length > len) { best = p.slug; len = p.w.length; clash = false; }
+      else if (p.slug !== best) clash = true;
+    }
+    return best && !clash ? { slug: best, n: len } : null;
+  }
+  const FILLER = new Set(['q', 'qs', 'question', 'questions', 'practise', 'practice', 'set', 'of', 'a', 'an', 'the',
+    'and', 'with', 'in', 'on', 'some', 'me', 'do']);
+  const TIER_WORDS = { easy: 'easy', medium: 'medium', med: 'medium', hard: 'hard' };
+  /* UI.parseSet(text, {count, types}) -> {body, chips, unknown, text, any, box}
+     count: the default when none is typed (prefs.set_length; 0 = endless). types: the
+     catalogue's [{template, name}], so a whole type name selects that type. Unrecognised
+     words come back in `unknown` for the caller to search on. */
+  function parseSet(text, o = {}) {
+    const toks = words(text);
+    const topics = [], chips = [], unknown = [];
+    const body = {};
+    let tiers = null, count, box = null, set = false;
+    const addTier = t => { tiers = tiers || new Set(); tiers.add(t); };
+    for (let i = 0; i < toks.length; i++) {
+      const t = toks[i], next = toks[i + 1];
+      const mins = /^(\d{1,2})(m|min|mins|minute|minutes)$/.exec(t);
+      if (mins || (/^\d{1,2}$/.test(t) && /^(m|min|mins|minute|minutes)$/.test(next || ''))) {
+        box = Number(mins ? mins[1] : t); if (!mins) i++; continue;
+      }
+      if (t === 'half' && /^hours?$/.test(next || '')) { box = 30; i++; continue; }
+      if ((t === 'an' || t === '1' || t === 'one') && /^hours?$/.test(next || '')) { box = 60; i++; continue; }
+      if (/^hours?$/.test(t)) { box = 60; continue; }
+      const q = /^(\d{1,3})(q|qs)?$/.exec(t);
+      if (q && +q[1] >= 1 && +q[1] <= 120) { count = +q[1]; set = true; continue; }
+      if (t === 'endless' || t === '∞' || t === 'infinite' || t === 'unlimited') { count = null; set = true; continue; }
+      if (TIER_WORDS[t]) { addTier(TIER_WORDS[t]); set = true; continue; }
+      if (t === 'mixed' || t === 'all') { tiers = new Set(['easy', 'medium', 'hard']); set = true; continue; }
+      if (t === 'adaptive') { body.adaptive = true; set = true; continue; }
+      if (t === 'timed' || t === 'pace') { body.timed = true; set = true; continue; }
+      if (t === 'untimed') { body.timed = false; set = true; continue; }
+      if (t === 'mc' || t === 'mcq' || (t === 'multiple' && next === 'choice')) { body.formats = ['mcq']; if (t === 'multiple') i++; set = true; continue; }
+      if (t === 'grid' || t === 'gridin' || t === 'gridins' || t === 'spr') { body.formats = ['spr']; if (next === 'in' || next === 'ins') i++; set = true; continue; }
+      if (t === 'mistakes' || t === 'mistake' || t === 'redo') { body.pool = 'redo'; set = true; continue; }
+      if (t === 'due' || t === 'checkins' || (t === 'check' && /^ins?$/.test(next || ''))) { body.pool = 'checks'; if (t === 'check') i++; set = true; continue; }
+      if (t === 'untried' || t === 'unseen') { body.pool = 'untried'; set = true; continue; }
+      if (t === 'marked' || t === 'saved') { body.pool = t; set = true; continue; }
+      if (t === 'retry') { body.feedback = 'retry'; set = true; continue; }
+      if (t === 'test' && next === 'mode') { body.feedback = 'end'; body.timed = true; i++; set = true; continue; }
+      if (t === 'ramp') { body.order = 'ramp'; set = true; continue; }
+      if (t === 'warmup' || (t === 'warm' && next === 'up')) { body.zone = 'warm'; if (t === 'warm') i++; set = true; continue; }
+      if (t === 'stretch') { body.zone = t; set = true; continue; }
+      const sk = skillAt(toks, i);
+      if (sk) { if (!topics.includes(sk.slug)) topics.push(sk.slug); i += sk.n - 1; continue; }
+      if (!FILLER.has(t)) unknown.push(t);
+    }
+    // a whole type name ("central angles") picks that type
+    let type = null;
+    if (o.types && unknown.length && !topics.length) {
+      const phrase = unknown.join(' ');
+      type = o.types.find(x => words(x.name).join(' ') === phrase) || null;
+      if (type) { unknown.length = 0; body.templates = [type.template]; }
+    }
+    if (topics.length) body.topics = topics;
+    if (tiers) body.tiers = ['easy', 'medium', 'hard'].filter(x => tiers.has(x));
+    if (box) { body.box = box; body.count = null; }
+    else if (count !== undefined) body.count = count;
+    else { const c = o.count ?? 10; body.count = c ? c : null; }
+    body.source = o.source || 'palette';
+    const any = set || topics.length > 0 || !!type;
+    if (box && !any) { for (const k in body) delete body[k]; Object.assign(body, { source: 'next', box }); }
+
+    // chips and the composed line: "Practise Circles · Hard · 5 questions · timed"
+    topics.forEach(s => chips.push({ key: 'topic:' + s, label: TOPIC[s].short }));
+    if (type) chips.push({ key: 'type', label: type.name });
+    const POOL = { redo: 'My mistakes', checks: 'Check-ins due', untried: 'Types I haven’t met', marked: 'Marked', saved: 'Saved' };
+    if (body.pool) chips.push({ key: 'pool', label: POOL[body.pool] });
+    if (body.adaptive) chips.push({ key: 'adaptive', label: 'Adaptive' });
+    if (body.tiers && body.tiers.length < 3) chips.push({ key: 'tiers', label: body.tiers.map(cap).join(', ') });
+    else if (body.tiers) chips.push({ key: 'tiers', label: 'Mixed' });
+    if (box) chips.push({ key: 'box', label: `${box} minutes` });
+    else chips.push({ key: 'count', label: body.count ? `${body.count} ${body.count === 1 ? 'question' : 'questions'}` : 'Endless' });
+    if (body.timed === true) chips.push({ key: 'timed', label: body.feedback === 'end' ? 'Test mode' : 'timed' });
+    if (body.timed === false) chips.push({ key: 'timed', label: 'untimed' });
+    if (body.formats) chips.push({ key: 'formats', label: body.formats[0] === 'spr' ? 'Grid-in' : 'Multiple choice' });
+    if (body.feedback === 'retry') chips.push({ key: 'feedback', label: 'Retry first' });
+    if (body.order === 'ramp') chips.push({ key: 'order', label: 'Easy to hard' });
+    if (body.zone) chips.push({ key: 'zone', label: body.zone === 'warm' ? 'Warm-up' : 'Stretch' });
+    const line = box && !any ? `Up next for ${box} minutes` : `Practise ${chips.map(c => c.label).join(' · ')}`;
+    return { body, chips, unknown, text: line, any: any || !!box, box };
+  }
+
+  /* ------------------------------------------------------------ the question-type index
+     GET /api/shell/catalog once a session (sessionStorage satf.types): the palette's and the
+     quick sheet's 386 types with their named mistakes. */
+  let typesAsked = null;
+  function types() {
+    if (!typesAsked) {
+      typesAsked = (async () => {
+        let raw = null;
+        try { raw = JSON.parse(sget(SS(), 'satf.types') || 'null'); } catch (_) {}
+        if (!raw || !Array.isArray(raw.types)) {
+          raw = await api('/shell/catalog', { quiet: true });
+          sput(SS(), 'satf.types', JSON.stringify(raw));
+        }
+        const list = raw.types.map(([template, name, topic, rs]) =>
+          ({ template, name, topic, reasons: rs.map(([norm, label]) => ({ norm, label: label || norm })) }));
+        const byTopic = {};
+        list.forEach(x => (byTopic[x.topic] = byTopic[x.topic] || []).push(x));
+        return { list, byTopic, cb: raw.cb || {} };
+      })();
+      typesAsked.catch(() => { typesAsked = null; });
+    }
+    return typesAsked;
+  }
 
   const poly = (n, r, rot = -90) => Array.from({ length: n }, (_, i) => {
     const a = (rot + i * 360 / n) * Math.PI / 180;
@@ -1609,6 +1770,7 @@
         icon: 'settings', href: '/me/settings/', kbd: 'G S' });
     if (!saved) items.push({ label: 'Sign in', icon: 'signin', href: '/signin/' });
     items.push({ label: 'Sign in another device', icon: 'devices', href: '/link/' },
+      { label: 'Continue on your phone', icon: 'devices', onClick: () => UI.continueOnPhone() },
       { label: 'Help & FAQ', icon: 'help', href: '/help/', kbd: 'G H' },
       { label: 'Send feedback', icon: 'chat', onClick: feedback },
       { group: 'Display' },
@@ -1683,6 +1845,7 @@
       !saved && !shared ? row('Save your progress', 'save', { href: '/me/settings/#account', meta: dot() }) : null,
       !saved ? row('Sign in', 'signin', { href: '/signin/' }) : null,
       row('Sign in another device', 'devices', { href: '/link/' }),
+      row('Continue on your phone', 'devices', { onClick: () => UI.continueOnPhone() }),
       row('Help & FAQ', 'help', { href: '/help/', current: here === 'help' }),
       row('Send feedback', 'chat', { onClick: feedback })),
       h('div', { class: 'more-group' },
@@ -1893,7 +2056,7 @@
     }).catch(e => { console.warn(e); if (UI.toast) UI.toast('Couldn’t open that. Try again.'); });
     UI[name] = stub;
   }
-  lazy('quick', 'quick'); lazy('palette', 'palette'); lazy('report', 'report');
+  lazy('quick', 'quick'); lazy('palette', 'palette'); lazy('report', 'report'); lazy('continueOnPhone', 'qr');
   const feedback = () => UI.report({ kind: 'page', source: location.pathname + location.search });
 
   /* ---- UI.shell */
@@ -1925,6 +2088,9 @@
     for (const q of [W_SIDE, W_PHONE]) { try { matchMedia(q).addEventListener('change', layout); } catch (_) {} }
     layout();
     onShell(paintAll);
+    onShell(notices);
+    // the first hover on the sidebar in a session fetches the palette's type index (U23)
+    if (sideEl) sideEl.addEventListener('pointerenter', () => { types().catch(() => {}); }, { once: true });
     // no shell data at all: Up next and the Today card leave, the nav still works (Shell 2.12)
     // (and a retired code: nothing of that student stays painted)
     const gone = () => {
@@ -1957,6 +2123,100 @@
     paintTabs(d);
     paintStrip();
     paintBarNext();
+  }
+
+  /* ---- banners (Shell 2.11, U15, U17, U19) and event toasts (U25)
+     retired, offline and storage are the system's (above); of the student's notices one
+     shows at a time, in the spec's order, and kit puts the system's first. */
+  const NOTICES = ['deadline', 'stage', 'first', 'nudge'];
+  const WEEK_MS = 7 * 864e5;
+  const COLLEGE_BOARD = 'https://satsuite.collegeboard.org/sat/registration';
+  const daysTo = (from, to) => Math.round((new Date(to + 'T12:00:00') - new Date(from + 'T12:00:00')) / 864e5);
+  const STAGE_LINE = {
+    build: 'Build starts today: sets run at SAT pace, with the key after each question.',
+    test: 'Test-like starts today: sets run at SAT pace with the key at the end.',
+    final: 'Final week starts today: sets run at SAT pace with the key at the end.',
+  };
+  function noticeOf(d) {
+    const me = d.me || {}, saved = !!(me.linked || me.saved), today = (d.today && d.today.day) || localDay();
+    const r = d.registration;
+    if (r && r.day && r.register_by) {
+      const left = n => n <= 0 ? 'last day' : `${plural(n, 'day')} left`;
+      const text = r.late && r.late_by
+        ? `Late registration for ${day(r.day)} closes ${day(r.late_by)} · ${left(daysTo(today, r.late_by))}`
+        : `Register for ${day(r.day)} by ${day(r.register_by)} · ${left(r.days_left ?? daysTo(today, r.register_by))}`;
+      return { kind: 'deadline', text, o: { icon: 'clock' }, actions: [
+        { label: 'I’ve registered', primary: true, onClick: e => {
+          const b = e.currentTarget;
+          b.setAttribute('aria-busy', 'true');
+          prefs.set({ registered: r.day }).then(() => { UI.banner.clear('deadline'); if (shellData) shellData.registration = null; },
+            () => { b.removeAttribute('aria-busy'); if (UI.toast) UI.toast('Not saved. Try again.'); });
+        } },
+        { label: 'Register at College Board ↗', onClick: () => { window.open(COLLEGE_BOARD, '_blank', 'noopener'); } },
+        UI.ics ? { label: 'Add deadline to calendar', icon: 'calendar', onClick: () => UI.ics({
+          title: `Register for the SAT on ${day(r.day)}`, start: r.late ? r.late_by : r.register_by, allDay: true,
+          alarm: 9 * 60, url: COLLEGE_BOARD, description: `Registration for the ${day(r.day)} SAT closes this day.` }) } : null,
+      ].filter(Boolean) };
+    }
+    const st = d.stage, p = d.prefs || {};
+    const stageKey = st && `${st.name}:${st.since}`;
+    if (st && st.since === today && STAGE_LINE[st.name] && p.stage_auto !== false && lget('satf.stage.seen') !== stageKey) {
+      const seen = () => lput('satf.stage.seen', stageKey);
+      return { kind: 'stage', text: STAGE_LINE[st.name], o: { dismiss: true, onDismiss: seen }, actions: [
+        { label: 'Why?', href: '/help/#stages', onClick: seen },
+        { label: 'Keep my settings', onClick: () => { seen(); UI.banner.clear('stage');
+          prefs.set({ stage_auto: false }).then(() => { if (UI.toast) UI.toast('Kept. Your exam date no longer changes your settings.'); },
+            () => { if (UI.toast) UI.toast('Not saved. Try again.'); }); } },
+      ] };
+    }
+    if (shared || saved) return null;
+    if (!d.answered && !lget('satf.first')) {
+      return { kind: 'first', text: 'Have progress on another device?', actions: [
+        { label: 'Sign in', primary: true, href: '/signin/' },
+        { label: 'Dismiss', quiet: true, dismiss: true, onClick: () => lput('satf.first', 1) },
+      ] };
+    }
+    if (d.answered >= 50 && Date.now() - (Number(lget('satf.nudge', 0)) || 0) > WEEK_MS) {
+      return { kind: 'nudge', text: 'Your progress is only in this browser. Save it to an email so clearing the browser can’t lose it.',
+        o: { icon: 'save' }, actions: [
+          { label: 'Save progress', primary: true, href: '/me/settings/#account' },
+          { label: 'Not now', quiet: true, dismiss: true, onClick: () => lput('satf.nudge', Date.now()) },
+        ] };
+    }
+    return null;
+  }
+  function notices(d, fromCache) {
+    if (!d || !UI.banner) return;
+    const n = noticeOf(d);
+    NOTICES.forEach(k => { if (!n || n.kind !== k) UI.banner.clear(k); });
+    if (n) UI.banner(n.kind, n.text, n.actions, n.o || {});
+    if (!fromCache) whenVisible(() => eventToasts(d));
+  }
+  // achievements and report replies: at most 2 toasts a page load, each shown once a tab;
+  // what they announce is marked seen (it stays in the inbox, S1's feed)
+  let eventsShown = 0;
+  const ROMAN = ['', 'I', 'II', 'III', 'IV', 'V', 'VI'];
+  function eventToasts(d) {
+    if (!UI.toast) return;
+    let seen = [];
+    try { seen = JSON.parse(sget(SS(), 'satf.toasted') || '[]') || []; } catch (_) {}
+    const mark = k => { seen.push(k); sput(SS(), 'satf.toasted', JSON.stringify(seen.slice(-60))); };
+    const show = (text, o) => { if (eventsShown >= 2) return; eventsShown += 1; UI.toast(text, { ms: 6000, wait: true, ...o }); };
+    const ach = ((d.new && d.new.achievements) || []).filter(a => a && !seen.includes(`a:${a.id}:${a.tier || ''}`));
+    ach.forEach(a => {
+      mark(`a:${a.id}:${a.tier || ''}`);
+      const name = a.text || `${a.label || a.name || a.title || a.id}${a.tier > 1 && ROMAN[a.tier] ? ' · ' + ROMAN[a.tier] : ''}`;
+      show(`Achievement · ${name}`, { icon: a.glyph && TOPIC[a.glyph] ? glyph(a.glyph) : 'trophy', action: { label: 'See', href: '/me/#achievements' } });
+    });
+    if (ach.length) api('/me/achievements/seen', { method: 'POST', quiet: true, body: { ids: ach.map(a => a.id) } }).catch(() => {});
+    const n = d.report_replies || 0, rep = d.report;
+    const key = `r:${n}:${rep ? rep.id : ''}`;
+    if (n > 0 && !seen.includes(key)) {
+      mark(key);
+      show(n === 1 && rep && rep.unread ? `Report #${rep.id} answered` : `${plural(n, 'report')} answered`,
+        { icon: 'chat', action: { label: 'Read', href: '/me/settings/#reports' } });
+      api('/reports/seen', { method: 'POST', quiet: true }).catch(() => {});
+    }
   }
 
   // a toast carried over a page change: "Signed out · Undo", "Now Maya"
@@ -2193,7 +2453,7 @@
   Object.assign(UI, {
     learner, useLearner, freshLearner, shared: () => shared, stored: () => storable, ready,
     api, cached, whenVisible, refresh, onShell, shellData: () => shellData, me, prefs, prefRow, look,
-    keys, ROUTES, start, nextItems, skip,
+    keys, ROUTES, start, nextItems, skip, need, types, parseSet, ALIASES, boxChips, feedback,
     NAV, SECTION, shell, nowStrip, sections, menuSheet, accountMenu: accountItems,
     signOut: () => (shellData && shellData.me && shellData.me.linked) || shared ? signOut() : leave(),
     h, s, svg, mark, ICON, TOPICS, TOPIC, DOMAINS, glyph, chip,
