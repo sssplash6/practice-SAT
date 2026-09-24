@@ -13,11 +13,15 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
   revived, gate 19/19; the lint now reports 16 findings: 11 low-yield templates, 5 filler-majority notes) and `v2/f6`
   (33b1627; the test_flow label-threshold failure was a test-isolation bug, fixed by the other agent). F6's fixer left
   a drill.py change for S4 (use sets.serve for pool 'set'): in `followups/F6.json`.
-- PAUSED 2026-09-24 23:59 for usage limits (nothing running; checkpoint loop stopped). On "continue": restart the
-  checkpoint loop, then relaunch build.js with `[{id:'F2', from:'verify'}, {id:'F3', unit:3}]`.
-  F2: all 4 units built (tip 9811bca); its check r1 was cut off, so it re-runs (one check + one fix, then merge).
-  F3: units 1-3 built; unit 4 (dev/workspace.html plus fixes it made in question.js, runner.js and runner.css) was in
-  progress, checkpoint 2f4d1d0; then one check + one fix, then merge.
+- RESUMED 2026-09-25 ~02:00. RUNNING: build.js run `wf_0d8fa245-2c3` (task waib02fyp)
+  `[{id:'F2', from:'verify'}, {id:'F3', unit:3}]`; checkpoint loop task bvo5p4x5d. When each passes its one fix:
+  leftovers to `followups/<id>.json`, test_flow, merge.
+- **Wave 2 is ready to launch** once F2 and F3 merge: build.js TASKS now has S1, S3, S4, S5, S6, S10 (five units each).
+  Launch `[{id:'S1'},{id:'S3'},{id:'S4'},{id:'S5'},{id:'S6'},{id:'S10'}]` (6 = the concurrency cap).
+- **The other agent has HELPER-TASKS.md** (the user gave it to him 2026-09-25) and works through it: s9-server 6 commits,
+  s7-server 3, s8-server 5 as of 02:00. Wait for "<task> done" before checking; then add S9S/S7S/S8S TASKS entries,
+  run `from:'verify'`, merge; then add pages-only tasks S7, S8, S9 (web/plan/** + plan-ui.js; web/compete/**,
+  web/challenge/** + compete-ui.js; web/words/**, web/vocabulary/** + words-ui.js).
 - **S9 server** (`v2/s9-server`, worktree `.claude/worktrees/s9-server`, the other agent's): parts 1-2 done (content
   index + proof-based review core; gated item generation), part 3 (api_words.py) checkpointed at 91021b1, part 4
   (checks/s9.py) not started; ~2,400 lines. **The other agent finishes it** (the user, 2026-09-24): do not build it here. When the user
