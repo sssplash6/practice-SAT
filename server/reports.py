@@ -483,6 +483,14 @@ def _live(row) -> bool:
             or _json(row["cfg"]).get("feedback") == "end")
 
 
+def _paper(row) -> list[dict]:
+    """A sitting's questions in order; a fresh mock or a module keeps them by module."""
+    p = deps.paper_of(row) if row else []
+    if isinstance(p, dict):
+        p = [q for k in sorted(p) if isinstance(p[k], list) for q in p[k]]
+    return [q for q in p if isinstance(q, dict)]
+
+
 def _from_bank(template: str, seed: int) -> dict:
     from satbank.registry import generate, topic_of
     item = generate(template, seed)
@@ -500,7 +508,7 @@ def _question(learner: str, body: ReportIn, tz: int):
         return daily.question(day), None, f"qotd:{day}"
     if sid:
         row = deps.mine(deps.session_or_404(sid), learner)
-        q = next((x for x in deps.paper_of(row) if x.get("id") == body.question_id), None)
+        q = next((x for x in _paper(row) if x.get("id") == body.question_id), None)
         if q is None:
             raise HTTPException(404, "no such question in that session")
         return q, row, sid
@@ -540,7 +548,7 @@ def _context(learner: str, kind: str, body: ReportIn, tz: int) -> tuple[dict, di
         given = db.load_answers(row).get(q["id"]) if row else None
         if given is None and attempt:
             given = _given(q, attempt["given"])
-        paper = deps.paper_of(row) if row else []
+        paper = _paper(row)
         n = next((i for i, x in enumerate(paper, 1) if x.get("id") == q["id"]), None)
         ctx.update({"template": t, "seed": s, "topic": q.get("topic"), "topic_name": q.get("topic_name") or _topic_name(q.get("topic")),
                     "skill": practice.skill_of(q), "difficulty": q.get("difficulty"), "fmt": q.get("type"),
@@ -908,7 +916,7 @@ def run_pending(learner: str, session: str | None = None) -> int:
         row = db.one("SELECT * FROM sessions WHERE id=?", r["session"]) if r["session"] else None
         if _live(row) or not _revealed(learner, r["template"], r["seed"]):
             continue
-        q = next((x for x in deps.paper_of(row) if x.get("id") == r["qid"]), None) if row else None
+        q = next((x for x in _paper(row) if x.get("id") == r["qid"]), None)
         try:
             q = q or _from_bank(r["template"], r["seed"])
         except Exception:
