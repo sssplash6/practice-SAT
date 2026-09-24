@@ -284,7 +284,8 @@
     UI.workspace(host, q, Object.assign({ prefs: { confidence: 'ask' }, toolbar: false }, opts));
     return c;
   }
-  const actions = { session: 'dev', axes: ['easier', 'grid'], on: { save: async () => {}, mark: async () => {}, note: () => {}, history: () => {}, again: () => {}, report: () => {} } };
+  // the twin body: F5's {templates:[t]} once it lands; until then this server takes topics
+  const actions = { session: 'dev', axes: ['easier', 'grid'], body: { topics: [FX[0].topic], source: 'twin' }, on: { save: async () => {}, mark: async () => {}, note: () => {}, history: () => {}, again: () => {}, report: () => {} } };
   const mcq = FX[0], grid = FX.find(q => q.type === 'spr');
   const miss = feedback(mcq, 2, { ms: 72000, try: 1 });
   // G4 check 1: one ctx, four modes, one row (the row depends on ctx, never on the workspace mode)
