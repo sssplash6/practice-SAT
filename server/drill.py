@@ -178,6 +178,7 @@ def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], d
             traps = [t for t in traps if str(t["id"]) in allowed]
         for t in traps:
             queue.append(t["template"])
+            cfg.setdefault("trap_queue", []).append({"template": t["template"], "norm": t["norm"]})
             why[t["template"]] = "open mistake" if pool == "redo" else "check-in due"
             if t.get("norm") and not str(t["norm"]).startswith("~"):
                 cfg["want"].setdefault(t["template"], "^" + re.escape(t["norm"]) + "$")
@@ -499,6 +500,11 @@ def resolve(learner: str, body: dict) -> dict:
         cfg["why"] = why
         if "count" not in body and pool != "new":
             cfg["count"] = cfg["total"] = min(MAX_FIXED, (len(queue) + len(items)) * each)
+        if pool in {"redo", "checks"}:
+            targets = [t for t in cfg.get("trap_queue", ()) if t["template"] in queue]
+            if targets and cfg["count"] is not None:
+                cfg["trap_queue"] = [targets[i % len(targets)] for i in range(cfg["count"])]
+                cfg["queue"] = [t["template"] for t in cfg["trap_queue"]]
     elif pool != "new":
         _empty("filters_removed_all")
     else:
@@ -637,21 +643,51 @@ def _offers(card: practice.Card, regex: str) -> bool:
     return any(pattern.search(r or "") or pattern.search(progress.norm(r or "")) for r in reasons)
 
 
+def _mcq_form(card: practice.Card) -> practice.Card | None:
+    """The same seed's MCQ form, only when it keeps the question's setup."""
+    if card.item.fmt != "spr":
+        return None
+    try:
+        item = generate(card.key, card.seed, fmt="mcq")
+    except Exception:
+        return None
+    if item.fmt != "mcq" or item.key != card.item.key or item.params != card.item.params:
+        return None
+    return practice.Card.of(card.key, card.seed, item, card.topic)
+
+
 def _fresh(b: practice.Builder, template: str, allowed: set[str] | None,
-           cfg: dict | None = None) -> practice.Card | None:
+           cfg: dict | None = None, *, required_norm: str | None = None,
+           prefer_mcq: bool = False) -> practice.Card | None:
     """Walk fresh seeds with every active filter; keep want on repairs too."""
     cfg = cfg or {}
     topic = topic_of(template)
     wanted = cfg.get("want", {}).get(template)
     fallback = None
     survey = levels() if cfg.get("levels") else {}
-    for _ in range(60 if wanted else 24):
+    # A named repair or fix may not quietly become a plain question: F4 only
+    # lowers owed when the actual served form offers that norm. Ordinary want
+    # requests retain the 60-seed fallback and trap_true=False contract.
+    for _ in range(600 if required_norm else 60 if wanted else 24):
         card = b.draw(template, topic)
         if card is None:
             break
+        alternate = _mcq_form(card) if required_norm or prefer_mcq else None
+        if alternate and practice.question_hash(alternate.item) in b.seen_stems:
+            alternate = None
+        if required_norm and required_norm not in progress.offered_of(practice.to_question(card, 1)):
+            if alternate and required_norm in progress.offered_of(practice.to_question(alternate, 1)):
+                card = alternate
+            else:
+                b.keep(card)
+                fallback = True
+                continue
+        elif prefer_mcq and not progress.offered_of(practice.to_question(card, 1)) and alternate:
+            card = alternate
         tier = card.feats["difficulty"]
         measured = survey.get((template, tier), {})
-        if allowed and tier not in allowed or card.item.fmt not in cfg.get("formats", ("mcq", "spr")) \
+        if allowed and tier not in allowed or (card.item.fmt not in cfg.get("formats", ("mcq", "spr"))
+                                                  and not (required_norm or prefer_mcq)) \
                 or (cfg.get("levels") and measured.get("level") not in cfg["levels"]) \
                 or (cfg.get("unmeasured") is False and measured.get("rough", True)) \
                 or [template, card.seed] in cfg.get("exclude", ()):
@@ -667,7 +703,7 @@ def _fresh(b: practice.Builder, template: str, allowed: set[str] | None,
             continue
         card.trap_true = bool(wanted)
         return card
-    if wanted and fallback:
+    if wanted and fallback and not required_norm:
         plain = {**cfg, "want": {t: v for t, v in cfg.get("want", {}).items() if t != template}}
         card = _fresh(b, template, allowed, plain)
         if card:
@@ -693,11 +729,18 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
         rep = cfg["end_repairs"].pop(0)
     if rep:
         rep_key = rep["template"] if isinstance(rep, dict) else rep
-        if isinstance(rep, dict) and rep.get("want"):
-            cfg.setdefault("want", {})[rep_key] = rep["want"]
-        card = _fresh(b, rep_key, None, cfg)
+        norm = rep.get("norm") if isinstance(rep, dict) else None
+        want = rep.get("want") if isinstance(rep, dict) else None
+        target_want = {t: v for t, v in cfg.get("want", {}).items() if t != rep_key}
+        if want:
+            target_want[rep_key] = want
+        target = {**cfg, "want": target_want}
+        card = _fresh(b, rep_key, None, target, required_norm=norm,
+                      prefer_mcq=not norm)
         if card:
             return card, True
+        if norm:
+            _empty("named_mistake_unavailable")
 
     # a saved question, served again exactly
     while cfg.get("items"):
@@ -715,9 +758,33 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
     # templates queued by a report or the mistakes list
     while cfg.get("queue"):
         template = cfg["queue"].pop(0)
-        card = _fresh(b, template, allowed, cfg)
+        target = cfg.get("trap_queue", []).pop(0) if cfg.get("trap_queue") else None
+        norm = target["norm"] if target and progress.named(target["norm"]) else None
+        target_want = {t: v for t, v in cfg.get("want", {}).items() if t != template}
+        if norm:
+            target_want[template] = "^" + re.escape(norm) + "$"
+        target_cfg = {**cfg, "want": target_want}
+        card = _fresh(b, template, allowed, target_cfg, required_norm=norm,
+                      prefer_mcq=bool(target and not norm))
         if card:
             return card, cfg.get("pool") in ("redo", "checks")
+        if norm:
+            _empty("named_mistake_unavailable")
+
+    # An endless mistakes set keeps working on its open traps after the
+    # initial queue; each named question still has to offer its target.
+    if cfg.get("pool") == "redo" and cfg.get("count") is None:
+        for trap in progress.open_traps(learner):
+            norm = trap["norm"] if progress.named(trap["norm"]) else None
+            target_want = {t: v for t, v in cfg.get("want", {}).items() if t != trap["template"]}
+            if norm:
+                target_want[trap["template"]] = "^" + re.escape(norm) + "$"
+            card = _fresh(b, trap["template"], allowed, {**cfg, "want": target_want},
+                          required_norm=norm, prefer_mcq=not norm)
+            if card:
+                return card, False
+            if norm:
+                _empty("named_mistake_unavailable")
 
     if cfg.get("source") == "start" and len(served) < 4:
         domain = ("Algebra", "Advanced Math", "Problem-Solving and Data Analysis",
@@ -949,8 +1016,9 @@ def answer(row, qid: str, given, ms: int | None) -> dict:
             state["rights"] = 0
     if not filed["correct"] and not cfg.get("fixed") and not q.get("repair") and cfg.get("repairs", "next") != "off":
         normalized = progress.norm(filed["reason"] or "")
-        want = "^" + re.escape(normalized) + "$" if normalized and not normalized.startswith("~") else None
-        repair = {"template": q["key"], "want": want}
+        named = progress.named(normalized)
+        want = "^" + re.escape(normalized) + "$" if named else None
+        repair = {"template": q["key"], "want": want, "norm": normalized if named else None}
         if cfg.get("repairs") == "end":
             cfg.setdefault("end_repairs", []).append(repair)
         else:

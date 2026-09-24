@@ -49,15 +49,65 @@ def fixtures():
            learner, "f5-fixture", q["id"], q["key"], q["seed"], q["topic"], now)
     db.run("INSERT INTO sets(code,owner,kind,items,created) VALUES (?,?,?,?,?)",
            "F5SET", learner, "set", json.dumps([[q["key"], q["seed"]]]), now)
-    trap = progress.record_trap(learner, q, "substituted the wrong value", now)
+    trap = progress.record_trap(learner, q, next(r for r in q["reasons"] if r), now)
     q2 = question("pct.change", 72)
     db.run("INSERT INTO attempts(learner,qid,template,seed,topic,difficulty,fmt,correct,given,at)"
            " VALUES (?,?,?,?,?,?,?,?,?,?)", learner, "old-right", q2["key"], q2["seed"],
            q2["topic"], q2["difficulty"], q2["type"], 1, "0", old)
-    check = progress.record_trap(learner, q2, "wrong base", old)
+    check = progress.record_trap(learner, q2, progress.offered_of(q2)[0], old)
     db.run("UPDATE traps SET closed=?,closed_how='fixed',due=?,checks=0,owed=0 WHERE id=?",
            old, due, check["id"])
     return q, trap, check
+
+
+def trap_true_checks(client):
+    learner = "a:f5traptrue"
+    headers = {"X-Learner": learner}
+    first_set = request(client, {"templates": ["lin.evaluate"], "formats": ["mcq"], "count": 1},
+                        learner=learner)
+    sid = first_set["id"]
+    first = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", sid)["questions"])[0]
+    wrong = next(i for i, reason in enumerate(first["reasons"])
+                 if reason and i != "ABCD".index(first["answer"]))
+    norm = progress.norm(first["reasons"][wrong])
+    client.post(f"/api/drill/{sid}/answer", headers=headers,
+                json={"question_id": first["id"], "answer": wrong}).raise_for_status()
+    repair_result = client.post(f"/api/drill/{sid}/next", headers=headers)
+    repair_result.raise_for_status()
+    repair = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", sid)["questions"])[1]
+    assert repair_result.json()["question"]["repair"] and repair["seed"] != first["seed"]
+    assert norm in progress.offered_of(repair), (norm, progress.offered_of(repair))
+    right = "ABCD".index(repair["answer"]) if repair["type"] == "mcq" else repair["answer"]
+    client.post(f"/api/drill/{sid}/answer", headers=headers,
+                json={"question_id": repair["id"], "answer": right}).raise_for_status()
+    assert progress.open_traps(learner)[0]["owed"] == 1
+
+    fix = request(client, {"mistakes": True}, learner=learner)
+    assert fix["total"] == 2
+    for index in range(2):
+        served = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", fix["id"])["questions"])[-1]
+        assert norm in progress.offered_of(served), (norm, progress.offered_of(served))
+        right = "ABCD".index(served["answer"]) if served["type"] == "mcq" else served["answer"]
+        client.post(f"/api/drill/{fix['id']}/answer", headers=headers,
+                    json={"question_id": served["id"], "answer": right}).raise_for_status()
+        if index == 0:
+            assert not progress.open_traps(learner)
+        client.post(f"/api/drill/{fix['id']}/next", headers=headers).raise_for_status()
+    assert not progress.open_traps(learner)
+
+    # An unnamed grid-in trap has no offer requirement and still owes two clean answers.
+    unnamed = "a:f5unnamed"
+    q = question("pct.change", 72)
+    progress.record_trap(unnamed, q, "", progress.now())
+    fix = request(client, {"mistakes": True}, learner=unnamed)
+    assert fix["total"] == 2
+    for index in range(2):
+        served = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", fix["id"])["questions"])[-1]
+        right = "ABCD".index(served["answer"]) if served["type"] == "mcq" else served["answer"]
+        client.post(f"/api/drill/{fix['id']}/answer", headers={"X-Learner": unnamed},
+                    json={"question_id": served["id"], "answer": right}).raise_for_status()
+        assert [t["owed"] for t in progress.open_traps(unnamed)] == ([1] if index == 0 else [])
+        client.post(f"/api/drill/{fix['id']}/next", headers={"X-Learner": unnamed}).raise_for_status()
 
 
 def checks(client):
@@ -91,7 +141,7 @@ def checks(client):
         {"list": "templates", "ids": ["lin.evaluate"]},
         {"unseen": True, "topics": ["linear_functions"]},
         {"recheck": True}, {"share": "F5SET"},
-        {"trap": {"template": q["key"], "reason": "substituted the wrong value"}},
+        {"trap": {"template": q["key"], "reason": trap["norm"]}},
     ]
     related = progress.related()
     if related:
@@ -173,6 +223,7 @@ def checks(client):
     assert db.one("SELECT source,origin FROM traps WHERE id=?", tid)["source"] == "outside"
     assert client.post("/api/mistakes/log", headers={"X-Learner": "a:f5outside"},
                        json={"template": "bad.template"}).status_code == 422
+    trap_true_checks(client)
 
 
 def check(client):
