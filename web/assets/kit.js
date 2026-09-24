@@ -1716,6 +1716,24 @@
     put(host, el);
     return { el, update(c) { cur = { ...c }; draw(); }, pressed: () => [...pressed] };
   }
+  // dense grids (strip, atlas, heatmap; rule 9): cells sit closer than 44px, so no cell can have
+  // a 44px box of its own. A tap in the grid's gaps, or in the --touch band .near-tap adds
+  // around it on a coarse pointer, picks the nearest cell within 22px.
+  function nearTap(box, sel) {
+    box.classList.add('near-tap');
+    box.addEventListener('click', e => {
+      if (e.target.closest(sel) || (e.target !== box && e.target.getAttribute('role') !== 'row')) return;
+      let best = null, bd = 22 * 22;
+      box.querySelectorAll(sel).forEach(c => {
+        if (c.disabled || c.hasAttribute('data-filtered')) return;
+        const r = c.getBoundingClientRect();
+        const dx = Math.max(r.left - e.clientX, 0, e.clientX - r.right), dy = Math.max(r.top - e.clientY, 0, e.clientY - r.bottom);
+        if (dx * dx + dy * dy <= bd) { bd = dx * dx + dy * dy; best = c; }
+      });
+      if (best) { best.focus({ preventScroll: true }); best.click(); }
+    });
+    return box;
+  }
   function strip(host, marks, o = {}) {
     const el = h('div', { class: 'strip' + (o.fit ? ' fit' : ''), role: o.onPick ? 'group' : 'img' });
     const norm = (m, i) => typeof m === 'string' ? { status: m, n: i + 1 } : { n: i + 1, ...m };
@@ -1753,6 +1771,7 @@
       bs.forEach(x => { x.tabIndex = x === b ? 0 : -1; });
       b.focus();
     });
+    if (o.onPick) nearTap(el, 'button');
     draw();
     put(host, el);
     return { el, set(i, m) { list[i] = norm(m, i); draw(); }, update(ms) { list = ms.map(norm); draw(); } };
@@ -1783,6 +1802,7 @@
       return c;
     });
     el.append(...cells);
+    if (o.onPick || o.selectable) nearTap(el, '[role="gridcell"]');
     const emit = () => o.onSelect && o.onSelect([...sel]);
     const toggle = (c, on) => {
       on = on ?? !sel.has(c._t.template);
@@ -2251,7 +2271,7 @@
   Object.assign(UI, {
     sheet, confirm, pop, menu, tooltip, toast, banner,
     seg, chips, tabs, switch: switchCtl, triCheck, dropdown, filterBar, otp, counter, scoreSlider, images, examDate, actionBar, selbar,
-    tile, meter, skel, cardError, table, pips, dbars, cell, legend, strip, atlas, masteryWord, STRONG, skillRow, avatar, localPhoto, countdown, STATES,
+    tile, meter, skel, cardError, table, pips, dbars, cell, legend, strip, nearTap, atlas, masteryWord, STRONG, skillRow, avatar, localPhoto, countdown, STATES,
     VERBS, verb, KEYS, pts, fact, empty, SUBJECT, qlabel,
     dur, mmss, num, date, relTime, KIND, copyText, ics,
   });

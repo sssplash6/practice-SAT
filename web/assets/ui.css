@@ -2314,6 +2314,34 @@ main  { view-transition-name: main; }
 :root[data-motion="reduce"]::view-transition-old(*),
 :root[data-motion="reduce"]::view-transition-new(*) { animation: none !important; }
 
+/* ------------------------------------------------------------------ touch targets (rule 9)
+   On a phone or a coarse pointer every control is at least --touch (44px) each way. Controls
+   with room grow to it; small chrome gets a centred 44px hit area with no layout shift. Dense
+   grids (UI.strip, UI.atlas, UI.heatmap) sit closer than 44px, so UI.nearTap gives their gaps,
+   and a 14px band above and below, to the nearest cell. */
+@media (max-width: 759px), (pointer: coarse) {
+  .quiet { min-height: var(--touch); }
+  .seg:where([role]) > button, .seg:where([role]) > label { min-height: var(--touch); }
+  .ibtn { width: max(var(--ib, 36px), var(--touch)); height: max(var(--ib, 36px), var(--touch)); }
+  .pbar-mark { width: var(--touch); height: var(--touch); margin-left: -9px; }
+  .choices button { min-width: var(--touch); height: var(--touch); }
+  .legend li > button, .legend > button { min-height: var(--touch); padding-block: 0; margin-block: -12px; }
+  .nextup-go .pill { height: var(--touch); }
+  .table th:has(> button) { padding-block: 0; }
+  .table th button { min-width: var(--touch); min-height: var(--touch); }
+  .table.hover tbody td { height: var(--touch); }
+  .sb-hits { inset: calc((30px - var(--touch)) / 2) 0; }
+  input[type="range"] { height: var(--touch); }
+  :root { --cell: var(--touch); }
+  .cell.sm { --cell: var(--touch); }
+  .cal:not(.plan) .cal-grid, .cal.compact .cal-grid, .cal.plan.compact .cal-grid { --c: var(--touch); grid-template-columns: repeat(7, minmax(0, var(--c))); gap: 2px; }
+  .near-tap:is(.strip, .atlas) { padding-block: 14px; margin-block: -14px; }
+  .pbar-chip, .pbar-me, .brand, .streak, .bar-end > .avatar, .side-mark { position: relative; }
+  :is(.pbar-chip, .pbar-me, .brand, .streak, .bar-end > .avatar, .side-mark)::before {
+    content: ""; position: absolute; left: 50%; top: 50%; width: max(100%, 44px); height: max(100%, 44px); transform: translate(-50%, -50%);
+  }
+}
+
 /* ------------------------------------------------------------------ print */
 
 @page { margin: 14mm 12mm; }                     /* fits A4 and Letter */

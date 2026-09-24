@@ -1346,6 +1346,7 @@
       const end = iso(opts.end || today());
       const firstMon = addDays(monOf(end), -7 * (weeks - 1));
       const grid = h('div', { class: 'heat', role: 'grid', style: `--weeks:${weeks}` });
+      if (UI.nearTap) UI.nearTap(grid, 'button.heat-c');
       // month labels over the first column that holds a 1st, and the M / W / F row labels
       const firsts = [];
       for (let w = 0; w < weeks; w++) {
