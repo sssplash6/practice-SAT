@@ -85,7 +85,8 @@
      UI.VERBS, UI.verb(id, {count, onClick, href, primary, sm, subject}), UI.KEYS
      UI.pts(el, pts, key)     UI.fact(el, key, {label}); UI.fact.open(el, key)
          any [data-fact] element opens its working on click or Enter (delegated here)
-     UI.empty(host, {sample, text, action, tag})   UI.empty.START
+     UI.empty(host, {sample, text, action, tag, answered})   UI.empty.START; with 0 answers
+         (o.answered, else UI.answered, which the shell sets from /api/me) the action is START (R55)
      UI.SUBJECT      UI.qlabel(item, sitting); UI.qlabel.addr(item)
    Formatters
      UI.dur(minutes)  UI.mmss(sec)  UI.num(n)  UI.date(d, 'long' | 'short' | 'eyebrow')
@@ -2238,7 +2239,7 @@
       el.append(h('div', { class: 'empty-sample', 'aria-hidden': 'true', inert: '' }, s, o.tag === false ? null : h('span', { class: 'badge soft', text: o.tag || 'Example' })));
     }
     if (o.text) el.append(h('p', { class: 'empty-text', text: o.text }));
-    const a = o.action;
+    const a = o.action && (o.answered ?? UI.answered) === 0 ? empty.START : o.action;   // the action follows the learner (R55)
     if (a) {
       const label = `${a.label}${a.cost ? ` · ${a.cost}` : ''}`;
       let b;

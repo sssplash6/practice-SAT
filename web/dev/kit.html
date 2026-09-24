@@ -766,7 +766,7 @@
     onPick: p => say(`${p.label || p.id}: ${p.low}–${p.high}`), label: 'Math section scores' }));
   demo('UI.bandChart null', 'c-band-null', host => UI.bandChart(host, sittings.slice(0, 2), { target: 700, projection: null, label: 'Math section scores' }));
   demo('UI.trend', 'c-band-mini', host => UI.trend(host, sittings, { height: 90, label: 'Math trend' }));
-  demo('UI.bandChart empty', 'c-band-empty', host => UI.bandChart(host, [], { height: 140, empty: { text: 'Your first test puts a band here.', action: { label: 'Start the diagnostic · 35 min', onClick: () => say('Would start the diagnostic') } } }));
+  demo('UI.bandChart empty', 'c-band-empty', host => UI.bandChart(host, [], { height: 140, empty: { text: 'Your first test puts a band here.', action: { label: `${UI.empty.START.label} · ${UI.empty.START.cost}`, onClick: () => say('Would start with 8') } } }));
   demo('UI.gauge', 'c-gauge', host => UI.gauge(host, { band: { low: 600, high: 650 }, target: 700, previous: { low: 560, high: 610, label: 'Section #4' }, today: { low: 590, high: 650 }, subject: 'math', sub: 'Math · Section #5', caption: 'Your band moved up 40 since the last section.' }));
   demo('UI.scale', 'c-scale', host => {
     const counts = Array.from({ length: 31 }, (_, i) => Math.round(60 * Math.exp(-((i - 15) ** 2) / 40)));
