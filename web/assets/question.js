@@ -25,12 +25,14 @@
            formNudge X4's repeating-decimal warning   coverTool  offer Cover choices (P5, X7)
            stage     {prompt, options, skip} a staged item: options hidden until step 1 (W2, W6)
            actions   ctx for UI.questionActions under the verdict, or fn(host, fb)
+           stemEl    an existing .q-stem node to reuse (V14)     spans  initial stem spans (kind 'chg' draws <mark class=chg>)
            callbacks onCheck(answer, meta) -> fb | Promise | undefined (the page calls reveal)
                      onSelect(answer | null) (exam, end), onEnter (exam grid-in), onStrike(i, on, by),
                      onSkip, onHint -> {kind, choice, reason, step, example}, onShowAnswer -> fb,
                      onOwn(own) -> fb (cover), onCover({covered, own, reveal_ms}), onCause(kind),
                      onTrap(i), onLadder, onKeepMarked(on), onRule(action, text), onExample(ex),
-                     onReanswer(answer, correct), onNext, onDone, onReveal(fb), onChange(state)
+                     onReanswer(answer, correct), onNext, onDone, onReveal(fb), onChange(state),
+                     onNotMine(anchor, i) (review: V6's link on your pick), onSpot(i) (SR11)
      ws    {el, q, key(e), check(conf), select(i), choose(i), strike(i, on, by), eliminate(on),
             cover(on), hint(), skip(), reveal(fb), unlock(), answered(), canCheck(), value(),
             state(), setHidden(on), tools(), renderTools(host), focus(), restart(), destroy()}
@@ -38,6 +40,10 @@
    UI.questionActions(host, q, ctx) -> {el, run(id), has(id)}        G4, R49
    UI.twin(host, ctx) -> {el, run(axis, n), menu()}                   R44, P18
    UI.twinSheet({body, recall, title, onDone}) -> sheet api           T5 (callers go through UI.twin)
+   UI.twinInline(host, {body, caption, onBack, backLabel, againLabel, wsOpts(q, n), onAnswer(fb, q, n), session})
+       -> {el, sid, answered, ws, finish(), destroy()}                R23, R24: the players' tile, the pane's mini-session
+       (UI.twin's ctx.inline(o) hands a player the run instead of opening the sheet)
+   UI.stemDiff(old, new) -> [{start, end, kind: 'chg'}]               V14: the numbers that changed, for opts.spans
    UI.pad(field, {onKey}) -> el                                       X6
    UI.calc  {open(o), close, toggle, isOpen, mode, engine, dock(host), sitting(id), onChange(fn),
              onOpen(fn), walkthrough(desmos), setMode(m)}             Desmos, else scientific (item 74)
@@ -238,7 +244,8 @@
     for (let i = 1; i < 100; i++) if (spr.repeatingCut('.' + String(i).padStart(2, '0'))) n++;
     if (n !== 15) bad.push(`${n} two-digit cuts, not 15`);
     const sci = sciEval.__test.filter(([src, want]) => { try { return Math.abs(sciEval(src, true, 0) - want) > 1e-9; } catch (_) { return true; } }).map(([s]) => s);
-    return { ok: !bad.length && !sci.length, spr: bad, sci };
+    const diff = stemDiff.__test.filter(([a, b, want]) => JSON.stringify(stemDiff(a, b).map(s => b.slice(s.start, s.end))) !== JSON.stringify(want)).map(([a]) => a);
+    return { ok: !bad.length && !sci.length && !diff.length, spr: bad, sci, diff };
   }
 
   const DIRECTIONS = [
@@ -321,11 +328,38 @@
     (spans || []).filter(s => s && s.end > s.start).sort((a, b) => a.start - b.start).forEach(s => {
       if (s.start < at) return;
       put(text.slice(at, s.start));
-      el.append(h('span', { class: `span-${s.kind || 'mark'}`, 'data-label': s.label || null, title: s.label || null }, text.slice(s.start, s.end)));
+      el.append(s.kind === 'chg' ? h('mark', { class: 'chg' }, text.slice(s.start, s.end))
+        : h('span', { class: `span-${s.kind || 'mark'}`, 'data-label': s.label || null, title: s.label || null }, text.slice(s.start, s.end)));
       at = s.end;
     });
     put(text.slice(at));
   }
+  // V14: the tokens of b that are not in a (numbers and words, LCS over /(\d[\d.,/]*|\s+)/),
+  // as spans of kind 'chg' in b's text; stems are ~400 characters, so the table stays small
+  function stemDiff(a, b) {
+    const split = s => String(s || '').split(/(\d[\d.,/]*|\s+)/).filter(x => x !== '');
+    const A = split(a), B = split(b), n = A.length, m = B.length;
+    if (!n || !m || n * m > 400000) return [];
+    const L = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+    for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = A[i] === B[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+    const out = [];
+    let i = 0, j = 0, pos = 0;
+    while (j < m) {
+      if (i < n && A[i] === B[j]) { pos += B[j].length; i++; j++; continue; }
+      if (i < n && L[i + 1][j] >= L[i][j + 1]) { i++; continue; }
+      if (!/^\s+$/.test(B[j])) {
+        const last = out[out.length - 1];
+        if (last && last.end === pos) last.end = pos + B[j].length; else out.push({ start: pos, end: pos + B[j].length, kind: 'chg' });
+      }
+      pos += B[j].length; j++;
+    }
+    return out;
+  }
+  stemDiff.__test = [
+    ['A circle has a diameter of 32 inches.', 'A circle has a diameter of 70 inches.', ['70']],
+    ['x = 144 and 2π', 'x = 120 and 3π', ['120', '3']],
+    ['same text', 'same text', []],
+  ];
   const keyIndex = fb => {
     if (!fb) return null;
     if (Number.isInteger(fb.answer_index)) return fb.answer_index;
@@ -369,7 +403,8 @@
     const status = h('p', { class: 'sr', role: 'status' });
     const headEl = headLine();
     const ruleTip = typeRule();
-    const stemEl = h('div', { class: 'q-stem', 'data-addr': 's' });
+    // V14: a twin can take over the stem node it replaces, so only its changed numbers move
+    const stemEl = o.stemEl || h('div', { class: 'q-stem', 'data-addr': 's' });
     const watchEl = q.watch_for && q.watch_for.length && live
       ? h('p', { class: 'ws-watch' }, h('b', { text: 'Watch for: ' }), q.watch_for.join(' · ')) : null;
     const hintBox = h('div', { class: 'ws-hintbox', hidden: true, 'aria-live': 'polite' });
@@ -398,7 +433,7 @@
     if (whyToggle) el.append(whyToggle);
     el.append(mc ? wrap : sprBox);
     el.append(...[slipEl, underEl, errLine, localEl, toolsEl, verdictEl, barEl, status].filter(Boolean));
-    paintStem();
+    paintStem(o.spans);
 
     /* ---------------- head: skill, type, difficulty, format, Again */
     function headLine() {
@@ -1070,10 +1105,17 @@
         const filler = (fb.filler && fb.filler[i]) || (!reason && i !== key);
         if (i === key && !reason) { r.why.hidden = true; return; }
         const val = /\d/.test(choices[i]) && String(choices[i]).length <= 10 ? choices[i] : null;   // a value, not a word
+        const mine = i === g && i !== key && mode === 'review';
+        const share = fb.crowd && Array.isArray(fb.crowd.option_share) && i !== key ? fb.crowd.option_share[i] : null;   // SR12, n >= 20
         const line = h('p', { class: 'opt-why-l' + (i === g ? ' mine' : '') + (i === key ? ' key' : '') },
-          h('b', { text: LETTERS[i] }), ' · ', val !== null ? [minus(val), ' · '] : null,
-          filler ? 'a nearby value, not tied to a specific mistake' : cap1(reason));
+          mine ? 'Your pick · ' : null, h('b', { text: LETTERS[i] }), ' · ', val !== null ? [minus(val), ' · '] : null,
+          filler ? 'a nearby value, not tied to a specific mistake' : cap1(reason),
+          mine && fb.pick_note ? h('span', { class: 'opt-why-note', text: ` · ${fb.pick_note}` }) : null,
+          share !== null && share !== undefined ? h('span', { class: 'opt-why-share', text: ` · ${pct(share)}% of students who miss it pick this one` }) : null);
+        // V6: the student corrects the label on their own pick
+        if (mine && o.onNotMine) line.append(' ', h('button', { type: 'button', class: 'qlink opt-notmine', 'aria-haspopup': 'menu', text: 'Not what I did?', onclick: e => o.onNotMine(e.currentTarget, i) }));
         const acts = h('span', { class: 'opt-why-acts' });
+        if (mine && !filler && o.onSpot) acts.append(quiet('Spot this trap', () => o.onSpot(i)));          // SR11
         if (!filler && i !== key && fb.steps && fb.option_steps && Number.isInteger(fb.option_steps[i])) {
           acts.append(quiet(`See where ${LETTERS[i]} comes from`, () => outlineStep(fb.option_steps[i])));
         }
@@ -1254,6 +1296,7 @@
           out.push(h('div', { class: 'abox-pair' },
             h('div', { class: 'abox mine' + (blank ? ' blank' : ' no') }, h('span', { class: 'k', text: 'Your answer' }), h('span', { class: 'abox-v', text: blank ? 'Not answered' : minus(fb.given) })),
             h('div', { class: 'abox ok' }, h('span', { class: 'k', text: 'Correct answer' }), h('span', { class: 'abox-v', text: minus(fb.answer) }))));
+          if (fb.diagnosis && fb.diagnosis.text && !blank) out.push(h('p', { class: 'v-line v-diag', text: fb.diagnosis.text }));   // SR10
           if (also.length) out.push(h('p', { class: 'v-line', text: `Also accepted: ${also.map(minus).join(' · ')}` }));
         } else {
           out.push(h('p', { class: 'grid-key' }, 'Correct answer: ', h('b', { text: minus(fb.answer) }), also.length ? ` (also ${also.map(minus).join(', ')})` : ''));
@@ -1261,7 +1304,7 @@
         if (!blank) {
           if (fb.mistake) out.push(h('p', { class: 'mistake' }, `Your answer ${minus(fb.given)} is what you get if you ${low1(fb.mistake)}`));
           else if (fb.entry && fb.entry.text) out.push(h('p', { class: 'mistake', text: fb.entry.text }));
-          else if (fb.reasons !== undefined || fb.named === false) out.push(h('p', { class: 'v-line v-soft', text: 'No named mistake for this value.' }));
+          else if (!fb.diagnosis && (fb.reasons !== undefined || fb.named === false)) out.push(h('p', { class: 'v-line v-soft', text: 'No named mistake for this value.' }));
         }
       }
       return out;
@@ -1682,6 +1725,8 @@
       const ax = new Set(ctx.axes || []);
       const sib = ctx.siblings || {};
       const list = [{ label: 'Twin', sub: 'same kind, new numbers', kbd: 'T', onClick: () => run('same') }];
+      // SR16, V11: on a trap or gap miss, a worked example first (never filed), then Your turn
+      if (ctx.onSolved) list.push({ label: 'See one solved first', sub: 'your mistake marked on new numbers', onClick: () => ctx.onSolved() });
       if (ax.has('easier')) list.push({ label: sib.easier ? `Easier: ${sib.easier}` : 'Easier', onClick: () => run('easier') });
       if (ax.has('harder')) list.push({ label: sib.harder ? `Harder: ${sib.harder}` : 'Harder', onClick: () => run('harder') });
       if (ax.has('grid')) list.push({ label: AXIS.grid, onClick: () => run('grid') });
@@ -1701,7 +1746,10 @@
         if (axis === 'print') return start({ source: 'worksheet', templates: [t], count: 10 }, '&print=1');
         const body = Object.assign({}, ctx.body || (ctx.trap_id ? { pool: 'redo', ids: [ctx.trap_id], source: 'try' } : { templates: [t], source: 'twin' }), { count: n });
         if (axis !== 'same') body.axis = axis;
-        return twinSheet({ body, recall: ctx.recall, title: n > 1 ? `Twin ×${n}` : 'Twin', onDone: ctx.onDone, count: n });
+        const to = { body, recall: ctx.recall, title: n > 1 ? `Twin ×${n}` : 'Twin', onDone: ctx.onDone, count: n, axis };
+        // R23: the players answer the twin in their own column (R24's inline drill), not in a sheet
+        if (ctx.inline) return ctx.inline(to);
+        return twinSheet(to);
       } catch (e) {
         toast((e && e.message) || 'That didn’t start. Try again.');
         return null;
@@ -1715,15 +1763,86 @@
     return { el: wrapEl, run, menu };
   }
 
-  /* ------------------------------------------------------------ a twin, answered in place (T5) */
+  /* ------------------------------------------------------------ a twin, answered in place (T5, R23, R24)
+     One inline drill behind the twin sheet, the players' twin tile and the Review pane's
+     mini-session: POST /drill {body}; answers through /drill/{id}/answer; Another through
+     /more then /next (a fresh one-question drill until /more exists); a miss's queued repair
+     through /next ("Try the repair"); /finish once, when something was answered. */
+  function twinRun(qhost, msg, foot, o = {}) {
+    let sid = null, ws = null, answered = 0, right = null, lastQ = null, lastFb = null, closedDone = false, shown = 0;
+    const again = h('button', { type: 'button', class: 'btn twin-again', text: o.againLabel || 'Another twin', hidden: true });
+    foot.prepend(again);
+    const drillQ = async id => {
+      const stt = await api(`/drill/${encodeURIComponent(id)}`);
+      return stt.question || (await api(`/drill/${encodeURIComponent(id)}/next`, { method: 'POST' })).question;
+    };
+    async function load() {
+      try {
+        const d = await api('/drill', { method: 'POST', body: o.body });
+        sid = d.id;
+        const q = d.question || await drillQ(sid);
+        if (!q) throw new Error('We ran out of questions like this one for now.');
+        show(q);
+      } catch (e) {
+        qhost.replaceChildren(h('p', { class: 'error', text: e && e.status === 409 && o.body && o.body.from_session
+          ? 'Finish the test first: its questions stay closed until then.' : (e && e.message) || 'That didn’t load.' }));
+        if (o.onError) o.onError(e);
+      }
+    }
+    function show(q) {
+      lastQ = q; lastFb = null;
+      msg.textContent = '';
+      again.hidden = true;
+      if (ws) ws.destroy();
+      ws = workspace(qhost, q, Object.assign({
+        mode: 'inline', feedback: 'instant', prefs: o.prefs, autofocus: true,
+        onCheck: (a, m) => api(`/drill/${encodeURIComponent(sid)}/answer`, { method: 'POST', body: { question_id: q.id, answer: a, ms: m.ms, conf: m.conf, hints: m.hints } }),
+        onReveal: fb => {
+          answered++; lastFb = fb;
+          right = !!fb.correct;
+          again.textContent = !fb.correct && fb.repair_next ? 'Try the repair' : (o.againLabel || 'Another twin');
+          again.hidden = false;
+          if (o.onAnswer) o.onAnswer(fb, q, answered);
+          (o.focusAfter ? o.focusAfter() : again).focus({ preventScroll: true });
+        },
+      }, o.wsOpts ? o.wsOpts(q, shown) : {}));
+      shown++;
+      if (o.onShow) o.onShow(q, ws);
+    }
+    again.addEventListener('click', async () => {
+      again.setAttribute('aria-busy', 'true');
+      try {
+        let r = null;
+        if (lastFb && !lastFb.correct && lastFb.repair_next) {                   // the repair the drill queued (the set grows)
+          try { r = await api(`/drill/${encodeURIComponent(sid)}/next`, { method: 'POST' }); } catch (_) { r = null; }
+        }
+        if (!r || r.done || !r.question) {
+          try { await api(`/drill/${encodeURIComponent(sid)}/more`, { method: 'POST', body: { question_id: lastQ.id, axis: o.axis || 'same' } }); r = await api(`/drill/${encodeURIComponent(sid)}/next`, { method: 'POST' }); }
+          catch (_) { r = null; }
+        }
+        if (!r || r.done || !r.question) {                         // no /more yet: a fresh one-question drill
+          finish();
+          const d = await api('/drill', { method: 'POST', body: Object.assign({}, o.body, { count: 1 }) });
+          sid = d.id; closedDone = false;
+          r = { question: d.question || await drillQ(sid) };
+        }
+        show(r.question);
+      } catch (e) { toast((e && e.message) || 'That didn’t load. Try again.'); }
+      finally { again.removeAttribute('aria-busy'); }
+    });
+    function finish() {
+      if (sid && answered && !closedDone) { closedDone = true; api(`/drill/${encodeURIComponent(sid)}/finish`, { method: 'POST' }).catch(() => {}); }
+    }
+    load();
+    return { load, finish, again, get sid() { return sid; }, get answered() { return answered; }, get right() { return right; }, get ws() { return ws; } };
+  }
   function twinSheet(o = {}) {
-    let sid = null, ws = null, answered = 0, right = null, lastQ = null, closedDone = false;
+    let run = null;
     const qhost = h('div', { class: 'twin-q' });
     const msg = h('p', { class: 'twin-msg', role: 'status' });
     const foot = h('div', { class: 'twin-foot' });
-    const again = h('button', { type: 'button', class: 'btn', text: 'Another twin', hidden: true });
-    const done = h('button', { type: 'button', class: 'pill', text: 'Done', hidden: true });
-    foot.append(again, done);
+    const done = h('button', { type: 'button', class: 'pill', text: 'Done' });
+    foot.append(done);
     const sheet = UI.sheet({
       title: o.title || 'Twin', size: 'l', className: 'twin-sheet',
       body: b => {
@@ -1731,70 +1850,39 @@
         b.append(h('p', { class: 'k twin-k', text: 'Same kind of question, new numbers' }), qhost, msg, foot);
         UI.skel ? UI.skel(qhost, 'lines:3') : qhost.append(h('p', { class: 'meta', text: 'Loading…' }));
       },
-      onClose: () => finish(),
+      onClose: () => { if (run) { run.finish(); if (o.onDone) o.onDone({ right: run.right, answered: run.answered, session: run.sid }); } },
     });
     function recallBox(r) {
       const d = h('details', { class: 'twin-recall' }, h('summary', {}, r.text || 'The original question'));
       if (r.q) {
         const inner = h('div', { class: 'twin-recall-q' });
         d.append(inner);
-        d.addEventListener('toggle', () => { if (d.open && !inner.children.length) workspace(inner, r.q, { mode: 'review', fb: r.fb, bar: false, head: false }); }, { once: false });
+        d.addEventListener('toggle', () => { if (d.open && !inner.children.length) workspace(inner, r.q, { mode: 'review', fb: r.fb, bar: false, head: false }); });
       }
       return d;
     }
-    async function load() {
-      try {
-        const d = await api('/drill', { method: 'POST', body: o.body });
-        sid = d.id;
-        const stt = d.question ? d : await api(`/drill/${encodeURIComponent(sid)}`);
-        const q = stt.question || (await api(`/drill/${encodeURIComponent(sid)}/next`, { method: 'POST' })).question;
-        if (!q) throw new Error('We ran out of questions like this one for now.');
-        show(q);
-      } catch (e) {
-        qhost.replaceChildren(h('p', { class: 'error', text: e && e.status === 409 && o.body && o.body.from_session
-          ? 'Finish the test first: its questions stay closed until then.' : (e && e.message) || 'That didn’t load.' }));
-        done.hidden = false;
-      }
-    }
-    function show(q) {
-      lastQ = q;
-      msg.textContent = '';
-      again.hidden = true; done.hidden = true;
-      ws = workspace(qhost, q, {
-        mode: 'inline', feedback: 'instant', prefs: o.prefs, autofocus: true,
-        onCheck: (a, m) => api(`/drill/${encodeURIComponent(sid)}/answer`, { method: 'POST', body: { question_id: q.id, answer: a, ms: m.ms, conf: m.conf, hints: m.hints } }),
-        onReveal: fb => {
-          answered++;
-          right = !!fb.correct;
-          again.hidden = false; done.hidden = false;
-          done.focus({ preventScroll: true });
-        },
-      });
-    }
-    again.addEventListener('click', async () => {
-      again.setAttribute('aria-busy', 'true');
-      try {
-        let r = null;
-        try { await api(`/drill/${encodeURIComponent(sid)}/more`, { method: 'POST', body: { question_id: lastQ.id, axis: 'same' } }); r = await api(`/drill/${encodeURIComponent(sid)}/next`, { method: 'POST' }); }
-        catch (_) { r = null; }
-        if (!r || r.done || !r.question) {                         // no /more yet: a fresh one-question drill
-          finish(true);
-          const d = await api('/drill', { method: 'POST', body: Object.assign({}, o.body, { count: 1 }) });
-          sid = d.id; closedDone = false;
-          const stt = await api(`/drill/${encodeURIComponent(sid)}`);
-          r = { question: stt.question || (await api(`/drill/${encodeURIComponent(sid)}/next`, { method: 'POST' })).question };
-        }
-        show(r.question);
-      } catch (e) { toast((e && e.message) || 'That didn’t load. Try again.'); }
-      finally { again.removeAttribute('aria-busy'); }
-    });
     done.addEventListener('click', () => sheet.close());
-    function finish(keepOpen) {
-      if (sid && answered && !closedDone) { closedDone = true; api(`/drill/${encodeURIComponent(sid)}/finish`, { method: 'POST' }).catch(() => {}); }
-      if (!keepOpen && o.onDone) o.onDone({ right, answered, session: sid });
-    }
-    load();
+    run = twinRun(qhost, msg, foot, Object.assign({}, o, { focusAfter: () => done }));
     return sheet;
+  }
+  // the players' tile (Report 1.13) and the pane's mini-session (Review 8): the same run, in a host
+  function twinInline(host, o = {}) {
+    const el = h('section', { class: 'twin-tile', 'aria-label': o.caption || 'Same question type, new numbers' });
+    const qhost = h('div', { class: 'twin-q' });
+    const msg = h('p', { class: 'twin-msg', role: 'status' });
+    const foot = h('div', { class: 'twin-foot' });
+    if (o.caption !== false) el.append(h('p', { class: 'k twin-k', text: o.caption || 'Same question type, new numbers' }));
+    el.append(qhost, msg, foot);
+    const keep = o.session !== false ? h('a', { class: 'quiet twin-keep', hidden: true, text: 'Keep going in a session' }) : null;
+    if (o.onBack) foot.append(h('button', { type: 'button', class: 'quiet twin-back', text: o.backLabel || 'Back to the original', onclick: () => o.onBack() }));
+    if (keep) foot.append(keep);
+    if (!o.wsOpts && UI.skel) UI.skel(qhost, 'lines:3');
+    if (host) { if (o.prepend) host.prepend(el); else host.append(el); }
+    let run = null;
+    run = twinRun(qhost, msg, foot, Object.assign({ againLabel: 'Another like this' }, o, {
+      onShow: (q, w) => { if (keep && run && run.sid) { keep.href = `/practice/session/?id=${encodeURIComponent(run.sid)}`; keep.hidden = false; } if (o.onShow) o.onShow(q, w); },
+    }));
+    return Object.assign(run, { el, destroy() { run.finish(); if (run.ws) run.ws.destroy(); el.remove(); } });
   }
 
   function exampleSheet(ex) {
@@ -1811,7 +1899,7 @@
     let mode = 'float', dockHost = null, sid = null, big = false, walking = null, quietUntil = 0, saveTimer = 0, changeTimer = 0, sheetH = 62;
     const subs = new Set(), openSubs = new Set();
     const emitOpen = () => openSubs.forEach(f => { try { f(isOpen()); } catch (_) {} });
-    const isOpen = () => !!panel && !panel.hidden;
+    const isOpen = () => !!panel && !panel.hidden && panel.isConnected;   // a closed modal takes a panel mounted in it along
 
     function build() {
       panel = h('div', { class: 'calc', role: 'dialog', 'aria-label': 'Calculator', hidden: true, tabindex: '-1' });
@@ -1845,7 +1933,11 @@
       if (mode === 'dock' && dockHost) {
         if (panel.parentNode !== dockHost) dockHost.append(panel);
         panel.style.cssText = '';
-      } else if (panel.parentNode !== doc.body) doc.body.append(panel);
+      } else {
+        // inside an open modal (the review player) or everything outside it is inert
+        const top = (UI.sheet && UI.sheet.top && UI.sheet.top()) || doc.body;
+        if (panel.parentNode !== top) top.append(panel);
+      }
       if (mode === 'float') {
         const p = ls.get('satf.calc.pos', null);
         panel.style.cssText = '';
@@ -2185,7 +2277,7 @@
 
   /* ------------------------------------------------------------ export */
   Object.assign(UI, {
-    workspace, question, splitCheck, questionActions, twin, twinSheet, pad, calc, tex, katex, spr, readAloud, sciEval,
+    workspace, question, splitCheck, questionActions, twin, twinSheet, twinInline, stemDiff, pad, calc, tex, katex, spr, readAloud, sciEval,
     workspaceSelfTest: selfTest, qicon: icon,
   });
   if (location.pathname.startsWith('/dev/')) {
