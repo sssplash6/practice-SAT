@@ -44,10 +44,12 @@ def _load(name: str):
 @lru_cache(maxsize=1)
 def content() -> dict:
     sat, transitions = _load("sat"), _load("transitions")
+    transition_data = json.loads((HERE / "transitions.json").read_text(encoding="utf-8"))
     frames, pairs = _load("frames"), _load("pairs")
     entries = {w["slug"]: w for w in sat + transitions}
     idx = json.loads(INDEX.read_text(encoding="utf-8"))
     return {"entries": entries, "sat": sat, "transitions": transitions,
+            "transition_data": transition_data,
             "frames": {f["id"]: f for f in frames}, "pairs": {p["id"]: p for p in pairs},
             "confusions": {c["id"]: c for c in _load("confusions")},
             "roots": {r["id"]: r for r in _load("roots")},
@@ -482,3 +484,370 @@ def of_reason(template: str, reason: str) -> dict | None:
 def gloss_index() -> dict:
     return {"v": 1, "words": [{"slug": w["slug"], "word": w["word"], "short": w["short"],
                                "also": w.get("also", [])} for w in content()["entries"].values()]}
+
+# ------------------------------------------------------------------ generated Reading & Writing items
+
+def _servable(row: dict) -> bool:
+    return bool(row.get("reviewed")) or os.environ.get("SATF_WORDS_UNREVIEWED") == "1"
+
+
+def _suppressed(frame: str) -> bool:
+    return bool(db.one("SELECT 1 FROM word_suppress WHERE frame=? AND word='*'", frame))
+
+
+def _rng(template: str, seed: int, word: str | None = None) -> random.Random:
+    address = f"{template}\0{seed}\0{word or ''}".encode()
+    return random.Random(int.from_bytes(hashlib.sha256(address).digest()[:8], "big"))
+
+
+def _render(raw: str, rng: random.Random,
+            chosen: dict[str, str] | None = None) -> tuple[str, list[dict]]:
+    if chosen is None:
+        chosen = {}
+    pools = content()["fills"]
+    def fill(match):
+        name = match.group(1)
+        if name not in chosen:
+            chosen[name] = rng.choice(pools[name])
+        return chosen[name]
+    raw = re.sub(r"\{([a-z_]+)\}", fill, raw)
+    out, spans, pos = [], [], 0
+    for match in re.finditer(r"\[\[([^\[\]]+)\]\]", raw):
+        piece = raw[pos:match.start()]
+        out.append(piece)
+        start = sum(map(len, out))
+        out.append(match.group(1))
+        spans.append({"start": start, "end": start + len(match.group(1)), "kind": "clue"})
+        pos = match.end()
+    out.append(raw[pos:])
+    return "".join(out), spans
+
+
+def _legal(word: dict, need: dict) -> bool:
+    return (word.get("class") == need["class"] and word.get("polarity") == need["polarity"]
+            and need["lo"] <= word.get("intensity", -1) <= need["hi"]
+            and word.get("pos") == need["pos"] and need["pattern"] in word.get("pattern", []))
+
+
+def _synonyms(a: dict, b: dict) -> bool:
+    an = {a.get("slug", "").casefold(), a.get("word", "").casefold()}
+    bn = {b.get("slug", "").casefold(), b.get("word", "").casefold()}
+    return bool(an & {s.casefold() for s in b.get("same", [])} or
+                bn & {s.casefold() for s in a.get("same", [])})
+
+
+def _trap(frame: dict, key: dict, choice: dict) -> str | None:
+    need = frame["need"]
+    if _legal(choice, need):
+        return None
+    synonym = _synonyms(key, choice)
+    pins = need.get("pins") == "intensity"
+    traps = set()
+    opposite = content()["classes"][need["class"]].get("opposite")
+    if opposite and choice.get("class") == opposite:
+        traps.add("reversed")
+    if choice.get("class") == need["class"]:
+        if choice.get("polarity") == need["polarity"] and pins:
+            if choice["intensity"] > need["hi"]:
+                traps.add("too_strong")
+            elif choice["intensity"] < need["lo"]:
+                traps.add("too_weak")
+        elif choice.get("polarity") == -need["polarity"] != 0:
+            traps.add("connotation")
+    looks = {x["word"].casefold() for x in key.get("lookalikes", [])}
+    if choice["word"].casefold() in looks and choice.get("class") != need["class"]:
+        traps.add("lookalike")
+    if frame["subject"] in choice.get("subjects", []) and choice.get("class") not in {need["class"], opposite}:
+        traps.add("topical")
+    if synonym:
+        traps &= {"too_strong", "too_weak", "connotation"}
+    for kind in ("lookalike", "too_strong", "too_weak", "connotation", "reversed", "topical"):
+        if kind in traps:
+            return kind
+    return None
+
+
+def _appears(word: dict, passage: str) -> bool:
+    forms = [word["word"], *word.get("also", [])]
+    return any(re.search(r"(?<!\w)" + re.escape(form) + r"(?!\w)", passage, re.I) for form in forms)
+
+
+def _trap_reason(kind: str, choice: dict, need: str, clue: str) -> str:
+    labels = {"too_strong": "Too strong", "too_weak": "Too weak", "connotation": "Wrong tone",
+              "reversed": "Reversed meaning", "lookalike": "Looks like the answer",
+              "topical": "On the topic but wrong meaning"}
+    return (f"{labels[kind]}: the clue says “{clue}” and needs {need}; "
+            f"“{choice['word']}” means {choice['short']}.")
+
+
+def item(template: str, seed: int, word: str | None = None,
+         want_trap: str | None = None) -> dict:
+    """Regenerate one exact `(template, seed, word)` address.
+
+    The content review gate is enforced here, so every caller shares it.
+    """
+    data = content()
+    rng = _rng(template, seed, word)
+    if template.startswith("rw.wic."):
+        ident = template[len("rw.wic."):]
+        frame = data["frames"].get(ident)
+        if not frame or not _servable(frame) or _suppressed(ident):
+            raise ValueError("frame is not reviewed or is suppressed")
+        keys = frame["keys"]
+        if word is not None and word not in keys:
+            raise ValueError("word is not a key of this frame")
+        slug = word or rng.choice(keys)
+        key = data["entries"][slug]
+        passage, spans = _render(frame["text"], rng)
+        suppressed = {r["word"] for r in db.rows("SELECT word FROM word_suppress WHERE frame=?", ident)}
+        need = frame["need"]
+        clue = passage[spans[0]["start"]:spans[0]["end"]] if spans else frame["needs"]
+        candidates = []
+        for w in data["sat"]:
+            if w["pos"] != key["pos"] or w["slug"] == slug or _appears(w, passage):
+                continue
+            kind = _trap(frame, key, w)
+            if kind and w["slug"] not in suppressed:
+                candidates.append((w, kind))
+        rng.shuffle(candidates)
+        candidates.sort(key=lambda pair: (0 if pair[1] == want_trap else 1,
+                                          {"lookalike": 0, "too_strong": 1, "too_weak": 2,
+                                           "connotation": 3, "reversed": 4, "topical": 5}[pair[1]]))
+        picked, seen = [], {(key["class"], key["polarity"], key["intensity"])}
+        used_words = {key["word"].casefold()}
+        for w, kind in candidates:
+            features = (w["class"], w["polarity"], w["intensity"])
+            if features not in seen and w["word"].casefold() not in used_words:
+                seen.add(features)
+                used_words.add(w["word"].casefold())
+                picked.append((w, kind))
+                if len(picked) == 3:
+                    break
+        if len(picked) < 3 or _appears(key, passage):
+            raise ValueError("frame has fewer than three safe traps")
+        options = [(key, None)] + picked
+        rng.shuffle(options)
+        choices = [w["word"] for w, _ in options]
+        answer = next(i for i, (_, kind) in enumerate(options) if kind is None)
+        reasons = [(f"“{key['word']}” means {key['short']}; the text needs {frame['needs']}."
+                    if kind is None else _trap_reason(kind, w, frame["needs"], clue))
+                   for w, kind in options]
+        out = {"template": template, "skill": "Words in Context", "domain": "Craft and Structure",
+               "difficulty": frame["difficulty"], "seed": seed, "word": slug,
+               "kind": "nearly" if frame["stem"] == "nearly" else "incontext",
+               "stem": (f"As used in the text, what does the word “{key['word']}” most nearly mean?"
+                        if frame["stem"] == "nearly" else
+                        "Which choice completes the text with the most logical and precise word or phrase?"),
+               "text": passage, "choices": choices, "answer_index": answer,
+               "reasons": reasons, "traps": [kind for _, kind in options],
+               "spans": spans, "rationale": reasons[answer], "needs": frame["needs"],
+               "subject": frame["subject"]}
+        if frame.get("source"):
+            out["source"] = frame["source"]
+        return out
+    if template.startswith("rw.tr."):
+        ident = template[len("rw.tr."):]
+        pair = data["pairs"].get(ident)
+        if not pair or not _servable(pair) or _suppressed(ident):
+            raise ValueError("transition family is not reviewed or is suppressed")
+        keys = pair["fits"]
+        if word is not None and word not in keys:
+            raise ValueError("word is not a key of this family")
+        slug = word or rng.choice(keys)
+        key = data["entries"][slug]
+        chosen = {}
+        s1, first_spans = _render(pair["s1"], rng, chosen)
+        s2, second_spans = _render(rng.choice(pair["s2"]), rng, chosen)
+        passage = s1 + " " + s2
+        spans = [{**s, "kind": "idea"} for s in first_spans]
+        spans += [{**s, "start": s["start"] + len(s1) + 1,
+                   "end": s["end"] + len(s1) + 1, "kind": "idea"} for s in second_spans]
+        logic = pair["logic"]
+        excluded = {logic, *pair.get("compatible", [])}
+        candidates: dict[str, list[dict]] = defaultdict(list)
+        for transition in data["transitions"]:
+            other = transition["logic"]
+            if other not in excluded and logic not in transition.get("also_reads", []) and not _appears(transition, passage):
+                candidates[other].append(transition)
+        preferred = [b if a == logic else a for a, b in data["transition_data"]["confusable"]
+                     if a == logic or b == logic]
+        logics = [l for l in preferred if l in candidates]
+        logics += [l for l in sorted(candidates) if l not in logics]
+        if want_trap in candidates and want_trap not in logics[:3]:
+            logics = [want_trap] + [l for l in logics if l != want_trap]
+        picked = []
+        for other in logics[:3]:
+            picked.append((rng.choice(candidates[other]), other))
+        if len(picked) < 3 or _appears(key, passage):
+            raise ValueError("transition family has fewer than three distinct wrong logics")
+        options = [(key, logic)] + picked
+        rng.shuffle(options)
+        reasons_map = data["transition_data"]["logic_reasons"]
+        reasons = [(f"“{w['word']}” signals {logic}; the second sentence has that relationship."
+                    if other == logic else reasons_map[logic][other].replace("{word}", w["word"]))
+                   for w, other in options]
+        return {"template": template, "skill": "Transitions", "domain": "Expression of Ideas",
+                "difficulty": pair.get("difficulty", "medium"), "seed": seed, "word": slug,
+                "kind": "transition", "stem": "Which choice completes the text with the most logical transition?",
+                "text": passage, "choices": [w["word"] for w, _ in options],
+                "answer_index": next(i for i, (_, l) in enumerate(options) if l == logic),
+                "reasons": reasons, "traps": [None if l == logic else "wrong_logic" for _, l in options],
+                "spans": spans, "rationale": f"The two ideas have a {logic} relationship.",
+                "needs": pair["relation"], "logic_needed": logic,
+                "option_logics": [l for _, l in options], "relation": pair["relation"],
+                "subject": pair["subject"]}
+    raise ValueError("unknown Reading & Writing template")
+
+
+def choose_template(slug: str, *, learner: str | None = None,
+                    seed: int = 0, seen: set[str] | None = None,
+                    avoid_subject: str | None = None) -> str | None:
+    data = content()
+    known = data["index"]["words"].get(slug)
+    if not known:
+        return None
+    if slug in {w["slug"] for w in data["transitions"]}:
+        candidates = ["rw.tr." + p["id"] for p in data["pairs"].values()
+                      if slug in p["fits"] and _servable(p) and not _suppressed(p["id"])]
+    else:
+        candidates = ["rw.wic." + ident for ident in known["frames"]
+                      if _servable(data["frames"][ident]) and not _suppressed(ident)]
+    if not candidates:
+        return None
+    seen = set(seen or ())
+    if learner and not seen:
+        seen = {r["template"] for r in rw_answers(learner) if r["word"] == slug}
+    fresh = [t for t in candidates if t not in seen]
+    pool = fresh or candidates
+    if avoid_subject:
+        other = [t for t in pool if (data["pairs"][t[6:]]["subject"] if t.startswith("rw.tr.")
+                                    else data["frames"][t[7:]]["subject"]) != avoid_subject]
+        if other:
+            pool = other
+    rng = _rng("pick:" + slug, seed, learner)
+    return rng.choice(pool)
+
+
+def new_sentence(learner: str, slug: str, reps: int | None = None) -> dict | None:
+    """W8: unseen frame and fill first, keyed to this learner's review count."""
+    w = entry(slug, learner)
+    if not w or slug.startswith("u:"):
+        return None
+    reps = int(state(learner, slug)["reps"] if reps is None else reps)
+    previous = [r["template"] for r in rw_answers(learner) if r["word"] == slug]
+    seen = set(previous)
+    last = previous[-1] if previous else None
+    avoid = (content()["pairs"][last[6:]]["subject"] if last and last.startswith("rw.tr.")
+             else content()["frames"][last[7:]]["subject"] if last and last.startswith("rw.wic.")
+             else None)
+    template = choose_template(slug, learner=learner, seed=reps, seen=seen, avoid_subject=avoid)
+    if not template:
+        return None
+    seed = int.from_bytes(hashlib.sha256(f"sentence:{learner}:{slug}:{reps}".encode()).digest()[:4], "big")
+    try:
+        generated = item(template, seed, slug)
+    except ValueError:
+        return None
+    text = generated["text"].replace("____", w["word"], 1)
+    return {"template": template, "seed": seed, "text": text,
+            "subject": generated["subject"], "source": generated.get("source")}
+
+
+def _distractors(slug: str, rng: random.Random, *, meanings: bool = False,
+                 learner: str | None = None) -> list[dict]:
+    target = entry(slug, learner)
+    if not target:
+        raise ValueError("unknown word")
+    data = content()
+    if slug.startswith("u:"):
+        others = [entry(r["id"], learner) for r in db.rows("SELECT id FROM my_words WHERE learner=?", learner)]
+    elif target["collection"] == "transitions":
+        others = [w for w in data["transitions"] if w["logic"] != target["logic"]]
+    else:
+        others = [w for w in data["sat"] if w["pos"] == target["pos"]]
+    same = {s.casefold() for s in target.get("same", [])}
+    allowed = [w for w in others if w and w["slug"] != slug and
+               w["word"].casefold() not in same and not _synonyms(target, w) and
+               (not meanings or .6 <= len(w["short"]) / max(1, len(target["short"])) <= 1.4)]
+    confused = {other for c in data["confusions"].values() if slug in c["words"]
+                for other in c["words"] if other != slug}
+    rng.shuffle(allowed)
+    allowed.sort(key=lambda w: (0 if w["slug"] in confused else 1,
+                                0 if w.get("collection") == target.get("collection") else 1))
+    out, used = [], {target["short"] if meanings else target["word"]}
+    for w in allowed:
+        value = w["short"] if meanings else w["word"]
+        if value not in used:
+            out.append(w)
+            used.add(value)
+        if len(out) == 3:
+            break
+    if len(out) < 3:
+        raise ValueError("this deck needs four distinct words")
+    return out
+
+
+def quiz_item(word: str, kind: str, rng: random.Random,
+              learner: str | None = None) -> dict:
+    target = entry(word, learner)
+    if not target:
+        raise ValueError("unknown word")
+    if kind not in {"meaning2word", "word2meaning", "typed", "cloze"}:
+        raise ValueError("unknown simple quiz kind")
+    if kind == "typed":
+        return {"kind": kind, "word": word, "stem": "Type the word that fits this meaning.",
+                "text": target["short"], "also": target.get("also", []),
+                "answer": target["word"], "choices": []}
+    meanings = kind == "word2meaning"
+    distractors = _distractors(word, rng, meanings=meanings, learner=learner)
+    options = [target, *distractors]
+    rng.shuffle(options)
+    if kind == "cloze":
+        examples = target.get("examples", [])
+        raw = rng.choice(examples) if examples else ""
+        text = re.sub(r"\[\[[^\[\]]+\]\]", "____", raw, count=1)
+        if "____" not in text:
+            raise ValueError("word has no usable cloze")
+    else:
+        text = target["word"] if meanings else target["short"]
+    values = [w["short"] if meanings else w["word"] for w in options]
+    correct = options.index(target)
+    return {"kind": kind, "word": word, "stem": ("What does this word mean?" if meanings else
+             "Which word best matches the meaning?"), "text": text, "choices": values,
+            "answer_index": correct,
+            "reasons": [(f"“{w['word']}” means {w['short']}." if w != target else
+                         f"“{target['word']}” means {target['short']}.") for w in options],
+            "traps": [None if w == target else "meaning" for w in options]}
+
+
+def another(prev: dict, like: str, learner: str, seen: set[str] | None = None) -> dict:
+    if like not in {"word", "trap"}:
+        raise ValueError("like must be word or trap")
+    seed = int(prev["seed"]) + 1
+    old = prev["word"]
+    if like == "word":
+        slug = old
+        want = None
+    else:
+        want = prev.get("picked_trap") or next((t for t in prev.get("traps", []) if t), None)
+        choices = [w["slug"] for w in content()["sat"] if w["slug"] != old]
+        rng = _rng("another", seed, old)
+        rng.shuffle(choices)
+        slug = next((s for s in choices if choose_template(s, learner=learner, seed=seed,
+                                                           seen=seen) is not None), old)
+    for offset in range(20):
+        template = choose_template(slug, learner=learner, seed=seed + offset, seen=seen)
+        if template:
+            try:
+                return item(template, seed + offset, slug, want)
+            except ValueError:
+                continue
+    raise ValueError("no reviewed frame is available")
+
+
+def public_item(generated: dict, item_id: str | None = None) -> dict:
+    """One public shape; never serialize keys or trap reasons before a verdict."""
+    allowed = ("kind", "stem", "text", "choices", "head", "step", "predictions", "source")
+    out = {k: generated[k] for k in allowed if k in generated}
+    out["item_id"] = item_id or generated.get("item_id")
+    return out
