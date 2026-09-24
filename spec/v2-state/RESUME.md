@@ -26,8 +26,13 @@ words2.js `{from:'check'}` (or `{from:'fold'}`). Never resume from a run ID. Bef
 confirm they are real (not stale files after the branch moved elsewhere; see memory interruption-proof-workflows).
 
 **The user's other agent** (backend-only helper): built F4 and F5, verified SAT dates, wrote the bank lint. Its current job:
-`v2/bank-lint-fix` (the triage fix list in `followups/bank-lint-triage.json`; numbers must not change for seeds that
-generate on master). The repeated-reason triage is still running; send its fixes as a follow-up task. It must never touch `v2/f5` again.
+`v2/bank-lint-fix` groups 1-5 (plural, visuals, rationale, generation fallback, lint tightening) from
+`followups/bank-lint-triage.json`; numbers must not change for seeds that generate on master. Group 6 (reasons,
+degenerate draws) is MERGED (dfe3544). Its next job after that: S9 Words server half (words.py, api_words.py,
+checks/s9.py), leaving the Words UI to wave 2.
+- **F3 incident (fixed):** the runner unit committed on a detached HEAD in worktree wf_cafefb42-928-6 because unit 1
+  left an uncommitted file that kept `v2/f3` busy. `v2/f3` was re-attached with `git switch -C v2/f3` there (8 commits).
+  build.js now forbids detached commits. If F3's later units show no runner.js, check `git log v2/f3` first. It must never touch `v2/f5` again.
 
 **Next after wave 1b merges:** wave 2, the nine sections S1, S3-S10 (S2 dropped) in parallel through build.js (add TASKS
 entries from Part 4.2), then I1 integration. Offer backend-only pieces of wave 2 to the other agent.
