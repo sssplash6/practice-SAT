@@ -11,6 +11,7 @@ import json
 import re
 import sys
 from collections import Counter, defaultdict
+from difflib import SequenceMatcher
 from pathlib import Path
 
 
@@ -67,9 +68,12 @@ def require(condition: bool, message: str, errors: list[str]) -> None:
         errors.append(message)
 
 
-def check_words(data: dict[str, list | dict], errors: list[str]) -> None:
+def check_words(data: dict[str, list | dict], errors: list[str], warnings: list[str]) -> None:
     entries = rows(data["sat"])
     classes = {c.get("id") for c in rows(data["classes"]) if isinstance(c, dict)}
+    confused = {w for c in rows(data["confusions"]) if isinstance(c, dict) and c.get("tell")
+                for w in c.get("words", [])}
+    unlike: list[str] = []
     slugs: set[str] = set()
     senses: set[tuple[str, str]] = set()
     for entry in entries:
@@ -113,10 +117,13 @@ def check_words(data: dict[str, list | dict], errors: list[str]) -> None:
                 f"{label}: fewer than 2 valid same", errors)
         require(bool(entry.get("opposite")) or entry.get("no_opposite") is True,
                 f"{label}: no opposite or no_opposite", errors)
-        require(bool(entry.get("lookalikes")), f"{label}: no confusion with tell", errors)
+        require(bool(entry.get("lookalikes")) or slug in confused, f"{label}: no confusion with tell", errors)
         for look in entry.get("lookalikes", []):
             require(isinstance(look, dict) and bool(look.get("word")) and bool(look.get("tell")),
                     f"{label}: lookalike missing word or tell", errors)
+            if isinstance(look, dict) and SequenceMatcher(None, str(word).casefold(),
+                                                          str(look.get("word", "")).casefold()).ratio() < .5:
+                unlike.append(f"{slug}>{look.get('word')}")
         if "answer-choice" in entry.get("lists", []):
             require(bool(entry.get("uses")), f"{label}: answer-choice entry missing uses", errors)
         if entry.get("second_sense"):
@@ -127,6 +134,11 @@ def check_words(data: dict[str, list | dict], errors: list[str]) -> None:
         if "freq_band" in entry:
             require(type(entry["freq_band"]) is int and 1 <= entry["freq_band"] <= 5,
                     f"{label}: invalid freq_band", errors)
+    if unlike:
+        # lookalikes feed W1's "Looks like the answer" trap, so they must be alike in form or sound;
+        # a pair alike only in meaning is a nearmiss row in confusions.json
+        warnings.append(f"lookalikes: {len(unlike)} pairs look little alike (check they are not near-synonyms), "
+                        f"e.g. {', '.join(unlike[:8])}")
 
 
 def check_reference_data(data: dict[str, list | dict], errors: list[str]) -> None:
@@ -135,11 +147,12 @@ def check_reference_data(data: dict[str, list | dict], errors: list[str]) -> Non
     for c in classes:
         label = c.get("id", "class")
         require(bool(c.get("id") and c.get("dimension")), f"{label}: missing id or dimension", errors)
-        require(c.get("opposite") in ids, f"{label}: unknown opposite", errors)
+        # opposite null: a standalone class, whose frames get no "Reverses the meaning" trap
+        require(c.get("opposite") is None or c.get("opposite") in ids, f"{label}: unknown opposite", errors)
     opposite_by_id = {c.get("id"): c.get("opposite") for c in classes if isinstance(c, dict)}
     require(len(opposite_by_id) == len(classes), "classes: duplicate id", errors)
     for class_id, opposite in opposite_by_id.items():
-        require(opposite_by_id.get(opposite) == class_id,
+        require(opposite is None or opposite_by_id.get(opposite) == class_id,
                 f"{class_id}: opposite is not reciprocal", errors)
     traps = rows(data["traps"])
     require({t.get("id") for t in traps if isinstance(t, dict)} <= TRAPS,
@@ -172,6 +185,7 @@ def check_collections(data: dict[str, list | dict], errors: list[str]) -> None:
 
 
 def legal_key(word: dict, need: dict) -> bool:
+    """The need tags admit this sense. A frame's keys (its allow-list) are the senses that also fit its text."""
     return (
         word.get("class") == need.get("class")
         and word.get("polarity") == need.get("polarity")
@@ -215,11 +229,13 @@ def check_later(data: dict[str, list | dict], phase: int, errors: list[str], war
         "confusions": len(rows(data["confusions"])), "roots": len(rows(data["roots"])),
         "foils": len(rows(data["foils"])), "frames": len(frames),
     }
-    members = Counter(w.get("class") for w in sat if not w.get("second_sense"))
-    for class_id, n in sorted(members.items()):
-        if n < 3:
-            (errors if phase >= 3 else warnings).append(
-                f"{class_id}: {n} of 3 member words (a trap family needs several intensities)")
+    members = Counter(w.get("class") for w in sat)
+    for c in rows(data["classes"]):
+        n = members[c.get("id")]
+        if n == 0:
+            errors.append(f"{c.get('id')}: a class with no member word")
+        elif n < 3:
+            warnings.append(f"{c.get('id')}: {n} member words, too few for a W3 ladder")
     if phase >= 2:
         require({t.get("id") for t in rows(data["traps"])} == TRAPS,
                 "traps: expected exactly the nine W1 trap kinds", errors)
@@ -294,30 +310,49 @@ def check_fills(data: dict[str, list | dict], errors: list[str]) -> set[str]:
     return set(pools)
 
 
+def synonyms(a: dict, b: dict) -> bool:
+    """`same` read both ways: either sense lists the other (by headword or slug)."""
+    def names(w: dict) -> set[str]:
+        return {str(w.get("word", "")).casefold(), str(w.get("slug", "")).casefold()}
+    return bool(names(b) & {s.casefold() for s in a.get("same", [])} or
+                names(a) & {s.casefold() for s in b.get("same", [])})
+
+
 def trap_options(frame: dict, key: dict, by_pos: dict[str, list[dict]], opposite: dict) -> int:
-    """Distinct (class, polarity, intensity) distractors for this key that carry a legal W1 trap, up to 3."""
+    """Distinct (class, polarity, intensity) distractors for this key that carry a legal W1 trap, up to 3.
+
+    A sense the need tags admit is never a distractor, even when the frame's keys leave it out.
+    too_strong / too_weak need `need.pins == "intensity"` (the clue fixes the degree); without it a
+    same-class neighbour of another strength may fit the text. A synonym of the key (`same`, either
+    way) is offered only in a pinned frame, and then only as too_strong, too_weak or connotation.
+    A lookalike from the need's own class is a near-synonym, so it is not a lookalike trap.
+    """
     need = frame["need"]
+    pins = need.get("pins") == "intensity"
     looks = {look.get("word", "").casefold() for look in key.get("lookalikes", []) if isinstance(look, dict)}
-    same = {s.casefold() for s in key.get("same", [])}
     other = opposite.get(need["class"])
     seen = {(key["class"], key["polarity"], key["intensity"])}
     for word in by_pos.get(need["pos"], []):
         triple = (word.get("class"), word.get("polarity"), word.get("intensity"))
         if triple in seen or legal_key(word, need):
             continue
+        synonym = synonyms(key, word)
+        if synonym and not pins:
+            continue
         kinds = set()
-        if triple[0] == other:
+        if other is not None and triple[0] == other:
             kinds.add("reversed")
         if triple[0] == need["class"]:
             if triple[1] == need["polarity"]:
-                kinds.add("too_strong" if triple[2] > need["hi"] else "too_weak" if triple[2] < need["lo"] else "")
+                if pins:
+                    kinds.add("too_strong" if triple[2] > need["hi"] else "too_weak")
             elif triple[1] == -need["polarity"] != 0:
                 kinds.add("connotation")
-        if word.get("word", "").casefold() in looks:
+        if word.get("word", "").casefold() in looks and triple[0] != need["class"]:
             kinds.add("lookalike")
         if frame.get("subject") in word.get("subjects", []) and triple[0] not in {need["class"], other}:
             kinds.add("topical")
-        if word.get("word", "").casefold() in same:
+        if synonym:
             kinds &= {"too_strong", "too_weak", "connotation"}
         if kinds - {""}:
             seen.add(triple)
@@ -331,7 +366,10 @@ def check_frames(data: dict[str, list | dict], pools: set[str], phase: int,
     """W1 frames (frames.json).
 
     A frame is {id, stem: complete | nearly, subject, text, need: {class, polarity, lo, hi, pos,
-    pattern}, needs, difficulty, reviewed: null | {by, date}, source?}. The text has exactly one
+    pattern, pins?}, keys, needs, difficulty, reviewed: null | {by, date}, source?}. keys is the
+    frame's allow-list: the senses that fit its text, each admitted by the need tags; the other
+    senses the tags admit are neither keys nor distractors. pins: "intensity" marks a clue that fixes
+    the degree, the only case where same-class too_strong / too_weak traps are offered. The text has exactly one
     ____ where the key goes in its headword form (a verb blank takes the base form, a noun blank
     the singular), at least one [[clue]] that decides the blank, and {slot}s from fills.json.
     An excerpt frame is cut exactly from a text published before 1929: source is {author, title,
@@ -385,7 +423,15 @@ def check_frames(data: dict[str, list | dict], pools: set[str], phase: int,
         unfilled = SLOT.sub("{slot}", text)
         require(unfilled not in texts, f"{label}: same text as another frame apart from its slots", errors)
         texts.add(unfilled)
-        keys = [w for w in sat if legal_key(w, need)] if valid else []
+        allowed = frame.get("keys")
+        require(isinstance(allowed, list) and bool(allowed) and len(set(allowed)) == len(allowed),
+                f"{label}: keys must be a non-empty list of distinct SAT slugs", errors)
+        allowed = set(allowed) if isinstance(allowed, list) else set()
+        require(need.get("pins") in (None, "intensity"), f"{label}: need.pins must be \"intensity\" or absent", errors)
+        admitted = [w for w in sat if legal_key(w, need)] if valid else []
+        keys = [w for w in admitted if w["slug"] in allowed]
+        stray = sorted(allowed - {w["slug"] for w in admitted})
+        require(not valid or not stray, f"{label}: keys {stray} are not admitted by its need", errors)
         require(not valid or bool(keys), f"{label}: no SAT sense is a legal key for its need", errors)
         source = frame.get("source")
         if source is not None:
@@ -438,13 +484,13 @@ def main() -> int:
     data = {name: load(name, errors) for name in FILES}
     check_reference_data(data, errors)
     check_collections(data, errors)
-    check_words(data, errors)
+    check_words(data, errors, warnings)
     counts = check_later(data, PHASE, errors, warnings)
     check_frames(data, check_fills(data, errors), PHASE, errors, warnings)
     if args.review:
         for frame in rows(data["frames"]):
             if frame.get("reviewed") is None:
-                print(f"REVIEW {frame.get('id')}: {frame.get('text')}")
+                print(f"REVIEW {frame.get('id')} [keys {', '.join(frame.get('keys', []))}]: {frame.get('text')}")
     print("Words content:", ", ".join(f"{name}={count}" for name, count in counts.items()))
     for message in warnings:
         print("WARNING:", message)
