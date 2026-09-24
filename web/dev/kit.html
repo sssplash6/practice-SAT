@@ -555,15 +555,21 @@
       tier: ['easy', 'medium', 'hard'][i % 3], level: (i % 7) + 1, flag: i === 4 || i === 13, note: i === 8 }));
     const cells = qs.map(q => UI.cell(q.status, q.n, { tier: q.tier, level: q.level, flag: q.flag, note: q.note, current: q.n === 7, onClick: () => say(`Question ${q.n}`) }));
     host.append(...cells);
-    const counts = {};
-    qs.forEach(q => { counts[q.status] = (counts[q.status] || 0) + 1; });
+    const counts = { flag: qs.filter(q => q.flag).length };
+    qs.forEach(q => { counts[q.status] = (counts[q.status] || 0) + 1; counts[q.tier] = (counts[q.tier] || 0) + 1; });
+    // the legend follows the view: status keys, or Easy, Medium and Hard with their counts
+    const legendFor = view => {
+      $('x-nav-legend').replaceChildren();
+      cells.forEach(c => { c.removeAttribute('data-filtered'); c.removeAttribute('tabindex'); });
+      UI.legend($('x-nav-legend'), view === 'difficulty' ? ['easy', 'medium', 'hard'] : ['correct', 'incorrect', 'mixed', 'unanswered', 'skipped', 'flag'], counts, {
+        label: 'Show only', onFilter: (k, on, all) => cells.forEach((c, i) => {
+          const q = qs[i], hit = !all.length || all.some(a => a === 'flag' ? q.flag : q.status === a || q.tier === a);
+          if (hit) { c.removeAttribute('data-filtered'); c.removeAttribute('tabindex'); } else { c.setAttribute('data-filtered', ''); c.tabIndex = -1; }
+        }) });
+    };
     UI.seg($('x-nav-ctl'), [{ value: 'status', label: 'Status' }, { value: 'difficulty', label: 'Difficulty' }], {
-      label: 'Colour by', onChange: v => { if (v === 'difficulty') host.dataset.colour = 'difficulty'; else delete host.dataset.colour; } });
-    UI.legend($('x-nav-legend'), ['correct', 'incorrect', 'mixed', 'unanswered', 'skipped', 'flag'], { ...counts, flag: 2 }, {
-      label: 'Show only', onFilter: (k, on, all) => cells.forEach((c, i) => {
-        const q = qs[i], hit = !all.length || all.some(a => a === 'flag' ? q.flag : q.status === a);
-        if (hit) { c.removeAttribute('data-filtered'); c.removeAttribute('tabindex'); } else { c.setAttribute('data-filtered', ''); c.tabIndex = -1; }
-      }) });
+      label: 'Colour by', onChange: v => { if (v === 'difficulty') host.dataset.colour = 'difficulty'; else delete host.dataset.colour; legendFor(v); } });
+    legendFor('status');
   });
   demo('UI.dbars', 'x-dbars', host => { ['easy', 'medium', 'hard'].forEach(t => host.append(UI.dbars(t))); host.append(UI.dbars('hard', { bare: true })); });
   demo('UI.strip', 'x-strips', host => {

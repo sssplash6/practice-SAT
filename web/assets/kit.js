@@ -1682,7 +1682,8 @@
       'data-flag': o.flag, 'data-note': o.note, 'data-open': o.open, 'data-fixing': o.fixing, 'data-over': o.over, 'data-saved': o.saved,
       'data-tier': tierOf(o.tier), 'data-level': o.level ?? null, 'aria-current': o.current ? 'true' : null,
       'data-filtered': o.filtered, tabindex: o.filtered && tag !== 'span' ? '-1' : null,
-      'aria-label': o.label || [`${o.noun || 'Question'} ${n}`, st.label, ...overlayWords(o), o.current && 'on screen'].filter(Boolean).join(', ') },
+      'aria-label': o.label || [`${o.noun || 'Question'} ${n}`, st.label, tierOf(o.tier) && STATES[tierOf(o.tier)].label,
+        o.level !== undefined && o.level !== null && `level ${o.level}`, ...overlayWords(o), o.current && 'on screen'].filter(Boolean).join(', ') },
       h('span', { class: 'n', text: n ?? '', 'aria-hidden': 'true' }));
     if (o.onClick) el.addEventListener('click', e => o.onClick(e));
     if (o.tip) tooltip(el, o.tip);
