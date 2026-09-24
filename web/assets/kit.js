@@ -1416,25 +1416,21 @@
   }
 
   /* ------------------------------------------------------------ tile, meter, skeleton, card error */
-  // the count runs once, when the tile first shows; until then a screen reader reads the real
-  // number (the moving one is aria-hidden) and printing finishes it, so nothing reads 0
-  const counting = new Set();
-  addEventListener('beforeprint', () => counting.forEach(f => f()));
+  // the count runs once, when the tile first shows. The real number stays in the text (screen
+  // readers, print, anything reading textContent); the moving one is drawn over it (.counting in ui.css)
   function countUp(el, to, fmt) {
-    if (still() || !Number.isInteger(to) || to <= 0 || typeof IntersectionObserver !== 'function') { el.textContent = fmt(to); return; }
-    const shown = h('span', { 'aria-hidden': 'true', text: fmt(0) });
-    el.replaceChildren(shown, h('span', { class: 'sr', text: fmt(to) }));
-    const done = () => { io.disconnect(); counting.delete(done); el.textContent = fmt(to); };
-    counting.add(done);
+    el.textContent = fmt(to);
+    if (still() || !Number.isInteger(to) || to <= 0 || typeof IntersectionObserver !== 'function') return;
+    el.classList.add('counting');
+    el.dataset.n = fmt(0);
     const io = new IntersectionObserver(es => {
       if (!es.some(e => e.isIntersecting)) return;
       io.disconnect();
-      counting.delete(done);
       const t0 = performance.now();
       const step = t => {
         const k = Math.min(1, (t - t0) / 600);
-        if (k < 1) { shown.textContent = fmt(Math.round(to * (1 - Math.pow(1 - k, 3)))); requestAnimationFrame(step); }
-        else el.textContent = fmt(to);
+        if (k < 1) { el.dataset.n = fmt(Math.round(to * (1 - Math.pow(1 - k, 3)))); requestAnimationFrame(step); }
+        else { el.classList.remove('counting'); delete el.dataset.n; }
       };
       requestAnimationFrame(step);
     });
