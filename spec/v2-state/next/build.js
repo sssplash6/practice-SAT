@@ -192,7 +192,8 @@ the decisions, or something another task needs now) or "followup" (anything else
 const fix = (t, defects, round) => agent(`${CONTEXT(t)}
 A verifier found defects in ${t.title}. ${typeof defects === 'string' ? `Read them from ${defects}.` : `DEFECTS: ${JSON.stringify(defects)}`}
 An earlier fixer may have been cut off part way: check the branch first and do not redo what is fixed. Fix every blocker, and
-every followup that is small, in the files you own (list any that need another owner). Then run the task's check file and
+every followup that is small, in the files you own (list any that need another owner). Fix only the listed defects: do
+not widen the scope, and if a fix creates new work (content to add, a pattern elsewhere), list it in your return instead of doing it. Then run the task's check file and
 test_flow; both must pass. Commit as you go, and return what you changed and which defects are left.`,
   { label: `fix ${t.id} r${round}`, phase: 'Fix', isolation: 'worktree' })
 

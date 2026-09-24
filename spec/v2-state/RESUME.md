@@ -6,7 +6,9 @@
 `spec/v2-state/followups/<task>.json`. Only content tasks (`rounds: 2`) get two rounds.
 
 **Merged into master:** way-better upgrades, v2/f0, v2/t-bank-all, v2/bank, v2/f4 (+ swap middleware 7eafbe9, R45 test
-counting a00ea8c), v2/f1 (ffda717), v2/satdates (197b54a), v2/bank-lint (3ad7b8e), v2/f5 (22b1532; leftovers in `followups/F5.json`). Dev DB backup:
+counting a00ea8c), v2/f1 (ffda717), v2/satdates (197b54a), v2/bank-lint (3ad7b8e), v2/f5 (22b1532; leftovers in `followups/F5.json`), v2/words-content (99774c2; fix round stopped after ~55 min
+for scope creep; frame supply warns until the review gate; leftovers in `followups/words.json`). Bank-lint triage done
+(`followups/bank-lint-triage.json`, all 5 checks), handed to the other agent. Dev DB backup:
 `server/satfreshman.db.bak-20260924-1020`.
 
 **Live background work** (check each with its journal under
@@ -15,8 +17,6 @@ also copied to `spec/v2-state/runs/<run>/` by the checkpoint loop):
 | run | task id | what | when it returns |
 |---|---|---|---|
 | `wf_cafefb42-928` | wy8hd4xcp | build.js `[{id:'F2'},{id:'F3'},{id:'F6'}]`: 4 units each, then one check + one fix | per task: save leftovers to `followups/<id>.json`, test_flow, merge `v2/<id>` |
-| `wf_609b5aa4-27c` | wf5hy4nl6 | words2.js: frames, confusions, fold, 2 checks all done; the fix round running | run `tools/build_words.py`, merge `v2/words-content` (S9 builds on it) |
-| `wf_cffc089e-e95` | wml2xho3z | bank-lint triage, 5 read-only agents | turn the real flaws into a fix task (offer it to the user's other agent), tighten tools/lint_bank.py |
 | checkpoint loop | b2bucxp7g | tools/v2_checkpoint.py every 5 min | keep running |
 
 **If any of these died** (no notification, journal stale for 20+ minutes): its worktree's uncommitted work is snapshotted in

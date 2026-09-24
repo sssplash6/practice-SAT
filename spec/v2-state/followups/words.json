@@ -1,0 +1,188 @@
+{
+ "task": "words-content",
+ "checks": [
+  {
+   "pass": false,
+   "evidence": "This was a read-only check of the worktree at 1fb15f5 (branch v2/words-content). server/rw_items.py does not exist yet, so I wrote a generator in the scratchpad (gen.py) that follows W1. For each legal key it takes three distractors, each with a legal trap, in the spec's preference order (lookalike, too_strong/too_weak, connotation, reversed, topical). It keeps the (class, polarity, intensity) triples distinct and never uses an option that appears in the text. It uses the same legal_key and trap rules as tools/build_words.py.\n\nSample (seed 20260924): 120 random frames, giving 208 items (one item per legal key, at most 4 keys per frame), and 80 random confusions. I read every item as a student would. Output is in scratchpad/sample.txt.\n\n**Frames: systematic failures.**\n- About 11 of the 120 frames have at least one legal key that does not fit the text, so the item's key is wrong.\n- About 17 of the 120 frames produce items where a second option fits as well as the key. In most of these the extra option is a too_strong or too_weak neighbor from the same class, or a \"lookalike\" that is really a near-synonym.\n- Two whole-library measurements back this up:\n  - 12.5% of 9,104 generated items (one per frame and key over all 5,182 frames) carry a distractor that sat.json lists as the key's synonym (`same` list). By trap: 567 too_strong, 521 too_weak, 87 lookalike.\n  - 67 need-tuples in frames.json are shared by frames whose `needs` lines name different senses and admit more than one key. They cover 528 frames. For example, all 24 frames with need (acquire, 0, 3, 3, v., verb-object) admit attain, derive, glean, assume, realize and contract as keys, whether the frame is about catching an illness, taking on a duty or gathering information.\n- Where a frame's key and distractors do fit, the texts are natural, SAT-like, 1 to 3 sentences, and the clue usually decides the blank.\n\n**Excerpts.**\n- All 13 sampled literature excerpts match the Gutenberg plain text exactly, with the blanked word restored. I fetched each book with curl. The sources and years are right.\n- The only difference found: f1-abandon-19 closes the quotation after \"Heathcliff.\" where the original goes on. That is an acceptable cut.\n- I also checked every excerpt that had a local Gutenberg copy: 476 of 476 match exactly. 71 others had no local copy and were not checked.\n\n**Confusions.** 75 of the 80 tells are correct and useful. Defects are listed below. 11 confusions name plain words that are not library entries, which confusions.json's `about` note allows.\n\n**Context.** adjudications.json does not exist and every frame has `reviewed: null`. So by the spec's own review gate, no frame can be served yet. The build passes only because the servable-frame minimum is reported as a warning, not an error.",
+   "defects": [
+    {
+     "where": "server/words/frames.json: need tags shared across senses (67 need-tuples, 528 frames), e.g. f1-acquire-01..36, f1-create-22..33, f3-inconsistent-25..36, cause/0/3/3 verb-result (21 frames), bestow/0/3/3, implicit/0/2/2",
+     "what": "A frame's need tags (class, polarity, lo, hi, pos, pattern) are identical across frames whose `needs` lines name different senses, so every sense in the class counts as a legal key. In the sample: f1-acquire-28 ('many sailors would ____ scurvy') admits attain, derive, glean, assume.take_on and realize.achieve, and the key=attain item has no correct option. f3-inconsistent-36 (Hardy excerpt 'grasped the ____ truth') admits controversial, discordant, incompatible and incongruous, and only paradoxical fits.",
+     "fix": "Split these classes by sense, or give each frame an explicit `keys` allow-list checked by the build. Re-tag the 528 frames so that only the senses their `needs` line names are legal."
+    },
+    {
+     "where": "server/words/frames.json: f1-bestow-09, f3-implicit-23, f1-create-27",
+     "what": "Some legal keys break the frame's grammar or collocation. f1-bestow-09 '____ its highest honor on X': grant and tender.offer do not take 'on'. The bestow distractor, labeled too_strong, is the most natural answer. f3-implicit-23 '____ to his defeat': intimate.suggest cannot take 'to'. f1-create-27 'Lewis Carroll liked to ____ new words': construct, fashion.make and generate are weak, and the too_strong distractor 'originate' fits as well as they do.",
+     "fix": "Limit keys per frame (see the first defect). Let a frame name the preposition or collocation its blank needs, so bestow (not grant) is the key before 'on'."
+    },
+    {
+     "where": "server/words/frames.json: f1-accidental-08, f2-erroneous-06, f2-ominous-05, f4-slight-03, f4-vivid-30, f4-vivid-28 (nearly)",
+     "what": "Even where a frame has a single `needs` line, a legal key can fail the text. 'the applause was inadvertent' (the clue is about spontaneity). 'Her conviction was entirely illusory': illusory does not fit, spurious is weak, and the specious lookalike fits as well. 'a rumbling that they called dismal' (the needs line says threatening). 'The difference in weight is nominal'. The vivid class puts vivid (lifelike) and captivating (charming) next to moving and poignant at intensity 4, so frames whose clue is 'bringing many to tears' accept vivid and captivating as keys.",
+     "fix": "Remove inadvertent, illusory/spurious, dismal, nominal, vivid and captivating from these frames' keys by re-tagging, or move those words to a different class or intensity. Add each frame's accepted keys to the review sheet."
+    },
+    {
+     "where": "server/words/frames.json + distractor rule (build_words.trap_options and W1): f1-consistent-10, f1-chaotic-11, f4-vivid-10, f4-slight-03, f2-scrutinize-02, f1-certain-16, f1-credulous-02, f2-streamline-03, f2-hinder-03, f4-subordinate-07, f1-comply-13, f2-perennial-02, f3-protect-20, f2-galvanize-01",
+     "what": "Same-class too_strong and too_weak distractors fit the text, because the clue does not fix the degree. Examples:\n- 'data are ____ with the theory' accepts compatible and congruent.\n- 'The scene at the harbor was ____' accepts tumultuous.\n- 'Her ____ description of the eruption' accepts evocative and riveting.\n- 'difference … is ____: only a laboratory scale can detect it' accepts slight and marginal.\n- 'reviewers must ____ the paper's methods in detail' accepts analyze.\n- '____ proof of the abuses' accepts definitive.\n- 'Early audiences were ____' accepts gullible.\n- 'helps ____ the review' accepts facilitate.\n- impede vs obstruct: their shorts are nearly identical.\n- 'subordinate to its main purpose' fits.\n- 'pressured to adhere to the fashions' fits.\n- Moby-Dick 'is perpetual as sunlight' fits.\n\nThe spec lets a word from the key's `same` list be a too_strong or too_weak distractor, and 12.5% of all generated items carry such a synonym.",
+     "fix": "Offer a same-class too_strong or too_weak distractor only when the frame marks that its clue fixes the intensity (for example need.pins='intensity'). Never offer a word from the key's `same` list, or a word whose `same` list contains the key, unless that flag is set. Otherwise prefer reversed, connotation or topical traps."
+    },
+    {
+     "where": "server/words/sat.json `lookalikes` used as W1 lookalike traps: protect→preserve, negligible→subtle, slight→subtle, spurious→specious, denote→connote",
+     "what": "The `lookalikes` field holds near-synonyms, not look-alike words, and they fit the blank. f3-protect-08 'to ____ the rights of the minority' accepts preserve. f4-slight-03 key=negligible accepts subtle. f2-denote-04 'a lit candle … is used to ____ that someone inside is still waiting': nothing in the clue makes denote beat connote, and a symbol in a novel is usually said to connote. The trap's check line ('Which of the similar-looking words…') would be wrong for these.",
+     "fix": "Keep only form-alike words in `lookalikes`, or leave out any lookalike whose class matches or neighbors the need class. Rewrite f2-denote-04 so the clue says the meaning is literal or explicit, or change its key."
+    },
+    {
+     "where": "tools/build_words.py trap_options (and the W1 rule it copies)",
+     "what": "The synonym guard checks only the key's `same` list. In 93 generated items the key is in the distractor's `same` list but not the other way round (87 lookalike, 6 topical), so a synonym passes as a lookalike or topical trap.",
+     "fix": "Treat `same` as symmetric in the distractor rule, or have the build require the two lists to agree."
+    },
+    {
+     "where": "server/words/sat.json class/intensity scales: examine (cogitate, peruse, deem, appraise, analyze, probe, scrutinize), serious (dignified, earnest, staid, somber), conventional (orthodox, archaic), frugal (economical, frugal), playful (humorous, whimsical), address (field, approach, intervene)",
+     "what": "Within these classes, intensity orders words that differ in meaning, not in strength. The generated reasons would teach false things: 'Too strong' for peruse against cogitate, earnest against dignified (f4-serious-12), archaic against orthodox (f1-conventional-14), frugal against economical prose (f2-economical-03), whimsical against playful (f3-playful-26) and intervene against field (f1-address-13), and 'Too weak' for deem against probe (f2-scrutinize-02).",
+     "fix": "Put on one intensity ladder only words that differ in degree. Give different-meaning neighbors their own class, or label them topical."
+    },
+    {
+     "where": "server/words/frames.json f3-persuade-17 (Thackeray, Vanity Fair), f4-wordy-15 (Forster, A Room with a View)",
+     "what": "The clue does not decide the key. In f3-persuade-17 the clue 'when it is only a comedy that the reader pays his money to witness' gives no sign of gentleness or flattery, so the coerce distractor fits too. coerce is also labeled a lookalike of cajole, which it is not. In f4-wordy-15, '[[it was an easy topic]]' does not separate garrulous from verbose (too_weak) or prolix (too_strong).",
+     "fix": "Move the [[clue]] onto words that force the key, or leave out same-class neighbors for these excerpts."
+    },
+    {
+     "where": "server/words/frames.json f4-reveal-26",
+     "what": "'he wrote “colour” the English way in a letter supposedly signed by a Virginian' gives no date. Before Webster's spelling reforms (1806–1828), Virginians also wrote 'colour', so the premise is not true in general.",
+     "fix": "Date the forged letter after about 1830, or use an anachronism that holds without a date."
+    },
+    {
+     "where": "server/words/confusions.json compete~contend",
+     "what": "The tell says 'contend is struggling with a difficulty, or arguing a position', which implies contend does not mean competing for a prize. But 'contend for the title' does mean compete, and that is exactly what this pair confuses.",
+     "fix": "Say that contend can mean compete ('contend for a prize'), and give the difference in its other two senses."
+    },
+    {
+     "where": "server/words/confusions.json breach~rupture; server/words/sat.json rupture",
+     "what": "The pos does not match. breach is n., the rupture entry is v., and the tell defines rupture as a noun ('a rupture is a sudden bursting apart').",
+     "fix": "Word the tell to match the entries' pos, or make the rupture entry a noun."
+    },
+    {
+     "where": "server/words/sat.json shorts: vivacious/animated ('lively and spirited'), bolster/buttress ('strengthen with support'), obstruct/impede ('block or get in the way of' / 'block or slow down')",
+     "what": "Pairs that have a confusion row carry identical or nearly identical shorts. The tile and gloss cannot tell them apart, and when both appear as options the reasons cannot either.",
+     "fix": "Rewrite the shorts so each carries its tell's difference."
+    },
+    {
+     "where": "server/words/frames.json excerpt source metadata (outside the sample)",
+     "what": "Minor inconsistencies:\n- Middlemarch is dated 1871 on 2 frames and 1872 on 17.\n- Moby-Dick is titled two ways ('Moby-Dick' and 'Moby-Dick; or, The Whale').\n- Tolstoy and Dumas excerpts quote English translations but carry the original-language year and no translator.",
+     "fix": "Standardize the titles and years. For translations, add the translator and use the translation's year."
+    }
+   ]
+  },
+  {
+   "pass": false,
+   "evidence": "Worktree /Users/workingmyassof/satbank/.claude/worktrees/words (v2/words-content, HEAD 1fb15f5). Nothing edited or committed; my scratch files are in scratchpad/chk_entries_s20260924/. `python3 tools/build_words.py` exits 0 (1243 SAT senses, 5182 frames), so the build checks are all met. What follows is about the content itself.\n\nSAMPLE: seed 20260924, drawn as random.Random(20260924).sample(json.load(sat.json), 150). The first entries are affirm, synthesize, desultory, tolerate, unadorned, belligerent, premeditated, hypothetical, neophyte, propagate … and the last are glean and prevailing. For each entry I checked meaning, example, same, opposite and lookalike tells, and compared class, polarity and intensity with the whole family of that class.\n\n- Meanings: none were wrong for the tested sense.\n- Examples: mostly natural and in the right sense.\n- Same/opposite: a few weak synonyms.\n- Classes: 6 of the 150 are in the wrong class (invoke, credit.attribute, hypothetical, impulsive, serendipitous, originate). Their family members attribute and aesthetic share the problem. Because frames take their legal keys and trap labels from class, polarity and intensity, each misfiled word breaks frames. The worst case: the invoke frames f3-include-07 to -12 accept chronicle, document and enumerate as correct keys.\n- Lookalikes: across the library, 171 of 1442 lookalikes (12%) do not look like the headword; they are near-synonyms. About 95 of those are library words with the same part of speech, so W1 would offer them as \"Looks like the answer\" traps. Some of them fit the blank (placid in a serene frame, ample in a sufficient frame).\n\nFACT CHECK: I read every example, second-sense (\"nearly\") text and \"uses\" line with a capitalized name or a year: 408 matches, plus 100 more that start with a name. About 130 of them state real facts. About 12 of those are wrong or overstated. Checked against Gutenberg texts:\n- Darwin's Autobiography (#2010): the beetle-in-mouth story (avid) and the walks with Henslow (congenial) are both correct.\n- Wollstonecraft's Vindication (#3420): boys and girls \"educated together\" in day schools (espouse) is correct, but the example says \"later essays\" when the argument is in that book.\n\nThe rest were checked from memory, and it shows a pattern: facts that are nearly right with one detail wrong. Given that rate and the class problem, this is a fail.",
+   "defects": [
+    {
+     "where": "server/words/sat.json invoke (class include, 0/3, verb-claim) -> frames f3-include-07..12",
+     "what": "invoke has the same class, polarity, intensity and pattern as chronicle, document and enumerate, so all four are legal keys in the invoke frames. The generator could mark 'the lawyer chose to chronicle/enumerate an old law as support for her client' as correct.",
+     "fix": "Move invoke out of 'include' (into a cite/appeal class, or give it its own pattern) so those frames have invoke as their only legal key. Then re-derive the frame keys."
+    },
+    {
+     "where": "server/words/sat.json attribute, credit.attribute (class combine) -> frames f1-combine-07, f1-combine-08 and other attribute frames",
+     "what": "Attributing a cause is filed under 'joined, linked or divided'. In frames such as 'Some historians ____ the empire's fall to the plague', fuse/synthesize/amalgamate come out as 'Too strong' traps and separate/sever as 'Reverses the meaning'. Both labels are nonsense.",
+     "fix": "Create an attribution class (attribute, credit, ascribe) with a sensible opposite, or give it no strength ladder."
+    },
+    {
+     "where": "server/words/sat.json impulsive (class accidental, -1/4) vs fortuitous/serendipitous (+1/4) -> frames f1-accidental-01, f1-accidental-03",
+     "what": "Acting on a whim is filed with lucky chance. Because the polarities are opposite, serendipitous or fortuitous gets offered as the 'Wrong tone' trap for impulsive ('Shoppers who describe themselves as ____ often buy things on a sudden whim').",
+     "fix": "Move impulsive into a rash/hasty family (opposite: deliberate/cautious). Keep 'accidental' for chance outcomes."
+    },
+    {
+     "where": "server/words/sat.json hypothetical (class uncertain, 0/3) -> frames f4-uncertain-13, f4-uncertain-14",
+     "what": "Hypothetical means imagined for argument; it does not mean doubtful. Its frames (Dickens: 'a ____ case ... it would be a real case') get equivocal as 'Too strong' and definitive/unequivocal as 'Reverses the meaning'.",
+     "fix": "Give hypothetical its own class (hypothetical/theoretical vs actual/real), or file it under concrete/abstract."
+    },
+    {
+     "where": "server/words/sat.json originate (class create, 0/4, verb-process) -> frames f1-create-34, f1-create-35",
+     "what": "The entry's example and frames use the intransitive 'come from' sense ('The virus is thought to ____ in bats'), but the class is create. That makes generate, construct and coin 'Too weak' traps in these frames.",
+     "fix": "Split the senses: originate.arise (family with stem.arise and derive) and originate.create. Retag the frames."
+    },
+    {
+     "where": "server/words/sat.json aesthetic (class ornate, 0/1), elegant (+1/2) -> frames f3-ornate-07, f3-ornate-08",
+     "what": "'Concerned with beauty' is not a low degree of ornament. 'The reformers' arguments were partly ____: they cared about its beauty' gets ornate/opulent as 'Too strong' and austere/spartan as 'Reverses'.",
+     "fix": "Take aesthetic out of the ornate ladder. Check whether elegant (often plain) belongs at step 2 of 'how decorated'."
+    },
+    {
+     "where": "server/words/sat.json lookalikes (library-wide; in the sample: affirm>assume, patronize>support, stem>halt, arbitrary>deliberate, pragmatic>practical, shrewd>cunning, serene>placid, significant>substantial, sparse>scarce, sufficient>ample, focus>fixate, bent.inclination>intent, unequivocal>unambiguous, rudimentary<>fundamental, synthesize>summarize, tolerate>condone)",
+     "what": "171 of 1442 lookalikes are near-synonyms, not look/sound-alikes. W1 turns entry lookalikes into the 'Looks like the answer' trap, so about 95 same-part-of-speech library words would carry that label. Some of them fit the blank ('the lake looked ____, so still it mirrored the mountains': placid). The stem>halt tell ('halt stops it completely') also contradicts stem's own meaning ('stop or slow'). patronize>support should be the patron/customer sense.",
+     "fix": "Move near-synonym pairs to confusions.json as kind 'nearmiss' and keep only look/sound-alikes in lookalikes. Add a build warning for lookalikes with low string similarity."
+    },
+    {
+     "where": "server/words/sat.json abiding ex0",
+     "what": "'Carson's abiding interest in the sea ... shaped every book she wrote': Silent Spring (1962) is about pesticides.",
+     "fix": "Say it shaped her first three books (Under the Sea-Wind, The Sea Around Us, The Edge of the Sea)."
+    },
+    {
+     "where": "server/words/sat.json eminent ex0",
+     "what": "'Lyell urged the young Darwin to publish his theory before someone else did': that was 1856, when Darwin was 47.",
+     "fix": "Drop 'young' (for example 'urged Darwin, then in his forties, ...')."
+    },
+    {
+     "where": "server/words/sat.json ubiquitous ex0",
+     "what": "'smartphones had become ubiquitous by 2015, carried by nearly every adult in the country': Pew measured 64-68% of US adults in 2015.",
+     "fix": "Change to 'by 2015, carried by about two-thirds of American adults' (and pick a different word), or move the date and soften the claim."
+    },
+    {
+     "where": "server/words/sat.json captivating ex0",
+     "what": "'footage of hunting spiders ... even viewers who feared insects': spiders are arachnids, not insects. That is a science error in a science-register sentence.",
+     "fix": "'even viewers who feared spiders could not look away'."
+    },
+    {
+     "where": "server/words/sat.json endure.last nearly0",
+     "what": "Says the 1648 peace after thirty years of war 'endured for more than a century'. German lands were at war again within decades (Franco-Dutch War 1672-78; the Palatinate devastated 1688-89; War of the Spanish Succession).",
+     "fix": "Make it generic and unnamed, or say the Westphalian settlement's framework, not peace, lasted until 1806."
+    },
+    {
+     "where": "server/words/sat.json fledgling ex0",
+     "what": "'The fledgling republic had no navy ... yet it managed to win recognition from France': this reads as the US in 1778, and the Continental Navy had existed since October 1775.",
+     "fix": "'had only a handful of warships'."
+    },
+    {
+     "where": "server/words/sat.json empirical ex0",
+     "what": "'no empirical evidence for it until the telescope measurements of 1919': general relativity already accounted for Mercury's observed perihelion shift in 1915.",
+     "fix": "'the first dramatic test came with the eclipse measurements of 1919', or remove the date."
+    },
+    {
+     "where": "server/words/sat.json adroit ex0",
+     "what": "'Franklin won French support without ever appearing to ask for it': he openly negotiated the 1778 treaty and asked Vergennes for loans many times. This is an overstatement.",
+     "fix": "'won French support while seeming never to beg for it', or name a specific, checkable skill."
+    },
+    {
+     "where": "server/words/sat.json inform.shape nearly0",
+     "what": "Morrison's fiction 'returns again and again to small Midwestern towns': only a few of her 11 novels (The Bluest Eye, Sula, Beloved) are set in Ohio.",
+     "fix": "'several of her novels are set in Ohio towns like the one she grew up in'."
+    },
+    {
+     "where": "server/words/sat.json fashion.make nearly1",
+     "what": "New Caledonian crows 'fashion hooks from twigs, bending the tips': wild crows carve the hook from the joint where a side twig meets the branch. Bending was the lab crow Betty, with wire.",
+     "fix": "'carving a hook from the joint of a forked twig'."
+    },
+    {
+     "where": "server/words/sat.json espouse ex0",
+     "what": "'In her later essays, Wollstonecraft espoused equal schooling': the argument (boys and girls 'educated together' in day schools, Gutenberg #3420, ch. 12) is in the 1792 book A Vindication of the Rights of Woman, not in essays.",
+     "fix": "'In A Vindication of the Rights of Woman (1792), Wollstonecraft espoused ...'."
+    },
+    {
+     "where": "server/words/sat.json glean ex0",
+     "what": "'Historians have gleaned much of what they know about daily life in Pompeii from graffiti' overstates graffiti against the excavated houses, frescoes and artifacts.",
+     "fix": "'a surprising amount' / 'a good deal'."
+    },
+    {
+     "where": "server/words/sat.json same lists: hypothesis, complicate, balance, persist, compromise.settle",
+     "what": "Several 'same' words are not synonyms in the tested sense: hypothesis 'proposal'; complicate 'muddle'; balance 'weigh'; persist 'persevere' (does not fit the example 'The drought persisted'); compromise.settle 'negotiate'.",
+     "fix": "Replace with supposition/theory; make less simple (or drop muddle); reconcile/offset; continue/last/linger; meet halfway/concede."
+    },
+    {
+     "where": "server/words/sat.json sufficient ex0, significant, arbitrary ex0, premeditated ex0, recount lookalike",
+     "what": "Minor wording problems: 'large enough to be sufficient' is redundant. significant's meaning ('important enough to affect an interpretation') is oddly narrow, and its example 'significant difference' in a study reads as the statistical sense. The arbitrary example ('because it divided one neighborhood') does not show arbitrariness. 'the fire was premeditated' is unnatural (the arson was). The re-count tell gives the verb's stress as REE-kount; that is the noun's stress.",
+     "fix": "Rewrite those examples, broaden significant's meaning, and fix the pronunciation note (the verb is ree-KOUNT)."
+    }
+   ]
+  }
+ ],
+ "note": "fix round stopped 2026-09-24 15:15 after ~55 min (it had moved on to adding frames for senses left short); every commit kept. Re-check which of these defects remain before S9 ships Words; the frames also still need the two-reviewer gate."
+}
