@@ -24,6 +24,11 @@
    UI.checkYourWork(host, cells, {mode, title, meta, lead, left, timed, pace_ms, confidence,
        training, order, saving, onPick(i), onGo(list), onFinish, finishLabel, onBack, backLabel})
        -> {el, foot, update(cells, patch), queue()}
+   UI.annotate(host, marks, {editable, readonly, onChange(marks)}) -> {marks(), notes(), set, render,
+       editable, closeBar, destroy()}      marks {addr: 's' | 't:r:c' | 'o:i', start, end, style, note}
+   UI.scratch(host, {data, editable, onChange(data), onDone}) -> {el, bar, typed, data(), editable, set, destroy()}
+   UI.refDock(host, {highlight}) -> {el, highlight(id), filter(q), focus()}     ids ref-circle ... ref-180
+   UI.directions(first) -> sheet       UI.between(host, opts)       UI.predictSheet(cells, opts)
    cells: [{n, status, flag, note, saved, tier, level, topic, topic_name, ms, budget_ms, conf,
             trap, voided, current}]   status is a UI.STATES key (answered, unanswered, correct, ...)
    ========================================================================== */
@@ -1338,6 +1343,16 @@
       const b = e.target.closest('[data-i]');
       if (b && !b.disabled) pick(+b.dataset.i);
     });
+    segs.addEventListener('keydown', e => {                   // one keyboard group: arrows move, Enter opens
+      const bs = [...segs.querySelectorAll('.rn-seg:not(:disabled)')], i = bs.indexOf(doc.activeElement);
+      if (i < 0) return;
+      const j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: bs.length - 1 }[e.key];
+      if (j === undefined) return;
+      e.preventDefault(); e.stopPropagation();
+      const nx = bs[Math.max(0, Math.min(bs.length - 1, j))];
+      bs.forEach(b => { b.tabIndex = b === nx ? 0 : -1; });
+      nx.focus();
+    });
 
     // the question strip (practice) / header (exam)
     const strip = h('div', { class: exam ? 'rn-qhead' : 'rn-qstrip' });
@@ -1768,7 +1783,7 @@
         for (let i = 0; i < n; i++) {
           const c = cells[i] || { status: 'future' };
           const st = exam ? (c.status === 'answered' ? 'answered' : 'unanswered') : c.status;
-          const b = h('button', { type: 'button', class: 'rn-seg', 'data-i': i, 'data-status': st, 'data-flag': c.flag ? '' : null, 'data-queued': queue && queue.list.includes(i) ? '' : null,
+          const b = h('button', { type: 'button', class: 'rn-seg' + (c._added ? ' add' : ''), 'data-i': i, 'data-status': st, 'data-flag': c.flag ? '' : null, 'data-queued': queue && queue.list.includes(i) ? '' : null,
             'aria-current': i === at && view === 'q' ? 'true' : null, tabindex: '-1', disabled: c.status === 'future' && i !== t.served ? true : null,
             'aria-label': cellLabel(c, i, exam) });
           if (!phone() && UI.tooltip && !coarse()) UI.tooltip(b, cellLabel(c, i, exam).replace(/^Question (\d+), /, 'Question $1 · ').replace(/, /g, ' · '));
@@ -1776,6 +1791,7 @@
         }
         const cur = segs.querySelector('[aria-current="true"]') || segs.querySelector('.rn-seg:not(:disabled)');
         if (cur) cur.tabIndex = 0;
+        cells.forEach(c => { if (c) delete c._added; });
       } else {
         const done = total === null ? t.answered : t.answered;
         const of = total === null ? Math.max(t.served, 1) : total;
@@ -2371,6 +2387,10 @@
       if (!cfg.pause || !timerApi || view === 'paused') return false;
       leave('pause');
       try { await emit('pause'); } catch (_) { toast('Couldn’t pause. Try again.'); return true; }
+      showPaused();
+      return true;
+    }
+    function showPaused() {
       timerApi.pause();
       pausedView = view;
       view = 'paused';
@@ -2382,7 +2402,6 @@
       [fLeft, fMid, fRight].forEach(x => { x.hidden = true; });
       resume.focus();
       emit('view', 'paused', at);
-      return true;
     }
     async function resumeRun() {
       try { await emit('resume'); } catch (_) { toast('Couldn’t resume. Try again.'); return; }
@@ -2401,6 +2420,13 @@
       if (navPop) { try { navPop.close(); } catch (_) {} navPop = null; }
       if (UI.calc && UI.calc.isOpen) UI.calc.close();
       if (ann) ann.closeBar();
+      if (!exam && UI.sheet) {
+        const t = tally(cells);
+        const unans = total !== null ? total - t.answered : t.unanswered + t.skipped;
+        UI.sheet({ title: 'Time’s up', size: 's', dismiss: false,
+          body: b => b.append(h('p', { text: `${t.answered} answered, ${Math.max(0, unans)} unanswered. Every answer you gave is saved.` })),
+          actions: [{ label: 'See summary', primary: true, onClick: () => { emit('finish', 'timeup'); } }] });
+      }
       emit('timeUp');
     }
     async function discard() {
@@ -2579,7 +2605,7 @@
       qmap.W = { does: 'Hint', run: wsKey };
       qmap.V = { id: 'details', does: 'Details', run: () => (inQ() ? (openDetails(), undefined) : false) };
       qmap.Y = { id: 'history', does: 'Attempt history', run: () => (inQ() && (ws.answered() || +(items.get(at) || {}).attempts) ? (history(), undefined) : false) };
-      const act = id => () => { if (!inQ() || !ws.answered()) return false; const b = ws.el.querySelector('.q-actions'); if (!b) return false; const btn = b.querySelector(id === 'twin_menu' ? '.split-caret, .qa-twin-menu' : '.qa-twin, .verb, .split > :first-child'); if (!btn) return false; btn.click(); return undefined; };
+      const act = id => () => { if (!inQ() || !ws.answered()) return false; const btn = ws.el.querySelector(id === 'twin_menu' ? '.q-actions .split.twin .split-caret' : '.q-actions .split.twin > :first-child'); if (!btn) return false; btn.click(); return undefined; };
       qmap.T = { id: 'twin', does: 'Twin: same kind, new numbers', run: act('twin') };
       qmap['Shift+T'] = { id: 'twin_menu', does: 'Twin menu', run: act('twin_menu') };
       qmap['Shift+G'] = { id: 'desmos', does: 'Show me in Desmos', run: () => { const it = items.get(at) || {}; const dz = it.fb && it.fb.desmos; if (!inQ() || !dz || !UI.calc || !UI.calc.walkthrough) return false; UI.calc.walkthrough(dz); return undefined; } };
@@ -2623,7 +2649,7 @@
       item(i, patch) { const it = items.get(i); if (it) Object.assign(it, patch); else items.set(i, Object.assign({}, patch)); if (i === at) paintQ(); },
       cell(i, patch) { cells[i] = Object.assign(cells[i] || { n: i + 1, status: 'unanswered' }, patch); paintRail(); if (i === at) { paintQ(); syncFoot(); } if (navApi) navApi.update(cells, at); if (cyw) cyw.update(cells); },
       setCells(list, n) { cells = list.map((c, i) => Object.assign({ n: i + 1, status: 'unanswered' }, c, { current: i === at })); if (n !== undefined) total = n; paintRail(); syncFoot(); },
-      addSlot(c = {}, budget_s, why) { cells.push(Object.assign({ n: cells.length + 1, status: 'future' }, c)); if (total !== null) total++; paintRail(); syncFoot(); if (timerApi && budget_s) timerApi.add(budget_s, why); },
+      addSlot(c = {}, budget_s, why) { cells.push(Object.assign({ n: cells.length + 1, status: 'future', _added: true }, c)); if (total !== null) total++; paintRail(); syncFoot(); if (timerApi && budget_s) timerApi.add(budget_s, why); },
       // G9: the next question rendered while the verdict shows; Next swaps it in
       preload(i, it) {
         if (!it || !it.q || pre.has(i) || dead) return;
@@ -2675,11 +2701,96 @@
     const first = Math.max(0, Math.min(start, total === null ? start : total - 1));
     if (items.get(first)) show(first, items.get(first));
     else if (on.load) go(first, 'start');
+    if (o.resumed) toast('Picked up where you left off');
+    if (o.clock && o.clock.paused && cfg.pause) setTimeout(() => { if (!dead) showPaused(); }, 0);
     if (prefs.calc_mode && prefs.calc_mode !== 'closed' && cfg.calc && UI.calc && !UI.calc.isOpen) UI.calc.open({ mode: prefs.calc_mode === 'float' ? 'float' : undefined, focus: false });
     return run;
   }
 
+  /* ------------------------------------------------------------ between modules (Tests 4.6, X11)
+     UI.between(host, {conditions, seconds, stats: {answered, of, marked, used_s, away_s}, next, route,
+       cells, labels(i), predict, extra, onPredict(list), onBegin({between_ms, auto}), onExit()})
+       -> {el, stop(), busy(on)}
+     Test-day: a 60 s countdown ("Module 2 starts in 0:48", announced at 0:30 and 0:10) that
+     begins module 2 by itself at 0:00, with the prediction grid inside it. Training: no countdown.
+     UI.predictSheet(cells, {labels, value, onDone(list)}) is the same grid in a sheet, for after
+     the final Hand in. */
+  function predictGrid(host, cells, o = {}) {
+    const picked = new Set(o.value || []);
+    const box = h('div', { class: 'rn-predict' });
+    box.append(h('p', { class: 'rn-predict-h' }, h('b', { text: 'Which do you think you missed?' }), h('span', { class: 'meta', text: ' (optional)' })));
+    const grid = h('div', { class: 'cell-grid rn-predict-grid', role: 'group', 'aria-label': 'Tap the ones you think you missed' });
+    cells.forEach((c, i) => {
+      const answered = c.status === 'answered' || answeredish(c.status);
+      const label = o.labels ? o.labels(i) : '';
+      const b = h('button', { type: 'button', class: 'rn-pcell', 'aria-pressed': String(picked.has(i)), disabled: answered ? null : true,
+        'aria-label': `Question ${c.n ?? i + 1}${label ? ', ' + label : ''}${answered ? '' : ', unanswered'}` },
+        h('span', { class: 'n', text: c.n ?? i + 1 }), label ? h('span', { class: 'rn-pcell-l', text: label }) : null);
+      b.addEventListener('click', () => { picked.has(i) ? picked.delete(i) : picked.add(i); b.setAttribute('aria-pressed', String(picked.has(i))); count.textContent = picked.size ? `Think I missed: ${picked.size}` : ''; });
+      grid.append(b);
+    });
+    const count = h('p', { class: 'meta rn-predict-n', 'aria-live': 'polite' });
+    box.append(grid, count);
+    if (host) host.append(box);
+    return { el: box, value: () => [...picked].sort((a, b) => a - b) };
+  }
+  function predictSheet(cells, o = {}) {
+    if (!UI.sheet) return null;
+    let g = null;
+    return UI.sheet({ title: 'Which do you think you missed?', size: 'l', body: b => { g = predictGrid(b, cells, o); g.el.querySelector('.rn-predict-h').remove(); b.prepend(h('p', { class: 'help', text: 'Optional, about 20 seconds. Tap the ones you think you got wrong; your report compares.' })); },
+      actions: [{ label: 'Skip', quiet: true, onClick: () => { if (o.onDone) o.onDone(null); } }, { label: 'Done', primary: true, kbd: 'Enter', onClick: () => { if (o.onDone) o.onDone(g.value()); } }] });
+  }
+  function between(host, o = {}) {
+    const testDay = o.conditions !== 'training';
+    const total = testDay ? (o.seconds ?? 60) : null;
+    const t0 = performance.now();
+    const st = o.stats || {};
+    let iv = 0, done = false, said = new Set();
+    const el = h('section', { class: 'rn-between', id: 'between', 'aria-labelledby': 'betweenH' });
+    el.append(h('h1', { class: 'h1', id: 'betweenH', text: o.title || 'Module 1 is in' }));
+    const live = h('p', { class: 'sr', 'aria-live': 'polite' });
+    const tiles = h('div', { class: 'stats rn-between-tiles', style: '--cols: 4' });
+    [['Answered', st.answered !== undefined ? `${st.answered} of ${st.of}` : '—'], ['Left marked', st.marked ?? '—'],
+      ['Time used', st.used_s !== undefined ? mmss(st.used_s) : '—'], ['Away', mmss(st.away_s || 0)]].forEach(([k, v]) =>
+      tiles.append(h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: k }), h('span', { class: 'stat-v', text: String(v) }))));
+    el.append(live);
+    const clock = testDay ? h('div', { class: 'rn-between-clock', role: 'timer' }) : null;
+    const bar = testDay ? h('span', { class: 'rn-between-bar' }, h('i')) : null;
+    const pred = o.predict !== false && o.cells ? predictGrid(null, o.cells, o) : null;
+    const beginB = h('button', { type: 'button', class: testDay ? 'btn rn-begin' : 'pill rn-begin', text: testDay ? 'Begin module 2 now' : 'Begin module 2' });
+    const card = h('div', { class: 'rn-between-card' });
+    if (o.next) card.append(h('p', { class: 'rn-between-next', text: o.next }));
+    if (o.route) card.append(h('p', { class: 'rn-between-route', text: o.route }));
+    if (testDay) el.append(h('div', { class: 'rn-between-count' }, clock, bar, pred ? pred.el : null, beginB));
+    el.append(tiles, card);
+    if (!testDay) { if (pred) el.append(pred.el); if (o.extra) el.append(o.extra); el.append(beginB); }
+    if (o.onExit) el.append(h('button', { type: 'button', class: 'quiet rn-between-exit', text: 'Save and exit', onclick: () => o.onExit() }));
+    function begin(auto) {
+      if (done) return;
+      done = true;
+      clearInterval(iv);
+      if (pred && o.onPredict) o.onPredict(pred.value());
+      beginB.disabled = true;
+      beginB.textContent = 'Getting module 2 ready…';
+      if (o.onBegin) o.onBegin({ between_ms: Math.round(performance.now() - t0), auto: !!auto });
+    }
+    beginB.addEventListener('click', () => begin(false));
+    el.addEventListener('keydown', e => { if (e.key === 'Enter' && !(e.target.closest && e.target.closest('button, a, input, textarea'))) { e.preventDefault(); begin(false); } });
+    function tick() {
+      const left = Math.max(0, total - (performance.now() - t0) / 1000);
+      const s = Math.ceil(left);
+      clock.textContent = `Module 2 starts in ${mmss(s)}`;
+      bar.firstChild.style.width = `${(left / total * 100).toFixed(1)}%`;
+      [30, 10].forEach(k => { if (s <= k && !said.has(k)) { said.add(k); live.textContent = `Module 2 starts in ${k} seconds`; } });
+      if (left <= 0) begin(true);
+    }
+    if (testDay) { tick(); iv = setInterval(tick, 250); }
+    if (host) host.append(el);
+    setTimeout(() => { if (el.isConnected) { el.tabIndex = -1; el.focus({ preventScroll: true }); } }, 0);
+    return { el, stop() { clearInterval(iv); done = true; }, busy(on) { beginB.disabled = !!on; if (!on) { done = false; beginB.textContent = testDay ? 'Begin module 2 now' : 'Begin module 2'; } } };
+  }
+
   /* ------------------------------------------------------------ export */
-  Object.assign(UI, { runner, timer, saveQueue, navigator: navPanel, checkYourWork, annotate, scratch, refDock, directions: directionsSheet, rdp });
+  Object.assign(UI, { runner, timer, saveQueue, navigator: navPanel, checkYourWork, annotate, scratch, refDock, directions: directionsSheet, between, predictSheet, rdp });
   if (location.pathname.startsWith('/dev/') && !rdp.__test()) console.error('runner.js self-test failed: rdp');
 })();

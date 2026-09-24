@@ -275,7 +275,20 @@
       state: (i, p) => { if (exam) qs.state(qAt(i).id, p); log('state', i, p); },
       skip: (i, meta) => { saved(qAt(i).id).skipped = true; keep(); log('skip', i, meta); },
       exit: how => { log('exit', how); UI.toast && UI.toast(`Exit: ${how}`); },
-      finish: how => { log('finish', how); UI.toast && UI.toast('Finished: the page would show the summary or hand in'); },
+      finish: how => {
+        log('finish', how);
+        if (!exam) { UI.toast && UI.toast('Finished: the page would show the summary'); return; }
+        // the test window's #between (X11): Test-day counts down, Training waits for Begin
+        const t = run.cells;
+        const box = document.createElement('div');
+        UI.between(box, { conditions: rmode === 'training' ? 'training' : 'test_day', seconds: +(url.get('between') || 60), cells: t,
+          labels: i => (qAt(i).skill || '').split(' ').slice(0, 2).join(' '),
+          stats: { answered: t.filter(c => c.status === 'answered').length, of: t.length, marked: t.filter(c => c.flag).length, used_s: minutes * 60 - (run.timer.left || 0), away_s: 0 },
+          next: 'Module 2 · 22 questions · 35:00 · calculator and reference sheet on every question',
+          onPredict: l => log('predict', l), onBegin: b => { log('begin module 2', b); UI.toast && UI.toast(`Module 2 would begin (${b.auto ? 'by itself' : 'pressed'})`); },
+          onExit: () => log('exit from between') });
+        run.screen(box, []);
+      },
       pause: async () => { await wait(100); log('pause'); },
       resume: async () => { await wait(100); log('resume'); },
       timeUp: () => { log('time up'); run.screen(Object.assign(document.createElement('div'), { className: 'rn-paused', innerHTML: '<p class="k">Time’s up</p><p>Every answer you gave is saved.</p>' })); },

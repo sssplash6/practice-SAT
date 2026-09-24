@@ -487,6 +487,8 @@ html.has-runner, html.has-runner body { background: var(--paper); }
 .rn-seg[data-queued]::before { box-shadow: 0 0 0 1.5px var(--amber-deep); }
 .rn-seg[data-queued][aria-current="true"]::before { box-shadow: 0 0 0 1.5px var(--paper), 0 0 0 3px var(--ink); }
 .rn-seg:disabled { cursor: default; }
+.rn-seg.add::before { animation: segadd .32s var(--ease) both; transform-origin: left center; }
+@keyframes segadd { from { transform: scaleX(0); } }
 .rn-seg:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; border-radius: 3px; }
 .rn-segs.bar { height: 16px; }
 .rn-segs.bar::before { content: ""; position: absolute; left: 0; right: 0; top: 6px; height: 4px; border-radius: 2px; background: var(--line); }
@@ -650,6 +652,30 @@ a.rn-who { font-weight: 500; font-size: 13px; }
 .cyw-acts { display: flex; align-items: center; gap: 10px; margin-left: auto; }
 .cyw-finish:disabled { opacity: .5; cursor: not-allowed; }
 
+/* between modules (UI.between, X11) and the prediction grid */
+.rn-between { display: grid; gap: 16px; max-width: 700px; outline: none; }
+.rn-between-count { display: grid; gap: 12px; justify-items: start; padding: 18px 20px; border-radius: var(--radius-card); background: var(--wash); }
+.rn-between-clock { font: 500 22px var(--mono); font-variant-numeric: tabular-nums; color: var(--ink); }
+.rn-between-bar { display: block; width: 100%; height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; }
+.rn-between-bar > i { display: block; height: 100%; background: var(--amber); transition: width .25s linear; }
+.rn-between-card { display: grid; gap: 6px; padding: 16px 18px; border-radius: var(--radius-card); background: var(--tile); }
+.rn-between-next { margin: 0; font: 600 15px/1.4 var(--font); }
+.rn-between-route { margin: 0; font: 500 14px var(--font); color: var(--ink); }
+.rn-between-exit { justify-self: start; }
+.rn-begin:disabled { opacity: .6; cursor: progress; }
+.rn-predict { display: grid; gap: 10px; width: 100%; }
+.rn-predict-h { margin: 0; font: 400 14.5px var(--font); }
+.rn-predict-grid { --cell: 64px; --cell-gap: 8px; grid-template-columns: repeat(auto-fill, minmax(var(--cell), 1fr)); }
+.rn-pcell {
+  appearance: none; border: 0; cursor: pointer; min-height: 44px; padding: 4px 6px; border-radius: 8px;
+  display: grid; justify-items: center; align-content: center; gap: 1px; background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1px var(--line);
+  font: 600 14px var(--font);
+}
+.rn-pcell-l { font: 500 9.5px/1.15 var(--font); color: var(--soft); text-align: center; }
+.rn-pcell[aria-pressed="true"] { outline: 2px dashed var(--ink); outline-offset: -3px; }
+.rn-pcell:disabled { opacity: .4; cursor: default; }
+.rn-predict-n { margin: 0; min-height: 18px; }
+
 /* ------------------------------------------------------------------ highlights and notes (UI.annotate, X9) */
 
 mark.hl { color: inherit; background: none; border-radius: 2px; }
@@ -797,8 +823,8 @@ mark.hl[data-note]::after, [data-hl][data-hl-note]::after {
   .scratch-bar { width: 100%; }
 }
 @media (max-width: 359px) { .hl-sw { max-width: 200px; } }
-@media (prefers-reduced-motion: reduce) { .timer.t-pulse .t-digits, .rn-q.rn-slide-l, .rn-q.rn-slide-r { animation: none; } }
-html[data-motion="reduce"] :is(.timer.t-pulse .t-digits, .rn-q.rn-slide-l, .rn-q.rn-slide-r) { animation: none; }
+@media (prefers-reduced-motion: reduce) { .timer.t-pulse .t-digits, .rn-q.rn-slide-l, .rn-q.rn-slide-r, .rn-seg.add::before { animation: none; } }
+html[data-motion="reduce"] :is(.timer.t-pulse .t-digits, .rn-q.rn-slide-l, .rn-q.rn-slide-r, .rn-seg.add::before) { animation: none; }
 
 @media print {
   .rn-top, .rn-foot, .rn-rail, .rn-qtools, .rn-dock, .rn-slot, .rn-toolsrow, .rn-nudge, .scratch-bar, .rn-addnote { display: none !important; }
