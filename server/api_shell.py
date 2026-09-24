@@ -223,7 +223,7 @@ ADAPT = {"reports": _reports_part}
 HAS_ROUTES = {"next": "/api/next", "pair": "/api/pair", "share": "/api/share", "feed": "/api/me/feed",
               "achievements_seen": "/api/me/achievements/seen", "reports_seen": "/api/reports/seen",
               "match": "/api/types/match", "log": "/api/mistakes/log", "example": "/api/types/{template}/example",
-              "outside": "/api/outside/misses", "scores": "/api/scores"}
+              "outside": "/api/outside/misses", "scores": "/api/scores", "export": "/api/me/export"}
 HAS_FILES = {"help": "help/answers.json", "question": "assets/question.js", "words": "assets/words-ui.js",
              "report": "assets/report.js"}
 WEB = pathlib.Path(__file__).resolve().parent.parent / "web"

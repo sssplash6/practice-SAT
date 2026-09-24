@@ -2391,10 +2391,11 @@ var qrcode = function() {
       last = '';
       box.replaceChildren(UI.skel ? UI.skel(null, { w: 180, h: 180, r: 8 }) : h('p', { text: 'Making a code…' }));
       let r;
+      if (UI.has && !UI.has('pair')) { box.replaceChildren(h('p', { text: 'Pairing isn’t available here yet.' })); return; }
       try { r = await UI.api('/pair', { method: 'POST', quiet: true }); }
       catch (e) {
-        box.replaceChildren(h('p', { text: e.status === 404 || e.status === 405 ? 'Pairing isn’t available here yet.' : 'Couldn’t make a code.' }),
-          e.status === 404 || e.status === 405 ? null : again());
+        const gone = e.status === 404 || e.status === 405;
+        box.replaceChildren(...[h('p', { text: gone ? 'Pairing isn’t available here yet.' : 'Couldn’t make a code.' }), gone ? null : again()].filter(Boolean));
         return;
       }
       if (!open) return;
