@@ -67,7 +67,6 @@
   const toast = (t, o) => (UI.toast ? UI.toast(t, o) : null);
   const plural = (n, one, many) => `${n} ${n === 1 ? one : (many || one + 's')}`;
   const fmtN = n => (UI.num ? UI.num(n) : String(n));
-  const LETTERS = 'ABCDE';
   let seq = 0;
   const uid = p => `r${p}${++seq}`;
   const typing = el => !!el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName));
@@ -2077,7 +2076,6 @@
     function toggleNav() {
       if (navPop) { try { navPop.close(); } catch (_) {} navPop = null; return true; }
       if (!UI.pop) return false;
-      const t = tally(cells);
       navApi = navPanel(null, cells, {
         mode: exam ? 'exam' : 'practice', end: endMode, current: at, confidence: cfg.conf, pace_ms: 95000,
         title: exam ? o.title || 'Questions' : 'Question overview',
@@ -2093,7 +2091,6 @@
       navApi.el.id = 'nav';
       navPop = UI.pop(navB, navApi.el, { label: exam ? 'Questions' : 'Question overview', className: 'rn-navpop', align: 'center', onClose: () => { navPop = null; navApi = null; } });
       if (navPop) setTimeout(() => navApi && navApi.focus(), 0);
-      void t;
       return true;
     }
     // swipe up on the footer button opens it (X6)
@@ -2126,8 +2123,6 @@
       if (navPop) { try { navPop.close(); } catch (_) {} navPop = null; }
       view = 'review';
       queue = null;
-      const t = tally(cells);
-      void t;
       const saving = o.queue ? o.queue.status : null;
       cyw = checkYourWork(null, cells, {
         id: 'review', mode: exam ? 'exam' : 'practice', end: endMode, meta: exam ? o.title : null,
@@ -2385,9 +2380,8 @@
         { label: pausable ? 'Pause and keep for later' : 'Keep it for later', primary: true, onClick: () => { emit('exit', pausable ? 'pause' : 'keep'); } },
       ] });
     }
-    let pausedView = null;
     async function pause() {
-      if (!cfg.pause || !timerApi || view === 'paused') return false;
+      if (!cfg.pause || !timerApi || view !== 'q') return false;
       leave('pause');
       try { await emit('pause'); } catch (_) { toast('Couldn’t pause. Try again.'); return true; }
       showPaused();
@@ -2395,7 +2389,6 @@
     }
     function showPaused() {
       timerApi.pause();
-      pausedView = view;
       view = 'paused';
       qArea.hidden = true;
       rail.hidden = true;
@@ -2409,7 +2402,7 @@
     async function resumeRun() {
       try { await emit('resume'); } catch (_) { toast('Couldn’t resume. Try again.'); return; }
       timerApi.resume();
-      view = pausedView === 'review' ? 'q' : 'q';
+      view = 'q';
       screenEl.hidden = true; screenEl.replaceChildren();
       qArea.hidden = false; rail.hidden = false;
       [fLeft, fMid, fRight].forEach(x => { x.hidden = false; });
