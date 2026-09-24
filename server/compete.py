@@ -578,7 +578,8 @@ def due_today(learner: str, tz: int = 0) -> list[dict]:
     ensure(tz=tz)
     now = _iso(_now())
     out = []
-    for row in db.rows("SELECT c.* FROM contests c JOIN contest_members m ON m.contest=c.id"
+    for row in db.rows("SELECT c.* FROM contests c JOIN contest_members m"
+                       " ON m.contest=COALESCE(c.series,c.id)"
                        " WHERE m.learner=? AND c.opens<=? AND c.closes>? ORDER BY c.closes", learner, now, now):
         if not db.one("SELECT 1 FROM sessions WHERE contest=? AND learner=? AND finished IS NOT NULL",
                       row["id"], learner):
@@ -600,3 +601,157 @@ def go_for(rule_id: str, learner: str) -> dict | None:
     if not badge:
         return None
     return {**badge, "href": "/compete/", "action": "Open Compete"}
+
+
+def _private_slots(cid: str, names: list[str], count: int, tiers: list[str], fmt: str) -> list[list]:
+    catalogue = blueprint.kinds()
+    choices = [(name, tier, shape) for name in names for tier, shape in catalogue[name]["kinds"]
+               if tier in tiers and (fmt == "both" or fmt == shape)]
+    if not choices:
+        raise HTTPException(409, "no questions match these skills and settings")
+    choices.sort(key=lambda cell: hashlib.sha256(f"{cid}:{cell}".encode()).digest())
+    return [list(choices[i % len(choices)]) for i in range(count)]
+
+
+def create_private(learner: str, body: dict) -> dict:
+    title = str(body.get("title", "")).strip()
+    if not 3 <= len(title) <= 60:
+        raise HTTPException(422, "title must be 3–60 characters")
+    count = body.get("count", 10)
+    if count not in (5, 10, 15, 22):
+        raise HTTPException(422, "count must be 5, 10, 15 or 22")
+    minutes = body.get("minutes")
+    if minutes is not None and (not isinstance(minutes, int) or not 5 <= minutes <= 70):
+        raise HTTPException(422, "minutes must be 5–70")
+    duration = body.get("duration", "day")
+    lengths = {"hour": 3600, "day": 86400, "3days": 3 * 86400, "week": 7 * 86400}
+    if duration not in lengths:
+        raise HTTPException(422, "duration must be hour, day, 3days or week")
+    repeat = body.get("repeat") or {}
+    every = repeat.get("every") if isinstance(repeat, dict) else None
+    rounds = repeat.get("rounds", 1) if every else 1
+    if every not in (None, "day", "week") or not isinstance(rounds, int) or not 1 <= rounds <= 30:
+        raise HTTPException(422, "repeat must specify day or week and 2–30 rounds")
+    if every and rounds < 2:
+        raise HTTPException(422, "a series needs at least two rounds")
+    source = body.get("source", "skills")
+    if source not in ("skills", "my_traps", "our_traps"):
+        raise HTTPException(422, "unknown question source")
+    if source == "our_traps" and not every:
+        raise HTTPException(400, "Our open mistakes starts from round 2.")
+    kinds = blueprint.kinds()
+    names = body.get("templates") or []
+    topics = body.get("topics") or []
+    if source == "my_traps":
+        names = [t["template"] for t in progress.open_traps(learner)]
+    elif not names:
+        names = [n for n, data in kinds.items() if data["topic"] in topics]
+    names = sorted({n for n in names if n in kinds})
+    if not names:
+        raise HTTPException(409, "choose a skill with available questions")
+    tiers = body.get("difficulty") or ["easy", "medium", "hard"]
+    if not isinstance(tiers, list) or not tiers or set(tiers) - {"easy", "medium", "hard"}:
+        raise HTTPException(422, "invalid difficulty")
+    fmt = body.get("format", "both")
+    if fmt not in ("both", "mcq", "spr"):
+        raise HTTPException(422, "invalid format")
+    twin = bool(body.get("twins", False))
+    reveal = body.get("reveal", "each")
+    if reveal not in ("each", "end"):
+        raise HTTPException(422, "invalid reveal")
+    now = _now()
+    base = "p-" + secrets.token_hex(5)
+    code = secrets.token_hex(3).upper()
+    while db.one("SELECT 1 FROM contests WHERE code=?", code):
+        code = secrets.token_hex(3).upper()
+    for number in range(1, rounds + 1):
+        cid = base if number == 1 else f"{base}-r{number}"
+        delta = dt.timedelta(days=(number - 1) * (7 if every == "week" else 1))
+        opens = now + delta
+        closes = opens + dt.timedelta(seconds=lengths[duration])
+        slots = _private_slots(cid, names, count, tiers, fmt)
+        spec = {"slots": slots, "twin": twin, "rated": False, "strict": bool(body.get("strict")),
+                "reveal": reveal, "source": source if number > 1 else ("skills" if source == "our_traps" else source),
+                "repeat": {"every": every, "rounds": rounds} if every else None}
+        db.run("INSERT INTO contests(id,kind,title,owner,code,opens,closes,count,seconds,spec,created,subject,series,round)"
+               " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", cid, "private", title, learner,
+               code if number == 1 else None, _iso(opens), _iso(closes), count,
+               (minutes * 60 if minutes else count * 95), json.dumps(spec), _iso(now), "math",
+               base if every else None, number)
+    db.run("INSERT OR IGNORE INTO contest_members(contest,learner,joined) VALUES (?,?,?)", base, learner, _iso(now))
+    return {"id": base, "code": code, "link": f"/compete/contest/?code={code}",
+            "rounds": rounds, "opens": _iso(now)}
+
+
+def join_private(learner: str, code: str) -> dict:
+    row = db.one("SELECT * FROM contests WHERE code=? AND kind='private'", code.strip().upper())
+    if not row:
+        raise HTTPException(404, "no private contest has that code")
+    rounds = db.rows("SELECT * FROM contests WHERE id=? OR series=? ORDER BY round", row["id"], row["id"])
+    if all(r["closes"] <= _iso(_now()) for r in rounds):
+        raise HTTPException(409, "that contest has ended")
+    db.run("INSERT OR IGNORE INTO contest_members(contest,learner,joined) VALUES (?,?,?)",
+           row["id"], learner, _iso(_now()))
+    return {"id": row["id"], "title": row["title"], "rounds": len(rounds)}
+
+
+def private_members(cid: str) -> list[str]:
+    row = db.one("SELECT id,series FROM contests WHERE id=?", cid)
+    if not row:
+        return []
+    root = row["series"] or row["id"]
+    return [r["learner"] for r in db.rows("SELECT learner FROM contest_members WHERE contest=?", root)]
+
+
+def series_board(series: str, sort: str = "points", viewer: str | None = None) -> dict:
+    root = db.one("SELECT * FROM contests WHERE id=? AND kind='private'", series)
+    if not root:
+        raise HTTPException(404, "series not found")
+    rounds = db.rows("SELECT id,round FROM contests WHERE id=? OR series=? ORDER BY round", series, series)
+    entries = []
+    for member in private_members(series):
+        scores = []
+        for rnd in rounds:
+            run = db.one("SELECT points,result FROM sessions WHERE contest=? AND learner=?"
+                         " AND finished IS NOT NULL ORDER BY points DESC LIMIT 1", rnd["id"], member)
+            scores.append({"round": rnd["round"], "points": run["points"] if run else None,
+                           "net": ((_json(run["result"], {}) or {}).get("net") if run else None)})
+        entries.append({**_identity(member, viewer), "you": member == viewer,
+                        "rounds": scores, "sat": sum(x["points"] is not None for x in scores),
+                        "points": sum(x["points"] or 0 for x in scores),
+                        "net": sum(x["net"] or 0 for x in scores)})
+    if sort not in ("points", "net"):
+        raise HTTPException(422, "sort must be points or net")
+    _rank(entries, sort)
+    return {"id": series, "entries": entries, "streak": series_streak(series)}
+
+
+def series_streak(series: str) -> dict:
+    rounds = db.rows("SELECT id,round,closes FROM contests WHERE id=? OR series=? ORDER BY round",
+                    series, series)
+    members = private_members(series)
+    threshold = len(members) if len(members) <= 10 else math.ceil(len(members) * .75)
+    run = best = 0
+    for rnd in rounds:
+        done = db.one("SELECT COUNT(DISTINCT learner) AS n FROM sessions WHERE contest=? AND finished IS NOT NULL",
+                      rnd["id"])["n"]
+        if done >= threshold and threshold:
+            run += 1
+            best = max(best, run)
+        elif rnd["closes"] > _iso(_now()):
+            break
+        else:
+            run = 0
+    return {"current": run, "best": best}
+
+
+def nudge(sender: str, target: str, cid: str) -> dict:
+    row = contest(cid)
+    if row["kind"] != "private" or sender == target or sender not in private_members(cid) or target not in private_members(cid):
+        raise HTTPException(403, "both learners must be entrants")
+    if db.one("SELECT 1 FROM nudges WHERE sender=? AND target=? AND contest=? AND round=?",
+              sender, target, row["series"] or cid, row["round"] or 1):
+        raise HTTPException(429, "already nudged this entrant this round")
+    db.run("INSERT INTO nudges(sender,target,contest,round,at) VALUES (?,?,?,?,?)",
+           sender, target, row["series"] or cid, row["round"] or 1, _iso(_now()))
+    return {"sent": True}
