@@ -1,0 +1,135 @@
+{
+ "label": "verify F4 r3",
+ "key": "v2:2bf8804952f62269f79d16ef2db995863f2266821aad7024b609d431863dbda1",
+ "result": {
+  "pass": false,
+  "evidence": "I verified v2/f4 at e837e82, detached in /Users/workingmyassof/satbank/.claude/worktrees/wf_d6bde851-f95-5. I fixed nothing and committed nothing. The worktree is clean and the port 8014 server is stopped.\n\nThe main finding: the tip commit e837e82 (\"Checkpoint: F4 fix round 2, interrupted by a pause\") took away 4,396 lines. `git diff d5961bb e837e82` is empty, so the tip is byte-identical to d5961bb. That undoes six commits of upgrade work (6aee941, 30a6b8f, 176f90f, 6a171ce, 09804ea, c1ce5b8, 22a8c8f, 59d383b), including server/ratings.py, server/data/cb_percentiles.json and tools/seed_ratings.py. The builder's worktree .claude/worktrees/f4 holds the same undone state. The work still exists at 59d383b.\n\nWhat passes at the tip:\n- `PYTHONPATH=. python3 server/checks/f4.py` prints \"ok  F4 schema, traps, days, prefs, access and carry\".\n- `PYTHONPATH=. python3 server/test_flow.py` prints \"all good\".\n- `git diff --stat master...HEAD` touches only owned files: api_me, api_notes, checks/f4, db, deps, estimate, prefs, progress, satdates, scoring.\n- No class tables or columns exist, and words_from is sat/transitions only (decision 2 kept).\n\nMigration check: I built an old DB with master's db.py (2 learners, 2 sessions, 5 attempts, 4 traps, 2 saved, 1 practice_seen, 1 challenge) and ran the branch's db.init() twice on a copy.\n- Every learners, sessions, attempts, saved, practice_seen and challenges row survived unchanged.\n- The two traps with the same norm merged correctly: hits 3, opened MIN, open, seed and session from the latest wrong attempt.\n- One attempt, on a template that no longer exists, stays pending for the backfill after both runs.\n\nReading f4.py: it covers norm merging, repeat not moving mastery, unsure opening with owed 1, a relapse, check-ins at 3/10/30, streak == 6, a module's minutes counted once, prefs 422 and merge, access() on a live item and today's challenge item, and carry. It lacks product.md #27's amended checks (the offered-norm close rule and the transfer check-in).\n\nOver HTTP on port 8014 these worked:\n- Prefs: 422 naming the key, merge, sparse storage.\n- Names: 409 for a duplicate in any case, 422 for \"Student 1A2B\", \"Anonymous\" and 2 characters.\n- 422 for board, country, avatar and rw values out of range, and for an exam date before today.\n- /api/me/activity: 182 days for weeks=26, 422 for weeks=54.\n- Notes: 403, 404 and every 422 limit.\n\nThese failed over HTTP:\n- A retired code gets 401 on GET /api/me.\n- A drill answer by a new code creates no learners row.\n- The profile has no `account` field.\n- Carrying between two codes that both sat today's challenge leaves two ranked sittings.\n- Emptying a note keeps its row.\n- The coach result has no `reasons`.\n\nDirect function tests confirmed these defects:\n- A miss with a different reason on a due check-in does not reopen the fixed trap.\n- A mock of 10 plus 60 minutes counts 70 minutes (the per-module cap gives 46).\n- percentile() ranks a second section at 300 at pct 100 among other second sittings. Two different papers are pooled (n=40).\n- access() returns 'reveal' on an item of a UTC+14 learner's live 2026-09-24 challenge.\n- related(norm) raises TypeError.\n- carry keeps rating 1000/0 over the source's 1300/80.\n- accepted_forms('3.14159') returns 6-character forms that do not fit the grid.\n\nEvery F4 upgrade symbol I searched for is missing from the tip, for example: ratings, gains, route, projection, causes, pace, warmup_candidates, cause_of, steps_to, recovery, calibration, ledger, rescore, national, entry_error, subject_of, trap_log, skill_ratings, week_goals, devices, feed_seen, google_sub, quarantine, cb_unknown, follows, rank_snapshots, champions, conf, hints, miss_kind, struck, revealed_at, types_met, growth, official_done, due_forecast, time_cost, need, practice_delta, presets, /api/prefs, NOT_SAMPLE, cb_percentiles.\n\nChange needed outside F4's files: server/app.py (F0) must install any F4 middleware, such as U21's device-code swap, once it is rebuilt.",
+  "defects": [
+   {
+    "where": "v2/f4 tip e837e82 (all owned files; spec/v2-upgrades/*.md, every F4 item)",
+    "what": "The checkpoint commit rolled the tree back to d5961bb (git diff d5961bb e837e82 is empty). It deleted server/ratings.py, server/data/cb_percentiles.json and tools/seed_ratings.py, and threw away 4,396 lines of upgrade work in progress, estimate, prefs, deps, db, api_me, api_notes, scoring, satdates and checks/f4. As a result, no upgrade item assigned to F4 exists at the tip.",
+    "fix": "Restore the tree from 59d383b (git restore --source=59d383b -- server tools) as a new commit on v2/f4. Then continue the fix round from spec/v2-state/next/F4-verify2-issues.json. Never commit a stale index as a checkpoint."
+   },
+   {
+    "where": "server/progress.py record() and log_mistake() (§2.5 ensure_learner on first write)",
+    "what": "db.ensure_learner is only called from PUT /api/me and prefs.put. Verified on 8014: after a new code's first drill answer, the attempts row exists but there are 0 learners rows, so its rating DEFAULT 1000 and rated row do not exist.",
+    "fix": "Call db.ensure_learner(learner) at the top of record() and log_mistake()."
+   },
+   {
+    "where": "server/deps.py learner_of (Shell 'app.py learner_of: retired codes')",
+    "what": "Every request with a retired code is refused. Verified: GET /api/me with a retired code returns 401 {retired:true}. The spec says only writes (POST/PUT/DELETE) get 401, GET /api/shell returns {retired:true}, and other GETs return their (empty) data as usual.",
+    "fix": "Raise 401 only on write methods (pass the method from the request, or add a separate dependency for writes). Give GETs a way to tell they came from a retired code, so /api/shell can answer {retired:true}."
+   },
+   {
+    "where": "server/api_me.py profile() (Shell 'GET/PUT /api/me: new fields')",
+    "what": "profile() has no account {linked, email, since}. Verified: GET /api/me profile keys have no 'account'.",
+    "fix": "Add account from users (learner=this code): linked, the email, and since."
+   },
+   {
+    "where": "server/progress.py coach() (QBank 'progress: coach reasons, guess-aware mastery, record_trap, grid-in mistakes')",
+    "what": "coach() returns only topics/ahead/count/why/mistakes/traps. The per-topic reasons {slug:{kind: mistakes|new|weak|review|focus, traps, mastery, first_try_rate, since_days}} are missing, and 'focus' is never a kind. record_trap(learner, q, reason, when) is not split out of record().",
+    "fix": "Add a reasons dict per pick with those fields (kind 'focus' when the plan's Focus decided it), and extract record_trap()."
+   },
+   {
+    "where": "server/progress.py (Plan 'Trap rechecks')",
+    "what": "progress.due_rechecks(learner) and rechecks_passed(learner, since) do not exist.",
+    "fix": "Add both readers over traps.due/checks."
+   },
+   {
+    "where": "server/progress.py record() (R9: 'A miss on a due check reopens it as Relapsed')",
+    "what": "Only a miss with the same norm reopens the fixed trap. Verified: on a due check-in, a miss naming another mistake left the fixed trap at closed, due 2026-01-04, checks 0, relapses 0. It opened a separate trap instead. An unnamed grid-in miss behaves the same way.",
+    "fix": "On any miss on a template with a closed_how='fixed' trap whose check-in is due, reopen that trap as a relapse (relapses+1), as well as filing the new norm."
+   },
+   {
+    "where": "server/progress.py days() (R13; Today 'progress.days: one source of daily study figures')",
+    "what": "Per-day rows lack practice, tests and qotd {mcq, spr}, and there is no `best` key (only best_streak). A mock's minutes are capped on the total (2×2100+120 s), not per module. Verified: a 10-minute module 1 plus a 60-minute module 2 counts 70 minutes, where the per-module rule gives 10+36=46.",
+    "fix": "Add the practice, tests and qotd counts to each row and a `best` alias. Cap mocks as min(module_started−started, clock+60s) + min(finished−module_started, clock+60s)."
+   },
+   {
+    "where": "server/estimate.py percentile() (R16)",
+    "what": "It uses sessions.number, which is the learner's sitting count, as if it were a paper id. Peers are other learners' sittings with the same number, not each learner's first standard sitting. Verified: a second section at 300, set against first sittings of 400–640, is ranked pct 100, n 25. Two different papers are pooled together (n 40 instead of 20 'of that paper').",
+    "fix": "Peers = each learner's first standard sitting of the same kind; for kind 'paper', filter by the paper id in cfg (or the papers column), never by sessions.number."
+   },
+   {
+    "where": "server/deps.py access() (R19; decision 1 twins)",
+    "what": "Only the UTC day's challenges row is checked. Verified: a learner at UTC+14 answers the 2026-09-24 challenge while UTC is 09-23, and access() returns 'reveal' on its items, which others still have to sit. Twin challenge items, which live in each learner's own challenge sitting for the day rather than the shared row, are not protected either: access() returned 'kept' for a saved item in today's challenge sitting.",
+    "fix": "Treat as live every challenge day that is still today in some zone (UTC−12..+14). Also return None for items in any of the learner's challenge or contest sittings for such a day, and for unanswered challenge items."
+   },
+   {
+    "where": "server/progress.py carry() and record() (Compete 'progress.record and progress.carry', acceptance 21)",
+    "what": "carry does not keep the rating of the side with more rated answers (verified: the target keeps 1000/0 over the source's 1300/80). It does not unrank a second ranked sitting of one contest (verified over HTTP: two ranked challenge sittings remain, unranked_why NULL). record() never calls the compete.rate() hook.",
+    "fix": "Merge rating/rated from the side with the larger rated count. After moving, set ranked=0, unranked_why='repeat' on all but the first ranked sitting per contest or day. Call deps.part('compete','rate') after filing a ranked, unvoided contest answer."
+   },
+   {
+    "where": "server/db.py LEARNER_TABLES (§2.5 'lists them for S1's export and delete')",
+    "what": "sets (owner), contests (owner), name_reports (target/reporter) and retired are learner-keyed but missing from the list, so S1's export and delete would miss them.",
+    "fix": "List them, with the key column for each (e.g. a (table, column) map), and keep carry in step."
+   },
+   {
+    "where": "server/db.py _backfill_attempts()",
+    "what": "A row whose template no longer generates keeps stem NULL, so it is regenerated on every startup. Verified: 1 row still pending after two init() runs on the migrated copy.",
+    "fix": "Write stem='' for rows that fail to generate."
+   },
+   {
+    "where": "server/progress.py norm() self-check and trap kinds (Review 'progress.norm() and the trap key'; R9 kinds)",
+    "what": "The asserts use synthetic strings, not the specified cases: context.container_percent's 10%/50% seeds, circles.coterminal's two quarter-turn options, and the filler mapping to kind 'slip'. Nothing derives R9's kinds (misconception, gridin, slip, unsure).",
+    "fix": "Add a trap kind function and assert those three cases against generated items."
+   },
+   {
+    "where": "server/progress.py related() (product.md R45 and G3 rules 5 and 6)",
+    "what": "It takes no argument. Verified: related('used # instead of #') raises TypeError.",
+    "fix": "Accept an optional norm and return that norm's templates tuple (the whole map when called without one)."
+   },
+   {
+    "where": "server/api_notes.py put_note (QBank 'Notes and highlights: Empty values delete the row')",
+    "what": "Posting note '' and marks [] keeps the row. Verified: (1, '', '[]') is still stored.",
+    "fix": "Delete the notes row when both the resulting note and marks are empty."
+   },
+   {
+    "where": "server/scoring.py accepted_forms (QBank 'scoring.accepted_forms'; Report 4-character rule)",
+    "what": "For keys of 1 or more it returns forms that do not fit the grid. Verified: 3.14159 gives ['3.1415','3.1416'], 6 characters where the grid holds 5; 3.141/3.142 are the enterable forms. QBank's version (the fraction first, with and without the leading 0) is not built.",
+    "fix": "Truncate and round to fill 5 characters (6 with a minus), and include the fraction and the leading-0 forms, up to 5 entries."
+   },
+   {
+    "where": "server/api_me.py put_me name rule (R12)",
+    "what": "There is an undocumented exception: a 2-character name is accepted for a learner with answers, and board is silently forced to 'hidden'. R12 says board names are 3–24 characters.",
+    "fix": "Drop the exception, or record it in product.md's R-table and stop changing board without the learner asking."
+   },
+   {
+    "where": "server/checks/f4.py (product.md #27 amended §2.12 F4 acceptance)",
+    "what": "There is no check that a right answer on an item that did not offer the trap's norm leaves owed unchanged (G3 check 2), and none for the transfer check-in (G3 check 4). The close rule and transfer check-in themselves are missing from record().",
+    "fix": "Build R45's close rule by kind (attempts.offered / spr_reasons) and closed_how='transfer', and assert both in f4.py."
+   },
+   {
+    "where": "practice.md §2.5/§2.9/§2.12 F4 rows (P1–P16)",
+    "what": "Missing: attempts.conf, hints, miss_kind, offered, struck, cover and calc; tries.hints; the skill_ratings table; server/ratings.py (update, odds, level); estimate.gains and route; progress.steps_to, cause_of, conf_active and warmup_candidates (with `marked`); the P16 fluency fields; prefs presets; notes with seed −1 for type rules.",
+    "fix": "Restore from 59d383b, then complete per practice.md."
+   },
+   {
+    "where": "review.md F4 items (V4, V13, V15, §3.2)",
+    "what": "Missing: attempts.revealed_at and attempts.diag; repeat=1 when access is already 'reveal' or cfg.key_printed; the trap_log table with pts; the discard/void roll-back; tools/seed_ratings.py; POST /api/notes type rules.",
+    "fix": "Restore and complete per review.md."
+   },
+   {
+    "where": "reports.md F4 items (SR1–SR24, §2.5)",
+    "what": "Missing: estimate.ledger, mid, rescore, total, national and rescore_sitting; progress.recovery, causes(per_q) and calibration; scoring.grid_diagnose; server/data/cb_percentiles.json (with 'year' as a year); db.NOT_SAMPLE with 403 for sample: writes; the ratings.odds snapshot in sessions.result.odds.",
+    "fix": "Restore and complete per reports.md."
+   },
+   {
+    "where": "tests.md and today.md F4 items (X2–X21, T3, T7, T9, T14)",
+    "what": "Missing: progress.types_met; T9's sure/blind rule (a fast medium or hard miss, not a guess, cause trap); estimate.rescore, growth, calibration, time_cost, practice_delta and need(target).path; progress.causes, warmup_candidates and due_forecast; scoring.entry_error; satdates deadlines.",
+    "fix": "Restore and complete per tests.md and today.md."
+   },
+   {
+    "where": "shell-me.md F4 items (U2–U25)",
+    "what": "Missing: traps origin use; outside_scores.misses; the cb_unknown and quarantine tables; reports.parent; estimate.gains, need and projection; board() evidence, trend and last 5; the coach probe; progress.pace; the week_goals table; prefs stages, modes, labels and synonyms; GET /api/prefs; pref `registered`; users.google_sub; pairs dir, token, approver and session_only; the devices table with device tokens in learner_of and the code swap (needs app.py middleware, F0's file); 8-character transfer codes from new_code; learners.handle; learners.feed_seen.",
+    "fix": "Restore and complete per shell-me.md. List the app.py middleware line for F0."
+   },
+   {
+    "where": "compete.md, plan.md, product.md and words.md F4 items",
+    "what": "Missing: item_ratings calibration, skill_ratings and per-template priors (C13/V15 reconciliation); contests.subject; the champions, follows, rank_snapshots and nudges tables (also in LEARNER_TABLES and carry); progress.pace(only=) and causes(session=); plan_marks.minutes counted in days() (L10); estimate.route and projection. Also missing is deps.subject_of (G11/R51, which decision 3's additive R&W expansion needs), along with attempts.word, R&W answers through record (R57) and official_done (G16).",
+    "fix": "Restore and complete per each file."
+   }
+  ]
+ }
+}

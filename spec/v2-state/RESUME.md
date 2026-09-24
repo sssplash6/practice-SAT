@@ -4,7 +4,11 @@
 
 - build.js run `wf_d6bde851-f95` (task wlzjrhc30), args `[{id:'F1', unit:3}, {id:'F4', from:'fix', round:2, issues:
   next/F4-verify2-issues.json}, {id:'BANK'}]`. BANK = the three bank flaws (item 4 below), on branch `v2/bank`.
-- words.js run `wf_a586fef6-d3a` (task wy41ffafn), args `{skipCore: true}`: the 6 authors continue from their files.
+- words.js: FINISHED 2026-09-24 (run `wf_a586fef6-d3a`): 1,242 senses (469 core, 671 advanced, 102 second), 179
+  answer-choice, 80 transitions, 153 pair families, 119 roots, 64 foils, 194 classes; validator exit 0.
+- words2.js run `wf_609b5aa4-27c` (task wf5hy4nl6): setup (fills + frame loader + waste family) -> 4 frame authors by
+  class group + a confusions author -> fold parts into the final files -> 2 independent accuracy checks -> one fix round.
+  Restart: `args {from: 'author', only: [unfinished ids]}`, `{from: 'fold'}` or `{from: 'check'}` per git log.
 - Checkpoint loop running (task b2bucxp7g). Stale `wf_*` worktrees were removed at 04:23.
 - A second scheduled resume fires at 09:23 (session-only): it checks what is live and relaunches only what stopped.
 If this run is cut off: work out each task's position from `git log master..v2/<task>` and `runs/<run id>/`, then relaunch
