@@ -962,11 +962,15 @@ def routes(client):
         deps.SWAP.reset(reset)
     assert deps.learner_of(box["token"]) == "a:f4saved"
     # over HTTP: the header reaches the browser and its token works (shell-me U21 acceptance 4)
-    from fastapi import FastAPI
+    from fastapi import FastAPI, Header
     from server import api_me
     mini = FastAPI()
     mini.middleware("http")(deps.swap_middleware)
     mini.include_router(api_me.router)
+
+    @mini.post("/f4-write")                     # a write that, like POST /api/drill, calls learner_of
+    def f4_write(x_learner: str | None = Header(default=None)) -> dict:
+        return {"learner": deps.learner_of(x_learner)}
     installed = any(getattr(m, "kwargs", {}).get("dispatch") is deps.swap_middleware for m in app.user_middleware)
     for c in (TestClient(mini),) + ((client,) if installed else ()):
         r = c.get("/api/me", headers={"X-Learner": "a:f4saved", "User-Agent": "Mozilla/5.0 (Macintosh; Mac OS X) Chrome/120"})
@@ -976,7 +980,9 @@ def routes(client):
         assert db.one("SELECT label, method FROM devices WHERE token=?", swapped)["method"] == "swap"
     if not installed:
         print("PENDING  app.py does not install deps.swap_middleware (its owner adds"
-              " app.middleware('http')(deps.swap_middleware)); checked on a mini app instead")
+              " app.middleware('http')(deps.swap_middleware)): until then the site sends no X-Learner-Swap"
+              " and takes writes from retired codes on routes that call learner_of (POST /api/drill);"
+              " both checked on a mini app instead")
     db.run("UPDATE learners SET swap_until=? WHERE id=?", progress.now(), "a:f4saved")
     assert client.get("/api/me", headers={"X-Learner": "a:f4saved"}).status_code == 401
     # Shell §3.1.5: a rotated-away code is 401 on writes, reads get its own
@@ -988,6 +994,12 @@ def routes(client):
     assert r.status_code == 401 and r.json()["detail"] == {"retired": True, "into": None}, r.text
     assert client.post("/api/notes", headers={"X-Learner": "a:f4rotated"}, json={"attempt_id": 1}).status_code == 401
     assert deps.is_retired("a:f4rotated") and not deps.is_retired("a:f4device")
+    rot = {"X-Learner": "a:f4rotated"}
+    for c in (TestClient(mini),) + ((client,) if installed else ()):
+        assert c.get("/api/me/activity", headers=rot).status_code == 200
+        assert c.post("/f4-write" if c is not client else "/api/drill", headers=rot,
+                      json={"topics": ["percentages"], "count": 3}).status_code == 401
+    assert not db.one("SELECT 1 FROM sessions WHERE learner=?", "a:f4rotated")
     for method, refused in (("GET", False), ("POST", True), ("DELETE", True)):
         reset = deps.SWAP.set({"label": "Browser", "method": method})
         try:
