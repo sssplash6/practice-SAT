@@ -562,8 +562,23 @@
   card('Quiz · Words in Context, a miss', quiz, { mode: 'quiz', head: quiz.head, fb: feedback(quiz, 1, { ms: 12000 }) });
   card('Worked example', mcq, { mode: 'example', fb: Object.assign(feedback(mcq, null, {}), { correct: null, given: null }), onDone: () => log('your turn') });
 
+  // G4 check 1: the four cards above give one action row, label for label
+  const rows = [...$('#gallery').children].slice(0, 4).map(c => [...c.querySelectorAll('.q-actions button')].map(b => b.textContent.trim()).filter(Boolean).join(' | '));
+  const g4 = rows.every(x => x && x === rows[0]);
+  // G2 check 7 (R43): the key registry refuses a key bound twice in a scope, and one action on two keys across scopes
+  function keyCheck() {
+    if (!(UI.keys && UI.keys.register)) return 'keys: waiting for F2’s UI.keys';
+    const regs = [], run = () => {};
+    const throws = (scope, map) => { try { regs.push(UI.keys.register(scope, map)); return false; } catch (_) { return true; } };
+    const twice = !throws('runner', { T: { id: 'twin', does: 'Twin', run } }) && throws('runner', { T: { id: 'twin', does: 'Twin', run } });
+    const moved = !throws('player', { V: { id: 'details', does: 'Details', run } }) && throws('runner', { Q: { id: 'details', does: 'Details', run } });
+    const eOk = !throws('runner', { E: { id: 'eliminate', does: 'Eliminate mode', run } }) && !throws('player', { E: { id: 'again', does: 'Again, exactly', run } });
+    regs.forEach(x => { try { x && x.unregister && x.unregister(); } catch (_) {} });
+    return twice && moved && eOk ? 'keys: ok' : `keys failed: ${JSON.stringify({ twice, moved, eOk })}`;
+  }
   const r = UI.workspaceSelfTest();
-  $('#self').textContent = r.ok ? 'self-test: ok' : `self-test failed: ${JSON.stringify(r)}`;
+  $('#self').textContent = [r.ok ? 'self-test: ok' : `self-test failed: ${JSON.stringify(r)}`, g4 ? 'G4 row: ok' : 'G4 row differs', keyCheck()].join(' · ');
+  if (!g4) console.error('G4 rows', rows);
   mount();
 })();
 </script>

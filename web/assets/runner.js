@@ -721,9 +721,12 @@
       if (show === 'time') lines.append(h('p', { class: 'meta', text: `Pace is ${msx(pace())} a question${exam ? ' · a ring is over twice that' : ''}` }));
       const blanks = list.map((c, i) => ({ c, i })).filter(x => x.c.status === 'unanswered' || x.c.status === 'skipped');
       if (blanks.length) {
+        // the same counts as the tiles: practice keeps Skipped apart, the test window counts it as Unanswered
+        const sk = exam ? 0 : blanks.filter(x => x.c.status === 'skipped').length, un = blanks.length - sk;
+        const what = [un ? `${plural(un, 'question')} unanswered` : null, sk ? `${sk} skipped` : null].filter(Boolean).join(' and ');
         const text = exam
-          ? `${plural(blanks.length, 'question')} unanswered. A blank is marked wrong, and a wrong answer costs no more than a blank, so guess before you move on.`
-          : `${plural(blanks.length, 'question')} unanswered. A blank scores the same as a wrong answer: put your best guess on each.`;
+          ? `${what}. A blank is marked wrong, and a wrong answer costs no more than a blank, so guess before you move on.`
+          : `${what}. A blank scores the same as a wrong answer: put your best guess on each.`;
         lines.append(line(text, o.triage !== false ? blanks.slice(0, 12).map(x => x.i) : []));
       }
       if (!exam && o.triage !== false) {
@@ -1107,7 +1110,7 @@
   /* ------------------------------------------------------------ the reference, searchable (X9, P24)
      The sheet the test gives you, with an id on each entry. ponytail: a copy of ui.js's
      drawings; when ui.js exports them (UI.REF), read those. */
-  const F = 'font-family="Source Serif 4, serif" font-style="italic"';
+  const F = 'fill="currentColor" font-family="Source Serif 4, serif" font-style="italic"';
   const REF = [
     ['Area', [
       ['ref-circle', 'Circle', 'circle area circumference radius pi πr', `<circle cx="30" cy="28" r="20" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M30 28h20" stroke="currentColor" stroke-width="1.3"/><text x="38" y="24" font-size="11" ${F}>r</text>`, '<i>A</i> = π<i>r</i>²<br><i>C</i> = 2π<i>r</i>'],
@@ -1116,8 +1119,8 @@
     ]],
     ['Right triangles', [
       ['ref-pythagorean', 'Pythagorean theorem', 'pythagorean theorem hypotenuse right triangle a2 b2 c2', `<path d="M10 42 L50 42 L50 12 Z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M46 42 v-4 h4" fill="none" stroke="currentColor" stroke-width="1.1"/><text x="28" y="54" font-size="10" ${F}>b</text><text x="54" y="30" font-size="10" ${F}>a</text><text x="24" y="24" font-size="10" ${F}>c</text>`, '<i>c</i>² = <i>a</i>² + <i>b</i>²'],
-      ['ref-30-60-90', 'Special right triangle 30-60-90', 'special right triangle 30-60-90 30 60 90 sqrt3', `<path d="M8 43 L52 43 L52 18 Z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M48 43 v-4 h4" fill="none" stroke="currentColor" stroke-width="1.1"/><text x="11" y="39" font-size="8" font-family="Source Serif 4, serif">30°</text><text x="41" y="27" font-size="8" font-family="Source Serif 4, serif">60°</text>`, '<i>x</i>, <i>x</i>√3, 2<i>x</i>'],
-      ['ref-45-45-90', 'Special right triangle 45-45-90', 'special right triangle 45-45-90 45 90 isosceles sqrt2', `<path d="M14 43 L50 43 L50 7 Z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M46 43 v-4 h4" fill="none" stroke="currentColor" stroke-width="1.1"/><text x="17" y="39" font-size="8" font-family="Source Serif 4, serif">45°</text><text x="38" y="18" font-size="8" font-family="Source Serif 4, serif">45°</text>`, '<i>s</i>, <i>s</i>, <i>s</i>√2'],
+      ['ref-30-60-90', 'Special right triangle 30-60-90', 'special right triangle 30-60-90 30 60 90 sqrt3', `<path d="M8 43 L52 43 L52 18 Z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M48 43 v-4 h4" fill="none" stroke="currentColor" stroke-width="1.1"/><text x="11" y="39" font-size="8" fill="currentColor" font-family="Source Serif 4, serif">30°</text><text x="41" y="27" font-size="8" fill="currentColor" font-family="Source Serif 4, serif">60°</text>`, '<i>x</i>, <i>x</i>√3, 2<i>x</i>'],
+      ['ref-45-45-90', 'Special right triangle 45-45-90', 'special right triangle 45-45-90 45 90 isosceles sqrt2', `<path d="M14 43 L50 43 L50 7 Z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M46 43 v-4 h4" fill="none" stroke="currentColor" stroke-width="1.1"/><text x="17" y="39" font-size="8" fill="currentColor" font-family="Source Serif 4, serif">45°</text><text x="38" y="18" font-size="8" fill="currentColor" font-family="Source Serif 4, serif">45°</text>`, '<i>s</i>, <i>s</i>, <i>s</i>√2'],
     ]],
     ['Volume', [
       ['ref-box', 'Rectangular prism', 'box rectangular prism volume length width height', `<rect x="12" y="20" width="28" height="22" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 20 L23 12 L51 12 L40 20 M40 42 L51 34 L51 12" fill="none" stroke="currentColor" stroke-width="1.3"/>`, '<i>V</i> = ℓ<i>wh</i>'],
@@ -2358,6 +2361,8 @@
       if (!UI.sheet) return null;
       const rows = [];
       keyRegs.forEach(r => Object.entries(r.map).forEach(([k, b]) => { const d = b.does || ''; const row = rows.find(x => x.does === d); if (row) row.keys.push(k); else rows.push({ does: d, keys: [k] }); }));
+      // an object lists 1-4 before the letters: A-D first, then the digits
+      rows.forEach(r => r.keys.sort((a, b) => /^\d$/.test(a) - /^\d$/.test(b) || a.localeCompare(b)));
       return UI.sheet({ title: 'Keyboard shortcuts', size: 'm', body: b => b.append(h('table', { class: 'table compact' }, h('tbody', {}, rows.map(r => h('tr', {}, h('td', {}, r.keys.map(k => h('kbd', { class: 'kbd', text: k.replace('Arrow', '').replace('Left', '←').replace('Right', '→') }))), h('td', { text: r.does })))))) });
     }
 

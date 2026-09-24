@@ -166,9 +166,14 @@
   // text with $...$ math inside (steps, Desmos expressions)
   function texText(el, str) {
     el.replaceChildren();
-    String(str ?? '').split(/(\$[^$]+\$)/).forEach(part => {
-      if (/^\$[^$]+\$$/.test(part)) el.append(tex(h('span'), part.slice(1, -1), part.slice(1, -1) + ' '));
-      else if (part) el.append(part);
+    const parts = String(str ?? '').split(/(\$[^$]+\$)/);
+    parts.forEach((part, i) => {
+      if (/^\$[^$]+\$$/.test(part)) {
+        const m = tex(h('span'), part.slice(1, -1), part.slice(1, -1) + ' ');
+        // the punctuation after the math stays on its line
+        const p = (parts[i + 1] || '').match(/^[.,;:!?)]+/);
+        if (p) { parts[i + 1] = parts[i + 1].slice(p[0].length); el.append(h('span', { style: 'white-space: nowrap' }, m, p[0])); } else el.append(m);
+      } else if (part) el.append(part);
     });
     return el;
   }
@@ -1220,7 +1225,7 @@
           top && top.label ? ` · most common mistake: ${low1(top.label)}${top.share !== undefined ? ` (${pct(top.share)}% of misses)` : ''}` : ''));
       } else if (fb.crowd && fb.crowd.text) v.append(h('p', { class: 'v-line v-crowd', text: fb.crowd.text }));
       if (fb.twice && o.onLadder) {
-        v.append(h('p', { class: 'v-line' }, h('button', { type: 'button', class: 'btn sm', onclick: () => o.onLadder() },
+        v.append(h('p', { class: 'v-line v-ladder' }, h('button', { type: 'button', class: 'btn sm', onclick: () => o.onLadder() },
           icon('book', 16), 'Missed this type twice. Learn it step by step'), h('span', { class: 'meta', text: ' 3 questions · ~4 min' })));
       }
       if (fb.unmarked) {
@@ -2050,7 +2055,12 @@
     }
     function desmos() {
       hostEl.replaceChildren();
-      const c = window.Desmos.GraphingCalculator(hostEl, { keypad: true, expressions: true, settingsMenu: true, border: false });
+      // Desmos follows the site's look: inverted colours on a dark page
+      const dark = () => { const t = doc.documentElement.dataset.theme; return t ? t === 'dark' : media('(prefers-color-scheme: dark)'); };
+      const c = window.Desmos.GraphingCalculator(hostEl, { keypad: true, expressions: true, settingsMenu: true, border: false, invertedColors: dark() });
+      const relook = () => { try { c.updateSettings({ invertedColors: dark() }); } catch (_) {} };
+      new MutationObserver(relook).observe(doc.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', relook); } catch (_) {}
       c.observeEvent('change', changed);
       titleEl.textContent = 'Desmos';
       return {
@@ -2143,9 +2153,11 @@
       clearInterval(saveTimer);
       saveTimer = setInterval(save, 10000);
       emitOpen();
+      // focus now, so Esc closes it while Desmos is still loading; again once it has, unless the student moved on
+      if (o.focus !== false) panel.focus({ preventScroll: true });
       const e = await load();
       if (e.kind === 'desmos') try { e.calc.resize(); } catch (_) {}
-      if (o.focus !== false) panel.focus({ preventScroll: true });
+      if (o.focus !== false && isOpen() && (doc.activeElement === panel || doc.activeElement === doc.body)) panel.focus({ preventScroll: true });
       return e;
     }
     function close() {
