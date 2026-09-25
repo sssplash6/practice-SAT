@@ -524,6 +524,13 @@ def finish_contest(row) -> dict:
     best = max(previous, default=None)
     result["records_new"] = ([{"kind": contest_row["kind"], "value": points, "was": best}]
                              if ranked and (best is None or points > best) else [])
+    if cfg.get("race"):
+        race = cfg["race"]
+        opponent = db.one("SELECT points FROM sessions WHERE id=?", race.get("sid")) if race.get("sid") else None
+        them = opponent["points"] if opponent else race.get("points")
+        if them is not None:
+            result["race"] = {"them": them, "you": points, "won": points > them,
+                              "label": race["label"]}
     db.run("UPDATE sessions SET points=?,secs=?,ranked=?,unranked_why=?,result=? WHERE id=?",
            points, used, int(ranked), why, json.dumps(result), row["id"])
     return result
@@ -664,7 +671,103 @@ def state_extra(row) -> dict:
         return {}
     c = db.one("SELECT id,kind,title FROM contests WHERE id=?", row["contest"])
     return {"contest": dict(c) if c else None, "ranked": bool(row["ranked"]),
-            "why": row["unranked_why"], "clock": clock(row)}
+            "why": row["unranked_why"], "clock": clock(row),
+            "pacer": pacer(row)}
+
+
+def race_choice(cid: str, learner: str, choice: str | None) -> dict | None:
+    """Resolve a public race choice before a sitting starts; never expose a pick."""
+    if not choice:
+        return None
+    contest_row = contest(cid)
+    if choice == "pace":
+        return {"kind": "pace", "label": "SAT pace", "level": None, "points": None,
+                "right": None, "secs": contest_row["seconds"]}
+    if choice.startswith("par:"):
+        try:
+            level = int(choice[4:])
+        except ValueError as exc:
+            raise HTTPException(422, "invalid par level") from exc
+        if level < 1 or level > 10:
+            raise HTTPException(422, "invalid par level")
+        slots = (_json(contest_row["spec"], {}) or {}).get("slots", [])
+        expected = par(None, slots, rating=700 + 150 * (level - 1))
+        return {"kind": "par", "label": f"Level {level} par", "level": level,
+                "points": expected["points"], "right": expected["right"],
+                "secs": contest_row["seconds"]}
+    if choice == "median":
+        points = [r["points"] for r in db.rows("SELECT points FROM sessions WHERE contest=?"
+                                              " AND ranked=1 AND finished IS NOT NULL", contest_row["id"])]
+        return {"kind": "median", "label": "Field median", "level": None,
+                "points": statistics.median(points) if points else None,
+                "right": None, "secs": contest_row["seconds"]}
+    if choice == "best":
+        other = db.one("SELECT s.* FROM sessions s JOIN contests c ON c.id=s.contest"
+                       " WHERE s.learner=? AND c.kind=? AND s.finished IS NOT NULL AND s.ranked=1"
+                       " ORDER BY s.points DESC,s.finished DESC LIMIT 1", learner, contest_row["kind"])
+        if not other:
+            raise HTTPException(404, "no previous run to race")
+        return {"kind": "best", "label": "Your best", "sid": other["id"], "target": learner,
+                "level": _identity(learner, learner)["level"], "points": other["points"],
+                "right": (_json(other["result"], {}) or {}).get("right"), "secs": other["secs"]}
+    target = person_of(choice)
+    if not target:
+        raise HTTPException(404, "student not found")
+    profile = db.one("SELECT board FROM learners WHERE id=?", target)
+    if profile and profile["board"] == "hidden":
+        raise HTTPException(403, "this run is private now")
+    other = db.one("SELECT * FROM sessions WHERE contest=? AND learner=? AND finished IS NOT NULL"
+                   " AND ranked=1 ORDER BY points DESC LIMIT 1", contest_row["id"], target)
+    if not other:
+        raise HTTPException(404, "that student has not finished this contest")
+    return {"kind": "run", "label": _identity(target, learner)["name"], "sid": other["id"],
+            "target": target, "level": _identity(target, learner)["level"],
+            "points": other["points"], "right": (_json(other["result"], {}) or {}).get("right"),
+            "secs": other["secs"]}
+
+
+def pacer(row) -> dict | None:
+    cfg = _json(row["cfg"], {}) or {}
+    race = cfg.get("race")
+    if not race:
+        return None
+    target = race.get("target")
+    if target and target != row["learner"]:
+        profile = db.one("SELECT board FROM learners WHERE id=?", target)
+        if profile and profile["board"] == "hidden":
+            return None
+    own = db.one("SELECT COUNT(DISTINCT qid) AS n FROM attempts WHERE session=?", row["id"])["n"]
+    used = clock(row)["used"]
+    marks = []
+    elapsed = 0
+    if race.get("sid"):
+        other = db.one("SELECT questions FROM sessions WHERE id=?", race["sid"])
+        questions = _json(other["questions"], []) if other else []
+        if isinstance(questions, dict):
+            questions = questions.get("module1", []) + questions.get("module2", [])
+        by_id = {q["id"]: q for q in (questions or [])}
+        for attempt in db.rows("SELECT qid,correct,void,COALESCE(sms,ms,95000) AS ms"
+                               " FROM attempts WHERE session=? ORDER BY id", race["sid"]):
+            q = by_id.get(attempt["qid"])
+            if not q:
+                continue
+            elapsed += (attempt["ms"] or 0) / 1000
+            points = ({"easy": 10, "medium": 20, "hard": 30}.get(q["difficulty"], 20)
+                      if attempt["correct"] and not attempt["void"] else 0)
+            marks.append({"right": bool(attempt["correct"] and not attempt["void"]),
+                          "points": points, "at": round(elapsed)})
+    elif race["kind"] in ("pace", "par"):
+        slots = (_json(contest(row["contest"])["spec"], {}) or {}).get("slots", [])
+        for index, slot in enumerate(slots):
+            elapsed += {"easy": 65, "medium": 95, "hard": 126}.get(slot[1], 95)
+            right = race["kind"] == "pace" or index < (race.get("right") or 0)
+            marks.append({"right": right, "points": {"easy": 10, "medium": 20, "hard": 30}.get(slot[1], 20)
+                          if right else 0, "at": round(elapsed)})
+    visible = marks[:own]
+    progressed = [m for m in visible if m["at"] <= used]
+    return {"label": race["label"], "level": race.get("level"), "at": len(progressed),
+            "points_at": sum(m["points"] for m in progressed),
+            "marks": [{"right": m["right"], "points": m["points"], "at": m["at"]} for m in visible]}
 
 
 def _pid(learner: str) -> str:

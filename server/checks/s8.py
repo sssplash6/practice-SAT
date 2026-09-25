@@ -122,6 +122,31 @@ def run() -> None:
         assert_ok(c.get("/api/contest/daily/review", headers=head(a)).status_code == 200 and
               len(c.get("/api/contest/daily/review", headers=head(a)).json()["items"]) == 10,
               "finished learner can review ten twin questions")
+        racer = learner("race")
+        target_pid = compete._pid(a)
+        race_lobby = c.get(f"/api/contest/daily?race={target_pid}", headers=head(racer))
+        assert_ok(race_lobby.status_code == 200 and race_lobby.json()["race"]["points"] == 260,
+                  "a public finished run can be selected as a race")
+        race_start = c.post(f"/api/contest/daily/start?race={target_pid}", headers=head(racer)).json()
+        race_sid = race_start["session"]
+        for index in range(3):
+            question = race_start["question"] if index == 0 else c.post(
+                f"/api/drill/{race_sid}/next", headers=head(racer)).json()["question"]
+            original = question_for(race_sid, question["id"])
+            c.post(f"/api/drill/{race_sid}/answer", headers=head(racer),
+                   json={"question_id": question["id"], "answer": answer_of(original), "ms": 60_000})
+        first_pacer = c.get("/api/contest/daily/pacer", headers=head(racer)).json()["pacer"]
+        second_pacer = c.get("/api/contest/daily/pacer", headers=head(racer)).json()["pacer"]
+        assert_ok(len(first_pacer["marks"]) == 3 and first_pacer["at"] == second_pacer["at"],
+                  "race pacer reveals only answered slots and freezes at the verdict")
+        c.post(f"/api/drill/{race_sid}/finish", headers=head(racer))
+        race_result = c.get("/api/contest/daily", headers=head(racer)).json()["me"]
+        assert_ok(race_result["ranked"] and race_result["result"]["race"]["them"] == 260,
+                  "a first live race is ranked and reports the opponent's score")
+        db.run("UPDATE learners SET board='hidden' WHERE id=?", a)
+        assert_ok(c.get(f"/api/contest/daily?race={target_pid}", headers=head(racer)).status_code == 403,
+                  "hiding a learner revokes their race link")
+        db.run("UPDATE learners SET board='name' WHERE id=?", a)
         grid = c.get("/api/contest/daily/grid", headers=head(a)).json()
         assert_ok(grid["rows"] and all(len(r["marks"]) == 10 for r in grid["rows"]),
               "contest grid has one mark per slot")
