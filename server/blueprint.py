@@ -11,6 +11,7 @@ for each, and the README the sources.
 
 from __future__ import annotations
 
+import hashlib
 from collections import Counter
 
 from . import practice
@@ -33,7 +34,13 @@ TIERS = {
     "module1":       {"easy": 7,  "medium": 8, "hard": 7},
     "module2_lower": {"easy": 11, "medium": 8, "hard": 3},
     "module2_upper": {"easy": 3,  "medium": 8, "hard": 11},
+    # Tests' harder and easier module 1: practice, never a score estimate
+    "module1_upper": {"easy": 3,  "medium": 8, "hard": 11},
+    "module1_lower": {"easy": 11, "medium": 8, "hard": 3},
 }
+# the id prefix of each form's questions; every module 1 tier is 'm1'
+PREFIX = {"module1": "m1", "module1_upper": "m1", "module1_lower": "m1",
+          "module2_lower": "m2l", "module2_upper": "m2u"}
 
 # College Board's own answer keys put grid-ins at 6, 7, 13, 14, 20, 21 and 27 of
 # 27; scaled to 22 positions that is this.
@@ -53,6 +60,16 @@ def spread(counts: dict[str, int]) -> list[str]:
     n = sum(counts.values())
     marks = sorted(((k + .5) * n / c, d) for d, c in counts.items() for k in range(c))
     return [d for _, d in marks]
+
+
+def module_of(form: str) -> int:
+    """Which module's domain split a form uses: 2 for either module 2."""
+    return 2 if form.startswith("module2") else 1
+
+
+def ladder(form: str) -> list[str]:
+    """The public tier of each position, easiest first (X3's pace budgets)."""
+    return [tier for _, tier, _ in slots(form, module_of(form))]
 
 
 def slots(form: str, module: int) -> list[tuple[str, str, str | None]]:
@@ -211,12 +228,39 @@ def draw_matching(b: practice.Builder, key: str, tier: str, fmt: str | None,
     return None
 
 
+def _hash(salt: str, t: str) -> str:
+    return hashlib.sha1(f"{salt}:{t}".encode()).hexdigest()
+
+
+def order_key(order: str, used: dict[str, int], salt: str, exposure: dict[str, int] | None = None):
+    """X2: how a slot's pool is ranked before its first CANDIDATES are tried.
+
+    shuffle   (uses in this module, sha1(builder seed + t)): every template that
+              can make the slot is equally likely and exposure plays no part.
+              Test-day sittings, papers' slot builds, Compete's forms.
+    exposure  (uses, the learner's exposure to t, the same hash): Training
+              sittings and custom tests bring the types met least.
+    name      the old alphabetical key (it leaned to early names), kept only
+              so tools/build_mocks.py can rebuild its shelf as it was.
+    """
+    if order == "name":
+        return lambda t: (used.get(t, 0), t)
+    if order == "exposure":
+        seen = exposure or {}
+        return lambda t: (used.get(t, 0), seen.get(t, 0), _hash(salt, t))
+    if order != "shuffle":
+        raise ValueError("order is shuffle, exposure or name")
+    return lambda t: (used.get(t, 0), _hash(salt, t))
+
+
 def fill(form_slots, domains: dict[str, list[str]], b: practice.Builder,
-         can: dict[str, set[tuple[str, str]]], log=print) -> list[practice.Card]:
+         can: dict[str, set[tuple[str, str]]], log=print, order: str = "shuffle",
+         exposure: dict[str, int] | None = None) -> list[practice.Card]:
     """One module: the practice spread scoring, plus the format each slot wants."""
     chosen: list[practice.Card] = []
     used: dict[str, int] = {}
     missed = 0
+    rank = order_key(order, used, b.learner, exposure)
 
     for want_domain, want_tier, want_fmt in form_slots:
         wants = (want_tier, want_fmt or "mcq")
@@ -224,7 +268,7 @@ def fill(form_slots, domains: dict[str, list[str]], b: practice.Builder,
         if not pool:                           # no template makes it; widen to the tier
             pool = [t for t in domains[want_domain]
                     if t not in b.spent and any(k[0] == want_tier for k in can.get(t, ()))]
-        ranked = sorted(pool, key=lambda t: (used.get(t, 0), t))
+        ranked = sorted(pool, key=rank)
 
         cards = []
         for key in ranked:
@@ -235,7 +279,7 @@ def fill(form_slots, domains: dict[str, list[str]], b: practice.Builder,
                 break
 
         if not cards:                          # take anything in the domain
-            for key in sorted(domains[want_domain], key=lambda t: (used.get(t, 0), t)):
+            for key in sorted(domains[want_domain], key=rank):
                 card = b.draw(key, practice.topic_of(key))
                 if card:
                     cards.append(card)
@@ -260,14 +304,143 @@ def fill(form_slots, domains: dict[str, list[str]], b: practice.Builder,
     return chosen
 
 
-def module(form: str, b: practice.Builder, log=lambda *_: None) -> list[dict]:
-    """A module built now, as stored questions, ids prefixed by the form."""
-    num = 1 if form == "module1" else 2
-    cards = fill(slots(form, num), by_domain(), b, abilities(), log)
-    prefix = {"module1": "m1", "module2_lower": "m2l", "module2_upper": "m2u"}[form]
+def stored(cards: list[practice.Card], prefix: str, start: int = 1, sep: str = "q") -> list[dict]:
+    """Cards as stored questions (key included), ids {prefix}q01.."""
     out = []
-    for i, c in enumerate(cards, 1):
+    for i, c in enumerate(cards, start):
         q = practice.to_question(c, i)
-        q["id"] = f"{prefix}q{i:02d}"
+        q["id"] = f"{prefix}{sep}{i:02d}"
         out.append(q)
     return out
+
+
+def module(form: str, b: practice.Builder, log=lambda *_: None, order: str = "shuffle",
+           exposure: dict[str, int] | None = None) -> list[dict]:
+    """A module built now, as stored questions, ids prefixed by the form."""
+    cards = fill(slots(form, module_of(form)), by_domain(), b, abilities(), log, order, exposure)
+    return stored(cards, PREFIX[form])
+
+
+def slots_of(questions: list[dict]) -> list[list]:
+    """A built module's slot list [[template, tier, fmt]]: what twins and papers keep."""
+    return [[q["key"], q["difficulty"], q["type"]] for q in questions]
+
+
+def _fallback(b: practice.Builder, template: str, tier: str, fmt: str | None,
+              used: dict[str, int]) -> practice.Card | None:
+    """The least-used template of the same topic that makes this tier and format."""
+    want = (tier, fmt or "mcq")
+    can = abilities()
+    pool = [t for t in practice.catalogue()["by_topic"].get(practice.topic_of(template), [])
+            if t != template and t not in b.spent and want in can.get(t, ())]
+    for t in sorted(pool, key=order_key("shuffle", used, b.learner)):
+        card = draw_matching(b, t, tier, fmt)
+        if card:
+            return card
+    return None
+
+
+def twin_slots(slot_list: list[list], b: practice.Builder, prefix: str, start: int = 1) -> list[dict]:
+    """Each slot's template at its tier and format, on a seed of this learner's
+    own (the Builder starts every learner somewhere else in the seed space), so
+    everyone sitting the same slots has their own numbers. Positions follow the
+    slot list; a template this learner has used up falls back within its topic."""
+    cards: list[practice.Card] = []
+    used: dict[str, int] = {}
+    for template, tier, fmt, *_ in slot_list:
+        f = fmt if fmt in ("mcq", "spr") else None
+        card = draw_matching(b, template, tier, f, tries=40) or _fallback(b, template, tier, f, used) \
+            or b.draw(template, practice.topic_of(template))
+        if card is None:
+            raise LookupError(f"no twin for {template} at {tier}")
+        b.keep(card)
+        used[card.key] = used.get(card.key, 0) + 1
+        cards.append(card)
+    return stored(cards, prefix, start)
+
+
+def twin(source: list[dict], b: practice.Builder) -> list[dict]:
+    """A parallel form of a built module: the same template in every slot, at
+    the same difficulty, position and format, with new seeds and the same ids."""
+    out = twin_slots(slots_of(source), b, "x")
+    for q, s in zip(out, source):
+        q["id"] = s["id"]
+    return out
+
+
+def holds(questions: list[dict], subject: str = "math") -> dict:
+    """What a module holds, in public counts only (the lobby's X2 facts)."""
+    domains = Counter(q.get("domain") for q in questions)
+    return {"subject": subject, "questions": len(questions),
+            "domains": {d: domains[d] for d in DOMAIN_SPLIT[1] if domains[d]},
+            "grid_ins": sum(q.get("type") == "spr" for q in questions)}
+
+
+def custom_slots(topics: list[str], count: int, tiers: list[str], order: str,
+                 formats: str) -> list[tuple[str, str, str]]:
+    """A custom test's (topic, tier, fmt) per position: topics dealt with
+    practice.interleave; the allowed tiers in equal parts, easiest first for
+    'ladder' and interleaved for 'mixed'; grid-ins at SPR_AT scaled to the
+    length when formats is 'both'."""
+    rank = {"easy": 0, "medium": 1, "hard": 2}
+    tiers = sorted(dict.fromkeys(tiers), key=rank.__getitem__)
+    per, extra = divmod(count, len(tiers))
+    counts = {t: per + (i < extra) for i, t in enumerate(tiers)}
+    steps = [t for t in tiers for _ in range(counts[t])] if order == "ladder" else practice.interleave(counts)
+    share, left = divmod(count, len(topics))
+    dealt = practice.interleave({t: share + (i < left) for i, t in enumerate(topics)})
+    spr_at = {max(1, round(k * count / MODULE_SIZE)) for k in SPR_AT}
+    fmt = {"both": lambda i: "spr" if i in spr_at else "mcq",
+           "mcq": lambda i: "mcq", "spr": lambda i: "spr"}[formats]
+    return [(topic, tier, fmt(i)) for i, (topic, tier) in enumerate(zip(dealt, steps), 1)]
+
+
+def custom(topics: list[str], count: int, tiers: list[str], order: str, formats: str,
+           b: practice.Builder, queue: list | None = None, exposure: dict[str, int] | None = None,
+           offers=None) -> list[dict]:
+    """A custom test under test rules, ids c01..
+
+    From skills, each slot takes the least exposed template of its topic that
+    makes its tier and format, the candidates weighed by practice.penalty.
+    With a queue (the templates of open mistakes or of a sitting's misses, or
+    (template, norm) pairs for a trap test) each entry draws that template on a
+    fresh seed; for a norm, `offers(card, norm)` walks up to 40 seeds for one
+    whose options offer it.
+    """
+    chosen: list[practice.Card] = []
+    used: dict[str, int] = {}
+    if queue is not None:
+        for entry in queue:
+            template, norm = entry if isinstance(entry, (list, tuple)) else (entry, None)
+            card = None
+            for _ in range(40 if norm and offers else 1):
+                card = b.draw(template, practice.topic_of(template))
+                if card is None or not norm or not offers or offers(card, norm):
+                    break
+                b.keep(card)
+                card = None
+            if card is not None:
+                b.keep(card)
+                chosen.append(card)
+        return stored(chosen, "c", sep="")
+    can = abilities()
+    by_topic = practice.catalogue()["by_topic"]
+    rank = order_key("exposure" if exposure is not None else "shuffle", used, b.learner, exposure)
+    for topic, tier, fmt in custom_slots(topics, count, tiers, order, formats):
+        names = [t for t in by_topic.get(topic, []) if t not in b.spent]
+        pool = [t for t in names if (tier, fmt) in can.get(t, ())] or \
+               [t for t in names if any(k[0] == tier for k in can.get(t, ()))]
+        cards = []
+        for t in sorted(pool, key=rank):
+            card = draw_matching(b, t, tier, "spr" if fmt == "spr" else None)
+            if card:
+                cards.append(card)
+            if len(cards) >= practice.CANDIDATES:
+                break
+        if not cards:
+            continue
+        best = min(cards, key=lambda c: practice.penalty(c, chosen, used))
+        b.keep(best)
+        chosen.append(best)
+        used[best.key] = used.get(best.key, 0) + 1
+    return stored(chosen, "c", sep="")
