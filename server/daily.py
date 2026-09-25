@@ -242,6 +242,16 @@ def _cap(text: str | None) -> str | None:
     return text[:1].upper() + text[1:] if text else None
 
 
+def spread(picks: list[int] | None, mistakes: list) -> list[dict] | None:
+    """R27 / Compete's panel: each option's share of the on-time picks and
+    the mistake it names (None for the key)."""
+    if not picks:
+        return None
+    n = sum(picks)
+    return [{"index": i, "n": p, "share": round(p / n, 3) if n else None,
+             "mistake": mistakes[i] if i < len(mistakes) else None} for i, p in enumerate(picks)]
+
+
 def entry_line(given, key) -> dict | None:
     """T14: a grid-in entry error, named as entry (the answer is still wrong)."""
     kind = scoring.entry_error(str(given or ""), str(key))
@@ -267,13 +277,14 @@ def feedback(slot: str, day: str, q: dict, given, late: bool, ms: int | None = N
            "correct": ok, "given": given, "answer": q["answer"], "ms": ms,
            "mistake": _cap(reason), "rationale": q["rationale"],
            "crowd": crowd(slot, day), "sat_pace_ms": SAT_PACE_MS["math"],
-           "choices_explained": None, "entry": None,
+           "choices_explained": None, "entry": None, "options": None,
            "template": q["key"], "topic": q["topic"], "difficulty": q["difficulty"]}
     if q["type"] == "mcq":
         key = "ABCD".index(q["answer"])
         out["answer_index"] = key
         out["choices_explained"] = [None if i == key else _cap(reasons[i] if i < len(reasons) else "")
                                     for i in range(4)]
+        out["options"] = spread(out["crowd"].get("picks"), out["choices_explained"])
     elif not ok:
         out["entry"] = entry_line(given, q["answer"])
         out["accepted"] = scoring.accepted_forms(str(q["answer"]))
@@ -296,6 +307,7 @@ def rw_feedback(slot: str, day: str, gen: dict, given, late: bool, ms: int | Non
     out["correct"] = bool(out.get("correct", isinstance(given, int) and given == gen.get("answer_index")))
     if isinstance(given, int) and gen.get("traps") and 0 <= given < len(gen["traps"]):
         out.setdefault("trap", gen["traps"][given])
+    out["options"] = spread(out["crowd"].get("picks"), list(gen.get("traps") or []))
     return out
 
 
