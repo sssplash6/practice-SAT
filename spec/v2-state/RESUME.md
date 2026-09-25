@@ -16,11 +16,12 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
 - **ALL FOUNDATIONS MERGED** (2026-09-25): F2 (e9cf9f6) and F3 (1344fd9) passed their checks with no blockers;
   follow-ups in `followups/F2.json`, `followups/F3.json`. checks/f5.py's local-date bug fixed (45a2a33); moving
   check-ins to learners' local days is a follow-up in `followups/F5.json`.
-- **WAVE 2 RUNNING**: build.js run `wf_37eaad23-bb7` (task wrwfofyx1), args
-  `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'}]` (5 units each for sections, 3 for F2B;
-  then one check + one fix). F2B = F2's unowned follow-ups (next.py, sw.js, UI.run/autoSheet/share, G2 phrases).
-  Restart any one by its branch state: `{id, unit:<first unbuilt 0-based>}` / `{id, from:'verify'}` /
-  `{id, from:'fix', issues:<saved defects>}`. Merge each when ready (leftovers to followups/, test_flow).
+- **WAVE 2 RUNNING** (relaunched 2026-09-25 19:15 after a usage-limit stop): build.js run `wf_fb0187b6-e7f`
+  (task wgqj19cot), args `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'}]`, every task from
+  unit 0 (each builder continues from its branch: S3 3 commits, S5 1, S10 1, S6 checkpoint 2fadefd; S1, S4, F2B none).
+  Checkpoint loop task bz51av1mr. If stopped again: commit real WIP (worktree on its branch at the tip), free the
+  branches (remove clean worktrees that still hold them), relaunch the same args; units restart from branch state.
+  Merge each task when ready (leftovers to followups/, test_flow).
 - **S8 server (helper) 2026-09-25:** 12 commits, s8.py and test_flow pass, blocked on others' contracts. Told to mark
   them PENDING (like F4) and report done; its habits.py dependency (an unbuilt F5 item) and the C26 bank supply are
   HELPER-TASKS 4 and 5; S4/S5/S1 hooks come from wave 2.
