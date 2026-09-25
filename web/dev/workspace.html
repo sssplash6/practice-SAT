@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Workspace · SAT Freshman</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<script>
+  // ?theme=dark|light wins over the saved look, so a headless walk opens either theme
+  (() => { const t = new URLSearchParams(location.search).get('theme'); if (t === 'dark' || t === 'light') document.documentElement.dataset.theme = t; })();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/assets/runner.css">
+<style>
+  /* the dev page's own layout; everything inside .dev-q is question.js and runner.css */
+  body { background: var(--paper); }
+  .dev { max-width: 1120px; margin: 0 auto; padding: 20px var(--gutter) 120px; }
+  .dev-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin-bottom: 16px; }
+  .dev-controls { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 12px 16px; padding: 16px; border-radius: var(--radius-card); background: var(--tile); }
+  .dev-controls label { display: grid; gap: 4px; min-width: 0; font: 600 12.5px var(--font); }
+  .dev-controls select { width: 100%; min-width: 0; height: 40px; border-radius: 10px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); padding: 0 10px; font: 500 14px var(--font); }
+  .dev-checks { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; grid-column: 1 / -1; font: 500 13px var(--font); }
+  .dev-checks label { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; }
+  .dev-main { display: grid; grid-template-columns: minmax(0, 700px) minmax(0, 1fr); gap: 28px; margin-top: 22px; align-items: start; }
+  .dev-q { min-width: 0; }
+  .dev-side { position: sticky; top: 16px; display: grid; gap: 12px; min-width: 0; }
+  .dev-tools { display: flex; flex-wrap: wrap; gap: 6px; }
+  .dev-log { max-height: 60vh; overflow: auto; margin: 0; padding: 12px; border-radius: var(--radius); background: var(--tile); font: 400 11.5px/1.5 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+  .dev-gal { margin-top: 48px; }
+  .dev-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr)); gap: 20px; margin-top: 14px; }
+  .dev-card { padding: 18px; border-radius: var(--radius-card); box-shadow: inset 0 0 0 1px var(--line); min-width: 0; }
+  .dev-card > .k { margin-bottom: 12px; }
+  .dev-self { font: 500 12.5px var(--mono); }
+  @media (max-width: 999px) { .dev-main { grid-template-columns: minmax(0, 1fr); } .dev-side { position: static; } }
+</style>
+</head>
+<body>
+<main class="dev" id="main">
+  <div class="dev-h">
+    <h1 class="h1">Question workspace</h1>
+    <span class="meta">UI.workspace in every mode, with fixture questions and a fake server</span>
+    <span class="dev-self" id="self"></span>
+    <span class="meta">The runner: <a href="?view=runner&amp;rmode=practice">practice</a> · <a href="?view=runner&amp;rmode=practice&amp;timed=1">timed</a> · <a href="?view=runner&amp;rmode=retry">retry</a> · <a href="?view=runner&amp;rmode=end">end</a> · <a href="?view=runner&amp;rmode=challenge">challenge</a> · <a href="?view=runner&amp;rmode=exam">test-day</a> · <a href="?view=runner&amp;rmode=training">training</a></span>
+    <span class="meta">The review player: <a href="?view=review&amp;rmode=dialog">report dialog</a> · <a href="?view=review&amp;rmode=dialog&amp;n=44">44 questions</a> · <a href="?view=review&amp;rmode=pane">Review pane</a> · <a href="?view=review&amp;rmode=second">second look</a> · <a href="?view=review&amp;rmode=walk">walk</a> · <a href="?view=review&amp;rmode=pair">then vs now</a> · <a href="?view=review&amp;rmode=history">attempt history</a></span>
+  </div>
+
+  <div class="dev-controls" id="controls">
+    <label>Question <select id="fx"></select></label>
+    <label>Mode <select id="mode">
+      <option value="practice:instant">Practice · after each (instant)</option>
+      <option value="practice:retry">Practice · after I retry</option>
+      <option value="practice:end">Practice · at the end (end)</option>
+      <option value="exam">Exam (test window)</option>
+      <option value="review">Review</option>
+      <option value="review:hidden">Review · answers hidden</option>
+      <option value="quiz">Quiz (Words)</option>
+      <option value="inline">Inline (Today, sheets)</option>
+      <option value="example">Worked example</option>
+    </select></label>
+    <label>Confidence <select id="conf"><option value="ask">Ask (split Check)</option><option value="off">Off (one Check)</option></select></label>
+    <label>Answer <select id="outcome"><option value="auto">As picked</option><option value="wrong">Force wrong</option></select></label>
+    <div class="dev-checks">
+      <label><input type="checkbox" id="firstTap"> Answer on first tap</label>
+      <label><input type="checkbox" id="reasons" checked> Every option's mistake</label>
+      <label><input type="checkbox" id="openX"> Always open explanations</label>
+      <label><input type="checkbox" id="active"> Active tagger</label>
+      <label><input type="checkbox" id="toolbar" checked> Tools row</label>
+      <label><input type="checkbox" id="pad"> Answer pad</label>
+      <label><input type="checkbox" id="hints" checked> Hints</label>
+      <label><input type="checkbox" id="rich" checked> Rich feedback</label>
+      <label><input type="checkbox" id="keep" checked> Restore state on reload</label>
+      <label><input type="checkbox" id="nodesmos"> No Desmos key (scientific)</label>
+    </div>
+  </div>
+
+  <div class="dev-main">
+    <div class="dev-q" id="q"></div>
+    <aside class="dev-side">
+      <div class="dev-tools">
+        <button type="button" class="btn sm" id="reset">Reset</button>
+        <button type="button" class="btn sm" id="hide">Hide answers</button>
+        <button type="button" class="btn sm" id="dock">Calculator dock here</button>
+        <button type="button" class="quiet" id="clear">Clear log</button>
+      </div>
+      <div id="dockHost" style="height: 460px; display: none;"></div>
+      <pre class="dev-log" id="log" aria-live="off"></pre>
+    </aside>
+  </div>
+
+  <section class="dev-gal" aria-labelledby="galh">
+    <h2 class="h2" id="galh">Reveals</h2>
+    <p class="meta">The same verdict slot in each mode; an MC miss gives the same action row everywhere (G4 check 1).</p>
+    <div class="dev-grid" id="gallery"></div>
+  </section>
+</main>
+
+<script type="application/json" id="fixtures">[{"id": "p001", "template": "circle.convert", "seed": 1, "topic": "area_and_volume", "difficulty": "medium", "skill": "circle measures", "type": "mcq", "stem": "A circle has a diameter of 32 inches. What is the radius, in inches, of the circle?", "choices": ["4", "16", "32", "64"], "latex": ["4", "16", "32", "64"], "figure": null, "table": null, "answer": "B", "rationale": "From diameter = 32, the radius is 16, so the radius is 16.", "reasons": ["halved when the value should have been doubled", "", "gave the diameter instead", "doubled when the value should have been halved"], "accepted": null, "spr_reasons": null}, {"id": "p002", "template": "circles.arc_pair", "seed": 2, "topic": "circles", "difficulty": "medium", "skill": "arcs of a circle", "type": "mcq", "stem": "The circle above has center O, the length of arc XDP is 2π inches, and x = 144. What is the length, in inches, of arc XYP?", "choices": ["2π", "5π/2", "3π", "5π"], "latex": ["2π", "5π/2", "3π", "5π"], "figure": "<svg viewBox=\"0 0 216 216\" width=\"216\" height=\"216\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\"><style>.ax{stroke:currentColor;stroke-width:1.4;fill:none}.gr{stroke:currentColor;stroke-width:.5;opacity:.28}.pt{fill:currentColor}.sg{stroke:currentColor;stroke-width:1.4;fill:none}.lb{fill:currentColor;font:11px ui-sans-serif,system-ui,sans-serif}.it{fill:currentColor;font:italic 13px ui-serif,Georgia,serif}<\/style><circle class=\"ax\" cx=\"108\" cy=\"108\" r=\"76\"/><line class=\"sg\" x1=\"108\" y1=\"108\" x2=\"179.42\" y2=\"82.01\"/><line class=\"sg\" x1=\"108\" y1=\"108\" x2=\"34.94\" y2=\"87.05\"/><path class=\"sg\" d=\"M129.61,100.13 A23,23 0 0 0 85.89,101.66\"/><text class=\"it\" x=\"106.67\" y=\"74.02\" text-anchor=\"middle\">x°<\/text><circle class=\"pt\" cx=\"108\" cy=\"108\" r=\"2.6\"/><text class=\"it\" x=\"108.59\" y=\"128.99\" text-anchor=\"middle\">O<\/text><circle class=\"pt\" cx=\"179.42\" cy=\"82.01\" r=\"3.4\"/><text class=\"it\" x=\"187.87\" y=\"82.93\" text-anchor=\"start\">X<\/text><circle class=\"pt\" cx=\"110.65\" cy=\"183.95\" r=\"3.4\"/><text class=\"it\" x=\"110.97\" y=\"204.95\" text-anchor=\"middle\">Y<\/text><circle class=\"pt\" cx=\"34.94\" cy=\"87.05\" r=\"3.4\"/><text class=\"it\" x=\"26.29\" y=\"88.57\" text-anchor=\"end\">P<\/text><circle class=\"pt\" cx=\"105.35\" cy=\"32.05\" r=\"3.4\"/><text class=\"it\" x=\"105.03\" y=\"20.05\" text-anchor=\"middle\">D<\/text><\/svg>", "table": null, "answer": "C", "rationale": "The given arc is 144/360 of the circle, so the circumference is 5π and the rest of the circle is 5π − 2π = 3π.", "reasons": ["gave the arc that was already given", "halved the circumference instead of subtracting the given arc", "", "gave the whole circumference instead of the remaining arc"], "accepted": null, "spr_reasons": null}, {"id": "p003", "template": "esc.generalize_table", "seed": 0, "topic": "evaluating_statistical_claims", "difficulty": "hard", "skill": "evaluating a statistical claim", "type": "mcq", "stem": "A physiotherapist wanted to study the relationship between the number of therapy sessions a patient attends and the number of weeks a patient spends recovering. For the study, the physiotherapist selected 78 patients at random from all the patients at a certain clinic. The table displays the information for the 48 patients in the sample who recovered in at least 4 weeks. Which of the following is the largest population to which the results of the study can be generalized?", "choices": ["All patients at the clinic who attended 15 or more sessions", "All patients at the clinic", "The 48 patients in the sample who recovered in at least 4 weeks", "The 78 patients in the sample"], "latex": ["All patients at the clinic who attended 15 or more sessions", "All patients at the clinic", "The 48 patients in the sample who recovered in at least 4 weeks", "The 78 patients in the sample"], "figure": null, "table": [["Weeks recovering", "6 to 14 sessions", "15 or more sessions", "Total"], ["4 to 6 weeks", "11", "5", "16"], ["More than 6 weeks", "4", "28", "32"], ["Total", "15", "33", "48"]], "answer": "B", "rationale": "The patients were selected at random from all patients at the clinic, so the results reach that population and no wider one.", "reasons": ["named a population the sample can speak for, but not the largest one it can speak for", "", "read the table as the study, and applied the result only to the part of the sample the table reports", "stopped at the patients who were measured, although selecting them at random earns the population they were drawn from"], "accepted": null, "spr_reasons": null}, {"id": "p004", "template": "circles.arc_fraction", "seed": 2, "topic": "circles", "difficulty": "hard", "skill": "arc as a share of the circle", "type": "spr", "stem": "On a circle with radius 2, arc XY has length 5π/2. What fraction of the circumference of the circle is the length of arc XY ?", "choices": [], "latex": [], "figure": null, "table": null, "answer": "5/8", "rationale": "The circumference is 2π(2) = 4π, so the arc is 5π/2 ÷ 4π = 5/8 of it.", "reasons": [], "accepted": ["5/8", ".625", "0.625"], "spr_reasons": [["compared the arc with half the circumference", "5/4"], ["compared the arc with twice the circumference", "5/16"], ["gave the share the rest of the circle takes up", "3/8"]]}, {"id": "p005", "template": "circle.convert", "seed": 0, "topic": "area_and_volume", "difficulty": "medium", "skill": "circle measures", "type": "mcq", "stem": "A circle has a diameter of 70 centimeters. What is the circumference, in centimeters, of the circle?", "choices": ["35", "70π", "280π", "1,225π"], "latex": ["35", "70\\pi", "280\\pi", "1,225\\pi"], "figure": null, "table": null, "answer": "B", "rationale": "From diameter = 70, the radius is 35, so the circumference is 70π.", "reasons": ["gave the radius instead", "", "doubled when the value should have been halved", "gave the area instead"], "accepted": null, "spr_reasons": null}]</script>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script src="/assets/question.js"></script>
+<script src="/assets/runner.js"></script>
+<script>
+(() => {
+  'use strict';
+  const $ = s => document.querySelector(s);
+  const FX = JSON.parse($('#fixtures').textContent);
+
+  // fixtures the bank has no shape for yet: steps and a Desmos way (P1, P3), and a Words item (W1)
+  const convert = FX.find(q => q.template === 'circle.convert' && q.choices.length && q.choices[0] === '4');
+  if (convert) Object.assign(convert, {
+    name: 'Diameter and radius', about: 'A circle’s radius is half its diameter.',
+    steps: ['The diameter is given: $d = 32$.', 'The radius is half of it: $r = d \\div 2$.', '$32 \\div 2 = 16$, so the radius is 16 inches.'],
+    option_steps: [1, null, 0, 1], wrong_steps: ['32 ÷ 8 = 4', null, 'r = 32', '32 × 2 = 64'],
+    desmos: { exprs: [{ latex: 'd=32' }, { latex: 'r=\\frac{d}{2}' }], note: 'Type the diameter, then r = d/2: Desmos shows r = 16.', bounds: { left: -5, right: 40, bottom: -5, top: 40 } },
+    rungs: ['strike', 'step', 'example'], watch_for: ['doubling instead of halving', 'giving the diameter'],
+    why: 'Open mistake: gave the diameter instead · 1 of 2 clean answers left',
+  });
+  FX.forEach((q, i) => { q.number = i + 1; });
+  const quiz = {
+    id: 'w1', type: 'mcq', number: FX.length + 1, template: 'rw.wic.findings',
+    stem: 'The committee’s findings did not support the senator’s claim; if anything, the data seemed to ____ it.',
+    choices: ['undermine', 'bolster', 'overstate', 'celebrate'], latex: [], answer: 'A',
+    reasons: ['fits: “did not support” calls for a word that weakens the claim', 'the opposite: “did not support” rules out strengthening', 'too strong: the data weaken the claim, they don’t exaggerate it', 'wrong tone: nothing in the text praises the claim'],
+    trap: [null, 'opposite', 'too_strong', 'tone'], rationale: 'The clue “did not support” and “if anything” point to weakening the claim, so undermine fits.',
+    spans: null, needs: 'to weaken or contradict', head: { label: 'Words in Context · Science' },
+    crowd: { n: 140, options: [0.52, 0.31, 0.11, 0.06], text: '52% right · 31% chose a word that means the opposite' },
+  };
+  const clueAt = quiz.stem.indexOf('did not support');
+  quiz.spans = [{ start: clueAt, end: clueAt + 'did not support'.length, kind: 'clue' }];
+  FX.push(quiz);
+  const LABEL = q => q.id === 'w1' ? 'Words in Context (quiz)' : `${q.number} · ${q.template} · ${q.type === 'spr' ? 'grid-in' : 'MC'}${q.figure ? ' · figure' : ''}${q.table ? ' · table' : ''}${q.latex && q.latex.some((l, i) => l !== q.choices[i]) ? ' · KaTeX' : ''}`;
+  FX.forEach((q, i) => $('#fx').append(new Option(LABEL(q), String(i))));
+
+  /* the dev page's controls survive a reload */
+  const KEY = 'dev.ws';
+  const saved = (() => { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (_) { return {}; } })();
+  const url = new URLSearchParams(location.search);
+  ['fx', 'mode', 'conf', 'outcome'].forEach(id => { const v = url.get(id) ?? saved[id]; if (v !== undefined && v !== null) $('#' + id).value = v; });
+  ['firstTap', 'reasons', 'openX', 'active', 'toolbar', 'pad', 'hints', 'rich', 'keep', 'nodesmos'].forEach(id => { const v = url.has(id) ? url.get(id) === '1' : saved[id]; if (typeof v === 'boolean') $('#' + id).checked = v; });
+  const keepCtl = () => { const o = {}; ['fx', 'mode', 'conf', 'outcome'].forEach(id => { o[id] = $('#' + id).value; }); ['firstTap', 'reasons', 'openX', 'active', 'toolbar', 'pad', 'hints', 'rich', 'keep', 'nodesmos'].forEach(id => { o[id] = $('#' + id).checked; }); try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (_) {} };
+  if ($('#nodesmos').checked) UI.DESMOS_KEY = '';
+
+  const log = (...a) => { const line = a.map(x => typeof x === 'string' ? x : JSON.stringify(x)).join(' '); $('#log').textContent = `${line}\n${$('#log').textContent}`.slice(0, 20000); };
+
+  /* ---------------------------------------------------------------- a fake server */
+  const LET = 'ABCDE';
+  const clean = s => String(s ?? '').replace(/[−–]/g, '-');
+  const keyOf = q => q.type === 'spr' ? q.answer : LET.indexOf(q.answer);
+  function isRight(q, a) {
+    if ($('#outcome').value === 'wrong') return false;
+    if (q.type !== 'spr') return a === keyOf(q);
+    const p = UI.spr.parse(a), k = UI.spr.parse(q.answer);
+    return (q.accepted || []).map(clean).includes(clean(a)) || (p.ok && k.ok && Math.abs(p.value - k.value) < 1e-9);
+  }
+  function feedback(q, a, meta, extra = {}) {
+    const right = isRight(q, a);
+    const key = keyOf(q);
+    const fb = {
+      correct: right, given: a, answer: q.answer, answer_index: q.type === 'spr' ? null : key,
+      rationale: q.rationale, reasons: q.type === 'spr' ? [] : q.reasons.map((r, i) => (i === key && q.id !== 'w1') ? null : r),
+      accepted: q.accepted || null, ms: meta && meta.ms, conf: meta && meta.conf,
+    };
+    if (q.type !== 'spr' && !right && Number.isInteger(a)) fb.mistake = q.reasons[a] || null;
+    if (q.type === 'spr' && !right) {
+      const hit = (q.spr_reasons || []).find(([, v]) => { const p = UI.spr.parse(a), w = UI.spr.parse(v); return p.ok && w.ok && Math.abs(p.value - w.value) < 1e-9; });
+      if (hit) fb.mistake = hit[0];
+    }
+    if (q.id === 'w1') Object.assign(fb, { trap: !right && Number.isInteger(a) ? q.trap[a] : null, spans: q.spans, needs: q.needs, crowd: q.crowd });
+    if (q.steps) Object.assign(fb, { steps: q.steps, option_steps: q.option_steps, type_name: q.name, about: q.about, desmos: q.desmos,
+      diverge: !right && Number.isInteger(a) ? q.option_steps[a] : null, wrong_step: !right && Number.isInteger(a) ? q.wrong_steps[a] : null });
+    // a worked example files no attempt (T4): no mastery, habit, repair or crowd lines
+    if ($('#rich').checked && q.id !== 'w1' && !(meta && meta.example)) {
+      Object.assign(fb, {
+        budget_ms: 95000, fluency: right && meta && meta.ms < 95000 ? 'fluent' : null,
+        mastery: q.topic ? { topic: q.topic, before: 0.42, after: right ? 0.51 : 0.38 } : null,
+        crowd: { n: 212, first_rate: 0.58, top: { label: (q.reasons || []).find(Boolean) || 'left out the constant term', share: 0.41 },
+          options: q.type === 'spr' ? null : [0.18, 0.58, 0.17, 0.07] },
+        next_step: right ? 'Circles: 2 more first-try rights at Medium or Hard → Strong' : null,
+        then: right ? 'Sep 12 on this type: C, gave the diameter instead, 2:40 · today: right, 0:48' : null,
+        closed: right ? [{ label: 'gave the diameter instead', hits: 3, since: '2026-09-12', days: 6, questions: 5 }] : [],
+        opened: !right && fb.mistake ? [{ label: fb.mistake }] : [],
+        repair_next: !right, cause: !right ? { kind: 'trap', why: 'You picked an option that names a trap.' } : null,
+        habit: !right ? { name: 'answered a different quantity', tell: 'The question asks for one thing; the option gives another it passes through.', href: '/me/#habits' } : null,
+        formula: [{ text: 'C = 2πr', on_sheet: true, id: 'ref-circle' }, { text: '(x − h)² + (y − k)² = r²', on_sheet: false }],
+        twice: !right && meta && meta.try === 1, unmarked: right, rule_prompt: !right ? `Write your rule for ${q.name || 'this type'}` : null,
+        ...extra,
+      });
+    }
+    return fb;
+  }
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  const tries = new Map();
+
+  /* the fake server behind the history (every view) and, in the players, the inline twin and See one solved;
+     the playground's and the runner's twins go to the real /api/drill */
+  function fakeApi(drill) {
+    const twins = FX.filter(q => q.template === 'circle.convert');
+    let tw = 0, twQ = null;
+    const realApi = UI.api;
+    const nextTwin = () => { twQ = Object.assign(JSON.parse(JSON.stringify(twins[++tw % twins.length])), { id: `tw${tw}` }); return twQ; };
+    UI.api = async (path, o = {}) => {
+      const m = o.method || 'GET';
+      const mine = path.startsWith('/review/') || path.startsWith('/types/') || path === '/mistakes/add' || (path === '/saved' && m === 'PATCH') || (drill && path.startsWith('/drill'));
+      if (!mine) return realApi(path, o);
+      log('api', m, path, o.body || '');
+      await wait(140);
+      if (m === 'POST' && path === '/drill') return { id: `dv${tw + 1}`, question: nextTwin() };
+      if (m === 'GET' && /^\/drill\/dv\d+$/.test(path)) return { question: twQ };
+      if (/\/drill\/dv\d+\/answer$/.test(path)) return Object.assign(feedback(twQ, o.body.answer, o.body), { repair_next: !isRight(twQ, o.body.answer) });
+      if (/\/drill\/dv\d+\/next$/.test(path)) return { question: nextTwin() };
+      if (/\/drill\/dv\d+\/(more|finish)$/.test(path)) return { ok: true };
+      if (path.startsWith('/types/')) { const ex = Object.assign(JSON.parse(JSON.stringify(FX[4])), { id: 'ex', seed: 900003 }); return { question: ex, feedback: feedback(ex, null, { example: true }), trap_index: 2 }; }
+      if (path.startsWith('/review/family')) {
+        const p = new URLSearchParams(path.split('?')[1]);
+        const rows = Array.from({ length: p.get('cursor') ? 3 : 8 }, (_, i) => ({ id: 900 - i, at: `2026-09-${String(24 - i).padStart(2, '0')}T1${i}:05:00`, source: i % 2 ? 'practice' : 'section', sitting: i % 2 ? 'Practice set #45' : 'Section #7', href: '#',
+          tier: ['easy', 'medium', 'hard'][i % 3], result: ['wrong', 'right', 'repaired', 'mixed', 'right', 'repeat', 'wrong', 'right'][i % 8], given_label: 'C', mistake: i % 4 === 0 && i % 8 !== 4 ? 'gave the diameter instead' : '', norm: i % 4 === 0 ? 'n1' : 'n2',
+          ms: 40000 + i * 9000, flagged: i === 2, seed: i === 1 ? 1 : 10 + i, template: 'circle.convert', openable: true,
+          tries: i === 3 ? [{ given_label: 'C', correct: false, ms: 22000, reason: 'gave the diameter instead' }, { given_label: 'B', correct: true, ms: 41000 }] : null }))
+          .filter(r => !p.get('norm') || r.norm === p.get('norm'));
+        return { template: 'circle.convert', name: 'Diameter and radius', summary: { seen: p.get('norm') ? rows.length : 11, right: 5, mixed: 1, repaired: 1, repeats: 1, median_ms: 70000 },
+          trend: { first: ['wrong', 'wrong', 'right', 'right', 'right'], median_first: 130000, median_last: 58000, ready: 'Ready · back in your warm-up Oct 2' },
+          open: [{ trap_id: 7, label: 'gave the diameter instead', owed: 1, of: 2 }], verdict: { kind: 'same_trap', text: 'Same trap twice', start: { body: { source: 'learn', templates: ['circle.convert'] } } },
+          attempts: rows, next: p.get('cursor') ? null : 'c1' };
+      }
+      if (path.startsWith('/review/item')) return { question: FX[0], answer: FX[0].answer, reasons: FX[0].reasons, rationale: FX[0].rationale };
+      return { ok: true };
+    };
+  }
+
+  /* ---------------------------------------------------------------- the runner (UI.runner), on a fake server
+     ?view=runner&rmode=practice|retry|end|exam|training|challenge  [&minutes=6] [&n=10] [&endless=1]
+     Marks, notes, strikes, answers and the stopwatch go to a fake store in localStorage
+     (dev.run.<rmode>), so a reload restores them the way the server would. */
+  if (url.get('view') === 'runner') {
+    fakeApi(false);
+    const rmode = url.get('rmode') || 'practice';
+    const exam = rmode === 'exam' || rmode === 'training';
+    const KEYR = `dev.run.${rmode}`;
+    const store = (() => { try { return JSON.parse(localStorage.getItem(KEYR) || '{}'); } catch (_) { return {}; } })();
+    store.q = store.q || {};
+    const keep = () => { try { localStorage.setItem(KEYR, JSON.stringify(store)); } catch (_) {} };
+    const base = FX.filter(q => q.id !== 'w1');
+    const n = +(url.get('n') || (exam ? 12 : 10));
+    const TIERS = ['easy', 'medium', 'hard'];
+    const qAt = i => {
+      const b = base[i % base.length];
+      const q = JSON.parse(JSON.stringify(b));
+      q.id = `${exam ? 'm1q' : 'q'}${String(i + 1).padStart(2, '0')}`;
+      q.number = i + 1;
+      q.budget_ms = { easy: 65000, medium: 95000, hard: 126000 }[q.difficulty] || 95000;
+      if (!exam && i === 3) { q.repair = true; q.repair_of = 1; }
+      return q;
+    };
+    const saved = id => store.q[id] || (store.q[id] = {});
+    const itemAt = i => {
+      const q = qAt(i), s = saved(q.id);
+      const it = { q, marks: s.marks || [], note: s.note || '', saved: !!s.saved, scratch: s.scratch || null, attempts: i % 3 === 0 ? 2 : 0,
+        state: s.state || null, why: exam ? null : q.why || (i % 2 ? 'Your least-practised type in Circles' : 'A type you have never tried') };
+      if (s.fb) it.fb = s.fb;
+      return it;
+    };
+    const cells = Array.from({ length: n }, (_, i) => {
+      const q = qAt(i), s = saved(q.id);
+      const c = { tier: q.difficulty, level: i % 4 ? 3 + (i % 4) : null, topic: q.topic, topic_name: q.skill, budget_ms: q.budget_ms,
+        flag: !!s.flag, note: !!(s.note || (s.marks || []).some(m => m.note)), ms: s.ms || 0, conf: s.conf || null };
+      if (exam) c.status = s.answer !== undefined && s.answer !== null ? 'answered' : 'unanswered';
+      else c.status = s.fb ? (s.fb.correct ? 'correct' : 'incorrect') : s.skipped ? 'skipped' : (i <= Object.keys(store.q).length ? 'unanswered' : 'future');
+      return c;
+    });
+    if (!exam) { const served = cells.findIndex(c => c.status === 'future'); if (served === 0) cells[0].status = 'unanswered'; }
+    const minutes = +(url.get('minutes') || (exam ? 35 : rmode === 'challenge' ? 12 : 16));
+    const qs = UI.saveQueue(`dev-${rmode}`, async (item, stamps) => {
+      await wait(300);
+      if (url.get('fail') === '1') { const e = new Error('offline'); e.offline = true; throw e; }
+      log('queue sent', item.kind, item.qid, item.body, stamps);
+    }, { el: () => (run && run.timer && run.timer.left != null ? (minutes * 60 - run.timer.left) * 1000 : 0) });
+    let run = null;
+    const host = document.createElement('div');
+    document.body.append(host);
+    $('#main').hidden = true;
+    const on = {
+      load: async (i, how) => { await wait(120); log('load', i, how); return itemAt(i); },
+      check: async (i, a, meta) => {
+        log('check', i, a, meta);
+        await wait(180);
+        const q = qAt(i), s = saved(q.id);
+        if (meta.save) { s.answer = a; s.state = { selected: Number.isInteger(a) ? a : null, value: typeof a === 'string' ? a : '', saved: a }; keep(); return true; }
+        if (rmode === 'retry') {
+          s.tries = (s.tries || 0) + 1;
+          if (!isRight(q, a) && s.tries < 3 && !meta.show) { keep(); return { correct: false, final: false, mistake: Number.isInteger(a) ? q.reasons[a] : null, tries_left: 3 - s.tries }; }
+        }
+        const fb = feedback(q, meta.show ? null : a, meta, rmode === 'retry' ? { try: s.tries } : {});
+        s.fb = fb; keep();
+        // G9: the next question comes back with the verdict and is rendered before Next
+        if (i + 1 < n && run) run.preload(i + 1, itemAt(i + 1));
+        return fb;
+      },
+      select: (i, a, meta) => { const q = qAt(i), s = saved(q.id); s.answer = a; s.state = { selected: Number.isInteger(a) ? a : null, value: typeof a === 'string' ? a : '' }; keep(); if (exam) qs.answer(q.id, a, meta.made_left); log('select', i, a, meta); },
+      time: (i, ms, why) => { const s = saved(qAt(i).id); s.ms = (s.ms || 0) + ms; keep(); log('time', i, ms, why); },
+      strike: (i, k, v, by, struck) => { const s = saved(qAt(i).id); s.state = Object.assign({}, s.state, { struck }); keep(); log('strike', i, k, v, by); },
+      mark: async (i, v) => { await wait(120); saved(qAt(i).id).flag = v; keep(); log('mark', i, v); },
+      save: async (i, v) => { await wait(120); saved(qAt(i).id).saved = v; keep(); log('save', i, v); },
+      note: async (i, t) => { await wait(120); saved(qAt(i).id).note = t; keep(); log('note', i, t); },
+      marks: (i, m) => { saved(qAt(i).id).marks = m; keep(); log('marks', i, m); },
+      conf: (i, v) => { saved(qAt(i).id).conf = v; keep(); log('conf', i, v); },
+      scratch: (i, d) => { saved(qAt(i).id).scratch = d; keep(); log('scratch', i, JSON.stringify(d).length + ' bytes'); },
+      state: (i, p) => { if (exam) qs.state(qAt(i).id, p); log('state', i, p); },
+      skip: (i, meta) => { saved(qAt(i).id).skipped = true; keep(); log('skip', i, meta); },
+      exit: how => { log('exit', how); UI.toast && UI.toast(`Exit: ${how}`); },
+      finish: how => {
+        log('finish', how);
+        if (!exam) { UI.toast && UI.toast('Finished: the page would show the summary'); return; }
+        // the test window's #between (X11): Test-day counts down, Training waits for Begin
+        const t = run.cells;
+        const box = document.createElement('div');
+        UI.between(box, { conditions: rmode === 'training' ? 'training' : 'test_day', seconds: +(url.get('between') || 60), cells: t,
+          labels: i => (qAt(i).skill || '').split(' ').slice(0, 2).join(' '),
+          stats: { answered: t.filter(c => c.status === 'answered').length, of: t.length, marked: t.filter(c => c.flag).length, used_s: minutes * 60 - (run.timer.left || 0), away_s: 0 },
+          next: 'Module 2 · 22 questions · 35:00 · calculator and reference sheet on every question',
+          onPredict: l => log('predict', l), onBegin: b => { log('begin module 2', b); UI.toast && UI.toast(`Module 2 would begin (${b.auto ? 'by itself' : 'pressed'})`); },
+          onExit: () => log('exit from between') });
+        run.screen(box, []);
+      },
+      pause: async () => { await wait(100); log('pause'); },
+      resume: async () => { await wait(100); log('resume'); },
+      timeUp: () => { log('time up'); run.screen(Object.assign(document.createElement('div'), { className: 'rn-paused', innerHTML: '<p class="k">Time’s up</p><p>Every answer you gave is saved.</p>' })); },
+      twins: l => log('twins of', l), fix: (label, l) => log('fix', label, l),
+      pref: (k, v) => log('pref', k, v), away: a => log('away', a), nudge: x => log('nudge', x), view: (v, i) => log('view', v, i),
+      discard: () => log('discard'), show: i => log('show', i),
+    };
+    const o = {
+      mode: exam ? 'exam' : 'practice', feedback: ['retry', 'end'].includes(rmode) ? rmode : 'instant', sid: `dev-${rmode}`,
+      title: exam ? 'Math · Module 1 of 2' : rmode === 'challenge' ? 'Daily challenge' : 'Circles + 3', short: 'M1',
+      cells, total: url.get('endless') === '1' ? null : n, clock: rmode === 'challenge' || exam || url.get('timed') === '1' ? { secondsLeft: minutes * 60 } : { elapsed: 0 },
+      pausable: rmode === 'practice' && url.get('timed') === '1', challenge: rmode === 'challenge', conditions: exam ? (rmode === 'training' ? 'training' : 'test_day') : null,
+      confidence: rmode === 'training', pace: rmode === 'training' ? { budget_s: cells.map(c => c.budget_ms / 1000), reserve_s: 180, duration_s: minutes * 60 } : null,
+      items: exam ? cells.map((_, i) => itemAt(i)) : null, who: exam ? 'Ana' : null, queue: exam ? qs : null,
+      prefs: { confidence: 'ask', calc_mode: 'closed' }, confActive: false,
+      workspace: { formNudge: true, onHint: async () => { await wait(150); return { rung: 1, kind: 'step', step: 'Start from what the question gives you.' }; }, coverTool: !exam },
+      actions: exam ? null : { axes: ['easier', 'grid'], body: { topics: ['circles'], source: 'twin' }, more: async (axis) => log('twin /more', axis),
+        on: { save: async v => log('save (verdict)', v), note: () => {}, history: () => log('history'), report: () => log('report') } },
+      guardLeave: exam && url.get('guard') === '1', mainId: 'rnMain', on,
+    };
+    run = UI.runner(host, o);
+    window.devRun = run;
+    window.devQueue = qs;
+    const rt = UI.workspaceSelfTest();
+    if (!rt.ok) console.error('self-test', rt);
+    return;
+  }
+
+  /* ---------------------------------------------------------------- the review player (UI.review, UI.history), on a fake server
+     ?view=review&rmode=dialog|pane|second|walk|pair|history  [&n=12]  (#q=m1-7 opens the dialog there)
+     The twin, Again exactly, See one solved and the history go through UI.api, answered here. */
+  if (url.get('view') === 'review') {
+    const rmode = url.get('rmode') || 'dialog';
+    const base = FX.filter(q => q.id !== 'w1');
+    const n = +(url.get('n') || (rmode === 'pane' ? 8 : 12));
+    const PAT = ['incorrect', 'correct', 'unanswered', 'incorrect', 'correct', 'correct', 'incorrect', 'mixed', 'correct', 'incorrect', 'correct', 'fixed'];
+    const DIAG = [{ id: 'n1', text: 'Gave the diameter instead of the radius' }, { id: 'n2', text: 'Doubled when the value should have been halved' }, { id: 'misread', text: 'Misread the question' }, { id: 'slip', text: 'A slip: I knew how' }, { id: 'gap', text: 'Didn’t know how to start' }];
+    const qOf = (i, id) => { const q = JSON.parse(JSON.stringify(base[i % base.length])); q.id = id || `r${i + 1}`; q.number = i + 1; q.level = 3 + (i % 4); return q; };
+    const wrongOf = q => q.type === 'spr' ? '5/4' : (keyOf(q) + 1) % q.choices.length;
+    const make = i => {
+      const q = qOf(i);
+      const status = PAT[i % PAT.length];
+      const miss = status !== 'correct';
+      const given = status === 'correct' || status === 'mixed' ? keyOf(q) : status === 'unanswered' ? null : wrongOf(q);
+      const ms = 38000 + (i * 7919) % 120000;
+      const fb = feedback(q, given, { ms, try: 1 });
+      if (status === 'mixed') fb.correct = false;
+      if (i === 4) fb.saved_note = { text: 'halve the diameter before anything else', at: '2026-09-20' };
+      if (q.type !== 'spr' && miss) fb.crowd = Object.assign({}, fb.crowd, { option_share: q.choices.map((_, j) => (j === keyOf(q) ? null : [0.5, 0.3, 0.2][j % 3])) });
+      if (q.type === 'spr' && miss && given) fb.diagnosis = { kind: 'ten', text: 'Off by a factor of 2: check which part of the circle the question asks for.' };
+      return {
+        q, fb, n: n > 22 ? (i % 22) + 1 : i + 1, module: n > 22 ? (i < 22 ? 1 : 2) : 1, status, flag: i % 5 === 0, ms, budget_ms: { easy: 65000, medium: 95000, hard: 126000 }[q.difficulty] || 95000,
+        worth: miss ? 8 + (i % 6) * 2 : 0, saved: i === 4, reported: i === 6 ? 'checking' : null, changed: i === 3 ? [1, wrongOf(q)] : null,
+        cause: miss && given !== null ? { cause: i % 4 === 3 ? 'slip' : 'trap', auto: true, evidence: ['0:18 on it', '4 of your last 5 on this type right'] } : status === 'unanswered' ? { cause: 'clock', auto: true } : null,
+        odds: { you: miss ? 0.82 : 0.64, at: 'sitting', avg: 0.61 }, crowd: i % 2 ? { n: 212, rate: 0.74, median_ms_right: 65000, level: 4 } : { n: 6, level: 4, rough: true },
+        mistake: miss ? (status === 'fixed' ? { status: 'fixed', fixed_at: '2026-09-24', label: fb.mistake } : { status: i === 6 ? 'stuck' : i % 4 ? 'open' : 'half', owed: i % 4 ? 2 : 1, of: 2, hits: 3, label: fb.mistake || 'a named mistake', trap_id: 500 + i }) : null,
+        marks: i === 0 ? [{ addr: 's', start: 2, end: 8, style: 'given', note: 'the circle is the whole shape' }, { addr: 's', start: 30, end: 36, style: 'ask' }] : null,
+        tries: status === 'mixed' ? [{ given_label: 'A', correct: false, reason: 'halved when the value should have been doubled', ms: 22000 }, { given_label: 'B', correct: true, ms: 41000, hints: 1 }] : null,
+        path: q.type === 'spr' ? { ms, budget_ms: 95000, conf: miss ? 'sure' : null } : { struck: miss ? [(keyOf(q) + 2) % 4] : [], trail: i === 3 ? [1, wrongOf(q)] : null, first: i === 3 ? { correct: true, given: 1 } : null, ms, budget_ms: 95000, conf: i === 0 ? 'sure' : null },
+        family: i % 6 === 5 ? { seen: 0 } : { seen: 6, right: 3, repaired: 1, recent: [{ result: 'wrong', ms: 100000, at: '2026-09-12' }, { result: 'wrong', ms: 84000, at: '2026-09-14' }, { result: 'right', ms: 71000, at: '2026-09-18' }, { result: 'repaired', ms: 60000, at: '2026-09-20' }, { result: miss ? 'wrong' : 'right', ms, at: '2026-09-23', current: true }, { result: 'right', ms: 52000, at: '2026-09-24' }], line: '1:40 → 0:52 · 3 right in a row since', verdict: miss ? 'Recovered Sep 26' : null },
+        elsewhere: miss && i % 2 === 0 ? [{ skill: 'Circle measures' }, { skill: 'Arc length' }, { skill: 'Sector area' }] : null,
+        sitting: { label: 'Section #7 · Sep 23', href: '#' }, session: 'dev-sitting', tell: 'Reread the last line: is this the final quantity?', norm: 'n1', attempt_id: 100 + i, seen: false,
+        new: rmode === 'pane' && i === 0, diag_choices: DIAG, try: rmode === 'walk' && i !== 1, blank: status === 'unanswered',
+        story: rmode === 'pane' && miss ? [{ at: '2026-09-12', event: 'miss', source: 'Section #7 · Q14', label: 'picked C · Wrong (trap)', attempt: 1 }, { at: '2026-09-12', event: 'pip', source: 'Repair ↻', label: 'new numbers' }, { at: '2026-09-14', event: 'fixed', source: 'Practice', label: 'clean · Fixed' }, { at: '2026-09-17', event: 'check_ok', source: 'Check-in 1', label: '✓' }, { at: '2026-09-24', event: 'due', source: 'Check-in 2', label: 'due' }] : null,
+        summary: rmode === 'pane' && miss ? { days_to_fix: 2, answers: 3, held_days: 10 } : null,
+        strip: rmode === 'pane' && miss ? { status: 'incorrect', owed: i % 4 ? 2 : 1, of: 2, label: 'open' } : null,
+        details: { you: '1 of 4 right', cb: '06469-DC', ratings: 'your Circles rating 1180 against this type’s 1020' },
+        links: { fresh: `${location.origin}/q/?t=${q.template}`, exact: `${location.origin}/practice/session/?q=${q.template}:${q.seed}` },
+      };
+    };
+    let items = Array.from({ length: n }, (_, i) => make(i));
+    if (rmode === 'second' || rmode === 'walk') items = items.filter(x => x.status !== 'correct' && x.status !== 'fixed');
+    if (rmode === 'second') items.forEach(x => { x.fb = { given: x.fb.given }; });          // held back: no key, no reasons
+    fakeApi(true);
+    const on = {
+      seen: it => log('seen', it.q.id), reanswer: (it, a, right) => log('reanswer', it.q.id, a, right), show: (i, it) => log('show', i, it.q && it.q.id),
+      why: async (it, b) => { log('why', it.q.id, b); await wait(150); return { called: b.diag === it.norm, label: it.fb.mistake || 'gave the diameter instead', cause: b.kind || null }; },
+      rule: async (it, t) => { log('rule', t); await wait(120); }, save: async (it, v) => { log('save', it.q.id, v); await wait(120); }, mark: async (it, v) => { log('mark', it.q.id, v); await wait(120); },
+      second: async (it, a, m) => { log('second', it.q.id, a, m); await wait(200); const f = feedback(it.q, a, m); return f; },
+      walkAnswer: async (it, a, m) => { log('walk try', it.q.id, a); await wait(150); return feedback(it.q, a, m); },
+      seenSecond: null, at: (i, s, d) => log('at', i, s, d), story: async () => { await wait(100); return make(1); },
+      related: it => log('related', it.q.id), spot: it => log('spot', it.q.id), share: it => log('share', it.q.id), help: it => log('help', it.q.id),
+      addRedo: it => log('add to redo', it.q.id), dismiss: it => log('dismiss', it.q.id), twins: l => log('twins of', l.length), learn: l => log('learn', l.length),
+      closed: (it, f) => log('closed trap', it.q.id, f.closed), done: s => log('done', s), close: (i, x) => { log('player closed at', i, x); },
+      startSecond: () => log('start second look'), showNow: it => Object.assign({}, make(it.n - 1), { seen: true }),
+    };
+    if (rmode === 'pane') delete on.reanswer;                      // the pane files a hidden re-answer itself, through the fake /drill
+    if (rmode === 'second') on.seen = async it => { log('seen (just show me)', it.q.id); await wait(100); return make(it.n - 1); };
+    $('#main').hidden = true;
+    const page = document.createElement('main');
+    page.className = 'dev';
+    page.id = 'rvPage';
+    page.innerHTML = `<div class="dev-h"><h1 class="h1">Review player · ${rmode}</h1><span class="dev-self" id="self"></span><a class="quiet" href="?">← Workspace</a></div>
+      <div class="dev-tools" id="rvCells" role="group" aria-label="Open at"></div>
+      <div class="dev-tools" style="margin-top:10px"><label class="meta">Filter <select id="rvFilter" class="field sm" style="width: auto"><option value="all">All</option><option value="miss">Incorrect + unanswered</option></select></label>
+      <button type="button" class="btn sm" id="rvOpen">Open the player</button><button type="button" class="btn sm" id="rvHist">Attempt history</button><button type="button" class="quiet" id="rvClear">Clear log</button></div>
+      <div class="dev-main"><div class="dev-q" id="rvHost"></div><aside class="dev-side"><pre class="dev-log" id="rvLog" aria-live="off"></pre></aside></div>`;
+    document.body.append(page);
+    $('#log').id = 'logOld';
+    $('#rvLog').id = 'log';
+    $('#rvClear').addEventListener('click', () => { $('#log').textContent = ''; });
+    const filt = () => ($('#rvFilter').value === 'miss' ? { filter: (it) => it.status === 'incorrect' || it.status === 'unanswered', filterLabel: 'incorrect or blank' } : {});
+    let player = null;
+    const open = at => {
+      if (player && rmode !== 'pane') player.destroy();
+      if (rmode === 'pair') {
+        const pairs = items.slice(0, 8).map((x, i) => ({ then: x, now: make(i + 1), change: ['fixed', 'slipped', 'still_missing', 'held'][i % 4] }));
+        player = UI.review(null, pairs, { mode: 'pair', at, on });
+      } else player = UI.review(rmode === 'pane' ? $('#rvHost') : null, items, Object.assign({ mode: rmode, at, on, session: 'dev-sitting', title: rmode === 'dialog' ? 'Section #7 · Sep 23' : null,
+        axes: ['easier', 'harder', 'grid'], owner: true }, filt()));
+      window.devPlayer = player;
+      return player;
+    };
+    items.forEach((x, i) => {
+      const b = UI.cell ? UI.cell(x.status, x.n, { flag: x.flag || null, onClick: () => open(i) }) : Object.assign(document.createElement('button'), { textContent: x.n, onclick: () => open(i) });
+      $('#rvCells').append(b);
+    });
+    $('#rvOpen').addEventListener('click', () => open(0));
+    $('#rvFilter').addEventListener('change', () => { if (player && player.setFilter) { const f = filt(); player.setFilter(f.filter, f.filterLabel); } });
+    $('#rvHist').addEventListener('click', e => UI.history({ template: 'circle.convert', skill: 'Diameter and radius', seed: 1, norm: 'n1' }));
+    window.devItems = items;
+    const rt = UI.workspaceSelfTest();
+    $('#self').textContent = rt.ok ? 'self-test: ok' : `self-test failed: ${JSON.stringify(rt)}`;
+    if (rmode === 'history') UI.history({ template: 'circle.convert', skill: 'Diameter and radius', seed: 1, norm: 'n1' });
+    else if (rmode === 'pane') open(0);
+    else { const h0 = UI.review.at(items); open(h0 >= 0 ? h0 : 0); }
+    return;
+  }
+
+  /* ---------------------------------------------------------------- the playground */
+  fakeApi(false);
+  let ws = null;
+  const stateKey = () => `dev.ws.state.${$('#fx').value}.${$('#mode').value}`;
+  function mount() {
+    keepCtl();
+    const q = JSON.parse(JSON.stringify(FX[+$('#fx').value]));
+    const [mode, fbMode] = $('#mode').value.split(':');
+    const hidden = fbMode === 'hidden';
+    tries.set(q.id, 0);
+    let state = null;
+    if ($('#keep').checked) { try { state = JSON.parse(localStorage.getItem(stateKey()) || 'null'); } catch (_) {} }
+    const prefs = { first_tap: $('#firstTap').checked, option_reasons: $('#reasons').checked, open_explanations: $('#openX').checked, confidence: $('#conf').value };
+    const reviewFb = mode === 'review' ? feedback(q, q.type === 'spr' ? '5/4' : (keyOf(q) + 1) % q.choices.length, { ms: 72000, conf: null, try: 1 })
+      : mode === 'example' ? Object.assign(feedback(q, null, { example: true }), { correct: null, given: null }) : null;
+    const opts = {
+      mode, feedback: fbMode && fbMode !== 'hidden' ? fbMode : 'instant', prefs, confActive: $('#active').checked, state,
+      fb: reviewFb, hidden, toolbar: $('#toolbar').checked, pad: $('#pad').checked || undefined, formNudge: true,
+      head: q.head, coverTool: mode === 'practice' || mode === 'inline' || mode === 'exam',
+      onCheck: async (a, meta) => {
+        log('onCheck', { answer: a, ...meta });
+        await wait(250);
+        if (meta.save) return true;
+        if (fbMode === 'retry') {
+          const n = tries.get(q.id) + 1; tries.set(q.id, n);
+          if (!isRight(q, a) && n < 3 && !meta.show) return { correct: false, final: false, mistake: Number.isInteger(a) ? q.reasons[a] : null, tries_left: 3 - n };
+          return feedback(q, meta.show ? null : a, meta, { try: n });
+        }
+        return feedback(q, a, meta);
+      },
+      onShowAnswer: async () => { log('onShowAnswer'); return feedback(q, null, { ms: ws.elapsed() }, { shown: true }); },
+      onSelect: a => log('onSelect', a), onEnter: () => log('onEnter (exam: next question)'),
+      onStrike: (i, on, by) => log('onStrike', { i, on, by }), onSkip: (id, m) => log('onSkip', id, m),
+      onHint: $('#hints').checked ? async () => {
+        await wait(200);
+        const n = ws.state().hints;
+        const key = keyOf(q);
+        if (n === 0 && q.type !== 'spr') { const c = q.reasons.findIndex((r, i) => r && i !== key); return { rung: 1, kind: 'strike', choice: c, reason: q.reasons[c] }; }
+        if (n <= 1 && q.steps) return { rung: 2, kind: 'step', step: q.steps[0] };
+        return { rung: 3, kind: 'example', example: { question: Object.assign({}, FX[0], { id: 'ex' }), feedback: feedback(FX[0], null, { example: true }) } };
+      } : null,
+      onOwn: async own => {
+        log('onOwn', own); await wait(200);
+        const i = q.choices.findIndex(c => UI.spr.parse(String(c).replace(/,/g, '')).ok && Math.abs(UI.spr.parse(String(c).replace(/,/g, '')).value - UI.spr.parse(own).value) < 1e-9);
+        if (i < 0) return { cover: 'none' };
+        return Object.assign(feedback(q, i, { ms: ws.elapsed() }), { cover: i === keyOf(q) ? 'key' : 'distractor' });
+      },
+      onCover: x => log('onCover', x), onCause: k => log('onCause', k), onTrap: async i => { log('onTrap', i); await wait(150); },
+      onLadder: () => log('onLadder'), onKeepMarked: on => log('onKeepMarked', on), onRule: async (a, t) => { log('onRule', a, t); await wait(150); },
+      onReanswer: (a, right) => log('onReanswer', a, right), onDone: () => log('onDone: your turn'),
+      onNext: mode === 'inline' || mode === 'quiz' ? () => { log('onNext'); mount(); } : null,
+      onReveal: fb => log('onReveal', { correct: fb.correct, given: fb.given }),
+      onChange: s => { if ($('#keep').checked) { try { localStorage.setItem(stateKey(), JSON.stringify({ selected: s.selected, value: s.value, struck: s.struck, eliminate: s.eliminate, hints: s.hints, own: s.own })); } catch (_) {} } },
+      actions: {
+        session: 'dev', surface: mode === 'review' ? 'player' : mode === 'inline' ? 'inline' : 'runner', axes: ['easier', 'harder', 'grid', 'ask'], siblings: { harder: 'another Circles type (arc length)' },
+        more: async (axis, n) => log('twin /more', { axis, n }),
+        on: { save: async v => log('save', v), mark: async v => log('mark', v), note: () => log('note'), history: () => log('history'), again: () => log('again, exactly'), report: () => log('report') },
+      },
+    };
+    if (ws) ws.destroy();
+    ws = UI.workspace($('#q'), q, opts);
+    log(`mounted ${q.id} in ${$('#mode').value}`);
+  }
+  window.devWs = () => ws;
+
+  // the runner's key map, in small: the page passes keys to ws.key first (2.8)
+  document.addEventListener('keydown', e => {
+    if (!ws || e.defaultPrevented || document.querySelector('dialog[open]')) return;
+    if (ws.key(e)) { e.preventDefault(); return; }
+    if (e.key === 'g' || e.key === 'G') { if (!e.target.closest('input, textarea')) { UI.calc.toggle(); e.preventDefault(); } }
+  });
+
+  ['fx', 'mode', 'conf', 'outcome', 'firstTap', 'reasons', 'openX', 'active', 'toolbar', 'pad', 'hints', 'rich'].forEach(id => $('#' + id).addEventListener('change', () => mount()));
+  $('#keep').addEventListener('change', keepCtl);
+  $('#nodesmos').addEventListener('change', () => { keepCtl(); location.reload(); });
+  $('#reset').addEventListener('click', () => { try { localStorage.removeItem(stateKey()); } catch (_) {} mount(); });
+  $('#hide').addEventListener('click', () => { if (ws) { ws.setHidden(!ws.hidden); log('hidden', ws.hidden); } });
+  $('#dock').addEventListener('click', () => { const d = $('#dockHost'); d.style.display = 'block'; UI.calc.dock(d); UI.calc.open({ mode: 'dock' }); });
+  $('#clear').addEventListener('click', () => { $('#log').textContent = ''; });
+
+  /* ---------------------------------------------------------------- the gallery: one miss, every surface */
+  function card(title, q, opts) {
+    const c = document.createElement('div');
+    c.className = 'dev-card';
+    const k = document.createElement('p'); k.className = 'k'; k.textContent = title;
+    const host = document.createElement('div');
+    c.append(k, host);
+    $('#gallery').append(c);
+    UI.workspace(host, q, Object.assign({ prefs: { confidence: 'ask' }, toolbar: false }, opts));
+    return c;
+  }
+  // the twin body: F5's {templates:[t]} once it lands; until then this server takes topics
+  const actions = { session: 'dev', axes: ['easier', 'grid'], body: { topics: [FX[0].topic], source: 'twin' }, on: { save: async () => {}, mark: async () => {}, note: () => {}, history: () => {}, again: () => {}, report: () => {} } };
+  const mcq = FX[0], grid = FX.find(q => q.type === 'spr');
+  const miss = feedback(mcq, 2, { ms: 72000, try: 1 });
+  // G4 check 1: one ctx, four modes, one row (the row depends on ctx, never on the workspace mode)
+  const one = Object.assign({ surface: 'player' }, actions);
+  card('Practice · a miss (instant)', mcq, { mode: 'practice', fb: miss, actions: one });
+  card('Review · the same miss', mcq, { mode: 'review', fb: miss, actions: one });
+  card('Inline · the same miss', mcq, { mode: 'inline', fb: miss, actions: one });
+  card('Pane · the same miss', mcq, { mode: 'review', fb: miss, actions: one });
+  card('Grid-in · a named miss', grid, { mode: 'practice', fb: feedback(grid, '5/4', { ms: 61000, try: 1 }), actions: Object.assign({ surface: 'runner' }, actions) });
+  card('Grid-in · right, with accepted forms', grid, { mode: 'practice', fb: feedback(grid, '.625', { ms: 41000, try: 1 }) });
+  card('Quiz · Words in Context, a miss', quiz, { mode: 'quiz', head: quiz.head, fb: feedback(quiz, 1, { ms: 12000 }) });
+  card('Worked example', mcq, { mode: 'example', fb: Object.assign(feedback(mcq, null, { example: true }), { correct: null, given: null }), onDone: () => log('your turn') });
+
+  // G4 check 1: the four cards above give one action row, label for label
+  const rows = [...$('#gallery').children].slice(0, 4).map(c => [...c.querySelectorAll('.q-actions button')].map(b => b.textContent.trim()).filter(Boolean).join(' | '));
+  const g4 = rows.every(x => x && x === rows[0]);
+  // G2 check 7 (R43): the key registry refuses a key bound twice in a scope, and one action on two keys across scopes
+  function keyCheck() {
+    if (!(UI.keys && UI.keys.register)) return 'keys: waiting for F2’s UI.keys';
+    const regs = [], run = () => {};
+    const throws = (scope, map) => { try { regs.push(UI.keys.register(scope, map)); return false; } catch (_) { return true; } };
+    const twice = !throws('runner', { T: { id: 'twin', does: 'Twin', run } }) && throws('runner', { T: { id: 'twin', does: 'Twin', run } });
+    const moved = !throws('player', { V: { id: 'details', does: 'Details', run } }) && throws('runner', { Q: { id: 'details', does: 'Details', run } });
+    const eOk = !throws('runner', { E: { id: 'eliminate', does: 'Eliminate mode', run } }) && !throws('player', { E: { id: 'again', does: 'Again, exactly', run } });
+    regs.forEach(x => { try { x && x.unregister && x.unregister(); } catch (_) {} });
+    return twice && moved && eOk ? 'keys: ok' : `keys failed: ${JSON.stringify({ twice, moved, eOk })}`;
+  }
+  const r = UI.workspaceSelfTest();
+  $('#self').textContent = [r.ok ? 'self-test: ok' : `self-test failed: ${JSON.stringify(r)}`, g4 ? 'G4 row: ok' : 'G4 row differs', keyCheck()].join(' · ');
+  if (!g4) console.error('G4 rows', rows);
+  mount();
+})();
+</script>
+</body>
+</html>
