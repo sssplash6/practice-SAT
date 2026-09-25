@@ -2089,9 +2089,9 @@ def shell_part(learner: str, tz: int = 0) -> dict | None:
     summary = today_summary(learner, tz)
     if not summary:
         return None
-    return {"id": summary["id"], "day": summary["day"], "done": summary["tasks_done"],
-            "total": summary["tasks_counted"], "minutes_left": summary["minutes_left"],
-            "next": summary["next"]["title"] if summary["next"] else None}
+    return {"plan": {"id": summary["id"], "day": summary["day"], "done": summary["tasks_done"],
+                     "total": summary["tasks_counted"], "minutes_left": summary["minutes_left"],
+                     "next": summary["next"]["title"] if summary["next"] else None}}
 
 
 def _ics_escape(value: str) -> str:

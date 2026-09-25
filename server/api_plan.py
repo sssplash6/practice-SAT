@@ -527,10 +527,17 @@ def links(pid: str, body: dict, x_learner: str | None = Header(default=None)) ->
     values = {"cal": row["cal_token"], "view": row["view_token"]}
     with db.atomic() as c:
         for key in body:
+            if values[key]:
+                c.execute("UPDATE links SET revoked=? WHERE token=? AND learner=? AND kind=?"
+                          " AND revoked IS NULL", (deps.now(), values[key], learner,
+                                                  "cal" if key == "cal" else "progress"))
             values[key] = secrets.token_urlsafe(16) if body[key] else None
+            if values[key]:
+                c.execute("INSERT INTO links(token,learner,kind,created) VALUES (?,?,?,?)",
+                          (values[key], learner, "cal" if key == "cal" else "progress", deps.now()))
             c.execute(f"UPDATE plans SET {'cal_token' if key == 'cal' else 'view_token'}=? WHERE id=?",
                       (values[key], pid))
-    return {"cal": f"/cal/{values['cal']}.ics" if values["cal"] else None,
+    return {"cal": f"/api/cal/{values['cal']}.ics" if values["cal"] else None,
             "view": f"/api/plan/shared/{values['view']}" if values["view"] else None,
             "cal_token": values["cal"], "view_token": values["view"]}
 
@@ -538,7 +545,10 @@ def links(pid: str, body: dict, x_learner: str | None = Header(default=None)) ->
 @router.get("/cal/{token}.ics")
 @router.get("/api/cal/{token}.ics")
 def token_ics(token: str) -> Response:
-    row = db.one("SELECT * FROM plans WHERE cal_token=?", token)
+    link = db.one("SELECT learner,revoked FROM links WHERE token=? AND kind='cal'", token)
+    if link and link["revoked"]:
+        raise HTTPException(404, "calendar link not found")
+    row = plan.active_row(link["learner"]) if link else db.one("SELECT * FROM plans WHERE cal_token=?", token)
     if not row:
         raise HTTPException(404, "calendar link not found")
     return Response(plan.calendar(row["learner"], row), media_type="text/calendar")
@@ -546,7 +556,10 @@ def token_ics(token: str) -> Response:
 
 @router.get("/api/plan/shared/{token}")
 def shared(token: str) -> dict:
-    row = db.one("SELECT * FROM plans WHERE view_token=?", token)
+    link = db.one("SELECT learner,revoked FROM links WHERE token=? AND kind='progress'", token)
+    if link and link["revoked"]:
+        raise HTTPException(404, "share link not found")
+    row = plan.active_row(link["learner"]) if link else db.one("SELECT * FROM plans WHERE view_token=?", token)
     if not row:
         raise HTTPException(404, "share link not found")
     out = plan.payload(row["learner"], row["tz"] or 0, row["id"], shared=True)

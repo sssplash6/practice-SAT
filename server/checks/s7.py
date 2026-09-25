@@ -111,7 +111,9 @@ def check_create_schedule(client: TestClient, learner: str, cfg: dict, exam: dt.
     call(client, "GET", f"/api/plan/day/{(exam + dt.timedelta(days=1)).isoformat()}", learner=learner, status=404)
     assert call(client, "GET", "/api/plan/progress", learner=learner)["coverage"]["math"]["counts"]
     assert plan.today_summary(learner, 0)["id"] == payload["active"]["id"]
-    assert plan.shell_part(learner, 0)["id"] == payload["active"]["id"]
+    assert plan.shell_part(learner, 0)["plan"]["id"] == payload["active"]["id"]
+    shell = call(client, "GET", "/api/shell", learner=learner)
+    assert shell["plan"]["id"] == payload["active"]["id"] and isinstance(shell.get("next", []), list)
     print("ok  create, final rehearsals and taper, budgets, days and Today helpers")
     return payload
 
@@ -148,13 +150,16 @@ def check_allocation_and_time(learner: str, cfg: dict, payload: dict) -> None:
 
 def check_tasks_days(client: TestClient, learner: str, payload: dict) -> None:
     pid = payload["active"]["id"]
-    day = payload["today"]["date"]
-    focus = next(t for t in payload["today"]["tasks"] if t["kind"] in ("focus", "map"))
+    practice_day = next(d for d in payload["days"] if d["date"] >= payload["today"]["date"]
+                        and any(t["kind"] in ("focus", "map") for t in d["tasks"]))
+    day = practice_day["date"]
+    focus = next(t for t in practice_day["tasks"] if t["kind"] in ("focus", "map"))
     call(client, "PATCH", f"/api/plan/{pid}/tasks/{focus['id']}",
          {"day": day, "status": "done", "minutes": 15, "where": "khan"}, learner)
     marked = call(client, "GET", f"/api/plan/day/{day}", learner=learner)
     assert next(t for t in marked["tasks"] if t["id"] == focus["id"])["status"] == "marked"
-    assert marked["minutes_done"] >= 15
+    if day == payload["today"]["date"]:
+        assert marked["minutes_done"] >= 15
     call(client, "PATCH", f"/api/plan/{pid}/tasks/{focus['id']}", {"day": day, "status": "todo"}, learner)
     restored = call(client, "GET", f"/api/plan/day/{day}", learner=learner)
     assert next(t for t in restored["tasks"] if t["id"] == focus["id"])["status"] == "todo"
@@ -165,7 +170,8 @@ def check_tasks_days(client: TestClient, learner: str, payload: dict) -> None:
     call(client, "PATCH", f"/api/plan/{pid}/tasks/{tid}", {"day": day, "status": "done"}, learner)
     done = call(client, "GET", f"/api/plan/day/{day}", learner=learner)
     assert next(t for t in done["tasks"] if t["id"] == tid)["status"] == "done"
-    assert done["minutes_done"] >= 30
+    if day == payload["today"]["date"]:
+        assert done["minutes_done"] >= 30
     call(client, "PATCH", f"/api/plan/{pid}/tasks/{tid}", {"day": day, "status": "todo"}, learner)
     call(client, "DELETE", f"/api/plan/{pid}/tasks/{tid}", learner=learner)
     assert all(t["id"] != tid for t in call(client, "GET", f"/api/plan/day/{day}", learner=learner)["tasks"])
@@ -199,6 +205,12 @@ def check_tasks_days(client: TestClient, learner: str, payload: dict) -> None:
     assert off["kind"] == "off"
     reset = call(client, "DELETE", f"/api/plan/{pid}/day/{day}", learner=learner)["days"][0]
     assert reset["kind"] in ("practice", "test")
+    before = call(client, "GET", f"/api/plan/day/{day}", learner=learner)
+    used = {topic for task in before["tasks"] for topic in task.get("topics", [])}
+    alternate = next(topic for topic in plan.TOPICS if topic not in used)
+    swapped = call(client, "PATCH", f"/api/plan/{pid}/tasks/{focus['id']}",
+                   {"day": day, "swap": [alternate]}, learner)["days"][0]
+    assert any(alternate in task.get("topics", []) for task in swapped["tasks"])
     print("ok  marks and Undo, own tasks, repeats, moves and day overrides")
 
 
@@ -221,13 +233,30 @@ def check_freeze_and_links(client: TestClient, learner: str, payload: dict) -> N
     assert any(d["status"] == "missed" for d in patched["days"] if d["date"] < today.isoformat()
                and d["kind"] in ("practice", "test"))
     feed = call(client, "GET", f"/api/plan/{pid}/ics", learner=learner)
+    active_feed = call(client, "GET", "/api/plan/ics", learner=learner)
+    def stable_ics(value):
+        return "\n".join(line for line in value.splitlines() if not line.startswith("DTSTAMP:"))
+    assert stable_ics(active_feed) == stable_ics(feed)
     assert "BEGIN:VCALENDAR" in feed and "BEGIN:VALARM" in feed
     assert "SUMMARY:SAT" in feed and "DTSTART;VALUE=DATE:" in feed
     links = call(client, "POST", f"/api/plan/{pid}/links", {"cal": True, "view": True}, learner)
-    assert call(client, "GET", links["cal"]) == feed
+    assert links["cal"].startswith("/api/cal/")
+    assert db.one("SELECT kind FROM links WHERE token=?", links["cal_token"])["kind"] == "cal"
+    assert db.one("SELECT kind FROM links WHERE token=?", links["view_token"])["kind"] == "progress"
+    assert stable_ics(call(client, "GET", links["cal"])) == stable_ics(feed)
     shared = call(client, "GET", links["view"])
     assert shared["days"] and shared["stats"] and learner not in json.dumps(shared)
     assert all("start" not in t for d in shared["days"] for t in d["tasks"])
+    outside_view, outside_cal = secrets.token_urlsafe(16), secrets.token_urlsafe(16)
+    for issued, kind in ((outside_view, "progress"), (outside_cal, "cal")):
+        db.run("INSERT INTO links(token,learner,kind,created) VALUES (?,?,?,?)",
+               issued, learner, kind, dt.datetime.now(dt.timezone.utc).isoformat())
+    assert stable_ics(call(client, "GET", f"/api/cal/{outside_cal}.ics")) == stable_ics(feed)
+    assert call(client, "GET", f"/api/plan/shared/{outside_view}")["active"]["id"] == pid
+    db.run("UPDATE links SET revoked=? WHERE token IN (?,?)",
+           dt.datetime.now(dt.timezone.utc).isoformat(), outside_view, outside_cal)
+    call(client, "GET", f"/api/cal/{outside_cal}.ics", status=404)
+    call(client, "GET", f"/api/plan/shared/{outside_view}", status=404)
     call(client, "POST", f"/api/plan/{pid}/links", {"cal": False, "view": False}, learner)
     call(client, "GET", links["cal"], status=404)
     call(client, "GET", links["view"], status=404)
@@ -428,6 +457,18 @@ def check_progress_and_records(client: TestClient, exam: dt.date) -> None:
     print("ok  progress evidence, registration, week shaping, snapshots and plan record")
 
 
+def check_me_mirror(client: TestClient) -> None:
+    learner = token()
+    exam = next_saturday(plan.today(), 7)
+    made = call(client, "POST", "/api/plan", base(exam, tests="none"), learner)
+    later = (exam + dt.timedelta(days=7)).isoformat()
+    call(client, "PUT", "/api/me", {"target": 720, "minutes": 60, "exam_date": later}, learner)
+    cfg = call(client, "GET", "/api/plan", learner=learner)["active"]["cfg"]
+    assert cfg["target"] == 720 and cfg["minutes"] == 60 and cfg["exam_date"] == later
+    assert made["active"]["id"] == plan.active_row(learner)["id"]
+    print("ok  Me goal edits mirror into the active plan")
+
+
 def check(client: TestClient) -> None:
     plan._selfcheck()
     exam = next_saturday(plan.today())
@@ -440,6 +481,7 @@ def check(client: TestClient) -> None:
     check_focus_proof(client, exam)
     check_checkpoints_and_verdicts(client, exam)
     check_progress_and_records(client, exam)
+    check_me_mirror(client)
     print("S7 plan checks passed")
 
 
