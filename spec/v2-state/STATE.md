@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-25T19:16:05+05:00
+# v2 build state -- 2026-09-25T19:21:37+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -62,6 +62,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 ## Worktrees
 
+- `/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/bs` on `detached 14cf283`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/bank-supply` on `v2/bank-supply`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/habits` on `v2/habits`: 0 uncommitted
@@ -69,6 +70,12 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `/Users/workingmyassof/satbank/.claude/worktrees/s8-server` on `v2/s8-server`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/s9-server` on `v2/s9-server`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_fb0187b6-e7f-1` on `v2/s4`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_fb0187b6-e7f-2` on `v2/s5`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_fb0187b6-e7f-3` on `v2/s3`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_fb0187b6-e7f-4` on `v2/s6`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_fb0187b6-e7f-5` on `v2/s10`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_fb0187b6-e7f-6` on `v2/s1`: 0 uncommitted
 
 ## Workflow runs
 
@@ -121,6 +128,9 @@ Unfinished when saved: build F1 4/5
 
 ### wf_f6283862-332: 36 finished, 6 unfinished
 Unfinished when saved: fix 1: plan, fix 1: right_triangles_and_trigonometry, fix 1: tests, fix 2: shell-me, recheck 2: nonlinear_equations_and_systems, recheck 2: two_variable_data
+
+### wf_fb0187b6-e7f: 0 finished, 6 unfinished
+Unfinished when saved: build S1 1/5, build S10 1/5, build S3 1/5, build S4 1/5, build S5 1/5, build S6 1/5
 
 ### wf_fbdd8d24-a54: 20 finished, 0 unfinished
 

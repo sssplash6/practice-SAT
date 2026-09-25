@@ -166,6 +166,38 @@ fact popovers on UI.has('levers') and link the flame to /me/#activity until then
 seeded learner and the Up next block, rail play button and G N work; the welcome-back sheet shows once a day; offline pages load from
 the service worker; server/checks/f2.py passes; test_flow prints "all good".`,
   },
+  // Server halves built by the user's other agent (spec/v2-state/HELPER-TASKS.md); run each with from: 'verify'.
+  S9S: {
+    title: 'S9S · Words server', port: 8029,
+    spec: `spec/v2-state/HELPER-TASKS.md Task 1; the Words spec in spec/rebuild-v2.md Part 3.8 (lines 9134-10029) server items and
+spec/v2-upgrades/words.md W1-W22 server parts; S8's two Words contracts (words.sprint_items, words.record_contest_miss).`,
+    owns: 'server/words.py, server/api_words.py, server/checks/s9.py, server/words_index.json, tools/build_words.py',
+    units: [],
+    accept: `server/checks/s9.py covers and passes every Words server acceptance item (W7: no run of self-graded Know lifts a word
+above box 3; per-sense slugs keep separate state; only reviewed frames are served unless SATF_WORDS_UNREVIEWED=1); the helpers
+today_summary, minutes_today, me_stats, of_reason, sprint_items and record_contest_miss exist; test_flow prints "all good".`,
+  },
+  S7S: {
+    title: 'S7S · Plan server', port: 8027,
+    spec: `spec/v2-state/HELPER-TASKS.md Task 2; the Plan spec in spec/rebuild-v2.md Part 3.6 (lines 7046-8096) server items, R13, R14,
+R15, R18(b), the S7 contract row of §2.9, and spec/v2-upgrades/plan.md server parts.`,
+    owns: 'server/plan.py, server/api_plan.py, server/checks/s7.py',
+    units: [],
+    accept: `server/checks/s7.py covers and passes every Plan server acceptance item (as amended by §2.13 and plan.md): plan generation,
+PATCH tasks with done / skipped / todo / move / swap, plan.mirror both ways, plan.today_summary, the .ics download and token feed,
+the shared view; test_flow prints "all good".`,
+  },
+  S8S: {
+    title: 'S8S · Compete server', port: 8028,
+    spec: `spec/v2-state/HELPER-TASKS.md Task 3; the Compete spec in spec/rebuild-v2.md Part 3.7 (lines 8097-9133) server items, R3, R12,
+R25, R28, the S8 contract row of §2.9, §2.10's write-path hooks, and spec/v2-upgrades/compete.md server parts (C1-C27). Contracts owned
+by S4, S5 and S1 are PENDING by design until those sections merge; that is not a defect.`,
+    owns: 'server/compete.py, server/challenge.py, server/api_compete.py, server/checks/s8.py',
+    units: [],
+    accept: `server/checks/s8.py passes with only other sections' contracts PENDING (s8.py --supply and --traps included, now that the
+bank supply and habits.py are merged): twin daily challenges with no whole-question collisions, invite-code private contests, boards
+with R12's names, ratings, rank snapshots; test_flow prints "all good".`,
+  },
   // ---- wave 2: the sections (built on the merged foundations F0-F6). Server halves the user's other agent builds
   // (S7, S8, S9 servers) are not here; their pages-only tasks are added when those servers merge.
   ...section('S1', 'Account, Me, Settings, Help', 8021, `Part 3.1 §1, §3, §4, §5, §6, §8 and §9 (lines 653-2294; §2, §7 and
