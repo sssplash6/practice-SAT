@@ -228,7 +228,8 @@ def solve_standard(rng: random.Random, seed: int, *, a1=None, b1=None, c1=None,
             grid = {"x_only": Mis("reported x on its own instead of the expression "
                                   "asked for", x0), **pool}
         return Item("sys.solve_standard", "solving a system", difficulty, seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, params=P)
+                    "spr", keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_pool(keyx, grid, drop))
     fmt_value = opt_dec if value_style == "dec" else None
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, fmt_value=fmt_value)
     return Item("sys.solve_standard", "solving a system", difficulty, seed, stem,
@@ -394,7 +395,7 @@ def solve_substitution(rng: random.Random, seed: int, *, e1=None, e2=None, ask=N
                                     "as the answer", pool["const_ask"].value)
         return Item("sys.solve_substitution", "solving a system by substitution",
                     difficulty, seed, stem, "spr", keyx, keyx.gridin(), rationale,
-                    params=P)
+                    params=P, spr_mistakes=gridin_pool(keyx, grid, drop))
     fmt_value = opt_dec if value_style == "dec" else None
     ch, tex, why, letter = choices(keyx, pick(pool, wrongs), rng, fmt_value=fmt_value)
     return Item("sys.solve_substitution", "solving a system by substitution",

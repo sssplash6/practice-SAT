@@ -70,7 +70,8 @@ def infinite_constant(rng: random.Random, seed: int, *, a=None, b=None, c=None,
         if not griddable(key):
             raise ItemError("this answer could not be entered in the grid")
         return Item("sys.infinite_constant", "infinitely many solutions", "easy", seed,
-                    stem, "spr", keyx, keyx.gridin(), rationale, params=P)
+                    stem, "spr", keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_pool(keyx, pool))
     ch, tex, why, letter_ = choices(keyx, pick(pool, wrongs), rng)
     return Item("sys.infinite_constant", "infinitely many solutions", "easy", seed,
                 stem, "mcq", keyx, letter_, rationale, ch, why, tex, params=P)
@@ -231,7 +232,8 @@ def no_solution_slope(rng: random.Random, seed: int, *, m=None, b1=None, b2=None
         if not griddable(key):
             raise ItemError("this answer could not be entered in the grid")
         return Item("sys.no_solution_slope", "no solution", "hard", seed, stem, "spr",
-                    keyx, keyx.gridin(), rationale, params=P)
+                    keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_pool(keyx, pool))
     fmt_value = opt_dec if value_style == "dec" else None
     ch, tex, why, ltr = choices(keyx, pick(pool, wrongs), rng, fmt_value=fmt_value)
     return Item("sys.no_solution_slope", "no solution", "hard", seed, stem, "mcq",
@@ -301,7 +303,18 @@ def no_solution_gathered(rng: random.Random, seed: int, *, shape=None, alpha=Non
                      f"y-terms are in the same ratio, which needs {letter} = "
                      f"{_shown(keyx)}.")
     return Item("sys.no_solution_gathered", "no solution after gathering", "hard",
-                seed, stem, "spr", keyx, keyx.gridin(), rationale, params=P)
+                seed, stem, "spr", keyx, keyx.gridin(), rationale, params=P,
+                spr_mistakes=gridin_pool(keyx, {
+                    "sign": Mis("reversed the sign while gathering the y-terms",
+                                -key),
+                    "missing_y": Mis("matched the coefficient before gathering the "
+                                     "y-terms on the first line",
+                                     (Bl if shape == "x_first" else half) * phi / alpha
+                                     * (1 if shape == "x_first" else -1)),
+                    "no_scale": Mis("copied the first line's y-coefficient without "
+                                    "scaling to match the x-coefficients",
+                                    beta if shape == "x_first" else -beta),
+                }))
 
 
 def _join_const(head: str, c, first: bool = False, tail: str = "") -> str:
