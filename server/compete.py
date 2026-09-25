@@ -978,9 +978,9 @@ def due_today(learner: str, tz: int = 0) -> list[dict]:
     return out
 
 
-def closing_soon(learner: str) -> list[dict]:
+def closing_soon(learner: str, tz: int = 0) -> list[dict]:
     end = _iso(_now() + dt.timedelta(hours=24))
-    return [item for item in due_today(learner) if item["closes"] <= end]
+    return [item for item in due_today(learner, tz) if item["closes"] <= end]
 
 
 def shell_part(learner: str, tz: int = 0) -> dict:
@@ -988,7 +988,8 @@ def shell_part(learner: str, tz: int = 0) -> dict:
     ensure(tz=tz)
     done = db.one("SELECT 1 FROM sessions WHERE learner=? AND contest=? AND finished IS NOT NULL",
                   learner, today_id)
-    return {"daily": {"id": today_id, "done": bool(done)}, "streak": challenge_streak(learner, tz)["current"],
+    return {"challenge": {"streak": challenge_streak(learner, tz)["current"]},
+            "daily": {"id": today_id, "done": bool(done)},
             "due": due_today(learner, tz), "ranks": rank_snapshot(learner, tz)}
 
 
