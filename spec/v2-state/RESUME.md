@@ -16,14 +16,13 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
 - **ALL FOUNDATIONS MERGED** (2026-09-25): F2 (e9cf9f6) and F3 (1344fd9) passed their checks with no blockers;
   follow-ups in `followups/F2.json`, `followups/F3.json`. checks/f5.py's local-date bug fixed (45a2a33); moving
   check-ins to learners' local days is a follow-up in `followups/F5.json`.
-- **WAVE 2 RUNNING** (relaunched 2026-09-25 19:15 after a usage-limit stop): build.js run `wf_fb0187b6-e7f`
-  (task wgqj19cot), args `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'}]`, every task from
-  unit 0 (each builder continues from its branch: S3 3 commits, S5 1, S10 1, S6 checkpoint 2fadefd; S1, S4, F2B none).
-  Checkpoint loop task bz51av1mr. If stopped again: commit real WIP (worktree on its branch at the tip), free the
-  branches (remove clean worktrees that still hold them), relaunch the same args; units restart from branch state.
-  Merge each task when ready (leftovers to followups/, test_flow).
+- **WAVE 2 RUNNING** (relaunched 2026-09-25 19:30 after a logout pause): build.js run `wf_e48cbd7a-4e4` (task w9tbh24e5),
+  args `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'}]`; each continues from its branch
+  (S3 checkpoint 9a7b613, S10 85896a0, S1/S5/S6 1 commit, S4 and F2B none). Checkpoint loop task beg9hgryk.
+  If stopped: commit real WIP (a worktree on its branch at the tip), remove trial-merge or clean worktrees so the
+  branches are free, relaunch the same args. Merge each task when ready (leftovers to followups/, test_flow).
 - **Helper tasks 1-5 DONE 2026-09-25**: habits (79c4f73) and bank supply (3513836) merged after my inline check; the S9, S7
-  and S8 servers are in one check + one fix: build.js run `wf_a748f713-34b` (task wmxczhe4d),
+  and S8 servers are in one check + one fix: build.js run `wf_efc641bf-0d1` (task wp60i0yv8, relaunched 19:30),
   `[{id:'S9S',from:'verify'},{id:'S7S',from:'verify'},{id:'S8S',from:'verify'}]`; merge each when ready, then add
   pages-only tasks S7, S8, S9. The helper's next jobs are HELPER-TASKS.md Tasks 6-8 (spr coverage, security audit,
   frequency corpus): inline-check 6 and 8 and merge; 7 is findings only.

@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-25T19:21:37+05:00
+# v2 build state -- 2026-09-25T19:29:17+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -8,7 +8,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/bank` at e9c6f3c, 0 commits ahead of master
 - `v2/bank-lint` at f168c9f, 0 commits ahead of master
 - `v2/bank-lint-fix` at 033fa1a, 0 commits ahead of master
-- `v2/bank-supply` at 14cf283, 1 commits ahead of master
+- `v2/bank-supply` at 14cf283, 0 commits ahead of master
 - `v2/f0` at dc9873f, 0 commits ahead of master
 - `v2/f1` at b417976, 0 commits ahead of master
 - `v2/f2` at 9811bca, 0 commits ahead of master
@@ -16,10 +16,10 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/f4` at 2d419ba, 0 commits ahead of master
 - `v2/f5` at 6e3d219, 0 commits ahead of master
 - `v2/f6` at 4e2d2d1, 0 commits ahead of master
-- `v2/habits` at 84845cf, 1 commits ahead of master
-- `v2/s1` at c690c57, 0 commits ahead of master
-- `v2/s10` at 4123436, 1 commits ahead of master
-- `v2/s3` at e4c0b77, 3 commits ahead of master
+- `v2/habits` at 84845cf, 0 commits ahead of master
+- `v2/s1` at 15583f5, 1 commits ahead of master
+- `v2/s10` at 85896a0, 2 commits ahead of master
+- `v2/s3` at 9a7b613, 4 commits ahead of master
 - `v2/s4` at c690c57, 0 commits ahead of master
 - `v2/s5` at 83ee9a0, 1 commits ahead of master
 - `v2/s6` at 2fadefd, 1 commits ahead of master
@@ -62,20 +62,8 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 ## Worktrees
 
-- `/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/bs` on `detached 14cf283`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/bank-supply` on `v2/bank-supply`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/habits` on `v2/habits`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/s7-server` on `v2/s7-server`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/s8-server` on `v2/s8-server`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/s9-server` on `v2/s9-server`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_fb0187b6-e7f-1` on `v2/s4`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_fb0187b6-e7f-2` on `v2/s5`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_fb0187b6-e7f-3` on `v2/s3`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_fb0187b6-e7f-4` on `v2/s6`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_fb0187b6-e7f-5` on `v2/s10`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_fb0187b6-e7f-6` on `v2/s1`: 0 uncommitted
 
 ## Workflow runs
 
@@ -99,6 +87,9 @@ Unfinished when saved: verify F4 r3
 Unfinished when saved: advantage: words, experience: words, judge: compete, judge: plan, judge: practice, judge: reports, judge: tests, judge: words, outcomes: review, outcomes: words
 
 ### wf_a586fef6-d3a: 6 finished, 0 unfinished
+
+### wf_a748f713-34b: 0 finished, 3 unfinished
+Unfinished when saved: verify S7S r1, verify S8S r1, verify S9S r1
 
 ### wf_a8903963-411: 3 finished, 1 unfinished
 Unfinished when saved: fix F4 r2
