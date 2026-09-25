@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import datetime as dt
 import difflib
+import hashlib
 import json
 import pathlib
 import re
@@ -12,7 +13,7 @@ import zlib
 from collections import Counter
 from functools import lru_cache
 
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Header, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from satbank.registry import generate
@@ -20,6 +21,16 @@ from satbank.registry import generate
 from . import blueprint, db, deps, drill, practice, progress
 
 router = APIRouter()
+CB_ID = re.compile(r"[0-9a-fA-F]{8}\Z")
+UNKNOWN_PER_HOUR = 60
+UNKNOWN_IDS_MAX = 10_000
+UNKNOWN_COUNT_MAX = 1_000
+
+
+def init() -> None:
+    db.run("CREATE TABLE IF NOT EXISTS cb_unknown_budget ("
+           "hour TEXT NOT NULL, source TEXT NOT NULL, n INTEGER NOT NULL,"
+           "PRIMARY KEY (hour, source))")
 
 
 @lru_cache(maxsize=1)
@@ -90,14 +101,37 @@ def _match_id(cbid: str) -> dict | None:
             "via": "id", "example": f"/api/types/{template}/example", "cb_id": cbid}
 
 
+def _unknown(cbid: str, request: Request) -> None:
+    """Best-effort telemetry. Never let anonymous lookups grow storage without bound."""
+    hour = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H")
+    source = hashlib.blake2b((request.client.host if request.client else "unknown").encode(),
+                             digest_size=16).hexdigest()
+    with db.transaction():
+        db.run("DELETE FROM cb_unknown_budget WHERE hour<?", hour)
+        budget = db.one("SELECT n FROM cb_unknown_budget WHERE hour=? AND source=?", hour, source)
+        if budget and budget["n"] >= UNKNOWN_PER_HOUR:
+            return
+        if not budget and db.one("SELECT COUNT(*) n FROM cb_unknown_budget")["n"] >= UNKNOWN_IDS_MAX:
+            return
+        db.run("INSERT INTO cb_unknown_budget(hour,source,n) VALUES (?,?,1)"
+               " ON CONFLICT(hour,source) DO UPDATE SET n=n+1", hour, source)
+        known = db.one("SELECT n FROM cb_unknown WHERE cb_id=?", cbid)
+        if known:
+            if known["n"] < UNKNOWN_COUNT_MAX:
+                db.run("UPDATE cb_unknown SET n=n+1,last=? WHERE cb_id=?", progress.now(), cbid)
+        elif db.one("SELECT COUNT(*) n FROM cb_unknown")["n"] < UNKNOWN_IDS_MAX:
+            now = progress.now()
+            db.run("INSERT INTO cb_unknown(cb_id,first,last,n) VALUES (?,?,?,1)", cbid, now, now)
+
+
 @router.get("/api/types/match")
-def match_id(id: str) -> dict:
+def match_id(id: str, request: Request) -> dict:
+    if not CB_ID.fullmatch(id):
+        raise HTTPException(422, {"field": "id", "reason": "8 hexadecimal characters"})
     row = _match_id(id)
     if row:
         return {"rows": [row]}
-    now = progress.now()
-    db.run("INSERT INTO cb_unknown(cb_id,first,last,n) VALUES (?,?,?,1)"
-           " ON CONFLICT(cb_id) DO UPDATE SET last=excluded.last,n=n+1", id, now, now)
+    _unknown(id, request)
     return {"rows": [{"via": "none", "cb_id": id}]}
 
 
@@ -226,7 +260,7 @@ class MistakeLog(BaseModel):
 
 @router.post("/api/mistakes/log")
 def log_mistake(body: MistakeLog, x_learner: str | None = Header(default=None)) -> dict:
-    learner = deps.learner_of(x_learner)
+    learner = deps.writer_of(x_learner)
     entry = blueprint.kinds().get(body.template)
     if entry is None:
         raise HTTPException(422, {"field": "template", "reason": "unknown template"})
@@ -235,17 +269,19 @@ def log_mistake(body: MistakeLog, x_learner: str | None = Header(default=None)) 
     if body.reason and progress.norm(body.reason) not in entry["reasons"]:
         raise HTTPException(422, {"field": "reason", "reason": "not offered by this type"})
     today = dt.datetime.now(dt.timezone.utc).date().isoformat()
-    # outside logs only: in-app misses always carry their attempt id
-    n = db.one("SELECT COUNT(*) n FROM (SELECT DISTINCT template,norm,at FROM trap_log WHERE learner=?"
-               " AND attempt IS NULL AND event IN ('open','miss','reopened','relapse') AND at>=?)",
-               learner, today)["n"]
-    if n >= 30:
-        raise HTTPException(429, {"reason": "outside_mistake_limit"})
     q = {"id": "outside", "key": body.template, "seed": 900_000, "topic": entry["topic"],
          "topic_name": practice.catalogue()["topics"][entry["topic"]].name,
          "skill": entry["skill"]}
-    result = progress.record_trap(learner, q, body.reason or "", progress.now(),
-                                  label=body.reason or body.note or entry["skill"])
-    db.run("UPDATE traps SET source='outside',origin=?,note=? WHERE id=?",
-           body.origin, body.where_note or body.note, result["id"])
+    with db.transaction():
+        # One request marker, even though opening a trap writes two events.
+        # trap_log already follows the learner through export, merge and delete.
+        n = db.one("SELECT COUNT(*) n FROM trap_log WHERE learner=? AND at>=?"
+                   " AND event='outside_log'", learner, today)["n"]
+        if n >= 30:
+            raise HTTPException(429, {"reason": "outside_mistake_limit"})
+        progress.log(learner, body.template, progress.norm(body.reason or ""), "outside_log", progress.now())
+        result = progress.record_trap(learner, q, body.reason or "", progress.now(),
+                                      label=body.reason or body.note or entry["skill"])
+        db.run("UPDATE traps SET source='outside',origin=?,note=? WHERE id=?",
+               body.origin, body.where_note or body.note, result["id"])
     return {"trap": {**result, "source": "outside", "origin": body.origin}}
