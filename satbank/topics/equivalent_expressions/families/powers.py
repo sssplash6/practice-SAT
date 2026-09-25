@@ -12,7 +12,7 @@ from __future__ import annotations
 import random
 
 from ....exact import E
-from ....item import Item, ItemError
+from ....item import Item, ItemError, Mis, gridin_mistakes
 from ..render import (MINUS, Q, join, mono, num, power, pow_of, root, sent, sup)
 from .kit import FRAME_NAMES, Slip, frame_stem, text_item
 
@@ -315,6 +315,13 @@ def exponent_value(rng: random.Random, seed: int, *, shape=None, var=None, m=Non
         why = (f"The two radicals are {var}^({num(Q(m, 2))}) and "
                f"{var}^({num(Q(p, n))}), and dividing subtracts the exponents.")
         ex = E(e)
+        routes = [
+            Mis("added the exponents across a quotient instead of subtracting them",
+                E(Q(m, 2) + Q(p, n))),
+            Mis("used only the exponent from the numerator", E(Q(m, 2))),
+            Mis("used only the exponent from the denominator", E(Q(p, n))),
+            Mis("did not halve the exponent inside the square root", E(Q(m) - Q(p, n))),
+        ]
         params = {"kind": "eqx_exponent_value", "expr": expr, "base": var,
                   "vars": [var], "mult": 1}
     else:
@@ -331,12 +338,21 @@ def exponent_value(rng: random.Random, seed: int, *, shape=None, var=None, m=Non
         why = (f"The two roots give exponents 1/{m} and 2/{n}, which add to "
                f"{num(Q(1, m) + Q(2, n))}, and that has to equal {k}x.")
         ex = E(e)
+        routes = [
+            Mis("stopped at the combined radical exponent without dividing by the stated multiplier",
+                E(Q(1, m) + Q(2, n))),
+            Mis("treated the squared second root as a single root",
+                E((Q(1, m) + Q(1, n)) / k)),
+            Mis("multiplied by the exponent multiplier instead of dividing by it",
+                E((Q(1, m) + Q(2, n)) * k)),
+        ]
         params = {"kind": "eqx_exponent_value", "expr": expr, "base": base,
                   "vars": [var], "mult": k}
     if ex.coef.denominator > 1000:
         raise ItemError("that exponent would not go into a grid-in")
     return Item("eqx.exponent_value", "exponent rules", "hard", seed, stem, "spr",
-                ex, ex.gridin(), why, params=params)
+                ex, ex.gridin(), why, params=params,
+                spr_mistakes=gridin_mistakes(ex, routes))
 
 
 # ---------------------------------------------------------------- TELESCOPE
