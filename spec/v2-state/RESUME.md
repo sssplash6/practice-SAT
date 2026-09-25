@@ -21,6 +21,9 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
   then one check + one fix). F2B = F2's unowned follow-ups (next.py, sw.js, UI.run/autoSheet/share, G2 phrases).
   Restart any one by its branch state: `{id, unit:<first unbuilt 0-based>}` / `{id, from:'verify'}` /
   `{id, from:'fix', issues:<saved defects>}`. Merge each when ready (leftovers to followups/, test_flow).
+- **S8 server (helper) 2026-09-25:** 12 commits, s8.py and test_flow pass, blocked on others' contracts. Told to mark
+  them PENDING (like F4) and report done; its habits.py dependency (an unbuilt F5 item) and the C26 bank supply are
+  HELPER-TASKS 4 and 5; S4/S5/S1 hooks come from wave 2.
 - **The other agent has HELPER-TASKS.md** (the user gave it to him 2026-09-25) and works through it: s9-server 6 commits,
   s7-server 3, s8-server 5 as of 02:00. Wait for "<task> done" before checking; then add S9S/S7S/S8S TASKS entries,
   run `from:'verify'`, merge; then add pages-only tasks S7, S8, S9 (web/plan/** + plan-ui.js; web/compete/**,

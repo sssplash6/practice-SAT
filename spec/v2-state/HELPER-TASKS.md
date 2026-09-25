@@ -1,5 +1,7 @@
 # The other agent's next tasks (backend only)
 
+Order now: finish S8 (with PENDING markers), Task 1 (S9 incl. S8's two Words contracts), Task 4, Task 5.
+
 Written 2026-09-24 for the user's helper agent. Paste one task at a time. Each is a
 **feature**, so when the helper reports it done, the main session runs one
 independent check and one fix (build.js, `from: 'verify'`), then merges. The
@@ -92,6 +94,34 @@ BUILD, one commit per part:
 4. server/checks/s8.py covering every Compete server acceptance item (as amended by §2.13 and compete.md).
 Port 8028 with SATF_DB=$PWD/server/s8.db. Rules as in spec/v2-state/HELPER-TASKS.md.
 DONE: checks/s8.py passes and test_flow prints "all good". Tell the user "S8 server done" with the commit list.
+```
+
+## Task 4: server/habits.py (an F5 item nobody built)
+
+```
+Build server/habits.py, U6's mistake families, which F5 was assigned and never built.
+READ: spec/v2-upgrades/shell-me.md U6 (around line 693: "Families (server/habits.py, owner F5)": 11 families
+{id, name, tell, regex} applied to named mistakes' norms) plus the habits mentions in practice.md (line 520),
+review.md (line 22), plan.md (line 14) and compete.md (lines 13 and 749).
+SETUP: git worktree add .claude/worktrees/habits -b v2/habits master
+OWN ONLY: server/habits.py. Provide the family catalogue and reason-to-family mapping that Trap of the Week (S8),
+the Review habits view (S10), Plan's gauntlet (S7) and Practice's habit source need, for example families(),
+family_of(norm) and members(family). Also `python3 server/habits.py` must assert that every family spans at least 3
+topics and print coverage. Leave drill.py alone: its 'habit' and 'gauntlet' sources are S4's.
+DONE: python3 server/habits.py passes and test_flow prints "all good". Tell the user "habits done".
+```
+
+## Task 5: bank supply for twin challenges (C26)
+
+```
+The S8 supply survey (s8.py --supply) finds only 2 qualifying Advanced Math / easy / grid-in templates, and C26
+needs 3 at the 1,000-twin floor.
+SETUP: git worktree add .claude/worktrees/bank-supply -b v2/bank-supply master
+Add one new easy grid-in template (two for margin) in an Advanced Math topic (equivalent_expressions,
+nonlinear_functions, or nonlinear_equations_and_systems), with named grid-in mistakes (spr_mistakes), a rationale
+that ends on the answer, and the audit's rules. Existing templates' output must stay byte-identical: add, don't edit.
+DONE: PYTHONPATH=. python3 -m satbank check PASS on all 19 topics, tools/lint_bank.py adds no finding for the new
+template, s8.py --supply passes on master plus this branch, test_flow "all good". Tell the user "bank supply done".
 ```
 
 ---

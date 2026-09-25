@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-25T05:52:20+05:00
+# v2 build state -- 2026-09-25T14:13:35+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -15,8 +15,14 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/f4` at 2d419ba, 0 commits ahead of master
 - `v2/f5` at 6e3d219, 0 commits ahead of master
 - `v2/f6` at 4e2d2d1, 0 commits ahead of master
+- `v2/s1` at c690c57, 0 commits ahead of master
+- `v2/s10` at c690c57, 0 commits ahead of master
+- `v2/s3` at b2cbbd9, 1 commits ahead of master
+- `v2/s4` at c690c57, 0 commits ahead of master
+- `v2/s5` at 83ee9a0, 1 commits ahead of master
+- `v2/s6` at c690c57, 0 commits ahead of master
 - `v2/s7-server` at b88934e, 3 commits ahead of master
-- `v2/s8-server` at 87c2341, 5 commits ahead of master
+- `v2/s8-server` at 4e14b46, 12 commits ahead of master
 - `v2/s9-server` at 307c99f, 6 commits ahead of master
 - `v2/satdates` at 141f815, 0 commits ahead of master
 - `v2/t-bank` at 9403838, 0 commits ahead of master
@@ -62,6 +68,12 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_0d8fa245-2c3-1` on `detached 9811bca`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_0d8fa245-2c3-2` on `detached 2f8d3c9`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_0d8fa245-2c3-3` on `detached 2f8d3c9`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_37eaad23-bb7-1` on `v2/s4`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_37eaad23-bb7-2` on `v2/s5`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_37eaad23-bb7-3` on `v2/s3`: 2 uncommitted (saved in wip/wf_37eaad23-bb7-3/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_37eaad23-bb7-4` on `v2/s6`: 1 uncommitted (saved in wip/wf_37eaad23-bb7-4/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_37eaad23-bb7-5` on `v2/s10`: 1 uncommitted (saved in wip/wf_37eaad23-bb7-5/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_37eaad23-bb7-6` on `v2/s1`: 0 uncommitted
 
 ## Workflow runs
 
@@ -69,6 +81,9 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 ### wf_31f62ba7-6ae: 1 finished, 6 unfinished
 Unfinished when saved: author: adv1, author: adv2, author: adv3, author: roots, author: second, author: transitions
+
+### wf_37eaad23-bb7: 0 finished, 6 unfinished
+Unfinished when saved: build S1 1/5, build S10 1/5, build S3 1/5, build S4 1/5, build S5 1/5, build S6 1/5
 
 ### wf_609b5aa4-27c: 9 finished, 1 unfinished
 Unfinished when saved: fix check defects
