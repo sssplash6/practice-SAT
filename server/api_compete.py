@@ -93,7 +93,11 @@ def _meta(row, learner: str | None, tz: int = 0, race: str | None = None) -> dic
     me = {"session": own["id"] if own else None,
           "status": "finished" if own and own["finished"] else "progress" if own else "new",
           "answered": len(compete._json(own["answers"], {}) or {}) if own else 0,
-          "clock": compete.clock(own) if own else None,
+          "clock": ({"used": round((compete._now() - dt.datetime.fromisoformat(own["started"])).total_seconds()),
+                     "left": max(0, (compete._json(own["cfg"], {}) or {}).get("seconds", 240) -
+                                 round((compete._now() - dt.datetime.fromisoformat(own["started"])).total_seconds())),
+                     "running": not bool(own["finished"])} if row["kind"] == "words" else
+                    compete.clock(own)) if own else None,
           "result": compete._json(own["result"], {}) if own else None,
           "ranked": bool(own["ranked"]) if own else None,
           "why": own["unranked_why"] if own else None,
@@ -477,6 +481,8 @@ def contest_board(cid: str, scope: str = "all", offset: int = 0, limit: int = 50
         return compete.series_board(row["series"] or row["id"], sort, _viewer(x_learner))
     if row["kind"] == "rush":
         return compete.rush_board(row["id"], _viewer(x_learner), domain)
+    if row["kind"] == "words":
+        return compete.word_board(row["id"], _viewer(x_learner))
     return compete.board(row["id"], _viewer(x_learner), scope, offset, limit)
 
 
@@ -486,6 +492,16 @@ def contest_review(cid: str, x_learner: str | None = Header(default=None),
     learner = learner_of(x_learner)
     row = compete.contest(cid, x_tz)
     sitting = _sitting(row["id"], learner)
+    if row["kind"] == "words":
+        if not sitting or not sitting["finished"]:
+            raise HTTPException(403, "finish your Word Sprint first")
+        answers = compete._json(sitting["answers"], {}) or {}
+        return {"items": [{"question": {k: q[k] for k in ("id", "kind", "stem", "text", "choices")
+                                        if k in q}, "key": q["answer_index"],
+                           "word": q.get("word"), "given": answers.get(q["id"], {}).get("choice"),
+                           "correct": answers.get(q["id"], {}).get("correct"),
+                           "trap": answers.get(q["id"], {}).get("trap")}
+                          for q in compete._questions(sitting)]}
     if (not sitting or not sitting["finished"]) and row["closes"] > compete._iso(compete._now()):
         raise HTTPException(403, "answers open after you finish or the contest closes")
     if not sitting:
@@ -626,6 +642,14 @@ def contest_debrief(cid: str, x_learner: str | None = Header(default=None),
     sitting = _sitting(row["id"], learner)
     if not sitting or not sitting["finished"]:
         raise HTTPException(403, "finish your sitting first")
+    if row["kind"] == "words":
+        result = compete._json(sitting["result"], {}) or {}
+        answers = compete._json(sitting["answers"], {}) or {}
+        return {"subject": "rw", "score": result.get("score"), "traps": result.get("traps", []),
+                "missed": [{"id": q["id"], "word": q.get("word"),
+                            "trap": answers[q["id"]].get("trap")}
+                           for q in compete._questions(sitting) if q["id"] in answers and
+                           not answers[q["id"]].get("correct") and not answers[q["id"]].get("skip")]}
     return compete.debrief(sitting["id"], x_tz)
 
 
@@ -713,6 +737,9 @@ def start_contest(cid: str, race: str | None = None, domain: str = "all",
     if row["kind"] == "rush":
         with db.atomic():
             return compete.rush_start(learner, row["id"], domain)
+    if row["kind"] == "words":
+        with db.atomic():
+            return compete.word_start(learner, row["id"])
     return _start(cid, learner, x_tz, race)
 
 
@@ -720,6 +747,8 @@ def start_contest(cid: str, race: str | None = None, domain: str = "all",
 def contest_next(cid: str, sid: str, x_learner: str | None = Header(default=None),
                  x_tz: int = Depends(tz_of)) -> dict:
     row = compete.contest(cid, x_tz)
+    if row["kind"] == "words":
+        return compete.word_next(sid, learner_of(x_learner))
     if row["kind"] != "rush":
         raise HTTPException(404, "use this contest's runner")
     return compete.rush_next(sid, learner_of(x_learner))
@@ -729,6 +758,11 @@ def contest_next(cid: str, sid: str, x_learner: str | None = Header(default=None
 def contest_answer(cid: str, body: dict, x_learner: str | None = Header(default=None),
                    x_tz: int = Depends(tz_of)) -> dict:
     row = compete.contest(cid, x_tz)
+    if row["kind"] == "words":
+        if not isinstance(body.get("sid"), str) or not isinstance(body.get("question_id"), str):
+            raise HTTPException(422, "sid and question_id are required")
+        return compete.word_answer(body["sid"], learner_of(x_learner), body["question_id"],
+                                   body.get("answer"), body.get("ms"))
     if row["kind"] != "rush":
         raise HTTPException(404, "use this contest's runner")
     if not isinstance(body.get("sid"), str) or not isinstance(body.get("question_id"), str):
@@ -741,6 +775,8 @@ def contest_answer(cid: str, body: dict, x_learner: str | None = Header(default=
 def contest_finish(cid: str, sid: str, x_learner: str | None = Header(default=None),
                    x_tz: int = Depends(tz_of)) -> dict:
     row = compete.contest(cid, x_tz)
+    if row["kind"] == "words":
+        return compete.word_finish(sid, learner_of(x_learner))
     if row["kind"] != "rush":
         raise HTTPException(404, "use this contest's runner")
     return compete.rush_finish(sid, learner_of(x_learner))

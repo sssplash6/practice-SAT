@@ -221,7 +221,7 @@ def _sprint_slots(week: str) -> list[list]:
 
 
 def _habit_id(norm: str) -> str | None:
-    family = deps.part("habits", "family")
+    family = deps.part("habits", "family_of") or deps.part("habits", "family")
     if family is None or not norm:
         return None
     found = family(norm)
@@ -229,9 +229,11 @@ def _habit_id(norm: str) -> str | None:
 
 
 def _habit_catalogue() -> list[dict]:
-    families = deps.part("habits", "FAMILIES")
+    families = deps.part("habits", "families") or deps.part("habits", "FAMILIES")
     if families is None:
         return []
+    if callable(families):
+        families = families()
     if isinstance(families, dict):
         return [{"id": key, **value} for key, value in families.items()]
     return [dict(value) for value in families]
@@ -389,6 +391,11 @@ def ensure(at: dt.datetime | None = None, tz: int = 0) -> list[dict]:
             _insert("rush-" + week, "rush", "Rush · " + week, start,
                     start + dt.timedelta(days=7), [], 0,
                     extra={"mode": "three_strikes", "rated": True})
+        if deps.part("words", "sprint_items") and not db.one(
+                "SELECT 1 FROM contests WHERE id=?", "words-" + week):
+            _insert("words-" + week, "words", "Word Sprint · " + week, start,
+                    start + dt.timedelta(days=7), [], 240, subject="rw",
+                    extra={"rated": False, "twin": False, "mode": "word_sprint"})
         weekend = first + dt.timedelta(days=5)
         sat = weekend.isoformat()
         final_date = next((d for d in SAT_DATES if (dt.date.fromisoformat(d) - weekend).days == 7), None)
@@ -646,6 +653,148 @@ def rush_board(cid: str, viewer: str | None = None, domain: str = "all") -> dict
         entry["rank"] = prior["rank"] if prior and (prior["right"], prior["top_item"]) == (
             entry["right"], entry["top_item"]) else index + 1
     return {"id": cid, "domain": domain, "players": len(entries), "entries": entries,
+            "you": next((entry for entry in entries if entry["you"]), None)}
+
+
+def word_start(learner: str, cid: str) -> dict:
+    """Start one R&W sprint without writing a Math attempt or rating."""
+    row = contest(cid)
+    if row["kind"] != "words":
+        raise HTTPException(404, "not a Word Sprint")
+    provider = deps.part("words", "sprint_items")
+    if provider is None:
+        raise HTTPException(503, "Words Sprint items are pending")
+    prior = db.one("SELECT id FROM sessions WHERE learner=? AND contest=? AND kind='words'"
+                   " AND finished IS NULL ORDER BY started DESC LIMIT 1", learner, cid)
+    if prior:
+        return {"session": prior["id"], "runner": "words", **word_next(prior["id"], learner)}
+    estimate = deps.part("words", "estimate")
+    placement = estimate(learner) if estimate else {}
+    level = max(1, min(5, int(placement.get("band") or 1)))
+    seed = secrets.randbits(31)
+    items = provider(learner, seed, 80, level)
+    if not isinstance(items, list) or not items or any(
+            item.get("kind") not in ("incontext", "transition") or
+            not isinstance(item.get("choices"), list) or len(item["choices"]) != 4 or
+            item.get("answer_index") not in range(4) for item in items):
+        raise HTTPException(409, "Words Sprint provider returned no SAT-form items")
+    preferences = deps.part("prefs", "get")
+    settings = preferences(learner) if preferences else {}
+    timing = settings.get("contest_timing", "follow")
+    if timing == "follow":
+        timing = settings.get("test_timing", "official")
+    seconds = round(240 * {"official": 1, "x1.5": 1.5, "x2": 2}.get(timing, 1))
+    sid = secrets.token_urlsafe(16)
+    questions = [{**item, "id": f"w{i:03d}"} for i, item in enumerate(items, 1)]
+    db.ensure_learner(learner)
+    db.run("INSERT INTO sessions(id,kind,learner,started,questions,answers,cfg,result,contest,subject,ranked)"
+           " VALUES (?,?,?,? ,?,'{}',?,'{}',?,'rw',1)", sid, "words", learner, _iso(_now()),
+           json.dumps(questions), json.dumps({"mode": "word_sprint", "seed": seed,
+                                               "seconds": seconds, "timing": timing}), cid)
+    return {"session": sid, "runner": "words", **word_next(sid, learner)}
+
+
+def _word_row(sid: str, learner: str):
+    row = db.one("SELECT * FROM sessions WHERE id=? AND learner=? AND kind='words'"
+                 " AND json_extract(cfg,'$.mode')='word_sprint'", sid, learner)
+    if not row:
+        raise HTTPException(404, "Word Sprint run not found")
+    return row
+
+
+def word_next(sid: str, learner: str) -> dict:
+    row = _word_row(sid, learner)
+    if row["finished"]:
+        return {"done": True, "result": _json(row["result"], {})}
+    cfg = _json(row["cfg"], {}) or {}
+    left = max(0, cfg["seconds"] - round((_now() - dt.datetime.fromisoformat(row["started"])).total_seconds()))
+    answers = _json(row["answers"], {}) or {}
+    questions = _questions(row)
+    if not left or len(answers) >= len(questions):
+        return word_finish(sid, learner)
+    item = questions[len(answers)]
+    return {"question": {key: item[key] for key in ("id", "kind", "stem", "text", "choices")
+                         if key in item}, "left": left, "answered": len(answers),
+            "score": round(sum(1 if value["correct"] else -1 / 3 if not value["skip"] else 0
+                               for value in answers.values()), 1)}
+
+
+def word_answer(sid: str, learner: str, qid: str, choice: int | None,
+                ms: int | None = None) -> dict:
+    row = _word_row(sid, learner)
+    if row["finished"]:
+        raise HTTPException(409, "Word Sprint is finished")
+    cfg = _json(row["cfg"], {}) or {}
+    if (_now() - dt.datetime.fromisoformat(row["started"])).total_seconds() >= cfg["seconds"]:
+        word_finish(sid, learner)
+        raise HTTPException(409, "Word Sprint time is up")
+    questions = _questions(row)
+    answers = _json(row["answers"], {}) or {}
+    if len(answers) >= len(questions) or questions[len(answers)]["id"] != qid:
+        raise HTTPException(409, "answer the current Word Sprint item")
+    if choice is not None and (type(choice) is not int or choice not in range(4)):
+        raise HTTPException(422, "choice is an index from 0 to 3 or null to skip")
+    item = questions[len(answers)]
+    right = choice is not None and choice == item["answer_index"]
+    trap = ((item.get("traps") or [None] * 4)[choice] if choice is not None and not right else None)
+    with db.atomic():
+        if not db.set_answer(sid, qid, {"choice": choice, "correct": right,
+                                        "skip": choice is None, "trap": trap}, only_new=True):
+            raise HTTPException(409, "Word Sprint item already answered")
+        if choice is not None:
+            grade = deps.part("words", "grade")
+            if grade:
+                grade(learner, item["word"], right, mode="sprint", kind=item["kind"],
+                      ms=ms, session=sid, given=item["choices"][choice],
+                      confusion=trap, template=item.get("template"), seed=item.get("seed"))
+            if not right:
+                record_miss = deps.part("words", "record_contest_miss")
+                if record_miss:
+                    record_miss(learner, item["word"], trap)
+    return {"correct": right, "skip": choice is None,
+            "reason": item.get("reasons", [None] * 4)[choice] if choice is not None else None,
+            **word_next(sid, learner)}
+
+
+def word_finish(sid: str, learner: str) -> dict:
+    row = _word_row(sid, learner)
+    if row["finished"]:
+        return {"done": True, "result": _json(row["result"], {})}
+    answers = _json(row["answers"], {}) or {}
+    right = sum(bool(a["correct"]) for a in answers.values())
+    wrong = sum(not a["correct"] and not a["skip"] for a in answers.values())
+    skipped = sum(bool(a["skip"]) for a in answers.values())
+    traps = Counter(a["trap"] for a in answers.values() if a.get("trap"))
+    result = {"score": round(right - wrong / 3, 1), "right": right, "wrong": wrong,
+              "skipped": skipped, "traps": [{"trap": key, "label": key, "n": n}
+                                            for key, n in traps.most_common()]}
+    db.run("UPDATE sessions SET finished=?,result=?,points=?,secs=?,ranked=1 WHERE id=?",
+           _iso(_now()), json.dumps(result), result["score"],
+           round((_now() - dt.datetime.fromisoformat(row["started"])).total_seconds()), sid)
+    return {"done": True, "result": result}
+
+
+def word_board(cid: str, viewer: str | None = None) -> dict:
+    best: dict[str, tuple] = {}
+    runs: Counter = Counter()
+    for row in db.rows("SELECT * FROM sessions WHERE contest=? AND kind='words'"
+                       " AND finished IS NOT NULL AND ranked=1", cid):
+        result = _json(row["result"], {}) or {}
+        runs[row["learner"]] += 1
+        prior = best.get(row["learner"])
+        if prior is None or (result.get("score", 0), result.get("right", 0)) > (
+                prior[1].get("score", 0), prior[1].get("right", 0)):
+            best[row["learner"]] = row, result
+    entries = [{**_identity(person, viewer), "score": result["score"],
+                "right": result["right"], "wrong": result["wrong"],
+                "runs": runs[person], "you": person == viewer}
+               for person, (_, result) in best.items()]
+    entries.sort(key=lambda e: (-e["score"], -e["right"], e["pid"]))
+    for index, entry in enumerate(entries):
+        prior = entries[index - 1] if index else None
+        entry["rank"] = prior["rank"] if prior and (prior["score"], prior["right"]) == (
+            entry["score"], entry["right"]) else index + 1
+    return {"id": cid, "subject": "rw", "players": len(entries), "entries": entries,
             "you": next((entry for entry in entries if entry["you"]), None)}
 
 
@@ -1009,7 +1158,9 @@ def rematch_items(sitting) -> tuple[list[list], list[dict]]:
         for _ in range(600 if norm else 100):
             card = blueprint.draw_matching(b, key, tier, fmt, tries=20)
             if not card:
-                break
+                # A twenty-seed batch can miss a valid tier/format even when
+                # later seeds supply it; the Builder has advanced its cursor.
+                continue
             if original and card.seed == original["seed"]:
                 b.keep(card)
                 continue
@@ -1378,6 +1529,8 @@ def board(cid: str, me: str | None = None, scope: str = "all", offset: int = 0,
     contest_row = contest(cid)
     if contest_row["kind"] == "rush":
         return rush_board(contest_row["id"], me)
+    if contest_row["kind"] == "words":
+        return word_board(contest_row["id"], me)
     rows = db.rows("SELECT s.*,l.country,l.rating,l.board,l.handle,l.name FROM sessions s"
                    " LEFT JOIN learners l ON l.id=s.learner WHERE s.contest=? AND s.finished IS NOT NULL"
                    " AND s.ranked=1 ORDER BY s.finished", contest_row["id"])
@@ -1716,11 +1869,12 @@ def leaderboard(metric: str = "points", period: str = "week", scope: str = "all"
                 if row["contest_kind"] in ("sprint", "rush", "words"):
                     continue
                 amount = (_json(row["result"], {}) or {}).get("net", 0)
-            if row["contest_kind"] == "sprint":
+            if row["contest_kind"] in ("sprint", "words"):
                 key = (row["learner"], row["contest"])
-                old = sprint_best.get(key, 0)
-                sprint_best[key] = max(old, amount)
-                values[row["learner"]] += max(0, amount - old)
+                old = sprint_best.get(key)
+                best = amount if old is None else max(old, amount)
+                sprint_best[key] = best
+                values[row["learner"]] += best - (old or 0)
             else:
                 values[row["learner"]] += amount
             finished[row["learner"]] = max(finished.get(row["learner"], ""), row["finished"])
