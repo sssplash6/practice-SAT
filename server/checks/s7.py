@@ -15,7 +15,7 @@ from collections import Counter
 
 from fastapi.testclient import TestClient
 
-from server import db, estimate, plan, prefs, progress
+from server import db, estimate, plan, practice, prefs, progress
 from server.app import app
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -54,7 +54,7 @@ def check_empty_preview_and_validation(client: TestClient, exam: dt.date) -> tup
     learner = token()
     empty = call(client, "GET", "/api/plan", learner=learner)
     assert empty["active"] is None and empty["bank"]["topics"] == 19
-    assert empty["bank"]["templates"] == 386 and empty["bank"]["example"]["label"]
+    assert empty["bank"]["templates"] == sum(map(len, practice.catalogue()["by_topic"].values())) and empty["bank"]["example"]["label"]
     assert empty["proposal"]["cfg"]["measure"] is True
     assert [t["kind"] for t in empty["proposal"]["preview"]["sample_day"]["tasks"][:2]] == ["test", "map"]
     cfg = base(exam, focus={"Geometry and Trigonometry": "focus", "Algebra": "strong"})
