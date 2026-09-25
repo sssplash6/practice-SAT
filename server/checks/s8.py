@@ -114,6 +114,11 @@ def run() -> None:
               {"base": 200, "pace": 50, "finish": 10}, "perfect Daily scores 260 points")
         assert_ok(result["par"]["base"] == json.loads(db.one("SELECT cfg FROM sessions WHERE id=?", sid)["cfg"])
               ["par"]["base"], "par is frozen at contest start")
+        assert_ok(result["records_new"] == [{"kind": "daily", "value": 260, "was": None}] and
+                  c.get("/api/compete/me", headers=head(a)).json()["records"]["bests"]["daily"]["value"] == 260,
+                  "first Daily stores and exposes its personal record")
+        assert_ok(c.get("/api/compete/me", headers=head(a)).json()["streak"]["current"] == 1,
+                  "daily twin sitting advances the challenge streak")
         assert_ok(c.get("/api/contest/daily/review", headers=head(a)).status_code == 200 and
               len(c.get("/api/contest/daily/review", headers=head(a)).json()["items"]) == 10,
               "finished learner can review ten twin questions")
@@ -154,6 +159,13 @@ def run() -> None:
         private_result = c.get(f"/api/contest/{root}", headers=head(a)).json()["me"]["result"]
         assert_ok(private_result["confirmed"] == 1 and private_result["voided"] == 0,
               "held confirm preserves the original right answer")
+        private_cfg = json.loads(db.one("SELECT cfg FROM sessions WHERE id=?", private_sid)["cfg"])
+        private_cfg["rematch_due"] = today
+        db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(private_cfg), private_sid)
+        open_history = c.get("/api/compete/history?followup=open", headers=head(a)).json()
+        assert_ok(any(row["session"] == private_sid and row["followup"]["due"] == today
+                      for row in open_history["history"]),
+                  "history open filter includes a due rematch")
         assert_ok(c.get(f"/api/contest/{root}/grid", headers=head(a)).status_code == 200,
               "finished entrant sees private grid")
         assert_ok(c.get("/api/groups").status_code == 404 and c.get("/api/classes").status_code == 404,
