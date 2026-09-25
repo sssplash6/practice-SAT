@@ -318,8 +318,12 @@ def trap_theme(week: str, catalogue: dict | None = None) -> dict | None:
     if measured:
         return max(measured, key=lambda entry: (falls[entry["family"]["id"]] /
                          chances[entry["family"]["id"]], -qualified.index(entry)))
-    # Cyclic order has no repeat in the preceding W weeks when W < families.
-    return qualified[monday.toordinal() // 7 % len(qualified)]
+    # Keep the catalogue's order while skipping themes already used by a
+    # data-selected week; a plain modulo can repeat one of those themes.
+    start = monday.toordinal() // 7 % len(qualified)
+    return next(qualified[(start + offset) % len(qualified)]
+                for offset in range(len(qualified))
+                if qualified[(start + offset) % len(qualified)] in available)
 
 
 def _trap_slots(week: str, theme: dict, floor: int) -> list[list]:
@@ -491,9 +495,14 @@ def rush_start(learner: str, cid: str, domain: str = "all") -> dict:
     placing = db.one("SELECT COUNT(*) AS n FROM attempts WHERE learner=? AND repeat=0", learner)["n"] < 8
     target = 700 if placing else skill_rating - 300
     sid = secrets.token_urlsafe(16)
+    preferences = deps.part("prefs", "get")
+    timing = preferences(learner).get("contest_timing", "follow") if preferences else "official"
+    if timing == "follow":
+        timing = preferences(learner).get("test_timing", "official") if preferences else "official"
+    factor = {"official": 1, "x1.5": 1.5, "x2": 2}.get(timing, 1)
     cfg = {"contest": row["id"], "domain": domain, "target": target, "strikes": 0,
            "strike_reasons": [], "top_bank": False, "turn": 0, "last_rating": None,
-           "last_right": None, "tz": 0, "source": "rush"}
+           "last_right": None, "tz": 0, "source": "rush", "timing_factor": factor}
     db.run("INSERT INTO sessions(id,kind,learner,started,questions,answers,cfg,result,contest,subject,ranked)"
            " VALUES (?,?,?,?,'[]','{}',?,'{}',?,'math',1)", sid, "rush", learner,
            _iso(_now()), json.dumps(cfg), row["id"])
@@ -534,6 +543,14 @@ def rush_next(sid: str, learner: str) -> dict:
         cfg["top_bank"] = True
         directional = pairs
     preferred = sorted(directional, key=lambda cell: (abs(cell[2] - cfg["target"]), cell[0]))
+    # All-domains runs rotate through the four Math domains. If the next one
+    # has no eligible fresh pair, the nearest pair in another domain keeps the
+    # run moving instead of repeating an item.
+    if cfg["domain"] == "all":
+        domain_order = tuple(challenge.MIX)
+        next_domain = domain_order[cfg["turn"] % len(domain_order)]
+        preferred.sort(key=lambda cell: (blueprint.kinds()[cell[0]]["domain"] != next_domain,
+                                         abs(cell[2] - cfg["target"]), cell[0]))
     b = drill._builder(learner, dedupe="question")
     chosen = None
     for name, tier, value in preferred:
@@ -571,7 +588,7 @@ def rush_answer(sid: str, learner: str, qid: str, answer, ms: int | None = None)
     feedback = progress.record(learner, sid, q, answer, ms)
     cfg = _json(db.one("SELECT cfg FROM sessions WHERE id=?", sid)["cfg"], {}) or {}
     right = bool(feedback["correct"])
-    slow = ms is not None and ms > 1.5 * q["budget_ms"]
+    slow = ms is not None and ms > 1.5 * q["budget_ms"] * cfg.get("timing_factor", 1)
     cfg["target"] += 60 if right else -120
     cfg["last_rating"] = q["item_rating"]
     cfg["last_right"] = right

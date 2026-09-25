@@ -16,7 +16,7 @@ import sys
 
 from fastapi.testclient import TestClient
 
-from server import blueprint, compete, db, practice, progress
+from server import blueprint, compete, db, practice, prefs, progress
 from server.app import app
 
 
@@ -343,6 +343,15 @@ def run() -> None:
                   rush_board["players"] and
                   rush_board["you"]["right"] == 5 and rush_board["you"]["runs"] == 2,
                   "Rush weekly board keeps one best run per learner")
+        timed_person = learner("rush-timing")
+        prefs.put(timed_person, {"contest_timing": "x1.5"})
+        timed = c.post(f"/api/contest/{rush_cid}/start", headers=head(timed_person)).json()
+        timed_sid = timed["session"]
+        first = question_for(timed_sid, timed["question"]["id"])
+        paced = c.post(f"/api/contest/{rush_cid}/answer", headers=head(timed_person),
+                       json={"sid": timed_sid, "question_id": first["id"],
+                             "answer": answer_of(first), "ms": first["budget_ms"] * 2}).json()
+        assert_ok(paced["strikes"] == 0, "Rush slow strike respects extended contest time")
         final_person = learner("final")
         db.ensure_learner(final_person)
         sat_day = next(day for day in compete.SAT_DATES if day >= today)
