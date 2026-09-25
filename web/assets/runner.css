@@ -738,7 +738,7 @@ mark.hl[data-note]::after, [data-hl][data-hl-note]::after {
 .rn-notepop { width: min(340px, calc(100vw - 48px)); }
 .rn-detpop { max-width: 420px; }
 .rn-details dd { overflow-wrap: anywhere; }
-.rn-details dd > span:has(> .mono) { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+.rn-details dd > span:has(> .mono) { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding-bottom: 8px; }   /* room for Copy's padded target and its focus ring when it wraps */
 
 /* ------------------------------------------------------------------ scratch (UI.scratch, X8) */
 
@@ -1123,7 +1123,9 @@ html[data-motion="reduce"] :is(.rv-item.rv-slide-l, .rv-item.rv-slide-r, mark.ch
   .cyw-acts .pill { width: 100%; justify-content: center; }
   .hl-b { min-width: 36px; height: 36px; padding: 0 6px; }
   .hl-b .hl-l { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .scratch-bar { width: 100%; }
+  /* the five pen tools share one row */
+  .scratch-bar { width: 100%; flex-wrap: nowrap; }
+  .scratch-bar .tool { flex: 1 1 auto; justify-content: center; gap: 4px; padding: 0 4px; min-height: 44px; }
 }
 @media (max-width: 359px) { .hl-sw { max-width: 200px; } }
 @media (prefers-reduced-motion: reduce) { .timer.t-pulse .t-digits, .rn-q.rn-slide-l, .rn-q.rn-slide-r, .rn-seg.add::before { animation: none; } }
