@@ -468,6 +468,8 @@ def run() -> None:
         pending(deps.part("words", "sprint_items") is not None and
                 deps.part("words", "record_contest_miss") is not None,
                 "S9 Words exposes sprint_items and record_contest_miss")
+        available = deps.part("words", "sprint_available")
+        pending(bool(available and available()), "reviewed W1/W2 frames can open Word Sprint")
         pending(deps.part("habits", "families") is not None and
                 deps.part("habits", "family_of") is not None,
                 "U6 habits catalogue and reason-family matcher are available")
