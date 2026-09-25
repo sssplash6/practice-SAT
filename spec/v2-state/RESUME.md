@@ -13,11 +13,14 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
   revived, gate 19/19; the lint now reports 16 findings: 11 low-yield templates, 5 filler-majority notes) and `v2/f6`
   (33b1627; the test_flow label-threshold failure was a test-isolation bug, fixed by the other agent). F6's fixer left
   a drill.py change for S4 (use sets.serve for pool 'set'): in `followups/F6.json`.
-- RESUMED 2026-09-25 ~02:00. RUNNING: build.js run `wf_0d8fa245-2c3` (task waib02fyp)
-  `[{id:'F2', from:'verify'}, {id:'F3', unit:3}]`; checkpoint loop task bvo5p4x5d. When each passes its one fix:
-  leftovers to `followups/<id>.json`, test_flow, merge.
-- **Wave 2 is ready to launch** once F2 and F3 merge: build.js TASKS now has S1, S3, S4, S5, S6, S10 (five units each).
-  Launch `[{id:'S1'},{id:'S3'},{id:'S4'},{id:'S5'},{id:'S6'},{id:'S10'}]` (6 = the concurrency cap).
+- **ALL FOUNDATIONS MERGED** (2026-09-25): F2 (e9cf9f6) and F3 (1344fd9) passed their checks with no blockers;
+  follow-ups in `followups/F2.json`, `followups/F3.json`. checks/f5.py's local-date bug fixed (45a2a33); moving
+  check-ins to learners' local days is a follow-up in `followups/F5.json`.
+- **WAVE 2 RUNNING**: build.js run `wf_37eaad23-bb7` (task wrwfofyx1), args
+  `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'}]` (5 units each for sections, 3 for F2B;
+  then one check + one fix). F2B = F2's unowned follow-ups (next.py, sw.js, UI.run/autoSheet/share, G2 phrases).
+  Restart any one by its branch state: `{id, unit:<first unbuilt 0-based>}` / `{id, from:'verify'}` /
+  `{id, from:'fix', issues:<saved defects>}`. Merge each when ready (leftovers to followups/, test_flow).
 - **The other agent has HELPER-TASKS.md** (the user gave it to him 2026-09-25) and works through it: s9-server 6 commits,
   s7-server 3, s8-server 5 as of 02:00. Wait for "<task> done" before checking; then add S9S/S7S/S8S TASKS entries,
   run `from:'verify'`, merge; then add pages-only tasks S7, S8, S9 (web/plan/** + plan-ui.js; web/compete/**,
