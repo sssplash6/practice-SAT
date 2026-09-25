@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-25T19:46:44+05:00
+# v2 build state -- 2026-09-25T20:46:57+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -16,6 +16,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/f4` at 2d419ba, 0 commits ahead of master
 - `v2/f5` at 6e3d219, 0 commits ahead of master
 - `v2/f6` at 4e2d2d1, 0 commits ahead of master
+- `v2/freq` at baddd02, 1 commits ahead of master
 - `v2/habits` at 84845cf, 0 commits ahead of master
 - `v2/s1` at 15583f5, 1 commits ahead of master
 - `v2/s10` at 85896a0, 2 commits ahead of master
@@ -24,12 +25,13 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/s5` at 83ee9a0, 1 commits ahead of master
 - `v2/s6` at 2fadefd, 1 commits ahead of master
 - `v2/s7-server` at b88934e, 3 commits ahead of master
-- `v2/s7s` at a90e3a6, 3 commits ahead of master
+- `v2/s7s` at 909e603, 4 commits ahead of master
 - `v2/s8-server` at c39b162, 15 commits ahead of master
-- `v2/s8s` at 64f360c, 15 commits ahead of master
+- `v2/s8s` at f498844, 15 commits ahead of master
 - `v2/s9-server` at bd5b705, 7 commits ahead of master
 - `v2/s9s` at bd5b705, 7 commits ahead of master
 - `v2/satdates` at 141f815, 0 commits ahead of master
+- `v2/sec-audit` at 21fa6b9, 1 commits ahead of master
 - `v2/spr-grow` at 62e7df5, 13 commits ahead of master
 - `v2/t-bank` at 9403838, 0 commits ahead of master
 - `v2/t-bank-all` at f4bf864, 0 commits ahead of master
@@ -66,15 +68,13 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 ## Worktrees
 
+- `/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/sg` on `detached 62e7df5`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/freq` on `v2/freq`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/s8s` on `v2/s8s`: 2 uncommitted (saved in wip/s8s/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/sec-audit` on `v2/sec-audit`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/spr-grow` on `v2/spr-grow`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_efc641bf-0d1-1` on `detached bd5b705`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_efc641bf-0d1-2` on `detached b88934e`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_efc641bf-0d1-3` on `detached c39b162`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_efc641bf-0d1-4` on `v2/s9s`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_efc641bf-0d1-5` on `v2/s8s`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_efc641bf-0d1-6` on `v2/s7s`: 0 uncommitted
 
 ## Workflow runs
 

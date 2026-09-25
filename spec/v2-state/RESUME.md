@@ -16,6 +16,11 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
 - **ALL FOUNDATIONS MERGED** (2026-09-25): F2 (e9cf9f6) and F3 (1344fd9) passed their checks with no blockers;
   follow-ups in `followups/F2.json`, `followups/F3.json`. checks/f5.py's local-date bug fixed (45a2a33); moving
   check-ins to learners' local days is a follow-up in `followups/F5.json`.
+- **Merged 2026-09-25 (helper, inline-checked):** spr-grow (6c9b8e2: grid-in named mistakes 204/204), freq (1bd58bc),
+  sec-audit report. **When wave 2 resumes, its builders must fix these audit findings in their files:** SEC-01 (S1,
+  api_account signup), SEC-02 (S3 qotd and S8 challenge: disposable codes farm the daily key), SEC-03 (S5/S6: session
+  ID alone authorizes test writes and results). Add them to each task's unit prompts. SEC-04-07, 09 are the helper's
+  Task 9; SEC-08 goes with his S8 fixes.
 - **WAVE 2 PAUSED until the user's weekly usage reset** (the user, 2026-09-25: "henceforth till weekly reset, we are only
   checking other guys work"). Until then: NO building here. Only check the helper's work (inline for data jobs, one check +
   one fix for features) and merge it. Saved state: S3 5 commits (tip de9e831), S10 2 (85896a0), S1 1 (15583f5), S5 1

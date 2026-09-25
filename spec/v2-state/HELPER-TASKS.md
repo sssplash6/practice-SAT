@@ -1,7 +1,7 @@
 # The other agent's next tasks (backend only)
 
 Tasks 1-5 are DONE (2026-09-25): S9, S7, S8 servers under one check each; habits.py and bank supply merged.
-Next, in order: Task 0 (fixes, first), then Task 6, Task 7, Task 8. Never touch v2/s7-server, v2/s8-server, v2/s9-server or any wave-2 branch.
+Tasks 6, 7 and 8 are DONE and merged (2026-09-25). Next, in order: Task 0 (server blockers), then Task 9 (security fixes). Never touch v2/s7-server, v2/s8-server, v2/s9-server or any wave-2 branch.
 
 Written 2026-09-24 for the user's helper agent. Paste one task at a time. Each is a
 **feature**, so when the helper reports it done, the main session runs one
@@ -194,6 +194,26 @@ words appearing at least 5 times). Then print, for every headword in server/word
 W17 defines (1: top 3,000; 2: to 10,000; 3: to 25,000; 4: to 50,000; 5: rarer), and the count per band.
 Commit the three files (freq.txt must stay under 5 MB; drop the tail if needed). Tell the user "freq done" with the
 per-band counts.
+```
+
+## Task 9: fix the security findings in files no running task owns
+
+```
+Fix these findings from spec/v2-state/followups/security-audit.md (your audit), each with its reproduction turned
+into a check that now passes:
+- SEC-04 outside-mistake quota: count log requests per learner and day atomically (server/api_bank.py).
+- SEC-05 report uploads: enforce the byte cap on the request stream before multipart parsing, chunked too
+  (server/reports.py).
+- SEC-06 /api/types/match: validate the College Board ID format and length, bound the cb_unknown writes
+  (server/api_bank.py).
+- SEC-07 legacy creation routes: POST /api/practice and /api/mock/{num} go through writer_of, body codes included
+  (server/api_legacy.py; the /api/session part of it is S5's, leave it).
+- SEC-09 sample learners: use writer_of in /api/mistakes/log and guard progress.record_trap against sample:
+  learners (server/api_bank.py, server/progress.py; touch only record_trap in progress.py).
+SETUP: git worktree add .claude/worktrees/sec-fix -b v2/sec-fix master
+Put the checks in server/checks/security.py (new). DONE: security.py and test_flow pass. Tell the user
+"security fixes done". Also fix SEC-08 (the challenge board's unbounded work) on v2/s8s as part of Task 0.
+SEC-01, SEC-02 and SEC-03 are in files owned by paused wave-2 sections (S1, S3, S5, S6); the main build fixes those.
 ```
 
 ---
