@@ -414,6 +414,15 @@ def abs_value(rng: random.Random, seed: int, *, mode=None, p=None, b=None, a=Non
              "p": [p.numerator, p.denominator], "b": [b.numerator, b.denominator],
              "a": [a.numerator, a.denominator], "d": [d.numerator, d.denominator],
              "e": [e.numerator, e.denominator]}
+        mistakes = [
+            Mis("stopped after evaluating f and reported f(a) instead of g(f(a))", c),
+            Mis("omitted the absolute value when evaluating g", -c / (c - d) - c + e),
+            Mis("added the input to g instead of subtracting it",
+                abs(-c / (c - d)) + c + e),
+        ]
+        if a != d:
+            mistakes.append(Mis("evaluated g at the original input instead of f(a)",
+                                abs(-a / (a - d)) - a + e))
     else:
         name = name or rng.choice(["g", "f", "h"])
         t = q(t if t is not None else rng.randint(5, 20))
@@ -428,6 +437,14 @@ def abs_value(rng: random.Random, seed: int, *, mode=None, p=None, b=None, a=Non
                f"product is {num(key)}.")
         P = {"kind": "nlf_abs_value", "mode": mode, "t": [t.numerator, t.denominator],
              "m": m, "k": k}
+        mistakes = [
+            Mis("treated a as positive when dividing the absolute values by a",
+                (m - t) * (k - t)),
+            Mis("changed the sign of only one of the two negative outputs", -key),
+            Mis("added the two function values instead of multiplying them",
+                -(m + t) - (k + t)),
+            Mis("left the constant term out of both function values", m * k),
+        ]
 
     return value_item("nlfunc.abs_value", "absolute value in a nonlinear rule", "hard",
-                      seed, stem, key, [], rng, P, why, fmt="spr")
+                      seed, stem, key, mistakes, rng, P, why, fmt="spr")

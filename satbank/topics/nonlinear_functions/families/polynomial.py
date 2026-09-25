@@ -91,4 +91,11 @@ def zeros_constant(rng: random.Random, seed: int, *, r1=None, r2=None, r3=None,
     return value_item("nlfunc.zeros_constant", "the constant term from three zeros",
                       "hard", seed, ZEROS.format(rule=rule, n=name, z1=num(r1),
                                                  z2=num(r2), z3=num(r3)),
-                      key, [], rng, P, why, fmt="spr")
+                      key, [
+                          Mis("multiplied the three zeros but forgot the sign change",
+                              r1 * r2 * r3),
+                          Mis("reported the quadratic coefficient instead of the constant",
+                              -(r1 + r2 + r3)),
+                          Mis("multiplied only two of the three zeros", -r1 * r2),
+                          Mis("reported one zero instead of the constant term", r1),
+                      ], rng, P, why, fmt="spr")

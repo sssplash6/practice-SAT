@@ -417,6 +417,12 @@ def exp_steps(rng: random.Random, seed: int, *, ask=None, mode=None, a=None, den
                    f"= {dec(key)} feet.")
             P = {"kind": "nlf_exp_steps", "ask": ask, "mode": mode,
                  "a": [q(a).numerator, q(a).denominator], "den": den, "n": n}
+            mistakes = [
+                Mis("counted one fewer bounce", a / q(den) ** (n - 1)),
+                Mis("counted only the first bounce", a / q(den)),
+                Mis("multiplied by the bounce ratio's denominator instead of dividing",
+                    a * q(den) ** n),
+            ]
         else:
             a = q(a if a is not None else rng.randint(12, 400))
             r = q(r if r is not None else Q(rng.randrange(10, 95, 5), 100))
@@ -430,8 +436,15 @@ def exp_steps(rng: random.Random, seed: int, *, ask=None, mode=None, a=None, den
             P = {"kind": "nlf_exp_steps", "ask": ask, "mode": mode,
                  "a": [q(a).numerator, q(a).denominator],
                  "r": [r.numerator, r.denominator], "n": n}
+            mistakes = [
+                Mis("applied the decrease only once", a * (1 - r)),
+                Mis("counted one fewer decrease step", a * (1 - r) ** (n - 1)),
+                Mis("treated each decrease as an increase", a * (1 + r) ** n),
+                Mis("subtracted the original amount's fixed percentage each time",
+                    a * (1 - n * r)),
+            ]
         return value_item("nlfunc.exp_steps", "a geometric sequence step by step",
-                          "medium", seed, stem, key, [], rng, P, why, fmt="spr")
+                          "medium", seed, stem, key, mistakes, rng, P, why, fmt="spr")
 
     mode = mode or rng.choice(["moore", "culture"])
     power = int(power if power is not None else rng.randint(2, 5))
@@ -549,5 +562,13 @@ def exp_power_table(rng: random.Random, seed: int, *, step=None, first=None, k=N
     P = {"kind": "nlf_exp_power_table", "step": step, "first": first, "rows": rows,
          "target": target}
     return value_item("nlfunc.exp_power_table", "an exponent read off a table", "hard",
-                      seed, POWER_TABLE.format(n=name, target=sup(target)), q(k), [],
+                      seed, POWER_TABLE.format(n=name, target=sup(target)), q(k), [
+                          Mis("omitted the first-row exponent when solving for the input",
+                              Q(target, step)),
+                          Mis("forgot to add the first table row after counting steps",
+                              Q(target - first, step)),
+                          Mis("subtracted the first exponent but did not divide by the step",
+                              target - first),
+                          Mis("read the target exponent directly as the input", target),
+                      ],
                       rng, P, why, fmt="spr", table=table)
