@@ -2771,7 +2771,8 @@
     el.append(live);
     const clock = testDay ? h('div', { class: 'rn-between-clock', role: 'timer' }) : null;
     const bar = testDay ? h('span', { class: 'rn-between-bar' }, h('i')) : null;
-    const pred = o.predict !== false && o.cells ? predictGrid(null, o.cells, o) : null;
+    // nothing answered, nothing to predict: no grid of disabled cells
+    const pred = o.predict !== false && o.cells && o.cells.some(c => answeredish(c.status)) ? predictGrid(null, o.cells, o) : null;
     const beginB = h('button', { type: 'button', class: testDay ? 'btn rn-begin' : 'pill rn-begin', text: testDay ? 'Begin module 2 now' : 'Begin module 2' });
     const card = h('div', { class: 'rn-between-card' });
     if (o.next) card.append(h('p', { class: 'rn-between-next', text: o.next }));

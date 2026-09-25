@@ -1005,7 +1005,7 @@
       else if (r.kind === 'example') {
         if (o.onExample) o.onExample(r.example);
         else if (r.example) exampleSheet(r.example);
-        hintMsg('A worked twin', 'is open beside this question. This one still counts as yours.');
+        hintMsg('Worked twin', 'open beside this question. This one still counts as yours.');
       }
       paint(); changed();
       return true;

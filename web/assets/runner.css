@@ -91,7 +91,8 @@ figure.q-figure { margin: 4px 0 18px; }
 .ws .opts.done .opt.tried { opacity: .6; }
 .ws .opts.busy .opt, .ws.is-busy .opt { cursor: progress; }
 @media (min-width: 640px) {
-  .ws .opts.two { grid-template-columns: 1fr 1fr; }
+  /* top-aligned: a tried option's line under it never drops its neighbour to its middle */
+  .ws .opts.two { grid-template-columns: 1fr 1fr; align-items: start; }
 }
 
 /* the gap is the strike's own margin, so a row with no strike or Undo showing keeps the full width */
@@ -147,16 +148,20 @@ figure.q-figure { margin: 4px 0 18px; }
 }
 .qlink:hover { text-decoration-color: currentColor; }
 
-/* P5: the choices under a paper panel until you have your own answer */
+/* P5: the choices under a paper panel until you have your own answer. The panel shares the
+   options' grid cell, so the wrap grows to whichever is taller: a 2x2 grid is shorter than the field */
 .opts.covered .opt-row { visibility: hidden; }
+.opts-wrap:has(> .ws-cover:not([hidden])) { display: grid; }
+.opts-wrap > .opts, .opts-wrap > .ws-cover { grid-area: 1 / 1; }
 .ws-cover {
-  position: absolute; inset: 26px 0 0 0; z-index: 1; min-height: calc(100% - 26px);
+  z-index: 1; margin-top: 26px;
   display: grid; align-content: start; gap: 8px; padding: 18px 20px; border-radius: var(--radius-card);
   background: var(--tile-2);
 }
 .ws-cover .cover-lead { font: 400 14.5px/1.4 var(--font); color: var(--ink); }
 .ws-cover .field { max-width: 320px; }
 .cover-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-top: 4px; }
+.cover-acts .btn { background: var(--paper); }   /* a button on the panel, not the panel's colour */
 
 /* grid-in */
 .spr { margin-top: 26px; }
