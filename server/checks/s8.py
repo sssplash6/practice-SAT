@@ -133,6 +133,22 @@ def run() -> None:
                   "first Daily stores and exposes its personal record")
         assert_ok(c.get("/api/compete/me", headers=head(a)).json()["streak"]["current"] == 1,
                   "daily twin sitting advances the challenge streak")
+        makeup = learner("makeup")
+        db.ensure_learner(makeup)
+        for back in range(6, -1, -1):
+            day = dt.date.fromisoformat(today) - dt.timedelta(days=back)
+            finished = dt.datetime.combine(day, dt.time(10), dt.timezone.utc)
+            if back == 1:
+                finished = dt.datetime.combine(day + dt.timedelta(days=1), dt.time(0, 30), dt.timezone.utc)
+            if back == 0:
+                finished = dt.datetime.combine(day, dt.time(0, 40), dt.timezone.utc)
+            db.run("INSERT INTO sessions(id,kind,learner,started,finished,answers,contest,day,ranked)"
+                   " VALUES (?,?,?,?,?,'{}',?,?,?)", secrets.token_urlsafe(12), "challenge", makeup,
+                   finished.isoformat(), finished.isoformat(), "daily-" + day.isoformat(),
+                   day.isoformat(), int(back != 1))
+        streak = compete.challenge_streak(makeup)
+        assert_ok(streak["current"] == 7 and streak["strip"][-2]["state"] == "made_up",
+                  "a Daily made up within 48 hours preserves the challenge streak")
         assert_ok(c.get("/api/contest/daily/review", headers=head(a)).status_code == 200 and
               len(c.get("/api/contest/daily/review", headers=head(a)).json()["items"]) == 10,
               "finished learner can review ten twin questions")
@@ -198,6 +214,13 @@ def run() -> None:
         board = c.get("/api/contest/daily/board", headers=head(a)).json()
         assert_ok(board["you"]["points"] == 260 and len(board["pars"]) in (4, 5),
               "real ranks and four or five par rows share the board")
+        yesterday = (dt.datetime.now(dt.timezone.utc).date() - dt.timedelta(days=1)).isoformat()
+        db.run("INSERT OR REPLACE INTO rank_snapshots(day,board,learner,rank,value) VALUES (?,?,?,?,?)",
+               yesterday, "points:week:all:math::value", a, 4, 200)
+        moving = c.get("/api/leaderboard?metric=points&period=week", headers=head(a)).json()
+        assert_ok(moving["you"]["move"] == 3 and moving["you"]["gap"] == 0 and
+                  all("gap" in entry for entry in moving["entries"]),
+                  "leaderboard shows movement and the gap from one rank source")
         assert_ok(c.get("/api/compete/me", headers=head(a)).json()["rating"] != 1000,
               "ranked answers move contest rating")
         assert_ok(c.get("/api/leaderboard", headers=head(a)).status_code == 200,
@@ -285,6 +308,79 @@ def run() -> None:
                   "hidden champion stays anonymous to others")
         assert_ok(c.get(f"/api/leaderboard?period=week&at={old_week}", headers=head(b)).json()
                   ["entries"] == past.json()["entries"], "closed board is stable on repeated reads")
+        rush_cid = next(row["id"] for row in compete.ensure() if row["kind"] == "rush" and
+                        row["opens"] <= compete._iso(compete._now()))
+        rush_person = learner("rush")
+        def rush_pick(q, right):
+            original = question_for(rush_sid, q["id"])
+            answer = answer_of(original)
+            return answer if right else ((answer + 1) % 4 if original["type"] == "mcq" else "999999999")
+        rush = c.post(f"/api/contest/{rush_cid}/start", headers=head(rush_person)).json()
+        rush_sid = rush["session"]
+        for strike in range(3):
+            rush = c.post(f"/api/contest/{rush_cid}/answer", headers=head(rush_person),
+                          json={"sid": rush_sid, "question_id": rush["question"]["id"],
+                                "answer": rush_pick(rush["question"], False), "ms": 60_000}).json()
+        assert_ok(rush["done"] and rush["result"]["right"] == 0 and len(rush["result"]["strikes"]) == 3,
+                  "Rush ends on its third strike")
+        again = c.post(f"/api/contest/{rush_cid}/start", headers=head(rush_person)).json()
+        rush_sid = again["session"]
+        ratings_seen, keys = [], []
+        for _ in range(5):
+            ratings_seen.append(again["item_rating"])
+            keys.append(question_for(rush_sid, again["question"]["id"])["key"])
+            again = c.post(f"/api/contest/{rush_cid}/answer", headers=head(rush_person),
+                           json={"sid": rush_sid, "question_id": again["question"]["id"],
+                                 "answer": rush_pick(again["question"], True), "ms": 60_000}).json()
+        assert_ok(len(set(keys)) == 5 and all(b > a for a, b in zip(ratings_seen, ratings_seen[1:])),
+                  "five clean Rush answers climb through fresh item ratings")
+        for strike in range(3):
+            again = c.post(f"/api/contest/{rush_cid}/answer", headers=head(rush_person),
+                           json={"sid": rush_sid, "question_id": again["question"]["id"],
+                                 "answer": rush_pick(again["question"], False), "ms": 60_000}).json()
+        rush_board = c.get(f"/api/contest/{rush_cid}/board", headers=head(rush_person)).json()
+        assert_ok(again["done"] and len({row["pid"] for row in rush_board["entries"]}) ==
+                  rush_board["players"] and
+                  rush_board["you"]["right"] == 5 and rush_board["you"]["runs"] == 2,
+                  "Rush weekly board keeps one best run per learner")
+        final_person = learner("final")
+        db.ensure_learner(final_person)
+        sat_day = next(day for day in compete.SAT_DATES if day >= today)
+        final_cid = "final-" + sat_day
+        compete.contest(final_cid)
+        db.run("UPDATE learners SET exam_date=? WHERE id=?", sat_day, final_person)
+        circle_name = practice.catalogue()["by_topic"]["circles"][0]
+        cards = []
+        for seed in range(100):
+            item = practice.generate(circle_name, seed, fmt="mcq")
+            if item.fmt == "mcq" and any(item.reasons):
+                q = practice.to_question(practice.Card.of(circle_name, seed, item, "circles"), len(cards) + 1)
+                q["id"] = f"f{len(cards) + 1:02d}"
+                q["budget_ms"] = 95_000
+                cards.append(q)
+            if len(cards) == 2:
+                break
+        assert len(cards) == 2
+        final_sid = secrets.token_urlsafe(12)
+        db.run("INSERT INTO sessions(id,kind,learner,started,finished,questions,answers,result,contest,ranked)"
+               " VALUES (?,?,?,?,?,?,?, ?,?,1)", final_sid, "module", final_person,
+               today + "T00:00:00+00:00", today + "T01:00:00+00:00",
+               json.dumps({"module1": cards}), "{}", json.dumps({"estimate": {"low": 610, "high": 750},
+                                                        "route": "upper"}), final_cid)
+        for q in cards:
+            reason = next(text for text in q["reasons"] if text)
+            db.run("INSERT INTO attempts(learner,session,qid,template,seed,topic,difficulty,fmt,correct,reason,ms,at)"
+                   " VALUES (?,?,?,?,?,?,?,?,0,?,?,?)", final_person, final_sid, q["id"], q["key"], q["seed"],
+                   q["topic"], q["difficulty"], q["type"], reason, 210_000, today + "T01:00:00+00:00")
+        focus = compete.final_focus(final_person)
+        card = c.get(f"/api/contest/{final_cid}/card", headers=head(final_person))
+        assert_ok(focus["mode"] == "last_week" and "circles" in focus["skip_first"] and
+                  card.status_code == 200 and "7:45 AM" in card.json()["doors"],
+                  "Final focus names slow wrong skills and the test-day doors")
+        db.run("UPDATE learners SET exam_date=? WHERE id=?",
+               (dt.date.fromisoformat(sat_day) + dt.timedelta(days=42)).isoformat(), final_person)
+        assert_ok(compete.final_focus(final_person)["mode"] == "focus",
+                  "a later exam date keeps Final advice without entering the taper")
         print("S8 checks passed")
 
 
@@ -293,14 +389,26 @@ def supply() -> None:
         if not compete._read_supply():
             print("Surveying up to 3,000 seeds per template and tier; this may take several minutes.")
             compete.survey_supply()
+        required = set()
+        for form, module in (("module1", 1), ("module2_lower", 2), ("module2_upper", 2)):
+            required.update(blueprint.slots(form, module))
+        for back in range(2):
+            day = compete.local_day() + dt.timedelta(days=back)
+            for name, tier, fmt in compete._daily_slots(day):
+                required.add((blueprint.kinds()[name]["domain"], tier, fmt))
+        shortages = []
         for domain, names in blueprint.by_domain().items():
             for tier in ("easy", "medium", "hard"):
-                for fmt in ("mcq", "spr"):
+                for fmt in (None, "mcq", "spr"):
                     passing = set(compete.pool("daily", tier, need=1000))
-                    count = sum(name in passing and (tier, fmt) in blueprint.abilities()[name]
+                    count = sum(name in passing and (any(t == tier for t, _ in blueprint.abilities()[name])
+                                 if fmt is None else (tier, fmt) in blueprint.abilities()[name])
                                 for name in names)
-                    print(f"{domain}\t{tier}\t{fmt}\t{count}")
-                    assert count >= 3, (domain, tier, fmt, count)
+                    needed = (domain, tier, fmt) in required
+                    print(f"{domain}\t{tier}\t{fmt or 'either'}\t{count}\t{'required' if needed else 'optional'}")
+                    if needed and count < 3:
+                        shortages.append((domain, tier, fmt, count))
+        assert not shortages, f"required contest cells have fewer than three templates: {shortages}"
 
 
 def simulate(n: int) -> None:
@@ -314,6 +422,34 @@ def simulate(n: int) -> None:
                        " GROUP BY slot,qhash HAVING COUNT(*)>1", row["id"])
         assert not rows, rows
         print(f"simulated {n} entrants without whole-question collisions")
+
+
+def traps() -> None:
+    with TestClient(app):
+        survey = compete.trap_families()
+        if not survey["families"]:
+            print("Trap of the week unavailable:", survey["reason"],
+                  "(F5's server/habits.py has not landed on master)")
+            return
+        print("topic floor", survey["topic_floor"], "no-repeat window", survey["window"])
+        qualified = {row["family"]["id"] for row in survey["families"]}
+        for fid, entry in survey["survey"].items():
+            print(fid, *(f"{tier}={len(entry['tiers'][tier])}" for tier in ("easy", "medium", "hard")),
+                  "topics=" + str(len(entry["topics"])), "qualified=" + str(fid in qualified))
+        monday = dt.datetime.now(dt.timezone.utc).date()
+        monday -= dt.timedelta(days=monday.weekday())
+        themes = []
+        for offset in range(12):
+            day = monday + dt.timedelta(days=7 * offset)
+            week = f"{day.isocalendar().year}-W{day.isocalendar().week:02d}"
+            theme = compete.trap_theme(week, survey)
+            slots = compete._trap_slots(week, theme, survey["topic_floor"])
+            assert len(slots) == 10 and [s[1] for s in slots].count("easy") == 3
+            assert [s[1] for s in slots].count("medium") == 4 and [s[1] for s in slots].count("hard") == 3
+            assert theme["family"]["id"] != "slip"
+            assert theme["family"]["id"] not in themes[-survey["window"]:]
+            themes.append(theme["family"]["id"])
+        print("12 trap weeks:", ", ".join(themes))
 
 
 def check(client: TestClient) -> None:
@@ -331,6 +467,8 @@ def check(client: TestClient) -> None:
 if __name__ == "__main__":
     if "--supply" in sys.argv:
         supply()
+    elif "--traps" in sys.argv:
+        traps()
     elif "--simulate" in sys.argv:
         at = sys.argv.index("--simulate")
         simulate(int(sys.argv[at + 1]))

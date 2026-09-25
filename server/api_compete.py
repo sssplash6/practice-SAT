@@ -156,6 +156,7 @@ def compete_home(x_learner: str | None = Header(default=None), x_tz: int = Depen
             "board_preview": compete.leaderboard(learner=learner, limit=5),
             "records": compete.records(learner), "week_line": compete.week_line(learner),
             "champions": compete.champions(limit=1, viewer=learner),
+            "traps": compete.traps_index(learner)[:3],
             "next_badges": [b for b in compete.evaluate(learner) if not b["earned"]][:3],
             "private": compete.due_today(learner, x_tz), "sat_dates": compete.SAT_DATES}
 
@@ -217,7 +218,8 @@ def _start_locked(cid: str, learner: str, tz: int, race: str | None = None) -> d
     spec = compete._json(contest["spec"], {}) or {}
     race_data = compete.race_choice(contest["id"], learner, race)
     if contest["kind"] in ("weekly", "final"):
-        questions = compete.twin_questions(learner, contest["id"], spec["slots"])
+        questions = compete.twin_questions(learner, contest["id"], spec["slots"],
+                                           family=spec.get("family"))
         sid = secrets.token_urlsafe(16)
         expected = compete.par(learner, spec["slots"])
         db.run("INSERT INTO sessions(id,kind,learner,started,questions,answers,contest,subject,cfg,module,result)"
@@ -226,7 +228,8 @@ def _start_locked(cid: str, learner: str, tz: int, race: str | None = None) -> d
                json.dumps({"timed": True, "contest": contest["id"], "par": expected, "race": race_data}), json.dumps({"par": expected}))
         return {"session": sid, "runner": "test", "clock": {"left": contest["seconds"]}}
     if spec.get("twin"):
-        qs = compete.twin_questions(learner, contest["id"], spec["slots"])
+        qs = compete.twin_questions(learner, contest["id"], spec["slots"],
+                                    family=spec.get("family"))
     else:
         qs = compete._json(contest["questions"], []) or []
         if not qs:
@@ -264,9 +267,10 @@ def daily_start(race: str | None = None, x_learner: str | None = Header(default=
 def public_leaderboard(metric: str = "points", period: str = "week", scope: str = "all",
                        subject: str = "math", domain: str | None = None, offset: int = 0,
                        limit: int = 50, find: str | None = None, at: str | None = None,
+                       sort: str = "value",
                        x_learner: str | None = Header(default=None)) -> dict:
     return compete.leaderboard(metric, period, scope, learner=_viewer(x_learner), subject=subject,
-                               domain=domain, offset=offset, limit=limit, find=find, at=at)
+                               domain=domain, offset=offset, limit=limit, find=find, at=at, sort=sort)
 
 
 @router.get("/api/compete/champions")
@@ -289,6 +293,32 @@ def compete_me(x_learner: str | None = Header(default=None), x_tz: int = Depends
 @router.get("/api/compete/recap")
 def compete_recap(season: str | None = None, x_learner: str | None = Header(default=None)) -> dict:
     return compete.season_recap(learner_of(x_learner), season)
+
+
+@router.get("/api/compete/final-focus")
+def compete_final_focus(x_learner: str | None = Header(default=None)) -> dict:
+    return {"focus": compete.final_focus(learner_of(x_learner))}
+
+
+@router.get("/api/contest/{cid}/card")
+def contest_test_day_card(cid: str, x_learner: str | None = Header(default=None),
+                          x_tz: int = Depends(tz_of)) -> dict:
+    learner = learner_of(x_learner)
+    row = compete.contest(cid, x_tz)
+    if row["kind"] != "final":
+        raise HTTPException(404, "test-day card is for a Season Final")
+    focus = compete.final_focus(learner)
+    if not focus or focus["sid"] != (_sitting(row["id"], learner) or {"id": None})["id"]:
+        raise HTTPException(403, "finish your Final first")
+    return {"date": focus["exam_date"] or focus["sat_date"], "doors": compete.DOORS_LINE,
+            "pace": {"easy": "2:10", "medium": "3:10", "hard": "4:12"},
+            "skip_first": focus["skip_first"], "traps": focus["trap_norms"],
+            "band": focus["band"], "route": focus["route"]}
+
+
+@router.get("/api/compete/traps-index")
+def compete_traps_index(x_learner: str | None = Header(default=None)) -> list[dict]:
+    return compete.traps_index(learner_of(x_learner))
 
 
 @router.get("/api/compete/history")
@@ -440,11 +470,13 @@ def remove_private_member(cid: str, pid: str, x_learner: str | None = Header(def
 
 @router.get("/api/contest/{cid}/board")
 def contest_board(cid: str, scope: str = "all", offset: int = 0, limit: int = 50,
-                  view: str | None = None, sort: str = "points",
+                  view: str | None = None, sort: str = "points", domain: str = "all",
                   x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
     row = compete.contest(cid, x_tz)
     if view == "series":
         return compete.series_board(row["series"] or row["id"], sort, _viewer(x_learner))
+    if row["kind"] == "rush":
+        return compete.rush_board(row["id"], _viewer(x_learner), domain)
     return compete.board(row["id"], _viewer(x_learner), scope, offset, limit)
 
 
@@ -673,9 +705,45 @@ def get_contest(cid: str, code: str | None = None, race: str | None = None,
 
 
 @router.post("/api/contest/{cid}/start")
-def start_contest(cid: str, race: str | None = None, x_learner: str | None = Header(default=None),
+def start_contest(cid: str, race: str | None = None, domain: str = "all",
+                  x_learner: str | None = Header(default=None),
                   x_tz: int = Depends(tz_of)) -> dict:
-    return _start(cid, learner_of(x_learner), x_tz, race)
+    learner = learner_of(x_learner)
+    row = compete.contest(cid, x_tz)
+    if row["kind"] == "rush":
+        with db.atomic():
+            return compete.rush_start(learner, row["id"], domain)
+    return _start(cid, learner, x_tz, race)
+
+
+@router.post("/api/contest/{cid}/next")
+def contest_next(cid: str, sid: str, x_learner: str | None = Header(default=None),
+                 x_tz: int = Depends(tz_of)) -> dict:
+    row = compete.contest(cid, x_tz)
+    if row["kind"] != "rush":
+        raise HTTPException(404, "use this contest's runner")
+    return compete.rush_next(sid, learner_of(x_learner))
+
+
+@router.post("/api/contest/{cid}/answer")
+def contest_answer(cid: str, body: dict, x_learner: str | None = Header(default=None),
+                   x_tz: int = Depends(tz_of)) -> dict:
+    row = compete.contest(cid, x_tz)
+    if row["kind"] != "rush":
+        raise HTTPException(404, "use this contest's runner")
+    if not isinstance(body.get("sid"), str) or not isinstance(body.get("question_id"), str):
+        raise HTTPException(422, "sid and question_id are required")
+    return compete.rush_answer(body["sid"], learner_of(x_learner), body["question_id"],
+                               body.get("answer"), body.get("ms"))
+
+
+@router.post("/api/contest/{cid}/finish")
+def contest_finish(cid: str, sid: str, x_learner: str | None = Header(default=None),
+                   x_tz: int = Depends(tz_of)) -> dict:
+    row = compete.contest(cid, x_tz)
+    if row["kind"] != "rush":
+        raise HTTPException(404, "use this contest's runner")
+    return compete.rush_finish(sid, learner_of(x_learner))
 
 
 @router.get("/api/contest/{cid}/pacer")
