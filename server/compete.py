@@ -609,9 +609,12 @@ def _identity(learner: str, viewer: str | None = None) -> dict:
     anon = board_mode in ("anon", "hidden")
     name = profile["handle"] if profile else None
     name = challenge.handle(learner, name)
+    title = champion_title(learner)
     return {"pid": _pid(learner), "name": name if not anon or learner == viewer else "Anonymous",
             "anon": anon, "level": ratings.level_of(profile["rating"] or 1000) if profile else 1,
-            "country": profile["country"] if profile else None}
+            "country": profile["country"] if profile else None,
+            "ring": bool(title) and (not anon or learner == viewer),
+            "title": title if not anon or learner == viewer else None}
 
 
 def _rank(entries: list[dict], value: str = "points") -> None:
@@ -738,6 +741,189 @@ def _period_bounds(period: str, at: dt.date | None = None) -> tuple[str | None, 
     return start.isoformat(), end.isoformat()
 
 
+def period_window(period: str, at: str | None = None) -> tuple[str | None, str | None, str | None, bool]:
+    """Decode public period IDs and refuse future or still-open historical boards."""
+    if at is None:
+        start, end = _period_bounds(period)
+        return start, end, None, False
+    if period in ("all", "7d", "rating", "skill", "climb"):
+        raise HTTPException(400, "this board has no past-period stepper")
+    try:
+        if period == "week":
+            year, week = at.split("-W")
+            date = dt.date.fromisocalendar(int(year), int(week), 1)
+        elif period == "month":
+            date = dt.date.fromisoformat(at + "-01")
+        elif period == "year":
+            date = dt.date(int(at), 1, 1)
+        elif period == "season" and at.startswith("road-"):
+            date = dt.date.fromisoformat(at[5:])
+            if date.isoformat() not in SAT_DATES:
+                raise ValueError("unknown SAT season")
+        else:
+            raise ValueError("invalid period")
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(400, "invalid past period") from exc
+    start, end = _period_bounds(period, date)
+    if start is None or end is None:
+        raise HTTPException(400, "period has no dates")
+    current_start, _ = _period_bounds(period)
+    if start > current_start:
+        raise HTTPException(400, "period has not started")
+    close = dt.datetime.fromisoformat(end + "T12:00:00+00:00")
+    closed = _now() >= close
+    if start != current_start and not closed:
+        raise HTTPException(400, "period has not closed")
+    return start, end, at, closed
+
+
+def _season_end(period: str) -> dt.date:
+    return dt.date.fromisoformat(period.removeprefix("road-"))
+
+
+def champion_title(learner: str) -> dict | None:
+    """A season/final podium ring lasts until the next SAT season closes."""
+    now = _now().date()
+    rows = db.rows("SELECT kind,period,board,place FROM champions WHERE learner=?"
+                   " AND kind IN ('season','final') ORDER BY period DESC,place LIMIT 12", learner)
+    for row in rows:
+        end = _season_end(row["period"]) if row["kind"] == "season" else dt.date.fromisoformat(row["period"])
+        next_sat = next((dt.date.fromisoformat(x) for x in SAT_DATES if dt.date.fromisoformat(x) > end), None)
+        if end < now <= (next_sat or end):
+            return dict(row)
+    return None
+
+
+def _champion_values(start: str, end: str, metric: str, subject: str = "math") -> list[dict]:
+    rows = db.rows("SELECT s.*,c.kind AS contest_kind,c.subject AS contest_subject FROM sessions s"
+                   " JOIN contests c ON c.id=s.contest WHERE s.finished>=? AND s.finished<?"
+                   " AND s.ranked=1 AND c.kind!='private' AND c.subject=?", start, end, subject)
+    totals: dict[str, float] = defaultdict(float)
+    first: dict[str, tuple[str, float]] = {}
+    last: dict[str, tuple[str, float]] = {}
+    sprint_best: dict[tuple[str, str], float] = {}
+    for row in rows:
+        person = row["learner"]
+        result = _json(row["result"], {}) or {}
+        if metric == "change":
+            before, after = result.get("rating_before"), result.get("rating_after")
+            if before is None or after is None:
+                continue
+            if person not in first or row["finished"] < first[person][0]:
+                first[person] = (row["finished"], before)
+            if person not in last or row["finished"] > last[person][0]:
+                last[person] = (row["finished"], after)
+            continue
+        if metric == "net":
+            if row["contest_kind"] in ("sprint", "rush", "words"):
+                continue
+            value = result.get("net", 0) or 0
+        else:
+            if row["contest_kind"] in ("rush", "words"):
+                continue
+            value = row["points"] or 0
+        if row["contest_kind"] == "sprint":
+            key = (person, row["contest"])
+            previous = sprint_best.get(key, 0)
+            sprint_best[key] = max(previous, value)
+            totals[person] += max(0, value - previous)
+        else:
+            totals[person] += value
+    if metric == "change":
+        totals = {person: after - first[person][1] for person, (_, after) in last.items() if person in first}
+    entries = [{"learner": person, "pid": _pid(person), "value": round(value, 1),
+                "level": _identity(person)["level"]} for person, value in totals.items()]
+    _rank(entries, "value")
+    return entries
+
+
+def _save_podium(kind: str, period: str, board_name: str, entries: list[dict], band: str = "") -> None:
+    for entry in entries:
+        if entry["rank"] > (1 if band else 3):
+            continue
+        db.run("INSERT OR IGNORE INTO champions(kind,period,board,place,learner,value,band)"
+               " VALUES (?,?,?,?,?,?,?)", kind, period, board_name, entry["rank"],
+               entry["learner"], entry["value"], band)
+
+
+def close_champions() -> None:
+    """Lazily freeze every finished, populated week, season and Final."""
+    now = _now()
+    rows = db.rows("SELECT DISTINCT finished FROM sessions WHERE contest IS NOT NULL"
+                   " AND ranked=1 AND finished IS NOT NULL")
+    weeks: set[dt.date] = set()
+    seasons: set[str] = set()
+    for row in rows:
+        day = dt.date.fromisoformat(row["finished"][:10])
+        weeks.add(day - dt.timedelta(days=day.weekday()))
+        season = next((s for s in SAT_DATES if s >= day.isoformat()), None)
+        if season:
+            seasons.add(season)
+    for monday in sorted(weeks):
+        end = monday + dt.timedelta(days=7)
+        if now < dt.datetime.combine(end, dt.time(12), dt.timezone.utc):
+            continue
+        period = f"{monday.isocalendar().year}-W{monday.isocalendar().week:02d}"
+        if db.one("SELECT 1 FROM champions WHERE kind='week' AND period=?", period):
+            continue
+        for metric in ("points", "net", "change"):
+            entries = _champion_values(monday.isoformat(), end.isoformat(), metric)
+            _save_podium("week", period, metric, entries)
+            if metric == "points":
+                for label, low, high in (("1-3", 1, 3), ("4-6", 4, 6), ("7-10", 7, 10)):
+                    band = [e.copy() for e in entries if low <= e["level"] <= high]
+                    _rank(band, "value")
+                    _save_podium("week", period, "band", band, label)
+    for sat in sorted(seasons):
+        end = dt.date.fromisoformat(sat) + dt.timedelta(days=1)
+        if now < dt.datetime.combine(end, dt.time(12), dt.timezone.utc):
+            continue
+        period = "road-" + sat
+        if db.one("SELECT 1 FROM champions WHERE kind='season' AND period=?", period):
+            continue
+        start, _ = _period_bounds("season", dt.date.fromisoformat(sat))
+        for metric in ("points", "net", "change"):
+            entries = _champion_values(start, end.isoformat(), metric)
+            _save_podium("season", period, metric, entries)
+            if metric == "points":
+                for label, low, high in (("1-3", 1, 3), ("4-6", 4, 6), ("7-10", 7, 10)):
+                    band = [e.copy() for e in entries if low <= e["level"] <= high]
+                    _rank(band, "value")
+                    _save_podium("season", period, "band", band, label)
+        standings = {metric: _champion_values(start, end.isoformat(), metric)
+                     for metric in ("points", "net", "change")}
+        db.run("INSERT OR IGNORE INTO seasons(id,opens,closes,standings,closed) VALUES (?,?,?,?,?)",
+               period, start, end.isoformat(), json.dumps(standings), _iso(now))
+        final = "final-" + sat
+        final_rows = db.rows("SELECT learner,points FROM sessions WHERE contest=? AND ranked=1"
+                             " AND finished IS NOT NULL", final)
+        podium = [{"learner": r["learner"], "pid": _pid(r["learner"]), "value": r["points"] or 0}
+                  for r in final_rows]
+        _rank(podium, "value")
+        _save_podium("final", sat, "points", podium)
+
+
+def champions(kind: str | None = None, mine: str | None = None,
+              before: str | None = None, limit: int = 8,
+              viewer: str | None = None) -> list[dict]:
+    close_champions()
+    rows = db.rows("SELECT * FROM champions ORDER BY period DESC,kind,board,place")
+    periods: dict[tuple[str, str], dict] = {}
+    for row in rows:
+        if (kind and row["kind"] != kind) or (before and row["period"] >= before):
+            continue
+        key = (row["kind"], row["period"])
+        group = periods.setdefault(key, {"kind": row["kind"], "period": row["period"], "boards": {}})
+        ident = _identity(row["learner"], viewer)
+        group["boards"].setdefault(row["board"], []).append(
+            {"place": row["place"], "value": row["value"], "band": row["band"], **ident})
+    if mine:
+        own_pid = _pid(mine)
+        periods = {key: group for key, group in periods.items()
+                   if any(entry["pid"] == own_pid for entries in group["boards"].values() for entry in entries)}
+    return list(periods.values())[:max(1, min(limit, 50))]
+
+
 def leaderboard(metric: str = "points", period: str = "week", scope: str = "all",
                 *, learner: str | None = None, subject: str = "math", domain: str | None = None,
                 offset: int = 0, limit: int = 50, sort: str = "value", find: str | None = None,
@@ -749,8 +935,10 @@ def leaderboard(metric: str = "points", period: str = "week", scope: str = "all"
         raise HTTPException(422, "subject or sort is invalid")
     if domain and metric == "rating":
         raise HTTPException(400, {"error": "domain applies to metric=skill"})
-    date = dt.date.fromisoformat(at) if at and len(at) == 10 else None
-    start, end = _period_bounds(period, date)
+    if at and metric in ("rating", "skill", "climb"):
+        raise HTTPException(400, "this metric has no past-period board")
+    start, end, period_id, closed = period_window(period, at)
+    close_champions()
     rows = db.rows("SELECT s.*,c.kind AS contest_kind,c.subject AS contest_subject FROM sessions s"
                    " LEFT JOIN contests c ON c.id=s.contest WHERE s.finished IS NOT NULL AND s.ranked=1")
     values: dict[str, float] = defaultdict(float)
@@ -844,7 +1032,8 @@ def leaderboard(metric: str = "points", period: str = "week", scope: str = "all"
         e.pop("finished", None)
     if mine:
         mine = {k: v for k, v in mine.items() if k not in ("learner", "finished")}
-    return {"metric": metric, "period": period, "scope": scope, "subject": subject,
+    return {"metric": metric, "period": period, "at": period_id, "closed": closed,
+            "scope": scope, "subject": subject,
             "players": players, "entries": page, "podium": page[:3] if offset == 0 else [],
             "you": mine, "next_offset": offset + len(page) if offset + len(page) < players else None,
             "resets_at": end, "nearest_nonempty": None, "window": climb_window}

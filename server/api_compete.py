@@ -253,10 +253,17 @@ def daily_start(x_learner: str | None = Header(default=None), x_tz: int = Depend
 @router.get("/api/leaderboard")
 def public_leaderboard(metric: str = "points", period: str = "week", scope: str = "all",
                        subject: str = "math", domain: str | None = None, offset: int = 0,
-                       limit: int = 50, find: str | None = None,
+                       limit: int = 50, find: str | None = None, at: str | None = None,
                        x_learner: str | None = Header(default=None)) -> dict:
     return compete.leaderboard(metric, period, scope, learner=_viewer(x_learner), subject=subject,
-                               domain=domain, offset=offset, limit=limit, find=find)
+                               domain=domain, offset=offset, limit=limit, find=find, at=at)
+
+
+@router.get("/api/compete/champions")
+def compete_champions(kind: str | None = None, mine: bool = False, before: str | None = None,
+                      x_learner: str | None = Header(default=None)) -> list[dict]:
+    learner = _viewer(x_learner)
+    return compete.champions(kind, learner if mine else None, before, viewer=learner)
 
 
 @router.get("/api/compete/me")
