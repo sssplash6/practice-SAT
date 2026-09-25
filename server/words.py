@@ -1003,6 +1003,101 @@ def item(template: str, seed: int, word: str | None = None,
     raise ValueError("unknown Reading & Writing template")
 
 
+def _sprint_pool(kind: str, tier: str) -> list[tuple[str, str]]:
+    """Reviewed SAT-form addresses at one authored difficulty."""
+    data = content()
+    if kind == "incontext":
+        return [("rw.wic." + frame["id"], slug)
+                for frame in data["frames"].values()
+                if frame["stem"] == "complete" and frame["difficulty"] == tier
+                and _servable(frame) and not _suppressed(frame["id"])
+                for slug in frame["keys"]]
+    return [("rw.tr." + pair["id"], slug)
+            for pair in data["pairs"].values()
+            if _servable(pair) and not _suppressed(pair["id"])
+            for slug in pair["fits"] if data["entries"][slug].get("level") == tier]
+
+
+def sprint_available() -> bool:
+    """The weekly contest opens only when both reviewed SAT forms can climb."""
+    return all(_sprint_pool(kind, tier) for kind in ("incontext", "transition")
+               for tier in ("easy", "medium", "hard"))
+
+
+def sprint_items(learner: str, seed: int, n: int, level: int) -> list[dict]:
+    """Alternating W1/W2 twins with a difficulty band every five answers.
+
+    The template walk depends on the shared contest seed. The learner changes
+    each passage's draw, so entrants receive the same forms but fresh text.
+    """
+    if not isinstance(n, int) or not 1 <= n <= 80 or not isinstance(level, int) or not 1 <= level <= 5:
+        raise HTTPException(422, "Word Sprint count is 1–80 and level is 1–5")
+    if not sprint_available():
+        raise HTTPException(409, "reviewed Words in Context and Transitions frames are needed")
+    pools = {(kind, tier): _sprint_pool(kind, tier)
+             for kind in ("incontext", "transition") for tier in ("easy", "medium", "hard")}
+    out, seen = [], set()
+    for index in range(n):
+        band = min(5, level + index // 5)
+        tier = "easy" if band <= 2 else "medium" if band == 3 else "hard"
+        kind = "incontext" if index % 2 == 0 else "transition"
+        candidates = pools[kind, tier]
+        start = (seed + index // 2) % len(candidates)
+        selected = None
+        for offset in range(len(candidates)):
+            template, slug = candidates[(start + offset) % len(candidates)]
+            draw = int.from_bytes(hashlib.sha256(
+                f"{learner}:{seed}:{index}:{offset}".encode()).digest()[:4], "big")
+            for retry in range(4):
+                try:
+                    generated = item(template, draw + retry, slug)
+                except ValueError:
+                    continue
+                signature = (generated["text"], tuple(generated["choices"]))
+                if signature in seen:
+                    continue
+                selected = generated
+                seen.add(signature)
+                break
+            if selected:
+                break
+        if not selected:
+            raise HTTPException(409, f"reviewed {kind} supply ran out at item {index + 1}")
+        if kind == "transition":
+            need = selected["logic_needed"]
+            selected["traps"] = [None if i == selected["answer_index"] else
+                                 f"Read {need} as {logic}"
+                                 for i, logic in enumerate(selected["option_logics"])]
+        else:
+            labels = content()["traps"]
+            selected["traps"] = [labels[trap]["name"] if trap in labels else trap
+                                 for trap in selected["traps"]]
+        selected["sprint_band"] = band
+        out.append(selected)
+    return out
+
+
+def record_contest_miss(learner: str, word: str, trap: str | None) -> dict:
+    """Mark a Word Sprint miss without another review or any box loss.
+
+    Compete grades the item first in passive sprint mode. This adapter also
+    works when a contest imports a miss after its review was filed.
+    """
+    if not entry(word, learner):
+        raise HTTPException(404, "unknown word")
+    with db.atomic() as c:
+        s = state(learner, word)
+        before = s["box"]
+        s["lastwrong"] = _stamp()
+        _upsert_state(c, s)
+        latest = c.execute("SELECT id,trap FROM word_reviews WHERE learner=? AND word=?"
+                           " AND mode='sprint' AND correct=0 ORDER BY id DESC LIMIT 1",
+                           (learner, word)).fetchone()
+        if latest and trap and not latest["trap"]:
+            c.execute("UPDATE word_reviews SET trap=?,confusion=? WHERE id=?", (trap, trap, latest["id"]))
+    return {"word": word, "trap": trap, "box": before, "missed": True}
+
+
 def choose_template(slug: str, *, learner: str | None = None,
                     seed: int = 0, seen: set[str] | None = None,
                     avoid_subject: str | None = None) -> str | None:
