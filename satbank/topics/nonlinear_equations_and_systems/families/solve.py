@@ -853,9 +853,14 @@ def shared_factor(rng: random.Random, seed: int, *, a=None, k=None, b=None, m=No
                       "sign", -key),
     }
     if fmt == "spr":
-        # r1 + m is the sum of x = −k and x = m, what the right side alone gives
-        pool["no_ratio"] = Mis("set both brackets on the right equal to zero and "
-                               "ignored the left side", pool["no_ratio"].value)
+        if ask == "positive":
+            pool = {name: mistake for name, mistake in pool.items()
+                    if name not in {"printed_signs", "no_ratio"}}
+        else:
+            # Setting only the right side to zero gives roots −k and m.
+            value = r1 + m if ask == "sum" else r1 * m
+            pool["no_ratio"] = Mis("set both brackets on the right equal to zero and "
+                                   "ignored the left side", value)
     P = {"kind": "nleq_shared_factor", "a": _p(a), "b": _p(b), "k": _p(k),
          "m": _p(m), "ask": ask}
     rationale = sent(f"Taking everything to one side gives "
@@ -870,7 +875,7 @@ def shared_factor(rng: random.Random, seed: int, *, a=None, k=None, b=None, m=No
         keyx = E(q(key))
         return Item("nleq.shared_factor", "a factor on both sides", difficulty,
                     seed, sent(stem), "spr", keyx, gridin(key), sent(rationale),
-                    params=P)
+                    params=P, spr_mistakes=gridin_pool(keyx, pool.values()))
     return _value_item("nleq.shared_factor", "a factor on both sides", difficulty,
                        seed, stem, key, pool, wrongs, rng, rationale, P, fmt)
 
