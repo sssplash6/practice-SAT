@@ -73,6 +73,7 @@ def _sitting(cid: str, learner: str):
 
 
 def _meta(row, learner: str | None, tz: int = 0, race: str | None = None) -> dict:
+    compete.private_access(row, learner)
     now = compete._iso(compete._now())
     own = _sitting(row["id"], learner) if learner else None
     if own and own["finished"]:
@@ -116,7 +117,7 @@ def _meta(row, learner: str | None, tz: int = 0, race: str | None = None) -> dic
         me["forecast"] = None
     entrants = None
     if row["kind"] == "private" and learner in compete.private_members(row["id"]):
-        entrants = [{**compete._identity(person, learner),
+        entrants = [{**compete._identity(person, learner, private=True),
                      "status": "finished" if (s := _sitting(row["id"], person)) and s["finished"]
                      else "progress" if s else "new"} for person in compete.private_members(row["id"])]
     status = "upcoming" if row["opens"] > now else "closed" if row["closes"] <= now else "live"
@@ -174,7 +175,8 @@ def list_contests(status: str = "live", offset: int = 0, limit: int = 20,
     compete.ensure(tz=x_tz)
     now = compete._iso(compete._now())
     rows = db.rows("SELECT * FROM contests ORDER BY opens DESC")
-    rows = [r for r in rows if (r["opens"] <= now < r["closes"] if status == "live" else
+    rows = [r for r in rows if (r["kind"] != "private" or learner in compete.private_members(r["id"]))
+               and (r["opens"] <= now < r["closes"] if status == "live" else
                                r["opens"] > now if status == "upcoming" else
                                bool(_sitting(r["id"], learner)) if status == "finished" else
                                r["kind"] == "private" and learner in compete.private_members(r["id"]))]
@@ -477,6 +479,7 @@ def contest_board(cid: str, scope: str = "all", offset: int = 0, limit: int = 50
                   view: str | None = None, sort: str = "points", domain: str = "all",
                   x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
     row = compete.contest(cid, x_tz)
+    compete.private_access(row, _viewer(x_learner))
     if view == "series":
         return compete.series_board(row["series"] or row["id"], sort, _viewer(x_learner))
     if row["kind"] == "rush":
@@ -491,6 +494,7 @@ def contest_review(cid: str, x_learner: str | None = Header(default=None),
                    x_tz: int = Depends(tz_of)) -> dict:
     learner = learner_of(x_learner)
     row = compete.contest(cid, x_tz)
+    compete.private_access(row, learner)
     sitting = _sitting(row["id"], learner)
     if row["kind"] == "words":
         if not sitting or not sitting["finished"]:
@@ -566,6 +570,7 @@ def contest_grid(cid: str, offset: int = 0, limit: int = 50,
                  x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
     learner = learner_of(x_learner)
     row = compete.contest(cid, x_tz)
+    compete.private_access(row, learner)
     own = _sitting(row["id"], learner)
     if (not own or not own["finished"]) and row["closes"] > compete._iso(compete._now()):
         raise HTTPException(403, "grid opens after you finish or the contest closes")
@@ -604,6 +609,7 @@ def contest_grid(cid: str, offset: int = 0, limit: int = 50,
 def contest_traps(cid: str, x_learner: str | None = Header(default=None),
                   x_tz: int = Depends(tz_of)) -> dict:
     row = compete.contest(cid, x_tz)
+    compete.private_access(row, _viewer(x_learner))
     gathered: Counter = Counter()
     for slot in range(1, row["count"] + 1):
         for item in _slot_field(row["id"], slot)["mistakes"]:
@@ -616,12 +622,14 @@ def contest_compare(cid: str, pid: str, x_learner: str | None = Header(default=N
                     x_tz: int = Depends(tz_of)) -> dict:
     learner = learner_of(x_learner)
     row = compete.contest(cid, x_tz)
+    compete.private_access(row, learner)
     own = _sitting(row["id"], learner)
     if not own or not own["finished"]:
         raise HTTPException(403, "finish your sitting first")
     peer = next((s for s in db.rows("SELECT * FROM sessions WHERE contest=? AND finished IS NOT NULL"
                                       " AND ranked=1", row["id"]) if compete._pid(s["learner"]) == pid), None)
-    if not peer or compete._identity(peer["learner"], learner)["anon"]:
+    if not peer or compete._identity(peer["learner"], learner,
+                                    private=row["kind"] == "private")["name"] == "Anonymous":
         raise HTTPException(404, "student not found")
     def marks(session):
         return [bool(a["correct"]) if (a := db.one("SELECT correct FROM attempts WHERE session=? AND qid=?",
@@ -695,6 +703,7 @@ def contest_warmup(cid: str, x_learner: str | None = Header(default=None),
                    x_tz: int = Depends(tz_of)) -> dict:
     learner = learner_of(x_learner)
     row = compete.contest(cid, x_tz)
+    compete.private_access(row, learner)
     if _sitting(row["id"], learner):
         raise HTTPException(409, "warm up before you start the contest")
     slots = (compete._json(row["spec"], {}) or {}).get("slots", [])
@@ -721,11 +730,19 @@ def get_contest(cid: str, code: str | None = None, race: str | None = None,
                 x_learner: str | None = Header(default=None),
                 x_tz: int = Depends(tz_of)) -> dict:
     if code:
-        matched = db.one("SELECT id FROM contests WHERE code=?", code.upper())
+        matched = db.one("SELECT id FROM contests WHERE code=? AND kind='private'", code.strip().upper())
         if not matched:
             raise HTTPException(404, "contest not found")
         cid = matched["id"]
-    return _meta(compete.contest(cid, x_tz), _viewer(x_learner), x_tz, race)
+    row = compete.contest(cid, x_tz)
+    viewer = _viewer(x_learner)
+    if row["kind"] == "private" and viewer not in compete.private_members(row["id"]):
+        if not code:
+            raise HTTPException(403, "join this contest first")
+        return {"id": row["id"], "kind": "private", "title": row["title"],
+                "count": row["count"], "opens": row["opens"], "closes": row["closes"],
+                "join": True}
+    return _meta(row, viewer, x_tz, race)
 
 
 @router.post("/api/contest/{cid}/start")
@@ -787,6 +804,7 @@ def contest_pacer(cid: str, x_learner: str | None = Header(default=None),
                   x_tz: int = Depends(tz_of)) -> dict:
     learner = learner_of(x_learner)
     row = compete.contest(cid, x_tz)
+    compete.private_access(row, learner)
     sitting = _sitting(row["id"], learner)
     if not sitting:
         raise HTTPException(404, "start the contest first")

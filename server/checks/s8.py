@@ -17,7 +17,7 @@ import sys
 
 from fastapi.testclient import TestClient
 
-from server import blueprint, compete, db, deps, practice, prefs, progress
+from server import blueprint, challenge, compete, db, deps, practice, prefs, progress
 from server.app import app
 
 
@@ -238,6 +238,18 @@ def run() -> None:
             "title": "Friday Five", "templates": ["eqx.add_polys"], "count": 5,
             "repeat": {"every": "day", "rounds": 3}, "strict": True, "twin": True}).json()
         code, root = private["code"], private["id"]
+        default_title = c.post("/api/contests", headers=head(a), json={
+            "count": 10, "topics": ["area_and_volume"], "open_for": 24, "twin": True})
+        assert_ok(default_title.status_code == 200 and
+                  default_title.json()["code"] != code and
+                  default_title.json()["id"] != root,
+                  "spec's title-free private contest body works")
+        db.run("UPDATE contests SET closes=? WHERE id=?", "2025-01-01T00:00:00+00:00",
+               default_title.json()["id"])
+        assert_ok(c.post("/api/contests", headers=head(a), json={
+            "title": "Invalid duration", "topics": ["area_and_volume"],
+            "open_for": 5}).status_code == 422,
+            "unsupported private contest durations are rejected")
         assert_ok(len(code) == 6 and all(ch in "ABCDEFGHJKLMNPQRSTUVWXYZ23456789" for ch in code),
               "private invite code uses six unambiguous characters")
         rounds = db.rows("SELECT id,opens FROM contests WHERE id=? OR series=? ORDER BY round", root, root)
@@ -247,6 +259,41 @@ def run() -> None:
         joined = c.post("/api/join", headers=head(b), json={"code": code})
         assert_ok(joined.status_code == 200 and joined.json()["kind"] == "contest" and
               b in compete.private_members(rounds[1]["id"]), "one join enters every series round")
+        stranger = learner("private-stranger")
+        assert_ok(c.get(f"/api/contest/{default_title.json()['id']}/grid",
+                        headers=head(stranger)).status_code in (403, 404),
+                  "a closed private grid stays private")
+        for status in ("live", "upcoming", "finished", "private"):
+            visible = c.get(f"/api/contests?status={status}&limit=50", headers=head(stranger)).json()
+            assert_ok(not {r["id"] for r in visible["contests"]} & {r["id"] for r in rounds},
+                      f"stranger cannot list private {status} rounds")
+        for path in ("", "/board", "/board?view=series", "/grid", "/traps",
+                     "/review", f"/compare/{compete._pid(b)}", "/pacer"):
+            denied = c.get(f"/api/contest/{root}{path}", headers=head(stranger))
+            assert_ok(denied.status_code in (403, 404),
+                      f"stranger cannot read private contest {path or 'lobby'}")
+        preview = c.get(f"/api/contest/{root}?code={code}", headers=head(stranger))
+        assert_ok(preview.status_code == 200 and preview.json()["join"] and
+                  "entrants" not in preview.json() and "field" not in preview.json(),
+                  "invite code grants only a minimal Join preview")
+        anon_person = learner("public-anon")
+        db.ensure_learner(anon_person)
+        db.run("UPDATE learners SET board='anon',rated=1,rating=? WHERE id=?",
+               db.one("SELECT rating FROM learners WHERE id=?", a)["rating"], anon_person)
+        anon_pid = compete._pid(anon_person)
+        ident = compete._identity(anon_person, a)
+        assert_ok(ident["name"] == challenge.handle(anon_person, None) and ident["anon"] and
+                  c.post("/api/follows", headers=head(a), json={"pid": anon_pid}).status_code == 200 and
+                  any(r["pid"] == anon_pid for r in c.get("/api/compete/rivals", headers=head(a))
+                      .json()["rivals"]),
+                  "anon students show default handles and remain followable and raceable")
+        db.run("UPDATE learners SET board='anon' WHERE id=?", b)
+        entrants = c.get(f"/api/contest/{root}", headers=head(a)).json()["entrants"]
+        assert_ok(next(e for e in entrants if e["pid"] == compete._pid(b))["name"] == "Anonymous" and
+                  next(e for e in compete.series_board(root, viewer=a)["entries"]
+                       if e["pid"] == compete._pid(b))["name"] == "Anonymous",
+                  "private entrant lists mask anon names")
+        db.run("UPDATE learners SET board='name' WHERE id=?", b)
         first_nudge = c.post("/api/compete/nudge", headers=head(a), json={"contest": root, "member": b})
         second_nudge = c.post("/api/compete/nudge", headers=head(a), json={"contest": root, "member": b})
         assert_ok(first_nudge.status_code == 200 and second_nudge.status_code == 429,
@@ -269,7 +316,7 @@ def run() -> None:
         assert_ok(c.get("/api/groups").status_code == 404 and c.get("/api/classes").status_code == 404,
               "class and group APIs are absent")
         assert_ok(compete.series_streak(root)["current"] == 0 and
-              len(compete.series_board(root)["entries"]) == 2,
+              len(compete.series_board(root, viewer=a)["entries"]) == 2,
               "series board includes members and honest unfinished rounds")
         assert_ok(compete.due_today(b), "joined private contest appears in due today")
         assert_ok(c.get("/api/contest/daily/board", headers=head(a)).json()["you"]["pid"] != a,

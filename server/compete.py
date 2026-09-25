@@ -545,8 +545,11 @@ def rush_next(sid: str, learner: str) -> dict:
         return rush_finish(sid, learner)
     previous = cfg.get("last_rating")
     direction = cfg.get("last_right")
+    # The lobby displays integer ratings, so direction must be strict at that
+    # same precision. Comparing raw candidates with a rounded previous value
+    # can serve 794 immediately after 794.
     directional = [(name, tier, value) for name, tier, value in pairs if previous is None or
-                   (value > previous if direction else value < previous)]
+                   (round(value) > previous if direction else round(value) < previous)]
     if not directional:
         cfg["top_bank"] = True
         directional = pairs
@@ -1506,18 +1509,26 @@ def _pid(learner: str) -> str:
     return hmac.new(bytes.fromhex(secret["v"]), learner.encode(), hashlib.sha256).hexdigest()[:10]
 
 
-def _identity(learner: str, viewer: str | None = None) -> dict:
+def _identity(learner: str, viewer: str | None = None, *, private: bool = False) -> dict:
     profile = db.one("SELECT name,handle,board,rating,rated,country FROM learners WHERE id=?", learner)
     board_mode = profile["board"] if profile else "name"
     anon = board_mode in ("anon", "hidden")
     name = profile["handle"] if profile else None
     name = challenge.handle(learner, name)
+    masked = learner != viewer and (board_mode == "hidden" or private and anon)
+    if learner != viewer and board_mode == "anon" and not private:
+        name = challenge.handle(learner, None)
     title = champion_title(learner)
-    return {"pid": _pid(learner), "name": name if not anon or learner == viewer else "Anonymous",
+    return {"pid": _pid(learner), "name": "Anonymous" if masked else name,
             "anon": anon, "level": ratings.level_of(profile["rating"] or 1000) if profile else 1,
             "country": profile["country"] if profile else None,
-            "ring": bool(title) and (not anon or learner == viewer),
-            "title": title if not anon or learner == viewer else None}
+            "ring": bool(title) and not masked,
+            "title": title if not masked else None}
+
+
+def private_access(row, viewer: str | None) -> None:
+    if row["kind"] == "private" and (not viewer or viewer not in private_members(row["id"])):
+        raise HTTPException(403, "join this contest first")
 
 
 def _rank(entries: list[dict], value: str = "points") -> None:
@@ -1535,6 +1546,7 @@ def _rank(entries: list[dict], value: str = "points") -> None:
 def board(cid: str, me: str | None = None, scope: str = "all", offset: int = 0,
           limit: int = 50, *, view: str | None = None) -> dict:
     contest_row = contest(cid)
+    private_access(contest_row, me)
     if contest_row["kind"] == "rush":
         return rush_board(contest_row["id"], me)
     if contest_row["kind"] == "words":
@@ -1551,7 +1563,7 @@ def board(cid: str, me: str | None = None, scope: str = "all", offset: int = 0,
     extended_entries = []
     marks = Counter()
     for learner, row in best.items():
-        ident = _identity(learner, me)
+        ident = _identity(learner, me, private=contest_row["kind"] == "private")
         result = _json(row["result"], {}) or {}
         flags = (_json(row["cfg"], {}) or {}).get("flags", {})
         mark = ("clean" if not flags else "confirmed" if all(f.get("status") == "confirmed"
@@ -1572,6 +1584,7 @@ def board(cid: str, me: str | None = None, scope: str = "all", offset: int = 0,
     _rank(extended_entries)
     mine = next((e for e in entries if e["you"]), None)
     extended_mine = next((e for e in extended_entries if e["you"]), None)
+    near_players = None
     if scope == "country" and me:
         own_country = (_identity(me).get("country"))
         entries = [e for e in entries if e["country"] == own_country] if own_country else []
@@ -1586,6 +1599,7 @@ def board(cid: str, me: str | None = None, scope: str = "all", offset: int = 0,
                 "you": {"extended": {"rank": extended_mine["rank"], "of": len(extended_entries)}}
                 if extended_mine else None, "mine": None, "next_offset": None, "pars": [], "marks": {}}
     elif scope == "near" and mine:
+        near_players = len(entries)
         center = next(i for i, e in enumerate(entries) if e["you"])
         start = max(0, min(center - 5, len(entries) - 11))
         entries = entries[start:start + 11]
@@ -1605,9 +1619,10 @@ def board(cid: str, me: str | None = None, scope: str = "all", offset: int = 0,
         db.run("INSERT OR IGNORE INTO rank_snapshots(day,board,learner,rank,value) VALUES (?,?,?,?,?)",
                _now().date().isoformat(), "contest:" + contest_row["id"], entry["learner"],
                entry["rank"], entry["points"])
-    players = len(entries)
+    players = near_players if near_players is not None else len(entries)
     page = entries[offset:offset + min(max(1, limit), 100)]
-    next_offset = offset + len(page) if offset + len(page) < players else None
+    next_offset = (offset + len(page) if near_players is None and offset + len(page) < players
+                   else None)
     for entry in page:
         entry.pop("learner", None)
         entry.pop("finished", None)
@@ -2181,17 +2196,21 @@ def _private_slots(cid: str, names: list[str], count: int, tiers: list[str], fmt
 
 
 def create_private(learner: str, body: dict) -> dict:
-    title = str(body.get("title", "")).strip()
-    if not 3 <= len(title) <= 60:
-        raise HTTPException(422, "title must be 3–60 characters")
+    profile = db.one("SELECT board,handle FROM learners WHERE id=?", learner)
+    public_name = (profile["handle"] if profile and profile["board"] == "name" else None)
+    title = str(body.get("title") or f"{challenge.handle(learner, public_name)}'s challenge").strip()
+    if not 3 <= len(title) <= 40:
+        raise HTTPException(422, "title must be 3–40 characters")
     count = body.get("count", 10)
     if count not in (5, 10, 15, 22):
         raise HTTPException(422, "count must be 5, 10, 15 or 22")
     minutes = body.get("minutes")
     if minutes is not None and (not isinstance(minutes, int) or not 5 <= minutes <= 70):
         raise HTTPException(422, "minutes must be 5–70")
-    duration = body.get("duration", {1: "hour", 24: "day", 72: "3days", 168: "week"}.get(
-        body.get("open_for"), "day"))
+    hours = body.get("open_for", 24)
+    if hours not in (1, 24, 72, 168):
+        raise HTTPException(422, "open_for must be 1, 24, 72 or 168 hours")
+    duration = body.get("duration", {1: "hour", 24: "day", 72: "3days", 168: "week"}[hours])
     lengths = {"hour": 3600, "day": 86400, "3days": 3 * 86400, "week": 7 * 86400}
     if duration not in lengths:
         raise HTTPException(422, "duration must be hour, day, 3days or week")
@@ -2277,6 +2296,7 @@ def series_board(series: str, sort: str = "points", viewer: str | None = None) -
     root = db.one("SELECT * FROM contests WHERE id=? AND kind='private'", series)
     if not root:
         raise HTTPException(404, "series not found")
+    private_access(root, viewer)
     rounds = db.rows("SELECT id,round FROM contests WHERE id=? OR series=? ORDER BY round", series, series)
     entries = []
     for member in private_members(series):
@@ -2286,7 +2306,7 @@ def series_board(series: str, sort: str = "points", viewer: str | None = None) -
                          " AND finished IS NOT NULL ORDER BY points DESC LIMIT 1", rnd["id"], member)
             scores.append({"round": rnd["round"], "points": run["points"] if run else None,
                            "net": ((_json(run["result"], {}) or {}).get("net") if run else None)})
-        entries.append({**_identity(member, viewer), "you": member == viewer,
+        entries.append({**_identity(member, viewer, private=True), "you": member == viewer,
                         "rounds": scores, "sat": sum(x["points"] is not None for x in scores),
                         "points": sum(x["points"] or 0 for x in scores),
                         "net": sum(x["net"] or 0 for x in scores)})
@@ -2337,7 +2357,7 @@ def follow(learner: str, pid: str) -> dict:
     if not target or target == learner:
         raise HTTPException(404, "student not found")
     profile = db.one("SELECT board FROM learners WHERE id=?", target)
-    if profile and profile["board"] in ("anon", "hidden"):
+    if profile and profile["board"] == "hidden":
         raise HTTPException(403, "this student is not public")
     n = db.one("SELECT COUNT(*) AS n FROM follows WHERE learner=?", learner)["n"]
     if n >= 50 and not db.one("SELECT 1 FROM follows WHERE learner=? AND target=?", learner, target):
@@ -2376,7 +2396,7 @@ def rivals(learner: str) -> dict:
     followed = {r["target"] for r in db.rows("SELECT target FROM follows WHERE learner=?", learner)}
     candidates = []
     for row in db.rows("SELECT id,rating,board FROM learners WHERE id!=? AND rated>0", learner):
-        if row["board"] in ("anon", "hidden") or abs((row["rating"] or 1000) - rating) > 200:
+        if row["board"] == "hidden" or abs((row["rating"] or 1000) - rating) > 200:
             continue
         ident = _identity(row["id"], learner)
         if row["id"] in followed:
