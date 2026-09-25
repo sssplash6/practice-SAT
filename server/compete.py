@@ -671,7 +671,12 @@ def word_start(learner: str, cid: str) -> dict:
         return {"session": prior["id"], "runner": "words", **word_next(prior["id"], learner)}
     estimate = deps.part("words", "estimate")
     placement = estimate(learner) if estimate else {}
-    level = max(1, min(5, int(placement.get("band") or 1)))
+    # W10 reports an estimated vocabulary count and six band sizes, rather
+    # than a single sprint band. Start in one of five bands according to the
+    # estimated share known; the provider raises that band every five items.
+    total = sum(int(row.get("size") or 0) for row in placement.get("bands", ()))
+    known = int(placement.get("n") or 0)
+    level = 1 + min(4, max(0, 5 * known // total)) if total else 1
     # Template order is shared across entrants; the Words provider uses the
     # learner code only to vary each rendered passage and its options.
     seed = int.from_bytes(hashlib.sha256(cid.encode()).digest()[:4], "big")
