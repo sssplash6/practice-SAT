@@ -360,8 +360,9 @@ def run() -> None:
         # The S9 provider is owned by the Words branch. Exercise the S8
         # contract with fixed SAT-form items until those functions land.
         real_part = deps.part
-        reviewed, missed = [], []
+        reviewed, missed, sprint_levels = [], [], []
         def sprint_items(person, seed, n, level):
+            sprint_levels.append(level)
             return [{"template": "rw.mock", "seed": seed + i, "word": "mock",
                      "kind": "incontext" if i % 2 == 0 else "transition",
                      "stem": "Which choice completes the text?", "text": "A short passage.",
@@ -372,6 +373,7 @@ def run() -> None:
         def fake_part(module, name):
             if module == "words":
                 return {"sprint_items": sprint_items,
+                        "estimate": lambda person: {"n": 500, "bands": [{"size": 1000}]},
                         "grade": lambda *args, **kwargs: reviewed.append((args, kwargs)),
                         "record_contest_miss": lambda *args: missed.append(args)}.get(name)
             return real_part(module, name)
@@ -391,6 +393,7 @@ def run() -> None:
                       "Word Sprint schedules as R&W when S9 provides items")
             word_run = c.post(f"/api/contest/{word_cid}/start", headers=head(word_person)).json()
             word_sid = word_run["session"]
+            assert_ok(sprint_levels == [3], "Word Sprint starts at the W10 placement band")
             for index in range(12):
                 word_run = c.post(f"/api/contest/{word_cid}/answer", headers=head(word_person),
                                   json={"sid": word_sid, "question_id": word_run["question"]["id"],
