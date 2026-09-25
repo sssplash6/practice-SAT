@@ -148,6 +148,24 @@ want-regex sets, exact items refused by access(), inline drills absent from /api
 items), each exercised against a server on port 8015; repairs and {mistakes: true} drills offer the trap; test_flow prints "all good"
 on 3 runs in a row.`,
   },
+  F2B: {
+    title: 'F2B · Shell follow-ups: Up next, offline, run and share helpers', port: 8018,
+    spec: `spec/v2-state/followups/F2.json (F2's check: the items assigned to F2 that no task owned), spec/v2-upgrades/shell-me.md
+(its "§2.12 F2" row in §3.2, U1 Up next, U18 offline, U25 welcome back, U28 share), spec/v2-upgrades/product.md (G1 UI.run, G2
+retired phrases, G10 start kind), and the Shell spec §2 in spec/rebuild-v2.md Part 3.1 (lines 653-2294). F2 is merged: extend it.`,
+    owns: 'server/next.py, web/sw.js, web/assets/ui.js, web/assets/palette.js, web/assets/quick.js, server/api_shell.py, server/checks/f2.py',
+    units: [
+      `server/next.py: queue, due, stage and resolve_drill, GET /api/next, the 'start' kind for new learners (G10), sources read through
+deps.part so a missing section drops its rows; /api/shell.next and /api/shell.has wired in api_shell.py.`,
+      `ui.js: UI.run (start, between, rail; G1), UI.autoSheet with the welcome-back sheet (U25), UI.share (U28); gate the Today card's
+fact popovers on UI.has('levers') and link the flame to /me/#activity until then; replace the retired phrases in palette.js and quick.js
+(G2); the quick sheet full screen under 760px; palette Recent rows keep the skill name; f2.py's console hook stops hiding real 404s.`,
+      `web/sw.js (U18 offline) registered from ui.js; extend server/checks/f2.py for everything above; walk the shell at 1280 and 390.`,
+    ],
+    accept: `Every follow-up in spec/v2-state/followups/F2.json that this task owns is fixed; /api/next returns the queue for a new and a
+seeded learner and the Up next block, rail play button and G N work; the welcome-back sheet shows once a day; offline pages load from
+the service worker; server/checks/f2.py passes; test_flow prints "all good".`,
+  },
   // ---- wave 2: the sections (built on the merged foundations F0-F6). Server halves the user's other agent builds
   // (S7, S8, S9 servers) are not here; their pages-only tasks are added when those servers merge.
   ...section('S1', 'Account, Me, Settings, Help', 8021, `Part 3.1 §1, §3, §4, §5, §6, §8 and §9 (lines 653-2294; §2, §7 and

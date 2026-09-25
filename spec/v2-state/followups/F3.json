@@ -1,0 +1,54 @@
+{
+ "task": "F3",
+ "verified_defects": [
+  {
+   "where": "web/assets/runner.js:3984 (UI.review onKey, own document keydown listener)",
+   "what": "The player and pane keys do not go through UI.keys (R22: one registry), so R43's dev-time one-key-per-action check never covers the player or pane scopes. I served F2's ui.js (branch v2/f2) in its place: in the Review pane, G no longer opens the calculator. F2's global G-sequence prefix calls preventDefault first, and the player's listener then ignores the event. G and F are also not in §2.8's player row, and G clashes with the Global G-then-X map on pages with the shell.",
+   "fix": "Register the player and pane maps with keyScope('player' | 'pane', map, {within: dlg or host}) the way the runner does. Drop G and F from the pane on pages with the shell, or bind them only in the modal dialog.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/assets/runner.js:4102 and 3856 (UI.history verdict buttons, walk end card)",
+   "what": "These buttons are labelled 'Learn it', 'Learn it · the gap types' and 'Keep warm · 3'. product.md §3.2 (line 1521, R42) maps these labels to 'Learn this type' and 'Twin ×3'.",
+   "fix": "Use UI.verb('learn') and 'Twin ×n', or those exact labels, in H_VERDICT and on the walk end card.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/assets/runner.js:2268-2292 (openDetails)",
+   "what": "The session's Details popover has no Domain row. 'You and this type' is left out when there is no data, where QBank §2.9 says it should read 'First time'.",
+   "fix": "Add row('Domain', t && t.domain), as the player's details at :3742 already does, and fall back to 'First time' for the You and this type row.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/assets/runner.js:2090 (toggleNav in end mode)",
+   "what": "In end mode the navigator still offers the Difficulty, Skill, Time, Confidence and Traps views. QBank §2.6 end says the navigator shows Answered / Unanswered / Skipped / Marked only.",
+   "fix": "Pass views ['status'] when endMode is on.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/assets/runner.js:533 and 617 (navigator Time legend)",
+   "what": "The legend repeats itself: 'Over budget 0' then 'Over budget: 0 · average 0:03'. The spec's wording is 'Over 1:35: 2 · average 1:04'.",
+   "fix": "Keep one of the two, with the budget in its label.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/assets/question.js readAloud (G8 spoken-math map)",
+   "what": "'5π/2' is read as '5 pi /2'. G8's rule that a/b reads 'a over b' is not applied when the fraction follows π.",
+   "fix": "Apply the a/b → 'a over b' rule after the π replacement, or match fractions whose numerator ends in a symbol.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/dev/workspace.html runner fake store (cells for !exam)",
+   "what": "In ?view=runner&rmode=end, a reload shows the saved answers as unanswered. The fake store's cells read only s.fb or s.skipped, not s.answer. Only the dev fixture is wrong; the component restores fine.",
+   "fix": "In the dev page's cells builder, set status 'answered' when s.answer is set and there is no s.fb.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/assets/runner.js:27 (UI.annotate location)",
+   "what": "§2.4 lists UI.annotate under question.js, but it is built and exported in runner.js. A page that loads only question.js, such as a read-only notes view, would not have it.",
+   "fix": "Move annotate to question.js, or update the §2.4 row so consumers know to load runner.js.",
+   "severity": "followup"
+  }
+ ],
+ "evidence": "I verified v2/f3 at 2f8d3c9 on a detached HEAD. I committed nothing, edited nothing and left the tree clean. The server ran on port 8013 against server/v2.db (git-ignored) and is stopped. Every check below I ran myself, headless, in chrome-headless-shell through Playwright.\n\n1. Checks. server/checks/f3.py does not exist, so there was no task check file to run. `PYTHONPATH=. python3 server/test_flow.py` printed \"all good\".\n\n2. The acceptance of §2.12 F3, at 1280 and 390:\n- **Every dev view loads.** All 15 views of web/dev/workspace.html open with no page errors and scrollWidth equal to the viewport. The views are the playground, the runner in practice, timed, retry, end, challenge, exam and training, and the player in dialog, 44 questions, pane, second, walk, pair and history. The self-test and the G4 row check print ok.\n- **Select, then Check.** Tested on MC (p001), figure (p002), table (p003) and grid-in (p004): 75/76 of my checks passed, and the one miss was my own test, not the page. Check is disabled before a pick. A click selects without a verdict, clicking the selected choice clears it, and another click moves the selection. Check reveals the verdict. On a miss the picked row is .no, the key is .ok, and every distractor shows its reason.\n- **Grid-in field.** The rule line shows. The two error messages are word for word, and an invalid entry disables Check. The preview stacks the fraction with a real minus and adds \"= −0.75\". Enter checks and shows \"Also accepted\". The All entry rules popover lists .6666 and .6667.\n- **Strike and Undo.** Shift+A strikes (class out) and shows Undo. A struck choice cannot be selected. Undo restores it. E turns on the strike circles.\n- **Highlight and reload-restore.** L turns highlights on. Selecting stem text raises the bar with 7 styles and Note. The mark is drawn and saved to the fake store (dev.run.practice), and it comes back after a reload. The playground's store also restores a selection and a strike after a reload.\n- **Navigator.** N opens it with the views Status, Difficulty, Skill, Time, Confidence and Traps. Each view has a legend with counts, and the cells have aria-labels. The grid is 8 columns of 40px with a 6px gap. Esc closes it and focus returns to the navigator button.\n- **Check your work.** The tiles add up to the question count in exam, training and end mode (for example 3 answered + 9 unanswered = 12, with 2 marked matching the cells). The grid has every question. The unanswered warning and the pacing line show. A tile filters the grid, the Time view works, and the footer offers Back and Hand in. Answers and marks survive a reload in exam and training.\n- **Calculator.** G docks Desmos at 1280: 420px on the left, engine desmos, with satf.calc.dev-practice saved. At 390 it opens as a sheet 523px tall on an 844px screen. With no key it falls back to the scientific engine, and sciEval gives the right values.\n- **Player: Hide answers.** H hides the key, the reasons and the verdict, and they stay hidden across three Nexts in both dialog and pane. The \"Answers hidden\" chip shows, and the button becomes Show answers. Picking A while hidden reveals locally (\"A · wrong again\"). In the pane, Hide survives a reload through satf.review.hidden.\n- **Key map of §2.8, as amended by R43.** Every runner key worked:\n  - A–D and 1–4 choose, and D only chooses.\n  - Shift+A–D strike, Enter checks, and ← → move.\n  - M mark, E eliminate, L highlights, O note, V details, W hint.\n  - I guess (sends conf guess), S skip, and B saves after answering.\n  - Y opens the history, G the calculator, F the reference, H hides the timer.\n  - P pauses a timed practice set, K sets confidence in training, and Shift+Enter checks as Unsure.\n  - Shift+R opens Check your work, ? opens the shortcuts sheet, and Esc closes.\n\n  In exam, S and I do nothing and Enter moves to Next. In the player, ← → J K, N, H, V and Esc work. With F2's ui.js served in place of master's copy, the dev R43 check reads \"keys: ok\".\n\n3. A sample of 15 requirements, built as written:\n- QBank §2.2: the hidden timer reads \"— : —\"; toasts \"5 minutes left\" and \"1 minute left\" appear; under 60 seconds the digits go to weight 700.\n- QBank §2.2: Pause shows \"Paused · 15:53 left\", hides the question and offers Resume.\n- QBank §2.5: automatic 2x2 choices at 640px and up.\n- QBank §2.5: the grid-in field's 7-character limit, messages, rule line and preview.\n- QBank §2.6 retry: \"That answer comes from: … Try another.\", \"2 tries left\", Show answer, and \"Right on try 2 · counts as Mixed\".\n- QBank §2.6 end: Check becomes Save & next, answers can change, and the last question reads Review & finish.\n- QBank §2.9 Details: the ID with Copy, the toast \"Link copied: anyone who opens it gets this exact question\", and in the challenge \"Shown after today's challenge closes\".\n- Review §9 history: 560px on desktop, full screen on a phone, Open disabled before answering with its note, the \"this question\" tag, and Load more (9 rows to 12).\n- Report §1.13: the #q= hash, Back closes the player, a pasted link opens at 7 of 12, and 44 questions show the pill \"M1 Q1 · 1 of 44\".\n- Tests §4.8: the calculator dock on the left, Desmos state kept per sitting, the phone sheet, and the fallback (tests.md item 74).\n- Tests §4.5 and X5: Check your work.\n- product.md G8: the figure has role=img, an aria-label and an aria-hidden SVG; the table has th scope=col and a visually hidden caption; KaTeX outputs MathML; Read aloud reads \"pi\" and shows Stop with aria-pressed.\n- R50: at 390 the tools row has 44px buttons with labels, scrollWidth is 390, and the footer has no ⋯.\n- P7, R54 and P23: the split Check, the tip on the first 3 questions, \"Check · Sure\" for an active tagger, and tap-again on touch with its guard (a double tap files one answer).\n- reports.md mode second and the X1 save queue: when saves fail, the answers mirror to satf.pending, the footer reads \"Offline · 2 answers waiting\", and after a reload they are resent in order and it reads \"Saved\".\n\n4. Scope. `git diff --stat master...HEAD` shows only question.js, runner.js, runner.css and web/dev/workspace.html. Nothing contradicts spec/v2-decisions.md: there is no class, teacher or homework code, the only accent is orange #F18508 through tokens, the hash is subject-aware, and every localStorage read and write is in try/catch."
+}

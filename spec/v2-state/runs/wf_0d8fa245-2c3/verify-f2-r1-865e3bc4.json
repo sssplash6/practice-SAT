@@ -1,0 +1,70 @@
+{
+ "label": "verify F2 r1",
+ "key": "v2:a8a6f7b85e8f9d0388aca72fdb82f876427608a1b56199933051fec8865e3bc4",
+ "result": {
+  "pass": true,
+  "evidence": "I checked v2/f2 at 9811bca, detached. It is 26 commits ahead of merge-base 1e09252 and has not merged master. I ran everything myself on port 8012 and stopped the server at the end. I made a trial merge with master using --no-commit, then aborted it. The worktree is clean, nothing was committed, and the scratch DB is removed.\n\n1. Checks\n- On the branch, `PYTHONPATH=. python3 server/test_flow.py` exits 0 and prints \"all good\". Its f2 lines pass: /api/shell keys, one streak, resume, parts, catalogue, streak of 6.\n- On the branch, `python3 server/checks/f2.py 8012` exits 0. All 15 ok lines pass. The F5 parts were skipped because F5 is not on this branch.\n- On the trial merge with master (F5 and F6 present), f2.py also exits 0. That run includes \"a Question types row starts its type\", the quick sheet's own sitting, and 18 pages in light and dark.\n- On the trial merge, test_flow fails in checks/f5.py with 409 no_checks_due. Master on its own (1d54def) fails the same way, so this is not caused by F2.\n\n2. §2.12 F2 acceptance\nCovered by f2.py plus my own walk. I loaded 15 pages at 1280 and 390, for a new learner and a seeded one, and logged every console error and warning, page error, failed request and 4xx/5xx response, including 404s (f2.py filters those out). I found none, apart from the 403 I triggered on purpose by opening another learner's session. No page scrolls sideways.\n- /api/shell has every key from acceptance 7 except assignments, which decision 5 drops.\n- Account menu keyboard: Enter opens it, ArrowDown, Home and End move, typing \"h\" jumps to Help, Space toggles Dark in place, Esc returns focus to the user card.\n- The menu is 300px wide and sits above the user card. The palette is 640px wide at 12vh, and full screen at 390.\n\n3. A sample of 20 requirements, all built as written\n1. §2.2.1 collapse button: aria-label \"Collapse sidebar\", tooltip \"Collapse [\".\n2. §2.2.2–3 Search shows ⌘K, Quick shows Q.\n3. §2.2.9 user card: aria-haspopup=menu, \"Student XXXX\", \"Not saved yet\".\n4. §2.2 metas: Plan reads \"Set up\" without a plan; Compete reads \"New\".\n5. §2.2.7 Today card at 1920x1100: \"Nothing yet today\" and \"Set a daily goal\" for a new learner; \"Exam in N days · date\" with a plan.\n6. §2.3 rail: count bubble, tooltip \"Review · n open · G M\".\n7. §2.4 phone bar: labels Search, \"Quick question or log a mistake\" and Menu; avatar dot while the challenge is unplayed.\n8. §2.6 / U26 account menu: \"This device only\", the Save your progress callout with its sub-line, Home, typeahead, no Class or Join.\n9. §2.7 / R29 quick sheet: three tabs, satf.quick.tab remembered, \"Couldn't get a question.\" with Retry on a 500, tally \"1 answered · 0 right\".\n10. Log a mistake end to end: 19 skills by domain, Show an example, \"Not sure\" offering Practise Circles · 5, reasons plus Something else and I don't know, origin chips. POST /api/mistakes/log returns 200, the trap has source outside and origin bluebook, the attempts count stays 0, and the toast reads \"Added. Two clean answers…\".\n11. §2.8 palette: placeholder, no-match text, groups, Tab sub-actions, satf.palette Recent, focus returns on Esc.\n12. R1 keys: G M goes to /review/, G C to /compete/; the ? sheet lists Go to Review, Words, Compete and Profile.\n13. §2.9 / R22: Q is ignored in an input, and does nothing with prefs.keys off.\n14. §2.11 banners:\n    - First visit: Dismiss is kept.\n    - Save nudge at 55 answers: Not now sets satf.nudge.\n    - Offline: \"Retrying in 5s\", then 10s, and it clears itself.\n    - Only one banner shows at a time, in priority order.\n15. §2.11 reply toast: \"Report #N answered\" with Read.\n16. §2.12 satf.shell is cached; UI.refresh and UI.me both exist.\n17. §2.13 System theme is mirrored to satf.look.\n18. §2.5 the session page has no shell, and ? opens the shortcuts sheet.\n19. U23 speculation rules: every exclusion is present, and URLPattern confirms ?next= and /practice/session/?id= are excluded.\n20. U26 rail peek after a 400 ms rest; satf.rail untouched. Also U1's chrome with a faked shell.next: sidebar block, Now strip, G N starts a session, the more popover, Not today snooze, the phone sheet's first row, the Today tab dot.\n\nThe F1 view-transition follow-up is fixed. 12 navigations, including interrupted ones and with fonts blocked, gave 0 page errors while transitions ran.\n\n4. Scope and decisions\n`git diff --stat master...HEAD` shows only the 7 owned files, and the merge with master is clean. There is no class, join, assignment or teacher string in the owned files. PARTS leaves out classes and there are no assignment toasts. Nothing I found contradicts v2-decisions.",
+  "defects": [
+   {
+    "where": "web/assets/palette.js:219 (the Mistakes group's row meta), web/assets/quick.js:511 (and the comments at lines 21 and 506)",
+    "what": "Two phrases that product.md G2 retires are visible to students: 'Drill it' on every named-misconception row in the palette, and a 'Try one now' button in the Log a mistake fix path. G2 acceptance 1 greps web/ for these phrases and must come back empty, so I1's copy gate will fail on F2's files.",
+    "fix": "Use the UI.VERBS labels instead, for example 'Twin' / 'Fix n' or a plain 'Practise this mistake · 3'. Update the comments too, because the gate greps them as well.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/assets/ui.js todayCard() (the streak button and the minutes figure, both data-fact); server/api_shell.py HAS_ROUTES",
+    "what": "Clicking the streak or study minutes in the shell's Today card (sidebar, Now strip, menu sheet) makes kit's fact popover call GET /api/levers. That route does not exist yet (it is S1's), so the click logs a 404 console error and the popover shows 'Couldn't load how this is worked out.' Every other call the shell makes is gated on /api/shell.has, but this one is not. §2.2.7 says the flame goes to /me/#activity.",
+    "fix": "Add 'levers': '/api/levers' to HAS_ROUTES. Set data-fact only when UI.has('levers'). Until then make the flame a link to /me/#activity.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/assets/ui.js (an owned file); product.md G1, shell-me.md U25 and U28",
+    "what": "Three upgrade items assigned to F2 in ui.js are not built. First, UI.run (start, between, rail; G1). Second, UI.autoSheet with the welcome-back sheet (U25: one sheet a day, clean-load rule, toasts queued while a sheet is open). Third, UI.share (U28). The wave-2 tasks that consume them are S1 (the U14 week sheet), S3 (Start today), S4 and S6 (the between pane) and S9. They can code against the signatures meanwhile, but the items need an owner and a scheduled unit.",
+    "fix": "Add an F2 follow-up unit that builds UI.run, UI.autoSheet with welcome-back, and UI.share in ui.js, with checks.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/next.py and web/sw.js (not in this task's owned files); shell-me.md §3.2 '§2.12 F2' row, U1 and U18; product.md G10",
+    "what": "shell-me assigns F2 server/next.py (queue, due, stage and resolve_drill; GET /api/next; the 'start' kind for new learners) and web/sw.js, but the task's owned list leaves both out, and the builder did not list them as needed. So /api/shell.next is always []. The Up next block, the rail's play button, G N and ?next=1 never show anything, and U1 acceptance 1–9 cannot pass. S3's Due list also needs next.due. I faked shell.next and the chrome for it works.",
+    "fix": "The orchestrator should give next.py and sw.js an owner (an F2 follow-up task) before S3 and S7 are verified.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/assets/ui.js NAV, ROUTES, menuSheet(), accountItems(), buildPbar() chip",
+    "what": "The sidebar, the phone chip, the menu sheet and the G keys link to pages that do not exist yet: /review/, /words/, /compete/, /help/, /signin/, /link/ and /me/settings/, which are wave-2 pages. Once F2 merges, those items land on the 404 page, and the /mistakes/ and /challenge/ pages that do exist can no longer be reached from the nav.",
+    "fix": "Until S8, S9, S10 and S1 land, fall back to /mistakes/ and /challenge/ through a /api/shell.has page flag. Or have those tasks add redirects from the old routes when they land.",
+    "severity": "followup"
+   },
+   {
+    "where": "spec: product.md G2 (line 441 and acceptance 4) against Shell §3.1.8 item 12, R29 and §2.13's Words row",
+    "what": "The specs conflict. product.md says Q opens the quick sheet everywhere, the practice runner included. Shell 12 and R29 say Q does nothing on /practice/session/ and /test/. The builder followed Shell and checks/f2 asserts it, so G2 acceptance 4 will fail.",
+    "fix": "Record a decision in v2-decisions.md, then align ui.js's Q binding (currently when: chrome) and the checks.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/checks/f5.py followup_checks, line 205 (master, not F2)",
+    "what": "On master 1d54def, and on master merged with v2/f2, test_flow stops with AssertionError: POST /api/drill {pool:'checks', ids:[...]} returns 409 no_checks_due. So once F2 is merged, test_flow will not print 'all good' until F5's check is fixed. On v2/f2 alone it does print 'all good'.",
+    "fix": "The F5 owner should fix the check-in-due setup in checks/f5.py, which looks date-dependent.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/assets/quick.js quick() (the sheet height at under 760px)",
+    "what": "§2.7 wants the quick sheet full screen on the phone. At 390x844 it measures 390x760, a bottom sheet with about 84px of the page showing above it.",
+    "fix": "Under 760px, give the sheet height 100dvh with no top radius, as the palette already does.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/assets/palette.js remember(), the Tab sub-action rows",
+    "what": "Running a skill's Tab sub-action saves the Recent entry as 'Practise · 10 questions' without the skill name, so a Recent row cannot say which skill it starts.",
+    "fix": "When a sub-row runs, store the parent row's label in the entry, for example 'Circles · Practise · 10 questions'.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/checks/f2.py page() console hook",
+    "what": "The error hook ignores every console error that contains '404 (Not Found)'. That would also hide asset and API 404s on real pages, not only the document 404 of the intentionally missing routes. My own walk found no such 404s today.",
+    "fix": "Skip only the navigation's own 404, where the error URL equals the page URL. Keep failing on every other 404.",
+    "severity": "followup"
+   }
+  ]
+ }
+}

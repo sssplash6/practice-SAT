@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-25T04:12:03+05:00
+# v2 build state -- 2026-09-25T05:52:10+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -10,8 +10,8 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/bank-lint-fix` at 033fa1a, 0 commits ahead of master
 - `v2/f0` at dc9873f, 0 commits ahead of master
 - `v2/f1` at b417976, 0 commits ahead of master
-- `v2/f2` at 9811bca, 26 commits ahead of master
-- `v2/f3` at 2f4d1d0, 22 commits ahead of master
+- `v2/f2` at 9811bca, 0 commits ahead of master
+- `v2/f3` at 2f8d3c9, 0 commits ahead of master
 - `v2/f4` at 2d419ba, 0 commits ahead of master
 - `v2/f5` at 6e3d219, 0 commits ahead of master
 - `v2/f6` at 4e2d2d1, 0 commits ahead of master
@@ -59,8 +59,13 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `/Users/workingmyassof/satbank/.claude/worktrees/s8-server` on `v2/s8-server`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/s9-server` on `v2/s9-server`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_0d8fa245-2c3-1` on `detached 9811bca`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_0d8fa245-2c3-2` on `detached 2f8d3c9`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_0d8fa245-2c3-3` on `detached 2f8d3c9`: 0 uncommitted
 
 ## Workflow runs
+
+### wf_0d8fa245-2c3: 3 finished, 0 unfinished
 
 ### wf_31f62ba7-6ae: 1 finished, 6 unfinished
 Unfinished when saved: author: adv1, author: adv2, author: adv3, author: roots, author: second, author: transitions
