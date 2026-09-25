@@ -254,7 +254,8 @@ def _build_solve(rng, seed, shape, p, var, frame, fmt, decimal, mistakes,
     ex = E(key)
     if fmt == "spr":
         return Item(template, skill, difficulty, seed, stem, "spr", ex,
-                    ex.gridin(), rationale, params=P)
+                    ex.gridin(), rationale, params=P,
+                    spr_mistakes=spr_mistakes(ex, mistakes))
     fv = (lambda v: dec(v.coef)) if dec_opts else None
     ch, tex, why, letter = choices(ex, mistakes, rng, fmt_value=fv)
     return Item(template, skill, difficulty, seed, stem, "mcq", ex, letter,

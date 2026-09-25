@@ -14,7 +14,7 @@ import math
 import random
 
 from ....exact import E
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ..render import (MINUS, Q, join, mono, num, pc, poly, sent, show_terms,
                       sup, terms)
 from .kit import FRAME_NAMES, Slip, frame_stem, text_item
@@ -487,7 +487,12 @@ def factor_constant(rng: random.Random, seed: int, *, shape=None, var=None,
         params = {"kind": "eqx_factor_constant", "shape": "cubic_root", "var": var,
                   "expr": expr, "ask": "smallest"}
         return Item("eqx.factor_constant", "factoring", "hard", seed, stem, "spr",
-                    ex, ex.gridin(), why, params=params)
+                    ex, ex.gridin(), why, params=params,
+                    spr_mistakes=gridin_mistakes(ex, [
+                        Mis("chose the larger positive factor instead of the smallest", E(q)),
+                        Mis("reported the sum of the two positive factor constants", E(p + q)),
+                        Mis("reported the product of the two positive factor constants", E(p * q)),
+                    ]))
 
     fmt = "mcq" if shape == "sq_over" else (fmt or ("spr" if rng.random() < 0.25
                                                     else "mcq"))

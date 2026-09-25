@@ -61,7 +61,12 @@ def y_intercept(rng: random.Random, seed: int, *, mode=None, name=None, frame=No
              "k": [k.numerator, k.denominator], "mid": [mid.numerator, mid.denominator]}
         stem = Y_SPR[frame].format(body=body, rule=rule, n=name)
         return value_item("nlfunc.y_intercept", "the y-intercept of a curve", "easy",
-                          seed, stem, k, [], rng, P, why, fmt="spr")
+                          seed, stem, k, [
+                              Mis("read the coefficient of x instead of the constant term", mid),
+                              Mis("evaluated the function at x = 1 instead of x = 0",
+                                  1 + mid + k),
+                              Mis("changed the sign of the constant term", -k),
+                          ], rng, P, why, fmt="spr")
 
     if mode == "expo":
         a = q(a if a is not None else rng.randint(2, 60))

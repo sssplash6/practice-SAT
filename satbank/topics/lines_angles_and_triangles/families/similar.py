@@ -809,6 +809,16 @@ def area_range(rng: random.Random, seed: int, *, d1=None, d2=None, lo=None, hi=N
                  f"The small triangle is similar to {A}{B}{C}, so x = {d1}y/{base}; "
                  f"y = {y} gives x = {plain(x)}.")
     params = {"kind": "lat_area_range", "d1": d1, "d2": d2, "lo": lo, "hi": hi}
+    # The stem accepts any height in ys. Never label one of its other valid
+    # x-values as a misconception just because it differs from the printed key.
+    valid = {Q(d1 * height, base) for height in ys}
+    routes = [
+        Mis("reported the full height y instead of the similar triangle's x", E(y)),
+        Mis("used the other part of the base in the similarity ratio", E(Q(d2 * y, base))),
+        Mis("divided by only the other base segment instead of the full base",
+            E(Q(d1 * y, d2))),
+    ] if fmt == "spr" else []
+    routes = [route for route in routes if route.value.coef not in valid]
     return finish("lat.area_range", "an area between two bounds", "hard", seed, stem,
-                  key, [], rng, rationale, unit=unit, figure=fig, params=params,
+                  key, routes, rng, rationale, unit=unit, figure=fig, params=params,
                   fmt=fmt)

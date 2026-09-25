@@ -14,7 +14,7 @@ import random
 from fractions import Fraction as Q
 from math import gcd
 
-from ....item import Item, ItemError, Mis
+from ....item import Item, ItemError, Mis, gridin_mistakes
 from ..common import (MINUS, choose, ex, lin_text, numtext, point_text, q, sig,
                       std_text, text_item)
 
@@ -338,7 +338,14 @@ def table_symbolic(rng: random.Random, seed: int, *, ask=None, step=None, d=None
          "x1": [X1.numerator, X1.denominator], "y1": [y1.numerator, y1.denominator],
          "y2": [Y2.numerator, Y2.denominator], "x3": [X3.numerator, X3.denominator]}
     return Item("le2.table_symbolic", "a table with a constant in it", "hard", seed,
-                stem, "spr", keyx, keyx.gridin(), why, table=table, params=P)
+                stem, "spr", keyx, keyx.gridin(), why, table=table, params=P,
+                spr_mistakes=gridin_mistakes(keyx, [
+                    Mis("found k but did not add n", ex(K)),
+                    Mis("found n but did not add k", ex(N)),
+                    Mis("subtracted n from k instead of adding it", ex(K - N)),
+                    Mis("added the visible third-row input and second-row output",
+                        ex(X3 + Y2)),
+                ]))
 
 
 # --------------------------------------- one more fact about the same line

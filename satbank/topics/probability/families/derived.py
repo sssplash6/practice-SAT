@@ -74,7 +74,12 @@ def missing_cell(rng: random.Random, seed: int, *, scenario=None, cells=None,
                  f"x = {x:,}.")
     table = T.printed(c, margins=False, hide=(hr, hc), mark="x")
     return spr("prob.two_way.missing_cell", "two-way table", tier, seed, stem, x,
-               rationale, params=P, table=table)
+               rationale, params=P, table=table, mistakes=[
+                   ("reported the total in the chosen row instead of the hidden cell", den),
+                   (f"reported the {col.label} cell instead of the hidden cell", num),
+                   (f"reported all {row.g} outside {col.label} instead of the hidden cell",
+                    den - num),
+               ])
 
 
 # --------------------------------------------- prob.two_way.cell_from_total
@@ -200,7 +205,13 @@ def percent_columns(rng: random.Random, seed: int, *, scenario=None, first=None,
                  f"{a} to {b} × {mult} = {b * mult}, and the probability is "
                  f"{grid(key)}.")
     return spr("prob.two_way.percent_columns", "two-way table", tier, seed, stem,
-               key, rationale, params=P, table=table)
+               key, rationale, params=P, table=table, mistakes=[
+                   ("treated the two response columns as equal-sized groups", Q(b, a + b)),
+                   ("put the first-column count in the numerator despite asking for the second",
+                    Q(a, den)),
+                   ("divided the second-column count by the first-column count alone",
+                    Q(num, a)),
+               ])
 
 
 def _split(rng: random.Random, k: int) -> list[int]:

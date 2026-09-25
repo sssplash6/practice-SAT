@@ -20,7 +20,7 @@ import random
 from dataclasses import dataclass, field
 from fractions import Fraction as Q
 
-from ....item import Item, ItemError, Mis, assemble
+from ....item import Item, ItemError, Mis, assemble, gridin_mistakes
 from ..values import Num, dec, grid, q, snap, tidy, unambiguous
 
 __all__ = ["scale_count", "scale_group", "scale_range", "scale_two_way",
@@ -421,7 +421,15 @@ def scale_two_way(rng: random.Random, seed: int, *, ctx=None, N=None, counts=Non
              focus=e["focus"])
     return Item("sstat.scale_two_way", "sample statistics and margin of error",
                 tier, seed, stem, "spr", Num(key), grid(key), why,
-                table=table, params=P)
+                table=table, params=P,
+                spr_mistakes=gridin_mistakes(Num(key), [
+                    Mis("reported the count in the sample instead of scaling to the population",
+                        Num(col)),
+                    Mis("scaled the other response column instead of the asked-for column",
+                        Num(snap(Q(N * (n - col), n), 1))),
+                    Mis("scaled only the population outside the sample",
+                        Num(snap(Q((N - n) * col, n), 1))),
+                ]))
 
 
 # ------------------------------------- a frequency table, differenced, gridded
@@ -490,4 +498,13 @@ def scale_frequency(rng: random.Random, seed: int, *, ctx=None, P=None,
     P_ = dict(kind="sstat.scale_frequency", ctx=kit.key, P=P, freq=list(freq))
     return Item("sstat.scale_frequency", "sample statistics and margin of error",
                 tier, seed, stem, "spr", Num(key), grid(key), why,
-                table=table, params=P_)
+                table=table, params=P_,
+                spr_mistakes=gridin_mistakes(Num(key), [
+                    Mis("scaled only the favorable responses, without subtracting the opposing ones",
+                        Num(snap(Q(P * plus, n), 1))),
+                    Mis("scaled only the opposing responses, without finding the difference",
+                        Num(snap(Q(P * minus, n), 1))),
+                    Mis("reported the difference in the sample without scaling it",
+                        Num(plus - minus)),
+                    Mis("added the two response groups instead of subtracting them", Num(P)),
+                ]))

@@ -21,7 +21,7 @@ from fractions import Fraction as Q
 from ....exact import E
 from ....item import Item, ItemError, Mis
 from ..figure import plane
-from ..kit import (MINUS, choices, join, mono, num, pick, point, q, sent, sup,
+from ..kit import (MINUS, choices, gridin_pool, join, mono, num, pick, point, q, sent, sup,
                    text_choices)
 
 __all__ = ["graph_solution", "graph_count", "function_meets"]
@@ -371,4 +371,11 @@ def function_meets(rng: random.Random, seed: int, *, a=None, h=None, k=None, m=N
     if not griddable(key):
         raise ItemError("that answer could not be entered in the grid")
     return Item("nleq.function_meets", "two functions that agree", difficulty, seed,
-                stem, "spr", E(key), gridin(key), rationale, figure=fig, params=P)
+                stem, "spr", E(key), gridin(key), rationale, figure=fig, params=P,
+                spr_mistakes=gridin_pool(E(key), [
+                    Mis("used the midpoint of the two intersections and omitted the square-root term",
+                        -B / (2 * A)),
+                    Mis("used the sum of the two intersections as one solution", -B / A),
+                    Mis("reported the drawn parabola's turning-point input", h),
+                    Mis("reported the other line's slope instead of solving where they agree", m),
+                ], forbid=xs))

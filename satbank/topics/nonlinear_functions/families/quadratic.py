@@ -308,7 +308,13 @@ def vertex_symmetry(rng: random.Random, seed: int, *, mode=None, h=None, k=None,
     return value_item("nlfunc.vertex_symmetry", "the axis of symmetry from two zeros",
                       "hard", seed, MIDPOINT.format(n=name, r1=num(r1), r2=num(r2),
                                                     k=num(k)),
-                      key, [], rng, P, why, fmt="spr")
+                      key, [
+                          Mis("added the two zeros without halving", r1 + r2),
+                          Mis("reported the first zero instead of their midpoint", r1),
+                          Mis("reported the second zero instead of their midpoint", r2),
+                          Mis("used half their separation as the coordinate of the axis",
+                              abs(r2 - r1) / 2),
+                      ], rng, P, why, fmt="spr")
 
 
 # ------------------------------------------------ a shifted maximum, in symbols

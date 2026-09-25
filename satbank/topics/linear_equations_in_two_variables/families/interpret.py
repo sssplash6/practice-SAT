@@ -15,7 +15,7 @@ import random
 from fractions import Fraction as Q
 
 from ....figures import coordinate_grid
-from ....item import Item, ItemError, Mis
+from ....item import Item, ItemError, Mis, gridin_mistakes
 from ..common import ex, numtext, q, sig, std_text, text_item
 
 __all__ = ["interpret_coefficient", "interpret_constant", "interpret_point"]
@@ -164,7 +164,15 @@ def interpret_coefficient(rng: random.Random, seed: int, *, ctx=None, a=None, b=
         if key == 0:
             raise ItemError("the two per-unit prices must differ")
         return Item("le2.interpret_coefficient", "reading a coefficient", "medium", seed,
-                    stem, "spr", key, key.gridin(), why, params=P)
+                    stem, "spr", key, key.gridin(), why, params=P,
+                    spr_mistakes=gridin_mistakes(key, [
+                        Mis("reported only the first per-unit price", ex(A)),
+                        Mis("reported only the second per-unit price", ex(B)),
+                        Mis("added the two per-unit prices instead of finding their difference",
+                            ex(A + B)),
+                        Mis("halved the difference between the two per-unit prices",
+                            ex(abs(B - A) / 2)),
+                    ]))
 
     if d["ask"] == "expression":
         key = at

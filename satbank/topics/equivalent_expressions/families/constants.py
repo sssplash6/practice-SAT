@@ -290,8 +290,31 @@ def coef_combination(rng: random.Random, seed: int, *, shape=None, var=None,
     ex = E(key)
     if not _griddable(Q(key)):
         raise ItemError("that value would not go into a grid-in")
+    if shape == "sum_two":
+        routes = [
+            Mis("reported only the quadratic coefficient", E(p[2] + q[2])),
+            Mis("reported only the constant coefficient", E(p[0] + q[0])),
+            Mis("added the coefficients of the first polynomial only", E(sum(p))),
+        ]
+    elif shape in ("product_frac", "product_int"):
+        routes = [
+            Mis("used only the first cross product", E(a * d)),
+            Mis("used only the second cross product", E(b * c)),
+            Mis("reported the leading coefficient instead of the middle one", E(a * c)),
+            Mis("reported the constant coefficient instead of the middle one", E(b * d)),
+        ]
+    else:
+        quadratic, constant = a + c * a2, b - c * d
+        routes = [
+            Mis("reported only the quadratic coefficient", E(quadratic)),
+            Mis("reported only the constant coefficient", E(constant)),
+            Mis("did not distribute the multiplier to the second expression", E(a + a2 + b - d)),
+            Mis("added the subtracted constant instead of subtracting it",
+                E(quadratic + b + c * d)),
+        ]
     params = {"kind": "eqx_coef_combination", "expr": expr, "var": var,
               "degree": degree, "weights": weights, "vars": [var]}
     return Item("eqx.coef_combination", "equivalent expressions",
                 "medium" if shape != "product_int" else "hard", seed, stem, "spr",
-                ex, ex.gridin(), why, params=params)
+                ex, ex.gridin(), why, params=params,
+                spr_mistakes=gridin_mistakes(ex, routes))

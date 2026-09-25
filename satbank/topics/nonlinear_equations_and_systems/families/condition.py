@@ -415,8 +415,21 @@ def tangent_constant(rng: random.Random, seed: int, *, p=None, height=None, a=No
                          f"{named} = {gridin(key).replace('-', MINUS)}.")
         P = {"kind": "nleq_tangent_constant", "p": _p(p), "a": _p(a),
              "b": _p(0), "ask": ask, "height": _p(h)}
+    if ask == "height":
+        routes = [
+            Mis("found the line's height but forgot its coefficient of y", h),
+            Mis("changed the sign when setting the discriminant to zero", -key),
+            Mis("reported the square of the parabola's middle coefficient", b * b),
+        ]
+    else:
+        routes = [
+            Mis("reported the square of the required coefficient instead of its root", inside),
+            Mis("took the negative root despite the positive-constant condition", -key),
+            Mis("omitted the factor of four before taking the square root", key / 2),
+        ]
     return Item("nleq.tangent_constant", "a line touching a parabola", difficulty,
-                seed, sent(stem), "spr", E(key), gridin(key), rationale, params=P)
+                seed, sent(stem), "spr", E(key), gridin(key), rationale, params=P,
+                spr_mistakes=gridin_pool(E(key), routes))
 
 
 def tangent_point(rng: random.Random, seed: int, *, a=None, b=None, c=None, m=None,
@@ -507,9 +520,16 @@ def integer_roots_constant(rng: random.Random, seed: int, *, k=None, named=None,
                      f"{shown}; {named} is their sum, which can be "
                      f"{', '.join(str(v) for v in sums[:4])}"
                      f"{' and so on' if len(sums) > 4 else ''}.")
+    factor = min((d for d in range(1, n + 1) if n % d == 0 and d * d <= n),
+                 key=lambda d: d + n // d)
     return Item("nleq.integer_roots_constant", "a constant with integer roots",
                 difficulty, seed, sent(stem), "spr", E(key), gridin(Q(key)),
-                rationale, params=P)
+                rationale, params=P,
+                spr_mistakes=gridin_pool(E(key), [
+                    Mis("reported the product of the two integer roots instead of their sum", k),
+                    Mis("reported the difference between the two closest factor roots",
+                        abs(n // factor - factor)),
+                ], forbid=sums))
 
 
 # ------------------------------------------------------------ params packing

@@ -555,4 +555,13 @@ def rate_of_change(rng: random.Random, seed: int, *, ctx=None, ys=None, i=None,
                 f"{d['intro']} {ask}", "spr", E(rate), E(rate).gridin(),
                 f"The two points are {num_str(abs(ys[j] - ys[i]))} apart on the "
                 f"vertical axis over {plural(int(xs[j] - xs[i]), 'day')}.",
-                figure=fig, params=P)
+                figure=fig, params=P,
+                spr_mistakes=gridin_mistakes(E(rate), [
+                    Mis("reported the total vertical change without dividing by elapsed time",
+                        E(ys[j] - ys[i])),
+                    Mis("counted both endpoint days as elapsed intervals",
+                        E((ys[j] - ys[i]) / (xs[j] - xs[i] + 1))),
+                    Mis("reversed rise and run when calculating the rate",
+                        E((xs[j] - xs[i]) / (ys[j] - ys[i]))),
+                    Mis("ignored the direction of the vertical change", E(abs(rate))),
+                ]))

@@ -716,4 +716,12 @@ def slope_scaled(rng: random.Random, seed: int, *, ctx=None, m=None, b=None, k=N
                 E(key), E(key).gridin(),
                 f"A slope of {num_str(m)} means a change of {num_str(abs(m))} for "
                 f"each 1, so {num_str(abs(m))} × {num_str(k)} = {num_str(key)} for "
-                f"each {num_str(k)}.", figure=fig, params=P)
+                f"each {num_str(k)}.", figure=fig, params=P,
+                spr_mistakes=gridin_mistakes(E(key), [
+                    Mis("reported the one-unit change without scaling to the stated interval",
+                        E(abs(m))),
+                    Mis("divided the one-unit change by the interval instead of multiplying",
+                        E(abs(m) / k)),
+                    Mis("used one fewer unit of change than the interval states",
+                        E(abs(m) * (k - 1))),
+                ]))

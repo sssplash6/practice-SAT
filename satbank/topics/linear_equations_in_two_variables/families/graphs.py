@@ -16,7 +16,7 @@ from fractions import Fraction as Q
 from math import gcd
 
 from ....figures import coordinate_grid
-from ....item import Item, ItemError, Mis, unit_word
+from ....item import Item, ItemError, Mis, gridin_mistakes, unit_word
 from ....plot import line_graph, scatter
 from ..common import (MINUS, choose, coef_text, dec, ex, lin_text, numtext, q, sig,
                       std_text, text_item)
@@ -329,4 +329,12 @@ def graph_combinations(rng: random.Random, seed: int, *, ctx=None, xi=None, yi=N
     P = {"kind": "le2_combo", "ask": d["ask"], "xi": XI, "yi": YI,
          "c": [C.numerator, C.denominator]}
     return Item("le2.graph_combinations", "a price from a combinations graph", "hard",
-                seed, stem, "spr", keyx, keyx.gridin(), why, figure=fig, params=P)
+                seed, stem, "spr", keyx, keyx.gridin(), why, figure=fig, params=P,
+                spr_mistakes=gridin_mistakes(keyx, [
+                    Mis("priced the other item using the vertical intercept", ex(C / YI)),
+                    Mis("divided the total by both intercept counts together", ex(C / (XI + YI))),
+                    Mis("multiplied the total by the horizontal intercept instead of dividing",
+                        ex(C * XI)),
+                    Mis("reported the number at the horizontal intercept instead of its unit price",
+                        ex(XI)),
+                ]))

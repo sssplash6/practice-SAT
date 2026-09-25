@@ -457,7 +457,9 @@ def special_triangle(rng: random.Random, seed: int, *, alpha=None, given=None,
         if ask.startswith("angle") and not (alpha == 45 and len(angle_marks) == 2):
             pool["straight"] = None
         return Item("rtt.special_triangle", "special right triangles", "medium", seed,
-                    stem, "spr", key, key.gridin(), rationale, figure=fig, params=P)
+                    stem, "spr", key, key.gridin(), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, [m for m in pool.values()
+                                                     if m is not None]))
     choices, latex, reasons, letter_ = assemble(key, pick(pool, wrongs), rng)
     return Item("rtt.special_triangle", "special right triangles", "medium", seed, stem,
                 "mcq", key, letter_, rationale, choices, reasons, latex, figure=fig,
