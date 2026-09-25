@@ -1,6 +1,6 @@
 """Advanced Math -> Equivalent Expressions.
 
-Seventy official items and twenty-one templates. What the source actually
+Seventy official items and twenty-three templates. What the source actually
 varies is the *direction* of the rewrite -- expand a product or factor one,
 turn a radical into an exponent or an exponent into a radical, divide out a
 quotient or put two fractions back over one denominator -- and whether the
@@ -22,6 +22,7 @@ from .families import constants as C
 from .families import factoring as F
 from .families import powers as W
 from .families import rational as R
+from .families import supply as U
 from .sources import ALL, EXCLUDED
 
 TEMPLATES = {
@@ -46,6 +47,8 @@ TEMPLATES = {
     "eqx.rational_combine": R.rational_combine,
     "eqx.rational_simplify": R.rational_simplify,
     "eqx.divide_remainder": R.divide_remainder,
+    "eqx.collect_coefficient": U.collect_coefficient,
+    "eqx.distribute_coefficient": U.distribute_coefficient,
 }
 
 TOPIC = Topic(
