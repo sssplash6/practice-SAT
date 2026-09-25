@@ -172,6 +172,37 @@ def run() -> None:
             assert item["qhash"] not in by_slot[slot]
             by_slot[slot].add(item["qhash"])
         assert_ok(bool(ids), "whole-question twin hashes are unique within every slot")
+        # A closed week is permanent even while fresh Dailies arrive.
+        old_week = "2025-W02"
+        db.run("DELETE FROM champions WHERE kind='week' AND period=?", old_week)
+        db.run("DELETE FROM sessions WHERE contest='s8-historic'")
+        old_people = [learner("champ") for _ in range(3)]
+        db.run("INSERT OR IGNORE INTO contests(id,kind,title,opens,closes,count,seconds,spec,created,subject)"
+               " VALUES ('s8-historic','daily','Old Daily','2025-01-06T00:00:00+00:00',"
+               " '2025-01-13T12:00:00+00:00',10,950,'{}','2025-01-06T00:00:00+00:00','math')")
+        for index, person in enumerate(old_people):
+            db.ensure_learner(person)
+            db.run("UPDATE learners SET board=? WHERE id=?", "hidden" if index == 0 else "name", person)
+            db.run("INSERT INTO sessions(id,kind,learner,started,finished,answers,result,contest,ranked,points)"
+                   " VALUES (?,?,?,?,?,'{}',?,?,1,?)", secrets.token_urlsafe(12), "challenge", person,
+                   "2025-01-08T10:00:00+00:00", "2025-01-08T10:10:00+00:00",
+                   json.dumps({"net": 30 - index * 10, "rating_before": 1000,
+                               "rating_after": 1030 - index * 10}), "s8-historic", 230 - index * 10)
+        past = c.get(f"/api/leaderboard?period=week&at={old_week}", headers=head(b))
+        assert_ok(past.status_code == 200 and past.json()["closed"] and
+                  [e["value"] for e in past.json()["entries"][:3]] == [230, 220, 210],
+                  "closed week keeps its ranked values")
+        hall = c.get("/api/compete/champions?kind=week&before=2025-W03", headers=head(b)).json()
+        old = next(p for p in hall if p["period"] == old_week)
+        assert_ok(len(old["boards"]["points"]) == 3 and len(old["boards"]["net"]) == 3 and
+                  len(old["boards"]["change"]) == 3,
+                  "closed week writes points, over-par and change podiums")
+        assert_ok(old["boards"]["points"][0]["name"] == "Anonymous" and
+                  c.get("/api/compete/champions?kind=week&before=2025-W03", headers=head(old_people[0]))
+                  .json()[0]["boards"]["points"][0]["name"] != "Anonymous",
+                  "hidden champion stays anonymous to others")
+        assert_ok(c.get(f"/api/leaderboard?period=week&at={old_week}", headers=head(b)).json()
+                  ["entries"] == past.json()["entries"], "closed board is stable on repeated reads")
         print("S8 checks passed")
 
 
