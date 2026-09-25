@@ -460,7 +460,13 @@ def _flags(learner: str, slug: str, s: dict, day: dt.date) -> dict:
 def library(learner: str, tz: int = 0, days: int = 14) -> dict:
     data = content()
     day = local_day(tz)
+    exam = _exam(learner)
     states = {r["word"]: dict(r) for r in db.rows("SELECT * FROM word_state WHERE learner=?", learner)}
+    last_context = {}
+    for review in db.rows("SELECT word,correct,trap FROM word_reviews WHERE learner=?"
+                          " AND kind IN ('incontext','nearly','precise','transition')"
+                          " AND correct IS NOT NULL ORDER BY id DESC", learner):
+        last_context.setdefault(review["word"], review)
     own = [dict(r) for r in db.rows("SELECT id FROM my_words WHERE learner=?", learner)]
     slugs = list(data["entries"]) + [r["id"] for r in own]
     words = []
@@ -470,12 +476,18 @@ def library(learner: str, tz: int = 0, days: int = 14) -> dict:
         flags = _flags(learner, slug, s, day)
         box = int(s["box"] or 0)
         measured = _measured(slug) if slug in data["entries"] else None
+        last = last_context.get(slug)
+        trap = last["trap"] if last and not last["correct"] and last["trap"] else None
+        at_risk = bool(exam and box and retention(s, exam) < .8)
         words.append({"slug": slug, "word": w["word"], "sense": w.get("sense"), "pos": w.get("pos"),
                       "collection": w.get("collection"), "topics": w.get("subjects", w.get("topics", [])),
                       "difficulty": ("easy" if measured["pct"] >= 75 else "medium" if measured["pct"] >= 45 else "hard")
                       if measured else w.get("level", "medium"), "short": w["short"],
                       "freq_band": w.get("freq_band", 3), "measured": measured,
                       "lists": w.get("lists", []), "bank": 0, "own": slug.startswith("u:"),
+                      "family": w.get("class"),
+                      "roots": data["index"]["words"].get(slug, {}).get("roots", []),
+                      "value": w.get("value"), "at_risk": at_risk, "trap": trap,
                       "second_sense": bool(w.get("second_sense")), "state": s if slug in states else None,
                       "proven": s.get("proven"), "claimed": box == 3 and not s.get("proven"),
                       **flags, "saved": bool(s["saved"]), "placed": s.get("placed", 0)})
@@ -487,6 +499,9 @@ def library(learner: str, tz: int = 0, days: int = 14) -> dict:
         counts["learning"] += 1 <= box <= 3
         counts["known"] += box >= 4 and bool(w["proven"])
         counts["claimed"] += w["claimed"]
+        counts["probable"] += w["placed"] == 2
+        counts["trapped"] += bool(w["trap"])
+        counts["atrisk"] += w["at_risk"]
         counts["saved"] += w["saved"]
         counts["mine"] += w["own"]
         for key in ("missed", "looked_up", "stubborn", "thought"):

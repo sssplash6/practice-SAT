@@ -68,7 +68,7 @@ def _run_payload(row, *, include_items: bool = False) -> dict:
 
 def _make_item(learner: str, slug: str, kind: str, seed: int,
                seen: set[str] | None = None, want_trap: str | None = None,
-               strict_trap: bool = False) -> dict:
+               strict_trap: bool = False, review_fallback: bool = False) -> dict:
     w = words.entry(slug, learner)
     if not w:
         raise HTTPException(404, "unknown word")
@@ -101,6 +101,20 @@ def _make_item(learner: str, slug: str, kind: str, seed: int,
                     return q
             except ValueError:
                 continue
+        if review_fallback:
+            # Until adjudicated frames exist, due high-box words can still be
+            # reviewed. A self-grade at box 3+ stays at that box; neither a
+            # card nor a recognition check can claim in-context proof.
+            if int(words.state(learner, slug)["box"] or 0) >= 3:
+                card = _make_item(learner, slug, "card", seed)
+                card["stem"] = "Prove it in context when a reviewed passage is ready. Do you know this word?"
+                return card
+            try:
+                check = _make_item(learner, slug, "meaning2word", seed)
+                check["stem"] = "Prove it in context when a reviewed passage is ready. " + check["stem"]
+                return check
+            except HTTPException:
+                return _make_item(learner, slug, "card", seed)
         raise HTTPException(409, "no reviewed frame is available for this word")
     if kind in {"meaning2word", "word2meaning", "cloze", "typed"}:
         try:
@@ -151,7 +165,9 @@ def _choose(learner: str, slugs: list[str], mode: str, formats: list[str],
             continue
         if mode in {"cards", "mix"}:
             kind = _card_kind(learner, slug)
-            if mode == "mix" and not words.state(learner, slug)["reps"]:
+            state = words.state(learner, slug)
+            if (mode == "mix" and not state["reps"] and not state["box"]
+                    and int(state.get("placed") or 0) not in (1, 2)):
                 kind = "learn"
         elif mode == "sprint":
             kind = "meaning2word"
@@ -172,7 +188,7 @@ def _choose(learner: str, slugs: list[str], mode: str, formats: list[str],
             kind = "card"
         wanted = want_trap or (adaptive[0] if adaptive and i % 2 == 0 else None)
         q = _make_item(learner, slug, kind, rng.randrange(2**31), seen, wanted,
-                       strict_trap=bool(want_trap))
+                       strict_trap=bool(want_trap), review_fallback=mode in {"cards", "mix"})
         if commit and q["kind"] in {"card", "fix"}:
             choices = [w["short"] for w in [words.entry(slug, learner),
                        *words._distractors(slug, rng, meanings=True, learner=learner)[:2]]]
@@ -1355,10 +1371,11 @@ def grade_sheet(slug: str, body: dict, x_learner: str | None = Header(default=No
     learner = _learner(x_learner)
     if type(body.get("ok")) is not bool:
         raise HTTPException(422, "ok must be true or false")
-    last = db.one("SELECT id,at,mode FROM word_reviews WHERE learner=? AND word=?"
+    last = db.one("SELECT id,at,mode,kind FROM word_reviews WHERE learner=? AND word=?"
                   " ORDER BY id DESC LIMIT 1", learner, slug)
     with db.atomic():
-        if last and last["mode"] == "sheet" and words.local_day(x_tz, last["at"]) == words.local_day(x_tz):
+        if (last and last["mode"] == "sheet" and last["kind"] == "card"
+                and words.local_day(x_tz, last["at"]) == words.local_day(x_tz)):
             words.restore_review(learner, slug, last["id"])
         verdict = words.grade(learner, slug, body["ok"], "sheet", "card", body.get("ms"),
                               None, None, x_tz)
