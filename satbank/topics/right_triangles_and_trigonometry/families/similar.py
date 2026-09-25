@@ -152,7 +152,8 @@ def similar_ratio(rng: random.Random, seed: int, *, given_fn=None, given_at=None
             mistakes = [m for m in mistakes if m not in
                         (pool["sum_denominator"], pool["swapped_sum"])]
         return Item("rtt.similar_ratio", "similar right triangles", "hard", seed, stem,
-                    "spr", key, key.gridin(), rationale, params=P)
+                    "spr", key, key.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(key, mistakes))
     choices, latex, reasons, letter = assemble(key, mistakes, rng)
     return Item("rtt.similar_ratio", "similar right triangles", "hard", seed, stem,
                 "mcq", key, letter, rationale, choices, reasons, latex, params=P)

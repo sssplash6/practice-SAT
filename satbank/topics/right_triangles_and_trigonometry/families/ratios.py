@@ -148,7 +148,9 @@ def trig_ratio(rng: random.Random, seed: int, *, hyp=None, leg=None, mode=None,
             pool["unit_leg"] = None
         pool["hyp_over_sum"] = None     # no route to a sine or cosine runs through it
         return Item("rtt.trig_ratio", "trigonometric ratios", "medium", seed, stem,
-                    "spr", key, key.gridin(), rationale, figure=fig, params=P)
+                    "spr", key, key.gridin(), rationale, figure=fig, params=P,
+                    spr_mistakes=gridin_mistakes(key, [m for m in pool.values()
+                                                     if m is not None]))
     choices, latex, reasons, letter_ = assemble(key, pick(pool, wrongs), rng)
     return Item("rtt.trig_ratio", "trigonometric ratios", "medium", seed, stem, "mcq",
                 key, letter_, rationale, choices, reasons, latex, figure=fig, params=P)
@@ -547,4 +549,6 @@ def split_right_angle(rng: random.Random, seed: int, *, leg_p=None, leg_q=None,
                  f"the {FN_NAME[second]} of the other. The difference is 0.")
     P = {"kind": "rtt_split_right_angle", "a": a, "b": b, "order": order}
     return Item("rtt.split_right_angle", "cofunctions", "hard", seed, stem, "spr", key,
-                key.gridin(), rationale, figure=fig, params=P)
+                key.gridin(), rationale, figure=fig, params=P,
+                spr_mistakes=[Mis("used the full 90° angle for both split angles",
+                                  E(-1 if order == "cos_sin" else 1))])
