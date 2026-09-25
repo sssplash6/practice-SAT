@@ -187,7 +187,8 @@ def evaluate(rng: random.Random, seed: int, *, m=None, b=None, x0=None, form=Non
         if keyx.gridin().lstrip("-").replace("/", "").replace(".", "") == "":
             raise ItemError("no grid-in form")
         return Item("lin.evaluate", "evaluating a linear function", "easy", seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, params=P)
+                    "spr", keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, named(True)))
     mistakes = named()
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True)
     return Item("lin.evaluate", "evaluating a linear function", "easy", seed, stem, "mcq",
@@ -273,7 +274,8 @@ def coefficient(rng: random.Random, seed: int, *, m=None, b=None, x1=None, x2=No
     mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
         return Item("lin.coefficient", "an unknown coefficient", "medium", seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, params=P)
+                    "spr", keyx, keyx.gridin(), rationale, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, mistakes))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                                fillers="shift")
     return Item("lin.coefficient", "an unknown coefficient", "medium", seed, stem, "mcq",

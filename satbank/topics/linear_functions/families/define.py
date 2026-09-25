@@ -426,7 +426,9 @@ def table_facts(rng: random.Random, seed: int, *, m=None, b=None, xs=None, x0=No
     mistakes = [Mis(r.reason, ex(r.value)) for r in mistakes if r.value is not None]
     if fmt == "spr":
         return Item("lin.table_facts", "reading a linear table", "medium", seed, stem,
-                    "spr", keyx, keyx.gridin(), rationale, table=table, params=P)
+                    "spr", keyx, keyx.gridin(), rationale, table=table, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, [Mis(r.reason, ex(r.value))
+                                                       for r in spr if r.value is not None]))
     choices, latex, reasons, letter = choose(keyx, mistakes, rng, signed=True,
                                                fillers="shift")
     return Item("lin.table_facts", "reading a linear table", "medium", seed, stem, "mcq",
