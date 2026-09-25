@@ -72,7 +72,7 @@ def _sitting(cid: str, learner: str):
     return db.one("SELECT * FROM sessions WHERE contest=? AND learner=? ORDER BY started DESC LIMIT 1", cid, learner)
 
 
-def _meta(row, learner: str | None, tz: int = 0) -> dict:
+def _meta(row, learner: str | None, tz: int = 0, race: str | None = None) -> dict:
     now = compete._iso(compete._now())
     own = _sitting(row["id"], learner) if learner else None
     if own and own["finished"]:
@@ -121,6 +121,9 @@ def _meta(row, learner: str | None, tz: int = 0) -> dict:
     status = "upcoming" if row["opens"] > now else "closed" if row["closes"] <= now else "live"
     if row["kind"] == "daily":
         status = "live" if row["id"] == "daily-" + compete.local_day(tz).isoformat() else "closed"
+    race_data = compete.race_choice(row["id"], learner, race) if race and learner else None
+    if race and not learner:
+        raise HTTPException(400, "send a learner code to race")
     return {"id": row["id"], "kind": row["kind"], "title": row["title"],
             "subject": row["subject"], "opens": row["opens"], "closes": row["closes"],
             "count": row["count"], "seconds": row["seconds"],
@@ -132,6 +135,7 @@ def _meta(row, learner: str | None, tz: int = 0) -> dict:
                       "median_points": statistics.median(all_scores) if all_scores else None,
                       "best": max(all_scores) if all_scores else None},
             "me": me, "entrants": entrants,
+            "race": {k: v for k, v in race_data.items() if k not in ("target", "sid")} if race_data else None,
             "series": row["series"], "round": row["round"]}
 
 
@@ -188,19 +192,20 @@ def join_contest(body: dict, x_learner: str | None = Header(default=None)) -> di
 
 
 @router.get("/api/contest/daily")
-def daily_contest(x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
-    return _meta(compete.contest("daily", x_tz), _viewer(x_learner), x_tz)
+def daily_contest(race: str | None = None, x_learner: str | None = Header(default=None),
+                  x_tz: int = Depends(tz_of)) -> dict:
+    return _meta(compete.contest("daily", x_tz), _viewer(x_learner), x_tz, race)
 
 
-def _start(cid: str, learner: str, tz: int) -> dict:
+def _start(cid: str, learner: str, tz: int, race: str | None = None) -> dict:
     # Two devices starting together must claim one sitting. Every insert and
     # its twin allocations happen under SQLite's single immediate writer.
     compete.contest(cid, tz)
     with db.atomic():
-        return _start_locked(cid, learner, tz)
+        return _start_locked(cid, learner, tz, race)
 
 
-def _start_locked(cid: str, learner: str, tz: int) -> dict:
+def _start_locked(cid: str, learner: str, tz: int, race: str | None = None) -> dict:
     contest = compete.contest(cid, tz)
     if contest["opens"] > compete._iso(compete._now()) and contest["kind"] != "daily":
         raise HTTPException(409, "contest has not opened")
@@ -213,6 +218,7 @@ def _start_locked(cid: str, learner: str, tz: int) -> dict:
         return {"session": old["id"], "runner": "test" if old["kind"] == "module" else "session",
                 "clock": compete.clock(db.one("SELECT * FROM sessions WHERE id=?", old["id"])), **state}
     spec = compete._json(contest["spec"], {}) or {}
+    race_data = compete.race_choice(contest["id"], learner, race)
     if contest["kind"] in ("weekly", "final"):
         questions = compete.twin_questions(learner, contest["id"], spec["slots"])
         sid = secrets.token_urlsafe(16)
@@ -220,7 +226,7 @@ def _start_locked(cid: str, learner: str, tz: int) -> dict:
         db.run("INSERT INTO sessions(id,kind,learner,started,questions,answers,contest,subject,cfg,module,result)"
                " VALUES (?,?,?,?,?,'{}',?,?,?,1,?)", sid, "module", learner, compete._iso(compete._now()),
                json.dumps({"module1": questions}), contest["id"], contest["subject"],
-               json.dumps({"timed": True, "contest": contest["id"], "par": expected}), json.dumps({"par": expected}))
+               json.dumps({"timed": True, "contest": contest["id"], "par": expected, "race": race_data}), json.dumps({"par": expected}))
         return {"session": sid, "runner": "test", "clock": {"left": contest["seconds"]}}
     if spec.get("twin"):
         qs = compete.twin_questions(learner, contest["id"], spec["slots"])
@@ -241,7 +247,7 @@ def _start_locked(cid: str, learner: str, tz: int) -> dict:
     expected = compete.par(learner, spec["slots"])
     cfg.update({"contest": contest["id"], "seconds": round(contest["seconds"] * multiplier),
                 "timing": timing, "tz": tz, "timed": False, "fixed": True,
-                "feedback": spec.get("reveal", "each"), "par": expected})
+                "feedback": spec.get("reveal", "each"), "par": expected, "race": race_data})
     db.run("UPDATE sessions SET contest=?,cfg=?,subject=? WHERE id=?", contest["id"],
            json.dumps(cfg), contest["subject"], sid)
     db.run("UPDATE sessions SET result=? WHERE id=?", json.dumps({"par": expected}), sid)
@@ -252,8 +258,9 @@ def _start_locked(cid: str, learner: str, tz: int) -> dict:
 
 
 @router.post("/api/contest/daily/start")
-def daily_start(x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
-    return _start("daily", learner_of(x_learner), x_tz)
+def daily_start(race: str | None = None, x_learner: str | None = Header(default=None),
+                x_tz: int = Depends(tz_of)) -> dict:
+    return _start("daily", learner_of(x_learner), x_tz, race)
 
 
 @router.get("/api/leaderboard")
@@ -532,6 +539,7 @@ def contest_grid(cid: str, offset: int = 0, limit: int = 50,
                            session["id"], q["id"])
                 slots.append("void" if a and a["void"] else "right" if a and a["correct"] else
                              "wrong" if a else "skip")
+            slots.extend(["skip"] * max(0, row["count"] - len(slots)))
         marks.append({"pid": entry["pid"], "name": entry["name"], "rank": entry["rank"],
                       "you": entry["you"], "marks": slots})
     footer = []
@@ -666,20 +674,32 @@ def contest_warmup(cid: str, x_learner: str | None = Header(default=None),
 
 
 @router.get("/api/contest/{cid}")
-def get_contest(cid: str, code: str | None = None, x_learner: str | None = Header(default=None),
+def get_contest(cid: str, code: str | None = None, race: str | None = None,
+                x_learner: str | None = Header(default=None),
                 x_tz: int = Depends(tz_of)) -> dict:
     if code:
         matched = db.one("SELECT id FROM contests WHERE code=?", code.upper())
         if not matched:
             raise HTTPException(404, "contest not found")
         cid = matched["id"]
-    return _meta(compete.contest(cid, x_tz), _viewer(x_learner), x_tz)
+    return _meta(compete.contest(cid, x_tz), _viewer(x_learner), x_tz, race)
 
 
 @router.post("/api/contest/{cid}/start")
-def start_contest(cid: str, x_learner: str | None = Header(default=None),
+def start_contest(cid: str, race: str | None = None, x_learner: str | None = Header(default=None),
                   x_tz: int = Depends(tz_of)) -> dict:
-    return _start(cid, learner_of(x_learner), x_tz)
+    return _start(cid, learner_of(x_learner), x_tz, race)
+
+
+@router.get("/api/contest/{cid}/pacer")
+def contest_pacer(cid: str, x_learner: str | None = Header(default=None),
+                  x_tz: int = Depends(tz_of)) -> dict:
+    learner = learner_of(x_learner)
+    row = compete.contest(cid, x_tz)
+    sitting = _sitting(row["id"], learner)
+    if not sitting:
+        raise HTTPException(404, "start the contest first")
+    return {"pacer": compete.pacer(sitting)}
 
 
 @router.get("/challenge/")
