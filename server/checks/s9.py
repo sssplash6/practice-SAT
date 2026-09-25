@@ -427,12 +427,51 @@ def test_rw_migration() -> None:
         c.execute("RELEASE s9_migration")
 
 
+def test_compete_contract() -> None:
+    previous = os.environ.pop("SATF_WORDS_UNREVIEWED", None)
+    try:
+        assert not words.sprint_available(), "unreviewed content must not open a Word Sprint"
+        os.environ["SATF_WORDS_UNREVIEWED"] = "1"
+        assert words.sprint_available()
+        learner = code()
+        items = words.sprint_items(learner, 89751, 12, 1)
+        peer = words.sprint_items(code(), 89751, 12, 1)
+        assert [q["kind"] for q in items] == ["incontext", "transition"] * 6
+        assert [q["sprint_band"] for q in items] == [1] * 5 + [2] * 5 + [3] * 2
+        assert [q["template"] for q in items] == [q["template"] for q in peer]
+        assert any(q["text"] != p["text"] for q, p in zip(items, peer))
+        assert all(q["traps"][q["answer_index"]] is None and
+                   all(trap for i, trap in enumerate(q["traps"]) if i != q["answer_index"])
+                   for q in items)
+        q = items[0]
+        wrong = next(i for i in range(4) if i != q["answer_index"])
+        words.place(learner, q["word"], "yes")
+        before = words.state(learner, q["word"])["box"]
+        attempts_before = db.one("SELECT COUNT(*) n FROM attempts WHERE learner=?", learner)["n"]
+        words.grade(learner, q["word"], False, mode="sprint", kind=q["kind"],
+                    session="s9-compete-check", template=q["template"], seed=q["seed"],
+                    given=q["choices"][wrong], confusion=q["traps"][wrong])
+        marked = words.record_contest_miss(learner, q["word"], q["traps"][wrong])
+        state = words.state(learner, q["word"])
+        review = db.one("SELECT * FROM word_reviews WHERE learner=? AND word=? ORDER BY id DESC LIMIT 1",
+                        learner, q["word"])
+        assert marked["missed"] and state["box"] == before == 3
+        assert words._flags(learner, q["word"], state, words.local_day())["missed"]
+        assert review["mode"] == "sprint" and review["trap"] == q["traps"][wrong]
+        assert db.one("SELECT COUNT(*) n FROM attempts WHERE learner=?", learner)["n"] == attempts_before
+    finally:
+        if previous is None:
+            os.environ.pop("SATF_WORDS_UNREVIEWED", None)
+        else:
+            os.environ["SATF_WORDS_UNREVIEWED"] = previous
+
+
 def check(client: TestClient) -> None:
     previous = os.environ.pop("SATF_WORDS_UNREVIEWED", None)
     try:
         tests = (test_content, test_core, test_library, test_runs, test_placement_and_own,
                  test_daily_print_offline, test_crowd_guard, test_study_policy,
-                 test_external_words, test_rw_migration)
+                 test_external_words, test_rw_migration, test_compete_contract)
         for test in tests:
             test(client) if test.__code__.co_argcount else test()
             print(test.__name__, "PASS")
