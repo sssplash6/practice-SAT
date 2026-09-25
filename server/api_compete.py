@@ -102,6 +102,10 @@ def _meta(row, learner: str | None, tz: int = 0) -> dict:
         flags = (compete._json(own["cfg"], {}) or {}).get("flags", {})
         me["confirm"] = {"due": sum(f.get("status") == "pending" for f in flags.values()),
                          "next": (compete._json(own["cfg"], {}) or {}).get("confirm_active")}
+        cfg = compete._json(own["cfg"], {}) or {}
+        me["followup"] = {"due": cfg.get("rematch_due"), "session": cfg.get("rematch_session"),
+                          "won_back": (own_result or {}).get("won_back"),
+                          "of": (own_result or {}).get("won_back_of")}
     if len(all_scores) >= 10:
         lower = expected["base"] - expected["sd"]
         upper = expected["base"] + expected["sd"]
@@ -149,6 +153,8 @@ def compete_home(x_learner: str | None = Header(default=None), x_tz: int = Depen
             "season": {"closes": next_sat,
                        "name": "Road to " + dt.date.fromisoformat(next_sat).strftime("%b %-d") if next_sat else None},
             "board_preview": compete.leaderboard(learner=learner, limit=5),
+            "records": compete.records(learner), "week_line": compete.week_line(learner),
+            "champions": compete.champions(limit=1, viewer=learner),
             "next_badges": [b for b in compete.evaluate(learner) if not b["earned"]][:3],
             "private": compete.due_today(learner, x_tz), "sat_dates": compete.SAT_DATES}
 
@@ -271,22 +277,47 @@ def compete_me(x_learner: str | None = Header(default=None), x_tz: int = Depends
     learner = learner_of(x_learner)
     return {**compete.rank_snapshot(learner, x_tz), "badges": compete.evaluate(learner),
             "streak": compete.challenge_streak(learner, x_tz),
+            "records": compete.records(learner), "week_line": compete.week_line(learner),
             "boards": {p: compete.leaderboard(period=p, learner=learner)["you"]
                        for p in ("week", "month", "season", "all")}}
 
 
+@router.get("/api/compete/recap")
+def compete_recap(season: str | None = None, x_learner: str | None = Header(default=None)) -> dict:
+    return compete.season_recap(learner_of(x_learner), season)
+
+
 @router.get("/api/compete/history")
-def compete_history(kind: str | None = None, offset: int = 0, limit: int = 20,
+def compete_history(kind: str | None = None, followup: str | None = None,
+                    offset: int = 0, limit: int = 20,
                     x_learner: str | None = Header(default=None)) -> dict:
     learner = learner_of(x_learner)
     rows = db.rows("SELECT s.*,c.kind AS contest_kind,c.title FROM sessions s JOIN contests c ON c.id=s.contest"
                    " WHERE s.learner=? AND s.finished IS NOT NULL ORDER BY s.finished DESC", learner)
-    rows = [r for r in rows if not kind or r["contest_kind"] == kind]
-    return {"history": [{"id": r["contest"], "session": r["id"], "kind": r["contest_kind"],
-                         "title": r["title"], "finished": r["finished"], "points": r["points"],
-                         "ranked": bool(r["ranked"]), "why": r["unranked_why"],
-                         "result": compete._json(r["result"], {})} for r in rows[offset:offset + min(limit, 50)]],
-            "total": len(rows)}
+    if followup not in (None, "open"):
+        raise HTTPException(422, "followup must be open")
+    items = []
+    for r in rows:
+        if kind and r["contest_kind"] != kind:
+            continue
+        cfg = compete._json(r["cfg"], {}) or {}
+        open_traps = db.one("SELECT COUNT(DISTINCT t.template||':'||t.reason) AS n FROM attempts a"
+                            " JOIN traps t ON t.learner=a.learner AND t.template=a.template"
+                            " AND t.closed IS NULL WHERE a.session=? AND a.correct=0", r["id"])["n"]
+        due = cfg.get("rematch_due") if not cfg.get("rematch_done") else None
+        if followup == "open" and not (due or open_traps):
+            continue
+        result = compete._json(r["result"], {}) or {}
+        items.append({"id": r["contest"], "session": r["id"], "kind": r["contest_kind"],
+                      "title": r["title"], "finished": r["finished"], "points": r["points"],
+                      "net": result.get("net"), "ranked": bool(r["ranked"]),
+                      "why": r["unranked_why"], "result": result,
+                      "followup": {"due": due, "open_traps": open_traps,
+                                   "won_back": result.get("won_back"), "of": result.get("won_back_of")},
+                      "record": bool(result.get("records_new"))})
+    return {"history": items[offset:offset + min(limit, 50)], "total": len(items),
+            "open_followups": sum(bool(item["followup"]["due"] or item["followup"]["open_traps"])
+                                  for item in items)}
 
 
 @router.post("/api/compete/nudge")

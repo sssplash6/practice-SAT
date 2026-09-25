@@ -517,9 +517,81 @@ def finish_contest(row) -> dict:
         result["net"] = base - par_data["base"]
     result["confirmed"] = sum(f.get("status") == "confirmed" for f in
                               (_json(row["cfg"], {}) or {}).get("flags", {}).values())
+    previous = [s["points"] for s in db.rows("SELECT s.points FROM sessions s"
+                " JOIN contests c ON c.id=s.contest WHERE s.learner=? AND s.id!=?"
+                " AND c.kind=? AND s.finished IS NOT NULL AND s.points IS NOT NULL AND s.ranked=1",
+                row["learner"], row["id"], contest_row["kind"])]
+    best = max(previous, default=None)
+    result["records_new"] = ([{"kind": contest_row["kind"], "value": points, "was": best}]
+                             if ranked and (best is None or points > best) else [])
     db.run("UPDATE sessions SET points=?,secs=?,ranked=?,unranked_why=?,result=? WHERE id=?",
            points, used, int(ranked), why, json.dumps(result), row["id"])
     return result
+
+
+def records(learner: str) -> dict:
+    """Personal contest bests and the permanent weekly podium ledger."""
+    rows = db.rows("SELECT s.*,c.kind AS contest_kind FROM sessions s JOIN contests c ON c.id=s.contest"
+                   " WHERE s.learner=? AND s.finished IS NOT NULL AND s.ranked=1 ORDER BY s.finished", learner)
+    best: dict[str, dict] = {}
+    for row in rows:
+        kind = row["contest_kind"]
+        value = row["points"] or 0
+        if kind not in best or value > best[kind]["value"]:
+            best[kind] = {"kind": kind, "value": value, "at": row["finished"], "session": row["id"]}
+        if kind == "daily" and (_json(row["result"], {}) or {}).get("right") == 10:
+            secs = row["secs"] or 0
+            if secs and ("fastest_daily" not in best or secs < best["fastest_daily"]["value"]):
+                best["fastest_daily"] = {"kind": "fastest_daily", "value": secs,
+                                         "at": row["finished"], "session": row["id"]}
+    rating = db.one("SELECT rating FROM learners WHERE id=?", learner)
+    best["peak_rating"] = {"kind": "peak_rating", "value": round(rating["rating"] or 1000) if rating else 1000}
+    best["challenge_streak"] = {"kind": "challenge_streak", "value": challenge_streak(learner)["best"]}
+    podiums = db.rows("SELECT kind,period,board,place FROM champions WHERE learner=? ORDER BY period DESC", learner)
+    return {"bests": best, "podiums": [dict(row) for row in podiums]}
+
+
+def week_line(learner: str) -> dict:
+    today = _now().date()
+    end = today - dt.timedelta(days=today.weekday())
+    start = end - dt.timedelta(days=7)
+    rows = db.rows("SELECT s.points,s.result,c.kind FROM sessions s JOIN contests c ON c.id=s.contest"
+                   " WHERE s.learner=? AND s.finished>=? AND s.finished<? AND s.ranked=1",
+                   learner, start.isoformat(), end.isoformat())
+    kinds = Counter(r["kind"] for r in rows)
+    points = sum(r["points"] or 0 for r in rows)
+    record_count = sum(len((_json(r["result"], {}) or {}).get("records_new", [])) for r in rows)
+    return {"week": f"{start.isocalendar().year}-W{start.isocalendar().week:02d}",
+            "daily": kinds["daily"], "weekly": kinds["weekly"], "points": points,
+            "records": record_count, "text": f"Last week: {kinds['daily']} Dailies · "
+            f"{kinds['weekly']} Weekly · {points} pts · {record_count} records"}
+
+
+def season_recap(learner: str, season: str | None = None) -> dict:
+    if season is None:
+        previous = [day for day in SAT_DATES if day < _now().date().isoformat()]
+        if not previous:
+            raise HTTPException(404, "no finished season")
+        season = "road-" + previous[-1]
+    if not season.startswith("road-") or season[5:] not in SAT_DATES:
+        raise HTTPException(404, "season not found")
+    start, end, _, closed = period_window("season", season)
+    if not closed:
+        raise HTTPException(409, "season is still live")
+    rows = db.rows("SELECT s.*,c.kind AS contest_kind FROM sessions s JOIN contests c ON c.id=s.contest"
+                   " WHERE s.learner=? AND s.finished>=? AND s.finished<? ORDER BY s.finished", learner, start, end)
+    rated = [(_json(row["result"], {}) or {}) for row in rows if row["ranked"]]
+    before = next((r["rating_before"] for r in rated if r.get("rating_before") is not None), None)
+    after = next((r["rating_after"] for r in reversed(rated) if r.get("rating_after") is not None), None)
+    closed_traps = db.one("SELECT COUNT(*) AS n FROM traps WHERE learner=? AND closed>=? AND closed<?",
+                          learner, start, end)["n"]
+    titles = [dict(r) for r in db.rows("SELECT kind,period,board,place FROM champions WHERE learner=?"
+                                        " AND period=?", learner, season)]
+    return {"season": season, "contests": len(rows), "points": sum(r["points"] or 0 for r in rows),
+            "rating_before": before, "rating_after": after, "mistakes_closed": closed_traps,
+            "best_finish": min((board(r["contest"], learner)["you"]["rank"] for r in rows
+                                if r["ranked"] and board(r["contest"], learner)["you"]), default=None),
+            "titles": titles}
 
 
 def flag(sid: str, learner: str, qid: str, why: str, secs: float = 0) -> dict:
@@ -1112,8 +1184,9 @@ def evaluate(learner: str) -> list[dict]:
 
 def challenge_streak(learner: str, tz: int = 0) -> dict:
     today = local_day(tz)
-    days = {r["day"] for r in db.rows("SELECT DISTINCT day FROM sessions WHERE learner=?"
-                                       " AND contest LIKE 'daily-%' AND finished IS NOT NULL", learner)}
+    days = {r["day"] for r in db.rows("SELECT DISTINCT COALESCE(day,SUBSTR(contest,7,10)) AS day"
+                                       " FROM sessions WHERE learner=? AND contest LIKE 'daily-%'"
+                                       " AND finished IS NOT NULL", learner) if r["day"]}
     count = 0
     at = today
     if at.isoformat() not in days:
@@ -1121,7 +1194,15 @@ def challenge_streak(learner: str, tz: int = 0) -> dict:
     while at.isoformat() in days:
         count += 1
         at -= dt.timedelta(days=1)
-    return {"current": count, "days": sorted(days, reverse=True)[:30]}
+    best = 0
+    streak = 0
+    prior = None
+    for day in sorted(days):
+        date = dt.date.fromisoformat(day)
+        streak = streak + 1 if prior and date == prior + dt.timedelta(days=1) else 1
+        best = max(best, streak)
+        prior = date
+    return {"current": count, "best": best, "days": sorted(days, reverse=True)[:30]}
 
 
 def rank_snapshot(learner: str, tz: int = 0) -> dict:
