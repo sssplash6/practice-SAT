@@ -22,6 +22,11 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
   Checkpoint loop task bz51av1mr. If stopped again: commit real WIP (worktree on its branch at the tip), free the
   branches (remove clean worktrees that still hold them), relaunch the same args; units restart from branch state.
   Merge each task when ready (leftovers to followups/, test_flow).
+- **Helper tasks 1-5 DONE 2026-09-25**: habits (79c4f73) and bank supply (3513836) merged after my inline check; the S9, S7
+  and S8 servers are in one check + one fix: build.js run `wf_a748f713-34b` (task wmxczhe4d),
+  `[{id:'S9S',from:'verify'},{id:'S7S',from:'verify'},{id:'S8S',from:'verify'}]`; merge each when ready, then add
+  pages-only tasks S7, S8, S9. The helper's next jobs are HELPER-TASKS.md Tasks 6-8 (spr coverage, security audit,
+  frequency corpus): inline-check 6 and 8 and merge; 7 is findings only.
 - **S8 server (helper) 2026-09-25:** 12 commits, s8.py and test_flow pass, blocked on others' contracts. Told to mark
   them PENDING (like F4) and report done; its habits.py dependency (an unbuilt F5 item) and the C26 bank supply are
   HELPER-TASKS 4 and 5; S4/S5/S1 hooks come from wave 2.

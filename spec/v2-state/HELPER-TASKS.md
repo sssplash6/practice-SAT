@@ -1,6 +1,7 @@
 # The other agent's next tasks (backend only)
 
-Order now: finish S8 (with PENDING markers), Task 1 (S9 incl. S8's two Words contracts), Task 4, Task 5.
+Tasks 1-5 are DONE (2026-09-25): S9, S7, S8 servers under one check each; habits.py and bank supply merged.
+Next, in order: Task 6, Task 7, Task 8. Never touch v2/s7-server, v2/s8-server, v2/s9-server or any wave-2 branch.
 
 Written 2026-09-24 for the user's helper agent. Paste one task at a time. Each is a
 **feature**, so when the helper reports it done, the main session runs one
@@ -122,6 +123,57 @@ nonlinear_functions, or nonlinear_equations_and_systems), with named grid-in mis
 that ends on the answer, and the audit's rules. Existing templates' output must stay byte-identical: add, don't edit.
 DONE: PYTHONPATH=. python3 -m satbank check PASS on all 19 topics, tools/lint_bank.py adds no finding for the new
 template, s8.py --supply passes on master plus this branch, test_flow "all good". Tell the user "bank supply done".
+```
+
+## Task 6: named mistakes for more grid-in templates
+
+```
+56 of 202 grid-in templates still name no mistake: a wrong typed answer only says "Incorrect". Grow the coverage.
+READ: satbank/item.py (Item.spr_mistakes, satbank.item.gridin_mistakes), satbank/audit.py, tools/spr_coverage.py
+(it lists which grid-in templates name their mistakes), and how the multiple-choice Mis(reason, value) lists
+already name mistakes in each template.
+SETUP: git worktree add .claude/worktrees/spr-grow -b v2/spr-grow master
+For each uncovered grid-in template, pass spr_mistakes built from the template's own mistake logic. Keep a mistake
+ONLY if it is a real route a student takes to that exact value for that question; a false "you made this mistake"
+is worse than none, so leave a template uncovered when you are unsure. Never change satbank/item.py or audit.py.
+RULE: multiple-choice output of every template stays byte-identical; grid-ins may differ only in spr_mistakes.
+Prove it with a dump of seeds 0-199 (as in the lint job).
+One commit per topic. DONE: satbank check PASS 19/19, tools/lint_bank.py adds no finding, test_flow "all good",
+and tools/spr_coverage.py shows the new count. Tell the user "spr-grow done: N of 202".
+```
+
+## Task 7: server security and abuse audit (read-only)
+
+```
+Audit the merged server for security and abuse problems. READ-ONLY: do not edit anything; write findings only.
+SETUP: git worktree add --detach .claude/worktrees/sec-audit master
+Go through every route in server/api_*.py and the modules they call (deps.py learner_of and access, reports.py,
+sets.py, drill.py, progress.py, words.py when merged). Look for: identity (X-Learner codes, retired codes, device
+tokens, the swap middleware), access to answer keys (deps.access: live tests, today's challenge, sets), injection
+(SQL built from input, regex from input: F5 had a ReDoS), unbounded work (a request that loops, generates or sorts
+without a cap), file uploads (reports: types, sizes, paths), rate limits, admin routes (SATF_ADMIN_TOKEN), error
+messages that leak data, and CSRF-style writes from other sites. Reproduce each finding with a curl or a TestClient
+script on your own port (8039, SATF_DB of your own).
+Write spec/v2-state/followups/security-audit.md: each finding with severity (critical/high/medium/low), file:line,
+a reproduction, and the fix. Commit only that file on a branch v2/sec-audit (git switch -c v2/sec-audit).
+Tell the user "security audit done" with the counts by severity.
+```
+
+## Task 8: the word-frequency corpus (W17)
+
+```
+Build the objective word-frequency data W17 asks for (spec/v2-upgrades/words.md, W17 "Frequency band").
+SETUP: git worktree add .claude/worktrees/freq -b v2/freq master
+OWN ONLY: tools/count_freq.py, tools/data/freq_sources.txt, tools/data/freq.txt. Do not edit tools/build_words.py
+(it is under review on another branch; it will read freq.txt later).
+List a pinned public-domain corpus in freq_sources.txt: about 300 Project Gutenberg books from 1850-1928 plus modern
+US federal public-domain texts (NSF award abstracts, NASA and NOAA articles, CRS reports), about 60 million words;
+record each source's URL. count_freq.py downloads each source once into a cache outside the repo, strips headers and
+licences, tokenizes, and writes tools/data/freq.txt as "word count" lines sorted by count (lowercased; keep only
+words appearing at least 5 times). Then print, for every headword in server/words/sat.json, its rank and the band
+W17 defines (1: top 3,000; 2: to 10,000; 3: to 25,000; 4: to 50,000; 5: rarer), and the count per band.
+Commit the three files (freq.txt must stay under 5 MB; drop the tail if needed). Tell the user "freq done" with the
+per-band counts.
 ```
 
 ---
