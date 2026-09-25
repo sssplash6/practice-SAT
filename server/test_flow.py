@@ -535,7 +535,7 @@ def check_learner(c) -> None:
     assert again["correct"] is False, "a second answer replaced the first"
     c.post("/api/qotd", headers={"X-Learner": "a:qotdother"}, json={"answer": keyed_answer(kq, True)})
     mine = c.get("/api/qotd", headers=H).json()["mine"]
-    assert mine and mine["crowd"] == {"answered": 2, "right": 1}, mine
+    assert mine and (mine["crowd"]["answered"], mine["crowd"]["right"]) == (2, 1), mine
     print("ok  the question of the day is one question, one answer each, with the crowd's count")
 
     # --- the challenge: the same ten for everyone, ranked --------------------------

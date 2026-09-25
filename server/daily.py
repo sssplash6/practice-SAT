@@ -146,8 +146,9 @@ def public(slot: str, q: dict) -> dict:
     return out
 
 
-def valid_day(day: str | None, tz: int) -> str:
-    """A day's-question date the student may open: today back to today − 30."""
+def valid_day(day: str | None, tz: int, closed: int = 422) -> str:
+    """A day's-question date the student may open: today back to today − 30.
+    Before that the day is `closed` (422 to open; an answer gets 409)."""
     t = today(tz)
     if day is None:
         return t
@@ -161,7 +162,7 @@ def valid_day(day: str | None, tz: int) -> str:
     if d > dt.date.fromisoformat(t):
         raise HTTPException(422, "that day's questions are not out yet")
     if d < first:
-        raise HTTPException(422, f"the day's questions go back {BACK} days")
+        raise HTTPException(closed, f"the day's questions go back {BACK} days")
     return day
 
 
@@ -169,7 +170,7 @@ def route(day: str | None, tz: int) -> tuple[str, bool]:
     """(day, late) for an answer: today is on time; yesterday is on time
     within an hour of local midnight; any other day back to today − 30 is
     late (it moves mastery, never the crowd or the streak)."""
-    day = valid_day(day, tz)
+    day = valid_day(day, tz, closed=409)
     t = today(tz)
     if day == t:
         return day, False
@@ -363,23 +364,35 @@ def month(learner: str, tz: int = 0) -> dict:
     return {"right": sum(mine_), "of": len(mine_), "crowd_pct": round(100 * right / n) if n else None}
 
 
-def marks(learner: str, day: str, shown: list[str] | None = None) -> dict:
-    """{slot: 'right' | 'wrong' | None} for one day, on time or late."""
-    out = {}
-    for slot in shown or slots():
-        got = answered(learner, slot, day)
-        out[slot] = None if not got else ("right" if got["correct"] else "wrong")
+def by_day(learner: str | None) -> dict[str, dict[str, str]]:
+    """{day: {slot: 'right' | 'wrong'}} for every day this learner answered,
+    on time or late (the first answer in a slot wins), from one read."""
+    out: dict[str, dict[str, str]] = {}
+    if not learner:
+        return out
+    for table in ("attempts", "word_reviews"):
+        for r in db.rows(f"SELECT session, correct FROM {table} WHERE learner=? AND (session LIKE 'qotd:%'"
+                         " OR session LIKE 'qotd-spr:%' OR session LIKE 'qotd-late:%') ORDER BY id", learner):
+            got = day_of(r["session"])
+            if got:
+                out.setdefault(got[1], {}).setdefault(got[0], "right" if r["correct"] else "wrong")
     return out
+
+
+def marks(learner: str | None, day: str, shown: list[str] | None = None, known: dict | None = None) -> dict:
+    """{slot: 'right' | 'wrong' | None} for one day, on time or late."""
+    got = (known if known is not None else by_day(learner)).get(day, {})
+    return {slot: got.get(slot) for slot in shown or slots()}
 
 
 def past(learner: str | None, tz: int = 0, n: int = 7) -> list[dict]:
     """The n days before today, with a mark per slot (v2's mcq / spr kept)."""
     t = dt.date.fromisoformat(today(tz))
-    shown = slots()
+    shown, known = slots(), by_day(learner)
     out = []
     for back in range(n, 0, -1):
         d = (t - dt.timedelta(days=back)).isoformat()
-        m = marks(learner, d, shown) if learner else {s: None for s in shown}
+        m = marks(learner, d, shown, known)
         out.append({"day": d, "marks": m, "mcq": m["math:mcq"], "spr": m["math:spr"]})
     return out
 
