@@ -73,8 +73,22 @@ def slope_of_line(rng: random.Random, seed: int, *, form=None, p=None, d=None, r
     if not keyx.is_rational or len(keyx.gridin()) > 6:
         raise ItemError("the slope does not fit a grid-in")
     stem = f"What is the slope of the graph of y = {body} in the xy-plane?"
+    if form == "grouped":
+        routes = [
+            Mis("read only the coefficient inside the bracket", ex(Q(P, D))),
+            Mis("read only the coefficient of x outside the bracket", ex(S)),
+            Mis("added the numerator coefficient without dividing the bracket", ex(P + S)),
+            Mis("read the bracket's constant as the slope", ex(Q(R, D))),
+        ]
+    else:
+        routes = [
+            Mis("read the numerator as the slope without dividing", ex(P)),
+            Mis("inverted the slope fraction", ex(Q(D, P))),
+            Mis("read the constant term as the slope", ex(C)),
+        ]
     return Item("le2.slope_of_line", "the slope of a line", "medium", seed, stem, "spr",
-                keyx, keyx.gridin(), why, params=P_)
+                keyx, keyx.gridin(), why, params=P_,
+                spr_mistakes=gridin_mistakes(keyx, routes))
 
 
 # --------------------------------------------- parallel and perpendicular
@@ -457,8 +471,25 @@ def point_on_line(rng: random.Random, seed: int, *, ask=None, mode=None, x1=None
     keyx = ex(key)
     if not keyx.is_rational or len(keyx.gridin()) > 6:
         raise ItemError("the answer does not fit a grid-in")
+    if mode == "two_points":
+        routes = [
+            Mis("reported the given point's y-coordinate instead of the new one", ex(Y1)),
+            Mis("omitted the y-intercept after multiplying slope by the new input", ex(M * X3)),
+            Mis("reported the y-intercept instead of evaluating the new point", ex(Bv)),
+            Mis("used the full rise as the slope without dividing by the run",
+                ex((Y1 - Bv) * X3 + Bv)),
+        ]
+    else:
+        routes = [
+            Mis("carried over the other line's y-intercept despite starting at the origin",
+                ex(M * X3 + Cv)),
+            Mis("added the slope and input instead of multiplying them", ex(M + X3)),
+            Mis("reported the other line's y-intercept instead of the new point", ex(Cv)),
+            Mis("inverted the slope before applying it to the new input", ex(X3 / M)),
+        ]
     return Item("le2.point_on_line", "a further point on a line", "hard", seed, stem,
-                "spr", keyx, keyx.gridin(), why, params=P)
+                "spr", keyx, keyx.gridin(), why, params=P,
+                spr_mistakes=gridin_mistakes(keyx, routes))
 
 
 # ------------------------------------------- writing the equation of a line
@@ -564,7 +595,12 @@ def intercepts(rng: random.Random, seed: int, *, mode=None, m=None, b=None, A=No
         P = {"kind": "le2_intercepts", "mode": mode, "m": [M.numerator, M.denominator],
              "b": [Bv.numerator, Bv.denominator]}
         return Item("le2.intercepts", "the intercepts of a line", "easy", seed, stem,
-                    "spr", keyx, keyx.gridin(), why, params=P)
+                    "spr", keyx, keyx.gridin(), why, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, [
+                        Mis("reported the slope instead of the y-intercept", ex(M)),
+                        Mis("changed the sign of the constant term", ex(-Bv)),
+                        Mis("evaluated the line at x = 1 instead of x = 0", ex(M + Bv)),
+                    ]))
 
     if mode == "standard_x":
         Ac = q(A) if A is not None else Q(rng.randint(1, 9), rng.randint(2, 9))
@@ -587,7 +623,14 @@ def intercepts(rng: random.Random, seed: int, *, mode=None, m=None, b=None, A=No
         P = {"kind": "le2_intercepts", "mode": mode, "A": [Ac.numerator, Ac.denominator],
              "B": [Bc.numerator, Bc.denominator], "C": [Cc.numerator, Cc.denominator]}
         return Item("le2.intercepts", "the intercepts of a line", "hard", seed, stem,
-                    "spr", keyx, keyx.gridin(), why, params=P)
+                    "spr", keyx, keyx.gridin(), why, params=P,
+                    spr_mistakes=gridin_mistakes(keyx, [
+                        Mis("found the y-intercept instead of the x-intercept", ex(Cc / Bc)),
+                        Mis("multiplied by the x coefficient instead of dividing by it",
+                            ex(Cc * Ac)),
+                        Mis("inverted the ratio used to find the x-intercept", ex(Ac / Cc)),
+                        Mis("reported the constant on the right without dividing", ex(Cc)),
+                    ]))
 
     if mode == "ratio":
         Ac = q(A) if A is not None else q(rng.randint(2, 12))

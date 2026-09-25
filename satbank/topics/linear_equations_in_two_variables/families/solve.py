@@ -500,4 +500,13 @@ def mixture_solve(rng: random.Random, seed: int, *, p1=None, p2=None, pm=None,
     P = {"kind": "le2_mixture", "p1": P1, "p2": P2, "pm": PM,
          "v": [V.numerator, V.denominator]}
     return Item("le2.mixture_solve", "a mixture of two concentrations", "hard", seed,
-                stem, "spr", keyx, keyx.gridin(), why, params=P)
+                stem, "spr", keyx, keyx.gridin(), why, params=P,
+                spr_mistakes=gridin_mistakes(keyx, [
+                    Mis("used the full difference between the two solutions as the denominator",
+                        ex(V * Q(PM - P2, P1 - P2))),
+                    Mis("reversed the target's shortfall and the added solution's surplus",
+                        ex(V * Q(P1 - PM, PM - P2))),
+                    Mis("multiplied the original volume by the shortfall but did not divide by the surplus",
+                        ex(V * (PM - P2))),
+                    Mis("reported the original volume rather than the amount to add", ex(V)),
+                ]))
