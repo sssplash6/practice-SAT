@@ -187,16 +187,20 @@ def _given(text):
     return int(text) if text is not None and str(text).isdigit() else text
 
 
+def _rows(cols: str, where: str, *args) -> list:
+    """Day's-question answers: every slot's `attempts` rows (R57 files the R&W
+    ones there too), then Words' own rows that carry no attempt yet, so one
+    answer is never counted twice and nothing is missed before R57 lands."""
+    return (db.rows(f"SELECT {cols} FROM attempts WHERE {where} ORDER BY id", *args)
+            + db.rows(f"SELECT {cols} FROM word_reviews WHERE attempt IS NULL AND {where} ORDER BY id", *args))
+
+
 def answered(learner: str, slot: str, day: str) -> dict | None:
     """This learner's one answer in that slot on that day, on time or late."""
     for late in (False, True):
         sid = session(slot, day, late)
-        if slot in MATH:
-            r = db.one("SELECT template, seed, given, correct, ms, at, id FROM attempts"
-                       " WHERE learner=? AND session=? ORDER BY id LIMIT 1", learner, sid)
-        else:
-            r = db.one("SELECT template, seed, given, correct, ms, at, id FROM word_reviews"
-                       " WHERE learner=? AND session=? ORDER BY id LIMIT 1", learner, sid)
+        got = _rows("template, seed, given, correct, ms, at, id", "learner=? AND session=?", learner, sid)
+        r = got[0] if got else None
         if r:
             given = r["given"] if SLOTS[slot]["fmt"] == "spr" else _given(r["given"])
             return {**dict(r), "given": given, "late": late, "session": sid}
@@ -211,9 +215,7 @@ def _group(value: str):
 
 def crowd(slot: str, day: str) -> dict:
     """On-time answers only, everyone but sample learners."""
-    table = "attempts" if slot in MATH else "word_reviews"
-    rows = db.rows(f"SELECT given, correct, ms FROM {table} WHERE session=? AND {db.NOT_SAMPLE}",
-                   session(slot, day))
+    rows = _rows("given, correct, ms", f"session=? AND {db.NOT_SAMPLE}", session(slot, day))
     out = {"answered": len(rows), "right": sum(bool(r["correct"]) for r in rows),
            "median_ms": None}
     times = [r["ms"] for r in rows if r["ms"] is not None]
@@ -317,12 +319,10 @@ def _on_time_days(learner: str) -> dict[str, list[int]]:
     """Per local day, the correct flags of this learner's on-time answers
     (graced ones included, since they are filed in that day's session)."""
     out: dict[str, list[int]] = {}
-    for table in ("attempts", "word_reviews"):
-        for r in db.rows(f"SELECT session, correct FROM {table} WHERE learner=?"
-                         " AND (session LIKE 'qotd:%' OR session LIKE 'qotd-spr:%')", learner):
-            got = day_of(r["session"])
-            if got and not got[2]:
-                out.setdefault(got[1], []).append(int(bool(r["correct"])))
+    for r in _rows("session, correct", "learner=? AND (session LIKE 'qotd:%' OR session LIKE 'qotd-spr:%')", learner):
+        got = day_of(r["session"])
+        if got and not got[2]:
+            out.setdefault(got[1], []).append(int(bool(r["correct"])))
     return out
 
 
@@ -353,14 +353,12 @@ def month(learner: str, tz: int = 0) -> dict:
     prefix = today(tz)[:7]
     mine_ = [c for d, flags in _on_time_days(learner).items() if d.startswith(prefix) for c in flags]
     n = right = 0
-    for table in ("attempts", "word_reviews"):
-        for r in db.rows(f"SELECT session, correct FROM {table} WHERE (session LIKE ? OR session LIKE ?"
-                         f" OR session LIKE ?) AND {db.NOT_SAMPLE}",
-                         f"qotd:{prefix}-%", f"qotd-spr:{prefix}-%", f"qotd:%:%:{prefix}-%"):
-            got = day_of(r["session"])
-            if got and not got[2]:
-                n += 1
-                right += int(bool(r["correct"]))
+    for r in _rows("session, correct", f"(session LIKE ? OR session LIKE ? OR session LIKE ?) AND {db.NOT_SAMPLE}",
+                   f"qotd:{prefix}-%", f"qotd-spr:{prefix}-%", f"qotd:%:%:{prefix}-%"):
+        got = day_of(r["session"])
+        if got and not got[2]:
+            n += 1
+            right += int(bool(r["correct"]))
     return {"right": sum(mine_), "of": len(mine_), "crowd_pct": round(100 * right / n) if n else None}
 
 
@@ -370,12 +368,11 @@ def by_day(learner: str | None) -> dict[str, dict[str, str]]:
     out: dict[str, dict[str, str]] = {}
     if not learner:
         return out
-    for table in ("attempts", "word_reviews"):
-        for r in db.rows(f"SELECT session, correct FROM {table} WHERE learner=? AND (session LIKE 'qotd:%'"
-                         " OR session LIKE 'qotd-spr:%' OR session LIKE 'qotd-late:%') ORDER BY id", learner):
-            got = day_of(r["session"])
-            if got:
-                out.setdefault(got[1], {}).setdefault(got[0], "right" if r["correct"] else "wrong")
+    for r in _rows("session, correct", "learner=? AND (session LIKE 'qotd:%' OR session LIKE 'qotd-spr:%'"
+                   " OR session LIKE 'qotd-late:%')", learner):
+        got = day_of(r["session"])
+        if got:
+            out.setdefault(got[1], {}).setdefault(got[0], "right" if r["correct"] else "wrong")
     return out
 
 

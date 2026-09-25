@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import datetime as dt
 import hashlib
+import inspect
 import json
 import math
 import re
@@ -1036,7 +1037,9 @@ def answer_qotd(body: Reply, x_learner: str | None = Header(default=None), x_tz:
         record = part("words", "record_daily")
         if gen is None or record is None:
             raise HTTPException(409, {"reason": "no_item_today"})
-        reply = record(learner, day, daily.SLOTS[slot]["fmt"], given, body.ms, tz=x_tz)
+        # W21's signature; the session carries S3's grace and late routing when Words takes it
+        kw = {"session": daily.session(slot, day, late)} if "session" in inspect.signature(record).parameters else {}
+        reply = record(learner, day, daily.SLOTS[slot]["fmt"], given, body.ms, **kw) or {}
         return daily.rw_feedback(slot, day, gen, reply.get("given", given), late, body.ms, reply)
     first = daily.answered(learner, slot, day)
     if first is None:
@@ -1073,9 +1076,9 @@ def another_qotd(body: Another, x_learner: str | None = Header(default=None), x_
         day = daily.valid_day(body.day, x_tz)
     except HTTPException:
         raise HTTPException(404, {"reason": "day_out_of_range"})
-    another, sign, public_item = part("words", "another"), part("api_words", "_sign"), part("words", "public_item")
+    another, sign = part("words", "another"), part("api_words", "_sign")
     gen = daily.item(slot, day)
-    if not (another and sign and public_item and gen):
+    if not (another and sign and gen):
         raise HTTPException(501, {"reason": "words_unavailable"})
     got = daily.answered(learner, slot, day)
     if not got:
@@ -1090,8 +1093,8 @@ def another_qotd(body: Another, x_learner: str | None = Header(default=None), x_
     payload = {"learner": learner, "day": daily.today(x_tz), "template": twin["template"], "seed": twin["seed"],
                "word": twin["word"]}
     token = sign(payload)
-    return {"item": public_item(twin, "sample:" + hashlib.sha256(token.encode()).hexdigest()[:12]),
-            "token": token, "slot": slot, "like": body.like}
+    item = {**daily.public(slot, twin), "item_id": "sample:" + hashlib.sha256(token.encode()).hexdigest()[:12]}
+    return {"item": item, "token": token, "slot": slot, "like": body.like}
 
 
 # ------------------------------------------------------------------ /api/scores
