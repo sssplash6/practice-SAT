@@ -60,6 +60,14 @@ def challenge_board(day: str | None = None, x_learner: str | None = Header(defau
                     x_tz: int = Depends(tz_of)) -> dict:
     if day and not DATE_OK.match(day):
         raise HTTPException(422, "day is YYYY-MM-DD")
+    if day:
+        try:
+            requested = dt.date.fromisoformat(day)
+        except ValueError:
+            raise HTTPException(422, "day is YYYY-MM-DD") from None
+        today = dt.datetime.now(dt.timezone.utc).date()
+        if requested < today - dt.timedelta(days=3 * 366) or requested > today + dt.timedelta(days=1):
+            raise HTTPException(422, "day is outside the challenge board range")
     me = x_learner.strip() if x_learner and LEARNER_OK.match(x_learner.strip()) else None
     return challenge.board(day or daily.today(x_tz), me)
 

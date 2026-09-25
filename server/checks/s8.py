@@ -82,10 +82,54 @@ def play(c: TestClient, person: str, cid: str = "daily", *, flag_first: bool = F
     return sid, originals
 
 
+def bounded_challenge_board(c: TestClient) -> None:
+    """SEC-08: a large legacy Daily board never materializes every finisher."""
+    day = (dt.datetime.now(dt.timezone.utc).date() - dt.timedelta(days=900)).isoformat()
+    before = db.one("SELECT COUNT(*) n FROM sessions WHERE kind='challenge' AND day=?"
+                    " AND finished IS NOT NULL", day)["n"]
+    token = secrets.token_hex(4)
+    mine = "a:s8board" + token
+    with db.transaction() as conn:
+        for i in range(1000):
+            person = mine if i == 0 else f"a:board{token}{i}"
+            conn.execute("INSERT INTO sessions(id,kind,learner,day,started,finished,result)"
+                         " VALUES (?,?,?,?,?,?,?)", (f"s8board-{token}-{i}", "challenge", person,
+                          day, day + "T10:00:00+00:00",
+                          day + f"T10:{i % 10:02d}:{i % 60:02d}+00:00",
+                          json.dumps({"right": i % 11, "asked": 10})))
+    plan = db.rows("EXPLAIN QUERY PLAN SELECT id FROM sessions WHERE kind='challenge' AND day=?"
+                   " AND finished IS NOT NULL ORDER BY " + challenge.BOARD_ORDER + " LIMIT 100", day)
+    assert_ok(any("sessions_challenge_board" in r["detail"] for r in plan),
+              "SEC-08 indexed SQL orders the legacy board")
+    old_rows = db.rows
+    fetched = []
+
+    def measured(sql, *args):
+        rows = old_rows(sql, *args)
+        fetched.append(len(rows))
+        return rows
+
+    db.rows = measured
+    try:
+        board = challenge.board(day, mine)
+    finally:
+        db.rows = old_rows
+    assert_ok(board["players"] == before + 1000 and len(board["entries"]) == 101 and
+              board["you"]["rank"] > 100 and board["entries"][-1] == board["you"] and
+              fetched == [100], "SEC-08 top 100 plus caller uses bounded rows")
+    route = c.get("/api/challenge/board", params={"day": day}, headers=head(mine))
+    assert_ok(route.status_code == 200 and route.json()["you"]["rank"] == board["you"]["rank"],
+              "SEC-08 route preserves the caller's true rank")
+    assert_ok(c.get("/api/challenge/board?day=2099-01-01").status_code == 422 and
+              c.get("/api/challenge/board?day=2026-99-99").status_code == 422,
+              "SEC-08 invalid and far-future days are refused")
+
+
 def run() -> None:
     path = pathlib.Path(os.environ.get("SATF_DB", "")).resolve()
     assert_ok(path.name == "s8.db" and path.parent.name == "server", "only the dedicated S8 database is used")
     with TestClient(app) as c:
+        bounded_challenge_board(c)
         a, b = learner("a"), learner("b")
         today = dt.datetime.now(dt.timezone.utc).date().isoformat()
         lobby = c.get("/api/contest/daily", headers=head(a))
