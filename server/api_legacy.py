@@ -6,12 +6,12 @@ import json
 import logging
 import secrets
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel, Field
 
 from . import db, practice
 from .api_tests import payload
-from .deps import now, session_or_404
+from .deps import now, session_or_404, writer_of
 
 log = logging.getLogger("satf")
 router = APIRouter()
@@ -26,7 +26,7 @@ class Practice(BaseModel):
 
 
 @router.post("/api/practice")
-def new_practice(body: Practice) -> dict:
+def new_practice(body: Practice, x_learner: str | None = Header(default=None)) -> dict:
     """Build a mixed set. Nothing here is drawn at random; see practice.py."""
     cat = practice.catalogue()
     basket = {k: int(v) for k, v in body.basket.items() if int(v) > 0}
@@ -41,7 +41,11 @@ def new_practice(body: Practice) -> dict:
 
     # An anonymous learner still gets a history, because repetition is felt by
     # the person and not by the account.
-    learner = body.learner.strip() or ("anon:" + secrets.token_urlsafe(9))
+    body_learner = writer_of(body.learner) if body.learner.strip() else None
+    header_learner = writer_of(x_learner) if x_learner else None
+    if body_learner and header_learner and body_learner != header_learner:
+        raise HTTPException(403, "learner tokens disagree")
+    learner = body_learner or header_learner or writer_of("anon:" + secrets.token_urlsafe(9))
     seen, seen_stems = db.seen_for(learner)
 
     cards = practice.build(basket, learner, seen, seen_stems)
