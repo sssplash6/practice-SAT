@@ -16,11 +16,11 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
 - **ALL FOUNDATIONS MERGED** (2026-09-25): F2 (e9cf9f6) and F3 (1344fd9) passed their checks with no blockers;
   follow-ups in `followups/F2.json`, `followups/F3.json`. checks/f5.py's local-date bug fixed (45a2a33); moving
   check-ins to learners' local days is a follow-up in `followups/F5.json`.
-- **WAVE 2 RUNNING** (relaunched 2026-09-25 19:30 after a logout pause): build.js run `wf_e48cbd7a-4e4` (task w9tbh24e5),
-  args `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'}]`; each continues from its branch
-  (S3 checkpoint 9a7b613, S10 85896a0, S1/S5/S6 1 commit, S4 and F2B none). Checkpoint loop task beg9hgryk.
-  If stopped: commit real WIP (a worktree on its branch at the tip), remove trial-merge or clean worktrees so the
-  branches are free, relaunch the same args. Merge each task when ready (leftovers to followups/, test_flow).
+- **WAVE 2 PAUSED until the user's weekly usage reset** (the user, 2026-09-25: "henceforth till weekly reset, we are only
+  checking other guys work"). Until then: NO building here. Only check the helper's work (inline for data jobs, one check +
+  one fix for features) and merge it. Saved state: S3 5 commits (tip de9e831), S10 2 (85896a0), S1 1 (15583f5), S5 1
+  (83ee9a0), S6 1 (2fadefd), S4 and F2B none. After the reset, relaunch build.js with
+  `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'}]`; each continues from its branch.
 - **Helper tasks 1-5 DONE 2026-09-25**: habits (79c4f73) and bank supply (3513836) merged after my inline check; the S9, S7
   and S8 servers are in one check + one fix: build.js run `wf_efc641bf-0d1` (task wp60i0yv8, relaunched 19:30),
   `[{id:'S9S',from:'verify'},{id:'S7S',from:'verify'},{id:'S8S',from:'verify'}]`; merge each when ready, then add
