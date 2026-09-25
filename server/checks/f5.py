@@ -201,7 +201,7 @@ def followup_checks(client):
     t = progress.record_trap("a:f5transfer", q, next(r for r in q["reasons"] if r and progress.norm(r) == norm),
                              progress.now())
     db.run("UPDATE traps SET closed=?,closed_how='fixed',due=?,checks=1,owed=0 WHERE id=?",
-           progress.now(), dt.date.today().isoformat(), t["id"])
+           progress.now(), dt.datetime.now(dt.timezone.utc).date().isoformat(), t["id"])  # due dates are UTC days
     check = request(client, {"pool": "checks", "ids": [t["id"]], "count": 1}, learner="a:f5transfer")
     assert served_of(check["id"])[0]["key"] != keys[0]
     # QBank 15: a second learner gets the set's identical item; a revoked set is 410
