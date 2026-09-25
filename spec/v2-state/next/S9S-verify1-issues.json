@@ -1,0 +1,104 @@
+[
+ {
+  "where": "orchestration: spec/v2-state/next/build.js line 310 (branch `v2/${id}`) vs the real branch v2/s9-server",
+  "what": "The S9S task branch v2/s9s does not exist (`git switch --detach v2/s9s`: invalid reference). All S9 server work is on v2/s9-server at bd5b705. The fix step runs `git switch -c v2/s9s master` and would work on an empty branch, and a merge of v2/s9s would merge nothing.",
+  "fix": "Outside the owned files, for the orchestrator: create v2/s9s at v2/s9-server's tip (git branch v2/s9s bd5b705), or add a branch override for S9S in build.js, before the fix and merge steps.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/api_words.py _card_kind (lines 133-139) and _make_item (lines 88-104)",
+  "what": "Due words at box 3 or higher (and placed=2 words) are always served as in-context items. frames.json has 0 of 5376 frames reviewed and pairs.json 0 of 153, so _make_item raises 409 and the whole run fails. Probe: bolster self-graded to box 3 and due; POST /api/words/run {mode:'mix',deck:{source:'today'}} returned 409 'no reviewed frame is available for this word', and {mode:'cards',deck:{source:'due'}} also returned 409. That mix body is exactly what today_summary.start sends, and S3 Today, S7 Plan and F2 Up next launch it. s9.py hides this because it runs with SATF_WORDS_UNREVIEWED=1.",
+  "fix": "When no servable frame exists, serve a self-graded card that reschedules at the current box ('Prove it') or a meaning2word check instead of failing, and skip an item rather than abort the run. Add an s9 check with SATF_WORDS_UNREVIEWED unset: a mix run and a due-cards run holding a due box-3 word both return 200.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/api_words.py grade_sheet (lines 1358-1362)",
+  "what": "The same-day 'replace the first grade' path undoes any latest review whose mode is 'sheet', but answer_sample also files mode 'sheet' (kind incontext). Probe: box-3 mitigate, sheet sample answered right gave box 3→4 with proven set; then POST /api/words/mitigate/grade {ok:true} deleted the in-context row and left box 3 with proven=None. That is data loss of a proof, and the covered sheet shows the sample and Know/Don't know together.",
+  "fix": "Replace only a previous covered-sheet grade: require last.kind == 'card' as well as mode 'sheet' and same day (or give sheet grades their own mode). Add an s9 check that a sample proof followed by a sheet grade keeps the incontext row and proven.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/words.py library() (lines 482-524); server/checks/s9.py test_library (line 129)",
+  "what": "Spec check 5 (as amended by words.md override 53) requires counts trapped, stubborn and atrisk; override 50 adds probable. GET /api/words lacks trapped, atrisk and probable, and its rows lack at_risk, trap, family, roots and value. s9.py asserts only a subset, so a Words server acceptance item is neither covered nor passing. The S9 pages' My words tiles (Fell for a trap, At risk, Probably known) need these fields.",
+  "fix": "Add counts.trapped (last in-context miss named a trap), counts.atrisk (retention < .8 to exam_date), counts.probable (placed == 2), and the row fields at_risk, trap, family (class), roots and value. Extend the test_library key assertion to the full amended list.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/words.py root_item (lines 1369-1408); server/api_words.py _make_item (lines 80-87)",
+  "what": "Decode it ignores the requested word: it tests a random word from the root's family. A deck of ['circumspect'] served speculate, circumspect, speculate, and grades whichever word was served. Its options exclude only the chosen root's family, not all of the served word's families (W4.3).",
+  "fix": "Pass the target slug into root_item and use it as the key. Exclude words from every root family of that slug.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/words.py place() (lines 315-317)",
+  "what": "Placement No / Not sure sets due=today on box-0 words, so they count as due. After 10 placement No answers, counts.due was 10 and today_summary.due was 10. That inflates the Due tile, the nav meta and the plan minutes. W10 only asks for the front of New.",
+  "fix": "Leave due NULL and order the New deck by placed < 0 (or looked_at / saved) instead.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/api_words.py _choose (lines 154-155)",
+  "what": "In mix runs, any word with reps == 0 becomes a Learn card, including placement-Yes words at box 3 (place() does not bump reps). A due Claimed word therefore gets a Learn card and a meaning2word check instead of its in-context proof (W10 / W7).",
+  "fix": "Use 'learn' only for box 0 with placed not in {1, 2}.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/api_words.py answer_run (lines 638-639 and 654)",
+  "what": "In a Words check, where there should be no feedback until the end, re-posting an answered item returns the stored verdict including answer_index and reasons, and regrade is also accepted, so the key can be read and the answer changed mid-check. Probe: the first reply was {filed,next,total}; the repeat reply carried answer_index and reasons.",
+  "fix": "For mode 'check', return {filed:true,next,total} on repeats too, and refuse regrade until the check is finished.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/words.py _review_row / grade (attempt defaults to 1) and _measured (lines 428-435)",
+  "what": "W18's measured difficulty should use first-try in-context answers, but every generated review is stored with attempt=1, so repeat answers by the same learner count. Generated rows are also read outside words.rw_answers (_measured, the crowd_guard recent query, the _flags context query, today's previous query), contrary to W1 acceptance 11.",
+  "fix": "Set attempt from whether the learner has an earlier row for that template or word, and route the generated-row reads through rw_answers.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/words.py grade() (lines 209, 257-269)",
+  "what": "kind 'fix' is not a self-grade kind, so a Fix-card Know counts as an objective right answer and sets stubborn_right_day toward clearing Stubborn. W9 requires objective answers on 2 days. The Fix card's 3-item pair quiz (all 3 right → box 2) is not built.",
+  "fix": "Add 'fix' to SELF_KINDS and build the pair-quiz items after a Fix card.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/words.py grade() line 291; server/api_words.py answer_run (lines 757-761)",
+  "what": "Every wrong answer's reply says requeued: true, but only card and fix items are actually re-inserted. Wrong quiz answers are not requeued, contrary to the §12 rule.",
+  "fix": "Requeue wrong quiz items as well, or report requeued only when an item was actually inserted.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/api_words.py _make_item kind 'precise' (lines 95-101); _choose check mode (line 159)",
+  "what": "'Most precise' items (W3, and 2 of the Words check's 12) are ordinary in-context items relabelled 'precise'. They do not use frames whose need pins intensity, with two same-class neighbours and one reversed.",
+  "fix": "Pick frames with need.pins == 'intensity' and want_trap too_strong or too_weak.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/words.py deck('today') (lines 579-602)",
+  "what": "Three extra transitions are always added. For a new learner they become Learn cards beyond the daily goal: 13 Learn cards with goal 10. The run also does not keep consecutive items apart by transition logic (W11).",
+  "fix": "Count new transitions inside the goal, and interleave by logic.",
+  "severity": "followup"
+ },
+ {
+  "where": "W1 acceptance 1/2 and W2.1 (server/rw_items.py, not an owned file)",
+  "what": "The generator lives in words.py with no __main__ self-check (200 seeds × every frame, re-deriving the rules, exit 1 naming the frame). PYTHONPATH=. python3 server/rw_items.py cannot pass.",
+  "fix": "Either give S9S server/rw_items.py, or add the self-check as words.py __main__ and amend the acceptance text.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/api_words.py add_own (lines 937-939)",
+  "what": "A library match returns 200 {library_slug} without creating an own word, so spec check 19 as written ('ubiquitous' then 'Ubiquitous' → 409 existing_id) cannot pass now that ubiquitous is a library word. Both posts returned 200 {library_slug:'ubiquitous'}.",
+  "fix": "Decide whether a library-match add creates an own word. Then either change the check's example word or create the own word and return the hint as well.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/api_words.py _card_kind (line 135) and _summary (line 550)",
+  "what": "words.local_day() is called with tz=0 rather than the learner's X-Tz, so due, stubborn and next-review buckets can be off by a day near midnight.",
+  "fix": "Pass x_tz through.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/words/frames.json, pairs.json (content, not code)",
+  "what": "0 frames and 0 families are reviewed, and there is no adjudications.json. Until the review gate runs: no word can reach Known, both daily R&W items are null, and sprint_available() is False, so S8's Word Sprint (sprint_items) returns 409. The build also reports 348 senses short of 6 frames over 2 subjects.",
+  "fix": "Run the W1 adjudication and review pass (tools/build_words.py --review) and tell S8 that the Sprint contract is 409 until then.",
+  "severity": "followup"
+ }
+]

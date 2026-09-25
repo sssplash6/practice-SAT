@@ -1,0 +1,80 @@
+[
+ {
+  "where": "server/api_compete.py list_contests, _meta/get_contest, contest_board, contest_grid, contest_traps, contest_pacer (and compete.board/series_board)",
+  "what": "Non-members can see private contests. /api/contests?status=live|upcoming lists every learner's private contest, including all future series rounds, to everyone. For a non-member, GET /api/contest/{cid} and /api/contest/{cid}/board return 200 with the title, the entrants' names and their scores (probe: a stranger found the contest in the live list, got board 200 with 2 entrant names and lobby 200). After a private contest closes, a non-member can also open /grid. This breaks the invite-only privacy of friends' contests under decision 5.",
+  "fix": "Leave kind='private' rows out of the live, upcoming and finished lists unless the viewer is a member. Return 403 or 404 to non-members on /api/contest/{cid} (keep a minimal Join preview reachable only through ?code=), /board (including view=series), /grid, /traps, /review, /compare and /pacer of a private contest. Add an s8.py assertion that a stranger cannot list or read a private contest.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/compete.py rush_next / rush_answer (cfg['last_rating'] vs q['item_rating'])",
+  "what": "The directional filter compares an unrounded candidate rating (value > previous) with the rounded rating stored as last_rating. After a right answer the next Rush item can show the same rounded rating (794 then 794), so the difficulty does not strictly climb. s8.py failed on this ('five clean Rush answers climb through fresh item ratings') in 1 of my 5 runs, and 2 of 25 repeated runs failed. test_flow runs s8.py against the accumulating server/s8.db, so it will fail intermittently.",
+  "fix": "Store the unrounded rating (for example cfg['last_rating'] = item_rating before rounding, or q['item_rating_raw']) and compare against it. Alternatively require round(value) > previous. Keep the rounded value only for display.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/compete.py _identity, follow, rivals",
+  "what": "The anon board mode does not follow R12. _identity treats board='anon' like 'hidden' and shows 'Anonymous' on public boards and leaderboards. R12 says anon lists the default handle ('Student 4F2A') and only hidden reads 'Anonymous' (probe: anon row name 'Anonymous', expected 'Student 4739'). follow() also refuses anon targets and rivals() drops them, but compete.md's R12 row says name and anon rows are raceable and followable. The acceptance names 'boards with R12's names'.",
+  "fix": "In _identity, when board='anon' and the row is not the viewer's, return challenge.handle(learner, None) ('Student XXXX') with anon:true. Keep 'Anonymous' for hidden, and for anon or hidden on private-contest entrant lists (C18). Allow follow() and rivals() for anon, and refuse only hidden.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/compete.py create_private",
+  "what": "Acceptance #18 (as amended by compete.md) fails as written. POST /api/contests {count:10, topics:[...], open_for:24, twin:true} returns 422 'title must be 3–60 characters'. Spec §7 gives the title a default of \"{name}'s challenge\" and a length of 3–40 characters. The server requires a title and allows 60.",
+  "fix": "When no title is sent, default it to f\"{board name or handle}'s challenge\" using the owner's handle via challenge.handle. Validate 3–40 characters. Add the spec's exact body to s8.py.",
+  "severity": "blocker"
+ },
+ {
+  "where": "task branch (orchestrator / build.js S8S entry)",
+  "what": "The harness verifies and fixes v2/s8s, which does not exist. The work is on v2/s8-server (15 commits at c39b162, 8 commits behind master, missing habits.py and the C26 supply template). A fixer following 'git switch -c v2/s8s master' would start from master without compete.py or s8.py. Only a tree with master merged passes --traps and the C26 line.",
+  "fix": "Before the fix round, point S8S at v2/s8-server, or create v2/s8s at v2/s8-server. Merge or rebase master into it so habits.py and the equivalent_expressions supply are present, then re-run s8.py, s8.py --supply, s8.py --traps and test_flow.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/compete.py board (players) and leaderboard (players)",
+  "what": "For scope=near, players is the length of the 11-row slice instead of the field size (probe: 20 players, board reports players 11). §3.7.5 and acceptance #15 treat players as the field count.",
+  "fix": "Compute players before slicing for near scope. Keep the filtered count for country, following and level if that is intended.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/compete.py create_private",
+  "what": "open_for values outside {1,24,72,168} are silently mapped to 24 h instead of refused (probe: open_for=5 returns 200).",
+  "fix": "Return 422 when open_for is present and not in {1,24,72,168}.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/compete.py ACHIEVEMENTS, go_for",
+  "what": "C23 is not built as written. ACHIEVEMENTS lacks the five new ladders (over-par 3/5/10, won-back 10/50/200, rush 10/20/30, trap-week 1/4/12, full-house 5/10/30). go_for returns a generic '/compete/' for every rule instead of the per-rule targets (today's Daily, Rush, Sprint, the Weekly, the Final lobby, a due rematch, a series). It also does not resolve Shell rule ids through the inverse of achievements.FOLDED. pace-setter's rule text should read 'every right answer within its budget'.",
+  "fix": "Declare the five ladders with tiers in ACHIEVEMENTS. Map each id to its C23 Go target in go_for. Resolve Shell ids through deps.part('achievements','FOLDED') when present.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/compete.py finish_contest / rate",
+  "what": "C15's fast rule uses a fixed 4 s and omits the 'max(4 s, 2nd percentile of clean right times once n >= 50)' part. rate() also rates every answer of a sitting that later becomes unranked 'fast', because ranked is only decided at finish, so a too-fast sitting still moves the contest rating.",
+  "fix": "Add the percentile threshold once a (template, tier) has 50 or more clean right times. Hold or revert the rating deltas of a sitting that finish_contest marks unranked.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/compete.py leaderboard, rank_snapshot, board, person_of; server/api_compete.py report_name, compete_me",
+  "what": "Hot paths scan whole tables. leaderboard() loads every finished ranked session (and every attempt for metric=right) on each request, and calls _identity per row with several queries. /api/compete/me runs 7 leaderboard passes. Every board or leaderboard GET writes rank_snapshots rows. person_of and report-name compute an HMAC for every learner. contest() calls ensure() on every lookup.",
+  "fix": "Filter sessions and attempts by the period in SQL, cache pid to learner in kv or a column, write snapshots once a day, and memoise ensure() per request or day.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/compete.py init/_survey_background, SUPPLY_PATH",
+  "what": "The C26 supply survey runs as a CPU-heavy thread inside the web process 30 s after startup. It took more than 10 CPU-minutes here and re-runs after any satbank .py edit. It writes server/cache/twin_supply.json, which .gitignore does not cover (git check-ignore returns 1), so an untracked file appears after any server start. s8.py's C26 line stays PENDING until --supply has populated the cache.",
+  "fix": "Add 'server/cache/' to .gitignore (not an owned file: needs the owner or the main session). Consider running the survey only through a tool or s8.py --supply, or at low priority.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/compete.py nudge (person_of(target) or target)",
+  "what": "The nudge API accepts a raw learner code as 'member' (s8.py sends one). The learner code is the private identity, and every other API takes a pid.",
+  "fix": "Accept only a pid for member and update s8.py to send compete._pid(b).",
+  "severity": "followup"
+ },
+ {
+  "where": "server/compete.py confirm_next (twin_questions start_slot=len(original)+slot)",
+  "what": "Confirm twins are dealt under slot numbers 11-20, so their whole-question hash is never checked against the questions already dealt in the original slot. C15 requires 'a whole question not yet dealt in the contest (C26)'.",
+  "fix": "Also check the confirm candidate's qhash against the original slot's contest_items rows, or deal it under the original slot number with a confirm marker.",
+  "severity": "followup"
+ }
+]

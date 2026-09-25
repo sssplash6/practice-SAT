@@ -1,7 +1,7 @@
 # The other agent's next tasks (backend only)
 
 Tasks 1-5 are DONE (2026-09-25): S9, S7, S8 servers under one check each; habits.py and bank supply merged.
-Next, in order: Task 6, Task 7, Task 8. Never touch v2/s7-server, v2/s8-server, v2/s9-server or any wave-2 branch.
+Next, in order: Task 0 (fixes, first), then Task 6, Task 7, Task 8. Never touch v2/s7-server, v2/s8-server, v2/s9-server or any wave-2 branch.
 
 Written 2026-09-24 for the user's helper agent. Paste one task at a time. Each is a
 **feature**, so when the helper reports it done, the main session runs one
@@ -28,6 +28,26 @@ helper never merges.
 - **Done means** your `server/checks/<task>.py` passes and
   `PYTHONPATH=. python3 server/test_flow.py` prints "all good". Then tell the
   user "<task> done" with the commit list.
+
+## Task 0 (DO FIRST): fix the blockers the checks found in your three servers
+
+```
+The independent checks of your S7, S8 and S9 servers found real blockers. Your work now lives on these branches
+(the checker copied it; S7 and S8 are rebased on master): v2/s7s, v2/s8s, v2/s9s. Use those, NOT the old
+v2/s7-server, v2/s8-server, v2/s9-server.
+For each: git worktree add .claude/worktrees/<name> v2/<s7s|s8s|s9s>, then read the defects in
+spec/v2-state/next/<S7S|S8S|S9S>-verify1-issues.json. Fix every "blocker" except the one about the branch name
+(already resolved). Fix a "followup" only if it is small. v2/s7s has one checkpoint from a fixer that was stopped
+(909e603, server/checks/s7.py): keep it and continue from it.
+Highlights: S8, non-members can list private contests; anon mode must show the handle (R12); Rush's rating filter
+compares rounded and unrounded ratings; the create-contest body in acceptance #18. S7, checks depend on the weekday
+and hardcode 386 templates (the bank has 388 now); shell_part's shape (§2.10 root keys); progress-link tokens 404
+on /api/plan/shared; missing checks for swap and mirror. S9, box-3+ reviews need in-context items but no frame is
+reviewed yet (serve a meaning or recall item until frames pass the gate, and say so); a same-day regrade can undo
+an in-context review; GET /api/words counts need trapped, stubborn, atrisk and probable.
+Rules as above. DONE per server: its checks/*.py and test_flow pass. Tell the user "S7 fixes done" (S8, S9) with
+the commits. The main agent then re-checks lean and merges.
+```
 
 ---
 

@@ -21,6 +21,11 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
   one fix for features) and merge it. Saved state: S3 5 commits (tip de9e831), S10 2 (85896a0), S1 1 (15583f5), S5 1
   (83ee9a0), S6 1 (2fadefd), S4 and F2B none. After the reset, relaunch build.js with
   `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'}]`; each continues from its branch.
+- **Server checks done 2026-09-25 (run wf_efc641bf-0d1, stopped during the fixes):** blockers S7S 6, S8S 5, S9S 4 (each
+  includes my branch-naming bug: build.js used v2/<id> = v2/s7s etc.). The fixers created v2/s7s, v2/s8s and v2/s9s from
+  the helper's branches (S7 and S8 rebased on master), so those are now the canonical branches; v2/s7s has a fixer
+  checkpoint 909e603. Defects are saved in next/<id>-verify1-issues.json. Check-only mode, so the helper fixes them
+  (HELPER-TASKS Task 0); then I re-check lean (run the checks, confirm each blocker) and merge.
 - **Helper tasks 1-5 DONE 2026-09-25**: habits (79c4f73) and bank supply (3513836) merged after my inline check; the S9, S7
   and S8 servers are in one check + one fix: build.js run `wf_efc641bf-0d1` (task wp60i0yv8, relaunched 19:30),
   `[{id:'S9S',from:'verify'},{id:'S7S',from:'verify'},{id:'S8S',from:'verify'}]`; merge each when ready, then add

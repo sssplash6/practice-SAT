@@ -1,0 +1,80 @@
+[
+ {
+  "where": "git refs: branch v2/s7s (missing); the work is on v2/s7-server at b88934e",
+  "what": "The workflow targets v2/s7s, which does not exist. The fixer's `git switch v2/s7s 2>/dev/null || git switch -c v2/s7s master` would start from master without any of the S7 work.",
+  "fix": "Before the fix round, have the orchestrator create v2/s7s at b88934e (`git branch v2/s7s v2/s7-server`), or point the S7S task at v2/s7-server, and rebase it on master.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/checks/s7.py:152 (check_tasks_days) and :437",
+  "what": "The check depends on the weekday. It takes today's first focus/map task, but on a 1111100 plan today is the weekly test day on Fridays and a rest day on Sat/Sun. It raises StopIteration today (Fri 2026-09-25), so both s7.py and test_flow fail. Shifting plan.today confirms it fails Fri/Sat/Sun and passes Mon-Thu.",
+  "fix": "Pick the first future practice day with a focus/map task (as study_after does) instead of payload['today']. Or create that section's plan with test_day and start chosen so the day is a practice day.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/checks/s7.py:57",
+  "what": "The check hardcodes `bank.templates == 386`. Master now has 388 templates after the bank-supply merge, so test_flow fails on master plus S7 before any plan check runs.",
+  "fix": "Compare against the live catalogue: sum(map(len, practice.catalogue()['by_topic'].values())), or assert only that it is >= 386.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/plan.py:2088 shell_part",
+  "what": "The shell_part contract (§2.10: /api/shell merges part keys at the root and plan provides the `plan` key) is broken. shell_part returns flat keys {id, day, done, total, minutes_left, next}, so for every learner with a plan /api/shell gains root id/day/done/total/minutes_left and its `next` queue list becomes a string. Probe: next went from [] to \"Module test\". web/assets/ui.js:1058 then calls `(shellData.next || []).filter(...)` on a string and throws a TypeError.",
+  "fix": "Return {'plan': {...}} so it merges one level down into shell.plan (keeping the shell's existing plan fields). Add a check that /api/shell.next stays a list with a plan active.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/api_plan.py:521-555 (links, token_ics, shared); server/plan.py:41-55 init (plans.cal_token/view_token)",
+  "what": "The R18/§2.13 sharing contract is not met. The progress-link token from links(kind='progress') that S1's /share/?t= and /plan/?view= use gets 404 from GET /api/plan/shared/<token>. The calendar feed ignores links(kind='cal') rows (a token inserted there gives 404 at /api/cal/<t>.ics). Tokens live in new plans.cal_token/view_token columns that F4's schema deliberately leaves out. S1, now in wave 2, needs the shared plan view keyed by the progress link.",
+  "fix": "Look up /api/plan/shared/{token} in links WHERE kind='progress' AND revoked IS NULL, serving that learner's active plan. Mint and revoke cal tokens as links(kind='cal') rows and serve /api/cal/{token}.ics from them. Keep the plans.* columns only as a fallback, or drop them.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/checks/s7.py",
+  "what": "The check does not cover items the task's accept list names: PATCH {swap}, plan.mirror from learner to plan (PUT /api/me with target/minutes/exam_date reaching the plan cfg), and GET /api/plan/ics (only /api/plan/{pid}/ics is tested). My probes show all three work, but the accept says s7.py covers them.",
+  "fix": "Add asserts: a swap PATCH changes the day's topics; PUT /api/me {target, minutes} shows in GET /api/plan active.cfg; GET /api/plan/ics equals /api/plan/{pid}/ics and the token feed.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/plan.py payload()/allocate/day_view (POST and GET /api/plan)",
+  "what": "The spec says POST /api/plan is synchronous and under 1 s, and exam_date may be up to 730 days out. Measured create/GET times: 240-day plan 1.1 s / 1.1 s, 365-day 2.4 s / 2.7 s, 700-day 9-12 s / 9-15 s. The today_summary and shell paths stay fast (2-5 ms).",
+  "fix": "Compute allocation and day views once per request and cache per (plan, updated) (for example, reuse one allocate/pin_schedule pass). Or build full day views only for a window and send summaries for later months.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/plan.py:2047 mirror (called by PUT /api/me)",
+  "what": "R15 allows exam_date = today, but mirror runs plan.validate, which requires a date after today, so PUT /api/me {exam_date: today} returns 422 for a learner with an active plan. Clearing exam_date (null) with an active plan returns 422 with the misleading message 'exam_date: use YYYY-MM-DD'. mirror also uses the plan's stored tz, not the request tz.",
+  "fix": "Line up the date rule with R15, or return a clear 409/422 message. Handle null exam_date explicitly. Pass the request tz through.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/plan.py:2101 calendar",
+  "what": "plan.md override 36 is only partly built. Events are not titled from the check-ins due, the DESCRIPTION has no /?next=1 link, and there are no registration-deadline events (U17).",
+  "fix": "Add a DESCRIPTION with the /?next=1 URL, check-in counts in the SUMMARY, and the registration deadline event.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/api_plan.py:533",
+  "what": "POST /api/plan/{id}/links returns cal as '/cal/<t>.ics'. §2.13 amends this to /api/cal/<token>.ics. Both routes are served.",
+  "fix": "Return the /api/cal/ path.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/plan.py payload() drift preview (suggest.preview)",
+  "what": "The drift preview text is wrong: 'Start from 580 · needs +19.5 a week instead of +19.5'. old_needs comes from a verdict that already uses the sitting mean, not cfg.current (520 → 700 needs about 29 a week). _pace_suggest also uses its own last-3-since-start mean (test kinds only), not R16's mean3 (45 days, outside scores included), which plan.md keeps as the one drift rule.",
+  "fix": "Compute old_needs from cfg['current'] and base the suggestion on estimate's mean3.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/plan.py:2137 _selfcheck",
+  "what": "The __main__ self-check is thinner than the spec asks. It lacks L4 acceptance 6's grid (minutes {10..90} × s 60-150 × Words on/off × Build/Sharpen/Final × test day or not, with counted minutes never above m) and the §3.6.5 items (shares() summing to 1, the Advanced Math fallback, the streak skipping rest days). It asserts only BLUEPRINT summing to 1.",
+  "fix": "Add those asserts to _selfcheck.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/plan.py payload(shared=True) line ~2037",
+  "what": "The shared view sets active.name to the plan name only when the learner has a profile name. The spec says 'name only if set', meaning the learner's name, so the rule is muddled.",
+  "fix": "Expose the learner's display name only if set, and keep the plan name as its own field.",
+  "severity": "followup"
+ }
+]

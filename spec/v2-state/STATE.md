@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-25T19:37:26+05:00
+# v2 build state -- 2026-09-25T19:46:44+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -19,15 +19,18 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/habits` at 84845cf, 0 commits ahead of master
 - `v2/s1` at 15583f5, 1 commits ahead of master
 - `v2/s10` at 85896a0, 2 commits ahead of master
-- `v2/s3` at 9a7b613, 4 commits ahead of master
+- `v2/s3` at de9e831, 5 commits ahead of master
 - `v2/s4` at c690c57, 0 commits ahead of master
 - `v2/s5` at 83ee9a0, 1 commits ahead of master
 - `v2/s6` at 2fadefd, 1 commits ahead of master
 - `v2/s7-server` at b88934e, 3 commits ahead of master
+- `v2/s7s` at a90e3a6, 3 commits ahead of master
 - `v2/s8-server` at c39b162, 15 commits ahead of master
+- `v2/s8s` at 64f360c, 15 commits ahead of master
 - `v2/s9-server` at bd5b705, 7 commits ahead of master
+- `v2/s9s` at bd5b705, 7 commits ahead of master
 - `v2/satdates` at 141f815, 0 commits ahead of master
-- `v2/spr-grow` at d4e90d0, 7 commits ahead of master
+- `v2/spr-grow` at 62e7df5, 13 commits ahead of master
 - `v2/t-bank` at 9403838, 0 commits ahead of master
 - `v2/t-bank-all` at f4bf864, 0 commits ahead of master
 - `v2/t-bank-area_and_volume` at 11402c0, 0 commits ahead of master
@@ -64,16 +67,14 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 ## Worktrees
 
 - `/Users/workingmyassof/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/spr-grow` on `v2/spr-grow`: 4 uncommitted (saved in wip/spr-grow/)
+- `/Users/workingmyassof/satbank/.claude/worktrees/spr-grow` on `v2/spr-grow`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_e48cbd7a-4e4-2` on `v2/s5`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_e48cbd7a-4e4-3` on `v2/s3`: 1 uncommitted (saved in wip/wf_e48cbd7a-4e4-3/)
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_e48cbd7a-4e4-4` on `v2/s6`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_e48cbd7a-4e4-5` on `v2/s10`: 0 uncommitted
-- `/Users/workingmyassof/satbank/.claude/worktrees/wf_e48cbd7a-4e4-6` on `v2/s1`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_efc641bf-0d1-1` on `detached bd5b705`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_efc641bf-0d1-2` on `detached b88934e`: 0 uncommitted
 - `/Users/workingmyassof/satbank/.claude/worktrees/wf_efc641bf-0d1-3` on `detached c39b162`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_efc641bf-0d1-4` on `v2/s9s`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_efc641bf-0d1-5` on `v2/s8s`: 0 uncommitted
+- `/Users/workingmyassof/satbank/.claude/worktrees/wf_efc641bf-0d1-6` on `v2/s7s`: 0 uncommitted
 
 ## Workflow runs
 
@@ -130,8 +131,8 @@ Unfinished when saved: build S1 1/5, build S10 1/5, build S3 1/5, build S4 1/5, 
 
 ### wf_e6cc0b6f-9c8: 2 finished, 0 unfinished
 
-### wf_efc641bf-0d1: 0 finished, 3 unfinished
-Unfinished when saved: verify S7S r1, verify S8S r1, verify S9S r1
+### wf_efc641bf-0d1: 3 finished, 3 unfinished
+Unfinished when saved: fix S7S r1, fix S8S r1, fix S9S r1
 
 ### wf_f6283862-332: 36 finished, 6 unfinished
 Unfinished when saved: fix 1: plan, fix 1: right_triangles_and_trigonometry, fix 1: tests, fix 2: shell-me, recheck 2: nonlinear_equations_and_systems, recheck 2: two_variable_data
