@@ -127,7 +127,10 @@ def test_library(client: TestClient) -> None:
     assert len(lib["words"]) >= 1_000 and len(lib["forecast"]) == 60
     assert all(1 <= w["freq_band"] <= 5 for w in lib["words"] if not w["own"])
     assert {"due", "new", "learning", "known", "saved", "mine", "missed", "lookedup",
-            "new_today", "goal", "claimed"} <= set(lib["counts"])
+            "new_today", "goal", "claimed", "thought", "probable", "trapped",
+            "stubborn", "atrisk"} <= set(lib["counts"])
+    assert {"at_risk", "trap", "family", "roots", "value", "measured", "freq_band",
+            "lists", "placed", "proven", "claimed"} <= set(lib["words"][0])
     detail = ok(client.get("/api/words/qualify.limit", headers=headers))
     assert any(w["slug"] == "qualify.meet" for w in detail["other_senses"])
     assert detail["shades"]["words"] and detail["shades"]["at"] is not None
@@ -142,6 +145,64 @@ def test_library(client: TestClient) -> None:
     assert {"traps", "logic", "gaps", "calibration", "recall", "finish"} <= insights.keys()
     today = ok(client.get("/api/words/today", headers=headers))
     assert today["summary"]["start"]["path"] == "/api/words/run"
+    db.ensure_learner(learner)
+    db.run("UPDATE learners SET exam_date=? WHERE id=?",
+           (words.local_day() + dt.timedelta(days=45)).isoformat(), learner)
+    words.place(learner, "bolster", "probably")
+    words.grade(learner, "mitigate", False, "quiz", "incontext", confusion="too_strong")
+    active = ok(client.get("/api/words", headers=headers))
+    mitigate = next(row for row in active["words"] if row["slug"] == "mitigate")
+    assert active["counts"]["probable"] >= 1 and active["counts"]["trapped"] >= 1
+    assert active["counts"]["atrisk"] >= 1 and mitigate["trap"] == "too_strong"
+    assert mitigate["at_risk"] and mitigate["family"] and isinstance(mitigate["roots"], list)
+    assert mitigate["value"] in (1, 2, 3)
+
+
+def test_review_fallback(client: TestClient) -> None:
+    previous = os.environ.pop("SATF_WORDS_UNREVIEWED", None)
+    try:
+        learner = code()
+        words.place(learner, "bolster", "yes")
+        db.run("UPDATE word_state SET due=? WHERE learner=? AND word='bolster'",
+               words.local_day().isoformat(), learner)
+        mixed = use(client, learner, "/api/words/run", {"mode": "mix", "deck": {"source": "today"}})
+        stored = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", mixed["id"])["questions"])
+        due_word = next(q for q in stored if q.get("word") == "bolster")
+        assert due_word["kind"] == "card" and "Prove it" in due_word["stem"]
+        cards = use(client, learner, "/api/words/run", {"mode": "cards", "deck": {"source": "due"}, "count": 1})
+        assert cards["next"]["kind"] == "card" and cards["next"]["word"] == "bolster"
+        verdict = use(client, learner, f"/api/words/run/{cards['id']}/answer",
+                      {"item_id": cards["next"]["item_id"], "answer": "know"})
+        assert verdict["box"]["after"] == 3 and words.state(learner, "bolster")["proven"] is None
+        words.place(learner, "mitigate", "probably")
+        probable = use(client, learner, "/api/words/run", {"mode": "cards",
+                          "deck": {"source": "words", "words": ["mitigate"]}, "count": 1})
+        assert probable["next"]["kind"] == "meaning2word"
+    finally:
+        if previous is None:
+            os.environ.pop("SATF_WORDS_UNREVIEWED", None)
+        else:
+            os.environ["SATF_WORDS_UNREVIEWED"] = previous
+
+
+def test_sheet_proof(client: TestClient) -> None:
+    from server import api_words
+
+    learner = code()
+    words.place(learner, "mitigate", "yes")
+    db.run("UPDATE word_state SET due=? WHERE learner=? AND word='mitigate'",
+           words.local_day().isoformat(), learner)
+    sample = use(client, learner, "/api/words/sample", {"slug": "mitigate"})
+    signed = api_words._unsign(sample["token"], learner, 0)
+    item = words.item(signed["template"], signed["seed"], signed["word"])
+    proof = use(client, learner, "/api/words/sample/answer",
+                {"token": sample["token"], "answer": item["answer_index"]})
+    assert proof["box"]["after"] == 4 and proof["proven"]
+    sheet = use(client, learner, "/api/words/mitigate/grade", {"ok": True})
+    reviews = words.word_reviews(learner, "mitigate")
+    assert sheet["box"]["after"] >= 4 and words.state(learner, "mitigate")["proven"] == proof["proven"]
+    assert any(row["id"] == proof["review_id"] and row["kind"] == item["kind"]
+               and row["kind"] != "card" for row in reviews)
 
 
 def test_runs(client: TestClient) -> None:
@@ -469,7 +530,8 @@ def test_compete_contract() -> None:
 def check(client: TestClient) -> None:
     previous = os.environ.pop("SATF_WORDS_UNREVIEWED", None)
     try:
-        tests = (test_content, test_core, test_library, test_runs, test_placement_and_own,
+        tests = (test_content, test_core, test_library, test_review_fallback,
+                 test_sheet_proof, test_runs, test_placement_and_own,
                  test_daily_print_offline, test_crowd_guard, test_study_policy,
                  test_external_words, test_rw_migration, test_compete_contract)
         for test in tests:
