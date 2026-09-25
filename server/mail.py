@@ -1,4 +1,5 @@
-"""Mail: the verification email, and the report notices (R17).
+"""Mail: sign-in codes (Shell §3.1.5), the diagnostic's confirmation, and the
+report notices (R17).
 
 With SMTP configured in the environment this sends. Without it, it writes the
 message to server/outbox/ and says so in the log, rather than returning success
@@ -36,27 +37,80 @@ def verify_url(token: str) -> str:
     return f"{BASE_URL}/api/verify?token={token}"
 
 
-def build(to: str, first: str, token: str) -> EmailMessage:
+PILL = ("background:#F18508;color:#3F3F3F;padding:11px 22px;border-radius:999px;"
+        "text-decoration:none;font-weight:700;font-family:Helvetica,Arial,sans-serif")
+CODE_STYLE = ("font-family:'DM Mono',ui-monospace,Menlo,Consolas,monospace;font-size:32px;"
+              "letter-spacing:.12em;color:#1E1E1E;margin:8px 0 18px")
+QUIET = "color:#6b6b6b;font:13px Helvetica,Arial,sans-serif"
+IGNORE = "If you didn't ask for this, ignore it. Nobody can sign in without this code."
+
+
+def grouped(code: str) -> str:
+    """482913 -> '482 913', as the subject and the code boxes show it."""
+    return f"{code[:3]} {code[3:]}"
+
+
+def signin_url(token: str) -> str:
+    return f"{BASE_URL}/signin/?t={token}"
+
+
+def build(to: str, first: str, token: str, code: str | None = None) -> EmailMessage:
+    """The diagnostic's confirmation. With a code (and its sign-in link) it
+    also saves the account on the device that sat the test (§3.1.5)."""
     link = verify_url(token)
     m = EmailMessage()
-    m["Subject"] = "Confirm your email"
+    m["Subject"] = f"Confirm your email · code {grouped(code)}" if code else "Confirm your email"
     m["From"] = MAIL_FROM
     m["To"] = to
+    code_text = (f"Or type this code on the page that asked: {grouped(code)}\n"
+                 f"(30 minutes, one use)\n\n") if code else ""
     m.set_content(
         f"Hi {first},\n\n"
         f"Confirm this address to keep your diagnostic results:\n\n"
         f"{link}\n\n"
+        f"{code_text}"
         f"If you did not start a diagnostic, ignore this email.\n\n"
         f"SAT Freshman\n"
     )
+    code_html = (f'<p style="{QUIET}">Or type this code on the page that asked (30 minutes, one use):</p>'
+                 f'<p style="{CODE_STYLE}">{grouped(code)}</p>') if code else ""
     m.add_alternative(
         f"<p>Hi {first},</p>"
         f"<p>Confirm this address to keep your diagnostic results.</p>"
-        f'<p><a href="{link}" style="background:#F18508;color:#3F3F3F;padding:11px 22px;'
-        f'border-radius:999px;text-decoration:none;font-weight:700;'
-        f'font-family:Helvetica,Arial,sans-serif">Confirm email</a></p>'
-        f'<p style="color:#6b6b6b;font:13px Helvetica,Arial,sans-serif">'
+        f'<p><a href="{link}" style="{PILL}">Confirm email</a></p>'
+        f"{code_html}"
+        f'<p style="{QUIET}">'
         f"If you did not start a diagnostic, ignore this email.</p>",
+        subtype="html",
+    )
+    return m
+
+
+def build_login(to: str, code: str, token: str) -> EmailMessage:
+    """Shell §3.1.5: the 6-digit code and a link, each good once for 30 minutes.
+    Only the device that asked can finish with the code; the link signs in
+    whichever browser opens it, never the one that asked (§3.1.3 item 11)."""
+    link = signin_url(token)
+    m = EmailMessage()
+    m["Subject"] = f"Your SAT Freshman code: {grouped(code)}"
+    m["From"] = MAIL_FROM
+    m["To"] = to
+    m.set_content(
+        f"Your code: {grouped(code)}\n\n"
+        f"Type it on the page that asked, or open this link on the device you want to use:\n\n"
+        f"{link}\n\n"
+        f"30 minutes, one use.\n\n"
+        f"{IGNORE}\n\n"
+        f"SAT Freshman\n"
+    )
+    m.add_alternative(
+        f'<p style="font:15px Helvetica,Arial,sans-serif;color:#1E1E1E">Your code</p>'
+        f'<p style="{CODE_STYLE}">{grouped(code)}</p>'
+        f'<p style="font:15px Helvetica,Arial,sans-serif;color:#1E1E1E">Type it on the page that asked, '
+        f"or open the link on the device you want to use.</p>"
+        f'<p><a href="{link}" style="{PILL}">Sign in on this device</a></p>'
+        f'<p style="{QUIET}">30 minutes, one use.</p>'
+        f'<p style="{QUIET}">{IGNORE}</p>',
         subtype="html",
     )
     return m
@@ -89,9 +143,14 @@ def deliver(msg: EmailMessage, note: str = "") -> str:
         return "failed"
 
 
-def send(to: str, first: str, token: str) -> str:
+def send(to: str, first: str, token: str, code: str | None = None) -> str:
     """The verification email: 'sent', 'outbox' or 'failed'."""
-    return deliver(build(to, first, token), f"the link is {verify_url(token)}")
+    return deliver(build(to, first, token, code), f"the link is {verify_url(token)}")
+
+
+def send_login(to: str, code: str, token: str) -> str:
+    """The sign-in code: 'sent', 'outbox' or 'failed'."""
+    return deliver(build_login(to, code, token), f"the code is {grouped(code)}, the link {signin_url(token)}")
 
 
 def _one_line(text: str, n: int = 120) -> str:
