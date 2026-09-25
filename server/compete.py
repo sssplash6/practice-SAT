@@ -391,7 +391,8 @@ def ensure(at: dt.datetime | None = None, tz: int = 0) -> list[dict]:
             _insert("rush-" + week, "rush", "Rush · " + week, start,
                     start + dt.timedelta(days=7), [], 0,
                     extra={"mode": "three_strikes", "rated": True})
-        if deps.part("words", "sprint_items") and not db.one(
+        available = deps.part("words", "sprint_available")
+        if deps.part("words", "sprint_items") and (available is None or available()) and not db.one(
                 "SELECT 1 FROM contests WHERE id=?", "words-" + week):
             _insert("words-" + week, "words", "Word Sprint · " + week, start,
                     start + dt.timedelta(days=7), [], 240, subject="rw",
@@ -671,7 +672,9 @@ def word_start(learner: str, cid: str) -> dict:
     estimate = deps.part("words", "estimate")
     placement = estimate(learner) if estimate else {}
     level = max(1, min(5, int(placement.get("band") or 1)))
-    seed = secrets.randbits(31)
+    # Template order is shared across entrants; the Words provider uses the
+    # learner code only to vary each rendered passage and its options.
+    seed = int.from_bytes(hashlib.sha256(cid.encode()).digest()[:4], "big")
     items = provider(learner, seed, 80, level)
     if not isinstance(items, list) or not items or any(
             item.get("kind") not in ("incontext", "transition") or
