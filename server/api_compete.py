@@ -102,10 +102,7 @@ def _meta(row, learner: str | None, tz: int = 0, race: str | None = None) -> dic
         flags = (compete._json(own["cfg"], {}) or {}).get("flags", {})
         me["confirm"] = {"due": sum(f.get("status") == "pending" for f in flags.values()),
                          "next": (compete._json(own["cfg"], {}) or {}).get("confirm_active")}
-        cfg = compete._json(own["cfg"], {}) or {}
-        me["followup"] = {"due": cfg.get("rematch_due"), "session": cfg.get("rematch_session"),
-                          "won_back": (own_result or {}).get("won_back"),
-                          "of": (own_result or {}).get("won_back_of")}
+        me["followup"] = compete.rematch_status(own)
     if len(all_scores) >= 10:
         lower = expected["base"] - expected["sd"]
         upper = expected["base"] + expected["sd"]
@@ -307,11 +304,11 @@ def compete_history(kind: str | None = None, followup: str | None = None,
     for r in rows:
         if kind and r["contest_kind"] != kind:
             continue
-        cfg = compete._json(r["cfg"], {}) or {}
+        follow = compete.rematch_status(r)
         open_traps = db.one("SELECT COUNT(DISTINCT t.template||':'||t.reason) AS n FROM attempts a"
                             " JOIN traps t ON t.learner=a.learner AND t.template=a.template"
                             " AND t.closed IS NULL WHERE a.session=? AND a.correct=0", r["id"])["n"]
-        due = cfg.get("rematch_due") if not cfg.get("rematch_done") else None
+        due = follow["due"]
         if followup == "open" and not (due or open_traps):
             continue
         result = compete._json(r["result"], {}) or {}
@@ -319,8 +316,7 @@ def compete_history(kind: str | None = None, followup: str | None = None,
                       "title": r["title"], "finished": r["finished"], "points": r["points"],
                       "net": result.get("net"), "ranked": bool(r["ranked"]),
                       "why": r["unranked_why"], "result": result,
-                      "followup": {"due": due, "open_traps": open_traps,
-                                   "won_back": result.get("won_back"), "of": result.get("won_back_of")},
+                      "followup": {**follow, "open_traps": open_traps},
                       "record": bool(result.get("records_new"))})
     return {"history": items[offset:offset + min(limit, 50)], "total": len(items),
             "open_followups": sum(bool(item["followup"]["due"] or item["followup"]["open_traps"])
@@ -598,28 +594,7 @@ def contest_debrief(cid: str, x_learner: str | None = Header(default=None),
     sitting = _sitting(row["id"], learner)
     if not sitting or not sitting["finished"]:
         raise HTTPException(403, "finish your sitting first")
-    compete.finish_contest(sitting)
-    sitting = db.one("SELECT * FROM sessions WHERE id=?", sitting["id"])
-    lost: Counter = Counter()
-    by_norm: Counter = Counter()
-    per = []
-    for q in compete._questions(sitting):
-        a = db.one("SELECT * FROM attempts WHERE session=? AND qid=? ORDER BY id LIMIT 1",
-                   sitting["id"], q["id"])
-        worth = {"easy": 10, "medium": 20, "hard": 30}.get(q["difficulty"], 20)
-        cause = "right" if a and a["correct"] and not a["void"] else "void" if a and a["void"] else \
-                "wrong" if a else "skip"
-        if cause != "right":
-            lost[cause] += worth
-            if a and a["reason"]:
-                by_norm[progress.norm(a["reason"])] += worth
-        per.append({"slot": len(per) + 1, "cause": cause, "lost": 0 if cause == "right" else worth,
-                    "budget_ms": q.get("budget_ms"), "ms": a["sms"] if a else None})
-    b = compete.board(row["id"], learner, limit=1)
-    return {"subject": row["subject"], "max": sum({"easy": 10, "medium": 20, "hard": 30}.get(q["difficulty"], 20)
-                                                  for q in compete._questions(sitting)) + 10,
-            "points": sitting["points"], "rank": (b["you"] or {}).get("rank"),
-            "players": b["players"], "lost": dict(lost), "by_norm": dict(by_norm), "slots": per}
+    return compete.debrief(sitting["id"], x_tz)
 
 
 @router.post("/api/contest/{cid}/rematch")
@@ -639,11 +614,23 @@ def contest_rematch(cid: str, body: dict, x_learner: str | None = Header(default
         cfg["rematch_due"] = due
         db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(cfg), sitting["id"])
         return {"due": due}
-    missed = [q["key"] for q in compete._questions(sitting) if (a := db.one(
-        "SELECT correct FROM attempts WHERE session=? AND qid=?", sitting["id"], q["id"])) and not a["correct"]]
-    if not missed:
+    prior_cfg = json.loads(sitting["cfg"] or "{}")
+    old = prior_cfg.get("rematch_session")
+    if old and db.one("SELECT 1 FROM sessions WHERE id=? AND learner=?", old, learner):
+        return {"session": old}
+    items, mapping = compete.rematch_items(sitting)
+    if not items:
         raise HTTPException(409, "no missed questions to rematch")
-    sid = drill.create(learner, {"templates": missed, "count": len(missed), "source": "rematch"})
+    sid = secrets.token_urlsafe(16)
+    topics = list(dict.fromkeys(practice.topic_of(key) for key, _ in items))
+    drill.create(learner, sid, topics, len(items), None, False, "rematch",
+                 items=items, kind="drill", fixed=True)
+    child_cfg = json.loads(db.one("SELECT cfg FROM sessions WHERE id=?", sid)["cfg"])
+    child_cfg.update({"parent": sitting["id"], "rematch_map": mapping,
+                      "feedback": "instant", "repairs": "off"})
+    db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(child_cfg), sid)
+    prior_cfg["rematch_session"] = sid
+    db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(prior_cfg), sitting["id"])
     return {"session": sid}
 
 

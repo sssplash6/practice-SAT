@@ -558,6 +558,156 @@ def records(learner: str) -> dict:
     return {"bests": best, "podiums": [dict(row) for row in podiums]}
 
 
+def debrief(sid: str, tz: int = 0) -> dict:
+    """Price each lost slot, its misconception and the places one fix buys."""
+    sitting = db.one("SELECT * FROM sessions WHERE id=?", sid)
+    if not sitting or not sitting["contest"] or not sitting["finished"]:
+        raise HTTPException(403, "finish your contest first")
+    finish_contest(sitting)
+    sitting = db.one("SELECT * FROM sessions WHERE id=?", sid)
+    contest_row = db.one("SELECT * FROM contests WHERE id=?", sitting["contest"])
+    spec = _json(contest_row["spec"], {}) or {}
+    questions = _questions(sitting)
+    attempts = {r["qid"]: r for r in db.rows("SELECT * FROM attempts WHERE session=?"
+                                              " ORDER BY id", sid)}
+    causes = progress.causes(sitting["learner"], tz, session=sid).get("per_q", {})
+    cfg = _json(sitting["cfg"], {}) or {}
+    timing = {"official": 1, "x1.5": 1.5, "x2": 2}.get(cfg.get("timing"), 1)
+    slots = spec.get("slots") or [[q["key"], q["difficulty"], q["type"]] for q in questions]
+    paced = contest_row["kind"] not in ("sprint", "rush", "words")
+    max_points = sum({"easy": 10, "medium": 20, "hard": 30}.get(slot[1], 20) + (5 if paced else 0)
+                     for slot in slots) + (10 if paced else 0)
+    board_rows = board(sitting["contest"], sitting["learner"], limit=100)["entries"]
+    others = [entry["points"] for entry in board_rows if not entry["you"]]
+    current_rank = 1 + sum(value > (sitting["points"] or 0) for value in others) if len(others) else None
+    def rank_if(gain: int) -> int | None:
+        return 1 + sum(value > (sitting["points"] or 0) + gain for value in others) if len(others) else None
+    lost = []
+    by_norm: Counter = Counter()
+    per = []
+    for index, slot in enumerate(slots):
+        q = questions[index] if index < len(questions) else None
+        qid = q["id"] if q else f"c{index + 1:02d}"
+        key, tier = slot[0], slot[1]
+        a = attempts.get(qid)
+        worth = {"easy": 10, "medium": 20, "hard": 30}.get(tier, 20)
+        budget = (q.get("budget_ms") if q else None) or {"easy": 65_000, "medium": 95_000,
+                                                        "hard": 126_000}.get(tier, 95_000)
+        budget *= timing
+        elapsed = (a["sms"] if a["sms"] is not None else a["ms"]) if a else None
+        on_pace = elapsed is not None and elapsed <= budget
+        flag = cfg.get("flags", {}).get(qid, {})
+        right = bool(a and a["correct"] and not a["void"] and
+                     (not flag or flag.get("status") == "confirmed"))
+        norm = progress.norm(a["reason"]) if a and a["reason"] else None
+        topic = (q or {}).get("topic") or practice.topic_of(key)
+        if right:
+            if paced and not on_pace:
+                lost.append({"qid": qid, "slot": index + 1, "kind": "pace", "template": key,
+                             "tier": tier, "topic": topic, "norm": None, "label": "Over budget",
+                             "pts": 5, "rank_if": rank_if(5),
+                             "places": current_rank - rank_if(5) if current_rank else None,
+                             "rushed": False})
+        else:
+            kind = "void" if a and (a["void"] or (flag and flag.get("status") != "confirmed")) else \
+                (causes.get(qid) or {}).get("cause", "trap") if a else "skip"
+            # A missed paced answer loses its possible pace bonus in that row.
+            amount = worth + (5 if paced and a and on_pace and kind not in ("skip", "void") else 0)
+            lost.append({"qid": qid, "slot": index + 1, "kind": kind, "template": key,
+                         "tier": tier, "topic": topic, "norm": norm, "label": norm or kind.title(),
+                         "pts": amount, "rank_if": rank_if(amount),
+                         "places": current_rank - rank_if(amount) if current_rank else None,
+                         "rushed": bool(a and elapsed is not None and elapsed < budget / 4),
+                         "fix": {"from_session": sid, "only": [qid], "each": 3, "source": "twin",
+                                 "parent": sid, "want": {key: norm}} if norm else None})
+            if norm:
+                by_norm[norm] += amount
+            if paced and not (a and on_pace and kind not in ("skip", "void")):
+                lost.append({"qid": qid, "slot": index + 1, "kind": "pace", "template": key,
+                             "tier": tier, "topic": topic, "norm": None, "label": "Pace bonus",
+                             "pts": 5, "rank_if": rank_if(5),
+                             "places": current_rank - rank_if(5) if current_rank else None,
+                             "rushed": False})
+        per.append({"slot": index + 1, "cause": "right" if right else kind, "lost": 0 if right else worth,
+                    "budget_ms": budget, "ms": elapsed})
+    result = _json(sitting["result"], {}) or {}
+    if paced and not result.get("points_parts", {}).get("finish"):
+        lost.append({"qid": None, "slot": len(slots) + 1, "kind": "finish", "template": None,
+                     "tier": None, "topic": None, "norm": None, "label": "Finish bonus", "pts": 10,
+                     "rank_if": rank_if(10), "places": current_rank - rank_if(10) if current_rank else None,
+                     "rushed": False})
+    lost.sort(key=lambda item: (-(item["places"] or 0), -item["pts"], item["slot"]))
+    if sum(item["pts"] for item in lost) != max_points - (sitting["points"] or 0):
+        raise RuntimeError("contest debrief does not reconcile with its points")
+    return {"subject": contest_row["subject"], "max": max_points, "points": sitting["points"],
+            "rank": current_rank, "players": len(others) + 1, "lost": lost, "slots": per,
+            "by_norm": [{"norm": norm, "label": norm, "pts": pts,
+                         "slots": sum(item["norm"] == norm for item in lost)}
+                        for norm, pts in by_norm.most_common()],
+            "all_right_rank": rank_if(max_points - (sitting["points"] or 0))}
+
+
+def rematch_items(sitting) -> tuple[list[list], list[dict]]:
+    """Deal fresh exact twins of missed, skipped and voided slots with their trap."""
+    row = db.one("SELECT * FROM contests WHERE id=?", sitting["contest"])
+    slots = (_json(row["spec"], {}) or {}).get("slots") or [
+        [q["key"], q["difficulty"], q["type"]] for q in _questions(sitting)]
+    originals = _questions(sitting)
+    attempts = {a["qid"]: a for a in db.rows("SELECT * FROM attempts WHERE session=?", sitting["id"])}
+    b = practice.Builder(sitting["learner"], *db.seen_for(sitting["learner"]), dedupe="question")
+    items = []
+    mapping = []
+    for index, (key, tier, fmt) in enumerate(slots):
+        original = originals[index] if index < len(originals) else None
+        qid = original["id"] if original else f"c{index + 1:02d}"
+        attempt = attempts.get(qid)
+        if attempt and attempt["correct"] and not attempt["void"]:
+            continue
+        norm = progress.norm(attempt["reason"]) if attempt and attempt["reason"] else None
+        picked = None
+        for _ in range(600 if norm else 100):
+            card = blueprint.draw_matching(b, key, tier, fmt, tries=20)
+            if not card:
+                break
+            if original and card.seed == original["seed"]:
+                b.keep(card)
+                continue
+            offered = progress.offered_of(practice.to_question(card, index + 1))
+            if norm and norm not in offered:
+                b.keep(card)
+                continue
+            picked = card
+            b.keep(card)
+            break
+        if not picked:
+            raise HTTPException(409, {"reason": "rematch_supply", "slot": index + 1,
+                                      "template": key, "norm": norm})
+        items.append([key, picked.seed])
+        mapping.append({"original": qid, "template": key, "tier": tier, "format": fmt,
+                        "norm": norm, "pts": {"easy": 10, "medium": 20, "hard": 30}.get(tier, 20)})
+    return items, mapping
+
+
+def rematch_status(sitting) -> dict:
+    cfg = _json(sitting["cfg"], {}) or {}
+    sid = cfg.get("rematch_session")
+    status = {"due": cfg.get("rematch_due"), "session": sid, "won_back": None, "of": None}
+    if not sid:
+        return status
+    other = db.one("SELECT finished,cfg FROM sessions WHERE id=? AND learner=?", sid, sitting["learner"])
+    if not other:
+        return status
+    mapping = (_json(other["cfg"], {}) or {}).get("rematch_map", [])
+    status["of"] = sum(item["pts"] for item in mapping)
+    if other["finished"]:
+        right = {r["qid"] for r in db.rows("SELECT qid FROM attempts WHERE session=?"
+                                            " AND correct=1 AND void IS NULL", sid)}
+        status["won_back"] = sum(item["pts"] for index, item in enumerate(mapping, 1)
+                                 if f"d{index:03d}" in right)
+        status["due"] = None
+    return status
+
+
 def week_line(learner: str) -> dict:
     today = _now().date()
     end = today - dt.timedelta(days=today.weekday())

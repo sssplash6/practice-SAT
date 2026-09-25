@@ -16,7 +16,7 @@ import sys
 
 from fastapi.testclient import TestClient
 
-from server import blueprint, compete, db, practice
+from server import blueprint, compete, db, practice, progress
 from server.app import app
 
 
@@ -106,6 +106,20 @@ def run() -> None:
         assert_ok(practice.question_hash(practice.generate(first_a["key"], first_a["seed"])) !=
               practice.question_hash(practice.generate(first_b["key"], first_b["seed"])),
               "two entrants receive different whole questions")
+        wrong_index = next(i for i, reason in enumerate(first_b["reasons"]) if reason)
+        missed_norm = progress.norm(first_b["reasons"][wrong_index])
+        c.post(f"/api/drill/{start_b['session']}/answer", headers=head(b),
+               json={"question_id": first_b["id"], "answer": wrong_index, "ms": 60_000})
+        c.post(f"/api/drill/{start_b['session']}/finish", headers=head(b))
+        c.get("/api/contest/daily", headers=head(b))
+        named_rematch = c.post("/api/contest/daily/rematch", headers=head(b), json={"when": "now"})
+        assert_ok(named_rematch.status_code == 200, "named miss starts a fresh rematch")
+        fresh_sid = named_rematch.json()["session"]
+        fresh = c.post(f"/api/drill/{fresh_sid}/next", headers=head(b)).json()["question"]
+        fresh_original = question_for(fresh_sid, fresh["id"])
+        assert_ok(fresh_original["seed"] != first_b["seed"] and
+                  missed_norm in progress.offered_of(fresh_original),
+                  "named rematch preserves the original misconception on fresh numbers")
         assert_ok(c.get("/api/contest/daily/review", headers=head(a)).status_code == 403,
               "review is gated before finishing")
         sid, originals = play(c, a)
@@ -143,6 +157,37 @@ def run() -> None:
         race_result = c.get("/api/contest/daily", headers=head(racer)).json()["me"]
         assert_ok(race_result["ranked"] and race_result["result"]["race"]["them"] == 260,
                   "a first live race is ranked and reports the opponent's score")
+        priced = c.get("/api/contest/daily/debrief", headers=head(racer)).json()
+        assert_ok(len(priced["lost"]) == 15 and sum(row["pts"] for row in priced["lost"]) ==
+                  priced["max"] - priced["points"],
+                  "debrief prices early hand-in skips, pace and finish exactly")
+        rematch = c.post("/api/contest/daily/rematch", headers=head(racer), json={"when": "now"})
+        assert_ok(rematch.status_code == 200, "missed contest slots start a rematch")
+        rematch_sid = rematch.json()["session"]
+        rematch_cfg = json.loads(db.one("SELECT cfg FROM sessions WHERE id=?", rematch_sid)["cfg"])
+        assert_ok(len(rematch_cfg["rematch_map"]) == 7 and
+                  all(q["original"].startswith("c") for q in rematch_cfg["rematch_map"]),
+                  "rematch keeps every skipped slot's type and tier")
+        recovered = 0
+        for index, cell in enumerate(rematch_cfg["rematch_map"]):
+            asked = c.post(f"/api/drill/{rematch_sid}/next", headers=head(racer)).json()["question"]
+            original = question_for(rematch_sid, asked["id"])
+            assert_ok((original["key"], original["difficulty"], original["type"]) ==
+                      (cell["template"], cell["tier"], cell["format"]),
+                      "rematch serves the original slot's type, tier and format")
+            if index < 2:
+                given = answer_of(original)
+                recovered += cell["pts"]
+            else:
+                given = (answer_of(original) + 1) % 4 if original["type"] == "mcq" else "999999999"
+            marked = c.post(f"/api/drill/{rematch_sid}/answer", headers=head(racer),
+                            json={"question_id": asked["id"], "answer": given, "ms": 60_000})
+            assert_ok(marked.status_code == 200, "rematch answer is filed")
+        c.post(f"/api/drill/{rematch_sid}/finish", headers=head(racer))
+        followup = c.get("/api/contest/daily", headers=head(racer)).json()["me"]["followup"]
+        assert_ok(followup["won_back"] == recovered and followup["of"] == sum(
+                  cell["pts"] for cell in rematch_cfg["rematch_map"]),
+                  "won-back totals only recovered original slot points")
         db.run("UPDATE learners SET board='hidden' WHERE id=?", a)
         assert_ok(c.get(f"/api/contest/daily?race={target_pid}", headers=head(racer)).status_code == 403,
                   "hiding a learner revokes their race link")
