@@ -13,13 +13,14 @@ TRIPLES = ((3, 4, 5), (5, 12, 13), (8, 15, 17))
 
 def hypotenuse_grid(rng: random.Random, seed: int) -> Item:
     a, b, c = rng.choice(TRIPLES)
-    k = rng.randint(1, 4)
+    k = rng.randint(1, 35)
+    unit = rng.choice(("centimeters", "meters", "feet"))
     a, b, c = a * k, b * k, c * k
     key = E(c)
     return Item(
         "rtt.hypotenuse_grid", "Pythagorean theorem", "easy", seed,
-        f"The legs of a right triangle are {a} and {b} units long. "
-        "What is the length of its hypotenuse?",
+        f"The legs of a right triangle are {a} and {b} {unit} long. "
+        f"What is the length of its hypotenuse, in {unit}?",
         "spr", key, key.gridin(),
         f"By the Pythagorean theorem, the hypotenuse is "
         f"√({a}² + {b}²) = {c}.",
@@ -34,13 +35,14 @@ def hypotenuse_grid(rng: random.Random, seed: int) -> Item:
 
 def leg_grid(rng: random.Random, seed: int) -> Item:
     a, b, c = rng.choice(TRIPLES)
-    k = rng.randint(1, 4)
+    k = rng.randint(1, 35)
+    unit = rng.choice(("centimeters", "meters", "feet"))
     a, b, c = a * k, b * k, c * k
     key = E(b)
     return Item(
         "rtt.missing_leg_grid", "Pythagorean theorem", "easy", seed,
-        f"A right triangle has a hypotenuse of {c} units and one leg of "
-        f"{a} units. What is the length of its other leg?",
+        f"A right triangle has a hypotenuse of {c} {unit} and one leg of "
+        f"{a} {unit}. What is the length of its other leg, in {unit}?",
         "spr", key, key.gridin(),
         f"The missing leg satisfies b² = {c}² − {a}², so b = {b}.",
         params={"kind": "rtt_supply_leg", "hyp": c, "leg": a},
@@ -56,11 +58,14 @@ def sine_grid(rng: random.Random, seed: int) -> Item:
     a, b, c = rng.choice(TRIPLES)
     if rng.randrange(2):
         a, b = b, a
+    k = rng.randint(1, 35)
+    unit = rng.choice(("centimeters", "meters", "feet"))
+    a, b, c = a * k, b * k, c * k
     key = E(Fraction(a, c))
     return Item(
         "rtt.sine_ratio_grid", "trigonometric ratios", "easy", seed,
-        f"In a right triangle, the side opposite acute angle A is {a} units, "
-        f"the adjacent leg is {b} units, and the hypotenuse is {c} units. "
+        f"In a right triangle, the side opposite acute angle A is {a} {unit}, "
+        f"the adjacent leg is {b} {unit}, and the hypotenuse is {c} {unit}. "
         "What is sin A? Enter a fraction or decimal.",
         "spr", key, key.gridin(),
         f"Sine is opposite divided by hypotenuse, so sin A = {a}/{c} = "
