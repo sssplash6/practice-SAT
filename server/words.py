@@ -48,6 +48,8 @@ def content() -> dict:
     frames, pairs = _load("frames"), _load("pairs")
     entries = {w["slug"]: w for w in sat + transitions}
     idx = json.loads(INDEX.read_text(encoding="utf-8"))
+    for slug, word in entries.items():
+        word["freq_band"] = idx["freq_bands"][slug]
     return {"entries": entries, "sat": sat, "transitions": transitions,
             "transition_data": transition_data,
             "frames": {f["id"]: f for f in frames}, "pairs": {p["id"]: p for p in pairs},
