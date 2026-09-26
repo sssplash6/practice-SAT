@@ -24,9 +24,13 @@ from .families import composite as C
 from .families import ratios as R
 from .families import sides as S
 from .families import similar as M
+from .families import supply as U
 from .sources import ALL, EXCLUDED
 
 TEMPLATES = {
+    "rtt.hypotenuse_grid": U.hypotenuse_grid,
+    "rtt.missing_leg_grid": U.leg_grid,
+    "rtt.sine_ratio_grid": U.sine_grid,
     "rtt.pythagoras": S.pythagoras,
     "rtt.leg_expression": S.leg_expression,
     "rtt.rectangle_diagonal": S.rectangle_diagonal,
