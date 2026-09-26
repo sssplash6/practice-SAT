@@ -17,6 +17,20 @@ from ...audit import AuditError
 TOL = 1e-9
 
 
+def supply_nested(p: dict) -> float:
+    a, b, c, d, e = (p[k] for k in ("a", "b", "c", "d", "e"))
+    return (p["rhs"] - a * c + d * e) / (a * b - d)
+
+
+def supply_fraction(p: dict) -> float:
+    from fractions import Fraction
+
+    rhs = Fraction(p["rhs_num"], p["rhs_den"])
+    numerator = rhs - Fraction(p["a"], p["m"]) - Fraction(p["b"], p["n"])
+    coefficient = Fraction(1, p["m"]) + Fraction(1, p["n"])
+    return float(numerator / coefficient)
+
+
 # --------------------------------------------------------------- arithmetic
 
 def _root(f, lo: float = -1.0e7, hi: float = 1.0e7) -> float:
@@ -294,6 +308,8 @@ def interpret(p: dict) -> str:
 
 
 AUDITS = {
+    "lin1_supply_nested": supply_nested,
+    "lin1_supply_fraction": supply_fraction,
     "lin1_solve": solve,
     "lin1_distribute": solve,
     "lin1_then_value": then_value,
