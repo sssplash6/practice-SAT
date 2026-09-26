@@ -287,20 +287,22 @@ SETUP: git worktree add .claude/worktrees/ops -b v2/ops v2/helper-integ
 Commit both tools and the report on v2/ops. Tell the user "ops done" with the three slowest routes.
 ```
 
-## Task 15: College Board question index (P11's cb-index), data only
+## Task 15: College Board question index (P11's cb-index): WAITING for the partner file
 
 ```
-Capture College Board's public SAT Question Bank LISTING into material/cb_index.json: {cb_id: {subject, domain,
-skill, tier, band}} for every question (band = its 1-7 score band), Math and Reading & Writing. Metadata only:
-never store or copy question text, answers or explanations.
-READ: spec/v2-upgrades/practice.md P11 (lines 815-840 and acceptance 9 near line 934; also lines 1047, 1112, 1226,
-1253 for how cb_index is used).
+PAUSED 2026-09-27: College Board's Student Question Bank needs a login and its terms restrict copying. The user has an
+official College Board partnership, so the listing comes through that channel, not by scraping. Do NOT log in,
+scrape or automate a College Board account.
+When the user provides the partner export (CSV/JSON/XLSX of question IDs with subject, domain, skill, difficulty and
+score band) and the written permission to store that metadata:
 SETUP: git worktree add .claude/worktrees/cb-index -b v2/cb-index master
-OWN ONLY: tools/cb_index.py (the fetcher, with a cache outside the repo, polite rate limiting, and a --check mode)
-and material/cb_index.json. Record the source URL and fetch date in the JSON. If the listing needs a login or its
-terms forbid automated collection, STOP and tell the user instead of working around it.
-DONE: every entry has subject, domain, skill, tier and band 1..7; counts per subject, domain and band printed;
-PYTHONPATH=. python3 server/test_flow.py "all good". Tell the user "cb-index done" with the counts.
+Write tools/cb_index.py that reads the provided file (path given by the user; never commit the raw export if the
+permission says not to) and writes material/cb_index.json: {cb_id: {subject, domain, skill, tier, band}} for every
+question, band 1..7, plus a "source" block {provider: "College Board (partner export)", received, permission_ref}.
+Metadata only: never store question text, answers or explanations. See spec/v2-upgrades/practice.md P11 (lines
+815-840, acceptance 9 near line 934) for how it is used.
+DONE: every entry has subject, domain, skill, tier and band 1..7; counts per subject, domain and band printed; test_flow
+"all good". Tell the user "cb-index done" with the counts.
 ```
 
 ## Task 16: question-bank supply survey and gap filling (additive)
