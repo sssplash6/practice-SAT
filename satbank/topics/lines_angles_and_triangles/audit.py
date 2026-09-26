@@ -19,6 +19,18 @@ from ...audit import AuditError
 MINUS = "−"
 
 
+def supply_pair(p: dict) -> float:
+    return _pos(180.0 - p["given"])
+
+
+def supply_base(p: dict) -> float:
+    return _pos((180.0 - p["vertex"]) / 2)
+
+
+def supply_exterior(p: dict) -> float:
+    return _pos(p["a"] + p["b"])
+
+
 def _pos(v, what="angle"):
     if not 0 < v < 360:
         raise AuditError(f"{what} came out as {v}, which is not a measure")
@@ -273,6 +285,9 @@ def area_range(p: dict) -> float:
 
 
 AUDITS = {
+    "lat_supply_pair": supply_pair,
+    "lat_supply_base": supply_base,
+    "lat_supply_exterior": supply_exterior,
     "lat_triangle_sum": triangle_sum,
     "lat_isosceles": isosceles,
     "lat_isosceles_possible": isosceles_possible,
