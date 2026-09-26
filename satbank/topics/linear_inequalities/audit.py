@@ -35,6 +35,20 @@ def supply_count(p: dict) -> float:
     return float(len(range(p["lower"], p["upper"])))
 
 
+def supply_two_sided(p: dict) -> float:
+    a, b, lo, hi = (p[k] for k in ("coefficient", "offset", "lower", "upper"))
+    if a <= 0 or lo >= hi:
+        raise AuditError("invalid compound inequality")
+    candidate = (hi - b - 1) // a
+    if a * candidate + b < lo:
+        raise AuditError("no integer satisfies the compound inequality")
+    return float(candidate)
+
+
+def supply_perimeter(p: dict) -> float:
+    return float((p["limit"] - 2 * p["difference"]) // 4)
+
+
 # ------------------------------------------------------------ the relations
 
 def true(a, op: str, b) -> bool:
@@ -481,6 +495,8 @@ def interpret(p: dict) -> str:
 AUDITS = {
     "ineq_supply_budget": supply_budget,
     "ineq_supply_count": supply_count,
+    "ineq_supply_two_sided": supply_two_sided,
+    "ineq_supply_perimeter": supply_perimeter,
     "ineq_solve_linear": solve_linear,
     "ineq_greatest_value": greatest_value,
     "ineq_y_range": y_range,

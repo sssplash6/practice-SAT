@@ -24,6 +24,8 @@ from .sources import ALL, EXCLUDED
 TEMPLATES = {
     "ineq.budget_max_grid": U.budget_max,
     "ineq.interval_count_grid": U.interval_count,
+    "ineq.two_sided_bound_grid": U.two_sided_bound,
+    "ineq.perimeter_limit_grid": U.perimeter_limit,
     "ineq.solve_linear": S.solve_linear,
     "ineq.greatest_value": S.greatest_value,
     "ineq.y_range_from_system": S.y_range_from_system,
