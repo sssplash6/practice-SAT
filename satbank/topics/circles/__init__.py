@@ -14,9 +14,12 @@ from .audit import AUDITS
 from .families import angles as G
 from .families import arc as A
 from .families import equation as Q
+from .families import supply as U
 from .sources import ALL, EXCLUDED
 
 TEMPLATES = {
+    "circles.radius_from_circumference": U.radius_from_circumference,
+    "circles.diameter_from_area": U.diameter_from_area,
     "circles.arc": A.arc,
     "circles.arc_pair": A.arc_pair,
     "circles.arc_fraction": A.arc_fraction,

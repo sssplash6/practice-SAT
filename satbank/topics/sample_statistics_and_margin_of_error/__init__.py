@@ -45,9 +45,13 @@ from .audit import AUDITS
 from .families import design as D
 from .families import estimate as E
 from .families import interpret as I
+from .families import supply as U
 from .sources import ALL, EXCLUDED
 
 TEMPLATES = {
+    "sstat.sample_percent_grid": U.sample_percent,
+    "sstat.population_estimate_grid": U.population_estimate,
+    "sstat.margin_lower_grid": U.interval_lower,
     "sstat.scale_count": E.scale_count,
     "sstat.scale_group": E.scale_group,
     "sstat.scale_range": E.scale_range,

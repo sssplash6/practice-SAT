@@ -14,9 +14,12 @@ from .audit import AUDITS
 from .families import algebra as A
 from .families import context as C
 from .families import structure as S
+from .families import supply as U
 from .sources import ALL, EXCLUDED
 
 TEMPLATES = {
+    "lin1.nested_distribution_grid": U.nested_distribution,
+    "lin1.fraction_sum_grid": U.fraction_sum,
     "lin1.solve": A.solve,
     "lin1.distribute": A.distribute,
     "lin1.then_value": A.then_value,

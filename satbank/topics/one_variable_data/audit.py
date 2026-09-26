@@ -440,7 +440,21 @@ def must_be_true(p: dict):
     return _one_two(truth[first], truth[second])
 
 
+def supply_shift_mean(p: dict) -> float:
+    if p["n"] <= 0:
+        raise AuditError("a data set needs at least one value")
+    old_total = p["n"] * p["mean"]
+    new_total = old_total + p["n"] * p["shift"]
+    return new_total / p["n"]
+
+
+def supply_scaled_range(p: dict) -> float:
+    return p["range"] * abs(p["factor"])
+
+
 AUDITS = {
+    "ovd_supply_shift_mean": supply_shift_mean,
+    "ovd_supply_scaled_range": supply_scaled_range,
     "ovd_list_stat": _centre,
     "ovd_table_stat": _centre,
     "ovd_bar_read": bar_read,

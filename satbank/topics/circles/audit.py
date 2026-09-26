@@ -21,6 +21,14 @@ from .render import point, standard_equation
 TAU = 2.0 * math.pi
 
 
+def supply_radius(p: dict) -> float:
+    return p["pi_coefficient"] / 2.0
+
+
+def supply_diameter(p: dict) -> float:
+    return 2.0 * math.sqrt(p["area_pi_coefficient"])
+
+
 # ------------------------------------------------------------------- arcs
 
 def arc(p: dict) -> float:
@@ -179,6 +187,8 @@ def transform(p: dict):
 
 
 AUDITS = {
+    "circles_supply_radius": supply_radius,
+    "circles_supply_diameter": supply_diameter,
     "circles_arc": arc,
     "circles_arc_pair": arc_pair,
     "circles_arc_fraction": arc_fraction,

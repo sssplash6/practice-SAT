@@ -28,6 +28,22 @@ from ...audit import AuditError, close
 TOL = 1e-9
 
 
+def supply_hyp(p: dict) -> float:
+    return math.hypot(*p["legs"])
+
+
+def supply_leg(p: dict) -> float:
+    if p["hyp"] <= p["leg"]:
+        raise AuditError("hypotenuse must exceed a leg")
+    return math.sqrt(p["hyp"] ** 2 - p["leg"] ** 2)
+
+
+def supply_sine(p: dict) -> float:
+    if not close(p["opposite"] ** 2 + p["adjacent"] ** 2, p["hyp"] ** 2):
+        raise AuditError("the named sides do not form a right triangle")
+    return p["opposite"] / p["hyp"]
+
+
 def _triple(u, v, w) -> None:
     if abs(u * u + v * v - w * w) > 1e-9:
         raise AuditError(f"{u}, {v}, {w} are not the sides of a right triangle")
@@ -309,6 +325,9 @@ def parallel_similar(p: dict) -> float:
 
 
 AUDITS = {
+    "rtt_supply_hyp": supply_hyp,
+    "rtt_supply_leg": supply_leg,
+    "rtt_supply_sine": supply_sine,
     "rtt_pythagoras": pythagoras,
     "rtt_leg_expression": leg_expression,
     "rtt_rectangle_diagonal": rectangle_diagonal,

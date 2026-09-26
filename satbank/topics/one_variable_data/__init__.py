@@ -18,9 +18,12 @@ from .families import boxes as X
 from .families import compare as C
 from .families import freq as Q
 from .families import means as M
+from .families import supply as U
 from .sources import ALL, EXCLUDED
 
 TEMPLATES = {
+    "ovd.shifted_mean_grid": U.shifted_mean,
+    "ovd.scaled_range_grid": U.scaled_range,
     "ovd.list_stat": B.list_stat,
     "ovd.table_stat": B.table_stat,
     "ovd.bar_read": B.bar_read,

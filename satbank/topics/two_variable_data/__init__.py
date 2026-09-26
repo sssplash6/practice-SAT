@@ -22,9 +22,13 @@ from .families import describe as D
 from .families import fit as F
 from .families import models as M
 from .families import read as R
+from .families import supply as U
 from .sources import ALL, EXCLUDED
 
 TEMPLATES = {
+    "tvdata.table_slope_grid": U.table_slope,
+    "tvdata.model_prediction_grid": U.model_prediction,
+    "tvdata.residual_grid": U.residual,
     "tvdata.point_read": R.point_read,
     "tvdata.interval_change": R.interval_change,
     "tvdata.series_extreme": R.series_extreme,

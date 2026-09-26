@@ -42,6 +42,20 @@ ALL_SCENES = {**PCT_SCENES, **MEAN_SCENES, **TABLE_SCENES, **SUBGROUP_SCENES,
               **COUNT_SCENES}
 
 
+def supply_percent(p: dict) -> float:
+    if not 0 <= p["count"] <= p["n"]:
+        raise AuditError("sample count is outside the sample")
+    return 100.0 * p["count"] / p["n"]
+
+
+def supply_estimate(p: dict) -> float:
+    return p["population"] * p["percent"] / 100.0
+
+
+def supply_lower(p: dict) -> float:
+    return p["estimate"] - p["margin"]
+
+
 # --------------------------------------------------------------- value sets
 #
 # ("band", lo, hi) with None for an open end, ("only", v), ("not", v),
@@ -382,6 +396,9 @@ def _margin_size(p: dict) -> str:
 
 
 AUDITS = {
+    "sstat_supply_percent": supply_percent,
+    "sstat_supply_estimate": supply_estimate,
+    "sstat_supply_lower": supply_lower,
     "sstat.scale_count": _scale_count,
     "sstat.scale_group": _scale_group,
     "sstat.scale_range": _scale_range,
