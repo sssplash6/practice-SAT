@@ -2,7 +2,8 @@
 
 Tasks 1-5 are DONE (2026-09-25): S9, S7, S8 servers under one check each; habits.py and bank supply merged.
 Tasks 6, 7 and 8 are DONE and merged (2026-09-25). Tasks 0 and 9 are DONE on branches (2026-09-26). Tasks 10 and 11 are DONE on v2/helper-integ (not merged yet, by the user's choice). Task 12 waits for that merge.
-Next: Task 13, then Task 14 (both branch from v2/helper-integ). Never touch v2/s7-server, v2/s8-server, v2/s9-server or any wave-2 branch.
+Next: Tasks 13, 14, 15 and 16 can run in parallel (separate instances): 13 and 14 branch from v2/helper-integ,
+15 and 16 from master. They touch disjoint files. Never touch v2/s7-server, v2/s8-server, v2/s9-server or any wave-2 branch.
 
 Written 2026-09-24 for the user's helper agent. Paste one task at a time. Each is a
 **feature**, so when the helper reports it done, the main session runs one
@@ -284,6 +285,38 @@ SETUP: git worktree add .claude/worktrees/ops -b v2/ops v2/helper-integ
    50 and 200 concurrent learners. Write the findings to spec/v2-state/followups/load-test.md with the slowest routes
    and the likely cause of each (profile the worst one).
 Commit both tools and the report on v2/ops. Tell the user "ops done" with the three slowest routes.
+```
+
+## Task 15: College Board question index (P11's cb-index), data only
+
+```
+Capture College Board's public SAT Question Bank LISTING into material/cb_index.json: {cb_id: {subject, domain,
+skill, tier, band}} for every question (band = its 1-7 score band), Math and Reading & Writing. Metadata only:
+never store or copy question text, answers or explanations.
+READ: spec/v2-upgrades/practice.md P11 (lines 815-840 and acceptance 9 near line 934; also lines 1047, 1112, 1226,
+1253 for how cb_index is used).
+SETUP: git worktree add .claude/worktrees/cb-index -b v2/cb-index master
+OWN ONLY: tools/cb_index.py (the fetcher, with a cache outside the repo, polite rate limiting, and a --check mode)
+and material/cb_index.json. Record the source URL and fetch date in the JSON. If the listing needs a login or its
+terms forbid automated collection, STOP and tell the user instead of working around it.
+DONE: every entry has subject, domain, skill, tier and band 1..7; counts per subject, domain and band printed;
+PYTHONPATH=. python3 server/test_flow.py "all good". Tell the user "cb-index done" with the counts.
+```
+
+## Task 16: question-bank supply survey and gap filling (additive)
+
+```
+Find the thin cells of the bank and fill them with NEW templates. Adaptive practice, twin challenges and
+per-skill tiers all need at least 3 templates per (skill, tier, format) cell.
+SETUP: git worktree add .claude/worktrees/bank-gaps -b v2/bank-gaps master
+1. tools/bank_supply.py (new): for every skill (19) x tier (easy/medium/hard) x format (mcq/spr), count the
+   templates that generate items in that cell (seeds 0-99) and print the cells with fewer than 3.
+2. For each thin cell (at most 12 cells in this task; the thinnest first), add a NEW template in a new family file,
+   the way bank-supply's supply.py did: a real SAT-style item, named wrong options (Mis) and named grid-in mistakes
+   (spr_mistakes) that are real routes to their values, a rationale ending on the answer, and a figure or table only
+   if the item carries it. ADD, never edit: every existing template's output stays byte-identical.
+One commit per topic. DONE: satbank check PASS 19/19; tools/lint_bank.py adds no finding; bank_supply.py shows each
+filled cell at 3 or more; test_flow "all good". Tell the user "bank-gaps done" with the cells filled.
 ```
 
 ---
