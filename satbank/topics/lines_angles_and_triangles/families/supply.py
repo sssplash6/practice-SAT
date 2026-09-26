@@ -10,12 +10,14 @@ from ....item import Item, Mis, gridin_mistakes
 
 
 def linear_pair(rng: random.Random, seed: int) -> Item:
-    a = rng.randrange(35, 146, 5)
+    a = rng.randint(20, 160)
+    first, second = rng.choice((("A", "B"), ("P", "Q"), ("R", "S")))
     key = E(180 - a)
     return Item(
         "lat.linear_pair_grid", "angles formed by intersecting lines", "easy", seed,
-        f"Two adjacent angles form a straight line. One angle measures {a}°. "
-        "What is the measure, in degrees, of the other angle?",
+        f"Adjacent angles {first} and {second} form a straight line. "
+        f"Angle {first} measures {a}°. What is the measure, in degrees, "
+        f"of angle {second}?",
         "spr", key, key.gridin(),
         f"Adjacent angles on a straight line sum to 180°, so the other angle "
         f"is 180 − {a} = {180 - a}.",
@@ -29,12 +31,14 @@ def linear_pair(rng: random.Random, seed: int) -> Item:
 
 
 def isosceles_base(rng: random.Random, seed: int) -> Item:
-    vertex = rng.randrange(30, 121, 10)
+    vertex = rng.randrange(20, 141, 2)
+    label = rng.choice(("ABC", "PQR", "XYZ", "LMN"))
     base = (180 - vertex) // 2
     key = E(base)
     return Item(
         "lat.isosceles_base_grid", "isosceles triangles", "easy", seed,
-        f"An isosceles triangle has a vertex angle of {vertex}°. "
+        f"Isosceles triangle {label} has a vertex angle at {label[0]} "
+        f"of {vertex}°. "
         "What is the measure, in degrees, of each base angle?",
         "spr", key, key.gridin(),
         f"The two equal base angles share 180 − {vertex} = {180 - vertex}°, "
@@ -49,8 +53,8 @@ def isosceles_base(rng: random.Random, seed: int) -> Item:
 
 
 def exterior_sum(rng: random.Random, seed: int) -> Item:
-    a = rng.randrange(25, 81, 5)
-    b = rng.randrange(25, 81, 5)
+    a = rng.randint(20, 85)
+    b = rng.randint(20, 85)
     key = E(a + b)
     return Item(
         "lat.exterior_sum_grid", "exterior angles of triangles", "easy", seed,
