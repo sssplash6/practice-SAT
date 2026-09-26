@@ -1,7 +1,7 @@
 # The other agent's next tasks (backend only)
 
 Tasks 1-5 are DONE (2026-09-25): S9, S7, S8 servers under one check each; habits.py and bank supply merged.
-Tasks 6, 7 and 8 are DONE and merged (2026-09-25). Next, in order: Task 0 (server blockers), then Task 9 (security fixes). Never touch v2/s7-server, v2/s8-server, v2/s9-server or any wave-2 branch.
+Tasks 6, 7 and 8 are DONE and merged (2026-09-25). Tasks 0 and 9 are DONE on branches (2026-09-26). Next, in order: Task 10, Task 11, Task 12. Never touch v2/s7-server, v2/s8-server, v2/s9-server or any wave-2 branch.
 
 Written 2026-09-24 for the user's helper agent. Paste one task at a time. Each is a
 **feature**, so when the helper reports it done, the main session runs one
@@ -214,6 +214,41 @@ SETUP: git worktree add .claude/worktrees/sec-fix -b v2/sec-fix master
 Put the checks in server/checks/security.py (new). DONE: security.py and test_flow pass. Tell the user
 "security fixes done". Also fix SEC-08 (the challenge board's unbounded work) on v2/s8s as part of Task 0.
 SEC-01, SEC-02 and SEC-03 are in files owned by paused wave-2 sections (S1, S3, S5, S6); the main build fixes those.
+```
+
+## Task 10 (DO FIRST): make your four branches pass together
+
+```
+Each of v2/s7s, v2/s8s, v2/s9s and v2/sec-fix passes alone, but merged together on master they fail: s7.py and
+s8.py raise AssertionError, and test_flow fails "warm create must finish within one second".
+SETUP: git worktree add .claude/worktrees/integ -b v2/helper-integ master, then git merge --no-ff each of v2/s9s,
+v2/s7s, v2/s8s, v2/sec-fix (they merge without conflicts).
+Find and fix every failure on v2/helper-integ, in the files those branches own, until ALL of these pass in the same
+tree: server/checks/s7.py, s8.py, s9.py, security.py, and PYTHONPATH=. python3 server/test_flow.py three runs in a
+row. If the one-second timing check only fails under load, make it robust (measure the warm path correctly); don't
+just raise the limit. Commit on v2/helper-integ. Tell the user "integ done": the main agent merges that one branch.
+```
+
+## Task 11: wire the frequency bands into the Words build
+
+```
+On v2/helper-integ after Task 10: tools/build_words.py sets each entry's freq_band from tools/data/freq.txt (W17's
+bands), replacing the estimated values; GET /api/words rows carry it (W17 acceptance 7: every non-own row has
+freq_band 1-5). Keep python3 tools/build_words.py at exit 0 and checks/s9.py passing. Commit; tell the user "bands done".
+```
+
+## Task 12: start the Words review gate (no frame can be served yet)
+
+```
+No frame is reviewed, so Words has no in-context questions yet. Build the gate W1 describes and run its first pass.
+READ: spec/v2-upgrades/words.md W1 "The review gate" (tools/build_words.py --review, server/words/adjudications.json,
+two independent verdicts with different "by"; a frame is servable only with two "one" verdicts naming the key).
+On a new branch v2/words-gate from master after Task 10 merges: implement --review (each frame x legal key x 5 seeds as
+full items WITHOUT the key, and review-queue.json). Then adjudicate as "model:helper-a": for each item decide which
+options fit, blind to the key, and record the verdict. Start with the frames that cover the most senses, until every
+SAT sense has at least one judged frame. The second, independent verdict ("model:helper-b") must come from a fresh
+session that never saw the first verdicts. Only then may a frame get reviewed set. Commit in batches of about 100
+frames. Tell the user how many frames and senses are servable.
 ```
 
 ---
