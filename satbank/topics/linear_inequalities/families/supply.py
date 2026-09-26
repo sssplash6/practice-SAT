@@ -33,7 +33,7 @@ def budget_max(rng: random.Random, seed: int) -> Item:
 
 
 def interval_count(rng: random.Random, seed: int) -> Item:
-    lower = rng.randint(1, 15)
+    lower = rng.randint(1, 50)
     upper = lower + rng.randint(4, 14)
     key = E(upper - lower)
     return Item(
