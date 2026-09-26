@@ -29,6 +29,8 @@ TEMPLATES = {
     "lat.linear_pair_grid": U.linear_pair,
     "lat.isosceles_base_grid": U.isosceles_base,
     "lat.exterior_sum_grid": U.exterior_sum,
+    "lat.parallel_angle_algebra_grid": U.parallel_angle_algebra,
+    "lat.exterior_angle_algebra_grid": U.exterior_angle_algebra,
     "lat.triangle_sum": T.triangle_sum,
     "lat.isosceles": T.isosceles,
     "lat.isosceles_possible": T.isosceles_possible,

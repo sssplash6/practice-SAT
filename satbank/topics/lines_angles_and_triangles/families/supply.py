@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import random
+from fractions import Fraction
 
 from ....exact import E
 from ....item import Item, Mis, gridin_mistakes
@@ -63,5 +64,55 @@ def exterior_sum(rng: random.Random, seed: int) -> Item:
             Mis("found the third interior angle instead of the exterior angle", E(180 - a - b)),
             Mis("used only the first remote interior angle", E(a)),
             Mis("used only the second remote interior angle", E(b)),
+        ]),
+    )
+
+
+def parallel_angle_algebra(rng: random.Random, seed: int) -> Item:
+    x = rng.randint(5, 15)
+    a = rng.randint(30, 55)
+    b = a - x
+    key = E(x)
+    return Item(
+        "lat.parallel_angle_algebra_grid", "parallel-line angles", "medium", seed,
+        f"Two parallel lines are cut by a transversal. A pair of alternate "
+        f"interior angles measure (2x + {a})° and (3x + {b})°. "
+        "What is the value of x?",
+        "spr", key, key.gridin(),
+        f"Alternate interior angles are equal, so 2x + {a} = 3x + {b}; "
+        f"therefore x = {x}.",
+        params={"kind": "lat_supply_parallel", "a": a, "b": b},
+        spr_mistakes=gridin_mistakes(key, [
+            Mis("treated the equal angles as supplementary",
+                E(Fraction(180 - a - b, 5))),
+            Mis("omitted the constant from the second angle", E(a)),
+            Mis("added rather than subtracted the constants", E(a + b)),
+        ]),
+    )
+
+
+def exterior_angle_algebra(rng: random.Random, seed: int) -> Item:
+    x = rng.randint(5, 12)
+    a = rng.randint(15, 35)
+    b = rng.randint(20, 40)
+    c = a + b - x
+    key = E(x)
+    return Item(
+        "lat.exterior_angle_algebra_grid", "exterior angles of triangles", "medium", seed,
+        f"An exterior angle of a triangle measures (4x + {c})°. Its two "
+        f"remote interior angles measure (2x + {a})° and (x + {b})°. "
+        "What is the value of x?",
+        "spr", key, key.gridin(),
+        f"The exterior angle equals the sum of the two remote interior "
+        f"angles, so 4x + {c} = 3x + {a + b} and x = {x}.",
+        params={"kind": "lat_supply_exterior_algebra", "a": a, "b": b,
+                "c": c},
+        spr_mistakes=gridin_mistakes(key, [
+            Mis("treated the exterior and remote interior angles as summing to 180°",
+                E(Fraction(180 - a - b - c, 7))),
+            Mis("used only the first remote interior angle",
+                E(Fraction(a - c, 2))),
+            Mis("used only the second remote interior angle",
+                E(Fraction(b - c, 3))),
         ]),
     )
