@@ -32,8 +32,8 @@ def shifted_mean(rng: random.Random, seed: int) -> Item:
 
 
 def scaled_range(rng: random.Random, seed: int) -> Item:
-    spread = rng.randint(8, 25)
-    factor = rng.randint(2, 5)
+    spread = rng.randint(4, 100)
+    factor = rng.randint(2, 9)
     key = E(spread * factor)
     return Item(
         "ovd.scaled_range_grid", "range of a data set", "easy", seed,
