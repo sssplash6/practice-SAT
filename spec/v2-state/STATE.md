@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-27T02:55:58+05:00
+# v2 build state -- 2026-09-27T04:07:55+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -6,11 +6,11 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 ## Branches
 
 - `v2/bank` at e9c6f3c, 0 commits ahead of master
-- `v2/bank-gaps` at 57ea796, 19 commits ahead of master
+- `v2/bank-gaps` at 57ea796, 0 commits ahead of master
 - `v2/bank-lint` at f168c9f, 0 commits ahead of master
 - `v2/bank-lint-fix` at 033fa1a, 0 commits ahead of master
 - `v2/bank-supply` at 14cf283, 0 commits ahead of master
-- `v2/cb-data` at 9346217, 2 commits ahead of master
+- `v2/cb-data` at 9346217, 0 commits ahead of master
 - `v2/f0` at dc9873f, 0 commits ahead of master
 - `v2/f1` at b417976, 0 commits ahead of master
 - `v2/f2` at 9811bca, 0 commits ahead of master
@@ -21,9 +21,9 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/freq` at baddd02, 0 commits ahead of master
 - `v2/habits` at 84845cf, 0 commits ahead of master
 - `v2/helper-handoff` at 9ed741d, 1 commits ahead of master
-- `v2/helper-integ` at e0aa1c6, 41 commits ahead of master
-- `v2/localday` at 933ae67, 42 commits ahead of master
-- `v2/ops` at 991efbd, 42 commits ahead of master
+- `v2/helper-integ` at e0aa1c6, 0 commits ahead of master
+- `v2/localday` at 933ae67, 0 commits ahead of master
+- `v2/ops` at 991efbd, 0 commits ahead of master
 - `v2/s1` at 15583f5, 1 commits ahead of master
 - `v2/s10` at 85896a0, 2 commits ahead of master
 - `v2/s3` at de9e831, 5 commits ahead of master
@@ -31,14 +31,14 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/s5` at 83ee9a0, 1 commits ahead of master
 - `v2/s6` at 2fadefd, 1 commits ahead of master
 - `v2/s7-server` at b88934e, 3 commits ahead of master
-- `v2/s7s` at 14174d3, 5 commits ahead of master
+- `v2/s7s` at 14174d3, 0 commits ahead of master
 - `v2/s8-server` at c39b162, 15 commits ahead of master
-- `v2/s8s` at 3be6463, 17 commits ahead of master
+- `v2/s8s` at 3be6463, 0 commits ahead of master
 - `v2/s9-server` at bd5b705, 7 commits ahead of master
-- `v2/s9s` at c60500b, 9 commits ahead of master
+- `v2/s9s` at c60500b, 0 commits ahead of master
 - `v2/satdates` at 141f815, 0 commits ahead of master
 - `v2/sec-audit` at 21fa6b9, 0 commits ahead of master
-- `v2/sec-fix` at 5414988, 4 commits ahead of master
+- `v2/sec-fix` at 5414988, 0 commits ahead of master
 - `v2/spr-grow` at 62e7df5, 0 commits ahead of master
 - `v2/t-bank` at 9403838, 0 commits ahead of master
 - `v2/t-bank-all` at f4bf864, 0 commits ahead of master

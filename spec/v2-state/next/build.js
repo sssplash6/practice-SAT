@@ -266,6 +266,8 @@ YOUR TASK: ${t.title} (port ${t.port}). You own only: ${t.owns}. Read: ${t.spec}
 If you need a change in a file you do not own, do not make it; list it in your return.
 RULES:
 - You are in your own git worktree. First: git switch v2/${t.id.toLowerCase()} 2>/dev/null || git switch -c v2/${t.id.toLowerCase()} master.
+  If the branch already existed and master has moved on (git merge-base --is-ancestor master HEAD fails), run git rebase
+  master first and resolve any conflict keeping both sides' intent; master now holds the merged servers and fixes.
   Then git log --oneline master..HEAD and git status: continue from any predecessor's commits and uncommitted edits, never
   redo or discard them. Never create another branch for this task, and never move the branch with update-ref or branch -f.
   If git says the branch is already checked out in another worktree: if git -C <that worktree> status --short is empty, run
