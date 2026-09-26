@@ -29,6 +29,17 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
 - **2026-09-27:** helper Tasks 10-11 done on `v2/helper-integ` (checks pass 3 runs); the user said don't merge it yet. Task 12
   waits for that merge. Helper now on Tasks 13 (local-day check-ins, v2/localday) and 14 (backups + load test, v2/ops), both
   from v2/helper-integ. Merge order later: v2/helper-integ, then v2/localday and v2/ops.
+- **SCHEDULED 2026-09-27 04:02 (the user: "schedule a job at 4 am that deals with 12, and fully finishes frontend"):**
+  the check-only pause ENDS then. The job:
+  1. Restart the checkpoint loop; remove stale clean worktrees.
+  2. Merge the helper's branches into master in this order, running `PYTHONPATH=. python3 server/test_flow.py` after
+     each (plus `python3 -m satbank check` after bank-gaps): v2/helper-integ, v2/localday, v2/ops, v2/bank-gaps, and
+     v2/cb-data only if its last commit says done (else leave it). A merge that conflicts: `git merge --abort`, skip it,
+     note it. A merge whose tests fail: `git revert -m 1 HEAD`, note it.
+  3. Launch Task 12: `Workflow({scriptPath: ".../spec/v2-state/next/words-gate.js"})`.
+  4. Launch the frontend: build.js with `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'},{id:'S7'},
+     {id:'S8'},{id:'S9'}]` (sections now 3 units, S7/S8/S9 pages-only 2 units; each continues from its branch).
+  5. As each task returns ready: leftovers to followups/<id>.json, test_flow, merge. Then I1 (integration walk).
 - **WAVE 2 PAUSED until the user's weekly usage reset** (the user, 2026-09-25: "henceforth till weekly reset, we are only
   checking other guys work"). Until then: NO building here. Only check the helper's work (inline for data jobs, one check +
   one fix for features) and merge it. Saved state: S3 5 commits (tip de9e831), S10 2 (85896a0), S1 1 (15583f5), S5 1

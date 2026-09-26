@@ -12,12 +12,21 @@ export const meta = {
 // Everything lives on the task branch and in saved verdicts, so a restart names where to begin
 // (from: 'verify' after a finished build, 'fix' with the saved issues file) and nothing finished re-runs.
 
-const REPO = '/Users/workingmyassof/satbank'
+const REPO = '/Users/workingmyassof/freshbot/satbank'
 const SIGN = 'Co-Authored-By: Claude Opus 5.5 (1M context) <noreply@anthropic.com>'
 const SHELL = '/Users/workingmyassof/Library/Caches/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-mac-arm64/chrome-headless-shell'
 
 // A wave-2 section: its spec pointers, upgrade file and owned files; five units from server to a walked page.
-function section(id, name, port, builds, upgrades, owns) {
+// Pages: two units. The independent check walks every page afterwards, so the builder's own walk is a quick one.
+const PAGE_UNITS = [
+  `The main page(s) of the section: layout, data wiring and every primary action, built from the kit and the shell, at 1280 and 390.`,
+  `The rest of the section's screens (sheets, menus, empty, loading and error states, the phone layout, keyboard support, the upgrade
+file's remaining page items), then a quick headless walk of every page at 1280 and 390 with a new and a seeded learner: no console
+errors, test_flow still "all good".`,
+]
+// pagesOnly: the server half was built by the user's other agent and is merged; build only the pages.
+function section(id, name, port, builds, upgrades, owns, pagesOnly) {
+  section.pagesOnly = !!pagesOnly
   const t = {
     title: `${id} · ${name}`, port,
     spec: `spec/rebuild-v2.md: Part 4.2 ${id} (from line 11062), which builds ${builds}; the resolutions and contracts of Part 2
@@ -27,16 +36,11 @@ the kit.js header and /dev/kit.html), F2's shell (ui.js, UI.api, UI.prefs, UI.ke
 F4's progress/estimate/prefs/deps.access, F5's drill body, F6's UI.report and sets. Another section's helper you need is called through
 deps.part (server) or \`UI.x && UI.x(...)\` (client) so it degrades until that section lands.`,
     owns,
-    units: [
-      `Server: every endpoint and module function this section owns (the section's server items and the §2.9 contracts it provides),
-with validation at the boundary.`,
-      `server/checks/${id.toLowerCase()}.py covering every server acceptance item of the section (as amended by §2.13 and the upgrade
-file). Make it pass.`,
-      `The main page(s) of the section: layout, data wiring and every primary action, built from the kit and the shell, at 1280 and 390.`,
-      `The rest of the section's screens: sheets, menus, empty, loading and error states, the phone layout, keyboard support, and the
-upgrade file's remaining page items.`,
-      `Walk every page of the section at 1280 and 390, in light and dark, with a new learner and a seeded one (answers, mistakes, a
-test, a plan), in a headless browser; fix what is broken; no console errors; test_flow still "all good".`,
+    units: section.pagesOnly ? PAGE_UNITS : [
+      `Server and its checks: every endpoint and module function this section owns (its server items and the §2.9 contracts it
+provides, validated at the boundary), and server/checks/${id.toLowerCase()}.py covering every server acceptance item (as amended by
+§2.13 and the upgrade file), passing. Also fix the security findings in spec/v2-state/followups/security-audit.md that sit in your files.`,
+      ...PAGE_UNITS,
     ],
     accept: `The section's acceptance list in Part 3 (as amended by §2.13 and spec/v2-upgrades/${upgrades}.md): its server items via
 server/checks/${id.toLowerCase()}.py, and its page items walked at 1280 and 390 with a new and a seeded learner, no console errors;
@@ -225,6 +229,15 @@ starts Practice on only that skill (the user's request)`, 'reports',
   ...section('S10', 'Review', 8030, `Part 3.9 in full (lines 10030-10969; components from F3, traps logic from F4, sets from F6), R2,
 R5's endpoints`, 'review',
     'web/review/**, web/mistakes/**, server/api_review.py, server/checks/s10.py'),
+  ...section('S7', 'Plan pages', 8027, `Part 3.6 in full (lines 7046-8096): the PAGES only. The server (server/plan.py, api_plan.py) is
+merged from the user's other agent: use its endpoints; list any server change you need instead of making it`, 'plan',
+    'web/plan/**, web/assets/plan-ui.js', true),
+  ...section('S8', 'Compete pages', 8028, `Part 3.7 in full (lines 8097-9133): the PAGES only (the runner hooks' UI is S4's and S5's). The
+server (server/compete.py, challenge.py, api_compete.py) is merged from the user's other agent: use its endpoints`, 'compete',
+    'web/compete/**, web/challenge/**, web/assets/compete-ui.js', true),
+  ...section('S9', 'Words pages', 8029, `Part 3.8 in full (lines 9134-10029): the PAGES only. The server (server/words.py, api_words.py) is
+merged from the user's other agent: use its endpoints`, 'words',
+    'web/words/**, web/vocabulary/**, web/assets/words-ui.js', true),
   // F4 was built outside this script by another agent (branch v2/f4, from v2/f0); run it with from: 'verify'.
   F4: {
     title: 'F4 · Data layer', port: 8014,

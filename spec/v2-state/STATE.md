@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-27T01:48:14+05:00
+# v2 build state -- 2026-09-27T02:55:58+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -6,9 +6,11 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 ## Branches
 
 - `v2/bank` at e9c6f3c, 0 commits ahead of master
+- `v2/bank-gaps` at 57ea796, 19 commits ahead of master
 - `v2/bank-lint` at f168c9f, 0 commits ahead of master
 - `v2/bank-lint-fix` at 033fa1a, 0 commits ahead of master
 - `v2/bank-supply` at 14cf283, 0 commits ahead of master
+- `v2/cb-data` at 9346217, 2 commits ahead of master
 - `v2/f0` at dc9873f, 0 commits ahead of master
 - `v2/f1` at b417976, 0 commits ahead of master
 - `v2/f2` at 9811bca, 0 commits ahead of master
@@ -20,6 +22,8 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/habits` at 84845cf, 0 commits ahead of master
 - `v2/helper-handoff` at 9ed741d, 1 commits ahead of master
 - `v2/helper-integ` at e0aa1c6, 41 commits ahead of master
+- `v2/localday` at 933ae67, 42 commits ahead of master
+- `v2/ops` at 991efbd, 42 commits ahead of master
 - `v2/s1` at 15583f5, 1 commits ahead of master
 - `v2/s10` at 85896a0, 2 commits ahead of master
 - `v2/s3` at de9e831, 5 commits ahead of master
@@ -71,9 +75,13 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 ## Worktrees
 
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/bank-gaps` on `v2/bank-gaps`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/cb-data` on `v2/cb-data`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/helper-handoff` on `v2/helper-handoff`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/integ` on `v2/helper-integ`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/localday` on `v2/localday`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/ops` on `v2/ops`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s7s` on `v2/s7s`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s8s` on `v2/s8s`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s9s` on `v2/s9s`: 0 uncommitted
