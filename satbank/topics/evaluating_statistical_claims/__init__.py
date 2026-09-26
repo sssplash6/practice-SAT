@@ -37,9 +37,12 @@ from .families import claims as C
 from .families import conclude as K
 from .families import method as M
 from .families import scope as G
+from .families import supply as U
 from .sources import ALL, EXCLUDED
 
 TEMPLATES = {
+    "esc.study_conclusion_supply": U.study_conclusion,
+    "esc.sampling_method_supply": U.sampling_method,
     "esc.generalize": G.generalize,
     "esc.generalize_table": G.generalize_table,
     "esc.must_be_true": C.must_be_true,

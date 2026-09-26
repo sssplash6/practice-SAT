@@ -24,6 +24,27 @@ from .world import SCOPES, TABLES
 __all__ = ["AUDITS"]
 
 
+def supply_conclusion(p: dict) -> str:
+    if p["selected"] and p["assigned"]:
+        return "The program may have caused the difference, and the result may apply to the school's students."
+    if p["assigned"]:
+        return "The program may have caused the difference, but school-wide generalization is not supported."
+    if p["selected"]:
+        return "The association may apply to the school's students, but causation is not supported."
+    return "Neither causation nor school-wide generalization is supported."
+
+
+def supply_method(p: dict) -> str:
+    if len(p["methods"]) != 4:
+        raise AuditError("four sampling methods are required")
+    for phrase in p["texts"]:
+        if phrase.startswith("Randomly select people from all "):
+            return phrase
+        if phrase.startswith("Randomly select from each part of "):
+            return phrase
+    raise AuditError("none of the methods covers the target population")
+
+
 # ------------------------------------------------------- reading a population
 
 def _worlds(name: str):
@@ -282,6 +303,8 @@ def _conclusion(p) -> str:
 
 
 AUDITS = {
+    "esc_supply_conclusion": supply_conclusion,
+    "esc_supply_method": supply_method,
     "esc.generalize": _scope,
     "esc.generalize_table": _scope,
     "esc.must_be_true": _must_be_true,
