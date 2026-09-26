@@ -18,9 +18,12 @@ from .families import interpret as N
 from .families import model as M
 from .families import points as P
 from .families import solve as S
+from .families import supply as U
 from .sources import ALL, EXCLUDED
 
 TEMPLATES = {
+    "ineq.budget_max_grid": U.budget_max,
+    "ineq.interval_count_grid": U.interval_count,
     "ineq.solve_linear": S.solve_linear,
     "ineq.greatest_value": S.greatest_value,
     "ineq.y_range_from_system": S.y_range_from_system,

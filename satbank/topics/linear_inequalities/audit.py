@@ -25,6 +25,16 @@ SYM = {"<": "<", "<=": "≤", ">": ">", ">=": "≥"}
 BIG = 10 ** 7
 
 
+def supply_budget(p: dict) -> float:
+    if p["price"] <= 0 or p["budget"] < p["fee"]:
+        raise AuditError("invalid budget")
+    return float((p["budget"] - p["fee"]) // p["price"])
+
+
+def supply_count(p: dict) -> float:
+    return float(len(range(p["lower"], p["upper"])))
+
+
 # ------------------------------------------------------------ the relations
 
 def true(a, op: str, b) -> bool:
@@ -469,6 +479,8 @@ def interpret(p: dict) -> str:
 
 
 AUDITS = {
+    "ineq_supply_budget": supply_budget,
+    "ineq_supply_count": supply_count,
     "ineq_solve_linear": solve_linear,
     "ineq_greatest_value": greatest_value,
     "ineq_y_range": y_range,
