@@ -38,9 +38,7 @@ def supply_method(p: dict) -> str:
     if len(p["methods"]) != 4:
         raise AuditError("four sampling methods are required")
     for phrase in p["texts"]:
-        if phrase.startswith("Randomly select people from all "):
-            return phrase
-        if phrase.startswith("Randomly select from each part of "):
+        if (" from all " in phrase or " in proportion to each part's size." in phrase):
             return phrase
     raise AuditError("none of the methods covers the target population")
 

@@ -15,7 +15,7 @@ def study_conclusion(rng: random.Random, seed: int) -> Item:
     tier = "easy" if seed % 2 == 0 else "medium"
     selected = rng.choice((True, False))
     assigned = not selected if tier == "easy" else selected
-    n = rng.choice((80, 120, 160))
+    n = rng.randint(80, 600)
     options = {
         (True, True): "The program may have caused the difference, and the result may apply to the school's students.",
         (False, True): "The program may have caused the difference, but school-wide generalization is not supported.",
@@ -47,19 +47,20 @@ def study_conclusion(rng: random.Random, seed: int) -> Item:
 def sampling_method(rng: random.Random, seed: int) -> Item:
     tier = "easy" if seed % 2 == 0 else "medium"
     population = rng.choice(("students at a school", "residents of a town"))
+    n = rng.randint(50, 350)
     if tier == "easy":
         options = [
-            ("random_population", f"Randomly select people from all {population}."),
-            ("voluntary", f"Invite all {population} to answer an optional online poll."),
-            ("convenience", "Survey the first 100 people to enter a nearby cafe."),
-            ("subgroup", f"Survey 100 people from one group within the {population}."),
+            ("random_population", f"Randomly select {n} people from all {population}."),
+            ("voluntary", f"Invite all {population} to answer an optional online poll until {n} reply."),
+            ("convenience", f"Survey the first {n} people to enter a nearby cafe."),
+            ("subgroup", f"Survey {n} people from one group within the {population}."),
         ]
     else:
         options = [
-            ("stratified_population", f"Randomly select from each part of the {population} in proportion to its size."),
-            ("unequal_strata", f"Randomly select the same number from each part of the {population}, despite different sizes."),
-            ("voluntary", f"Let any of the {population} reply to a public invitation."),
-            ("subgroup", f"Randomly select only from one part of the {population}."),
+            ("stratified_population", f"Randomly select {n} people from all parts of the {population} in proportion to each part's size."),
+            ("unequal_strata", f"Randomly select {n} people from each part of the {population}, despite different sizes."),
+            ("voluntary", f"Let any of the {population} reply to a public invitation until {n} reply."),
+            ("subgroup", f"Randomly select {n} people only from one part of the {population}."),
         ]
     key_text = options[0][1]
     choices, reasons, letter = assemble_text(
@@ -71,7 +72,8 @@ def sampling_method(rng: random.Random, seed: int) -> Item:
          for tag, text in options[1:]], rng)
     return Item(
         "esc.sampling_method_supply", "representative samples", tier, seed,
-        f"A researcher wants to estimate the opinion of all {population}. "
+        f"A researcher wants to estimate the opinion of all {population} "
+        f"using a sample of about {n} people. "
         "Which method is least likely to produce selection bias?",
         "mcq", E(0), letter,
         "Every member of the target population needs a route into the sample, "
