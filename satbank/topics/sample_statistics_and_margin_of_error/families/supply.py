@@ -9,7 +9,7 @@ from ....item import Item, Mis, gridin_mistakes
 
 
 def sample_percent(rng: random.Random, seed: int) -> Item:
-    n = rng.choice((100, 200, 400))
+    n = rng.randrange(100, 3001, 100)
     pct = rng.randrange(20, 81, 5)
     count = n * pct // 100
     key = E(pct)
@@ -29,8 +29,8 @@ def sample_percent(rng: random.Random, seed: int) -> Item:
 
 
 def population_estimate(rng: random.Random, seed: int) -> Item:
-    population = rng.choice((600, 800, 1000, 1200))
-    pct = rng.choice((20, 25, 30, 40, 50, 60, 75))
+    population = rng.randrange(200, 5001, 100)
+    pct = rng.randrange(10, 91, 5)
     estimate = population * pct // 100
     key = E(estimate)
     return Item(
@@ -51,8 +51,8 @@ def population_estimate(rng: random.Random, seed: int) -> Item:
 
 
 def interval_lower(rng: random.Random, seed: int) -> Item:
-    estimate = rng.randrange(35, 71, 5)
-    margin = rng.choice((3, 4, 5, 6, 7))
+    estimate = rng.randint(20, 80)
+    margin = rng.randint(2, 12)
     key = E(estimate - margin)
     return Item(
         "sstat.margin_lower_grid", "margin of error", "easy", seed,
