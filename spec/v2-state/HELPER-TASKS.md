@@ -1,7 +1,8 @@
 # The other agent's next tasks (backend only)
 
 Tasks 1-5 are DONE (2026-09-25): S9, S7, S8 servers under one check each; habits.py and bank supply merged.
-Tasks 6, 7 and 8 are DONE and merged (2026-09-25). Tasks 0 and 9 are DONE on branches (2026-09-26). Next, in order: Task 10, Task 11, Task 12. Never touch v2/s7-server, v2/s8-server, v2/s9-server or any wave-2 branch.
+Tasks 6, 7 and 8 are DONE and merged (2026-09-25). Tasks 0 and 9 are DONE on branches (2026-09-26). Tasks 10 and 11 are DONE on v2/helper-integ (not merged yet, by the user's choice). Task 12 waits for that merge.
+Next: Task 13, then Task 14 (both branch from v2/helper-integ). Never touch v2/s7-server, v2/s8-server, v2/s9-server or any wave-2 branch.
 
 Written 2026-09-24 for the user's helper agent. Paste one task at a time. Each is a
 **feature**, so when the helper reports it done, the main session runs one
@@ -249,6 +250,40 @@ options fit, blind to the key, and record the verdict. Start with the frames tha
 SAT sense has at least one judged frame. The second, independent verdict ("model:helper-b") must come from a fresh
 session that never saw the first verdicts. Only then may a frame get reviewed set. Commit in batches of about 100
 frames. Tell the user how many frames and senses are servable.
+```
+
+## Task 13: check-ins on the learner's own day (R13)
+
+```
+Check-in due dates, record()'s day and the drill's checks pool all use UTC dates, but R13 (spec/rebuild-v2.md Part 2,
+line 149) says a day is the learner's local day from X-Tz. So a student in Asia gets check-ins a day late and one in
+the US gets them early (logged in spec/v2-state/followups/F5.json, "later").
+SETUP: git worktree add .claude/worktrees/localday -b v2/localday v2/helper-integ
+Make every check-in date local to the learner: when a mistake closes, its 3/10/30-day due dates are set in the
+learner's local day (store the tz the answer came with, or the learner's last tz); the checks pool and every "due
+today" count (progress, drill's checks pool, Review's and Today's due counts through progress) compare against the
+learner's local today. Keep UTC timestamps in the database; only the day boundaries change. Files: server/progress.py,
+server/drill.py (the checks pool only), server/checks/f4.py and f5.py. Add checks: a learner at X-Tz -300 (UTC+5)
+and one at X-Tz 300 (UTC-5) each see a check-in come due at their own local midnight, not UTC's.
+DONE: f4.py, f5.py and test_flow pass (three runs, including one between 00:00 and 05:00 local if you can fake the
+clock). Tell the user "localday done".
+```
+
+## Task 14: production readiness: database backups and a load test
+
+```
+SETUP: git worktree add .claude/worktrees/ops -b v2/ops v2/helper-integ
+1. tools/backup_db.py: an online backup of the live SQLite database with sqlite3's backup API (safe while the server
+   runs), written to a dated file outside the repo (a directory set by SATF_BACKUPS), keeping the last 14 daily and 8
+   weekly copies, plus --verify (open the copy, run PRAGMA integrity_check, count rows per table) and --restore
+   <file> <target> (refuses to overwrite a non-empty target without --force). Never touch server/satfreshman.db in
+   tests: use a temp database.
+2. tools/load_test.py: start the app on your own port with a temp SATF_DB, seed N learners, then hammer the hot
+   routes concurrently (drill create/next/answer, /api/today, /api/shell, /api/me, /api/words, a test sitting) for a
+   set time and report p50/p95/p99 latency, errors and throughput per route, and which routes break first at 10,
+   50 and 200 concurrent learners. Write the findings to spec/v2-state/followups/load-test.md with the slowest routes
+   and the likely cause of each (profile the worst one).
+Commit both tools and the report on v2/ops. Tell the user "ops done" with the three slowest routes.
 ```
 
 ---

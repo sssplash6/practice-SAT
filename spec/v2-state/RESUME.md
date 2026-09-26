@@ -26,6 +26,9 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
 - **2026-09-26:** the helper finished Task 0 (v2/s7s, v2/s8s, v2/s9s) and Task 9 (v2/sec-fix). Each passes alone; merged
   together s7.py and s8.py assert and test_flow fails a timing check, so NOTHING was merged. The helper integrates them
   on v2/helper-integ (Task 10); then I merge that branch. The user asked for no further double-checking.
+- **2026-09-27:** helper Tasks 10-11 done on `v2/helper-integ` (checks pass 3 runs); the user said don't merge it yet. Task 12
+  waits for that merge. Helper now on Tasks 13 (local-day check-ins, v2/localday) and 14 (backups + load test, v2/ops), both
+  from v2/helper-integ. Merge order later: v2/helper-integ, then v2/localday and v2/ops.
 - **WAVE 2 PAUSED until the user's weekly usage reset** (the user, 2026-09-25: "henceforth till weekly reset, we are only
   checking other guys work"). Until then: NO building here. Only check the helper's work (inline for data jobs, one check +
   one fix for features) and merge it. Saved state: S3 5 commits (tip de9e831), S10 2 (85896a0), S1 1 (15583f5), S5 1
