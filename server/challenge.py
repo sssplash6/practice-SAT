@@ -21,6 +21,16 @@ MIX = {"Algebra": 3, "Advanced Math": 3,
        "Problem-Solving and Data Analysis": 2, "Geometry and Trigonometry": 2}
 LADDER = ["easy"] * 3 + ["medium"] * 4 + ["hard"] * 3
 SPR_AT = (4, 8)             # two grid-ins, as a module carries about a quarter
+BOARD_RIGHT = "COALESCE(CAST(json_extract(result,'$.right') AS INTEGER),0)"
+BOARD_SECONDS = "CAST(strftime('%s',finished) AS INTEGER)-CAST(strftime('%s',started) AS INTEGER)"
+BOARD_ORDER = f"{BOARD_RIGHT} DESC,{BOARD_SECONDS},finished,id"
+BOARD_ORDER_QUERY = f"{BOARD_RIGHT} DESC,{BOARD_SECONDS},s.finished,s.id"
+
+
+def init() -> None:
+    db.run("CREATE INDEX IF NOT EXISTS sessions_challenge_board ON sessions("
+           f"day,{BOARD_RIGHT} DESC,{BOARD_SECONDS},finished,id) "
+           "WHERE kind='challenge' AND finished IS NOT NULL")
 
 
 def challenge(day: str) -> list[dict]:
@@ -54,24 +64,32 @@ def handle(learner: str | None, name: str | None) -> str:
 
 def board(day: str, me: str | None = None, limit: int = 100) -> dict:
     """Right answers first, then time, then who finished first."""
-    got = db.rows(
-        "SELECT s.learner, s.started, s.finished, s.result, l.name FROM sessions s"
-        " LEFT JOIN learners l ON l.id = s.learner"
-        " WHERE s.kind='challenge' AND s.day=? AND s.finished IS NOT NULL", day)
-    entries = []
-    for r in got:
-        res = json.loads(r["result"] or "{}")
-        secs = (dt.datetime.fromisoformat(r["finished"]) - dt.datetime.fromisoformat(r["started"])).total_seconds()
-        entries.append({"name": handle(r["learner"], r["name"]), "right": res.get("right", 0),
-                        "asked": res.get("asked", CHALLENGE_SIZE), "seconds": int(secs),
-                        "you": r["learner"] == me, "finished": r["finished"]})
-    entries.sort(key=lambda e: (-e["right"], e["seconds"], e["finished"]))
-    for i, e in enumerate(entries, 1):
-        e["rank"] = i
-    mine = next((e for e in entries if e["you"]), None)
-    top = entries[:limit]
-    if mine and mine not in top:
-        top.append(mine)
-    for e in top:
-        e.pop("finished", None)
-    return {"day": day, "players": len(entries), "entries": top, "you": mine}
+    where = "kind='challenge' AND day=? AND finished IS NOT NULL"
+    players = db.one(f"SELECT COUNT(*) n FROM sessions WHERE {where}", day)["n"]
+    select = ("SELECT s.id,s.learner,s.result,s.finished,l.name,"
+              f"{BOARD_RIGHT} AS right,{BOARD_SECONDS} AS seconds FROM sessions s"
+              " LEFT JOIN learners l ON l.id=s.learner"
+              " WHERE s.kind='challenge' AND s.day=? AND s.finished IS NOT NULL")
+
+    def entry(row, rank: int) -> dict:
+        result = json.loads(row["result"] or "{}")
+        return {"name": handle(row["learner"], row["name"]), "right": row["right"],
+                "asked": result.get("asked", CHALLENGE_SIZE), "seconds": row["seconds"],
+                "you": row["learner"] == me, "rank": rank}
+
+    top = [entry(r, i) for i, r in enumerate(db.rows(
+        select + f" ORDER BY {BOARD_ORDER_QUERY} LIMIT ?", day, max(1, min(limit, 100))), 1)]
+    mine = next((e for e in top if e["you"]), None)
+    if me and mine is None:
+        row = db.one(select + f" AND s.learner=? ORDER BY {BOARD_ORDER_QUERY} LIMIT 1", day, me)
+        if row:
+            right, seconds, finished, sid = row["right"], row["seconds"], row["finished"], row["id"]
+            ahead = db.one(f"SELECT COUNT(*) n FROM sessions WHERE {where} AND ("
+                           f"{BOARD_RIGHT}>? OR ({BOARD_RIGHT}=? AND {BOARD_SECONDS}<?) OR "
+                           f"({BOARD_RIGHT}=? AND {BOARD_SECONDS}=? AND finished<?) OR "
+                           f"({BOARD_RIGHT}=? AND {BOARD_SECONDS}=? AND finished=? AND id<?))",
+                           day, right, right, seconds, right, seconds, finished,
+                           right, seconds, finished, sid)["n"]
+            mine = entry(row, ahead + 1)
+            top.append(mine)
+    return {"day": day, "players": players, "entries": top, "you": mine}

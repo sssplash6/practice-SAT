@@ -840,12 +840,27 @@ def _student_check(chk: dict) -> dict:
 async def post_report(request: Request, x_learner: str | None = Header(default=None),
                       x_tz: int = Depends(tz_of)) -> dict:
     learner = deps.writer_of(x_learner)
+    _rate(learner)
     size = request.headers.get("content-length", "")
-    if size.isdigit() and int(size) > MAX_TOTAL + MB:
+    body_limit = MAX_TOTAL + MB  # multipart boundaries and the JSON field
+    if size.isdigit() and int(size) > body_limit:
         raise HTTPException(413, {"file": None, "limit": MAX_TOTAL})
-    # ponytail: Starlette spools the whole form to temp files before we see it; the
-    # Content-Length gate above bounds that, and _store stops each copy past its cap
-    form = await request.form(max_files=100, max_fields=50)
+    received = 0
+    receive = request.receive
+
+    async def bounded_receive():
+        nonlocal received
+        message = await receive()
+        if message["type"] == "http.request":
+            received += len(message.get("body", b""))
+            if received > body_limit:
+                raise HTTPException(413, {"file": None, "limit": MAX_TOTAL})
+        return message
+
+    # The parser only sees chunks after the stream gate, including when the
+    # client omits Content-Length or sends a false one.
+    bounded = Request(request.scope, receive=bounded_receive)
+    form = await bounded.form(max_files=MAX_FILES, max_fields=50)
     try:
         raw = form.get("data") or "{}"
         if hasattr(raw, "read"):

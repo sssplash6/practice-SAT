@@ -7,6 +7,7 @@ requirements are reported as warnings so authors can run this after every batch.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -17,7 +18,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTENT = ROOT / "server" / "words"
-PHASE = 6  # phases 1-6 are errors; the review gate (servable frames) and freq.txt come later
+PHASE = 6  # phases 1-6 are errors; the independent review gate comes later
+FREQ = ROOT / "tools" / "data" / "freq.txt"
 FILES = (
     "classes", "traps", "sat", "transitions", "pairs", "confusions",
     "roots", "foils", "collections", "fills", "frames", "adjudications",
@@ -485,6 +487,83 @@ def check_frames(data: dict[str, list | dict], pools: set[str], phase: int,
             warnings.append(f"frames: literature excerpt share {share:.1%} of 20% (phase 6)")
 
 
+def frequency_ranks(errors: list[str]) -> dict[str, int]:
+    """The committed corpus is ordered by descending count; its line is the rank."""
+    if not FREQ.exists():
+        errors.append("tools/data/freq.txt: missing frequency corpus")
+        return {}
+    ranks: dict[str, int] = {}
+    previous = None
+    for number, line in enumerate(FREQ.read_text(encoding="utf-8").splitlines(), 1):
+        fields = line.split()
+        if len(fields) != 2 or not fields[1].isdigit() or int(fields[1]) <= 0:
+            errors.append(f"tools/data/freq.txt:{number}: expected word and positive count")
+            continue
+        word, count = fields[0].casefold(), int(fields[1])
+        if word in ranks:
+            errors.append(f"tools/data/freq.txt:{number}: duplicate {word}")
+        if previous is not None and count > previous:
+            errors.append(f"tools/data/freq.txt:{number}: counts must descend")
+        ranks[word] = number
+        previous = count
+    return ranks
+
+
+def frequency_band(word: str, ranks: dict[str, int]) -> int:
+    rank = ranks.get(word.casefold(), 50_001)
+    return 1 if rank <= 3_000 else 2 if rank <= 10_000 else 3 if rank <= 25_000 else 4 if rank <= 50_000 else 5
+
+
+def build_index(data: dict[str, list | dict], ranks: dict[str, int]) -> dict:
+    """The compact, reproducible lookup used by the Words server.
+
+    A frame's review status is kept here as data, never inferred from its
+    presence. Unreviewed material remains unavailable in production.
+    """
+    sat = rows(data["sat"])
+    transitions = rows(data["transitions"])
+    entries = sat + transitions
+    freq_bands = {w["slug"]: frequency_band(w["word"], ranks) for w in entries}
+    by_word = {w["slug"]: {"frames": [], "confusions": [], "roots": []} for w in entries}
+    for frame in rows(data["frames"]):
+        for slug in frame["keys"]:
+            by_word[slug]["frames"].append(frame["id"])
+    for confusion in rows(data["confusions"]):
+        for slug in confusion["words"]:
+            if slug in by_word:
+                by_word[slug]["confusions"].append(confusion["id"])
+    for root in rows(data["roots"]):
+        for related in root["words"]:
+            by_word[related["slug"]]["roots"].append(root["id"])
+    values = {"easy": .8, "medium": .6, "hard": .4}
+    for word in sat:
+        band = freq_bands[word["slug"]]
+        freq = "easy" if band <= 2 else "medium" if band == 3 else "hard"
+        value = "easy" if word["value"] == 3 else "medium" if word["value"] == 2 else "hard"
+        levels = (values[freq], values[value], values[word["level"]])
+        by_word[word["slug"]]["prior"] = round(sum(levels) / 3, 4)
+    for word in transitions:
+        by_word[word["slug"]]["prior"] = values[word["level"]]
+    # Passage terms remain the paste matcher vocabulary until its own W19
+    # inflection rules are built; frequency bands use the pinned corpus above.
+    texts = ([f["text"] for f in rows(data["frames"])] +
+             [p["s1"] for p in rows(data["pairs"])] +
+             [s for p in rows(data["pairs"]) for s in p["s2"]] +
+             [s for w in entries for s in w.get("examples", [])])
+    common_counts = Counter(w.casefold() for text in texts
+                            for w in re.findall(r"[A-Za-zÀ-ž]+", text) if len(w) >= 2)
+    library_forms = {s.casefold() for w in entries
+                     for s in (w["word"], *w.get("also", []))}
+    common = [w for w, _ in common_counts.most_common()
+              if w not in library_forms][:10_000]
+    source = {name: hashlib.sha256(json.dumps(data[name], ensure_ascii=False, sort_keys=True)
+                                   .encode()).hexdigest() for name in FILES if name != "adjudications"}
+    source["freq.txt"] = hashlib.sha256(FREQ.read_bytes()).hexdigest()
+    return {"v": 1, "sources": source, "counts": {"sat": len(sat), "transitions": len(transitions),
+            "frames": len(rows(data["frames"])), "pairs": len(rows(data["pairs"]))},
+            "words": by_word, "freq_bands": freq_bands, "common": common}
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--review", action="store_true", help="list frames awaiting adjudication")
@@ -492,6 +571,7 @@ def main() -> int:
     errors: list[str] = []
     warnings: list[str] = []
     data = {name: load(name, errors) for name in FILES}
+    ranks = frequency_ranks(errors)
     check_reference_data(data, errors)
     check_collections(data, errors)
     check_words(data, errors, warnings)
@@ -506,6 +586,11 @@ def main() -> int:
         print("WARNING:", message)
     for message in errors:
         print("ERROR:", message, file=sys.stderr)
+    if not errors and not args.review:
+        path = ROOT / "server" / "words_index.json"
+        path.write_text(json.dumps(build_index(data, ranks), ensure_ascii=False, sort_keys=True,
+                                   separators=(",", ":")) + "\n", encoding="utf-8")
+        print(f"Words index: {path.relative_to(ROOT)}")
     return 1 if errors else 0
 
 

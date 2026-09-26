@@ -13,7 +13,7 @@ from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel, Field
 
 from . import blueprint, db, drill, practice, progress, scoring
-from .deps import LEARNER_OK, SECONDS_PER_QUESTION, learner_of, now, session_or_404
+from .deps import LEARNER_OK, SECONDS_PER_QUESTION, learner_of, now, session_or_404, writer_of
 
 log = logging.getLogger("satf")
 router = APIRouter()
@@ -293,11 +293,16 @@ class MockStart(BaseModel):
 
 
 @router.post("/api/mock/{num}")
-def start_mock(num: str, body: MockStart | None = None) -> dict:
+def start_mock(num: str, body: MockStart | None = None,
+               x_learner: str | None = Header(default=None)) -> dict:
     if num not in MOCKS:
         raise HTTPException(404, f"no mock {num}")
+    body_learner = writer_of(body.learner) if body and body.learner.strip() else None
+    header_learner = writer_of(x_learner) if x_learner else None
+    if body_learner and header_learner and body_learner != header_learner:
+        raise HTTPException(403, "learner tokens disagree")
+    learner = body_learner or header_learner or writer_of("anon:" + secrets.token_urlsafe(9))
     sid = secrets.token_urlsafe(16)
-    learner = (body.learner.strip() if body else "") or ("anon:" + secrets.token_urlsafe(9))
     stamp = now()
     db.run("INSERT INTO sessions (id, kind, mock_id, module, learner, started, module_started)"
            " VALUES (?,?,?,?,?,?,?)", sid, "mock", num, 1, learner, stamp, stamp)
