@@ -201,7 +201,7 @@ def _pool(learner: str, cfg: dict, body: dict) -> tuple[list[str], list[list], d
     if pool == "new":
         return queue, items, why
     if pool in {"redo", "checks"}:
-        today = dt.datetime.now(dt.timezone.utc).date().isoformat()
+        today = progress._local_today(learner).isoformat()
         traps = progress.open_traps(learner) if pool == "redo" else [dict(r) for r in db.rows(
             "SELECT * FROM traps WHERE learner=? AND closed IS NOT NULL AND due<=? AND checks<3",
             learner, today)]

@@ -132,10 +132,47 @@ assert norm("divided by 360/90 instead of 180") == norm("divided by 90/360 inste
 
 def init() -> None:
     _self_check()
+    if "tz" not in {r["name"] for r in db.rows("PRAGMA table_info(traps)")}:
+        db.run("ALTER TABLE traps ADD COLUMN tz INTEGER NOT NULL DEFAULT 0")
 
 
 def now() -> str:
     return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+
+
+def _utc_now() -> dt.datetime:
+    return dt.datetime.now(dt.timezone.utc)
+
+
+def _learner_tz(learner: str, tz: int | None = None) -> int:
+    """X-Tz is minutes behind UTC; remember it for answer paths without a tz argument."""
+    box = deps.SWAP.get()
+    raw = box.get("tz_header") if box else None
+    if raw is not None:
+        try:
+            parsed = int(raw)
+            if -840 <= parsed <= 720:
+                tz = parsed
+        except ValueError:
+            pass
+    if tz is None:
+        saved = db.one("SELECT v FROM kv WHERE k=?", "learner-tz:" + learner)
+        if saved:
+            tz = int(saved["v"])
+    if tz is None:
+        plan = db.one("SELECT tz FROM plans WHERE learner=? AND archived IS NULL ORDER BY created DESC LIMIT 1", learner)
+        tz = int(plan["tz"]) if plan and plan["tz"] is not None else 0
+    if not -840 <= tz <= 720:
+        tz = 0
+    saved = db.one("SELECT v FROM kv WHERE k=?", "learner-tz:" + learner)
+    if not saved or saved["v"] != str(tz):
+        db.run("INSERT INTO kv(k,v) VALUES (?,?) ON CONFLICT(k) DO UPDATE SET v=excluded.v",
+               "learner-tz:" + learner, str(tz))
+    return tz
+
+
+def _local_today(learner: str, tz: int | None = None) -> dt.date:
+    return (_utc_now() - dt.timedelta(minutes=_learner_tz(learner, tz))).date()
 
 
 def topics(subject: str = "math") -> dict:
@@ -212,7 +249,7 @@ def board(learner: str, subject: str = "math") -> dict[str, dict]:
     the change over 14 days, the last five, whether it is fading, and the
     mistakes still open in it."""
     cutoff = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=14)).isoformat()
-    today = dt.datetime.now(dt.timezone.utc).date()
+    today = _local_today(learner)
     recent: dict[str, list] = defaultdict(list)
     before: dict[str, list] = defaultdict(list)
     last: dict[str, str] = {}
@@ -249,11 +286,11 @@ def board(learner: str, subject: str = "math") -> dict[str, dict]:
 
 # ------------------------------------------------------------------ filing
 
-def _check_due(closed: str, checks: int) -> str | None:
+def _check_due(closed: str, checks: int, tz: int = 0) -> str | None:
     """R9: the next check-in after `checks` of 3 have passed."""
     if checks >= len(CHECK_DAYS):
         return None
-    return (dt.date.fromisoformat(closed[:10]) + dt.timedelta(days=CHECK_DAYS[checks])).isoformat()
+    return (_local_day(closed, tz) + dt.timedelta(days=CHECK_DAYS[checks])).isoformat()
 
 
 def log(learner: str, template: str, normalized: str, event: str, when: str,
@@ -315,7 +352,7 @@ def _pass_check(t, when: str, attempt: int | None, elsewhere: bool) -> dict:
     if checks == 3 and _transfers(t) >= 2:
         how = "transfer"
     db.run("UPDATE traps SET checks=?, due=?, last=?, closed_how=? WHERE id=?",
-           checks, _check_due(t["closed"], checks), when, how, t["id"])
+           checks, _check_due(t["closed"], checks, t["tz"]), when, how, t["id"])
     return {"id": t["id"], "label": t["label"], "checks": checks, "how": how, "elsewhere": elsewhere}
 
 
@@ -369,7 +406,7 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
            conf: str | None = None, hints: int = 0, struck=None, cover: bool = False,
            calc: bool = False, word: str | None = None, revealed: bool | None = None,
            source: str | None = None, check: bool = False, miss_kind: str | None = None,
-           placement: bool = False) -> dict | None:
+           placement: bool = False, tz: int | None = None) -> dict | None:
     """File one answer, and say what it did to the learner's open mistakes.
 
     once: the learner may have one answer in this session at all (the question
@@ -387,6 +424,7 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
     if db.is_sample(learner):
         raise HTTPException(403, "the sample report is read-only")
     when = when or now()
+    tz = _learner_tz(learner, tz)
     conf = conf if conf in ("sure", "unsure", "guess") else None
     guess = bool(guess) or conf == "guess"
     conf = "guess" if guess else conf
@@ -423,7 +461,7 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
     closed_ids: list[int] = []
     clean = ok and not (repeat or flagged or guess or void or hints or conf == "unsure")
     miss_key = None if ok else norm(reason)
-    day = when[:10]
+    day = _local_day(when, tz).isoformat()
     with db.atomic():
         db.ensure_learner(learner)
         if once:
@@ -446,8 +484,8 @@ def record(learner: str, session: str | None, q: dict, given, ms: int | None = N
                     continue
                 left = t["owed"] - 1
                 if left <= 0:
-                    db.run("UPDATE traps SET owed=0,closed=?,closed_how='fixed',last=?,due=?,checks=0 WHERE id=?",
-                           when, when, _check_due(when, 0), t["id"])
+                    db.run("UPDATE traps SET owed=0,closed=?,closed_how='fixed',last=?,due=?,checks=0,tz=? WHERE id=?",
+                           when, when, _check_due(when, 0, tz), tz, t["id"])
                     log(learner, t["template"], t["norm"], "pip", when, attempt)
                     from . import estimate
                     log(learner, t["template"], t["norm"], "fixed", when, attempt,
@@ -686,12 +724,13 @@ def carry(frm: str, to: str) -> int:
                 shut = t["closed"] is not None and s["closed"] is not None
                 # open on either side stays open, with no fix or check-ins to show
                 c.execute("UPDATE traps SET hits=?,owed=?,opened=?,last=?,closed=?,closed_how=?,reason=?,label=?,topic=?,"
-                          "seed=?,session=?,relapses=?,checks=?,due=? WHERE id=?",
+                          "seed=?,session=?,relapses=?,checks=?,due=?,tz=? WHERE id=?",
                           (t["hits"] + s["hits"], max(t["owed"], s["owed"]), min(t["opened"], s["opened"]),
                            max(t["last"], s["last"]), max(t["closed"], s["closed"]) if shut else None,
                            t["closed_how"] if shut else None,
                            *(recent[k] for k in ("reason", "label", "topic", "seed", "session")), t["relapses"] + s["relapses"],
-                           max(t["checks"], s["checks"]) if shut else 0, recent["due"] if shut else None, t["id"]))
+                           max(t["checks"], s["checks"]) if shut else 0, recent["due"] if shut else None,
+                           recent["tz"] if shut else 0, t["id"]))
                 c.execute("DELETE FROM traps WHERE id=?", (s["id"],))
             else:
                 c.execute("UPDATE traps SET learner=? WHERE id=?", (to, s["id"]))
@@ -756,7 +795,7 @@ def coach(learner: str, k: int = 3, count: int = 10, subject: str = "math") -> d
     stays strong.
     """
     b = board(learner, subject)
-    today = dt.datetime.now(dt.timezone.utc).date()
+    today = _local_today(learner)
     due = {r["topic"] for r in db.rows("SELECT topic FROM traps WHERE learner=? AND closed_how IN ('fixed','transfer')"
                                       " AND closed IS NOT NULL AND due<=?", learner, today.isoformat())}
     sure = {t["topic"] for t in _confident_traps(learner).values()}
@@ -901,6 +940,7 @@ def sitting_seconds(row) -> int:
 def days(learner: str, tz: int = 0, weeks: int = 2) -> dict:
     """One local-day ledger for questions, words, finished sittings, official
     questions and plan work (R13), with spare days (U16)."""
+    tz = _learner_tz(learner, tz)
     weeks = max(1, min(53, int(weeks)))
     per: dict[dt.date, dict] = defaultdict(lambda: {"questions": 0, "right": 0, "words": 0, "ms": 0,
                                                     "practice": 0, "tests": 0, "official": 0, "fixed": 0,
@@ -1038,7 +1078,7 @@ def _clean_rights(learner: str, subject: str = "math") -> dict[str, list[str]]:
 def due_rechecks(learner: str, day: str | None = None) -> list[dict]:
     """Fixed traps whose check-in is due by `day`, most overdue first, each with
     the template its check-in is served on."""
-    day = day or dt.datetime.now(dt.timezone.utc).date().isoformat()
+    day = day or _local_today(learner).isoformat()
     out = []
     for t in db.rows("SELECT * FROM traps WHERE learner=? AND closed IS NOT NULL AND closed_how IN ('fixed','transfer')"
                      " AND due IS NOT NULL AND due<=? ORDER BY due, id", learner, day):
@@ -1056,12 +1096,13 @@ def rechecks_passed(learner: str, since: str) -> dict:
     return {"n": len(rows), "items": [dict(r) for r in rows]}
 
 
-def warmup_candidates(learner: str, tz: int = 0, subject: str = "math") -> dict:
+def warmup_candidates(learner: str, tz: int | None = None, subject: str = "math") -> dict:
     """T3: what is due for a spaced return, in priority order: check-ins due
     (most overdue first), fading types (by age over interval), one Strong
     topic to keep warm; and P12's marked: a question flagged 2 or more days
     ago whose template has had no right first try since the flag."""
-    today = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=tz)).date()
+    tz = _learner_tz(learner, tz)
+    today = _local_today(learner, tz)
     checks = [c for c in due_rechecks(learner, today.isoformat()) if deps.subject_of(c["topic"]) == subject]
     open_templates = {t["template"] for t in open_traps(learner)}
     fading = []
@@ -1099,10 +1140,11 @@ def warmup_candidates(learner: str, tz: int = 0, subject: str = "math") -> dict:
             "size": len(checks) + len(fading) + len(keep) + len(marked)}
 
 
-def due_forecast(learner: str, tz: int = 0, days: int = 14) -> list[dict]:
+def due_forecast(learner: str, tz: int | None = None, days: int = 14) -> list[dict]:
     """T3: check-ins and fading types coming due over the next days, assuming
     no practice in between."""
-    today = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=tz)).date()
+    tz = _learner_tz(learner, tz)
+    today = _local_today(learner, tz)
     checks = Counter(r["due"] for r in db.rows("SELECT due FROM traps WHERE learner=? AND closed IS NOT NULL"
                                                 " AND closed_how IN ('fixed','transfer') AND due IS NOT NULL", learner))
     fading: Counter = Counter()
@@ -1585,7 +1627,7 @@ def discard(learner: str, sid: str) -> dict:
             elif e["event"] == "check_ok":
                 checks = max(0, t["checks"] - 1)
                 db.run("UPDATE traps SET checks=?, due=? WHERE id=?", checks,
-                       _check_due(t["closed"], checks) if t["closed"] else None, t["id"])
+                       _check_due(t["closed"], checks, t["tz"]) if t["closed"] else None, t["id"])
             log(learner, e["template"], e["norm"], "discarded", stamp, e["attempt"], undoes=e["id"])
     return out
 
@@ -1619,10 +1661,11 @@ def restore(learner: str, sid: str) -> dict:
                 out["pips_back"] += 1
             elif d["undid"] == "fixed":
                 db.run("UPDATE traps SET closed=?, closed_how='fixed', owed=0, due=?, checks=0 WHERE id=?",
-                       d["undid_at"], _check_due(d["undid_at"], 0), t["id"])
+                       d["undid_at"], _check_due(d["undid_at"], 0, t["tz"]), t["id"])
                 out["reopened"] += 1
             elif d["undid"] == "check_ok" and t["closed"]:
                 checks = min(3, t["checks"] + 1)
-                db.run("UPDATE traps SET checks=?, due=? WHERE id=?", checks, _check_due(t["closed"], checks), t["id"])
+                db.run("UPDATE traps SET checks=?, due=? WHERE id=?", checks,
+                       _check_due(t["closed"], checks, t["tz"]), t["id"])
             log(learner, d["template"], d["norm"], "restored", stamp, d["attempt"], undoes=d["id"])
     return out
