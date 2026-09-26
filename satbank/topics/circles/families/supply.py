@@ -9,12 +9,13 @@ from ....item import Item, Mis, gridin_mistakes
 
 
 def radius_from_circumference(rng: random.Random, seed: int) -> Item:
-    r = rng.randint(3, 18)
+    r = rng.randint(2, 80)
+    unit = rng.choice(("centimeters", "meters", "feet"))
     key = E(r)
     return Item(
         "circles.radius_from_circumference", "circle circumference", "easy", seed,
-        f"A circle has circumference {2 * r}π units. What is its radius "
-        "in units?",
+        f"A circle has circumference {2 * r}π {unit}. What is its radius "
+        f"in {unit}?",
         "spr", key, key.gridin(),
         f"Since C = 2πr, dividing {2 * r}π by 2π gives r = {r}.",
         params={"kind": "circles_supply_radius", "pi_coefficient": 2 * r},
@@ -27,12 +28,13 @@ def radius_from_circumference(rng: random.Random, seed: int) -> Item:
 
 
 def diameter_from_area(rng: random.Random, seed: int) -> Item:
-    r = rng.randint(3, 15)
+    r = rng.randint(2, 80)
+    unit = rng.choice(("centimeters", "meters", "feet"))
     key = E(2 * r)
     return Item(
         "circles.diameter_from_area", "area of circles", "easy", seed,
-        f"The area of a circle is {r * r}π square units. What is its "
-        "diameter in units?",
+        f"The area of a circle is {r * r}π square {unit}. What is its "
+        f"diameter in {unit}?",
         "spr", key, key.gridin(),
         f"From A = πr², r² = {r * r}, so r = {r} and the diameter is {2 * r}.",
         params={"kind": "circles_supply_diameter", "area_pi_coefficient": r * r},
