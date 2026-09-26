@@ -785,7 +785,8 @@ def _checkpoint(learner: str, cfg: dict, start: dt.date, day: dt.date) -> dict |
 
 
 def build_day(learner: str, row, day: dt.date, topics: list[str] | None = None,
-              preview_minutes: int | None = None, pins: list[dict] | None = None) -> dict:
+              preview_minutes: int | None = None, pins: list[dict] | None = None,
+              words_plan: tuple[dict, int] | None = None) -> dict:
     """One budget for ordinary days and Today-I-have previews alike."""
     cfg = cfg_of(row)
     pid = row["id"]
@@ -860,7 +861,7 @@ def build_day(learner: str, row, day: dt.date, topics: list[str] | None = None,
         tasks[-1].update(rehearsal=rehearsal, aim=aim,
                          checkpoint=checkpoint["checkpoint"] if checkpoint else None)
         g -= test_minutes
-    word_info, word_need = _words(learner, row["tz"] or 0, cfg)
+    word_info, word_need = words_plan if words_plan is not None else _words(learner, row["tz"] or 0, cfg)
     w = min(word_need, max(3, round(.2 * g))) if word_need and g >= 3 else 0
     q = min(120, math.floor(max(0, g - w) * 60 / s))
     left = q
@@ -1060,7 +1061,7 @@ def checkpoints_of(learner: str, row) -> list[dict]:
 
 
 def _task_status(learner: str, pid: str, day: dt.date, task: dict,
-                 sessions: list[dict], tz: int) -> dict:
+                 sessions: list[dict], tz: int, words_summary: dict | None = None) -> dict:
     out = dict(task)
     mark = db.one("SELECT * FROM plan_marks WHERE plan=? AND day=? AND task=?",
                   pid, day.isoformat(), task["id"])
@@ -1077,8 +1078,11 @@ def _task_status(learner: str, pid: str, day: dt.date, task: dict,
             return out
     matches = [s for s in sessions if s["config"].get("task") == task["id"]]
     if task["kind"] == "words":
-        summary = deps.part("words", "today_summary")
-        if summary and summary(learner, tz).get("done") and day == today(tz):
+        summary = words_summary
+        if summary is None:
+            read = deps.part("words", "today_summary")
+            summary = read(learner, tz) if read else {}
+        if summary.get("done") and day == today(tz):
             out["status"] = "done"
     if matches:
         s = matches[-1]
@@ -1118,7 +1122,8 @@ def _task_status(learner: str, pid: str, day: dt.date, task: dict,
 def day_view(learner: str, row, date: dt.date, *, allocated: dict | None = None,
              pins: dict | None = None,
              sessions: list[dict] | None = None, ledger: dict | None = None,
-             preview_minutes: int | None = None) -> dict:
+             preview_minutes: int | None = None,
+             words_plan: tuple[dict, int] | None = None) -> dict:
     cfg = cfg_of(row)
     start, exam = dt.date.fromisoformat(row["start"]), dt.date.fromisoformat(cfg["exam_date"])
     if date < start or date > exam:
@@ -1132,11 +1137,14 @@ def day_view(learner: str, row, date: dt.date, *, allocated: dict | None = None,
     else:
         topics = allocated.get(date.isoformat(), []) if allocated is not None else None
         base = build_day(learner, row, date, topics, preview_minutes,
-                         pins.get(date.isoformat(), []) if pins is not None else None)
+                         pins.get(date.isoformat(), []) if pins is not None else None,
+                         words_plan=words_plan)
         base["frozen"] = False
     tz = row["tz"] or 0
     sessions = sessions if sessions is not None else _sessions(learner)
-    base["tasks"] = [_task_status(learner, row["id"], date, t, sessions, tz) for t in base["tasks"]]
+    base["tasks"] = [_task_status(learner, row["id"], date, t, sessions, tz,
+                                  words_plan[0] if words_plan is not None else None)
+                     for t in base["tasks"]]
     if ledger is None:
         ledger = {d["day"]: d for d in progress.days(learner, tz, 53)["days"]}
     fact = ledger.get(date.isoformat(), {})
@@ -1948,8 +1956,12 @@ def payload(learner: str, tz: int = 0, pid: str | None = None, *, shared: bool =
     pins = pin_schedule(learner, cfg, start, exam, row["id"])
     sessions = _sessions(learner)
     ledger = {d["day"]: d for d in progress.days(learner, tz, 53)["days"]}
+    # Every generated day uses today's Words due count and minutes. Read it
+    # once for this response, rather than rescanning the full library per day.
+    words_plan = _words(learner, row["tz"] or 0, cfg)
     days = [day_view(learner, row, start + dt.timedelta(days=i), allocated=allocation, pins=pins,
-                     sessions=sessions, ledger=ledger) for i in range((exam - start).days + 1)]
+                     sessions=sessions, ledger=ledger, words_plan=words_plan)
+            for i in range((exam - start).days + 1)]
     if not shared:
         snapshot(learner, row, days)
     local = today(tz).isoformat()

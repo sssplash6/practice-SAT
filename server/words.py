@@ -124,15 +124,19 @@ def entry(slug: str, learner: str | None = None) -> dict | None:
     return None
 
 
-def state(learner: str, slug: str) -> dict:
-    row = db.one("SELECT * FROM word_state WHERE learner=? AND word=?", learner, slug)
-    return dict(row) if row else {"learner": learner, "word": slug, "box": 0, "due": None,
+def _empty_state(learner: str, slug: str) -> dict:
+    return {"learner": learner, "word": slug, "box": 0, "due": None,
                                   "reps": 0, "lapses": 0, "right": 0, "wrong": 0,
                                   "saved": 0, "first": None, "last": None, "lastday": None,
                                   "lastwrong": None, "proven": None, "placed": 0,
                                   "hook": None, "pending_know": None, "thought_at": None,
                                   "looked_at": None, "stubborn_right_day": None,
                                   "stubborn_cleared": None, "sentence_history": None}
+
+
+def state(learner: str, slug: str) -> dict:
+    row = db.one("SELECT * FROM word_state WHERE learner=? AND word=?", learner, slug)
+    return dict(row) if row else _empty_state(learner, slug)
 
 
 def _upsert_state(c, s: dict) -> None:
@@ -435,24 +439,33 @@ def _measured(slug: str) -> dict:
             "n": n, "prior": prior}
 
 
-def _flags(learner: str, slug: str, s: dict, day: dt.date) -> dict:
+def _flags(learner: str, slug: str, s: dict, day: dt.date,
+           reviews: dict | None = None) -> dict:
     recent_wrong = bool(s["lastwrong"] and (day - local_day(0, s["lastwrong"])).days <= 14)
-    last_right = db.one("SELECT at FROM word_reviews WHERE learner=? AND word=? AND correct=1"
-                        " ORDER BY id DESC LIMIT 1", learner, slug)
-    missed = recent_wrong and (not last_right or last_right["at"] < s["lastwrong"])
+    if reviews is None:
+        last_right_row = db.one("SELECT at FROM word_reviews WHERE learner=? AND word=? AND correct=1"
+                                " ORDER BY id DESC LIMIT 1", learner, slug)
+        last_right = last_right_row["at"] if last_right_row else None
+        misses = db.one("SELECT COUNT(*) n FROM word_reviews WHERE learner=? AND word=? AND correct=0"
+                        " AND at>=?", learner, slug,
+                        max((day - dt.timedelta(days=14)).isoformat(), s.get("stubborn_cleared") or ""))["n"]
+        context = [r["correct"] for r in db.rows(
+            "SELECT correct FROM word_reviews WHERE learner=? AND word=?"
+            " AND kind IN ('incontext','nearly','transition') ORDER BY id DESC LIMIT 20", learner, slug)]
+    else:
+        data = reviews.get(slug, {})
+        last_right = data.get("last_right")
+        cutoff = max((day - dt.timedelta(days=14)).isoformat(), s.get("stubborn_cleared") or "")
+        misses = sum(at >= cutoff for at in data.get("wrong_at", ()))
+        context = data.get("context", ())
+    missed = recent_wrong and (not last_right or last_right < s["lastwrong"])
     thought = bool(s.get("thought_at") and (day - local_day(0, s["thought_at"])).days <= 30
-                   and (not last_right or last_right["at"] < s["thought_at"]))
-    misses = db.one("SELECT COUNT(*) n FROM word_reviews WHERE learner=? AND word=? AND correct=0"
-                    " AND at>=?", learner, slug,
-                    max((day - dt.timedelta(days=14)).isoformat(), s.get("stubborn_cleared") or ""))["n"]
-    context = db.rows("SELECT correct FROM word_reviews WHERE learner=? AND word=?"
-                      " AND kind IN ('incontext','nearly','transition') ORDER BY id DESC LIMIT 20",
-                      learner, slug)
+                   and (not last_right or last_right < s["thought_at"]))
     return {"is_due": bool(s["due"] and s["due"] <= day.isoformat()),
             "missed": missed, "thought": thought,
             "stubborn": int(s["lapses"] or 0) >= 4 or misses >= 3,
             "hard_for_you": int(s["lapses"] or 0) >= 2 or thought or int(s.get("placed") or 0) == -1 or
-            (len(context) >= 2 and sum(r["correct"] for r in context) / len(context) < .5),
+            (len(context) >= 2 and sum(context) / len(context) < .5),
             "looked_up": bool(s.get("looked_at") and (day - local_day(0, s["looked_at"])).days <= 30
                               and int(s["box"] or 0) < 4)}
 
@@ -463,19 +476,39 @@ def library(learner: str, tz: int = 0, days: int = 14) -> dict:
     exam = _exam(learner)
     states = {r["word"]: dict(r) for r in db.rows("SELECT * FROM word_state WHERE learner=?", learner)}
     last_context = {}
-    for review in db.rows("SELECT word,correct,trap FROM word_reviews WHERE learner=?"
-                          " AND kind IN ('incontext','nearly','precise','transition')"
-                          " AND correct IS NOT NULL ORDER BY id DESC", learner):
-        last_context.setdefault(review["word"], review)
+    reviews = {}
+    for review in db.rows("SELECT word,correct,trap,kind,at FROM word_reviews WHERE learner=?"
+                          " ORDER BY id DESC", learner):
+        slug = review["word"]
+        data_for_word = reviews.setdefault(slug, {"wrong_at": [], "context": []})
+        if review["correct"] == 1:
+            data_for_word.setdefault("last_right", review["at"])
+        elif review["correct"] == 0:
+            data_for_word["wrong_at"].append(review["at"])
+        if review["kind"] in ("incontext", "nearly", "transition") and len(data_for_word["context"]) < 20:
+            data_for_word["context"].append(review["correct"])
+        if (review["kind"] in ("incontext", "nearly", "precise", "transition")
+                and review["correct"] is not None):
+            last_context.setdefault(slug, review)
+    measured_counts = {r["word"]: r for r in db.rows(
+        "SELECT word,COUNT(*) n,SUM(correct) hits FROM word_reviews WHERE subject='rw'"
+        " AND kind IN ('incontext','nearly','transition') AND attempt=1"
+        " AND learner NOT LIKE 'sample:%' GROUP BY word")}
     own = [dict(r) for r in db.rows("SELECT id FROM my_words WHERE learner=?", learner)]
     slugs = list(data["entries"]) + [r["id"] for r in own]
     words = []
     for slug in slugs:
         w = entry(slug, learner)
-        s = states.get(slug) or state(learner, slug)
-        flags = _flags(learner, slug, s, day)
+        s = states.get(slug) or _empty_state(learner, slug)
+        flags = _flags(learner, slug, s, day, reviews)
         box = int(s["box"] or 0)
-        measured = _measured(slug) if slug in data["entries"] else None
+        measured = None
+        if slug in data["entries"]:
+            prior = data["index"]["words"][slug]["prior"]
+            row = measured_counts.get(slug)
+            n, hits = (row["n"], row["hits"]) if row else (0, 0)
+            measured = {"pct": round(100 * (hits + 20 * prior) / (n + 20)),
+                        "n": n, "prior": prior}
         last = last_context.get(slug)
         trap = last["trap"] if last and not last["correct"] and last["trap"] else None
         at_risk = bool(exam and box and retention(s, exam) < .8)

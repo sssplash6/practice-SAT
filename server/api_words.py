@@ -92,7 +92,8 @@ def _make_item(learner: str, slug: str, kind: str, seed: int,
                 break
             try:
                 q = words.item(template, seed + offset, slug, want_trap)
-                if kind == "transition" or q["kind"] == kind or kind == "precise":
+                if (kind == "transition" or q["kind"] == kind or kind == "precise"
+                        or (kind == "incontext" and q["kind"] == "nearly")):
                     if (strict_trap and want_trap and want_trap not in q.get("traps", [])
                             and want_trap not in q.get("option_logics", [])):
                         continue

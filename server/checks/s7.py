@@ -222,9 +222,12 @@ def check_freeze_and_links(client: TestClient, learner: str, payload: dict) -> N
     frozen = db.rows("SELECT day,minutes FROM plan_days WHERE plan=? ORDER BY day", pid)
     assert len(frozen) >= 3
     before = {r["day"]: r["minutes"] for r in frozen}
-    current = plan_before["today"]["minutes"]
+    practice_day = next(d for d in plan_before["days"]
+                        if d["date"] >= today.isoformat() and d["kind"] == "practice")
+    current = practice_day["minutes"]
     patched = call(client, "PATCH", f"/api/plan/{pid}", {"minutes": 90}, learner)
-    assert patched["today"]["minutes"] != current
+    updated_day = next(d for d in patched["days"] if d["date"] == practice_day["date"])
+    assert updated_day["minutes"] != current
     changed = db.one("SELECT kind,field,from_v,to_v FROM plan_events WHERE plan=? ORDER BY id DESC LIMIT 1", pid)
     assert changed["kind"] == "edit" and changed["field"] == "minutes"
     assert json.loads(changed["from_v"]) == 45 and json.loads(changed["to_v"]) == 90
@@ -272,7 +275,8 @@ def check_rw_measure_lifecycle(client: TestClient, exam: dt.date) -> None:
     item = call(client, "POST", "/api/plan", cfg, learner)
     pid = item["active"]["id"]
     assert item["score"]["total"]["start"] == 1060 and item["score"]["total"]["target"] == 1350
-    rw = [t for t in item["today"]["tasks"] if t.get("type") == "rw"]
+    first_study = next(d for d in item["days"] if d["kind"] == "practice")
+    rw = [t for t in first_study["tasks"] if t.get("type") == "rw"]
     assert len(rw) == 2 and sum(t["minutes"] for t in rw) == 30
     assert all(t["subject"] == "rw" for t in rw)
     assert "Standard English Conventions" in rw[0]["title"]
@@ -297,8 +301,9 @@ def check_rw_measure_lifecycle(client: TestClient, exam: dt.date) -> None:
     measure = token()
     measured = call(client, "POST", "/api/plan", base(exam, current=None, target=600, measure=True,
                                                         tests="none"), measure)
-    first = [t["kind"] for t in measured["today"]["tasks"][:2]]
-    assert first == ["test", "map"] and measured["today"]["tasks"][0]["start"]["path"] == "/api/session"
+    diagnostic = next(d for d in measured["days"] if d["test"] == "diagnostic")
+    first = [t["kind"] for t in diagnostic["tasks"][:2]]
+    assert first == ["test", "map"] and diagnostic["tasks"][0]["start"]["path"] == "/api/session"
     print("ok  R&W score/time/evidence, Words focus, lifecycle and diagnostic measure path")
 
 
