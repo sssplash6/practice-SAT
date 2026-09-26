@@ -120,7 +120,8 @@ def mint_device(learner: str, method: str, label: str = "Browser", session_only:
 async def swap_middleware(request, call_next):
     """app.middleware('http')(deps.swap_middleware): hands learner_of a box and
     turns a minted swap token into the X-Learner-Swap header."""
-    box = {"label": _label(request.headers.get("user-agent", "")), "method": request.method}
+    box = {"label": _label(request.headers.get("user-agent", "")), "method": request.method,
+           "tz_header": request.headers.get("x-tz")}
     reset = SWAP.set(box)
     try:
         response = await call_next(request)

@@ -11,6 +11,7 @@ import json
 import pathlib
 import re
 import tempfile
+from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
@@ -62,7 +63,7 @@ def fixtures():
 
 def trap_true_checks(client):
     learner = "a:f5traptrue"
-    headers = {"X-Learner": learner}
+    headers = {"X-Learner": learner, "X-Tz": "-300"}
     first_set = request(client, {"templates": ["lin.evaluate"], "formats": ["mcq"], "count": 1},
                         learner=learner)
     sid = first_set["id"]
@@ -94,6 +95,7 @@ def trap_true_checks(client):
             assert not progress.open_traps(learner)
         client.post(f"/api/drill/{fix['id']}/next", headers=headers).raise_for_status()
     assert not progress.open_traps(learner)
+    assert db.one("SELECT tz FROM traps WHERE learner=? AND norm=?", learner, norm)["tz"] == -300
 
     # An unnamed grid-in trap has no offer requirement and still owes two clean answers.
     unnamed = "a:f5unnamed"
@@ -355,7 +357,31 @@ def checks(client):
 
 def check(client):
     checks(client)
+    check_local_pool(client)
     print("ok  F5 pools, aliases, filters, preview, types, feedback and inline history")
+
+
+def check_local_pool(client):
+    """Checks pool opens at each learner's midnight, across the same UTC day."""
+    q = question("lin.evaluate", 890)
+    reason = next(r for r in q["reasons"] if r)
+    for learner, tz, due in (("a:f5tzplus", -300, "2026-01-06"),
+                             ("a:f5tzminus", 300, "2026-01-05")):
+        progress._learner_tz(learner, tz)
+        row = progress.record_trap(learner, q, reason, "2026-01-02T22:30:00+00:00")
+        db.run("UPDATE traps SET closed=?,closed_how='fixed',owed=0,due=?,tz=? WHERE id=?",
+               "2026-01-02T22:30:00+00:00", due, tz, row["id"])
+    def available(learner, tz):
+        reply = client.post("/api/drill/preview", json={"pool": "checks"},
+                            headers={"X-Learner": learner, "X-Tz": str(tz)})
+        assert reply.status_code == 200, reply.text
+        return reply.json()["available"]
+    with patch.object(progress, "_utc_now", return_value=dt.datetime(2026, 1, 5, 4, 59, tzinfo=dt.timezone.utc)):
+        assert not available("a:f5tzplus", -300) and not available("a:f5tzminus", 300)
+    with patch.object(progress, "_utc_now", return_value=dt.datetime(2026, 1, 5, 5, 0, tzinfo=dt.timezone.utc)):
+        assert available("a:f5tzminus", 300) and not available("a:f5tzplus", -300)
+    with patch.object(progress, "_utc_now", return_value=dt.datetime(2026, 1, 5, 19, 0, tzinfo=dt.timezone.utc)):
+        assert available("a:f5tzplus", -300)
 
 
 if __name__ == "__main__":

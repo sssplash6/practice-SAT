@@ -62,6 +62,30 @@ def trap(learner: str, **where):
     return db.one(f"SELECT * FROM traps WHERE learner=?{' AND ' + sql if sql else ''}", learner, *where.values())
 
 
+def check_local_checkins() -> None:
+    """UTC+5 and UTC-5 check-ins follow their own midnight, including later stages."""
+    fixed = "2026-01-02T22:30:00+00:00"
+    plus, minus = "a:f4tzplus", "a:f4tzminus"
+    for learner, tz, due in ((plus, -300, "2026-01-06"), (minus, 300, "2026-01-05")):
+        progress.record(learner, None, q(801), 1, when="2026-01-02T20:00:00+00:00", tz=tz)
+        progress.record(learner, None, q(802), 0, when="2026-01-02T21:00:00+00:00", tz=tz)
+        progress.record(learner, None, q(803), 0, when=fixed, tz=tz)
+        row = trap(learner)
+        assert (row["closed"], row["due"], row["tz"]) == (fixed, due, tz)
+    with patch.object(progress, "_utc_now", return_value=dt.datetime(2026, 1, 5, 4, 59, tzinfo=dt.timezone.utc)):
+        assert not progress.due_rechecks(plus) and not progress.due_rechecks(minus)
+    with patch.object(progress, "_utc_now", return_value=dt.datetime(2026, 1, 5, 5, 0, tzinfo=dt.timezone.utc)):
+        assert not progress.due_rechecks(plus) and len(progress.due_rechecks(minus)) == 1
+    with patch.object(progress, "_utc_now", return_value=dt.datetime(2026, 1, 5, 18, 59, tzinfo=dt.timezone.utc)):
+        assert not progress.due_rechecks(plus)
+    with patch.object(progress, "_utc_now", return_value=dt.datetime(2026, 1, 5, 19, 0, tzinfo=dt.timezone.utc)):
+        assert len(progress.due_rechecks(plus)) == len(progress.due_rechecks(minus)) == 1
+    progress.record(minus, None, q(804), 0, when="2026-01-05T05:00:00+00:00", tz=300)
+    progress.record(plus, None, q(804), 0, when="2026-01-05T19:00:00+00:00", tz=-300)
+    assert (trap(minus)["checks"], trap(minus)["due"]) == (1, "2026-01-12")
+    assert (trap(plus)["checks"], trap(plus)["due"]) == (1, "2026-01-13")
+
+
 def checks():
     for table in ("classes", "members", "assignments", "attachments"):
         assert not db.one("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", table)
@@ -1158,6 +1182,7 @@ def carry():
 
 def check(client):
     checks()
+    check_local_checkins()
     days_checks()
     causes_checks()
     estimate_checks()
