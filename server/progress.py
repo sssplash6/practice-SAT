@@ -330,6 +330,8 @@ def record_trap(learner: str, q: dict, reason: str, when: str, session: str | No
                 attempt: int | None = None, unsure: bool = False, label: str | None = None) -> dict:
     """Open or refresh the trap a miss (or an unsure right) files under. Retry
     mode files a later try's trap hit through this too."""
+    if db.is_sample(learner):
+        raise ValueError("the sample report is read-only")
     key = "~unsure" if unsure else norm(reason)
     if not (unsure or label or reason):
         try:
