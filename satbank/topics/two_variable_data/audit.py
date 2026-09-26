@@ -21,6 +21,19 @@ __all__ = ["AUDITS"]
 MINUS = "−"
 
 
+def supply_slope(p: dict) -> float:
+    return float((Q(p["y1"]) - Q(p["y0"])) / (Q(p["x1"]) - Q(p["x0"])))
+
+
+def supply_predict(p: dict) -> float:
+    return float(Q(p["slope"]) * Q(p["x"]) + Q(p["intercept"]))
+
+
+def supply_residual(p: dict) -> float:
+    predicted = Q(p["slope"]) * Q(p["x"]) + Q(p["intercept"])
+    return float(Q(p["observed"]) - predicted)
+
+
 def _n(text) -> Q:
     """A number as this topic prints one: 480, 1,200, −0.7, 3/4."""
     t = str(text).replace(MINUS, "-").replace(",", "").replace("%", "").strip()
@@ -383,6 +396,9 @@ def _word(text: str, after: str) -> Q:
 
 
 AUDITS = {
+    "tvdata_supply_slope": supply_slope,
+    "tvdata_supply_predict": supply_predict,
+    "tvdata_supply_residual": supply_residual,
     "tvdata.point_read": point_read,
     "tvdata.interval_change": interval_change,
     "tvdata.series_extreme": series_extreme,
