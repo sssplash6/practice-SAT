@@ -53,8 +53,9 @@
 .wfin details p { margin-top: 6px; font: 400 13px/1.5 var(--font); color: var(--soft); max-width: 70ch; }
 dialog.sheet.wsheet { max-width: min(720px, calc(100vw - 32px)); max-height: 88vh; }
 .wsheet > .sheet-head { position: sticky; top: 0; background: inherit; z-index: 1; }
-.wsheet > .sheet-head h2 { font: 800 32px/1.05 var(--font) !important; letter-spacing: -.03em; overflow-wrap: anywhere; }
-.ws-tools { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+.wsheet > .sheet-head h2 { font: 800 32px/1.05 var(--font) !important; letter-spacing: -.03em; overflow-wrap: break-word; flex: 0 1 auto; }
+.ws-mode .seg { --ctl: 30px; }
+.ws-tools { display: flex; flex: none; align-items: center; gap: 2px; margin-left: auto; }
 .ws-tools .btn.icon { background: none; }
 .ws-tools .btn[aria-pressed="true"] { color: var(--amber-deep); }
 .ws-tools .btn[aria-pressed="true"] svg path { fill: var(--amber); stroke: var(--amber-deep); }
@@ -74,7 +75,7 @@ dialog.sheet.wsheet { max-width: min(720px, calc(100vw - 32px)); max-height: 88v
 .wchips { display: flex; flex-wrap: wrap; gap: 6px; }
 .wchip { appearance: none; border: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px;
   border-radius: 8px; background: var(--tile); font: 600 14px var(--font); color: var(--ink); }
-.wchip.plain { cursor: default; font-weight: 500; }
+.wchip.plain { cursor: default; font-weight: 500; background: none; padding: 0 6px; }
 .wchip[aria-current="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
 .wchip small { font: 500 11.5px var(--mono); color: var(--soft); }
 @media (hover: hover) and (pointer: fine) { button.wchip:not([aria-current="true"]):hover { background: var(--tile-2); } }
@@ -164,6 +165,14 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
   const TRAP = { reversed: 'Reverses the meaning', too_strong: 'Too strong', too_weak: 'Too weak', connotation: 'Wrong tone',
     lookalike: 'Looks like the answer', everyday: 'Everyday meaning', topical: 'Fits the subject, not the blank',
     wrong_logic: 'Wrong relationship', reversed_direction: 'Cause and effect swapped' };
+  // traps.json's check lines, shown under the reason (W1)
+  const CHECK = { reversed: 'Does the passage favor this idea or push against it?', too_strong: 'Does the evidence justify that degree of certainty?',
+    too_weak: 'Is the passage firmer than this word suggests?', connotation: 'Is the writer approving, disapproving, or neutral?',
+    lookalike: 'Which of the similar-looking words actually means this?', everyday: 'What does this word mean in this particular sentence?',
+    topical: 'What action or quality must the missing word express?', wrong_logic: 'Do the ideas add, contrast, explain, or follow from each other?',
+    reversed_direction: 'Which event is the cause, and which is the result?' };
+  // a verdict from the Words server in UI.workspace's feedback shape
+  const verdict = (r, answer) => ({ ...r, given: Number.isInteger(r.given_index) ? r.given_index : answer, trap_check: r.trap ? CHECK[r.trap] : null });
   const KIND = { card: 'Card', learn: 'Learn card', fix: 'Fix card', commit: 'Card', meaning2word: 'Meaning → word', word2meaning: 'Word → meaning',
     cloze: 'Fill the blank', incontext: 'In context', nearly: 'Most nearly means', precise: 'Most precise', order: 'Order the ladder',
     transition: 'Transitions', decode: 'Decode it', rootshare: 'Which root?', typed: 'Type it', placement: 'Placement', placement_check: 'Check',
@@ -408,7 +417,8 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
   word.open = function open(slug, o = {}) {
     if (openSheet) { openSheet.go(slug, o); return openSheet; }
     const list = o.list || [];
-    let cur = slug, data = null, covered = !!o.covered, shownAt = 0;
+    // covered: the answer-giving blocks are hidden; selftest: the footer grades (W14), through Show and after it
+    let cur = slug, data = null, covered = !!o.covered, selftest = covered, shownAt = 0;
     const tools = h('div', { class: 'ws-tools' });
     const foot = h('div', { class: 'sheet-foot ws-foot' });
     const api = UI.sheet({ className: 'wsheet', title: '…', body: b => { b.append(h('p', { class: 'meta', text: 'Loading…' })); },
@@ -423,8 +433,8 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
         ArrowLeft: { does: 'Previous word', run: () => step(-1) },
         ArrowRight: { does: 'Next word', run: () => step(1) },
         Space: { does: 'Show the covered blocks', run: () => { if (covered) uncover(); } },
-        1: { does: 'Don’t know (covered)', run: () => { if (covered) grade(false); } },
-        2: { does: 'Know (covered)', run: () => { if (covered) grade(true); } },
+        1: { does: 'Don’t know (covered)', run: () => { if (selftest) grade(false); } },
+        2: { does: 'Know (covered)', run: () => { if (selftest) grade(true); } },
         P: { does: 'Say it', run: () => data && speak(data.word) },
         B: { does: 'Save', run: () => data && toggleSave() },
       }, { within: d, label: 'Word sheet' });
@@ -441,7 +451,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     }
     function go(s, oo = {}) {
       cur = s;
-      if (oo.covered !== undefined) covered = oo.covered;
+      if (oo.covered !== undefined) selftest = covered = oo.covered;
       setW(s);
       load();
     }
@@ -468,11 +478,11 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       const saved = !!(data.state && data.state.saved);
       const star = h('button', { type: 'button', class: 'btn icon', 'aria-pressed': String(saved), 'aria-label': saved ? 'Saved' : 'Save', title: 'Save (B)', onclick: toggleSave }, ic('star'));
       const i = list.indexOf(cur);
-      tools.replaceChildren(speakBtn(data.word), star,
+      tools.replaceChildren(...[speakBtn(data.word), star,
         h('button', { type: 'button', class: 'btn icon', 'aria-label': 'Report a problem with this word', title: 'Report',
           onclick: () => UI.report && UI.report({ kind: 'word', source: 'words', word: data.slug, meaning: data.meaning }) }, ic('flag')),
-        list.length > 1 ? [h('button', { type: 'button', class: 'btn icon', 'aria-label': 'Previous word', title: 'Previous (←)', disabled: i <= 0, onclick: () => step(-1) }, ic('left')),
-          h('button', { type: 'button', class: 'btn icon', 'aria-label': 'Next word', title: 'Next (→)', disabled: i < 0 || i >= list.length - 1, onclick: () => step(1) }, ic('right'))] : null);
+        ...(list.length > 1 ? [h('button', { type: 'button', class: 'btn icon', 'aria-label': 'Previous word', title: 'Previous (←)', disabled: i <= 0, onclick: () => step(-1) }, ic('left')),
+          h('button', { type: 'button', class: 'btn icon', 'aria-label': 'Next word', title: 'Next (→)', disabled: i < 0 || i >= list.length - 1, onclick: () => step(1) }, ic('right'))] : [])]);
     }
     async function toggleSave() {
       if (!data || !data.slug) return;
@@ -506,9 +516,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
         (w.also || []).length ? h('span', { text: `also: ${w.also.join(', ')}` }) : null,
         w.sense && w.sense !== 'main' && w.sense !== '' ? h('span', { class: 'wtag', text: w.sense.replace(/_/g, ' ') }) : null,
         own ? h('span', { class: 'wtag', text: 'My word' }) : null,
-        h('span', { class: 'ws-mode' }, h('button', { type: 'button', class: 'quiet', text: covered ? 'Covered · Open' : 'Open · Cover',
-          'aria-pressed': String(covered), title: 'Cover the blocks that give the answer away',
-          onclick: () => { covered = !covered; ls.set(COVER_KEY, covered ? 'covered' : 'open'); d.classList.toggle('covered', covered); paint(); } }))));
+        coverSeg()));
       const lv = level(w.measured, w.level);
       body.push(h('div', { class: 'ws-chips' },
         w.collection ? h('span', { class: 'wtag', text: collName(w.collection) }) : null,
@@ -520,12 +528,12 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       // shades (W3)
       const sh = w.shades && w.shades.words || [];
       if (sh.length > 1) {
+        // one row, weakest -> strongest; the tone shows on each chip only when the class mixes tones
         const mixed = new Set(sh.map(x => Math.sign(x.polarity || 0))).size > 1;
-        const row = xs => h('div', { class: 'wchips' }, xs.map(x => wordChip({ slug: x.slug, word: x.word }, { current: x.slug === w.slug })));
-        body.push(block(`Shades · ${w.shades.dimension || 'weakest → strongest'}`, [row(sh),
-          mixed ? [1, 0, -1].map(p => sh.filter(x => Math.sign(x.polarity || 0) === p)).filter(g => g.length).map((g, i) => h('div', { class: 'wchips' },
-            h('span', { class: 'meta', text: ['+', '0', '−'][[1, 0, -1].indexOf(Math.sign(g[0].polarity || 0))] }), g.map(x => wordChip({ slug: x.slug, word: x.word }, { current: x.slug === w.slug })))) : null,
-          h('p', { class: 'help', text: 'The most precise word matches the text’s strength and tone.' }),
+        const tone = x => ({ 1: '+', 0: '0', '-1': '−' })[Math.sign(x.polarity || 0)];
+        body.push(block(`Shades · ${w.shades.dimension || 'weakest → strongest'}`, [
+          h('div', { class: 'wchips', 'aria-label': 'Weakest to strongest' }, sh.map(x => wordChip({ slug: x.slug, word: x.word }, { current: x.slug === w.slug, small: mixed ? tone(x) : null }))),
+          h('p', { class: 'help', text: `Weakest → strongest${mixed ? ' · + approving, 0 neutral, − critical' : ''}. The most precise word matches the text’s strength and tone.` }),
           w.shade ? h('p', { class: 'shade-n', text: w.shade }) : null], { cover: true, cls: 'shades' }));
       }
       // built from (W4)
@@ -566,6 +574,13 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       paintFoot();
       if (UI.gloss) api.body.querySelectorAll('.wb .ex').forEach(p => UI.gloss(p, { exclude: [w.word], ref: 'sheet' }));
     }
+    // W14: Covered · Open, remembered per browser
+    function coverSeg() {
+      const host = h('span', { class: 'ws-mode' });
+      UI.seg(host, [{ value: 'covered', label: 'Covered' }, { value: 'open', label: 'Open' }], { value: covered ? 'covered' : 'open', label: 'Sheet view',
+        onChange: v => { selftest = covered = v === 'covered'; ls.set(COVER_KEY, v); d.classList.toggle('covered', covered); paintFoot(); } });
+      return host;
+    }
     function collName(id) { return (UI.word._coll && UI.word._coll[id]) || cap(String(id).replace(/-/g, ' ')); }
     function confRow(kind, other, tell, c, ix) {
       const hit = ix && ix.byWord.get(String(other).toLowerCase());
@@ -590,7 +605,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
           onCheck: async (answer, meta) => {
             const r = await UI.api('/words/sample/answer', { method: 'POST', body: { token, answer, ms: meta && meta.ms, conf: meta && meta.conf === 'guess' ? 'guess' : undefined } });
             if (o.onChange) o.onChange(w.slug, { graded: true });
-            return { ...r, given: answer, mistake: r.trap ? `${TRAP[r.trap] || r.trap}: ${(r.reasons || [])[answer] || ''}` : null };
+            return verdict(r, answer);
           },
           actions: (slot) => slot.append(h('button', { type: 'button', class: 'btn sm', onclick: another }, UI.VERBS ? 'Twin' : 'Another', h('span', { class: 'meta', text: ' same word, new text' }))) });
         const stem = ws.el.querySelector('.q-stem');
@@ -651,10 +666,10 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     function paintFoot() {
       if (!data || !data.slug) { foot.replaceChildren(); return; }
       const w = data;
-      if (covered) {
-        foot.replaceChildren(h('button', { type: 'button', class: 'btn', onclick: uncover }, 'Show', h('span', { class: 'kbd', text: 'Space' })), h('span', { class: 'grow' }),
+      if (selftest) {
+        foot.replaceChildren(...[covered ? h('button', { type: 'button', class: 'btn', onclick: uncover }, 'Show', h('span', { class: 'kbd', text: 'Space' })) : null, h('span', { class: 'grow' }),
           h('button', { type: 'button', class: 'btn', onclick: () => grade(false) }, 'Don’t know', h('span', { class: 'kbd', text: '1' })),
-          h('button', { type: 'button', class: 'pill sm', onclick: () => grade(true) }, 'Know', h('span', { class: 'kbd', text: '2' })));
+          h('button', { type: 'button', class: 'pill sm', onclick: () => grade(true) }, 'Know', h('span', { class: 'kbd', text: '2' }))].filter(Boolean));
         return;
       }
       const lookalikes = (w.confusions || []).map(c => c.other).concat((w.lookalikes || []).map(l => l.word));
@@ -662,7 +677,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       more.addEventListener('click', () => UI.menu(more, [{ label: 'Reset progress', onClick: resetProgress }], { align: 'end' }));
       const cardsHere = h('button', { type: 'button', class: w.sample ? 'btn' : 'pill sm', text: 'Flashcards from here',
         onclick: () => startWords({ mode: 'cards', deck: { source: 'words', words: (list.length ? list : [w.slug]).slice(0, 200), start: w.slug }, order: 'az', count: Math.min(200, list.length || 1) }) });
-      foot.replaceChildren(
+      foot.replaceChildren(...[
         w.sample && !w.own ? (UI.verb ? UI.verb('twin', { count: 10, primary: true, subject: 'rw', onClick: () => practise10(w) }) : h('button', { type: 'button', class: 'pill sm', text: 'Practise 10 in context', onclick: () => practise10(w) })) : null,
         cardsHere,
         lookalikes.length ? h('button', { type: 'button', class: 'quiet', text: 'Quiz it with its lookalikes', onclick: async () => {
@@ -670,7 +685,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
           const slugs = [w.slug, ...lookalikes.map(x => ix && ix.byWord.get(String(x).toLowerCase())).filter(Boolean).map(x => x.slug)];
           quizStart({ source: 'words', words: [...new Set(slugs)] }, 6);
         } }) : null,
-        h('span', { class: 'grow' }), more);
+        h('span', { class: 'grow' }), more].filter(Boolean));
     }
     const practise10 = w => startWords({ mode: 'quiz', deck: { source: 'words', words: [w.slug] }, formats: ['incontext', 'nearly'], count: 10 });
     async function resetProgress() {
@@ -694,15 +709,15 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       api.setTitle((r.forms || [r.id]).join(' · '));
       tools.replaceChildren();
       const fam = r.words || [];
-      api.body.replaceChildren(
+      api.body.replaceChildren(...[
         h('p', { class: 'ws-sub' }, h('span', { text: cap(r.kind || 'root') }), r.origin ? h('span', { text: r.origin }) : null),
         block('Meaning', h('p', { class: 'meaning', text: r.meaning || '' })),
         r.false_friend ? block('False friend', h('p', { class: 'line', text: r.false_friend })) : null,
         block(`Family · ${fam.length}`, [h('div', { class: 'wchips' }, fam.map(x => h('button', { type: 'button', class: 'wchip', onclick: () => go(x.slug, { covered: false }) },
           pips({ state: { box: x.box } }), x.word, h('small', { text: x.split || '' })))),
           fam.some(x => x.gloss) ? fam.filter(x => x.gloss).map(x => h('p', { class: 'line', text: `${x.split} · ${x.gloss}` })) : null]),
-        h('p', { class: 'line wb', text: `Knowing “${(r.forms || [r.id])[0].replace(/-/g, '')}” helps with ${plural(r.total ?? fam.length, 'word')}${r.known ? ` (${r.known} known)` : ''}.` }));
-      foot.replaceChildren(fam.length ? h('button', { type: 'button', class: 'pill sm', text: `Flashcards · ${fam.length}`, onclick: () => startWords({ mode: 'cards', deck: { source: 'root', value: r.id }, count: fam.length }) }) : null);
+        h('p', { class: 'line wb', text: `Knowing “${(r.forms || [r.id])[0].replace(/-/g, '')}” helps with ${plural(r.total ?? fam.length, 'word')}${r.known ? ` (${r.known} known)` : ''}.` })].filter(Boolean));
+      if (fam.length) foot.replaceChildren( h('button', { type: 'button', class: 'pill sm', text: `Flashcards · ${fam.length}`, onclick: () => startWords({ mode: 'cards', deck: { source: 'root', value: r.id }, count: fam.length }) }));
     }
     setW(cur);
     load();
@@ -720,6 +735,8 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
   word.POS = POS;
   word.TRAP = TRAP;
   word.KIND = KIND;
+  word.CHECK = CHECK;
+  word.verdict = verdict;
   word.marked = marked;
   word.markWord = markWord;
   word.speakBtn = speakBtn;
