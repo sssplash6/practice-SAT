@@ -37,6 +37,7 @@ MODULE_S = 35 * 60
 SECTION_S = 70 * 60
 CHALLENGE_S = 16 * 60
 SOURCES = ("bluebook", "official", "other")
+SCORES_A_DAY = 20                   # added scores are durable writes: a bound, as SEC-06 asks of every write
 FIRST_SCORE_DAY = dt.date(2020, 1, 1)
 
 
@@ -161,6 +162,9 @@ def add_outside_score(learner: str, day: str, math_score: int, rw: int | None = 
         raise HTTPException(422, "day is YYYY-MM-DD")
     if d > _local_today(tz) or d < FIRST_SCORE_DAY:
         raise HTTPException(422, "day is on or before today")
+    since = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=1)).isoformat()
+    if db.one("SELECT COUNT(*) n FROM outside_scores WHERE learner=? AND at>=?", learner, since)["n"] >= SCORES_A_DAY:
+        raise HTTPException(429, f"at most {SCORES_A_DAY} added scores a day")
     row = {"id": secrets.token_hex(8), "learner": learner, "day": day, "math": math_score, "rw": rw,
            "source": source, "at": drill.deps.now()}
     with db.transaction():
@@ -1054,6 +1058,27 @@ def exam_part(p: dict, t: dt.date) -> dict | None:
             "registration": satdates.registration(p["exam_date"], (p.get("prefs") or {}).get("registered"), t)}
 
 
+def readiness(learner: str, tz: int, t: dt.date, doms: list[dict]) -> list[dict]:
+    """T13's readiness per domain: Ready (Strong, no open mistake on a skill
+    with 2+ a test, answered in the last 7 days), Shaky (such mistakes, or
+    mastery under 0.6), Untested for 14 days; else close. Each with a 10-minute box."""
+    shares = estimate.shares()
+    last = {r["topic"]: r["at"] for r in db.rows("SELECT topic, MAX(at) at FROM attempts WHERE learner=? GROUP BY topic",
+                                                learner)}
+    out = []
+    for d in doms:
+        topics = [x["topic"] for x in d["topics"]]
+        seen = max((last[x] for x in topics if x in last), default=None)
+        ago = (t - progress._local_day(seen, tz)).days if seen else None
+        big = sum(x["traps"] for x in d["topics"] if 44 * shares.get(x["topic"], 0) >= 2)
+        state = ("untested" if ago is None or ago >= 14 else "shaky" if big or d["mastery"] < 0.6 else
+                 "ready" if d["mastery"] >= progress.STRONG and ago <= 7 else "close")
+        out.append({"domain": d["domain"], "state": state, "open": d["traps"], "open_big": big,
+                    "mastery": d["mastery"], "days_since": ago,
+                    "start": {"path": "/api/drill", "body": {"topics": topics, "box": 10, "source": "today"}}})
+    return out
+
+
 def today_payload(learner: str, tz: int) -> dict:
     p = profile(learner, tz)
     d = progress.days(learner, tz, 6)
@@ -1085,11 +1110,15 @@ def today_payload(learner: str, tz: int) -> dict:
     review = review_counts(learner, tz, t)
     box = (p.get("prefs") or {}).get("review_minutes", 10)
     review["start"] = {"path": "/api/drill", "body": {"source": "due", "box": box}, "minutes": box}
+    doms = domains(learner)
+    exam = exam_part(p, t)
+    if exam and st and st.get("mode") in ("stretch", "taper", "eve", "exam"):
+        exam["readiness"] = readiness(learner, tz, t, doms)
     return {
-        "profile": p, "days": d, "exam": exam_part(p, t), "tested": tested,
+        "profile": p, "days": d, "exam": exam, "tested": tested,
         "score": score_list[0] if score_list else None,
         "coach": coach, "mistakes": len(open_list),
-        "study": study_, "scores": score_list, "outside": outside(learner), "domains": domains(learner),
+        "study": study_, "scores": score_list, "outside": outside(learner), "domains": doms,
         "traps": tr, "open": open_, "week": week(learner, tz, d, t),
         "warmup": warm, "plan": plan, "draft": None if plan else plan_draft(learner, tz, p, t, d, score_list),
         "review": review, "words": words,
