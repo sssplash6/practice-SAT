@@ -19,7 +19,7 @@
   /* Today (spec 3.2, today.md T1-T20, R27, R30). Every shared piece (cards, seg, chips,
      sheets, charts, the question) is ui.css / runner.css; these rules lay the page out. */
   .td { padding-bottom: 110px; }
-  .td :where(*) { min-width: 0; }
+  .td :where(*:not(.q-table)) { min-width: 0; }
   .td-upd { margin: 0 0 10px; padding-top: 6px; border-top: 1px solid var(--line); font: 500 11px var(--mono); color: var(--soft); }
 
   /* the grid: DOM order is the phone order; order + span place the wider layouts */
@@ -50,11 +50,11 @@
   .td .card-head { justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
   .td .card-head > .k { flex: 1 1 auto; margin: 0; outline-offset: 4px; }
   .td .card-head .card-act { margin-left: auto; }
-  .td .sub { margin: 18px 0 8px; font: 600 11px/1.3 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
-  .td .sub:first-child { margin-top: 0; }
-  .td .line { margin: 6px 0 0; font: 400 14.5px/1.45 var(--font); color: var(--ink); text-wrap: pretty; }
-  .td .line.soft { color: var(--soft); font-size: 13.5px; }
-  .td .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  .td .sub, .td-takes .sub { margin: 18px 0 8px; font: 600 11px/1.3 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+  .td .sub:first-child, .td-takes .sub:first-child { margin-top: 0; }
+  .td .line, .td-takes .line { margin: 6px 0 0; font: 400 14.5px/1.45 var(--font); color: var(--ink); text-wrap: pretty; }
+  .td .line.soft, .td-takes .line.soft { color: var(--soft); font-size: 13.5px; }
+  .td .row, .td-takes .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
   .td .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
   .td .big { font: 600 44px/1 var(--mono); font-variant-numeric: tabular-nums; letter-spacing: -.02em; color: var(--ink); }
   .td .bar4 { display: block; height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; margin-top: 6px; }
@@ -187,7 +187,7 @@
     .qd-row { grid-template-columns: minmax(0, 1fr); gap: 0; }
     .qd-row + .qd-rowk { margin-top: 0; }
     .qd-slot:not(.on) { display: none; }
-    .qd-slot { padding: 0; background: none; }
+    .qd-slot { padding: 0; background: none; touch-action: pan-y; }
     .qd-lab .mk { display: none; }
   }
 
@@ -481,7 +481,8 @@
   }
   function twinSheet(body, recall, title) {
     if (!UI.twinSheet) return drill(body);
-    UI.twinSheet({ body, recall: recall ? { text: recall } : null, title: title || 'Try one now', onDone: () => refresh(['today']) });
+    const s = UI.twinSheet({ body, recall: recall ? { text: recall } : null, title: title || 'Try one now', onDone: () => refresh(['today']) });
+    if (s && s.el && !title) s.el.id = 'tryOne';
   }
 
   /* ---------------------------------------------------------------- loading */
@@ -648,7 +649,8 @@
   function paintNext() {
     const t = S.t, nx = t.next || {}, plan = t.plan;
     const pday = plan ? planDay(t.days.today) : null;
-    const right = plan && pday ? h('span', { class: 'meta', text: pday.kind === 'rest' ? 'Rest day in your plan'
+    const restLead = pday && pday.kind === 'rest' && !(nx.items || [])[0];   // the lead says it then
+    const right = plan && pday && !restLead ? h('span', { class: 'meta', text: pday.kind === 'rest' ? 'Rest day in your plan'
       : pday.kind === 'test' ? `Test day in your plan · ${n(pday.minutes)} min` : `Today in your plan · ${n(pday.minutes)} min` }) : null;
     const kids = [];
     if (t.receipt) kids.push(receiptBlock(t.receipt));
@@ -796,7 +798,7 @@
     // the reason, the blocks and question 1 (painted by paintBlocks)
     wrap.append(h('div', { id: 'sessBody' }));
     const goRow = h('div', { class: 'go' });
-    const start = (hasLead ? btn : pill)('Study', inCard(goRow, () => drill(sessBody())));
+    const start = (hasLead && (nx.items || [])[0] ? btn : pill)('Study', inCard(goRow, () => drill(sessBody())));
     start.id = 'sessStart';
     prefetchSession(start);
     goRow.append(start);
@@ -1493,11 +1495,14 @@
     tgt.addEventListener('click', () => targetSheet(tgt));
     const kids = [];
     if (!sc) {
-      kids.push(h('p', { class: 'score-band', text: 'No score yet' }));
-      if (p.current) kids.push(meta(`Your estimate: ${p.current}`));
+      // only added scores: the latest one is the score; else the doors to one (Add a score is at the foot)
+      const added = (t.outside || []).filter(x => x.math).sort((a, b) => (a.day < b.day ? -1 : 1)).pop();
+      kids.push(h('p', { class: 'score-band', text: added ? String(added.math) : 'No score yet' }));
+      if (added) kids.push(meta(join('Math', added.source === 'official' ? 'Official' : 'Bluebook', UI.date(added.day), 'added')));
+      else if (p.current) kids.push(meta(`Your estimate: ${p.current}`));
       kids.push(h('div', { class: 'acts' }, btn('Module · 22 questions · 35 min', () => go({ path: '/mock/new', body: { full: false } })),
-        link('Diagnostic · 20 questions · 32 min', '/diagnostic/', 'btn'), quiet('Add a score', () => scoreSheet({}))));
-      kids.push(h('p', { class: 'help', text: 'Any module, the diagnostic, or an added score gives a score.' }));
+        link('Diagnostic · 20 questions · 32 min', '/diagnostic/', 'btn')));
+      if (!added) kids.push(h('p', { class: 'help', text: 'Any module, the diagnostic, or an added score gives a score.' }));
     } else {
       kids.push(h('p', { class: 'score-band', text: `${sc.low}–${sc.high}` }));
       kids.push(h('p', { class: 'meta' }, h('a', { class: 'plain', href: `/results/report/?id=${encodeURIComponent(sc.session)}`, text: join('Math', UI.KIND && UI.KIND.label ? UI.KIND.label(sc) : cap(sc.kind), UI.date(sc.at)) })));
@@ -1519,8 +1524,9 @@
     else if (est) {
       const pd = est.practice_delta;
       if (pd && pd.show) kids.push(line(`Practice since ${UI.date(pd.since)}: ≈ ${pd.pts > 0 ? '+' : '−'}${Math.abs(pd.pts)} · from ${pl(pd.answers, 'answer')}`));
-      if (est.evidence) {
-        const ev = Object.entries(est.evidence).map(([d, k]) => `${DSHORT(d)} ${k}${(est.thin || []).includes(d) ? ' (thin)' : ''}`).join(' · ');
+      const evs = Object.entries(est.evidence || {}).filter(([, k]) => k);   // zero rows say nothing
+      if (evs.length) {
+        const ev = evs.map(([d, k]) => `${DSHORT(d)} ${k}${(est.thin || []).includes(d) ? ' (thin)' : ''}`).join(' · ');
         kids.push(meta(`Evidence: ${ev}`));
         if ((est.thin || []).length) kids.push(h('div', { class: 'acts' }, btn('Sharpen · 12 questions · ~19 min', () => drill({ source: 'probe', count: 12 }))));
       }
@@ -1537,7 +1543,7 @@
     if (est && est.verdict) {
       kids.push(line(est.verdict));
       if (est.made_per_week !== null && est.made_per_week !== undefined) kids.push(meta(join(`Made ${est.made_per_week >= 0 ? '+' : '−'}${Math.abs(Math.round(est.made_per_week))} / wk`, est.needs_per_week && `needs +${Math.round(est.needs_per_week)} / wk`)));
-      if (est.verdict_kind === 'not_enough') kids.push(h('div', { class: 'acts' }, btn('Module · 22 q · 35 min', () => go({ path: '/mock/new', body: { full: false } }))));
+      if (est.verdict_kind === 'not_enough' && sc) kids.push(h('div', { class: 'acts' }, btn('Module · 22 q · 35 min', () => go({ path: '/mock/new', body: { full: false } }))));
       if (est.calibration) kids.push(line(est.calibration.text || `We projected ${est.calibration.low}–${est.calibration.high} for ${UI.date(est.calibration.day)} · you scored ${est.calibration.score}`));
     }
     if (ins.causes) kids.push(causesBlock(ins.causes));
@@ -1610,7 +1616,7 @@
     const start = { v, rwNow, rwT };
     let sheet, later = null;                          // a later exam date that makes the target Steady (T11)
     const save = h('button', { type: 'button', class: 'pill', text: 'Save', disabled: true });
-    const takes = h('div', { class: 'td', role: 'status' });
+    const takes = h('div', { class: 'td-takes', role: 'status' });
     const note = h('p', { class: 'help' });
     const num = h('input', { type: 'number', class: 'field', min: 200, max: 800, step: 10, value: v, 'aria-label': 'Math target' });
     const rng = h('input', { type: 'range', min: 200, max: 800, step: 10, value: v, 'aria-label': 'Math target slider', style: 'width:100%' });
@@ -1682,6 +1688,7 @@
         h('p', { class: 'help', text: 'We only test Math. Add your R&W from Bluebook or a real SAT to see your total.' }));
       b.append(h('div', { class: 'acts' }, draft ? null : clear, h('span', { style: 'flex:1' }), quiet('Cancel', () => sheet.close()), save));
     } });
+    if (sheet && sheet.el) sheet.el.id = 'targetSheet';
     askTakes();
   }
 
@@ -1734,7 +1741,9 @@
   function previewFor(over) {
     const p = S.t.profile, sc = S.t.score;
     const current = (S.t.plan && S.t.plan.current) || (sc ? Math.round((sc.low + sc.high) / 20) * 10 : p.current) || undefined;
-    return post('/plan/preview', Object.assign({ current, target: p.target || undefined, exam_date: p.exam_date || undefined, minutes: p.minutes || 45, days: p.days || '1111100' }, over));
+    const body = Object.assign({ current, target: p.target || undefined, exam_date: p.exam_date || undefined, minutes: p.minutes || 45, days: p.days || '1111111' }, over);   // every day, as the workload counts
+    if (body.target && body.current && body.target < body.current) return Promise.resolve({});   // the server refuses a target below now
+    return post('/plan/preview', body);
   }
   // at most `ms` to wait, so a slow preview never holds a control shut
   const within = (pr, ms = 700) => Promise.race([pr.catch(() => null), new Promise(r => setTimeout(() => r(null), ms))]);
@@ -1764,7 +1773,8 @@
       card('exam', 'SAT', null, h('p', { class: 'exam-cap', text: 'When is your SAT?' }), ch, h('div', { class: 'acts' }, quiet('Another date', (e, b) => examPop(b))));
       return;
     }
-    const trig = h('button', { type: 'button', class: 'exam-trig', 'aria-haspopup': 'listbox', text: `${UI.date(p.exam_date, 'long')}, ${p.exam_date.slice(0, 4)} ▾` });
+    const ed = UI.date(p.exam_date, 'long');       // carries the year only outside this year
+    const trig = h('button', { type: 'button', class: 'exam-trig', 'aria-haspopup': 'listbox', text: `${/\d{4}$/.test(ed) ? ed : `${ed}, ${p.exam_date.slice(0, 4)}`} ▾` });
     trig.addEventListener('click', () => examPop(trig));
     const days = ex ? ex.days : dayDiff(today(), p.exam_date);
     const kids = [];
@@ -1913,7 +1923,7 @@
     const recent = d.recent || [];
     const met = goal ? recent.filter(r => (r.minutes || 0) >= goal).length : null;
     const wm = t.warmup && t.warmup.month;
-    kids.push(h('p', { class: 'meta', style: 'margin-top:16px', text: join(d.streak ? `${d.streak}-day study streak` : 'No streak yet', d.best && `best ${d.best}`, d.spares && `${pl(d.spares, 'spare')}`,
+    kids.push(h('p', { class: 'meta', style: 'margin-top:16px', text: join(d.streak && `${d.streak}-day study streak`, d.best && `best ${d.best}`, d.spares && `${pl(d.spares, 'spare')}`,
       met !== null && `goal met ${met} of the last ${recent.length} days`, wm && wm.of && `held ${Math.round(100 * wm.held / wm.of)}% of ${wm.of} warm-up answers this month`) }));
     if (!t.warmup || !t.warmup.due) kids.push(meta('Nothing to review yet · first check-ins come 3 days after a fix.'));
     card('study', 'Study time', goalBtn, kids);
@@ -1957,9 +1967,10 @@
     if (day > today()) {
       kids.push(h('p', { class: 'dd-t', text: UI.date(day, 'long') }));
       if (pd) kids.push(line(join('Planned', cap(pd.kind), pd.questions && `${pd.questions} q`, pd.minutes && `${pd.minutes} min`)));
-      if (row && row.due && (row.due.checks || row.due.fading)) kids.push(line(join('warm-up', row.due.checks && pl(row.due.checks, 'check-in'), row.due.fading && `about ${row.due.fading} fading`), 'soft'));
+      const due = row && row.due && (row.due.checks || row.due.fading);
+      if (due) kids.push(line(join('warm-up', row.due.checks && pl(row.due.checks, 'check-in'), row.due.fading && `about ${row.due.fading} fading`), 'soft'));
       if (pd) kids.push(h('div', { class: 'acts' }, link('Open in plan', `/plan/?day=${day}`)));
-      if (!pd && !(row && row.due)) kids.push(line('Nothing planned yet.', 'soft'));
+      if (!pd && !due) kids.push(line('Nothing planned yet.', 'soft'));
       host.replaceChildren(...kids);
       return;
     }
@@ -2102,7 +2113,7 @@
       next.addEventListener('click', () => { S.week++; paintPlan(); });
       kids.push(h('div', { class: 'wk-pager' }, prev, h('span', { class: 'line', style: 'margin:0;font-weight:600', text: `Week ${w.n} of ${weeks.length} · ${w.tasks_done} of ${w.tasks_planned} tasks · ${pctW}%` }), next,
         S.week !== cur && cur >= 0 ? quiet('This week', () => { S.week = cur; paintPlan(); }) : null));
-      kids.push(bar4(pctW / 100), meta(w.theme || ''));
+      kids.push(bar4(pctW / 100), meta((w.theme || '').replace(/\d{4}-\d{2}-\d{2}/g, x => UI.date(x))));
       const strip = h('div', { class: 'wk-strip' });
       // Monday to Sunday, always 7 columns: days outside the plan (before its start, after the exam) stay blank
       const mon = addDays(w.from, -((new Date(w.from + 'T12:00:00').getDay() + 6) % 7));
