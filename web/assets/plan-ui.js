@@ -66,7 +66,8 @@
   .trow-title { font: 600 15px/1.3 var(--font); color: var(--ink); }
   .trow[data-next] .trow-title { font-weight: 700; }
   .trow-detail { margin: 0; font: 400 13.5px/1.45 var(--font); color: var(--ink); display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; }
-  .trow-detail .chip { font-size: 13px; }
+  .trow-detail .chip { height: 28px; padding: 0 9px 0 6px; gap: 6px; font-size: 13px; }
+  .trow-detail .chip .glyph { width: 16px; height: 16px; }
   .trow-meta { margin: 0; font: 500 12.5px/1.4 var(--mono); color: var(--soft); font-variant-numeric: tabular-nums; }
   .trow-meta b { font-weight: 500; color: var(--ink); }
   .trow-why { margin: 2px 0 0; padding: 0; list-style: none; display: grid; gap: 3px; font: 400 13px/1.45 var(--font); color: var(--soft); }
@@ -114,14 +115,14 @@
   const DONE = new Set(['done', 'marked', 'made_up']);
   const TOPIC_KINDS = new Set(['focus', 'map', 'learn', 'check', 'pace', 'habit']);
   const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  const DOTS = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="6" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="18" cy="12" r="1.6" fill="currentColor"/></svg>';
+  const DOTS = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="5.5" cy="12" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="18.5" cy="12" r="2" fill="currentColor"/></svg>';
   const WHERE = [['bluebook', 'Bluebook'], ['khan', 'Khan Academy'], ['book', 'A book'], ['tutor', 'A tutor'], ['other', 'Other']];
   const WHERE_LABEL = Object.fromEntries(WHERE);
 
-  function detailOf(t) {
-    if (t.topics && t.topics.length && TOPIC_KINDS.has(t.kind) && UI.chip) return t.topics.map(s => UI.chip(s));
+  function detailOf(t, compact) {
+    if (t.topics && t.topics.length && TOPIC_KINDS.has(t.kind)) return compact || !UI.chip ? t.topics.map(name).join(', ') : t.topics.map(s => UI.chip(s));
     // a zero is not news (decision 7): "0 due · due first" says nothing
-    const text = String(t.detail || '').split(' · ').filter(x => !/^0 \w+$/.test(x) && x !== 'due first').join(' · ');
+    const text = String(t.detail || '').split(' · ').filter(x => !/^0 /.test(x) && x !== 'due first').join(' · ');
     return text || null;
   }
   function metaOf(t) {
@@ -139,7 +140,8 @@
   }
   function receiptOf(t) {
     const r = t.result;
-    if (t.status === 'marked' && r && r.minutes) return `Marked done · ${r.minutes} min${r.where ? ` in ${WHERE_LABEL[r.where] || r.where}` : ''}`;
+    const m = t.minutes_done || (r && r.minutes), where = t.where || (r && r.where);
+    if (t.status === 'marked' && m) return `Marked done · ${Math.round(m)} min${where && WHERE_LABEL[where] ? ` in ${WHERE_LABEL[where]}` : ''}`;
     if (t.status === 'marked') return 'Marked done';
     if (!r || !r.asked) return t.status === 'made_up' ? 'Made up' : null;
     const bits = [`${r.right} of ${r.asked} right`];
@@ -184,7 +186,7 @@
         t.status === 'skipped' && h('span', { class: 'badge line', text: 'Skipped' }),
         t.status === 'moved' && t.moved_to && h('span', { class: 'meta', text: `Moved to ${UI.date ? UI.date(t.moved_to, 'long') : t.moved_to}` }));
       const main = h('div', { class: 'trow-main' }, head);
-      const det = detailOf(t);
+      const det = detailOf(t, o.compact);
       if (det) main.append(h('p', { class: 'trow-detail' }, det));
       const meta = o.compact ? '' : metaOf(t);
       const rec = !o.compact && done ? receiptOf(t) : null;
