@@ -73,10 +73,10 @@
 .mini-rows li.par { color: var(--soft); border-top-style: dashed; }
 .season-bar { height: 4px; margin: 10px 0 12px; border-radius: 3px; background: var(--mat); }
 .season-bar > i { display: block; height: 100%; border-radius: inherit; background: var(--ink); }
-.dots { display: inline-flex; flex-wrap: wrap; gap: 4px; vertical-align: middle; }
-.dot { width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink); }
-.dot.done { background: var(--ink); }
-.dot.progress { background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); }
+.edots { display: inline-flex; flex-wrap: wrap; gap: 4px; vertical-align: middle; }
+.edot { display: inline-block; flex: none; width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--ink); }
+.edot.done { background: var(--ink); }
+.edot.progress { background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); }
 .badge-row .meter { margin-top: 6px; }
 
 /* the contest page */
@@ -123,16 +123,16 @@
 .grid-t th button { appearance: none; border: 0; background: none; font: inherit; color: var(--soft); cursor: pointer; width: 22px; height: 22px; }
 .grid-t tfoot td { color: var(--soft); font-size: 10.5px; line-height: 1.2; }
 .review-list { display: grid; gap: 6px; }
-.rv { border-radius: 10px; background: var(--paper); }
-.rv > summary { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; padding: 12px 14px; cursor: pointer; list-style: none; }
-.rv > summary::-webkit-details-marker { display: none; }
-.rv > summary .q { font: 600 14px var(--mono); }
-.rv > summary .s { display: flex; align-items: center; gap: 8px; font: 500 14px/1.35 var(--font); }
-.rv > summary .s .glyph { width: 18px; height: 18px; flex: none; }
-.rv > summary .m { grid-column: 2 / -1; font: 500 12px var(--mono); color: var(--soft); }
-.rv > summary .mark { font: 700 15px var(--font); }
-.rv[hidden] { display: none; }
-.rv-body { padding: 4px 14px 18px; display: grid; gap: 16px; }
+.crv { border-radius: 10px; background: var(--paper); }
+.crv > summary { display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; align-items: center; gap: 4px 12px; padding: 12px 14px; cursor: pointer; list-style: none; }
+.crv > summary::-webkit-details-marker { display: none; }
+.crv > summary .q { font: 600 14px var(--mono); }
+.crv > summary .s { display: flex; align-items: center; gap: 8px; font: 500 14px/1.35 var(--font); }
+.crv > summary .s .glyph { width: 18px; height: 18px; flex: none; }
+.crv > summary .m { grid-column: 2 / -1; font: 500 12px var(--mono); color: var(--soft); }
+.crv > summary .mark { font: 700 15px var(--font); }
+.crv[hidden] { display: none; }
+.crv-body { padding: 4px 14px 18px; display: grid; gap: 16px; }
 .traps-list li { grid-template-columns: minmax(0, 1fr) auto; }
 .thumbbar { display: none; }
 @media (max-width: 759px) {
