@@ -65,6 +65,9 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
     - S4 Practice: MERGED 2026-09-27 (b2e4aaf): builder + session pages and the Practice server work so far (the helper's
       Task 25 continues the server on v2/s4-server: rebase it on master first). Leftovers in followups/S4-pages.json.
     - S4Q MERGED after the user approved the preview ("good job with practice"); leftovers in followups/S4Q.json.
+    - 2026-09-28: the user reviewed the Today preview live (13 basic visual findings, all fixed on v2/s3 and v2/calm-shared).
+      RUNNING: today-hygiene run `wf_da1586d8-318` (task w0342biml): 4 lens auditors, one fixer (commits on v2/s3 and
+      v2/calm-shared), one re-check. Every future page check now has a VISUAL HYGIENE item (build.js verify, item 5).
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH

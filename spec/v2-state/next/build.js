@@ -356,6 +356,13 @@ Check, with evidence you ran yourself:
 3. A SAMPLE of 15 requirements from the spec sections above and the upgrades assigned to ${t.id} (pick across the whole list and
    say which), built as written.
 4. Nothing outside the owned files changed (git diff --stat master...HEAD), and nothing contradicts spec/v2-decisions.md.
+5. VISUAL HYGIENE, measured in a headless browser at 1440, 1280, 900 and 390, light and dark, new and seeded learner (the user found
+   all of these by eye on Today and every earlier check missed them): controls in one row share one height and one vertical centre, and
+   their labels match; separate choices are visibly separate; no two equal-weight buttons doing different things side by side; hover and
+   focus boxes never overlap other elements; numbers, not sentences, for counts (0, not "Start a streak"), icons centred with their
+   text; no primary button repeating the header's facts; no zeros or defaults on screen; icons instead of repeated "Why" lines; long
+   cards collapsed by default; no card repeating another card; no empty area over 120px beside or inside a card; detail boxes sit with
+   what they describe; headers are one quiet line; help paragraphs become one link or tooltip. Each violation is a blocker.
 Mark each defect severity "blocker" (a failing check, broken or unsafe behaviour, data loss, a security hole, a contradiction of
 the decisions, or something another task needs now) or "followup" (anything else). pass = no blockers.`,
   { label: `verify ${t.id} r${round}`, phase: 'Verify', schema: VERDICT, isolation: 'worktree' })

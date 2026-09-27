@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-28T00:59:52+05:00
+# v2 build state -- 2026-09-28T04:18:07+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -10,6 +10,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/bank-lint` at f168c9f, 0 commits ahead of master
 - `v2/bank-lint-fix` at 033fa1a, 0 commits ahead of master
 - `v2/bank-supply` at 14cf283, 0 commits ahead of master
+- `v2/calm-shared` at 6ff230d, 1 commits ahead of master
 - `v2/cb-data` at 9346217, 0 commits ahead of master
 - `v2/cb-student-data` at fb3bc71, 1 commits ahead of master
 - `v2/f0` at dc9873f, 0 commits ahead of master
@@ -32,8 +33,8 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/s1-server` at cf53af4, 1 commits ahead of master
 - `v2/s10` at 4611321, 2 commits ahead of master
 - `v2/s10-server` at 85896a0, 2 commits ahead of master
-- `v2/s3` at 966913c, 20 commits ahead of master
-- `v2/s3-server` at 6fad986, 13 commits ahead of master
+- `v2/s3` at e7056b5, 24 commits ahead of master
+- `v2/s3-server` at 9c35fcc, 15 commits ahead of master
 - `v2/s4` at 5b22933, 0 commits ahead of master
 - `v2/s4-server` at 6259a3f, 1 commits ahead of master
 - `v2/s4q` at ef2ba16, 0 commits ahead of master
@@ -95,12 +96,15 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 ## Worktrees
 
-- `/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/prev4` on `detached e91db6b`: 0 uncommitted
+- `/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/prev4` on `detached fa5e885`: 1 uncommitted (saved in wip/prev4/)
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/calm-shared` on `v2/calm-shared`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/cb-student-data` on `v2/cb-student-data`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/helper-handoff` on `v2/helper-handoff`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/ops-docs` on `v2/ops-docs`: 2 uncommitted (saved in wip/ops-docs/)
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/perf` on `v2/perf`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s3-server` on `v2/s3-server`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s3-ui` on `v2/s3`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s4-server` on `v2/s4-server`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-1` on `detached 368eec4`: 0 uncommitted
