@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-27T17:19:50+05:00
+# v2 build state -- 2026-09-27T17:21:26+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -32,7 +32,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/s1-server` at cf53af4, 1 commits ahead of master
 - `v2/s10` at 4611321, 2 commits ahead of master
 - `v2/s10-server` at 85896a0, 2 commits ahead of master
-- `v2/s3` at 2fde10a, 12 commits ahead of master
+- `v2/s3` at dbf8f1d, 13 commits ahead of master
 - `v2/s3-server` at 6fad986, 13 commits ahead of master
 - `v2/s4` at 5b22933, 0 commits ahead of master
 - `v2/s4-server` at 6259a3f, 1 commits ahead of master
@@ -41,6 +41,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/s5-server` at a1788ce, 8 commits ahead of master
 - `v2/s6` at 83f13d8, 3 commits ahead of master
 - `v2/s6-server` at 057b7fc, 1 commits ahead of master
+- `v2/s7` at c0f34a4, 0 commits ahead of master
 - `v2/s7-server` at b88934e, 3 commits ahead of master
 - `v2/s7s` at 14174d3, 0 commits ahead of master
 - `v2/s8-server` at c39b162, 15 commits ahead of master
@@ -104,7 +105,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_9e14b5f3-2c4-3` on `detached dedddf9`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_9e14b5f3-2c4-4` on `detached ef2ba16`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_b6e107a2-030-1` on `detached 5b22933`: 1 uncommitted (saved in wip/wf_b6e107a2-030-1/)
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_d0e024ee-51b-1` on `v2/s3`: 2 uncommitted (saved in wip/wf_d0e024ee-51b-1/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_cd6aa6f5-112-1` on `v2/s7`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-fix` on `v2/words-fix`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-seed-sqlite` on `v2/words-seed-sqlite`: 0 uncommitted
 
@@ -167,6 +168,9 @@ Unfinished when saved: build F3 4/4, verify F2 r1
 
 ### wf_cafefb42-928: 11 finished, 2 unfinished
 Unfinished when saved: build F2 4/4, build F3 3/4
+
+### wf_cd6aa6f5-112: 0 finished, 1 unfinished
+Unfinished when saved: build S7 1/2
 
 ### wf_cffc089e-e95: 5 finished, 0 unfinished
 

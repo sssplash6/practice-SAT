@@ -66,8 +66,8 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       Task 25 continues the server on v2/s4-server: rebase it on master first). Leftovers in followups/S4-pages.json.
     - S4Q MERGED after the user approved the preview ("good job with practice"); leftovers in followups/S4Q.json.
     - The user (2026-09-27, going out): "only pick up sections in which server was done by another guy". So only S7, S9, S8 (their
-      servers are merged). RUNNING one at a time: run `wf_*` (see STATE.md) with `[{id:'S7'},{id:'S9'},{id:'S8'}]`. S3's page work
-      (about 2,100 lines of web/index.html) is checkpointed on v2/s3 and waits for the helper's Task 24 (Today server); S5, S6,
+      servers are merged), plus S3, which was already running (the user: "i never told you to stop the current one"). RUNNING one
+      at a time: `[{id:'S3'},{id:'S7'},{id:'S9'},{id:'S8'}]` (S3 continues from its checkpoint on v2/s3). S5, S6,
       S10, S1 and F2B wait for Tasks 26, 20, 21, 22, 23. Do NOT merge any page before the user previews it.
     - (history) queue S3, S5, S6, S10, S7, S9, S8, S1, F2B
       (WORKERS = 1). For each finished page: verify its web/ diff on the branch, preview it for the user, merge on their OK.
