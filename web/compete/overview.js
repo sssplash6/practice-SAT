@@ -32,39 +32,7 @@
   });
 
   /* ------------------------------------------------------------ A. the Daily Challenge */
-  function ladder(host, c) {
-    const cells = h('div', { class: 'ladder', role: 'list', 'aria-label': 'The ten questions: skill, difficulty and your chance' });
-    (c.ladder || []).forEach(q => {
-      const t = UI.TOPIC && UI.TOPIC[q.topic];
-      const name = t ? t.short : C.topicName(q.topic);
-      const tier = C.TIER[q.tier] || q.tier;
-      const cell = h('div', { class: 'lad', role: 'listitem', tabindex: '0' },
-        h('span', { class: 'n', text: String(q.slot) }),
-        UI.glyph ? UI.glyph(q.topic) : null,
-        UI.dbars ? UI.dbars(q.tier, { bare: true }) : null,
-        q.format === 'spr' ? h('span', { class: 'gi', text: 'GI' }) : null,
-        q.chance !== undefined && q.chance !== null ? h('span', { class: 'ch', 'aria-hidden': 'true' }, h('i', { style: `width:${Math.round(q.chance * 100)}%` })) : null);
-      const label = [`Q${q.slot}`, name, tier, q.format === 'spr' ? 'grid-in' : null, q.chance !== undefined && q.chance !== null ? `your chance ${pct(q.chance)}` : null].filter(Boolean).join(' · ');
-      cell.setAttribute('aria-label', label);
-      UI.tooltip(cell, label);
-      cells.append(cell);
-    });
-    host.append(cells, h('p', { class: 'meta ladder-legend', text: 'Bars: difficulty · GI: grid-in, you type the answer · underline: your chance' }));
-  }
-  function parLine(c) {
-    const p = c.me && c.me.par, f = c.me && c.me.forecast;
-    if (!p || p.base === undefined) return null;
-    const el = h('p', { class: 'line' }, `${p.rough ? 'Your par (rough)' : 'Your par'} ${num(p.base)} · about ${num(p.right)} right`,
-      f ? ` · likely #${f.lo}–#${f.hi} of ~${num(f.of)}` : '');
-    UI.tooltip(el, 'What a student at your rating scores on these questions, on average.' + (p.rough ? ' Rough while you are placing or the questions are new.' : ''));
-    return el;
-  }
-  function fieldLine(c) {
-    const f = c.field || {};
-    if (!f.players) return h('p', { class: 'meta', text: 'No one has finished yet.' });
-    return h('p', { class: 'meta', text: [`${num(f.players)} finished`, f.sitting_now ? `${num(f.sitting_now)} sitting now` : null,
-      f.median_points !== null && f.median_points !== undefined ? `median ${num(f.median_points)} pts` : null, f.best !== null && f.best !== undefined ? `best ${num(f.best)}` : null].filter(Boolean).join(' · ') });
-  }
+  const ladder = C.ladder, parLine = C.parLine, fieldLine = C.fieldLine;
   function followChip(fu) {
     if (!fu) return null;
     if (fu.won_back !== null && fu.won_back !== undefined && fu.of) return h('span', { class: 'chip-s', text: `Won back ${num(fu.won_back)}/${num(fu.of)}` });
