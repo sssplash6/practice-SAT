@@ -4,6 +4,10 @@
 --port 8000 --log-level warning --reload --reload-dir server` (background task bkhbftu1e since 2026-09-27; the old one ran from the
 deleted path and served 500s).
 
+**One page at a time (the user, 2026-09-27):** build.js runs WORKERS = 1. After S4Q finishes, the user allowed ONE more
+workflow: pages in the order S3 Today, S5 Tests, S6 Results, S10 Review, S7 Plan, S9 Words, S8 Compete, S1 Me, F2B, one
+fully finished (built, checked, fixed, merged after a branch check, opened for the user) before the next starts.
+
 **Standing rule (the user, 2026-09-27): my builds are PAGES ONLY. Any backend part becomes a HELPER-TASKS.md task and I ask
 the user to give it to the other agent.**
 

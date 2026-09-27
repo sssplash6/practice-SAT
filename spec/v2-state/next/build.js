@@ -393,8 +393,8 @@ async function run(a) {
   }
 }
 
-// At most WORKERS tasks at a time (the user, 2026-09-27: finish a few before usage limits instead of many at once).
-const WORKERS = 3
+// One task at a time, fully finished before the next (the user, 2026-09-27: "we fully finish one then only move to another one").
+const WORKERS = 1
 const queue = [...args]
 const results = []
 await parallel(Array.from({ length: WORKERS }, () => async () => {
