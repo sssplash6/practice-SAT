@@ -54,6 +54,7 @@ def check_empty_preview_and_validation(client: TestClient, exam: dt.date) -> tup
     learner = token()
     empty = call(client, "GET", "/api/plan", learner=learner)
     assert empty["active"] is None and empty["bank"]["topics"] == 19
+    assert "sittings" in empty and "rhythm" in empty and "points" in empty
     assert empty["bank"]["templates"] == sum(map(len, practice.catalogue()["by_topic"].values())) and empty["bank"]["example"]["label"]
     assert empty["proposal"]["cfg"]["measure"] is True
     assert [t["kind"] for t in empty["proposal"]["preview"]["sample_day"]["tasks"][:2]] == ["test", "map"]
@@ -61,6 +62,14 @@ def check_empty_preview_and_validation(client: TestClient, exam: dt.date) -> tup
     t = time.perf_counter()
     p = call(client, "POST", "/api/plan/preview", cfg, learner)
     assert time.perf_counter() - t < .6
+    dates = p["per_date"]
+    assert dates and [d["date"] for d in dates] == sorted(d["date"] for d in dates)
+    assert all({"date", "days", "study_days", "pace_per_week", "tag", "recommended"} <= d.keys()
+               and d["study_days"] <= d["days"] for d in dates)
+    assert sum(d["recommended"] for d in dates) <= 1
+    assert next((d for d in dates if d["tag"] == "Steady"), None) == next(
+        (d for d in dates if d["recommended"]), None)
+    assert p["later_date"] is None or p["later_date"] > cfg["exam_date"]
     assert p["split"]["Geometry and Trigonometry"] > .15
     assert p["split"]["Algebra"] < .35
     assert abs(sum(p["split"].values()) - 1) < .01

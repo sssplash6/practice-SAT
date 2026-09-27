@@ -1877,6 +1877,25 @@ def preview(learner: str, cfg: dict, tz: int = 0) -> dict:
     study_days = len(active_days)
     hours = round(sum(m for _, _, m in active_days) / 60, 1)
     pace = (cfg["target"] - (cfg["current"] or 520)) / max(1, weeks)
+    per_date = []
+    for date in satdates.upcoming(start):
+        candidate = dt.date.fromisoformat(date)
+        if candidate <= start or candidate > start + dt.timedelta(days=730):
+            continue
+        date_cfg = {**cfg, "exam_date": date}
+        candidate_study = (study_days if candidate == exam else
+                           sum(kind_of(date_cfg, start, start + dt.timedelta(days=n))[0]
+                               in ("practice", "test") for n in range((candidate - start).days + 1)))
+        weekly = (cfg["target"] - (cfg["current"] or 520)) / max(1, math.ceil((candidate - start).days / 7))
+        tag = "Steady" if weekly <= 15 else "Ambitious" if weekly <= 30 else "Very ambitious"
+        per_date.append({"date": date, "days": (candidate - start).days,
+                         "study_days": candidate_study, "pace_per_week": round(weekly, 1),
+                         "tag": tag, "recommended": False})
+    recommended = next((row for row in per_date if row["tag"] == "Steady"), None)
+    if recommended:
+        recommended["recommended"] = True
+    later_date = next((row["date"] for row in per_date
+                       if row["date"] > cfg["exam_date"] and row["tag"] != "Very ambitious"), None)
     point_split = {}
     if gains:
         by = Counter(x["domain"] for x in gains["skills"] for _ in range(max(0, x["gain"])))
@@ -1901,7 +1920,7 @@ def preview(learner: str, cfg: dict, tz: int = 0) -> dict:
             "hours": hours, "questions": sum(math.floor(m * 60 / 95) for _, _, m in active_days),
             "pace_per_week": round(pace, 1),
             "pace_tag": "Steady" if pace <= 15 else "Ambitious" if pace <= 30 else "Very ambitious",
-            "per_date": [], "later_date": None, "split": split, "base_split": dict(progress.BLUEPRINT),
+            "per_date": per_date, "later_date": later_date, "split": split, "base_split": dict(progress.BLUEPRINT),
             "split_points": {"math": point_split} if gains else None,
             "points": {"math": points}, "phases": [phase(start, exam, d) for d, _, _ in active_days],
             "target_note": {"route_up": cfg["target"] > 580, "route_right": 14, "route_of": 22,
@@ -1919,7 +1938,9 @@ def payload(learner: str, tz: int = 0, pid: str | None = None, *, shared: bool =
     if row is None:
         out = {"active": None, "plans": [_summary(p) for p in plans],
                "draft": _json(draft["plan_draft"], None) if draft else None,
-               "bank": _bank(learner), "proposal": propose(learner, tz)}
+               "bank": _bank(learner), "proposal": propose(learner, tz),
+               "sittings": _sittings(learner), "rhythm": rhythm_of(learner, tz),
+               "points": {"math": _points(learner)}}
         return out
     cfg = cfg_of(row)
     if not shared:
