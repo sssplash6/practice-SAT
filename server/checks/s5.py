@@ -18,7 +18,7 @@ from collections import Counter
 
 from fastapi.testclient import TestClient
 
-from server import api_tests, blueprint, db, deps, papers, practice, progress, scoring
+from server import api_tests, blueprint, db, deps, papers, practice, progress
 
 N = [0]
 LEAKS = {"answer", "rationale", "reasons", "distractor_reasons", "key", "seed", "template"}
