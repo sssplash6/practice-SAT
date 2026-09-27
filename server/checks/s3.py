@@ -1006,6 +1006,67 @@ def plan_rows(c: TestClient) -> None:
           " your own task ticks through S7's PATCH and its minutes count today")
 
 
+def streak_at_risk(c: TestClient) -> None:
+    """T19.2's server half: after 18:00 local, a 6-day streak and nothing today."""
+    for minute, risky in ((19 * 60, True), (17 * 60, False)):
+        tz = tz_at(minute)
+        me = code()
+        local = today(tz)
+        for back in range(1, 7):
+            noon = dt.datetime.combine(local - dt.timedelta(days=back), dt.time(12), dt.timezone.utc) + \
+                dt.timedelta(minutes=tz)
+            answers(me, 1, when=noon.isoformat())
+        got = call(c, "GET", "/api/today", me, tz=tz)
+        assert got["days"]["streak"] == 6, got["days"]["streak"]
+        r = got["at_risk"]
+        assert (r is not None) == risky, (minute, r)
+        if risky:
+            assert r["streak"] == 6 and 0 < r["left_ms"] <= 5 * 3600 * 1000 and r["start"]["body"]["source"] == "try"
+            assert r["start"]["body"]["count"] == 1
+    print("ok  S3 the streak at risk shows after 18:00 with a 6-day streak and nothing today, and not at 17:00")
+
+
+def gates_and_twins(c: TestClient) -> None:
+    """Check 10's history half and check 9 once S6's modules land; T5.2 (R19);
+    SEC-06's bound on added scores; readiness in the final stretch."""
+    me = code()
+    s = call(c, "POST", "/api/session", me)
+    call(c, "POST", f"/api/session/{s['id']}/finish", me)
+    hist = call(c, "GET", "/api/history?kind=tests&all=1&limit=6", me).get("sessions") or []
+    row = next((h for h in hist if h["id"] == s["id"]), None)
+    if row and "gated" in row:
+        assert row["gated"] is True and not row.get("modules") and not row.get("estimate"), row
+    m = call(c, "POST", "/api/mock/new", me, {"full": True})
+    call(c, "POST", f"/api/session/{m['id']}/finish", me)
+    call(c, "POST", f"/api/session/{m['id']}/finish", me)
+    review = call(c, "GET", f"/api/session/{m['id']}/results", me).get("review") or []
+    row = next((h for h in call(c, "GET", "/api/history?kind=tests&all=1&limit=6", me).get("sessions") or []
+                if h["id"] == m["id"]), None)
+    if row and len(row.get("modules") or []) == 2:
+        one, two = row["modules"]
+        assert one.get("asked") == 22 and min(two.get("missed", []) + two.get("blank", [])) == 1, row["modules"]
+        assert len(review) == 44
+    # T5.2: a twin of a live test's item is refused
+    live = call(c, "POST", "/api/mock/new", me, {"full": False})
+    r = c.post("/api/drill", headers={"X-Learner": me, "X-Tz": "0"},
+               json={"from_session": live["id"], "only": [live["questions"][2]["id"]], "source": "twin"})
+    assert r.status_code == 409, (r.status_code, r.text[:200])
+    # added scores are bounded
+    x = code()
+    for _ in range(api_today.SCORES_A_DAY):
+        call(c, "POST", "/api/scores", x, {"day": today().isoformat(), "math": 600}, status=201)
+    call(c, "POST", "/api/scores", x, {"day": today().isoformat(), "math": 600}, status=429)
+    # T13: readiness per domain from 12 days out, each with a 10-minute box
+    call(c, "PUT", "/api/me", me, {"exam_date": (today() + dt.timedelta(days=12)).isoformat()})
+    got = call(c, "GET", "/api/today", me)
+    rd = got["exam"]["readiness"]
+    assert [x["domain"] for x in rd] == [x["domain"] for x in got["domains"]] and len(rd) == 4
+    assert all(x["state"] in ("ready", "shaky", "untested", "close") and x["start"]["body"]["topics"] for x in rd)
+    assert got["exam"]["days"] == 12 and "register_by" in got["exam"] and "registration" in got["exam"]
+    print("ok  S3 gated diagnostics and the module split in history (with S6), no twins of a live test,"
+          " added scores bounded, readiness per domain in the stretch")
+
+
 def check(c: TestClient) -> None:
     fresh(c)
     qotd_shape(c)
@@ -1031,6 +1092,8 @@ def check(c: TestClient) -> None:
     day_redo_and_draft(c)
     receipt_falls(c)
     plan_rows(c)
+    streak_at_risk(c)
+    gates_and_twins(c)
     print("S3 today checks passed")
 
 
