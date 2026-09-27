@@ -87,10 +87,10 @@
   #next { background: var(--wash); }
   #next .lead { display: grid; gap: 6px; padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid color-mix(in srgb, var(--amber) 25%, transparent); }
   #next .lead-t { font: 700 20px/1.25 var(--font); letter-spacing: -.01em; color: var(--ink); }
-  .size { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
-  .size .chips { gap: 6px 6px; align-items: center; }
-  .size .chips > .sz-k { font: 600 12px var(--font); color: var(--soft); margin: 0 2px 0 6px; }
-  .size .chips > .sz-k:first-child { margin-left: 0; }
+  .size { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+  .size > * { margin: 0; }
+  .size-picks { display: flex; align-items: center; }
+  .size-picks .chips { gap: 6px; align-items: center; margin: 0; }
   .size-help { margin: 6px 0 0; }
   .sess-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 14px; }
   .reason { margin: 16px 0 0; font: 500 15px/1.45 var(--font); color: var(--ink); }
@@ -766,22 +766,35 @@
     const nx = t.next, coach = t.coach || {};
     const wrap = h('div', { class: 'sess' });
     if (hasLead) wrap.append(sub('Or a practice session'));
-    // the Size row (T1): one radiogroup of ten, Time or Count
+    // the Size row (T1), calm (decision 7): a Minutes | Questions toggle, then only that mode's options, one line
     const box = (nx.box && nx.box.options) || [5, 15, 30, 45, 60];
-    const counts = (nx.count && nx.count.options) || [5, 10, 22, coach.count || 10, null];
+    const counts = [...new Set((nx.count && nx.count.options) || [5, 10, 22, coach.count || 10, null])];
+    const DEF = { box: (nx.box || {}).default || 15, count: counts.includes(10) ? 10 : counts[0] };
     const s = sizeValue();
-    const opts = [...box.map(v => ({ value: `b${v}`, label: `${v}` })), ...counts.map(v => ({ value: `c${v === null ? 'x' : v}`, label: v === null ? 'Endless' : `${v}` }))];
-    const size = h('div', { class: 'size' }, h('span', { class: 'label', text: 'Size' }));
-    const ch = UI.chips(null, opts, { value: s.kind === 'box' ? `b${s.v}` : `c${s.v === null ? 'x' : s.v}`, label: 'Session size', onChange: v => {
-      SZ.sel = v[0] === 'b' ? { kind: 'box', v: +v.slice(1) } : { kind: 'count', v: v.slice(1) === 'x' ? null : +v.slice(1) };
+    const size = h('div', { class: 'size' });
+    const picks = h('div', { class: 'size-picks' });
+    const choose = sel => {
+      SZ.sel = sel;
       SZ.drop = [];
-      helper.hidden = !(SZ.sel.kind === 'box' && SZ.sel.v === 5);
+      helper.hidden = !(sel.kind === 'box' && sel.v === 5);
       pillLabel();
       askPreview();
-    } });
-    ch.btns[0].before(h('span', { class: 'sz-k', text: 'Time' }));
-    ch.btns[box.length - 1].after(h('span', { class: 'sz-k', text: 'min' }), h('span', { class: 'sz-k', text: 'or Count' }));
-    size.append(ch.el);
+    };
+    const paintPicks = kind => {
+      const cur = sizeValue();
+      const opts = kind === 'box'
+        ? box.map(v => ({ value: `b${v}`, label: `${v}` }))
+        : counts.map(v => ({ value: `c${v === null ? 'x' : v}`, label: v === null ? 'Endless' : `${v}` }));
+      const v = cur.kind === kind ? cur.v : DEF[kind];
+      picks.replaceChildren();
+      UI.chips(picks, opts, { value: kind === 'box' ? `b${v}` : `c${v === null ? 'x' : v}`,
+        label: kind === 'box' ? 'Minutes' : 'Questions',
+        onChange: val => choose(val[0] === 'b' ? { kind: 'box', v: +val.slice(1) } : { kind: 'count', v: val.slice(1) === 'x' ? null : +val.slice(1) }) });
+    };
+    UI.seg(size, [{ value: 'box', label: 'Minutes' }, { value: 'count', label: 'Questions' }], { value: s.kind === 'box' ? 'box' : 'count',
+      label: 'Session size', onChange: kind => { paintPicks(kind); choose(kind === 'box' ? { kind: 'box', v: DEF.box } : { kind: 'count', v: DEF.count }); } });
+    size.append(picks);
+    paintPicks(s.kind === 'box' ? 'box' : 'count');
     const helper = h('p', { class: 'help size-help', text: 'Short on time? 5 minutes keeps your streak and your check-ins.', hidden: !(s.kind === 'box' && s.v === 5) });
     wrap.append(size, helper);
     // clock and More options, always beside each other
@@ -804,7 +817,13 @@
     goRow.append(start);
     if (coach.why === 'new' || (coach.reasons && Object.values(coach.reasons).some(r => r && r.kind === 'new'))) {
       const topic = (coach.topics || [])[0];
-      if (topic) goRow.append(btn('Learn it · example + 3', () => drill({ source: 'learn', topics: [topic], example: true, count: 3 })));
+      if (topic) {
+        // decision 7: one primary action; learning a new skill is a quiet offer that says what it is
+        const learn = h('button', { type: 'button', class: 'quiet', text: `New to ${TOP(topic)}? See an example first`,
+          title: 'A worked example, then 3 questions on just this skill' });
+        learn.addEventListener('click', () => drill({ source: 'learn', topics: [topic], example: true, count: 3 }));
+        goRow.append(learn);
+      }
     }
     if (!t.plan && coach.why === 'new' && !(t.scores || []).length) goRow.append(link('Or start from a score: Diagnostic · 20 questions · 32 min', '/diagnostic/'));
     wrap.append(goRow);
