@@ -262,8 +262,9 @@
     const d = dailyData[fmt];
     if (!d || !d.item) { box.append(h('span', { class: 'stat-sub', text: 'A new one tomorrow' })); return box; }
     if (d.mine) {
+      const g = /^[0-3]$/.test(String(d.mine.given)) ? (d.item.choices || [])[+d.mine.given] : d.mine.given;
       box.append(h('span', { class: 'qd-key', text: d.word ? (words.find(w => w.slug === d.word) || {}).word || d.word : '' }),
-        h('span', { class: 'stat-sub', text: d.mine.correct ? 'You got it' : `You picked “${d.mine.given}”` }),
+        h('span', { class: 'stat-sub', text: d.mine.correct ? 'You got it' : `You picked “${g}”` }),
         h('button', { type: 'button', class: 'btn sm', text: 'See it again', onclick: () => answerDaily(fmt, title, d) }));
     } else {
       box.append(h('p', { class: 'qd-text', text: d.item.text || '' }), h('button', { type: 'button', class: 'btn sm', text: 'Answer it', onclick: () => answerDaily(fmt, title, d) }));
@@ -284,7 +285,8 @@
         } });
       const stem = ws.el.querySelector('.q-stem');
       if (stem && item.stem) stem.after(h('p', { class: 'ws-ask', text: item.stem }));
-      if (d.mine && d.mine.given !== undefined) { const i = (item.choices || []).indexOf(d.mine.given); if (i >= 0) { ws.select(i); ws.check(); } }
+      // answered already (here or on Today): the same verdict comes back and nothing new is filed (W21)
+      if (d.mine && d.mine.given !== undefined) { const g = String(d.mine.given); const i = /^[0-3]$/.test(g) ? +g : (item.choices || []).indexOf(g); if (i >= 0) { ws.select(i); ws.check(); } }
     } });
   }
   async function spread(days) {

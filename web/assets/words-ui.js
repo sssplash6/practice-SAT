@@ -174,7 +174,13 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     topical: 'What action or quality must the missing word express?', wrong_logic: 'Do the ideas add, contrast, explain, or follow from each other?',
     reversed_direction: 'Which event is the cause, and which is the result?' };
   // a verdict from the Words server in UI.workspace's feedback shape
-  const verdict = (r, answer) => ({ ...r, given: Number.isInteger(r.given_index) ? r.given_index : answer, trap_check: r.trap ? CHECK[r.trap] : null });
+  // (the daily items file the pick's index as a string: "2")
+  const verdict = (r, answer) => {
+    const g = Number.isInteger(r.given_index) ? r.given_index : Number.isInteger(r.given) ? r.given
+      : typeof r.given === 'string' && /^[0-3]$/.test(r.given) ? +r.given : answer;
+    const trap = r.trap !== undefined ? r.trap : r.traps && Number.isInteger(g) ? r.traps[g] : null;
+    return { ...r, given: g, trap, trap_check: trap ? CHECK[trap] : null };
+  };
   const KIND = { card: 'Card', learn: 'Learn card', fix: 'Fix card', commit: 'Card', meaning2word: 'Meaning → word', word2meaning: 'Word → meaning',
     cloze: 'Fill the blank', incontext: 'In context', nearly: 'Most nearly means', precise: 'Most precise', order: 'Order the ladder',
     transition: 'Transitions', decode: 'Decode it', rootshare: 'Which root?', typed: 'Type it', placement: 'Placement', placement_check: 'Check',
