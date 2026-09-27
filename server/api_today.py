@@ -24,7 +24,7 @@ from typing import Literal
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 
-from . import challenge, daily, db, drill, estimate, progress, scoring
+from . import challenge, daily, db, drill, estimate, progress, satdates
 from .api_me import per_session, profile
 from .deps import DATE_OK, LEARNER_OK, TARGETS, TEST_KINDS, learner_of, part, subject_param, tz_of, writer_of
 
@@ -213,8 +213,34 @@ def domains(learner: str) -> list[dict]:
     return out
 
 
-def traps(learner: str, tz: int, t: dt.date, open_list: list[dict], stage: dict | None) -> dict:
-    """Review's card on Today (R30): counts, blind spots first, the top 5."""
+def _group_gain(learner: str, topics) -> int | None:
+    """U4's one change for a set of skills raised to 80% (never a sum of gains)."""
+    rows = estimate._rows(learner)
+    if len(rows) < estimate.MIN_ANSWERS or not topics:
+        return None
+    m = estimate.model(rows)
+    return estimate._round5(estimate._lift(m, [x for x in topics if x in m["skills"]]))
+
+
+def _trap_row(x: dict, blind: dict) -> dict:
+    return {"id": x["id"], "label": x["label"], "topic": x["topic"], "template": x["template"],
+            "hits": x["hits"], "owed": x["owed"], "last": x["last"], "relapses": x["relapses"] or 0,
+            "blind": blind[x["id"]]["why"] if x["id"] in blind else None,
+            "learn": bool((x["relapses"] or 0) >= 1 or x["hits"] >= 3)}
+
+
+def _trap_group(learner: str, group: list[dict], blind: dict, **extra) -> dict:
+    ids = [x["id"] for x in group]
+    return {"n": len(group), "rows": [_trap_row(x, blind) for x in group],
+            "fix": {"n": 2 * len({x["template"] for x in group}), "body": {"pool": "redo", "ids": ids}} if ids else None,
+            **extra}
+
+
+def traps(learner: str, tz: int, t: dt.date, open_list: list[dict], stage: dict | None,
+          gains: dict | None = None, exam_date: str | None = None) -> dict:
+    """Review's card on Today (R30): counts, blind spots first, the top 5;
+    in the final stretch (T13) every open trap in two visible groups: worth
+    fixing now (skills with 2+ a test, by gain) and rare skills."""
     blind = progress.blind(learner)
     order = sorted(open_list, key=lambda x: (x["hits"], x["last"]), reverse=True)
     order = [x for x in order if x["id"] in blind] + [x for x in order if x["id"] not in blind]
@@ -225,16 +251,15 @@ def traps(learner: str, tz: int, t: dt.date, open_list: list[dict], stage: dict 
            "fixed_today": sum(r["closed"] >= today0 for r in fixed), "fixed_week": len(fixed),
            "opened_today": db.one("SELECT COUNT(*) n FROM traps WHERE learner=? AND opened>=?", learner, today0)["n"],
            "blind": [x["id"] for x in order if x["id"] in blind],
-           "top": [{"id": x["id"], "label": x["label"], "topic": x["topic"], "template": x["template"],
-                    "hits": x["hits"], "owed": x["owed"], "last": x["last"], "relapses": x["relapses"] or 0,
-                    "blind": blind[x["id"]]["why"] if x["id"] in blind else None,
-                    "learn": bool((x["relapses"] or 0) >= 1 or x["hits"] >= 3)} for x in order[:5]],
+           "top": [_trap_row(x, blind) for x in order[:5]],
            "habits": _call("habits", "of_learner", learner) or [], "now": None, "rare": None}
     if stage and stage.get("mode") in ("stretch", "taper", "eve"):
         shares = estimate.shares()
-        now_ids = [x["id"] for x in order if 44 * shares.get(x["topic"], 0) >= 2]
-        out["now"] = now_ids
-        out["rare"] = [x["id"] for x in order if x["id"] not in now_ids]
+        gain = {x["topic"]: x["raw"] for x in (gains or {}).get("skills", [])}
+        now = sorted((x for x in order if 44 * shares.get(x["topic"], 0) >= 2), key=lambda x: -gain.get(x["topic"], 0))
+        now_ids = {x["id"] for x in now}
+        out["now"] = _trap_group(learner, now, blind, gain=_group_gain(learner, {x["topic"] for x in now}))
+        out["rare"] = _trap_group(learner, [x for x in order if x["id"] not in now_ids], blind, until=exam_date)
     return out
 
 
@@ -313,17 +338,31 @@ def warmup(learner: str, tz: int, t: dt.date, stage: dict | None) -> dict:
     today0 = _start(t, tz)
     mine = [r for r in rows if r["at"] >= today0]
     return {"checks": len(c["checks"]), "fading": len(c["fading"]), "keep_warm": len(c["keep_warm"]),
-            "marked": len(c["marked"]), "due": c["size"], "size": min(size, c["size"]),
+            "marked": len(c["marked"]), "due": c["size"], "size": min(size, c["size"]), "nominal": size,
             "today": {"held": sum(bool(held(r)) for r in mine), "of": len(mine),
                       "slipped": sorted({r["topic"] for r in mine if not r["correct"]})} if mine else None,
             "month": {"held": sum(bool(held(r)) for r in rows), "of": len(rows)}}
 
 
-def plan_part(learner: str, tz: int) -> dict | None:
-    """S7's day (R14), with the plan's own start (plans.start, R15) and its weeks."""
+def _day_marks(learner: str, tz: int, first: dt.date, last: dt.date) -> dict[str, dict]:
+    """Per local day: mistakes fixed and check-ins held (T18's week strip,
+    T17's calendar), from the trap log."""
+    out: dict[str, dict] = {}
+    for r in db.rows("SELECT at, event FROM trap_log WHERE learner=? AND at>=? AND at<? AND event IN ('fixed','check_ok')",
+                     learner, _start(first, tz), _start(last + dt.timedelta(days=1), tz)):
+        got = out.setdefault(progress._local_day(r["at"], tz).isoformat(), {"fixed": 0, "held": 0})
+        got["fixed" if r["event"] == "fixed" else "held"] += 1
+    return out
+
+
+def plan_part(learner: str, tz: int, t: dt.date | None = None) -> dict | None:
+    """S7's day (R14), with the plan's own start (plans.start, R15), its weeks
+    and days, and the Plan card's figures (T18): Day N of M, % done, on time,
+    the pace verdict, what being behind cost, and what moved since the start."""
     s = _call("plan", "today_summary", learner, tz)
     if not s:
         return None
+    t = t or _local_today(tz)
     out = dict(s)
     out["next_start"] = s.get("start")
     row = db.one("SELECT start, cfg FROM plans WHERE id=?", s.get("id"))
@@ -333,7 +372,94 @@ def plan_part(learner: str, tz: int) -> dict | None:
     whole = _call("plan", "payload", learner, tz) or {}
     out["weeks"] = whole.get("weeks")
     out["stats"] = whole.get("stats")
+    iso = t.isoformat()
+    marks = _day_marks(learner, tz, dt.date.fromisoformat(out["start"]), t) if out["start"] else {}
+    days = []
+    for d in whole.get("days") or []:
+        counted = [x for x in d.get("tasks") or [] if x.get("counted")]
+        days.append({"date": d.get("date"), "kind": d.get("kind"), "test": d.get("test"), "phase": d.get("phase"),
+                     "minutes": d.get("minutes"), "minutes_done": d.get("minutes_done"), "status": d.get("status"),
+                     "tasks_done": d.get("tasks_done"), "tasks_counted": len(counted),
+                     "questions": sum(x.get("count") or 0 for x in counted),
+                     "topics": list(dict.fromkeys(tp for x in counted for tp in x.get("topics") or [])),
+                     **(marks.get(d.get("date"), {"fixed": 0, "held": 0}) if (d.get("date") or "") <= iso else {})})
+    out["days"] = days
+    study = [d for d in days if d["kind"] in ("practice", "test")]
+    past = [d for d in study if d["date"] < iso]
+    if out["start"] and out["exam_date"]:
+        first, exam = dt.date.fromisoformat(out["start"]), dt.date.fromisoformat(out["exam_date"])
+        done = sum(d["status"] in ("done", "made_up") for d in study)
+        out["card"] = {"day": (t - first).days + 1, "of": (exam - first).days + 1,
+                       "pct": round(100 * done / len(study)) if study else 0,
+                       "study_days_done": done, "study_days": len(study),
+                       "on_time": {"n": sum(d["status"] == "done" for d in past), "of": len(past)}}
+    out["pace"] = (whole.get("verdict") or {}).get("math")
+    out["suggest"] = whole.get("suggest")
+    behind = whole.get("behind")
+    if behind:
+        ten = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=10)).isoformat()
+        behind = {**behind, "cost": {
+            "missed": behind.get("planned", 0) - behind.get("done", 0),
+            "overdue_checks": db.one("SELECT COUNT(*) n FROM traps WHERE learner=? AND closed IS NOT NULL"
+                                     " AND due IS NOT NULL AND due<?", learner, iso)["n"],
+            "old_mistakes": db.one("SELECT COUNT(*) n FROM traps WHERE learner=? AND closed IS NULL AND opened<?",
+                                   learner, ten)["n"]},
+            "catch_up": {"box": 15}}
+    out["behind"] = behind
+    # what moved since the start: each skill's mastery now against its mastery before the plan began
+    before = _mastery_at(learner, _start(dt.date.fromisoformat(out["start"]), tz)) if out["start"] else {}
+    now_m = {k: v["mastery"] for k, v in progress.board(learner).items() if v["answered"]}
+    moved = sorted(((k, m - before.get(k, 0.0)) for k, m in now_m.items()), key=lambda kv: -abs(kv[1]))
+    out["moved"] = [{"topic": k, "delta": round(x, 2)} for k, x in moved if abs(x) >= 0.05][:3]
     return out
+
+
+def plan_draft(learner: str, tz: int, p: dict, t: dt.date, d: dict, score_list: list[dict]) -> dict:
+    """T18's Build with these: Plan step 1's source (the mean of 2+ sittings
+    in 45 days, the latest one, practice only, or a new student), the SAT
+    date, the daily minutes, the days studied, and a target that is never silent."""
+    cut = t - dt.timedelta(days=45)
+    gated = {r["id"] for r in db.rows("SELECT id FROM sessions WHERE learner=? AND kind='diagnostic'"
+                                      " AND user_id IS NULL", learner)}           # R38
+    items = [x for x in estimate._sittings(learner)
+             if dt.date.fromisoformat(x["at"][:10]) >= cut and x["id"] not in gated]
+    answers = db.one("SELECT COUNT(*) n FROM attempts WHERE learner=?", learner)["n"]
+    if len(items) >= 2:
+        mean = estimate._mean3(items)
+        source = {"kind": "mean3", "value": estimate._round10(mean), "n": min(3, len(items))}
+    elif items:
+        x = items[0]
+        source = {"kind": "latest", "value": estimate._round10(x["mid"]), "low": x["low"], "high": x["high"],
+                  "at": x["at"], "sitting_kind": x.get("kind"), "session": x.get("id")}
+    else:
+        source = {"kind": "practice" if answers else "new", "value": None}
+    recent = [r for r in d["days"] if r["day"] > (t - dt.timedelta(days=28)).isoformat()]
+    avg = sum(r["minutes"] for r in d["days"] if r["day"] > (t - dt.timedelta(days=7)).isoformat()) / 7
+    studied = {dt.date.fromisoformat(r["day"]).weekday() for r in recent if r["questions"] or r["tests"]}
+    days = "".join("1" if i in studied else "0" for i in range(7)) if studied else "1111100"
+    start = source["value"]
+    band_high = score_list[0]["high"] if score_list else None
+    target = p.get("target") or (min(800, estimate._round10(band_high + 50)) if band_high else
+                                 min(800, start + 100) if start else None)
+    upcoming = satdates.upcoming(t + dt.timedelta(days=1))
+    return {"source": source, "current": start, "target": target,
+            "target_from": "profile" if p.get("target") else "band" if band_high else "start" if start else None,
+            "exam_date": p.get("exam_date") or (upcoming[0] if upcoming else None),
+            "minutes": p.get("minutes") or max(20, 15 * round(avg / 15)), "days": p.get("days") or days,
+            "ready": start is not None}
+
+
+def usual_start(learner: str, tz: int) -> str | None:
+    """T17: the median local start of sittings over 30 days, to five minutes."""
+    since = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=30)).isoformat()
+    starts = sorted(x.hour * 60 + x.minute for x in (
+        dt.datetime.fromisoformat(r["started"]) - dt.timedelta(minutes=tz)
+        for r in db.rows("SELECT started FROM sessions WHERE learner=? AND started>=? AND abandoned IS NULL",
+                         learner, since)))
+    if not starts:
+        return None
+    m = 5 * round(statistics.median_low(starts) / 5) % 1440
+    return f"{m // 60:02d}:{m % 60:02d}"
 
 
 def review_counts(learner: str, tz: int, t: dt.date) -> dict:
@@ -373,8 +499,14 @@ def qotd_today(learner: str, tz: int) -> dict:
             "streak": streak["current"], "best": streak["best"]}
 
 
-def stage(learner: str, tz: int, p: dict, t: dt.date) -> dict | None:
-    """T13's mode from the exam date: next.stage (F2) when it exists."""
+def _local_hour(tz: int) -> int:
+    return (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=tz)).hour
+
+
+def stage(learner: str, tz: int, p: dict, t: dt.date, plan: dict | None = None) -> dict | None:
+    """T13's mode from the exam date: next.stage (F2) when it exists. With a
+    plan, its Final phase's test days are the rehearsals (no second schedule).
+    ponytail: the fallback goes once server/next.py lands."""
     got = _call("next", "stage", learner, tz)
     if got is not None or part("next", "stage"):
         return got
@@ -382,12 +514,16 @@ def stage(learner: str, tz: int, p: dict, t: dt.date) -> dict | None:
         return None
     exam = dt.date.fromisoformat(p["exam_date"])
     days = (exam - t).days
-    hour = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=tz)).hour
-    mode = ("after" if days < 0 or (days == 0 and hour >= 13) else "exam" if days == 0 else "eve" if days == 1
-            else "taper" if days <= 7 else "stretch" if days <= 14 else None)
+    mode = ("after" if days < 0 or (days == 0 and _local_hour(tz) >= 13) else "exam" if days == 0 else
+            "eve" if days == 1 else "taper" if days <= 7 else "stretch" if days <= 14 else None)
     if mode is None:
-        return {"mode": None, "days": days, "rehearsals": [], "sweep": None, "rare": None}
+        return {"mode": None, "days": days, "rehearsals": [], "sweep": None, "rare": None, "scores_by": None}
     sats = [exam - dt.timedelta(days=n) for n in range(6, 15) if (exam - dt.timedelta(days=n)).weekday() == 5]
+    row = db.one("SELECT start, cfg FROM plans WHERE id=?", plan.get("id")) if plan else None
+    if row:
+        dates = _call("plan", "_rehearsal_dates", _json(row["cfg"], {}), dt.date.fromisoformat(row["start"]))
+        if dates is not None:
+            sats = [x for x in dates if exam - dt.timedelta(days=14) <= x < exam]
     rehearsals = []
     for s in sorted(sats)[-2:]:
         done = db.one("SELECT 1 FROM sessions WHERE learner=? AND kind IN ('mock','section','paper')"
@@ -397,17 +533,92 @@ def stage(learner: str, tz: int, p: dict, t: dt.date) -> dict | None:
     cut = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=90)).isoformat()
     closed = db.rows("SELECT id, template FROM traps WHERE learner=? AND closed>=? AND closed_how IN ('fixed','transfer')",
                      learner, cut)
-    swept = sum(bool(db.one("SELECT 1 FROM attempts WHERE learner=? AND template=? AND at>=?",
-                            learner, c["template"], _start(began, tz))) for c in closed)
+    # a trap is swept once any attempt on its template comes after the stretch began
+    last = {r["template"]: r["at"] for r in db.rows(
+        "SELECT template, MAX(at) at FROM attempts WHERE learner=? AND at>=? GROUP BY template",
+        learner, _start(began, tz))}
+    swept = [c for c in closed if c["template"] in last]
+    today0 = _start(t, tz)
     study_left = max(1, (exam - t).days - 1)
     return {"mode": mode, "days": days, "rehearsals": rehearsals,
-            "sweep": {"total": len(closed), "done": swept,
-                      "today": math.ceil(max(0, len(closed) - swept) / study_left)},
-            "rare": None}
+            "sweep": {"total": len(closed), "done": len(swept),
+                      "done_today": sum(last[c["template"]] >= today0 for c in swept),
+                      "today": math.ceil(max(0, len(closed) - len(swept)) / study_left)},
+            "rare": None, "scores_by": satdates.entry(p["exam_date"])["scores_by"] if mode == "after" else None}
+
+
+def strongest(learner: str, n: int = 3) -> list[str]:
+    b = progress.board(learner)
+    return [k for k, v in sorted(b.items(), key=lambda kv: -kv[1]["mastery"]) if v["answered"]][:n]
+
+
+def queue_fallback(learner: str, t: dt.date, open_: dict, plan: dict | None, st: dict | None) -> list[dict]:
+    """Up next's first items while next.queue (F2) is not there (§3a 1-3 and
+    T13): a running test, an unfinished set, the plan's test, then the
+    stage's rehearsal, the eve's light warm-up, exam morning, after the exam.
+    ponytail: replaced by next.queue as soon as server/next.py lands."""
+    items = []
+    x = open_["test"]
+    if x:
+        out = x["timed"] and x["seconds_left"] == 0
+        title = (f"Time's up on module {x['module']}" if out else f"Section · module {x['module']} in progress"
+                 if x["section"] else f"{progress_kind(x['kind'])} in progress")
+        items.append({"kind": "test", "title": title, "href": f"/test/?s={x['id']}",
+                      "action": ("Continue to module 2" if x["section"] and x["module"] == 1 else "See results")
+                      if out else "Resume", **{k: x[k] for k in ("id", "answered", "asked", "timed", "seconds_left")}})
+    d = open_["drill"]
+    if d:
+        items.append({"kind": "resume", "title": "Continue", "action": "Continue", "href": f"/practice/session/?id={d['id']}",
+                      "more": open_["drills"], **{k: d[k] for k in ("id", "answered", "total", "timed", "seconds_left", "topics")}})
+    test = next((x for x in (plan or {}).get("tasks") or [] if x.get("kind") == "test" and x.get("status") not in FINISHED), None)
+    if test:
+        items.append({"kind": "plan", "test": True, "title": test.get("title"), "action": "Start test",
+                      "start": test.get("start"), "task_id": test.get("id"), "minutes": test.get("minutes")})
+    mode = (st or {}).get("mode")
+    if mode in ("stretch", "taper") and not test and any(r["day"] == t.isoformat() and not r["done"] for r in st["rehearsals"]):
+        items.append({"kind": "rehearsal", "action": "Start section", "time": None,
+                      "title": "Dress rehearsal · full Math section · 44 q · 70 min · at the time your Math section"
+                               " will start (after R&W and the break)",
+                      "helper": "On test day Math starts after Reading and Writing (64 min) and a 10-minute break.",
+                      "start": {"path": "/api/mock/new", "body": {"kind": "section", "timing": "official"}}})
+    if mode in ("eve", "exam"):
+        eve = mode == "eve"
+        body = {"count": 5, "tiers": ["easy", "medium"] if eve else ["easy"], "timed": False, "source": "today"}
+        top = strongest(learner)
+        items.append({"kind": mode, "action": "Start",
+                      "title": "Light warm-up · 5 from your strongest skills · ~8 min" if eve else
+                               "Warm-up · 5 easy · untimed · ~7 min",
+                      "then": "Done for today. Sleep does more than cramming now." if eve else None,
+                      "start": {"path": "/api/drill", "body": {**body, **({"topics": top} if top else {})}}})
+    if mode == "after":
+        by = st.get("scores_by")
+        items.append({"kind": "after", "action": "Add your official score", "scores_by": by,
+                      "title": f"How did it go? Scores come out around {_short(by)}" if by else "How did it go?"})
+    return items
+
+
+def stretch_coach(coach: dict, st: dict | None) -> dict:
+    """T13: no new rare skills in the final stretch, and never "New skills"
+    as the reason; the rare ones are named with what they are worth."""
+    if not st or st.get("mode") not in ("stretch", "taper", "eve") or coach.get("why") != "new":
+        return coach
+    shares, names = estimate.shares(), progress.topics()
+
+    def rare(topic):
+        return 44 * shares.get(topic, 0) < 2
+
+    groups = [coach.get("topics") or []] + list(coach.get("ahead") or [])
+    keep = next(([x for x in g if not rare(x)] for g in groups if any(not rare(x) for x in g)), [])
+    dropped = [x for x in coach.get("topics") or [] if rare(x)]
+    return {**coach, "topics": keep, "why": "stretch_new",
+            "suppressed": [{"topic": x, "per_test": round(44 * shares.get(x, 0), 1),
+                            "text": f"Not starting {names[x].name if x in names else x}: about"
+                                    f" {44 * shares.get(x, 0):.1f} of 44 a test, {st['days']} days left."}
+                           for x in dropped]}
 
 
 def next_part(learner: str, tz: int, p: dict, coach: dict, st: dict | None, plan: dict | None,
-              study_: dict, due_: dict) -> dict:
+              study_: dict, due_: dict, open_: dict, t: dt.date) -> dict:
     """Up next (T1): next.queue's items, the Size row's defaults, and the
     preview of the default box once next.resolve_drill makes one."""
     goal = p.get("minutes")
@@ -429,78 +640,175 @@ def next_part(learner: str, tz: int, p: dict, coach: dict, st: dict | None, plan
             preview = drill.preview(learner, {"source": "next", "box": default})
         except HTTPException:
             preview = None
-    return {"items": _call("next", "queue", learner, tz, limit=6) or [],
+    items = _call("next", "queue", learner, tz, limit=6) if part("next", "queue") else \
+        queue_fallback(learner, t, open_, plan, st)
+    return {"items": items or [],
             "box": {"default": default, "options": list(BOX_OPTIONS)},
             "count": {"default": count, "options": list(dict.fromkeys([5, 10, 22, count])) + [None]},
             "preview": preview, "stage": st}
 
 
+FINISHED = ("done", "marked", "made_up", "skipped", "moved")
+PLAN_OWN_ROWS = ("recheck", "sweep", "words", "qotd", "challenge")     # plan tasks that are rows 4 to 8
+
+
+def _row(key: str, kind: str, title: str | None, tag: str, minutes, status: str, **extra) -> dict:
+    """One Due row in T2's full shape, so no key is ever missing on the client."""
+    out = {"key": key, "kind": kind, "title": title, "tag": tag, "meta": None,
+           "minutes": math.ceil(minutes) if minutes else 0, "progress": None, "due_at": None,
+           "status": status, "why": [], "evidence_href": None, "start": None, "href": None,
+           "result": None, "fix": None, "alternatives": None, "task_id": None, "own": False,
+           "marked": False, "group": "also"}
+    out.update(extra)
+    return out
+
+
+def session_result(learner: str, sid: str | None) -> dict | None:
+    """A sitting's result for its done row: answered, right, and the mistakes
+    it fixed and opened (a relapse counts as opened)."""
+    if not sid:
+        return None
+    a = db.one("SELECT COUNT(*) n, SUM(correct) r FROM attempts WHERE session=? AND repair=0", sid)
+    if not a["n"]:
+        return None
+    ev = {r["event"]: r["n"] for r in db.rows(
+        "SELECT event, COUNT(*) n FROM trap_log WHERE learner=? AND event IN ('open','relapse','fixed')"
+        " AND attempt IN (SELECT id FROM attempts WHERE session=?) GROUP BY event", learner, sid)}
+    return {"answered": a["n"], "right": a["r"] or 0, "fixed": ev.get("fixed", 0),
+            "opened": ev.get("open", 0) + ev.get("relapse", 0), "session": sid}
+
+
+def _fix(res: dict | None) -> dict | None:
+    """`Fix the N it opened`: the sitting's still-open misses as fresh questions."""
+    if not res or not res["opened"]:
+        return None
+    return {"n": res["opened"], "path": "/api/drill",
+            "body": {"from_session": res["session"], "still_open": True, "scope": "misses"}}
+
+
+def _plan_row(learner: str, task: dict, kind: str = "plan", **over) -> dict:
+    status = task.get("status") or "todo"
+    why = task.get("why") or []
+    topic = (task.get("topics") or [None])[0]
+    href = next((w.get("href") for w in why if isinstance(w, dict) and w.get("href")), None)
+    res = session_result(learner, task.get("session"))
+    row = _row(f"plan:{task.get('id')}", kind, task.get("title"), task.get("kind"), task.get("minutes"), status,
+               progress={"have": task.get("answered") or 0, "of": task.get("total")},
+               why=[w.get("text") if isinstance(w, dict) else str(w) for w in why],
+               evidence_href=href or (f"/review/?tab=redo&topic={topic}" if topic else None),
+               start=task.get("start"), result=res, fix=_fix(res),
+               alternatives=task.get("alternatives") or None, task_id=task.get("id"),
+               own=task.get("kind") == "custom",
+               marked=status == "marked" or (task.get("kind") == "custom" and status == "done"),   # a tick is a mark
+               group="plan" if task.get("counted") else "also", detail=task.get("detail"))
+    row.update(over)
+    return row
+
+
+def review_done(learner: str, tz: int, t: dt.date) -> bool:
+    """T2: today's review run is finished, or every check-in due today has
+    been answered (none is left due and one was answered today)."""
+    today0 = _start(t, tz)
+    if db.one("SELECT 1 FROM sessions WHERE learner=? AND kind='drill' AND finished>=?"
+              " AND json_extract(cfg,'$.source') IN ('due','warmup')", learner, today0):
+        return True
+    return not progress.due_rechecks(learner, t.isoformat()) and bool(db.one(
+        "SELECT 1 FROM trap_log WHERE learner=? AND at>=? AND event IN ('check_ok','relapse')", learner, today0))
+
+
 def due_fallback(learner: str, tz: int, p: dict, open_: dict, plan: dict | None, warm: dict,
                  words: dict | None, qotd: dict, chal: dict, secs: float, st: dict | None = None,
                  t: dt.date | None = None) -> dict:
-    """T2's rows while next.due (F2) is not there: the same sources, in its order.
+    """T2's rows while next.due (F2) is not there, in its order: a running
+    test, the plan's tasks, Review (R56: check-ins, fading and keep-warm; the
+    plan's recheck is this row), the sweep, Words (the plan's words task is
+    this row), the day's questions, the challenge, contests closing today.
     ponytail: replaced by next.due as soon as server/next.py lands."""
+    t = t or _local_today(tz)
     rows = []
     if open_["test"]:
         x = open_["test"]
-        rows.append({"key": f"test:{x['id']}", "kind": "test", "title": "Section" if x["section"] else "Module",
-                     "tag": "Test", "minutes": math.ceil((x["seconds_left"] or 0) / 60),
-                     "progress": {"have": x["answered"], "of": x["asked"]}, "status": "progress",
-                     "href": f"/test/?s={x['id']}"})
-    recheck = False
+        rows.append(_row(f"test:{x['id']}", "test", "Section" if x["section"] else progress_kind(x["kind"]), "Test",
+                         (x["seconds_left"] or 0) / 60, "progress", progress={"have": x["answered"], "of": x["asked"]},
+                         href=f"/test/?s={x['id']}"))
+    own: dict[str, dict] = {}
     for task in (plan or {}).get("tasks") or []:
-        kind = task.get("kind")
-        if kind in ("qotd", "challenge"):
-            continue
-        recheck = recheck or kind == "recheck"
-        rows.append({"key": f"plan:{task.get('id')}", "kind": "warmup" if kind == "recheck" else "plan",
-                     "title": task.get("title"), "tag": kind, "minutes": task.get("minutes"),
-                     "status": task.get("status"), "task_id": task.get("id"), "own": kind == "custom",
-                     "marked": task.get("status") == "marked", "start": task.get("start"),
-                     "why": task.get("why") or [], "alternatives": task.get("alternatives"),
-                     "progress": task.get("progress"), "result": task.get("result")})
-    if warm["size"] and not recheck:
-        done = bool(warm["today"] and warm["today"]["of"] >= warm["size"])
-        rows.append({"key": "warmup", "kind": "warmup", "title": f"Warm-up · {warm['size']} questions",
-                     "tag": "Warm-up", "minutes": math.ceil(warm["size"] * secs / 60),
-                     "progress": {"have": (warm["today"] or {}).get("of", 0), "of": warm["size"]},
-                     "status": "done" if done else "todo",
-                     "start": {"path": "/api/drill", "body": {"source": "warmup", "count": warm["size"]}}})
+        if task.get("kind") in PLAN_OWN_ROWS:
+            own.setdefault(task["kind"], task)
+        else:
+            rows.append(_plan_row(learner, task))
+    # 4. Review (R56)
+    box = (p.get("prefs") or {}).get("review_minutes", 10)
+    done_review = review_done(learner, tz, t)
+    task = own.get("recheck")
+    if warm["due"] or task or done_review:
+        mins = warm["due"] * secs / 60
+        mins = min(mins, box) if box else mins
+        meta = f"{warm['due']} due · ~{math.ceil(mins)} min · {warm['checks']} check-ins · {warm['fading']} fading"
+        today_ = warm["today"] or {"held": 0, "of": 0, "slipped": []}
+        extra = dict(meta=meta, progress={"have": today_["of"], "of": max(warm["due"] + today_["of"], today_["of"])},
+                     why=["Questions you got right before, back just as you start to forget them."],
+                     evidence_href="/review/?tab=checks",
+                     start={"path": "/api/drill", "body": {"source": "due", "box": box}},
+                     result=warm["today"])
+        if task:
+            extra["start"] = {"path": "/api/drill", "body": {"source": "due", "box": box, "task": task.get("id")}}
+            rows.append(_plan_row(learner, task, "review", title="Review", tag="Review", minutes=math.ceil(mins),
+                                  **{k: v for k, v in extra.items() if k != "result"}))
+        else:
+            rows.append(_row("review", "review", "Review", "Review", mins, "done" if done_review else "todo", **extra))
+    # 5. Sweep (T13, final stretch only)
     mode = (st or {}).get("mode")
-    if mode in ("stretch", "taper") and t and not plan:        # T13: without a plan, Due lists the rehearsal
-        for r in st["rehearsals"]:
-            if r["day"] == t.isoformat():
-                rows.append({"key": f"rehearsal:{r['day']}", "kind": "rehearsal", "title": "Dress rehearsal",
-                             "tag": "Rehearsal", "minutes": 70, "status": "done" if r["done"] else "todo",
-                             "start": {"path": "/api/mock/new", "body": {"kind": "section", "timing": "official"}}})
     sweep = (st or {}).get("sweep") or {}
-    if mode in ("stretch", "taper") and sweep.get("today"):   # T13's relapse sweep
-        n = sweep["today"]
-        rows.append({"key": "sweep", "kind": "sweep", "title": f"Sweep · {n} of {sweep['total']} fixed mistakes today",
-                     "tag": "Sweep", "minutes": math.ceil(n * secs / 60), "status": "todo",
-                     "start": {"path": "/api/drill", "body": {"pool": "checks", "sweep": True, "count": n}}})
-    if words and words.get("due"):
-        rows.append({"key": "words", "kind": "words", "title": words.get("title"), "tag": "Words",
-                     "minutes": words.get("minutes"), "status": "done" if words.get("done") else "todo",
-                     "start": words.get("start")})
-    rows.append({"key": "qotd", "kind": "qotd", "title": "The day's questions", "tag": "Day's questions",
-                 "minutes": math.ceil(qotd["slots"] * secs / 60),
-                 "progress": {"have": qotd["answered"], "of": qotd["slots"]},
-                 "status": "done" if qotd["answered"] == qotd["slots"] else "progress" if qotd["answered"] else "todo",
-                 "why": [f"The same {qotd['slots']} for everyone, one try each"], "href": "/#qotd"})
-    rows.append({"key": "challenge", "kind": "challenge", "title": "Daily challenge", "tag": "Challenge",
-                 "minutes": 0 if chal["done"] else CHALLENGE_S // 60,
-                 "progress": {"have": chal["answered"], "of": chal["total"]},
-                 "status": "done" if chal["done"] else "progress" if chal["started"] else "todo",
-                 "start": {"path": "/api/challenge/start", "body": {}}})
+    if own.get("sweep"):
+        rows.append(_plan_row(learner, own["sweep"], "sweep"))
+    elif mode in ("stretch", "taper") and (sweep.get("today") or sweep.get("done_today")):
+        n = sweep.get("today") or 0
+        rows.append(_row("sweep", "sweep", f"Sweep · {n} of {sweep['total']} fixed mistakes today", "Sweep",
+                         n * secs / 60, "done" if sweep.get("done_today", 0) >= n else "todo",
+                         progress={"have": sweep.get("done_today", 0), "of": n},
+                         why=["Every mistake you fixed in the last 90 days gets one fresh twin before the SAT."],
+                         start={"path": "/api/drill", "body": {"pool": "checks", "sweep": True, "count": max(1, n)}}))
+    # 6. Words (R56)
+    task = own.get("words")
+    if words and (words.get("due") or task or (_call("words", "minutes_today", learner, tz) or 0) > 0):
+        new = (words.get("preview") or {}).get("new", 0)
+        meta = f"{words.get('due', 0)} due · {new} new · ~{math.ceil(words.get('minutes') or 0)} min"
+        base = dict(title="Words", tag="Words", meta=meta, minutes=math.ceil(words.get("minutes") or 0),
+                    why=[words.get("reason")] if words.get("reason") else [], start=words.get("start"),
+                    evidence_href="/words/")
+        if task:
+            base.pop("start")                       # the plan's own start carries its task tag
+            rows.append(_plan_row(learner, task, "words", **base))
+        else:
+            rows.append(_row("words", "words", base.pop("title"), base.pop("tag"), base.pop("minutes"),
+                             "done" if words.get("done") else "todo", **base))
+    elif task:
+        rows.append(_plan_row(learner, task, "words"))
+    # 7. The day's questions, 8. the challenge, 9. contests closing today
+    task = own.get("qotd")
+    rows.append(_row("qotd", "qotd", "The day's questions", "Day's questions", qotd["slots"] * secs / 60,
+                     "done" if qotd["answered"] == qotd["slots"] else "progress" if qotd["answered"] else "todo",
+                     meta=f"{qotd['answered']} of {qotd['slots']}",
+                     progress={"have": qotd["answered"], "of": qotd["slots"]},
+                     why=[f"The same {qotd['slots']} for everyone, one try each"], href="/#qotd",
+                     result={"marks": qotd["marks"]} if qotd["answered"] else None,
+                     task_id=task.get("id") if task else None))
+    task = own.get("challenge")
+    rows.append(_row("challenge", "challenge", "Daily challenge", "Challenge", CHALLENGE_S / 60,
+                     "done" if chal["done"] else "progress" if chal["started"] else "todo",
+                     progress={"have": chal["answered"], "of": chal["total"]},
+                     why=["10 question types · the same for everyone, your own numbers · ranked by right answers,"
+                          " then time"],
+                     start={"path": "/api/challenge/start", "body": {}}, href="/compete/contest/?id=daily",
+                     result={"right": chal.get("right"), "asked": chal["total"], "session": chal["id"]}
+                     if chal["done"] else None, task_id=task.get("id") if task else None))
     for c in _call("compete", "due_today", learner, tz) or []:
-        rows.append({"key": f"contest:{c['id']}", "kind": "contest", "title": c.get("title"), "tag": "Contest",
-                     "minutes": CHALLENGE_S // 60, "due_at": c.get("closes"), "status": "todo",
-                     "href": f"/compete/contest/?id={c['id']}"})
-    finished = ("done", "marked", "made_up", "skipped", "moved")
-    rows.sort(key=lambda r: r.get("status") in finished)
-    undone = [r for r in rows if r.get("status") not in finished]
-    return {"rows": rows, "minutes_left": sum(r.get("minutes") or 0 for r in undone),
+        rows.append(_row(f"contest:{c['id']}", "contest", c.get("title"), "Contest", CHALLENGE_S / 60, "todo",
+                         due_at=c.get("closes"), href=f"/compete/contest/?id={c['id']}"))
+    rows.sort(key=lambda r: r["status"] in FINISHED)
+    undone = [r for r in rows if r["status"] not in FINISHED]
+    return {"rows": rows, "minutes_left": sum(r["minutes"] for r in undone),
             "goal_minutes": p.get("minutes"), "done": len(rows) - len(undone), "total": len(rows), "source": "today"}
 
 
@@ -538,6 +846,12 @@ def brief(learner: str, tz: int, d: dict, t: dt.date, score_list: list[dict]) ->
         delta = f" · {round(s['mid'] - prev['mid']):+d}" if prev else ""
         facts.append({"kind": "score", "text": f"{progress_kind(s['kind'])} on {_short(s['at'])}: {s['low']}–{s['high']}{delta}",
                       "href": f"/results/report/?id={s['session']}"})
+    elif last:                              # an added Bluebook or official score counts as news too
+        o = db.one("SELECT day, math, source FROM outside_scores WHERE learner=? AND day>=? ORDER BY day DESC, at DESC"
+                   " LIMIT 1", learner, last["day"])
+        if o:
+            label = {"official": "Official SAT", "bluebook": "Bluebook test"}.get(o["source"], "Added score")
+            facts.append({"kind": "score", "text": f"{label} on {_short(o['day'])}: {o['math']}", "href": "#score"})
     if last:
         label = "Yesterday" if last["day"] == (t - dt.timedelta(days=1)).isoformat() else \
             f"Since {dt.date.fromisoformat(last['day']).strftime('%a')}"
@@ -628,34 +942,49 @@ def _chip(minutes: float) -> int:
 
 
 def workload(learner: str, tz: int, p: dict, t: dt.date, d: dict, open_count: int, warm: dict,
-             gains: dict | None, secs: float) -> dict | None:
+             gains: dict | None, secs: float, plan_days: list[dict] | None = None) -> dict | None:
     """Capacity against need to the exam's eve, including the target's skill
-    work (estimate.need(target).path). Sized only with 30 answers and a target."""
+    work (estimate.need(target).path). Sized only with 30 answers and a target.
+    Capacity is the plan's own days when there is a plan, else the daily goal
+    on the study days, else the last 7 days' average."""
     if not p.get("exam_date"):
         return None
     exam = dt.date.fromisoformat(p["exam_date"])
     pattern = p.get("days") if p.get("days") and len(p["days"]) == 7 else None
     days = [t + dt.timedelta(days=i) for i in range(max(0, (exam - t).days - 1))]   # today to the eve's eve
     study_days = [x for x in days if not pattern or pattern[x.weekday()] == "1"]
-    if p.get("minutes"):
-        per_day = p["minutes"] * 60
+    lo, hi = t.isoformat(), (exam - dt.timedelta(days=1)).isoformat()
+    planned = [x for x in plan_days or [] if lo <= (x.get("date") or "") < hi and x.get("kind") in ("practice", "test")]
+    if planned:
+        study_days = planned
+        capacity = int(sum(x.get("minutes") or 0 for x in planned) * 60)
+        per_day = capacity / len(planned)
     else:
-        week_rows = d["recent"][-7:]
-        per_day = sum(r["minutes"] for r in week_rows) * 60 / 7
-    capacity = int(per_day * len(study_days))
+        if p.get("minutes"):
+            per_day = p["minutes"] * 60
+        else:
+            week_rows = d["recent"][-7:]
+            per_day = sum(r["minutes"] for r in week_rows) * 60 / 7
+        capacity = int(per_day * len(study_days))
     answers = db.one(f"SELECT COUNT(*) n FROM attempts WHERE learner=? AND {progress.COUNTED}", learner)["n"]
     unsized = "answers" if gains is None else "target" if not p.get("target") else None
     checks = db.one("SELECT COUNT(*) n FROM traps WHERE learner=? AND closed IS NOT NULL AND due IS NOT NULL"
                     " AND due<?", learner, exam.isoformat())["n"]
     tests_per_week = {"daily": 7, "twice": 2, "weekly": 1, "none": 0}.get(p.get("tests") or "", None)
-    if tests_per_week is not None:
-        tests, clock = math.ceil(len(study_days) / 7 * tests_per_week) if tests_per_week < 7 else len(study_days), MODULE_S
-    else:
-        tests = sum(1 for n in range(6, 15) if (exam - dt.timedelta(days=n)).weekday() == 5
-                    and exam - dt.timedelta(days=n) >= t)
-        tests, clock = min(2, tests), SECTION_S
-    need = {"traps": int(open_count * 2 * secs), "checks": int(checks * secs), "tests": tests * clock,
-            "tests_n": tests, "warmups": int(min(5, warm["due"]) * secs * len(study_days)), "target": None}
+    if planned:                                     # the plan's test days, each at its own clock
+        clocks = [SECTION_S if x.get("test") in ("section", "mock", "rehearsal") else MODULE_S
+                  for x in planned if x.get("test") or x.get("kind") == "test"]
+        tests, test_s = len(clocks), sum(clocks)
+    elif tests_per_week is not None:
+        tests = math.ceil(len(study_days) / 7 * tests_per_week) if tests_per_week < 7 else len(study_days)
+        test_s = tests * MODULE_S
+    else:                                           # T13's rehearsals: the Saturdays 6 to 14 days out
+        tests = min(2, sum(1 for n in range(6, 15) if (exam - dt.timedelta(days=n)).weekday() == 5
+                           and exam - dt.timedelta(days=n) >= t))
+        test_s = tests * SECTION_S
+    need = {"traps": int(open_count * 2 * secs), "checks": int(checks * secs), "tests": test_s,
+            "tests_n": tests, "warmups": int(warm.get("nominal", 5) * secs * len(study_days)), "target": None,
+            "traps_n": open_count, "checks_n": checks, "secs": round(secs)}
     if p.get("target") and gains is not None:
         n = estimate.need(p["target"], learner)
         path = n.get("path") or {}
@@ -676,36 +1005,73 @@ def workload(learner: str, tz: int, p: dict, t: dt.date, d: dict, open_count: in
     return out
 
 
+def _dur(minutes: float) -> str:
+    """42h 10m, 45m, 6h (the design rules' durations)."""
+    m = int(round(minutes))
+    h, m = divmod(m, 60)
+    return f"{h}h {m}m" if h and m else f"{h}h" if h else f"{m}m"
+
+
 def goal_suggest(w: dict | None) -> dict | None:
-    """T17: the suggested daily goal and its arithmetic; null exactly when unsized."""
+    """T17: the suggested daily goal and its arithmetic, in words; null
+    exactly when unsized."""
     if not w or not w["sized"] or w["suggest_minutes"] is None:
         return None
     n = w["need"]
     parts = {"traps": n["traps"], "checks": n["checks"], "tests": n["tests"], "warmups": n["warmups"],
              "target": n["target"]["minutes"] * 60 if n["target"] else 0}
+    secs = n.get("secs") or 95
+    terms = []
+    if n.get("traps_n") or n.get("checks_n"):
+        inner = " + ".join(x for x in (f"{n['traps_n']} mistakes × 2" if n.get("traps_n") else "",
+                                       f"{n['checks_n']} check-ins" if n.get("checks_n") else "") if x)
+        terms.append(f"({inner}) at {secs // 60}:{secs % 60:02d} each ({_dur((n['traps'] + n['checks']) / 60)})")
+    if n["tests_n"]:
+        terms.append(f"{n['tests_n']} test{'s' if n['tests_n'] > 1 else ''} ({_dur(n['tests'] / 60)})")
+    if n["warmups"]:
+        terms.append(f"warm-ups ({_dur(n['warmups'] / 60)})")
+    if n["target"]:
+        terms.append(f"reach {n['target']['target']} (at least {_dur(n['target']['minutes'])})")
+    per_day = w["total"] / 60 / max(1, w["study_days"])
+    arithmetic = (f"{' + '.join(terms) or 'nothing left'} = {_dur(w['total'] / 60)} ÷ {w['study_days']} study days"
+                  f" ≈ {round(per_day)} min → {w['suggest_minutes']} min")
     return {"minutes": w["suggest_minutes"], "study_days": w["study_days"], "total": w["total"],
-            "per_day": round(w["total"] / 60 / max(1, w["study_days"])), "parts": parts,
+            "per_day": round(per_day), "parts": parts, "arithmetic": arithmetic,
             "target": n["target"]["target"] if n["target"] else None}
 
 
 # ------------------------------------------------------------------ GET /api/today
 
+def exam_part(p: dict, t: dt.date) -> dict | None:
+    """The exam date with its official deadlines (U17): register by, late by,
+    scores by, and the registration line while it applies."""
+    if not p.get("exam_date"):
+        return None
+    e = satdates.entry(p["exam_date"])
+    return {"date": p["exam_date"], "days": (dt.date.fromisoformat(p["exam_date"]) - t).days,
+            "official": p["exam_date"] in satdates.SAT_DATES,
+            "register_by": e["register_by"], "late_by": e["late_by"], "scores_by": e["scores_by"],
+            "registration": satdates.registration(p["exam_date"], (p.get("prefs") or {}).get("registered"), t)}
+
+
 def today_payload(learner: str, tz: int) -> dict:
     p = profile(learner, tz)
     d = progress.days(learner, tz, 6)
     t = dt.date.fromisoformat(d["today"])
-    exam = None
-    if p["exam_date"]:
-        exam = {"date": p["exam_date"], "days": (dt.date.fromisoformat(p["exam_date"]) - t).days}
     today0 = _start(t, tz)
     tested = bool(db.one("SELECT 1 FROM sessions WHERE learner=? AND kind IN ('mock','module') AND finished>=?",
                          learner, today0)) or bool(db.one("SELECT 1 FROM outside_scores WHERE learner=? AND day=?",
                                                           learner, t.isoformat()))
-    coach = progress.coach(learner, count=per_session(p))
+    plan = plan_part(learner, tz, t)
+    st = stage(learner, tz, p, t, plan)
+    coach = stretch_coach(progress.coach(learner, count=per_session(p)), st)
     open_list = progress.open_traps(learner)
     score_list = scores(learner)
-    st = stage(learner, tz, p, t)
-    plan = plan_part(learner, tz)
+    gains = estimate.gains(learner)
+    tr = traps(learner, tz, t, open_list, st, gains, p.get("exam_date"))
+    if st and tr["rare"] is not None and not st.get("rare"):
+        st["rare"] = {"n": tr["rare"]["n"], "ids": tr["rare"]["fix"]["body"]["ids"] if tr["rare"]["fix"] else [],
+                      "until": p.get("exam_date")}
     words = _call("words", "today_summary", learner, tz)
     open_ = open_sittings(learner)
     warm = warmup(learner, tz, t, st)
@@ -713,19 +1079,25 @@ def today_payload(learner: str, tz: int) -> dict:
     qotd = qotd_today(learner, tz)
     chal = challenge_today(learner, tz, t)
     secs = _median_s(learner)
-    due_ = _call("next", "due", learner, tz) or due_fallback(learner, tz, p, open_, plan, warm, words, qotd, chal, secs, st, t)
-    gains = estimate.gains(learner)
-    work = workload(learner, tz, p, t, d, len(open_list), warm, gains, secs)
+    due_ = _call("next", "due", learner, tz) or due_fallback(learner, tz, p, open_, plan, warm, words, qotd, chal,
+                                                            secs, st, t)
+    work = workload(learner, tz, p, t, d, len(open_list), warm, gains, secs, (plan or {}).get("days"))
+    review = review_counts(learner, tz, t)
+    box = (p.get("prefs") or {}).get("review_minutes", 10)
+    review["start"] = {"path": "/api/drill", "body": {"source": "due", "box": box}, "minutes": box}
     return {
-        "profile": p, "days": d, "exam": exam, "tested": tested, "score": score_list[0] if score_list else None,
+        "profile": p, "days": d, "exam": exam_part(p, t), "tested": tested,
+        "score": score_list[0] if score_list else None,
         "coach": coach, "mistakes": len(open_list),
         "study": study_, "scores": score_list, "outside": outside(learner), "domains": domains(learner),
-        "traps": traps(learner, tz, t, open_list, st), "open": open_, "week": week(learner, tz, d, t),
-        "warmup": warm, "plan": plan, "review": review_counts(learner, tz, t), "words": words,
+        "traps": tr, "open": open_, "week": week(learner, tz, d, t),
+        "warmup": warm, "plan": plan, "draft": None if plan else plan_draft(learner, tz, p, t, d, score_list),
+        "review": review, "words": words,
         "qotd": qotd, "challenge": chal, "seconds_per_question": round(secs),
-        "next": next_part(learner, tz, p, coach, st, plan, study_, due_), "due": due_,
+        "next": next_part(learner, tz, p, coach, st, plan, study_, due_, open_, t), "due": due_,
         "brief": brief(learner, tz, d, t, score_list), "at_risk": at_risk(learner, tz, d, t, coach),
         "receipt": receipt(learner, tz, d, t, p, due_), "workload": work, "goal_suggest": goal_suggest(work),
+        "usual_start": None if (p.get("prefs") or {}).get("study_time") else usual_start(learner, tz),
     }
 
 
@@ -781,12 +1153,48 @@ def _pace_extras(learner: str, pace: dict, tz: int) -> dict:
             "guard": guard}
 
 
+def early_projection(points: list[tuple[dt.date, float]], to_day: dt.date, half_latest: float) -> dict | None:
+    """T10's verdict from 2 scored sittings in 60 days a week apart, while
+    U9's cone waits for 3 over 21 days: estimate.project's own shrunk slope
+    and taper, with the latest band's half-width.
+    ponytail: goes once estimate.projection starts at 2 sittings (F4)."""
+    got = estimate.project(points, to_day, half_latest)
+    if got:
+        return got
+    points = sorted(points)
+    n = len(points)
+    if n < 2 or (points[-1][0] - points[0][0]).days < 7:
+        return None
+    x = [(d - points[0][0]).days / 7 for d, _ in points]
+    y = [v for _, v in points]
+    xb, yb = sum(x) / n, sum(y) / n
+    b = sum((xi - xb) * (yi - yb) for xi, yi in zip(x, y)) / sum((xi - xb) ** 2 for xi in x)
+    b2 = b * n / (n + 3)
+    w = max(0.0, (to_day - points[-1][0]).days / 7)
+    mid_ = max(200.0, min(800.0, yb + b2 * (x[-1] - xb) + b2 * min(w, 4) + max(-20.0, min(20.0, b2)) * max(w - 4, 0)))
+    half = max(60, min(150, estimate._round10(half_latest)))
+    return {"mid": round(mid_), "low": max(200, round(mid_ - half)), "high": min(800, round(mid_ + half)),
+            "half": half, "slope": round(b, 1), "slope_used": round(b2, 1), "n": n, "to": to_day.isoformat(),
+            "label": "If this pace held", "early": True}
+
+
+def _points(learner: str, since: dt.date, before: dt.date | None = None) -> tuple[list, float]:
+    """Scored standard sittings (our tests) from `since`, and the newest one's half-width."""
+    items = [x for x in estimate._sittings(learner) if x["standard"] and not x["outside"]
+             and since <= dt.date.fromisoformat(x["at"][:10]) and (before is None or x["at"][:10] < before.isoformat())]
+    half = (items[0]["high"] - items[0]["low"]) / 2 if items else 0
+    return [(dt.date.fromisoformat(x["at"][:10]), x["mid"]) for x in items], half
+
+
 def _estimate_block(learner: str, tz: int, p: dict) -> dict:
     """T10: practice since the last test, evidence per domain, the projection
-    and its verdict, calibration against an official score."""
+    and its verdict (in words), calibration against an official score."""
+    t = _local_today(tz)
     score_list = scores(learner)
     latest = score_list[0] if score_list else None
     delta = estimate.practice_delta(learner, latest["at"]) if latest else None
+    if delta:
+        delta["show"] = abs(delta["pts"]) >= 5 and delta["answers"] >= 20
     since = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=60)).isoformat()
     names = progress.topics()
     evidence = {name: 0 for name in progress.DOMAINS}
@@ -794,39 +1202,44 @@ def _estimate_block(learner: str, tz: int, p: dict) -> dict:
                      f" AND {progress.COUNTED} GROUP BY topic", learner, since):
         if r["topic"] in names:
             evidence[names[r["topic"]].domain] = evidence.get(names[r["topic"]].domain, 0) + r["n"]
+    exam = dt.date.fromisoformat(p["exam_date"]) if p.get("exam_date") else None
     proj = estimate.projection(learner)
+    if proj is None and exam:
+        pts, half = _points(learner, t - dt.timedelta(days=60))
+        proj = early_projection(pts, exam, half)
     target = p.get("target")
-    verdict = made = needs = None
+    made = proj.get("slope_used") if proj else None
+    needs = None
     if latest and target and latest["low"] >= target:
-        verdict = "at_target"
+        kind, text = "at_target", "At your target ✓"
     elif proj is None:
-        verdict = "not_enough"
-    else:
-        made = proj.get("slope_used")
-        if target and p.get("exam_date"):
-            weeks = max(1 / 7, (dt.date.fromisoformat(p["exam_date"]) - _local_today(tz)).days / 7)
-            needs = round((target - (latest["mid"] if latest else proj["mid"])) / weeks, 1)
-            verdict = "on_pace" if proj["mid"] >= target else "behind"
+        kind, text = "not_enough", "Not enough to project yet · 2 scored sittings in 60 days start it"
+    elif target and exam:
+        weeks = max(1 / 7, (exam - t).days / 7)
+        needs = round((target - (latest["mid"] if latest else proj["mid"])) / weeks, 1)
+        if proj["mid"] >= target:
+            kind, text = "on_pace", f"On pace: about {proj['low']}–{proj['high']} on {_short(proj['to'])} · target {target}"
         else:
-            verdict = "projected"
+            kind, text = "behind", (f"Behind: on pace for {proj['low']}–{proj['high']} · {target} needs"
+                                    f" {needs:+.0f} a week, you're making {made:+.0f}")
+    else:
+        kind, text = "projected", f"If this pace held: about {proj['low']}–{proj['high']} on {_short(proj['to'])}"
     calibration = None
-    o = db.one("SELECT * FROM outside_scores WHERE learner=? AND source='official' AND math IS NOT NULL"
-               " ORDER BY day DESC LIMIT 1", learner)
-    if o:
-        day = dt.date.fromisoformat(o["day"])
-        items = [x for x in estimate._sittings(learner) if x["standard"] and not x["outside"]
-                 and day - dt.timedelta(days=90) <= dt.date.fromisoformat(x["at"][:10]) < day]
-        if items:
-            pr = estimate.project([(dt.date.fromisoformat(x["at"][:10]), x["mid"]) for x in items], day,
-                                  (items[0]["high"] - items[0]["low"]) / 2)
-            if pr:
-                calibration = {"projected": {"low": pr["low"], "high": pr["high"]}, "score": o["math"],
-                               "day": o["day"], "inside": pr["low"] <= o["math"] <= pr["high"]}
+    o = db.one("SELECT * FROM outside_scores WHERE learner=? AND source='official' AND day>=? ORDER BY day DESC LIMIT 1",
+               learner, exam.isoformat()) if exam and exam <= t else None
+    if o:                                   # recomputed from the sittings before the exam date: nothing stored
+        pts, half = _points(learner, exam - dt.timedelta(days=90), exam)
+        pr = early_projection(pts, exam, half)
+        if pr:
+            calibration = {"projected": {"low": pr["low"], "high": pr["high"]}, "score": o["math"], "day": o["day"],
+                           "exam_date": exam.isoformat(), "inside": pr["low"] <= o["math"] <= pr["high"],
+                           "text": f"We projected {pr['low']}–{pr['high']} for {_short(exam.isoformat())}"
+                                   f" · you scored {o['math']}"}
     standard = sum(1 for x in estimate._sittings(learner) if x["standard"] and not x["outside"]
-                   and (dt.date.today() - dt.date.fromisoformat(x["at"][:10])).days <= 90)
+                   and (t - dt.date.fromisoformat(x["at"][:10])).days <= 90)
     return {"latest": latest, "practice_delta": delta, "evidence": evidence,
-            "thin": [k for k, n in evidence.items() if n < 15], "projection": proj, "verdict": verdict,
-            "made_per_week": made, "needs_per_week": needs, "calibration": calibration,
+            "thin": [k for k, n in evidence.items() if n < 15], "projection": proj, "verdict": text,
+            "verdict_kind": kind, "made_per_week": made, "needs_per_week": needs, "calibration": calibration,
             "standard_sittings": standard, "confidence": estimate.estimate(learner)["confidence"]}
 
 
@@ -938,7 +1351,8 @@ def get_calendar(month: str = Query(...), x_learner: str | None = Header(default
              "asked": res.get("asked"), "estimate": {"low": est["low"], "high": est["high"]} if isinstance(est, dict)
              and est.get("low") is not None else None, "rank": rank, "gated": gated})
     qotd = daily.by_day(learner)
-    forecast = {f["day"]: f for f in progress.due_forecast(learner, tz, (last - t).days)} if last > t else {}
+    held = _day_marks(learner, tz, first, min(last, t))
+    forecast ={f["day"]: f for f in progress.due_forecast(learner, tz, (last - t).days)} if last > t else {}
     days, totals = [], {"minutes": 0, "questions": 0, "right": 0, "active_days": 0}
     for i in range((last - first).days + 1):
         day = first + dt.timedelta(days=i)
@@ -948,7 +1362,7 @@ def get_calendar(month: str = Query(...), x_learner: str | None = Header(default
         extra = per.get(key, {})
         row = {"day": key, "questions": r["questions"], "right": r["right"], "minutes": r["minutes"],
                "practice": r["practice"], "tests": r["tests"], "words": r["words"], "fixed": r["fixed"],
-               "rest": r["rest"], "spare_used": r.get("spare_used", False),
+               "held": held.get(key, {}).get("held", 0), "rest": r["rest"], "spare_used": r.get("spare_used", False),
                "qotd": daily.marks(learner, key, None, qotd),
                "sittings": extra.get("sittings", []), "opened": extra.get("opened", []),
                "closed": extra.get("closed", []), "topics": list(extra.get("topics", {}).values()),
@@ -1050,10 +1464,20 @@ def answer_qotd(body: Reply, x_learner: str | None = Header(default=None), x_tz:
         record = part("words", "record_daily")
         if gen is None or record is None:
             raise HTTPException(409, {"reason": "no_item_today"})
-        # W21's signature; the session carries S3's grace and late routing when Words takes it
-        kw = {"session": daily.session(slot, day, late)} if "session" in inspect.signature(record).parameters else {}
+        params = inspect.signature(record).parameters
+        first = daily.answered(learner, slot, day)
+        if first is None and late and "session" not in params:
+            raise HTTPException(409, {"reason": "late_rw_unavailable"})     # Words files the day's own only, so far
+        kw = {}
+        if "session" in params:                 # W21's signature once Words takes S3's routing
+            kw["session"] = daily.session(slot, day, late)
+        if "tz" in params:
+            # ponytail: the grace hour, until Words takes the session: an hour-behind zone makes
+            # yesterday "today" for record_daily's own day check
+            kw["tz"] = x_tz + daily.GRACE_MIN if day != daily.today(x_tz) and not late else x_tz
         reply = record(learner, day, daily.SLOTS[slot]["fmt"], given, body.ms, **kw) or {}
-        return daily.rw_feedback(slot, day, gen, reply.get("given", given), late, body.ms, reply, learner)
+        return daily.rw_feedback(slot, day, gen, reply.get("given", given), first["late"] if first else late,
+                                 body.ms, reply, learner)
     first = daily.answered(learner, slot, day)
     if first is None:
         q = daily.item(slot, day)

@@ -9,10 +9,13 @@ next.preview) are checked when that part has landed and skipped quietly before.
 
 from __future__ import annotations
 
+import contextlib
 import datetime as dt
+import importlib
 import itertools
 import json
 import os
+import re
 import secrets
 import tempfile
 from unittest.mock import patch
@@ -22,7 +25,7 @@ if __name__ == "__main__":
 
 from fastapi.testclient import TestClient
 
-from server import api_today, daily, db, deps, estimate, practice, progress
+from server import api_today, daily, db, deps, drill, estimate, practice, progress, satdates
 from server.app import app
 
 LEAKS = ("answer", "answer_index", "rationale", "reasons", "traps", "key", "seed", "word")
@@ -103,11 +106,13 @@ def answers(learner: str, n: int, right: bool = True, ms: int = 40000, topic: st
         done += 1
 
 
-def answer_drill(c: TestClient, sid: str, learner: str, limit: int = 30) -> list[dict]:
-    """Answer a drill right until done; the questions it served."""
+def answer_drill(c: TestClient, sid: str, learner: str, limit: int = 30, right: bool = True) -> list[dict]:
+    """Answer a drill all right (or all wrong) until done; the questions it served."""
     for _ in range(limit):
         q = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", sid)["questions"])[-1]
         given = "ABCD".index(q["answer"]) if q["type"] == "mcq" else q["answer"]
+        if not right:
+            given = (given + 1) % 4 if q["type"] == "mcq" else "-99999"
         call(c, "POST", f"/api/drill/{sid}/answer", learner, {"question_id": q["id"], "answer": given})
         if call(c, "POST", f"/api/drill/{sid}/next", learner).get("done"):
             break
@@ -410,7 +415,8 @@ def profile_fields(c: TestClient) -> None:
     assert not p.get("plan_started")
     call(c, "PUT", "/api/me", me, {"rw_now": 615}, status=422)
     t = call(c, "GET", "/api/today", me)
-    assert t["exam"] == {"date": exam, "days": 40} and t["study"]["goal"] == 60 and t["study"]["week_goal"] == 300
+    assert t["exam"]["date"] == exam and t["exam"]["days"] == 40 and t["study"]["goal"] == 60
+    assert t["study"]["week_goal"] == 300
     print("ok  S3 exam date today or later, a goal without a plan, and R&W now and target on the profile")
 
 
@@ -605,6 +611,401 @@ def final_stretch(c: TestClient) -> None:
     print("ok  S3 exam in 12 days is the final stretch, and fixed mistakes come back as a sweep row")
 
 
+# ------------------------------------------------------------------ T2 (R56), T1.1, T1.8
+
+ROW_KEYS = {"key", "kind", "title", "tag", "meta", "minutes", "progress", "due_at", "status", "why", "evidence_href",
+            "start", "href", "result", "fix", "alternatives", "task_id", "own", "marked", "group"}
+
+
+def traps_on(learner: str, n: int, topics=None) -> list[dict]:
+    """n open traps on different templates (in `topics` when given)."""
+    names = sorted(x for t, v in practice.catalogue()["by_topic"].items() if topics is None or t in topics for x in v)
+    got: list[dict] = []
+    for name in names[::3] + names[1::3] + names[2::3]:
+        if len(got) == n:
+            break
+        tr = named_miss(learner, name)
+        if tr and tr["id"] not in {x["id"] for x in got}:
+            got.append(tr)
+    assert len(got) == n, (n, topics, len(got))
+    return got
+
+
+def check_ins_due(learner: str, traps: list[dict], day: dt.date) -> None:
+    for tr in traps:
+        db.run("UPDATE traps SET closed=?, closed_how='fixed', due=?, checks=0, owed=0 WHERE id=?",
+               progress.now(), day.isoformat(), tr["id"])
+
+
+def wrong_named_in_drill(c: TestClient, sid: str, learner: str) -> None:
+    """Answer the drill right until an item with a named distractor comes, and pick it."""
+    for _ in range(12):
+        q = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", sid)["questions"])[-1]
+        key = "ABCD".index(q["answer"]) if q["type"] == "mcq" else None
+        wrong = next((i for i, r in enumerate(q.get("reasons") or []) if r and i != key), None) if key is not None else None
+        call(c, "POST", f"/api/drill/{sid}/answer", learner,
+             {"question_id": q["id"], "answer": wrong if wrong is not None else (key if key is not None else q["answer"])})
+        if wrong is not None:
+            return
+        if call(c, "POST", f"/api/drill/{sid}/next", learner).get("done"):
+            break
+    raise AssertionError("no named distractor came up")
+
+
+def due_rows(c: TestClient) -> None:
+    me = code()
+    answers(me, 6)
+    before = [db.one(f"SELECT COUNT(*) n FROM {tb} WHERE learner=?", me)["n"] for tb in ("practice_seen", "sessions")]
+    t = today()
+    check_ins_due(me, traps_on(me, 2), t)
+    seen = db.one("SELECT COUNT(*) n FROM practice_seen WHERE learner=?", me)["n"]
+    got = call(c, "GET", "/api/today", me)
+    again = call(c, "GET", "/api/today", me)
+    # T1.1: loading Today marks nothing seen and creates no session
+    assert db.one("SELECT COUNT(*) n FROM practice_seen WHERE learner=?", me)["n"] == seen
+    assert db.one("SELECT COUNT(*) n FROM sessions WHERE learner=?", me)["n"] == before[1]
+    rows = got["due"]["rows"]
+    assert all(ROW_KEYS <= set(r) for r in rows), [sorted(ROW_KEYS - set(r)) for r in rows]
+    kinds = [r["kind"] for r in rows]
+    assert kinds.count("review") == 1 and "warmup" not in kinds, kinds
+    review = next(r for r in rows if r["kind"] == "review")
+    assert got["warmup"]["checks"] >= 2 and f"{got['warmup']['checks']} check-ins" in review["meta"], review["meta"]
+    assert review["start"] == {"path": "/api/drill", "body": {"source": "due", "box": 10}}, review["start"]
+    assert got["review"]["start"]["body"] == review["start"]["body"]            # R30: #mist starts the same row
+    undone = [r for r in rows if r["status"] not in api_today.FINISHED]
+    assert got["due"]["minutes_left"] == sum(r["minutes"] for r in undone)
+    assert [r["status"] in api_today.FINISHED for r in rows] == sorted(r["status"] in api_today.FINISHED for r in rows)
+    assert again["due"]["rows"] == rows
+    d = call(c, "POST", "/api/drill", me, review["start"]["body"])
+    served = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", d["id"])["questions"])
+    assert served, "the Review row starts a set"
+    # T2.4: a set that opened a mistake: its result and the Fix body
+    s = call(c, "POST", "/api/drill", me, {"topics": ["linear_functions"], "count": 4})
+    wrong_named_in_drill(c, s["id"], me)
+    res = api_today.session_result(me, s["id"])
+    assert res["opened"] == 1 and res["answered"] >= 1, res
+    assert api_today._fix(res)["body"] == {"from_session": s["id"], "still_open": True, "scope": "misses"}
+    # T2.5: Words absent, then 12 due (R56's row)
+    base = (me, 0, got["profile"], got["open"], None, got["warmup"])
+    rest = (got["qotd"], got["challenge"], 95)
+    none = api_today.due_fallback(*base, None, *rest)
+    assert "words" not in [r["kind"] for r in none["rows"]]
+    words = {"due": 12, "preview": {"new": 5}, "minutes": 6, "done": False, "reason": "12 come back today",
+             "start": {"path": "/api/words/run", "body": {"mode": "mix", "deck": {"source": "today"}}}}
+    w = next(r for r in api_today.due_fallback(*base, words, *rest)["rows"] if r["kind"] == "words")
+    assert w["title"] == "Words" and w["meta"].startswith("12 due · 5 new · ~6 min") and w["start"] == words["start"]
+    print("ok  S3 Due today: one Review row (R56), the full row shape, minutes left, a set's result and Fix;"
+          " loading Today writes nothing")
+
+
+def goal_met_box(c: TestClient) -> None:
+    """T1.8's server half: the goal met, the box defaults to 15."""
+    me = code()
+    call(c, "PUT", "/api/me", me, {"minutes": 30})
+    answers(me, 4, ms=600000)
+    got = call(c, "GET", "/api/today", me)
+    assert got["study"]["today"] >= 30 and got["next"]["box"]["default"] == 15, (got["study"], got["next"]["box"])
+    assert got["next"]["box"]["options"] == [5, 15, 30, 45, 60]
+    assert got["next"]["count"]["options"][-1] is None and len(set(got["next"]["count"]["options"][:-1])) == \
+        len(got["next"]["count"]["options"][:-1])
+    print("ok  S3 the Size row: five time chips, deduplicated counts with Endless, 15 once the goal is met")
+
+
+# ------------------------------------------------------------------ T13
+
+def stages(c: TestClient) -> None:
+    t = today()
+    me = code()
+    answers(me, 3)
+    call(c, "PUT", "/api/me", me, {"exam_date": (t + dt.timedelta(days=1)).isoformat()})
+    got = call(c, "GET", "/api/today", me)
+    first = got["next"]["items"][0]
+    assert got["next"]["stage"]["mode"] == "eve" and first["title"].startswith("Light warm-up"), first
+    assert first["then"].startswith("Done for today") and first["start"]["body"]["count"] == 5
+    call(c, "POST", first["start"]["path"], me, first["start"]["body"])            # the drill body is valid
+    # exam morning, 07:00 local
+    tz = tz_at(7 * 60)
+    morning = code()
+    call(c, "PUT", "/api/me", morning, {"exam_date": today(tz).isoformat()}, tz=tz)
+    got = call(c, "GET", "/api/today", morning, tz=tz)
+    assert got["next"]["stage"]["mode"] == "exam" and got["next"]["items"][0]["title"].startswith("Warm-up · 5 easy")
+    # after the exam: scores come out
+    past = (t - dt.timedelta(days=3)).isoformat()
+    db.run("UPDATE learners SET exam_date=? WHERE id=?", past, me)
+    got = call(c, "GET", "/api/today", me)
+    last = got["next"]["items"][-1]
+    assert got["next"]["stage"]["mode"] == "after" and last["kind"] == "after"
+    assert last["scores_by"] == satdates.entry(past)["scores_by"]
+    # T13.3, 8: the rehearsal leads on its Saturday, with no clock time
+    items = api_today.queue_fallback(me, t, {"test": None, "drill": None, "drills": 0}, None,
+                                     {"mode": "stretch", "days": 10, "rehearsals": [{"day": t.isoformat(), "done": False}]})
+    title = items[0]["title"]
+    assert title.startswith("Dress rehearsal") and "after R&W and the break" in title and items[0]["time"] is None
+    assert not re.search(r"\d:\d\d", title) and items[0]["start"]["body"] == {"kind": "section", "timing": "official"}
+    call(c, "PUT", "/api/me", me, {"exam_date": (t + dt.timedelta(days=14)).isoformat()})
+    st = call(c, "GET", "/api/today", me)["next"]["stage"]
+    exam = t + dt.timedelta(days=14)
+    assert 1 <= len(st["rehearsals"]) <= 2 and all(
+        dt.date.fromisoformat(r["day"]).weekday() == 5 and (exam - dt.date.fromisoformat(r["day"])).days >= 6
+        for r in st["rehearsals"]), st["rehearsals"]
+    # T13.1: in the stretch the coach never starts New skills, and never a rare one
+    shares = estimate.shares()
+    new = code()
+    call(c, "PUT", "/api/me", new, {"exam_date": (t + dt.timedelta(days=12)).isoformat()})
+    coach = call(c, "GET", "/api/today", new)["coach"]
+    assert coach["why"] != "new" and all(44 * shares[x] >= 2 for x in coach["topics"]), coach
+    # T13.7: both groups, every row, and the rare group's own Fix
+    common = [x for x in shares if 44 * shares[x] >= 2]
+    rare = [x for x in shares if 44 * shares[x] < 2]
+    grp = code()
+    now_ids = [x["id"] for x in traps_on(grp, 3, common)]
+    rare_ids = [x["id"] for x in traps_on(grp, 2, rare)]
+    call(c, "PUT", "/api/me", grp, {"exam_date": (t + dt.timedelta(days=12)).isoformat()})
+    got = call(c, "GET", "/api/today", grp)
+    tr = got["traps"]
+    assert sorted(x["id"] for x in tr["now"]["rows"]) == sorted(now_ids) and tr["now"]["n"] == 3
+    assert sorted(tr["rare"]["fix"]["body"]["ids"]) == sorted(rare_ids) and tr["rare"]["fix"]["body"]["pool"] == "redo"
+    assert sorted(got["next"]["stage"]["rare"]["ids"]) == sorted(rare_ids)
+    print("ok  S3 the final stretch: eve, exam morning and after lead Up next; rehearsals on Saturdays with no"
+          " clock time; no new rare skills; both trap groups with their own Fix")
+
+
+# ------------------------------------------------------------------ T14 with Words' R&W slots
+
+def rw_slots(c: TestClient) -> None:
+    if not deps.part("words", "record_daily"):
+        return
+    with patch.dict(os.environ, {"SATF_WORDS_UNREVIEWED": "1"}), contextlib.ExitStack() as stack:
+        daily.shown.cache_clear()
+        try:
+            # S9's known crash (helper Task 18, v2/words-fix) hits some days' seeds: take a zone whose day files
+            for tz in (0, 720, -720):
+                day = daily.today(tz)
+                gen = daily.item("rw:wic", day)
+                if gen is None or daily.item("rw:transition", day) is None:
+                    continue
+                try:
+                    for fmt in ("wic", "transition"):
+                        deps.part("words", "record_daily")(code(), day, fmt, 0, 1000, tz=tz)
+                    break
+                except OverflowError:
+                    continue
+            else:                           # none does: run S3's paths on seeds SQLite can hold
+                words_mod = importlib.import_module("server.words")
+                made = words_mod.daily_item
+
+                def held(d, fmt):
+                    g = made(d, fmt)
+                    return g and {**g, "seed": g["seed"] % 2 ** 62}
+
+                stack.enter_context(patch.object(words_mod, "daily_item", held))
+                print("--  S3 R&W seeds clamped for this check: words.daily_item's seeds overflow SQLite (S9, Task 18)")
+                tz, day = 0, daily.today(0)
+                gen = daily.item("rw:wic", day)
+            q = call(c, "GET", "/api/qotd", code(), tz=tz)
+            assert [s["slot"] for s in q["slots"]] == ["math:mcq", "math:spr", "rw:wic", "rw:transition"]
+            named = re.compile(rf"\b{re.escape(gen['word'])}\b", re.I)
+            for s in q["slots"]:
+                assert not any(k in s["question"] for k in LEAKS), (s["slot"], set(s["question"]) & set(LEAKS))
+                shown = {k: v for k, v in s["question"].items() if not (s["slot"] == "rw:wic" and k == "choices")}
+                assert not named.search(json.dumps(shown)), (s["slot"], "names the key word before the answer")
+                for ch in s["question"].get("choices") or []:
+                    assert not isinstance(ch, dict) or not {"correct", "key", "answer", "is_key"} & set(ch), ch
+            me = code()
+            wrong = (gen["answer_index"] + 1) % 4
+            first = call(c, "POST", "/api/qotd", me, {"slot": "rw:wic", "answer": wrong, "day": day, "ms": 20000}, tz=tz)
+            assert first["correct"] is False and first["key_word"] == gen["word"] and len(first["reasons"]) == 4
+            assert first["given"] == wrong and first["sat_pace_ms"] == daily.SAT_PACE_MS["rw"]
+            session = f"qotd:rw:wic:{day}"
+            assert db.one("SELECT COUNT(*) n FROM word_reviews WHERE learner=? AND session=?", me, session)["n"] == 1
+            again = call(c, "POST", "/api/qotd", me, {"slot": "rw:wic", "answer": gen["answer_index"], "day": day}, tz=tz)
+            assert again["already"] and again["given"] == wrong and again["correct"] is False
+            assert db.one("SELECT COUNT(*) n FROM word_reviews WHERE learner=? AND session=?", me, session)["n"] == 1
+            # T14.6: the twin waits for the answer, then keeps the word in another frame
+            call(c, "POST", "/api/qotd/another", code(), {"day": day, "slot": "rw:wic", "like": "word"}, status=409, tz=tz)
+            if deps.part("api_words", "_unsign"):
+                tw = call(c, "POST", "/api/qotd/another", me, {"day": day, "slot": "rw:wic", "like": "word"}, tz=tz)
+                assert not any(k in tw["item"] for k in LEAKS)
+                payload = deps.part("api_words", "_unsign")(tw["token"], me, tz)
+                assert payload["word"] == gen["word"] and payload["template"] != gen["template"], payload
+            # T14.7 / 8: a right answer shows every reason; the Due row is N of 4 and done at 4
+            x = code()
+            for s in q["slots"]:
+                item = daily.item(s["slot"], day)
+                key = item["answer_index"] if "answer_index" in item else item["answer"]
+                if s["slot"] == "math:mcq":
+                    key = "ABCD".index(item["answer"])
+                reply = call(c, "POST", "/api/qotd", x, {"slot": s["slot"], "answer": key, "day": day}, tz=tz)
+                assert reply["correct"] is True, (s["slot"], reply)
+                assert reply.get("rationale") or len(reply.get("reasons") or []) == 4
+                row = next(r for r in call(c, "GET", "/api/today", x, tz=tz)["due"]["rows"] if r["kind"] == "qotd")
+                assert row["progress"]["of"] == 4
+            assert row["status"] == "done" and row["meta"] == "4 of 4"
+            assert all(s["mine"] and s["mine"]["correct"] for s in call(c, "GET", "/api/qotd", x, tz=tz)["slots"])
+        finally:
+            daily.shown.cache_clear()
+    print("ok  S3 the four day's questions: R&W keys hidden, filed once in Words' session, twins after the answer,"
+          " every reason open, the Due row done at 4 of 4")
+
+
+# ------------------------------------------------------------------ T6, T8, T10, T12.5, T17.1, T18, T19.4
+
+def fake_sitting(sid: str, mid: int, day: dt.date, half: int = 40) -> dict:
+    return {"id": sid, "kind": "module", "low": mid - half, "high": mid + half, "mid": mid,
+            "at": f"{day.isoformat()}T12:00:00+00:00", "route": None, "standard": True, "outside": False, "why": None}
+
+
+def insights_and_score(c: TestClient) -> None:
+    t = today()
+    me = code()
+    answers(me, 25)
+    answers(me, 15, right=False)
+    ins, got = call(c, "GET", "/api/today/insights", me), call(c, "GET", "/api/today", me)
+    by = {x["domain"]: x["answered"] for x in ins["gains"]["by_domain"]}
+    assert by == {x["domain"]: x["answered"] for x in got["domains"]}, (by, got["domains"])          # T6.3
+    # T8.1: slow but right
+    slow = code()
+    answers(slow, 6, topic="circles", ms=150000)
+    answers(slow, 24, ms=30000)
+    pace = call(c, "GET", "/api/today/insights", slow)["pace"]
+    assert pace["slow_right"] and pace["slow_right"][0]["topic"] == "circles", pace["slow_right"]
+    # T8.4: a Speed drill 20 points under the usual brings the guard (once F5 takes source 'pace')
+    if "pace" in drill.SOURCES:
+        d = call(c, "POST", "/api/drill", slow, {"topics": ["circles"], "count": 3, "timing": "pace", "source": "pace"})
+        answer_drill(c, d["id"], slow, right=False)
+        call(c, "POST", f"/api/drill/{d['id']}/finish", slow)
+        assert "circles" in call(c, "GET", "/api/today/insights", slow)["pace"]["guard"]
+    # T10.1: practice since the last test
+    sit = code()
+    two_days = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=2)).isoformat()
+    answers(sit, 30, right=False, when=two_days)
+    m = call(c, "POST", "/api/mock/new", sit, {"full": False})
+    call(c, "POST", f"/api/session/{m['id']}/finish", sit)
+    db.run("UPDATE sessions SET finished=? WHERE id=?",
+           (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=1)).isoformat(timespec="seconds"), m["id"])
+    answers(sit, 40)
+    delta = call(c, "GET", "/api/today/insights", sit)["estimate"]["practice_delta"]
+    assert delta and delta["pts"] > 0 and delta["show"] is True and delta["answers"] == 40, delta
+    # T10.2: two sittings two weeks apart project a verdict and a cone
+    fake = [fake_sitting("b", 560, t - dt.timedelta(days=10)), fake_sitting("a", 500, t - dt.timedelta(days=24))]
+    with patch.object(estimate, "_sittings", return_value=fake):
+        blk = api_today._estimate_block(me, 0, {"exam_date": (t + dt.timedelta(days=45)).isoformat(), "target": 700})
+    assert blk["verdict"].startswith(("On pace", "Behind")) and blk["projection"]["low"] < blk["projection"]["high"]
+    assert blk["made_per_week"] > 0 and blk["needs_per_week"] > 0
+    # T10.3: an official score after the exam date, against what was projected
+    exam = t - dt.timedelta(days=5)
+    api_today.add_outside_score(me, (t - dt.timedelta(days=1)).isoformat(), 640, None, "official")
+    before = [fake_sitting("d", 600, exam - dt.timedelta(days=9)), fake_sitting("c", 560, exam - dt.timedelta(days=30))]
+    with patch.object(estimate, "_sittings", return_value=before):
+        cal = api_today._estimate_block(me, 0, {"exam_date": exam.isoformat(), "target": 700})["calibration"]
+    assert cal and cal["score"] == 640 and cal["text"].startswith("We projected") and "you scored 640" in cal["text"]
+    # T12.5: a target 200 points above the model, no traps, no sittings: the target's skill work is sized
+    far = code()
+    answers(far, 20)
+    answers(far, 20, right=False)
+    db.run("UPDATE traps SET closed=?, closed_how='fixed', due=NULL WHERE learner=?", progress.now(), far)
+    s_now = estimate.model(estimate._rows(far))["S"]
+    target = min(800, 10 * round((s_now + 200) / 10))
+    call(c, "PUT", "/api/me", far, {"exam_date": (t + dt.timedelta(days=30)).isoformat(), "target": target})
+    w = call(c, "GET", "/api/today", far)["workload"]
+    order = [x["topic"] for x in estimate.gains(far)["skills"]]
+    need = w["need"]["target"]
+    assert need and need["minutes"] > 0 and need["skills"] == order[:len(need["skills"])], (need, order[:5])
+    assert w["fits"] == (need["reachable"] and w["capacity"] >= w["total"])
+    print("ok  S3 insights: domains agree, slow-but-right and the guard, practice since the test,"
+          " the verdict from 2 sittings, calibration, and the target's skill work")
+
+
+def day_redo_and_draft(c: TestClient) -> None:
+    t = today()
+    me = code()
+    answers(me, 5, right=False)
+    row = next(d for d in call(c, "GET", f"/api/calendar?month={t.isoformat()[:7]}", me)["days"]
+               if d["day"] == t.isoformat())
+    assert len(row["missed"]) == 5 and "held" in row
+    missed = {r["id"]: (r["template"], r["seed"]) for r in db.rows(
+        f"SELECT id, template, seed FROM attempts WHERE id IN ({','.join('?' * 5)})", *row["missed"])}
+    d = call(c, "POST", "/api/drill", me, {"pool": "history", "ids": row["missed"], "exact": False, "each": 1,
+                                           "source": "today"})
+    served = answer_drill(c, d["id"], me)
+    assert sorted(q["key"] for q in served) == sorted(x[0] for x in missed.values())            # T17.1
+    assert not {(q["key"], q["seed"]) for q in served} & set(missed.values())
+    # T17: the usual start
+    assert re.fullmatch(r"\d\d:\d\d", call(c, "GET", "/api/today", me)["usual_start"] or "")
+    # T18: Build with these, Plan step 1's four sources
+    blank = {"target": None, "exam_date": None, "minutes": None, "days": None}
+    two = [fake_sitting("y", 680, t - dt.timedelta(days=5)), fake_sitting("x", 620, t - dt.timedelta(days=20))]
+    with patch.object(estimate, "_sittings", return_value=two):
+        dr = api_today.plan_draft(me, 0, blank, t, {"days": []}, [{"high": 720}])
+    assert dr["source"]["kind"] == "mean3" and dr["current"] == 650 and dr["target"] == 770 and dr["ready"]
+    assert dr["minutes"] == 20 and dr["days"] == "1111100" and dr["exam_date"] > t.isoformat()
+    with patch.object(estimate, "_sittings", return_value=two[:1]):
+        dr = api_today.plan_draft(me, 0, blank, t, {"days": []}, [])
+    assert dr["source"]["kind"] == "latest" and dr["current"] == 680 and dr["target"] == 780
+    dr = call(c, "GET", "/api/today", me)["draft"]
+    assert dr["source"] == {"kind": "practice", "value": None} and dr["ready"] is False and dr["target"] is None
+    assert call(c, "GET", "/api/today", code())["draft"]["source"]["kind"] == "new"
+    print("ok  S3 a day's misses redo as twins; the usual start; Build with these reads Plan step 1's four sources")
+
+
+def receipt_falls(c: TestClient) -> None:
+    """T19.4: a day that lowers S claims a negative figure, the same as practice_delta."""
+    me = code()
+    call(c, "PUT", "/api/me", me, {"minutes": 15})
+    answers(me, 30, when=(dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=1)).isoformat())
+    answers(me, 20, right=False, ms=60000)
+    r = call(c, "GET", "/api/today", me)["receipt"]
+    assert r and r["claimed"] < 0 and r["claimed"] == estimate.practice_delta(me, api_today._start(today(), 0))["pts"]
+    # an added official score since the last study day is news in the briefing
+    call(c, "POST", "/api/scores", me, {"day": today().isoformat(), "math": 650, "source": "official"}, status=201)
+    facts = call(c, "GET", "/api/today", me)["brief"]
+    assert any(f["kind"] == "score" and f["text"].startswith("Official SAT on") for f in facts), facts
+    print("ok  S3 a bad day's receipt claims a fall, as practice_delta does; an added score is in the briefing")
+
+
+def plan_rows(c: TestClient) -> None:
+    """T2.1, 2, 6, 7 and T18's card with a plan (S7)."""
+    if not deps.part("plan", "today_summary"):
+        return
+    me = code()
+    t = today()
+    check_ins_due(me, traps_on(me, 2), t)
+    exam = t + dt.timedelta(days=49 + (5 - t.weekday()) % 7)
+    call(c, "POST", "/api/plan", me, {"current": 520, "target": 700, "exam_date": exam.isoformat(),
+                                      "minutes": 60, "days": "1111111", "tests": "weekly", "test_size": "module"})
+    got = call(c, "GET", "/api/today", me)
+    plan, rows = got["plan"], got["due"]["rows"]
+    kinds = [r["kind"] for r in rows]
+    assert kinds[0] == "plan" and kinds.count("review") == 1 and "warmup" not in kinds, kinds
+    assert all(k == "plan" for k in kinds[:kinds.index("review")]), kinds
+    assert not [r for r in rows if r["group"] == "plan" and r["kind"] in ("qotd", "challenge")]        # T2.7
+    plan_n = [r for r in rows if r["group"] == "plan"]
+    assert all(r["task_id"] for r in plan_n) and len(plan_n) <= plan["tasks_counted"] + 1
+    card = plan["card"]
+    assert card["day"] == 1 and card["of"] == (exam - t).days + 1 and set(card["on_time"]) == {"n", "of"}
+    assert got["draft"] is None and plan["days"] and all("status" in d for d in plan["days"])
+    # T2.6: the student's own task is a tick, through S7's PATCH, and its minutes count today
+    r = c.post(f"/api/plan/{plan['id']}/tasks", headers={"X-Learner": me, "X-Tz": "0"},
+               json={"title": "R&W reading", "minutes": 30, "day": t.isoformat()})
+    assert r.status_code == 200, r.text[:300]
+    got = call(c, "GET", "/api/today", me)
+    own = next(x for x in got["due"]["rows"] if x["own"])
+    assert own["title"] == "R&W reading" and own["group"] == "plan" and own["status"] == "todo"
+    minutes, done = got["study"]["today"], got["plan"]["tasks_done"]
+    path = f"/api/plan/{plan['id']}/tasks/{own['task_id']}"
+    call(c, "PATCH", path, me, {"day": t.isoformat(), "status": "done"})
+    after = call(c, "GET", "/api/today", me)
+    mine = next(x for x in after["due"]["rows"] if x["task_id"] == own["task_id"])
+    # T2.6 names Plan's status `marked`; S7 files a ticked own task as `done` (listed for S7)
+    assert mine["status"] in ("marked", "done") and mine["marked"] and after["plan"]["tasks_done"] == done + 1
+    assert after["study"]["today"] == minutes + 30, (minutes, after["study"]["today"])
+    call(c, "PATCH", path, me, {"day": t.isoformat(), "status": "todo"})
+    back = call(c, "GET", "/api/today", me)
+    assert back["study"]["today"] == minutes and back["plan"]["tasks_done"] == done
+    print("ok  S3 with a plan: PLAN rows, then one Review row; no daily extras in PLAN; Day 1 of N;"
+          " your own task ticks through S7's PATCH and its minutes count today")
+
+
 def check(c: TestClient) -> None:
     fresh(c)
     qotd_shape(c)
@@ -622,6 +1023,14 @@ def check(c: TestClient) -> None:
     workload(c)
     brief_and_receipt(c)
     final_stretch(c)
+    due_rows(c)
+    goal_met_box(c)
+    stages(c)
+    rw_slots(c)
+    insights_and_score(c)
+    day_redo_and_draft(c)
+    receipt_falls(c)
+    plan_rows(c)
     print("S3 today checks passed")
 
 
