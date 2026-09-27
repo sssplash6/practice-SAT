@@ -145,6 +145,7 @@
     return d;
   }
   async function go() {
+    S.nearEnd = false;
     sync();
     renderControls();
     const path = query();
@@ -192,7 +193,7 @@
     const unit = { points: 'pts', net: 'over par', right: 'right', rating: '', skill: '', test: '', climb: '' }[S.metric] || '';
     const gap = you.cheapest || (you.gap ? Math.ceil(you.gap) + 1 : null);
     const parts = [`You · #${you.rank}`, `${fmtVal(you.value)}${unit ? ` ${unit}` : ''}`];
-    if (you.anon && you.name === 'Anonymous') parts.push('shown as Anonymous');
+    if (you.anon) parts.push('shown as Anonymous');
     if (gap && you.rank > 1) {
       parts.push(`${num(gap)} ${unit || 'points'} to pass #${you.rank - 1}`);
       if (!d.closed) { const st = C.step(gap, S.metric === 'points' ? 'points' : S.metric, true); if (st) parts.push(st); }
@@ -208,6 +209,16 @@
       out.push(e);
     });
     return out;
+  }
+  async function nearest() {
+    for (const p of ['week', 'month', 'season', 'year', 'all'].filter(x => x !== S.period)) {
+      try {
+        const q = new URLSearchParams({ metric: S.metric, period: p, scope: S.scope, subject: S.subject, limit: '1' });
+        const x = await api(`/leaderboard?${q}`);
+        if (x.players) return { period: p, players: x.players, label: { week: 'This week', month: 'This month', season: 'This season', year: 'This year', all: 'All time' }[p] };
+      } catch (_) { return null; }
+    }
+    return null;
   }
   async function parsForEmpty() {
     if (S.pars) return S.pars;
@@ -268,6 +279,7 @@
     host.replaceChildren();
     if (!entries.length) {
       const pars = await parsForEmpty();
+      if (!d.nearest_nonempty && !S.at && ['points', 'net', 'right', 'test'].includes(S.metric)) d.nearest_nonempty = await nearest();
       const empty = h('div', { class: 'card' },
         h('p', { class: 'line', text: `No ranked contests yet ${{ week: 'this week', month: 'this month', year: 'this year', season: 'this season', '7d': 'in the last 7 days', all: '' }[S.period] || ''}.`.replace(' .', '.') }),
         d.nearest_nonempty ? h('p', {}, h('a', { class: 'link', href: `?metric=${S.metric}&period=${d.nearest_nonempty.period}`, text: `${d.nearest_nonempty.label || d.nearest_nonempty.period}: ${num(d.nearest_nonempty.players)} students ›` })) : null,
@@ -292,7 +304,27 @@
       onJump: y => { if (y.rank) fetchQ(query({ offset: Math.floor((y.rank - 1) / 50) * 50 })).then(x => { S.data = x; draw().then(() => S.board.jump()); }); },
       empty: 'No one on this board yet.',
     });
-    if (you && you.anon && you.name === 'Anonymous') host.append(h('p', { class: 'help' }, 'You’re shown as Anonymous to others. ', h('a', { class: 'link', href: '/me/#boards', text: 'Change on Me' })));
+    if (S.scope === 'near' && you && you.rank && entries.length) {
+      const first = entries[0].rank, last = entries[entries.length - 1].rank;
+      const more = async (dir, b) => {
+        b.disabled = true;
+        try {
+          const off = dir < 0 ? Math.max(0, first - 11) : last;
+          const lim = dir < 0 ? Math.min(10, first - 1) : 10;
+          const x = await fetchQ(query({ scope: 'all', offset: off }).replace(/limit=\d+/, `limit=${lim}`));
+          const seen = new Set(entries.map(e => e.pid));
+          const add = (x.entries || []).filter(e => !seen.has(e.pid));
+          if (dir > 0 && x.next_offset === null) S.nearEnd = true;
+          S.data = { ...S.data, entries: dir < 0 ? [...add, ...entries] : [...entries, ...add] };
+          draw();
+        } catch (_) { b.disabled = false; UI.toast('Couldn’t load more. Try again.'); }
+      };
+      const row = h('div', { class: 'row-act' });
+      if (first > 1) row.append(h('button', { type: 'button', class: 'btn', text: 'Show 10 more above', onclick: ev => more(-1, ev.currentTarget) }));
+      if (!S.nearEnd) row.append(h('button', { type: 'button', class: 'btn', text: 'Show 10 more below', onclick: ev => more(1, ev.currentTarget) }));
+      host.append(row);
+    }
+    if (you && you.anon) host.append(h('p', { class: 'help' }, 'You’re shown as Anonymous to others. ', h('a', { class: 'link', href: '/me/#boards', text: 'Change on Me' })));
     const ago = Math.round((Date.now() - S.at0) / 1000);
     if (ago > 5) host.append(h('p', { class: 'meta', text: `updated ${ago} s ago` }));
   }
@@ -301,6 +333,7 @@
   const cycle = (list, v, d = 1) => list[(list.findIndex(x => x.value === v) + d + list.length) % list.length].value;
   UI.keys.register('compete-leaderboard', {
     '/': { does: 'Find a student', run: () => { const f = $('#find-in'); if (f) f.focus(); } },
+    'Shift+Y': { does: 'Jump to your row', run: () => S.board && S.board.jump() },
     M: { does: 'Next metric', run: () => setMetric(cycle(METRICS, S.metric)) },
     P: { does: 'Next period', run: () => { if (NO_PERIOD[S.metric] && S.metric !== 'rating') return; S.period = cycle(PERIODS.filter(p => p.value !== '7d' || S.metric === 'right'), S.period); S.at = ''; go(); } },
     ',': { does: 'Previous period', run: () => step(-1) },
