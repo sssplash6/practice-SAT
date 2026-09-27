@@ -476,7 +476,10 @@ def payload(row) -> dict:
             notes = {r["template"]: r["note"] for r in db.rows(
                 "SELECT template, note FROM notes WHERE learner=? AND seed=-1 AND note IS NOT NULL AND note!=''",
                 row["learner"])}
-            out["type_notes"] = {q["id"]: notes[q["key"]] for q in qs if q.get("key") in notes}
+            # the note's text on its question only, never the template name (X9)
+            for pq, q in zip(out["questions"], qs):
+                if q.get("key") in notes:
+                    pq["type_note"] = notes[q["key"]]
     if row["contest"]:
         extra = deps.part("compete", "state_extra")
         if extra:
@@ -755,6 +758,8 @@ def put_state(sid: str, body: State, x_learner: str | None = Header(default=None
     _guard(row, "answer")
     live = set(_live_ids(row))
     if qid is not None and qid not in live:
+        if qid in _handed_in_ids(row):
+            raise HTTPException(409, "that module is handed in")
         raise HTTPException(400, "that question is not on this form")
     per_q = {"marked", "struck", "ms", "conf", "note", "marks", "predict", "scratch", "calc", "ref_n",
              "ref_ms", "covered", "reveal_ms", "own"}
@@ -1022,6 +1027,13 @@ def _builder(learner: str) -> practice.Builder:
     return drill._builder(learner)
 
 
+def _twin_builder(learner: str) -> practice.Builder:
+    """For twins: a new (template, seed) whose rendered question is new. A
+    graph template keeps its stem's words, so stem dedupe would spend it on
+    the very sitting being twinned."""
+    return drill._builder(learner, dedupe="question")
+
+
 def exposure(learner: str) -> dict[str, int]:
     """X2: the learner's attempts plus practice_seen rows per template."""
     out: Counter = Counter()
@@ -1061,13 +1073,13 @@ def _module2(row, cfg: dict, route: str) -> list[dict] | None:
     if cfg.get("twin_source"):
         src = db.one("SELECT * FROM sessions WHERE id=?", cfg["twin_source"])
         if src is not None and src["route"] == route:
-            return blueprint.twin(mock_module(src, 2), _builder(learner))
+            return blueprint.twin(mock_module(src, 2), _twin_builder(learner))
     if cfg.get("paper"):
         if cfg.get("exact"):
             first = _first_of_paper(learner, cfg["paper"], exclude=row["id"])
             if first is not None and first["route"] == route:
                 return [dict(q) for q in (_json(first["questions"], {}) or {}).get("module2", [])]
-        return blueprint.twin_slots(papers.slots(cfg["paper"], "module2_" + route), _builder(learner), prefix)
+        return blueprint.twin_slots(papers.slots(cfg["paper"], "module2_" + route), _twin_builder(learner), prefix)
     if cfg.get("share"):
         m2 = cfg.get("shared_m2") or []
         match = bool(m2) and cfg.get("shared_route") == route
@@ -1101,8 +1113,11 @@ def _route(row, cfg: dict, body) -> dict:
     # The route and module 2 are set in one statement that only a paper
     # still in module 1 matches, so a second finish sent at the same moment
     # cannot route it again; it is told where the first one went.
+    # end_at (X5) is module 1's; module 2's second pass starts from its own
     if not db.run("UPDATE sessions SET module=2, route=?, module1=?, module_started=?, paused_ms=0,"
-                  " paused_at=NULL, questions=?, cfg=? WHERE id=? AND COALESCE(module, 1)=1 AND finished IS NULL",
+                  " paused_at=NULL, questions=?, cfg=?,"
+                  " qstate=json_remove(COALESCE(qstate,'{}'), '$.\"_session\".\"end_at\"')"
+                  " WHERE id=? AND COALESCE(module, 1)=1 AND finished IS NULL",
                   route, json.dumps(info), started, questions, json.dumps(cfg), row["id"]).rowcount:
         m = _json(session_or_404(row["id"])["module1"], {}) or {}
         return {"next_module": 2, "finished_module": 1, "summary": m.get("summary")}
@@ -1213,6 +1228,19 @@ def _moments(row, result: dict, est: dict | None, prev: dict | None) -> list[dic
         out.append({"id": "first_upper", "text": "Your first harder module 2"})
     if band.get("low") is not None and est and est.get("best") and est["best"]["id"] == row["id"] and prev:
         out.append({"id": "best", "text": "A new best band"})
+    cfg = _cfg(row)
+    mid = _mid(result)
+    if mid is not None and cfg.get("paper"):
+        p = papers.paper(cfg["paper"])
+        others = [m for r in papers.firsts(p)[0].values() if r["id"] != row["id"]
+                  for m in [papers._mid(r)] if m is not None] if p else []
+        if len(others) >= papers.AVERAGE_N and mid > statistics.mean(others):
+            out.append({"id": "paper_avg", "text": "Above this paper's average"})
+    if mid is not None and cfg.get("twin_source"):
+        src = db.one("SELECT result FROM sessions WHERE id=?", cfg["twin_source"])
+        was = _mid(_json(src["result"], {}) or {}) if src else None
+        if was is not None and mid - was >= 30:
+            out.append({"id": "twin_up", "text": f"Up {int(round((mid - was) / 10) * 10)} on the original"})
     if not any(m["blank"] for m in result.get("modules", [])):
         out.append({"id": "no_blanks", "text": "No blanks"})
     left = [(_json(row["module1"], {}) or {}).get("summary", {}).get("left_s"), result.get("left_s")]
@@ -1477,7 +1505,7 @@ def _source_sitting(learner: str, sid: str) -> object:
 
 def _first_of_paper(learner: str, n: int, exclude: str | None = None):
     return db.one("SELECT * FROM sessions WHERE learner=? AND mock_id=? AND abandoned IS NULL AND id!=?"
-                  " ORDER BY started LIMIT 1", learner, f"P{n}", exclude or "")
+                  " ORDER BY started, rowid LIMIT 1", learner, f"P{n}", exclude or "")
 
 
 def _trap_queue(learner: str, c: Custom) -> list[tuple[str, str]]:
@@ -1663,7 +1691,7 @@ def _new(learner: str, body: NewMock) -> str:
         for k in ("m1", "module", "paper", "trainer"):
             if scfg.get(k) and k not in cfg:
                 cfg[k] = scfg[k]
-        m1 = blueprint.twin(mock_module(src, 1), _builder(learner))
+        m1 = blueprint.twin(mock_module(src, 1), _twin_builder(learner))
         return _insert(learner, "mock" if src["kind"] == "mock" else "module",
                        f"P{scfg['paper']}" if scfg.get("paper") else FRESH, {"module1": m1}, cfg)
     if kind == "paper":
@@ -1678,7 +1706,7 @@ def _new(learner: str, body: NewMock) -> str:
             cfg["exact"] = True
             m1 = [dict(q) for q in mock_module(first, 1)]
         else:
-            m1 = blueprint.twin_slots(papers.slots(n, "module1"), _builder(learner), "m1")
+            m1 = blueprint.twin_slots(papers.slots(n, "module1"), _twin_builder(learner), "m1")
         return _insert(learner, "mock", f"P{n}", {"module1": m1}, cfg)
     # shared (R18c): the set's module 1, exact or twins, and its module 2 for the same route
     if not body.shared:
@@ -1770,7 +1798,7 @@ def resolve_drill(learner: str, body: dict) -> dict:
     ok, why = pressure_eligible(row)
     if not ok:
         raise HTTPException(409, why)
-    b = _builder(learner)
+    b = _twin_builder(learner)
     marked = {q["id"]: q for q in marked_questions(row)}
     ids, of = [], {}
     for qid in pressure_questions(row):
@@ -1785,21 +1813,20 @@ def resolve_drill(learner: str, body: dict) -> dict:
         raise HTTPException(409, "no twins could be drawn")
     rest = {k: v for k, v in body.items() if k != "pressure"}
     return {**rest, "pool": "items", "ids": ids, "exact": True, "feedback": "end", "timing": "off",
-            "source": "pressure", "parent": sid, "pressure_of": of}
+            "repairs": "off", "source": "pressure", "parent": sid, "pressure_of": of}
 
 
 @router.post("/api/session/{sid}/pressure")
 def start_pressure(sid: str, x_learner: str | None = Header(default=None)) -> dict:
     """The pressure check as a drill: fresh twins, no clock, nothing revealed
     until the end, inline (never listed; counted on the parent)."""
-    learner = writer_of(x_learner)
-    own(session_or_404(sid), x_learner, write=True)
+    learner = own(session_or_404(sid), x_learner, write=True)["learner"] or writer_of(x_learner)
     got = resolve_drill(learner, {"pressure": sid})
     new = secrets.token_urlsafe(16)
     drill.create(learner, new, list(dict.fromkeys(practice.topic_of(t) for t, _ in got["ids"])),
                  len(got["ids"]), None, False, "twin", items=got["ids"])
     row = session_or_404(new)
-    cfg = {**_cfg(row), "feedback": "end", "timing": "off", "source": "pressure", "inline": True,
+    cfg = {**_cfg(row), "feedback": "end", "timing": "off", "repairs": "off", "source": "pressure", "inline": True,
            "parent": sid, "pressure_of": got["pressure_of"]}
     db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(cfg), new)
     first = drill.next_question(session_or_404(new))
@@ -1855,7 +1882,24 @@ def on_drill_finish(row) -> dict | None:
     return result["pressure"]
 
 
+def settle_pressure(learner: str) -> None:
+    """X13 until drill.finish calls on_drill_finish (F5, §2.10): a finished
+    pressure round whose parent has no verdicts yet is classified on read.
+    /api/tests calls it; S6's results read can too."""
+    for d in db.rows("SELECT d.* FROM sessions AS d JOIN sessions AS p ON p.id=json_extract(d.cfg,'$.parent')"
+                     " WHERE d.learner=? AND d.kind='drill' AND d.finished IS NOT NULL"
+                     " AND json_extract(d.cfg,'$.source')='pressure'"
+                     " AND json_extract(p.result,'$.pressure') IS NULL", learner):
+        on_drill_finish(d)
+
+
 # ------------------------------------------------------------------ the sittings list's Tests fields
+
+def _src(name: str) -> str:
+    """A drill body's source label: Tests' own (fix, gate) once F5's
+    drill.SOURCES lists them, else one it accepts today."""
+    return name if name in drill.SOURCES else "mistakes"
+
 
 def status_of(row) -> str:
     if row["finished"]:
@@ -1889,8 +1933,10 @@ def sitting_row(row) -> dict:
     marked = marked_questions(row) if row["kind"] in TESTS else []
     retake = None
     if cfg.get("paper"):
+        # rowid breaks a tie between sittings started in the same second
         k = db.one("SELECT COUNT(*) AS n FROM sessions WHERE learner=? AND mock_id=? AND abandoned IS NULL"
-                   " AND started<=?", row["learner"], f"P{cfg['paper']}", row["started"])["n"]
+                   " AND (started<? OR (started=? AND rowid<=(SELECT rowid FROM sessions WHERE id=?)))",
+                   row["learner"], f"P{cfg['paper']}", row["started"], row["started"], row["id"])["n"]
         retake = k if k >= 2 else None
     est = res.get("estimate") or None
     out = {"id": row["id"], "kind": kind_of(row), "mode": row["kind"], "kind_label": kind_label(row),
@@ -2014,7 +2060,7 @@ def gate_summary(learner: str) -> dict:
             m1 = mock_module(r, 1)
             templates += [m1[i - 1]["key"] for i in g.get("cheap_misses", []) if i - 1 < len(m1)]
         protect = {"templates": list(dict.fromkeys(templates))[:40], "count": 12, "timing": "pace",
-                   "source": "gate"} if templates else None
+                   "source": _src("gate")} if templates else None
     return {"up": sum(r["route"] == "upper" for r in sections), "sections": len(sections),
             "margins": list(reversed(margins[:6])), "lower_recent": lower_recent, "protect": protect}
 
@@ -2047,9 +2093,9 @@ def levers(learner: str) -> dict:
     causes = []
     for cause, d in sorted(per_cause.items(), key=lambda kv: -sum(kv[1]["pts"])):
         pts = int(round(sum(d["pts"]) / len(sections) / 10) * 10)
-        action = {"trap": {"label": f"Fix {d['n']}", "body": {"pool": "redo", "source": "fix"}},
+        action = {"trap": {"label": f"Fix {d['n']}", "body": {"pool": "redo", "source": _src("fix")}},
                   "clock": {"label": "Pacing practice", "preset": "pacing"},
-                  "slip": {"label": f"See your {d['n']} slips", "body": {"topics": [], "count": 8, "source": "fix"}},
+                  "slip": {"label": f"See your {d['n']} slips", "body": {"topics": [], "count": 8, "source": _src("fix")}},
                   "entry": {"label": "Grid-in entry drill · 5", "body": {"formats": ["spr"], "count": 5}},
                   "gap": {"label": "Learn it"},
                   "changed": {"label": "See the changes", "href": f"/results/report/?id={sections[0]['id']}&filter=changed"},
@@ -2243,7 +2289,7 @@ def cycle(learner: str) -> dict | None:
             prove_due = (dt.date.fromisoformat(max(closed)[:10]) + dt.timedelta(days=3)).isoformat()
         twin_from = (dt.date.fromisoformat(r["finished"][:10]) + dt.timedelta(days=7)).isoformat()
         return {"session": r["id"], "label": kind_label(r), "number": r["number"], "misses": misses,
-                "fix": {"body": {"from_session": r["id"], "scope": "misses", "source": "fix"},
+                "fix": {"body": {"from_session": r["id"], "scope": "misses", "source": _src("fix")},
                         "open": len(traps) - len(closed), "done": bool(traps) and len(closed) == len(traps)},
                 "prove": {"due": prove_due, "body": {"kind": "custom", "custom": {"source": "traps",
                                                                                 "from_session": r["id"]}}},
@@ -2315,6 +2361,7 @@ def tests_overview(x_learner: str | None = Header(default=None)) -> dict:
     from . import estimate, prefs
     learner = learner_of(x_learner)
     paper_n = papers.ensure()
+    settle_pressure(learner)
     live = open_sittings(learner)
     done = finished_sittings(learner)
     est = estimate.estimate(learner)

@@ -699,9 +699,11 @@ def get_paper(n: int, x_learner: str | None = Header(default=None)) -> dict:
 # ------------------------------------------------------------------ moderation (tools/moderate.py)
 
 def reported(pending_only: bool = True) -> list[dict]:
+    """Posts with reports; pending = not yet hidden, restored or confirmed by
+    a moderator (hidden by 3 reports or not)."""
     sql = "SELECT * FROM posts WHERE reports>0"
     if pending_only:
-        sql += " AND hidden=1 AND NOT EXISTS (SELECT 1 FROM kv WHERE k='reviewed:'||posts.id)"
+        sql += " AND NOT EXISTS (SELECT 1 FROM kv WHERE k='reviewed:'||posts.id)"
     return [dict(r) for r in db.rows(sql + " ORDER BY reports DESC, at")]
 
 
