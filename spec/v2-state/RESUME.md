@@ -60,6 +60,9 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       commits); their "check" and "fix" did nothing. build.js now has an IGNORE CHAT rule. S3 and S5 pages need building again.
     - S4 Practice: MERGED 2026-09-27 (b2e4aaf): builder + session pages and the Practice server work so far (the helper's
       Task 25 continues the server on v2/s4-server: rebase it on master first). Leftovers in followups/S4-pages.json.
+    - DECISION 7 (calm, quiet UI) added 2026-09-27; briefs regenerated. RUNNING: S4Q (the Practice pages made calm, no feature
+      lost): run `wf_9e14b5f3-2c4` (task wgluczzch), `[{id:'S4Q'}]`, 2 units + one check + one fix, branch v2/s4q. Verify its
+      web/ diff on the branch before merging.
     - Also merged: v2/perf (helper Task 17: zero errors at 10/50/200 learners), v2/words-seed-sqlite (Task 18's crash fix;
       master already had it). Words gate pass A done on v2/words-gate-a (1,263 items: 1,235 one, 28 more); waiting for pass B.
     - S4 Practice pages: built, checked (3 blockers, next/S4-pages-verify1-issues.json); the fix is the ONLY thing running:
