@@ -564,9 +564,103 @@ def build_index(data: dict[str, list | dict], ranks: dict[str, int]) -> dict:
             "words": by_word, "freq_bands": freq_bands, "common": common}
 
 
+SEEDS = range(5)
+FEATURES = ("class", "polarity", "intensity", "pos", "pattern")
+
+
+def review_hash(frame: dict, sat: dict[str, dict]) -> str:
+    """The frame and its keys' features: a review stands only while this is unchanged (reviewed.hash)."""
+    body = {k: v for k, v in frame.items() if k != "reviewed"}
+    feats = {slug: {f: sat[slug].get(f) for f in FEATURES} for slug in frame.get("keys", []) if slug in sat}
+    return hashlib.sha256(json.dumps([body, feats], sort_keys=True).encode()).hexdigest()[:16]
+
+
+def key_token(frame: str, slug: str) -> str:
+    """The key's name on the blind sheet; review-queue.json maps it back to the slug."""
+    return "k" + hashlib.sha256(f"{frame}|{slug}".encode()).hexdigest()[:6]
+
+
+def review(data: dict[str, list | dict], only: str | None) -> None:
+    """W1's review gate: print each frame x legal key x 5 seeds as the student sees it (key unmarked),
+    write review-queue.json (frames unreviewed or changed since review) and, on a full run, gate_plan.json."""
+    import os
+    import tempfile
+    sat = {w["slug"]: w for w in rows(data["sat"])}
+    frames = [f for f in rows(data["frames"]) if isinstance(f, dict)]
+    if only and not any(f.get("id") == only for f in frames):
+        raise SystemExit(f"--frame {only}: no such frame")
+    with tempfile.TemporaryDirectory() as tmp:
+        # the served generator itself, on an empty database (no suppressions) with the gate lifted
+        os.environ["SATF_DB"] = str(Path(tmp) / "review.db")
+        os.environ["SATF_WORDS_UNREVIEWED"] = "1"
+        sys.path.insert(0, str(ROOT))
+        from server import db, words
+        db.init()
+        words.init()
+        queue, good, printed, failed = [], {}, 0, 0
+        for frame in frames:
+            ident = frame["id"]
+            digest = review_hash(frame, sat)
+            reviewed = frame.get("reviewed")
+            if reviewed and reviewed.get("hash") in (None, digest):
+                continue
+            if only and ident != only:
+                queue.append({"frame": ident, "hash": digest,
+                              "keys": {key_token(ident, s): s for s in frame["keys"]}})
+                continue
+            bad = []
+            for slug in frame["keys"]:
+                for seed in SEEDS:
+                    head = f"ITEM {ident} key_slug={key_token(ident, slug)} seed={seed}"
+                    try:
+                        it = words.item("rw.wic." + ident, seed, slug)
+                    except ValueError as exc:
+                        print(f"{head}\nNOT GENERATED: {exc}\n")
+                        bad.append({"key": slug, "seed": seed, "why": str(exc)})
+                        failed += 1
+                        continue
+                    src = it.get("source")
+                    lines = [f"{head} · {it['subject']}", it["text"]]
+                    if src:
+                        lines.append(f"Adapted from {src['author']}, {src['title']}, {src['year']}")
+                    lines += [it["stem"], *(f"{'ABCD'[i]}) {c}" for i, c in enumerate(it["choices"]))]
+                    print("\n".join(lines) + "\n")
+                    printed += 1
+            row = {"frame": ident, "hash": digest, "keys": {key_token(ident, s): s for s in frame["keys"]}}
+            if bad:
+                row["not_generated"] = bad
+            else:
+                good[ident] = frame["keys"]
+            queue.append(row)
+    (CONTENT / "review-queue.json").write_text(json.dumps(
+        {"about": "W1 review gate: frames unreviewed or changed since review (hash of the frame and its keys' "
+                  "features). keys maps each blind key_slug token on the --review sheet to its SAT slug.",
+         "frames": queue}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print(f"Review: {printed} items printed, {failed} not generated, {len(queue)} frames queued")
+    if only:
+        return
+    # ponytail: greedy set cover (ties by frame order), not a minimum cover; good enough to judge every sense once
+    uncovered = set(sat) & {s for keys in good.values() for s in keys}
+    missing = sorted(set(sat) - uncovered)
+    plan = []
+    while uncovered:
+        ident, keys = max(good.items(), key=lambda kv: len(uncovered.intersection(kv[1])))
+        plan.append({"frame": ident, "new": sorted(uncovered.intersection(keys)), "items": len(keys) * len(SEEDS)})
+        uncovered -= set(keys)
+    (CONTENT / "gate_plan.json").write_text(json.dumps(
+        {"about": "W1 review gate, first pass: frames chosen greedily (most uncovered SAT senses first) so every "
+                  "SAT sense is a legal key in at least one judged frame; only frames whose every item generates.",
+         "counts": {"frames": len(plan), "items": sum(p["items"] for p in plan),
+                    "senses": len(sat), "covered": len(sat) - len(missing), "uncovered": len(missing)},
+         "uncovered": missing, "frames": plan}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
+    print(f"Gate plan: {len(plan)} frames, {sum(p['items'] for p in plan)} items, "
+          f"{len(sat) - len(missing)} of {len(sat)} SAT senses covered")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--review", action="store_true", help="list frames awaiting adjudication")
+    parser.add_argument("--review", action="store_true", help="print the blind review sheet and write the queue")
+    parser.add_argument("--frame", help="with --review: print only this frame's items")
     args = parser.parse_args()
     errors: list[str] = []
     warnings: list[str] = []
@@ -577,10 +671,8 @@ def main() -> int:
     check_words(data, errors, warnings)
     counts = check_later(data, PHASE, errors, warnings)
     check_frames(data, check_fills(data, errors), PHASE, errors, warnings)
-    if args.review:
-        for frame in rows(data["frames"]):
-            if frame.get("reviewed") is None:
-                print(f"REVIEW {frame.get('id')} [keys {', '.join(frame.get('keys', []))}]: {frame.get('text')}")
+    if args.review and not errors:
+        review(data, args.frame)
     print("Words content:", ", ".join(f"{name}={count}" for name, count in counts.items()))
     for message in warnings:
         print("WARNING:", message)

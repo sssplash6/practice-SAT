@@ -920,9 +920,14 @@ def _trap(frame: dict, key: dict, choice: dict) -> str | None:
     return None
 
 
+@lru_cache(maxsize=None)
+def _forms(*forms: str) -> re.Pattern:
+    # compiled once per word: re's own 512-pattern cache thrashes over the ~1,100-word library
+    return re.compile("|".join(r"(?<!\w)" + re.escape(f) + r"(?!\w)" for f in forms), re.I)
+
+
 def _appears(word: dict, passage: str) -> bool:
-    forms = [word["word"], *word.get("also", [])]
-    return any(re.search(r"(?<!\w)" + re.escape(form) + r"(?!\w)", passage, re.I) for form in forms)
+    return bool(_forms(word["word"], *word.get("also", [])).search(passage))
 
 
 def _trap_reason(kind: str, choice: dict, need: str, clue: str) -> str:
