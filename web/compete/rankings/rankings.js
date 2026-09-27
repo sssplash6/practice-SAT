@@ -342,7 +342,7 @@
     const body = h('tbody');
     el.replaceChildren(...[head('history-h', 'Contest history'), ctl, S.hist.length > 1 ? trend : null].filter(Boolean), h('div', { class: 'table-wrap' }, h('table', { class: 'table compact hist' },
       h('thead', {}, h('tr', {}, ['Date', 'Contest', 'Score', 'R · W · S · V', 'Points', 'Over par', 'Time', 'Ranked', 'Follow-up', ''].map((t, i) =>
-        h('th', { scope: 'col', class: [[2, 3, 4, 5, 6].includes(i) ? 'n' : '', [0, 3, 5, 6, 7].includes(i) ? 'hx-opt' : ''].join(' ').trim() || null, text: t })))), body)),
+        h('th', { scope: 'col', class: [[2, 3, 4, 5, 6].includes(i) ? 'n' : '', [0, 2, 3, 4, 5, 6, 7].includes(i) ? 'hx-opt' : ''].join(' ').trim() || null, text: t })))), body)),
       h('div', { class: 'foot-links', id: 'hist-more' }));
     S.body = body;
     if (!S.hist.length) body.append(h('tr', {}, h('td', { colspan: 10, text: S.followup ? 'No open follow-ups.' : 'No contests yet.' })));
@@ -363,10 +363,13 @@
       const x = h('button', { type: 'button', class: 'xbtn', 'aria-expanded': 'false', 'aria-label': `Details for ${kindLabel(r)}`, text: '▸' });
       const tr = h('tr', { 'data-s': r.session },
         h('td', { class: 'hx-opt', text: day(r.finished) }),
-        h('td', {}, h('a', { class: 'link', href: C.href(r.id), text: kindLabel(r) }), r.record ? h('span', { class: 'star', title: 'A record was set', html: ` ${C.svg(C.SVG.star, 14)}` }) : null),
-        h('td', { class: 'n', text: res.asked ? `${num(res.right)}/${num(res.asked)}` : '—' }),
+        h('td', {}, h('a', { class: 'link', href: C.href(r.id), text: kindLabel(r) }), r.record ? h('span', { class: 'star', title: 'A record was set', html: ` ${C.svg(C.SVG.star, 14)}` }) : null,
+          // phone: the row's second line (§6: "8/10 · 8·1·1·0 · 170 pts · +14")
+          h('span', { class: 'hx-ph', text: [r.ranked ? 'Ranked' : 'Unranked', res.asked ? `${num(res.right)}/${num(res.asked)}` : null, res.asked ? `${num(res.right || 0)}·${num(wrong)}·${num(res.skipped || 0)}·${num(res.voided || 0)}` : null,
+            r.points !== undefined && r.points !== null ? `${num(r.points)} pts` : null, r.net !== undefined && r.net !== null ? `${signed(r.net)} par` : null].filter(Boolean).join(' · ') })),
+        h('td', { class: 'n hx-opt', text: res.asked ? `${num(res.right)}/${num(res.asked)}` : '—' }),
         h('td', { class: 'n hx-opt', text: res.asked ? `${num(res.right || 0)}·${num(wrong)}·${num(res.skipped || 0)}·${num(res.voided || 0)}` : '—' }),
-        h('td', { class: 'n', text: num(r.points) }),
+        h('td', { class: 'n hx-opt', text: num(r.points) }),
         h('td', { class: 'n hx-opt', text: signed(r.net) }),
         h('td', { class: 'n hx-opt', text: res.secs !== undefined ? mmss(res.secs) : '—' }),
         h('td', { class: 'hx-opt', text: r.ranked ? 'Ranked' : `Unranked${r.why ? ` · ${r.why}` : ''}` }),
