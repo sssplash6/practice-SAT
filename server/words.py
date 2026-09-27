@@ -955,6 +955,14 @@ def item(template: str, seed: int, word: str | None = None,
         if word is not None and word not in keys:
             raise ValueError("word is not a key of this frame")
         slug = word or rng.choice(keys)
+        reviewed = frame.get("reviewed")
+        if reviewed and os.environ.get("SATF_WORDS_UNREVIEWED") != "1":
+            # Pick the requested key first, then use only its reviewed option
+            # set. The blind passes generated each item with an explicit key.
+            approved_seeds = reviewed.get("seeds")
+            if approved_seeds:
+                seed = approved_seeds[seed % len(approved_seeds)]
+                rng = _rng(template, seed, slug)
         key = data["entries"][slug]
         passage, spans = _render(frame["text"], rng)
         suppressed = {r["word"] for r in db.rows("SELECT word FROM word_suppress WHERE frame=?", ident)}
@@ -1341,7 +1349,8 @@ def daily_item(day: str, fmt: str) -> dict | None:
             frames = [ident for ident in data["index"]["words"][slug]["frames"]
                       if _servable(data["frames"][ident]) and not _suppressed(ident)]
             ident = frames[int.from_bytes(digest[8:16], "big") % len(frames)]
-            seed = int.from_bytes(digest[16:24], "big")
+            # Persisted review seeds must fit SQLite's signed 64-bit INTEGER.
+            seed = int.from_bytes(digest[16:24], "big") & ((1 << 63) - 1)
             try:
                 generated = item("rw.wic." + ident, seed, slug)
                 generated["item_id"] = f"rw:wic:{day}"
@@ -1355,7 +1364,7 @@ def daily_item(day: str, fmt: str) -> dict | None:
         return None
     for offset in range(min(40, len(families))):
         ident = families[(int.from_bytes(digest[:8], "big") + offset) % len(families)]
-        seed = int.from_bytes(digest[8:16], "big")
+        seed = int.from_bytes(digest[8:16], "big") & ((1 << 63) - 1)
         try:
             generated = item("rw.tr." + ident, seed)
             generated["item_id"] = f"rw:transition:{day}"

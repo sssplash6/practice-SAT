@@ -204,15 +204,25 @@ def legal_key(word: dict, need: dict) -> bool:
 
 def check_review_gate(item: dict, adjudications: list, errors: list[str]) -> None:
     """A reviewed template needs two independent matching approvals per item."""
-    if item.get("reviewed") is None:
+    reviewed = item.get("reviewed")
+    if reviewed is None:
         return
     ident = item.get("id", "template")
-    require(isinstance(item.get("reviewed"), dict) and
-            all(item["reviewed"].get(k) for k in ("by", "date")),
+    require(isinstance(reviewed, dict) and
+            all(reviewed.get(k) for k in ("by", "date")),
             f"{ident}: reviewed metadata incomplete", errors)
+    if not isinstance(reviewed, dict):
+        return
+    # The first independent passes judged seed 0 only. A later full pass can
+    # replace this list with all five reviewed seeds without inventing votes.
+    seeds = reviewed.get("seeds", list(range(5)))
+    if not (isinstance(seeds, list) and seeds and len(seeds) == len(set(seeds)) and
+            all(type(seed) is int and seed in range(5) for seed in seeds)):
+        errors.append(f"{ident}: reviewed seeds must be distinct values in 0..4")
+        return
     keys = item.get("keys") or item.get("fits") or []
     for key in keys:
-        for seed in range(5):
+        for seed in seeds:
             votes = [a for a in adjudications if a.get("frame") == ident and
                      a.get("key") == key and a.get("seed") == seed]
             approved = {a.get("by") for a in votes if a.get("verdict") == "one" and
@@ -384,6 +394,7 @@ def check_frames(data: dict[str, list | dict], pools: set[str], phase: int,
     Structure rules are always errors; the supply minimums are errors from the frames phase (6).
     """
     sat = [w for w in rows(data["sat"]) if isinstance(w, dict)]
+    sat_by_slug = {w["slug"]: w for w in sat}
     opposite = {c.get("id"): c.get("opposite") for c in rows(data["classes"]) if isinstance(c, dict)}
     patterns = {p for w in sat for p in w.get("pattern", [])}
     by_pos: dict[str, list[dict]] = defaultdict(list)
@@ -450,6 +461,10 @@ def check_frames(data: dict[str, list | dict], pools: set[str], phase: int,
             if isinstance(source, dict) and keys:
                 require(str(source.get("word", "")).casefold() in {w["word"].casefold() for w in keys},
                         f"{label}: the excerpt's blanked word is not a legal key", errors)
+        reviewed = frame.get("reviewed")
+        if isinstance(reviewed, dict) and "seeds" in reviewed:
+            require(reviewed.get("hash") == review_hash(frame, sat_by_slug),
+                    f"{label}: reviewed content or key features changed", errors)
         check_review_gate({**frame, "keys": [w["slug"] for w in keys]}, adjudications, errors)
         if not valid:
             continue
