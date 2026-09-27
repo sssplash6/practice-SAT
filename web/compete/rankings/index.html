@@ -45,7 +45,9 @@
   .hist .xbtn { width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; cursor: pointer; font: 600 14px var(--font); color: var(--ink); }
   .hist .xbtn[aria-expanded="true"] { transform: rotate(90deg); }
   .hist td .star svg { width: 14px; height: 14px; vertical-align: -2px; color: var(--amber-deep); }
-  @media (max-width: 759px) { .pace-row { grid-template-columns: 90px minmax(0, 1fr); } .cx .hx-opt { display: none; } }
+  .hx-ph { display: none; }
+  @media (max-width: 759px) { .pace-row { grid-template-columns: 90px minmax(0, 1fr); } .cx .hx-opt { display: none; }
+    .hx-ph { display: block; margin-top: 3px; font: 500 12px var(--mono); color: var(--soft); } .hist th.hx-opt { display: none; } }
 </style>
 </head>
 <body data-page="compete">
