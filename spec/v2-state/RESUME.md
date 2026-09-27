@@ -32,7 +32,11 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
 - **2026-09-27 (the 04:02 job, per the user):** the check-only pause is OVER. Merged: v2/helper-integ (4549610), v2/localday
   (304aa62), v2/ops (6b010a2), v2/bank-gaps (ddd545d, gate 19/19), v2/cb-data (eec25b0); test_flow all good after each.
   RUNNING:
-  * Task 12: words-gate.js run `wf_8efb6cd4-701` (task wwm1jrc2h). Restart: `args {from:'verdicts'}` or `{from:'gate'}`.
+  * Task 12 PAUSED 2026-09-27 to save tokens for the frontend: the tool and gate plan are done (v2/words-gate 8306599: 827 frames
+    cover 1,218 of 1,244 senses; 26 senses are a key in no frame); the verdict passes were stopped early (v2/words-gate-a/-b).
+    Resume later with a lighter first pass (1 seed per frame x key instead of 5): `{from:'verdicts'}` after editing the pass prompt.
+    Found on the way: server/checks/s9.py fails with "OverflowError: Python int too large to convert to SQLite INTEGER" in
+    test_daily_print_offline (words.grade), on master too: a real Words server bug for S9 or the helper.
   * The frontend (3 workers at a time since 2026-09-27, the user's request): build.js run `wf_9d9dbc9e-5dc` (task wc7l1f3i5), args `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},
     {id:'S1'},{id:'F2B'},{id:'S7'},{id:'S8'},{id:'S9'}]` (sections 3 units; S7/S8/S9 pages-only 2 units; builders rebase old
     branches onto master first).

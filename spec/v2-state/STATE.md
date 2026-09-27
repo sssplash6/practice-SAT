@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-27T09:54:21+05:00
+# v2 build state -- 2026-09-27T10:15:30+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -11,7 +11,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/bank-lint-fix` at 033fa1a, 0 commits ahead of master
 - `v2/bank-supply` at 14cf283, 0 commits ahead of master
 - `v2/cb-data` at 9346217, 0 commits ahead of master
-- `v2/cb-student-data` at b4d9bb0, 0 commits ahead of master
+- `v2/cb-student-data` at fb3bc71, 1 commits ahead of master
 - `v2/f0` at dc9873f, 0 commits ahead of master
 - `v2/f1` at b417976, 0 commits ahead of master
 - `v2/f2` at 9811bca, 0 commits ahead of master
@@ -27,9 +27,9 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/ops` at 991efbd, 0 commits ahead of master
 - `v2/s1` at cf53af4, 1 commits ahead of master
 - `v2/s10` at 85896a0, 2 commits ahead of master
-- `v2/s3` at 8a76187, 5 commits ahead of master
+- `v2/s3` at a2a4798, 5 commits ahead of master
 - `v2/s4` at b4d9bb0, 0 commits ahead of master
-- `v2/s5` at c1725f5, 1 commits ahead of master
+- `v2/s5` at 95d2fdf, 1 commits ahead of master
 - `v2/s6` at 057b7fc, 1 commits ahead of master
 - `v2/s7-server` at b88934e, 3 commits ahead of master
 - `v2/s7s` at 14174d3, 0 commits ahead of master
@@ -73,21 +73,24 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/t-bank-systems_of_linear_equations` at 90dd059, 0 commits ahead of master
 - `v2/t-bank-two_variable_data` at 4469303, 0 commits ahead of master
 - `v2/words-content` at 4c67155, 0 commits ahead of master
-- `v2/words-gate` at bf3910d, 0 commits ahead of master
+- `v2/words-gate` at 8306599, 1 commits ahead of master
+- `v2/words-gate-a` at 8306599, 1 commits ahead of master
+- `v2/words-gate-b` at 8306599, 1 commits ahead of master
+- `v2/words-seed-sqlite` at b834a83, 1 commits ahead of master
 
 ## Worktrees
 
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/cb-student-data` on `v2/cb-student-data`: 3 uncommitted (saved in wip/cb-student-data/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/cb-student-data` on `v2/cb-student-data`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/helper-handoff` on `v2/helper-handoff`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_74382569-b10-1` on `v2/s4`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_74382569-b10-2` on `v2/s5`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_74382569-b10-3` on `v2/s3`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_74382569-b10-4` on `v2/s6`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_74382569-b10-5` on `v2/s10`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_74382569-b10-6` on `v2/s1`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_8efb6cd4-701-1` on `v2/words-gate`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_8efb6cd4-701-2` on `v2/words-gate-a`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_8efb6cd4-701-3` on `v2/words-gate-b`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_9d9dbc9e-5dc-1` on `v2/s4`: 1 uncommitted (saved in wip/wf_9d9dbc9e-5dc-1/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_9d9dbc9e-5dc-2` on `v2/s5`: 2 uncommitted (saved in wip/wf_9d9dbc9e-5dc-2/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_9d9dbc9e-5dc-3` on `v2/s3`: 4 uncommitted (saved in wip/wf_9d9dbc9e-5dc-3/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-seed-sqlite` on `v2/words-seed-sqlite`: 0 uncommitted
 
 ## Workflow runs
 
@@ -113,8 +116,11 @@ Unfinished when saved: verify F4 r3
 ### wf_8c0945ee-c24: 51 finished, 10 unfinished
 Unfinished when saved: advantage: words, experience: words, judge: compete, judge: plan, judge: practice, judge: reports, judge: tests, judge: words, outcomes: review, outcomes: words
 
-### wf_8efb6cd4-701: 0 finished, 1 unfinished
-Unfinished when saved: gate: review tool + plan
+### wf_8efb6cd4-701: 1 finished, 2 unfinished
+Unfinished when saved: verdicts: model:helper-a, verdicts: model:helper-b
+
+### wf_9d9dbc9e-5dc: 0 finished, 3 unfinished
+Unfinished when saved: build S3 1/3, build S4 1/3, build S5 1/3
 
 ### wf_a586fef6-d3a: 6 finished, 0 unfinished
 
