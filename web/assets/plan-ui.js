@@ -19,6 +19,8 @@
              · again {kind: misses | more | harder} · review
            menu(task) -> [UI.menu items]   the ⋯ items (Move to…, Swap topics, Edit, Remove)
            extra(task) -> Node | null        a page's own line under the row (R&W Log misses)
+           drag(task, pointerdown event)     a handle to drag the row onto another day (L12;
+                                             a fine pointer only: touch long-presses, keys use M)
      A rejected on() keeps the row as it was and says why inside it.
    UI.taskTag(task) -> 'Focus' | 'Warm-up' | ...      UI.taskQuestion(task) -> bool
    UI.weekPlanner(host, week) -> {el, value()}   next week's plan, hosted by U14's sheet
@@ -77,6 +79,9 @@
   .trow-act { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: flex-end; }
   .trow-act .quiet { min-height: 32px; }
   .trow-more { width: 32px; height: 32px; }
+  .trow-grip { display: none; width: 18px; height: 22px; margin-left: -4px; place-items: center; color: var(--faint); cursor: grab; touch-action: none; }
+  .trow:hover .trow-grip { color: var(--soft); }
+  @media (hover: hover) and (pointer: fine) { .trow-grip { display: inline-grid; } }
   .trow-sub { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; margin-top: 4px; }
   .trow-sub .k { margin-right: 2px; }
   .trow-sub .field { width: 76px; height: 34px; font: 500 14px var(--mono); text-align: center; }
@@ -116,6 +121,7 @@
   const DONE = new Set(['done', 'marked', 'made_up']);
   const TOPIC_KINDS = new Set(['focus', 'map', 'learn', 'check', 'pace', 'habit']);
   const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const GRIP = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><g fill="currentColor"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></g></svg>';
   const DOTS = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="5.5" cy="12" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="18.5" cy="12" r="2" fill="currentColor"/></svg>';
   const WHERE = [['bluebook', 'Bluebook'], ['khan', 'Khan Academy'], ['book', 'A book'], ['tutor', 'A tutor'], ['other', 'Other']];
   const WHERE_LABEL = Object.fromEntries(WHERE);
@@ -182,7 +188,10 @@
         open = open === 'done' ? null : 'done';
         draw();
       });
-      const head = h('div', { class: 'trow-head' }, h('span', { class: 'trow-title', text: t.title }),
+      const grip = o.drag && !o.readonly && !o.past && !done && t.status !== 'skipped' && t.status !== 'moved'
+        ? h('span', { class: 'trow-grip', 'aria-hidden': 'true', title: 'Drag to another day' }) : null;
+      if (grip) { grip.innerHTML = GRIP; grip.addEventListener('pointerdown', e => o.drag(t, e)); }
+      const head = h('div', { class: 'trow-head' }, grip, h('span', { class: 'trow-title', text: t.title }),
         h('span', { class: 'badge soft', text: taskTag(t) }),
         t.status === 'skipped' && h('span', { class: 'badge line', text: 'Skipped' }),
         t.status === 'moved' && t.moved_to && h('span', { class: 'meta', text: `Moved to ${UI.date ? UI.date(t.moved_to, 'long') : t.moved_to}` }));
