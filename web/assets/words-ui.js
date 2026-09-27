@@ -160,7 +160,9 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
   }
   const shortDate = day => { if (!day) return ''; const x = new Date(String(day).slice(0, 10) + 'T12:00:00'); return `${MONTHS[x.getMonth()]} ${x.getDate()}`; };
   // the server's status lines carry ISO days: "Back 2026-09-30" -> "Back Wed, Sep 30"
-  const statusLine = s => String(s || '').replace(/\d{4}-\d{2}-\d{2}/g, d => dayName(d));
+  const statusLine = s => String(s || '')
+    .replace(/\bBack (\d{4}-\d{2}-\d{2})/, (m, d) => { const n = dayDiff(today(), d); return n <= 0 ? 'Back today' : n === 1 ? 'Back tomorrow' : n <= 21 ? `Back in ${n} days` : `Back ${dayName(d)}`; })
+    .replace(/\d{4}-\d{2}-\d{2}/g, d => dayName(d));
   const POS = { 'n.': 'noun', 'v.': 'verb', 'adj.': 'adjective', 'adv.': 'adverb', 'phrase.': 'phrase', phrase: 'phrase' };
   const TRAP = { reversed: 'Reverses the meaning', too_strong: 'Too strong', too_weak: 'Too weak', connotation: 'Wrong tone',
     lookalike: 'Looks like the answer', everyday: 'Everyday meaning', topical: 'Fits the subject, not the blank',
