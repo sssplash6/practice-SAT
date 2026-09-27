@@ -35,8 +35,11 @@
 .ws > .q-figure, .ws > .q-fig { margin: 4px 0 18px; }
 figure.q-figure { margin: 4px 0 18px; }
 
-.ws-headline { flex-wrap: wrap; gap: 6px 10px; margin-bottom: 14px; }
-.ws-headline .ws-skill { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); }
+/* decision 7: one quiet line above the question, sentence case, muted, no icon */
+.ws-headline { flex-wrap: wrap; gap: 6px 10px; margin-bottom: 14px; font: 500 13.5px var(--font); text-transform: none; letter-spacing: 0; color: var(--soft); }
+.ws-headline .ws-skill { display: inline-flex; align-items: center; gap: 8px; color: var(--soft); }
+.ws-headline .ws-diff::before { content: "·"; margin-right: 4px; color: var(--faint); }
+.ws-headline .dbars { font-size: 13px; color: var(--soft); }
 .ws-headline .ws-type { color: var(--soft); letter-spacing: .08em; }
 .ws-headline .ws-type::before { content: "·"; margin-right: 10px; color: var(--faint); }
 .ws-headline .ws-diff { display: inline-flex; align-items: center; gap: 6px; text-transform: none; letter-spacing: 0; }

@@ -447,6 +447,10 @@ Rules as above (own files only, own port and SATF_DB, commit per part, never pus
 is building this section's pages right now against the endpoints its spec lists, so build exactly those endpoints and shapes).
 Requirements: spec/v2-state/briefs/S3.md (its server items are yours). The branch already has the section's server work from the main
 build (13 commits): continue from it, do not redo it.
+ALSO, what the Today page builder found missing (spec/v2-state/followups/S3-pages.json, "fixer_report" and the unit reports):
+seconds_per_question must default to 95 until the learner has 20+ timed answers (one 2-second answer promised "450 questions");
+an endpoint for estimate.need at any target (e.g. GET /api/today/need?target=) so the target slider's "700 ≈ N of 44 right" moves;
+the pace card must not count a module finished with 0 answers as "ran out of time". The Today page is built and waiting on these.
 DONE: checks/s3.py passes and test_flow "all good". Tell the user "S3 server done".
 ```
 
@@ -530,6 +534,21 @@ OWN ONLY: README.md (add one new section, "Running and operating SAT Freshman"; 
      admin (tools/reports.py);
    - what launch still needs from outside: an SMTP server for email sign-in and a Desmos production key.
 DONE: every command in the section runs as written. Tell the user "docs done".
+```
+
+## Task 30: what the new pages need from the merged servers (Plan, Words, Compete)
+
+```
+The Today, Plan, Words and Compete pages are built and waiting for review. Their builders and checkers listed server gaps.
+READ: spec/v2-state/followups/S3-pages.json, S7-pages.json, S9-pages.json, S8-pages.json (each "verified_defects" and
+"fixer_report"). Do every item that belongs to a server file you own here, and list the rest.
+SETUP: git worktree add .claude/worktrees/page-asks -b v2/page-asks master
+OWN ONLY: server/plan.py, server/api_plan.py, server/checks/s7.py, server/words.py, server/api_words.py, server/checks/s9.py,
+server/compete.py, server/api_compete.py, server/checks/s8.py.
+Known asks: /api/plan/preview's per_date is empty (the exam-date picker needs each date's study days, weekly pace, tag and
+Recommended); words.daily_item is missing (Today's day's questions show only the two Math slots); anything else in those files.
+Do NOT change response shapes the pages already use; add fields. DONE: s7.py, s8.py, s9.py and test_flow pass. Tell the user
+"page asks done" with what you did and the list of items for other owners.
 ```
 
 ---

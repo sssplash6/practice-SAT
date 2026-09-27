@@ -1,0 +1,70 @@
+{
+ "label": "verify S7 r1",
+ "key": "v2:491ba0b1f31c273e8c873415dab5f15b61774f6bfddc66711498890bd74a7cbd",
+ "result": {
+  "pass": false,
+  "evidence": "Verified v2/s7 at 1634c39, detached. master is an ancestor, so no rebase was needed. I fixed nothing and committed nothing. I ran the server on 8027 with the worktree's server/v2.db, stopped it at the end, and deleted server/cache/ (created by my runs), so the tree is clean.\n\n1. Checks\n- `SATF_DB=<scratch>/s7check.db PYTHONPATH=. python3 server/checks/s7.py` printed \"plan core self-check passed\", all 10 \"ok\" groups and \"S7 plan checks passed\".\n- `PYTHONPATH=. python3 server/test_flow.py` printed \"all good\".\n\n2. Page walk\n- Learners: a:v2revplanacc1 (new), a:v2revshellhist (seeded with 4 weeks of Mon/Wed/Thu 30-min practice and 2 module sittings at midpoints 560 and 580, no plan). I also made a:v2verplan01 (archived plan plus an active plan with its start backdated 8 days), a:v2verfin01 (exam backdated to yesterday) and a few single-purpose learners.\n- Tool: Python Playwright with the chrome-headless-shell, at 1280 and 390.\n- No console errors on any page. The only errors were the 500s I forced on purpose.\n- scrollWidth <= 390 everywhere I checked: landing, wizard steps 1-4 (new and edit), ?tab=plan|progress|plans for the new, history and plan learners, the day view and the shared view.\n- The pages degrade cleanly where server data is missing.\n\n3. Sample of 15 requirements (PASS unless marked FAIL)\n1. §3.6.8 #6: the landing shows \"Draft · step 3 of 4\" and Continue, which opens ?setup=1&step=3.\n2. #13: a skipped row has opacity 0.55 and the \"Skipped\" badge.\n3. #21: no page is wider than 390px (list above).\n4. #22: the step name reads \"Step 2 of 4 · Where you're going\"; the day tiles read Mon..Sun with STUDY or REST, and every study tile has a select. FAIL: the calendar cells show no minutes.\n5. #23: \"2 focus areas at most\" is visible text, and the third Focus button has aria-disabled=true.\n6. #24: the Geometry & Trig segment of the split bar grew from 160 to 170px in 0.25s.\n7. #25: the Study time chart has an svg and a table; By accuracy lists 36, 53, 53, 72 (ascending); \"All 19 skills\" shows 19 rows on load.\n8. #26 FAIL: no result form after the exam.\n9. #28: ArrowRight moves the calendar selection (it sets aria-selected on the cell) and the day panel's heading changes to Monday, September 28.\n10. #29: the first plan shows as Archived; ?id=<old> shows \"You are viewing an older plan\" with \"Back to active plan\" and \"Make this my plan\".\n11. #19 (§2.13): the ?view= page has no action buttons and no learner code; after the link is turned off it says \"This link is off\".\n12. plan.md L1: \"Use this plan\" sends 1 POST and lands on /plan/. The \"30 min ×\" chip → 45 sends PATCH {minutes:45}, and its Undo sends {minutes:30}. Cmd+Enter on step 2 sends one POST with the step 3-4 defaults. FAIL: the 1h chip does not change the cells to 1h.\n13. L2: Words \"20 new a day\" sends PUT /api/me {prefs:{words_goal:20}}; target 700 reads \"700 is about 88% of the section's points\"; 19 skill rows; the landing has 4 tiles and the 4th is Words; with R&W unset step 2 says \"Set your R&W score first\"; the edit wizard's score bar has 2 bands and 1 average mark; step 3 shows \"You've averaged 1h 48m a week\".\n14. L10 / L12: every undone row has visible Skip and Mark done and a checkbox, and the ⋯ menu holds only \"Move to…\". Drag at 1280: hovering Thursday shows \"45 → 53m\", the drop sends one PATCH with to=2026-10-01, and a rest day shows \"rest day\" and sends nothing. J, M, →, Enter sends PATCH to=Tue. Z (R43 replaced U) sends status todo. A forced PATCH 500 puts the row back and shows \"Couldn't move. Try again.\". On a second visit the rows appear 0.1ms after DOMContentLoaded with no skeleton.\n15. Remaining upgrades: \"Map · <skills>\" appears for a new learner on a measure plan. An R&W sections plan shows \"Total 1060 → 1350\" and the tab title \"Nov 7 · 1350 · Plan · SAT Freshman\". A mouse click on Thursday's bar goes to ?day=2026-09-24&tab=plan. On a test day \"Start today · 3 tasks · 44 min\" opens /test/?s=. FAIL: 25 plans show 5 rows and \"Show all 25\".\n\n4. Scope and decisions\n- `git diff --stat master...HEAD` shows only web/assets/plan-ui.js and web/plan/{index.html, plan.js, progress.js, wizard.js} (5 files).\n- Nothing about classes, teachers, homework or assignments; colours all come from tokens; the only College Board link is a plain registration link (allowed by decision 6). Nothing contradicts spec/v2-decisions.md.\n- Two places look like decision 7 rather than bugs: the Why lines are folded behind a Why button, and step 1 shows \"Add my R&W score\" instead of the slider (listed below).",
+  "defects": [
+   {
+    "where": "web/plan/plan.js dayFoot() ~lines 787-793",
+    "what": "After the exam (GET /api/plan state 'after', exam yesterday) the selected day is clamped to exam_date, whose kind is 'exam'. The eve/exam branch runs before the 'after' branch, so the page says 'SAT today · good luck' and resultPanel() never renders. There is no way to record the result, so §3.6.8 #26 fails (a:v2verfin01: no input, 'SAT was Sat, Sep 26').",
+    "fix": "Test `S.d.state === 'after' && day.date >= cfg().exam_date` before the eve/exam branch, or render resultPanel() for the exam day once state is 'after'.",
+    "severity": "blocker"
+   },
+   {
+    "where": "web/plan/index.html:161",
+    "what": "The rule `.pl .cal.plan.compact .cal-meta { display: none }` hides each day's minutes in the wizard's live month grid (and in the landing's ready panel). The markup has `<span class=cal-meta>45m</span>`, but the cells' visible text is only '28', '29', '30'. So §3.6.8 #22 ('Calendar cells show their minutes text') and plan.md L1 acceptance 4 (the 1h chip changes week 1's cells to '1h' within 400 ms) both fail.",
+    "fix": "Remove .cal-meta from that selector (keep .cal-own and .cal-phase hidden if intended), so compact plan calendars show the minutes.",
+    "severity": "blocker"
+   },
+   {
+    "where": "web/plan/plan.js drawTiles() ~line 392 and drawUp() ~line 1288",
+    "what": "Native Element.append/replaceChildren get a null argument (`studyLeft ? h(...) : null`, `notes.length ? h(...) : null`) and insert the literal text 'null'. It shows in the Days-to-exam tile ('SAT was Sat, Sep 26 null') and in the Coming up card ('No more study days before the SAT.null') whenever no study days are left: the eve, exam day and after. Also, after the exam that tile's aria-label reads '-1 days to the SAT'.",
+    "fix": "Filter falsy children before native append/replaceChildren, or build these nodes with UI.h, which skips null. Scan the other native append calls in plan.js for the same pattern. Clamp or reword the aria-label once state is 'after'.",
+    "severity": "blocker"
+   },
+   {
+    "where": "web/plan/plan.js plansCard() lines 1487-1490 (S.shown = 5)",
+    "what": "The Plans tab shows 5 plans and a 'Show all N' button. The upgrade acceptance says 25 plans show 20 rows and 'Show 20 more · 5 left', and 12 plans show 12 rows with no pager. Seen with a:v2verpager01 (25 plans): 5 rows, no 'Show 20 more'.",
+    "fix": "Start S.shown at 20. The button reads `Show 20 more · ${plans.length - S.shown} left` and adds 20; hide it when every plan is shown.",
+    "severity": "blocker"
+   },
+   {
+    "where": "server/plan.py payload for learners with no active plan (sittings, rhythm and points are only added in the active branch, ~lines 2021-2040): a server change for the other agent, not the pages",
+    "what": "A learner with no active plan gets only active/bank/draft/plans/proposal. So the new-plan wizard's step 1 score bar has no bands and no average mark (plan.md L2 acceptance 1), step 3 has no 'Last 4 weeks' / 'You've averaged' line (L2 acceptance 3), and step 4 shows the 'Where your points are' placeholder. With ?edit=<id> the same learner data gives 2 bands + 1 average mark and 'You've averaged 1h 48m a week', so the pages are right and only degrade.",
+    "fix": "Have GET /api/plan include sittings, rhythm and points (math) when there is no active plan.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/assets/plan-ui.js:208 (why list hidden unless o.whyOpen)",
+    "what": "The why lines are folded behind a 'Why' button with aria-expanded=false. plan.md L10 acceptance 7 and the brief's phone layout note say they render open on load. Decision 7 (details on demand) is newer and wins, so this is probably intended.",
+    "fix": "Have the main session confirm decision 7 overrides L10 acceptance 7; if not, render the list open by default.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/plan/wizard.js step1 ~lines 324-330",
+    "what": "With R&W unset, step 1 shows 'Not set · your Total needs it' and an 'Add my R&W score' button, not the R&W slider that L20 acceptance 6 expects. This fits decision 7 (hide defaults, one tap away).",
+    "fix": "Confirm decision 7 governs this; otherwise show the slider when R&W is unset.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/plan/plan.js Score tile in state 'after'",
+    "what": "After the exam the Score tile still shows the server's pace line 'Needs +910 a week' (verdict.needs_per_week) and 'Behind · 112', which make no sense once the SAT is over.",
+    "fix": "Hide the pace and behind lines when S.d.state === 'after', or ask the server to return a null verdict after the exam.",
+    "severity": "followup"
+   },
+   {
+    "where": "§3.6.8 #30 (satf.return): cross-section",
+    "what": "No S7 file reads or writes sessionStorage satf.return, and 'Back to your plan' exists nowhere under web/. The report side is not S7's, so the item can't pass until someone owns both halves.",
+    "fix": "Agree the contract: S7 sets satf.return to a same-origin /plan/ path when it sends a student to a test or diagnostic, and the report page shows 'Back to your plan' only for same-origin paths.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/assets/charts.js calendar (F1) vs §3.6.8 #28",
+    "what": "The calendar marks the chosen cell with aria-selected=true (correct for role=gridcell), not the aria-pressed=true the acceptance text names. The behaviour works.",
+    "fix": "Read #28 as aria-selected; no page change needed.",
+    "severity": "followup"
+   }
+  ]
+ }
+}
