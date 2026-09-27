@@ -1,7 +1,9 @@
-"""Collect public College Board metadata for material/cb, without account access.
+"""Collect public College Board metadata and import a Student Bank UI snapshot.
 
 Fetches are cached outside this repository and spaced at least one second apart.
 The committed outputs contain metadata only: no question stems, answers, or explanations.
+The Student Bank importer reads an already captured table snapshot; it never
+handles an account, credential, or authenticated HTTP request.
 """
 
 from __future__ import annotations
@@ -47,6 +49,7 @@ TRADEMARKS = "https://privacy.collegeboard.org/copyright-trademark/guidelines"
 MARK_LIST = "https://privacy.collegeboard.org/copyright-trademark/college-board"
 COPYRIGHT = "https://privacy.collegeboard.org/copyright-trademark/request-instructions"
 STUDENT_BANK = "https://satsuite.collegeboard.org/practice/student-question-bank"
+STUDENT_RESULTS = "https://mypractice.collegeboard.org/questionbank/results"
 ALLOWED_URLS = {BANK_PAGE, LOOKUP, QUESTIONS, PERCENTILES, RW_SPEC, MATH_SPEC,
                 DOMAINS, DATES, SCORES, TRADEMARKS, MARK_LIST, COPYRIGHT, STUDENT_BANK}
 
@@ -337,8 +340,55 @@ The public terms address official material and its reproduction. They do not exp
     (OUT / "replicas.md").write_text(replicas)
 
 
+def import_student(path: Path) -> dict:
+    """Turn the signed-in results table's four visible metadata columns into an index."""
+    path = path.resolve()
+    if path.is_relative_to(ROOT.resolve()):
+        raise ValueError("the raw Student Bank snapshot must remain outside the repository")
+    raw = json.loads(path.read_text())
+    assert set(raw) == {"rw", "math"}
+    specs = json.loads((OUT / "specs.json").read_text())["domains"]
+    valid = {subject: {(domain["name"], skill) for domain in specs[subject]
+                       for skill in domain["skills"]} for subject in raw}
+    valid["rw"].add(("Craft and Structure", "Cross-text Connections"))
+    items: dict[str, dict] = {}
+    for subject, rows in raw.items():
+        for row in rows:
+            assert isinstance(row, list) and len(row) == 4, "expected visible table columns only"
+            cb_id, tier, domain, skill = row
+            assert isinstance(cb_id, str) and re.fullmatch(r"[0-9a-f]{8}", cb_id), cb_id
+            assert tier in ("Easy", "Medium", "Hard"), (cb_id, tier)
+            assert (domain, skill) in valid[subject], (cb_id, domain, skill)
+            assert cb_id not in items, f"duplicate Student Bank ID: {cb_id}"
+            items[cb_id] = {"subject": subject, "domain": domain, "skill": skill,
+                            "tier": tier.lower(), "band": None, "public_item_url": None}
+    assert len(items) == 3311 and len(raw["rw"]) == 1845 and len(raw["math"]) == 1466
+    educator = json.loads((OUT / "cb_index.json").read_text())["items"]
+    overlap = len(items.keys() & educator.keys())
+    observed = dt.datetime.fromtimestamp(path.stat().st_mtime, dt.timezone.utc)
+    counts = {"total": len(items),
+              "by_subject": dict(sorted(Counter(v["subject"] for v in items.values()).items())),
+              "by_tier": dict(sorted(Counter(v["tier"] for v in items.values()).items())),
+              "by_domain": dict(sorted(Counter(v["domain"] for v in items.values()).items()))}
+    result = {
+        "source": {"permission": PERMISSION, "fetched_timezone": "UTC",
+                   "method": "signed-in browser results table; user entered credentials directly",
+                   "observed_at_utc": observed.isoformat(timespec="seconds"),
+                   "urls": [{"url": STUDENT_RESULTS, "fetched": observed.date().isoformat()}]},
+        "assessment": "SAT", "inventory": "Student Question Bank",
+        "capture": "All domains in each section; no difficulty filter; Exclude Active Questions off; 50 results per page.",
+        "counts": counts, "overlap_with_educator_index": overlap,
+        "missing_fields": {"band": "not displayed in Student results table",
+                           "public_item_url": "no stable per-item URL verified; preview is a modal on /questionbank/results"},
+        "items": dict(sorted(items.items())),
+    }
+    save("student_index.json", result)
+    return result
+
+
 def check() -> None:
-    expected = {"cb_index.json", "percentiles.json", "specs.json", "dates.json", "brand.md", "replicas.md"}
+    expected = {"cb_index.json", "student_index.json", "percentiles.json", "specs.json",
+                "dates.json", "brand.md", "replicas.md", "student_bank.md"}
     assert expected <= {p.name for p in OUT.iterdir()}, "missing outputs"
     for path in OUT.iterdir():
         if path.suffix == ".json":
@@ -351,6 +401,12 @@ def check() -> None:
     assert len(bank["items"]) == bank["counts"]["total"]
     assert all(set(v) == {"subject", "domain", "skill", "tier", "band"} and 1 <= v["band"] <= 7
                for v in bank["items"].values())
+    student = json.loads((OUT / "student_index.json").read_text())
+    assert student["counts"]["total"] == len(student["items"]) == 3311
+    assert student["overlap_with_educator_index"] == len(student["items"].keys() & bank["items"].keys())
+    assert all(set(v) == {"subject", "domain", "skill", "tier", "band", "public_item_url"}
+               and v["band"] is None and v["public_item_url"] is None
+               for v in student["items"].values())
     p = json.loads((OUT / "percentiles.json").read_text())
     assert all(len(p["tables"][cohort][section]) == (121 if section == "total" else 61)
                for cohort in ("national", "user") for section in ("total", "rw", "math"))
@@ -358,6 +414,8 @@ def check() -> None:
     assert len(d["dates"]) >= 16
     print(f"cb_index: {bank['counts']['total']} items; {bank['counts']['by_subject']}; "
           f"tiers {bank['counts']['by_tier']}; bands {bank['counts']['by_band']}")
+    print(f"student_index: {student['counts']['total']} items; {student['counts']['by_subject']}; "
+          f"Educator ID overlap {student['overlap_with_educator_index']}")
     print(f"percentiles: {sum(len(x) for cohort in p['tables'].values() for x in cohort.values())} values; "
           f"server differences {len(p['comparison_with_server_data_cb_percentiles_json']['user_percentile_differences'])}")
     print(f"dates: {len(d['dates'])}; server mismatches {len(d['comparison_with_server_satdates_py']['mismatches'])}")
@@ -368,8 +426,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--refresh", action="store_true", help="refresh cached responses")
     parser.add_argument("--check", action="store_true", help="validate existing outputs")
+    parser.add_argument("--import-student", type=Path, metavar="PATH",
+                        help="import a metadata-only Student Bank table snapshot from outside the repo")
     args = parser.parse_args()
-    if args.check:
+    if args.import_student:
+        import_student(args.import_student)
+        check()
+    elif args.check:
         check()
     else:
         _, lookup = index(args.refresh)
