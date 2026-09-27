@@ -10,6 +10,7 @@ import re
 import secrets
 import sqlite3
 import threading
+import time
 from contextlib import contextmanager
 from datetime import datetime, timezone
 
@@ -295,25 +296,40 @@ def is_sample(learner: str | None) -> bool:
     return bool(learner) and learner.startswith("sample:")
 
 _local = threading.local()
+_write_lock = threading.RLock()
+_LOCK_RETRIES = 3
+_wal_ready: set[str] = set()
+
+
+def _retry_locked(action):
+    """Wait for an external SQLite writer too; in-process writers use the lock."""
+    for attempt in range(_LOCK_RETRIES + 1):
+        try:
+            return action()
+        except sqlite3.OperationalError as exc:
+            if "database is locked" not in str(exc).lower() or attempt == _LOCK_RETRIES:
+                raise
+            time.sleep(.025 * (2 ** attempt))
 
 
 @contextmanager
 def transaction():
     """Keep a multi-row write atomic even when helpers call run()."""
-    c = conn()
     if getattr(_local, "atomic", False):
         raise RuntimeError("nested database transaction")
-    c.execute("BEGIN IMMEDIATE")
-    _local.atomic = True
-    try:
-        yield c
-    except BaseException:
-        c.rollback()
-        raise
-    else:
-        c.commit()
-    finally:
-        _local.atomic = False
+    with _write_lock:
+        c = conn()
+        _retry_locked(lambda: c.execute("BEGIN IMMEDIATE"))
+        _local.atomic = True
+        try:
+            yield c
+        except BaseException:
+            c.rollback()
+            raise
+        else:
+            _retry_locked(c.commit)
+        finally:
+            _local.atomic = False
 
 
 @contextmanager
@@ -331,9 +347,14 @@ def conn() -> sqlite3.Connection:
     """One connection per thread: sqlite objects do not cross threads."""
     c = getattr(_local, "c", None)
     if c is None:
-        c = sqlite3.connect(DB_PATH)
+        c = sqlite3.connect(DB_PATH, timeout=2.5)
         c.row_factory = sqlite3.Row
-        c.execute("PRAGMA journal_mode=WAL")
+        c.execute("PRAGMA busy_timeout=2500")
+        path = str(DB_PATH.resolve())
+        with _write_lock:
+            if path not in _wal_ready:
+                _retry_locked(lambda: c.execute("PRAGMA journal_mode=WAL"))
+                _wal_ready.add(path)
         c.execute("PRAGMA foreign_keys=ON")
         _local.c = c
     return c
@@ -433,10 +454,14 @@ def _backfill_handles(c: sqlite3.Connection) -> None:
 
 
 def ensure_learner(code: str) -> None:
-    conn().execute("INSERT OR IGNORE INTO learners(id,created) VALUES (?,?)",
-                   (code, datetime.now(timezone.utc).isoformat(timespec="seconds")))
-    if not getattr(_local, "atomic", False):
-        conn().commit()
+    if getattr(_local, "atomic", False):
+        conn().execute("INSERT OR IGNORE INTO learners(id,created) VALUES (?,?)",
+                       (code, datetime.now(timezone.utc).isoformat(timespec="seconds")))
+    else:
+        with _write_lock:
+            _retry_locked(lambda: conn().execute("INSERT OR IGNORE INTO learners(id,created) VALUES (?,?)",
+                                                 (code, datetime.now(timezone.utc).isoformat(timespec="seconds"))))
+            _retry_locked(conn().commit)
 
 
 CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"     # A-HJ-NP-Z2-9: no I, O, 0 or 1
@@ -566,12 +591,13 @@ def seen_for(learner: str) -> tuple[set[tuple[str, int]], set[str]]:
 
 def remember(learner: str, items, when: str) -> None:
     """Record a whole set at once; a re-served set must not fail on the key."""
-    conn().executemany(
-        "INSERT OR IGNORE INTO practice_seen (learner, template, seed, stem, at)"
-        " VALUES (?,?,?,?,?)",
-        [(learner, q["key"], q["seed"], q["stem_hash"], when) for q in items],
-    )
-    conn().commit()
+    rows = [(learner, q["key"], q["seed"], q["stem_hash"], when) for q in items]
+    with _write_lock:
+        _retry_locked(lambda: conn().executemany(
+            "INSERT OR IGNORE INTO practice_seen (learner, template, seed, stem, at)"
+            " VALUES (?,?,?,?,?)", rows))
+        if not getattr(_local, "atomic", False):
+            _retry_locked(conn().commit)
 
 
 def one(sql: str, *args) -> sqlite3.Row | None:
@@ -583,9 +609,10 @@ def rows(sql: str, *args) -> list[sqlite3.Row]:
 
 
 def run(sql: str, *args) -> sqlite3.Cursor:
-    cur = conn().execute(sql, args)
-    if not getattr(_local, "atomic", False):
-        conn().commit()
+    if getattr(_local, "atomic", False):
+        return conn().execute(sql, args)
+    cur = _retry_locked(lambda: conn().execute(sql, args))
+    _retry_locked(conn().commit)
     return cur
 
 
