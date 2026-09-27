@@ -658,7 +658,7 @@
     const gen = !!(fb.traps && fb.traps.some(Boolean));
     const logic = item.kind === 'transition';
     const twin = like => another(like);
-    if (gen) {
+    if (twinable(item)) {
       const t = UI.verb ? UI.verb('twin', { subject: 'rw', sm: true, onClick: () => twin('word') }) : h('button', { type: 'button', class: 'btn sm', text: 'Twin', onclick: () => twin('word') });
       const menu = h('button', { type: 'button', class: 'btn sm', 'aria-haspopup': 'menu', text: 'Twin ▾', title: 'Shift+T' });
       menu.addEventListener('click', () => UI.menu(menu, [
@@ -678,8 +678,9 @@
     if (fb.status) slot.append(h('span', { class: 'meta', text: W.statusLine(fb.status) }));
     if (fb.spelling) slot.append(h('span', { class: 'meta', text: `Spelling: ${fb.spelling}` }));
   }
+  const twinable = it => !!it && ['incontext', 'nearly', 'transition'].includes(it.kind);   // only generated items have a twin
   async function another(like) {
-    if (!R.cur || !R.verdicts.has(R.cur.item_id)) return;
+    if (!R.cur || !R.verdicts.has(R.cur.item_id) || !twinable(R.cur)) return;
     try {
       const r = await UI.api(`/words/run/${enc(id)}/another`, { method: 'POST', body: { item_id: R.cur.item_id, like } });
       R.run.total = r.total;
@@ -930,8 +931,8 @@
         if (R.onEnter) { const f = R.onEnter; R.onEnter = null; f(); }
       } },
     Z: { does: 'Undo the last (triage)', when: () => R.run && R.run.mode === 'sort', run: undoSort },
-    T: { does: 'Twin: same word, new text', when: () => !!R.ws && answered(), run: () => another('word') },
-    'Shift+T': { does: 'Twin menu', when: () => !!R.ws && answered(), run: () => (R.twinMenu ? R.twinMenu() : another('trap')) },
+    T: { does: 'Twin: same word, new text', when: () => !!R.ws && answered() && twinable(R.cur), run: () => another('word') },
+    'Shift+T': { does: 'Twin menu', when: () => !!R.ws && answered() && twinable(R.cur), run: () => (R.twinMenu ? R.twinMenu() : another('trap')) },
     O: { does: 'Open the word', when: () => !!curSlug() && (isCard() || answered()), run: () => W.open(curSlug()) },
     B: { does: 'Save', when: () => !!it(), run: saveCur },
     P: { does: 'Say it', when: () => !!it(), run: speakCur },
