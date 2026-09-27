@@ -172,6 +172,23 @@ def target_need(c: TestClient) -> None:
     print("ok  S3 target need follows the selected score and this learner's answers")
 
 
+def pace_empty_modules(c: TestClient) -> None:
+    me = code()
+    db.ensure_learner(me)
+    paper = {"module1": [{"id": "a"}, {"id": "b"}], "module2": [{"id": "c"}]}
+    for answers_map in ({}, {"a": 0}):
+        now = progress.now()
+        db.run("INSERT INTO sessions (id,kind,learner,started,finished,cfg,questions,answers)"
+               " VALUES (?,?,?,?,?,?,?,?)", "s3-pace-" + secrets.token_hex(8), "section", me,
+               now, now, '{"timed":true}', json.dumps(paper), json.dumps(answers_map))
+        shown = call(c, "GET", "/api/today/insights", me)["pace"]["tests"]
+        if not answers_map:
+            assert shown == {"modules": 0, "ran_out": 0, "blanks": 0}, shown
+        else:
+            assert shown == {"modules": 1, "ran_out": 1, "blanks": 1}, shown
+    print("ok  S3 pace ignores an empty test and the empty module of a partial test")
+
+
 # ------------------------------------------------------------------ check 2 / T14.1, 2, 4, 5
 
 def qotd_shape(c: TestClient) -> None:
@@ -1119,6 +1136,7 @@ def check(c: TestClient) -> None:
     fresh(c)
     pace_default(c)
     target_need(c)
+    pace_empty_modules(c)
     qotd_shape(c)
     qotd_answer_and_crowd(c)
     late_and_grace(c)

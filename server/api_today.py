@@ -26,7 +26,7 @@ from typing import Literal
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
 
-from . import challenge, daily, db, drill, estimate, progress, satdates
+from . import challenge, daily, db, deps, drill, estimate, progress, satdates
 from .api_me import per_session, profile
 from .deps import DATE_OK, LEARNER_OK, TARGETS, TEST_KINDS, learner_of, part, subject_param, tz_of, writer_of
 
@@ -1205,6 +1205,20 @@ def get_target_need(target: int = Query(..., ge=200, le=800),
 
 # ------------------------------------------------------------------ GET /api/today/insights
 
+def _timed_modules(row) -> list[list[dict]]:
+    """The modules actually offered in a finished test, on its chosen route."""
+    if row["kind"] == "mock":
+        from .api_tests import mock_module
+        return [mock_module(row, 1), mock_module(row, 2)]
+    paper = deps.paper_of(row)
+    if isinstance(paper, dict):
+        if isinstance(paper.get("module1"), list):
+            second = paper.get("module2") or paper.get("module2_" + (row["route"] or ""))
+            return [paper["module1"]] + ([second] if isinstance(second, list) else [])
+        return [items for items in paper.values() if isinstance(items, list)]
+    return [paper] if isinstance(paper, list) else []
+
+
 def _pace_extras(learner: str, pace: dict, tz: int) -> dict:
     """T8's additions to progress.pace: the cost, slow-but-right skills,
     rushing, tests that ran out, and the accuracy guard."""
@@ -1223,11 +1237,15 @@ def _pace_extras(learner: str, pace: dict, tz: int) -> dict:
         cfg = _json(r["cfg"], {})
         if cfg.get("timed") is False or cfg.get("timing") == "untimed":
             continue
-        answers = _json(r["answers"], {})
-        blanks = sum(1 for q in progress._paper(r) if answers.get(q["id"]) in (None, ""))
-        tests["modules"] += 2 if r["kind"] in ("mock", "section", "paper") else 1
-        tests["ran_out"] += int(blanks > 0)
-        tests["blanks"] += blanks
+        answers = _json(r["answers"], {}) or {}
+        for module in _timed_modules(r):
+            ids = [q["id"] for q in module if isinstance(q, dict) and "id" in q]
+            if not any(answers.get(qid) not in (None, "") for qid in ids):
+                continue                       # an empty module says nothing about pace
+            blanks = sum(answers.get(qid) in (None, "") for qid in ids)
+            tests["modules"] += 1
+            tests["ran_out"] += int(blanks > 0)
+            tests["blanks"] += blanks
     since = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=60)).isoformat()
     timed = db.one(f"SELECT COUNT(*) n FROM attempts AS a JOIN sessions AS s ON s.id=a.session WHERE a.learner=?"
                    f" AND a.at>=? AND (s.kind IN ({','.join('?' for _ in TEST_KINDS)},'challenge')"
