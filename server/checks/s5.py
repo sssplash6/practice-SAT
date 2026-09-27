@@ -273,7 +273,7 @@ def per_question(c) -> None:
     begin(c, me, sid)
     finish(c, me, sid)
     res = result(sid)
-    assert res["pass2"]["answered"] >= 1 and res["pass2"]["right"] >= 1, res["pass2"]
+    assert res["pass2"]["answered"] >= 1 and res["pass2"]["right"] >= 1 and res["pass2"]["pts"] >= 0, res["pass2"]
     assert "y=2x+1" in qstate(sid)[q4["id"]]["calc"]["exprs"]
     a4 = db.one("SELECT calc FROM attempts WHERE session=? AND qid=?", sid, q4["id"])
     assert a4 and a4["calc"] == 1, "attempts.calc"
@@ -427,6 +427,7 @@ def kinds(c) -> None:
     assert [(q["key"], q["difficulty"], q["type"]) for q in a] == [(q["key"], q["difficulty"], q["type"]) for q in b]
     assert all(x["seed"] != y["seed"] for x, y in zip(a, b)) and [q["id"] for q in a] == [q["id"] for q in b]
     assert json.loads(row(tw["id"])["cfg"])["twin_of"] == src
+    assert api_tests.sitting_row(row(tw["id"]))["chain"] == {"root": src, "n": 2}
     like = new(c, me, {"like": src})
     assert json.loads(row(like["id"])["cfg"])["twin_of"] == src, "{like} is the twin alias"
     other = code("other")
