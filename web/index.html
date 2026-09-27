@@ -285,6 +285,7 @@
     .td .quiet, .td .btn, .td .pill, .exam-trig, .hero-stats a { min-height: 40px; }
     .mchips button { min-width: 40px; height: 40px; }
     .td a.chip { min-height: 40px; } .wk-hd { min-height: 40px; align-content: center; }
+    .wk-strip { gap: 4px; } .wk-day { padding: 8px 2px; } .wk-day .wk-s { font-size: 10.5px; overflow-wrap: anywhere; }
   }
   @media (prefers-reduced-motion: reduce) { .rise { animation: none !important; } }
 </style>
@@ -970,7 +971,8 @@
     const el = h('div', { class: 'drow', 'data-status': r.status, 'data-key': r.key });
     const body = h('div', {});
     body.append(h('div', { class: 'dt' }, r.title || cap(r.kind), r.tag && !String(r.title || '').toLowerCase().includes(String(r.tag).toLowerCase()) ? h('span', { class: 'tag', text: r.own ? 'Your own' : cap(r.tag) }) : null));
-    const m = r.meta || join(r.progress && r.progress.of && `${n(r.progress.have || 0)} of ${n(r.progress.of)}`, r.minutes && `~${n(r.minutes)} min`);
+    // once done, the result line says how it went, so the progress count goes
+    const m = r.meta || join(!(done && r.result) && r.progress && r.progress.of && `${n(r.progress.have || 0)} of ${n(r.progress.of)}`, r.minutes && `~${n(r.minutes)} min`);
     const dm = join(nz(m), r.due_at && `closes ${r.due_at}`, r.status === 'marked' && 'Marked done');
     if (dm) body.append(h('p', { class: 'meta dm', text: dm }));
     if (done && r.result) {
@@ -2170,7 +2172,7 @@
     if (src.value) srcBox.append(line(src.text || join(src.kind === 'mean' ? `Your last ${src.n || 2} tests average ${src.value}`
       : ['Latest', src.sitting_kind && (UI.KIND && UI.KIND.label ? UI.KIND.label({ kind: src.sitting_kind }) : cap(src.sitting_kind)), src.at && UI.date(src.at), src.low && `${src.low}–${src.high}`], `Use ${src.value}`)));
     else {
-      const out = h('span', { class: 'meta', text: dr.current ? String(dr.current) : '—' });
+      const out = h('span', { class: 'meta', text: dr.current ? String(dr.current) : 'not set' });
       const r = h('input', { type: 'range', min: 200, max: 800, step: 10, value: dr.current || 500, 'aria-label': 'Your best guess', style: 'width:100%' });
       r.addEventListener('input', () => { dr.current = +r.value; out.textContent = r.value; if (!dr.target_set) dr.target = Math.min(800, dr.current + 100); planPreview(); });
       srcBox.append(h('div', { class: 'row' }, h('span', { class: 'help', style: 'margin:0', text: 'Your best guess' }), out), r,
