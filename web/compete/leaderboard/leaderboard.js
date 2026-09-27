@@ -293,9 +293,9 @@
     if (S.metric === 'rating' && S.sort === 'value') cols.push({ label: 'Change', value: e => (e.change !== undefined && e.change !== null ? `${e.change > 0 ? '+' : e.change < 0 ? '−' : ''}${num(Math.abs(Math.round(e.change)))}` : null) });
     cols.push({ label: 'Accuracy', value: e => (e.accuracy !== undefined && e.accuracy !== null ? `${Math.round(e.accuracy * 100)}%` : null) },
       { label: 'Avg time', value: e => (e.avg_secs ? mmss(e.avg_secs) : null) },
-      { label: S.metric === 'test' ? 'Sections' : 'Contests', value: e => e.contests ?? e.sections ?? null });
+      { label: S.metric === 'test' ? 'Sections' : 'Contests', value: e => e.contests ?? e.sections ?? null, unit: S.metric === 'test' ? 'sections' : 'contests' });
     if (!d.closed) cols.push({ label: 'Move', value: e => (e.move ? `${e.move > 0 ? '▲' : '▼'}${Math.abs(e.move)}` : null), title: S.period === 'week' ? 'Places since yesterday' : 'Places since 7 days ago' });
-    cols.push({ label: 'Gap', value: e => (!you || e.you || you.value === undefined || e.value === undefined ? null : `${e.value - you.value >= 0 ? '+' : '−'}${num(Math.abs(Math.round((e.value - you.value) * 10) / 10))}`), title: 'Their value minus yours' });
+    cols.push({ label: 'Gap', value: e => (!you || e.you || you.value === undefined || e.value === undefined ? null : `${e.value - you.value >= 0 ? '+' : '−'}${num(Math.abs(Math.round((e.value - you.value) * 10) / 10))}`), title: 'Their value minus yours', meta: false });
     S.board = UI.board(host, { ...d, entries: levelSeps(entries) }, {
       label: `${m.label} board`, columns: cols, value: e => e.value, youText,
       rowMenu: e => [{ label: 'Follow', onClick: () => api('/follows', { method: 'POST', body: { pid: e.pid } }).then(() => UI.toast(`Following ${e.name}`), err => UI.toast(err.status === 403 ? 'This student is private.' : 'Not saved.')) }],

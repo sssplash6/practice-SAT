@@ -205,14 +205,14 @@
       trapOf(c).then(t => {
         if (!t) { tb.remove(); return; }
         const skills = new Set((c.ladder || []).map(q => q.topic)).size;
-        tb.append(h('span', { class: 'k', text: 'TRAP OF THE WEEK' }), h('p', { class: 'line', text: t.name }), t.tell ? h('p', { class: 'line' }, h('i', { text: t.tell })) : '',
+        tb.append(t.tell ? h('p', { class: 'line' }, h('i', { text: t.tell })) : '',
           h('p', { class: 'meta', text: [t.field_share ? `caught ${pct(t.field_share)} of the field this week` : null, `${num(c.count)} questions in ${num(skills)} skills, each with this trap in it`].filter(Boolean).join(' · ') }));
       });
     }
     const lines = h('div', { class: 'daily-lines' });
     lines.append(h('p', { class: 'line', text: C.facts({ ...c, field: null }) }));
     if (c.status !== 'upcoming') lines.append(C.fieldLine(c, 'in'));
-    const par = C.parLine(c); if (par) lines.append(par);
+    const par = ['daily', 'weekly', 'final', 'trap', 'private'].includes(c.kind) ? C.parLine(c) : null; if (par) lines.append(par);
     kids.push(lines);
     if (['weekly', 'final'].includes(c.kind)) kids.push(h('p', { class: 'help', text: `Runs in the test window: move between questions, mark for review, hand in when ready. Answers and explanations appear at hand-in.${c.kind === 'final' ? ' No pace guide: test conditions.' : ''}` }));
     if (c.kind === 'rush') {
@@ -224,7 +224,7 @@
     if (c.status !== 'upcoming' && !closedGhost) kids.push(timingRow(c));
     const act = h('div', { class: 'row-act' });
     if (c.status === 'upcoming') {
-      act.append(h('button', { type: 'button', class: 'pill', text: 'Add to calendar', onclick: () => UI.ics({ title: `SAT Freshman · ${c.title}`, start: new Date(c.opens), minutes: 30, url: `${location.origin}${C.href(c.id)}` }) }));
+      act.append(h('button', { type: 'button', class: 'quiet', text: 'Add to calendar', onclick: () => UI.ics({ title: `SAT Freshman · ${c.title}`, start: new Date(c.opens), minutes: 30, url: `${location.origin}${C.href(c.id)}` }) }));
     } else if (closedGhost) {
       const go = h('button', { type: 'button', class: 'pill', text: 'Sit it now (unranked)' });
       go.addEventListener('click', () => busy(go, () => C.start(c.id, { kind: c.kind })));
@@ -247,7 +247,8 @@
         const leftH = Math.max(0, Math.round((new Date(`${shiftDay(dayOf(c), 3)}T00:00:00`) - Date.now()) / 36e5));
         kids.push(h('p', { class: 'line', text: `Make up ${C.dayLabel(dayOf(c), { weekday: false })} · keeps your streak · ${leftH >= 24 ? `${Math.floor(leftH / 24)} day${leftH >= 48 ? 's' : ''}` : `${leftH}h`} left` }));
       }
-    } else if (c.status === 'live') kids.push(h('p', { class: 'help', text: C.kind(c).clock === 'answer' ? 'The clock runs only while a question is open. Skipped and voided questions score 0.' : 'A wall clock, like the real test.' }));
+    } else if (c.status === 'live') kids.push(h('p', { class: 'help', text: c.kind === 'rush' ? 'Three strikes end the run: a miss, or an answer over 1.5× its time budget.'
+      : C.kind(c).clock === 'answer' ? 'The clock runs only while a question is open. Skipped and voided questions score 0.' : 'A wall clock, like the real test.' }));
     el.replaceChildren(...kids);
     if (c.status === 'live' && !S.rivals) api('/compete/rivals').then(r => { S.rivals = (r.rivals || []).slice(0, 5); if (S.c.me.status === 'new') renderState(); }).catch(() => { S.rivals = []; });
   }
@@ -505,7 +506,7 @@
     const move = e => (e.move ? `${e.move > 0 ? '▲' : '▼'}${Math.abs(e.move)}` : e.move === 0 ? '–' : null);
     const you = S.board && S.board.you;
     const gap = e => (!you || e.you || e.par || you.points === undefined || e.points === undefined ? null : `${e.points - you.points >= 0 ? '+' : '−'}${num(Math.abs(e.points - you.points))}`);
-    const M = { label: 'Move', value: move, title: 'Places since yesterday' }, G = { label: 'Gap', value: gap, title: 'Their points minus yours' };
+    const M = { label: 'Move', value: move, title: 'Places since yesterday' }, G = { label: 'Gap', value: gap, title: 'Their points minus yours', meta: false };
     if (S.view === 'series') return [{ label: 'Rounds sat', value: e => e.rounds ?? e.sat }, { label: 'Points', value: pts, phone: true }, { label: 'Over par', value: net }, M];
     if (c.kind === 'sprint') return [{ label: 'Best points', value: pts, phone: true }, { label: 'Right/answered', value: score }, { label: 'Runs', value: e => e.runs }, M];
     if (c.kind === 'rush') return [{ label: 'Right', value: e => num(e.right), phone: true }, { label: 'Top item', value: e => e.top_item ? (e.top === true ? 'Top' : `L${e.top_item}`) : null }, { label: 'Runs', value: e => e.runs }, M];
@@ -513,7 +514,7 @@
     const list = [{ label: 'Score', value: score }];
     if (c.kind === 'trap') list.push({ label: 'Resisted', value: e => e.resisted });
     if (c.kind === 'final') list.push({ label: 'Band', value: e => (e.band ? `${e.band.low ?? e.band[0]}–${e.band.high ?? e.band[1]}` : null) });
-    list.push({ label: 'Points', value: pts, phone: true, par: true }, { label: 'Over par', value: net, title: 'Base points minus the player’s par' },
+    list.push({ label: 'Points', value: pts, phone: true, par: true }, { label: 'Over par', value: net, title: 'Base points minus the player’s par', unit: 'par' },
       { label: 'Time', value: time, title: C.kind(c).clock === 'wall' ? 'Time used, start to hand-in' : 'Answer clock used: only while a question was open' }, M, G);
     return list;
   }
