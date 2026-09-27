@@ -430,12 +430,13 @@
       .finally(() => { live--; upd(); });
     return p;
   }
-  const TODAY_CARDS = ['next', 'mist', 'score', 'plan', 'exam', 'words'];
+  const TODAY_CARDS = ['next', 'mist', 'score', 'plan', 'exam', 'study', 'words'];
   const LOADERS = {
     today: () => load('/today', d => { S.t = d; paintToday(); }, () => {
       TODAY_CARDS.forEach(id => UI.cardError($(id), () => LOADERS.today()));
       const hs = document.querySelector('.hero-stats');
       if (hs) hs.replaceChildren(UI.cardError(null, () => LOADERS.today()));
+      else $('hero').append(UI.cardError(null, () => LOADERS.today()));
     }),
     insights: () => load('/today/insights', d => { S.ins = d; paintInsights(); }, () => {
       ['gain', 'pace'].forEach(id => UI.cardError($(id), () => LOADERS.insights()));
@@ -768,8 +769,9 @@
       p.blocks.forEach(b => {
         if (b.kind === 'then') { ul.append(h('li', { class: 'then' }, h('span'), h('span', { class: 'lb', text: b.label }), h('span'), h('span'))); return; }
         i++;
-        const lb = h('span', { class: 'lb' }, b.label, b.detail ? h('span', { class: 'meta', text: b.detail }) : null);
-        if (b.kind === 'skill' && b.topic) lb.append(h('div', { class: 'tchips' }, topicChip(b.topic, { traps: b.traps, mastery: b.mastery })));
+        // a skill block's label is its topic chip (glyph, name, open-trap dots, mastery bar), so the name shows once
+        const chip = b.kind === 'skill' && b.topic;
+        const lb = h('span', { class: 'lb' }, chip ? topicChip(b.topic, { traps: b.traps, mastery: b.mastery }) : b.label, b.detail ? h('span', { class: 'meta', text: b.detail }) : null);
         const x = h('button', { type: 'button', class: 'x', 'aria-label': `Drop ${b.label}`, html: UI.svg(UI.ICON.x || '<path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6"/>', 16) });
         x.addEventListener('click', () => { SZ.drop.push(b.key); askPreview(); });
         ul.append(h('li', {}, h('span', { class: 'no', text: String(i) }), lb,
@@ -818,7 +820,8 @@
           const r = await post('/drill', sessBody({ first: { token: f.token, answer: a, ms: m.ms } }));
           SZ.sid = r.id;
           const next = r.next_url || `/practice/session/?id=${encodeURIComponent(r.id)}`;
-          const cont = pill(`Continue · 2 of ~${(p.count || '').toString() || '…'}`, () => { location.href = next; });
+          const total = p.count || p.blocks.reduce((k, x) => k + (x.kind === 'then' ? 0 : x.count || 0), 0);
+          const cont = pill(total > 1 ? `Continue · 2 of ~${total}` : 'Continue', () => { location.href = next; });
           after.replaceChildren(cont, quiet('Stop here', async () => { await post(`/drill/${encodeURIComponent(r.id)}/finish`); after.replaceChildren(line('Counted toward today.', 'soft')); refresh(['today']); }));
           setTimeout(() => cont.focus(), 0);
           return r.feedback;
@@ -1649,7 +1652,7 @@
     }
     const st = t.next.stage || {};
     if (['stretch', 'taper', 'eve'].includes(st.mode)) {
-      kids.push(meta(join(st.rehearsals && `${pl(st.rehearsals.filter(r => !r.done).length, 'rehearsal')} left`, t.review && t.review.due && `${pl(t.review.due, 'check-in')} due`, t.traps.now && `${t.traps.now.n} mistakes worth ≈ +${t.traps.now.gain}`)));
+      kids.push(meta(join(st.rehearsals && `${pl(st.rehearsals.filter(r => !r.done).length, 'rehearsal')} left`, t.review && t.review.due && `${pl(t.review.due, 'check-in')} due`, t.traps.now && t.traps.now.n && join(pl(t.traps.now.n, 'mistake'), t.traps.now.gain && `worth ≈ +${t.traps.now.gain}`))));
     }
     if (ex && ex.readiness && ex.readiness.length) {
       kids.push(sub('Readiness'));
@@ -1713,7 +1716,7 @@
       ul.append(h('li', {}, h('label', {}, cb, label)));
     });
     count();
-    return h('div', {}, hd, ul);
+    return h('div', { style: 'margin-top:16px' }, hd, ul);
   }
   async function setGoal(minutes) {
     const before = S.t.profile.minutes;
