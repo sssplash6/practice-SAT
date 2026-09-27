@@ -12,8 +12,8 @@
   const S = { hub: null, me: null, live: null, board: null };
   const WHY = { ghost: 'Sat after the contest closed: it shows where you would have placed.', repeat: 'A second sitting of this contest.', fast: 'Answers came in faster than the questions can be read.' };
 
-  const card = (id, ...kids) => { const el = $(id); el.replaceChildren(...kids); return el; };
-  const head = (title, ...right) => h('div', { class: 'card-head' }, h('h2', { class: 'h2', text: title }), right.length ? h('div', { class: 'card-act' }, right) : null);
+  const card = (id, ...kids) => { const el = $(id); el.replaceChildren(...kids.filter(Boolean)); return el; };
+  const head = (title, ...right) => h('div', { class: 'card-head' }, h('h2', { class: 'h2', text: title }), right.some(Boolean) ? h('div', { class: 'card-act' }, right) : null);
   const kline = (text, right) => h('div', { class: 'card-head' }, h('span', { class: 'k', text }), right || null);
   const quiet = (text, onClick, o = {}) => { const b = h(o.href ? 'a' : 'button', { class: 'quiet', type: o.href ? null : 'button', href: o.href || null, text }); if (onClick) b.addEventListener('click', onClick); return b; };
   const fail = (sel, retry, text) => { const el = $(sel); el.replaceChildren(); UI.cardError(el, retry, text || 'The server is not answering.'); };
@@ -199,13 +199,15 @@
     const rating = me.rating;
     const lin = !me.provisional ? C.levelIn(rating, false) : null;
     const rate = h('div', { class: 'me-rate' }, UI.level(rating, me.provisional, 48),
-      h('div', {}, h('span', { class: 'num', text: me.provisional ? '–' : num(Math.round(rating)) }),
+      h('div', {}, me.provisional ? null : h('span', { class: 'num', text: num(Math.round(rating)) }),
         h('p', { class: 'line', text: me.provisional ? 'Placing · a level after 30 rated answers' : `Contest rating · Level ${me.level}` })));
-    const tile = (label, value, sub) => h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: label }), h('span', { class: 'stat-v', text: value ?? '—' }), sub ? h('span', { class: 'stat-sub', text: sub }) : null);
+    // decision 7: a tile shows only with a value, and nothing but the line before a first rank
+    const tile = (label, value, sub) => (value == null ? null : h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: label }), h('span', { class: 'stat-v', text: value }), sub ? h('span', { class: 'stat-sub', text: sub }) : null));
+    const ranked = me.week || me.all;
     const pass = b => b && b.cheapest ? `${num(b.cheapest)} pts to #${b.rank - 1}` : null;
     const move = b => b && b.move ? `${b.move > 0 ? '▲' : '▼'}${Math.abs(b.move)}` : null;
     const wk = boards.week;
-    const tiles = h('div', { class: 'stat-grid' },
+    const tiles = ranked && h('div', { class: 'stat-grid' },
       tile('Week rank', me.week ? `#${me.week}${players ? ` of ${num(players)}` : ''}` : null, [move(wk), pass(wk)].filter(Boolean).join(' · ')),
       tile('All-time rank', me.all ? `#${me.all}` : null, pass(boards.all)),
       me.country ? tile('Country', `#${me.country}`) : h('a', { class: 'stat', href: '/me/#boards' }, h('span', { class: 'stat-k', text: 'Country' }), h('span', { class: 'stat-sub', text: 'Set a country on Me' })),
@@ -215,7 +217,7 @@
     const kids = [head('Your stats', quiet('Your rankings ›', null, { href: '/compete/rankings/' })), rate];
     if (lin) kids.push(h('p', { class: 'meta', text: `Level ${lin.level} in +${num(lin.gap)} ≈ ${lin.rights} hard right${lin.rights === 1 ? '' : 's'}` }));
     kids.push(tiles);
-    if (!me.week && !me.all) kids.push(h('p', { class: 'help', text: 'Finish a ranked contest to get a rank.' }));
+    if (!ranked) kids.push(h('p', { class: 'help', text: 'Finish a ranked contest to get a rank.' }));
     if (new Date().getDay() === 1 && hub.week_line && hub.week_line.text && (hub.week_line.daily || hub.week_line.weekly)) kids.push(h('p', { class: 'meta', text: hub.week_line.text }));
     card('#stats', ...kids);
   }
@@ -251,12 +253,12 @@
     const days = s.closes ? Math.max(0, Math.ceil((new Date(`${s.closes}T23:59:59`) - Date.now()) / 864e5)) : null;
     const mine = (S.me && S.me.boards && S.me.boards.season) || null;
     const fin = (S.live || []).find(c => c.kind === 'final');
-    const kids = [kline(`SEASON · ${String(s.name || '').toUpperCase()}`, days !== null ? h('span', { class: 'meta', text: `${days} day${days === 1 ? '' : 's'} left` }) : null)];
+    const kids = [kline(`SEASON · ${String(s.name || '').toUpperCase()}`, h('span', {}, days !== null ? h('span', { class: 'meta', text: `${days} day${days === 1 ? '' : 's'} left ` }) : null, C.info('Every ranked contest adds to your season points.', 'About season points')))];
     if (s.opens && s.closes) {
       const a = new Date(s.opens), b = new Date(`${s.closes}T23:59:59`);
       kids.push(h('div', { class: 'season-bar', role: 'img', 'aria-label': 'Season elapsed' }, h('i', { style: `width:${Math.min(100, Math.max(0, (Date.now() - a) / (b - a) * 100))}%` })));
     }
-    kids.push(mine && mine.rank ? h('p', { class: 'line mono', text: `#${mine.rank} · ${num(mine.value)} pts` }) : h('p', { class: 'help', text: 'Every ranked contest adds to your season points.' }));
+    if (mine && mine.rank) kids.push(h('p', { class: 'line mono', text: `#${mine.rank} · ${num(mine.value)} pts` }));
     if (fin) {
       const end = new Date(new Date(fin.closes).getTime() - 864e5);
       kids.push(h('p', { class: 'line' }, `Season Final · ${new Date(fin.opens).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} – ${end.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} · full Math section `,
@@ -328,11 +330,9 @@
   /* ------------------------------------------------------------ Champions (C27) */
   function renderChamps() {
     const list = S.hub.champions || [];
-    const kids = [head('Champions')];
     const last = list[0];
-    if (!last) {
-      kids.push(h('p', { class: 'help', text: 'Last week’s podiums show here once a week closes, Mondays at 12:00 UTC.' }));
-    } else {
+    const kids = [head('Champions', last ? null : C.info('Last week’s podiums show here once a week closes, Mondays at 12:00 UTC.', 'About champions'))];
+    if (last) {
       const b = last.boards || {};
       const names = arr => (arr || []).slice(0, 3);
       const table = h('table', { class: 'table compact' }, h('caption', { text: `${last.kind === 'season' ? 'Season' : 'Week'} ${last.period}` }),
@@ -392,10 +392,9 @@
         const key = c.series || c.id, cur = by.get(key);
         if (!cur || (c.status === 'live' && cur.status !== 'live') || (c.status === cur.status && (c.round || 0) < (cur.round || 0))) by.set(key, c);
       });
-      const kids = [head('Your private contests')];
+      const kids = [head('Your private contests', by.size ? null : C.info('Private contests are for friends: make one and share the link.', 'About private contests'))];
       if (!by.size) {
-        kids.push(h('p', { class: 'help', text: 'Private contests are for friends: make one and share the link.' }),
-          h('div', { class: 'row-act' }, quiet('+ Create a contest', () => C.create()), quiet('Join with a code', () => C.join())));
+        kids.push(h('div', { class: 'row-act' }, quiet('+ Create a contest', () => C.create()), quiet('Join with a code', () => C.join())));
       } else {
         const ul = h('ul', { class: 'mini-rows' });
         by.forEach((c, key) => {

@@ -12,7 +12,8 @@
   const S = { me: null, hist: [], total: 0, open: 0, kind: '', followup: false, sort: 'new', shown: 20, badgeF: 'all', champMine: false };
   const quiet = (text, onClick, o = {}) => { const b = h(o.href ? 'a' : 'button', { class: 'quiet', type: o.href ? null : 'button', href: o.href || null, text }); if (onClick) b.addEventListener('click', onClick); return b; };
   const head = (id, title, ...right) => h('div', { class: 'card-head' }, h('h2', { class: 'h2', id, text: title }), right.filter(Boolean).length ? h('div', { class: 'card-act' }, right.filter(Boolean)) : null);
-  const stat = (label, value, sub) => h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: label }), h('span', { class: 'stat-v', text: value ?? '—' }), sub ? h('span', { class: 'stat-sub', text: sub }) : null);
+  // a tile with no value is left out (decision 7: no '—' placeholders)
+  const stat = (label, value, sub) => (value == null ? null : h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: label }), h('span', { class: 'stat-v', text: value }), sub ? h('span', { class: 'stat-sub', text: sub }) : null));
   const card = (sel, ...kids) => $(sel).replaceChildren(...kids.filter(Boolean));
   const fail = (sel, retry) => { $(sel).replaceChildren(); UI.cardError($(sel), retry, 'The server is not answering.'); };
   const drill = body => api('/drill', { method: 'POST', body }).then(r => { const to = C.runner(r); if (to) location.href = to; }).catch(e => UI.toast(e.message || 'Couldn’t start.'));
@@ -39,8 +40,8 @@
       stat('Podiums', me.records && me.records.podiums && me.records.podiums.length ? num(me.records.podiums.length) : null, 'top 3 with 10 or more players'),
       stat('Points this week', b.week ? num(b.week.value) : null, b.week && b.week.rank ? `#${b.week.rank}` : null),
       stat('Season rank', b.season && b.season.rank ? `#${b.season.rank}` : null, b.season ? `${num(b.season.value)} pts` : null),
-      stat('Challenge streak', me.streak ? num(me.streak.current) : null, me.streak && me.streak.best ? `best ${num(me.streak.best)}` : null),
-      stat('Peak rating', bests.peak_rating ? num(Math.round(bests.peak_rating.value)) : null)));
+      stat('Challenge streak', me.streak && me.streak.current ? num(me.streak.current) : null, me.streak && me.streak.best ? `best ${num(me.streak.best)}` : null),
+      stat('Peak rating', S.total && bests.peak_rating ? num(Math.round(bests.peak_rating.value)) : null)));
     const roll = trapRollup();
     if (roll) kids.push(roll);
     if (!rows.length) {
@@ -94,9 +95,8 @@
     const me = S.me;
     const lin = me.provisional ? null : C.levelIn(me.rating, false);
     const kids = [head('rating-h', 'Rating'),
-      h('p', { class: 'help', text: 'Contest rating moves only on ranked contest answers. Skill ratings move on every first try, in practice, tests and contests.' }),
       h('div', { class: 'rate-block sub-block' }, UI.level(me.rating, me.provisional, 48),
-        h('div', {}, h('span', { class: 'k', text: 'CONTEST RATING' }), h('div', { class: 'num', text: me.provisional ? 'Placing' : num(Math.round(me.rating)) }),
+        h('div', {}, h('span', { class: 'k', text: 'CONTEST RATING ' }, C.info('Contest rating moves only on ranked contest answers. Skill ratings move on every first try, in practice, tests and contests.', 'About contest rating')), h('div', { class: 'num', text: me.provisional ? 'Placing' : num(Math.round(me.rating)) }),
           h('p', { class: 'line', text: me.provisional ? 'A level shows after 30 rated answers.' : `Level ${me.level}` })))];
     if (lin) kids.push(h('p', { class: 'line mono', text: `Level ${lin.level} in +${num(lin.gap)} ≈ ${lin.rights} hard right${lin.rights === 1 ? '' : 's'} at your level` }));
     const sk = me.skills;
@@ -175,10 +175,14 @@
       const txt = `#${you.rank}${players ? ` of ${num(players)}` : ''}${players >= 10 ? ` · top ${Math.ceil(you.rank / players * 100)}%` : ''}${you.move ? ` · ${you.move > 0 ? '▲' : '▼'}${Math.abs(you.move)}` : ''}`;
       return h('td', {}, h('a', { class: 'link', href: `/compete/leaderboard/?metric=points&period=${period}&scope=${scope}`, text: you.anon && you.name === 'Anonymous' ? `#${you.rank} · as Anonymous` : txt }));
     };
+    // decision 7: no row of dashes; the card shows once there is a rank
+    const sec = $('#ranks');
+    sec.hidden = !periods.some(([p]) => b[p] && b[p].rank);
+    if (sec.hidden) return;
     const tbody = h('tbody', {}, h('tr', {}, h('th', { scope: 'row', text: 'Everyone' }), periods.map(([p]) => cell(b[p], null, p, 'all'))));
     const table = h('table', { class: 'table compact' }, h('thead', {}, h('tr', {}, h('th', { scope: 'col', text: '' }), periods.map(([, l]) => h('th', { scope: 'col', text: l })))), tbody);
-    card('#ranks', head('ranks-h', 'Your ranks'), h('div', { class: 'table-wrap' }, table),
-      h('p', { class: 'meta', text: [S.me.climb ? `Climb ${signed(S.me.climb.gain ?? S.me.climb)}` : null, S.total ? `Contests played ${num(S.total)}` : null].filter(Boolean).join(' · ') }));
+    const meta = [S.me.climb ? `Climb ${signed(S.me.climb.gain ?? S.me.climb)}` : null, S.total ? `Contests played ${num(S.total)}` : null].filter(Boolean).join(' · ');
+    card('#ranks', head('ranks-h', 'Your ranks'), h('div', { class: 'table-wrap' }, table), meta ? h('p', { class: 'meta', text: meta }) : null);
     // the other scopes, one row each, filled as they arrive
     for (const [scope, label] of [['following', 'Following'], ['level', 'My level'], ['country', 'Country'], ['exam', 'Same exam date']]) {
       const tr = h('tr', {}, h('th', { scope: 'row', text: label }), periods.map(() => h('td', { text: '…' })));
@@ -204,20 +208,29 @@
   /* ------------------------------------------------------------ the Trap Index (C12) */
   async function renderTraps() {
     try {
-      const list = await api('/compete/traps-index');
-      const rows = list.map(t => {
-        const name = h('span', { text: t.name });
-        if (t.tell) UI.tooltip(name, `Tell: ${t.tell}`);
-        return h('tr', {}, h('td', {}, name, t.proven ? h('span', { class: 'chip-s on', style: 'margin-left:8px', text: 'Trap-proof' }) : null),
-          h('td', { class: 'n', 'data-label': 'Field', text: t.field_share ? `${pct(t.field_share)}${t.field_move ? ` ${t.field_move > 0 ? '▲' : '▼'}${Math.abs(Math.round(t.field_move * 100))}` : ''}` : '—' }),
-          h('td', { class: 'n', 'data-label': 'You', text: t.chances ? `${pct(t.you_share)} · ${num(t.chances)} chances` : '—' }),
-          h('td', { class: 'n' }, quiet('Drill · 8', () => drill({ habit: t.family, count: 8, source: 'habit' }))));
-      });
-      card('#traps', head('traps-h', 'Trap Index'),
-        h('div', { class: 'table-wrap' }, h('table', { class: 'table compact stack' },
-          h('thead', {}, h('tr', {}, h('th', { scope: 'col', text: 'Trap' }), h('th', { scope: 'col', class: 'n', text: 'Field this week' }), h('th', { scope: 'col', class: 'n', text: 'You · chances (30 days)' }), h('th', { scope: 'col', text: '' }))),
-          h('tbody', {}, rows))),
-        h('p', { class: 'help', text: 'A chance is a first try on a question with that trap among its choices. Trap-proof: 5 chances over 3 question types in 30 days, none fallen for.' }));
+      const [all, live] = await Promise.all([api('/compete/traps-index'), api('/contests?status=live&limit=20').catch(() => null)]);
+      // decision 7: only traps with data, plus this week's trap; no You column before a first chance
+      const wk = ((live && live.contests) || []).find(c => c.kind === 'trap');
+      const weekName = wk ? String(wk.title).split(' · ').slice(1).join(' · ') : null;
+      const some = all.filter(t => t.field_share || t.chances || t.name === weekName);
+      draw(some.length ? some : all);
+      function draw(list) {
+        const mine = list.some(t => t.chances), field = list.some(t => t.field_share);
+        const rows = list.map(t => {
+          const name = h('span', { text: t.name });
+          if (t.tell) UI.tooltip(name, `Tell: ${t.tell}`);
+          return h('tr', {}, h('td', {}, name, t.name === weekName ? h('span', { class: 'chip-s', style: 'margin-left:8px', text: 'This week' }) : null, t.proven ? h('span', { class: 'chip-s on', style: 'margin-left:8px', text: 'Trap-proof' }) : null),
+            field && h('td', { class: 'n', 'data-label': 'Field', text: t.field_share ? `${pct(t.field_share)}${t.field_move ? ` ${t.field_move > 0 ? '▲' : '▼'}${Math.abs(Math.round(t.field_move * 100))}` : ''}` : '' }),
+            mine ? h('td', { class: 'n', 'data-label': 'You', text: t.chances ? `${pct(t.you_share)} · ${num(t.chances)} chances` : '' }) : null,
+            h('td', { class: 'n' }, quiet('Drill · 8', () => drill({ habit: t.family, count: 8, source: 'habit' }))));
+        });
+        // the rest stay one tap away, each with its drill
+        card('#traps', head('traps-h', 'Trap Index', list.length < all.length ? quiet(`All ${num(all.length)} traps`, () => draw(all)) : null),
+          h('div', { class: 'table-wrap' }, h('table', { class: 'table compact stack' },
+            h('thead', {}, h('tr', {}, h('th', { scope: 'col', text: 'Trap' }), field ? h('th', { scope: 'col', class: 'n', text: 'Field this week' }) : null, mine ? h('th', { scope: 'col', class: 'n', text: 'You · chances (30 days)' }) : null, h('th', { scope: 'col', text: '' }))),
+            h('tbody', {}, rows))),
+          h('p', { class: 'help', text: 'A chance is a first try on a question with that trap among its choices. Trap-proof: 5 chances over 3 question types in 30 days, none fallen for.' }));
+      }
     } catch (e) { fail('#traps', renderTraps); }
   }
 
@@ -302,8 +315,8 @@
       h('td', {}, h('span', { style: 'display:inline-flex;gap:8px;align-items:center' }, UI.level(null, false, 20, { level: n }), `Level ${n}`)),
       h('td', { class: 'n', text: C.rangeOf(n) }), h('td', { class: 'n', text: '—' }), h('td', { class: 'n', text: '—' })));
     card('#ladder', head('ladder-h', 'Level ladder'), h('div', { class: 'table-wrap' }, h('table', { class: 'table compact' },
-      h('thead', {}, h('tr', {}, ['Level', 'Contest rating', 'Students at it', 'Timed-section median'].map((t, i) => h('th', { scope: 'col', class: i ? 'n' : null, text: t })))), h('tbody', {}, rows))),
-      h('p', { class: 'help', text: 'The median is measured from students at each level with a timed full section in the last 30 days, shown once 20 have one.' }));
+      h('thead', {}, h('tr', {}, ['Level', 'Contest rating', 'Students at it', 'Timed-section median'].map((t, i) => h('th', { scope: 'col', class: i ? 'n' : null }, t,
+        i === 3 ? [' ', C.info('The median is measured from students at each level with a timed full section in the last 30 days, shown once 20 have one.', 'About the median')] : null)))), h('tbody', {}, rows))));
   }
 
   /* ------------------------------------------------------------ contest history (C22) */
@@ -359,6 +372,7 @@
     const list = sortedHist().slice(0, S.shown);
     body.replaceChildren(...list.flatMap(r => {
       const res = r.result || {};
+      const secs = res.secs ?? (res.ms != null ? res.ms / 1000 : undefined); // /history rows carry result.ms
       const wrong = res.wrong ?? Math.max(0, (res.asked || 0) - (res.right || 0) - (res.skipped || 0) - (res.voided || 0));
       const x = h('button', { type: 'button', class: 'xbtn', 'aria-expanded': 'false', 'aria-label': `Details for ${kindLabel(r)}`, text: '▸' });
       const tr = h('tr', { 'data-s': r.session },
@@ -371,7 +385,7 @@
         h('td', { class: 'n hx-opt', text: res.asked ? `${num(res.right || 0)}·${num(wrong)}·${num(res.skipped || 0)}·${num(res.voided || 0)}` : '—' }),
         h('td', { class: 'n hx-opt', text: num(r.points) }),
         h('td', { class: 'n hx-opt', text: signed(r.net) }),
-        h('td', { class: 'n hx-opt', text: res.secs !== undefined ? mmss(res.secs) : '—' }),
+        h('td', { class: 'n hx-opt', text: secs !== undefined ? mmss(secs) : '—' }),
         h('td', { class: 'hx-opt', text: r.ranked ? 'Ranked' : `Unranked${r.why ? ` · ${r.why}` : ''}` }),
         h('td', { text: followText(r.followup) }),
         h('td', {}, x));
@@ -399,7 +413,7 @@
       const you = board.you;
       const rows = [...board.entries.slice(0, 1)];
       if (you && !rows.some(e => e.you)) rows.push(you);
-      right.append(h('ul', { class: 'mini-rows' }, rows.map(e => h('li', { class: e.you ? 'you' : null }, h('span', { class: 'mt', text: `${e.tie ? '=' : ''}#${e.rank} ${e.name}` }), h('span', { class: 'ma mono', text: num(e.points) })))));
+      right.append(h('ul', { class: 'mini-rows' }, rows.map(e => h('li', { class: e.you ? 'you' : null }, h('span', { class: 'mt', text: `${e.tie ? '=' : ''}${e.rank} ${e.name}` }), h('span', { class: 'ma mono', text: num(e.points) })))));
       if (you && you.cheapest && you.rank > 1) right.append(h('p', { class: 'meta', text: `${num(you.cheapest)} pts to pass #${you.rank - 1}` }));
     } else right.append(h('p', { class: 'meta', text: '—' }));
     const acts = h('div', { class: 'row-act' });
