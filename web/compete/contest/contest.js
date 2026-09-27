@@ -661,8 +661,18 @@
       body.append(sp);
       const act = h('div', { class: 'row-act' }, quiet('Another like this', ev => busy(ev.currentTarget, () => drill({ templates: [q.key], count: 5, source: 'result' }))));
       if (s === 'incorrect' || s === 'skipped') act.append(quiet(s === 'skipped' ? 'Try it now' : 'Fix it · 3', () => fix({ qid: q.id, norm: mine.mistake ? String(mine.mistake).toLowerCase() : null, label: mine.mistake || q.type_name }, s === 'skipped' ? 'Try it now' : 'Fix it · 3')));
-      if (UI.report) act.append(quiet('Report a problem', () => UI.report({ kind: 'question', source: 'challenge', session: S.c.me.session, question_id: q.id, revealed: true })));
       body.append(act);
+      // the Player region's keys (§2.8): B save, R report, while focus is inside this item (C24)
+      const sid = S.c.me && S.c.me.session;
+      if (UI.questionActions && sid && finished()) {
+        const qa = UI.questionActions(null, q, { revealed: true, source: 'challenge', session: sid, question_id: q.id,
+          on: { save: v => api('/saved', { method: 'POST', body: { session: sid, question_id: q.id, on: v } }) } });
+        act.prepend(qa.el);
+        UI.keys.register(`compete-review-${i}`, {
+          B: { does: 'Save the question', run: () => qa.run('save') },
+          R: { does: 'Report a problem', run: () => qa.run('report') },
+        }, { label: 'Review item', within: d });
+      }
     });
     return d;
   }
