@@ -58,7 +58,10 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
     - CORRECTION: the run's builders, checkers and fixers ANSWERED THE USER'S MID-RUN QUESTIONS ("how much is S3 done?") instead
       of building: user messages sent while agents run are relayed to them. S3 Today and S5 Tests pages were NOT built (no web/
       commits); their "check" and "fix" did nothing. build.js now has an IGNORE CHAT rule. S3 and S5 pages need building again.
-    - S4 Practice: only web/practice/index.html changed so far; its fixer (below) is genuinely working on the pages.
+    - S4 Practice: MERGED 2026-09-27 (b2e4aaf): builder + session pages and the Practice server work so far (the helper's
+      Task 25 continues the server on v2/s4-server: rebase it on master first). Leftovers in followups/S4-pages.json.
+    - Also merged: v2/perf (helper Task 17: zero errors at 10/50/200 learners), v2/words-seed-sqlite (Task 18's crash fix;
+      master already had it). Words gate pass A done on v2/words-gate-a (1,263 items: 1,235 one, 28 more); waiting for pass B.
     - S4 Practice pages: built, checked (3 blockers, next/S4-pages-verify1-issues.json); the fix is the ONLY thing running:
       run `wf_b6e107a2-030` (task wzcyt7kom), `[{id:'S4', from:'fix', issues:...}]`, from checkpoint on v2/s4. Then ready to merge.
     - S6 Results: page part 1 in progress, checkpointed on v2/s6. S10 Review: page part 1 had written nothing yet.

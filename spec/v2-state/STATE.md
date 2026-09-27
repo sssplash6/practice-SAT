@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-27T12:16:15+05:00
+# v2 build state -- 2026-09-27T15:11:35+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -25,15 +25,15 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/helper-integ` at e0aa1c6, 0 commits ahead of master
 - `v2/localday` at 933ae67, 0 commits ahead of master
 - `v2/ops` at 991efbd, 0 commits ahead of master
-- `v2/perf` at fe2abdc, 5 commits ahead of master
+- `v2/perf` at 80676b3, 0 commits ahead of master
 - `v2/s1` at cf53af4, 1 commits ahead of master
 - `v2/s1-server` at cf53af4, 1 commits ahead of master
 - `v2/s10` at 4611321, 2 commits ahead of master
 - `v2/s10-server` at 85896a0, 2 commits ahead of master
 - `v2/s3` at 6fad986, 13 commits ahead of master
 - `v2/s3-server` at 6fad986, 13 commits ahead of master
-- `v2/s4` at e361fdd, 9 commits ahead of master
-- `v2/s4-server` at 7043670, 7 commits ahead of master
+- `v2/s4` at 5b22933, 0 commits ahead of master
+- `v2/s4-server` at 1d70935, 7 commits ahead of master
 - `v2/s5` at a1788ce, 8 commits ahead of master
 - `v2/s5-server` at a1788ce, 8 commits ahead of master
 - `v2/s6` at 83f13d8, 3 commits ahead of master
@@ -80,23 +80,23 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/t-bank-systems_of_linear_equations` at 90dd059, 0 commits ahead of master
 - `v2/t-bank-two_variable_data` at 4469303, 0 commits ahead of master
 - `v2/words-content` at 4c67155, 0 commits ahead of master
-- `v2/words-fix` at 262d903, 1 commits ahead of master
+- `v2/words-fix` at 262d903, 0 commits ahead of master
 - `v2/words-gate` at 8306599, 1 commits ahead of master
-- `v2/words-gate-a` at 8306599, 1 commits ahead of master
-- `v2/words-gate-b` at 67436ae, 4 commits ahead of master
-- `v2/words-seed-sqlite` at b834a83, 1 commits ahead of master
+- `v2/words-gate-a` at 0d02fb0, 10 commits ahead of master
+- `v2/words-gate-b` at 9b1a5b2, 9 commits ahead of master
+- `v2/words-seed-sqlite` at b834a83, 0 commits ahead of master
 
 ## Worktrees
 
-- `/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/preview` on `detached 3c13b63`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/cb-student-data` on `v2/cb-student-data`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/gate-a` on `v2/words-gate-a`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/gate-b` on `v2/words-gate-b`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/helper-handoff` on `v2/helper-handoff`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/perf` on `v2/perf`: 1 uncommitted (saved in wip/perf/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/perf` on `v2/perf`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s4-server` on `v2/s4-server`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_b6e107a2-030-1` on `v2/s4`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_b6e107a2-030-1` on `detached 5b22933`: 1 uncommitted (saved in wip/wf_b6e107a2-030-1/)
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-fix` on `v2/words-fix`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-seed-sqlite` on `v2/words-seed-sqlite`: 0 uncommitted
 
@@ -144,8 +144,7 @@ Unfinished when saved: fix F4 r2
 ### wf_aca7fe38-327: 12 finished, 6 unfinished
 Unfinished when saved: fix: area_and_volume, fix: linear_equations_in_one_variable, fix: linear_functions, recheck: equivalent_expressions, recheck: linear_inequalities, verify: right_triangles_and_trigonometry
 
-### wf_b6e107a2-030: 0 finished, 1 unfinished
-Unfinished when saved: fix S4 r1
+### wf_b6e107a2-030: 1 finished, 0 unfinished
 
 ### wf_bc31c955-f3c: 3 finished, 0 unfinished
 
