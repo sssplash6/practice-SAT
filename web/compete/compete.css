@@ -196,3 +196,11 @@
 
 /* the QOTD panel sits in the narrow side column: its choices take one column at every width */
 #qotd .ws .opts.two { grid-template-columns: minmax(0, 1fr); }
+
+/* the ⓘ that holds an explanation (C.info) */
+.quiet.info-i { padding: 4px 6px; margin: -4px -2px; font-weight: 400; color: var(--soft); vertical-align: baseline; }
+.pop-help { margin: 0; padding: 12px 14px; max-width: 340px; }
+
+/* the test-day card (?card=1): no shell on screen either, so it reads and prints as one page (C4) */
+body.print-card :is(#bar, #tabs, .bar, .nav, .tabs, .side, .rail, .now-strip) { display: none !important; }
+body.print-card, body.print-card.has-side, body.print-card.has-rail { padding-left: 0 !important; padding-top: 0 !important; }
