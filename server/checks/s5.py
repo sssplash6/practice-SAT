@@ -587,6 +587,8 @@ def papers_check(c) -> None:
         (rw[nx]["rating"]["you"], rw[nx + 1]["rating"]["you"])
     assert rw[nx]["rating"]["you"]["source"] == "you"
     db.run("DELETE FROM papers WHERE n IN (?,?)", nx, nx + 1)
+    papers.forget(nx)
+    papers.forget(nx + 1)
 
     # X20 8: a closed Season Final joins the shelf with its crowd
     cid = "final-2031-10-04"
@@ -1086,8 +1088,13 @@ def security(c) -> None:
     assert d["learner"].startswith("anon:") and not d["questions"]
     assert c.get(f"/api/session/{d['id']}").status_code == 403
     assert len(ok(c.post(f"/api/session/{d['id']}/begin", headers=H(d["learner"]), json={}))["questions"]) == 20
+    seen = lambda who: db.one("SELECT COUNT(*) AS n FROM practice_seen WHERE learner=?", who)["n"]  # noqa: E731
+    assert seen(d["learner"]) == 20, "a diagnostic form remembers what it served (QBank)"
     arc = ok(c.post("/api/mock/1.1", headers=H(me), json={}))
     assert arc["learner"] == me and arc["begun"] is False
+    was = seen(me)
+    begin(c, me, arc["id"])
+    assert seen(me) == was + 22, "a shelf section remembers what it served, at Begin"
     busy = code("busy")
     past = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=5)).isoformat(timespec="seconds")
     for i in range(api_tests.NEW_PER_HOUR):

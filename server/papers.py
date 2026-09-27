@@ -47,7 +47,9 @@ HIDE_AT = 3             # reports from different codes that hide a post
 TEXT_MAX = 500
 ABOUT_OK = re.compile(r"^m(1|2u|2l):([1-9]|1\d|2[0-2])$")
 CROWD_TTL = 600         # the board's crowd part, per paper, in seconds
+FIRSTS_TTL = 300        # each paper's first sittings; a paper sitting's hand-in forgets its paper
 _CROWD: dict[int, tuple[float, dict]] = {}
+_FIRSTS: dict[int, tuple[float, tuple[dict, dict]]] = {}
 
 
 def _json(text, default=None):
@@ -194,15 +196,25 @@ def _share(row) -> float | None:
     return sum(d.get("earned", 0) for d in doms) / possible if possible else None
 
 
+def forget(n: int) -> None:
+    """A sitting of paper n was handed in: its Sat by and averages move now."""
+    _FIRSTS.pop(n, None)
+
+
 def firsts(p: dict) -> tuple[dict, dict]:
     """(each learner's first finished sitting, each learner's first ranked
-    sitting), a Road-to paper's Final sittings counting as first sittings."""
+    sitting), a Road-to paper's Final sittings counting as first sittings.
+    Cached per paper, so the shelf doesn't read every sitting on each view."""
+    hit = _FIRSTS.get(p["n"])
+    if hit and time.monotonic() - hit[0] < FIRSTS_TTL:
+        return hit[1]
     first: dict[str, object] = {}
     ranked: dict[str, object] = {}
     for row in list(_final_sittings(p)) + list(sittings(p["n"])):
         first.setdefault(row["learner"], row)
         if row["learner"] not in ranked and (row["contest"] or _ranked(row)):
             ranked[row["learner"]] = row
+    _FIRSTS[p["n"]] = (time.monotonic(), (first, ranked))
     return first, ranked
 
 
