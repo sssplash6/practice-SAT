@@ -451,7 +451,7 @@
         return hd;
       }
       const t = UI.TOPIC && UI.TOPIC[q.topic];
-      const skill = h('span', { class: 'ws-skill' }, UI.glyph && q.topic ? UI.glyph(q.topic) : '',
+      const skill = h('span', { class: 'ws-skill' },
         h('span', { class: 'ws-skill-name', text: o.hideSkill || (t ? t.short : q.topic_name || '') }));
       hd.append(skill);
       if (!o.hideSkill && q.name) hd.append(h('span', { class: 'ws-type', text: q.name }));
@@ -730,9 +730,9 @@
       errEl = h('p', { class: 'field-err', id: eid, hidden: true });
       hintEl = h('p', { class: 'help spr-hint', hidden: true, role: 'status' });
       nudgeEl = h('p', { class: 'spr-nudge', hidden: true, role: 'status' });
-      const rulesBtn = h('button', { type: 'button', class: 'qlink spr-all', text: 'All entry rules', 'aria-haspopup': 'dialog' });
+      const rulesBtn = h('button', { type: 'button', class: 'qlink spr-all', text: 'Entry rules', 'aria-haspopup': 'dialog' });
       rulesBtn.addEventListener('click', () => (UI.pop ? UI.pop(rulesBtn, directions(), { label: 'Entering your answer' }) : null));
-      const rule = h('p', { class: 'help spr-rule', id: rid }, spr.RULE + ' ', rulesBtn);
+      const rule = h('p', { class: 'help spr-rule', id: rid }, h('span', { class: 'sr', text: spr.RULE }), rulesBtn);
       if (mode === 'review') {                                   // answers hidden: check here, file nothing
         localCheck = h('button', { type: 'button', class: 'btn', text: 'Check', hidden: true, onclick: () => localPick(spr.clean(field.value)) });
         fieldWrap.append(localCheck);

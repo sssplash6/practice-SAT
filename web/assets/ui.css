@@ -824,7 +824,8 @@ body.has-rail { padding-left: var(--rail-w); }
   font: 600 14.5px var(--font); color: var(--ink);
   transition: background-color .16s var(--ease), color .16s var(--ease);
 }
-@media (hover: hover) and (pointer: fine) { .quiet:hover { background: var(--tile); } }
+/* the hover underlines instead of painting: the padding reaches 9px past the text, and a painted hover covered neighbours */
+@media (hover: hover) and (pointer: fine) { .quiet:hover { background: none; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; } }
 .quiet:disabled { color: var(--faint); cursor: default; background: none; }
 .quiet svg { width: 16px; height: 16px; }
 
