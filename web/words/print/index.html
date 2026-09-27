@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Worksheet · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* A printed worksheet (words.md W20): a word run with mode 'print'. Serif, numbered, four
+     options with bubbles, a name and date line, the code in the header, and the key on its
+     own page. Graded back with the code and the letters. */
+  .wp { display: grid; gap: 20px; padding-bottom: 60px; }
+  .wp * { min-width: 0; }
+  .wp-tools { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+  .wp-tools .sp { flex: 1; }
+  .paper { background: #fff; color: #16150f; border-radius: 12px; box-shadow: 0 0 0 1px var(--line), 0 12px 40px -24px rgba(0, 0, 0, .35);
+    padding: 40px 44px; display: grid; gap: 18px; }
+  .paper + .paper { margin-top: 8px; }
+  .ph { display: grid; grid-template-columns: 1fr auto; gap: 6px 20px; align-items: start; border-bottom: 1.5px solid #16150f; padding-bottom: 14px; }
+  .ph h1 { font: 800 22px/1.2 var(--font); letter-spacing: -.01em; }
+  .ph .code { font: 500 12.5px var(--mono); letter-spacing: .02em; }
+  .ph .nd { grid-column: 1 / -1; display: flex; gap: 28px; font: 500 13px var(--font); }
+  .ph .nd span { flex: 1; border-bottom: 1px solid #16150f; padding-bottom: 2px; }
+  .ph .qr svg { display: block; }
+  .items { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; counter-reset: q; }
+  .items > li { break-inside: avoid; display: grid; grid-template-columns: 30px 1fr; gap: 4px 10px; counter-increment: q; }
+  .items > li::before { content: counter(q) "."; font: 700 15px/1.55 var(--font); }
+  .items .tx { font: 400 16px/1.55 var(--serif); }
+  .items .st { grid-column: 2; font: 600 13px/1.4 var(--font); }
+  .items .ops { grid-column: 2; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; list-style: none; margin: 4px 0 0; padding: 0; }
+  .items .ops li { display: flex; gap: 10px; align-items: baseline; font: 400 15px/1.4 var(--serif); }
+  .items .ops .b { flex: 0 0 auto; width: 20px; height: 20px; border: 1.3px solid #16150f; border-radius: 50%; display: inline-grid; place-items: center;
+    font: 600 10.5px var(--font); transform: translateY(3px); }
+  .key { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .key li { break-inside: avoid; display: grid; grid-template-columns: 30px 28px 1fr; gap: 2px 10px; font: 400 13.5px/1.45 var(--font); }
+  .key .n { font-weight: 700; }
+  .key .l { font: 700 15px var(--font); }
+  .key .m { grid-column: 3; }
+  .key .m b { font-weight: 600; }
+  .key .why { grid-column: 3; color: #55534a; font-size: 12.5px; }
+  .paper.keypage.inline { box-shadow: none; padding: 0; border-top: 1.5px dashed var(--line); padding-top: 18px; border-radius: 0; }
+  .wp-msg { padding: 32px 0; display: grid; gap: 12px; justify-items: start; }
+  @media (max-width: 759px) {
+    .paper { padding: 22px 18px; }
+    .items .ops { grid-template-columns: 1fr; }
+    .ph { grid-template-columns: 1fr; }
+    .ph .qr { display: none; }
+  }
+  @media print {
+    @page { margin: 16mm 14mm; }
+    body { background: #fff !important; }
+    .wp { padding: 0; gap: 0; }
+    .wp-tools { display: none !important; }
+    .paper { box-shadow: none; border-radius: 0; padding: 0; }
+    .paper.keypage { break-before: page; }
+    .paper.keypage.inline { break-before: auto; margin-top: 24px; }
+    .page { max-width: none !important; padding: 0 !important; }
+  }
+</style>
+</head>
+<body data-page="words-print">
+<main class="page wp" id="main" tabindex="-1">
+  <div class="wp-tools" id="tools"></div>
+  <div id="sheet"><p class="meta">Loading…</p></div>
+</main>
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script>UI.shell('words');</script>
+<script src="/assets/words-ui.js"></script>
+<script>
+(() => {
+  'use strict';
+  const h = UI.h, $ = id => document.getElementById(id), W = UI.word;
+  const P = new URLSearchParams(location.search);
+  const enc = encodeURIComponent;
+  let id = P.get('id') || '';
+  let keyApart = true;
+  try { keyApart = localStorage.getItem('satf.words.keyApart') !== '0'; } catch (_) {}
+  const code = sid => 'W-' + String(sid).replace(/^w:/, '');
+  const clean = s => String(s || '').replace(/\[\[([^\]]+)\]\]/g, '$1');
+  const put = (el, ...kids) => { el.replaceChildren(...kids.flat().filter(k => k !== null && k !== undefined && k !== false)); return el; };
+  const TITLE = { incontext: 'Words in context', transition: 'Transitions', precise: 'Most precise word', meaning2word: 'Meaning → word',
+    word2meaning: 'Word → meaning', nearly: 'Most nearly means', cloze: 'Fill the blank' };
+
+  async function load() {
+    if (!id) return put($('sheet'), h('div', { class: 'wp-msg' }, h('p', { text: 'Make a worksheet from Quiz or the library’s ⋯ menu.' }),
+      h('div', { class: 'wp-tools' }, h('a', { class: 'pill sm', href: '/words/study/?mode=quiz', text: 'Quiz setup' }),
+        h('button', { type: 'button', class: 'btn', text: 'Grade a worksheet', onclick: () => W.gradeSheet() }))));
+    let run, key = null;
+    try { run = await UI.api(`/words/run/${enc(id)}`); }
+    catch (e) {
+      return put($('sheet'), h('div', { class: 'wp-msg' }, h('p', { text: e.status === 404 || e.status === 403 ? 'No worksheet with that code on this account.' : 'The worksheet did not load.' }),
+        e.status === 404 || e.status === 403 ? null : h('button', { type: 'button', class: 'btn', text: 'Retry', onclick: load })));
+    }
+    if (run.mode !== 'print') { location.replace(`/words/run/?id=${enc(id)}`); return; }
+    try { key = await UI.api(`/words/run/${enc(id)}/key`, { quiet: true }); } catch (_) {}
+    paint(run, key);
+    if (P.get('grade') && !run.finished) W.gradeSheet({ code: code(id), count: (run.items || []).length });
+  }
+
+  function paint(run, key) {
+    const items = run.items || [];
+    const kinds = [...new Set(items.map(q => q.kind))];
+    const day = UI.date ? UI.date(new Date(), 'short') : new Date().toLocaleDateString();
+    const head = `${code(id)} · ${items.length} questions · ${day}`;
+    document.title = `Worksheet ${code(id)} · SAT Freshman`;
+    const qr = h('div', { class: 'qr', 'aria-hidden': 'true' });
+    (UI.qr ? Promise.resolve() : UI.need ? UI.need('qr') : Promise.reject()).then(() => {
+      if (UI.qr) qr.append(UI.qr(`${location.origin}/words/print/?id=${enc(id)}&grade=1`, { size: 76, margin: 2, label: 'Scan to grade this sheet' }));
+    }).catch(() => {});
+    const sheet = h('section', { class: 'paper', 'aria-label': 'Worksheet' },
+      h('header', { class: 'ph' }, h('div', {}, h('h1', { text: kinds.length === 1 ? TITLE[kinds[0]] || 'Words' : 'Words' }), h('p', { class: 'code', text: head })), qr,
+        h('p', { class: 'nd' }, h('span', { text: 'Name' }), h('span', { text: 'Date' }))),
+      h('ol', { class: 'items' }, items.map(q => h('li', {},
+        h('p', { class: 'tx', text: clean(q.text) }),
+        q.stem ? h('p', { class: 'st', text: q.stem }) : null,
+        h('ul', { class: 'ops' }, (q.choices || []).map((c, i) => h('li', {}, h('span', { class: 'b', text: 'ABCD'[i] }), h('span', { text: clean(c) }))))))));
+    const byId = new Map(((key && key.answers) || []).map(a => [a.item_id, a]));
+    const keyPage = key ? h('section', { class: 'paper keypage' + (keyApart ? '' : ' inline'), 'aria-label': 'Key' },
+      h('header', { class: 'ph' }, h('div', {}, h('h1', { text: 'Key' }), h('p', { class: 'code', text: head }))),
+      h('ol', { class: 'key' }, items.map((q, n) => {
+        const a = byId.get(q.item_id) || {};
+        const k = 'ABCD'.indexOf(a.letter || '');
+        const why = (a.reasons || []).map((r, i) => (i === k || !r ? null : h('span', { class: 'why', text: `${'ABCD'[i]} · ${r}` }))).filter(Boolean);
+        return h('li', {}, h('span', { class: 'n', text: `${n + 1}.` }), h('span', { class: 'l', text: a.letter || '—' }),
+          h('span', { class: 'm' }, k >= 0 ? h('b', { text: clean((q.choices || [])[k]) }) : null, a.meaning ? ` · ${a.meaning}` : ''), why);
+      }))) : null;
+    put($('sheet'), sheet, keyPage);
+    tools(run, items.length);
+  }
+
+  function tools(run, n) {
+    const sw = h('span');
+    UI.switch(sw, { checked: keyApart, label: 'Key on its own page', onChange: v => { keyApart = v; try { localStorage.setItem('satf.words.keyApart', v ? '1' : '0'); } catch (_) {} document.querySelectorAll('.keypage').forEach(k => k.classList.toggle('inline', !v)); } });
+    put($('tools'),
+      h('a', { class: 'btn', href: (() => { try { return sessionStorage.getItem('satf.words.from') || '/words/study/?mode=quiz'; } catch (_) { return '/words/study/?mode=quiz'; } })() }, W.icon ? W.icon('left', 16) : null, 'Back'),
+      h('span', { class: 'sp' }),
+      sw,
+      h('button', { type: 'button', class: 'btn', text: 'New version', title: 'The same words and types, new sentences', onclick: newVersion }),
+      run.finished ? h('a', { class: 'btn', href: `/words/run/?id=${enc(id)}`, text: 'See the results' })
+        : h('button', { type: 'button', class: 'btn', text: 'Grade this sheet', onclick: () => W.gradeSheet({ code: code(id), count: n }) }),
+      h('button', { type: 'button', class: 'pill sm', text: 'Print', onclick: () => print() }));
+  }
+
+  async function newVersion() {
+    try {
+      const r = await UI.api(`/words/run/${enc(id)}/new-version`, { method: 'POST' });
+      id = r.id;
+      history.replaceState(null, '', `/words/print/?id=${enc(id)}`);
+      load();
+      UI.toast('A new version · same words, new sentences');
+    } catch (e) { if (!e.offline) UI.toast('Couldn’t make a new version. Try again.'); }
+  }
+
+  UI.keys.register('wordsprint', { P: { does: 'Print', run: () => print() } }, { label: 'Worksheet' });
+  load();
+})();
+</script>
+</body>
+</html>

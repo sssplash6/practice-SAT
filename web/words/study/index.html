@@ -38,12 +38,13 @@
   .glance .line { font: 400 14px/1.5 var(--font); }
   .glance .pill { width: 100%; }
   .glance .err { font: 400 13px var(--font); color: var(--ink); }
+  .gl-print { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
   @media (max-width: 999px) { .st-grid { grid-template-columns: 1fr; } }
   @media (max-width: 759px) {
     .glance { position: fixed; top: auto; left: 0; right: 0; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); z-index: 25; border-radius: 0; padding: 10px 16px;
       grid-template-columns: 1fr auto; align-items: center; box-shadow: 0 -1px 0 var(--line); background: var(--paper); gap: 4px 12px; }
     .glance .big { font-size: 17px; font-family: var(--font); font-weight: 600; }
-    .glance .line, .glance .k { display: none; }
+    .glance .line, .glance .k, .glance .gl-print { display: none; }
     .glance .pill { width: auto; grid-row: 1 / span 2; grid-column: 2; }
     .st { padding-bottom: 240px; }
     .decks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -272,8 +273,13 @@
       h('p', { class: 'line', text: [d.label, due && d.id !== 'due' ? `${num(due)} due` : null, nw && d.id !== 'new' ? `${num(nw)} new` : null].filter(Boolean).join(' · ') }),
       mode === 'cards' && !d.mix ? h('p', { class: 'line', text: `${orderText} · ${{ word: 'word first', meaning: 'meaning first', sentence: 'in a sentence', commit: 'commit first', mixed: 'mixed' }[S.direction]}` }) : null,
       mode === 'quiz' && S.qmode === 'quiz' && !d.mix ? h('p', { class: 'line', text: S.formats.map(f => (TYPES.find(t => t[0] === f) || [0, f])[1]).join(' · ') + (S.timer ? ` · ${S.timer} s each` : '') }) : null,
-      start].filter(Boolean));
+      start,
+      // W20: the same deck, types and count on paper, with a key page; graded back by code
+      mode === 'quiz' && S.qmode === 'quiz' && d.n !== 0 ? h('div', { class: 'gl-print' },
+        h('button', { type: 'button', class: 'btn sm', text: 'Print a worksheet', onclick: () => W.print(deck(), { formats: S.formats, count: S.count }) }),
+        h('button', { type: 'button', class: 'quiet', text: 'Grade a worksheet', onclick: () => W.gradeSheet() })) : null].filter(Boolean));
   }
+  function deck() { const d = curDeck(); return d.deck(S.value[d.id]); }
   async function go() {
     const all = ls.get(STORE, {}) || {};
     all[mode] = { count: S.count, direction: S.direction, order: S.order, qmode: S.qmode, formats: S.formats, timer: S.timer, seconds: S.seconds };

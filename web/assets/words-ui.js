@@ -45,7 +45,7 @@
 .tw-box .k { white-space: nowrap; }
 .tw-note { font: 400 13.5px/1.45 var(--font); color: var(--ink); }
 .tw-note b { font-weight: 600; }
-@media (max-width: 759px) { .tw-row .pill { flex: 1 1 100%; min-height: 48px; } .tw-row > .btn { flex: 1 1 calc(33% - 8px); min-height: var(--touch); padding: 0 8px; } .tw-box { margin-left: 0; } }
+@media (max-width: 759px) { .tw-row .pill { flex: 1 1 100%; min-height: 48px; } .tw-row > .btn { flex: 1 1 auto; min-height: var(--touch); padding: 0 12px; } .tw-box { margin-left: 0; } }
 .wfin { display: grid; gap: 10px; }
 .wfin-l { font: 400 14px/1.5 var(--font); }
 .wfin-l b { font-weight: 600; }
@@ -274,8 +274,36 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       if (UI.skel) UI.skel(el, 'line'); else el.append(h('p', { class: 'meta', text: 'Loading…' }));
       let d;
       try { d = await UI.api('/words/today', { quiet: true }); }
-      catch (_) { el.replaceChildren(h('div', { class: 'tw-top' }, h('h2', { text: 'Today’s words' }))); if (UI.cardError) UI.cardError(el, draw, 'Today’s words did not load.'); return; }
+      catch (e) {
+        el.replaceChildren(h('div', { class: 'tw-top' }, h('h2', { text: 'Today’s words' })));
+        const kept = e.offline ? await offline.stored() : null;
+        if (kept) {
+          el.append(h('div', { class: 'tw-row' }, h('a', { class: 'pill', href: `/words/run/?id=${encodeURIComponent(kept.id)}`, text: `Offline cards · ${kept.left} left` })),
+            h('p', { class: 'help', text: 'Grades wait on this device and sync when you’re back. Quizzes need a connection.' }));
+          return;
+        }
+        if (UI.cardError) UI.cardError(el, draw, 'Today’s words did not load.');
+        return;
+      }
       paint(d.summary || {});
+      if (offline.ok()) offlineRow(d.summary || {});
+    }
+    async function offlineRow(s) {
+      const kept = await offline.stored();
+      const n = (s.due || 0) + Math.max(0, (s.new_goal || 0) - (s.new_today || 0));
+      if (!kept && !n) return;
+      const line = h('p', { class: 'help' });
+      const take = h('button', { type: 'button', class: 'quiet', text: 'Take today’s cards offline', onclick: async () => {
+        take.disabled = true;
+        const r = await offline.take();
+        take.disabled = false;
+        if (r) { toast(`${plural(r.items.length, 'card')} on this device · they work with no signal`); offlineRow(s); }
+      } });
+      if (kept) line.append(`${plural(kept.left, 'card')} on this device · `, h('a', { class: 'quiet', href: `/words/run/?id=${encodeURIComponent(kept.id)}`, text: 'Open' }), ' · ', take);
+      else line.append(take);
+      el.querySelectorAll('.tw-off').forEach(x => x.remove());
+      line.classList.add('tw-off');
+      el.append(line);
     }
     function paint(s) {
       const lib = o.lib || null, c = (lib && lib.counts) || {};
@@ -471,6 +499,15 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       foot.replaceChildren();
       tools.replaceChildren();
       d.classList.toggle('covered', covered);
+      // a slug the index does not hold: a typed word finds its entry, else the message, with no request
+      if (!/^(u:|root:)/.test(cur)) {
+        const ix = await index().catch(() => null);
+        if (ix && !ix.bySlug.has(cur)) {
+          const hit = ix.byWord.get(cur.toLowerCase());
+          if (!hit) { data = null; api.setTitle('Words'); api.body.replaceChildren(h('p', { class: 'wmsg', text: `No word called “${cur}”.` })); return; }
+          cur = hit.slug; setW(cur);
+        }
+      }
       const path = cur.startsWith('root:') ? `/words/root/${encodeURIComponent(cur.slice(5))}` : `/words/${encodeURIComponent(cur)}`;
       try { data = await UI.api(path, { quiet: true }); }
       catch (e) {
@@ -686,7 +723,12 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       const more = h('button', { type: 'button', class: 'btn icon', 'aria-label': 'More', 'aria-haspopup': 'menu' }, ic('more'));
       more.addEventListener('click', () => UI.menu(more, [{ label: 'Reset progress', onClick: resetProgress }], { align: 'end' }));
       const cardsHere = h('button', { type: 'button', class: w.sample ? 'btn' : 'pill sm', text: 'Flashcards from here',
-        onclick: () => startWords({ mode: 'cards', deck: { source: 'words', words: (list.length ? list : [w.slug]).slice(0, 200), start: w.slug }, order: 'az', count: Math.min(200, list.length || 1) }) });
+        onclick: () => {
+          // the list from this word on, wrapping round, so the deck always holds it
+          const i = list.indexOf(w.slug);
+          const from = i < 0 ? [w.slug, ...list] : [...list.slice(i), ...list.slice(0, i)];
+          startWords({ mode: 'cards', deck: { source: 'words', words: from.slice(0, 200), start: w.slug }, order: 'az', count: Math.min(200, from.length) });
+        } });
       foot.replaceChildren(...[
         w.sample && !w.own ? (UI.verb ? UI.verb('twin', { count: 10, primary: true, subject: 'rw', onClick: () => practise10(w) }) : h('button', { type: 'button', class: 'pill sm', text: 'Practise 10 in context', onclick: () => practise10(w) })) : null,
         cardsHere,
@@ -977,5 +1019,185 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       } }] });
   }
 
+  /* ------------------------------------------------------------ list keys (§2.8 Lists) */
+  // J K or ↑ ↓ move through the items, Enter opens one (they are buttons or rows), X selects it
+  function listKeys(scope, sel, o = {}) {
+    if (!UI.keys || !UI.keys.register) return null;
+    const items = () => [...doc.querySelectorAll(sel)].filter(e => e.offsetParent);
+    const at = () => items().indexOf(doc.activeElement);
+    const move = n => {
+      const a = items();
+      if (!a.length) return;
+      const i = at();
+      const t = a[Math.max(0, Math.min(a.length - 1, i < 0 ? 0 : i + n))];
+      t.focus();
+      t.scrollIntoView({ block: 'nearest' });
+    };
+    const on = () => at() >= 0;
+    return UI.keys.register(scope, {
+      J: { does: 'Next word', run: () => move(1) },
+      K: { does: 'Previous word', run: () => move(-1) },
+      ArrowDown: { does: 'Next word', when: on, run: () => move(1) },
+      ArrowUp: { does: 'Previous word', when: on, run: () => move(-1) },
+      X: { does: 'Select it', when: () => on() && !!o.select, run: () => o.select(doc.activeElement) },
+    }, { label: o.label || 'Words list' });
+  }
+
+  /* ------------------------------------------------------------ share a list or a view (W20) */
+  async function share(o = {}) {
+    let r;
+    try {
+      r = o.list ? await UI.api(`/words/lists/${encodeURIComponent(o.list)}/share`, { method: 'POST' })
+        : await UI.api('/sets', { method: 'POST', body: { kind: 'words', title: String(o.title || 'Words').slice(0, 60),
+          items: (o.words || []).slice(0, 200).map(s => (s.startsWith('u:') ? 'own:' + s : s)) } });
+    } catch (e) {
+      if (o.quiet404 && e.status === 404) return false;
+      if (!e.offline) toast(e.status >= 400 && e.status < 500 ? cap(e.message) : 'Couldn’t make the link. Try again.');
+      return null;
+    }
+    if (!r || r.available === false || !r.url) { toast('Sharing is not available yet.'); return null; }
+    const url = new URL(r.url, location.origin).href;
+    const field = h('input', { class: 'field', type: 'text', readonly: true, value: url, 'aria-label': 'Link', onfocus: e => e.target.select() });
+    UI.sheet({ title: o.list || o.title || 'Share', size: 's',
+      body: h('div', { class: 'addw' }, h('p', { class: 'line', text: plural(r.count || (o.words || []).length, 'word') }), field),
+      actions: [navigator.share ? { label: 'Share…', onClick: () => { navigator.share({ title: o.list || o.title || 'Words', url }).catch(() => {}); return false; } } : null,
+        { label: 'Open', href: url, quiet: true },
+        { label: 'Copy link', primary: true, onClick: () => { UI.copyText ? UI.copyText(url, { toast: 'Link copied' }) : field.select(); return false; } }].filter(Boolean) });
+    return r;
+  }
+
+  /* ------------------------------------------------------------ worksheets (W20) */
+  // the 4-option types a pencil can answer; Type it and Order the ladder stay on screen
+  const PRINTABLE = ['incontext', 'transition', 'precise', 'meaning2word', 'word2meaning', 'nearly', 'cloze'];
+  async function printSheet(deck, o = {}) {
+    const formats = (o.formats || []).filter(f => PRINTABLE.includes(f));
+    const body = { mode: 'print', deck, formats: formats.length ? formats : ['incontext', 'meaning2word'], count: Math.max(10, Math.min(40, o.count || 20)) };
+    let r;
+    try { r = await UI.api('/words/run', { method: 'POST', body }); }
+    catch (e) {
+      if (e.status === 409 || e.status === 400 || e.status === 422) {
+        try { r = await UI.api('/words/run', { method: 'POST', body: { ...body, formats: ['meaning2word', 'word2meaning'] } }); } catch (e2) { if (!e2.offline) toast(cap(e2.message)); return null; }
+      } else { if (!e.offline) toast('Couldn’t make the worksheet. Try again.'); return null; }
+    }
+    remember(o.from);
+    location.href = `/words/print/?id=${encodeURIComponent(r.id)}`;
+    return r;
+  }
+  // the code on a sheet is its run id with W- for w:; letters are one A–D per item
+  const sheetId = code => { const c = String(code || '').trim().replace(/^w[-:]/i, ''); return c ? 'w:' + c : ''; };
+  function gradeSheet(pre = {}) {
+    const code = h('input', { class: 'field', maxlength: '40', value: pre.code || '', placeholder: 'W-…', 'aria-label': 'Worksheet code', autocomplete: 'off', spellcheck: 'false' });
+    const letters = h('input', { class: 'field', maxlength: '40', placeholder: 'CABD…', 'aria-label': 'Letters, one per question', autocomplete: 'off', spellcheck: 'false',
+      oninput: () => { letters.value = letters.value.toUpperCase().replace(/[^A-D]/g, ''); n.textContent = `${letters.value.length}${pre.count ? ` of ${pre.count}` : ''}`; } });
+    const n = h('span', { class: 'meta', text: pre.count ? `0 of ${pre.count}` : '' });
+    const out = h('div', { 'aria-live': 'polite' });
+    return UI.sheet({ title: 'Grade a worksheet', size: 's',
+      body: h('div', { class: 'addw' }, pre.code ? null : [h('label', { class: 'label', text: 'Code, from the top of the sheet' }), code],
+        h('label', { class: 'label', text: 'The letters, in order' }), letters, n, out),
+      focus: pre.code ? letters : code,
+      actions: [{ label: 'Cancel', quiet: true }, { label: 'Grade', primary: true, onClick: async () => {
+        const id = sheetId(pre.code || code.value);
+        if (!id) { out.replaceChildren(h('p', { class: 'field-err', text: 'Add the code' })); return false; }
+        try { await UI.api(`/words/run/${encodeURIComponent(id)}/grade`, { method: 'POST', body: { letters: letters.value } }); }
+        catch (e) {
+          if (!e.offline) out.replaceChildren(h('p', { class: 'field-err', text: e.status === 404 || e.status === 403 ? 'No worksheet with that code on this account.'
+            : e.status === 409 ? 'That code is not a worksheet.' : e.status === 422 ? 'One letter, A to D, for every question.' : 'Not graded. Try again.' }));
+          return false;
+        }
+        location.href = `/words/run/?id=${encodeURIComponent(id)}`;
+      } }] });
+  }
+
+  /* ------------------------------------------------------------ offline cards (W22) */
+  // one IndexedDB store; every read and write is caught, and a failure reads as "not kept"
+  const idb = (() => {
+    let p = null;
+    const open = () => p || (p = new Promise((res, rej) => {
+      const r = indexedDB.open('satf-words', 1);
+      r.onupgradeneeded = () => r.result.createObjectStore('kv');
+      r.onsuccess = () => res(r.result);
+      r.onerror = () => rej(r.error);
+    }).catch(e => { p = null; throw e; }));
+    const tx = async (mode, fn) => {
+      const db = await open();
+      return new Promise((res, rej) => { const t = db.transaction('kv', mode); const q = fn(t.objectStore('kv')); t.oncomplete = () => res(q && q.result); t.onerror = t.onabort = () => rej(t.error); });
+    };
+    const safe = f => (...a) => { try { return f(...a); } catch (e) { return Promise.reject(e); } };
+    return {
+      get: k => safe(tx)('readonly', s => s.get(k)).catch(() => undefined),
+      set: (k, v) => safe(tx)('readwrite', s => s.put(v, k)).then(() => true, () => false),
+    };
+  })();
+  let flushing = false;
+  const offline = {
+    ok: () => { try { return 'serviceWorker' in navigator && typeof indexedDB !== 'undefined' && isSecureContext; } catch (_) { return false; } },
+    register() { try { return navigator.serviceWorker.register('/words/sw.js', { scope: '/words/' }).catch(() => null); } catch (_) { return Promise.resolve(null); } },
+    // today's due and new cards as one cards run, its faces kept on this device
+    async take() {
+      await offline.register();
+      let r;
+      try { r = await UI.api('/words/run', { method: 'POST', body: { mode: 'cards', deck: { source: 'today' }, count: 60 } }); }
+      catch (e) { if (!e.offline) toast(e.status === 409 ? cap(e.message) : 'Couldn’t save them. Try again.'); return null; }
+      if (!(r.items || []).length) { toast('Nothing to take today.'); return null; }
+      const ok = await idb.set('run:' + r.id, { ...r, done: [] });
+      if (!ok || !(await idb.set('today', { id: r.id, day: today(), n: r.items.length }))) { toast('This browser won’t keep them. Try again with more free space.'); return null; }
+      return r;
+    },
+    async stored() {
+      const t = await idb.get('today');
+      if (!t || t.day !== today()) return null;
+      const run = await idb.get('run:' + t.id);
+      return run ? { id: t.id, left: Math.max(0, (run.items || []).length - (run.done || []).length) } : null;
+    },
+    run: id => idb.get('run:' + id),
+    async done(id, itemId) {
+      const run = await idb.get('run:' + id);
+      if (run && !(run.done || []).includes(itemId)) { run.done = [...(run.done || []), itemId]; await idb.set('run:' + id, run); }
+    },
+    async queue(entry) {
+      const q = (await idb.get('queue')) || [];
+      q.push(entry);
+      const ok = await idb.set('queue', q);
+      offline.banner(q.length);
+      return ok;
+    },
+    async pending() { return ((await idb.get('queue')) || []).length; },
+    banner(n) {
+      if (!UI.banner) return;
+      if (n && !navigator.onLine) UI.banner('words-offline', `Offline · ${plural(n, 'grade')} will sync`, [], { dismiss: false });
+      else if (UI.banner.clear) UI.banner.clear('words-offline');
+    },
+    // replay in order; the server claims each answer once, so a replay is safe, and a
+    // refused one (already claimed, or older than 72 hours) is dropped
+    async flush() {
+      if (flushing) return;
+      flushing = true;
+      try {
+        let q = (await idb.get('queue')) || [];
+        while (q.length) {
+          const e = q[0];
+          try { await UI.api(`/words/run/${encodeURIComponent(e.run)}/answer`, { method: 'POST', quiet: true, body: { item_id: e.item_id, answer: e.answer, ms: e.ms, at: e.at } }); }
+          catch (err) { if (err.offline) break; }
+          q = q.slice(1);
+          await idb.set('queue', q);
+        }
+        offline.banner(q.length);
+        if (!q.length) doc.dispatchEvent(new CustomEvent('satf:words'));
+      } finally { flushing = false; }
+    },
+  };
+  if (offline.ok()) {
+    addEventListener('online', () => offline.flush());
+    addEventListener('offline', () => offline.pending().then(n => offline.banner(n)));
+    offline.pending().then(n => { if (n) { if (navigator.onLine) offline.flush(); else offline.banner(n); } });
+  }
+
+  word.listKeys = listKeys;
+  word.share = share;
+  word.print = printSheet;
+  word.gradeSheet = gradeSheet;
+  word.sheetId = sheetId;
+  word.PRINTABLE = PRINTABLE;
+  word.offline = offline;
   Object.assign(UI, { wordsTabs, todayWords, wordsFinish, word, startWords, addWord, gloss, speak, bringWords });
 })();

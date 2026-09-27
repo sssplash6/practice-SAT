@@ -102,6 +102,8 @@
     .wl-strip .stat { flex: 0 0 78%; min-height: 160px; scroll-snap-align: start; }
     .wl-gtiles { flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; }
     .ctile { flex: 0 0 160px; scroll-snap-align: start; }
+    .wl-fbar .filters { flex: 1 1 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 2px 0; }
+    .wl-fbar .filters > * { flex: 0 0 auto; }
     .wl-bar { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
     .wl-bar-in { padding-bottom: 10px; }
     .wl { padding-bottom: 240px; }
@@ -133,7 +135,7 @@
 <div class="wl-bar" id="studybar" role="region" aria-label="Study these words">
   <div class="wl-bar-in">
     <div><p class="l1" id="barText">Loading…</p><p class="help" id="barHelp" hidden></p></div>
-    <div class="go"><button type="button" class="btn" id="barQuiz">Quiz</button><button type="button" class="pill" id="barCards">Flashcards</button></div>
+    <div class="go"><button type="button" class="btn icon" id="barMore" aria-label="Share, print or grade a worksheet" aria-haspopup="menu">⋯</button><button type="button" class="btn" id="barQuiz">Quiz</button><button type="button" class="pill" id="barCards">Flashcards</button></div>
   </div>
 </div>
 <nav id="tabs"></nav>
@@ -167,7 +169,7 @@
   const LIMIT0 = 400;
 
   let lib = null, ins = null, words = [], famSize = new Map(), rootsOf = new Map(), fbar = null, shown = [], limit = LIMIT0;
-  let meanings = params().get('m') === '1', selecting = false, selected = new Set(), lastPick = null, alsoOf = new Map();
+  let meanings = params().get('m') === '1', selecting = false, selected = new Set(), lastPick = null, alsoOf = new Map(), sBtn = null;
   const qEl = $('q');
   qEl.value = params().get('q') || '';
 
@@ -375,7 +377,7 @@
       { key: 'c', label: 'Collection', type: 'multi', options: collOpts, counts: Object.fromEntries(collOpts.map(o => [o.value, count(w => inC(w, o.value))])) },
       { key: 't', label: 'Topic', type: 'multi', groups: topicGroups },
       { key: 'f', label: 'Family', type: 'multi', options: fams },
-      { key: 'd', label: 'Difficulty', type: 'pills', options: [{ value: 'easy', label: 'Easy', n: count(w => !w.own && levelOf(w) === 'easy') }, { value: 'medium', label: 'Medium', n: count(w => !w.own && levelOf(w) === 'medium') },
+      { key: 'd', label: 'Difficulty', type: 'multi', options: [{ value: 'easy', label: 'Easy', n: count(w => !w.own && levelOf(w) === 'easy') }, { value: 'medium', label: 'Medium', n: count(w => !w.own && levelOf(w) === 'medium') },
         { value: 'hard', label: 'Hard', n: count(w => !w.own && levelOf(w) === 'hard') }, { value: 'hardforyou', label: 'Hard for you', n: count(w => w.hard_for_you) || undefined }] },
       { key: 's', label: 'Status', type: 'select', groups: statusGroups, all: 'All' },
       ...(hasRW ? [{ key: 'p', label: 'Part of speech', type: 'multi', options: Object.entries(W.POS).filter(([k]) => k !== 'phrase').map(([v, l]) => ({ value: v, label: l, n: count(w => w.pos === v) })) }] : []),
@@ -383,11 +385,11 @@
     ];
     const host = $('fbar');
     host.replaceChildren();
-    fbar = UI.filterBar(host, F, { url: true, label: 'Word filters', onChange: () => { limit = LIMIT0; groups(); paintGrid(); } });
+    fbar = UI.filterBar(host, F, { url: true, sheet: false, label: 'Word filters', onChange: () => { limit = LIMIT0; groups(); paintGrid(); } });
     const mBtn = h('button', { type: 'button', class: 'btn', 'aria-pressed': String(meanings), text: 'Meanings', title: 'Show each word’s short meaning on its tile',
       onclick: () => { meanings = !meanings; mBtn.setAttribute('aria-pressed', String(meanings)); mBtn.classList.toggle('on', meanings); setUrl('m', meanings ? '1' : null); paintGrid(); } });
     mBtn.classList.toggle('on', meanings);
-    const sBtn = h('button', { type: 'button', class: 'btn', 'aria-pressed': 'false', text: 'Select',
+    sBtn = h('button', { type: 'button', class: 'btn', 'aria-pressed': 'false', text: 'Select',
       onclick: () => { selecting = !selecting; if (!selecting) selected.clear(); sBtn.setAttribute('aria-pressed', String(selecting)); sBtn.classList.toggle('on', selecting); paintGrid(); } });
     host.append(mBtn, sBtn, h('span', { class: 'wl-count', id: 'count', 'aria-live': 'polite' }));
   }
@@ -569,6 +571,22 @@
     else W.quizStart(deck, 10);
   });
 
+  // ⋯: share this view or the selection, print it as a worksheet, grade a printed one (W20)
+  const viewTitle = () => {
+    const c = (fbar ? fbar.values().c : []) || [];
+    const name = c.length === 1 ? ((W._coll || {})[c[0]] || c[0]) : '';
+    return selected.size ? (name ? `${name} · picked` : 'Picked words') : name || (qEl.value.trim() ? `Words: ${qEl.value.trim()}` : 'Words');
+  };
+  $('barMore').addEventListener('click', () => {
+    const pick = studySlugs();
+    UI.menu($('barMore'), [
+      { label: 'Share these words', sub: `${num(pick.length)} words · a link anyone can open`, disabled: !pick.length, onClick: () => W.share({ title: viewTitle(), words: pick }) },
+      { label: 'Print a worksheet', sub: 'In context and meaning, with a key page', disabled: !pick.length,
+        onClick: () => { const q = (ls.get('satf.words.study', {}) || {}).quiz || {}; W.print({ source: 'words', words: pick }, { formats: q.formats, count: Math.min(20, pick.length) }); } },
+      { label: 'Grade a worksheet', sub: 'The code and your letters', onClick: () => W.gradeSheet() },
+    ], { align: 'end', label: 'More' });
+  });
+
   /* ---------------- search and keys */
   let qt = 0;
   qEl.addEventListener('input', () => { clearTimeout(qt); qt = setTimeout(() => { setUrl('q', qEl.value.trim() || null); limit = LIMIT0; paintGrid(); }, 150); });
@@ -577,6 +595,13 @@
     '/': { does: 'Search words', run: () => { qEl.focus(); qEl.select(); } },
     N: { does: 'Add a word', run: () => UI.addWord() },
   }, { label: 'Words' });
+  W.listKeys('wordslist', '.wgrid .wtile, .lmap .wtile, .wroots .wtile', { label: 'Word tiles', select: el => {
+    const slug = el.dataset.slug;
+    if (!slug) return;
+    if (!selecting && sBtn) sBtn.click();
+    const t = document.querySelector(`.wtile[data-slug="${CSS.escape(slug)}"]`);
+    if (t) { t.click(); t.focus(); }
+  } });
   document.addEventListener('satf:words', () => load());
   addEventListener('popstate', () => { const w = params().get('w'); if (w) openWord(w, { fromLink: true }); });
   load();
