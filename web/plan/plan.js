@@ -44,7 +44,7 @@
   const CB = 'https://satsuite.collegeboard.org/sat/registration';
   // the server's week themes still carry slugs and ISO dates: say them as words
   const TASKNAME = { fix: 'Fix mistakes', recheck: 'warm-up', focus: 'focus set', test: 'test', learn: 'Learn it', check: 'check', habit: 'habit task', pace: 'pace set', map: 'Map', sweep: 'sweep', words: 'Words', custom: 'own task', extra: 'extra set' };
-  const pretty = text => String(text || '')
+  const pretty = text => String(text || '').replace(/\bpt:[\w-]+/g, 'your own task')
     .replace(/\b(\d{4}-\d{2}-\d{2}):([a-z]+)(?::([a-z_]+))?/g, (m, dd, k, tp) => `${DOW[dow(dd)]}’s ${TASKNAME[k] || k}${tp && UI.TOPIC[tp] ? ` on ${UI.TOPIC[tp].short}` : ''}`)
     .replace(/\b\d{4}-\d{2}-\d{2}\b/g, m => DOW[dow(m)]).replace(/\b[a-z]+(?:_[a-z]+)*\b/g, m => UI.TOPIC[m] ? UI.TOPIC[m].short : m);
   const rowErr = text => Object.assign(new Error(text), { rowText: text });
@@ -284,7 +284,7 @@
     R.pPlan = h('div'); R.pProg = h('div'); R.pPlans = h('div');
     const bar = h('div', { class: 'pl-tabbar' });
     R.tabs = UI.tabs(bar, [{ id: 'plan', label: 'Plan', panel: R.pPlan }, { id: 'progress', label: 'Progress', panel: R.pProg },
-      { id: 'plans', label: 'Plans', panel: R.pPlans, n: (d.plans || []).length > 1 ? d.plans.length : null }],
+      { id: 'plans', label: 'Plans', panel: R.pPlans, n: (d.plans || []).length > 1 ? d.plans.length : null }].filter(x => !(x.id === 'plans' && Q.get('view'))),
     { value: S.tab, label: 'Plan views', onChange: id => { S.tab = id; url(paramsNow(), true); drawTab(); } });
     R.thumb = h('div', { class: 'pl-thumb' });
     R.shell = h('div', {}, R.upd, title, R.tiles, R.banners, bar, R.pPlan, R.pProg, R.pPlans, R.thumb);
@@ -304,7 +304,7 @@
     return p;
   }
   function drawTab() {
-    if (S.tab === 'progress' && UI.planProgress) UI.planProgress(R.pProg, { d: S.d, api, pick: date => { S.tab = 'plan'; R.tabs.set('plan', true); pick(date); url(paramsNow(), true); drawTab(); } });
+    if (S.tab === 'progress' && UI.planProgress) UI.planProgress(R.pProg, { d: S.d, api, pick: date => { S.tab = 'plan'; R.tabs.set('plan', true); pick(date); url({ ...paramsNow(), tab: 'plan', day: date }, true); drawTab(); } });
     if (S.tab === 'plans') drawPlansTab();
     drawThumb();
   }
@@ -382,12 +382,12 @@
     if (w.fits === true && w.spare_h !== null && w.spare_h !== undefined) t1.append(h('p', { class: 'stat-sub', text: `fits with ${UI.num(w.spare_h)} h to spare` }));
     if (w.fits === false) {
       t1.append(h('p', { class: 'stat-sub ink', text: `short by ${UI.num(w.short_h)} h` }));
-      if (w.suggest_minutes) {
+      if (w.suggest_minutes && !S.readonly) {
         const set = btn(`Set ${w.suggest_minutes} min`, 'btn sm', e => { e.stopPropagation(); busy(set, () => patchPlan({ minutes: w.suggest_minutes }, `Days set to ${w.suggest_minutes} min`, undoOf({ minutes: 1 }))); });
         t1.append(set);
       }
     }
-    if (!c.booked && d.state !== 'after') {
+    if (!c.booked && d.state !== 'after' && !S.readonly) {
       const nb = h('a', { class: 'tag line', href: `/plan/?edit=${enc(a.id)}&step=2`, text: 'not booked' });
       nb.addEventListener('click', e => e.stopPropagation());
       t1.append(nb);
@@ -415,14 +415,14 @@
       else if (!p) {
         const next = d.days.find(x => x.date >= t && x.kind === 'test');
         const nt = next && next.tasks.find(k => k.kind === 'test' && undone(k));
-        if (nt) t2.append(btn('Take this week’s test now', 'quiet', e => busy(e.currentTarget, () => startTask(nt, next.date))));
+        if (nt && !S.readonly) t2.append(btn('Take this week’s test now', 'quiet', e => busy(e.currentTarget, () => startTask(nt, next.date))));
       }
       if (v && v.needs_per_week) t2.append(h('p', { class: 'stat-sub', text: v.made_per_week !== null && v.made_per_week !== undefined
         ? `Making +${UI.num(v.made_per_week)} a week · needs +${UI.num(v.needs_per_week)}` : `Needs +${UI.num(v.needs_per_week)} a week` }));
     }
     const tot = d.score && d.score.rw && c.rw_current !== null && c.rw_current !== undefined && c.rw_target;
     if (tot) t2.append(h('p', { class: 'stat-sub', text: `R&W ${c.rw_current} → ${c.rw_target} · Total ${(start || 0) + c.rw_current} → ${target + c.rw_target}` }));
-    if ((d.levers || []).length) {
+    if ((d.levers || []).length && !S.readonly) {
       const lv = btn('What changes it ›', 'quiet', () => leversPop(lv));
       t2.append(lv);
     }
@@ -577,7 +577,7 @@
 
   /* ---- the Plan tab (3e-3i) */
   function drawPlanTab() {
-    R.log = changeLog();
+    R.log = S.readonly ? null : changeLog();
     R.day = h('section', { class: 'card', 'aria-label': 'The day' });
     R.week = h('section', { class: 'card', 'aria-label': 'The week' });
     R.up = h('section', { class: 'card', 'aria-label': 'Coming up' });
@@ -686,7 +686,7 @@
       const row = UI.taskRow(list, task, {
         primary: primary && task.id === primary.id, future, past, readonly: S.readonly,
         open: S.open && S.open.id === task.id ? S.open.kind : null,
-        on: (a, tk, arg) => onTask(a, tk, arg, day.date), menu: tk => taskMenu(tk, day),
+        on: (a, tk, arg) => onTask(a, tk, arg, day.date), menu: tk => taskMenu(tk, day), extra: tk => rwLog(tk, day),
       });
       row.el.dataset.task = task.id;
       row.el.setAttribute('role', 'listitem');
@@ -1018,6 +1018,28 @@
     });
     setTimeout(() => title.focus(), 50);
   }
+  // An R&W task, once done: log its misses by domain (L21), one pair per domain
+  const RW_DOMAINS = ['Information and Ideas', 'Craft and Structure', 'Expression of Ideas', 'Standard English Conventions'];
+  function rwLog(t, day) {
+    if (t.subject !== 'rw' || t.kind !== 'custom' || !DONE.has(t.status) || day.date > today()) return null;
+    const named = RW_DOMAINS.filter(x => (t.title || '').includes(x));
+    const doms = named.length ? named : RW_DOMAINS;
+    const box = h('div', { class: 'trow-sub' }, h('span', { class: 'k', text: 'Log misses' }));
+    const pairs = doms.map(dn => {
+      const missed = h('input', { type: 'number', class: 'field', min: '0', max: '60', 'aria-label': `${dn}: missed` });
+      const of = h('input', { type: 'number', class: 'field', min: '1', max: '60', 'aria-label': `${dn}: questions` });
+      box.append(doms.length > 1 ? h('span', { class: 'meta', text: dn }) : '', missed, h('span', { class: 'meta', text: 'missed of' }), of);
+      return { dn, missed, of };
+    });
+    const save = btn('Save', 'btn sm', e => busy(e.currentTarget, async () => {
+      const rows = pairs.filter(p => +p.of.value > 0).map(p => ({ domain: p.dn, missed: Math.min(+p.missed.value || 0, +p.of.value), of: +p.of.value }));
+      if (!rows.length) return;
+      try { await api(`/plan/${enc(pid())}/rwlog`, { method: 'POST', body: { day: day.date, task: t.id, rows } }); UI.toast('Misses logged'); reload(); }
+      catch (err) { UI.toast(err.message || 'Couldn’t save. Try again.'); }
+    }));
+    box.append(save);
+    return box;
+  }
   // Ticking a Bluebook test: its scores feed the plan (L11). The Math and R&W scores go
   // to /api/scores (S3's add_outside_score); the R&W misses by domain to the plan's rwlog.
   function scoreSheet(t, date) {
@@ -1181,7 +1203,8 @@
       if ((r.by_dow || []).some(Boolean)) row.append(h('div', { class: 'pl-dow', role: 'img', 'aria-label': r.by_dow.map((v, i) => `${DOW[i]} ${v}%`).join(', ') },
         r.by_dow.map((v, i) => h('span', {}, h('b', { text: DOW[i] }), `${v}%`))));
     }
-    if ((p.recent_events || []).length) row.append(h('p', { class: 'meta', text: p.recent_events.slice(0, 3).map(e => `${D(e.at || e.day)} ${pretty(e.text)}`).join(' · ') }));
+    if ((p.recent_events || []).length) row.append(h('p', { class: 'meta', text: p.recent_events.slice(0, 3).map(e => `${D(String(e.at || e.day).slice(0, 10))} ${pretty(e.text)}`).join(' · ') }));
+    if (r.changes > 3) row.append(h('a', { class: 'quiet', href: `/plan/?${p.status === 'active' ? '' : `id=${enc(p.id)}&`}tab=progress#changes`, text: `All ${r.changes} changes ›` }));
     const acts = h('div', { class: 'acts' });
     if (p.status !== 'active') {
       acts.append(h('a', { class: 'btn sm', href: `/plan/?id=${enc(p.id)}`, text: 'Open' }));
