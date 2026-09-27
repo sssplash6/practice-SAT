@@ -33,7 +33,7 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
   (304aa62), v2/ops (6b010a2), v2/bank-gaps (ddd545d, gate 19/19), v2/cb-data (eec25b0); test_flow all good after each.
   RUNNING:
   * Task 12: words-gate.js run `wf_8efb6cd4-701` (task wwm1jrc2h). Restart: `args {from:'verdicts'}` or `{from:'gate'}`.
-  * The frontend: build.js run `wf_74382569-b10` (task w5xjce2wv), args `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},
+  * The frontend (3 workers at a time since 2026-09-27, the user's request): build.js run `wf_9d9dbc9e-5dc` (task wc7l1f3i5), args `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},
     {id:'S1'},{id:'F2B'},{id:'S7'},{id:'S8'},{id:'S9'}]` (sections 3 units; S7/S8/S9 pages-only 2 units; builders rebase old
     branches onto master first).
   * Checkpoint loop: task bgbqcunjk.

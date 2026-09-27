@@ -345,4 +345,11 @@ async function run(a) {
   }
 }
 
-return await pipeline(args, a => run(a))
+// At most WORKERS tasks at a time (the user, 2026-09-27: finish a few before usage limits instead of many at once).
+const WORKERS = 3
+const queue = [...args]
+const results = []
+await parallel(Array.from({ length: WORKERS }, () => async () => {
+  while (queue.length) { const a = queue.shift(); results.push(await run(a)) }
+}))
+return results
