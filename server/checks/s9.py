@@ -162,21 +162,40 @@ def test_review_fallback(client: TestClient) -> None:
     previous = os.environ.pop("SATF_WORDS_UNREVIEWED", None)
     try:
         learner = code()
-        words.place(learner, "bolster", "yes")
-        db.run("UPDATE word_state SET due=? WHERE learner=? AND word='bolster'",
+        # An uncovered sense still falls back to a card without claiming proof.
+        assert words.choose_template("apathetic") is None
+        words.place(learner, "apathetic", "yes")
+        db.run("UPDATE word_state SET due=? WHERE learner=? AND word='apathetic'",
                words.local_day().isoformat(), learner)
         mixed = use(client, learner, "/api/words/run", {"mode": "mix", "deck": {"source": "today"}})
         stored = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", mixed["id"])["questions"])
-        due_word = next(q for q in stored if q.get("word") == "bolster")
+        due_word = next(q for q in stored if q.get("word") == "apathetic")
         assert due_word["kind"] == "card" and "Prove it" in due_word["stem"]
         cards = use(client, learner, "/api/words/run", {"mode": "cards", "deck": {"source": "due"}, "count": 1})
-        assert cards["next"]["kind"] == "card" and cards["next"]["word"] == "bolster"
+        assert cards["next"]["kind"] == "card" and cards["next"]["word"] == "apathetic"
         verdict = use(client, learner, f"/api/words/run/{cards['id']}/answer",
                       {"item_id": cards["next"]["item_id"], "answer": "know"})
-        assert verdict["box"]["after"] == 3 and words.state(learner, "bolster")["proven"] is None
-        words.place(learner, "mitigate", "probably")
-        probable = use(client, learner, "/api/words/run", {"mode": "cards",
-                          "deck": {"source": "words", "words": ["mitigate"]}, "count": 1})
+        assert verdict["box"]["after"] == 3 and words.state(learner, "apathetic")["proven"] is None
+
+        # An approved sense now gets a real in-context item in production.
+        approved = code()
+        words.place(approved, "bolster", "yes")
+        db.run("UPDATE word_state SET due=? WHERE learner=? AND word='bolster'",
+               words.local_day().isoformat(), approved)
+        run = use(client, approved, "/api/words/run", {"mode": "mix", "deck": {"source": "today"}})
+        items = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", run["id"])["questions"])
+        proved = next(q for q in items if q.get("word") == "bolster")
+        assert proved["kind"] == "incontext" and proved["seed"] == 0
+        frame = words.content()["frames"][proved["template"][7:]]
+        assert frame["reviewed"]["seeds"] == [0]
+        assert words.item(proved["template"], 42, "bolster") == words.item(proved["template"], 0, "bolster")
+        without_key = words.item(proved["template"], 42)
+        assert without_key == words.item(proved["template"], 0, without_key["word"])
+
+        probable_learner = code()
+        words.place(probable_learner, "apathetic", "probably")
+        probable = use(client, probable_learner, "/api/words/run", {"mode": "cards",
+                          "deck": {"source": "words", "words": ["apathetic"]}, "count": 1})
         assert probable["next"]["kind"] == "meaning2word"
     finally:
         if previous is None:
