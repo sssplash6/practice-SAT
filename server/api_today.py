@@ -436,7 +436,8 @@ def next_part(learner: str, tz: int, p: dict, coach: dict, st: dict | None, plan
 
 
 def due_fallback(learner: str, tz: int, p: dict, open_: dict, plan: dict | None, warm: dict,
-                 words: dict | None, qotd: dict, chal: dict, secs: float) -> dict:
+                 words: dict | None, qotd: dict, chal: dict, secs: float, st: dict | None = None,
+                 t: dt.date | None = None) -> dict:
     """T2's rows while next.due (F2) is not there: the same sources, in its order.
     ponytail: replaced by next.due as soon as server/next.py lands."""
     rows = []
@@ -465,6 +466,19 @@ def due_fallback(learner: str, tz: int, p: dict, open_: dict, plan: dict | None,
                      "progress": {"have": (warm["today"] or {}).get("of", 0), "of": warm["size"]},
                      "status": "done" if done else "todo",
                      "start": {"path": "/api/drill", "body": {"source": "warmup", "count": warm["size"]}}})
+    mode = (st or {}).get("mode")
+    if mode in ("stretch", "taper") and t and not plan:        # T13: without a plan, Due lists the rehearsal
+        for r in st["rehearsals"]:
+            if r["day"] == t.isoformat():
+                rows.append({"key": f"rehearsal:{r['day']}", "kind": "rehearsal", "title": "Dress rehearsal",
+                             "tag": "Rehearsal", "minutes": 70, "status": "done" if r["done"] else "todo",
+                             "start": {"path": "/api/mock/new", "body": {"kind": "section", "timing": "official"}}})
+    sweep = (st or {}).get("sweep") or {}
+    if mode in ("stretch", "taper") and sweep.get("today"):   # T13's relapse sweep
+        n = sweep["today"]
+        rows.append({"key": "sweep", "kind": "sweep", "title": f"Sweep · {n} of {sweep['total']} fixed mistakes today",
+                     "tag": "Sweep", "minutes": math.ceil(n * secs / 60), "status": "todo",
+                     "start": {"path": "/api/drill", "body": {"pool": "checks", "sweep": True, "count": n}}})
     if words and words.get("due"):
         rows.append({"key": "words", "kind": "words", "title": words.get("title"), "tag": "Words",
                      "minutes": words.get("minutes"), "status": "done" if words.get("done") else "todo",
@@ -699,7 +713,7 @@ def today_payload(learner: str, tz: int) -> dict:
     qotd = qotd_today(learner, tz)
     chal = challenge_today(learner, tz, t)
     secs = _median_s(learner)
-    due_ = _call("next", "due", learner, tz) or due_fallback(learner, tz, p, open_, plan, warm, words, qotd, chal, secs)
+    due_ = _call("next", "due", learner, tz) or due_fallback(learner, tz, p, open_, plan, warm, words, qotd, chal, secs, st, t)
     gains = estimate.gains(learner)
     work = workload(learner, tz, p, t, d, len(open_list), warm, gains, secs)
     return {
