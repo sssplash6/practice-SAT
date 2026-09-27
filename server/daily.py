@@ -10,6 +10,7 @@ as soon as `words.daily_item` exists. The day's challenge is in challenge.py.
 from __future__ import annotations
 
 import datetime as dt
+import functools
 import hashlib
 import json
 import statistics
@@ -101,6 +102,14 @@ def slot_id(value) -> str | None:
 def slots() -> list[str]:
     """The slots shown today: the R&W two only once Words can make them."""
     return list(MATH) + (["rw:wic", "rw:transition"] if deps.part("words", "daily_item") else [])
+
+
+@functools.lru_cache(maxsize=128)
+def shown(day: str) -> tuple[str, ...]:
+    """The slots on the page that day: both Math ones, and each R&W one that
+    Words can make an item for (N in `1 of N`, the past marks, the calendar).
+    ponytail: cached per process; a Words content reload shows after a restart."""
+    return tuple(s for s in slots() if s in MATH or item(s, day) is not None)
 
 
 def session(slot: str, day: str, late: bool = False) -> str:
@@ -213,9 +222,22 @@ def _group(value: str):
     return exact if exact is not None else scoring.normalise(value)
 
 
-def crowd(slot: str, day: str) -> dict:
-    """On-time answers only, everyone but sample learners."""
-    rows = _rows("given, correct, ms", f"session=? AND {db.NOT_SAMPLE}", session(slot, day))
+# SEC-02: the questions are public and the same for everyone, so a code minted
+# on the day can read the key and a second code answer it right. Nothing here
+# is ranked, so that only fools its author; what it must not do is move the
+# crowd everyone else reads. The crowd counts learners who were here before
+# the day began (created before its UTC midnight; a session id ends in its
+# day), plus the one asking.
+# ponytail: pre-aged throwaway codes still count; a verified identity would
+# close that, once ranked daily scores exist.
+ESTABLISHED = "learner IN (SELECT id FROM learners WHERE created < substr(session, -10))"
+
+
+def crowd(slot: str, day: str, you: str | None = None) -> dict:
+    """On-time answers of established learners (SEC-02) and the asker's own;
+    never sample learners."""
+    rows = _rows("given, correct, ms", f"session=? AND {db.NOT_SAMPLE} AND ({ESTABLISHED} OR learner=?)",
+                 session(slot, day), you or "")
     out = {"answered": len(rows), "right": sum(bool(r["correct"]) for r in rows),
            "median_ms": None}
     times = [r["ms"] for r in rows if r["ms"] is not None]
@@ -266,7 +288,8 @@ def entry_line(given, key) -> dict | None:
                                   f"{' or ' if len(fills) > 1 else ''}{fills[-1] if fills else key}."}
 
 
-def feedback(slot: str, day: str, q: dict, given, late: bool, ms: int | None = None) -> dict:
+def feedback(slot: str, day: str, q: dict, given, late: bool, ms: int | None = None,
+             you: str | None = None) -> dict:
     """What an answered Math slot shows: the key, the named mistake, the
     rationale, every option explained, the on-time crowd and the entry line."""
     from .progress import _reason_of          # the one rule record() files the mistake by
@@ -276,7 +299,7 @@ def feedback(slot: str, day: str, q: dict, given, late: bool, ms: int | None = N
     out = {"slot": slot, "subject": "math", "fmt": q["type"], "day": day, "late": late,
            "correct": ok, "given": given, "answer": q["answer"], "ms": ms,
            "mistake": _cap(reason), "rationale": q["rationale"],
-           "crowd": crowd(slot, day), "sat_pace_ms": SAT_PACE_MS["math"],
+           "crowd": crowd(slot, day, you), "sat_pace_ms": SAT_PACE_MS["math"],
            "choices_explained": None, "entry": None, "options": None,
            "template": q["key"], "topic": q["topic"], "difficulty": q["difficulty"]}
     if q["type"] == "mcq":
@@ -292,7 +315,7 @@ def feedback(slot: str, day: str, q: dict, given, late: bool, ms: int | None = N
 
 
 def rw_feedback(slot: str, day: str, gen: dict, given, late: bool, ms: int | None = None,
-                reply: dict | None = None) -> dict:
+                reply: dict | None = None, you: str | None = None) -> dict:
     """An answered R&W slot: Words' reply fields plus the key word, its
     meaning and the on-time crowd."""
     word = gen.get("word")
@@ -302,7 +325,7 @@ def rw_feedback(slot: str, day: str, gen: dict, given, late: bool, ms: int | Non
             if k in gen}
     out = {**base, **(reply or {}), "slot": slot, "subject": "rw", "fmt": SLOTS[slot]["fmt"], "day": day,
            "late": late, "given": given, "answer_index": gen.get("answer_index"), "ms": ms,
-           "key_word": word, "meaning": meaning, "crowd": crowd(slot, day),
+           "key_word": word, "meaning": meaning, "crowd": crowd(slot, day, you),
            "sat_pace_ms": SAT_PACE_MS["rw"]}
     out["correct"] = bool(out.get("correct", isinstance(given, int) and given == gen.get("answer_index")))
     if isinstance(given, int) and gen.get("traps") and 0 <= given < len(gen["traps"]):
@@ -319,10 +342,10 @@ def mine(learner: str, slot: str, day: str) -> dict | None:
         return None
     if slot in MATH:
         q = rebuild(got["template"], got["seed"], "qotd" if slot == "math:mcq" else "qotd-spr")
-        return feedback(slot, day, q, got["given"], got["late"], got["ms"])
+        return feedback(slot, day, q, got["given"], got["late"], got["ms"], learner)
     gen = item(slot, day)
     return rw_feedback(slot, day, gen, got["given"], got["late"], got["ms"],
-                       {"correct": bool(got["correct"])}) if gen else None
+                       {"correct": bool(got["correct"])}, learner) if gen else None
 
 
 # ------------------------------------------------------------------ the learner's record
@@ -365,8 +388,8 @@ def month(learner: str, tz: int = 0) -> dict:
     prefix = today(tz)[:7]
     mine_ = [c for d, flags in _on_time_days(learner).items() if d.startswith(prefix) for c in flags]
     n = right = 0
-    for r in _rows("session, correct", f"(session LIKE ? OR session LIKE ? OR session LIKE ?) AND {db.NOT_SAMPLE}",
-                   f"qotd:{prefix}-%", f"qotd-spr:{prefix}-%", f"qotd:%:%:{prefix}-%"):
+    for r in _rows("session, correct", f"(session LIKE ? OR session LIKE ? OR session LIKE ?) AND {db.NOT_SAMPLE}"
+                   f" AND {ESTABLISHED}", f"qotd:{prefix}-%", f"qotd-spr:{prefix}-%", f"qotd:%:%:{prefix}-%"):
         got = day_of(r["session"])
         if got and not got[2]:
             n += 1
@@ -388,20 +411,20 @@ def by_day(learner: str | None) -> dict[str, dict[str, str]]:
     return out
 
 
-def marks(learner: str | None, day: str, shown: list[str] | None = None, known: dict | None = None) -> dict:
-    """{slot: 'right' | 'wrong' | None} for one day, on time or late."""
+def marks(learner: str | None, day: str, only=None, known: dict | None = None) -> dict:
+    """{slot: 'right' | 'wrong' | None} for one day's shown slots, on time or late."""
     got = (known if known is not None else by_day(learner)).get(day, {})
-    return {slot: got.get(slot) for slot in shown or slots()}
+    return {slot: got.get(slot) for slot in only or shown(day)}
 
 
 def past(learner: str | None, tz: int = 0, n: int = 7) -> list[dict]:
     """The n days before today, with a mark per slot (v2's mcq / spr kept)."""
     t = dt.date.fromisoformat(today(tz))
-    shown, known = slots(), by_day(learner)
+    known = by_day(learner)
     out = []
     for back in range(n, 0, -1):
         d = (t - dt.timedelta(days=back)).isoformat()
-        m = marks(learner, d, shown, known)
+        m = marks(learner, d, None, known)
         out.append({"day": d, "marks": m, "mcq": m["math:mcq"], "spr": m["math:spr"]})
     return out
 
