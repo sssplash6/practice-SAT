@@ -582,6 +582,29 @@ def brief_and_receipt(c: TestClient) -> None:
     print("ok  S3 the briefing names yesterday's fixes; the receipt claims practice_delta since midnight")
 
 
+def final_stretch(c: TestClient) -> None:
+    """T13.1-2: exam + 12 is the stretch, and traps fixed 20 days ago are swept from Due."""
+    me = code()
+    t = today()
+    for days, mode in ((12, "stretch"), (6, "taper"), (1, "eve"), (30, None)):
+        call(c, "PUT", "/api/me", me, {"exam_date": (t + dt.timedelta(days=days)).isoformat()})
+        st = call(c, "GET", "/api/today", me)["next"]["stage"]
+        assert st and st["mode"] == mode and st["days"] == days, (days, st)
+    names = sorted(x for v in practice.catalogue()["by_topic"].values() for x in v)
+    missed = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=25)).isoformat()
+    opened = [tr for tr in (named_miss(me, n, missed) for n in names[::7][:12]) if tr][:3]
+    assert len(opened) == 3
+    closed = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=20)).isoformat()
+    for tr in opened:
+        db.run("UPDATE traps SET closed=?, closed_how='fixed' WHERE id=?", closed, tr["id"])
+    call(c, "PUT", "/api/me", me, {"exam_date": (t + dt.timedelta(days=12)).isoformat()})
+    got = call(c, "GET", "/api/today", me)
+    assert got["next"]["stage"]["sweep"]["total"] == 3, got["next"]["stage"]
+    row = next(r for r in got["due"]["rows"] if r["kind"] == "sweep")
+    assert row["start"]["body"]["sweep"] is True and row["start"]["body"]["count"] >= 1
+    print("ok  S3 exam in 12 days is the final stretch, and fixed mistakes come back as a sweep row")
+
+
 def check(c: TestClient) -> None:
     fresh(c)
     qotd_shape(c)
@@ -598,6 +621,7 @@ def check(c: TestClient) -> None:
     open_drill(c)
     workload(c)
     brief_and_receipt(c)
+    final_stretch(c)
     print("S3 today checks passed")
 
 
