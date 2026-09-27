@@ -327,6 +327,10 @@ def test_daily_print_offline(client: TestClient) -> None:
     day = words.local_day().isoformat()
     q = words.daily_item(day, "wic")
     assert q == words.daily_item(day, "wic") and q["item_id"] == f"rw:wic:{day}"
+    assert 0 <= q["seed"] < 1 << 63
+    transition = words.daily_item(day, "transition")
+    if transition:
+        assert 0 <= transition["seed"] < 1 << 63
     same = ok(client.get("/api/words/today", headers=h))["wic"]
     assert same["word"] is None and same["item"]["item_id"] == q["item_id"]
     first = use(client, learner, "/api/words/daily/wic/answer", {"answer": 0})
