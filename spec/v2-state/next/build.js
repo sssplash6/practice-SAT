@@ -176,6 +176,38 @@ test_flow still "all good".`,
 /api/next when it is present and degrade when it is not; the welcome-back sheet shows once a day; offline pages load from the service
 worker; test_flow prints "all good".`,
   },
+  // Decision 7 pass on the merged Practice pages (the user, 2026-09-27: "make it easy and less tiring for eyes").
+  S4Q: {
+    title: 'S4Q · Practice, calm and quiet (decision 7)', port: 8031,
+    spec: `spec/v2-decisions.md decision 7 (it wins), and spec/v2-state/briefs/S4.md for what each element is for. The Practice builder
+and session are merged on master; this task makes them calm and easy on the eyes WITHOUT removing any feature. Read the pages first
+(web/practice/index.html, builder.js, session/index.html, session.js) by line range.`,
+    owns: 'web/practice/index.html, web/practice/builder.js, web/practice/session/index.html, web/practice/session/session.js',
+    units: [
+      `The builder (web/practice/index.html and builder.js), exactly this, the user's review:
+- Skill row: checkbox, skill name, and only once started a mastery bar with ONE word (Learning / Getting there / Strong); open
+  mistakes as a small orange count only when above 0. Remove the always-on line "20 types · Easy Medium Hard · 10 grid-in" (show
+  types, tiers and grid-in counts inside the expanded row), "Not practised", "0 open" and the dash.
+- Domain card: name, "2 of 5 selected", "~15 of 44 on the test"; drop "0 answered · not practised · 0 open · 0 of 107 types ready"
+  unless a figure is non-zero and useful (open mistakes > 0, answered > 0).
+- Header: "3 skills" (type counts only when expanded); "Expand all" becomes an icon button with a tooltip; keep Skills / Map /
+  Habits, Select all, Clear and the sort.
+- Questions-from panel: option names only; their explanation sentences become tooltips.
+- Bottom bar: ONE line, "120 questions · ~3 h" and the Start button, plus a "Settings" button that opens a sheet with every setting
+  (pace, feedback timing, repairs, final round, reviews mixed in, format, printable worksheet). Remove the chips that repeat the
+  checked skills.
+- Calm visuals: generous row spacing, one text size per level, secondary facts muted, mono only for numbers that matter, orange only
+  for Start and states that need attention.
+Keep every feature and every keyboard path working.`,
+      `The session and its summary (web/practice/session/): apply decision 7 the same way (the question screen stays focused on the
+question; the summary leads with the score and what changed, and puts the long breakdowns behind expandable sections). Then a
+headless walk of the builder and a session at 1280 and 390, light and dark, new and seeded learner: no console errors, no feature
+lost (compare against the old page's controls), test_flow still "all good".`,
+    ],
+    accept: `Decision 7 holds on the Practice builder and session: no zeros or defaults on screen, no repeated facts, the bottom bar is one
+line plus Start and Settings, details open on demand; every feature of the old pages is still reachable (list each old control and
+where it now lives); walked at 1280 and 390, light and dark, no console errors; test_flow "all good".`,
+  },
   // Server halves built by the user's other agent (spec/v2-state/HELPER-TASKS.md); run each with from: 'verify'.
   S9S: {
     title: 'S9S · Words server', port: 8029,

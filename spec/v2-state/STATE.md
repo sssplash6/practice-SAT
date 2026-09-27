@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-27T15:11:35+05:00
+# v2 build state -- 2026-09-27T15:18:36+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -83,7 +83,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/words-fix` at 262d903, 0 commits ahead of master
 - `v2/words-gate` at 8306599, 1 commits ahead of master
 - `v2/words-gate-a` at 0d02fb0, 10 commits ahead of master
-- `v2/words-gate-b` at 9b1a5b2, 9 commits ahead of master
+- `v2/words-gate-b` at 2c6be93, 10 commits ahead of master
 - `v2/words-seed-sqlite` at b834a83, 0 commits ahead of master
 
 ## Worktrees
@@ -94,7 +94,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/gate-b` on `v2/words-gate-b`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/helper-handoff` on `v2/helper-handoff`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/perf` on `v2/perf`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s4-server` on `v2/s4-server`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s4-server` on `v2/s4-server`: 2 uncommitted (saved in wip/s4-server/)
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_b6e107a2-030-1` on `detached 5b22933`: 1 uncommitted (saved in wip/wf_b6e107a2-030-1/)
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-fix` on `v2/words-fix`: 0 uncommitted
