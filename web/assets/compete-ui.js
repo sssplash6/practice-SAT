@@ -658,7 +658,8 @@
         go.addEventListener('click', async () => { go.disabled = true; try { await o.onRematch(whenV); } finally { go.disabled = false; } });
         act.append(go);
         under(act, [{ value: 'later', label: 'In 2 days' }, { value: 'now', label: 'Now' }], { value: 'later', label: 'When', onChange: v => { whenV = v; } });
-        el.append(act, h('p', { class: 'help', text: 'Same types, new numbers, the same traps. Coming back in 2 days fixes them for longer.' }));
+        act.append(info('Same types, new numbers, the same traps. Coming back in 2 days fixes them for longer.', 'About rematches'));
+        el.append(act);
       }
     }
     return { el };
@@ -852,9 +853,17 @@
     });
   }
 
+  // an explanation on demand (decision 7): an i that shows it on hover or focus, and in a pop on tap
+  function info(text, label = 'More about this') {
+    const b = h('button', { class: 'quiet info-i', type: 'button', 'aria-label': label, text: 'ⓘ' });
+    if (UI.tooltip) UI.tooltip(b, text);
+    b.addEventListener('click', () => (UI.pop ? UI.pop(b, h('p', { class: 'help pop-help', text }), { label, anchored: true }) : toast(text)));
+    return b;
+  }
+
   Object.assign(UI, {
     level, board, podium, debrief, pacer,
     compete: { KINDS, kind, title, icon, svg: svgOf, SVG, href, runner, start, rulesSeen, markRules, windowLine, clockText, facts, marks,
-      copyResult, under, subnav, join, create, reminder, ladder, parLine, fieldLine, pct, LADDER, levelOf, rangeOf, levelIn, step, left, when, dayLabel, titleText, topicName, TIER, num, mmss },
+      copyResult, under, subnav, join, create, reminder, ladder, parLine, fieldLine, pct, LADDER, levelOf, rangeOf, levelIn, step, left, when, dayLabel, titleText, topicName, TIER, num, mmss, info },
   });
 })();
