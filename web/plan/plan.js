@@ -118,7 +118,7 @@
         UI.cached.clear && UI.cached.clear();
         route();
         scrollTo(0, 0);
-        if (R.start) R.start.focus();
+        focusStart();
       },
       onExit: () => { history.length > 1 && doc.referrer.includes(location.host) ? history.back() : go({}); },
       step2url: (step, replace) => url({ ...(Q.get('edit') ? { edit: Q.get('edit') } : { setup: 1 }), step }, !replace),
@@ -248,10 +248,18 @@
       url({});
       UI.toast(`Plan made · ${pl(r.stats.study_days_total, 'study day')} to ${D(r.active.cfg.exam_date)}`);
       route();
-      if (R.start) R.start.focus();
+      focusStart();
       if (!UI.reduced || !UI.reduced()) root.querySelectorAll('.cal-d[data-kind]').forEach((c, i) => c.animate &&
         c.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 160, delay: Math.min(240, i * 6), fill: 'backwards' }));
     } catch (e) { UI.toast(e.status === 422 ? e.message : 'Couldn’t make the plan. Try again.'); }
+  }
+
+  // after a create: Start today, or the day itself on a rest day
+  function focusStart() {
+    const el = R.start || R.day;
+    if (!el) return;
+    if (!R.start) el.tabIndex = -1;
+    el.focus();
   }
 
   /* ------------------------------------------------------------ the plan view */
@@ -611,8 +619,20 @@
   function drawDay() {
     const day = dayOf(S.sel), c = cfg(), t = today();
     const card = R.day;
+    // a redraw keeps the keyboard where it was: the same button in the same row, else the
+    // row, else the chosen chip, else the day itself
+    const a = doc.activeElement, had = a && card.contains(a) && a !== card;
+    const was = had ? { task: a.closest('[data-task]') && a.closest('[data-task]').dataset.task, text: a.textContent } : null;
     card.replaceChildren();
     if (!day) return;
+    if (was) queueMicrotask(() => {
+      const row = was.task && card.querySelector(`[data-task="${CSS.escape(was.task)}"]`);
+      const pool = [...(row || card).querySelectorAll('button, a, input')];
+      const el = pool.find(x => x.textContent === was.text) || (row && (row.querySelector('.trow-act button') || row))
+        || card.querySelector('[aria-checked="true"]') || card;
+      if (el === card) card.tabIndex = -1;
+      if (!card.contains(doc.activeElement) || doc.activeElement === doc.body) el.focus({ preventScroll: true });
+    });
     const isToday = day.date === t, past = day.date < t, future = day.date > t;
     const study = STUDY.has(day.kind);
     const head = h('div', { class: 'pl-dayhead' });

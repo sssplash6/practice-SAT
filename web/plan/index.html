@@ -265,7 +265,8 @@
   .wz-own-item p { flex: 1 1 auto; font: 500 14px/1.35 var(--font); }
   .wz-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; align-items: end; padding: 12px; border-radius: 10px; background: var(--tile); }
   .wz-off { display: grid; gap: 6px; }
-  .wz-off > div { display: flex; align-items: center; gap: 8px; }
+  .wz-off > div { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+  .wz-off input[type="date"] { width: 170px; }
   .wz-err { font: 500 13px/1.4 var(--font); color: var(--ink); }
   .wz-err:empty { display: none; }
   .wz-err::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: var(--ink); vertical-align: 1px; }

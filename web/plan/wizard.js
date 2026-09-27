@@ -64,7 +64,8 @@
     if (f.sections && f.sections.rw) { f.rw_focus = f.sections.rw.focus || f.rw_focus || {}; }
     delete f.sections;
     if (!f.exam_date) f.exam_date = (UI.SAT_DATES || []).map(x => x.date || x.day).find(x => x > addDays(today(), 27)) || null;
-    if (f.current === null || f.current === undefined) f.measure = f.measure !== false && !editing;
+    // no starting score means the plan measures it (a plan can't have neither)
+    if (f.current === null || f.current === undefined) f.measure = true;
     W.rwSet = f.rw_current !== null && f.rw_current !== undefined;
     if (editing && !ctx.edit) W.f.name = editing.name;
 
@@ -152,7 +153,7 @@
         { 'aria-busy': W.saving ? 'true' : null, 'aria-keyshortcuts': 'Enter', disabled: (last && W.offline) || null });
       const kids = [back, h('span', { class: 'meta', text: `${W.step} / 4` })];
       if (W.offline) kids.push(h('span', { class: 'meta', text: 'Can’t save right now' }));
-      else if (!last && v2()) kids.push(h('span', { class: 'hint', text: `${UI.keys && UI.keys.label ? UI.keys.label('Mod+Enter') : '⌘↵'} create now` }));
+      else if (!last && v2()) kids.push(h('span', { class: 'hint', text: `${UI.keys && UI.keys.label ? UI.keys.label('Mod+Enter') : '⌘↵'} ${editing ? 'save' : 'create'} now` }));
       if (last && editing) kids.push(btn('Save as new plan', 'btn', e => submit(e.currentTarget, true)));
       kids.push(next);
       foot.replaceChildren(...kids);
