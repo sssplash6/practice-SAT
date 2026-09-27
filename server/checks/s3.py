@@ -676,6 +676,11 @@ def due_rows(c: TestClient) -> None:
     assert got["due"]["minutes_left"] == sum(r["minutes"] for r in undone)
     assert [r["status"] in api_today.FINISHED for r in rows] == sorted(r["status"] in api_today.FINISHED for r in rows)
     assert again["due"]["rows"] == rows
+    pv = got["next"]["preview"]
+    if deps.part("next", "resolve_drill") and pv:           # T1.1, 2 once F2's box and F5's first token land
+        assert pv["blocks"] and not {"answer", "rationale", "reasons"} & set((pv.get("first") or {}).get("question") or {})
+        assert (again["next"]["preview"].get("first") or {}).get("question", {}).get("stem") == \
+            (pv.get("first") or {}).get("question", {}).get("stem")
     d = call(c, "POST", "/api/drill", me, review["start"]["body"])
     served = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", d["id"])["questions"])
     assert served, "the Review row starts a set"
@@ -812,6 +817,9 @@ def rw_slots(c: TestClient) -> None:
                 for ch in s["question"].get("choices") or []:
                     assert not isinstance(ch, dict) or not {"correct", "key", "answer", "is_key"} & set(ch), ch
             me = code()
+            words_today = c.get("/api/words/today", headers={"X-Learner": me, "X-Tz": str(tz)})
+            if words_today.status_code == 200 and isinstance(words_today.json().get("wic"), dict):
+                assert words_today.json()["wic"].get("word") is None, "Words names the key before the answer"
             wrong = (gen["answer_index"] + 1) % 4
             first = call(c, "POST", "/api/qotd", me, {"slot": "rw:wic", "answer": wrong, "day": day, "ms": 20000}, tz=tz)
             assert first["correct"] is False and first["key_word"] == gen["word"] and len(first["reasons"]) == 4
