@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Flashcards · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<style>
+  /* Study setup (spec 3.8 §5; words.md W6 W7 W8 W11 W15 W16, overrides 27-30). */
+  .st { padding-bottom: 140px; display: grid; gap: 20px; }
+  .st * { min-width: 0; }
+  .st-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+  .st-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; align-items: start; }
+  .st-opts { display: grid; gap: 22px; }
+  .st-sec { display: grid; gap: 10px; }
+  .st-sec > .k { display: block; }
+  .decks { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+  .deck { appearance: none; border: 0; cursor: pointer; text-align: left; display: grid; gap: 4px; min-height: 72px; padding: 12px 14px; border-radius: 10px;
+    background: var(--tile); color: var(--ink); font: inherit; position: relative; }
+  .deck[aria-checked="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
+  .deck:disabled { cursor: default; opacity: .55; }
+  .deck b { font: 600 14.5px/1.3 var(--font); padding-right: 40px; }
+  .deck .n { position: absolute; top: 12px; right: 14px; font: 500 13px var(--mono); color: var(--soft); }
+  .deck .help { margin: 0; }
+  .deck select { margin-top: 4px; }
+  @media (hover: hover) and (pointer: fine) { .deck:not(:disabled):not([aria-checked="true"]):hover { background: var(--tile-2); } }
+  .st-note { font: 400 13px/1.45 var(--font); color: var(--soft); }
+  .glance { position: sticky; top: 24px; display: grid; gap: 12px; }
+  .glance .big { font: 500 28px/1.1 var(--mono); letter-spacing: -.02em; }
+  .glance .line { font: 400 14px/1.5 var(--font); }
+  .glance .pill { width: 100%; }
+  .glance .err { font: 400 13px var(--font); color: var(--ink); }
+  @media (max-width: 999px) { .st-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 759px) {
+    .glance { position: fixed; top: auto; left: 0; right: 0; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); z-index: 25; border-radius: 0; padding: 10px 16px;
+      grid-template-columns: 1fr auto; align-items: center; box-shadow: 0 -1px 0 var(--line); background: var(--paper); gap: 4px 12px; }
+    .glance .big { font-size: 17px; font-family: var(--font); font-weight: 600; }
+    .glance .line, .glance .k { display: none; }
+    .glance .pill { width: auto; grid-row: 1 / span 2; grid-column: 2; }
+    .st { padding-bottom: 240px; }
+    .decks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .deck b { padding-right: 0; }
+    .deck .n { position: static; }
+  }
+</style>
+</head>
+<body data-page="words-study">
+<main class="page st" id="main" tabindex="-1">
+  <header class="st-head"><h1 class="h1" id="h1">Flashcards</h1><p class="meta" id="meta"></p></header>
+  <div id="today"></div>
+  <div id="wtabs"></div>
+  <div class="st-grid">
+    <div class="st-opts" id="opts"><p class="meta">Loading…</p></div>
+    <aside class="card glance" id="glance" aria-label="At a glance"></aside>
+  </div>
+</main>
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script src="/assets/charts.js"></script>
+<script>UI.shell('words');</script>
+<script src="/assets/words-ui.js"></script>
+<script>
+(() => {
+  'use strict';
+  const h = UI.h, $ = id => document.getElementById(id), W = UI.word;
+  const P = new URLSearchParams(location.search);
+  const mode = P.get('mode') === 'quiz' ? 'quiz' : 'cards';
+  const cap = s => (s ? s[0].toUpperCase() + s.slice(1) : '');
+  const num = n => UI.num ? UI.num(n) : String(n);
+  const ls = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (_) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} },
+  };
+  const STORE = 'satf.words.study';
+  const TYPES = [['meaning2word', 'Meaning → word'], ['word2meaning', 'Word → meaning'], ['cloze', 'Fill the blank'], ['incontext', 'In context'],
+    ['nearly', 'Most nearly means'], ['precise', 'Most precise'], ['order', 'Order the ladder'], ['transition', 'Pick the transition'],
+    ['decode', 'Decode it'], ['typed', 'Type it']];
+  const OWN_OK = new Set(['meaning2word', 'word2meaning', 'typed', 'cloze']);
+  const SUBJECTS = [['science', 'Science'], ['history', 'History & social studies'], ['literature', 'Literature & arts']];
+  const LOGIC = ['contrast', 'concession', 'cause-effect', 'addition', 'example', 'sequence', 'clarification', 'similarity', 'conclusion'];
+
+  document.title = `${mode === 'quiz' ? 'Quiz' : 'Flashcards'} · SAT Freshman`;
+  $('h1').textContent = mode === 'quiz' ? 'Quiz' : 'Flashcards';
+  UI.wordsTabs($('wtabs'), mode);
+  const saved = (ls.get(STORE, {}) || {})[mode] || {};
+  const S = {
+    deck: null, value: {}, count: saved.count || (mode === 'quiz' ? 10 : 20), direction: saved.direction || 'word', order: saved.order || 'due',
+    qmode: saved.qmode || 'quiz', formats: saved.formats && saved.formats.length ? saved.formats : ['meaning2word', 'incontext'], timer: saved.timer || 0, seconds: saved.seconds || 60,
+  };
+  let lib = null, today = null, words = [];
+
+  async function load() {
+    try { [lib, today] = await Promise.all([UI.api('/words'), UI.api('/words/today', { quiet: true }).catch(() => null)]); }
+    catch (e) { $('opts').replaceChildren(); UI.cardError($('opts'), load, 'Words did not load.'); return; }
+    words = lib.words || [];
+    (lib.groups || []).forEach(g => (g.collections || []).forEach(c => { W._coll[c.id] = c.name; }));
+    W._lists = [...new Set(words.filter(w => w.own && w.collection).map(w => w.collection))];
+    const c = lib.counts || {};
+    $('meta').textContent = [c.due ? `${num(c.due)} due` : null, c.known ? `${num(c.known)} known` : null, c.claimed ? `${num(c.claimed)} claimed` : null].filter(Boolean).join(' · ');
+    UI.todayWords($('today'), { lib, onChange: load });
+    if (!S.deck) S.deck = P.get('words') ? 'from' : P.get('deck') || (c.due ? 'due' : 'new');
+    paint();
+  }
+
+  /* ---------------- decks */
+  const slugsWhere = fn => words.filter(fn).map(w => w.slug);
+  function decks() {
+    const c = lib.counts || {};
+    const s = (today && today.summary) || {};
+    const trapKinds = [...new Set(words.filter(w => w.trap).map(w => w.trap))];
+    const fams = [...words.reduce((m, w) => (w.family ? m.set(w.family, (m.get(w.family) || 0) + 1) : m), new Map()).entries()].filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]);
+    const roots = [...words.reduce((m, w) => { (w.roots || []).forEach(r => m.set(r, (m.get(r) || 0) + 1)); return m; }, new Map()).entries()].sort((a, b) => b[1] - a[1]);
+    const colls = [];
+    (lib.groups || []).forEach(g => (g.collections || []).forEach(x => { if (x.kind !== 'own' && x.kind !== 'roots') colls.push([x.id, x.name]); }));
+    const own = W._lists || [];
+    const fromWords = (P.get('words') || '').split(',').filter(Boolean);
+    const list = [
+      fromWords.length ? { id: 'from', label: `From the Library`, n: fromWords.length, help: `${fromWords.length} from your filter`, deck: () => ({ source: 'words', words: fromWords.slice(0, 200) }) } : null,
+      { id: 'today', label: 'Today’s words', n: (s.due || 0) + Math.max(0, (s.new_goal || 0) - (s.new_today || 0)), help: 'Due, proofs and new, mixed', deck: () => ({ source: 'today' }), mix: true },
+      { id: 'due', label: 'Due today', n: c.due, empty: 'Nothing is due. New words come due as you learn them.', deck: () => ({ source: 'due' }) },
+      { id: 'new', label: 'New', n: c.new, help: `Next ${S.count} by test value`, deck: () => ({ source: 'new' }) },
+      { id: 'missed', label: 'Missed lately', n: c.missed, empty: 'Words you miss land here for 14 days.', deck: () => ({ source: 'missed' }) },
+      { id: 'saved', label: 'Saved', n: c.saved, empty: 'Star words to build this deck.', deck: () => ({ source: 'saved' }) },
+      { id: 'claimed', label: 'Claimed', n: c.claimed, help: 'Prove them in context', empty: 'Words you say you know wait here to be proven.', deck: () => ({ source: 'words', words: slugsWhere(w => W.status(w) === 'claimed').slice(0, 200) }) },
+      { id: 'thought', label: 'Thought I knew', n: c.thought, empty: 'Words you were sure of and then missed.', deck: () => ({ source: 'thought' }) },
+      { id: 'trap', label: 'Fell for a trap', n: c.trapped, empty: 'No trap has caught you in the last 60 days.', select: trapKinds.map(t => [t, W.TRAP[t] || t]),
+        deck: v => (mode === 'quiz' ? { source: 'trap', value: v || trapKinds[0] } : { source: 'words', words: slugsWhere(w => w.trap === (v || trapKinds[0])).slice(0, 200) }) },
+      { id: 'stubborn', label: 'Stubborn', n: c.stubborn, empty: 'Words that keep slipping get a Fix card here.', deck: () => ({ source: 'stubborn' }) },
+      { id: 'atrisk', label: 'At risk', n: c.atrisk, empty: 'With an exam date, words likely to slip before it show here.', deck: () => ({ source: 'atrisk' }) },
+      { id: 'lookedup', label: 'Looked up', n: c.lookedup || c.looked_up, empty: 'Tap a word in a Words text to look it up.', deck: () => ({ source: 'looked_up' }) },
+      { id: 'collection', label: 'A collection', select: colls, n: null, deck: v => ({ source: 'collection', value: v || colls[0][0] }) },
+      { id: 'topic', label: 'A topic', select: [...SUBJECTS, ...LOGIC.map(l => [l, `Transitions · ${cap(l.replace('-', ' → '))}`])], n: null, deck: v => ({ source: 'topic', value: v || 'science' }) },
+      { id: 'family', label: 'A family', select: fams.map(([f, n]) => [f, `${cap(f.replace(/[-_]/g, ' '))} · ${n}`]), n: null, deck: v => ({ source: 'words', words: slugsWhere(w => w.family === (v || (fams[0] || [])[0])) }) },
+      { id: 'root', label: 'A root', select: roots.map(([r, n]) => [r, `${r} · ${n}`]), n: null, deck: v => ({ source: 'root', value: v || (roots[0] || [])[0] }) },
+      { id: 'mine', label: 'My own', n: c.mine, select: own.length > 1 ? own.map(l => [l, l]) : null, empty: 'Add your own words with Add a word.',
+        deck: v => (v ? { source: 'words', words: slugsWhere(w => w.own && w.collection === v) } : { source: 'mine' }) },
+    ].filter(Boolean);
+    return list;
+  }
+  const curDeck = () => decks().find(d => d.id === S.deck) || decks()[0];
+  const deckWords = d => {
+    const body = d.deck(S.value[d.id]);
+    if (body.source === 'words') return words.filter(w => body.words.includes(w.slug));
+    if (body.source === 'collection') return words.filter(w => w.collection === body.value || (w.lists || []).includes(body.value));
+    if (body.source === 'topic') return words.filter(w => (w.topics || []).includes(body.value));
+    if (body.source === 'root') return words.filter(w => (w.roots || []).includes(body.value));
+    if (body.source === 'mine') return words.filter(w => w.own);
+    if (body.source === 'due') return words.filter(w => w.is_due);
+    if (body.source === 'new') return words.filter(w => W.status(w) === 'new' && w.placed !== 2 && !w.own);
+    if (body.source === 'saved') return words.filter(w => w.saved);
+    if (body.source === 'missed') return words.filter(w => w.missed);
+    if (body.source === 'stubborn') return words.filter(w => w.stubborn);
+    if (body.source === 'atrisk') return words.filter(w => w.at_risk);
+    if (body.source === 'thought') return words.filter(w => w.thought);
+    if (body.source === 'looked_up') return words.filter(w => w.looked_up);
+    if (body.source === 'trap') return words.filter(w => w.trap === body.value);
+    return words.filter(w => w.is_due || W.status(w) === 'new').slice(0, 30);
+  };
+
+  /* ---------------- the options */
+  function paint() {
+    const host = $('opts');
+    host.replaceChildren();
+    const sec = (k, ...kids) => { const s = h('section', { class: 'st-sec' }, h('span', { class: 'k', text: k })); kids.flat().filter(Boolean).forEach(x => s.append(x)); host.append(s); return s; };
+    // DECK
+    const grid = h('div', { class: 'decks', role: 'radiogroup', 'aria-label': 'Deck' });
+    decks().forEach(d => {
+      const empty = d.n === 0;
+      const b = h('button', { type: 'button', class: 'deck', role: 'radio', 'aria-checked': String(S.deck === d.id), disabled: empty ? true : null,
+        onclick: e => { if (e.target.closest('select')) return; S.deck = d.id; paint(); } },
+        h('b', { text: d.label }), d.n ? h('span', { class: 'n', text: num(d.n) }) : null,
+        empty && d.empty ? h('p', { class: 'help', text: d.empty }) : d.help ? h('p', { class: 'help', text: d.help }) : null);
+      if (d.select && d.select.length && !empty) {
+        const sel = h('select', { class: 'field sm', 'aria-label': d.label }, d.select.map(([v, l]) => h('option', { value: v, text: l, selected: S.value[d.id] === v ? true : null })));
+        sel.addEventListener('change', () => { S.value[d.id] = sel.value; S.deck = d.id; paint(); });
+        sel.addEventListener('click', e => e.stopPropagation());
+        b.append(sel);
+      }
+      grid.append(b);
+    });
+    sec('Deck', grid);
+    const d = curDeck();
+    // HOW MANY
+    if (!(mode === 'quiz' && (S.qmode === 'check' || S.qmode === 'sprint')) && !d.mix) {
+      const opts = mode === 'quiz' ? [[10, '10'], [20, '20'], [30, '30'], [200, '∞']] : [[10, '10'], [20, '20'], [30, '30'], [200, 'All']];
+      const s = sec('How many');
+      UI.seg(s, opts.map(([v, l]) => ({ value: String(v), label: l })), { value: String(S.count), label: 'How many', onChange: v => { S.count = +v; glance(); } });
+    }
+    if (mode === 'cards') {
+      const s1 = sec('Show first');
+      UI.seg(s1, [['word', 'Word'], ['meaning', 'Meaning'], ['sentence', 'In a sentence'], ['commit', 'Commit first'], ['mixed', 'Mixed']].map(([v, l]) => ({ value: v, label: l })),
+        { value: S.direction, label: 'Show first', onChange: v => { S.direction = v; glance(); } });
+      s1.append(h('p', { class: 'help', text: 'Commit first shows three meanings before the flip; your pick grades the card.' }));
+      const s2 = sec('Order');
+      UI.seg(s2, [['due', 'Due first'], ['shuffle', 'Shuffle'], ['az', 'A–Z']].map(([v, l]) => ({ value: v, label: l })), { value: S.order, label: 'Order', onChange: v => { S.order = v; glance(); } });
+    } else {
+      const s0 = sec('Mode');
+      UI.seg(s0, [['quiz', 'Quiz'], ['sprint', 'Sprint'], ['check', 'Words check']].map(([v, l]) => ({ value: v, label: l })), { value: S.qmode, label: 'Mode', onChange: v => { S.qmode = v; paint(); } });
+      s0.append(h('p', { class: 'help', text: S.qmode === 'sprint' ? 'One key per word, as many as you can. Sprint answers never move a word’s box.'
+        : S.qmode === 'check' ? '12 SAT-style items in 14:12, no feedback until the end; the second half steps up after 5 of the first 6.' : 'Every answer shows why each option is right or wrong.' }));
+      if (S.qmode === 'sprint') {
+        const ss = sec('Length');
+        UI.seg(ss, [['60', '60 s'], ['120', '120 s']].map(([v, l]) => ({ value: v, label: l })), { value: String(S.seconds), label: 'Sprint length', onChange: v => { S.seconds = +v; glance(); } });
+      }
+      if (S.qmode === 'quiz') {
+        const pool = deckWords(d);
+        const own = pool.length && pool.every(w => w.own);
+        const hasTr = pool.some(w => w.collection === 'transitions') || d.id === 'today' || d.id === 'topic' && LOGIC.includes(S.value.topic);
+        const hasRoots = pool.some(w => (w.roots || []).length);
+        const why = t => own && !OWN_OK.has(t) ? 'Own words take Meaning → word, Word → meaning, Type it and Fill the blank'
+          : t === 'transition' && !hasTr && pool.length ? 'Needs transitions in the deck' : t === 'decode' && !hasRoots && pool.length ? 'Needs words built from roots' : null;
+        S.formats = S.formats.filter(f => !why(f));
+        if (!S.formats.length) S.formats = [own ? 'meaning2word' : 'incontext'];
+        const st = sec('Question types');
+        UI.chips(st, TYPES.map(([v, l]) => ({ value: v, label: l, disabled: !!why(v), why: why(v) || undefined })),
+          { multi: true, value: S.formats, label: 'Question types', onChange: v => { if (!v.length) { UI.toast('Keep at least one type.'); paint(); return; } S.formats = v; glance(); } });
+        const reasons = TYPES.map(([v, l]) => why(v) ? `${l}: ${why(v)}` : null).filter(Boolean);
+        if (reasons.length) st.append(h('p', { class: 'help', text: [...new Set(reasons.map(r => r.split(': ')[1]))].join(' · ') }));
+        const tm = sec('Timer per question');
+        UI.seg(tm, [['0', 'Off'], ['15', '15 s'], ['30', '30 s'], ['60', '60 s'], ['71', 'SAT pace (71 s)']].map(([v, l]) => ({ value: v, label: l })),
+          { value: String(S.timer), label: 'Timer per question', onChange: v => { S.timer = +v; glance(); } });
+        const pr = UI.prefs.now ? UI.prefs.now() : {};
+        const triple = (key, label, help) => {
+          const s = sec(label);
+          UI.seg(s, [['auto', 'Auto'], ['on', 'On'], ['off', 'Off']].map(([v, l]) => ({ value: v, label: l })), { value: pr[key] || 'auto', label,
+            onChange: async v => { try { await UI.prefs.set({ [key]: v }); } catch (e) { if (!e.offline) UI.toast('Not saved. Try again.'); } } });
+          s.append(h('p', { class: 'help', text: help }));
+        };
+        triple('words_method', 'Method', 'Predict what the blank needs before the choices, and find the clue after a miss. Auto runs it for your first 30 in-context items and turns it off once 8 of your last 10 predictions are right.');
+        if (S.formats.includes('transition')) triple('words_relation', 'Relationship first', 'Name how the two sentences relate before you pick the word. Auto runs it for your first 20 transitions and turns it off after 8 right in 10.');
+        const an = sec('Move on by itself');
+        UI.switch(an, { checked: !!pr.words_autonext, label: 'After a right answer, go on after 2.5 s', onChange: v => UI.prefs.set({ words_autonext: v }) });
+        an.append(h('p', { class: 'help', text: 'Never after a guess, an answer under 3 s or a miss. Any key or a touch holds it.' }));
+      }
+    }
+    glance();
+  }
+
+  /* ---------------- at a glance and start */
+  function body() {
+    const d = curDeck();
+    const deck = d.deck(S.value[d.id]);
+    if (d.mix) return mode === 'quiz' ? { mode: 'quiz', deck, formats: S.formats, count: S.count, timer: S.timer } : { mode: 'mix', deck };
+    if (mode === 'cards') return { mode: 'cards', deck, count: S.count, order: S.order, direction: S.direction };
+    if (S.qmode === 'check') return { mode: 'check' };
+    if (S.qmode === 'sprint') return { mode: 'sprint', deck, seconds: S.seconds, formats: ['meaning2word'] };
+    return { mode: 'quiz', deck, formats: S.formats, count: S.count, timer: S.timer };
+  }
+  function glance() {
+    const el = $('glance');
+    const d = curDeck();
+    const pool = deckWords(d);
+    const due = pool.filter(w => w.is_due).length, nw = pool.filter(w => W.status(w) === 'new').length;
+    const n = d.mix ? ((today && today.summary && today.summary.due) || 0) + Math.max(0, ((today && today.summary && today.summary.new_goal) || 0) - ((today && today.summary && today.summary.new_today) || 0))
+      : mode === 'quiz' && S.qmode === 'check' ? 12 : Math.min(S.count, d.n ?? (pool.length || S.count));
+    const per = mode === 'cards' ? 10 : S.timer || 20;
+    const minutes = mode === 'quiz' && S.qmode === 'sprint' ? S.seconds / 60 : mode === 'quiz' && S.qmode === 'check' ? 14.2 : d.mix && today ? today.summary.minutes : n * per / 60;
+    const what = mode === 'quiz' && S.qmode === 'sprint' ? `${S.seconds} s sprint` : `${num(n)} ${mode === 'cards' && !d.mix ? 'cards' : 'items'}`;
+    const orderText = { due: 'Due first', shuffle: 'Shuffled', az: 'A–Z' }[S.order];
+    const start = h('button', { type: 'button', class: 'pill', disabled: d.n === 0 ? true : null, onclick: go }, 'Start', h('span', { class: 'kbd', text: 'Enter' }));
+    el.replaceChildren(...[h('span', { class: 'k', text: 'At a glance' }),
+      h('p', { class: 'big', text: `${what} · about ${Math.max(1, Math.round(minutes))} min` }),
+      h('p', { class: 'line', text: [d.label, due && d.id !== 'due' ? `${num(due)} due` : null, nw && d.id !== 'new' ? `${num(nw)} new` : null].filter(Boolean).join(' · ') }),
+      mode === 'cards' && !d.mix ? h('p', { class: 'line', text: `${orderText} · ${{ word: 'word first', meaning: 'meaning first', sentence: 'in a sentence', commit: 'commit first', mixed: 'mixed' }[S.direction]}` }) : null,
+      mode === 'quiz' && S.qmode === 'quiz' && !d.mix ? h('p', { class: 'line', text: S.formats.map(f => (TYPES.find(t => t[0] === f) || [0, f])[1]).join(' · ') + (S.timer ? ` · ${S.timer} s each` : '') }) : null,
+      start].filter(Boolean));
+  }
+  async function go() {
+    const all = ls.get(STORE, {}) || {};
+    all[mode] = { count: S.count, direction: S.direction, order: S.order, qmode: S.qmode, formats: S.formats, timer: S.timer, seconds: S.seconds };
+    ls.set(STORE, all);
+    UI.startWords(body());
+  }
+  UI.keys.register('wordsstudy', { Enter: { does: 'Start', when: () => !document.querySelector('dialog[open]') && !(document.activeElement && document.activeElement.closest('button, a, select, [role=radio]')), run: go } }, { label: 'Study setup' });
+  document.addEventListener('satf:words', load);
+  load();
+})();
+</script>
+</body>
+</html>
