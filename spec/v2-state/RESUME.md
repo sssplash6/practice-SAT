@@ -52,7 +52,11 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
   The Workflow tool can't open scripts under the moved repo: launch copies from
   ~/.claude/projects/-Users-workingmyassof-freshbot-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/workflows/scripts/ (copy
   spec/v2-state/next/*.js there first). As each task returns ready: leftovers to followups/<id>.json, test_flow, merge.
-  Then I1, the integration walk.
+  Then I1, the integration walk, which now includes the "nothing dropped" audit (the user, 2026-09-27): once every section
+  is merged, run spec/v2-state/next/i1-audit.js (copy in the workflow scripts folder): per section an auditor lists every
+  spec and upgrade requirement as built / missing / weaker / contradicts against the full texts, and an independent refuter
+  keeps only the gaps it can't disprove. Save the confirmed gaps to followups/audit-<id>.json, turn them into build.js
+  tasks (one per section with gaps; one check + one fix), and build them before launch. Then the full walk.
 - **Server checks done 2026-09-25 (run wf_efc641bf-0d1, stopped during the fixes):** blockers S7S 6, S8S 5, S9S 4 (each
   includes my branch-naming bug: build.js used v2/<id> = v2/s7s etc.). The fixers created v2/s7s, v2/s8s and v2/s9s from
   the helper's branches (S7 and S8 rebased on master), so those are now the canonical branches; v2/s7s has a fixer
