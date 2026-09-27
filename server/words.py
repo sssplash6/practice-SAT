@@ -1336,7 +1336,8 @@ def daily_item(day: str, fmt: str) -> dict | None:
             frames = [ident for ident in data["index"]["words"][slug]["frames"]
                       if _servable(data["frames"][ident]) and not _suppressed(ident)]
             ident = frames[int.from_bytes(digest[8:16], "big") % len(frames)]
-            seed = int.from_bytes(digest[16:24], "big")
+            # Persisted review seeds must fit SQLite's signed 64-bit INTEGER.
+            seed = int.from_bytes(digest[16:24], "big") & ((1 << 63) - 1)
             try:
                 generated = item("rw.wic." + ident, seed, slug)
                 generated["item_id"] = f"rw:wic:{day}"
@@ -1350,7 +1351,7 @@ def daily_item(day: str, fmt: str) -> dict | None:
         return None
     for offset in range(min(40, len(families))):
         ident = families[(int.from_bytes(digest[:8], "big") + offset) % len(families)]
-        seed = int.from_bytes(digest[8:16], "big")
+        seed = int.from_bytes(digest[8:16], "big") & ((1 << 63) - 1)
         try:
             generated = item("rw.tr." + ident, seed)
             generated["item_id"] = f"rw:transition:{day}"
