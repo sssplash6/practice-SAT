@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-27T16:54:40+05:00
+# v2 build state -- 2026-09-27T17:19:24+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -32,11 +32,11 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/s1-server` at cf53af4, 1 commits ahead of master
 - `v2/s10` at 4611321, 2 commits ahead of master
 - `v2/s10-server` at 85896a0, 2 commits ahead of master
-- `v2/s3` at 6fad986, 13 commits ahead of master
+- `v2/s3` at 2fde10a, 12 commits ahead of master
 - `v2/s3-server` at 6fad986, 13 commits ahead of master
 - `v2/s4` at 5b22933, 0 commits ahead of master
 - `v2/s4-server` at 6259a3f, 1 commits ahead of master
-- `v2/s4q` at ef2ba16, 6 commits ahead of master
+- `v2/s4q` at ef2ba16, 0 commits ahead of master
 - `v2/s5` at a1788ce, 8 commits ahead of master
 - `v2/s5-server` at a1788ce, 8 commits ahead of master
 - `v2/s6` at 83f13d8, 3 commits ahead of master
@@ -92,6 +92,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 ## Worktrees
 
+- `/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/s4qprev` on `detached ef2ba16`: 1 uncommitted (saved in wip/s4qprev/)
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/cb-student-data` on `v2/cb-student-data`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/helper-handoff` on `v2/helper-handoff`: 0 uncommitted
@@ -104,6 +105,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_9e14b5f3-2c4-3` on `detached dedddf9`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_9e14b5f3-2c4-4` on `detached ef2ba16`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_b6e107a2-030-1` on `detached 5b22933`: 1 uncommitted (saved in wip/wf_b6e107a2-030-1/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_d0e024ee-51b-1` on `v2/s3`: 2 uncommitted (saved in wip/wf_d0e024ee-51b-1/)
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-fix` on `v2/words-fix`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-seed-sqlite` on `v2/words-seed-sqlite`: 0 uncommitted
 
@@ -168,6 +170,9 @@ Unfinished when saved: build F3 4/4, verify F2 r1
 Unfinished when saved: build F2 4/4, build F3 3/4
 
 ### wf_cffc089e-e95: 5 finished, 0 unfinished
+
+### wf_d0e024ee-51b: 0 finished, 1 unfinished
+Unfinished when saved: build S3 1/2
 
 ### wf_d6bde851-f95: 12 finished, 1 unfinished
 Unfinished when saved: verify F1 r2
