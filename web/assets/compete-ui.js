@@ -165,6 +165,15 @@
     words: { label: 'Word Sprint', icon: 'words', clock: 'answer', runs: true },
   };
   const kind = c => KINDS[(c && c.kind) || 'daily'] || KINDS.daily;
+  // a contest's title as students read it: "Sprint · Geometry & Trig week", "Weekly Module · Week 40"
+  function title(c) {
+    const dshort = d => ((UI.DOMAINS || []).find(x => x[0] === d) || [])[1] || d;
+    const wk = String(c.id || '').match(/-(\d{4})-W(\d{2})/);
+    if (c.kind === 'sprint' && c.spec && c.spec.theme) return `Sprint · ${dshort(c.spec.theme)} week`;
+    if (c.kind === 'weekly' && wk) return `Weekly Module · Week ${+wk[2]}`;
+    if (c.kind === 'final' && c.spec && c.spec.sat_date) return `Season Final · Road to ${dayLabel(c.spec.sat_date, { weekday: false })}`;
+    return String(c.title || kind(c).label).replace(/(\d{4})-W(\d{2})/, (_, y, w) => `Week ${+w}`);
+  }
   const href = (cid, q = {}) => {
     const p = new URLSearchParams({ id: cid, ...Object.fromEntries(Object.entries(q).filter(([, v]) => v !== null && v !== undefined && v !== '')) });
     return `/compete/contest/?${p}`;
@@ -392,7 +401,7 @@
     put(host, el);
     const val = o.value || (e => e.points ?? e.value);
     let d = data || {}, list = [], youRow = null, obs = null;
-    const cols = () => (o.columns || []).filter(c => list.some(e => !e.par && !e.sep && c.value(e) !== null && c.value(e) !== undefined && c.value(e) !== ''));
+    const cols = () => (o.columns || []).filter(c => list.some(e => !e.sep && (!e.par || c.par) && c.value(e) !== null && c.value(e) !== undefined && c.value(e) !== ''));
 
     function markEl(e) {
       if (e.mark === 'clean') return tip(h('span', { class: 'mk', html: svgOf(SVG.clean, 14), role: 'img', 'aria-label': 'Clean' }), 'Clean: nothing flagged');
@@ -828,7 +837,7 @@
 
   Object.assign(UI, {
     level, board, podium, debrief, pacer,
-    compete: { KINDS, kind, icon, svg: svgOf, SVG, href, runner, start, rulesSeen, markRules, windowLine, clockText, facts, marks,
+    compete: { KINDS, kind, title, icon, svg: svgOf, SVG, href, runner, start, rulesSeen, markRules, windowLine, clockText, facts, marks,
       copyResult, under, subnav, join, create, reminder, ladder, parLine, fieldLine, pct, LADDER, levelOf, rangeOf, levelIn, step, left, when, dayLabel, titleText, topicName, TIER, num, mmss },
   });
 })();

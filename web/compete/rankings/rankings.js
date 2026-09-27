@@ -18,7 +18,7 @@
   const drill = body => api('/drill', { method: 'POST', body }).then(r => { const to = C.runner(r); if (to) location.href = to; }).catch(e => UI.toast(e.message || 'Couldn’t start.'));
   const day = iso => C.dayLabel(String(iso).slice(0, 10), { weekday: false });
   const signed = v => (v === null || v === undefined ? '—' : `${v > 0 ? '+' : v < 0 ? '−' : ''}${num(Math.abs(Math.round(v)))}`);
-  const kindLabel = r => (r.kind === 'daily' ? `Daily · ${day(String(r.id).slice(6))}` : r.title || C.kind(r).label);
+  const kindLabel = r => (r.kind === 'daily' ? `Daily · ${day(String(r.id).slice(6))}` : C.title(r));
 
   $('#subnav').replaceWith(C.subnav('rankings'));
 
