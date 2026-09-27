@@ -13,6 +13,7 @@ from .deps import now, session_or_404, writer_of
 
 router = APIRouter()
 STYLES = {"highlight", "strong", "underline", "dashed", "dotted", "box", "strike"}
+RUNNER_STYLES = {"ask": "box", "given": "highlight", "ignore": "strike", "under": "underline"}
 TYPE_RULE = -1              # notes.seed for a type rule
 RULE_MAX = 140
 
@@ -61,8 +62,11 @@ def put_note(body: Note, x_learner: str | None = Header(default=None)) -> dict:
         if len(body.marks) > 50:
             raise HTTPException(422, "marks holds at most 50 marks")
         for mark in body.marks:
-            if mark.get("style") not in STYLES or not isinstance(mark.get("note", ""), str) or len(mark.get("note", "")) > 500:
+            style = mark.get("style")
+            if not isinstance(style, str) or (style not in STYLES and style not in RUNNER_STYLES) \
+                    or not isinstance(mark.get("note", ""), str) or len(mark.get("note", "")) > 500:
                 raise HTTPException(422, "marks has an invalid style or note")
+            mark["style"] = RUNNER_STYLES.get(style, style)
     # R6: the template goes back only to a write made from the learner's own
     # attempt (Review); the session page never learns it, live tests and
     # today's challenge included
