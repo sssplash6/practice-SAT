@@ -284,7 +284,9 @@
     const all = ls.get(STORE, {}) || {};
     all[mode] = { count: S.count, direction: S.direction, order: S.order, qmode: S.qmode, formats: S.formats, timer: S.timer, seconds: S.seconds };
     ls.set(STORE, all);
-    UI.startWords(body());
+    const b = body(), fm = b.formats || [], rest = fm.filter(f => !['incontext', 'nearly', 'transition'].includes(f));
+    // words with no reviewed frame yet: start with the other types instead of refusing
+    UI.startWords(b, rest.length && rest.length < fm.length ? { fallback: { ...b, formats: rest } } : {});
   }
   UI.keys.register('wordsstudy', { Enter: { does: 'Start', when: () => !document.querySelector('dialog[open]') && !(document.activeElement && document.activeElement.closest('button, a, select, [role=radio]')), run: go } }, { label: 'Study setup' });
   document.addEventListener('satf:words', load);
