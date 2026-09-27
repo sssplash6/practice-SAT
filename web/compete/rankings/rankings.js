@@ -193,8 +193,10 @@
   /* ------------------------------------------------------------ records (C21) */
   function renderRecords() {
     const r = (S.me.records || {}).bests || {};
-    const NAME = { daily: 'Best Daily', sprint: 'Best Sprint', rush: 'Best Rush', weekly: 'Best Weekly', top_pct: 'Best top %', perfect_fast: 'Fastest perfect Daily', challenge_streak: 'Longest challenge streak', peak_rating: 'Peak rating' };
-    const tiles = Object.entries(r).map(([k, v]) => stat(NAME[k] || k.replace(/_/g, ' '), k === 'perfect_fast' ? mmss(v.value) : num(Math.round(v.value)), v.at ? day(v.at) : null));
+    const NAME = { daily: 'Best Daily', sprint: 'Best Sprint', rush: 'Best Rush', weekly: 'Best Weekly', top_pct: 'Best top %', perfect_fast: 'Fastest perfect Daily', fastest_daily: 'Fastest perfect Daily', challenge_streak: 'Longest challenge streak', peak_rating: 'Peak rating' };
+    // a record needs a sitting behind it: no 1,000 peak or 0-day streak before the first contest
+    const tiles = Object.entries(r).filter(([k, v]) => v && v.value && (S.total || k === 'challenge_streak'))
+      .map(([k, v]) => stat(NAME[k] || k.replace(/_/g, ' '), k === 'perfect_fast' || k === 'fastest_daily' ? mmss(v.value) : num(Math.round(v.value)), v.at ? day(v.at) : null));
     (S.me.records.podiums || []).slice(0, 4).forEach(p => tiles.push(stat(p.label || 'Podium', p.place ? `#${p.place}` : '—', p.period || null)));
     card('#records', head('records-h', 'Records'), tiles.length ? h('div', { class: 'stats sum-tiles' }, tiles) : h('p', { class: 'help', text: 'Your bests show here: points, top %, streaks, peak rating.' }));
   }
@@ -207,12 +209,12 @@
         const name = h('span', { text: t.name });
         if (t.tell) UI.tooltip(name, `Tell: ${t.tell}`);
         return h('tr', {}, h('td', {}, name, t.proven ? h('span', { class: 'chip-s on', style: 'margin-left:8px', text: 'Trap-proof' }) : null),
-          h('td', { class: 'n', text: t.field_share ? `${pct(t.field_share)}${t.field_move ? ` ${t.field_move > 0 ? '▲' : '▼'}${Math.abs(Math.round(t.field_move * 100))}` : ''}` : '—' }),
-          h('td', { class: 'n', text: t.chances ? `${pct(t.you_share)} · ${num(t.chances)}` : '—' }),
+          h('td', { class: 'n', 'data-label': 'Field', text: t.field_share ? `${pct(t.field_share)}${t.field_move ? ` ${t.field_move > 0 ? '▲' : '▼'}${Math.abs(Math.round(t.field_move * 100))}` : ''}` : '—' }),
+          h('td', { class: 'n', 'data-label': 'You', text: t.chances ? `${pct(t.you_share)} · ${num(t.chances)} chances` : '—' }),
           h('td', { class: 'n' }, quiet('Drill · 8', () => drill({ habit: t.family, count: 8, source: 'habit' }))));
       });
       card('#traps', head('traps-h', 'Trap Index'),
-        h('div', { class: 'table-wrap' }, h('table', { class: 'table compact' },
+        h('div', { class: 'table-wrap' }, h('table', { class: 'table compact stack' },
           h('thead', {}, h('tr', {}, h('th', { scope: 'col', text: 'Trap' }), h('th', { scope: 'col', class: 'n', text: 'Field this week' }), h('th', { scope: 'col', class: 'n', text: 'You · chances (30 days)' }), h('th', { scope: 'col', text: '' }))),
           h('tbody', {}, rows))),
         h('p', { class: 'help', text: 'A chance is a first try on a question with that trap among its choices. Trap-proof: 5 chances over 3 question types in 30 days, none fallen for.' }));
@@ -231,11 +233,11 @@
           try { await api(`/follows/${enc(x.pid)}`, { method: 'DELETE' }); ev.target.closest('tr').remove(); UI.toast(`Unfollowed ${x.name}`); } catch (e) { UI.toast('Not saved. Try again.'); }
         });
         return h('tr', {}, h('td', {}, h('span', { class: 'who-l', style: 'display:flex;gap:8px;align-items:center' }, UI.level(null, false, 20, { level: x.level, ring: x.ring }), x.name)),
-          h('td', { class: 'n', text: hh.you || hh.them ? `${hh.you}–${hh.them}${hh.ties ? `–${hh.ties}` : ''}` : '—' }),
+          h('td', { class: 'n', 'data-label': 'This season', text: hh.you || hh.them ? `${hh.you}–${hh.them}${hh.ties ? `–${hh.ties}` : ''}` : '—' }),
           h('td', { class: 'n hx-opt', text: x.last_shared ? day(x.last_shared) : '—' }),
           h('td', { class: 'n' }, quiet('Race', null, { href: C.href('daily', { race: x.pid }) }), ' ', un));
       });
-      card('#rivals', head('rivals-h', 'Rivals'), h('div', { class: 'table-wrap' }, h('table', { class: 'table compact' },
+      card('#rivals', head('rivals-h', 'Rivals'), h('div', { class: 'table-wrap' }, h('table', { class: 'table compact stack' },
         h('thead', {}, h('tr', {}, h('th', { scope: 'col', text: 'Student' }), h('th', { scope: 'col', class: 'n', text: 'This season' }), h('th', { scope: 'col', class: 'n hx-opt', text: 'Last shared' }), h('th', { scope: 'col', text: '' }))),
         h('tbody', {}, rows))));
     } catch (e) { fail('#rivals', renderRivals); }
