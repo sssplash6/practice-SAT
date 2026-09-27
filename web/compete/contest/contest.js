@@ -37,7 +37,7 @@
   const stat = (label, value, sub) => h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: label }), h('span', { class: 'stat-v', text: value ?? '—' }), sub ? h('span', { class: 'stat-sub', text: sub }) : null);
   const myPid = () => S.board && S.board.you && S.board.you.pid;
   const localCode = c => { try { const m = JSON.parse(localStorage.getItem('satf.contest.codes') || '{}'); return m[c.series || c.id] || m[c.id] || null; } catch (_) { return null; } };
-  const titleParts = c => { const t = String(c.title || C.kind(c).label); const i = t.indexOf(' · '); return i > 0 ? [t.slice(0, i), t.slice(i + 3)] : [C.kind(c).label, t]; };
+  const titleParts = c => { const t = C.title(c); const i = t.indexOf(' · '); return i > 0 ? [t.slice(0, i), t.slice(i + 3)] : [C.kind(c).label, t]; };
 
   /* ------------------------------------------------------------ load */
   async function load() {

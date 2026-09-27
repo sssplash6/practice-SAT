@@ -116,7 +116,7 @@
   const counts = { live: null, upcoming: null, finished: null, private: null };
   function crow(c) {
     const me = c.me || {}, k = C.kind(c);
-    const title = c.series && c.round ? `${c.title} · round ${c.round}${c.spec && c.spec.repeat ? ` of ${c.spec.repeat.rounds}` : ''}` : c.title;
+    const title = c.series && c.round ? `${c.title} · round ${c.round}${c.spec && c.spec.repeat ? ` of ${c.spec.repeat.rounds}` : ''}` : C.title(c);
     let chip = null;
     if (me.status === 'progress') chip = `In progress${me.clock && me.clock.left !== undefined ? ` · ${mmss(me.clock.left)} left` : ''}`;
     else if (me.status === 'finished') chip = me.result && me.result.points !== undefined ? `Finished · ${num(me.result.points)} pts` : 'Finished';
