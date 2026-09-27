@@ -514,6 +514,24 @@ OWN ONLY: server/prefs.py, server/api_notes.py, server/checks/f4.py.
 Add a case for each to server/checks/f4.py. DONE: f4.py and test_flow "all good". Tell the user "light done".
 ```
 
+## Task 29 (light): an operator's README section, and ignore the generated cache
+
+```
+SETUP: git worktree add .claude/worktrees/ops-docs -b v2/ops-docs master
+OWN ONLY: README.md (add one new section, "Running and operating SAT Freshman"; do not rewrite the rest) and .gitignore.
+1. .gitignore: add server/cache/ (generated files such as twin_supply.json keep getting committed by accident); if any file under
+   server/cache/ is tracked, git rm --cached it.
+2. The README section, short and exact, from what is really in the repo (check each command runs):
+   - how to run the site locally (the uvicorn command, the port, PYTHONPATH), and the test commands (server/test_flow.py, every
+     server/checks/*.py, python3 -m satbank check, tools/build_words.py, tools/lint_bank.py);
+   - every environment variable the server reads (grep for os.environ / getenv: SATF_DB, SATF_ADMIN_TOKEN, SATF_REPORTS,
+     SATF_BACKUPS, SATF_WORDS_UNREVIEWED, SATF_GOOGLE_CLIENT_ID, mail/SMTP settings and any others) with what each does and its default;
+   - backups (tools/backup_db.py: daily/weekly rotation, --verify, --restore), the load test (tools/load_test.py) and the reports
+     admin (tools/reports.py);
+   - what launch still needs from outside: an SMTP server for email sign-in and a Desmos production key.
+DONE: every command in the section runs as written. Tell the user "docs done".
+```
+
 ---
 
 ## For the main session
