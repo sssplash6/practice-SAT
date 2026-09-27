@@ -41,6 +41,8 @@
       stat('Season rank', b.season && b.season.rank ? `#${b.season.rank}` : null, b.season ? `${num(b.season.value)} pts` : null),
       stat('Challenge streak', me.streak ? num(me.streak.current) : null, me.streak && me.streak.best ? `best ${num(me.streak.best)}` : null),
       stat('Peak rating', bests.peak_rating ? num(Math.round(bests.peak_rating.value)) : null)));
+    const roll = trapRollup();
+    if (roll) kids.push(roll);
     if (!rows.length) {
       kids.push(h('p', { class: 'help', text: 'Finish a ranked contest to fill this in.' }), h('div', { class: 'row-act' }, h('a', { class: 'pill', href: C.href('daily'), text: 'Start today’s challenge' })));
       card('#summary', ...kids);
@@ -67,6 +69,24 @@
     kids.push(ctl, chartHost);
     card('#summary', ...kids);
     draw();
+  }
+
+  // "This week: −210 pts to traps, 60% of it one trap: Swapped the columns" + Fix it (C1)
+  function trapRollup() {
+    const TP = { easy: 10, medium: 20, hard: 30 };
+    const by = new Map();
+    let total = 0;
+    S.hist.filter(r => Date.now() - new Date(r.finished) < 7 * 864e5).forEach(r => ((r.result || {}).questions || []).forEach(q => {
+      if (q.status !== 'incorrect' || !q.mistake) return;
+      const pts = TP[q.difficulty] || 20;
+      const x = by.get(q.mistake) || { label: q.mistake, pts: 0, at: [] };
+      x.pts += pts; x.at.push([r.session, q.id]); by.set(q.mistake, x); total += pts;
+    }));
+    if (!total) return null;
+    const top = [...by.values()].sort((a, b) => b.pts - a.pts)[0];
+    const sid = top.at[0][0], only = top.at.filter(a => a[0] === sid).map(a => a[1]);
+    const fix = quiet('Fix it', () => { const body = { from_session: sid, only, each: 3, source: 'twin', parent: sid }; return UI.twinSheet ? UI.twinSheet({ body, title: 'Fix it', recall: top.label }) : drill(body); });
+    return h('div', { class: 'row-act' }, h('span', { class: 'line', text: `This week: −${num(total)} pts to traps${by.size > 1 ? `, ${Math.round(top.pts / total * 100)}% of it one trap` : ''}: ${top.label}` }), fix);
   }
 
   /* ------------------------------------------------------------ 2. the rating card (C11) and pace (C3) */
@@ -107,20 +127,41 @@
     const ctl = h('div', { class: 'board-ctl' });
     C.under(ctl, [{ value: 'difficulty', label: 'By difficulty' }, { value: 'domain', label: 'By domain' }, { value: 'rw', label: 'Right vs wrong' }], { value: view, label: 'Pace view', onChange: v => { view = v; draw(); } });
     function draw() {
-      const groups = view === 'difficulty' ? ['easy', 'medium', 'hard'].map(t => [C.TIER[t], qs.filter(q => q.difficulty === t)])
-        : view === 'domain' ? (UI.DOMAINS || []).map(([d, s]) => [s, qs.filter(q => (UI.TOPIC[q.topic] || {}).domain === d)])
+      const groups = view === 'difficulty' ? ['easy', 'medium', 'hard'].map(t => [C.TIER[t], qs.filter(q => q.difficulty === t), { tiers: [t] }])
+        : view === 'domain' ? (UI.DOMAINS || []).map(([d, s]) => [s, qs.filter(q => (UI.TOPIC[q.topic] || {}).domain === d), {}])
         : ['correct', 'incorrect'].map(st => [st === 'correct' ? 'Right answers' : 'Wrong answers', qs.filter(q => q.status === st)]);
       const max = Math.max(...qs.map(q => Math.max(q.ms, q.budget_ms || 0)));
-      box.replaceChildren(...groups.map(([label, g]) => {
+      const rw = view === 'rw' && groups.every(([, g]) => g.length >= 3) ? med(groups[1][1].map(q => q.ms)) - med(groups[0][1].map(q => q.ms)) : null;
+      box.replaceChildren(...groups.map(([label, g, extra]) => {
         if (g.length < 3) return h('div', { class: 'pace-row' }, h('span', { class: 'line', text: label }), h('span', { class: 'meta', text: '—' }));
         const m = med(g.map(q => q.ms)), bud = med(g.map(q => q.budget_ms || 0));
         const acc = g.filter(q => q.status === 'correct').length / g.length;
         return h('div', { class: 'pace-row' }, h('span', { class: 'line', text: label }),
           h('span', { class: 'tb', role: 'img', 'aria-label': `${label}: median ${mmss(m / 1000)} against a budget of ${mmss(bud / 1000)}` }, h('i', { style: `width:${Math.round(m / max * 100)}%` }), bud ? h('b', { style: `left:${Math.round(bud / max * 100)}%` }) : null),
-          h('span', { class: 'pm', text: `you ${mmss(m / 1000)}${bud ? ` · budget ${mmss(bud / 1000)}` : ''} · accuracy ${pct(acc)} · ${g.length} answers` }));
-      }));
+          h('span', { class: 'pm', text: `you ${mmss(m / 1000)}${bud ? ` · budget ${mmss(bud / 1000)}` : ''} · accuracy ${pct(acc)} · ${g.length} answers` }),
+          extra ? quadrant(m, bud, acc, g, extra) : '');
+      }), rw !== null && Math.abs(rw) >= 5000 ? h('p', { class: 'line', text: `Wrong answers came ${mmss(Math.abs(rw) / 1000)} ${rw < 0 ? 'faster' : 'slower'} than right ones${rw < 0 ? ': the rushing signal' : ''}.` }) : '');
     }
-    kids.push(ctl, box, h('p', { class: 'help', text: 'Bar: your median answer time. Tick: each question’s time budget.' }));
+    // U7's quadrants: slow and right → Speed drill; fast and wrong → Careful set; slow and wrong → Learn it untimed; fast and right → Keep warm
+    function quadrant(m, bud, acc, g, extra) {
+      const topics = [...new Set(g.map(q => q.topic).filter(Boolean))];
+      const slow = bud && m > bud, right = acc >= 0.7;
+      const [label, body] = slow && right ? ['Speed drill · 8', { timed: true, timing: 'pace', count: 8 }]
+        : !slow && !right ? ['Careful set · 8', { count: 8 }]
+        : slow ? ['Learn it untimed', { count: 8 }] : ['Keep warm · 5', { count: 5, pool: 'review' }];
+      return h('span', { class: 'pa' }, quiet(label, () => drill({ topics, ...extra, ...body, source: 'result' })));
+    }
+    function trends() {
+      const last = [...S.hist].reverse().slice(-10).map(r => (r.result || {}).questions || []).filter(q => q.some(x => x.ms));
+      if (last.length < 2) return '';
+      const sinks = last.map(q => q.filter(x => x.ms && x.budget_ms && x.ms > 2 * x.budget_ms).reduce((a, x) => a + x.ms, 0));
+      const banked = last.map(q => q.filter(x => x.difficulty === 'easy' && x.ms && x.budget_ms).reduce((a, x) => a + Math.max(0, x.budget_ms - x.ms), 0));
+      const strip = (label, vals) => { const max = Math.max(...vals, 1); return h('div', { class: 'row-act' }, h('span', { class: 'meta', text: label }),
+        h('span', { class: 'trend-strip', role: 'img', 'aria-label': `${label}, last ${vals.length} contests` }, vals.map(v => h('i', { style: `height:${Math.max(2, Math.round(v / max * 28))}px` }))),
+        h('span', { class: 'mono', text: mmss(vals[vals.length - 1] / 1000) })); };
+      return h('div', { class: 'sub-block' }, strip('Time in sinks per contest', sinks), strip('Banked on easy', banked));
+    }
+    kids.push(ctl, box, h('p', { class: 'help', text: 'Bar: your median answer time. Tick: each question’s time budget.' }), trends());
     card('#pace', ...kids);
     draw();
   }
