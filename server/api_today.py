@@ -79,11 +79,20 @@ def _word(m: float, answered: int) -> str:
 
 
 def _median_s(learner: str) -> float:
-    """The learner's median seconds a question over 60 days (95 by default)."""
+    """Median Math seconds over 60 days, after 20 timed first answers.
+
+    One very fast answer is not evidence that a learner can sustain that pace
+    across a section. Untimed practice and daily questions are excluded.
+    """
     since = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=60)).isoformat()
-    spent = [r["t"] for r in db.rows("SELECT COALESCE(ms, sms) AS t FROM attempts WHERE learner=? AND at>=?"
-                                     " AND COALESCE(ms, sms) BETWEEN 1000 AND ?", learner, since, progress.MS_CAP)]
-    return statistics.median(spent) / 1000 if spent else float(drill.deps.SECONDS_PER_QUESTION)
+    rows = db.rows(f"SELECT a.topic, COALESCE(a.ms, a.sms) AS t FROM attempts AS a"
+                   f" JOIN sessions AS s ON s.id=a.session WHERE a.learner=? AND a.at>=?"
+                   f" AND a.repeat=0 AND a.disputed=0 AND a.void IS NULL"
+                   f" AND COALESCE(a.ms, a.sms) BETWEEN 1000 AND ?"
+                   f" AND (s.kind IN ({','.join('?' for _ in TEST_KINDS)}, 'challenge')"
+                   " OR json_extract(s.cfg,'$.timed')=1)", learner, since, progress.MS_CAP, *TEST_KINDS)
+    spent = [r["t"] for r in rows if drill.deps.subject_of(r["topic"]) == "math"]
+    return statistics.median(spent) / 1000 if len(spent) >= 20 else 95.0
 
 
 def _call(module: str, name: str, *args, **kwargs):

@@ -89,7 +89,7 @@ def named_miss(learner: str, template: str, when: str | None = None) -> dict | N
 
 
 def answers(learner: str, n: int, right: bool = True, ms: int = 40000, topic: str | None = None,
-            when: str | None = None) -> None:
+            when: str | None = None, session: str | None = None) -> None:
     """n counted answers on fresh (template, seed) pairs, all right or all wrong."""
     names = sorted(x for t, v in practice.catalogue()["by_topic"].items() if topic in (None, t) for x in v)
     done = 0
@@ -102,7 +102,7 @@ def answers(learner: str, n: int, right: bool = True, ms: int = 40000, topic: st
             continue
         given = ("ABCD".index(q["answer"]) if right else ("ABCD".index(q["answer"]) + 1) % 4) \
             if q["type"] == "mcq" else (q["answer"] if right else "-99999")
-        progress.record(learner, None, q, given, ms, when=when)
+        progress.record(learner, session, q, given, ms, when=when)
         done += 1
 
 
@@ -141,6 +141,21 @@ def fresh(c: TestClient) -> None:
     for k in ("today", "week", "month"):
         assert t["study"][k] == 0
     print("ok  S3 a fresh code's Today is all zeros and empty lists, with the day's questions and challenge due")
+
+
+def pace_default(c: TestClient) -> None:
+    """A short first answer must not promise a section at that speed."""
+    me = code()
+    answers(me, 1, ms=2000, topic="circles")
+    assert call(c, "GET", "/api/today", me)["seconds_per_question"] == 95
+    sid = "s3-timed-" + secrets.token_hex(8)
+    db.run("INSERT INTO sessions (id,kind,learner,started,cfg,questions) VALUES (?,?,?,?,?,?)",
+           sid, "drill", me, progress.now(), '{"timed":true}', "[]")
+    answers(me, 19, ms=2000, topic="circles", session=sid)
+    assert api_today._median_s(me) == 95
+    answers(me, 1, ms=2000, topic="circles", session=sid)
+    assert call(c, "GET", "/api/today", me)["seconds_per_question"] == 2
+    print("ok  S3 pace stays at 95 s until 20 timed Math answers")
 
 
 # ------------------------------------------------------------------ check 2 / T14.1, 2, 4, 5
@@ -1088,6 +1103,7 @@ def gates_and_twins(c: TestClient) -> None:
 
 def check(c: TestClient) -> None:
     fresh(c)
+    pace_default(c)
     qotd_shape(c)
     qotd_answer_and_crowd(c)
     late_and_grace(c)
