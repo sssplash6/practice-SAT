@@ -858,5 +858,116 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     return p;
   }
 
-  Object.assign(UI, { wordsTabs, todayWords, wordsFinish, word, startWords, addWord, gloss, speak });
+  /* ------------------------------------------------------------ Bring words (W19): a text, a word list, a missed question */
+  let libP = null;
+  const libRows = () => (libP = libP || UI.api('/words', { quiet: true }).then(d => new Map((d.words || []).map(w => [w.slug, w])))).catch(e => { libP = null; throw e; });
+  const dayLabel = () => shortDate(today());
+  async function saveList(name, slugs) {
+    try { await UI.api('/words/lists', { method: 'POST', body: { name: name.slice(0, 30), words: slugs } }); toast(`Saved “${name.slice(0, 30)}” · ${plural(slugs.length, 'word')}`, { action: { label: 'Study them', onClick: () => startWords({ mode: 'cards', deck: { source: 'words', words: slugs.slice(0, 200) } }) } }); return true; }
+    catch (e) { if (!e.offline) toast(e.status === 409 ? 'You already have a list with that name.' : cap(e.message || 'Not saved.')); return false; }
+  }
+  function bringWords(kind = 'text') {
+    if (kind === 'list') return bringList();
+    if (kind === 'missed') return bringMissed();
+    return bringText();
+  }
+  function bringList() {
+    const ta = h('textarea', { class: 'field', rows: '8', maxlength: '20000', placeholder: 'One word per line, or comma-separated (up to 1,000)' });
+    const out = h('div', { 'aria-live': 'polite' });
+    const name = h('input', { class: 'field sm', maxlength: '30', value: `Word list · ${dayLabel()}`, 'aria-label': 'List name' });
+    let found = [], missing = [];
+    const sh = UI.sheet({ title: 'Bring a word list', size: 'm', body: h('div', { class: 'addw' }, ta, out, h('label', { class: 'label', text: 'Save as' }), name),
+      actions: [{ label: 'Cancel', quiet: true }, { label: 'Match', onClick: async () => { await match(); return false; } },
+        { label: 'Save as a list', primary: true, onClick: async () => { if (!found.length) await match(); if (!found.length) return false; return (await saveList(name.value.trim() || 'Word list', found)) ? true : false; } }] });
+    async function match() {
+      if (!ta.value.trim()) { out.replaceChildren(h('p', { class: 'help', text: 'Paste some words first.' })); return; }
+      const r = await UI.api('/words/lists/match', { method: 'POST', body: { text: ta.value } });
+      found = r.found || []; missing = r.missing || [];
+      const n = found.length + missing.length;
+      out.replaceChildren(h('p', { class: 'line', text: `${found.length} of ${n} found in the library${missing.length ? ` · ${missing.length} not in it` : ''}` }),
+        missing.length ? h('div', { class: 'wchips' }, missing.slice(0, 60).map(m => h('button', { type: 'button', class: 'wchip', title: 'Make it my word', onclick: () => { sh.close(); addWord({ word: m, source: 'From a word list' }); } }, m, h('small', { text: '+ mine' })))) : null);
+    }
+    setTimeout(() => ta.focus(), 30);
+    return sh;
+  }
+  function bringText() {
+    const ta = h('textarea', { class: 'field', rows: '7', maxlength: '20000', placeholder: 'Paste a passage (up to 20,000 characters). Nothing is sent until you save.' });
+    const view = h('div', { class: 'wb' });
+    const side = h('div', {});
+    const body = h('div', { class: 'addw' }, ta, view, side);
+    let hits = new Map(), odd = [];
+    // the index and the learner's statuses load when the sheet opens: matching the text sends nothing
+    index().catch(() => {}); libRows().catch(() => {});
+    const sh = UI.sheet({ title: 'Bring words from a text', size: 'l', body });
+    let t = 0;
+    ta.addEventListener('input', () => { clearTimeout(t); t = setTimeout(scan, 250); });
+    async function scan() {
+      const text = ta.value;
+      if (!text.trim()) { view.replaceChildren(); side.replaceChildren(); return; }
+      let ix, lib;
+      try { [ix, lib] = await Promise.all([index(), libRows()]); } catch (_) { side.replaceChildren(h('p', { class: 'help', text: 'The library did not load.' })); return; }
+      const forms = new Map();
+      ix.words.forEach(w => [w.word, ...(w.also || [])].forEach(f => { if (f) forms.set(f.toLowerCase(), w); }));
+      const common = new Set(ix.common || []);
+      hits = new Map(); odd = [];
+      const p = h('p', { class: 'ex' });
+      String(text).split(/(\b[A-Za-z][A-Za-z'’-]*\b)/).forEach(tok => {
+        const key = tok.toLowerCase().replace(/['’]s$/, '');
+        const w = /^[A-Za-z]/.test(tok) ? forms.get(key) : null;
+        if (w) {
+          const st = status(lib.get(w.slug));
+          const mark = st === 'known' ? '●' : st === 'new' || st === 'probable' ? '○' : '◐';
+          hits.set(w.slug, { w, st });
+          p.append(h('mark', { title: `${w.word}: ${w.short || ''} · ${STATUS[st]}`, text: tok }), h('small', { class: 'meta', text: mark }));
+        } else {
+          if (/^[A-Za-z]{7,}$/.test(tok) && !common.has(key) && !odd.includes(key)) odd.push(key);
+          p.append(tok);
+        }
+      });
+      view.replaceChildren(p);
+      const groups = { new: [], learning: [], known: [] };
+      hits.forEach(({ w, st }) => groups[st === 'known' ? 'known' : st === 'new' || st === 'probable' ? 'new' : 'learning'].push(w));
+      const checks = new Map();
+      const col = (k, lab) => groups[k].length ? h('div', {}, h('p', { class: 'k', text: `${groups[k].length} ${lab}` }),
+        h('div', { class: 'wchips' }, groups[k].map(w => { const cb = h('input', { type: 'checkbox', checked: true, 'aria-label': w.word }); checks.set(w.slug, cb); return h('label', { class: 'wchip' }, cb, w.word); }))) : null;
+      const chosen = () => [...checks.entries()].filter(([, cb]) => cb.checked).map(([s]) => s);
+      const name = h('input', { class: 'field sm', maxlength: '30', value: `From pasted text · ${dayLabel()}`, 'aria-label': 'List name' });
+      side.replaceChildren(...[col('new', 'new'), col('learning', 'learning'), col('known', 'known'),
+        hits.size ? h('div', { class: 'wchips', style: 'margin-top:8px' },
+          groups.new.length ? h('button', { type: 'button', class: 'btn sm', text: `Star the ${groups.new.length} new`, onclick: async () => {
+            await Promise.all(groups.new.map(w => UI.api(`/words/${encodeURIComponent(w.slug)}/save`, { method: 'POST', body: { on: true } }).catch(() => null)));
+            toast(`Starred ${groups.new.length} · they go to the front of New`); } }) : null,
+          name, h('button', { type: 'button', class: 'pill sm', text: 'Save as a list', onclick: async () => { const s = chosen(); if (s.length && await saveList(name.value.trim() || 'From pasted text', s)) sh.close(); } })) : h('p', { class: 'help', text: 'No library words in this text yet.' }),
+        odd.length ? h('div', {}, h('p', { class: 'k', text: `Not in the library · ${odd.length}` }),
+          h('div', { class: 'wchips' }, odd.slice(0, 40).map(o2 => h('button', { type: 'button', class: 'wchip', title: 'Make it my word', onclick: () => { sh.close(); addWord({ word: o2, source: 'From a pasted text' }); } }, o2, h('small', { text: '+ mine' }))))) : null].filter(Boolean));
+    }
+    setTimeout(() => ta.focus(), 30);
+    return sh;
+  }
+  function bringMissed() {
+    const dl = h('datalist', { id: 'bm-words' });
+    index().then(ix => ix.words.slice(0, 2000).forEach(w => dl.append(h('option', { value: w.word })))).catch(() => {});
+    const inputs = [0, 1, 2, 3].map(i => h('input', { class: 'field sm', list: 'bm-words', maxlength: '60', 'aria-label': `Choice ${'ABCD'[i]}`, placeholder: `Choice ${'ABCD'[i]}` }));
+    const radio = (nm, i) => h('input', { type: 'radio', name: nm, value: String(i), 'aria-label': `${nm === 'bm-key' ? 'Right answer' : 'My pick'} ${'ABCD'[i]}` });
+    const keys = [0, 1, 2, 3].map(i => radio('bm-key', i)), picks = [0, 1, 2, 3].map(i => radio('bm-pick', i));
+    const text = h('textarea', { class: 'field', rows: '3', maxlength: '2000', placeholder: 'The text (optional)' });
+    const label = h('input', { class: 'field sm', maxlength: '30', placeholder: 'Bluebook · Test 4 · Q12', 'aria-label': 'Where it was from' });
+    const grid = h('div', { style: 'display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center' },
+      h('span', { class: 'k', text: 'Choices' }), h('span', { class: 'k', text: 'Right' }), h('span', { class: 'k', text: 'I picked' }),
+      inputs.map((inp, i) => [inp, keys[i], picks[i]]));
+    const out = h('div', { 'aria-live': 'polite' });
+    return UI.sheet({ title: 'A question I missed', size: 'm', body: h('div', { class: 'addw' }, h('p', { class: 'help', text: 'A Words in Context or Transitions question from Bluebook or anywhere else.' }), grid, text, label, dl, out),
+      actions: [{ label: 'Cancel', quiet: true }, { label: 'Save', primary: true, onClick: async () => {
+        const choices = inputs.map(i => i.value.trim());
+        const k = keys.findIndex(r => r.checked), p = picks.findIndex(r => r.checked);
+        if (choices.some(c => !c) || k < 0 || p < 0) { out.replaceChildren(h('p', { class: 'field-err', text: 'Fill the four choices, the right one and your pick.' })); return false; }
+        const r = await UI.api('/words/outside', { method: 'POST', body: { choices, key: choices[k], picked: choices[p], text: text.value.trim() || undefined, label: label.value.trim() || undefined } });
+        out.replaceChildren(h('p', { class: 'line' }, h('b', { text: r.trap ? (TRAP[r.trap] || r.trap) : 'Not classified' }), ` · saved to “${r.list}”; both words are starred and due today.`),
+          h('div', { class: 'wchips' }, r.run && r.run.id ? h('button', { type: 'button', class: 'pill sm', text: '3 twins · same trap, new word', onclick: () => { remember(); location.href = `/words/run/?id=${encodeURIComponent(r.run.id)}`; } }) : null,
+            h('button', { type: 'button', class: 'btn sm', text: 'Quiz the set', onclick: async () => { const ix = await index().catch(() => null); const slugs = choices.map(c => ix && ix.byWord.get(c.toLowerCase())).filter(Boolean).map(x => x.slug); quizStart({ source: 'words', words: slugs }, 4); } })));
+        return false;
+      } }] });
+  }
+
+  Object.assign(UI, { wordsTabs, todayWords, wordsFinish, word, startWords, addWord, gloss, speak, bringWords });
 })();
