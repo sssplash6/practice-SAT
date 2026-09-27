@@ -13,6 +13,7 @@ import json
 import os
 import random
 import re
+import threading
 import unicodedata
 from collections import Counter, defaultdict
 from functools import lru_cache
@@ -29,6 +30,7 @@ PROOF_KINDS = frozenset({"incontext", "nearly", "transition", "precise"})
 SELF_KINDS = frozenset({"card", "cards", "self", "sort", "placement", "sheet-grade"})
 ACHIEVEMENTS = [{"id": f"words-{n}", "kind": "words_known", "target": n}
                 for n in (50, 250, 1000)]
+_LIBRARY_LOCAL = threading.local()
 RW_TO_ATTEMPTS = """INSERT INTO attempts(learner,session,qid,template,seed,topic,difficulty,fmt,correct,reason,given,conf,ms,at)
 SELECT learner, session, 'w' || id, template, seed,
 CASE skill WHEN 'Transitions' THEN 'rw.transitions' ELSE 'rw.words_in_context' END,
@@ -473,6 +475,24 @@ def _flags(learner: str, slug: str, s: dict, day: dt.date,
 
 
 def library(learner: str, tz: int = 0, days: int = 14) -> dict:
+    """Cache the assembled library and its state reads until this DB changes.
+
+    SQLite's data_version sees other connections' commits; total_changes sees
+    this thread's writes. Grade paths bypass this cache while in a transaction.
+    Callers treat the returned payload as read-only.
+    """
+    if getattr(db._local, "atomic", False):
+        return _library_uncached(learner, tz, days)
+    c = db.conn()
+    key = (str(db.DB_PATH), learner, tz, days, local_day(tz), c.total_changes,
+           c.execute("PRAGMA data_version").fetchone()[0])
+    if getattr(_LIBRARY_LOCAL, "key", None) != key:
+        _LIBRARY_LOCAL.value = _library_uncached(learner, tz, days)
+        _LIBRARY_LOCAL.key = key
+    return _LIBRARY_LOCAL.value
+
+
+def _library_uncached(learner: str, tz: int = 0, days: int = 14) -> dict:
     data = content()
     day = local_day(tz)
     exam = _exam(learner)
@@ -1336,7 +1356,8 @@ def daily_item(day: str, fmt: str) -> dict | None:
             frames = [ident for ident in data["index"]["words"][slug]["frames"]
                       if _servable(data["frames"][ident]) and not _suppressed(ident)]
             ident = frames[int.from_bytes(digest[8:16], "big") % len(frames)]
-            seed = int.from_bytes(digest[16:24], "big")
+            # Persisted review seeds must fit SQLite's signed 64-bit INTEGER.
+            seed = int.from_bytes(digest[16:24], "big") & ((1 << 63) - 1)
             try:
                 generated = item("rw.wic." + ident, seed, slug)
                 generated["item_id"] = f"rw:wic:{day}"
@@ -1350,7 +1371,7 @@ def daily_item(day: str, fmt: str) -> dict | None:
         return None
     for offset in range(min(40, len(families))):
         ident = families[(int.from_bytes(digest[:8], "big") + offset) % len(families)]
-        seed = int.from_bytes(digest[8:16], "big")
+        seed = int.from_bytes(digest[8:16], "big") & ((1 << 63) - 1)
         try:
             generated = item("rw.tr." + ident, seed)
             generated["item_id"] = f"rw:transition:{day}"

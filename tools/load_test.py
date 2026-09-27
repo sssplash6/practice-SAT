@@ -93,7 +93,8 @@ class Survey:
                 await self.call("test_finish", "POST", f"/api/session/{sid}/finish", learner, {})
 
 
-async def stage(base: str, learners: list[str], concurrency: int, seconds: float, timeout: float) -> dict:
+async def stage(base: str, learners: list[str], concurrency: int, seconds: float, timeout: float,
+                routes: tuple[str, ...]) -> dict:
     survey = Survey(base, timeout)
     gate = asyncio.Event()
     began = time.perf_counter()
@@ -103,7 +104,7 @@ async def stage(base: str, learners: list[str], concurrency: int, seconds: float
         await gate.wait()
         turn = index
         while time.perf_counter() < deadline:
-            await survey.operation(ROUTES[turn % len(ROUTES)], learners[index])
+            await survey.operation(routes[turn % len(routes)], learners[index])
             turn += 1
 
     tasks = [asyncio.create_task(worker(i)) for i in range(concurrency)]
@@ -127,17 +128,18 @@ async def stage(base: str, learners: list[str], concurrency: int, seconds: float
             "breaks": broken}
 
 
-async def run(base: str, learners: list[str], seconds: float, timeout: float) -> dict:
+async def run(base: str, learners: list[str], seconds: float, timeout: float,
+              routes: tuple[str, ...], stages: tuple[int, ...]) -> dict:
     async with httpx.AsyncClient(base_url=base, timeout=timeout) as client:
         for learner in learners:
             reply = await client.put("/api/me", headers={"X-Learner": learner, "X-Tz": "0"},
                                      json={"minutes": 30})
             if reply.status_code != 200:
                 raise RuntimeError(f"seeding failed: HTTP {reply.status_code} {reply.text[:120]}")
-    result = {"learners": len(learners), "stages": []}
-    for concurrency in (10, 50, 200):
+    result = {"learners": len(learners), "routes": routes, "stages": []}
+    for concurrency in stages:
         print(f"stage {concurrency} learners for {seconds:g}s", flush=True)
-        result["stages"].append(await stage(base, learners, concurrency, seconds, timeout))
+        result["stages"].append(await stage(base, learners, concurrency, seconds, timeout, routes))
     return result
 
 
@@ -149,9 +151,19 @@ def main() -> int:
     parser.add_argument("--port", type=int, default=0)
     parser.add_argument("--json", type=pathlib.Path)
     parser.add_argument("--server-log", type=pathlib.Path)
+    parser.add_argument("--routes", default=",".join(ROUTES), help="comma-separated route groups")
+    parser.add_argument("--stages", default="10,50,200", help="comma-separated concurrency levels")
     args = parser.parse_args()
+    routes = tuple(part.strip() for part in args.routes.split(",") if part.strip())
+    try:
+        stages = tuple(int(part.strip()) for part in args.stages.split(",") if part.strip())
+    except ValueError:
+        parser.error("stages must be comma-separated integers")
     if args.seconds <= 0 or args.learners < 200 or args.timeout <= 0 or args.port == 8000:
         parser.error("seconds/timeout must be positive, learners >= 200, and port cannot be 8000")
+    if not routes or any(route not in ROUTES for route in routes) or not stages or any(
+            stage < 1 or stage > args.learners for stage in stages):
+        parser.error("routes must be known groups and stages must be 1..learners")
     port = args.port or _port()
     with tempfile.TemporaryDirectory(prefix="satf-load-") as folder:
         root = pathlib.Path(folder)
@@ -178,7 +190,7 @@ def main() -> int:
                     raise RuntimeError("server did not become ready: " + log_path.read_text()[-1200:])
                 prefix = uuid.uuid4().hex[:8]
                 learners = [f"a:load{prefix}{i:04d}" for i in range(args.learners)]
-                report = asyncio.run(run(base, learners, args.seconds, args.timeout))
+                report = asyncio.run(run(base, learners, args.seconds, args.timeout, routes, stages))
                 report["server_exit_before_shutdown"] = server.poll()
             finally:
                 server.terminate()

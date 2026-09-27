@@ -29,3 +29,15 @@ An earlier eight-second survey corroborated overload: at 200 learners, 1,945 of 
 ## Backup exercise
 
 `tools/backup_db.py` was exercised against a temporary WAL database during a live SQLite connection. Snapshot verification reported `integrity_check=ok` and one table row; restore reproduced the row count; overwriting a nonempty target failed without `--force` and succeeded with it. Synthetic dated files confirmed retention of 14 daily and 8 weekly copies. Backups must use `SATF_BACKUPS` outside the repository.
+
+## Task 17 after run — 2026-09-27
+
+`PYTHONPATH=. python3 tools/load_test.py --seconds 3 --json /tmp/satf-perf-final-run.json --server-log /tmp/satf-perf-final-run-server.log` used a temporary database and ephemeral port after the Compete transaction changes. The result is a single short run, not a capacity certification. The server was still alive at shutdown. The log contained **no `database is locked` error**. `server/checks/perf.py` separately verified WAL, a 2.5-second SQLite busy timeout, 400 concurrent writes, an external writer wait, precomputed contests, and Words cache invalidation.
+
+| Learners | Before attempts / errors | After attempts / errors | Before total attempts/s | After total attempts/s | Main after p95s |
+| ---: | ---: | ---: | ---: | ---: | --- |
+| 10 | 22 / 10 | 167 / 0 | 1.28 | 47.85 | Drill create 1.18 s, next 0.85 s, Shell 0.20 s |
+| 50 | 222 / 0 | 241 / 0 | 29.96 | 35.76 | Drill create 4.65 s, next 3.68 s, Shell 1.32 s, Words 0.34 s |
+| 200 | 422 / 129 | 511 / 0 | 11.42 | 39.80 | Shell 10.08 s, drill next 6.80 s, test finish 7.99 s |
+
+The 10- and 50-learner **zero-error** targets and the 200-learner **no SQLite lock error** target passed in this run. The **50-learner hot-route p95 under 1 s target did not pass**. Drill create and next dominate the remaining latency; see `perf-for-sections.md` for the profile and the section-owned fix. An earlier run with the same database changes and before the final Compete transaction edits recorded 237/0, 257/0, and 508/0 attempts/errors at 10/50/200, but also missed the latency target. The small runs vary, and none establish subsecond performance at 50.
