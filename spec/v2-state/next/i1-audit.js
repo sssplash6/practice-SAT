@@ -72,7 +72,7 @@ restate what to build precisely. Return confirmed and refuted.`, { label: `refut
 const ids = Array.isArray(args) && args.length ? args : Object.keys(SECTIONS)
 const out = await pipeline(ids,
   id => audit(id),
-  (found, id) => (found && found.gaps && found.gaps.length ? refute(id, found) : { confirmed: [], refuted: [] })
+  (found, id) => Promise.resolve(found && found.gaps && found.gaps.length ? refute(id, found) : { confirmed: [], refuted: [] })
     .then(v => ({ id, total: found ? found.total : 0, built: found ? found.built : 0, confirmed: v ? v.confirmed : [], refuted: v ? v.refuted.length : 0 })))
 const gaps = out.filter(Boolean).reduce((n, r) => n + r.confirmed.length, 0)
 log(`${gaps} confirmed gaps across ${ids.length} sections`)
