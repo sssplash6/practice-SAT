@@ -23,6 +23,7 @@ import pathlib
 import re
 import secrets
 import statistics
+import threading
 import zlib
 from collections import Counter
 from types import SimpleNamespace
@@ -1198,9 +1199,33 @@ def _builder(learner: str, dedupe: str = "stem") -> practice.Builder:
     return b
 
 
-@functools.lru_cache(maxsize=8)
+def _level_entry(template: str, tier: str, sample: list, rated: tuple[float, int]) -> dict:
+    from . import ratings
+    value, rating_n = rated
+    rating = {"level": ratings.level_of(value), "rating": round(value),
+              "n": rating_n, "rough": rating_n < ratings.MEASURED}
+    right_ms = sorted(r["ms"] for r in sample if r["correct"] and r["ms"] is not None)
+    n = len(sample)
+    # Slips, misreads, filler and unnamed grid-ins do not name a misconception.
+    misses = Counter(r["reason"] for r in sample if not r["correct"] and r["reason"]
+                     and progress.norm(r["reason"]) not in progress.UNNAMED
+                     and r["miss_kind"] not in ("slip", "misread"))
+    rate = round(sum(r["correct"] for r in sample) / n, 3) if n >= 20 else None
+    top = misses.most_common(1)[0] if misses else None
+    wrong = sum(1 for r in sample if not r["correct"])
+    return {
+        **rating, "n": n, "rate": rate,
+        "median_ms_right": int(statistics.median(right_ms)) if right_ms else None,
+        "rough": rating["rough"],
+        "crowd": {"n": n, "rate": rate, "top_mistake": top[0] if top else None,
+                  "share": round(top[1] / wrong, 3) if top and wrong else None} if n >= 20 else None,
+    }
+
+
 def _levels_at(version: tuple) -> dict[tuple[str, str], dict]:
     from . import ratings
+    item_ratings = {(r["template"], r["tier"]): (r["rating"], r["n"])
+                    for r in db.rows("SELECT template,tier,rating,n FROM item_ratings")}
     rows = db.rows("SELECT template,difficulty,correct,ms,reason,norm,miss_kind FROM attempts WHERE repeat=0"
                    " AND disputed=0 AND void IS NULL AND guess=0 AND hints=0 AND flagged=0"
                    f" AND {db.NOT_SAMPLE}")
@@ -1210,32 +1235,55 @@ def _levels_at(version: tuple) -> dict[tuple[str, str], dict]:
     out = {}
     for template, kinds in blueprint.abilities().items():
         for tier in {t for t, _ in kinds}:
-            sample = answers.get((template, tier), [])
-            rating = ratings.level(template, tier)
-            right_ms = sorted(r["ms"] for r in sample if r["correct"] and r["ms"] is not None)
-            n = len(sample)
-            # the crowd's most common named mistake: slips and misreads are not
-            # misconceptions (P8), and a filler or an unnamed grid-in names nothing
-            misses = Counter(r["reason"] for r in sample if not r["correct"] and r["reason"]
-                             and progress.norm(r["reason"]) not in progress.UNNAMED
-                             and r["miss_kind"] not in ("slip", "misread"))
-            rate = round(sum(r["correct"] for r in sample) / n, 3) if n >= 20 else None
-            top = misses.most_common(1)[0] if misses else None
-            wrong = sum(1 for r in sample if not r["correct"])
-            out[(template, tier)] = {
-                **rating, "n": n, "rate": rate,
-                "median_ms_right": int(statistics.median(right_ms)) if right_ms else None,
-                "rough": rating["rough"],
-                "crowd": {"n": n, "rate": rate, "top_mistake": top[0] if top else None,
-                          "share": round(top[1] / wrong, 3) if top and wrong else None} if n >= 20 else None,
-            }
+            out[(template, tier)] = _level_entry(template, tier, answers.get((template, tier), []),
+                                                   item_ratings.get((template, tier),
+                                                                    (ratings.TIER_PRIOR.get(tier, 1100.0), 0)))
     return out
 
 
+_levels_lock = threading.Lock()
+_levels_snapshot: dict[tuple[str, str], dict] | None = None
+_levels_version = -1
+_levels_path: str | None = None
+
+
 def levels() -> dict[tuple[str, str], dict]:
-    """Crowd result and measured level for each template and difficulty."""
+    """Crowd and measured levels. Refresh only pairs with new attempts.
+
+    A whole-bank rebuild on every answer made simultaneous create/answer
+    requests rescan the same history hundreds of times. One lock coalesces
+    misses; the first call still builds the complete catalogue snapshot.
+    """
+    global _levels_snapshot, _levels_version, _levels_path
     latest = db.one("SELECT MAX(id) n FROM attempts")
-    return _levels_at((latest["n"] if latest else 0,))
+    version = int(latest["n"] or 0) if latest else 0
+    path = str(db.DB_PATH)
+    if _levels_snapshot is not None and path == _levels_path and version == _levels_version:
+        return _levels_snapshot
+    with _levels_lock:
+        # A request can wait behind a newer answer; take the version again so
+        # that an older waiter cannot replace the current snapshot.
+        latest = db.one("SELECT MAX(id) n FROM attempts")
+        version = int(latest["n"] or 0) if latest else 0
+        if _levels_snapshot is not None and path == _levels_path and version == _levels_version:
+            return _levels_snapshot
+        if _levels_snapshot is None or path != _levels_path or version < _levels_version:
+            snapshot = _levels_at((version,))
+        else:
+            from . import ratings
+            snapshot = _levels_snapshot.copy()
+            changed = {(r["template"], r["difficulty"]) for r in db.rows(
+                "SELECT DISTINCT template,difficulty FROM attempts WHERE id>? AND id<=?", _levels_version, version)}
+            for template, tier in changed & snapshot.keys():
+                sample = db.rows("SELECT correct,ms,reason,norm,miss_kind FROM attempts"
+                                 " WHERE template=? AND difficulty=? AND repeat=0 AND disputed=0"
+                                 " AND void IS NULL AND guess=0 AND hints=0 AND flagged=0"
+                                 f" AND {db.NOT_SAMPLE}", template, tier)
+                r = db.one("SELECT rating,n FROM item_ratings WHERE template=? AND tier=?", template, tier)
+                rated = (r["rating"], r["n"]) if r else (ratings.TIER_PRIOR.get(tier, 1100.0), 0)
+                snapshot[(template, tier)] = _level_entry(template, tier, sample, rated)
+        _levels_snapshot, _levels_version, _levels_path = snapshot, version, path
+        return snapshot
 
 
 def budget_ms(template: str, tier: str) -> int:

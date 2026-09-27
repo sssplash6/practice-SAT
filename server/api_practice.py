@@ -27,6 +27,12 @@ from .deps import learner_of, mine, session_or_404, writer_of
 log = logging.getLogger("satf")
 router = APIRouter()
 
+
+def init() -> None:
+    """Warm fixed and initial crowd data before the first request wave."""
+    drill._pinned()
+    drill.levels()
+
 QID = Field(min_length=1, max_length=16)
 MS = Field(default=None, ge=0, le=24 * 3600 * 1000)
 

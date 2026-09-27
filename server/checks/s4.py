@@ -680,7 +680,11 @@ def choosing_checks(c) -> None:
         r = db.one("SELECT n FROM skill_ratings WHERE learner=? AND topic='percentages'", learner)
         return r["n"] if r else 0
     n0, s0 = item_n(q), skill_n()
-    answer(c, learner, sid, q["id"], right(q))
+    pair = (q["key"], q["difficulty"])
+    crowd_n = drill.levels()[pair]["n"]
+    with patch.object(drill, "_levels_at", side_effect=AssertionError("full levels rebuild after one answer")):
+        answer(c, learner, sid, q["id"], right(q))
+        assert drill.levels()[pair]["n"] == crowd_n + 1
     assert item_n(q) == n0 + 1 and skill_n() == s0 + 1
     for extra in ({"conf": "guess"}, {"hints": 1}):
         q = full(sid, nxt(c, learner, sid)["question"]["id"])
