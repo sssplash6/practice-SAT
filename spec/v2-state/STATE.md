@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-27T10:25:33+05:00
+# v2 build state -- 2026-09-27T11:31:00+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -25,12 +25,12 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/helper-integ` at e0aa1c6, 0 commits ahead of master
 - `v2/localday` at 933ae67, 0 commits ahead of master
 - `v2/ops` at 991efbd, 0 commits ahead of master
-- `v2/perf` at eeb229c, 0 commits ahead of master
+- `v2/perf` at fe2abdc, 5 commits ahead of master
 - `v2/s1` at cf53af4, 1 commits ahead of master
 - `v2/s10` at 85896a0, 2 commits ahead of master
-- `v2/s3` at 6a9eb14, 7 commits ahead of master
-- `v2/s4` at f7cbbb8, 1 commits ahead of master
-- `v2/s5` at 63ea045, 2 commits ahead of master
+- `v2/s3` at 89ecd6e, 11 commits ahead of master
+- `v2/s4` at 4a61e59, 6 commits ahead of master
+- `v2/s5` at 9d4bf87, 6 commits ahead of master
 - `v2/s6` at 057b7fc, 1 commits ahead of master
 - `v2/s7-server` at b88934e, 3 commits ahead of master
 - `v2/s7s` at 14174d3, 0 commits ahead of master
@@ -74,22 +74,27 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/t-bank-systems_of_linear_equations` at 90dd059, 0 commits ahead of master
 - `v2/t-bank-two_variable_data` at 4469303, 0 commits ahead of master
 - `v2/words-content` at 4c67155, 0 commits ahead of master
+- `v2/words-fix` at 262d903, 1 commits ahead of master
 - `v2/words-gate` at 8306599, 1 commits ahead of master
 - `v2/words-gate-a` at 8306599, 1 commits ahead of master
-- `v2/words-gate-b` at 71541bf, 2 commits ahead of master
+- `v2/words-gate-b` at 67436ae, 4 commits ahead of master
 - `v2/words-seed-sqlite` at b834a83, 1 commits ahead of master
 
 ## Worktrees
 
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/cb-student-data` on `v2/cb-student-data`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/gate-a` on `v2/words-gate-a`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/gate-b` on `v2/words-gate-b`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/helper-handoff` on `v2/helper-handoff`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/perf` on `v2/perf`: 2 uncommitted (saved in wip/perf/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/perf` on `v2/perf`: 1 uncommitted (saved in wip/perf/)
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_3f139f0b-f7c-1` on `v2/s4`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_3f139f0b-f7c-2` on `v2/s5`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_3f139f0b-f7c-3` on `v2/s3`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_3f139f0b-f7c-1` on `detached c56c10e`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_3f139f0b-f7c-2` on `v2/s5`: 3 uncommitted (saved in wip/wf_3f139f0b-f7c-2/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_3f139f0b-f7c-3` on `detached 63c7ca8`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_3f139f0b-f7c-4` on `v2/s3`: 2 uncommitted (saved in wip/wf_3f139f0b-f7c-4/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_3f139f0b-f7c-5` on `v2/s4`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-fix` on `v2/words-fix`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-seed-sqlite` on `v2/words-seed-sqlite`: 0 uncommitted
 
 ## Workflow runs
@@ -102,8 +107,8 @@ Unfinished when saved: author: adv1, author: adv2, author: adv3, author: roots, 
 ### wf_37eaad23-bb7: 0 finished, 6 unfinished
 Unfinished when saved: build S1 1/5, build S10 1/5, build S3 1/5, build S4 1/5, build S5 1/5, build S6 1/5
 
-### wf_3f139f0b-f7c: 0 finished, 3 unfinished
-Unfinished when saved: build S3 1/3, build S4 1/3, build S5 1/3
+### wf_3f139f0b-f7c: 2 finished, 3 unfinished
+Unfinished when saved: build S3 2/3, build S4 2/3, build S5 1/3
 
 ### wf_609b5aa4-27c: 9 finished, 1 unfinished
 Unfinished when saved: fix check defects

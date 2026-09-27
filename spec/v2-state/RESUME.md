@@ -1,5 +1,8 @@
 # Resume here
 
+**Standing rule (the user, 2026-09-27): my builds are PAGES ONLY. Any backend part becomes a HELPER-TASKS.md task and I ask
+the user to give it to the other agent.**
+
 ## Now: PAUSED for usage limits (2026-09-24, evening). Nothing is running; all work is committed.
 
 Policy: features get one independent check + one fix; content two rounds; small or data-only tasks (and the other

@@ -25,6 +25,8 @@ file's remaining page items), then a quick headless walk of every page at 1280 a
 errors, test_flow still "all good".`,
 ]
 // pagesOnly: the server half was built by the user's other agent and is merged; build only the pages.
+// RULE (the user, 2026-09-27): every NEW task is pages-only. Backend parts are written into spec/v2-state/HELPER-TASKS.md
+// for the user's other agent, and the user is asked to hand them over. The run wf_3f139f0b-f7c is the one exception.
 function section(id, name, port, builds, upgrades, owns, pagesOnly) {
   section.pagesOnly = !!pagesOnly
   const t = {
