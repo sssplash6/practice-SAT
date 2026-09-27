@@ -40,6 +40,12 @@ disagree, this file wins. Builders read it alongside the plan and `spec/v2-upgra
    with no teacher or homework features. Resolution R4 of the plan ("Compete's groups are the
    same thing as classes") is void.
 
+6. **No College Board Student-bank features (2026-09-27).** The public Question Bank index in `material/cb/cb_index.json`
+   (3,770 questions with subject, domain, skill, difficulty and band) covers what we need: day-one levels and mapping official
+   questions to our types. Do not build the two nice-to-haves that would need the signed-in Student Question Bank: resolving a
+   Student-bank question ID when a student logs a missed official question (public-index IDs still work), and per-question
+   "open on College Board" deep links. A plain link to College Board's Question Bank home is fine.
+
 
 ## Task entry
 
