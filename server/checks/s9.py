@@ -255,6 +255,26 @@ def test_runs(client: TestClient) -> None:
     use(client, learner, f"/api/words/run/{twin['id']}/answer", {"item_id": first["item_id"], "answer": 0})
     newer = use(client, learner, f"/api/words/run/{twin['id']}/another", {"item_id": first["item_id"], "like": "word"})
     assert newer["item"]["item_id"] != first["item_id"]
+    templates = [q.get("template") for q in json.loads(
+        db.one("SELECT questions FROM sessions WHERE id=?", twin["id"])["questions"])]
+    assert len([t for t in templates if t]) == len(set(t for t in templates if t))
+
+    typed = use(client, learner, "/api/words/run", {"mode": "quiz", "deck": {"source": "words", "words": ["mitigate"]},
+                                                    "formats": ["typed"], "count": 1})
+    assert typed["next"]["first"] == "m" and "answer" not in typed["next"]
+
+    previous_gate = os.environ.pop("SATF_WORDS_UNREVIEWED", None)
+    try:
+        if words.choose_template("apathetic") is None:
+            mixed = use(client, learner, "/api/words/run", {"mode": "quiz",
+                "deck": {"source": "words", "words": ["apathetic"]},
+                "formats": ["meaning2word", "incontext"], "count": 2})
+            assert mixed["total"] == 2
+            assert all(q["kind"] == "meaning2word" for q in json.loads(
+                db.one("SELECT questions FROM sessions WHERE id=?", mixed["id"])["questions"]))
+    finally:
+        if previous_gate is not None:
+            os.environ["SATF_WORDS_UNREVIEWED"] = previous_gate
 
     tr = use(client, learner, "/api/words/run", {"mode": "quiz", "deck": {"source": "words", "words": ["however"]},
                                                  "formats": ["transition"], "count": 1})

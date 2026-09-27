@@ -1285,7 +1285,7 @@ def quiz_item(word: str, kind: str, rng: random.Random,
     if kind == "typed":
         return {"kind": kind, "word": word, "stem": "Type the word that fits this meaning.",
                 "text": target["short"], "also": target.get("also", []),
-                "answer": target["word"], "choices": []}
+                "answer": target["word"], "first": target["word"][:1], "choices": []}
     meanings = kind == "word2meaning"
     distractors = _distractors(word, rng, meanings=meanings, learner=learner)
     options = [target, *distractors]
@@ -1316,30 +1316,38 @@ def another(prev: dict, like: str, learner: str, seen: set[str] | None = None) -
         raise ValueError("like must be word or trap")
     seed = int(prev["seed"]) + 1
     old = prev["word"]
+    seen = set(seen or ())
     if like == "word":
-        slug = old
+        slugs = [old]
         want = None
     else:
         want = prev.get("picked_trap") or next((t for t in prev.get("traps", []) if t), None)
-        choices = [w["slug"] for w in content()["sat"] if w["slug"] != old]
+        pool = content()["transitions"] if prev.get("kind") == "transition" else content()["sat"]
+        slugs = [w["slug"] for w in pool if w["slug"] != old]
         rng = _rng("another", seed, old)
-        rng.shuffle(choices)
-        slug = next((s for s in choices if choose_template(s, learner=learner, seed=seed,
-                                                           seen=seen) is not None), old)
-    for offset in range(20):
-        template = choose_template(slug, learner=learner, seed=seed + offset, seen=seen)
-        if template:
+        rng.shuffle(slugs)
+        slugs = slugs[:32]
+    for slug in slugs:
+        for offset in range(20 if like == "word" else 8):
+            template = choose_template(slug, learner=learner, seed=seed + offset, seen=seen)
+            if not template or template in seen:
+                break
             try:
-                return item(template, seed + offset, slug, want)
+                candidate = item(template, seed + offset, slug, want)
             except ValueError:
                 continue
-    raise ValueError("no reviewed frame is available")
+            if like == "trap" and want and want not in candidate.get("traps", []):
+                continue
+            return candidate
+    raise ValueError("no unseen reviewed frame is available")
 
 
 def public_item(generated: dict, item_id: str | None = None) -> dict:
     """One public shape; never serialize keys or trap reasons before a verdict."""
     allowed = ("kind", "stem", "text", "choices", "head", "step", "predictions", "source")
     out = {k: generated[k] for k in allowed if k in generated}
+    if generated.get("kind") == "typed":
+        out["first"] = generated.get("first") or (generated.get("answer") or "")[:1]
     if generated.get("step") in {"predict", "logic"} and not generated.get("stage_done"):
         out.pop("choices", None)
     if generated.get("kind") in {"card", "fix", "learn"}:

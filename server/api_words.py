@@ -188,8 +188,18 @@ def _choose(learner: str, slugs: list[str], mode: str, formats: list[str],
         else:
             kind = "card"
         wanted = want_trap or (adaptive[0] if adaptive and i % 2 == 0 else None)
-        q = _make_item(learner, slug, kind, rng.randrange(2**31), seen, wanted,
-                       strict_trap=bool(want_trap), review_fallback=mode in {"cards", "mix"})
+        draw = rng.randrange(2**31)
+        try:
+            q = _make_item(learner, slug, kind, draw, seen, wanted,
+                           strict_trap=bool(want_trap), review_fallback=mode in {"cards", "mix"})
+        except HTTPException as exc:
+            # A mixed quiz still works when this particular word has no
+            # reviewed passage. Recognition does not grant in-context proof.
+            if (exc.status_code != 409 or mode not in {"quiz", "print"} or
+                    kind not in {"incontext", "nearly", "transition", "precise"} or
+                    "meaning2word" not in formats):
+                raise
+            q = _make_item(learner, slug, "meaning2word", draw)
         if commit and q["kind"] in {"card", "fix"}:
             choices = [w["short"] for w in [words.entry(slug, learner),
                        *words._distractors(slug, rng, meanings=True, learner=learner)[:2]]]
