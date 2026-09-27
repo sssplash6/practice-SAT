@@ -76,6 +76,8 @@
   .wr-ctl .grade { flex: 1; min-height: 52px; }
   .wr-ctl .nav { min-width: var(--touch); }
   .wr-ctl .kbd { margin-left: 6px; }
+  /* a touch screen has no keys to hint at */
+  @media (hover: none) and (pointer: coarse) { .wr .kbd, .wr .keys { display: none; } }
   /* sorting and placement */
   .sortw { text-align: center; display: grid; gap: 18px; justify-items: center; padding: 40px 0 16px; }
   .sortw .fword { font-size: clamp(40px, 7vw, 64px); }
@@ -191,8 +193,20 @@
     }
     if (!id) return nothingHere();
     let run;
-    try { run = await UI.api(`/words/run/${enc(id)}`); }
-    catch (e) { return fail(e.status === 403 ? 'This run belongs to someone else.' : e.status === 404 ? 'No such run.' : 'This run did not load.', e.status >= 500 || e.offline); }
+    const kept = W.offline && W.offline.ok() ? await W.offline.run(id) : null;
+    R.stored = !!kept;
+    R.keptDone = new Set((kept && kept.done) || []);
+    try { run = await UI.api(`/words/run/${enc(id)}`, { quiet: R.stored }); }
+    catch (e) {
+      // W22: no signal, and this run's cards are on the device: go on from the first one not yet graded
+      if (e.offline && kept) {
+        const done = new Set(kept.done || []);
+        run = { ...kept, next: (kept.items || []).find(x => !done.has(x.item_id)) || null, finished: false };
+        R.offline = true;
+        W.offline.pending().then(n => W.offline.banner(n || 0));
+      } else return fail(e.status === 403 ? 'This run belongs to someone else.' : e.status === 404 ? 'No such run.' : 'This run did not load.', e.status >= 500 || e.offline);
+    }
+    if (run.mode === 'print' && !run.finished) { location.replace(`/words/print/?id=${enc(id)}`); return; }
     R.run = run;
     R.items = run.items || [];
     R.dir = (run.cfg && run.cfg.direction) || 'word';
@@ -311,7 +325,19 @@
   }
   const ms = () => Math.round(performance.now() - R.shownAt);
   async function post(body) {
-    return UI.api(`/words/run/${enc(id)}/answer`, { method: 'POST', body: { item_id: R.cur.item_id, ms: ms(), ...body } });
+    const b = { item_id: R.cur.item_id, ms: ms(), ...body };
+    if (!R.stored) return UI.api(`/words/run/${enc(id)}/answer`, { method: 'POST', body: b });
+    // W22: a kept run queues its grade when there is no signal, and goes on to the next kept card
+    try { const v = await UI.api(`/words/run/${enc(id)}/answer`, { method: 'POST', body: b, quiet: true }); R.keptDone.add(b.item_id); W.offline.done(id, b.item_id); return v; }
+    catch (e) {
+      if (!e.offline || !CARDS.has(R.cur.kind)) throw e;
+      await W.offline.queue({ run: id, ...b, at: new Date().toISOString() });
+      await W.offline.done(id, b.item_id);
+      R.keptDone.add(b.item_id);
+      R.offline = true;
+      return { offline: true, correct: body.answer === 'know' ? true : body.answer === 'dontknow' ? false : null,
+        next: R.items.find(x => !R.keptDone.has(x.item_id)) || null };
+    }
   }
   function took(v) {
     R.verdicts.set(R.cur.item_id, v);
@@ -328,8 +354,17 @@
   async function finish() {
     clearInterval(R.timer); clearTimeout(R.autoT);
     put($('stage'), h('p', { class: 'meta', text: 'Adding it up…' }));
-    try { summary(await UI.api(`/words/run/${enc(id)}/finish`, { method: 'POST' })); }
-    catch (e) { fail(e.status === 409 ? 'This run is finished.' : 'The summary did not load.', true); }
+    try { summary(await UI.api(`/words/run/${enc(id)}/finish`, { method: 'POST', quiet: R.stored })); }
+    catch (e) {
+      if (e.offline && R.stored) {
+        const n = await W.offline.pending();
+        return put($('stage'), h('div', { class: 'wl-msg', style: 'display:grid;gap:12px;justify-items:start;padding-top:24px' },
+          h('p', { text: n ? `Done · ${n === 1 ? '1 grade' : `${n} grades`} will sync when you’re back online.` : 'Done.' }),
+          h('p', { class: 'help', text: 'The summary comes with the signal. Quizzes need a connection.' }),
+          h('div', { style: 'display:flex;gap:10px' }, h('button', { type: 'button', class: 'btn', text: 'Try again', onclick: finish }), h('a', { class: 'btn', href: '/words/', text: 'Words' }))));
+      }
+      fail(e.status === 409 ? 'This run is finished.' : 'The summary did not load.', true);
+    }
   }
   // the per-question timer (off, 15, 30, 60 or SAT pace 71 s)
   let itemT = 0;
@@ -450,7 +485,7 @@
     took(v);
     R.prevStack.push(item);
     const st = $('status');
-    const line = v.requeued ? 'Again in 3 cards' : W.statusLine(v.status);
+    const line = v.offline ? 'Saved on this device' : v.requeued ? 'Again in 3 cards' : W.statusLine(v.status);
     if (st) st.textContent = `${ok ? 'Know' : 'Don’t know'} · ${line}`;
     setTimeout(() => { R.busy = false; advance(v); }, 900);
   }
