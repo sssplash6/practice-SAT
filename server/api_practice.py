@@ -98,7 +98,7 @@ def drill_answer(sid: str, body: DrillAnswer, x_learner: str | None = Header(def
         raise HTTPException(400, "no answer")
     try:
         return drill.answer(row, body.question_id, body.answer, body.ms)
-    except KeyError:
+    except drill.NotServed:
         raise HTTPException(400, "that question is not in this set")
     except drill.Closed as e:
         raise HTTPException(409, str(e))

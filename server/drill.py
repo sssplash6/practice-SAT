@@ -45,6 +45,16 @@ class Closed(Exception):
     """The set is finished, or its clock ran out: nothing more is filed."""
 
 
+class NotServed(LookupError):
+    """The question id is not one this set has shown."""
+
+
+def _add_ms(cfg: dict, qid: str, ms) -> None:
+    """Time on a question, capped per call (progress.MS_CAP)."""
+    spent = cfg.setdefault("ms", {})
+    spent[qid] = spent.get(qid, 0) + min(max(0, int(ms or 0)), progress.MS_CAP)
+
+
 def _cfg(row) -> dict:
     return json.loads(row["cfg"] or "{}")
 
@@ -1275,7 +1285,7 @@ def _day_word(at: str | None) -> str:
 
 
 def _aim(row, cfg: dict, served: list[dict], topic: str, pool: list[str], allowed: set,
-         used: Counter) -> dict | None:
+         used: Counter, fmt: str | None = None) -> dict | None:
     """The tier (and, for a placed skill in For me, the exact type) this slot
     aims at: the probe's staircase, tier_mix's plan, For me's zone by odds,
     and before placement the test's own 7 / 8 / 7 mix."""
@@ -1303,6 +1313,8 @@ def _aim(row, cfg: dict, served: list[dict], topic: str, pool: list[str], allowe
     best = None
     for t in pool:
         for tier in _tiers_of(t) & allowed:
+            if fmt and (tier, fmt) not in blueprint.abilities().get(t, ()):
+                continue                  # a format tilt (spr_share) narrows the zone's pairs
             p = ratings.expected(rated.get((t, tier), ratings.TIER_PRIOR[tier]), skill)
             score = abs(p - centre) + 0.05 * used.get(t, 0)
             if best is None or score < best[0]:
@@ -1486,12 +1498,18 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
 
         # P11: For me aims a placed skill at its zone by odds; an unplaced one
         # (and tier_mix, and the probe's staircase) serves the slot's planned tier
-        aim = _aim(row, cfg, served, topic, pool, allowed, used)
+        wanted_share = cfg.get("spr_share")
+        spr_count = sum(q.get("type") == "spr" for q in served)
+        target_spr = wanted_share is not None and spr_count < round((len(served) + 1) * wanted_share)
+        tilt = ("spr" if target_spr else "mcq") if wanted_share is not None and len(cfg.get("formats", ())) == 2 \
+            else None
+        aim = _aim(row, cfg, served, topic, pool, allowed, used, tilt)
         if aim and aim.get("template"):
-            card = _fresh(b, aim["template"], {aim["tier"]}, cfg)
+            card = _fresh(b, aim["template"], {aim["tier"]}, {**cfg, "formats": [tilt]} if tilt else cfg)
             if card:
                 cfg["_why"] = aim.get("why")
                 return card, False
+        wide = pool
         if aim and aim.get("tier") and any(aim["tier"] in _tiers_of(t) for t in pool):
             allowed = {aim["tier"]}
             pool = [t for t in pool if aim["tier"] in _tiers_of(t)]
@@ -1500,17 +1518,18 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
         # otherwise the least used templates, tie-broken per session so two
         # sessions do not open on the same one
         salt = row["id"]
-        ranked = sorted(pool, key=lambda t: (used[t], zlib.crc32(f"{salt}:{t}".encode())))
-        wanted_share = cfg.get("spr_share")
-        spr_count = sum(q.get("type") == "spr" for q in served)
-        target_spr = wanted_share is not None and spr_count < round((len(served) + 1) * wanted_share)
-        # spr_share picks the slot's format first, so the candidates carry it
-        walks = [cfg]
-        if wanted_share is not None and len(cfg.get("formats", ())) == 2:
-            walks.insert(0, {**cfg, "formats": ["spr" if target_spr else "mcq"]})
+
+        def rank(names):
+            return sorted(names, key=lambda t: (used[t], zlib.crc32(f"{salt}:{t}".encode())))
+        # spr_share picks the slot's format first, so the candidates carry it; a
+        # format tilt outranks the planned tier (a tier with no grid-in widens)
+        walks = [(cfg, allowed, pool)]
+        if tilt:
+            forced = {**cfg, "formats": [tilt]}
+            walks[:0] = [(forced, allowed, pool), (forced, base_allowed, wide)]
         cards = []
-        for walk in walks:
-            for template in ranked:
+        for walk, allowed, names in walks:
+            for template in rank(names):
                 card = _fresh(b, template, allowed, walk)
                 if card:
                     cards.append(card)
@@ -2133,7 +2152,7 @@ def next_question(row, skip: bool = False, ms: int | None = None) -> dict:
             if cur["id"] not in cfg.setdefault("skipped_ever", []):
                 cfg["skipped_ever"].append(cur["id"])
             if ms:
-                cfg.setdefault("ms", {})[cur["id"]] = cfg["ms"].get(cur["id"], 0) + min(int(ms), progress.MS_CAP)
+                _add_ms(cfg, cur["id"], ms)
             cfg["at"] = None
             cfg.pop("pending", None)            # a skip discards the preview (P23)
     elif served:
@@ -2222,11 +2241,11 @@ def answer(row, qid: str, given, ms: int | None, *, conf=None, guess: bool = Fal
         cfg["at"] = qid
     q = next((x for x in served if x["id"] == qid), None)
     if q is None:
-        raise KeyError(qid)
+        raise NotServed(qid)
     if overtime(row, cfg) and not row["contest"]:
         raise Closed("time is up")
     if ms:
-        cfg.setdefault("ms", {})[qid] = cfg["ms"].get(qid, 0) + min(max(0, int(ms)), progress.MS_CAP)
+        _add_ms(cfg, qid, ms)
     if qid in (cfg.get("skipped") or []):
         cfg["skipped"].remove(qid)
     if q.get("kind") == "example":                 # a worked example files nothing
@@ -2285,11 +2304,8 @@ def answer(row, qid: str, given, ms: int | None, *, conf=None, guess: bool = Fal
         reason = (q.get("reasons") or [""] * 4)[given] if not ok and isinstance(given, int) and 0 <= given < 4 else ""
         return _feedback(row, q, given, ok, reason, [], [], None, None, cfg, answers, served,
                          learner=learner)
+    # ponytail: attempts.sms stays Compete's (S8 scores the client's ms today, as its check expects)
     sms = None
-    if row["contest"] and q.get("served"):
-        spent = round((_now() - _at(q["served"])).total_seconds() * 1000)
-        left = seconds_left(row, cfg)
-        sms = max(0, min(spent, (left or 0) * 1000 + spent)) if left is not None else spent
     before = progress.topic_mastery(learner, q["topic"])
     best_before = db.one(f"SELECT MIN(COALESCE(ms, sms)) m FROM attempts WHERE learner=? AND template=? AND correct=1"
                          f" AND guess=0 AND hints=0 AND {progress.COUNTED}", learner, q["key"])["m"]
@@ -2436,7 +2452,7 @@ def reveal(row, qid: str) -> dict:
     r = (cfg.get("retry") or {}).get(qid)
     q = next((x for x in served if x["id"] == qid), None)
     if q is None:
-        raise KeyError(qid)
+        raise NotServed(qid)
     answers = db.load_answers(row)
     if not r and qid not in answers:
         raise HTTPException(409, {"reason": "answer it first"})
@@ -2671,9 +2687,9 @@ def time_on(row, qid: str, ms: int) -> dict:
     _open(row, cfg)
     commit_pending(row, cfg, served, qid)
     if not any(q["id"] == qid for q in served):
-        raise KeyError(qid)
+        raise NotServed(qid)
     add = min(max(0, int(ms)), progress.MS_CAP)
-    cfg.setdefault("ms", {})[qid] = cfg["ms"].get(qid, 0) + add
+    _add_ms(cfg, qid, add)
     cfg["at"] = qid
     _save(row["id"], cfg, served)
     return {"question_id": qid, "ms": cfg["ms"][qid], "at": qid}
@@ -2685,7 +2701,7 @@ def strike(row, qid: str, choice: int, on: bool, by: str | None = None) -> dict:
     commit_pending(row, cfg, served, qid)
     q = next((x for x in served if x["id"] == qid), None)
     if q is None:
-        raise KeyError(qid)
+        raise NotServed(qid)
     if q.get("type") != "mcq" or not 0 <= choice < len(q.get("choices") or ()):
         raise HTTPException(422, {"field": "choice", "reason": "strike a choice 0–3"})
     marks = cfg.setdefault("strike", {}).setdefault(qid, [])
@@ -2713,7 +2729,7 @@ def more(row, qid: str, step: int = 0, axis: str | None = None, want: str | None
         raise Paused()
     q = next((x for x in served if x["id"] == qid), None)
     if q is None or q.get("kind", "question") != "question":
-        raise KeyError(qid)
+        raise NotServed(qid)
     axis = axis or {-1: "easier", 0: "same", 1: "harder"}.get(step, "same")
     if axis not in ("same", "easier", "harder", "grid", "ask"):
         raise HTTPException(422, {"field": "axis", "reason": "same, easier, harder, grid or ask"})
@@ -2808,7 +2824,7 @@ def hint(row, qid: str) -> dict:
         raise HTTPException(409, {"reason": "hints are off"})
     q = next((x for x in served if x["id"] == qid), None)
     if q is None or q.get("kind", "question") != "question":
-        raise KeyError(qid)
+        raise NotServed(qid)
     answers = db.load_answers(row)
     retry = (cfg.get("retry") or {}).get(qid)
     if qid in answers and not (retry and not retry.get("final")):
@@ -2876,7 +2892,7 @@ def calc(row, qid: str, exprs: list) -> dict:
     if not isinstance(exprs, list) or len(exprs) > 30 or any(not isinstance(e, str) or len(e) > 500 for e in exprs):
         raise HTTPException(422, {"field": "exprs", "reason": "up to 30 expressions of 500 characters"})
     if not any(q["id"] == qid for q in served):
-        raise KeyError(qid)
+        raise NotServed(qid)
     cfg.setdefault("calc", {})[qid] = exprs
     _save(row["id"], cfg, served)
     return {"question_id": qid, "saved": len(exprs)}
@@ -2888,7 +2904,7 @@ def contest_skip(row, qid: str) -> dict:
     _open(row, cfg)
     q = next((x for x in served if x["id"] == qid), None)
     if q is None:
-        raise KeyError(qid)
+        raise NotServed(qid)
     if not db.set_answer(row["id"], qid, "_skip", only_new=True):
         raise HTTPException(409, {"reason": "already answered"})
     nxt = preview_next(row, cfg, served) if _save_after(row, cfg, served) else None
@@ -2908,7 +2924,7 @@ def detail(row, qid: str) -> dict:
         _save(row["id"], cfg, served)
     q = next((x for x in served if x["id"] == qid), None)
     if q is None:
-        raise KeyError(qid)
+        raise NotServed(qid)
     learner = row["learner"]
     answers = db.load_answers(row)
     finished = row["finished"] is not None
