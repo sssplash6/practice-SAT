@@ -88,6 +88,7 @@
   #next .lead { display: grid; gap: 6px; padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid color-mix(in srgb, var(--amber) 25%, transparent); }
   #next .lead-t { font: 700 20px/1.25 var(--font); letter-spacing: -.01em; color: var(--ink); }
   .size { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+  .size .seg button { min-height: 36px; }
   .size > * { margin: 0; }
   .size-picks { display: flex; align-items: center; }
   .size-picks .chips { gap: 6px; align-items: center; margin: 0; }
@@ -1172,7 +1173,7 @@
     Object.values(QD.ws).forEach(w => { try { w.destroy(); } catch (_) {} });
     QD.ws = {};
     const streak = h('span', { class: 'row' }, h('span', { class: 'streak' + (d.streak ? ' on' : ''), 'aria-label': `Day's questions streak, ${d.streak || 0} days` },
-      flame(d.streak > 0), d.streak ? `${d.streak} ${d.streak === 1 ? 'day' : 'days'} in a row` : 'Start a streak'));
+      flame(d.streak > 0), d.streak ? `${d.streak} ${d.streak === 1 ? 'day' : 'days'} in a row` : '0'));
     const mo = d.month || {};
     const metaT = join(d.best > (d.streak || 0) && `best ${d.best}`, mo.of && `${mo.right} of ${mo.of} right this month`, mo.crowd_pct !== null && mo.crowd_pct !== undefined && `crowd ${pct(mo.crowd_pct)}`);
     const kids = [];
@@ -1838,7 +1839,7 @@
     if (t.plan) {
       const left = (t.plan.days || []).filter(d => d.date >= today() && ['practice', 'test'].includes(d.kind));
       kids.push(line(`${pl(left.length, 'study day')} and ${pl(left.filter(d => d.kind === 'test').length, 'test')} left in your plan`));
-    } else if (days > 0) kids.push(h('div', {}, link(`Build a plan for these ${n(days)} days`, '#plan')));
+    } else if (days > 0) kids.push(h('div', { class: 'acts' }, link(`Build a plan for these ${n(days)} days`, '#plan')));
     kids.push(h('div', { class: 'acts' }, quiet('Add to calendar', () => calSheet())));
     if (days <= 7) kids.push(checklist(p.exam_date, days <= 1));
     card('exam', 'SAT', trig, kids);
