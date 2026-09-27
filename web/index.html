@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>SAT Freshman</title>
+<title>Today · SAT Freshman</title>
 <meta name="description" content="Free SAT Math practice that never runs out and never repeats.">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
@@ -14,239 +14,2137 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/assets/runner.css">
 <style>
-  /* Today: the one thing to do, then the day's question, then where you
-     stand. The next thing -- the coach's set, or the plan's test -- is the
-     only pill on the page. */
-  .today { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 20px; align-items: start; }
-  .col { display: grid; gap: 20px; }
+  /* Today (spec 3.2, today.md T1-T20, R27, R30). Every shared piece (cards, seg, chips,
+     sheets, charts, the question) is ui.css / runner.css; these rules lay the page out. */
+  .td { padding-bottom: 110px; }
+  .td * { min-width: 0; }
+  .td-upd { margin: 0 0 10px; padding-top: 6px; border-top: 1px solid var(--line); font: 500 11px var(--mono); color: var(--soft); }
 
-  .next { padding: 26px 26px 24px; border-radius: 14px; background: var(--wash); }
-  .next .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-  .next .chip { background: var(--paper); }
-  .next .chip .dots { margin-left: 2px; }
-  .next-foot { margin-top: 26px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-  .next-foot .meta { color: var(--ink); }
-
-  .qotd { padding: 24px 26px 26px; border-radius: 14px; background: var(--tile); }
-  .qotd-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-  .qotd .q-skill { margin-bottom: 12px; }
-  .qotd .q-skill .glyph { --gb: var(--tile); }
-  .qotd .q-stem { font-size: 18.5px; }
-  .qotd .opt { background: var(--paper); font-size: 17px; padding: 11px 16px; }
-  @media (hover: hover) and (pointer: fine) { .qotd .opts:not(.done) .opt:hover { background: var(--wash); } }
-  .crowd { margin-top: 14px; }
-
-  .stat { padding: 22px 24px; border-radius: 14px; background: var(--tile); }
-  .stat .num { font-size: clamp(38px, 4.6vw, 52px); display: block; }
-  .stat .k { display: block; margin-top: 10px; }
-  .stat .quiet { margin-top: 10px; }
-  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-
-  .week { display: flex; justify-content: space-between; margin-top: 14px; }
-  .week div { display: grid; justify-items: center; gap: 7px; }
-  .week i { width: 14px; height: 14px; border-radius: 50%; background: var(--mat); display: block; }
-  .week i.on { background: var(--amber); }
-  .week i.now { box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--ink); }
-  .week span { font: 500 10.5px var(--mono); color: var(--soft); }
-
-  .chal { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; }
-  .chal svg { width: 26px; height: 26px; color: var(--ink); }
-  .chal .h2 { font-size: 16px; }
-  .chal .meta { display: block; margin-top: 2px; }
-  .chal .num { font-size: 26px; }
-
-  @media (max-width: 859px) {
-    .today { grid-template-columns: minmax(0, 1fr); }
+  /* the grid: DOM order is the phone order; order + span place the wider layouts */
+  #today { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 760px) {
+    #today { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #today > section { grid-column: span 1; }
+    #hero, #next, #qotd, #gain, #study, #plan, #tests { grid-column: span 2 !important; }
+    #hero { order: 1; } #next { order: 2; } #qotd { order: 3; } #gain { order: 4; } #mist { order: 5; } #exam { order: 6; }
+    #score { order: 7; } #pace { order: 8; } #study { order: 9; } #chal { order: 10; } #words { order: 11; } #plan { order: 12; } #tests { order: 13; }
+    #today.stretch #exam { order: 1; grid-column: span 2; }
   }
-  @media (max-width: 420px) { .pair { grid-template-columns: 1fr; } }
+  @media (min-width: 1080px) {
+    #today { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+    #hero, #qotd, #tests { grid-column: span 12 !important; }
+    #next, #gain, #study, #plan { grid-column: span 8 !important; }
+    #mist, #exam, #chal, #words { grid-column: span 4 !important; }
+    #score, #pace { grid-column: span 6 !important; }
+    #hero { order: 1; } #next { order: 2; } #mist { order: 3; } #gain { order: 4; } #exam { order: 5; } #qotd { order: 6; }
+    #score { order: 7; } #pace { order: 8; } #study { order: 9; } #chal { order: 10; } #plan { order: 11; } #words { order: 12; } #tests { order: 13; }
+    #today.stretch #exam { order: 2; grid-column: span 12 !important; }
+    #today.stretch #next { order: 3; } #today.stretch #mist { order: 4; }
+    #today.stretch #gain { order: 5; grid-column: span 12 !important; }
+    #today.examday #next { grid-column: span 12 !important; }
+    #today.examday #gain { order: 4; grid-column: span 8 !important; } #today.examday #mist { order: 5; }
+  }
+
+  .td .card-head { justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  .td .card-head > .k { flex: 1 1 auto; margin: 0; outline-offset: 4px; }
+  .td .card-head .card-act { margin-left: auto; }
+  .td .sub { margin: 18px 0 8px; font: 600 11px/1.3 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+  .td .sub:first-child { margin-top: 0; }
+  .td .line { margin: 6px 0 0; font: 400 14.5px/1.45 var(--font); color: var(--ink); text-wrap: pretty; }
+  .td .line.soft { color: var(--soft); font-size: 13.5px; }
+  .td .row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  .td .acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+  .td .big { font: 600 44px/1 var(--mono); font-variant-numeric: tabular-nums; letter-spacing: -.02em; color: var(--ink); }
+  .td .bar4 { display: block; height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; margin-top: 6px; }
+  .td .bar4 > i { display: block; height: 100%; background: var(--amber); border-radius: 2px; }
+  .td hr.sep { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
+  .td .tag { display: inline-flex; align-items: center; gap: 4px; padding: 1px 7px; border-radius: 6px; background: var(--tile-2); font: 600 11px/1.6 var(--font); color: var(--ink); }
+  .td .tag.ink { background: var(--ink); color: var(--on-ink); }
+  .td a.plain { color: inherit; text-decoration: none; }
+  .td a.plain:hover { text-decoration: underline; }
+
+  /* hero */
+  #hero { padding: 4px 0 0; }
+  .hero-top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
+  .hero-top .h1 { margin: 4px 0 0; outline: none; }
+  .hero-name { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
+  .hero-name .field { max-width: 240px; }
+  .hero-stats { display: flex; flex-wrap: wrap; gap: 8px; }
+  .hero-stats a { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px; border-radius: 16px; background: var(--tile);
+    font: 600 13px var(--font); color: var(--ink); text-decoration: none; }
+  .hero-stats a.bold { background: var(--ink); color: var(--on-ink); }
+  .hero-stats svg { width: 16px; height: 16px; }
+  .hero-stats .on svg .flame { fill: var(--amber); stroke: var(--amber-deep); }
+  .brief { margin: 10px 0 0; font: 400 15px/1.5 var(--font); color: var(--soft); display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+  .brief a { color: var(--ink); text-decoration: none; }
+  .brief a:hover { text-decoration: underline; }
+  .brief .sep { color: var(--faint); }
+  .brief .risk { color: var(--ink); font-weight: 600; }
+
+  /* up next */
+  #next { background: var(--wash); }
+  #next .lead { display: grid; gap: 6px; padding-bottom: 18px; margin-bottom: 18px; border-bottom: 1px solid color-mix(in srgb, var(--amber) 25%, transparent); }
+  #next .lead-t { font: 700 20px/1.25 var(--font); letter-spacing: -.01em; color: var(--ink); }
+  .size { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .size .chips { gap: 6px 6px; align-items: center; }
+  .size .chips > .sz-k { font: 600 12px var(--font); color: var(--soft); margin: 0 2px 0 6px; }
+  .size .chips > .sz-k:first-child { margin-left: 0; }
+  .size-help { margin: 6px 0 0; }
+  .sess-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 14px; }
+  .reason { margin: 16px 0 0; font: 500 15px/1.45 var(--font); color: var(--ink); }
+  .blocks { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 2px; transition: opacity .15s; }
+  .blocks.stale { opacity: .6; }
+  .blocks li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto auto; gap: 10px; align-items: center; min-height: 40px; padding: 4px 0; border-bottom: 1px solid color-mix(in srgb, var(--amber) 16%, transparent); }
+  .blocks li .no { font: 500 13px var(--mono); color: var(--soft); }
+  .blocks li .lb { font: 500 14.5px/1.35 var(--font); color: var(--ink); }
+  .blocks li .lb .meta { display: block; margin-top: 2px; }
+  .blocks li .qm { font: 500 13px var(--mono); color: var(--ink); white-space: nowrap; }
+  .blocks li.tot .lb { font-weight: 700; }
+  .blocks li.then { border-bottom: 0; }
+  .blocks li.then .lb { color: var(--soft); font-size: 13.5px; }
+  .tchips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .tchip { display: inline-flex; flex-direction: column; gap: 4px; padding: 7px 11px 6px; border-radius: 10px; background: var(--paper); font: 600 13.5px var(--font); color: var(--ink); }
+  .tchip .tc-t { display: inline-flex; align-items: center; gap: 6px; }
+  .tchip .mbar { width: 100%; }
+  .q1 { margin-top: 16px; padding: 16px 18px; border-radius: 12px; background: var(--paper); }
+  .q1-after { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 12px; }
+  .go { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 18px; }
+  .note-ok { margin: 10px 0 0; font: 400 13px/1.4 var(--font); color: var(--soft); }
+  .receipt { margin: 0 0 18px; padding: 14px 16px; border-radius: 12px; background: var(--paper); }
+  .receipt p { margin: 4px 0 0; font: 400 14.5px/1.45 var(--font); color: var(--ink); }
+  .receipt p.fig { font: 600 16px var(--mono); }
+
+  /* due today */
+  .due { margin-top: 22px; padding-top: 18px; border-top: 1px solid color-mix(in srgb, var(--amber) 25%, transparent); }
+  .due-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; }
+  .due-head .k { margin: 0; }
+  .due-head .meta { color: var(--ink); }
+  .drow { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; gap: 4px 12px; align-items: start; padding: 10px 0; border-bottom: 1px solid color-mix(in srgb, var(--amber) 14%, transparent); }
+  .drow:last-child { border-bottom: 0; }
+  .drow[data-status="skipped"] { opacity: .55; }
+  .drow .dt { font: 600 15px/1.35 var(--font); color: var(--ink); }
+  .drow .dt .tag { margin-left: 6px; vertical-align: 1px; }
+  .drow .dm { margin-top: 2px; }
+  .drow .dwhy { margin: 6px 0 0; font: 400 13.5px/1.45 var(--font); color: var(--ink); }
+  .drow .dres { margin: 4px 0 0; font: 500 13px var(--mono); color: var(--ink); }
+  .drow .dact { display: flex; align-items: center; gap: 6px; }
+  .drow .dextra { grid-column: 2 / -1; display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; }
+  .st { position: relative; display: inline-grid; place-items: center; width: 22px; height: 22px; margin-top: 1px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--faint); }
+  .st[data-s="done"], .st[data-s="marked"] { background: var(--amber); box-shadow: none; }
+  .st[data-s="done"]::after, .st[data-s="marked"]::after { content: ""; width: 9px; height: 5px; border: solid var(--ink-deep); border-width: 0 0 2px 2px; transform: translateY(-1px) rotate(-45deg); }
+  .st[data-s="progress"] { box-shadow: inset 0 0 0 1.5px var(--ink); background: conic-gradient(var(--ink) calc(var(--f, 0) * 1turn), transparent 0); -webkit-mask: radial-gradient(circle, transparent 5px, #000 5.5px); mask: radial-gradient(circle, transparent 5px, #000 5.5px); }
+  .st[data-s="skipped"] { box-shadow: none; }
+  .st[data-s="skipped"]::after { content: ""; width: 12px; height: 2px; background: var(--soft); }
+  .st-box { display: inline-grid; place-items: center; width: 28px; height: 28px; }
+  .st-box input { width: 20px; height: 20px; accent-color: var(--amber); margin: 0; }
+
+  /* mistakes / review card */
+  .mist-fig { display: flex; align-items: baseline; gap: 10px; }
+  .trow { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 4px 10px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--line); }
+  .trow:last-child { border-bottom: 0; }
+  .trow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); }
+  .trow button.tl { all: unset; cursor: pointer; font: 500 14px/1.35 var(--font); color: var(--ink); }
+  .trow button.tl:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 4px; }
+  .trow .tm { grid-column: 2 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+  .trow .tm .glyph { width: 16px; height: 16px; }
+  .habit { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .habit .hn { font: 600 15px/1.35 var(--font); }
+  .habit .hn.broken { text-decoration: line-through; }
+  .habit .tell { font-style: italic; }
+
+  /* questions of the day */
+  .qd-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; }
+  .qd-tabs { display: none; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .qd-tabs button { display: inline-flex; align-items: center; gap: 8px; min-height: var(--ctl); padding: 0 12px; border-radius: 10px; border: 0; background: var(--tile-2);
+    font: 600 14px var(--font); color: var(--ink); cursor: pointer; }
+  .qd-tabs button[aria-selected="true"] { background: var(--ink); color: var(--on-ink); }
+  .qd-rowk { margin: 0 0 10px; }
+  .qd-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .qd-row + .qd-rowk { margin-top: 28px; }
+  .qd-slot { display: grid; align-content: start; gap: 10px; padding: 18px; border-radius: 12px; background: var(--paper); }
+  .qd-lab { display: flex; align-items: center; gap: 8px; }
+  .mk { position: relative; display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; box-shadow: inset 0 0 0 1.5px var(--faint); flex: none; font: 700 10px/1 var(--font); }
+  .mk[data-m="right"] { background: var(--amber); box-shadow: none; color: var(--ink-deep); }
+  .mk[data-m="wrong"] { background: var(--ink); box-shadow: none; color: var(--on-ink); }
+  .mk[data-rep]::after { content: "↻"; position: absolute; right: -6px; top: -7px; font: 700 10px var(--font); color: var(--ink); }
+  .qd-text { margin: 0; font: 400 var(--q-opt)/1.55 var(--serif); color: var(--ink); }
+  .qd-after { display: grid; gap: 8px; }
+  .qd-after .line { margin: 0; }
+  .qd-past { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .qd-past .k { margin-right: 4px; }
+  .qd-day { display: inline-grid; justify-items: center; gap: 4px; min-width: 44px; min-height: 44px; padding: 5px 6px; border: 0; border-radius: 10px; background: var(--tile-2); cursor: pointer; font: 600 12px var(--font); color: var(--ink); }
+  .qd-day[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--ink); }
+  .qd-day .mm { display: flex; gap: 3px; }
+  .qd-day .mm i { width: 7px; height: 7px; border-radius: 50%; box-shadow: inset 0 0 0 1.2px var(--faint); }
+  .qd-day .mm i[data-m="right"] { background: var(--amber); box-shadow: none; }
+  .qd-day .mm i[data-m="wrong"] { background: var(--ink); box-shadow: none; }
+  .qd-arch { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 0 0 14px; }
+  @media (max-width: 1079px) {
+    .qd-tabs { display: flex; }
+    .qd-rowk { display: none; }
+    .qd-row { grid-template-columns: minmax(0, 1fr); gap: 0; }
+    .qd-row + .qd-rowk { margin-top: 0; }
+    .qd-slot:not(.on) { display: none; }
+    .qd-slot { padding: 0; background: none; }
+  }
+
+  /* points, pace, score */
+  .gain-head { position: sticky; top: calc(var(--bar, 64px) + 4px); z-index: 2; background: var(--tile); padding: 6px 0 10px; margin: -6px 0 6px; }
+  @media (min-width: 1080px) { .gain-head { top: 8px; } }
+  .gain-rows .skill-row { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .gain-rows .skill-row:last-child { border-bottom: 0; }
+  .extra-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .extra-row b { font: 600 18px var(--mono); }
+  .dom-row { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto; gap: 6px 14px; align-items: center; padding: 11px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--ink); }
+  .dom-row .mbar { width: 100%; }
+  .score-band { font: 600 48px/1 var(--mono); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .causes-fix { margin-top: 10px; padding: 12px 14px; border-radius: 10px; background: var(--paper); }
+  .pace-fig { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+  .pace-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .pace-row:last-child { border-bottom: 0; }
+
+  /* exam */
+  .exam-trig { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 10px; border-radius: 8px; border: 0; background: var(--tile-2); font: 600 13.5px var(--font); color: var(--ink); cursor: pointer; }
+  .exam-cap { font: 600 17px/1.35 var(--font); color: var(--ink); }
+  .td .countdown { margin-top: 14px; }
+  .td .countdown .num { font-size: 28px; }
+  .check-list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 2px; }
+  .check-list label { display: flex; align-items: center; gap: 10px; min-height: 40px; font: 400 14px/1.35 var(--font); cursor: pointer; }
+  .check-list input { width: 18px; height: 18px; accent-color: var(--amber); flex: none; }
+  .ready-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; padding: 9px 0; border-bottom: 1px solid var(--line); }
+
+  /* study */
+  .figs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  @media (max-width: 759px) { .figs { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .fig { padding: 12px 14px; border-radius: 10px; background: var(--paper); }
+  .fig .v { font: 600 24px/1.1 var(--mono); }
+  .fig .k { display: block; margin-top: 4px; }
+  .cal-wrap { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px; margin-top: 18px; }
+  @media (max-width: 899px) { .cal-wrap { grid-template-columns: minmax(0, 1fr); } }
+  .day-detail { padding: 14px 16px; border-radius: 12px; background: var(--paper); align-self: start; }
+  .day-detail .dd-t { font: 600 15px/1.35 var(--font); }
+  .day-detail ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; }
+
+  /* challenge, words, plan, tests */
+  .board { list-style: none; margin: 10px 0 0; padding: 0; }
+  .board li { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto auto; gap: 10px; align-items: center; min-height: 36px; border-bottom: 1px solid var(--line); font: 500 14px var(--font); }
+  .board li.you { background: var(--wash); box-shadow: inset 3px 0 0 var(--amber); padding-left: 6px; }
+  .board li .meta { color: var(--ink); }
+  .slots10 { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+  .slots10 > div { display: grid; justify-items: center; gap: 4px; }
+  .plan-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  @media (max-width: 759px) { .plan-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .wk-pager { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+  .wk-strip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-top: 12px; }
+  .wk-day { display: grid; gap: 4px; align-content: start; padding: 8px 6px; border-radius: 10px; background: var(--paper); font: 500 12px var(--font); text-align: center; min-height: 96px; }
+  .wk-day[data-today] { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .wk-day .wk-k { font: 600 11px var(--font); color: var(--soft); text-transform: uppercase; letter-spacing: .06em; }
+  .wk-day .wk-s { font: 600 12px var(--font); }
+  .wk-day .meta { font-size: 10.5px; }
+  .wk-day .quiet { font-size: 12px; min-height: 28px; padding: 0 4px; }
+  .draft-ctl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px; margin-top: 8px; }
+  @media (max-width: 759px) { .draft-ctl { grid-template-columns: minmax(0, 1fr); } }
+  .draft-ctl label.label { display: block; margin-bottom: 6px; }
+  .days7 { display: flex; flex-wrap: wrap; gap: 4px; }
+  .days7 button { min-width: 40px; min-height: var(--ctl); border: 0; border-radius: 8px; background: var(--tile-2); font: 600 13px var(--font); color: var(--ink); cursor: pointer; }
+  .days7 button[aria-pressed="true"] { background: var(--ink); color: var(--on-ink); }
+  .week-rows { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 2px; }
+  .week-rows li { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--line); font: 400 13.5px var(--font); }
+  .week-rows li b { font: 600 13px var(--mono); min-width: 88px; }
+  .cta-steps { display: flex; flex-wrap: wrap; gap: 6px 14px; margin: 10px 0 0; padding: 0; list-style: none; }
+  .cta-steps a { font: 500 14px var(--font); color: var(--ink); }
+  .tests-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  @media (max-width: 1079px) { .tests-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 759px) { .tests-grid { grid-template-columns: minmax(0, 1fr); } }
+  .tcard { display: grid; gap: 8px; align-content: start; padding: 16px; border-radius: 12px; background: var(--paper); }
+  .tcard.open { box-shadow: inset 3px 0 0 var(--amber); }
+  .tcard .band { font: 600 34px/1 var(--mono); letter-spacing: -.02em; }
+  .mchips { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+  .mchips button { min-width: 28px; height: 26px; padding: 0 5px; border-radius: 6px; border: 0; background: var(--ink); color: var(--on-ink); font: 500 12px var(--mono); cursor: pointer; }
+  .mchips button.blank { background: none; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--faint); }
+
+  @media (max-width: 759px) {
+    .td .big { font-size: 38px; }
+    .score-band { font-size: 40px; }
+    .qd-slot .opt { min-height: 56px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .rise { animation: none !important; } }
 </style>
 </head>
 <body data-page="today">
 <header id="bar"></header>
-
-<main class="page">
-  <div class="today">
-    <div class="col">
-      <section class="next rise" id="next" aria-label="Next">
-        <div class="chips" id="chips"></div>
-        <div class="next-foot">
-          <span class="meta" id="nextMeta"></span>
-          <button type="button" class="pill" id="go" disabled>Start</button>
-        </div>
-        <p class="error" id="err" hidden></p>
-      </section>
-
-      <section class="qotd rise rise-2" id="qotd" aria-label="Question of the day">
-        <div class="qotd-head"><span class="k" id="qday"></span><span class="meta" id="qcrowd"></span></div>
-        <div id="qbox"></div>
-      </section>
-    </div>
-
-    <div class="col">
-      <div class="pair rise rise-2">
-        <section class="stat" aria-label="Score">
-          <span class="num" id="score">—</span>
-          <span class="k" id="scoreK">Math</span>
-          <a class="quiet" id="scoreGo" href="/tests/" hidden>Take a test</a>
-        </section>
-        <section class="stat" aria-label="Exam">
-          <span class="num" id="exam">—</span>
-          <span class="k" id="examK">Exam</span>
-          <a class="quiet" id="examGo" href="/plan/" hidden>Set a date</a>
-        </section>
-      </div>
-
-      <section class="stat rise rise-3" aria-label="This week">
-        <div style="display:flex;justify-content:space-between;align-items:baseline">
-          <span class="k">Week</span><span class="meta" id="weekMeta"></span>
-        </div>
-        <div class="week" id="week"></div>
-      </section>
-
-      <section class="stat rise rise-3" aria-label="Challenge">
-        <div class="chal">
-          <span id="trophy"></span>
-          <div><span class="h2">Challenge</span><span class="meta" id="chalMeta"></span></div>
-          <div id="chalGo"></div>
-        </div>
-      </section>
-
-      <a class="quiet rise rise-3" id="mistakes" href="/mistakes/" hidden style="justify-self:start;margin-left:0"><span class="dot"></span><span></span></a>
-    </div>
+<main class="page td" id="main" tabindex="-1">
+  <p class="td-upd" id="upd" hidden>Updating…</p>
+  <p class="note-ok" id="dayNote" role="status" hidden></p>
+  <div id="today">
+    <section id="hero" aria-label="Today"></section>
+    <section id="next" class="card" aria-label="Up next"></section>
+    <section id="qotd" class="card" aria-label="Questions of the day"></section>
+    <section id="gain" class="card" aria-label="Points on the table"></section>
+    <section id="mist" class="card" aria-label="Mistakes"></section>
+    <section id="exam" class="card" aria-label="SAT countdown"></section>
+    <section id="score" class="card" aria-label="Score"></section>
+    <section id="pace" class="card" aria-label="Pace"></section>
+    <section id="study" class="card" aria-label="Study time"></section>
+    <section id="plan" class="card" aria-label="Study plan"></section>
+    <section id="chal" class="card" aria-label="Daily challenge"></section>
+    <section id="words" class="card" aria-label="Words"></section>
+    <section id="tests" class="card" aria-label="Recent tests"></section>
   </div>
 </main>
-
 <nav id="tabs"></nav>
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
+<script src="/assets/question.js"></script>
+<script>UI.shell({ page: 'today', now: false });</script>
 <script>
 (() => {
   'use strict';
-  const { api, h, glyph, TOPIC, band, day, minutesFor, $, svg, ICON } = UI;
-  UI.shell();
-  $('#trophy').innerHTML = svg(ICON.trophy, 26);
+  const h = UI.h, $ = id => document.getElementById(id);
+  const S = { t: null, ins: null, q: null, cal: null, chal: null, board: null, hist: null, histMore: [], calMonth: null, calDay: null,
+              week: null, draft: null, qday: null, gainSort: 'points', mistView: 'type', causePick: null, calMetric: 'minutes' };
+  const api = (p, o) => UI.api(p, o);
+  const post = (p, body) => api(p, { method: 'POST', body: body || {} });
+  const put = (p, body) => api(p, { method: 'PUT', body });
+  const n = x => UI.num(x);
+  const pl = (k, one, many) => `${n(k)} ${k === 1 ? one : (many || one + 's')}`;
+  const pct = x => `${Math.round((x > 1 ? x / 100 : x || 0) * 100)}%`;
+  const TOP = slug => (UI.TOPIC && UI.TOPIC[slug] || {}).short || String(slug || '').replace(/_/g, ' ');
+  const DSHORT = d => ((UI.DOMAINS || []).find(x => x[0] === d) || [d, d])[1];
+  const sdur = s => UI.dur((s || 0) / 60);
+  const cap = s => s ? s[0].toUpperCase() + s.slice(1) : '';
+  const phone = () => matchMedia('(max-width: 759px)').matches;
+  const narrow = () => matchMedia('(max-width: 1079px)').matches;
+  const ls = { get(k) { try { return localStorage.getItem(k); } catch (_) { return null; } },
+               set(k, v) { try { localStorage.setItem(k, v); } catch (_) {} } };
+  const localDay = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
+  const addDays = (iso, k) => { const d = new Date(iso + 'T12:00:00'); d.setDate(d.getDate() + k); return d.toISOString().slice(0, 10); };
+  const dayDiff = (a, b) => Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 864e5);
+  const today = () => (S.t && S.t.days && S.t.days.today) || localDay();
+  const flame = on => h('span', { class: on ? 'on' : '', html: UI.svg(UI.ICON.flame, 16), 'aria-hidden': 'true' });
 
-  /* ---------------------------------------------------------- the next thing
-     The coach's set, or on the plan's test day the test, until one is done. */
-  let start = null;              // makes the sitting and says where it opens
-  $('#go').addEventListener('click', async () => {
-    if (!start) return;
-    const go = $('#go');
-    go.setAttribute('aria-busy', 'true');
-    try { location.href = await start(); }
-    catch (e) {
-      go.removeAttribute('aria-busy');
-      $('#err').textContent = e.message; $('#err').hidden = false;
+  /* ---------------------------------------------------------------- small builders */
+  function btn(label, onClick, cls = 'btn') {
+    const b = h('button', { type: 'button', class: cls, text: label });
+    if (onClick) b.addEventListener('click', e => run(b, () => onClick(e, b)));
+    return b;
+  }
+  const quiet = (label, onClick) => btn(label, onClick, 'quiet');
+  const pill = (label, onClick) => btn(label, onClick, 'pill');
+  const link = (label, href, cls = 'quiet') => h('a', { class: cls, href, text: label });
+  const line = (text, cls = '') => h('p', { class: 'line' + (cls ? ' ' + cls : ''), text });
+  const meta = text => h('p', { class: 'meta', text });
+  const sub = text => h('p', { class: 'sub', text });
+  const bar4 = f => h('span', { class: 'bar4', 'aria-hidden': 'true' }, h('i', { style: `width:${Math.max(0, Math.min(100, Math.round((f || 0) * 100)))}%` }));
+  const join = (...xs) => xs.flat().filter(Boolean).join(' · ');
+  function errText(e) {
+    const d = e && e.detail;
+    if (d && typeof d === 'object' && d.reason) return cap(String(d.reason).replace(/_/g, ' ')) + '.';
+    if (typeof d === 'string' && d.length < 120) return cap(d) + (/[.!?]$/.test(d) ? '' : '.');
+    return e && e.offline ? 'Can’t reach SAT Freshman.' : 'That didn’t work. Try again.';
+  }
+  async function run(b, fn) {
+    if (b.getAttribute('aria-busy') === 'true') return;
+    b.setAttribute('aria-busy', 'true');
+    try { await fn(); } catch (e) { if (e && e.name !== 'AbortError') UI.toast(errText(e)); }
+    finally { b.removeAttribute('aria-busy'); }
+  }
+  function head(id, label, ...right) {
+    const r = right.flat().filter(Boolean);
+    return h('div', { class: 'card-head' }, h('h2', { class: 'k', id: id + '-h', tabindex: '-1', text: label }),
+      r.length ? h('div', { class: 'card-act' }, ...r) : null);
+  }
+  function card(id, label, right, ...kids) {
+    const el = $(id);
+    el.setAttribute('aria-labelledby', id + '-h');
+    el.replaceChildren(head(id, label, right || []), ...kids.flat().filter(Boolean));
+    return el;
+  }
+  const skel = (id, label, shape) => card(id, label, null, UI.skel(null, shape));
+  const topicChip = (slug, o = {}) => {
+    const c = h('span', { class: 'tchip', 'aria-label': join(TOP(slug), o.answered !== undefined && `${n(o.answered)} answered`, o.traps && pl(o.traps, 'open mistake')) });
+    c.append(h('span', { class: 'tc-t' }, UI.glyph(slug), TOP(slug),
+      o.traps ? h('span', { class: 'dots', 'aria-hidden': 'true' }, Array.from({ length: Math.min(3, o.traps) }, () => h('i'))) : null));
+    if (o.mastery !== undefined) c.append(h('span', { class: 'mbar', 'aria-hidden': 'true' }, h('i', { style: `--m:${Math.max(0, Math.min(1, o.mastery || 0))}` })));
+    return c;
+  }
+
+  /* ---------------------------------------------------------------- starting things */
+  function hrefOf(path, r) {
+    if (!r) return '/';
+    if (r.href) return r.href;
+    if (r.next_url) return r.next_url;
+    const id = encodeURIComponent(r.id || r.session || '');
+    if (/^\/mock/.test(path)) return `/test/?s=${id}`;
+    if (/^\/words\/run/.test(path)) return `/words/run/?id=${id}`;
+    if (r.runner === 'test') return `/test/?s=${encodeURIComponent(r.session)}`;
+    return `/practice/session/?id=${id}`;
+  }
+  async function go(st) {
+    if (!st) return;
+    if (typeof st === 'string') { location.href = st; return; }
+    if (!st.path) { if (st.href) location.href = st.href; return; }
+    const path = String(st.path).replace(/^\/api(?=\/)/, '');
+    if (/^\/challenge\/start|^\/contest\/daily\/start/.test(path)) return startChallenge();
+    const r = await post(path, st.body || {});
+    location.href = hrefOf(path, r);
+  }
+  const drill = body => go({ path: '/drill', body });
+  async function startChallenge() {
+    const r = await post('/contest/daily/start');
+    location.href = hrefOf('/contest', r);
+  }
+  function prefetchSession(el) {
+    el.addEventListener('pointerdown', () => {
+      if (document.querySelector('link[data-pf]')) return;
+      document.head.append(h('link', { rel: 'prefetch', href: '/practice/session/', 'data-pf': '' }));
+    }, { once: true });
+  }
+  function download(name, text, type = 'text/calendar') {
+    const url = URL.createObjectURL(new Blob([text], { type }));
+    const a = h('a', { href: url, download: name });
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }
+  function twinSheet(body, recall, title) {
+    if (!UI.twinSheet) return drill(body);
+    UI.twinSheet({ body, recall: recall ? { text: recall } : null, title: title || 'Try one now', onDone: () => refresh(['today']) });
+  }
+
+  /* ---------------------------------------------------------------- loading */
+  let live = 0, fromCache = false;
+  const upd = () => { $('upd').hidden = !(fromCache && live > 0); };
+  function load(path, paint, onFail, o = {}) {
+    live++; upd();
+    let painted = false;
+    const p = (o.nocache ? api(path).then(d => { painted = true; paint(d, false); return d; })
+      : UI.cached(path, (d, c) => { painted = true; if (c) { fromCache = true; upd(); } paint(d, c); }, { store: 'local', until: 'day' }))
+      .catch(e => { if (!painted) onFail(e); else if (!o.quietFail) UI.toast('Couldn’t refresh everything. Showing your last copy.'); })
+      .finally(() => { live--; upd(); });
+    return p;
+  }
+  const TODAY_CARDS = ['next', 'mist', 'score', 'plan', 'exam', 'words'];
+  const LOADERS = {
+    today: () => load('/today', d => { S.t = d; paintToday(); }, () => {
+      TODAY_CARDS.forEach(id => UI.cardError($(id), () => LOADERS.today()));
+      const hs = document.querySelector('.hero-stats');
+      if (hs) hs.replaceChildren(UI.cardError(null, () => LOADERS.today()));
+    }),
+    insights: () => load('/today/insights', d => { S.ins = d; paintInsights(); }, () => {
+      ['gain', 'pace'].forEach(id => UI.cardError($(id), () => LOADERS.insights()));
+      S.ins = { failed: true };
+      if (S.t) paintScore();
+    }),
+    qotd: () => load(S.qday ? `/qotd?day=${S.qday}` : '/qotd', d => { S.q = d; paintQotd(); },
+      () => UI.cardError($('qotd'), () => LOADERS.qotd(), 'Couldn’t load today’s questions.'), { nocache: !!S.qday }),
+    calendar: () => load(`/calendar?month=${S.calMonth || localDay().slice(0, 7)}`, d => { S.cal = d; paintStudy(); },
+      () => { S.cal = { failed: true }; paintStudy(); }, { nocache: !!S.calMonth }),
+    chal: () => Promise.all([
+      load('/contest/daily', d => { S.chal = d; paintChal(); }, () => UI.cardError($('chal'), () => LOADERS.chal(), 'Couldn’t load the challenge.')),
+      load('/contest/daily/board?limit=5', d => { S.board = d; if (S.chal) paintChal(); }, () => {}, { quietFail: true }),
+    ]),
+    tests: () => load('/history?kind=tests&all=1&limit=6', d => { S.hist = d; S.histMore = []; paintTests(); },
+      () => UI.cardError($('tests'), () => LOADERS.tests())),
+  };
+  let refreshTimer = 0;
+  function refresh(which) {
+    clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(() => (which || Object.keys(LOADERS)).forEach(k => LOADERS[k]()), 150);
+  }
+
+  function firstPaint() {
+    paintHero();
+    skel('next', 'Up next', 'rows:3');
+    skel('qotd', 'Questions of the day', 'lines:5');
+    skel('gain', 'Points on the table', 'rows:4');
+    skel('mist', 'Mistakes', 'rows:3');
+    skel('exam', 'SAT', 'lines:3');
+    skel('score', 'Score', 'chart:120');
+    skel('pace', 'Pace', 'cells:22');
+    skel('study', 'Study time', 'lines:4');
+    skel('plan', 'Study plan', 'lines:4');
+    skel('chal', 'Daily challenge', 'rows:3');
+    skel('words', 'Words', 'lines:2');
+    skel('tests', 'Recent tests', 'lines:3');
+  }
+
+  /* ---------------------------------------------------------------- the whole of /api/today */
+  function stageMode() { const st = S.t && S.t.next && S.t.next.stage; return st && st.mode || null; }
+  function paintToday() {
+    const mode = stageMode();
+    const grid = $('today');
+    const hour = new Date().getHours();
+    const examDay = mode === 'exam' && hour < 13;
+    grid.classList.toggle('stretch', ['stretch', 'taper', 'eve', 'exam'].includes(mode));
+    grid.classList.toggle('examday', examDay);
+    // T13: in the final stretch #exam sits under the hero in the DOM too, so it is the second card
+    if (grid.classList.contains('stretch')) $('hero').after($('exam'));
+    else $('gain').after($('mist')), $('mist').after($('exam'));
+    if (examDay) $('exam').after($('next'));
+    else if (grid.classList.contains('stretch')) $('exam').after($('next'));
+    else $('hero').after($('next'));
+    paintHero(); paintNext(); paintMist(); paintExam(); paintPlan(); paintWords(); paintScore();
+    if (S.cal) paintStudy();
+    if (S.chal) paintChal();
+    loadHelpers();
+  }
+  const helpersAsked = new Set();
+  function loadHelpers() {
+    (S.t.assets || []).forEach(name => {
+      if (helpersAsked.has(name)) return;
+      helpersAsked.add(name);
+      const s = h('script', { src: `/assets/${name}.js` });
+      s.onload = () => { if (name === 'results-ui' && S.hist) paintTests(); if (name === 'plan-ui') paintNext(); };
+      document.body.append(s);
+    });
+  }
+
+  /* ---------------------------------------------------------------- hero (§2, T19) */
+  function paintHero() {
+    const t = S.t, p = (t && t.profile) || {};
+    const now = new Date(), hr = now.getHours();
+    const greet = hr >= 5 && hr < 12 ? 'Good morning' : hr >= 12 && hr < 18 ? 'Good afternoon' : 'Good evening';
+    const el = $('hero');
+    const title = h('h1', { class: 'h1', id: 'hero-h', tabindex: '-1', text: p.name ? `${greet}, ${p.name}` : greet });
+    const left = h('div', {}, h('p', { class: 'k', text: UI.date(now, 'eyebrow') }), title);
+    if (t && !p.name) left.append(h('div', { class: 'hero-name' }, quiet('Add your name', (e, b) => nameEdit(b.parentNode))));
+    const top = h('div', { class: 'hero-top' }, left, t ? heroChips(t) : null);
+    el.replaceChildren(top);
+    if (!t) return;
+    const mode = stageMode();
+    if (['stretch', 'taper', 'eve'].includes(mode)) el.append(line('Rehearse, keep what you have, fix what repeats.'));
+    const facts = (t.brief || []).slice(0, 3).map(f => f.href ? h('a', { href: f.href, text: f.text }) : h('span', { text: f.text }));
+    const risk = t.at_risk;
+    if (risk) {
+      const left_ = Math.max(0, Math.round(risk.left_ms / 60000));
+      facts.unshift(h('span', { class: 'risk' }, `One answer keeps your ${risk.streak}-day streak · ${UI.dur(left_)} left today`,
+        risk.spare ? ' · or a spare covers it' : ''),
+        btn('1 question', () => twinSheet(risk.start.body, null, 'One question')));
+      if (facts.length > 4) facts.length = 4;
     }
-  });
+    if (facts.length) el.append(h('p', { class: 'brief' }, facts.flatMap((f, i) => i ? [h('span', { class: 'sep', 'aria-hidden': 'true', text: '·' }), f] : [f])));
+  }
+  function heroChips(t) {
+    const d = t.days || {}, st = t.study || {}, goal = t.profile && t.profile.minutes, ex = t.exam;
+    const chips = h('div', { class: 'hero-stats' });
+    chips.append(h('a', { href: '#study', class: d.streak ? 'on' : '' }, flame(d.streak > 0),
+      d.streak ? `${d.streak}-day study streak${d.best > d.streak ? ` · best ${d.best}` : ''}` : 'No streak yet'));
+    chips.append(h('a', { href: '#study' }, goal ? `${n(Math.round(st.today || 0))} of ${n(goal)} min today` : `${n(Math.round(st.today || 0))} min today`));
+    if (ex && ex.days >= 0) chips.append(h('a', { href: '#exam', class: ex.days <= 7 ? 'bold' : '' }, ex.days === 0 ? 'SAT today' : `SAT in ${pl(ex.days, 'day')}`));
+    else chips.append(h('a', { href: '#exam' }, 'Set your SAT date'));
+    const mode = stageMode();
+    if (['stretch', 'taper', 'eve'].includes(mode)) chips.append(h('a', { href: '#exam' }, `Final stretch · ${pl(t.next.stage.days, 'day')}`));
+    if (t.plan) {
+      const pday = planDay(today());
+      chips.append(h('a', { href: '#next' }, pday && pday.kind === 'rest' ? 'Plan · rest day' : `Plan · ${t.plan.tasks_done || 0} of ${t.plan.tasks_counted || 0} done`));
+    }
+    return chips;
+  }
+  function nameEdit(host) {
+    const f = h('input', { class: 'field sm', maxlength: 24, 'aria-label': 'Your name', autocomplete: 'given-name' });
+    const err = h('p', { class: 'field-err', hidden: true });
+    const save = btn('Save', async () => {
+      const v = f.value.trim();
+      if (!v) { err.textContent = 'Type a name first.'; err.hidden = false; return; }
+      try {
+        await put('/me', { name: v });
+        S.t.profile.name = v;
+        UI.me && UI.me(true);
+        paintHero();
+      } catch (e) { err.textContent = errText(e); err.hidden = false; }
+    });
+    f.addEventListener('keydown', e => { if (e.key === 'Enter') save.click(); if (e.key === 'Escape') paintHero(); });
+    host.replaceChildren(f, save, h('span', { class: 'help', text: 'Shown on the challenge board' }), err);
+    f.focus();
+  }
 
-  function paintNext(t) {
-    const p = t.profile;
-    const kind = UI.plan.set(p) && p.exam_date >= t.days.today ? UI.plan.dayOf(new Date(t.days.today + 'T12:00:00'), p) : 'practice';
-    if (kind === 'test' && !t.tested) {
-      const full = UI.plan.testOf(p.minutes) === 'section';
-      $('#chips').replaceChildren(h('span', { class: 'h2', text: full ? 'Section' : 'Module' }));
-      $('#nextMeta').textContent = full ? '44 questions · 70 min' : '22 questions · 35 min';
-      start = async () => `/test/?s=${encodeURIComponent((await api('/mock/new', { method: 'POST', body: { full } })).id)}`;
+  /* ---------------------------------------------------------------- up next (§3, T1, T2, T4, T19) */
+  const planDay = day => S.t && S.t.plan && (S.t.plan.days || []).find(x => x.date === day);
+  const SZ = { sel: null, timed: false, drop: [], preview: null, failed: false, seq: 0, ws: null, sid: null };
+  function sizeValue() { return SZ.sel || { kind: 'box', v: (S.t.next.box || {}).default || 15 }; }
+  function sessBody(extra) {
+    const s = sizeValue();
+    return Object.assign({ source: 'next', timed: SZ.timed, drop: SZ.drop.slice() }, s.kind === 'box' ? { box: s.v } : { count: s.v }, extra || {});
+  }
+  function paintNext() {
+    const t = S.t, nx = t.next || {}, plan = t.plan;
+    const pday = plan ? planDay(t.days.today) : null;
+    const right = plan && pday ? h('span', { class: 'meta', text: pday.kind === 'rest' ? 'Rest day in your plan'
+      : pday.kind === 'test' ? `Test day in your plan · ${n(pday.minutes)} min` : `Today in your plan · ${n(pday.minutes)} min` }) : null;
+    const kids = [];
+    if (t.receipt) kids.push(receiptBlock(t.receipt));
+    const lead = leadItem(t, pday);
+    if (lead) kids.push(lead);
+    const goalMet = t.receipt || (t.profile.minutes && t.study.today >= t.profile.minutes);
+    if (goalMet && !SZ.sel) SZ.sel = { kind: 'box', v: 15 };
+    kids.push(sessionBlock(t, pday, !!lead, goalMet));
+    kids.push(dueBlock(t));
+    card('next', 'Up next', right, kids);
+    if (SZ.preview === null && !SZ.failed && nx.preview) SZ.preview = nx.preview;
+    paintBlocks();
+  }
+  function receiptBlock(r) {
+    const key = `satf.done.${today()}`;
+    const first = !ls.get(key);
+    ls.set(key, '1');
+    const el = h('div', { class: 'receipt' + (first ? ' rise' : ''), role: 'status' }, h('p', { class: 'k', text: 'Today’s work' }));
+    el.append(h('p', { class: 'fig', text: join(`${n(r.minutes)} min`, pl(r.questions, 'question'), r.questions && `${Math.round(100 * r.right / r.questions)}% right`) }));
+    if (r.moved && r.moved.length) el.append(h('p', { text: 'Moved: ' + r.moved.map(m => `${TOP(m.topic)} ${m.from} → ${m.to}`).join(' · ') }));
+    if (r.fixed && r.fixed.length) el.append(h('p', { text: `Fixed: ${r.fixed[0]}${r.fixed.length > 1 ? ` (+${r.fixed.length - 1} more)` : ''}` }));
+    if (r.checks && r.checks.of) el.append(h('p', { text: join(`Check-ins held ${r.checks.held} of ${r.checks.of}`, r.relapses && `${pl(r.relapses, 'relapse')} caught`) }));
+    const c = r.claimed;
+    const pts = c === null || c === undefined || Math.abs(c) < 5 ? 'Points today: under 5 either way'
+      : c > 0 ? `Points today: ≈ +${c} on our score model` : `Points today: ≈ −${Math.abs(c)} on our score model · a rough day; the mistakes it opened are in Fix`;
+    const pp = h('p', { text: pts + ' ' });
+    if (UI.fact) { const how = h('button', { type: 'button', class: 'quiet', text: 'How' }); UI.fact(how, 'practice_delta'); pp.append(how); }
+    el.append(pp, h('p', { class: 'meta' }, `${pl(r.streak, 'day')} · best ${r.best}`));
+    el.append(h('div', { class: 'acts' }, link('See today in the calendar', '#study')));
+    return el;
+  }
+  function leadItem(t, pday) {
+    const it = (t.next.items || [])[0];
+    if (it) return leadFrom(it);
+    if (pday && pday.kind === 'rest') {
+      return h('div', { class: 'lead' }, h('p', { class: 'lead-t', text: 'Rest day' }), line('Your plan has today off. Rest is part of it.', 'soft'));
+    }
+    return null;
+  }
+  function leadFrom(it) {
+    const el = h('div', { class: 'lead' }, h('p', { class: 'lead-t', text: it.title || 'Up next' }));
+    const m = [];
+    if (it.kind === 'test' || it.kind === 'resume') {
+      if (it.seconds_left !== null && it.seconds_left !== undefined && it.timed) {
+        const left = h('span', { class: 'mono', text: UI.mmss(it.seconds_left) });
+        tickDown(left, it.seconds_left);
+        m.push(left, ' left · ');
+      }
+      m.push(it.total ? `${it.answered} of ${it.total} answered` : it.asked ? `${it.answered} of ${it.asked} answered` : `${n(it.answered)} answered`);
+    } else if (it.meta) m.push(it.meta);
+    else if (it.minutes) m.push(`${n(it.minutes)} min`);
+    if (m.length) el.append(h('p', { class: 'meta' }, ...m));
+    if (it.kind === 'test') el.append(line(it.seconds_left === 0 && it.timed
+      ? (/Continue/.test(it.action || '') ? 'Module 1 is handed in as it stands. Module 2 gets its own 35 minutes.' : 'Opening the test window hands the module in.')
+      : 'The clock keeps running while you’re away.', 'soft'));
+    if (it.helper) el.append(line(it.helper, 'soft'));
+    if (it.topics && it.topics.length) el.append(h('div', { class: 'tchips' }, it.topics.slice(0, 4).map(x => topicChip(x))));
+    const acts = h('div', { class: 'acts' });
+    let timed = true;
+    if (it.kind === 'plan' && it.test) {
+      UI.seg(acts, [{ value: true, label: 'Timed' }, { value: false, label: 'Untimed' }], { value: true, label: 'Test clock', onChange: v => { timed = v; } });
+    }
+    const go_ = pill(it.action || 'Start', () => {
+      if (it.kind === 'plan' && it.test && it.start) return go({ path: it.start.path, body: Object.assign({}, it.start.body, { timed }) });
+      if (it.kind === 'after') return scoreSheet({ source: 'official' });
+      return go(it.href && !it.start ? it.href : (it.start || it.href));
+    });
+    prefetchSession(go_);
+    acts.prepend(go_);
+    if (it.kind === 'plan' && it.test) acts.append(quiet('I took a Bluebook test instead', () => scoreSheet({ source: 'bluebook', task: it.task_id })));
+    if (it.kind === 'resume' && it.more) acts.append(link(`+${pl(it.more, 'more unfinished set')}`, '/practice/#unfinished'));
+    if (it.kind === 'after') acts.append(quiet('Pick your next date', (e, b) => examPop(b)));
+    if (it.kind === 'rehearsal') acts.append(btn('Add to calendar', () => rehearsalIcs()));
+    el.append(acts);
+    if (it.then) el.append(line(it.then, 'soft'));
+    return el;
+  }
+  function tickDown(el, secs) {
+    const end = Date.now() + secs * 1000;
+    const iv = setInterval(() => {
+      if (!el.isConnected) return clearInterval(iv);
+      const left = Math.max(0, Math.round((end - Date.now()) / 1000));
+      el.textContent = UI.mmss(left);
+      if (!left) { clearInterval(iv); refresh(['today']); }
+    }, 1000);
+  }
+  function rehearsalIcs() {
+    const st = S.t.next.stage || {};
+    const r = (st.rehearsals || []).find(x => !x.done) || {};
+    UI.pop(document.activeElement, (el, res) => {
+      const f = h('input', { type: 'time', class: 'field sm', 'aria-label': 'Start time' });
+      return h('div', { class: 'date-form' }, h('label', { class: 'label', text: 'Pick your time' }), f,
+        h('p', { class: 'help', text: 'On test day Math starts after Reading and Writing (64 min) and a 10-minute break.' }),
+        btn('Download', () => {
+          if (!f.value) { f.focus(); return; }
+          download('dress-rehearsal.ics', UI.ics({ title: 'Dress rehearsal · full Math section', start: r.day || today(), time: f.value, minutes: 90 }));
+          res.close();
+        }));
+    }, { label: 'Dress rehearsal time' });
+  }
+
+  function sessionBlock(t, pday, hasLead, goalMet) {
+    const nx = t.next, coach = t.coach || {};
+    const wrap = h('div', { class: 'sess' });
+    if (hasLead) wrap.append(sub('Or a practice session'));
+    // the Size row (T1): one radiogroup of ten, Time or Count
+    const box = (nx.box && nx.box.options) || [5, 15, 30, 45, 60];
+    const counts = (nx.count && nx.count.options) || [5, 10, 22, coach.count || 10, null];
+    const s = sizeValue();
+    const opts = [...box.map(v => ({ value: `b${v}`, label: `${v}` })), ...counts.map(v => ({ value: `c${v === null ? 'x' : v}`, label: v === null ? 'Endless' : `${v}` }))];
+    const size = h('div', { class: 'size' }, h('span', { class: 'label', text: 'Size' }));
+    const ch = UI.chips(null, opts, { value: s.kind === 'box' ? `b${s.v}` : `c${s.v === null ? 'x' : s.v}`, label: 'Session size', onChange: v => {
+      SZ.sel = v[0] === 'b' ? { kind: 'box', v: +v.slice(1) } : { kind: 'count', v: v.slice(1) === 'x' ? null : +v.slice(1) };
+      SZ.drop = [];
+      helper.hidden = !(SZ.sel.kind === 'box' && SZ.sel.v === 5);
+      pillLabel();
+      askPreview();
+    } });
+    ch.btns[0].before(h('span', { class: 'sz-k', text: 'Time' }));
+    ch.btns[box.length - 1].after(h('span', { class: 'sz-k', text: 'min' }), h('span', { class: 'sz-k', text: 'or Count' }));
+    size.append(ch.el);
+    const helper = h('p', { class: 'help size-help', text: 'Short on time? 5 minutes keeps your streak and your check-ins.', hidden: !(s.kind === 'box' && s.v === 5) });
+    wrap.append(size, helper);
+    // clock and More options, always beside each other
+    const ctl = h('div', { class: 'sess-ctl' });
+    UI.seg(ctl, [{ value: false, label: 'Untimed' }, { value: true, label: 'Timed' }], { value: SZ.timed, label: 'Clock', onChange: v => { SZ.timed = v; askPreview(); } });
+    const more = h('a', { class: 'quiet', text: 'More options' });
+    const setMore = () => {
+      const sv = sizeValue(), topics = (coach.topics || []).join(',');
+      more.href = `/practice/?topics=${encodeURIComponent(topics)}&timed=${SZ.timed ? 1 : 0}` + (sv.kind === 'box' ? `&box=${sv.v}` : `&count=${sv.v === null ? 0 : sv.v}`);
+    };
+    more.addEventListener('pointerdown', setMore); more.addEventListener('focus', setMore); setMore();
+    ctl.append(more);
+    wrap.append(ctl);
+    // the reason, the blocks and question 1 (painted by paintBlocks)
+    wrap.append(h('div', { id: 'sessBody' }));
+    const goRow = h('div', { class: 'go' });
+    const start = (hasLead ? btn : pill)('Study', () => drill(sessBody()));
+    start.id = 'sessStart';
+    prefetchSession(start);
+    goRow.append(start);
+    if (coach.why === 'new' || (coach.reasons && Object.values(coach.reasons).some(r => r && r.kind === 'new'))) {
+      const topic = (coach.topics || [])[0];
+      if (topic) goRow.append(btn('Learn it · example + 3', () => drill({ source: 'learn', topics: [topic], example: true, count: 3 })));
+    }
+    if (!t.plan && coach.why === 'new' && !(t.scores || []).length) goRow.append(link('Or start from a score: Diagnostic · 20 questions · 32 min', '/diagnostic/'));
+    wrap.append(goRow);
+    SZ.rest = pday && pday.kind === 'rest';
+    SZ.goalMet = goalMet;
+    setTimeout(pillLabel, 0);
+    return wrap;
+  }
+  function pillLabel() {
+    const b = $('sessStart');
+    if (!b) return;
+    const s = sizeValue();
+    const what = s.kind === 'box' ? `${s.v} min` : s.v === null ? 'endless' : pl(s.v, 'question');
+    b.textContent = SZ.rest ? `Practice anyway · ${what}` : SZ.goalMet ? `Keep going · ${what}` : s.kind === 'box' ? `Study ${what}` : `Study · ${what}`;
+  }
+  let previewTimer = 0;
+  function askPreview() {
+    clearTimeout(previewTimer);
+    const ul = document.querySelector('#sessBody .blocks');
+    if (ul) ul.classList.add('stale');
+    previewTimer = setTimeout(async () => {
+      const seq = ++SZ.seq;
+      try {
+        const p = await post('/drill/preview', sessBody());
+        if (seq !== SZ.seq) return;
+        SZ.preview = p; SZ.failed = false;
+      } catch (e) {
+        if (seq !== SZ.seq) return;
+        SZ.preview = null; SZ.failed = true;
+      }
+      paintBlocks();
+    }, 200);
+  }
+  function paintBlocks() {
+    const host = $('sessBody');
+    if (!host || !S.t) return;
+    const coach = S.t.coach || {}, p = SZ.preview, s = sizeValue();
+    const kids = [];
+    kids.push(h('p', { class: 'reason', text: reasonText(coach, p) }));
+    if (p && Array.isArray(p.blocks) && p.blocks.length) {
+      const ul = h('ol', { class: 'blocks', 'aria-label': 'The plan of the session' });
+      let i = 0;
+      p.blocks.forEach(b => {
+        if (b.kind === 'then') { ul.append(h('li', { class: 'then' }, h('span'), h('span', { class: 'lb', text: b.label }), h('span'), h('span'))); return; }
+        i++;
+        const lb = h('span', { class: 'lb' }, b.label, b.detail ? h('span', { class: 'meta', text: b.detail }) : null);
+        if (b.kind === 'skill' && b.topic) lb.append(h('div', { class: 'tchips' }, topicChip(b.topic, { traps: b.traps, mastery: b.mastery })));
+        const x = h('button', { type: 'button', class: 'x', 'aria-label': `Drop ${b.label}`, html: UI.svg(UI.ICON.x || '<path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6"/>', 16) });
+        x.addEventListener('click', () => { SZ.drop.push(b.key); askPreview(); });
+        ul.append(h('li', {}, h('span', { class: 'no', text: String(i) }), lb,
+          h('span', { class: 'qm', text: join(`${b.count} q`, `${n(Math.round(b.minutes))} min`, b.pts && `≈ +${b.pts}`) }), x));
+      });
+      ul.append(h('li', { class: 'tot' }, h('span', { class: 'no', text: '=' }), h('span', { class: 'lb', text: s.kind === 'box' ? `${n(Math.round(p.minutes || s.v))} min` : pl(p.count || s.v, 'question') }), h('span'), h('span')));
+      kids.push(ul);
+      if (p.alt && p.alt.kind === 'module') kids.push(h('div', { class: 'row', style: 'margin-top:10px' }, h('span', { class: 'line', text: 'Or a timed module · 22 q · 35 min · no test yet this week' }),
+        btn('Start module', () => go({ path: '/mock/new', body: { full: false, timed: true } }))));
+      if (p.plan_note) kids.push(line(p.plan_note, 'soft'));
     } else {
-      const coach = t.coach;
-      $('#chips').replaceChildren(...coach.topics.map(slug => {
-        const c = UI.chip(slug);
-        const n = (coach.traps || {})[slug] || 0;
-        if (n) c.append(h('span', { class: 'dots' }, Array.from({ length: Math.min(3, n) }, () => h('i'))));
-        return c;
-      }));
-      $('#nextMeta').textContent = `${coach.count} questions · ${minutesFor(coach.count)} min`;
-      start = async () => `/practice/session/?id=${encodeURIComponent((await api('/drill', { method: 'POST', body: { topics: coach.topics, count: coach.count, source: 'coach' } })).id)}`;
+      // the coach's set: its skills as chips, the estimate from the preview when it has one
+      const topics = coach.topics || [];
+      const byTopic = {};
+      (S.t.domains || []).forEach(d => (d.topics || []).forEach(x => { byTopic[x.topic] = x; }));
+      if (topics.length) kids.push(h('div', { class: 'tchips' }, topics.map(x => topicChip(x, { traps: (coach.traps || {})[x], mastery: (byTopic[x] || {}).mastery || 0, answered: (byTopic[x] || {}).answered }))));
+      const est = s.kind === 'box' ? join(`${s.v} min`, p && p.minutes && s.v === null ? null : null, `about ${n(Math.max(1, Math.round(s.v * 60 / (S.t.seconds_per_question || 95))))} questions at your pace`)
+        : s.v === null ? 'as many as you like' : join(pl(s.v, 'question'), `${n(Math.round((p && p.minutes) || s.v * (S.t.seconds_per_question || 95) / 60))} min`);
+      kids.push(meta(est));
+      if (SZ.failed) kids.push(h('p', { class: 'note-ok', text: 'Couldn’t size the set. Here is the usual one.' }));
+      if (coach.suppressed && coach.suppressed.length) coach.suppressed.forEach(x => kids.push(h('p', { class: 'line soft' }, x.text, ' ',
+        quiet('Practise anyway', () => drill({ topics: [x.topic], count: 10, source: 'today' })))));
     }
-    $('#go').disabled = false;
+    host.replaceChildren(...kids);
+    paintQ1(host, p);
   }
-
-  function paintToday(t) {
-    paintNext(t);
-
-    if (t.score) {
-      $('#score').textContent = band(t.score);
-      $('#scoreK').textContent = `Math · ${day(t.score.at)}`;
-    } else { $('#scoreGo').hidden = false; $('#scoreK').hidden = true; }
-
-    if (t.exam && t.exam.days >= 0) {
-      $('#exam').textContent = t.exam.days;
-      $('#examK').textContent = `${t.exam.days === 1 ? 'day' : 'days'} · ${day(t.exam.date)}`;
-    } else { $('#examGo').hidden = false; $('#examK').hidden = true; }
-
-    // the last seven days, today last
-    const recent = t.days.recent.slice(-7);
-    const LETTER = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-    $('#week').replaceChildren(...recent.map((d, i) => {
-      const dt = new Date(d.day + 'T12:00:00');
-      const dot = h('i', { class: (d.questions ? 'on' : '') + (i === recent.length - 1 ? ' now' : '') });
-      return h('div', { title: `${d.questions} questions` }, dot, h('span', { text: LETTER[dt.getDay()] }));
-    }));
-    const q7 = recent.reduce((a, d) => a + d.questions, 0);
-    $('#weekMeta').textContent = q7 ? `${q7} ${q7 === 1 ? 'question' : 'questions'}` : '';
-
-    const m = $('#mistakes');
-    m.hidden = !t.mistakes;
-    m.lastElementChild.textContent = `${t.mistakes} ${t.mistakes === 1 ? 'mistake' : 'mistakes'}`;
+  function reasonText(coach, p) {
+    const lead = p && p.reason ? p.reason : null;
+    if (lead) return lead;
+    const w = { mistakes: `${pl(coach.mistakes || 0, 'open mistake')} in these skills`, new: 'New skills, the biggest domains first', weak: 'Your weakest skills right now',
+      review: 'Strong skills you haven’t worked on for 10+ days', stretch_new: 'Skills worth the most on the test, none new' }[coach.why] || 'Picked from your results';
+    const focus = S.t.plan && S.t.plan.focus ? ` · ${S.t.plan.focus} is on focus` : '';
+    return w + focus;
   }
-
-  /* ---------------------------------------------------------- the question of the day */
-  function crowd(c) {
-    if (!c || !c.answered) return '';
-    return `${Math.round(100 * c.right / c.answered)}% of ${c.answered} right`;
-  }
-  function paintQotd(d) {
-    $('#qday').textContent = day(d.day);
-    const ctrl = UI.question($('#qbox'), d.question, {
-      onAnswer: async given => {
+  function paintQ1(host, p) {
+    const f = p && p.first;
+    if (!f || !f.question || !UI.workspace) return;
+    const box = h('div', { class: 'q1' });
+    host.append(box);
+    const warm = p.blocks && p.blocks[0] && p.blocks[0].kind === 'warmup';
+    const after = h('div', { class: 'q1-after' });
+    SZ.ws = UI.workspace(box, f.question, {
+      mode: 'inline', feedback: 'instant', hideSkill: warm ? 'Mixed warm-up' : null,
+      onCheck: async (a, m) => {
         try {
-          // the day it was shown, so an answer sent after midnight is not marked against the next one
-          const fb = await api('/qotd', { method: 'POST', body: { answer: given, day: d.day } });
-          ctrl.reveal(fb);
-          $('#qcrowd').textContent = crowd(fb.crowd);
-          UI.me(true);
-          $('#week').lastElementChild?.querySelector('i')?.classList.add('on');
+          const r = await post('/drill', sessBody({ first: { token: f.token, answer: a, ms: m.ms } }));
+          SZ.sid = r.id;
+          const next = r.next_url || `/practice/session/?id=${encodeURIComponent(r.id)}`;
+          const cont = pill(`Continue · 2 of ~${(p.count || '').toString() || '…'}`, () => { location.href = next; });
+          after.replaceChildren(cont, quiet('Stop here', async () => { await post(`/drill/${encodeURIComponent(r.id)}/finish`); after.replaceChildren(line('Counted toward today.', 'soft')); refresh(['today']); }));
+          setTimeout(() => cont.focus(), 0);
+          return r.feedback;
         } catch (e) {
-          if (e.status === 409) { api('/qotd').then(paintQotd).catch(() => {}); return; }   // a new day, a new question
-          ctrl.unlock();
-          $('#qcrowd').textContent = e.message;
+          if (e.status === 409) { SZ.preview = null; askPreview(); UI.toast('That question was used elsewhere. Here’s a fresh one.'); return null; }
+          throw e;
         }
       },
     });
-    if (d.mine) { ctrl.reveal(d.mine); $('#qcrowd').textContent = crowd(d.mine.crowd); }
+    box.append(after);
   }
 
-  /* ---------------------------------------------------------- the challenge */
-  function paintChallenge(c) {
-    const go = $('#chalGo');
-    const you = c.board && c.board.you;
-    if (c.finished && you) {
-      $('#chalMeta').textContent = `${you.right}/${you.asked} · ${UI.mmss(you.seconds)}`;
-      go.replaceChildren(h('a', { class: 'quiet', href: '/challenge/' },
-        h('span', { class: 'num', text: `#${you.rank}` })));
+  /* Due today (T2, R56) */
+  function dueBlock(t) {
+    const due = t.due || { rows: [] }, rows = due.rows || [];
+    const el = h('div', { class: 'due' });
+    const undone = rows.filter(r => !['done', 'marked', 'skipped', 'made_up'].includes(r.status));
+    const hd = h('div', { class: 'due-head' });
+    const goal = due.goal_minutes || t.profile.minutes;
+    const left = due.minutes_left || 0;
+    hd.append(h('div', {}, h('p', { class: 'k', text: join('Due today', rows.length && `${due.done} of ${due.total} done`, left && `about ${n(left)} min left`) }),
+      goal && rows.length ? h('p', { class: 'meta', text: left + (t.study.today || 0) <= goal ? `fits in your ${goal}-min goal` : `${n(Math.round(left + (t.study.today || 0) - goal))} min over your goal` }) : null));
+    if (undone.length >= 2) {
+      const st = pill(`Start today · ${pl(undone.length, 'part')} · ${n(left)} min`, () => startRow(undone[0]));
+      prefetchSession(st);
+      hd.append(st);
+    }
+    el.append(hd);
+    if (!rows.length) { el.append(line('Nothing due yet today.', 'soft')); return el; }
+    const order = r => (['done', 'marked', 'made_up', 'skipped'].includes(r.status) ? 1 : 0);
+    const planRows = rows.filter(r => r.group === 'plan').sort((a, b) => order(a) - order(b));
+    const also = rows.filter(r => r.group !== 'plan').sort((a, b) => order(a) - order(b));
+    if (t.plan && planRows.length) {
+      const pm = t.plan.minutes_left, pd = planDay(t.days.today);
+      el.append(sub(join('Plan', `${t.plan.tasks_done || 0} of ${t.plan.tasks_counted || 0}`, pm !== undefined && pd && `${n(pm)} min left of ${n(pd.minutes)}`)));
+      planRows.forEach(r => el.append(dueRow(r)));
+      if (also.length) el.append(sub('Also due'));
+    }
+    (t.plan && planRows.length ? also : rows).forEach(r => el.append(dueRow(r)));
+    if (!t.plan) el.append(h('div', { class: 'acts' }, link('Build a plan to set a daily goal', '#plan')));
+    return el;
+  }
+  function startRow(r) {
+    if (r.kind === 'challenge') return startChallenge();
+    if (r.kind === 'qotd') { location.hash = '#qotd'; $('qotd-h') && $('qotd-h').focus(); return; }
+    return go(r.start || r.href);
+  }
+  function statusBox(r) {
+    if (r.own && S.t.plan) {
+      const on = r.status === 'done' || r.status === 'marked';
+      const cb = h('input', { type: 'checkbox', 'aria-label': on ? 'Mark as not done' : 'Mark as done' });
+      cb.checked = on;
+      cb.addEventListener('change', () => patchTask(r, { status: cb.checked ? 'done' : 'todo' }, cb.checked ? 'Marked done' : 'Marked not done'));
+      return h('span', { class: 'st-box' }, cb);
+    }
+    const s = r.status === 'marked' ? 'marked' : r.status === 'made_up' ? 'done' : r.status;
+    const f = r.progress && r.progress.of ? Math.min(1, (r.progress.have || 0) / r.progress.of) : 0;
+    const label = s === 'done' || s === 'marked' ? 'Done' : s === 'skipped' ? 'Skipped' : s === 'progress' && r.progress ? `${r.progress.have} of ${r.progress.of}` : 'To do';
+    return h('span', { class: 'st-box' }, h('span', { class: 'st', 'data-s': s === 'progress' || (s === 'todo' && f > 0) ? 'progress' : s, style: `--f:${f}`, role: 'img', 'aria-label': label }));
+  }
+  function dueRow(r) {
+    const done = ['done', 'marked', 'made_up'].includes(r.status);
+    const el = h('div', { class: 'drow', 'data-status': r.status, 'data-key': r.key });
+    const body = h('div', {});
+    body.append(h('div', { class: 'dt' }, r.title || cap(r.kind), r.tag && r.tag.toLowerCase() !== String(r.title || '').toLowerCase() ? h('span', { class: 'tag', text: r.own ? 'Your own' : cap(r.tag) }) : null));
+    const m = r.meta || join(r.progress && r.progress.of && `${n(r.progress.have || 0)} of ${n(r.progress.of)}`, r.minutes && `~${n(r.minutes)} min`);
+    const dm = join(m, r.due_at && `closes ${r.due_at}`, r.status === 'marked' && 'Marked done');
+    if (dm) body.append(h('p', { class: 'meta dm', text: dm }));
+    if (done && r.result) {
+      const x = r.result;
+      if (x.answered !== undefined) body.append(h('p', { class: 'dres', text: join(`${x.answered} answered`, `${x.right} right`, x.fixed && `${x.fixed} fixed`, x.opened && pl(x.opened, 'new mistake')) }));
+    }
+    const extra = h('div', { class: 'dextra' });
+    if (r.why && r.why.length) {
+      const why = h('p', { class: 'dwhy', hidden: true }, r.why.join(' · '), r.evidence_href ? [' ', link('See the evidence', r.evidence_href)] : null);
+      const tg = h('button', { type: 'button', class: 'quiet', text: 'Why', 'aria-expanded': 'false' });
+      tg.addEventListener('click', () => { why.hidden = !why.hidden; tg.textContent = why.hidden ? 'Why' : 'Hide'; tg.setAttribute('aria-expanded', String(!why.hidden)); });
+      extra.append(tg);
+      body.append(why);
+    }
+    if (r.fix && r.fix.n) extra.append(btn(`Fix the ${r.fix.n} it opened · ${r.fix.n * 2} q`, () => go({ path: r.fix.path || '/drill', body: r.fix.body })));
+    const act = h('div', { class: 'dact' });
+    if (!done && r.status !== 'skipped' && (r.start || r.href) && !r.own) {
+      const b = btn(r.status === 'progress' ? 'Continue' : 'Start', () => startRow(r));
+      prefetchSession(b);
+      act.append(b);
+    } else if (done && r.kind === 'plan' && r.tag !== 'test') act.append(btn('Practice again', () => drill(sessBody())));
+    if (r.task_id && S.t.plan) {
+      const mb = h('button', { type: 'button', class: 'ibtn', 'aria-label': `More actions for ${r.title}`, 'aria-haspopup': 'menu', html: UI.svg(UI.ICON.more || '<circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/>', 18) });
+      UI.menu.bind(mb, () => taskMenu(r));
+      act.append(mb);
+    }
+    body.append(extra.children.length ? extra : '');
+    el.append(statusBox(r), body, act);
+    return el;
+  }
+  function studyDays(from, k = 7) {
+    const days = (S.t.plan && S.t.plan.days) || [];
+    const eve = S.t.profile.exam_date ? addDays(S.t.profile.exam_date, -1) : null;
+    return days.filter(d => d.date > from && ['practice', 'test'].includes(d.kind) && (!eve || d.date < eve)).slice(0, k);
+  }
+  function taskMenu(r) {
+    const items = [];
+    const skipped = r.status === 'skipped';
+    items.push({ label: skipped ? 'Undo skip' : 'Skip for today', onClick: () => patchTask(r, { status: skipped ? 'todo' : 'skipped' }, skipped ? 'Skip undone' : 'Skipped for today') });
+    if (!r.own) {
+      const done = ['done', 'marked'].includes(r.status);
+      items.push({ label: done ? 'Mark not done' : 'Mark done', sub: done ? null : 'for work done off the site', onClick: () => patchTask(r, { status: done ? 'todo' : 'done' }, done ? 'Marked not done' : 'Marked done') });
+    }
+    const later = studyDays(today());
+    items.push({ group: 'Move to…' });
+    if (!later.length) items.push({ label: 'No study day left before the exam', disabled: true });
+    later.forEach(d => items.push({ label: UI.date(d.date, 'long'), onClick: () => patchTask(r, { to: d.date }, `Moved to ${UI.date(d.date, 'long').slice(0, 3)}`) }));
+    if (later.length) items.push({ label: 'Another date…', onClick: () => moveOther(r) });
+    (r.alternatives || []).slice(0, 3).forEach(a => {
+      const topic = typeof a === 'string' ? a : a.topic || a.value;
+      items.push({ label: `Swap for: ${TOP(topic)}`, onClick: () => patchTask(r, { topics: [topic] }, `Swapped for ${TOP(topic)}`) });
+    });
+    return items;
+  }
+  function moveOther(r) {
+    UI.pop(document.querySelector(`[data-key="${CSS.escape(r.key)}"] .ibtn`) || document.body, (el, res) => {
+      const eve = S.t.profile.exam_date ? addDays(S.t.profile.exam_date, -1) : '';
+      const f = h('input', { type: 'date', class: 'field sm', min: addDays(today(), 1), max: eve || null, 'aria-label': 'Move to' });
+      return h('div', { class: 'date-form' }, h('label', { class: 'label', text: 'Move to' }), f,
+        btn('Move', async () => { if (!f.value) return f.focus(); res.close(); await patchTask(r, { to: f.value }, `Moved to ${UI.date(f.value)}`); }));
+    }, { label: 'Move to another date' });
+  }
+  async function patchTask(r, change, text) {
+    const plan = S.t.plan;
+    if (!plan || !r.task_id) return;
+    const before = { status: r.status };
+    const path = `/plan/${encodeURIComponent(plan.id)}/tasks/${r.task_id.split('/').map(encodeURIComponent).join('/')}`;
+    const body = Object.assign({ day: today() }, change);
+    try {
+      await api(path, { method: 'PATCH', body, failText: 'Not saved. Try again.', optimistic: () => {
+        if (change.status) { r.status = change.status === 'todo' ? 'todo' : change.status === 'done' ? (r.own ? 'done' : 'marked') : change.status; }
+        if (change.to) r.status = 'moved';
+        paintNext();
+        return () => { r.status = before.status; paintNext(); };
+      } });
+      const undo = change.to ? { day: change.to, to: today() } : { status: before.status === 'skipped' ? 'skipped' : before.status === 'todo' || before.status === 'progress' ? 'todo' : 'done' };
+      UI.toast(text, { undo: () => api(path, { method: 'PATCH', body: Object.assign({ day: today() }, undo) }).then(() => refresh(['today', 'calendar'])).catch(() => UI.toast('Not saved. Try again.')) });
+      refresh(['today', 'calendar']);
+    } catch (_) { /* reverted with its toast */ }
+  }
+
+  /* ---------------------------------------------------------------- mistakes = the Review card (§4, R30, T9, T13) */
+  function paintMist() {
+    const t = S.t, tr = t.traps || {}, rv = t.review || {};
+    const right = link('All mistakes', '/review/');
+    if (!tr.open && !rv.due) {
+      card('mist', 'Mistakes', right, line('No open mistakes.'),
+        h('p', { class: 'help', text: 'Every wrong answer lands here under the mistake it names, and leaves after two clean answers.' }),
+        h('div', { class: 'acts' }, link('Practice', '#next')));
       return;
     }
-    $('#chalMeta').textContent = `${c.count} questions · ${Math.round(c.seconds / 60)} min${c.board.players ? ` · ${c.board.players} in` : ''}`;
-    const b = h('button', { type: 'button', class: 'quiet', text: c.session ? 'Resume' : 'Start' });
-    b.addEventListener('click', async () => {
-      b.setAttribute('aria-busy', 'true');
-      try {
-        const s = await api('/challenge/start', { method: 'POST' });
-        location.href = `/practice/session/?id=${encodeURIComponent(s.id)}`;
-      } catch (e) { b.removeAttribute('aria-busy'); $('#chalMeta').textContent = e.message; }
-    });
-    go.replaceChildren(b);
+    const kids = [];
+    kids.push(h('div', { class: 'mist-fig' }, h('span', { class: 'big', text: n(tr.open || 0) }), h('span', { class: 'k', text: 'open' })));
+    const m = join(tr.fixed_today && `${tr.fixed_today} fixed today`, tr.fixed_week && tr.fixed_week !== tr.fixed_today && `${tr.fixed_week} this week`,
+      tr.opened_today && `${tr.opened_today} new today`, rv.half && `${rv.half} half fixed`, rv.due && `${pl(rv.due, 'check-in')} due`, rv.marked && `${rv.marked} marked`);
+    if (m) kids.push(meta(m));
+    if (rv.start) {
+      const b = btn(`Start review · ${n(rv.start.minutes || 10)} min`, () => go(rv.start));
+      kids.push(h('div', { class: 'acts' }, b, rv.due ? h('span', { class: 'meta', text: `${n(rv.due)} due today` }) : null));
+    }
+    if (tr.habits && tr.habits.length) {
+      const sg = UI.seg(null, [{ value: 'type', label: 'By question type' }, { value: 'habit', label: 'By habit' }], { value: S.mistView, label: 'Group mistakes', onChange: v => { S.mistView = v; paintMist(); } });
+      kids.push(h('div', { style: 'margin-top:14px' }, sg.el));
+    }
+    const list = h('div', {});
+    if (S.mistView === 'habit' && tr.habits && tr.habits.length) {
+      list.append(h('div', { class: 'acts' }, btn('Trap gauntlet · 10', () => drill({ source: 'gauntlet', count: 10 }))));
+      tr.habits.forEach(x => list.append(habitRow(x)));
+    } else if (tr.now || tr.rare) {
+      if (tr.now) {
+        list.append(sub(join('Worth fixing now', n(tr.now.n), tr.now.gain && `≈ +${tr.now.gain}`)));
+        (tr.now.rows || []).forEach((x, i) => list.append(trapRow(x, i === 0)));
+        if (tr.now.fix) list.append(h('div', { class: 'acts' }, btn(`Fix all · ${tr.now.fix.n}`, () => drill(tr.now.fix.body))));
+      }
+      if (tr.rare) {
+        list.append(sub(join('Rare skills', tr.rare.until && `after ${UI.date(tr.rare.until)}`, n(tr.rare.n))));
+        list.append(h('p', { class: 'help', text: 'About 0.5 of 44 a test each: after the SAT, or now if you have time.' }));
+        (tr.rare.rows || []).forEach(x => list.append(trapRow(x, false)));
+        if (tr.rare.fix) list.append(h('div', { class: 'acts' }, btn(`Fix · ${tr.rare.fix.n}`, () => drill(tr.rare.fix.body))));
+      }
+    } else {
+      const top = tr.top || [], blind = new Set(tr.blind || []);
+      const b = top.filter(x => blind.has(x.id)), rest = top.filter(x => !blind.has(x.id));
+      if (b.length) {
+        list.append(sub(`Blind spots · ${b.length}`), h('p', { class: 'help', text: 'You were sure and wrong: these never get double-checked.' }));
+        b.forEach((x, i) => list.append(trapRow(x, i === 0, true)));
+        if (rest.length) list.append(sub('Open'));
+      }
+      rest.forEach((x, i) => list.append(trapRow(x, !b.length && i === 0)));
+    }
+    kids.push(list);
+    const foot = h('div', { class: 'acts' });
+    if (tr.templates) foot.append(btn(`Fix all · ${n(tr.templates * 2)} questions`, () => drill({ mistakes: true })));
+    if ((tr.open || 0) > 5 && !(tr.now || tr.rare)) foot.append(link(`+${n(tr.open - 5)} more`, '/review/'));
+    kids.push(foot);
+    card('mist', 'Mistakes', right, kids);
+  }
+  function trapRow(x, first, sure) {
+    const el = h('div', { class: 'trow' });
+    const lb = h('button', { type: 'button', class: 'tl', text: x.label || 'A named mistake', 'aria-label': `Fix · 2 questions: ${x.label}` });
+    lb.addEventListener('click', () => run(lb, () => drill({ mistakes: true, templates: [x.template] })));
+    const mt = h('div', { class: 'tm' });
+    if (x.hits > 1) mt.append(h('span', { class: 'meta', text: `×${x.hits}` }));
+    if (UI.pips) mt.append(UI.pips(x.owed ?? 2, 2));
+    mt.append(h('span', { class: 'meta' }, UI.glyph(x.topic), ' ', TOP(x.topic)));
+    if (sure || x.blind) mt.append(h('span', { class: 'tag ink', text: 'Sure' }));
+    if (x.relapses >= 1 || x.learn) mt.append(quiet('Relapsed · learn it again', () => drill({ source: 'learn', templates: [x.template], example: true, count: 3 })));
+    if (first) mt.append(btn('Try one now', () => twinSheet({ pool: 'redo', ids: [x.id], count: 1, source: 'try' }, x.label)));
+    el.append(h('span', { class: 'dot', 'aria-hidden': 'true' }), lb, h('span'), mt);
+    return el;
+  }
+  function habitRow(x) {
+    const el = h('div', { class: 'habit' });
+    el.append(h('p', { class: 'hn' + (x.broken_at ? ' broken' : ''), text: x.name }));
+    el.append(meta(join(pl(x.misses, 'miss', 'misses'), (x.skills || []).map(TOP).join(', '))));
+    if (x.tell) el.append(h('p', { class: 'line soft tell', text: x.tell }));
+    el.append(meta(x.broken_at ? `Broken · ${UI.date(x.broken_at)}` : x.avoided && x.avoided.of ? `avoided ${x.avoided.n} of the last ${x.avoided.of}` : ''));
+    el.append(h('div', { class: 'acts' }, btn('Drill this habit · 8', () => drill({ source: 'habit', habit: x.id, count: 8 }))));
+    return el;
   }
 
-  (async () => {
-    try { paintToday(await api('/today')); }
-    catch (e) { $('#err').textContent = 'The server is not answering.'; $('#err').hidden = false; }
-    api('/qotd').then(paintQotd).catch(() => { $('#qotd').hidden = true; });
-    api('/challenge').then(paintChallenge).catch(() => {});
-  })();
+  /* ---------------------------------------------------------------- questions of the day (§5, R27, T14, T5) */
+  const QD = { tab: null, rep: {}, ws: {} };
+  const SLOT_SHORT = { 'math:mcq': 'MC', 'math:spr': 'Grid-in', 'rw:wic': 'Words', 'rw:transition': 'Transitions' };
+  const markOf = sl => !sl.mine ? 'open' : sl.mine.correct ? 'right' : 'wrong';
+  function markEl(sl) {
+    const m = markOf(sl);
+    return h('span', { class: 'mk', 'data-m': m, 'data-rep': QD.rep[sl.slot] ? '' : null, role: 'img',
+      'aria-label': m === 'open' ? 'Not answered' : m === 'right' ? 'Right' : 'Wrong', text: m === 'right' ? '✓' : m === 'wrong' ? '✕' : '' });
+  }
+  function paintQotd() {
+    const d = S.q;
+    const slots = d.slots || [];
+    Object.values(QD.ws).forEach(w => { try { w.destroy(); } catch (_) {} });
+    QD.ws = {};
+    const streak = h('span', { class: 'row' }, h('span', { class: 'streak' + (d.streak ? ' on' : ''), 'aria-label': `Day's questions streak, ${d.streak || 0} days` },
+      flame(d.streak > 0), d.streak ? `${d.streak} ${d.streak === 1 ? 'day' : 'days'} in a row` : 'Start a streak'));
+    const mo = d.month || {};
+    const metaT = join(d.best > (d.streak || 0) && `best ${d.best}`, mo.of && `${mo.right} of ${mo.of} right this month`, mo.crowd_pct !== null && mo.crowd_pct !== undefined && `crowd ${pct(mo.crowd_pct)}`);
+    const kids = [];
+    if (d.late || S.qday) {
+      kids.push(h('div', { class: 'qd-arch' }, h('span', { class: 'tag', text: 'Late · not counted in the crowd or streak' }),
+        quiet('Back to today', () => { S.qday = null; history.replaceState(null, '', location.pathname + '#qotd'); LOADERS.qotd(); })));
+    }
+    if (d.note) kids.push(h('p', { class: 'note-ok', text: d.note }));
+    // tabs under 1080px, rows of two above it
+    if (!QD.tab || !slots.some(s => s.slot === QD.tab)) QD.tab = (slots.find(s => !s.mine) || slots[0] || {}).slot;
+    const tabs = h('div', { class: 'qd-tabs', role: 'tablist', 'aria-label': 'The day’s questions' });
+    const panels = {};
+    slots.forEach(sl => {
+      const tb = h('button', { type: 'button', role: 'tab', id: `qt-${sl.slot.replace(':', '-')}`, 'aria-selected': String(sl.slot === QD.tab), tabindex: sl.slot === QD.tab ? '0' : '-1' },
+        markEl(sl), SLOT_SHORT[sl.slot] || sl.label);
+      tb.addEventListener('click', () => selectTab(sl.slot, true));
+      tabs.append(tb);
+    });
+    tabs.addEventListener('keydown', e => {
+      const i = slots.findIndex(s => s.slot === QD.tab);
+      const j = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: slots.length - 1 }[e.key];
+      if (j === undefined) return;
+      e.preventDefault();
+      selectTab(slots[(j + slots.length) % slots.length].slot, true);
+    });
+    kids.push(tabs);
+    const groups = [['math', 'Math'], ['rw', 'Reading & Writing']];
+    groups.forEach(([subj, label]) => {
+      const mine = slots.filter(s => (s.subject || s.slot.split(':')[0]) === subj);
+      if (!mine.length) return;
+      kids.push(h('p', { class: 'k qd-rowk', text: label }));
+      const row = h('div', { class: 'qd-row' });
+      mine.forEach(sl => { const p = slotPanel(sl, d); panels[sl.slot] = p; row.append(p); });
+      kids.push(row);
+    });
+    kids.push(pastStrip(d));
+    card('qotd', `Questions of the day · ${UI.date(d.day, 'long')}`, [streak, metaT ? h('span', { class: 'meta', text: metaT }) : null], kids);
+    QD.panels = panels;
+    selectTab(QD.tab, false);
+  }
+  function selectTab(slot, focus) {
+    QD.tab = slot;
+    document.querySelectorAll('#qotd .qd-tabs [role=tab]').forEach(b => {
+      const on = b.id === `qt-${slot.replace(':', '-')}`;
+      b.setAttribute('aria-selected', String(on)); b.tabIndex = on ? 0 : -1;
+      if (on && focus) b.focus();
+    });
+    Object.entries(QD.panels || {}).forEach(([k, p]) => p.classList.toggle('on', k === slot));
+  }
+  function swipe(el) {
+    let x0 = null, y0 = 0;
+    el.addEventListener('pointerdown', e => { if (!narrow() || e.pointerType === 'mouse' || document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName)) { x0 = null; return; } x0 = e.clientX; y0 = e.clientY; });
+    el.addEventListener('pointerup', e => {
+      if (x0 === null) return;
+      const dx = e.clientX - x0, dy = e.clientY - y0;
+      x0 = null;
+      if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx)) return;
+      const list = S.q.slots.map(s => s.slot), i = list.indexOf(QD.tab);
+      const j = dx < 0 ? i + 1 : i - 1;
+      if (j >= 0 && j < list.length) selectTab(list[j], false);
+    });
+  }
+  function toFb(r) {
+    if (!r) return null;
+    const ai = r.answer_index ?? (typeof r.answer === 'string' && r.answer.length === 1 ? 'ABCD'.indexOf(r.answer) : undefined);
+    return Object.assign({}, r, {
+      reasons: r.reasons || (r.choices_explained ? r.choices_explained.map((x, i) => i === ai ? null : x) : undefined),
+      crowd: null,
+    });
+  }
+  function wsQ(sl) {
+    const q = sl.question || {};
+    if (sl.subject === 'rw' || String(sl.slot).startsWith('rw:')) return { id: q.item_id || sl.slot, type: 'mcq', stem: q.stem, choices: q.choices, topic_name: q.head || sl.label };
+    return q;
+  }
+  function slotPanel(sl, d) {
+    const p = h('div', { class: 'qd-slot', id: `qd-${sl.slot.replace(':', '-')}`, role: 'tabpanel', 'aria-labelledby': `qt-${sl.slot.replace(':', '-')}` });
+    p.append(h('div', { class: 'qd-lab' }, markEl(sl), h('span', { class: 'k', text: sl.label })));
+    const rw = String(sl.slot).startsWith('rw:');
+    if (rw && sl.question && sl.question.text) p.append(h('p', { class: 'qd-text', text: sl.question.text }));
+    const qh = h('div', {}), after = h('div', { class: 'qd-after', role: 'status' }), twin = h('div', {});
+    p.append(qh, after, twin);
+    swipe(p);
+    if (!UI.workspace) { qh.append(line('The question needs question.js to load.', 'soft')); return p; }
+    const prefs = { rationale: 'always', open_explanations: true, option_reasons: true, first_tap: false };
+    if (sl.mine) {
+      QD.ws[sl.slot] = UI.workspace(qh, wsQ(sl), { mode: 'review', fb: toFb(sl.mine), bar: false, prefs });
+      paintAfter(sl, d, after, twin);
+    } else {
+      QD.ws[sl.slot] = UI.workspace(qh, wsQ(sl), {
+        mode: 'inline', feedback: 'instant', prefs,
+        onCheck: async (a, m) => {
+          const r = await post('/qotd', { slot: sl.slot, answer: a, day: d.day, ms: m.ms });
+          sl.mine = r;
+          setTimeout(() => { paintAfter(sl, d, after, twin); refreshMarks(sl); afterAnswer(); }, 0);
+          return toFb(r);
+        },
+      });
+    }
+    return p;
+  }
+  function refreshMarks(sl) {
+    const tb = $(`qt-${sl.slot.replace(':', '-')}`);
+    if (tb) tb.firstChild.replaceWith(markEl(sl));
+    const lab = document.querySelector(`#qd-${sl.slot.replace(':', '-')} .qd-lab .mk`);
+    if (lab) lab.replaceWith(markEl(sl));
+  }
+  function afterAnswer() {
+    UI.me && UI.me(true);
+    refresh(['today', 'calendar']);
+  }
+  function paintAfter(sl, d, host, twinHost) {
+    const r = sl.mine, rw = String(sl.slot).startsWith('rw:'), c = r.crowd || {};
+    const kids = [];
+    if (rw && r.key_word) kids.push(line(join(`The word: ${r.key_word}`, r.meaning), ''));
+    if (r.entry && r.entry.text) kids.push(line(r.entry.text));
+    if (c.answered !== undefined) {
+      if (c.answered < 5) kids.push(line(`You’re one of the first ${c.answered} today`, 'soft'));
+      else {
+        const top = Array.isArray(c.picks) ? c.picks.map((k, i) => [k, i]).filter(([, i]) => i !== r.answer_index).sort((a, b) => b[0] - a[0])[0] : null;
+        kids.push(line(join(`${Math.round(100 * c.right / c.answered)}% of ${n(c.answered)} got it right`,
+          top && top[0] && `most common trap: ${'ABCD'[top[1]]} (${Math.round(100 * top[0] / c.answered)}%)`,
+          c.top_wrong && c.top_wrong.length && `Most common wrong answers: ${c.top_wrong.map(x => `${x.value} (${Math.round(100 * x.n / c.answered)}%)`).join(' · ')}`), ''));
+        if (Array.isArray(c.picks) && UI.spread) {
+          const fig = h('div', {});
+          const q = sl.question || {};
+          UI.spread(fig, c.picks.map((k, i) => ({ label: 'ABCD'[i], text: (q.choices || [])[i], n: k, key: i === r.answer_index, pick: i === r.given,
+            reason: (r.choices_explained || [])[i] || null })), { n: c.answered, label: 'How everyone answered', noun: 'answers' });
+          kids.push(fig);
+        }
+        if (c.median_ms) kids.push(meta(join(r.ms && `You ${UI.mmss(r.ms / 1000)}`, `everyone ${UI.mmss(c.median_ms / 1000)}`, `SAT pace ${UI.mmss((r.sat_pace_ms || (rw ? 71000 : 95000)) / 1000)}`)));
+      }
+    }
+    const acts = h('div', { class: 'acts' });
+    const day = d.day;
+    if (!r.correct) acts.append(pill('Now its twin', () => twinInCol(sl, d, twinHost, 'word')));
+    if (rw) {
+      if (!r.correct) acts.append(btn('Same trap, new word', () => twinInCol(sl, d, twinHost, 'trap')));
+      if (r.key_word && UI.addWord) acts.append(btn('Add to my words', () => UI.addWord({ word: r.key_word })));
+      acts.append(link('5 more like this', `/words/#${sl.slot.split(':')[1]}`, 'btn'));
+    } else {
+      acts.append(btn('5 more like this', () => drill({ like: { day, slot: sl.slot }, count: 5 })));
+      const topic = r.topic || (sl.question || {}).topic;
+      if (topic) acts.append(btn(`${r.difficulty === 'hard' ? 'More hard' : 'Harder'} · ${TOP(topic)}`, () => drill({ topics: [topic], tiers: ['hard'], count: 5 })));
+      const sv = btn(sl.saved ? 'Saved' : 'Save', async () => {
+        await post('/qotd/save', { day, slot: sl.slot, on: !sl.saved });
+        sl.saved = !sl.saved; sv.textContent = sl.saved ? 'Saved' : 'Save';
+        sv.setAttribute('aria-pressed', String(sl.saved));
+      });
+      sv.setAttribute('aria-pressed', String(!!sl.saved));
+      acts.append(sv);
+    }
+    acts.append(btn('Share', () => share(day)));
+    acts.append(quiet('Report a problem', () => UI.report && UI.report({ kind: 'question', source: 'qotd', day, slot: sl.slot, revealed: true })));
+    kids.push(acts);
+    host.replaceChildren(...kids);
+  }
+  async function share(day) {
+    const url = `${location.origin}/?day=${day}`;
+    if (navigator.share && matchMedia('(pointer: coarse)').matches) { try { await navigator.share({ url, title: 'Question of the day' }); return; } catch (_) { return; } }
+    UI.copyText(url, { toast: 'Link copied' });
+  }
+  function twinInCol(sl, d, host, like) {
+    if (!String(sl.slot).startsWith('rw:')) {
+      if (!UI.twinInline) return drill({ like: { day: d.day, slot: sl.slot }, count: 1, source: 'twin' });
+      host.replaceChildren();
+      UI.twinInline(host, { body: { like: { day: d.day, slot: sl.slot }, count: 1, source: 'twin' }, caption: 'Its twin · same trap, new numbers',
+        onAnswer: fb => { if (fb && fb.correct) { QD.rep[sl.slot] = true; refreshMarks(sl); } } });
+      return;
+    }
+    return (async () => {
+      const r = await post('/qotd/another', { day: d.day, slot: sl.slot, like });
+      const it = r.item || {};
+      host.replaceChildren(h('p', { class: 'k', text: like === 'trap' ? 'Same trap, new word' : 'Its twin' }), it.text ? h('p', { class: 'qd-text', text: it.text }) : '');
+      const qh = h('div', {});
+      host.append(qh);
+      UI.workspace(qh, { id: it.item_id || 'twin', type: 'mcq', stem: it.stem, choices: it.choices, topic_name: it.head }, {
+        mode: 'inline', feedback: 'instant', prefs: { rationale: 'always', open_explanations: true },
+        onCheck: async (a, m) => {
+          const fb = await post('/words/sample/answer', { token: r.token, answer: a, ms: m.ms });
+          if (fb && fb.correct) { QD.rep[sl.slot] = true; refreshMarks(sl); }
+          return toFb(fb);
+        },
+      });
+    })().catch(e => {
+      host.replaceChildren(line(e && e.status === 404 ? 'No twin for this one' : errText(e), 'soft'));
+    });
+  }
+  function pastStrip(d) {
+    const el = h('div', { class: 'qd-past' }, h('span', { class: 'k', text: 'Past days' }));
+    const slots = (d.slots || []).map(s => s.slot);
+    (d.past || []).slice(-7).forEach(p => {
+      const wd = new Date(p.day + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'narrow' });
+      const marks = slots.map(s => (p.marks || {})[s] ?? null);
+      const b = h('button', { type: 'button', class: 'qd-day', 'aria-pressed': String(S.qday === p.day),
+        'aria-label': `${UI.date(p.day, 'long')}: ${marks.map((m, i) => `${SLOT_SHORT[slots[i]] || slots[i]} ${m || 'not answered'}`).join(', ')}` },
+        h('span', { text: wd, 'aria-hidden': 'true' }), h('span', { class: 'mm', 'aria-hidden': 'true' }, marks.map(m => h('i', { 'data-m': m || '' }))));
+      b.addEventListener('click', () => openDay(p.day));
+      el.append(b);
+    });
+    el.append(quiet('Older…', (e, b) => UI.pop(b, (pe, res) => {
+      const t0 = d.today || today();
+      const f = h('input', { type: 'date', class: 'field sm', min: addDays(t0, -30), max: addDays(t0, -1), 'aria-label': 'A past day' });
+      return h('div', { class: 'date-form' }, h('label', { class: 'label', text: 'Up to 30 days back' }), f, btn('Open', () => { if (f.value) { res.close(); openDay(f.value); } }));
+    }, { label: 'An older day' })));
+    return el;
+  }
+  function openDay(day) {
+    S.qday = day === today() ? null : day;
+    const u = new URL(location.href);
+    if (S.qday) u.searchParams.set('day', S.qday); else u.searchParams.delete('day');
+    history.replaceState(null, '', u.pathname + u.search + '#qotd');
+    LOADERS.qotd();
+  }
+
+  /* ---------------------------------------------------------------- points on the table (T6) */
+  function paintInsights() {
+    paintGain(); paintPace();
+    if (S.t) { paintScore(); if (S.cal) paintStudy(); }
+  }
+  function paintGain() {
+    const ins = S.ins || {}, g = ins.gains;
+    if (!g) {
+      const have = ins.answers || 0;
+      card('gain', 'Points on the table', null, line(`Answer 30 questions and this shows where your points are · ${Math.min(have, 30)} of 30`),
+        h('div', { class: 'acts' }, btn('Start the coach’s set', () => drill({ source: 'coach', count: 10 }))));
+      return;
+    }
+    const traps = {};
+    (S.t && S.t.traps && S.t.traps.top || []).forEach(x => { traps[x.topic] = (traps[x.topic] || 0) + 1; });
+    (S.t && S.t.domains || []).forEach(d => (d.topics || []).forEach(x => { if (x.traps) traps[x.topic] = x.traps; }));
+    const sorter = S.gainSort;
+    const hd = h('div', { class: 'gain-head' });
+    const sg = UI.seg(null, [{ value: 'points', label: 'By points' }, { value: 'minutes', label: 'By minutes' }, { value: 'domain', label: 'By domain' }],
+      { value: sorter, label: 'Sort', onChange: v => { S.gainSort = v; paintGain(); } });
+    hd.append(h('div', { class: 'row', style: 'justify-content:space-between' }, h('p', { class: 'meta', text: `from ${n(g.answers)} answers · updated after every answer` }), sg.el));
+    const total = (g.top3 ? g.top3.gain : 0) + (g.others ? g.others.gain : 0);
+    const exWt = S.t && S.t.workload && S.t.workload.need && S.t.workload.need.target;
+    const sumLine = join(`About +${n(total)} on the table`, g.top3 && g.top3.gain && `your top 3 together ≈ +${g.top3.gain}`);
+    hd.append(line(sumLine));
+    if (exWt && exWt.right_of_44) {
+      const tl = h('button', { type: 'button', class: 'quiet', text: `Target ${exWt.target} needs about ${exWt.right_of_44} of 44 right; you’re near ${exWt.now_of_44}` });
+      tl.addEventListener('click', () => targetSheet(tl));
+      hd.append(tl);
+    }
+    const rows = h('div', { class: 'gain-rows' });
+    if (sorter === 'domain') {
+      const maxG = Math.max(...(g.by_domain || []).map(x => x.gain || 0));
+      (g.by_domain || []).forEach(x => rows.append(h('a', { class: 'dom-row', href: `/practice/?domain=${encodeURIComponent(x.domain)}` },
+        h('span', {}, h('b', { text: DSHORT(x.domain) }), x.gain === maxG && maxG > 0 ? [' ', h('span', { class: 'tag', text: 'Most points to fix' })] : ''),
+        h('span', { class: 'mbar', role: 'img', 'aria-label': `Mastery ${UI.masteryWord(x.mastery, x.answered)}` }, h('i', { style: `--m:${x.mastery || 0}` })),
+        h('span', { class: 'meta', text: join(x.answered ? `${Math.round(100 * x.right / x.answered)}% right of ${n(x.answered)}` : 'no answers yet', x.traps && pl(x.traps, 'open mistake'), x.gain && `≈ +${x.gain}`) }))));
+    } else {
+      const skills = (g.skills || []).map(s => Object.assign({}, s, { tiers: g.tiers && g.tiers[s.topic], open: traps[s.topic] || 0 }));
+      const extras = (g.extras || []).map(x => ({ extra: true, ...x }));
+      const all = [...skills, ...extras];
+      const val = s => sorter === 'minutes' ? (s.gain || 0) / Math.max(1, s.minutes || 1) : (s.gain || 0);
+      all.sort((a, b) => val(b) - val(a));
+      const top = all.slice(0, 6), other = all.slice(6);
+      rows.append(sub('Top 6'));
+      top.forEach(s => rows.append(gainRow(s)));
+      if (other.length) {
+        rows.append(sub(join(`The other ${other.length}`, g.others && g.others.gain && `≈ +${g.others.gain} together`)));
+        other.forEach(s => rows.append(gainRow(s)));
+      }
+    }
+    const foot = h('div', { class: 'acts' });
+    if (g.top3 && g.top3.topics && g.top3.topics.length) foot.append(btn('Practise the top 3 · 15', () => drill({ topics: g.top3.topics, count: 15, adaptive: true, source: 'gain' })));
+    foot.append(h('span', { class: 'help', text: 'Estimated with our score model: how far your Math band would move if this skill reached 80%.' }), link('How this works', '/help/#points'));
+    card('gain', 'Points on the table', null, hd, rows, foot);
+  }
+  function gainRow(s) {
+    if (s.extra) {
+      const label = s.kind === 'spr' ? 'Grid-in answers' : s.kind === 'pace' ? 'Pace' : cap(s.kind);
+      const act = s.kind === 'pace' ? btn('See pace', () => { $('pace').scrollIntoView({ behavior: 'smooth' }); $('pace-h').focus({ preventScroll: true }); })
+        : btn('Practise · 10', () => drill({ formats: ['spr'], count: 10, source: 'gain' }));
+      return h('div', { class: 'extra-row' }, h('div', {}, h('p', { class: 'line', style: 'margin:0;font-weight:600', text: label }), s.detail ? meta(s.detail) : null),
+        h('b', { text: s.gain >= 5 ? `≈ +${s.gain}` : 'under 5' }), act);
+    }
+    const setLen = (S.t && S.t.profile.prefs && S.t.profile.prefs.set_length) || 10;
+    if ((s.evidence || 0) < 5) {
+      const el = h('div', { class: 'extra-row' }, h('div', {}, h('p', { class: 'line', style: 'margin:0;font-weight:600' }, UI.glyph(s.topic), ' ', TOP(s.topic)),
+        meta(join('Not measured yet', s.per_test && `about ${n(s.per_test)} of 44`))),
+        h('div', { class: 'row' }, btn('Measure · 5', () => drill({ topics: [s.topic], count: 5, source: 'gain' })), btn('Learn it', () => drill({ source: 'learn', topics: [s.topic], example: true, count: 3 }))));
+      return el;
+    }
+    return UI.skillRow(null, { topic: s.topic, gain: s.gain, accuracy: s.accuracy, per_test: s.per_test, minutes: s.minutes, tiers: s.tiers, open: s.open, evidence: s.evidence,
+      need_right: s.to_strong, answered: s.evidence, mastery: s.mastery },
+      { practise: { count: setLen, label: `Practise · ${setLen}`, body: { topics: [s.topic], count: setLen, adaptive: true, source: 'gain' }, onClick: () => drill({ topics: [s.topic], count: setLen, adaptive: true, source: 'gain' }) } });
+  }
+
+  /* ---------------------------------------------------------------- pace (T8) */
+  function paintPace() {
+    const ins = S.ins || {}, p = ins.pace;
+    if (!p) { card('pace', 'Pace', null, line('Pace shows once you have answers.', 'soft')); return; }
+    const timedN = p.timed_answers ?? 0;
+    const kids = [];
+    const secs = p.seconds || (p.forecast && p.forecast.seconds);
+    const limit = p.limit || 2100;
+    if (!secs || (timedN < 20 && !(p.strip && p.strip.length))) {
+      card('pace', 'Pace', null, line(`Your pace shows after 20 answers with the clock on · ${timedN} so far`),
+        h('div', { class: 'acts' }, btn('Timed set · 10', () => drill({ count: 10, timing: 'pace', source: 'pace' }))));
+      return;
+    }
+    kids.push(h('div', { class: 'pace-fig' }, h('span', { class: 'big', text: UI.mmss(secs) }), h('span', { class: 'meta', text: `a module at your pace · the SAT gives ${UI.mmss(limit)}` })));
+    if (p.strip && p.strip.length && UI.strip) {
+      const marks = p.strip.map((c, i) => ({ status: p.runs_out_at !== null && p.runs_out_at !== undefined && i >= p.runs_out_at ? 'unanswered' : 'answered', tier: c.tier,
+        label: `Question ${i + 1}, ${c.tier || ''}, ${UI.mmss((c.ms || 0) / 1000)}` }));
+      const fig = h('div', { style: 'margin-top:12px' });
+      UI.strip(fig, marks, { marker: p.runs_out_at ?? undefined, label: `22 questions at your pace${p.blanks ? `, about ${p.blanks} left blank` : ''}` });
+      kids.push(fig);
+      if (p.blanks) kids.push(meta(`~${p.blanks} left blank`));
+    }
+    if (p.pts_lost) kids.push(line(`≈ −${p.pts_lost} points from time alone`));
+    else if (secs < limit) kids.push(line(`${UI.mmss(limit - secs)} to spare · use it to check your last 5.`, 'soft'));
+    (p.slow_right || []).slice(0, 3).forEach(x => kids.push(h('div', { class: 'pace-row' },
+      h('span', { class: 'line', style: 'margin:0', text: join(TOP(x.topic), x.ms && `${UI.mmss(x.ms / 1000)} a question`, x.accuracy !== undefined && `${Math.round(100 * x.accuracy)}% right`) }),
+      (p.guard || []).includes(x.topic) ? btn('Careful set · 8', () => drill({ topics: [x.topic], count: 8, timed: false, source: 'pace' }))
+        : btn('Speed drill · 8 in 12:40', () => drill({ topics: [x.topic], count: 8, timing: 'pace', source: 'pace' })))));
+    if (p.rushing && p.rushing.n) kids.push(h('div', { class: 'pace-row' }, h('span', { class: 'line', style: 'margin:0', text: join(`${p.rushing.n} wrong answers under 20 s this week`, p.rushing.topic && `${p.rushing.n_topic} in ${TOP(p.rushing.topic)}`) }),
+      btn('Careful set · 8', () => drill({ topics: p.rushing.topic ? [p.rushing.topic] : undefined, count: 8, timed: false, source: 'pace' }))));
+    if (p.tests && p.tests.modules) kids.push(h('div', { class: 'pace-row' }, h('span', { class: 'line', style: 'margin:0', text: join(`Ran out of time in ${p.tests.ran_out} of your last ${p.tests.modules} ${p.tests.modules === 1 ? 'module' : 'modules'}`, p.tests.blanks && `${p.tests.blanks} blank at time-up`) }),
+      btn('Timed module · 22 · 35 min', () => go({ path: '/mock/new', body: { full: false, timed: true } }))));
+    if (p.week_before_ms) kids.push(meta(`Module pace ${UI.mmss(p.week_before_ms / 1000)} → ${UI.mmss(secs)} since last week`));
+    kids.push(h('div', { class: 'acts' }, link('Every skill', '/me/#pace')));
+    card('pace', 'Pace', null, kids);
+  }
+
+  /* ---------------------------------------------------------------- score (§9, T7, T10, T11) */
+  function paintScore() {
+    const t = S.t;
+    if (!t) return;
+    const p = t.profile, sc = t.score, ins = S.ins || {}, est = ins.estimate;
+    const tgt = h('button', { type: 'button', class: 'quiet', text: p.target ? `Target ${p.target} ✎` : 'Set a target ✎' });
+    tgt.addEventListener('click', () => targetSheet(tgt));
+    const kids = [];
+    if (!sc) {
+      kids.push(h('p', { class: 'score-band', text: 'No score yet' }));
+      if (p.current) kids.push(meta(`Your estimate: ${p.current}`));
+      kids.push(h('div', { class: 'acts' }, btn('Module · 22 questions · 35 min', () => go({ path: '/mock/new', body: { full: false } })),
+        link('Diagnostic · 20 questions · 32 min', '/diagnostic/', 'btn'), quiet('Add a score', () => scoreSheet({}))));
+      kids.push(h('p', { class: 'help', text: 'Any module, the diagnostic, or an added score gives a score.' }));
+    } else {
+      kids.push(h('p', { class: 'score-band', text: `${sc.low}–${sc.high}` }));
+      kids.push(h('p', { class: 'meta' }, h('a', { class: 'plain', href: `/results/report/?id=${encodeURIComponent(sc.session)}`, text: join('Math', UI.KIND && UI.KIND.label ? UI.KIND.label(sc) : cap(sc.kind), UI.date(sc.at)) })));
+      if (sc.capped) kids.push(line(`Capped at ${sc.high}: module 2 was the easier one`, 'soft'));
+      if (p.rw_now) kids.push(line(join(`SAT total ${sc.low + p.rw_now}–${sc.high + p.rw_now}`, `R&W ${p.rw_now} (yours)`, p.rw_target && p.target && `Target ${p.target + p.rw_target}`)));
+      else kids.push(h('div', {}, quiet('Add your R&W score for a total', () => targetSheet(tgt))));
+    }
+    if (UI.scale) {
+      const fig = h('div', { style: 'margin-top:14px' });
+      UI.scale(fig, { band: sc ? { low: sc.low, high: sc.high } : null, target: p.target, start: t.plan ? t.plan.current || p.current : null, estimate: !sc && p.current ? { low: p.current - 30, high: p.current + 30 } : null, min: 200, max: 800 });
+      kids.push(fig);
+    }
+    if (sc && p.target) {
+      const mid = (sc.low + sc.high) / 2, gap = Math.round(p.target - mid);
+      const wks = t.exam && t.exam.days > 0 ? t.exam.days / 7 : null;
+      kids.push(line(gap <= 0 ? 'At your target ✓' : join(`+${gap} to target`, wks && `about ${Math.round(gap / wks)} a week`)));
+    }
+    if (ins.failed) kids.push(UI.cardError(null, () => LOADERS.insights()));
+    else if (est) {
+      const pd = est.practice_delta;
+      if (pd && pd.show) kids.push(line(`Practice since ${UI.date(pd.since)}: ≈ ${pd.pts > 0 ? '+' : '−'}${Math.abs(pd.pts)} · from ${pl(pd.answers, 'answer')}`));
+      if (est.evidence) {
+        const ev = Object.entries(est.evidence).map(([d, k]) => `${DSHORT(d)} ${k}${(est.thin || []).includes(d) ? ' (thin)' : ''}`).join(' · ');
+        kids.push(meta(`Evidence: ${ev}`));
+        if ((est.thin || []).length) kids.push(h('div', { class: 'acts' }, btn('Sharpen · 12 questions · ~19 min', () => drill({ source: 'probe', count: 12 }))));
+      }
+    }
+    // the trend: our sittings and added scores
+    const pts = [...(t.scores || []).map(x => ({ id: x.session, at: x.at, low: x.low, high: x.high, kind: x.kind, href: `/results/report/?id=${encodeURIComponent(x.session)}` })),
+      ...(t.outside || []).map(x => ({ id: 'o' + x.id, day: x.day, value: x.math, low: x.math, high: x.math, kind: 'outside', outside: x.source === 'official' ? 'Official' : 'Bluebook' }))];
+    if (pts.length && UI.bandChart) {
+      const fig = h('div', { style: 'margin-top:14px' });
+      UI.bandChart(fig, pts, { height: 120, target: p.target, exam: p.exam_date, projection: est && est.projection ? est.projection : undefined, label: 'Your scores' });
+      kids.push(fig);
+      if (pts.length === 1) kids.push(meta('1 scored sitting'));
+    }
+    if (est && est.verdict) {
+      kids.push(line(est.verdict));
+      if (est.made_per_week !== null && est.made_per_week !== undefined) kids.push(meta(join(`Made ${est.made_per_week >= 0 ? '+' : '−'}${Math.abs(Math.round(est.made_per_week))} / wk`, est.needs_per_week && `needs +${Math.round(est.needs_per_week)} / wk`)));
+      if (est.verdict_kind === 'not_enough') kids.push(h('div', { class: 'acts' }, btn('Module · 22 q · 35 min', () => go({ path: '/mock/new', body: { full: false } }))));
+      if (est.calibration) kids.push(line(est.calibration.text || `We projected ${est.calibration.low}–${est.calibration.high} for ${UI.date(est.calibration.day)} · you scored ${est.calibration.score}`));
+    }
+    if (ins.causes) kids.push(causesBlock(ins.causes));
+    if (t.plan && t.plan.suggest && t.plan.suggest.current) {
+      const sg = t.plan.suggest;
+      kids.push(sub('Your plan’s start'), line(`Your last tests average ${sg.current}; your plan started from ${t.plan.current || p.current}.`),
+        h('div', { class: 'acts' }, btn(`Update the plan’s start to ${sg.current}`, async () => { await api(`/plan/${encodeURIComponent(t.plan.id)}`, { method: 'PATCH', body: { current: sg.current } }); refresh(['today']); }),
+          quiet('Not now', async () => { await post(`/plan/${encodeURIComponent(t.plan.id)}/drift`, { dismiss: sg.sessions || [] }); refresh(['today']); })));
+    }
+    kids.push(h('div', { class: 'acts' }, quiet('Add a score', () => scoreSheet({}))));
+    card('score', 'Score', tgt, kids);
+  }
+  const CAUSE = { clock: 'Clock', entry: 'Entry', trap: 'Traps', slip: 'Slips', gap: 'Gaps', misread: 'Misreads', changed: 'Changed' };
+  function causesBlock(c) {
+    const el = h('div', {});
+    el.append(sub('Where points went · last 14 days'));
+    if (!c.total || c.total < 5) { el.append(line('Fewer than 5 misses in 14 days: nothing to sort yet.', 'soft')); return el; }
+    const segs = Object.keys(CAUSE).filter(k => c.by[k]).map(k => ({ key: k, label: CAUSE[k], value: c.by[k], n: c.by[k] }));
+    const fix = h('div', {});
+    if (UI.stackBar) UI.stackBar(el, segs, { largest: true, noun: 'misses', label: 'Misses by cause', onPick: sg => { S.causePick = sg.key; fixRow(c, sg.key, fix); } });
+    else el.append(meta(segs.map(s => `${s.label} ${s.value}`).join(' · ')));
+    const lv = c.lever && c.by[c.lever] ? `Most of your misses are ${CAUSE[c.lever].toLowerCase()} (${c.by[c.lever]} of ${c.total})${c.lever === 'trap' ? ': fixing them is your fastest gain.' : '.'}` : null;
+    if (lv) el.append(line(lv));
+    el.append(h('div', { class: 'row', style: 'margin-top:8px' }, segs.map(sg => btn(`${sg.label} ${sg.value}`, () => { S.causePick = sg.key; fixRow(c, sg.key, fix); }))));
+    el.append(fix);
+    if (S.causePick) fixRow(c, S.causePick, fix);
+    const ch = c.changes || {};
+    if ((ch.right_to_wrong || 0) + (ch.wrong_to_right || 0) >= 5) el.append(line(ch.right_to_wrong > ch.wrong_to_right
+      ? `On tests you changed ${ch.right_to_wrong} right answers to wrong and ${ch.wrong_to_right} wrong to right: keep your first answer unless you find an error.`
+      : `Your changes help: ${ch.wrong_to_right} wrong to right, ${ch.right_to_wrong} right to wrong. Keep checking.`));
+    return el;
+  }
+  function fixRow(c, key, host) {
+    const ids = (c.items || {})[key] || [];
+    const box = h('div', { class: 'causes-fix' });
+    if (key === 'trap') box.append(btn(`Fix all · ${n((S.t.traps.templates || ids.length) * 2)}`, () => drill({ pool: 'redo' })));
+    else if (key === 'slip') box.append(line('You know these. Reread the last line of the question before Check.', 'soft'),
+      h('div', { class: 'acts' }, btn(`See your ${ids.length} slips`, () => drill({ pool: 'history', ids: ids.filter(x => typeof x === 'number'), exact: true, source: 'review' })),
+        btn('Careful set · 8', () => drill({ pool: 'history', ids: ids.filter(x => typeof x === 'number'), exact: false, each: 1, count: 8, timed: false, source: 'today' }))));
+    else if (key === 'clock') box.append(btn('Speed drill · 8 in 12:40', () => drill({ count: 8, timing: 'pace', source: 'pace' })), ' ', link('See pace', '#pace'));
+    else if (key === 'entry') box.append(btn('Grid-in entry drill · 5', () => drill({ pool: 'history', ids: ids.filter(x => typeof x === 'number'), exact: false, formats: ['spr'], count: 5, source: 'today' })),
+      h('p', { class: 'help', text: 'Up to 5 characters for a positive answer and 6 for a negative one; fractions or decimals; no mixed numbers.' }));
+    else if (key === 'gap' && c.top_gap_topic) box.append(btn(`Learn it · ${TOP(c.top_gap_topic)}`, () => drill({ source: 'learn', topics: [c.top_gap_topic], example: true, count: 3 })));
+    else box.append(line(`${ids.length} of these in 14 days.`, 'soft'));
+    host.replaceChildren(box);
+  }
+
+  /* the target dialog (§9, T11) */
+  function targetSheet(opener, draft) {
+    const p = S.t.profile, sc = S.t.score;
+    let v = (draft ? draft.target : p.target) || (sc ? Math.min(800, Math.ceil(((sc.low + sc.high) / 2 + 60) / 10) * 10) : 600);
+    let rwNow = p.rw_now || null, rwT = p.rw_target || null;
+    const start = { v, rwNow, rwT };
+    let sheet;
+    const save = h('button', { type: 'button', class: 'pill', text: 'Save', disabled: true });
+    const takes = h('div', { class: 'td', role: 'status' });
+    const note = h('p', { class: 'help' });
+    const num = h('input', { type: 'number', class: 'field', min: 200, max: 800, step: 10, value: v, 'aria-label': 'Math target' });
+    const rng = h('input', { type: 'range', min: 200, max: 800, step: 10, value: v, 'aria-label': 'Math target slider', style: 'width:100%' });
+    const changed = () => { save.disabled = v === start.v && rwNow === start.rwNow && rwT === start.rwT; };
+    const set = x => {
+      v = Math.max(200, Math.min(800, Math.round(x / 10) * 10));
+      num.value = v; rng.value = v;
+      note.textContent = sc && v < sc.low ? 'Below your latest band' : '';
+      changed(); askTakes();
+    };
+    num.addEventListener('input', () => { if (num.value.length >= 3) set(+num.value); });
+    rng.addEventListener('input', () => set(+rng.value));
+    const quick = UI.chips(null, [500, 550, 600, 650, 700, 750, 800].map(x => ({ value: x, label: String(x) })), { value: v, label: 'Quick targets', onChange: x => set(x) });
+    const rwA = h('input', { type: 'number', class: 'field', min: 200, max: 800, step: 10, value: rwNow || '', 'aria-label': 'R&W now', placeholder: 'R&W now' });
+    const rwB = h('input', { type: 'number', class: 'field', min: 200, max: 800, step: 10, value: rwT || '', 'aria-label': 'R&W target', placeholder: 'R&W target' });
+    const total = h('p', { class: 'meta' });
+    const rwSync = () => { rwNow = rwA.value ? +rwA.value : null; rwT = rwB.value ? +rwB.value : null; total.textContent = rwT ? `Total target ${v + rwT}` : ''; changed(); };
+    rwA.addEventListener('input', rwSync); rwB.addEventListener('input', rwSync);
+    let tk = 0;
+    function askTakes() {
+      clearTimeout(tk);
+      tk = setTimeout(async () => {
+        const w = S.t.workload && S.t.workload.need && S.t.workload.need.target;
+        const kids = [h('p', { class: 'sub', text: 'What it takes' })];
+        if (w && w.target === v && w.right_of_44) kids.push(line(`${v} ≈ ${w.right_of_44} of 44 right · you’re near ${w.now_of_44}`));
+        if (w && w.target === v && w.skills && w.skills.length) kids.push(line(`The ones you’re most likely missing are in ${w.skills.slice(0, 3).map(TOP).join(', ')}`, 'soft'));
+        try {
+          const pv = await post('/plan/preview', { current: sc ? Math.round((sc.low + sc.high) / 20) * 10 : p.current || 500, target: v, exam_date: p.exam_date || undefined, minutes: p.minutes || 45, days: p.days || '1111100' });
+          const tn = pv.target_note;
+          if (tn && tn.route_up && v > 580) kids.push(line(`Needs the harder module 2: at least ${tn.route_right} of ${tn.route_of} right in module 1`, 'soft'));
+          if (p.exam_date && pv.pace_per_week) kids.push(line(join(`${pv.study_days} study days`, `about ${Math.round(pv.pace_per_week)} a week`, pv.pace_tag)));
+        } catch (_) {}
+        if (sc && sc.low >= v) kids.push(line(`You’re at ${v} · Raise to ${Math.min(800, v + 50)}?`));
+        takes.replaceChildren(...kids);
+      }, 250);
+    }
+    save.addEventListener('click', () => run(save, async () => {
+      if (draft) { draft.target = v; sheet.close(); paintPlan(); return; }
+      await put('/me', { target: v, rw_now: rwNow, rw_target: rwT });
+      Object.assign(S.t.profile, { target: v, rw_now: rwNow, rw_target: rwT });
+      sheet.close();
+      paintScore(); paintHero(); paintPlan();
+      refresh(['today', 'insights']);
+    }));
+    const clear = quiet('Clear target', async () => { await put('/me', { target: null }); S.t.profile.target = null; sheet.close(); paintScore(); refresh(['today']); });
+    sheet = UI.sheet({ title: 'Target', label: 'Target', body: b => {
+      b.append(h('p', { class: 'meta', text: 'Math, 200 to 800' }), h('div', { class: 'row' }, num), rng, quick.el,
+        meta(join(sc && `Latest ${sc.low}–${sc.high}`, S.t.plan && S.t.plan.current && `Plan start ${S.t.plan.current}`)), note, takes);
+      if (!draft) b.append(h('p', { class: 'sub', text: 'SAT total (optional)' }), h('div', { class: 'row' }, rwA, rwB), total,
+        h('p', { class: 'help', text: 'We only test Math. Add your R&W from Bluebook or a real SAT to see your total.' }));
+      b.append(h('div', { class: 'acts' }, draft ? null : clear, h('span', { style: 'flex:1' }), quiet('Cancel', () => sheet.close()), save));
+    } });
+    askTakes();
+  }
+
+  /* add a score (§9) */
+  function scoreSheet(o) {
+    let src = o.source || 'bluebook';
+    let sheet;
+    const dayF = h('input', { type: 'date', class: 'field', max: today(), value: today(), 'aria-label': 'Date' });
+    const math = h('input', { type: 'number', class: 'field', min: 200, max: 800, step: 10, required: true, 'aria-label': 'Math', placeholder: 'Math' });
+    const rw = h('input', { type: 'number', class: 'field', min: 200, max: 800, step: 10, 'aria-label': 'R&W (optional)', placeholder: 'R&W (optional)' });
+    const err = h('p', { class: 'field-err', hidden: true });
+    const list = h('div', {});
+    const drawList = () => {
+      const rows = S.t.outside || [];
+      list.replaceChildren(rows.length ? h('p', { class: 'sub', text: 'Scores you added' }) : '', ...rows.map(x => h('div', { class: 'row', style: 'justify-content:space-between;padding:6px 0' },
+        h('span', { text: join(UI.date(x.day), cap(x.source), `Math ${x.math}`, x.rw && `R&W ${x.rw}`) }),
+        h('button', { type: 'button', class: 'x', 'aria-label': `Delete the score from ${UI.date(x.day)}`, html: UI.svg(UI.ICON.x || '', 16), onclick: async () => {
+          if (!(await UI.confirm({ title: 'Delete this score?', confirm: 'Delete', destructive: true }))) return;
+          await api(`/scores/${encodeURIComponent(x.id)}`, { method: 'DELETE' });
+          S.t.outside = rows.filter(y => y.id !== x.id); drawList(); paintScore();
+        } }))));
+    };
+    const save = pill('Save', async () => {
+      const m = +math.value, r = rw.value ? +rw.value : null;
+      const ok = v => v >= 200 && v <= 800 && v % 10 === 0;
+      if (!ok(m) || (r !== null && !ok(r)) || !dayF.value || dayF.value > today()) { err.textContent = 'Scores are 200 to 800 in steps of 10, on or before today.'; err.hidden = false; return; }
+      const got = await post('/scores', { day: dayF.value, math: m, rw: r, source: src });
+      S.t.outside = [got, ...(S.t.outside || [])];
+      sheet.close();
+      if (r && !S.t.profile.rw_now) UI.toast(`Use ${r} as your R&W now?`, { action: { label: 'Use it', onClick: () => put('/me', { rw_now: r }).then(() => refresh(['today'])) } });
+      if (o.task && S.t.plan) patchTask({ task_id: o.task, status: 'todo', key: o.task }, { status: 'done' }, 'Test marked done');
+      refresh(['today', 'insights', 'calendar']);
+    });
+    sheet = UI.sheet({ title: 'Add a score', body: b => {
+      UI.chips(b, [{ value: 'bluebook', label: 'Bluebook practice test' }, { value: 'official', label: 'Official SAT' }, { value: 'other', label: 'Other' }], { value: src, label: 'Source', onChange: v => { src = v; } });
+      b.append(h('label', { class: 'label', text: 'Date' }), dayF, h('label', { class: 'label', text: 'Math' }), math, h('label', { class: 'label', text: 'R&W' }), rw, err,
+        h('div', { class: 'acts' }, quiet('Cancel', () => sheet.close()), save), list);
+      drawList();
+    } });
+  }
+
+  /* ---------------------------------------------------------------- SAT countdown (§10, T12, T13) */
+  let stopCount = null;
+  function examPop(anchor) {
+    const dates = ((UI.shellData && UI.shellData()) || {}).dates || [];
+    return UI.examDate(anchor, { value: S.t.profile.exam_date, dates: dates.map(d => ({ date: d.day, register_by: d.register_by, late_by: d.late_by })), onSave: setExam });
+  }
+  async function setExam(v) {
+    const before = S.t.profile.exam_date;
+    await api('/me', { method: 'PUT', body: { exam_date: v }, optimistic: () => { S.t.profile.exam_date = v; paintExam(); return () => { S.t.profile.exam_date = before; paintExam(); }; } });
+    UI.toast(v ? `SAT date set to ${UI.date(v)}` : 'SAT date removed', { undo: () => setExam(before) });
+    refresh(['today', 'insights', 'calendar']);
+  }
+  function paintExam() {
+    const t = S.t, p = t.profile, ex = t.exam, w = t.workload;
+    if (stopCount) { stopCount(); stopCount = null; }
+    const dates = (((UI.shellData && UI.shellData()) || {}).dates || []).filter(d => d.day >= today());
+    if (!p.exam_date) {
+      const ch = h('div', { class: 'row' });
+      dates.slice(0, 4).forEach(d => ch.append(btn(`${UI.date(d.day, 'long')}`, () => setExam(d.day))));
+      card('exam', 'SAT', null, h('p', { class: 'exam-cap', text: 'When is your SAT?' }), ch, h('div', { class: 'acts' }, quiet('Another date', (e, b) => examPop(b))));
+      return;
+    }
+    const trig = h('button', { type: 'button', class: 'exam-trig', 'aria-haspopup': 'listbox', text: `${UI.date(p.exam_date, 'long')}, ${p.exam_date.slice(0, 4)} ▾` });
+    trig.addEventListener('click', () => examPop(trig));
+    const days = ex ? ex.days : dayDiff(today(), p.exam_date);
+    const kids = [];
+    const mode = stageMode();
+    if (days < 0 || mode === 'after') {
+      kids.push(h('p', { class: 'exam-cap', text: `Your SAT was ${UI.date(p.exam_date)}.` }));
+      if (ex && ex.scores_by) kids.push(line(`Scores come out around ${UI.date(ex.scores_by)}`, 'soft'));
+      kids.push(h('div', { class: 'acts' }, btn('Add your official score', () => scoreSheet({ source: 'official' })), quiet('Pick your next date', (e, b) => examPop(b))));
+      card('exam', 'SAT', trig, kids);
+      return;
+    }
+    if (days === 0) kids.push(h('p', { class: 'exam-cap', text: 'Today. Doors close at 8:00 AM.' }), meta('Good luck'));
+    else if (w) {
+      kids.push(h('p', { class: 'exam-cap', text: join(pl(w.study_days, 'study day'), `~${sdur(w.capacity)} at your goal`, w.need && w.need.tests_n && `${pl(w.need.tests_n, 'test')} left`) }));
+      kids.push(needLine(w, p));
+    }
+    if (ex && ex.registration) kids.push(line(ex.registration.text || `Register by ${UI.date(ex.register_by)}`));
+    else if (ex && ex.register_by && ex.register_by >= today() && (p.prefs || {}).registered !== p.exam_date) {
+      kids.push(h('div', { class: 'row', style: 'margin-top:8px' }, h('span', { class: 'line', style: 'margin:0', text: `Register for ${UI.date(p.exam_date)} by ${UI.date(ex.register_by)} · ${pl(dayDiff(today(), ex.register_by), 'day')} left` }),
+        btn('I’ve registered', async () => { await put('/me', { prefs: { registered: p.exam_date } }); refresh(['today']); }),
+        h('a', { class: 'quiet', href: 'https://satsuite.collegeboard.org/sat/registration', target: '_blank', rel: 'noopener', text: 'College Board ↗' })));
+    }
+    if (days > 0) {
+      const box = h('div', {});
+      const at = new Date(p.exam_date + 'T08:00:00');
+      if (UI.countdown) stopCount = UI.countdown(box, at.toISOString(), { boxes: true });
+      kids.push(box, h('p', { class: 'meta', text: 'to 8:00 AM, when doors close' }),
+        h('p', { class: 'sr', text: `${pl(days, 'day')} until your SAT on ${new Date(p.exam_date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}` }));
+    }
+    const st = t.next.stage || {};
+    if (['stretch', 'taper', 'eve'].includes(st.mode)) {
+      kids.push(meta(join(st.rehearsals && `${pl(st.rehearsals.filter(r => !r.done).length, 'rehearsal')} left`, t.review && t.review.due && `${pl(t.review.due, 'check-in')} due`, t.traps.now && `${t.traps.now.n} mistakes worth ≈ +${t.traps.now.gain}`)));
+    }
+    if (ex && ex.readiness && ex.readiness.length) {
+      kids.push(sub('Readiness'));
+      ex.readiness.forEach(r => kids.push(h('div', { class: 'ready-row' },
+        h('span', {}, h('b', { text: DSHORT(r.domain) }), ' ', h('span', { class: 'meta', text: r.state === 'ready' ? 'Ready' : r.state === 'shaky' ? join('Shaky', r.open && pl(r.open, 'open mistake')) : r.state === 'untested' ? 'Untested for 14 days' : cap(r.state) })),
+        btn('10 min', () => go(r.start || { path: '/drill', body: { source: 'next', box: 10, topics: [] } })))));
+    }
+    // the plan line
+    if (t.plan) {
+      const left = (t.plan.days || []).filter(d => d.date >= today() && ['practice', 'test'].includes(d.kind));
+      kids.push(line(`${pl(left.length, 'study day')} and ${pl(left.filter(d => d.kind === 'test').length, 'test')} left in your plan`));
+    } else if (days > 0) kids.push(h('div', {}, link(`Build a plan for these ${n(days)} days`, '#plan')));
+    kids.push(h('div', { class: 'acts' }, quiet('Add to calendar', () => download('sat-freshman.ics', UI.ics({ title: 'SAT', start: p.exam_date, allDay: true, alarm: { before: '6h' } })))));
+    if (days <= 7) kids.push(checklist(p.exam_date, days <= 1));
+    card('exam', 'SAT', trig, kids);
+  }
+  function needLine(w, p) {
+    if (!w.sized) {
+      if (w.unsized === 'answers') return h('div', {}, line(`Answer 30 questions to size the work · ${Math.min(30, (w.answers || {}).have || 0)} of 30`), h('div', { class: 'acts' }, btn('Start the coach’s set', () => drill({ source: 'coach', count: 10 }))));
+      return h('div', { class: 'row' }, line('Set a target to size the work'), btn('Set target', (e, b) => targetSheet(b)));
+    }
+    const nd = w.need || {}, parts = [];
+    if (nd.traps_n) parts.push(`${pl(nd.traps_n, 'open mistake')} (~${sdur(nd.traps)})`);
+    if (nd.tests_n) parts.push(`${pl(nd.tests_n, 'test')} (${sdur(nd.tests)})`);
+    if (nd.warmups) parts.push(`warm-ups (~${sdur(nd.warmups)})`);
+    const tg = nd.target;
+    const el = h('p', { class: 'line' }, 'Needed: ', parts.join(' · '));
+    if (tg) {
+      el.append(parts.length ? ' · ' : '', `reach ${tg.target}: `);
+      if (!tg.skills || !tg.skills.length) el.append('covered at your current accuracy');
+      else {
+        tg.skills.slice(0, 3).forEach((s, i) => { el.append(i ? ', ' : '', h('a', { href: '#gain', text: TOP(s) })); });
+        if (tg.skills.length > 3) el.append(` +${tg.skills.length - 3} more`);
+        el.append(tg.reachable === false ? ` (at least ~${UI.dur(tg.minutes)}), and more past 80%` : ` (at least ~${UI.dur(tg.minutes)})`);
+      }
+    }
+    if (w.fits) el.append(` · fits${w.capacity - w.total > 0 ? `, with ${sdur(w.capacity - w.total)} to spare` : ''}`);
+    else if (w.short_by) {
+      el.append(` · short by ${sdur(w.short_by)}: add ${n(w.add_per_day)} min a day `);
+      el.append(btn(`Set ${w.suggest_minutes} min`, () => setGoal(w.suggest_minutes)));
+    }
+    return el;
+  }
+  const CHECKS = ['Bluebook installed and updated', 'Exam setup done in Bluebook (it gives you your admission ticket)', 'Admission ticket', 'Acceptable photo ID',
+    'Pencils or pens for scratch work', 'Device charged, charger packed', 'Calculator, optional: Desmos is built in'];
+  const NIGHT = ['Bluebook opened and updated today', 'Admission ticket saved', 'Alarm set'];
+  function checklist(examDate, eve) {
+    const key = `satf.checklist.${examDate}`;
+    let got = {};
+    try { got = JSON.parse(ls.get(key) || '{}') || {}; } catch (_) {}
+    const items = [...(eve ? NIGHT.map(x => ['n:' + x, x]) : []), ...CHECKS.map(x => [x, x])];
+    const hd = h('p', { class: 'sub' });
+    const count = () => { hd.textContent = `Test-day checklist · ${items.filter(([k]) => got[k]).length} of ${items.length}`; };
+    const ul = h('ul', { class: 'check-list' });
+    if (eve) ul.append(h('li', { class: 'meta', text: 'Night before' }));
+    items.forEach(([k, label], i) => {
+      if (eve && i === NIGHT.length) ul.append(h('li', { class: 'meta', text: 'Test day' }));
+      const cb = h('input', { type: 'checkbox' });
+      cb.checked = !!got[k];
+      cb.addEventListener('change', () => { got[k] = cb.checked; ls.set(key, JSON.stringify(got)); count(); });
+      ul.append(h('li', {}, h('label', {}, cb, label)));
+    });
+    count();
+    return h('div', {}, hd, ul);
+  }
+  async function setGoal(minutes) {
+    const before = S.t.profile.minutes;
+    await api('/me', { method: 'PUT', body: { minutes }, optimistic: () => { S.t.profile.minutes = minutes; paintStudy(); paintHero(); return () => { S.t.profile.minutes = before; paintStudy(); paintHero(); }; } });
+    UI.toast(`Daily goal ${minutes} min`, { undo: () => setGoal(before) });
+    refresh(['today']);
+  }
+
+  /* ---------------------------------------------------------------- study time and calendar (§6, T3, T17) */
+  function paintStudy() {
+    const t = S.t;
+    if (!t) return;
+    const st = t.study || {}, p = t.profile, goal = p.minutes, d = t.days || {};
+    const goalBtn = h('button', { type: 'button', class: 'quiet', text: goal ? `Goal ${goal} min ✎` : 'Set a daily goal' });
+    goalBtn.addEventListener('click', () => goalPop(goalBtn));
+    const fig = (v, k, subText, frac) => h('div', { class: 'fig' }, h('div', { class: 'v', text: v }), h('span', { class: 'k', text: k }), subText ? h('span', { class: 'meta', text: subText }) : null, frac !== undefined ? bar4(frac) : null);
+    const figs = h('div', { class: 'figs' },
+      fig(st.rest_today ? 'Rest day' : UI.dur(st.today), 'Today', join(st.questions_today && pl(st.questions_today, 'question'), st.questions_today && `${Math.round(100 * st.right_today / st.questions_today)}% right`, st.fixed_today && `${st.fixed_today} fixed`, goal && `of ${UI.dur(goal)}`), goal ? st.today / goal : undefined),
+      fig(UI.dur(st.week), 'This week', st.week_goal ? `of ${UI.dur(st.week_goal)}${st.week_days_left ? ` · ${n(Math.max(0, Math.round((st.week_goal - st.week) / st.week_days_left)))} min a day for the ${pl(st.week_days_left, 'day')} left` : ''}` : null, st.week_goal ? st.week / st.week_goal : undefined),
+      fig(UI.dur(st.month), 'This month'),
+      fig(n(st.active_days_month || 0), 'Active days', 'this month'));
+    const kids = [figs];
+    const ins = S.ins || {};
+    if (ins.time_split && ins.time_split.minutes) kids.push(timeSplit(ins.time_split, ins.gains));
+    // the calendar
+    const wrap = h('div', { class: 'cal-wrap' });
+    const calHost = h('div', {}), detail = h('div', { class: 'day-detail', role: 'region', 'aria-label': 'Day detail' });
+    wrap.append(calHost, detail);
+    kids.push(wrap);
+    if (S.cal && !S.cal.failed && UI.calendar) {
+      const cal = S.cal;
+      const plan = (t.plan && t.plan.days || []).map(x => ({ day: x.date, kind: x.kind, state: x.status === 'planned' ? 'future' : x.status, minutes: x.minutes, tasks: { done: x.tasks_done, of: x.tasks_counted } }));
+      const firstM = (cal.first_active || today()).slice(0, 7), maxM = (p.exam_date || today()).slice(0, 7);
+      UI.calendar(calHost, { month: cal.month, days: cal.days.map(x => Object.assign({}, x, { due: x.due })), plan, marks: { exam: p.exam_date, today: today() },
+        selected: S.calDay || today(), goal, metric: S.calMetric, metrics: true, min: firstM, max: maxM > today().slice(0, 7) ? maxM : today().slice(0, 7),
+        onPick: day => { S.calDay = day; dayDetail(detail, day); },
+        onMonth: m => { S.calMonth = m; LOADERS.calendar(); } });
+      dayDetail(detail, S.calDay || today());
+    } else if (S.cal && S.cal.failed) UI.cardError(calHost, () => LOADERS.calendar(), 'Couldn’t load the calendar.');
+    else calHost.append(UI.skel(null, 'chart:240'));
+    // this week vs last
+    const wk = t.week;
+    if (wk && (wk.this.questions || wk.last.questions)) {
+      const dl = (a, b, f = x => x) => `${f(a)}${b !== undefined ? ` (${a - b >= 0 ? '+' : '−'}${f(Math.abs(a - b))})` : ''}`;
+      kids.push(sub('This week vs last'), line(join(`${dl(wk.this.questions, wk.last.questions)} questions`,
+        wk.this.questions && `${Math.round(100 * wk.this.right / wk.this.questions)}% right`, dl(wk.this.minutes, wk.last.minutes, UI.dur), wk.this.fixed && `${wk.this.fixed} fixed`, wk.this.opened && pl(wk.this.opened, 'new mistake'))));
+      if (wk.moved && wk.moved.length) kids.push(h('div', { class: 'row' }, wk.moved.map(m => h('a', { class: 'chip', href: `/practice/?topics=${m.topic}` }, UI.glyph(m.topic), TOP(m.topic), m.now > m.before ? ' ▲' : ' ▼'))));
+    }
+    const recent = d.recent || [];
+    const met = goal ? recent.filter(r => (r.minutes || 0) >= goal).length : null;
+    const wm = t.warmup && t.warmup.month;
+    kids.push(h('p', { class: 'meta', style: 'margin-top:16px', text: join(d.streak ? `${d.streak}-day study streak` : 'No streak yet', d.best && `best ${d.best}`, d.spares && `${pl(d.spares, 'spare')}`,
+      met !== null && `goal met ${met} of the last ${recent.length} days`, wm && wm.of && `held ${Math.round(100 * wm.held / wm.of)}% of ${wm.of} warm-up answers this month`) }));
+    if (!t.warmup || !t.warmup.due) kids.push(meta('Nothing to review yet · first check-ins come 3 days after a fix.'));
+    card('study', 'Study time', goalBtn, kids);
+  }
+  function timeSplit(ts, gains) {
+    const el = h('div', { style: 'margin-top:18px' });
+    el.append(sub('Where the time went · this week'));
+    const doms = Object.entries(ts.domains || {}).filter(([, m]) => m > 0).sort((a, b) => b[1] - a[1]);
+    if (UI.stackBar) UI.stackBar(el, doms.map(([d, m]) => ({ key: d, label: DSHORT(d), value: Math.round(m) })), { unit: 'min', label: 'Minutes by domain', noun: 'minutes' });
+    if (doms.length) {
+      const [d0, m0] = doms[0];
+      el.append(line(join(`${Math.round(100 * m0 / ts.minutes)}% of your time on ${DSHORT(d0)}`, ts.test_share && `${Math.round(100 * (ts.test_share[d0] || 0))}% of the test`, ts.points_share && `${Math.round(100 * (ts.points_share[d0] || 0))}% of your points`)));
+      const gap = Object.keys(ts.points_share || {}).map(d => [d, (ts.points_share[d] || 0) - ((ts.domains[d] || 0) / ts.minutes)]).sort((a, b) => b[1] - a[1])[0];
+      if (gap && gap[1] > 0.1 && gains) {
+        const topics = (gains.skills || []).filter(s => s.domain === gap[0]).sort((a, b) => b.gain - a.gain).slice(0, 3).map(s => s.topic);
+        if (topics.length) el.append(h('div', { class: 'acts' }, btn(`Rebalance · 10 in ${DSHORT(gap[0])}`, () => drill({ topics, count: 10, source: 'gain' }))));
+      }
+    }
+    const k = ts.kinds || {};
+    el.append(meta(join(k.new && `new ${UI.dur(k.new)}`, k.fix && `fixing ${UI.dur(k.fix)}`, k.review && `review ${UI.dur(k.review)}`, k.test && `tests ${UI.dur(k.test)}`)));
+    return el;
+  }
+  function goalPop(anchor) {
+    const t = S.t, secs = t.seconds_per_question || 95, gs = t.goal_suggest, w = t.workload;
+    UI.pop(anchor, (el, res) => {
+      const chips = [15, 30, 45, 60, 90, 120, 180, 240];
+      const box = h('div', { style: 'display:grid;gap:8px;max-width:340px' }, h('p', { class: 'label', text: 'Daily goal' }));
+      const ch = UI.chips(null, chips.map(m => ({ value: m, label: `${m} min`, n: `≈ ${Math.round(m * 60 / secs)} q` })), { value: t.profile.minutes, label: 'Daily goal', onChange: v => { res.close(); setGoal(v); } });
+      if (gs) { const b = ch.btns.find(x => x._opt.value === gs.minutes); if (b) b.style.boxShadow = 'inset 0 0 0 2px var(--amber)'; }
+      box.append(ch.el);
+      if (gs) box.append(line(`Suggested: ${gs.minutes} min`), h('p', { class: 'help', text: gs.arithmetic }));
+      else if (w && !w.sized) box.append(line(w.unsized === 'answers' ? `Answer 30 questions to size the work · ${Math.min(30, (w.answers || {}).have || 0)} of 30` : 'Set a target to size the work', 'soft'));
+      box.append(h('p', { class: 'help', text: 'Your plan uses this as a study day’s length.' }));
+      return box;
+    }, { label: 'Daily goal' });
+  }
+  function dayDetail(host, day) {
+    const cal = S.cal, row = cal && (cal.days || []).find(x => x.day === day);
+    const pd = planDay(day);
+    const kids = [];
+    if (day > today()) {
+      kids.push(h('p', { class: 'dd-t', text: UI.date(day, 'long') }));
+      if (pd) kids.push(line(join('Planned', cap(pd.kind), pd.questions && `${pd.questions} q`, pd.minutes && `${pd.minutes} min`)));
+      if (row && row.due && (row.due.checks || row.due.fading)) kids.push(line(join('warm-up', row.due.checks && pl(row.due.checks, 'check-in'), row.due.fading && `about ${row.due.fading} fading`), 'soft'));
+      if (pd) kids.push(h('div', { class: 'acts' }, link('Open in plan', `/plan/?day=${day}`)));
+      if (!pd && !(row && row.due)) kids.push(line('Nothing planned yet.', 'soft'));
+      host.replaceChildren(...kids);
+      return;
+    }
+    if (!row || (!row.questions && !row.minutes && !(row.sittings || []).length)) {
+      kids.push(h('p', { class: 'dd-t', text: UI.date(day, 'long') }), line(S.t.days.total ? 'Nothing that day.' : 'Your first answer starts the streak.', 'soft'));
+      host.replaceChildren(...kids);
+      return;
+    }
+    kids.push(h('p', { class: 'dd-t', text: join(UI.date(day, 'long'), `${UI.dur(row.minutes)}`, row.questions && pl(row.questions, 'question'), row.questions && `${Math.round(100 * row.right / row.questions)}% right`) }));
+    if (row.first_at && row.last_at) kids.push(meta(`${new Date(row.first_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} – ${new Date(row.last_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`));
+    if ((row.sittings || []).length) kids.push(h('ul', {}, row.sittings.map(s => h('li', {}, h('a', { class: 'plain', href: s.gated ? `/diagnostic/signup.html?s=${encodeURIComponent(s.id)}` : `/results/report/?id=${encodeURIComponent(s.id)}`,
+      text: join(UI.KIND && UI.KIND.label ? UI.KIND.label(s) : cap(s.kind), s.gated ? 'Sign up to see your results' : s.estimate ? `${s.estimate.low}–${s.estimate.high}` : s.asked && `${s.right}/${s.asked}`, s.rank && `#${s.rank}`) })))));
+    if ((row.opened || []).length || (row.closed || []).length) {
+      const l = h('p', { class: 'line' }, `Mistakes that day: ${pl((row.opened || []).length, 'opened', 'opened')} · ${(row.closed || []).length} closed`);
+      kids.push(l, h('ul', {}, [...(row.opened || []), ...(row.closed || [])].slice(0, 6).map(x => h('li', {}, h('a', { class: 'plain', href: `/review/?open=trap:${x.id}`, text: x.label })))));
+    }
+    if ((row.topics || []).length) kids.push(h('div', { class: 'row', style: 'margin-top:8px' }, row.topics.map(x => h('span', { class: 'chip' }, UI.glyph(x.topic), `${TOP(x.topic)} ${x.right}/${x.asked}`))));
+    if (pd) kids.push(meta(`Plan: ${pd.status}`));
+    if ((row.missed || []).length) kids.push(h('div', { class: 'acts' }, btn(`Redo this day’s misses · ${row.missed.length}`, () => drill({ pool: 'history', ids: row.missed, exact: false, each: 1, source: 'today' }))));
+    host.replaceChildren(...kids);
+  }
+
+  /* ---------------------------------------------------------------- daily challenge (§7, T15) */
+  function paintChal() {
+    const c = S.chal || {}, me = c.me || {}, b = S.board || {}, tc = (S.t && S.t.challenge) || {};
+    const players = (c.field && c.field.players) || b.players || 0;
+    const kids = [line(`${c.count || 10} questions · ${Math.round((c.seconds || 950) / 60)} min · 10 question types, the same for everyone, your own numbers · ranked by right answers, then time`, 'soft')];
+    const entries = (b.entries || []).slice(0, 5);
+    if (entries.length) {
+      const ul = h('ol', { class: 'board', 'aria-label': 'Top 5 today' });
+      entries.forEach(e => ul.append(h('li', { class: e.you || e.mine ? 'you' : '' }, h('span', { class: 'meta', text: `#${e.rank}` }), h('span', { text: e.name || e.label || 'Student' }),
+        h('span', { class: 'meta', text: `${e.right ?? e.score ?? '–'}/${c.count || 10}` }), h('span', { class: 'meta', text: e.secs !== undefined ? UI.mmss(e.secs) : e.time || '' }))));
+      if (b.you && !entries.some(e => e.you || e.mine)) ul.append(h('li', { class: 'you' }, h('span', { class: 'meta', text: `#${b.you.rank}` }), h('span', { text: 'You' }), h('span', { class: 'meta', text: `${b.you.right ?? ''}/${c.count || 10}` }), h('span', {})));
+      kids.push(ul);
+    } else if (!players) kids.push(meta('Nobody has finished today’s yet.'));
+    const acts = h('div', { class: 'acts' });
+    const status = me.status || (tc.done ? 'done' : tc.started ? 'live' : 'new');
+    if (status === 'done' || status === 'finished' || tc.done) {
+      const r = me.result || {};
+      kids.push(h('div', { class: 'row', style: 'margin-top:12px' }, h('span', { class: 'big', text: r.rank ? `#${r.rank}` : '✓' }),
+        h('span', { class: 'meta', text: join(players && `of ${n(players)}`, r.right !== undefined && `${r.right}/${c.count || 10}`, r.secs && UI.mmss(r.secs)) })));
+      acts.append(link('Full board', '/compete/contest/?id=daily'));
+    } else if (status === 'new') acts.append(btn('Start', () => startChallenge()));
+    else {
+      const left = me.clock && me.clock.left;
+      acts.append(btn(left === 0 ? 'See your result' : join('Resume', `${me.answered || tc.answered || 0} of ${c.count || 10}`, left && `${UI.mmss(left)} left`), () => startChallenge()));
+    }
+    kids.push(acts);
+    card('chal', 'Daily challenge', players ? h('span', { class: 'meta', text: `${n(players)} in today` }) : null, kids);
+  }
+
+  /* ---------------------------------------------------------------- words tile (R30) */
+  function paintWords() {
+    const w = S.t.words;
+    if (!w) { card('words', 'Words', link('Words', '/words/'), line('Your SAT words live on the Words page.', 'soft')); return; }
+    const kids = [line(join(w.due && `${w.due} due`, w.new_goal && `${w.new_goal - (w.new_today || 0)} new`, w.minutes && `~${Math.round(w.minutes)} min`) || 'Nothing due', '')];
+    if (w.reason) kids.push(meta(w.reason));
+    const acts = h('div', { class: 'acts' });
+    if (!w.done && w.start) acts.append(btn('Start', () => go(w.start)));
+    else if (w.done) acts.append(h('span', { class: 'meta', text: 'Done for today ✓' }));
+    acts.append(link('All words', '/words/'));
+    kids.push(acts);
+    if (S.q && (S.q.slots || []).some(s => String(s.slot).startsWith('rw:'))) kids.push(h('a', { class: 'quiet', href: '#qotd', text: 'Word and transition of the day · in the day’s questions ↑' }));
+    card('words', 'Words', null, kids);
+  }
+
+  /* ---------------------------------------------------------------- plan (§8, T18) */
+  function paintPlan() {
+    const t = S.t;
+    if (t.plan) return planSet(t);
+    planNone(t);
+  }
+  function planSet(t) {
+    const pl_ = t.plan, c = pl_.card || {};
+    const right = [link('Open plan', '/plan/'), link('Change plan', '/plan/?edit=1'), h('a', { class: 'quiet', href: '/api/plan/ics', text: 'Add to calendar', download: 'sat-freshman.ics' })];
+    const kids = [];
+    const stat = (v, k) => h('div', { class: 'fig' }, h('div', { class: 'v', style: 'font-size:18px', text: v }), h('span', { class: 'meta', text: k }));
+    const pace = pl_.pace || {};
+    kids.push(h('div', { class: 'plan-stats' },
+      stat(`Day ${c.day || 1} of ${c.of || '–'}`, 'from the plan’s start'),
+      stat(`${c.pct || 0}% done`, `${c.study_days_done || 0} of ${c.study_days || 0} study days`),
+      stat(c.on_time && c.on_time.of ? `On time ${c.on_time.n} of ${c.on_time.of}` : 'On time', 'study days'),
+      stat(pace.kind === 'behind' ? 'Behind' : pace.kind === 'on_pace' || pace.kind === 'ahead' ? 'On pace' : 'Pace', pace.made_per_week !== null && pace.made_per_week !== undefined
+        ? `making ${pace.made_per_week >= 0 ? '+' : '−'}${Math.abs(Math.round(pace.made_per_week))} a week, needs +${Math.round(pace.needs_per_week || 0)}` : pace.needs_per_week ? `needs +${Math.round(pace.needs_per_week)} a week` : 'after 2 tests')));
+    const weeks = pl_.weeks || [];
+    if (weeks.length) {
+      const cur = weeks.findIndex(w => w.from <= today() && today() <= w.to);
+      if (S.week === null || S.week >= weeks.length) S.week = Math.max(0, cur);
+      const w = weeks[S.week];
+      const pctW = w.tasks_planned ? Math.round(100 * w.tasks_done / w.tasks_planned) : 0;
+      const prev = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Previous week', text: '‹', disabled: S.week === 0 });
+      const next = h('button', { type: 'button', class: 'ibtn', 'aria-label': 'Next week', text: '›', disabled: S.week === weeks.length - 1 });
+      prev.addEventListener('click', () => { S.week--; paintPlan(); });
+      next.addEventListener('click', () => { S.week++; paintPlan(); });
+      kids.push(h('div', { class: 'wk-pager' }, prev, h('span', { class: 'line', style: 'margin:0;font-weight:600', text: `Week ${w.n} of ${weeks.length} · ${w.tasks_done} of ${w.tasks_planned} tasks · ${pctW}%` }), next,
+        S.week !== cur && cur >= 0 ? quiet('This week', () => { S.week = cur; paintPlan(); }) : null));
+      kids.push(bar4(pctW / 100), meta(w.theme || ''));
+      const strip = h('div', { class: 'wk-strip' });
+      (pl_.days || []).filter(d => d.date >= w.from && d.date <= w.to).forEach(d => strip.append(weekDay(d)));
+      kids.push(strip);
+    }
+    const nt = (pl_.days || []).find(d => d.date > today() && d.kind === 'test');
+    if (nt) kids.push(meta(`Next test: ${UI.date(nt.date, 'long').slice(0, 3)} · ${cap(nt.test || 'test')}`));
+    const bh = pl_.behind;
+    if (bh) {
+      kids.push(sub('Behind'), line(join(`${bh.planned - bh.done} study days missed`, bh.overdue && `${pl(bh.overdue, 'check-in')} now overdue`, bh.old && `${pl(bh.old, 'mistake')} older than 10 days`)));
+      const acts = h('div', { class: 'acts' }, pill('Catch up · 15 min', () => drill({ source: 'next', box: 15 })));
+      (bh.fixes || [{ kind: 'shorter', label: `Shorter days: ${bh.suggest_minutes} min`, patch: { minutes: bh.suggest_minutes } }]).forEach(f => acts.append(btn(`${f.label} · Apply`, async () => {
+        const old = {};
+        Object.keys(f.patch).forEach(k => { old[k] = pl_[k] ?? t.profile[k]; });
+        await api(`/plan/${encodeURIComponent(pl_.id)}`, { method: 'PATCH', body: f.patch });
+        UI.toast('Plan changed', { undo: () => api(`/plan/${encodeURIComponent(pl_.id)}`, { method: 'PATCH', body: old }).then(() => refresh(['today'])) });
+        refresh(['today']);
+      })));
+      acts.append(link('Change daily time', '/plan/?step=2'));
+      kids.push(acts);
+    }
+    card('plan', 'Your plan', right, kids);
+  }
+  function weekDay(d) {
+    const past = d.date < today(), isToday = d.date === today();
+    const el = h('div', { class: 'wk-day', 'data-today': isToday ? '' : null, 'data-kind': d.kind, 'data-status': d.status });
+    const dt = new Date(d.date + 'T12:00:00');
+    el.append(h('span', { class: 'wk-k', text: dt.toLocaleDateString('en-US', { weekday: 'short' }) }), h('span', { class: 'meta', text: String(dt.getDate()) }));
+    const word = d.kind === 'rest' || d.kind === 'off' ? 'Rest' : d.status === 'planned' ? (d.kind === 'test' ? 'Test' : 'Practice') : cap(String(d.status || '').replace('_', ' '));
+    el.append(h('span', { class: 'wk-s', text: word }));
+    if (d.kind !== 'rest' && d.kind !== 'off') {
+      el.append(h('span', { class: 'meta', text: d.kind === 'test' ? cap(d.test || 'Module') : `${d.questions || 0}q` }));
+      if (d.minutes) el.append(bar4((d.minutes_done || 0) / d.minutes));
+      if ((d.topics || []).length) el.append(h('span', { 'aria-hidden': 'true' }, d.topics.slice(0, 3).map(x => UI.glyph(x))));
+      if (past && (d.fixed || d.held)) el.append(h('span', { class: 'meta', text: join(d.fixed && `${d.fixed} fixed`, d.held && `${d.held} held`) }));
+      if (past && d.status === 'missed') el.append(quiet('Make up', () => startDayTask(d.date, 'focus')));
+      else if (d.date > today()) el.append(quiet('Work ahead', () => startDayTask(d.date, 'focus')));
+    }
+    el.addEventListener('dblclick', () => { S.calDay = d.date; $('study').scrollIntoView({ behavior: 'smooth' }); paintStudy(); });
+    return el;
+  }
+  async function startDayTask(day, kind) {
+    try {
+      const dv = await api(`/plan/day/${day}`);
+      const task = (dv.tasks || []).find(x => x.kind === kind && x.start) || (dv.tasks || []).find(x => x.start && x.kind !== 'test');
+      if (task) return go(task.start);
+    } catch (_) {}
+    return drill({ source: 'plan', task: `${day}:${kind}` });
+  }
+  function planNone(t) {
+    const dr = S.draft || (S.draft = Object.assign({}, t.draft || {}, { current: (t.draft || {}).current ?? ((t.draft || {}).source || {}).value ?? null }));
+    const kids = [sub('Build with these')];
+    const ctl = h('div', { class: 'draft-ctl' });
+    // where you start (Plan step 1's four variants)
+    const srcBox = h('div', {}, h('label', { class: 'label', text: 'Start from' }));
+    const src = dr.source || {};
+    if (src.value) srcBox.append(line(src.text || (src.kind === 'mean' ? `Your last tests average ${src.value}` : `Latest · ${src.value}`) + ` · Use ${src.value}`));
+    else {
+      const out = h('span', { class: 'meta', text: dr.current ? String(dr.current) : '—' });
+      const r = h('input', { type: 'range', min: 200, max: 800, step: 10, value: dr.current || 500, 'aria-label': 'Your best guess', style: 'width:100%' });
+      r.addEventListener('input', () => { dr.current = +r.value; out.textContent = r.value; if (!dr.target_set) dr.target = Math.min(800, dr.current + 100); planPreview(); });
+      srcBox.append(h('div', { class: 'row' }, h('span', { class: 'help', style: 'margin:0', text: 'Your best guess' }), out), r,
+        h('div', { class: 'acts' }, src.kind === 'new'
+          ? btn('Diagnostic · 20 q · ~30 min', () => saveDraftThen('/diagnostic/'))
+          : btn('Take a module · 35 min', () => saveDraftThen({ path: '/mock/new', body: { full: false } }))));
+    }
+    ctl.append(srcBox);
+    const dates = (((UI.shellData && UI.shellData()) || {}).dates || []).filter(d => d.day > today());
+    const sel = h('select', { class: 'field', 'aria-label': 'SAT date' }, dates.map(d => h('option', { value: d.day, text: UI.date(d.day, 'long'), selected: d.day === dr.exam_date })));
+    if (dr.exam_date && !dates.some(d => d.day === dr.exam_date)) sel.prepend(h('option', { value: dr.exam_date, text: UI.date(dr.exam_date, 'long'), selected: true }));
+    sel.addEventListener('change', () => { dr.exam_date = sel.value; planPreview(); });
+    ctl.append(h('div', {}, h('label', { class: 'label', text: 'SAT date' }), sel));
+    const mins = h('select', { class: 'field', 'aria-label': 'Daily minutes' }, [15, 20, 30, 45, 60, 90, 120, 180, 240].map(m => h('option', { value: m, text: `${m} min`, selected: m === dr.minutes })));
+    mins.addEventListener('change', () => { dr.minutes = +mins.value; planPreview(); });
+    ctl.append(h('div', {}, h('label', { class: 'label', text: 'Daily' }), mins));
+    const days = h('div', { class: 'days7', role: 'group', 'aria-label': 'Study days' });
+    let bits = (dr.days || '1111100').split('');
+    ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].forEach((d, i) => {
+      const b = h('button', { type: 'button', 'aria-pressed': String(bits[i] === '1'), text: d });
+      b.addEventListener('click', () => { bits[i] = bits[i] === '1' ? '0' : '1'; b.setAttribute('aria-pressed', String(bits[i] === '1')); dr.days = bits.join(''); planPreview(); });
+      days.append(b);
+    });
+    ctl.append(h('div', {}, h('label', { class: 'label', text: 'Days' }), days));
+    kids.push(ctl);
+    if (!dr.target) dr.target = t.profile.target || (t.score ? Math.min(800, t.score.high + 50) : dr.current ? Math.min(800, dr.current + 100) : null);
+    const tchip = h('button', { type: 'button', class: 'btn', text: dr.target ? `Target ${dr.target} ✎` : 'Set a target ✎' });
+    tchip.addEventListener('click', () => { dr.target_set = true; targetSheet(tchip, dr); });
+    kids.push(h('div', { class: 'acts' }, tchip));
+    kids.push(h('div', { id: 'planWeek' }, UI.skel(null, 'lines:4')));
+    const use = pill('Use this plan', async () => {
+      await post('/plan', { current: dr.current, target: dr.target, exam_date: dr.exam_date, minutes: dr.minutes, days: dr.days });
+      S.draft = null;
+      refresh(['today', 'calendar']);
+    });
+    use.disabled = !dr.current;
+    kids.push(h('div', { class: 'go' }, use, dr.current ? null : h('span', { class: 'help', style: 'margin:0', text: 'Pick where you start' }),
+      quiet('Adjust…', () => saveDraftThen('/plan/?step=1'))));
+    // v2's CTA, under it
+    kids.push(h('hr', { class: 'sep' }), h('p', { class: 'k', text: 'Study plan' }), h('p', { class: 'line', style: 'font-weight:700;font-size:18px', text: 'Build your study plan' }),
+      h('ol', { class: 'cta-steps' }, ['Where you are', 'Where you’re going', 'Time you have', 'What to focus on'].map((s, i) => h('li', {}, h('a', { href: `/plan/?step=${i}`, text: `${i + 1} ${s}` })))),
+      t.score || (t.traps && t.traps.open) ? line(join(t.score && `Starts from ${t.score.low}–${t.score.high}`, t.coach && t.coach.topics && `first up: ${t.coach.topics.slice(0, 2).map(TOP).join(', ')}`, t.traps.open && `${pl(t.traps.open, 'open mistake')} to fix`), 'soft') : null,
+      h('ul', { class: 'line soft' }, ['A set for every study day, picked from your results', 'Rest days you choose, and a test each week or every day', 'Redrawn every day, so a missed day never piles up'].map(x => h('li', { text: x }))),
+      h('p', { class: 'help', text: 'About a minute. Change it any time. Free, as many as you like.' }), link('Build my plan →', '/plan/'));
+    card('plan', 'Study plan', null, kids);
+    planPreview();
+  }
+  async function saveDraftThen(target) {
+    const dr = S.draft || {};
+    try { await put('/plan/draft', { step: 1, fields: { current: dr.current, target: dr.target, exam_date: dr.exam_date, minutes: dr.minutes, days: dr.days } }); } catch (_) {}
+    try { sessionStorage.setItem('satf.return', '/plan/?setup=1&step=1'); } catch (_) {}
+    return go(target);
+  }
+  let planTimer = 0;
+  function planPreview() {
+    clearTimeout(planTimer);
+    planTimer = setTimeout(async () => {
+      const dr = S.draft, host = $('planWeek');
+      if (!dr || !host) return;
+      const use = document.querySelector('#plan .go .pill');
+      if (use) use.disabled = !dr.current;
+      try {
+        const body = { target: dr.target || undefined, exam_date: dr.exam_date, minutes: dr.minutes, days: dr.days };
+        if (dr.current) body.current = dr.current;
+        const pv = await post('/plan/preview', body);
+        const ul = h('ul', { class: 'week-rows', 'aria-label': 'Your first 7 days' });
+        (pv.week || []).slice(0, 7).forEach(d => ul.append(h('li', {}, h('b', { text: UI.date(d.date, 'long') }), h('span', { text: join(cap(d.kind), d.minutes && `${d.minutes} min`, (d.topics || []).slice(0, 3).map(TOP).join(', ')) }))));
+        host.replaceChildren(ul, meta(dr.current ? join(pv.study_days && `${pv.study_days} study days`, pv.pace_per_week && `about +${Math.round(pv.pace_per_week)} a week`, pv.pace_tag) : 'Set a start to see the pace'));
+      } catch (e) { host.replaceChildren(line('Pick a date and your days to see the first week.', 'soft')); }
+    }, 250);
+  }
+
+  /* ---------------------------------------------------------------- recent tests (§11, T16) */
+  function paintTests() {
+    const rows = [...((S.hist && S.hist.sessions) || []), ...S.histMore];
+    const open = S.t && S.t.open && S.t.open.test;
+    const right = link(`All tests${S.hist && S.hist.total ? ` (${S.hist.total})` : ''}`, '/tests/');
+    if (!rows.length && !open) {
+      card('tests', 'Recent tests', right, line('No tests yet.'), h('div', { class: 'acts' },
+        btn('Module · 22 questions · 35 min', () => go({ path: '/mock/new', body: { full: false } })),
+        btn('Section · 44 questions · 70 min', () => go({ path: '/mock/new', body: { full: true } })), quiet('Add a score', () => scoreSheet({}))));
+      return;
+    }
+    const grid = h('div', { class: 'tests-grid' });
+    if (open) {
+      const out = open.timed && open.seconds_left === 0;
+      grid.append(h('div', { class: 'tcard open' }, h('p', { class: 'k', text: 'In progress' }), h('p', { class: 'line', style: 'margin:0;font-weight:600', text: open.section ? `Section · module ${open.module}` : cap(open.kind) }),
+        meta(join(open.timed ? (out ? 'Time’s up' : `${UI.mmss(open.seconds_left)} left`) : 'Untimed', `${open.answered} of ${open.asked} answered`)),
+        h('div', { class: 'acts' }, h('a', { class: 'btn', href: `/test/?s=${encodeURIComponent(open.id)}`, text: out ? (open.section && open.module === 1 ? 'Continue to module 2' : 'See results') : 'Resume' }))));
+    }
+    rows.filter(r => r.finished).forEach(r => {
+      if (UI.sittingCard) { const hst = h('div', {}); UI.sittingCard(hst, r, {}); grid.append(hst); return; }
+      grid.append(testCard(r));
+    });
+    const kids = [grid];
+    if (S.hist && S.hist.next_offset) kids.push(h('div', { class: 'acts' }, btn('Show 6 more', async () => {
+      const more = await api(`/history?kind=tests&all=1&limit=6&offset=${S.hist.next_offset}`);
+      S.histMore.push(...(more.sessions || [])); S.hist.next_offset = more.next_offset; paintTests();
+    })));
+    card('tests', 'Recent tests', right, kids);
+  }
+  function testCard(r) {
+    const el = h('div', { class: 'tcard' });
+    const asked = r.asked || 0, misses = r.misses ?? (asked - (r.right || 0));
+    el.append(meta(join(UI.date(r.finished || r.started), UI.KIND && UI.KIND.label ? UI.KIND.label(r) : cap(r.kind), asked && pl(asked, 'question'))));
+    if (r.gated) {
+      el.append(h('a', { class: 'btn', href: `/diagnostic/signup.html?s=${encodeURIComponent(r.id)}`, text: 'Sign up to see your results' }));
+      return el;
+    }
+    if (r.estimate) el.append(h('p', { class: 'band', text: `${r.estimate.low}–${r.estimate.high}` }));
+    if (r.route) el.append(h('span', { class: 'tag', text: r.route === 'up' ? 'Harder module 2' : `Easier module 2${r.capped ? ` · capped ${r.capped}` : ''}` }));
+    el.append(meta(join(`${r.right}/${asked} right`, r.minutes && `${r.minutes} min`)));
+    if (r.estimate && UI.scale) { const f = h('div', {}); UI.scale(f, { band: r.estimate, target: S.t && S.t.profile.target, compact: true, min: 200, max: 800 }); el.append(f); }
+    (r.modules || []).forEach(m => {
+      const miss = [...(m.missed || m.wrong || []).map(q => [q, 'wrong']), ...(m.blank || []).map(q => [q, 'blank'])].sort((a, b) => a[0] - b[0]);
+      if (!miss.length) return;
+      const row = h('div', { class: 'mchips' }, h('span', { class: 'meta', text: `M${m.n || m.module}` }));
+      miss.slice(0, 10).forEach(([q, kind]) => {
+        const b = h('button', { type: 'button', class: kind === 'blank' ? 'blank' : '', text: String(q), 'aria-label': `Module ${m.n || m.module} question ${q}, ${kind}` });
+        UI.menu.bind(b, [{ label: `Review Q${q}`, href: `/results/report/?id=${encodeURIComponent(r.id)}&q=M${m.n || m.module}-${q}` },
+          { label: 'Twin', onClick: () => twinSheet({ from_session: r.id, only: [`m${m.n || m.module}q${String(q).padStart(2, '0')}`], each: 1, source: 'twin', parent: r.id }, null, 'Twin') }]);
+        row.append(b);
+      });
+      if (miss.length > 10) row.append(h('span', { class: 'meta', text: `+${miss.length - 10}` }));
+      el.append(row);
+    });
+    if ((r.modules || []).length) el.append(h('p', { class: 'meta', text: '■ wrong ▢ blank' }));
+    const acts = h('div', { class: 'acts' });
+    const old = r.finished && dayDiff(String(r.finished).slice(0, 10), today()) >= 3;
+    const twinB = btn('Twin test', () => go({ path: '/mock/new', body: { kind: 'twin', twin_of: r.id } }));
+    if (old || misses >= 5) acts.append(twinB);
+    acts.append(h('a', { class: 'btn', href: `/results/report/?id=${encodeURIComponent(r.id)}`, text: 'Review' }));
+    if (misses > 0) acts.append(btn(`Fix ${misses}`, () => drill({ from_session: r.id })));
+    else acts.append(h('span', { class: 'meta', text: 'All right' }));
+    if (!(old || misses >= 5)) acts.append(twinB);
+    acts.append(quiet('New one like this', () => go({ path: '/mock/new', body: { full: r.kind === 'mock' } })));
+    el.append(acts);
+    return el;
+  }
+
+  /* ---------------------------------------------------------------- keys, rollover, return (T20, §12) */
+  function cards() {
+    return [...document.querySelectorAll('#today > section')].filter(s => s.offsetParent !== null)
+      .sort((a, b) => { const A = a.getBoundingClientRect(), B = b.getBoundingClientRect(); return Math.abs(A.top - B.top) > 8 ? A.top - B.top : A.left - B.left; });
+  }
+  function moveCard(k) {
+    const list = cards();
+    const cur = list.findIndex(s => s.contains(document.activeElement));
+    const j = Math.max(0, Math.min(list.length - 1, cur < 0 ? (k > 0 ? 0 : list.length - 1) : cur + k));
+    const hd = list[j].querySelector('h1, h2');
+    if (hd) { hd.focus({ preventScroll: true }); hd.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }
+  }
+  UI.keys.register('today', {
+    J: { does: 'Next card', run: () => moveCard(1) },
+    K: { does: 'Previous card', run: () => moveCard(-1) },
+    T: { does: 'Try one now', run: () => { const x = S.t && S.t.traps && (S.t.traps.top || [])[0]; if (x) twinSheet({ pool: 'redo', ids: [x.id], count: 1, source: 'try' }, x.label); } },
+    Enter: { does: 'Run the focused card’s main action', when: () => document.activeElement && document.activeElement.matches('#today h2.k, #today h1'),
+      run: () => { const c = document.activeElement.closest('section'); const b = c && (c.querySelector('.pill') || c.querySelector('.btn')); if (b) b.click(); } },
+  }, { label: 'Today' });
+
+  let day0 = localDay();
+  setInterval(() => {
+    if (localDay() === day0) return;
+    day0 = localDay();
+    S.qday = null; S.calMonth = null; S.calDay = null; SZ.sel = null; SZ.preview = null;
+    const note = $('dayNote');
+    note.textContent = 'It’s a new day. Here are today’s questions.'; note.hidden = false;
+    refresh();
+  }, 60000);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') refresh(['today', 'insights', 'chal', 'tests']); });
+  addEventListener('pageshow', e => { if (e.persisted) refresh(['today', 'insights', 'chal', 'tests']); });
+
+  /* ---------------------------------------------------------------- go */
+  const dq = new URLSearchParams(location.search).get('day');
+  if (dq) {
+    const t0 = localDay();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dq) && dq < t0 && dayDiff(dq, t0) <= 30) S.qday = dq;
+    else if (dq !== t0) setTimeout(() => { if (S.q) { S.q.note = 'That day is out of range. Here is today’s.'; paintQotd(); } }, 1500);
+  }
+  firstPaint();
+  LOADERS.today();
+  LOADERS.insights();
+  LOADERS.qotd();
+  LOADERS.calendar();
+  LOADERS.chal();
+  LOADERS.tests();
 })();
 </script>
 </body>
