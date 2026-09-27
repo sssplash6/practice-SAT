@@ -482,6 +482,24 @@ build (8 commits): continue from it, do not redo it.
 DONE: checks/s5.py passes and test_flow "all good". Tell the user "S5 server done".
 ```
 
+## Task 27: the Words gate step (combine passes A and B, approve the agreed frames)
+
+```
+Passes A and B are done (v2/words-gate-a, v2/words-gate-b; 1,263 seed-0 items over the 827 frames in gate_plan.json).
+SETUP: git worktree add .claude/worktrees/gate -b v2/words-gate-final v2/words-gate, then git merge --no-ff v2/words-gate-a and
+v2/words-gate-b (their files differ: adjudications_a.json and adjudications_b.json).
+1. Combine both into server/words/adjudications.json in W1's format (spec/v2-upgrades/words.md, W1 "The review gate").
+2. A frame is servable only when EVERY judged item of it has two verdicts "one" from different "by" (model:helper-a and
+   model:helper-b) that BOTH name the key's option. Set that frame's reviewed {by: "model:helper-a+model:helper-b", date}.
+3. Any "more", "none", or two verdicts that disagree (or disagree with the key) blocks the frame: list those frames with both
+   verdicts in server/words/review-queue.json, for a person to resolve. Never mark a blocked frame reviewed.
+4. Run python3 tools/build_words.py (exit 0) and PYTHONPATH=. python3 server/checks/s9.py, and confirm with SATF_WORDS_UNREVIEWED
+   unset that Words now serves in-context items for the approved frames (box 3+ reviews stop falling back).
+5. Report: frames approved, frames blocked (and why, by kind), SAT senses with at least one approved frame, and the 26 senses no
+   frame covers (from gate_plan.json "uncovered").
+Commit on v2/words-gate-final. Tell the user "gate done" with those counts. The main agent merges it.
+```
+
 ---
 
 ## For the main session
