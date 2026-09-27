@@ -18,6 +18,7 @@ import random
 import re
 import secrets
 import statistics
+import time
 from collections import Counter, defaultdict
 from typing import Literal
 
@@ -1385,6 +1386,8 @@ def _final(row, cfg: dict) -> dict:
         done = session_or_404(row["id"])
         return {"finished": done["finished"], "already": True,
                 "done": (_json(done["result"], {}) or {}).get("done")}
+    if cfg.get("paper"):
+        papers.forget(cfg["paper"])
     if row["learner"]:
         # every answered question goes on the learner's map, a removed one aside
         progress.record_paper(row["learner"], row["id"], kept, answers, qstate)
@@ -2012,6 +2015,10 @@ def _mid(res: dict) -> float | None:
     return (e["low"] + e["high"]) / 2 if e.get("low") is not None else None
 
 
+EVERYONE_TTL = 300          # the kinds' crowd counts; nobody's own row waits on it
+_EVERYONE: dict[str, tuple[float, tuple]] = {}
+
+
 def kinds_rows(learner: str) -> list[dict]:
     """T4: each kind's use by everyone, and yours."""
     def key(row) -> str | None:
@@ -2026,16 +2033,23 @@ def kinds_rows(learner: str) -> list[dict]:
             return "traps" if (cfg.get("custom") or {}).get("source") == "traps" else "custom"
         return "diagnostic" if row["kind"] == "diagnostic" else None
     ids = ("section", "module1", "module2u", "module2l", "custom", "diagnostic", "trainer", "traps")
-    everyone: Counter = Counter()
-    ranked: dict[str, dict[str, float]] = defaultdict(dict)
-    for r in db.rows(f"SELECT * FROM sessions WHERE finished IS NOT NULL AND abandoned IS NULL AND contest IS NULL"
-                     f" AND kind IN ('mock','module','custom','diagnostic') AND {db.NOT_SAMPLE}"):
-        k = key(r)
-        if k:
-            everyone[k] += 1
-            m = _mid(_json(r["result"], {}) or {})
-            if m is not None and r["ranked"] and r["learner"] not in ranked[k]:
-                ranked[k][r["learner"]] = m
+    hit = _EVERYONE.get("kinds")
+    if hit and time.monotonic() - hit[0] < EVERYONE_TTL:
+        everyone, ranked = hit[1]
+    else:
+        everyone: Counter = Counter()
+        ranked: dict[str, dict[str, float]] = defaultdict(dict)
+        # only the small columns: a sitting's questions never leave SQLite here
+        for r in db.rows(f"SELECT kind, learner, ranked, cfg, json_extract(result,'$.estimate.low') AS lo,"
+                         f" json_extract(result,'$.estimate.high') AS hi FROM sessions WHERE finished IS NOT NULL"
+                         f" AND abandoned IS NULL AND contest IS NULL"
+                         f" AND kind IN ('mock','module','custom','diagnostic') AND {db.NOT_SAMPLE} ORDER BY finished"):
+            k = key(r)
+            if k:
+                everyone[k] += 1
+                if r["lo"] is not None and r["hi"] is not None and r["ranked"] and r["learner"] not in ranked[k]:
+                    ranked[k][r["learner"]] = (r["lo"] + r["hi"]) / 2
+        _EVERYONE["kinds"] = (time.monotonic(), (everyone, ranked))
     mine: dict[str, list] = defaultdict(list)
     for r in reversed(finished_sittings(learner)):
         k = key(r)
