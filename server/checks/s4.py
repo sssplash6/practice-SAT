@@ -390,6 +390,10 @@ def share_checks(c) -> None:
     play(c, who("take3"), b["id"])
     assert [q["key"] for q in asked(a["id"])] == [q["key"] for q in asked(b["id"])] == [q["key"] for q in asked(sid)]
     assert [q["seed"] for q in asked(a["id"])] != [q["seed"] for q in asked(b["id"])]
+    post(c, who("take2"), f"/api/drill/{a['id']}/finish")
+    post(c, who("take3"), f"/api/drill/{b['id']}/finish")
+    res = get(c, owner, f"/api/sets/{twin['code']}/results")
+    assert len(res["takers"]) == 2 and all("right" in q and "top_wrong" in q for q in res["questions"])
     # P19 1-2: a rematch serves the same types, tiers and formats in order on new seeds
     rem = start(c, owner, {"rematch": sid})
     play(c, owner, rem["id"])
@@ -1035,8 +1039,65 @@ def learn_checks(c) -> None:
     print("ok  S4 Learn this type, worked first, habits, word cards")
 
 
+def points_checks(c) -> None:
+    """P10 1 (points on the table after 30 answers, and the route), P14 2 (the
+    map's Select unmet starts pool untried) and P11 9 (College Board's bands)."""
+    learner = who("pts1")
+    names = [t for topic in ("circles", "percentages", "linear_functions", "probability")
+             for t in practice.catalogue()["by_topic"][topic][:4]]
+    for i in range(40):
+        t = names[i % len(names)]
+        it = generate(t, 81000 + i)
+        q = practice.to_question(practice.Card.of(t, 81000 + i, it, practice.topic_of(t)), 1)
+        given = right(q) if i % 3 else wrong(q)
+        progress.record(learner, None, q, given, 40000)
+    d = get(c, learner, "/api/bank")
+    sk = {s["slug"]: s for x in d["domains"] for s in x["skills"]}
+    assert d["gains"] and d["route"] and d["route"]["route"] in ("upper", "lower"), (d["gains"], d["route"])
+    assert sk["circles"]["gain"] is not None and sk["circles"]["per_test"]
+    picked = practice.catalogue()["by_topic"]["circles"][-3:]
+    u = start(c, who("pts2"), {"pool": "untried", "templates": picked, "count": 3})
+    assert cfg_of(u["id"])["pool"] == "untried" and {q["key"] for q in asked(u["id"])} <= set(picked)
+    idx = drill.cb_index()
+    assert idx and all(1 <= x["band"] <= 7 for x in idx.values())
+    band7 = {(e["template"], e["tier"]) for k, e in drill._official_map().items() if (idx.get(k) or {}).get("band") == 7}
+    low = [p for p in band7 if ratings.item(*p)[0] < 1350]
+    if low:
+        print(f"..  S4 P11 9 waits for F4's band priors: {len(low)} of {len(band7)} band-7 types sit at their tier prior")
+    print("ok  S4 points on the table and the route after 30 answers, pool untried, College Board bands")
+
+
+def content_checks(c) -> None:
+    """P1 2 and P24 2, once T-bank's worked steps and formula table land."""
+    has = sorted(drill._has("steps"))
+    if has:
+        learner = who("steps1")
+        s = start(c, learner, {"templates": [has[0]], "formats": ["mcq"], "count": 1, "zone": "off"})
+        q = full(s["id"], s["question"]["id"])
+        pick = wrong(q)
+        said = answer(c, learner, s["id"], q["id"], pick)
+        assert said["steps"] and said["diverge"] == said["option_steps"][pick], said.get("option_steps")
+        e = start(c, learner, {"templates": [has[0]], "count": 1, "zone": "off", "feedback": "end"})
+        assert "steps" not in answer(c, learner, e["id"], e["question"]["id"], wrong(full(e["id"], e["question"]["id"])))
+    else:
+        print("..  S4 P1 2 waits for T-bank's Item.steps (no template has worked steps yet)")
+    try:
+        from satbank import formulas
+    except ImportError:
+        print("..  S4 P24 waits for T-bank's satbank.formulas")
+        return
+    uses = [t for t, ids in formulas.USES.items() if ids and t in set(math_templates())]
+    if uses:
+        learner = who("formula1")
+        s = start(c, learner, {"templates": [uses[0]], "count": 1, "zone": "off"})
+        said = answer(c, learner, s["id"], s["question"]["id"], right(full(s["id"], s["question"]["id"])))
+        assert said.get("formula"), "the formula line after the reveal"
+
+
 def check(c) -> None:
     b = bank_checks(c)
+    points_checks(c)
+    content_checks(c)
     body_checks(c, b)
     mode_checks(c)
     action_checks(c)
