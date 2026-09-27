@@ -29,22 +29,18 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
 - **2026-09-27:** helper Tasks 10-11 done on `v2/helper-integ` (checks pass 3 runs); the user said don't merge it yet. Task 12
   waits for that merge. Helper now on Tasks 13 (local-day check-ins, v2/localday) and 14 (backups + load test, v2/ops), both
   from v2/helper-integ. Merge order later: v2/helper-integ, then v2/localday and v2/ops.
-- **SCHEDULED 2026-09-27 04:02 (the user: "schedule a job at 4 am that deals with 12, and fully finishes frontend"):**
-  the check-only pause ENDS then. The job:
-  1. Restart the checkpoint loop; remove stale clean worktrees.
-  2. Merge the helper's branches into master in this order, running `PYTHONPATH=. python3 server/test_flow.py` after
-     each (plus `python3 -m satbank check` after bank-gaps): v2/helper-integ, v2/localday, v2/ops, v2/bank-gaps, and
-     v2/cb-data only if its last commit says done (else leave it). A merge that conflicts: `git merge --abort`, skip it,
-     note it. A merge whose tests fail: `git revert -m 1 HEAD`, note it.
-  3. Launch Task 12: `Workflow({scriptPath: ".../spec/v2-state/next/words-gate.js"})`.
-  4. Launch the frontend: build.js with `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'},{id:'S7'},
-     {id:'S8'},{id:'S9'}]` (sections now 3 units, S7/S8/S9 pages-only 2 units; each continues from its branch).
-  5. As each task returns ready: leftovers to followups/<id>.json, test_flow, merge. Then I1 (integration walk).
-- **WAVE 2 PAUSED until the user's weekly usage reset** (the user, 2026-09-25: "henceforth till weekly reset, we are only
-  checking other guys work"). Until then: NO building here. Only check the helper's work (inline for data jobs, one check +
-  one fix for features) and merge it. Saved state: S3 5 commits (tip de9e831), S10 2 (85896a0), S1 1 (15583f5), S5 1
-  (83ee9a0), S6 1 (2fadefd), S4 and F2B none. After the reset, relaunch build.js with
-  `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'}]`; each continues from its branch.
+- **2026-09-27 (the 04:02 job, per the user):** the check-only pause is OVER. Merged: v2/helper-integ (4549610), v2/localday
+  (304aa62), v2/ops (6b010a2), v2/bank-gaps (ddd545d, gate 19/19), v2/cb-data (eec25b0); test_flow all good after each.
+  RUNNING:
+  * Task 12: words-gate.js run `wf_8efb6cd4-701` (task wwm1jrc2h). Restart: `args {from:'verdicts'}` or `{from:'gate'}`.
+  * The frontend: build.js run `wf_74382569-b10` (task w5xjce2wv), args `[{id:'S4'},{id:'S5'},{id:'S3'},{id:'S6'},{id:'S10'},
+    {id:'S1'},{id:'F2B'},{id:'S7'},{id:'S8'},{id:'S9'}]` (sections 3 units; S7/S8/S9 pages-only 2 units; builders rebase old
+    branches onto master first).
+  * Checkpoint loop: task bgbqcunjk.
+  The Workflow tool can't open scripts under the moved repo: launch copies from
+  ~/.claude/projects/-Users-workingmyassof-freshbot-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/workflows/scripts/ (copy
+  spec/v2-state/next/*.js there first). As each task returns ready: leftovers to followups/<id>.json, test_flow, merge.
+  Then I1, the integration walk.
 - **Server checks done 2026-09-25 (run wf_efc641bf-0d1, stopped during the fixes):** blockers S7S 6, S8S 5, S9S 4 (each
   includes my branch-naming bug: build.js used v2/<id> = v2/s7s etc.). The fixers created v2/s7s, v2/s8s and v2/s9s from
   the helper's branches (S7 and S8 rebased on master), so those are now the canonical branches; v2/s7s has a fixer

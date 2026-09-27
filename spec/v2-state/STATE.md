@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-27T04:07:55+05:00
+# v2 build state -- 2026-09-27T09:50:17+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -72,21 +72,14 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/t-bank-systems_of_linear_equations` at 90dd059, 0 commits ahead of master
 - `v2/t-bank-two_variable_data` at 4469303, 0 commits ahead of master
 - `v2/words-content` at 4c67155, 0 commits ahead of master
+- `v2/words-gate` at bf3910d, 0 commits ahead of master
 
 ## Worktrees
 
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/bank-gaps` on `v2/bank-gaps`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/cb-data` on `v2/cb-data`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/helper-handoff` on `v2/helper-handoff`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/integ` on `v2/helper-integ`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/localday` on `v2/localday`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/ops` on `v2/ops`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s7s` on `v2/s7s`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s8s` on `v2/s8s`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s9s` on `v2/s9s`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/sec-fix` on `v2/sec-fix`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_8efb6cd4-701-1` on `v2/words-gate`: 0 uncommitted
 
 ## Workflow runs
 
@@ -108,6 +101,9 @@ Unfinished when saved: verify F4 r3
 
 ### wf_8c0945ee-c24: 51 finished, 10 unfinished
 Unfinished when saved: advantage: words, experience: words, judge: compete, judge: plan, judge: practice, judge: reports, judge: tests, judge: words, outcomes: review, outcomes: words
+
+### wf_8efb6cd4-701: 0 finished, 1 unfinished
+Unfinished when saved: gate: review tool + plan
 
 ### wf_a586fef6-d3a: 6 finished, 0 unfinished
 
