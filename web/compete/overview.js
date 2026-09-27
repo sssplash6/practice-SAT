@@ -155,6 +155,8 @@
     try {
       const r = await api(`/contests?status=${tab}&limit=${shown}`);
       counts[tab] = r.total; filter.count(tab, r.total);
+      // today's Daily is the hub's (your local day); the list's may be yesterday's, still open elsewhere
+      if (tab === 'live' && S.hub && S.hub.daily) r.contests = r.contests.map(c => (c.kind === 'daily' ? S.hub.daily : c));
       if (tab === 'live') S.live = r.contests;
       const rows = r.contests.map(crow);
       if (!rows.length) {
@@ -447,6 +449,7 @@
   }
   function renderHub() {
     try { renderDaily(); } catch (e) { console.error(e); }
+    if (tab === 'live' && (S.live || []).some(c => c.kind === 'daily' && c.id !== S.hub.daily.id)) loadRows();
     renderStats(); renderSeason(); renderTrapsCard(); renderChamps(); renderBadges(); renderRecap();
   }
   async function load() {

@@ -422,7 +422,7 @@
         'aria-current': e.you ? 'true' : null, 'data-pid': e.pid || null });
       tr._e = e;
       const rank = e.par ? h('td', { class: 'rk', html: FLAG, title: 'Par: never ranked' }) : h('td', { class: 'rk', text: `${e.tie ? '=' : ''}${e.rank ?? ''}` });
-      const off = cs.filter(c => !c.phone).map(c => { const v = c.value(e); return v === null || v === undefined || v === '' ? null : (c.short ? `${v}` : v); }).filter(Boolean);
+      const off = cs.filter(c => !c.phone && c.meta !== false).map(c => { const v = c.value(e); return v === null || v === undefined || v === '' ? null : c.unit ? `${v} ${c.unit}` : `${v}`; }).filter(Boolean);
       const who = h('td', { class: 'who' },
         h('span', { class: 'who-l' },
           e.par ? null : level(null, false, 20, { level: e.level, ring: e.ring, ringTitle: titleText(e.title) }),
