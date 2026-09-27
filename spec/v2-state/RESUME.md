@@ -41,6 +41,12 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
     {id:'S1'},{id:'F2B'},{id:'S7'},{id:'S8'},{id:'S9'}]` (sections 3 units; S7/S8/S9 pages-only 2 units; builders rebase old
     branches onto master first).
   * Checkpoint loop: task bgbqcunjk.
+  * BRIEFS (2026-09-27, the user: "one section shouldnt be taking 4m tokens"): each remaining task reads only
+    spec/v2-state/briefs/<id>.md (80-110k tokens) instead of the whole plan. The frontend was relaunched on them: run
+    `wf_fd260b46-512` (task wboqn5zsh), same args, 3 workers; S4/S5/S3 checkpoints 539de3f / 6b131f0 / c9f9a82.
+  * Helper queue: Task 17 perf (the load test fails at 10 learners), 18 words grading fix + gate pass A (1 seed),
+    19 gate pass B in a separate instance. After 18+19: merge v2/words-gate-a/-b into v2/words-gate, run the gate step
+    (words-gate.js {from:'gate'}), merge.
   The Workflow tool can't open scripts under the moved repo: launch copies from
   ~/.claude/projects/-Users-workingmyassof-freshbot-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/workflows/scripts/ (copy
   spec/v2-state/next/*.js there first). As each task returns ready: leftovers to followups/<id>.json, test_flow, merge.

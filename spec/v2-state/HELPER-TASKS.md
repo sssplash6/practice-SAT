@@ -329,6 +329,51 @@ One commit per topic. DONE: satbank check PASS 19/19; tools/lint_bank.py adds no
 filled cell at 3 or more; test_flow "all good". Tell the user "bank-gaps done" with the cells filled.
 ```
 
+## Task 17 (DO FIRST): make the server survive real traffic
+
+```
+Your load test (spec/v2-state/followups/load-test.md) shows the site failing at 10 concurrent learners (drill create and
+/api/shell time out), heavy latency at 50, and "sqlite3.OperationalError: database is locked" at 200.
+SETUP: git worktree add .claude/worktrees/perf -b v2/perf master
+OWN ONLY: server/db.py, server/compete.py, server/challenge.py, server/api_compete.py, server/words.py, server/api_words.py,
+tools/load_test.py, and a new server/checks/perf.py. Do NOT edit api_shell.py, next.py, drill.py, practice.py, api_today.py,
+api_tests.py or any web/ file: those belong to sections being built right now. For slowness inside them, profile it and
+write the cause and the fix into spec/v2-state/followups/perf-for-sections.md for their builders.
+Fix in your files:
+1. SQLite contention: WAL mode, a busy_timeout, short write transactions (BEGIN IMMEDIATE only around the writes), and a
+   bounded retry on "database is locked"; no request should hold a write lock while generating questions.
+2. Anything slow or synchronous in Compete (contest/twin generation on the request path: precompute or cache per day)
+   and Words (GET /api/words: cache the library and per-learner state reads).
+3. Re-run the load test at 10, 50 and 200. Targets: 0 errors at 10 and 50, hot-route p95 under 1 s at 50, no
+   "database is locked" at 200. Record before/after in load-test.md.
+DONE: perf.py, the section checks you touched (s8.py, s9.py) and test_flow pass; tell the user "perf done" with the
+before/after table.
+```
+
+## Task 18: fix the Words grading crash, then Words gate verdicts, pass A
+
+```
+1. server/checks/s9.py fails on master: "OverflowError: Python int too large to convert to SQLite INTEGER" in
+   test_daily_print_offline (words.grade). Fix it in server/words.py on v2/perf's sibling branch v2/words-fix from master;
+   commit; tell the user "words fix done".
+2. Then the review gate's first verdict pass, LIGHT version: git worktree add .claude/worktrees/gate-a v2/words-gate-a.
+   The tool and plan are on v2/words-gate (merge it into your branch first if missing): 827 frames in
+   server/words/gate_plan.json. For each frame x legal key judge ONE generated item (seed 0), not five. You are
+   "model:helper-a". Never look at the key and never open adjudications_b.json. Keep valid rows a stopped predecessor
+   left in adjudications_a.json (skip items already judged). Commit every ~100 frames. Tell the user "gate A done"
+   with the one / more / none counts.
+```
+
+## Task 19: Words gate verdicts, pass B (a SEPARATE, fresh instance)
+
+```
+Run this in a different instance from Task 18, one that has never seen pass A's verdicts.
+git worktree add .claude/worktrees/gate-b v2/words-gate-b. Same job as Task 18 part 2, as "model:helper-b", writing
+server/words/adjudications_b.json: ONE item (seed 0) per frame x legal key over server/words/gate_plan.json (merge
+v2/words-gate into your branch first if missing). Never look at the key and never open adjudications_a.json. Commit every
+~100 frames. Tell the user "gate B done" with the counts. The main agent then merges both and marks agreed frames reviewed.
+```
+
 ---
 
 ## For the main session

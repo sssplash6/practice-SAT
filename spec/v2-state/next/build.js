@@ -29,7 +29,8 @@ function section(id, name, port, builds, upgrades, owns, pagesOnly) {
   section.pagesOnly = !!pagesOnly
   const t = {
     title: `${id} · ${name}`, port,
-    spec: `spec/rebuild-v2.md: Part 4.2 ${id} (from line 11062), which builds ${builds}; the resolutions and contracts of Part 2
+    spec: `spec/v2-state/briefs/${id}.md ONLY (it holds the decisions, your task entry, your upgrade file, product.md's overrides for
+you, your section spec and Part 2; do not open spec/rebuild-v2.md or other upgrade files). You build ${builds}; the resolutions and contracts of Part 2
 (§2.2 R1-R38, §2.9 contracts, §2.10 registries, §2.13 amended checks); and spec/v2-upgrades/${upgrades}.md (its accepted upgrades and
 overrides win over the section spec). Use the merged foundations instead of writing your own: F1's ui.css, kit.js and charts.js (read
 the kit.js header and /dev/kit.html), F2's shell (ui.js, UI.api, UI.prefs, UI.keys), F3's UI.workspace, UI.runner and UI.review,
@@ -154,7 +155,7 @@ on 3 runs in a row.`,
   },
   F2B: {
     title: 'F2B · Shell follow-ups: Up next, offline, run and share helpers', port: 8018,
-    spec: `spec/v2-state/followups/F2.json (F2's check: the items assigned to F2 that no task owned), spec/v2-upgrades/shell-me.md
+    spec: `spec/v2-state/briefs/F2B.md ONLY for requirements, plus spec/v2-state/followups/F2.json (F2's check: the items assigned to F2 that no task owned); in the brief see shell-me.md
 (its "§2.12 F2" row in §3.2, U1 Up next, U18 offline, U25 welcome back, U28 share), spec/v2-upgrades/product.md (G1 UI.run, G2
 retired phrases, G10 start kind), and the Shell spec §2 in spec/rebuild-v2.md Part 3.1 (lines 653-2294). F2 is merged: extend it.`,
     owns: 'server/next.py, web/sw.js, web/assets/ui.js, web/assets/palette.js, web/assets/quick.js, server/api_shell.py, server/checks/f2.py',
