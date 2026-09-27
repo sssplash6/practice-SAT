@@ -1,4 +1,4 @@
-# Check brief for S4: Practice builder and session
+# Check brief for S4: Practice builder and session pages
 
 ## Decisions
 

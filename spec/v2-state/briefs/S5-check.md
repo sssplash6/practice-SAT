@@ -1,4 +1,4 @@
-# Check brief for S5: Tests and the test window
+# Check brief for S5: Tests and the test window pages
 
 ## Decisions
 

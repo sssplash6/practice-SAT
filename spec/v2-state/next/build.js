@@ -216,16 +216,16 @@ Review's Saved content card, Tests' test defaults`, 'shell-me',
     'web/me/**, web/signin/**, web/pair/**, web/share/**, web/help/**, web/diagnostic/signup.html, web/diagnostic/verified.html', true),
   ...section('S3', 'Today', 8023, `Part 3.2 in full (lines 2295-3347), R27 (the questions of the day), R30 (the Review card and
 Words tile), and the Today items of Review §10, Words §11 and Compete §9`, 'today',
-    'web/index.html, server/api_today.py, server/daily.py, server/checks/s3.py'),
+    'web/index.html', true),
   ...section('S4', 'Practice builder and session', 8024, `Part 3.3 in full (lines 3348-4779; components from F3, report and sets
 from F6, the body from F5), Compete §8 for the practice session (R28), Review §10's session strip, Words' session hooks, Plan's session
 summary; also F6's drill.py follow-up (pool 'set' through sets.serve, in spec/v2-state/followups/F6.json)`, 'practice',
-    'web/practice/**, server/drill.py, server/practice.py, server/api_practice.py, server/checks/s4.py'),
+    'web/practice/**', true),
   ...section('S5', 'Tests and the test window', 8025, `Part 3.4 in full (lines 4780-6054; runner components from F3), Compete §8
 for the test window, the Weekly Module and Season Final starts, Review's flags in the runner, Shell's UI.learner and token rules for
 web/test/ (R32), QBank's "shelf sections and diagnostic forms remember what they serve". One test format everywhere, based on the
 practice session (the user: "the practice one is the best")`, 'tests',
-    'web/tests/**, web/test/**, web/diagnostic/index.html, server/api_tests.py, server/papers.py, server/blueprint.py, server/mocks.json, server/forms.json, tools/moderate.py, server/checks/s5.py'),
+    'web/tests/**, web/test/**, web/diagnostic/index.html', true),
   ...section('S6', 'Results and the score report', 8026, `Part 3.5 in full (lines 6055-7045; the player from F3, the report dialog
 from F6), R26, R35, the report's parts of Tests (?q=, peers, notes, confidence, away, changes), Words (redirect), Compete (contest rows,
 Ranked pill) and Review (Flagged filter); also the follow-ups in spec/v2-state/followups/F1.json (UI.sittingCard) and F5.json (move

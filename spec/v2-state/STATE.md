@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-27T11:35:02+05:00
+# v2 build state -- 2026-09-27T11:38:28+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -31,8 +31,11 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/s10` at 85896a0, 2 commits ahead of master
 - `v2/s10-server` at 85896a0, 2 commits ahead of master
 - `v2/s3` at 6fad986, 13 commits ahead of master
+- `v2/s3-server` at 6fad986, 13 commits ahead of master
 - `v2/s4` at 7043670, 7 commits ahead of master
+- `v2/s4-server` at 7043670, 7 commits ahead of master
 - `v2/s5` at a1788ce, 8 commits ahead of master
+- `v2/s5-server` at a1788ce, 8 commits ahead of master
 - `v2/s6` at 057b7fc, 1 commits ahead of master
 - `v2/s6-server` at 057b7fc, 1 commits ahead of master
 - `v2/s7-server` at b88934e, 3 commits ahead of master
@@ -138,6 +141,8 @@ Unfinished when saved: fix F4 r2
 
 ### wf_aca7fe38-327: 12 finished, 6 unfinished
 Unfinished when saved: fix: area_and_volume, fix: linear_equations_in_one_variable, fix: linear_functions, recheck: equivalent_expressions, recheck: linear_inequalities, verify: right_triangles_and_trigonometry
+
+### wf_bc31c955-f3c: 3 finished, 0 unfinished
 
 ### wf_c0d90d11-40f: 9 finished, 0 unfinished
 

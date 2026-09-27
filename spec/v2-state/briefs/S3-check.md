@@ -1,4 +1,4 @@
-# Check brief for S3: Today
+# Check brief for S3: Today pages
 
 ## Decisions
 

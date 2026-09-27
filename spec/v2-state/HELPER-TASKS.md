@@ -435,6 +435,53 @@ palette.js, quick.js, sw.js) right now against GET /api/next and /api/shell.next
 DONE: checks/f2.py passes and test_flow "all good". Tell the user "F2B server done".
 ```
 
+## Task 24: finish the S3 Today server
+
+```
+SETUP: git worktree add .claude/worktrees/s3-server v2/s3-server   (exists; git rebase master first)
+OWN ONLY: server/api_today.py, server/daily.py, server/checks/s3.py.
+Finish every server item of Today (Part 3.2 in full, R27 the questions of the day, R30): api_today.py and daily.py are largely built
+and checks/s3.py exists (1,121 lines). Also SEC-02 (spec/v2-state/followups/security-audit.md): throwaway learner codes must not farm
+the day's answer key for a second code, and the audit's perf notes for api_today in spec/v2-state/followups/perf-for-sections.md.
+Rules as above (own files only, own port and SATF_DB, commit per part, never push or merge, never touch a web/ file: the main build
+is building this section's pages right now against the endpoints its spec lists, so build exactly those endpoints and shapes).
+Requirements: spec/v2-state/briefs/S3.md (its server items are yours). The branch already has the section's server work from the main
+build (13 commits): continue from it, do not redo it.
+DONE: checks/s3.py passes and test_flow "all good". Tell the user "S3 server done".
+```
+
+## Task 25: finish the S4 Practice server
+
+```
+SETUP: git worktree add .claude/worktrees/s4-server v2/s4-server   (exists; git rebase master first)
+OWN ONLY: server/drill.py, server/practice.py, server/api_practice.py, server/checks/s4.py.
+Finish every server item of the Practice builder and session (Part 3.3, R28 for the practice session): the session endpoints,
+GET /api/drill, the builder's API. Also F6's follow-up (pool 'set' through sets.serve, spec/v2-state/followups/F6.json), deleting
+the shadow GET /api/history once S6's server moves the R24 filter (Task 20), and the drill perf notes in perf-for-sections.md
+(drill create timed out at 10 learners in your load test).
+Rules as above (own files only, own port and SATF_DB, commit per part, never push or merge, never touch a web/ file: the main build
+is building this section's pages right now against the endpoints its spec lists, so build exactly those endpoints and shapes).
+Requirements: spec/v2-state/briefs/S4.md (its server items are yours). The branch already has the section's server work from the main
+build (7 commits): continue from it, do not redo it.
+DONE: checks/s4.py passes and test_flow "all good". Tell the user "S4 server done".
+```
+
+## Task 26: finish the S5 Tests server
+
+```
+SETUP: git worktree add .claude/worktrees/s5-server v2/s5-server   (exists; git rebase master first)
+OWN ONLY: server/api_tests.py, server/papers.py, server/blueprint.py, server/mocks.json, server/forms.json, tools/moderate.py,
+server/checks/s5.py.
+Finish every server item of Tests and the test window (Part 3.4, R28 for the test window, the Weekly Module and Season Final starts,
+R32's token rules). Also SEC-03 (security-audit.md): a sitting's ID alone must not let anyone read, answer, finish or sign up on it
+(ownership through X-Learner, or a server-minted secret for anonymous diagnostics), and the /api/session part of SEC-07.
+Rules as above (own files only, own port and SATF_DB, commit per part, never push or merge, never touch a web/ file: the main build
+is building this section's pages right now against the endpoints its spec lists, so build exactly those endpoints and shapes).
+Requirements: spec/v2-state/briefs/S5.md (its server items are yours). The branch already has the section's server work from the main
+build (8 commits): continue from it, do not redo it.
+DONE: checks/s5.py passes and test_flow "all good". Tell the user "S5 server done".
+```
+
 ---
 
 ## For the main session
