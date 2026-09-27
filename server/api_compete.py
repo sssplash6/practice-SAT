@@ -136,6 +136,12 @@ def _meta(row, learner: str | None, tz: int = 0, race: str | None = None) -> dic
     race_data = compete.race_choice(row["id"], learner, race) if race and learner else None
     if race and not learner:
         raise HTTPException(400, "send a learner code to race")
+    is_owner = bool(row["kind"] == "private" and learner and row["owner"] == learner)
+    invite = None
+    if is_owner:
+        root = row["series"] or row["id"]
+        original = db.one("SELECT code FROM contests WHERE id=?", root)
+        invite = original["code"] if original else None
     return {"id": row["id"], "kind": row["kind"], "title": row["title"],
             "subject": row["subject"], "opens": row["opens"], "closes": row["closes"],
             "count": row["count"], "seconds": row["seconds"],
@@ -148,7 +154,8 @@ def _meta(row, learner: str | None, tz: int = 0, race: str | None = None) -> dic
                       "best": max(all_scores) if all_scores else None},
             "me": me, "entrants": entrants,
             "race": {k: v for k, v in race_data.items() if k not in ("target", "sid")} if race_data else None,
-            "series": row["series"], "round": row["round"]}
+            "series": row["series"], "round": row["round"],
+            "owner": is_owner, "code": invite}
 
 
 @router.get("/api/compete")

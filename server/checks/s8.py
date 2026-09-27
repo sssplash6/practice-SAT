@@ -282,6 +282,9 @@ def run() -> None:
             "title": "Friday Five", "templates": ["eqx.add_polys"], "count": 5,
             "repeat": {"every": "day", "rounds": 3}, "strict": True, "twin": True}).json()
         code, root = private["code"], private["id"]
+        owner_lobby = c.get(f"/api/contest/{root}", headers=head(a)).json()
+        assert_ok(owner_lobby["owner"] is True and owner_lobby["code"] == code,
+                  "private owner can recover the invite code on another device")
         default_title = c.post("/api/contests", headers=head(a), json={
             "count": 10, "topics": ["area_and_volume"], "open_for": 24, "twin": True})
         assert_ok(default_title.status_code == 200 and
@@ -301,6 +304,9 @@ def run() -> None:
               dt.datetime.fromisoformat(rounds[i - 1]["opens"])).days == 1 for i in (1, 2)),
               "private series opens on consecutive days")
         joined = c.post("/api/join", headers=head(b), json={"code": code})
+        member_lobby = c.get(f"/api/contest/{root}", headers=head(b)).json()
+        assert_ok(member_lobby["owner"] is False and member_lobby["code"] is None,
+                  "private members cannot read the owner invite code")
         assert_ok(joined.status_code == 200 and joined.json()["kind"] == "contest" and
               b in compete.private_members(rounds[1]["id"]), "one join enters every series round")
         stranger = learner("private-stranger")
@@ -318,7 +324,8 @@ def run() -> None:
                       f"stranger cannot read private contest {path or 'lobby'}")
         preview = c.get(f"/api/contest/{root}?code={code}", headers=head(stranger))
         assert_ok(preview.status_code == 200 and preview.json()["join"] and
-                  "entrants" not in preview.json() and "field" not in preview.json(),
+                  "entrants" not in preview.json() and "field" not in preview.json() and
+                  "code" not in preview.json(),
                   "invite code grants only a minimal Join preview")
         anon_person = learner("public-anon")
         db.ensure_learner(anon_person)
