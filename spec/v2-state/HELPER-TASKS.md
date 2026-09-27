@@ -500,6 +500,20 @@ v2/words-gate-b (their files differ: adjudications_a.json and adjudications_b.js
 Commit on v2/words-gate-final. Tell the user "gate done" with those counts. The main agent merges it.
 ```
 
+## Task 28 (light): two small backend leftovers from the Practice pages
+
+```
+SETUP: git worktree add .claude/worktrees/light -b v2/light master
+OWN ONLY: server/prefs.py, server/api_notes.py, server/checks/f4.py.
+1. prefs: add "hide_timer" (bool, default false) and "open_explanations" (bool, default false) to the one prefs registry
+   (spec/rebuild-v2.md §2.7, R11), with validation like the other keys (bad value: 422 naming the key). The Practice session
+   stores them in localStorage until these exist.
+2. notes: the question runner (web/assets/runner.js) and api_notes.py use different highlight style names, so every save got a
+   422 until the Practice page added a translation. Make POST /api/notes accept the runner's style names (map them to the stored
+   ones; keep accepting today's names), so the page's stopgap can be removed later.
+Add a case for each to server/checks/f4.py. DONE: f4.py and test_flow "all good". Tell the user "light done".
+```
+
 ---
 
 ## For the main session

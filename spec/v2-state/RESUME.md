@@ -63,6 +63,7 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
     - DECISION 7 (calm, quiet UI) added 2026-09-27; briefs regenerated. RUNNING: S4Q (the Practice pages made calm, no feature
       lost): run `wf_9e14b5f3-2c4` (task wgluczzch), `[{id:'S4Q'}]`, 2 units + one check + one fix, branch v2/s4q. Verify its
       web/ diff on the branch before merging.
+    - Words gate MERGED (93fc62c): 797 frames approved over 1,159 senses; 30 blocked in review-queue.json; 26 senses no frame.
     - Also merged: v2/perf (helper Task 17: zero errors at 10/50/200 learners), v2/words-seed-sqlite (Task 18's crash fix;
       master already had it). Words gate pass A done on v2/words-gate-a (1,263 items: 1,235 one, 28 more); waiting for pass B.
     - S4 Practice pages: built, checked (3 blockers, next/S4-pages-verify1-issues.json); the fix is the ONLY thing running:
