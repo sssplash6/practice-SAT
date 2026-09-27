@@ -399,7 +399,7 @@
         by.forEach((c, key) => {
           const code = c.code || codes[key] || codes[c.id];
           const ents = c.entrants || [];
-          const dots = h('span', { class: 'dots' }, ents.map(e => { const d = h('i', { class: `dot ${e.status === 'finished' ? 'done' : e.status === 'progress' ? 'progress' : ''}`, tabindex: '0' });
+          const dots = h('span', { class: 'edots' }, ents.map(e => { const d = h('i', { class: `edot${e.status === 'finished' ? 'done' : e.status === 'progress' ? 'progress' : ''}`, tabindex: '0' });
             UI.tooltip(d, `${e.name}: ${e.status === 'finished' ? 'done' : e.status === 'progress' ? 'in progress' : 'not yet'}`); return d; }));
           const acts = h('span', { class: 'ma' });
           if (code) acts.append(quiet('Copy link', () => UI.copyText(`${location.origin}/compete/contest/?code=${code}`)));

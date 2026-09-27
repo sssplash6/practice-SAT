@@ -632,7 +632,7 @@
   function reviewRow(it, i, s) {
     const q = it.question, f = it.field || {};
     const mine = ((S.c.me && S.c.me.result && S.c.me.result.questions) || [])[i] || {};
-    const d = h('details', { class: 'rv', id: `q${i + 1}` });
+    const d = h('details', { class: 'crv', id: `q${i + 1}` });
     const sum = h('summary', {},
       h('span', { class: 'q', text: `Q${i + 1}` }),
       h('span', { class: 's' }, UI.glyph ? UI.glyph(q.topic) : null, h('span', { text: q.type_name || C.topicName(q.topic) }), UI.dbars ? UI.dbars(q.difficulty, { bare: true }) : null),
@@ -644,7 +644,7 @@
     d.addEventListener('toggle', () => {
       if (!d.open || built) return;
       built = true;
-      const body = h('div', { class: 'rv-body' });
+      const body = h('div', { class: 'crv-body' });
       d.append(body);
       const qh = h('div');
       body.append(qh);
@@ -722,7 +722,7 @@
     const el = show('#entrants');
     const done = c.entrants.filter(e => e.status === 'finished').length;
     el.replaceChildren(h('div', { class: 'card-head' }, h('h2', { class: 'h2', text: `Entrants (${c.entrants.length})` }), h('span', { class: 'meta', text: done ? `${done} done` : '' })),
-      h('ul', { class: 'ent' }, c.entrants.map(e => h('li', {}, h('i', { class: `dot ${e.status === 'finished' ? 'done' : e.status === 'progress' ? 'progress' : ''}`, 'aria-hidden': 'true' }),
+      h('ul', { class: 'ent' }, c.entrants.map(e => h('li', {}, h('i', { class: `edot${e.status === 'finished' ? 'done' : e.status === 'progress' ? 'progress' : ''}`, 'aria-hidden': 'true' }),
         e.name, h('span', { class: 'sr', text: e.status === 'finished' ? ' finished' : e.status === 'progress' ? ' in progress' : ' not started' })))),
       h('div', { class: 'day-legend' }, h('span', {}, h('i', { class: 'sat', style: 'border-radius:50%;background:var(--ink)' }), 'finished'), h('span', {}, h('i', { style: 'border-radius:50%;background:linear-gradient(90deg,var(--ink) 50%,var(--mat) 50%)' }), 'in progress'), h('span', {}, h('i', { style: 'border-radius:50%' }), 'not yet')));
   }
