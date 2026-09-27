@@ -328,7 +328,7 @@ def _stamp_sets(row, s: Stamps | None) -> list[tuple[str, str, list]]:
     base = f'$."_session"."pids"."m{row["module"] or 1}:{s.pid}"'
     cap = elapsed_ms(row) + 2000
     el = min(s.el if s.el is not None else elapsed_ms(row), cap)
-    out = [(base + '."first_el"', f"COALESCE(json_extract(qstate, ?), ?)", [base + '."first_el"', el]),
+    out = [(base + '."first_el"', "COALESCE(json_extract(qstate, ?), ?)", [base + '."first_el"', el]),
            (base + '."last_el"', "max(COALESCE(json_extract(qstate, ?), 0), ?)", [base + '."last_el"', el])]
     for k in ("hid", "off"):
         v = getattr(s, k)
@@ -1868,7 +1868,6 @@ def on_drill_finish(row) -> dict | None:
     from . import estimate
     marked = {q["id"]: q for q in marked_questions(parent)}
     answers = db.load_answers(parent)
-    qstate = _json(parent["qstate"], {}) or {}
     factor = FACTOR.get(timing_of(parent), 1.0)
     twins = {}
     for a in db.rows("SELECT * FROM attempts WHERE session=? ORDER BY id", row["id"]):
@@ -2440,7 +2439,7 @@ def tests_overview(x_learner: str | None = Header(default=None)) -> dict:
     live = open_sittings(learner)
     done = finished_sittings(learner)
     est = estimate.estimate(learner)
-    latest, previous = est.get("latest"), est.get("previous")
+    latest = est.get("latest")
     lr = db.one("SELECT target, exam_date FROM learners WHERE id=?", learner)
     exam = None
     if lr and lr["exam_date"]:

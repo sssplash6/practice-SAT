@@ -29,7 +29,7 @@ from collections import Counter, defaultdict
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import blueprint, db, deps, practice, scoring
+from . import blueprint, db, practice, scoring
 from .deps import learner_of, now, writer_of
 
 router = APIRouter()
