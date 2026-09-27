@@ -334,6 +334,12 @@ def card(p: dict, learner: str, rating: dict, met: set[str], seen: set[str], ope
     s = p["sections"][0]
     templates = [t for form in FORMS for t, *_ in s[form]]
     status = "completed" if done else "in_progress" if live else "not_sat"
+    misses_to_fix, hardest = 0, None
+    if done:
+        mine_q, ans = _slot_questions(done[0]), _json(done[0]["answers"], {}) or {}
+        misses_to_fix = sum(q.get("key") in open_t and not scoring.is_correct(q, ans.get(q["id"]))
+                            for q in mine_q.values())
+        hardest = _hardest(p, mine_q, ans)
     posts = db.one("SELECT COUNT(*) AS n FROM posts WHERE paper=? AND hidden=0", p["n"])["n"]
     return {"n": p["n"], "label": p["label"], "week": p["week"], "source": p["source"],
             "kind": ("road_to" if p["source"].startswith("final-") else p["source"]),
@@ -343,12 +349,37 @@ def card(p: dict, learner: str, rating: dict, met: set[str], seen: set[str], ope
             "rating": rating,
             "yours": {"status": status, "sittings": len(done),
                       "last": _mid(done[-1]) if done else None, "last_session": done[-1]["id"] if done else None,
-                      "live_session": live[-1]["id"] if live else None, "first_percentile": pct},
+                      "live_session": live[-1]["id"] if live else None, "first_percentile": pct,
+                      "misses_to_fix": misses_to_fix},
+            "hardest": hardest,
             "types_new": len({t for t in templates if t not in met}),
             "new_to_you": len({t for t in templates if t not in seen}),
             "open_traps": sum(t in open_t for t in templates),
             "posts": posts, "questions": sum(len(s[f]) for f in ("module1", "module2_upper")),
             "gated": not done}
+
+
+def _hardest(p: dict, mine_q: dict[str, dict], ans: dict) -> dict | None:
+    """X20's "Hardest: M2 harder Q19 · 18% right · you got it", over the slots
+    you sat, from this paper's first ranked sittings or site-wide (n >= 5)."""
+    c = _crowd(p)
+    s = p["sections"][0]
+    best = None
+    for form in FORMS:
+        tag = SLOT_PREFIX[form]
+        for i, (t, tier, *_) in enumerate(s[form], 1):
+            slot = f"{tag}:{i}"
+            q = mine_q.get(slot)
+            d = (c["per"].get(slot) if c["own"] else None) or c["site"].get((t, tier))
+            if q is None or not d or d["n"] < SHARE_N:
+                continue
+            share = d["right"] / d["n"]
+            if best is None or share < best["right"]:
+                given = ans.get(q["id"])
+                best = {"slot": slot, "module": tag, "position": i, "right": round(share, 3), "n": d["n"],
+                        "source": "paper" if c["own"] else "site",
+                        "you": "blank" if given in (None, "") else "right" if scoring.is_correct(q, given) else "wrong"}
+    return best
 
 
 def listing(learner: str) -> list[dict]:
@@ -418,7 +449,7 @@ def _crowd(p: dict) -> dict:
             answers = _json(row["answers"], {}) or {}
             qstate = _json(row["qstate"], {}) or {}
             for slot, q in _slot_questions(row).items():
-                d = per.setdefault(slot, {"n": 0, "right": 0, "norms": Counter(), "ms": []})
+                d = per.setdefault(slot, {"n": 0, "right": 0, "norms": Counter(), "ms": [], "given": Counter()})
                 given = answers.get(q["id"])
                 d["n"] += 1
                 if scoring.is_correct(q, given):
@@ -430,17 +461,22 @@ def _crowd(p: dict) -> dict:
                     norm = _norm_of(q, given)
                     if norm:
                         d["norms"][norm] += 1
+                    if q.get("type") == "spr" and given not in (None, ""):
+                        d["given"][str(given)] += 1
     site: dict[tuple[str, str], dict] = {}
     pairs = {(t, tier) for form in FORMS for t, tier, *_ in s[form]}
     for t, tier in pairs:
-        rows = db.rows(f"SELECT a.correct, a.norm, COALESCE(a.ms, a.sms) AS ms, s.kind, s.cfg FROM attempts AS a"
+        rows = db.rows(f"SELECT a.correct, a.norm, a.given, a.fmt, COALESCE(a.ms, a.sms) AS ms, s.kind, s.cfg"
+                       f" FROM attempts AS a"
                        f" LEFT JOIN sessions AS s ON s.id=a.session WHERE a.template=? AND a.difficulty=?"
                        f" AND a.repeat=0 AND a.disputed=0 AND a.void IS NULL AND a.{db.NOT_SAMPLE}", t, tier)
         timed = [r["ms"] for r in rows if r["correct"] and r["ms"] and (
             r["kind"] in ("mock", "module", "custom", "diagnostic") or '"timed": true' in (r["cfg"] or ""))]
         site[(t, tier)] = {"n": len(rows), "right": sum(r["correct"] for r in rows),
                            "norms": Counter(r["norm"] for r in rows if not r["correct"] and r["norm"]),
-                           "ms": timed}
+                           "ms": timed,
+                           "given": Counter(str(r["given"]) for r in rows if not r["correct"] and r["fmt"] == "spr"
+                                            and r["given"] not in (None, ""))}
     out = {"own": own, "n_first": len(ranked), "per": per, "site": site, "labels": _labels()}
     _CROWD[p["n"]] = (time.monotonic(), out)
     return out
@@ -490,7 +526,8 @@ def crowd(n: int, learner: str) -> dict:
             slot = f"{tag}:{i}"
             data = c["per"].get(slot) if c["own"] else None
             src = "paper" if data else "site"
-            d = data or c["site"].get((t, tier)) or {"n": 0, "right": 0, "norms": Counter(), "ms": []}
+            d = data or c["site"].get((t, tier)) or {"n": 0, "right": 0, "norms": Counter(), "ms": [],
+                                                     "given": Counter()}
             wrong = d["n"] - d["right"]
             spread = ([{"norm": k, "label": labels.get(k, k), "share": round(v / d["n"], 3)}
                        for k, v in d["norms"].most_common(4)] if d["n"] >= SHARE_N else [])
@@ -510,6 +547,8 @@ def crowd(n: int, learner: str) -> dict:
                    "source": src, "n": d["n"], "right": round(d["right"] / d["n"], 3) if d["n"] else None,
                    "median_right_ms": int(statistics.median(d["ms"])) if d["ms"] else None,
                    "spread": spread, "designed": [] if spread else _designed(t, tier, fmt, q),
+                   "spr_top": ([{"value": v, "share": round(k / d["n"], 3)} for v, k in d["given"].most_common(3)]
+                               if fmt == "spr" and d["n"] >= SHARE_N else []),
                    "wrong": wrong if d["n"] >= SHARE_N else None,
                    "you": you, "on_route": tag == "m1" or my_route is None or tag == ("m2u" if my_route == "upper" else "m2l"),
                    "posts": about.get(slot, 0), "top_post": (top["text"][:120] if top else None)}
