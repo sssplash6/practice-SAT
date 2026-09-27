@@ -4,7 +4,8 @@
    One route. The URL holds the mode: /plan/ (the plan view, or the landing with no
    active plan), ?tab=progress|plans, ?day=YYYY-MM-DD, ?setup=1&step=1..4 and
    ?edit=<id>&step=1..4 (the wizard, wizard.js), ?id=<id> (an older plan, read-only),
-   ?view=<token> (a shared read-only plan). Every number comes from server/plan.py
+   ?view=<token> (a shared read-only plan), ?print=sheet (the test-day sheet: your traps
+   and what to bring; ?print=traps lands on its #traps). Every number comes from server/plan.py
    through GET /api/plan; this file draws it and sends the student's changes.
    The Progress tab is progress.js (UI.planProgress); rows are plan-ui.js (UI.taskRow).
    ========================================================================== */
@@ -13,7 +14,7 @@
   const doc = document, h = UI.h;
   const root = doc.getElementById('plan');
   let Q = new URLSearchParams(location.search);
-  const S = { d: null, sel: Q.get('day'), tab: Q.get('tab') || 'plan', open: null, trim: null, kb: -1, shown: 20, readonly: false, older: null };
+  const S = { d: null, sel: Q.get('day'), tab: Q.get('tab') || 'plan', open: null, trim: null, kb: -1, shown: 5, readonly: false, older: null };
   const R = {};
   const DOW = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   const LETTER = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
@@ -72,8 +73,9 @@
     root.replaceChildren(
       h('div', { class: 'pl-title' }, h('span', { class: 'skel line lg', style: 'width: 240px' })),
       h('div', { class: 'pl-tiles' }, [0, 1, 2, 3].map(() => h('div', { class: 'stat' }, h('span', { class: 'skel line', style: 'width: 60%' }), h('span', { class: 'skel num' })))),
-      h('div', { class: 'pl-cols' }, h('div', { class: 'card' }, h('span', { class: 'skel', style: 'height: 180px' })), h('div', { class: 'card' }, h('span', { class: 'skel', style: 'height: 180px' }))),
-      h('div', { class: 'card pl-sec' }, h('span', { class: 'skel', style: 'height: 90px' })));
+      h('div', { class: 'pl-cols' }, h('div', { class: 'pl-stack' }, h('div', { class: 'card' }, h('span', { class: 'skel', style: 'height: 180px' })),
+        h('div', { class: 'card' }, h('span', { class: 'skel', style: 'height: 90px' }))), h('div', { class: 'card' }, h('span', { class: 'skel', style: 'height: 180px' }))),
+      h('div', { class: 'card pl-sec' }, h('div', { class: 'pl-skcal' }, Array.from({ length: 35 }, () => h('span', { class: 'skel' })))));
   }
   function failPage() {
     root.replaceChildren();
@@ -95,6 +97,7 @@
   }
 
   function route(keep) {
+    if (Q.get('print')) return sheetPage();
     if (Q.get('view')) return sharedView();
     if (Q.has('setup') || Q.has('edit')) return wizard();
     if (!S.d) return;
@@ -106,8 +109,8 @@
 
   function wizard() {
     if (!UI.planWizard) { root.replaceChildren(h('p', { class: 'line-t', text: 'The plan builder did not load. Reload the page.' })); return; }
-    const start = d => UI.planWizard(root, {
-      d, step: +(Q.get('step') || 1), edit: Q.get('edit'), fresh: Q.has('fresh'), from: Q.get('from'),
+    const start = (d, how = {}) => UI.planWizard(root, {
+      d, ...how, step: +(Q.get('step') || 1), edit: Q.get('edit'), fresh: Q.has('fresh'), from: Q.get('from'),
       onDone: (reply, how) => {
         S.d = reply;
         const days = reply.active ? reply.stats.study_days_total : 0;
@@ -123,8 +126,12 @@
       onExit: () => { history.length > 1 && doc.referrer.includes(location.host) ? history.back() : go({}); },
       step2url: (step, replace) => url({ ...(Q.get('edit') ? { edit: Q.get('edit') } : { setup: 1 }), step }, !replace),
     });
-    if (S.d) start(S.d);
-    else { skeleton(); api('/plan').then(d => { S.d = d; start(d); }).catch(failPage); }
+    if (S.d) { start(S.d); return; }
+    // the stepper works and the controls wait for /api/plan; offline, the local draft
+    // keeps working with Create off ("Can't save right now")
+    start({}, { loading: true });
+    const here = () => Q.has('setup') || Q.has('edit');
+    api('/plan').then(d => { S.d = d; if (here()) start(d); }).catch(() => { if (here()) start({}, { offline: true }); });
   }
 
   /* ------------------------------------------------------------ the landing (no active plan) */
@@ -281,13 +288,15 @@
     R.tiles = h('div', { class: 'pl-tiles' });
     R.banners = h('div', { class: 'pl-banners' });
     R.upd = h('p', { class: 'meta', role: 'status', hidden: !S.stale || null, text: 'Updating…' });
-    R.pPlan = h('div'); R.pProg = h('div'); R.pPlans = h('div');
+    R.pPlan = h('div', { class: 'pl-panel' }); R.pProg = h('div', { class: 'pl-panel' }); R.pPlans = h('div', { class: 'pl-panel' });
+    R.live = h('p', { class: 'sr', role: 'status' });
+    R.print = h('div', { class: 'pl-print' });
     const bar = h('div', { class: 'pl-tabbar' });
     R.tabs = UI.tabs(bar, [{ id: 'plan', label: 'Plan', panel: R.pPlan }, { id: 'progress', label: 'Progress', panel: R.pProg },
       { id: 'plans', label: 'Plans', panel: R.pPlans, n: (d.plans || []).length > 1 ? d.plans.length : null }].filter(x => !(x.id === 'plans' && Q.get('view'))),
     { value: S.tab, label: 'Plan views', onChange: id => { S.tab = id; url(paramsNow(), true); drawTab(); } });
     R.thumb = h('div', { class: 'pl-thumb' });
-    R.shell = h('div', {}, R.upd, title, R.tiles, R.banners, bar, R.pPlan, R.pProg, R.pPlans, R.thumb);
+    R.shell = h('div', {}, R.upd, title, R.tiles, R.banners, bar, R.pPlan, R.pProg, R.pPlans, R.print, R.thumb, R.live);
     root.replaceChildren(R.shell);
     drawTiles(); drawBanners(); drawPlanTab(); drawTab();
     if (had) {
@@ -335,7 +344,8 @@
       { label: 'Duplicate', onClick: () => duplicate(a.id) },
       { label: 'Calendar…', onClick: () => calendarSheet() },
       { label: 'Share read-only…', onClick: () => shareSheet() },
-      { label: 'Print', onClick: () => print() },
+      { label: 'Print', onClick: () => { buildPrint(); print(); } },
+      { label: 'Test-day sheet', href: '/plan/?print=sheet' },
       { separator: true },
       { label: 'Archive', onClick: async () => {
         if (!await UI.confirm({ title: 'Archive this plan?', text: 'It stays under Plans, with its record. You can make it active again.', confirm: 'Archive', destructive: true })) return;
@@ -372,7 +382,7 @@
     const testsLeft = ahead.filter(x => x.kind === 'test').length;
     const left = diff(t, c.exam_date);
     // 1 days to exam, with the time against the work left
-    const t1 = h('button', { type: 'button', class: 'stat', 'aria-label': `${left} days to the SAT; show the calendar` });
+    const t1 = h('button', { type: 'button', class: 'stat print-keep', 'aria-label': `${left} days to the SAT; show the calendar` });
     t1.addEventListener('click', () => R.cal && R.cal.scrollIntoView({ behavior: 'smooth', block: 'start' }));
     t1.append(h('span', { class: 'stat-k', text: 'Days to exam' }),
       h('span', { class: 'pl-big', text: d.state === 'exam' ? 'SAT today' : d.state === 'after' ? 'Done' : String(left) }),
@@ -430,7 +440,7 @@
     const pct = st.study_days_total ? Math.round(st.days_done / st.study_days_total * 100) : 0;
     const pastStudy = days.filter(x => x.date < t && STUDY.has(x.kind));
     const missed = pastStudy.filter(x => x.status === 'missed').length;
-    const t3 = h('button', { type: 'button', class: 'stat', 'aria-label': `Plan ${pct}% done; show the calendar` });
+    const t3 = h('button', { type: 'button', class: 'stat print-keep', 'aria-label': `Plan ${pct}% done; show the calendar` });
     t3.addEventListener('click', () => R.cal && R.cal.scrollIntoView({ behavior: 'smooth', block: 'start' }));
     t3.append(h('span', { class: 'stat-k', text: 'Plan done' }), h('span', { class: 'pl-big', text: `${pct}%` }),
       h('p', { class: 'stat-sub', text: `${st.days_done} of ${pl(st.study_days_total, 'study day')}` }));
@@ -439,7 +449,7 @@
     // 4 this week
     const wk = st.week || {};
     const mon = monday(t);
-    const t4 = h('button', { type: 'button', class: 'stat', 'aria-label': 'This week; show the week' });
+    const t4 = h('button', { type: 'button', class: 'stat print-keep', 'aria-label': 'This week; show the week' });
     t4.addEventListener('click', () => { pick(t); R.week && R.week.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
     t4.append(h('span', { class: 'stat-k', text: 'This week' }),
       h('span', { class: 'pl-big' }, UI.dur(wk.minutes_done || 0), wk.minutes_planned ? h('small', { text: ` of ${UI.dur(wk.minutes_planned)}` }) : null));
@@ -582,11 +592,10 @@
     R.week = h('section', { class: 'card', 'aria-label': 'The week' });
     R.up = h('section', { class: 'card', 'aria-label': 'Coming up' });
     R.side = h('aside', { class: 'pl-stack' }, R.up);
-    const map = mapTile();
-    if (map) R.side.append(map);
+    for (const c of [mapTile(), habitsCard(), sweepCard()]) if (c) R.side.append(c);
     R.phase = h('section', { class: 'card pl-sec', 'aria-label': 'Phases' });
     R.cal = h('section', { class: 'card pl-sec', 'aria-label': 'Calendar' });
-    R.pPlan.replaceChildren(R.log || '', h('div', { class: 'pl-cols' }, h('div', { class: 'pl-stack' }, R.day, R.week), R.side), R.phase, R.cal);
+    R.pPlan.replaceChildren(mapDone() || '', R.log || '', h('div', { class: 'pl-cols' }, h('div', { class: 'pl-stack' }, R.day, R.week), R.side), R.phase, R.cal);
     drawDay(); drawWeek(); drawUp(); drawPhase(); drawCal();
   }
   function changeLog() {
@@ -606,7 +615,9 @@
   }
   function pick(date) {
     if (!dayOf(date)) return;
-    S.sel = date; S.trim = null; S.kb = -1; S.open = null;
+    S.sel = date; S.trim = null; S.kb = -1; S.open = null; S.err = null;
+    const seen = Object.fromEntries(Object.entries(ls.get('satf.plan.seen', {})).filter(([, v]) => v === today()));
+    if (seen[date] !== today()) { seen[date] = today(); ls.set('satf.plan.seen', seen); }
     url(paramsNow());
     drawDay(); drawWeek(); drawThumb();
     if (R.calApi) R.calApi.select(date);
@@ -682,12 +693,19 @@
     const list = h('div', { class: 'trows', role: 'list', 'aria-label': 'Tasks' });
     const primary = isToday ? nextOf(day) : null;
     let seenOwn = false;
+    R.rows = {};
     ordered(day).forEach((task, i) => {
+      const can = movable(task, day);
       const row = UI.taskRow(list, task, {
         primary: primary && task.id === primary.id, future, past, readonly: S.readonly,
         open: S.open && S.open.id === task.id ? S.open.kind : null,
-        on: (a, tk, arg) => onTask(a, tk, arg, day.date), menu: tk => taskMenu(tk, day), extra: tk => rwLog(tk, day),
+        on: (a, tk, arg) => onTask(a, tk, arg, day.date), menu: tk => taskMenu(tk, day),
+        extra: tk => (tk.title === 'Read your trap sheet' ? h('a', { class: 'quiet', href: '/plan/?print=sheet#traps', text: 'Open your trap sheet' }) : rwLog(tk, day)),
+        drag: can ? (tk, e) => dragStart(tk, day, e) : null,
       });
+      R.rows[task.id] = row;
+      if (S.err && S.err.id === task.id) row.error(S.err.text);    // a failed move keeps saying so through a refresh
+      if (can) longPress(row.el, () => moveMenu(row.task, day));
       row.el.dataset.task = task.id;
       row.el.setAttribute('role', 'listitem');
       row.el.tabIndex = -1;
@@ -765,7 +783,11 @@
       if (day.overridden && day.date >= t && !S.readonly) f.append(btn('Undo day off', 'btn sm', e => busy(e.currentTarget, () => dayPut(day.date, { off: false }, 'Day off undone'))));
       foot.append(f);
     } else if (day.kind === 'eve' || day.kind === 'exam') {
-      foot.append(h('div', { class: 'pl-rest' }, h('p', { text: day.kind === 'eve' ? 'Rest before the SAT' : 'SAT today · good luck' }), checklist()));
+      const sw = day.kind === 'eve' && sweepOf(S.d);
+      const reh = day.kind === 'eve' && S.d.days.flatMap(x => x.tasks.map(k => ({ k, date: x.date }))).reverse().find(x => x.k.rehearsal && x.k.result && x.k.result.mid);
+      const line = [sw && sw.fixed + sw.back ? `${sw.fixed} of ${sw.fixed + sw.back} still fixed` : null, reh ? `Rehearsal ${D(reh.date)}: ${reh.k.result.mid} mid` : null].filter(Boolean).join(' · ');
+      foot.append(h('div', { class: 'pl-rest' }, h('p', { text: day.kind === 'eve' ? 'Rest before the SAT' : 'SAT today · good luck' }),
+        line ? h('p', { class: 'meta', text: line }) : null, checklist(), h('a', { class: 'quiet', href: '/plan/?print=sheet', text: 'Your test-day sheet' })));
     } else if (day.kind === 'after' || (S.d.state === 'after' && day.date >= cfg().exam_date)) foot.append(resultPanel());
     else if (counted.length && counted.every(x => DONE.has(x.status))) {
       const f = h('div', { class: 'pl-foot' }, h('p', { text: 'Day done ✓' }));
@@ -852,8 +874,16 @@
   const taskPath = t => `/plan/${enc(pid())}/tasks/${enc(t.id)}`;
   async function patchTask(t, body, toast, undoBody, fail) {
     let r;
+    const row = R.rows && R.rows[t.id];
+    const was = row && row.task;
+    if (row && (body.to || body.status)) row.set({ ...t, status: body.to ? 'moved' : body.status, moved_to: body.to || null });
     try { r = await api(taskPath(t), { method: 'PATCH', body }); }
-    catch (e) { throw rowErr(fail || (e.status === 422 || e.status === 409 ? e.message : 'Couldn’t save that. Try again.')); }
+    catch (e) {
+      if (row && was) row.set(was);
+      throw rowErr(fail || (e.status === 422 || e.status === 409 ? e.message : 'Couldn’t save that. Try again.'));
+    }
+    // a toast is role=status already; without one, the change is said here
+    if (R.live && !toast) R.live.textContent = `${t.title}: ${body.to ? `moved to ${D(body.to, 'long')}` : ({ done: 'done', skipped: 'skipped', todo: 'to do' }[body.status] || 'saved')}`;
     applyDays(r.days);
     drawDay(); drawWeek();
     if (toast) UI.toast(toast, undoBody ? { undo: async () => { const r2 = await api(taskPath(t), { method: 'PATCH', body: undoBody }); applyDays(r2.days); S.open = null; drawDay(); drawWeek(); reload(); } } : {});
@@ -861,7 +891,7 @@
     return r;
   }
   async function onTask(action, t, arg, date) {
-    S.kb = -1;
+    S.kb = -1; S.err = null;
     switch (action) {
       case 'start': return startTask(t, date);
       case 'review': location.href = t.kind === 'test' ? `/results/report/?id=${enc(t.session)}` : `/practice/session/?id=${enc(t.session)}`; return;
@@ -913,9 +943,7 @@
     if (S.readonly || day.date < today()) return [];
     const items = [];
     const own = String(t.id).startsWith('pt:');
-    if (!own && t.counted && t.kind !== 'custom' && undone(t)) {
-      items.push({ label: 'Move to…', onClick: () => setTimeout(() => moveMenu(t, day), 0) });
-    }
+    if (movable(t, day)) items.push({ label: 'Move to…', kbd: 'M', onClick: () => setTimeout(() => moveMenu(t, day), 0) });
     if (t.kind === 'focus' && (t.alternatives || []).length) items.push({ label: 'Swap topics', sub: t.alternatives[0].map ? t.alternatives[0].map(tn).join(', ') : null,
       onClick: () => patchTask(t, { day: day.date, swap: t.alternatives[0] }, 'Topics swapped').catch(e => UI.toast(e.rowText)) });
     if (t.kind === 'test' && undone(t)) {
@@ -948,7 +976,129 @@
   }
   function doMove(t, day, to) {
     return patchTask(t, { day: day.date, to }, `Moved to ${D(to, 'long')}`, { day: day.date, status: 'todo' }, 'Couldn’t move. Try again.')
-      .catch(e => { const row = R.day.querySelector(`[data-task="${CSS.escape(t.id)}"] .trow-err`); if (row) row.textContent = e.rowText || 'Couldn’t move. Try again.'; });
+      .catch(e => { S.err = { id: t.id, text: e.rowText || 'Couldn’t move. Try again.' }; const row = R.rows && R.rows[t.id]; if (row) row.error(S.err.text); });
+  }
+  /* ---- moving a task: drag (fine pointer), long press (touch), M (keys) (L12) */
+  function movable(t, day) {
+    return !S.readonly && day.date >= today() && !String(t.id).startsWith('pt:') && t.counted && t.kind !== 'custom' && undone(t);
+  }
+  // where t could go: its new load, or the reason it can't (shown as text, never colour alone)
+  function dropInfo(t, day, date) {
+    const x = dayOf(date);
+    if (!x || date <= day.date) return null;
+    if (x.kind === 'eve') return { why: 'the eve' };
+    if (x.kind === 'exam' || x.kind === 'after') return null;
+    if (x.kind === 'rest') return { why: 'rest day' };
+    if (x.kind === 'off') return { why: 'day off' };
+    if (!STUDY.has(x.kind)) return null;
+    if (t.kind === 'test' && x.minutes < 35) return { why: 'a test needs 35 min' };
+    return { ok: true, load: `${x.minutes} → ${Math.round(x.minutes + (t.minutes || 0))}m` };
+  }
+  const cellDate = c => c.dataset.date || c.dataset.day;
+  function markTargets(t, day, over) {
+    for (const c of root.querySelectorAll('.pl-wd[data-date], .cal-d[data-day]')) {
+      const date = cellDate(c), info = dropInfo(t, day, date);
+      let tag = c.querySelector('.pl-drop');
+      if (!info) { if (tag) tag.remove(); c.removeAttribute('data-drop'); c.removeAttribute('data-over'); continue; }
+      if (!tag) {
+        tag = h('span', { class: 'pl-drop', id: `drop-${c.classList.contains('pl-wd') ? 'w' : 'c'}-${date}` });
+        c.append(tag);
+        c.setAttribute('aria-describedby', tag.id);
+      }
+      tag.textContent = info.ok ? info.load : info.why;
+      c.dataset.drop = info.ok ? 'ok' : 'no';
+      c.toggleAttribute('data-over', date === over);
+    }
+  }
+  function clearTargets() {
+    root.querySelectorAll('[data-drop]').forEach(c => { c.removeAttribute('data-drop'); c.removeAttribute('data-over'); c.removeAttribute('aria-describedby'); });
+    root.querySelectorAll('.pl-drop').forEach(x => x.remove());
+  }
+  function dragStart(t, day, e) {
+    if (e.button !== 0 || e.pointerType === 'touch') return;
+    e.preventDefault();
+    const grip = e.currentTarget;
+    try { grip.setPointerCapture(e.pointerId); } catch (_) {}
+    const ghost = h('div', { class: 'pl-ghost', 'aria-hidden': 'true', text: t.title });
+    doc.body.append(ghost);
+    doc.body.classList.add('pl-dragging');
+    let over = null, last = e, vy = 0, raf = 0;
+    markTargets(t, day, null);
+    const hitTest = ev => {
+      const hit = doc.elementFromPoint(ev.clientX, ev.clientY);
+      const c = hit && hit.closest && hit.closest('[data-drop]');
+      const date = c ? cellDate(c) : null;
+      if (date !== over) { over = date; root.querySelectorAll('[data-drop]').forEach(x => x.toggleAttribute('data-over', cellDate(x) === over)); }
+    };
+    // near the top or bottom edge the page scrolls, so the week and the calendar are in reach
+    const edge = () => { if (!vy) { raf = 0; return; } scrollBy(0, vy); hitTest(last); raf = requestAnimationFrame(edge); };
+    const move = ev => {
+      last = ev;
+      ghost.style.transform = `translate(${ev.clientX + 14}px, ${ev.clientY + 10}px)`;
+      hitTest(ev);
+      vy = ev.clientY > innerHeight - 56 ? 14 : ev.clientY < 56 ? -14 : 0;
+      if (vy && !raf) raf = requestAnimationFrame(edge);
+    };
+    const end = ev => {
+      vy = 0; cancelAnimationFrame(raf); raf = 0;
+      grip.removeEventListener('pointermove', move); grip.removeEventListener('pointerup', end); grip.removeEventListener('pointercancel', end);
+      doc.removeEventListener('keydown', esc, true);
+      ghost.remove(); doc.body.classList.remove('pl-dragging');
+      const ok = ev.type === 'pointerup' && over && dropInfo(t, day, over);
+      clearTargets();
+      if (ok && ok.ok) doMove(t, day, over);
+    };
+    const esc = ev => { if (ev.key === 'Escape') { ev.preventDefault(); ev.stopImmediatePropagation(); over = null; end(ev); } };
+    grip.addEventListener('pointermove', move); grip.addEventListener('pointerup', end); grip.addEventListener('pointercancel', end);
+    doc.addEventListener('keydown', esc, true);
+    move(e);
+  }
+  // a 500 ms press on a touch screen opens the Move sheet; the tap that ends it does nothing
+  function longPress(el, open) {
+    let timer = 0, fired = false, x0 = 0, y0 = 0;
+    const stop = () => { clearTimeout(timer); timer = 0; };
+    el.addEventListener('pointerdown', e => {
+      if (e.pointerType !== 'touch') return;
+      fired = false; x0 = e.clientX; y0 = e.clientY;
+      timer = setTimeout(() => { timer = 0; fired = true; if (navigator.vibrate) navigator.vibrate(10); open(); }, 500);
+    });
+    el.addEventListener('pointermove', e => { if (timer && Math.hypot(e.clientX - x0, e.clientY - y0) > 10) stop(); });
+    el.addEventListener('pointerup', stop);
+    el.addEventListener('pointercancel', stop);
+    el.addEventListener('contextmenu', e => { if (fired || timer) e.preventDefault(); });
+    el.addEventListener('click', e => { if (fired) { fired = false; e.preventDefault(); e.stopPropagation(); } }, true);
+  }
+  // M: ← / → walk the study days with each one's new load, Enter moves, Esc cancels
+  function moveMode(t, day) {
+    const opts = studyAfter(day.date, 400);
+    const row = R.rows && R.rows[t.id];
+    if (!opts.length || !row) return;
+    let i = -1;
+    const line = h('p', { class: 'pl-moving', role: 'status' });
+    row.el.querySelector('.trow-main').append(line);
+    const say = () => {
+      const x = opts[i];
+      if (!x) { line.textContent = 'Move to… ← → pick a day · Enter moves · Esc cancels'; drawWeek(); markTargets(t, day, null); return; }
+      const info = dropInfo(t, day, x.date) || {};
+      line.textContent = `Move to ${D(x.date, 'long')} · ${info.ok ? info.load : info.why} · Enter moves · Esc cancels`;
+      drawWeek(x.date);
+      if (R.calApi && x.date.slice(0, 7) !== (R.calMonth || '')) { R.calMonth = x.date.slice(0, 7); R.calApi.go(R.calMonth); }
+      markTargets(t, day, x.date);
+    };
+    const done = () => {
+      doc.removeEventListener('keydown', key, true); doc.removeEventListener('pointerdown', done, true);
+      line.remove(); clearTargets(); R.calMonth = null; drawWeek();
+    };
+    const key = e => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { i = Math.max(-1, Math.min(opts.length - 1, i + (e.key === 'ArrowRight' ? 1 : -1))); say(); }
+      else if (e.key === 'Enter') { const x = opts[i], info = x && dropInfo(t, day, x.date); if (info && info.ok) { done(); doMove(t, day, x.date); } }
+      else if (e.key === 'Escape' || e.key === 'Tab') done();
+      else return;
+      if (e.key !== 'Tab') { e.preventDefault(); e.stopImmediatePropagation(); }
+    };
+    doc.addEventListener('keydown', key, true);
+    doc.addEventListener('pointerdown', done, true);
+    say();
   }
   async function dayPut(date, body, toast, undoBody) {
     const path = `/plan/${enc(pid())}/day/${date}`;
@@ -1068,14 +1218,25 @@
   }
 
   /* ---- week strip, coming up, map, phases, month (3g-3i, L2, L16) */
-  function drawWeek() {
-    const d = S.d, a = d.active, t = today();
-    const mon = monday(S.sel), sun = addDays(mon, 6);
-    const wk = (d.weeks || []).find(w => w.from <= S.sel && S.sel <= w.to) || null;
+  // the week of `at` (default: the chosen day); move mode shows the week it walks into
+  function drawWeek(at) {
+    const d = S.d, a = d.active, t = today(), ref = at || S.sel;
+    const mon = monday(ref), sun = addDays(mon, 6);
+    const wk = (d.weeks || []).find(w => w.from <= ref && ref <= w.to) || null;
     const box = R.week;
+    // L15: a day the plan changed carries a dot until it is opened
+    const seen = ls.get('satf.plan.seen', {});
+    const changed = new Set(((d.changes && d.changes.today) || []).map(x => x.day).filter(x => x && seen[x] !== t));
+    // L16: the week's goals (U14's week_goals), met ✓ · open ○ · missed –
+    const goals = (wk && wk.goals) || [];
+    const met = goals.filter(g => g.state === 'met' || g.done).length;
     const prev = h('button', { type: 'button', class: 'btn sm icon', 'aria-label': 'Previous week', text: '‹', disabled: mon <= a.start || null, onclick: () => pick(clampDay(addDays(S.sel, -7))) });
     const next = h('button', { type: 'button', class: 'btn sm icon', 'aria-label': 'Next week', text: '›', disabled: sun >= a.cfg.exam_date || null, onclick: () => pick(clampDay(addDays(S.sel, 7))) });
-    const head = h('div', { class: 'pl-weekhead' }, h('h2', { class: 'h3', text: `${wk ? `Week ${wk.n} of ${d.weeks.length} · ` : ''}${D(mon)}–${D(sun)}` }), prev, next);
+    const head = h('div', { class: 'pl-weekhead' }, h('h2', { class: 'h3', text: `${wk ? `Week ${wk.n} of ${d.weeks.length} · ` : ''}${D(mon)}–${D(sun)}${goals.length ? ` · Goals ${met}/${goals.length}` : ''}` }));
+    if (goals.length) head.append(h('span', { class: 'pl-goals', role: 'img', 'aria-label': goals.map(g => `${g.text || g.label}: ${g.state === 'met' || g.done ? 'met' : g.state === 'missed' ? 'missed' : 'open'}`).join(', ') },
+      goals.map(g => h('i', { 'data-s': g.state === 'met' || g.done ? 'met' : g.state === 'missed' ? 'missed' : 'open', text: g.state === 'met' || g.done ? '✓' : g.state === 'missed' ? '–' : '○' }))));
+    if (UI.weekReview && !S.readonly && mon <= t) head.append(btn('Review week', 'quiet', () => UI.weekReview({ monday: mon, plan: pid() })));
+    head.append(prev, next);
     if (monday(t) !== mon && dayOf(t)) head.append(btn('This week', 'quiet', () => pick(t)));
     const kids = [head];
     if (wk && wk.tasks_planned) {
@@ -1083,19 +1244,21 @@
       UI.meter(m, { label: 'Tasks', value: wk.tasks_done, max: wk.tasks_planned, text: `${wk.tasks_done} of ${wk.tasks_planned} tasks · ${Math.round(wk.tasks_done / wk.tasks_planned * 100)}%`, ink: true });
       kids.push(m);
     }
-    if (wk && wk.theme) kids.push(h('p', { class: 'pl-theme', text: pretty(wk.theme) }));
+    const theme = [goals.length ? `Goals: ${goals.map(g => g.text || g.label).join(' · ')}` : null, wk && wk.theme ? pretty(wk.theme) : null].filter(Boolean);
+    if (theme.length) kids.push(h('p', { class: 'pl-theme', text: theme.join(' — ') }));
     const grid = h('div', { class: 'pl-week', role: 'group', 'aria-label': 'Days of the week' });
     for (let i = 0; i < 7; i++) {
       const date = addDays(mon, i), x = dayOf(date);
       if (!x) { grid.append(h('span', { class: 'pl-wd', style: 'visibility: hidden', 'aria-hidden': 'true' })); continue; }
       const planned = x.tasks_planned || 0;
-      const b = h('button', { type: 'button', class: 'pl-wd', 'aria-pressed': String(date === S.sel), 'data-today': date === t ? '' : null,
-        'data-kind': x.kind, 'data-status': x.status, 'aria-label': `${D(date, 'long')}, ${KIND[x.kind] || x.kind}${x.minutes ? `, ${x.minutes} minutes` : ''}${planned ? `, ${x.tasks_done} of ${planned} tasks` : ''}${STATUS[x.status] ? `, ${STATUS[x.status]}` : ''}` },
+      const b = h('button', { type: 'button', class: 'pl-wd', 'aria-pressed': String(date === S.sel), 'data-today': date === t ? '' : null, 'data-date': date,
+        'data-kind': x.kind, 'data-status': x.status, 'aria-label': `${D(date, 'long')}, ${KIND[x.kind] || x.kind}${x.minutes ? `, ${x.minutes} minutes` : ''}${planned ? `, ${x.tasks_done} of ${planned} tasks` : ''}${STATUS[x.status] ? `, ${STATUS[x.status]}` : ''}${changed.has(date) ? ', changed' : ''}` },
+        changed.has(date) ? h('span', { class: 'chg', 'aria-hidden': 'true' }) : null,
         h('span', { class: 'k', text: `${DOW[i]} ${+date.slice(8)}` }),
         h('i', { class: 'ic', 'aria-hidden': 'true', text: x.kind === 'exam' ? 'SAT' : '' }),
         h('span', { class: 'mono', text: x.minutes ? `${x.minutes}m` : x.kind === 'off' ? 'off' : x.kind === 'rest' || x.kind === 'eve' ? 'rest' : '' }),
         planned ? h('span', { class: 'mono soft', text: `${x.tasks_done}/${planned}` }) : null,
-        planned ? h('span', { class: 'bar', style: `--p: ${Math.min(1, (x.tasks_done || 0) / planned)}` }, h('i')) : null,
+        planned ? h('span', { class: 'wbar', style: `--p: ${Math.min(1, (x.tasks_done || 0) / planned)}` }, h('i')) : null,
         x.status === 'done' ? h('span', { class: 'dotc', 'aria-hidden': 'true', text: '✓' }) : null);
       b.addEventListener('click', () => pick(date));
       grid.append(b);
@@ -1156,6 +1319,7 @@
       return { day: x.date, kind: x.kind === 'exam' ? null : x.kind, state, minutes: x.minutes, tasks: x.tasks_planned ? { done: x.tasks_done, of: x.tasks_planned } : null,
         own: x.custom || x.tasks.some(k => String(k.id).startsWith('pt:')), phase: x.phase, phase_start: first && x.date !== a.start, current_phase: x.phase === now };
     });
+    R.planRows = plan;
     const host = h('div');
     R.cal.replaceChildren(h('div', { class: 'card-head' }, h('h2', { text: 'Calendar' })), host);
     R.calApi = UI.calendar(host, { look: 'plan', plan, selected: S.sel, legend: true,
@@ -1172,6 +1336,145 @@
       btn('Start', 'pill sm', e => busy(e.currentTarget, () => startTask(next, today()).catch(err => UI.toast(err.rowText || 'Couldn’t start. Try again.')))));
   }
 
+  // L4 / U6: the habits that cost you most, each a short drill on the same trap
+  function habitsCard() {
+    const hs = (S.d.habits || []).slice(0, 3);
+    if (!hs.length) return null;
+    const t = today();
+    const next = S.d.days.find(x => x.date >= t && x.tasks.some(k => k.kind === 'habit' && undone(k)));
+    return h('section', { class: 'card', 'aria-label': 'Your habits' }, h('div', { class: 'card-head' }, h('h2', { text: 'Your habits' })),
+      h('div', { class: 'pg-rows' }, hs.map(x => h('div', { class: 'pg-row' }, h('span', { class: 'line-t', text: x.label || x.name }),
+        !S.readonly && (x.norm || x.label) ? btn('Drill · 8', 'btn sm', e => busy(e.currentTarget, async () => {
+          try { const r = await api('/drill', { method: 'POST', body: { pool: 'related', ids: x.norm || x.label, count: 8, source: 'plan' } }); location.href = `/practice/session/?id=${enc(r.id)}`; }
+          catch (_) { UI.toast('Couldn’t start. Try again.'); }
+        })) : h('span'),
+        x.tell && x.tell !== (x.label || x.name) ? h('p', { class: 'meta', text: x.tell }) : null))),
+      next ? h('p', { class: 'meta', style: 'margin-top: 8px', text: `Next habit task ${dayName(next.date)}` }) : null);
+  }
+  // L19: the sweep re-asks every fixed mistake in Final; one square per question
+  function sweepOf(d) {
+    const t = today();
+    let fixed = 0, back = 0, togo = 0, any = false;
+    for (const x of d.days || []) for (const k of x.tasks || []) {
+      if (k.kind !== 'sweep') continue;
+      any = true;
+      if (k.result && k.result.asked) { fixed += k.result.right; back += k.result.asked - k.result.right; }
+      else if (x.date >= t && undone(k)) togo += k.count || 0;
+    }
+    return any ? { fixed, back, togo } : null;
+  }
+  function sweepCard() {
+    const sw = sweepOf(S.d);
+    if (!sw) return null;
+    const sq = (n, st, label, text) => Array.from({ length: n }, () => h('i', { 'data-s': st, role: 'img', 'aria-label': label, text }));
+    return h('section', { class: 'card', 'aria-label': 'Sweep' }, h('div', { class: 'card-head' }, h('h2', { text: 'Sweep' })),
+      h('p', { class: 'line-t', text: [sw.fixed ? `Still fixed ${sw.fixed}` : null, sw.back ? `Back on the list ${sw.back}` : null, sw.togo ? `To go ${sw.togo}` : null].filter(Boolean).join(' · ') || 'Nothing to re-ask' }),
+      h('div', { class: 'pl-sweep' }, sq(sw.fixed, 'ok', 'Still fixed', '✓'), sq(sw.back, 'back', 'Back on the list', '✕'), sq(sw.togo, 'togo', 'To go', '')));
+  }
+  // L2: the Map is done (5 or fewer skills rough): what it found, and the focus it suggests
+  function mapDone() {
+    const d = S.d, m = d.map, key = `mapdone:${pid()}`;
+    if (!m || S.readonly || dismissed()[key]) return null;
+    const hadMap = d.days.some(x => x.date < today() && x.tasks.some(k => k.kind === 'map'));
+    if (!(m.done_at || (hadMap && !m.on && m.of - m.measured <= 5))) return null;
+    const sk = (d.skills || []).filter(x => x.answered >= 6);
+    const best = sk.slice().sort((a, b) => b.right / b.answered - a.right / a.answered)[0];
+    const pts = d.points && d.points.math;
+    const top = pts ? (pts.skills || []).filter(x => !x.floor && x.gain >= 5).slice(0, 3) : [];
+    const rt = pts && pts.route;
+    const text = [`Map done · ${m.measured} of ${m.of} measured`, best ? `strongest ${tn(best.topic)} ${Math.round(best.right / best.answered * 100)}%` : null,
+      top.length ? `most points: ${tn(top[0].topic)} ≈ +${Math.round(top[0].gain)}` : null,
+      rt && rt.m1 !== null && rt.m1 !== undefined ? `first modules about ${Math.round(rt.m1 * 100)}%` : null].filter(Boolean).join(' · ');
+    let card = null;
+    const close = () => { const x = dismissed(); x[key] = today(); ls.set('satf.plan.dismiss', x); if (card) card.remove(); };
+    const acts = [];
+    if (top.length) {
+      const was = Object.fromEntries(Object.entries(cfg().skills || {}).map(([k, v]) => [k, (v && v.state) || v]));
+      const skills = { ...was };
+      top.forEach(x => { skills[x.topic] = 'focus'; });
+      acts.push(btn(`Use the suggested focus · ${top.map(x => tn(x.topic)).join(', ')}`, 'pill sm', e => busy(e.currentTarget, async () => {
+        close();
+        try { await patchPlan({ skills }, 'Focus set from your Map', { skills: was }); } catch (err) { UI.toast(err.message || 'Couldn’t save. Try again.'); }
+      })));
+    }
+    acts.push(btn('Keep mine', 'quiet', close));
+    card = banner(key, text, acts, { label: 'Map done', onDismiss: close, keep: true });
+    card.classList.add('pl-sec');
+    return card;
+  }
+
+  /* ---- print (3l): the title, tiles, phases, every month and a week-by-week list */
+  const nextMonth = m => { const [y, mo] = m.split('-').map(Number); return mo === 12 ? `${y + 1}-01` : `${y}-${pad(mo + 1)}`; };
+  function buildPrint() {
+    if (!R.print || !R.print.isConnected || !S.d || !S.d.active) return;
+    const d = S.d, a = d.active, exam = a.cfg.exam_date, t = today();
+    const months = h('div', { class: 'pl-print-months' });
+    for (let m = a.start.slice(0, 7); m <= exam.slice(0, 7); m = nextMonth(m)) {
+      const host = h('div');
+      months.append(host);
+      UI.calendar(host, { look: 'plan', plan: R.planRows || [], month: m, legend: false, marks: { start: a.start, end: exam, exam, today: t }, min: `${m}-01`, max: `${m}-28` });
+    }
+    const weeks = (d.weeks || []).map(w => h('section', { class: 'pl-pweek keep' },
+      h('h3', { class: 'h3', text: `Week ${w.n} · ${D(w.from)}–${D(w.to)}` }), w.theme ? h('p', { class: 'meta', text: pretty(w.theme) }) : null,
+      h('ul', {}, d.days.filter(x => x.date >= w.from && x.date <= w.to).map(x => {
+        const topics = [...new Set(x.tasks.flatMap(k => k.topics || []))].map(tn);
+        const own = x.tasks.filter(k => k.kind === 'custom' && k.counted !== false).map(k => `${k.title} ${Math.round(k.minutes)} min`);
+        const tests = x.tasks.filter(k => k.kind === 'test').map(k => k.title);
+        return h('li', {}, h('b', { text: dayName(x.date) }), ' · ', [KIND[x.kind] || x.kind, x.minutes ? `${x.minutes} min` : null, ...tests, topics.join(', ') || null,
+          own.length ? `Your tasks: ${own.join(', ')}` : null, x.date < t && STATUS[x.status] ? STATUS[x.status] : null].filter(Boolean).join(' · '));
+      }))));
+    R.print.replaceChildren(R.phase ? R.phase.cloneNode(true) : '', h('section', { class: 'card pl-sec' }, h('h2', { text: 'Calendar' }), months),
+      h('section', { class: 'card pl-sec' }, h('h2', { text: 'Week by week' }), weeks));
+  }
+  addEventListener('beforeprint', () => { if (!Q.get('print')) buildPrint(); });
+
+  /* ---- the test-day sheet (?print=sheet): section 1 your traps (L19, R60), then what to bring */
+  async function sheetPage() {
+    if (Q.get('print') === 'traps') { history.replaceState(null, '', '/plan/?print=sheet#traps'); Q = new URLSearchParams('print=sheet'); }
+    doc.title = 'Test-day sheet · SAT Freshman';
+    root.replaceChildren(h('div', { class: 'card' }, h('span', { class: 'skel', style: 'height: 220px' })));
+    let d = S.d;
+    try { if (!d) d = S.d = await api('/plan'); } catch (_) { failPage(); return; }
+    const a = d.active;
+    const top = h('header', { class: 'pl-title' }, h('div', {}, h('h1', { text: 'Your test-day sheet' }),
+      a ? h('p', { class: 'meta', text: `SAT ${D(a.cfg.exam_date, 'long')} · read it once the day before` }) : null),
+      h('div', { class: 'row no-print' }, h('a', { class: 'quiet', href: '/plan/', text: 'Back to plan' }), btn('Print', 'btn sm', () => print())));
+    if (!a) {
+      root.replaceChildren(top, h('section', { class: 'card pl-sec' }, h('p', { class: 'line-t', text: 'Make a plan first: the sheet is built from it.' }),
+        h('a', { class: 'pill sm', href: '/plan/?setup=1&step=1', text: 'Make a plan' })));
+      return;
+    }
+    const traps = h('section', { class: 'card pl-sec', id: 'traps', 'aria-label': 'Your traps' }, h('div', { class: 'card-head' }, h('h2', { text: 'Your traps' })));
+    const bring = h('section', { class: 'card pl-sec', id: 'bring' }, h('div', { class: 'card-head' }, h('h2', { text: 'What to bring' })), checklist());
+    root.replaceChildren(top, traps, bring);
+    let r = null;
+    try { r = await api(`/plan/${enc(a.id)}/trapsheet`); }
+    catch (_) { UI.cardError(traps, () => { S.d = d; sheetPage(); }, 'Couldn’t load your traps.'); return; }
+    const plain = x => String(x ?? '').replace(/\$([^$]+)\$/g, '$1');
+    const L = 'ABCDEFGH';
+    const list = (r.entries || []).map((e, n) => {
+      const ex = e.example, q = ex && ex.question, key = ex && ex.key;
+      const item = h('article', { class: 'pl-trap keep' }, h('h3', { class: 'h3', text: `${n + 1}. ${e.name}` }),
+        h('p', { class: 'meta', text: `caught you ${pl(e.hits || 1, 'time')}` }),
+        e.tell && e.tell !== e.name ? h('p', { class: 'line-t', text: e.tell }) : null);
+      if (q) {
+        item.append(h('p', { class: 'pl-stem', text: plain(q.stem) }));
+        if (q.figure_alt || q.figure) item.append(h('p', { class: 'meta', text: q.figure_alt || 'There is a figure.' }));
+        if ((q.choices || []).length) {
+          item.append(h('ol', { class: 'pl-choices' }, q.choices.map((c, i) => {
+            const trap = ex.trap_index === i, right = key !== undefined && (String(c) === String(key) || L[i] === String(key));
+            return h('li', { 'data-trap': trap ? '' : null, 'data-key': right ? '' : null }, h('b', { text: L[i] }), ` ${plain(c)} `,
+              trap ? h('span', { class: 'tag', text: 'Your trap' }) : null, right ? h('span', { class: 'tag line', text: 'Answer' }) : null);
+          })));
+        } else if (key !== undefined) item.append(h('p', { class: 'line-t', text: `Answer: ${plain(key)}` }));
+        if (ex.rationale) item.append(h('p', { class: 'help', text: plain(ex.rationale) }));
+      }
+      return item;
+    });
+    traps.append(...(list.length ? list : [h('p', { class: 'line-t', text: 'No traps yet. Every mistake you make gets its name here.' })]));
+    if (location.hash === '#traps') traps.scrollIntoView({ block: 'start' });
+  }
+
   /* ---- the Plans tab (3k, L20) */
   function drawPlansTab() {
     R.pPlans.replaceChildren(plansCard(S.d.plans || [], S.d.active ? S.d.active.id : null, true));
@@ -1183,7 +1486,7 @@
     const list = h('div', { class: 'pl-plans' });
     plans.slice(0, S.shown).forEach(p => list.append(planRow(p, activeId)));
     card.append(list);
-    if (plans.length > S.shown) card.append(btn(`Show 20 more · ${plans.length - S.shown} left`, 'btn sm', () => { S.shown += 20; tab ? drawPlansTab() : landing(); }));
+    if (plans.length > S.shown) card.append(btn(`Show all ${plans.length}`, 'btn sm', () => { S.shown = Infinity; tab ? drawPlansTab() : landing(); }));
     card.append(h('p', { class: 'help', text: 'Changing your date or target? Edit keeps this plan’s record. Save as new keeps this one here.' }));
     return card;
   }
@@ -1311,7 +1614,7 @@
     Enter: { does: 'Start the selected task', run: () => { const t = selTask(); if (!t || doc.activeElement !== rows()[S.kb]) return false; startTask(t, S.sel).catch(e => UI.toast(e.rowText)); } },
     X: { does: 'Done or not done', run: () => { const t = selTask(); if (!t) return false; const btnEl = rows()[S.kb].querySelector('.trow-box'); if (btnEl && !btnEl.disabled) btnEl.click(); } },
     S: { does: 'Skip or undo', run: () => { const t = selTask(); if (!t) return false; const b = [...rows()[S.kb].querySelectorAll('.trow-act button')].find(x => /^(Skip|Undo)$/.test(x.textContent)); if (b) b.click(); } },
-    M: { does: 'Move the selected task', run: () => { const t = selTask(); if (!t) return false; moveMenu(t, dayOf(S.sel)); } },
+    M: { does: 'Move the selected task: ← → pick a day, Enter moves, Esc cancels', run: () => { const t = selTask(), day = dayOf(S.sel); if (!t || !movable(t, day)) return false; moveMode(t, day); } },
     ArrowLeft: { does: 'Previous day', run: () => (S.kb < 0 ? pick(clampDay(addDays(S.sel, -1))) : false) },
     ArrowRight: { does: 'Next day', run: () => (S.kb < 0 ? pick(clampDay(addDays(S.sel, 1))) : false) },
     'Shift+ArrowLeft': { does: 'Previous week', run: () => pick(clampDay(addDays(S.sel, -7))) },
@@ -1323,6 +1626,6 @@
   doc.addEventListener('focusin', e => { if (S.kb >= 0 && !(e.target.closest && e.target.closest('.trow'))) { S.kb = -1; rows().forEach(r => r.removeAttribute('data-kb')); } });
 
   UI.planPage = { S, reload, pick, startTask, tn, pretty };
-  if (Q.get('view') || Q.has('setup') || Q.has('edit')) route();
+  if (Q.get('view') || Q.get('print') || Q.has('setup') || Q.has('edit')) route();
   else { skeleton(); load(); }
 })();

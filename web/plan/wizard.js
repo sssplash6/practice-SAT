@@ -49,7 +49,7 @@
   function planWizard(root, ctx) {
     const d = ctx.d || {};
     const editing = ctx.edit && d.active && d.active.id === ctx.edit ? d.active : null;
-    const W = { step: Math.min(4, Math.max(1, ctx.step || 1)), f: null, pv: null, week0: null, map: null, err: null, errStep: 0, saving: false, offline: false, seq: 0, rwSet: false };
+    const W = { step: Math.min(4, Math.max(1, ctx.step || 1)), f: null, pv: null, week0: null, map: null, err: null, errStep: 0, saving: false, offline: !!ctx.offline, seq: 0, rwSet: false };
     // boot order: the plan being edited; a fresh start; the proposal; the server draft; the local copy; defaults
     const prop = d.proposal && d.proposal.cfg ? d.proposal.cfg : null;
     let seed = null;
@@ -82,6 +82,8 @@
       btn('Exit', 'quiet', () => { flush(); ctx.onExit && ctx.onExit(); })),
       stepsEl, stepName, h('div', { class: 'wz-body' }, body, glance), err, foot);
     root.replaceChildren(shell);
+    // while GET /api/plan loads, the stepper works and the fields wait (spec 3.6 6)
+    if (ctx.loading) { body.inert = true; glance.inert = true; body.setAttribute('aria-busy', 'true'); }
     doc.title = `${editing ? 'Edit plan' : 'Create your plan'} · SAT Freshman`;
 
     // skill stats for step 4 (the same board the rest of the site reads)
@@ -108,6 +110,7 @@
     }
     function save() {
       clearTimeout(draftT);
+      if (ctx.loading) return;          // nothing to save until the server's draft is known
       ls.set(KEY, { step: W.step, fields: f, at: Date.now() });
       if (editing) return;
       draftT = setTimeout(() => UI.api('/plan/draft', { method: 'PUT', body: { step: W.step, fields: f }, quiet: true })
@@ -150,7 +153,7 @@
       const last = W.step === 4;
       const back = btn('Back', 'quiet', () => goStep(W.step - 1), { disabled: W.step === 1 || null });
       const next = btn(last ? (editing ? 'Save changes' : 'Create plan') : 'Next', 'pill', () => (last ? submit(next) : nextStep()),
-        { 'aria-busy': W.saving ? 'true' : null, 'aria-keyshortcuts': 'Enter', disabled: (last && W.offline) || null });
+        { 'aria-busy': W.saving || ctx.loading ? 'true' : null, 'aria-keyshortcuts': 'Enter', disabled: (last && W.offline) || ctx.loading || null });
       const kids = [back, h('span', { class: 'meta', text: `${W.step} / 4` })];
       if (W.offline) kids.push(h('span', { class: 'meta', text: 'Can’t save right now' }));
       else if (!last && v2()) kids.push(h('span', { class: 'hint', text: `${UI.keys && UI.keys.label ? UI.keys.label('Mod+Enter') : '⌘↵'} ${editing ? 'save' : 'create'} now` }));
@@ -199,7 +202,7 @@
     const reg = UI.keys.register('plan-wizard', {
       Enter: { does: 'Next step', run: e => { if (e.target.closest && e.target.closest('button, a, input, select, textarea')) return false; nextStep(); } },
       'Mod+Enter': { does: 'Create the plan now', run: () => { const b = foot.querySelector('.pill'); if (v2()) submit(b || h('button')); else { goStep(Math.min(2, W.step)); showNeed(); } } },
-    }, { label: 'Plan builder', when: () => shell.isConnected });
+    }, { label: 'Plan builder', when: () => shell.isConnected && !ctx.loading });
     const unkeys = () => reg.unregister();
     addEventListener('pagehide', flush);
 
@@ -719,8 +722,7 @@
     }
 
     draw();
-    preview();
-    save();
+    if (!ctx.loading) { preview(); save(); }
     return { W };
   }
 
