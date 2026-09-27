@@ -1,0 +1,66 @@
+{
+ "task": "S7 pages",
+ "verified_defects": [
+  {
+   "where": "web/plan/plan.js dayFoot() ~lines 787-793",
+   "what": "After the exam (GET /api/plan state 'after', exam yesterday) the selected day is clamped to exam_date, whose kind is 'exam'. The eve/exam branch runs before the 'after' branch, so the page says 'SAT today · good luck' and resultPanel() never renders. There is no way to record the result, so §3.6.8 #26 fails (a:v2verfin01: no input, 'SAT was Sat, Sep 26').",
+   "fix": "Test `S.d.state === 'after' && day.date >= cfg().exam_date` before the eve/exam branch, or render resultPanel() for the exam day once state is 'after'.",
+   "severity": "blocker"
+  },
+  {
+   "where": "web/plan/index.html:161",
+   "what": "The rule `.pl .cal.plan.compact .cal-meta { display: none }` hides each day's minutes in the wizard's live month grid (and in the landing's ready panel). The markup has `<span class=cal-meta>45m</span>`, but the cells' visible text is only '28', '29', '30'. So §3.6.8 #22 ('Calendar cells show their minutes text') and plan.md L1 acceptance 4 (the 1h chip changes week 1's cells to '1h' within 400 ms) both fail.",
+   "fix": "Remove .cal-meta from that selector (keep .cal-own and .cal-phase hidden if intended), so compact plan calendars show the minutes.",
+   "severity": "blocker"
+  },
+  {
+   "where": "web/plan/plan.js drawTiles() ~line 392 and drawUp() ~line 1288",
+   "what": "Native Element.append/replaceChildren get a null argument (`studyLeft ? h(...) : null`, `notes.length ? h(...) : null`) and insert the literal text 'null'. It shows in the Days-to-exam tile ('SAT was Sat, Sep 26 null') and in the Coming up card ('No more study days before the SAT.null') whenever no study days are left: the eve, exam day and after. Also, after the exam that tile's aria-label reads '-1 days to the SAT'.",
+   "fix": "Filter falsy children before native append/replaceChildren, or build these nodes with UI.h, which skips null. Scan the other native append calls in plan.js for the same pattern. Clamp or reword the aria-label once state is 'after'.",
+   "severity": "blocker"
+  },
+  {
+   "where": "web/plan/plan.js plansCard() lines 1487-1490 (S.shown = 5)",
+   "what": "The Plans tab shows 5 plans and a 'Show all N' button. The upgrade acceptance says 25 plans show 20 rows and 'Show 20 more · 5 left', and 12 plans show 12 rows with no pager. Seen with a:v2verpager01 (25 plans): 5 rows, no 'Show 20 more'.",
+   "fix": "Start S.shown at 20. The button reads `Show 20 more · ${plans.length - S.shown} left` and adds 20; hide it when every plan is shown.",
+   "severity": "blocker"
+  },
+  {
+   "where": "server/plan.py payload for learners with no active plan (sittings, rhythm and points are only added in the active branch, ~lines 2021-2040): a server change for the other agent, not the pages",
+   "what": "A learner with no active plan gets only active/bank/draft/plans/proposal. So the new-plan wizard's step 1 score bar has no bands and no average mark (plan.md L2 acceptance 1), step 3 has no 'Last 4 weeks' / 'You've averaged' line (L2 acceptance 3), and step 4 shows the 'Where your points are' placeholder. With ?edit=<id> the same learner data gives 2 bands + 1 average mark and 'You've averaged 1h 48m a week', so the pages are right and only degrade.",
+   "fix": "Have GET /api/plan include sittings, rhythm and points (math) when there is no active plan.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/assets/plan-ui.js:208 (why list hidden unless o.whyOpen)",
+   "what": "The why lines are folded behind a 'Why' button with aria-expanded=false. plan.md L10 acceptance 7 and the brief's phone layout note say they render open on load. Decision 7 (details on demand) is newer and wins, so this is probably intended.",
+   "fix": "Have the main session confirm decision 7 overrides L10 acceptance 7; if not, render the list open by default.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/plan/wizard.js step1 ~lines 324-330",
+   "what": "With R&W unset, step 1 shows 'Not set · your Total needs it' and an 'Add my R&W score' button, not the R&W slider that L20 acceptance 6 expects. This fits decision 7 (hide defaults, one tap away).",
+   "fix": "Confirm decision 7 governs this; otherwise show the slider when R&W is unset.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/plan/plan.js Score tile in state 'after'",
+   "what": "After the exam the Score tile still shows the server's pace line 'Needs +910 a week' (verdict.needs_per_week) and 'Behind · 112', which make no sense once the SAT is over.",
+   "fix": "Hide the pace and behind lines when S.d.state === 'after', or ask the server to return a null verdict after the exam.",
+   "severity": "followup"
+  },
+  {
+   "where": "§3.6.8 #30 (satf.return): cross-section",
+   "what": "No S7 file reads or writes sessionStorage satf.return, and 'Back to your plan' exists nowhere under web/. The report side is not S7's, so the item can't pass until someone owns both halves.",
+   "fix": "Agree the contract: S7 sets satf.return to a same-origin /plan/ path when it sends a student to a test or diagnostic, and the report page shows 'Back to your plan' only for same-origin paths.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/assets/charts.js calendar (F1) vs §3.6.8 #28",
+   "what": "The calendar marks the chosen cell with aria-selected=true (correct for role=gridcell), not the aria-pressed=true the acceptance text names. The behaviour works.",
+   "fix": "Read #28 as aria-selected; no page change needed.",
+   "severity": "followup"
+  }
+ ],
+ "fixer_report": "{\"branch\":\"v2/s7\",\"commit\":\"7799ff1\",\"worktree\":\"/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-8\",\"checks\":{\"server/checks/s7.py\":\"S7 plan checks passed\",\"server/test_flow.py\":\"all good\"},\"browser_check\":\"Not run. This worktree has no server/v2.db, so the verifier's accounts (a:v2verfin01, a:v2verpager01) are not here to test with. node --check passes on plan.js.\",\"fixed\":[{\"defect\":\"dayFoot after the exam (blocker)\",\"file\":\"/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-8/web/plan/plan.js\",\"change\":\"The 'after' branch (day.kind==='after' || state==='after' && day.date>=exam_date) now runs before the eve/exam branch, so resultPanel() renders on the exam day once the SAT is over.\"},{\"defect\":\"compact calendar hides minutes (blocker)\",\"file\":\"/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-8/web/plan/index.html\",\"change\":\"Removed .cal-meta from the rule on line 161. .cal-own and .cal-phase stay hidden.\"},{\"defect\":\"literal 'null' text and '-1 days' aria-label (blocker)\",\"file\":\"/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-8/web/plan/plan.js\",\"change\":\"drawTiles and drawUp now pass '' instead of null to the native append/replaceChildren. I scanned every native append/replaceChildren/prepend call in plan.js, wizard.js, progress.js and plan-ui.js, and no other call passes null. The days tile's aria-label reads 'SAT was <date>; show the calendar' when state is 'after'.\"},{\"defect\":\"Plans pager (blocker)\",\"file\":\"/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-8/web/plan/plan.js\",\"change\":\"S.shown starts at 20. The button reads 'Show 20 more · N left', adds 20 per tap, and is hidden once every plan is shown.\"},{\"defect\":\"Score tile pace lines after the exam (followup)\",\"file\":\"/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-8/web/plan/plan.js\",\"change\":\"When state is 'after', the tile no longer shows the Ahead/Behind chip with '+N to go', the 'At this pace' projection, the 'Take this week's test now' button, or the 'Needs +N a week' line.\"}],\"left\":[{\"defect\":\"GET /api/plan leaves out sittings, rhythm and points when there is no active plan\",\"owner\":\"the server agent (server/plan.py)\",\"needed\":\"Include sittings, rhythm and points (math) in the payload when there is no active plan. The pages already use them when present.\"},{\"defect\":\"plan-ui.js why list folded behind a 'Why' button\",\"owner\":\"main session\",\"needed\":\"Confirm that decision 7 (details on demand) overrides plan.md L10 acceptance 7. I made no change.\"},{\"defect\":\"wizard step 1 shows an 'Add my R&W score' button instead of the slider when R&W is unset\",\"owner\":\"main session\",\"needed\":\"Confirm that decision 7 governs this. I made no change.\"},{\"defect\":\"satf.return / 'Back to your plan' (§3.6.8 #30)\",\"owner\":\"cross-section (S7 and the report/test pages)\",\"needed\":\"Agree the contract first. Then S7 sets sessionStorage satf.return to a same-origin /plan/ path before it sends a student to a test or diagnostic, and the report page shows 'Back to your plan' only for same-origin paths. Not done here: it creates new work on both sides.\"},{\"defect\":\"calendar marks the chosen day with aria-selected instead of aria-pressed (§3.6.8 #28)\",\"owner\":\"none\",\"needed\":\"No change. aria-selected is correct for role=gridcell, so #28 should be read as aria-selected.\"}]}"
+}

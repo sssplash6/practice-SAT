@@ -1,0 +1,54 @@
+{
+ "task": "S9 pages",
+ "verified_defects": [
+  {
+   "where": "web/words/run/index.html:648 (quiz render, UI.gloss call)",
+   "what": "Answer leak. In a word→meaning quiz the question text is the target word itself, and UI.gloss turns it into a tappable .term. Its popover shows the correct option word for word: the stem 'mitigate' popped 'make a harm or risk less severe', which is option C. It also files a lookup.",
+   "fix": "Do not gloss the question text when it is the target word (item.kind word2meaning, or any kind whose question text is item.text), or add the target word to exclude. Keep the rule that choices are excluded.",
+   "severity": "blocker"
+  },
+  {
+   "where": "web/assets/words-ui.js (exports at line 1202)",
+   "what": "UI.addWordFromSelection(root) is missing. It is in the §2.10 registry and the §2.9 contract (S4, S3, S6 and S8 use it), and the section spec §1 'Add a selection' plus acceptance #30 need it. grep finds no definition anywhere in web/.",
+   "fix": "Add UI.addWordFromSelection(root). When 1-6 words are selected inside root, show UI.pop at the selection rect with an 'Add to my words' button that calls UI.addWord({word: selection, source}). It never appears in the test window. Export it next to addWord.",
+   "severity": "blocker"
+  },
+  {
+   "where": "web/words/index.html:190-205, web/words/study/index.html:110, web/words/mine/index.html:136",
+   "what": "The offline entry point is broken. UI.todayWords is only mounted after GET /api/words succeeds. After 'Take today's cards offline' (toast: '12 cards on this device · they work with no signal'), opening /words/ offline shows only 'Words did not load. Retry'. The panel's own offline branch ('Offline cards · N left' in words-ui.js:279) never runs, so the stored cards can only be reached if the run URL is already open.",
+   "fix": "Mount UI.todayWords($('today')) before the library fetch or apart from it (at least in the load() catch), so its offline branch can show the stored run.",
+   "severity": "blocker"
+  },
+  {
+   "where": "server words public item for 'typed' (not S9-page-owned); web/words/run/index.html:763",
+   "what": "W8.4: the typed public item has no 'first' field (it has kind, stem, text, choices and item_id only), so 'Hint · first letter' is always disabled ('No hint for this one') and Alt+W does nothing.",
+   "fix": "The server owner adds 'first' (the key's first letter) to typed public items, or adds a hint endpoint. The page already reads item.first.",
+   "severity": "followup"
+  },
+  {
+   "where": "server/api_words.py:856-890 (/another; server owner)",
+   "what": "On the live server, POST /api/words/run/{id}/another {like:'word'} after answering an in-context item always returned 409 'this twin was already added; request another' (8 of 8, right and wrong answers). So T in a quiz verdict and the sheet's Twin button only show a toast.",
+   "fix": "Server: make words.another respect 'seen', or pick the next unseen template, before the duplicate guard.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/words/run/index.html (verdict T key / Another)",
+   "what": "T is offered for items with no generated twin (meaning2word). It POSTs /another, gets a 409 (a console 'Failed to load resource' error) and toasts 'This item has no generated twin'.",
+   "fix": "Only bind or show T / Another when the item kind is generated (incontext or transition).",
+   "severity": "followup"
+  },
+  {
+   "where": "server run builder (server owner); web/words/study/index.html default quiz",
+   "what": "A new learner's default Quiz Start ({deck:{source:'new'}, formats:['meaning2word','incontext'], count:10}) returns 409 'no reviewed frame is available for this word'. The first new word, 'account', has no reviewed frame. The page shows the toast and does not start.",
+   "fix": "Server: skip or fall back for words with no reviewed frame when building incontext items. Page option: retry without incontext on that 409.",
+   "severity": "followup"
+  },
+  {
+   "where": "server/api_words.py:425-429 (content / server owner)",
+   "what": "POST /api/words/run {mode:'check'} returns 409 'not enough reviewed items for a Words check' with the live content, so the Words check cannot start. I could not check W16.3 (no .term before finish) on a live check run.",
+   "fix": "Review more frames, or relax the gate, on the server/content side.",
+   "severity": "followup"
+  }
+ ],
+ "fixer_report": "All 3 blockers and 2 of the 5 followups are fixed on branch v2/s9, in 5 commits after b3a1469. `PYTHONPATH=. python3 server/test_flow.py` prints \"all good\", and that run includes `server/checks/s9.py` and f0. I checked each fix in headless Chromium against port 8029; the server is stopped. Everything is committed and HEAD is detached, so the branch is free.\n\n**Fixed:**\n- **d45d11c, answer leak** (`web/words/run/index.html`): the quiz gloss now excludes the question text as well as the choices, so a word→meaning question never makes its own word tappable. Checked: the stem \"account\" had no `.term`.\n- **d0942c9, `UI.addWordFromSelection(root, {source})`** (`web/assets/words-ui.js`): selecting 1–6 words inside `root` shows a small \"Add to my words\" button over the selection. It opens the Add sheet with the word filled in and the source \"`<source>` · Sep 27\". It returns a function that removes it, never runs on `/test/`, and is exported next to `addWord`. Checked: the button opens a prefilled sheet, and 8 selected words show no button.\n- **fba5c62, offline entry point** (`web/words/index.html`, `web/words/study/index.html`, `web/words/mine/index.html`): when the library fails to load because there is no connection, each page now mounts Today's words, which shows its offline run. Checked with the API blocked: \"Offline cards · 13 left\".\n- **e4c44b9, Twin and T** (`web/words/run/index.html`): the Twin buttons, T and Shift+T now appear only for in-context, most-nearly and transition items. Checked: after a word→meaning answer there is no Twin button and T sends no `/another` request.\n- **de60763, default quiz start** (`web/words/study/index.html`): if Start gets a 409 because a word has no reviewed frame, it retries once without the in-context types. Checked: the 409 is followed by a 200 and the quiz opens.\n\n**Left for the server owner:**\n1. The typed item has no `first` field, so \"Hint · first letter\" and Alt+W stay disabled. The page already reads `item.first`.\n2. `POST /api/words/run/{id}/another` returns 409 \"this twin was already added\" for in-context items, so the Twin button still only shows a toast there.\n3. The run builder should skip words with no reviewed frame when building in-context items. The page now works around this, but the server should handle it.\n4. The Words check returns 409 \"not enough reviewed items\", so W16.3 (no `.term` before finish) is still unchecked on a live check run. This needs more reviewed frames or a looser gate.\n\n**Needs other owners:** the Add-a-selection feature and acceptance #30 only work once the other pages call it. `web/practice/session/` (S4) doesn't load `words-ui.js` or call `UI.addWordFromSelection` yet; S3, S6 and S8 need the same `UI.addWordFromSelection && UI.addWordFromSelection(root, {source})` hook.\n\nThe relayed question about the stopped run is for the main session. On this branch nothing was lost: no earlier fixer had committed anything, there were no uncommitted edits, and nothing was redone or discarded."
+}

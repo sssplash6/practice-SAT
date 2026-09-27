@@ -1,0 +1,52 @@
+{
+ "label": "verify S8 r1",
+ "key": "v2:c5e69cc4b56b3326808cb441d22e9edb6fcac863f3d6cc4709f62e11a4ce44d0",
+ "result": {
+  "pass": false,
+  "evidence": "I checked branch v2/s8 at a1077fd, with HEAD detached and nothing committed. Master is an ancestor of the branch.\n\n1. Checks\n- `SATF_DB=server/s8.db PYTHONPATH=. python3 server/checks/s8.py` exits 0 and prints \"S8 checks passed (external contracts may be PENDING)\". The PENDING lines belong to other tasks: the S5 test-runner hooks, S1 FOLDED, reviewed W1/W2 frames, and C26 supply.\n- `PYTHONPATH=. python3 server/test_flow.py` prints \"all good\".\n\n2. Page walk\n- Setup: my own server on port 8028 with server/v2.db. I seeded 6 board learners, 1 seeded learner (a:v2revseed1) and 1 private contest, all over HTTP.\n- Pages walked with Playwright on the given headless shell, at 1280 and 390, as a new and as a seeded learner: /compete/, /compete/contest/?id=daily, /compete/leaderboard/, /compete/rankings/ and the private contest.\n- Across all 20 loads: no page errors, and no load had `scrollWidth > innerWidth`. The one console error is a 403 when a non-member opens a private contest by id; the page falls back to its Join card.\n- The Compete nav link has aria-current=page on every Compete page. The phone bar has 5 tabs, as R1 says (it overrides item 26's 6).\n- `/challenge/` returns 307 to /compete/contest/?id=daily.\n\nAcceptance items confirmed in the browser:\n- 29: after a finished daily the panel reads \"On the board as Student F4BB\". Saving Tester9 puts it on the board with no reload (a window marker survived).\n- 30: the \"Skills in this sitting\" rows and Mistakes both show.\n- 32: the clipboard reads \"SAT Freshman · Daily Challenge · Sep 27\" / \"7/10 · 195 pts · 10:00 · #7 of 9\" / \"□■■□■■□■■■\" / \"Beat 195: …&race=…\".\n- 31: metric, period, scope and domain write the URL (`?metric=right&period=month&scope=country&domain=Advanced+Math`), and a reload restores the same controls. On the podium only the `.pod.you` card has the amber inset edge; every background is a tile or wash colour, never orange.\n- 27, page half: after leaving a sitting, the contest page shows Resume. The X key opens nothing in the runner, but that is S4's hook.\n- C24:\n  - With satf.rules.daily set, one click lands on the runner with Q1 showing.\n  - `/` focuses find-in, and `M` changes the metric from right to test.\n  - B on a focused review item saves it (aria-pressed and \"Saved\") without scrolling; Shift+B brings the board to 72px from the top; J moves board-row focus.\n  - The thumb bar at 390 is 56px.\n- C1: the \"Traps: −40 on 2 questions\" segment leaves Q1 and Q7 in Review, labelled \"Selected · 2\".\n- C6: par rows show no rank text; with Pars off, 0 par rows after a reload.\n- C20: grid at 390, no overflow.\n- C21: 0 running animations with reduced motion.\n- C22: rankings has no contest select (its two selects are Kind and Sort). The Daily history row expands in place into a strip plus a mini board.\n- R12: a hidden learner shows as \"Anonymous\" with no row menu, including on the podium.\n- C17: a 1.5× learner sees the consequence line and the confirm sheet. \"Use official time for contests\" starts with clock.left 947, while test_timing stays x1.5.\n- C11: the board columns read \"Contest rating\" and \"Skill rating\".\n- C18: the create sheet returns a code, a link, Copy code, Copy link and Open contest at both widths, and the link-join page shows Join.\n\n3. Sample of 15 requirements, all built as written\n1. Overview phone order (A, D, Rivals, H, B, E, Traps, Champions, C, F, G)\n2. Contest page main order plus thumb bar (Layout)\n3. C1 debrief filter\n4. C2 rematch \"In 2 days / Now\"\n5. C3 Time block, bar against budget tick\n6. C6 pars\n7. C7 lobby ladder with chance underline and \"Warm up · 6\"\n8. C8 race link in Copy result\n9. C10 you-bar (\"31 pts to pass #6 · one hard right at pace\")\n10. C11 labels\n11. C16 ties (=1, =1, =3, =3, 5)\n12. C17 timing\n13. C20 grid\n14. C22 history\n15. C24 keys\n\nChecked beyond the 15: C27/R12 anonymity and R3 redirect.\n\nNot verifiable: the C4 test-day card, because it needs a finished Final.\n\n4. Scope and decisions\n- `git diff --stat master...HEAD` touches only owned files: web/compete/**, web/assets/compete-ui.js, and the deletion of web/challenge/index.html (R3's redirect replaces it).\n- Colours are token-only. There are no class, homework or /join/ references, and the leaderboard has a Subject control (decision 3).\n- Decision 7 is contradicted; see the blockers.\n\nCleanup: server stopped, and I removed the server/cache/ it generated, so the tree is clean.",
+  "defects": [
+   {
+    "where": "web/compete/overview.js (Your stats card) and web/compete/rankings/rankings.js (Performance summary, Your ranks, Trap Index)",
+    "what": "Decision 7 says to hide zeros and defaults, but a new learner sees a wall of placeholders. Overview Your stats shows five tiles reading '—' (WEEK RANK, ALL-TIME RANK, POINTS THIS WEEK, CONTESTS, BEST DAILY). Rankings Performance summary shows seven '—' tiles plus 'CHALLENGE STREAK 0' and the default 'PEAK RATING 1,000'. 'Your ranks' is one row of four '—'. The Trap Index lists 12 traps whose field and 'You' columns are '—'. That is 74 dashes on /compete/rankings/ for a new learner.",
+    "fix": "Render only tiles and cells that have a value. With no ranked sitting, collapse Your stats and the Performance summary to the existing 'Finish a ranked contest…' line plus the Placing badge. Hide the Your ranks row until a rank exists. In the Trap Index, drop the 'You' column when you have no chances and show only traps with field or own data (keep the trap of the week).",
+    "severity": "blocker"
+   },
+   {
+    "where": "web/compete/overview.js, web/compete/contest/contest.js, web/compete/leaderboard/leaderboard.js, web/compete/rankings/rankings.js",
+    "what": "Decision 7 says explanatory sentences become tooltips or help, not permanent text, yet many permanent ones remain:\n- Contest lobby: 'The clock runs only while a question is open. Skipped and voided questions score 0.', 'Racing never changes your rank: …', 'Official time: placed on the public board.'\n- Board name field: 'Shown on public boards. Don't use your full name.'\n- Rematch: 'Same types, new numbers, the same traps. Coming back in 2 days…'\n- Contest QOTD panel: 'Today's question; answering it here counts like on Today.'\n- Overview: Champions 'Last week's podiums show here once a week closes…', Private contests 'Private contests are for friends…', Season 'Every ranked contest adds to your season points.'\n- Leaderboard: the metric help paragraph ('10 / 20 / 30 for each easy…') and 'Weekly boards reset Monday 00:00 UTC…'.\n- Rankings: 'Contest rating moves only on ranked contest answers…' and 'The median is measured from students at each level…'.",
+    "fix": "Move these into UI.tooltip or ⓘ popovers on the control they explain, or into the How it's ranked rules and ? sheet. Keep lines an acceptance check names, such as C17's extended-time consequence line, and keep data lines such as par.",
+    "severity": "blocker"
+   },
+   {
+    "where": "web/compete/rankings/rankings.js:374",
+    "what": "The Contest history Time column always shows '—'. The page reads res.secs, but /api/compete/history rows carry result.ms (600000 for a 10:00 sitting) and no secs.",
+    "fix": "Use `res.secs ?? (res.ms != null ? res.ms / 1000 : undefined)` before falling back to '—'.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/compete/rankings/rankings.js (the expanded history row's mini board)",
+    "what": "The mini board's rank text reads '=#1 Student 8BF0' and '#13 Student E786': the tie mark and '#' are combined, unlike every other board, which shows '=1'.",
+    "fix": "Format ranks as on UI.board: '=1' for ties, a plain number otherwise.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/compete/contest/contest.js renderOwner() (needs server/api_compete.py, not owned)",
+    "what": "The owner of a private contest sees no owner controls (Copy link or code, Rename, Extend, Close, Delete). GET /api/contest/{cid} returns no `owner` or `code`, and the page only falls back to a code saved in localStorage when the contest was created in this browser. The page degrades cleanly, but the controls never show for an owner on another device.",
+    "fix": "Server owner (the other agent): return `owner: true` and `code` to the owner in GET /api/contest/{cid}. No page change needed.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/compete/contest/contest.js testDayCard() and web/compete/contest/index.html",
+    "what": "The C4 test-day card (?card=1) adds body.print-card, but no CSS targets it, so on screen the card keeps the shell sidebar and nav. C4's acceptance 4 wants a card page with no nav that prints as one page. I could not verify end to end without a finished Final.",
+    "fix": "Add `body.print-card #bar, body.print-card .now-strip { display: none }` (or skip UI.shell in card mode), then run the A4 and Letter print-to-PDF check once a Final can be seeded.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/compete/leaderboard/leaderboard.js:12",
+    "what": "URL parameters are not validated. A stale or hand-edited `?scope=everyone` sends scope=everyone to the server, which answers 422 instead of the page falling back to the default scope.",
+    "fix": "Clamp metric, period and scope from the URL to known values (e.g. unknown scope becomes 'all') before the first fetch.",
+    "severity": "followup"
+   }
+  ]
+ }
+}

@@ -2,41 +2,77 @@
  "task": "S3 pages",
  "verified_defects": [
   {
-   "where": "web/index.html",
-   "what": "The v2 Today page has not been built: the file is unchanged from master and is still the v1 page. It has only #next, #qotd, #exam and #score. It has no #mist, #study, #plan, #chal or #tests cards, no dialog#targetSheet or #tryOne, no calendar, no size chips and no SEC/DAYS countdown, and it draws one day's question instead of the twins. §3.2.8 page items 15-27 and today.md's page items all fail.",
-   "fix": "Build Part 3.2 as pages-only in web/index.html, following the S3 brief on master, against the endpoints on v2/s3-server. Where an endpoint has not landed yet, the card should degrade quietly.",
+   "where": "web/index.html:22 (`.td :where(*) { min-width: 0; }`)",
+   "what": "Question tables are invisible on Today. ui.css:1868 sizes `.q-table` with `width:0; min-width:100%`. The page's `.td :where(*)` rule has the same specificity, loads later, and resets min-width to 0. So every table in a question of the day, an in-column twin or Up next question 1 renders 0px wide, leaving a blank gap. Measured on today's grid-in question (\"The table shows the distribution…\"): the .q-table is 0×330, so the student has to answer without the data.",
+   "fix": "Exclude the question from the reset, e.g. `.td :where(*:not(.q-table))` or add `.td .q-table { min-width: 100%; }`. Re-check that the table is visible at 1280 and 390.",
    "severity": "blocker"
   },
   {
-   "where": "web/index.html paintQotd (lines ~201-215)",
-   "what": "The first tap on a day's-question option sends POST /api/qotd straight away. §3.2.8 #23 and today.md T1 item 5 say the first tap only selects and Check sends the request.",
-   "fix": "Put a separate select step and a Check button in front of UI.question's onAnswer, as part of the Today page build.",
+   "where": "web/index.html:800 (sessionBlock: `const start = (hasLead ? btn : pill)(...)`)",
+   "what": "Check 18 fails. On a plan rest day the rest lead counts as a lead, so \"Practice anyway · 45 min\" renders as a grey .btn (rgb(233,229,223)). The spec wants an orange pill: brief lines 193 and 2031, and check 18 \"an orange pill Practice anyway\". Reproduced with a plan whose today is off.",
+   "fix": "Use `pill` when the only lead is the rest-day lead (e.g. `(hasLead && !(pday && pday.kind === 'rest') ? btn : pill)`).",
    "severity": "blocker"
   },
   {
-   "where": "web/index.html",
-   "what": "There is no per-card error or Retry. With /api/challenge aborted, no challenge card shows \"Couldn't load the challenge.\" with Retry, and a failed /api/today has no shared Retry either (§3.2.8 #27).",
-   "fix": "Give each card an error state, and one Retry that repaints every card fed by /api/today, as part of the page build.",
+   "where": "web/index.html:1204-1216 (swipe) and the .qd-slot CSS",
+   "what": "T19.4 fails: a real 70px left touch swipe at 390 never switches to the Grid-in tab. The panel has default touch-action, so the browser takes the pan and fires pointercancel instead of pointerup. Measured events: pointerdown:touch, then pointercancel:touch. The same swipe with a synthetic pointerup does switch tabs.",
+   "fix": "Add `touch-action: pan-y` to the swipe panel (.qd-slot at <760px), or track touchstart/touchend instead of pointerup.",
    "severity": "blocker"
   },
   {
-   "where": "server/words.py:186 _review_row (reached via server/checks/s9.py:332 test_daily_print_offline)",
-   "what": "test_flow.py does not print \"all good\": it stops with OverflowError: Python int too large to convert to SQLite INTEGER. The same failure happens on master, so it comes from S9 (words.daily_item seeds), not from S3.",
-   "fix": "S9/Task 18 should clamp or hash words.daily_item seeds into SQLite's 64-bit range. It is outside S3's files, so report it to the owner.",
-   "severity": "blocker"
-  },
-  {
-   "where": "branch v2/s3",
-   "what": "The branch is not rebased onto master, which has 3 newer commits including 155d352 (S3 made pages-only). So the S3.md and S3-check.md in the worktree are the older 'server and pages' versions.",
-   "fix": "The next builder should run git rebase master before starting the page work.",
+   "where": "web/index.html:1767 (exam trigger label)",
+   "what": "The exam trigger repeats the year for any date outside this year: \"Sat, Mar 6, 2027, 2027 ▾\". UI.date(...,'long') already includes the year, and the page appends it again.",
+   "fix": "Drop the appended year or append it only when UI.date leaves it out.",
    "severity": "followup"
   },
   {
-   "where": "git diff --stat master...HEAD",
-   "what": "The branch diff touches only files S3 no longer owns: server/api_today.py, server/daily.py, server/checks/s3.py, server/test_flow.py and server/cache/twin_supply.json. They are the predecessor's commits, identical to v2/s3-server (helper Task 24).",
-   "fix": "Merge the server half once, through v2/s3-server. When v2/s3 is merged after it, those commits should already be in master, leaving only web/index.html as S3's delta.",
+   "where": "web/index.html:1627-1629 and 1734-1738 (targetSheet quick-chip tags / previewFor)",
+   "what": "Opening the target sheet sends POST /api/plan/preview for quick targets below the learner's current score. Each returns 422 \"target must be at least current\", so the console shows 2 errors and the 500 chip has no Steady/Ambitious tag.",
+   "fix": "Skip previews for quick targets below `current`, or tag them without a request.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/index.html paintScore (empty state with added scores)",
+   "what": "With a Bluebook score added, the Score card says \"No score yet\" while its trend says \"1 scored sitting\" with the diamond. The empty state also repeats itself: two Module buttons (\"Module · 22 questions · 35 min\" and \"Module · 22 q · 35 min\") and two \"Add a score\" links. For a new code it shows zero evidence rows (\"Algebra 0 (thin)…\"). This goes against decision 7 (one fact once, hide zeros). The server's /api/today score is null despite the outside score.",
+   "fix": "Say one thing when only added scores exist, show each door once, and hide zero evidence rows. Ask the server half whether an added Math score should fill `score`.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/index.html examPop/targetSheet previewFor (days default '1111100') vs workload",
+   "what": "For a learner with no plan, the exam card says \"54 study days\" for Nov 21. The target sheet and exam popover say about 40 for the same date, because previewFor defaults days to Mon–Fri. That is two different numbers for one idea on the same screen.",
+   "fix": "Pass the same days/minutes the workload uses (or omit days so the server uses its default).",
+   "severity": "followup"
+  },
+  {
+   "where": "web/index.html paintNext/paintHero/paintStudy",
+   "what": "Decision 7 repetitions: a rest day shows \"Rest day in your plan\" in the header and \"Rest day\" in the lead; a new code shows \"No streak yet\" in both the hero and the Study card; the plan's week theme line shows a raw ISO date (\"Build · Math practice · Test 2026-09-27\").",
+   "fix": "Say each once. Format the theme's date (or ask S7 for a formatted theme).",
+   "severity": "followup"
+  },
+  {
+   "where": "web/index.html dayDetail (future day with no plan)",
+   "what": "A future day whose row has a `due` object with no check-ins shows only the date. The \"Nothing planned yet.\" fallback is skipped because `row.due` is truthy.",
+   "fix": "Treat a due with no checks/fading as empty.",
+   "severity": "followup"
+  },
+  {
+   "where": "web/index.html:1613 (targetSheet `takes` div)",
+   "what": "The \"What it takes\" block reuses the page root class `td`. That borrows `.td { padding-bottom:110px }` (a 110px gap in the sheet) and the min-width reset.",
+   "fix": "Give it its own class and scope the shared line/sub styles to it.",
+   "severity": "followup"
+  },
+  {
+   "where": "dialog ids (targetSheet in web/index.html, try-one from F3's UI.twinSheet)",
+   "what": "Checks 21 and 25 name dialog#targetSheet and dialog#tryOne. The dialogs work but carry no id, because UI.sheet takes no id.",
+   "fix": "Add a className/id hook through UI.sheet (F1) or set the id after creation, so the checks' selectors match.",
+   "severity": "followup"
+  },
+  {
+   "where": "server/cache/twin_supply.json (commit ca5c6e2) and server/test_flow.py",
+   "what": "Checkpoint ca5c6e2 committed a generated cache file (S8's compete.py, guarded by bank hash) that is outside S3's files. test_flow.py also has a 3-line change from the server half (SEC-02 backdating and a tuple compare) and is not an S3-owned file.",
+   "fix": "Drop the cache file from the branch or have S8 gitignore server/cache/. Have the owner confirm the test_flow change.",
    "severity": "followup"
   }
  ],
- "fixer_report": "S3 is about half done. The server half is built but not yet merged into master. The Today page has not been started. I changed nothing, because the request was a status question. I did not rebase, build the page or commit.\n\n**Server half: built, not merged**\n- 13 commits on v2/s3, about 3,250 lines added. They change `server/api_today.py`, `server/daily.py`, `server/checks/s3.py`, `server/test_flow.py` and `server/cache/twin_supply.json`.\n- v2/s3 and v2/s3-server point at the same commit, 6fad986. Since 155d352, this half belongs to the helper's Task 24, and it should be merged once through v2/s3-server.\n- Of the 28 acceptance checks in §3.2.8, checks 1-14 cover the server. The verifier raised no defects against them, but I did not re-run them.\n\n**Page half (`web/index.html`): not started**\n- The page on v2/s3 is identical to master: the 253-line v1 page with only `#next`, `#qotd`, `#exam` and `#score`.\n- Page checks 15-27 all fail:\n  - there are no `#mist`, `#study`, `#plan`, `#chal` or `#tests` cards;\n  - there is no `dialog#targetSheet`, no `dialog#tryOne`, no calendar, no size chips and no SEC/DAYS countdown;\n  - the page draws one day's question instead of the twins;\n  - the first tap on an option sends POST /api/qotd, with no select step and Check button;\n  - there is no error or Retry on any card.\n- The other S3 worktree, wf_d97948f9-1df-8, also has an unchanged `web/index.html`, so there is no half-finished page work to pick up.\n\n**Blocking check 28 (`test_flow.py`)**\n- `test_flow.py` does not print \"all good\". It stops with `OverflowError: Python int too large to convert to SQLite INTEGER` at `server/words.py:186 _review_row`, reached from `server/checks/s9.py:332 test_daily_print_offline`. This comes from S9, not S3: the fix is to clamp the `words.daily_item` seeds (S9 / Task 18).\n\n**Branch**\n- v2/s3 is 3 commits behind master (e21f409, 8f8c8b8, 155d352), so its copy of the S3 brief is the older \"server and pages\" version.\n- Before the page build starts, v2/s3 needs `git rebase master`.\n\n**Defects left: all six from the verifier.**\n1. Blocker: the Today page is not built.\n2. Blocker: the day's question has no select step and Check button.\n3. Blocker: there is no per-card error or shared Retry.\n4. Blocker: the S9 overflow in `test_flow.py`, which belongs to S9's owner.\n5. Followup: the branch is not rebased onto master.\n6. Followup: the server commits should go into master through v2/s3-server."
+ "fixer_report": "All 3 blockers and 8 of the 9 followups are fixed on v2/s3 in commit 966913c. The server check `server/checks/s3.py` passes and `server/test_flow.py` prints \"all good\".\n\n**How I checked the blockers.** I ran a headless browser against a server on port 8023, which I stopped afterwards.\n- **Table width:** the question-of-the-day table is 406×222 at 1280. At 390 it is 326×330 on the Grid-in tab.\n- **Swipe:** a real 70px touch swipe at 390 now fires pointerup and switches the tab from MC to Grid-in. The panel has `touch-action: pan-y`.\n- **Rest day:** with a plan whose today (Sunday) is off, \"Practice anyway · 45 min\" is an orange `.pill` (rgb(241,133,8)).\n\n**What changed in `web/index.html`:**\n1. **Tables (blocker):** the min-width reset is now `.td :where(*:not(.q-table))`, so tables keep their width.\n2. **Rest-day button (blocker):** the start button is grey only when there is a real Up next item. The rest-day lead alone gets the orange pill.\n3. **Swipe (blocker):** `.qd-slot` gets `touch-action: pan-y` below 760px.\n4. **Exam year:** the year is added only when `UI.date` leaves it out (\"Sat, Mar 6, 2027 ▾\").\n5. **Target previews:**\n   - `previewFor` skips targets below the current score, so there are no 422s and no console errors.\n   - It now counts every day as a study day when the profile has no day pattern, which matches the workload's 54 days.\n6. **Score card:**\n   - With only an added score, the card shows it (\"640\", \"Math · Bluebook · Sep 20 · added\") instead of \"No score yet\".\n   - The Module and Add a score buttons each appear once.\n   - Evidence rows with zero are hidden.\n7. **Said once:**\n   - On a rest day with no Up next item, \"Rest day in your plan\" no longer shows in the Up next header; the lead says it.\n   - The Study card no longer repeats \"No streak yet\".\n   - Dates in the week theme are formatted.\n8. **Future day:** a day whose due has no check-ins falls back to \"Nothing planned yet.\"\n9. **Target sheet:** the \"What it takes\" block uses its own `.td-takes` class (padding is now 0).\n10. **Dialog ids:** the target sheet gets `id=\"targetSheet\"`, and the Try one now sheet gets `id=\"tryOne\"`.\n11. **Cache file:** `server/cache/twin_supply.json` is no longer tracked on the branch. It is recreated when the checks run, so I deleted the copy on disk.\n\nThe worktree is clean and HEAD is detached, so the branch is free.\n\n**Left for other owners:**\n- **Score from an added score:** `/api/today` still returns `score: null` when the learner has an added Math score. The server half should decide whether that score fills `score`.\n- **Study-day defaults:** the page now matches, but the server has two defaults. The workload counts every day when there is no day pattern (`server/api_today.py:996`), while `plan.validate` defaults to Mon–Fri. These should agree.\n- **Cache folder:** S8 should add `server/cache/` to `.gitignore`.\n- **`server/test_flow.py`:** the branch carries a 3-line change from the server half (SEC-02 backdating and a tuple compare). Its owner needs to confirm it.\n- **Dialog ids:** a proper id or className option on `UI.sheet` (F1) would be cleaner than setting the id after the sheet is made.\n\nThe relayed question (\"how much did we lose because of that?\") was meant for the main session, so I didn't answer it here."
 }
