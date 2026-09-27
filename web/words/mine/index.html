@@ -250,21 +250,76 @@
   }
   function importSheet() {
     const ta = h('textarea', { class: 'field', rows: '8', placeholder: 'One per line: word, then a tab, " - ", ":" or " — ", then the meaning' });
-    const list = h('input', { class: 'field sm', value: 'My words', maxlength: '30', 'aria-label': 'List' });
-    const prev = h('div', { class: 'help' });
-    const parse = () => ta.value.split('\n').map(l => l.trim()).filter(Boolean).map(l => {
-      const m = l.split(/\t| - | — |: ?/);
-      return m.length >= 2 && m[0].trim() && m.slice(1).join(' ').trim() ? { word: m[0].trim(), meaning: m.slice(1).join(' ').trim() } : { word: l, meaning: null };
-    });
-    const upd = () => { const rows = parse(); const ok = rows.filter(r => r.meaning).length; prev.textContent = rows.length ? `${ok} with a meaning · ${rows.length - ok} words only (matched against the library)` : 'A Quizlet export pastes in as is. A CSV with a word,meaning header works too.'; };
-    ta.addEventListener('input', upd); upd();
-    UI.sheet({ title: 'Import words', size: 'm', body: h('div', { style: 'display:grid;gap:10px' }, ta, h('label', { class: 'label', text: 'List' }), list, prev),
+    const list = h('input', { class: 'field sm', value: 'My words', maxlength: '30', 'aria-label': 'List', list: 'imp-lists' });
+    const dl = h('datalist', { id: 'imp-lists' }, [...new Set(['My words', ...(W._lists || [])])].map(n => h('option', { value: n })));
+    const prev = h('div', { 'aria-live': 'polite' });
+    const LABEL = { new: 'new', dup: 'duplicate', lib: 'in the library', bad: 'not understood' };
+    let ix = null, rows = [], done = false, sh = null;
+    W.index().then(x => { ix = x; upd(); }).catch(() => {});
+    const ownWords = () => new Set(words.filter(w => w.own).map(w => w.word.toLowerCase()));
+    // a tab, " - ", " — " or ":" splits word from meaning; a CSV with a word,meaning header too;
+    // a line with neither is a word to match against the library (W19)
+    const parse = () => {
+      const lines = ta.value.split('\n').map(l => l.trim()).filter(Boolean);
+      const csv = lines.length && /^word\s*,\s*meaning/i.test(lines[0]);
+      const own = ownWords();
+      return (csv ? lines.slice(1) : lines).map(l => {
+        const m = csv ? l.match(/^([^,]+),(.*)$/) : l.match(/^(.+?)(?:\t| - | — |:)\s*(.+)$/);
+        const word = (m ? m[1] : l).trim().replace(/^"|"$/g, ''), meaning = m ? m[2].trim().replace(/^"|"$/g, '') : '';
+        const hit = ix && ix.byWord.get(word.toLowerCase());
+        const st = meaning ? (own.has(word.toLowerCase()) ? 'dup' : 'new') : hit ? 'lib' : 'bad';
+        return { word, meaning, st, slug: hit && hit.slug };
+      });
+    };
+    const addBtn = () => sh && sh.foot && sh.foot.querySelector('.pill, [data-primary], button:last-child');
+    function upd() {
+      if (done) return;
+      rows = parse();
+      const n = rows.filter(r => r.st === 'new' || r.st === 'lib').length;
+      const b = addBtn();
+      if (b) { b.textContent = n ? `Add ${num(n)} ${n === 1 ? 'word' : 'words'}` : 'Add them'; b.disabled = !n; }
+      if (!rows.length) { put(prev, h('p', { class: 'help', text: 'A Quizlet export pastes in as is. A CSV with a word,meaning header works too.' })); return; }
+      put(prev, h('div', { class: 'table-wrap' }, h('table', { class: 'table compact' },
+        h('thead', {}, h('tr', {}, h('th', { text: 'Word' }), h('th', { text: 'Meaning' }), h('th', { text: '' }))),
+        h('tbody', {}, rows.slice(0, 60).map(r => h('tr', {}, h('td', { class: 'w', text: r.word }), h('td', { text: r.meaning || (r.st === 'lib' ? 'the library’s meaning' : '—') }),
+          h('td', { class: 'meta', text: LABEL[r.st] })))))),
+        rows.length > 60 ? h('p', { class: 'help', text: `and ${num(rows.length - 60)} more` }) : null);
+    }
+    async function addToList(name, slugs) {
+      try { await UI.api('/words/lists', { method: 'POST', body: { name, words: slugs } }); }
+      catch (e) {
+        if (e.status !== 409) throw e;
+        const had = words.filter(w => (w.lists || []).includes(name)).map(w => w.slug);
+        await UI.api(`/words/lists/${encodeURIComponent(name)}`, { method: 'PUT', body: { words: [...new Set([...had, ...slugs])] } });
+      }
+    }
+    ta.addEventListener('input', upd);
+    sh = UI.sheet({ title: 'Import words', size: 'm', body: h('div', { style: 'display:grid;gap:10px' }, ta, h('label', { class: 'label', text: 'List' }), list, dl, prev),
       actions: [{ label: 'Cancel', quiet: true }, { label: 'Add them', primary: true, onClick: async () => {
-        if (!ta.value.trim()) return false;
-        const r = await UI.api('/words/mine/import', { method: 'POST', body: { text: ta.value, list: list.value.trim() || 'My words' } });
-        UI.toast(`Added ${r.added} · skipped ${(r.skipped || []).length}`);
+        if (done) return true;
+        rows = parse();
+        const name = list.value.trim().slice(0, 30) || 'My words';
+        const own = rows.filter(r => r.st === 'new'), lib = rows.filter(r => r.st === 'lib');
+        if (!own.length && !lib.length) return false;
+        let added = 0, skipped = rows.filter(r => r.st === 'dup' || r.st === 'bad').map(r => ({ word: r.word, why: r.st === 'dup' ? 'you already have it' : 'no meaning, and not in the library' }));
+        try {
+          if (own.length) {
+            const r = await UI.api('/words/mine/import', { method: 'POST', body: { text: own.map(x => `${x.word}\t${x.meaning}`).join('\n'), list: name } });
+            added += r.added || 0;
+            (r.skipped || []).forEach(s => skipped.push({ word: (own[(s.line || 1) - 1] || {}).word || `line ${s.line}`, why: /existing/.test(String(s.why)) ? 'you already have it' : String(s.why) }));
+          }
+          if (lib.length) { await addToList(name, [...new Set(lib.map(x => x.slug))]); added += lib.length; }
+        } catch (e) { if (!e.offline) put(prev, h('p', { class: 'field-err', text: 'Not added. Try again.' })); return false; }
+        done = true;
+        put(prev, h('p', { class: 'line' }, h('b', { text: `Added ${num(added)}` }), skipped.length ? ` · skipped ${num(skipped.length)}` : ''),
+          skipped.length ? h('ul', { class: 'help' }, skipped.slice(0, 30).map(s => h('li', { text: `${s.word}: ${s.why}` }))) : null);
+        const b = addBtn(); if (b) { b.textContent = 'Done'; b.disabled = false; }
+        sh.foot.querySelectorAll('button').forEach(x => { if (x !== b) x.hidden = true; });
+        ta.disabled = true;
         load();
+        return false;
       } }] });
+    upd();
   }
 
   /* ---------------- filters and the list */
