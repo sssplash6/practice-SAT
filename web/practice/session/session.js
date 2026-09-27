@@ -171,7 +171,7 @@
     document.title = `${setTitle()} · SAT Freshman`;
     runHost.replaceChildren();
     run = UI.runner(runHost, {
-      mode: 'practice', feedback: st.feedback || 'instant', sid, title: setTitle(), short: null, cells, total, at,
+      mode: 'practice', mainId: 'rnMain', feedback: st.feedback || 'instant', sid, title: setTitle(), short: null, cells, total, at,
       clock: st.timed ? { secondsLeft: st.seconds_left ?? 0, paused: !!st.paused } : { elapsed: st.elapsed || 0 },
       pausable: !!(can.pause && st.timed && !challenge()), challenge: challenge(), resumed: st.answered > 0,
       prefs, confActive: !!st.conf_active, hideSkill: st.hide_skill ? 'Mix-up' : false, source: 'drill',
@@ -467,7 +467,7 @@
           h('span', { class: 'fill', role: 'img', 'aria-label': `${d.right} of ${d.asked} right` }, h('i', { style: `width:${(d.right / d.asked) * 100}%` })),
           h('span', { class: 't', text: mmss(d.ms / d.asked) })));
       });
-      b.append(diff, lv.length ? h('p', { class: 'sm-legend', text: `Levels seen: ${lv[0]}${lv.length > 1 ? `–${lv[lv.length - 1]}` : ''} (${r.measured_seen || 0} measured)` }) : null);
+      b.append(diff, lv.length ? h('p', { class: 'sm-legend', text: `Levels seen: ${lv[0]}${lv.length > 1 ? `–${lv[lv.length - 1]}` : ''} ${r.measured_seen ? ` (${r.measured_seen} measured)` : ''}` }) : null);
     }));
 
     const timed = qs.filter(q => q.ms);
@@ -573,18 +573,20 @@
     }
     const btn = (label, onClick, href) => box.append(href ? h('a', { class: 'btn', href, text: label }) : h('button', { type: 'button', class: 'btn', text: label, onclick: onClick }));
     if (!challenge()) {
-      if (misses) btn(`Fix my ${plural(misses, 'miss', 'misses')}`, () => create({ from_session: sid, source: 'result' }));
+      if (misses && !r.next_set) btn(`Fix my ${plural(misses, 'miss', 'misses')}`, () => create({ from_session: sid, source: 'result' }));
       btn('Same settings, new questions', () => create({ again: sid, source: 'builder' }));
     }
     if (r.words_due) btn(`SAT words · ${r.words_due} due`, null, '/words/');
     const items = challenge() ? [] : [
+      // the pill is already the fix set, so the plain fix waits here: one count, said once
+      misses && r.next_set ? { label: `Fix my ${plural(misses, 'miss', 'misses')}`, onClick: () => create({ from_session: sid, source: 'result' }) } : null,
       { label: 'Rematch · same types, new numbers', onClick: () => copySheet('rematch') },
       { label: 'Rematch in 3 days', onClick: async () => { try { await api(drillPath('/rematch-due'), { method: 'POST', body: { days: 3 } }); toast('It comes back in Up next in 3 days'); } catch (_) { toast('Not saved. Try again.'); } } },
       { label: 'Retake these exact questions (tests memory)', onClick: () => create({ retake: sid, clean: true, source: 'builder' }) },
       { label: 'Share this set', onClick: () => share() },
       { label: 'Print', href: `/practice/session/?id=${encodeURIComponent(sid)}&print=1` },
       { separator: true },
-    ];
+    ].filter(Boolean);
     items.push({ label: 'Back to Practice', href: '/practice/' });
     const moreB = h('button', { type: 'button', class: 'btn sm-more', 'aria-haspopup': 'menu' }, h('span', { text: 'More' }), icon('chev', 16));
     UI.menu.bind(moreB, items, { label: 'More ways to go on' });

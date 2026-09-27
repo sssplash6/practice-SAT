@@ -156,6 +156,8 @@
     .pv { padding: 0; max-width: none; }
     .pv-q { border-color: #999; }
   }
+  /* the page's <main> is the one landmark; the runner's column must not claim its transition name too */
+  #run main { view-transition-name: none; }
 </style>
 </head>
 <body>
