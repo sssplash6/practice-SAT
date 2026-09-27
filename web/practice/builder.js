@@ -224,14 +224,14 @@
     const c = b.counts || {};
     const act = (B.sets && B.sets.active) || [];
     const link = (label, n, href, onClick, dot) => {
-      const inner = [dot && n ? h('span', { class: 'dot', 'aria-hidden': 'true' }) : null, h('span', { text: label }), h('span', { class: 'n' + (n ? ' on' : ''), text: `· ${n || 0}` })];
+      const inner = [dot && n ? h('span', { class: 'dot', 'aria-hidden': 'true' }) : null, h('span', { text: label }), n ? h('span', { class: 'n on', text: `· ${n}` }) : null];
       return href ? h('a', { href }, inner) : h('button', { type: 'button', onclick: onClick }, inner);
     };
     $('#links').replaceChildren(
       link('Mistakes', c.mistakes, '/mistakes/', null, true),
       link('Marked', c.marked, '/mistakes/#marked'),
       link('Saved', c.saved, null, () => { setPool('saved'); $('#settings').scrollIntoView({ behavior: 'smooth', block: 'start' }); }),
-      h('button', { type: 'button', onclick: () => $('#sets').scrollIntoView({ behavior: 'smooth' }) }, h('span', { text: 'Your sets' }), h('span', { class: 'n' + (act.length ? ' on' : ''), text: `· ${act.length} in progress` })));
+      h('button', { type: 'button', onclick: () => $('#sets').scrollIntoView({ behavior: 'smooth' }) }, h('span', { text: 'Your sets' }), act.length ? h('span', { class: 'n on', text: `· ${act.length} in progress` }) : null));
   }
   function paintSubject() {
     const host = $('#subject');
@@ -389,20 +389,20 @@
     const untried = sk.filter(s => !s.placed && !s.answered).slice(0, 3);
     const list = [
       { id: 'coach', label: `Coach’s pick${why ? ` · ${why}` : ''}` },
-      { id: 'weak', label: 'Weakest 3', why: weak.length < 3 ? 'needs 5 answers in 3 skills' : null, skills: weak },
-      { id: 'focus', label: 'Plan focus', why: focusSkills.length ? null : 'no Focus domain in your plan', skills: focusSkills, href: focusSkills.length ? null : '/plan/' },
+      { id: 'weak', label: 'Weakest 3', why: weak.length < 3 ? 'Needs 5 answers in 3 skills' : null, skills: weak },
+      { id: 'focus', label: 'Plan focus', why: focusSkills.length ? null : 'No Focus domain in your plan yet: set one in Plan', skills: focusSkills, href: focusSkills.length ? null : '/plan/' },
       { id: 'full', label: 'Full section mix' },
-      { id: 'gains', label: `Biggest gains · ${gains.length || 3} skills`, why: (b.totals.answered || 0) < 30 || !gains.length ? 'needs 30 answers' : null, skills: gains },
-      { id: 'mistakes', label: `My mistakes · ${c.mistakes || 0}`, why: c.mistakes ? null : '0 open' },
-      { id: 'missed', label: `Missed · ${seen.missed || 0}`, why: seen.missed ? null : '0 missed' },
-      { id: 'marked', label: `Marked · ${c.marked || 0}`, why: c.marked ? null : '0 marked' },
-      { id: 'saved', label: `Saved · ${c.saved || 0}`, why: c.saved ? null : '0 saved' },
-      { id: 'due', label: `Due for review · ${c.review || c.due || 0}`, why: c.review || c.due ? null : 'nothing due' },
+      { id: 'gains', label: `Biggest gains · ${gains.length || 3} skills`, why: (b.totals.answered || 0) < 30 || !gains.length ? 'Needs 30 answers' : null, skills: gains },
+      { id: 'mistakes', label: `My mistakes${c.mistakes ? ` · ${c.mistakes}` : ''}`, why: c.mistakes ? null : 'No open mistakes yet' },
+      { id: 'missed', label: `Missed${seen.missed ? ` · ${seen.missed}` : ''}`, why: seen.missed ? null : 'Nothing missed yet' },
+      { id: 'marked', label: `Marked${c.marked ? ` · ${c.marked}` : ''}`, why: c.marked ? null : 'Nothing marked yet' },
+      { id: 'saved', label: `Saved${c.saved ? ` · ${c.saved}` : ''}`, why: c.saved ? null : 'Nothing saved yet' },
+      { id: 'due', label: `Due for review${c.review || c.due ? ` · ${c.review || c.due}` : ''}`, why: c.review || c.due ? null : 'Nothing due for review' },
       { id: 'solve', label: 'Solve first · 10' },
-      { id: 'probe', label: `Check ${untried.length || 3} skills I haven’t tried`, why: untried.length ? null : 'every skill has answers', skills: untried },
+      { id: 'probe', label: `Check ${untried.length || 3} skills I haven’t tried`, why: untried.length ? null : 'Every skill has answers', skills: untried },
     ];
     if (b.top_habit) list.push({ id: 'habit', label: `Your top habit · ${b.top_habit.name || b.top_habit.id}` });
-    if (b.desmos_way) { const n = allTypes().filter(t => t.desmos).length; list.push({ id: 'desmos', label: `Desmos drills · ${n}`, why: n ? null : 'no Desmos-way types yet' }); }
+    if (b.desmos_way) { const n = allTypes().filter(t => t.desmos).length; list.push({ id: 'desmos', label: `Desmos drills${n ? ` · ${n}` : ''}`, why: n ? null : 'No Desmos-way types yet' }); }
     ((((B.prefs.practice || {}).math) || {}).presets || []).forEach((p, i) => list.push({ id: `mine:${i}`, label: p.name, mine: p }));
     list.push({ id: 'custom', label: 'Custom', inert: true });
     return list;
@@ -413,7 +413,9 @@
     presets().forEach(p => {
       const on = B.preset === p.id;
       const chip = h('button', { type: 'button', class: 'pr-chip', 'aria-pressed': String(on), 'aria-disabled': p.why || p.inert ? 'true' : null, 'data-preset': p.id },
-        h('span', { text: p.label }), p.why ? h('span', { class: 'why', text: p.why }) : null);
+        h('span', { text: p.label }));
+      // decision 7: a dimmed chip says why on hover or focus, not in a second line
+      if (p.why) { chip.setAttribute('aria-description', p.why); tip(chip, p.why); }
       if (!p.why && !p.inert) chip.addEventListener('click', () => applyPreset(p.id, p));
       else if (p.href) chip.addEventListener('click', () => { location.href = p.href; });
       host.append(chip);
