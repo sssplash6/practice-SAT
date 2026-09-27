@@ -103,7 +103,7 @@
     const [kind, name] = titleParts(c);
     const rounds = c.spec && c.spec.repeat && c.spec.repeat.rounds;
     let k = c.kind === 'daily' ? 'DAILY CHALLENGE' : kind.toUpperCase();
-    if (c.kind === 'private') k = `PRIVATE CONTEST${c.round ? ` · ROUND ${c.round}${rounds ? ` OF ${rounds}` : ''}` : ''}`;
+    if (c.kind === 'private') k = `PRIVATE CONTEST${c.by ? ` · BY ${String(c.by).toUpperCase()}` : ''}${c.round && rounds ? ` · ROUND ${c.round} OF ${rounds}` : ''}`;
     const title = c.kind === 'daily' ? C.dayLabel(dayOf(c)) : c.kind === 'private' ? c.title : name;
     const chip = h('span', { class: 'chip-s' + (c.status === 'live' ? ' on' : ''), text: { upcoming: 'Upcoming', live: 'Live', closed: 'Closed' }[c.status] || c.status });
     const kids = [h('a', { class: 'quiet ct-back', href: '/compete/', text: '‹ Compete' }), h('span', { class: 'k', text: k }),
@@ -121,7 +121,7 @@
         const strip = h('div', { class: 'day-strip', role: 'list', 'aria-label': 'The last 30 days' },
           S.streak.strip.map(x => { const a = h('a', { role: 'listitem', href: C.href(`daily-${x.day}`), 'data-s': x.state === 'made up' ? 'madeup' : x.state, 'aria-current': x.day === day ? 'page' : null,
             'aria-label': `${C.dayLabel(x.day, { weekday: false })}: ${x.state}` }); UI.tooltip(a, `${C.dayLabel(x.day)}: ${x.state}`); return a; }));
-        kids.push(strip, h('div', { class: 'day-legend' }, h('span', {}, h('i', { class: 'sat' }), 'sat'), h('span', {}, h('i', { class: 'madeup' }), 'made up · ghost'), h('span', {}, h('i'), 'missed')));
+        kids.push(strip, h('div', { class: 'day-legend' }, h('span', {}, h('i', { class: 'sat' }), 'sat'), h('span', {}, h('i', { class: 'madeup' }), 'made up'), h('span', {}, h('i', { class: 'ghost' }), 'ghost'), h('span', {}, h('i'), 'missed')));
       }
     }
     $('#head').replaceChildren(...kids);
@@ -199,6 +199,16 @@
     }
     if ((c.ladder || []).length) { const lad = h('div', { class: 'sub-block' }); C.ladder(lad, c); kids.push(lad); }
     if (c.kind === 'final') kids.push(h('p', { class: 'meta', text: 'Module 2 · 22 questions · easier or harder by your module 1' }));
+    if (c.kind === 'trap') {
+      const tb = h('div', { class: 'sub-block' });
+      kids.push(tb);
+      trapOf(c).then(t => {
+        if (!t) { tb.remove(); return; }
+        const skills = new Set((c.ladder || []).map(q => q.topic)).size;
+        tb.append(h('span', { class: 'k', text: 'TRAP OF THE WEEK' }), h('p', { class: 'line', text: t.name }), t.tell ? h('p', { class: 'line' }, h('i', { text: t.tell })) : '',
+          h('p', { class: 'meta', text: [t.field_share ? `caught ${pct(t.field_share)} of the field this week` : null, `${num(c.count)} questions in ${num(skills)} skills, each with this trap in it`].filter(Boolean).join(' · ') }));
+      });
+    }
     const lines = h('div', { class: 'daily-lines' });
     lines.append(h('p', { class: 'line', text: C.facts({ ...c, field: null }) }));
     if (c.status !== 'upcoming') lines.append(C.fieldLine(c, 'in'));
@@ -242,6 +252,12 @@
     if (c.status === 'live' && !S.rivals) api('/compete/rivals').then(r => { S.rivals = (r.rivals || []).slice(0, 5); if (S.c.me.status === 'new') renderState(); }).catch(() => { S.rivals = []; });
   }
 
+  async function trapOf(c) {
+    if (!S.trapIdx) { try { S.trapIdx = await api('/compete/traps-index'); } catch (_) { S.trapIdx = []; } }
+    const name = String(c.title || '').split(' · ').slice(1).join(' · ');
+    return (S.trapIdx || []).find(x => x.name === name || (c.spec && c.spec.family && x.family === c.spec.family)) || null;
+  }
+
   /* ------------------------------------------------------------ the result panel */
   function renderResult(el) {
     const c = S.c, me = c.me, r = me.result || {};
@@ -256,6 +272,16 @@
       if (players >= 10) rank.append(h('span', { class: 'chip-s', text: `Top ${Math.ceil(you.rank / players * 100)}%` }));
     }
     kids.push(rank);
+    const band = r.band || r.estimate || null;
+    const bandTxt = band && (band.low ?? band[0]) !== undefined ? `${band.low ?? band[0]}–${band.high ?? band[1]}` : null;
+    if (c.kind === 'final' && bandTxt) {
+      const route = { hard: 'harder', harder: 'harder', easy: 'easier', easier: 'easier' }[r.route] || r.route;
+      kids.push(h('div', { class: 'final-band' }, h('span', { class: 'k', text: 'SECTION ESTIMATE' }), h('span', { class: 'num', text: bandTxt }),
+        route ? h('span', { class: 'line', text: `Route: ${route} module 2` }) : '',
+        r.route_kept || me.route_kept ? h('span', { class: 'meta', text: 'Route kept: decided before confirms' }) : ''));
+    }
+    if (c.kind === 'weekly' && bandTxt) kids.push(h('p', { class: 'line', text: `Module estimate ${bandTxt}` }));
+    if (c.kind === 'sprint' && you && you.points !== undefined) kids.push(h('p', { class: 'line', text: `Best this week ${num(you.points)} pts${you.runs ? ` · ${num(you.runs)} run${you.runs === 1 ? '' : 's'}` : ''}. Every run draws fresh questions; only your best counts.` }));
     if (me.ranked === false && me.why !== 'ghost') kids.push(h('p', { class: 'line' }, h('span', { class: 'chip-s', text: 'Unranked' }), ' ', WHY[me.why] || ''));
     const parts = r.points_parts || {};
     const par = r.par || {};
@@ -269,10 +295,37 @@
     [...tiles.children].forEach(t => { if (!t) tiles.removeChild(t); });
     kids.push(tiles);
     const right = r.right || 0, wrong = r.wrong ?? Math.max(0, (r.asked || 0) - right - (r.skipped || 0) - (r.voided || 0));
-    const brk = h('p', { class: 'line', text: `${num(right)} right${r.confirmed ? ` (${num(r.confirmed)} confirmed)` : ''} · ${num(wrong)} wrong · ${num(r.skipped || 0)} skipped · ${num(r.voided || 0)} voided` });
+    const brk = h('p', { class: 'line res-brk', text: `${num(right)} right${r.confirmed ? ` (${num(r.confirmed)} confirmed)` : ''} · ${num(wrong)} wrong · ${num(r.skipped || 0)} skipped · ${num(r.voided || 0)} voided` });
     if (you && you.mark === 'clean') brk.append(' ', h('span', { class: 'chip-s', text: 'Clean run' }));
     kids.push(brk);
-    if (r.race) kids.push(h('p', { class: 'line', text: r.race.won ? `Beat ${r.race.them_label || 'the pacer'} by ${num(Math.abs((r.race.you || 0) - (r.race.them || 0)))} pts` : `${r.race.them_label || 'The pacer'} by ${num(Math.abs((r.race.them || 0) - (r.race.you || 0)))}` }));
+    if (r.race) { const who = r.race.label || r.race.them_label || 'the pacer'; kids.push(h('p', { class: 'line', text: r.race.won ? `Beat ${who} by ${num(Math.abs((r.race.you || 0) - (r.race.them || 0)))} pts` : `${who.replace(/^./, x => x.toUpperCase())} by ${num(Math.abs((r.race.them || 0) - (r.race.you || 0)))} pts` })); }
+    const pars = ((S.board && S.board.pars) || []).slice().sort((a, b) => a.points - b.points);
+    if (pars.length && r.points !== undefined && ['daily', 'weekly', 'final', 'trap', 'private'].includes(c.kind)) {
+      const below = pars.filter(p => p.points <= r.points).pop(), above = pars.find(p => p.points > r.points);
+      kids.push(h('p', { class: 'meta', text: below && above ? `Between Level ${below.level} and Level ${above.level} par` : below ? `Above Level ${below.level} par` : `Below Level ${above.level} par` }));
+    }
+    if (c.status === 'live' && c.kind !== 'private' && me.why !== 'ghost') { const rl = h('p', { class: 'line', hidden: true }); kids.push(rl); rivalsToday(rl, r.points); }
+    if (r.trap) {
+      const caught = (r.questions || []).filter(q => q.status === 'incorrect' && q.mistake).map(q => `Q${q.n} (${C.topicName(q.topic)})`);
+      const tl = h('div', { class: 'sub-block' }, h('p', { class: 'line', text: [`Resisted ${num(r.trap.resisted)} of ${num(r.trap.chances)}`,
+        r.trap.field_mean !== null && r.trap.field_mean !== undefined ? `field ${r.trap.field_mean}` : null, caught.length ? `caught on ${caught.join(' and ')}` : null].filter(Boolean).join(' · ') }));
+      const act0 = h('div', { class: 'row-act' }, quiet('Drill this habit · 8', ev => busy(ev.currentTarget, () => drill({ habit: r.trap.family, count: 8, source: 'habit' }))));
+      tl.append(act0);
+      trapOf(c).then(t => { if (t && t.tell) tl.insertBefore(h('p', { class: 'line' }, h('i', { text: t.tell })), act0); });
+      kids.push(tl);
+    }
+    if (c.kind === 'rush') {
+      const top = r.top_item === true || r.top_item === 'top' ? 'the top of the bank' : r.top_item ? `L${r.top_item} items` : null;
+      kids.push(h('p', { class: 'line', text: [`${num(r.right || 0)} right`, top ? `reached ${top}` : null, you && you.right !== undefined ? `best this week ${num(you.right)}` : null].filter(Boolean).join(' · ') }));
+      const st = (Array.isArray(r.strikes) ? r.strikes : []).filter(x => x && typeof x === 'object');
+      const tpl = [...new Set(st.map(x => x.template).filter(Boolean))];
+      if (st.length) kids.push(h('div', { class: 'row-act' }, h('span', { class: 'line', text: `Your ${st.length} strike${st.length === 1 ? '' : 's'}: ${st.map(x => x.label || x.reason || 'slow').join(' · ')}` }),
+        tpl.length ? quiet(`Practice these ${tpl.length}`, ev => busy(ev.currentTarget, () => drill({ templates: tpl, count: Math.min(10, tpl.length * 2), source: 'result' }))) : ''));
+    }
+    if (c.kind === 'words') {
+      kids.push(h('p', { class: 'line', text: [`Score ${Number(r.score ?? 0).toFixed(1)}`, `${num(r.right || 0)} right`, `${num(r.wrong || 0)} wrong`, you && you.score !== undefined ? `best this week ${Number(you.score).toFixed(1)}` : null].filter(Boolean).join(' · ') }));
+      if ((r.traps || []).length) kids.push(h('p', { class: 'line', text: `Traps: ${r.traps.map(t => `${t.n} × ${t.label || t.trap}`).join(' · ')}` }));
+    }
     if ((r.records_new || []).length) kids.push(h('div', { class: 'row-act' }, r.records_new.map(x => h('span', { class: 'chip-s on', html: `${C.svg(C.SVG.star, 14)} ` }, `New best ${x.kind === 'daily' ? 'Daily' : x.kind} · ${num(x.value)}${x.was !== null && x.was !== undefined ? ` (was ${num(x.was)})` : ''}`))));
     const fu = me.followup || {};
     if (fu.won_back !== null && fu.won_back !== undefined && fu.of) kids.push(h('p', { class: 'line', text: `Won back ${num(fu.won_back)} of ${num(fu.of)}${fu.due ? ` · ${C.dayLabel(fu.due)}` : ''}` }));
@@ -317,6 +370,18 @@
     el.replaceChildren(...kids.filter(Boolean));
     requestAnimationFrame(() => { if (!sessionReveal()) return; el.querySelectorAll('.big-rank, .res-tiles').forEach(x => x.animate([{ opacity: 0, transform: 'translateY(6px)' }, { opacity: 1, transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.23,1,.32,1)' })); });
   }
+  // "Rivals today: beat Maya · lost to Sam · Lee hasn't sat yet" (C9)
+  // ponytail: reads the board's first page; a rival placed below #50 reads "hasn't sat yet" until the board returns rival rows
+  async function rivalsToday(el, mine) {
+    try {
+      if (!S.rivals) S.rivals = ((await api('/compete/rivals')).rivals || []).slice(0, 5);
+      const list = S.rivals.slice(0, 3);
+      if (!list.length || mine === undefined) return;
+      const entries = (S.board && S.board.entries) || [];
+      el.textContent = `Rivals today: ${list.map(x => { const e = entries.find(y => y.pid === x.pid); return !e ? `${x.name} hasn’t sat yet` : e.points > mine ? `lost to ${x.name}` : e.points < mine ? `beat ${x.name}` : `level with ${x.name}`; }).join(' · ')}`;
+      el.hidden = false;
+    } catch (_) {}
+  }
   // the rank reveal plays once per sitting (C21), never with reduced motion
   function sessionReveal() {
     if ((UI.reduced && UI.reduced()) || matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
@@ -355,9 +420,12 @@
       const f = await api('/compete/final-focus');
       if (!f) return;
       box.append(h('span', { class: 'k', text: f.mode === 'last_week' ? 'YOUR LAST WEEK' : 'FINAL FOCUS' }));
-      if ((f.trap_norms || f.traps || []).length) box.append(h('p', { class: 'line', text: `${(f.trap_norms || f.traps).length} traps to fix: ${(f.trap_norms || []).join(' · ')}` }));
+      const labels = f.trap_norms || [], ids = f.traps || [];
+      if (labels.length) box.append(h('p', { class: 'line', text: `${labels.length} trap${labels.length === 1 ? '' : 's'} to fix` }), h('ul', { class: 'mini-rows' }, labels.map((l, i) => h('li', {}, h('span', { class: 'mt', text: l }),
+        ids[i] ? h('span', { class: 'ma' }, quiet('Fix it · 3', ev => busy(ev.currentTarget, () => drill({ pool: 'redo', ids: [ids[i]], each: 3, source: 'twin' })))) : ''))));
       if ((f.skip_first || []).length) box.append(h('p', { class: 'line', text: `Skip first on test day: ${f.skip_first.map(C.topicName).join(', ')}` }));
       if (f.mode !== 'last_week') box.append(h('p', { class: 'help', text: f.exam_date ? `Your SAT is ${C.dayLabel(f.exam_date, { weekday: false })}. These lead your final week when it starts.` : 'Set your SAT date and these lead your final week.' }));
+      if (!f.exam_date && UI.examDate) box.append(h('div', { class: 'row-act' }, quiet('Set date', ev => UI.examDate(ev.currentTarget, { onSave: async v => { await UI.prefs.set({ exam_date: v }); UI.toast('Saved'); render(); } }))));
     } catch (_) { box.remove(); }
   }
   async function testDayCard() {
@@ -465,7 +533,7 @@
     const val = S.sort === 'net' ? you.net : you.points;
     const unit = S.sort === 'net' ? 'over par' : 'pts';
     const toPass = you.cheapest || (you.gap ? you.gap + 1 : null);
-    return [`You · #${you.rank}`, `${num(val)} ${unit}`, toPass && you.rank > 1 ? `${num(toPass)} to pass #${you.rank - 1}` : null,
+    return [`You · #${you.rank}`, `${num(val)} ${unit}`, you.anon ? 'shown as Anonymous' : null, toPass && you.rank > 1 ? `${num(toPass)} to pass #${you.rank - 1}` : null,
       toPass && you.rank > 1 && c.status === 'live' ? C.step(toPass, S.sort === 'net' ? 'net' : 'points', !!C.kind(c).pace) : null].filter(Boolean).join(' · ');
   }
   function rowMenu(e) {
