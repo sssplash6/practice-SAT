@@ -28,7 +28,8 @@
     #today { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     #today > section { grid-column: span 1; }
     #hero, #next, #qotd, #gain, #study, #plan, #tests { grid-column: span 2 !important; }
-    #hero { order: 1; } #next { order: 2; } #qotd { order: 3; } #gain { order: 4; } #mist { order: 5; } #exam { order: 6; }
+    #due { grid-column: span 2 !important; }
+    #hero { order: 1; } #next { order: 2; } #due { order: 2; } #qotd { order: 3; } #gain { order: 4; } #mist { order: 5; } #exam { order: 6; }
     #score { order: 7; } #pace { order: 8; } #study { order: 9; } #chal { order: 10; } #words { order: 11; } #plan { order: 12; } #tests { order: 13; }
     #today.stretch #exam { order: 1; grid-column: span 2; }
   }
@@ -38,12 +39,14 @@
     #next, #gain, #study, #plan { grid-column: span 8 !important; }
     #mist, #exam, #chal, #words { grid-column: span 4 !important; }
     #score, #pace { grid-column: span 6 !important; }
-    #hero { order: 1; } #next { order: 2; } #mist { order: 3; } #gain { order: 4; } #exam { order: 5; } #qotd { order: 6; }
-    #score { order: 7; } #pace { order: 8; } #study { order: 9; } #chal { order: 10; } #plan { order: 11; } #words { order: 12; } #tests { order: 13; }
+    #next { grid-row: span 2; }
+    #mist, #due { grid-column: span 4 !important; }
+    #hero { order: 1; } #next { order: 2; } #mist { order: 3; } #due { order: 4; } #gain { order: 5; } #exam { order: 6; } #qotd { order: 7; }
+    #score { order: 8; } #pace { order: 9; } #study { order: 10; } #chal { order: 11; } #plan { order: 12; } #words { order: 13; } #tests { order: 14; }
     #today.stretch #exam { order: 2; grid-column: span 12 !important; }
-    #today.stretch #next { order: 3; } #today.stretch #mist { order: 4; }
+    #today.stretch #next { order: 3; } #today.stretch #mist { order: 4; } #today.stretch #due { order: 4; }
     #today.stretch #gain { order: 5; grid-column: span 12 !important; }
-    #today.examday #next { grid-column: span 12 !important; }
+    #today.examday #next { grid-column: span 12 !important; grid-row: auto; }
     #today.examday #gain { order: 4; grid-column: span 8 !important; } #today.examday #mist { order: 5; }
   }
 
@@ -89,6 +92,10 @@
   #next .lead-t { font: 700 20px/1.25 var(--font); letter-spacing: -.01em; color: var(--ink); }
   .size { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
   .size .seg button { min-height: 36px; }
+  /* the streak: flame and number centred on one line, the number in the text font (the user: misaligned) */
+  .streak { display: inline-flex; align-items: center; gap: 6px; font: 600 14px/1 var(--font); font-variant-numeric: tabular-nums; }
+  .streak > span[aria-hidden] { display: inline-flex; }
+  .streak svg { display: block; width: 16px; height: 16px; }
   .why-i { appearance: none; border: 1.5px solid var(--faint); background: none; color: var(--soft); width: 18px; height: 18px; border-radius: 50%;
     font: 600 11px/1 var(--font); font-style: italic; margin-left: 8px; vertical-align: 2px; cursor: pointer; padding: 0; }
   .why-i[aria-expanded="true"] { border-color: var(--ink); color: var(--ink); }
@@ -124,6 +131,7 @@
 
   /* due today */
   .due { margin-top: 22px; padding-top: 18px; border-top: 1px solid color-mix(in srgb, var(--amber) 25%, transparent); }
+  #due > .due { margin-top: 0; padding-top: 0; border-top: 0; }
   .due-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 14px; }
   .due-head .k { margin: 0; }
   .due-head .meta { color: var(--ink); }
@@ -178,7 +186,11 @@
   .qd-text { margin: 0; font: 400 var(--q-opt)/1.55 var(--serif); color: var(--ink); }
   .qd-after { display: grid; gap: 8px; }
   .qd-after .line { margin: 0; }
-  .qd-past { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .qd-past { display: flex; align-items: center; gap: 12px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .qd-past .quiet { margin: 0; flex: none; }
+  .qd-days { flex: 1; min-width: 0; display: flex; justify-content: flex-end; gap: 6px; overflow: hidden; }
+  .qd-days .qd-day { flex: none; width: 44px; }
+  .qd-days .qd-day.mon { box-shadow: inset 2px 0 0 var(--line); }
   .qd-past .k { margin-right: 4px; }
   .qd-day { display: inline-grid; justify-items: center; gap: 4px; min-width: 44px; min-height: 44px; padding: 5px 6px; border: 0; border-radius: 10px; background: var(--tile-2); cursor: pointer; font: 600 12px var(--font); color: var(--ink); }
   .qd-day[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--ink); }
@@ -228,9 +240,10 @@
   .fig { padding: 12px 14px; border-radius: 10px; background: var(--paper); }
   .fig .v { font: 600 24px/1.1 var(--mono); }
   .fig .k { display: block; margin-top: 4px; }
-  .cal-wrap { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px; margin-top: 18px; }
-  @media (max-width: 899px) { .cal-wrap { grid-template-columns: minmax(0, 1fr); } }
-  .day-detail { padding: 14px 16px; border-radius: 12px; background: var(--paper); align-self: start; }
+  /* the day detail is the calendar's caption, under it (the user: it floated beside the controls) */
+  .cal-wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; margin-top: 18px; }
+  .day-detail { padding: 14px 0 0; border-top: 1px solid var(--line); background: none; }
+  .day-detail[hidden] { display: none; }
   .day-detail .dd-t { font: 600 15px/1.35 var(--font); }
   .day-detail ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 4px; }
 
@@ -304,6 +317,7 @@
   <div id="today">
     <section id="hero" aria-label="Today"></section>
     <section id="next" class="card" aria-label="Up next"></section>
+    <section id="due" class="card" aria-label="Due today"></section>
     <section id="qotd" class="card" aria-label="Questions of the day"></section>
     <section id="gain" class="card" aria-label="Points on the table"></section>
     <section id="mist" class="card" aria-label="Mistakes"></section>
@@ -541,6 +555,7 @@
     card('qotd', 'Questions of the day', null, h('div', { class: 'qd-row' }, col(), col()));
     skel('gain', 'Points on the table', 'rows:4');
     skel('mist', 'Mistakes', 'rows:3');
+    skel('due', 'Due today', 'rows:3');
     skel('exam', 'SAT', 'lines:3');
     skel('score', 'Score', 'chart:120');
     skel('pace', 'Pace', 'cells:22');
@@ -566,6 +581,7 @@
     if (examDay) $('exam').after($('next'));
     else if (grid.classList.contains('stretch')) $('exam').after($('next'));
     else $('hero').after($('next'));
+    $('next').after($('due'));
     paintHero(); paintNext(); paintMist(); paintExam(); paintPlan(); paintWords(); paintScore();
     if (S.ins && !S.ins.failed) paintGain();
     if (S.cal) paintStudy();
@@ -665,8 +681,9 @@
     const goalMet = t.receipt || (t.profile.minutes && t.study.today >= t.profile.minutes);
     if (goalMet && !SZ.sel) SZ.sel = { kind: 'box', v: 15 };
     kids.push(sessionBlock(t, pday, !!lead, goalMet));
-    kids.push(dueBlock(t));
     card('next', 'Up next', right, kids);
+    // the user: use the empty right column; Due today is its own card under Mistakes (its head carries the label)
+    $('due').replaceChildren(dueBlock(t));
     if (SZ.preview === null && !SZ.failed && nx.preview) SZ.preview = nx.preview;
     paintBlocks();
   }
@@ -1370,22 +1387,40 @@
     });
   }
   function pastStrip(d) {
+    // decision 7 + the user's review: Older on the left, and the strip fills its width with the most recent days (up to 30 back,
+    // the same range Older opens); each tile shows its date, the weekday is in the tooltip
     const el = h('div', { class: 'qd-past' }, h('span', { class: 'k', text: 'Past days' }));
     const slots = (d.slots || []).map(s => s.slot);
-    (d.past || []).slice(-7).forEach(p => {
-      const wd = new Date(p.day + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'narrow' });
+    const t0 = d.today || today();
+    const byDay = Object.fromEntries((d.past || []).map(p => [p.day, p]));
+    const days = Array.from({ length: 30 }, (_, i) => addDays(t0, -(30 - i)));
+    const tile = day => {
+      const p = byDay[day] || { day, marks: {} };
+      const dt = new Date(day + 'T12:00:00');
       const marks = slots.map(s => (p.marks || {})[s] ?? null);
-      const b = h('button', { type: 'button', class: 'qd-day', 'aria-pressed': String(S.qday === p.day),
-        'aria-label': `${UI.date(p.day, 'long')}: ${marks.map((m, i) => `${SLOT_SHORT[slots[i]] || slots[i]} ${m || 'not answered'}`).join(', ')}` },
-        h('span', { text: wd, 'aria-hidden': 'true' }), h('span', { class: 'mm', 'aria-hidden': 'true' }, marks.map(m => h('i', { 'data-m': m || '' }))));
-      b.addEventListener('click', () => openDay(p.day));
-      el.append(b);
-    });
+      const b = h('button', { type: 'button', class: 'qd-day', 'aria-pressed': String(S.qday === day), title: UI.date(day, 'long'),
+        'aria-label': `${UI.date(day, 'long')}: ${marks.map((m, i) => `${SLOT_SHORT[slots[i]] || slots[i]} ${m || 'not answered'}`).join(', ')}` },
+        h('span', { text: String(dt.getDate()), 'aria-hidden': 'true' }), h('span', { class: 'mm', 'aria-hidden': 'true' }, marks.map(m => h('i', { 'data-m': m || '' }))));
+      if (dt.getDay() === 1) b.classList.add('mon');
+      b.addEventListener('click', () => openDay(day));
+      return b;
+    };
+    const row = h('div', { class: 'qd-days' });
     el.append(quiet('Older…', (e, b) => UI.pop(b, (pe, res) => {
-      const t0 = d.today || today();
       const f = h('input', { type: 'date', class: 'field sm', min: addDays(t0, -30), max: addDays(t0, -1), 'aria-label': 'A past day' });
       return h('div', { class: 'date-form' }, h('label', { class: 'label', text: 'Up to 30 days back' }), f, btn('Open', () => { if (f.value) { res.close(); openDay(f.value); } }));
-    }, { label: 'An older day' })));
+    }, { label: 'An older day' })), row);
+    let shown = -1;
+    const fit = () => {
+      const w = row.clientWidth;
+      if (!w) return;
+      const n = Math.max(1, Math.min(days.length, Math.floor((w + 6) / (44 + 6))));
+      if (n === shown) return;
+      shown = n;
+      row.replaceChildren(...days.slice(-n).map(tile));
+    };
+    if (window.ResizeObserver) new ResizeObserver(fit).observe(row);
+    requestAnimationFrame(fit);
     return el;
   }
   function openDay(day) {
@@ -1929,8 +1964,10 @@
       fig(st.rest_today ? 'Rest day' : UI.dur(st.today), 'Today', join(st.questions_today && pl(st.questions_today, 'question'), st.questions_today && `${Math.round(100 * st.right_today / st.questions_today)}% right`, st.fixed_today && `${st.fixed_today} fixed`, goal && `of ${UI.dur(goal)}`), goal ? st.today / goal : undefined),
       fig(UI.dur(st.week), 'This week', st.week_goal ? `of ${UI.dur(st.week_goal)}${st.week_days_left ? ` · ${n(Math.max(0, Math.round((st.week_goal - st.week) / st.week_days_left)))} min a day for the ${pl(st.week_days_left, 'day')} left` : ''}` : null, st.week_goal ? st.week / st.week_goal : undefined),
       fig(UI.dur(st.month), 'This month'),
-      fig(n(st.active_days_month || 0), 'Active days', 'this month'));
-    const kids = [figs];
+      fig(n(st.active_days_month || 0), 'Active days this month'));
+    // decision 7: a brand-new student gets one line, not four zeros
+    const fresh = !st.today && !st.week && !st.month && !st.active_days_month && !(d.total > 0);
+    const kids = [fresh ? line('No study time yet. Your first answer starts your streak and fills this calendar.', 'soft') : figs];
     const ins = S.ins || {};
     if (ins.time_split && ins.time_split.minutes) kids.push(timeSplit(ins.time_split, ins.gains));
     // the calendar
@@ -1998,6 +2035,7 @@
     }, { label: 'Daily goal' });
   }
   function dayDetail(host, day) {
+    host.hidden = false;
     const cal = S.cal, row = cal && (cal.days || []).find(x => x.day === day);
     const pd = planDay(day);
     const kids = [];
@@ -2012,7 +2050,9 @@
       return;
     }
     if (!row || (!row.questions && !row.minutes && !(row.sittings || []).length)) {
-      kids.push(h('p', { class: 'dd-t', text: UI.date(day, 'long') }), line(S.t.days.total ? 'Nothing that day.' : 'Your first answer starts the streak.', 'soft'));
+      // nothing that day: a plain caption; a brand-new student already has the line above the calendar
+      host.hidden = !S.t.days.total;
+      kids.push(h('p', { class: 'dd-t', text: UI.date(day, 'long') }), line('Nothing that day.', 'soft'));
       host.replaceChildren(...kids);
       return;
     }
