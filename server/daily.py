@@ -198,10 +198,12 @@ def _given(text):
 
 def _rows(cols: str, where: str, *args) -> list:
     """Day's-question answers: every slot's `attempts` rows (R57 files the R&W
-    ones there too), then Words' own rows that carry no attempt yet, so one
-    answer is never counted twice and nothing is missed before R57 lands."""
+    ones there too), then Words' own rows for sessions with no attempts row
+    (word_reviews.attempt is the try number, not a link), so one answer is
+    never counted twice and nothing is missed before R57 lands."""
     return (db.rows(f"SELECT {cols} FROM attempts WHERE {where} ORDER BY id", *args)
-            + db.rows(f"SELECT {cols} FROM word_reviews WHERE attempt IS NULL AND {where} ORDER BY id", *args))
+            + db.rows(f"SELECT {cols} FROM word_reviews AS w WHERE {where} AND NOT EXISTS (SELECT 1 FROM attempts AS a"
+                      f" WHERE a.session=w.session AND a.learner=w.learner) ORDER BY id", *args))
 
 
 def answered(learner: str, slot: str, day: str) -> dict | None:
@@ -318,6 +320,7 @@ def rw_feedback(slot: str, day: str, gen: dict, given, late: bool, ms: int | Non
                 reply: dict | None = None, you: str | None = None) -> dict:
     """An answered R&W slot: Words' reply fields plus the key word, its
     meaning and the on-time crowd."""
+    given = _given(given)                   # Words stores the pick as text
     word = gen.get("word")
     entry = deps.part("words", "entry")
     meaning = ((entry(word) or {}).get("meaning") if entry and word else None)
