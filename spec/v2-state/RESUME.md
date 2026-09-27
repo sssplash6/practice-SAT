@@ -1,5 +1,9 @@
 # Resume here
 
+**Dev server:** started from the moved repo, `cd /Users/workingmyassof/freshbot/satbank && PYTHONPATH=. python3 -m uvicorn server.app:app
+--port 8000 --log-level warning --reload --reload-dir server` (background task bkhbftu1e since 2026-09-27; the old one ran from the
+deleted path and served 500s).
+
 **Standing rule (the user, 2026-09-27): my builds are PAGES ONLY. Any backend part becomes a HELPER-TASKS.md task and I ask
 the user to give it to the other agent.**
 
