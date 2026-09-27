@@ -1,0 +1,458 @@
+{
+ "label": "audit: visual",
+ "key": "v2:c0e3e6ac3df2508fd82019ef455dac77720a5d8de3f7793420d0331810318208",
+ "result": {
+  "findings": [
+   {
+    "severity": "high",
+    "card": "grid (#today)",
+    "selector": "#today > #exam, #chal, #pace, #words, #next (beside #gain, #study, #score, #plan, #mist+#due)",
+    "where": "1440 and 1280, every learner state, light and dark; 900 too (#exam beside #mist, #pace beside #score)",
+    "what": "Short cards hold a grid row open beside tall ones, so there are huge empty areas. getBoundingClientRect, gap under the short card: #exam (148–222px tall) next to #gain leaves 1,680–1,840px empty. #chal next to #study leaves 1,040–1,210px. #next next to #mist+#due leaves 850–1,460px (plan learner at 1440: 1,376px). #pace next to #score leaves 400–470px. #words next to #plan leaves 250–800px. At 900: #exam next to #mist leaves 380–680px and #pace next to #score leaves 520px.",
+    "fix": "At ≥1080, stack the 4-column cards in their own column instead of pairing them row by row. paintToday already moves nodes, so have it put #mist, #due, #exam, #pace, #chal and #words into an <aside class=\"td-side\"> (display:flex; flex-direction:column; gap:20px; grid-column:9/-1). Put #next, #gain, #score, #study and #plan into <div class=\"td-main\"> (same flex column, grid-column:1/9). #hero, #qotd and #tests stay full width. Below 1080 give both wrappers display:contents so the phone order and the order rules still apply; J/K already sorts cards by their rects. At 760–1079, pair short cards with short cards (#exam with #pace, #mist with #score).",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light-p0.png, plan-1440-light-p1.png, mid-1440-light-p1.png, mid-1440-light-p3.png"
+   },
+   {
+    "severity": "high",
+    "card": "all (orange)",
+    "selector": "#due .due-head > .pill.sm (Start today); #qotd .qd-after .acts > .pill (Now its twin); #sessStart",
+    "where": "All widths and themes. Every learner with 2+ due rows. After answering the day's questions, both slots add one.",
+    "what": "Up to 4 orange pills on one screen: Up next \"Study 15 min\", Due today \"Start today\", and \"Now its twin\" in each question-of-the-day slot (plan learner at 1440: [Study 15 min, Start today, Now its twin, Now its twin]). Decision 7 allows orange only for the one action that needs attention. \"Start today\" also repeats the first row's own Start button.",
+    "fix": "Keep .pill only on #sessStart (or the lead item). In dueBlock make \"Start today\" a .btn.sm (or drop it, since row 1's Start does the same). In paintAfter make \"Now its twin\" btn(), not pill().",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light-p0.png, plan-1440-light-p3.png, new-1440-light-p0.png"
+   },
+   {
+    "severity": "high",
+    "card": "hero",
+    "selector": "#hero .hero-stats > a",
+    "where": "All widths and themes. New learner: \"No streak yet\", \"0 min today\". Plan and stretch learners: \"Plan · 0 of 5 done\" / \"Plan · 0 of 4 done\". Stretch: \"SAT in 6 days\" + \"Final stretch · 6 days\". After the exam: \"Set your SAT date\".",
+    "what": "The same defects the user named are still in the hero. \"No streak yet\" is a sentence where a number belongs (#5); the day's-questions head was changed to flame + number, the hero was not. \"0 min today\" and \"Plan · 0 of 5 done\" are the named \"0 of 3 done\" zero (#7). \"6 days\" appears in two adjacent chips (and a third time in the SAT card). After the exam the chip asks for a date while the SAT card says \"Your SAT was Sep 27\".",
+    "fix": "In heroChips: streak = flame + number with title=\"Study streak · best N\", the same as .streak in #qotd. Hide the streak and minutes chips for a brand-new student until they have a value. Plan chip only when tasks_done > 0 (otherwise \"Plan · 5 tasks\" or none). Merge the stretch into the SAT chip (\"SAT in 6 days · final stretch\"). When ex.days < 0, show \"SAT was Sep 27\" → #exam.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/new-1440-light-p0.png, str-1280-light-p0.png, crop-after-1440-top.png"
+   },
+   {
+    "severity": "high",
+    "card": "due",
+    "selector": "#due .drow (grid 28px 1fr auto) > div, .dm, .why-i; #due .due-head .k",
+    "where": "1280 and 1440 (4-column card, ~300px), plan, stretch and after learners, light and dark",
+    "what": "The row body is only 103–132px wide because Start + ⋯ take 105px, so every row breaks. \"11 due · ~10 / min · 11 / fading\" runs to 3 lines with a line starting on \"·\". \"4 questions · / ~6 min\". The (i) icon wraps under its title (\"Fix mistakes\" and \"The day's questions\" at 1280: icon 20px below the title line). The head eyebrow \"DUE TODAY · 1 OF 7 DONE · ABOUT 50 MIN / LEFT\" wraps with an orphan.",
+    "fix": "At ≥1080: `#due .drow .dact .btn{min-height:32px;padding:0 10px;font-size:13px}` and move the ⋯ (.ibtn) into the .dt line so the body gets ~190px. Wrap each ' · ' part of .dm in <span style=\"white-space:nowrap\"> so no line starts with '·'. Give .dt `display:flex;align-items:center;gap:6px;flex-wrap:nowrap` so (i) stays beside its title.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/crop-str-1280-due.png, plan-1440-light-p1.png"
+   },
+   {
+    "severity": "high",
+    "card": "gain",
+    "selector": "#gain .gain-rows .extra-row (Not measured yet rows) .row > .btn × 2",
+    "where": "All widths and themes, any learner with 30+ answers. The card is 1,840–1,930px tall at ≥1080 and 2,936–3,001px at 390.",
+    "what": "19 rows, 16 of them \"Not measured yet · about N of 44\", each with two equal-weight buttons \"Measure · 5\" | \"Learn it\" that do different things and give no hint of the difference (the Study vs Learn it defect, #3). The default text is repeated 16 times (#7), and the card is the tallest on the page when it should be collapsed (#9).",
+    "fix": "By default show the measured rows (Top 6) and fold the rest into one row: \"16 skills not measured yet · Measure all\" with a ▸ that expands the list. In each unmeasured row keep \"Measure · 5\" as the .btn and make \"Learn it\" a .quiet link with title=\"A worked example, then 3 questions on this skill\" (the same pattern as Up next's learn link). Remember the expanded state in localStorage the way satf.exam.open is.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/mid-1440-light-p1.png, plan-1440-light-p2.png"
+   },
+   {
+    "severity": "high",
+    "card": "gain",
+    "selector": "#gain .extra-row .line > svg.glyph",
+    "where": "All widths and themes, every Not measured row (16 per page)",
+    "what": "The skill icon is not centred with its name. The glyph is 22px with vertical-align:baseline, so its centre sits 6px above the text centre (measured glyph_cy 2050 vs text_cy 2056, repeated on every row). This is the flame-not-centred defect again.",
+    "fix": "`.td .extra-row .line{display:flex;align-items:center;gap:8px}` and drop the ' ' text node in gainRow, or `.extra-row .glyph{vertical-align:-5px}`.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/crop-mid-1440-gain.png"
+   },
+   {
+    "severity": "high",
+    "card": "qotd",
+    "selector": "#qotd .card-head (h2#qotd-h + .card-act .streak + .meta)",
+    "where": "All widths and themes. At 390 the title takes 2 lines and the streak drops to a third.",
+    "what": "The head is cluttered (#12): the title repeats the hero's date (\"Questions of the day · Mon, Sep 28\"), then a flame, then \"0\" or \"1 day in a row\", then a mono line \"0 of 2 right this month · crowd 0%\". \"crowd 0%\" appears when the crowd is only this student, and \"0 of 2 right\" is a zero (#7).",
+    "fix": "Title: \"Questions of the day\", with the date only when S.qday (a past day). Right side: flame + number only, with title=\"Day's questions streak · best N\"; drop \"… in a row\". Move month and crowd into that tooltip or the Past days strip, show crowd only when crowd answered ≥ 5, and hide \"N of M right\" when N is 0.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/crop-plan-1440-qotd-head.png, crop-plan-390-qotd-head.png"
+   },
+   {
+    "severity": "high",
+    "card": "score",
+    "selector": "#score p.score-band (No score yet), #score figure.chart.scale, #score .blk (causes), #score > .acts",
+    "where": "All widths and themes. New and mid learners (no sitting), and plan learners before a test.",
+    "what": "\"No score yet\" is set in DM Mono at 48px (40px on a phone), a sentence at number size. Around it, for a student with no score, sit: an empty 200–800 scale, \"Not enough to project yet · 2 scored sittings in 60 days start it\", \"Where points went · Fewer than 5 misses in 14 days: nothing to sort yet\", a help line, and two stacked equal buttons. The card is 440–590px of defaults.",
+    "fix": "When !sc and there is no added score: a .line \"No score yet\" at 15px and one btn \"Get a score\" (UI.menu: Module · 35 min / Diagnostic · 32 min / Add a score). Hide the scale unless there is a target or estimate, skip causesBlock when total < 5, skip the not_enough verdict until there is 1 sitting, and drop the help line (it becomes the menu's sub text).",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/crop-new-1440-score.png"
+   },
+   {
+    "severity": "high",
+    "card": "plan",
+    "selector": "#plan (planNone): hr.sep + p.k 'Study plan' + 'Build your study plan' + ol.cta-steps + ul + p.help + a 'Build my plan →'",
+    "where": "All widths and themes, any learner without a plan",
+    "what": "The card says its message twice (#9). First comes the full builder (Start from, SAT date, Daily, Days, Target, the week preview, Use this plan, Adjust…). Then a second block: \"STUDY PLAN\" (repeats the card title), \"Build your study plan\", 4 step links, 3 bullets, a help line and \"Build my plan →\", which goes to the same place as Adjust….",
+    "fix": "Keep the builder. Remove the second heading and the \"Build my plan →\" link (Adjust… already opens /plan/). Move the steps and bullets behind one quiet \"How plans work\" link, as a popover or tooltip, beside Adjust….",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/new-1440-light-p2.png, mid-1440-light-p4.png"
+   },
+   {
+    "severity": "high",
+    "card": "next + exam",
+    "selector": "#next .lead (How did it go?) and #exam (Your SAT was …)",
+    "where": "The day after the exam (stage after), all widths and themes",
+    "what": "The same message and both buttons appear twice, in two stacked cards: Up next shows \"How did it go? / Add your official score / Pick your next date\", and the SAT card shows \"Your SAT was Sep 27. / How did it go? / Add your official score / Pick your next date\".",
+    "fix": "In paintExam, when mode === 'after', show only \"Your SAT was Sep 27 · scores around <date>\" with Remind me and the date trigger. The two actions stay in Up next's lead.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/crop-after-1440-top.png"
+   },
+   {
+    "severity": "high",
+    "card": "mist",
+    "selector": "#mist > .acts (Start review · 10 min); #mist .acts (Fix all · N) inside tr.now + foot .acts (Fix all · N questions); #mist p.sub 'Rare skills · … · 0'",
+    "where": "All widths and themes. Mid, plan and stretch learners; the double Fix all and the empty rare group in the final stretch.",
+    "what": "Repeats and empties. \"Start review · 10 min\" duplicates Due today's \"Review · 16 due · Start\" row. In the stretch, the card has two Fix all buttons (\"Fix all · 4\" under Worth fixing now and \"Fix all · 4 questions\" at the foot). A \"RARE SKILLS · AFTER OCT 4 · 0\" heading with its help line is shown for zero rows.",
+    "fix": "Show one review start: drop it from Mistakes when t.due has a review row, or the other way round. In paintMist render the foot Fix all only when !(tr.now || tr.rare). Skip the rare block when !tr.rare.n.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/crop-str-1280-mist.png"
+   },
+   {
+    "severity": "high",
+    "card": "plan",
+    "selector": "#plan .wk-strip .wk-day > button.quiet (Work ahead / Make up), .wk-day .wk-s, .wk-day .meta",
+    "where": "Plan and stretch learners. 1280/1440 (box 6px past the tile on each side). 390 (10px past; the text wraps to 2 lines and the boxes overlap the next tile; \"Practice\" breaks as \"Practic / e\").",
+    "what": "The quiet \"Work ahead\" keeps its -9px/-12px margins inside 43–87px tiles, so its box and focus ring spill onto the next tile (#4). At 390, .wk-s has overflow-wrap:anywhere, so the day word splits mid-word. In the stretch, the Sat Rest and Sun Exam tiles show \"0q\" plus \"Work ahead\".",
+    "fix": "`.wk-day .quiet{margin:0;padding:4px 2px;justify-content:center;font-size:12px;white-space:normal}`, or an icon button with aria-label. At ≤759 set `.wk-day .wk-s{overflow-wrap:normal;font-size:10px}`. In weekDay, show `${d.questions}q` and Work ahead only for kind practice/test with questions > 0 (not taper, eve, exam or rest).",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/crop-plan-390-plan.png, crop-str-1280-plan.png"
+   },
+   {
+    "severity": "high",
+    "card": "plan",
+    "selector": "#plan > p.meta (week theme)",
+    "where": "Plan and stretch learners, all widths and themes",
+    "what": "Raw slugs are shown to the student in mono: \"Build · nonlinear_equations_and_systems, nonlinear_functions, linear_inequalities\" and \"Final · nonlinear_equations_and_systems, linear_equations_in_one_variable, …\". It wraps with the last slug alone on a line.",
+    "fix": "In planSet: meta((w.theme||'').replace(/\\d{4}-\\d{2}-\\d{2}/g, x => UI.date(x)).replace(/[a-z]+(?:_[a-z]+)+/g, s => TOP(s))), in Archivo (see the mono finding).",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light-p5.png, crop-str-1280-plan.png"
+   },
+   {
+    "severity": "high",
+    "card": "plan",
+    "selector": "#plan .plan-stats .fig, #plan .wk-pager",
+    "where": "Plan and stretch learners on day 1, all widths and themes",
+    "what": "Four stat tiles of placeholders and zeros, with words in mono: \"0% done / 0 of 30 study days\", \"On time / from your first study day\", \"Pace / needs +23 a week\", \"Day 1 of 41 / from the plan's start\". The pager says \"Week 1 of 6 · 0 of 25 tasks · 0%\". The stretch shows \"Week 1 of 1\" with both arrows disabled.",
+    "fix": "Show a tile only when it has a value (done > 0, on_time.of > 0, made_per_week known). On day 1, collapse to one Archivo line: \"Day 1 of 41 · needs +23 a week\". Drop \"· 0 of N tasks · 0%\" while it is 0, and hide ‹ › when weeks.length === 1.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light-p5.png"
+   },
+   {
+    "severity": "high",
+    "card": "due",
+    "selector": "#due .drow .dm ('0 of 2'), .dt ('Sweep · 0 of 3 fixed mistakes today'), #due p.sub (Plan · 0 of 5 · …), .due-head .k + .meta",
+    "where": "All widths and themes: every learner who hasn't answered today; plan and stretch learners",
+    "what": "Zeros, and one idea given several numbers. \"The day's questions 0 of 2\" is the named \"0 of 22\" defect; nz() deliberately keeps \"0 of\". A row title reads \"Sweep · 0 of 3 fixed mistakes today\". The plan sub says \"PLAN · 0 OF 5 · 20 MIN LEFT OF 30\" (the hero repeats 0 of 5). Today's minutes appear as \"about 50 min left\" (head), \"30 min over your goal\", \"20 min left of 30\" (sub) and \"Today in your plan · 30 min\" (Up next).",
+    "fix": "In nz(), drop \"0 of N\" parts too, and show pl(of,'question') while have is 0 (the code already does this for progress). Build the Sweep title without the 0 count. Show the minutes once: in Due today's head (\"about 50 min\"), with \"over your goal\" as its title tooltip. Remove the counts from the plan sub and the Up next head meta.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light-p0.png, crop-str-1280-due.png"
+   },
+   {
+    "severity": "high",
+    "card": "study",
+    "selector": "#study .cal-grid (--c:40px) and .cal-wrap",
+    "where": "900, 1280 and 1440, all learners, both themes",
+    "what": "The calendar uses less than half its card. The grid has fixed 40px columns (7×40 + 6×4 = 304px) inside a 584–643px card, leaving ~280–340px empty to the right of the month (#10: a strip of 7 tiles with half the width empty). The day detail sits under it with the right half blank.",
+    "fix": "`#study .cal-grid{grid-template-columns:repeat(7,minmax(40px,1fr));max-width:560px}` `#study .cal-d{width:auto;aspect-ratio:1.3}`. Or at ≥1080 use `.cal-wrap{grid-template-columns:auto minmax(0,1fr);align-items:start}` so the day detail is the caption beside the month it describes, top-aligned with the grid.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/mid-1440-light-p3.png, crop-plan-1440-study.png"
+   },
+   {
+    "severity": "high",
+    "card": "next",
+    "selector": "#next .go > button.quiet (New to X? See an example first), #next .go > a.quiet (Or start from a score: …)",
+    "where": "390 (new and stretch learners); focus overlap also at 1280/1440",
+    "what": "Both long quiet offers wrap to 2 lines as centred text: \"…See an example / first\" with the orphan centred, and \"…20 questions · / 32 min\". Their boxes sit 3px apart, so each focus ring covers the other and the Study pill.",
+    "fix": "`.td .go .quiet{text-align:left}`. At ≤759 `.td .go{flex-direction:column;align-items:flex-start;row-gap:16px}`. Shorten to \"See an example first\" (the topic is on the chip, keep it in title) and \"Diagnostic instead · 32 min\".",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/crop-new-390-next.png"
+   },
+   {
+    "severity": "high",
+    "card": "pace, gain, mist, study, tests (new student)",
+    "selector": "#pace > p.line, #gain > p.line + .acts, #mist (No open mistakes + help + Practice), #study .cal-wrap, #tests .acts",
+    "where": "Brand-new learner, all widths and themes",
+    "what": "For a brand-new student, most cards are made of zeros and defaults. Pace: \"… · 0 so far\" + Timed set. Points: \"Answer 30 questions … · 0 of 30\" + \"Start the coach's set\" (a second 'start a set' right under Up next's). Mistakes: \"No open mistakes.\" + a help paragraph + a Practice link back to #next. Study: a full empty month + a mono note. Recent tests: \"No tests yet.\" + Module and Section buttons that repeat the Score card's.",
+    "fix": "For a learner with d.total === 0, render each of these as its head plus one quiet line without the count (\"Shows after 20 timed answers\"; \"Shows after 30 answers\"). Drop the duplicate start buttons (Up next owns starting) and keep them in each card's ⋯ menu or as quiet links. Skip the empty calendar until the first active day (the line above it already says so).",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/new-1440-light-p0.png, new-1440-light-p1.png"
+   },
+   {
+    "severity": "medium",
+    "card": "all (quiet links)",
+    "selector": ".quiet:focus-visible (ui.css: padding 9px 12px; margin -9px -12px; outline 2px + offset 2px)",
+    "where": "All widths, keyboard focus, both themes",
+    "what": "Hover no longer paints, but the focus ring still draws around the padded box and covers neighbours (#4). Measured overlaps: All words → Start 8px; Add a score → Section button 8px; +2 more → Fix all 8px; Report a problem → Share 8px; Open plan / Change plan / Add to calendar onto each other 8px; Add your name → h1 6px; Relapsed · learn it again over the topic line, the Sure tag and Try one now; Target 650 needs… → the summary line 7px; Adjust… → its help; Build my plan → → its help 9px.",
+    "fix": "In ui.css: `.quiet:focus-visible{outline-offset:-6px}`, so the ring sits inside the padding (3px above and below the text, 6px to each side). In index.html: `.td :is(.acts,.go,.card-act,.sess-ctl,.q1-after,.tm){column-gap:16px}`, so a quiet link beside a control keeps its own space.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light.json (focus[]), mid-1440-light.json (focus[])"
+   },
+   {
+    "severity": "medium",
+    "card": "next",
+    "selector": "#next .sess-ctl (seg Untimed|Timed + a.quiet More options)",
+    "where": "All widths and themes",
+    "what": "A toggle and a navigation link share one row (#2). \"More options\" (a link to /practice) sits 14px after the Untimed | Timed seg at the same weight, so it reads as a third clock option.",
+    "fix": "Move More options to the .go row after the Study pill (or into the card head as a quiet link), so the clock row holds only the clock.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/mid-1440-light-p0.png"
+   },
+   {
+    "severity": "medium",
+    "card": "next",
+    "selector": "#next .size > .seg (42px) + .size-picks .chips > button (36px); #next .sess-ctl > .seg (40px)",
+    "where": "760 and up, all learners, both themes",
+    "what": "Controls on one row have different heights: the size seg track is 42px (its buttons are forced to 36px), the chips beside it are 36px (dh 6), and the clock seg below is 40px. The two stacked segs differ by 2px, and the selected looks differ (seg: paper with orange ring; chip: wash-2 with orange ring).",
+    "fix": "Drop `.size .seg button{min-height:36px}` so both segs are 40px, and set `.td .size-picks .chips > button{min-height:40px}`. Use one selected look for this row: the chips' wash-2 + ring, or paper + ring on both.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/probe-mid-1440.json (size, clock)"
+   },
+   {
+    "severity": "medium",
+    "card": "next",
+    "selector": "#sessBody > p.meta (15 min · about 11 questions at your pace), #sessStart, #next .card-head .meta (Today in your plan · 30 min)",
+    "where": "All widths and themes, all learners",
+    "what": "The chosen size is said three times: the selected chip \"15\", the meta \"15 min · about 11 questions at your pace\", and the pill \"Study 15 min\" (#6). With a plan, the head says \"Today in your plan · 30 min\" while the session defaults to 15.",
+    "fix": "In paintBlocks, box mode: meta = \"about 11 questions at your pace\" only. Keep the pill's size or make it \"Study\". When a plan day exists, default SZ.sel to pday.minutes (nearest box option), or drop the head meta (Due today carries the minutes).",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light-p0.png"
+   },
+   {
+    "severity": "medium",
+    "card": "gain",
+    "selector": "#gain .skill-row.gain (grid minmax(150px,1fr) 84px minmax(150px,1.2fr) auto)",
+    "where": "1280 and 1440, mid and plan learners, both themes",
+    "what": "The columns shift from row to row because the last column (.skill-side) is auto-width: \"≈ +10\" sits at x=514, 534 and 529 on consecutive rows, the track starts at 616, 636 and 631, and track widths are 150, 204 and 198. The number column zig-zags down the card. \"Learning 54% right of / 11\" wraps with the count alone.",
+    "fix": "`.td .skill-row.gain{grid-template-columns:minmax(150px,1fr) 84px minmax(150px,1.2fr) 150px}` (or subgrid on .gain-rows), and `.skill-m .meta{white-space:nowrap}`.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/crop-mid-1440-gain.png"
+   },
+   {
+    "severity": "medium",
+    "card": "gain",
+    "selector": "#gain > .acts > span.help + a.quiet (How this works)",
+    "where": "All widths and themes",
+    "what": "A help paragraph sits beside a link (#13): \"Estimated with our score model: how far your Math band would move if this skill reached 80%.\" at 12.5px next to \"How this works\" at 14.5px, with centres 3px apart. It wraps under the button at 390.",
+    "fix": "Keep only the \"How this works\" link and put the sentence in its title, or UI.fact(link, 'points') as receiptBlock does for How.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/mid-1440-light-p2.png"
+   },
+   {
+    "severity": "medium",
+    "card": "mist, score, chal, plan, study",
+    "selector": "#mist p.help (Blind spots / Rare skills / new-student), #score p.help, #chal > p.line.soft, #plan p.help, #study > p.meta (Nothing to review yet…)",
+    "where": "All widths and themes",
+    "what": "Help paragraphs sit permanently where a tooltip or link would do (#13): \"You were sure and wrong: these never get double-checked.\" (orphan \"double-checked.\"); \"About 0.5 of 44 a test each: after the SAT, or now if you have time.\"; \"Any module, the diagnostic, or an added score gives a score.\"; the challenge's 2-line rules; \"About a minute. Change it any time. Free, as many as you like.\"; \"Nothing to review yet · first check-ins come 3 days after a fix.\"",
+    "fix": "Put each sentence in a title/aria-describedby on its sub heading or button (a small (i) like .why-i on Due today), or in UI.fact popovers. The challenge rules become the Start button's title; the head keeps \"10 questions · 16 min\".",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light-p0.png, mid-1440-light-p3.png"
+   },
+   {
+    "severity": "medium",
+    "card": "mist",
+    "selector": "#mist .trow .tm (meta ×N, pips, glyph + topic in .meta, .tag.ink Sure, button.quiet Relapsed · learn it again, .btn Try one now)",
+    "where": "1280/1440 (4-column card) and 390, both themes",
+    "what": "A cluttered meta row (#12): mono count, pips, a glyph, the topic name in DM Mono, an 11px Sure tag, a 14.5px quiet link and a 40px button wrap onto 3 lines (centres 473, 499, 535). Tag and link sizes don't match (11 vs 14.5px), and the topic is a word set in mono.",
+    "fix": "Line 1: ×N · pips · glyph + topic in Archivo 13px soft (`.trow .tm .meta{font-family:var(--font)}`). Line 2: actions at one size: Sure as a 16px icon with title, \"Learn it again\" as a 13px quiet link, and Try one now as .btn.sm.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light-p0.png"
+   },
+   {
+    "severity": "medium",
+    "card": "mist",
+    "selector": "#mist > .acts + div > p.sub:first-child; #mist .mist-fig + p.meta",
+    "where": "All widths and themes, any learner with mistakes",
+    "what": "The spacing rhythm breaks: 0px between the \"Start review · 10 min\" button and the next heading (\"BLIND SPOTS · 3\" / \"WORTH FIXING NOW\") because `.sub:first-child{margin-top:0}` fires inside the list div. There is also 0px between the big \"7 OPEN\" and its meta line, which wraps with \"fixed\" alone (\"6 fixed today · 5 new today · 4 half / fixed\").",
+    "fix": "`#mist > .acts + div{margin-top:18px}` and `#mist .mist-fig + .meta{margin-top:4px}`. Shorten the meta to what needs attention (\"6 fixed today · 5 new\"; half-fixed goes in the tooltip).",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/crop-str-1280-mist.png"
+   },
+   {
+    "severity": "medium",
+    "card": "exam",
+    "selector": "#exam .check-list (checklist()), #exam .exam-sum",
+    "where": "Stretch (6 days) at 1280/1440 and exam day, both themes",
+    "what": "The card is collapsed (Details), but the 7–10-item checklist stays open below the summary: 330–480px at full card width, with labels ending at 441px of a 908px list (467px empty to the right). \"TEST-DAY CHECKLIST · 0 OF 7\" is a zero. On exam day the key fact (\"Doors close at 8:00 AM\") is hidden inside Details while the checklist shows.",
+    "fix": "`@media (min-width:760px){#exam .check-list{grid-template-columns:repeat(2,minmax(0,1fr))}}`. Collapse the checklist to its heading line with ▸ (open by default only when days ≤ 1), show the count only once something is ticked, and put \"Doors close at 8:00 AM\" in .exam-sum on exam day.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/str-1280-light-p0.png, exam-1440-light-p0.png"
+   },
+   {
+    "severity": "medium",
+    "card": "qotd",
+    "selector": "#qotd .qd-row (grid, default align stretch) > .qd-slot",
+    "where": "≥1080, both themes; any learner (unanswered and answered)",
+    "what": "The two slot tiles are forced to the same height, leaving a large blank area in the shorter one (#10): the MC slot's content ends 224px above its bottom (354 of 578px). After answering, the grid-in slot has 279px blank (843 of 1122px).",
+    "fix": "`.qd-row{align-items:start}`.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/new-1440-light-p1.png, plan-1440-light-p3.png"
+   },
+   {
+    "severity": "medium",
+    "card": "qotd",
+    "selector": "#qotd .qd-after .acts (pill, 5 more like this, More hard · …, Save, Share, quiet Report a problem)",
+    "where": "After answering, 1440 (each slot ~450px) and 390, both themes",
+    "what": "Six actions of mixed weight wrap onto 3 rows, with \"Report a problem\" alone on the last one. \"Save\" and \"Share\" are equal .btn next to practice actions, with no hint of what they do. In the answered MC review the student's pick appears three times: the option marked YOUR ANSWER, the line \"Your pick · B · −8/5 · Solved for the wrong sign of x\", and YOUR ANSWER / CORRECT ANSWER boxes, plus the trap line a second time. \"You're one of the first 1 today\".",
+    "fix": "Keep Now its twin (as .btn, see the orange finding), 5 more like this and Harder. Put Save, Share and Report into one ⋯ UI.menu. In qotd's review, hide the verdict's answer boxes when the options already carry the marks. For c.answered === 1 say \"You're the first today\".",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light-p3.png, spr-slot-after.png"
+   },
+   {
+    "severity": "medium",
+    "card": "qotd",
+    "selector": "#qotd p.k.qd-rowk (MATH) + .qd-lab .k (MATH · MULTIPLE CHOICE / MATH · GRID-IN) + the question's Grid-in chip",
+    "where": "≥1080 (row label) and all widths (slot label), both themes",
+    "what": "\"Math\" is said twice: the row label \"MATH\", then each slot \"MATH · MULTIPLE CHOICE\". The grid-in slot also shows a \"Grid-in\" chip under its \"GRID-IN\" label.",
+    "fix": "Slot label = \"Multiple choice\" / \"Grid-in\" (drop the subject while the row label or tab shows it), and hide the format chip in qotd workspaces.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/mid-1440-light-p2.png"
+   },
+   {
+    "severity": "medium",
+    "card": "study",
+    "selector": "#study .figs .fig (Today / This week / This month / Active days this month)",
+    "where": "All widths and themes, mid, plan and stretch learners",
+    "what": "\"Today 8m\" and \"This week 8m\" repeat each other on Monday. Tile meta is mono and runs to 3–4 lines (\"8 questions · / 38% right · 6 / fixed · of 30m\"). \"ACTIVE DAYS THIS MONTH\" wraps with MONTH alone. All four tiles are stretched to 135–167px, so the Month and Active tiles are half empty.",
+    "fix": "Hide This week while it equals Today. Put the Today meta in Archivo on at most 2 lines, or move it into the bar4 title. Label the last tile \"Active days\" (the month is the tile before). `.figs{align-items:start}`.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/crop-plan-1440-study.png"
+   },
+   {
+    "severity": "medium",
+    "card": "study",
+    "selector": "#study .day-detail .dd-t + .meta (times), #study > p.meta (streak footer)",
+    "where": "All widths and themes, mid and plan learners (today selected)",
+    "what": "Repeats. For today, the caption \"Mon, Sep 28 · 10m · 8 questions · 38% right\" repeats the Today tile word for word. One sitting prints \"4:21 AM – 4:21 AM\". The footer \"3-day study streak · best 3 · goal met 0 of the last 14 days\" repeats the hero chip and adds a zero.",
+    "fix": "When day === today, the caption drops the minutes, questions and % (the tiles say them) and keeps sittings, mistakes and topics. Print one time when first_at and last_at are the same minute. Footer: drop the streak and best, and drop \"goal met\" while it is 0.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light-p4.png"
+   },
+   {
+    "severity": "medium",
+    "card": "score, study",
+    "selector": "figure.chart.stackbar (.sb-seg labels + .legend + following p.line)",
+    "where": "All widths and themes, mid and plan learners",
+    "what": "Each stacked bar says its numbers three times: on-bar labels \"Traps 12 | Gaps 5\", the legend \"Traps 12 · Gaps 5\", then \"Most of your misses are traps (12 of 17)\". The time split does the same (\"Algebra 7 min\", legend \"Algebra 7 min · Advanced Math 1 min\", \"83% of your time on Algebra\"). The small segment's label is clipped to nothing (scrollWidth > clientWidth).",
+    "fix": "Call UI.stackBar with the legend off when segments are labelled, and let the legend carry only segments too narrow for their label. The sentence keeps the insight without repeating the count (\"Most of your misses are traps: fixing them is your fastest gain\").",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/mid-1440-light-p3.png"
+   },
+   {
+    "severity": "medium",
+    "card": "plan",
+    "selector": "#plan .draft-ctl (select.field 48px vs .days7 button 40px; input[type=range] row), .days7 button[aria-pressed=true]",
+    "where": "All widths and themes, any learner without a plan",
+    "what": "The builder's two-column grid is misaligned. The Daily select (48px) and the Days buttons (40px) share a row, with bottoms 8px apart. In row 1 the Start-from slider sits 18px lower than the SAT date select because of the \"Your best guess · not set\" line. Selected days are solid ink (#3F3F3F) while every other toggle on the page is paper/wash with an orange ring. \"not set\" in mono sits beside a slider thumb resting at 500.",
+    "fix": "Match heights with `.days7 button{min-height:48px}` (or the selects .sm at 40px). Put \"Your best guess\" in the label line and hide \"not set\". `.days7 button[aria-pressed=true]{background:var(--wash-2);box-shadow:inset 0 0 0 1.5px var(--amber);color:var(--ink)}`.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/new-1440-light-p2.png, probe-new-1440.json (draft)"
+   },
+   {
+    "severity": "medium",
+    "card": "plan",
+    "selector": "#plan .card-head .card-act (a.quiet Open plan, a.quiet Change plan, button.quiet Add to calendar)",
+    "where": "Plan and stretch learners. All widths; at 390 the three wrap under the title.",
+    "what": "A cluttered head (#12): three quiet links 8px apart, whose focus rings overlap each other by 8px. \"Add to calendar\" also sits in the SAT card's details.",
+    "fix": "Keep \"Open plan\" in the head and move Change plan and Add to calendar into a ⋯ UI.menu (.ibtn) beside it.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/crop-str-1280-plan.png, crop-plan-390-plan.png"
+   },
+   {
+    "severity": "medium",
+    "card": "plan",
+    "selector": "#plan .go (button.pill:disabled + span.help + button.quiet Adjust…)",
+    "where": "All widths and themes, without a plan. At 390 Adjust… wraps alone.",
+    "what": "One row mixes a disabled orange pill (15.5px, 52px), a 12.5px help line \"Pick where you start\" and a 14.5px quiet (18px height difference). At 390 \"Adjust…\" wraps onto its own line.",
+    "fix": "Put the help under the pill (display:block, as the field hint), or drop it and say it in the pill's title. Move Adjust… to the card head's right.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/new-1440-light-p2.png"
+   },
+   {
+    "severity": "medium",
+    "card": "score, plan, next, tests",
+    "selector": "#score > .acts .btn, #plan .draft-ctl .acts .btn, #next .go a.quiet, #tests .acts .btn",
+    "where": "All widths and themes (new and mid learners)",
+    "what": "The same actions carry different labels, and two equal buttons don't say how they differ (#3). The diagnostic is \"Diagnostic · 20 questions · 32 min\" (Score and Up next) and \"Diagnostic · 20 q · ~30 min\" (Plan). The module is \"Module · 22 questions · 35 min\" (Score and Tests), \"Take a module · 35 min\" (Plan) and \"Module · 22 q · 35 min\". In Score the two buttons each wrap to their own line at span-6 width.",
+    "fix": "Use one label per action everywhere (e.g. \"Module · 35 min\", \"Diagnostic · 32 min\") and a title for the difference (\"a timed test module\" vs \"20 questions across every skill\"). In Score use one \"Get a score\" menu (see the score finding).",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/new-1440-light-p1.png, new-1440-light-p2.png"
+   },
+   {
+    "severity": "medium",
+    "card": "all (type)",
+    "selector": ".td .meta (DM Mono 13px) in #next, #due, #gain, #mist, #score, #chal, #plan, #study",
+    "where": "All widths and themes",
+    "what": "Mono is used for sentences, against \"DM Mono only for numbers that matter\": \"Today in your plan · 30 min\", \"15 min · about 11 questions at your pace\", \"from 48 answers · updated after every answer\", \"6 fixed today · 5 new today · 4 half fixed\", \"Evidence: Algebra 23 · Advanced Math 14 (thin)\", \"Nobody has finished today's yet.\", \"from the plan's start\", \"Plan: partial\", \"Night before / Test day\", and topic names in Mistakes rows. That is 91 mono text nodes on one screen.",
+    "fix": "`.td .meta{font-family:var(--font);font-size:13px;letter-spacing:0}` and wrap the numbers that matter in <span class=\"mono\"> (the .mono utility exists).",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light-p0.png, mid-1440-light-p1.png"
+   },
+   {
+    "severity": "medium",
+    "card": "all (type)",
+    "selector": "#today text (computed font-size/weight/family)",
+    "where": "1440, plan learner, light",
+    "what": "About 48 distinct size/weight/family combinations on one page: sans at 11, 11.5, 12, 12.5, 13, 13.5, 14, 14.5, 15, 15.5, 16, 17, 18, 20 and 36px, mono at 10.5, 11, 12.5, 13, 18, 24, 44 and 48px. Decision 7 asks for few text sizes and weights.",
+    "fix": "Collapse the page's own sizes to 12 / 13.5 / 15 / 18 (+ numerals): .help 12.5→13.5, .line.soft 13.5 (keep), .quiet 14.5→14, .tag 11→12, .skill-meta 11→12, the checklist 14→15. The remaining odd sizes (10.5 eyebrows, 15.5 pill) come from ui.css tokens.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/probe-plan-1440.json (sizes)"
+   },
+   {
+    "severity": "medium",
+    "card": "all (card heads)",
+    "selector": "#today .card-head > h2.k; #due .due-head p.k",
+    "where": "All widths and themes",
+    "what": "Card heads are inconsistent. 13 cards render their h2 as 18px 700 Archivo in ALL CAPS grey, because the .k eyebrow class brings uppercase and --soft (\"UP NEXT\" reads as \"UPNEXT\", and \"QUESTIONS OF THE DAY · MON, SEP 28\" wraps at 390). Due today, now its own card, has a 10.5px DM Mono eyebrow head that wraps at 4-column width.",
+    "fix": "Choose one head. Either `.td .card-head > h2.k{text-transform:none;letter-spacing:-.015em;color:var(--ink)}` (or drop 'k' from head()), or keep the caps. In either case build Due today's head with head('due','Due today', meta) like the other cards.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light-p0.png"
+   },
+   {
+    "severity": "medium",
+    "card": "hero",
+    "selector": "#hero .hero-top (align-items:flex-end) > div + .hero-stats",
+    "where": "≥760 when the student has no name (new, mid, stretch and after learners), both themes",
+    "what": "The chips are aligned to the bottom of the left block (the \"Add your name\" line), so their centre sits 27px below the title's centre (h1 cy 147, chips cy 174). With a name they line up with the title (cy 67 vs 70), so the head changes shape between students.",
+    "fix": "`.hero-top{align-items:center}`, or move .hero-name out of .hero-top to sit under it.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/new-1440-light-p0.png"
+   },
+   {
+    "severity": "low",
+    "card": "hero",
+    "selector": "#hero .hero-name > button.quiet (Add your name)",
+    "where": "All widths, both themes",
+    "what": "The quiet's -12px margin puts its box 12px left of the page gutter (the hero has no padding). Its focus ring reaches 16px out, 4px from the screen edge at 390, and covers the h1's descenders by 6px.",
+    "fix": "`.hero-name .quiet{margin:0;padding:4px 0}`.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/new-390-light-g0.png"
+   },
+   {
+    "severity": "low",
+    "card": "next, study",
+    "selector": ".seg:where([role]) > button:focus-visible, #study .cal-d:focus-visible",
+    "where": "All widths, keyboard focus",
+    "what": "Focus rings on segmented options and calendar days are 2px wide at a 2px offset, with only 2–4px between items, so each ring covers the neighbouring option or day by 2px.",
+    "fix": "`.seg:where([role]) > button:focus-visible, .cal-d:focus-visible{outline-offset:-2px}`.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/new-390-light.json (focus[])"
+   },
+   {
+    "severity": "low",
+    "card": "exam",
+    "selector": "#exam > .row > .btn (date buttons, no date set)",
+    "where": "1280/1440 (4-column card), new and mid learners",
+    "what": "The four date buttons wrap into a ragged 2×2 (widths 94, 97, 97 and 135px). \"Sat, Mar 6, 2027\" is wider, so the rows don't line up, and \"Another date\" hangs under them.",
+    "fix": "`#exam > .row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}` with the buttons at width:100%.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/mid-1440-light-p1.png"
+   },
+   {
+    "severity": "low",
+    "card": "plan",
+    "selector": "#planWeek .week-rows li (flex-wrap baseline)",
+    "where": "390, any learner without a plan",
+    "what": "The first-week rows are ragged: some wrap to put the date on its own line and the text below (Mon, Tue, Thu), while others fit on one line (Wed, Fri, Sat).",
+    "fix": "`.week-rows li{display:grid;grid-template-columns:88px minmax(0,1fr);gap:4px 10px}`, so the text wraps inside its own column.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/new-390-light-g1.png"
+   },
+   {
+    "severity": "low",
+    "card": "qotd",
+    "selector": "#qotd .q-stem (equation line)",
+    "where": "390, both themes",
+    "what": "The equation breaks in the middle of an expression: \"… = 8/(x\" on one line and \"– 14)\" on the next.",
+    "fix": "`#qotd .q-stem .tex, #qotd .q-stem .katex{white-space:nowrap}` for inline math, or insert break opportunities only after '=' and between terms.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/new-390-light-g0.png"
+   },
+   {
+    "severity": "low",
+    "card": "mist, score, study (dark)",
+    "selector": ".tag.ink (Sure), figure.stackbar .sb-seg:not(.top), .mk[data-m=wrong]",
+    "where": "Dark theme, all widths",
+    "what": "In dark mode ink fills turn near-white (#ECE8E1), so the Sure tags and the stack bar's second segment (a ~150px bright bar) are the brightest things on the page, louder than the orange.",
+    "fix": "In the dark tokens, give these fills var(--mat) or var(--tile-2) with --ink text instead of inverted ink.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/crop-plan-1440-dark-top.png, plan-1440-dark.png"
+   },
+   {
+    "severity": "low",
+    "card": "qotd",
+    "selector": "#qotd .verdict (animation: rise)",
+    "where": "≥1080 after answering, on page load",
+    "what": "The answered verdicts replay their rise fade on every repaint (the cached paint, then the live one). A capture 2.5s after load still showed the grid-in verdict at opacity 0.57, so it looks disabled while it plays.",
+    "fix": "In paintQotd, skip the rise for slots already answered when painting (add a class that sets animation:none on .verdict when the verdict is restored, not new).",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/plan-1440-light-p3.png"
+   },
+   {
+    "severity": "low",
+    "card": "hero",
+    "selector": "#hero-h (greeting)",
+    "where": "All widths, local time 04:21",
+    "what": "It says \"Good evening\" at 4 AM, because the code sends every hour before 5 to evening.",
+    "fix": "In paintHero: hr < 5 → 'Good night' or 'Hello'.",
+    "screenshot": "/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/hyg/8071/new-1440-light-p0.png"
+   }
+  ]
+ }
+}

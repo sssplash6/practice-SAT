@@ -375,6 +375,31 @@ not widen the scope, and if a fix creates new work (content to add, a pattern el
 test_flow; both must pass. Commit as you go, and return what you changed and which defects are left.`,
   { label: `fix ${t.id} r${round}`, phase: 'Fix', isolation: 'worktree' })
 
+// One hygiene agent per page (the user, 2026-09-28: "your call, dont fuck up tho"): visual + calm, measured, and it LOOKS at every
+// screenshot card by card. Its high/medium findings join the verifier's blockers in the one fix.
+const HYG = { type: 'object', properties: {
+  findings: { type: 'array', items: { type: 'object', properties: {
+    severity: { type: 'string', enum: ['high', 'medium', 'low'] }, where: { type: 'string' }, what: { type: 'string' }, fix: { type: 'string' } },
+    required: ['severity', 'where', 'what', 'fix'] } },
+}, required: ['findings'] }
+const hygiene = t => agent(`${CONTEXT(t)}
+You are the HYGIENE REVIEWER for ${t.title}: read-only, do not edit or commit. Run git switch --detach v2/${t.id.toLowerCase()}, start your
+server on port ${t.port + 40} with its own SATF_DB, and make a new learner and a seeded one (answers over several days, some wrong, a plan
+and an exam date) through the site's API. For every page of the section at 1440, 1280, 900 and 390, light and dark:
+1. MEASURE (getBoundingClientRect): controls in one row share one height and vertical centre, labels beside them match; hover and focus
+   every interactive element and check its painted box never overlaps another element; empty areas over 120px beside or inside cards;
+   awkward wraps and clipping.
+2. LOOK at each screenshot, card by card, as a demanding designer and as a first-time student: clutter, misalignment, anything not
+   eye-pleasing, anything a student would not understand at a glance.
+3. Decision 7: zeros and defaults on screen, facts said twice, explanatory sentences that should be tooltips, equal-weight buttons doing
+   different things, long cards that should start collapsed, headers that are more than one quiet line.
+The user found these on Today by eye, after every check had passed; find more of exactly this kind: misaligned control rows; two choices
+crammed in one row; hover highlights overlapping text; a sentence where a number belongs; icons off-centre with their text; an oversized
+button repeating the header; zeros; a "Why" line under every row; a card repeating another; big empty areas; a detail box floating away
+from what it describes; a cluttered header; help paragraphs instead of one link. No feature may be removed.
+Return every finding with severity, where (page, card, selector, width, theme), what, and the exact fix.`,
+  { label: `hygiene ${t.id}`, phase: 'Verify', schema: HYG, isolation: 'worktree' })
+
 async function run(a) {
   const t = { ...TASKS[a.id], id: a.id }
   const out = { id: a.id, branch: `v2/${a.id.toLowerCase()}`, units: [], rounds: [] }
@@ -386,12 +411,27 @@ async function run(a) {
   // small or data-only tasks (inline: true) skip the check agent: the main session checks them inline (the user, 2026-09-24)
   if (t.inline) { out.result = 'built; inline check by the main session, then merge'; return out }
   if (a.from === 'fix') { out.fixes = [await fix(t, a.issues, round)]; out.result = 'fixed; ready to merge (leftovers in the fix report)'; return out }
+  if (a.from === 'hygiene') {
+    const hy = await hygiene(t)
+    out.hygiene = hy
+    const list = ((hy && hy.findings) || []).filter(f => f.severity !== 'low').map(f => ({ where: f.where, what: f.what, fix: f.fix, severity: 'blocker' }))
+    if (list.length) out.fixes = [await fix(t, list, round)]
+    out.result = list.length ? 'hygiene fixed; ready for the user preview' : 'hygiene clean; ready for the user preview'
+    return out
+  }
   for (;;) {
     const v = await verify(t, round)
     out.rounds.push(v)
     if (!v) { out.result = 'verifier died'; return out }
-    const blockers = (v.defects || []).filter(d => d.severity === 'blocker')
+    let blockers = (v.defects || []).filter(d => d.severity === 'blocker')
     out.followups = (v.defects || []).filter(d => d.severity !== 'blocker')
+    if (t.units === PAGE_UNITS && round === 1) {            // pages get the hygiene review once, and its findings join the one fix
+      const hy = await hygiene(t)
+      out.hygiene = hy
+      const extra = ((hy && hy.findings) || []).filter(f => f.severity !== 'low').map(f => ({ where: f.where, what: f.what, fix: f.fix, severity: 'blocker' }))
+      v.defects = [...(v.defects || []), ...extra]
+      blockers = [...blockers, ...extra]
+    }
     if (!blockers.length) { out.result = 'passed; ready to merge'; return out }
     const r = await fix(t, v.defects, round)
     out.fixes = [...(out.fixes || []), r]
