@@ -17,6 +17,7 @@ const SHELL = '/Users/workingmyassof/Library/Caches/ms-playwright/chromium_headl
 const SECTIONS = {
   S1: { name: 'Account, Me, Settings, Help', lines: '653-2294 (§1, §3-§6, §8, §9)', up: 'shell-me', pages: '/me/, /me/settings/, /signin/, /pair/, /share/, /help/' },
   SHELL: { name: 'The shell (F2 + F2B)', lines: '653-2294 (§2 only)', up: 'shell-me', pages: 'the sidebar, rail, phone bar and tabs, menu sheet, palette and quick sheet on every page' },
+  RUNNER: { name: 'The question workspace, test window and review player (F3)', lines: '3348-4779 (§2) and 4780-6054 (§1, §4.3-4.8)', up: 'practice', pages: 'the session and the test window: the question, strip, navigator, footer, tools, review player' },
   S3: { name: 'Today', lines: '2295-3347', up: 'today', pages: '/' },
   S4: { name: 'Practice builder and session', lines: '3348-4779', up: 'practice', pages: '/practice/, /practice/session/' },
   S5: { name: 'Tests and the test window', lines: '4780-6054', up: 'tests', pages: '/tests/, /test/, /diagnostic/' },
@@ -58,7 +59,9 @@ You are the AUDITOR. Enumerate EVERY requirement in those texts (each upgrade's 
 design item of the section spec; each server item), then find its implementation in the code and see it on the page with a new
 and a seeded learner at 1280 and 390. Classify each: built (as specified), missing, weaker (present but less than specified), or
 contradicts (against the decisions). Report total, built, and every gap with its source (file and heading or upgrade id), the
-evidence you saw, and exactly what to build.`, { label: `audit ${id}`, phase: 'Audit', schema: ITEMS })
+evidence you saw, and exactly what to build. ALSO check every page of the section against decision 7 (a calm, quiet interface:
+no zeros or defaults on screen, no fact repeated, details on demand, easy on the eyes) and report each violation as a gap with
+status 'contradicts', source 'decision 7', the screen and the text, and the calmer version to build (keeping every feature).`, { label: `audit ${id}`, phase: 'Audit', schema: ITEMS })
 
 const refute = (id, found) => agent(`${COMMON(SECTIONS[id])}
 You are an independent REFUTER. An auditor claims these gaps: ${JSON.stringify(found.gaps)}
