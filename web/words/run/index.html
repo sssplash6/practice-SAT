@@ -645,7 +645,7 @@
     const stem = ws.el.querySelector('.q-stem');
     if (stem && item.stem) stem.after(h('p', { class: 'wask', text: item.stem }));
     if (stem && item.source) stem.after(h('p', { class: 'wsrc', text: `Adapted from ${item.source.author}, ${item.source.title}, ${item.source.year}` }));
-    if (UI.gloss && R.run.mode !== 'check' && stem) UI.gloss(stem, { exclude: item.choices || [], ref: id });
+    if (UI.gloss && R.run.mode !== 'check' && stem) UI.gloss(stem, { exclude: [...(item.choices || []), item.text], ref: id });   // word → meaning: the text is the target word, so never gloss it
     ws.focus && ws.focus();
   }
   function next() {
