@@ -15,6 +15,7 @@
      UI.word.index()                         GET /api/words/index once -> {bySlug, byWord}
      UI.startWords(body, {from, fallback})   POST /api/words/run, then /words/run/?id=
      UI.addWord(prefill)                     the Add sheet (§10, R29); prefill.id edits
+     UI.bringWords('text' | 'list' | 'missed')   Bring words (W19): matched in the browser
      UI.gloss(el, {exclude, ref})            tap-to-define in Words texts (§11)
      UI.speak(text) (UI.speak.ok())          the device's en-US voice
    ========================================================================== */
@@ -51,9 +52,10 @@
 .wfin .chips { flex-wrap: wrap; }
 .wfin details summary { cursor: pointer; font: 600 13.5px var(--font); }
 .wfin details p { margin-top: 6px; font: 400 13px/1.5 var(--font); color: var(--soft); max-width: 70ch; }
-dialog.sheet.wsheet { max-width: min(720px, calc(100vw - 32px)); max-height: 88vh; }
+@media (min-width: 760px) { dialog.sheet.wsheet { max-width: min(720px, calc(100vw - 32px)); max-height: 88vh; } }
+@media (max-width: 759px) { .wsheet > .sheet-head { flex-wrap: wrap; } .wsheet .ws-tools { order: 3; flex-basis: 100%; margin: 0 0 0 -8px; } .wsheet > .sheet-head h2 { font-size: 28px !important; } }
 .wsheet > .sheet-head { position: sticky; top: 0; background: inherit; z-index: 1; }
-.wsheet > .sheet-head h2 { font: 800 32px/1.05 var(--font) !important; letter-spacing: -.03em; overflow-wrap: break-word; flex: 0 1 auto; }
+.wsheet > .sheet-head h2 { font: 800 32px/1.05 var(--font) !important; letter-spacing: -.03em; overflow-wrap: normal; word-break: normal; flex: 0 1 auto; }
 .ws-mode .seg { --ctl: 30px; }
 .ws-tools { display: flex; flex: none; align-items: center; gap: 2px; margin-left: auto; }
 .ws-tools .btn.icon { background: none; }
