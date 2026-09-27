@@ -65,7 +65,11 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
     - S4 Practice: MERGED 2026-09-27 (b2e4aaf): builder + session pages and the Practice server work so far (the helper's
       Task 25 continues the server on v2/s4-server: rebase it on master first). Leftovers in followups/S4-pages.json.
     - S4Q MERGED after the user approved the preview ("good job with practice"); leftovers in followups/S4Q.json.
-    - RUNNING, one page at a time: run `wf_d0e024ee-51b` (task wx49ixdu0), queue S3, S5, S6, S10, S7, S9, S8, S1, F2B
+    - The user (2026-09-27, going out): "only pick up sections in which server was done by another guy". So only S7, S9, S8 (their
+      servers are merged). RUNNING one at a time: run `wf_*` (see STATE.md) with `[{id:'S7'},{id:'S9'},{id:'S8'}]`. S3's page work
+      (about 2,100 lines of web/index.html) is checkpointed on v2/s3 and waits for the helper's Task 24 (Today server); S5, S6,
+      S10, S1 and F2B wait for Tasks 26, 20, 21, 22, 23. Do NOT merge any page before the user previews it.
+    - (history) queue S3, S5, S6, S10, S7, S9, S8, S1, F2B
       (WORKERS = 1). For each finished page: verify its web/ diff on the branch, preview it for the user, merge on their OK.
     - (history) DECISION 7 (calm, quiet UI) added 2026-09-27; briefs regenerated. S4Q (the Practice pages made calm, no feature
       lost): run `wf_9e14b5f3-2c4` (task wgluczzch), `[{id:'S4Q'}]`, 2 units + one check + one fix, branch v2/s4q. Verify its
