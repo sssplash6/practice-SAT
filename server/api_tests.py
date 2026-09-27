@@ -463,12 +463,12 @@ def payload(row) -> dict:
         out["mock"] = row["mock_id"]
     if training and cfg.get("reveal_route") and (row["module"] or 1) == 2:
         out["route"] = row["route"]
+    if training and cfg.get("pace") and is_timed(row) and row["kind"] in TESTS:
+        # numbers from the public ladder only, so the lobby can say whose pace it is
+        out["pace"] = pace_plan(row["learner"], _form_of(row), FACTOR.get(timing_of(row), 1.0),
+                                reveal_route=bool(cfg.get("reveal_route")), route=row["route"],
+                                seconds=duration(row))
     if training and show:
-        form = _form_of(row)
-        if cfg.get("pace") and is_timed(row):
-            out["pace"] = pace_plan(row["learner"], form, FACTOR.get(timing_of(row), 1.0),
-                                    reveal_route=bool(cfg.get("reveal_route")), route=row["route"],
-                                    seconds=duration(row))
         from . import ratings
         out["odds"] = {q["id"]: round(ratings.odds(row["learner"], q["key"], q["difficulty"], q.get("topic")), 2)
                        for q in qs if "key" in q} if row["learner"] and not db.is_sample(row["learner"]) else {}
@@ -2036,6 +2036,13 @@ def kinds_rows(learner: str) -> list[dict]:
                         "pips": [(_json(r["result"], {}) or {}).get("gate", {}).get("margin", -1) >= 0 for r in rs[-5:]]})
         if k == "traps":
             row["ready"] = _traps_ready(learner)
+        if k == "module2u":
+            # X14's gauntlet: 18 of 22 on the harder module 2, shown from a 620 target or 2 upper routes
+            g = [r for r in rs if _cfg(r).get("trainer") == "gauntlet"]
+            lr = db.one("SELECT target FROM learners WHERE id=?", learner)
+            ups = sum(r["route"] == "upper" for r in finished_sittings(learner, 50) if r["kind"] == "mock")
+            row["gauntlet"] = {"shown": bool((lr and (lr["target"] or 0) >= 620) or ups >= 2), "goal": 18,
+                               "pips": [((_json(r["result"], {}) or {}).get("right") or 0) >= 18 for r in g[-5:]]}
         out.append(row)
     return out
 
@@ -2065,6 +2072,19 @@ def gate_summary(learner: str) -> dict:
             "margins": list(reversed(margins[:6])), "lower_recent": lower_recent, "protect": protect}
 
 
+def _up_to(row, qids: list[str], got: dict | None, base: dict | None) -> int | None:
+    """X15's "up to +N with the harder module 2": only when these flips carry
+    a lower-routed module 1 over the line, priced at the uncapped band."""
+    if row["route"] != "lower" or not got or not base or not got.get("capped"):
+        return None
+    g = (_json(row["result"], {}) or {}).get("gate") or {}
+    m1 = {q["id"] for q in mock_module(row, 1)}
+    if g.get("right", 0) + sum(q in m1 for q in qids) < g.get("needed", 10 ** 6):
+        return None
+    centre = min(800 - scoring.MOCK_HALF_BAND, got["low"] + scoring.MOCK_HALF_BAND)
+    return int(round((centre - base["mid"]) / 10) * 10)
+
+
 def levers(learner: str) -> dict:
     """X15: where the points went over the last 3 sections, priced by
     re-marking them with that cause's positions right."""
@@ -2074,39 +2094,51 @@ def levers(learner: str) -> dict:
     empty = {"subject": "math", "causes": [], "route": None, "skills": [], "both": None, "sittings": len(sections)}
     if not sections:
         return empty
-    per_cause: dict[str, dict] = defaultdict(lambda: {"n": 0, "pts": [], "by": {}})
+    per_cause: dict[str, dict] = defaultdict(lambda: {"n": 0, "pts": [], "up": [], "templates": []})
     both_flips: dict[str, list[str]] = {}
     for r in sections:
         c = progress.causes(learner, session=r["id"]).get("per_q", {})
         base = estimate.rescore(r["id"])
         if not base:
             continue
+        keys = {q["id"]: q.get("key") for q in marked_questions(r)}
         groups: dict[str, list[str]] = defaultdict(list)
         for qid, v in c.items():
             groups[v["cause"]].append(qid)
         for cause, qids in groups.items():
             got = estimate.rescore(r["id"], right=qids)
-            per_cause[cause]["n"] += len(qids)
-            per_cause[cause]["pts"].append(got["mid"] - base["mid"])
-            per_cause[cause]["by"][r["id"]] = qids
+            d = per_cause[cause]
+            d["n"] += len(qids)
+            d["pts"].append(got["mid"] - base["mid"])
+            d["up"].append(_up_to(r, qids, got, base))
+            d["templates"] += [keys[q] for q in qids if keys.get(q)]
         both_flips[r["id"]] = groups.get("trap", []) + groups.get("slip", [])
     causes = []
     for cause, d in sorted(per_cause.items(), key=lambda kv: -sum(kv[1]["pts"])):
         pts = int(round(sum(d["pts"]) / len(sections) / 10) * 10)
-        action = {"trap": {"label": f"Fix {d['n']}", "body": {"pool": "redo", "source": _src("fix")}},
+        ups = [u for u in d["up"] if u is not None]
+        templates = list(dict.fromkeys(d["templates"]))[:120]
+        action = {"trap": {"label": f"Fix {d['n']}", "body": {"pool": "redo", "templates": templates,
+                                                               "source": _src("fix")}},
                   "clock": {"label": "Pacing practice", "preset": "pacing"},
-                  "slip": {"label": f"See your {d['n']} slips", "body": {"topics": [], "count": 8, "source": _src("fix")}},
+                  "slip": {"label": f"See your {d['n']} slips", "also": "Careful set · 8",
+                           "body": {"templates": templates, "count": 8, "source": _src("fix")}},
                   "entry": {"label": "Grid-in entry drill · 5", "body": {"formats": ["spr"], "count": 5}},
-                  "gap": {"label": "Learn it"},
+                  "gap": {"label": "Learn it", "templates": templates[:1]},
                   "changed": {"label": "See the changes", "href": f"/results/report/?id={sections[0]['id']}&filter=changed"},
-                  "misread": {"label": "Careful set · 8", "body": {"count": 8}}}.get(cause, {})
-        causes.append({"cause": cause, "n": d["n"], "pts": pts, "route_pts": None, "action": action})
+                  "misread": {"label": "Careful set · 8", "body": {"templates": templates, "count": 8}}}.get(cause, {})
+        causes.append({"cause": cause, "n": d["n"], "pts": pts, "route_pts": max(ups) if ups else None,
+                       "action": action})
     route = None
     for r in sections:
         g = (_json(r["result"], {}) or {}).get("gate") or {}
         if r["route"] == "lower" and g and -2 <= g.get("margin", -99) < 0:
+            m1 = mock_module(r, 1)
+            flips = [m1[i - 1]["id"] for i in g.get("cheap_misses", [])][:-g["margin"]]
+            base = estimate.rescore(r["id"])
+            up = _up_to(r, flips, estimate.rescore(r["id"], right=flips), base) if flips and base else None
             route = {"session": r["id"], "day": r["finished"][:10], "short_by": -g["margin"],
-                     "cap": scoring.LOWER_ROUTE_CEILING}
+                     "cap": scoring.LOWER_ROUTE_CEILING, "pts": up}
             break
     gains = estimate.gains(learner) or {}
     skills = (gains.get("skills") or gains.get("rows") or [])[:3] if isinstance(gains, dict) else []

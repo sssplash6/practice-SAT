@@ -469,7 +469,7 @@ def pace(c) -> None:
     assert api_tests.pace_plan(me, "module2", 1, True, "upper")["budget_s"] != \
         api_tests.pace_plan(me, "module2", 1, True, "lower")["budget_s"]
     tr = new(c, me, {"kind": "section", "conditions": "training", "pace": True})
-    assert "pace" not in tr, "no pace before Begin"
+    assert len(tr["pace"]["budget_s"]) == 22 and tr["questions"] == [], "the lobby says whose pace it is"
     got = begin(c, me, tr["id"])
     assert len(got["pace"]["budget_s"]) == 22 and got["pace"]["source"] == "default"
     assert isinstance(got["odds"], dict) and all(isinstance(v, float) for v in got["odds"].values())
@@ -538,6 +538,7 @@ def papers_check(c) -> None:
     assert api_tests.sitting_row(row(re))["retake"] == 2 and api_tests.sitting_row(row(ex))["exact"] is True
     before = paper_rows(c, a)[1]
     assert before["yours"]["sittings"] == 3 and before["yours"]["status"] == "completed"
+    assert "hardest" in before and before["yours"]["misses_to_fix"] >= 0
     assert new(c, code("none"), {"kind": "paper", "paper": 1, "exact": True}, status=409)
     sat = {r["learner"] for r in papers.sittings(1)}
     assert before["sat_by"] == len(sat), (before["sat_by"], len(sat))
@@ -765,6 +766,7 @@ def trainers(c) -> None:
         sit(c, me, body, m1=15)
     k = {x["id"]: x for x in tests(c, me)["kinds"]}
     assert k["trainer"]["streak"] == 3 and k["trainer"]["yours"] == 3, k["trainer"]
+    assert k["module2u"]["gauntlet"]["goal"] == 18 and k["module2u"]["gauntlet"]["pips"] == []
     assert new(c, me, {"kind": "module", "module": "m1", "trainer": "gauntlet"}, status=422)
     g = new(c, me, {"kind": "module", "module": "m2u", "trainer": "gauntlet"})
     assert g["kind_label"] == "Gauntlet"
