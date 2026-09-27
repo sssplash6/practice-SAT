@@ -1391,6 +1391,14 @@ def _final(row, cfg: dict) -> dict:
             hook(session_or_404(row["id"]))
     fresh = session_or_404(row["id"])
     res = _json(fresh["result"], {}) or {}
+    if res.get("estimate") and res["pass2"]["right"]:
+        # X5's "2nd pass +20": the band without the second pass's right answers
+        from . import estimate
+        rights = [q["id"] for q in kept if (qstate.get(q["id"]) or {}).get("pass") == 2
+                  and scoring.is_correct(q, answers.get(q["id"]))]
+        base, without = estimate.rescore(row["id"]), estimate.rescore(row["id"], wrong=rights)
+        if base and without:
+            res["pass2"]["pts"] = int(round((base["mid"] - without["mid"]) / 10) * 10)
     res["done"] = done = _done(fresh, res)
     db.run("UPDATE sessions SET result=? WHERE id=?", json.dumps(res), row["id"])
     log.info("session %s finished: %d/%d", row["id"][:8], result["right"], result["asked"])
@@ -1938,6 +1946,13 @@ def sitting_row(row) -> dict:
                    " AND (started<? OR (started=? AND rowid<=(SELECT rowid FROM sessions WHERE id=?)))",
                    row["learner"], f"P{cfg['paper']}", row["started"], row["started"], row["id"])["n"]
         retake = k if k >= 2 else None
+    chain = None
+    if cfg.get("twin_of"):
+        # X18: "3rd sitting of this form", the root being the first
+        k = db.one("SELECT COUNT(*) AS n FROM sessions WHERE learner=? AND abandoned IS NULL"
+                   " AND json_extract(cfg,'$.twin_of')=? AND rowid<=(SELECT rowid FROM sessions WHERE id=?)",
+                   row["learner"], cfg["twin_of"], row["id"])["n"]
+        chain = {"root": cfg["twin_of"], "n": k + 1}
     est = res.get("estimate") or None
     out = {"id": row["id"], "kind": kind_of(row), "mode": row["kind"], "kind_label": kind_label(row),
            "section": section_label(row), "subject": row["subject"] or "math",
@@ -1952,11 +1967,12 @@ def sitting_row(row) -> dict:
            "modules": mods, "estimate": est, "right": res.get("right"), "asked": res.get("asked"),
            "ms": sum((qstate.get(q["id"]) or {}).get("ms") or 0 for q in marked),
            "mean_weight": round(statistics.mean(scoring.WEIGHT[q["difficulty"]] for q in marked), 3) if marked else None,
-           "twin_of": cfg.get("twin_of"), "paper": cfg.get("paper"), "retake": retake,
+           "twin_of": cfg.get("twin_of"), "chain": chain, "paper": cfg.get("paper"), "retake": retake,
            "exact": bool(cfg.get("exact")), "shared_from": row["shared_from"], "note": row["note"],
            "trainer": cfg.get("trainer"), "contest": row["contest"],
            "offline_ms": (qstate.get("_session") or {}).get("offline_ms"),
-           "gate": res.get("gate"), "pass2": res.get("pass2"), "pressure": res.get("pressure")}
+           "gate": res.get("gate"), "pass2": res.get("pass2"), "pressure": res.get("pressure"),
+           "removed": res.get("removed") or [], "new_types": (res.get("new_types") or {}).get("n")}
     if not row["finished"]:
         ids = {q["id"] for q in questions_of(row)}
         out.update({"module": row["module"] or 1, "answered": sum(1 for k in answers if k in ids),
