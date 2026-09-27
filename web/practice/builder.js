@@ -31,12 +31,29 @@
   // one bar and its one word (Learning · Getting there · Strong); the word says it, so the bar is decoration
   const mbar = (m, answered) => h('span', { class: 'mcell' }, h('span', { class: 'mbar', 'aria-hidden': 'true' }, h('i', { style: `--m:${answered ? Math.max(0, Math.min(1, m || 0)) : 0}` })),
     h('span', { class: 'w', text: UI.masteryWord(m, answered) }));
-  // an explanation on hover or keyboard focus (decision 7), and to a screen reader as the control's description
+  // an explanation on hover, keyboard focus or a tap (decision 7), and to a screen reader as the control's description
   const FOC = 'button, input, select, textarea, [tabindex="0"]';
+  const tipped = new WeakSet();
+  let lastPt = 'mouse';
+  addEventListener('pointerdown', e => { lastPt = e.pointerType; }, true);
+  const noHover = () => { try { return matchMedia('(hover: none)').matches; } catch (_) { return false; } };
+  // a tap has no hover: show the tip once the tap's own work is done; a repaint may have swapped the control, so find its twin under the finger
+  function tapTip(e) {
+    if (e._tip) return;                    // the innermost tip wins
+    e._tip = true;
+    const pt = e.pointerType || (e.detail ? lastPt : '');     // '' is a keyboard click: focus already shows it
+    if (!pt || (pt === 'mouse' && !noHover())) return;
+    const el = e.currentTarget, x = e.clientX, y = e.clientY;
+    setTimeout(() => {
+      let t = el.isConnected ? el : document.elementFromPoint(x, y);
+      while (t && !tipped.has(t)) t = t.parentElement;
+      if (t) t.dispatchEvent(new PointerEvent('pointerenter', { pointerType: 'mouse' }));
+    });
+  }
   function tip(el, text) {
     if (!el || !text) return el;
     const say = typeof text === 'function' ? text : () => text;
-    if (UI.tooltip) UI.tooltip(el, say);
+    if (UI.tooltip) { UI.tooltip(el, say); tipped.add(el); el.addEventListener('click', tapTip); }
     if (!el.matches(FOC)) el.querySelectorAll(FOC).forEach(f => {
       if (typeof text === 'string') f.setAttribute('aria-description', text);
       f.addEventListener('focus', () => { try { if (f.matches(':focus-visible')) el.dispatchEvent(new PointerEvent('pointerenter', { pointerType: 'mouse' })); } catch (_) {} });
@@ -386,18 +403,17 @@
     const f0 = B.me && (B.me.profile || B.me).focus;
     const focus = Array.isArray(f0) ? f0 : typeof f0 === 'string' && f0 ? f0.split(',') : f0 && typeof f0 === 'object' ? Object.keys(f0).filter(k => f0[k]) : [];
     const focusSkills = sk.filter(s => focus.includes(s.domain) || focus.includes(s.slug));
-    const why = { mistakes: `${b.coach.mistakes || 0} mistakes`, new: 'new', weak: 'weakest', review: 'review' }[b.coach.why] || b.coach.why || '';
     const untried = sk.filter(s => !s.placed && !s.answered).slice(0, 3);
     const list = [
-      { id: 'coach', label: `Coach’s pick${why ? ` · ${why}` : ''}` },
+      { id: 'coach', label: 'Coach’s pick', about: coachWhy() },
       { id: 'weak', label: 'Weakest 3', why: weak.length < 3 ? 'Needs 5 answers in 3 skills' : null, skills: weak },
       { id: 'focus', label: 'Plan focus', why: focusSkills.length ? null : 'No Focus domain in your plan yet: set one in Plan', skills: focusSkills, href: focusSkills.length ? null : '/plan/' },
       { id: 'full', label: 'Full section mix' },
       { id: 'gains', label: `Biggest gains · ${gains.length || 3} skills`, why: (b.totals.answered || 0) < 30 || !gains.length ? 'Needs 30 answers' : null, skills: gains },
-      { id: 'mistakes', label: `My mistakes${c.mistakes ? ` · ${c.mistakes}` : ''}`, why: c.mistakes ? null : 'No open mistakes yet' },
+      { id: 'mistakes', label: 'My mistakes', why: c.mistakes ? null : 'No open mistakes yet' },
       { id: 'missed', label: `Missed${seen.missed ? ` · ${seen.missed}` : ''}`, why: seen.missed ? null : 'Nothing missed yet' },
-      { id: 'marked', label: `Marked${c.marked ? ` · ${c.marked}` : ''}`, why: c.marked ? null : 'Nothing marked yet' },
-      { id: 'saved', label: `Saved${c.saved ? ` · ${c.saved}` : ''}`, why: c.saved ? null : 'Nothing saved yet' },
+      { id: 'marked', label: 'Marked', why: c.marked ? null : 'Nothing marked yet' },
+      { id: 'saved', label: 'Saved', why: c.saved ? null : 'Nothing saved yet' },
       { id: 'due', label: `Due for review${c.review || c.due ? ` · ${c.review || c.due}` : ''}`, why: c.review || c.due ? null : 'Nothing due for review' },
       { id: 'solve', label: 'Solve first · 10' },
       { id: 'probe', label: `Check ${untried.length || 3} skills I haven’t tried`, why: untried.length ? null : 'Every skill has answers', skills: untried },
@@ -411,12 +427,17 @@
   function paintPresets() {
     const host = $('#presets');
     host.replaceChildren();
-    presets().forEach(p => {
+    // decision 7: the chips that can't run yet wait behind More, each with its reason one tap away
+    const all = presets(), later = p => (p.why || p.inert) && B.preset !== p.id;
+    const nLater = all.filter(later).length;
+    const chips = all.filter(p => !later(p)).concat(B.morePresets ? all.filter(later) : []);
+    chips.forEach(p => {
       const on = B.preset === p.id;
       const chip = h('button', { type: 'button', class: 'pr-chip', 'aria-pressed': String(on), 'aria-disabled': p.why || p.inert ? 'true' : null, 'data-preset': p.id },
         h('span', { text: p.label }));
       // decision 7: a dimmed chip says why on hover or focus, not in a second line
-      if (p.why) { chip.setAttribute('aria-description', p.why); tip(chip, p.why); }
+      const about = p.why || p.about;
+      if (about) { chip.setAttribute('aria-description', about); tip(chip, about); }
       if (!p.why && !p.inert) chip.addEventListener('click', () => applyPreset(p.id, p));
       else if (p.href) chip.addEventListener('click', () => { location.href = p.href; });
       host.append(chip);
@@ -426,15 +447,17 @@
         host.append(more);
       }
     });
+    if (nLater) host.append(h('button', { type: 'button', class: 'quiet', 'aria-expanded': String(!!B.morePresets), 'data-more': '', text: B.morePresets ? 'Fewer presets' : 'More presets',
+      onclick: () => { B.morePresets = !B.morePresets; paintPresets(); const m = host.querySelector('[data-more]'); if (m) m.focus(); } }));
     host.append(h('button', { type: 'button', class: 'quiet', text: 'Save as preset', onclick: savePreset }),
       h('button', { type: 'button', class: 'quiet', text: 'Copy link', onclick: () => UI.copyText(deepLink(), { toast: 'Link copied: it opens these settings' }) }),
       h('button', { type: 'button', class: 'quiet', text: 'Reset', onclick: () => { B.st = fromPrefs(B.prefs); B.fromLink = false; applyPreset('coach'); linkNote(null); } }));
-    paintCoach();
+    if (!(B.bank.totals || {}).answered) host.append(tip(h('a', { class: 'quiet', href: '/diagnostic/', text: 'Diagnostic' }), 'A starting score in 20 questions'));
   }
-  function paintCoach() {
-    const el = $('#coach');
+  // why the coach picked these skills: the Coach's pick chip's tooltip, not a permanent line
+  function coachWhy() {
     const b = B.bank;
-    if (B.preset !== 'coach' || !b.coach) { el.hidden = true; return; }
+    if (!b.coach) return null;
     const R = b.coach.reasons || {};
     const bits = (b.coach.topics || []).map(t => {
       const r = R[t] || {}, s = B.skills.get(t) || {}, name = s.name || t;
@@ -445,12 +468,9 @@
       if (s.gain) return `${name} ≈ +${Math.round(s.gain)} (${s.per_test ? `${s.per_test} a test, ` : ''}${pct(s.accuracy)} first try)`;
       return null;
     }).filter(Boolean);
-    const text = bits.length ? bits.join(' · ') : (() => {
-      const d = [...b.domains].sort((a, z) => z.weight - a.weight)[0];
-      return `not practised yet, and ${d.name} is ${Math.round(d.weight * 100)}% of the test`;
-    })();
-    el.replaceChildren(h('b', { text: 'Why these: ' }), text);
-    el.hidden = false;
+    if (bits.length) return bits.join(' · ');
+    const d = [...b.domains].sort((a, z) => z.weight - a.weight)[0];
+    return d ? `Where the test puts the most questions: ${d.name}, ${Math.round(d.weight * 100)}% of it` : null;
   }
   function applyPreset(id, p) {
     const b = B.bank, st = B.st;
@@ -633,9 +653,6 @@
         expand, h('label', { class: 'sr', for: 'sort', text: 'Sort' }), sort));
     const jump = $('#jump');
     jump.onclick = () => $('#settings').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    const nw = $('#newHere');
-    nw.replaceChildren();
-    if (!(B.bank.totals || {}).answered) nw.append(h('p', { class: 'pr-new' }, 'New here? The coach picked where the test puts the most questions. Or take the ', h('a', { href: '/diagnostic/', text: '20-question diagnostic' }), ' for a starting score.'));
   }
   function paintTree() {
     const host = $('#treeBody');
@@ -772,7 +789,7 @@
     labels.forEach(l => {
       const list = l.templates.map(t => B.byT.get(t)).filter(Boolean);
       if (!list.length) return;
-      if (l.label) {
+      if (l.label && list.length > 1) {        // a one-type group's header would only repeat its row
         const lt = tri(`Select every ${l.label} type`, on => { list.forEach(t => (on ? B.sel.add(t.template) : B.sel.delete(t.template))); markCustom(); paintSel(); preview(); });
         lt.dataset.group = l.templates.join(' ');
         const ready = list.filter(t => t.state === 'ready').length, open = list.filter(t => (t.traps || []).length).length;
@@ -1120,8 +1137,9 @@
   function forecastText() {
     const f = B.bank.forecast || [];
     const c = B.bank.counts || {};
-    const week = f.slice(0, 7).reduce((a, x) => a + (x.fading || 0) + (x.checks || 0), 0);
-    return `${c.review || 0} due now · ${week} more this week · next 14 days: ${f.reduce((a, x) => a + (x.fading || 0) + (x.checks || 0), 0)}`;
+    const sum = l => l.reduce((a, x) => a + (x.fading || 0) + (x.checks || 0), 0);
+    const week = sum(f.slice(0, 7)), all = sum(f);
+    return [c.review ? `${c.review} due now` : null, week ? `${week} ${c.review ? 'more ' : ''}this week` : null, all > week ? `next 14 days: ${all}` : null].filter(Boolean).join(' · ') || null;
   }
   function paintFormatHelp() {
     if (!ctl.fmtHelp) return;
@@ -1455,7 +1473,7 @@
   $('#start').addEventListener('click', start);
   $('#openSettings').prepend(icon('settings', 18));
   $('#openSettings').addEventListener('click', openSettings);
-  tip($('#openSettings'), () => B.setText || '');
+  if (UI.tooltip) UI.tooltip($('#openSettings'), () => B.setText || '');   // a tap opens the sheet, which says it all
   tip($('#l1'), () => B.sumText || '');
   if (UI.keys && UI.keys.register) {
     try { UI.keys.register('page', { '/': { does: 'Search or build a set', run: () => { $('#q').focus(); } } }, { label: 'Practice' }); } catch (_) {}
