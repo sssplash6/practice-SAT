@@ -1,0 +1,514 @@
+/* ============================================================================
+   Compete Overview /compete/ (spec/rebuild-v2.md 3.7 §3; compete.md C2, C5-C7, C9, C10,
+   C12, C18, C21, C23-C25, C27; decision 7: only what the student needs, details on demand)
+   Reads GET /api/compete (the hub), /api/compete/me, /api/contests, /api/compete/rivals,
+   /api/qotd and /api/leaderboard; every card loads, fails and retries on its own.
+   ========================================================================== */
+(() => {
+  const h = UI.h, C = UI.compete, $ = s => document.querySelector(s);
+  const num = C.num, mmss = C.mmss;
+  const pct = x => (x === null || x === undefined ? '—' : `${Math.round(x * 100)}%`);
+  const api = (p, o) => UI.api(p, o);
+  const S = { hub: null, me: null, live: null, board: null };
+  const WHY = { ghost: 'Sat after the contest closed: it shows where you would have placed.', repeat: 'A second sitting of this contest.', fast: 'Answers came in faster than the questions can be read.' };
+
+  const card = (id, ...kids) => { const el = $(id); el.replaceChildren(...kids); return el; };
+  const head = (title, ...right) => h('div', { class: 'card-head' }, h('h2', { class: 'h2', text: title }), right.length ? h('div', { class: 'card-act' }, right) : null);
+  const kline = (text, right) => h('div', { class: 'card-head' }, h('span', { class: 'k', text }), right || null);
+  const quiet = (text, onClick, o = {}) => { const b = h(o.href ? 'a' : 'button', { class: 'quiet', type: o.href ? null : 'button', href: o.href || null, text }); if (onClick) b.addEventListener('click', onClick); return b; };
+  const fail = (sel, retry, text) => { const el = $(sel); el.replaceChildren(); UI.cardError(el, retry, text || 'The server is not answering.'); };
+  const skel = (sel, shape) => { const el = $(sel); if (!el.childElementCount) UI.skel(el, shape); };
+  const busy = async (b, fn) => { b.disabled = true; try { await fn(); } catch (e) { UI.toast(e.message || 'Couldn’t start. Try again.'); } finally { b.disabled = false; } };
+  const drill = async body => { const r = await api('/drill', { method: 'POST', body }); if (r && r.session) location.href = `/practice/session/?id=${encodeURIComponent(r.session)}`; };
+  const idOf = kind => ((S.live || []).find(c => c.kind === kind) || {}).id;
+
+  /* ------------------------------------------------------------ header */
+  $('#subnav').replaceWith(C.subnav('overview'));
+  $('#join').addEventListener('click', () => C.join());
+  $('#create').addEventListener('click', () => C.create());
+  $('#join-create').addEventListener('click', () => {
+    const s = UI.sheet({ title: 'Join or create', size: 's', body: b => b.append(
+      h('div', { class: 'row-act' }, quiet('Join with a code', () => { s.close(); C.join(); }), quiet('+ Create a contest', () => { s.close(); C.create(); }))) });
+  });
+
+  /* ------------------------------------------------------------ A. the Daily Challenge */
+  function ladder(host, c) {
+    const cells = h('div', { class: 'ladder', role: 'list', 'aria-label': 'The ten questions: skill, difficulty and your chance' });
+    (c.ladder || []).forEach(q => {
+      const t = UI.TOPIC && UI.TOPIC[q.topic];
+      const name = t ? t.short : C.topicName(q.topic);
+      const tier = C.TIER[q.tier] || q.tier;
+      const cell = h('div', { class: 'lad', role: 'listitem', tabindex: '0' },
+        h('span', { class: 'n', text: String(q.slot) }),
+        UI.glyph ? UI.glyph(q.topic) : null,
+        UI.dbars ? UI.dbars(q.tier, { bare: true }) : null,
+        q.format === 'spr' ? h('span', { class: 'gi', text: 'GI' }) : null,
+        q.chance !== undefined && q.chance !== null ? h('span', { class: 'ch', 'aria-hidden': 'true' }, h('i', { style: `width:${Math.round(q.chance * 100)}%` })) : null);
+      const label = [`Q${q.slot}`, name, tier, q.format === 'spr' ? 'grid-in' : null, q.chance !== undefined && q.chance !== null ? `your chance ${pct(q.chance)}` : null].filter(Boolean).join(' · ');
+      cell.setAttribute('aria-label', label);
+      UI.tooltip(cell, label);
+      cells.append(cell);
+    });
+    host.append(cells, h('p', { class: 'meta ladder-legend', text: 'Bars: difficulty · GI: grid-in, you type the answer · underline: your chance' }));
+  }
+  function parLine(c) {
+    const p = c.me && c.me.par, f = c.me && c.me.forecast;
+    if (!p || p.base === undefined) return null;
+    const el = h('p', { class: 'line' }, `${p.rough ? 'Your par (rough)' : 'Your par'} ${num(p.base)} · about ${num(p.right)} right`,
+      f ? ` · likely #${f.lo}–#${f.hi} of ~${num(f.of)}` : '');
+    UI.tooltip(el, 'What a student at your rating scores on these questions, on average.' + (p.rough ? ' Rough while you are placing or the questions are new.' : ''));
+    return el;
+  }
+  function fieldLine(c) {
+    const f = c.field || {};
+    if (!f.players) return h('p', { class: 'meta', text: 'No one has finished yet.' });
+    return h('p', { class: 'meta', text: [`${num(f.players)} finished`, f.sitting_now ? `${num(f.sitting_now)} sitting now` : null,
+      f.median_points !== null && f.median_points !== undefined ? `median ${num(f.median_points)} pts` : null, f.best !== null && f.best !== undefined ? `best ${num(f.best)}` : null].filter(Boolean).join(' · ') });
+  }
+  function followChip(fu) {
+    if (!fu) return null;
+    if (fu.won_back !== null && fu.won_back !== undefined && fu.of) return h('span', { class: 'chip-s', text: `Won back ${num(fu.won_back)}/${num(fu.of)}` });
+    if (fu.due) return h('a', { class: 'chip-s on', href: fu.session ? `/practice/session/?id=${encodeURIComponent(fu.session)}` : C.href(S.hub.daily.id), text: `Rematch · ${C.dayLabel(fu.due, { weekday: true }).split(',')[0]}` });
+    return null;
+  }
+  let stopNext = null;
+  async function renderDaily() {
+    const c = S.hub.daily, me = c.me || {};
+    const el = $('#daily');
+    const day = String(c.id).slice(6);
+    const next = h('span', { class: 'meta' });
+    const midnight = new Date(); midnight.setHours(24, 0, 0, 0);
+    const top = h('div', { class: 'daily-top' }, h('span', { class: 'k', text: `DAILY CHALLENGE · ${C.dayLabel(day).toUpperCase()}` }), h('span', { class: 'meta' }, 'Next one in ', next));
+    next.setAttribute('aria-live', 'off');
+    if (stopNext) stopNext();
+    const cd = UI.countdown(next, midnight.toISOString(), { label: 'Next Daily', onEnd: () => load() });
+    stopNext = typeof cd === 'function' ? cd : cd && cd.stop;
+    const body = [top];
+    const lad = h('div'); ladder(lad, c); body.push(lad);
+    const lines = h('div', { class: 'daily-lines' },
+      h('p', { class: 'line', text: `${c.count} questions · ${mmss(c.seconds)} answer clock · one sitting · ranked` }),
+      me.status === 'finished' ? null : parLine(c),
+      fieldLine(c),
+      S.hub.me && S.hub.me.challenge_streak ? h('p', { class: 'line' }, `Challenge streak ${num(S.hub.me.challenge_streak)} day${S.hub.me.challenge_streak === 1 ? '' : 's'}`,
+        S.me && S.me.streak && S.me.streak.best > S.hub.me.challenge_streak ? h('span', { class: 'meta', text: ` · best ${num(S.me.streak.best)}` }) : null) : null);
+    body.push(lines);
+    const st = h('div', { class: 'daily-status' });
+    if (me.status === 'new') {
+      const go = h('button', { type: 'button', class: 'pill', text: 'Start the challenge' });
+      go.addEventListener('click', () => {
+        if (C.rulesSeen('daily')) busy(go, () => C.start(c.id, { kind: 'daily' }));
+        else location.href = C.href(c.id);
+      });
+      const warm = quiet('Warm up · 6', ev => busy(ev.currentTarget, async () => {
+        const r = await api(`/contest/${encodeURIComponent(c.id)}/warmup`, { method: 'POST', body: {} });
+        location.href = `/practice/session/?id=${encodeURIComponent(r.session)}`;
+      }));
+      UI.tooltip(warm, 'Two questions on each of your three lowest-chance skills, from other question types. Offered only before you start.');
+      st.append(h('div', { class: 'row-act' }, go, warm), h('p', { class: 'help', text: 'The clock runs only while a question is open. Skipped and voided questions score 0.' }));
+    } else if (me.status === 'progress') {
+      const go = h('button', { type: 'button', class: 'pill', text: 'Resume' });
+      go.addEventListener('click', () => busy(go, () => C.start(c.id)));
+      st.append(h('div', { class: 'row-act' }, go, h('span', { class: 'meta', text: `${num(me.answered)} of ${num(c.count)} answered${me.clock ? ` · ${mmss(me.clock.left)} on the clock` : ''}` })));
+    } else {
+      const r = me.result || {};
+      const place = S.board && S.board.you;
+      const players = (S.board && S.board.players) || (c.field && c.field.players);
+      const res = [place ? `#${place.tie ? '=' : ''}${place.rank} of ${num(players)}` : null,
+        place && players >= 10 ? `top ${Math.ceil(place.rank / players * 100)}%` : null,
+        `${num(r.right)}/${num(r.asked || c.count)}`, `${num(r.points)} pts`, me.clock ? mmss(me.clock.used) : null].filter(Boolean).join(' · ');
+      st.append(h('p', { class: 'daily-res', text: res }));
+      if (me.ranked === false) st.append(h('p', { class: 'line' }, h('span', { class: 'chip-s', text: 'Unranked' }), ' ', WHY[me.why] || ''));
+      UI.strip(st, C.marks(r), { onPick: i => { location.href = `${C.href(c.id)}#q${i + 1}`; }, label: 'Your answers' });
+      const chips = h('div', { class: 'row-act' });
+      if (r.rating_after !== undefined && r.rating_before !== undefined) {
+        const d = Math.round(r.rating_after - r.rating_before);
+        chips.append(h('span', { class: 'chip-s', text: `${d >= 0 ? '+' : '−'}${Math.abs(d)} → ${num(Math.round(r.rating_after))} · Level ${C.levelOf(r.rating_after)}` }));
+      }
+      const fu = followChip(me.followup);
+      if (fu) chips.append(fu);
+      if (chips.childElementCount) st.append(chips);
+      const copy = quiet('Copy result', () => UI.copyText(C.copyResult(c, { ...r, secs: me.clock ? me.clock.used : undefined }, { rank: place && place.rank, players })));
+      st.append(h('div', { class: 'row-act' }, h('a', { class: 'pill', href: `${C.href(c.id)}#board`, text: 'See the board' }),
+        quiet('Review answers', null, { href: `${C.href(c.id)}#review` }), copy));
+    }
+    body.push(st);
+    const yday = new Date(); yday.setDate(yday.getDate() - 1);
+    const yid = `daily-${yday.getFullYear()}-${String(yday.getMonth() + 1).padStart(2, '0')}-${String(yday.getDate()).padStart(2, '0')}`;
+    const strip = S.me && S.me.streak && S.me.streak.strip;
+    const ystate = strip && (strip.find(x => x.day === yid.slice(6)) || {}).state;
+    body.push(h('div', { class: 'foot-links' }, quiet('Past days ›', null, { href: C.href(yid) }), quiet('Daily reminder', () => C.reminder()),
+      ystate === 'missed' ? quiet(`Make up ${C.dayLabel(yid.slice(6), { weekday: false })} · keeps your streak`, null, { href: C.href(yid) }) : null));
+    el.replaceChildren(...body);
+  }
+
+  /* ------------------------------------------------------------ B. contests */
+  const TRAINS = { daily: 'the ten skills of the day', sprint: 'fluency in the week’s domain', weekly: 'module pace and routing', final: 'a full adaptive section',
+    trap: 'this week’s trap', rush: 'your ceiling, one question at a time', words: 'Words in Context and Transitions', private: 'the skills your friends picked' };
+  let tab = 'live', shown = 10;
+  const counts = { live: null, upcoming: null, finished: null, private: null };
+  function crow(c) {
+    const me = c.me || {}, k = C.kind(c);
+    const title = c.series && c.round ? `${c.title} · round ${c.round}${c.spec && c.spec.repeat ? ` of ${c.spec.repeat.rounds}` : ''}` : c.title;
+    let chip = null;
+    if (me.status === 'progress') chip = `In progress${me.clock && me.clock.left !== undefined ? ` · ${mmss(me.clock.left)} left` : ''}`;
+    else if (me.status === 'finished') chip = me.result && me.result.points !== undefined ? `Finished · ${num(me.result.points)} pts` : 'Finished';
+    let act;
+    if (c.status === 'upcoming') act = quiet('Add to calendar', () => UI.ics({ title: `SAT Freshman · ${title}`, start: new Date(c.opens), minutes: 30, url: `${location.origin}${C.href(c.id)}` }));
+    else if (me.status === 'progress') act = quiet('Resume', ev => busy(ev.currentTarget, () => C.start(c.id)));
+    else if (me.status === 'finished') act = quiet('Results', null, { href: C.href(c.id) });
+    else if (c.status === 'live') act = quiet('Start', null, { href: C.href(c.id) });
+    else act = quiet('Open', null, { href: C.href(c.id) });
+    const par = me.status === 'new' && me.par && me.par.base && ['daily', 'weekly', 'final', 'trap'].includes(c.kind) ? ` · par ${num(me.par.base)}` : '';
+    return h('div', { class: 'crow' }, C.icon(c.kind),
+      h('div', {}, h('a', { class: 't link', href: C.href(c.id), text: title }),
+        h('span', { class: 'w', text: C.windowLine(c) }),
+        h('span', { class: 'f', text: C.facts(c) + par }),
+        TRAINS[c.kind] ? h('span', { class: 'f tr', text: `Trains ${TRAINS[c.kind]}` }) : null),
+      chip ? h('span', { class: 'st chip-s', text: chip }) : h('span'),
+      h('span', { class: 'act' }, act));
+  }
+  let filter = null;
+  async function renderContests() {
+    const el = $('#contests');
+    if (!filter) {
+      const hd = h('div', { class: 'card-head' }, h('h2', { class: 'h2', id: 'contests-h', text: 'Contests' }));
+      const box = h('div', { id: 'crows' });
+      el.replaceChildren(hd, box);
+      filter = C.under(hd, [{ value: 'live', label: 'Live' }, { value: 'upcoming', label: 'Upcoming' }, { value: 'finished', label: 'Finished' }, { value: 'private', label: 'Private' }],
+        { value: tab, label: 'Show', onChange: v => { tab = v; shown = 10; loadRows(); } });
+      filter.el.style.marginLeft = 'auto';
+    }
+    Object.entries(counts).forEach(([k, n]) => filter.count(k, n));
+    loadRows();
+  }
+  async function loadRows() {
+    const box = $('#crows');
+    box.replaceChildren(); UI.skel(box, 'rows:3');
+    try {
+      const r = await api(`/contests?status=${tab}&limit=${shown}`);
+      counts[tab] = r.total; filter.count(tab, r.total);
+      if (tab === 'live') S.live = r.contests;
+      const rows = r.contests.map(crow);
+      if (!rows.length) {
+        box.replaceChildren(tab === 'private'
+          ? h('div', { class: 'crows-empty' }, h('p', { text: 'No private contests yet.' }), h('div', { class: 'row-act' }, quiet('+ Create a contest', () => C.create()), quiet('Join with a code', () => C.join())))
+          : h('p', { class: 'crows-empty', text: tab === 'finished' ? 'No finished contests yet.' : 'Nothing here right now.' }));
+        return;
+      }
+      box.replaceChildren(...rows);
+      if (r.total > shown) box.append(h('div', { class: 'row-act' }, quiet(`Show ${Math.min(10, r.total - shown)} more`, () => { shown += 10; loadRows(); })));
+      if (tab === 'live') { renderSeason(); renderTrapsCard(); }
+    } catch (e) { box.replaceChildren(); UI.cardError(box, loadRows, 'The server is not answering.'); }
+  }
+  async function loadCounts() {
+    for (const k of ['finished', 'private']) {
+      try { const r = await api(`/contests?status=${k}&limit=0`); counts[k] = r.total; if (filter) filter.count(k, r.total || null); } catch (_) {}
+    }
+  }
+
+  /* ------------------------------------------------------------ C. question of the day */
+  async function renderQotd() {
+    const el = $('#qotd');
+    try {
+      const q = await api('/qotd');
+      const m = q.mine;
+      let line;
+      if (!m) line = [h('span', { text: 'Not answered yet' }), ' ', quiet('Answer it on Today ›', null, { href: '/' })];
+      else if (m.correct) line = [h('span', { text: ['Right', m.share !== undefined ? `${pct(m.share)} of ${num(m.n)} got it` : null, m.streak ? `${m.streak}-day streak` : null].filter(Boolean).join(' · ') })];
+      else line = [h('span', { text: m.mistake || m.reason ? `Fell for: ${m.mistake || m.reason}` : 'Wrong' })];
+      el.replaceChildren(h('div', { class: 'card-head' }, h('span', { class: 'k', text: 'QUESTION OF THE DAY' }),
+        h('div', { class: 'card-act' }, quiet('This day ›', null, { href: `${C.href('daily')}#qotd` }))), h('p', { class: 'line' }, line));
+    } catch (e) { fail('#qotd', renderQotd); }
+  }
+
+  /* ------------------------------------------------------------ D. your stats */
+  function renderStats() {
+    const hub = S.hub, me = hub.me || {}, mine = S.me || {};
+    const boards = mine.boards || {};
+    const players = hub.board_preview && hub.board_preview.players;
+    const rating = me.rating;
+    const lin = !me.provisional ? C.levelIn(rating, false) : null;
+    const rate = h('div', { class: 'me-rate' }, UI.level(rating, me.provisional, 48),
+      h('div', {}, h('span', { class: 'num', text: me.provisional ? '–' : num(Math.round(rating)) }),
+        h('p', { class: 'line', text: me.provisional ? 'Placing · a level after 30 rated answers' : `Contest rating · Level ${me.level}` })));
+    const tile = (label, value, sub) => h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: label }), h('span', { class: 'stat-v', text: value ?? '—' }), sub ? h('span', { class: 'stat-sub', text: sub }) : null);
+    const pass = b => b && b.cheapest ? `${num(b.cheapest)} pts to #${b.rank - 1}` : null;
+    const move = b => b && b.move ? `${b.move > 0 ? '▲' : '▼'}${Math.abs(b.move)}` : null;
+    const wk = boards.week;
+    const tiles = h('div', { class: 'stat-grid' },
+      tile('Week rank', me.week ? `#${me.week}${players ? ` of ${num(players)}` : ''}` : null, [move(wk), pass(wk)].filter(Boolean).join(' · ')),
+      tile('All-time rank', me.all ? `#${me.all}` : null, pass(boards.all)),
+      me.country ? tile('Country', `#${me.country}`) : h('a', { class: 'stat', href: '/me/#boards' }, h('span', { class: 'stat-k', text: 'Country' }), h('span', { class: 'stat-sub', text: 'Set a country on Me' })),
+      tile('Points this week', wk ? num(wk.value) : null),
+      tile('Contests', me.played ? num(me.played) : null),
+      tile('Best Daily', mine.records && mine.records.bests && mine.records.bests.daily ? num(mine.records.bests.daily.value) : null));
+    const kids = [head('Your stats', quiet('Your rankings ›', null, { href: '/compete/rankings/' })), rate];
+    if (lin) kids.push(h('p', { class: 'meta', text: `Level ${lin.level} in +${num(lin.gap)} ≈ ${lin.rights} hard right${lin.rights === 1 ? '' : 's'}` }));
+    kids.push(tiles);
+    if (!me.week && !me.all) kids.push(h('p', { class: 'help', text: 'Finish a ranked contest to get a rank.' }));
+    if (new Date().getDay() === 1 && hub.week_line && hub.week_line.text && (hub.week_line.daily || hub.week_line.weekly)) kids.push(h('p', { class: 'meta', text: hub.week_line.text }));
+    card('#stats', ...kids);
+  }
+
+  /* ------------------------------------------------------------ Rivals (C9) */
+  async function renderRivals() {
+    try {
+      const r = await api('/compete/rivals');
+      const list = (r.rivals || []).slice(0, 3);
+      const kids = [head('Rivals')];
+      if (!list.length) {
+        kids.push(h('p', { class: 'help', text: 'Rivals appear when 3 students near your level have played in the last two weeks. Until then, race your best run.' }),
+          h('div', { class: 'row-act' }, quiet('Race your best', null, { href: C.href('daily', { race: 'best' }) })));
+      } else {
+        const ul = h('ul', { class: 'mini-rows' });
+        list.forEach(x => {
+          const r2 = x.h2h || {};
+          const rec = r2.you > r2.them ? `You lead ${r2.you}–${r2.them}` : r2.you < r2.them ? `${x.name} leads ${r2.them}–${r2.you}` : r2.you ? `Level ${r2.you}–${r2.them}` : null;
+          ul.append(h('li', {}, h('span', { class: 'mt' }, UI.level(null, false, 20, { level: x.level, ring: x.ring }), x.name),
+            h('span', { class: 'mm', text: [rec ? `${rec} this season` : null, x.last_shared ? `last shared ${C.dayLabel(String(x.last_shared).slice(0, 10), { weekday: false })}` : null].filter(Boolean).join(' · ') || 'No shared contest yet' }),
+            h('span', { class: 'ma' }, quiet('Race', null, { href: C.href('daily', { race: x.pid }) }))));
+        });
+        kids.push(ul);
+      }
+      card('#rivals', ...kids);
+    } catch (e) { fail('#rivals', renderRivals); }
+  }
+
+  /* ------------------------------------------------------------ H. season */
+  function renderSeason() {
+    const hub = S.hub; if (!hub) return;
+    const s = hub.season || {};
+    const days = s.closes ? Math.max(0, Math.ceil((new Date(`${s.closes}T23:59:59`) - Date.now()) / 864e5)) : null;
+    const mine = (S.me && S.me.boards && S.me.boards.season) || null;
+    const fin = (S.live || []).find(c => c.kind === 'final');
+    const kids = [kline(`SEASON · ${String(s.name || '').toUpperCase()}`, days !== null ? h('span', { class: 'meta', text: `${days} day${days === 1 ? '' : 's'} left` }) : null)];
+    if (s.opens && s.closes) {
+      const a = new Date(s.opens), b = new Date(`${s.closes}T23:59:59`);
+      kids.push(h('div', { class: 'season-bar', role: 'img', 'aria-label': 'Season elapsed' }, h('i', { style: `width:${Math.min(100, Math.max(0, (Date.now() - a) / (b - a) * 100))}%` })));
+    }
+    kids.push(mine && mine.rank ? h('p', { class: 'line mono', text: `#${mine.rank} · ${num(mine.value)} pts` }) : h('p', { class: 'help', text: 'Every ranked contest adds to your season points.' }));
+    if (fin) {
+      const end = new Date(new Date(fin.closes).getTime() - 864e5);
+      kids.push(h('p', { class: 'line' }, `Season Final · ${new Date(fin.opens).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} – ${end.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })} · full Math section `,
+        quiet('Add to calendar', () => UI.ics({ title: 'SAT Freshman · Season Final', start: fin.opens.slice(0, 10), url: `${location.origin}${C.href(fin.id)}` }))));
+    }
+    kids.push(h('div', { class: 'foot-links' }, quiet('Season standings ›', null, { href: '/compete/leaderboard/?period=season' })));
+    card('#season', ...kids);
+  }
+
+  /* ------------------------------------------------------------ E. this week's board (C10, C6) */
+  let metric = 'points';
+  async function renderPreview() {
+    const el = $('#preview');
+    const hd = kline('THIS WEEK');
+    C.under(hd, [{ value: 'points', label: 'Points' }, { value: 'net', label: 'Over par' }, { value: 'climb', label: 'Climb' }], { value: metric, label: 'Board', onChange: v => { metric = v; renderPreview(); } });
+    const box = h('div');
+    el.replaceChildren(hd, box);
+    UI.skel(box, 'rows:5');
+    try {
+      const q = `metric=${metric}&period=week&limit=5`;
+      const top = metric === 'points' && S.hub.board_preview ? S.hub.board_preview : await api(`/leaderboard?${q}`);
+      let rows = [...(top.entries || [])];
+      const you = top.you;
+      if (you && you.rank > 5) {
+        if (you.rank > 7) rows.push({ sep: true });
+        const near = await api(`/leaderboard?metric=${metric}&period=week&offset=${Math.max(5, you.rank - 3)}&limit=5`);
+        (near.entries || []).forEach(e => { if (!rows.some(x => x.pid === e.pid)) rows.push(e); });
+      }
+      const ul = h('ul', { class: 'mini-rows' });
+      const fmt = v => metric === 'net' ? `${v > 0 ? '+' : ''}${num(v)}` : num(v);
+      rows.forEach(e => {
+        if (e.sep) { ul.append(h('li', { class: 'sep', 'aria-hidden': 'true' })); return; }
+        const gap = you && !e.you && you.value !== undefined ? e.value - you.value : null;
+        ul.append(h('li', { class: e.you ? 'you' : null },
+          h('span', { class: 'mt' }, h('span', { class: 'mono', text: `${e.tie ? '=' : ''}${e.rank}` }), UI.level(null, false, 20, { level: e.level, ring: e.ring }), e.name, e.you ? h('span', { class: 'chip-s', text: 'You' }) : null),
+          h('span', { class: 'mm', text: [e.move ? `${e.move > 0 ? '▲' : '▼'}${Math.abs(e.move)}` : null, gap ? `${gap > 0 ? '+' : '−'}${num(Math.abs(gap))}` : null].filter(Boolean).join(' · ') }),
+          h('span', { class: 'ma mono', text: fmt(e.value) })));
+      });
+      // fewer than 5 players: today's par rows fill the empty places (C6)
+      if (rows.filter(e => !e.sep).length < 5 && metric === 'points') {
+        const pars = (S.board && S.board.pars) || [];
+        pars.slice(0, 5 - rows.length).forEach(p => ul.append(h('li', { class: 'par' }, h('span', { class: 'mt', text: `Level ${p.level} par (today)` }), h('span', { class: 'ma mono', text: num(p.points) }))));
+      }
+      if (!rows.length && !ul.childElementCount) ul.append(h('li', {}, h('span', { class: 'mm', text: 'No one has scored this week yet.' })));
+      box.replaceChildren(ul, h('div', { class: 'foot-links' }, quiet('Full board ›', null, { href: `/compete/leaderboard/?metric=${metric}&period=week` })));
+    } catch (e) { box.replaceChildren(); UI.cardError(box, renderPreview); }
+  }
+
+  /* ------------------------------------------------------------ Traps this week (C12) */
+  function renderTrapsCard() {
+    const hub = S.hub; if (!hub) return;
+    const trap = (S.live || []).find(c => c.kind === 'trap');
+    const kids = [head('Traps this week')];
+    if (trap) kids.push(h('p', { class: 'line' }, 'Trap of the week: ', h('a', { class: 'link', href: C.href(trap.id), text: String(trap.title).split(' · ').slice(1).join(' · ') || trap.title })));
+    const ul = h('ul', { class: 'mini-rows' });
+    (hub.traps || []).slice(0, 3).forEach(t => {
+      const name = h('span', { class: 'mt', text: t.name });
+      if (t.tell) UI.tooltip(name, `Tell: ${t.tell}`);
+      const bits = [t.field_share ? `field ${pct(t.field_share)} this week${t.field_move ? ` ${t.field_move > 0 ? '▲' : '▼'}${Math.abs(Math.round(t.field_move * 100))}` : ''}` : null,
+        t.chances ? `you ${pct(t.you_share)} · ${num(t.chances)} chances in 30 days` : null].filter(Boolean);
+      const drillB = quiet('Drill · 8', ev => busy(ev.currentTarget, () => drill({ habit: t.family, count: 8, source: 'habit' })));
+      ul.append(h('li', {}, name, h('span', { class: 'mm' }, bits.join(' · '), t.proven ? h('span', { class: 'chip-s', text: 'Trap-proof' }) : null), h('span', { class: 'ma' }, drillB)));
+    });
+    if (ul.childElementCount) kids.push(ul);
+    kids.push(h('div', { class: 'foot-links' }, quiet('Trap Index ›', null, { href: '/compete/rankings/#traps' })));
+    card('#traps', ...kids);
+  }
+
+  /* ------------------------------------------------------------ Champions (C27) */
+  function renderChamps() {
+    const list = S.hub.champions || [];
+    const kids = [head('Champions')];
+    const last = list[0];
+    if (!last) {
+      kids.push(h('p', { class: 'help', text: 'Last week’s podiums show here once a week closes, Mondays at 12:00 UTC.' }));
+    } else {
+      const b = last.boards || {};
+      const names = arr => (arr || []).slice(0, 3);
+      const table = h('table', { class: 'table compact' }, h('caption', { text: `${last.kind === 'season' ? 'Season' : 'Week'} ${last.period}` }),
+        h('thead', {}, h('tr', {}, h('th', { scope: 'col', text: '' }), h('th', { scope: 'col', text: 'Points' }), h('th', { scope: 'col', text: 'Over par' }), h('th', { scope: 'col', text: 'Most improved' }))),
+        h('tbody', {}, [0, 1, 2].map(i => h('tr', {}, h('td', { class: 'n', text: `#${i + 1}` }),
+          ['points', 'net', 'change'].map(k => { const e = names(b[k])[i]; return h('td', { class: e && e.you ? 'you' : null, text: e ? `${e.name}${e.you ? ' (you)' : ''}` : '—' }); })))));
+      kids.push(h('div', { class: 'table-wrap' }, table));
+      if (b.bands) kids.push(h('p', { class: 'meta', text: Object.entries(b.bands).map(([band, e]) => `Levels ${band}: ${(e && (e.name || (e[0] && e[0].name))) || '—'}`).join(' · ') }));
+    }
+    kids.push(h('div', { class: 'foot-links' }, quiet('Hall of champions ›', null, { href: '/compete/rankings/#champions' })));
+    card('#champs', ...kids);
+  }
+
+  /* ------------------------------------------------------------ F. next badges (C23) */
+  function goFor(b) {
+    if (b.go && b.go.href) return b.go;
+    const daily = { href: C.href(S.hub.daily.id), label: S.hub.daily.me && S.hub.daily.me.status === 'finished' ? 'Tomorrow’s Daily' : 'Start the challenge' };
+    const kindGo = (k, label) => (idOf(k) ? { href: C.href(idOf(k)), label } : null);
+    const map = {
+      'first-contest': daily, 'daily-7': daily, 'daily-30': daily, 'perfect-ten': daily, 'top-ten': daily, podium: daily, 'over-par': daily, 'won-back': daily,
+      'pace-setter': { href: C.href(S.hub.daily.id, { race: 'pace' }), label: 'Race SAT pace' },
+      sprinter: kindGo('sprint', 'Sprint'), 'weekly-4': kindGo('weekly', 'Weekly Module'), 'dress-rehearsal': kindGo('final', 'Season Final'),
+      'level-5': kindGo('rush', 'Rush'), 'level-8': kindGo('rush', 'Rush'), 'all-rounder': kindGo('rush', 'Rush'), rush: kindGo('rush', 'Rush'),
+      'trap-week': kindGo('trap', 'Trap of the week'), 'trap-hunter': { href: '/review/', label: 'Fix mistakes' },
+      'season-top-10': { href: '/compete/leaderboard/?period=season', label: 'Season standings' },
+      'streak-7': { href: '/', label: 'Up next' }, consistency: { href: '/', label: 'Up next' }, 'solved-1000': { href: '/practice/', label: 'Practise' },
+    };
+    return map[b.id] || null;
+  }
+  function renderBadges() {
+    const list = S.hub.next_badges || [];
+    const kids = [head('Next badges', quiet('All badges ›', null, { href: '/compete/rankings/#badges' }))];
+    const ul = h('ul', { class: 'mini-rows' });
+    list.forEach(b => {
+      const li = h('li', { class: 'badge-row' });
+      const go = goFor(b);
+      const m = h('div', { class: 'mm' });
+      UI.meter(m, { label: b.rule, value: b.have, max: b.need, text: `${num(b.have)}/${num(b.need)}` });
+      li.append(h('span', { class: 'mt', text: b.name }), m);
+      if (go) li.append(h('span', { class: 'ma' }, quiet('Go', null, { href: go.href })));
+      if (go) UI.tooltip(li.querySelector('.ma a'), go.label);
+      ul.append(li);
+    });
+    kids.push(list.length ? ul : h('p', { class: 'help', text: 'Every badge is earned. New ladders open as you climb.' }));
+    card('#badges', ...kids);
+  }
+
+  /* ------------------------------------------------------------ G. your private contests (C18) */
+  async function renderPrivate() {
+    try {
+      const r = await api('/contests?status=private&limit=50');
+      const codes = (() => { try { return JSON.parse(localStorage.getItem('satf.contest.codes') || '{}'); } catch (_) { return {}; } })();
+      // one row per series (its live round, else the next) and per open one-off
+      const by = new Map();
+      (r.contests || []).forEach(c => {
+        if (c.status === 'closed') return;
+        const key = c.series || c.id, cur = by.get(key);
+        if (!cur || (c.status === 'live' && cur.status !== 'live') || (c.status === cur.status && (c.round || 0) < (cur.round || 0))) by.set(key, c);
+      });
+      const kids = [head('Your private contests')];
+      if (!by.size) {
+        kids.push(h('p', { class: 'help', text: 'Private contests are for friends: make one and share the link.' }),
+          h('div', { class: 'row-act' }, quiet('+ Create a contest', () => C.create()), quiet('Join with a code', () => C.join())));
+      } else {
+        const ul = h('ul', { class: 'mini-rows' });
+        by.forEach((c, key) => {
+          const code = c.code || codes[key] || codes[c.id];
+          const ents = c.entrants || [];
+          const dots = h('span', { class: 'dots' }, ents.map(e => { const d = h('i', { class: `dot ${e.status === 'finished' ? 'done' : e.status === 'progress' ? 'progress' : ''}`, tabindex: '0' });
+            UI.tooltip(d, `${e.name}: ${e.status === 'finished' ? 'done' : e.status === 'progress' ? 'in progress' : 'not yet'}`); return d; }));
+          const acts = h('span', { class: 'ma' });
+          if (code) acts.append(quiet('Copy link', () => UI.copyText(`${location.origin}/compete/contest/?code=${code}`)));
+          const mePid = S.board && S.board.you && S.board.you.pid;
+          const waiting = ents.filter(e => e.status === 'new' && e.name !== 'Anonymous' && e.pid && e.pid !== mePid);
+          if (waiting.length && c.status === 'live') {
+            const nb = h('button', { type: 'button', class: 'quiet', text: 'Nudge' });
+            UI.menu.bind(nb, () => waiting.map(e => ({ label: e.name, onClick: async () => {
+              try { await api('/compete/nudge', { method: 'POST', body: { contest: c.id, member: e.pid } }); UI.toast(`Nudged ${e.name}`); }
+              catch (err) { UI.toast(err.status === 429 ? `${e.name} was already nudged this round.` : 'Couldn’t nudge. Try again.'); }
+            } })), { label: 'Nudge' });
+            acts.append(nb);
+          }
+          ul.append(h('li', {}, h('a', { class: 'mt link', href: C.href(c.id), text: c.title }),
+            h('span', { class: 'mm' }, C.windowLine(c), ents.length ? ' · ' : '', dots), acts));
+        });
+        kids.push(ul, h('div', { class: 'foot-links' }, quiet('+ Create a contest', () => C.create()), quiet('Join with a code', () => C.join())));
+      }
+      card('#private', ...kids);
+    } catch (e) { fail('#private', renderPrivate); }
+  }
+
+  /* ------------------------------------------------------------ the season recap (C21) */
+  async function renderRecap() {
+    if (!S.hub || !S.hub.recap) return;   // the hub says when a closed season has a recap
+    try {
+      const r = await api('/compete/recap');
+      const text = r && (r.text || r.line);
+      const id = r && (r.season || r.id);
+      let off = null; try { off = localStorage.getItem('satf.recap.off'); } catch (_) {}
+      if (!text || (id && off === id)) return;
+      const el = $('#recap');
+      const dismiss = quiet('Dismiss', () => { try { localStorage.setItem('satf.recap.off', id || '1'); } catch (_) {} el.replaceChildren(); });
+      el.replaceChildren(h('section', { class: 'card', 'aria-label': 'Season recap' }, kline('SEASON RECAP'), h('p', { class: 'line', text }),
+        r.goal ? h('p', { class: 'meta', text: r.goal }) : null,
+        h('div', { class: 'row-act' }, quiet('Copy recap', () => UI.copyText(text)), dismiss)));
+    } catch (_) {}
+  }
+
+  /* ------------------------------------------------------------ load */
+  function paintSkeletons() {
+    skel('#daily', 'card:4'); skel('#contests', 'rows:3'); skel('#qotd', 'line'); skel('#stats', 'card:3');
+    skel('#rivals', 'rows:3'); skel('#season', 'lines:2'); skel('#preview', 'rows:5'); skel('#traps', 'rows:3');
+    skel('#champs', 'lines:3'); skel('#badges', 'rows:3'); skel('#private', 'lines:2');
+  }
+  function renderHub() {
+    try { renderDaily(); } catch (e) { console.error(e); }
+    renderStats(); renderSeason(); renderTrapsCard(); renderChamps(); renderBadges(); renderRecap();
+  }
+  async function load() {
+    paintSkeletons();
+    let hubP;
+    try {
+      hubP = UI.cached('/compete', hub => { S.hub = hub; renderHub(); renderPreview(); });
+      const [, me] = await Promise.all([hubP, UI.cached('/compete/me', me => { S.me = me; if (S.hub) renderHub(); })]);
+      S.me = me;
+    } catch (e) {
+      if (!S.hub) ['#daily', '#stats', '#season', '#preview', '#traps', '#champs', '#badges'].forEach(s => fail(s, load));
+      return;
+    }
+    const d = S.hub.daily;
+    try { S.board = await api(`/contest/${encodeURIComponent(d.id)}/board?limit=5`); } catch (_) {}
+    renderDaily();
+    if (!(S.hub.board_preview && S.hub.board_preview.players >= 5)) renderPreview();
+  }
+  load();
+  renderContests(); loadCounts();
+  renderQotd(); renderRivals(); renderPrivate();
+
+  // Enter starts or resumes the Daily while focus is on the page body (C24)
+  UI.keys.register('compete-overview', {
+    Enter: { does: 'Start or resume the Daily Challenge', run: () => {
+      const d = S.hub && S.hub.daily; if (!d) return;
+      if (d.me && d.me.status === 'finished') location.href = C.href(d.id);
+      else if (d.me && d.me.status === 'progress') C.start(d.id);
+      else if (C.rulesSeen('daily')) C.start(d.id, { kind: 'daily' });
+      else location.href = C.href(d.id);
+    } },
+  }, { label: 'This page', when: () => { const a = document.activeElement; return !a || a === document.body || a.id === 'main'; } });
+})();

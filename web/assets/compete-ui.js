@@ -210,7 +210,7 @@
   function clockText(c) {
     const k = kind(c);
     if (c.kind === 'rush') return '3 strikes';
-    if (k.clock === 'wall') return `${Math.round((c.seconds || 2100) / 60)} min${c.kind === 'final' ? ' a module' : ''}`;
+    if (k.clock === 'wall') return `${Math.round((c.seconds || 2100) / 60)} min${c.kind === 'final' ? ' · 2 modules' : ''}`;
     return c.seconds ? `${mmss(c.seconds)} answer clock` : 'answer clock';
   }
   function facts(c) {
@@ -219,7 +219,7 @@
     else if (c.kind === 'rush') out.push('difficulty climbs with you');
     else if (c.count) out.push(`${c.count} questions`);
     out.push(clockText(c));
-    if (kind(c).twins || (c.spec && c.spec.twin)) out.push('your own twin questions');
+    if (kind(c).twins || (c.kind === 'private' && c.spec && c.spec.twin)) out.push('your own twin questions');
     const n = c.field && c.field.players;
     if (n) out.push(`${num(n)} in`);
     return out.join(' · ');
@@ -429,7 +429,7 @@
       if (!text) { bar.hidden = true; return; }
       const jump = h('button', { type: 'button', class: 'quiet', text: 'Jump to me' });
       jump.addEventListener('click', () => api0.jump());
-      bar.replaceChildren(h('span', { text }), youRow || o.onJump ? jump : null);
+      bar.replaceChildren(h('span', { text }), ...(youRow || o.onJump ? [jump] : []));
       if (youRow && 'IntersectionObserver' in window) {
         obs = new IntersectionObserver(es => { bar.hidden = es.some(x => x.isIntersecting); }, { threshold: 0.6 });
         obs.observe(youRow);
@@ -493,12 +493,13 @@
       const p = !e && o.pars && o.pars[i];
       const card = h('div', { role: 'listitem', class: `pod p${i + 1}${e && e.you ? ' you' : ''}${!e ? (p ? ' parp' : ' open') : ''}` });
       if (e) {
-        card.append(i === 0 && TROPHY ? h('span', { html: TROPHY }) : null,
+        if (i === 0 && TROPHY) card.append(h('span', { html: TROPHY }));
+        card.append(
           h('span', { class: 'num', text: `${e.tie ? '=' : ''}${e.rank}` }),
           level(null, false, 32, { level: e.level, ring: e.ring, ringTitle: titleText(e.title) }),
           h('span', { class: 'pod-n', text: e.you ? `${e.name} (you)` : e.name }),
           h('span', { class: 'pod-v', text: value(e) }),
-          o.sub && o.sub(e) ? h('span', { class: 'pod-s', text: o.sub(e) }) : null);
+          ...(o.sub && o.sub(e) ? [h('span', { class: 'pod-s', text: o.sub(e) })] : []));
       } else if (p) card.append(h('span', { html: FLAG }), h('span', { class: 'pod-n', text: p.label }), h('span', { class: 'pod-v', text: num(p.value) }), h('span', { class: 'pod-s', text: 'par' }));
       else card.append(h('span', { class: 'num', text: String(i + 1) }), h('span', { class: 'pod-s', text: 'Open' }));
       el.append(card);
