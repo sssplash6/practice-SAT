@@ -534,6 +534,7 @@ def check_learner(c) -> None:
     again = c.post("/api/qotd", headers=H, json={"answer": keyed_answer(kq, True)}).json()
     assert again["correct"] is False, "a second answer replaced the first"
     c.post("/api/qotd", headers={"X-Learner": "a:qotdother"}, json={"answer": keyed_answer(kq, True)})
+    db.run("UPDATE learners SET created='2020-01-01' WHERE id='a:qotdother'")   # SEC-02: the crowd counts established codes
     mine = c.get("/api/qotd", headers=H).json()["mine"]
     assert mine and (mine["crowd"]["answered"], mine["crowd"]["right"]) == (2, 1), mine
     print("ok  the question of the day is one question, one answer each, with the crowd's count")

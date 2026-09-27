@@ -366,7 +366,7 @@ def challenge_today(learner: str, tz: int, t: dt.date) -> dict:
 
 def qotd_today(learner: str, tz: int) -> dict:
     t = daily.today(tz)
-    shown = daily.slots()
+    shown = daily.shown(t)
     m = daily.marks(learner, t, shown)
     streak = daily.qotd_streak(learner, tz)
     return {"day": t, "slots": len(shown), "answered": sum(v is not None for v in m.values()), "marks": m,
@@ -924,7 +924,6 @@ def get_calendar(month: str = Query(...), x_learner: str | None = Header(default
              "asked": res.get("asked"), "estimate": {"low": est["low"], "high": est["high"]} if isinstance(est, dict)
              and est.get("low") is not None else None, "rank": rank, "gated": gated})
     qotd = daily.by_day(learner)
-    shown = daily.slots()
     forecast = {f["day"]: f for f in progress.due_forecast(learner, tz, (last - t).days)} if last > t else {}
     days, totals = [], {"minutes": 0, "questions": 0, "right": 0, "active_days": 0}
     for i in range((last - first).days + 1):
@@ -936,7 +935,7 @@ def get_calendar(month: str = Query(...), x_learner: str | None = Header(default
         row = {"day": key, "questions": r["questions"], "right": r["right"], "minutes": r["minutes"],
                "practice": r["practice"], "tests": r["tests"], "words": r["words"], "fixed": r["fixed"],
                "rest": r["rest"], "spare_used": r.get("spare_used", False),
-               "qotd": daily.marks(learner, key, shown, qotd),
+               "qotd": daily.marks(learner, key, None, qotd),
                "sittings": extra.get("sittings", []), "opened": extra.get("opened", []),
                "closed": extra.get("closed", []), "topics": list(extra.get("topics", {}).values()),
                "first_at": extra.get("first_at"), "last_at": extra.get("last_at"),
@@ -968,18 +967,18 @@ def _maybe_learner(x_learner: str | None) -> str | None:
 
 def _slot_rows(learner: str | None, day: str) -> list[dict]:
     out = []
-    for slot in daily.slots():
+    for slot in daily.shown(day):
         got = daily.answered(learner, slot, day) if learner else None
         if slot in daily.MATH:
             q = (daily.rebuild(got["template"], got["seed"], "qotd" if slot == "math:mcq" else "qotd-spr")
                  if got else daily.item(slot, day))
-            mine = daily.feedback(slot, day, q, got["given"], got["late"], got["ms"]) if got else None
+            mine = daily.feedback(slot, day, q, got["given"], got["late"], got["ms"], learner) if got else None
         else:
             q = daily.item(slot, day)
             if q is None:
                 continue
             mine = daily.rw_feedback(slot, day, q, got["given"], got["late"], got["ms"],
-                                     {"correct": bool(got["correct"])}) if got else None
+                                     {"correct": bool(got["correct"])}, learner) if got else None
         out.append({"slot": slot, **daily.SLOTS[slot], "question": daily.public(slot, q), "mine": mine})
     return out
 
@@ -1040,18 +1039,18 @@ def answer_qotd(body: Reply, x_learner: str | None = Header(default=None), x_tz:
         # W21's signature; the session carries S3's grace and late routing when Words takes it
         kw = {"session": daily.session(slot, day, late)} if "session" in inspect.signature(record).parameters else {}
         reply = record(learner, day, daily.SLOTS[slot]["fmt"], given, body.ms, **kw) or {}
-        return daily.rw_feedback(slot, day, gen, reply.get("given", given), late, body.ms, reply)
+        return daily.rw_feedback(slot, day, gen, reply.get("given", given), late, body.ms, reply, learner)
     first = daily.answered(learner, slot, day)
     if first is None:
         q = daily.item(slot, day)
         filed = progress.record(learner, daily.session(slot, day, late), q, given, ms=body.ms, once=True)
         if filed is not None:
             daily.remember(learner, q)
-            return {**daily.feedback(slot, day, q, given, late, body.ms),
+            return {**daily.feedback(slot, day, q, given, late, body.ms, learner),
                     "opened": filed["opened"], "closed": filed["closed"]}
         first = daily.answered(learner, slot, day)
     q = daily.rebuild(first["template"], first["seed"], "qotd" if slot == "math:mcq" else "qotd-spr")
-    return {**daily.feedback(slot, day, q, first["given"], first["late"], first["ms"]), "already": True}
+    return {**daily.feedback(slot, day, q, first["given"], first["late"], first["ms"], learner), "already": True}
 
 
 class Another(BaseModel):
