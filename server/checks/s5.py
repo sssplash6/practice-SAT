@@ -1088,6 +1088,12 @@ def security(c) -> None:
     assert len(ok(c.post(f"/api/session/{d['id']}/begin", headers=H(d["learner"]), json={}))["questions"]) == 20
     arc = ok(c.post("/api/mock/1.1", headers=H(me), json={}))
     assert arc["learner"] == me and arc["begun"] is False
+    busy = code("busy")
+    past = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=5)).isoformat(timespec="seconds")
+    for i in range(api_tests.NEW_PER_HOUR):
+        db.run("INSERT INTO sessions(id,kind,learner,started,cfg) VALUES (?,?,?,?,?)",
+               f"s5-busy-{i}-{secrets.token_hex(3)}", "module", busy, past, "{}")
+    assert c.post("/api/mock/new", headers=H(busy), json={"kind": "module"}).status_code == 429
     print("ok  S5 security: every sitting endpoint owner-only (SEC-03), retired codes write nothing (SEC-07)")
 
 

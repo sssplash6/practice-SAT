@@ -58,6 +58,7 @@ SCRATCH_MAX = 20 * 1024
 BREAK_MAX_MS = 75_000       # X11: Bluebook's 60 s step plus slack for a slow device
 AWAY_MAX_MS = 120_000       # X1
 PRESSURE_MAX = 15
+NEW_PER_HOUR = 120          # sittings a code may build in an hour (each one generates a module)
 PRESSURE_DAYS = 7
 GRID_OK = re.compile(r"^[-\u2212]?[0-9./]{1,5}$")
 QID_OK = re.compile(r"^[A-Za-z0-9_:-]{1,24}$")
@@ -577,6 +578,8 @@ def new_session(body: NewDiagnostic | None = None, x_learner: str | None = Heade
     lobby. With no code, the server mints one and returns it (SEC-07)."""
     minted = not (x_learner and x_learner.strip())
     learner = writer_of("anon:" + secrets.token_urlsafe(9)) if minted else writer_of(x_learner)
+    if not minted:
+        _rate(learner)
     form_id = random.choice(list(FORMS))
     opts = options(learner, NewMock(conditions=body.conditions if body else None))
     cfg = {**opts, "kind": "diagnostic", "lobby": True}
@@ -1466,7 +1469,7 @@ class Custom(BaseModel):
     formats: Literal["both", "mcq", "spr"] = "both"
     tiers: list[Literal["easy", "medium", "hard"]] = Field(default_factory=lambda: ["easy", "medium", "hard"],
                                                            min_length=1)
-    traps: Literal["all", "open", "due"] | list[int] = "all"
+    traps: Literal["all", "open", "due"] | list[int] = Field(default="all", max_length=200)
     neutral: Literal[0, 0.25] = 0.25
 
 
@@ -1485,6 +1488,14 @@ class NewMock(Options):
     custom: Custom | None = None
     full: bool | None = None            # the old body: full -> section, else module 1
     timed: bool | None = None           # the old body: false -> untimed
+
+
+def _rate(learner: str) -> None:
+    """Building a sitting generates a module, so a code gets NEW_PER_HOUR an hour (429)."""
+    since = (_utc() - dt.timedelta(hours=1)).isoformat(timespec="seconds")
+    if db.one("SELECT COUNT(*) AS n FROM sessions WHERE learner=? AND started>=?"
+              " AND kind IN ('mock','module','custom','diagnostic')", learner, since)["n"] >= NEW_PER_HOUR:
+        raise HTTPException(429, "that's a lot of new tests this hour; resume one of them instead")
 
 
 def _insert(learner: str, kind: str, mock_id: str | None, questions: dict | None, cfg: dict,
@@ -1740,6 +1751,7 @@ def new_mock(body: NewMock | None = None, x_learner: str | None = Header(default
     """A sitting that has never existed before, in its lobby. The body picks
     the kind; the old {full, timed} still works for Today and Plan."""
     learner = writer_of(x_learner)
+    _rate(learner)
     sid = _new(learner, body or NewMock())
     row = session_or_404(sid)
     log.info("new %s %s for %s", kind_of(row), sid[:8], learner[:12])
@@ -1784,6 +1796,7 @@ def start_mock(num: str, body: MockStart | None = None,
     if body_learner and header_learner and body_learner != header_learner:
         raise HTTPException(403, "learner tokens disagree")
     learner = body_learner or header_learner or writer_of("anon:" + secrets.token_urlsafe(9))
+    _rate(learner)
     cfg = {**options(learner, Options()), "kind": "section", "lobby": True, "archive": num}
     sid = _insert(learner, "mock", num, None, cfg)
     log.info("mock %s started as %s", num, sid[:8])
