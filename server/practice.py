@@ -52,6 +52,7 @@ WINDOW = 8              # how far back sameness is still felt
 SPREAD = 46             # penalty per earlier use of the template in this set
 CANDIDATES = 7          # templates tried per slot before picking
 SEED_TRIES = 60         # how far to walk the seed space for an unused one
+FILLER = "near-miss arithmetic slip"   # satbank's unnamed near value (progress.FILLER)
 
 _CACHE: dict = {}
 
@@ -360,7 +361,9 @@ def to_question(card: Card, n: int) -> dict:
         "rationale": it.rationale,
         "reasons": list(it.reasons),
         "spr_reasons": spr_reasons(card.key, card.seed, it),
-        "filler": [not bool(reason) for reason in it.reasons],
+        # the bank's stand-in for an unnamed near value (progress.FILLER); the
+        # key's empty reason is not a filler
+        "filler": [reason == FILLER for reason in it.reasons],
         "steps": [getattr(step, "text", str(step)) for step in steps],
         "step_of": [dict(s) if isinstance(s, dict) else
                     ({"at": getattr(s, "at", None), "wrong": getattr(s, "wrong", None)} if s else None)
