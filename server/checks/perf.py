@@ -11,19 +11,22 @@ import sqlite3
 import tempfile
 import threading
 import time
+from contextlib import nullcontext
 from concurrent.futures import ThreadPoolExecutor
 
 from fastapi.testclient import TestClient
 
-_tmp = tempfile.TemporaryDirectory(prefix="satf-perf-check-")
-os.environ["SATF_DB"] = str(pathlib.Path(_tmp.name) / "perf.db")
+if __name__ == "__main__":
+    _tmp = tempfile.TemporaryDirectory(prefix="satf-perf-check-")
+    os.environ["SATF_DB"] = str(pathlib.Path(_tmp.name) / "perf.db")
 
 from server import compete, db, drill, words  # noqa: E402
 from server.app import app  # noqa: E402
 
 
-def check() -> None:
-    with TestClient(app) as client:
+def check(client=None) -> None:
+    standalone = client is None
+    with TestClient(app) if client is None else nullcontext(client) as client:
         assert client.get("/api/health").status_code == 200
         today = compete.local_day().isoformat()
         assert db.one("SELECT 1 FROM contests WHERE id=?", "daily-" + today)
@@ -31,6 +34,10 @@ def check() -> None:
         assert db.conn().execute("PRAGMA journal_mode").fetchone()[0] == "wal"
         assert db.conn().execute("PRAGMA busy_timeout").fetchone()[0] == 2500
         print("ok  current contest and challenge precomputed; WAL and busy timeout enabled")
+        # test_flow invokes all checks against its shared database. The full
+        # concurrency and cache exercise belongs to this check's isolated run.
+        if not standalone:
+            return
 
         family = compete.trap_families()
         assert compete.trap_families() is family  # including the empty-supply result
