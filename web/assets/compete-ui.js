@@ -385,6 +385,8 @@
 
   /* ------------------------------------------------------------ UI.board */
   const FLAG = svgOf(SVG.flag, 14);
+  let boardSeq = 0;
+  const boardKeys = [];
   function board(host, data, o = {}) {
     const el = h('div', { class: 'board' });
     const legendLine = h('p', { class: 'meta board-legend', hidden: true });
@@ -436,8 +438,9 @@
       const pars = o.pars ? (o.pars() || []) : [];
       if (!pars.length) return entries;
       const out = [...entries];
-      pars.forEach(p => {
-        const at = out.findIndex(e => !e.par && !e.sep && (val(e) ?? -Infinity) < p.value);
+      // highest par first, each placed above the first row (player or par) below it
+      [...pars].sort((x, y) => y.value - x.value).forEach(p => {
+        const at = out.findIndex(e => !e.sep && (e.par ? e.value : val(e) ?? -Infinity) < p.value);
         const row0 = { par: true, label: p.label, value: p.value, points: p.value };
         if (at < 0) out.push(row0); else out.splice(at, 0, row0);
       });
@@ -508,6 +511,20 @@
         wrap.tabIndex = -1; wrap.focus();
       }
     });
+    // the ? sheet lists the board region's keys (§2.8, C24); the table's own handler above acts first
+    if (UI.keys && UI.keys.register) {
+      // one Board heading in the ? sheet: drop the keys of boards no longer on the page
+      boardKeys.splice(0).forEach(([t, r]) => { if (t.isConnected && t !== table) boardKeys.push([t, r]); else r.unregister(); });
+      const shown = () => false;
+      const reg = UI.keys.register(`compete-board-${++boardSeq}`, {
+        J: { does: 'Next row', run: shown }, K: { does: 'Previous row', run: shown },
+        ArrowDown: { does: 'Next row', run: shown }, ArrowUp: { does: 'Previous row', run: shown },
+        Enter: { does: 'Row menu', run: shown },
+        ...(o.onFollow ? { F: { does: 'Follow the student', run: shown } } : {}),
+        Escape: { does: 'Leave the board', run: shown },
+      }, { label: 'Board', within: table, when: () => table.isConnected });
+      boardKeys.push([table, reg]);
+    }
     const api0 = {
       el,
       update(nd) { d = nd || {}; draw(); },
@@ -775,7 +792,7 @@
       const secs = f.clock === 'auto' ? f.count * 95 : f.minutes * 60;
       const closes = new Date(Date.now() + (f.repeat === 'once' ? f.open_for : f.repeat === 'day' ? 24 : 168) * 3600e3);
       const whenS = closes.toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: '2-digit' });
-      const src0 = f.source === 'skills' ? '' : f.source === 'my_traps' ? ' · from your open mistakes' : ' · from your group’s open mistakes (round 2 on)';
+      const src0 = f.source === 'skills' ? '' : f.source === 'my_traps' ? ' · from your open mistakes' : ' · from the mistakes you hold open together (round 2 on)';
       sum.textContent = `${f.count} questions · ${Math.round(secs / 60)} min${src0} · ${f.repeat === 'once' ? `open until ${whenS}` : `${f.rounds} rounds, ${f.repeat === 'day' ? 'daily' : 'weekly'}`}`;
     }
     draw();
