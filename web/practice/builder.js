@@ -357,7 +357,8 @@
     const host = $('#ready');
     const last = ((B.sets && B.sets.recent) || []).find(r => r.kind !== 'challenge');
     let next = [];
-    try { const r = await UI.api('/next?limit=3', { quiet: true }); next = (Array.isArray(r) ? r : r.items || []).slice(0, 3); } catch (_) { next = []; }
+    const shell = UI.shellData ? UI.shellData() : null;   // GET /api/next only once the server has it (U1), as the shell does
+    if (!(shell && shell.has && !shell.has.next)) try { const r = await UI.api('/next?limit=3', { quiet: true }); next = (Array.isArray(r) ? r : r.items || []).slice(0, 3); } catch (_) { next = []; }
     ready = next.map(x => ({ title: x.title, meta: x.meta || [x.count ? `${x.count} q` : null, x.minutes ? `${Math.round(x.minutes)} min` : null, x.points ? `≈ ${x.points} pts` : null].filter(Boolean).join(' · '),
       why: x.reason || x.why || '', body: x.start || x.body, reason: x.unavailable || null }));
     if (last) ready.push({ title: 'Again: your last set', meta: `${(last.topics || []).map(t => (B.skills.get(t) || {}).short || t).slice(0, 2).join(', ')} · ${last.total ?? last.answered} q`, why: `${last.right}/${last.answered} right`, body: { again: last.id, source: 'builder' } });
