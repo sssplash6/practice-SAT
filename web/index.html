@@ -443,7 +443,7 @@
       S.ins = { failed: true };
       if (S.t) paintScore();
     }),
-    qotd: () => load(S.qday ? `/qotd?day=${S.qday}` : '/qotd', d => { S.q = d; paintQotd(); },
+    qotd: () => load(S.qday ? `/qotd?day=${S.qday}` : '/qotd', d => { S.q = d; paintQotd(); if (S.t) paintWords(); },
       () => UI.cardError($('qotd'), () => LOADERS.qotd(), 'Couldn’t load today’s questions.'), { nocache: !!S.qday }),
     calendar: () => load(`/calendar?month=${S.calMonth || localDay().slice(0, 7)}`, d => { S.cal = d; paintStudy(); },
       () => { S.cal = { failed: true }; paintStudy(); }, { nocache: !!S.calMonth }),
@@ -568,6 +568,8 @@
   }
 
   /* ---------------------------------------------------------------- up next (§3, T1, T2, T4, T19) */
+  // the learner's median seconds a question; a median from a handful of quick taps (under 20 s) is no pace, so 95 (R34)
+  const spq = () => { const x = S.t && S.t.seconds_per_question; return x >= 20 ? x : 95; };
   const planDay = day => S.t && S.t.plan && (S.t.plan.days || []).find(x => x.date === day);
   const SZ = { sel: null, timed: false, drop: [], preview: null, failed: false, seq: 0, ws: null, sid: null };
   function sizeValue() { return SZ.sel || { kind: 'box', v: (S.t.next.box || {}).default || 15 }; }
@@ -788,8 +790,8 @@
       const byTopic = {};
       (S.t.domains || []).forEach(d => (d.topics || []).forEach(x => { byTopic[x.topic] = x; }));
       if (topics.length) kids.push(h('div', { class: 'tchips' }, topics.map(x => topicChip(x, { traps: (coach.traps || {})[x], mastery: (byTopic[x] || {}).mastery || 0, answered: (byTopic[x] || {}).answered }))));
-      const est = s.kind === 'box' ? join(`${s.v} min`, p && p.minutes && s.v === null ? null : null, `about ${n(Math.max(1, Math.round(s.v * 60 / (S.t.seconds_per_question || 95))))} questions at your pace`)
-        : s.v === null ? 'as many as you like' : join(pl(s.v, 'question'), `${n(Math.round((p && p.minutes) || s.v * (S.t.seconds_per_question || 95) / 60))} min`);
+      const est = s.kind === 'box' ? join(`${s.v} min`, `about ${n(Math.max(1, Math.round(s.v * 60 / spq())))} questions at your pace`)
+        : s.v === null ? 'as many as you like' : join(pl(s.v, 'question'), `${n(Math.round((p && p.minutes) || s.v * spq() / 60))} min`);
       kids.push(meta(est));
       if (SZ.failed) kids.push(h('p', { class: 'note-ok', text: 'Couldn’t size the set. Here is the usual one.' }));
       if (coach.suppressed && coach.suppressed.length) coach.suppressed.forEach(x => kids.push(h('p', { class: 'line soft' }, x.text, ' ',
@@ -1792,7 +1794,7 @@
     return el;
   }
   function goalPop(anchor) {
-    const t = S.t, secs = t.seconds_per_question || 95, gs = t.goal_suggest, w = t.workload;
+    const t = S.t, secs = spq(), gs = t.goal_suggest, w = t.workload;
     UI.pop(anchor, (el, res) => {
       const chips = [15, 30, 45, 60, 90, 120, 180, 240];
       const box = h('div', { style: 'display:grid;gap:8px;max-width:340px' }, h('p', { class: 'label', text: 'Daily goal' }));
@@ -2124,8 +2126,10 @@
   }
   function moveCard(k) {
     const list = cards();
-    const cur = list.findIndex(s => s.contains(document.activeElement));
-    const j = Math.max(0, Math.min(list.length - 1, cur < 0 ? (k > 0 ? 0 : list.length - 1) : cur + k));
+    let cur = list.findIndex(s => s.contains(document.activeElement));
+    // nothing focused: the card at the top of the view is the current one, so J from the top goes to the second card
+    if (cur < 0) cur = Math.max(0, list.filter(s => s.getBoundingClientRect().top <= 80).length - 1);
+    const j = Math.max(0, Math.min(list.length - 1, cur + k));
     const hd = list[j].querySelector('h1, h2');
     if (hd) { hd.focus({ preventScroll: true }); hd.scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }
   }
