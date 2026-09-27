@@ -113,7 +113,9 @@
     if (d.feedback || (given !== null && given !== undefined && given !== '')) answered.add(q.id);
     return it;
   }
-  const cellOf = s => ({ status: s.status, flag: !!s.marked, note: !!s.has_note, tier: s.difficulty, level: s.level, topic: s.topic,
+  // until S10's flag endpoint lands, a mark is kept here too (state reads the flags table)
+  const localMarks = () => new Set(ls.get(`satf.marks.${sid}`, []));
+  const cellOf = s => ({ status: s.status, flag: !!s.marked || localMarks().has(s.id), note: !!s.has_note, tier: s.difficulty, level: s.level, topic: s.topic,
     topic_name: topicName(s.topic), ms: s.ms || 0, budget_ms: s.budget_ms, conf: s.conf, repair: !!s.repair });
 
   function setTitle() {
@@ -282,6 +284,9 @@
     catch (e) {
       if (e.status !== 404 && e.status !== 405) throw e;
       await api('/saved', { method: 'POST', body: { session: sid, question_id: qid, on: !!on } });
+      const m = localMarks();
+      if (on) m.add(qid); else m.delete(qid);
+      ls.set(`satf.marks.${sid}`, [...m]);
     }
   }
 
@@ -350,7 +355,8 @@
   function summary(r) {
     runHost.replaceChildren();
     document.title = `Set complete · ${setTitle()} · SAT Freshman`;
-    const qs = r.questions || [];
+    const lm = localMarks();
+    const qs = (r.questions || []).map(q => (lm.has(q.id) ? Object.assign({}, q, { marked: true }) : q));
     const endless = st.total === null || st.total === undefined;
     const counts = {};
     qs.forEach(q => { counts[q.status] = (counts[q.status] || 0) + 1; });
