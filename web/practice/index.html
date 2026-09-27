@@ -80,7 +80,10 @@
   .tri::before { content: ''; position: absolute; inset: -12px; }
 
   .dcard { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); margin-bottom: 10px; }
-  .dhead { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto 150px auto auto auto 28px; gap: 12px; align-items: center; min-height: 56px; padding: 6px 14px; }
+  .dhead { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto 28px; grid-template-areas: "c n s v" "l l l l"; gap: 6px 12px; align-items: center; min-height: 56px; padding: 6px 14px; cursor: pointer; }
+  .dhead > .tri { grid-area: c; } .dhead > .dname { grid-area: n; } .dhead > .dsel { grid-area: s; } .dhead > .chev { grid-area: v; }
+  .dhead > .dline { grid-area: l; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; padding-left: 32px; }
+  .dhead .mcell { width: 120px; }
   .dhead .dname { font: 700 16px/1.25 var(--font); cursor: pointer; }
   .wchip { font: 500 12px var(--mono); color: var(--soft); background: var(--tile); border-radius: 6px; padding: 3px 7px; white-space: nowrap; }
   .mcell { display: grid; gap: 4px; }
@@ -92,11 +95,15 @@
   .open.none { color: var(--soft); }
   .chev { width: 28px; height: 28px; border-radius: 8px; border: 0; background: none; color: var(--ink); cursor: pointer; display: grid; place-items: center; }
   .chev svg { transition: transform .16s var(--ease); }
-  [aria-expanded="true"] > .chev svg, .chev[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .chev svg { transform: rotate(0deg); }
+  [aria-expanded="true"] > .chev svg, .chev[aria-expanded="true"] svg { transform: rotate(90deg); }
   .dbody { border-top: 1px solid var(--line); }
-  .srow { display: grid; grid-template-columns: 20px 22px minmax(0, 1fr) 140px 80px 150px 80px 72px 28px; gap: 10px; align-items: center; min-height: 56px; padding: 6px 14px; border-top: 1px solid var(--line); cursor: pointer; user-select: none; }
+  .srow { display: grid; grid-template-columns: 20px 22px minmax(0, 1fr) 28px; grid-template-areas: "c g n v" "l l l l"; gap: 4px 10px; align-items: center; min-height: 56px; padding: 6px 14px; border-top: 1px solid var(--line); cursor: pointer; user-select: none; }
   .srow:first-child { border-top: 0; }
-  .srow .glyph { width: 22px; height: 22px; }
+  .srow > .tri { grid-area: c; } .srow > .sg { grid-area: g; } .srow > .nm { grid-area: n; } .srow > .chev { grid-area: v; }
+  .srow > .sline { grid-area: l; display: grid; grid-template-columns: 140px 90px minmax(0, 1fr) 70px 60px; gap: 4px 12px; align-items: center; padding-left: 52px; }
+  .srow .sg { display: grid; place-items: center; } .srow .glyph { width: 22px; height: 22px; }
+  .srow .mwrap .mcell { width: 100%; }
   .srow .sname { font: 600 15px/1.25 var(--font); }
   .srow .ssub { font: 500 11.5px/1.35 var(--mono); color: var(--soft); margin-top: 2px; }
   .srow .worth { font: 600 13px var(--mono); }
@@ -123,6 +130,10 @@
   .trow .tacts { display: flex; flex-wrap: wrap; gap: 2px 6px; }
   .trow .tacts .quiet { min-height: 32px; font-size: 13px; padding: 0 6px; }
   mark.hit { background: var(--wash-2); color: inherit; border-radius: 2px; }
+  .qlink { background: none; border: 0; padding: 0; color: var(--ink); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; font: inherit; }
+  .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 14px; }
+  .ws-mobile { display: none; }
+  .skel-card { padding: 16px; }
   .pr-map { display: grid; gap: 10px; }
   .pr-map .mrow { display: grid; gap: 4px; }
   .pr-map .mrow .mh { display: flex; justify-content: space-between; gap: 8px; font: 600 13px var(--font); }
@@ -201,27 +212,22 @@
     .pr-set .sgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 24px; }
     .pr-set .sgrid > .wide { grid-column: 1 / -1; }
     .pr-ready { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .srow { grid-template-columns: 20px 22px minmax(0, 1fr) 120px 70px 120px 64px 28px; }
-    .srow .last { display: none; }
   }
   @media (max-width: 759px) {
     .pr { padding-bottom: 250px; }
     .pr-set { order: 2; padding: 16px; }
     .pr-set .sgrid { display: block; }
     .pr-jump { display: flex; width: 100%; justify-content: space-between; min-height: 44px; margin: 0 0 10px; }
-    .dhead { grid-template-columns: 20px minmax(0, 1fr) auto 28px; grid-template-areas: "c n s v" "l l l l"; row-gap: 6px; }
-    .dhead > .tri { grid-area: c; } .dhead > .dname { grid-area: n; } .dhead > .dsel { grid-area: s; } .dhead > .chev { grid-area: v; }
-    .dhead > .dline { grid-area: l; display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; padding-left: 32px; }
-    .srow { grid-template-columns: 20px 22px minmax(0, 1fr) 28px; grid-template-areas: "c g n v" "l l l l"; row-gap: 4px; min-height: 60px; }
-    .srow > .tri { grid-area: c; } .srow > .glyph { grid-area: g; } .srow > .nm { grid-area: n; } .srow > .chev { grid-area: v; }
-    .srow > .sline { grid-area: l; display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; padding-left: 32px; }
+    .ws-mobile { display: inline-flex; }
+    .srow { min-height: 60px; }
+    .srow > .sline { display: flex; flex-wrap: wrap; gap: 4px 12px; padding-left: 32px; }
     .srow > .sline .mcell { width: 80px; }
     .srow .last { display: inline; }
     .spanel { padding-left: 16px; }
     .setrow { grid-template-columns: minmax(0, 1fr) auto; }
     .setrow > :nth-child(n+3):not(.acts) { grid-column: 1; }
     .setrow .acts { grid-column: 1 / -1; justify-content: flex-start; }
-    .pr-abar { bottom: calc(62px + env(safe-area-inset-bottom, 0px)); }
+    .pr-abar, body.has-side .pr-abar, body.has-rail .pr-abar { left: 0; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
     .pr-abar-in { flex-direction: column; align-items: stretch; padding-bottom: 10px; min-height: 0; }
     .pr-abar .go { flex-direction: column; align-items: stretch; }
     .pr-abar .go .pill { width: 100%; height: 52px; }
@@ -230,13 +236,11 @@
     .pr-ready { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .lvls { grid-template-columns: repeat(7, minmax(0, 44px)); }
   }
-  @media (min-width: 760px) {
-    .dhead > .dline, .srow > .sline, .srow > .nm { display: contents; }
-  }
   @media print { .pr-abar { display: none; } }
 </style>
 </head>
-<body>
+<body data-page="practice">
+<header id="bar"></header>
 <main class="page pr" id="main" tabindex="-1">
   <header class="pr-head">
     <div class="pr-head-l">
@@ -289,10 +293,11 @@
     </div>
   </div>
 </div>
+<nav id="tabs"></nav>
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
-<script>UI.shell();</script>
+<script>UI.shell('practice');</script>
 <script src="/practice/builder.js"></script>
 </body>
 </html>
