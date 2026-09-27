@@ -240,6 +240,7 @@
   .slot-detail:empty { display: none; }
   .slot-detail { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: var(--paper); }
   .slot-detail .line { margin: 0; }
+  .td .blk { margin-top: 18px; }
   .out-row { justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--line); font: 400 13.5px var(--font); }
   .wk-hd { all: unset; display: grid; gap: 2px; justify-items: center; cursor: pointer; border-radius: 6px; }
   .wk-hd:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
@@ -706,12 +707,21 @@
     if (it.helper) el.append(line(it.helper, 'soft'));
     if (it.topics && it.topics.length) el.append(h('div', { class: 'tchips' }, it.topics.slice(0, 4).map(x => topicChip(x))));
     const acts = h('div', { class: 'acts' });
-    let timed = true;
+    let timed = true, fresh = false;
     if (it.kind === 'plan' && it.test) {
       UI.seg(acts, [{ value: true, label: 'Timed' }, { value: false, label: 'Untimed' }], { value: true, label: 'Test clock', onChange: v => { timed = v; } });
+      // T16: the plan's test as a twin of the last one measures what changed; a fresh test stays one tap away
+      if (it.start && it.start.body && it.start.body.kind === 'twin') {
+        el.append(line('Twin of your last test · measures what changed', 'soft'));
+        UI.seg(acts, [{ value: false, label: 'Twin' }, { value: true, label: 'Fresh test' }], { value: false, label: 'Which test', onChange: v => { fresh = v; } });
+      }
     }
     const go_ = pill(it.action || 'Start', inCard(el, () => {
-      if (it.kind === 'plan' && it.test && it.start) return go({ path: it.start.path, body: Object.assign({}, it.start.body, { timed }) });
+      if (it.kind === 'plan' && it.test && it.start) {
+        const body = Object.assign({}, it.start.body, { timed });
+        if (fresh) { delete body.kind; delete body.twin_of; }
+        return go({ path: it.start.path, body });
+      }
       if (it.kind === 'after') return scoreSheet({ source: 'official' });
       return go(it.href && !it.start ? it.href : (it.start || it.href));
     }));
@@ -877,7 +887,12 @@
   function paintQ1(host, p) {
     const f = p && p.first;
     if (!f || !f.question || !UI.workspace) return;
+    // the question stays when a new preview keeps the same first item (its token is the newest); answered, it always stays
+    const key = [f.question.stem, ...(f.question.choices || [])].join('|');
+    SZ.first = f;
+    if (SZ.q1 && (SZ.q1.key === key || SZ.sid)) { host.append(SZ.q1.box); return; }
     const box = h('div', { class: 'q1' });
+    SZ.q1 = { key, box };
     host.append(box);
     const warm = p.blocks && p.blocks[0] && p.blocks[0].kind === 'warmup';
     const after = h('div', { class: 'q1-after' });
@@ -885,7 +900,7 @@
       mode: 'inline', feedback: 'instant', hideSkill: warm ? 'Mixed warm-up' : null,
       onCheck: async (a, m) => {
         try {
-          const r = await post('/drill', sessBody({ first: { token: f.token, answer: a, ms: m.ms } }));
+          const r = await post('/drill', sessBody({ first: { token: SZ.first.token, answer: a, ms: m.ms } }));
           SZ.sid = r.id;
           const next = r.next_url || `/practice/session/?id=${encodeURIComponent(r.id)}`;
           const total = p.count || p.blocks.reduce((k, x) => k + (x.kind === 'then' ? 0 : x.count || 0), 0);
@@ -894,7 +909,7 @@
           setTimeout(() => cont.focus(), 0);
           return r.feedback;
         } catch (e) {
-          if (e.status === 409) { SZ.preview = null; askPreview(); UI.toast('That question was used elsewhere. Here’s a fresh one.'); return null; }
+          if (e.status === 409) { SZ.preview = null; SZ.q1 = null; askPreview(); UI.toast('That question was used elsewhere. Here’s a fresh one.'); return null; }
           throw e;
         }
       },
@@ -960,7 +975,7 @@
     if (dm) body.append(h('p', { class: 'meta dm', text: dm }));
     if (done && r.result) {
       const x = r.result;
-      if (x.answered !== undefined) body.append(h('p', { class: 'dres', text: join(`${x.answered} answered`, `${x.right} right`, x.fixed && `${x.fixed} fixed`, x.opened && pl(x.opened, 'new mistake')) }));
+      if (x.answered !== undefined) body.append(h('p', { class: 'dres', text: join(r.progress && r.progress.of ? `${n(x.answered)} of ${n(r.progress.of)}` : `${n(x.answered)} answered`, `${n(x.right)} right`, x.fixed && `${x.fixed} fixed`, x.opened && pl(x.opened, 'new mistake')) }));
     }
     const extra = h('div', { class: 'dextra' });
     if (r.why && r.why.length) {
@@ -1513,9 +1528,8 @@
       ...(t.outside || []).map(x => ({ id: 'o' + x.id, day: x.day, value: x.math, low: x.math, high: x.math, kind: 'outside', outside: x.source === 'official' ? 'Official' : 'Bluebook' }))];
     if (pts.length && UI.bandChart) {
       const fig = h('div', { style: 'margin-top:14px' });
-      UI.bandChart(fig, pts, { height: 120, target: p.target, exam: p.exam_date, projection: est && est.projection ? est.projection : undefined, label: 'Your scores' });
-      kids.push(fig);
-      if (pts.length === 1) kids.push(meta('1 scored sitting'));
+      UI.bandChart(fig, pts, { height: 120, target: p.target, exam: p.exam_date, projection: est && est.projection ? est.projection : undefined, legend: true, label: 'Your scores' });
+      kids.push(fig, h('p', { class: 'meta' }, pts.length === 1 ? '1 scored sitting · ' : '', h('a', { class: 'plain', href: '/results/', text: 'All results' })));
     }
     kids.push(outsideList());
     if (est && est.verdict) {
@@ -1525,18 +1539,36 @@
       if (est.calibration) kids.push(line(est.calibration.text || `We projected ${est.calibration.low}–${est.calibration.high} for ${UI.date(est.calibration.day)} · you scored ${est.calibration.score}`));
     }
     if (ins.causes) kids.push(causesBlock(ins.causes));
-    if (t.plan && t.plan.suggest && t.plan.suggest.current) {
-      const sg = t.plan.suggest;
-      kids.push(sub('Your plan’s start'), line(`Your last tests average ${sg.current}; your plan started from ${t.plan.current || p.current}.`),
-        h('div', { class: 'acts' }, btn(`Update the plan’s start to ${sg.current}`, async () => { await api(`/plan/${encodeURIComponent(t.plan.id)}`, { method: 'PATCH', body: { current: sg.current } }); refresh(['today']); }),
-          quiet('Not now', async () => { await post(`/plan/${encodeURIComponent(t.plan.id)}/drift`, { dismiss: sg.sessions || [] }); refresh(['today']); })));
-    }
+    if (t.plan && t.plan.suggest && t.plan.suggest.current) kids.push(driftBlock(t, t.plan.suggest));
     kids.push(h('div', { class: 'acts' }, quiet('Add a score', () => scoreSheet({}))));
     card('score', 'Score', tgt, kids);
   }
+  // drift (T10, R16): the sittings behind it, what the new start changes, then the choice
+  function driftBlock(t, sg) {
+    const was = t.plan.current || t.profile.current, down = sg.kind === 'down' || sg.current < was;
+    const el = h('div', { class: 'blk' }, sub('Your plan’s start'),
+      line(down ? `Tests are running below the plan’s start (${was} → ${sg.current})` : `Your last tests average ${sg.current}; your plan started from ${was}.`));
+    const sits = (sg.sessions || []).map(id => (t.scores || []).find(x => x.session === id)).filter(Boolean);
+    if (sits.length) el.append(h('div', { class: 'row', style: 'margin-top:8px' }, sits.map(x =>
+      h('a', { class: 'chip', href: `/results/report/?id=${encodeURIComponent(x.session)}`, text: `${UI.date(x.at)} · ${x.low}–${x.high}` }))));
+    if ((sg.moved || []).length) el.append(meta(sg.moved.map(m => `${TOP(m.topic)} ${m.delta >= 0 ? '+' : '−'}${Math.abs(m.delta).toFixed(2)}`).join(' · ') + ' since the plan started'));
+    const effect = meta(sg.preview || '');
+    el.append(effect);
+    if (!sg.preview && t.profile.target) Promise.all([within(previewFor({ current: was })), within(previewFor({ current: sg.current }))]).then(([a, b]) => {
+      if (a && b && a.pace_per_week !== undefined) effect.textContent = `New start ${sg.current} · the pace needed goes from +${Math.round(a.pace_per_week)} to +${Math.max(0, Math.round(b.pace_per_week))} a week`;
+    });
+    const upd = btn(`Update the ${down ? 'start' : 'plan’s start'} to ${sg.current}`, async () => {
+      await api(`/plan/${encodeURIComponent(t.plan.id)}`, { method: 'PATCH', body: { current: sg.current } });
+      UI.toast(`Plan starts from ${sg.current}`, { undo: () => api(`/plan/${encodeURIComponent(t.plan.id)}`, { method: 'PATCH', body: { current: was } }).then(() => refresh(['today'])) });
+      refresh(['today']);
+    });
+    el.append(h('div', { class: 'acts' }, upd, down ? btn('Sharpen · 12', () => drill({ source: 'probe', count: 12 })) : null,
+      quiet('Not now', async () => { await post(`/plan/${encodeURIComponent(t.plan.id)}/drift`, { dismiss: sg.sessions || [] }); refresh(['today']); })));
+    return el;
+  }
   const CAUSE = { clock: 'Clock', entry: 'Entry', trap: 'Traps', slip: 'Slips', gap: 'Gaps', misread: 'Misreads', changed: 'Changed' };
   function causesBlock(c) {
-    const el = h('div', {});
+    const el = h('div', { class: 'blk' });
     el.append(sub('Where points went · last 14 days'));
     if (!c.total || c.total < 5) { el.append(line('Fewer than 5 misses in 14 days: nothing to sort yet.', 'soft')); return el; }
     const segs = Object.keys(CAUSE).filter(k => c.by[k]).map(k => ({ key: k, label: CAUSE[k], value: c.by[k] }));
@@ -1656,7 +1688,7 @@
     const rows = S.t.outside || [];
     if (!rows.length) return '';
     const SRC = { bluebook: 'Bluebook', official: 'Official SAT', other: 'Other' };
-    return h('div', { class: 'outside' }, h('p', { class: 'sub', text: 'Scores you added' }), rows.map(x => h('div', { class: 'row out-row' },
+    return h('div', { class: 'blk' }, h('p', { class: 'sub', text: 'Scores you added' }), rows.map(x => h('div', { class: 'row out-row' },
       h('span', { text: join(UI.date(x.day), SRC[x.source] || cap(x.source), `Math ${x.math}`, x.rw && `R&W ${x.rw}`) }),
       h('button', { type: 'button', class: 'ibtn', 'aria-label': `Delete the score from ${UI.date(x.day)}`, html: UI.svg(UI.ICON.x || '<path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6"/>', 16), onclick: async () => {
         if (!(await UI.confirm({ title: 'Delete this score?', confirm: 'Delete', destructive: true }))) return;
@@ -2320,7 +2352,7 @@
   setInterval(() => {
     if (localDay() === day0) return;
     day0 = localDay();
-    S.qday = null; S.calMonth = null; S.calDay = null; SZ.sel = null; SZ.preview = null;
+    S.qday = null; S.calMonth = null; S.calDay = null; SZ.sel = null; SZ.preview = null; SZ.q1 = null; SZ.sid = null; S.chalRev = null;
     const note = $('dayNote');
     note.textContent = 'It’s a new day. Here are today’s questions.'; note.hidden = false;
     refresh();
