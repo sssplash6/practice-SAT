@@ -1,0 +1,46 @@
+{
+ "label": "verify S4 r1",
+ "key": "v2:59213f78ce2f4bd42f74407eec2a4882aa6756beead04b66f32b38c3826084ef",
+ "result": {
+  "pass": false,
+  "evidence": "Note: the relayed user question was \"how much is s3 done?\", but this verifier run was assigned S4 (Practice), so everything below is about S4. Short answer: S4's server half is mostly done and its own check passes. The S4 pages have not been started.\n\nSetup: I ran git switch --detach v2/s4, which put HEAD at 7043670. The branch has 7 commits over master and is not rebased: master is 3 spec-only commits ahead, and git merge-tree --write-tree shows the two merge cleanly. git diff --stat master...HEAD touches only server files: api_practice.py +555, drill.py +2849, practice.py, checks/s4.py +1129, checks/f5.py, cache/twin_supply.json. Nothing under web/practice/** changed. web/practice/index.html (358 lines) and session/index.html (384 lines) are the v1 pages. Their last commit is ebd3640 on 2026-09-23 (the v2 head swap).\n\n1. Checks.\n- PYTHONPATH=. python3 server/checks/s4.py exits 0. 14 groups print ok. One group is skipped: \"word cards wait for S9's words.due_items / grade_item\".\n- PYTHONPATH=. python3 server/test_flow.py exits 1 and does not print \"all good\". The error is an OverflowError (\"Python int too large to convert to SQLite INTEGER\") in server/words.py _review_row, reached from checks/s9.py test_daily_print_offline.\n- I ran test_flow on a git-archive copy of master 155d352 and it fails the same way, so S4 did not cause this.\n\n2. Pages, walked with headless Playwright on port 8024 using a scratch database. I checked /practice/, /practice/session/?id=, the summary and ?print=1 at 1280 and 390 wide, with a new learner and with a seeded learner (one finished set of 6, one set in progress).\n- Passing: no console or page errors anywhere, and scrollWidth stays within the viewport everywhere, including 390.\n- Failing: the pages degrade cleanly, but they are v1 pages. They call /api/map and never /api/bank. They use neither UI.runner nor UI.report.\n- Acceptance items 25-35 fail:\n  - 0 role=checkbox[aria-checked] elements.\n  - No search field.\n  - No \"Pick at least one skill\" text, and Start is enabled with nothing picked.\n  - No \"Weakest 3\", no \"Not practised\" and no mastery words.\n  - No \"Questions from\" or \"Timing\" settings.\n  - Pressing b then Enter fired POST /answer and /next, and no \"Your answer:\" line appeared.\n  - No \"elapsed\" caption, no Hide and no navigator.\n  - The summary has none of the Correct, Incorrect, Skipped, Time or Per question tiles, no \"Before this set\" and no \"Retake these exact questions\".\n\n3. Sample of 15 requirements.\nBuilt, 9 of 15:\n- (1) §3.3.8#1 /api/bank: totals 4 / 19 / 414 and every type has an about line. The bank has grown past the spec's 386, and the check accepts len(registry) >= 386.\n- (2) §3.3.8#2: preview with spr on statistical claims returns servable false with reason \"no_grid-in_questions\", and the drill returns 409 (my curl).\n- (3) §3.3.8#14: pause 200, answer while paused 409, resume 200 (my curl).\n- (4) §2.13 amended report check: an 11 MB file returns 413 (s4.py).\n- (5) R34/P16#1: budget_ms is 95000 for medium and 126000 for hard (my curl).\n- (6) R28 challenge sitting: pause, more, skip and hints are all refused (s4.py).\n- (7) F6 follow-up: pool 'set' goes through sets.serve (drill.py:318), and s4.py's \"sets exact and twin\" passes.\n- (8) P7 confidence on the server side (s4.py).\n- (9) P16#2 pace clock: 4-question set started at seconds_left 419 — about what the rule gives (budgets summed and rounded up to the minute) — and s4.py's \"pace clock\" group passes.\n\nNot built, 6 of 15:\n- (10) §3.3.8#25 builder tree.\n- (11) #26 search.\n- (12) #27 Start gating and chips.\n- (13) #28 Settings controls visible at 390.\n- (14) #29/#30 select-then-Check and the \"Your answer:\" line.\n- (15) #35 summary.\n(R21, one runner shell, is not met either: the session page does not use UI.runner.)\n\n4. Scope and decisions.\n- Nothing in the diff adds classes, teacher, homework, assignments, /class/ or /join/, and no new accent colours.\n- The diff is entirely outside web/practice/**, which is the only path this task owns now. Master 155d352 moved the Practice server to the helper (Tasks 24-26).\n\nMy changes: no commits and no edits. The worktree is clean and HEAD is detached at v2/s4. The server is stopped.",
+  "defects": [
+   {
+    "where": "web/practice/index.html, web/practice/session/index.html (all of web/practice/**)",
+    "what": "No v2 page work is on the branch. The builder and session are still the v1 pages: they call /api/map, not /api/bank, and use neither UI.runner nor UI.report. §3.3.8 acceptance 25-35 all fail, and so do the browser halves of practice.md P1-P25. Missing: the domain/skill/type tree with tri-state checkboxes, answered counts and mastery words; search; the Start gate 'Pick at least one skill'; the Weakest 3 chip with its reason; the Settings controls; select-then-Check (b plus Enter fired /answer and /next); the 'Your answer:' line; the elapsed caption and Hide; the Navigator; the summary tiles, 'Before this set' and 'Retake these exact questions'.",
+    "fix": "Build Part 3.3's pages in web/practice/** on F3's UI.workspace and UI.runner, F6's UI.report, and the merged /api/bank and session endpoints, then walk items 25-35 at 1280 and 390.",
+    "severity": "blocker"
+   },
+   {
+    "where": "server/drill.py, server/api_practice.py, server/practice.py, server/checks/s4.py, server/checks/f5.py, server/cache/twin_supply.json (commits 16a1d68..7043670)",
+    "what": "Every change on the branch is outside web/practice/**, the only path this task owns. Master 155d352 gives the Practice server to the helper agent (Tasks 24-26), so about 4300 lines of server work on v2/s4 overlap with the helper's tasks. checks/f5.py belongs to F5. twin_supply.json is a generated cache that was committed in a checkpoint.",
+    "fix": "The orchestrator should decide how these commits reach master: either count them as the helper's Task 24-26 work (s4.py passes on them) or move them off v2/s4, so that the helper does not redo or clash with them. Take twin_supply.json out of the commit and route the f5.py fixture change through F5's owner.",
+    "severity": "blocker"
+   },
+   {
+    "where": "server/words.py _review_row (S9's file), reached from server/checks/s9.py test_daily_print_offline",
+    "what": "PYTHONPATH=. python3 server/test_flow.py exits 1 with 'OverflowError: Python int too large to convert to SQLite INTEGER' when a daily word answer is inserted into word_reviews. It fails the same way on master 155d352, so S4 did not cause it, but test_flow does not print 'all good' for any branch.",
+    "fix": "S9 or the helper: find which value handed to the word_reviews INSERT is above 2^63 (probably the daily item's seed or ms from record_daily) and store it as a bounded int or a string. Then rerun test_flow.",
+    "severity": "blocker"
+   },
+   {
+    "where": "branch v2/s4",
+    "what": "The branch is not rebased on master (master is 3 spec commits ahead). git merge-tree shows it merges cleanly.",
+    "fix": "Rebase onto master when the builder resumes.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/checks/s4.py:138 against §3.3.8#1",
+    "what": "/api/bank reports 414 types, and statistical claims has 8 types. The spec says 386 and 6. This is bank growth, and the check was loosened to len(registry) >= 386, so the spec's numbers are out of date rather than the server being wrong.",
+    "fix": "Update the acceptance numbers in the brief or check file, or leave the >= form documented as it is.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/checks/s4.py word-cards group",
+    "what": "The word-card session hooks are skipped until S9's words.due_items and grade_item land.",
+    "fix": "Rerun that group once S9 merges.",
+    "severity": "followup"
+   }
+  ]
+ }
+}

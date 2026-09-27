@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-27T11:38:28+05:00
+# v2 build state -- 2026-09-27T12:12:28+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -28,15 +28,15 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/perf` at fe2abdc, 5 commits ahead of master
 - `v2/s1` at cf53af4, 1 commits ahead of master
 - `v2/s1-server` at cf53af4, 1 commits ahead of master
-- `v2/s10` at 85896a0, 2 commits ahead of master
+- `v2/s10` at 4611321, 2 commits ahead of master
 - `v2/s10-server` at 85896a0, 2 commits ahead of master
 - `v2/s3` at 6fad986, 13 commits ahead of master
 - `v2/s3-server` at 6fad986, 13 commits ahead of master
-- `v2/s4` at 7043670, 7 commits ahead of master
+- `v2/s4` at e361fdd, 9 commits ahead of master
 - `v2/s4-server` at 7043670, 7 commits ahead of master
 - `v2/s5` at a1788ce, 8 commits ahead of master
 - `v2/s5-server` at a1788ce, 8 commits ahead of master
-- `v2/s6` at 057b7fc, 1 commits ahead of master
+- `v2/s6` at 83f13d8, 3 commits ahead of master
 - `v2/s6-server` at 057b7fc, 1 commits ahead of master
 - `v2/s7-server` at b88934e, 3 commits ahead of master
 - `v2/s7s` at 14174d3, 0 commits ahead of master
@@ -95,6 +95,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/helper-handoff` on `v2/helper-handoff`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/perf` on `v2/perf`: 1 uncommitted (saved in wip/perf/)
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_b6e107a2-030-1` on `v2/s4`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-fix` on `v2/words-fix`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-seed-sqlite` on `v2/words-seed-sqlite`: 0 uncommitted
 
@@ -142,6 +143,9 @@ Unfinished when saved: fix F4 r2
 ### wf_aca7fe38-327: 12 finished, 6 unfinished
 Unfinished when saved: fix: area_and_volume, fix: linear_equations_in_one_variable, fix: linear_functions, recheck: equivalent_expressions, recheck: linear_inequalities, verify: right_triangles_and_trigonometry
 
+### wf_b6e107a2-030: 0 finished, 1 unfinished
+Unfinished when saved: fix S4 r1
+
 ### wf_bc31c955-f3c: 3 finished, 0 unfinished
 
 ### wf_c0d90d11-40f: 9 finished, 0 unfinished
@@ -161,6 +165,9 @@ Unfinished when saved: verify F1 r2
 
 ### wf_d6beb6e4-66c: 3 finished, 1 unfinished
 Unfinished when saved: build F1 4/5
+
+### wf_d97948f9-1df: 11 finished, 3 unfinished
+Unfinished when saved: build S10 1/2, build S6 1/2, fix S4 r1
 
 ### wf_e48cbd7a-4e4: 0 finished, 6 unfinished
 Unfinished when saved: build S1 1/5, build S10 1/5, build S3 1/5, build S4 1/5, build S5 1/5, build S6 1/5

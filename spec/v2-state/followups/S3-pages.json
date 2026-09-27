@@ -1,0 +1,42 @@
+{
+ "task": "S3 pages",
+ "verified_defects": [
+  {
+   "where": "web/index.html",
+   "what": "The v2 Today page has not been built: the file is unchanged from master and is still the v1 page. It has only #next, #qotd, #exam and #score. It has no #mist, #study, #plan, #chal or #tests cards, no dialog#targetSheet or #tryOne, no calendar, no size chips and no SEC/DAYS countdown, and it draws one day's question instead of the twins. §3.2.8 page items 15-27 and today.md's page items all fail.",
+   "fix": "Build Part 3.2 as pages-only in web/index.html, following the S3 brief on master, against the endpoints on v2/s3-server. Where an endpoint has not landed yet, the card should degrade quietly.",
+   "severity": "blocker"
+  },
+  {
+   "where": "web/index.html paintQotd (lines ~201-215)",
+   "what": "The first tap on a day's-question option sends POST /api/qotd straight away. §3.2.8 #23 and today.md T1 item 5 say the first tap only selects and Check sends the request.",
+   "fix": "Put a separate select step and a Check button in front of UI.question's onAnswer, as part of the Today page build.",
+   "severity": "blocker"
+  },
+  {
+   "where": "web/index.html",
+   "what": "There is no per-card error or Retry. With /api/challenge aborted, no challenge card shows \"Couldn't load the challenge.\" with Retry, and a failed /api/today has no shared Retry either (§3.2.8 #27).",
+   "fix": "Give each card an error state, and one Retry that repaints every card fed by /api/today, as part of the page build.",
+   "severity": "blocker"
+  },
+  {
+   "where": "server/words.py:186 _review_row (reached via server/checks/s9.py:332 test_daily_print_offline)",
+   "what": "test_flow.py does not print \"all good\": it stops with OverflowError: Python int too large to convert to SQLite INTEGER. The same failure happens on master, so it comes from S9 (words.daily_item seeds), not from S3.",
+   "fix": "S9/Task 18 should clamp or hash words.daily_item seeds into SQLite's 64-bit range. It is outside S3's files, so report it to the owner.",
+   "severity": "blocker"
+  },
+  {
+   "where": "branch v2/s3",
+   "what": "The branch is not rebased onto master, which has 3 newer commits including 155d352 (S3 made pages-only). So the S3.md and S3-check.md in the worktree are the older 'server and pages' versions.",
+   "fix": "The next builder should run git rebase master before starting the page work.",
+   "severity": "followup"
+  },
+  {
+   "where": "git diff --stat master...HEAD",
+   "what": "The branch diff touches only files S3 no longer owns: server/api_today.py, server/daily.py, server/checks/s3.py, server/test_flow.py and server/cache/twin_supply.json. They are the predecessor's commits, identical to v2/s3-server (helper Task 24).",
+   "fix": "Merge the server half once, through v2/s3-server. When v2/s3 is merged after it, those commits should already be in master, leaving only web/index.html as S3's delta.",
+   "severity": "followup"
+  }
+ ],
+ "fixer_report": "S3 is about half done. The server half is built but not yet merged into master. The Today page has not been started. I changed nothing, because the request was a status question. I did not rebase, build the page or commit.\n\n**Server half: built, not merged**\n- 13 commits on v2/s3, about 3,250 lines added. They change `server/api_today.py`, `server/daily.py`, `server/checks/s3.py`, `server/test_flow.py` and `server/cache/twin_supply.json`.\n- v2/s3 and v2/s3-server point at the same commit, 6fad986. Since 155d352, this half belongs to the helper's Task 24, and it should be merged once through v2/s3-server.\n- Of the 28 acceptance checks in §3.2.8, checks 1-14 cover the server. The verifier raised no defects against them, but I did not re-run them.\n\n**Page half (`web/index.html`): not started**\n- The page on v2/s3 is identical to master: the 253-line v1 page with only `#next`, `#qotd`, `#exam` and `#score`.\n- Page checks 15-27 all fail:\n  - there are no `#mist`, `#study`, `#plan`, `#chal` or `#tests` cards;\n  - there is no `dialog#targetSheet`, no `dialog#tryOne`, no calendar, no size chips and no SEC/DAYS countdown;\n  - the page draws one day's question instead of the twins;\n  - the first tap on an option sends POST /api/qotd, with no select step and Check button;\n  - there is no error or Retry on any card.\n- The other S3 worktree, wf_d97948f9-1df-8, also has an unchanged `web/index.html`, so there is no half-finished page work to pick up.\n\n**Blocking check 28 (`test_flow.py`)**\n- `test_flow.py` does not print \"all good\". It stops with `OverflowError: Python int too large to convert to SQLite INTEGER` at `server/words.py:186 _review_row`, reached from `server/checks/s9.py:332 test_daily_print_offline`. This comes from S9, not S3: the fix is to clamp the `words.daily_item` seeds (S9 / Task 18).\n\n**Branch**\n- v2/s3 is 3 commits behind master (e21f409, 8f8c8b8, 155d352), so its copy of the S3 brief is the older \"server and pages\" version.\n- Before the page build starts, v2/s3 needs `git rebase master`.\n\n**Defects left: all six from the verifier.**\n1. Blocker: the Today page is not built.\n2. Blocker: the day's question has no select step and Check button.\n3. Blocker: there is no per-card error or shared Retry.\n4. Blocker: the S9 overflow in `test_flow.py`, which belongs to S9's owner.\n5. Followup: the branch is not rebased onto master.\n6. Followup: the server commits should go into master through v2/s3-server."
+}

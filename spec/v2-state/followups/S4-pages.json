@@ -1,0 +1,42 @@
+{
+ "task": "S4 pages",
+ "verified_defects": [
+  {
+   "where": "web/practice/index.html, web/practice/session/index.html (all of web/practice/**)",
+   "what": "No v2 page work is on the branch. The builder and session are still the v1 pages: they call /api/map, not /api/bank, and use neither UI.runner nor UI.report. §3.3.8 acceptance 25-35 all fail, and so do the browser halves of practice.md P1-P25. Missing: the domain/skill/type tree with tri-state checkboxes, answered counts and mastery words; search; the Start gate 'Pick at least one skill'; the Weakest 3 chip with its reason; the Settings controls; select-then-Check (b plus Enter fired /answer and /next); the 'Your answer:' line; the elapsed caption and Hide; the Navigator; the summary tiles, 'Before this set' and 'Retake these exact questions'.",
+   "fix": "Build Part 3.3's pages in web/practice/** on F3's UI.workspace and UI.runner, F6's UI.report, and the merged /api/bank and session endpoints, then walk items 25-35 at 1280 and 390.",
+   "severity": "blocker"
+  },
+  {
+   "where": "server/drill.py, server/api_practice.py, server/practice.py, server/checks/s4.py, server/checks/f5.py, server/cache/twin_supply.json (commits 16a1d68..7043670)",
+   "what": "Every change on the branch is outside web/practice/**, the only path this task owns. Master 155d352 gives the Practice server to the helper agent (Tasks 24-26), so about 4300 lines of server work on v2/s4 overlap with the helper's tasks. checks/f5.py belongs to F5. twin_supply.json is a generated cache that was committed in a checkpoint.",
+   "fix": "The orchestrator should decide how these commits reach master: either count them as the helper's Task 24-26 work (s4.py passes on them) or move them off v2/s4, so that the helper does not redo or clash with them. Take twin_supply.json out of the commit and route the f5.py fixture change through F5's owner.",
+   "severity": "blocker"
+  },
+  {
+   "where": "server/words.py _review_row (S9's file), reached from server/checks/s9.py test_daily_print_offline",
+   "what": "PYTHONPATH=. python3 server/test_flow.py exits 1 with 'OverflowError: Python int too large to convert to SQLite INTEGER' when a daily word answer is inserted into word_reviews. It fails the same way on master 155d352, so S4 did not cause it, but test_flow does not print 'all good' for any branch.",
+   "fix": "S9 or the helper: find which value handed to the word_reviews INSERT is above 2^63 (probably the daily item's seed or ms from record_daily) and store it as a bounded int or a string. Then rerun test_flow.",
+   "severity": "blocker"
+  },
+  {
+   "where": "branch v2/s4",
+   "what": "The branch is not rebased on master (master is 3 spec commits ahead). git merge-tree shows it merges cleanly.",
+   "fix": "Rebase onto master when the builder resumes.",
+   "severity": "followup"
+  },
+  {
+   "where": "server/checks/s4.py:138 against §3.3.8#1",
+   "what": "/api/bank reports 414 types, and statistical claims has 8 types. The spec says 386 and 6. This is bank growth, and the check was loosened to len(registry) >= 386, so the spec's numbers are out of date rather than the server being wrong.",
+   "fix": "Update the acceptance numbers in the brief or check file, or leave the >= form documented as it is.",
+   "severity": "followup"
+  },
+  {
+   "where": "server/checks/s4.py word-cards group",
+   "what": "The word-card session hooks are skipped until S9's words.due_items and grade_item land.",
+   "fix": "Rerun that group once S9 merges.",
+   "severity": "followup"
+  }
+ ],
+ "fixer_report": ""
+}

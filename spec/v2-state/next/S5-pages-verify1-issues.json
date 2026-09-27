@@ -1,0 +1,38 @@
+[
+ {
+  "where": "web/tests/index.html, web/test/index.html, web/test/test.js, web/diagnostic/index.html (branch v2/s5)",
+  "what": "The S5 pages have not been built. v2/s5 has 8 commits, all server files; the owned page files are the v1 versions (last changed in ebd3640 on 2026-09-23). Every page acceptance item fails, including #20 to #39 of §3.4.8 and the upgrades' browser items. Observed: /test/ with no ?s= creates a row and does not redirect; ?s=nope shows sample questions; there is no lobby, #kinds, #papers or empty states; .rule is still used at 390.",
+  "fix": "Run the S5 pages build on v2/s5 (after rebasing onto master) against the endpoints in the brief's section 5. It should use UI.runner, UI.workspace and UI.review from F3, ui.css and kit.js from F1, and the shell from F2.",
+  "severity": "blocker"
+ },
+ {
+  "where": "server/words.py:186 (_review_row), reached from server/checks/s9.py:332 test_daily_print_offline",
+  "what": "test_flow.py does not print 'all good': it crashes with 'OverflowError: Python int too large to convert to SQLite INTEGER'. This is Words (S9) code, not S5's, and the same words.py is on master. All 20 S5 check groups pass before the crash.",
+  "fix": "Land the words fix (the v2/words-fix branch or helper task 18) on master, then rebase v2/s5 so that test_flow prints 'all good'.",
+  "severity": "blocker"
+ },
+ {
+  "where": "branch v2/s5",
+  "what": "Master has moved on: `git merge-base --is-ancestor master v2/s5` fails, because master is 4 spec-only commits ahead (155d352 and three before it) that turn S5 into a pages-only task.",
+  "fix": "Run `git rebase master` on v2/s5 before the pages build continues.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/api_tests.py, server/papers.py, server/blueprint.py, server/checks/s5.py, tools/moderate.py, server/test_flow.py",
+  "what": "The branch's whole diff is server files. Master's 155d352 now gives these to helper Task 26 (v2/s5-server, which is at the same commit a1788ce), and server/test_flow.py is outside every owned list (its 60-line change adds X-Learner headers because of SEC-03).",
+  "fix": "Merge the server half through v2/s5-server, and have the pages work sit on top of that same commit so the two branches don't diverge. The test_flow.py change needs the helper or the owner of test_flow to sign off.",
+  "severity": "followup"
+ },
+ {
+  "where": "server/compete.py:33 (SUPPLY_PATH = server/cache/twin_supply.json)",
+  "what": "Running the server leaves an untracked server/cache/ directory that .gitignore does not cover (Compete's code, not S5's).",
+  "fix": "Add server/cache/ to .gitignore (owner: Compete or the helper).",
+  "severity": "followup"
+ },
+ {
+  "where": "server/checks/s5.py waiting lines",
+  "what": "Four cross-section hooks have not landed yet: F5 POST /api/drill {pressure}; F4 progress.causes using pressure verdicts; S6 /api/history?all=1 through api_tests.sitting_row; F2 /api/shell resume item for a paused test.",
+  "fix": "The owning sections (F5, F4, S6, F2) need to land these; S5 already exposes its side of each hook.",
+  "severity": "followup"
+ }
+]
