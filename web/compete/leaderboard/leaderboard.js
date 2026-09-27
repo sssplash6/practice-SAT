@@ -25,6 +25,10 @@
   const NO_PERIOD = { rating: 'Contest rating is one number: the period decides who is listed.', skill: 'A Skill rating has no period.', climb: 'Climb runs since you started.' };
   const cache = new Map();
   const mOf = () => METRICS.find(m => m.value === S.metric) || METRICS[0];
+  // a stale or hand-edited link falls back to the defaults instead of a 422
+  if (!METRICS.some(m => m.value === S.metric)) S.metric = 'points';
+  if (!PERIODS.some(p => p.value === S.period)) S.period = 'week';
+  if (!['all', 'near', 'following', 'level', 'country', 'exam'].includes(S.scope)) S.scope = 'all';
 
   $('#subnav').replaceWith(C.subnav('leaderboard'));
 
@@ -80,7 +84,9 @@
     const r1 = h('div', { class: 'row lb-long' }), r1s = h('div', { class: 'row lb-short' });
     ctl.metric = C.under(r1, METRICS.map(x => ({ value: x.value, label: x.label })), { value: S.metric, label: 'Metric', onChange: v => setMetric(v) });
     C.under(r1s, METRICS.map(x => ({ value: x.value, label: x.short })), { value: S.metric, label: 'Metric', onChange: v => setMetric(v) });
-    box.append(r1, r1s, h('p', { class: 'help', text: m.help }));
+    // decision 7: what the metric counts sits in an i beside it
+    [r1, r1s].forEach(r => r.append(C.info(m.help, `About ${m.label}`)));
+    box.append(r1, r1s);
     if (S.metric === 'rating') {
       const r = h('div', { class: 'row' }, h('span', { class: 'meta', text: 'Sort:' }));
       C.under(r, [{ value: 'value', label: 'Rating' }, { value: 'change', label: 'Change' }], { value: S.sort, label: 'Sort', onChange: v => { S.sort = v; go(); } });
@@ -183,7 +189,7 @@
     const at = new Date(`${d.resets_at}T00:00:00Z`);
     const local = at.toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: '2-digit' });
     if (S.period === 'season') el.textContent = `${periodName()} · ends ${C.dayLabel(shift(d.resets_at, -1), { weekday: false })} · ${C.left(at.toISOString())} left`;
-    else el.textContent = `${{ week: 'Weekly', month: 'Monthly', year: 'Yearly', '7d': 'Rolling 7-day' }[S.period] || ''} boards reset ${S.period === 'week' ? 'Monday' : ''} 00:00 UTC (${local} your time · in ${C.left(at.toISOString())}).`.replace('  ', ' ');
+    else el.replaceChildren(`Resets in ${C.left(at.toISOString())} `, C.info(`${{ week: 'Weekly', month: 'Monthly', year: 'Yearly', '7d': 'Rolling 7-day' }[S.period] || ''} boards reset ${S.period === 'week' ? 'Monday' : ''} 00:00 UTC (${local} your time).`.replace('  ', ' '), 'About resets'));
   }
   const shift = (day, n) => { const d = new Date(`${day}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
   function youText(you) {

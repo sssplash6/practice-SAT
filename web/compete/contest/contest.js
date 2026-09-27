@@ -141,10 +141,13 @@
     change.addEventListener('click', () => UI.menu(change, ['official', 'x1.5', 'x2'].map(v => ({ label: TIMING[v], radio: true, checked: v === t,
       onClick: async () => { try { await UI.prefs.set({ contest_timing: v }); S.prefs = { ...S.prefs, contest_timing: v }; renderState(); } catch (e) { UI.toast('Not saved. Try again.'); } } })), { label: 'Contest timing' }));
     const clock = C.kind(c).clock === 'answer' && c.seconds ? ` · ${mmss(Math.round(c.seconds * FACTOR[t]))} answer clock` : C.kind(c).clock === 'wall' ? ` · ${Math.round(c.seconds * FACTOR[t] / 60)} min` : '';
-    box.append(h('p', { class: 'line' }, `Your time: ${TIMING[t]}${clock} `, change),
-      h('p', { class: 'help', text: c.kind === 'private' ? 'Ranked with everyone in this private contest. Nobody sees your timing.'
-        : t === 'official' ? 'Official time: placed on the public board.'
-        : 'Extended time: on this board you’re placed among extended-time sittings (only you see where). Rating, Over par and Climb count you with everyone.' }));
+    // decision 7: the explanations sit in one i; C17's extended-time consequence stays in the open
+    const tip = [c.kind !== 'private' && t === 'official' ? 'Official time: placed on the public board.' : null,
+      C.kind(c).clock === 'answer' ? 'The clock runs only while a question is open. Skipped and voided questions score 0.' : null].filter(Boolean).join(' ');
+    box.append(h('p', { class: 'line' }, `Your time: ${TIMING[t]}${clock} `, change, tip ? [' ', C.info(tip, 'About the clock')] : null),
+      c.kind === 'private' ? h('p', { class: 'help', text: 'Ranked with everyone in this private contest. Nobody sees your timing.' })
+        : t === 'official' ? null
+        : h('p', { class: 'help', text: 'Extended time: on this board you’re placed among extended-time sittings (only you see where). Rating, Over par and Climb count you with everyone.' }));
     return box;
   }
   function timingSheet(t) {
@@ -176,9 +179,9 @@
     opts.forEach(([v, l]) => sel.append(h('option', { value: v, text: l, selected: v === race ? true : null })));
     if (!race && ['sprint', 'rush'].includes(c.kind)) sel.value = 'best';
     sel.addEventListener('change', () => { race = sel.value; history.replaceState(null, '', C.href(c.id, { race })); load(); });
-    box.append(h('div', { class: 'race-row' }, h('label', { class: 'label', for: 'race-sel', text: 'Race', style: 'margin:0' }), sel));
+    box.append(h('div', { class: 'race-row' }, h('label', { class: 'label', for: 'race-sel', text: 'Race', style: 'margin:0' }), sel,
+      C.info('Racing never changes your rank: the pacer runs on your answer clock, and shows only where it was, never its answers.', 'About racing')));
     if (c.race) box.append(h('p', { class: 'line mono', text: `Race ${c.race.label}${c.race.right !== undefined ? ` · ${num(c.race.right)}/${num(c.count)}` : ''}${c.race.points !== undefined ? ` · ${num(c.race.points)} pts` : ''}${c.race.secs ? ` · ${mmss(c.race.secs)}` : ''}` }));
-    box.append(h('p', { class: 'help', text: 'Racing never changes your rank: the pacer runs on your answer clock, and shows only where it was, never its answers.' }));
     return box;
   }
   function renderState() {
@@ -247,8 +250,7 @@
         const leftH = Math.max(0, Math.round((new Date(`${shiftDay(dayOf(c), 3)}T00:00:00`) - Date.now()) / 36e5));
         kids.push(h('p', { class: 'line', text: `Make up ${C.dayLabel(dayOf(c), { weekday: false })} · keeps your streak · ${leftH >= 24 ? `${Math.floor(leftH / 24)} day${leftH >= 48 ? 's' : ''}` : `${leftH}h`} left` }));
       }
-    } else if (c.status === 'live') kids.push(h('p', { class: 'help', text: c.kind === 'rush' ? 'Three strikes end the run: a miss, or an answer over 1.5× its time budget.'
-      : C.kind(c).clock === 'answer' ? 'The clock runs only while a question is open. Skipped and voided questions score 0.' : 'A wall clock, like the real test.' }));
+    } else if (c.status === 'live' && C.kind(c).clock !== 'answer') kids.push(h('p', { class: 'help', text: c.kind === 'rush' ? 'Three strikes end the run: a miss, or an answer over 1.5× its time budget.' : 'A wall clock, like the real test.' }));
     el.replaceChildren(...kids);
     if (c.status === 'live' && !S.rivals) api('/compete/rivals').then(r => { S.rivals = (r.rivals || []).slice(0, 5); if (S.c.me.status === 'new') renderState(); }).catch(() => { S.rivals = []; });
   }
@@ -392,7 +394,7 @@
   }
   function namePrompt(handle) {
     const f = h('input', { class: 'field', id: 'bname', maxlength: '24', autocomplete: 'off', placeholder: 'A board name' });
-    const msg = h('p', { class: 'help', role: 'status', text: 'Shown on public boards. Don’t use your full name.' });
+    const msg = h('p', { class: 'help', role: 'status' });
     const save = h('button', { type: 'button', class: 'btn', text: 'Save' });
     save.addEventListener('click', () => busy(save, async () => {
       const v = f.value.trim();
@@ -401,7 +403,7 @@
       catch (e) { msg.textContent = e.status === 409 ? 'Someone already has that name.' : e.status === 422 ? 'That name is reserved.' : 'Not saved. Try again.'; }
     }));
     f.addEventListener('keydown', e => { if (e.key === 'Enter') save.click(); });
-    return h('div', { class: 'sub-block' }, h('label', { class: 'label', for: 'bname', text: `On the board as ${handle}` }), h('div', { class: 'name-form' }, f, save), msg);
+    return h('div', { class: 'sub-block' }, h('label', { class: 'label', for: 'bname' }, `On the board as ${handle} `, C.info('Shown on public boards. Don’t use your full name.', 'About board names')), h('div', { class: 'name-form' }, f, save), msg);
   }
   async function practiceTraps() {
     if (!S.review) await loadReviewData();
@@ -846,7 +848,8 @@
         if ((m.options || d.options || []).length && UI.spread) UI.spread(box, (m.options || d.options).map((o, i) => ({ label: 'ABCD'[o.index ?? i], share: o.share, key: o.key, pick: o.pick, reason: o.mistake })), { label: 'How everyone answered' });
       } else {
         const past = day < todayISO();
-        box.prepend(h('p', { class: 'help', text: past ? 'Answer, unranked: it doesn’t count for your streak.' : 'Today’s question; answering it here counts like on Today.' }));
+        if (past) box.prepend(h('p', { class: 'help', text: 'Answer, unranked: it doesn’t count for your streak.' }));
+        else el.querySelector('.card-head').append(C.info('Today’s question; answering it here counts like on Today.', 'About the question of the day'));
         ws(qh, q, { mode: 'practice', feedback: 'instant', onCheck: async answer => {
           const r = await api('/qotd', { method: 'POST', body: { day, answer } });
           return { ...r, given: answer };
