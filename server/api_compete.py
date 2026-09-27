@@ -7,6 +7,7 @@ import json
 import logging
 import secrets
 import statistics
+import threading
 from collections import Counter
 
 from fastapi import APIRouter, Depends, Header, HTTPException
@@ -17,6 +18,7 @@ from .deps import DATE_OK, LEARNER_OK, SECONDS_PER_QUESTION, learner_of, tz_of
 
 log = logging.getLogger("satf")
 router = APIRouter()
+_START_LOCKS = tuple(threading.Lock() for _ in range(64))
 
 
 def challenge_row(learner: str, day: str):
@@ -210,14 +212,33 @@ def daily_contest(race: str | None = None, x_learner: str | None = Header(defaul
 
 
 def _start(cid: str, learner: str, tz: int, race: str | None = None) -> dict:
-    # Two devices starting together must claim one sitting. Every insert and
-    # its twin allocations happen under SQLite's single immediate writer.
-    compete.contest(cid, tz)
-    with db.atomic():
-        return _start_locked(cid, learner, tz, race)
+    # Same-process duplicate starts share one build. Render twins before the
+    # short claim transaction so question generation never holds a DB writer.
+    with _START_LOCKS[hash((cid, learner)) % len(_START_LOCKS)]:
+        contest = compete.contest(cid, tz)
+        old = _sitting(contest["id"], learner)
+        prepared = None
+        if not old or old["finished"] and contest["kind"] in ("sprint", "rush"):
+            spec = compete._json(contest["spec"], {}) or {}
+            if contest["kind"] in ("weekly", "final") or spec.get("twin"):
+                prepared = compete.twin_questions(learner, contest["id"], spec["slots"],
+                                                   family=spec.get("family"))
+            elif not compete._json(contest["questions"], []):
+                prepared = compete.twin_questions("contest:" + contest["id"], contest["id"], spec["slots"])
+        with db.atomic():
+            result = _start_locked(cid, learner, tz, race, prepared)
+        if result.pop("_resume_challenge", False):
+            row = db.one("SELECT * FROM sessions WHERE id=?", result["session"])
+            return {**result, **drill.state(row), **drill.next_question(row)}
+        if result.pop("_first_challenge", False):
+            sid = result["session"]
+            first = drill.next_question(db.one("SELECT * FROM sessions WHERE id=?", sid))
+            return {**result, "clock": compete.clock(db.one("SELECT * FROM sessions WHERE id=?", sid)), **first}
+        return result
 
 
-def _start_locked(cid: str, learner: str, tz: int, race: str | None = None) -> dict:
+def _start_locked(cid: str, learner: str, tz: int, race: str | None = None,
+                  prepared: list[dict] | None = None) -> dict:
     contest = compete.contest(cid, tz)
     if contest["opens"] > compete._iso(compete._now()) and contest["kind"] != "daily":
         raise HTTPException(409, "contest has not opened")
@@ -225,15 +246,15 @@ def _start_locked(cid: str, learner: str, tz: int, race: str | None = None) -> d
         raise HTTPException(403, "join this contest first")
     old = _sitting(contest["id"], learner)
     if old and (not old["finished"] or contest["kind"] not in ("sprint", "rush")):
-        state = ({**drill.state(old), **drill.next_question(old)} if old["kind"] == "challenge"
-                 and not old["finished"] else {})
         return {"session": old["id"], "runner": "test" if old["kind"] == "module" else "session",
-                "clock": compete.clock(db.one("SELECT * FROM sessions WHERE id=?", old["id"])), **state}
+                "clock": compete.clock(db.one("SELECT * FROM sessions WHERE id=?", old["id"])),
+                "_resume_challenge": old["kind"] == "challenge" and not old["finished"]}
     spec = compete._json(contest["spec"], {}) or {}
     race_data = compete.race_choice(contest["id"], learner, race)
     if contest["kind"] in ("weekly", "final"):
-        questions = compete.twin_questions(learner, contest["id"], spec["slots"],
-                                           family=spec.get("family"))
+        questions = prepared
+        if questions is None:
+            raise RuntimeError("contest twins were not prepared")
         sid = secrets.token_urlsafe(16)
         expected = compete.par(learner, spec["slots"])
         db.run("INSERT INTO sessions(id,kind,learner,started,questions,answers,contest,subject,cfg,module,result)"
@@ -242,12 +263,15 @@ def _start_locked(cid: str, learner: str, tz: int, race: str | None = None) -> d
                json.dumps({"timed": True, "contest": contest["id"], "par": expected, "race": race_data}), json.dumps({"par": expected}))
         return {"session": sid, "runner": "test", "clock": {"left": contest["seconds"]}}
     if spec.get("twin"):
-        qs = compete.twin_questions(learner, contest["id"], spec["slots"],
-                                    family=spec.get("family"))
+        qs = prepared
+        if qs is None:
+            raise RuntimeError("contest twins were not prepared")
     else:
         qs = compete._json(contest["questions"], []) or []
         if not qs:
-            qs = compete.twin_questions("contest:" + contest["id"], contest["id"], spec["slots"])
+            qs = prepared
+            if qs is None:
+                raise RuntimeError("contest twins were not prepared")
             db.run("UPDATE contests SET questions=? WHERE id=? AND questions IS NULL", json.dumps(qs), contest["id"])
     sid = secrets.token_urlsafe(16)
     topics = list(dict.fromkeys(q["topic"] for q in qs))
@@ -265,10 +289,7 @@ def _start_locked(cid: str, learner: str, tz: int, race: str | None = None) -> d
     db.run("UPDATE sessions SET contest=?,cfg=?,subject=? WHERE id=?", contest["id"],
            json.dumps(cfg), contest["subject"], sid)
     db.run("UPDATE sessions SET result=? WHERE id=?", json.dumps({"par": expected}), sid)
-    row = db.one("SELECT * FROM sessions WHERE id=?", sid)
-    first = drill.next_question(row)
-    return {"session": sid, "runner": "session",
-            "clock": compete.clock(db.one("SELECT * FROM sessions WHERE id=?", sid)), **first}
+    return {"session": sid, "runner": "session", "_first_challenge": True}
 
 
 @router.post("/api/contest/daily/start")
@@ -760,10 +781,10 @@ def start_contest(cid: str, race: str | None = None, domain: str = "all",
     learner = learner_of(x_learner)
     row = compete.contest(cid, x_tz)
     if row["kind"] == "rush":
-        with db.atomic():
+        with _START_LOCKS[hash((row["id"], learner)) % len(_START_LOCKS)]:
             return compete.rush_start(learner, row["id"], domain)
     if row["kind"] == "words":
-        with db.atomic():
+        with _START_LOCKS[hash((row["id"], learner)) % len(_START_LOCKS)]:
             return compete.word_start(learner, row["id"])
     return _start(cid, learner, x_tz, race)
 
