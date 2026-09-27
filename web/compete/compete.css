@@ -136,7 +136,7 @@
 .traps-list li { grid-template-columns: minmax(0, 1fr) auto; }
 .thumbbar { display: none; }
 @media (max-width: 759px) {
-  .thumbbar { position: sticky; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); z-index: 6; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  .thumbbar:not([hidden]) { position: sticky; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); z-index: 6; display: flex; align-items: center; justify-content: space-between; gap: 12px;
     height: 56px; margin: 16px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter); background: var(--paper); box-shadow: 0 -1px 0 var(--line); }
   .thumbbar .pill { height: 44px; }
   .cx.has-thumb .youbar { display: none; }

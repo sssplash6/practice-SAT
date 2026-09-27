@@ -61,8 +61,11 @@
 .lvl.ring { box-shadow: 0 0 0 1.5px var(--paper), 0 0 0 3.5px var(--amber); }
 .board { position: relative; min-width: 0; }
 .board-t { table-layout: auto; }
+.board-t :is(th, td) { padding-left: 8px; padding-right: 8px; }
+.board-t td { padding-top: 8px; padding-bottom: 8px; }
 .board-t td.rk, .board-t th.rk { width: 1%; white-space: nowrap; font: 500 13px var(--mono); padding-right: 6px; }
-.board-t td.who { min-width: 0; }
+.board-t td.who { width: 100%; max-width: 0; }
+.board-t :is(th, td).n { white-space: nowrap; }
 .board-t .who-l { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .board-t .who-n { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 .board-t .who-t, .board-t .who-m { display: block; margin-top: 2px; font: 500 12px var(--mono); color: var(--soft); }
@@ -82,6 +85,7 @@
 .board-empty { margin: 14px 0 0; color: var(--soft); }
 .youbar { position: sticky; bottom: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin-top: 12px; padding: 10px 14px; border-radius: 10px; background: var(--wash); box-shadow: inset 3px 0 0 var(--amber), 0 -8px 16px -12px rgba(30, 30, 30, .35); font: 500 13px var(--mono); color: var(--ink); }
 .youbar > span { flex: 1 1 240px; min-width: 0; }
+.youbar[hidden], .debrief-rows li[hidden] { display: none; }
 @media (max-width: 759px) {
   .board-t .who-m { display: block; }
   .board-t :is(th, td).off-phone { display: none; }
@@ -240,6 +244,44 @@
       `${num(r.right)}/${num(r.asked || c.count)} · ${num(r.points)} pts${clock}${rank}`,
       marks(r).map(m => glyphOf(m.status)).join(''),
       pid ? `Beat ${num(r.points)}: ${url}` : url].join('\n');
+  }
+
+  /* ------------------------------------------------------------ the ladder, par and field lines (C5, C7) */
+  const pct = x => (x === null || x === undefined ? '—' : `${Math.round(x * 100)}%`);
+  function ladder(host, c) {
+    const n = (c.ladder || []).length;
+    const cells = h('div', { class: 'ladder', role: 'list', style: n > 10 ? `--cols:${Math.min(11, n)}` : null, 'aria-label': 'The questions: skill, difficulty and your chance' });
+    (c.ladder || []).forEach(q => {
+      const name = topicName(q.topic);
+      const label = [`Q${q.slot}`, name, TIER[q.tier] || q.tier, q.format === 'spr' ? 'grid-in' : null,
+        q.chance !== undefined && q.chance !== null ? `your chance ${pct(q.chance)}` : null].filter(Boolean).join(' · ');
+      const cell = h('div', { class: 'lad', role: 'listitem', tabindex: '0', 'aria-label': label },
+        h('span', { class: 'n', text: String(q.slot) }),
+        UI.glyph ? UI.glyph(q.topic) : null,
+        UI.dbars ? UI.dbars(q.tier, { bare: true }) : null,
+        q.format === 'spr' ? h('span', { class: 'gi', text: 'GI' }) : null,
+        q.chance !== undefined && q.chance !== null ? h('span', { class: 'ch', 'aria-hidden': 'true' }, h('i', { style: `width:${Math.round(q.chance * 100)}%` })) : null);
+      tip(cell, label);
+      cells.append(cell);
+    });
+    put(host, cells);
+    put(host, h('p', { class: 'meta ladder-legend', text: 'Bars: difficulty · GI: grid-in, you type the answer · underline: your chance' }));
+    return cells;
+  }
+  function parLine(c) {
+    const p = c.me && c.me.par, f = c.me && c.me.forecast;
+    if (!p || p.base === undefined || p.base === null) return null;
+    const el = h('p', { class: 'line' }, `${p.rough ? 'Your par (rough)' : 'Your par'} ${num(p.base)} · about ${num(p.right)} right`,
+      f ? ` · likely #${f.lo}–#${f.hi} of ~${num(f.of)}` : '');
+    tip(el, 'What a student at your rating scores on these questions, on average.' + (p.rough ? ' Rough while you are placing or the questions are new.' : ''));
+    return el;
+  }
+  function fieldLine(c, verb = 'finished') {
+    const f = c.field || {};
+    if (!f.players) return h('p', { class: 'meta', text: 'No one has finished yet.' });
+    return h('p', { class: 'meta', text: [`${num(f.players)} ${verb}`, f.sitting_now ? `${num(f.sitting_now)} sitting now` : null,
+      f.median_points !== null && f.median_points !== undefined ? `median ${num(f.median_points)} pts` : null,
+      f.best !== null && f.best !== undefined ? `best ${num(f.best)}` : null].filter(Boolean).join(' · ') });
   }
 
   /* ------------------------------------------------------------ levels (spec/rating.md) */
@@ -532,13 +574,13 @@
     const barHost = h('div');
     el.append(barHost);
     if (UI.stackBar) {
-      UI.stackBar(barHost, segs.map(s => ({ ...s, label: s.key === 'scored' ? `${num(d.max)} possible → ${num(d.points)} scored` : `${s.label} −${num(s.value)}`, tip: s.key === 'scored' ? null : `${s.label}: −${num(s.value)} on ${s.n} question${s.n === 1 ? '' : 's'}` })),
+      UI.stackBar(barHost, segs.map(s => ({ ...s, label: s.key === 'scored' ? `${num(d.max)} possible → scored` : `${s.label} −`, tip: s.key === 'scored' ? null : `${s.label}: −${num(s.value)} on ${s.n} question${s.n === 1 ? '' : 's'}` })),
         { total: d.max, unit: 'pts', noun: 'questions', label: 'Where your points went', legend: true,
           onPick: s => { if (s.key !== 'scored' && o.onFilter) o.onFilter(groups[s.key].qids, `${groups[s.key].label} · ${groups[s.key].n}`); } });
     } else {
       barHost.append(h('p', { class: 'meta', text: segs.slice(1).map(s => `${s.label} −${num(s.value)} (${s.n})`).join(' · ') }));
     }
-    if (o.onFilter) {
+    if (o.onFilter && !UI.stackBar) {
       const chips = h('div', { class: 'debrief-act' }, segs.slice(1).map(s => {
         const b = h('button', { type: 'button', class: 'quiet', text: `${s.label} −${num(s.value)} (${s.n})` });
         b.addEventListener('click', () => o.onFilter(s.qids, `${s.label} · ${s.n}`));
@@ -569,9 +611,17 @@
     });
     if (ranked && d.all_right_rank) ul.append(h('li', {}, h('span', { class: 'dr-t', text: `All of them right → #${d.all_right_rank}` })));
     el.append(ul);
+    // the five that move you most show; the rest are one tap away (decision 7)
+    const extra = [...ul.children].slice(5, rows.length);
+    if (extra.length > 1) {
+      extra.forEach(li => { li.hidden = true; });
+      const more = h('button', { type: 'button', class: 'quiet', text: `Show all ${rows.length}` });
+      more.addEventListener('click', () => { extra.forEach(li => { li.hidden = false; }); more.remove(); });
+      el.append(h('div', { class: 'debrief-act' }, more));
+    }
     if ((d.by_norm || []).length) {
       const top = d.by_norm.slice(0, 3);
-      el.append(h('p', { class: 'meta', text: `Lost ${num(top.reduce((s, x) => s + x.pts, 0))}: ` + top.map(x => `${num(x.pts)} to ${x.label}${x.slots > 1 ? ` (${x.slots} slots)` : ''}`).join(' · ') }));
+      el.append(h('p', { class: 'help', text: `Lost ${num(top.reduce((s, x) => s + x.pts, 0))}: ` + top.map(x => `${num(x.pts)} to ${x.label}${x.slots > 1 ? ` (${x.slots} slots)` : ''}`).join(' · ') }));
     }
     if (o.onRematch) {
       const n = lost.filter(r => !['pace', 'finish'].includes(r.kind)).length;
@@ -779,6 +829,6 @@
   Object.assign(UI, {
     level, board, podium, debrief, pacer,
     compete: { KINDS, kind, icon, svg: svgOf, SVG, href, runner, start, rulesSeen, markRules, windowLine, clockText, facts, marks,
-      copyResult, under, subnav, join, create, reminder, LADDER, levelOf, rangeOf, levelIn, step, left, when, dayLabel, titleText, topicName, TIER, num, mmss },
+      copyResult, under, subnav, join, create, reminder, ladder, parLine, fieldLine, pct, LADDER, levelOf, rangeOf, levelIn, step, left, when, dayLabel, titleText, topicName, TIER, num, mmss },
   });
 })();
