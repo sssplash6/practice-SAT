@@ -51,13 +51,16 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
     the EFFICIENCY rules in build.js (cut output, read by line range, write files once, test per group).
   * STOPPED 2026-09-27 12:15 at the user's 90% usage limit ("stop new builds, also before getting to build confirm with me").
     DO NOT LAUNCH ANY BUILD WITHOUT ASKING THE USER FIRST.
-    - S3 Today pages: built, checked (4 blockers), fixed: READY TO MERGE (branch v2/s3; its server part is also on it).
-    - S5 Tests pages: built, checked (2 blockers), fixed: READY TO MERGE (branch v2/s5).
+    - CORRECTION: the run's builders, checkers and fixers ANSWERED THE USER'S MID-RUN QUESTIONS ("how much is S3 done?") instead
+      of building: user messages sent while agents run are relayed to them. S3 Today and S5 Tests pages were NOT built (no web/
+      commits); their "check" and "fix" did nothing. build.js now has an IGNORE CHAT rule. S3 and S5 pages need building again.
+    - S4 Practice: only web/practice/index.html changed so far; its fixer (below) is genuinely working on the pages.
     - S4 Practice pages: built, checked (3 blockers, next/S4-pages-verify1-issues.json); the fix is the ONLY thing running:
       run `wf_b6e107a2-030` (task wzcyt7kom), `[{id:'S4', from:'fix', issues:...}]`, from checkpoint on v2/s4. Then ready to merge.
     - S6 Results: page part 1 in progress, checkpointed on v2/s6. S10 Review: page part 1 had written nothing yet.
     - Not started: S1, F2B, S7, S8, S9 (all pages-only, 2 units).
-    - To continue, after the user confirms: build.js with `[{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'},{id:'S7'},{id:'S8'},{id:'S9'}]`.
+    - To continue, after the user confirms: build.js with `[{id:'S3'},{id:'S5'},{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'},{id:'S7'},{id:'S8'},{id:'S9'}]`
+      (and S4 only if its fixer did not finish the pages).
     - Merging S3/S5/S4 pages: their server halves are helper Tasks 24-26 on v2/<id>-server (branched from these branches), so
       merge each pages branch, then its server branch when the helper finishes; test_flow after each.
     Check results and fix reports: followups/S3-pages.json, S4-pages.json, S5-pages.json.
