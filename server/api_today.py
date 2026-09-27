@@ -1194,6 +1194,15 @@ def get_today(x_learner: str | None = Header(default=None), x_tz: int = Depends(
     return today_payload(learner_of(x_learner), x_tz)
 
 
+@router.get("/api/today/need")
+def get_target_need(target: int = Query(..., ge=200, le=800),
+                    x_learner: str | None = Header(default=None)) -> dict:
+    """The target slider's right answers out of 44, at any valid Math target."""
+    if target not in TARGETS:
+        raise HTTPException(422, "target is a Math score from 200 to 800 in tens")
+    return estimate.need(target, learner_of(x_learner))
+
+
 # ------------------------------------------------------------------ GET /api/today/insights
 
 def _pace_extras(learner: str, pace: dict, tz: int) -> dict:

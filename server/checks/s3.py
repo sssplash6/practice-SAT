@@ -158,6 +158,20 @@ def pace_default(c: TestClient) -> None:
     print("ok  S3 pace stays at 95 s until 20 timed Math answers")
 
 
+def target_need(c: TestClient) -> None:
+    me = code()
+    low = call(c, "GET", "/api/today/need?target=500", me)
+    high = call(c, "GET", "/api/today/need?target=700", me)
+    assert low["target"] == 500 and high["target"] == 700
+    assert low["right_of_44"] < high["right_of_44"] and high["now_of_44"] is None
+    answers(me, 1)
+    live = call(c, "GET", "/api/today/need?target=700", me)
+    assert live == estimate.need(700, me) and live["now_of_44"] is not None
+    assert call(c, "GET", "/api/today/need?target=700", code())["now_of_44"] is None
+    call(c, "GET", "/api/today/need?target=705", me, status=422)
+    print("ok  S3 target need follows the selected score and this learner's answers")
+
+
 # ------------------------------------------------------------------ check 2 / T14.1, 2, 4, 5
 
 def qotd_shape(c: TestClient) -> None:
@@ -1104,6 +1118,7 @@ def gates_and_twins(c: TestClient) -> None:
 def check(c: TestClient) -> None:
     fresh(c)
     pace_default(c)
+    target_need(c)
     qotd_shape(c)
     qotd_answer_and_crowd(c)
     late_and_grace(c)
