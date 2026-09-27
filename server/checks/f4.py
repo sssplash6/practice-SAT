@@ -867,6 +867,7 @@ def routes(client):
     h = {"X-Learner": "a:f4prefs"}
     fresh = client.get("/api/me", headers={"X-Learner": "a:f4fresh"}).json()
     assert fresh["prefs"]["words_from"] == ["sat", "transitions"]
+    assert fresh["prefs"]["hide_timer"] is False and fresh["prefs"]["open_explanations"] is False
     assert fresh["profile"]["account"] == {"linked": False, "email": None, "since": None}
     assert fresh["review"]["due_left"] == 0
     assert client.put("/api/me", headers=h, json={"prefs": {"bogus": True}}).status_code == 422
@@ -877,6 +878,14 @@ def routes(client):
     assert b.status_code == 200 and b.json()["profile"]["prefs"]["theme"] == "dark"
     stored = json.loads(db.one("SELECT prefs FROM learners WHERE id=?", "a:f4prefs")["prefs"])
     assert stored == {"theme": "dark", "words_from": ["sat"], "set_length": 20}
+    enabled = client.put("/api/me", headers=h, json={"prefs": {"hide_timer": True, "open_explanations": True}})
+    assert enabled.status_code == 200 and all(enabled.json()["profile"]["prefs"][key] is True
+                                              for key in ("hide_timer", "open_explanations"))
+    assert all(client.get("/api/me", headers=h).json()["prefs"][key] is True
+               for key in ("hide_timer", "open_explanations"))
+    for key in ("hide_timer", "open_explanations"):
+        bad = client.put("/api/me", headers=h, json={"prefs": {key: "true"}})
+        assert bad.status_code == 422 and key in bad.text, (key, bad.text)
     for bad in ({"words_from": ["math"]}, {"words_goal": 41}, {"mode": "x"}, {"test_timing": "x3"},
                 {"practice": {"math": {"presets": [{"name": f"p{i}", "body": {}} for i in range(9)]}}},
                 {"practice": {"xx": {}}}, {"quiet": {"from": "25:00", "to": "07:00"}}):
@@ -888,6 +897,8 @@ def routes(client):
     assert client.put("/api/me", headers=h, json={"prefs": {"theme": None}}).json()["profile"]["prefs"]["theme"] == "light"
     listing = client.get("/api/prefs").json()
     assert {k["key"] for k in listing} == set(prefs.KEYS) and all(k["label"] for k in listing)
+    assert all(next(k for k in listing if k["key"] == key)["kind"] == "bool"
+               for key in ("hide_timer", "open_explanations"))
     assert any("calculator" in k["synonyms"] for k in listing if k["key"] == "calc_button")
     # U15: the stage follows the exam date; yours wins; null goes back to the stage
     st = {"X-Learner": "a:f4stage"}
@@ -942,6 +953,18 @@ def routes(client):
     assert "template" not in note.json()
     assert db.one("SELECT note FROM notes WHERE learner=? AND template=? AND seed=?",
                   "a:f4prefs", "lin.evaluate", 96)["note"] == "Remember the sign"
+    styles = {"ask": "box", "given": "highlight", "ignore": "strike", "under": "underline",
+              "strong": "strong", "dashed": "dashed", "dotted": "dotted", "box": "box",
+              "highlight": "highlight", "strike": "strike", "underline": "underline"}
+    saved = client.post("/api/notes", headers=h, json={"session": "notes-f4", "question_id": "q96",
+                                                      "marks": [{"style": style, "note": style} for style in styles]})
+    assert saved.status_code == 200, saved.text
+    expected = [{"style": stored, "note": style} for style, stored in styles.items()]
+    assert saved.json()["marks"] == expected
+    assert json.loads(db.one("SELECT marks FROM notes WHERE learner=? AND template=? AND seed=?",
+                             "a:f4prefs", "lin.evaluate", 96)["marks"]) == expected
+    assert client.post("/api/notes", headers=h, json={"session": "notes-f4", "question_id": "q96",
+                                                      "marks": [{"style": "unknown"}]}).status_code == 422
     assert client.post("/api/notes", headers={"X-Learner": "a:f4other"}, json={"session": "notes-f4", "question_id": "q96"}).status_code == 403
     gone = client.post("/api/notes", headers=h, json={"session": "notes-f4", "question_id": "q96", "note": "", "marks": []})
     assert gone.json()["deleted"] and "template" not in gone.json() and not db.one("SELECT 1 FROM notes WHERE learner=? AND seed=96", "a:f4prefs")
