@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-27T10:19:32+05:00
+# v2 build state -- 2026-09-27T10:22:28+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -25,10 +25,11 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/helper-integ` at e0aa1c6, 0 commits ahead of master
 - `v2/localday` at 933ae67, 0 commits ahead of master
 - `v2/ops` at 991efbd, 0 commits ahead of master
+- `v2/perf` at eeb229c, 0 commits ahead of master
 - `v2/s1` at cf53af4, 1 commits ahead of master
 - `v2/s10` at 85896a0, 2 commits ahead of master
 - `v2/s3` at 2581a97, 6 commits ahead of master
-- `v2/s4` at 5ce7674, 1 commits ahead of master
+- `v2/s4` at 24dec91, 1 commits ahead of master
 - `v2/s5` at 529b830, 2 commits ahead of master
 - `v2/s6` at 057b7fc, 1 commits ahead of master
 - `v2/s7-server` at b88934e, 3 commits ahead of master
@@ -82,11 +83,13 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/cb-student-data` on `v2/cb-student-data`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/gate-b` on `v2/words-gate-b`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/helper-handoff` on `v2/helper-handoff`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/perf` on `v2/perf`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_fd260b46-512-1` on `v2/s4`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_fd260b46-512-2` on `v2/s5`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_fd260b46-512-3` on `v2/s3`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_fd260b46-512-3` on `v2/s3`: 2 uncommitted (saved in wip/wf_fd260b46-512-3/)
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-seed-sqlite` on `v2/words-seed-sqlite`: 0 uncommitted
 
 ## Workflow runs

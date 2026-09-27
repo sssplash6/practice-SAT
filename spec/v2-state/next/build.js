@@ -283,6 +283,12 @@ RULES:
 - Headless browser checks: Python Playwright with p.chromium.launch(executable_path="${SHELL}") (the bundled chromium
   crashes on this machine).
 - PYTHONPATH=. python3 server/test_flow.py must still print "all good".
+EFFICIENCY (tokens are scarce; every tool result stays in your context for the rest of the task):
+- Cut every command's output: pipe through tail -n 40, grep, or head. Never cat a big file, print a whole JSON, or dump a
+  full test log; for a failing test show only the traceback's last lines.
+- Read your brief once. Read other code only where you call it, by line range (sed -n or grep -n first), not whole files.
+- Plan the file, then write it in one go; edit with small targeted replacements, never rewrite a file you already wrote.
+- Run the checks once per finished group of files, not after every edit.
 `
 
 const VERDICT = { type: 'object', properties: {
@@ -303,6 +309,7 @@ upgrades. Commit as you go. Return what you built, the commits, and anything lef
 // them or for I1. A task sets rounds: 2 only when it puts content in front of students (questions, definitions).
 const verify = (t, round) => agent(`${CONTEXT(t)}
 You are the VERIFIER, not the builder: do not fix anything and do not commit. Run git switch --detach v2/${t.id.toLowerCase()}.
+Your requirements: spec/v2-state/briefs/${t.id}-check.md if it exists (open the full brief only to look up one item).
 Check, with evidence you ran yourself:
 1. The task's own check file (server/checks/${t.id.toLowerCase()}.py) if it exists, and PYTHONPATH=. python3 server/test_flow.py.
 2. ${t.accept}
