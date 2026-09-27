@@ -43,7 +43,8 @@
   .pl-big { font: 500 38px/1 var(--mono); letter-spacing: -.03em; color: var(--ink); font-variant-numeric: tabular-nums; }
   .pl-big small { font: 500 15px var(--mono); color: var(--soft); letter-spacing: 0; }
   .pl-tiles .stat-sub { margin: 0; }
-  .pl-tiles .btn.sm, .pl-tiles .quiet { justify-self: start; }
+  .pl-tiles .btn.sm, .pl-tiles .quiet, .pl-tiles .tag { justify-self: start; }
+  .pl-big small { white-space: nowrap; }
   .pl-track { position: relative; height: 6px; border-radius: 3px; background: var(--mat); margin: 8px 0 4px; }
   .pl-track > b { position: absolute; top: 0; bottom: 0; border-radius: 3px; }
   .pl-track > b.gap { background: var(--amber); opacity: .3; }
@@ -338,7 +339,7 @@
   .pl-drop { display: block; font: 500 10px/1.2 var(--mono); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pl .cal-d .pl-drop { position: absolute; left: 1px; right: 1px; bottom: 1px; font-size: 8.5px; text-align: center; background: var(--paper); border-radius: 3px; }
   .pl-moving { margin: 4px 0 0; font: 500 13px/1.4 var(--mono); color: var(--ink); }
-  .pl-wd .chg { position: absolute; top: 6px; left: 6px; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); }
+  .pl-wd .chg { display: inline-block; width: 6px; height: 6px; margin-left: 4px; vertical-align: 1px; border-radius: 50%; background: var(--amber); }
   .pl-goals { display: inline-flex; gap: 3px; font: 600 12px var(--mono); color: var(--soft); }
   .pl-goals i { font-style: normal; }
   .pl-goals i[data-s="met"] { color: var(--ink); }
@@ -367,6 +368,12 @@
     .pl-have .chips > button, .trow-sub .chips > button, .pl-banner .chips > button { min-height: var(--touch); }
     .pl-log button { min-height: var(--touch); }
     .trows .trow { -webkit-touch-callout: none; }
+    .pl a.tag { position: relative; }
+    .pl a.tag::after { content: ""; position: absolute; inset: -11px -4px; }
+    .pg-cell { height: var(--touch); }
+    /* a text link keeps its look and gets a 44px reach */
+    .pg a:not(.btn):not(.pill), .pl a.quiet { position: relative; }
+    .pg a:not(.btn):not(.pill)::after, .pl a.quiet::after { content: ""; position: absolute; inset: -12px -2px; }
   }
 
   /* ---- paper (3l): title, tiles, phases, every month and the week-by-week list */

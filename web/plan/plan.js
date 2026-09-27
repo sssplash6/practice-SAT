@@ -298,6 +298,8 @@
     R.thumb = h('div', { class: 'pl-thumb' });
     R.shell = h('div', {}, R.upd, title, R.tiles, R.banners, bar, R.pPlan, R.pProg, R.pPlans, R.print, R.thumb, R.live);
     root.replaceChildren(R.shell);
+    const seen = Object.fromEntries(Object.entries(ls.get('satf.plan.seen', {})).filter(([, v]) => v === t));
+    if (seen[S.sel] !== t) { seen[S.sel] = t; ls.set('satf.plan.seen', seen); }
     drawTiles(); drawBanners(); drawPlanTab(); drawTab();
     if (had) {
       scrollTo(0, scrollY);
@@ -452,7 +454,7 @@
     const t4 = h('button', { type: 'button', class: 'stat print-keep', 'aria-label': 'This week; show the week' });
     t4.addEventListener('click', () => { pick(t); R.week && R.week.scrollIntoView({ behavior: 'smooth', block: 'start' }); });
     t4.append(h('span', { class: 'stat-k', text: 'This week' }),
-      h('span', { class: 'pl-big' }, UI.dur(wk.minutes_done || 0), wk.minutes_planned ? h('small', { text: ` of ${UI.dur(wk.minutes_planned)}` }) : null));
+      h('span', { class: 'pl-big' }, h('span', { style: 'white-space: nowrap', text: UI.dur(wk.minutes_done || 0) }), wk.minutes_planned ? h('small', { text: ` of ${UI.dur(wk.minutes_planned)}` }) : null));
     if (wk.minutes_planned) UI.meter(t4, { label: '', value: wk.minutes_done || 0, max: wk.minutes_planned, text: ' ' });
     const dots = h('div', { class: 'pl-dots', role: 'img' });
     const said = [];
@@ -604,10 +606,10 @@
     const t = today();
     const since = ch.since && diff(ch.since, t) > 1 ? `Since ${DOW[dow(ch.since)]}` : 'Since this morning';
     // the same change said twice is one line with a count (decision 7)
-    const lines = [];
+    const lines = [], by = new Map();
     for (const x of ch.today) {
-      const text = pretty(x.text), last = lines[lines.length - 1];
-      if (last && last.text === text && last.day === x.day) last.n++; else lines.push({ text, day: x.day, n: 1 });
+      const text = pretty(x.text), key = `${x.day}|${text}`;
+      if (by.has(key)) by.get(key).n++; else { const line = { text, day: x.day, n: 1 }; by.set(key, line); lines.push(line); }
     }
     return h('div', { class: 'pl-log', 'aria-label': 'What changed' }, h('p', { class: 'k', text: `${since} · ${pl(ch.today.length, 'change')}` }),
       lines.map(x => h('button', { type: 'button', onclick: () => x.day && pick(x.day) }, x.text, x.n > 1 ? ` ×${x.n}` : '',
@@ -1253,8 +1255,7 @@
       const planned = x.tasks_planned || 0;
       const b = h('button', { type: 'button', class: 'pl-wd', 'aria-pressed': String(date === S.sel), 'data-today': date === t ? '' : null, 'data-date': date,
         'data-kind': x.kind, 'data-status': x.status, 'aria-label': `${D(date, 'long')}, ${KIND[x.kind] || x.kind}${x.minutes ? `, ${x.minutes} minutes` : ''}${planned ? `, ${x.tasks_done} of ${planned} tasks` : ''}${STATUS[x.status] ? `, ${STATUS[x.status]}` : ''}${changed.has(date) ? ', changed' : ''}` },
-        changed.has(date) ? h('span', { class: 'chg', 'aria-hidden': 'true' }) : null,
-        h('span', { class: 'k', text: `${DOW[i]} ${+date.slice(8)}` }),
+        h('span', { class: 'k' }, `${DOW[i]} ${+date.slice(8)}`, changed.has(date) ? h('span', { class: 'chg', 'aria-hidden': 'true' }) : null),
         h('i', { class: 'ic', 'aria-hidden': 'true', text: x.kind === 'exam' ? 'SAT' : '' }),
         h('span', { class: 'mono', text: x.minutes ? `${x.minutes}m` : x.kind === 'off' ? 'off' : x.kind === 'rest' || x.kind === 'eve' ? 'rest' : '' }),
         planned ? h('span', { class: 'mono soft', text: `${x.tasks_done}/${planned}` }) : null,
@@ -1437,7 +1438,7 @@
     try { if (!d) d = S.d = await api('/plan'); } catch (_) { failPage(); return; }
     const a = d.active;
     const top = h('header', { class: 'pl-title' }, h('div', {}, h('h1', { text: 'Your test-day sheet' }),
-      a ? h('p', { class: 'meta', text: `SAT ${D(a.cfg.exam_date, 'long')} · read it once the day before` }) : null),
+      a ? h('p', { class: 'meta', text: `The SAT · ${D(a.cfg.exam_date, 'long')}` }) : null),
       h('div', { class: 'row no-print' }, h('a', { class: 'quiet', href: '/plan/', text: 'Back to plan' }), btn('Print', 'btn sm', () => print())));
     if (!a) {
       root.replaceChildren(top, h('section', { class: 'card pl-sec' }, h('p', { class: 'line-t', text: 'Make a plan first: the sheet is built from it.' }),
@@ -1455,7 +1456,7 @@
     const list = (r.entries || []).map((e, n) => {
       const ex = e.example, q = ex && ex.question, key = ex && ex.key;
       const item = h('article', { class: 'pl-trap keep' }, h('h3', { class: 'h3', text: `${n + 1}. ${e.name}` }),
-        h('p', { class: 'meta', text: `caught you ${pl(e.hits || 1, 'time')}` }),
+        e.hits > 1 ? h('p', { class: 'meta', text: `caught you ${e.hits} times` }) : null,
         e.tell && e.tell !== e.name ? h('p', { class: 'line-t', text: e.tell }) : null);
       if (q) {
         item.append(h('p', { class: 'pl-stem', text: plain(q.stem) }));
