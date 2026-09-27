@@ -15,6 +15,8 @@
      UI.word.index()                         GET /api/words/index once -> {bySlug, byWord}
      UI.startWords(body, {from, fallback})   POST /api/words/run, then /words/run/?id=
      UI.addWord(prefill)                     the Add sheet (§10, R29); prefill.id edits
+     UI.addWordFromSelection(root, {source}) -> unbind   selecting 1–6 words in root floats
+         Add to my words; source is a string or () => string ("From a Circles question")
      UI.bringWords('text' | 'list' | 'missed')   Bring words (W19): matched in the browser
      UI.gloss(el, {exclude, ref})            tap-to-define in Words texts (§11)
      UI.speak(text) (UI.speak.ok())          the device's en-US voice
@@ -857,6 +859,26 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     return sh;
   }
 
+  /* ------------------------------------------------------------ Add a selection (§1) */
+  function addWordFromSelection(root, o = {}) {
+    if (!root || /^\/test(\/|$)/.test(location.pathname)) return () => {};   // never in the test window
+    let open = null;
+    const check = () => setTimeout(() => {
+      const sel = getSelection();
+      const text = sel && sel.rangeCount && !sel.isCollapsed ? sel.toString().replace(/\s+/g, ' ').trim().replace(/^[^\p{L}]+|[^\p{L}]+$/gu, '') : '';
+      if (!text || text.split(' ').length > 6 || !root.contains(sel.anchorNode) || !root.contains(sel.focusNode)) return;
+      if (open) open.close();
+      const src = typeof o.source === 'function' ? o.source() : o.source;
+      const day = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      const res = open = UI.pop(sel.getRangeAt(0).cloneRange(), h('button', { type: 'button', class: 'btn sm primary', text: 'Add to my words',
+        onclick: () => { res.close(); addWord({ word: text, source: `${src || 'From a question'} · ${day}` }); } }),
+        { label: 'Add to my words', anchored: true, focus: false, onClose: () => { if (open === res) open = null; } });
+    }, 0);
+    const evs = ['mouseup', 'keyup', 'touchend'];
+    evs.forEach(e => root.addEventListener(e, check));
+    return () => { evs.forEach(e => root.removeEventListener(e, check)); if (open) open.close(); };
+  }
+
   /* ------------------------------------------------------------ tap-to-define (§11) */
   const looked = new Set();
   let reCache = null;
@@ -1199,5 +1221,5 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
   word.sheetId = sheetId;
   word.PRINTABLE = PRINTABLE;
   word.offline = offline;
-  Object.assign(UI, { wordsTabs, todayWords, wordsFinish, word, startWords, addWord, gloss, speak, bringWords });
+  Object.assign(UI, { wordsTabs, todayWords, wordsFinish, word, startWords, addWord, addWordFromSelection, gloss, speak, bringWords });
 })();
