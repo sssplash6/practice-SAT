@@ -101,7 +101,7 @@
 
   async function load() {
     try { [lib, today] = await Promise.all([UI.api('/words'), UI.api('/words/today', { quiet: true }).catch(() => null)]); }
-    catch (e) { $('opts').replaceChildren(); UI.cardError($('opts'), load, 'Words did not load.'); return; }
+    catch (e) { $('opts').replaceChildren(); UI.cardError($('opts'), load, 'Words did not load.'); if (e.offline) UI.todayWords($('today')); return; }
     words = lib.words || [];
     (lib.groups || []).forEach(g => (g.collections || []).forEach(c => { W._coll[c.id] = c.name; }));
     W._lists = [...new Set(words.filter(w => w.own && w.collection).map(w => w.collection))];

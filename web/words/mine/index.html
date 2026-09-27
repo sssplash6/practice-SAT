@@ -126,7 +126,7 @@
 
   async function load() {
     try { [lib, ins, me] = await Promise.all([UI.api('/words'), UI.api('/words/insights', { quiet: true }).catch(() => null), UI.me().catch(() => null)]); }
-    catch (e) { $('meta').textContent = ''; put($('list')); UI.cardError($('list'), load, 'Your words did not load.'); return; }
+    catch (e) { $('meta').textContent = ''; put($('list')); UI.cardError($('list'), load, 'Your words did not load.'); if (e.offline) UI.todayWords($('today')); return; }
     words = lib.words || [];
     mine = words.filter(touched);
     (lib.groups || []).forEach(g => (g.collections || []).forEach(c => { W._coll[c.id] = c.name; }));
