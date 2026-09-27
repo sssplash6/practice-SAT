@@ -999,6 +999,10 @@ def plan_rows(c: TestClient) -> None:
     # T2.6 names Plan's status `marked`; S7 files a ticked own task as `done` (listed for S7)
     assert mine["status"] in ("marked", "done") and mine["marked"] and after["plan"]["tasks_done"] == done + 1
     assert after["study"]["today"] == minutes + 30, (minutes, after["study"]["today"])
+
+    def week_done(payload):                 # the week header's figures follow the tick (the plan memo sees it)
+        return next(w["tasks_done"] for w in payload["plan"]["weeks"] if w["from"] <= t.isoformat() <= w["to"])
+    assert week_done(after) == week_done(got) + 1
     call(c, "PATCH", path, me, {"day": t.isoformat(), "status": "todo"})
     back = call(c, "GET", "/api/today", me)
     assert back["study"]["today"] == minutes and back["plan"]["tasks_done"] == done

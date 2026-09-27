@@ -19,6 +19,7 @@ import math
 import re
 import secrets
 import statistics
+import time
 from typing import Literal
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
@@ -359,6 +360,42 @@ def _day_marks(learner: str, tz: int, first: dt.date, last: dt.date) -> dict[str
     return out
 
 
+PLAN_MEMO_S = 120
+_plan_memo: dict[tuple, tuple] = {}
+_PLAN_READS = (   # what plan.payload reads, as one cheap fingerprint
+    "SELECT (SELECT MAX(id) FROM attempts WHERE learner=?), (SELECT MAX(id) FROM word_reviews WHERE learner=?),"
+    " (SELECT COUNT(*) || ':' || COALESCE(MAX(started), '') || ':' || COALESCE(MAX(finished), '')"
+    "  FROM sessions WHERE learner=?),"
+    " (SELECT COALESCE(updated, '') || cfg FROM plans WHERE id=?),"
+    " (SELECT group_concat(day || task || COALESCE(status, '') || COALESCE(to_day, '') || COALESCE(at, ''))"
+    "  FROM plan_marks WHERE plan=?),"
+    " (SELECT group_concat(id || COALESCE(removed, '') || COALESCE(minutes, '') || COALESCE(title, ''))"
+    "  FROM plan_tasks WHERE plan=?),"
+    " (SELECT group_concat(day || COALESCE(minutes, '') || COALESCE(off, '') || COALESCE(test, '')"
+    "  || COALESCE(topics, '')) FROM plan_overrides WHERE plan=?),"
+    " (SELECT COUNT(*) || ':' || COALESCE(MAX(last), '') || ':' || COALESCE(MAX(closed), '') FROM traps WHERE learner=?),"
+    " (SELECT COALESCE(prefs, '') || COALESCE(exam_date, '') || COALESCE(target, '') || COALESCE(minutes, '')"
+    "  FROM learners WHERE id=?)")
+
+
+def plan_payload(learner: str, tz: int, pid: str, t: dt.date) -> dict:
+    """S7's whole plan (about a second on a 60-day plan), memoised on a
+    fingerprint of the rows it reads, so /api/today stays quick between writes.
+    ponytail: the fingerprint misses a test's unsaved answers; bounded by
+    PLAN_MEMO_S. Upgrade: a cheap plan.card(learner, tz) from S7."""
+    fp = tuple(db.one(_PLAN_READS, learner, learner, learner, pid, pid, pid, pid, learner, learner))
+    key = (learner, tz, t.isoformat())
+    now = time.monotonic()
+    hit = _plan_memo.get(key)
+    if hit and hit[0] == fp and now - hit[1] < PLAN_MEMO_S:
+        return hit[2]
+    got = _call("plan", "payload", learner, tz) or {}
+    if len(_plan_memo) > 512:
+        _plan_memo.clear()
+    _plan_memo[key] = (fp, now, got)
+    return got
+
+
 def plan_part(learner: str, tz: int, t: dt.date | None = None) -> dict | None:
     """S7's day (R14), with the plan's own start (plans.start, R15), its weeks
     and days, and the Plan card's figures (T18): Day N of M, % done, on time,
@@ -373,7 +410,7 @@ def plan_part(learner: str, tz: int, t: dt.date | None = None) -> dict | None:
     out["start"] = row["start"] if row else None
     cfg = _json(row["cfg"], {}) if row else {}
     out["exam_date"] = cfg.get("exam_date")
-    whole = _call("plan", "payload", learner, tz) or {}
+    whole = plan_payload(learner, tz, s.get("id"), t)
     out["weeks"] = whole.get("weeks")
     out["stats"] = whole.get("stats")
     iso = t.isoformat()
