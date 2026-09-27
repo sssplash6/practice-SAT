@@ -89,6 +89,11 @@
   #next .lead-t { font: 700 20px/1.25 var(--font); letter-spacing: -.01em; color: var(--ink); }
   .size { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
   .size .seg button { min-height: 36px; }
+  .why-i { appearance: none; border: 1.5px solid var(--faint); background: none; color: var(--soft); width: 18px; height: 18px; border-radius: 50%;
+    font: 600 11px/1 var(--font); font-style: italic; margin-left: 8px; vertical-align: 2px; cursor: pointer; padding: 0; }
+  .why-i[aria-expanded="true"] { border-color: var(--ink); color: var(--ink); }
+  .exam-sum { margin: 10px 0 0; font-size: 16px; }
+  .exam-det { margin-top: 12px; }
   .size > * { margin: 0; }
   .size-picks { display: flex; align-items: center; }
   .size-picks .chips { gap: 6px; align-items: center; margin: 0; }
@@ -948,10 +953,11 @@
     const hd = h('div', { class: 'due-head' });
     const goal = due.goal_minutes || t.profile.minutes;
     const left = due.minutes_left || 0;
-    hd.append(h('div', {}, h('p', { class: 'k', text: join('Due today', rows.length && `${due.done} of ${due.total} done`, left && `about ${n(left)} min left`) }),
+    hd.append(h('div', {}, h('p', { class: 'k', text: join('Due today', due.done > 0 && `${due.done} of ${due.total} done`, !(due.done > 0) && undone.length && pl(undone.length, 'part'), left && (due.done > 0 ? `about ${n(left)} min left` : `about ${n(left)} min`)) }),
       goal && rows.length ? h('p', { class: 'meta', text: left + (t.study.today || 0) <= goal ? `fits in your ${goal}-min goal` : `${n(Math.round(left + (t.study.today || 0) - goal))} min over your goal` }) : null));
     if (undone.length >= 2) {
-      const st = pill(`Start today · ${pl(undone.length, 'part')} · ${n(left)} min`, () => startRow(undone[0]));
+      const st = pill('Start today', () => startRow(undone[0]));
+      st.classList.add('sm');
       prefetchSession(st);
       hd.append(st);
     }
@@ -994,7 +1000,8 @@
     const body = h('div', {});
     body.append(h('div', { class: 'dt' }, r.title || cap(r.kind), r.tag && !String(r.title || '').toLowerCase().includes(String(r.tag).toLowerCase()) ? h('span', { class: 'tag', text: r.own ? 'Your own' : cap(r.tag) }) : null));
     // once done, the result line says how it went, so the progress count goes
-    const m = r.meta || join(!(done && r.result) && r.progress && r.progress.of && `${n(r.progress.have || 0)} of ${n(r.progress.of)}`, r.minutes && `~${n(r.minutes)} min`);
+    const pg = r.progress && r.progress.of ? (r.progress.have > 0 ? `${n(r.progress.have)} of ${n(r.progress.of)}` : pl(r.progress.of, 'question')) : null;
+    const m = r.meta || join(!(done && r.result) && pg, r.minutes && `~${n(r.minutes)} min`);
     const dm = join(nz(m), r.due_at && `closes ${r.due_at}`, r.status === 'marked' && 'Marked done');
     if (dm) body.append(h('p', { class: 'meta dm', text: dm }));
     if (done && r.result) {
@@ -1004,9 +1011,9 @@
     const extra = h('div', { class: 'dextra' });
     if (r.why && r.why.length) {
       const why = h('p', { class: 'dwhy', hidden: true }, r.why.join(' · '), r.evidence_href ? [' ', link('See the evidence', r.evidence_href)] : null);
-      const tg = h('button', { type: 'button', class: 'quiet', text: 'Why', 'aria-expanded': 'false' });
-      tg.addEventListener('click', () => { why.hidden = !why.hidden; tg.textContent = why.hidden ? 'Why' : 'Hide'; tg.setAttribute('aria-expanded', String(!why.hidden)); });
-      extra.append(tg);
+      const tg = h('button', { type: 'button', class: 'why-i', text: 'i', title: 'Why this', 'aria-label': 'Why this', 'aria-expanded': 'false' });
+      tg.addEventListener('click', () => { why.hidden = !why.hidden; tg.setAttribute('aria-expanded', String(!why.hidden)); });
+      (body.querySelector('.dt') || extra).append(tg);
       body.append(why);
     }
     if (r.fix && r.fix.n) extra.append(btn(`Fix the ${r.fix.n} it opened · ${r.fix.n * 2} q`, () => go({ path: r.fix.path || '/drill', body: r.fix.body })));
@@ -1809,8 +1816,8 @@
     }
     if (days === 0) kids.push(h('p', { class: 'exam-cap', text: 'Today. Doors close at 8:00 AM.' }), meta('Good luck'));
     else if (w) {
-      kids.push(h('p', { class: 'exam-cap', text: join(pl(w.study_days, 'study day'), `~${sdur(w.capacity)} at your goal`, w.need && w.need.tests_n && `${pl(w.need.tests_n, 'test')} left`) }));
-      kids.push(needLine(w, p));
+      kids.push(h('p', { class: 'exam-cap', text: join(pl(w.study_days, 'study day'), w.capacity > 0 && `~${sdur(w.capacity)} at your goal`, w.need && w.need.tests_n && `${pl(w.need.tests_n, 'test')} left`) }));
+      if (!(w && !w.sized && w.unsized === 'answers')) kids.push(needLine(w, p));   // the Points card already asks for the 30 answers
     }
     if (ex && ex.registration) kids.push(line(ex.registration.text || `Register by ${UI.date(ex.register_by)}`));
     else if (ex && ex.register_by && ex.register_by >= today() && ((UI.prefs.now && UI.prefs.now()) || {}).registered !== p.exam_date) {
@@ -1841,8 +1848,18 @@
       kids.push(line(`${pl(left.length, 'study day')} and ${pl(left.filter(d => d.kind === 'test').length, 'test')} left in your plan`));
     } else if (days > 0) kids.push(h('div', { class: 'acts' }, link(`Build a plan for these ${n(days)} days`, '#plan')));
     kids.push(h('div', { class: 'acts' }, quiet('Add to calendar', () => calSheet())));
-    if (days <= 7) kids.push(checklist(p.exam_date, days <= 1));
-    card('exam', 'SAT', trig, kids);
+    // decision 7: collapsed by default; the summary says the two things that need attention, the rest opens on demand
+    const regDue = ex && ex.register_by && ex.register_by >= today() && ((UI.prefs.now && UI.prefs.now()) || {}).registered !== p.exam_date;
+    const sum = h('p', { class: 'exam-sum' }, h('b', { text: days === 0 ? 'Today' : pl(days, 'day') }), regDue ? ` · Register by ${UI.date(ex.register_by)}` : '');
+    const det = h('div', { class: 'exam-det' }, kids);
+    let open = false; try { open = localStorage.getItem('satf.exam.open') === '1'; } catch (e) {}
+    det.hidden = !open;
+    const tog = h('button', { type: 'button', class: 'quiet exam-tog', text: open ? 'Hide details' : 'Details', 'aria-expanded': String(open) });
+    tog.addEventListener('click', () => {
+      det.hidden = !det.hidden; tog.textContent = det.hidden ? 'Details' : 'Hide details'; tog.setAttribute('aria-expanded', String(!det.hidden));
+      try { localStorage.setItem('satf.exam.open', det.hidden ? '0' : '1'); } catch (e) {}
+    });
+    card('exam', 'SAT', trig, [sum, h('div', { class: 'acts' }, tog), det, days <= 7 ? checklist(p.exam_date, days <= 1) : null]);
   }
   function needLine(w, p) {
     if (!w.sized) {
