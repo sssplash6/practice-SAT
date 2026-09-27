@@ -18,6 +18,7 @@
              start · tick {done} · skip · reason {reason} · done {minutes, where} · undo
              · again {kind: misses | more | harder} · review
            menu(task) -> [UI.menu items]   the ⋯ items (Move to…, Swap topics, Edit, Remove)
+           extra(task) -> Node | null        a page's own line under the row (R&W Log misses)
      A rejected on() keeps the row as it was and says why inside it.
    UI.taskTag(task) -> 'Focus' | 'Warm-up' | ...      UI.taskQuestion(task) -> bool
    UI.weekPlanner(host, week) -> {el, value()}   next week's plan, hosted by U14's sheet
@@ -215,6 +216,7 @@
         main.append(h('div', { class: 'trow-sub' }, h('span', { class: 'k', text: 'Did it elsewhere?' }), f, h('span', { class: 'meta', text: 'min' }),
           chips && chips.el, save, h('button', { type: 'button', class: 'quiet', text: 'Cancel', onclick: () => { open = null; draw(); } })));
       }
+      if (o.extra && !o.readonly) { const x = o.extra(t); if (x) main.append(x); }
       main.append(err);
       const act = h('div', { class: 'trow-act' });
       if (!o.readonly) {
