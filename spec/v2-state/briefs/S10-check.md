@@ -1,4 +1,4 @@
-# Check brief for S10: Review
+# Check brief for S10: Review pages
 
 ## Decisions
 

@@ -1,4 +1,4 @@
-# Check brief for S1: Account, Me, Settings, Help (Part 3.1 §1, §3-§6, §8, §9; §2 is the shell, §7 classes are dropped, §10 is F6's)
+# Check brief for S1: Account, Me, Settings, Help pages (Part 3.1 §1, §3-§6, §8, §9; §2 is the shell, §7 classes are dropped, §10 is F6's)
 
 ## Decisions
 

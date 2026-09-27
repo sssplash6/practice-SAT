@@ -374,6 +374,67 @@ v2/words-gate into your branch first if missing). Never look at the key and neve
 ~100 frames. Tell the user "gate B done" with the counts. The main agent then merges both and marks agreed frames reviewed.
 ```
 
+## Task 20: the S6 Results server
+
+```
+SETUP: git worktree add .claude/worktrees/s6-server v2/s6-server   (the branch exists; git rebase master first)
+OWN ONLY: server/api_results.py, server/checks/s6.py.
+Build every server item of the Results section: the report, history, per-skill stats (a skill on Results opens its stats and
+Practice starts on only that skill: the user asked for this), R26, R35, the Tests parts (?q=, peers, notes, confidence, away,
+changes), contest rows and the Ranked pill, the Flagged filter. Also: SEC-03's results part (results only to the sitting's owner,
+spec/v2-state/followups/security-audit.md) and F5's follow-up (move the R24 history filter into api_results.history so the shadow
+GET /api/history in api_practice.py can be deleted; tell the user it can be).
+Rules as above (own files only, own port and SATF_DB, commit per part, never push or merge, never touch a web/ file: the
+main build is building this section's pages right now and codes against the endpoints your spec lists, so build exactly those
+endpoints and shapes). The requirements are in spec/v2-state/briefs/S6.md (sections 2-5 and 7; the brief says pages-only for the main
+build, but its server items are yours). The branch already has the section's early server commits: continue from them.
+DONE: checks/s6.py passes and test_flow "all good". Tell the user "S6 server done".
+```
+
+## Task 21: the S10 Review server
+
+```
+SETUP: git worktree add .claude/worktrees/s10-server v2/s10-server   (exists; git rebase master first)
+OWN ONLY: server/api_review.py, server/checks/s10.py.
+Build every server item of the Review section: redo, marked, saved, history and fixed lists, R2, R5's endpoints (flags vs saved),
+notes on saved questions, shares through sets, the habits view (server/habits.py is merged), check-ins due (local days are merged).
+Rules as above (own files only, own port and SATF_DB, commit per part, never push or merge, never touch a web/ file: the
+main build is building this section's pages right now and codes against the endpoints your spec lists, so build exactly those
+endpoints and shapes). The requirements are in spec/v2-state/briefs/S10.md (sections 2-5 and 7; the brief says pages-only for the main
+build, but its server items are yours). The branch already has the section's early server commits: continue from them.
+DONE: checks/s10.py passes and test_flow "all good". Tell the user "S10 server done".
+```
+
+## Task 22: the S1 Account and Me server
+
+```
+SETUP: git worktree add .claude/worktrees/s1-server v2/s1-server   (exists; git rebase master first)
+OWN ONLY: server/account.py, server/api_account.py, server/api_profile.py, server/achievements.py, server/mail.py,
+server/checks/s1.py.
+Build every server item of Account, Me, Settings and Help: sign-in (email codes, passkeys, device pairing, rotate), /api/me/summary,
+feed, activity, achievements (R25, reading ACHIEVEMENTS from compete and words), export and delete, progress links and the shared
+view (R18a), the diagnostic sign-up joining an account, mail. Also SEC-01 (spec/v2-state/followups/security-audit.md): a signup
+must never change a verified user's name, and the response must not reveal whether an email is registered.
+Rules as above (own files only, own port and SATF_DB, commit per part, never push or merge, never touch a web/ file: the
+main build is building this section's pages right now and codes against the endpoints your spec lists, so build exactly those
+endpoints and shapes). The requirements are in spec/v2-state/briefs/S1.md (sections 2-5 and 7; the brief says pages-only for the main
+build, but its server items are yours). The branch already has the section's early server commits: continue from them.
+DONE: checks/s1.py passes and test_flow "all good". Tell the user "S1 server done".
+```
+
+## Task 23: the shell's Up next server (F2B backend)
+
+```
+SETUP: git worktree add .claude/worktrees/f2b-server -b v2/f2b-server master
+OWN ONLY: server/next.py, server/api_shell.py, server/checks/f2.py.
+Build server/next.py (queue, due, stage and resolve_drill; GET /api/next; the 'start' kind for new learners, product.md G10;
+sources read through deps.part so a missing section drops its rows) and wire /api/shell.next and /api/shell.has in api_shell.py.
+Also profile /api/shell's cold start (your load test: 42.6M function calls for five calls) and make it fast. Extend checks/f2.py.
+Requirements: spec/v2-state/briefs/F2B.md and spec/v2-state/followups/F2.json. The main build is doing the shell's frontend (ui.js,
+palette.js, quick.js, sw.js) right now against GET /api/next and /api/shell.next: build exactly those shapes.
+DONE: checks/f2.py passes and test_flow "all good". Tell the user "F2B server done".
+```
+
 ---
 
 ## For the main session

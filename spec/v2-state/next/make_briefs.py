@@ -19,12 +19,12 @@ SPEC = (ROOT / "spec/rebuild-v2.md").read_text().splitlines()
 OUT = ROOT / "spec/v2-state/briefs"
 
 TASKS = {  # id: (section lines, upgrade file, name, pages only)
-    "S1": ((653, 2294), "shell-me", "Account, Me, Settings, Help (Part 3.1 §1, §3-§6, §8, §9; §2 is the shell, §7 classes are dropped, §10 is F6's)", False),
+    "S1": ((653, 2294), "shell-me", "Account, Me, Settings, Help pages (Part 3.1 §1, §3-§6, §8, §9; §2 is the shell, §7 classes are dropped, §10 is F6's)", "helper"),
     "S3": ((2295, 3347), "today", "Today", False),
     "S4": ((3348, 4779), "practice", "Practice builder and session", False),
     "S5": ((4780, 6054), "tests", "Tests and the test window", False),
-    "S6": ((6055, 7045), "reports", "Results and the score report", False),
-    "S10": ((10030, 10969), "review", "Review", False),
+    "S6": ((6055, 7045), "reports", "Results and score report pages", "helper"),
+    "S10": ((10030, 10969), "review", "Review pages", "helper"),
     "S7": ((7046, 8096), "plan", "Plan pages (the server is merged)", True),
     "S8": ((8097, 9133), "compete", "Compete pages (the server is merged)", True),
     "S9": ((9134, 10029), "words", "Words pages (the server is merged)", True),
@@ -110,7 +110,10 @@ def main() -> None:
         entry = m.group(0) if m else "(see the task prompt)"
         sec_no = SPEC[a - 1].split()[1] if SPEC[a - 1].startswith("## 3.") else ""
         rules = part2(sec + upg, tid, sec_no)
-        note = ("You build only the PAGES: the server is merged; use its endpoints and list any server change you need."
+        note = ("You build only the PAGES: the server is being built by the user's other agent on v2/" + tid.lower() + "-server; code "
+                "against the endpoints in section 5 and degrade quietly until they land; list any server change you need."
+                if pages_only == "helper" else
+                "You build only the PAGES: the server is merged; use its endpoints and list any server change you need."
                 if pages_only else "You build the server half and the pages.")
         brief = f"""# Brief for {tid}: {name}
 

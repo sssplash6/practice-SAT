@@ -45,7 +45,11 @@ provides, validated at the boundary), and server/checks/${id.toLowerCase()}.py c
 §2.13 and the upgrade file), passing. Also fix the security findings in spec/v2-state/followups/security-audit.md that sit in your files.`,
       ...PAGE_UNITS,
     ],
-    accept: `The section's acceptance list in Part 3 (as amended by §2.13 and spec/v2-upgrades/${upgrades}.md): its server items via
+    accept: section.pagesOnly
+      ? `The PAGE items of the section's acceptance list in Part 3 (as amended by §2.13 and spec/v2-upgrades/${upgrades}.md), walked at 1280
+and 390 with a new and a seeded learner, no console errors; the pages degrade cleanly where a server endpoint is not merged yet (the
+server half is the user's other agent's; do not fail the pages for missing endpoints); test_flow prints "all good".`
+      : `The section's acceptance list in Part 3 (as amended by §2.13 and spec/v2-upgrades/${upgrades}.md): its server items via
 server/checks/${id.toLowerCase()}.py, and its page items walked at 1280 and 390 with a new and a seeded learner, no console errors;
 test_flow prints "all good".`,
   }
@@ -156,22 +160,21 @@ items), each exercised against a server on port 8015; repairs and {mistakes: tru
 on 3 runs in a row.`,
   },
   F2B: {
-    title: 'F2B · Shell follow-ups: Up next, offline, run and share helpers', port: 8018,
-    spec: `spec/v2-state/briefs/F2B.md ONLY for requirements, plus spec/v2-state/followups/F2.json (F2's check: the items assigned to F2 that no task owned); in the brief see shell-me.md
-(its "§2.12 F2" row in §3.2, U1 Up next, U18 offline, U25 welcome back, U28 share), spec/v2-upgrades/product.md (G1 UI.run, G2
-retired phrases, G10 start kind), and the Shell spec §2 in spec/rebuild-v2.md Part 3.1 (lines 653-2294). F2 is merged: extend it.`,
-    owns: 'server/next.py, web/sw.js, web/assets/ui.js, web/assets/palette.js, web/assets/quick.js, server/api_shell.py, server/checks/f2.py',
+    title: 'F2B · Shell follow-ups (frontend): run and share helpers, welcome back, offline', port: 8018,
+    spec: `spec/v2-state/briefs/F2B.md ONLY for requirements, plus spec/v2-state/followups/F2.json (F2's check: the items assigned to F2 that no
+task owned). The backend half (server/next.py, GET /api/next, /api/shell.next and .has, checks/f2.py) is being built by the user's other
+agent: code against the endpoints the brief specifies and degrade quietly until they land. F2 is merged: extend it.`,
+    owns: 'web/sw.js, web/assets/ui.js, web/assets/palette.js, web/assets/quick.js',
     units: [
-      `server/next.py: queue, due, stage and resolve_drill, GET /api/next, the 'start' kind for new learners (G10), sources read through
-deps.part so a missing section drops its rows; /api/shell.next and /api/shell.has wired in api_shell.py.`,
-      `ui.js: UI.run (start, between, rail; G1), UI.autoSheet with the welcome-back sheet (U25), UI.share (U28); gate the Today card's
-fact popovers on UI.has('levers') and link the flame to /me/#activity until then; replace the retired phrases in palette.js and quick.js
-(G2); the quick sheet full screen under 760px; palette Recent rows keep the skill name; f2.py's console hook stops hiding real 404s.`,
-      `web/sw.js (U18 offline) registered from ui.js; extend server/checks/f2.py for everything above; walk the shell at 1280 and 390.`,
+      `ui.js: UI.run (start, between, rail; G1) reading /api/next and /api/shell.next, UI.autoSheet with the welcome-back sheet (U25),
+UI.share (U28); gate the Today card's fact popovers on UI.has('levers') and link the flame to /me/#activity until then; replace the
+retired phrases in palette.js and quick.js (G2); the quick sheet full screen under 760px; palette Recent rows keep the skill name.`,
+      `web/sw.js (U18 offline) registered from ui.js; then a quick headless walk of the shell at 1280 and 390, no console errors,
+test_flow still "all good".`,
     ],
-    accept: `Every follow-up in spec/v2-state/followups/F2.json that this task owns is fixed; /api/next returns the queue for a new and a
-seeded learner and the Up next block, rail play button and G N work; the welcome-back sheet shows once a day; offline pages load from
-the service worker; server/checks/f2.py passes; test_flow prints "all good".`,
+    accept: `The frontend follow-ups in spec/v2-state/followups/F2.json are fixed; the Up next block, rail play button and G N render from
+/api/next when it is present and degrade when it is not; the welcome-back sheet shows once a day; offline pages load from the service
+worker; test_flow prints "all good".`,
   },
   // Server halves built by the user's other agent (spec/v2-state/HELPER-TASKS.md); run each with from: 'verify'.
   S9S: {
@@ -210,7 +213,7 @@ with R12's names, ratings, rank snapshots; test_flow prints "all good".`,
   ...section('S1', 'Account, Me, Settings, Help', 8021, `Part 3.1 §1, §3, §4, §5, §6, §8 and §9 (lines 653-2294; §2, §7 and
 §10 are not yours: the shell is F2's, classes are dropped, §10 is F6's), R25, R31, Compete §9's Me Boards block, Words' Me items,
 Review's Saved content card, Tests' test defaults`, 'shell-me',
-    'server/account.py, api_account.py, api_profile.py, achievements.py, mail.py, web/me/**, web/signin/**, web/pair/**, web/share/**, web/help/**, web/diagnostic/signup.html, web/diagnostic/verified.html, server/checks/s1.py'),
+    'web/me/**, web/signin/**, web/pair/**, web/share/**, web/help/**, web/diagnostic/signup.html, web/diagnostic/verified.html', true),
   ...section('S3', 'Today', 8023, `Part 3.2 in full (lines 2295-3347), R27 (the questions of the day), R30 (the Review card and
 Words tile), and the Today items of Review §10, Words §11 and Compete §9`, 'today',
     'web/index.html, server/api_today.py, server/daily.py, server/checks/s3.py'),
@@ -228,10 +231,10 @@ from F6), R26, R35, the report's parts of Tests (?q=, peers, notes, confidence, 
 Ranked pill) and Review (Flagged filter); also the follow-ups in spec/v2-state/followups/F1.json (UI.sittingCard) and F5.json (move
 the R24 history filter into api_results.history so S4 can delete F5's shadow GET /api/history). A skill on Results opens its stats and
 starts Practice on only that skill (the user's request)`, 'reports',
-    'web/results/**, server/api_results.py, web/assets/results-ui.js, server/checks/s6.py'),
+    'web/results/**, web/assets/results-ui.js', true),
   ...section('S10', 'Review', 8030, `Part 3.9 in full (lines 10030-10969; components from F3, traps logic from F4, sets from F6), R2,
 R5's endpoints`, 'review',
-    'web/review/**, web/mistakes/**, server/api_review.py, server/checks/s10.py'),
+    'web/review/**, web/mistakes/**', true),
   ...section('S7', 'Plan pages', 8027, `Part 3.6 in full (lines 7046-8096): the PAGES only. The server (server/plan.py, api_plan.py) is
 merged from the user's other agent: use its endpoints; list any server change you need instead of making it`, 'plan',
     'web/plan/**, web/assets/plan-ui.js', true),

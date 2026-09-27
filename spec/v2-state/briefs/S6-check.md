@@ -1,4 +1,4 @@
-# Check brief for S6: Results and the score report
+# Check brief for S6: Results and score report pages
 
 ## Decisions
 
