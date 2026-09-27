@@ -43,7 +43,9 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
   * Checkpoint loop: task bgbqcunjk.
   * BRIEFS (2026-09-27, the user: "one section shouldnt be taking 4m tokens"): each remaining task reads only
     spec/v2-state/briefs/<id>.md (80-110k tokens) instead of the whole plan. The frontend was relaunched on them: run
-    `wf_fd260b46-512` (task wboqn5zsh), same args, 3 workers; S4/S5/S3 checkpoints 539de3f / 6b131f0 / c9f9a82.
+    `wf_3f139f0b-f7c` (task w64p2zb82), same args, 3 workers, effort HIGH for every agent (the user's call). Briefs come from
+    spec/v2-state/next/make_briefs.py (about 70k tokens each: the real requirements; 14-19k check briefs). Every agent follows
+    the EFFICIENCY rules in build.js (cut output, read by line range, write files once, test per group).
   * Helper queue: Task 17 perf (the load test fails at 10 learners), 18 words grading fix + gate pass A (1 seed),
     19 gate pass B in a separate instance. After 18+19: merge v2/words-gate-a/-b into v2/words-gate, run the gate step
     (words-gate.js {from:'gate'}), merge.
