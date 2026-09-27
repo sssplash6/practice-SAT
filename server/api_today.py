@@ -20,6 +20,7 @@ import re
 import secrets
 import statistics
 import time
+from pathlib import Path
 from typing import Literal
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
@@ -1164,7 +1165,19 @@ def today_payload(learner: str, tz: int) -> dict:
         "brief": brief(learner, tz, d, t, score_list), "at_risk": at_risk(learner, tz, d, t, coach),
         "receipt": receipt(learner, tz, d, t, p, due_), "workload": work, "goal_suggest": goal_suggest(work),
         "usual_start": None if (p.get("prefs") or {}).get("study_time") else usual_start(learner, tz),
+        "assets": helper_assets(),
     }
+
+
+HELPERS = ("plan-ui", "results-ui", "compete-ui", "words-ui")
+ASSETS = Path(__file__).resolve().parent.parent / "web" / "assets"
+
+
+def helper_assets() -> list[str]:
+    """The section helper files that exist (S6, S7, S8, S9's *-ui.js), so the page
+    loads only those and a missing one is no 404 in the console (§2.9: consumers
+    degrade until the provider lands)."""
+    return [n for n in HELPERS if (ASSETS / f"{n}.js").exists()]
 
 
 @router.get("/api/today")
@@ -1473,7 +1486,10 @@ def _slot_rows(learner: str | None, day: str) -> list[dict]:
                 continue
             mine = daily.rw_feedback(slot, day, q, got["given"], got["late"], got["ms"],
                                      {"correct": bool(got["correct"])}, learner) if got else None
-        out.append({"slot": slot, **daily.SLOTS[slot], "question": daily.public(slot, q), "mine": mine})
+        saved = bool(got and slot in daily.MATH and db.one(
+            "SELECT 1 FROM saved WHERE learner=? AND template=? AND seed=?", learner, got["template"], got["seed"]))
+        out.append({"slot": slot, **daily.SLOTS[slot], "question": daily.public(slot, q), "mine": mine,
+                    "saved": saved})
     return out
 
 
@@ -1598,6 +1614,35 @@ def another_qotd(body: Another, x_learner: str | None = Header(default=None), x_
     token = sign(payload)
     item = {**daily.public(slot, twin), "item_id": "sample:" + hashlib.sha256(token.encode()).hexdigest()[:12]}
     return {"item": item, "token": token, "slot": slot, "like": body.like}
+
+
+class Keep(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    day: str | None = None
+    slot: str = "math:mcq"
+    on: bool = True
+
+
+@router.post("/api/qotd/save")
+def save_qotd(body: Keep, x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> dict:
+    """Save a Math day's question (§3.2.5 "POST /api/saved {qotd, slot, on}", which is
+    S10's route): kept as the (template, seed) that regenerates it, and only once
+    this learner has answered it, so a save never reads a key early."""
+    learner = writer_of(x_learner)
+    slot = daily.slot_id(body.slot)
+    if slot not in daily.MATH:
+        raise HTTPException(422, "slot is math:mcq or math:spr (R&W words are kept with Add to my words)")
+    day = daily.valid_day(body.day, x_tz)
+    got = daily.answered(learner, slot, day)
+    if not got:
+        raise HTTPException(409, "answer it first")
+    if body.on:
+        q = daily.rebuild(got["template"], got["seed"], "qotd" if slot == "math:mcq" else "qotd-spr")
+        db.run("INSERT OR IGNORE INTO saved (learner, template, seed, topic, at) VALUES (?,?,?,?,?)",
+               learner, got["template"], got["seed"], q["topic"], progress.now())
+    else:
+        db.run("DELETE FROM saved WHERE learner=? AND template=? AND seed=?", learner, got["template"], got["seed"])
+    return {"saved": body.on}
 
 
 # ------------------------------------------------------------------ /api/scores

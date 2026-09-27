@@ -204,6 +204,13 @@ def qotd_answer_and_crowd(c: TestClient) -> None:
     assert t["study"]["today"] >= 1 and t["qotd"]["answered"] == 1
     assert call(c, "GET", "/api/me", me)["days"]["streak"] == t["days"]["streak"] == 1
     assert call(c, "GET", "/api/qotd", me)["streak"] == 1
+    # Save (§3.2.5): only once answered, kept as its (template, seed), read back on the slot
+    call(c, "POST", "/api/qotd/save", me, {"day": day, "slot": "math:mcq", "on": True}, status=409)
+    assert call(c, "POST", "/api/qotd/save", me, {"day": day, "slot": "spr", "on": True})["saved"] is True
+    assert next(s for s in call(c, "GET", "/api/qotd", me)["slots"] if s["slot"] == "math:spr")["saved"]
+    call(c, "POST", "/api/qotd/save", me, {"day": day, "slot": "spr", "on": False})
+    assert not next(s for s in call(c, "GET", "/api/qotd", me)["slots"] if s["slot"] == "math:spr")["saved"]
+    assert isinstance(call(c, "GET", "/api/today", me)["assets"], list)
 
     # SEC-02: a code minted today reads the key; its answer never moves the crowd others read
     viewer = code()
