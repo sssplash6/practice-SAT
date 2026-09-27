@@ -595,8 +595,10 @@ def _shape(learner: str, body: dict, cfg: dict, queue: list, items: list, why: d
                 x = cb_index()[cbid]
                 name = practice.catalogue()["topics"][x["topic"]].name
                 detail = f"Close twin of College Board question {cbid} ({name}, {x['tier'].capitalize()})"
+                ranked = _index_twins(cbid, 30)
                 for t in _index_twins(cbid, cfg["each"]):
                     slots.append({"template": t, "tier": x["tier"], "cb_id": cbid, "close": True,
+                                  "alts": list(dict.fromkeys(ranked)),
                                   "why": {"kind": "official", "detail": detail}})
                 continue
             for _ in range(cfg["each"]):
@@ -1265,6 +1267,13 @@ def _offers(card: practice.Card, regex: str) -> bool:
     return any(pattern.search(r or "") or pattern.search(progress.norm(r or "")) for r in reasons)
 
 
+def _offers_habit(card: practice.Card, ids) -> bool:
+    """P6: does a named trap on offer belong to one of these U6 families?"""
+    from . import habits
+    return any((habits.family(n) or {}).get("id") in ids
+               for n in progress.offered_of(practice.to_question(card, 1)))
+
+
 def _mcq_form(card: practice.Card) -> practice.Card | None:
     """The same seed's MCQ form, only when it keeps the question's setup."""
     if card.item.fmt != "spr":
@@ -1329,7 +1338,7 @@ def _fresh(b: practice.Builder, template: str, allowed: set[str] | None,
             b.keep(card)
             stepped = True
             continue
-        if wanted and not _offers(card, wanted):
+        if wanted and not (_offers_habit(card, cfg["habits"]) if cfg.get("habits") else _offers(card, wanted)):
             b.keep(card)
             fallback = True
             continue
@@ -1397,6 +1406,10 @@ def _slot_card(b: practice.Builder, cfg: dict, slot: dict) -> practice.Card | No
     """A rematch, official or final-round slot: its template at its tier and
     format on a fresh seed; an official twin prefers one sharing its traps."""
     walk = {**cfg, "adaptive_state": {}, "levels": None, "formats": [slot["fmt"]] if slot.get("fmt") else cfg["formats"]}
+    have = _tiers_of(slot["template"])
+    if slot.get("tier") and slot["tier"] not in have and have:
+        # an official item's tier its template cannot serve: the nearest one it can
+        slot = {**slot, "tier": min(have, key=lambda d: (abs(TIERS.index(d) - TIERS.index(slot["tier"])), d))}
     norms = set(slot.get("norms") or ())
     if norms:
         best = None
@@ -1413,6 +1426,11 @@ def _slot_card(b: practice.Builder, cfg: dict, slot: dict) -> practice.Card | No
         if best:
             return best[1]
     card = _fresh(b, slot["template"], {slot["tier"]} if slot.get("tier") else None, walk)
+    for alt in slot.get("alts") or ():          # an index twin: the skill's next closest type, same tier
+        if card is not None:
+            break
+        if alt != slot["template"]:
+            card = _fresh(b, alt, {slot["tier"]}, walk)
     if card is None:
         card = _fresh(b, slot["template"], None, {**walk, "formats": ["mcq", "spr"]})
     return card
@@ -1560,7 +1578,9 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
         template = cfg["queue"].pop(0)
         target = cfg.get("trap_queue", []).pop(0) if cfg.get("trap_queue") else None
         norm = target["norm"] if target and progress.named(target["norm"]) else None
-        target_want = {t: v for t, v in cfg.get("want", {}).items() if t != template}
+        # a trap target asks for its own norm; otherwise the template keeps its
+        # want (a habit drill's families, a sitting's missed trap)
+        target_want = {t: v for t, v in cfg.get("want", {}).items() if t != template or not target}
         if norm:
             target_want[template] = "^" + re.escape(norm) + "$"
         target_cfg = {**cfg, "want": target_want}
@@ -1574,6 +1594,14 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
                 card = None             # the named trap at any tier beats its tier
         card = card or _fresh(b, template, allowed, target_cfg, required_norm=norm,
                               prefer_mcq=bool(target and not norm))
+        if card is not None and cfg.get("habits") and not card.trap_true:
+            # P6: a habit drill's question always offers one of its families;
+            # this template's walk found none, so another that has them
+            for alt in sorted(cfg.get("pool_templates") or (), key=lambda t: zlib.crc32(f"{row['id']}:{t}".encode())):
+                other = _fresh(b, alt, allowed, target_cfg) if alt != template else None
+                if other is not None and other.trap_true:
+                    card = other
+                    break
         if card:
             return card, cfg.get("pool") in ("redo", "checks")
 
@@ -1643,9 +1671,15 @@ def _pick(row, cfg: dict, served: list[dict], b: practice.Builder):
                     or states[kinds[t]["skill"]]["tier"] in _tiers_of(t)] or pool
 
         # an open mistake in this topic is asked before anything new
+        # (offering its trap when a seed in the chosen formats does, so a clean
+        # right pays it down)
         for trap in progress.open_traps(learner, topic):
             if trap["template"] in pool and trap["template"] not in last_keys:
-                card = _fresh(b, trap["template"], allowed, cfg)
+                walk = cfg
+                if progress.named(trap["norm"]) and trap["template"] not in cfg.get("want", {}):
+                    walk = {**cfg, "want": {**cfg.get("want", {}),
+                                            trap["template"]: "^" + re.escape(trap["norm"]) + "$"}}
+                card = _fresh(b, trap["template"], allowed, walk)
                 if card:
                     return card, False
 
@@ -1914,6 +1948,32 @@ class Paused(Exception):
     """A paused set takes no answer, next or more until it resumes."""
 
 
+def _ready(learner: str, templates) -> set[str]:
+    """U8's ready: answered right on the first try at least twice (R8 counting)."""
+    names = list(dict.fromkeys(templates))
+    if not names:
+        return set()
+    marks = ",".join("?" for _ in names)
+    return {r["template"] for r in db.rows(
+        f"SELECT template FROM attempts WHERE learner=? AND template IN ({marks}) AND correct=1 AND {progress.COUNTED}"
+        " GROUP BY template HAVING COUNT(*) >= 2", learner, *names)}
+
+
+def _baseline(learner: str, cfg: dict) -> None:
+    """What the summary compares against (P9, P10, P14): each skill's first-try
+    rate and points on the table, and the types ready, before the set."""
+    from . import estimate
+    cfg["before_rate"] = {t: _first_try_rate(learner, [t]) for t in cfg.get("before") or ()}
+    try:
+        g = estimate.gains(learner, cfg.get("subject", "math"))
+    except Exception:
+        g = None
+    cfg["gain_before"] = {x["topic"]: x["gain"] for x in g["skills"]} if g else None
+    cfg["gain_total_before"] = g.get("total") if g else None
+    names = [t for topic in cfg.get("topics") or () for t in practice.catalogue()["by_topic"].get(topic, ())]
+    cfg["ready_before"] = sorted(_ready(learner, names))
+
+
 def create(learner: str, sid: str | dict, topics: list[str] | None = None,
            count: int | None = None, difficulty: list[str] | None = None,
            timed: bool = False, source: str = "map",
@@ -1925,6 +1985,7 @@ def create(learner: str, sid: str | dict, topics: list[str] | None = None,
     if isinstance(sid, dict):
         body = sid
         cfg = resolve(learner, body)
+        _baseline(learner, cfg)
         new_sid = secrets.token_urlsafe(16)
         db.run("INSERT INTO sessions (id,kind,learner,started,cfg,questions,subject)"
                " VALUES (?,?,?,?,?,'[]',?)", new_sid, "drill", learner, progress.now(),
@@ -2109,7 +2170,7 @@ def _aids(row, cfg: dict, q: dict) -> dict:
         rules_on = True
     if rules_on:
         rule = db.one("SELECT note, at FROM notes WHERE learner=? AND template=? AND seed=-1", learner, q["key"])
-        if rule and cfg.get("clean") and not row["finished"] and rule["at"] < row["started"]:
+        if rule and cfg.get("clean") and not row["finished"] and rule["at"] <= row["started"]:
             rule = None                  # P19: a Start clean copy hides rules from before
         if rule and rule["note"]:
             out["type_note"] = rule["note"]
@@ -2157,7 +2218,7 @@ def _notes(row, cfg: dict, served: list[dict]) -> dict:
     sql = "SELECT template, seed, note, marks FROM notes WHERE learner=? AND seed>=0"
     if cfg.get("clean") and not row["finished"]:
         # what the student adds on this copy shows; what came from before waits
-        rows = db.rows(sql + " AND at>=?", row["learner"], row["started"])
+        rows = db.rows(sql + " AND at>?", row["learner"], row["started"])
     else:
         rows = db.rows(sql, row["learner"])
     have = {(q.get("key"), q.get("seed")) for q in served}
@@ -2841,18 +2902,33 @@ def _then(learner: str, q: dict, ok: bool, spent: int, filed: dict) -> str | Non
     return ", ".join(bits) + f" · today: right{', ' + _fmt_ms(spent) if spent else ''}"
 
 
+def cause_kind(learner: str, a: dict, q: dict, cfg: dict, medians: dict) -> tuple[str, dict]:
+    """P8's first match (clock, entry, slip, trap, gap) over F4's cause_of,
+    which reads a named distractor as a trap before the slip rules: a learner
+    right on 4 of the last 5 first tries on the type, or an easy one done in
+    under half the median time, slipped."""
+    history = [r["correct"] for r in db.rows(
+        f"SELECT correct FROM attempts WHERE learner=? AND template=? AND id<? AND {progress.COUNTED}"
+        " ORDER BY id DESC LIMIT 5", learner, q["key"], a["id"])]
+    kind, ev = progress.cause_of(a, {"history": history, "median_easy_ms": medians.get("easy"),
+                                     "key": q["answer"], "spr_reasons": q.get("spr_reasons"),
+                                     "timed": bool(cfg.get("timed"))})
+    if kind == "trap" and not ev.get("set_by"):
+        ms = a.get("ms") if a.get("ms") is not None else a.get("sms")
+        if len(history) >= 5 and sum(history) >= 4:
+            return "slip", {**ev, "usually_right": f"{sum(history)} of your last 5"}
+        easy = medians.get("easy")
+        if a.get("difficulty") == "easy" and easy and ms is not None and ms < easy / 2:
+            return "slip", {**ev, "fast": True}
+    return kind, ev
+
+
 def _cause(learner: str, q: dict, filed: dict, cfg: dict, given) -> dict | None:
     """P8: T7's cause of this miss, pre-selected, with the reason shown."""
     a = db.one("SELECT * FROM attempts WHERE id=?", filed.get("attempt"))
     if not a:
         return None
-    history = [r["correct"] for r in db.rows(
-        f"SELECT correct FROM attempts WHERE learner=? AND template=? AND id<? AND {progress.COUNTED}"
-        " ORDER BY id DESC LIMIT 5", learner, q["key"], a["id"])]
-    medians = progress._tier_medians(learner)
-    kind, ev = progress.cause_of(dict(a), {"history": history, "median_easy_ms": medians.get("easy"),
-                                           "key": q["answer"], "spr_reasons": q.get("spr_reasons"),
-                                           "timed": bool(cfg.get("timed"))})
+    kind, ev = cause_kind(learner, dict(a), q, cfg, progress._tier_medians(learner))
     why = None
     if kind == "slip" and ev.get("usually_right"):
         why = f"You usually get this type right, and this took {_fmt_ms(ev.get('ms'))}."
@@ -3369,6 +3445,57 @@ def _next_set(cfg: dict, counted: list, sinks: set) -> dict | None:
             "body": {"source": "result", "segments": segs, "subject": cfg.get("subject", "math")}}
 
 
+def _moved(row, cfg: dict, counted: list, extras: dict) -> dict:
+    """P10's What this set moved, P9's head line, P6's habits this set against
+    last week, and P14's Finish this skill count."""
+    from . import estimate, habits
+    learner = row["learner"]
+    out: dict = {}
+    try:
+        g = estimate.gains(learner, cfg.get("subject", "math"))
+    except Exception:
+        g = None
+    gain_after = {x["topic"]: x["gain"] for x in g["skills"]} if g else {}
+    before_gain = cfg.get("gain_before") or {}
+    names = progress.topics(cfg.get("subject", "math"))
+    out["moved"] = [{"topic": t, "name": names[t].name if t in names else t,
+                     "rate_before": (cfg.get("before_rate") or {}).get(t), "rate_after": _first_try_rate(learner, [t]),
+                     "gain_before": before_gain.get(t), "gain_after": gain_after.get(t)}
+                    for t in dict.fromkeys(q["topic"] for q, _ in counted)]
+    catalogue = [t for topic in cfg.get("topics") or () for t in practice.catalogue()["by_topic"].get(topic, ())]
+    ready_now = _ready(learner, catalogue)
+    newly = sorted(ready_now - set(cfg.get("ready_before") or ()))
+    total_before, total_after = cfg.get("gain_total_before"), (g or {}).get("total")
+    out["head"] = {"closed": db.one("SELECT COUNT(*) n FROM traps WHERE learner=? AND closed>=?",
+                                    learner, row["started"])["n"],
+                   "ready": len(newly), "ready_types": newly,
+                   "held": (extras.get("retrieval") or {}).get("held", 0),
+                   "points": (total_before - total_after) if total_before is not None and total_after is not None
+                   else None}
+    fam: dict[str, dict] = {}
+    week_ago = (_at(row["started"]) - dt.timedelta(days=7)).isoformat()
+
+    def tally(rows, key):
+        for a in rows:
+            chosen = a["norm"] if not a["correct"] else None
+            for n in json.loads(a["offered"] or "[]"):
+                f = (habits.family(n) or {}).get("id")
+                if f:
+                    d = fam.setdefault(f, {"id": f, "here": {"offered": 0, "dodged": 0}, "week": {"offered": 0, "dodged": 0}})
+                    d[key]["offered"] += 1
+                    d[key]["dodged"] += n != chosen
+    tally([a for _, a in counted], "here")
+    tally(db.rows(f"SELECT norm, correct, offered FROM attempts WHERE learner=? AND at>=? AND at<? AND {progress.COUNTED}",
+                  learner, week_ago, row["started"]), "week")
+    listed = {f["id"]: f for f in habits.families()}
+    out["habits"] = sorted(({**d, "name": listed.get(k, {}).get("name", k)} for k, d in fam.items()
+                            if d["here"]["offered"]), key=lambda d: -d["here"]["offered"])
+    if cfg.get("source") == "finish" and cfg.get("topics"):
+        out["finish"] = {"topic": cfg["topics"][0], "ready": len(ready_now), "was": len(cfg.get("ready_before") or ()),
+                         "types": len(catalogue), "to_go": len(catalogue) - len(ready_now)}
+    return out
+
+
 def _summary_extras(row, cfg: dict, questions: list[dict], firsts: dict, statuses: dict, voided: set) -> dict:
     """The summary's blocks that read the whole set (P3, P5-P8, P11-P13, P16, P17, P19)."""
     learner = row["learner"]
@@ -3378,9 +3505,7 @@ def _summary_extras(row, cfg: dict, questions: list[dict], firsts: dict, statuse
     medians = progress._tier_medians(learner)
     for q, a in counted:
         if not a["correct"]:
-            kind, _ = progress.cause_of(dict(a), {"key": q["answer"], "timed": bool(cfg.get("timed")),
-                                                  "median_easy_ms": medians.get("easy"),
-                                                  "spr_reasons": q.get("spr_reasons")})
+            kind, _ = cause_kind(learner, dict(a), q, cfg, medians)
             causes[kind] += 1
     out["causes"] = dict(causes)
     offered = dodged = strikes = strike_wrong = struck_key = 0
@@ -3455,6 +3580,7 @@ def _summary_extras(row, cfg: dict, questions: list[dict], firsts: dict, statuse
     graded = [w for w in done.values() if not w.get("skipped")]
     out["words"] = {"reviewed": len(graded), "held": sum(1 for w in graded if w.get("correct"))} if done else None
     out["next_set"] = _next_set(cfg, counted, set(sinks))
+    out.update(_moved(row, cfg, counted, out))
     if cfg.get("rematch_of"):
         parent = db.one("SELECT * FROM sessions WHERE id=?", cfg.get("rematch_parent") or cfg["rematch_of"])
         slots = []

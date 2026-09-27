@@ -378,10 +378,10 @@ def _run(fn, *args, **kw):
 def new_drill(body: dict, x_learner: str | None = Header(default=None)) -> dict:
     """§2.6's body, validated in drill.resolve; the first question comes back."""
     learner = writer_of(x_learner)
-    sid = drill.create(learner, body)
-    first = _run(drill.next_question, session_or_404(sid))
+    sid = drill.create(learner, body)          # serves the first question (or a worked example)
+    st = drill.state(session_or_404(sid))
     log.info("drill %s started for %s", sid[:8], learner[:12])
-    return {**drill.state(session_or_404(sid)), **first}
+    return {**st, "index": next((i for i, x in enumerate(st["served"], 1) if x["id"] == st["current"]), 1)}
 
 
 @router.post("/api/drill/preview")
