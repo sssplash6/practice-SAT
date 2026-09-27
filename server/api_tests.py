@@ -1850,8 +1850,11 @@ def start_pressure(sid: str, x_learner: str | None = Header(default=None)) -> di
     drill.create(learner, new, list(dict.fromkeys(practice.topic_of(t) for t, _ in got["ids"])),
                  len(got["ids"]), None, False, "twin", items=got["ids"])
     row = session_or_404(new)
+    # This round is exactly the drawn twins. Once its items are exhausted,
+    # leave no topic pool for the drill's next-item preview to extend it.
     cfg = {**_cfg(row), "feedback": "end", "timing": "off", "repairs": "off", "source": "pressure", "inline": True,
-           "parent": sid, "pressure_of": got["pressure_of"]}
+           "parent": sid, "pressure_of": got["pressure_of"], "pressure_topics": _cfg(row).get("topics", []),
+           "topics": []}
     db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(cfg), new)
     first = drill.next_question(session_or_404(new))
     return {**drill.state(session_or_404(new)), **first}

@@ -849,6 +849,7 @@ def pressure(c) -> None:
             pressure_qid = orig
         served[orig] = pick
         ok(c.post(f"/api/drill/{did}/answer", headers=H(me), json={"question_id": qid, "answer": pick, "ms": ms}))
+    assert len(served) == len(of), "the pressure round serves only its mapped twins"
     ok(c.post(f"/api/drill/{did}/finish", headers=H(me)))
     t = tests(c, me)
     got = result(sid).get("pressure")
