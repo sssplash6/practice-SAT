@@ -19,11 +19,11 @@
   /* Today (spec 3.2, today.md T1-T20, R27, R30). Every shared piece (cards, seg, chips,
      sheets, charts, the question) is ui.css / runner.css; these rules lay the page out. */
   .td { padding-bottom: 110px; }
-  .td * { min-width: 0; }
+  .td :where(*) { min-width: 0; }
   .td-upd { margin: 0 0 10px; padding-top: 6px; border-top: 1px solid var(--line); font: 500 11px var(--mono); color: var(--soft); }
 
   /* the grid: DOM order is the phone order; order + span place the wider layouts */
-  #today { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); }
+  #today { display: grid; gap: 20px; grid-template-columns: minmax(0, 1fr); align-items: start; }
   @media (min-width: 760px) {
     #today { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     #today > section { grid-column: span 1; }
@@ -188,6 +188,7 @@
     .qd-row + .qd-rowk { margin-top: 0; }
     .qd-slot:not(.on) { display: none; }
     .qd-slot { padding: 0; background: none; }
+    .qd-lab .mk { display: none; }
   }
 
   /* points, pace, score */
@@ -240,6 +241,7 @@
   .wk-strip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; margin-top: 12px; }
   .wk-day { display: grid; gap: 4px; align-content: start; padding: 8px 6px; border-radius: 10px; background: var(--paper); font: 500 12px var(--font); text-align: center; min-height: 96px; }
   .wk-day[data-today] { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .wk-day.off { background: none; box-shadow: inset 0 0 0 1px var(--line); opacity: .6; }
   .wk-day .wk-k { font: 600 11px var(--font); color: var(--soft); text-transform: uppercase; letter-spacing: .06em; }
   .wk-day .wk-s { font: 600 12px var(--font); }
   .wk-day .meta { font-size: 10.5px; }
@@ -340,6 +342,8 @@
   const sub = text => h('p', { class: 'sub', text });
   const bar4 = f => h('span', { class: 'bar4', 'aria-hidden': 'true' }, h('i', { style: `width:${Math.max(0, Math.min(100, Math.round((f || 0) * 100)))}%` }));
   const join = (...xs) => xs.flat().filter(Boolean).join(' · ');
+  // decision 7: a server line's zero parts ("0 check-ins") say nothing, so they go; "0 of 2" stays
+  const nz = s => String(s || '').split(' · ').filter(x => !/^0 (?!of\b)/.test(x.trim())).join(' · ');
   function errText(e) {
     const d = e && e.detail;
     if (d && typeof d === 'object' && d.reason) return cap(String(d.reason).replace(/_/g, ' ')) + '.';
@@ -487,6 +491,7 @@
     else if (grid.classList.contains('stretch')) $('exam').after($('next'));
     else $('hero').after($('next'));
     paintHero(); paintNext(); paintMist(); paintExam(); paintPlan(); paintWords(); paintScore();
+    if (S.ins && !S.ins.failed) paintGain();
     if (S.cal) paintStudy();
     if (S.chal) paintChal();
     loadHelpers();
@@ -623,6 +628,7 @@
       }
       m.push(it.total ? `${it.answered} of ${it.total} answered` : it.asked ? `${it.answered} of ${it.asked} answered` : `${n(it.answered)} answered`);
     } else if (it.meta) m.push(it.meta);
+    else if (it.kind === 'plan' && it.test) m.push(it.start && it.start.body && it.start.body.full ? '44 questions · 70 min' : '22 questions · 35 min');
     else if (it.minutes) m.push(`${n(it.minutes)} min`);
     if (m.length) el.append(h('p', { class: 'meta' }, ...m));
     if (it.kind === 'test') el.append(line(it.seconds_left === 0 && it.timed
@@ -877,9 +883,9 @@
     const done = ['done', 'marked', 'made_up'].includes(r.status);
     const el = h('div', { class: 'drow', 'data-status': r.status, 'data-key': r.key });
     const body = h('div', {});
-    body.append(h('div', { class: 'dt' }, r.title || cap(r.kind), r.tag && r.tag.toLowerCase() !== String(r.title || '').toLowerCase() ? h('span', { class: 'tag', text: r.own ? 'Your own' : cap(r.tag) }) : null));
+    body.append(h('div', { class: 'dt' }, r.title || cap(r.kind), r.tag && !String(r.title || '').toLowerCase().includes(String(r.tag).toLowerCase()) ? h('span', { class: 'tag', text: r.own ? 'Your own' : cap(r.tag) }) : null));
     const m = r.meta || join(r.progress && r.progress.of && `${n(r.progress.have || 0)} of ${n(r.progress.of)}`, r.minutes && `~${n(r.minutes)} min`);
-    const dm = join(m, r.due_at && `closes ${r.due_at}`, r.status === 'marked' && 'Marked done');
+    const dm = join(nz(m), r.due_at && `closes ${r.due_at}`, r.status === 'marked' && 'Marked done');
     if (dm) body.append(h('p', { class: 'meta dm', text: dm }));
     if (done && r.result) {
       const x = r.result;
@@ -1309,7 +1315,9 @@
         h('span', { class: 'mbar', role: 'img', 'aria-label': `Mastery ${UI.masteryWord(x.mastery, x.answered)}` }, h('i', { style: `--m:${x.mastery || 0}` })),
         h('span', { class: 'meta', text: join(x.answered ? `${Math.round(100 * x.right / x.answered)}% right of ${n(x.answered)}` : 'no answers yet', x.traps && pl(x.traps, 'open mistake'), x.gain && `≈ +${x.gain}`) }))));
     } else {
-      const skills = (g.skills || []).map(s => Object.assign({}, s, { tiers: g.tiers && g.tiers[s.topic], open: traps[s.topic] || 0 }));
+      const mast = {};
+      (S.t && S.t.domains || []).forEach(d => (d.topics || []).forEach(x => { mast[x.topic] = x.mastery; }));
+      const skills = (g.skills || []).map(s => Object.assign({}, s, { tiers: g.tiers && g.tiers[s.topic], open: traps[s.topic] || 0, mastery: s.mastery ?? mast[s.topic] }));
       const extras = (g.extras || []).map(x => ({ extra: true, ...x }));
       const all = [...skills, ...extras];
       const val = s => sorter === 'minutes' ? (s.gain || 0) / Math.max(1, s.minutes || 1) : (s.gain || 0);
@@ -1355,9 +1363,11 @@
     const kids = [];
     const secs = p.seconds || (p.forecast && p.forecast.seconds);
     const limit = p.limit || 2100;
-    if (!secs || (timedN < 20 && !(p.strip && p.strip.length))) {
+    const testsRow = () => p.tests && p.tests.modules ? h('div', { class: 'pace-row' }, h('span', { class: 'line', style: 'margin:0', text: join(`Ran out of time in ${p.tests.ran_out} of your last ${p.tests.modules} ${p.tests.modules === 1 ? 'module' : 'modules'}`, p.tests.blanks && `${p.tests.blanks} blank at time-up`) }),
+      btn('Timed module · 22 · 35 min', () => go({ path: '/mock/new', body: { full: false, timed: true } }))) : null;
+    if (!secs || timedN < 20) {
       card('pace', 'Pace', null, line(`Your pace shows after 20 answers with the clock on · ${timedN} so far`),
-        h('div', { class: 'acts' }, btn('Timed set · 10', () => drill({ count: 10, timing: 'pace', source: 'pace' }))));
+        h('div', { class: 'acts' }, btn('Timed set · 10', () => drill({ count: 10, timing: 'pace', source: 'pace' }))), testsRow());
       return;
     }
     kids.push(h('div', { class: 'pace-fig' }, h('span', { class: 'big', text: UI.mmss(secs) }), h('span', { class: 'meta', text: `a module at your pace · the SAT gives ${UI.mmss(limit)}` })));
@@ -1377,8 +1387,7 @@
         : btn('Speed drill · 8 in 12:40', () => drill({ topics: [x.topic], count: 8, timing: 'pace', source: 'pace' })))));
     if (p.rushing && p.rushing.n) kids.push(h('div', { class: 'pace-row' }, h('span', { class: 'line', style: 'margin:0', text: join(`${p.rushing.n} wrong answers under 20 s this week`, p.rushing.topic && `${p.rushing.n_topic} in ${TOP(p.rushing.topic)}`) }),
       btn('Careful set · 8', () => drill({ topics: p.rushing.topic ? [p.rushing.topic] : undefined, count: 8, timed: false, source: 'pace' }))));
-    if (p.tests && p.tests.modules) kids.push(h('div', { class: 'pace-row' }, h('span', { class: 'line', style: 'margin:0', text: join(`Ran out of time in ${p.tests.ran_out} of your last ${p.tests.modules} ${p.tests.modules === 1 ? 'module' : 'modules'}`, p.tests.blanks && `${p.tests.blanks} blank at time-up`) }),
-      btn('Timed module · 22 · 35 min', () => go({ path: '/mock/new', body: { full: false, timed: true } }))));
+    kids.push(testsRow());
     if (p.week_before_ms) kids.push(meta(`Module pace ${UI.mmss(p.week_before_ms / 1000)} → ${UI.mmss(secs)} since last week`));
     kids.push(h('div', { class: 'acts' }, link('Every skill', '/me/#pace')));
     card('pace', 'Pace', null, kids);
@@ -1455,13 +1464,12 @@
     const el = h('div', {});
     el.append(sub('Where points went · last 14 days'));
     if (!c.total || c.total < 5) { el.append(line('Fewer than 5 misses in 14 days: nothing to sort yet.', 'soft')); return el; }
-    const segs = Object.keys(CAUSE).filter(k => c.by[k]).map(k => ({ key: k, label: CAUSE[k], value: c.by[k], n: c.by[k] }));
+    const segs = Object.keys(CAUSE).filter(k => c.by[k]).map(k => ({ key: k, label: CAUSE[k], value: c.by[k] }));
     const fix = h('div', {});
     if (UI.stackBar) UI.stackBar(el, segs, { largest: true, noun: 'misses', label: 'Misses by cause', onPick: sg => { S.causePick = sg.key; fixRow(c, sg.key, fix); } });
     else el.append(meta(segs.map(s => `${s.label} ${s.value}`).join(' · ')));
     const lv = c.lever && c.by[c.lever] ? `Most of your misses are ${CAUSE[c.lever].toLowerCase()} (${c.by[c.lever]} of ${c.total})${c.lever === 'trap' ? ': fixing them is your fastest gain.' : '.'}` : null;
     if (lv) el.append(line(lv));
-    el.append(h('div', { class: 'row', style: 'margin-top:8px' }, segs.map(sg => btn(`${sg.label} ${sg.value}`, () => { S.causePick = sg.key; fixRow(c, sg.key, fix); }))));
     el.append(fix);
     if (S.causePick) fixRow(c, S.causePick, fix);
     const ch = c.changes || {};
@@ -1817,7 +1825,7 @@
     if ((row.sittings || []).length) kids.push(h('ul', {}, row.sittings.map(s => h('li', {}, h('a', { class: 'plain', href: s.gated ? `/diagnostic/signup.html?s=${encodeURIComponent(s.id)}` : `/results/report/?id=${encodeURIComponent(s.id)}`,
       text: join(UI.KIND && UI.KIND.label ? UI.KIND.label(s) : cap(s.kind), s.gated ? 'Sign up to see your results' : s.estimate ? `${s.estimate.low}–${s.estimate.high}` : s.asked && `${s.right}/${s.asked}`, s.rank && `#${s.rank}`) })))));
     if ((row.opened || []).length || (row.closed || []).length) {
-      const l = h('p', { class: 'line' }, `Mistakes that day: ${pl((row.opened || []).length, 'opened', 'opened')} · ${(row.closed || []).length} closed`);
+      const l = h('p', { class: 'line' }, 'Mistakes that day: ' + join((row.opened || []).length && `${(row.opened || []).length} opened`, (row.closed || []).length && `${(row.closed || []).length} closed`));
       kids.push(l, h('ul', {}, [...(row.opened || []), ...(row.closed || [])].slice(0, 6).map(x => h('li', {}, h('a', { class: 'plain', href: `/review/?open=trap:${x.id}`, text: x.label })))));
     }
     if ((row.topics || []).length) kids.push(h('div', { class: 'row', style: 'margin-top:8px' }, row.topics.map(x => h('span', { class: 'chip' }, UI.glyph(x.topic), `${TOP(x.topic)} ${x.right}/${x.asked}`))));
@@ -1860,7 +1868,7 @@
     const w = S.t.words;
     if (!w) { card('words', 'Words', link('Words', '/words/'), line('Your SAT words live on the Words page.', 'soft')); return; }
     const kids = [line(join(w.due && `${w.due} due`, w.new_goal && `${w.new_goal - (w.new_today || 0)} new`, w.minutes && `~${Math.round(w.minutes)} min`) || 'Nothing due', '')];
-    if (w.reason) kids.push(meta(w.reason));
+    if (nz(w.reason)) kids.push(meta(nz(w.reason)));
     const acts = h('div', { class: 'acts' });
     if (!w.done && w.start) acts.append(btn('Start', () => go(w.start)));
     else if (w.done) acts.append(h('span', { class: 'meta', text: 'Done for today ✓' }));
@@ -1885,7 +1893,7 @@
     kids.push(h('div', { class: 'plan-stats' },
       stat(`Day ${c.day || 1} of ${c.of || '–'}`, 'from the plan’s start'),
       stat(`${c.pct || 0}% done`, `${c.study_days_done || 0} of ${c.study_days || 0} study days`),
-      stat(c.on_time && c.on_time.of ? `On time ${c.on_time.n} of ${c.on_time.of}` : 'On time', 'study days'),
+      stat(c.on_time && c.on_time.of ? `On time ${c.on_time.n} of ${c.on_time.of}` : 'On time', c.on_time && c.on_time.of ? 'study days' : 'from your first study day'),
       stat(pace.kind === 'behind' ? 'Behind' : pace.kind === 'on_pace' || pace.kind === 'ahead' ? 'On pace' : 'Pace', pace.made_per_week !== null && pace.made_per_week !== undefined
         ? `making ${pace.made_per_week >= 0 ? '+' : '−'}${Math.abs(Math.round(pace.made_per_week))} a week, needs +${Math.round(pace.needs_per_week || 0)}` : pace.needs_per_week ? `needs +${Math.round(pace.needs_per_week)} a week` : 'after 2 tests')));
     const weeks = pl_.weeks || [];
@@ -1902,11 +1910,17 @@
         S.week !== cur && cur >= 0 ? quiet('This week', () => { S.week = cur; paintPlan(); }) : null));
       kids.push(bar4(pctW / 100), meta(w.theme || ''));
       const strip = h('div', { class: 'wk-strip' });
-      (pl_.days || []).filter(d => d.date >= w.from && d.date <= w.to).forEach(d => strip.append(weekDay(d)));
+      // Monday to Sunday, always 7 columns: days outside the plan (before its start, after the exam) stay blank
+      const mon = addDays(w.from, -((new Date(w.from + 'T12:00:00').getDay() + 6) % 7));
+      for (let i = 0; i < 7; i++) {
+        const day = addDays(mon, i), d = (pl_.days || []).find(x => x.date === day);
+        strip.append(d ? weekDay(d) : h('div', { class: 'wk-day off', 'aria-hidden': 'true' },
+          h('span', { class: 'wk-k', text: new Date(day + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short' }) }), h('span', { class: 'meta', text: String(+day.slice(8)) })));
+      }
       kids.push(strip);
     }
     const nt = (pl_.days || []).find(d => d.date > today() && d.kind === 'test');
-    if (nt) kids.push(meta(`Next test: ${UI.date(nt.date, 'long').slice(0, 3)} · ${cap(nt.test || 'test')}`));
+    if (nt) kids.push(meta(`Next test: ${UI.date(nt.date, 'long')} · ${cap(nt.test || 'test')}`));
     const bh = pl_.behind;
     if (bh) {
       kids.push(sub('Behind'), line(join(`${bh.planned - bh.done} study days missed`, bh.overdue && `${pl(bh.overdue, 'check-in')} now overdue`, bh.old && `${pl(bh.old, 'mistake')} older than 10 days`)));
@@ -1956,7 +1970,8 @@
     // where you start (Plan step 1's four variants)
     const srcBox = h('div', {}, h('label', { class: 'label', text: 'Start from' }));
     const src = dr.source || {};
-    if (src.value) srcBox.append(line(src.text || (src.kind === 'mean' ? `Your last tests average ${src.value}` : `Latest · ${src.value}`) + ` · Use ${src.value}`));
+    if (src.value) srcBox.append(line(src.text || join(src.kind === 'mean' ? `Your last ${src.n || 2} tests average ${src.value}`
+      : ['Latest', src.sitting_kind && (UI.KIND && UI.KIND.label ? UI.KIND.label({ kind: src.sitting_kind }) : cap(src.sitting_kind)), src.at && UI.date(src.at), src.low && `${src.low}–${src.high}`], `Use ${src.value}`)));
     else {
       const out = h('span', { class: 'meta', text: dr.current ? String(dr.current) : '—' });
       const r = h('input', { type: 'range', min: 200, max: 800, step: 10, value: dr.current || 500, 'aria-label': 'Your best guess', style: 'width:100%' });
