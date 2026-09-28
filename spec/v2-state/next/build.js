@@ -322,7 +322,17 @@ RULES:
   use port 8000 or server/satfreshman.db. Stop your server when you are done.
 - Headless browser checks: Python Playwright with p.chromium.launch(executable_path="${SHELL}") (the bundled chromium
   crashes on this machine).
-- PYTHONPATH=. python3 server/test_flow.py must still print "all good".
+- PYTHONPATH=. python3 server/test_flow.py must still print "all good". KNOWN (2026-09-28): it stops at server/checks/s3.py ~line 200
+  and then server/checks/s8.py ~line 519, both date-dependent and owned by the helper (Tasks 24 and 30). Do not chase them: note
+  them, and run your own section's server/checks/<id>.py instead.
+- THE USER'S UI RULES (2026-09-28, from reviewing the built pages): never show students internal calibration: no "rough",
+  no L1-L7 levels, no "your odds", no "Built from N official questions", no pars' "estimate" caveats; a score reads right /
+  total ("7 / 11"); a right answer never lists the traps it "dodged"; no timestamps in history lines; one way in beside a
+  new student's start; no formula paragraphs ("How this is worked out: p = ..."); no card that repeats another card's
+  numbers; unpicked options must not look disabled, and an option that can't be picked shows why or is made to work;
+  fractions in math text use UI.fracText (stacked in the line).
+- Every page you add has the shell's mounts, as web/practice/index.html does: <header id="bar"></header> right after <body> and
+  <nav id="tabs"></nav> after </main>, then UI.shell(...). (Plan and Words shipped without them: no sidebar, no phone tab bar.)
 EFFICIENCY (tokens are scarce; every tool result stays in your context for the rest of the task):
 - Cut every command's output: pipe through tail -n 40, grep, or head. Never cat a big file, print a whole JSON, or dump a
   full test log; for a failing test show only the traceback's last lines.
@@ -397,7 +407,11 @@ and an exam date) through the site's API. For every page of the section at 1440,
 THE BAR, not a checklist: on Today the user found, by eye and after every check had passed, misaligned control rows, two choices
 crammed in one row, hover highlights overlapping text, a sentence where a number belongs, icons off-centre, an oversized button repeating
 the header, zeros, a "Why" line under every row, a card repeating another, big empty areas, a detail box floating away from what it
-describes, a cluttered header and help paragraphs. Those show the level of care expected; they are examples, not the limit. Be a
+describes, a cluttered header and help paragraphs. On Plan, Words and Compete the user then found: a page with no site navigation
+(no <header id="bar"> / <nav id="tabs"> mount), a second way in beside a new student's one start ("Find your level" or "Learn 10"), a
+formula paragraph ("How this is worked out: p = 2^(-t/h)...") shown to students, a summary card printing the whole question, an
+underline drawn through the difficulty bars, and an option that could not be clicked, looked like every unpicked option, and hid its
+reason in a tooltip (make such an option work, or show why). Those show the level of care expected; they are examples, not the limit. Be a
 creative, demanding product designer and go beyond them:
 - Hierarchy and the five-second test: what does a student see first, second, third? Is the one thing they should do today the most
   obvious thing on the screen? Does the page read top to bottom in the order a student thinks?
@@ -421,7 +435,8 @@ async function run(a) {
     for (let i = a.unit || 0; i < t.units.length; i++) out.units.push(await unit(t, i))
   }
   // small or data-only tasks (inline: true) skip the check agent: the main session checks them inline (the user, 2026-09-24)
-  if (t.inline) { out.result = 'built; inline check by the main session, then merge'; return out }
+  // {inline: true} in the args does the same for one run (the user, 2026-09-28: build, then the main session's light check)
+  if (t.inline || a.inline) { out.result = 'built; inline check by the main session, then merge'; return out }
   if (a.from === 'fix') { out.fixes = [await fix(t, a.issues, round)]; out.result = 'fixed; ready to merge (leftovers in the fix report)'; return out }
   if (a.from === 'hygiene') {
     const hy = await hygiene(t)
