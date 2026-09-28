@@ -32,6 +32,7 @@
   const icon = (name, size = 18) => h('span', { class: 'ic', 'aria-hidden': 'true', html: UI.svg(UI.ICON[name] || UI.ICON.dot || '', size) });
   const subjectLabel = s => ((UI.SUBJECT || {})[s] || {}).label || cap(s || 'math');
   const LIVE = `satf.test.live.${sid}`;
+  let wantReview = location.hash === '#review';     // Tests' "Hand in" on an in-progress row
   const TRAINING_AIDS = [
     ['pace', 'Pace guide', 'Paced to your own speed on the progress strip and under the clock'],
     ['nudges', 'Coaching nudges', 'The time sink, the last-minute blanks and the grid-in form'],
@@ -67,7 +68,8 @@
     const each = per || (two() ? ' for each module' : '');
     if (t === 'untimed') return 'Untimed · the clock counts up';
     const f = (TIMINGS.find(x => x[0] === t) || [])[2] || 1;
-    const clock = mmss(b * f);
+    const t0 = Math.round(b * f);
+    const clock = `${Math.floor(t0 / 60)}:${String(t0 % 60).padStart(2, '0')}`;
     const extra = { 'x1.5': ' · time and a half', x2: ' · double time', 'x0.85': ' · tight clock' }[t] || '';
     if (S.kind === 'custom' && t === 'official') return `95 s a question · ${clock}`;
     return `${clock}${each}${extra}`;
@@ -296,6 +298,7 @@
     b.append(card);
     const first = card.querySelector('#begin');
     if (first) setTimeout(() => first.focus({ preventScroll: true }), 0);
+    if (wantReview && !fresh && how !== 'expired') { wantReview = false; begin(false, first, false, true); }
   }
 
   async function cfg(body) {
@@ -413,6 +416,7 @@
 
   /* ---------------- the runner (4.3-4.12) */
   async function start(o = {}) {
+    if (wantReview) { wantReview = false; o = Object.assign({}, o, { review: true }); }
     makeQueue();
     ss.set(LIVE, '1');
     if (!S.questions || !S.questions.length) return lobby();
