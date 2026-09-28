@@ -271,6 +271,14 @@ dialog::backdrop { background: var(--backdrop); }
 
 /* heard, not seen */
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+/* a fraction in the line: numerator over a bar over denominator (UI.fracText); the slash and brackets stay in the text,
+   visually hidden, so highlights' offsets and screen readers are unchanged */
+.frac { position: relative; display: inline-flex; flex-direction: column; align-items: stretch; vertical-align: middle;
+  margin: 0 .12em; font-size: .9em; line-height: 1.2; text-align: center; white-space: nowrap; text-indent: 0; }
+.frac > .fn { padding: 0 .2em .08em; border-bottom: max(1px, .065em) solid currentColor; }
+.frac > .fd { padding: .1em .2em 0; }
+.frac .frac { font-size: 1em; }
+.fh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* "Skip to content": the first Tab stop, seen only when focused */
 .skip {
   position: fixed; left: 12px; top: 12px; z-index: 100;
