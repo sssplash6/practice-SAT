@@ -16,8 +16,20 @@
 <link rel="stylesheet" href="/compete/compete.css">
 <style>
   /* The leaderboard (spec 3.7 §5, compete.md): controls → podium → your path → find → table */
-  .lb-ctl .row.lb-short { display: none; }
-  @media (max-width: 759px) { .lb-ctl .row.lb-long { display: none; } .lb-ctl .row.lb-short { display: flex; } .lb-ctl select.field { width: 100%; } }
+  .lb-ctl .lb-filters { display: inline-flex; flex-wrap: wrap; gap: 8px 12px; margin-left: auto; }
+  .lb-ctl .lb-fbtn { display: none; }
+  .lb-ctl .resets { color: var(--soft); font-weight: 400; }
+  .lb-sheet { display: grid; gap: 12px; }
+  .lb-sheet select.field { width: 100%; }
+  @media (max-width: 759px) {
+    /* the metrics scroll sideways on one line, full labels, ending with their i */
+    .lb-ctl .lb-metrics { flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x proximity; scroll-padding-inline: calc(var(--gutter) - 9px); margin: 0 calc(-1 * var(--gutter)); padding: 0 var(--gutter); scrollbar-width: none; }
+    .lb-ctl .lb-metrics::-webkit-scrollbar { display: none; }
+    .lb-ctl .lb-metrics .choices { flex-wrap: nowrap; }
+    .lb-ctl .lb-metrics .choices button { flex: none; white-space: nowrap; scroll-snap-align: start; }
+    .lb-ctl .lb-filters { display: none; }
+    .lb-ctl .lb-fbtn { display: inline-flex; }
+  }
 </style>
 </head>
 <body data-page="compete">
@@ -25,7 +37,6 @@
 <main class="page cx" id="main" tabindex="-1">
   <h1 class="h1">Leaderboard</h1>
   <div id="subnav"></div>
-  <p class="help" id="resets"></p>
   <section class="lb-ctl" id="ctl" aria-label="Board controls"></section>
   <section id="podium" aria-label="Podium"></section>
   <p class="path-line" id="path"></p>
