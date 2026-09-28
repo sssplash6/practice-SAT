@@ -5,6 +5,7 @@ from __future__ import annotations
 import datetime as dt
 import json
 from collections import Counter
+from fastapi import HTTPException
 
 from . import db, deps, estimate, progress
 
@@ -49,6 +50,10 @@ def rules() -> list[dict]:
                 out.append({"id": extra["id"], "name": extra.get("name") or extra["id"].replace("-", " ").title(),
                             "group": section.title(), "rule": extra.get("rule") or "Keep learning",
                             "tiers": [extra.get("target", 1)]})
+    out += [{"id": "words-collection", "name": "Collection complete", "group": "Words",
+             "rule": "Know every word in a collection", "tiers": [1]},
+            {"id": "words-review-streak", "name": "Seven review days", "group": "Words",
+             "rule": "Review words on seven consecutive days", "tiers": [7]}]
     return out
 
 
@@ -83,6 +88,30 @@ def _counts(learner: str, tz: int) -> tuple[dict, dict]:
     scored = estimate._sittings(learner)
     latest, earliest = (scored[0], scored[-1]) if scored else (None, None)
     climb = max(0, round(latest["mid"] - earliest["mid"])) if latest and earliest else 0
+    podium = first_place = top_ten = 0
+    contest_board = deps.part("compete", "board")
+    if contest_board:
+        seen_contests = {s["contest"] for s in challenge if s["contest"]}
+        for cid in seen_contests:
+            try:
+                mine = contest_board(cid, learner, limit=1).get("you")
+            except HTTPException:
+                continue
+            rank = mine.get("rank") if mine else None
+            podium += bool(rank and rank <= 3)
+            first_place += rank == 1
+            top_ten += bool(rank and rank <= 10)
+    legacy_board = deps.part("challenge", "board")
+    if legacy_board:
+        for day in {s["day"] for s in db.rows("SELECT day FROM sessions WHERE learner=?"
+                                                  " AND kind='challenge' AND finished IS NOT NULL", learner)}:
+            if not day:
+                continue
+            mine = legacy_board(day, learner, 0).get("you")
+            rank = mine.get("rank") if mine else None
+            podium += bool(rank and rank <= 3)
+            first_place += rank == 1
+            top_ten += bool(rank and rank <= 10)
     values = {"streak": days["best"], "on_target": on_target, "consistency": consistency,
               "qotd": qotd, "answered": attempted["answered"] or 0,
               "hard_right": attempted["hard_right"] or 0, "hours": days["minutes_total"] // 60,
@@ -91,15 +120,34 @@ def _counts(learner: str, tz: int) -> tuple[dict, dict]:
               "first_section": int(sections > 0), "sections": sections,
               "upper_route": sum(s["route"] == "upper" for s in sittings),
               "climbing": climb, "challenge": len(challenge),
-              "podium": 0, "first_place": 0, "perfect": perfect}
+              "podium": podium, "first_place": first_place, "perfect": perfect,
+              "top-ten": top_ten}
     for topic, item in board.items():
         values[f"skill:{topic}"] = int(item["mastery"] >= progress.STRONG)
     for domain in progress.DOMAINS:
         members = [v for v in board.values() if v["domain"] == domain]
         values[f"domain:{domain}"] = int(bool(members) and all(v["mastery"] >= progress.STRONG for v in members))
-    known = db.one("SELECT COUNT(*) AS n FROM word_state WHERE learner=? AND box>=4", learner)["n"]
+    known = db.one("SELECT COUNT(*) AS n FROM word_state WHERE learner=? AND box>=4"
+                   " AND proven IS NOT NULL", learner)["n"]
     for n in (50, 250, 1000):
         values[f"words-{n}"] = known
+    word_library = deps.part("words", "library")
+    if word_library:
+        collections = [coll for group in word_library(learner, tz)["groups"]
+                       for coll in group["collections"]]
+        values["words-collection"] = sum(c.get("count", 0) > 0 and
+                                          c.get("known", 0) >= c["count"] for c in collections)
+    reviews = {progress._local_day(r["at"], tz) for r in db.rows(
+        "SELECT at FROM word_reviews WHERE learner=? AND correct IS NOT NULL"
+        " AND mode NOT IN ('lookup','sort','placement','sprint','outside','order')", learner)}
+    day = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=tz)).date()
+    if day not in reviews:
+        day -= dt.timedelta(days=1)
+    run = 0
+    while day in reviews:
+        run += 1
+        day -= dt.timedelta(days=1)
+    values["words-review-streak"] = run
     compete_evaluate = deps.part("compete", "evaluate")
     if compete_evaluate:
         for item in compete_evaluate(learner):

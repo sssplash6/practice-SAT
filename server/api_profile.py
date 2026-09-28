@@ -281,6 +281,77 @@ def _practice_rank(learner: str, scope: str = "all") -> dict | None:
             "gap": max(1, before["right"] - own["right"] + 1) if before and own else None}
 
 
+def _qotd_stats(learner: str, tz: int, days: list[dict]) -> dict:
+    rows = db.rows("SELECT session,correct,at FROM attempts WHERE learner=? AND"
+                   " (session LIKE 'qotd:%' OR session LIKE 'qotd-spr:%')", learner)
+    dates = set()
+    right = 0
+    for r in rows:
+        dates.add(progress._local_day(r["at"], tz))
+        right += bool(r["correct"])
+    today = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=tz)).date()
+    run = 0
+    day = today if today in dates else today - dt.timedelta(days=1)
+    while day in dates:
+        run += 1
+        day -= dt.timedelta(days=1)
+    return {"answered": len(rows), "right": right, "run": run}
+
+
+def _habits(learner: str) -> list[dict]:
+    family_of = deps.part("habits", "family_of")
+    families = deps.part("habits", "families")
+    if not family_of or not families:
+        return []
+    now = dt.datetime.now(dt.timezone.utc)
+    prior = (now - dt.timedelta(days=28)).isoformat()
+    recent = (now - dt.timedelta(days=14)).isoformat()
+    counts: dict[str, dict] = {}
+    for r in db.rows("SELECT reason,topic,at FROM attempts WHERE learner=? AND correct=0"
+                     " AND repeat=0 AND disputed=0 AND at>=?", learner, prior):
+        family = family_of(r["reason"] or "")
+        if not family:
+            continue
+        item = counts.setdefault(family["id"], {"id": family["id"], "name": family["name"],
+                                                   "tell": family["tell"], "misses": 0,
+                                                   "skills": set(), "this": 0, "prior": 0})
+        item["misses"] += 1
+        item["skills"].add(r["topic"])
+        item["this" if r["at"] >= recent else "prior"] += 1
+    out = []
+    for item in counts.values():
+        out.append({"id": item["id"], "name": item["name"], "tell": item["tell"],
+                    "misses": item["misses"], "skills": sorted(item["skills"]),
+                    "trend": item["this"] - item["prior"]})
+    return sorted(out, key=lambda x: (-x["misses"], x["id"]))
+
+
+def _self_rank(learner: str, board: dict, current: dict) -> dict | None:
+    first = db.one("SELECT MIN(at) AS at FROM attempts WHERE learner=?", learner)["at"]
+    if not first:
+        return None
+    today = dt.datetime.now(dt.timezone.utc).date()
+    available = (today - dt.date.fromisoformat(first[:10])).days
+    if available < 8:
+        return None
+    days = min(30, available)
+    cutoff = (today - dt.timedelta(days=days)).isoformat()
+    old = next((x for x in estimate._sittings(learner) if x["at"] < cutoff), None)
+    improved = 0
+    for topic, skill in board.items():
+        if skill["mastery"] < progress.STRONG:
+            continue
+        rows = db.rows(f"SELECT difficulty,correct FROM attempts WHERE learner=? AND topic=?"
+                       f" AND at<? AND {progress.COUNTED} ORDER BY at DESC,id DESC LIMIT ?",
+                       learner, topic, cutoff, progress.WINDOW)
+        older = progress.mastery_of([(r["difficulty"], r["correct"]) for r in rows])
+        improved += older < progress.STRONG
+    fixed = db.one("SELECT COUNT(*) AS n FROM traps WHERE learner=? AND closed>=?",
+                   learner, cutoff)["n"]
+    delta = round(current["mid"] - old["mid"]) if current and old else None
+    return {"days": days, "estimate": delta, "skills_to_strong": improved, "fixed": fixed}
+
+
 def summary(learner: str, tz: int = 0) -> dict:
     p = api_me.profile(learner, tz)
     d = progress.days(learner, tz, 5)
@@ -293,7 +364,7 @@ def summary(learner: str, tz: int = 0) -> dict:
     cutoff = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=7)).isoformat()
     a7 = db.one(f"SELECT COUNT(*) AS n,SUM(correct) AS right FROM attempts WHERE learner=?"
                 f" AND at>=? AND {progress.COUNTED}", learner, cutoff)
-    sessions = db.rows("SELECT id,kind,cfg,finished,result,route FROM sessions WHERE learner=?"
+    sessions = db.rows("SELECT id,kind,cfg,contest,finished,result,route FROM sessions WHERE learner=?"
                        " AND finished IS NOT NULL AND abandoned IS NULL ORDER BY finished DESC", learner)
     kinds = {}
     for r in sessions:
@@ -315,7 +386,7 @@ def summary(learner: str, tz: int = 0) -> dict:
     last_n = sum(recent[i]["questions"] for i in range(7))
     delta["accuracy"] = ((round(100 * sum(x["right"] for x in recent[7:]) / this_n) if this_n else 0) -
                          (round(100 * sum(x["right"] for x in recent[:7]) / last_n) if last_n else 0))
-    qotd = sum(any(x["qotd"].values()) for x in d["days"])
+    qotd = _qotd_stats(learner, tz, d["days"])
     stats = {"answered": all_a["n"], "right": all_a["right"] or 0,
              "accuracy": round(100 * (counted["right"] or 0) / counted["n"]) if counted["n"] else None,
              "accuracy7": round(100 * (a7["right"] or 0) / a7["n"]) if a7["n"] else None,
@@ -327,9 +398,8 @@ def summary(learner: str, tz: int = 0) -> dict:
              "modules": kinds.get("module", 0), "diagnostics": kinds.get("diagnostic", 0),
              "sets": kinds.get("drill", 0), "mistakes_open": traps["opened"] or 0,
              "mistakes_fixed": traps["fixed"] or 0, "saved": saved, "hard_right": hard,
-             "qotd": {"answered": qotd, "right": 0, "run": 0},
-             "challenges_played": sum(bool(r["kind"] == "challenge" or
-                                           json.loads(r["cfg"] or "{}").get("source") == "contest")
+             "qotd": qotd,
+             "challenges_played": sum(bool(r["kind"] == "challenge" or r["contest"])
                                       for r in sessions),
              "series": series, "delta": delta,
              "levers": levers(learner, tz, ["streak", "minutes:week", "open_mistakes"])}
@@ -337,6 +407,25 @@ def summary(learner: str, tz: int = 0) -> dict:
     by_topic = practice.catalogue()["by_topic"]
     met = {r["template"] for r in db.rows("SELECT DISTINCT template FROM attempts WHERE learner=?", learner)}
     coverage = []
+    types = {}
+    by_type = db.rows("SELECT template,COUNT(*) AS met,SUM(correct) AS right,MAX(at) AS last"
+                      f" FROM attempts WHERE learner=? AND {progress.COUNTED} GROUP BY template", learner)
+    type_counts = {r["template"]: dict(r) for r in by_type}
+    open_types = {r["template"] for r in db.rows("SELECT DISTINCT template FROM traps"
+                                                  " WHERE learner=? AND closed IS NULL", learner)}
+    from . import api_bank, blueprint
+    kinds = blueprint.kinds()
+    raw_weights = {name: api_bank._weight(entry) for name, entry in kinds.items()
+                   if deps.subject_of(entry["topic"]) == "math"}
+    weight_sum = sum(raw_weights.values()) or 1
+    ready_weight = 0.0
+    for name, weight in raw_weights.items():
+        counts = type_counts.get(name, {})
+        rights = counts.get("right") or 0
+        types[name] = {"met": counts.get("met") or 0, "right": rights,
+                       "last": counts.get("last"), "open": name in open_types}
+        if rights >= 2:
+            ready_weight += weight / weight_sum
     for domain in progress.DOMAINS:
         skills = []
         for topic, skill in b.items():
@@ -364,8 +453,10 @@ def summary(learner: str, tz: int = 0) -> dict:
                         for x in reversed(estimate._sittings(learner))]}
     rw = {"target": p["rw_target"], "now": p["rw_now"], "source": "yours"}
     math = {"target": p["target"], "band": e["latest"], "gains": g,
-            "coverage": {"met": sum(x["met"] for x in coverage),
-                         "total": sum(x["total"] for x in coverage), "skills": coverage},
+            "coverage": {"readiness": round(ready_weight, 3),
+                         "met": sum(x["met"] for x in coverage),
+                         "total": sum(x["total"] for x in coverage), "types": types,
+                         "skills": coverage},
             "domains": domains, "levers": levers(learner, tz, ["points", "band", "readiness"])}
     total = None
     if p["target"] and p["rw_target"]:
@@ -378,16 +469,44 @@ def summary(learner: str, tz: int = 0) -> dict:
              "focus": p["focus"], "first_day": d["days"][0]["day"] if d["active_days"] else None,
              "need": estimate.need(p["target"], learner) if p["target"] else None}
     ranks = {"all": _practice_rank(learner), "exam": _practice_rank(learner, "exam"),
-             "country": _practice_rank(learner, "country"), "climb": None, "self": None}
+             "country": _practice_rank(learner, "country"), "climb": None,
+             "self": _self_rank(learner, b, e["latest"])}
     climb = deps.part("compete", "climb")
     if climb:
         ranks["climb"] = climb(learner)
     words = deps.part("words", "me_stats")
+    rank_snapshot = deps.part("compete", "rank_snapshot")
+    competition = rank_snapshot(learner, tz) if rank_snapshot else {}
+    leaderboard = deps.part("compete", "leaderboard")
+    week_board = leaderboard("points", "week", learner=learner, limit=1) if leaderboard else {}
+    from . import challenge, daily
+    day = daily.today(tz)
+    today_board = challenge.board(day, learner, 0)
+    played = db.one("SELECT COUNT(*) AS n FROM sessions WHERE learner=? AND"
+                    " (kind='challenge' OR contest IS NOT NULL) AND finished IS NOT NULL", learner)["n"]
+    best = None
+    for row in db.rows("SELECT DISTINCT day FROM sessions WHERE learner=? AND kind='challenge'"
+                       " AND day IS NOT NULL AND finished IS NOT NULL", learner):
+        mine = challenge.board(row["day"], learner, 0).get("you")
+        if mine and (best is None or mine["rank"] < best["rank"]):
+            best = {"rank": mine["rank"], "day": row["day"]}
+    today_rank = (today_board["you"] or {}).get("rank")
+    challenge_summary = {"week_rank": competition.get("week"),
+                         "week_players": week_board.get("players"), "played": played,
+                         "ahead_today": today_rank - 1 if today_rank else None,
+                         "best_rank": best["rank"] if best else None,
+                         "best_day": best["day"] if best else None,
+                         "rating": competition.get("rating"), "level": competition.get("level")}
+    from . import api_shell
+    resume = api_shell._resume(learner)
+    habits = _habits(learner)
+    math["habits"] = habits
     return {"stats": stats, "score": score, "ranks": ranks, "domains": domains,
-            "catching": catching, "coverage": coverage, "challenge": {}, "resume": [],
+            "catching": catching, "coverage": coverage, "challenge": challenge_summary,
+            "resume": [resume] if resume else [],
             "goals": goals, "subjects": {"math": math, "rw": rw},
             "gains": g, "words": words(learner, tz) if words else None,
-            "achievements": achievements.evaluate(learner, tz), "habits": []}
+            "achievements": achievements.evaluate(learner, tz), "habits": habits}
 
 
 @router.get("/api/me/summary")
@@ -419,7 +538,7 @@ def feed(learner: str, before: str | None = None, kind: str = "all",
     seen = seen_row["feed_seen"] if seen_row else None
     items = []
     if kind in ("all", "practice", "test", "challenge") and not unread:
-        for r in db.rows("SELECT id,kind,cfg,finished,result FROM sessions WHERE learner=?"
+        for r in db.rows("SELECT id,kind,cfg,started,finished,result FROM sessions WHERE learner=?"
                          " AND finished IS NOT NULL AND finished<? AND abandoned IS NULL"
                          " ORDER BY finished DESC LIMIT ?", learner, marker, limit + 1):
             cfg = json.loads(r["cfg"] or "{}")
@@ -429,16 +548,36 @@ def feed(learner: str, before: str | None = None, kind: str = "all",
             category = "challenge" if is_challenge else "test" if is_test else "practice"
             if kind != "all" and kind != category:
                 continue
-            fixed = db.one("SELECT COUNT(*) AS n FROM traps WHERE learner=? AND session=?"
-                           " AND closed IS NOT NULL", learner, r["id"])["n"]
-            opened = db.one("SELECT COUNT(*) AS n FROM traps WHERE learner=? AND session=?"
-                            " AND closed IS NULL", learner, r["id"])["n"]
+            fixed = db.one("SELECT COUNT(*) AS n FROM traps WHERE learner=? AND closed>=?"
+                           " AND closed<=?", learner, r["started"], r["finished"])["n"]
+            opened = db.one("SELECT COUNT(*) AS n FROM traps WHERE learner=? AND opened>=?"
+                            " AND opened<=?", learner, r["started"], r["finished"])["n"]
+            words = []
+            topics = {x["topic"] for x in db.rows("SELECT DISTINCT topic FROM attempts WHERE learner=?"
+                                                   " AND session=?", learner, r["id"])}
+            for topic in topics:
+                before_rows = db.rows(f"SELECT difficulty,correct,guess,hints FROM attempts WHERE learner=?"
+                                      f" AND topic=? AND at<? AND {progress.COUNTED}"
+                                      " ORDER BY at DESC,id DESC LIMIT ?", learner, topic,
+                                      r["started"], progress.WINDOW)
+                after_rows = db.rows(f"SELECT difficulty,correct,guess,hints FROM attempts WHERE learner=?"
+                                     f" AND topic=? AND at<=? AND {progress.COUNTED}"
+                                     " ORDER BY at DESC,id DESC LIMIT ?", learner, topic,
+                                     r["finished"], progress.WINDOW)
+                def word(rows):
+                    if not rows:
+                        return "Not started"
+                    value = progress.mastery_of([(x["difficulty"], progress._counts(x)) for x in rows])
+                    return "Strong" if value >= progress.STRONG else "Learning" if value < .4 else "Getting there"
+                old, new = word(before_rows), word(after_rows)
+                if old != new:
+                    words.append({"topic": topic, "from": old, "to": new})
             title = ("Quick questions" if cfg.get("source") == "quick" else
                      "Challenge" if is_challenge else "Test" if is_test else "Practice set")
             items.append({"kind": category, "at": r["finished"], "title": title,
                           "detail": f"{result.get('right', 0)} of {result.get('asked', 0)} right",
                           "href": f"/results/report/?s={r['id']}", "session": r["id"],
-                          "effect": {"words": [], "fixed": fixed, "opened": opened, "pts": None},
+                          "effect": {"words": words, "fixed": fixed, "opened": opened, "pts": None},
                           "again": {"again": r["id"]},
                           "follow_up": {"from_session": r["id"], "still_open": True,
                                         "scope": "misses"} if opened else None})
@@ -477,12 +616,14 @@ def feed(learner: str, before: str | None = None, kind: str = "all",
             items.append({"kind": "goal", "at": r["done_at"], "title": "Weekly goal met",
                           "detail": r["kind"].replace("_", " "), "href": "/me/?tab=week"})
     items.sort(key=lambda x: (x["at"], x["kind"]), reverse=True)
-    total_unread = sum(1 for item in items if not seen or item["at"] > seen) if unread else None
+    since = seen or "0000"
+    total_unread = sum(db.one(sql, learner, since)["n"] for sql in (
+        "SELECT COUNT(*) AS n FROM earned WHERE learner=? AND at>?",
+        "SELECT COUNT(*) AS n FROM reports WHERE learner=? AND replied>? AND seen IS NULL",
+        "SELECT COUNT(*) AS n FROM week_goals WHERE learner=? AND done_at>?"))
     page = items[:limit]
     return {"items": page, "next": page[-1]["at"] if len(items) > limit else None,
-            "unread": total_unread if unread else sum(1 for item in items if
-                                                     item["kind"] in ("achievements", "reports") and
-                                                     (not seen or item["at"] > seen))}
+            "unread": total_unread}
 
 
 @router.get("/api/me/feed")
@@ -548,8 +689,9 @@ def shared_view(token: str) -> dict:
     data.pop("resume", None)
     data.pop("achievements", None)
     public = _private_text(data, learner, email["email"] if email else None)
-    public["feed"] = [{k: x[k] for k in ("kind", "at", "title", "detail")}
-                      for x in feed(learner, limit=20)["items"]]
+    public["feed"] = _private_text([{k: x[k] for k in ("kind", "at", "title", "detail")}
+                                    for x in feed(learner, limit=20)["items"]], learner,
+                                   email["email"] if email else None)
     plan = deps.part("plan", "payload")
     if plan:
         try:
@@ -592,6 +734,7 @@ def delete_me(body: DeleteMe, x_learner: str | None = Header(default=None)) -> d
         raise HTTPException(422, "type DELETE to confirm")
     gone = "gone:" + secrets.token_hex(12)
     counts = {}
+    from . import reports
     with db.transaction():
         challenge = db.run("UPDATE sessions SET learner=? WHERE learner=?"
                            " AND (kind='challenge' OR contest IS NOT NULL)", gone, learner)
@@ -601,6 +744,10 @@ def delete_me(body: DeleteMe, x_learner: str | None = Header(default=None)) -> d
                      "plan_snapshots", "plan_events"):
             counts[name] = db.run(f"DELETE FROM {name} WHERE plan IN"
                                   " (SELECT id FROM plans WHERE learner=?)", learner).rowcount
+        counts["report_files"] = reports.delete_files(learner)
+        db.run("DELETE FROM email_changes WHERE learner=?", learner)
+        db.run("DELETE FROM signup_claims WHERE session IN"
+               " (SELECT id FROM sessions WHERE learner=?)", learner)
         for name in ("attempts", "traps", "saved", "practice_seen", "flags", "notes", "tries",
                      "outside_scores", "word_reviews", "word_state", "my_words", "word_lists",
                      "skill_ratings", "trap_log", "due_days", "official_done", "rw_log",
