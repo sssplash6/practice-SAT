@@ -116,6 +116,14 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       UI.fracText/fracNodes in question.js (v2/calm-shared caafe29), 754 of 761 bank texts with a slash stack, textContent
       unchanged, in the question self-test. Preview server restarted for the bank fix: task beo07zfw1. The full Tests check is
       still to run later (build.js [{id:'S5', from:'verify'}]) once the helper finishes Task 26.
+    - 2026-09-28 (the user reviewing the preview live), all on v2/calm-shared unless noted, merged into prev4: the worked twin
+      keeps a Show it button; a right answer drops "Traps on offer · dodged all 3"; the next step isn't repeated under a new
+      mistake; drill.py's Then vs now drops times and the repeated trap, and "clean answers close it"; the Practice summary
+      reads right / total with the skills beside it, Fix now in one column, More from this set removed; the builder's skill
+      panel keeps only Check my level; type rows keep only their difficulty; no "rough" and no L1-L7 filter anywhere (levels
+      still count); no Enter starts line or bank-size line; Questions = three kinds of set (a number, a number in a time, a
+      time alone) and the parser reads "10 in 15 min"; the shell strip's Today card is one line; Results puts Sittings first
+      (noted in briefs/S6.md); Compete's par tooltip drops its estimate clause (v2/s8). Preview server now task bt2u0k1k9.
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
