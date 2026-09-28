@@ -184,7 +184,7 @@
       }
       box.replaceChildren(...rows);
       if (r.total > shown) box.append(h('div', { class: 'row-act' }, quiet(`Show ${Math.min(10, r.total - shown)} more`, () => { shown += 10; loadRows(); })));
-      if (tab === 'live') { renderSeason(); renderTrapsCard(); }
+      if (tab === 'live') renderSeason();
     } catch (e) { box.replaceChildren(); UI.cardError(box, loadRows, 'The server is not answering.'); }
   }
   async function loadCounts() {
@@ -338,25 +338,6 @@
   }
 
   /* ------------------------------------------------------------ Traps this week (C12) */
-  function renderTrapsCard() {
-    const hub = S.hub; if (!hub) return;
-    const trap = (S.live || []).find(c => c.kind === 'trap');
-    const kids = [head('Traps this week')];
-    if (trap) kids.push(h('p', { class: 'line' }, 'Trap of the week: ', h('a', { class: 'link', href: C.href(trap.id), text: String(trap.title).split(' · ').slice(1).join(' · ') || trap.title })));
-    const ul = h('ul', { class: 'mini-rows' });
-    (hub.traps || []).slice(0, 3).forEach(t => {
-      const name = h('span', { class: 'mt', text: t.name });
-      if (t.tell) UI.tooltip(name, `Tell: ${t.tell}`);
-      const bits = [t.field_share ? `field ${pct(t.field_share)} this week${t.field_move ? ` ${t.field_move > 0 ? '▲' : '▼'}${Math.abs(Math.round(t.field_move * 100))}` : ''}` : null,
-        t.chances ? `you ${pct(t.you_share)} · ${num(t.chances)} chances in 30 days` : null].filter(Boolean);
-      const drillB = quiet('Drill · 8', ev => busy(ev.currentTarget, () => drill({ habit: t.family, count: 8, source: 'habit' })));
-      ul.append(h('li', {}, name, h('span', { class: 'mm' }, bits.join(' · '), t.proven ? h('span', { class: 'chip-s', text: 'Trap-proof' }) : null), h('span', { class: 'ma' }, drillB)));
-    });
-    if (ul.childElementCount) kids.push(ul);
-    kids.push(h('div', { class: 'foot-links' }, quiet('Trap Index ›', null, { href: '/compete/rankings/#traps' })));
-    card('#traps', ...kids);
-  }
-
   /* ------------------------------------------------------------ Champions (C27) */
   function renderChamps() {
     const list = S.hub.champions || [];
@@ -473,12 +454,12 @@
   /* ------------------------------------------------------------ load */
   function paintSkeletons() {
     skel('#daily', 'card:4'); skel('#contests', 'rows:3'); skel('#qotd', 'line'); skel('#stats', 'card:3');
-    skel('#rivals', 'rows:3'); skel('#season', 'lines:2'); skel('#preview', 'rows:5'); skel('#traps', 'rows:3');
+    skel('#rivals', 'rows:3'); skel('#season', 'lines:2'); skel('#preview', 'rows:5');
     skel('#champs', 'lines:3'); skel('#badges', 'rows:3'); skel('#private', 'lines:2');
   }
   function renderHub() {
     try { renderDaily(); } catch (e) { console.error(e); }
-    renderStats(); renderSeason(); renderTrapsCard(); renderChamps(); renderBadges(); renderRecap();
+    renderStats(); renderSeason(); renderChamps(); renderBadges(); renderRecap();
   }
   async function load() {
     paintSkeletons();
@@ -488,7 +469,7 @@
       const [, me] = await Promise.all([hubP, UI.cached('/compete/me', me => { S.me = me; if (S.hub) renderHub(); })]);
       S.me = me;
     } catch (e) {
-      if (!S.hub) ['#daily', '#stats', '#season', '#preview', '#traps', '#champs', '#badges'].forEach(s => fail(s, load));
+      if (!S.hub) ['#daily', '#stats', '#season', '#preview', '#champs', '#badges'].forEach(s => fail(s, load));
       return;
     }
     const d = S.hub.daily;
