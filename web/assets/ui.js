@@ -1538,6 +1538,7 @@
   /* ---- the Today card (Shell 2.2 item 7, U16, U17, U26): the sidebar's, the Now strip's
      and the menu sheet's. Figures open their working (U13, kit's [data-fact]). */
   const flame = (size, spare) => { const e = icon('flame', size); if (spare) e.querySelector('.flame').removeAttribute('class'); return e; };
+  const unreadOf = x => (typeof x === 'number' ? x : x && typeof x === 'object' ? Number(x.unread ?? x.count ?? x.n ?? 0) || 0 : 0);
   function streakText(d) {
     const sp = d.spares || 0;
     return `${plural(d.streak || 0, 'day')}${sp ? ` · ${plural(sp, 'spare')}` : ''}`;
@@ -1880,7 +1881,7 @@
     u.querySelector('.side-name').textContent = me.label || (d ? 'You' : 'Account');   // no data (offline, retired): a neutral name, never a blank card
     const sub = u.querySelector('.side-sub');
     const sharedPc = d && d.device && d.device.session_only;
-    const unread = (d && d.inbox) || 0;
+    const unread = unreadOf(d && d.inbox);
     if (!d) sub.textContent = '';
     else if (sharedPc) sub.replaceChildren('Shared computer · Sign out');
     else if (me.linked) sub.replaceChildren(me.email_masked || 'Saved');
@@ -1929,7 +1930,7 @@
     st.classList.toggle('on', (d.streak || 0) > 0);
     st.querySelector('span').textContent = fmt(d.streak || 0);
     st.setAttribute('aria-label', `Streak: ${streakText(d)}`);
-    const me = refs.meBtn, unread = d.inbox || 0, c = d.challenge || {};
+    const me = refs.meBtn, unread = unreadOf(d.inbox), c = d.challenge || {};
     me.replaceChildren(avatarOf(d, 32));
     if (unread) me.append(h('span', { class: 'badge n', text: cap99(unread), style: 'position: absolute; top: -2px; right: -4px; box-shadow: 0 0 0 2px var(--paper)' }));
     else if (!c.started) me.append(dot());
