@@ -165,6 +165,14 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       preview and "good", later). RUNNING the I1 audit on the preview as run wf_a6acd4e3-941 (task wuai41f4i): 9 section
       groups, one auditor each, every gap proven in code and on the page, the user's removals listed as not-gaps. The main
       session does the integration walk itself on port 8061 (one student's journey across every page).
+      WALK (learner a:journey04 on the preview): Today -> the 8-question start -> a Practice set -> Module 1 -> Results
+      and the report -> Review -> Words placement -> the daily challenge -> the Plan wizard -> Me -> Today. Fixed on the way:
+      every report a 500 (api_account's results route, v2/s1 81129dd), Due today empty for everyone (next.due is Review's
+      reader, v2/s3 aa20767) and Today's Review counts (review.counts), the strip's L5 badge, stacked identical toasts, the
+      verdict naming a trap three times (calm-shared b9b7542), the practice summary's clock time (9c9d05b), Today's
+      '— answered' (85b8ff5), Up next's resume copy (v2/f2b 4fe4ab5). The user's asks during it: Minutes are always timed
+      and Questions get a clock toggle (v2/s3 f382b55); the section bar's Up next is off Today (v2/f2b 829ba96); button
+      studies published at https://claude.ai/artifact/Xx7ukRj4hVFhWV5Cmb7vB7 (five Check + rating layouts; my pick B).
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH

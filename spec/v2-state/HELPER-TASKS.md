@@ -650,6 +650,10 @@ On v2/s1-server:
    not "Practise nonlinear_functions").
 On v2/s6-server:
 4. The owner-only 403 on a report carries `kind` (e.g. "challenge"), so a live challenge can say why it is closed.
+5. v2/s1-server, server/api_account.py saved_diagnostic_results: it is registered before Results' own
+   /api/session/{sid}/results and called api_results.results (which doesn't exist), so every report request was a 500.
+   Make it `return api_results.get_results(sid, x_learner)` for every non-diagnostic sitting (the main session made
+   the same one-line change on v2/s1 81129dd; apply it on your branch so the two merge cleanly).
 DONE: checks/s1.py and checks/s6.py still pass. Tell the user "task 33 done".
 Do not touch server/next.py, server/api_shell.py or server/checks/f2.py: the main session is building Up next in them.
 ```
