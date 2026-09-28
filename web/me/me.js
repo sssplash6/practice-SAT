@@ -49,7 +49,15 @@
     return b;
   }
   const tag = t => h('span', { class: 'tag' }, UI.glyph(t), tn(t));
-  const fact = (el, key, label) => { if (!RO && key) { el.dataset.fact = key; if (label) el.dataset.factLabel = label; } return el; };
+  // ponytail: these server levers print a raw {low, high}, a topic slug or the met count instead of the
+  // figure on the card, so they stay unwired (the card's "?" explains them); drop a key once its lever reads right
+  const HELD = new Set(['band', 'points', 'readiness']);
+  const fact = (el, key, label) => {
+    if (RO || !key || HELD.has(key)) return el;
+    el.dataset.fact = key; if (label) el.dataset.factLabel = label;
+    if (el.tagName !== 'BUTTON') el.tabIndex = 0;
+    return el;
+  };
 
   /* ---- the cards */
   const CARDS = [
@@ -307,7 +315,7 @@
     }
     const ck = S.stats.checks;
     if (ck && ck.due) out.append(h('div', { class: 'out' }, h('b', { text: `${N(ck.passed)} / ${N(ck.due)}` }), 'fixes held'));
-    if (RO) out.querySelectorAll('button').forEach(b => b.replaceWith(h('div', { class: 'out' }, ...b.childNodes)));
+    out.querySelectorAll('button:not([data-fact])').forEach(b => b.replaceWith(h('div', { class: 'out' }, ...b.childNodes)));
     return out.childNodes.length ? out : null;
   }
   function tiles() {
@@ -550,7 +558,7 @@
     const rows = h('div', { class: 'rows' });
     const score = h('div', { class: 'row' }, h('span', { class: 'k', text: 'Math score' }));
     if (L) {
-      score.append(h('span', { class: 'grow' }, fact(h('span', { class: 'big', text: band(L), tabindex: RO ? null : '0' }), 'band', 'Math score')),
+      score.append(h('span', { class: 'grow' }, fact(h('span', { class: 'big', text: band(L) }), 'band', 'Math score')),
         L.id && !RO ? h('a', { class: 'link', href: `/results/report/?id=${encodeURIComponent(L.id)}`, text: 'Report' }) : null,
         h('span', { class: 's', text: [KIND[L.kind] || 'Sitting', day(L.at)].join(' · ') }));
       if (B && (B.low !== L.low || B.high !== L.high)) score.append(h('span', { class: 's', text: `Best ${band(B)} · ${day(B.at)}` }));
@@ -834,7 +842,7 @@
     const total = counts.unmet + counts.met + counts.ready;
     const readyPct = Math.round((cov.readiness || 0) * 100);
     fill('readiness',
-      h('p', { class: 'acts' }, fact(h('span', { class: 'big', text: `${readyPct}%`, tabindex: RO ? null : '0' }), 'readiness', 'Test-day readiness'),
+      h('p', { class: 'acts' }, fact(h('span', { class: 'big', text: `${readyPct}%` }), 'readiness', 'Test-day readiness'),
         h('span', { class: 'meta', text: `${N(counts.met + counts.ready)} of ${N(total)} question types met` })),
       legend, grid,
       RO ? null : h('div', { class: 'card-foot' }, gaps.length
