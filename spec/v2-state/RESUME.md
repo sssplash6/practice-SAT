@@ -161,6 +161,10 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       time box, the inbox NaN guard, Up next copy, no key hints on touch, plan warm-up detail without zeros; on v2/s1 the week
       sheet's null and its welcome line; on v2/s3 Today's Try one now -> Twin. 54 shell page loads clean. Preview b6nx39v5c.
       ALL FRONTEND IS BUILT. Next: the user's "good" on the preview, then merges; then the I1 audit and the integration walk.
+    - 2026-09-28/29: the user: "do 2, i will 1 later" (2 = the nothing-dropped audit and the integration walk; 1 = their
+      preview and "good", later). RUNNING the I1 audit on the preview as run wf_a6acd4e3-941 (task wuai41f4i): 9 section
+      groups, one auditor each, every gap proven in code and on the page, the user's removals listed as not-gaps. The main
+      session does the integration walk itself on port 8061 (one student's journey across every page).
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
