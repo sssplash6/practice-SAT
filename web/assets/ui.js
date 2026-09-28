@@ -1271,8 +1271,12 @@
       return card;
     }
     const t = d.today || {}, goal = t.goal, streak = d.streak || 0;
-    const st = h('button', { type: 'button', class: 'streak' + (streak > 0 ? ' on' : ''), 'data-fact': 'streak',
-      'data-fact-label': 'Streak', 'data-fact-value': streakText(d) },
+    // how a figure is worked out opens from GET /api/levers (S1); until it is served the
+    // flame goes to the activity heatmap (§2.2.7) and the minutes are plain text
+    const facts = has('levers');
+    const fact = (key, label, value) => facts ? { 'data-fact': key, 'data-fact-label': label, 'data-fact-value': value } : {};
+    const st = h(facts ? 'button' : 'a', { type: facts ? 'button' : null, href: facts ? null : '/me/#activity',
+      class: 'streak' + (streak > 0 ? ' on' : ''), ...fact('streak', 'Streak', streakText(d)) },
       flame(16), h('span', { text: o.compact ? plural(streak, 'day') : streakText(d) }),
       // one small outlined flame per banked spare (U16); the narrow sidebar card says it with these
       Array.from({ length: d.spares || 0 }, () => flame(12, true)),
@@ -1285,10 +1289,10 @@
     } else if (goal && goal.minutes && UI.meter) {
       const m = UI.meter(card, { label: 'Study time', value: t.minutes || 0, max: goal.minutes, unit: 'min' });
       const n = m.el.querySelector('.meter-n');
-      if (n) Object.assign(n.dataset, { fact: 'minutes:today', factLabel: 'Study time today', factValue: n.textContent });
+      if (n && facts) Object.assign(n.dataset, { fact: 'minutes:today', factLabel: 'Study time today', factValue: n.textContent });
     } else {
-      card.append(h('p', {}, h('button', { type: 'button', 'data-fact': 'minutes:today', 'data-fact-label': 'Study time today',
-        text: `${fmt(t.minutes)} min today` })));
+      const mins = `${fmt(t.minutes)} min today`;
+      card.append(h('p', {}, facts ? h('button', { type: 'button', ...fact('minutes:today', 'Study time today', mins), text: mins }) : mins));
       if (!goal) card.append(h('a', { class: 'link', href: '/plan/', text: 'Set a daily goal' }));
     }
     const reg = regLine(d);
