@@ -1032,7 +1032,7 @@
     // 3. Difficulty (P11)
     const g3 = group(grid, 'Difficulty', 'sDiff');
     const dz = UI.seg(g3, [{ value: 'forme', label: 'For me' }, { value: 'standard', label: 'Standard' }], { value: standard() ? 'standard' : 'forme', label: 'Difficulty', onChange: v => { st.zone = v === 'standard' ? 'off' : (st._zone || 'stretch'); changed(); paintSettings(); } });
-    tip(dz.btns[0], 'Aimed at your odds: chosen from how you’ve done in each skill and how hard each type has been for everyone.');
+    tip(dz.btns[0], 'Aimed at you: chosen from how you’ve done in each skill and how hard each type has been for everyone.');
     tip(dz.btns[1], 'Pick the tiers yourself.');
     if (!standard()) {
       const aim = UI.seg(g3, [{ value: 'warm', label: 'Warm-up' }, { value: 'stretch', label: 'Stretch' }, { value: 'challenge', label: 'Challenge' }], { value: st.zone, label: 'Aim', onChange: v => { st.zone = v; st._zone = v; changed(); paintBar(); } });
