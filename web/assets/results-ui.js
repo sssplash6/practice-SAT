@@ -131,9 +131,9 @@ dialog.sheet.drawer { margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; wi
   };
   const when = t => {
     if (!t) return '';
-    const d = new Date(t), hrs = (Date.now() - d) / 36e5;
-    if (hrs >= 0 && hrs < 48) return UI.relTime(d);
-    return `${UI.date(d)} · ${d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
+    // the day only: no clock times in history lines (the user's rule)
+    const d = new Date(t), days = Math.round((new Date().setHours(0, 0, 0, 0) - new Date(t).setHours(0, 0, 0, 0)) / 864e5);
+    return days === 0 ? 'Today' : days === 1 ? 'Yesterday' : UI.date(d);
   };
   const isTest = k => ['mock', 'module', 'diagnostic', 'paper', 'custom', 'twin', 'shared'].includes(k);
   const kindName = row => {
@@ -308,8 +308,7 @@ dialog.sheet.drawer { margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; wi
     let text;
     if (row.gated) text = 'Sign up to see these results';
     else if (row.expired) text = 'time ran out';
-    else if (test) text = [row.started && `started ${new Date(row.started).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`,
-      row.module && kind === 'mock' && `Module ${row.module}`, left !== null && left !== undefined ? `${UI.mmss(left)} left` : `${fmt(row.answered || 0)} of ${fmt(row.total || 0)} answered`].filter(Boolean).join(' · ');
+    else if (test) text = [row.module && kind === 'mock' && `Module ${row.module}`, left !== null && left !== undefined ? `${UI.mmss(left)} left` : `${fmt(row.answered || 0)} of ${fmt(row.total || 0)} answered`].filter(Boolean).join(' · ');
     else text = `${fmt(row.answered || 0)} of ${fmt(row.total || '?')}`;
     el.append(h('div', { class: 'sc-when' }, h('span', { text: when(row.started) })),
       h('div', { class: 'sc-main' }, h('div', { class: 'sc-title' }, h('b', { text: left === null && test && !row.expired ? `Untimed ${kindName(row).toLowerCase()}` : kindName(row) }), h('span', { class: 'sc-sub', text }))));

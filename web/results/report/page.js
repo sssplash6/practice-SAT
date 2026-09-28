@@ -141,12 +141,16 @@
     main.removeAttribute('aria-busy');
     const root = $('root');
     if (st === 403) {
-      root.replaceChildren(h('section', { class: 'card rp-alone' }, h('h1', { class: 'h2', text: 'This report is private to the student who sat it.' }),
-        h('p', { class: 'rp-helper', text: 'A daily challenge’s report opens to everyone the day after.' }),
-        h('div', { class: 'rp-row' }, h('a', { class: 'pill sm', href: '/challenge/', text: 'Sit today’s challenge' }), link('All results', '/results/'))));
+      // 1.16: a live challenge says so and offers today's; any other private report just says it is private
+      const live = d.kind === 'challenge';
+      root.replaceChildren(h('section', { class: 'card rp-alone' },
+        h('h1', { class: 'h2', text: live ? 'This challenge is still running today. Its report opens to others tomorrow.' : 'This report is private to the student who sat it.' }),
+        h('div', { class: 'rp-row' }, live ? h('a', { class: 'pill sm', href: '/challenge/', text: 'Sit today’s challenge' }) : null, link('All results', '/results/'))));
       return;
     }
-    const again = btn('Try again', b => { b.setAttribute('aria-busy', 'true'); skeleton(); load(); });
+    // Try again puts the section shells back (this card replaced them), then loads as on arrival
+    const shell = [...root.children];
+    const again = btn('Try again', () => { root.replaceChildren(...shell); main.setAttribute('aria-busy', 'true'); skeleton(); load(); });
     root.replaceChildren(h('section', { class: 'card rp-alone', role: 'alert' }, h('h1', { class: 'h2', text: 'Couldn’t load this report.' }), h('div', { class: 'rp-row' }, again, link('All results', '/results/'))));
   }
   function notFound() {
@@ -436,17 +440,17 @@
   function stickBar() {
     const el = $('stick');
     el.replaceChildren();
-    const jump = h('select', { class: 'field sm', 'aria-label': 'Jump to' }, h('option', { value: '', text: 'Jump to ▾' }),
+    const jump = h('select', { class: 'field sm', 'aria-label': 'Jump to' }, h('option', { value: '', text: 'Jump to' }),
       jumpList().map(s => h('option', { value: s.id, text: s.label })));
     jump.addEventListener('change', () => { const t = $(jump.value); if (t) t.scrollIntoView({ block: 'start' }); jump.value = ''; });
     const all = misses();
     if (owner && all.length) el.append(btn(`Fix · ${n(all.length)}`, b => drill(scored && R.ledger ? fixBody(fixPlan().list, { order: 'given' }) : fixBody(all), b), 'pill sm'));
     el.append(jump);
     if (all.length) el.append(btn('Review', () => openPlayer(all[0].i, { filter: 'misses' })));
-    if (!('IntersectionObserver' in window)) return;
-    if (stickBar.io) stickBar.io.disconnect();
-    stickBar.io = new IntersectionObserver(([e]) => { el.hidden = e.isIntersecting || e.boundingClientRect.top > 0; });
-    stickBar.io.observe($('hero'));
+    // a scroll check, not an IntersectionObserver: a jump from below the hero to past it crosses no threshold
+    const sync = () => { el.hidden = $('hero').getBoundingClientRect().bottom > 0; };
+    if (!stickBar.on) { stickBar.on = true; addEventListener('scroll', () => requestAnimationFrame(sync), { passive: true }); }
+    sync();
   }
   function jumpList() {
     return [{ id: 'hero', label: 'Score' }, !$('ledger').hidden && { id: 'ledger', label: scored ? 'Points' : 'Why' },
@@ -475,7 +479,7 @@
     el.append(h('div', { class: 'rp-steps' },
       step('Second look', secondDone ? `${n(s2.looked || 0)} looked at again` : s2.offered ? `${plural(s2.unseen.length, 'miss', 'misses')} · about ${n(s2.minutes || mins(0))} min` : 'done', secondDone || !s2.offered,
         () => (s2.offered ? startSecond() : openPlayer(all[0].i, { filter: 'misses' }))),
-      step('Fix', groups ? `${n(closed)} of ${n(groups)} closed` : 'nothing named', groups && closed >= groups, b => drill(fixBody(fixPlan().list, { order: 'given' }), b)),
+      step('Fix', !groups ? 'nothing named' : closed ? `${n(closed)} of ${n(groups)} closed` : `${plural(groups, 'mistake')} to close`, groups && closed >= groups, b => drill(fixBody(fixPlan().list, { order: 'given' }), b)),
       step('Check-ins', 'come due as you fix', false, () => { location.href = '/review/'; }),
       step('Prove it', UI.date(due), false, b => drill(fixBody(all, { timed: true, feedback: 'end', order: 'mixed' }), b))));
   }
@@ -892,8 +896,9 @@
   function missRow(r) {
     const x = r.first, m = r.m;
     const fixed = r.group === 'fixed';
-    const label = x.held ? 'Misconception hidden until your second look' : m ? cap(m.label) : x.type === 'spr' ? (x.diagnosis && x.diagnosis.text) || `Missed grid-in: ${math(x.answer)}` : cap(x.mistake || 'Incorrect');
-    const meta = [r.list.map(labelOf).join(' · '), topicName(x.topic, x.topic_name), TIER[x.difficulty], r.list.length > 1 ? `×${r.list.length} here` : null,
+    // a held key names the skill, not the same "hidden" line on every row; the second-look banner says why once
+    const label = x.held ? topicName(x.topic, x.topic_name) : m ? cap(m.label) : x.type === 'spr' ? (x.diagnosis && x.diagnosis.text) || `Missed grid-in: ${math(x.answer)}` : cap(x.mistake || 'Incorrect');
+    const meta = [r.list.map(labelOf).join(' · '), x.held ? null : topicName(x.topic, x.topic_name), TIER[x.difficulty], r.list.length > 1 ? `×${r.list.length} here` : null,
       m && m.hits_all_time > 1 ? `×${n(m.hits_all_time)} all time` : null, rx.worth(x.worth) || null, x.cause ? causeOne(x.cause) : null, x.raw === 'mixed' ? 'right on a later try' : null].filter(Boolean).join(' · ');
     const state = fixed ? h('span', { class: 'st', text: `✓ Fixed${m && m.closed ? ` ${UI.date(m.closed)}` : ''}` })
       : m && m.open ? h('span', { class: 'st rp-dot', text: ` Open · ${plural(m.owed || 2, 'clean answer')} to close` }) : null;

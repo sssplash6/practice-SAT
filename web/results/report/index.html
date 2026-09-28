@@ -182,6 +182,8 @@
 
   /* the sticky strip on a phone: the primary, Jump to, Review, more */
   .rp-stick { display: none; }
+  .rp > section, .rp-mist-wrap > section { scroll-margin-top: 72px; }
+  @media (max-width: 759px) { .rp > section, .rp-mist-wrap > section { scroll-margin-top: 128px; } }
   /* a phone or a coarse pointer: chips and info buttons get a 44px hit area, as the kit's .btn.sm does */
   @media (max-width: 759px), (pointer: coarse) {
     .rp-info, button.rp-chip, a.rp-chip { position: relative; }

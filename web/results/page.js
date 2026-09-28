@@ -59,6 +59,12 @@
   async function region(id, fn) { try { await fn(); } catch (e) { const el = $(id); el.hidden = false; UI.cardError(el, () => region(id, fn), 'Couldn’t load this.'); } }
 
   let ST = null, HIST = null, MAP = null;
+  // 2.10: a feed that failed on arrival is fetched again by each region that needs it, so a region
+  // shows its own error with Try again instead of an empty state; the regions share one request
+  const FEED = { ST: ['/stats', r => { ST = r; }, () => ST], HIST: ['/history?limit=200&all=1', r => { HIST = r; }, () => HIST], MAP: ['/map', r => { MAP = r; }, () => MAP] };
+  const pend = {};
+  const refetch = k => pend[k] || (pend[k] = UI.api(withQ(FEED[k][0]), { quiet: true }).then(FEED[k][1]).finally(() => { delete pend[k]; }));
+  const needs = (keys, fn) => () => { const miss = keys.filter(k => !FEED[k][2]()); return miss.length ? Promise.all(miss.map(refetch)).then(() => fn()) : fn(); };
 
   /* ------------------------------------------------------------ load */
   function skeleton() {
@@ -82,20 +88,21 @@
     try { HIST = await hist; } catch (_) { HIST = null; }
     try { MAP = await map; } catch (_) { MAP = null; }
     $('main').removeAttribute('aria-busy');
-    const tests = ((HIST && HIST.sessions) || []).filter(s => TESTS.includes(s.kind));
-    const fresh = ST && !ST.answered && !tests.length;
+    const tests = () => ((HIST && HIST.sessions) || []).filter(s => TESTS.includes(s.kind));
+    const fresh = ST && !ST.answered && !tests().length;
     region('sample', () => drawSample(fresh));
-    region('estimate', drawEstimate);
-    region('overview', () => drawChart(tests));
-    region('gap', drawGap);
-    region('totals', drawTotals);
-    region('days', drawDays);
-    region('why', drawWhy);
-    region('split', drawSplit);
-    region('domtrend', drawDomains);
-    region('sittings', drawSittings);
-    region('traps', drawTraps);
-    region('skills', drawSkills);
+    // the stats regions: without /api/stats one error card stands in the estimate's place (no
+    // repeats), and its Try again draws them all
+    const byStats = [['estimate', drawEstimate], ['overview', needs(['HIST'], () => drawChart(tests()))], ['gap', drawGap], ['totals', drawTotals], ['days', drawDays],
+      ['why', drawWhy], ['split', drawSplit], ['domtrend', needs(['HIST'], drawDomains)], ['traps', drawTraps]];
+    if (ST) byStats.forEach(([id, fn]) => region(id, fn));
+    else {
+      const was = byStats.map(([id]) => $(id).hidden);
+      byStats.slice(1).forEach(([id]) => { $(id).hidden = true; });
+      region('estimate', async () => { await refetch('ST'); byStats.forEach(([id, fn], k) => { $(id).hidden = was[k]; region(id, fn); }); });
+    }
+    region('sittings', needs(['HIST'], drawSittings));
+    region('skills', needs(['MAP'], drawSkills));
     UI.shell({ page: 'results', sections: [{ id: 'estimate', label: 'Estimate' }, { id: 'totals', label: 'Totals' }, { id: 'sittings', label: 'Sittings' },
       { id: 'traps', label: 'Mistakes' }, { id: 'skills', label: 'Skills' }].filter(x => !$(x.id).hidden) });
   }
