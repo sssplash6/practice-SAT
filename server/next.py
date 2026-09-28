@@ -235,8 +235,9 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
         pts = _points(gains, trap["topic"], hits / wrong_total[trap["topic"]]
                       if wrong_total[trap["topic"]] else 0)
         rows.append(_item("redo", f"redo:redo:{trap['id']}", f"Fix: {trap['label']}",
-                          f"{trap['hits']} catches · 3 questions",
-                          f"Caught you {trap['hits']} times" +
+                          "3 questions",
+                          ("Caught you once" if trap["hits"] == 1 else "Caught you twice" if trap["hits"] == 2
+                           else f"Caught you {trap['hits']} times") +
                           (" · also in today's plan" if "redo" in plan_pools else ""),
                           _minutes(3, seconds), body={"pool": "redo", "ids": [trap["id"]], "count": 3},
                           pts=pts, topic=trap["topic"]))
