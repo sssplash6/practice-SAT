@@ -362,7 +362,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
         newLeft ? `${newLeft} new` : null, s.minutes ? `about ${Math.max(1, Math.round(s.minutes))} min` : null].filter(Boolean);
       const debt = lib && lib.debt;
       const top = h('div', { class: 'tw-top' }, h('h2', { text: 'Today’s words' }),
-        s.done ? h('span', { class: 'tw-facts', text: 'Done for today' }) : facts.length ? h('span', { class: 'tw-facts', text: facts.join(' · ') }) : null);
+        s.done ? h('span', { class: 'tw-facts', text: 'Done for today' }) : facts.length && !fresh ? h('span', { class: 'tw-facts', text: facts.join(' · ') }) : null);
       const goal = s.new_goal || 10;
       const learn = h('button', { type: 'button', class: 'btn', text: s.done && !newLeft ? `Learn ${goal} more` : `Learn ${goal}`,
         onclick: () => startWords({ mode: 'cards', deck: { source: 'new' }, count: goal }) });
@@ -381,9 +381,9 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
         return;
       }
       const row = h('div', { class: 'tw-row' });
+      // a fresh learner has one way in: placement sizes the first words (the user: why is Learn 10 an option here)
       if (fresh) {
-        row.append(h('button', { type: 'button', class: 'pill', text: 'Find your level · 3 min', onclick: () => startWords({ mode: 'placement' }) }),
-          h('span', { class: 'meta', text: 'or' }), learn);
+        row.append(h('button', { type: 'button', class: 'pill', text: 'Find your level · 3 min', onclick: () => startWords({ mode: 'placement' }) }));
       } else {
         const start = h('button', { type: 'button', class: 'pill', onclick: () => startWords(startBody()) },
           s.done ? 'Start again' : 'Start', h('span', { class: 'kbd', text: 'Enter', hidden: !o.enter }));

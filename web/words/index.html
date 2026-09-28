@@ -239,7 +239,7 @@
     el.replaceChildren();
     el.hidden = false;
     const tidy = () => { el.hidden = !el.children.length; };
-    // a fresh learner: the Today card already says Find your level / Learn 10, so only the daily items
+    // a fresh learner: the Today card already says Find your level, so only the daily items
     if (!fresh) dueAndNew(el, c);
     el.append(daily('wic', 'Word of the day'), daily('transition', 'Transition'));
     UI.api('/words/today', { quiet: true }).then(t => { dailyData = t; el.querySelectorAll('[data-daily]').forEach(x => { const n = daily(x.dataset.daily, x.dataset.title); if (n) x.replaceWith(n); else x.remove(); }); tidy(); })
