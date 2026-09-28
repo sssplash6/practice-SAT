@@ -579,7 +579,8 @@ def fixed(subject: str = "math", topics: str | None = None, difficulty: str | No
     names = review.math_topics(subject)
     misses = review.latest_misses(learner, subject)
     rows = []
-    for t in db.rows("SELECT * FROM traps WHERE learner=? AND closed IS NOT NULL ORDER BY id DESC", learner):
+    for t in db.rows("SELECT * FROM traps WHERE learner=? AND closed IS NOT NULL"
+                     " AND closed_how!='discarded' ORDER BY id DESC", learner):
         if t["topic"] not in names:
             continue
         miss = misses.get((t["template"], t["norm"]))
@@ -987,3 +988,113 @@ def walk_at(sid: str, body: WalkAt, x_learner: str | None = Header(default=None)
     data.update({"i": body.i, "step": body.step})
     db.run("UPDATE sessions SET cfg=? WHERE id=? AND learner=?", json.dumps(cfg), sid, learner)
     return {"ok": True}
+
+
+@router.post("/api/session/{sid}/void")
+def void_sitting(sid: str, x_learner: str | None = Header(default=None)) -> dict:
+    learner = writer_of(x_learner)
+    row = _own(sid, learner)
+    if row["contest"] or row["kind"] == "challenge":
+        raise HTTPException(409, "contest and challenge results cannot be discarded")
+    if row["kind"] != "drill" and (row["kind"] not in TEST_KINDS or not row["finished"]):
+        raise HTTPException(409, "finish this test first")
+    if db.one("SELECT 1 FROM attempts WHERE learner=? AND session=? AND void='discarded' LIMIT 1",
+              learner, sid):
+        raise HTTPException(409, "this sitting was already discarded")
+    return progress.discard(learner, sid)
+
+
+@router.post("/api/session/{sid}/unvoid")
+def unvoid_sitting(sid: str, x_learner: str | None = Header(default=None)) -> dict:
+    learner = writer_of(x_learner)
+    _own(sid, learner)
+    if not db.one("SELECT 1 FROM attempts WHERE learner=? AND session=? AND void='discarded' LIMIT 1",
+                  learner, sid):
+        raise HTTPException(409, "this sitting is not discarded")
+    return progress.restore(learner, sid)
+
+
+class Share(BaseModel):
+    items: list[list] | None = Field(default=None, max_length=40)
+    from_: dict | None = Field(default=None, alias="from")
+    title: str | None = Field(default=None, max_length=80)
+
+
+@router.post("/api/shares")
+def share(body: Share, x_learner: str | None = Header(default=None)) -> dict:
+    from . import sets
+    owner = writer_of(x_learner)
+    if (body.items is None) == (body.from_ is None):
+        bad("items", "send items or from")
+    created = sets.create(owner, sets.SetIn(kind="items", items=body.items, from_=body.from_,
+                                            title=body.title))
+    return {"id": created["code"], "count": created["count"], "url": created["url"]}
+
+
+@router.get("/api/shares/{code}")
+def shared(code: str, x_learner: str | None = Header(default=None)) -> dict:
+    from . import sets
+    summary = sets.get_set(code, x_learner)
+    return {"id": summary["code"], "title": summary["title"], "count": summary["count"],
+            "topics": summary["topics"], "difficulties": summary["tiers"],
+            "minutes": summary["minutes"]}
+
+
+class Spot(BaseModel):
+    trap_id: int = Field(ge=1)
+
+
+class SpotAnswer(BaseModel):
+    answer: int | str
+
+
+@router.post("/api/review/spot")
+def spot(body: Spot, x_learner: str | None = Header(default=None)) -> dict:
+    learner = writer_of(x_learner)
+    t = _trap(learner, body.trap_id)
+    if t["closed"] or t["norm"] in progress.UNNAMED:
+        raise HTTPException(409, "this mistake has no fresh version with that option")
+    seen = {r["seed"] for r in db.rows("SELECT seed FROM practice_seen WHERE learner=? AND template=?",
+                                       learner, t["template"])}
+    seen.update(r["seed"] for r in db.rows("SELECT seed FROM attempts WHERE learner=? AND template=?",
+                                           learner, t["template"]))
+    cursor = (max(seen) + 1) if seen else 0
+    found = None
+    for seed in range(cursor, cursor + 40):
+        if seed in seen or deps._protected(learner, t["template"], seed):
+            continue
+        q = _card(t["template"], seed)
+        if (q and q["type"] == "mcq" and t["norm"] in
+                {progress.norm(r) for r in q.get("reasons") or [] if r}):
+            found = q
+            break
+    if not found:
+        raise HTTPException(409, "this mistake has no fresh version with that option")
+    sid = secrets.token_urlsafe(16)
+    with db.atomic():
+        db.run("INSERT INTO sessions(id,kind,learner,started,questions,answers,cfg) VALUES (?,?,?,?,?,'{}',?)",
+               sid, "spot", learner, now(), json.dumps([found]), json.dumps({"trap_id": t["id"]}))
+        db.run("INSERT OR IGNORE INTO practice_seen(learner,template,seed,stem,at) VALUES (?,?,?,?,?)",
+               learner, t["template"], seed, drill._hash_of(found), now())
+    return {"id": sid, "question": public(found), "prompt": review.trap_label(t)}
+
+
+@router.post("/api/review/spot/{sid}")
+def spot_answer(sid: str, body: SpotAnswer, x_learner: str | None = Header(default=None)) -> dict:
+    learner = writer_of(x_learner)
+    row = _own(sid, learner)
+    if row["kind"] != "spot":
+        raise HTTPException(409, "this is not a spot question")
+    q = json.loads(row["questions"])[0]
+    cfg = json.loads(row["cfg"] or "{}")
+    trap = _trap(learner, cfg["trap_id"])
+    key = "ABCD".index(q["answer"])
+    got = body.answer
+    if isinstance(got, str) and got.upper() in "ABCD":
+        got = "ABCD".index(got.upper())
+    if type(got) is not int or not 0 <= got < 4:
+        bad("answer", "choose an option")
+    trap_index = next((i for i, r in enumerate(q["reasons"])
+                       if progress.norm(r or "") == trap["norm"]), None)
+    return {"correct": got == key, "trap_index": trap_index, "answer_index": key,
+            "reasons": review.option_labels(q), "rationale": q["rationale"]}

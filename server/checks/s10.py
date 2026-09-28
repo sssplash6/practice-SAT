@@ -33,7 +33,7 @@ def main() -> None:
         assert call("GET", "/api/review/trapsheet")["entries"] == []
         print("ok  empty learner has complete Review summaries")
 
-        started = call("POST", "/api/drill", json={"templates": ["lin.evaluate"], "count": 1})
+        started = call("POST", "/api/drill", json={"templates": ["lin.evaluate"], "formats": ["mcq"], "count": 1})
         sid = started["id"]
         q = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", sid)["questions"])[0]
         params = {"template": q["key"], "seed": q["seed"]}
@@ -48,7 +48,7 @@ def main() -> None:
         assert call("GET", "/api/review/marked")["items"][0]["qid"] == q["id"]
         print("ok  saved and marked keep ownership and hide an unseen key")
 
-        wrong = next(i for i in range(4) if "ABCD"[i] != q["answer"])
+        wrong = next(i for i in range(4) if "ABCD"[i] != q["answer"] and q["reasons"][i])
         call("POST", f"/api/drill/{sid}/answer", json={"question_id": q["id"], "answer": wrong})
         a = db.one("SELECT * FROM attempts WHERE learner=? ORDER BY id DESC LIMIT 1", owner)
         redo = call("GET", "/api/review/redo")
@@ -83,6 +83,33 @@ def main() -> None:
         call("POST", "/api/mistakes/restore", json={"id": redo["items"][0]["id"]})
         assert call("GET", "/api/review/redo")["total"] == 1
         print("ok  dismiss and restore preserve the trap")
+
+        before_spot = db.one("SELECT COUNT(*) AS n FROM attempts WHERE learner=?", owner)["n"]
+        spot = call("POST", "/api/review/spot", json={"trap_id": redo["items"][0]["id"]})
+        result = call("POST", f"/api/review/spot/{spot['id']}", json={"answer": 0})
+        assert spot["question"]["stem"] and result["trap_index"] is not None
+        assert db.one("SELECT COUNT(*) AS n FROM attempts WHERE learner=?", owner)["n"] == before_spot
+        call("POST", f"/api/review/spot/{spot['id']}", json={"answer": 0}, headers=other, want=403)
+        print("ok  Spot the Trap names the option without filing an attempt")
+
+        share = call("POST", "/api/shares", json={"items": [[q["key"], q["seed"]]], "title": "One item"})
+        card = call("GET", f"/api/shares/{share['id']}")
+        assert card["count"] == 1 and "stem" not in card
+        twin = call("POST", "/api/drill", headers=other,
+                    json={"list": "share", "ids": share["id"], "exact": True, "count": 1})
+        other_q = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", twin["id"])["questions"])[0]
+        assert other_q["stem"] == q["stem"] and other_q["seed"] == q["seed"]
+        print("ok  a share exposes no stem until its exact set starts")
+
+        discarded = call("POST", f"/api/session/{sid}/void")
+        assert discarded["answers"] == 1
+        assert call("GET", "/api/review/history", params={"result": "discarded"})["total"] == 1
+        assert call("GET", "/api/review/history")["summary"]["answers"] == 0
+        call("POST", f"/api/session/{sid}/void", want=409)
+        assert call("POST", f"/api/session/{sid}/unvoid")["answers"] == 1
+        assert call("GET", "/api/review/history")["summary"]["answers"] == 1
+        call("POST", f"/api/session/{sid}/void", headers=other, want=403)
+        print("ok  discard and restore adjust History and require ownership")
 
     print("S10 checks passed")
 
