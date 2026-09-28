@@ -683,7 +683,7 @@
     const b = frame({ title: S.section, hash: 'done', wide: true });
     const diag = S.kind === 'diagnostic';
     const card = h('section', { class: 'tw-card done', id: 'done', 'aria-labelledby': 'doneH' });
-    const rankChip = d.ranked === undefined || d.ranked === null ? null
+    const rankChip = d.ranked === undefined || d.ranked === null || d.scored === false ? null
       : h('span', { class: 'tw-chip' + (d.ranked ? ' ranked' : ''), text: d.ranked ? 'Ranked' : `Unranked${d.unranked_why ? ' · ' + d.unranked_why : ''}` });
     card.append(h('p', { class: 'tw-kline' }, h('span', { class: 'k', text: `${d.kind_label || S.kind_label}${d.number || S.number ? ` #${d.number || S.number}` : ''} · handed in` }), rankChip));
     const est = d.estimate;
@@ -729,7 +729,8 @@
       acts.append(h('button', { type: 'button', class: 'pill', id: 'pressureGo', text: `Pressure check · ${plural(p.n, 'question')} · ~${p.minutes} min`, onclick: e => pressure(e.currentTarget) }));
       acts.append(h('a', { class: 'btn', href: report, text: diag ? 'See your result' : 'See your report' }));
     } else acts.append(h('a', { class: 'pill', href: report, text: diag ? 'See your result' : 'See your report' }));
-    if (!diag && d.misses) acts.append(h('button', { type: 'button', class: 'quiet', text: `Fix ${d.misses} now`, onclick: e => fix(e.currentTarget) }));
+    const toFix = (d.misses || 0) + (d.blanks || 0);
+    if (!diag && toFix) acts.append(h('button', { type: 'button', class: 'quiet', text: `Fix ${toFix} now`, onclick: e => fix(e.currentTarget) }));
     acts.append(S.contest ? h('a', { class: 'quiet', href: '/compete/', text: 'Back to Compete' }) : h('a', { class: 'quiet', href: '/tests/', text: 'Back to Tests' }));
     card.append(acts);
     if (p.eligible) card.append(h('p', { class: 'help', text: `${plural(p.n, 'question')} like ones you missed, left blank, guessed or spent long on. Same kind, same difficulty, new numbers, no clock.` }));

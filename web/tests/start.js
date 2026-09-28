@@ -171,7 +171,8 @@
     return null;
   }
   function summary(st) {
-    const k = st.kind === 'paper' && st.paper ? `Paper #${st.paper}` : st.kind === 'twin' && st.twin ? `Twin of ${st.twin.label}` : KIND[st.kind].label;
+    const k = st.kind === 'paper' && st.paper ? `Paper #${st.paper}` : st.kind === 'twin' && st.twin ? `Twin of ${st.twin.label}`
+      : st.kind === 'shared' && st.shared && st.shared.by ? `Shared by ${st.shared.by}` : KIND[st.kind].label;
     const route = ['section', 'paper'].includes(st.kind) ? { adaptive: 'adaptive', upper: 'always harder', lower: 'always easier' }[st.m2] : null;
     const n = count(st), s = seconds(st);
     const time = s === null ? 'untimed' : `${Math.round(s / 60)} min`;
@@ -228,7 +229,9 @@
     async function loadShared(code) {
       try {
         const r = await api(`/sets/${encodeURIComponent(code)}`, { quiet: true }).catch(() => api(`/shared/${encodeURIComponent(code)}`, { quiet: true }));
-        st.shared = Object.assign({ code }, r || {});
+        // R18(c)'s public summary: {title, by, created, count, fresh}; no stems
+        st.shared = r ? { code, kind_label: r.kind_label || r.title, by: r.by, at: r.at || r.created, questions: r.questions || r.count,
+          minutes: r.minutes || (r.count ? Math.round(r.count / 22) * 35 : null), sat_by: r.sat_by, fresh: r.fresh !== false } : null;
       } catch (_) { st.shared = null; }
       draw();
     }
@@ -282,7 +285,7 @@
       if (st.kind === 'shared' || o.shared) list.push('shared');
       list.forEach(k => {
         const info = KIND[k];
-        const label = k === 'twin' && st.twin ? `Twin of ${st.twin.label}` : k === 'shared' && st.shared && st.shared.kind_label ? `${st.shared.kind_label}${st.shared.by ? ` shared by ${st.shared.by}` : ''}` : info.label;
+        const label = k === 'twin' && st.twin ? `Twin of ${st.twin.label}` : k === 'shared' && st.shared ? (st.shared.by ? `Shared by ${st.shared.by}` : st.shared.kind_label || info.label) : info.label;
         const card = h('button', { type: 'button', class: 'st-card', role: 'radio', 'aria-checked': String(st.kind === k), onclick: () => { st.kind = k; if (k === 'paper' && !st.paper) st.paper = firstPaper(); draw(); } },
           h('b', { text: label }), h('span', { class: 'meta', text: info.facts }));
         grid.append(card);
@@ -365,9 +368,10 @@
       if (k === 'shared') {
         const s = st.shared;
         if (!s) { host.append(h('p', { class: 'error', text: 'This link doesn’t lead to a test.' })); return; }
-        host.append(h('p', {}, h('b', { text: `${s.kind_label || 'A test'}${s.by ? ` shared by ${s.by}` : ''}` })),
+        host.append(h('p', {}, h('b', { text: s.by ? `${s.kind_label || 'A test'} · shared by ${s.by}` : s.kind_label || 'A shared test' })),
           h('p', { class: 'meta', text: [s.at ? UI.date(s.at, 'short') : null, s.questions ? plural(s.questions, 'question') : null, s.minutes ? `${s.minutes} min` : null, s.sat_by ? `Sat by ${s.sat_by}` : null].filter(Boolean).join(' · ') }),
-          h('p', { class: 'help', text: `Module 1 has the same question types in the same order as ${s.by || 'theirs'}, with your own numbers. Module 2 matches when you earn the same route.` }));
+          h('p', { class: 'help', text: s.fresh === false ? `Module 1 is the same as ${s.by ? s.by + '’s' : 'theirs'}. Module 2 matches when you earn the same route.`
+            : `Module 1 has the same question types in the same order as ${s.by ? s.by + '’s' : 'theirs'}, with your own numbers. Module 2 matches when you earn the same route.` }));
       }
     }
     function stepCustom(host) {

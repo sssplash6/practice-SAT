@@ -764,7 +764,7 @@
         x.setAttribute('aria-busy', 'true');
         try {
           const s = await api('/sets', { method: 'POST', body: { kind: 'test', session: r.id, show_score: showScore, cfg: { fresh } } });
-          link = s.url || `${location.origin}/tests/?shared=${encodeURIComponent(s.code)}`;
+          link = new URL(s.url || `/tests/?shared=${encodeURIComponent(s.code)}`, location.origin).href;
           field.value = link;
           if (UI.copyText) UI.copyText(link, { toast: 'Link copied' });
         } catch (e) { toast(`Couldn’t make the link: ${e.message}`); }
