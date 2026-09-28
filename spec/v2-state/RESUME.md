@@ -134,6 +134,10 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       Math 320-320, repeated tile numbers, the single-cause legend, glyph wraps and two orange starts (v2/s6 cafc17a), and
       took odds and levels out of the shared player (calm-shared 90f2469). prev4 has v2/s6 (preview server bx2scb467).
       Results asks for the helper added to Task 20. The old Results swap on calm-shared is reverted (9ea9dff).
+    - 2026-09-28: the user: "build me". Same flow as Results: build.js [{id:'S1', inline: true}] (build units only), then my
+      light check and design review, then tell the user. v2/s1 = v2/s1-server (the helper's, mid-work: his worktree had 2
+      uncommitted files) + master; the old v2/s1 (one mail.py commit, identical in s1-server) is kept as v2/s1-old-server.
+      At merge: v2/s1-server first (after "S1 server done" and its check), then v2/s1. No master commits while it runs.
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
