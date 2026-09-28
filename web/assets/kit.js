@@ -1906,7 +1906,9 @@
       h('span', { class: 'meta', text: s.answered ? `${pct(acc)} right of ${fmtN(s.answered)}` : 'no answers yet' }));
     el.append(m);
     if (s.gain !== undefined) {
-      el.append(h('span', { class: 'skill-gain', text: s.gain === null || s.gain < 5 ? 'under 5' : `≈ +${Math.round(s.gain)}` }));
+      // a figure only when there is one: under 5 is a quiet note, not the row's headline
+      const small = s.gain === null || s.gain < 5;
+      el.append(h('span', { class: 'skill-gain' + (small ? ' small' : ''), text: small ? 'under 5' : `≈ +${Math.round(s.gain)}` }));
       const goal = s.to ?? STRONG;
       el.append(h('div', { class: 'skill-track-wrap' },
         h('span', { class: 'skill-track', role: 'img', 'aria-label': `First-try accuracy ${pct(acc)}; the gain assumes ${pct(goal)}` },
@@ -1914,12 +1916,13 @@
         h('span', { class: 'meta', text: `${pct(acc)} → ${pct(goal)}` })));
       const meta = [s.per_test !== undefined && `about ${fmtN(s.per_test)} of 44`, s.need_right && `at least ${fmtN(s.need_right)} right`, s.minutes && `~${dur(s.minutes)}`].filter(Boolean);
       if (meta.length) el.append(h('p', { class: 'meta skill-meta', text: meta.join(' · ') }));
-      if (s.tiers) el.append(h('p', { class: 'meta skill-tiers', text: ['easy', 'medium', 'hard'].filter(t => s.tiers[t]).map(t => `${t[0].toUpperCase()} ${s.tiers[t][0]}/${s.tiers[t][1]}`).join(' · ') }));
+      if (s.tiers) el.append(h('p', { class: 'meta skill-tiers', text: ['easy', 'medium', 'hard'].filter(t => s.tiers[t] && s.tiers[t][1]).map(t => `${t[0].toUpperCase()} ${s.tiers[t][0]}/${s.tiers[t][1]}`).join(' · ') }));
     }
     const side = h('div', { class: 'skill-side' });
     if (s.open) side.append(h('span', { class: 'skill-open', 'aria-label': `${s.open} open mistake${s.open === 1 ? '' : 's'}` },
       h('span', { class: 'dots', 'aria-hidden': 'true' }, Array.from({ length: Math.min(3, s.open) }, () => h('i'))), h('span', { class: 'meta', text: fmtN(s.open) })));
-    if (s.evidence !== undefined && s.evidence < 10) side.append(h('span', { class: 'badge soft', text: `rough · ${fmtN(s.evidence)} answers` }));
+    // the answer count is the accuracy line's ("of 6"), so the badge only says the figure is rough
+    if (s.evidence !== undefined && s.evidence < 10) side.append(h('span', { class: 'badge soft', title: `From ${fmtN(s.evidence)} answers`, text: 'rough' }));
     if (s.pts !== undefined && s.gain === undefined) side.append(pts(null, s.pts, `skill:${topic}`) || '');
     const pr = o.practise;
     if (pr) {
