@@ -184,6 +184,8 @@
   .rp-stick { display: none; }
   .rp > section, .rp-mist-wrap > section { scroll-margin-top: 72px; }
   @media (max-width: 759px) { .rp > section, .rp-mist-wrap > section { scroll-margin-top: 128px; } }
+  /* on a phone a head's control row takes its own line, so the ⓘ's 44px hit area never lies over it ("By cause") */
+  @media (max-width: 759px) { .card-head > .rp-headr { flex-basis: 100%; margin-top: 6px; } }
   /* a phone or a coarse pointer: chips and info buttons get a 44px hit area, as the kit's .btn.sm does */
   @media (max-width: 759px), (pointer: coarse) {
     .rp-info, button.rp-chip, a.rp-chip { position: relative; }

@@ -242,7 +242,7 @@
       if (ret && ret.href && /^\/[^/]/.test(ret.href)) back.append(h('a', { href: ret.href, text: `← ${ret.label || 'Back to your plan'}` }));
     } catch (_) {}
     const d = new Date(R.finished || R.started);
-    const bits = [UI.date(d, 'long'), d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })];
+    const bits = [UI.date(d, 'long')];             // the day, not the clock time (the user: no timestamps)
     if (R.ms) bits.push(`${mins(R.ms)} min`);
     bits.push(R.timed ? 'Timed' : 'Untimed');
     const title = h('div', {}, h('p', { class: 'k', text: eyebrow() }), h('h1', { text: bits.join(' · ') }));
