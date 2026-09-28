@@ -1284,8 +1284,11 @@
       if (mc && fb.reasons && !blank && mode !== 'quiz') v.append(...trapsLines(fb, key, g, right));
       if (!right && !blank && fb.cause && o.onCause) v.append(causeChips(fb.cause));
       if (fb.habit && fb.habit.name) v.append(habitChip(fb.habit));
+      // the verdict's headline already names the trap the answer came from: the new-mistake line then only says what it takes
+      const named = g !== null && fb.reasons && fb.reasons[g] ? String(fb.reasons[g]).trim().toLowerCase() : null;
       (fb.opened || []).map(x => (typeof x === 'string' ? { label: x } : x)).filter(x => x && x.label).forEach(x => {
-        v.append(h('p', { class: 'v-line v-new' }, h('b', { text: 'New mistake to fix: ' }), cap1(x.label),
+        const same = named && String(x.label).trim().toLowerCase() === named;
+        v.append(h('p', { class: 'v-line v-new' }, h('b', { text: same ? 'New mistake to fix' : 'New mistake to fix: ' }), same ? '' : cap1(x.label),
           ` · ${x.clean ?? 0} of ${x.of ?? 2} clean answers · `, h('a', { class: 'qlink', href: x.href || '/review/?tab=redo', text: 'See it in Review' })));
       });
       if (fb.repair_next) v.append(h('p', { class: 'v-line', text: 'Next: one like this, with new numbers' }));
