@@ -598,7 +598,7 @@
   }
   function twinSheet(body, recall, title) {
     if (!UI.twinSheet) return drill(body);
-    const s = UI.twinSheet({ body, recall: recall ? { text: recall } : null, title: title || 'Try one now', onDone: () => refresh(['today']) });
+    const s = UI.twinSheet({ body, recall: recall ? { text: recall } : null, title: title || 'Twin', onDone: () => refresh(['today']) });
     if (s && s.el && !title) s.el.id = 'tryOne';
   }
 
@@ -1384,7 +1384,7 @@
     if (sure || x.blind) mt.append(h('span', { class: 'tag', title: 'You were sure, and it was wrong', text: 'Sure' }));
     const acts = h('div', { class: 'tacts' });
     if (x.relapses >= 1 || x.learn) { const q = quiet('Learn it again', () => drill({ source: 'learn', templates: [x.template], example: true, count: 3 })); q.title = 'It came back: a worked example, then 3 questions'; acts.append(q); }
-    if (first) acts.append(btn('Try one now', () => twinSheet({ pool: 'redo', ids: [x.id], count: 1, source: 'try' }, x.label), 'btn sm'));
+    if (first) acts.append(btn('Twin', () => twinSheet({ pool: 'redo', ids: [x.id], count: 1, source: 'try' }, x.label), 'btn sm'));
     el.append(h('span', { class: 'dot', 'aria-hidden': 'true' }), lb, chev, mt);
     if (acts.children.length) el.append(acts);
     return el;
@@ -2802,7 +2802,7 @@
   UI.keys.register('today', {
     J: { does: 'Next card', run: () => moveCard(1) },
     K: { does: 'Previous card', run: () => moveCard(-1) },
-    T: { does: 'Try one now', run: () => { const x = S.t && S.t.traps && (S.t.traps.top || [])[0]; if (x) twinSheet({ pool: 'redo', ids: [x.id], count: 1, source: 'try' }, x.label); } },
+    T: { does: 'Twin', run: () => { const x = S.t && S.t.traps && (S.t.traps.top || [])[0]; if (x) twinSheet({ pool: 'redo', ids: [x.id], count: 1, source: 'try' }, x.label); } },
     Enter: { does: 'Run the focused card’s main action', when: () => document.activeElement && document.activeElement.matches('#today .card-head > h2, #today h1'),
       run: () => { const c = document.activeElement.closest('section'); const b = c && (c.querySelector('.pill') || c.querySelector('.btn')); if (b) b.click(); } },
   }, { label: 'Today' });
