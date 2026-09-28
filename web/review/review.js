@@ -35,6 +35,10 @@
     get(k, d) { try { const v = sessionStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (_) { return d; } },
     set(k, v) { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch (_) {} },
   };
+  const ls = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (_) { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (_) {} },
+  };
   // fractions in math text stack in the line when the kit offers it (the user's rule, 2026-09-28)
   const mtext = (el, text) => {
     const t = String(text ?? '');
@@ -57,7 +61,7 @@
   const S = {
     tab: null, counts: null, countsErr: false, due: null, dueErr: false, prefs: {}, me: null, minutes: 10,
     lists: {}, filters: {}, bar: {}, player: null, playerTab: null, cache: new Map(), token: 0, ledger: null,
-    fb: null, marked: 'miss', savedCard: 'all', savedView: 'questions', sinceCal: '30', open: null,
+    fb: null, marked: 'miss', savedCard: 'all', savedView: new URLSearchParams(location.search).get('view') === 'rules' ? 'rules' : 'questions', sinceCal: '30', open: null,
   };
   const Q = () => new URLSearchParams(location.search);
   const selKey = tab => `satf.review.sel.${tab}`;
@@ -1143,6 +1147,7 @@
     const host = $('tabhead');
     host.replaceChildren();
     const tab = S.tab;
+    $('main').classList.toggle('rh-rules', tab === 'saved' && S.savedView === 'rules');
     if (tab === 'due') dueHead(host);
     else if (tab === 'redo') redoHead(host);
     else if (tab === 'marked') markedHead(host);
@@ -1159,9 +1164,10 @@
   function dueHead(host) {
     const d = S.due;
     if (!d) { if (S.dueErr) UI.cardError(host, () => loadDue().then(() => { paintHead(); afterDue(); }), 'Today’s review didn’t load.'); return; }
-    const exam = S.me && (S.me.exam_date || (S.me.learner && S.me.learner.exam_date));
+    const exam = S.me && ((S.me.profile && S.me.profile.exam_date) || S.me.exam_date);
     const soon = exam && (Date.parse(exam) - Date.now()) / 864e5 <= 7 && Date.parse(exam) >= Date.now() - 864e5;
-    if (!d.total && !(d.forecast || []).some(f => f.checks || f.saved) && !soon) return;
+    if (soon) examCard(host, exam);
+    if (!d.total && !(d.forecast || []).some(f => f.checks || f.saved)) return;
     const card = h('section', { class: 'card rh-card', 'aria-label': 'Today' });
     const box = h('div', { class: 'rh-today' });
     const pct = d.total ? d.done / d.total : 0;
@@ -1179,7 +1185,6 @@
       mid.append(kinds);
     } else mid.append(h('p', { class: 'rh-big', text: 'Nothing due today' }));
     if (d.waiting > 0) mid.append(h('p', { class: 'rh-wait', text: `${fmtN(d.waiting)} more wait for later days` }));
-    if (soon) mid.append(h('p', { class: 'rh-line', style: 'margin-top:8px' }, h('a', { class: 'btn sm', href: '/plan/?print=sheet', text: 'Your test-day sheet' })));
     box.append(d.total ? ring : h('span'), mid);
     const fc = (d.forecast || []);
     if (fc.some(f => f.checks || f.saved) && UI.barChart) {
@@ -1333,6 +1338,16 @@
   // Saved: Questions · Your rules, and the deck cards (V3, V19)
   function savedHead(host) {
     const c = S.counts || {};
+    const view = h('div', { class: 'rh-row2', style: 'margin-bottom:12px' });
+    UI.seg(view, [{ value: 'questions', label: 'Questions' }, { value: 'rules', label: 'Your rules' }], { value: S.savedView, label: 'Show', onChange: v => {
+      S.savedView = v;
+      const u = new URL(location.href);
+      if (v === 'rules') u.searchParams.set('view', 'rules'); else u.searchParams.delete('view');
+      history.replaceState(history.state, '', u);
+      paintHead();
+    } });
+    host.append(view);
+    if (S.savedView === 'rules') { rulesCard(host); return; }
     if (!c.saved) return;
     const row = h('div', { class: 'rh-row2' });
     const cards = [{ value: 'all', label: 'All', n: null }];
@@ -1345,6 +1360,112 @@
       UI.seg(row, cards, { value: S.savedCard, label: 'Show', onChange: v => { S.savedCard = v; const L = S.lists.saved; if (L && L.all) { L.items = L.all; L.total = L.data.total; clientSaved(L); paintListHead(); paintList(); syncPane(); paintBar(); } } });
     }
     if (row.children.length) host.append(row);
+  }
+
+  // V19: Your SAT is days away: the trap sheet, and one fresh question per trap
+  function examCard(host, exam) {
+    const when = new Date(`${String(exam).slice(0, 10)}T12:00:00`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    const n = Math.min(10, (S.counts && S.counts.open) || 0);
+    const card = h('section', { class: 'card rh-card', 'aria-label': 'Exam week' });
+    const acts = h('div', { class: 'rh-row2', style: 'margin-top:10px' });
+    acts.append(h('a', { class: 'btn', href: '/review/print.html?sheet=traps', text: 'Your trap sheet' }));
+    if (n) {
+      const go = h('button', { type: 'button', class: 'pill', text: `Final check · one fresh question per trap · ${n} · about ${Math.max(1, Math.round((n * 95) / 60))} min` });
+      go.addEventListener('click', async () => {
+        go.setAttribute('aria-busy', 'true');
+        try {
+          const t = await UI.api('/review/trapsheet');
+          const templates = [...new Set((t.entries || []).map(e => e.template))].slice(0, 10);
+          if (!templates.length) throw new Error('none');
+          start({ templates, count: templates.length, timing: 'pace', order: 'mixed', source: 'mistakes' }, go);
+        } catch (_) { go.removeAttribute('aria-busy'); toast('The final check didn’t start. Try again.'); }
+      });
+      acts.prepend(go);
+    }
+    card.append(h('p', { class: 'rh-big', text: `Your SAT is ${when}` }), acts);
+    host.append(card);
+  }
+
+  // V19: Your rules (P21's store): the type's rule, its date, Try one, edit in place, Still useful?
+  const RULE_MAX = 140;
+  function rulesCard(host) {
+    const kept = ls.get('satf.rules.kept', {}) || {};
+    part(host, null, async body => {
+      const b = await UI.api('/bank', { quiet: true });
+      const rules = [];
+      (b.domains || []).forEach(dm => (dm.skills || []).forEach(sk => (sk.types || []).forEach(t => {
+        if (t.type_note) rules.push({ template: t.template, name: t.name || sk.name, note: t.type_note, at: t.type_note_at });
+      })));
+      rules.sort((x, y) => String(y.at || '').localeCompare(String(x.at || '')));
+      if (!rules.length) {
+        body.replaceChildren(h('p', { class: 'meta', text: 'Write a rule after a miss (“Next time I will…”) and it waits here for test week.' }));
+        return;
+      }
+      const list = h('div', { class: 'rh-rules-l', role: 'list' });
+      rules.forEach(r => list.append(ruleRow(r, kept)));
+      body.replaceChildren(list, h('p', { class: 'rh-row2', style: 'margin-top:12px' }, h('a', { class: 'btn sm', href: '/practice/?print=rules', text: 'Print my rules' })));
+    });
+  }
+  // a rule is written against one of your own answers of that type (the server never takes a template from the page)
+  async function writeRule(template, note) {
+    const f = await UI.api(`/review/family?template=${encodeURIComponent(template)}&limit=1`, { quiet: true });
+    const a = (f.attempts || [])[0];
+    if (!a) throw new Error('no answer of this type');
+    await UI.api('/notes', { method: 'POST', body: { attempt_id: a.id, scope: 'type', note } });
+  }
+  function ruleRow(r, kept) {
+    const row = h('div', { class: 'rh-rule', role: 'listitem' });
+    const text = h('p', { class: 'rh-rule-t', text: r.note });
+    const tryHost = h('div');
+    const acts = h('div', { class: 'rh-row2' });
+    const tryB = h('button', { type: 'button', class: 'btn sm', text: 'Try one' });
+    tryB.addEventListener('click', () => {
+      if (!UI.twinInline) return;
+      tryHost.replaceChildren();
+      UI.twinInline(tryHost, { body: { templates: [r.template], count: 1, source: 'review' }, caption: `Try one · ${r.name}`, session: false });
+    });
+    const editB = h('button', { type: 'button', class: 'quiet', text: 'Edit' });
+    editB.addEventListener('click', () => {
+      const ta = h('textarea', { rows: '2', maxlength: String(RULE_MAX), 'aria-label': `Your rule for ${r.name}` });
+      ta.value = r.note;
+      const cnt = UI.counter ? UI.counter(ta, RULE_MAX) : null;
+      const box = h('div', { class: 'rh-rule-ed' }, ta, cnt);
+      text.replaceWith(box);
+      ta.focus();
+      let done = false;
+      const finish = async () => {
+        if (done) return;
+        done = true;
+        const v = ta.value.trim();
+        if (v && v !== r.note) {
+          try { await writeRule(r.template, v); r.note = v; } catch (_) { toast('Not saved. Try again.'); }
+        }
+        text.textContent = r.note;
+        box.replaceWith(text);
+      };
+      ta.addEventListener('blur', finish);
+      ta.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ta.blur(); }
+        if (e.key === 'Escape') { e.preventDefault(); ta.value = r.note; ta.blur(); }
+      });
+    });
+    acts.append(tryB, editB);
+    if (!kept[r.template]) {
+      const ask = h('span', { class: 'meta rh-rule-ask' }, 'Still useful? ');
+      const keep = h('button', { type: 'button', class: 'quiet', text: 'Keep' });
+      keep.addEventListener('click', () => { kept[r.template] = 1; ls.set('satf.rules.kept', kept); ask.remove(); });
+      const rm = h('button', { type: 'button', class: 'quiet', text: 'Remove' });
+      rm.addEventListener('click', async () => {
+        const old = r.note;
+        try { await writeRule(r.template, ''); } catch (_) { toast('Not removed. Try again.'); return; }
+        row.remove();
+        toast('Rule removed', { undo: () => writeRule(r.template, old).then(() => { if (S.tab === 'saved') paintHead(); }).catch(() => toast('Not restored.')) });
+      });
+      ask.append(keep, ' · ', rm);
+      acts.append(ask);
+    }
+    row.append(h('p', { class: 'rh-rule-h' }, h('b', { text: r.name }), r.at ? h('span', { class: 'meta', text: ` · ${day(r.at)}` }) : null), text, acts, tryHost);
+    return row;
   }
 
   // History: the summary card, pace and the rushed line (V8, V12)
@@ -1449,7 +1570,7 @@
     }
     const f = l.forecast || {}, rate = l.rate || {};
     if (f.zero_on) {
-      const exam = S.me && (S.me.exam_date || (S.me.learner && S.me.learner.exam_date));
+      const exam = S.me && ((S.me.profile && S.me.profile.exam_date) || S.me.exam_date);
       const gap = exam ? Math.round((Date.parse(exam) - Date.parse(f.zero_on)) / 864e5) : null;
       card.append(h('p', { style: 'margin-top:10px', text: `At this pace (${fmtN(Math.round(rate.fixed_week || 0))} fixed a week, ${fmtN(Math.round(rate.made_week || 0))} made) open mistakes reach 0 around ${day(f.zero_on)}${gap !== null && gap > 0 ? `, ${plural(gap, 'day')} before your SAT` : ''}.` }));
       if (f.after_exam && f.extra_minutes) card.append(h('p', { class: 'help', text: `That’s after your SAT. About ${fmtN(f.extra_minutes)} more minutes a day clears them in time.` }));

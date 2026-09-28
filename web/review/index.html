@@ -59,6 +59,15 @@
   .rh-card .card-head { margin-bottom: 12px; }
   .rh-card .rh-k { flex: 1 1 auto; font: 500 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--soft); }
   .rh-row2 { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  /* Saved · Your rules (V19): the rules replace the question list, its filters, pane and bar */
+  .rh.rh-rules #optsbox, .rh.rh-rules #filters, .rh.rh-rules #body, .rh.rh-rules #actbar { display: none; }
+  .rh-rules-l { display: grid; gap: 0; }
+  .rh-rule { padding: 12px 0; border-top: 1px solid var(--line); display: grid; gap: 6px; }
+  .rh-rule:first-child { border-top: 0; padding-top: 0; }
+  .rh-rule-h, .rh-rule-t { margin: 0; }
+  .rh-rule-t { font-size: 15px; }
+  .rh-rule-ed textarea { width: 100%; font: inherit; padding: 8px 10px; border: 1.5px solid var(--ink); border-radius: 8px; background: var(--bg); color: var(--ink); resize: vertical; }
+  .rh-rule-ask .quiet { min-height: 32px; }
   .rh-kinds { display: flex; flex-wrap: wrap; gap: 6px; }
   .rh-kind { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px; border-radius: 999px;
     background: var(--paper); box-shadow: inset 0 0 0 1px var(--line); font: 600 12.5px var(--font); color: var(--ink); white-space: nowrap; }
