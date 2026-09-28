@@ -2226,7 +2226,8 @@
     if (!barEl) return;
     const old = barEl.querySelector('.sections-next');
     if (old) old.remove();
-    const it = shellData && nextItems()[0];
+    // Today has its own Up next card: the bar doesn't say it a second time (the user)
+    const it = shellData && doc.body.dataset.page !== 'today' && nextItems()[0];
     if (it) barEl.append(h('span', { class: 'sections-next' }, 'Up next: ', h('b', { text: it.title }), startBtn(it)));
     const chips = barEl.querySelectorAll(':scope > a').length;
     barEl.hidden = !chips && !it;
