@@ -391,7 +391,7 @@
       tRow.append(h('p', { class: 's' }, L ? `${band(L)} now · ${target} target · ${go > 0 ? `+${go} to go` : 'target reached'}` : 'Your first module shows where you are against it.',
         L && go <= 0 && target < 800 ? [' · ', btn(`Raise to ${Math.min(800, target + 50)}?`, { quiet: true, onClick: () => saveTarget({ target: Math.min(800, target + 50) }) })] : null));
       if (!rwT && !RO) tRow.append(h('p', { class: 's' }, btn('Add your R&W target for a total', { quiet: true, onClick: (e, b) => targetPop(b) })));
-      const need = g.need;
+      const need = RO ? null : g.need;                  // it speaks to the student, not to a parent reading the link
       if (need && need.reachable && need.right_of_44) {
         const where = (need.where || []).slice(0, 3).map(tn);
         tRow.append(h('p', { class: 's', text: `What ${target} takes: about ${need.right_of_44} of 44 right` +
@@ -714,6 +714,8 @@
           href: RO ? null : `/results/#${s.topic}` });
       // "Not started" already says it: the kit's "no answers yet" beside it is the same fact twice (decision 7)
       if (!s.answered) { const m = el.querySelector('.skill-m .meta'); if (m) m.remove(); }
+      // with nothing answered anywhere, the empty bars say it; nineteen "Not started" would not
+      if (!s.answered && !S.stats.answered) { const w = el.querySelector('.skill-word'); if (w) w.remove(); }
       return [el, more(s)];
     };
     function more(s) {
@@ -762,7 +764,7 @@
         const hd = h('button', { type: 'button', class: 'dom-h', 'aria-expanded': String(open) },
           h('span', { class: 'nm', text: d.domain }),
           h('span', { class: 'mbar6', role: 'img', 'aria-label': `${d.domain}: ${UI.masteryWord(d.mastery, d.answered)}` }, h('i', { style: `--m: ${d.mastery || 0}` })),
-          h('span', { class: 'meta', text: d.answered ? `${N(d.answered)} answered · ${pct(d.right / d.answered)} right` : 'Not started' }),
+          h('span', { class: 'meta', text: d.answered ? `${N(d.answered)} answered · ${pct(d.right / d.answered)} right` : '' }),
           weak ? h('span', { class: 'weak', text: `Weakest: ${tn(weak.topic)}` }) : null);
         hd.addEventListener('click', () => {
           if (!phone()) return;
@@ -831,11 +833,17 @@
       body: b => {
         b.append(UI.skel(null, 'lines:4'));
         UI.api(`/types/${encodeURIComponent(x.template)}/example`).then(r => {
-          const q = r.question || {};
-          b.replaceChildren(h('p', { class: 'k', text: 'An example, new numbers each time' }),
-            q.figure ? h('div', { class: 'ex-fig', html: q.figure }) : null,
-            h('div', { class: 'ex-q' }, h('p', { text: q.stem || '' }), q.choices ? h('ol', { type: 'A' }, q.choices.map(c => h('li', { text: c }))) : null),
-            h('p', { class: 'help', text: [x.c.met ? `Met ${x.c.met} · right ${x.c.right || 0}` : 'Not met yet', x.open ? 'an open mistake' : null].filter(Boolean).join(' · ') }));
+          // the key stays out: the example is to recognise the form, not to answer (U8)
+          const { answer, rationale, reasons, spr_reasons, steps, step_of, ...q } = r.question || {};
+          const host = h('div', { class: 'ex-q' });
+          const plain = () => host.replaceChildren(h('p', { text: q.stem || '' }),
+            (q.choices || []).length ? h('ol', { type: 'A' }, q.choices.map(c => h('li', { text: c }))) : null);
+          b.replaceChildren(...[h('p', { class: 'k', text: 'An example, new numbers each time' }), host,
+            h('p', { class: 'help', text: [x.c.met ? `Met ${x.c.met} · right ${x.c.right || 0}` : 'Not met yet', x.open ? 'an open mistake' : null].filter(Boolean).join(' · ') })]);
+          // the one question renderer, so figures, tables, math and fractions read as they do in a set
+          // shown to read, not to answer: inert, with the entry and help rows hidden (me.css .ex-q)
+          UI.need('question').then(() => { UI.workspace(host, q, { mode: 'review', hidden: true, bar: false, toolbar: false, head: false }); host.inert = true; })
+            .catch(plain);
         }, () => b.replaceChildren(h('p', { class: 'soft', text: 'Couldn’t load an example.' })));
       },
       actions: [{ label: 'Log a mistake on it', onClick: () => { UI.quick('mistake'); } },
