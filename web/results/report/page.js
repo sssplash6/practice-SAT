@@ -492,7 +492,8 @@
     if (!owner || !s2.offered || !(s2.unseen || []).length) return;
     head(el, { k: `Second look · ${plural(s2.unseen.length, 'miss', 'misses')} · answers still hidden · about ${n(Math.max(1, s2.minutes || 1))} min`,
       title: 'Re-work each miss before you see the answer', tip: 'It tells a slip from a gap, and it makes the fix stick.' });
-    const start = h('button', { type: 'button', class: 'pill', text: 'Start second look' });
+    // one orange start on the screen: Win back is the report's; the card's own wash marks this step
+    const start = h('button', { type: 'button', class: 'btn', text: 'Start second look' });
     start.addEventListener('click', startSecond);
     const skip = btn('Show answers now', async b => {
       b.setAttribute('aria-busy', 'true');
