@@ -22,11 +22,16 @@
   .st-opts { display: grid; gap: 22px; }
   .st-sec { display: grid; gap: 10px; }
   .st-sec > .k { display: block; }
+  .st .seg { width: fit-content; max-width: 100%; }
+  .st-more > summary { cursor: pointer; font: 600 14px var(--font); min-height: 44px; display: flex; align-items: center; }
+  .st-more-in { display: grid; gap: 22px; padding-top: 10px; }
+  .deck-empty > summary { cursor: pointer; font: 600 13.5px var(--font); color: var(--soft); min-height: 44px; display: flex; align-items: center; }
+  .deck-empty .decks { margin-top: 4px; }
+  .deck[aria-disabled="true"] { cursor: default; background: none; box-shadow: inset 0 0 0 1px var(--line); color: var(--soft); }
   .decks { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
   .deck { appearance: none; border: 0; cursor: pointer; text-align: left; display: grid; gap: 4px; min-height: 72px; padding: 12px 14px; border-radius: 10px;
     background: var(--tile); color: var(--ink); font: inherit; position: relative; }
   .deck[aria-checked="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
-  .deck:disabled { cursor: default; opacity: .55; }
   .deck b { font: 600 14.5px/1.3 var(--font); padding-right: 40px; }
   .deck .n { position: absolute; top: 12px; right: 14px; font: 500 13px var(--mono); color: var(--soft); }
   .deck .help { margin: 0; }
@@ -34,18 +39,27 @@
   @media (hover: hover) and (pointer: fine) { .deck:not(:disabled):not([aria-checked="true"]):hover { background: var(--tile-2); } }
   .st-note { font: 400 13px/1.45 var(--font); color: var(--soft); }
   .glance { position: sticky; top: 24px; display: grid; gap: 12px; }
-  .glance .big { font: 500 28px/1.1 var(--mono); letter-spacing: -.02em; }
+  .glance .big { font: 500 28px/1.1 var(--mono); letter-spacing: -.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .glance .big + .meta { margin-top: -8px; }
   .glance .line { font: 400 14px/1.5 var(--font); }
   .glance .pill { width: 100%; }
   .glance .err { font: 400 13px var(--font); color: var(--ink); }
   .gl-print { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; }
-  @media (max-width: 999px) { .st-grid { grid-template-columns: 1fr; } }
-  @media (max-width: 759px) {
-    .glance { position: fixed; top: auto; left: 0; right: 0; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); z-index: 25; border-radius: 0; padding: 10px 16px;
-      grid-template-columns: 1fr auto; align-items: center; box-shadow: 0 -1px 0 var(--line); background: var(--paper); gap: 4px 12px; }
+  /* one column: the glance is a bar at the bottom, so Start is always in reach */
+  @media (max-width: 999px) {
+    .st-grid { grid-template-columns: 1fr; }
+    .glance { position: fixed; top: auto; left: 0; right: 0; bottom: env(safe-area-inset-bottom, 0px); z-index: 25; border-radius: 0; padding: 10px var(--gutter);
+      grid-template-columns: minmax(0, 1fr) auto; align-items: center; box-shadow: 0 -1px 0 var(--line); background: var(--paper); gap: 2px 12px; }
+    body.has-side .glance { left: var(--side-w); }
+    body.has-rail .glance { left: var(--rail-w); }
     .glance .big { font-size: 17px; font-family: var(--font); font-weight: 600; }
+    .glance .big + .meta { margin-top: 0; }
     .glance .line, .glance .k, .glance .gl-print { display: none; }
-    .glance .pill { width: auto; grid-row: 1 / span 2; grid-column: 2; }
+    .glance .pill { width: auto; grid-row: 1 / span 2; grid-column: 2; height: 44px; }
+    .st { padding-bottom: 200px; }
+  }
+  @media (max-width: 759px) {
+    .glance { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
     .st { padding-bottom: 240px; }
     .decks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .deck b { padding-right: 0; }
@@ -107,7 +121,7 @@
     W._lists = [...new Set(words.filter(w => w.own && w.collection).map(w => w.collection))];
     const c = lib.counts || {};
     $('meta').textContent = [c.due ? `${num(c.due)} due` : null, c.known ? `${num(c.known)} known` : null, c.claimed ? `${num(c.claimed)} claimed` : null].filter(Boolean).join(' · ');
-    UI.todayWords($('today'), { lib, onChange: load });
+    UI.todayWords($('today'), { lib, compact: true, onChange: load });
     if (!S.deck) S.deck = P.get('words') ? 'from' : P.get('deck') || (c.due ? 'due' : 'new');
     paint();
   }
@@ -168,18 +182,22 @@
   };
 
   /* ---------------- the options */
+  const tip = (s, text) => { const k = s.querySelector('.k'); if (k && W.info) k.append(' ', W.info(text, k.textContent)); };
   function paint() {
     const host = $('opts');
     host.replaceChildren();
     const sec = (k, ...kids) => { const s = h('section', { class: 'st-sec' }, h('span', { class: 'k', text: k })); kids.flat().filter(Boolean).forEach(x => s.append(x)); host.append(s); return s; };
     // DECK
     const grid = h('div', { class: 'decks', role: 'radiogroup', 'aria-label': 'Deck' });
+    const none = [];
     decks().forEach(d => {
       const empty = d.n === 0;
-      const b = h('button', { type: 'button', class: 'deck', role: 'radio', 'aria-checked': String(S.deck === d.id), disabled: empty ? true : null,
-        onclick: e => { if (e.target.closest('select')) return; S.deck = d.id; paint(); } },
+      const b = h('button', { type: 'button', class: 'deck', role: 'radio', 'aria-checked': String(S.deck === d.id), 'aria-disabled': empty ? 'true' : null,
+        'aria-description': empty && d.empty ? d.empty : null,
+        onclick: e => { if (empty || e.target.closest('select')) return; S.deck = d.id; paint(); } },
         h('b', { text: d.label }), d.n ? h('span', { class: 'n', text: num(d.n) }) : null,
-        empty && d.empty ? h('p', { class: 'help', text: d.empty }) : d.help ? h('p', { class: 'help', text: d.help }) : null);
+        !empty && d.help ? h('p', { class: 'help', text: d.help }) : null);
+      if (empty) { if (d.empty && UI.tooltip) UI.tooltip(b, d.empty); none.push(b); return; }
       if (d.select && d.select.length && !empty) {
         const sel = h('select', { class: 'field sm', 'aria-label': d.label }, d.select.map(([v, l]) => h('option', { value: v, text: l, selected: S.value[d.id] === v ? true : null })));
         sel.addEventListener('change', () => { S.value[d.id] = sel.value; S.deck = d.id; paint(); });
@@ -188,11 +206,16 @@
       }
       grid.append(b);
     });
-    sec('Deck', grid);
+    let fold = null;
+    if (none.length) {
+      fold = h('details', { class: 'deck-empty' }, h('summary', { text: `${none.length} more ${none.length === 1 ? 'deck' : 'decks'} (empty)` }), h('div', { class: 'decks' }, none));
+      fold.open = none.some(b => b.getAttribute('aria-checked') === 'true');
+    }
+    sec('Deck', grid, fold);
     const d = curDeck();
     // HOW MANY
     if (!(mode === 'quiz' && (S.qmode === 'check' || S.qmode === 'sprint')) && !d.mix) {
-      const opts = mode === 'quiz' ? [[10, '10'], [20, '20'], [30, '30'], [200, '∞']] : [[10, '10'], [20, '20'], [30, '30'], [200, 'All']];
+      const opts = [[10, '10'], [20, '20'], [30, '30'], [200, 'All']];
       const s = sec('How many');
       UI.seg(s, opts.map(([v, l]) => ({ value: String(v), label: l })), { value: String(S.count), label: 'How many', onChange: v => { S.count = +v; glance(); } });
     }
@@ -200,14 +223,14 @@
       const s1 = sec('Show first');
       UI.seg(s1, [['word', 'Word'], ['meaning', 'Meaning'], ['sentence', 'In a sentence'], ['commit', 'Commit first'], ['mixed', 'Mixed']].map(([v, l]) => ({ value: v, label: l })),
         { value: S.direction, label: 'Show first', onChange: v => { S.direction = v; glance(); } });
-      s1.append(h('p', { class: 'help', text: 'Commit first shows three meanings before the flip; your pick grades the card.' }));
+      tip(s1, 'Commit first shows three meanings before the flip; your pick grades the card.');
       const s2 = sec('Order');
       UI.seg(s2, [['due', 'Due first'], ['shuffle', 'Shuffle'], ['az', 'A–Z']].map(([v, l]) => ({ value: v, label: l })), { value: S.order, label: 'Order', onChange: v => { S.order = v; glance(); } });
     } else {
       const s0 = sec('Mode');
       UI.seg(s0, [['quiz', 'Quiz'], ['sprint', 'Sprint'], ['check', 'Words check']].map(([v, l]) => ({ value: v, label: l })), { value: S.qmode, label: 'Mode', onChange: v => { S.qmode = v; paint(); } });
-      s0.append(h('p', { class: 'help', text: S.qmode === 'sprint' ? 'One key per word, as many as you can. Sprint answers never move a word’s box.'
-        : S.qmode === 'check' ? '12 SAT-style items in 14:12, no feedback until the end; the second half steps up after 5 of the first 6.' : 'Every answer shows why each option is right or wrong.' }));
+      tip(s0, S.qmode === 'sprint' ? 'One key per word, as many as you can. Sprint answers never move a word’s box.'
+        : S.qmode === 'check' ? '12 SAT-style items in 14:12, no feedback until the end; the second half steps up after 5 of the first 6.' : 'Every answer shows why each option is right or wrong.');
       if (S.qmode === 'sprint') {
         const ss = sec('Length');
         UI.seg(ss, [['60', '60 s'], ['120', '120 s']].map(([v, l]) => ({ value: v, label: l })), { value: String(S.seconds), label: 'Sprint length', onChange: v => { S.seconds = +v; glance(); } });
@@ -225,7 +248,7 @@
         UI.chips(st, TYPES.map(([v, l]) => ({ value: v, label: l, disabled: !!why(v), why: why(v) || undefined })),
           { multi: true, value: S.formats, label: 'Question types', onChange: v => { if (!v.length) { UI.toast('Keep at least one type.'); paint(); return; } S.formats = v; glance(); } });
         const reasons = TYPES.map(([v, l]) => why(v) ? `${l}: ${why(v)}` : null).filter(Boolean);
-        if (reasons.length) st.append(h('p', { class: 'help', text: [...new Set(reasons.map(r => r.split(': ')[1]))].join(' · ') }));
+        if (reasons.length) tip(st, [...new Set(reasons.map(r => r.split(': ')[1]))].join(' · '));
         const tm = sec('Timer per question');
         UI.seg(tm, [['0', 'Off'], ['15', '15 s'], ['30', '30 s'], ['60', '60 s'], ['71', 'SAT pace (71 s)']].map(([v, l]) => ({ value: v, label: l })),
           { value: String(S.timer), label: 'Timer per question', onChange: v => { S.timer = +v; glance(); } });
@@ -234,13 +257,21 @@
           const s = sec(label);
           UI.seg(s, [['auto', 'Auto'], ['on', 'On'], ['off', 'Off']].map(([v, l]) => ({ value: v, label: l })), { value: pr[key] || 'auto', label,
             onChange: async v => { try { await UI.prefs.set({ [key]: v }); } catch (e) { if (!e.offline) UI.toast('Not saved. Try again.'); } } });
-          s.append(h('p', { class: 'help', text: help }));
+          tip(s, help);
+          return s;
         };
-        triple('words_method', 'Method', 'Predict what the blank needs before the choices, and find the clue after a miss. Auto runs it for your first 30 in-context items and turns it off once 8 of your last 10 predictions are right.');
-        if (S.formats.includes('transition')) triple('words_relation', 'Relationship first', 'Name how the two sentences relate before you pick the word. Auto runs it for your first 20 transitions and turns it off after 8 right in 10.');
+        const extra = [tm];
+        extra.push(triple('words_method', 'Method', 'Predict what the blank needs before the choices, and find the clue after a miss. Auto runs it for your first 30 in-context items and turns it off once 8 of your last 10 predictions are right.'));
+        if (S.formats.includes('transition')) extra.push(triple('words_relation', 'Relationship first', 'Name how the two sentences relate before you pick the word. Auto runs it for your first 20 transitions and turns it off after 8 right in 10.'));
         const an = sec('Move on by itself');
         UI.switch(an, { checked: !!pr.words_autonext, label: 'After a right answer, go on after 2.5 s', onChange: v => UI.prefs.set({ words_autonext: v }) });
-        an.append(h('p', { class: 'help', text: 'Never after a guess, an answer under 3 s or a miss. Any key or a touch holds it.' }));
+        tip(an, 'Never after a guess, an answer under 3 s or a miss. Any key or a touch holds it.');
+        extra.push(an);
+        // timer, Method and Move on wait under one fold, remembered open
+        const more = h('details', { class: 'st-more' }, h('summary', { text: 'More options' }), h('div', { class: 'st-more-in' }, extra));
+        more.open = !!ls.get('satf.words.studyMore', false);
+        more.addEventListener('toggle', () => ls.set('satf.words.studyMore', more.open));
+        host.append(more);
       }
     }
     glance();
@@ -269,10 +300,11 @@
     const orderText = { due: 'Due first', shuffle: 'Shuffled', az: 'A–Z' }[S.order];
     const start = h('button', { type: 'button', class: 'pill', disabled: d.n === 0 ? true : null, onclick: go }, 'Start', h('span', { class: 'kbd', text: 'Enter' }));
     el.replaceChildren(...[h('span', { class: 'k', text: 'At a glance' }),
-      h('p', { class: 'big', text: `${what} · about ${Math.max(1, Math.round(minutes))} min` }),
-      h('p', { class: 'line', text: [d.label, due && d.id !== 'due' ? `${num(due)} due` : null, nw && d.id !== 'new' ? `${num(nw)} new` : null].filter(Boolean).join(' · ') }),
-      mode === 'cards' && !d.mix ? h('p', { class: 'line', text: `${orderText} · ${{ word: 'word first', meaning: 'meaning first', sentence: 'in a sentence', commit: 'commit first', mixed: 'mixed' }[S.direction]}` }) : null,
-      mode === 'quiz' && S.qmode === 'quiz' && !d.mix ? h('p', { class: 'line', text: S.formats.map(f => (TYPES.find(t => t[0] === f) || [0, f])[1]).join(' · ') + (S.timer ? ` · ${S.timer} s each` : '') }) : null,
+      h('p', { class: 'big', text: what }),
+      h('p', { class: 'meta', text: `about ${Math.max(1, Math.round(minutes))} min` }),
+      h('p', { class: 'line', text: [d.label, due && d.id !== 'due' ? `${num(due)} due` : null, nw && d.id !== 'new' ? `${num(nw)} new` : null,
+        mode === 'cards' && !d.mix ? `${orderText.toLowerCase()}, ${{ word: 'word first', meaning: 'meaning first', sentence: 'in a sentence', commit: 'commit first', mixed: 'mixed' }[S.direction]}` : null,
+        mode === 'quiz' && S.qmode === 'quiz' && !d.mix ? S.formats.map(f => (TYPES.find(t => t[0] === f) || [0, f])[1]).join(', ') + (S.timer ? `, ${S.timer} s each` : '') : null].filter(Boolean).join(' · ') }),
       start,
       // W20: the same deck, types and count on paper, with a key page; graded back by code
       mode === 'quiz' && S.qmode === 'quiz' && d.n !== 0 ? h('div', { class: 'gl-print' },
