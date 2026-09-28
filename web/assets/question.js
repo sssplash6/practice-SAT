@@ -238,7 +238,11 @@
     if (at < str.length) out.push(doc.createTextNode(str.slice(at)));
     return out;
   }
-  const fracText = (el, str) => { el.replaceChildren(...fracNodes(str)); return el; };
+  // UI.fracText(el, text) fills el; UI.fracText(text) returns a span to insert (the Review and Results pages call it so)
+  const fracText = (el, str) => {
+    if (!(el instanceof Element)) { const s = h('span'); s.append(...fracNodes(el)); return s; }
+    el.replaceChildren(...fracNodes(str)); return el;
+  };
 
   /* ------------------------------------------------------------ the grid-in rules */
   const num = x => /^(\d+\.?\d*|\.\d+)$/.test(x);
@@ -316,7 +320,7 @@
     const frac = [['10x²/(x² − 196) − 5x/(x + 14) = 8/(x − 14)', 3], ['P = (2/19)s − 1/9', 2], ['the ratio BC/AB', 1], ['|x|/a − 6', 1],
       ['60 km/h and/or more', 0], ['at 5 m/s', 0], ['$4.50/hour', 0], ['a/b/c', 0], ['lb/ft³', 0]].filter(([t, want]) => {
       const box = h('span', {}, fracNodes(t));
-      return box.textContent !== t || box.querySelectorAll(':scope > .frac').length !== want;
+      return box.textContent !== t || box.querySelectorAll(':scope > .frac').length !== want || fracText(t).textContent !== t;
     }).map(([t]) => t);
     return { ok: !bad.length && !sci.length && !diff.length && !frac.length, spr: bad, sci, diff, frac };
   }
