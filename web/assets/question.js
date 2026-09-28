@@ -14,7 +14,7 @@
      opts  mode      practice | exam | review | quiz | inline | example
            feedback  instant | retry | end (practice, inline); quiz is instant
            tries     3 (retry)        prefs {first_tap, option_reasons, open_explanations,
-           rationale, confidence}     confActive (P7: the pill reads "Check · Sure")
+           rationale, confidence}     confActive
            state     restore {selected, value, struck, tries, hints, covered, own, eliminate, saved}
            fb        review / example: the feedback shown at once   hidden (review: Hide answers)
            bar       its own Check bar (default in practice, inline, quiz, example; the runner
@@ -36,7 +36,7 @@
      ws    {el, q, key(e), check(conf), select(i), choose(i), strike(i, on, by), eliminate(on),
             cover(on), hint(), skip(), reveal(fb), unlock(), answered(), canCheck(), value(),
             state(), setHidden(on), tools(), renderTools(host), focus(), restart(), destroy()}
-   UI.splitCheck(host, {confidence, active, save, onSubmit(conf)}) -> {el, set({enabled, save, firstTry})}
+   UI.splitCheck(host, {confidence, save, onSubmit(conf)}) -> {el, set({enabled, save, firstTry})}
    UI.questionActions(host, q, ctx) -> {el, run(id), has(id)}        G4, R49
    UI.twin(host, ctx) -> {el, run(axis, n), menu()}                   R44, P18
    UI.twinSheet({body, recall, title, onDone}) -> sheet api           T5 (callers go through UI.twin)
@@ -972,7 +972,7 @@
         return;
       }
       if (!live || S.stage === 'on') { barEl.hidden = true; return; }
-      if (!splitCtl) splitCtl = splitCheck(barEl, { confidence: prefs.confidence, active: o.confActive, save: endMode, onSubmit: conf => check(conf) });
+      if (!splitCtl) splitCtl = splitCheck(barEl, { confidence: prefs.confidence, save: endMode, onSubmit: conf => check(conf) });
       splitCtl.set({ enabled: canCheck(), firstTry: S.tries.length === 0, save: endMode });
       barEl.hidden = false;
     }
@@ -982,6 +982,7 @@
       if (S.busy || S.answered) return false;
       if (S.covered && mc) { if (o.onOwn && spr.parse(S.own).ok) checkOwn(); return false; }
       if (!canCheck()) return false;
+      if (conf === 'auto' && prefs.confidence !== 'off' && !S.tries.length) conf = 'sure';   // D: no unrated first try
       S.lastConf = conf;
       // P8: a fast answer on a slip-prone type asks once
       if (q.check_anyway && !S.fastOk && elapsed() < (q.check_anyway.under_ms || 0)) {
@@ -1004,7 +1005,6 @@
       if (!o.onCheck) return false;
       S.busy = true; errLine.hidden = true; paint();
       status.textContent = 'Checking';
-      bump('satf.conf.tip', 3);
       let fb;
       try { fb = await o.onCheck(a, m); }
       catch (e) { S.busy = false; paint(); return showErr(e, () => check(conf)); }
@@ -1693,28 +1693,27 @@
   /* ------------------------------------------------------------ the split Check (P7, R54) */
   function splitCheck(host, o = {}) {
     const el = h('div', { class: 'split-check', role: 'group', 'aria-label': 'Check your answer' });
-    const label = () => (o.save ? 'Save & next' : o.active ? 'Check · Sure' : 'Check');
-    const main = h('button', { type: 'button', class: 'pill sc-main', 'data-conf': 'auto', disabled: true }, h('span', { class: 'sc-l', text: label() }), h('kbd', { class: 'kbd', text: 'Enter' }));
-    const sure = h('button', { type: 'button', class: 'btn sc-part', 'data-conf': 'sure', text: 'Sure' });
-    const unsure = h('button', { type: 'button', class: 'btn sc-part', 'data-conf': 'unsure', title: 'Shift+Enter' }, 'Unsure');
-    const guess = h('button', { type: 'button', class: 'quiet sc-part', 'data-conf': 'guess', title: 'I' }, 'Guess');
-    const tip = h('p', { class: 'help sc-tip', hidden: true, text: 'Sure? Tap Sure. Not sure? Tap Unsure. Check alone leaves it unrated.' });
+    const main = h('button', { type: 'button', class: 'pill sc-main', 'data-conf': 'auto', disabled: true }, h('span', { class: 'sc-l' }), h('kbd', { class: 'kbd', text: 'Enter' }));
+    // D: the rating is the button, three of one shape
+    const sure = h('button', { type: 'button', class: 'pill sc-part', 'data-conf': 'sure' }, 'Sure', h('kbd', { class: 'kbd', text: 'Enter' }));
+    const unsure = h('button', { type: 'button', class: 'btn sc-part', 'data-conf': 'unsure' }, 'Not sure', h('kbd', { class: 'kbd', text: '⇧Enter' }));
+    const guess = h('button', { type: 'button', class: 'btn sc-part', 'data-conf': 'guess' }, 'Guessing', h('kbd', { class: 'kbd', text: 'I' }));
     el.append(main, sure, unsure, guess);
     let enabled = false;
     [main, sure, unsure, guess].forEach(b => b.addEventListener('click', () => { if (enabled && o.onSubmit) o.onSubmit(b.dataset.conf); }));
     function set(p = {}) {
       Object.assign(o, p);
       if ('enabled' in p) enabled = !!p.enabled;
-      const split = o.confidence !== 'off' && enabled && o.firstTry !== false;
-      [sure, unsure, guess].forEach(b => { b.hidden = !split; });
+      const split = o.confidence !== 'off' && o.firstTry !== false;
+      [sure, unsure, guess].forEach(b => { b.hidden = !split; b.disabled = !enabled; });
+      main.hidden = split;
       main.disabled = !enabled;
-      main.querySelector('.sc-l').textContent = label();
+      main.querySelector('.sc-l').textContent = o.save ? 'Save & next' : 'Check';
       el.classList.toggle('split', split);
-      tip.hidden = !(split && ls.get('satf.conf.tip', 0) < 3);
     }
     set({});
-    if (host) host.append(el, tip);
-    return { el, tip, set, get enabled() { return enabled; } };
+    if (host) host.append(el);
+    return { el, set, get enabled() { return enabled; } };
   }
 
   /* ------------------------------------------------------------ the answer pad (X6) */
