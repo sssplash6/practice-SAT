@@ -17,7 +17,7 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from fastapi.testclient import TestClient
 
 from server.app import app
-from server import account, db
+from server import account, db, practice
 
 
 def check(c: TestClient) -> None:
@@ -160,6 +160,51 @@ def check(c: TestClient) -> None:
         assert c.post("/api/passkey/login", headers={"X-Learner": browser},
                       json=invalid).status_code == 401
     print("ok  passkeys verify origin, challenge reuse, and cryptographic signatures")
+
+    profile_learner = "a:" + secrets.token_hex(12)
+    profile_h = {"X-Learner": profile_learner}
+    template = practice.catalogue()["by_topic"]["circles"][0]
+    with db.transaction():
+        for i in range(50):
+            db.run("INSERT INTO attempts(learner,template,seed,topic,difficulty,fmt,correct,at)"
+                   " VALUES (?,?,?,?,?,?,?,?)", profile_learner, template, i, "circles", "medium",
+                   "mcq", 1, f"2026-09-01T00:00:{i:02d}+00:00")
+    badges = c.get("/api/me/achievements", headers=profile_h)
+    assert badges.status_code == 200, badges.text
+    answered = next(b for b in badges.json() if b["id"] == "answered")
+    assert answered["have"] == 50 and answered["earned"][0]["at"] == "2026-09-01T00:00:49+00:00"
+    assert len([b for b in badges.json() if b["id"].startswith("skill:")]) == 19
+    feed = c.get("/api/me/feed", params={"unread": 1}, headers=profile_h)
+    assert any(x["kind"] == "achievements" for x in feed.json()["items"])
+    assert c.post("/api/me/feed/seen", headers=profile_h).status_code == 200
+    assert not c.get("/api/me/feed", params={"unread": 1}, headers=profile_h).json()["items"]
+    summary = c.get("/api/me/summary", headers=profile_h)
+    assert summary.status_code == 200, summary.text
+    assert summary.json()["stats"]["answered"] == 50
+    assert len(summary.json()["stats"]["series"]["answered"]) == 14
+    assert len(summary.json()["domains"]) == 4
+    print("ok  Me summary and 43 base achievement rules use the same counted attempts")
+
+    private_email = "s1-private-" + secrets.token_hex(6) + "@example.org"
+    db.run("INSERT INTO users(id,first,last,email,verified,learner,created) VALUES (?,?,?,?,1,?,?)",
+           secrets.token_urlsafe(12), "Private", "Student", private_email,
+           profile_learner, "2026-09-01T00:00:00+00:00")
+    link = c.post("/api/share", headers=profile_h).json()["token"]
+    public = c.get(f"/api/shared/{link}")
+    assert public.status_code == 200, public.text
+    assert private_email not in public.text and profile_learner not in public.text
+    assert public.json()["stats"]["answered"] == 50
+    assert c.delete(f"/api/share/{link}", headers=profile_h).status_code == 200
+    assert c.get(f"/api/shared/{link}").status_code == 404
+    export = c.get("/api/me/export", headers=profile_h)
+    assert export.status_code == 200 and "attachment" in export.headers["content-disposition"]
+    assert len(export.json()["attempts"]) == 50
+    assert c.request("DELETE", "/api/me", headers=profile_h, json={"confirm": "nope"}).status_code == 422
+    erased = c.request("DELETE", "/api/me", headers=profile_h, json={"confirm": "DELETE"})
+    assert erased.status_code == 200, erased.text
+    assert db.one("SELECT COUNT(*) AS n FROM attempts WHERE learner=?", profile_learner)["n"] == 0
+    assert db.one("SELECT learner FROM users WHERE email=?", private_email)["learner"] is None
+    print("ok  progress links redact identity, exports exclude keys, and delete removes learner rows")
 
 
 def main() -> None:
