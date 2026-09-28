@@ -5,6 +5,7 @@ from __future__ import annotations
 import datetime as dt
 import json
 import secrets
+from collections import Counter
 from functools import lru_cache
 
 from fastapi import APIRouter, Depends, Header, HTTPException, Query
@@ -468,6 +469,13 @@ def feed(learner: str, before: str | None = None, kind: str = "all",
             items.append({"kind": "reports", "at": r["replied"],
                           "title": "Your report has a reply", "detail": r["title"],
                           "href": f"/me/settings/#report-{r['id']}"})
+    if kind == "all":
+        for r in db.rows("SELECT kind,done_at FROM week_goals WHERE learner=? AND done_at IS NOT NULL"
+                         " AND done_at<? ORDER BY done_at DESC LIMIT ?", learner, marker, limit + 1):
+            if unread and seen and r["done_at"] <= seen:
+                continue
+            items.append({"kind": "goal", "at": r["done_at"], "title": "Weekly goal met",
+                          "detail": r["kind"].replace("_", " "), "href": "/me/?tab=week"})
     items.sort(key=lambda x: (x["at"], x["kind"]), reverse=True)
     total_unread = sum(1 for item in items if not seen or item["at"] > seen) if unread else None
     page = items[:limit]
@@ -617,3 +625,158 @@ def delete_me(body: DeleteMe, x_learner: str | None = Header(default=None)) -> d
         db.run("UPDATE contests SET owner=? WHERE owner=?", gone, learner)
         counts["learners"] = db.run("DELETE FROM learners WHERE id=?", learner).rowcount
     return {"deleted": counts}
+
+
+GOAL_KINDS = {"fix_traps", "pass_checks", "reach_word", "take_module", "habit_cap", "minutes"}
+
+
+def _week_id(day: dt.date) -> str:
+    iso = day.isocalendar()
+    return f"{iso.year}-W{iso.week:02d}"
+
+
+def _week_start(week: str) -> dt.date:
+    try:
+        year, number = week.split("-W")
+        start = dt.date.fromisocalendar(int(year), int(number), 1)
+    except (ValueError, TypeError, AttributeError) as exc:
+        raise HTTPException(422, "week must be YYYY-WNN") from exc
+    if _week_id(start) != week:
+        raise HTTPException(422, "invalid week")
+    return start
+
+
+def _goal_progress(learner: str, week: str, kind: str, params: dict,
+                   target: int, tz: int = 0) -> tuple[int, bool]:
+    start = _week_start(week).isoformat()
+    end = (_week_start(week) + dt.timedelta(days=7)).isoformat()
+    if kind == "fix_traps":
+        topic = params.get("topic")
+        if topic and topic not in progress.topics():
+            raise HTTPException(422, "unknown goal topic")
+        sql = "SELECT COUNT(*) AS n FROM traps WHERE learner=? AND closed>=? AND closed<?"
+        args = [learner, start, end]
+        if topic:
+            sql += " AND topic=?"
+            args.append(topic)
+        have = db.one(sql, *args)["n"]
+    elif kind == "pass_checks":
+        have = db.one("SELECT COUNT(*) AS n FROM trap_log WHERE learner=? AND at>=? AND at<?"
+                      " AND event IN ('check-pass','check_pass','passed')", learner, start, end)["n"]
+    elif kind == "reach_word":
+        topic = params.get("topic")
+        if topic not in progress.topics():
+            raise HTTPException(422, "unknown goal topic")
+        mastery = progress.topic_mastery(learner, topic)
+        have = round(mastery * 100)
+        target = {"Learning": 25, "Getting there": 50, "Strong": 80}.get(params.get("word"), target)
+    elif kind == "take_module":
+        have = db.one("SELECT COUNT(*) AS n FROM sessions WHERE learner=? AND kind='module'"
+                      " AND finished>=? AND finished<?", learner, start, end)["n"]
+    elif kind == "habit_cap":
+        habit = str(params.get("habit") or "")
+        have = db.one("SELECT COUNT(*) AS n FROM attempts WHERE learner=? AND at>=? AND at<?"
+                      " AND correct=0 AND reason LIKE ?", learner, start, end, f"%{habit}%")["n"]
+        attempted = db.one("SELECT 1 FROM attempts WHERE learner=? AND at>=? AND at<? LIMIT 1",
+                           learner, start, end)
+        return have, bool(attempted and have <= target)
+    else:
+        d = progress.days(learner, tz, 5)
+        have = sum(x["minutes"] for x in d["days"] if start <= x["day"] < end)
+    return have, have >= target
+
+
+def week_goals(learner: str, week: str | None = None, tz: int = 0) -> list[dict]:
+    today = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=tz)).date()
+    week = week or _week_id(today)
+    out = []
+    for r in db.rows("SELECT * FROM week_goals WHERE learner=? AND week=? ORDER BY created,id", learner, week):
+        params = json.loads(r["params"] or "{}")
+        have, done = _goal_progress(learner, week, r["kind"], params, r["target"], tz)
+        if done and not r["done_at"]:
+            db.run("UPDATE week_goals SET done_at=? WHERE learner=? AND week=? AND id=?",
+                   deps.now(), learner, week, r["id"])
+        title = {"fix_traps": "Fix mistakes", "pass_checks": "Pass check-ins",
+                 "reach_word": "Reach a skill level", "take_module": "Take a module",
+                 "habit_cap": "Keep a habit down", "minutes": "Study minutes"}[r["kind"]]
+        out.append({"id": r["id"], "kind": r["kind"], "params": params,
+                    "title": title, "have": have, "target": r["target"],
+                    "done": done, "done_at": r["done_at"] or (deps.now() if done else None)})
+    return out
+
+
+def week_summary(learner: str, week: str | None = None, tz: int = 0) -> dict:
+    today = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=tz)).date()
+    week = week or _week_id(today)
+    monday = _week_start(week)
+    last = monday - dt.timedelta(days=7)
+    end = monday.isoformat()
+    prior = db.one(f"SELECT COUNT(*) AS n,SUM(correct) AS right FROM attempts WHERE learner=?"
+                   f" AND at>=? AND at<? AND {progress.COUNTED}", learner, last.isoformat(), end)
+    d = progress.days(learner, tz, 5)
+    minutes = sum(x["minutes"] for x in d["days"] if last.isoformat() <= x["day"] < end)
+    closed = db.one("SELECT COUNT(*) AS n FROM traps WHERE learner=? AND closed>=? AND closed<?",
+                    learner, last.isoformat(), end)["n"]
+    newly = [r["label"] for r in db.rows("SELECT label FROM traps WHERE learner=?"
+                                          " AND opened>=? AND opened<? ORDER BY opened DESC LIMIT 5",
+                                          learner, last.isoformat(), end)]
+    open_traps = progress.open_traps(learner)
+    top = Counter(x["topic"] for x in open_traps).most_common(1)
+    suggestions = []
+    if top:
+        topic, n = top[0]
+        suggestions.append({"kind": "fix_traps", "params": {"topic": topic}, "target": n,
+                            "why": f"{n} open mistakes in {topic}", "minutes": n * 3})
+    due = progress.due_rechecks(learner, today.isoformat())
+    if due:
+        suggestions.append({"kind": "pass_checks", "params": {}, "target": len(due),
+                            "why": f"{len(due)} check-ins are due", "minutes": len(due) * 2})
+    rough = next((v for v in progress.board(learner).values() if v["answered"] and
+                  v["mastery"] < progress.STRONG), None)
+    if rough:
+        suggestions.append({"kind": "reach_word", "params": {"topic": rough["topic"], "word": "Strong"},
+                            "target": 80, "why": f"{rough['name']} is still growing", "minutes": 25})
+    suggestions += [{"kind": "take_module", "params": {}, "target": 1,
+                     "why": "A module measures progress under the clock", "minutes": 35},
+                    {"kind": "minutes", "params": {}, "target": 60,
+                     "why": "An hour of study this week", "minutes": 60}]
+    return {"week": week,
+            "receipts": {"answered": prior["n"], "right": prior["right"] or 0,
+                         "accuracy": round(100 * (prior["right"] or 0) / prior["n"]) if prior["n"] else None,
+                         "minutes": minutes, "fixed": closed, "new_mistakes": newly},
+            "suggestions": suggestions[:5], "goals": week_goals(learner, week, tz)}
+
+
+@router.get("/api/me/week")
+def get_week(week: str | None = None, x_learner: str | None = Header(default=None),
+             x_tz: int = Depends(tz_of)) -> dict:
+    return week_summary(learner_of(x_learner), week, x_tz)
+
+
+class Goal(BaseModel):
+    kind: str
+    params: dict = Field(default_factory=dict)
+    target: int = Field(ge=1, le=10000)
+
+
+class WeekGoals(BaseModel):
+    week: str
+    goals: list[Goal] = Field(max_length=3)
+
+
+@router.put("/api/me/week/goals")
+def put_week_goals(body: WeekGoals, x_learner: str | None = Header(default=None),
+                   x_tz: int = Depends(tz_of)) -> dict:
+    learner = deps.writer_of(x_learner)
+    _week_start(body.week)
+    if any(g.kind not in GOAL_KINDS for g in body.goals):
+        raise HTTPException(422, "unknown weekly goal kind")
+    for g in body.goals:
+        _goal_progress(learner, body.week, g.kind, g.params, g.target, x_tz)
+    with db.transaction():
+        db.run("DELETE FROM week_goals WHERE learner=? AND week=?", learner, body.week)
+        for g in body.goals:
+            db.run("INSERT INTO week_goals(learner,week,id,kind,params,target,created)"
+                   " VALUES (?,?,?,?,?,?,?)", learner, body.week, secrets.token_urlsafe(8),
+                   g.kind, json.dumps(g.params), g.target, deps.now())
+    return {"week": body.week, "goals": week_goals(learner, body.week, x_tz)}

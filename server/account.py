@@ -545,3 +545,11 @@ def signout_others(x_learner: str | None = Header(default=None)) -> dict:
            deps.now(), learner, x_learner)
     db.run("UPDATE learners SET swap_until=? WHERE id=?", deps.now(), learner)
     return {"ok": True}
+
+
+def shell_part(learner: str, tz: int = 0) -> dict:
+    """The account-owned inbox and weekly goal pips in the shared shell."""
+    from .api_profile import feed, week_goals
+    inbox = feed(learner, limit=3, unread=True)
+    return {"inbox": inbox, "goals": [{k: g[k] for k in ("title", "have", "target", "done")}
+                                       for g in week_goals(learner, tz=tz)]}

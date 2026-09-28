@@ -9,6 +9,7 @@ import os
 import secrets
 import json
 import hashlib
+import datetime as dt
 from unittest.mock import patch
 
 from cryptography.hazmat.primitives import hashes, serialization
@@ -184,6 +185,24 @@ def check(c: TestClient) -> None:
     assert len(summary.json()["stats"]["series"]["answered"]) == 14
     assert len(summary.json()["domains"]) == 4
     print("ok  Me summary and 43 base achievement rules use the same counted attempts")
+
+    today = dt.datetime.now(dt.timezone.utc)
+    iso = today.isocalendar()
+    week = f"{iso.year}-W{iso.week:02d}"
+    goal = c.put("/api/me/week/goals", headers=profile_h,
+                 json={"week": week, "goals": [{"kind": "fix_traps",
+                      "params": {"topic": "circles"}, "target": 1}]})
+    assert goal.status_code == 200 and goal.json()["goals"][0]["have"] == 0, goal.text
+    assert c.get("/api/shell", headers=profile_h).json()["goals"][0]["done"] is False
+    db.run("INSERT INTO traps(learner,template,norm,reason,label,topic,hits,owed,opened,last,closed)"
+           " VALUES (?,?,?,?,?,?,?,?,?,?,?)", profile_learner, template, "test", "test",
+           "Test mistake", "circles", 1, 0, today.isoformat(), today.isoformat(), today.isoformat())
+    assert c.get("/api/me/week", headers=profile_h).json()["goals"][0]["done"] is True
+    assert c.get("/api/shell", headers=profile_h).json()["goals"][0]["have"] == 1
+    many = c.put("/api/me/week/goals", headers=profile_h, json={"week": week,
+                 "goals": [{"kind": "minutes", "target": 1}] * 4})
+    assert many.status_code == 422
+    print("ok  weekly goals move from 0/1 to done and reject a fourth goal")
 
     private_email = "s1-private-" + secrets.token_hex(6) + "@example.org"
     db.run("INSERT INTO users(id,first,last,email,verified,learner,created) VALUES (?,?,?,?,1,?,?)",
