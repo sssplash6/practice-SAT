@@ -427,6 +427,13 @@ Rules as above (own files only, own port and SATF_DB, commit per part, never pus
 main build is building this section's pages right now and codes against the endpoints your spec lists, so build exactly those
 endpoints and shapes). The requirements are in spec/v2-state/briefs/S1.md (sections 2-5 and 7; the brief says pages-only for the main
 build, but its server items are yours). The branch already has the section's early server commits: continue from them.
+ALSO (from the Me pages, followups/S1-pages.json): the shell's `inbox` is an object, so the phone avatar badge reads "NaN"
+(send the unread count in account.shell_part); /api/health needs mail, google and the Google client ID; endpoints for "End
+the old code now", a target-needs estimate for any target, /api/push/*, /api/mistakes/import; /api/me/summary needs
+subjects.math.pace, score.projection and score.gaps, check-ins passed and due, week history, skills[].last and the default
+board name; /api/shared/{token} needs the name and activity days; PUT /api/me must accept avatar 'initial'; feed rows:
+achievement names (not "Hard Right · Tier 10"), scores as "7 / 10", report links with ?id= (not ?s=), effect counts per
+sitting; lever texts must use skill names, not raw ids ("Practise nonlinear_functions").
 FIRST among them: GET /api/levers?keys= (G6 in spec/v2-upgrades/product.md): every page's "how it's worked out" popovers call
 it, including the streak button in the phone top bar, and today they all show "Couldn't load".
 DONE: checks/s1.py passes and test_flow "all good". Tell the user "S1 server done".
@@ -586,6 +593,27 @@ ALSO READ followups/S7-hygiene.json, S9-hygiene.json, S8-hygiene.json ("fixer_re
   ratings.py (not in your files) unless compete.py can map it.
 Do NOT change response shapes the pages already use; add fields. DONE: s7.py, s8.py, s9.py and test_flow pass. Tell the user
 "page asks done" with what you did and the list of items for other owners.
+```
+
+
+## Task 31 (light): make test_flow pass on any date
+
+```
+test_flow never prints "all good" today, so no task can meet its DONE line. Two checks depend on the calendar, and one
+test lacks a header. Fix only these; nothing else.
+SETUP: git worktree add .claude/worktrees/flow-green -b v2/flow-green master
+OWN ONLY: server/checks/s3.py, server/checks/s8.py, server/test_flow.py.
+1. server/checks/s3.py ~line 200 (qotd_answer_and_crowd): `got["sat_pace_ms"] == 95_000` fails on some days (the day's
+   grid-in has one accepted form). Make the check build or pick its own question so the assert holds on every date.
+2. server/checks/s8.py ~517-519: compete.contest("final-" + next SAT date) is a 404 outside the week before an SAT
+   (compete.ensure makes a Season Final only then). Create or pick the check's own Final so it works on any date.
+3. server/test_flow.py line ~212 ("practice results were gated behind signup"): the Results server on v2/s6-server now
+   answers 403 without an X-Learner header. Send the learner's header in that call (do not loosen the server rule).
+Test each on at least three dates: today, the week before an SAT (e.g. 2026-09-28 for Oct 3), and an ordinary week, by
+setting the clock the checks already use (or freezegun-style patching inside the check). Commit per fix, never push or merge.
+DONE: on v2/flow-green (and with v2/s6-server merged into a scratch copy for item 3) test_flow prints "all good".
+Tell the user "flow green". These fixes come out of Tasks 24 and 30: skip them there.
+Also commit your Task 29 edits (README.md, .gitignore) on v2/ops-docs if they are finished.
 ```
 
 ---
