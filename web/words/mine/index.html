@@ -31,7 +31,13 @@
   .trap-row .l, .mix-row .l { display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; }
   .trap-row .meta { font-size: 12.5px; }
   .wm-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .wm-view { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: space-between; }
+  .wm-view { display: flex; gap: 8px; align-items: center; flex-wrap: nowrap; }
+  .wm-view .filters { flex: 1 1 auto; }
+  .wm-view > span:last-child { margin-left: auto; align-self: center; flex: none; }
+  .wm-empty .wm-tools > * { min-height: 44px; }
+  .wm-empty .wm-tools > .pill { height: 44px; }
+  .wm-empty h2 { font: 700 20px var(--font); letter-spacing: -.01em; }
+  .wm[data-empty] > :is(#stats, .wm-two, #tools, #view) { display: none; }
   .wm-list .table td, .wm-list .table th { white-space: nowrap; }
   .wm-list .table .w { font-weight: 600; }
   .wm-list .due { color: var(--amber-deep); font: 500 12.5px var(--mono); }
@@ -133,7 +139,9 @@
     W._lists = [...new Set(words.filter(w => w.own && w.collection).map(w => w.collection))];
     const c = lib.counts || {};
     $('meta').textContent = [mine.length ? `${num(mine.length)} studied or saved` : null, c.known ? `${num(c.known)} known` : null, c.claimed ? `${num(c.claimed)} claimed` : null, c.due ? `${num(c.due)} due` : null].filter(Boolean).join(' · ');
-    UI.todayWords($('today'), { lib, onChange: load });
+    UI.todayWords($('today'), { lib, compact: true, onChange: load });
+    // nothing touched yet: only the way in, at the top; the cards and tools come with the first word
+    if (mine.length) $('main').removeAttribute('data-empty'); else $('main').setAttribute('data-empty', '');
     stats(); forecast(); UI.wordsFinish($('finish'), ins, { lib, onChange: load }); traps(); habits(); tools();
     if (!fbar) filters();
     paint();
@@ -150,9 +158,10 @@
       if (id === 'saved' && n) { const ns = words.filter(w => w.saved && W.status(w) === 'new').length; s = ns ? `${ns} not started` : null; }
       if (id === 'atrisk') s = exam ? `before ${W.shortDate(exam)}` : 'Needs an exam date';
       if (id === 'due' && !n) { const nx = (lib.forecast || []).find(d => d.n > 0 && d.day > lib.today); s = nx ? `Next: ${nx.n} on ${W.dayName(nx.day, { plain: true })}` : null; }
-      const t = UI.tile(host, { label, value: n, sub: s || undefined, pressed: tile === id, onClick: () => { tile = tile === id ? '' : id; setUrl('tile', tile || null); stats(); limit = LIMIT0; paint(); } });
+      if (!n && tile !== id) return;
+      const t = UI.tile(host, { label, value: n, sub: s && s !== sub ? s : undefined, pressed: tile === id, onClick: () => { tile = tile === id ? '' : id; setUrl('tile', tile || null); stats(); limit = LIMIT0; paint(); } });
       t.el.setAttribute('aria-pressed', String(tile === id));
-      if (!n && tile !== id) t.el.disabled = true;
+      if (sub && UI.tooltip) UI.tooltip(t.el, sub);
       if (id === 'due' && n) t.el.append(h('button', { type: 'button', class: 'btn sm', text: 'Review', onclick: e => { e.stopPropagation(); UI.startWords({ mode: 'cards', deck: { source: 'due' } }); } }));
     });
   }
@@ -165,10 +174,16 @@
     const todayRow = days.find(d => d.day === lib.today);
     const week = days.slice(-7).reduce((a, d) => a + (d.words || 0), 0);
     const rs = me && me.words ? me.words.reviews_week : week;
-    put(el, h('h2', {}, 'Due in the next 14 days', h('span', { class: 'meta', text: [todayRow && todayRow.words ? `Reviewed today ${todayRow.words}` : null, rs ? `this week ${rs}` : null, me && me.days && me.days.streak ? `streak ${me.days.streak} days` : null].filter(Boolean).join(' · ') })));
-    const total = f.reduce((a, d) => a + d.n, 0);
+    const streak = me && me.days && me.days.streak;
+    put(el, h('h2', {}, 'Due in the next 14 days', h('span', { class: 'meta', text: [todayRow && todayRow.words ? `Reviewed today ${todayRow.words}` : null, rs ? `this week ${rs}` : null, streak ? `streak ${streak} ${streak === 1 ? 'day' : 'days'}` : null].filter(Boolean).join(' · ') })));
+    const dueNow = (lib.counts || {}).due || 0;
+    const f2 = f.map(d => (d.day === lib.today ? { ...d, n: Math.max(d.n, dueNow) } : d));
+    const total = f2.reduce((a, d) => a + d.n, 0);
     if (!total) { el.append(h('p', { class: 'wm-line', text: 'Nothing is scheduled yet. Words you study come back here on their review days.' })); return; }
-    if (UI.barChart) UI.barChart(el, f.map(d => ({ day: d.day, value: d.n, today: d.day === lib.today, exam: ins && ins.finish && d.day === ins.finish.exam })), { unit: 'q', noun: 'due', labels: 'weekday', today: 'amber', height: 120, max: Math.max(4, ...f.map(d => d.n)), label: 'Words due each day, next 14 days' });
+    const top = Math.max(...f2.map(d => d.n)), wide = el.clientWidth >= 480;
+    const DOW = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+    if (UI.barChart) UI.barChart(el, f2.map(d => ({ day: d.day, value: d.n, today: d.day === lib.today, exam: ins && ins.finish && d.day === ins.finish.exam })), { unit: 'q', noun: 'due',
+      labels: r => (r.today && wide ? 'Today' : DOW[new Date(r.day + 'T12:00:00').getDay()]), today: 'amber', height: 120, max: Math.max(4, Math.ceil(top / 2) * 2), label: 'Words due each day, next 14 days' });
     const wk = (ins && ins.finish && ins.finish.forecast_to_exam) || [];
     if (wk.length) {
       el.append(h('p', { class: 'k', text: 'Weeks to the exam' }));
@@ -218,27 +233,29 @@
   function tools() {
     const el = $('tools');
     const bring = h('button', { type: 'button', class: 'btn', text: 'Bring words ▾', 'aria-haspopup': 'menu' });
-    UI.menu.bind(bring, () => [
-      { label: 'From a text', onClick: () => UI.bringWords ? UI.bringWords('text') : UI.toast('Bring words is not ready yet.') },
-      { label: 'A word list', onClick: () => UI.bringWords ? UI.bringWords('list') : UI.toast('Bring words is not ready yet.') },
-      { label: 'A question I missed', onClick: () => UI.bringWords ? UI.bringWords('missed') : UI.toast('Bring words is not ready yet.') }]);
-    put(el, h('button', { type: 'button', class: 'btn', onclick: () => UI.addWord() }, W.icon('plus', 16), 'Add a word'), bring,
-      h('button', { type: 'button', class: 'btn', text: 'Import', onclick: importSheet }),
-      h('button', { type: 'button', class: 'btn', text: 'Export CSV', onclick: exportCsv }),
-      h('button', { type: 'button', class: 'btn', text: 'Print this list', onclick: () => print() }), shareBtn(),
-      h('button', { type: 'button', class: 'btn', text: 'Grade a worksheet', onclick: () => W.gradeSheet() }));
+    UI.menu.bind(bring, bringItems);
+    const more = h('button', { type: 'button', class: 'btn icon', 'aria-label': 'Export, print, share or grade', 'aria-haspopup': 'menu', text: '⋯' });
+    UI.menu.bind(more, () => [
+      { label: 'Export CSV', onClick: exportCsv },
+      { label: 'Print this list', onClick: () => print() },
+      { label: 'Share a list', sub: 'A link anyone can open', onClick: () => setTimeout(() => UI.menu(more, shareItems(), { align: 'end', label: 'Share a list' }), 0) },
+      { label: 'Grade a worksheet', onClick: () => W.gradeSheet() }], { align: 'end' });
+    put(el, h('button', { type: 'button', class: 'btn', onclick: () => UI.addWord() }, W.icon('plus', 16), 'Add a word'), bring, more);
   }
+  const bringItems = () => [
+    { label: 'From a text', onClick: () => UI.bringWords ? UI.bringWords('text') : UI.toast('Bring words is not ready yet.') },
+    { label: 'A word list', onClick: () => UI.bringWords ? UI.bringWords('list') : UI.toast('Bring words is not ready yet.') },
+    { label: 'A question I missed', onClick: () => UI.bringWords ? UI.bringWords('missed') : UI.toast('Bring words is not ready yet.') },
+    { label: 'Import a file or a paste', sub: 'Quizlet, CSV, one per line', onClick: importSheet }];
   // W20: share any list; a list the server does not keep (own words' list) goes by its words
-  function shareBtn() {
-    const b = h('button', { type: 'button', class: 'btn', text: 'Share a list ▾', 'aria-haspopup': 'menu' });
-    UI.menu.bind(b, () => {
+  function shareItems() {
+    {
       const names = [...new Set(words.flatMap(w => [...(w.lists || []), ...(w.own && w.collection ? [w.collection] : [])]))].sort();
       const of = n => words.filter(w => (w.lists || []).includes(n) || (w.own && w.collection === n)).map(w => w.slug);
       return names.length ? names.map(n => ({ label: n, sub: `${num(of(n).length)} words`,
         onClick: async () => { if (await W.share({ list: n, quiet404: true }) === false) W.share({ title: n, words: of(n) }); } }))
         : [{ label: 'No lists yet', sub: 'Make one from the library: Select, then + New list', disabled: true }];
-    });
-    return b;
+    }
   }
   async function exportCsv() {
     try {
@@ -330,7 +347,7 @@
     fbar = UI.filterBar($('view'), [
       { key: 'q', type: 'search', label: 'Search your words', placeholder: 'Search your words' },
       { key: 'c', label: 'Collection', type: 'multi', options: collOpts },
-      { key: 'd', label: 'Difficulty', type: 'pills', options: [{ value: 'easy', label: 'Easy' }, { value: 'medium', label: 'Medium' }, { value: 'hard', label: 'Hard' }, { value: 'hardforyou', label: 'Hard for you' }] },
+      { key: 'd', label: 'Difficulty', type: 'multi', options: [{ value: 'easy', label: 'Easy' }, { value: 'medium', label: 'Medium' }, { value: 'hard', label: 'Hard' }, { value: 'hardforyou', label: 'Hard for you' }] },
       { key: 'p', label: 'Part of speech', type: 'multi', options: Object.entries(W.POS).filter(([k]) => k !== 'phrase').map(([v, l]) => ({ value: v, label: l })) },
     ], { url: true, label: 'Filter your words', onChange: () => { limit = LIMIT0; paint(); } });
     const tv = h('span', {});
@@ -355,8 +372,11 @@
     const host = $('list');
     const rs = rows();
     if (!mine.length && !tile) {
-      put(host, h('div', { class: 'wm-empty' }, h('p', { text: 'No words yet. Study a deck in the Library, star words to keep them, or add your own.' }),
-        h('div', { class: 'wm-tools' }, h('a', { class: 'pill sm', href: '/words/', text: 'Library' }), h('button', { type: 'button', class: 'btn', text: 'Add a word', onclick: () => UI.addWord() }))));
+      const bring = h('button', { type: 'button', class: 'btn', text: 'Bring words ▾', 'aria-haspopup': 'menu' });
+      UI.menu.bind(bring, bringItems);
+      put(host, h('div', { class: 'wm-empty' }, h('h2', { text: 'Your words live here' }),
+        h('p', { class: 'help', text: 'Words you study, star or add show up here with their schedule.' }),
+        h('div', { class: 'wm-tools' }, h('a', { class: 'pill', href: '/words/', text: 'Library' }), h('button', { type: 'button', class: 'btn', onclick: () => UI.addWord() }, W.icon('plus', 16), 'Add a word'), bring)));
       bulk(); return;
     }
     if (!rs.length) {
