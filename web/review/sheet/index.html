@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Worksheet answers · SAT Freshman</title>
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#FFFFFF">
+<script src="/assets/head.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="/assets/ui.css">
+<link rel="stylesheet" href="/assets/runner.css">
+<style>
+  /* The worksheet's answer sheet and its key (review.md V18). A row per number: A-D, or a
+     grid-in field with the usual filter and preview. Answers entered here are filed like
+     online ones; the key prints after Submit (or earlier, and then nothing counts as clean). */
+  .ws { max-width: 760px; padding-bottom: 120px; }
+  .ws-back { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-soft); text-decoration: none; font-weight: 600; }
+  .ws-back:hover { color: var(--ink); }
+  .ws-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .ws h1 { font: 800 36px/1.1 var(--sans, 'Archivo'), sans-serif; margin: 4px 0 6px; }
+  .ws-sub { margin: 0 0 20px; color: var(--ink-soft); }
+  .ws-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .ws-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 14px; background: var(--tile); border-radius: 10px; }
+  .ws-row:focus-within { box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .ws-n { font: 700 18px var(--mono, 'DM Mono'), monospace; }
+  .ws-skill { color: var(--ink-soft); font-size: 14px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ws-abcd { display: flex; gap: 8px; }
+  .ws-abcd button { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--ink); background: var(--bg, #fff); color: var(--ink); font: 700 16px var(--sans, 'Archivo'), sans-serif; cursor: pointer; }
+  .ws-abcd button[aria-pressed="true"] { background: var(--ink); color: var(--bg, #fff); }
+  .ws-grid { display: grid; gap: 4px; justify-items: end; }
+  .ws-grid input { width: 132px; min-height: 44px; font: 600 18px var(--mono, 'DM Mono'), monospace; text-align: center; border: 1.5px solid var(--ink); border-radius: 8px; background: var(--bg, #fff); color: var(--ink); }
+  .ws-grid .pvw { min-height: 18px; font-size: 13px; color: var(--ink-soft); }
+  .ws-grid .pvw.err { color: var(--ink); font-weight: 600; }
+  .ws-min { display: flex; align-items: center; gap: 12px; margin: 20px 0 0; }
+  .ws-min input { width: 96px; min-height: 44px; font: 600 16px var(--mono, 'DM Mono'), monospace; text-align: center; border: 1.5px solid var(--line, #ccc); border-radius: 8px; background: var(--bg, #fff); color: var(--ink); }
+  .ws-foot { position: sticky; bottom: 0; margin-top: 24px; padding: 12px 0; background: var(--bg, #fff); border-top: 1px solid var(--line, #e5e5e5); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .ws-card { background: var(--tile); border-radius: 12px; padding: 20px; display: grid; gap: 12px; }
+  .ws-card .t { font-weight: 700; font-size: 20px; margin: 0; }
+  .ws-card .s { margin: 0; color: var(--ink-soft); }
+  .ws-acts { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .ws-key-q { break-inside: avoid; padding: 16px 0; border-bottom: 1px solid var(--line, #e5e5e5); }
+  .ws-key-n { font: 700 16px var(--mono, 'DM Mono'), monospace; margin: 0 0 6px; }
+  .ws-key-yours { margin: 0 0 8px; color: var(--ink-soft); }
+  @media (max-width: 759px) {
+    .ws h1 { font-size: 28px; }
+    .ws-row { grid-template-columns: 32px minmax(0, 1fr); }
+    .ws-row > .ws-abcd, .ws-row > .ws-grid { grid-column: 1 / -1; justify-content: flex-start; justify-items: start; }
+    .ws-abcd { gap: 10px; }
+    .ws-foot { bottom: calc(62px + env(safe-area-inset-bottom)); }
+    .ws-foot .pill { flex: 1 1 100%; justify-content: center; }
+  }
+  @media print {
+    #bar, #tabs, .ws-back, .ws-noprint, .ws-foot { display: none !important; }
+    .ws { max-width: none; padding: 0; }
+    body { background: #fff; }
+  }
+</style>
+</head>
+<body>
+<header id="bar"></header>
+<main class="page ws" id="main" tabindex="-1">
+  <a class="ws-back" href="/review/">‹ Review</a>
+  <div class="ws-top">
+    <div>
+      <h1 id="title">Enter your answers</h1>
+      <p class="ws-sub" id="sub"></p>
+    </div>
+    <div class="ws-noprint" id="more"></div>
+  </div>
+  <section id="sheet" aria-busy="true"></section>
+</main>
+<nav id="tabs"></nav>
+<script src="/assets/ui.js"></script>
+<script src="/assets/kit.js"></script>
+<script src="/assets/question.js"></script>
+<script>UI.shell('review');</script>
+<script src="/review/sheet/sheet.js"></script>
+</body>
+</html>
