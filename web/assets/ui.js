@@ -1777,7 +1777,7 @@
       { label: d.report_replies ? ['Settings ', dot(), h('span', { class: 'sr', text: `, ${plural(d.report_replies, 'unread reply', 'unread replies')}` })] : 'Settings',
         icon: 'settings', href: '/me/settings/', kbd: 'G S' });
     if (!saved) items.push({ label: 'Sign in', icon: 'signin', href: '/signin/' });
-    items.push({ label: 'Sign in another device', icon: 'devices', href: '/link/' },
+    items.push({ label: 'Sign in another device', icon: 'devices', href: '/pair/' },
       has('pair') ? { label: 'Continue on your phone', icon: 'devices', onClick: () => UI.continueOnPhone() } : null,
       { label: 'Help & FAQ', icon: 'help', href: '/help/', kbd: 'G H' },
       { label: 'Send feedback', icon: 'chat', onClick: feedback },
@@ -1852,7 +1852,7 @@
       row('Settings', 'settings', { href: '/me/settings/', current: here === 'me' && page() === 'settings', meta: d && d.report_replies ? dot() : null }),
       !saved && !shared ? row('Save your progress', 'save', { href: '/me/settings/#account', meta: dot() }) : null,
       !saved ? row('Sign in', 'signin', { href: '/signin/' }) : null,
-      row('Sign in another device', 'devices', { href: '/link/' }),
+      row('Sign in another device', 'devices', { href: '/pair/' }),
       has('pair') ? row('Continue on your phone', 'devices', { onClick: () => UI.continueOnPhone() }) : null,
       row('Help & FAQ', 'help', { href: '/help/', current: here === 'help' }),
       row('Send feedback', 'chat', { onClick: feedback })),
@@ -2179,7 +2179,8 @@
       ] };
     }
     if (shared || saved) return null;
-    if (!d.answered && !lget('satf.first')) {
+    // not on the sign-in page itself, where it only repeats the page
+    if (!d.answered && !lget('satf.first') && !location.pathname.startsWith('/signin')) {
       // a question for the few with progress elsewhere, so a plain button: the page's own start (Today's Study) stays its one orange
       return { kind: 'first', text: 'Have progress on another device?', actions: [
         { label: 'Sign in', href: '/signin/' },
