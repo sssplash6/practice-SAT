@@ -2161,6 +2161,8 @@ body.has-rail .toasts { left: calc(var(--rail-w) + 20px); }
 .banner > svg { width: 20px; height: 20px; flex: none; }
 .banner-t { flex: 1 1 320px; min-width: 0; }
 .banner-act { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+/* a quiet action beside a button keeps its tap area to itself (Dismiss's -12px margin ran under Sign in) */
+.banner-act .quiet { margin: 0; padding: 6px 8px; }
 .banner > .x { width: 34px; height: 34px; margin: -4px -2px -4px 0; }
 
 /* the command palette (UI.palette): <dialog class="palette"> with .palette-q (an svg and the
