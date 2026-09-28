@@ -42,8 +42,12 @@ def coordinate_grid(xmin, xmax, ymin, ymax, points=(), segments=(),
         px = max(13, min(26, 400 // span))
     w, h = (xmax - xmin) * px + 2 * pad, (ymax - ymin) * px + 2 * pad
 
-    def X(x): return pad + (x - xmin) * px
-    def Y(y): return h - pad - (y - ymin) * px
+    # plain numbers: an exact Fraction wrote x1="325/3", which no browser can read, so the lines didn't draw (sys.graph_solution)
+    def _n(v):
+        v = float(v)
+        return int(v) if v.is_integer() else round(v, 2)
+    def X(x): return _n(pad + (x - xmin) * px)
+    def Y(y): return _n(h - pad - (y - ymin) * px)
 
     out = [f'<svg viewBox="0 0 {w} {h}" width="{w}" height="{h}" role="img" '
            f'xmlns="http://www.w3.org/2000/svg"><style>{_CSS}</style>']
