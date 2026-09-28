@@ -97,7 +97,9 @@ def saved_diagnostic_results(sid: str, x_learner: str | None = Header(default=No
     """Passkey-only and Google-saved learners can see their diagnostic result."""
     row = session_or_404(sid)
     if row["kind"] != "diagnostic" or row["user_id"]:
-        return api_results.results(sid)
+        # this route is registered before Results' own: every other sitting goes to Results' handler (the integration walk
+        # found `api_results.results` does not exist, so every report request was a 500)
+        return api_results.get_results(sid, x_learner)
     if not row["finished"]:
         raise HTTPException(409, {"need": "finish"})
     if not x_learner or learner_of(x_learner) != row["learner"] or not account.saved(row["learner"]):
