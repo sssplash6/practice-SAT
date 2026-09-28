@@ -500,7 +500,8 @@
       rwT.addEventListener('change', () => { rw = rwT.value ? +rwT.value : null; sync(); });
       rwN.addEventListener('change', () => { rwNow = rwN.value ? +rwN.value : null; sync(); });
       function sync() {
-        total.replaceChildren(...(rw ? ['Total ', h('b', { text: String(t + rw) })] : ['Math ', h('b', { text: String(t) })]));
+        total.replaceChildren('Total ', h('b', { text: String(t + (rw || 0)) }));
+        total.hidden = !rw;                            // the slider already says the Math part
         live.textContent = L ? (t > mid(L) ? `+${t - mid(L)} from your latest band` : 'At or below your latest band') : '';
         save.disabled = t === prof.target && rw === (prof.rw_target || null) && rwNow === (prof.rw_now || null);
       }
