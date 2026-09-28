@@ -10,7 +10,7 @@
 .cx .card-head { margin-bottom: 14px; }
 .cx .card-head .card-act { margin-left: auto; }
 .cx .card-foot .quiet, .cx .card-head .quiet { margin: 0; }
-.cx .foot-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 20px; margin-top: 16px; }
+.cx .foot-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 28px; margin-top: 16px; }
 .cx .foot-links .quiet { margin: 0 -12px; }
 .cx p + p { margin-top: 6px; }
 .cx .soft { color: var(--soft); }
@@ -18,13 +18,22 @@
 .cx .line.mono, .cx .mono { font-family: var(--mono); font-size: 13px; }
 .cx .chip-s { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 6px; background: var(--tile-2); font: 500 12px var(--mono); color: var(--ink); white-space: nowrap; }
 .cx .chip-s.on { background: var(--wash); box-shadow: inset 0 0 0 1px var(--amber); }
-.cx .row-act { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 16px; }
+/* a quiet control's hover box reaches 12px past its text: 28px between neighbours keeps two boxes apart */
+.cx .row-act { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin-top: 16px; }
+.cx .card-act { display: flex; flex-wrap: wrap; align-items: center; column-gap: 28px; }
 .cx .row-act .quiet { margin: 0 -12px; }
 .cx .kind-ic { display: inline-grid; place-items: center; width: 28px; height: 28px; color: var(--ink); }
 .cx .kind-ic svg { width: 22px; height: 22px; }
 .cx .err-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
 .cx .dim { opacity: .55; }
 .cx .card.wash { background: var(--wash); }
+:root[data-theme="dark"] .cx .card.wash { background: color-mix(in srgb, var(--amber) 8%, var(--tile)); }
+:root[data-theme="dark"] .cx-daily [data-status="incorrect"] { --st-fill: var(--faint); --st-fg: var(--ink); --st-mark: var(--ink); }
+
+/* stat tiles: one-line labels, so every value in a row sits on one baseline; tiles fill the row */
+.cx .stat { display: grid; grid-template-rows: auto 1fr; align-content: start; }
+.cx .stat-k { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cx :is(.res-tiles, .stat-grid, .sum-tiles) { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); }
 
 /* the ladder: ten cells, each a slot's skill, difficulty and your chance on it (C7) */
 .ladder { display: grid; grid-template-columns: repeat(var(--cols, 10), minmax(0, 1fr)); gap: 6px; }
@@ -35,7 +44,6 @@
 .lad .ch { position: absolute; left: 7px; right: 7px; bottom: 6px; height: 3px; border-radius: 2px; background: var(--mat); overflow: hidden; }
 .lad .ch > i { display: block; height: 100%; background: var(--ink); }
 .lad .dbars { transform: scale(.85); }
-.ladder-legend { margin-top: 10px; }
 
 /* the Daily card */
 .daily-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 16px; margin-bottom: 16px; }
@@ -56,7 +64,7 @@
 .crows-empty { padding: 8px 0; color: var(--soft); }
 
 /* side cards */
-.stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+.stat-grid { display: grid; gap: 10px; margin-top: 16px; }
 .stat-grid .stat { padding: 12px 14px; background: var(--paper); }
 .stat-grid .stat-v { font-size: 20px; }
 .me-rate { display: flex; align-items: center; gap: 14px; }
@@ -83,8 +91,8 @@
 .ct-head { display: grid; gap: 6px; }
 .ct-back { justify-self: start; margin-bottom: 6px; }
 .ct-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
-.day-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 10px; }
-.day-nav input { width: auto; height: 40px; }
+.day-nav { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 10px; }
+.day-nav .pick-in { position: absolute; left: 0; bottom: 0; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 .day-strip { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
 .day-strip a { width: 14px; height: 14px; border-radius: 3px; background: var(--mat); }
 .day-strip a[data-s="sat"] { background: var(--amber); }
@@ -92,6 +100,7 @@
 .day-strip a[data-s="madeup"] { background: none; box-shadow: inset 0 0 0 1.5px var(--amber); position: relative; }
 .day-strip a[data-s="madeup"]::after { content: "✓"; position: absolute; inset: 0; display: grid; place-items: center; font: 700 9px/1 var(--font); color: var(--amber-deep); }
 .day-strip a[aria-current="page"] { outline: 1.5px solid var(--ink); outline-offset: 1.5px; }
+.k-row { display: inline-flex; align-items: center; gap: 4px; }
 .day-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; font: 500 11.5px var(--mono); color: var(--soft); }
 .day-legend i { display: inline-block; width: 10px; height: 10px; margin-right: 5px; border-radius: 2px; background: var(--mat); vertical-align: -1px; }
 .day-legend i.sat { background: var(--amber); } .day-legend i.ghost, .day-legend i.madeup { background: none; box-shadow: inset 0 0 0 1.5px var(--amber); }
@@ -108,9 +117,11 @@
 .final-band .num { font-size: 40px; }
 .topic-rows { display: grid; gap: 10px; margin-top: 6px; }
 .topic-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: baseline; }
-.topic-row .mbar { grid-column: 1 / -1; position: relative; height: 4px; border-radius: 3px; background: var(--mat); }
+.topic-row .mbar { grid-column: 1 / -1; position: relative; height: 4px; border-radius: 3px; background: var(--mat); overflow: visible; }
 .topic-row .mbar i { position: absolute; top: 0; bottom: 0; left: 0; border-radius: inherit; background: var(--ink); }
 .topic-row .mbar b { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--soft); }
+.mist-d > summary { cursor: pointer; }
+.mist-d[open] > summary { margin-bottom: 10px; }
 .mist { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
 .mist li { display: flex; gap: 8px; align-items: baseline; font: 400 14px/1.4 var(--font); }
 .mist li::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--amber); transform: translateY(-1px); }
@@ -119,6 +130,12 @@
 .sub-block > .k { display: block; margin-bottom: 10px; }
 .board-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-bottom: 12px; }
 .board-ctl .field { height: 40px; max-width: 220px; }
+.board-ctl .find-box { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-left: auto; }
+.view-tg { display: inline-flex; gap: 2px; padding: 2px; border-radius: 10px; background: var(--tile); }
+.view-tg button { display: grid; place-items: center; width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--faint); cursor: pointer; }
+.view-tg button[aria-pressed="true"] { background: var(--paper); color: var(--ink); box-shadow: 0 0 0 1px var(--line); }
+@media (hover: hover) and (pointer: fine) { .view-tg button:hover { color: var(--ink); } }
+.join-card { display: grid; gap: 8px; max-width: 640px; margin-top: 6px; }
 .board-ctl .choices { margin-left: -9px; }
 .grid-wrap { overflow-x: auto; max-width: 100%; }
 .grid-t { border-collapse: separate; border-spacing: 3px; font: 500 12px var(--mono); }
@@ -135,6 +152,7 @@
 .crv > summary .q { font: 600 14px var(--mono); }
 .crv > summary .s { display: flex; align-items: center; gap: 8px; font: 500 14px/1.35 var(--font); }
 .crv > summary .s .glyph { width: 18px; height: 18px; flex: none; }
+.crv > summary .s .st { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .crv > summary .m { grid-column: 2 / -1; font: 500 12px var(--mono); color: var(--soft); }
 .crv > summary .mark { font: 700 15px var(--font); }
 .crv[hidden] { display: none; }
@@ -142,11 +160,18 @@
 .traps-list li { grid-template-columns: minmax(0, 1fr) auto; }
 .thumbbar { display: none; }
 @media (max-width: 759px) {
-  .thumbbar:not([hidden]) { position: sticky; bottom: calc(64px + env(safe-area-inset-bottom, 0px)); z-index: 6; display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    height: 56px; margin: 16px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter); background: var(--paper); box-shadow: 0 -1px 0 var(--line); }
+  /* the thumb bar takes the tab bar's slot while it shows: one bar of fixed chrome, not two */
+  body.cx-thumb :is(#tabs, .tabs) { display: none; }
+  .thumbbar:not([hidden]) { position: sticky; bottom: 0; z-index: 6; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    height: calc(60px + env(safe-area-inset-bottom, 0px)); margin: 16px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter) env(safe-area-inset-bottom, 0px); background: var(--paper); box-shadow: 0 -1px 0 var(--line); }
   .thumbbar .pill { height: 44px; }
   .cx.has-thumb .youbar { display: none; }
 }
+#rules summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; list-style: none; }
+#rules summary::-webkit-details-marker { display: none; }
+#rules summary::after { content: "▸"; color: var(--soft); transition: transform .16s; }
+#rules details[open] > summary::after { transform: rotate(90deg); }
+#rules details[open] > summary { margin-bottom: 14px; }
 .rules { margin: 0; padding-left: 18px; display: grid; gap: 8px; font: 400 13.5px/1.45 var(--font); }
 .rules b { font-weight: 600; }
 
@@ -177,6 +202,10 @@
 .trend-strip { display: flex; gap: 3px; align-items: flex-end; height: 28px; }
 .trend-strip i { width: 8px; border-radius: 2px 2px 0 0; background: var(--ink); }
 
+/* the contest page: the side (rules, question of the day) stays with the reader down a long result */
+@media (min-width: 960px) {
+  #grid.cx-grid > .cx-side { position: sticky; top: calc(var(--bar, 64px) + 16px); max-height: calc(100vh - var(--bar, 64px) - 32px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+}
 @media (max-width: 959px) {
   .cx-grid { grid-template-columns: minmax(0, 1fr); }
   .cx-grid > .cx-main, .cx-grid > .cx-side { display: contents; }
@@ -197,8 +226,9 @@
 /* the QOTD panel sits in the narrow side column: its choices take one column at every width */
 #qotd .ws .opts.two { grid-template-columns: minmax(0, 1fr); }
 
-/* the ⓘ that holds an explanation (C.info) */
+/* the ⓘ that holds an explanation (C.info); after a quiet control it keeps clear of that control's hover box */
 .quiet.info-i { padding: 4px 6px; margin: -4px -2px; font-weight: 400; color: var(--soft); vertical-align: baseline; }
+.quiet:not(.info-i) + .info-i { margin-left: 12px; }
 .pop-help { margin: 0; padding: 12px 14px; max-width: 340px; }
 
 /* the test-day card (?card=1): no shell on screen either, so it reads and prints as one page (C4) */
