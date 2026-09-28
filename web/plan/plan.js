@@ -101,6 +101,7 @@
     // a shared plan or the test-day sheet: the viewer's own sign-in and save banners stay out
     const mode = Q.get('print') ? 'sheet' : Q.get('view') ? 'view' : null;
     if (mode) doc.body.dataset.planMode = mode; else delete doc.body.dataset.planMode;
+    S.shared = mode === 'view';
     if (Q.get('print')) return sheetPage();
     if (Q.get('view')) return sharedView();
     if (Q.has('setup') || Q.has('edit')) return wizard();
@@ -147,12 +148,12 @@
     const left = h('div', {},
       h('p', { class: 'k', text: 'Study plan' }),
       h('h1', { text: 'A plan to your score, one day at a time' }),
-      h('p', { class: 'lead', text: 'Mistakes first, then your focus skills, and a fresh test each week, up to exam day. Skip, move or add anything; miss a day and it redraws from today.' }));
+      h('p', { class: 'lead', text: 'Mistakes first, then your focus skills, and a fresh test each week, up to exam day.' }));
     const acts = h('div', { class: 'row' });
     if (withData && pc) {
       const use = btn('Use this plan', 'pill', () => busy(use, () => useProposal(pc)));
       acts.append(use, btn('Adjust…', 'btn', () => go({ setup: 1, step: 1, from: 'proposal' })));
-    } else acts.append(btn(draft ? 'Start over' : 'Create my plan', 'pill', () => go({ setup: 1, step: 1, ...(draft ? { fresh: 1 } : {}) })));
+    } else acts.append(btn(draft ? 'Start over' : 'Create my plan', draft ? 'btn' : 'pill', () => go({ setup: 1, step: 1, ...(draft ? { fresh: 1 } : {}) })));
     left.append(acts, h('p', { class: 'meta', text: 'About a minute · free · as many plans as you like' }));
     const right = withData && pv ? readyPanel(pc, pv) : miniTiles(pc);
     const hero = h('section', { class: 'pl-hero', 'aria-label': 'Study plan' }, left, right);
@@ -160,15 +161,16 @@
     const parts = [hero];
     const pts = pv && pv.points && pv.points.math;
     if (withData && pts) parts.push(numbersCard(pts));
-    parts.push(bankStats(d.bank || {}), howItWorks());
+    // the most telling part first: what a day holds (numbered, it's a preview)
     if (!withData && pv && pv.sample_day && pv.sample_day.tasks.length) {
       const c = h('section', { class: 'card pl-sec' }, h('div', { class: 'card-head' }, h('h2', { text: 'A day in your plan' }),
         pv.sample_day.date && h('span', { class: 'meta', text: `day 1 · ${D(pv.sample_day.date, 'long')}` })));
       const list = h('div', { class: 'trows' });
-      pv.sample_day.tasks.forEach(t => UI.taskRow(list, t, { readonly: true }));
+      pv.sample_day.tasks.forEach((t, i) => UI.taskRow(list, t, { readonly: true, n: i + 1 }));
       c.append(list);
       parts.push(c);
     }
+    parts.push(howItWorks(), bankStats(d.bank || {}));
     if ((d.plans || []).length) parts.push(plansCard(d.plans, null));
     root.replaceChildren(...parts);
   }
@@ -194,7 +196,7 @@
       marks: { start: today(), end: pc.exam_date, exam: pc.exam_date, today: today() }, min: today(), max: pc.exam_date });
     if (pv.sample_day && pv.sample_day.tasks.length) {
       const list = h('div', { class: 'trows' });
-      pv.sample_day.tasks.slice(0, 5).forEach(t => UI.taskRow(list, t, { readonly: true, compact: true }));
+      pv.sample_day.tasks.slice(0, 5).forEach((t, i) => UI.taskRow(list, t, { readonly: true, compact: true, n: i + 1 }));
       box.append(h('p', { class: 'k', text: `Day 1 · ${D(pv.sample_day.date, 'long')}` }), list);
     }
     return box;
@@ -204,8 +206,9 @@
     const open = sh.mistakes && typeof sh.mistakes === 'object' ? sh.mistakes.open : sh.mistakes;
     const box = h('div', { class: 'pl-mini' });
     const now = pc && pc.current;
-    UI.tile(box, { label: 'Math now', value: now || null, missing: '', sub: now ? 'your starting point' : null });
-    if (!now) box.lastChild.append(h('a', { class: 'quiet', href: '/tests/', text: 'Take a test' }));
+    // no score yet: the tile is the way to one
+    if (now) UI.tile(box, { label: 'Math now', value: now, sub: 'your starting point' });
+    else box.append(h('a', { class: 'stat pl-find', href: '/tests/' }, h('span', { class: 'stat-k', text: 'Math score' }), h('span', { class: 'pl-find-t', text: 'Find it in 30 min ›' })));
     if (pc && pc.exam_date) UI.tile(box, { label: 'Next SAT', value: D(pc.exam_date), sub: `${pl(diff(today(), pc.exam_date), 'day')}` });
     if (open) UI.tile(box, { label: 'Open mistakes', value: open, href: '/review/' });
     return box;
@@ -232,24 +235,19 @@
     return h('section', { class: 'card pl-sec' }, h('div', { class: 'card-head' }, h('h2', { text: 'Your numbers' })),
       lines.map(t => h('p', { class: 'line-t', text: t })));
   }
+  // what the plan draws on, as one quiet line of numbers
   function bankStats(b) {
     const w = b.words || {};
-    const tile = (n, label, line, extra) => h('div', { class: 'card' }, n ? h('span', { class: 'n', text: n }) : null, h('h3', { class: 'h3', text: label }), extra || null, h('p', { text: line }));
-    return h('section', { class: 'pl-bank pl-sec', 'aria-label': 'What the plan draws on' },
-      tile('∞', 'Practice sections', 'A new adaptive section every sitting, built to the published blueprint.'),
-      tile(UI.num(b.templates || 386), `Question types · ${b.topics || 19} skills`, 'Every question new to you. None repeat.'),
-      h('div', { class: 'card' }, h('h3', { class: 'h3', text: 'Every wrong answer is named' }),
-        b.example && h('p', { class: 'line-t', text: `“${b.example.label}”` }), b.example && b.example.topic && UI.chip(b.example.topic),
-        h('p', { text: 'The next question is the same trap with new numbers.' })),
-      tile(w.known ? `≈ ${UI.num(w.known)}` : null, w.known ? 'SAT words you know' : 'Words · SAT words and transitions',
-        'Spaced review that measures itself: the first part of Reading & Writing here.'));
+    const bits = [`${UI.num(b.templates || 386)} question types`, `${b.topics || 19} skills`, 'a new section every sitting', 'every wrong answer named',
+      w.known ? `≈ ${UI.num(w.known)} SAT words you know` : 'SAT words and transitions'];
+    return h('div', { class: 'pl-sec pl-bank', role: 'note', 'aria-label': 'What the plan draws on' }, bits.join(' · '));
   }
   function howItWorks() {
-    const step = (n, t, p) => h('div', { class: 'card' }, h('span', { class: 'num-c', text: String(n) }), h('h3', { class: 'h3', text: t }), h('p', { text: p }));
-    return h('section', { class: 'pl-how pl-sec', 'aria-label': 'How it works' },
-      step(1, 'Four questions', 'Your score, your target and date, your time, your focus. Filled in from your results where there are any.'),
-      step(2, 'Every day planned', 'Open mistakes first, then focus skills, a test on your test day. Harder and timed as the exam gets close.'),
-      step(3, 'It keeps up', 'Skip, move or add tasks; take a day off; a new test offers to move your starting score.'));
+    const step = (n, t, p) => h('li', {}, h('span', { class: 'num-c', text: String(n) }), h('span', {}, h('b', { text: t }), ` · ${p}`));
+    return h('section', { class: 'pl-how pl-sec', 'aria-label': 'How it works' }, h('ol', {},
+      step(1, 'Four questions', 'your score, target and date, time, focus'),
+      step(2, 'Every day planned', 'to exam day, harder and timed near the end'),
+      step(3, 'It keeps up', 'skip, move or add; miss a day and it redraws')));
   }
   async function useProposal(pc) {
     try {
@@ -330,7 +328,8 @@
       .concat(Object.entries(c.skills || {}).filter(([, v]) => (v.state || v) === 'focus').map(([k]) => tn(k)));
     const sub = [`${days} ${days === 1 ? 'day' : 'days'}`, `${c.minutes} min`, testsLabel(c), focus.length ? `Focus ${focus.join(', ')}` : null].filter(Boolean).join(' · ');
     const total = c.rw_target && c.rw_current !== null && c.rw_current !== undefined;
-    const left = h('div', {}, h('h1', { text: titleOf() }), h('p', { class: 'meta', text: total ? `Math ${c.target} · ${sub}` : sub }));
+    const left = h('div', {}, h('h1', { text: titleOf() }), h('p', { class: 'meta', text: total ? `Math ${c.target} · ${sub}` : sub }),
+      S.shared ? h('p', { class: 'pl-shared', text: 'Shared plan · view only' }) : null);
     const right = h('div', { class: 'row' });
     if (!S.readonly) {
       right.append(h('a', { class: 'quiet', href: `/plan/?edit=${enc(a.id)}&step=1`, text: 'Edit' }));
@@ -1548,7 +1547,8 @@
     }
     const traps = h('section', { class: 'card pl-sec', id: 'traps', 'aria-label': 'Your traps' }, h('div', { class: 'card-head' }, h('h2', { text: 'Your traps' })));
     const bring = h('section', { class: 'card pl-sec', id: 'bring' }, h('div', { class: 'card-head' }, h('h2', { text: 'What to bring' })), checklist());
-    root.replaceChildren(top, traps, bring);
+    // the traps to read, and beside them on a wide screen what to bring
+    root.replaceChildren(top, h('div', { class: 'pl-sheet' }, traps, bring));
     let r = null;
     try { r = await api(`/plan/${enc(a.id)}/trapsheet`); }
     catch (_) { UI.cardError(traps, () => { S.d = d; sheetPage(); }, 'Couldn’t load your traps.'); return; }
@@ -1556,17 +1556,21 @@
     const L = 'ABCDEFGH';
     const list = (r.entries || []).map((e, n) => {
       const ex = e.example, q = ex && ex.question, key = ex && ex.key;
-      const item = h('article', { class: 'pl-trap keep' }, h('h3', { class: 'h3', text: `${n + 1}. ${e.name}` }),
+      // a confidence word ("Unsure") is not a trap's name: say its skill
+      const topic = (q && q.topic) || (ex && ex.topic);
+      const title = /^(sure|unsure|guess(ed)?|not sure)$/i.test(String(e.name || '').trim()) ? (topic ? tn(topic) : 'A trap you fell for') : e.name;
+      const item = h('article', { class: 'pl-trap keep' }, h('h3', { class: 'h3', text: `${n + 1}. ${title}` }),
         e.hits > 1 ? h('p', { class: 'meta', text: `caught you ${e.hits} times` }) : null,
-        e.tell && e.tell !== e.name ? h('p', { class: 'line-t', text: e.tell }) : null);
+        e.tell && e.tell !== e.name && e.tell !== title ? h('p', { class: 'line-t', text: e.tell }) : null);
       if (q) {
         item.append(h('p', { class: 'pl-stem', text: plain(q.stem) }));
         if (q.figure_alt || q.figure) item.append(h('p', { class: 'meta', text: q.figure_alt || 'There is a figure.' }));
         if ((q.choices || []).length) {
           item.append(h('ol', { class: 'pl-choices' }, q.choices.map((c, i) => {
             const trap = ex.trap_index === i, right = key !== undefined && (String(c) === String(key) || L[i] === String(key));
-            return h('li', { 'data-trap': trap ? '' : null, 'data-key': right ? '' : null }, h('b', { text: L[i] }), ` ${plain(c)} `,
-              trap ? h('span', { class: 'tag', text: 'Your trap' }) : null, right ? h('span', { class: 'tag line', text: 'Answer' }) : null);
+            // the answer stands out; the trap is there to recognise, crossed through
+            return h('li', { 'data-trap': trap ? '' : null, 'data-key': right ? '' : null }, h('b', { text: L[i] }), h('span', { class: 'c', text: plain(c) }),
+              right ? h('span', { class: 'tag', text: '✓ Answer' }) : null, trap ? h('span', { class: 'tag', text: 'The trap' }) : null);
           })));
         } else if (key !== undefined) item.append(h('p', { class: 'line-t', text: `Answer: ${plain(key)}` }));
         if (ex.rationale) item.append(h('p', { class: 'help', text: plain(ex.rationale) }));
@@ -1583,50 +1587,61 @@
   }
   function plansCard(plans, activeId, tab) {
     const card = h('section', { class: 'card' + (tab ? '' : ' pl-sec') }, h('div', { class: 'card-head' }, h('h2', { text: 'Your plans' }),
-      h('span', { class: 'card-act' }, btn('New plan', 'pill sm', () => go({ setup: 1, step: 1, fresh: 1 })))));
-    if (!plans.length) { card.append(h('p', { class: 'soft', text: 'No plans yet. Plans you make stay here, so you can switch when your date or target changes.' })); return card; }
+      h('span', { class: 'card-act pl-hmeta' }, UI.infoTip('Changing your date or target? Edit keeps this plan’s record. Save as new keeps this one here.', 'About Edit and Save as new'),
+        btn('New plan', 'pill sm', () => go({ setup: 1, step: 1, fresh: 1 })))));
     const list = h('div', { class: 'pl-plans' });
+    // a draft in the builder is a plan too, one tap from where it stopped
+    const dr = tab && S.d && S.d.draft && S.d.draft.fields ? S.d.draft : null;
+    if (dr) {
+      const f = dr.fields;
+      list.append(h('div', { class: 'pl-prow' }, h('div', { class: 'pl-pmain' }, h('h3', { class: 'h3' }, f.exam_date ? `${D(f.exam_date)} · ${f.target || ''}` : 'New plan', h('span', { class: 'tag', text: 'Draft' })),
+        h('p', { class: 'meta', text: `Step ${dr.step || 1} of 4` })),
+        h('div', { class: 'acts' }, btn('Resume ›', 'btn sm', () => go({ setup: 1, step: dr.step || 1 })))));
+    }
+    if (!plans.length && !dr) { card.append(h('p', { class: 'soft', text: 'No plans yet. Plans you make stay here, so you can switch when your date or target changes.' })); return card; }
     plans.slice(0, S.shown).forEach(p => list.append(planRow(p, activeId)));
     card.append(list);
     if (plans.length > S.shown) card.append(btn(`Show 20 more · ${plans.length - S.shown} left`, 'btn sm', () => { S.shown += 20; tab ? drawPlansTab() : landing(); }));
-    card.append(h('p', { class: 'help', text: 'Changing your date or target? Edit keeps this plan’s record. Save as new keeps this one here.' }));
     return card;
   }
   function planRow(p, activeId) {
     const r = p.record || {};
     const finished = p.result && p.result.math;
     const status = p.status === 'active' ? h('span', { class: 'tag or', text: 'Active' }) : finished ? h('span', { class: 'tag', text: `Finished · ${p.result.math}` }) : h('span', { class: 'tag', text: 'Archived' });
-    const here = (S.older || activeId) === p.id ? h('span', { class: 'meta', text: 'You are here' }) : null;
-    const name = !p.name || /^Plan for \d{4}-/.test(p.name) ? `${D(p.exam)} · ${p.total_target || p.target}` : p.name;
-    const line = [`Built ${D(p.built)}`, `${D(p.start)} → ${D(p.exam)}`, `target ${p.total_target || p.target}`,
+    const auto = !p.name || /^Plan for \d{4}-/.test(p.name);
+    const name = auto ? `${D(p.exam)} · ${p.total_target || p.target}` : p.name;
+    const line = [`Built ${D(p.built)}`, `${D(p.start)} → ${D(p.exam)}`, auto ? null : `target ${p.total_target || p.target}`,
       p.days_left > 0 ? `${pl(p.days_left, 'day')} left` : null, p.tasks_done ? `${pl(p.tasks_done, 'task')} done` : null,
       p.adherence ? `${Math.round(p.adherence * 100)}% of days` : null].filter(Boolean).join(' · ');
-    const row = h('div', { class: 'pl-prow' }, h('h3', { class: 'h3' }, name, status, here), h('p', { class: 'meta', text: line }));
+    const main = h('div', { class: 'pl-pmain' }, h('h3', { class: 'h3' }, name, status), h('p', { class: 'meta', text: line }));
     if (p.status !== 'active' && r.hours) {
-      row.append(h('p', { class: 'meta', text: [`${r.days_pct}% of days`, `${UI.num(r.hours)} h`, r.start_mid && r.end_mid ? `${r.start_mid} → ${r.end_mid} (${r.end_mid - r.start_mid >= 0 ? '+' : ''}${r.end_mid - r.start_mid})` : null,
+      main.append(h('p', { class: 'meta', text: [`${r.days_pct}% of days`, `${UI.num(r.hours)} h`, r.start_mid && r.end_mid ? `${r.start_mid} → ${r.end_mid} (${r.end_mid - r.start_mid >= 0 ? '+' : ''}${r.end_mid - r.start_mid})` : null,
         r.fixed ? `${r.fixed} fixed` : null, r.relapsed ? `${r.relapsed} relapsed` : null].filter(Boolean).join(' · ') }));
-      if ((r.by_dow || []).some(Boolean)) row.append(h('div', { class: 'pl-dow', role: 'img', 'aria-label': r.by_dow.map((v, i) => `${DOW[i]} ${v}%`).join(', ') },
+      if ((r.by_dow || []).some(Boolean)) main.append(h('div', { class: 'pl-dow', role: 'img', 'aria-label': r.by_dow.map((v, i) => `${DOW[i]} ${v}%`).join(', ') },
         r.by_dow.map((v, i) => h('span', {}, h('b', { text: DOW[i] }), `${v}%`))));
     }
-    if ((p.recent_events || []).length) row.append(h('p', { class: 'meta', text: p.recent_events.slice(0, 3).map(e => `${D(String(e.at || e.day).slice(0, 10))} ${pretty(e.text)}`).join(' · ') }));
-    if (r.changes > 3) row.append(h('a', { class: 'quiet', href: `/plan/?${p.status === 'active' ? '' : `id=${enc(p.id)}&`}tab=progress#changes`, text: `All ${r.changes} changes ›` }));
+    if (r.changes) main.append(h('div', { class: 'pl-links' }, btn(`All ${r.changes} changes ›`, 'quiet', () => changesSheet(p.id))));
     const acts = h('div', { class: 'acts' });
-    if (p.status !== 'active') {
-      acts.append(h('a', { class: 'btn sm', href: `/plan/?id=${enc(p.id)}`, text: 'Open' }));
-      const mk = btn('Make active', 'btn sm', () => {
-        acts.replaceChildren(h('span', { class: 'line-t', text: 'Switch to this plan? Your current one is kept.' }),
-          btn('Switch', 'btn sm ink', e => busy(e.currentTarget, async () => { S.d = await api(`/plan/${enc(p.id)}/activate`, { method: 'POST' }); S.older = null; UI.toast('Switched to this plan'); go({}); })),
-          btn('Keep', 'quiet', () => row.replaceWith(planRow(p, activeId))));
-      });
-      acts.append(mk);
-    }
-    acts.append(btn('Duplicate', 'quiet', () => duplicate(p.id)));
-    if (p.status !== 'active') acts.append(btn('Remove', 'quiet', () => {
-      acts.replaceChildren(h('span', { class: 'line-t', text: 'Remove this plan for good?' }),
-        btn('Remove', 'btn sm ink', e => busy(e.currentTarget, async () => { await api(`/plan/${enc(p.id)}`, { method: 'DELETE' }); S.d = await api('/plan'); route(); })),
-        btn('Keep', 'quiet', () => row.replaceWith(planRow(p, activeId))));
-    }));
-    row.append(acts);
+    const row = h('div', { class: 'pl-prow' }, main, acts);
+    const drawActs = () => {
+      acts.replaceChildren();
+      if (p.status === 'active') acts.append(h('a', { class: 'btn sm', href: `/plan/?edit=${enc(p.id)}&step=1`, text: 'Edit' }));
+      else {
+        acts.append(h('a', { class: 'btn sm', href: `/plan/?id=${enc(p.id)}`, text: 'Open' }));
+        acts.append(btn('Make active', 'btn sm', () => {
+          acts.replaceChildren(h('span', { class: 'line-t', text: 'Switch to this plan? Your current one is kept.' }),
+            btn('Switch', 'btn sm ink', e => busy(e.currentTarget, async () => { S.d = await api(`/plan/${enc(p.id)}/activate`, { method: 'POST' }); S.older = null; UI.toast('Switched to this plan'); go({}); })),
+            btn('Keep', 'btn sm', drawActs));
+        }));
+      }
+      acts.append(btn('Duplicate', 'btn sm', () => duplicate(p.id)));
+      if (p.status !== 'active') acts.append(btn('Remove', 'btn sm', () => {
+        acts.replaceChildren(h('span', { class: 'line-t', text: 'Remove this plan for good?' }),
+          btn('Remove', 'btn sm ink', e => busy(e.currentTarget, async () => { await api(`/plan/${enc(p.id)}`, { method: 'DELETE' }); S.d = await api('/plan'); route(); })),
+          btn('Keep', 'btn sm', drawActs));
+      }));
+    };
+    drawActs();
     return row;
   }
   // ?id=: an older plan. GET /api/plan?id= is asked for; until the server serves it, the
