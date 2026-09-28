@@ -22,7 +22,8 @@
   const mmss = ms => UI.mmss(Math.round((ms || 0) / 1000));
   const cap = t => (t ? t[0].toUpperCase() + t.slice(1) : '');
   const plural = (n, one, many) => `${n} ${n === 1 ? one : many || one + 's'}`;
-  const when = iso => { try { return new Date(iso).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }); } catch (_) { return ''; } };
+  // the day only: no clock times on screen (the user's rule)
+  const when = iso => { try { return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); } catch (_) { return ''; } };
   const day = iso => { try { return new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }); } catch (_) { return ''; } };
   const TIER = { easy: 'Easy', medium: 'Medium', hard: 'Hard' };
   const topicName = t => (UI.TOPIC[t] || {}).short || t;
