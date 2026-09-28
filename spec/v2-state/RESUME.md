@@ -129,6 +129,11 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       v2/s6 page checkpoints + v2/s6-server + master (runtime cache file dropped); checks/s6.py passes on it. LAUNCHING
       build.js [{id:'S6', inline: true}] (build units only, then it stops by itself); then MY light check (a real walk
       through the pages, the measured overlap and zero pass, fixes) and tell the user. Resume if cut: resumeFromRunId.
+      DONE: run wf_523dbc31-b86 built both units (v2/s6, 724k tokens); my light check fixed the report's 40 tap overlaps
+      (shared .quiet reach 4px sideways, calm-shared 800b3c4), the report's clock time and phone ⓘ overlap (v2/s6 7f713a1),
+      Math 320-320, repeated tile numbers, the single-cause legend, glyph wraps and two orange starts (v2/s6 cafc17a), and
+      took odds and levels out of the shared player (calm-shared 90f2469). prev4 has v2/s6 (preview server bx2scb467).
+      Results asks for the helper added to Task 20. The old Results swap on calm-shared is reverted (9ea9dff).
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
