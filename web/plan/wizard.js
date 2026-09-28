@@ -39,6 +39,10 @@
   const RW = [['Information and Ideas', 26, 'its own daily R&W task'], ['Craft and Structure', 28, 'its own task; Words adds new words and in-context items'],
     ['Expression of Ideas', 20, 'its own task; Words adds transition items'], ['Standard English Conventions', 26, 'its own task']];
   const MINUTES = [15, 30, 45, 60, 90, 120, 150, 180, 240];
+  // one way to say minutes: "45 min", "1 h 30 min"
+  const mn = v => { v = Math.round(v || 0); return v < 60 ? `${v} min` : v % 60 ? `${Math.floor(v / 60)} h ${v % 60} min` : `${v / 60} h`; };
+  // a time of day in the reader's own clock ("3:00 PM" or "15:00")
+  const clock = hm => { const [a, b] = String(hm).split(':').map(Number); try { return new Date(2000, 0, 1, a, b).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); } catch (_) { return hm; } };
   const STEPS = ['Where you are', 'Where you’re going', 'Time you have', 'What to focus on'];
   const KEY = 'satf.plan.draft';
   const DEFAULTS = { current: 520, measure: false, target: 650, exam_date: null, booked: false, minutes: 45, day_minutes: null, days: '1111100', off: [],
@@ -71,7 +75,6 @@
 
     const shell = h('div', { class: 'wz' });
     const stepsEl = h('nav', { class: 'wz-steps', 'aria-label': 'Steps' });
-    const stepName = h('p', { class: 'wz-stepname' });
     const body = h('div', { class: 'wz-step', 'data-k': 'body' });
     const glance = h('aside', { class: 'wz-glance', 'aria-label': 'Your plan at a glance' });
     const foot = h('div', { class: 'wz-foot' });
@@ -80,7 +83,7 @@
       h('header', { class: 'wz-top' }, h('div', {}, h('h1', { text: editing ? `Edit plan · ${editing.name && !/^Plan for /.test(editing.name) ? editing.name : `${D(editing.cfg.exam_date)} · ${editing.cfg.target}`}` : 'Create your plan' }),
         h('p', { class: 'meta', style: 'margin-top: 6px', text: 'Your draft saves as you go.' })),
       btn('Exit', 'quiet', () => { flush(); ctx.onExit && ctx.onExit(); })),
-      stepsEl, stepName, h('div', { class: 'wz-body' }, body, glance), err, foot);
+      stepsEl, h('div', { class: 'wz-body' }, body, glance), err, foot);
     root.replaceChildren(shell);
     // while GET /api/plan loads, the stepper works and the fields wait (spec 3.6 6)
     if (ctx.loading) { body.inert = true; glance.inert = true; body.setAttribute('aria-busy', 'true'); }
@@ -135,7 +138,7 @@
         if (n === W.seq) { delete glance.dataset.stale; if (W.step > 1 && !typing) draw(); else { paintGlance(); paintLive(); } }
       }, 250);
     }
-    function changed(redraw = true) { save(); preview(); if (redraw) draw(); else paintGlance(); }
+    function changed(redraw = true) { W.touched = true; save(); preview(); if (redraw) draw(); else { paintGlance(); paintFoot(); } }
 
     /* ---- the shell: stepper, footer, keys */
     function paintSteps() {
@@ -147,16 +150,15 @@
         b.addEventListener('click', () => goStep(s));
         return b;
       }));
-      stepName.textContent = `Step ${W.step} of 4 · ${STEPS[W.step - 1]}`;
     }
     function paintFoot() {
       const last = W.step === 4;
-      const back = btn('Back', 'quiet', () => goStep(W.step - 1), { disabled: W.step === 1 || null });
+      const back = W.step > 1 ? btn('Back', 'quiet', () => goStep(W.step - 1)) : null;
       const next = btn(last ? (editing ? 'Save changes' : 'Create plan') : 'Next', 'pill', () => (last ? submit(next) : nextStep()),
         { 'aria-busy': W.saving || ctx.loading ? 'true' : null, 'aria-keyshortcuts': 'Enter', disabled: (last && W.offline) || ctx.loading || null });
-      const kids = [back, h('span', { class: 'meta', text: `${W.step} / 4` })];
+      const kids = [back, h('span', { class: 'meta', text: `${W.step} / 4` })].filter(Boolean);
       if (W.offline) kids.push(h('span', { class: 'meta', text: 'Can’t save right now' }));
-      else if (!last && v2()) kids.push(h('span', { class: 'hint', text: `${UI.keys && UI.keys.label ? UI.keys.label('Mod+Enter') : '⌘↵'} ${editing ? 'save' : 'create'} now` }));
+      else if (!last && v2() && W.touched) kids.push(h('span', { class: 'hint', text: `${UI.keys && UI.keys.label ? UI.keys.label('Mod+Enter') : '⌘↵'} ${editing ? 'save' : 'create'} now` }));
       if (last && editing) kids.push(btn('Save as new plan', 'btn', e => submit(e.currentTarget, true)));
       kids.push(next);
       foot.replaceChildren(...kids);
@@ -214,8 +216,12 @@
       const pv = W.pv;
       if (!pv) { live.replaceChildren(h('p', { class: 'meta', text: v2() ? 'Working it out…' : 'Pick a date to see the plan.' })); return; }
       const cal = h('div');
-      UI.calendar(cal, { look: 'plan', compact: true, legend: false, plan: (pv.calendar || []).map(x => ({ day: x.date, kind: x.kind, minutes: x.minutes, phase: x.phase })),
-        marks: { start: today(), end: f.exam_date, exam: f.exam_date, today: today() }, min: today(), max: f.exam_date });
+      // editing a plan under way: its days so far keep their marks, before the new ones
+      const STATE = { done: 'done', partial: 'partial', missed: 'missed', skipped: 'skipped', made_up: 'madeup' };
+      const past = editing ? (d.days || []).filter(x => x.date < today()).map(x => ({ day: x.date, kind: x.kind === 'exam' ? null : x.kind, state: STATE[x.status] || null, minutes: x.minutes, phase: x.phase })) : [];
+      const from = editing ? editing.start : today();
+      UI.calendar(cal, { look: 'plan', compact: true, legend: false, plan: [...past, ...(pv.calendar || []).filter(x => x.date >= today()).map(x => ({ day: x.date, kind: x.kind, minutes: x.minutes, phase: x.phase }))],
+        marks: { start: from, end: f.exam_date, exam: f.exam_date, today: today() }, min: from, max: f.exam_date });
       const old = new Map((W.week0 || []).map(x => [x.date, `${x.kind}${x.minutes}${(x.topics || []).join()}`]));
       const wk = h('div', { class: 'wz-wk', role: 'img', 'aria-label': `Week 1: ${(pv.week || []).map(x => `${DOW[dow(x.date)]} ${x.minutes ? x.minutes + ' min' : x.kind}`).join(', ')}` },
         (pv.week || []).map(x => {
@@ -224,9 +230,10 @@
             h('b', { text: x.minutes ? UI.dur(x.minutes) : '—' }), x.kind === 'test' ? 'test' : '');
         }));
       const day1 = h('div', { class: 'trows' });
-      ((pv.sample_day && pv.sample_day.tasks) || []).slice(0, 5).forEach(t => UI.taskRow(day1, t, { readonly: true, compact: true }));
-      live.replaceChildren(cal, h('p', { class: 'k', text: 'Week 1' }), wk,
-        pv.sample_day && pv.sample_day.date ? h('p', { class: 'k', text: `Day 1 · ${D(pv.sample_day.date, 'long')}` }) : '', day1);
+      ((pv.sample_day && pv.sample_day.tasks) || []).slice(0, 5).forEach((t, i) => UI.taskRow(day1, t, { readonly: true, compact: true, n: i + 1 }));
+      const sd = pv.sample_day && pv.sample_day.date;
+      live.replaceChildren(cal, h('p', { class: 'k', text: editing ? 'This week' : 'Week 1' }), wk,
+        sd ? h('p', { class: 'k', text: editing ? (sd === today() ? `Today · ${D(sd, 'long')}` : D(sd, 'long')) : `Day 1 · ${D(sd, 'long')}` }) : '', day1);
       if (W.week0) setTimeout(() => live.querySelectorAll('[data-ch]').forEach(x => x.removeAttribute('data-ch')), 600);
     }
     function paintGlance() {
@@ -239,7 +246,7 @@
       if (pv) {
         if (!f.measure) row('Pace', `${UI.num(pv.pace_per_week)} points a week · ${pv.pace_tag}`);
         const week = weekMinutes();
-        row('Study', `${f.days.split('').filter(x => x === '1').length} days · ${UI.dur(week)} a week`);
+        row('Study', `${f.days.split('').filter(x => x === '1').length} days · ${mn(week)} a week`);
         row('To exam', `${pl(pv.study_days, 'study day')} · ${UI.num(pv.hours)} h · about ${UI.num(pv.questions)} questions`);
         if (pv.tests && pv.tests.count) row('Tests', `${pl(pv.tests.count, pv.tests.size)}${f.test_day !== null && f.test_day !== undefined ? ` · ${DOW[f.test_day]}s` : ''}`);
         const ph = phaseLine(pv);
@@ -251,7 +258,7 @@
       const str = [...Object.entries(f.focus).filter(([, v]) => stateOf(v) === 'strong').map(([k]) => DSHORT[k] || k),
         ...Object.entries(f.skills).filter(([, v]) => stateOf(v) === 'strong').map(([k]) => tn(k))];
       if (str.length) row('Strong', str.join(', '));
-      if (f.rw_minutes) row('R&W', `${f.rw_minutes} min × ${f.days.split('').filter(x => x === '1').length} a week`);
+      if (f.rw_minutes) row('R&W', `${mn(f.rw_minutes)} × ${f.days.split('').filter(x => x === '1').length} a week`);
       if ((f.custom || []).length) row('Your own', f.custom.map(t => t.title).join(', '));
       const ex = [f.extras.recheck && 'Warm-up', f.extras.qotd && 'Question of the day', f.extras.challenge && 'Daily challenge'].filter(Boolean);
       if (ex.length) row('Extras', ex.join(' · '));
@@ -272,6 +279,8 @@
 
     /* ---- steps */
     function field(label, ...kids) { return h('div', { class: 'wz-field' }, label ? h('p', { class: 'label', text: label }) : null, ...kids); }
+    // a label with its explanation one tap away (decision 7)
+    function fieldTip(label, tip, ...kids) { return h('div', { class: 'wz-field' }, h('p', { class: 'label wz-lab' }, label, tip ? UI.infoTip(tip, `About ${label}`) : null), ...kids); }
     function draw() {
       // keep the keyboard where it was across a redraw
       const a = doc.activeElement, zone = a && a.closest && a.closest('[data-k]');
@@ -317,8 +326,9 @@
       }
       if (!f.measure) {
         const sl = h('div', { 'data-k': 'math' });
-        UI.scoreSlider(sl, { min: 200, max: 800, step: 10, value: f.current || 520, label: 'Math', onChange: v => { f.current = v; if (f.target < v) f.target = v; changed(); } });
-        out.push(field('Math', sl, rangeBar(sits)));
+        const ms = UI.scoreSlider(sl, { min: 200, max: 800, step: 10, value: f.current || 520, label: 'Math', onChange: v => { f.current = v; if (f.target < v) f.target = v; changed(); } });
+        ticks(ms, sits);
+        out.push(field('Math', sl));
       }
       // Reading & Writing, beside Math (L21)
       const rw = h('div', { 'data-k': 'rw' });
@@ -332,23 +342,19 @@
       out.push(h('p', { class: 'help', text: 'You can update this after any test; the plan will offer it.' }));
       return out;
     }
-    function rangeBar(sits) {
-      const x = v => `${(Math.max(200, Math.min(800, v)) - 200) / 6}%`;
-      const box = h('div', { class: 'wz-range' });
+    // the national average and your recent tests, drawn on the slider's own track (one control)
+    function ticks(slider, sits) {
+      const at = v => `calc(11px + ${(Math.max(200, Math.min(800, v)) - 200) / 600} * (100% - 134px))`;
       const mean = sits.length ? sits.reduce((a, s) => a + (s.low + s.high) / 2, 0) / sits.length : null;
-      const NS = 'http://www.w3.org/2000/svg';
-      const svg = doc.createElementNS(NS, 'svg');
-      svg.setAttribute('role', 'img');
-      svg.setAttribute('aria-label', `200 to 800${sits.length ? `; your last ${sits.length} tests, averaging ${r10(mean)}` : ''}; you: ${f.current}`);
-      const add = (tag, at) => { const e = doc.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); svg.append(e); return e; };
-      add('rect', { x: '0', y: '18', width: '100%', height: '4', rx: '2', fill: 'var(--mat)' });
-      // a band's width is calc(), which an SVG attribute doesn't take: it goes on the style
-      sits.forEach(s => { add('rect', { x: x(s.low), y: '13', height: '14', rx: '3', fill: 'var(--faint)', opacity: '.55', class: 'band' }).style.width = `calc(${x(s.high)} - ${x(s.low)})`; });
-      if (sits.length) add('rect', { x: x(mean), y: '9', width: '2', height: '22', fill: 'var(--ink)', class: 'mean' });
-      add('circle', { cx: x(f.current || 520), cy: '20', r: '6', fill: 'var(--ink)' });
-      [[200, '200'], [505, 'avg 505'], [800, '800']].forEach(([v, t]) => { const e = add('text', { x: x(v), y: '40', 'text-anchor': v === 200 ? 'start' : v === 800 ? 'end' : 'middle', 'font-size': '10.5', fill: 'var(--soft)', 'font-family': 'var(--mono)' }); e.textContent = t; });
-      box.append(svg);
-      return box;
+      const layer = h('div', { class: 'wz-ticks', 'aria-hidden': 'true' });
+      sits.forEach(s => layer.append(h('b', { style: `left: ${at(s.low)}; width: calc(${at(s.high)} - ${at(s.low)})` })));
+      layer.append(h('i', { style: `left: ${at(505)}`, 'data-l': 'avg 505' }));
+      if (mean !== null && Math.abs(mean - 505) >= 40) layer.append(h('i', { class: 'you', style: `left: ${at(mean)}`, 'data-l': `your tests ${r10(mean)}` }));
+      slider.el.append(layer);
+      slider.range.setAttribute('aria-describedby', layer.id = 'wz-ticks-math');
+      layer.removeAttribute('aria-hidden');
+      layer.setAttribute('role', 'note');
+      layer.setAttribute('aria-label', `The average Math score is 505${sits.length ? `; your last ${sits.length} tests average ${r10(mean)}` : ''}.`);
     }
 
     function perDate(date) {
@@ -370,9 +376,18 @@
       const sl = h('div', { 'data-k': 'target' });
       UI.scoreSlider(sl, { min: low, max: 800, step: 10, value: Math.max(low, f.target), label: 'Math target', onChange: v => { f.target = v; changed(); } });
       const quick = h('div', { 'data-k': 'quick' });
-      const opts = [50, 100, 150, 200].map(n => ({ value: `+${n}`, label: `+${n}`, disabled: f.measure || f.current + n > 800 })).concat([700, 750, 800].map(v => ({ value: String(v), label: String(v), disabled: v < low })));
+      // "+50" means nothing without a starting score
+      const opts = (f.measure ? [] : [50, 100, 150, 200].filter(n => f.current + n <= 800).map(n => ({ value: `+${n}`, label: `+${n}` })))
+        .concat([700, 750, 800].filter(v => v >= low).map(v => ({ value: String(v), label: String(v) })));
       UI.chips(quick, opts, { label: 'Quick targets', value: null, onChange: v => { f.target = Math.min(800, v[0] === '+' ? f.current + +v.slice(1) : +v); changed(); } });
-      out.push(field('Math target', sl, quick));
+      // what a target means (the share of points, the harder module, the 780 rule): on demand
+      const tnote = W.pv && W.pv.target_note;
+      const pts = W.pv && W.pv.points && W.pv.points.math;
+      const notes = [];
+      if (tnote) notes.push(`${f.target} is about ${tnote.points_pct}% of the section’s points${pts && pts.skills ? `; the points you’re most likely missing are in ${pts.skills.slice().sort((a, b) => b.gain - a.gain).slice(0, 3).map(s => tn(s.topic)).join(', ')}` : ''}.`);
+      if (f.target > 580) notes.push(pts && pts.route && pts.route.m1 !== null && pts.route.m1 !== undefined ? `Your first modules: about ${Math.round(pts.route.m1 * 100)}%; 14 of 22 right in module 1 routes you to the harder second module.` : 'Above 580 needs the harder second module: 14 of 22 right in module 1 routes you up.');
+      if (f.target > 780) notes.push('A perfect section reads 710–800 here; the plan counts 780 as reaching your target.');
+      out.push(fieldTip('Math target', notes.join(' '), sl, quick));
       if (!f.measure) {
         const x = v => `${(v - 200) / 6}%`;
         out.push(h('div', { class: 'wz-gain' },
@@ -382,61 +397,58 @@
           W.rwSet && f.rw_target ? h('p', { class: 'meta', text: `R&W ${f.rw_current} → ${f.rw_target} (+${f.rw_target - f.rw_current}) · Total ${f.current + f.rw_current} → ${f.target + f.rw_target} (+${f.target + f.rw_target - f.current - f.rw_current})` }) : null,
           h('p', { class: 'sr', 'aria-live': 'polite', text: `From ${f.current} to ${f.target}, ${f.target - f.current} points.` })));
       }
-      const tnote = W.pv && W.pv.target_note;
-      const pts = W.pv && W.pv.points && W.pv.points.math;
-      const notes = [];
-      if (tnote) notes.push(`${f.target} is about ${tnote.points_pct}% of the section’s points${pts && pts.skills ? ` · the points you’re most likely missing are in ${pts.skills.slice().sort((a, b) => b.gain - a.gain).slice(0, 3).map(s => tn(s.topic)).join(', ')}` : ''}.`);
-      if (f.target > 580) notes.push(pts && pts.route && pts.route.m1 !== null && pts.route.m1 !== undefined ? `Your first modules: about ${Math.round(pts.route.m1 * 100)}% · 14 of 22 routes up.` : 'Above 580 needs the harder second module: 14 of 22 right in module 1 routes you up.');
-      if (f.target > 780) notes.push('A perfect section reads 710–800 here; the plan counts 780 as reaching your target.');
-      if (notes.length) out.push(h('div', { class: 'help' }, notes.map(t => h('p', { text: t }))));
-      // R&W target (L21)
+      // R&W target (L21): a slider once there is an R&W score, else one tap to add both
       const rw = h('div', { 'data-k': 'rwt' });
       if (W.rwSet) UI.scoreSlider(rw, { min: f.rw_current, max: 800, step: 10, value: Math.max(f.rw_current, f.rw_target || f.rw_current), label: 'R&W target', onChange: v => { f.rw_target = v; changed(); } });
-      else rw.append(h('p', { class: 'help', text: 'Set your R&W score first (step 1).' }), h('input', { type: 'range', disabled: true, 'aria-label': 'R&W target, set your R&W score first' }));
-      out.push(field('R&W target', rw));
-      // dates (T12's rows)
+      else rw.append(btn('Add an R&W target', 'btn sm', () => { W.rwSet = true; if (f.rw_current === null || f.rw_current === undefined) f.rw_current = 500; if (!f.rw_target) f.rw_target = f.rw_current; changed(); }));
+      out.push(field('R&W target', rw, W.rwSet ? h('p', { class: 'meta', text: `From your R&W score, ${f.rw_current} (step 1)` }) : null));
+      // dates (T12's rows): the next four, the rest one tap away
       const dates = (UI.SAT_DATES || []).map(x => ({ ...x, date: x.date || x.day })).filter(x => x.date > today());
       const rec = dates.find(x => perDate(x.date).tag === 'Steady');
-      const list = h('div', { class: 'wz-dates', role: 'radiogroup', 'aria-label': 'SAT date', 'data-k': 'dates' });
-      for (const x of dates) {
+      const dateBtn = x => {
         const p = perDate(x.date);
         const meta = [`in ${pl(diff(today(), x.date), 'day')}`, pl(p.study, 'study day'), p.per !== null ? `+${p.per} a week` : null, p.tag,
           x.register_by && x.register_by >= today() ? `register by ${D(x.register_by)}` : x.late_by && x.late_by >= today() ? `late registration by ${D(x.late_by)}` : null].filter(Boolean).join(' · ');
         const b = h('button', { type: 'button', role: 'radio', class: 'wz-date', 'aria-checked': String(f.exam_date === x.date) },
           h('b', { text: `${D(x.date)} · ${DOW[dow(x.date)]}` }), h('span', { class: 'meta', text: meta }), x === rec ? h('span', { class: 'badge', text: 'Recommended' }) : null);
         b.addEventListener('click', () => { f.exam_date = x.date; changed(); });
-        list.append(b);
-      }
+        return b;
+      };
+      const list = h('div', { class: 'wz-dates', role: 'radiogroup', 'aria-label': 'SAT date', 'data-k': 'dates' }, dates.slice(0, 4).map(dateBtn));
+      const rest = dates.slice(4);
+      const laterOpen = W.later || rest.some(x => x.date === f.exam_date);
+      const later = rest.length ? h('details', { class: 'wz-later', open: laterOpen || null }, h('summary', { text: `Later dates (${rest.length})` }),
+        h('div', { class: 'wz-dates', role: 'radiogroup', 'aria-label': 'Later SAT dates', 'data-k': 'later' }, rest.map(dateBtn))) : null;
+      if (later) later.addEventListener('toggle', () => { W.later = later.open; });
       const other = h('input', { type: 'date', class: 'field sm', min: addDays(today(), 1), max: addDays(today(), 730), value: dates.some(x => x.date === f.exam_date) ? '' : f.exam_date || '', 'aria-label': 'Another date' });
       other.addEventListener('change', () => { if (other.value) { f.exam_date = other.value; changed(); } });
       const need = h('p', { class: 'field-err', 'data-need': '', hidden: true, text: !f.exam_date ? 'Pick a date' : 'Pick a date after today' });
       if (v2()) need.removeAttribute('data-need');
       const booked = h('input', { type: 'checkbox', checked: f.booked || null });
       booked.addEventListener('change', () => { f.booked = booked.checked; changed(false); });
-      out.push(field('SAT date', list, h('div', { class: 'row', 'data-k': 'other' }, h('span', { class: 'meta', text: 'Other date' }), other), need,
+      out.push(field('SAT date', list, later, h('div', { class: 'row', 'data-k': 'other' }, h('span', { class: 'label', text: 'Other date' }), other), need,
         h('label', { class: 'check' }, booked, 'I’ve registered for this date')));
       if (f.exam_date && !f.measure) {
         const p = perDate(f.exam_date);
         const line = h('p', { class: 'line-t' }, `${pl(diff(today(), f.exam_date), 'day')} · ${pl(p.study, 'study day')} · about ${p.per} points a week `, h('span', { class: p.tag === 'Steady' ? 'tag' : 'tag or', text: p.tag }));
         out.push(line);
         if (p.tag === 'Very ambitious') {
-          const later = dates.find(x => x.date > f.exam_date && perDate(x.date).per <= 30);
-          if (later) out.push(h('p', { class: 'help' }, `${D(later.date)} brings it to ${perDate(later.date).per} a week. `, btn(`Use ${D(later.date)}`, 'quiet', () => { f.exam_date = later.date; changed(); })));
+          const nextOk = dates.find(x => x.date > f.exam_date && perDate(x.date).per <= 30);
+          if (nextOk) out.push(h('p', { class: 'help' }, `${D(nextOk.date)} brings it to ${perDate(nextOk.date).per} a week. `, btn(`Use ${D(nextOk.date)}`, 'quiet', () => { f.exam_date = nextOk.date; changed(); })));
         }
       }
       return out;
     }
-
     function step3() {
       const out = [h('header', {}, h('h2', { class: 'h2', text: 'Time you have' }), h('p', { text: 'A plan you keep beats one you drop.' }))];
       const rh = d.rhythm;
       const mc = h('div', { 'data-k': 'minutes' });
-      UI.chips(mc, MINUTES.map(v => ({ value: v, label: UI.dur(v) })), { value: f.minutes, label: 'A study day', onChange: v => { f.minutes = v; if (f.ramp && f.ramp.from > v) f.ramp = null; changed(); } });
+      UI.chips(mc, MINUTES.map(v => ({ value: v, label: mn(v) })), { value: f.minutes, label: 'A study day', onChange: v => { f.minutes = v; if (f.ramp && f.ramp.from > v) f.ramp = null; changed(); } });
       const kids = [mc];
       if (rh && rh.active_days >= 7) {
         const pattern = rh.by_dow.map(x => (x.studied >= 2 ? '1' : '0')).join('');
         const snap = Math.max(15, ...MINUTES.filter(v => v <= (rh.median_min || 45)));
-        kids.unshift(h('div', { class: 'wz-note' }, h('p', { text: `Last 4 weeks: ${UI.num(rh.days_per_week)} days a week · median ${rh.median_min} min · ${UI.dur(rh.weekly_min)} a week` }),
+        kids.unshift(h('div', { class: 'wz-note' }, h('p', { text: `Last 4 weeks: ${UI.num(rh.days_per_week)} days a week · median ${mn(rh.median_min)} · ${mn(rh.weekly_min)} a week` }),
           btn('Use that', 'btn sm', () => { if (pattern.includes('1')) f.days = pattern; f.minutes = snap; changed(); })));
       }
       out.push(field('A study day', ...kids));
@@ -456,95 +468,99 @@
         if (on) {
           const own = f.day_minutes && f.day_minutes[i] !== null && f.day_minutes[i] !== undefined ? f.day_minutes[i] : null;
           const sel = h('select', { 'aria-label': `${name} minutes`, class: own !== null ? 'diff' : null },
-            h('option', { value: '', text: `${UI.dur(f.minutes)}` }), MINUTES.filter(v => v !== f.minutes).map(v => h('option', { value: String(v), selected: own === v || null, text: UI.dur(v) })));
+            h('option', { value: '', text: mn(f.minutes) }), MINUTES.filter(v => v !== f.minutes).map(v => h('option', { value: String(v), selected: own === v || null, text: mn(v) })));
           sel.addEventListener('change', () => { const dm = f.day_minutes ? f.day_minutes.slice() : [null, null, null, null, null, null, null]; dm[i] = sel.value ? +sel.value : null; f.day_minutes = dm; changed(); });
           tile.append(sel);
         }
         const r = rh && rh.by_dow && rh.by_dow[i];
-        if (r && r.studied) tile.append(h('span', { class: 'meta', text: `studied ${r.studied} of ${r.of}${r.median_min ? ` · ~${r.median_min}m` : ''}` }));
+        if (r && r.studied) tile.append(h('span', { class: 'meta', text: `studied ${r.studied} of ${r.of}${r.median_min ? ` · ~${r.median_min} min` : ''}` }));
         tiles.append(tile);
       });
       const n = f.days.split('').filter(x => x === '1').length;
       const week = weekMinutes();
-      out.push(field('Days a week', tiles, warn, h('p', { class: 'meta', text: `${pl(n, 'day')} · ${UI.dur(week)} a week · Rest ${7 - n}` })));
+      out.push(field('Days a week', tiles, warn));
       // too much at once: ramp up (L7)
       if (rh && rh.active_days >= 7 && rh.weekly_min && week > 1.5 * rh.weekly_min && !f.ramp) {
         const from = Math.max(15, Math.min(f.minutes - 5, Math.round(rh.weekly_min / Math.max(1, n) / 5) * 5));
-        out.push(h('div', { class: 'wz-note' }, h('p', { text: `You’ve averaged ${UI.dur(rh.weekly_min)} a week; this asks ${UI.dur(week)}.` }),
+        out.push(h('div', { class: 'wz-note' }, h('p', { text: `You’ve averaged ${mn(rh.weekly_min)} a week; this asks ${mn(week)}.` }),
           btn('Ramp up to it', 'btn sm', () => { f.ramp = { from }; changed(); })));
       }
       if (f.ramp) {
         const weeks = Math.ceil((f.minutes - f.ramp.from) / 5) + 1;
-        out.push(h('div', { class: 'wz-note' }, h('p', { text: `Ramp: ${f.ramp.from} → ${f.minutes} min by week ${weeks}` }), btn('Remove', 'quiet', () => { f.ramp = null; changed(); })));
+        out.push(h('div', { class: 'wz-note' }, h('p', { text: `Ramp: ${mn(f.ramp.from)} → ${mn(f.minutes)} by week ${weeks}` }), btn('Remove', 'quiet', () => { f.ramp = null; changed(); })));
       }
+      // tests
+      const tr = h('div', { 'data-k': 'tests' });
+      UI.seg(tr, [['none', 'None'], ['weekly', 'Weekly'], ['twice', 'Twice a week'], ['daily', 'Every study day']].map(([value, label]) => ({ value, label })),
+        { value: f.tests, label: 'Practice tests', onChange: v => { f.tests = v; changed(); } });
+      const kidsT = [tr];
+      const pv = W.pv;
+      if (f.tests !== 'none' && pv && pv.tests && pv.hours) {
+        const tmin = pv.tests.count * (pv.tests.size === 'section' ? 70 : 35), share = tmin / (pv.hours * 60);
+        if (share > 0.3 && f.tests !== 'weekly') kidsT.push(h('div', { class: 'wz-note' }, h('p', { text: `Tests take ${Math.round(share * 100)}% of your time. Tests measure; practice raises the score.` }),
+          btn('Weekly instead', 'btn sm', () => { f.tests = 'weekly'; changed(); })));
+      }
+      out.push(field('Practice tests', ...kidsT));
+      // the rest of the settings, one tap away (decision 7), each with its label above
+      const more = [];
+      if (f.tests !== 'none') {
+        const size = h('div', { 'data-k': 'size' });
+        const maxDay = Math.max(...[0, 1, 2, 3, 4, 5, 6].map(dayMin));
+        const sz = UI.seg(size, [{ value: 'module', label: 'Module · 22 q · 35 min', disabled: maxDay < 35 }, { value: 'section', label: 'Section · 44 q · 70 min', disabled: maxDay < 70 }],
+          { value: f.test_size, label: 'Test size', onChange: v => { f.test_size = v; changed(); } });
+        if (UI.tooltip) { if (maxDay < 35) UI.tooltip(sz.btns[0], 'A module needs a 35-minute day'); if (maxDay < 70) UI.tooltip(sz.btns[1], 'A section needs a 70-minute day'); }
+        more.push(field('Test size', size));
+        if (f.tests === 'weekly' || f.tests === 'twice') {
+          const sel = h('select', { class: 'field sm', 'aria-label': 'Test day', 'data-k': 'tday' }, h('option', { value: '', text: 'Auto (last study day)' }),
+            DOW.map((nm, i) => (f.days[i] === '1' ? h('option', { value: String(i), selected: f.test_day === i || null, text: nm }) : null)));
+          sel.addEventListener('change', () => { f.test_day = sel.value === '' ? null : +sel.value; changed(); });
+          more.push(field('Test day', sel));
+        }
+        const cp = h('div', { 'data-k': 'cp' });
+        UI.seg(cp, [['every', 'Every test'], ['every_2nd', 'Every 2nd test'], ['off', 'Off']].map(([value, label]) => ({ value, label })),
+          { value: f.checkpoints, label: 'Checkpoints', onChange: v => { f.checkpoints = v; changed(false); } });
+        more.push(fieldTip('Checkpoints', 'A twin of one of your baseline tests: the same question types with new numbers, so the two compare slot by slot.', cp));
+      }
+      const clk = h('div', { 'data-k': 'clock' });
+      UI.seg(clk, [['off', 'Off'], ['auto', 'Auto'], ['always', 'Always']].map(([value, label]) => ({ value, label })), { value: f.clock, label: 'Clock on practice sets', onChange: v => { f.clock = v; changed(false); } });
+      more.push(fieldTip('Clock on practice sets', 'Auto times sets from Sharpen on, and sooner for a skill you’re slow on. Each question gets its own budget: easy 1:05, medium 1:35, hard 2:06.', clk));
+      // usual time and place
+      const tm = h('div', { 'data-k': 'time' });
+      const known = ['08:00', '15:00', '18:00'], NAMES = { '08:00': 'Morning', '15:00': 'Afternoon', '18:00': 'Evening' };
+      UI.chips(tm, [...known.map(value => ({ value, label: `${NAMES[value]} ${clock(value)}` })), { value: 'other', label: 'Other' }],
+        { value: known.includes(f.time) ? f.time : 'other', label: 'Usual time', onChange: v => { if (v !== 'other') { f.time = v; changed(false); } else { f.time = f.time || '17:00'; changed(); } } });
+      if (!known.includes(f.time)) { const ti = h('input', { type: 'time', class: 'field sm', value: f.time || '17:00', 'aria-label': 'Your time' }); ti.addEventListener('change', () => { f.time = ti.value || null; changed(false); }); tm.append(ti); }
+      more.push(field('Usual time', tm));
+      const place = h('input', { class: 'field sm', maxlength: '30', value: f.place || '', placeholder: 'the library', 'aria-label': 'Where you study', 'data-k': 'place' });
+      place.addEventListener('change', () => { f.place = place.value.trim() || null; changed(false); });
+      more.push(field('Where', place));
+      // R&W time (L21)
+      const rwm = h('div', { 'data-k': 'rwm' });
+      UI.chips(rwm, [0, 15, 30, 45, 60].map(v => ({ value: v, label: v ? mn(v) : 'None' })), { value: f.rw_minutes || 0, label: 'R&W time a study day', onChange: v => { f.rw_minutes = v; changed(); } });
+      more.push(fieldTip('R&W time a study day', f.rw_minutes ? `On top of your Math time: ${mn(week)} + ${mn(f.rw_minutes * n)} a week.` : 'On top of your Math time.', rwm));
       // days off
       const off = h('div', { class: 'wz-off', 'data-k': 'off' });
       (f.off || []).forEach(([a, b], i) => off.append(h('div', {}, h('span', { class: 'line-t', text: `${D(a)}${a !== b ? ` – ${D(b)}` : ''} · ${pl(diff(a, b) + 1, 'day')}` }),
-        btn('×', 'quiet', () => { f.off.splice(i, 1); changed(); }, { 'aria-label': `Remove days off from ${D(a)}` }))));
+        btn('×', 'btn sm icon', () => { f.off.splice(i, 1); changed(); }, { 'aria-label': `Remove days off from ${D(a)}` }))));
       const from = h('input', { type: 'date', class: 'field sm', min: today(), max: f.exam_date || '', 'aria-label': 'Days off from' });
       const to = h('input', { type: 'date', class: 'field sm', min: today(), max: f.exam_date || '', 'aria-label': 'Days off to' });
       const offErr = h('p', { class: 'field-err', hidden: true });
-      const add = btn('Add days off', 'btn sm', () => {
+      const add = btn('Add days off', 'btn', () => {
         const a = from.value, b = to.value || from.value;
         if (!a || b < a || a < today() || (f.exam_date && b > f.exam_date)) { offErr.textContent = 'Pick a start and an end between today and the exam.'; offErr.hidden = false; return; }
         if ((f.off || []).length >= 20) { offErr.textContent = 'At most 20 ranges.'; offErr.hidden = false; return; }
         f.off = [...(f.off || []), [a, b]]; changed();
       });
       off.append(h('div', { class: 'row' }, from, h('span', { class: 'meta', text: 'to' }), to, add), offErr);
-      out.push(field('Days off', off));
-      // tests
-      const tr = h('div', { 'data-k': 'tests' });
-      UI.seg(tr, [['none', 'None'], ['weekly', 'Weekly'], ['twice', 'Twice a week'], ['daily', 'Every study day']].map(([value, label]) => ({ value, label })),
-        { value: f.tests, label: 'Practice tests', onChange: v => { f.tests = v; changed(); } });
-      const kidsT = [tr];
-      if (f.tests !== 'none') {
-        const size = h('div', { 'data-k': 'size' });
-        const maxDay = Math.max(...[0, 1, 2, 3, 4, 5, 6].map(dayMin));
-        UI.seg(size, [{ value: 'module', label: 'Module · 22 q · 35 min', disabled: maxDay < 35, why: 'A module needs 35 minutes' },
-          { value: 'section', label: 'Section · 44 q · 70 min', disabled: maxDay < 70, why: 'Needs a 70-minute day' }], { value: f.test_size, label: 'Test size', onChange: v => { f.test_size = v; changed(); } });
-        kidsT.push(size);
-        if (f.tests === 'weekly' || f.tests === 'twice') {
-          const sel = h('select', { class: 'field sm', 'aria-label': 'Test day', 'data-k': 'tday' }, h('option', { value: '', text: 'Auto (last study day)' }),
-            DOW.map((nm, i) => (f.days[i] === '1' ? h('option', { value: String(i), selected: f.test_day === i || null, text: nm }) : null)));
-          sel.addEventListener('change', () => { f.test_day = sel.value === '' ? null : +sel.value; changed(); });
-          kidsT.push(h('div', { class: 'row' }, h('span', { class: 'meta', text: 'Test day' }), sel));
-        }
-        const cp = h('div', { 'data-k': 'cp' });
-        UI.seg(cp, [['every', 'Every test'], ['every_2nd', 'Every 2nd test'], ['off', 'Off']].map(([value, label]) => ({ value, label })),
-          { value: f.checkpoints, label: 'Checkpoints', onChange: v => { f.checkpoints = v; changed(false); } });
-        const tip = h('button', { type: 'button', class: 'quiet', text: 'What’s a checkpoint?' });
-        UI.tooltip && UI.tooltip(tip, 'A twin of one of your baseline tests: the same question types with new numbers, so the two compare slot by slot.');
-        kidsT.push(h('div', { class: 'row' }, h('span', { class: 'meta', text: 'Checkpoints' }), cp, tip));
-        // tests share (L7)
-        const pv = W.pv;
-        if (pv && pv.tests && pv.hours) {
-          const tmin = pv.tests.count * (pv.tests.size === 'section' ? 70 : 35), share = tmin / (pv.hours * 60);
-          if (share > 0.3 && f.tests !== 'weekly') kidsT.push(h('div', { class: 'wz-note' }, h('p', { text: `Tests take ${Math.round(share * 100)}% of your time. Tests measure; practice raises the score.` }),
-            btn('Weekly instead', 'btn sm', () => { f.tests = 'weekly'; changed(); })));
-        }
-      }
-      out.push(field('Practice tests', ...kidsT));
-      const clk = h('div', { 'data-k': 'clock' });
-      UI.seg(clk, [['off', 'Off'], ['auto', 'Auto'], ['always', 'Always']].map(([value, label]) => ({ value, label })), { value: f.clock, label: 'Clock on practice sets', onChange: v => { f.clock = v; changed(false); } });
-      out.push(field('Clock on practice sets', clk, h('p', { class: 'help', text: 'Auto times sets from Sharpen on, and sooner for a skill you’re slow on. Each question gets its own budget: easy 1:05 · medium 1:35 · hard 2:06.' })));
-      // usual time and place
-      const tm = h('div', { 'data-k': 'time' });
-      const known = { '08:00': 'Morning 8:00', '15:00': 'Afternoon 15:00', '18:00': 'Evening 18:00' };
-      UI.chips(tm, [...Object.entries(known).map(([value, label]) => ({ value, label })), { value: 'other', label: 'Other' }],
-        { value: known[f.time] ? f.time : 'other', label: 'Usual time', onChange: v => { if (v !== 'other') { f.time = v; changed(false); } else { f.time = f.time || '17:00'; changed(); } } });
-      if (!known[f.time]) { const ti = h('input', { type: 'time', class: 'field sm', value: f.time || '17:00', 'aria-label': 'Your time' }); ti.addEventListener('change', () => { f.time = ti.value || null; changed(false); }); tm.append(ti); }
-      const place = h('input', { class: 'field sm', maxlength: '30', value: f.place || '', placeholder: 'the library', 'aria-label': 'Where you study' });
-      place.addEventListener('change', () => { f.place = place.value.trim() || null; changed(false); });
-      out.push(field('Usual time', tm, h('div', { class: 'row' }, h('span', { class: 'meta', text: 'Where' }), place)));
-      // R&W time (L21)
-      const rwm = h('div', { 'data-k': 'rwm' });
-      UI.chips(rwm, [0, 15, 30, 45, 60].map(v => ({ value: v, label: v ? `${v} min` : 'None' })), { value: f.rw_minutes || 0, label: 'R&W time a study day', onChange: v => { f.rw_minutes = v; changed(); } });
-      out.push(field('R&W time a study day', rwm, f.rw_minutes ? h('p', { class: 'help', text: `On top of your Math time · ${UI.dur(week)} + ${UI.dur(f.rw_minutes * n)} a week` }) : null));
-      const pv = W.pv;
-      if (pv) out.push(h('p', { class: 'line-t', text: `Until ${D(f.exam_date)}: ${pl(pv.study_days, 'study day')} · ${UI.num(pv.hours)} h${pv.tests.count ? ` · ${pl(pv.tests.count, 'test')}` : ''} · about ${UI.num(pv.questions)} new questions` }));
+      more.push(field('Days off', off));
+      const set = [f.tests !== 'none' && f.test_size === 'section' ? 'section tests' : null, f.clock !== 'auto' ? `clock ${f.clock}` : null,
+        f.rw_minutes ? `R&W ${mn(f.rw_minutes)}` : null, (f.off || []).length ? pl(f.off.length, 'break') : null, f.place ? f.place : null].filter(Boolean);
+      const box = h('details', { class: 'wz-more', open: W.more3 || null }, h('summary', {}, `More options (${more.length})`, set.length ? h('span', { class: 'meta', text: ` · ${set.join(' · ')}` }) : null),
+        h('div', { class: 'wz-step' }, more));
+      box.addEventListener('toggle', () => { W.more3 = box.open; });
+      out.push(box);
       return out;
     }
-
     function suggestion() {
       const topics = (W.map && W.map.topics) || [];
       const pts = W.pv && W.pv.points && W.pv.points.math;
@@ -579,12 +595,15 @@
       const sFocus = () => Object.values(f.skills).filter(v => stateOf(v) === 'focus').length;
       const setSkill = (t, v) => { if (v === 'normal') delete f.skills[t]; else f.skills[t] = v; changed(); };
       const setDom = (dn, v) => { if (v === 'normal') delete f.focus[dn]; else f.focus[dn] = v; changed(); };
+      // a three-way choice; Normal is the default, so only Focus and Strong wear the orange edge
+      const three = (host, value, label, onChange, focusOff) => UI.seg(host, [{ value: 'focus', label: 'Focus', disabled: focusOff }, { value: 'normal', label: 'Normal' }, { value: 'strong', label: 'Strong' }],
+        { value, label, onChange, className: 'wz-seg3' });
       // where your points are (L1)
       const panel = h('section', { class: 'wz-points', 'data-k': 'points' });
       if (pts && pts.skills && pts.skills.length) {
         const top = pts.skills.slice().sort((a, b) => (b.v || 0) - (a.v || 0)).slice(0, 6);
         const top3 = top.slice(0, 3).reduce((a, x) => a + Math.max(0, x.gain || 0), 0);
-        panel.append(h('p', { class: 'label', text: 'Where your points are' }), h('p', { class: 'meta', text: `About +${Math.round(pts.total || 0)} on the table · your top 3 together ≈ +${Math.round(top3)}` }));
+        panel.append(h('p', { class: 'label', text: 'Where your points are' }), h('p', { class: 'meta', text: `About +${Math.round(pts.total || 0)} to gain · your top 3 together ≈ +${Math.round(top3)}` }));
         for (const s of top) {
           const t = byTopic[s.topic] || {};
           const row = UI.skillRow(null, { topic: s.topic, mastery: t.mastery, answered: t.answered, accuracy: s.accuracy, open: (t.traps || []).length, gain: s.gain, per_test: s.per_test, minutes: s.minutes });
@@ -593,19 +612,20 @@
             onclick: () => setSkill(s.topic, on ? 'normal' : 'focus') }));
           panel.append(row);
         }
-      } else panel.append(h('p', { class: 'help', text: answered >= 30 ? 'Where your points are shows once the plan has your first estimate.' : `Answer 30 questions and this shows where your points are · ${answered} of 30` }));
-      out.push(panel);
-      // counters and suggestions
+      } else if (answered) panel.append(h('p', { class: 'help', text: answered >= 30 ? 'Where your points are shows once the plan has your first estimate.' : `Where your points are shows after 30 answers · ${answered} of 30` }));
+      if (panel.childNodes.length) out.push(panel);
+      // counters and suggestions: only once there is something to count or undo
+      const any = Object.keys(f.focus).length || Object.keys(f.skills).length;
       const cnt = h('div', { class: 'row', 'data-k': 'counters' },
-        h('span', { class: dFocus() ? 'tag or' : 'tag', text: `${dFocus()}/2 focus` }),
-        Object.values(f.focus).filter(v => stateOf(v) === 'strong').length ? h('span', { class: 'tag line', text: `${Object.values(f.focus).filter(v => stateOf(v) === 'strong').length} strong` }) : null,
-        sFocus() ? h('span', { class: 'tag', text: `${sFocus()}/6 skills on focus` }) : null,
+        dFocus() ? h('span', { class: 'tag or', text: `${dFocus()} of 2 areas on focus` }) : null,
+        sFocus() ? h('span', { class: 'tag', text: `${sFocus()} of 6 skills on focus` }) : null,
         answered ? btn('Use suggestions', 'quiet', () => { f.focus = { ...sug.focus }; f.skills = { ...sug.skills }; changed(); }) : null,
-        btn('Reset', 'quiet', () => { f.focus = {}; f.skills = {}; changed(); }));
-      out.push(cnt);
+        any ? btn('Reset', 'quiet', () => { f.focus = {}; f.skills = {}; changed(); }) : null);
+      if (cnt.childNodes.length) out.push(cnt);
       if (dFocus() >= 2) out.push(h('p', { class: 'help', text: '2 focus areas at most. Move one back to Normal to pick another.' }));
       if (sFocus() >= 6) out.push(h('p', { class: 'help', text: '6 skills at most.' }));
-      // the four domains, each with its skills open (decision 4)
+      // the four domains, each a row; its skills one tap away
+      W.openDom = W.openDom || {};
       const rows = h('div', { class: 'wz-rows' });
       for (const dn of DOMAINS) {
         const ts = UI.TOPICS.filter(t => t.domain === dn);
@@ -615,28 +635,36 @@
         const traps = st.reduce((a, x) => a + (x.traps || []).length, 0);
         const state = stateOf(f.focus[dn]);
         const seg = h('div', { 'data-k': `dom:${dn}` });
-        UI.seg(seg, [{ value: 'focus', label: '↑ Focus', disabled: state !== 'focus' && dFocus() >= 2 }, { value: 'normal', label: '— Normal' }, { value: 'strong', label: '✓ Strong' }],
-          { value: state, label: `${dn}: focus, normal or strong`, onChange: v => setDom(dn, v) });
+        three(seg, state, `${dn}: focus, normal or strong`, v => setDom(dn, v), state !== 'focus' && dFocus() >= 2);
         const sugState = sug.focus[dn];
         const gain = pts && pts.skills ? pts.skills.filter(x => (UI.TOPIC[x.topic] || {}).domain === dn).reduce((a, x) => a + Math.max(0, x.gain || 0), 0) : 0;
-        const onFocus = ts.filter(t => stateOf(f.skills[t.slug]) === 'focus').length;
+        const onFocus = ts.filter(t => stateOf(f.skills[t.slug]) !== 'normal').length;
+        const open = !!W.openDom[dn];
+        const tog = h('button', { type: 'button', class: 'quiet wz-tog', 'aria-expanded': String(open), 'data-k': `tog:${dn}`,
+          text: `${pl(ts.length, 'skill')}${onFocus ? ` · ${onFocus} set` : ''} ${open ? '▴' : '▾'}`, onclick: () => { W.openDom[dn] = !open; draw(); } });
         const head = h('div', { class: 'wz-dom-head' },
-          h('div', {}, h('p', { class: 'h3', text: dn }), h('p', { class: 'meta', text: [`${Math.round(WEIGHT[dn] * 100)}% of the test`, gain >= 5 ? `≈ +${Math.round(gain)} on the table` : null].filter(Boolean).join(' · ') }),
-            h('p', { class: 'meta', text: ans ? [`${UI.num(ans)} answered`, `${Math.round(right / ans * 100)}% right`, traps ? pl(traps, 'mistake') : null].filter(Boolean).join(' · ') : 'Not started' }),
-            sugState && sugState !== state ? h('span', { class: 'badge soft', text: `Suggested: ${sugState === 'focus' ? 'Focus' : 'Strong'}` }) : null),
+          h('div', {}, h('p', { class: 'h3', text: dn }),
+            h('p', { class: 'meta', text: [`${Math.round(WEIGHT[dn] * 100)}% of the test`, gain >= 5 ? `≈ +${Math.round(gain)} to gain` : null,
+              ans ? `${Math.round(right / ans * 100)}% right of ${UI.num(ans)}` : null, traps ? pl(traps, 'mistake') : null].filter(Boolean).join(' · ') }),
+            sugState && sugState !== state ? h('span', { class: 'badge soft', text: `Suggested: ${sugState === 'focus' ? 'Focus' : 'Strong'}` }) : null,
+            tog),
           seg);
-        const skills = h('div', { class: 'wz-skills' }, h('p', { class: 'meta', text: onFocus ? `${pl(onFocus, 'skill')} on focus` : pl(ts.length, 'skill') }));
-        for (const t of ts) {
-          const s = byTopic[t.slug] || { answered: 0 };
-          const sst = stateOf(f.skills[t.slug]);
-          const sseg = h('div', { 'data-k': `sk:${t.slug}` });
-          UI.seg(sseg, [{ value: 'focus', label: 'Focus', disabled: sst !== 'focus' && sFocus() >= 6 }, { value: 'normal', label: '—' }, { value: 'strong', label: 'Strong' }],
-            { value: sst, label: `${t.short}: focus, normal or strong`, onChange: v => setSkill(t.slug, v) });
-          const g = pts && pts.skills && pts.skills.find(x => x.topic === t.slug);
-          skills.append(h('div', { class: 'wz-skill' }, h('span', { class: 'nm' }, UI.glyph(t.slug), t.short, (s.traps || []).length ? h('span', { class: 'dot', 'aria-label': pl(s.traps.length, 'open mistake') }) : null),
-            h('span', { class: 'meta', text: s.answered ? [`${UI.num(s.answered)} answered`, `${Math.round((s.accuracy || 0) * 100)}% right`, g ? (g.gain >= 5 ? `≈ +${Math.round(g.gain)}` : null) : s.answered < 5 ? 'Not measured yet' : null].filter(Boolean).join(' · ') : 'Not started' }), sseg));
+        const box = h('div', { class: 'wz-dom', 'data-state': state }, head);
+        if (open) {
+          const skills = h('div', { class: 'wz-skills' });
+          for (const t of ts) {
+            const s = byTopic[t.slug] || { answered: 0 };
+            const sst = stateOf(f.skills[t.slug]);
+            const sseg = h('div', { 'data-k': `sk:${t.slug}` });
+            three(sseg, sst, `${t.short}: focus, normal or strong`, v => setSkill(t.slug, v), sst !== 'focus' && sFocus() >= 6);
+            const g = pts && pts.skills && pts.skills.find(x => x.topic === t.slug);
+            const meta = s.answered ? [`${Math.round((s.accuracy || 0) * 100)}% right of ${UI.num(s.answered)}`, g && g.gain >= 5 ? `≈ +${Math.round(g.gain)}` : null].filter(Boolean).join(' · ') : null;
+            skills.append(h('div', { class: 'wz-skill' }, h('div', { class: 'nm' }, UI.glyph(t.slug), h('span', {}, t.short, meta ? h('span', { class: 'meta', text: meta }) : null),
+              (s.traps || []).length ? h('span', { class: 'dot', 'aria-label': pl(s.traps.length, 'open mistake') }) : null), sseg));
+          }
+          box.append(skills);
         }
-        rows.append(h('div', { class: 'wz-dom', 'data-state': state }, head, skills));
+        rows.append(box);
       }
       out.push(rows);
       // the split the scheduler deals (2e SplitBar)
@@ -645,51 +673,61 @@
       const rwFocus = () => Object.values(f.rw_focus || {}).filter(v => v === 'focus').length;
       const rwBox = h('div', { class: 'wz-rows' });
       const rwLog = Object.fromEntries(((d.rw_domains) || []).map(x => [x.domain, x]));
+      const logged = RW.some(([dn]) => rwLog[dn] && rwLog[dn].of);
       for (const [dn, share, does] of RW) {
         const st = (f.rw_focus || {})[dn] || 'normal';
         const seg = h('div', { 'data-k': `rw:${dn}` });
-        UI.seg(seg, [{ value: 'focus', label: '↑ Focus', disabled: st !== 'focus' && rwFocus() >= 2 }, { value: 'normal', label: '— Normal' }, { value: 'strong', label: '✓ Strong' }],
-          { value: st, label: `${dn}: focus, normal or strong`, onChange: v => { f.rw_focus = { ...(f.rw_focus || {}) }; if (v === 'normal') delete f.rw_focus[dn]; else f.rw_focus[dn] = v; changed(); } });
+        three(seg, st, `${dn}: focus, normal or strong`, v => { f.rw_focus = { ...(f.rw_focus || {}) }; if (v === 'normal') delete f.rw_focus[dn]; else f.rw_focus[dn] = v; changed(); }, st !== 'focus' && rwFocus() >= 2);
         const lg = rwLog[dn];
         rwBox.append(h('div', { class: 'wz-dom', 'data-state': st }, h('div', { class: 'wz-dom-head' },
-          h('div', {}, h('p', { class: 'h3', text: dn }), h('p', { class: 'meta', text: `about ${share}% of the R&W section · Focus: ${does}` }),
-            h('p', { class: 'meta', text: lg && lg.of ? `${lg.missed} missed of ${lg.of}` : 'No R&W results yet · log them after a Bluebook test' })), seg)));
+          h('div', {}, h('p', { class: 'h3' }, dn, ' ', UI.infoTip(`About ${share}% of the R&W section. Focus: ${does}.`, `About ${dn}`)),
+            lg && lg.of ? h('p', { class: 'meta', text: `${lg.missed} missed of ${lg.of}` }) : null), seg)));
       }
-      out.push(field(`Reading & Writing · ${rwFocus()}/2 focus`, rwBox));
-      // auto focus, extras, words, own tasks
+      out.push(field(`Reading & Writing${rwFocus() ? ` · ${rwFocus()} of 2 on focus` : ''}`, logged ? null : h('p', { class: 'help', text: 'No R&W results yet. Log them after a Bluebook test.' }), rwBox));
+      // auto focus, extras, words, own tasks: one tap away, their state in the summary
       const auto = h('div');
-      UI.switch(auto, { checked: (UI.prefs.now && UI.prefs.now().plan_auto_focus) !== false, label: 'Move a skill off Focus when it passes its check',
+      const autoOn = (UI.prefs.now && UI.prefs.now().plan_auto_focus) !== false;
+      UI.switch(auto, { checked: autoOn, label: 'Move a skill off Focus when it passes its check',
         onChange: v => UI.api('/me', { method: 'PUT', body: { prefs: { plan_auto_focus: v } } }) });
       const ex = h('div', { class: 'wz-rows' });
       [['recheck', 'Warm-up', 'Questions you got right before, back just as you start to forget them, mixed and unlabelled.'], ['qotd', 'Question of the day', null],
         ['challenge', 'Daily challenge', 'The same 10 question types for everyone, your own numbers.']].forEach(([k, label, help]) => {
-        const box = h('div', { style: 'padding: 6px 0' });
+        const box = h('div', { class: 'wz-sw' });
         UI.switch(box, { checked: !!f.extras[k], label, onChange: v => { f.extras = { ...f.extras, [k]: v }; changed(false); } });
-        if (help) box.append(h('p', { class: 'help', text: help }));
+        if (help) box.append(UI.infoTip(help, `About ${label}`));
         ex.append(box);
       });
-      out.push(field('When a skill is ready', auto), field('Extras', ex, h('p', { class: 'help', text: 'Extras never count against the day’s minutes.' })));
       const words = h('div', { 'data-k': 'words' });
       const goal = UI.prefs.now ? UI.prefs.now().words_goal : 10;
       UI.chips(words, [0, 5, 10, 20].map(v => ({ value: v, label: v ? `${v} new a day` : 'Off' })), { value: goal ?? 10, label: 'Words',
         onChange: v => UI.prefs.set ? UI.prefs.set({ words_goal: v }) : UI.api('/me', { method: 'PUT', body: { prefs: { words_goal: v } } }) });
-      out.push(field('Words · SAT words and transitions', words, h('p', { class: 'help', text: 'About 6 minutes a day, counted as Reading & Writing time.' })));
-      out.push(field('Your own tasks', ownTasks()));
+      const exOn = [f.extras.recheck && 'Warm-up', f.extras.qotd && 'Question of the day', f.extras.challenge && 'Daily challenge'].filter(Boolean);
+      const sum = [exOn.length ? exOn.join(', ') : 'no extras', (goal ?? 10) ? `Words ${goal ?? 10} a day` : 'Words off', (f.custom || []).length ? pl(f.custom.length, 'own task') : null].filter(Boolean).join(' · ');
+      const more = h('details', { class: 'wz-more', open: W.more4 || null }, h('summary', {}, 'Extras, Words and your own tasks', h('span', { class: 'meta', text: ` · ${sum}` })),
+        h('div', { class: 'wz-step' },
+          fieldTip('When a skill is ready', null, auto),
+          fieldTip('Extras', 'Extras never count against the day’s minutes.', ex),
+          fieldTip('Words · SAT words and transitions', 'About 6 minutes a day, counted as Reading & Writing time.', words),
+          fieldTip('Your own tasks', 'They count toward the day’s minutes and are done when you tick them.', ownTasks())));
+      more.addEventListener('toggle', () => { W.more4 = more.open; });
+      out.push(more);
       return out;
     }
+
     function splitBar(split, base, points) {
       const box = h('div', { style: 'display: grid; gap: 8px' });
       const bar = (vals, label, focusOrange) => h('div', { class: 'wz-split', role: 'img', 'aria-label': `${label}: ${DOMAINS.map(dn => `${DSHORT[dn]} ${Math.round((vals[dn] || 0) * 100)}%`).join(', ')}` },
         DOMAINS.filter(dn => vals[dn] > 0).map(dn => h('span', { style: `flex-grow: ${vals[dn]}`, 'data-on': focusOrange && stateOf(f.focus[dn]) === 'focus' ? '' : null }, `${DSHORT[dn]} ${Math.round(vals[dn] * 100)}%`)));
-      box.append(bar(split, 'Your practice week', true));
+      const key = vals => h('p', { class: 'meta wz-split-key', 'aria-hidden': 'true', text: DOMAINS.filter(dn => vals[dn] > 0).map(dn => `${DSHORT[dn]} ${Math.round(vals[dn] * 100)}%`).join(' · ') });
+      box.append(bar(split, 'Your practice week', true), key(split));
       if (base) box.append(h('p', { class: 'meta', text: `was ${DOMAINS.map(dn => Math.round((base[dn] || 0) * 100)).join(' / ')} by the test’s weights` }));
-      if (points && Object.values(points).some(Boolean)) box.append(h('p', { class: 'label', style: 'margin: 6px 0 0', text: 'Where your points are' }), bar(points, 'Where your points are', false));
+      if (points && Object.values(points).some(Boolean)) box.append(h('p', { class: 'label', style: 'margin: 6px 0 0', text: 'Where your points are' }), bar(points, 'Where your points are', false), key(points));
       return box;
     }
     function ownTasks() {
       const box = h('div', { class: 'wz-own', 'data-k': 'own' });
       (f.custom || []).forEach((t, i) => box.append(h('div', { class: 'wz-own-item' }, h('p', { text: `${t.title} · ${t.minutes} min · ${t.repeat === 'study_days' ? 'every study day' : t.repeat ? `weekly on ${DOW[+t.repeat.split(':')[1]]}` : `once on ${D(t.day)}`}` }),
-        btn('×', 'quiet', () => { f.custom.splice(i, 1); changed(); }, { 'aria-label': `Remove ${t.title}` }))));
+        btn('×', 'btn sm icon', () => { f.custom.splice(i, 1); changed(); }, { 'aria-label': `Remove ${t.title}` }))));
       const form = h('div');
       const open = (pre = {}) => {
         const title = h('input', { class: 'field sm', maxlength: '60', value: pre.title || '', 'aria-label': 'Title', placeholder: 'Title' });
@@ -717,7 +755,7 @@
         btn('+ Reading & Writing · 30 min · every study day', '', () => { f.rw_minutes = 30; changed(); }, { disabled: f.rw_minutes >= 30 || null }),
         btn('+ Tutor session', '', () => open({ title: 'Tutor session', minutes: 60, repeat: 'weekly:5', type: 'tutor' })),
         btn('+ Other…', '', () => open()));
-      box.append(chips, form, h('p', { class: 'help', text: 'They count toward the day’s minutes and are done when you tick them.' }));
+      box.append(chips, form);
       return box;
     }
 
