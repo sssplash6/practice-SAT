@@ -36,9 +36,9 @@ def _pace(learner: str) -> int:
 
 def _item(kind: str, key: str, title: str, detail: str, reason: str, minutes: int,
           *, body: dict | None = None, href: str | None = None,
-          pts: int | None = None, urgent: bool = False) -> dict:
+          pts: int | None = None, urgent: bool = False, topic: str | None = None) -> dict:
     out = {"key": key, "kind": kind, "title": title, "detail": detail,
-           "reason": reason, "minutes": minutes, "pts": pts, "urgent": urgent}
+           "reason": reason, "minutes": minutes, "pts": pts, "urgent": urgent, "topic": topic}
     if body is not None:
         out["start"] = {"path": "/api/drill", "body": body}
     elif href is not None:
@@ -89,9 +89,16 @@ def _points(gains: dict | None, topic: str, share: float = 1) -> int | None:
     return value if value >= 1 else None
 
 
-def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_UNSET,
+def _day(value: dt.date) -> str:
+    return f"{value:%b} {value.day}"
+
+
+def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET, _closing=_UNSET,
           _board=_UNSET) -> list[dict]:
-    """Return actions in priority order, keeping one row for each action key."""
+    """Return actions in priority order, keeping one row for each action key.
+
+    `exclude` drops what a session just did (U1's chaining): each entry is a
+    key, a kind, or `kind:topic`."""
     if not 1 <= limit <= 20:
         raise ValueError("limit must be 1–20")
     today = _today(tz)
@@ -101,8 +108,12 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_
     resume = api_shell._resume(learner)
     phase = stage(learner, tz)
     if phase["eve"]:
-        return [_item("rest", "rest:eve:math", "Rest. Nothing new today.", "Exam tomorrow",
-                      "A rested mind is part of your preparation", 0, href="/plan/")]
+        rest = _item("rest", "rest:eve:math", "Rest. Nothing new today.", "Exam tomorrow",
+                     "A rested mind is part of your preparation", 0, href="/plan/")
+        if answered:
+            rest["warmup"] = {"title": "Warm-up · 5", "minutes": _minutes(5, seconds),
+                              "start": {"path": "/api/drill", "body": {"source": "warmup"}}}
+        return [rest]
     finished_start = db.one("SELECT 1 FROM sessions WHERE learner=? AND finished IS NOT NULL"
                             " AND json_extract(cfg,'$.source')='start' LIMIT 1", learner)
     if answered < 8 and not finished_start and not (resume and resume["kind"] in
@@ -154,9 +165,11 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_
     else:
         contests = _closing or []
     for contest in contests:
-        close = dt.datetime.fromisoformat(contest["closes"])
+        close = dt.datetime.fromisoformat(contest["closes"]) - dt.timedelta(minutes=tz)
+        when = ("tonight" if close.date() == today else "tomorrow"
+                if close.date() == today + dt.timedelta(days=1) else _day(close.date()))
         rows.append(_item("contest", f"contest:private:{contest['id']}", contest["title"],
-                          "A private contest is waiting", f"Closes {close:%b %-d, %H:%M}",
+                          "A private contest is waiting", f"Closes {when} {close:%H:%M}",
                           _minutes(10, seconds), href=f"/compete/contest/?id={contest['id']}", urgent=True))
 
     if _plan is _UNSET:
@@ -225,7 +238,7 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_
                           f"Caught you {trap['hits']} times" +
                           (" · also in today's plan" if "redo" in plan_pools else ""),
                           _minutes(3, seconds), body={"pool": "redo", "ids": [trap["id"]], "count": 3},
-                          pts=pts))
+                          pts=pts, topic=trap["topic"]))
 
     family_of = deps.part("habits", "family_of")
     if family_of and len(wrong_rows) >= 4:
@@ -250,7 +263,7 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_
     rough = [t for t, v in board.items() if v["evidence"] < 10]
     if not phase["final_week"] and answered < 200 and len(rough) >= 4:
         rows.append(_item("probe", "probe:new:math", "Sharpen · 12 q",
-                          f"{len(rough)} skills still rough", "Measure them before choosing a focus",
+                          "12 questions across your skills", "Find your weak skills first",
                           _minutes(12, seconds), body={"source": "probe", "count": 12}))
 
     candidates = sorted((gains or {}).get("skills", []), key=lambda x: -x["gain"])
@@ -258,17 +271,18 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_
     count = length or 10
     pts = _points(gains, topic)
     rows.append(_item("skill", f"skill:new:{topic}", f"{names[topic].name} · {count} q",
-                      f"{count} questions", f"Most points on the table: about {pts}" if pts else
+                      f"{count} questions", "Most points on the table" if pts else
                       "Your next useful skill", _minutes(count, seconds),
-                      body={"topics": [topic], "count": length}, pts=pts))
+                      body={"topics": [topic], "count": length}, pts=pts, topic=topic))
 
     for saved in db.rows("SELECT template,seed,topic,at FROM saved WHERE learner=? ORDER BY at", learner):
-        age = (today - dt.date.fromisoformat(saved["at"][:10])).days
+        on = dt.date.fromisoformat(saved["at"][:10])
+        age = (today - on).days
         if not (6 <= age <= 8 or 20 <= age <= 22):
             continue
         rows.append(_item("saved", f"saved:saved:{saved['template']}:{saved['seed']}",
-                          f"Saved {saved['at'][:10]} · try a fresh one", "1 question",
-                          "Saved questions come back twice", _minutes(1, seconds),
+                          f"Saved {_day(on)} · try a fresh one", "1 question",
+                          "Saved questions come back twice", _minutes(1, seconds), topic=saved["topic"],
                           body={"pool": "saved", "ids": [[saved["template"], saved["seed"]]],
                                 "exact": False, "each": 1, "count": 1}))
 
@@ -278,7 +292,8 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_
             v = max(warm, key=lambda x: x["last"] or "")
             rows.append(_item("warm", f"warm:review:{v['topic']}",
                               f"Keep warm: {v['name']} · 3", "3 questions",
-                              f"Strong, last practised {v['last'][:10]}", _minutes(3, seconds),
+                              f"Strong, last practised {_day(dt.date.fromisoformat(v['last'][:10]))}",
+                              _minutes(3, seconds), topic=v["topic"],
                               body={"pool": "review", "topics": [v["topic"]], "count": 3}))
 
     if not phase["final_week"]:
@@ -293,7 +308,7 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_
             rows.append(_item("untried", f"untried:untried:{t}",
                               f"{min(5, n)} new kinds of {names[t].name} question",
                               f"{n} types not met", "See a form you have not seen yet",
-                              _minutes(min(5, n), seconds),
+                              _minutes(min(5, n), seconds), topic=t,
                               body={"pool": "untried", "topics": [t], "count": min(5, n)}))
 
     if not db.one("SELECT 1 FROM attempts WHERE learner=? AND session=?", learner,
@@ -301,12 +316,20 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_
         rows.append(_item("qotd", f"qotd:today:{today.isoformat()}", "Question of the day",
                           "1 question", "Keep your day's-questions streak", _minutes(1, seconds), href="/#qotd"))
 
+    if plan and plan.get("status") == "done" and not any(r["urgent"] for r in rows):
+        skill = next(r for r in rows if r["kind"] == "skill")
+        skill["title"] = f"Day done · Another? {skill['title']}"
+        rows.remove(skill)
+        rows.insert(0, skill)
+
+    drop = set(exclude)
     seen_keys = set()
     result = []
     for row in rows:
-        if row["key"] not in seen_keys:
-            seen_keys.add(row["key"])
-            result.append(row)
+        if row["key"] in seen_keys or drop & {row["key"], row["kind"], f"{row['kind']}:{row['topic']}"}:
+            continue
+        seen_keys.add(row["key"])
+        result.append(row)
     return result[:limit]
 
 
@@ -368,8 +391,9 @@ def resolve_drill(learner: str, body: dict) -> dict:
     mixed = []
     while slots:
         prior = practice.topic_of(mixed[-1]["template"]) if mixed else None
-        index = next((i for i, slot in enumerate(slots)
-                      if practice.topic_of(slot["template"]) != prior), 0)
+        left = Counter(practice.topic_of(slot["template"]) for slot in slots)
+        index = min(range(len(slots)), key=lambda i: (
+            practice.topic_of(slots[i]["template"]) == prior, -left[practice.topic_of(slots[i]["template"])], i))
         mixed.append(slots.pop(index))
     return {**body, "source": "next", "box": box, "count": None,
             "order": "mixed", "segments": mixed[:30], "want": want}

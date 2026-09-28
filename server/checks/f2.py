@@ -17,8 +17,10 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import re
 import secrets
 import sys
+from collections import Counter
 from unittest.mock import patch
 
 from server import api_shell, compete, db, next as next_actions, plan, practice
@@ -191,10 +193,60 @@ def check(c) -> None:
         priced = next_actions.queue(learner, 0, limit=20)
     target = next(x for x in priced if x["key"] == f"redo:redo:{cursor.lastrowid}")
     assert target["pts"] == 6, target
+    # the user's rules: no calibration words, and a figure lives in pts only (never again in the reason)
+    assert not any("rough" in x["title"] + x["detail"] + x["reason"] for x in priced)
+    assert not re.search(r"\d", next(x for x in priced if x["kind"] == "skill")["reason"])
+
+    # chaining (U1): what a session just did is left out; a key, a kind or kind:topic
+    kept = c.get("/api/next?limit=20&exclude=checks,redo:probability", headers=NH).json()["items"]
+    assert not any(x["kind"] == "checks" or (x["kind"], x["topic"]) == ("redo", "probability") for x in kept), kept
+    assert any(x["kind"] == "redo" and x["topic"] == "circles" for x in kept), "other redo rows stay"
+
+    # the time box mixes skills: no two in a row share one when that can be avoided
+    segs = [practice.topic_of(x["template"]) for x in
+            next_actions.resolve_drill(learner, {"source": "next", "box": 15})["segments"]]
+    assert len(set(segs)) >= 2, segs
+    if max(Counter(segs).values()) <= (len(segs) + 1) // 2:
+        assert all(a != b for a, b in zip(segs, segs[1:])), segs
+
+    # a private contest closing soon comes first, in the learner's local time; Compete absent: no row, still 200
+    soon = (now + dt.timedelta(hours=2)).isoformat()
+    first_row = next_actions.queue(learner, 0, _closing=[{"id": "c1", "title": "Sam's contest", "closes": soon}])[0]
+    assert first_row["kind"] == "contest" and first_row["urgent"], first_row
+    assert re.fullmatch(r"Closes (tonight|tomorrow) \d\d:\d\d", first_row["reason"]), first_row["reason"]
+    with patch.object(next_actions.deps, "part",
+                      side_effect=lambda m, n: None if m == "compete" else original_part(m, n)):
+        bare = c.get("/api/next", headers=NH)
+    assert bare.status_code == 200 and not any(x["kind"] == "contest" for x in bare.json()["items"])
+
+    # the plan's day is done and nothing is urgent: "Day done · Another?" leads
+    with patch.object(next_actions, "due", return_value={"items": [], "left": 0}):
+        done_day = next_actions.queue(learner, 0, _closing=[], _plan={
+            "tasks": [], "tasks_done": 2, "tasks_counted": 2, "status": "done"})
+    assert done_day[0]["kind"] == "skill" and done_day[0]["title"].startswith("Day done · Another? "), done_day[0]
+
+    # a question saved 7 days ago comes back as a fresh one, dated like "Sep 2"
+    week_ago = now - dt.timedelta(days=7)
+    db.run("INSERT OR IGNORE INTO saved(learner,template,seed,topic,at) VALUES (?,?,?,?,?)",
+           learner, template, 99, "circles", week_ago.isoformat())
+    saved_row = next(x for x in next_actions.queue(learner, 0, limit=20) if x["kind"] == "saved")
+    assert saved_row["title"] == f"Saved {week_ago:%b} {week_ago.day} · try a fresh one", saved_row
+    assert saved_row["start"]["body"]["pool"] == "saved" and saved_row["start"]["body"]["exact"] is False
+
+    # a failing queue hides the block; the shell and its nav stand
+    real = api_shell.part
+    with patch.object(api_shell, "part", lambda m, n: (lambda *a, **k: 1 / 0) if (m, n) == ("next", "queue")
+                      else real(m, n)), patch.object(api_shell.log, "exception") as logged:
+        broken = c.get("/api/shell", headers=NH)
+    assert broken.status_code == 200 and broken.json()["next"] == [] and logged.called
+
     db.run("UPDATE learners SET exam_date=? WHERE id=?",
            (now.date() + dt.timedelta(days=1)).isoformat(), learner)
-    assert c.get("/api/next", headers=NH).json()["items"][0]["title"].startswith("Rest")
-    print("ok  /api/next: start, check-in priority, plan dedupe, time box and exam-eve rest")
+    eve = c.get("/api/next", headers=NH).json()["items"]
+    assert len(eve) == 1 and eve[0]["title"].startswith("Rest"), eve
+    assert eve[0]["warmup"]["start"]["body"] == {"source": "warmup"}
+    print("ok  /api/next: start, check-in priority, plan dedupe, points, chaining, mixed time box, contest,"
+          " day done, saved, a failing queue, and the exam eve's rest with a warm-up")
 
 
 # ------------------------------------------------------------------ the browser half

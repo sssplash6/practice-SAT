@@ -213,8 +213,11 @@ def shell(learner: str, tz: int, token: str) -> dict:
     }
     queue = part("next", "queue")
     if queue:
-        out["next"] = queue(learner, tz, limit=3, _plan=plan_summary,
-                            _closing=closing, _board=board)[:3]
+        try:                                # U1: on an error the block hides and the nav stands
+            out["next"] = queue(learner, tz, limit=3, _plan=plan_summary,
+                                _closing=closing, _board=board)[:3]
+        except Exception:
+            log.exception("next.queue failed")
     if plan_part:
         _merge(out, plan_part)
     if compete_part:
@@ -282,11 +285,15 @@ def get_shell(request: Request, x_learner: str | None = Header(default=None), x_
 
 @router.get("/api/next")
 def get_next(limit: int = Query(default=6, ge=1, le=20),
+             exclude: str = Query(default="", max_length=400),
              x_learner: str | None = Header(default=None),
              x_tz: int = Depends(tz_of)) -> dict:
+    """U1's queue. `exclude=skill:probability,redo` leaves out what a session
+    just did (a key, a kind, or kind:topic), for the Next: primary after it."""
     learner = learner_of(x_learner)
     queue = part("next", "queue")
-    return {"items": queue(learner, x_tz, limit=limit) if queue else []}
+    drop = tuple(x.strip() for x in exclude.split(",") if x.strip())
+    return {"items": queue(learner, x_tz, limit=limit, exclude=drop) if queue else []}
 
 
 # ponytail: College Board's Math question bank size from the teardown (2026-09); F5's
