@@ -155,7 +155,8 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
         remaining = resume["seconds_left"]
         if remaining is None or remaining > 0 or resume.get("paused"):
             rows.append(_item("resume", f"resume:test:{resume['id']}",
-                              f"Resume {resume['kind']} · {resume['answered']}/{resume['total']}",
+                              # the count once, in the detail ("Resume module · 0/22" over "0 of 22 answered" said it twice)
+                              f"Resume your {resume['kind']}",
                               f"{resume['answered']} of {resume['total']} answered",
                               "Your clock is still running", math.ceil(remaining / 60) if remaining else 0,
                               href=resume["href"], urgent=True))
