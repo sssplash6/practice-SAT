@@ -593,12 +593,14 @@
     }
     if (topics.length) body.topics = topics;
     if (tiers) body.tiers = ['easy', 'medium', 'hard'].filter(x => tiers.has(x));
-    if (box) { body.box = box; body.count = null; }
+    const inTime = box && count;                  // "10 in 10 min": the count, with the minutes as its limit
+    if (inTime) { body.count = count; body.timing = 'custom'; body.minutes = box; body.timed = true; }
+    else if (box) { body.box = box; body.count = null; }
     else if (count !== undefined) body.count = count;
     else { const c = o.count ?? 10; body.count = c ? c : null; }
     body.source = o.source || 'palette';
     const any = set || topics.length > 0 || !!type;
-    if (box && !any) { for (const k in body) delete body[k]; Object.assign(body, { source: 'next', box }); }
+    if (box && !inTime && !any) { for (const k in body) delete body[k]; Object.assign(body, { source: 'next', box }); }
 
     // chips and the composed line: "Practise Circles · Hard · 5 questions · timed"
     topics.forEach(s => chips.push({ key: 'topic:' + s, label: TOPIC[s].short }));
@@ -608,16 +610,17 @@
     if (body.adaptive) chips.push({ key: 'adaptive', label: 'Adaptive' });
     if (body.tiers && body.tiers.length < 3) chips.push({ key: 'tiers', label: body.tiers.map(cap).join(', ') });
     else if (body.tiers) chips.push({ key: 'tiers', label: 'Mixed' });
-    if (box) chips.push({ key: 'box', label: `${box} minutes` });
+    if (inTime) chips.push({ key: 'count', label: `${count} ${count === 1 ? 'question' : 'questions'} in ${box} min` });
+    else if (box) chips.push({ key: 'box', label: `${box} minutes` });
     else chips.push({ key: 'count', label: body.count ? `${body.count} ${body.count === 1 ? 'question' : 'questions'}` : 'Endless' });
-    if (body.timed === true) chips.push({ key: 'timed', label: body.feedback === 'end' ? 'Test mode' : 'timed' });
+    if (body.timed === true && !inTime) chips.push({ key: 'timed', label: body.feedback === 'end' ? 'Test mode' : 'timed' });
     if (body.timed === false) chips.push({ key: 'timed', label: 'untimed' });
     if (body.formats) chips.push({ key: 'formats', label: body.formats[0] === 'spr' ? 'Grid-in' : 'Multiple choice' });
     if (body.feedback === 'retry') chips.push({ key: 'feedback', label: 'Retry first' });
     if (body.order === 'ramp') chips.push({ key: 'order', label: 'Easy to hard' });
     if (body.zone) chips.push({ key: 'zone', label: body.zone === 'warm' ? 'Warm-up' : 'Stretch' });
-    const line = box && !any ? `Up next for ${box} minutes` : `Practise ${chips.map(c => c.label).join(' · ')}`;
-    return { body, chips, unknown, text: line, any: any || !!box, box };
+    const line = box && !inTime && !any ? `Up next for ${box} minutes` : `Practise ${chips.map(c => c.label).join(' · ')}`;
+    return { body, chips, unknown, text: line, any: any || !!box, box: inTime ? null : box };
   }
 
   /* ------------------------------------------------------------ the question-type index
