@@ -73,8 +73,9 @@
     UI.refresh();
     return res;
   }
-  async function passkeyGet({ conditional = false, signal } = {}) {
+  async function passkeyGet({ conditional = false, signal, onOptions } = {}) {
     const o = await UI.api('/passkey/login/options', { method: 'POST', body: { conditional } });
+    if (onOptions) onOptions(o);
     const cred = await navigator.credentials.get({ mediation: conditional ? 'conditional' : undefined, signal,
       publicKey: { challenge: unb64u(o.challenge), rpId: o.rpId, allowCredentials: [], userVerification: 'preferred', timeout: o.timeout } });
     const r = cred.response;
@@ -108,11 +109,11 @@
       if (guess) chip.textContent = `${countryName(guess)}?`;
       clear.hidden = !sel.value;
     };
+    let cur = value || '';
     const pick = async v => {
-      const old = sel.value;
       sel.value = v;
       sync();
-      try { await onChange(v); } catch (_) { sel.value = old; sync(); }
+      try { await onChange(v); cur = v; } catch (_) { sel.value = cur; sync(); }
     };
     sel.addEventListener('change', () => pick(sel.value));
     chip.addEventListener('click', () => pick(guess));
