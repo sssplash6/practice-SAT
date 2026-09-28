@@ -230,35 +230,6 @@
     if (tiles.length) card('#records', head('records-h', 'Records'), h('div', { class: 'stats sum-tiles' }, tiles));
   }
 
-  /* ------------------------------------------------------------ the Trap Index (C12) */
-  async function renderTraps() {
-    try {
-      const [all, live] = await Promise.all([api('/compete/traps-index'), api('/contests?status=live&limit=20').catch(() => null)]);
-      // decision 7: only traps with data, plus this week's trap; no You column before a first chance
-      const wk = ((live && live.contests) || []).find(c => c.kind === 'trap');
-      const weekName = wk ? String(wk.title).split(' · ').slice(1).join(' · ') : null;
-      const some = all.filter(t => t.field_share || t.chances || t.name === weekName);
-      draw(some.length ? some : all);
-      function draw(list) {
-        const mine = list.some(t => t.chances), field = list.some(t => t.field_share);
-        const rows = list.map(t => {
-          const name = h('span', { text: t.name });
-          if (t.tell) UI.tooltip(name, `Tell: ${t.tell}`);
-          return h('tr', {}, h('td', {}, name, t.name === weekName ? h('span', { class: 'chip-s', style: 'margin-left:8px', text: 'This week' }) : null, t.proven ? h('span', { class: 'chip-s on', style: 'margin-left:8px', text: 'Trap-proof' }) : null),
-            field && h('td', { class: 'n', 'data-label': 'Field', text: t.field_share ? `${pct(t.field_share)}${t.field_move ? ` ${t.field_move > 0 ? '▲' : '▼'}${Math.abs(Math.round(t.field_move * 100))}` : ''}` : '' }),
-            mine ? h('td', { class: 'n', 'data-label': 'You', text: t.chances ? `${pct(t.you_share)} · ${num(t.chances)} chances` : '' }) : null,
-            h('td', { class: 'n' }, quiet('Drill · 8', () => drill({ habit: t.family, count: 8, source: 'habit' }))));
-        });
-        // the rest stay one tap away, each with its drill
-        card('#traps', head('traps-h', 'Trap Index', list.length < all.length ? quiet(`All ${num(all.length)} traps`, () => draw(all)) : null),
-          h('div', { class: 'table-wrap' }, h('table', { class: 'table compact stack' },
-            h('thead', {}, h('tr', {}, h('th', { scope: 'col', text: 'Trap' }), field ? h('th', { scope: 'col', class: 'n', text: 'Field this week' }) : null, mine ? h('th', { scope: 'col', class: 'n', text: 'You · chances (30 days)' }) : null, h('th', { scope: 'col', text: '' }))),
-            h('tbody', {}, rows))),
-          h('p', { class: 'help', text: 'A chance is a first try on a question with that trap among its choices. Trap-proof: 5 chances over 3 question types in 30 days, none fallen for.' }));
-      }
-    } catch (e) { fail('#traps', renderTraps); }
-  }
-
   /* ------------------------------------------------------------ rivals (C9) */
   async function renderRivals() {
     try {
@@ -477,14 +448,14 @@
 
   /* ------------------------------------------------------------ load */
   async function load() {
-    ['#summary', '#rating', '#pace', '#ranks', '#records', '#traps', '#rivals', '#badges', '#seasons', '#champions', '#ladder', '#history']
+    ['#summary', '#rating', '#pace', '#ranks', '#records', '#rivals', '#badges', '#seasons', '#champions', '#ladder', '#history']
       .forEach(s => UI.skel($(s), s === '#summary' ? 'cells:10' : 'card:3'));
     try {
       const [me, hist] = await Promise.all([api('/compete/me'), loadHistory()]);
       S.me = me; S.hist = hist.history || []; S.total = hist.total; S.open = hist.open_followups;
     } catch (e) { ['#summary', '#rating', '#pace', '#ranks', '#records', '#badges', '#seasons', '#ladder', '#history'].forEach(s => fail(s, load)); return; }
     renderSummary(); renderRating(); renderPace(); renderRanks(); renderRecords(); renderBadges(); renderSeasons(); renderLadder(); renderHistory();
-    renderTraps(); renderRivals(); renderChampions();
+    renderRivals(); renderChampions();
     if (location.hash) setTimeout(() => { const t = document.querySelector(location.hash); if (t) t.scrollIntoView(); }, 200);
   }
   load();
