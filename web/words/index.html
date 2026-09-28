@@ -21,8 +21,11 @@
   .wl-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; }
   .wl-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
   .wl-acts { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  .wl-acts .field { width: 280px; }
-  .wl-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .wl-acts .field { width: 280px; height: 44px; }
+  .wl-acts > * { min-height: 44px; }
+  .wl-acts > .quiet { margin: 0; }
+  .wl-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
+  .wl-strip[hidden] { display: none; }
   .wl-strip .stat { display: grid; gap: 8px; align-content: start; min-height: 150px; }
   .wl-strip .big { font: 500 34px/1 var(--mono); letter-spacing: -.02em; }
   .wl-strip .big small { font-size: 15px; color: var(--soft); }
@@ -33,13 +36,13 @@
   .wl-strip .qd-key { font: 700 20px var(--font); }
   .wl-groups { display: grid; gap: 14px; }
   .wl-group { display: grid; gap: 8px; }
-  .wl-gtiles { display: flex; flex-wrap: wrap; gap: 8px; }
-  .ctile { appearance: none; border: 0; cursor: pointer; text-align: left; display: grid; gap: 6px; width: 176px; min-height: 92px; padding: 12px 14px;
+  .wl-gtiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+  .ctile { appearance: none; border: 0; cursor: pointer; text-align: left; display: grid; gap: 6px; align-content: start; min-height: 92px; padding: 12px 14px;
     border-radius: 10px; background: var(--tile); color: var(--ink); font: inherit; position: relative; }
   .ctile[aria-pressed="true"] { background: var(--wash); box-shadow: inset 0 0 0 1.5px var(--amber); }
-  .ctile b { font: 600 15px/1.25 var(--font); }
+  .ctile b { font: 600 15px/1.25 var(--font); padding-right: 30px; }
   .ctile .meta { font-size: 12px; }
-  .ctile .kb { height: 4px; border-radius: 2px; background: var(--mat); overflow: hidden; }
+  .ctile .kb { height: 4px; border-radius: 2px; background: var(--mat); overflow: hidden; margin-top: auto; }
   .ctile .kb i { display: block; height: 100%; background: var(--ink); }
   .ctile .due { position: absolute; top: 10px; right: 12px; display: inline-flex; align-items: center; gap: 4px; font: 500 11.5px var(--mono); }
   .ctile.new { place-content: center; text-align: center; color: var(--soft); background: none; box-shadow: inset 0 0 0 1.5px var(--line); }
@@ -47,21 +50,20 @@
   .wl-fbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .wl-fbar .filters { flex: 1 1 auto; }
   .wl-count { font: 500 13px var(--mono); color: var(--soft); margin-left: auto; white-space: nowrap; }
+  .wl-fbar .dd .dd-v[hidden], .wl-fbar .dd .dd-k[hidden] { display: none; }
   .wl-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font: 500 12px var(--mono); color: var(--soft); }
   .wl-legend b { color: var(--ink); font-weight: 500; }
-  .wgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  @media (min-width: 560px) { .wgrid { grid-template-columns: repeat(3, 1fr); } }
-  @media (min-width: 760px) { .wgrid { grid-template-columns: repeat(4, 1fr); } }
-  @media (min-width: 1100px) { .wgrid { grid-template-columns: repeat(6, 1fr); } }
+  .wgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+  @media (max-width: 389px) { .wgrid { grid-template-columns: repeat(2, 1fr); } }
   .wtile { appearance: none; border: 0; cursor: pointer; text-align: left; position: relative; display: grid; grid-template-rows: auto auto 1fr auto; gap: 3px;
     min-height: 92px; padding: 10px 12px; border-radius: 10px; background: var(--tile); color: var(--ink); font: inherit; }
   @media (hover: hover) and (pointer: fine) { .wtile:hover { background: var(--tile-2); } }
-  .wtile .w { font: 600 16px/1.2 var(--font); padding-right: 38px; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .wtile .w { font: 600 clamp(14px, 1.15vw, 17px)/1.25 var(--font); padding-right: 38px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wtile .w .sn { font-weight: 500; color: var(--soft); }
   .wtile .tag { font: 500 10.5px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--soft); }
   .wtile .mt { font: 400 12.5px/1.35 var(--font); color: var(--soft); }
   .wtile .mt.on { color: var(--ink); }
   .wtile .bot { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 4px; }
-  .wtile .bot .est { font: 500 10.5px var(--mono); color: var(--faint); }
   .wtile .dbars { font-size: 0; }
   .wtile .marks { position: absolute; top: 9px; right: 10px; display: flex; align-items: center; gap: 4px; font: 500 10.5px var(--mono); }
   .wtile .marks .due { color: var(--amber-deep); }
@@ -90,22 +92,26 @@
   body.has-rail .wl-bar { left: var(--rail-w); }
   .wl-bar-in { max-width: var(--max); margin: 0 auto; min-height: 68px; padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom, 0px));
     display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; }
-  .wl-bar .l1 { font: 600 15.5px/1.35 var(--font); font-variant-numeric: tabular-nums; }
-  .wl-bar .help { margin: 2px 0 0; }
-  .wl-bar .go { display: flex; gap: 10px; align-items: center; }
+  .wl-bar[hidden] { display: none; }
+  .wl-bar .l1 { font: 600 15.5px/1.35 var(--font); font-variant-numeric: tabular-nums; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wl-bar-in > div:first-child { min-width: 0; }
+  .wl-bar .go { display: flex; gap: 10px; align-items: center; flex: none; }
   @media (max-width: 759px) {
     .wl-acts { width: 100%; }
     .wl-acts .field { flex: 1 1 100%; width: auto; }
     .wl-acts .btn { flex: 1; }
-    #add { margin: 0; min-height: 40px; }
+    #add { margin: 0; min-height: 44px; }
     .wl-strip { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; }
     .wl-strip .stat { flex: 0 0 78%; min-height: 160px; scroll-snap-align: start; }
-    .wl-gtiles { flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; }
+    .wl-gtiles { display: flex; flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; }
     .ctile { flex: 0 0 160px; scroll-snap-align: start; }
     .wl-fbar .filters { flex: 1 1 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 2px 0; }
     .wl-fbar .filters > * { flex: 0 0 auto; }
     .wl-bar { bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
-    .wl-bar-in { padding-bottom: 10px; }
+    .wl-bar-in { min-height: 56px; padding-top: 6px; padding-bottom: 6px; flex-wrap: nowrap; gap: 10px; }
+    .wl-bar .l1 { font-size: 14px; }
+    .wl-bar .go { gap: 6px; }
+    .wl-bar .go > .btn:not(.icon), .wl-bar .go > .pill { padding: 0 12px; }
     .wl { padding-bottom: 240px; }
   }
 </style>
@@ -132,10 +138,10 @@
   <p class="wl-legend" id="legend"></p>
   <section id="gridSec" aria-label="Words" aria-live="polite"></section>
 </main>
-<div class="wl-bar" id="studybar" role="region" aria-label="Study these words">
+<div class="wl-bar" id="studybar" role="region" aria-label="Study these words" hidden>
   <div class="wl-bar-in">
-    <div><p class="l1" id="barText">Loading…</p><p class="help" id="barHelp" hidden></p></div>
-    <div class="go"><button type="button" class="btn icon" id="barMore" aria-label="Share, print or grade a worksheet" aria-haspopup="menu">⋯</button><button type="button" class="btn" id="barQuiz">Quiz</button><button type="button" class="pill" id="barCards">Flashcards</button></div>
+    <div><p class="l1" id="barText">Loading…</p></div>
+    <div class="go"><button type="button" class="btn icon" id="barMore" aria-label="Share, print or grade a worksheet" aria-haspopup="menu">⋯</button><button type="button" class="btn" id="barQuiz">Quiz</button><button type="button" class="btn" id="barCards">Flashcards</button></div>
   </div>
 </div>
 <nav id="tabs"></nav>
@@ -199,12 +205,13 @@
       (w.roots || []).forEach(r => { if (!rootsOf.has(r)) rootsOf.set(r, []); rootsOf.get(r).push(w); });
     });
     (lib.groups || []).forEach(g => (g.collections || []).forEach(c => { W._coll[c.id] = c.name; }));
-    W._lists = [...new Set(words.filter(w => w.own && w.collection).map(w => w.collection))];
+    const builtin = new Set(['second-sense', 'my-words', ...Object.keys(W._coll)]);
+    W._lists = [...new Set(words.flatMap(w => [...(w.lists || []).filter(l => !builtin.has(l)), ...(w.own && w.collection ? [w.collection] : [])]))];
     W.index().then(ix => { ix.words.forEach(x => alsoOf.set(x.slug, (x.also || []).join(' ').toLowerCase())); if (qEl.value) paintGrid(); }).catch(() => {});
     head();
     UI.todayWords($('today'), { lib, noDebt: true, onChange: load });
     strip();
-    UI.wordsFinish($('finish'), ins, { lib, onChange: load });
+    UI.wordsFinish($('finish'), ins, { lib, collapsible: true, onChange: load });
     groups();
     if (!fbar) filters(); else fbar.counts && fbar.counts('s', statusCounts());
     paintGrid();
@@ -220,54 +227,61 @@
   /* ---------------- title meta: "1,180 words · 212 known · 64 claimed · 12 due" */
   function head() {
     const c = lib.counts || {};
-    const lib_n = words.filter(w => !w.own).length;
-    $('meta').textContent = [`${num(lib_n)} words`, c.known ? `${num(c.known)} known` : null, c.claimed ? `${num(c.claimed)} claimed` : null,
-      c.due ? `${num(c.due)} due` : null, c.mine ? `${num(c.mine)} of your own` : null].filter(Boolean).join(' · ');
+    const mine = c.mine || words.filter(w => w.own).length;
+    $('meta').textContent = [`${num(words.length)} words`, c.known ? `${num(c.known)} known` : null, mine ? `${num(mine)} of your own` : null].filter(Boolean).join(' · ');
   }
 
   /* ---------------- today strip */
   function strip() {
-    const c = lib.counts || {}, fresh = !c.learning && !c.known && !c.claimed && !c.due;
+    const c = lib.counts || {}, fresh = !c.learning && !c.known && !c.claimed && !c.due && !c.new_today;
     const el = $('strip');
     el.replaceChildren();
+    el.hidden = false;
+    const tidy = () => { el.hidden = !el.children.length; };
+    // a fresh learner: the Today card already says Find your level / Learn 10, so only the daily items
+    if (!fresh) dueAndNew(el, c);
+    el.append(daily('wic', 'Word of the day'), daily('transition', 'Transition'));
+    UI.api('/words/today', { quiet: true }).then(t => { dailyData = t; el.querySelectorAll('[data-daily]').forEach(x => { const n = daily(x.dataset.daily, x.dataset.title); if (n) x.replaceWith(n); else x.remove(); }); tidy(); })
+      .catch(() => { el.querySelectorAll('[data-daily]').forEach(x => x.remove()); tidy(); });
+  }
+  function dueAndNew(el, c) {
     // Due today
     const nextDay = (lib.forecast || []).find(d => d.n > 0 && d.day > lib.today);
     const due = h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: 'Due today' }));
     if (lib.debt && lib.debt.due) {
       const days = Math.max(2, Math.ceil(lib.debt.due / Math.max(1, lib.debt.spread || 1)));
       due.append(h('span', { class: 'big', text: num(lib.debt.due) }), h('span', { class: 'stat-sub', text: lib.debt.away ? `due after ${lib.debt.away} days away` : 'a backlog' }),
-        h('button', { type: 'button', class: 'pill sm', text: `Spread over ${days} days`, onclick: () => spread(days) }),
+        h('button', { type: 'button', class: 'btn sm', text: `Spread over ${days} days`, onclick: () => spread(days) }),
         h('button', { type: 'button', class: 'quiet', text: 'Do all now', onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'due' }, count: Math.min(200, lib.debt.due) }) }));
     } else if (c.due) {
-      due.append(h('span', { class: 'big', text: num(c.due) }), h('button', { type: 'button', class: 'pill sm', text: 'Review', onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'due' }, order: 'due' }) }));
-    } else {
-      due.append(h('span', { class: 'big', text: '0' }), h('span', { class: 'stat-sub', text: fresh ? 'Nothing due yet' : nextDay ? `Nothing due · next: ${nextDay.n} on ${W.dayName(nextDay.day, { plain: true }).split(',')[0]}` : 'Nothing due' }));
-    }
+      due.append(h('span', { class: 'big', text: num(c.due) }), h('button', { type: 'button', class: 'btn sm', text: 'Review', onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'due' }, order: 'due' }) }));
+    } else if (nextDay) {
+      due.firstChild.textContent = 'Next due';
+      due.append(h('span', { class: 'big', text: num(nextDay.n) }), h('span', { class: 'stat-sub', text: `on ${W.dayName(nextDay.day, { plain: true }).split(',')[0]} · nothing due today` }));
+    } else due.append(h('span', { class: 'stat-sub', text: 'Nothing due' }));
     // New today
     const goal = c.goal ?? 10, nt = c.new_today || 0;
     const nw = h('div', { class: 'stat' }, h('span', { class: 'stat-k', text: 'New today' }));
     const met = goal > 0 && nt >= goal;
-    nw.append(...[h('span', { class: 'big' }, met ? 'Goal met' : String(nt), met ? null : h('small', { text: ` / ${goal}` })),
-      goal ? h('span', { class: 'bar', role: 'img', 'aria-label': `${nt} of ${goal} new words today` }, h('i', { style: `width:${Math.min(100, Math.round(nt / goal * 100))}%` })) : null,
-      h('button', { type: 'button', class: 'btn sm', text: fresh ? 'Learn your first 10' : met ? `Learn ${goal || 10} more` : `Learn ${goal || 10}`,
+    nw.append(...[nt ? h('span', { class: 'big' }, String(nt), h('small', { text: ` / ${goal}${met ? ' ✓' : ''}` })) : h('span', { class: 'big' }, String(goal), h('small', { text: ' to learn' })),
+      met ? h('span', { class: 'stat-sub', text: 'Goal met' }) : null,
+      goal && nt ? h('span', { class: 'bar', role: 'img', 'aria-label': `${nt} of ${goal} new words today` }, h('i', { style: `width:${Math.min(100, Math.round(nt / goal * 100))}%` })) : null,
+      h('button', { type: 'button', class: 'btn sm', text: met ? `Learn ${goal || 10} more` : `Learn ${goal || 10}`,
         onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'new' }, count: goal || 10 }) })].filter(Boolean));
     UI.tooltip && UI.tooltip(nw.querySelector('.stat-k'), 'Daily goal, set in Plan. It is never a cap.');
     el.append(due, nw);
-    // Word and transition of the day (W21)
-    el.append(daily('wic', 'Word of the day'), daily('transition', 'Transition of the day'));
-    UI.api('/words/today', { quiet: true }).then(t => { dailyData = t; el.querySelectorAll('[data-daily]').forEach(x => x.replaceWith(daily(x.dataset.daily, x.dataset.title))); }).catch(() => {});
   }
   let dailyData = null;
   function daily(fmt, title) {
     const box = h('div', { class: 'stat', 'data-daily': fmt, 'data-title': title }, h('span', { class: 'stat-k', text: title }));
     if (!dailyData) { box.append(h('span', { class: 'stat-sub', text: 'Loading…' })); return box; }
     const d = dailyData[fmt];
-    if (!d || !d.item) { box.append(h('span', { class: 'stat-sub', text: 'A new one tomorrow' })); return box; }
+    if (!d || !d.item) return null;   // no item today: no tile
     if (d.mine) {
       const g = /^[0-3]$/.test(String(d.mine.given)) ? (d.item.choices || [])[+d.mine.given] : d.mine.given;
       box.append(h('span', { class: 'qd-key', text: d.word ? (words.find(w => w.slug === d.word) || {}).word || d.word : '' }),
         h('span', { class: 'stat-sub', text: d.mine.correct ? 'You got it' : `You picked “${g}”` }),
-        h('button', { type: 'button', class: 'btn sm', text: 'See it again', onclick: () => answerDaily(fmt, title, d) }));
+        h('button', { type: 'button', class: 'btn sm', text: 'See it again', onclick: () => answerDaily(fmt, title, d) }), h('span', { class: 'meta', text: 'New one tomorrow' }));
     } else {
       box.append(h('p', { class: 'qd-text', text: d.item.text || '' }), h('button', { type: 'button', class: 'btn sm', text: 'Answer it', onclick: () => answerDaily(fmt, title, d) }));
     }
@@ -282,7 +296,7 @@
         onCheck: async (answer, meta) => {
           const r = await UI.api(`/words/daily/${fmt}/answer`, { method: 'POST', body: { answer, ms: meta && meta.ms } });
           const fb = W.verdict(r, answer);
-          UI.api('/words/today', { quiet: true }).then(t => { dailyData = t; const el = document.querySelector(`[data-daily="${fmt}"]`); if (el) el.replaceWith(daily(fmt, title)); }).catch(() => {});
+          UI.api('/words/today', { quiet: true }).then(t => { dailyData = t; const el = document.querySelector(`[data-daily="${fmt}"]`), n = daily(fmt, title); if (el && n) el.replaceWith(n); }).catch(() => {});
           return fb;
         } });
       const stem = ws.el.querySelector('.q-stem');
@@ -303,12 +317,12 @@
     el.replaceChildren();
     const sel = () => (fbar ? fbar.values().c : (params().get('c') || '').split(',').filter(Boolean));
     const tile = (id, name, rows, o = {}) => {
-      const known = rows.filter(w => W.status(w) === 'known').length, due = rows.filter(w => w.is_due).length;
+      const known = o.known ?? rows.filter(w => W.status(w) === 'known').length, due = rows.filter(w => w.is_due).length, of = o.total ?? rows.length;
       const on = id === '' ? !sel().length : sel().includes(id);
       const b = h('button', { type: 'button', class: 'ctile', 'aria-pressed': String(on), onclick: () => toggleColl(id) },
         h('b', { text: name }), h('span', { class: 'meta', text: o.sub || `${num(rows.length)} ${rows.length === 1 ? 'word' : 'words'}` }),
-        known ? h('span', { class: 'kb', role: 'img', 'aria-label': `${known} of ${rows.length} known` }, h('i', { style: `width:${rows.length ? Math.round(known / rows.length * 100) : 0}%` })) : null,
-        known ? h('span', { class: 'meta', text: `${num(known)} known` }) : null,
+        h('span', { class: 'kb', role: 'img', 'aria-label': `${known} of ${of} known` }, h('i', { style: `width:${of ? Math.round(known / of * 100) : 0}%` })),
+        known ? h('span', { class: 'meta', text: o.knownText || `${num(known)} known` }) : null,
         due ? h('span', { class: 'due', 'aria-label': `${due} due` }, h('span', { class: 'dot' }), String(due)) : null);
       return b;
     };
@@ -320,11 +334,11 @@
         const rw = words.filter(w => (w.roots || []).length);
         // W4: a root is known when half its family is at box 3 or higher
         const known = [...rootsOf.values()].filter(ws => ws.length && ws.filter(w => w.state && w.state.box >= 3).length * 2 >= ws.length).length;
-        tiles.push(tile('roots', 'Roots', rw, { sub: `${rootsOf.size} parts · ${num(rw.length)} words${known ? ` · ${known} known` : ''}` }));
+        tiles.push(tile('roots', 'Roots', rw, { sub: `${rootsOf.size} roots · ${num(rw.length)} words`, known, total: rootsOf.size, knownText: `${known} ${known === 1 ? 'root' : 'roots'} known` }));
       } else if (g.id === 'mine') {
         const own = words.filter(w => w.own);
         tiles.push(tile('my-words', 'My words', own));
-        (W._lists || []).filter(l => l !== 'My words').forEach(l => tiles.push(tile(l, l, own.filter(w => w.collection === l))));
+        (W._lists || []).filter(l => l !== 'My words').forEach(l => tiles.push(tile(l, l, words.filter(w => (w.lists || []).includes(l) || (w.own && w.collection === l)))));
         tiles.push(h('button', { type: 'button', class: 'ctile new', onclick: newList }, h('b', { text: '+ New list' })));
       } else {
         (g.collections || []).forEach(c => tiles.push(tile(c.id, c.name, words.filter(w => inColl(w, c)))));
@@ -339,7 +353,14 @@
   async function newList() {
     const name = await UI.confirm({ title: 'New list', text: selected.size ? `A list of the ${selected.size} selected words.` : 'Name it. Add words from any word sheet or with Select.', confirm: 'Create', input: { label: 'Name', value: '', maxlength: 30 } });
     if (!name) return;
-    try { await UI.api('/words/lists', { method: 'POST', body: { name: String(name).trim().slice(0, 30), words: [...selected] } }); UI.toast(`Made “${name}”`); }
+    const nm = String(name).trim().slice(0, 30);
+    try {
+      await UI.api('/words/lists', { method: 'POST', body: { name: nm, words: [...selected] } });
+      UI.toast(`Made “${nm}”`);
+      words.forEach(w => { if (selected.has(w.slug)) w.lists = [...(w.lists || []), nm]; });
+      if (!(W._lists || []).includes(nm)) W._lists = [...(W._lists || []), nm];
+      filters(); groups(); paintGrid();
+    }
     catch (e) { if (!e.offline) UI.toast(e.status === 409 ? 'You already have a list with that name.' : 'Not made. Try again.'); }
   }
 
@@ -385,18 +406,28 @@
     ];
     const host = $('fbar');
     host.replaceChildren();
-    fbar = UI.filterBar(host, F, { url: true, sheet: false, label: 'Word filters', onChange: () => { limit = LIMIT0; groups(); paintGrid(); } });
+    fbar = UI.filterBar(host, F, { url: true, sheet: false, label: 'Word filters', onChange: () => { limit = LIMIT0; tidyChips(); groups(); paintGrid(); } });
     const mBtn = h('button', { type: 'button', class: 'btn', 'aria-pressed': String(meanings), text: 'Meanings', title: 'Show each word’s short meaning on its tile',
       onclick: () => { meanings = !meanings; mBtn.setAttribute('aria-pressed', String(meanings)); mBtn.classList.toggle('on', meanings); setUrl('m', meanings ? '1' : null); paintGrid(); } });
     mBtn.classList.toggle('on', meanings);
     sBtn = h('button', { type: 'button', class: 'btn', 'aria-pressed': 'false', text: 'Select',
       onclick: () => { selecting = !selecting; if (!selecting) selected.clear(); sBtn.setAttribute('aria-pressed', String(selecting)); sBtn.classList.toggle('on', selecting); paintGrid(); } });
-    host.append(mBtn, sBtn, h('span', { class: 'wl-count', id: 'count', 'aria-live': 'polite' }));
+    host.append(h('span', { class: 'wl-count', id: 'count', 'aria-live': 'polite' }), mBtn, sBtn);
+    tidyChips();
+  }
+  // "Collection" until set, then "SAT core"; a count ("3") keeps its label; the sort shows once it is not A–Z
+  function tidyChips() {
+    const dds = [...$('fbar').querySelectorAll('.filters .dd')], sort = dds[dds.length - 1], v = fbar.values();
+    dds.forEach(d => {
+      const val = d.querySelector('.dd-v'), k = d.querySelector('.dd-k');
+      const set = d === sort ? (v.sort || 'az') !== 'az' : d.classList.contains('on');
+      val.hidden = !set;
+      k.hidden = set && !/^\d+$/.test(val.textContent.trim());
+    });
   }
   function inC(w, c) {
     if (c === 'roots') return (w.roots || []).length > 0;
     if (c === 'my-words') return !!w.own;
-    if (w.own) return w.collection === c;
     return w.collection === c || (w.lists || []).includes(c);
   }
   const fold = s => String(s || '').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -445,7 +476,8 @@
   /* ---------------- the grid */
   function tileFor(w, o = {}) {
     const st = W.status(w), lv = W.level(w.measured, w.difficulty);
-    const tag = w.own ? 'mine' : w.sense && w.sense !== 'main' ? w.sense.replace(/_/g, ' ') : W.POS[w.pos] || w.pos || '';
+    const tag = w.own ? 'mine' : W.POS[w.pos] || w.pos || '';
+    const sense = !w.own && w.sense && w.sense !== 'main' ? w.sense.replace(/_/g, ' ') : '';
     const subj = (w.topics || [])[0];
     const metaText = meanings ? w.short : o.compact ? '' : subj ? (LOGIC.find(l => l[0] === subj) || SUBJECTS.find(s => s[0] === subj) || [0, cap(subj)])[1] : (w.own ? w.collection : '');
     const marks = h('span', { class: 'marks' },
@@ -456,9 +488,9 @@
       w.saved ? h('span', { class: 'st on', title: 'Saved' }, W.icon('star', 13)) : null);
     const b = h('button', { type: 'button', class: 'wtile', 'data-slug': w.slug, 'aria-label': W.label(w) + (meanings && w.short ? `: ${w.short}` : ''),
       role: selecting ? 'checkbox' : null, 'aria-checked': selecting ? String(selected.has(w.slug)) : null },
-      h('span', { class: 'w', text: w.word }), h('span', { class: 'tag', text: tag }),
+      h('span', { class: 'w', title: sense ? `${w.word} · ${sense}` : w.word }, w.word, sense ? h('span', { class: 'sn', text: ` · ${sense}` }) : null), h('span', { class: 'tag', text: tag }),
       h('span', { class: 'mt' + (meanings ? ' on' : ''), text: metaText || '' }),
-      h('span', { class: 'bot' }, W.pips(w), w.own ? null : h('span', {}, lv.n ? null : h('span', { class: 'est', text: 'est. ' }), UI.dbars ? UI.dbars(lv.tier) : '')), marks, h('span', { class: 'ck', 'aria-hidden': 'true' }));
+      h('span', { class: 'bot' }, W.pips(w), w.own ? null : h('span', { title: lv.n ? `Difficulty: ${lv.tier}` : `Difficulty: ${lv.tier} · estimated until your first answer` }, UI.dbars ? UI.dbars(lv.tier) : '')), marks, h('span', { class: 'ck', 'aria-hidden': 'true' }));
     return b;
   }
   function paintGrid() {
@@ -539,9 +571,10 @@
   }
   function legend() {
     const n = fn => shown.filter(fn).length;
-    const bits = [['●●●○○', 'strength'], [n(w => w.proven), '✓ proven'], [n(w => w.is_due), 'DUE'], [n(w => w.saved), '★ saved'],
-      [n(w => w.trap), '● fell for a trap'], [n(w => w.stubborn), '⌇ stubborn'], ['▮▮▯', 'difficulty (est. before the first answer)']];
-    $('legend').replaceChildren(...bits.filter(([c]) => c !== 0).map(([c, t]) => h('span', {}, typeof c === 'number' ? [h('b', { text: String(c) }), ' '] : [c, ' '], t)));
+    const bits = [['●●●○○', 'strength'], [n(w => w.proven), '✓ proven'], [shown.some(w => w.is_due) ? 'DUE' : 0, 'due today'], [n(w => w.saved), '★ saved'],
+      [n(w => w.trap), '● fell for a trap'], [n(w => w.stubborn), '⌇ stubborn'], ['▮▮▯', 'difficulty']];
+    $('legend').replaceChildren(...bits.filter(([c]) => c !== 0).map(([c, t]) => h('span', {}, typeof c === 'number' ? [h('b', { text: String(c) }), ' '] : [c, ' '], t,
+      t === 'difficulty' && W.info ? [' ', W.info('Estimated until your first answer, then measured from students’ answers', 'Difficulty')] : null)));
   }
 
   /* ---------------- the study bar */
@@ -550,15 +583,26 @@
     const rank = w => (w.is_due ? 0 : W.status(w) === 'new' ? 1 : 2);
     return [...pick].sort((a, b) => rank(a) - rank(b)).slice(0, 200).map(w => w.slug);
   }
+  function narrowed() {
+    const v = fbar ? fbar.values() : {};
+    return selected.size > 0 || !!qEl.value.trim() || ['c', 't', 'f', 'd', 's', 'p'].some(k => [].concat(v[k] || []).filter(Boolean).length);
+  }
+  let gridSeen = !('IntersectionObserver' in window);
+  if (!gridSeen) new IntersectionObserver(es => { gridSeen = es.some(e => e.isIntersecting); barShow(); }, { rootMargin: '0px 0px -25% 0px' }).observe($('gridSec'));
+  function barShow() {
+    const n = narrowed();
+    $('studybar').hidden = !(gridSeen || n) || !words.length;
+    $('barCards').className = n ? 'pill' : 'btn';
+  }
   function bar() {
     const pick = selected.size ? shown.filter(w => selected.has(w.slug)) : shown;
     const due = pick.filter(w => w.is_due).length, nw = pick.filter(w => W.status(w) === 'new').length;
-    $('barText').textContent = selected.size ? `${num(selected.size)} selected` : [`${num(pick.length)} words`, due ? `${num(due)} due` : null, nw ? `${num(nw)} new` : null].filter(Boolean).join(' · ');
+    $('barText').textContent = selected.size ? `${num(selected.size)} selected` : narrowed() ? [`${num(pick.length)} words`, due ? `${num(due)} due` : null, nw ? `${num(nw)} new` : null].filter(Boolean).join(' · ') : `All ${num(pick.length)} words`;
     const last = ls.get('satf.words.study', {}) || {};
     const n = (last.cards && last.cards.count) || 20;
-    $('barHelp').hidden = pick.length <= n;
-    $('barHelp').textContent = `Takes ${n}: due first, then new`;
+    $('barCards').title = pick.length > n ? `Takes ${n}: due first, then new` : '';
     $('barCards').disabled = $('barQuiz').disabled = !pick.length;
+    barShow();
   }
   $('barCards').addEventListener('click', () => {
     const last = (ls.get('satf.words.study', {}) || {}).cards || {};
