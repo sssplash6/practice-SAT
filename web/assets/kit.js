@@ -1914,7 +1914,7 @@
         h('span', { class: 'skill-track', role: 'img', 'aria-label': `First-try accuracy ${pct(acc)}; the gain assumes ${pct(goal)}` },
           h('i', { class: 'you', style: `--t: ${acc || 0}` }), h('i', { class: 'goal', style: `--t: ${goal}` })),
         h('span', { class: 'meta', text: `${pct(acc)} → ${pct(goal)}` })));
-      const meta = [s.per_test !== undefined && `about ${fmtN(s.per_test)} of 44`, s.need_right && `at least ${fmtN(s.need_right)} right`, s.minutes && `~${dur(s.minutes)}`].filter(Boolean);
+      const meta = [s.per_test !== undefined && `about ${fmtN(s.per_test)} of 44`, s.need_right && `at least ${fmtN(s.need_right)} right`, Math.round(s.minutes || 0) >= 1 && `~${dur(s.minutes)}`].filter(Boolean);
       if (meta.length) el.append(h('p', { class: 'meta skill-meta', text: meta.join(' · ') }));
       if (s.tiers) el.append(h('p', { class: 'meta skill-tiers', text: ['easy', 'medium', 'hard'].filter(t => s.tiers[t] && s.tiers[t][1]).map(t => `${t[0].toUpperCase()} ${s.tiers[t][0]}/${s.tiers[t][1]}`).join(' · ') }));
     }
