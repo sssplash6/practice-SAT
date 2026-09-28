@@ -84,7 +84,8 @@ def _points(gains: dict | None, topic: str, share: float = 1) -> int | None:
     return value if value >= 1 else None
 
 
-def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_UNSET) -> list[dict]:
+def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_UNSET,
+          _board=_UNSET) -> list[dict]:
     """Return actions in priority order, keeping one row for each action key."""
     if not 1 <= limit <= 20:
         raise ValueError("limit must be 1–20")
@@ -93,7 +94,23 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_
     answered = db.one("SELECT COUNT(*) AS n FROM attempts WHERE learner=?", learner)["n"]
     from . import api_shell
     resume = api_shell._resume(learner)
-    if answered == 0:
+    phase = stage(learner, tz)
+    if phase["eve"]:
+        return [_item("rest", "rest:eve:math", "Rest. Nothing new today.", "Exam tomorrow",
+                      "A rested mind is part of your preparation", 0, href="/plan/")]
+    finished_start = db.one("SELECT 1 FROM sessions WHERE learner=? AND finished IS NOT NULL"
+                            " AND json_extract(cfg,'$.source')='start' LIMIT 1", learner)
+    if answered < 8 and not finished_start and not (resume and resume["kind"] in
+                                                   api_shell.RESUME_TESTS):
+        if resume and resume["kind"] == "drill":
+            row = db.one("SELECT cfg FROM sessions WHERE id=?", resume["id"])
+            import json
+            cfg = json.loads(row["cfg"] or "{}") if row else {}
+            if cfg.get("source") == "start":
+                return [_item("resume", f"resume:start:{resume['id']}",
+                              f"Resume · {resume['answered']} of 8", "Finish your first eight",
+                              "Your start set is waiting", _minutes(max(1, 8 - resume["answered"]), seconds),
+                              href=resume["href"], urgent=True)][:limit]
         saved = deps.part("account", "saved")
         return [
             _item("start", "start:new:math", "Start with 8 questions",
@@ -105,27 +122,13 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_
                   else "Asks for a name and email to show results",
                   _minutes(20, seconds), href="/diagnostic/")
         ][:limit]
-    if resume and resume["kind"] == "drill":
-        row = db.one("SELECT cfg FROM sessions WHERE id=?", resume["id"])
-        import json
-        cfg = json.loads(row["cfg"] or "{}") if row else {}
-        if cfg.get("source") == "start":
-            return [_item("resume", f"resume:start:{resume['id']}",
-                          f"Resume · {resume['answered']} of 8", "Finish your first eight",
-                          "Your start set is waiting", _minutes(max(1, 8 - resume["answered"]), seconds),
-                          href=resume["href"], urgent=True)][:limit]
-
-    phase = stage(learner, tz)
-    if phase["eve"]:
-        return [_item("rest", "rest:eve:math", "Rest. Nothing new today.", "Exam tomorrow",
-                      "A rested mind is part of your preparation", 0, href="/plan/")]
     due_list = due(learner, tz)
     checks = [i for i in due_list.get("items", []) if i["kind"] == "check" and
               not i.get("done") and not i.get("snoozed")]
     open_traps = progress.open_traps(learner)
     wrong_total, wrong_norm, wrong_rows = _wrong(learner)
     gains = estimate.gains(learner) if answered >= estimate.MIN_ANSWERS else None
-    board = progress.board(learner)
+    board = progress.board(learner) if _board is _UNSET else _board
     names = progress.topics()
     settings = prefs.get(learner, tz)
     length = settings.get("set_length", 10) or None

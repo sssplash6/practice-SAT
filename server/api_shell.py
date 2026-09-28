@@ -213,7 +213,8 @@ def shell(learner: str, tz: int, token: str) -> dict:
     }
     queue = part("next", "queue")
     if queue:
-        out["next"] = queue(learner, tz, limit=3, _plan=plan_summary, _closing=closing)[:3]
+        out["next"] = queue(learner, tz, limit=3, _plan=plan_summary,
+                            _closing=closing, _board=board)[:3]
     if plan_part:
         _merge(out, plan_part)
     if compete_part:

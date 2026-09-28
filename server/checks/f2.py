@@ -125,6 +125,12 @@ def check(c) -> None:
     db.run("INSERT INTO attempts(learner,template,seed,topic,difficulty,fmt,correct,at)"
            " VALUES (?,?,?,?,?,?,?,?)", learner, template, 1, "circles", "medium", "mcq", 1,
            now.isoformat())
+    assert c.get("/api/next", headers=NH).json()["items"][0]["kind"] == "start"
+    with db.transaction():
+        for seed in range(2, 9):
+            db.run("INSERT INTO attempts(learner,template,seed,topic,difficulty,fmt,correct,at)"
+                   " VALUES (?,?,?,?,?,?,?,?)", learner, template, seed, "circles", "medium",
+                   "mcq", 1, now.isoformat())
     db.run("INSERT INTO traps(learner,template,norm,reason,label,topic,hits,owed,opened,last,closed,closed_how,due)"
            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", learner, template, "diameter", "diameter",
            "Used diameter as radius", "circles", 2, 0, now.isoformat(), now.isoformat(),
