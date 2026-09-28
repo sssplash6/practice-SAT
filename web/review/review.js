@@ -1554,7 +1554,7 @@
     card.append(head);
     if (withData.length < 2) {
       const made = weeks.reduce((s, w) => s + (w.opened || 0), 0), fixed = weeks.reduce((s, w) => s + (w.fixed || 0), 0);
-      card.append(h('p', { class: 'rh-big', text: `${fmtN(made)} made · ${fmtN(fixed)} fixed so far` }));
+      card.append(h('p', { class: 'rh-big', text: fixed ? `${fmtN(made)} made · ${fmtN(fixed)} fixed so far` : `${fmtN(made)} made so far` }));
     } else {
       card.append(h('p', { class: 'rh-big', text: `This week: fixed ${fmtN(cur.fixed || 0)}, made ${fmtN(cur.opened || 0)}, net ${net > 0 ? '−' : net < 0 ? '+' : ''}${fmtN(Math.abs(net))}${c.median_days !== null && c.median_days !== undefined ? ` · median ${plural(c.median_days, 'day')} to fix` : ''}` }));
       if ((cur.fixed || 0) > (cur.opened || 0)) card.append(h('p', { class: 'help', text: 'Fixing them faster than you make them.' }));
@@ -1562,7 +1562,9 @@
         const ch = h('div', { style: 'margin-top:12px' });
         UI.barChart(ch, weeks.map(w => ({ key: w.week, label: day(w.week), fixed: w.fixed || 0, made: Math.max(0, (w.opened || 0) - (w.relapsed || 0)), relapsed: w.relapsed || 0, open: w.open_end || 0,
           tip: `${day(w.week)} week · ${fmtN(w.opened || 0)} made · ${fmtN(w.fixed || 0)} fixed · open ${fmtN(w.open_end || 0)}` })), {
-          series: [{ key: 'fixed', label: 'Fixed', look: 'amber' }], down: [{ key: 'made', label: 'Made', look: 'ink' }, { key: 'relapsed', label: 'Relapsed', look: 'hatch' }],
+          // a series only when it has something to draw: no "Fixed 0" or "Relapsed 0" in the legend (decision 7)
+          series: weeks.some(w => w.fixed) ? [{ key: 'fixed', label: 'Fixed', look: 'amber' }] : [],
+          down: [{ key: 'made', label: 'Made', look: 'ink' }, ...(weeks.some(w => w.relapsed) ? [{ key: 'relapsed', label: 'Relapsed', look: 'hatch' }] : [])],
           line: { key: 'open', label: 'Open' }, labels: 'label', height: phone() ? 150 : 180, legend: true, label: 'Mistakes made and fixed, week by week',
           onPick: row => { const d0 = row.key; const e = new Date(Date.parse(d0) + 6 * 864e5).toISOString().slice(0, 10); if (FB) FB.set('date', `${d0}..${e}`); } });
         card.append(ch);
