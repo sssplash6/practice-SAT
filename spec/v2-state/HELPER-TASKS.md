@@ -388,6 +388,14 @@ Rules as above (own files only, own port and SATF_DB, commit per part, never pus
 main build is building this section's pages right now and codes against the endpoints your spec lists, so build exactly those
 endpoints and shapes). The requirements are in spec/v2-state/briefs/S6.md (sections 2-5 and 7; the brief says pages-only for the main
 build, but its server items are yours). The branch already has the section's early server commits: continue from them.
+ALSO (from the Results pages, followups/S6-pages.json): the new owner-only check in api_results.py returns 403 without a
+learner header and stops test_flow at line 212 ("practice results were gated behind signup"): make test_flow send the header
+or narrow the rule; /whatif must work for any reader (the spec), so the sample and shared views get What if; a hidden miss
+must not give away its misconception in cause.evidence.norm; the 403 carries `kind` so a live challenge can say so; share
+links must open for the people they are shared with; the sample sitting should match its spec (misses, named mistakes,
+a second look, recovered points); the first /api/stats after seeding took ~15 s.
+ALSO (from the Tests pages): /api/history?all=1 rows through api_tests.sitting_row (number, M1/M2 scores, miss and blank chips,
+conditions), and GET /api/session/{a}/compare?with={b} for Compare two sittings (slot by slot and by type).
 DONE: checks/s6.py passes and test_flow "all good". Tell the user "S6 server done".
 ```
 
@@ -419,6 +427,15 @@ Rules as above (own files only, own port and SATF_DB, commit per part, never pus
 main build is building this section's pages right now and codes against the endpoints your spec lists, so build exactly those
 endpoints and shapes). The requirements are in spec/v2-state/briefs/S1.md (sections 2-5 and 7; the brief says pages-only for the main
 build, but its server items are yours). The branch already has the section's early server commits: continue from them.
+ALSO (from the Me pages, followups/S1-pages.json): the shell's `inbox` is an object, so the phone avatar badge reads "NaN"
+(send the unread count in account.shell_part); /api/health needs mail, google and the Google client ID; endpoints for "End
+the old code now", a target-needs estimate for any target, /api/push/*, /api/mistakes/import; /api/me/summary needs
+subjects.math.pace, score.projection and score.gaps, check-ins passed and due, week history, skills[].last and the default
+board name; /api/shared/{token} needs the name and activity days; PUT /api/me must accept avatar 'initial'; feed rows:
+achievement names (not "Hard Right · Tier 10"), scores as "7 / 10", report links with ?id= (not ?s=), effect counts per
+sitting; lever texts must use skill names, not raw ids ("Practise nonlinear_functions").
+FIRST among them: GET /api/levers?keys= (G6 in spec/v2-upgrades/product.md): every page's "how it's worked out" popovers call
+it, including the streak button in the phone top bar, and today they all show "Couldn't load".
 DONE: checks/s1.py passes and test_flow "all good". Tell the user "S1 server done".
 ```
 
@@ -450,7 +467,9 @@ build (13 commits): continue from it, do not redo it.
 ALSO, what the Today page builder found missing (spec/v2-state/followups/S3-pages.json, "fixer_report" and the unit reports):
 seconds_per_question must default to 95 until the learner has 20+ timed answers (one 2-second answer promised "450 questions");
 an endpoint for estimate.need at any target (e.g. GET /api/today/need?target=) so the target slider's "700 ≈ N of 44 right" moves;
-the pace card must not count a module finished with 0 answers as "ran out of time". The Today page is built and waiting on these.
+the pace card must not count a module finished with 0 answers as "ran out of time". The Today page is built and waiting on these. ALSO: server/checks/s3.py line ~200 fails (`got["accepted"] and got["sat_pace_ms"]
+== 95_000`) depending on the day's grid-in (probably no other accepted answer forms that day, so `accepted` is empty): make the
+check and the server handle a grid-in with a single accepted form.
 DONE: checks/s3.py passes and test_flow "all good". Tell the user "S3 server done".
 ```
 
@@ -483,6 +502,14 @@ Rules as above (own files only, own port and SATF_DB, commit per part, never pus
 is building this section's pages right now against the endpoints its spec lists, so build exactly those endpoints and shapes).
 Requirements: spec/v2-state/briefs/S5.md (its server items are yours). The branch already has the section's server work from the main
 build (8 commits): continue from it, do not redo it.
+ALSO (the Tests pages are built on v2/s5 and read these; followups/S5-pages.json): add `type_notes` to the session payload;
+GET /api/tests reads habits_last and habits_scope and each habit row lists its sitting ids; the score card's total, projection,
+growth and calibration fields (the pages found them null in every test: confirm the names in the payload); the cycle's
+`proved {n, of, pts}`; the hand-in's gate data gives the positions answered right (the trainer's 22-cell strip);
+/api/papers/{n}/crowd returns the learner's sitting id and each slot's question id; a paper card's "You" is a midpoint score;
+the Custom test's "For me" difficulty in its request model.
+Also send each question's `topic` slug with the test payload (PUBLIC_FIELDS has only topic_name; the break screen maps names
+back to short names by guesswork).
 DONE: checks/s5.py passes and test_flow "all good". Tell the user "S5 server done".
 ```
 
@@ -547,8 +574,46 @@ OWN ONLY: server/plan.py, server/api_plan.py, server/checks/s7.py, server/words.
 server/compete.py, server/api_compete.py, server/checks/s8.py.
 Known asks: /api/plan/preview's per_date is empty (the exam-date picker needs each date's study days, weekly pace, tag and
 Recommended); words.daily_item is missing (Today's day's questions show only the two Math slots); anything else in those files.
+ALSO READ followups/S7-hygiene.json, S9-hygiene.json, S8-hygiene.json ("fixer_report", the part for other owners). From them:
+- FIRST: server/checks/s8.py ~517-519 is date-dependent and stops test_flow: it asks compete.contest("final-" + next SAT date),
+  but compete.ensure only makes a Season Final in the week before an SAT, so on a fresh DB in other weeks (e.g. 2026-09-28)
+  it is a 404. Make the check create or pick its Final itself.
+  The page shows the same gap: on 2026-09-28 Compete's season card reads "Road to Oct 3 · 6 days left" with a Season
+  Final dated Sat Sep 26 - Sun Sep 27, already past. Say what the SAT week holds instead.
+- Words: /api/words must fill each word's `lists` from word_lists (a new list vanishes on reload); quiz_item must leave out
+  the target's family, synonyms and "Same as" words (the worksheet's Q3 has two right answers: student-facing, fix first);
+  "nearly" sample items keep the word in the text or are labelled in-context; _summary needs a "today" bucket (words due
+  today are counted under tomorrow); add "meaning" to the traps catalogue.
+- Plan: api_plan.py logs the student's own task marks under the settings-edit kind ("Changed 2026-09-28:fix"): give them
+  their own kind, say what changed ("Skipped Fix mistakes", "Moved Warm-up to Tue") and put `field` in changes.today.
+- Compete: GET /api/contest/{cid} returns owner: true and code to the owner; the join payload adds who invited, how many
+  are in, the round and topics; send `rated` (the count of rated answers); the debrief marks unreached slots itself.
+  POST /api/contests accepts a sitting or paper to build a race from (the Tests share sheet's "Race friends").
+  Levels: ratings.level_of is a 7-level scale but spec/rating.md and the par rows use 10; list it for the owner of
+  ratings.py (not in your files) unless compete.py can map it.
 Do NOT change response shapes the pages already use; add fields. DONE: s7.py, s8.py, s9.py and test_flow pass. Tell the user
 "page asks done" with what you did and the list of items for other owners.
+```
+
+
+## Task 31 (light): make test_flow pass on any date
+
+```
+test_flow never prints "all good" today, so no task can meet its DONE line. Two checks depend on the calendar, and one
+test lacks a header. Fix only these; nothing else.
+SETUP: git worktree add .claude/worktrees/flow-green -b v2/flow-green master
+OWN ONLY: server/checks/s3.py, server/checks/s8.py, server/test_flow.py.
+1. server/checks/s3.py ~line 200 (qotd_answer_and_crowd): `got["sat_pace_ms"] == 95_000` fails on some days (the day's
+   grid-in has one accepted form). Make the check build or pick its own question so the assert holds on every date.
+2. server/checks/s8.py ~517-519: compete.contest("final-" + next SAT date) is a 404 outside the week before an SAT
+   (compete.ensure makes a Season Final only then). Create or pick the check's own Final so it works on any date.
+3. server/test_flow.py line ~212 ("practice results were gated behind signup"): the Results server on v2/s6-server now
+   answers 403 without an X-Learner header. Send the learner's header in that call (do not loosen the server rule).
+Test each on at least three dates: today, the week before an SAT (e.g. 2026-09-28 for Oct 3), and an ordinary week, by
+setting the clock the checks already use (or freezegun-style patching inside the check). Commit per fix, never push or merge.
+DONE: on v2/flow-green (and with v2/s6-server merged into a scratch copy for item 3) test_flow prints "all good".
+Tell the user "flow green". These fixes come out of Tasks 24 and 30: skip them there.
+Also commit your Task 29 edits (README.md, .gitignore) on v2/ops-docs if they are finished.
 ```
 
 ---

@@ -1,0 +1,352 @@
+{
+ "task": "S8",
+ "run": "wf_e4dc824e-f6c",
+ "date": "2026-09-28",
+ "branch_head": "v2/s8 cd3e6f7",
+ "note": "hygiene review (visual + calm, measured and looked at) then one fix of every high and medium finding; no re-check (the user)",
+ "findings": [
+  {
+   "severity": "high",
+   "where": "Contest page lobby, every public contest (daily, trap, rush, sprint). #state .sub-block under 'Your time: Official · 15:50 answer clock Change ⓘ'. All widths, both themes. web/compete/contest/contest.js:147-150",
+   "what": "The word \"null\" shows under the timing line. box.append() gets the literal null that the `t === 'official' ? null : …` branch returns, and DOM append() turns null into the text \"null\".",
+   "fix": "Pass only real nodes, e.g. `box.append(...[line, c.kind === 'private' ? privHelp : t === 'official' ? null : extHelp].filter(Boolean))`, or build the box with h(), which already drops nulls."
+  },
+  {
+   "severity": "high",
+   "where": "Overview #stats rating block, Rankings #rating card, Rankings #ladder table, board par rows. All widths, both themes. web/assets/compete-ui.js:297-309 (LADDER, levelOf, levelIn, rangeOf)",
+   "what": "The page shows two different level ladders at once. At rating 1,260 the ring shows 5 while the text beside it says 'Contest rating · Level 6', and 'Level 6 in +141 ≈ 22 hard rights' contradicts it. The ladder table highlights Level 6 = 1,401–1,550, even though 1,260 falls in its Level 5 row. Boards show 'Level 9 par'. The cause: the client LADDER has 10 levels (800…2000), but the server's ratings.EDGES has 7 (850, 1000, 1075, 1150, 1225, 1350), and me.level comes from the server.",
+   "fix": "Use one ladder. The server should send its edges (for example `ladder: [...]` on /api/compete/me or /shell) and levelOf, levelIn and rangeOf should read them. Until then, call `UI.level(rating, prov, 48, { level: me.level })` in overview.js:201 and in the rankings rating card so the ring never computes its own level. The ladder table should mark the row whose range holds the rating. Server change: I1 or the server owner."
+  },
+  {
+   "severity": "high",
+   "where": "Contest result, #state 'SKILLS IN THIS SITTING' .topic-row .mbar. All widths, both themes. web/compete/contest/contest.js:345-346",
+   "what": "Every mastery bar looks empty. For example '3/3' sits over a 0% bar while the data says after=0.259. The page sets `width:` on the <i>, but the kit's `.mbar > i` is `inset:0; transform: scaleX(var(--m,0))`, so the fill is always scaled to 0. Because the bar sits next to 'x/y', students will also read it as progress on that count.",
+   "fix": "Set `style: --m:${t.after}` on the <i>, drop the width, and keep the <b> tick at `left:${before*100}%`. Add the value to the meta, e.g. '3/3 · mastery 26%', so the bar's meaning is on screen."
+  },
+  {
+   "severity": "high",
+   "where": "Leaderboard table (sticky 'You · #3 · 1,110 pts · 46 pts to pass #2 · Jump to me'), 900/1280/1440, both themes. Contest #board, the same strip at 900/1280/1440",
+   "what": "At rest the sticky 'You' strip sits on top of real content. On the leaderboard it covers row #2 (Student 9D4D, 1,155, +45). In dark mode the strip is translucent, so row 2's text shows through and overlaps the strip's text, which makes both unreadable. On contest boards it covers the table header (Rank · Student · Score · Points · Over par · Time · Gap), which leaves the last column unlabelled, and it also covers the '9 clean' legend. Measured overlaps are 1,919 px² over td '1,155' and 1,733 px² over th 'Time'.",
+   "fix": "Render the strip in the normal flow above the table. Make it sticky (`top: var(--bar-h)`) only when an IntersectionObserver reports that the learner's own row is out of view. Give it an opaque background (var(--wash) mixed onto var(--paper)) in both themes, and give rows `scroll-margin-top` so 'Jump to me' never lands under it."
+  },
+  {
+   "severity": "high",
+   "where": "Contest lobby 'Your par (rough) 85 · about 4.8 right' vs board row 'Your level (1) par (estimated) · 4.8 right · 111' (daily, new learner). Private: 140 vs 175. Daily result PAR tile 'par 85' vs board 'Your level (6) par … 186'. web/compete/contest/contest.js:614",
+   "what": "The same screen gives two different par numbers for the student. The board also decides which row is 'yours' by whether the level is in [3,5,7,9]. So a Level 5 student has no 'Your' row, and a placing student is called 'Your level (1)'.",
+   "fix": "Show one par. The server should flag the student's own par row (`p.you`), and the lobby, the PAR tile and the board should all read that value. Label it 'Your par' with no level number while placing. Build the fixed rows from `!p.you`."
+  },
+  {
+   "severity": "high",
+   "where": "Contest page #traps 'Where the field went wrong', 1440/390, both themes",
+   "what": "Raw internal mistake keys appear as trap names: 'below the lower end of the range, #°f, by more than a degree', 'subtracted the marked angle from # degrees', 'other mistake'. They are lowercase and still contain # placeholders, so it looks broken.",
+   "fix": "Use the display label the debrief already uses ('fell for …'): capitalised, with the numbers filled in. Group the leftovers as a last row, 'Other slips'. Keep the counts."
+  },
+  {
+   "severity": "high",
+   "where": "Private contest page for its owner (?id=p-…), #owner block. All widths. web/compete/contest/contest.js:810-833",
+   "what": "The owner sees no invite code or link, and no Rename, Extend, Close or Delete. renderOwner() needs `c.owner` or `c.code`, and GET /api/contest/{cid} (_meta) sends neither. Only the browser that created the contest (localCode) gets the controls, so they are missing on another device or after storage is cleared.",
+   "fix": "Server change (not mine; server/api_compete.py _meta): return `owner: true, code` when the viewer is the owner. The client already renders them. Until then, fall back to /api/contests?status=private, if that exposes the code."
+  },
+  {
+   "severity": "high",
+   "where": "Rankings #rivals table, all widths, both themes. web/compete/rankings/rankings.js:245-251",
+   "what": "Every suggested rival row shows 'Unfollow', even though the API marks only one of them `following: true`. Tapping it on a student who was never followed sends DELETE /follows and removes the row. 'Race' and 'Unfollow' also sit in one cell separated by only a space, so their hover boxes overlap by 550 px².",
+   "fix": "Show `x.following ? Unfollow : Follow`, or better, move Follow/Unfollow into the row's ⋯ menu so Race is the one visible action. If both stay visible, give the cell `display:flex; gap:28px`."
+  },
+  {
+   "severity": "medium",
+   "where": "Overview #daily (finished state), 1440/1280/900/390, both themes",
+   "what": "After finishing, the card still leads with the pre-contest rules ('10 questions · 15:50 answer clock · one sitting · ranked'), then the field line and the streak. The result '#6 of 9 · 7/10 · 165 pts · 8:19' comes only fourth, in small mono type. Five-second test: the student sees the rules before their own result.",
+   "fix": "When finished, make the result the headline, using the contest page's big '#6 of 9' treatment scaled down, with '7/10 · 165 pts · 8:19' beneath it. Hide the rules line; it belongs in the lobby. Show the streak as a chip in the card header ('🔥 1 day'), and put the field line last as meta."
+  },
+  {
+   "severity": "medium",
+   "where": "Overview #daily and contest lobby/result ladder, 'Bars: difficulty · GI: grid-in, you type the answer · underline: your chance'. All widths",
+   "what": "A legend sentence repeats on every visit (decision 7). The ladder icons (≡, ⊸, △, ⚄) are topic glyphs a student can't decode at a glance.",
+   "fix": "Move the legend into an ⓘ at the end of the ladder row. Give each tile a tooltip, e.g. 'Q4 · Probability · Medium · grid-in · your chance 62%'. Keep the tiles."
+  },
+  {
+   "severity": "medium",
+   "where": "Overview #daily action rows (.row-act + second row), 1440/1280/900/390",
+   "what": "There are two rows of equal-weight quiet actions: 'See the board | Review answers | Copy result' and 'Past days › | Daily reminder | Make up Sep 27 · keeps your streak'. That is six actions, and the second row has three unrelated jobs of equal weight.",
+   "fix": "Keep the pill plus 'Review answers'. Put 'Copy result', 'Past days' and 'Daily reminder' in a '⋯ More' menu (UI.menu). Promote the make-up to a small chip with a number, shown only when relevant (see the next finding)."
+  },
+  {
+   "severity": "medium",
+   "where": "Overview #daily and Today strip, new learner (0 days), all widths",
+   "what": "'Make up Sep 27 · keeps your streak' is offered to a learner whose streak is 0 days. There is no streak to keep, so this is a default on screen.",
+   "fix": "Show it only when the streak is ≥ 1 and yesterday was missed. Word it with the number: 'Keep your 9-day streak: make up Sep 27'."
+  },
+  {
+   "severity": "medium",
+   "where": "Overview #contests Live list vs #daily card, all widths",
+   "what": "Today's Daily Challenge appears twice: as the hero card, and as a row in Contests › Live ('Finished · 165 pts · Results'). This is a card repeating another.",
+   "fix": "Leave the daily out of the Overview's Live list, since the hero owns it. Adjust the Live (n) count to match."
+  },
+  {
+   "severity": "medium",
+   "where": "Overview #stats tiles, #season card, #preview board, 1440/1280/900",
+   "what": "The same facts appear up to three times. Week rank '#3 of 9 · 46 pts to #2' and All-time rank '#3 · 46 pts to #2' are identical. Points this week 1,110 repeats in Season ('#3 · 1,110 pts') and in the This-week board's You row. Best daily 165 equals today's result. The 'COUNTRY: Set a country on Me' tile is a prompt, not a stat.",
+   "fix": "Show only tiles whose value differs. Hide All-time when it equals Week, and hide Season's rank/points when they equal the week's. Remove the Country tile and offer 'Set a country' inside the board's scope menu. Hide Best daily when the best is today's sitting."
+  },
+  {
+   "severity": "medium",
+   "where": "Overview #stats (new learner), Rankings #summary + #rating (new learner), all widths",
+   "what": "The placing state shows a '–' ring and two explanatory sentences ('Placing · a level after 30 rated answers' and 'Finish a ranked contest to get a rank.'). On Rankings, 'Contest rating Placing' appears twice (in a summary tile and again in the Rating card), and the Pace and Records cards each hold only a help paragraph.",
+   "fix": "Show one line with progress: 'Placing · 0 of 30 answers', a thin bar, and 'Start today's challenge'. On Rankings, show a single empty-state card ('Your first contest fills this page' plus the button) and hide Rating, Pace, Records and Your ranks until they have data. Trap Index, Badges and the Ladder stay."
+  },
+  {
+   "severity": "medium",
+   "where": "Stat tiles: contest result 'ANSWER TIME' (1440), overview 'POINTS THIS WEEK' (1440/1280), rankings Records 'LONGEST CHALLENGE STREAK' (1440). both themes",
+   "what": "Tile labels wrap to two lines and push the values down, so values in one row sit on different baselines (7/10 at y=636 vs 8:19 at y=650).",
+   "fix": "Use shorter labels ('Time', 'This week', 'Best streak'). Lay the tile out as `display:grid; grid-template-rows: auto 1fr; align-content:start`, with the label `white-space:nowrap; overflow:hidden; text-overflow:ellipsis`, so the values share a line."
+  },
+  {
+   "severity": "medium",
+   "where": "Contest result #state stat tiles, 1440/1280; Overview #stats at 900",
+   "what": "At 1440, four fixed ~118px tiles sit in a 636px card, leaving a ~130px empty band on the right. At 900, the overview stats become two 350px-wide tiles, each holding a small number.",
+   "fix": "Use `grid-template-columns: repeat(auto-fit, minmax(130px, 1fr))` for both, so tiles fill the row: four across on the result, three or four per row at 900."
+  },
+  {
+   "severity": "medium",
+   "where": "Contest #board toolbar, 1440/1280/900/390, both themes; private board",
+   "what": "Controls are crammed together. Scope tabs (Everyone, Near me, Following, My level, Country), view tabs (List/Grid) and metric tabs (Points/Over par), all in the same underline style, read as one nine-tab list, followed by the Pars toggle and the search. On a phone, 'Country' wraps onto its own line. A three-person private contest still offers Near me, Following, My level and Country.",
+   "fix": "Turn scope into one select-style button ('Everyone ▾'). Make List/Grid an icon toggle at the right. Put Points/Over par in the numeric column's header as a small switch. Hide scopes that would hold fewer than two people; private boards show only This round/Series."
+  },
+  {
+   "severity": "medium",
+   "where": "Contest #board rows and par rows, all widths",
+   "what": "Every row repeats a ⊘ check (plus a '9 clean' legend) and a ⋯ button. Five par rows, each saying '(estimated)', are interleaved among 9 students; a private board shows 4 par rows among 2 students. On a phone the par labels are cut off ('Level 9 par (estimated) · 9.9 ri…').",
+   "fix": "Mark only the exceptions: show the check icon only on unverified rows and drop the 'clean' legend. Move '(estimated)' into the Pars toggle's tooltip. By default show only 'Your par' and the next par above you, with 'All pars' under the toggle. Shorten labels to 'L9 par · 9.9 right'. At desktop, show ⋯ on row hover/focus; keep it visible on touch."
+  },
+  {
+   "severity": "medium",
+   "where": "Contest #debrief 'Where your points went', all widths",
+   "what": "Facts are said two or three times. The stacked bar's labels are repeated in the legend ('260 possible → scored 165 pts'). The headline 'Q10 right would have put you #4.' is repeated by the row's 'right → #4 (+2 places)'. The closing 'Lost 60: 35 to … · 25 to …' repeats the rows. Rows that don't move you still say 'right → #6', a default. On the Sprint, 'right → #2 (+1 place)' repeats on five rows. '95 of 260 left' reads as points remaining.",
+   "fix": "Label segments either inside the bar (only where wide enough) or in the legend, not both. Show a row's sub-line only when that answer changes your place and differs from the headline. Drop the 'Lost 60' sentence. Write '−95 of 260'."
+  },
+  {
+   "severity": "medium",
+   "where": "Sprint result (sprint-2026-W40), #state + #debrief, all widths",
+   "what": "The counts contradict each other on one screen. '33/41 · 7 wrong · 1 skipped' sits beside 'Skipped − 500 pts (20)', 'Rematch my misses · 27' and 'Show all 27', because questions the student never reached are counted as skipped misses. 'Q22 right would have put you #2: one fix from the podium' appears while the student is already =#3, which is on the podium.",
+   "fix": "For runs, list unreached questions separately as 'Not reached', leave them out of the rematch and the miss counts (8 here), and show the podium copy only when rank > 3. This probably needs the server's debrief to split them, which is outside my files."
+  },
+  {
+   "severity": "medium",
+   "where": "Contest result #state 'MISTAKES' list, 1440/390, both themes",
+   "what": "The list shows all of the learner's open mistakes, not this sitting's: 7 on a daily with 3 wrong, and percentage mistakes on an Algebra sprint. Some items are topic names ('Frequency table', 'Percent change between two values'). It also repeats what the Debrief lists.",
+   "fix": "Limit it to this sitting's misses, and since the Debrief already names them, fold it into the Debrief. If the global list stays, retitle it 'Your open mistakes' and start it collapsed."
+  },
+  {
+   "severity": "medium",
+   "where": "Contest result #state .row-act, 1440/900/390",
+   "what": "There are too many actions of mixed weight: the 'See the board' pill, a boxed 'Run again', four quiet links ('Race your best · 720', 'Practice the field's traps', 'Copy result', 'Race link') and 'Challenge a friend' wrapping onto a line by itself. 'Copy result' and 'Race link' both share. 'Practice the field's traps' duplicates the traps card's 'Practice these 5'. There are three orange pills on the page (See the board, Rematch my misses, Practice these 5).",
+   "fix": "Keep the pill, 'Run again' (runs only) and one 'Share ▾' menu (Copy result, Race link, Challenge a friend). Remove the duplicate traps link from this row. Keep one pill per screen: make Rematch a mat .btn and 'Practice these 5' a .quiet."
+  },
+  {
+   "severity": "medium",
+   "where": "Adjacent .quiet controls: overview #daily actions, #private '+ Create a contest | Join with a code', QOTD 'Not answered yet' + 'Answer it on Today ›', lobby 'Change' + ⓘ, result actions. All widths",
+   "what": "Hover highlights overlap neighbouring text. .quiet has `margin:-9px -12px` and the rows use a 20px gap, so each hover background paints 4px into its neighbour (136 px²). The QOTD link sits flush against its text (137 px²), and 'Change' overlaps its ⓘ (334 px²).",
+   "fix": "In compete.css, set `.row-act, .card-act, .debrief-act { column-gap: 28px }` (at least 2 × 12px). Give `.info-i` a `margin-left: 10px` after a quiet button. Separate text from a quiet link by at least 12px. The ui.css margin itself is F1's."
+  },
+  {
+   "severity": "medium",
+   "where": "Contest page .cx-side (QOTD + How it's ranked), 1280/1440, both themes",
+   "what": "There is a large empty right half. The side column ends 3,194px above the main column on the daily result and 6,888px above it on the sprint result.",
+   "fix": "Make .cx-side `position: sticky; top: calc(var(--bar-h,0px) + 16px); align-self:start` so the rules and QOTD stay with the reader. Also shorten the main column (see the Time, Review and How-it's-ranked findings)."
+  },
+  {
+   "severity": "medium",
+   "where": "Overview .cx-grid, 1280/1440",
+   "what": "The main column (Daily, Contests, QOTD) ends 1,070px above the side column (seven cards), leaving a large empty area under the QOTD.",
+   "fix": "Move 'Traps this week' and 'Next badges' into the main column under the QOTD at ≥1024px (both start study), or make the side sticky. Keep the phone order."
+  },
+  {
+   "severity": "medium",
+   "where": "Contest #rules 'How it's ranked', all widths",
+   "what": "The rules card is a 10-item, always-open list of help paragraphs, 440px tall, shown again after the student has finished.",
+   "fix": "Use `<details>`: open on the first visit to a kind (UI.prefs flag) and in the lobby, closed on the result. Put the key terms (Par, Pace bonus) in the tooltips where they're used."
+  },
+  {
+   "severity": "medium",
+   "where": "Overview #qotd, all widths; contest page #qotd panel, 1440",
+   "what": "On the Overview, 'This day ›' floats alone on the second row under the eyebrow, and 'Not answered yet Answer it on Today ›' runs together with no separator. That makes two links to the same question in different places. On the contest page, the ⓘ sits alone on a line under 'QUESTION OF THE DAY', and the stem wraps in the middle of '8/(x − 14)'.",
+   "fix": "Put the title and a single 'Answer ›' in one header row, and show the stem's first line plus the difficulty so the card invites a try. Put the ⓘ inline with the eyebrow (flex card-head). Wrap the math groups in `white-space:nowrap` spans."
+  },
+  {
+   "severity": "medium",
+   "where": "Contest page .day-nav, all widths",
+   "what": "The three controls in this row have different heights: '‹ Sep 27' is 32px, the native date input is 40px, and the disabled 'Sep 29 ›' is 32px. The input shows '28/09/2026' (dd/mm/yyyy), while every other date on the site reads 'Mon, Sep 28'. The input is also heavier than the title.",
+   "fix": "Make all three 40px, or all .sm. Replace the visible input with a button reading 'Sep 28 ▾' that calls `input.showPicker()` on a hidden input."
+  },
+  {
+   "severity": "medium",
+   "where": "Contest page 30-day strip + legend 'sat · made up · ghost · missed', new learner, all widths",
+   "what": "A new learner sees 30 grey 'missed' squares, a wall of defaults. 'ghost' is jargon.",
+   "fix": "Start the strip at the learner's first sitting. Move the legend into an ⓘ, and rename 'ghost' to what it means for a student."
+  },
+  {
+   "severity": "medium",
+   "where": "Leaderboard #ctl, 1440/1280/900 and especially 390",
+   "what": "There are four rows of controls before the podium. 'Resets in 6d 20h ⓘ' sits above the metric tabs, away from the period it describes. The Subject select offers only 'Math' (a default). On a phone, the metric tabs wrap, leaving 'Climb' alone on line 2 and the ⓘ alone on line 3, followed by three full-width selects (~400px). The short labels 'Right' and 'Test' are cryptic.",
+   "fix": "Place 'resets in 6d 20h' beside the stepper ('‹ This week · resets in 6d 20h ›'). Hide Subject until a second subject exists. On a phone, make the metric row a nowrap `overflow-x:auto; scroll-snap-type:x` strip that ends with the ⓘ, keeping full labels. Put Scope, Domain and Subject behind one 'Filters · Everyone' button that opens a sheet."
+  },
+  {
+   "severity": "medium",
+   "where": "Rankings #summary vs #rating vs #records vs #ranks, 1440/1280/900",
+   "what": "Facts repeat across cards: Contest rating 1,260 appears in a tile and again in the Rating card; Peak rating equals the current rating; 'Points this week 1,110 #3' matches 'Season rank #3 1,110 pts'; 'Contests played 3', 'over 3 contests' and Your ranks' 'Contests played 3'. Records repeats Best daily 165 and Peak rating 1,260 from the summary. There are nine tiles, leaving a ragged second row.",
+   "fix": "Show a summary tile only for things no card below owns: drop Contest rating, Peak and Best daily there. Show Peak only when it's above the current rating, and Season only when it differs from the week. Let the grid auto-fit."
+  },
+  {
+   "severity": "medium",
+   "where": "Rankings #ranks table, all widths",
+   "what": "The four period columns hold identical values (#3 / #3 / #3 / #3, and '#1 of 1' for Same exam date), which is 16 cells for four facts.",
+   "fix": "Merge equal adjacent periods ('Week – All time: #3'), or show Week with the other periods in a disclosure. Hide any scope where n < 3."
+  },
+  {
+   "severity": "medium",
+   "where": "Contest #review list titles, all widths",
+   "what": "Review rows are titled with internal template names ('Add polys', 'Freq grouped', 'Model one var', 'Arc pair', 'Interpret').",
+   "fix": "Title each row with the skill name plus the first words of the stem, e.g. 'Probability · A bag holds…'."
+  },
+  {
+   "severity": "medium",
+   "where": "Contest page on a phone (390), thumb bar + shell tab bar, both themes",
+   "what": "The 56px thumb bar (See the board · Jump to me) sits on top of the shell's bottom tab bar, so about 130px of fixed chrome covers a 900px viewport.",
+   "fix": "On /compete/contest/, hide the shell tab bar while the thumb bar shows (body class, shell change for F2), or put the thumb actions in its slot."
+  },
+  {
+   "severity": "medium",
+   "where": "Overview #daily wash and answer strip, dark theme, 1440/390",
+   "what": "In dark mode the hero card's wash is a large saturated brown block, which is not calm. The wrong-answer squares turn white, so the misses are the brightest thing on the card.",
+   "fix": "In dark mode, set the wash to about 8% amber (`color-mix(in srgb, var(--amber) 8%, var(--tile))`). Fill wrong squares with var(--soft) / ink-2 so they're quieter than the orange right answers."
+  },
+  {
+   "severity": "medium",
+   "where": "Private join page (?code=…), 1440/390",
+   "what": "The page shows a bare title, the jargon line 'Entrants see your board name here (Anonymous if your name is off on Me).' and a Join pill. It doesn't say who invited them, how many friends are in, the round (1 of 4) or what the contest trains.",
+   "fix": "Show a card: 'Friday math club · round 1 of 4 · 10 questions · closes Mon 8:09 AM', 'Invited by Student 7BC1 · 2 friends in', 'Trains linear functions and percentages', then Join, with the name line behind an ⓘ. Needs the join payload to send the owner name, entrant count, topics and rounds (server, outside my files)."
+  },
+  {
+   "severity": "low",
+   "where": "Private contest header and Overview contest rows",
+   "what": "The round is said twice: the eyebrow 'PRIVATE CONTEST · ROUND 1 OF 4' plus the subline 'Round 1 of 4 · closes…', and the row title '… · round 1 of 4' plus its meta 'Round 1 of 4 · …'. The Overview's 'Private (4)' counts the four rounds of one series.",
+   "fix": "Say the round once, in the subline or meta. Count series in the tab ('Private (1)') and list the rounds inside."
+  },
+  {
+   "severity": "low",
+   "where": "Private contest #entrants, all widths",
+   "what": "Finished entrants have no ● marker; only the not-started ○ shows. The names wrap two and one.",
+   "fix": "Render a marker for every state and list entrants vertically (marker + name), or as chips with equal gaps."
+  },
+  {
+   "severity": "low",
+   "where": "Overview #contests Rush row, all widths. web/compete/overview.js:121; compete-ui.js:144",
+   "what": "The untimed Rush shows 'In progress · 0:00 left'. Its 'strikes' icon (three small ×) reads as the text 'xxx' and doesn't match the outline style of the other icons.",
+   "fix": "Show 'left' only when the kind has a clock and left > 0. Replace the icon with a stepped 'climb' glyph at the same stroke weight."
+  },
+  {
+   "severity": "low",
+   "where": "Rush lobby, new learner, 1440/390",
+   "what": "Race defaults to 'Your best' when the learner has no best. 'No one has finished yet.' is followed by the board's '0 ranked · updated just now' and 'No one else has finished yet.', which is said twice, with a zero, over an empty table header. The line under Start repeats the rules card's Three-strikes rule. The Domain and Race selects start at different x positions (160 vs 144).",
+   "fix": "Default the race to 'No one' until a best exists. Make the board's empty state one line ('Be the first on this week's board') with no header or meta. Drop the sentence under Start. Put the label and control in a `grid-template-columns: 72px 1fr`."
+  },
+  {
+   "severity": "low",
+   "where": "Lobby par and warm-up copy, all widths",
+   "what": "'Your par (rough) 85 · about 4.8 right' uses jargon and fractional answers. 'Warm up · 6' doesn't say what 6 is.",
+   "fix": "Write 'Par for you: 85 (about 5 right)' with an ⓘ for par, and 'Warm up · 6 questions'."
+  },
+  {
+   "severity": "low",
+   "where": "Overview #traps, all widths",
+   "what": "'Trap of the week: Units and conversions' repeats as a row in the list below it. The mono meta 'field 12% this week ▼8 · you 9% · 11 chances in 30 days' is dense jargon, and three identical 'Drill · 8' buttons repeat.",
+   "fix": "Mark the trap-of-the-week row with the 'This week' chip (as on the Trap Index) and drop the separate line. Meta: '12% of students fell for it · you 9%', with the week-over-week change and 'chances' in a tooltip. Show '· 8' only in the tooltip."
+  },
+  {
+   "severity": "low",
+   "where": "Overview #champs, all widths",
+   "what": "The card holds only a title, an ⓘ and one link (124px): an almost empty card.",
+   "fix": "Until there is a champion to show, fold it into the Season card as a 'Hall of champions ›' link."
+  },
+  {
+   "severity": "low",
+   "where": "Overview #rivals, all widths",
+   "what": "The sub-line repeats the name ('Student 555C' / 'Student 555C leads 1-0 this season · last shared Sep 28'). A new learner sees 'No shared contest yet' three times.",
+   "fix": "Sub-line 'Leads 1–0 · Sep 28' or 'You lead 1–0 · Sep 28'. Omit it when nothing has been shared."
+  },
+  {
+   "severity": "low",
+   "where": "Overview card headers, 1440",
+   "what": "The side column mixes two header styles: mono eyebrows ('SEASON · ROAD TO OCT 3', 'THIS WEEK', 'QUESTION OF THE DAY') and bold h2 titles ('Your stats', 'Rivals', 'Traps this week'). The cards don't read as one family.",
+   "fix": "Use one pattern: an h2 title plus an optional right-hand link, as Practice does. Keep the eyebrow only on the hero Daily card."
+  },
+  {
+   "severity": "low",
+   "where": "Contest result counts and points breakdown, all widths",
+   "what": "Zeros on screen: '7 right · 3 wrong · 0 skipped · 0 voided' and '720 + 0 pace + 0 finish'. The jargon 'Clean run', '9 clean' and 'Between Level 3 and Level 6 par' adds nothing beside the PAR tile.",
+   "fix": "Leave out zero terms ('7 right · 3 wrong'; '720 base'). Mark only the exceptions, not 'clean'. Drop the 'Between Level…' line; the PAR tile says it."
+  },
+  {
+   "severity": "low",
+   "where": "Contest #time card, sprint result, 1440/390",
+   "what": "The Time chart draws one bar per question, so a 41-question sprint makes a 1,074px card. The legends 'bar: your time · tick: its budget' and 'Banked: easy median 1:09 against 1:05 · 0:38 banked…' are jargon.",
+   "fix": "Show over-budget and wrong questions by default, with 'All 41' as a toggle. Move the legend into an ⓘ, and rephrase: 'Easy: 1:09 each (budget 1:05) · saved 0:38 for hard'."
+  },
+  {
+   "severity": "low",
+   "where": "Rankings #pace, 1440/390",
+   "what": "'Time in sinks per contest ___ 0:00' shows a zero with a flat placeholder sparkline, and 'sinks' is jargon. 'Bar: your median answer time. Tick: each question's time budget.' is a help paragraph. The meta 'you 1:11 · budget 1:05 · accuracy 80% · 10 answers' wraps, leaving 'answers' on its own line.",
+   "fix": "Hide the sinks row at 0:00 and rename it 'Time stuck (over 2× budget)'. Put the legend in an ⓘ. Shorten the meta to '1:11 of 1:05 · 80%', with the answer count in a tooltip."
+  },
+  {
+   "severity": "low",
+   "where": "Rankings .rk-grid2 (Rating | Pace), 1280/1440",
+   "what": "The Rating card stretches to the Pace card's height, leaving 372px empty under its content.",
+   "fix": "Set `align-items:start` on .rk-grid2, or stack Records under Rating in the left column."
+  },
+  {
+   "severity": "low",
+   "where": "Rankings #summary chart and trap sentence, 1440/390",
+   "what": "With three contests on one day, the chart's x-axis reads 'Sep 28 … Sep 28' and the sprint's 720 dwarfs the dailies. 'This week: −250 pts to traps, 12% of it one trap: Reversed the one bound that was found' puts a sentence where numbers belong.",
+   "fix": "Under five points, show a small bar list per contest, or default the chart to Over par. Rewrite the line as 'Traps cost 250 pts this week · biggest: Reversed the bound (30)' with Fix it."
+  },
+  {
+   "severity": "low",
+   "where": "Rankings #ladder table, all widths",
+   "what": "Two columns (Students at it, Timed-section median) are all '—' across ten rows.",
+   "fix": "Hide a column until any row has a value."
+  },
+  {
+   "severity": "low",
+   "where": "Rankings #history, 1440/900",
+   "what": "'All' appears as both a select and a tab. The mini legend 'Sprint ▌ Trap of the week ▌ Daily Challenge ▌' shows black blocks with no meaning. The 'R · W · S · V' header is cryptic. Every row says 'Ranked'. The ☆ after names is unexplained, and the ▸ expander is tiny, at the far right. The table scrolls sideways by 51px at 900.",
+   "fix": "Make the kind filter the tabs (All · Daily · Sprint · …) and 'Open follow-ups' a chip. Drop the legend blocks. Header 'Right·Wrong·Skip·Void' with a tooltip. Show 'Unranked' only when a sitting isn't ranked. Give ☆ the tooltip 'New best'. Make the whole row clickable with a 24px chevron. Hide the Time column at <1000px."
+  },
+  {
+   "severity": "low",
+   "where": "Rankings #badges and Overview #badges, all widths",
+   "what": "Each rule repeats its name ('Four weekly modules / Finish four Weekly Modules'). Zeros show: '0/10', '0/1', '0/4', and the tab 'Earned (0)'. The Go buttons sit at different heights across a row. On the Overview, the third badge has no Go, so its bar is wider.",
+   "fix": "Show the name, with the rule as a tooltip or as a sub-line only when it adds something. Hide the '0/' count until progress > 0, and hide '(0)'. Tile layout `grid-template-rows:auto 1fr auto` puts Go at the bottom. Reserve the Go column on every row."
+  },
+  {
+   "severity": "low",
+   "where": "Rankings #seasons table, 1440",
+   "what": "Headers are left-aligned over right-aligned numbers ('Points' header at x=578, value at 714–754; 'Rank' at 778, '#3' at 905). 'Final —' is a placeholder.",
+   "fix": "Add class `n` to the numeric <th> so headers align right. Hide the Final column until a final has been played."
+  },
+  {
+   "severity": "low",
+   "where": "Phone (390) names and podium",
+   "what": "Board names are clipped ('Student 555C' loses 13px on the sprint board). Podium names are clipped ('Student 7BC1 (you)' loses 48px). The ⋯ sits between the name and the points instead of at the row's end.",
+   "fix": "Show '(you)' as a chip under the podium name. Move ⋯ to the last cell. Let the name cell take `min-width:0; flex:1`."
+  },
+  {
+   "severity": "low",
+   "where": "Phone (390) ⓘ buttons (.quiet.info-i)",
+   "what": "The ⓘ touch target is 27×44.",
+   "fix": "Give it `min-width:44px` on `(pointer:coarse)` via padding, keeping the glyph size."
+  }
+ ],
+ "fixer_report": "I fixed the page side of all 37 defects on branch v2/s8, but the task isn't cleanly done. The two required checks fail: `server/checks/s8.py` and `test_flow.py` (which calls it) both stop at s8.py:519 with \"404 contest not found\". This branch has no server changes against master (`git diff master -- server` is empty), so my edits didn't cause it. It looks date-dependent: the check asks for `final-2026-10-03`, but `compete.ensure` only creates a Season Final in the week before an SAT date. On a fresh DB during the SAT week itself, that contest never exists. I can't fix it because the check and `compete.py` belong to the server owner.\n\nFour defects still need a server change before they're fully fixed (details below).\n\nI rebased on master first. There were six commits: 341f085, e34fa55, e215e97, 28959be, 59e3d0e and cd3e6f7. The worktree is clean, the 8028 server is stopped and the branch is detached. I checked the pages with a seeded DB and headless screenshots: 1280 and 390, light and dark, spot checks at 900 and 1440. The overlap measure found no touching controls on Overview, Contest (daily, sprint, private), Rankings or Leaderboard.\n\n**What changed, by defect:**\n- **Shared board and debrief (#4, 18–21):**\n  - The \"You\" strip now sits above the table and only sticks while your own row is out of view. It is solid in both themes, and \"Jump to me\" lands clear of it.\n  - The clean ⊘ mark and its legend are gone, and ⋯ shows on hover or focus.\n  - Pars: by default \"Your par\" plus the next one up, with an \"All pars\" switch; labels read \"L9 par · 9.9 right\".\n  - Points and Over par are sortable column headers. Scope is one \"Everyone ▾\" menu that hides scopes with fewer than 2 students (private boards have none). List/Grid are icons.\n  - Debrief: labels appear only in the legend, the \"Lost 60\" sentence is gone, and the header reads \"−95 of 260\". Place lines show only when they add something.\n  - Sprints: unreached questions now show as a single \"Not reached\" row and no longer count as skips or misses. The podium line only shows when you're below #3.\n- **Contest page (#1, 3, 5, 6, 22–25, 27–30, 34, 35):**\n  - No more \"null\" text. Mastery bars fill, with the percentage beside them.\n  - One par everywhere, taken from your sitting's own par. The result tile shows only \"Over par\".\n  - Trap names use the student's own wording (e.g. \"Stopped at 2b rather than dividing by 2\"), leftovers grouped last as \"Other slips\".\n  - The mistakes list is limited to this sitting's skills and starts folded.\n  - Actions are one pill, \"Run again\" (runs only, races your best) and a \"Share ▾\" menu. Wider gaps between quiet buttons.\n  - The side column is sticky. The rules card is open in the lobby and folded on the result.\n  - QOTD ⓘ sits inline. The day picker is a \"Sep 28 ▾\" button. The 30-day strip starts at your first sitting.\n  - Review rows read like \"Probability · The table gives the number…\".\n  - On a phone the thumb bar takes the tab bar's slot.\n- **Overview (#9–17, 26, 28, 36):**\n  - A finished Daily leads with the big rank, with the streak as a header chip.\n  - Copy result, Past days and Daily reminder share one \"More ▾\" menu. The make-up chip only shows when there's a streak to keep and says the number.\n  - The Daily is out of the Live list, and repeated tiles and the Country prompt are gone.\n  - Placing is one meter line.\n  - QOTD has one \"Answer ›\" and shows the question itself.\n  - Traps and badges moved into the main column. The dark-mode card and wrong squares are quieter.\n- **Rankings (#8, 15, 32, 33):** A new learner sees one \"Your first contest fills this page\" card. The summary only shows tiles no other card owns. Equal periods merge into one cell and scopes under 3 students drop. Rivals keep Race visible and put Follow/Unfollow in ⋯, following what the API says.\n- **Leaderboard (#31):** Two control rows. \"Resets in\" sits beside the period, Subject is hidden, and on a phone the metrics scroll sideways and filters open in one sheet.\n\n**Two places I went against the reviewer's wording:**\n- **#2, the level ladders.** The reviewer suggested showing the server's `me.level`. But the server's `ratings.level_of` is a 7-level scale, while the spec (spec/rating.md) and the server's own par rows use 10 levels. So I made the pages work out the student's level from their rating on the 10-level ladder everywhere: ring, text, \"Level 6 in\", ladder table and rating board. Other students' rows still carry the server's number until the server is fixed.\n- **#15, Overview placing state.** I left out the second \"Start today's challenge\" pill, because the Daily card right beside it already has that button. The Rankings empty state does have it.\n\n**Changes needed from other owners:**\n- **Server (#2):** learner levels (`_identity`, `rank_snapshot`, board entries, the Level 5/8 badges) should use the 10-level ladder, or the server should send its edges.\n- **Server (#7):** `GET /api/contest/{cid}` should return `owner: true` and `code` to the owner. Until then Rename / Extend / Close / Delete only appear in the browser that created the contest.\n- **Server (#37):** the join payload should add who invited you, how many are in, the round and the topics. The join card already shows these when they arrive.\n- **Server (#15):** send the count of rated answers (`rated`). The placing meter adds it up from history for now.\n- **Server (#21):** the debrief could mark unreached slots itself; the page splits them for now.\n- **Server owner / helper:** fix the date-dependent Final lookup in s8.py:517–519.\n- **F3 (#28):** keep math like \"8/(x − 14)\" from breaking across lines inside question stems.\n- **Today page (#12):** the Today strip's make-up offer needs the same \"only with a streak to keep\" rule."
+}
