@@ -388,6 +388,8 @@ Rules as above (own files only, own port and SATF_DB, commit per part, never pus
 main build is building this section's pages right now and codes against the endpoints your spec lists, so build exactly those
 endpoints and shapes). The requirements are in spec/v2-state/briefs/S6.md (sections 2-5 and 7; the brief says pages-only for the main
 build, but its server items are yours). The branch already has the section's early server commits: continue from them.
+ALSO (from the Tests pages): /api/history?all=1 rows through api_tests.sitting_row (number, M1/M2 scores, miss and blank chips,
+conditions), and GET /api/session/{a}/compare?with={b} for Compare two sittings (slot by slot and by type).
 DONE: checks/s6.py passes and test_flow "all good". Tell the user "S6 server done".
 ```
 
@@ -487,6 +489,12 @@ Rules as above (own files only, own port and SATF_DB, commit per part, never pus
 is building this section's pages right now against the endpoints its spec lists, so build exactly those endpoints and shapes).
 Requirements: spec/v2-state/briefs/S5.md (its server items are yours). The branch already has the section's server work from the main
 build (8 commits): continue from it, do not redo it.
+ALSO (the Tests pages are built on v2/s5 and read these; followups/S5-pages.json): add `type_notes` to the session payload;
+GET /api/tests reads habits_last and habits_scope and each habit row lists its sitting ids; the score card's total, projection,
+growth and calibration fields (the pages found them null in every test: confirm the names in the payload); the cycle's
+`proved {n, of, pts}`; the hand-in's gate data gives the positions answered right (the trainer's 22-cell strip);
+/api/papers/{n}/crowd returns the learner's sitting id and each slot's question id; a paper card's "You" is a midpoint score;
+the Custom test's "For me" difficulty in its request model.
 DONE: checks/s5.py passes and test_flow "all good". Tell the user "S5 server done".
 ```
 
@@ -565,6 +573,7 @@ ALSO READ followups/S7-hygiene.json, S9-hygiene.json, S8-hygiene.json ("fixer_re
   their own kind, say what changed ("Skipped Fix mistakes", "Moved Warm-up to Tue") and put `field` in changes.today.
 - Compete: GET /api/contest/{cid} returns owner: true and code to the owner; the join payload adds who invited, how many
   are in, the round and topics; send `rated` (the count of rated answers); the debrief marks unreached slots itself.
+  POST /api/contests accepts a sitting or paper to build a race from (the Tests share sheet's "Race friends").
   Levels: ratings.level_of is a 7-level scale but spec/rating.md and the par rows use 10; list it for the owner of
   ratings.py (not in your files) unless compete.py can map it.
 Do NOT change response shapes the pages already use; add fields. DONE: s7.py, s8.py, s9.py and test_flow pass. Tell the user

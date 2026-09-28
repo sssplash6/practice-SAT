@@ -94,6 +94,17 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       carried into the helper's v2/s5-server) is kept as v2/s5-old-server; the new v2/s5 = v2/s5-server + master (d1c6072),
       checks/s5.py passes on it. At merge: v2/s5-server first (after the helper says "S5 server done" and its one check),
       then v2/s5. Resume if cut: Workflow({scriptPath: <scripts>/v2-build.js, resumeFromRunId: 'wf_5cbbf5d1-7c9'}).
+      THE USER (2026-09-28): "dont go to verify after the build agent is done. pause, i will tell you when". Watcher bj2gvj38m
+      fires when both build units return; then TaskStop wajkgbyam before the check. WAIT for the user's go; then launch
+      build.js [{id:'S5', from:'verify'}] (check, hygiene, one fix; units skipped).
+      DONE: both units built (v2/s5 622c6c1, 9 page commits, ~3,200 lines, reports in followups/S5-pages.json); the run was
+      stopped at "verify S5 r1" seconds after it started. PAUSED until the user says go. The builder rebased v2/s5 onto master
+      (so v2/s5-server is no longer its ancestor: at merge, take v2/s5-server's side for server files). /test/ keeps no shell
+      bar (the spec's no-chrome test window, like the practice session); desktop filter chips dropped (decision 7); 9 papers
+      before Show all. Server asks went to Tasks 26, 20 and 30; the flag endpoint is on v2/s10-server (Task 21).
+      PREVIEW now has Tests too (the user asked): prev4 = master + v2/s3, calm-shared, s7, s9, s8, s5 (297737d); the preview
+      server was restarted for the Tests server code as task bn2sg1616 (same command, port 8061, prev4.db kept; a copy of the
+      db before the restart is scratchpad/prev4-backup.db).
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
