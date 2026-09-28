@@ -12,6 +12,8 @@
    UI.acct.countrySelect(value, onChange) -> el        ISO alpha-2, blank by default (U11)
    UI.acct.nameError(e) / UI.acct.handleError(e)       the server's refusal, in words
    UI.acct.deviceLabel()                               "Chrome on Mac"
+   UI.acct.helpBtn(id, label) -> button                "?" that opens Help answer #id in a popover (U13)
+   UI.acct.googleButton(host, {clientId, text, body, onResult, onError})   the GIS button (U19b)
    ========================================================================== */
 (() => {
   'use strict';
@@ -173,7 +175,40 @@
     location.href = o.to || '/';
   }
 
-  UI.acct = { COUNTRIES, countryName, regionGuess, deviceLabel, passkeyReady, savePasskey, passkeyGet,
-    saveMe, nameError, handleError, detail, countrySelect, localAnswers, finish, flash, park, ls,
+  /* "?" beside a figure or a setting (U13): that Help answer in a popover, from the same
+     answers.json /help/ renders. F2's UI.help(id, anchor) wins once it exists. */
+  let answers = null;
+  const loadAnswers = () => answers || (answers = fetch('/help/answers.json').then(r => r.json())
+    .then(d => d.answers || [], () => { answers = null; return []; }));
+  function helpBtn(id, label) {
+    const b = h('button', { type: 'button', class: 'help-q', 'aria-label': `Help: ${label || id}`, 'aria-haspopup': 'dialog', text: '?' });
+    b.addEventListener('click', async e => {
+      e.stopPropagation();
+      if (UI.help) { UI.help(id, b); return; }
+      const a = (await loadAnswers()).find(x => x.id === id);
+      UI.pop(b, [h('div', { class: 'help-pop' }, h('p', { class: 'q', text: a ? a.q : label || 'Help' }),
+        a ? h('p', { text: a.a }) : null, h('a', { class: 'link', href: `/help/#${id}`, text: 'More in Help' }))], { label: a ? a.q : 'Help' });
+    });
+    return b;
+  }
+
+  /* Google Identity Services (U19b), loaded on demand only where a button is drawn. The nonce is
+     single use, so each drawn button asks for its own. */
+  async function googleButton(host, { clientId, text = 'continue_with', body = {}, onResult, onError }) {
+    if (!(window.google && google.accounts)) await new Promise((ok, no) => {
+      const s = h('script', { src: 'https://accounts.google.com/gsi/client' });
+      s.onload = ok; s.onerror = no; document.head.append(s);
+    });
+    const { nonce } = await UI.api('/google/nonce', { method: 'POST' });
+    google.accounts.id.initialize({ client_id: clientId, nonce, ux_mode: 'popup', use_fedcm_for_prompt: true, callback: async r => {
+      const extra = typeof body === 'function' ? body() : body;       // read at the tap: "shared computer" may have changed
+      try { await onResult(await UI.api('/google', { method: 'POST', body: { credential: r.credential, nonce, carry: false, ...extra } })); }
+      catch (x) { if (onError) onError(x); }
+    } });
+    google.accounts.id.renderButton(host, { theme: 'outline', size: 'large', width: Math.min(380, host.clientWidth || 380), text });
+  }
+
+  UI.acct = { COUNTRIES, countryName, regionGuess, deviceLabel, passkeyReady, savePasskey, passkeyGet, googleButton,
+    saveMe, nameError, handleError, detail, countrySelect, localAnswers, finish, flash, park, ls, helpBtn,
     HANDLE_OK: /^[A-Za-z0-9 _.\-]{3,24}$/, NAME_OK: /^[^\d<>@]{1,40}$/ };
 })();

@@ -54,20 +54,20 @@
   /* ---- the cards */
   const CARDS = [
     { id: 'you', title: 'You', col: 'L', o: 1 },
-    { id: 'snapshot', title: 'Snapshot', col: 'L', o: 5 },
+    { id: 'snapshot', title: 'Snapshot', col: 'L', o: 5, help: 'band' },
     { id: 'saved', title: 'Saved & in progress', col: 'L', o: 15, chip: 'Saved', me: true },
-    { id: 'account', title: 'Account', col: 'L', o: 16, me: true },
+    { id: 'account', title: 'Account', col: 'L', o: 16, me: true, help: 'devices' },
     { id: 'week', title: 'This week', col: 'R', o: 2 },
-    { id: 'goals', title: 'Goals', col: 'R', o: 3 },
-    { id: 'prefs', title: 'Learning preferences', col: 'R', o: 14, chip: 'Preferences', me: true },
-    { id: 'skills', title: 'Skills', col: 'R', o: 4 },
-    { id: 'readiness', title: 'Test-day readiness', col: 'R', o: 6, chip: 'Readiness' },
-    { id: 'trend', title: 'Score trend', col: 'R', o: 7, chip: 'Trend' },
-    { id: 'pace', title: 'Pace', col: 'R', o: 8, me: true },
-    { id: 'catching', title: 'What keeps catching you', col: 'R', o: 9, chip: 'Catching you' },
-    { id: 'habits', title: 'Your habits', col: 'R', o: 10, chip: 'Habits' },
+    { id: 'goals', title: 'Goals', col: 'R', o: 3, help: 'routing' },
+    { id: 'prefs', title: 'Learning preferences', col: 'R', o: 14, chip: 'Preferences', me: true, help: 'stages' },
+    { id: 'skills', title: 'Skills', col: 'R', o: 4, help: 'points' },
+    { id: 'readiness', title: 'Test-day readiness', col: 'R', o: 6, chip: 'Readiness', help: 'readiness' },
+    { id: 'trend', title: 'Score trend', col: 'R', o: 7, chip: 'Trend', help: 'projection' },
+    { id: 'pace', title: 'Pace', col: 'R', o: 8, me: true, help: 'pace' },
+    { id: 'catching', title: 'What keeps catching you', col: 'R', o: 9, chip: 'Catching you', help: 'mistakes' },
+    { id: 'habits', title: 'Your habits', col: 'R', o: 10, chip: 'Habits', help: 'habits' },
     { id: 'badges', title: 'Achievements', col: 'R', o: 11, chip: 'Badges', me: true },
-    { id: 'activity', title: 'Activity', col: 'R', o: 12 },
+    { id: 'activity', title: 'Activity', col: 'R', o: 12, help: 'streak' },
     { id: 'recent', title: 'Recent activity', col: 'R', o: 13, chip: 'Recent' },
   ].filter(c => !RO || !c.me);
   const CHIPS = ['you', 'week', 'goals', 'snapshot', 'readiness', 'skills', 'trend', 'pace', 'catching', 'habits', 'badges',
@@ -78,7 +78,7 @@
     const title = c.id === 'you' ? null : h('h2', { id: `${c.id}-h`, text: c.title });
     const act = h('div', { class: 'card-act' });
     const fold = RO ? null : h('button', { type: 'button', class: 'ibtn card-fold', html: UI.svg(UI.ICON.chev, 18) });
-    const head = h('div', { class: 'card-head' }, title, act, fold);
+    const head = h('div', { class: 'card-head' }, title, c.help && !RO ? A.helpBtn(c.help, c.title) : null, act, fold);
     const sum = h('p', { class: 'card-sum' });
     const body = h('div', { class: 'card-body' });
     const el = h('section', { class: 'card' + (c.id === 'you' ? ' id-card' : ''), id: c.id, style: `--o: ${c.o}`,
@@ -196,7 +196,7 @@
         ? h('span', {}, h('span', { class: 'chk', 'aria-hidden': 'true', text: '✓' }), ACC.email_masked || 'Progress saved')
         : h('span', {}, h('span', { class: 'odot', 'aria-hidden': 'true' }), 'This device only · ', h('a', { class: 'link', href: '/me/settings/#account', text: 'Save progress' })));
     }
-    fill('you', h('div', { class: 'id-top' }, avWrap, RO ? null : h('div', {}, nameBox, lines)), outcomes(), tiles());
+    fill('you', h('div', { class: 'id-top' }, avWrap, RO ? null : nameBox), RO ? null : lines, outcomes(), tiles());
     said('you', [name, st.answered ? `${N(st.answered)} answered` : null, st.streak ? `streak ${N(st.streak)}` : null].filter(Boolean).join(' · '));
   };
   function boardLine(prof, name) {
@@ -246,15 +246,21 @@
         try { P = await A.saveMe({ avatar: v }); res.close(); UI.toast('Saved'); paint('you'); } catch (_) { UI.toast('Not saved. Try again.'); }
       };
       if (!UI.shared()) {
-        const file = h('input', { type: 'file', accept: 'image/*', hidden: true });
-        file.addEventListener('change', async () => {
-          if (!file.files[0]) return;
-          try { await UI.localPhoto.set(file.files[0]); res.close(); UI.toast('Photo set on this device'); paint('you'); }
-          catch (_) { UI.toast('That photo couldn’t be used. Try another.'); }
-        });
-        const photo = h('button', { type: 'button', class: 'wide' }, 'Your photo', h('small', { text: 'this device only' }));
-        photo.addEventListener('click', () => file.click());
-        grid.append(photo, file);
+        const picker = (label, extra) => {
+          const file = h('input', { type: 'file', accept: 'image/*', hidden: true, ...extra });
+          file.addEventListener('change', async () => {
+            if (!file.files[0]) return;
+            try { await UI.localPhoto.set(file.files[0]); res.close(); UI.toast('Photo set on this device'); paint('you'); }
+            catch (_) { UI.toast('That photo couldn’t be used. Try another.'); }
+          });
+          const b = h('button', { type: 'button', class: 'wide' }, ...label);
+          b.addEventListener('click', () => file.click());
+          grid.append(b, file);
+          return b;
+        };
+        const photo = picker(['Your photo', h('small', { text: 'this device only' })]);
+        // a phone can take one with its front camera (U22)
+        if (matchMedia('(pointer: coarse)').matches) picker(['Take one', h('small', { text: 'front camera' })], { capture: 'user' });
         UI.localPhoto.get().then(b => {
           if (!b) return;
           const rm = h('button', { type: 'button', class: 'wide' }, 'Remove your photo');
@@ -626,7 +632,7 @@
     if (!ready('account', 'account')) return;
     const kids = [];
     if (ACC.saved) {
-      const ways = [PK && PK.items && PK.items.length ? 'passkey' : null, ACC.verified ? 'email' : null].filter(Boolean);
+      const ways = [PK && PK.items && PK.items.length ? 'passkey' : null, ACC.verified ? 'email' : null, ACC.google ? 'Google' : null].filter(Boolean);
       kids.push(h('p', {}, ways.length ? `You can sign in ${ways.length === 1 ? 'one way' : `${ways.length} ways`}: ${ways.join(', ')}` : 'Your progress is saved.'));
       if (ways.length === 1) kids.push(h('p', { class: 'help' }, h('span', { class: 'odot', 'aria-hidden': 'true' }),
         h('a', { class: 'link', href: '/me/settings/#account', text: ways[0] === 'email' ? 'Add a passkey' : 'Add an email' }), ' so you can’t get locked out.'));
@@ -722,6 +728,15 @@
     const kids = [];
     if (!g && !RO) kids.push(h('p', { class: 'help', style: 'margin: 0 0 12px' }, 'Answer 30 questions and this shows where your points are. ',
       btn(`Today’s set · ${setLen()}`, { quiet: true, body: { source: 'coach', count: setLen() } })));
+    // Sharpen (U5): 12 questions over the 4-6 skills with the most test weight and the fewest answers
+    const nOf = s => s.evidence ?? s.answered ?? 0;
+    const thin = Object.values(byTopic).filter(s => nOf(s) < 10);
+    if (thin.length && S.stats.answered && !RO) {
+      const share = t => ((g && g.skills.find(x => x.topic === t)) || {}).per_test || 1;
+      const topics = thin.map(s => [s.topic, share(s.topic) * (1 - nOf(s) / 10)]).sort((a, b) => b[1] - a[1]).slice(0, 6).map(x => x[0]);
+      kids.push(h('p', { class: 'help sharpen' }, `${thin.length === 1 ? '1 skill needs' : `${thin.length} skills need`} more answers. `,
+        btn('Sharpen · 12 questions · ~19 min', { quiet: true, body: { source: 'probe', topics, count: 12, order: 'mixed' } })));
+    }
     if (view === 'points') {
       const ranked = g.skills.filter(x => x.evidence >= 5 && byTopic[x.topic]).sort((a, b) => b.gain - a.gain);
       ranked.forEach((x, i) => {
@@ -983,7 +998,7 @@
     ['achievements', 'Achievements'], ['unread', 'Unread']];
   const FEED_ICON = { practice: 'practice', test: 'tests', challenge: 'trophy', mistakes: 'review', achievements: 'trophy', reports: 'chat', goal: 'check', correction: 'check' };
   const score = t => String(t || '').replace(/^(\d+) of (\d+) right$/, '$1 / $2');
-  const hrefOf = x => (x.href ? x.href.replace(/^\/results\/report\/\?s=/, '/results/report/?id=') : null);
+  const hrefOf = x => (x.href ? x.href.replace(/^\/results\/report\/\?s=/, '/results/report/?id=').replace(/^\/me\/\?tab=achievements$/, '#badges') : null);
   function dayHead(at) {
     const d = new Date(at), t = new Date();
     const k = x => x.toDateString();
@@ -1009,11 +1024,12 @@
       const e = x.effect || {};
       const eff = [...(e.words || []).map(w => `${tn(w.topic)}: ${w.from} → ${w.to}`), e.fixed && `${pl(e.fixed, 'mistake')} fixed`,
         e.opened && `${N(e.opened)} opened`, e.pts && Math.abs(e.pts) >= 5 && `≈ ${e.pts > 0 ? '+' : '−'}${Math.abs(e.pts)} pts`].filter(Boolean);
+      const title = x.kind === 'achievements' && !/^Earned/.test(x.title || '') ? `Earned: ${x.title}` : x.title;
       kids.push(h('div', { class: 'lrow' }, h('span', { class: 'ic' }, ic(FEED_ICON[x.kind] || 'dot')),
-        h('div', {}, href ? h('a', { class: 't', href, text: x.title, style: 'color: inherit; text-decoration: none; display: block' }) : h('p', { class: 't', text: x.title }),
+        h('div', {}, href ? h('a', { class: 't feed-link', href, text: title }) : h('p', { class: 't', text: title }),
           x.detail ? h('p', { class: 'd', text: score(x.detail) }) : null,
           eff.length ? h('p', { class: 'd', text: eff.join(' · ') }) : null),
-        h('span'),
+        href ? h('a', { class: 'ibtn feed-go', href, tabindex: '-1', 'aria-hidden': 'true', html: UI.svg(UI.ICON.chev, 16) }) : h('span'),
         RO || (!x.again && !x.follow_up) ? null : h('div', { class: 'fx' },
           x.again ? btn('Again · new numbers', { quiet: true, body: { ...x.again, source: 'review' } }) : null,
           x.follow_up ? btn(`Follow up · ${Math.min(3, e.opened || 3)}`, { quiet: true, body: { ...x.follow_up, source: 'review' } }) : null)));
@@ -1044,8 +1060,13 @@
   UI.onShell(d => { SHELL = d; paint('you', 'goals', 'saved'); });
   loadSummary(); loadProfile(); loadAccount(); loadActivity(); loadWeek(); loadTypes(); loadFeed(true);
   paint('prefs');
-  if (location.hash) {
-    const el = document.getElementById(location.hash.slice(1));
-    if (el) { el.dispatchEvent(new CustomEvent('satf:open')); setTimeout(() => el.scrollIntoView({ block: 'start' }), 300); }
-  }
+  // a hash opens its card, folded or not; the spec's older anchors still land (#achievements, #types)
+  const ALIAS = { achievements: 'badges', types: 'readiness', coverage: 'readiness', feed: 'recent', preferences: 'prefs' };
+  const toHash = (wait) => {
+    const id = location.hash.slice(1);
+    const el = id && document.getElementById(ALIAS[id] || id);
+    if (el) { el.dispatchEvent(new CustomEvent('satf:open')); setTimeout(() => el.scrollIntoView({ block: 'start' }), wait); }
+  };
+  toHash(300);
+  addEventListener('hashchange', () => toHash(0));
 })();

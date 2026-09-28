@@ -211,9 +211,34 @@ a.lrow { color: inherit; text-decoration: none; }
 @media (max-width: 759px) { .set-sec .pref-ctl .acts { justify-content: flex-start; } }
 .fieldrow { display: grid; gap: 8px; padding: 14px 0 0; }
 .fieldrow .acts > .field { flex: 1 1 220px; max-width: 360px; }
+/* unit 2: help, the feed's rows, the identity lines, skill rows in a narrow column, code boxes */
+.help-q {
+  appearance: none; border: 0; padding: 0; width: 22px; height: 22px; border-radius: 50%; flex: none; align-self: center;
+  display: inline-grid; place-items: center; background: var(--tile-2); color: var(--soft); font: 600 12px/1 var(--font); cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) { .help-q:hover { color: var(--ink); } }
+.help-q[aria-expanded="true"] { color: var(--ink); }
+.help-pop { display: grid; gap: 8px; width: min(340px, calc(100vw - 48px)); font: 400 14px/1.5 var(--font); }
+.help-pop .q { font-weight: 600; }
+.feed-link { color: inherit; text-decoration: none; display: block; }
+@media (hover: hover) and (pointer: fine) { .feed-link:hover { text-decoration: underline; text-decoration-color: var(--amber); text-underline-offset: 3px; } }
+.feed-go { width: 32px; height: 32px; margin: -4px -6px 0 0; color: var(--soft); }
+.feed-go svg { width: 16px; height: 16px; }
+.id-card .id-lines { margin-top: 14px; }
+.sharpen { margin: 0 0 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; }
+.me .card .otp input { background: var(--paper); }
+/* the Skills card's column is ~570px at 1280: name and gain on one line, the bars under them */
+@media (min-width: 760px) {
+  #skills .skill-row.gain { grid-template-columns: minmax(0, 1fr) 76px 176px; row-gap: 6px; }
+  #skills .skill-row.gain > .skill-name { grid-column: 1; grid-row: 1; }
+  #skills .skill-row.gain > .skill-gain { grid-column: 2; grid-row: 1; align-self: center; }
+  #skills .skill-row.gain > .skill-side { grid-column: 3; grid-row: 1 / span 2; align-self: start; }
+  #skills .skill-row.gain > .skill-m { grid-column: 1 / span 2; grid-row: 2; }
+  #skills .skill-row.gain > .skill-track-wrap, #skills .skill-row.gain > .skill-meta, #skills .skill-row.gain > .skill-tiers { grid-column: 1 / span 2; grid-row: auto; }
+}
 /* phone: the title and its fold share the first line; the card's own controls go under it */
 @media (max-width: 759px) {
-  .me .card-head > h2 { flex: 1 1 auto; }
+  .me .card-head > h2 { flex: 0 1 auto; }
   .me .card-head > .card-fold { order: 1; margin-left: auto; }
   .me .card-head > .card-act:not(:empty) { order: 2; flex: 1 0 100%; margin-left: 0; }
 }
