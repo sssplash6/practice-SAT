@@ -124,6 +124,11 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       still count); no Enter starts line or bank-size line; Questions = three kinds of set (a number, a number in a time, a
       time alone) and the parser reads "10 in 15 min"; the shell strip's Today card is one line; Results puts Sittings first
       (noted in briefs/S6.md); Compete's par tooltip drops its estimate clause (v2/s8). Preview server now task bt2u0k1k9.
+    - 2026-09-28: Compete's Trap Index removed at the user's word (v2/s8 7bfadc0). The user: "results again no need to run 1m
+      check and verifies. first finish the build, then run light general and hygeine check. then js tell me". v2/s6 = the old
+      v2/s6 page checkpoints + v2/s6-server + master (runtime cache file dropped); checks/s6.py passes on it. LAUNCHING
+      build.js [{id:'S6', inline: true}] (build units only, then it stops by itself); then MY light check (a real walk
+      through the pages, the measured overlap and zero pass, fixes) and tell the user. Resume if cut: resumeFromRunId.
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
