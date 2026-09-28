@@ -2177,8 +2177,9 @@
     }
     if (shared || saved) return null;
     if (!d.answered && !lget('satf.first')) {
+      // a question for the few with progress elsewhere, so a plain button: the page's own start (Today's Study) stays its one orange
       return { kind: 'first', text: 'Have progress on another device?', actions: [
-        { label: 'Sign in', primary: true, href: '/signin/' },
+        { label: 'Sign in', href: '/signin/' },
         { label: 'Dismiss', quiet: true, dismiss: true, onClick: () => lput('satf.first', 1) },
       ] };
     }
