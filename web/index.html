@@ -896,7 +896,9 @@
         tickDown(left, it.seconds_left);
         m.push(left, ' left · ');
       }
-      m.push(it.total ? `${it.answered} of ${it.total} answered` : it.asked ? `${it.answered} of ${it.asked} answered` : `${n(it.answered)} answered`);
+      // the count only when it is known and the title doesn't already say it ("Resume · 1 of 8" over "— answered")
+      if (Number.isFinite(it.answered) && !/\bof \d/.test(it.title || ''))
+        m.push(it.total ? `${it.answered} of ${it.total} answered` : it.asked ? `${it.answered} of ${it.asked} answered` : `${n(it.answered)} answered`);
     } else if (it.meta) m.push(it.meta);
     else if (it.kind === 'plan' && it.test) m.push(it.start && it.start.body && it.start.body.full ? '44 questions · 70 min' : '22 questions · 35 min');
     else if (it.minutes) m.push(`${n(it.minutes)} min`);
