@@ -355,8 +355,18 @@
         UI.meter(null, { value: Math.min(g.have || 0, g.target || 0), max: g.target || 0, text: `${N(g.have || 0)} / ${N(g.target || 0)}` }).el),
       g.done ? h('span', { class: 'meta', text: 'Met' }) : null)));
     const first = goals.find(g => !g.done);
+    // the last six weeks that had goals: "Met 4 of the last 6 weeks", six bars, the best one named (U14)
+    const hist = (WEEK.history || []).filter(w => w.total).slice(-6);
+    const met = w => w.met >= w.total;
+    const best = hist.slice().sort((a, b) => b.met / b.total - a.met / a.total)[0];
+    const histEl = hist.length >= 2 ? h('div', { class: 'wk-hist' },
+      h('span', { class: 'wk-bars', role: 'img', 'aria-label': hist.map(w => `${w.start ? day(w.start) : w.week}: ${w.met} of ${w.total}`).join(', ') },
+        hist.map(w => h('i', { class: met(w) ? 'met' : '', style: `--h: ${Math.min(1, w.met / w.total)}` }))),
+      h('span', { class: 'meta', text: [`Met ${hist.filter(met).length} of the last ${hist.length} weeks`,
+        best && best.start && best.met ? `best: week of ${day(best.start)}` : null].filter(Boolean).join(' · ') })) : null;
     fill('week',
       goals.length ? list : h('p', { class: 'soft', text: 'Pick up to three goals for this week. They show on your Profile item as you go.' }),
+      histEl,
       receipt.length ? h('p', { class: 'help', text: `Last week: ${receipt.join(' · ')}` }) : null,
       RO ? null : h('div', { class: 'card-foot' },
         first && UI.weekStart ? btn('Start the first', { primary: true, onClick: (e, b) => UI.weekStart(first, b) }) : null,
@@ -573,7 +583,11 @@
     } else rank.append(h('span', { class: 'v grow soft', text: 'Answer a question this week to be ranked.' }));
     if (R.climb) {
       const c = R.climb;
-      rank.append(h('span', { class: 's', text: `${c.window ? `Started ${c.lo}–${c.hi}` : 'Everyone who has sat a module'} · #${N(c.rank)} of ${N(c.of)} by points gained` }));
+      // "Started 440–600 · +90 · ahead of 74% of 212" (U11): gain against students who started near you
+      const ahead = c.of > 1 ? Math.round(100 * (c.of - c.rank) / c.of) : null;
+      rank.append(h('span', { class: 's', text: [c.window ? `Started ${c.lo}–${c.hi}` : 'Everyone who has sat a module',
+        c.gain !== undefined && c.gain !== null ? `${c.gain >= 0 ? '+' : '−'}${Math.abs(c.gain)}` : null,
+        ahead !== null ? `ahead of ${ahead}% of ${N(c.of)}` : `#${N(c.rank)} of ${N(c.of)}`].filter(Boolean).join(' · ') }));
     }
     if (R.self && R.self.days >= 8) {
       const x = R.self;

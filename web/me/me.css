@@ -227,6 +227,10 @@ a.lrow { color: inherit; text-decoration: none; }
 .id-card .id-lines { margin-top: 14px; }
 .sharpen { margin: 0 0 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; }
 .me .card .otp input { background: var(--paper); }
+.wk-hist { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px 12px; margin: 12px 0 4px; }
+.wk-bars { display: inline-flex; align-items: flex-end; gap: 3px; height: 18px; }
+.wk-bars i { width: 8px; height: calc(3px + var(--h, 0) * 15px); border-radius: 2px; background: var(--mat); }
+.wk-bars i.met { background: var(--ink); }
 /* the type sheet's example: the question only, no entry, hints or verdict */
 .ex-q .spr, .ex-q .ws-hintbox, .ex-q .ws-under, .ex-q .ws-err, .ex-q .ws-verdict, .ex-q .strike, .ex-q .undo,
 .ex-q .opt-why, .ex-q .opt-crowd, .ex-q .ws-whyhead { display: none !important; }
