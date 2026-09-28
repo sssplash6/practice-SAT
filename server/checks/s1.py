@@ -244,6 +244,7 @@ def check(c: TestClient) -> None:
     assert all("rarity" in b for b in badges.json())
     feed = c.get("/api/me/feed", params={"unread": 1}, headers=profile_h)
     assert any(x["kind"] == "achievements" for x in feed.json()["items"])
+    assert c.get("/api/shell", headers=profile_h).json()["inbox"] == feed.json()["unread"]
     assert c.post("/api/me/feed/seen", headers=profile_h).status_code == 200
     assert not c.get("/api/me/feed", params={"unread": 1}, headers=profile_h).json()["items"]
     summary = c.get("/api/me/summary", headers=profile_h)
