@@ -449,7 +449,13 @@
     awaySent.n = (qst._session && qst._session.away_n) || 0;
     const tr = training();
     try { history.replaceState(null, '', location.pathname + location.search); } catch (_) {}
+    // the runner keeps one position per sitting (satf.pos.{sid}); a new module opens at its question 1, not at the last
+    // module's last question (module 2 opened on Q22, so Review then Hand in skipped 21 unseen questions)
+    const modNow = S.module || 1, modKey = `satf.posmod.${sid}`;
+    let posMod = null; try { posMod = Number(localStorage.getItem(modKey)) || null; } catch (_) {}
+    try { localStorage.setItem(modKey, String(modNow)); } catch (_) {}
     run = UI.runner(runHost, {
+      at: posMod && posMod !== modNow ? 0 : undefined,
       mode: 'exam', sid, title: S.section, short: `M${S.module || 1}`, cells, total: cells.length, items,
       clock: timed ? { secondsLeft: S.seconds } : { elapsed: Math.round(elapsed / 1000) },
       conditions: S.conditions, confidence: tr && S.confidence, pace: tr && S.pace ? Object.assign({ duration_s: S.duration }, S.pace) : null,
@@ -546,7 +552,17 @@
     cellsM1 = run.cells.map(c => ({ n: c.n, status: c.status, ms: c.ms || 0 }));
     paceM1 = S.pace && S.pace.budget_s ? S.pace.budget_s.slice() : null;
     // a two-word skill label; a joining word takes the third ("Area and volume")
-    labelsM1 = S.questions.map(q => { const w = String(q.topic_name || '').replace(/[:,]/g, '').split(/\s+/); return w.slice(0, /^(and|of|in|the|to)$/i.test(w[1] || '') ? 3 : 2).join(' '); });
+    // the site's short skill names ("Ratios & rates"), found from the full name's slug; the first words of the full name read
+    // "Ratios Rates" and "Systems of Linear"
+    // (the part before a colon; else the one slug that starts with its first two words: "Ratios, Rates, Proportional ...")
+    const shortOf = q => {
+      if (!UI.TOPIC) return null;
+      const slug = String(q.topic_name || '').split(':')[0].toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+      if (UI.TOPIC[slug]) return UI.TOPIC[slug].short;
+      const pre = slug.split('_').slice(0, 2).join('_') + '_', hits = Object.keys(UI.TOPIC).filter(k => k.startsWith(pre));
+      return hits.length === 1 ? UI.TOPIC[hits[0]].short : null;
+    };
+    labelsM1 = S.questions.map(q => { if (shortOf(q)) return shortOf(q); const w = String(q.topic_name || '').replace(/[:,]/g, '').split(/\s+/); return w.slice(0, /^(and|of|in|the|to)$/i.test(w[1] || '') ? 3 : 2).join(' '); });
     qidsM1 = S.questions.map(q => q.id);
   }
   async function flushOrWait(body) {
