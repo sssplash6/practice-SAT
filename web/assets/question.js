@@ -1069,9 +1069,12 @@
         hintMsg(`Struck ${LETTERS[r.choice]}`, r.reason ? `that’s what you get if you ${low1(r.reason)}.` : 'a trap, not the answer.');
       } else if (r.kind === 'step') hintMsg('First step', r.step);
       else if (r.kind === 'example') {
-        if (o.onExample) o.onExample(r.example);
-        else if (r.example) exampleSheet(r.example);
-        hintMsg('Worked twin', 'open beside this question. This one still counts as yours.');
+        const open = () => (o.onExample ? o.onExample(r.example) : r.example && exampleSheet(r.example));
+        open();
+        // closing it keeps a way back (the user: closed the auto pop-up and had no way to open it again)
+        hintBox.append(h('p', { class: 'ws-hint-l' }, h('b', { text: 'Worked twin: ' }), quiet('Show it', () => open()),
+          ' · this one still counts as yours.'));
+        hintBox.hidden = false;
       }
       paint(); changed();
       return true;
@@ -1284,7 +1287,8 @@
       if (fb.repair_next) v.append(h('p', { class: 'v-line', text: 'Next: one like this, with new numbers' }));
 
       // 4. the next step, then vs now, the formula, everyone, and offers
-      if (fb.next_step) v.append(h('p', { class: 'v-line v-next', text: fb.next_step }));
+      const openedNow = (fb.opened || []).map(x => String((typeof x === 'string' ? x : x && x.label) || '').toLowerCase()).filter(Boolean);
+      if (fb.next_step && !openedNow.some(l => fb.next_step.toLowerCase().startsWith(l))) v.append(h('p', { class: 'v-line v-next', text: fb.next_step }));
       if (fb.then) v.append(h('p', { class: 'v-line v-then', text: fb.then }));
       // V3: a fresh version from the Saved pool brings back the note on the saved one
       const sn = typeof fb.saved_note === 'string' ? { text: fb.saved_note } : fb.saved_note;
@@ -1400,10 +1404,11 @@
       const shown = !(prefs.option_reasons === false && live);
       const letters = list => list.map(i => LETTERS[i]).join(list.length === 2 ? ' and ' : ', ');
       if (named.length && g !== null) {
-        const word = named.length === 1 ? 'it' : named.length === 2 ? 'both' : `all ${named.length}`;
-        if (right || !named.includes(g)) {
+        if (right) {
+          // a right answer dodged every trap by definition (the user: "why do we even say that?")
+        } else if (!named.includes(g)) {
           out.push(h('p', { class: 'v-line v-traps' }, h('b', { text: 'Traps on offer: ' }),
-            shown ? letters(named) : named.map(i => `${LETTERS[i]} ${low1(fb.reasons[i])}`).join(' · '), right ? ` · dodged ${word}` : ''));
+            shown ? letters(named) : named.map(i => `${LETTERS[i]} ${low1(fb.reasons[i])}`).join(' · ')));
         } else {
           const rest = named.filter(i => i !== g);
           out.push(h('p', { class: 'v-line v-traps' }, h('b', { text: `Caught by ${LETTERS[g]}` }), shown ? '' : `: ${low1(fb.reasons[g])}`,
