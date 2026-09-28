@@ -1,0 +1,248 @@
+{
+ "label": "hygiene S7",
+ "key": "v2:73746961c5f512eeadaafed12ca5ee79a4b3672a4e7c819e4531035a97d5dabe",
+ "result": {
+  "findings": [
+   {
+    "severity": "high",
+    "where": "Every Plan page (landing, wizard, plan view, Progress, Plans, day, sheet, shared) · web/plan/index.html body · all widths, light+dark",
+    "what": "There is no site navigation anywhere on /plan/. Practice at 1440 shows the sidebar (Today, Practice, Review, Words, Tests, Plan, Results...), but /plan/ at 1440 has no sidebar, and at 390 it has no bottom tab bar. The reason: web/plan/index.html has no <header id=\"bar\"> and no <nav id=\"tabs\"> for UI.shell to mount into (practice/index.html has both, lines 235 and 284). On phones the wizard footer is placed for a 64px tab bar (.wz-foot bottom: calc(64px + ...)), so it floats 64px above the screen bottom with form content showing underneath it (seen at 390 on step 3).",
+    "fix": "In web/plan/index.html add <header id=\"bar\"></header> right after <body data-page=\"plan\"> and <nav id=\"tabs\"></nav> after </main>, the same as practice/index.html. Then check .wz-foot and .pl-thumb sit on top of the real tab bar at 390."
+   },
+   {
+    "severity": "high",
+    "where": "Plan tab and ?day= view · Today/day card · div.trow-act buttons (Skip, Mark done, Why, Start early, ··· menu) · all widths",
+    "what": "Buttons in the task action row overlap each other. Measured at 1440: Skip spans 650-704 and Mark done starts at 686; Mark done ends at 780 and Why starts at 762; Why ends at 816 and the menu starts at 798. That is 18px of overlap at every join, and the same at 390. The cause is .quiet's padding 9px 12px with margin -9px -12px (ui.css:823) inside a flex row with only a 6px gap. The hover or focus fill on one button paints over the next button's text: with Why open, the row reads \"Mark don| Why\" (screenshot i_why_1440). The same overlap happens with Undo/Why, with 'All N changes ›' over 'Duplicate' on the Plans tab, and with the Edit and Plan menu focus rings in the title row.",
+    "fix": "In plan-ui.js CSS add `.trow-act .quiet { margin: 0; padding: 6px 10px; }` and keep `gap: 6px`. Give the same zero-margin rule to `.pl-title .row .quiet` and the Plans-tab row. Result: every hover fill stays inside its own label and no two hit areas share pixels."
+   },
+   {
+    "severity": "high",
+    "where": "Plan tab · Calendar card (button.cal-d) and Week card (button.pl-wd) · 1440, 1280, 900, 390",
+    "what": "Tapping a calendar day or week cell appears to do nothing. The selected day's card redraws where the Today card is, far above what was tapped. Measured at 1440: clicked the Sep 23 cell at page y 2277, the page scrolled to 1365, and the 'Wednesday, September 23' card is at y 770, off screen. At 390: the cell is at 3629, the view is at 2665, the card is at 1100. Only the orange outline on the cell changes. This is the Today review's 'detail box floating away from what it describes'.",
+    "fix": "When a day is picked from the calendar or week strip, open that day's card right next to the tap: a UI.sheet on phones, a popover or inline panel under the week strip or calendar row on desktop. Or scroll the day card into view with block:'start' and briefly flash it. Keep the Today card in place for today."
+   },
+   {
+    "severity": "high",
+    "where": "Wizard (?setup=1 and ?edit=) · aside.wz-glance 'Live plan' (position: sticky; top: 88px) · 1440x900, 1280x800",
+    "what": "The sticky Live plan panel is 822px tall and pinned at top 88, so its bottom reaches 910. The sticky footer starts at 824 (1440x900) or 724 (1280x800). While scrolling steps 2-4, the last 86px (1440x900) or 186px (1280x800) of the panel stay under the footer or below the fold and can never be scrolled into view: the TO EXAM, TESTS, PHASES and EXTRAS rows.",
+    "fix": "Give .wz-glance `max-height: calc(100vh - 88px - var(--wz-foot-h, 84px)); overflow: auto;`. Better, trim it: drop the full-month calendar (see the compact-calendar finding) and keep the week strip, Day 1 and the summary rows, so the whole panel fits in 700px."
+   },
+   {
+    "severity": "high",
+    "where": "Wizard Live plan · figure.chart.cal.plan.compact cells (28, 29, 30) · 1440, 1280, 900 light+dark",
+    "what": "In the 32px compact calendar cells, the day number, the status mark (absolute, bottom 3px) and the new '45m' .cal-meta label draw on top of each other. At 1440 '28', a circle and '45m' form one unreadable blob (zoomed crop of wiz1_1440). The week strip right below already shows 45m for each weekday, so the minutes are also said twice.",
+    "fix": "In web/plan/index.html add `.wz-glance .cal.compact .cal-meta { display: none; }` (and the same for .pl-ready on the landing). Also start the compact calendar at the plan's first week instead of the 1st of the month: Sep 1-27 are three empty rows."
+   },
+   {
+    "severity": "high",
+    "where": "Plan view · Days to exam tile · button.stat.print-keep > a.tag.line 'not booked' (plan.js:403) · all widths",
+    "what": "A link sits inside a button: the 'not booked' <a> is nested in the tile's <button> ('show the calendar'). This is invalid HTML, so which action a tap triggers is unclear and screen readers announce it badly. At 390 the chip is 77x22, so it is also a small target.",
+    "fix": "Make the tile a <div class=\"stat\"> with a transparent full-tile <button> behind the text, and move 'not booked' out as a sibling <a>, or turn it into one line 'Register by Oct 23 ›' linking to College Board. Give it at least a 44px hit area on phones."
+   },
+   {
+    "severity": "high",
+    "where": "Plan tab · phone 390 light+dark (and desktop hierarchy)",
+    "what": "The five-second test fails on the phone. Today's first task starts about 960px down, after the save banner, the title, four tiles (about 480px) and the change log. One action, starting the warm-up, has three orange buttons: 'Resume today · task 1 of 4', the row's 'Start', and the sticky thumb's 'Start'. The pinned thumb also covers the tab bar at first paint (measured overlap with the Plan, Progress and Plans tabs).",
+    "fix": "On phones show the Today card straight after the title. Fold the four tiles into one swipeable row (overflow-x:auto, 70% cards) or one quiet line '40 days · 520→680 · 11m of 4h 30m this week' that opens the tiles. Keep one primary CTA: remove the row 'Start' pill on the task that 'Resume today' already starts (show it as the active row), and hide .pl-thumb until the Today card has scrolled out of view (IntersectionObserver)."
+   },
+   {
+    "severity": "medium",
+    "where": "Plan view, sheet, wizard, landing · section.now-strip (the shell's Today strip) · 1440x900, 1280, 900",
+    "what": "At these heights the shell's Now strip shows above the plan and repeats the page. 'Study time 11 of 45 min' also appears in the Today card ('11 of 45 min · 34 min left'); '9 days · 1 spare' also appears in This week ('Streak 9 · longest 9') and Progress; 'Exam in 40 days · Nov 7' also appears in the title 'Nov 7 · 680' and the Days-to-exam tile. For a new learner it shows 'Nothing yet today · 0 days', a zero.",
+    "fix": "In web/plan/index.html call `UI.shell({ page: 'plan', now: false })`. The shell supports o.now (ui.js:2088). The Plan page is the fuller version of that strip."
+   },
+   {
+    "severity": "medium",
+    "where": "Plan view · tiles row div.pl-tiles · all widths",
+    "what": "The tiles show zeros and repeat facts, and the Score tile is crowded. 'Plan done 0% · 0 of 42 study days · on schedule' shows beside a 9-day streak and 60 questions answered, which contradicts it (partly done days count as nothing) and discourages the student. 'Streak 9 · longest 9' says the same number twice. The Score tile stacks six items (range bar, 'No test yet' tag, '+160 to go', 'Take this week's test now', 'Needs +28 a week', 'What changes it ›'), and the two quiet buttons' boxes overlap 'No test yet' and 'Needs +28 a week' (box measure). At 900, 'Take this week's test now' wraps with 'now' centred on its own line while the rest of the tile is left-aligned.",
+    "fix": "Plan done: until a day is fully done, show days studied ('9 days studied · 0 fully done'), or hide the % and the meter; never show 0%. Streak: show 'Streak 9 · your best' when streak equals longest. Score tile: keep the range bar, one status line ('No test yet · +160 to go') and one link 'Take this week's test ›'; move 'Needs +28 a week' and the levers into the 'What changes it' popover. Give the quiet buttons margin:0 and text-align:left."
+   },
+   {
+    "severity": "medium",
+    "where": "Plan view · 'What changes it ›' popover (plan.js:474-485) · all widths",
+    "what": "The popover says 'Move to 2026-12-05 · needs +16.5 a week': a raw ISO date and a decimal. 'Add 15 min a day · 35 days · needs +28 a week' and 'Add Sat · needs +28 a week' show the same +28 the tile already shows, so the student cannot see what each option changes.",
+    "fix": "Run lv.label through pretty() and format dates with UI.date (e.g. 'Move to Dec 5'). Round needs_per_week with Math.round. Word each option by what it changes, e.g. 'Move to Dec 5 · +17 a week instead of +28' or '+45 min a week · fits'. List as a server change: plan.py lever labels should carry the date as a separate field, not inside the text."
+   },
+   {
+    "severity": "medium",
+    "where": "Plan view · Streak fact popover (shell button.streak in the now strip)",
+    "what": "Clicking the streak shows 'Couldn't load how this is worked out. Retry'. GET /api/levers?keys=streak returns 404 (server log).",
+    "fix": "Not in S7's files: the shell/F4 owner needs to serve /api/levers?keys=streak, or the shell should hide the 'how' link when the endpoint is missing. Also moot on /plan/ once now:false is set."
+   },
+   {
+    "severity": "medium",
+    "where": "Plan tab · change log div.pl-log (plan.js:604) · all widths",
+    "what": "The student's own taps are logged as plan 'changes'. After a few skip/undo taps the top of the Plan tab reads 'SINCE SAT · 9 CHANGES / Changed Mon's warm-up / Changed Mon's focus set ×3 / Changed Mon's Fix mistakes ×4 / Changed Mon's Words', which pushes Today down about 110px. The words are awkward ('Changed Mon's Words'), the casing is mixed (warm-up and focus set lower-case, Fix mistakes and Words capitalised), and the same log appears again as the Progress 'Changes' card and the Plans-tab line.",
+    "fix": "Show only changes the plan made (redraws, moved days, auto focus changes), not the student's own done/skip/undo. Collapse the log to one quiet line '3 changes since Sat ›' that opens the list in a sheet. Use 'You skipped Fix mistakes' or 'Moved Warm-up to Tue' wording and capitalise TASKNAME values the same way."
+   },
+   {
+    "severity": "medium",
+    "where": "Plan and day views · task rows div.trow (plan-ui.js) · all widths",
+    "what": "Each row says things twice and carries clutter. The title repeats as a tag: 'Warm-up [Warm-up]', 'Map [Map]', 'Words [Words]', 'Focus set [Focus]', 'Fix mistakes [Mistakes]'. 'Mark done' repeats the round checkbox on the left. Every row has a 'Why' button. The drag grip shows on every row, and rows without it (done or Words) start their title 22px further left (x 102 vs 124 at 900), so the title column is ragged. Fix mistakes lists every mistake as a 5-line paragraph ('Used one power less than..., Used the highest power..., Divided by the number of female penguins...'). '1 fading' under Warm-up is jargon. In the day view the action group sits 7px above the title's centre line.",
+    "fix": "Drop the tag when it equals the title (render it only for kinds whose title differs, as an icon). Move Skip, Mark done, Why and Move into the ··· menu and keep only Start plus the checkbox (Skip can stay as a swipe or long-press). Make the grip absolutely positioned in the left gutter, shown on row hover, so titles always align. Replace the mistake list with '5 mistakes' plus a 'Show' disclosure. Say '1 question you're starting to forget'. Align .trow-act to the title line (align-self: start; margin-top matches the title's line-height)."
+   },
+   {
+    "severity": "medium",
+    "where": "Task row ··· menu (button[aria-haspopup] in trow-act) · all widths",
+    "what": "The ··· menu holds one item, 'Move to… M'. A menu with a single item adds a tap for nothing, and the ··· glyph is tiny and faint (32px, --soft).",
+    "fix": "Put Skip, Mark done, Why and 'Move to…' in this menu (see the task-row finding) so it earns its place. Show kbd hints only with a fine pointer. Use the same 32/44px icon button as the Day ··· and Plan menu buttons."
+   },
+   {
+    "severity": "medium",
+    "where": "Plan view · after Skip · toast (UI.toast) at bottom-left · 1440",
+    "what": "After 'Skip', the reason chips ('No time', 'Too hard', 'I know this', 'Close') appear at the bottom of the row, and the 'Skipped · Undo Z ×' toast covers them (screenshot i_skip_1440). The student cannot pick a reason without closing the toast first.",
+    "fix": "Put the reason choice inside the toast ('Skipped · Why? No time / Too hard / I know it · Undo'), or place the toast bottom-right or at top-centre on the plan page, or move the reason row above the fold of the row."
+   },
+   {
+    "severity": "medium",
+    "where": "?day=<future> view · day card header and 'Today I have' chips (plan.js:727) · all widths",
+    "what": "On Sunday Oct 4 the chips are still labelled 'TODAY I HAVE'. Future tasks offer 'Start early · Skip · Mark done' (marking a future task done is odd), and rows with and without 'Why' have action groups of different widths, so the left edges are ragged (Start early at x 445 in one row and 409 in the next). 'Coming up' also repeats the selected day (Sun Oct 4).",
+    "fix": "Label it '{Sun} I have' on other days. Hide 'Mark done' on future days (keep Start early and Skip). Give every row the same action set so the groups line up, or left-align actions under the title. Leave the selected day out of Coming up."
+   },
+   {
+    "severity": "medium",
+    "where": "Plan tab · Week card section.card > .pl-weekhead and .pl-week · 390 (and all)",
+    "what": "At 390 'MON 28', 'TUE 29' and 'WED 30' wrap onto two lines but 'THU 1' does not, so the status icons, minutes and counts sit about 24px lower in the first three cells than in the rest. Future days show '0/4', '0/4', '0/3' (zeros). The meter says 'Tasks … 1 of 23 tasks · 4%', saying 'tasks' twice. The week-nav buttons are 32x32 at 390.",
+    "fix": "Show the weekday letter and the date stacked on two fixed lines in every cell (M / 28), or the letter only on phones. Show counts only for today and past days; future cells keep the icon and minutes. Change the meter to 'Tasks · 1 of 23' (drop the %). Make ‹ › 44px on phones."
+   },
+   {
+    "severity": "medium",
+    "where": "Plan tab · Calendar card figure.chart.cal · all widths",
+    "what": "The month opens with 2.5 empty weeks before the plan started (Sep 1-18): about 200px of blank cells. The legend has 10 items, and 'Partly done' and 'Missed' are nearly the same half-circle glyph. '45m' repeats in every study cell. The faint pre-plan numbers measure 1.94:1 contrast.",
+    "fix": "Start the grid at the plan's first week (or collapse weeks before it into a one-line 'Plan starts Sep 19'). Show only legend items that appear this month. Give Missed a different shape (hollow ring with a slash). Show minutes only when a day differs from the usual (e.g. 90m on test days)."
+   },
+   {
+    "severity": "medium",
+    "where": "Plan tab · right column aside.pl-stack (Coming up, Map) vs left column · 1440, 1280",
+    "what": "The right column ends after Map, 352px above the end of the Week card: a large empty area beside the week. The Map card's sentence 'Map days measure each skill with a few mixed questions, so focus goes where your points are.' is help text, and its 19 unlabelled squares mean nothing at a glance. 'Next rest Sat Oct 3 · Sharpen starts Oct 15 · harder, timed' wraps so the second line starts with '·'.",
+    "fix": "Move Phases into the aside under Map (the aside is 420px wide, so stack the three phases) to fill the gap, or make the aside sticky. Put the Map sentence in an (i) tooltip beside '5 of 19 skills measured', and give the squares a title per skill with the domain as a gap between groups. Split the footer into two lines ('Rest Sat Oct 3' and 'Sharpen from Oct 15 · harder, timed')."
+   },
+   {
+    "severity": "medium",
+    "where": "Plan tab · Phases card (current phase) · all widths, dark",
+    "what": "The current phase is a solid orange block (Build) 510px wide. It is the loudest thing on the page but the least actionable, and in dark mode the black text on orange is heavy.",
+    "fix": "Show the current phase as --wash with a 3px orange left bar and bold name, like the selected step pills. Keep solid orange for primary buttons only."
+   },
+   {
+    "severity": "medium",
+    "where": "Progress tab · 'Why you lose points' card (div.pg > section.card) · 1440, 1280",
+    "what": "The card holds a single stacked bar, but it stretches to the 914px height of 'Ready on every skill?', leaving 679px empty (measured). The legend under the bar repeats the bar's labels ('Named traps 15 · Not learned yet 13').",
+    "fix": "Set align-items:start on .pg, or give 'Ready on every skill?' the full width so the two short cards (Why you lose points, Pace) share a row. Remove the legend when the segments are labelled."
+   },
+   {
+    "severity": "medium",
+    "where": "Progress tab · Score path chart · 1440, 1280, 900",
+    "what": "Labels collide. The orange exam-day line cuts through 'Target 680' ('Target 6|80'). 'No test yet' sits on the dashed projection line and its circles. The 'Start this week's test' button floats in the middle of the plot. The y-axis runs 200-800, so the data uses less than a third of the height, and a dotted empty rectangle near Sep 19 has no label.",
+    "fix": "Put 'Target 680' at the left end of the target line. Put the 'No test yet' empty state and its button in the card header ('Score path · No test yet · Take this week's test ›'). Clamp the y-domain to [min-60, target+60]. Label or remove the dotted placeholder."
+   },
+   {
+    "severity": "medium",
+    "where": "Progress tab · 'Accuracy by domain' + 'How the plan splits your time' · all widths",
+    "what": "The two cards list the same four domains with the same planned share ('planned 36%' vs '36% of your time'). Accuracy rows mix a left line ('53% right · 15 answered'), a right-aligned line on the next row ('planned 36% · ≈ +90 on the table') and a thin bar below, so the eye zig-zags. 'on the table' is jargon. The split bar uses 5 greys (Tests, Learn it, Words, Map, Mistakes) that cannot be told apart, and the segment labels are clipped (sb-seg 'Tests 280 min' etc. overflow).",
+    "fix": "Merge into one 'Domains' table: Domain | % right (n) | Time share | Points share | Points to gain. Label segments only when they are wide enough, otherwise rely on the legend, and use at most 3 neutral tones plus orange for Focus. Say 'points to gain' instead of 'on the table'."
+   },
+   {
+    "severity": "medium",
+    "where": "Progress tab · 'Ready on every skill?' grid · all widths",
+    "what": "Cells show '·', '~' or '✓' glyphs in 34px boxes that a student cannot decode. The header line 'Proven 1 of 38 · shaky 11 · untested 26 · 28 not planned before Final' is jargon. The footnote 'Every skill at least once in 14 days at this time. A cell starts 5 questions on that skill and tier.' is help text.",
+    "fix": "Use the legend words in the cells' tooltips and colour: filled ink = proven, half = shaky, empty = untested. Add a one-row legend. Rewrite the header as '1 proven · 11 shaky · 26 not tried'. Move the footnote into an (i) tooltip on the title."
+   },
+   {
+    "severity": "medium",
+    "where": "Progress tab · 'All 19 skills' table, 'Weeks', 'Pace', 'Since Sep 19', 'Changes' cards",
+    "what": "The table shows zeros and dashes: 7 rows read '0 · — · —'. The '▾ ≈ +' header is cryptic, and every skill name is underlined (19 underlines). Weeks says '0/18 tasks' next to 'days 6 of 6', a contradiction. Pace is a sentence where numbers belong ('Sure 58% right (19) · Unsure 55% right (20) · Guess 48% right (21)'). 'Since Sep 19' repeats the tiles (0/42 0%, streak 9 · longest 9, open 32, plus a separate '32 open mistakes in Review' link). 'Changes' is a whole card for one line.",
+    "fix": "Table: put untried skills in a collapsed 'Not tried yet (7)' group, rename the column 'Points to gain', and underline on row hover only. Weeks: show days studied and minutes, and tasks only when tasks_done > 0. Pace: a 3-bar mini chart (Sure/Unsure/Guess) with % labels. Since card: drop the facts the tiles already show and make 'open 32' the link. Remove the Changes card (the Plan-tab log covers it)."
+   },
+   {
+    "severity": "medium",
+    "where": "Wizard step 2 · Math target, R&W target, SAT date list · all widths",
+    "what": "The value shows twice (tooltip bubble '600' and number box '600'). '+50 +100 +150 +200' show as disabled chips when there is no current score. Two lines of module-routing jargon sit under the slider ('Above 580 needs the harder second module: 14 of 22 right in module 1 routes you up.'). The disabled R&W slider is still painted orange. The SAT date list has 17 full-width cards through Jun 2028 (about 1100px).",
+    "fix": "Keep the number box and drop the bubble, or show the bubble only while dragging. Hide the + chips until a current score exists. Put the routing text in an (i) tooltip next to 'Math target'. Replace the disabled R&W slider with an 'Add R&W target' link. Show the next 4 dates as a 2x2 grid with a 'Later dates' disclosure. The phone carousel is fine."
+   },
+   {
+    "severity": "medium",
+    "where": "Wizard step 3 · 'Time you have' · all widths",
+    "what": "Eleven settings are open at once (study day, days a week with per-day selects, days off, practice tests, test size, test day, checkpoints, clock, usual time, where, R&W time). Labels use two styles: sans bold ('Practice tests', 'Usual time') and small mono ('Test day', 'Checkpoints', 'Where'). 'Checkpoints' sits inline while other labels sit above. Help paragraphs ('Auto times sets from Sharpen on... easy 1:05 · medium 1:35 · hard 2:06.', 'Section · 44 q · 70 min: Needs a 70-minute day') repeat option labels. The summary 'Until Nov 7: 30 study days · 21.4 h · 5 tests · about 801 new questions' repeats the Live plan panel. Units change between chips ('45m' vs '45 min'), times are 24-hour ('Afternoon 15:00'), and in the days-off row the inputs are 40px and the button 32px.",
+    "fix": "Keep study day, days a week and practice tests visible. Put test size, test day, checkpoints, clock, usual time, where, R&W time and days off under 'More options (8)', collapsed. Use one label style (the sans .label) everywhere. Turn help lines into (i) tooltips. Put the disabled-Section reason in its tooltip. Delete the summary line. Use one unit format ('45 min'). Format times with the locale (3:00 PM). Make 'Add days off' a 40px .btn (44 on phones)."
+   },
+   {
+    "severity": "medium",
+    "where": "Wizard step 4 · 'What to focus on' · all widths",
+    "what": "The page is 3728px tall. All 19 skill rows are expanded, each with 'Not started' on its own line (19 times, a default on screen), and the three-way seg ('Focus / — / Strong') sits on the second line, level with 'Not started' rather than the skill name. The middle option is an unlabelled '—' (31px wide at 390). Every row shows an orange outline, so orange appears 23 times. There are zeros ('Answer 30 questions ... · 0 of 30', '0/2 focus', and a 'Reset' with nothing to reset). 'No R&W results yet · log them after a Bluebook test' repeats 4 times. The extras, Words and own-task settings are buried at the bottom. At 390 the domain split labels are clipped ('Algebra 35%').",
+    "fix": "Collapse each domain to its header row (domain seg, 'N skills' disclosure). Hide 'Not started' (show only real states). Vertically centre the seg on the skill name. Label the middle option 'Normal'. Outline only non-default choices in orange. Hide the 0-of-30 line and the Reset button until a focus is set. Say the R&W note once under the R&W header. Move Extras, Words and Your own tasks above the skill list or into a second collapsed group. At 390 drop the % in the split labels or let them wrap."
+   },
+   {
+    "severity": "medium",
+    "where": "Wizard · header, stepper, footer · 390 and all",
+    "what": "At 390 'Step 1 of 4 · Where you are' sits directly under the stepper and the step's H2 'Where you are' repeats it. The stepper's focus ring overlaps the step-name line (focus measure). The footer shows '⌘Enter create now' on step 1, before anything is chosen. On steps 1-3 'Back 1 / 4' is disabled grey text (Back at 2.13:1 contrast). Every day tile's study button and its select draw focus rings over each other on step 3.",
+    "fix": "Drop .wz-stepname or the H2 (keep one). Add margin-top: 14px under .wz-steps. Show the ⌘Enter hint only on step 4 or after the first change. Hide Back on step 1. In .wz-wd give the select its own row with an 8px gap, or set outline-offset:-2px on both."
+   },
+   {
+    "severity": "medium",
+    "where": "Edit wizard (?edit=<id>) · step 1 and Live plan · 1440, 1280",
+    "what": "The Math score shows as a slider with bubble '520', a number box '520', and a second track underneath ('200 · avg 505 · 800') that looks like another control. The Live plan for a plan already in week 3 shows 'WEEK 1' and 'DAY 1 · MON, SEP 28', and its calendar does not mark the days already studied (19-27).",
+    "fix": "Draw the avg 505 as a tick on the main slider track and remove the second track. In edit mode title the glance rows 'This week' and 'Today' (or the first changed day), and mark past plan days in the compact calendar."
+   },
+   {
+    "severity": "medium",
+    "where": "Landing (no plan) · hero, bank tiles, how-it-works, 'A day in your plan' · all widths",
+    "what": "The hero paragraph and the three how-it-works cards say the same things ('Mistakes first, then your focus skills' vs 'Open mistakes first, then focus skills'; 'Skip, move or add anything' vs 'Skip, move or add tasks'). 'MATH NOW —' is a dash placeholder, and the 'Take a test' link box overlaps the dash (box measure). The four bank tiles use mixed formats (∞, 414, a sentence, a heading), and the third ('Every wrong answer is named “Area and Volume” [icon] Area & volume') is unclear. The preview, the most convincing part, is last, and its rows show empty checkbox circles that are disabled buttons. At 390 the two mini tiles fill only about 230 of 340px, and '· 19 skills' wraps onto its own line.",
+    "fix": "Order: hero, then 'A day in your plan' (with kind icons or numbers instead of empty checkboxes), then how-it-works collapsed to three one-line steps (no paragraphs, and drop the hero's second sentence), then the bank tiles as one quiet row of numbers ('414 question types · 19 skills · unlimited sections'). Replace 'MATH NOW —' with 'Math score · Find it in 30 min ›' as one link. At 390 make .pl-mini a 2-column grid of equal width."
+   },
+   {
+    "severity": "medium",
+    "where": "Shared view (?view=<token>) · whole page · all widths",
+    "what": "Nothing says this is someone else's plan, shown read-only. The viewer's own shell strip ('Nothing yet today · 0 days') and 'Have progress on another device? Sign in' banner sit right above the owner's 'Nov 7 · 680' and 'Today · Monday', so it is unclear whose day it is.",
+    "fix": "Add one quiet line under the title: 'Shared plan · view only'. Hide the now strip and the sign-in banner on ?view= (now:false plus a check before the banner). Use 'Their day · Monday, Sep 28' instead of 'Today'."
+   },
+   {
+    "severity": "medium",
+    "where": "Test-day sheet (?print=sheet) · Your traps + What to bring · all widths",
+    "what": "One trap is titled '3. Unsure': the confidence label is used as the trap name. The emphasis is the wrong way round: the wrong choice ('Your trap') gets the orange wash and left bar, while the correct answer gets only a thin outlined 'Answer' chip. Question stems run about 1000px wide (about 140 characters a line) in serif. 'What to bring' spans 1040px with 360px of content. Checkboxes are 18px. The browser-save banner and the now strip show above a page meant for printing.",
+    "fix": "Fall back to the skill name when the trap label is a confidence word. Show the correct choice in bold with a ✓ and the wash, and the trap in --soft with strike-through or a 'you picked' tag. Cap .pl-stem at max-width: 68ch. On desktop put 'What to bring' in a sticky right column beside the traps. Make the checklist rows 44px labels. Set now:false (it is also hidden in print)."
+   },
+   {
+    "severity": "medium",
+    "where": "Plans tab · 'Your plans' card · all widths",
+    "what": "'Active' tag and 'You are here' say the same thing. 'target 680' repeats the title 'Nov 7 · 680'. 'Duplicate' is bold text that looks like a heading, not a button. The help sentence 'Changing your date or target? Edit keeps this plan's record. Save as new keeps this one here.' should be a tooltip. The draft made by 'Duplicate' is not listed anywhere.",
+    "fix": "Keep the 'Active' tag and drop 'You are here'. Drop 'target 680' from the meta line. Give Duplicate and Edit the .btn sm style on the row's right. Put the help sentence in an (i) beside 'New plan'. List a draft as 'Draft · Resume ›'."
+   },
+   {
+    "severity": "medium",
+    "where": "Phone 390 · touch targets under 44px",
+    "what": "Under 44px at 390: Plan menu 32x32; week ‹ › 32x32; Day ··· 32 tall; Print 32; 'Add my R&W score' 32; 'Use that' 32; 'Add days off' 32; per-day selects 34; skill seg buttons 32 tall ('—' 31 wide); Extras switch 26 tall; 'I've registered' checkbox and What-to-bring checkboxes 18x18; 'not booked' 22. The last commit meant to bring phones to 44px, but these were missed.",
+    "fix": "In the plan page's @media (max-width: 759px) block set `.pl .btn.sm, .pl .btn.icon, .wz .btn.sm, .wz-wd select, .wz .seg > button { min-height: var(--touch); min-width: var(--touch); }` and make label.check rows 44px tall with the whole label clickable."
+   },
+   {
+    "severity": "medium",
+    "where": "Whole section · text contrast (light)",
+    "what": "Meta and label text in --soft #8A847C on --tile measures about 3.37:1 at 10-12.5px (about 600 elements across the 1440 pages). Mono uppercase keys at 10.5-11px measure 3.7:1. Disabled seg text is 1.8:1. AA needs 4.5:1 for text this small. Dark mode passes except the calendar numbers (2.87:1).",
+    "fix": "Not in S7's files (F1 ui.css tokens): darken --soft to about #6F6A62 (about 4.8:1 on the tile) and use --soft, never --faint, for any text a student must read. For S7: raise .k and .stat-k from 10.5px to 11.5px."
+   },
+   {
+    "severity": "low",
+    "where": "Row alignment · several rows · all widths",
+    "what": "Controls in the same row have different heights: Edit 34 vs Plan menu 32 (390: 44 vs 32); sheet 'Back to plan' 34 vs 'Print' 32; day-view calendar '‹ ›' 36 vs 'Today' 34; Start pill 40 vs quiet buttons 34 vs menu 32 in task rows; shell banner 'Save progress' 40 vs 'Not now' 34.",
+    "fix": "Give quiet buttons and btn.sm in one row the same height (min-height: 34px desktop, 44px phone): .pl-title .row > *, .pl-title .row.no-print > *, .cal-head > *, .trow-act > *. The banner row is the shell's (list for the shell owner)."
+   },
+   {
+    "severity": "low",
+    "where": "Title row header.pl-title · plan view · all widths",
+    "what": "The meta line '6 days · 45 min · module weekly' reads as '6 days in total' and uses the jargon 'module weekly'. 'Edit' sits beside the ··· menu, whose first items (Rename, Duplicate…) overlap in purpose.",
+    "fix": "Write '6 days a week · 45 min · a test module weekly'. Keep the title one quiet line and put Edit as the first item of the ··· menu, or keep Edit and remove Rename from the menu."
+   },
+   {
+    "severity": "low",
+    "where": "Dark mode · plan view",
+    "what": "The empty task checkbox (.trow-box, 1.5px --faint border on the dark tile) is almost invisible. The score range bar's orange-at-opacity reads as muddy brown. The 'not booked' chip's bright white outline is the loudest element in the tiles row.",
+    "fix": "In dark mode give .trow-box border-color var(--soft). Use solid --amber for the target tick on a --mat track instead of a translucent fill. Use --soft for the 'not booked' outline."
+   },
+   {
+    "severity": "low",
+    "where": "Loading and empty states · plan.js skeleton() (line 72)",
+    "what": "A new learner with no plan sees the plan-view skeleton (title, 4 tiles, two columns, a 35-cell calendar) and then the landing hero, so the page jumps to a different layout.",
+    "fix": "Use UI.cached's last-known shape: if the cached payload has no active plan (or nothing is cached and there is no learner history), draw a hero-shaped skeleton (one wash block with a title line, a button pill and a mini card)."
+   }
+  ]
+ }
+}

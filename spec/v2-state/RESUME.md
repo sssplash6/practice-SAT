@@ -11,7 +11,10 @@ fully finished (built, checked, fixed, merged after a branch check, opened for t
 **Standing rule (the user, 2026-09-27): my builds are PAGES ONLY. Any backend part becomes a HELPER-TASKS.md task and I ask
 the user to give it to the other agent.**
 
-## Now: PAUSED for usage limits (2026-09-24, evening). Nothing is running; all work is committed.
+## Now (2026-09-29): PAUSED by the user after the I1 audit. Nothing is running; all work is committed. The latest status is
+## the 2026-09-29 entries in the list below (search "I1 AUDIT DONE").
+
+### (history) Paused for usage limits 2026-09-24 evening
 
 Policy: features get one independent check + one fix; content two rounds; small or data-only tasks (and the other
 agent's non-feature jobs) get my inline check. Fixers fix only the listed defects. See memory check-policy.
@@ -173,6 +176,22 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       '— answered' (85b8ff5), Up next's resume copy (v2/f2b 4fe4ab5). The user's asks during it: Minutes are always timed
       and Questions get a clock toggle (v2/s3 f382b55); the section bar's Up next is off Today (v2/f2b 829ba96); button
       studies published at https://claude.ai/artifact/Xx7ukRj4hVFhWV5Cmb7vB7 (five Check + rating layouts; my pick B).
+      The user chose D with uniform radii: Sure / Not sure / Guessing, one height and radius, Enter rates Sure, no unrated
+      first try (v2/calm-shared 09ee635, merged into prev4; decision 8 in spec/v2-decisions.md). Checked at 1440/390, light/dark.
+    - 2026-09-29: I1 AUDIT DONE (run wf_a6acd4e3-941, 4.3M tokens, 9 of 9 auditors). 2,717 requirements checked, 2,148 built,
+      315 gaps proven (68 high, 125 medium, 122 low; owners: 121 server, 109 page, 85 shared). Saved per section in
+      followups/audit-<section>.json (today, practice, tests, results, plan, compete, words, review, me-shell); each gap has
+      item, source, status (missing/broken/weaker/contradicts), severity, evidence, owner and a build line.
+      Note: me-shell's first high gap says the account menu and phone menu sheet still print NaN for the inbox (my F2B
+      guard covered loadFeed only; accountItems/menuSheet use cap99(d.inbox)).
+      PAUSED HERE by the user ("after audit finishes fully, save everything and pause, we will resume later").
+      ON RESUME: (1) show the user the 68 high gaps by section and owner, and ask what to fix; server gaps become HELPER-TASKS
+      (memory backend-goes-to-helper), page and shared gaps are mine; ask before any build. (2) The walk is done except its
+      final report. (3) Still the user's: their preview and "good", then the merges (server branches first: s5-server,
+      s6-server, s1-server, s10-server, f2b; then the pages, calm-shared, bank-figfix), then stop the preview and remove prev4.
+      (4) Open questions for the user: "Practise" or "Practice"; the plan builder's default SAT date on Today.
+      The preview (worktree scratchpad/prev4, port 8061, SATF_DB scratchpad/prev4.db) dies with the session; restart it:
+      cd <scratchpad>/prev4 && SATF_DB=<scratchpad>/prev4.db PYTHONPATH=. python3 -m uvicorn server.app:app --port 8061
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH

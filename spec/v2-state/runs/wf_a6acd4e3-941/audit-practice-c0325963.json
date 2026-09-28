@@ -1,0 +1,361 @@
+{
+ "label": "audit PRACTICE",
+ "key": "v2:8d74551f46749e88cfaec4da54a6aa99e5169ad5949a5b5ba587e1bbc0325963",
+ "result": {
+  "total": 318,
+  "built": 247,
+  "gaps": [
+   {
+    "item": "Builder Settings sheet (Format, Answers shown with Ask-how-sure/Hints/Solve-first/Worked-first, After a miss, Final round, Mix in reviews, SAT words, Order, Spread, Repeats, Saved-as-defaults footer, Reset to defaults, Printable worksheet)",
+    "source": "rebuild-v2.md 3.3.3 §1.7 items 4-11 and §1.8 (Printable worksheet); practice.md §3.1 items 14-20; acceptance 18",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "Clicking Settings on /practice/ throws 'endless is not defined' (pageerror) for the new and the seeded learner at 1280 and 390; no .pr-sheet is ever created. builder.js:1104 (paintSheet) uses `endless`, which is only declared inside body() at line 195. Every control in the sheet, and the only Printable worksheet button, is unreachable.",
+    "owner": "page",
+    "build": "In paintSheet() declare `const endless = B.st.count === null && !B.st.box;` before the Order seg (or compute it once in a helper shared with body()). Then re-check that the sheet opens and that acceptance 18 (prefs timing pace + feedback retry show as selected) passes."
+   },
+   {
+    "item": "Skip, jump or Next right after an answer keeps the set loading",
+    "source": "rebuild-v2.md 3.3.3 §2.7 (Skipped questions, time saving) and §3.3.5 Skip/revisit; practice.md P23 (the preview is committed by /time)",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "End-mode set, Shift+Enter on Q1 then S: in 2 of 3 runs the page showed 'That question didn't load.' with Try again. Network: POST /answer, POST /time {d002, ms:0} (the preview commit), POST /next {skip:true}, POST /time {d002}, then GET /q/d003 gives 400 {\"detail\":\"that question is not in this set\"}. The concurrent /time and /next each read the set's cfg and questions and write them back, so one overwrites the question the other served.",
+    "owner": "server",
+    "build": "Serialize writes per session in drill.py: take a per-sid lock, or run each read-modify-write in a BEGIN IMMEDIATE transaction that re-reads cfg and questions, for /time, /next, /answer, /more, /strike and commit_pending. In session.js, have skip await the in-flight preview-commit /time before it posts /next {skip:true}."
+   },
+   {
+    "item": "Check, Enter and tap-again file Sure for an active tagger (the pill reads 'Check · Sure')",
+    "source": "practice.md P7 (Sure means Sure; conf:'auto' resolved by answer()), P7 acceptance 7; P23 acceptance 2",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "The seeded learner has state.conf_active true and the footer reads 'Check · Sure'. Enter sent {\"conf\":null} (network log), and the attempts row has conf NULL. session.js:246 maps meta.conf 'auto' to null, while drill._resolve_conf turns only 'auto' into 'sure'.",
+    "owner": "page",
+    "build": "In session.js check(), send conf:'auto' when meta.conf is 'auto' or missing and the attempt is a first try. Keep null only when prefs.confidence is 'off'."
+   },
+   {
+    "item": "Final round offer after the last slot ('Final round: the N you missed, new numbers · Start', plus Skip it)",
+    "source": "practice.md P12 The final round; §3.1 item 31 (RunFooter 'On the last slot with misses it offers the final round'); P12 acceptance 1",
+    "status": "missing",
+    "severity": "high",
+    "evidence": "A 3-question set with final_round on and one miss: after the last answer the footer reads 'Previous | Question 3 of 3 | Finish'. There is no 'Final round' text on the page, although GET /api/drill/{id} returns final {offer:true, n:2, templates:[...]}. Neither runner.js nor session.js mentions the final round or calls POST /api/drill/{id}/final.",
+    "owner": "page",
+    "build": "When state.final.offer is true on the last answered slot, show 'Final round: the {n} you missed, new numbers' with Start (POST /final, then grow the rail by n, grouped under 'Final round · n') and a quiet 'Skip it' (finish) in place of Finish. Add the rail group and the 'Final round' strip chip."
+   },
+   {
+    "item": "Official questions on our answer pad (/practice/official/, GET /api/official, POST /api/official/answer, official_done)",
+    "source": "product.md G16 and R59",
+    "status": "missing",
+    "severity": "high",
+    "evidence": "GET /practice/official/ gives 404 and GET /api/official gives 404. There is no web/practice/official directory and no official route in server/*.py.",
+    "owner": "server",
+    "build": "Build G16 in full. Server: GET /api/official (filters, status, counts) and POST /api/official/answer (key only after the pick, a named reason through types.match/pick, a trap with source 'outside' and origin 'cb_qbank', a twin body with want), plus the official_done table in LEARNER_TABLES and carry. Page: /practice/official/ list and pad (Copy ID, 'Open on College Board' to the bank home per decision 6, the A-D or grid-in pad, a verdict through UI.questionActions with Twin as the primary), linked from the builder's Questions from."
+   },
+   {
+    "item": "Worked steps on this question's numbers, and the Method paragraph floor",
+    "source": "practice.md P1 (Item.steps, Mis.at/wrong, the Method paragraph, steps_coverage gate), P1 acceptance 1-6; P2 rung 2 (First step)",
+    "status": "missing",
+    "severity": "high",
+    "evidence": "/api/bank: 0 of 414 types have steps. The answer feedback has steps [] and no 'method' field. satbank has no method(). tools/steps_coverage.py does not exist. The explanation card shows only the one-sentence rationale (for example 'The outputs change by 14 for every 2 in t…'), with no Steps or Method tab, no diverge compare and no 'See where C comes from'. The hint ladder reads 'Hint · 1 of 2' with no First-step rung.",
+    "owner": "server",
+    "build": "T-bank: add Item.steps and Mis.at/wrong to templates in U8 weight order until tools/steps_coverage.py exits 0 (50% or more of test weight). Add item.method(item), a paragraph of 40+ words, for every template without steps, with the audit. F5: return steps, method, diverge, wrong_step and option_steps in revealed feedback. The page already renders the Steps and Method tabs."
+   },
+   {
+    "item": "Choices covered when 'Solve before seeing choices' is Medium and Hard or All, or with the 'Solve first · 10' preset",
+    "source": "practice.md P5 Controls (the builder setting and the preset), §3.1 item 16",
+    "status": "broken",
+    "severity": "medium",
+    "evidence": "POST /api/drill {cover:'all'} stores cfg.cover 'all', but state.cover, question.cover and /q question.cover are all null. session.js never passes a cover option to the workspace. On the page, all four options show uncovered.",
+    "owner": "server",
+    "build": "Have drill.state, next and /q put cover:'field' (or 'ready' when the options don't parse) on each served MC question that cfg.cover selects: all, or medium and hard for 'hard'. Then have session.js pass it through so UI.workspace starts covered."
+   },
+   {
+    "item": "Cover choices and Read aloud tools on desktop",
+    "source": "practice.md P5 (a Cover choices ToolButton in the strip), §3.1 item 26; product.md G8 (Read aloud visible on every screen size), R50",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "At 1280 the only 'Cover choices' and 'Read aloud' buttons sit in .rn-toolsrow, which is not displayed (offsetParent null, visible=false). The strip holds Mark, Eliminate, Highlight, My note, Details, Report and Attempts. At 390 both appear in the tools row.",
+    "owner": "shared",
+    "build": "In runner.js, add Cover choices (when the workspace allows it) and Read aloud (when speechSynthesis exists) to the practice strip's qtools at 760 px and wider, as icon tools like the others. Keep the phone tools row as it is."
+   },
+   {
+    "item": "'Twins of these (n)' on a filtered navigator",
+    "source": "practice.md P20 Navigator, P20 acceptance 2; §3.1 item 32",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "Filtering the navigator to 'Incorrect 1' dims the other cells to opacity 0.3, but no 'Twins of these' button appears. runner.js:590 renders it only when o.onTwins is set, runner.js:2098 sets that only when on.twins exists, and session.js passes no twins handler.",
+    "owner": "page",
+    "build": "In session.js on:{}, add twins: list => post /more {question_id, axis:'same'} for each listed slot in order, grow the rail, and toast the count. Hide it in end mode before Finish."
+   },
+   {
+    "item": "Reports answered inside the session: a broken question is voided and replaced, a remarked one flips to Correct",
+    "source": "practice.md P25; §3.1 item 35",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "report.js documents ctx.onSent for P25's void and remark, but grep finds no caller that passes onSent (only report.js:403 calls it). runner.js and session.js have no 'broken' or 'remarked' handling, so the slot never takes the Voided token and is never replaced.",
+    "owner": "shared",
+    "build": "In the runner's report(), pass onSent(res). On res.check.outcome 'broken', set the cell to voided ('Voided: broken question · replaced') and call on.more({axis:'same'}) so the set keeps its length. On 'remarked', flip the cell and the verdict to Correct and update the rail counts."
+   },
+   {
+    "item": "Route check line under the header, with the Route-up / harder-module chip",
+    "source": "practice.md P10 Builder (route line), §3.1 items 1 and 3; P10 acceptance 4",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "The seeded learner's /api/bank.route is {m1:0.437, route:'lower', margin:-0.163, tiers:{...}}, but #route stays hidden. builder.js:234 renders only route.text or route.line, which the server never sends. No Route-up chip exists anywhere.",
+    "owner": "page",
+    "build": "In paintHead(), build the text from route.m1 and route.route. Below ROUTE_UP_AT: 'Route check: about 44% on a first module. The harder module 2 needs about 60%; below it, Math tops out at 580.' with a 'Route-up · Easy and Medium in your 5 weakest skills' chip (tiers easy and medium, 5 weakest skills). At 0.65 or more: the 'likely' line with 'Practise the harder module's mix'. Add a 'How we count' link to /help/#points."
+   },
+   {
+    "item": "Search matches College Board IDs, TopTierPrep IDs and pasted questions",
+    "source": "practice.md P13 Builder (Search accepts IDs and pasted questions, the result list, the twins seg, Practise twins), §3.1 item 5; P13 acceptance 3",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "Typing '23c5fcce 84664a7c' shows only '16 questions | → Practise 16 questions · Enter to start'. '06469-DC' shows the same. A 110-character pasted stem is parsed as 'Circles · 5 questions'. UI.parseSet returns the IDs as unknown words. There is no 'N of N found', no 'Practise twins · 6 questions' and no call to POST /api/types/match, although POST /api/drill {pool:'official', ids} works (the S4 checks pass).",
+    "owner": "page",
+    "build": "In onSearch(): 8-hex IDs switch the field to 'Match official questions' and list one row per ID (from the U2 map or cb_index: Exact or Close, or 'Reading & Writing question: logged for the R&W bank'), with a 'Twins of each 1 · 3 · 5' seg and a 'Practise twins · N questions' pill posting {pool:'official', ids, each}. Text over 60 characters calls POST /api/types/match. A TopTierPrep-style ID reads 'That's a TopTierPrep ID. Paste the question text instead.' Support ?cb=."
+   },
+   {
+    "item": "Questions-from rows and presets: confident misses, outside mistakes, Twins of College Board questions, 'Sure but wrong'; Confident misses and Fluency sprint chips",
+    "source": "practice.md §3.1 items 3 and 11; P7 Elsewhere; P13 Questions from; P16 Fluency (preset)",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "/api/bank.counts has confident:3, outside:0 and seen.sure_wrong:16, but the builder rows are only new, redo, checks, review, untried, seen, marked and saved (builder.js:944-953). The Result seg is Any, Missed, Right and Guessed only. The preset list has no 'Confident misses' or 'Fluency sprint' chip.",
+    "owner": "page",
+    "build": "Add rows 'Fresh numbers on confident misses · N' (pool redo with the confident trap ids), 'Fresh numbers on mistakes I logged from outside · N' (pool redo, source outside) and 'Twins of College Board questions' (focuses the search in ID mode). Add 'Sure but wrong' to the Result seg. Add presets 'Confident misses · N' and 'Fluency sprint · N types' (the slow_right types, per_q 1.0)."
+   },
+   {
+    "item": "Shared-set banner and Shared-by-me rows",
+    "source": "rebuild-v2.md 3.3.3 §1.3 SharedSetBanner and §1.9 Shared by me rows",
+    "status": "broken",
+    "severity": "medium",
+    "evidence": "/practice/?share=5QC8V8T6 as a second learner shows 'Shared set · 9 questions · [object Object], [object Object], [object Object] · timed 16 min'. GET /api/sets/{code} returns topics as objects and taken/avg_right, but builder.js:345 maps the topics as strings and :357 reads s.n, so 'taken by N · average X / N' never shows. Shared-by-me rows read 'Opened 1' instead of 'Taken by N · average X / N'.",
+    "owner": "page",
+    "build": "Map s.topics to t.name, print 'taken by {s.taken} · average {avg_right} / {count}' when taken > 0, and print the same on ownedRow from /api/sets rows (taken, avg_right)."
+   },
+   {
+    "item": "Your sets In progress rows: right count",
+    "source": "rebuild-v2.md 3.3.5 GET /api/drill (each row carries right); §1.9 Row",
+    "status": "broken",
+    "severity": "medium",
+    "evidence": "Seeded learner, In progress tab: rows read '3 / 3 | null right · 0%'. GET /api/drill active[0] has right: None, while recent rows have right: 8.",
+    "owner": "server",
+    "build": "Fill right (first-try rights so far) on active rows in GET /api/drill. In setRow(), guard r.right === null."
+   },
+   {
+    "item": "SkillPanel worth line ('you miss ~1.6 of them')",
+    "source": "practice.md P10 SkillRow worth sub-line; §3.1 item 8",
+    "status": "broken",
+    "severity": "medium",
+    "evidence": "The Linear functions panel reads '≈ +25 points on the table · about 4.1 of 44 on the test · you miss ~14'. builder.js:770 prints s.to_strong (questions to Strong) as the miss count.",
+    "owner": "page",
+    "build": "Print 'you miss ~{round1(per_test × (1 − accuracy))} of them' from s.per_test and s.gain_accuracy (or s.accuracy), and show to_strong separately if it is wanted."
+   },
+   {
+    "item": "L1-L7 levels shown in the summary and the review player",
+    "source": "User removal 2026-09-28 (no L1-L7 levels)",
+    "status": "contradicts",
+    "severity": "medium",
+    "evidence": "The summary Review list shows 'Easy · L2' and 'Medium · L5' (session.js:503). The By difficulty fold reads 'Levels seen: 1–6' (session.js:467). The review player strip shows 'Medium · L5'.",
+    "owner": "page",
+    "build": "Drop the ' · L{level}' suffix in reviewList() and the 'Levels seen' line in session.js. Remove the level from the UI.review head in runner.js (shared)."
+   },
+   {
+    "item": "Retired twin and learn phrases (G2 copy gate) in this section's files",
+    "source": "product.md G2 (retired phrases), acceptance 1; R42",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "The G2 grep over web/practice and the question and runner assets finds: builder.js:801-805 'Try one ▾', 'Try one, these settings', 'Try one · Easy', 'Try one · as a grid-in'; builder.js:889 'Drill it'; runner.js:592 'Fix these'; :3617/:3690 'See one solved'; :3696 'Now you: a new one'; :3854 'Learn it · the gap types'; :4100 'Learn it', 'Keep warm · 3', 'Another like this'; question.js:1826 'See one solved first'; :1980 'Another like this'; :1311/:1459 'Learn it'.",
+    "owner": "shared",
+    "build": "Use UI.VERBS labels. TypeRow's split becomes 'Twin ▾' (UI.twin). Habits 'Drill it' becomes 'Fix n' or a count-labelled set. 'Fix these' becomes 'Fix n'. 'See one solved' and 'Learn it' become 'Learn this type'. 'Another like this' becomes 'Twin'. 'Keep warm · 3' becomes a plain count label. Then run tools/product_gates.py copy."
+   },
+   {
+    "item": "Type map (Map view): legend counts, quick picks, popover, drag-paint",
+    "source": "practice.md P14 States, View, Selecting, Popover; P14 acceptance 1-2",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "Map shows 414 cells and 'n of m ready' per skill, but no 'Met · Ready · Open · Due · Unmet' legend with counts, no 'Select unmet · open mistakes · due · slow' quick picks, no cell popover (name, about, record, Twin, Learn this type, Add to selection) and no drag-paint. Only click-to-toggle exists (builder.js:869-883).",
+    "owner": "page",
+    "build": "Add the legend with live counts that add up to the type total, and quick picks that select cells and set the pool (unmet: untried, open: redo, due: review, slow: slow_right). Add a focus/hover popover on role=grid cells with arrow keys, and mouse drag or long-press paint."
+   },
+   {
+    "item": "SkillPanel: Types · Speed view, 'You reliably rule out', slips trend",
+    "source": "practice.md P16 Speed view; P6 SkillPanel; P8 Trend; §3.1 item 9 (items 4 and 7)",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "The Linear functions panel shows the fact lines, Open mistakes, Check my level and the type rows only. There is no Types · Speed toggle (UI.quadrant), no 'You reliably rule out: …' and no 'Slips: x% → y%' line, although /api/bank types carry median_ms, budget_ms and slow_right, and habits carry dodged and offered.",
+    "owner": "page",
+    "build": "Add a 'Types · Speed' seg that renders UI.quadrant (x = median ÷ budget, y = first-try rate; four quadrant counts with Keep warm, Beat the clock, Slow down and Learn this type). Add the best-dodged norm line when 5 or more are on offer. Add the monthly slips trend when each month has 10 or more misses."
+   },
+   {
+    "item": "Formulas: the 'Used / Not on the sheet' line, Reference opened at the formula, the Details Formula row, the 'Not on the sheet' card",
+    "source": "practice.md P24; §3.1 items 29, 33, 38 and 9 (item 5)",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "satbank/formulas.py does not exist, and drill._formula returns nothing, so no answer feedback carries 'formula'. No verdict shows 'on the reference sheet' or 'Not on the sheet', and no SkillPanel card exists. question.js formulaLine() and runner.js refDock ids are in place.",
+    "owner": "server",
+    "build": "T-bank: add satbank/formulas.py with SHEET, KNOW and USES holding one explicit entry for each of the 414 templates, plus its assert check. F5 then returns feedback.formula. S4: add the 'Not on the sheet: you must know' card with 'Drill · 5' per KNOW id."
+   },
+   {
+    "item": "Every type can be started on its own",
+    "source": "rebuild-v2.md 3.3.5 POST /api/drill/preview (the single source of truth for the create-time 409); §1.6 TypeRow Try one",
+    "status": "broken",
+    "severity": "medium",
+    "evidence": "POST /api/drill {templates:[t], count:1} returns 409 pool_empty for 9 templates while /preview says servable: sys.graph_solution, nleq.graph_count, nleq.graph_solution, nlfunc.graph_equation, tvdata.best_model, tvdata.nonlinear_table, lat.isosceles_cross, lat.three_lines_triangle, lat.vertical_isosceles. server/checks/s4.py fails in challenge_checks on the same 409; the other 15 groups pass.",
+    "owner": "server",
+    "build": "Find why _fresh rejects every seed of these templates (likely the PINNED filter or a figure-format rejection) and let them serve. Make preview run the same draw check so the two never disagree. Re-run server/checks/s4.py."
+   },
+   {
+    "item": "Reading & Writing seg lists Words in Context and Transitions as practise-now skills",
+    "source": "product.md §3.2 row for practice.md P15 (R57: rw_items is the first rw bank, served by POST /api/drill {subject:'rw'})",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "/practice/?subject=rw shows College Board links, Log it and Words drills only. POST /api/drill {subject:'rw', topics:['words-in-context']} and {topics:['transitions']} both return 409 no_bank. /api/bank?subject=rw has types 0 and every skill available:false.",
+    "owner": "server",
+    "build": "Register the rw.wic.*, rw.nearly.* and rw.tr.* templates under the topics words-in-context and transitions (subject rw) so /api/bank?subject=rw returns them available and /api/drill serves them. Then list both in the R&W panel with unlimited counts and a Start."
+   },
+   {
+    "item": "Strip chips: zone ('Stretch' / 'For me starts after 8 answers here · n to go'), Review, Final round, Twin of CB, Twin as grid-in, Learn pips; clock glyph on review rail segments",
+    "source": "practice.md §3.1 items 25-26; P11 Picker cold start and acceptance 7; P12 review slots; P13 Session; P18 Display; P2 Pips",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "The strip shows only number, skill, type, difficulty bars, Grid-in and Again (question.js headLine 516-534). A review slot shows the why line 'Warm-up: right 11 days ago…' but no Review chip, and its rail segment has no glyph. Served entries carry zone, final, cb_id and twin, but none of them reach the strip.",
+    "owner": "shared",
+    "build": "In headLine(), add a zone chip (the zone name, or 'For me starts after 8 answers here · n to go' for unplaced skills) plus Review, Final round, 'Twin of CB {cb_id}', 'Twin · as grid-in · of question n' and the Learn pips from q.why.kind, q.final, q.cb_id and q.twin. In the runner rail, mark why.kind due, check or marked segments with the clock glyph."
+   },
+   {
+    "item": "Verdict pace word: rushed / slow (budget)",
+    "source": "practice.md P16 Verdict word; §3.1 item 29",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "A wrong answer in 0:04 against a 1:05 budget read 'Incorrect · 0:04 · budget 1:05'. The server computes fluency 'rushed' (drill.py:2830), but question.js:1354 renders only 'fluent'.",
+    "owner": "shared",
+    "build": "Render fb.fluency 'rushed' as '· rushed' and 'slow' as '· slow (budget m:ss)', and keep 'fluent (budget m:ss)'."
+   },
+   {
+    "item": "Verdict action row: Save; review player: Note",
+    "source": "product.md G4 row (Save B, Note O); rebuild-v2.md §2.11 ReviewSheet (My note)",
+    "status": "missing",
+    "severity": "low",
+    "evidence": "The practice verdict row is Twin, Mark, Note, History, Report, with no Save. The summary's review player row is Twin, History, Again exactly, About this type, Report, with no Save and no Note. questionActions renders Save only when on.save is supplied (question.js:1784).",
+    "owner": "shared",
+    "build": "Pass on.save (POST /api/saved) from the runner's verdict and from UI.review, and on.note in the review player, so the row matches G4's order on every surface."
+   },
+   {
+    "item": "'About this type' link target (/types/?t=)",
+    "source": "product.md G4 row item 8 and G7",
+    "status": "broken",
+    "severity": "low",
+    "evidence": "The review player's 'About this type' links to /types/?t=…, which gives 404 (no web/types). GET /api/types/{t} returns 200.",
+    "owner": "page",
+    "build": "Build G7's /types/?t= page on GET /api/types/{t}, or hide the link until it exists."
+   },
+   {
+    "item": "More menu setting checkboxes: Hints, Solve before seeing choices, Two passes, Final round",
+    "source": "practice.md §3.1 item 36",
+    "status": "missing",
+    "severity": "low",
+    "evidence": "The session's More menu lists Answer on first tap, Always open explanations, Show every option's mistake, Show question stopwatch, Pace alert, Check asks how sure, and Calculator opens. It has no Hints, Solve before seeing choices, Two passes or Final round.",
+    "owner": "shared",
+    "build": "Add the four checkbox items to the runner's More menu, saving prefs.practice.math.{hints, cover, two_passes, final_round}."
+   },
+   {
+    "item": "Your rule for a type: 'Show this on every question of this type', and rule prompts",
+    "source": "practice.md P21 Your rule for this type",
+    "status": "missing",
+    "severity": "low",
+    "evidence": "The My note popover shows only 'MY NOTE · Q1 · 0/1,000', with no checkbox. After a first miss or a close no 'Write your rule for …' prompt appears. The tip above the stem does work: 'Your rule: my type rule here' shows on a fresh eqx.combine_like question.",
+    "owner": "shared",
+    "build": "Add the checkbox that saves POST /api/notes {scope:'type'}. Add at most two prompts a set (after the first miss on a type, and when a mistake closes), never in timed sets or the challenge."
+   },
+   {
+    "item": "Learn this type session: card 0 as a worked example, traps under it, pips",
+    "source": "practice.md P2 Learn this type (card 0, The traps in this question, Watch for, Pips)",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "POST /api/drill {source:'learn', templates:['circles.arc'], example:true} serves kind 'example', but the page renders it as an unanswered review item ('– Not answered · Correct answer: 40'). It does not show 'Worked example · the answer is 40', lists no 'The traps in this question', and has no Example · With help · On your own pips.",
+    "owner": "shared",
+    "build": "Render served kind 'example' in UI.workspace mode 'example' (key marked, steps open) with one 'B · value · reason' line per distractor, and add the pips to the strip for source learn."
+   },
+   {
+    "item": "Habits view record and multi-habit drill",
+    "source": "practice.md P6 Builder: a Habits view",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "Rows show the name, the tell and a 'Drill it' button. /api/bank.habits carries caught 8, dodged 28, offered 36, open 3, skills and last, but no row prints 'caught 8 times across 2 skills · 3 open · dodged 28 of 36 on offer · last Sep 28' or the skill glyphs, and you cannot tick several habits into one drill.",
+    "owner": "page",
+    "build": "Print the record line and skill glyphs from the payload, and make rows tickable so the set body is {source:'habit', habits:[ids]}."
+   },
+   {
+    "item": "Summary quiet actions: Rematch my misses, Twins of what I marked",
+    "source": "practice.md P19 Entry points; P21 Pools; §3.1 item 40",
+    "status": "missing",
+    "severity": "low",
+    "evidence": "The summary More menu lists Fix my 3 misses, Rematch, Rematch in 3 days, Retake these exact questions (tests memory), Share this set, Print and Back to Practice, with no 'Rematch my misses · n' and no 'Twins of what I marked · n'.",
+    "owner": "page",
+    "build": "Add 'Rematch my misses · n' ({rematch: sid, scope:'misses'}) and, when marked questions exist, 'Twins of what I marked · n' ({pool:'marked', exact:false, ids from this set})."
+   },
+   {
+    "item": "Details popover: Domain and 'Modeled on' rows",
+    "source": "rebuild-v2.md §2.9 DetailsPopover (Domain row); practice.md P13 Session, §3.1 item 33",
+    "status": "missing",
+    "severity": "low",
+    "evidence": "Details lists Question ID, Skill, Question type, Difficulty, Format, Why this one, You and this type, Everyone and Link, with no Domain row and no 'Modeled on: College Board …' row.",
+    "owner": "shared",
+    "build": "Add a Domain row, and a 'Modeled on' row from served cb_id or the type's official count (an ID only; decision 6 allows no deep link)."
+   },
+   {
+    "item": "Repair notice after a miss ('Next: one like this, with new numbers')",
+    "source": "rebuild-v2.md §2.6 Wrong (notice when repairs are on)",
+    "status": "missing",
+    "severity": "low",
+    "evidence": "question.js:1294 shows the notice only when fb.repair_next is set. The /answer response keys include next (why kind 'repair') but no repair_next, so the notice never appears.",
+    "owner": "server",
+    "build": "Set repair_next:true in the answer feedback when a first-try miss queues a repair (repairs 'next')."
+   },
+   {
+    "item": "Search empty state",
+    "source": "rebuild-v2.md §1.5 Search (Empty: 'No question type matches \"xyz\". Try a skill name.')",
+    "status": "broken",
+    "severity": "low",
+    "evidence": "Typing 'xyzzy' shows '16 questions | → Practise 16 questions · Enter to start', not the empty message. builder.js passes count:16 to UI.parseSet, which then always returns a count chip, so the chip branch hides the message. Pressing Enter then fails with 'Pick at least one skill'.",
+    "owner": "page",
+    "build": "Show the command preview only when parseSet recognised a word other than the defaults (a non-count chip, or a count typed in the text). Otherwise show the empty message."
+   },
+   {
+    "item": "Zeros shown against decision 7",
+    "source": "spec/v2-decisions.md decision 7 (hide zeros and defaults)",
+    "status": "contradicts",
+    "severity": "low",
+    "evidence": "The new learner's Your sets tabs read 'In progress 0 · Finished 0 · Shared by me 0 · Official questions you brought 0'. The navigator legend reads 'Unanswered 0 · Correct 0 · Marked 0 · Has note 0'.",
+    "owner": "shared",
+    "build": "Drop the n from zero-count tabs in builder.js paintSets, and hide zero legend chips in UI.navigator."
+   },
+   {
+    "item": "Fit to today's plan",
+    "source": "practice.md P15 Time boxes; §3.1 item 12",
+    "status": "missing",
+    "severity": "low",
+    "evidence": "grep finds no 'Fit to today' in web/. The seeded learner has an active plan, and the Questions group offers only the three kinds of set with fixed minutes.",
+    "owner": "page",
+    "build": "When plan.today_summary().minutes_left is above 0, add 'Fit to today's plan · N min' to the Time only choices (box = minutes left, clamped to 5-60)."
+   },
+   {
+    "item": "Header score range ('Math 560–640 · ≈ N points on the table')",
+    "source": "practice.md §3.1 item 1; P10 Header meta",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "The header reads '≈ 250 points on the table'. /api/bank.gains is {total, top3, answers} with no range, so builder.js:230 never prints 'Math 560–640 ·'.",
+    "owner": "server",
+    "build": "Add U4's current Math range (range) to /api/bank.gains. The page already prints it when present."
+   },
+   {
+    "item": "Challenge: Mark for review only after answering",
+    "source": "rebuild-v2.md §2.13 Challenge mode",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "The Daily challenge in /practice/session/ shows 'Mark for review' in the strip before the question is answered.",
+    "owner": "shared",
+    "build": "In the runner, hide or disable Mark for the challenge until the current question has a verdict."
+   }
+  ]
+ }
+}

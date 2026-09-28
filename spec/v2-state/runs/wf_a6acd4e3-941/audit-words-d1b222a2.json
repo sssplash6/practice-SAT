@@ -1,0 +1,370 @@
+{
+ "label": "audit WORDS",
+ "key": "v2:5f84ea61db6299eaa2ea09d52adcf0e0d2f1706b99becc2fc1e9da45d1b222a2",
+ "result": {
+  "total": 286,
+  "built": 226,
+  "gaps": [
+   {
+    "item": "Review gate supply: servable frames and transition families",
+    "source": "spec/v2-upgrades/words.md W1 Content (supply minimums, review gate), W2 Content (pairs.json), §3.1 override 17 (build checks)",
+    "status": "missing",
+    "severity": "high",
+    "evidence": "In the preview content, 797 of 5,376 frames are servable. 0 of 1,244 SAT senses have 6 or more servable frames (1,159 have at least 1). 0 of 153 transition families are servable. PYTHONPATH=. python3 tools/build_words.py (run in a scratch copy) exits 0 and only warns: 'frames: 348 SAT senses short of 6 frames over 2 subjects' and 'servable frame minimum waits for independent adjudications and S9 review gate'. The code turns these checks into warnings on purpose (tools/build_words.py:491-495).",
+    "owner": "server",
+    "build": "Finish the two-adjudication pass so every SAT sense is a legal key in at least 6 reviewed frames over 2 or more subjects, and at least 150 transition families (15 or more per logic) are reviewed. Then make tools/build_words.py exit 1 on the override-17 supply checks instead of warning."
+   },
+   {
+    "item": "Transitions items (Pick the transition, relationship first, logic map Practise, transition card back)",
+    "source": "words.md W2; §3.8.3 §7 Types 'Pick the transition'",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "POST /api/words/run {mode:'quiz', deck:{source:'collection', value:'transitions'}, formats:['transition']} returns 409 'no reviewed frame is available for this word'. On /words/?c=transitions, clicking a column's 'Practise · 8' only shows the toast 'No reviewed frame is available for this word'. The card item's back payload (api_words.py _make_item) has no logic group or example pairs.",
+    "owner": "server",
+    "build": "Serve reviewed pairs.json families through words.item('rw.tr.*'). Put the logic group and two generated pairs on a transition's card back. The relationship-first step, the logic map and logic mix-up drills then work as coded."
+   },
+   {
+    "item": "Words check (12 SAT-form items in 14:12)",
+    "source": "words.md W15",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "POST /api/words/run {mode:'check'} returns 409 'not enough reviewed items for a Words check'. In the browser, /words/study/?mode=quiz → Mode 'Words check' → Start only shows the toast 'Not enough reviewed items for a Words check'.",
+    "owner": "server",
+    "build": "After transitions are servable, make the check draw 6 in-context items (1–2 of them nearly), 4 transitions and 2 most precise, with the two-stage step up. Until the supply exists, the Words check chip should say why it is unavailable instead of failing on Start."
+   },
+   {
+    "item": "Word of the day and Transition of the day, answerable",
+    "source": "words.md W21; §3.1 override 19 (Today strip)",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "GET /api/words/today returns wic: null and transition: null for every learner. words.daily_item (server/words.py:1355) needs senses with 6 or more servable frames (there are 0) and servable families (there are 0). On /words/ at 1280 and 390, the strip shows only Due today and New today, and a new learner's strip is empty.",
+    "owner": "server",
+    "build": "Once the supply exists, daily_item returns both items. Until then, fall back to senses with at least 1 servable frame for wic, so the two tiles (and Today's rw:wic and rw:transition slots) always have an item."
+   },
+   {
+    "item": "Twin: same word, new text (T) and the sheet sample's Twin",
+    "source": "words.md W1 Screens (Same word, new text), acceptance 5 and 8; product.md G2 acceptance 5, R44",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "After answering an in-context item, POST /api/words/run/{id}/another {like:'word'} returned 409 'this twin was already added; request another' on both tries (like:'trap' worked). In the browser, pressing T on the verdict leaves the item unchanged and toasts 'This twin was already added; request another'. On the sheet, 6 calls of POST /api/words/sample {slug:'mitigate', like:'word'} all returned the same text ('Planting trees along city streets can ____ the summer heat…'). The cause is that choose_template falls back to a template already seen, and the duplicate guard in api_words.py:883 then rejects it.",
+    "owner": "server",
+    "build": "In words.another, choose an unseen frame (supply as above). When none is left, use the same frame with a new seed and a different fill or key, and never return the item already in the run. If nothing new exists, return a clear 'no new text yet' and have the pages disable Twin."
+   },
+   {
+    "item": "Complete card back: SAME AS / OPPOSITE, NOT THE SAME AS, SHADES, BUILT FROM, partners",
+    "source": "§3.1 override 31 (§6 Card back); words.md W17 'Every card back complete', W3 SHADES strip on card backs, W4 BUILT FROM on card backs",
+    "status": "weaker",
+    "severity": "high",
+    "evidence": "The card item back payload (api_words.py _make_item kind card/fix) has only meaning, short, examples, sentence, hook and picks. After flipping in the browser, the back shows only 'MEANING', 'IN A NEW SENTENCE', 'More examples' and 'Open word' (checked at 1280 and 390). TopTierPrep's back shows synonyms, antonyms and confusions.",
+    "owner": "shared",
+    "build": "Server: add same/opposite (resolved), up to 2 confusions with tells plus a +N count, shades, roots with split and gloss, and partners to the card back. Page (web/words/run/index.html backFace): render SAME AS / OPPOSITE chips, up to two NOT THE SAME AS rows then '+1 more' (opens the sheet), SHADES, BUILT FROM and partners."
+   },
+   {
+    "item": "Lists of library words (New list, Save as a list, word-list import)",
+    "source": "§3.8.3 §3 Collections (MINE ends with New list), §9 Lists; words.md W19 Data (word_lists)",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "POST /api/words/lists {name:'Unit 3', words:[6 slugs]} returns 200 and word_lists holds the row. But no /api/words row has 'Unit 3' in lists, the mine group lists only 'My words', and the Library MINE group shows only 'My words' and 'English' (own words). So a list made with '+ New list', Bring words 'Save as a list' or the importer never appears as a tile, a Collection option or a deck.",
+    "owner": "server",
+    "build": "words.library: merge word_lists membership into each row's lists and add each list to the mine group's collections (with count, known, due), so the Library tiles, the Collection filter, the study decks and Share all see it."
+   },
+   {
+    "item": "Today page Words tile",
+    "source": "§3.1 override 42 (§11 Today); words.md W11 'Today's Words tile' and acceptance 6",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "On / for the seeded learner, the Words card reads '22 due · -16 new · ~5 min'. web/index.html:2493 computes new_goal - new_today with no floor, so it goes negative once the goal is exceeded. The card's only control is 'All words'. There is no Today's words pill and no Review cards / Learn 10 / Quiz, and no 'known · claimed' line.",
+    "owner": "page",
+    "build": "web/index.html paintWords: show max(0, goal - new_today) and hide it at 0. Add the Today's words pill (mix run) with Review cards, Learn N and Quiz as visible quiet buttons (wrapping to a second row of 44px buttons on a phone), and the 'N known · N claimed' line."
+   },
+   {
+    "item": "R&W answers as the first rw bank (attempts, Review, drill)",
+    "source": "product.md R57 and G11 'The first rw bank' (acceptance 2–3); row 44",
+    "status": "missing",
+    "severity": "high",
+    "evidence": "GET /api/types?subject=rw returns []. POST /api/drill {subject:'rw', topics:['words-in-context'], count:5} returns 409 {reason:'no_bank'}. After 14 generated word_reviews for the seeded learner, attempts has 0 rows with template 'rw.%'. The columns attempts.word and word_reviews.attempt exist but are never written. words.rw_answers still reads word_reviews.",
+    "owner": "server",
+    "build": "Register the rw.wic.*, rw.nearly.* and rw.tr.* templates in the catalogue under words-in-context and transitions (subject rw). File every generated R&W answer (run, sheet sample, daily, drill) through progress.record into attempts with word set, and link word_reviews.attempt. Open a misconception trap on a miss (norm = trap id). Point words.rw_answers at attempts."
+   },
+   {
+    "item": "By exam day 'Auto' new-words chip",
+    "source": "words.md W12 (New words a day chips … Auto)",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "On /words/mine/, clicking the chip labelled 'auto' sends PUT /api/me {\"prefs\":{\"words_goal\":null}}, toasts 'auto new words a day', and GET /api/me then shows words_goal 10. words-ui.js:455-462 relies on c.auto, but the server's chip is {goal:'auto', daily:16}, so it sends +'auto' (NaN). For the same reason the label reads lowercase 'auto' instead of 'Auto · 16'.",
+    "owner": "shared",
+    "build": "web/assets/words-ui.js wordsFinish: treat c.goal === 'auto' as the Auto chip, label it 'Auto · {daily}', send words_goal 'auto', and select it when the pref is 'auto'."
+   },
+   {
+    "item": "Near-synonym traps and Most precise",
+    "source": "words.md W1 Generator (trap preference lookalike, too_strong/too_weak, connotation…), W3 Most precise (precise) and its ladder verdict, W5 trap deck",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "There are 0 servable frames that pin intensity. Across 300 served items (900 distractors) the trap kinds were reversed 641, topical 165, lookalike 72, connotation 22, and too_strong/too_weak 0. 130 of the 300 items had all three distractors 'reversed'. POST /api/words/run {deck:{source:'trap', value:'too_strong'}} returns 409, so 'Twin ×10' on a Too strong trap row fails. A 'precise' item is only an in-context item relabelled (api_words.py:94), and its verdict draws no ladder.",
+    "owner": "shared",
+    "build": "Review intensity-pinning frames so too strong and too weak neighbours are served. Build 'precise' from frames that pin one intensity, with two same-class neighbours and one reversed. On the verdict, draw the ladder with the key and the pick marked (run page)."
+   },
+   {
+    "item": "In-context and print runs on a collection deck",
+    "source": "§3.8.3 §5 (a type the deck cannot supply is disabled with its reason); words.md W1 Practise 10 in context, W20 worksheets",
+    "status": "broken",
+    "severity": "medium",
+    "evidence": "POST /api/words/run {mode:'quiz', deck:{source:'collection', value:'sat-core'}, formats:['incontext'], count:10} returns 409 'no reviewed frame is available for this word'. The same happens for {mode:'print', …, formats:['incontext']}. The whole run fails because one word in the deck lacks a frame. The pages hide this by silently falling back to the meaning types (study go(), printSheet).",
+    "owner": "server",
+    "build": "When a run asks for incontext/nearly/transition/precise, pick deck words that have a servable frame, or give an unsupplied word a Meaning → word item. Return 409 only when no word can supply the format."
+   },
+   {
+    "item": "Run summary sections",
+    "source": "§3.8.3 §8 Summary; §3.1 override 37; words.md W5, W6, W7 (calibration, guesses), W13 (graduation)",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "api_words.py _summary always returns \"groups\": [] and has no calibration, guesses, graduations, gaps or logic mix-ups. The run page summary (run/index.html summary()) renders none of these, and its mix-up rows are by trap kind only (no lookalike Quiz the pair).",
+    "owner": "shared",
+    "build": "Server: fill groups [{id, name, known_before, known_after, right, asked}], and add guesses {n, right}, calibration, graduations (seen → missed → in context ✓ dates), gaps {word, reading} and logic pairs. Page: per-collection rows whose known-bar animates from before to after, the calibration and guess lines, graduations, word vs reading gaps with Learn these / Practise finding the clue, and logic and lookalike rows with Quiz the pair."
+   },
+   {
+    "item": "Fix card for stubborn words",
+    "source": "words.md W9 The Fix card (items 2–5)",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "For a word with 4 lapses and picks illusory ×2 and evasive ×1, the due run holds one item of kind 'fix' with picks and hook. Its back is the ordinary card back. It does not show the most-picked word's meaning with the tell side by side, BUILT FROM or SHADES, a My hook input, or the 3-item pair quiz: the run had 1 item, and 'All 3 right → box 2' is absent.",
+    "owner": "shared",
+    "build": "Server: add the rival word (most picked, else top lookalike) with both meanings and the tell, and append the 3-item pair quiz (the key alternating) after the Fix card, with the all-3-right rule. Page: render the side-by-side, BUILT FROM/SHADES and a hook field on the Fix card."
+   },
+   {
+    "item": "Today's words run composition and preview",
+    "source": "words.md W11 The run (parts 1–7, spacing rules, Preview), W14 (starred 14 days), W5 (2 items for an open trap)",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "The seeded mix run's stored order was: due cards, learn, learn, then the incontext proofs, then checks and transition learn cards. There were no items for the learner's open trap, no in-context item for yesterday's word and no root card. words.deck('today') has no starred-14-days or lookalike-spacing rule. today_summary.preview hard-codes 'transitions': 3, and the › preview sheet lists parts without a switch per part.",
+    "owner": "shared",
+    "build": "words.deck('today'): put proofs before missed and learn items, add 2 open-trap items and 2–3 transition items, 1 in-context item for a word learned yesterday, 1 root card per 10 new, and starred words untouched for 14 days. Keep lookalike pairs 3 or more items apart. Compute the preview counts from the real parts, and add per-part switches in the preview sheet."
+   },
+   {
+    "item": "Up next 'words' row, nav meta and home-screen shortcut",
+    "source": "words.md W11 Entry (Up next kind words, phone menu row, manifest shortcut) and acceptance 3; §3.2 rows R1, F2 manifest, shell-me U1",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "GET /api/next for a learner with math answers, no plan and 5 words due has no item of kind 'words'. server/next.py only turns a plan's words task into a row, and words.queue_item does not exist. The sidebar and menu meta reads '20 due' with no minutes. The phone menu Words row (ui.js:1991) is a plain link, with no Start or Review · Learn · Quiz. /manifest.webmanifest has no shortcuts entry.",
+    "owner": "shared",
+    "build": "Add words.queue_item and a 'words' kind in next.py after checks (prefs.words_goal > 0 and something due or the goal unmet), with the title 'Today's words · N due · M min' and a reason from real counts. Make the nav meta 'N due · M min'. Give the phone menu Words row Start plus Review · Learn · Quiz. Add a manifest shortcut 'Today's words' → /words/run/?today=1 (the runner already handles today=1)."
+   },
+   {
+    "item": "Plan step 4 Words row and the Plan Words task",
+    "source": "§3.1 override 43 (§11 Plan); words.md W12 (chips with finish dates, By exam day on step 4); W11 (Plan's Words task buttons); §3.2 plan.md L4",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "web/plan/wizard.js:702 offers only 0 · 5 · 10 · 20 chips, with no 15, 30 or Auto, no finish dates or review load, no NEW WORDS FROM (SAT words · Transitions) and no By exam day card. grep finds no 'Review cards' or 'Learn' launch in web/plan or plan-ui.js, so the Words task has no Today's words pill with three quiet buttons. The Coming-up calendar has no 'Words · ~N due' line.",
+    "owner": "page",
+    "build": "Step 4: chips 0 · 5 · 10 · 15 · 20 · 30 · Auto from /api/words/insights finish.chips, each with its finish date and load; a NEW WORDS FROM multi-select; and UI.wordsFinish. Day card: the Today's words pill with Review cards (N due), Learn N and Quiz beside it, with ⋯ holding only Mark done / Skip / Undo. Future days: 'Words · ~N due' from /api/words?days=N."
+   },
+   {
+    "item": "Me words stats and settings",
+    "source": "§3.8.3 §11 Me; §3.1 override 50 (GET /api/me words adds claimed, estimate, calibration, finish, top_trap); §3.2 S1 Me row",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "GET /api/me returns words {known, studied, saved, reviews_week, due} only. Me's tile (me.js:348) shows the known count and 'N due'. There is no claimed, no Words studied or Reviews this week tiles, no vocabulary estimate line, no 'Your Know holds up N%', no 'Core done by', and no top word trap. The words_goal seg is auto/0/5/10/20.",
+    "owner": "shared",
+    "build": "Server api_me: pass words.me_stats' claimed and estimate, plus calibration, finish (core done date) and top_trap. Me page: tiles Words known ('N known · N claimed'), Words studied, Saved words and Reviews this week; the estimate and delta line, Know holds up, Core done by, and the top trap with Twin ×10; words_goal chips 0 · 5 · 10 · 15 · 20 · 30 · Auto."
+   },
+   {
+    "item": "Results Words block and Words sittings filter",
+    "source": "§3.1 override 44 (§11 Results); §3.8.3 §11 Results (sittings Words filter); §3.2 S6 Results row",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "web/results/page.js:343 drops every words session (s.kind !== 'words'). grep finds no Words block in web/results. There are no New/Learning/Claimed/Known bars, no in-context and transitions accuracy with the top trap, no recall on due reviews, no estimate over time, no 14-bar reviews chart, and no Words filter (its rows would open /words/run/?id=).",
+    "owner": "page",
+    "build": "Results: add the Words block from /api/words, /api/words/insights and /api/me words, and a Words filter in sittings using /api/history?kind=words, whose rows link to /words/run/?id= and label mode check as 'Words check'."
+   },
+   {
+    "item": "/api/history kind filter",
+    "source": "§3.8.5 GET /api/history; acceptance 23",
+    "status": "broken",
+    "severity": "medium",
+    "evidence": "For the seeded learner, GET /api/history lists kind 'words' among drill and module. GET /api/history?kind=words returns the drill and module sessions too. The route in server/api_practice.py:401 is registered first, shadows api_results.history, and ignores kind.",
+    "owner": "server",
+    "build": "Have the single /api/history route exclude words runs and word-example drills by default and honour ?kind=words (words runs only, right/asked from the result, mode check labelled 'Words check'). That means merging the api_practice inline-drill rule into api_results.history, or taking kind in the api_practice route."
+   },
+   {
+    "item": "Add a selection ('Add to my words' on selected question text)",
+    "source": "§3.8.3 §1 Add a selection; acceptance 30",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "UI.addWordFromSelection is defined (web/assets/words-ui.js:933), but grep over web/ finds no caller. The practice session, the question of the day, the challenge and the report review never show the floating 'Add to my words' button on a 1–6 word selection.",
+    "owner": "page",
+    "build": "Call UI.addWordFromSelection(stemAndRationaleRoot, {source: () => 'From a <topic> question'}) in web/practice/session, the Today qotd card, web/challenge and the report review. It stays off in the test window."
+   },
+   {
+    "item": "Quick sheet 'Add a word' tab and Log a mistake R&W type",
+    "source": "§3.2 R29 quick sheet (Paste text mode) and shell-me U2 (Words in Context / Transitions type); words.md W19",
+    "status": "broken",
+    "severity": "medium",
+    "evidence": "On /words/, Q → Add a word, then typing 'ubiquitous' and Enter opens the Add sheet with the Word field empty. quick.js:640 calls UI.addWord('ubiquitous') or UI.addWord({text}), but addWord reads pre.word. A pasted passage also opens an empty Add sheet instead of Bring words 'From a text'. quick.js has no Words in Context / Transitions type in Log a mistake (no /api/words/outside call).",
+    "owner": "shared",
+    "build": "quick.js: pass {word: v} for a short entry and call UI.bringWords('text') prefilled with the passage for long text. Add a 'Words in Context / Transitions' Log-a-mistake type that posts /api/words/outside and offers its twins and 'Quiz the set'."
+   },
+   {
+    "item": "Type it: Hint · first letter / Alt+W",
+    "source": "words.md W8 Type it, acceptance 4",
+    "status": "broken",
+    "severity": "medium",
+    "evidence": "The public typed item has only choices, item_id, kind, stem and text, with no first letter. So the page's 'Hint · first letter' button is disabled with the title 'No hint for this one' and Alt+W does nothing (run/index.html:765-767). Answering 'mitigat' correctly returns spelling 'mitigate'.",
+    "owner": "server",
+    "build": "Add 'first' (the key's first letter) to public typed items, or add a hint endpoint that marks the answer hinted. Keep the rule: hinted answers never move a box."
+   },
+   {
+    "item": "False 'You were sure, and it's wrong' note on Words verdicts",
+    "source": "words.md W1 Verdict / W7 Guess mark (Words has only an optional I guess mark, no Sure rating)",
+    "status": "contradicts",
+    "severity": "medium",
+    "evidence": "Every wrong in-context answer in /words/run/ shows 'You were sure, and it's wrong: this kind costs points on test day, because you wouldn’t re-check it. It comes back first.' The student never rated confidence. question.js:985 defaults conf to 'sure' when prefs.confidence is not 'off', and question.js:1275 prints the note.",
+    "owner": "shared",
+    "build": "In Words quiz mode, pass conf only when the student marked a guess. In question.js, skip the sure-miss note unless a confidence was actually chosen (or give Words its own prefs with confidence off)."
+   },
+   {
+    "item": "Lists: rename, delete, Move to list, New list on My words",
+    "source": "§3.8.3 §9 My words (Bulk bar 'Move to list', Tools 'New list', Lists rename and delete)",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "grep over web/ finds no rename or DELETE call to /api/words/lists/{name}, although the server has PUT and DELETE. The My words bulk bar holds Flashcards, Quiz, Share, Print a worksheet, Save, Unsave, Reset progress and Delete (own only), with no Move to list. My words tools hold Add a word, Bring words and ⋯ (Export CSV, Print this list, Share a list, Grade a worksheet), with no New list.",
+    "owner": "page",
+    "build": "Give each list (on its MINE tile menu and in My words) Rename and Delete; a delete moves own words to 'My words', behind a confirm. Add 'Move to list' to the My words bulk bar and 'New list' to its tools."
+   },
+   {
+    "item": "Method mode clue step and state line",
+    "source": "words.md W6 Method mode ('On a miss: Tap the words that tell you'; the setup and item head say which mode and why; Read for the clue set)",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "grep finds no 'Tap the words that tell you' or clue-tap step anywhere in web/words, words-ui.js or api_words.py. The setup tooltips give generic text, not the current state ('Method off: your predictions are right 9 of 10'). The readgap deck is random SAT in-context items (api_words.py create_run), not the frames the student misread weighted to far clues.",
+    "owner": "shared",
+    "build": "After a wrong in-context answer with Method on, add a step where tapping any word of the clue span counts (Enter skips), then show the clue. Have the setup and the item head show the Method and Relationship state and its reason from the prefs rule. Build the readgap deck from frames with gap = 'reading', weighted to clues 8 or more words from the blank."
+   },
+   {
+    "item": "rw_items self-check and the Words audit tool",
+    "source": "words.md W1 Generator __main__ and acceptance 1; product.md G14 'The Words audit' (tools/words_audit.py)",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "server/rw_items.py does not exist (the generator lives in server/words.py, which has no __main__ self-check), so 'PYTHONPATH=. python3 server/rw_items.py' cannot run. tools/words_audit.py does not exist ('ls: No such file').",
+    "owner": "server",
+    "build": "Add the stdlib self-check (200 seeds × every frame × up to 5 keys, re-deriving every rule, exit 1 naming frame and seed) behind a runnable module, and hook it into build_words.py. Add tools/words_audit.py: a WordNet check of pos and definition overlap, a second-method check of frame keys and traps, and a review_queue.json that must be empty before ship."
+   },
+   {
+    "item": "My words filter bar",
+    "source": "§3.8.3 §9 item 3 (the same UI.filters as the Library); words.md W5 (trap, family and root filters); W10 (Probably known count)",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "On /words/mine/ the filter bar has only Search, Collection, Difficulty and Part of speech (mine/index.html filters()). There is no Topic (subjects, logics, roots), no Family and no Sort chip, and no Probably known count or tile.",
+    "owner": "page",
+    "build": "Reuse the Library's filter definitions on My words (Topic with its Roots group, Family, a Status group including Probably known, and Sort), keeping the tile filters."
+   },
+   {
+    "item": "Library search on meaning and synonyms",
+    "source": "§3.8.3 §3 Title row (matches word, also, short, meaning and same)",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "/words/?q=unpleasant (a word in mitigate's meaning) shows no tiles. /words/?q=lessen (in mitigate's same list) shows no tiles. /words/?q=alleviate finds only alleviate. index.html visible() matches word, also and short only.",
+    "owner": "page",
+    "build": "Include meaning and same in the search, served in /api/words/index or the library rows, ranked after word-prefix matches."
+   },
+   {
+    "item": "Library header meta and tab due count",
+    "source": "words.md W7 acceptance 5 ('the Words H1 meta contains claimed'), §3.1 override 18; §3.8.3 §1 Words tabs (My words carries a dot and the due count)",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "For the seeded learner (26 claimed, 20 due), /words/ meta reads '1,328 words · 4 of your own'. head() never adds known or claimed. On /words/ the My words tab shows no dot or count, while /words/study/ and /words/mine/ show '20' (wordsTabs runs before the shell data loads).",
+    "owner": "page",
+    "build": "Meta: 'N words · K known · C claimed', each hidden at 0. Re-render UI.wordsTabs with lib.counts.due after /api/words loads."
+   },
+   {
+    "item": "Grid, logic map and By topic layout",
+    "source": "§3.8.3 §3 Grid (6 columns at 1100+; Sort By topic grouped under headers); words.md W2 Library logic map (9 columns, 5 + 4 below 1100px; '8 of 10 right in 30 days')",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "At 1280 the grid computes 5 columns (repeat(auto-fill, minmax(170px,1fr))). /words/?c=transitions renders 9 .logic-col in 5 grid columns, and each column has no 'N of M right in 30 days' line. /words/?sort=topic renders 0 group headers.",
+    "owner": "page",
+    "build": "Set the grid columns to 6 / 4 / 3 / 2 at the spec's breakpoints. Give the logic map 9 columns at 1100px and up (5 + 4 below) and a 30-day right/asked line per column from insights. With Sort = By topic, add group headers (name, 'k/n known', mbar)."
+   },
+   {
+    "item": "My words LOGIC MIX-UPS grid and trap trend",
+    "source": "words.md W5 Screens (trend arrow against the previous 30 days; 9×9 grid of non-empty cells on desktop)",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "GET /api/words/insights returns 'trend': 0 on every trap row (hard-coded in api_words.py insights). My words shows logic mix-ups as a list at every width, with no desktop grid.",
+    "owner": "shared",
+    "build": "Server: compute each trap's trend as last 30 days against the previous 30. Page: at 760px and up, draw the needed × picked grid of non-empty cells, ink opacity by count, each cell with 'Quiz the pair · 8'."
+   },
+   {
+    "item": "Decode it parts and hint",
+    "source": "words.md W4 Decode it ('W shows the parts'; the verdict shows how the parts build the meaning)",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "The public decode item has only choices, item_id, kind, stem and text (e.g. text 'conspicuous'), with no parts. The runner binds no W key, and nothing renders the parts on the verdict.",
+    "owner": "shared",
+    "build": "Add the word's split and parts to the decode item, hidden behind a W hint, and show 'circum- around + spect look → careful' on the verdict."
+   },
+   {
+    "item": "Triage of a collection",
+    "source": "words.md W10 Triage (/words/study/?mode=sort&c=<collection>)",
+    "status": "missing",
+    "severity": "low",
+    "evidence": "study/index.html only knows the modes quiz and cards (P.get('mode') === 'quiz' ? 'quiz' : 'cards'), so /words/study/?mode=sort&c=sat-core opens Flashcards. A sort run is reachable only from placement's 'Confirm the rest'.",
+    "owner": "page",
+    "build": "Add a Sort what you know entry (study mode sort, a collection deck) that starts POST /api/words/run {mode:'sort', deck:{source:'collection', value}}."
+   },
+   {
+    "item": "Compact Today's words panel on Study and My words",
+    "source": "words.md W11 'The Today's words panel on every Words page but the runner' (Start, three quiet buttons, 5 · 10 · 15 chips, › preview)",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "On /words/study/?mode=cards|quiz and /words/mine/, .today-words is one line with 'Start today’s words' only (words-ui.js compact branch). It has no Review cards, Learn 10, Quiz, time-box chips or preview.",
+    "owner": "page",
+    "build": "Keep the compact line but add Review cards, Learn N and Quiz as quiet buttons plus the time-box chips and ›. Use no second orange control, per decision 7."
+   },
+   {
+    "item": "Flashcard front chip row",
+    "source": "§3.8.3 §6 Front (a chip row: collection · level; the part of speech or sense tag)",
+    "status": "missing",
+    "severity": "low",
+    "evidence": "run/index.html card() front renders only the Fix line, the word (or meaning or sentence) and the 'Space' hint. There is no collection or level chip and no part-of-speech or sense tag.",
+    "owner": "page",
+    "build": "Add the collection · level chips above the word and the part of speech or sense tag under it."
+   },
+   {
+    "item": "Tap-to-define coverage and sense",
+    "source": "§3.1 override 40 (§11 Tap-to-define: quiz and sheet items, card-back sentences, Today's Word in context slot); §3.8.3 §2 split senses (novel: new / book)",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "In an in-context item whose text begins 'In the novel's last pages…', tapping 'novel' shows 'new and unlike what came before' (the wrong sense). UI.gloss runs only on quiz stems (run/index.html:649) and sheet examples. The sheet's SAT-style sample text, card-back 'In a new sentence' text and Today's slot are not glossed.",
+    "owner": "shared",
+    "build": "Exclude split-sense headwords from the gloss index, or pick the sense by context. Call UI.gloss on the sheet sample stem, card-back sentences and Today's rw:wic slot after answering."
+   },
+   {
+    "item": "'Another choice also fits' reach and filing",
+    "source": "words.md W18 (one tap on any verdict files an R17 report, kind word, category 'More than one right answer'; toast with Undo); acceptance 4",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "run/index.html:673 shows the button only after a wrong answer. POST /api/words/run/{id}/also-fits writes word_fit_reports; the reports table stayed empty after two taps. The toast has no Undo.",
+    "owner": "shared",
+    "build": "Show it on every generated verdict. Also file an R17 report (kind 'word', category two_right, context = the item address and pick) so U3's reply applies, and add Undo to the toast."
+   },
+   {
+    "item": "Runner report key",
+    "source": "product.md G2 / R43 Keys (Words: R Report)",
+    "status": "missing",
+    "severity": "low",
+    "evidence": "UI.keys.register('wordsrun', …) in run/index.html binds no R. Report is reachable only by the ⚑ button.",
+    "owner": "page",
+    "build": "Bind R to reportCur in the wordsrun scope."
+   },
+   {
+    "item": "Falling-behind pricing and debt spread in the forecast",
+    "source": "words.md W12 (Falling behind is priced; the forecast draws the spread as stacked bars; Final 10 days puts at-risk words first)",
+    "status": "missing",
+    "severity": "low",
+    "evidence": "grep finds no 'days missed' or behind-pricing copy in words.py or words-ui.js. The My words forecast (UI.barChart) draws single bars with no stacked spread. words.deck('today') does not put at-risk words first in the final 10 days.",
+    "owner": "shared",
+    "build": "Add to finish_metrics a behind line ('3 days missed: 14 a day keeps Nov 24, or stay at 12 and finish Nov 28') with a one-tap chip for each option. Stack the spread in the forecast when prefs.words_spread is set. In the final 10 days, put at-risk words first in the today deck."
+   }
+  ]
+ }
+}

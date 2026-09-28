@@ -1,0 +1,266 @@
+{
+ "label": "hygiene S9",
+ "key": "v2:cf02cc53e4e7d0c2aa2e6652af741624f1f0b657798e6492f2310e1914d62b20",
+ "result": {
+  "findings": [
+   {
+    "severity": "high",
+    "where": "/words/run/ sort mode (Sort what you know), p.meta under the answer buttons, all widths, light+dark; web/words/run/index.html:573",
+    "what": "The counter shows \"-1 / 10 · about 1 min left\". `const done = R.items.indexOf(item)` looks up the next-item object, which is a different object from the one in R.items, so it returns -1. Even when the lookup works, the first word would read \"0 / 10\", which puts a zero on screen.",
+    "fix": "`const done = R.items.findIndex(i => i.item_id === item.item_id)` and render `${done + 1} of ${tot} · about N min left`."
+   },
+   {
+    "severity": "high",
+    "where": "/words/ Collections > MINE group (#colls) and /words/mine/ Share a list menu, all widths; web/words/index.html:202,327 + server words.library (not S9)",
+    "what": "A list made with '+ New list' (POST /api/words/lists returns 200 and the page toasts 'Made “Unit 3”') never shows up again. /api/words never fills any word's `lists` from the word_lists table, and the Mine group builds W._lists only from the student's own words' `collection`, so a list of library words has no tile anywhere.",
+    "fix": "Server (outside S9, hand to its owner): merge word_lists membership into each entry's `lists` in words.library. Client: index.html:202 `W._lists = [...new Set(words.flatMap(w => [...(w.lists||[]).filter(l => !BUILTIN_LISTS.has(l)), ...(w.own && w.collection ? [w.collection] : [])]))]`, and at line 327 build each list tile from `words.filter(w => (w.lists||[]).includes(l) || (w.own && w.collection === l))`, not only from own words."
+   },
+   {
+    "severity": "high",
+    "where": "Word sheet (/words/?w=account.explanation, also occasion.cause), block 'In an SAT-style question', all widths; server sample builder (not S9)",
+    "what": "An item labelled MOST NEARLY MEANS shows the passage with a blank ('but his ____ of the riot') and lists the target word itself as choice B ('account'). This is a fill-in-the-blank item mislabelled as most-nearly-means. 2 of the 102 words sampled had it.",
+    "fix": "Server: build 'nearly' items with the word left in the text (underlined) and meanings as the choices, or relabel them as incontext. Page guard in words-ui.js sampleBlock and in run/index.html: if `item.kind === 'nearly' && /_{3,}/.test(item.text)`, show the 'In context' label instead of 'Most nearly means'."
+   },
+   {
+    "severity": "high",
+    "where": "/words/print/?id=… worksheet Q3, and meaning→word quiz items generally; server quiz_item distractors (not S9)",
+    "what": "Distractors come from the same meaning family, so more than one answer is correct: for 'friendly and good-natured' the choices amicable, amiable and congenial all fit, and the key accepts only amiable. A student gets marked wrong for a correct answer.",
+    "fix": "Server: leave out distractors that share the target's family, synonyms or 'Same as' list (or have a short-meaning overlap). Until that lands, the pages cannot fix it."
+   },
+   {
+    "severity": "high",
+    "where": "/words/ first screen at 1440/1280/900/390 (Today card .pill Start, #strip .pill.sm Review, #studybar #barCards .pill Flashcards); /words/study/ (Today card Start and aside#glance Start)",
+    "what": "Three orange primary buttons compete on the Library's first screen: Start, Review and Flashcards (plus the shell's Sign in). On Flashcards and Quiz there are two orange buttons both labelled 'Start' that do different things (today's mix vs the chosen deck). A student can't tell which Start to press.",
+    "fix": "Keep one orange button per screen. Library: Today's Start stays .pill; strip Review becomes .btn.sm; #barCards becomes .btn until a filter, search or selection is active. /words/study/ and /words/mine/: render the Today card compact, as one line 'Today's words · 52 due · about 6 min' with a .btn 'Start today's words', so the glance Start is the only orange button."
+   },
+   {
+    "severity": "high",
+    "where": "/words/ div#studybar.wl-bar (fixed bottom), all widths; worst at 390",
+    "what": "The study bar is always pinned. At 390 it adds about 120px on top of the 64px tab bar, so roughly 22% of the phone screen is covered on arrival (and the shell's shortcut toast covers its Flashcards button). At 1440 it hides the top of the 'By exam day' card. Its text ('1,325 words · 52 due · 1,240 new / Takes 20: due first, then new') repeats the header and the Today card, and says 1,325 where the header says 1,324.",
+    "fix": "Show the bar only when the grid is in view (IntersectionObserver on #gridSec) or when a filter, search or selection is active. Make it a single 56px row on phones. Move barHelp into the Flashcards button's title. Count words the same way as the header (both include or both exclude own words)."
+   },
+   {
+    "severity": "high",
+    "where": "/words/mine/ for a new learner (and zero tiles for any learner), section#stats.wm-stats, #forecast, #finish, traps, habits, tools, 1440→390, both themes",
+    "what": "A new student sees 12 tiles that all say 0, then four cards made of explanation sentences, then seven tool buttons. The one useful thing, 'No words yet… Library / Add a word', is at the very bottom. For a learner with data, four tiles still show 0 at half opacity with explanation sentences.",
+    "fix": "If no word is touched, render only the empty state at the top: heading 'Your words live here', buttons Library (.pill), Add a word and Bring words ▾. Hide stats, forecast, finish, traps, habits and tools until there is at least one word. With data, skip tiles whose count is 0 and move their sentences into the tile's title tooltip."
+   },
+   {
+    "severity": "high",
+    "where": "/words/ at every width: h1 meta (#meta), Today card .tw-facts, 'Review cards (52 due)', help line s.reason, #strip Due today, #studybar text, #legend '52 DUE', All tile badge",
+    "what": "'52 due' is said 8 times above the grid. The line '52 come back today · 12 are proofs' repeats the facts right above it word for word.",
+    "fix": "Keep the count in the Today card facts and the strip's Due tile only. Header meta becomes '1,324 words · 1 of your own'. The Review button reads 'Review cards'. Skip `s.reason` when it restates the facts (words-ui.js:347). The legend shows the DUE key with no count. The bar follows the rule in the study-bar finding."
+   },
+   {
+    "severity": "medium",
+    "where": "Control rows everywhere in the section: Today card .tw-row (Start 52 / others 40), #studybar .go (40/40/52), header .wl-acts (search 48 / Bring 40 / Add 34), sheet .ws-foot (44/40/34/40), hook row (input 40–44 / Save hook 32), Add-word sheet foot (34/32/40), run .wr-ctl.grades (‹ 40 / Show 52 / › 40; 44 vs 52 at 390), result .upnext (52/40/34)",
+    "what": "Buttons that share a row have different heights, even though they share a vertical centre.",
+    "fix": "One height per row. In words-ui.js CSS: `.tw-row > button, .go > button, .ws-foot > button, .sheet-foot > button, .upnext > *, .wr-ctl > button, .hook > * { min-height: 44px; }`. Drop the 52px pill size in rows that mix it with .btn. Size the search field to 44 as well."
+   },
+   {
+    "severity": "medium",
+    "where": "Hover boxes of .quiet (margin -9px -12px): header 'Add a word' over 'Bring words' (4px, all widths); Add-word sheet 'Cancel' over 'Save and add another' (4px); result .upnext 'Library' over '10 new' (2px); quiz feedback 'Another choice also fits' over 'Open word' (2px); sheet 'Quiz the pair · 6' over the contrast text above (3px)",
+    "what": "The hover highlight of quiet buttons paints over the neighbouring button or text. This is the same defect the user flagged on Today.",
+    "fix": "In these rows give the quiet button `margin-inline: 0` (keep the negative block margin), or set the row `gap: 16px` so the -12px margin never reaches the sibling. Put 8px above 'Quiz the pair'."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/ library grid .wtile .w (word title), 1440/1280/900, both themes",
+    "what": "Long words break mid-word onto a second line: 'accommodat|e', 'advantageou|s'. The tile then grows taller and the row goes ragged.",
+    "fix": "`.wtile .w { overflow-wrap: normal; word-break: keep-all; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: clamp(14px, 1.15vw, 17px) }` with `title` set to the word, or widen the grid to `repeat(auto-fill, minmax(170px, 1fr))`."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/ grid .wtile kicker (POS slot), all widths",
+    "what": "For second senses, the part-of-speech slot shows the sense name ('account EXPLANATION', 'abstract SUMMARY', 'advance PROPOSE', 'air EXPRESS'), so a student reads EXPRESS as a part of speech. On the result page the two 'apparent' chips can't be told apart.",
+    "fix": "The kicker always shows the POS (NOUN, VERB). Add the sense to the title in muted text: 'account · explanation'. Result chips use the same 'word · sense' label."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/ grid .wtile 'est.' next to the difficulty bars, all widths",
+    "what": "'est.' is printed on every one of about 1,300 tiles, and the legend already explains it ('difficulty (est. before the first answer)'). It adds noise to every card.",
+    "fix": "Remove the per-tile 'est.'. Put 'Estimated until your first answer' in the bars' title or aria-label and keep one mention in the legend (as an ⓘ tooltip, not a sentence)."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/ filter bar .wl-fbar, 1440/1280 (wraps), 390 (scroll)",
+    "what": "All eight chips show their default ('Collection All', 'Topic All', … 'Sort A–Z'). Because they are wide, 'Select' wraps alone onto a second row at 1440 and 1280.",
+    "fix": "Show a value only when it differs from the default: 'Collection ▾' becomes 'SAT core ✕' once set. The shorter chips let Select fit on row 1; also put Select on the right beside the '1,325 words' count."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/ #strip.wl-strip tiles 'Word of the day' and 'Transition of the day' (index.html:265), 'New today', 1440/1280/900 (4 tiles), 390 (scroller), both themes",
+    "what": "When the server has no item (wic/transition null), both tiles say 'A new one tomorrow'. That is untrue on day one, repeats itself, and leaves two tiles about 136px tall with one line in them. 'New today' shows the phrase 'Goal met' in 32px mono where a number belongs. At 900, 'TRANSITION OF THE DAY' wraps, so its line sits lower than its neighbours.",
+    "fix": "Skip a tile when d.item is null (the strip drops to 2 or 3 tiles). When today's item is answered, show the word and your result, with 'New one tomorrow' as meta. New today: big '15 / 10' plus a ✓, with 'Goal met' as the sub-line. Shorten the kicker to 'TRANSITION' so kickers stay on one line."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/ strip for a new learner (Due today 0 'Nothing due yet', New today 0 / 10 'Learn your first 10')",
+    "what": "A zero, a filler sentence and a second 'Learn 10' that repeats the Today card's 'Find your level / Learn 10'.",
+    "fix": "While the learner is fresh (no state), hide the Due and New tiles and show only the word and transition of the day if they exist."
+   },
+   {
+    "severity": "medium",
+    "where": "section.card.wfin 'By exam day' on /words/ and /words/mine/, all widths",
+    "what": "'0 of 85 studied words likely to hold on test day · 85 at risk [Review at risk (85)]' puts a zero on screen and says 85 three times. 'Core: 542 left · advanced: 683 left · transition logics: 9 of 9 not yet known' is jargon. 'Dec 5 · 68 days' repeats the shell's 'Exam in 68 days · Dec 5' on the same screen. The 'New words a day' chips wrap 'auto' alone at 390, and their focus ring covers the kicker by 4px. On Library the card is long and fully open.",
+    "fix": "Headline: '85 words at risk by Dec 5' with a 'Review them' .btn, and no '0 of' part. Replace the jargon with 'SAT core 542 · advanced 683 · transitions 9 to go'. Chips: 8px margin-top and `flex-wrap: nowrap; overflow-x: auto` at 390. On Library, start the card collapsed as a one-line summary ('By exam day · 85 at risk ▸') and remember the open state."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/ #colls .wl-gtiles, 1440/1280 (5+1), 900 (4+2); Roots tile",
+    "what": "'Answer-choice language' wraps onto a row of its own with a two-line title and no 'known' bar, unlike its siblings. The Roots tile shows two different known counts ('119 parts · 349 words · 4 known', then '10 known').",
+    "fix": "`.wl-gtiles { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) }` so all six fit at 1040px. Always reserve the known-bar line. Roots: sub-line '119 roots · 349 words' and a single '4 roots known'."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/study/ (Flashcards and Quiz) .seg rows How many / Show first / Order / Mode / Timer / Method, 1440/1280/900",
+    "what": "Each segmented control stretches to the full 696px column while its options sit on the left, leaving 400–550px of empty tinted bar.",
+    "fix": "`.st .seg { width: fit-content; max-width: 100% }`, or `display: inline-flex`."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/study/ aside#glance .big, 1440 (wrap) and 390 (fixed bar)",
+    "what": "'20 cards · about 3 min' in 28px mono wraps as 'about / 3 min' at 1440. In the fixed phone bar, the Start pill covers the line ('20 cards · abo…'). The lines 'Due today' and 'Due first · word first' repeat the choices just made above.",
+    "fix": "`.big` shows only '20 cards'; 'about 3 min' moves to .meta beneath. Phone: `.glance { grid-template-columns: minmax(0,1fr) auto } .glance .big { white-space: nowrap; overflow: hidden; text-overflow: ellipsis }`. Merge the two recap lines into one meta line."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/study/ at 760–999px (study/index.html:42-44)",
+    "what": "The grid drops to one column, but the glance only becomes a fixed bar below 760px. Its Start button ends up about 1,600px down, after 13 deck tiles and every option.",
+    "fix": "Change the fixed-bottom glance media query to `max-width: 999px`, or render the glance above the options in one-column layouts."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/study/ deck grid: empty decks (Thought I knew, Fell for a trap, Looked up, Stubborn at 0), all widths, both themes",
+    "what": "Empty decks render as greyed tiles at opacity .55 (low contrast), each with an explanatory sentence ('No trap has caught you in the last 60 days.', 'Tap a word in a Words text to look it up.').",
+    "fix": "Collect empty decks under a '4 more decks (empty)' <details> at the end of the grid. Their sentences move into the tile's title tooltip."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/study/?mode=quiz options: Mode help, Method paragraph, Move on by itself help; Flashcards 'Commit first' help",
+    "what": "Three help paragraphs sit under the controls (Method takes two lines), and every option group is open, so the page runs about 1,900px. 'How many' ends in '∞' on Quiz but 'All' on Flashcards.",
+    "fix": "Move the help into ⓘ tooltips on the labels. Collapse Timer, Method and Move on under a 'More options' <details> (remember it open). Use 'All' on both pages."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/run/ quiz mode on load, option A (.opt), 1440 and 390; run/index.html:649",
+    "what": "`ws.focus()` runs on every question mount with no prior interaction, so option A gets a 2px ink :focus-visible ring and looks already selected. Practice focuses the workspace only when resuming (runner.js:2422).",
+    "fix": "Stop focusing on mount (keys 1–4 and A–D already work). If focus is needed, focus the question container (tabindex=-1, outline none) instead of the first option."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/run/ quiz feedback state, 1440/390",
+    "what": "The rationale for the picked option appears twice: under option B and again in the verdict ('MEANING “qualify” means limit or narrow a claim.'). The header reads '0 right of 1' (a zero). The kbd hint in 'Open word [0]' reads as a count of zero. 'Again today' sits after the 'Another choice also fits' link and looks like its label.",
+    "fix": "The verdict shows only the miss type ('You picked a word with a different meaning'), not the rationale again. Hide the right-count until the first correct answer, or mark ✓/✗ in the progress segments. Give Open word the key 'O'. Put 'Comes back today' on the verdict line, away from the dispute link."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/run/ finished run (result), 1440/390",
+    "what": "Every 'Still learning' chip shows 'Sep 28' (today), yet the next line says 'Next reviews: 5 tomorrow'. The two contradict each other. 'By type: Meaning → word 0/5' repeats the score when the run had only one type. The score is a giant slashed mono '0'. Up next buttons are 52/40/34px tall.",
+    "fix": "Reconcile the date (use the scheduled due date). Drop per-chip dates when all are the same and state it once ('All 5 back tomorrow'). Hide By type when there is one type. Set the score in the sans display font. Up next: 'Review 52 due' (.pill 44), '10 new' (.btn 44), Library (.btn 44)."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/mine/ tools row and filter row, 1440/1280/900",
+    "what": "There are seven equal-weight grey buttons (Add a word, Bring words, Import, Export CSV, Print this list, Share a list, Grade a worksheet). In the filter row, 'Part of speech ▾' wraps alone and the Table/Wall toggle floats between the two rows (y≈1246 vs 1228/1265), aligned with neither.",
+    "fix": "Toolbar: '+ Add a word' (.btn), 'Bring words ▾' with Import moved inside it, and '⋯' holding Export CSV, Print, Share and Grade. Filter row: `flex-wrap: nowrap` with the toggle `margin-left: auto; align-self: center` on the first row; move Part of speech and the level chips into a 'Filters ▾' popover at ≤1280."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/mine/ #forecast 'Due in the next 14 days', all widths, both themes; mine/index.html:168,171",
+    "what": "Today's bar shows 17 while the Due today tile says 52, because overdue words are left out. The y-axis has an '8.5' tick for a word count. The meta line says 'streak 1 days'.",
+    "fix": "Today's value is everything due now, overdue included, with the axis label 'Today'. Round `max` to an even number (`Math.max(4, Math.ceil(m / 2) * 2)`) so ticks are integers. Use `plural(me.days.streak, 'day')`."
+   },
+   {
+    "severity": "medium",
+    "where": "Word sheet dialog.sheet.wsheet .ws-foot, 1440 (one row) and 390 (two rows)",
+    "what": "The footer mixes four styles and heights: orange two-line 'Twin ×10 · same kind, new text' (44), .btn 'Flashcards from here' (40), quiet 'Quiz it with its lookalikes' (34) and ⋯ (40). 'Twin' is jargon to lead the sheet with. At 390 the ⋯ button stretches to 112px on a second row.",
+    "fix": "Primary: 'Practice 10 like this' (.pill 44, one line). Secondary: 'Flashcards from here' (.btn 44). A 44×44 ⋯ holds 'Quiz with lookalikes'. Everything fits on one row at 390 (⋯ fixed width)."
+   },
+   {
+    "severity": "medium",
+    "where": "Word sheet body blocks, 1440/390, both themes",
+    "what": "Two kickers stack ('IN AN SAT-STYLE QUESTION' then 'IN CONTEXT'). The '=' and '≠' glyphs sit about 6px above the chip centre. Under 'NOT THE SAME AS' the entry is 'vs subside', although subside is also listed in 'Same as'. 'looks like debate' starts lowercase. 'Quiz the pair · 6' has an unexplained 6. 'Your record' shows the dots and a 5-step ladder for the same fact, with no space in '○○○○○New'. The shades help sentence is a paragraph.",
+    "fix": "One kicker: 'SAT-STYLE · IN CONTEXT'. Syn rows `align-items: center`. Rename the block 'EASY TO MIX UP', with headings 'abate or subside?' and 'abate or debate?'. Button: 'Quiz abate vs subside (6)'. Record: keep the ladder, drop the dot row (or the reverse), and add the space. Shades help moves to an ⓘ tooltip, with the weak→strong direction shown as a thin gradient under the chips."
+   },
+   {
+    "severity": "low",
+    "where": "Word sheet 'Covered / Open' segmented toggle, 1440 (beside the POS line) and 390 (a full row)",
+    "what": "The toggle's labels are jargon, it takes a whole row on phones, and it floats in the middle of the POS line on desktop.",
+    "fix": "Make it an icon toggle in the header icon row (eye / eye-off) with aria-label and tooltip 'Hide the meaning to test yourself'."
+   },
+   {
+    "severity": "medium",
+    "where": "/words/run/ placement ('Find your level') and sort, 390 (wrap) and all widths (weight)",
+    "what": "At 390, 'Not sure' wraps onto a row of its own. 'Yes' and 'Know it' are orange while the other answers are grey, which nudges a self-report toward yes.",
+    "fix": "`.answers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px }` and all three as neutral .btn of equal weight (orange only for the selected or confirmed state)."
+   },
+   {
+    "severity": "low",
+    "where": "Keyboard hints on touch: cards run ('Space' on the card and on Show), Start/Check pills ('Enter'), sort and placement digits, prev/next '‹ ←' / '› →', 390",
+    "what": "Keyboard hints show on phones, where they mean nothing. The flashcard shows 'Space' twice, and prev/next carry two arrows each.",
+    "fix": "`@media (hover: none) { .kbd, .keys { display: none } }`. Drop the 'Space' under the card word on every device (the Show button has it). Prev/next get one glyph each and a 44px square."
+   },
+   {
+    "severity": "low",
+    "where": "nav.wtabs (Library / Flashcards / Quiz / My words) on every Words page, all widths",
+    "what": "The section tabs sit below the Today card rather than under the page title. The 'My words • 52' badge shows the global due count on the My words tab, which holds 1 own word.",
+    "fix": "Render .wtabs directly under the h1 header on every page. Move the due badge to the Flashcards tab or drop it (the count is in the Today card)."
+   },
+   {
+    "severity": "low",
+    "where": "/words/ header.wl-head, all widths",
+    "what": "The layout changes with state: a new learner gets search and actions on the title row, while the seeded learner's longer meta pushes them to a second row. At 390 the meta wraps as '1,324 words · 20 claimed · 52 due · 1 of your / own'.",
+    "fix": "Shorten the meta ('1,324 words · 1 of your own') and always place the actions row under the title. `white-space: nowrap` on each meta segment."
+   },
+   {
+    "severity": "low",
+    "where": "Today card time box row (.tw-box) with the '›' button (words-ui.js:337), 1440/900/390",
+    "what": "The '›' button opens 'Preview today's words' but reads as 'more time options'. It is 40×32 at 390, below the 44px target. At 900 the row wraps and floats right on its own line. By default no time box is chosen.",
+    "fix": "Make the facts line ('52 due · 12 proofs · about 6 min') a quiet button that opens the preview, and remove the '›'. Time box chips read '5 · 10 · 15 min' on the button row, left-aligned after Quiz, at 44px height."
+   },
+   {
+    "severity": "low",
+    "where": "Preview sheet 'Today's words' (words-ui.js:356)",
+    "what": "'1 fix cards' is a plural bug, and 'Fix cards' and 'Proofs in context' are jargon.",
+    "fix": "`plural(n, 'word to fix')`, 'due reviews', 'checks in context', 'new words', 'transitions'."
+   },
+   {
+    "severity": "low",
+    "where": "Words-wide microcopy: 'claimed', 'proofs', 'Twin', 'transition logics', 'Commit first', 'Picked', 'Method', 'Bring words'",
+    "what": "This is internal vocabulary a first-time student wouldn't use.",
+    "fix": "Claimed → 'Said I know it'; proofs → 'checks'; Twin → 'Another like this'; Picked → 'Chose it'; Method → 'Predict first'; Bring words → 'Import words ▾'. Put the definitions in tooltips."
+   },
+   {
+    "severity": "low",
+    "where": "/words/mine/ table rows (tr[tabindex]) focus ring, 1440/1280/900",
+    "what": "The shared 2px ring plus 2px offset bleeds 4px into the rows above and below.",
+    "fix": "`.wm-list tr:focus-visible { outline-offset: -2px; border-radius: 8px }`."
+   },
+   {
+    "severity": "low",
+    "where": "/words/print/?id=… worksheet, 1440 and 390",
+    "what": "The choices grid puts A/C on the left and B/D at the middle of the sheet, about 400px apart, so the A→B reading order is lost. At 390 the meta wraps 'Sep | 28'. The long id 'W-o5R47UYIToQWXhfe' is set as a title meta.",
+    "fix": "`grid-template-columns: repeat(2, minmax(0, 240px)); column-gap: 32px` (4 columns in print). `white-space: nowrap` on the date. Show a short code (last 6 characters) next to the QR."
+   },
+   {
+    "severity": "low",
+    "where": "/words/print/ with no id (empty state), 1440/390",
+    "what": "There is no heading, about 120px of empty space where one would go, and a single sentence.",
+    "fix": "Add h1 'Worksheets' with the sentence as meta, then the buttons Quiz setup (.pill) and Grade a worksheet. Optionally list recent worksheets."
+   },
+   {
+    "severity": "low",
+    "where": "Add a word sheet, 1440/390",
+    "what": "All seven fields are open, though only Word and Meaning are required. Part of speech defaults to '—', and 'comma list' is a jargon placeholder.",
+    "fix": "Show Word, Meaning and List. Put Part of speech, Example, Same as, Opposite of and Notes behind a 'More details' <details>. Placeholders: 'e.g. lessen, subside'. POS default 'Choose…'."
+   },
+   {
+    "severity": "low",
+    "where": "Shell (ui.js, not S9): .now-strip 'Nothing yet today' (ui.js:1260), shortcuts toast, muted text tokens",
+    "what": "On every Words page the shell strip says 'Nothing yet today' after 25 word reviews, because d.answered counts questions only. At 390 the 'Hold a tab for shortcuts' toast covers the Words bar's Flashcards and the glance Start. In light mode, .meta, .help and .k text on the tile background measures 3.37:1, below AA for 12–13px.",
+    "fix": "Hand to the shell owner: count Words reviews in the Today strip ('25 words today'), place the toast above any fixed page bar (or delay it until the bar hides), and darken the muted token on --tile to at least 4.5:1."
+   }
+  ]
+ }
+}

@@ -1,0 +1,307 @@
+{
+ "label": "audit ME_SHELL",
+ "key": "v2:d371316d34248977c4c9a61c59ff703ec49fa995ca778a3c14300722dc1931ad",
+ "result": {
+  "total": 212,
+  "built": 180,
+  "gaps": [
+   {
+    "item": "Account menu and phone menu sheet inbox ('Since you were last here')",
+    "source": "shell-me.md U25 Inbox, U26 account menu (acceptance 6); rebuild-v2 §2.6 + acceptance 10",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "/api/shell.inbox is an object {items,next,unread} but web/assets/ui.js accountItems()/menuSheet() test `if (d.inbox)` and print cap99(d.inbox)/fmt(d.inbox). Every learner, even with 0 unread, sees 'SINCE YOU WERE LAST HERE · NAN' and 'See all (NaN)' (seen on the desktop menu and the 390/360 menu sheet for the new and the seeded learner). Opening the menu also fires markSeen() -> POST /me/feed/seen -> refresh() on every open, which repaints and drops focus: after Enter on the user card document.activeElement stays BODY and ArrowDown/End/Home do nothing. With /api/shell patched to inbox:0 the same menu takes focus, End reaches 'Leave this device…', Esc returns to the user card.",
+    "owner": "shared",
+    "build": "In ui.js read the count with the existing unreadOf(d.inbox) everywhere (loadFeed, markSeen, accountItems, menuSheet) and use d.inbox.items as the first 3 rows (skip the extra GET); show the group only when unread > 0; call markSeen only when unread > 0 and do not repaint the open menu (refresh after close)."
+   },
+   {
+    "item": "Me › Pace card (U7)",
+    "source": "shell-me.md U7 'Me › Pace'; §3 override 32",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "server/api_profile.py summary() never adds pace: /api/me/summary.subjects.math keys are target, band, gains, coverage, domains, levers, habits. me.js PAINT.pace reads S.subjects.math.pace, so the card always shows 'Answer with the clock on to see where your minutes go.' although progress.pace(seeded learner) returns 6 skills with n>=5, quadrants and a forecast (1320 s of 2100).",
+    "owner": "server",
+    "build": "In api_profile.summary set math['pace'] = progress.pace(learner) (skills, quadrants, forecast, guess, struck2) so the header line, quadrant chart, per-quadrant drills and the 'When you guess' line render."
+   },
+   {
+    "item": "A saved learner's a: code never reaches a d: device",
+    "source": "shell-me.md U21 (acceptance 3; 'A saved learner's a: code is never shown or copyable again')",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "With a d: token of an email-saved learner: GET /api/me returns profile.id = the a: code, GET /api/today contains it, POST /api/transfer/redeem for a saved learner returns {credential:'d:…', learner:'a:ffff…03'}, and GET /api/link/{token} after approval returns learner:'a:…' next to the credential. Inside the 14-day swap window that a: code still signs in and mints new keys, so a shared-computer or transferred device keeps a way back after its token is revoked.",
+    "owner": "server",
+    "build": "Strip the learner id from every response to a d: request (api_me profile.id, api_today, transfer redeem, link status, verify when the caller is not the a: holder); return only the credential. Add the s1 check that greps every endpoint body for the a: code."
+   },
+   {
+    "item": "Swap window: one device key per browser",
+    "source": "shell-me.md U21 'The swap window' (acceptance 4)",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "A second browser holding a saved learner's a: code loaded /me/ once: GET /api/devices went from 3 to 12 rows, nine 'Chrome on Mac · moved to its own key Sep 29' (every parallel request on the page got its own X-Learner-Swap token). Settings › Devices lists all nine as separate live devices.",
+    "owner": "server",
+    "build": "Make the swap idempotent: for the same a: code + User-Agent within a short window (e.g. 5 min) return the already-minted swap token instead of inserting a new devices row (or have UI.api hold other requests until the first swap header arrives); clean up duplicates."
+   },
+   {
+    "item": "Practice ranks show only board names, and board visibility applies",
+    "source": "shell-me.md U29 (acceptance 3), R12, §3.1.5 progress.practice_rank / board visibility",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "server/api_profile.py _practice_rank builds top as r['handle'] or r['name']: /api/me/summary ranks.all.top listed another student's private name ('Secretname'); with that student's board set to 'anon' it still showed 'Secretname'; and GET /api/shared/{token} (no login, a parent link) also contains 'Secretname'.",
+    "owner": "server",
+    "build": "In _practice_rank use handle or challenge.handle(learner) only, never learners.name; apply 'anon' -> handle and keep 'hidden' excluded; drop other learners' rows from the shared payload."
+   },
+   {
+    "item": "Notify me on this device (Web Push)",
+    "source": "shell-me.md U18(b); §3 override 17 and 34; rebuild-v2 Settings §4.3",
+    "status": "missing",
+    "severity": "high",
+    "evidence": "No server/push.py and no /api/push/* route (route list has none); /api/health has no push flag. settings.js paintPush returns early (`if (!(await health()).push) return`), so Settings › Study shows no 'Notify me on this device' row, and UI.notify.offer never fires. web/sw.js and db push_subs exist but nothing sends.",
+    "owner": "server",
+    "build": "Build server/push.py: VAPID key pair in server/vapid.pem (ES256 via cryptography), GET /api/push/key, POST/PUT/DELETE /api/push/subscribe, POST /api/push/next (text from next.queue), the 5-minute scheduler at study_time − remind with quiet hours for extra nudges only, SATF_PUSH=off → 404, and health.push."
+   },
+   {
+    "item": "GET /api/health: version, mail, google (+client id), push",
+    "source": "rebuild-v2 §3.1.5 'GET /api/health: version'; shell-me.md U19 (acceptance 8), U19b, §3 override 36",
+    "status": "missing",
+    "severity": "high",
+    "evidence": "GET /api/health returns only {\"ok\":true,\"forms\":10} (server/app.py health()). mail.mode() exists but is not exposed, so: /signin/#email and Settings › Email offer the Send code form with SMTP off (the 'aren't switched on' text appears only after sending); signin.js shows Continue with Google only when health.google && health.google_client_id, so Google sign-in can never appear even with SATF_GOOGLE_CLIENT_ID set; the report modal's device list has no App version.",
+    "owner": "server",
+    "build": "Return {ok, forms, version (git short sha read once, 'dev'), mail: mail.mode(), google: bool, google_client_id when set, push: bool} from /api/health."
+   },
+   {
+    "item": "Run screens: between-parts pane and day rail (Start today chaining)",
+    "source": "product.md G1 'The run (UI.run)', R40; shell-me.md U1 'Chaining'",
+    "status": "broken",
+    "severity": "high",
+    "evidence": "UI.run.between and UI.run.rail exist in web/assets/ui.js but grep finds no caller in web/ (only palette.js calls UI.run.start). Started a run (label 'Start today · 6 parts · 55 min'), finished part 1 (cfg.run = today): the session summary shows 'Keep going · Same settings, new questions' with no .run-between pane, no 'Continue ↵ / Skip this part / Stop for now', no 'Next: {Up next title}' primary and no rail in the header.",
+    "owner": "page",
+    "build": "In the practice session summary (and S6 report footer, S9 words run end) call UI.run.between(host, {title,right,total,minutes}) when cfg.run is today, else make 'Next: {first /api/next item}' the primary; show UI.run.rail in the session header while a run is on."
+   },
+   {
+    "item": "Today nav meta 'Done' follows the Plan day rule",
+    "source": "rebuild-v2 §2.2 item 4 (Today meta), §2.12 UI.plan.doneOf; U1 'Day done'",
+    "status": "broken",
+    "severity": "medium",
+    "evidence": "Seeded learner with an active plan (0 of 5 tasks done, 8 of 45 min): the sidebar Today item reads 'Done' while the Now strip shows 'Study time 8 of 45 min' and Up next 'Plan · Warm-up · Today's plan · 5 tasks'. /api/shell.today.done is null and UI.plan.doneOf is never defined, so ui.js dayDone() falls back to questions >= per_session (30 >= 26).",
+    "owner": "shared",
+    "build": "Set shell.today.done from the plan part (plan.done >= plan.total, R41) on the server, or have dayDone() use d.plan.done/d.plan.total when present; keep the questions fallback only when there is no plan."
+   },
+   {
+    "item": "Quick sheet: Another on Enter",
+    "source": "rebuild-v2 §2.7 Quick question step 4, acceptance 12",
+    "status": "broken",
+    "severity": "medium",
+    "evidence": "Press Q, answer with A then Enter (Check): the verdict shows 'Another Enter', but pressing Enter again leaves the same stem (stem before and after identical). Same with mouse: click B, click Check, then Enter: focus sits on option A and the stem does not change. Only N loads a new one.",
+    "owner": "shared",
+    "build": "In quick.js move focus to the Another button when the verdict shows (or let the delegate's Enter run next() whenever fb is set, even with an .opt focused, since the options are locked after Check)."
+   },
+   {
+    "item": "Palette 'Download my data'",
+    "source": "shell-me.md U24 Actions; rebuild-v2 §4.6",
+    "status": "broken",
+    "severity": "medium",
+    "evidence": "palette.js actionRows: { label: 'Download my data', run: () => go('/api/me/export') } navigates the browser to /api/me/export, which carries no X-Learner header: curl without the header → 400. Settings' own exportData() uses UI.api and works.",
+    "owner": "shared",
+    "build": "Run the same export as Settings (UI.api('/me/export') then save the JSON as sat-freshman-YYYY-MM-DD.json), e.g. expose it as UI.acct.exportData and call it from the palette."
+   },
+   {
+    "item": "Continue on your phone (account-menu row and palette command)",
+    "source": "product.md G12 'Continue on your phone'",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "qr.js continueOnPhone() posts /api/pair, which was never built (U20 replaced it with /api/link). /api/shell.has.pair is false, so ui.js accountItems and palette.js hide the row and the command; the account menu lists no 'Continue on your phone'.",
+    "owner": "shared",
+    "build": "Rebase continueOnPhone on the U20 link flow (the laptop shows a QR of /pair/?r=…&go=<path>, the phone approves, the phone lands on go, with the same go whitelist) or add the /api/pair endpoints; then show the menu row and palette command."
+   },
+   {
+    "item": "Log a mistake › Bring many at once (up to 200 IDs)",
+    "source": "shell-me.md U2 'Bring many at once' (acceptance 9); §3 override 30 'Bring your misses'",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "POST /api/mistakes/import → 405 (no route). No textarea/table UI: grep of web/ for 'many at once', 'Not in our set', 'mistakes/import' finds nothing; Me › Saved & in progress offers only 'Log a missed question'.",
+    "owner": "shared",
+    "build": "Server: POST /api/mistakes/import {ids ≤ 200} → {rows:[{id,template,topic,matched}], added}, 5 a day. UI (quick sheet and Me › Saved 'Bring your misses'): textarea, result table ID · skill · type · Matched/Not in our set with a skill select for unmatched, footer split line, 'Add n to my mistakes' and 'Practise all · 2 each'."
+   },
+   {
+    "item": "Log a mistake › A whole test (Bluebook grids) follow-up",
+    "source": "shell-me.md U2 'Log a mistake → a whole test' (acceptance 6)",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "POST /api/outside/misses → 405 and /api/shell.has.outside is false, so quick.js follow() takes its ponytail path: a plain topics drill (2 per skill, source 'outside'). The misses are not stored on the outside score, the set is not drawn from the skill's missed-then-never-met types, and it does not become Up next item 1.",
+    "owner": "server",
+    "build": "Build POST /api/outside/misses {score_id, misses:[{module,n,topic,letter?}]} → {set}: store misses JSON on outside_scores and create the 'Bluebook follow-up' set with segments (missed types first, then never met), surfaced by next.queue."
+   },
+   {
+    "item": "Score trend looks forward (projection cone, pace line, what changed)",
+    "source": "shell-me.md U9; §3 override 24",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "api_profile.summary's score is {latest, best, points} only; me.js sets o.projection only when S.score.projection !== undefined and o.gaps only when S.score.gaps exist, so Me's trend never draws a cone, never prints 'Three modules over three weeks start a projection.' (seeded learner with 1 sitting shows neither) and has no 'what changed' gaps. estimate.projection exists (api_tests uses it).",
+    "owner": "server",
+    "build": "Add score.projection = estimate.projection(learner, exam_date) (null when too few sittings), score.pace (plan start → target line) and score.gaps (per adjacent pair: questions, minutes, fixes, skills moved, band change) to the summary."
+   },
+   {
+    "item": "Shared progress view (/share/?t=)",
+    "source": "rebuild-v2 §6; shell-me.md §3 override 37",
+    "status": "broken",
+    "severity": "medium",
+    "evidence": "Opened a live link: the Activity card stays on its skeleton forever (the /api/shared payload has no activity/days); the Snapshot row prints a literal 'null' ('360–560 | null | Module · Sep 29'); the H1 is 'SAT progress' with 'Shared by the student' although the learner's name is Dana (payload has no name); no Words card although the payload carries words.",
+    "owner": "shared",
+    "build": "Server: add the student's name and activity days (26 weeks) to GET /api/shared/{token}. me.js read-only mode: render '{name}'s SAT progress · Shared by {name}', paint the heatmap from the shared days, drop the Report slot instead of printing null, and add the Words card from words.me_stats."
+   },
+   {
+    "item": "Every number opens its working (lever popovers on Me)",
+    "source": "shell-me.md U13 (acceptance 2), U10 outcome strip 'each a button opening its lever'; product.md G6",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "On /me/ only 3 fact keys exist (streak, minutes:today, minutes:week). ANSWERED, FIRST-TRY ACCURACY and TESTS tiles are plain links (Enter navigates), the outcome strip figures, skill mastery bars, the band, ranks and readiness have no data-fact, although GET /api/levers serves skill:circles, band, points, readiness, rank:… .",
+    "owner": "page",
+    "build": "Add data-fact to every Me figure: tiles (answered, accuracy:all:7, tests, mistakes fixed), outcome strip (band/since start, points, fixes held), each skill's mastery bar (skill:<topic>), the band, each rank line (rank:…), readiness; keep the link as a 'See' action inside the popover."
+   },
+   {
+    "item": "Week sheet opens on the first clean load of the week, on any section root",
+    "source": "shell-me.md U14 'The sheet', U25 acceptance 4-5",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "web/me/week.js (UI.week) is loaded only by web/me/index.html. Fresh device for the seeded learner: '/' and '/practice/' open no sheet and leave satf.week.shown unset; only '/me/' opens 'Your week, Sep 28 – Oct 4'.",
+    "owner": "shared",
+    "build": "Load week.js lazily from ui.js autoSheets (UI.need('week')) on every section root, so the week sheet (with welcome-back merged in) opens on the first clean load of the week wherever it happens."
+   },
+   {
+    "item": "Your week: receipts, suggestions and Start the first",
+    "source": "shell-me.md U14",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "GET /api/me/week receipts = {answered, right, accuracy, minutes, fixed, new_mistakes} only; the sheet shows '40 questions · 62% right on the first try · 32m'. Missing: accuracy change, minutes against the plan, check-ins passed/relapsed, skills that moved up a word, the habit that fell most, the estimate change. 4 suggestions (no pass_checks or habit_cap), none priced ('≈ 12 pts'); the sheet ends 'Not now · Save my goals' with no 'Start the first' pill and no custom goal.",
+    "owner": "shared",
+    "build": "Server: complete the receipts and the five suggestion kinds with pts from estimate.gains and a 'why' each. Sheet: add 'Start the first' (runs the first goal's drill) and a custom goal row (kind + number)."
+   },
+   {
+    "item": "Me empty states for a 0-answer learner",
+    "source": "product.md G12 'Empty states' and R55",
+    "status": "weaker",
+    "severity": "medium",
+    "evidence": "New learner on /me/: Skills and Test-day readiness offer 'Today's set · 10', Recent activity 'Start today's set · 10', Score trend 'Start a module'; none shows a sample row. grep: me.js never calls UI.empty (only results/page.js and review/review.js do), and 'Start with 8' appears nowhere in web/me.",
+    "owner": "page",
+    "build": "Render Me's empty cards through UI.empty(host, {sample, text, action}) with the real row component as the sample and, at 0 answers, UI.empty.START ('Start with 8 · about 10 min', {source:'start'}); with answers, the card's own smallest set."
+   },
+   {
+    "item": "Practice rank movement since last week",
+    "source": "shell-me.md U11 'movement since last week, ▲ 3'; §3 override 20",
+    "status": "missing",
+    "severity": "medium",
+    "evidence": "/api/me/summary ranks.all/exam/country = {rank, of, top, gap} with no move field; me.js renders r.move only when present, so no '▲ n' ever shows (the gap line '44 right answers to pass #1' does show).",
+    "owner": "server",
+    "build": "Add move to each practice-rank scope from S8's weekly rank_snapshots (last week's rank − this week's)."
+   },
+   {
+    "item": "Feed and inbox rows for achievements",
+    "source": "rebuild-v2 §3.10 (Achievement row 'Earned: 7-day streak' → #achievements), U25 inbox rows",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "Feed/inbox titles are built from raw ids: 'Earned: Answered · Tier 50', 'Earned: Explorer · Tier 50', 'Earned: Streak · Tier 3', inbox row 'Skill:Percentages · Tier 1'; href '/me/?tab=achievements' (Me has no tabs).",
+    "owner": "server",
+    "build": "Build feed/inbox titles from achievements RULES names ('Earned: Questions answered I', 'Earned: Percentages'), detail = the tier in words, href '/me/#badges'."
+   },
+   {
+    "item": "Report device details: breadcrumb and app version",
+    "source": "shell-me.md U3 'Breadcrumb'; rebuild-v2 §2.10 'Include device details › Show'",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "?feedback on /me/ after the page made its /api calls: Show lists 'Last actions: none yet' because the fetch/click trail starts only when report.js is lazily loaded; no App version row (health has no version).",
+    "owner": "shared",
+    "build": "Keep the last-10 trail in ui.js from page load (UI.api and a capture-phase click listener) and let report.js read it; version comes with the health fix."
+   },
+   {
+    "item": "Me H1 and board line for an unnamed learner",
+    "source": "rebuild-v2 §3 acceptance 23 ('The H1 is Student XXXX'); U29 'On boards: Student 4F2A · Choose a board name'",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "New learner: /me/ H1 is 'Student' (me.js falls back to the literal 'Student') while the sidebar user card says 'Student 6688'; the board line reads 'On boards: no name yet · Choose one' although boards show 'Student 6688'.",
+    "owner": "page",
+    "build": "Use shell me.label (the handle 'Student XXXX') as the unnamed H1 and print 'On boards: Student XXXX · Choose a board name'."
+   },
+   {
+    "item": "'Studying since' is the first attempt",
+    "source": "rebuild-v2 §3.1 Lines ('Studying since Sep 23 (the first attempt)')",
+    "status": "contradicts",
+    "severity": "low",
+    "evidence": "api_profile.summary stats.since = learners.created; the seeded learner whose first attempt is Sep 22 shows 'Studying since Sep 29' (the day the row was created).",
+    "owner": "server",
+    "build": "Set stats.since to MIN(attempts.at) (null before the first answer)."
+   },
+   {
+    "item": "Diagnostic confirmation email carries the sign-in code",
+    "source": "rebuild-v2 §1 'The diagnostic sign-up is the same account', §3.1.5 mail.py",
+    "status": "missing",
+    "severity": "low",
+    "evidence": "api_account.signup calls mail.send(email, first, token) with no code, so the confirmation has only the link; mail.build supports a code ('Or type this code on the page that asked') but it is never passed, and signup.html's 'Check your email' step has no code boxes.",
+    "owner": "shared",
+    "build": "Mint a login code in signup and pass it to mail.send; add UI.otp boxes on the 'Check your email' step that POST /api/account/verify {code}."
+   },
+   {
+    "item": "Settings/Me preset controls: preferred study time and questions per set",
+    "source": "rebuild-v2 §4.3 Preferred study time seg; §3.4/§4.1 Questions per set seg 5 · 10 · 22 · ∞",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "Settings › Study 'Study time' is only <input type=time> + Off (no Morning 7:00 · After school 16:00 · Evening 19:00 · Night 21:00); 'Questions per set' is only a number field (value 10, helper '0 means endless.') with no 5 · 10 · 22 · ∞ choices.",
+    "owner": "shared",
+    "build": "Give the prefs registry preset values for study_time and set_length and have UI.prefRow render a seg of presets beside the free field."
+   },
+   {
+    "item": "Goals card detail lines",
+    "source": "rebuild-v2 §3.3 (Exam '6 test days · 32 study days left'; Preferred time 'Add to calendar'; Daily goal '45 min · 28 questions')",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "Seeded learner's Goals card: Exam row shows only 'Sat, Nov 7 · 39 days' + bar, no test/study days left; Daily goal reads '45 min a day' with only the minutes bar; the Preferred time row (when set) has only 'Change', no 'Add to calendar'.",
+    "owner": "page",
+    "build": "Add the 'n test days · m study days left' line from UI.plan.dayOf, the questions part of the daily goal, and an 'Add to calendar' button that opens the Settings calendar sheet."
+   },
+   {
+    "item": "/link/?r= phone approval page",
+    "source": "shell-me.md U20 ('/link/?r= is the phone's approval page'), §3.2 §2.12 'S1 owns web/link/**'",
+    "status": "missing",
+    "severity": "low",
+    "evidence": "GET /link/?r=abc → 404 (no web/link/). The sign-in QR encodes /pair/?r=…&c=… and /pair/ was turned into the approval page, so the specified URL and any /link/ QR never work.",
+    "owner": "page",
+    "build": "Add web/link/index.html (or a redirect to /pair/?r=…) so /link/?r= opens the approval screen."
+   },
+   {
+    "item": "Summary is subject-aware",
+    "source": "shell-me.md intro 'Subject-aware' (acceptance: no top-level domains, coverage, gains, pace, habits or Math score)",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "/api/me/summary top-level keys include domains, coverage, gains, habits and score (the Math score) next to subjects.math.",
+    "owner": "server",
+    "build": "Move domains, coverage, gains, habits, score and ranks under subjects.math and update me.js/share to read them there."
+   },
+   {
+    "item": "Explorer badge's top tier is the served type count",
+    "source": "shell-me.md U13 Data ('Explorer's top tier is the served type count, not a typed 386'); §3 override 26",
+    "status": "contradicts",
+    "severity": "low",
+    "evidence": "Achievements › View all: 'Question types met | 50 | 100 | 200 | 300 | 386' while the bank serves 414 types (Test-day readiness reads '68 of 414 question types met').",
+    "owner": "server",
+    "build": "Compute Explorer's tiers from len(catalogue types for the subject) instead of the typed 386."
+   },
+   {
+    "item": "Up next plan Words row shows a zero",
+    "source": "v2-decisions item 7 (hide zeros); shell-me.md U1",
+    "status": "contradicts",
+    "severity": "low",
+    "evidence": "GET /api/next for the seeded learner: 'Plan · Words | 0 due · due first' (also in the More up next popover).",
+    "owner": "server",
+    "build": "Drop zero parts from the plan words row's detail (e.g. 'New words · ~5 min')."
+   },
+   {
+    "item": "End the old code now (separate control)",
+    "source": "shell-me.md U21 'End the old code now'; §3 override 35",
+    "status": "weaker",
+    "severity": "low",
+    "evidence": "Settings › Devices shows 'Your old code still works until Oct 13 … Sign out all other devices ends it now.' with only 'Sign out all other devices'; ending the old code forces signing out every other device.",
+    "owner": "shared",
+    "build": "Add an 'End the old code now' button (sets swap_until = now without revoking d: tokens), shown while the swap window is open, and the line in the save toast's detail."
+   }
+  ]
+ }
+}

@@ -1,0 +1,323 @@
+{
+ "section": "compete",
+ "run": "wf_a6acd4e3-941",
+ "total": 330,
+ "built": 258,
+ "gaps": [
+  {
+   "item": "Contest mode in the practice-session runner (answer clock, Ranked chip, Skip, Rules link, Full screen, leave sheet, flag triggers + banner, Confirm step, race rail, field line in the verdict, result-panel summary)",
+   "source": "spec/rebuild-v2.md 3.7 §8 'The runner in contest mode'; compete.md C15 (triggers, Confirm step), C8 (race rail), C6 (field line), C17, C24 (Rules link); §3.1 entry 27",
+   "status": "missing",
+   "severity": "high",
+   "evidence": "Playwright, new learner, /compete/contest/?id=daily → Start: /practice/session/ header reads 'Exit | Daily challenge | 0:03 elapsed' (a stopwatch counting up, not the 15:50 answer clock). No Ranked chip, no Skip button, no Rules link, no Full screen. With the tab hidden 6 s there was no POST /void and no banner. session.js/runner.js contain no /void, /confirm, hasFocus, pacer or 'Leave the challenge' code, and the session page doesn't load compete-ui.js. GET /api/drill/{sid} already returns contest, ranked and clock, and the answer returns field {source:'contest', share, n}, but none of it is drawn. The summary is the practice summary with a 'Board' pill to /compete/, not the §4 result panel.",
+   "owner": "shared",
+   "build": "In web/assets/runner.js and practice/session, when state.contest is set: show a Ranked/Unranked chip; draw a countdown from state.clock.left/running (dimmed on a verdict); add a quiet Skip (POST next {skip:true}); add a Rules sheet (the §1.2 list) and optional Full screen. Post /api/drill/{sid}/void for tab hidden ≥5 s, window blur ≥5 s (calculator host exempt), copy-then-leave within 20 s, a paste outside the calculator, and a pagehide beacon, and show the first-flag banner. After the last answer run the Confirm step (POST /confirm until due is empty; the server must expose confirm {due,next} in GET state). Render UI.pacer when a race is set, and the field line in the verdict. On finish, go to the contest page's result panel."
+  },
+  {
+   "item": "Exit/X in a contest sitting hands the Daily in",
+   "source": "spec 3.7 §1.2 'Leaving', §8 'X no longer hands the sitting in', acceptance 27",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "Playwright a:cxaudrun1: started today's Daily, clicked Exit on Q1 without answering. The page went to /practice/ with no sheet, and GET /api/drill/{sid} → finished 2026-09-28T20:25:13, answered 0. /api/contest/daily → me.status 'finished', ranked True, points 0, so the one ranked sitting is gone. After one answer, Exit opens the generic 'Leave this set? … The clock keeps running while you are away.' with End and see summary / Keep it for later.",
+   "owner": "shared",
+   "build": "For contest sittings, X opens 'Leave the challenge? This question will be skipped. The clock stops until you come back. Finish before 11:59 PM.' with Leave (skip the open question and return to the contest page, which shows Resume), Hand in now, and × Stay. On a verdict it reads 'Come back before 11:59 PM to finish.' Never quiet-finish a contest sitting."
+  },
+  {
+   "item": "Rush runs can't be played",
+   "source": "compete.md C13 (Rush), acceptance 1-5",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "Playwright a:cxaudrush1 on /compete/contest/?id=rush-2026-W40 → Start → /practice/session/?id=honx1… shows 'That set does not exist.', and GET /api/drill/{sid} returns 404. rush_start returns runner 'session', but Rush sittings are served only through /api/contest/{cid}/next|answer|finish, which the session page never calls. Overview also shows a started run as 'In progress · 0:00 left'.",
+   "owner": "shared",
+   "build": "Either give Rush its own runner mode (Sprint mode header 'Right 14 · strikes ✕✕○ · now L6', key and mistake line, 'Why' collapsed) that calls /api/contest/{cid}/next, answer and finish, or make Rush sessions answerable through /api/drill/{sid}. Drop the clock text from Rush rows."
+  },
+  {
+   "item": "First-time Sprint start and 'Race your best' links fail",
+   "source": "compete.md C8 (pacers: Sprint and Rush default to your best), C9 empty state 'Race your best'",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "The Sprint lobby preselects Race: 'Your best', so a new player's Start sends POST /api/contest/sprint-2026-W40/start?race=best, which returns 404 {'detail':'no previous run to race'} (a:cxaudspr1, seen in Playwright). The same 404 affects daily?race=best. The Overview Rivals empty state (new learners) links 'Race your best' to /compete/contest/?id=daily&race=best, which renders 'There's no contest with that link.'",
+   "owner": "server",
+   "build": "When race=best and there is no previous run, start or return the contest with no pacer (race null) instead of 404. On the page, default the select to 'Your best' only when the learner has a run, and hide 'Race your best' when they don't."
+  },
+  {
+   "item": "The answer clock doesn't end the sitting at 0",
+   "source": "spec 3.7 §1.2 'When the clock hits 0, the open question scores 0 and the sitting ends'; §3.7.5 drill.overtime uses compete.clock",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "API sprint run (a:cxaudp09), answers sent with ms=100000: clock.left reached 0 after 3 answers, but /next kept serving and finished stayed null through 8 answers. On finish: points 120, secs 800 against a 300 s clock, all 8 right scored. The seeded Sprint recorded secs 480 on a 300 s clock.",
+   "owner": "server",
+   "build": "In the drill next/answer path for contest sittings: when compete.clock(row).left hits 0, refuse the next question, score the open one 0 and finish the sitting. Cap secs at the contest's seconds (× the timing factor)."
+  },
+  {
+   "item": "Server-measured answer time (attempts.sms)",
+   "source": "spec 3.7.5 drill.py '_serve sets q[served]; answer() computes sms = min(now − served, clock left)'; §3.7.2 'Board time: worse'; C15 'fast' trigger",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "drill.py:2568 reads '# ponytail: attempts.sms stays Compete's (S8 scores the client's ms today…)' and sets sms = None. Every contest attempt row in the DB has sms NULL. compete.clock sums COALESCE(sms, ms), so the clock, the board's Time column, too-fast detection and pace-setter (which reads sms ≤ 95000) all depend on the client's ms. Review field median_ms is None and the Grid footer median_ms is None.",
+   "owner": "server",
+   "build": "On a contest answer, compute sms = min(now − q.served, clock left) and pass it to progress.record(sms=). Use sms for clock.used, board secs, the fast flag, the pace bonus, field median_ms in review and grid, and the badges."
+  },
+  {
+   "item": "Word Sprint (Reading & Writing in Compete) and the Subject select",
+   "source": "compete.md C14 (Word Sprint), acceptance 1; §3.1 entry 19 (Subject select)",
+   "status": "missing",
+   "severity": "high",
+   "evidence": "GET /api/contests?status=live has no kind 'words' row. words.sprint_available() is false because the transition pools are empty: 0 of 153 transition pairs are reviewed. With SATF_WORDS_UNREVIEWED=1 the pools hold 302/247/56. So compete.ensure never inserts words-2026-W40, and the Leaderboard has no Subject select (leaderboard.js: 'Subject waits until a second subject has a board').",
+   "owner": "server",
+   "build": "Review (or ship) enough W2 Transitions pairs at each tier so sprint_available() is true. Then the weekly words-YYYY-Www contest is scheduled. Show the Leaderboard Subject select (Math · Reading & Writing) once it exists."
+  },
+  {
+   "item": "Past days of the Daily (ghost sittings, make-up, date picker)",
+   "source": "spec 3.7 §4 header (day navigation, date input min = first stored day), 'Closed / past day, not sat'; §3.7.4 'Any past day can be regenerated'; compete.md C25 make-up",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "GET /api/contest/daily-2026-09-27, -09-25 and -09-01 all return 404 'contest not found'. Playwright seeded learner on daily-2026-09-28, clicking '‹ Sep 27': 'There's no contest with that link.' The date input has no min attribute (min ''), so any picked day can 404. POST start on a past day returns 404 too, so no ghost sitting or make-up is possible for a day nobody opened.",
+   "owner": "server",
+   "build": "compete.contest('daily-YYYY-MM-DD') lazily creates any past day up to today (the canonical slots from the date, as ensure does for today), so the page, ghost sittings and make-ups work. Set the date input min to the first stored or supported day."
+  },
+  {
+   "item": "Rating change per sitting (rating_before/after) is lost",
+   "source": "spec 3.7.5 rating 'rating_before and rating_after are stored in the sitting's result JSON'; §4 Rating tile; §6 history Rating Δ; C10 'Rating › Sort: Change' (Most improved)",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "All 6 of the seeded learner's contest sittings have result.rating_before/after and cfg.rating_before/after NULL, yet learners.rating moved to 1385 with 87 rated answers. compete.rate writes them, but the drill's later cfg/result save overwrites them. Effects: no Rating tile on the result panel or chip on the Daily card, and /api/leaderboard?metric=rating&sort=change returns players 0. Entries' 'change' is always None.",
+   "owner": "server",
+   "build": "Persist rating_before/after atomically with the drill's own cfg/result save (merge on write, or have finish_contest recompute from the rated attempts). Then the result tile '+14 → 1,084 · Level 3 → 4', history Rating Δ, the Change column and the Most improved board all fill."
+  },
+  {
+   "item": "The student level on boards uses the item L1–L7 scale, not the 1–10 ladder",
+   "source": "spec 3.7 §1.2 'Levels 1–10 use the ladder in spec/rating.md'; compete.md C11/C13 (the two scales never share 'Level'); decisions/NOT-GAPS (no L1–L7)",
+   "status": "contradicts",
+   "severity": "medium",
+   "evidence": "compete.py fills 'level' with ratings.level_of (EDGES 850/1000/1075/1150/1225/1350, the P11 item L-codes). Seeded rating 1,385 shows a '7' badge on the Daily board, the week board and the podium, while Your stats and the Rating card say 'Contest rating · Level 5'. Ada at 1,179 shows '5' on the board but falls in Level 4 on the ladder table (1,101–1,250). The 'Level five'/'Level eight' badge progress reads 7/5.",
+   "owner": "server",
+   "build": "Use the spec/rating.md 1–10 ladder (≤800, then 150-wide bands, Level 10 from 2,001) for every Compete learner level in board entries, identity, hub me.level, badges and rivals, the same ladder compete-ui.js levelOf uses."
+  },
+  {
+   "item": "Owner controls and 'by' for private contests",
+   "source": "spec 3.7 §4 Owner controls (settings only, compete.md C18 'Ownership is settings only'), §4 header 'PRIVATE CONTEST · by Sam', join landing",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "The creator's GET /api/contest/p-5faa0a364c returns owner None, code None and by None. The page renders the Contest settings card (Copy link/code, Rename, Extend 24 h, Close now, Remove an entrant, Delete) only from a localStorage code. In the creator's browser without that key, the card was absent (Playwright seeded page text has no 'Contest settings'). The header has no 'by …', the Overview G row has no Copy link, and the join view has no 'Invited by'. This matches the open item in followups/S8-pages.json.",
+   "owner": "server",
+   "build": "GET /api/contest/{cid} (and the private rows of /api/contests) return owner: true for the creator, code for every entrant, and by: the creator's board name. The page already renders the settings card and the header from these."
+  },
+  {
+   "item": "Leaderboard accuracy, avg time and contests per row",
+   "source": "spec 3.7 §5 Table 'Accuracy | Avg time | Contests', podium sub-line '82% · 1:34 avg', phone meta line; §3.7.5 leaderboard() 'also returns accuracy, median secs and contests'",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "GET /api/leaderboard?metric=points&period=week entries carry only pid, name, anon, level, country, ring, title, value, you, rank, tie, gap, move, cheapest. The same holds for the rating, test, skill and right metrics (accuracy/contests None). The page table therefore shows only Rank | Student | Points (Playwright 1280 and 390), with no podium sub-line and no phone meta line.",
+   "owner": "server",
+   "build": "compete.leaderboard adds accuracy, avg_secs (median answer time) and contests (or sections for Test score), computed over the same answers the metric counts. The page's columns and podium sub-line already read them."
+  },
+  {
+   "item": "Contest history: Rank, Top % and Rating Δ",
+   "source": "spec 3.7 §6.6 as replaced by compete.md §3.1 entry 24 (Rank | Top % | Rating Δ columns; Sort Best rank / Best top %); phone second line",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "/api/compete/history rows carry id, session, kind, title, finished, points, net, ranked, why, followup, record and result, with no rank, players or rating delta. rankings.js table headers are Date, Contest, Score, R·W·S·V, Points, Over par, Time, Ranked, Follow-up, with no Rank, Top % or Rating Δ. Sort offers Newest / Most points / Best over par only. The phone line lacks '#4 of 37 · top 11% · +14'.",
+   "owner": "page",
+   "build": "Server: add rank, tie, players, top_pct (≥10 players) and rating_delta to each history row. Page: add Rank, Top % and Rating Δ columns, 'Best rank' and 'Best top %' sorts, and those parts on the phone second line."
+  },
+  {
+   "item": "Rating card Skill ratings and the Pace section from progress.pace",
+   "source": "compete.md C11 (Skill ratings block: 4 domain rows with ladder bar and expectation line, Skills · 19 disclosure, Weakest line + Rush/Sprint links); C3 'Your rankings › Pace' (4 views, field median tick, budget lines, quadrant actions); §3.7.5 GET /api/compete/me (pace, skills, seasons, chart series)",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "GET /api/compete/me keys: week, all, country, rating, level, provisional, climb, badges, streak, records, week_line, boards. There is no skills, pace, seasons or chart series. The seeded Rating card shows only the Contest rating block, with no 'SKILL RATINGS (ALL PRACTICE)'. rankings.js Pace reads history rows ('ponytail: … switch to /api/compete/me.pace'), offers only By difficulty · By domain · Right vs wrong (no Under pressure) and draws no field-median tick.",
+   "owner": "server",
+   "build": "/api/compete/me returns skills {domains:[{domain,name,rating,level,n,placing,delta30,expect}], topics[19]} from P11 skill_ratings and pace = progress.pace(learner, 90, only='contest') with field medians and the under-pressure split. Page: render the Skill ratings block (outlined badges, ladder bar, expectation line, Skills · 19 disclosure, Weakest + 'Rush Geometry' + Sprint link) and the fourth Pace view with field ticks."
+  },
+  {
+   "item": "Level ladder table: Students at it and Timed-section median",
+   "source": "compete.md C11 'Level ladder table … Students at it · Timed-section median', acceptance 4",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "rankings.js renderLadder hardcodes h('td', {text:'—'}) for both columns in every row. Playwright shows '—' in all 10 rows for both learners, although 12 learners have ratings.",
+   "owner": "page",
+   "build": "Server: return per-level counts and the R16 mean3 midpoint median of learners at each level with a timed full section in 30 days (only when n ≥ 20). Page: fill both columns from it."
+  },
+  {
+   "item": "Performance chart series",
+   "source": "spec 3.7 §6.1 chart toggle 'Top % · Rating' (+ Over par, compare §3.1 entry 21), top-% axis with 10%/50% gridlines, rating with level-band stripes",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "rankings.js offers only 'Points · Over par' (C.under with the values points and net). There is no Top % series, no Rating series and no level-band stripes. The seeded page shows 'Points per contest'.",
+   "owner": "page",
+   "build": "Add Top % (inverted 1–100% axis, gridlines at 10% and 50%) and Rating (level bands as faint stripes) beside Over par, using history rank/players and rating_after. Points open their history row as now."
+  },
+  {
+   "item": "Seasons: past seasons, columns and the season stepper",
+   "source": "spec 3.7 §6.5 Seasons table (Season | Points | Rank | Top % | Final | Badge); compete.md C27 (period stepper '‹ Road to Sep 12 ›', ?period=season&at=, acceptance 5)",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "The Seasons table renders one hardcoded 'This season live' row with Points/Rank and Final '—'. It has no past seasons and no Top % or Badge columns. On the Leaderboard, both stepper buttons for Season are disabled (Playwright: ['Previous period:true','Next period:true']). GET /api/leaderboard?period=season&at=road-2026-09-12 returns 400 'invalid past period'.",
+   "owner": "server",
+   "build": "Serve stored seasons (standings JSON from close_season) through /api/compete/me.seasons and leaderboard at=road-YYYY-MM-DD. Page: list every season with Points, Rank, Top %, Final (band, rank) and Badge, and enable the season stepper."
+  },
+  {
+   "item": "Your ranks table: Last week column, gaps and series rows",
+   "source": "compete.md §3.1 entry 22 (Last week column, movement and gap in each cell, rows for Following, My level, Same exam date, each private series, a Climb row)",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "rankings.js renders only the Week/Month/Season/All time columns. Cells show rank, of, top % and ▲ but no gap to the next place ('7 pts to #11'). There are no private-series rows, and Climb appears as a meta line, not a row. The seeded page shows 'Everyone #1' and 'Country #1 of 4' only.",
+   "owner": "page",
+   "build": "Add a 'Last week' column from the closed week's final board, add '· N pts to #k' from each board's cheapest, add a row per private series (Series rank) and a Climb row."
+  },
+  {
+   "item": "Rivals: three weekly picks by the C9 rules",
+   "source": "compete.md C9 Rivals ('three a week', follows first, then public learners active in 14 days at ±100 widening to ±200 then the nearest, same exam date / fellow entrants first; auto rows stored with week); acceptance 1",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "compete.rivals returns candidates[:10], filtered only by |rating diff| ≤ 200 and rated>0. There is no activity window, no ±100 step, no nearest fallback, no exam-date or entrant priority and no weekly storage. The new learner (a:cxaudnew3) gets 9 rivals, and Your rankings › Rivals lists all 9. The table's 'Last shared' is a date, not 'Daily · Sep 23 · you 170 · them 150'.",
+   "owner": "server",
+   "build": "Implement the C9 pick (write follows auto rows with week), return 3, and include the last shared result {contest, you, them}. The page shows the result line."
+  },
+  {
+   "item": "Compete badges: new ladders, rules and earned toasts",
+   "source": "spec 3.7 §6 Badge set; compete.md C23 (new ladders Over par, Won back, Rush, Trap-proof week, Full house; pace-setter per budget); §4 result panel 'New badges from this sitting' + toast 'Badge earned: …'; §3.7.5 finish responses carry badges_new",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "compete.ACHIEVEMENTS has 9 rules. grep finds no over-par, won-back, trap-week or full-house anywhere in server/. evaluate() counts pace-setter from COALESCE(a.sms, 999999) ≤ 95000, and sms is always NULL, so it stays 0/10 forever. 'top-ten' and 'season-top-10' have no key in `have`, so they are always 0. Rules are weaker than spec: sprinter 'Finish a Sprint' (spec 20 right in one sprint), all-rounder 'Play a Daily, Sprint, and Weekly' (spec ≥70% in each domain). No badges_new in server or web, so the result panel shows no new badge.",
+   "owner": "server",
+   "build": "Declare the five C23 ladders in compete.ACHIEVEMENTS with have/need, compute top-ten (Daily with ≥20 ranked) and season-top-10, base pace-setter on per-question budgets, restore the spec thresholds, and return badges_new from finish. The result panel shows them as small tiles and a toast."
+  },
+  {
+   "item": "Find a student beyond the loaded page",
+   "source": "compete.md C9 'Find a student' (GET /api/leaderboard?…&find=<name> → {offset}), acceptance 4",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "GET /api/leaderboard?metric=points&period=week&find=ada returns offset None (the param is ignored). leaderboard.js searches only the entries of the page it fetched, so a public name ranked below #50 reads 'No public student has that name.'",
+   "owner": "server",
+   "build": "leaderboard(find=name) returns {offset} of the exact public name's page (and 404 or null when no such public name). The page already jumps to that offset and highlights the row."
+  },
+  {
+   "item": "Upcoming list shows tomorrow's Daily as ended",
+   "source": "spec 3.7 §3 B (Upcoming row 'Opens …'), §1.1 Daily window",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "api_compete.py:135 sets any daily that isn't today's local id to 'closed'. /api/contests?status=upcoming includes daily-2026-09-30 with status 'closed' and today's live daily. Playwright Upcoming tab: 'Daily Challenge · Ended Thu 5:00 PM … Open' and 'Daily Challenge · Open until 11:59 PM your time … Finished · 210 pts'.",
+   "owner": "server",
+   "build": "A daily after the learner's local today is 'upcoming', and one before it is 'closed'. Keep dailies out of Upcoming except tomorrow's (as an upcoming row), and keep today's live Daily out of Upcoming."
+  },
+  {
+   "item": "Weekly Module window in local time",
+   "source": "spec 3.7 §1.1 Weekly 'your local Sat 00:00 → Sun 23:59'; Review changes item 18",
+   "status": "contradicts",
+   "severity": "low",
+   "evidence": "weekly-2026-W40 opens '2026-10-03T00:00:00+00:00' (UTC), and status and start use that UTC value. For a UTC+5 browser the row reads 'Opens Sat 5:00 AM · in 4d 03h', not Sat 12:00 AM.",
+   "owner": "server",
+   "build": "Evaluate the Weekly and Final window against the learner's local Saturday 00:00 (X-Tz), as the Daily does, and close everywhere Mon 12:00 UTC."
+  },
+  {
+   "item": "Series board and series streak",
+   "source": "compete.md C18 (Series board: Rank | Student | Rounds sat | Points | Over par | Move, a round not sat shows '–'; 'Series streak 3 · best 5'; Overview G row 'Series streak', your place this round and in the series)",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "Playwright, seeded learner, Friday Five → Series: the table shows only Ada and Student 0AAF with Points | Over par. The Rounds sat column and per-round '–' are missing, and Maya (not sat, in the API with 0) is dropped. The API returns streak {current, best} but no page code reads it (no 'Series streak' in contest.js or overview.js). The G card has no place this round or in the series.",
+   "owner": "page",
+   "build": "In series view, render every entrant with Rounds sat (count of rounds with points), '–' for unsat rounds, and Move. Show 'Series streak N · best M' in the board header and on the Overview G row, with your round and series places."
+  },
+  {
+   "item": "Entrant status dots invisible for finished and in-progress entrants",
+   "source": "compete.md C18 'entrant dots (✓ done · half-filled in progress · empty not yet)'; spec §4 'Entrants (12)' status dots",
+   "status": "broken",
+   "severity": "low",
+   "evidence": "overview.js and contest.js build the class as `edot${…'done'…}`, which gives 'edotdone' and 'edotprogress'. compete.css styles only '.edot.done' and '.edot.progress', so those dots render with no box (seeded Overview G row shows a single empty dot for 3 entrants).",
+   "owner": "page",
+   "build": "Use `edot ${e.status === 'finished' ? 'done' : …}` (with a space) in both files."
+  },
+  {
+   "item": "Grid 'Where we went wrong' Fix it and your pinned row",
+   "source": "compete.md C19 ('when you did, Fix it · 3'), C20 ('your row pinned at the top')",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "GET /api/contest/p-5faa0a364c/grid 'where' rows are {norm, label, fell, of} with no 'you' or qid, so the page's `w.you ? Fix it` never renders, although the seeded learner fell for that trap. rows[0] is Ada (rank order) and your row isn't pinned first.",
+   "owner": "server",
+   "build": "/grid 'where' adds you: bool and the qid of your miss, and rows put the viewer's row first."
+  },
+  {
+   "item": "Result 'Time' block field-median tick and quadrant pills; Review field median",
+   "source": "compete.md C3 Time block ('graphite tick at the field median for that slot'; Speed drill · {skill} and Careful set · {skill} pills); spec §4 Review row 'you 1:12 · field median 1:34'",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "The seeded Time block shows bars against budget ticks only ('bar: your time · tick: its budget'). There is no field tick and no Speed drill/Careful set pills. Review field.median_ms is None for every item, so review rows show only 'field 50% right · you 0:40'.",
+   "owner": "page",
+   "build": "Add a per-slot field-median tick (from review/grid median once sms is recorded, with C6's fallback) and the two U7 quadrant pills beneath the Time block."
+  },
+  {
+   "item": "Debrief mislabels a skipped question and the finish bonus",
+   "source": "compete.md C1 (Over budget = pace bonus not earned on right answers; rows sorted by places, one action per row)",
+   "status": "broken",
+   "severity": "low",
+   "evidence": "GET /api/contest/daily/debrief lost: {slot 6, kind 'skip', pts 20} and also {slot 6, kind 'pace', label 'Pace bonus', pts 5}, so the skipped Q6 appears as 'over budget −5' with 'Speed drill · 8'. The finish row has slot 11, which the page prints as 'Q11 · finish bonus'.",
+   "owner": "server",
+   "build": "Fold a skipped or voided slot's pace value into its skip/void row (value = tier + 5 when within budget), keep 'pace' rows for right-but-slow answers only, and give the finish row no slot number."
+  },
+  {
+   "item": "Forecast line math",
+   "source": "compete.md C7 'likely #8–#14 of ~37'",
+   "status": "broken",
+   "severity": "low",
+   "evidence": "New learner lobby and Overview read 'Your par 112 · about 4.8 right · likely #13–#13 of ~12', and the field line reads 'median 252.5 pts'.",
+   "owner": "server",
+   "build": "Report of = ranked players + 1 (you), and round median_points to a whole point."
+  },
+  {
+   "item": "Compare sheet per-slot times",
+   "source": "spec 3.7 §4 Compare sheet ('Per slot: you 1:12 · them 0:58')",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "contest.js compare() renders two strips, the totals line and h2h only. It has no per-slot time line, although §3.7.5 compare returns per-slot sms.",
+   "owner": "page",
+   "build": "Under the aligned strips, list per slot 'you m:ss · them m:ss' from the compare payload (server sends per-slot sms)."
+  },
+  {
+   "item": "Results list contest rows",
+   "source": "spec 3.7 §9 'Results list: contest rows show the kind (\"Daily Challenge · Sep 23\"), \"#4 of 37 · 170 pts\", a Ranked/Unranked chip, and link to the contest page'",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "Playwright /results/ for the seeded learner: every contest sitting (private, Sprint, Trap, two Dailies) reads 'Today | Challenge | <topics> | 4 / 5 · 80% | Review'. There is no kind name, rank, points or Ranked chip, and no link to the contest page.",
+   "owner": "page",
+   "build": "Results rows for sittings with a contest show the kind title ('Daily Challenge · Sep 29', 'Trap of the week · Units and conversions'), '#9 of 13 · 210 pts', a Ranked/Unranked chip, and link to /compete/contest/?id=…"
+  },
+  {
+   "item": "Season card elapsed bar and hub season fields",
+   "source": "spec 3.7 §3 H ('a thin bar of the season's days elapsed', '#34 of 512 · top 7% · 1,240 pts', Season Final line); §3.7.5 GET /api/compete season {id, name, closes, rank, points, final}",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "GET /api/compete season = {'closes': '2026-10-03', 'name': 'Road to Oct 3'}, with no id, opens, rank, points or final. overview.js draws the bar only when s.opens is set, so the Season card shows no bar (seeded and new screenshots).",
+   "owner": "server",
+   "build": "Hub season returns id, opens, closes, name, rank, players, points and the season's final {id, opens, closes}. The page already draws the bar, the rank line and the Final line from them."
+  },
+  {
+   "item": "Weekly and Final contest mode in the test window",
+   "source": "spec 3.7 §8 Test window (header chip 'Weekly Module · Ranked', voids via /api/session/{sid}/void, hand-in to the contest page result panel); compete.md C15 Weekly Confirm step and the Final's module-break confirms; C3 Final forces the pace guide off",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "grep of web/test/test.js finds no '/void', '/confirm', hasFocus or a redirect to /compete/contest/. The only contest touches are the lobby line 'Contest · this sitting counts on the board' and a 'Back to Compete' link. No Weekly was live during the audit, so this was proven from the code only.",
+   "owner": "shared",
+   "build": "In the test window for contest sessions: a header chip, the same flag triggers posting /api/session/{sid}/void, the Confirm step after hand-in (the Final's module-1 confirms at the break), and hand-in to /compete/contest/?id=… with the report link kept."
+  },
+  {
+   "item": "Leaderboard phone short labels",
+   "source": "spec 3.7 §5 Phone 390 ('Points · Rating · Right · Test' and 'Week · Month · Season · Year · All')",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "Playwright 390: the metric underline uses full labels (Points · Over par · Contest rating · Skill rating · Que…), which run off the right edge in a sideways scroll. METRICS defines `short` labels, but renderControls never uses them.",
+   "owner": "page",
+   "build": "At ≤759 px use each metric's and period's short label so the whole underline fits without scrolling."
+  },
+  {
+   "item": "Board 'your rows' (your best and 7-day average)",
+   "source": "compete.md C6 ('Your best Daily · 230' and 'You, last 7 days avg · 184' rows; result placement line '… · 12 above your 7-day average')",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "GET /api/contest/daily/board 'mine' is the viewer's own entry object, not [{label, points}] rows. The board shows only par rows and your real row, and the result panel's placement line reads 'Between L5 and L7 par' with no 7-day-average part.",
+   "owner": "server",
+   "build": "board() returns mine: [{label:'Your best Daily', points}, {label:'You, last 7 days avg', points}]. The page draws them as dashed par-style rows and adds the '· N above your 7-day average' part."
+  }
+ ]
+}

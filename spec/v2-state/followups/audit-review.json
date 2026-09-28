@@ -1,0 +1,278 @@
+{
+ "section": "review",
+ "run": "wf_a6acd4e3-941",
+ "total": 262,
+ "built": 224,
+ "gaps": [
+  {
+   "item": "Start review · 10 min (source 'due') serves today's Due list",
+   "source": "spec/v2-upgrades/review.md V1 'The session' and acceptance 2, 5; product.md R56",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "server/drill.py create() dispatches only like/word/confusion/next resolvers; review.resolve_drill is never called. POST /api/drill {source:'due',box:10} for the seeded learner stored pool 'new' with an 18-template warm-up queue (fading plus check-ins already done), while GET /api/review/due listed 4 undone items (rtt.rectangle_diagonal, sys.model_purchase, prob.freq_grouped, lin.interpret_x_intercept), and none of them was queued. cfg.hide_skill was null (GET /api/drill/{id} hide_skill False; the skill line showed 'the unit circle'). With minutes = All the pill read 'All · 10 questions · about 16 min' while the Due list had 47 rows.",
+   "owner": "server",
+   "build": "In drill.create, when body.source is 'due' (and 'warmup', which becomes due with count 5), replace the body with deps.part('review','resolve_drill')(learner, body) before the pool runs. Set cfg.hide_skill = True for source due. Make POST /api/drill/preview {source:'due'} go through the same resolver and return T1's blocks (key, kind, label) so drop and the All count are correct."
+  },
+  {
+   "item": "The walk (/review/walk/) opens a walk",
+   "source": "review.md V2 'The walk' and acceptance 2, 5; §3.1 item 4 (new route)",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "Every entry point ('Walk them · name each, then prove it', the sitting header's Walk these misses, Redo's Walk these · n) lands on 'This walk can't be opened yet.' walk.js readWalk calls GET /api/review/walk/{id}, which returns 404 because no such route exists in api_review.py. It then falls back to GET /api/drill/{id}, whose keys have no cfg or walk. POST /api/review/walk creates the walk correctly, with cfg.walk.items stored in the DB.",
+   "owner": "server",
+   "build": "Add an owner-only GET /api/review/walk/{sid} returning cfg.walk {items, i, step} and inline. The alternative is to expose cfg.walk and cfg.inline on GET /api/drill/{id} for review-source drills, which also meets V2 acceptance 2."
+  },
+  {
+   "item": "A selection in Saved and Marked starts only the selected questions",
+   "source": "review.md V3 acceptance 4 and 7, V15 acceptance 1; §3.9.3 §4-§5 action bars",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "In server/drill.py _pool, the 'saved' and 'marked' branches read every row of the table and ignore cfg.ids. POST /api/drill {pool:'saved', ids:[['pct.change',10042]], exact:false, each:1} served 7 questions (the whole deck). The same call with 3 ids and each 2 served 14. The marked pool with one [session,qid] id, exact true or false, served 7. In the browser, Print worksheet with 3 Saved rows selected and 2 each made a 14-question set; the bar had said 6. The same happens to 'Twin this set · n selected', 'Practise due · n' and Again, exactly.",
+   "owner": "server",
+   "build": "In _pool, when ids is given, filter saved to the listed [template, seed] pairs and marked to the listed [session, qid] pairs, validated as pairs, before items is built. Keep the whole deck only when ids is null."
+  },
+  {
+   "item": "Pane 'Again, exactly' and Hide answers → Check re-answer the exact question",
+   "source": "spec §3.9.3 §8 'Hide answers' and 'Inline mini-session'; §3.9.8 acceptance 19",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "runner.js fileRepeat (line 3289) and onx.again (line 3592) post {list:'items', ids:[[t,s]], count:1, source:'review'} with no exact. drill.py only makes exact the default for history/marked/set. The same body over the API served pct.change 10044 for the pair pct.change 10042; with exact:true it served 10042. In the browser I hid answers on History's pct.change:10042, picked an option and pressed Sure. The pane said 'Filed as a repeat', but the attempt was filed on seed 10043 with correct=0 and repeat=0. That graded my pick against a question never shown, and the Fixed trap then read Relapsed/Stuck in the Redo filter sheet.",
+   "owner": "shared",
+   "build": "In web/assets/runner.js, add exact:true to both bodies (fileRepeat and the default again body). Also default exact to true in drill.py for pool 'items' (list:'items' means these exact pairs), so no caller serves a twin by accident."
+  },
+  {
+   "item": "Spot the trap scores the trap pick as right",
+   "source": "spec §3.9.4 'Spot the trap', §3.9.5 'Spot the trap (extra)'",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "api_review.py spot_answer returns correct = (got == key). Picking the option that carries the trap (index 1) returned correct:false, trap_index:1, so the sheet says 'Not quite: the trap is B' when B was the pick. Picking the answer key returned correct:true with trap_index 2, so the sheet says 'Yes: C is the trap'.",
+   "owner": "server",
+   "build": "Return correct = (got == trap_index) in POST /api/review/spot/{id}, and keep answer_index for the key's highlight."
+  },
+  {
+   "item": "Why you lose points bar and each row's cause",
+   "source": "review.md V6 'The bar', 'Rows', acceptance 1; §3.1 item 9 Cause chip",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "GET /api/review/redo gives cause = diag or miss_kind or 'trap' and returns no causes. For the seeded learner every item's cause was 'trap', while progress.causes(learner,0,30).by = {trap 24, slip 3, gap 4, clock 2}. The client draws the bar only when 2 or more causes exist, so the card never showed and no Slip, Clock or Gap chip appeared. After What happened? the raw diag leaks in as the cause. 'Just show me' made the pane chip read 'Cause: Skip'. Choosing a misconception set cause to the norm text ('treated the chord as a diameter…'), after which cause=trap no longer lists the trap and 'See one solved' disappears (runner trapMiss requires cause trap or gap). The error log's Cause column reads 'Fell for a trap' for unsure and grid-in rows too.",
+   "owner": "server",
+   "build": "Build each redo item's cause with progress._cause on its latest miss (honouring miss_kind in misread, slip, gap), mapping diag = a norm to 'trap' and 'skip' to the automatic cause. Return causes: progress.causes(learner, tz, 30)['by'] from /api/review/redo, and apply cause= against the derived value."
+  },
+  {
+   "item": "Trap gauntlet · 10 on the Redo habits strip",
+   "source": "review.md V7 'Habits strip' (U6's Trap gauntlet pill)",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "The button posts {source:'gauntlet', count:10}. The server returns 409 {reason:'no_templates'} for the seeded learner, who has 36 open traps and 3 habit groups; adding habit:'sign' gives the same result. 'gauntlet' appears only in drill.SOURCES, and no resolver builds its set.",
+   "owner": "server",
+   "build": "Resolve source 'gauntlet' (U6): draw 10 fresh items across the learner's top habit families, walking seeds with want so each offers that family's trap. Until it exists, hide the pill."
+  },
+  {
+   "item": "Attempt History modal columns and summary",
+   "source": "spec §3.9.3 §9 'Table' and 'Summary row'; §3.1 item 20; the user's 2026-09-28 rule (no clock timestamps in history lines)",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "UI.history reads r.mistake, r.tier, r.flagged and summary.median_ms or mixed. GET /api/review/family returns attempts with reason (not mistake) and no difficulty, tier or flagged, and a summary with no median or mixed. The modal therefore showed 'Wrong · picked A' with no misconception, an empty Difficulty column and 'seen 1 · right 0' with no median. Its 'When and where' cell reads 'Sep 24 01:12', a clock time in a history line.",
+   "owner": "shared",
+   "build": "Server: family attempts add mistake (the capitalised reason), tier (attempts.difficulty) and flagged (flags row), and the summary adds median_ms and mixed. web/assets/runner.js UI.history: show the date only (no clock time) in 'When and where'."
+  },
+  {
+   "item": "Sitting header cells include blanks from the paper",
+   "source": "review.md V13 'Sitting header' and acceptance 3, 6",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "The finished 22-question module with 2 unanswered questions shows 20 cells. /api/review/history?group=sitting gives that sitting cells 20, blanks 2 and blank cells 0: cells are built only from its attempts. No dashed Blank cell can be opened. The 'Blanks · 2 · fresh twins' button is shown.",
+   "owner": "server",
+   "build": "Build sittings[].cells from progress._paper(session) in paper order, one per question: the attempt's result, or {blank:true, template, seed} for an unanswered one. The client already draws blank cells and opens them through openSittingCell."
+  },
+  {
+   "item": "Pane drills stay out of History's Sitting view",
+   "source": "spec §3.9.3 §8 'Pane drills are never finished, so they never appear as sittings'; review.md R24 note",
+   "status": "contradicts",
+   "severity": "medium",
+   "evidence": "After two inline Twins in the pane, Group by Sitting listed 'Review · Percentages · Sep 29 · 0 / 1' and 'Review · Nonlinear functions · 1 / 1' (kind drill, source review). Each carried Rematch, Walk these misses and Fix buttons.",
+   "owner": "server",
+   "build": "In _history_response(group='sitting'), skip sessions whose cfg.inline is true or whose cfg.source is 'review' (as /api/history already does). Their rows stay under Source = Review in the flat list."
+  },
+  {
+   "item": "Worksheet key comes after the answers (V18)",
+   "source": "review.md V18 'The key comes after the answers', 'Visible state', acceptance 3, 4; §3.1 item 27",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "The worksheet's print view (/practice/session/?id=…&print=1, session.js line 598) has 'Include answer key and explanations' ticked by default, and printing with it never sets cfg.key_printed. The header has no 'Enter answers: /review/sheet/?id=…', and 'Enter answers online' links to the practice runner. On /review/sheet/, the ⋯ menu's Print the key now posts /api/drill/{id}/key, which no route serves, so the toast says 'isn't available yet'. Review's '1 worksheet waiting for answers · Enter answers' link points to /practice/, because GET /api/drill returned active: [] for an in-progress worksheet.",
+   "owner": "server",
+   "build": "Server: add an owner-only POST /api/drill/{id}/key that sets cfg.key_printed = now, and list in-progress source='worksheet' sets in GET /api/drill.active (or return their ids in /api/review/counts). Page (practice/session print view): for source 'worksheet', leave the key unticked, print 'Enter answers: /review/sheet/?id=<sid>' in the header and link the button there, and post the key endpoint when the key is printed."
+  },
+  {
+   "item": "Your note comes back on a fresh saved version",
+   "source": "review.md V3 'Your note comes back' and acceptance 4",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "server/drill.py line 2809 always sets saved_note to the constant 'Saved for another look' for pool saved. The student's note (notes table, for example 'check the sign') is never sent.",
+   "owner": "server",
+   "build": "For items served from pool 'saved', set feedback.saved_note = {text: the note on the saved (template, seed) from notes, at: its date}. Use null when there is no note."
+  },
+  {
+   "item": "History first page renders fast with thousands of answers",
+   "source": "spec §3.9.3 §12 'Lots of history' (first page under 300 ms at 5,000 answers; counts from SQL)",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "With 5,088 answers, GET /api/review/history?limit=50 took 2.20 s cold and about 1.1 s warm (also with result=wrong, and 1.15 s with group=sitting). _history_rows loads every attempt, generates every card and runs a tries query and a sessions lookup per row before paging.",
+   "owner": "server",
+   "build": "Filter and page in SQL first (cursor on attempts.id, with topic, difficulty, fmt, since and until in the WHERE), build card metadata only for the page's rows, compute summary and days with aggregate SQL, and fetch tries for the page's qids in one query."
+  },
+  {
+   "item": "One test-day sheet URL, and no exam-week card",
+   "source": "spec/v2-upgrades/product.md R60 and G13 ('One URL', 'Final check', acceptance 3-4); product.md §3 row for review.md V19",
+   "status": "contradicts",
+   "severity": "medium",
+   "evidence": "/review/print.html?sheet=traps renders its own 'Your traps' page and does not redirect to /plan/?print=sheet. With exam_date 5 days away, the Due tab still shows the 'Your SAT is Sun, Oct 4' card with its own pill 'Final check · one fresh question per trap · 10 · about 16 min', and it links to /review/print.html?sheet=traps.",
+   "owner": "page",
+   "build": "In print.html, location.replace('/plan/?print=sheet#traps') when sheet=traps (keep sheet=log). On the Due tab, replace the exam-week card with one line 'Your test-day sheet' linking to /plan/?print=sheet in the last 7 days. Final check is Today's final_check Due row."
+  },
+  {
+   "item": "Filter bar chips per tab (Habit, Date, Cause, Flagged, Sort, Why)",
+   "source": "spec §3.9.3 §2 filter table and sort list; §3.1 items 9, 10; review.md V7 ('The filter bar gains a Habit chip', acceptance 3), V3 'Why' filter, V12 'Most over budget'",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "filterDefs in review.js: Redo has no Habit chip and no Date chip, and listPath never forwards habit, so /review/?tab=redo&habit=sign is ignored although the server accepts habit=. History has no Cause and no Flagged chip, and the server's history() takes no cause, flagged or sort. Marked, Saved and History have no Sort chip (Newest / Sitting / Wrong first; Due first / Oldest / Topic / Not answered first; Oldest / Slowest / Most over budget). Saved has no Why filter. The Topic menu shows no per-topic counts.",
+   "owner": "page",
+   "build": "Page: add Habit (U6's 11 families) and Date to Redo; Cause and Flagged to History; Sort to Marked, Saved and History; Why to Saved; and forward habit, flagged and sort in listPath. Server: add sort (newest|oldest|slowest|over), flagged and cause params to /api/review/history and the CSV; sort to marked and saved; since and until to redo; and per-topic counts for the Topic menu."
+  },
+  {
+   "item": "Saved's two fresh actions are both always offered",
+   "source": "review.md V3 'The Saved tab head' and acceptance 7; §3.1 item 16",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "primaryFor('saved') shows either 'Practise due · n' or 'Twin this set · n selected' and never both. secondaryActions('saved') offers only Again, exactly, Print worksheet, Share and Unsave. With due items and a selection there is no Practise due beside the Twin primary, and while Practise due is the primary there is no Twin-selected button.",
+   "owner": "page",
+   "build": "When saved_spaced and due > 0, keep 'Practise due · n' in the bar as a secondary pill whenever 'Twin this set · n selected' is the primary. When Practise due is the primary, show 'Twin this set · all n' or '· n selected' beside it."
+  },
+  {
+   "item": "Tab counts read 'n of N' while filtered",
+   "source": "spec §3.9.3 §2 'Tab bar' ('While a filter is set, each count reads 9 of 25'); §3.9.8 acceptance 22",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "At 390 with Topic = Circles, the Redo tab still read 'Redo 39'. Only the list head said '5 of 39 match'.",
+   "owner": "page",
+   "build": "Show the filtered count in the open tab's segment as 'n of N', and drop the duplicate from the list head so the number is said once."
+  },
+  {
+   "item": "Error band when the counts fail",
+   "source": "spec §3.9.3 §12 'Error'",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "With /api/review/counts returning 503, the tiles read 'REDO — MARKED — SAVED — …'. No 'The server is not answering.' band and no Try again appeared.",
+   "owner": "page",
+   "build": "When loadCounts fails, show UI.cardError above the tiles with 'The server is not answering.' and Try again (re-running loadCounts), keeping any last good counts."
+  },
+  {
+   "item": "Accuracy by difficulty in History's summary",
+   "source": "spec §3.9.3 §6 'Summary card' (three short bars, each r/n)",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "The summary card shows 'Easy 35 · Medium 33 · Hard 38': answer counts only. summary.by_difficulty is Counter(difficulty) with no right count.",
+   "owner": "server",
+   "build": "Return by_difficulty as {tier: {n, right}} so the page's existing r/n branch draws '28 / 35'-style bars."
+  },
+  {
+   "item": "What happened? general choices",
+   "source": "review.md V2 step 2 and V6 'Not what I did?'",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "The pane's What happened? offered 'I misread it', 'Arithmetic slip' and 'I did not know how to start' (built in api_review.item diag_choices). The spec's three are 'Misread the question', 'A slip: I knew how' and 'Didn't know how to start', which walk.js already defines as GENERAL.",
+   "owner": "server",
+   "build": "Use the spec wording for the three general diag_choices in GET /api/review/item."
+  },
+  {
+   "item": "Pane's 'rushed' uses the same rule as History and V5",
+   "source": "review.md V5 inferred-sure rule and V12 (Rushed = wrong under 25% of budget)",
+   "status": "contradicts",
+   "severity": "low",
+   "evidence": "The pane's Your path read '0:45 · rushed' for a 45 s miss on a hard question with a 2:06 budget (36% of the budget), because runner.js line 3449 uses ms < budget/2. History files the same answer as not rushed (ms < budget × 0.25).",
+   "owner": "shared",
+   "build": "In runner.js Your path, call it rushed only when wrong and ms < 0.25 × budget_ms. Better still, read a rushed flag from /api/review/item."
+  },
+  {
+   "item": "Habits strip and Worth the most details",
+   "source": "review.md V7 'Habits strip'; V4 / §3.1 item 11 (×hits until points exist)",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "Habit rows show the name, tell, misses, pts and Drill this habit · 8, without 'avoided 2 of the last 5' / 'Broken · Sep 30' or 'Spot it · 3'. worth() returns early unless 2 or more items have pts, so a learner under 30 answers with 5+ open never sees the strip, although the spec wants ×hits chips until points exist.",
+   "owner": "page",
+   "build": "Add the dodge record (review.dodged) and a 'Spot it · 3' button per habit row. When points are null, show the top 5 by hits with '×hits' and 'Fix 5 · n questions'."
+  },
+  {
+   "item": "Due and fixing-set action bars",
+   "source": "review.md V15 ('Due has one sizing control… the Due bar's summary echoes the seg'; Redo/Fixed read 'Instant · fixing set') and acceptance 4-5",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "paintBar returns early for tab 'due', so the Due tab has no bar echoing '4 questions · 10 min · instant · fixing set'. The Redo and Fixed bars show no 'Instant · fixing set' text.",
+   "owner": "page",
+   "build": "Give the Due tab a bar with the summary '<left> questions · <minutes> min · instant · fixing set' and Start review as the primary, updated when the seg changes. Add the fixed 'Instant · fixing set' text to the Redo and Fixed options rows."
+  },
+  {
+   "item": "Tile sub-lines",
+   "source": "review.md V1 stat-strip table; §1 row 28 ('2 unsure' on OPEN)",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "The REDO tile reads '6 half fixed · ≈ 33 pts at stake · ▲25 this week' with no '6 sure and wrong' or '7 unsure' (counts.blind 6, unsure 7). MARKED reads only '6 right' (spec: 'from 2 sittings · flags caught 24% of misses'). The at-stake figure has no top two topics.",
+   "owner": "page",
+   "build": "Add non-zero blind ('n sure and wrong') and unsure counts to the Redo tile. Add 'from n sittings' and 'flags caught x% of misses' (from /api/review/calibration flags) to Marked. Add the two costliest topics to the at-stake bit."
+  },
+  {
+   "item": "Fixed rows show the mistake's story as a compact run",
+   "source": "review.md V8 ('Fixed rows show the chain as a compact run of cells'); §3.1 item 18",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "paintFixed draws the label, dates, check-in state, Proven at and Prove it, but no story cells. /api/review/fixed returns no story.",
+   "owner": "page",
+   "build": "Return a short story (trap_log events) with each fixed item and draw it as a row of small UI.cells after the meta line."
+  },
+  {
+   "item": "Done for today summary",
+   "source": "review.md V1 'Done for today'",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "The Due card read 'Done for today · 1 due tomorrow' (ring 13 / 17). The spec line is 'Done for today · 5 of 6 right · 2 fixed · 7 due tomorrow'.",
+   "owner": "page",
+   "build": "Add today's right/total and the fixes made today (from /api/review/due or counts) to the Done for today line."
+  },
+  {
+   "item": "Last row never covered on a phone",
+   "source": "spec §3.9.3 §11 'Action bar' ('the last row is never covered'); §3.9.8 acceptance 21",
+   "status": "broken",
+   "severity": "low",
+   "evidence": "At 390, Redo with Level = Harder (the summary wraps to two lines plus the echo), scrolled to the end: the last row's bottom was at 643.8 px and the fixed bar's top at 638.2 px, so its chip row sits under the bar.",
+   "owner": "page",
+   "build": "Set the page's bottom padding from the bar's measured height (for example a ResizeObserver writing --bar-h), not a fixed 200px."
+  },
+  {
+   "item": "Me's Saved content card",
+   "source": "spec §3.9.3 §10 'Me' and §3.1 item 21; review.md V9 'Me'; §3.2 shell-me override 30",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "/me/ shows 'Saved questions 7 · Practise saved · See all · Open mistakes 36 · Fix all'. It has no '4 due today', no Start review · 10 min, no '▼n this week' or sparkline, and no Marked, Fixed or Answers counts linking to their tabs.",
+   "owner": "page",
+   "build": "On /me/, read /api/review/counts and /api/review/ledger: 'n due today' with Start review · <m> min, 'Open mistakes n ▼d this week' with the 12-week sparkline, 'Saved n · k due', and Marked, Fixed and Answers, each linking to its Review tab."
+  },
+  {
+   "item": "Nested retakes' summary line",
+   "source": "review.md V13 'Nested retakes'",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "After a rematch of an 8-question sitting (the rematch filed 12 answers), the parent read 'Rematched ×1 · best 12 / 8'. best is the child's right count divided by the parent's asked, and there is no 'Then x → Now y'.",
+   "owner": "page",
+   "build": "Compute best and Then → Now over the original slots (first try per slot), and render 'Rematched ×n · best r/asked · Then a → Now b'."
+  },
+  {
+   "item": "Rule prompts on close and at 2 hits",
+   "source": "review.md V19 'Prompts in Review' and acceptance 3",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "The pane shows a 'Next time I will…' box on every miss (placeholder 'When I see … I will …'). Closing a trap inline showed 'That closes it…' with no 'You fixed it. Write the rule so it sticks.' prompt, and nothing prompts at 2 hits or relapse.",
+   "owner": "shared",
+   "build": "In runner.js, prompt once per trap on close and at hits 2 or a relapse, with the placeholder taken from the label, and skip it when a rule already exists for the template."
+  }
+ ]
+}

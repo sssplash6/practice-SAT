@@ -53,3 +53,12 @@ disagree, this file wins. Builders read it alongside the plan and `spec/v2-upgra
    - Easy on the eyes: generous spacing, few text sizes and weights, the primary fact in normal ink, secondary facts muted, mono
      only for numbers that matter, orange only for the one action or state that needs attention.
    - No feature is removed (this is not minimalism; decision 4 still holds): everything stays reachable and fast to use.
+
+8. **Every first try is rated: the Check is three buttons (2026-09-29).** The user picked variant D of the button studies
+   (https://claude.ai/artifact/Xx7ukRj4hVFhWV5Cmb7vB7): "lets have d but buttons should have uniform radii".
+   - When ratings are on and it is the first try, the answer goes in with one of three buttons of one shape (one height, one
+     radius): Sure (orange, Enter), Not sure (Shift+Enter), Guessing (I). There is no plain unrated Check; every other way
+     of checking (Enter, a second tap on a phone, first-tap) rates Sure.
+   - A retry, or ratings turned off, shows the single Check (Save & next in end mode). The buttons show disabled until an
+     answer is picked, so nothing jumps. No tip line: the three labels say it.
+   - Built in web/assets/question.js splitCheck + runner.css (v2/calm-shared 09ee635); this replaces P7's split Check.

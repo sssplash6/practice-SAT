@@ -1,0 +1,260 @@
+{
+ "section": "tests",
+ "run": "wf_a6acd4e3-941",
+ "total": 473,
+ "built": 405,
+ "gaps": [
+  {
+   "item": "Your sittings (T6) gets the thin legacy history rows: no #number, M1/M2, time, miss/blank chips, route/cap/rank chips, paper/retake labels; filters, sorts, notes and CSV module columns fail",
+   "source": "rebuild-v2.md §3.4.3 §2.8 T6 and §3.4.5 History; tests.md §3.1 item 23, X1, X18; acceptance 18, 36, 37",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "GET /api/history?all=1 goes to api_practice.history_without_inline (registered before api_results' route), which returns {id,kind,started,finished,right,asked,estimate,topics,label} and no finished-row status/number/modules/route/paper/note. Seeded learner at 1280: rows read 'Sep 28 · 00:42 Full section adaptive · official 630–770 Compare Review Fix 5 Twin Share Note' with no #, M1, M2, minutes or chips. The Paper #1 sitting shows as 'Full section' with no Retake. The lower-routed Sep 26 row has no 'Try the harder module 2'. ?kind=paper and ?route=lower both give 'No sittings match these filters.' PUT /session/{id}/note returned 200, but after a reload every .sr-note is hidden and empty (history carries no note). The score card's source line reads 'From Full section' for a paper sitting. api_tests.sitting_row has every field the page needs, but only /api/tests.in_progress uses it.",
+   "owner": "server",
+   "build": "Make the served GET /api/history?all=1 return api_tests.sitting_row(row) for every finished, non-abandoned test sitting (mock, module, custom, diagnostic), newest first, with api_tests.open_sittings in the same shape. Do it by removing or merging the shadowing api_practice route and having api_results.history call deps.part('api_tests','sitting_row') for test kinds. Keep R24's inline-drill exclusion. Then check that number, modules[].missed/blank, route, paper, retake, note, conditions, ranked and unranked_why reach the page."
+  },
+  {
+   "item": "Compare sheet (X18) never shows the slot-by-slot or type diff, and wrongly says nothing was missed",
+   "source": "tests.md X18 (Compare sheet, Data, Acceptance)",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "/tests/?compare=s1,s2 opened a sheet with only Date/Band/Wrong/Blank ('WRONG 10 13 BLANK 0 0') and 'Question types: No question type was missed in either sitting.' Both sittings had 10+ misses. GET /api/session/{a}/compare?with={b} returns {subject, with, paired, unpaired, slots:[{n,module,template,then,now,change,same_trap}]}. compare.js reads {by, a, b, rows, summary}, so it drops to the empty template branch. The head also lacks M1, M2, route and margin, time, away, pauses, conditions and the domain bars. The titles read 'Full section and Full section' with no numbers.",
+   "owner": "server",
+   "build": "Make the compare endpoint return X18's shape {by:'slot'|'template', a:{domains,...}, b:{...}, rows:[{slot_label, topic_name, a, b, same_trap, still}|{group:'both'|'fixed'|'new', template, topic_name, trap}], summary:{fixed, still, new, held, pts}}. Use by:'slot' when one sitting is a twin, retake or rematch of the other. Or adapt compare.js to the existing slots/change shape. Then fill the head facts from the fixed history rows."
+  },
+  {
+   "item": "Race friends does nothing: Compete accepts neither from_session nor paper, and /compete/ ignores ?create=",
+   "source": "tests.md X22 (Race friends) and §3.2 row §3.7 Compete",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "POST /api/contests {from_session, count:22, minutes:35, twin:true, open_for:72} → 409 'choose a skill with available questions'. The same with {paper:1,...} gives the same 409. Clicking 'Race friends' on the Paper #3 card went to /compete/?create=%7B%22paper%22%3A3... and showed the plain Compete page with no create sheet. grep finds no UI.createContest and no from_session or paper in server/api_compete.py. The share sheet's 'Create the race' hits the same 409 and falls back to that URL.",
+   "owner": "server",
+   "build": "In POST /api/contests, accept from_session (a finished sitting the owner has) or paper (n). Build module 1's slots as twins, count 22, 35 minutes, open_for hours, and return {code, url}. Have /compete/ open its Create a private contest sheet preset from ?create= (or expose UI.createContest) so Race friends on paper and section cards opens it."
+  },
+  {
+   "item": "Time ran out while away, then Continue hangs forever at 'Time’s up. Handing in… 1 answer still saving…'",
+   "source": "rebuild-v2.md §4.2 'Expired while away', §4.7 Time's up, §4.9 saving",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "Custom test (minutes 6): began it, reloaded, moved module_started back past the end, reopened. The lobby said 'Time ran out while you were away… Continue'. After Continue the view stayed at 'Time’s up. Handing in… 1 answer still saving…' for 20 s. localStorage held satf.pendstate.{sid} = [{qid:'c01', body:{ms:13439}}] and the sitting stayed finished=NULL. In test.js the queue's send awaits liveGate, which only start() opens. The expired path (begin → timeUp → handIn → flushOrWait → queue.wait()) never opens it. The line also counts state items as answers.",
+   "owner": "page",
+   "build": "In test.js, open the queue gate (openGate()) before timeUp()/handIn on the expired path, and on any path that flushes without start(). Or skip queued state items older than the expiry. Count only kind 'answer' in the 'N answers still saving' line."
+  },
+  {
+   "item": "The runner's Ranked chip ignores the sitting's real rank: unrankable sittings show 'Ranked' and a paused sitting never shows 'Unranked · paused once'",
+   "source": "tests.md X1 (Runner header), §3.1 item 6",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "runner.js:1327 sets text: training ? 'Training' : 'Ranked' and never reads S.ranked or S.why. The screenshot of a custom test (the lobby said 'won’t rank (custom test)') shows 'RANKED' in the header. The paused seeded Module 1 (server unranked_why 'paused once') opened at #review with chip 'Ranked'. {kind:'module', module:'m2u'} returns ranked:false, why 'single module 2', and would still show Ranked.",
+   "owner": "shared",
+   "build": "Pass S.ranked and S.why from test.js into UI.runner (for example o.rank {ranked, why}). Render 'Ranked' only when ranked. Otherwise render 'Unranked · <why>', with an aria-label that states the rule. Update the chip when a pause or the away limit drops the rank mid-module."
+  },
+  {
+   "item": "Hash routing: no #q7 or #review, so the browser's Back from Check your work leaves the test window",
+   "source": "rebuild-v2.md §4.1 Screens and URL; acceptance 27",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "The hash stayed '' on Q2, on Shift+R to Check your work, and after clicking cell 5. page.go_back() from review left /test/ entirely. The runner only calls history.pushState in the report review player (runner.js:3212). test.js start() clears the hash.",
+   "owner": "shared",
+   "build": "In UI.runner exam mode, replaceState('#q{n}') on each question change and pushState('#review') when Check your work opens. On popstate back to a #q hash, close review and show that question. Leave #lobby, #between, #timeup and #done as test.js sets them."
+  },
+  {
+   "item": "How you take tests: the Last 5/10/All and Sections/All timed filters do nothing, and rows have no trend or 'Which sittings?'",
+   "source": "tests.md X17 (Filters, Rows, Data)",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "tests.js calls /api/tests?habits_last=…&habits_scope=…, but tests_overview(x_learner) takes no query params and always calls habits(learner) with no last or scope. The habits rows payload (for example {'id':'blanks',...,'series':[5,5,1],'action':null,'why':...}) has no 'trend' and no 'sittings', so the page never shows the trend line or 'Which sittings?' (seen on the seeded page: 12 rows, none with either).",
+   "owner": "server",
+   "build": "Accept habits_last (5|10|all) and habits_scope (sections|timed) on GET /api/tests (or a GET /api/tests/habits) and pass them to habits(). Add per-row 'trend' against the previous 3 sittings and 'sittings' (the ids that fed the row), so the page's 'Which sittings?' sets the T6 filter."
+  },
+  {
+   "item": "Shell Up next says a paused test's clock is still running (urgent) instead of 'Paused · … · mm:ss left'",
+   "source": "tests.md X23 (Resume everywhere, Acceptance)",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "GET /api/shell for the seeded learner with a paused Module 1: next[0] = {kind:'resume', title:'Resume module · 6/22', reason:'Your clock is still running', urgent:true}. The same text shows on /compete/'s Up next. X23 wants 'Paused' in the title, the time left and not urgent. server/checks/s5.py shell_resume also crashes because next is a list.",
+   "owner": "server",
+   "build": "In the shell's next queue (U1 row 1), for a sitting with paused_at set: title 'Paused · {kind_label} #{n} · {mm:ss} left', reason without 'clock is still running', urgent false. Keep urgent for a running clock."
+  },
+  {
+   "item": "Read aloud is missing in the test window even with extended time",
+   "source": "product.md G8 (Read aloud, acceptance 4); §3.1 question 21",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "Sittings at timing official and x1.5, begun at 1280: no button matches /Read aloud/ in either, and speechSynthesis exists. question.js:1576 turns Read aloud off in exam mode unless o.readAloud is set, and test.js never passes it.",
+   "owner": "page",
+   "build": "In test.js, pass workspace.readAloud = ['x1.5','x2'].includes(S.timing) (and have runner forward it to UI.question). Under 760px, put it in the tools row as a labelled 44px button."
+  },
+  {
+   "item": "Cover the choices (Training): V doesn't reveal, and the cover doesn't show '(V)'",
+   "source": "tests.md X7 (What changes from P5, Acceptance); §3.1 item 49",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "Training section with cover on: .opts.covered is present with 'Choices covered · work it out, then reveal' and a 'Ready: show choices' button. Pressing V leaves .opts.covered in place, and qstate stays {'_session':{}} (no reveal_ms). The exam branch of the runner key map (runner.js ~2608) binds K only. V is bound only in practice mode (Details).",
+   "owner": "shared",
+   "build": "In UI.runner exam mode with cover on, bind V to the workspace cover toggle (reveal) and save {covered:false, reveal_ms} through putState. Add '(V)' to the cover lead."
+  },
+  {
+   "item": "At 1180px the floating calculator covers the question text and the reference panel",
+   "source": "tests.md X9 (One layout rule, Fitting, Acceptance 2); §3.1 item 45",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "On a grid-in at 1180, G then F: calc 'calc floating' at x 740–1160, the column at 62–802 and #rightSlot at 864–1164 with no .float class. The screenshot shows Desmos over the end of the stem ('…m are'), over the Report button and over the whole Reference panel. At 1280 the dock fit (calc 356, column 608, slot 300).",
+   "owner": "shared",
+   "build": "Apply X9's fitting rule in UI.runner: the calculator docks at 1180 and wider (narrowing to 320). When column + panels don't fit, the panel opened later floats (#rightSlot.float as an overlay from the right edge with ×). The floating calculator never sits over the question column."
+  },
+  {
+   "item": "The recommended preset chip isn't orange",
+   "source": "tests.md X1 (Start sheet · Recommended; Acceptance 7)",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "Start sheet presets: 'Routing check' has class 'pill sm' but a computed background of rgb(246,244,240), the same as every 'btn sm' chip. The `.chips > button` rule in ui.css overrides .pill's amber.",
+   "owner": "page",
+   "build": "Give the recommended chip a rule that beats `.chips > button` (for example `.st-presets .chips > .pill { background: var(--amber); color: var(--ink-deep) }`) or render it outside .chips."
+  },
+  {
+   "item": "The recommended preset's reason line shows a raw ISO date",
+   "source": "tests.md X1 (Recommended: 'Routing check · Sep 12 missed the harder module 2 by 1')",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "The start sheet reads '2026-09-25 missed the harder module 2 by 2'. api_tests.recommended builds f\"{r['finished'][:10]} missed …\" and start.js prints it raw.",
+   "owner": "page",
+   "build": "Format the date with UI.date(…,'short') (or have the server send a day and the page format it): 'Sep 25 missed the harder module 2 by 2'."
+  },
+  {
+   "item": "Start sheet: 'Trains:' lines lack the personal clause, Module 1 options and timing cards have none, and the summary ignores Module 1 Harder/Easier",
+   "source": "tests.md X1 ('Trains:' lines; Step 2 module cards); acceptance 38; §3.1 item 29",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "Walked sheet: Module 2 'Always harder · Trains the 700s: hard questions late in a module.' has no '· your last: 15/22'. The Module 1 seg (Standard/Harder/Easier) has no Trains line. Timing cards show only '35:00 a module', and Tight clock shows no 'your modules average 37:10'. After choosing Harder module 1 the footer summary still read 'Full section · adaptive · 44 questions · 70 min · Test-day · calculator on'.",
+   "owner": "page",
+   "build": "Add one 'Trains:' line per Module 1, route and timing option, with the learner's clause from /api/tests kinds (last result, average module time). Include 'harder module 1' or 'easier module 1' in summary()."
+  },
+  {
+   "item": "Custom test step: no counts on the sources, no mastery % or open-mistake dot on skill chips, no Weak spots / Focus domains presets, no 'For me' difficulty",
+   "source": "rebuild-v2.md §3 Step 2 Custom test; tests.md §3.1 item 30",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "The custom step reads 'Questions from Skills My open mistakes Saved A sitting’s misses All Clear Algebra Linear equations …' and 'Difficulty Easy Medium Hard'. There are no '(9)' or '(12)' counts, no mastery % or dot on chips, the presets are only All and Clear, and 'For me' is absent.",
+   "owner": "page",
+   "build": "Show counts on 'My open mistakes (n)' and 'Saved (n)' (from /api/mistakes and /api/saved). Show each chip's mastery % and an open-mistake dot. Add 'Weak spots' (coach ahead[0] plus open-trap topics) and 'Focus domains' (plan focus) presets. Add a 'For me' difficulty toggle (P11's zone)."
+  },
+  {
+   "item": "Sittings dates show clock timestamps ('Sep 28 · 00:42')",
+   "source": "User change 2026-09-28: no clock timestamps in history lines",
+   "status": "contradicts",
+   "severity": "low",
+   "evidence": "Every T6 row at 1280 and 390 reads like '#5 Sep 29 · 00:42' or 'Sep 26 · 00:42'. tests.js sitRow builds `${day} · ${toLocaleTimeString(hh:mm)}`.",
+   "owner": "page",
+   "build": "Show the date only (UI.date short) in the sittings rows and in the CSV date column."
+  },
+  {
+   "item": "Test data shown mid-test: the report sheet shows the template name and seed during a live module",
+   "source": "tests.md §2 Shared rules ('Nothing leaks from a live module… no template name or seed')",
+   "status": "contradicts",
+   "severity": "low",
+   "evidence": "Live Test-day Q5, Report: the sheet reads 'SENT WITH THIS modelling a constraint Easy Module 1 · Q5 We have this exact question (ineq.model_two_var · seed 30606).' GET /api/reports/context returns box.template and box.seed even when ctx.live.",
+   "owner": "server",
+   "build": "In reports.report_context, omit template and seed from box while ctx.live. The page line then reads 'We have this exact question. No screenshot needed.'. POST /api/report still resolves both server-side."
+  },
+  {
+   "item": "'Plan your test days' shows under Up next even when a plan exists",
+   "source": "rebuild-v2.md §2.3 T2 ('Under the pill, when no plan is set')",
+   "status": "broken",
+   "severity": "low",
+   "evidence": "The seeded learner has an active plan (UI.shellData().plan.id = 'pl:hOX…' after load), yet #next ends with 'Plan your test days'. nextCard reads UI.shellData() once, before the shell loads, and never repaints on UI.onShell.",
+   "owner": "page",
+   "build": "Repaint the Up next card from UI.onShell (or use /api/tests' plan state) so the link shows only with no plan."
+  },
+  {
+   "item": "Up next's plan test day ignores whether today's test is done, and lacks the twin/rehearsal variants and the 'Next test day' meta",
+   "source": "rebuild-v2.md §2.3 T2 rule 2 and 5; tests.md §3.1 item 11 (T16 twin, T13 rehearsal)",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "api_tests.up_next returns {'kind':…, 'reason':'plan','preset':'like_test_day'} whenever plan_days has a test today, with no check of a sitting finished today. It never picks T16's twin (last same-kind ≥7 days) or T13's Saturday rehearsal. tests.js default meta is always 'Your last was N days ago', never 'Next test day: Saturday'.",
+   "owner": "server",
+   "build": "Skip the plan branch when a whole section or module (Today's tested rule) finished today. Choose the twin of the last same-kind sitting when it is ≥7 days old, and T13's rehearsal on its Saturday. Return next_test_day so the default meta can read 'Next test day: Saturday'."
+  },
+  {
+   "item": "New-test and paper 'You'/'Best' tiles show a rounded midpoint, not the band; the Twin card lacks its 'Original' band and facts",
+   "source": "rebuild-v2.md §2.5 T4 (You: band / '17/22 · 460–660', Best band; Twin: 'Original' band, '44 questions · 70 min'); §2.6 You '560–700'",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "Full section card reads 'YOU ≈700 BEST ≈700'. The Paper #1 card reads 'YOU 700'. The Twin card reads 'The same length as the original' with no Original tile (server twin = {source,label} with no band). kinds_rows returns last and best as midpoints only.",
+   "owner": "server",
+   "build": "Return last and best as bands ({low, high}, plus right/asked for modules) in kinds and papers.yours.last. Return twin.band and twin question/minute counts. Render '630–770' and '17/22 · 460–660'."
+  },
+  {
+   "item": "Doubled number in labels: 'Twin of Paper #1 #4', 'Paper #1 #4 · 5 misses'",
+   "source": "rebuild-v2.md §2.5 card 7 title; tests.md X16 Cycle card",
+   "status": "broken",
+   "severity": "low",
+   "evidence": "On the seeded /tests/, the T4 card, the start sheet card and the cycle header all read 'Paper #1 #4'. /api/tests twin.label = 'Paper #1 #4' (f\"{kind_label(r)} #{number}\" when kind_label already carries the paper number), and cycle.label + number give the same.",
+   "owner": "server",
+   "build": "Build twin.label and cycle labels without appending #number when kind_label already names a paper (or use the sitting's own '#number' only for non-paper kinds)."
+  },
+  {
+   "item": "Total line omits the R&W part",
+   "source": "tests.md X15 (Total: 'Total 1180–1320 · with your R&W 620 (entered Sep 12)')",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "With rw_now 620 the score card shows only 'Total 1250–1390'. The server's total has parts:[{subject:'rw', value:620, source:'self', at}], but tests.js reads T.rw and T.rw_day.",
+   "owner": "page",
+   "build": "Read the rw part from total.parts (value, at) and print '· with your R&W 620 (entered Sep 12)'."
+  },
+  {
+   "item": "In progress rows don't say how many are marked",
+   "source": "rebuild-v2.md §2.4 T3 (Meta: 'Module 1 of 2 · 14 of 22 answered · 3 marked')",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "The seeded paused Module 1 has a marked question, but its row reads 'Module 1 #5 · 6 of 22 answered · Paused · 35:00 left · won’t rank'. Neither sitting_row nor liveRow carries a marked count.",
+   "owner": "shared",
+   "build": "Add marked (count of qstate marked in the live module) to sitting_row for unfinished rows, and append '· N marked' in liveRow when N > 0."
+  },
+  {
+   "item": "Queue mode has no visible Stop",
+   "source": "tests.md X5 (Queue mode: 'A quiet Stop returns to #review')",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "After 'Go through 22' the footer reads 'Going through · 1 of 22 · Q1 Back Next'. runner.js has stopQueue() only on Esc (line 2643), and there is no Stop button.",
+   "owner": "shared",
+   "build": "In UI.runner's footer during queue mode, add a quiet 'Stop' button that calls stopQueue()."
+  },
+  {
+   "item": "The test window's shortcuts sheet lists practice-only keys that clash (E, F)",
+   "source": "rebuild-v2.md §4.10 ('No letter key does two things'), §4.8 Keyboard shortcuts",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "'?' in a live test shows 'E Eliminate mode … F Reference (formula sheet)' plus an 'AFTER A QUESTION' block with 'T Twin', 'E Again, exactly' and 'F Fix · your open mistakes'. None of those work in the test window, and they reuse E and F.",
+   "owner": "shared",
+   "build": "In exam mode, list only the scopes the runner registers (question, test window, global) in the shortcuts sheet, and drop the 'After a question' block."
+  },
+  {
+   "item": "Hand-in moment claims 'A new best band' on a tie",
+   "source": "tests.md X12 (earned moments: a new best band)",
+   "status": "broken",
+   "severity": "low",
+   "evidence": "Section #6 handed in at 630–770 when the best was already 630–770. #done reads 'Level with Sep 27' and also 'A new best band'. _moments adds it when est.best.id == this row, which a tie can satisfy.",
+   "owner": "server",
+   "build": "Add 'best' only when this sitting's midpoint is strictly above every earlier scored sitting's."
+  },
+  {
+   "item": "Tests' empty states don't use UI.empty and offer 'Full section · 70 min' to a learner with no answers",
+   "source": "product.md G12 / R55 (every empty state: sample row, and 'Start with 8 · about 10 min' for 0 answers)",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "New learner at 1280: the sittings card is '.ts-empty' with 'Nothing sat yet… Full section · 70 min', and habits shows 'Sit 2 timed tests… Full section · 70 min'. grep finds no UI.empty in web/tests or web/test, though kit.js has UI.empty.",
+   "owner": "page",
+   "build": "Render the sittings, habits and What-moves empty states through UI.empty(host, {sample: a dimmed sitting row, text, action}). With 0 answers the action is 'Start with 8 · about 10 min' ({source:'start'}); otherwise keep the section action."
+  },
+  {
+   "item": "/api/today returns 400 for every a: learner, so S5's server checks (test_flow) crash before shares, security and X23",
+   "source": "rebuild-v2.md §3.4.8 acceptance 19 and 40; §3.4.5 'Today and latest_score'",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "GET /api/today with X-Learner a:auditseed01 (with or without X-Tz) returns 400 'send your learner token in the X-Learner header'. Traced: today_payload → review_counts → _call('api_review','counts', learner, tz) calls the route function counts(x_learner=…), which re-runs learner_of on the wrong argument. `PYTHONPATH=. python3 server/checks/s5.py` fails in rows_and_discard at c.get('/api/today'). Run alone, shares and security pass.",
+   "owner": "server",
+   "build": "In api_today.review_counts, call the review module's function (review.counts(learner, tz, subject)), not the route handler. Then check /api/today tested ignores discarded, custom and variant sittings, and rerun server/checks/s5.py to green."
+  }
+ ]
+}

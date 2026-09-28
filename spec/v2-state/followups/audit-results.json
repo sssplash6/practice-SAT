@@ -1,0 +1,458 @@
+{
+ "section": "results",
+ "run": "wf_a6acd4e3-941",
+ "total": 268,
+ "built": 164,
+ "gaps": [
+  {
+   "item": "Every score report fails to load: GET /api/session/{sid}/results returns 500",
+   "source": "rebuild-v2.md 3.5.5 'Extend GET /api/session/{sid}/results'; reports.md SR1-SR25 (all payloads)",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "curl -H 'X-Learner: a:audres03' /api/session/veZbl4hMyYU-i49dDbVTvw/results -> 500. Log: api_account.py:100 saved_diagnostic_results -> AttributeError: module 'server.api_results' has no attribute 'results'. app.py ROUTERS registers api_account before api_results, so its /api/session/{sid}/results route shadows S6's. The page then shows 'Couldn't load this report.' (I audited everything else on a scratch copy with that one line changed to api_results.report(sid, x_learner))",
+   "owner": "server",
+   "build": "In api_account.saved_diagnostic_results, call api_results.report(sid, x_learner) (or move the passkey-diagnostic case into api_results and delete the duplicate route). Add a test_flow check that a finished mock's results return 200."
+  },
+  {
+   "item": "Sittings list is served by api_practice's old /api/history, not S6's: no chips, numbers, deltas, durations, open counts, rings, reviewed, notes, In progress, filters or counts",
+   "source": "rebuild-v2.md 2.9 Sittings and 3.5.5 'Extend GET /api/history'; reports.md SR23, SR6, SR14, SR18",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "/api/history returns only {sessions:[{id,kind,started,finished,right,asked,estimate,topics,label}]}, with no counts/in_progress/weeks and no seq/modules/delta/ms/open/recovery/reviewed/note. api_practice.py:401 is registered before api_results.py:909. On /results/ the first card reads 'Today | Module | 510–710 | Review | Fix · 6': 0 .sc-chip, no '#1', no delta or minutes. A live mock (acQL3...) has no In progress group. ?kind=, limit, offset, sort=points_open, reviewed=, topic= and share= are ignored",
+   "owner": "server",
+   "build": "Remove api_practice's GET /api/history (or have it return api_results.history). Check that /api/history?kind=mock&limit=1 has modules[].wrong/blank, counts and in_progress, and that the Tests/Today consumers still get 'sessions'."
+  },
+  {
+   "item": "Every Fix action is refused: POST /api/drill rejects source 'fix'",
+   "source": "reports.md SR2 (Fix primary, body source:'fix'), §3.2 §2.6 'source adds fix'; rebuild-v2.md 1.2, 1.11, 2.8, 2.9",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "Clicking 'Win back ≈ 160 pts · 13 questions · 22 min' sends POST /drill {from_session, only:[...], source:'fix', order:'given'} -> 422 'choose from builder, challenge, ...', and the toast says 'Couldn't start that set. Try again.' The same 422 comes from the sitting card's 'Fix · 6' ({from_session, source:'fix'}) and from 'Fix all open · 47' ({mistakes:true, source:'fix'}). drill.SOURCES has no 'fix'. fixBody() adds source:'fix' to every report drill: the menu items, the mistake-row Fix, Fix this domain, Best value's Fix these n, Practise these n (blanks), the selection bar, the recovery strip's Fix, Up next's 'Start: <topic>' and the peek's Fix",
+   "owner": "server",
+   "build": "Add 'fix' to drill.SOURCES (§2.6) and keep order:'given'. Add a check that the report's Fix primary body returns 200 with the qids in the order given."
+  },
+  {
+   "item": "Answer changes are never shown, though the runner records them",
+   "source": "rebuild-v2.md 1.4 Changed tile, 1.10, 1.12 Changed filter/column, 1.13 'Changed B → D' tag; reports.md SR9 panel 3 and the instinct line",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "The seeded mock's qstate has m1q10 {changes:1, first:1} and m1q13 {changes:1, first:'99'}, but results.summary.changed = {total:0,...}. report() and core() read st['trail'], which the S5 runner never writes (it writes changes/first). So there is no Changed tile, no Show 'Changed' chip, no Judgement 'Answer changes' panel or instinct line, no ↺ table column and no 'Changed' player tag. judgement.instinct.changes=2 proves the data exists",
+   "owner": "server",
+   "build": "Compute summary.changed and each review item's changes from qstate[qid].first plus the final answer (or have the runner append a trail through /state per R7), and keep the right→wrong / wrong→right / wrong→wrong buckets."
+  },
+  {
+   "item": "Sure and wrong / Guessed right never match any question",
+   "source": "reports.md SR9 (Confidence panel, 'Sure and wrong' first Mistakes group, without_guesses), SR2 Fix menu items",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "results.judgement.sure_wrong = [77, 99] and guessed_right = [78, 98, 103] are attempt row ids (progress.py:1509), while the page compares them with review ids ('m1q04'). With 2 sure-wrong answers the report shows no 'Sure and wrong' group, no 'Sure and wrong · 2 … Fix these 2' line, no 'Guessed right' line and no menu or Act-on chips for either. judgement also has no without_guesses",
+   "owner": "server",
+   "build": "Return question ids (qid) in sure_wrong/guessed_right for session calls, and add without_guesses = estimate.rescore(sid, wrong=guessed_right)."
+  },
+  {
+   "item": "Selection bar crashes; no multi-question actions",
+   "source": "reports.md SR15 Selection (Shift/Ctrl-click, Space, long-press; 'n selected · Fix these n · Twins · Print a retry sheet · Save n · What if…')",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "Cmd-click then Shift-click on grid cells throws PAGEERROR '(o.actions || []) is not iterable' 3 times, and no bar appears. page.js drawSel passes actions as a function (k => [...]), but kit.js selbar spreads o.actions as an array. Only Fix and What if are defined; Twins, Print retry sheet, Save, Space-to-toggle and phone long-press are absent",
+   "owner": "page",
+   "build": "Pass an array to UI.selbar and rebuild the labels on update, and add Twins of these n, Print a retry sheet, Save n and What if these were right (+x). Add Space to toggle the focused cell and a long-press select mode on touch."
+  },
+  {
+   "item": "'Add your R&W score' Save is refused",
+   "source": "reports.md SR4 (inline R&W field, PUT /api/me {rw_now} plus a dated outside_scores row)",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "totalBlock sends PUT /api/me {rw_now, rw_source}. With that body the server returns 422 extra_forbidden loc body.rw_source (the Me model forbids extra fields), so the student gets 'Not saved. Try again.' No outside_scores row with math null is ever added",
+   "owner": "page",
+   "build": "Send {rw_now} only, then add the dated history row through S3's add_outside_score({rw, math:null, source}) endpoint. Refresh the page so the Total line shows."
+  },
+  {
+   "item": "'Stop sharing' leaves the progress link working",
+   "source": "rebuild-v2.md 2.1 Share my progress ('Stop sharing'); R18(a)",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "The sheet sends POST /share {on:true}, then 'Stop sharing' sends POST /share {on:false}: both return 200, because api_profile.create_share ignores the body and mints a new token. The toast says 'Link turned off', but GET /api/stats?share=<old token> still returns 200",
+   "owner": "page",
+   "build": "Call DELETE /api/share/{token} for Stop sharing, reuse an existing token (GET /api/share) instead of minting one on every open, and check that the old link then returns 404."
+  },
+  {
+   "item": "Shared progress view (/results/?share=) shows the viewer's own empty data",
+   "source": "rebuild-v2.md 2.1 and 2.10 Shared view; 3.5.5 'Share progress: /api/stats, /api/history, /api/map and /api/skill accept ?share='",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "curl /api/history?share=TOKEN and /api/map?share=TOKEN -> 400 'send your learner token'. In a fresh browser the page's device token is used instead, so the shared view shows the sharer's estimate but 'Your first test puts a point here' in the chart, no sittings, and the viewer's blank skills. Card 'Open' links add &share=, which the results endpoint ignores (403)",
+   "owner": "server",
+   "build": "Make /api/history (S6's route, once the shadow is removed) and /api/map accept ?share= through share_learner (GET only, no in_progress). Hide the per-question Open link in shared cards."
+  },
+  {
+   "item": "Question table prints '[object HTMLSpanElement]' in the answer columns",
+   "source": "rebuild-v2.md 1.12 Table (Your answer, Correct); reports.md SR15 table",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "With view=table on the seeded mock, #review innerText holds '[object HTMLSpanElement]' in every row's Your answer and Correct cells, and in their title tooltips. page.js drawTable uses math() = UI.fracText(text), which returns a span, as the 'text' property",
+   "owner": "page",
+   "build": "Render the fracText node as the cell child and use the plain string for title and sort value."
+  },
+  {
+   "item": "Careful set is refused (timing 'careful')",
+   "source": "reports.md SR13 Actions ('Careful set · 3'), SR14 pace takeaway",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "POST /api/drill {from_session, timing:'careful'} -> 422 'choose from custom, off, pace'. The takeaway card 'Careful set · 5' and the pace region's Careful set both send it",
+   "owner": "page",
+   "build": "Send P16's Slow down body (whatever drill accepts for the rushed types, e.g. timing:'off' with its careful flag) or add 'careful' to drill's timing values."
+  },
+  {
+   "item": "Where your points went: the cause bar drops the 'changed' bucket, so it doesn't add up",
+   "source": "reports.md SR1 (printed buckets add to the printed total); product.md R47 (cause 'changed' on tests)",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "ledger.by_cause has changed 10, clock 50, gap 35, trap 65. The heading reads 'About 160 points below all right', but the bar shows only Traps 65 · Clock 50 · Gaps 35, and its aria says '≈ 150 pts in all'. page.js CAUSES and results-ui rx.CAUSE have no 'changed' (the Why-you-miss and peek bars show 'Changed'/'changed' inconsistently)",
+   "owner": "shared",
+   "build": "Add changed (label 'Changed', letter per R47) to rx.CAUSE and to the report's CAUSES list, so every cause bar, filter and legend includes it."
+  },
+  {
+   "item": "Clock replay and its auto lines never render",
+   "source": "reports.md SR13 (UI.clockLane per module, visits, behind_at, returns_worked, never_opened, starved)",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "results.pace keys are only pace_ms, rushed, long and per_q, with no visits_recorded, modules, behind_at, chips, sink_ms or blank_ev. grep 'visits' in web/test/test.js and server/api_tests.py finds nothing, so the runner logs no _session.visits. The report's clockReplay() returns early; the pace region only shows the bars",
+   "owner": "server",
+   "build": "Have the runner log qstate._session.visits [[qid,t_in,t_out]] through /state (R7, ≤400). Serve pace.modules [{n, visits, behind_at, behind_ms, left_for_rest_ms, never_opened, returns_worked, starved}], visits_recorded and chips from api_results."
+  },
+  {
+   "item": "Time away is recorded but never shown",
+   "source": "reports.md SR9 panel 4 ('Left the test window 3× · 1:40'), SR18 condition chip",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "After POST /state {away_ms:100000, away_n:3}, results.away = {ms:100000, n:3}, but judgement.away = {n:0, ms:0, log:[]} because _report_insight reads _session.away_log, which nothing writes. So there is no 'Left the window 3× · 1:40' chip and no Judgement line",
+   "owner": "server",
+   "build": "Build judgement.away from _session.away_ms/away_n (and away_log when present) so the header chip and the Judgement line show."
+  },
+  {
+   "item": "Domain cards never show change since the previous section",
+   "source": "rebuild-v2.md 1.6 Delta ('+2 correct vs Section #6'); 3.5.5 domains previous",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "Mock #2 has previous = Section #1, yet every domains[].previous is None. api_results.report hard-codes 'previous': None, so no card shows a delta",
+   "owner": "server",
+   "build": "Fill domains[].previous {right, asked} from the previous same-kind sitting (the one already found for results.previous)."
+  },
+  {
+   "item": "Domain cards: no best-value line and no expand-to-skills",
+   "source": "reports.md SR2 ('each domain card's best value line … replacing Missed most'), SR1 ('A card expands in place … to its skills … with Fix this domain')",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "The domain card text is '60% 9/15 Building · 15 questions · 34% of the sitting · ≈ −75 pts · 48% of your gap · Fix this domain · 6'. There is no 'Missed most' or 'Best value: <skill> · ≈ +25 · Fix 3' line and no chevron/Enter expansion. grep 'Best value:\\|Missed most' in page.js finds 0",
+   "owner": "page",
+   "build": "Add the domain's top Best value row (skill, ≈ +pts, Fix n) to each card. Make the card expandable in place to its skills in this sitting (right/asked, worth, open traps) with Fix this domain."
+  },
+  {
+   "item": "Takeaways are thin (at most one card, often none)",
+   "source": "reports.md SR14 Takeaways (biggest leak, pace, route, changes, sure-and-wrong, should-have-had, slips, a win; each with an action)",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "debrief.takeaways is only {kind:'misses'} (which the page drops) and {kind:'pace'}. Mock #1 shows one card ('5 quick misses…'), and mock #2's #takeaways is hidden. There is no biggest-leak, route, win or changes rule and no 'action' field",
+   "owner": "server",
+   "build": "Build debrief[] from SR14's rules ranked by points (the leak topic with its pts, route short_by, right→wrong changes, sure-wrong, slips, and a win vs the previous sitting), each with an action body. Render three cards, each with one button."
+  },
+  {
+   "item": "Recovery strip's Prove it is a practice drill, not the Prove-it test",
+   "source": "reports.md SR6 step 4 (POST /api/mock/new {kind:'custom', custom:{source:'misses', from_session}}, 'Proved n of m' on its report)",
+   "status": "contradicts",
+   "severity": "medium",
+   "evidence": "page.js drawRecovery step 'Prove it' sends drill(fixBody(all, {timed, feedback:'end', order:'mixed'})), which also 422s on source 'fix'. grep 'Proved' in page.js and api_results.py finds 0",
+   "owner": "page",
+   "build": "Post Tests' custom test from misses under test rules and go to /test/?s=. Show 'Proved n of m from Section #k →' on that sitting's report (server compare with from_session)."
+  },
+  {
+   "item": "Recovery strip steps are vague or wrong",
+   "source": "reports.md SR6 steps ('Check-ins · 2 due Sep 26'; 'Second look ✓ or to do')",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "Mock #1 (second look lapsed, 0 looked) shows '✓ Second look · done'. Check-ins always reads 'come due as you fix' with no count or date, and links to /review/",
+   "owner": "page",
+   "build": "Read R9's due dates for this sitting's fixed traps (server steps[] in recovery) and print 'Check-ins · n due <date>'. Show a lapsed or skipped look as not done."
+  },
+  {
+   "item": "First view after Finish: no ?fresh=1, no prefetch, no milestone stamps",
+   "source": "reports.md SR4 (sweep from the previous band, tiles count from previous, milestone stamps), SR16 zero wait (prefetch into sessionStorage)",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "grep 'fresh=1' in web/ finds only the report's own reader. test.js:181/747 redirects to /results/report/?id= without it, and nothing writes sessionStorage 'satf.results.<sid>'. grep 'milestone|New best band' finds nothing in page.js or api_results.py",
+   "owner": "page",
+   "build": "Have test.js and practice session.js add ?fresh=1 and prefetch /results into sessionStorage while 'Finishing…' shows. Add the earned milestone stamps (R25 earned rows, at most 2) on the fresh view."
+  },
+  {
+   "item": "Practice session summary has no link to its report",
+   "source": "rebuild-v2.md 3 'Practice session summary: a Review every answer outline → /results/report/?id='; acceptance 22",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "/practice/session/?id=4UlP… (finished) has no <a> matching /result/. Its More menu is Fix my 3 misses, Rematch, Rematch in 3 days, Retake these exact questions, Share, Print, Back to Practice",
+   "owner": "page",
+   "build": "Add an outline 'Review every answer' → /results/report/?id=<sid> (with ?fresh=1) to the practice summary."
+  },
+  {
+   "item": "'Practise' links don't preselect the skill",
+   "source": "rebuild-v2.md 1.7 and 2.7 ('/practice/?topics=<slug>'), 3 'Practice page accepts ?topics='",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "The report's Skills rows and Best value 'Practise skill' link to /practice/?topics=<slug>, but builder.js fromLink reads only ?skills= and ?types=, so Practice opens with nothing selected",
+   "owner": "page",
+   "build": "Link to /practice/?skills=<slug> (or make builder.js accept topics as an alias)."
+  },
+  {
+   "item": "Save (bookmark) is hidden on test reports",
+   "source": "rebuild-v2.md 1.13 Save tool, 1.12 'Saved' Show chip; 3.5.5 'POST /api/saved accepts finished tests'",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "POST /api/saved {session: finished mock, question_id:'m1q03', on:true} -> {saved:true}, so the server is ready. page.js sets on.save only if (!test), so the player's tools on a mock are Details, Hide answers, Calculator, Reference, Report, with no Save",
+   "owner": "page",
+   "build": "Wire on.save for every kind (it already works for practice sets) and show the Saved count in Show."
+  },
+  {
+   "item": "Second-look verdicts are wrong for a different wrong answer; 'same trap' count is always 0",
+   "source": "reports.md SR3 verdicts ('The same answer again: a trap you believe' vs 'A different wrong answer'), end card, Second look tile sub-line",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "api_results.second_answer returns verdict 'same trap' for any wrong answer. second_block counts 'same' by qstate second.norm, which is never stored, so it is always 0. After one wrong look the tile reads 'SECOND LOOK 1 of 9' with no sub-line",
+   "owner": "server",
+   "build": "Store the second pick's norm, and return verdict slip / guess / same (same norm or same pick) / other. Count same, other and still_blank so the tile reads 'n slips · n gaps · n to go'."
+  },
+  {
+   "item": "Second look leaks the hidden misconception in cause.evidence",
+   "source": "reports.md SR3 held-back set (the Mistakes label and every key-derived field, for every viewer)",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "While a second look is offered, mock #2's unseen miss m1q05 has cause.evidence.norm = 'divided by the first digit of each percentage instead of multiplying by the decimal it stands for', and its trap label is blanked. hold_back strips only diagnosis/struck_key/first from evidence",
+   "owner": "server",
+   "build": "In hold_back (and the causes redaction in report()), also drop evidence.norm and any label-like evidence for unseen misses. Extend the SR3 acceptance jq check to cover cause.evidence."
+  },
+  {
+   "item": "Up next misses the coach's pick on a first paint",
+   "source": "rebuild-v2.md 1.15 Up next (coach's pick + New section); reports.md SR2 top value row first",
+   "status": "broken",
+   "severity": "low",
+   "evidence": "On practice report 4UlP… #next reads only 'UP NEXT | New section', while UI.nextItems() returns ['Resume mock · 1/22', 'Plan · Warm-up', …]. drawNext runs before the shell's data arrives and never redraws",
+   "owner": "page",
+   "build": "Redraw #next when the shell data lands (a shell 'ready' event or UI.shell callback), keeping the top value row first on scored sittings."
+  },
+  {
+   "item": "Results estimate card is missing its forward-looking lines",
+   "source": "reports.md SR21 Estimate card (Practice since, projection 'At this pace', Nationally percentile, Total with R&W, Climb at n≥20); SR5 'Nationally about the Nth–Mth'",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "The estimate card reads 'Math 580–670 · High confidence ↓ −40 · Latest · Best · Target · Exam · caption'. grep 'Practice since|At this pace|Nationally' in web/results/page.js finds 0, and /api/stats has no projection or national fields",
+   "owner": "shared",
+   "build": "Add projection (U9), practice_since (T10), national {low_pct, high_pct} and total to /api/stats.estimate, and render them as lines under the estimate (hidden when absent)."
+  },
+  {
+   "item": "Score-over-time chart is missing its SR21 layers",
+   "source": "reports.md SR21 chart (outside scores as diamonds, between-sittings gaps, twin brackets, projection cone, R&W lane, two clicked points open Compare, legend additions)",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "charts.js bandChart supports outside, gaps, pairs, projection, rw and compare, but web/results/page.js drawChart passes only target, estimate, filters, store, legend and onPick. /api/stats provides no outside, gaps, pairs, projection or rw_history",
+   "owner": "shared",
+   "build": "Serve outside scores, U9 gaps and projection, twin pairs and rw_history from /api/stats. Pass them to UI.bandChart with compare(newer, older) → /results/report/?id=newer&vs=older."
+  },
+  {
+   "item": "Results 'Gap to target' and 'Why you miss' are not the specified views",
+   "source": "reports.md SR22 (#gap: last 3 ledgers averaged by cause and by domain·tier, each row Start; #why: per-sitting 100% bars with a shift line, calibration trend)",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "#gap renders U4 skill gains ('Linear equations ≈ +10 Practise … Practise the top 3 · ≈ +25') from stats.gap = estimate.gains(). #why is one 14-day stacked bar ('60 misses in the last 14 days, by cause'). stats.calibration_trend is served but never rendered, and there are no gap.by_cause or why[] per sitting",
+   "owner": "shared",
+   "build": "Add stats.gap {by_cause, by_domain, from} from the last 3 ledgers, with Start = {pool:'history', ids, exact:false, each:1}, and stats.why [{id, seq, by}]. Render per-sitting 100% bars with the '±15 points' line and 'Sure answers right: a% → b%'."
+  },
+  {
+   "item": "Results: Recovered this week, skills by points and the Pace card are missing",
+   "source": "reports.md SR22 (Recovered this week tile, Skills sort By points and '≈ +20' per tile), SR13 ('Results: the Pace region is U7's card after #split')",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "stats.week = {minutes, questions}, with no recovered_pts, so the tile never shows. The skills sort select is By domain / Weakest / Most open / Least practised / Least recent, with no By points and no ≈ pts on tiles. There is no #pace section in web/results/index.html (grep quadrant in page.js: 0)",
+   "owner": "shared",
+   "build": "Serve week {recovered_pts, closed, checks_passed} and U4 gains per topic. Add the Recovered this week tile, the By points sort (the default once gains exist) with ≈ +pts on each tile, and U7's UI.quadrant pace card after #split."
+  },
+  {
+   "item": "Sittings filters and week summaries are incomplete",
+   "source": "reports.md SR23 (Not reviewed yet, Has skill ▾, sort Most points still open; week line with time and delta)",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "The controls are only All/Tests/Practice, Newest/Oldest/Highest/Lowest, and 'Has open mistakes' when any row has open. There is no Not reviewed yet chip and no Has skill select, and the points_open sort only appears when rows carry recovery (the served history never does). The week header reads 'THIS WEEK · 2 SITTINGS · 62 QUESTIONS' with no time or delta",
+   "owner": "page",
+   "build": "Add the Not reviewed yet check-chip (reviewed=0), a Has skill select (topic=) and the points_open sort. Print week summaries as '· n sittings · q questions · 6 h 10 m · +40' from history.weeks."
+  },
+  {
+   "item": "Challenge report: no contest tiles and no per-slot crowd",
+   "source": "reports.md SR25 tiles (Points/Right/Wrong/Skipped/Voided/Time/Per question/Rank), SR12 challenge crowd per slot; acceptance 25 ('x% of 2 got slot n right')",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "Today's challenge report shows tiles INCORRECT 3 · TIME 6:40 · PER QUESTION only, and the hero has no points line (contest is None for kind 'challenge'). review[0].crowd = {n:1, rate:None, …} from drill.levels(), and the page shows crowd only when n≥20, so no slot % shows under cells or in the player",
+   "owner": "shared",
+   "build": "For challenge and contest sittings, read S8's daily review per slot (rate, norm shares) and show it at any n. Render Points/Right/Wrong/Skipped/Voided/Rank tiles from sessions.result's contest fields."
+  },
+  {
+   "item": "The sample report is a thin example",
+   "source": "reports.md SR24 (31/44, 13 misses of every cause, a second look done, 4 recovered, fixed timestamps 16:00Z + 64 min, Prove-it sitting, every control live incl. What if)",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "sample-section: 33/44 with 11 misses, all labelled 'Incorrect' (no named misconceptions), causes only Clock and Gaps, second.state lapsed, recovery empty, 'Times were not recorded', no Judgement or Habits. What if is hidden, and POST /whatif returns 403 'the sample report is read-only'. Timestamps are 12:00→13:10",
+   "owner": "server",
+   "build": "Seed sample:report in init() with attempts (named reasons, conf tags, ms, a trail), a done second look, 4 later recoveries and a Prove-it sitting at SR24's fixed dates. Let any reader call /whatif (it writes nothing) and show What if on the sample."
+  },
+  {
+   "item": "'Add a score you already have' is never offered",
+   "source": "reports.md SR24 (new learner card 'Add a score you already have' → S3's add-a-score sheet)",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "page.js drawSample renders the button only if UI.addScore exists. grep addScore in web/assets finds no definition, so a new learner sees only 'Open the sample report'",
+   "owner": "shared",
+   "build": "Ship UI.addScore (S3's sheet) or, until then, link the button to /me/#scores as Tests does."
+  },
+  {
+   "item": "Total score: the split gap to a total target, the hatched R&W bar, the stale warning and R&W history are not shown",
+   "source": "reports.md SR4 (Gap to a total target split into Math path and R&W, hatched R&W part, 'R&W is 74 days old · Update', rw_history lane)",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "With rw_now 610 and rw_target 700, results.total.gap = {target:1400, above_high:70, math_path:[…3], rw_to_target:90}, but totalBlock renders only 'Total ≈ …' and the provenance line. rw_history is [] and never drawn",
+   "owner": "page",
+   "build": "Render 'Total target 1400 · 70 above your total's high end' with the Math row (path chips) and the R&W row (→ Words). Add a small total bar with the hatched R&W part and the >60-day stale line with Update."
+  },
+  {
+   "item": "Best value next: no 'Put in my plan' and no time line",
+   "source": "reports.md SR2 Best value next ('.quiet Put in my plan' when a plan exists; 'The top 3 take about 25 min: under one of your 40-minute study days')",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "The seeded learner has an active plan and minutes 40. The #value rows show only 'Fix these n' and 'Practise skill' (grep 'Put in my plan' in page.js: 0), with the forecast line but no time line",
+   "owner": "page",
+   "build": "Add Put in my plan (POST /api/plan/{id}/tasks with start = the row's drill body, then 'In your plan · <day>') and the minutes line under the forecast."
+  },
+  {
+   "item": "Habits: player trap lines, Mistakes habit chip, recurrence and unmet types are missing",
+   "source": "reports.md SR11 (player 'your 3rd time · also in Systems' + Spot this trap; Mistakes habit chip; 'in 4 of your last 5 tests'; 'also appears in 4 types you haven't met'; Results #traps grouped by norm with By question type · By habit)",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "grep 'your 3rd time|Spot this trap|By habit' across the pages and runner.js: 0. Mistake meta reads 'M2 Q18 · Nonlinear equations · Hard · ≈ +20 · Trap' with no habit. habits[].recur and norms[].unmet_types are 0 and never printed. The overview traps are per template, with no norm grouping and no 'last' date",
+   "owner": "shared",
+   "build": "Compute recur and unmet_types, and render the recurrence and unmet lines, a habit chip on Mistakes rows, the player's 'your nth time · also in …' with Spot this trap, and #traps grouped by norm with the By question type · By habit seg."
+  },
+  {
+   "item": "How other students picked is never shown; no Colour by Crowd; no Should-have-had filter",
+   "source": "reports.md SR12 (option_share by norm: '31% of students who miss it pick this one'; Colour by Crowd; Should-have-had and Hard for you filters, Fix-menu 'Should-have-had · n')",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "api_results sets crowd.option_share = None for every item. Colour by offers Status/Difficulty/Time/Cause/Points only, and the Act-on row has no Should-have-had or Hard for you (grep 'Should-have-had' in page.js: 0). Odds numbers stay hidden per the user's rule; these filters don't print them",
+   "owner": "shared",
+   "build": "Serve option_share per norm once 20 misses exist and show the line under wrong options. Add Colour by Crowd (with the est. corner). Add Should-have-had (stored result.odds ≥ 0.75) and Hard for you (≤ 0.35) as Act-on and Fix-menu items, labelled without any odds figure."
+  },
+  {
+   "item": "Cell hover card is a bare tooltip",
+   "source": "reports.md SR15 hover card (status, cause, worth, % students right, time vs budget, full answers and mistake, .btn Try one like this)",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "makeCell attaches UI.tooltip(hoverText): a single line such as 'M1 Q3 · Incorrect · Trap · ≈ +5 · 0:25 (budget 1:05)'. It shows no answers, no mistake and no button",
+   "owner": "page",
+   "build": "Make the hover card show your answer, the key and the named mistake, with a Try one like this button (hover devices only)."
+  },
+  {
+   "item": "Printed question table is one 7-column table, not SR15's two landscape tables",
+   "source": "reports.md SR15 Print (@page landscape; table 1: # · Skill · Your answer · Correct · Result · Cause · Worth · Mistake; table 2: the rest; headers repeat); acceptance 6",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "print emulation: .rp-ptable visible with 7 th: #, Skill, Your answer, Correct, Result, Mistake, Time. It has no Cause or Worth and no second table",
+   "owner": "page",
+   "build": "Print two tables per SR15 with # repeated and thead as a table-header-group, printing 'Hidden' while a second look stands."
+  },
+  {
+   "item": "Compare: empty skills table and no side-by-side pair player",
+   "source": "reports.md SR7 (skills [{topic, then, now}] with ▲▼; clicking a pair opens UI.review mode 'pair' with both bodies)",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "api_results.compare returns 'skills': [] (hard-coded). drawCompare's strip onPick opens the normal player on the now question only",
+   "owner": "shared",
+   "build": "Fill compare.skills from both sittings. Open UI.review(…, {mode:'pair'}) with then and now on a pair click."
+  },
+  {
+   "item": "In-site percentile: no 'needs 20' line and no dot histogram",
+   "source": "rebuild-v2.md 1.3 ('A percentile needs 20 first sections; 8 so far'); reports.md SR5 (rank.hist + UI.dotStrip at n≥20)",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "Mock #1 has rank {ranked:true, pct:null, n:2, why:'too few sittings'}, and the hero prints nothing about it. estimate.percentile returns no hist, and the page never calls UI.dotStrip",
+   "owner": "shared",
+   "build": "Print 'A percentile needs 20 first sections; n so far' when pct is null on a ranked sitting. Serve rank.hist (20-point bins, NOT_SAMPLE) and draw UI.dotStrip at n≥20."
+  },
+  {
+   "item": "Recovered count differs between hero and tile",
+   "source": "decision 7 (one number per idea); reports.md SR6 ('Recovered 9 of 13')",
+   "status": "contradicts",
+   "severity": "low",
+   "evidence": "Mock #1: the hero reads 'Recovered 6 of 9 · ≈ 85 since · 3 open', and the tile reads 'RECOVERED 6 of 13 ≈ 85 since'. The hero uses recovered+open+slipping; the tile uses all misses",
+   "owner": "page",
+   "build": "Use one denominator (all misses in the sitting) in both places and one 'open' count."
+  },
+  {
+   "item": "Ledger bar prints every bucket twice",
+   "source": "decision 7 (never repeat a fact on the same screen)",
+   "status": "contradicts",
+   "severity": "low",
+   "evidence": "#ledger shows 'Traps ≈ 65 pts (6) · Clock ≈ 50 pts (4) · Gaps ≈ 35 pts (2)' on the bar segments and again in the legend row beneath, with the same numbers (seen at 1280)",
+   "owner": "shared",
+   "build": "In UI.stackBar, keep the numbers on the segments and show the legend only as swatches plus labels (or the list only on phones, where the segments carry no text)."
+  },
+  {
+   "item": "CSV lacks subject, address, diagnosis and accepted columns",
+   "source": "reports.md intro (CSV 'subject' and 'address' columns, decision 3), SR3 (Hidden in correct/mistake/diagnosis/accepted)",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "The downloaded CSV header is question,module,n,skill,type,difficulty,format,time_s,your_answer,correct,result,cause,cause_auto,worth,changed,flagged,mistake",
+   "owner": "page",
+   "build": "Add subject, address (math-m1-7), diagnosis and accepted columns, with 'Hidden' for unseen misses."
+  },
+  {
+   "item": "Tests page doesn't use UI.sittingCard; the Tests lobby shows no briefing",
+   "source": "rebuild-v2.md 3 ('Tests page: its history list uses UI.sittingCard, and it shows In progress'); reports.md SR17 ('Your briefing from Section #7' in the lobby, acceptance 3)",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "grep sittingCard web/tests/tests.js finds 0, and grep briefing in web/tests and web/test finds 0. GET /api/session/{sid}/briefing exists",
+   "owner": "page",
+   "build": "Render Tests' history and In progress rows with UI.sittingCard. Show GET /api/session/{last scored}/briefing before Begin in the lobby."
+  },
+  {
+   "item": "Eyebrows for Prove it and shared sittings",
+   "source": "reports.md SR18 eyebrows ('PROVE IT · FROM SECTION #7', 'SHARED BY SAM · FULL SECTION')",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "page.js eyebrow() has cases for mock, module, diagnostic, paper, custom, twin, challenge and practice only. A Prove-it custom test reads 'Custom test · n questions', and a shared test falls through to 'Practice set'",
+   "owner": "page",
+   "build": "Add the Prove it (cfg.custom.source 'misses' → from Section #k) and shared (sharer name + kind) eyebrows."
+  },
+  {
+   "item": "Sitting peek prints raw, unrounded points",
+   "source": "reports.md shared rules ('Worth is printed ≈ +15, rounded to 5')",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "The peek on /results/ reads 'changed ≈ 32.1 pts (1) | Traps ≈ 90.3 pts (4)': results-ui drawPeek passes c.pts, not printed, and 'changed' has no label",
+   "owner": "shared",
+   "build": "Pass c.printed ?? r5(c.pts) with the cause label from rx.CAUSE (once 'changed' is added)."
+  },
+  {
+   "item": "New learner estimate empty state has no Diagnostic option",
+   "source": "rebuild-v2.md 2.2 Empty ('plus a quiet Diagnostic · 20 questions'); reports.md SR24 ('The spec's estimate empty state (Full section · One module · Diagnostic) stays')",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "The new learner's estimate card reads 'Your first test gives you an estimate. Full section · 70 min or one module · 35 min', with no Diagnostic link",
+   "owner": "page",
+   "build": "Add a quiet 'Diagnostic · 20 questions' link to the empty state."
+  },
+  {
+   "item": "Briefing pace facts are not SR13's checkpoints",
+   "source": "reports.md SR17 briefing (2 pace facts such as 'You fell behind at Q12. Aim to reach Q11 by 17:00'; route fact from route_rule)",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "The briefing returns the two slowest misses ('M1 Q9 took 220 seconds. Aim for about 95 seconds a question.'), and the route line hard-codes 'of 22' via math.ceil(ROUTE_UP_AT*22)",
+   "owner": "server",
+   "build": "Build the pace facts from pace.modules behind_at and budget checkpoints, and the route fact from route_rule {needed, m1_asked}."
+  }
+ ]
+}

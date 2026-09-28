@@ -1,0 +1,350 @@
+{
+ "section": "plan",
+ "run": "wf_a6acd4e3-941",
+ "total": 312,
+ "built": 251,
+ "gaps": [
+  {
+   "item": "Plan test tasks, the checkpoint twins and the measure-path diagnostic cannot be started",
+   "source": "rebuild-v2.md 3.6.5 'POST /api/mock/new: task'; plan.md L7 step 1 (measure path), L8 (run echoed), L14, L19 (pause:false); 3.2 row 3.4 S5",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "POST /api/mock/new {full:false,timed:true,pause:true,task:'2026-10-02:test'} -> 422 extra_forbidden on pause and task (NewMock has extra='forbid'). POST /api/session {task,run} -> 422 extra_forbidden. On /plan/?day=2026-10-02 at 1280, clicking the Module test row's 'Start early' shows 'Couldn't start. Try again.' (network: RES 422 api/mock/new). A new learner's measure plan: 'Start today' -> POST /api/session -> 422, so day 1 cannot begin.",
+   "owner": "server",
+   "build": "Let NewMock and NewDiagnostic take task (the ^YYYY-MM-DD:test regex), run (YYYY-MM-DD) and pause (bool). Store them in the sitting's cfg and echo them in the results. pause:false turns pausing off for rehearsals. Add a check that a plan test task's start.body from GET /api/plan returns 200."
+  },
+  {
+   "item": "Focus sets with pins, and the Learn, Map, Check, Sweep and I-know-this test-out tasks, fail to start",
+   "source": "plan.md 3.2 row §2.6 (task regex widening, pins, sibling); L2 pins, L2 Map mode, L3 checks, L4 learn, L10 test-out, L19 sweep",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "Today's focus body for a:auditplanseed1 carries pins [{topic:'nonlinear_equations_and_systems',tier:'easy',count:2}]. POST /api/drill with it -> 422 {field:'pins',reason:'unknown field'}. On the page the Focus set row reads 'Couldn't start. Try again.' Other tasks: '2026-09-28:learn', ':map', ':check:circles' and the test-out body -> 422 'use YYYY-MM-DD:fix|recheck|focus|extra|test'; the sweep body -> 422 'sweep unknown field'. 14 of the seeded plan's 19 focus days carry pins.",
+   "owner": "server",
+   "build": "In drill.resolve, widen the task regex to ^\\d{4}-\\d{2}-\\d{2}:(fix|recheck|focus|extra|learn|check|habit|pace|map|sweep|test)(:[a-z0-9_]+)?$. Accept pins [{topic,tier,count 1-4,why?}], served inside count whatever the topics are, plus sweep:true with pool:'checks'. Add a check that posts every start.body in GET /api/plan's days and expects 200 or a 409 reason."
+  },
+  {
+   "item": "First load of /plan/ on a new day fails with 'The server is not answering.'",
+   "source": "rebuild-v2.md 3.6 §4 Freezing; §6 States",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "server log: sqlite3.IntegrityError UNIQUE constraint failed: plan_days.plan, plan_days.day in plan.freeze (plan.py:1196), from GET /api/plan. Firing /api/plan and /api/shell together while a past day was still unfrozen gave 500 on 2 of 3 tries. The page itself triggers it: with the browser's local day one past the last frozen day, /plan/ at 1280 showed the error card with Retry, twice.",
+   "owner": "server",
+   "build": "Make freeze idempotent under concurrency: INSERT OR IGNORE INTO plan_days (or ON CONFLICT DO NOTHING), and re-read existing inside the transaction. Add a check that runs two concurrent GETs after deleting yesterday's plan_days row and expects 200 from both."
+  },
+  {
+   "item": "A Bluebook test, or any own task dated on a rest day or longer than the day, never appears",
+   "source": "plan.md L11 (Bluebook quick-add, 134 min, the score sheet on tick); rebuild-v2.md 2e 'Your own tasks' (Once on… date)",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "POST /api/plan/{id}/tasks {type:'bluebook',day:'2026-10-03'} (a rest Saturday) -> 200, but that day's tasks are []. With day '2026-09-30' (a 45-min study day), budget.cut gets {kind:'custom',to:'next study day'} and the task shows on no day of the plan: a search of every day found neither task. The wizard's Bluebook chip defaults to the first Saturday, a rest day. So the tick and the score sheet (L11) can never be reached from the plan.",
+   "owner": "server",
+   "build": "In build_day, list dated own tasks on rest and off days too (as own tasks, not counted in the Math minutes). When L4 cuts a one-off own task, actually place it on the named next study day, and show it on its own date as 'on your own' when it is longer than the day. Keep the Bluebook task visible so it can be ticked and open its score sheet."
+  },
+  {
+   "item": "Today (/) shows no plan tasks: the Due list reads 'Nothing due yet today' although the plan has 6 tasks",
+   "source": "rebuild-v2.md 3.6 §5 Today (acceptance 27); product.md G1/R56 (plan tasks first in one Due list), R40",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "GET /api/today for a:auditplanseed1: plan = {tasks_counted:6, next:'Warm-up'}, but due is review.due's shape ({items:[fading…]}) with no rows. api_today.py:1145 takes next.due, which hands over to review.due. On / at 1280 the Due card reads 'Due today Nothing due yet today.' and the plan shows only as a 'Plan · 6 tasks today' chip, with no Start today and no plan rows.",
+   "owner": "server",
+   "build": "Make next.due / /api/today.due return G1's rows ({rows:[…], group:'plan'|'also'}): the plan tasks from plan.today_summary first, each carrying task_id, then the review row, words and the day's questions. Keep review.due only as the source of the review row. Add a check that a learner with a plan day gets due.rows with the plan tasks' task_ids."
+  },
+  {
+   "item": "Start today doesn't chain: no interstitial, day rail or receipt after a plan block",
+   "source": "plan.md L8 (interstitial, day rail, the end on T19's receipt); product.md G1 (UI.run.between) and the §3.1 46 session summary",
+   "status": "missing",
+   "severity": "high",
+   "evidence": "A plan Warm-up started with run:'2026-09-29' and finished: /api/drill/finish returns plan.next 'Words'. But /practice/session/?id=… at 1280 shows only the ordinary 'Set complete' summary: no 'Continue ↵', no 'Next in today's plan: …', no day rail. plan.js's Start today posts a single task and never calls UI.run.start, and UI.run.runParts reads /api/next, not the plan's tasks.",
+   "owner": "shared",
+   "build": "When cfg.run is today, the session summary (S4), the report footer (S6) and the words-run end should render UI.run.between with the finished block and the next plan task from the finish reply's plan.next (or /api/today.due rows): 'Continue ↵' (Enter), 'Stop for now' (Esc), and the day rail from the day's tasks' answered/total. The last block ends on /api/today.receipt. Plan's Start today should start the run through UI.run so the chain state is kept."
+  },
+  {
+   "item": "Next week's plan sheet, Review week and week goals are not built",
+   "source": "plan.md L16 (UI.weekPlanner hosted by U14's sheet, 'Review week', 'Goals 2/3' pips, the Weeks row with goals)",
+   "status": "missing",
+   "severity": "high",
+   "evidence": "grep: UI.weekPlanner is defined in plan-ui.js but called nowhere, and Me's 'Plan your week' sheet doesn't host it. UI.weekReview doesn't exist, so drawWeek never shows 'Review week'. GET /api/plan.weeks items have no goals field (keys n, from, to, theme, tasks_planned, tasks_done), so there are no goal pips and the theme never leads with goals. PUT /api/plan/{id}/week/{monday} works but no screen calls it.",
+   "owner": "shared",
+   "build": "Add goals (U14 week_goals, with state met|open|missed) to each weeks[] item. Host UI.weekPlanner(host, {plan, monday, days, swaps, focus}) in U14's Monday sheet when a plan is active, adding the plan's receipts. Define UI.weekReview({monday, plan}) to open that sheet. Add the pass_check goal kind."
+  },
+  {
+   "item": "Question of the day and Daily challenge rows start a drill that is refused",
+   "source": "rebuild-v2.md 3f Task kinds (QOTD 'Answer' goes to Today's inline question; the challenge row with its rank); decision 1 (twin challenge)",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "The qotd task's start is {path:'/api/drill', body:{task:'2026-09-28:qotd'}} and the challenge's is {task:'…:challenge'}. POSTing either -> 422 'use YYYY-MM-DD:fix|recheck|focus|extra|test'. On /plan/ the rows show 'Question of the day Extra 1 question · 0 min Start' and 'Daily challenge Extra 10 questions · 0 min Start', and Start fails.",
+   "owner": "shared",
+   "build": "Give qotd and challenge tasks an href instead of a drill start: '/?#qotd' with the action 'Answer', and the challenge's own lobby. Show 'Done · right/wrong' and 'rank N of M' from /api/today's qotd and challenge. Drop the '0 min' meta."
+  },
+  {
+   "item": "Words task ignores the plan's box, task and run",
+   "source": "plan.md L4 Words (box = w, task '<d>:words'), L8 (Words block, run echoed); 3.2 row §3.8 Words",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "plan.js opens /words/run/?today=1&task=…&run=…&box=5. web/words/run/index.html reads only P.get('id') and P.get('today') and posts {mode:'mix',deck:{source:'today'}} without box, task, run, goal, transitions or in_context. The run isn't sized to w, isn't tagged, and can't hand back to the plan.",
+   "owner": "page",
+   "build": "In the words run page, pass box, task and run from the URL (and goal, transitions and in_context from the task body) into POST /api/words/run. Show the day rail when run is set, and on finish hand plan.next to UI.run.between."
+  },
+  {
+   "item": "'Too hard' skip never produces its Learn task",
+   "source": "plan.md L10 Skip asks why (Too hard: a Learn task before the skill's next focus set); acceptance 3",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "PATCH {status:'skipped',reason:'too_hard'} stores the note 'too_hard:ratios_rates_proportions_and_units:2026-10-13'. GET /api/plan/day/2026-10-13 has a Focus set on that skill but no learn task, and budget.cut lists {kind:'learn',count:4}. The page toast still says 'A Learn it task comes before its next focus set'.",
+   "owner": "server",
+   "build": "In build_day, a Learn task owed by a too_hard skip (or by an L3 again/learn result) goes ahead of fix and the focus reserve, so the budget never cuts it on its follow-up day. If the day truly can't hold 4, move it with a real date."
+  },
+  {
+   "item": "'Today I have' preview says '→ undefined', counts R&W in the total, and never says the test moves",
+   "source": "plan.md L9 (preview line from budget.cut: 'Fits: Words 3 · Warm-up 3 · Fix 4 · 14 min · Left for later … → Thu'; 'Module test moves to Thu · it needs 35 min'); L4 (the test moves to the next 35-min day); acceptance 5",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "Clicking the 10 chip on /plan/ at 1280 shows 'Fits: Warm-up 2 · Words 3 · R&W … 15 · R&W … 15 · 36.4 min Left for later: Fix 4 q → undefined · Learn it 4 q → undefined · Focus 2 q → undefined'. budget.cut 'to' is the text 'next study day', not a date. GET /api/plan/day/2026-10-02?minutes=30 (a test day) has no test task and no cut item of kind 'test': kind_of drops the test before build_day sees it, so it is lost, not moved.",
+   "owner": "shared",
+   "build": "The server should give each cut item a real 'to' date (the next study day that deals it; for the test, the next study day with 35+ min that isn't the eve or a taper day) and actually move the test there. In the preview, total only the counted Math rows against the chosen minutes and name R&W separately. The page renders 'Module test moves to Thu · it needs 35 min' from that item."
+  },
+  {
+   "item": "Drift banner's preview compares a number with itself",
+   "source": "plan.md L17 Drift ('the effect before applying: Start from 650 · needs +11 a week instead of +22'); acceptance 2",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "GET /api/plan suggest.preview = 'Start from 290 · needs +71.8 a week instead of +71.8'. On the page: 'Start from 290 · needs +73.6 a week instead of +71.8'. The old need comes from verdict.needs_per_week, which already uses the recent-tests mean (290) as its baseline, not the plan's current (520).",
+   "owner": "server",
+   "build": "Compute the 'instead of' figure from cfg.current: (min(target,780) − cfg.current) ÷ weeks left, and the new one from suggest.current, over the same weeks left."
+  },
+  {
+   "item": "After the exam, the Behind banner still shows and its fixes fail",
+   "source": "rebuild-v2.md 3f After the exam (ResultPanel only); §6 'Plan in the past: the ResultPanel, and no tasks'; L17",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "A plan whose exam was yesterday (state 'after') still returns behind with fixes 'Fit to 15 min', 'Make Mon 15 min' … 'Make Fri 15 min'. The page shows the banner and '27 behind' in the Plan done tile, next to 'Plan the next one'. PATCH {minutes:15} -> 422 'exam_date must be after today'.",
+   "owner": "server",
+   "build": "Return behind = null (and no levers, drift or registration banner) when state is after, exam or eve. Also group the weekday pattern into one fix ('You miss most Tuesdays and Thursdays. Make them 15-minute days?') instead of one button per weekday."
+  },
+  {
+   "item": "An archived plan (?id=) opens only as a list row, not as the read-only plan",
+   "source": "rebuild-v2.md 3k 'Open: an archived plan opens read-only at ?id='; archived view banner; §6 Archived; acceptance 29",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "GET /api/plan?id=<archived> returns the active plan (get_plan ignores id). So plan.js olderPlan() falls back: /plan/?id=pl:joyRbeCA7sEE1q69 shows only the banner 'You are viewing an older plan…' with its two buttons and one Plans row, with no title, tiles, calendar, week or Progress.",
+   "owner": "server",
+   "build": "Let GET /api/plan take ?id=<owned plan id> and return plan.payload(learner, tz, pid). The page already draws it read-only when active.id matches."
+  },
+  {
+   "item": "Learner-with-data landing ('Your plan, ready' / 'Use this plan') shows only sometimes",
+   "source": "plan.md L6 Landing with data (30+ answers or a sitting); acceptance 2",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "a:auditplanseed2 (40 answers, no sitting): /plan/ at 1280 showed 'Create my plan' and the new-student example on 3 of 3 loads. At 390 it showed 'Use this plan · Adjust… · YOUR PLAN, READY' on some loads. landing() tests UI.answered, which the shell sets asynchronously, and never redraws when it arrives.",
+   "owner": "page",
+   "build": "Decide withData from the server: add answered (or proposal.with_data) to GET /api/plan's no-plan payload and use it in landing(), or redraw the landing when shell data arrives."
+  },
+  {
+   "item": "Landing's first question is not answerable in place",
+   "source": "plan.md L6 Landing new student (preview.first token, UI.workspace inline, source 'plan_preview'); acceptance 6",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "POST /api/plan/preview (and proposal.preview) returns first: null. There is no plan_preview drill source, and the landing's 'A day in your plan' rows are read-only numbered rows with no live question.",
+   "owner": "shared",
+   "build": "Build preview.first {token, question} for sample_day's first question row (drill.preview_seed plus an HMAC over learner|template|seed|day|task). Accept POST /api/drill {source:'plan_preview',count:1,first:{token,answer,ms}} (409 preview_stale on reuse). Render the item on the landing with UI.workspace(host,q,{mode:'inline'})."
+  },
+  {
+   "item": "Habit and Pace tasks, cause routing and the Your habits card are missing",
+   "source": "plan.md L4 table rows 6-7 (habit, pace), cause routing (T7 causes), side card 'Your habits'; L19 trap sheet (U6 habits first)",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "payload returns 'habits': [] as a literal (plan.py:2041). No _task(…,'habit') or 'pace' is ever built: a Counter of the seeded plan's task kinds has none. progress.causes feeds nothing into the day. api_tests.habits(learner) exists but plan.py never calls it, so habitsCard() never renders and the trap sheet lists only open traps.",
+   "owner": "server",
+   "build": "Fill GET /api/plan.habits from U6 (api_tests.habits). Deal the weekly habit task (a family at 25%+ of the last 20 misses, count 8, source 'habit') and pace tasks (slow-and-right from Sharpen, or rushing; at most 2 a week) in L4's order and budget. Route T7 causes (slip → instant feedback, clock → Pace, entry → spr_share, gap → Learn) with a why line each."
+  },
+  {
+   "item": "Final still deals weekly tests; the rehearsals don't replace them",
+   "source": "plan.md L19 Dress rehearsals ('From Final's first day, no weekly module or section is dealt'); §3.1 49 self-check",
+   "status": "contradicts",
+   "severity": "medium",
+   "evidence": "POST /api/plan/preview for exam 2027-03-06, weekly module: tests on 2027-02-12 (Final, module), 2027-02-19 (Final, module) and 2027-02-20 (Final, section rehearsal). So the week of Feb 15 has two tests, and Final keeps weekly modules. kind_of still has the 'exam-week test on Thursday' branch.",
+   "owner": "server",
+   "build": "In kind_of, stop dealing cfg.tests on any day whose phase is Final: only rehearsal dates are test days there. Drop the Thursday exam-week branch, and assert this in plan.py's self-check."
+  },
+  {
+   "item": "Before/After checks break the 2-a-week cap and land where no After can follow",
+   "source": "plan.md L3 The checks (at most 2 skills a week; Before on the week's first practice day, After on its last)",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "The seeded plan deals a check only in taper days. The week of Nov 2 has 'Before · Area and Volume' (Nov 2), 'Before · Lines, Angles, and Triangles' (Nov 3) and 'Before · Right Triangles and Trigonometry' (Nov 4): 3 skills in one week, all in the exam week, with no After possible. _check_for has no weekly cap and no check for a remaining practice day.",
+   "owner": "server",
+   "build": "Pick at most 2 check skills per week (focus skills by gain, no passed check), deal their Before only when the week also has a later practice day for the After, and keep checks out of taper days."
+  },
+  {
+   "item": "Graduated banner has no Move / Keep buttons",
+   "source": "plan.md L3 Auto or ask (Off: 'Move it to Strong and put Percentages (≈ +20) on Focus?' with Move and Keep on Focus); L17",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "auto_focus returns {kind:'graduated',topic,text} with no actions. drawBanners renders b.text with (b.actions||[]) buttons, so the student sees the sentence and a dismiss × only. The same applies to the slipping banner.",
+   "owner": "shared",
+   "build": "Send actions in the graduated banner: 'Move' with a PATCH {skills:{topic:{state:'strong',by:'auto'}, next:{state:'focus',by:'auto'}}}, primary, and 'Keep on Focus' with a PATCH setting pin:true. Name the next skill and its ≈ gain in the text."
+  },
+  {
+   "item": "Swap topics is never offered",
+   "source": "rebuild-v2.md 3f TaskMenu 'Swap topics' (server alternatives, two other sets with the same shares); §4 Allocation 'alternatives'; §3.6.5 PUT day topics",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "_task always sets 'alternatives': [] (plan.py:575) and nothing fills it. taskMenu shows 'Swap topics' only when t.alternatives is non-empty, so no focus row ever has it.",
+   "owner": "server",
+   "build": "Have allocate return the next two candidate topic sets per practice day (same domain shares, same recency rules), and put them in the focus task's alternatives."
+  },
+  {
+   "item": "Test-day sheet has only traps and a checklist, and needs a plan",
+   "source": "product.md G13 (six sections at /plan/?print=sheet, works without a plan, GET /api/plan/sheet); plan.md L19 Trap sheet",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "GET /api/plan/sheet -> 404. /plan/?print=sheet for a learner without a plan shows 'Make a plan first: the sheet is built from it.' With a plan it shows 'Your traps' (open traps, tell = label, figures as 'There is a figure.') and 'What to bring'. Your rules, Skip first, Use Desmos on and Grid-in rules you broke are missing.",
+   "owner": "shared",
+   "build": "Add GET /api/plan/sheet returning the six sections (review.trapsheet with habits first, P21 rules, skip-first types, Desmos types, T7 entry rules, the checklist), usable without a plan. Render all six on ?print=sheet with no plan required, keep #traps, and draw the example figures."
+  },
+  {
+   "item": "Nothing says what the plan is working on (GapsCard, gap tags)",
+   "source": "rebuild-v2.md 3j GapsCard; 2e SkillRows gap tags ('grid-in 48% vs 71%', 'slow · 2:40 a question'); §3.6.4 grid-in and pace gaps",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "GET /api/plan returns gaps: {} always (plan.py:2030), even though _question_body silently tilts fmt to 'mix'. progress.js has no GapsCard, and wizard SkillRows show no gap tag.",
+   "owner": "shared",
+   "build": "Fill gaps {fmt:{spr_right,spr_n,mcq_right,applied}, pace:[{topic,median_s,budget_s,timed_from}]} from the rules the allocator already uses. Show a GapsCard on Progress when one exists, and the tags on step 4's SkillRows."
+  },
+  {
+   "item": "Behind banner doesn't price all its fixes",
+   "source": "plan.md L17 Behind (what it cost; Ramp; later date; Add days off); §3.1 44 (behind.fixes: ramp, weekday, date)",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "behind.fixes holds only 'shorter' and one 'weekday' entry per missed weekday. There is no ramp fix, no later-date fix and no preview effect. behind.text is 'N study days missed · catch up in 15 min', with no check-ins overdue or mistakes older than 10 days. The page has no 'Add days off' button. The levers also lack L13's 'Ramp from 25'.",
+   "owner": "server",
+   "build": "Add behind.fixes ramp {patch:{ramp:{from}}} and date {patch:{exam_date}} (when not booked), each with effect {study_days, hours, needs_per_week}. Build the 'what it cost' line from overdue check-ins and old mistakes, and add the Ramp lever to levers."
+  },
+  {
+   "item": "Test rows always read 'Fresh adaptive test', including twins, rehearsals and the diagnostic",
+   "source": "plan.md L14 row ('Checkpoint 2 · twin of your Oct 7 module · same 22 question types, new numbers · 35 min'); L19 row ('Dress rehearsal · like Nov 7 · Sat 8:30 · 2 modules · 70 min · no pausing'); L5 ('Two passes…' from Sharpen); L6 ('Diagnostic · 20 questions · ~30 min')",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "Every test task's detail is 'Fresh adaptive test' (plan.py:858), even on the 2026-09-25 twin (kind 'twin', twin_of set). The rehearsal title is just 'Dress rehearsal', and the Sharpen tests have no two-pass line. The new student's diagnostic row shows 'aim 520+', an aim made from the default score.",
+   "owner": "server",
+   "build": "Title and detail each test by what it is: Checkpoint N · twin of your <date> <kind>; Dress rehearsal · like <exam> · <rehearsal_at> · 2 modules · 70 min · no pausing; the two-pass line from Sharpen on. Give the diagnostic no aim."
+  },
+  {
+   "item": "Taper extras: no Trap gauntlet, no reserved last timed set, no R&W-first rehearsal option",
+   "source": "plan.md L19 Taper ('Trap gauntlet · 10' 3 days out; 'Last timed set · 10 in 15:50' reserved r = min(10, q−2); focus only on skills with 2+ questions a test) and the task-menu option 'Sit Bluebook R&W first'",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "grep 'gauntlet' in plan.py: nothing (only the test trainer in api_tests). Nov 5 (2 days out) has an ordinary 'Focus set' of 4. Nov 4 (3 days out) has a Before check, not a gauntlet. There is no R&W-first item in taskMenu, and no per_test filter on taper topics.",
+   "owner": "server",
+   "build": "On the day 3 out, deal a counted 'Trap gauntlet · 10' (U6) that takes the focus reserve. Two days out, reserve a 'Last timed set' of min(10,q−2) with timing 'pace'. Limit taper focus topics to per_test ≥ 2. Add the rehearsal menu item that adds a Bluebook R&W task at 08:30 and moves Math to 09:45."
+  },
+  {
+   "item": "Changelog lines lack their causes, file edits as 'auto', and show raw ids",
+   "source": "plan.md L15 (each line takes its cause from plan_events; examples 'Mon off · you took it off'; Progress › Changes with counts)",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "plan_events after a snapshot diff: 'Tue off' (from my PUT /week edit) is stored with kind 'auto', because the week event's day is the Monday. Other lines read '2026-10-08 re-dealt from your answers' with no cause, and one reads 'Scored sitting 1BepIuxh-PzfIB3NHByGdQ' (a raw session id the sheet shows). changes_counts is never rendered: progress.js has no Changes card with 'Your plan changed N times · …'.",
+   "owner": "shared",
+   "build": "Match diff lines to events by the affected dates (week edits cover their seven days), and append the cause ('· you took it off', '· 2 new mistakes yesterday'). Write sitting lines with kind and band, not the id. Add Progress › Changes with the counts line and the paged list."
+  },
+  {
+   "item": "Progress charts are thinner than specified",
+   "source": "rebuild-v2.md 3j StudyTimeChart (tests hatched, range 2 weeks / Month / Whole plan), DomainCard (mastery bar with a start_mastery tick, planned vs done), SplitCard (done-so-far bar); plan.md L18 (accuracy line on StudyTimeChart, SplitCard 'Rebalance to the points', R&W segment, ≈ claimed per domain)",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "progress.js: the StudyTimeChart is always the last 28 days, with one 'studied' series, no range control, no test hatch and no first-try accuracy line. Domains is a table with no mastery bar, start tick or '≈ +12 claimed'. 'Planned time by task' has no done-so-far bar, no R&W minutes segment and no 'Rebalance to the points' button.",
+   "owner": "page",
+   "build": "Add the range seg and a tests series (hatched) to the StudyTimeChart, and the accuracy line on a right axis. Add the mastery-change bar and claimed to the Domains rows, the done-so-far bar and R&W segment to the split, and a Rebalance button that PATCHes the largest-gap domain onto Focus with Undo."
+  },
+  {
+   "item": "Test-day verdict marks missing from the week strip",
+   "source": "plan.md L13 Checkpoints ('The WeekStrip marks a test day ✓ only on beat; under gets a hollow ring with !'); §3.1 33",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "The 2026-09-25 test has result.verdict 'under'. drawWeek in plan.js never reads result.verdict (grep 'verdict' in plan.js: no match); the ✓ comes from day status only.",
+   "owner": "page",
+   "build": "In drawWeek, draw a ✓ on a test column only when its test task's result.verdict is 'beat', and a hollow ring with '!' for 'under', with the verdict in the aria-label."
+  },
+  {
+   "item": "Score tile omits claimed points and the route line",
+   "source": "plan.md L13 Stat tiles (Score: '≈ +18 claimed since Sep 23 · from 412 answers', 'First modules about 54% · 14 of 22 routes up'; each tile a button: Score → the trajectory); L1 Claimed",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "drawTiles builds t2 with no tap target and no points.claimed or route line (grep 'claimed' in plan.js: no match). The Score tile of a:auditplanseed1 reads 'SCORE 520 → 700 Behind · 255 +180 to go R&W … What changes it ›'.",
+   "owner": "page",
+   "build": "Add '≈ +N claimed since <start>' (points.math.claimed) and, when target > 580, the route line to the Score tile, and make the tile open the Progress trajectory."
+  },
+  {
+   "item": "Calendar feed events use skill slugs and lack the Today link and deadlines",
+   "source": "rebuild-v2.md 3l events ('SAT Math · 45 min · Circles, Percentages'); plan.md §3.1 36 (titles with check-ins due, DESCRIPTION /?next=1, registration deadlines U17)",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "The /api/cal/<token>.ics SUMMARY reads 'SAT Math · 30 min · nonlinear_functions\\, systems_of_linear_equations\\, two_variable_data'. No event DESCRIPTION links /?next=1 (the only DESCRIPTION is the VALARM's), titles carry no check-ins, and there are no register-by events.",
+   "owner": "server",
+   "build": "In plan.calendar, title events with skill names (progress.topics()[t].name) and the day's check-ins due. Add DESCRIPTION with the site's /?next=1 link, and an all-day 'Register for the SAT by <date>' event when not booked."
+  },
+  {
+   "item": "Landing's BankStats is one text line, without the named-mistake example or the Words counts",
+   "source": "rebuild-v2.md 1b BankStats (tiles; 'Every wrong answer is named' with a real bank.example); plan.md §3.1 3 (tile 4 Words: words · transitions · you know about N); L21 acceptance 5",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "The landing shows '414 question types · 19 skills · a new section every sitting · every wrong answer named · SAT words and transitions'. bank.example.label is 'Area and Volume', a skill name, not a named trap, and bank.words has no words or transitions counts (known 0 only).",
+   "owner": "shared",
+   "build": "Make bank.example a real trap label with its topic and show it as the 'every wrong answer is named' example with its skill chip. Fill bank.words {words, transitions, known} from S9 and show those counts. Keep the calm single row if decision 7 wants it, but carry these facts."
+  },
+  {
+   "item": "Wizard evidence lines missing: practice-only note, pace made-vs-needed, date projection, coverage per domain",
+   "source": "plan.md L7 (PaceLine 'You're making +9 a week; this date needs +22'; date rows '~690' projection); L2 (step 4 DomainRow 'Algebra · 9 of 15 proven'); L21 (R&W SourceNote 'From your Oct 3 Bluebook test'); product.md G10 (SourceNote '8 practice answers · take a module for a real start')",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "wizard.js has no 'making' or 'proven' text and no projection on date rows. For a:auditplanseed2 (40 answers, no sitting), step 1 shows only the Let-the-plan-measure-it choice with no practice-answers note. The R&W step 1 row reads 'Not set · your Total needs it' even when a Bluebook R&W score exists.",
+   "owner": "page",
+   "build": "Step 1: a practice-only note with the answer count and a 'take a module' link, and R&W prefilled from the latest outside score with its SourceNote. Step 2: the date rows' projection and the made-vs-needed pace line (from GET /api/plan projection and verdict). Step 4: each DomainRow's coverage line from coverage.math."
+  },
+  {
+   "item": "'Learn it' label still used",
+   "source": "product.md G2 (retired phrase 'Learn it'; verb 'Learn this type')",
+   "status": "contradicts",
+   "severity": "low",
+   "evidence": "The server task title is 'Learn it · <skill>' (plan.py:914). plan-ui.js TAGS learn: 'Learn it', the trim preview says 'Learn it 4 q', the skip toast says 'A Learn it task comes before its next focus set', and progress.js's button reads 'Learn it · untimed'.",
+   "owner": "shared",
+   "build": "Rename to UI.VERBS.learn ('Learn this type' / tag 'Learn') in the server title and on every plan surface."
+  },
+  {
+   "item": "Z doesn't undo a skip on /plan/",
+   "source": "product.md G2 acceptance 6 ('On /plan/, Z undoes a skip'); R43",
+   "status": "broken",
+   "severity": "low",
+   "evidence": "plan.js onTask 'skip' calls patchTask(t, {status:'skipped'}, null, null), so no toast and no undo, and the global Z (toast.undo) has nothing to act on until a reason chip is picked.",
+   "owner": "page",
+   "build": "Toast 'Skipped' with Undo on the skip itself (it may sit below the reason chips), so Z restores it."
+  },
+  {
+   "item": "Plan stat tiles have no data-fact working",
+   "source": "product.md G6 ('every [data-fact]' on /plan/, Plan's stat tiles; acceptance 2, 3)",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "grep -c data-fact in web/plan/plan.js, progress.js, wizard.js and plan-ui.js: 0 each.",
+   "owner": "page",
+   "build": "Add data-fact keys (days_to_exam, score, plan_done, week_minutes, streak) to the tiles' numbers, with the matching levers in GET /api/levers."
+  },
+  {
+   "item": "Phone layout: tiles are a swipe row; phases are a list, not the proportional strip",
+   "source": "rebuild-v2.md 3b ('one full-width tile plus a 3-up row at 390'), §7 ('The date chips are the only horizontal scroller'), 3i PhaseStrip (a three-part bar, each part as wide as its phase)",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "index.html @media max-width 759px sets .pl-tiles to a horizontal scroll-snap row (flex 0 0 72%). drawPhase renders stacked .pl-ph rows in the side column, with no proportional widths.",
+   "owner": "page",
+   "build": "At <760 px lay the tiles out as a full-width Days tile over a 3-up grid, and draw the phases as one bar with part widths set to their day counts (current part orange)."
+  },
+  {
+   "item": "Done rows lack the receipt's fixes, new mistakes and Fix-the-N button",
+   "source": "plan.md L10 Done receipt ('15 of 15 · 12 right · 2 fixed · 1 new mistake · Circles 41% → 58% · 12 min', 'Fix the 1 it opened · 2 q'); Task.result.fixed/opened/moved/to_strong",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "_task_status sets result = {right, asked, ms} only, so receiptOf never gets fixed or opened, rows show only 'N of M right · X min', and there is no Fix-the-N-it-opened button.",
+   "owner": "server",
+   "build": "Fill result.fixed, opened (labels, from trap_log for the session), moved (mastery words) and to_strong. On the row, show 'Fix the N it opened' with T2's from_session body."
+  }
+ ]
+}

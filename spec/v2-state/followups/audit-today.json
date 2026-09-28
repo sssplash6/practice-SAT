@@ -1,0 +1,206 @@
+{
+ "section": "today",
+ "run": "wf_a6acd4e3-941",
+ "total": 256,
+ "built": 193,
+ "gaps": [
+  {
+   "item": "Due today list (T2 rows, R56 review row, words, day's questions, challenge, contests, own-task checkbox, Skip/Move/Mark done/Swap, Why, results, Fix the N it opened)",
+   "source": "spec/v2-upgrades/today.md T2; spec/rebuild-v2.md §3.2.3 3b; product.md G1/R56",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "GET /api/today .due for the seeded learner (5 plan tasks today) and for a new learner is review.due's shape {subject, cap, items, kinds, forecast, ...} with no `rows`. The page reads due.rows, so #due reads 'Nothing due yet today.' for both at 1280 and 390. Cause: server/api_today.py today_payload uses `_call('next','due') or due_fallback(...)`. next.due (F2) returns review.due's payload, so the T2 rows builder due_fallback never runs. Side effect: a new learner's #chal is hidden because Due has no challenge row, so Today offers no way to start the daily challenge.",
+   "owner": "server",
+   "build": "In today_payload, build /api/today.due from due_fallback (T2's rows with R56's review row), or have next.due return {rows, minutes_left, goal_minutes, done, total}. Keep review.due for the review row's items. Check: seeded plan day gives rows starting ['plan',...,'review','words','qotd','challenge'], and a new learner gets 3 rows (0 of 3)."
+  },
+  {
+   "item": "Up next session plan: numbered blocks with × drop, alt 'Or a timed module' row, plan_note, value-first reason line, and question 1 answered in place (first token), including G10's 'Start with 8' block with its inline question",
+   "source": "today.md T1 (Screens, Data and endpoints, acceptance 1-5); product.md G10 'On Today'",
+   "status": "missing",
+   "severity": "high",
+   "evidence": "POST /api/drill/preview {source:'next', box:15|count:22, timed, drop:[]} returns the builder preview keys (available, servable, count, templates, ...) with no `blocks`, `first`, `reason`, `alt` or `plan_note`. /api/today.next.preview has the same shape. grep of server/*.py finds no preview_seed, preview_secret or preview_stale. On the page, #next shows only the coach's topic chips and 'about 24 questions at your pace', with no block rows and no inline question, for both the new and the seeded learner.",
+   "owner": "server",
+   "build": "F5: /api/drill/preview for source 'next' (and 'start') returns blocks [{key, kind, label, detail, count, minutes, pts, topic}], minutes, alt, plan_note, reason and first:{token, question} (preview_seed walk, HMAC token in kv preview_secret). POST /api/drill accepts first:{token, answer, ms} and returns {id, feedback, next_url}, or 409 preview_stale. The page code (paintBlocks, paintQ1) already renders these fields."
+  },
+  {
+   "item": "Starts on Today that fail: Up next lead 'Sharpen · 12 q', Score's 'Sharpen · 12 questions', every Pace-card drill, causes 'Clock' speed drill, plan 'Map' task, grid-in extra 'Practise · 10'",
+   "source": "today.md T8 (Speed drill, Careful set, Timed set · 10), T10 (Sharpen, acceptance 4), T6 extras; §3.2 row §2.6 (sources pace, gain)",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "POST /api/drill {count:8, timing:'pace', source:'pace'} → 422 'choose from builder, challenge, coach, due, ...' (no 'pace'). {source:'probe', count:12} → 409 no_templates, although insights.estimate.thin lists 2 domains. {formats:['spr'], count:10, source:'gain'} → 409 no_templates. The plan Map item's body {source:'probe', count:10, task:'2026-09-29:map'} → 422 'use YYYY-MM-DD:fix|recheck|focus|extra|test'. On the page, a learner with 14 answers has Up next's orange pill 'Sharpen · 12 q'. Clicking it shows 'No templates.' in the card.",
+   "owner": "server",
+   "build": "F5: accept source 'pace' (timing pace at 95 s a question; with no topics, draw from the learner's slow-right or weakest skills). Make probe with no topics fill from estimate.thin domains (U5), and let a formats-only set with no topics draw from all servable grid-in templates. S7/F2: give the plan's map task a task id the drill accepts, or accept ':map'. Check: each body above returns 200."
+  },
+  {
+   "item": "Up next item 2: an unfinished drill leads with 'Continue · N of M answered' (+ timed '· 6:10 left', topic chips, '+N more unfinished sets')",
+   "source": "spec/rebuild-v2.md §3.2.3 3a item 2, acceptance 24; today.md §3.2 row 'shell-me U1 next.queue' (adds kind resume for an unfinished drill)",
+   "status": "missing",
+   "severity": "high",
+   "evidence": "Two learners each had a drill with 2 answers left open. /api/today.open.drill is set (answered 2, seconds_left 899 for the timed one). /api/today.next.items still contains no resume row: [start, diagnostic] for the new one and [probe, skill, untried, qotd] for the seeded one. #next leads with 'Start with 8 questions' / 'Sharpen · 12 q' and nothing on Today continues the open set.",
+   "owner": "server",
+   "build": "F2 next.queue: add the kind 'resume' row for open.drill before the plan and coach rows, as {kind:'resume', title:'Continue', answered, total, timed, seconds_left, topics, href:'/practice/session/?id=', more: open.drills}. The page's leadFrom already renders these fields and the '+N more' link."
+  },
+  {
+   "item": "Up next item 1: a running timed test shows 'Module in progress · 14:22 left · 9 of 22 answered', a ticking clock, 'The clock keeps running while you're away', and a Resume pill (or 'Time's up' with Continue to module 2 / See results)",
+   "source": "spec/rebuild-v2.md §3.2.3 3a item 1, acceptance 19",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "After I began a timed module and answered 3 questions, next.items[0] = {kind:'resume', title:'Resume module · 3/22', detail:'3 of 22 answered', href:'/test/?s=…'}, with no timed or seconds_left. #next shows 'Resume module · 3/22' and an orange 'Start' pill, with no time left and no helper line. The same payload's open.test has seconds_left 2099, and #tests shows '34:58 left'.",
+   "owner": "shared",
+   "build": "F2 next.queue: emit the running sitting as kind 'test' with timed, seconds_left, answered, asked, module, section and action ('Resume', or 'Continue to module 2' / 'See results' when seconds_left is 0). Page leadFrom: title 'Module in progress' / 'Section · module 2 in progress', and fall back to S.t.open.test when the queue row has no clock."
+  },
+  {
+   "item": "Final stretch (T13 modes stretch/taper/eve/exam/after): hero '· final stretch' chip, #exam moved full width, rehearsal lead, readiness rows, countdown additions, sweep row, 'Light warm-up' on the eve, exam-day card order, no new rare skills",
+   "source": "today.md T13 (acceptance 1, 4, 5); §3.1 entry 21/24",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "For exam dates of today+12, +6, +1 and 0, /api/today.next.stage is next.py's shell stage {name:'test'|'final', days_to_exam, final_week, eve}, with no `mode`, rehearsals, sweep or rare. The page keys every T13 behaviour on stage.mode. At +12 the hero reads 'SAT in 12 days' (no final stretch), #exam stays in the side column, and the reason line reads 'New skills, the biggest domains first'. On the eve Up next reads 'Rest. Nothing new today.'. On exam day Up next leads with 'Start with 8 questions' and #exam is not the second card. Cause: api_today.stage() returns _call('next','stage') first, so its own T13 builder is unreachable.",
+   "owner": "server",
+   "build": "Have api_today.stage() compute T13's {mode, days, rehearsals, sweep, rare, scores_by} itself and merge F2's name/final_week into it, or add `mode` and the T13 fields to next.stage. Then check T13 acceptance 1, 4, 5 and 7 (no untried/probe items in the stretch, 'Light warm-up' on the eve, #exam second on exam day, both #mist groups)."
+  },
+  {
+   "item": "Four day's-question slots: R&W Words in Context and Transitions rows (the key hidden until answered, clue and idea spans, R&W crowd spread, R&W twin via /api/qotd/another, Add to my words, the Words tile's 'Word and transition of the day' link)",
+   "source": "today.md T14 (Slots, 'R&W is not optional', acceptance 1); §3.1 entry 15",
+   "status": "missing",
+   "severity": "high",
+   "evidence": "GET /api/qotd returns slots ['math:mcq','math:spr'] only, although words.daily_item is present. words.daily_item('2026-09-29','wic') and ('…','transition') both return None. WIC requires ≥ 6 servable (reviewed) frames per word, but at most 2 exist (41 words have 2, per the spec's ≥ 2 rule). Transitions have 0 of 153 pairs reviewed. #qotd shows only MULTIPLE CHOICE and GRID-IN at 1280, and only 2 tabs at 390.",
+   "owner": "server",
+   "build": "S9: draw the WIC key word over SAT words with ≥ 2 servable in-context frames (spec T14 and §3.2 S9 row), not ≥ 6, and get transition pairs through the Words review gate (content queue) so daily_item('transition') returns an item. Then check T14 acceptance 1-3 (4 slots, no key fields, key word absent from the page until answered)."
+  },
+  {
+   "item": "Recent tests data: diagnostic gate, miss chips per module (wrong vs blank), open sittings, total, kind=tests and paging from /api/history",
+   "source": "spec/rebuild-v2.md §3.2.3 §11 'Diagnostic not signed up for', Review change 17; today.md §3.1 entry 32 (history rows carry modules, gated)",
+   "status": "broken",
+   "severity": "high",
+   "evidence": "GET /api/history?kind=tests&all=1&limit=6 returns every finished drill with only {id, kind, started, finished, right, asked, estimate, topics, label}: no modules, gated, total or next_offset. Cause: api_practice's R24 /api/history is registered before api_results' S6 history (app.py ROUTERS order), so it shadows it. For a learner who finished a diagnostic without signing up, #tests shows 'Diagnostic | 200–300 | Review | Fix · 20', and that Fix gives 403 'finish and sign up before fixing this diagnostic'. The calendar lists the same sitting gated:true.",
+   "owner": "server",
+   "build": "Serve one /api/history: fold R24's inline filter into api_results.history (or drop the api_practice route), so kind/all/limit/offset, modules[{n, wrong, blank}], gated (no estimate or modules for an un-signed-up diagnostic), in_progress and total reach Today. Check: the gated diagnostic's card reads 'Sign up to see your results' with no band and no Fix."
+  },
+  {
+   "item": "Finished test card: Twin test (first when 3+ days old or 5+ misses), New one like this, route tag, right/asked and minutes, mini scale, time per module, worth, total with R&W, and a chip menu 'Review Q13 / Twin'",
+   "source": "today.md T16 (acceptance 2, 4); §3.1 entry 22; spec §3.2.3 §11 Finished test card",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "Today hands finished rows to UI.sittingCard (results-ui.js is always loaded as a helper), so the page's own testCard, which has Twin test, New one like this, the chip menu, delta and R&W total, never renders. At 1280 the seeded module card shows only 'Sep 25 | Module | 310–510 | Review | Fix · 12 | ⌄'. The band wraps to '310–/510' in a one-third-width column of the 3-column .tests-grid. sittingCard chips are plain report links, with no Twin.",
+   "owner": "page",
+   "build": "Either keep Today's testCard for finished sittings, or pass sittingCard options for the T16 actions (Twin test first by the 3-day/5-miss rule, quiet New one like this, chip menu Review Q/Twin with the twin sheet) and the extra lines. Give the card the full row width (1 column at desktop, or a layout that doesn't wrap the band)."
+  },
+  {
+   "item": "Start today: the Due list header's run over every undone row ('Start today · 5 parts · 38 min', 'Continue today · part 2 of 5')",
+   "source": "product.md G1 / R40 (Today's two starts; acceptance 7)",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "grep -c 'UI.run|Start today|run=1' web/index.html → 0. The calm pass (commit 97c401e) removed the Due header's Start today. #due has no run control at 1280 or 390, and only the palette and ?run=1 can start the day's run. UI.run exists in web/assets/ui.js.",
+   "owner": "page",
+   "build": "In paintDue's head, add a `.btn` (not orange, keeping one orange) `Start today · n parts · m min` from UI.run.label() that calls UI.run.start(), shown when 2+ rows are undone. Mid-run it reads `Continue today · part n of m`. When every row is done the head reads 'Day done · 42 of 40 min'."
+  },
+  {
+   "item": "Daily challenge footer: challenge streak ('3-day challenge streak') and yesterday's result ('Yesterday: #4 of 30 · 9/10' linking to the past board)",
+   "source": "spec §3.2.3 §7 Footer; §3.2.5 GET /api/challenge (streak, yesterday); §3.2.4 extras",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "The page reads S.t.challenge.streak and .yesterday. challenge_today() in server/api_today.py returns only {started, done, answered, total, id, seconds_left, right}. GET /api/contest/daily has no streak or yesterday either (both None), and grep '\"yesterday\"' in server/*.py matches only the hero brief. The page also links to '/challenge/?day=', but R3 moved past boards to /compete/contest/?id=daily-YYYY-MM-DD.",
+   "owner": "server",
+   "build": "Add streak (consecutive days with a finished daily challenge, ending today or yesterday) and yesterday {rank, players, right, asked, day} to /api/today.challenge. Page: link yesterday to /compete/contest/?id=daily-{day}."
+  },
+  {
+   "item": "Final check Due row in exam week and the test-day sheet link from the final stretch",
+   "source": "product.md G13 (Final check row, acceptance 4); §3.2 today.md T13 row",
+   "status": "missing",
+   "severity": "medium",
+   "evidence": "grep 'final_check' server/*.py → nothing. grep 'print=sheet' web/index.html → 0. With an exam 6 days out, neither Due today nor #exam offers the Final check or a link to /plan/?print=sheet.",
+   "owner": "shared",
+   "build": "Server (next.due / due rows): from 7 days before exam_date, add row kind 'final_check' ('Final check · one fresh question per trap on your sheet · 10 · ~16 min'), starting {templates: sheet templates, count:10, timing:'pace', order:'mixed', source:'mistakes'}. It is done once finished in the last 7 days. Page: in the final stretch, a quiet 'Your test-day sheet' link in #exam."
+  },
+  {
+   "item": "Build with these: the target chip shows the assumed target (start + 100) once a best guess is set",
+   "source": "today.md T18 'Target' ('It is always visible, so the assumed target is never silent') and acceptance 1b",
+   "status": "broken",
+   "severity": "medium",
+   "evidence": "New learner at 1280: I moved the 'Start from: your best guess' slider to 520. The chip still reads 'Set a target ✎', while 'Use this plan' then sends POST /api/plan {current:520, target:620, ...}. The slider handler sets dr.target but never repaints the chip.",
+   "owner": "page",
+   "build": "In planNone's range 'input' handler, update tchip.textContent to `Target ${dr.target} ✎` whenever dr.target is set or changed (and on draft load)."
+  },
+  {
+   "item": "Target dialog 'What it takes' recomputed as the value moves: '700 ≈ 37 of 44 right · you're near 31' and 'the ones you're most likely missing are in …'",
+   "source": "today.md T11 (recomputed as the slider moves, acceptance 1)",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "With a saved target of 650, the dialog shows '650 ≈ 36 of 44 right · you're near 28' and the three skills. After typing 700 it shows only the route note and the pace line. Both lines come from S.t.workload.need.target (saved target only). POST /api/plan/preview has no need, of-44 or skill fields, and no endpoint serves estimate.need for an arbitrary target.",
+   "owner": "shared",
+   "build": "Server: expose estimate.need(target).path for any target (e.g. GET /api/estimate/need?target=700 → {right_of_44, now_of_44, skills}), or add it to /api/plan/preview. Page: call it in askTakes (debounced 250 ms) for the current value."
+  },
+  {
+   "item": "Every figure opens its working (data-fact / UI.fact) on Today's hero chips, score band, mistakes count, points total and skill rows, study figures, plan stat tiles and the Due header",
+   "source": "product.md G6 (Client: 'Used on every stat tile, chip and meta: Today's hero chips, … score cards, skill rows, … the Due header'); today.md §3.1 entry 2",
+   "status": "weaker",
+   "severity": "medium",
+   "evidence": "On the seeded page, document.querySelectorAll('[data-fact]') returns 3 elements: the shell bar's streak and minutes, and the receipt's points line. None are in #hero chips, #score, #mist, #gain, #study or #plan. GET /api/levers?keys=streak,open_mistakes,due_today,points,band,minutes:today answers 200 with how/inputs for each.",
+   "owner": "page",
+   "build": "Tag Today's figures with UI.fact(el, key): hero streak ('streak'), minutes chip ('minutes:today'), score band ('band'), mistakes count ('open_mistakes'), points total ('points'), study tiles ('minutes:week'/'minutes:month'), Due header ('due_today'), the review row's count."
+  },
+  {
+   "item": "Warm-up / review session hides the skill ('Mixed warm-up' until Check)",
+   "source": "today.md T3 (cfg.hide_skill, acceptance 2); product.md R56 (V1's session keeps T3's hide_skill)",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "POST /api/drill {source:'warmup', count:5} is served as source 'due', and GET /api/drill/{id}.hide_skill is False.",
+   "owner": "server",
+   "build": "F5/S10: set cfg.hide_skill = true for sessions from source 'warmup' and for the review row's 'due' session (skill names hidden in the header and navigator until each item is answered)."
+  },
+  {
+   "item": "No zeros on screen: study streak chip and day's-questions streak at zero, challenge 'beat the field on 0 slots'",
+   "source": "spec §3.2.3 §2 ('At zero it reads No streak yet'), §5 header ('or Start a streak'); v2-decisions.md decision 7 (hide zeros)",
+   "status": "contradicts",
+   "severity": "low",
+   "evidence": "New learner at 1280: the hero reads 'Good morning | 0 | Set your SAT date' (a flame and '0'), and the #qotd head shows the streak mark with '0'. After a finished challenge #chal reads 'You beat the field on 0 slots · hardest for the field: 1'.",
+   "owner": "page",
+   "build": "heroChips: at streak 0 show the plain flame with 'No streak yet' in its tooltip, or drop the chip. qStreak: at 0 render 'Start a streak'. drawSlots: omit the 'beat the field' part when beat is 0."
+  },
+  {
+   "item": "Plan week theme line shows skill names, not slugs",
+   "source": "today.md T18 week header theme line (the theme in skill names)",
+   "status": "broken",
+   "severity": "low",
+   "evidence": "The seeded plan card reads 'Build · probability, Two-variable equations, Nonlinear functions'. The slug-to-name regex in planSet only matches slugs with an underscore, so one-word slugs (probability, circles, percentages) stay raw and lower-case.",
+   "owner": "page",
+   "build": "Map theme words through UI.TOPIC for every known slug (split on ', ' and look each up), not only /[a-z]+(_[a-z]+)+/."
+  },
+  {
+   "item": "Plan card focus line 'Focus: Algebra · Geometry & Trig' under the week strip",
+   "source": "spec §3.2.3 §8 'Row under the strip'",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "grep 'Focus:' web/index.html → nothing. planSet renders only 'Next test: …'. The plan's focus appears only as '· X is on focus' in Up next's fallback reason.",
+   "owner": "page",
+   "build": "In planSet, after the next-test line, add meta `Focus: {domains}` from S.t.plan.focus (or profile.focus) when any domain is on focus."
+  },
+  {
+   "item": "Where the time went: the two reference bars (the test's share 35/35/15/15 and the share of points on the table) under the minutes bar",
+   "source": "today.md T17 'Where the time went'",
+   "status": "weaker",
+   "severity": "low",
+   "evidence": "#study shows one stacked bar (Algebra 16 min, Advanced Math 12 min, PSDA 1 min) and one line: '55% of your time on Algebra · 35% of the test · 42% of your points'. No reference bars, so the other domains' test and points shares are not shown. insights.time_split has test_share and points_share for all 4 domains.",
+   "owner": "page",
+   "build": "In timeSplit, draw two thin UI.stackBar rows under the minutes bar from ts.test_share and ts.points_share (same domain order and labels, with their hidden data tables)."
+  },
+  {
+   "item": "Habit rows' 'Spot it · 3'",
+   "source": "today.md T9 (By habit rows: .quiet Spot it · 3, S10's spot)",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "The page adds 'Spot it · 3' only when UI.spot exists. grep over web/ finds no definition of UI.spot, so the action can never render. Spot exists on the server (api_review.py spot sessions, drill source 'spot').",
+   "owner": "shared",
+   "build": "Expose Review's spot starter as UI.spot({habit, templates, count}) in a shared asset (or have the page start the spot session through the S10 endpoint), so habit rows show 'Spot it · 3'."
+  },
+  {
+   "item": "Palette entries for Today: 'Start today's set', 'Warm-up', 'Fix top mistake', 'Question of the day'",
+   "source": "today.md T20 'Page keys … Palette entries'",
+   "status": "missing",
+   "severity": "low",
+   "evidence": "web/assets/palette.js actionRows lists Start today, Quick question, Log a mistake, Add a word, Start a module/section, Take the diagnostic, Fix all mistakes, and so on. None of the four named entries are there.",
+   "owner": "shared",
+   "build": "Add the four palette actions: Up next's box start, the review row's start, a twin of traps.top[0], and a jump to /#qotd."
+  }
+ ]
+}
