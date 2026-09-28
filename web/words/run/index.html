@@ -73,7 +73,7 @@
   html[data-motion="reduce"] .fcard.flipped .fface.back { opacity: 1; }
   html[data-motion="reduce"] .fcard.flipped .fface.ffront { opacity: 0; }
   .wr-ctl { display: flex; gap: 10px; justify-content: center; align-items: center; flex-wrap: wrap; max-width: 620px; margin: 0 auto; width: 100%; }
-  .wr-ctl .grade { flex: 1; min-height: 52px; }
+  .wr-ctl .grade { flex: 1; min-height: 44px; }
   .wr-ctl .nav { min-width: var(--touch); }
   .wr-ctl .kbd { margin-left: 6px; }
   /* a touch screen has no keys to hint at */
@@ -81,8 +81,8 @@
   /* sorting and placement */
   .sortw { text-align: center; display: grid; gap: 18px; justify-items: center; padding: 40px 0 16px; }
   .sortw .fword { font-size: clamp(40px, 7vw, 64px); }
-  .sort-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
-  .sort-btns button { min-width: 130px; min-height: 52px; }
+  .sort-btns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 480px; }
+  .sort-btns button { min-height: 52px; padding: 0 8px; }
   /* staged items, quick options, order, typed */
   .wtext { font: 400 var(--q-size, 20px)/1.6 var(--serif); }
   .wtext .blank { display: inline-block; width: 4em; border-bottom: 1.5px solid var(--ink); }
@@ -117,7 +117,7 @@
   .guess-chip { font: 500 12px var(--mono); padding: 3px 8px; border-radius: 999px; background: var(--wash); box-shadow: inset 0 0 0 1px var(--amber); }
   /* summary */
   .wsum { display: grid; gap: 20px; padding-top: 24px; }
-  .wsum .score { font: 500 clamp(44px, 8vw, 64px)/1 var(--mono); letter-spacing: -.03em; }
+  .wsum .score { font: 800 clamp(44px, 8vw, 64px)/1 var(--font); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
   .wsum .score small { font-size: .35em; color: var(--soft); letter-spacing: 0; }
   .wsum h2 { font: 700 15px var(--font); margin-bottom: 8px; }
   .wsum .rows { display: grid; gap: 6px; }
@@ -182,7 +182,8 @@
   };
   let ix = null;
   W.index().then(x => { ix = x; }).catch(() => {});
-  const wordOf = slug => (ix && ix.bySlug.get(slug) ? ix.bySlug.get(slug).word : String(slug || '').replace(/\..*$/, '').replace(/^u:.*/, 'your word'));
+  const wordOf = slug => W.nameOf(slug, ix && ix.bySlug.get(slug) ? ix.bySlug.get(slug).word : String(slug || '').replace(/\..*$/, '').replace(/^u:.*/, 'your word'));
+  const pos = item => R.items.findIndex(x => x.item_id === item.item_id);   // items get copied (predictions, back faces), so match by id
   const shortOf = slug => (ix && ix.bySlug.get(slug) ? ix.bySlug.get(slug).short : '');
 
   /* ---------------- load or create */
@@ -267,7 +268,7 @@
     const items = R.items, total = Math.max(items.length, (R.run && R.run.total) || 0);
     const at = R.cur ? items.findIndex(x => x.item_id === R.cur.item_id) : items.length;
     const nAns = R.run ? R.run.answered || 0 : 0;
-    const count = R.run && (R.run.mode === 'quiz' || R.run.mode === 'mix') && R.asked ? h('span', { class: 'n', text: `${R.right} right of ${R.asked}` }) : null;
+    const count = R.run && (R.run.mode === 'quiz' || R.run.mode === 'mix') && R.right ? h('span', { class: 'n', text: `${R.right} right of ${R.asked}` }) : null;
     if (total > 24) {
       put(el, h('span', { class: 'n', text: `${Math.min(total, Math.max(0, at) + 1)} / ${total}` }), count);
       return;
@@ -400,7 +401,7 @@
   function front(item) {
     const b = item.back || {};
     let dir = R.dir;
-    if (dir === 'mixed') dir = (R.items.indexOf(item) % 3 === 1) ? 'meaning' : (R.items.indexOf(item) % 3 === 2 && b.sentence) ? 'sentence' : 'word';
+    if (dir === 'mixed') dir = (pos(item) % 3 === 1) ? 'meaning' : (pos(item) % 3 === 2 && b.sentence) ? 'sentence' : 'word';
     if (dir === 'meaning' && b.meaning) return h('p', { class: 'fmean', text: b.meaning });
     if (dir === 'sentence' && b.sentence && b.sentence.text) return W.markWord(b.sentence.text, [item.text], 'fsent');
     return h('p', { class: 'fword', text: item.text });
@@ -430,7 +431,7 @@
     const cardEl = h('div', { class: 'fcard' + ((item.back && (item.back.examples || []).length > 1) || item.kind === 'fix' ? ' tall' : ''), role: 'group', 'aria-label': `Card: ${item.text}` }, fr, bk);
     const stack = h('div', { class: 'fstack' }, cardEl);
     const status = h('p', { class: 'wr-status', id: 'status', 'aria-live': 'polite' });
-    const left = R.items.length - R.items.indexOf(item) - 1;
+    const left = R.items.length - pos(item) - 1;
     const ctl = h('div', { class: 'wr-ctl grades' });
     put($('stage'), stack, h('p', { class: 'wr-left', text: left > 0 ? `${left} left` : 'Last one' }), status, ctl);
     const flip = () => {
@@ -570,12 +571,12 @@
   function sortItem(item) {
     const place = item.kind === 'placement';
     const opts = place ? [['yes', 'Yes'], ['no', 'No'], ['unsure', 'Not sure']] : [['know', 'Know it'], ['unsure', 'Not sure'], ['no', 'New to me']];
-    const done = R.items.indexOf(item), tot = R.items.length;
+    const done = pos(item), tot = R.items.length;
     put($('stage'), h('div', { class: 'sortw' },
       h('p', { class: 'wask', text: place ? 'Do you know this word?' : 'Do you know it?' }),
       h('p', { class: 'fword', text: item.text }),
-      h('div', { class: 'sort-btns' }, opts.map(([a, l], i) => h('button', { type: 'button', class: i === 0 ? 'pill' : 'btn', onclick: () => sortPick(a) }, l, h('span', { class: 'kbd', text: String(i + 1) })))),
-      !place ? h('p', { class: 'meta', text: `${done} / ${tot} · about ${Math.max(1, Math.round((tot - done) * 1.5 / 60))} min left` }) : null,
+      h('div', { class: 'sort-btns' }, opts.map(([a, l], i) => h('button', { type: 'button', class: 'btn', onclick: () => sortPick(a) }, l, h('span', { class: 'kbd', text: String(i + 1) })))),
+      !place ? h('p', { class: 'meta', text: `${done + 1} of ${tot} · about ${Math.max(1, Math.round((tot - done) * 1.5 / 60))} min left` }) : null,
       !place && R.prevStack.length ? h('button', { type: 'button', class: 'quiet', onclick: undoSort }, 'Undo the last', h('span', { class: 'kbd', text: 'Z' })) : null,
       h('p', { class: 'help', text: place ? 'Say yes only if you could use it in a sentence. A few are checked.' : 'Know it: it comes back once as a question in context. Not sure: starred for soon.' })));
     const w = $('stage').querySelector('.fword');
@@ -617,7 +618,7 @@
     catch (e) { R.busy = false; if (!e.offline) UI.toast('Not saved. Try again.'); }
   }
   function head(item) {
-    return h('div', { class: 'q-skill ws-headline', style: 'display:flex;gap:10px;align-items:center' }, h('span', { class: 'ws-skill', text: item.head || W.KIND[item.kind] || 'Words' }),
+    return h('div', { class: 'q-skill ws-headline', style: 'display:flex;gap:10px;align-items:center' }, h('span', { class: 'ws-skill', text: W.kindLabel(item) }),
       R.guess ? h('span', { class: 'guess-chip', text: 'Guessing' }) : null);
   }
   function passage(item) {
@@ -628,10 +629,10 @@
 
   /* ---------------- a quiz item through UI.workspace (§7, W1, W2) */
   function quiz(item) {
-    const host = h('div', {});
+    const host = h('div', { tabindex: '-1', style: 'outline:none' });
     const q = { id: item.item_id, type: 'mcq', stem: item.text || '', choices: item.choices || [], latex: [] };
     put($('stage'), host);
-    const ws = R.ws = UI.workspace(host, q, { mode: 'quiz', head: { label: item.head || W.KIND[item.kind] || 'Words' },
+    const ws = R.ws = UI.workspace(host, q, { mode: 'quiz', head: { label: W.kindLabel(item) },
       onCheck: async (answer, meta) => {
         stopItemTimer();
         const conf = (meta && meta.conf === 'guess') || R.guess ? 'guess' : undefined;
@@ -643,10 +644,10 @@
       onNext: () => next(),
       actions: (slot, fb) => verdictActions(slot, fb, item) });
     const stem = ws.el.querySelector('.q-stem');
-    if (stem && item.stem) stem.after(h('p', { class: 'wask', text: item.stem }));
+    if (stem && W.stemOf(item)) stem.after(h('p', { class: 'wask', text: W.stemOf(item) }));
     if (stem && item.source) stem.after(h('p', { class: 'wsrc', text: `Adapted from ${item.source.author}, ${item.source.title}, ${item.source.year}` }));
     if (UI.gloss && R.run.mode !== 'check' && stem) UI.gloss(stem, { exclude: [...(item.choices || []), item.text], ref: id });   // word → meaning: the text is the target word, so never gloss it
-    ws.focus && ws.focus();
+    host.focus({ preventScroll: true });   // not option A: a ring there reads as already picked; keys reach the workspace from here
   }
   function next() {
     clearTimeout(R.autoT);
@@ -658,6 +659,7 @@
     const gen = !!(fb.traps && fb.traps.some(Boolean));
     const logic = item.kind === 'transition';
     const twin = like => another(like);
+    if (fb.status) slot.append(h('span', { class: 'meta', text: W.statusLine(fb.status) }));
     if (twinable(item)) {
       const t = UI.verb ? UI.verb('twin', { subject: 'rw', sm: true, onClick: () => twin('word') }) : h('button', { type: 'button', class: 'btn sm', text: 'Twin', onclick: () => twin('word') });
       const menu = h('button', { type: 'button', class: 'btn sm', 'aria-haspopup': 'menu', text: 'Twin ▾', title: 'Shift+T' });
@@ -667,15 +669,14 @@
       R.twinMenu = () => menu.click();
       slot.append(t, menu);
     }
-    if (fb.word) slot.append(h('button', { type: 'button', class: 'btn sm', onclick: () => W.open(fb.word) }, 'Open word', h('span', { class: 'kbd', text: 'O' })));
+    if (fb.word) slot.append(h('button', { type: 'button', class: 'btn sm', onclick: () => W.open(fb.word) }, 'Open word', h('span', { class: 'kbd', style: 'font-family:var(--font)', text: 'O' })));
     if (gen && fb.correct === false && fb.given !== null && fb.given !== undefined) {
-      slot.append(h('button', { type: 'button', class: 'quiet', text: 'Another choice also fits', onclick: async e => {
+      slot.append(h('button', { type: 'button', class: 'quiet', style: 'margin:0 0 0 auto', text: 'Another choice also fits', onclick: async e => {
         e.target.disabled = true;
         try { await UI.api(`/words/run/${enc(id)}/also-fits`, { method: 'POST', body: { item_id: item.item_id } }); UI.toast('Sent · thank you, a person checks every one'); }
         catch (x) { e.target.disabled = false; if (!x.offline) UI.toast('Not sent. Try again.'); }
       } }));
     }
-    if (fb.status) slot.append(h('span', { class: 'meta', text: W.statusLine(fb.status) }));
     if (fb.spelling) slot.append(h('span', { class: 'meta', text: `Spelling: ${fb.spelling}` }));
   }
   const twinable = it => !!it && ['incontext', 'nearly', 'transition'].includes(it.kind);   // only generated items have a twin
@@ -789,7 +790,7 @@
 
   /* ---------------- Sprint (W16): one key answers and moves on */
   function quick(item) {
-    put($('stage'), h('p', { class: 'wask', text: item.stem || '' }), passage(item),
+    put($('stage'), h('p', { class: 'wask', text: W.stemOf(item) || '' }), passage(item),
       h('div', { class: 'wquick' }, (item.choices || []).map((c, i) => h('button', { type: 'button', class: 'btn', onclick: () => sprintPick(i) }, h('span', { class: 'kbd', text: String(i + 1) }), c))),
       R.miss.length ? h('div', {}, h('p', { class: 'k', text: `Missed · ${R.miss.length}` }), h('div', { class: 'wtray' }, R.miss.map(s => h('span', { class: 'wchip plain', text: wordOf(s) })))) : null);
   }
@@ -802,8 +803,8 @@
 
   /* ---------------- Words check (W15): no feedback until the end */
   function checkItem(item) {
-    const n = R.items.indexOf(item) + 1;
-    put($('stage'), h('p', { class: 'k', text: `Question ${n} of ${R.items.length}` }), passage(item), h('p', { class: 'wask', text: item.stem || '' }),
+    const n = pos(item) + 1;
+    put($('stage'), h('p', { class: 'k', text: `Question ${n} of ${R.items.length}` }), passage(item), h('p', { class: 'wask', text: W.stemOf(item) || '' }),
       h('div', { class: 'wquick', role: 'radiogroup' }, (item.choices || []).map((c, i) => h('button', { type: 'button', class: 'btn', 'aria-pressed': 'false', onclick: e => { R.checkPick = i; e.currentTarget.parentElement.querySelectorAll('.btn').forEach((b, j) => b.setAttribute('aria-pressed', String(j === i))); } },
         h('span', { class: 'kbd', text: 'ABCD'[i] }), c))),
       h('div', { class: 'wr-ctl' }, h('button', { type: 'button', class: 'pill', onclick: checkNext }, n === R.items.length ? 'Finish' : 'Next', h('span', { class: 'kbd', text: 'Enter' }))));
@@ -838,13 +839,20 @@
     // moved to Known, still learning, next reviews
     if ((s.moved_known || []).length) out.append(sec('Moved to Known', h('div', { class: 'chips' }, s.moved_known.map(chip))));
     const learning = (s.learning || []).slice(0, 40);
-    if (learning.length) out.append(sec('Still learning', h('div', { class: 'chips' }, learning.map(l => h('button', { type: 'button', class: 'wchip', onclick: () => W.open(l.slug) }, wordOf(l.slug), l.due ? h('small', { text: W.shortDate(l.due) }) : null)))));
-    const sc = s.schedule || {};
-    const nx = [sc.tomorrow ? `${sc.tomorrow} tomorrow` : null, sc.in3 ? `${sc.in3} in 3 days` : null, sc.in7 ? `${sc.in7} in a week` : null, sc.later ? `${sc.later} later` : null].filter(Boolean);
+    // one date for all of them is said once, in the heading; the dates are the scheduled ones
+    const days = new Set(learning.map(l => l.due || ''));
+    const one = days.size === 1 && learning[0].due ? backOn(learning[0].due) : '';
+    if (learning.length) out.append(sec(one ? `Still learning · ${learning.length === 1 ? 'back' : `all ${learning.length} back`} ${one}` : 'Still learning',
+      h('div', { class: 'chips' }, learning.map(l => h('button', { type: 'button', class: 'wchip', onclick: () => W.open(l.slug) }, wordOf(l.slug), !one && l.due ? h('small', { text: backOn(l.due) }) : null)))));
+    const sc = { ...(s.schedule || {}) };
+    // ponytail: the server files words due today under "tomorrow"; count those back out from the learning list (helper: split "today" server-side)
+    const dueNow = (s.learning || []).filter(l => l.due && l.due <= W.today()).length;
+    if (dueNow && sc.tomorrow) sc.tomorrow = Math.max(0, sc.tomorrow - dueNow);
+    const nx = [dueNow ? `${dueNow} today` : null, sc.tomorrow ? `${sc.tomorrow} tomorrow` : null, sc.in3 ? `${sc.in3} in 3 days` : null, sc.in7 ? `${sc.in7} in a week` : null, sc.later ? `${sc.later} later` : null].filter(Boolean);
     if (nx.length) out.append(h('p', { class: 'line', text: `Next reviews: ${nx.join(' · ')}` }));
     // by type, with pace against 71 s
     const bk = Object.entries(s.by_kind || {}).filter(([k]) => !['card', 'fix', 'learn', 'placement', 'sort'].includes(k));
-    if (bk.length) out.append(sec('By type', h('div', { class: 'rows' }, bk.map(([k, v]) => {
+    if (bk.length > 1) out.append(sec('By type', h('div', { class: 'rows' }, bk.map(([k, v]) => {
       const p = (s.pace || {})[k] || {};
       return h('div', { class: 'row' }, h('span', { text: W.KIND[k] || k }), h('span', { class: 'meta', text: `${v.right}/${v.asked}${p.median_ms ? ` · ${Math.round(p.median_ms / 1000)} s median · SAT pace 71 s` : ''}` }));
     }))));
@@ -866,6 +874,7 @@
     const title = $('title').firstChild; if (title) title.textContent = `${MODE[mode] || 'Words'} · done`;
   }
   const sec = (t, body) => h('section', {}, h('h2', { text: t }), body);
+  const backOn = day => { const n = W.dayDiff(W.today(), day); return n <= 0 ? 'today' : n === 1 ? 'tomorrow' : n < 7 ? `in ${n} days` : `on ${W.shortDate(day)}`; };
   function placementResult(s) {
     const e = s.estimate || {};
     const BAND = b => { const [tier, lv] = String(b).split(':'); return `SAT ${tier} · ${lv}`; };
@@ -887,12 +896,12 @@
       row.append(h('button', { type: 'button', class: 'pill', text: `Next: ${item.title || 'Up next'}`, onclick: () => words ? UI.startWords(item.start.body) : UI.start(item) }));
     }
     const c = await UI.api('/words', { quiet: true }).then(d => d.counts).catch(() => null);
-    if (c && c.due) row.append(h('button', { type: 'button', class: item ? 'btn' : 'pill', text: `${c.due} more due`, onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'due' } }) }));
+    if (c && c.due) row.append(h('button', { type: 'button', class: item ? 'btn' : 'pill', text: `Review ${c.due} due`, onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'due' } }) }));
     row.append(h('button', { type: 'button', class: item || (c && c.due) ? 'btn' : 'pill', text: `${(c && c.goal) || 10} new`, onclick: () => UI.startWords({ mode: 'cards', deck: { source: 'new' }, count: (c && c.goal) || 10 }) }));
     const played = R.items.map(x => x.word).filter(Boolean).concat((s.learning || []).map(l => l.slug), s.moved_known || []);
     const uniq = [...new Set(played)].slice(0, 200);
     if (uniq.length >= 4 && R.run.mode === 'cards') row.append(h('button', { type: 'button', class: 'btn', text: `Quiz these ${uniq.length}`, onclick: () => W.quizStart({ source: 'words', words: uniq }, Math.min(20, uniq.length)) }));
-    row.append(h('a', { class: 'quiet', href: '/words/', text: 'Library' }));
+    row.append(h('a', { class: 'btn', href: '/words/', text: 'Library' }));
     return sec('Up next', row);
   }
 

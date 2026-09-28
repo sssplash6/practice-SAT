@@ -76,7 +76,7 @@
 .wb .src { font: 400 12.5px var(--font); color: var(--soft); font-style: italic; }
 .wb .line { font: 400 14px/1.5 var(--font); }
 .wb .line + .line { margin-top: 4px; }
-.wchips { display: flex; flex-wrap: wrap; gap: 6px; }
+.wchips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
 .wchip { appearance: none; border: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 12px;
   border-radius: 8px; background: var(--tile); font: 600 14px var(--font); color: var(--ink); }
 .wchip.plain { cursor: default; font-weight: 500; background: none; padding: 0 6px; }
@@ -89,7 +89,7 @@
 .confu + .confu { border-top: 1px dashed var(--line); }
 .confu .t { font: 400 15px/1.5 var(--serif); }
 .confu .fell { display: flex; align-items: center; gap: 6px; font: 500 12.5px var(--mono); color: var(--ink); }
-.confu .acts { display: flex; gap: 14px; margin-top: 2px; }
+.confu .acts { display: flex; gap: 14px; margin-top: 12px; }
 .ladder { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 10px 0; }
 .ladder span { display: grid; gap: 4px; font: 500 11.5px var(--font); color: var(--soft); text-align: center; }
 .ladder span::before { content: ""; height: 6px; border-radius: 3px; background: var(--mat); }
@@ -124,6 +124,35 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
 @media (max-width: 559px) { .addw .two { grid-template-columns: 1fr; } }
 .addw .field-err { margin-top: 4px; }
 .addw .dup { font: 400 13.5px var(--font); }
+/* one height per control row; a quiet button in a row keeps its hover box inside itself */
+:is(.tw-row, .go, .ws-foot, .sheet-foot, .upnext, .wr-ctl, .hook) > :is(button, a, .btn, .pill, .quiet) { min-height: 44px; }
+:is(.tw-row, .go, .ws-foot, .sheet-foot, .upnext, .wr-ctl) > .pill { height: 44px; }
+:is(.tw-row, .go, .ws-foot, .sheet-foot, .upnext, .wr-ctl, .hook) > .quiet { margin: 0; }
+.hook > .field { height: 44px; }
+.winfo { appearance: none; border: 0; background: none; padding: 0 2px; margin: 0; position: relative; cursor: help;
+  font: 500 13px/1 var(--font); letter-spacing: 0; text-transform: none; color: var(--soft); vertical-align: baseline; }
+.winfo::before { content: ""; position: absolute; left: 50%; top: 50%; width: 32px; height: 32px; transform: translate(-50%, -50%); }
+@media (hover: hover) and (pointer: fine) { .winfo:hover { color: var(--ink); } }
+.tw-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.tw-line h2 { font: 700 15px var(--font); }
+.tw-line .btn { margin-left: auto; min-height: 44px; }
+.wfin > details > summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.wfin > details > summary::-webkit-details-marker { display: none; }
+.wfin > details > summary::after { content: "▸"; margin-left: auto; color: var(--soft); }
+.wfin > details[open] > summary::after { content: "▾"; }
+.wfin > details[open] > summary { margin-bottom: 10px; }
+.wfin > details[open] > summary .tw-facts { display: none; }
+.wfin-body { display: grid; gap: 10px; }
+.wfin-left { font: 500 13px var(--mono); color: var(--soft); }
+.wfin .chips { margin-top: 8px; }
+@media (max-width: 759px) { .wfin .chips { flex-wrap: nowrap; overflow-x: auto; padding: 3px 2px; scrollbar-width: none; } .wfin .chips > * { flex: none; } }
+.shade-bar { height: 3px; border-radius: 2px; margin-top: 8px; background: linear-gradient(90deg, var(--mat), var(--amber)); }
+.confu h3 { font: 600 15px var(--font); }
+.wsample .trap-chip, .wr .trap-chip { display: none; }
+.ws-foot { flex-wrap: nowrap; }
+.ws-foot > .btn.icon { flex: 0 0 44px; width: 44px; }
+.ws-foot .pill { padding: 0 24px; }
+@media (max-width: 419px) { .ws-foot .l { display: none; } .ws-foot .pill { padding: 0 18px; } }
 `;
   if (!doc.getElementById('words-ui-css')) doc.head.append(h('style', { id: 'words-ui-css', text: CSS }));
 
@@ -164,13 +193,23 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
   }
   const shortDate = day => { if (!day) return ''; const x = new Date(String(day).slice(0, 10) + 'T12:00:00'); return `${MONTHS[x.getMonth()]} ${x.getDate()}`; };
   // the server's status lines carry ISO days: "Back 2026-09-30" -> "Back Wed, Sep 30"
+  // a second sense lives after the dot in its slug: account.explanation reads "account · explanation"
+  const senseOf = slug => (/^(u:|root:)/.test(slug || '') ? '' : (/\.(.+)$/.exec(slug || '') || [0, ''])[1].replace(/[-_]/g, ' '));
+  const nameOf = (slug, w) => (senseOf(slug) ? `${w} · ${senseOf(slug)}` : w);
+  // an ⓘ that holds the explanation a sentence used to take on screen
+  function info(text, label = 'About this') {
+    const b = h('button', { type: 'button', class: 'winfo', 'aria-label': `${label}: ${text}`, text: 'ⓘ' });
+    if (UI.tooltip) UI.tooltip(b, text); else b.title = text;
+    b.addEventListener('click', e => { e.preventDefault(); e.stopPropagation(); b.focus(); });
+    return b;
+  }
   const statusLine = s => String(s || '')
     .replace(/\bBack (\d{4}-\d{2}-\d{2})/, (m, d) => { const n = dayDiff(today(), d); return n <= 0 ? 'Back today' : n === 1 ? 'Back tomorrow' : n <= 21 ? `Back in ${n} days` : `Back ${dayName(d)}`; })
     .replace(/\d{4}-\d{2}-\d{2}/g, d => dayName(d));
   const POS = { 'n.': 'noun', 'v.': 'verb', 'adj.': 'adjective', 'adv.': 'adverb', 'phrase.': 'phrase', phrase: 'phrase' };
   const TRAP = { reversed: 'Reverses the meaning', too_strong: 'Too strong', too_weak: 'Too weak', connotation: 'Wrong tone',
     lookalike: 'Looks like the answer', everyday: 'Everyday meaning', topical: 'Fits the subject, not the blank',
-    wrong_logic: 'Wrong relationship', reversed_direction: 'Cause and effect swapped' };
+    wrong_logic: 'Wrong relationship', reversed_direction: 'Cause and effect swapped', meaning: 'Different meaning' };
   // traps.json's check lines, shown under the reason (W1)
   const CHECK = { reversed: 'Does the passage favor this idea or push against it?', too_strong: 'Does the evidence justify that degree of certainty?',
     too_weak: 'Is the passage firmer than this word suggests?', connotation: 'Is the writer approving, disapproving, or neutral?',
@@ -183,8 +222,16 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     const g = Number.isInteger(r.given_index) ? r.given_index : Number.isInteger(r.given) ? r.given
       : typeof r.given === 'string' && /^[0-3]$/.test(r.given) ? +r.given : answer;
     const trap = r.trap !== undefined ? r.trap : r.traps && Number.isInteger(g) ? r.traps[g] : null;
-    return { ...r, given: g, trap, trap_check: trap ? CHECK[trap] : null };
+    return { ...r, given: g, trap, trap_check: trap ? CHECK[trap] : null, ...(trap && MISS[trap] ? { mistake: MISS[trap] } : {}) };
   };
+  const MISS = { meaning: 'You picked a word with a different meaning', reversed: 'You picked a word that reverses the meaning', too_strong: 'You picked a word that is too strong',
+    too_weak: 'You picked a word that is too weak', connotation: 'You picked a word with the wrong tone', lookalike: 'You picked a word that looks like the answer',
+    everyday: 'You picked the everyday meaning, not the one in this text', topical: 'You picked a word that fits the subject, not the blank',
+    wrong_logic: 'You picked the wrong relationship', reversed_direction: 'You swapped cause and effect' };
+  // a "most nearly means" item that still has a blank is an in-context item (a server mislabel guard)
+  const blankNearly = it => !!it && it.kind === 'nearly' && /_{3,}/.test(it.text || '');
+  const stemOf = it => (blankNearly(it) ? 'Which choice completes the text with the most logical and precise word or phrase?' : it && it.stem);
+  const kindLabel = it => (it && it.kind === 'nearly' && /_{3,}/.test(it.text || '') ? 'In context' : (it && (it.head || KIND[it.kind])) || 'Words');
   const KIND = { card: 'Card', learn: 'Learn card', fix: 'Fix card', commit: 'Card', meaning2word: 'Meaning → word', word2meaning: 'Word → meaning',
     cloze: 'Fill the blank', incontext: 'In context', nearly: 'Most nearly means', precise: 'Most precise', order: 'Order the ladder',
     transition: 'Transitions', decode: 'Decode it', rootshare: 'Which root?', typed: 'Type it', placement: 'Placement', placement_check: 'Check',
@@ -288,7 +335,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
         return;
       }
       paint(d.summary || {});
-      if (offline.ok()) offlineRow(d.summary || {});
+      if (offline.ok() && !o.compact) offlineRow(d.summary || {});
     }
     async function offlineRow(s) {
       const kept = await offline.stored();
@@ -319,10 +366,20 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       const goal = s.new_goal || 10;
       const learn = h('button', { type: 'button', class: 'btn', text: s.done && !newLeft ? `Learn ${goal} more` : `Learn ${goal}`,
         onclick: () => startWords({ mode: 'cards', deck: { source: 'new' }, count: goal }) });
-      const review = h('button', { type: 'button', class: 'btn', disabled: !s.due, text: s.due ? `Review cards (${s.due} due)` : 'Review cards',
+      const review = h('button', { type: 'button', class: 'btn', disabled: !s.due, text: 'Review cards',
         title: s.due ? null : 'Nothing is due', onclick: () => startWords({ mode: 'cards', deck: { source: 'due' }, order: 'due' }) });
       const quiz = h('button', { type: 'button', class: 'btn', text: 'Quiz', onclick: () => quizStart({ source: 'today' }, 10) });
       const startBody = () => ({ mode: 'mix', deck: { source: 'today' }, ...(box ? { box } : {}) });
+      // compact (Study, My words): one line and a quiet button, so the page's own Start is the one orange button
+      if (o.compact) {
+        const line = h('div', { class: 'tw-line' }, h('h2', { text: 'Today’s words' }),
+          h('span', { class: 'tw-facts', text: s.done ? 'Done for today' : [s.due ? `${s.due} due` : null, s.minutes ? `about ${Math.max(1, Math.round(s.minutes))} min` : null].filter(Boolean).join(' · ') }),
+          fresh ? h('button', { type: 'button', class: 'btn', text: 'Find your level · 3 min', onclick: () => startWords({ mode: 'placement' }) })
+            : h('button', { type: 'button', class: 'btn', text: s.done ? 'Start again' : 'Start today’s words', onclick: () => startWords(startBody()) }));
+        el.classList.add('compact');
+        el.replaceChildren(line);
+        return;
+      }
       const row = h('div', { class: 'tw-row' });
       if (fresh) {
         row.append(h('button', { type: 'button', class: 'pill', text: 'Find your level · 3 min', onclick: () => startWords({ mode: 'placement' }) }),
@@ -345,7 +402,8 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
           h('button', { type: 'button', class: 'quiet', text: `Spread over ${days} days`, onclick: () => spread(days) }), ' · ',
           h('button', { type: 'button', class: 'quiet', text: 'Do all now', onclick: () => startWords({ mode: 'cards', deck: { source: 'due' }, count: Math.min(200, debt.due) }) })));
       }
-      if (s.reason && !s.done && !fresh && s.due) el.append(h('p', { class: 'help', text: s.reason }));
+      // the reason only when it says something the facts above do not ("52 come back today" restates "52 due")
+      if (s.reason && !s.done && !fresh && s.due && !new RegExp(`\\b${s.due}\\b`).test(s.reason)) el.append(h('p', { class: 'help', text: s.reason }));
     }
     async function spread(days) {
       try { await UI.prefs.set({ words_spread: addDays(today(), days) }); toast(`Spread over ${days} days · new words pause until you catch up`); draw(); if (o.onChange) o.onChange(); }
@@ -375,18 +433,22 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       el.append(h('div', { class: 'tw-top' }, h('h2', { text: 'By exam day' })), h('p', { class: 'wfin-l', text: 'Set your SAT date to see your finish line.' }), h('div', {}, b));
       return el;
     }
-    const left = f.left || {}, days = dayDiff(today(), f.exam);
-    const bits = [left.core ? `core: ${UI.num(left.core)} left` : 'core: done', left.advanced ? `advanced: ${UI.num(left.advanced)} left` : null,
-      left.logics ? `transition logics: ${left.logics} of 9 not yet known` : null].filter(Boolean);
-    el.append(h('div', { class: 'tw-top' }, h('h2', { text: 'By exam day' }), h('span', { class: 'tw-facts', text: `${shortDate(f.exam)} · ${plural(days, 'day')}` })),
-      h('p', { class: 'wfin-l', text: cap(bits.join(' · ')) }));
+    const left = f.left || {}, days = dayDiff(today(), f.exam), on = shortDate(f.exam);
+    const togo = [left.core ? `SAT core ${UI.num(left.core)}` : null, left.advanced ? `advanced ${UI.num(left.advanced)}` : null, left.logics ? `transitions ${left.logics}` : null].filter(Boolean);
     const studied = (f.likely || 0) + (f.at_risk || 0);
-    if (studied) {
-      el.append(h('p', { class: 'wfin-l' }, h('b', { text: `${UI.num(f.likely || 0)} of ${UI.num(studied)}` }), ' studied words likely to hold on test day',
-        f.at_risk ? [` · ${UI.num(f.at_risk)} at risk `, h('button', { type: 'button', class: 'btn sm', text: `Review at risk (${f.at_risk})`,
-          onclick: () => startWords({ mode: 'cards', deck: { source: 'atrisk' }, count: Math.min(200, f.at_risk) }) })] : null));
-    }
-    if (days <= 10) el.append(h('p', { class: 'help', text: 'Final 10 days · reviews and at-risk words only' }));
+    const headline = f.at_risk ? `${plural(f.at_risk, 'word')} at risk by ${on}` : studied ? `All ${plural(studied, 'studied word')} should hold on ${on}` : `SAT on ${on}`;
+    const body = h('div', { class: 'wfin-body' },
+      h('p', { class: 'wfin-l' }, h('b', { text: headline }), f.at_risk ? [' ', h('button', { type: 'button', class: 'btn sm', text: 'Review them',
+        onclick: () => startWords({ mode: 'cards', deck: { source: 'atrisk' }, count: Math.min(200, f.at_risk) }) })] : null),
+      h('p', { class: 'wfin-left', text: [left.core ? null : 'SAT core done', togo.length ? `To learn: ${togo.join(' · ')}` : null].filter(Boolean).join(' · ') }));
+    if (o.collapsible) {
+      // Library: one line until opened; the open state is remembered
+      const det = h('details', {}, h('summary', {}, h('h2', { text: 'By exam day' }), h('span', { class: 'tw-facts', text: f.at_risk ? `${UI.num(f.at_risk)} at risk` : on })), body);
+      det.open = !!ls.get('satf.words.finOpen', false);
+      det.addEventListener('toggle', () => ls.set('satf.words.finOpen', det.open));
+      el.append(det);
+    } else el.append(h('div', { class: 'tw-top' }, h('h2', { text: 'By exam day' })), body);
+    if (days <= 10) body.append(h('p', { class: 'help', text: 'Final 10 days · reviews and at-risk words only' }));
     const chips = f.chips || [];
     if (chips.length) {
       const cur = UI.prefs && UI.prefs.now ? UI.prefs.now().words_goal : null;
@@ -402,9 +464,9 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
         } });
       line.textContent = (opts.find(x => x.value === sel.value) || {}).why || '';
       row.append(line);
-      el.append(row);
+      body.append(row);
     }
-    el.append(h('details', {}, h('summary', { text: 'How this is worked out' }),
+    body.append(h('details', {}, h('summary', { text: 'How this is worked out' }),
       h('p', { text: 'Each word you have studied is likely to hold when p = 2^(−t/h) is at least 0.8: h is the word’s current interval, scaled by how well you recall due words and by 0.8 for every lapse, and t is the days from its last right answer to the exam. The finish dates run your schedule forward at your own lapse rate.' })));
     return el;
   }
@@ -580,10 +642,12 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
         // one row, weakest -> strongest; the tone shows on each chip only when the class mixes tones
         const mixed = new Set(sh.map(x => Math.sign(x.polarity || 0))).size > 1;
         const tone = x => ({ 1: '+', 0: '0', '-1': '−' })[Math.sign(x.polarity || 0)];
-        body.push(block(`Shades · ${w.shades.dimension || 'weakest → strongest'}`, [
+        const shades = block(`Shades · ${w.shades.dimension || 'weakest → strongest'}`, [
           h('div', { class: 'wchips', 'aria-label': 'Weakest to strongest' }, sh.map(x => wordChip({ slug: x.slug, word: x.word }, { current: x.slug === w.slug, small: mixed ? tone(x) : null }))),
-          h('p', { class: 'help', text: `Weakest → strongest${mixed ? ' · + approving, 0 neutral, − critical' : ''}. The most precise word matches the text’s strength and tone.` }),
-          w.shade ? h('p', { class: 'shade-n', text: w.shade }) : null], { cover: true, cls: 'shades' }));
+          h('div', { class: 'shade-bar', 'aria-hidden': 'true' }),
+          w.shade ? h('p', { class: 'shade-n', text: w.shade }) : null], { cover: true, cls: 'shades' });
+        shades.querySelector('.k').append(' ', info(`Weakest → strongest${mixed ? ' · + approving, 0 neutral, − critical' : ''}. The most precise word matches the text’s strength and tone.`, 'Shades'));
+        body.push(shades);
       }
       // built from (W4)
       if ((w.roots || []).length) {
@@ -614,7 +678,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       if (conf.length || looks.length) {
         const ix = await index().catch(() => null);
         const rows = conf.map(c => confRow(c.kind, c.other, c.tell, c, ix)).concat(looks.map(l => confRow('lookalike', l.word, l.tell, {}, ix)));
-        body.push(block('Not the same as', rows));
+        body.push(block('Easy to mix up', rows));
       }
       body.push(recordBlock(w, s));
       if (own) body.push(ownBlock(w));
@@ -633,24 +697,25 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
     function collName(id) { return (UI.word._coll && UI.word._coll[id]) || cap(String(id).replace(/-/g, ' ')); }
     function confRow(kind, other, tell, c, ix) {
       const hit = ix && ix.byWord.get(String(other).toLowerCase());
-      const lead = kind === 'lookalike' ? 'looks like ' : kind === 'sense' ? 'other meaning: ' : 'vs ';
+      const me = data.word;
       return h('div', { class: 'confu' },
-        h('p', { class: 'line' }, lead, hit ? h('button', { type: 'button', class: 'quiet', style: 'margin:0;padding:0 2px', onclick: () => go(hit.slug, { covered: false }) }, h('b', { text: other })) : h('b', { text: other })),
+        h('h3', {}, `${me} or `, hit ? h('button', { type: 'button', class: 'quiet', style: 'margin:0;padding:0;font:inherit', onclick: () => go(hit.slug, { covered: false }) }, other) : other, '?'),
         h('p', { class: 't cov-t', text: tell || '' }),
         c.fell ? h('p', { class: 'fell' }, h('span', { class: 'dot' }), `You picked it for this ${c.fell}×${c.last ? ' · last ' + shortDate(c.last) : ''}`) : null,
-        hit ? h('div', { class: 'acts' }, h('button', { type: 'button', class: 'quiet', text: 'Quiz the pair · 6',
+        hit ? h('div', { class: 'acts' }, h('button', { type: 'button', class: 'quiet', text: `Quiz ${me} vs ${other} (6)`,
           onclick: () => startWords({ mode: 'quiz', deck: { source: 'words', words: [data.slug, hit.slug] }, formats: ['meaning2word', 'word2meaning'], count: 6 }) })) : null);
     }
     function sampleBlock(w) {
       const host = h('div', { class: 'wsample' });
-      const sec = block('In an SAT-style question', host);
+      const sec = block(`SAT-style · ${kindLabel(w.sample.item)}`, host);
       let token = w.sample.token;
       const mount = async item => {
         host.replaceChildren(h('p', { class: 'meta', text: 'Loading…' }));
         try { if (!UI.workspace) await UI.need('question'); } catch (_) { host.replaceChildren(h('p', { class: 'help', text: 'Could not load the question.' })); return; }
         const q = { id: item.item_id, type: 'mcq', stem: item.text || '', choices: item.choices || [], latex: [] };
         host.replaceChildren();
-        const ws = UI.workspace(host, q, { mode: 'quiz', head: { label: `${KIND[item.kind] || 'Words in Context'}${item.source ? '' : ''}` },
+        sec.querySelector('.k').textContent = `SAT-style · ${kindLabel(item)}`;
+        const ws = UI.workspace(host, q, { mode: 'quiz', head: false,
           onCheck: async (answer, meta) => {
             const r = await UI.api('/words/sample/answer', { method: 'POST', body: { token, answer, ms: meta && meta.ms, conf: meta && meta.conf === 'guess' ? 'guess' : undefined } });
             if (o.onChange) o.onChange(w.slug, { graded: true });
@@ -658,7 +723,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
           },
           actions: (slot) => slot.append(h('button', { type: 'button', class: 'btn sm', onclick: another }, UI.VERBS ? 'Twin' : 'Another', h('span', { class: 'meta', text: ' same word, new text' }))) });
         const stem = ws.el.querySelector('.q-stem');
-        if (stem && item.stem) stem.after(h('p', { class: 'ws-ask', text: item.stem }));
+        if (stem && stemOf(item)) stem.after(h('p', { class: 'ws-ask', text: stemOf(item) }));
         if (item.source && stem) stem.after(h('p', { class: 'src', text: `Adapted from ${item.source.author}, ${item.source.title}, ${item.source.year}` }));
       };
       async function another() {
@@ -680,7 +745,7 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
       const lastWrong = [...j].reverse().find(x => x.correct === 0 || x.correct === false);
       const next = s.due ? (s.due <= today() ? 'due today' : `next review ${dayName(s.due, { plain: true })}`) : null;
       const kids = [
-        h('p', { class: 'line' }, pips({ state: s }), ' ', h('b', { text: STATUS[st] }), next ? ` · ${next}` : '', s.proven ? ` · proven ${shortDate(s.proven)}` : ''),
+        h('p', { class: 'line' }, h('b', { text: STATUS[st] }), next ? ` · ${next}` : '', s.proven ? ` · proven ${shortDate(s.proven)}` : ''),
         h('div', { class: 'ladder', role: 'list', 'aria-label': 'Proof ladder' }, steps.map(([t, on]) => h('span', { role: 'listitem', class: on ? 'on' : null, 'aria-label': `${t}${on ? ', done' : ''}`, text: t }))),
         r.n ? h('p', { class: 'line', text: `Reviews ${r.n} · right ${r.right}${byKind ? ' · ' + byKind : ''}` }) : null,
         j.length ? h('div', { class: 'journey', role: 'img', 'aria-label': `${j.length} reviews, ${j.filter(x => x.correct).length} right` },
@@ -722,24 +787,25 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
         return;
       }
       const lookalikes = (w.confusions || []).map(c => c.other).concat((w.lookalikes || []).map(l => l.word));
+      const quizLooks = async () => {
+        const ix = await index().catch(() => null);
+        const slugs = [w.slug, ...lookalikes.map(x => ix && ix.byWord.get(String(x).toLowerCase())).filter(Boolean).map(x => x.slug)];
+        quizStart({ source: 'words', words: [...new Set(slugs)] }, 6);
+      };
       const more = h('button', { type: 'button', class: 'btn icon', 'aria-label': 'More', 'aria-haspopup': 'menu' }, ic('more'));
-      more.addEventListener('click', () => UI.menu(more, [{ label: 'Reset progress', onClick: resetProgress }], { align: 'end' }));
-      const cardsHere = h('button', { type: 'button', class: w.sample ? 'btn' : 'pill sm', text: 'Flashcards from here',
+      more.addEventListener('click', () => UI.menu(more, [lookalikes.length ? { label: 'Quiz with lookalikes', onClick: quizLooks } : null,
+        { label: 'Reset progress', onClick: resetProgress }].filter(Boolean), { align: 'end' }));
+      const primary = w.sample && !w.own;
+      const cardsHere = h('button', { type: 'button', class: primary ? 'btn' : 'pill',
         onclick: () => {
           // the list from this word on, wrapping round, so the deck always holds it
           const i = list.indexOf(w.slug);
           const from = i < 0 ? [w.slug, ...list] : [...list.slice(i), ...list.slice(0, i)];
           startWords({ mode: 'cards', deck: { source: 'words', words: from.slice(0, 200), start: w.slug }, order: 'az', count: Math.min(200, from.length) });
-        } });
+        } }, h('span', {}, 'Flashcards', h('span', { class: 'l', text: ' from here' })));
       foot.replaceChildren(...[
-        w.sample && !w.own ? (UI.verb ? UI.verb('twin', { count: 10, primary: true, subject: 'rw', onClick: () => practise10(w) }) : h('button', { type: 'button', class: 'pill sm', text: 'Practise 10 in context', onclick: () => practise10(w) })) : null,
-        cardsHere,
-        lookalikes.length ? h('button', { type: 'button', class: 'quiet', text: 'Quiz it with its lookalikes', onclick: async () => {
-          const ix = await index().catch(() => null);
-          const slugs = [w.slug, ...lookalikes.map(x => ix && ix.byWord.get(String(x).toLowerCase())).filter(Boolean).map(x => x.slug)];
-          quizStart({ source: 'words', words: [...new Set(slugs)] }, 6);
-        } }) : null,
-        h('span', { class: 'grow' }), more].filter(Boolean));
+        primary ? h('button', { type: 'button', class: 'pill', title: 'Ten in-context questions on this word, each a new text', onclick: () => practise10(w) }, h('span', {}, 'Practice 10', h('span', { class: 'l', text: ' like this' }))) : null,
+        cardsHere, h('span', { class: 'grow' }), more].filter(Boolean));
     }
     const practise10 = w => startWords({ mode: 'quiz', deck: { source: 'words', words: [w.slug] }, formats: ['incontext', 'nearly'], count: 10 });
     async function resetProgress() {
@@ -796,6 +862,12 @@ button.term { appearance: none; border: 0; background: none; padding: 0; font: i
   word.speakBtn = speakBtn;
   word.icon = ic;
   word.quizStart = quizStart;
+  word.nameOf = nameOf;
+  word.kindLabel = kindLabel;
+  word.stemOf = stemOf;
+  word.info = info;
+  word.today = today;
+  word.dayDiff = dayDiff;
   word.coverPref = () => ls.get(COVER_KEY, null);
   word._coll = {};
 
