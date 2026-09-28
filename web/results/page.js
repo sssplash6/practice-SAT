@@ -174,8 +174,9 @@
     }
     const low = Math.round(band.low / 10) * 10, high = Math.round(band.high / 10) * 10;
     el.append(h('p', { class: 'k', text: 'Current estimate' }));
-    el.append(h('div', { class: 'rs-est' }, h('span', { class: 'rs-big', text: `Math ${low}–${high}` }),
-      h('p', { class: 'rs-helper' }, `From your last ${plural((E.counted || {}).sittings || 1, 'scored sitting')}`, ' ', info('Sections count double. Sittings from the last 60 days.'))));
+    const nSit = (E.counted || {}).sittings || 1;
+    el.append(h('div', { class: 'rs-est' }, h('span', { class: 'rs-big', text: low === high ? `Math ${low}` : `Math ${low}–${high}` }),
+      h('p', { class: 'rs-helper' }, nSit === 1 ? 'From your last scored sitting' : `From your last ${n(nSit)} scored sittings`, ' ', info('Sections count double. Sittings from the last 60 days.'))));
     const conf = E.confidence || {}, tr = E.trend || {};
     const chips = h('div', { class: 'rs-row' });
     if (conf.level) chips.append(h('span', { class: 'badge soft lg', title: conf.reason || '', text: `${cap(conf.level)} confidence` }));
@@ -250,7 +251,7 @@
       s.types_met && s.types_met.met && { label: 'Question types met', value: `${n(s.types_met.met)} of ${n(s.types_met.total || s.types_met.of || 0)}`, sub: '', href: readOnly ? null : '/me/#atlas' },
       s.week && s.week.recovered_pts && { label: 'Recovered this week', value: rx.pts(s.week.recovered_pts), sub: s.week.closed ? `${plural(s.week.closed, 'mistake')} closed` : '' },
     ].filter(Boolean);
-    tiles.forEach(x => UI.tile(box, { ...x, countUp: false }));
+    tiles.forEach(x => { if (x.sub && String(x.value) && String(x.sub).endsWith(` ${x.value}`)) x.sub = ''; UI.tile(box, { ...x, countUp: false }); });
     box.style.setProperty('--cols', String(Math.min(4, tiles.length)));
     el.append(box);
   }
@@ -277,7 +278,7 @@
     const by = w.by || {};
     const keys = ['trap', 'slip', 'misread', 'clock', 'entry', 'gap', 'changed'].filter(k => by[k]);
     head(el, { k: 'Why you miss', title: `${plural(w.total, 'miss', 'misses')} in the last ${n(w.days || 14)} days, by cause` });
-    UI.stackBar(el, keys.map(k => ({ key: k, label: (rx.CAUSE[k] || { label: cap(k) }).label, value: by[k], n: by[k] })), { label: 'Misses by cause', noun: 'misses', format: v => n(v) });
+    UI.stackBar(el, keys.map(k => ({ key: k, label: (rx.CAUSE[k] || { label: cap(k) }).label, value: by[k] })), { label: 'Misses by cause', noun: 'misses', format: v => n(v), legend: keys.length > 1 ? 'auto' : false });
   }
 
   /* ------------------------------------------------------------ difficulty and format (2.5) */
