@@ -89,8 +89,8 @@
 .sc-lines .open::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--amber); vertical-align: 1px; }
 .sc-note { font: italic 400 13.5px/1.4 var(--serif, var(--font)); color: var(--ink); }
 .sc-side { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; }
-.sc-ring { --p: 0; width: 34px; height: 34px; border-radius: 50%; flex: none; display: inline-grid; place-items: center;
-  background: conic-gradient(var(--amber) calc(var(--p) * 1%), var(--tile-2) 0); }
+.sc-ring { --ring: 0; width: 34px; height: 34px; border-radius: 50%; flex: none; display: inline-grid; place-items: center;
+  background: conic-gradient(var(--amber) calc(var(--ring) * 1%), var(--tile-2) 0); }
 .sc-ring::before { content: ""; width: 24px; height: 24px; border-radius: 50%; background: var(--tile); grid-area: 1 / 1; }
 .sc-ring > span { grid-area: 1 / 1; font: 600 10px var(--mono); color: var(--ink); z-index: 1; }
 .sc-peekb[aria-expanded="true"] svg { transform: rotate(180deg); }
@@ -209,7 +209,7 @@ dialog.sheet.drawer { margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; wi
       const n = (Array.isArray(rec.recovered) ? rec.recovered.length : rec.recovered) || 0;
       const of = n + ((Array.isArray(rec.open) ? rec.open.length : rec.open) || 0) + ((Array.isArray(rec.slipping) ? rec.slipping.length : rec.slipping) || 0);
       const text = `Recovered ${fmt(n)}/${fmt(of)}${rec.points_open ? ` · ${rx.pts(rec.points_open)} open` : ''}`;
-      side.append(h('span', { class: 'sc-ring', style: `--p: ${of ? Math.round(n / of * 100) : 0}`, role: 'img', 'aria-label': text, title: text }, h('span', { text: `${fmt(n)}/${fmt(of)}` })));
+      side.append(h('span', { class: 'sc-ring', style: `--ring: ${of ? Math.round(n / of * 100) : 0}`, role: 'img', 'aria-label': text, title: text }, h('span', { text: `${fmt(n)}/${fmt(of)}` })));
     }
     const misses = (row.modules || []).reduce((s, m) => s + (m.wrong || []).length + (m.blank || []).length, 0) || (row.asked ? row.asked - (row.right || 0) : 0);
     let peekEl = null, peekB = null;
