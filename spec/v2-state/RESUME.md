@@ -190,6 +190,11 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       final report. (3) Still the user's: their preview and "good", then the merges (server branches first: s5-server,
       s6-server, s1-server, s10-server, f2b; then the pages, calm-shared, bank-figfix), then stop the preview and remove prev4.
       (4) Open questions for the user: "Practise" or "Practice"; the plan builder's default SAT date on Today.
+      OPEN ASK, NOT STARTED (the user, 2026-09-29, a dark screenshot of Today's Up next card: "Up next / Review what's due /
+      3 min / [Start]"): "can move start button to white space to the left". The Start pill sits alone under the title and
+      the card's right side is empty: move Start up onto the title row, into that empty space, so the card is shorter. The
+      code is Today's leadFrom() in web/index.html (v2/s3, the .lead block and its .acts row). Check at 1440/390, light and dark.
+      The user gives feedback as screenshots (memory feedback-by-screenshot).
       The preview (worktree scratchpad/prev4, port 8061, SATF_DB scratchpad/prev4.db) dies with the session; restart it:
       cd <scratchpad>/prev4 && SATF_DB=<scratchpad>/prev4.db PYTHONPATH=. python3 -m uvicorn server.app:app --port 8061
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
