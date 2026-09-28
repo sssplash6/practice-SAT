@@ -21,7 +21,7 @@ import secrets
 import sys
 from unittest.mock import patch
 
-from server import api_shell, db, next as next_actions, practice
+from server import api_shell, compete, db, next as next_actions, plan, practice
 
 KEYS = {"me", "streak", "best_streak", "today", "plan", "tested_today", "mistakes", "saved", "challenge", "resume",
         "newest_report", "report_replies", "new", "prefs", "pref_source", "stage", "next", "goals", "inbox",
@@ -138,6 +138,11 @@ def check(c) -> None:
     assert listed.json()["items"][0]["pts"] is None
     assert listed.json()["items"][0]["start"]["body"]["pool"] == "checks"
     assert c.get("/api/shell", headers=NH).json()["next"] == listed.json()["items"][:3]
+    with patch.object(compete, "due_today", wraps=compete.due_today) as contests_due, \
+         patch.object(plan, "today_summary", wraps=plan.today_summary) as plan_today:
+        assert c.get("/api/shell", headers=NH).status_code == 200
+    assert contests_due.call_count == 1 and plan_today.call_count == 1, (
+        contests_due.call_count, plan_today.call_count)
 
     original_part = next_actions.deps.part
     def with_plan(module, name):

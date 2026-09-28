@@ -154,7 +154,30 @@ def shell(learner: str, tz: int, token: str) -> dict:
     day = daily.today(tz)
     mine = db.one("SELECT finished FROM sessions WHERE kind='challenge' AND learner=? AND day=?", learner, day)
     b = challenge.board(day, learner, limit=0)
-    closing = part("compete", "closing_soon")
+    # Plan's snapshot and Compete's schedule can be expensive on a cold DB.
+    # Read each once, then give those exact rows to Up next and the chrome.
+    plan_summary = compete_part = plan_part = None
+    plan_reader = part("plan", "today_summary")
+    if plan_reader:
+        try:
+            plan_summary = plan_reader(learner, tz)
+            if plan_summary:
+                plan_part = {"plan": {"id": plan_summary["id"], "day": plan_summary["day"],
+                                      "done": plan_summary["tasks_done"],
+                                      "total": plan_summary["tasks_counted"],
+                                      "minutes_left": plan_summary["minutes_left"],
+                                      "next": plan_summary["next"]["title"] if plan_summary["next"] else None}}
+        except Exception:
+            log.exception("plan today_summary failed")
+    compete_reader = part("compete", "shell_part")
+    if compete_reader:
+        try:
+            compete_part = compete_reader(learner, tz)
+        except Exception:
+            log.exception("compete shell_part failed")
+    cutoff = dt.datetime.now(dt.timezone.utc) + dt.timedelta(hours=24)
+    closing = [item for item in (compete_part or {}).get("due", [])
+               if dt.datetime.fromisoformat(item["closes"]) <= cutoff]
 
     out = {
         "me": {"name": p["name"], "handle": p["handle"], "label": p["name"] or p["handle"] or challenge.handle(learner, None),
@@ -166,7 +189,7 @@ def shell(learner: str, tz: int, token: str) -> dict:
         "today": {"day": d["today"], "questions": line["questions"], "right": line["right"],
                   "minutes": line["minutes"], "words": line["words"], "rest": line["rest"],
                   "goal": {"minutes": p["minutes"], "questions": per_session(p)} if p["minutes"] else None,
-                  "done": None, "exam": exam, "contest": closing(learner, tz) if closing else []},
+                  "done": None, "exam": exam, "contest": closing},
         "plan": plan,
         "tested_today": tested,
         "mistakes": review["open"],
@@ -190,8 +213,14 @@ def shell(learner: str, tz: int, token: str) -> dict:
     }
     queue = part("next", "queue")
     if queue:
-        out["next"] = queue(learner, tz, limit=3)[:3]
+        out["next"] = queue(learner, tz, limit=3, _plan=plan_summary, _closing=closing)[:3]
+    if plan_part:
+        _merge(out, plan_part)
+    if compete_part:
+        _merge(out, compete_part)
     for name in PARTS:
+        if (name == "plan" and plan_reader) or (name == "compete" and compete_reader):
+            continue
         fn = part(name, "shell_part") or ADAPT.get(name, lambda: None)()
         if fn is None:
             continue

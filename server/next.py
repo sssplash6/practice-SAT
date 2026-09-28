@@ -14,6 +14,8 @@ from collections import Counter, defaultdict
 
 from . import db, deps, estimate, prefs, progress
 
+_UNSET = object()
+
 
 def _today(tz: int) -> dt.date:
     return (dt.datetime.now(dt.timezone.utc) - dt.timedelta(minutes=tz)).date()
@@ -82,7 +84,7 @@ def _points(gains: dict | None, topic: str, share: float = 1) -> int | None:
     return value if value >= 1 else None
 
 
-def queue(learner: str, tz: int = 0, limit: int = 6) -> list[dict]:
+def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_UNSET) -> list[dict]:
     """Return actions in priority order, keeping one row for each action key."""
     if not 1 <= limit <= 20:
         raise ValueError("limit must be 1–20")
@@ -138,15 +140,22 @@ def queue(learner: str, tz: int = 0, limit: int = 6) -> list[dict]:
                               "Your clock is still running", math.ceil(remaining / 60) if remaining else 0,
                               href=resume["href"], urgent=True))
 
-    closing = deps.part("compete", "closing_soon")
-    for contest in (closing(learner, tz) if closing else []):
+    if _closing is _UNSET:
+        closing = deps.part("compete", "closing_soon")
+        contests = closing(learner, tz) if closing else []
+    else:
+        contests = _closing or []
+    for contest in contests:
         close = dt.datetime.fromisoformat(contest["closes"])
         rows.append(_item("contest", f"contest:private:{contest['id']}", contest["title"],
                           "A private contest is waiting", f"Closes {close:%b %-d, %H:%M}",
                           _minutes(10, seconds), href=f"/compete/contest/?id={contest['id']}", urgent=True))
 
-    plan_fn = deps.part("plan", "today_summary")
-    plan = plan_fn(learner, tz) if plan_fn else None
+    if _plan is _UNSET:
+        plan_fn = deps.part("plan", "today_summary")
+        plan = plan_fn(learner, tz) if plan_fn else None
+    else:
+        plan = _plan
     planned = []
     if plan:
         for task in plan["tasks"]:
