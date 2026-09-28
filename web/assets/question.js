@@ -527,7 +527,7 @@
       if (!o.hideSkill && q.name) hd.append(h('span', { class: 'ws-type', text: q.name }));
       if (q.difficulty) {
         const d = UI.dbars ? UI.dbars(q.difficulty) : h('span', { text: cap1(q.difficulty) });
-        hd.append(h('span', { class: 'ws-diff' }, d, q.level ? h('span', { class: 'ws-level', text: `L${q.level}` }) : null));
+        hd.append(h('span', { class: 'ws-diff' }, d));       // the difficulty only: the internal level stays off screen (the user)
       }
       if (!mc && o.fmt !== false) hd.append(h('span', { class: 'ws-fmt', text: 'Grid-in' }));   // fmt: false when the page labels the format
       if (q.repair || o.again) hd.append(h('span', { class: 'again', text: 'Again', title: q.repair_of ? `Same trap as question ${q.repair_of}, new numbers` : 'Same trap, new numbers' }));
