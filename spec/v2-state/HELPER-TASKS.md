@@ -588,6 +588,27 @@ Do NOT change response shapes the pages already use; add fields. DONE: s7.py, s8
 "page asks done" with what you did and the list of items for other owners.
 ```
 
+
+## Task 31 (light): make test_flow pass on any date
+
+```
+test_flow never prints "all good" today, so no task can meet its DONE line. Two checks depend on the calendar, and one
+test lacks a header. Fix only these; nothing else.
+SETUP: git worktree add .claude/worktrees/flow-green -b v2/flow-green master
+OWN ONLY: server/checks/s3.py, server/checks/s8.py, server/test_flow.py.
+1. server/checks/s3.py ~line 200 (qotd_answer_and_crowd): `got["sat_pace_ms"] == 95_000` fails on some days (the day's
+   grid-in has one accepted form). Make the check build or pick its own question so the assert holds on every date.
+2. server/checks/s8.py ~517-519: compete.contest("final-" + next SAT date) is a 404 outside the week before an SAT
+   (compete.ensure makes a Season Final only then). Create or pick the check's own Final so it works on any date.
+3. server/test_flow.py line ~212 ("practice results were gated behind signup"): the Results server on v2/s6-server now
+   answers 403 without an X-Learner header. Send the learner's header in that call (do not loosen the server rule).
+Test each on at least three dates: today, the week before an SAT (e.g. 2026-09-28 for Oct 3), and an ordinary week, by
+setting the clock the checks already use (or freezegun-style patching inside the check). Commit per fix, never push or merge.
+DONE: on v2/flow-green (and with v2/s6-server merged into a scratch copy for item 3) test_flow prints "all good".
+Tell the user "flow green". These fixes come out of Tasks 24 and 30: skip them there.
+Also commit your Task 29 edits (README.md, .gitignore) on v2/ops-docs if they are finished.
+```
+
 ---
 
 ## For the main session
