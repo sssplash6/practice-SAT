@@ -713,6 +713,7 @@
       if (g) line.append(h('span', { text: g }));
       card.append(line);
     }
+    if (!diag && d.gate && (/trainer/i.test(d.kind_label || S.kind_label || '') || S.trainer)) card.append(trainerBlock(d.gate));
     if (!diag && d.moments && d.moments.length) {
       card.append(h('ul', { class: 'tw-moments' }, d.moments.slice(0, 2).map(m => h('li', {}, icon(m.id === 'best' || m.id === 'first_upper' ? 'trophy' : 'check', 18), h('span', { text: m.text })))));
     }
@@ -741,6 +742,42 @@
     b.append(card);
     const first = acts.querySelector('.pill');
     if (first) setTimeout(() => first.focus({ preventScroll: true }), 0);
+  }
+  // X14: the Route-up trainer's hand-in: where the line fell, what cost the route, and the next go
+  function trainerBlock(g) {
+    const box = h('section', { class: 'tw-trainer', 'aria-label': 'The route line' });
+    const qs = S.questions || [];
+    if (Array.isArray(g.rights) && qs.length) {
+      const rights = new Set(g.rights);
+      let k = 0, line = null;
+      qs.forEach((q, i) => { if (rights.has(i + 1) && ++k === g.needed) line = i + 1; });
+      const strip = h('div', { class: 'tw-strip', role: 'img', 'aria-label': `${g.right} of ${qs.length} right; ${g.needed} routes you up${line ? `, reached at Q${line}` : ''}` });
+      qs.forEach((q, i) => strip.append(h('i', { class: (rights.has(i + 1) ? 'on' : '') + (line === i + 1 ? ' line' : '') })));
+      box.append(strip);
+    }
+    const cheap = (g.cheap_misses || []).filter(p => qs[p - 1]);
+    if (cheap.length) {
+      const tier = p => ({ easy: 'easy', medium: 'medium', hard: 'hard' })[qs[p - 1].difficulty] || '';
+      const list = h('ul', { class: 'tw-cost' });
+      cheap.forEach(p => list.append(h('li', {}, h('span', { text: `Q${p}${tier(p) ? ` (${tier(p)})` : ''}` }),
+        h('button', { type: 'button', class: 'quiet', text: 'Try a twin', onclick: e => twinOf([qs[p - 1].id], 1, e.currentTarget, 'twin') }))));
+      box.append(h('p', { class: 'k', text: 'These cost the route' }), list);
+    }
+    const acts = h('div', { class: 'tw-acts' });
+    if (cheap.length) acts.append(h('button', { type: 'button', class: 'btn', text: 'Fix what cost the route', onclick: e => twinOf(cheap.map(p => qs[p - 1].id), 2, e.currentTarget, 'gate') }));
+    acts.append(h('button', { type: 'button', class: 'quiet', text: 'Next module 1', onclick: async e => {
+      const b = e.currentTarget;
+      b.setAttribute('aria-busy', 'true');
+      try { const r = await api('/mock/new', { method: 'POST', body: { kind: 'module', module: 'm1', trainer: 'route', conditions: 'test_day' } }); location.href = `/test/?s=${encodeURIComponent(r.id)}`; }
+      catch (x) { b.removeAttribute('aria-busy'); toast(`Couldn’t build it: ${x.message}`); }
+    } }));
+    box.append(acts);
+    return box;
+  }
+  async function twinOf(only, each, btn, source) {
+    btn.setAttribute('aria-busy', 'true');
+    try { const r = await api('/drill', { method: 'POST', body: { from_session: sid, only, each, source } }); location.href = `/practice/session/?id=${encodeURIComponent(r.id)}`; }
+    catch (e) { btn.removeAttribute('aria-busy'); toast(`Couldn’t start it: ${e.message}`); }
   }
   async function pressure(btn) {
     btn.setAttribute('aria-busy', 'true');
