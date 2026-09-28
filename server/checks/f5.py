@@ -49,7 +49,8 @@ def fixtures():
     db.run("INSERT INTO flags(learner,session,qid,template,seed,topic,at) VALUES (?,?,?,?,?,?,?)",
            learner, "f5-fixture", q["id"], q["key"], q["seed"], q["topic"], now)
     db.run("INSERT INTO sets(code,owner,kind,items,created) VALUES (?,?,?,?,?)",
-           "F5SET", learner, "set", json.dumps([[q["key"], q["seed"]]]), now)
+           "F5SET000", learner, "set", json.dumps([{"template": q["key"], "seed": q["seed"], "topic": q["topic"],
+                                                   "tier": q["difficulty"], "fmt": q["type"]}]), now)
     trap = progress.record_trap(learner, q, next(r for r in q["reasons"] if r), now)
     q2 = question("pct.change", 72)
     db.run("INSERT INTO attempts(learner,qid,template,seed,topic,difficulty,fmt,correct,given,at)"
@@ -207,11 +208,12 @@ def followup_checks(client):
     check = request(client, {"pool": "checks", "ids": [t["id"]], "count": 1}, learner="a:f5transfer")
     assert served_of(check["id"])[0]["key"] != keys[0]
     # QBank 15: a second learner gets the set's identical item; a revoked set is 410
-    got = served_of(request(client, {"share": "F5SET", "count": 1}, learner="a:f5second")["id"])[0]
-    assert [got["key"], got["seed"]] == json.loads(db.one("SELECT items FROM sets WHERE code='F5SET'")["items"])[0]
-    db.run("INSERT INTO sets(code,owner,kind,items,created,revoked) VALUES ('F5GONE','a:f5pool','set',?,?,?)",
-           db.one("SELECT items FROM sets WHERE code='F5SET'")["items"], progress.now(), progress.now())
-    request(client, {"share": "F5GONE"}, learner="a:f5second", expect=410)
+    got = served_of(request(client, {"share": "F5SET000", "count": 1}, learner="a:f5second")["id"])[0]
+    first = json.loads(db.one("SELECT items FROM sets WHERE code='F5SET000'")["items"])[0]
+    assert [got["key"], got["seed"]] == [first["template"], first["seed"]]
+    db.run("INSERT INTO sets(code,owner,kind,items,created,revoked) VALUES ('F5REV000','a:f5pool','set',?,?,?)",
+           db.one("SELECT items FROM sets WHERE code='F5SET000'")["items"], progress.now(), progress.now())
+    request(client, {"share": "F5REV000"}, learner="a:f5second", expect=410)
     # R19: a permalink serves an unseen catalogue item
     item = request(client, {"item": "measure.inverse:12345"}, learner="a:f5permalink")
     assert served_of(item["id"])[0]["seed"] == 12345 and item["total"] == 1
@@ -262,12 +264,12 @@ def checks(client):
         {"pool": "marked"},
         {"pool": "history", "ids": [db.one("SELECT id FROM attempts WHERE session='f5-fixture'")["id"]]},
         {"pool": "items", "ids": [[q["key"], q["seed"]]]},
-        {"pool": "set", "ids": "F5SET"},
+        {"pool": "set", "ids": "F5SET000"},
         {"pool": "official", "ids": ["84664a7c"]},
         {"list": "fixed"}, {"mistakes": True}, {"saved": True},
         {"list": "templates", "ids": ["lin.evaluate"]},
         {"unseen": True, "topics": ["linear_functions"]},
-        {"recheck": True}, {"share": "F5SET"},
+        {"recheck": True}, {"share": "F5SET000"},
         {"trap": {"template": q["key"], "reason": trap["norm"]}},
     ]
     related = progress.related()

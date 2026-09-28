@@ -288,8 +288,12 @@ def _route_check(questions: list[dict], seed: int) -> None:
 
 @router.get("/api/words")
 def get_words(days: int = 14, x_learner: str | None = Header(default=None),
-              x_tz: int = Depends(tz_of)) -> dict:
-    return words.library(_learner(x_learner), x_tz, days)
+              x_tz: int = Depends(tz_of)) -> Response:
+    # Serialize in the worker thread instead of making the event loop walk
+    # 1,300 nested library rows through FastAPI's generic encoder.
+    return Response(content=json.dumps(words.library(_learner(x_learner), x_tz, days),
+                                       ensure_ascii=False, separators=(",", ":")),
+                    media_type="application/json")
 
 
 @router.get("/api/words/insights")
@@ -645,9 +649,32 @@ def _finish(row, questions: list[dict], answers: dict, cfg: dict) -> dict:
 def answer_run(sid: str, body: dict, x_learner: str | None = Header(default=None),
                x_tz: int = Depends(tz_of)) -> dict:
     learner = _learner(x_learner)
+    # Prepare possible follow-up questions before claiming the write lock.
+    # The transaction below rechecks the sitting snapshot before using them.
+    prepared_probe = prepared_upper = None
+    before_row = _row(sid, learner)
+    before_questions, before_answers, before_cfg = _current(before_row)
+    before_qid = body.get("item_id")
+    before_q = next((item for item in before_questions if item["item_id"] == before_qid), None)
+    if before_q and before_q["kind"] == "placement" and not before_q.get("foil") and str(
+            body.get("answer")).casefold() in {"0", "yes", "know", "know it"}:
+        yes_n = 1 + sum(a.get("choice") == "yes" and
+                        next((x for x in before_questions if x["item_id"] == aid), {}).get("kind") == "placement"
+                        and not next((x for x in before_questions if x["item_id"] == aid), {}).get("foil")
+                        for aid, a in before_answers.items())
+        if yes_n % 3 == 0:
+            prepared_probe = words.quiz_item(before_q["word"], "word2meaning",
+                                              random.Random(hashlib.sha256(f"{sid}:{yes_n}".encode()).digest()),
+                                              learner)
+    if before_q and before_cfg.get("mode") == "check" and len(before_answers) == 5 and all(
+            f"w{i}" in before_answers for i in range(1, 6)):
+        prepared_upper = [dict(item) for item in before_questions]
+        _route_check(prepared_upper, int.from_bytes(hashlib.sha256(sid.encode()).digest()[:8], "big") + 6)
     with db.atomic():
         row = _row(sid, learner)
         questions, answers, cfg = _current(row)
+        if (prepared_probe is not None or prepared_upper is not None) and row["questions"] != before_row["questions"]:
+            raise HTTPException(409, "this Words run advanced; retry the answer")
         qid = body.get("item_id")
         q = next((q for q in questions if q["item_id"] == qid), None)
         if q is None:
@@ -707,8 +734,9 @@ def answer_run(sid: str, body: dict, x_learner: str | None = Header(default=None
                                 and not next((x for x in questions if x["item_id"] == aid), {}).get("foil")
                                 for aid, a in answers.items())
                 if yes_n % 3 == 0:
-                    probe = words.quiz_item(q["word"], "word2meaning",
-                                            random.Random(hashlib.sha256(f"{sid}:{yes_n}".encode()).digest()), learner)
+                    if prepared_probe is None:
+                        raise HTTPException(409, "this Words run advanced; retry the answer")
+                    probe = prepared_probe
                     probe.update(kind="placement_check", band=q["band"],
                                  item_id=f"w{len(questions)+1}")
                     questions.insert(questions.index(q) + 1, probe)
@@ -782,7 +810,9 @@ def answer_run(sid: str, body: dict, x_learner: str | None = Header(default=None
         if cfg["mode"] == "check" and len(answers) == 6 and all(f"w{i}" in answers for i in range(1, 7)):
             cfg["route"] = "upper" if sum(bool(answers[f"w{i}"].get("correct")) for i in range(1, 7)) >= 5 else "lower"
             if cfg["route"] == "upper":
-                _route_check(questions, int.from_bytes(hashlib.sha256(sid.encode()).digest()[:8], "big") + 6)
+                if prepared_upper is None:
+                    raise HTTPException(409, "this Words run advanced; retry the answer")
+                questions[:] = prepared_upper
             db.run("UPDATE sessions SET cfg=? WHERE id=?", json.dumps(cfg), sid)
         if q.get("template"):
             db.run("UPDATE sessions SET questions=? WHERE id=?", json.dumps(questions), sid)
@@ -826,23 +856,34 @@ def finish_run(sid: str, x_learner: str | None = Header(default=None)) -> dict:
 @router.post("/api/words/run/{sid}/another")
 def another_run(sid: str, body: dict, x_learner: str | None = Header(default=None)) -> dict:
     learner = _learner(x_learner)
+    row = _row(sid, learner)
+    if row["finished"]:
+        raise HTTPException(409, "this Words run is finished")
+    questions, answers, _ = _current(row)
+    qid = body.get("item_id")
+    old = next((q for q in questions if q["item_id"] == qid), None)
+    if not old or qid not in answers:
+        raise HTTPException(409, "answer the item before requesting another")
+    if not old.get("template"):
+        raise HTTPException(409, "this item has no generated twin")
+    old = {**old, "picked_trap": answers[qid].get("trap")}
+    seen = {q.get("template") for q in questions if q.get("template")}
+    try:
+        q = words.another(old, body.get("like", "word"), learner, seen)
+    except ValueError as exc:
+        raise HTTPException(409, str(exc)) from exc
     with db.atomic():
         row = _row(sid, learner)
         if row["finished"]:
             raise HTTPException(409, "this Words run is finished")
-        questions, answers, cfg = _current(row)
-        qid = body.get("item_id")
-        old = next((q for q in questions if q["item_id"] == qid), None)
+        questions, answers, _ = _current(row)
+        old = next((item for item in questions if item["item_id"] == qid), None)
         if not old or qid not in answers:
             raise HTTPException(409, "answer the item before requesting another")
         if not old.get("template"):
             raise HTTPException(409, "this item has no generated twin")
-        old = {**old, "picked_trap": answers[qid].get("trap")}
-        seen = {q.get("template") for q in questions if q.get("template")}
-        try:
-            q = words.another(old, body.get("like", "word"), learner, seen)
-        except ValueError as exc:
-            raise HTTPException(409, str(exc)) from exc
+        if q.get("template") in {item.get("template") for item in questions}:
+            raise HTTPException(409, "this twin was already added; request another")
         q["item_id"] = f"w{len(questions)+1}"
         questions.insert(questions.index(next(q for q in questions if q["item_id"] == qid)) + 1, q)
         db.run("UPDATE sessions SET questions=? WHERE id=?", json.dumps(questions), sid)

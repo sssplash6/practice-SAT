@@ -1,0 +1,64 @@
+{
+ "label": "verify S4Q r1",
+ "key": "v2:0625b1740a68a1c5491ffacc927cc6b80b42c6aed27fbe556ed1343d375ab70d",
+ "result": {
+  "pass": false,
+  "evidence": "Verified v2/s4q at dedddf9, detached. There are 4 commits since master: a9cc016, ffe0a49, d02b56e and dedddf9. I made no edits and no commits. My server on port 8031 is stopped, the server/cache folder it created is removed, and the worktree is clean.\n\n1. Checks\n- Neither server/checks/s4q.py nor spec/v2-state/briefs/S4Q-check.md exists.\n- `PYTHONPATH=. python3 server/test_flow.py` printed \"all good\". That run includes server/checks/s4.py.\n\n2. Decision 7 walk\nPlaywright with chrome-headless-shell covered:\n- the builder, for a new and a used learner\n- a session in progress\n- the summary\n- the print view (?print=1)\n\nEach was loaded at 1280 and at 390, in light and in dark. Dark mode comes from a server pref: PUT /api/me {prefs:{theme:'dark'}}, which gives body rgb(26,25,23).\n- No console errors on any load, and scrollWidth never exceeded the viewport width.\n- A zero/default regex (0 open, · 0, Not practised, 0 of N types, 0 answered, Easy Medium Hard, 0 selected, 0 in progress, nothing due …) scanned #main plus #abar on all 8 builder loads and found nothing.\n- The bottom bar is one line on all 8 builder loads: #l1 is 22px high and reads \"10 questions · ~16 min\". The only visible controls are Settings and Start practice.\n- At 390 the bar ends at y=780 and the tabs start at y=780, so they don't overlap.\n\nWhere each old control now lives (all reached in the browser):\n- Bar line 2 (timing, feedback, repairs, final round, reviews, order): the Settings button's tooltip and aria-description. Keyboard focus shows it too.\n- Bar line 1 extras (skills, types, difficulty, format, gain): #l1 hover tooltip. Skill and type counts also sit next to the Skills heading (\"3 skills · 64 types\" while a skill is open).\n- Bar skill chips: the checkmarks.\n- Printable worksheet: the Settings sheet footer.\n- Format, Timing, Answers shown, After a miss, Mix in reviews, Order, Spread, the Repeats note and Reset: the Settings sheet (UI.sheet).\n- Questions from, How many and Difficulty: the side panel. At 390 it sits below the tree, and the jump button scrolls there.\n- Every help line: a tooltip on its option.\n- Dimmed preset reasons: tooltip plus aria-description.\n- Domain line: shows its facts only when non-zero. Open mistakes are an orange badge.\n- Skill sub-line, points, due, held, last practised, record: the expanded skill panel.\n- See the traps: the type's ⋯ menu, next to \"Mix it up with look-alikes\".\n- \"Learn this type\": renamed \"Learn\", with aria-label.\n- Expand all: an icon button with a tooltip.\n- Summary StatTiles: the score, a meta line, and counts on the filter chips.\n- The other summary sections: folds named Mistakes, By skill, By difficulty, Time per question, More from this set and Then → Now. Open folds are remembered in satf.summary.open.\n- Rematch, Rematch in 3 days, Retake, Share, Print, Back to Practice: the More menu.\n- Session tool strip at 760px and wider: icons with a title tooltip; the labels are still read to screen readers. The strip is 48px, one row.\n\n3. Sample of 15 requirements (decision 7 bullets, §3.3.8 items 18/25-29/34/35, P2/P11/P14/P15/P17)\n- (1) D7 hide zeros: passes on the main surfaces; the exceptions are in the followups.\n- (2) D7 one number per idea: FAILS (blockers 2 and 3).\n- (3) D7 details on demand: passes on desktop, FAILS on touch (blocker 1).\n- (4) D7 one-line bar plus Settings and Start: passes.\n- (5) D7 easy on the eyes: passes. Few sizes, soft secondary text, mono only for numbers, orange only for Start, the selected state and open-mistake badges.\n- (6) #25: passes. 4 domain cards and 19 skill rows. Unchecking one type makes the skill aria-checked=\"mixed\". Toggling the Algebra domain changes the count at once, from \"3 skills · 64 types\" to \"7 skills · 148 types\".\n- (7) #26: passes. Typing \"margin\" shows \"16 types match\", and Esc clears it.\n- (8) #27: passes. Clear disables Start and shows \"Pick at least one skill\". Grid-in dims Statistical claims with \"No grid-in types\". The dimmed-chip reason is now a tooltip.\n- (9) #28: passes. scrollWidth stays within 390 on all four pages at 390.\n- (10) #18: passes. With prefs clock pace and feedback retry, the sheet shows Test pace aria-checked=true and After I retry checked.\n- (11) #29: passes. \"b\" selects without a verdict, Enter submits (answered=1), and elementFromPoint at Check's centre hits Check.\n- (12) #34: passes. Hide shows \"— : —\", survives a reload, and the caption reads \"elapsed\".\n- (13) #35: passes. The Incorrect filter shows exactly the 2 incorrect rows, Retake is in More, and print shows keys and explanations.\n- (14) P2/P11/P14/P17 skill panel: passes. Finish · 40 questions, Check my level · 8, Mix it up · 8, Try one (these settings, Hard, as a grid-in), and Learn.\n- (15) P15: passes. Ready row, Save as preset, Copy link, the subject switch, 15 and 30 min boxes, and one-line search sets. The College Board link goes to the Question Bank home only, as decision 6 allows.\n\n4. Scope\n- `git diff --stat master...HEAD` touches only the 4 owned files (537+/395-).\n- No classes or homework code, and no hard-coded colours.",
+  "defects": [
+   {
+    "where": "web/practice/builder.js tip() (~line 35) and its callers: preset chips (~417), Settings panel and sheet options (~961-1110), #l1 (~1459)",
+    "what": "Explanations moved into tooltips can't be reached on a touch phone. UI.tooltip only opens on mouse hover or keyboard focus (focus-visible), and a tap triggers neither. In a 390px touch context, tapping the dimmed 'Weakest 3' chip shows no reason, and tapping 'At the end, like a test' in the sheet shows no 'No feedback until you finish…'. The text appears nowhere on the page. The same holds for the Timing, Aim, Order, Spread, Fresh twins/Exactly, rough-levels and module-2 explanations. #l1 is a non-focusable span, so the skills/types/difficulty/format/'works on ≈ +N' summary is hover-only even on desktop keyboards. This breaks decision 7's 'one tap away … everything stays reachable'.",
+    "fix": "Make tip() work on touch: when (hover: none) or the pointerType isn't a mouse, tapping the control, or a small (i) next to it, shows the text (a popover, UI.toast, or an inline help line under the tapped or selected option). An aria-disabled chip shows its reason on tap. Give #l1 tabindex=0 so its tooltip opens on focus.",
+    "severity": "blocker"
+   },
+   {
+    "where": "web/practice/builder.js paintLinks (~227-240), presets() (~392-400), coach line (~452), New here box (~638)",
+    "what": "The builder repeats facts on its first screen. Used learner: the open-mistake count appears as the header link 'Mistakes · 2', the chip 'Coach's pick · 2 mistakes', the chip 'My mistakes · 2' and the permanent line 'Why these: Circles: 1 open mistake · Linear Functions: 1 open mistake'. New learner: 'Why these: not practised yet, and Algebra is 35% of the test' repeats what 'New here? The coach picked where the test puts the most questions…' says, and the Algebra card's '~15 of 44 on the test'. 'Not practised' is a default decision 7 names, and these explanatory sentences are permanent text.",
+    "fix": "Say the mistakes count once, on the My mistakes chip or the header link but not both, and drop '· 2 mistakes' from Coach's pick. Move the 'Why these' and 'New here?' wording into the Coach's pick tooltip or help (keeping the diagnostic link reachable). Drop 'not practised yet'.",
+    "severity": "blocker"
+   },
+   {
+    "where": "web/practice/session/session.js nextActions() (~562-580)",
+    "what": "The summary's next row shows the pill 'Fix 2 other misses · ≈ 3 min' right beside the button 'Fix my 2 misses'. They are two near-identical actions with the same count, and 'Mistakes · 2 new' repeats it again above. This breaks 'one number per idea, said once'.",
+    "fix": "When r.next_set exists (it is already the fix set), move 'Fix my N misses' into the More menu, or leave it out, so the miss count and the fix action appear once.",
+    "severity": "blocker"
+   },
+   {
+    "where": "web/practice/builder.js forecastText() (~1124); web/practice/session/session.js By difficulty legend (~471)",
+    "what": "Zeros still appear on demand: the Settings sheet shows '0 due now · 3 more this week · next 14 days: 3', and the summary By difficulty fold shows 'Levels seen: 2–4 (0 measured)'.",
+    "fix": "Leave out the zero parts: no 'N due now' when it is 0, and no '(N measured)' when it is 0.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/practice/builder.js type-list group header .lhead (~779)",
+    "what": "A group with a single type prints a header such as 'A scaled linear conversion · 1 type' directly above its only type row, which repeats the row.",
+    "fix": "Skip the group header, or its '· 1 type', when the group holds one type.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/practice/builder.js presets() (new learner)",
+    "what": "A new learner sees 9 dimmed, unusable preset chips on the first screen (Weakest 3, Plan focus, Biggest gains, My mistakes, Missed, Marked, Saved, Due for review, Custom). That goes against decision 7's 'show what the student needs to decide or act on now'.",
+    "fix": "Put unavailable presets behind a 'More presets' control, or show them after the usable ones, with their reason one tap away.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/practice/session/index.html line 162 together with web/assets/runner.js:1401 (existed before S4Q, already on master)",
+    "what": "The session page renders two <main id=\"main\"> elements, one nested inside the other. That duplicates an id, and ui.css's 'main { view-transition-name: main }' logs 'Unexpected duplicate view-transition-name: main' every time you leave a session.",
+    "fix": "Change the page's outer <main id=\"main\"> to a <div>, or give runner a different mainId.",
+    "severity": "followup"
+   },
+   {
+    "where": "Outside the owned files: web/assets/runner.js:1825, the shell Today card, and the shell toast",
+    "what": "Other owners need to handle these. The session progress line reads '1 of 5 · 0 right': a zero, with 'N of M' repeated in the 'Question 1 of 5' navigator. At 390 'Mark' appears both in the tool strip and in the bottom bar. The shell's Today card shows '0 min today' and a '0 days' streak. The shell toast 'Hold a tab for shortcuts' covers Start at 390.",
+    "fix": "Runner: drop 'K right' when K is 0, and drop the duplicate 'N of M'. Shell: hide the zero Today and streak values, and keep the toast off the fixed action bar.",
+    "severity": "followup"
+   },
+   {
+    "where": "spec/v2-state/briefs/S4-check.md items 25, 27, 28, 35 (the S4 browser page check)",
+    "what": "Decision 7 supersedes these acceptance items, and the built pages no longer match their wording: 'answered count or Not practised' on every row, the chip reason as visible text, Timing visible without opening a dialog, and StatTiles plus a 'Before this set' line.",
+    "fix": "Update the S4 browser check wording to decision 7, so a later page check doesn't fail or re-add these.",
+    "severity": "followup"
+   }
+  ]
+ }
+}

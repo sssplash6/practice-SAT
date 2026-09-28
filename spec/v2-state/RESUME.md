@@ -1,5 +1,13 @@
 # Resume here
 
+**Dev server:** started from the moved repo, `cd /Users/workingmyassof/freshbot/satbank && PYTHONPATH=. python3 -m uvicorn server.app:app
+--port 8000 --log-level warning --reload --reload-dir server` (background task bkhbftu1e since 2026-09-27; the old one ran from the
+deleted path and served 500s).
+
+**One page at a time (the user, 2026-09-27):** build.js runs WORKERS = 1. After S4Q finishes, the user allowed ONE more
+workflow: pages in the order S3 Today, S5 Tests, S6 Results, S10 Review, S7 Plan, S9 Words, S8 Compete, S1 Me, F2B, one
+fully finished (built, checked, fixed, merged after a branch check, opened for the user) before the next starts.
+
 **Standing rule (the user, 2026-09-27): my builds are PAGES ONLY. Any backend part becomes a HELPER-TASKS.md task and I ask
 the user to give it to the other agent.**
 
@@ -49,7 +57,48 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
     `wf_3f139f0b-f7c` (task w64p2zb82), same args, 3 workers, effort HIGH for every agent (the user's call). Briefs come from
     spec/v2-state/next/make_briefs.py (about 70k tokens each: the real requirements; 14-19k check briefs). Every agent follows
     the EFFICIENCY rules in build.js (cut output, read by line range, write files once, test per group).
-  * RUNNING (2026-09-27): run `wf_d97948f9-1df` (task wi11d1s10). ALL TEN tasks are pages-only (2 units each). Server halves are
+  * STOPPED 2026-09-27 12:15 at the user's 90% usage limit ("stop new builds, also before getting to build confirm with me").
+    DO NOT LAUNCH ANY BUILD WITHOUT ASKING THE USER FIRST.
+    - CORRECTION: the run's builders, checkers and fixers ANSWERED THE USER'S MID-RUN QUESTIONS ("how much is S3 done?") instead
+      of building: user messages sent while agents run are relayed to them. S3 Today and S5 Tests pages were NOT built (no web/
+      commits); their "check" and "fix" did nothing. build.js now has an IGNORE CHAT rule. S3 and S5 pages need building again.
+    - S4 Practice: MERGED 2026-09-27 (b2e4aaf): builder + session pages and the Practice server work so far (the helper's
+      Task 25 continues the server on v2/s4-server: rebase it on master first). Leftovers in followups/S4-pages.json.
+    - S4Q MERGED after the user approved the preview ("good job with practice"); leftovers in followups/S4Q.json.
+    - 2026-09-28: the user reviewed the Today preview live (13 basic visual findings, all fixed on v2/s3 and v2/calm-shared).
+      RUNNING: today-hygiene run `wf_da1586d8-318` (task w0342biml): 4 lens auditors, one fixer (commits on v2/s3 and
+      v2/calm-shared), one re-check (the user: stop the workflow once the fix is done; watcher task b6bs40lyi). Every future
+      page gets ONE hygiene agent (visual + calm, measured, looks at screenshots) whose findings join the one fix (build.js).
+      THE USER'S STANDING ORDER (2026-09-28, then left): when the Today fix finishes, (1) TaskStop the today-hygiene workflow
+      (w0342biml) before its re-check, (2) launch build.js `[{id:'S7',from:'hygiene'},{id:'S9',from:'hygiene'},{id:'S8',from:'hygiene'}]`
+      (WORKERS = 1, the designer brief), (3) do my own creative design pass on Today from screenshots and have improvements ready.
+      Merge nothing before the user previews.
+    - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
+      their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
+      PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
+      ONLY AFTER THE USER LOOKS AND SAYS GOOD; then stop the preview and remove prev4.
+    - The user (2026-09-27, going out): "only pick up sections in which server was done by another guy". So only S7, S9, S8 (their
+      servers are merged), plus S3, which was already running (the user: "i never told you to stop the current one"). RUNNING one
+      at a time: `[{id:'S3'},{id:'S7'},{id:'S9'},{id:'S8'}]` (S3 continues from its checkpoint on v2/s3). S5, S6,
+      S10, S1 and F2B wait for Tasks 26, 20, 21, 22, 23. Do NOT merge any page before the user previews it.
+    - (history) queue S3, S5, S6, S10, S7, S9, S8, S1, F2B
+      (WORKERS = 1). For each finished page: verify its web/ diff on the branch, preview it for the user, merge on their OK.
+    - (history) DECISION 7 (calm, quiet UI) added 2026-09-27; briefs regenerated. S4Q (the Practice pages made calm, no feature
+      lost): run `wf_9e14b5f3-2c4` (task wgluczzch), `[{id:'S4Q'}]`, 2 units + one check + one fix, branch v2/s4q. Verify its
+      web/ diff on the branch before merging.
+    - Words gate MERGED (93fc62c): 797 frames approved over 1,159 senses; 30 blocked in review-queue.json; 26 senses no frame.
+    - Also merged: v2/perf (helper Task 17: zero errors at 10/50/200 learners), v2/words-seed-sqlite (Task 18's crash fix;
+      master already had it). Words gate pass A done on v2/words-gate-a (1,263 items: 1,235 one, 28 more); waiting for pass B.
+    - S4 Practice pages: built, checked (3 blockers, next/S4-pages-verify1-issues.json); the fix is the ONLY thing running:
+      run `wf_b6e107a2-030` (task wzcyt7kom), `[{id:'S4', from:'fix', issues:...}]`, from checkpoint on v2/s4. Then ready to merge.
+    - S6 Results: page part 1 in progress, checkpointed on v2/s6. S10 Review: page part 1 had written nothing yet.
+    - Not started: S1, F2B, S7, S8, S9 (all pages-only, 2 units).
+    - To continue, after the user confirms: build.js with `[{id:'S3'},{id:'S5'},{id:'S6'},{id:'S10'},{id:'S1'},{id:'F2B'},{id:'S7'},{id:'S8'},{id:'S9'}]`
+      (and S4 only if its fixer did not finish the pages).
+    - Merging S3/S5/S4 pages: their server halves are helper Tasks 24-26 on v2/<id>-server (branched from these branches), so
+      merge each pages branch, then its server branch when the helper finishes; test_flow after each.
+    Check results and fix reports: followups/S3-pages.json, S4-pages.json, S5-pages.json.
+  * (history) run `wf_d97948f9-1df` (task wi11d1s10). ALL TEN tasks are pages-only (2 units each). Server halves are
     the helper's: Tasks 20-23 (S6, S10, S1, F2B) and 24-26 (S3, S4, S5, continuing the main build's commits), on
     v2/<id>-server. Merge each server branch together with its pages branch. The previous run crashed because my shell sat in
     a non-git folder when agents needed worktrees: never cd outside the repo while a workflow runs.

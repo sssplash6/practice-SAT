@@ -34,6 +34,8 @@ SUPPLY_PATH = pathlib.Path(__file__).resolve().parent / "cache" / "twin_supply.j
 _SUPPLY: dict | None = None
 _SUPPLY_THREAD: threading.Thread | None = None
 _TRAP_CACHE: dict | None = None
+_ENSURE_LOCK = threading.RLock()
+_ENSURE_READY: set[tuple[str, str, str, int]] = set()
 ACHIEVEMENTS = [
     {"id": "pace-setter", "name": "Pace setter", "rule": "10 contest answers at SAT pace"},
     {"id": "top-ten", "name": "Top ten", "rule": "Place in a contest's top ten"},
@@ -63,6 +65,7 @@ def _json(value, default=None):
 
 
 def init() -> None:
+    _ENSURE_READY.clear()
     c = db.conn()
     if not c.execute("SELECT 1 FROM kv WHERE k='compete:pid_secret'").fetchone():
         c.execute("INSERT OR IGNORE INTO kv(k,v) VALUES ('compete:pid_secret',?)", (secrets.token_hex(32),))
@@ -82,6 +85,10 @@ def init() -> None:
     if _SUPPLY_THREAD is None and not _read_supply():
         _SUPPLY_THREAD = threading.Thread(target=_survey_background, daemon=True, name="twin-supply")
         _SUPPLY_THREAD.start()
+    # Build the current UTC day's scheduled forms before health goes ready.
+    # Shell asks for them several times; the first learner must not pay for it.
+    ensure(tz=0)
+    challenge.challenge(local_day().isoformat())
 
 
 def _bank_hash() -> str:
@@ -246,7 +253,8 @@ def trap_families() -> dict:
         return _TRAP_CACHE
     families = [f for f in _habit_catalogue() if f.get("id") != "slip"]
     if not families:
-        return {"families": [], "topic_floor": 5, "window": 0, "reason": "habits_unavailable"}
+        _TRAP_CACHE = {"families": [], "topic_floor": 5, "window": 0, "reason": "habits_unavailable"}
+        return _TRAP_CACHE
     found: dict[str, dict] = {f["id"]: {"family": f, "tiers": {t: set() for t in ("easy", "medium", "hard")},
                                      "topics": set()} for f in families}
     kinds = blueprint.kinds()
@@ -277,8 +285,9 @@ def trap_families() -> dict:
         qualified = [entry for entry in found.values() if len(entry["topics"]) >= 3 and
                      all(len(entry["tiers"][tier]) >= 10 for tier in ("easy", "medium", "hard"))]
     if len(qualified) < 2:
-        return {"families": [], "topic_floor": topic_floor, "window": 0,
-                "reason": "too_few_qualified_families", "survey": found}
+        _TRAP_CACHE = {"families": [], "topic_floor": topic_floor, "window": 0,
+                       "reason": "too_few_qualified_families", "survey": found}
+        return _TRAP_CACHE
     _TRAP_CACHE = {"families": qualified, "topic_floor": topic_floor,
                    "window": min(4, len(qualified) - 1), "survey": found}
     return _TRAP_CACHE
@@ -361,6 +370,22 @@ def _module_slots(form: str, module: int, salt: str) -> list[list]:
 
 
 def ensure(at: dt.datetime | None = None, tz: int = 0) -> list[dict]:
+    """Serialize first builds; a second request waits for the same saved form."""
+    at = at or _now()
+    local = local_day(tz, at)
+    monday = at.date() - dt.timedelta(days=at.weekday())
+    # A swapped dependency resolver (used by optional integrations and checks)
+    # may make a previously unavailable Word Sprint schedulable.
+    window = (str(db.DB_PATH.resolve()), local.isoformat(), monday.isoformat(), id(deps.part))
+    with _ENSURE_LOCK:
+        if window not in _ENSURE_READY:
+            rows = _ensure_unlocked(at, tz)
+            _ENSURE_READY.add(window)
+            return rows
+    return [dict(r) for r in db.rows("SELECT * FROM contests WHERE closes>? ORDER BY opens", _iso(at))]
+
+
+def _ensure_unlocked(at: dt.datetime | None = None, tz: int = 0) -> list[dict]:
     """Create live and next scheduled contests once, with no background job."""
     at = at or _now()
     local = local_day(tz, at)
@@ -511,9 +536,15 @@ def rush_start(learner: str, cid: str, domain: str = "all") -> dict:
     cfg = {"contest": row["id"], "domain": domain, "target": target, "strikes": 0,
            "strike_reasons": [], "top_bank": False, "turn": 0, "last_rating": None,
            "last_right": None, "tz": 0, "source": "rush", "timing_factor": factor}
-    db.run("INSERT INTO sessions(id,kind,learner,started,questions,answers,cfg,result,contest,subject,ranked)"
-           " VALUES (?,?,?,?,'[]','{}',?,'{}',?,'math',1)", sid, "rush", learner,
-           _iso(_now()), json.dumps(cfg), row["id"])
+    with db.atomic():
+        existing = db.one("SELECT id FROM sessions WHERE learner=? AND contest=? AND kind='rush'"
+                          " AND finished IS NULL ORDER BY started DESC LIMIT 1", learner, row["id"])
+        if existing:
+            sid = existing["id"]
+        else:
+            db.run("INSERT INTO sessions(id,kind,learner,started,questions,answers,cfg,result,contest,subject,ranked)"
+                   " VALUES (?,?,?,?,'[]','{}',?,'{}',?,'math',1)", sid, "rush", learner,
+                   _iso(_now()), json.dumps(cfg), row["id"])
     return {"session": sid, "runner": "session", **rush_next(sid, learner)}
 
 
@@ -697,11 +728,17 @@ def word_start(learner: str, cid: str) -> dict:
     seconds = round(240 * {"official": 1, "x1.5": 1.5, "x2": 2}.get(timing, 1))
     sid = secrets.token_urlsafe(16)
     questions = [{**item, "id": f"w{i:03d}"} for i, item in enumerate(items, 1)]
-    db.ensure_learner(learner)
-    db.run("INSERT INTO sessions(id,kind,learner,started,questions,answers,cfg,result,contest,subject,ranked)"
-           " VALUES (?,?,?,? ,?,'{}',?,'{}',?,'rw',1)", sid, "words", learner, _iso(_now()),
-           json.dumps(questions), json.dumps({"mode": "word_sprint", "seed": seed,
-                                               "seconds": seconds, "timing": timing}), cid)
+    with db.atomic():
+        existing = db.one("SELECT id FROM sessions WHERE learner=? AND contest=? AND kind='words'"
+                          " AND finished IS NULL ORDER BY started DESC LIMIT 1", learner, cid)
+        if existing:
+            sid = existing["id"]
+        else:
+            db.ensure_learner(learner)
+            db.run("INSERT INTO sessions(id,kind,learner,started,questions,answers,cfg,result,contest,subject,ranked)"
+                   " VALUES (?,?,?,? ,?,'{}',?,'{}',?,'rw',1)", sid, "words", learner, _iso(_now()),
+                   json.dumps(questions), json.dumps({"mode": "word_sprint", "seed": seed,
+                                                       "seconds": seconds, "timing": timing}), cid)
     return {"session": sid, "runner": "words", **word_next(sid, learner)}
 
 
@@ -2170,7 +2207,6 @@ def closing_soon(learner: str, tz: int = 0) -> list[dict]:
 
 def shell_part(learner: str, tz: int = 0) -> dict:
     today_id = "daily-" + local_day(tz).isoformat()
-    ensure(tz=tz)
     done = db.one("SELECT 1 FROM sessions WHERE learner=? AND contest=? AND finished IS NOT NULL",
                   learner, today_id)
     return {"challenge": {"streak": challenge_streak(learner, tz)["current"]},

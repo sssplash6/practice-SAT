@@ -40,6 +40,24 @@ disagree, this file wins. Builders read it alongside the plan and `spec/v2-upgra
    with no teacher or homework features. Resolution R4 of the plan ("Compete's groups are the
    same thing as classes") is void.
 
+6. **No College Board Student-bank features (2026-09-27).** The public Question Bank index in `material/cb/cb_index.json`
+   (3,770 questions with subject, domain, skill, difficulty and band) covers what we need: day-one levels and mapping official
+   questions to our types. Do not build the two nice-to-haves that would need the signed-in Student Question Bank: resolving a
+   Student-bank question ID when a student logs a missed official question (public-index IDs still work), and per-question
+   "open on College Board" deep links. A plain link to College Board's Question Bank home is fine.
+
+7. **A calm, quiet interface: show only what the student needs (2026-09-27).** The user: "lets show students stuff that they
+   only really indeed need to know ... make it easy and less tiring for eyes. convinience matters". Every page follows this:
+   - Show what the student needs to decide or act on now. Hide zeros and defaults ("0 open", "Not practised", "0 of 107
+     types ready", "Easy Medium Hard" when all are on); show a count only when it says something.
+   - One number per idea, said once. Never repeat a fact in two places on the same screen (a selection shown by checkmarks is
+     not also listed as chips; "Not started" is not beside "Not practised").
+   - Details on demand, one tap away: expand a row, hover or focus for a tooltip, or open a Details / Settings sheet. Settings
+     summaries collapse into one control; explanatory sentences become tooltips or help, not permanent text.
+   - Easy on the eyes: generous spacing, few text sizes and weights, the primary fact in normal ink, secondary facts muted, mono
+     only for numbers that matter, orange only for the one action or state that needs attention.
+   - No feature is removed (this is not minimalism; decision 4 still holds): everything stays reachable and fast to use.
+
 
 ## Task entry
 

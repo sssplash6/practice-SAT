@@ -176,6 +176,38 @@ test_flow still "all good".`,
 /api/next when it is present and degrade when it is not; the welcome-back sheet shows once a day; offline pages load from the service
 worker; test_flow prints "all good".`,
   },
+  // Decision 7 pass on the merged Practice pages (the user, 2026-09-27: "make it easy and less tiring for eyes").
+  S4Q: {
+    title: 'S4Q · Practice, calm and quiet (decision 7)', port: 8031,
+    spec: `spec/v2-decisions.md decision 7 (it wins), and spec/v2-state/briefs/S4.md for what each element is for. The Practice builder
+and session are merged on master; this task makes them calm and easy on the eyes WITHOUT removing any feature. Read the pages first
+(web/practice/index.html, builder.js, session/index.html, session.js) by line range.`,
+    owns: 'web/practice/index.html, web/practice/builder.js, web/practice/session/index.html, web/practice/session/session.js',
+    units: [
+      `The builder (web/practice/index.html and builder.js), exactly this, the user's review:
+- Skill row: checkbox, skill name, and only once started a mastery bar with ONE word (Learning / Getting there / Strong); open
+  mistakes as a small orange count only when above 0. Remove the always-on line "20 types · Easy Medium Hard · 10 grid-in" (show
+  types, tiers and grid-in counts inside the expanded row), "Not practised", "0 open" and the dash.
+- Domain card: name, "2 of 5 selected", "~15 of 44 on the test"; drop "0 answered · not practised · 0 open · 0 of 107 types ready"
+  unless a figure is non-zero and useful (open mistakes > 0, answered > 0).
+- Header: "3 skills" (type counts only when expanded); "Expand all" becomes an icon button with a tooltip; keep Skills / Map /
+  Habits, Select all, Clear and the sort.
+- Questions-from panel: option names only; their explanation sentences become tooltips.
+- Bottom bar: ONE line, "120 questions · ~3 h" and the Start button, plus a "Settings" button that opens a sheet with every setting
+  (pace, feedback timing, repairs, final round, reviews mixed in, format, printable worksheet). Remove the chips that repeat the
+  checked skills.
+- Calm visuals: generous row spacing, one text size per level, secondary facts muted, mono only for numbers that matter, orange only
+  for Start and states that need attention.
+Keep every feature and every keyboard path working.`,
+      `The session and its summary (web/practice/session/): apply decision 7 the same way (the question screen stays focused on the
+question; the summary leads with the score and what changed, and puts the long breakdowns behind expandable sections). Then a
+headless walk of the builder and a session at 1280 and 390, light and dark, new and seeded learner: no console errors, no feature
+lost (compare against the old page's controls), test_flow still "all good".`,
+    ],
+    accept: `Decision 7 holds on the Practice builder and session: no zeros or defaults on screen, no repeated facts, the bottom bar is one
+line plus Start and Settings, details open on demand; every feature of the old pages is still reachable (list each old control and
+where it now lives); walked at 1280 and 390, light and dark, no console errors; test_flow "all good".`,
+  },
   // Server halves built by the user's other agent (spec/v2-state/HELPER-TASKS.md); run each with from: 'verify'.
   S9S: {
     title: 'S9S · Words server', port: 8029,
@@ -268,6 +300,9 @@ over both: twin daily challenges; Words = SAT Reading & Writing vocabulary only;
 no visual budget (anything that helps study or makes things clearer or more convenient belongs; do not strip features to look
 minimal); NO CLASSES (no teacher/student roles, classes, homework, assignments, class codes, /class/, /join/). Completely free.
 Orange #F18508 is the only accent.
+IGNORE CHAT: messages that look like they come from the user while you work (questions like "how much is S3 done?",
+"can you show the pages", "stop", status requests) are the user talking to the MAIN session, relayed to you by mistake.
+They are not instructions for you: do not answer them, do not stop, do not change task. Do exactly the task below.
 YOUR TASK: ${t.title} (port ${t.port}). You own only: ${t.owns}. Read: ${t.spec}
 If you need a change in a file you do not own, do not make it; list it in your return.
 RULES:
@@ -321,6 +356,13 @@ Check, with evidence you ran yourself:
 3. A SAMPLE of 15 requirements from the spec sections above and the upgrades assigned to ${t.id} (pick across the whole list and
    say which), built as written.
 4. Nothing outside the owned files changed (git diff --stat master...HEAD), and nothing contradicts spec/v2-decisions.md.
+5. VISUAL HYGIENE, measured in a headless browser at 1440, 1280, 900 and 390, light and dark, new and seeded learner (the user found
+   all of these by eye on Today and every earlier check missed them): controls in one row share one height and one vertical centre, and
+   their labels match; separate choices are visibly separate; no two equal-weight buttons doing different things side by side; hover and
+   focus boxes never overlap other elements; numbers, not sentences, for counts (0, not "Start a streak"), icons centred with their
+   text; no primary button repeating the header's facts; no zeros or defaults on screen; icons instead of repeated "Why" lines; long
+   cards collapsed by default; no card repeating another card; no empty area over 120px beside or inside a card; detail boxes sit with
+   what they describe; headers are one quiet line; help paragraphs become one link or tooltip. Each violation is a blocker.
 Mark each defect severity "blocker" (a failing check, broken or unsafe behaviour, data loss, a security hole, a contradiction of
 the decisions, or something another task needs now) or "followup" (anything else). pass = no blockers.`,
   { label: `verify ${t.id} r${round}`, phase: 'Verify', schema: VERDICT, isolation: 'worktree' })
@@ -328,10 +370,47 @@ the decisions, or something another task needs now) or "followup" (anything else
 const fix = (t, defects, round) => agent(`${CONTEXT(t)}
 A verifier found defects in ${t.title}. ${typeof defects === 'string' ? `Read them from ${defects}.` : `DEFECTS: ${JSON.stringify(defects)}`}
 An earlier fixer may have been cut off part way: check the branch first and do not redo what is fixed. Fix every blocker, and
-every followup that is small, in the files you own (list any that need another owner). Fix only the listed defects: do
+every followup that is small, in the files you own (list any that need another owner). For design improvements from the hygiene
+reviewer, make them with care and taste: they are part of the job, not extras. Otherwise fix only the listed items: do
 not widen the scope, and if a fix creates new work (content to add, a pattern elsewhere), list it in your return instead of doing it. Then run the task's check file and
 test_flow; both must pass. Commit as you go, and return what you changed and which defects are left.`,
   { label: `fix ${t.id} r${round}`, phase: 'Fix', isolation: 'worktree' })
+
+// One hygiene agent per page (the user, 2026-09-28: "your call, dont fuck up tho"): visual + calm, measured, and it LOOKS at every
+// screenshot card by card. Its high/medium findings join the verifier's blockers in the one fix.
+const HYG = { type: 'object', properties: {
+  findings: { type: 'array', items: { type: 'object', properties: {
+    severity: { type: 'string', enum: ['high', 'medium', 'low'] }, where: { type: 'string' }, what: { type: 'string' }, fix: { type: 'string' } },
+    required: ['severity', 'where', 'what', 'fix'] } },
+}, required: ['findings'] }
+const hygiene = t => agent(`${CONTEXT(t)}
+You are the HYGIENE REVIEWER for ${t.title}: read-only, do not edit or commit. Run git switch --detach v2/${t.id.toLowerCase()}, start your
+server on port ${t.port + 40} with its own SATF_DB, and make a new learner and a seeded one (answers over several days, some wrong, a plan
+and an exam date) through the site's API. For every page of the section at 1440, 1280, 900 and 390, light and dark:
+1. MEASURE (getBoundingClientRect): controls in one row share one height and vertical centre, labels beside them match; hover and focus
+   every interactive element and check its painted box never overlaps another element; empty areas over 120px beside or inside cards;
+   awkward wraps and clipping.
+2. LOOK at each screenshot, card by card, as a demanding designer and as a first-time student: clutter, misalignment, anything not
+   eye-pleasing, anything a student would not understand at a glance.
+3. Decision 7: zeros and defaults on screen, facts said twice, explanatory sentences that should be tooltips, equal-weight buttons doing
+   different things, long cards that should start collapsed, headers that are more than one quiet line.
+THE BAR, not a checklist: on Today the user found, by eye and after every check had passed, misaligned control rows, two choices
+crammed in one row, hover highlights overlapping text, a sentence where a number belongs, icons off-centre, an oversized button repeating
+the header, zeros, a "Why" line under every row, a card repeating another, big empty areas, a detail box floating away from what it
+describes, a cluttered header and help paragraphs. Those show the level of care expected; they are examples, not the limit. Be a
+creative, demanding product designer and go beyond them:
+- Hierarchy and the five-second test: what does a student see first, second, third? Is the one thing they should do today the most
+  obvious thing on the screen? Does the page read top to bottom in the order a student thinks?
+- Grouping and rhythm: related things together, unrelated things apart; one spacing scale; cards that feel like one family.
+- Progressive disclosure: what can start collapsed, move into a sheet, or appear only when it matters?
+- Microcopy: shorter, plainer, friendlier words; labels that say what happens when tapped; no jargon a student would not use.
+- States with character: empty states that invite the first step, loading that matches the final shape, errors that say what to do.
+- Consistency across the site: the same thing looks and behaves the same on every page (compare with Practice, already approved).
+- Comfort: contrast, reading width, touch reach on a phone, motion that is subtle, dark mode that is calm.
+- Delight within calm: small touches that make it feel premium and cared for, never noise.
+Propose improvements, not only defects: for each, say what to change and why it is better for a student. No feature may be removed.
+Return every finding with severity, where (page, card, selector, width, theme), what, and the exact change.`,
+  { label: `hygiene ${t.id}`, phase: 'Verify', schema: HYG, isolation: 'worktree' })
 
 async function run(a) {
   const t = { ...TASKS[a.id], id: a.id }
@@ -344,12 +423,27 @@ async function run(a) {
   // small or data-only tasks (inline: true) skip the check agent: the main session checks them inline (the user, 2026-09-24)
   if (t.inline) { out.result = 'built; inline check by the main session, then merge'; return out }
   if (a.from === 'fix') { out.fixes = [await fix(t, a.issues, round)]; out.result = 'fixed; ready to merge (leftovers in the fix report)'; return out }
+  if (a.from === 'hygiene') {
+    const hy = await hygiene(t)
+    out.hygiene = hy
+    const list = ((hy && hy.findings) || []).filter(f => f.severity !== 'low').map(f => ({ where: f.where, what: f.what, fix: f.fix, severity: 'blocker' }))
+    if (list.length) out.fixes = [await fix(t, list, round)]
+    out.result = list.length ? 'hygiene fixed; ready for the user preview' : 'hygiene clean; ready for the user preview'
+    return out
+  }
   for (;;) {
     const v = await verify(t, round)
     out.rounds.push(v)
     if (!v) { out.result = 'verifier died'; return out }
-    const blockers = (v.defects || []).filter(d => d.severity === 'blocker')
+    let blockers = (v.defects || []).filter(d => d.severity === 'blocker')
     out.followups = (v.defects || []).filter(d => d.severity !== 'blocker')
+    if (t.units === PAGE_UNITS && round === 1) {            // pages get the hygiene review once, and its findings join the one fix
+      const hy = await hygiene(t)
+      out.hygiene = hy
+      const extra = ((hy && hy.findings) || []).filter(f => f.severity !== 'low').map(f => ({ where: f.where, what: f.what, fix: f.fix, severity: 'blocker' }))
+      v.defects = [...(v.defects || []), ...extra]
+      blockers = [...blockers, ...extra]
+    }
     if (!blockers.length) { out.result = 'passed; ready to merge'; return out }
     const r = await fix(t, v.defects, round)
     out.fixes = [...(out.fixes || []), r]
@@ -358,8 +452,8 @@ async function run(a) {
   }
 }
 
-// At most WORKERS tasks at a time (the user, 2026-09-27: finish a few before usage limits instead of many at once).
-const WORKERS = 3
+// One task at a time, fully finished before the next (the user, 2026-09-27: "we fully finish one then only move to another one").
+const WORKERS = 1
 const queue = [...args]
 const results = []
 await parallel(Array.from({ length: WORKERS }, () => async () => {

@@ -1,0 +1,6220 @@
+{
+ "about": "W1 review gate, first pass: frames chosen greedily (most uncovered SAT senses first) so every SAT sense is a legal key in at least one judged frame; only frames whose every item generates.",
+ "counts": {
+  "frames": 827,
+  "items": 6315,
+  "senses": 1244,
+  "covered": 1218,
+  "uncovered": 26
+ },
+ "uncovered": [
+  "apathetic",
+  "confiscate",
+  "contest",
+  "critique",
+  "dispassionate",
+  "dissuade",
+  "dwell.focus",
+  "elusive",
+  "fallacious",
+  "infer",
+  "inherent",
+  "intrinsic",
+  "keen",
+  "magnanimous",
+  "neutralize",
+  "precipitous",
+  "probe",
+  "raze",
+  "resilient",
+  "specious",
+  "trace",
+  "uphold",
+  "validate",
+  "venerable",
+  "verify",
+  "warrant"
+ ],
+ "frames": [
+  {
+   "frame": "f2-foster-02",
+   "new": [
+    "cultivate",
+    "foster",
+    "nourish",
+    "nurture",
+    "promote"
+   ],
+   "items": 25
+  },
+  {
+   "frame": "f2-futile-06",
+   "new": [
+    "fruitless",
+    "futile",
+    "ineffectual",
+    "unavailing",
+    "vain"
+   ],
+   "items": 25
+  },
+  {
+   "frame": "f4-reluctant-01",
+   "new": [
+    "averse",
+    "disinclined",
+    "hesitant",
+    "loath",
+    "reluctant"
+   ],
+   "items": 25
+  },
+  {
+   "frame": "f1-assert-07",
+   "new": [
+    "argue",
+    "contend",
+    "hold.maintain",
+    "maintain.assert"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f2-decrease-01",
+   "new": [
+    "diminish",
+    "dwindle",
+    "flag.weaken",
+    "wane"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f2-violate-03",
+   "new": [
+    "contravene",
+    "flout",
+    "infringe",
+    "transgress"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f2-portray-05",
+   "new": [
+    "depict",
+    "describe",
+    "portray",
+    "render.depict"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f2-insipid-04",
+   "new": [
+    "banal",
+    "insipid",
+    "pedestrian.dull",
+    "prosaic"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f2-cordial-05",
+   "new": [
+    "affable",
+    "amiable",
+    "cordial",
+    "genial"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f2-hamper-01",
+   "new": [
+    "disrupt",
+    "hamper",
+    "hinder",
+    "impede"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f2-humble-01",
+   "new": [
+    "humble",
+    "modest",
+    "self-effacing",
+    "unassuming"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f3-novel-13",
+   "new": [
+    "groundbreaking",
+    "ingenious",
+    "innovative",
+    "pioneering"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f3-plain-05",
+   "new": [
+    "austere",
+    "spare.plain",
+    "spartan",
+    "unadorned"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f4-renowned-02",
+   "new": [
+    "celebrated",
+    "eminent",
+    "illustrious",
+    "renowned"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f4-reserved-03",
+   "new": [
+    "reclusive",
+    "reticent",
+    "retiring.shy",
+    "taciturn"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f4-restrict-01",
+   "new": [
+    "check.restrain",
+    "constrain",
+    "curb",
+    "restrain"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f4-support-07",
+   "new": [
+    "bolster",
+    "buttress",
+    "justify",
+    "reinforce"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f4-support-13",
+   "new": [
+    "confirm",
+    "corroborate",
+    "establish",
+    "substantiate"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f4-thorough-02",
+   "new": [
+    "meticulous",
+    "painstaking",
+    "rigorous",
+    "thorough"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f4-thrive-01",
+   "new": [
+    "blossom",
+    "flourish",
+    "prosper",
+    "thrive"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f4-transient-02",
+   "new": [
+    "ephemeral",
+    "fleeting",
+    "transient",
+    "transitory"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f4-understand-03",
+   "new": [
+    "astute",
+    "keen.sharp",
+    "perceptive",
+    "shrewd"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f1-accept-01",
+   "new": [
+    "acknowledge",
+    "concede",
+    "grant.concede"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-advocate-01",
+   "new": [
+    "advocate",
+    "champion.support",
+    "espouse"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-active-20",
+   "new": [
+    "animated",
+    "spirited",
+    "vivacious"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-arduous-13",
+   "new": [
+    "arduous",
+    "daunting",
+    "strenuous"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-arrogant-16",
+   "new": [
+    "condescending",
+    "haughty",
+    "pompous"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-biased-01",
+   "new": [
+    "one-sided",
+    "partial.biased",
+    "tendentious"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-calm-07",
+   "new": [
+    "composed",
+    "poised",
+    "serene"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-clarify-39",
+   "new": [
+    "elucidate",
+    "explicate",
+    "illuminate"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-conspicuous-13",
+   "new": [
+    "apparent",
+    "evident",
+    "salient"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-contract-04",
+   "new": [
+    "abridge",
+    "compress",
+    "condense"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-credible-01",
+   "new": [
+    "credible",
+    "plausible",
+    "tenable"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-credible-15",
+   "new": [
+    "authoritative",
+    "sound.valid",
+    "valid"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-criticize-13",
+   "new": [
+    "deride",
+    "disparage",
+    "pan.criticize"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-decline-02",
+   "new": [
+    "falter",
+    "flounder",
+    "stagnate"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-wipeout-03",
+   "new": [
+    "eliminate",
+    "eradicate",
+    "obliterate"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-distinct-03",
+   "new": [
+    "disparate",
+    "distinct",
+    "divergent"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-discourage-03",
+   "new": [
+    "daunt",
+    "deter",
+    "discourage"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-misrepresent-02",
+   "new": [
+    "embellish",
+    "misrepresent",
+    "skew"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-downplay-01",
+   "new": [
+    "downplay",
+    "minimize",
+    "understate"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-dubious-02",
+   "new": [
+    "dubious",
+    "implausible",
+    "questionable"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-ostensible-04",
+   "new": [
+    "apparent.seeming",
+    "ostensible",
+    "purported"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-enthusiastic-01",
+   "new": [
+    "ardent",
+    "avid",
+    "enthusiastic"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-effortless-05",
+   "new": [
+    "effortless",
+    "manageable",
+    "painless"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-emphasize-03",
+   "new": [
+    "accentuate",
+    "emphasize",
+    "highlight"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-jeopardize-01",
+   "new": [
+    "compromise.endanger",
+    "imperil",
+    "jeopardize"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-indispensable-04",
+   "new": [
+    "indispensable",
+    "integral",
+    "vital"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-disseminate-01",
+   "new": [
+    "diffuse",
+    "disseminate",
+    "propagate"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-explicit-01",
+   "new": [
+    "explicit",
+    "express.explicit",
+    "unambiguous"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-malleable-07",
+   "new": [
+    "malleable",
+    "plastic.moldable",
+    "pliant"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-profligate-01",
+   "new": [
+    "extravagant",
+    "prodigal",
+    "profligate"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-evolutionary-01",
+   "new": [
+    "evolutionary",
+    "gradual",
+    "incremental"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-optimistic-03",
+   "new": [
+    "buoyant",
+    "optimistic",
+    "sanguine"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-detrimental-01",
+   "new": [
+    "adverse",
+    "deleterious",
+    "detrimental"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-noxious-02",
+   "new": [
+    "insidious",
+    "noxious",
+    "pernicious"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-important-07",
+   "new": [
+    "fundamental",
+    "profound",
+    "weighty"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-important-21",
+   "new": [
+    "critical.crucial",
+    "crucial",
+    "paramount"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-include-06",
+   "new": [
+    "chronicle",
+    "document",
+    "enumerate"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-inconsistent-10",
+   "new": [
+    "discordant",
+    "incompatible",
+    "incongruous"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-indifferent-04",
+   "new": [
+    "blase",
+    "indifferent",
+    "jaded"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-kind-15",
+   "new": [
+    "altruistic",
+    "benevolent",
+    "compassionate"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-misunderstand-10",
+   "new": [
+    "baffled",
+    "bemused",
+    "perplexed"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-mitigate-13",
+   "new": [
+    "allay",
+    "alleviate",
+    "assuage"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-obscure-09",
+   "new": [
+    "ambiguous",
+    "cryptic",
+    "enigmatic"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-omit-07",
+   "new": [
+    "excise",
+    "expunge",
+    "redact"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-persuade-03",
+   "new": [
+    "cogent",
+    "compelling",
+    "persuasive"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-polarize-12",
+   "new": [
+    "alienate",
+    "antagonize",
+    "estrange"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-practical-24",
+   "new": [
+    "feasible",
+    "pragmatic",
+    "viable"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f3-praise-21",
+   "new": [
+    "celebrate",
+    "hail.praise",
+    "laud"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-relinquish-01",
+   "new": [
+    "cede",
+    "forfeit",
+    "relinquish"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-robust-03",
+   "new": [
+    "hardy",
+    "robust",
+    "sturdy"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-serious-01",
+   "new": [
+    "grave.serious",
+    "sober",
+    "solemn"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-similar-01",
+   "new": [
+    "akin",
+    "analogous",
+    "similar"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-slight-01",
+   "new": [
+    "minuscule",
+    "minute.tiny",
+    "negligible"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-stubborn-04",
+   "new": [
+    "resolute",
+    "steadfast",
+    "tenacious"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-stubborn-14",
+   "new": [
+    "dogmatic",
+    "intransigent",
+    "obstinate"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-superficial-01",
+   "new": [
+    "cursory",
+    "perfunctory",
+    "superficial"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-superficial-14",
+   "new": [
+    "lax",
+    "negligent",
+    "remiss"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-superfluous-03",
+   "new": [
+    "dispensable",
+    "extraneous",
+    "superfluous"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-suppress-06",
+   "new": [
+    "smother",
+    "stifle",
+    "suppress"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-trivial-07",
+   "new": [
+    "inconsequential",
+    "insignificant",
+    "trivial"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-true-10",
+   "new": [
+    "accurate",
+    "faithful",
+    "precise"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-true-14",
+   "new": [
+    "authentic",
+    "bona-fide",
+    "genuine"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-vulnerable-29",
+   "new": [
+    "brittle",
+    "frail",
+    "precarious"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-worsen-05",
+   "new": [
+    "deteriorate",
+    "regress",
+    "relapse"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-abstract-01",
+   "new": [
+    "conceptual",
+    "theoretical"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-abstract-10",
+   "new": [
+    "abstract",
+    "overarching"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-abundant-01",
+   "new": [
+    "adequate",
+    "sufficient"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-abundant-10",
+   "new": [
+    "ample",
+    "numerous"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-accidental-20",
+   "new": [
+    "fortuitous",
+    "serendipitous"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-acquire-14",
+   "new": [
+    "derive",
+    "glean"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-acquire-31",
+   "new": [
+    "attain",
+    "realize.achieve"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-advocate-09",
+   "new": [
+    "advance.propose",
+    "propose"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-alter-01",
+   "new": [
+    "adapt",
+    "alter"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-alter-07",
+   "new": [
+    "amend",
+    "revise"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-arduous-02",
+   "new": [
+    "grueling",
+    "onerous"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-assert-16",
+   "new": [
+    "affirm",
+    "assert"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-avoid-14",
+   "new": [
+    "abstain",
+    "refrain"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-beneficial-13",
+   "new": [
+    "advantageous",
+    "beneficial"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-bestow-07",
+   "new": [
+    "bestow",
+    "confer"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-bold-04",
+   "new": [
+    "impetuous",
+    "rash"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-bold-11",
+   "new": [
+    "brazen",
+    "reckless"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-bold-14",
+   "new": [
+    "audacious",
+    "intrepid"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-calm-12",
+   "new": [
+    "placid",
+    "tranquil"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-capable-09",
+   "new": [
+    "adept",
+    "adroit"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-cause-09",
+   "new": [
+    "catalyst",
+    "impetus"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-cause-21",
+   "new": [
+    "influence",
+    "inform.shape"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-cause-38",
+   "new": [
+    "occasion.cause",
+    "prompt.cause"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-cause-47",
+   "new": [
+    "originate.arise",
+    "stem.arise"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-cause-62",
+   "new": [
+    "induce",
+    "provoke"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-cautious-17",
+   "new": [
+    "judicious",
+    "prudent"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-cautious-24",
+   "new": [
+    "circumspect",
+    "vigilant"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-certain-13",
+   "new": [
+    "incontrovertible",
+    "unequivocal"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-certain-19",
+   "new": [
+    "ensure",
+    "guarantee"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-chaotic-02",
+   "new": [
+    "disorganized",
+    "haphazard"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-chaotic-14",
+   "new": [
+    "chaotic",
+    "disorderly"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-clarify-32",
+   "new": [
+    "clarify",
+    "explain"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-combine-26",
+   "new": [
+    "coalesce",
+    "fuse"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-complex-22",
+   "new": [
+    "elaborate.detailed",
+    "intricate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-comply-02",
+   "new": [
+    "compliant",
+    "docile"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-conceal-05",
+   "new": [
+    "furtive",
+    "surreptitious"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-concise-19",
+   "new": [
+    "pithy",
+    "succinct"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-concrete-07",
+   "new": [
+    "concrete",
+    "empirical"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-conspicuous-01",
+   "new": [
+    "blatant",
+    "flagrant"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-conspicuous-39",
+   "new": [
+    "conspicuous",
+    "marked.noticeable"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-continue-24",
+   "new": [
+    "prolong",
+    "sustain"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-contract-18",
+   "new": [
+    "curtail",
+    "truncate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-conventional-01",
+   "new": [
+    "hackneyed",
+    "trite"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-conventional-07",
+   "new": [
+    "conventional",
+    "orthodox"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-conventional-29",
+   "new": [
+    "archaic",
+    "obsolete"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-corrupt-13",
+   "new": [
+    "reprehensible",
+    "unscrupulous"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-corrupt-24",
+   "new": [
+    "egregious",
+    "nefarious"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-create-07",
+   "new": [
+    "construct",
+    "formulate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-create-13",
+   "new": [
+    "generate",
+    "yield.produce"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-credulous-01",
+   "new": [
+    "credulous",
+    "unquestioning"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-criticize-01",
+   "new": [
+    "criticize",
+    "mock"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-criticize-40",
+   "new": [
+    "derisive",
+    "disdainful"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-decline-07",
+   "new": [
+    "languish",
+    "wither"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-tardy-03",
+   "new": [
+    "dilatory",
+    "tardy"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-defer-01",
+   "new": [
+    "defer",
+    "table.postpone"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-willful-02",
+   "new": [
+    "premeditated",
+    "willful"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-recount-01",
+   "new": [
+    "couch.phrase",
+    "recount"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-revoke-01",
+   "new": [
+    "rescind",
+    "revoke"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-contrast-01",
+   "new": [
+    "contrast",
+    "juxtapose"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-diverse-01",
+   "new": [
+    "diverse",
+    "eclectic"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-prevailing-02",
+   "new": [
+    "predominant",
+    "prevailing"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-potent-03",
+   "new": [
+    "efficacious",
+    "potent"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-embryonic-01",
+   "new": [
+    "embryonic",
+    "nascent"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-exaggerate-03",
+   "new": [
+    "exaggerate",
+    "overstate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-emphasize-04",
+   "new": [
+    "rehearse.repeat",
+    "reiterate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-inquisitive-02",
+   "new": [
+    "inquisitive",
+    "intrigued"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-rapt-02",
+   "new": [
+    "engrossed",
+    "rapt"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-entrenched-01",
+   "new": [
+    "deep-rooted",
+    "entrenched"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-seasoned-02",
+   "new": [
+    "seasoned",
+    "veteran"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-principled-02",
+   "new": [
+    "principled",
+    "virtuous"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-integrity-03",
+   "new": [
+    "integrity",
+    "probity"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-evaluate-01",
+   "new": [
+    "assess",
+    "evaluate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-evaluate-03",
+   "new": [
+    "contemplate",
+    "ponder"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-scrutinize-01",
+   "new": [
+    "peruse",
+    "scrutinize"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-undue-02",
+   "new": [
+    "inordinate",
+    "undue"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-broaden-01",
+   "new": [
+    "broaden",
+    "extend"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-enable-01",
+   "new": [
+    "enable",
+    "facilitate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-expedite-01",
+   "new": [
+    "catalyze",
+    "expedite"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-erroneous-02",
+   "new": [
+    "erroneous",
+    "spurious"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-waver-03",
+   "new": [
+    "vacillate",
+    "waver"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-subsequent-01",
+   "new": [
+    "consequent",
+    "subsequent"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-stingy-03",
+   "new": [
+    "parsimonious",
+    "stingy"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-thrifty-04",
+   "new": [
+    "frugal",
+    "thrifty"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-pessimistic-02",
+   "new": [
+    "melancholy",
+    "pessimistic"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-bleak-01",
+   "new": [
+    "bleak",
+    "dismal"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-nostalgic-01",
+   "new": [
+    "nostalgic",
+    "wistful"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-auspicious-03",
+   "new": [
+    "auspicious",
+    "propitious"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-obstruct-01",
+   "new": [
+    "obstruct",
+    "stymie"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-candid-06",
+   "new": [
+    "candid",
+    "transparent"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-antagonistic-02",
+   "new": [
+    "antagonistic",
+    "hostile"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-belligerent-02",
+   "new": [
+    "belligerent",
+    "pugnacious"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-impractical-01",
+   "new": [
+    "impractical",
+    "unworkable"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-benighted-02",
+   "new": [
+    "benighted",
+    "uninformed"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-implicit-01",
+   "new": [
+    "implicit",
+    "tacit"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-implicit-19",
+   "new": [
+    "connote",
+    "imply"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-important-03",
+   "new": [
+    "noteworthy",
+    "significant"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-improve-07",
+   "new": [
+    "rectify",
+    "redress"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-indifferent-18",
+   "new": [
+    "detached",
+    "nonchalant"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-inept-04",
+   "new": [
+    "neophyte",
+    "novice"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-inept-08",
+   "new": [
+    "incompetent",
+    "inept"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-inferior-02",
+   "new": [
+    "mediocre",
+    "subpar"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-inferior-14",
+   "new": [
+    "second-rate",
+    "shoddy"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-intense-01",
+   "new": [
+    "acute",
+    "severe"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-intense-13",
+   "new": [
+    "emphatic",
+    "vehement"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-intensify-01",
+   "new": [
+    "aggravate",
+    "exacerbate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-intensify-14",
+   "new": [
+    "amplify",
+    "intensify"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-irrelevant-01",
+   "new": [
+    "immaterial",
+    "irrelevant"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-learned-15",
+   "new": [
+    "erudite",
+    "scholarly"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-mitigate-01",
+   "new": [
+    "mitigate",
+    "temper.moderate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-moderate-02",
+   "new": [
+    "moderate",
+    "restrained"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-novel-07",
+   "new": [
+    "radical",
+    "unprecedented"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-objective-10",
+   "new": [
+    "disinterested",
+    "impartial"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-obscure-01",
+   "new": [
+    "nebulous",
+    "vague"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-obscure-13",
+   "new": [
+    "blur",
+    "obscure"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-orderly-07",
+   "new": [
+    "sequential",
+    "structured"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-orderly-13",
+   "new": [
+    "methodical",
+    "systematic"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-ornate-13",
+   "new": [
+    "opulent",
+    "ornate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-ornate-21",
+   "new": [
+    "elegant",
+    "exquisite"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-outspoken-01",
+   "new": [
+    "outspoken",
+    "vociferous"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-overlook-15",
+   "new": [
+    "discount.disregard",
+    "overlook"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-partial-19",
+   "new": [
+    "fragmentary",
+    "partial"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-passive-13",
+   "new": [
+    "lethargic",
+    "torpid"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-permit-19",
+   "new": [
+    "authorize",
+    "sanction.approve"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-persuade-14",
+   "new": [
+    "cajole",
+    "coax"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-playful-01",
+   "new": [
+    "facetious",
+    "flippant"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-playful-07",
+   "new": [
+    "sarcastic",
+    "sardonic"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-playful-18",
+   "new": [
+    "ironic",
+    "wry"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-playful-26",
+   "new": [
+    "humorous",
+    "playful"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-praise-14",
+   "new": [
+    "commend",
+    "praise"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-precede-01",
+   "new": [
+    "initial",
+    "preliminary"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-precede-17",
+   "new": [
+    "forerunner",
+    "harbinger"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-predictable-01",
+   "new": [
+    "foresee",
+    "predict"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-preserve-08",
+   "new": [
+    "maintain",
+    "preserve"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-prevent-01",
+   "new": [
+    "avert",
+    "forestall"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-protect-07",
+   "new": [
+    "protect",
+    "safeguard"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-pursue-01",
+   "new": [
+    "conduct.carry_out",
+    "pursue"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-pursue-10",
+   "new": [
+    "endeavor",
+    "objective.goal"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-pursue-20",
+   "new": [
+    "execute.carry_out",
+    "implement"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-rare-01",
+   "new": [
+    "episodic",
+    "intermittent"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-rare-07",
+   "new": [
+    "infrequent",
+    "sporadic"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-rational-01",
+   "new": [
+    "rational",
+    "sensible"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-reconcile-07",
+   "new": [
+    "appease",
+    "placate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-relevant-01",
+   "new": [
+    "applicable",
+    "relevant"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-relevant-08",
+   "new": [
+    "germane",
+    "pertinent"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-relevant-15",
+   "new": [
+    "apposite",
+    "apt"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-important-31",
+   "new": [
+    "consequential",
+    "pivotal"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-improve-13",
+   "new": [
+    "enhance",
+    "further"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-relinquish-11",
+   "new": [
+    "forgo",
+    "yield.give_way"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-restrict-07",
+   "new": [
+    "prohibit",
+    "proscribe"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-reveal-01",
+   "new": [
+    "disclose",
+    "unveil"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-robust-14",
+   "new": [
+    "endure",
+    "weather.withstand"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-scarce-01",
+   "new": [
+    "scarce",
+    "sparse"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-scarce-16",
+   "new": [
+    "dearth",
+    "paucity"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-separate-01",
+   "new": [
+    "isolate",
+    "separate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-separate-10",
+   "new": [
+    "segregate",
+    "sever"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-serious-22",
+   "new": [
+    "somber",
+    "staid"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-similar-19",
+   "new": [
+    "mimic",
+    "replicate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-simple-07",
+   "new": [
+    "facile",
+    "simplistic"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-skeptical-01",
+   "new": [
+    "leery",
+    "skeptical"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-slight-07",
+   "new": [
+    "marginal",
+    "slight"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-speculate-03",
+   "new": [
+    "assume",
+    "surmise"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-speculate-07",
+   "new": [
+    "hypothesize",
+    "speculate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-speculate-13",
+   "new": [
+    "conjecture",
+    "hypothesis"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-stable-01",
+   "new": [
+    "stable",
+    "static"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-stable-10",
+   "new": [
+    "immutable",
+    "invariable"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-subordinate-25",
+   "new": [
+    "servile",
+    "subservient"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-substantial-03",
+   "new": [
+    "colossal",
+    "substantial"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-subtle-13",
+   "new": [
+    "latent",
+    "subtle"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-superior-02",
+   "new": [
+    "exemplary",
+    "impeccable"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-superior-13",
+   "new": [
+    "exceed",
+    "surpass"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-support-01",
+   "new": [
+    "indicate",
+    "suggest"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-support-25",
+   "new": [
+    "evidence",
+    "ground.basis"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-suppress-15",
+   "new": [
+    "quell",
+    "subdue"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-surprising-05",
+   "new": [
+    "astonishing",
+    "unforeseen"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-timely-14",
+   "new": [
+    "expeditious",
+    "opportune"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-sudden-16",
+   "new": [
+    "instantaneous",
+    "meteoric"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-transient-15",
+   "new": [
+    "evanescent",
+    "momentary"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-typical-19",
+   "new": [
+    "embody",
+    "epitomize"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-uncertain-31",
+   "new": [
+    "provisional",
+    "tentative"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-understand-34",
+   "new": [
+    "identify",
+    "perceive"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-understand-42",
+   "new": [
+    "grasp",
+    "interpret"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-uniform-15",
+   "new": [
+    "homogeneous",
+    "monolithic"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-unknown-19",
+   "new": [
+    "anonymous",
+    "unsung"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-unusual-01",
+   "new": [
+    "curious.odd",
+    "peculiar"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-unusual-16",
+   "new": [
+    "eccentric",
+    "idiosyncratic"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-use-09",
+   "new": [
+    "deploy",
+    "exercise.use"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-vivid-20",
+   "new": [
+    "moving.touching",
+    "poignant"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-volatile-22",
+   "new": [
+    "capricious",
+    "mercurial"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-weaken-08",
+   "new": [
+    "challenge",
+    "question"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-weaken-13",
+   "new": [
+    "dispute",
+    "undermine"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-weaken-44",
+   "new": [
+    "negate",
+    "refute"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-widespread-09",
+   "new": [
+    "endemic",
+    "prevalent"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-widespread-13",
+   "new": [
+    "pervasive",
+    "ubiquitous"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-wordy-28",
+   "new": [
+    "loquacious",
+    "voluble"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-abandon-01",
+   "new": [
+    "renege"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-abandon-07",
+   "new": [
+    "forsake"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-abandon-13",
+   "new": [
+    "jettison"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-abstract-13",
+   "new": [
+    "intangible"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-abstract-19",
+   "new": [
+    "generalize"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-abundant-16",
+   "new": [
+    "myriad"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-abundant-22",
+   "new": [
+    "prolific"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-abundant-28",
+   "new": [
+    "plethora"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-accept-07",
+   "new": [
+    "heed"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-accept-13",
+   "new": [
+    "assent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-accept-19",
+   "new": [
+    "shoulder.bear"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-accept-25",
+   "new": [
+    "embrace"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-accept-31",
+   "new": [
+    "resigned"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-accidental-01",
+   "new": [
+    "impulsive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-address-01",
+   "new": [
+    "intercede"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-active-01",
+   "new": [
+    "vigorous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-accidental-08",
+   "new": [
+    "spontaneous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-accidental-14",
+   "new": [
+    "inadvertent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-acquire-02",
+   "new": [
+    "appropriate.take"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-acquire-19",
+   "new": [
+    "assume.take_on"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-acquire-25",
+   "new": [
+    "contract.catch"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-acquire-37",
+   "new": [
+    "procure"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-active-02",
+   "new": [
+    "dynamic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-active-08",
+   "new": [
+    "proactive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-address-03",
+   "new": [
+    "approach"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-address-09",
+   "new": [
+    "field.handle"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-address-15",
+   "new": [
+    "negotiate.navigate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-address-21",
+   "new": [
+    "intervene"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-address-27",
+   "new": [
+    "grapple"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-advocate-02",
+   "new": [
+    "proponent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-advocate-14",
+   "new": [
+    "tout"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-advocate-20",
+   "new": [
+    "lobby"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-advocate-26",
+   "new": [
+    "endorse"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-arrogant-04",
+   "new": [
+    "pretentious"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-arrogant-07",
+   "new": [
+    "presumptuous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-anxious-01",
+   "new": [
+    "apprehensive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-anxious-02",
+   "new": [
+    "trepidation"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-anxious-04",
+   "new": [
+    "distraught"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-arduous-01",
+   "new": [
+    "formidable"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-avoid-01",
+   "new": [
+    "shun"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-alter-13",
+   "new": [
+    "overhaul"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-alter-19",
+   "new": [
+    "revamp"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-anxious-05",
+   "new": [
+    "perturbed"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-arduous-22",
+   "new": [
+    "tax.strain"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-arrogant-19",
+   "new": [
+    "hubris"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-assert-01",
+   "new": [
+    "allege"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-assert-22",
+   "new": [
+    "proclaim"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-assert-28",
+   "new": [
+    "conviction.belief"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-avoid-08",
+   "new": [
+    "evade"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-avoid-19",
+   "new": [
+    "eschew"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-avoid-22",
+   "new": [
+    "circumvent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-beneficial-01",
+   "new": [
+    "benign"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-beneficial-07",
+   "new": [
+    "wholesome"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-beneficial-19",
+   "new": [
+    "constructive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-beneficial-25",
+   "new": [
+    "salutary"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-bestow-01",
+   "new": [
+    "allocate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-bestow-10",
+   "new": [
+    "tender.offer"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-bestow-22",
+   "new": [
+    "endow"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-biased-07",
+   "new": [
+    "partisan"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-biased-20",
+   "new": [
+    "subjective"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-biased-26",
+   "new": [
+    "bias"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-calm-01",
+   "new": [
+    "equanimity"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-capable-03",
+   "new": [
+    "proficient"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cause-02",
+   "new": [
+    "evoke"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cautious-01",
+   "new": [
+    "timid"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cautious-03",
+   "new": [
+    "wary"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-capable-15",
+   "new": [
+    "capacity"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-capable-21",
+   "new": [
+    "command.mastery"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-capable-27",
+   "new": [
+    "qualify.meet"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cause-03",
+   "new": [
+    "factor"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cause-15",
+   "new": [
+    "incite"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cause-32",
+   "new": [
+    "elicit"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cause-41",
+   "new": [
+    "render"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cautious-28",
+   "new": [
+    "caution"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-certain-01",
+   "new": [
+    "definitive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-certain-07",
+   "new": [
+    "inevitable"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-chaotic-01",
+   "new": [
+    "desultory"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-complex-01",
+   "new": [
+    "sophisticated"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-chaotic-17",
+   "new": [
+    "tumultuous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-clarify-01",
+   "new": [
+    "lucid"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-clarify-07",
+   "new": [
+    "context"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-clarify-13",
+   "new": [
+    "rationale"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-clarify-19",
+   "new": [
+    "account.explanation"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-clarify-25",
+   "new": [
+    "elaborate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-clarify-31",
+   "new": [
+    "articulate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-clarify-37",
+   "new": [
+    "delineate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-combine-01",
+   "new": [
+    "hybrid"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-combine-07",
+   "new": [
+    "attribute"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-combine-13",
+   "new": [
+    "integrate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-combine-19",
+   "new": [
+    "synthesize"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-combine-31",
+   "new": [
+    "amalgamate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-combine-37",
+   "new": [
+    "complement"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-combine-43",
+   "new": [
+    "credit.attribute"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-compete-01",
+   "new": [
+    "compete"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-compete-07",
+   "new": [
+    "rival"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-compete-13",
+   "new": [
+    "vie"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-complex-04",
+   "new": [
+    "convoluted"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-complex-10",
+   "new": [
+    "labyrinthine"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-complex-16",
+   "new": [
+    "complex"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-complex-28",
+   "new": [
+    "nuanced"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-complex-38",
+   "new": [
+    "complicate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-conceal-03",
+   "new": [
+    "clandestine"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-concise-01",
+   "new": [
+    "laconic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-concise-02",
+   "new": [
+    "terse"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-comply-08",
+   "new": [
+    "conform"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-comply-14",
+   "new": [
+    "abide"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-comply-20",
+   "new": [
+    "defer.yield"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-comply-26",
+   "new": [
+    "adhere"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-comprehensive-01",
+   "new": [
+    "extensive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-comprehensive-07",
+   "new": [
+    "holistic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-comprehensive-13",
+   "new": [
+    "inclusive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-comprehensive-19",
+   "new": [
+    "comprehensive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-comprehensive-25",
+   "new": [
+    "encyclopedic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-conceal-13",
+   "new": [
+    "covert"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-conceal-19",
+   "new": [
+    "veil"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-conceal-25",
+   "new": [
+    "harbor.hold"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-concise-13",
+   "new": [
+    "concise"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-concise-25",
+   "new": [
+    "abstract.summary"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-concise-31",
+   "new": [
+    "summarize"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-concrete-01",
+   "new": [
+    "specific"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-concrete-13",
+   "new": [
+    "tangible"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-consistent-01",
+   "new": [
+    "compatible"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-consistent-07",
+   "new": [
+    "consistent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-consistent-13",
+   "new": [
+    "congruent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-consistent-19",
+   "new": [
+    "coherent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-consistent-25",
+   "new": [
+    "harmonious"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-consistent-31",
+   "new": [
+    "consensus"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-consistent-37",
+   "new": [
+    "coincide"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-consistent-43",
+   "new": [
+    "concur"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-conspicuous-25",
+   "new": [
+    "prominent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-conspicuous-31",
+   "new": [
+    "palpable"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-conspicuous-43",
+   "new": [
+    "stark"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-conspicuous-49",
+   "new": [
+    "patent.obvious"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-continue-01",
+   "new": [
+    "perpetuate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-continue-07",
+   "new": [
+    "protract"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-continue-12",
+   "new": [
+    "linger"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-continue-18",
+   "new": [
+    "persist"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-continue-31",
+   "new": [
+    "mount.launch"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-continue-37",
+   "new": [
+    "persevere"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-contract-07",
+   "new": [
+    "contract.shrink"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-conventional-17",
+   "new": [
+    "stock.standard"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-conventional-23",
+   "new": [
+    "outmoded"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cooperate-01",
+   "new": [
+    "reciprocal"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cooperate-07",
+   "new": [
+    "mutual"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cooperate-12",
+   "new": [
+    "concerted"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cooperate-18",
+   "new": [
+    "collusion"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cooperate-23",
+   "new": [
+    "synergy"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cooperate-29",
+   "new": [
+    "collaborate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-corrupt-01",
+   "new": [
+    "venal"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-corrupt-07",
+   "new": [
+    "illicit"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-create-01",
+   "new": [
+    "concoct"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-create-22",
+   "new": [
+    "coin.invent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-create-28",
+   "new": [
+    "fashion.make"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-create-38",
+   "new": [
+    "originate.create"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-credible-07",
+   "new": [
+    "reputable"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f1-credulous-10",
+   "new": [
+    "gullible"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-credulous-14",
+   "new": [
+    "gullibility"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-criticize-07",
+   "new": [
+    "patronize"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-criticize-14",
+   "new": [
+    "ridicule"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f1-criticize-25",
+   "new": [
+    "condemn"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-criticize-30",
+   "new": [
+    "dismissive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-criticize-42",
+   "new": [
+    "contemptuous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cruel-01",
+   "new": [
+    "spiteful"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cruel-07",
+   "new": [
+    "callous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cruel-12",
+   "new": [
+    "ruthless"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cruel-13",
+   "new": [
+    "malicious"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cruel-21",
+   "new": [
+    "vindictive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-cruel-26",
+   "new": [
+    "malevolent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-deceptive-01",
+   "new": [
+    "evasive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-deceptive-05",
+   "new": [
+    "disingenuous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-deceptive-10",
+   "new": [
+    "hypocritical"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-deceptive-15",
+   "new": [
+    "duplicitous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-deceptive-21",
+   "new": [
+    "pretext"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f1-decline-13",
+   "new": [
+    "founder.fail"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-decrease-04",
+   "new": [
+    "abate"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f2-defiant-01",
+   "new": [
+    "defiant"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-breach-01",
+   "new": [
+    "breach"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-belated-01",
+   "new": [
+    "belated"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-procrastinate-01",
+   "new": [
+    "procrastinate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-deliberate-01",
+   "new": [
+    "deliberate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-purposeful-01",
+   "new": [
+    "purposeful"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-treatment-01",
+   "new": [
+    "treatment.handling"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-characterize-02",
+   "new": [
+    "characterize"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f2-recount-02",
+   "new": [
+    "outline"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-deprive-01",
+   "new": [
+    "deprive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-withhold-01",
+   "new": [
+    "withhold"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-divest-01",
+   "new": [
+    "divest"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-abolish-01",
+   "new": [
+    "abolish"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-disparity-01",
+   "new": [
+    "disparity"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-deterrent-01",
+   "new": [
+    "deterrent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-warn-01",
+   "new": [
+    "warn"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-distort-01",
+   "new": [
+    "distort"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-caricature-01",
+   "new": [
+    "caricature"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-falsify-01",
+   "new": [
+    "falsify"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-multifaceted-01",
+   "new": [
+    "multifaceted"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-heterogeneous-01",
+   "new": [
+    "heterogeneous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-autonomous-01",
+   "new": [
+    "autonomous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-dominant-02",
+   "new": [
+    "dominant"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-sovereign-01",
+   "new": [
+    "sovereign"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-hegemony-01",
+   "new": [
+    "hegemony"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-trivialize-01",
+   "new": [
+    "trivialize"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-untenable-01",
+   "new": [
+    "untenable"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-tedious-01",
+   "new": [
+    "tedious"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-mundane-01",
+   "new": [
+    "mundane"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-zealous-01",
+   "new": [
+    "zealous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-impassioned-01",
+   "new": [
+    "impassioned"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-fervent-01",
+   "new": [
+    "fervent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-bent-01",
+   "new": [
+    "bent.inclination"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-fruitful-01",
+   "new": [
+    "fruitful"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-efficacy-01",
+   "new": [
+    "efficacy"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-undemanding-01",
+   "new": [
+    "undemanding"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-incipient-01",
+   "new": [
+    "incipient"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-fledgling-01",
+   "new": [
+    "fledgling"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-budding-01",
+   "new": [
+    "budding"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-focus-01",
+   "new": [
+    "focus"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-underscore-01",
+   "new": [
+    "underscore"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-incentive-01",
+   "new": [
+    "incentive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-stimulate-01",
+   "new": [
+    "stimulate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-galvanize-01",
+   "new": [
+    "galvanize"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-invigorate-01",
+   "new": [
+    "invigorate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-jeopardize-03",
+   "new": [
+    "menace"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f2-chronic-01",
+   "new": [
+    "chronic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-perennial-01",
+   "new": [
+    "perennial"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-perpetual-01",
+   "new": [
+    "perpetual"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-perpetual-03",
+   "new": [
+    "indelible"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-abiding-01",
+   "new": [
+    "abiding"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-endure-01",
+   "new": [
+    "endure.last"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-curious-01",
+   "new": [
+    "curious"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-innate-01",
+   "new": [
+    "innate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-peculiar-01",
+   "new": [
+    "peculiar.distinctive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-requisite-01",
+   "new": [
+    "requisite"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-entail-01",
+   "new": [
+    "entail"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-legitimate-01",
+   "new": [
+    "legitimate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-reflective-01",
+   "new": [
+    "reflective"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-deem-01",
+   "new": [
+    "deem"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-deem-07",
+   "new": [
+    "entertain.consider"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-evaluate-04",
+   "new": [
+    "analyze"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-evaluate-07",
+   "new": [
+    "reflect.ponder"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-cogitate-01",
+   "new": [
+    "cogitate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-analyze-02",
+   "new": [
+    "appraise"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-ascertain-01",
+   "new": [
+    "ascertain"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-immoderate-01",
+   "new": [
+    "immoderate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-overwrought-01",
+   "new": [
+    "overwrought"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-exorbitant-01",
+   "new": [
+    "exorbitant"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-hyperbole-01",
+   "new": [
+    "hyperbole"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-permeate-02",
+   "new": [
+    "permeate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-denote-01",
+   "new": [
+    "denote"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-stipulate-01",
+   "new": [
+    "stipulate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-abet-01",
+   "new": [
+    "abet"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-streamline-01",
+   "new": [
+    "streamline"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-erroneous-04",
+   "new": [
+    "illusory"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-counterfeit-01",
+   "new": [
+    "counterfeit"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-fabricated-01",
+   "new": [
+    "fabricated"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-versatile-01",
+   "new": [
+    "versatile"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-ultimate-01",
+   "new": [
+    "ultimate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-aftermath-01",
+   "new": [
+    "aftermath"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-wake-01",
+   "new": [
+    "wake.aftermath"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-ensue-01",
+   "new": [
+    "ensue"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-culminate-01",
+   "new": [
+    "culminate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-congenial-01",
+   "new": [
+    "congenial"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-amicable-01",
+   "new": [
+    "amicable"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-economical-01",
+   "new": [
+    "economical"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-husband-01",
+   "new": [
+    "husband.conserve"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-counterproductive-01",
+   "new": [
+    "counterproductive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-lavish-01",
+   "new": [
+    "lavish"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-munificent-01",
+   "new": [
+    "munificent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-largesse-01",
+   "new": [
+    "largesse"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-glacial-01",
+   "new": [
+    "glacial"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-ominous-03",
+   "new": [
+    "ominous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-lament-01",
+   "new": [
+    "lament"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-exuberant-02",
+   "new": [
+    "exuberant"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f2-encumber-01",
+   "new": [
+    "encumber"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-inhibit-01",
+   "new": [
+    "inhibit"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-stem-01",
+   "new": [
+    "stem"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-interfere-01",
+   "new": [
+    "interfere"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-guileless-01",
+   "new": [
+    "guileless"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-ingenuous-01",
+   "new": [
+    "ingenuous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-candor-01",
+   "new": [
+    "candor"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-veracity-01",
+   "new": [
+    "veracity"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-defensive-01",
+   "new": [
+    "defensive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-animosity-01",
+   "new": [
+    "animosity"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-humble-02",
+   "new": [
+    "unpretentious"
+   ],
+   "items": 20
+  },
+  {
+   "frame": "f2-deferential-01",
+   "new": [
+    "deferential"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-idealistic-01",
+   "new": [
+    "idealistic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-utopian-01",
+   "new": [
+    "utopian"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-quixotic-01",
+   "new": [
+    "quixotic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-visionary-01",
+   "new": [
+    "visionary"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f2-benighted-04",
+   "new": [
+    "naive"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-implicit-10",
+   "new": [
+    "insinuate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-important-13",
+   "new": [
+    "pressing.urgent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-important-20",
+   "new": [
+    "momentous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-important-25",
+   "new": [
+    "seminal"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-improve-01",
+   "new": [
+    "refine"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-inconsistent-01",
+   "new": [
+    "inconsistent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-inconsistent-13",
+   "new": [
+    "discrepancy"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-inconsistent-19",
+   "new": [
+    "conflict"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-increase-01",
+   "new": [
+    "cumulative"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-increase-07",
+   "new": [
+    "accumulate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-increase-13",
+   "new": [
+    "wax.grow"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-increase-19",
+   "new": [
+    "augment"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-increase-25",
+   "new": [
+    "escalate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-increase-31",
+   "new": [
+    "proliferate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-indifferent-07",
+   "new": [
+    "cool.unenthusiastic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-inept-14",
+   "new": [
+    "callow"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-inept-20",
+   "new": [
+    "amateurish"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-intense-07",
+   "new": [
+    "strident"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-intense-23",
+   "new": [
+    "drastic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-intensify-07",
+   "new": [
+    "inflame"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-irrational-01",
+   "new": [
+    "arbitrary"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-irrational-07",
+   "new": [
+    "unfounded"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-irrational-13",
+   "new": [
+    "preposterous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-irrelevant-07",
+   "new": [
+    "inapplicable"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-irrelevant-13",
+   "new": [
+    "digression"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-irrelevant-19",
+   "new": [
+    "digress"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-kind-01",
+   "new": [
+    "sympathetic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-kind-07",
+   "new": [
+    "humane"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-learned-01",
+   "new": [
+    "pedantic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-learned-07",
+   "new": [
+    "cerebral"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-mild-01",
+   "new": [
+    "muted"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-mild-07",
+   "new": [
+    "temperate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-mild-13",
+   "new": [
+    "mellow"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-misunderstand-01",
+   "new": [
+    "obtuse"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-misunderstand-13",
+   "new": [
+    "misconception"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-misunderstand-19",
+   "new": [
+    "misinterpret"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-misunderstand-25",
+   "new": [
+    "misconstrue"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-mitigate-07",
+   "new": [
+    "mollify"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-moderate-07",
+   "new": [
+    "measured"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-novel-01",
+   "new": [
+    "novel"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-objective-01",
+   "new": [
+    "neutral"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-objective-13",
+   "new": [
+    "equitable"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-objective-19",
+   "new": [
+    "objective"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-obscure-03",
+   "new": [
+    "opaque"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-omit-01",
+   "new": [
+    "omit"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-orderly-01",
+   "new": [
+    "regimented"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-ornate-01",
+   "new": [
+    "ostentatious"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-ornate-07",
+   "new": [
+    "aesthetic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-outspoken-07",
+   "new": [
+    "forthright"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-overlook-01",
+   "new": [
+    "oblivious"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-overlook-07",
+   "new": [
+    "disregard"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-partial-01",
+   "new": [
+    "piecemeal"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-partial-07",
+   "new": [
+    "sketchy"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-partial-13",
+   "new": [
+    "selective"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-passive-01",
+   "new": [
+    "complacent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-passive-07",
+   "new": [
+    "sluggish"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-passive-19",
+   "new": [
+    "passive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-passive-25",
+   "new": [
+    "inert"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-permit-01",
+   "new": [
+    "lenient"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-permit-07",
+   "new": [
+    "condone"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-permit-13",
+   "new": [
+    "tolerate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-permit-25",
+   "new": [
+    "accommodate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-persuade-07",
+   "new": [
+    "coerce"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-playful-32",
+   "new": [
+    "whimsical"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-polarize-01",
+   "new": [
+    "divisive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-polarize-13",
+   "new": [
+    "polarize"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-practical-01",
+   "new": [
+    "expedient"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-practical-07",
+   "new": [
+    "practicable"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-practical-13",
+   "new": [
+    "utilitarian"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-oppose-01",
+   "new": [
+    "dissent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-oppose-07",
+   "new": [
+    "oppose"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-praise-01",
+   "new": [
+    "admire"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-praise-08",
+   "new": [
+    "appreciative"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-praise-30",
+   "new": [
+    "acclaim"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-praise-37",
+   "new": [
+    "reverent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-praise-46",
+   "new": [
+    "revere"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-precede-09",
+   "new": [
+    "precede"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-precede-23",
+   "new": [
+    "precedent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-precede-30",
+   "new": [
+    "precursor"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-predictable-09",
+   "new": [
+    "anticipate"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f3-predictable-15",
+   "new": [
+    "presage"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-predictable-21",
+   "new": [
+    "prescient"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-predictable-27",
+   "new": [
+    "foresight"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-preserve-01",
+   "new": [
+    "retain"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-preserve-15",
+   "new": [
+    "salvage"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-preserve-21",
+   "new": [
+    "conserve"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-prevent-08",
+   "new": [
+    "obviate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-prevent-09",
+   "new": [
+    "thwart"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-prevent-16",
+   "new": [
+    "preclude"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-protect-01",
+   "new": [
+    "insulate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-protect-14",
+   "new": [
+    "fortify"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-pursue-29",
+   "new": [
+    "aspire"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-rare-14",
+   "new": [
+    "isolated"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-rational-09",
+   "new": [
+    "reasoned"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-reconcile-01",
+   "new": [
+    "balance"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-reconcile-14",
+   "new": [
+    "mediate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-reconcile-20",
+   "new": [
+    "compromise.settle"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-reconcile-26",
+   "new": [
+    "resolve"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-reconcile-32",
+   "new": [
+    "conciliatory"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-reconcile-39",
+   "new": [
+    "reconcile"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-reject-01",
+   "new": [
+    "dismiss"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-reject-07",
+   "new": [
+    "rebuff"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-reject-13",
+   "new": [
+    "spurn"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-reject-19",
+   "new": [
+    "reject"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-reject-25",
+   "new": [
+    "disavow"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-reject-31",
+   "new": [
+    "repudiate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-implicit-22",
+   "new": [
+    "allude"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-implicit-26",
+   "new": [
+    "intimate.suggest"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-improve-17",
+   "new": [
+    "ameliorate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-include-07",
+   "new": [
+    "invoke"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-inconsistent-25",
+   "new": [
+    "controversial"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-inconsistent-31",
+   "new": [
+    "paradoxical"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-increase-37",
+   "new": [
+    "appreciate.rise"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f3-increase-46",
+   "new": [
+    "burgeon"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-relinquish-04",
+   "new": [
+    "renounce"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-reluctant-07",
+   "new": [
+    "grudging"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-renowned-07",
+   "new": [
+    "notorious"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-renowned-13",
+   "new": [
+    "standing.reputation"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-reserved-08",
+   "new": [
+    "aloof"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-restrict-03",
+   "new": [
+    "confine"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-restrict-13",
+   "new": [
+    "fetter"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-restrict-19",
+   "new": [
+    "stringent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-restrict-25",
+   "new": [
+    "draconian"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-restrict-31",
+   "new": [
+    "qualify.limit"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-restrict-34",
+   "new": [
+    "sanction.penalty"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-restrict-46",
+   "new": [
+    "impose"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-reveal-02",
+   "new": [
+    "divulge"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-reveal-07",
+   "new": [
+    "convey"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-reveal-13",
+   "new": [
+    "manifest"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-reveal-19",
+   "new": [
+    "overt"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-reveal-25",
+   "new": [
+    "betray.reveal"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-reveal-28",
+   "new": [
+    "air.express"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-robust-07",
+   "new": [
+    "impervious"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-scarce-04",
+   "new": [
+    "wanting.lacking"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-scarce-07",
+   "new": [
+    "lean.meager"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-scarce-10",
+   "new": [
+    "meager"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-separate-13",
+   "new": [
+    "fragment"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-separate-19",
+   "new": [
+    "rupture"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-serious-10",
+   "new": [
+    "dignified"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-serious-16",
+   "new": [
+    "earnest"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-serious-28",
+   "new": [
+    "gravity.seriousness"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-similar-07",
+   "new": [
+    "interchangeable"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-similar-13",
+   "new": [
+    "emulate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-simple-01",
+   "new": [
+    "rudimentary"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-simple-13",
+   "new": [
+    "simplify"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-skeptical-04",
+   "new": [
+    "incredulous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-skeptical-10",
+   "new": [
+    "cynical"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-skeptical-16",
+   "new": [
+    "skeptic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-skeptical-22",
+   "new": [
+    "reservation.doubt"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-slight-02",
+   "new": [
+    "nominal"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-slight-13",
+   "new": [
+    "modest.small"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-slight-16",
+   "new": [
+    "paltry"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-speculate-09",
+   "new": [
+    "presume"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-speculate-19",
+   "new": [
+    "premise"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-speculate-25",
+   "new": [
+    "venture.propose"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-stable-19",
+   "new": [
+    "stagnant"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-stop-01",
+   "new": [
+    "terminate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-stop-07",
+   "new": [
+    "arrest.halt"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-stop-13",
+   "new": [
+    "discontinue"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-stop-19",
+   "new": [
+    "desist"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-stubborn-16",
+   "new": [
+    "rigid"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-stubborn-22",
+   "new": [
+    "resolve.determination"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-subordinate-01",
+   "new": [
+    "reliant"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-subordinate-07",
+   "new": [
+    "ancillary"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-subordinate-13",
+   "new": [
+    "subordinate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-subordinate-19",
+   "new": [
+    "contingent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-substantial-07",
+   "new": [
+    "immense"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-substantial-10",
+   "new": [
+    "prodigious"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-substantial-16",
+   "new": [
+    "appreciable"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-subtle-07",
+   "new": [
+    "understated"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-subtle-16",
+   "new": [
+    "faint"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-subtle-19",
+   "new": [
+    "fine.subtle"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-subtle-25",
+   "new": [
+    "imperceptible"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-sudden-01",
+   "new": [
+    "abrupt"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-superfluous-07",
+   "new": [
+    "extrinsic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-superfluous-13",
+   "new": [
+    "redundant"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-superfluous-19",
+   "new": [
+    "gratuitous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-superior-17",
+   "new": [
+    "eclipse"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-superior-22",
+   "new": [
+    "transcend"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-support-09",
+   "new": [
+    "defend"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-support-14",
+   "new": [
+    "demonstrate"
+   ],
+   "items": 15
+  },
+  {
+   "frame": "f4-support-19",
+   "new": [
+    "vindicate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-suppress-07",
+   "new": [
+    "repress"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-suppress-20",
+   "new": [
+    "quash"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-suppress-26",
+   "new": [
+    "squelch"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-surprising-07",
+   "new": [
+    "startling"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-thorough-01",
+   "new": [
+    "diligent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-thorough-07",
+   "new": [
+    "scrupulous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-thrive-07",
+   "new": [
+    "affluent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-thrive-13",
+   "new": [
+    "lucrative"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-timely-01",
+   "new": [
+    "prompt"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-timely-07",
+   "new": [
+    "punctual"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-timely-19",
+   "new": [
+    "dispatch.speed"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-timely-25",
+   "new": [
+    "hasten"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-trivial-01",
+   "new": [
+    "incidental"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-trivial-13",
+   "new": [
+    "peripheral"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-trivial-19",
+   "new": [
+    "trifling"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-trivial-25",
+   "new": [
+    "frivolous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-true-01",
+   "new": [
+    "veritable"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-typical-01",
+   "new": [
+    "quintessential"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-typical-07",
+   "new": [
+    "paradigm"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-typical-13",
+   "new": [
+    "illustrate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-typical-20",
+   "new": [
+    "exemplify"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-uncertain-01",
+   "new": [
+    "ambivalent"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-uncertain-13",
+   "new": [
+    "hypothetical"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-uncertain-19",
+   "new": [
+    "inconclusive"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-uncertain-25",
+   "new": [
+    "equivocal"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-understand-09",
+   "new": [
+    "discriminating.discerning"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-understand-18",
+   "new": [
+    "insight"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-understand-24",
+   "new": [
+    "acumen"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-understand-36",
+   "new": [
+    "appreciate.recognize"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-understand-48",
+   "new": [
+    "discern"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-understand-49",
+   "new": [
+    "deduce"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-uniform-01",
+   "new": [
+    "monotonous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-uniform-08",
+   "new": [
+    "standardized"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-unknown-01",
+   "new": [
+    "uncelebrated"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-unknown-07",
+   "new": [
+    "obscure.unknown"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-unknown-25",
+   "new": [
+    "obscurity"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-unusual-19",
+   "new": [
+    "anomalous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-unusual-25",
+   "new": [
+    "anomaly"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-unusual-32",
+   "new": [
+    "deviate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-use-01",
+   "new": [
+    "utilize"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-use-10",
+   "new": [
+    "leverage"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-use-14",
+   "new": [
+    "exploit"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-use-20",
+   "new": [
+    "harness"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-waste-01",
+   "new": [
+    "underutilize"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-waste-07",
+   "new": [
+    "fritter"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-waste-13",
+   "new": [
+    "squander"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-vivid-01",
+   "new": [
+    "evocative"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-vivid-07",
+   "new": [
+    "vivid"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-vivid-14",
+   "new": [
+    "captivating"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-vivid-26",
+   "new": [
+    "arresting.striking"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-vivid-32",
+   "new": [
+    "riveting"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-volatile-01",
+   "new": [
+    "erratic"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-volatile-07",
+   "new": [
+    "volatile"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-volatile-26",
+   "new": [
+    "fluid.changing"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-volatile-32",
+   "new": [
+    "fluctuate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-vulnerable-01",
+   "new": [
+    "tenuous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-vulnerable-07",
+   "new": [
+    "vulnerable"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-vulnerable-32",
+   "new": [
+    "susceptible"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-vulnerable-38",
+   "new": [
+    "defenseless"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-vulnerable-44",
+   "new": [
+    "subject.expose"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-weaken-01",
+   "new": [
+    "query"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-weaken-25",
+   "new": [
+    "rebut"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-weaken-26",
+   "new": [
+    "dispel"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-weaken-30",
+   "new": [
+    "contradict"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-weaken-31",
+   "new": [
+    "discredit"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-widespread-01",
+   "new": [
+    "rampant"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-widespread-10",
+   "new": [
+    "commonplace"
+   ],
+   "items": 10
+  },
+  {
+   "frame": "f4-wordy-01",
+   "new": [
+    "verbose"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-wordy-07",
+   "new": [
+    "rambling"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-wordy-13",
+   "new": [
+    "garrulous"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-wordy-19",
+   "new": [
+    "prolix"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f4-worsen-07",
+   "new": [
+    "debilitate"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f5-bestow-04",
+   "new": [
+    "grant"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f5-deceptive-01",
+   "new": [
+    "devious"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f5-decrease-06",
+   "new": [
+    "erode"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f5-decrease-12",
+   "new": [
+    "subside"
+   ],
+   "items": 5
+  },
+  {
+   "frame": "f5-decrease-18",
+   "new": [
+    "dissipate"
+   ],
+   "items": 5
+  }
+ ]
+}

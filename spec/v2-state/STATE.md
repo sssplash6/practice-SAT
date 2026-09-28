@@ -1,4 +1,4 @@
-# v2 build state -- 2026-09-27T11:38:28+05:00
+# v2 build state -- 2026-09-28T04:58:30+05:00
 
 Written by `tools/v2_checkpoint.py`. Nothing below is lost on an interruption: finished
 agent results are in `runs/`, uncommitted worktree work in `wip/`.
@@ -10,6 +10,7 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/bank-lint` at f168c9f, 0 commits ahead of master
 - `v2/bank-lint-fix` at 033fa1a, 0 commits ahead of master
 - `v2/bank-supply` at 14cf283, 0 commits ahead of master
+- `v2/calm-shared` at 6ff230d, 1 commits ahead of master
 - `v2/cb-data` at 9346217, 0 commits ahead of master
 - `v2/cb-student-data` at fb3bc71, 1 commits ahead of master
 - `v2/f0` at dc9873f, 0 commits ahead of master
@@ -23,25 +24,32 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/habits` at 84845cf, 0 commits ahead of master
 - `v2/helper-handoff` at 9ed741d, 1 commits ahead of master
 - `v2/helper-integ` at e0aa1c6, 0 commits ahead of master
+- `v2/light` at 3792711, 0 commits ahead of master
 - `v2/localday` at 933ae67, 0 commits ahead of master
 - `v2/ops` at 991efbd, 0 commits ahead of master
-- `v2/perf` at fe2abdc, 5 commits ahead of master
+- `v2/ops-docs` at 5aa97e6, 0 commits ahead of master
+- `v2/page-asks` at 876a623, 3 commits ahead of master
+- `v2/perf` at 80676b3, 0 commits ahead of master
 - `v2/s1` at cf53af4, 1 commits ahead of master
 - `v2/s1-server` at cf53af4, 1 commits ahead of master
-- `v2/s10` at 85896a0, 2 commits ahead of master
+- `v2/s10` at 4611321, 2 commits ahead of master
 - `v2/s10-server` at 85896a0, 2 commits ahead of master
-- `v2/s3` at 6fad986, 13 commits ahead of master
-- `v2/s3-server` at 6fad986, 13 commits ahead of master
-- `v2/s4` at 7043670, 7 commits ahead of master
-- `v2/s4-server` at 7043670, 7 commits ahead of master
+- `v2/s3` at e7056b5, 24 commits ahead of master
+- `v2/s3-server` at 9c35fcc, 15 commits ahead of master
+- `v2/s4` at 5b22933, 0 commits ahead of master
+- `v2/s4-server` at 6259a3f, 1 commits ahead of master
+- `v2/s4q` at ef2ba16, 0 commits ahead of master
 - `v2/s5` at a1788ce, 8 commits ahead of master
-- `v2/s5-server` at a1788ce, 8 commits ahead of master
-- `v2/s6` at 057b7fc, 1 commits ahead of master
+- `v2/s5-server` at 52e6fd5, 9 commits ahead of master
+- `v2/s6` at 83f13d8, 3 commits ahead of master
 - `v2/s6-server` at 057b7fc, 1 commits ahead of master
+- `v2/s7` at 7799ff1, 7 commits ahead of master
 - `v2/s7-server` at b88934e, 3 commits ahead of master
 - `v2/s7s` at 14174d3, 0 commits ahead of master
+- `v2/s8` at 75177fa, 17 commits ahead of master
 - `v2/s8-server` at c39b162, 15 commits ahead of master
 - `v2/s8s` at 3be6463, 0 commits ahead of master
+- `v2/s9` at de60763, 16 commits ahead of master
 - `v2/s9-server` at bd5b705, 7 commits ahead of master
 - `v2/s9s` at c60500b, 0 commits ahead of master
 - `v2/satdates` at 141f815, 0 commits ahead of master
@@ -80,21 +88,49 @@ agent results are in `runs/`, uncommitted worktree work in `wip/`.
 - `v2/t-bank-systems_of_linear_equations` at 90dd059, 0 commits ahead of master
 - `v2/t-bank-two_variable_data` at 4469303, 0 commits ahead of master
 - `v2/words-content` at 4c67155, 0 commits ahead of master
-- `v2/words-fix` at 262d903, 1 commits ahead of master
-- `v2/words-gate` at 8306599, 1 commits ahead of master
-- `v2/words-gate-a` at 8306599, 1 commits ahead of master
-- `v2/words-gate-b` at 67436ae, 4 commits ahead of master
-- `v2/words-seed-sqlite` at b834a83, 1 commits ahead of master
+- `v2/words-fix` at 262d903, 0 commits ahead of master
+- `v2/words-gate` at 8306599, 0 commits ahead of master
+- `v2/words-gate-a` at 0d02fb0, 0 commits ahead of master
+- `v2/words-gate-b` at 2c6be93, 0 commits ahead of master
+- `v2/words-gate-final` at f7ccabc, 0 commits ahead of master
+- `v2/words-seed-sqlite` at b834a83, 0 commits ahead of master
 
 ## Worktrees
 
+- `/private/tmp/claude-501/-Users-workingmyassof-satbank/9030c288-6222-49fa-a25a-6e6802e22cd3/scratchpad/prev4` on `detached fa5e885`: 1 uncommitted (saved in wip/prev4/)
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/bank-lint-fix` on `v2/bank-lint-fix`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/calm-shared` on `v2/calm-shared`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/cb-student-data` on `v2/cb-student-data`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/gate-a` on `v2/words-gate-a`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/gate-b` on `v2/words-gate-b`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/helper-handoff` on `v2/helper-handoff`: 0 uncommitted
-- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/perf` on `v2/perf`: 1 uncommitted (saved in wip/perf/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/ops-docs` on `v2/ops-docs`: 2 uncommitted (saved in wip/ops-docs/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/page-asks` on `v2/page-asks`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/perf` on `v2/perf`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s3-server` on `v2/s3-server`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s3-ui` on `v2/s3`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s4-server` on `v2/s4-server`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/s5-server` on `v2/s5-server`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/t-bank-all` on `v2/t-bank-all`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-1` on `detached 368eec4`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-10` on `detached b3a1469`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-11` on `detached b3a1469`: 1 uncommitted (saved in wip/wf_52a6cb52-1a2-11/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-12` on `detached de60763`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-13` on `detached aba17af`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-14` on `detached a1077fd`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-15` on `detached a1077fd`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-16` on `detached 75177fa`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-2` on `detached 798ac2e`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-3` on `detached 798ac2e`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-4` on `detached 966913c`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-5` on `detached 8030fb0`: 1 uncommitted (saved in wip/wf_52a6cb52-1a2-5/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-6` on `detached 1634c39`: 1 uncommitted (saved in wip/wf_52a6cb52-1a2-6/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-7` on `detached 1634c39`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-8` on `detached 7799ff1`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_52a6cb52-1a2-9` on `detached c5476a0`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_9e14b5f3-2c4-1` on `detached 2d82df7`: 1 uncommitted (saved in wip/wf_9e14b5f3-2c4-1/)
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_9e14b5f3-2c4-2` on `detached dedddf9`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_9e14b5f3-2c4-3` on `detached dedddf9`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_9e14b5f3-2c4-4` on `detached ef2ba16`: 0 uncommitted
+- `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/wf_b6e107a2-030-1` on `detached 5b22933`: 1 uncommitted (saved in wip/wf_b6e107a2-030-1/)
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-fix` on `v2/words-fix`: 0 uncommitted
 - `/Users/workingmyassof/freshbot/satbank/.claude/worktrees/words-seed-sqlite` on `v2/words-seed-sqlite`: 0 uncommitted
 
@@ -110,6 +146,8 @@ Unfinished when saved: build S1 1/5, build S10 1/5, build S3 1/5, build S4 1/5, 
 
 ### wf_3f139f0b-f7c: 2 finished, 3 unfinished
 Unfinished when saved: build S3 2/3, build S4 2/3, build S5 1/3
+
+### wf_52a6cb52-1a2: 16 finished, 0 unfinished
 
 ### wf_609b5aa4-27c: 9 finished, 1 unfinished
 Unfinished when saved: fix check defects
@@ -131,6 +169,8 @@ Unfinished when saved: verdicts: model:helper-a, verdicts: model:helper-b
 ### wf_9d9dbc9e-5dc: 0 finished, 3 unfinished
 Unfinished when saved: build S3 1/3, build S4 1/3, build S5 1/3
 
+### wf_9e14b5f3-2c4: 4 finished, 0 unfinished
+
 ### wf_a586fef6-d3a: 6 finished, 0 unfinished
 
 ### wf_a748f713-34b: 0 finished, 3 unfinished
@@ -141,6 +181,8 @@ Unfinished when saved: fix F4 r2
 
 ### wf_aca7fe38-327: 12 finished, 6 unfinished
 Unfinished when saved: fix: area_and_volume, fix: linear_equations_in_one_variable, fix: linear_functions, recheck: equivalent_expressions, recheck: linear_inequalities, verify: right_triangles_and_trigonometry
+
+### wf_b6e107a2-030: 1 finished, 0 unfinished
 
 ### wf_bc31c955-f3c: 3 finished, 0 unfinished
 
@@ -154,13 +196,25 @@ Unfinished when saved: build F3 4/4, verify F2 r1
 ### wf_cafefb42-928: 11 finished, 2 unfinished
 Unfinished when saved: build F2 4/4, build F3 3/4
 
+### wf_cd6aa6f5-112: 0 finished, 1 unfinished
+Unfinished when saved: build S7 1/2
+
 ### wf_cffc089e-e95: 5 finished, 0 unfinished
+
+### wf_d0e024ee-51b: 0 finished, 1 unfinished
+Unfinished when saved: build S3 1/2
 
 ### wf_d6bde851-f95: 12 finished, 1 unfinished
 Unfinished when saved: verify F1 r2
 
 ### wf_d6beb6e4-66c: 3 finished, 1 unfinished
 Unfinished when saved: build F1 4/5
+
+### wf_d97948f9-1df: 11 finished, 3 unfinished
+Unfinished when saved: build S10 1/2, build S6 1/2, fix S4 r1
+
+### wf_da1586d8-318: 4 finished, 1 unfinished
+Unfinished when saved: fix: Today
 
 ### wf_e48cbd7a-4e4: 0 finished, 6 unfinished
 Unfinished when saved: build S1 1/5, build S10 1/5, build S3 1/5, build S4 1/5, build S5 1/5, build S6 1/5

@@ -447,6 +447,10 @@ Rules as above (own files only, own port and SATF_DB, commit per part, never pus
 is building this section's pages right now against the endpoints its spec lists, so build exactly those endpoints and shapes).
 Requirements: spec/v2-state/briefs/S3.md (its server items are yours). The branch already has the section's server work from the main
 build (13 commits): continue from it, do not redo it.
+ALSO, what the Today page builder found missing (spec/v2-state/followups/S3-pages.json, "fixer_report" and the unit reports):
+seconds_per_question must default to 95 until the learner has 20+ timed answers (one 2-second answer promised "450 questions");
+an endpoint for estimate.need at any target (e.g. GET /api/today/need?target=) so the target slider's "700 ≈ N of 44 right" moves;
+the pace card must not count a module finished with 0 answers as "ran out of time". The Today page is built and waiting on these.
 DONE: checks/s3.py passes and test_flow "all good". Tell the user "S3 server done".
 ```
 
@@ -480,6 +484,71 @@ is building this section's pages right now against the endpoints its spec lists,
 Requirements: spec/v2-state/briefs/S5.md (its server items are yours). The branch already has the section's server work from the main
 build (8 commits): continue from it, do not redo it.
 DONE: checks/s5.py passes and test_flow "all good". Tell the user "S5 server done".
+```
+
+## Task 27: the Words gate step (combine passes A and B, approve the agreed frames)
+
+```
+Passes A and B are done (v2/words-gate-a, v2/words-gate-b; 1,263 seed-0 items over the 827 frames in gate_plan.json).
+SETUP: git worktree add .claude/worktrees/gate -b v2/words-gate-final v2/words-gate, then git merge --no-ff v2/words-gate-a and
+v2/words-gate-b (their files differ: adjudications_a.json and adjudications_b.json).
+1. Combine both into server/words/adjudications.json in W1's format (spec/v2-upgrades/words.md, W1 "The review gate").
+2. A frame is servable only when EVERY judged item of it has two verdicts "one" from different "by" (model:helper-a and
+   model:helper-b) that BOTH name the key's option. Set that frame's reviewed {by: "model:helper-a+model:helper-b", date}.
+3. Any "more", "none", or two verdicts that disagree (or disagree with the key) blocks the frame: list those frames with both
+   verdicts in server/words/review-queue.json, for a person to resolve. Never mark a blocked frame reviewed.
+4. Run python3 tools/build_words.py (exit 0) and PYTHONPATH=. python3 server/checks/s9.py, and confirm with SATF_WORDS_UNREVIEWED
+   unset that Words now serves in-context items for the approved frames (box 3+ reviews stop falling back).
+5. Report: frames approved, frames blocked (and why, by kind), SAT senses with at least one approved frame, and the 26 senses no
+   frame covers (from gate_plan.json "uncovered").
+Commit on v2/words-gate-final. Tell the user "gate done" with those counts. The main agent merges it.
+```
+
+## Task 28 (light): two small backend leftovers from the Practice pages
+
+```
+SETUP: git worktree add .claude/worktrees/light -b v2/light master
+OWN ONLY: server/prefs.py, server/api_notes.py, server/checks/f4.py.
+1. prefs: add "hide_timer" (bool, default false) and "open_explanations" (bool, default false) to the one prefs registry
+   (spec/rebuild-v2.md §2.7, R11), with validation like the other keys (bad value: 422 naming the key). The Practice session
+   stores them in localStorage until these exist.
+2. notes: the question runner (web/assets/runner.js) and api_notes.py use different highlight style names, so every save got a
+   422 until the Practice page added a translation. Make POST /api/notes accept the runner's style names (map them to the stored
+   ones; keep accepting today's names), so the page's stopgap can be removed later.
+Add a case for each to server/checks/f4.py. DONE: f4.py and test_flow "all good". Tell the user "light done".
+```
+
+## Task 29 (light): an operator's README section, and ignore the generated cache
+
+```
+SETUP: git worktree add .claude/worktrees/ops-docs -b v2/ops-docs master
+OWN ONLY: README.md (add one new section, "Running and operating SAT Freshman"; do not rewrite the rest) and .gitignore.
+1. .gitignore: add server/cache/ (generated files such as twin_supply.json keep getting committed by accident); if any file under
+   server/cache/ is tracked, git rm --cached it.
+2. The README section, short and exact, from what is really in the repo (check each command runs):
+   - how to run the site locally (the uvicorn command, the port, PYTHONPATH), and the test commands (server/test_flow.py, every
+     server/checks/*.py, python3 -m satbank check, tools/build_words.py, tools/lint_bank.py);
+   - every environment variable the server reads (grep for os.environ / getenv: SATF_DB, SATF_ADMIN_TOKEN, SATF_REPORTS,
+     SATF_BACKUPS, SATF_WORDS_UNREVIEWED, SATF_GOOGLE_CLIENT_ID, mail/SMTP settings and any others) with what each does and its default;
+   - backups (tools/backup_db.py: daily/weekly rotation, --verify, --restore), the load test (tools/load_test.py) and the reports
+     admin (tools/reports.py);
+   - what launch still needs from outside: an SMTP server for email sign-in and a Desmos production key.
+DONE: every command in the section runs as written. Tell the user "docs done".
+```
+
+## Task 30: what the new pages need from the merged servers (Plan, Words, Compete)
+
+```
+The Today, Plan, Words and Compete pages are built and waiting for review. Their builders and checkers listed server gaps.
+READ: spec/v2-state/followups/S3-pages.json, S7-pages.json, S9-pages.json, S8-pages.json (each "verified_defects" and
+"fixer_report"). Do every item that belongs to a server file you own here, and list the rest.
+SETUP: git worktree add .claude/worktrees/page-asks -b v2/page-asks master
+OWN ONLY: server/plan.py, server/api_plan.py, server/checks/s7.py, server/words.py, server/api_words.py, server/checks/s9.py,
+server/compete.py, server/api_compete.py, server/checks/s8.py.
+Known asks: /api/plan/preview's per_date is empty (the exam-date picker needs each date's study days, weekly pace, tag and
+Recommended); words.daily_item is missing (Today's day's questions show only the two Math slots); anything else in those files.
+Do NOT change response shapes the pages already use; add fields. DONE: s7.py, s8.py, s9.py and test_flow pass. Tell the user
+"page asks done" with what you did and the list of items for other owners.
 ```
 
 ---

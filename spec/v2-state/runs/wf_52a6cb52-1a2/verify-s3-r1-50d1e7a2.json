@@ -1,0 +1,82 @@
+{
+ "label": "verify S3 r1",
+ "key": "v2:a4731ebf7da38293ca21719ae5a290964b0a1076f532ee49614d534150d1e7a2",
+ "result": {
+  "pass": false,
+  "evidence": "Worktree detached at v2/s3 (798ac2e); master is an ancestor. Server was on :8023 with server/v2.db and has been stopped. Working tree is clean and nothing was committed.\n\n1. Checks. `PYTHONPATH=. python3 server/checks/s3.py` prints \"S3 today checks passed\" (every item ok). `PYTHONPATH=. python3 server/test_flow.py` prints \"all good\".\n\n2. Page walks. Headless shell at 1280 and 390, with a new code and two seeded codes: a:v2verifseedp has a plan, a:v2verifseedn has none. Both seeded codes have 51 answers, 15 open mistakes, target 700, an SAT date and a Bluebook score (seed.py).\n   - No console or page errors on load, no 4xx/5xx responses, no leftover .skel, and scrollWidth equals the viewport width.\n   - Bare-dash leaves appear only in the calendar's sr-only data table.\n   - Desktop grid matches the upgraded layout: hero×12, next×8|mist×4, gain×8|exam×4, qotd×12, score×6|pace×6, study×8|chal×4, plan×8|words×4, tests×12.\n   - Phone order is exactly hero, next, qotd, gain, mist, exam, score, pace, study, plan, chal, words, tests. The last card's bottom (790) clears the tab bar (836).\n   - Check 15: all empty states for a new code: Add your name, Diagnostic link, Due 0 of 2, When is your SAT?, No score yet with doors, No tests yet with doors, Plan CTA.\n   - Check 16: the questions of the day sit side by side at 1280. At 390 they are MC / Grid-in tabs with .mk status marks.\n   - Check 20: SEC ticks within 1.1s. With timezone Pacific/Kiritimati, the hero date and the ringed calendar cell both show the local Sep 28.\n   - Check 21: the target sheet opens with Save disabled. 650 enables it. Save sends PUT /api/me {target:650} and the score head repaints. Esc sends no request.\n   - Target dialog upgrade: \"N of 44 right\" at 700, \"14 of 22\" at 650 and not at 560, pace tags on the quick chips.\n   - Check 22: the exam popover rows show study days, a tag and \"register by\". Esc returns focus to the trigger.\n   - Check 23: the first tap sends nothing, Check sends POST /api/qotd, and \"5 more like this\" opens /practice/session/?id=. The template had no choices_explained, and \"one of the first 1\" means no percentages, which is correct.\n   - Twin in the column: POST /api/drill, the new stem shows inside #qotd, no dialog.\n   - Check 24: after 2 answers, Up next reads \"Continue · 14:56 left · 2 answered\".\n   - Check 25: Try one now opens a question on the top trap's template.\n   - Check 26: a past day reads \"Fri, Sep 25 · 7m · 11 questions · 73% right\". A future plan day reads \"Planned · Practice · 24 q · 45 min\".\n   - Check 27: aborting /api/contest/daily gives only the challenge \"Couldn't load the challenge.\" with Retry. Aborting /api/today puts \"Couldn't load this.\" on next, mist, score, plan, exam, study, words and hero, and one Retry sends one GET and clears them all.\n   - T1.7: 5 Time chips plus the deduplicated Count chips, More options, no \"Count instead\". Count 22 clears the Time chips and the preview posts count 22 with no box.\n   - T1.5 degrades cleanly: F2/F5's preview has no first/blocks yet, so there is no question 1.\n   - T18.2: at 19:07 local (Asia/Kolkata) the hero reads \"One answer keeps your 6-day streak\" and its button opens a question. At 17:37 (Asia/Dubai) it is absent.\n   - T19.1: #next has real content 50 ms after DOMContentLoaded on a second visit.\n   - T19.2: PATCH forced to 500 reverts the skip and shows \"Not saved. Try again.\"\n   - T19.3: J J moves focus to mist-h, the third card.\n   - The R&W slots and question 1 degrade cleanly while Words and F5 are unmerged: only the math row shows.\n\n3. Sample of 15 requirements:\n   - (1) R30 Words tile placement: ok.\n   - (2) R30 #mist as the Review card, with count, top 5, Fix all and Try one now: ok.\n   - (3) R27 slots mcq+spr with no key fields in GET /api/qotd: ok.\n   - (4) Actions row after the answer (5 more, Harder · topic, Save, Share, Report): ok.\n   - (5) \"You're one of the first N\" and no percentages under 5 answers: ok.\n   - (6) Desktop layout: ok.\n   - (7) Phone order: ok.\n   - (8) Target sheet contents: ok, except the 500 chip is untagged (a 422, see defects).\n   - (9) Add-a-score sheet: sources, date max today, 200–800 step 10, POST /api/scores, \"Delete this score?\", \"Use N as your R&W\". Checked in code: ok.\n   - (10) Score empty state with \"Your estimate: 520\" from the plan's current: ok, but it contradicts itself (see defects).\n   - (11) Exam popover per-date rows: ok.\n   - (12) Countdown boxes: ok.\n   - (13) Rest-day pill \"Practice anyway\": FAIL.\n   - (14) Streak at risk after 18:00: ok.\n   - (15) T19 keys, cached paint, PATCH revert and swipe: swipe FAILS, the rest ok.\n   - The upgrade's replacement of the plan stat row target with pace status explains why 650 is not in #plan, which is correct.\n\n4. Scope and decisions. `git diff --stat master...HEAD` shows api_today.py, daily.py, checks/s3.py, test_flow.py (3 lines), server/cache/twin_supply.json and web/index.html. The server files come from the server half's earlier commits on this branch. The page commits (23ff84b..798ac2e) touch only web/index.html. The exception is checkpoint ca5c6e2, which also added the generated server/cache/twin_supply.json. Nothing contradicts spec/v2-decisions.md: no class, teacher, join or homework code, the only College Board link is registration, and the only extra hex colour is #FFFFFF.",
+  "defects": [
+   {
+    "where": "web/index.html:22 (`.td :where(*) { min-width: 0; }`)",
+    "what": "Question tables are invisible on Today. ui.css:1868 sizes `.q-table` with `width:0; min-width:100%`. The page's `.td :where(*)` rule has the same specificity, loads later, and resets min-width to 0. So every table in a question of the day, an in-column twin or Up next question 1 renders 0px wide, leaving a blank gap. Measured on today's grid-in question (\"The table shows the distribution…\"): the .q-table is 0×330, so the student has to answer without the data.",
+    "fix": "Exclude the question from the reset, e.g. `.td :where(*:not(.q-table))` or add `.td .q-table { min-width: 100%; }`. Re-check that the table is visible at 1280 and 390.",
+    "severity": "blocker"
+   },
+   {
+    "where": "web/index.html:800 (sessionBlock: `const start = (hasLead ? btn : pill)(...)`)",
+    "what": "Check 18 fails. On a plan rest day the rest lead counts as a lead, so \"Practice anyway · 45 min\" renders as a grey .btn (rgb(233,229,223)). The spec wants an orange pill: brief lines 193 and 2031, and check 18 \"an orange pill Practice anyway\". Reproduced with a plan whose today is off.",
+    "fix": "Use `pill` when the only lead is the rest-day lead (e.g. `(hasLead && !(pday && pday.kind === 'rest') ? btn : pill)`).",
+    "severity": "blocker"
+   },
+   {
+    "where": "web/index.html:1204-1216 (swipe) and the .qd-slot CSS",
+    "what": "T19.4 fails: a real 70px left touch swipe at 390 never switches to the Grid-in tab. The panel has default touch-action, so the browser takes the pan and fires pointercancel instead of pointerup. Measured events: pointerdown:touch, then pointercancel:touch. The same swipe with a synthetic pointerup does switch tabs.",
+    "fix": "Add `touch-action: pan-y` to the swipe panel (.qd-slot at <760px), or track touchstart/touchend instead of pointerup.",
+    "severity": "blocker"
+   },
+   {
+    "where": "web/index.html:1767 (exam trigger label)",
+    "what": "The exam trigger repeats the year for any date outside this year: \"Sat, Mar 6, 2027, 2027 ▾\". UI.date(...,'long') already includes the year, and the page appends it again.",
+    "fix": "Drop the appended year or append it only when UI.date leaves it out.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/index.html:1627-1629 and 1734-1738 (targetSheet quick-chip tags / previewFor)",
+    "what": "Opening the target sheet sends POST /api/plan/preview for quick targets below the learner's current score. Each returns 422 \"target must be at least current\", so the console shows 2 errors and the 500 chip has no Steady/Ambitious tag.",
+    "fix": "Skip previews for quick targets below `current`, or tag them without a request.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/index.html paintScore (empty state with added scores)",
+    "what": "With a Bluebook score added, the Score card says \"No score yet\" while its trend says \"1 scored sitting\" with the diamond. The empty state also repeats itself: two Module buttons (\"Module · 22 questions · 35 min\" and \"Module · 22 q · 35 min\") and two \"Add a score\" links. For a new code it shows zero evidence rows (\"Algebra 0 (thin)…\"). This goes against decision 7 (one fact once, hide zeros). The server's /api/today score is null despite the outside score.",
+    "fix": "Say one thing when only added scores exist, show each door once, and hide zero evidence rows. Ask the server half whether an added Math score should fill `score`.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/index.html examPop/targetSheet previewFor (days default '1111100') vs workload",
+    "what": "For a learner with no plan, the exam card says \"54 study days\" for Nov 21. The target sheet and exam popover say about 40 for the same date, because previewFor defaults days to Mon–Fri. That is two different numbers for one idea on the same screen.",
+    "fix": "Pass the same days/minutes the workload uses (or omit days so the server uses its default).",
+    "severity": "followup"
+   },
+   {
+    "where": "web/index.html paintNext/paintHero/paintStudy",
+    "what": "Decision 7 repetitions: a rest day shows \"Rest day in your plan\" in the header and \"Rest day\" in the lead; a new code shows \"No streak yet\" in both the hero and the Study card; the plan's week theme line shows a raw ISO date (\"Build · Math practice · Test 2026-09-27\").",
+    "fix": "Say each once. Format the theme's date (or ask S7 for a formatted theme).",
+    "severity": "followup"
+   },
+   {
+    "where": "web/index.html dayDetail (future day with no plan)",
+    "what": "A future day whose row has a `due` object with no check-ins shows only the date. The \"Nothing planned yet.\" fallback is skipped because `row.due` is truthy.",
+    "fix": "Treat a due with no checks/fading as empty.",
+    "severity": "followup"
+   },
+   {
+    "where": "web/index.html:1613 (targetSheet `takes` div)",
+    "what": "The \"What it takes\" block reuses the page root class `td`. That borrows `.td { padding-bottom:110px }` (a 110px gap in the sheet) and the min-width reset.",
+    "fix": "Give it its own class and scope the shared line/sub styles to it.",
+    "severity": "followup"
+   },
+   {
+    "where": "dialog ids (targetSheet in web/index.html, try-one from F3's UI.twinSheet)",
+    "what": "Checks 21 and 25 name dialog#targetSheet and dialog#tryOne. The dialogs work but carry no id, because UI.sheet takes no id.",
+    "fix": "Add a className/id hook through UI.sheet (F1) or set the id after creation, so the checks' selectors match.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/cache/twin_supply.json (commit ca5c6e2) and server/test_flow.py",
+    "what": "Checkpoint ca5c6e2 committed a generated cache file (S8's compete.py, guarded by bank hash) that is outside S3's files. test_flow.py also has a 3-line change from the server half (SEC-02 backdating and a tuple compare) and is not an S3-owned file.",
+    "fix": "Drop the cache file from the branch or have S8 gitignore server/cache/. Have the owner confirm the test_flow change.",
+    "severity": "followup"
+   }
+  ]
+ }
+}

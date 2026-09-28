@@ -1,0 +1,46 @@
+{
+ "label": "verify S5 r1",
+ "key": "v2:6e5f264b0624c2ccb99c11886b0c837d5e1a85a9d06d0093703a4fa77c5cb236",
+ "result": {
+  "pass": false,
+  "evidence": "Note: the user asked about S3, but this verifier run was set up to check S5 (Tests and the test window), so everything below is about S5 only.\n\nShort answer for S5: the server half is essentially done, and the pages have not been started (0%).\n\nBranch state: I ran `git switch --detach v2/s5`, which lands on a1788ce. `v2/s5-server` points at the same commit. Master has moved 4 commits ahead (155d352 and three before it), and all of them change only spec files, so the branch still needs a rebase. `git log master..v2/s5` shows 8 commits, and every one is server work. `git diff --stat master...HEAD` lists only server/api_tests.py (+2496), server/blueprint.py, server/checks/s5.py (+1155), server/papers.py (+777), server/test_flow.py (60 lines) and tools/moderate.py. None of the owned page files changed: web/tests/**, web/test/** and web/diagnostic/index.html were last touched by ebd3640 on 2026-09-23 (the v1 head swap). None of the 13 worktrees has uncommitted edits to them.\n\n1. Checks I ran.\n- `PYTHONPATH=. python3 server/checks/s5.py` passes and prints `ok  S5 server checks`: papers, discussion, board, hand-in, X13/X14/X16, overview, rows, shares, security (SEC-03, SEC-07) and X23.\n- It prints four waiting lines for hooks other sections still owe: F5 pressure drill, F4 progress.causes, S6 history rows, F2 shell resume.\n- `PYTHONPATH=. python3 server/test_flow.py` does NOT print \"all good\". All 20 `ok  S5` lines pass inside it. It then crashes in server/checks/s9.py:332 (test_daily_print_offline) with `OverflowError: Python int too large to convert to SQLite INTEGER` from server/words.py:186 (_review_row). That is Words code, not S5's, and words.py is identical on master (the s9 OverflowError already noted in master commit 5a70d90).\n\n2. Page walk. I served the pages on :8025 with SATF_DB=server/v2.db and loaded them headless at 1280 and 390, as a new learner (a:v2revacc99) and a seeded one (a:v2revseed77, with a finished module 1 and a live unbegun section). Pages: /tests/, /test/, /test/?s=nope, /diagnostic/ and /test/?s=<live id>.\n- No page errors. The only console error is the expected 404 on ?s=nope, and scrollWidth equals the viewport width everywhere.\n- The pages are still the v1 pages, so the page acceptance items fail:\n  - #20: /test/ with no ?s= stays on /test/ showing \"This test has no questions\", and the sessions count went 6 to 7 across the /test/, ?s=nope and /tests/ loads.\n  - #21: ?s=nope shows a sample question (\"Which expression is equivalent to x² + 3x − 40?\") instead of \"This test doesn't exist.\"\n  - #23: there is no 'Enter fullscreen and begin' or 'Begin without fullscreen'.\n  - #33: #kinds and #papers are absent.\n  - #34: 'No estimate yet' and 'Nothing sat yet' are absent.\n  - #39: .rule elements are present at 390.\n  - None of these strings appear anywhere in the owned files: 'Check your work', 'Entering your answer', 'Like test day', 'Pace guide', 'Export CSV', 'Save these as my defaults', UI.runner, UI.workspace.\n- Degrading cleanly where endpoints are missing does not apply, because no v2 page exists yet.\n\n3. Sample of 15 requirements.\n- Server items, checked over HTTP on :8025, all built as written:\n  - §3.4.8 #1: begun:false, 0 questions, question_count 22, seconds 2100, still 2100 three seconds later.\n  - #3: /answer before /begin returns 409; after /begin there are 22 questions and seconds starts falling (3149).\n  - #4: /cfg x1.5 gives 3150; after begin it returns 409.\n  - #7: a recursive key scan finds none of answer, rationale, reasons, key, seed.\n  - #8: 403 for another learner and 403 with no X-Learner header.\n  - #14: papers n 1..7 are 'Launch set', plus 'Week of Sep 21' for this ISO week.\n  - Upgrade acceptance 1: conditions is \"test_day\" and there is no pace key.\n  - Upgrade acceptance 2: x0.85 gives 422 {field: timing}; with conditions training it gives 1784 s after begin (1785 ±1).\n- Page items, all NOT built: #20, #21, #23, #33, #34 and #39 (details above), and upgrade acceptance 6 (the 'Like test day' chip).\n\n4. Scope and decisions. Nothing under the owned page paths changed. The 6 changed files are the server files the old S5 brief assigned to this task; master's 155d352 now gives them to helper Task 26, on v2/s5-server at the same commit. server/test_flow.py is not in any owned list, but its change only adds X-Learner headers because of SEC-03 ownership. A grep of the added lines finds no /class/, /join/, homework, teacher, assignment or class-code, so nothing contradicts v2-decisions.md.\n\nCleanup: I stopped the :8025 server. It had created an untracked server/cache/twin_supply.json (written by compete.py and not gitignored), which I removed. The worktree is clean and I committed nothing.",
+  "defects": [
+   {
+    "where": "web/tests/index.html, web/test/index.html, web/test/test.js, web/diagnostic/index.html (branch v2/s5)",
+    "what": "The S5 pages have not been built. v2/s5 has 8 commits, all server files; the owned page files are the v1 versions (last changed in ebd3640 on 2026-09-23). Every page acceptance item fails, including #20 to #39 of §3.4.8 and the upgrades' browser items. Observed: /test/ with no ?s= creates a row and does not redirect; ?s=nope shows sample questions; there is no lobby, #kinds, #papers or empty states; .rule is still used at 390.",
+    "fix": "Run the S5 pages build on v2/s5 (after rebasing onto master) against the endpoints in the brief's section 5. It should use UI.runner, UI.workspace and UI.review from F3, ui.css and kit.js from F1, and the shell from F2.",
+    "severity": "blocker"
+   },
+   {
+    "where": "server/words.py:186 (_review_row), reached from server/checks/s9.py:332 test_daily_print_offline",
+    "what": "test_flow.py does not print 'all good': it crashes with 'OverflowError: Python int too large to convert to SQLite INTEGER'. This is Words (S9) code, not S5's, and the same words.py is on master. All 20 S5 check groups pass before the crash.",
+    "fix": "Land the words fix (the v2/words-fix branch or helper task 18) on master, then rebase v2/s5 so that test_flow prints 'all good'.",
+    "severity": "blocker"
+   },
+   {
+    "where": "branch v2/s5",
+    "what": "Master has moved on: `git merge-base --is-ancestor master v2/s5` fails, because master is 4 spec-only commits ahead (155d352 and three before it) that turn S5 into a pages-only task.",
+    "fix": "Run `git rebase master` on v2/s5 before the pages build continues.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/api_tests.py, server/papers.py, server/blueprint.py, server/checks/s5.py, tools/moderate.py, server/test_flow.py",
+    "what": "The branch's whole diff is server files. Master's 155d352 now gives these to helper Task 26 (v2/s5-server, which is at the same commit a1788ce), and server/test_flow.py is outside every owned list (its 60-line change adds X-Learner headers because of SEC-03).",
+    "fix": "Merge the server half through v2/s5-server, and have the pages work sit on top of that same commit so the two branches don't diverge. The test_flow.py change needs the helper or the owner of test_flow to sign off.",
+    "severity": "followup"
+   },
+   {
+    "where": "server/compete.py:33 (SUPPLY_PATH = server/cache/twin_supply.json)",
+    "what": "Running the server leaves an untracked server/cache/ directory that .gitignore does not cover (Compete's code, not S5's).",
+    "fix": "Add server/cache/ to .gitignore (owner: Compete or the helper).",
+    "severity": "followup"
+   },
+   {
+    "where": "server/checks/s5.py waiting lines",
+    "what": "Four cross-section hooks have not landed yet: F5 POST /api/drill {pressure}; F4 progress.causes using pressure verdicts; S6 /api/history?all=1 through api_tests.sitting_row; F2 /api/shell resume item for a paused test.",
+    "fix": "The owning sections (F5, F4, S6, F2) need to land these; S5 already exposes its side of each hook.",
+    "severity": "followup"
+   }
+  ]
+ }
+}

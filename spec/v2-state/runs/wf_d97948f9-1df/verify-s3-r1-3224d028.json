@@ -1,0 +1,46 @@
+{
+ "label": "verify S3 r1",
+ "key": "v2:dc75803535c1ff65a8f30097e9672d8e0795eb9d797f69b6bd7e99be3224d028",
+ "result": {
+  "pass": false,
+  "evidence": "HOW MUCH OF S3 IS DONE: the server half is mostly built. The page half, which is S3's whole task now, has not been started.\n\nBranch state: v2/s3 is at 6fad986, 13 commits ahead of master, and v2/s3-server is at that same commit. The branch is not rebased: master has 3 newer commits, among them 155d352, which made S3 pages-only and gave the server half to the helper as Task 24. `git diff --stat master...HEAD` lists only server/api_today.py (+1712), server/daily.py (+503), server/checks/s3.py (+1121), server/test_flow.py (3 lines) and server/cache/twin_supply.json. `git diff master...HEAD -- web/` is empty, so web/index.html, the only file S3 owns, is still the 253-line v1 home page.\n\n1. Checks\n- `PYTHONPATH=. python3 server/checks/s3.py` prints \"S3 today checks passed\". Every item is ok except one skip: \"R&W seeds clamped for this check: words.daily_item's seeds overflow SQLite (S9, Task 18)\".\n- `PYTHONPATH=. python3 server/test_flow.py` fails. The error is `OverflowError: Python int too large to convert to SQLite INTEGER`, raised in server/words.py:186 `_review_row`, reached via checks/s9.py:332 `test_daily_print_offline`. I got the same failure on master (I detached to master, ran it, then detached back to v2/s3), so S3 did not cause it.\n\n2. Page walk\nI ran uvicorn on port 8023 with server/v2.db, which is gitignored, and stopped it afterwards. I walked the page with Playwright at 1280 and at 390, once as a new learner and once as a seeded one (a day's question answered, exam Nov 7, target 650).\n- All four runs had no console or page errors, and scrollWidth matched the viewport (1280 and 390).\n- Present: #next, #qotd, #exam, #score.\n- Absent: #mist, #study, #plan, #chal, #tests, dialog#targetSheet, dialog#tryOne, the calendar, and any [data-slot] tabs for the day's questions.\n- The server returns 2 day's-question slots (math:mcq, math:spr), but the page draws 1 stem.\n- #next has 0 size chips, and there are no SEC or DAYS count boxes.\n- None of the empty-state texts appear (Add your name, 0 of 3, When is your SAT?, No score yet, No tests yet).\n- The first tap on a day's-question option sends POST /api/qotd right away.\n- With /api/challenge aborted, there is no \"Couldn't load the challenge.\" and no Retry.\n- The branch server still accepts the v1 page: a POST to /api/qotd without a slot returns 200, and GET still returns the top-level question and mine.\n\n3. Sample of 15 requirements\nNone of the 15 is built on the page.\n- From §3.2.8: #15 empty states with actions, #16 the two day's questions side by side at 1280, tabs at 390 and the card order, #17 PLAN · 0 of 1 done, #18 Rest day and Practice anyway, #19 Resume and Continue to module 2, #20 the SEC and DAYS boxes and the local date, #21 Target ✎ and #targetSheet, #22 the exam-date popover, #23 first tap only selects, then percentages and misconception lines, #24 Continue · 2 of N, #25 Try one now and #tryOne, #26 calendar day detail, #27 per-card errors with Retry.\n- From today.md: T1 #7 (10 size chips in #next), the twin bottom sheet at 390, and insights #5 (#gain with 19 skill rows under TOP 6).\n- The branch's server items that checks/s3.py covers do pass, but those are now the helper's (Task 24).\n\n4. Ownership and decisions\n- The branch diff touches only server files, none of which S3 owns now. They are the earlier S3 commits, identical to v2/s3-server's.\n- The diff has nothing about classes, teachers, homework, assignments, /join/ or payment. Nothing in it contradicts spec/v2-decisions.md.\n- The worktree is clean after the walk, and I made no commits.",
+  "defects": [
+   {
+    "where": "web/index.html",
+    "what": "The v2 Today page has not been built: the file is unchanged from master and is still the v1 page. It has only #next, #qotd, #exam and #score. It has no #mist, #study, #plan, #chal or #tests cards, no dialog#targetSheet or #tryOne, no calendar, no size chips and no SEC/DAYS countdown, and it draws one day's question instead of the twins. §3.2.8 page items 15-27 and today.md's page items all fail.",
+    "fix": "Build Part 3.2 as pages-only in web/index.html, following the S3 brief on master, against the endpoints on v2/s3-server. Where an endpoint has not landed yet, the card should degrade quietly.",
+    "severity": "blocker"
+   },
+   {
+    "where": "web/index.html paintQotd (lines ~201-215)",
+    "what": "The first tap on a day's-question option sends POST /api/qotd straight away. §3.2.8 #23 and today.md T1 item 5 say the first tap only selects and Check sends the request.",
+    "fix": "Put a separate select step and a Check button in front of UI.question's onAnswer, as part of the Today page build.",
+    "severity": "blocker"
+   },
+   {
+    "where": "web/index.html",
+    "what": "There is no per-card error or Retry. With /api/challenge aborted, no challenge card shows \"Couldn't load the challenge.\" with Retry, and a failed /api/today has no shared Retry either (§3.2.8 #27).",
+    "fix": "Give each card an error state, and one Retry that repaints every card fed by /api/today, as part of the page build.",
+    "severity": "blocker"
+   },
+   {
+    "where": "server/words.py:186 _review_row (reached via server/checks/s9.py:332 test_daily_print_offline)",
+    "what": "test_flow.py does not print \"all good\": it stops with OverflowError: Python int too large to convert to SQLite INTEGER. The same failure happens on master, so it comes from S9 (words.daily_item seeds), not from S3.",
+    "fix": "S9/Task 18 should clamp or hash words.daily_item seeds into SQLite's 64-bit range. It is outside S3's files, so report it to the owner.",
+    "severity": "blocker"
+   },
+   {
+    "where": "branch v2/s3",
+    "what": "The branch is not rebased onto master, which has 3 newer commits including 155d352 (S3 made pages-only). So the S3.md and S3-check.md in the worktree are the older 'server and pages' versions.",
+    "fix": "The next builder should run git rebase master before starting the page work.",
+    "severity": "followup"
+   },
+   {
+    "where": "git diff --stat master...HEAD",
+    "what": "The branch diff touches only files S3 no longer owns: server/api_today.py, server/daily.py, server/checks/s3.py, server/test_flow.py and server/cache/twin_supply.json. They are the predecessor's commits, identical to v2/s3-server (helper Task 24).",
+    "fix": "Merge the server half once, through v2/s3-server. When v2/s3 is merged after it, those commits should already be in master, leaving only web/index.html as S3's delta.",
+    "severity": "followup"
+   }
+  ]
+ }
+}
