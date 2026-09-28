@@ -5,10 +5,11 @@ from __future__ import annotations
 import json
 import os
 import secrets
+import datetime as dt
 
 from fastapi.testclient import TestClient
 
-from server import db
+from server import db, progress
 from server.app import app
 
 
@@ -31,7 +32,24 @@ def main() -> None:
         assert call("GET", "/api/review/ledger")["open"] == 0
         assert call("GET", "/api/review/calibration")["matrix"]["sure"]["wrong"] == 0
         assert call("GET", "/api/review/trapsheet")["entries"] == []
+        assert call("GET", "/api/review/counts", params={"subject": "rw"})["open"] == 0
+        call("GET", "/api/review/counts", params={"subject": "science"}, want=422)
         print("ok  empty learner has complete Review summaries")
+
+        due_owner = "a:s10due" + secrets.token_hex(5)
+        old = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=4)).isoformat()
+        progress.record_trap(due_owner, {"key": "lin.evaluate", "seed": 71,
+                                         "topic": "linear_functions"}, "Added instead of multiplying", old)
+        due_h = {"X-Learner": due_owner}
+        day = call("GET", "/api/review/due", headers=due_h)
+        assert day["left"] == 1 and len(day["items"]) == 1
+        key = day["items"][0]["key"]
+        assert call("POST", "/api/review/snooze", headers=due_h, json={"key": key})["left"] == 0
+        assert call("GET", "/api/review/counts", headers=due_h)["due_left"] == 0
+        assert call("POST", "/api/review/snooze", headers=due_h,
+                    json={"key": key, "undo": True})["left"] == 1
+        call("POST", "/api/review/snooze", headers=due_h, json={"key": "due:wrong:key"}, want=404)
+        print("ok  one frozen due item snoozes and returns for the same learner")
 
         started = call("POST", "/api/drill", json={"templates": ["lin.evaluate"], "formats": ["mcq"], "count": 1})
         sid = started["id"]
@@ -53,6 +71,7 @@ def main() -> None:
         a = db.one("SELECT * FROM attempts WHERE learner=? ORDER BY id DESC LIMIT 1", owner)
         redo = call("GET", "/api/review/redo")
         assert redo["total"] == 1 and redo["items"][0]["id"] > 0 and redo["items"][0]["owed"] == 2
+        assert {"attempt", "level", "habit", "stuck", "blind", "pts", "rule"} <= redo["items"][0].keys()
         assert call("GET", "/api/review/counts")["open"] == 1
         history = call("GET", "/api/review/history")
         assert history["items"][0]["result"] == "wrong" and history["summary"]["answers"] == 1
@@ -60,6 +79,7 @@ def main() -> None:
         assert csv.status_code == 200 and q["key"] in csv.text
         item = call("GET", "/api/review/item", params=params)
         assert item["access"] == "reveal" and item["answer"] == q["answer"]
+        assert {"story", "path", "summary", "level", "budget_ms", "domain", "has_steps"} <= item.keys()
         assert call("GET", "/api/review/family", params={"template": q["key"]})["summary"]["wrong"] == 1
         print("ok  a miss appears in Redo, History, the CSV and question detail")
 
@@ -111,7 +131,25 @@ def main() -> None:
         call("POST", f"/api/session/{sid}/void", headers=other, want=403)
         print("ok  discard and restore adjust History and require ownership")
 
+        next_run = call("POST", "/api/drill", json={"templates": ["lin.evaluate"],
+                                                    "formats": ["mcq"], "count": 1})
+        next_q = json.loads(db.one("SELECT questions FROM sessions WHERE id=?", next_run["id"])["questions"])[0]
+        call("POST", f"/api/drill/{next_run['id']}/answer",
+             json={"question_id": next_q["id"], "answer": "ABCD".index(next_q["answer"]), "ms": 180000})
+        slow = call("GET", "/api/review/history", params={"result": "slow"})
+        assert slow["total"] == 1 and slow["summary"]["slow"]["over_ms"] > 0
+        first_page = call("GET", "/api/review/history", params={"limit": 1})
+        second_page = call("GET", "/api/review/history", params={"limit": 1, "cursor": first_page["next"]})
+        assert first_page["items"][0]["id"] > second_page["items"][0]["id"]
+        assert call("GET", "/api/review/history")["summary"]["answers"] == call("GET", "/api/review/counts")["answers"]
+        print("ok  slow answers, cursor pages and Review counts agree")
+
     print("S10 checks passed")
+
+
+def check(client: TestClient) -> None:
+    """Entry point used by server/test_flow.py's check discovery."""
+    main()
 
 
 if __name__ == "__main__":

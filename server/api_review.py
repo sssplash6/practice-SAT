@@ -407,16 +407,24 @@ def snooze(body: Snooze, subject: str = "math", x_learner: str | None = Header(d
 def redo(subject: str = "math", topics: str | None = None, difficulty: str | None = None,
          fmt: str | None = None, kind: str | None = None, status: str | None = None,
          q: str | None = None, sort: str = "recent", group: str = "topic", cause: str | None = None,
-         lens: str | None = None, x_learner: str | None = Header(default=None)) -> dict:
+         lens: str | None = None, levels: str | None = None, conf: str | None = None,
+         habit: str | None = None, cursor: int | None = None,
+         limit: int = Query(default=50, ge=1, le=100),
+         x_learner: str | None = Header(default=None)) -> dict:
     learner, subject = learner_of(x_learner), _subject(subject)
-    if sort not in ("recent", "hits", "near", "oldest", "topic", "stake", "blind"):
+    if sort not in ("recent", "hits", "near", "oldest", "topic", "stake", "worth", "blind"):
         bad("sort")
-    if group not in ("topic", "domain", "norm"):
+    if group not in ("topic", "domain", "norm", "habit"):
         bad("group")
+    if lens not in (None, "blind", "new", "stuck"):
+        bad("lens")
     names = review.math_topics(subject)
     misses = review.latest_misses(learner, subject)
     pts = review.pts_fn(learner, subject)
     blind = review.blind(learner, subject)
+    rules = review.rules(learner)
+    per_test = review.per_test(learner)
+    level = review.level_fn()
     sittings = {}
     items = []
     for t in progress.open_traps(learner):
@@ -424,6 +432,10 @@ def redo(subject: str = "math", topics: str | None = None, difficulty: str | Non
             continue
         miss = misses.get((t["template"], t["norm"]))
         source = review.source_of(miss["session"]) if miss else t["source"] or "outside"
+        lv, rough = level(t["template"], miss["difficulty"] if miss else "medium")
+        h = review.habit_of(t["norm"])
+        blind_info = blind.get(t["id"])
+        cause_name = (miss["diag"] or miss["miss_kind"] or "trap") if miss else "trap"
         entry = {**t, "label": review.trap_label(t), "kind": review.trap_kind(t, miss),
                  "skill": review.cap(review.skill_of(t["template"], t["seed"])),
                  "name": names[t["topic"]].name, "domain": names[t["topic"]].domain,
@@ -432,38 +444,65 @@ def redo(subject: str = "math", topics: str | None = None, difficulty: str | Non
                  "fmt": miss["fmt"] if miss else None, "source": source,
                  "given": miss["given"] if miss else None,
                  "given_label": review.given_label(miss["fmt"], miss["given"]) if miss else None,
-                 "elsewhere": review.dodged_elsewhere(learner, t["template"], t["norm"])
-                 if t["norm"] and t["norm"] != "~unsure" else 0,
+                 "elsewhere": [{"template": other, "skill": review.skill_of(other),
+                                "topic": known(other)} for other in progress.related(t["norm"])
+                               if other != t["template"]] if t["norm"] not in progress.UNNAMED else [],
                  "pts": pts(t["template"], t["norm"], t["topic"]),
                  "new": review.is_new(miss, sittings), "blind": t["id"] in blind,
-                 "cause": miss["diag"] or miss["miss_kind"] if miss else None}
+                 "blind_assumed": bool(blind_info and blind_info["assumed"]),
+                 "cause": cause_name, "conf": miss["conf"] if miss else None,
+                 "attempt": miss["id"] if miss else None,
+                 "stuck": review.stuck(t), "habit": h, "level": lv, "level_rough": rough,
+                 "dodged_elsewhere": review.dodged_elsewhere(learner, t["template"], t["norm"])
+                 if t["norm"] and t["norm"] != "~unsure" else 0,
+                 "rule": rules.get(t["template"])}
         if _csv(kind) and entry["kind"] not in _csv(kind):
             continue
-        if _csv(status) and entry["status"] not in _csv(status):
+        if _csv(status) and entry["status"] not in _csv(status) and not ("new" in _csv(status) and entry["new"]):
             continue
         if lens == "new" and not entry["new"]:
             continue
         if lens == "blind" and not entry["blind"]:
             continue
+        if lens == "stuck" and not entry["stuck"]:
+            continue
         if cause and entry["cause"] != cause:
+            continue
+        if conf and (entry["conf"] or "untagged") not in _csv(conf):
+            continue
+        if habit and (h or {}).get("id") not in _csv(habit):
+            continue
+        if _csv(levels) and str(lv) not in _csv(levels):
             continue
         if _matches(entry, topics=topics, difficulty=difficulty, fmt=fmt, q=q, at="last"):
             items.append(entry)
     orders = {"recent": lambda x: x["last"], "oldest": lambda x: x["last"],
               "hits": lambda x: x["hits"], "near": lambda x: -x["owed"],
               "topic": lambda x: x["topic"], "stake": lambda x: x["pts"] or 0,
+              "worth": lambda x: x["pts"] or 0,
               "blind": lambda x: int(x["blind"])}
     items.sort(key=orders[sort], reverse=sort not in ("oldest", "topic"))
     groups: dict[str, dict] = {}
     for item in items:
-        key = item["topic"] if group == "topic" else item["domain"] if group == "domain" else item["norm"]
+        key = (item["topic"] if group == "topic" else item["domain"] if group == "domain"
+               else (item["habit"] or {}).get("id", "other") if group == "habit" else item["norm"])
         g = groups.setdefault(key, {"key": key, "name": item["name"] if group == "topic" else
-                                    item["domain"] if group == "domain" else item["label"],
-                                    "domain": item["domain"], "count": 0, "questions": 0})
+                                    item["domain"] if group == "domain" else
+                                    (item["habit"] or {}).get("name", "Other") if group == "habit" else item["label"],
+                                    "domain": item["domain"], "count": 0, "questions": 0,
+                                    "pts": 0, "per_test": per_test.get(item["topic"]),
+                                    "tell": (item["habit"] or {}).get("tell") if group == "habit" else None})
         g["count"] += 1
         g["questions"] += item["owed"]
-    return {"subject": subject, "items": items[:500], "groups": list(groups.values()),
-            "total": len(items), "questions": sum(i["owed"] for i in items)}
+        g["pts"] += item["pts"] or 0
+    all_items = items[:500]
+    if cursor is not None:
+        offset = next((i + 1 for i, x in enumerate(all_items) if x["id"] == cursor), 0)
+        all_items = all_items[offset:]
+    page = all_items[:limit]
+    return {"subject": subject, "items": page, "groups": list(groups.values()),
+            "total": len(items), "questions": sum(i["owed"] for i in items),
+            "next": page[-1]["id"] if len(all_items) > limit and page else None}
 
 
 @lru_cache(maxsize=4096)
@@ -504,11 +543,19 @@ def marked(subject: str = "math", topics: str | None = None, difficulty: str | N
            limit: int = Query(default=50, ge=1, le=100), x_learner: str | None = Header(default=None)) -> dict:
     learner, subject = learner_of(x_learner), _subject(subject)
     names = review.math_topics(subject)
+    budget = review.budget_fn()
     rows = []
     for f in review.visible_flags(learner, subject):
         session = db.one("SELECT * FROM sessions WHERE id=?", f["session"])
         a = f["attempt"]
-        item = {**_meta(f["template"], f["seed"], f["topic"], names),
+        state = (json.loads(session["qstate"] or "{}").get(f["qid"]) or {}) if session else {}
+        meta = _meta(f["template"], f["seed"], f["topic"], names)
+        card = _card(f["template"], f["seed"]) or {}
+        first = state.get("first") if isinstance(state, dict) else None
+        final = a["given"] if a else None
+        start = dt.datetime.fromisoformat(session["started"]) if session else None
+        flagged_at_ms = max(0, round((dt.datetime.fromisoformat(f["at"]) - start).total_seconds() * 1000)) if start else None
+        item = {**meta,
                 "id": f["rowid"] if "rowid" in f else None,
                 "session": f["session"], "qid": f["qid"], "at": f["at"],
                 "during": f["during"], "session_kind": session["kind"] if session else None,
@@ -516,8 +563,12 @@ def marked(subject: str = "math", topics: str | None = None, difficulty: str | N
                 "n": review.number_of(session, f["qid"])[1],
                 "answered": bool(a), "correct": f["correct"],
                 "given_label": review.given_label(a["fmt"], a["given"]) if a else None,
-                "answer": _card(f["template"], f["seed"]).get("answer") if a and _card(f["template"], f["seed"]) else None,
+                "answer": card.get("answer") if deps.access(learner, f["template"], f["seed"]) == "reveal" else None,
                 "ms": a["ms"] if a else None,
+                "visits": state.get("visits", 0) if isinstance(state, dict) else 0,
+                "first": first, "changes": int(first not in (None, "") and str(first) != str(final)),
+                "budget_ms": budget(f["template"], meta["difficulty"] or "medium"),
+                "flagged_at_ms": flagged_at_ms,
                 "source": review.source_of(f["session"], session)}
         rows.append(item)
     # flags have no integer primary key; assign their SQLite rowid for stable cursor pagination.
@@ -586,9 +637,19 @@ def fixed(subject: str = "math", topics: str | None = None, difficulty: str | No
         miss = misses.get((t["template"], t["norm"]))
         opened = dt.datetime.fromisoformat(t["opened"])
         closed = dt.datetime.fromisoformat(t["closed"])
+        proven = {r["difficulty"] for r in db.rows(
+            "SELECT DISTINCT difficulty FROM attempts WHERE learner=? AND template=? AND correct=1"
+            " AND repeat=0 AND flagged=0 AND guess=0 AND hints=0 AND void IS NULL AND disputed=0"
+            " AND at>=? AND at<=?", learner, t["template"], t["opened"], t["closed"])}
+        tiers = ("easy", "medium", "hard")
+        points = db.one("SELECT pts FROM trap_log WHERE learner=? AND template=? AND norm=?"
+                        " AND event='fixed' ORDER BY id DESC LIMIT 1", learner, t["template"], t["norm"])
         rows.append({**dict(t), **_meta(t["template"], t["seed"] or 0, t["topic"], names),
                      "label": review.trap_label(t), "kind": review.trap_kind(t, miss),
                      "at": t["closed"], "days_to_fix": max(0, (closed-opened).days),
+                     "held": t["checks"], "tiers_proven": [x for x in tiers if x in proven],
+                     "tiers_available": [x for x in tiers if x in drill._tiers_of(t["template"])],
+                     "pts": points["pts"] if points else None,
                      "source": review.source_of(miss["session"]) if miss else t["source"]})
     out = _filtered_page(rows, topics=topics, difficulty=difficulty, fmt=fmt, source=source,
                          since=since, until=until, q=q, cursor=cursor, limit=limit)
@@ -602,6 +663,7 @@ def _history_rows(learner: str, subject: str) -> list[dict]:
     names = review.math_topics(subject)
     where, args = review.in_subject("a.topic", subject)
     sessions = {}
+    budget = review.budget_fn()
     flagged = {(f["session"], f["qid"]) for f in db.rows(
         "SELECT session,qid FROM flags WHERE learner=?", learner)}
     out = []
@@ -613,36 +675,54 @@ def _history_rows(learner: str, subject: str) -> list[dict]:
         session = sessions[sid]
         if session and session["kind"] == "spot":
             continue
-        cfg = json.loads(session["cfg"] or "{}") if session and session["cfg"] else {}
-        if cfg.get("inline"):
-            continue
         meta = _meta(a["template"], a["seed"], a["topic"], names)
         card = _card(a["template"], a["seed"]) or {}
+        ms = a["ms"] if a["ms"] is not None else a["sms"]
+        budget_ms = budget(a["template"], a["difficulty"])
+        slow = bool(a["correct"] and ms is not None and ms > budget_ms)
+        rushed = bool(not a["correct"] and ms is not None and ms < budget_ms * .25)
+        state = (json.loads(session["qstate"] or "{}").get(a["qid"]) or {}) if session and a["qid"] else {}
+        changed = bool(isinstance(state, dict) and state.get("first") not in (None, "")
+                       and str(state["first"]) != str(a["given"]))
         result = "repeat" if a["repeat"] else "repaired" if a["repair"] else "right" if a["correct"] else "wrong"
         if a["void"]:
             result = "discarded"
-        tries = db.rows("SELECT correct FROM tries WHERE learner=? AND session=? AND qid=?",
+        tries = db.rows("SELECT given, correct, ms, at FROM tries WHERE learner=? AND session=? AND qid=?",
                         learner, sid, a["qid"]) if sid and a["qid"] else []
-        if len(tries) > 1 and len({r["correct"] for r in tries}) > 1 and result != "discarded":
+        if not a["void"] and not a["correct"] and any(r["correct"] for r in tries):
             result = "mixed"
+        elif not a["void"] and not a["repeat"] and not a["repair"]:
+            if slow:
+                result = "slow"
+            elif rushed:
+                result = "rushed"
+            elif changed:
+                result = "changed"
         out.append({**meta, "id": a["id"], "at": a["at"], "correct": bool(a["correct"]),
                     "result": result, "given": a["given"], "given_label": review.given_label(a["fmt"], a["given"]),
                     "answer": card.get("answer"), "mistake": review.cap(a["reason"]),
-                    "ms": a["ms"] or a["sms"], "source": review.source_of(sid, session),
+                    "ms": ms, "budget_ms": budget_ms, "slow": slow, "rushed": rushed,
+                    "changed": changed, "conf": a["conf"],
+                    "source": review.source_of(sid, session),
                     "session": sid, "qid": a["qid"], "flagged": (sid, a["qid"]) in flagged,
-                    "repeat": bool(a["repeat"]), "tries": len(tries), "void": a["void"]})
+                    "repeat": bool(a["repeat"]),
+                    "tries": [{"given": tr["given"], "given_label": review.given_label(a["fmt"], tr["given"]),
+                               "correct": bool(tr["correct"]), "ms": tr["ms"], "at": tr["at"]} for tr in tries],
+                    "void": a["void"]})
     return out
 
 
 def _history_response(learner: str, subject: str, topics: str | None, difficulty: str | None,
                       fmt: str | None, source: str | None, since: str | None, until: str | None,
-                      q: str | None, result: str | None, cursor: int | None, limit: int,
+                      q: str | None, result: str | None, conf: str | None, cursor: int | None, limit: int,
                       group: str | None, tz: int) -> dict:
     rows = [x for x in _history_rows(learner, subject) if
             _matches(x, topics=topics, difficulty=difficulty, fmt=fmt, source=source,
                      since=since, until=until, q=q)]
     if result:
         rows = [x for x in rows if x["result"] in _csv(result)]
+    if conf:
+        rows = [x for x in rows if (x["conf"] or "untagged") in _csv(conf)]
     valid = [x for x in rows if x["void"] is None]
     timed = [x["ms"] for x in valid if x["ms"] is not None]
     by_diff = Counter(x["difficulty"] for x in valid)
@@ -652,6 +732,10 @@ def _history_response(learner: str, subject: str, topics: str | None, difficulty
                "timed": len(timed), "repaired": sum(x["result"] == "repaired" for x in valid),
                "repeats": sum(x["repeat"] for x in valid),
                "mixed": sum(x["result"] == "mixed" for x in valid),
+               "slow": {"n": sum(x["slow"] for x in valid),
+                        "over_ms": sum(max(0, (x["ms"] or 0) - x["budget_ms"]) for x in valid if x["slow"])},
+               "rushed": sum(x["rushed"] for x in valid),
+               "discarded": sum(x["void"] is not None for x in rows),
                "by_difficulty": dict(by_diff)}
     days = defaultdict(lambda: {"questions": 0, "right": 0, "minutes": 0})
     for x in valid:
@@ -663,6 +747,16 @@ def _history_response(learner: str, subject: str, topics: str | None, difficulty
     page = _page(rows, limit, cursor)
     page["total"] = len(rows)
     page.update({"subject": subject, "summary": summary, "days": day_rows})
+    by_type = defaultdict(list)
+    for x in valid:
+        by_type[x["template"]].append(x)
+    page["pace"] = sorted(({"template": t, "skill": review.skill_of(t), "topic": rows_[0]["topic"],
+                            "median_ms": statistics.median(x["ms"] for x in rows_ if x["ms"] is not None),
+                            "budget_ms": rows_[0]["budget_ms"],
+                            "right": sum(x["correct"] for x in rows_), "asked": len(rows_)}
+                           for t, rows_ in by_type.items() if sum(x["slow"] for x in rows_) >= 2
+                           and any(x["ms"] is not None for x in rows_)),
+                          key=lambda x: x["median_ms"] - x["budget_ms"], reverse=True)[:5]
     if group == "sitting":
         by_sid = defaultdict(list)
         for x in rows:
@@ -670,6 +764,11 @@ def _history_response(learner: str, subject: str, topics: str | None, difficulty
         sittings = []
         for sid, own in by_sid.items():
             s = db.one("SELECT * FROM sessions WHERE id=?", sid) if sid else None
+            cfg = json.loads(s["cfg"] or "{}") if s and s["cfg"] else {}
+            paper = progress._paper(s) if s else []
+            answered = {x["qid"] for x in own if x["qid"]}
+            blank = [{"qid": x["id"], "template": x["key"], "seed": x["seed"]}
+                     for x in paper if x.get("id") not in answered and x.get("key") is not None]
             sittings.append({"session": sid, "kind": s["kind"] if s else "practice",
                              "source": own[0]["source"], "topics": sorted({x["topic"] for x in own}),
                              "at": max(x["at"] for x in own), "right": sum(x["correct"] for x in own),
@@ -677,9 +776,20 @@ def _history_response(learner: str, subject: str, topics: str | None, difficulty
                              "cells": [{"qid": x["qid"], "n": i, "result": x["result"],
                                         "flagged": x["flagged"], "blank": x["given"] in (None, "")}
                                        for i, x in enumerate(reversed(own), 1)],
-                             "void": s["abandoned"] if s else None,
-                             "rematch_of": s["rematch_of"] if s and "rematch_of" in s.keys() else None})
-        page["sittings"] = sorted(sittings, key=lambda x: x["at"], reverse=True)
+                             "blanks": blank, "void": all(x["void"] for x in own),
+                             "rematch_of": cfg.get("rematch_of"), "children": [], "best": None})
+        by_id = {x["session"]: x for x in sittings if x["session"]}
+        top = []
+        for sitting in sittings:
+            parent = by_id.get(sitting["rematch_of"])
+            if parent:
+                parent["children"].append(sitting["session"])
+            else:
+                top.append(sitting)
+        for sitting in top:
+            scores = [sitting["right"]] + [by_id[x]["right"] for x in sitting["children"]]
+            sitting["best"] = max(scores)
+        page["sittings"] = sorted(top, key=lambda x: x["at"], reverse=True)
     return page
 
 
@@ -687,25 +797,28 @@ def _history_response(learner: str, subject: str, topics: str | None, difficulty
 def history(subject: str = "math", topics: str | None = None, difficulty: str | None = None,
             fmt: str | None = None, source: str | None = None, since: str | None = None,
             until: str | None = None, q: str | None = None, result: str | None = None,
+            conf: str | None = None,
             group: str | None = None, cursor: int | None = None,
             limit: int = Query(default=50, ge=1, le=100), x_learner: str | None = Header(default=None),
             x_tz: int = Depends(tz_of)) -> dict:
     if group not in (None, "day", "sitting"):
         bad("group")
     return _history_response(learner_of(x_learner), _subject(subject), topics, difficulty, fmt,
-                             source, since, until, q, result, cursor, limit, group, x_tz)
+                             source, since, until, q, result, conf, cursor, limit, group, x_tz)
 
 
 @router.get("/api/review/history.csv")
 def history_csv(subject: str = "math", topics: str | None = None, difficulty: str | None = None,
                 fmt: str | None = None, source: str | None = None, since: str | None = None,
                 until: str | None = None, q: str | None = None, result: str | None = None,
+                conf: str | None = None,
                 x_learner: str | None = Header(default=None), x_tz: int = Depends(tz_of)) -> Response:
     rows = _history_response(learner_of(x_learner), _subject(subject), topics, difficulty, fmt,
-                             source, since, until, q, result, None, 1000000, None, x_tz)["items"]
+                             source, since, until, q, result, conf, None, 1000000, None, x_tz)["items"]
     out = io.StringIO()
-    fields = ("id", "at", "template", "seed", "topic", "difficulty", "result", "given", "answer",
-              "mistake", "ms", "source", "session", "qid", "flagged", "repeat")
+    fields = ("id", "at", "template", "seed", "topic", "domain", "difficulty", "result", "given", "answer",
+              "mistake", "ms", "budget_ms", "slow", "rushed", "changed", "conf", "source", "session", "qid",
+              "flagged", "repeat", "void")
     w = csv.DictWriter(out, fieldnames=fields, extrasaction="ignore")
     w.writeheader()
     w.writerows(rows)
@@ -723,6 +836,8 @@ def _attempts(learner: str, template: str, seed: int | None = None) -> list[dict
 
 
 def _attempt_view(a: dict) -> dict:
+    tries = db.rows("SELECT given,correct,ms,at FROM tries WHERE learner=? AND session=? AND qid=?",
+                    a["learner"], a["session"], a["qid"]) if a["session"] and a["qid"] else []
     return {"id": a["id"], "at": a["at"], "seed": a["seed"], "correct": bool(a["correct"]),
             "given": a["given"], "given_label": review.given_label(a["fmt"], a["given"]),
             "reason": a["reason"], "norm": a["norm"], "diag": a["diag"],
@@ -731,6 +846,8 @@ def _attempt_view(a: dict) -> dict:
             "ms": a["ms"] or a["sms"], "source": review.source_of(a["session"]),
             "session": a["session"], "qid": a["qid"], "repeat": bool(a["repeat"]),
             "repair": bool(a["repair"]), "revealed": bool(a["revealed_at"]),
+            "tries": [{"given": t["given"], "given_label": review.given_label(a["fmt"], t["given"]),
+                       "correct": bool(t["correct"]), "ms": t["ms"], "at": t["at"]} for t in tries],
             "openable": bool(a["revealed_at"] or a["correct"])}
 
 
@@ -775,9 +892,32 @@ def item(template: str, seed: int = Query(ge=0), x_learner: str | None = Header(
     story = []
     for event in db.rows("SELECT * FROM trap_log WHERE learner=? AND template=? ORDER BY id",
                          learner, template):
+        prior = db.one("SELECT * FROM attempts WHERE id=? AND learner=?", event["attempt"], learner) if event["attempt"] else None
         story.append({"at": event["at"], "event": event["event"], "attempt": event["attempt"],
-                      "pts": event["pts"]})
-    return {"template": template, "seed": seed, "topic": topic, "question": public(q),
+                      "pts": event["pts"], "source": review.source_of(prior["session"]) if prior else None,
+                      "session": prior["session"] if prior else None, "qid": prior["qid"] if prior else None,
+                      "result": "right" if prior and prior["correct"] else "wrong" if prior else None,
+                      "pick": review.given_label(prior["fmt"], prior["given"]) if prior else None})
+    lv = review.level(template, q["difficulty"])
+    budget_ms = review.budget_fn()(template, q["difficulty"])
+    points = review.pts_fn(learner, deps.subject_of(topic))
+    session = db.one("SELECT qstate FROM sessions WHERE id=?", last["session"]) if last and last["session"] else None
+    state = (json.loads(session["qstate"] or "{}").get(last["qid"]) or {}) if session and last["qid"] else {}
+    tries = [dict(r) for r in db.rows("SELECT given,correct,ms,at FROM tries WHERE learner=? AND session=? AND qid=?",
+                                     learner, last["session"], last["qid"])] if last and last["session"] and last["qid"] else []
+    fixed = db.one("SELECT opened,closed,checks FROM traps WHERE learner=? AND template=?"
+                   " AND closed_how='fixed' ORDER BY closed DESC LIMIT 1", learner, template)
+    has_steps = bool(q.get("steps"))
+    path = {"struck": json.loads(last["struck"] or "[]") if last else [],
+            "trail": state.get("trail", []) if isinstance(state, dict) else [],
+            "first": state.get("first") if isinstance(state, dict) else None,
+            "ms": (last["ms"] or last["sms"]) if last else None,
+            "budget_ms": budget_ms, "conf": last["conf"] if last else None,
+            "conf_assumed": bool(last and not last["conf"] and last["id"] in
+                                 {v["attempt"] for v in review.blind(learner, deps.subject_of(topic)).values()}),
+            "marks": json.loads(note["marks"] or "[]") if note else []}
+    return {"template": template, "seed": seed, "topic": topic,
+            "domain": q.get("domain"), "question": public(q),
             "answer": q["answer"] if access == "reveal" else None,
             "rationale": q["rationale"] if access == "reveal" else None,
             "reasons": review.option_labels(q) if access == "reveal" else None,
@@ -794,9 +934,20 @@ def item(template: str, seed: int = Query(ge=0), x_learner: str | None = Header(
             "flagged": bool(flags), "flags": [dict(f) for f in flags],
             "address": f"{template}:{seed}", "access": access, "new": fresh,
             "revealed": bool(last and last["revealed_at"]), "diag_choices": choices,
-            "story": story, "path": {k: last[k] for k in
-                                       ("struck", "ms", "conf", "given") if last} if last else {},
-            "summary": {"answers": len(clean)}}
+            "story": story, "path": path, "tries": tries,
+            "summary": {"answers": len(clean),
+                        "days_to_fix": (dt.datetime.fromisoformat(fixed["closed"]) -
+                                        dt.datetime.fromisoformat(fixed["opened"])).days if fixed else None,
+                        "held_days": (review.utcnow() - dt.datetime.fromisoformat(fixed["closed"])).days if fixed else None},
+            "level": lv["level"], "level_rough": lv["rough"], "budget_ms": budget_ms,
+            "pts": sum(points(t["template"], t["norm"], t["topic"]) or 0 for t in trap_rows)
+                   if trap_rows and any(points(t["template"], t["norm"], t["topic"]) is not None
+                                        for t in trap_rows) else None,
+            "rule": review.rules(learner).get(template),
+            "has_steps": has_steps if access == "reveal" else False,
+            "value_lines": [{"choice": i, "value": value, "reason": review.cap(q["reasons"][i])
+                             if i < len(q["reasons"]) else None}
+                            for i, value in enumerate(q["choices"])] if access == "reveal" and not has_steps else []}
 
 
 @router.get("/api/review/family")
@@ -824,13 +975,26 @@ def family(template: str | None = None, session: str | None = None, question_id:
     if norm is not None:
         attempts = [a for a in attempts if a["norm"] == norm]
     clean = [a for a in attempts if a["void"] is None]
+    misses = [a for a in clean if not a["correct"]]
+    rights = [a for a in clean if a["correct"] and not a["repeat"]]
+    budget = review.budget_fn()
+    verdict = None
+    if len(misses) >= 2 and misses[0]["norm"] == misses[1]["norm"] and misses[0]["norm"]:
+        verdict = {"kind": "same_trap", "text": "The same mistake came up twice.",
+                   "start": {"body": {"pool": "redo", "templates": [template], "count": 3}}}
+    elif rights and rights[0]["ms"] and rights[0]["ms"] > budget(template, rights[0]["difficulty"]):
+        verdict = {"kind": "slow", "text": "Right, but over your time budget.",
+                   "start": {"body": {"templates": [template], "count": 8, "timing": "pace"}}}
+    elif len(rights) >= 3:
+        verdict = {"kind": "fluent", "text": "You're getting this type right.",
+                   "start": {"body": {"templates": [template], "count": 3}}}
     out = _page([_attempt_view(a) for a in attempts], limit, cursor)
     out.update({"template": template, "topic": topic, "skill": review.cap(review.skill_of(template)),
                 "summary": {"seen": len(clean), "right": sum(a["correct"] for a in clean),
                             "wrong": sum(not a["correct"] for a in clean),
                             "repaired": sum(a["repair"] for a in clean),
                             "repeats": sum(a["repeat"] for a in clean)},
-                "attempts": out.pop("items"), "verdict": None})
+                "attempts": out.pop("items"), "verdict": verdict})
     return out
 
 
