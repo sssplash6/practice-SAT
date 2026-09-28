@@ -19,7 +19,7 @@ import gzip
 import pathlib
 from functools import lru_cache
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Request
+from fastapi import APIRouter, Depends, Header, HTTPException, Query, Request
 from fastapi.responses import Response
 
 from . import challenge, daily, db, progress, satdates
@@ -220,7 +220,7 @@ ADAPT = {"reports": _reports_part}
 
 # What the chrome may call: another section's route or file, present or not yet. The
 # client asks nothing that would 404 (a 404 is a console error on every page).
-HAS_ROUTES = {"next": "/api/next", "pair": "/api/pair", "share": "/api/share", "feed": "/api/me/feed",
+HAS_ROUTES = {"next": "/api/next", "levers": "/api/levers", "pair": "/api/pair", "share": "/api/share", "feed": "/api/me/feed",
               "achievements_seen": "/api/me/achievements/seen", "reports_seen": "/api/reports/seen",
               "match": "/api/types/match", "log": "/api/mistakes/log", "example": "/api/types/{template}/example",
               "outside": "/api/outside/misses", "scores": "/api/scores", "export": "/api/me/export"}
@@ -248,6 +248,15 @@ def get_shell(request: Request, x_learner: str | None = Header(default=None), x_
             return {"retired": True}
         raise
     return {**shell(learner, x_tz, (x_learner or "").strip()), "has": _has(request.app)}
+
+
+@router.get("/api/next")
+def get_next(limit: int = Query(default=6, ge=1, le=20),
+             x_learner: str | None = Header(default=None),
+             x_tz: int = Depends(tz_of)) -> dict:
+    learner = learner_of(x_learner)
+    queue = part("next", "queue")
+    return {"items": queue(learner, x_tz, limit=limit) if queue else []}
 
 
 # ponytail: College Board's Math question bank size from the teardown (2026-09); F5's

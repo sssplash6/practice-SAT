@@ -17,10 +17,11 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import secrets
 import sys
 from unittest.mock import patch
 
-from server import api_shell, db
+from server import api_shell, db, next as next_actions, practice
 
 KEYS = {"me", "streak", "best_streak", "today", "plan", "tested_today", "mistakes", "saved", "challenge", "resume",
         "newest_report", "report_replies", "new", "prefs", "pref_source", "stage", "next", "goals", "inbox",
@@ -105,6 +106,57 @@ def check(c) -> None:
            c.get("/api/today", headers=S).json()["days"]["streak"])
     assert got == (6, 6, 6), got
     print("ok  /api/shell: one streak of 6 across a rest weekend in shell, me and today")
+
+    first = "a:f2next" + secrets.token_hex(6)
+    FH = {"X-Learner": first, "X-Tz": "0"}
+    fresh = c.get("/api/next", headers=FH)
+    assert fresh.status_code == 200, fresh.text
+    assert [x["kind"] for x in fresh.json()["items"][:2]] == ["start", "diagnostic"]
+    assert fresh.json()["items"][0]["start"]["body"] == {"source": "start"}
+    assert c.get("/api/shell", headers=FH).json()["next"] == fresh.json()["items"]
+    assert c.get("/api/shell", headers=FH).json()["has"]["next"]
+
+    learner = "a:f2next" + secrets.token_hex(6)
+    NH = {"X-Learner": learner, "X-Tz": "0"}
+    now = dt.datetime.now(dt.timezone.utc)
+    day = now.date().isoformat()
+    template = practice.catalogue()["by_topic"]["circles"][0]
+    db.ensure_learner(learner)
+    db.run("INSERT INTO attempts(learner,template,seed,topic,difficulty,fmt,correct,at)"
+           " VALUES (?,?,?,?,?,?,?,?)", learner, template, 1, "circles", "medium", "mcq", 1,
+           now.isoformat())
+    db.run("INSERT INTO traps(learner,template,norm,reason,label,topic,hits,owed,opened,last,closed,closed_how,due)"
+           " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", learner, template, "diameter", "diameter",
+           "Used diameter as radius", "circles", 2, 0, now.isoformat(), now.isoformat(),
+           now.isoformat(), "fixed", day)
+    db.run("INSERT INTO traps(learner,template,norm,reason,label,topic,hits,owed,opened,last)"
+           " VALUES (?,?,?,?,?,?,?,?,?,?)", learner, template, "radius", "radius",
+           "Used radius as diameter", "circles", 3, 2, now.isoformat(), now.isoformat())
+    listed = c.get("/api/next", headers=NH)
+    assert listed.status_code == 200, listed.text
+    assert [x["kind"] for x in listed.json()["items"][:2]] == ["checks", "redo"]
+    assert listed.json()["items"][0]["pts"] is None
+    assert listed.json()["items"][0]["start"]["body"]["pool"] == "checks"
+    assert c.get("/api/shell", headers=NH).json()["next"] == listed.json()["items"][:3]
+
+    original_part = next_actions.deps.part
+    def with_plan(module, name):
+        if (module, name) == ("plan", "today_summary"):
+            return lambda *_: {"tasks": [{"id": "today:checks", "kind": "recheck", "title": "Check-ins",
+                                          "counted": True, "status": "todo", "count": 2,
+                                          "start": {"path": "/api/drill", "body": {"pool": "checks"}}}],
+                              "tasks_done": 0, "tasks_counted": 1}
+        return original_part(module, name)
+    with patch.object(next_actions.deps, "part", side_effect=with_plan):
+        planned = next_actions.queue(learner, 0)
+    assert sum(x.get("start", {}).get("body", {}).get("pool") == "checks" for x in planned) == 1
+    assert "also in today's plan" in planned[0]["reason"]
+    assert next_actions.resolve_drill(learner, {"source": "next", "box": 15})["count"] is None
+    assert next_actions.resolve_drill(learner, {"source": "next", "box": 15})["segments"]
+    db.run("UPDATE learners SET exam_date=? WHERE id=?",
+           (now.date() + dt.timedelta(days=1)).isoformat(), learner)
+    assert c.get("/api/next", headers=NH).json()["items"][0]["title"].startswith("Rest")
+    print("ok  /api/next: start, check-in priority, plan dedupe, time box and exam-eve rest")
 
 
 # ------------------------------------------------------------------ the browser half
