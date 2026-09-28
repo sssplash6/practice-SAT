@@ -665,8 +665,11 @@ def walk(b, base, http, sql) -> None:
             pg.keyboard.press("Enter")
             pg.wait_for_function("t => !document.querySelector('dialog[open] .skel') && document.querySelector('dialog[open]').innerText !== t", arg=before)
             pg.keyboard.press("Escape")
-            pg.wait_for_timeout(700)
-            hist = api(QL, "GET", "/api/history")["sessions"]
+            for _ in range(20):             # the close finishes the sitting in the background
+                pg.wait_for_timeout(250)
+                hist = api(QL, "GET", "/api/history")["sessions"]
+                if hist:
+                    break
             assert [x.get("label") for x in hist] == ["Quick questions"], hist
             assert api(QL, "GET", "/api/shell")["resume"] is None
     own = api(QL, "POST", "/api/drill", {"topics": ["circles"], "count": 3})["id"]

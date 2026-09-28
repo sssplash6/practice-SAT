@@ -1063,11 +1063,11 @@
   });
 
   /* ------------------------------------------------------------ Up next (U1) */
-  function nextItems() {
+  function nextItems(d = shellData) {
     let snooze = {};
     try { snooze = JSON.parse(sget(LS(), 'satf.next.snooze') || '{}') || {}; } catch (_) {}
     const day = localDay();
-    return ((shellData && shellData.next) || []).filter(x => snooze[x.key] !== day);
+    return ((d && d.next) || []).filter(x => snooze[x.key] !== day);
   }
   async function start(item) {
     if (!item) return;
@@ -1157,7 +1157,8 @@
       done.minutes ? h('span', { class: 'nextup-m', text: `${fmt(done.minutes)} min` }) : '');
     el.append(left, right);
     let cur = null, contBtn = null;
-    const act = (label, cls, kbd, fn) => h('button', { type: 'button', class: cls, onclick: fn }, label, kbd ? keycaps(kbd) : null);
+    const act = (label, cls, kbd, fn) => h('button', { type: 'button', class: cls, onclick: fn }, label,
+      kbd && !media('(pointer: coarse)') ? keycaps(kbd) : null);             // no key hints on a touch screen
     const stop = () => { if (o.onStop) o.onStop(); else location.href = '/'; };
     async function cont() {
       if (!cur || !contBtn || contBtn.getAttribute('aria-busy') === 'true') return;
@@ -1283,7 +1284,9 @@
       if (autoOpen) return;
     }
     if (!lines || !UI.sheet) return;
-    const it = nextItems()[0];
+    const it = nextItems(d)[0];             // d, not shellData: a fresh copy arrives here before it is taken
+    // nothing else waiting: the body says what Pick up starts
+    if (!lines.length && it) lines.push({ text: [nextMeta(it), it.reason].filter(Boolean).join(' · ') });
     autoSheet(() => UI.sheet({ title: 'Welcome back', size: 's',
       body: lines.length ? h('div', { style: 'display: grid; gap: 8px' }, lines.map(l => h('p', { style: 'margin: 0' },
         l.href ? h('a', { class: 'link', href: l.href, text: l.text }) : l.text))) : null,
