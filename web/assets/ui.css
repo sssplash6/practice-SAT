@@ -836,7 +836,9 @@ body.has-rail { padding-left: var(--rail-w); }
 .quiet {
   appearance: none; border: 0; background: none; cursor: pointer; text-decoration: none;
   display: inline-flex; align-items: center; gap: 8px;
-  padding: 9px 12px; margin: -9px -12px; border-radius: 8px;
+  /* a tall tap area that reaches only 4px sideways: 12px made neighbours in a row share taps ("Review" over "Fix" on
+     every report row, "Options" over "Race friends"); padding and margin cancel, so nothing moves */
+  padding: 9px 4px; margin: -9px -4px; border-radius: 8px;
   font: 600 14.5px var(--font); color: var(--ink);
   transition: background-color .16s var(--ease), color .16s var(--ease);
 }
@@ -844,7 +846,7 @@ body.has-rail { padding-left: var(--rail-w); }
 @media (hover: hover) and (pointer: fine) { .quiet:hover { background: none; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; } }
 .quiet:disabled { color: var(--faint); cursor: default; background: none; }
 /* the ring sits inside the padded box, 3px above and below the text, so it no longer covers the neighbours */
-.quiet:focus-visible { outline-offset: -6px; }
+.quiet:focus-visible { outline-offset: -4px; }
 .quiet svg { width: 16px; height: 16px; }
 
 .link {
