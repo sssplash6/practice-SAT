@@ -244,6 +244,8 @@ def check(c: TestClient) -> None:
     assert all("rarity" in b for b in badges.json())
     feed = c.get("/api/me/feed", params={"unread": 1}, headers=profile_h)
     assert any(x["kind"] == "achievements" for x in feed.json()["items"])
+    assert any(x["title"] == "Questions answered" and x["detail"] == ""
+               for x in feed.json()["items"] if x["kind"] == "achievements")
     assert c.get("/api/shell", headers=profile_h).json()["inbox"] == feed.json()["unread"]
     assert c.post("/api/me/feed/seen", headers=profile_h).status_code == 200
     assert not c.get("/api/me/feed", params={"unread": 1}, headers=profile_h).json()["items"]
@@ -253,6 +255,16 @@ def check(c: TestClient) -> None:
     assert len(summary.json()["stats"]["series"]["answered"]) == 14
     assert len(summary.json()["domains"]) == 4
     print("ok  Me summary and 43 base achievement rules use the same counted attempts")
+
+    feed_learner = "a:s1feed" + secrets.token_hex(5)
+    feed_session = "s1-feed-" + secrets.token_hex(5)
+    db.run("INSERT INTO sessions(id,kind,learner,started,finished,result) VALUES (?,?,?,?,?,?)",
+           feed_session, "drill", feed_learner, "2026-09-01T00:00:00+00:00",
+           "2026-09-01T00:10:00+00:00", json.dumps({"right": 7, "asked": 10}))
+    feed_row = c.get("/api/me/feed", params={"kind": "practice"},
+                     headers={"X-Learner": feed_learner}).json()["items"][0]
+    assert feed_row["detail"] == "7 / 10"
+    assert feed_row["href"] == f"/results/report/?id={feed_session}"
 
     today = dt.datetime.now(dt.timezone.utc)
     iso = today.isocalendar()

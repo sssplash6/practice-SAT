@@ -575,8 +575,8 @@ def feed(learner: str, before: str | None = None, kind: str = "all",
             title = ("Quick questions" if cfg.get("source") == "quick" else
                      "Challenge" if is_challenge else "Test" if is_test else "Practice set")
             items.append({"kind": category, "at": r["finished"], "title": title,
-                          "detail": f"{result.get('right', 0)} of {result.get('asked', 0)} right",
-                          "href": f"/results/report/?s={r['id']}", "session": r["id"],
+                          "detail": f"{result.get('right', 0)} / {result.get('asked', 0)}",
+                          "href": f"/results/report/?id={r['id']}", "session": r["id"],
                           "effect": {"words": words, "fixed": fixed, "opened": opened, "pts": None},
                           "again": {"again": r["id"]},
                           "follow_up": {"from_session": r["id"], "still_open": True,
@@ -592,13 +592,14 @@ def feed(learner: str, before: str | None = None, kind: str = "all",
                 items.append({"kind": "mistakes", "at": r["opened"], "title": "Mistake logged",
                               "detail": r["label"], "href": f"/review/?open=trap:{r['id']}"})
     if kind in ("all", "achievements"):
+        badge_names = {rule["id"]: rule["name"] for rule in achievements.rules()}
         for r in db.rows("SELECT id,tier,at FROM earned WHERE learner=? AND at<?"
                          " ORDER BY at DESC LIMIT ?", learner, marker, limit + 1):
             if unread and seen and r["at"] <= seen:
                 continue
             items.append({"kind": "achievements", "at": r["at"],
-                          "title": r["id"].replace("_", " ").replace("-", " ").title(),
-                          "detail": f"Tier {r['tier']}", "href": "/me/?tab=achievements"})
+                          "title": badge_names.get(r["id"], r["id"].replace("_", " ").replace("-", " ").title()),
+                          "detail": "", "href": "/me/?tab=achievements"})
     if kind in ("all", "reports"):
         for r in db.rows("SELECT id,title,replied,seen FROM reports WHERE learner=?"
                          " AND replied IS NOT NULL AND replied<? ORDER BY replied DESC LIMIT ?",
