@@ -160,19 +160,25 @@ items), each exercised against a server on port 8015; repairs and {mistakes: tru
 on 3 runs in a row.`,
   },
   F2B: {
-    title: 'F2B · Shell follow-ups (frontend): run and share helpers, welcome back, offline', port: 8018,
+    title: 'F2B · Up next, end to end: its server, run and share helpers, welcome back, offline', port: 8018,
     spec: `spec/v2-state/briefs/F2B.md ONLY for requirements, plus spec/v2-state/followups/F2.json (F2's check: the items assigned to F2 that no
-task owned). The backend half (server/next.py, GET /api/next, /api/shell.next and .has, checks/f2.py) is being built by the user's other
-agent: code against the endpoints the brief specifies and degrade quietly until they land. F2 is merged: extend it.`,
-    owns: 'web/sw.js, web/assets/ui.js, web/assets/palette.js, web/assets/quick.js',
+task owned). THE USER (2026-09-28): the other agent can't do this server, so this task does it all. The branch already holds his
+server start (5 commits: next.py, the shell endpoint, checks/f2.py passing 15 checks): continue from it, never redo it. F2 is merged:
+extend it. The branch also carries today's shared polish (v2/calm-shared): keep every one of those changes.`,
+    owns: 'server/next.py, server/api_shell.py, server/checks/f2.py, web/sw.js, web/assets/ui.js, web/assets/palette.js, web/assets/quick.js',
     units: [
+      `Server: finish every server item of Task 23 in spec/v2-state/HELPER-TASKS.md and the brief: server/next.py (queue, due, stage and
+resolve_drill; GET /api/next; the 'start' kind for new learners, product.md G10; sources read through deps.part so a missing section
+drops its rows), /api/shell.next and /api/shell.has in api_shell.py, and /api/shell's cold start made fast (the load test measured
+42.6M function calls for five calls: profile it and fix the hot path). Extend server/checks/f2.py to cover each server item; it passes.`,
       `ui.js: UI.run (start, between, rail; G1) reading /api/next and /api/shell.next, UI.autoSheet with the welcome-back sheet (U25),
 UI.share (U28); gate the Today card's fact popovers on UI.has('levers') and link the flame to /me/#activity until then; replace the
 retired phrases in palette.js and quick.js (G2); the quick sheet full screen under 760px; palette Recent rows keep the skill name.`,
       `web/sw.js (U18 offline) registered from ui.js; then a quick headless walk of the shell at 1280 and 390, no console errors,
 test_flow still "all good".`,
     ],
-    accept: `The frontend follow-ups in spec/v2-state/followups/F2.json are fixed; the Up next block, rail play button and G N render from
+    accept: `GET /api/next, /api/shell.next and .has are built as the brief says and server/checks/f2.py covers and passes them;
+/api/shell answers fast from cold; the frontend follow-ups in spec/v2-state/followups/F2.json are fixed; the Up next block, rail play button and G N render from
 /api/next when it is present and degrade when it is not; the welcome-back sheet shows once a day; offline pages load from the service
 worker; test_flow prints "all good".`,
   },

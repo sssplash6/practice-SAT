@@ -134,6 +134,22 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       Math 320-320, repeated tile numbers, the single-cause legend, glyph wraps and two orange starts (v2/s6 cafc17a), and
       took odds and levels out of the shared player (calm-shared 90f2469). prev4 has v2/s6 (preview server bx2scb467).
       Results asks for the helper added to Task 20. The old Results swap on calm-shared is reverted (9ea9dff).
+    - 2026-09-28: the user: "build me". Same flow as Results: build.js [{id:'S1', inline: true}] (build units only), then my
+      light check and design review, then tell the user. v2/s1 = v2/s1-server (the helper's, mid-work: his worktree had 2
+      uncommitted files) + master; the old v2/s1 (one mail.py commit, identical in s1-server) is kept as v2/s1-old-server.
+      At merge: v2/s1-server first (after "S1 server done" and its check), then v2/s1. No master commits while it runs.
+      DONE: run wf_980379dc-23a (1.01M tokens), 9 pages on v2/s1; my light check fixed Profile's new-student defaults and
+      tap overlaps (v2/s1 fc27550, 8e99743 and the board line), ~0m (calm-shared e086b70), /link/ -> /pair/ and the
+      banner on /signin/ (calm-shared caadfff). All Me pages: 0 overlaps, no zeros, no errors, new and seeded, 1440 and 390.
+      Me's server asks added to Task 22; Task 31 (light, test_flow on any date) written for the helper. Preview: batn2qp1y.
+    - 2026-09-28: the user: "review pls". Same flow: build.js [{id:'S10', inline: true}], then my light check and design review,
+      then tell the user. v2/s10 = v2/s10-server (checks/s10.py passes, 11/11) + master; the old v2/s10 (its 2 server
+      commits, carried into s10-server) is kept as v2/s10-old-server. No master commits while it runs.
+      DONE: run wf_ca695ea6-8f2 (813k tokens), hub + walk + answer sheet + trap sheet/error log on v2/s10; my light check
+      fixed UI.fracText's one-argument form (calm-shared 406d198: the pages threw), the Fixed tab's zeros and legend and the
+      Fix ▾ spacing (v2/s10 2bd6036), and in the shared player the header level badge, the twin label and its want shape
+      (calm-shared bfe0c34). Review's asks went to Task 21; Task 32 (four one-line fixes) written. Preview: bbhtv2ara.
+      Frontend left: the shell's Up next (F2B, its server Task 23 not started).
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
