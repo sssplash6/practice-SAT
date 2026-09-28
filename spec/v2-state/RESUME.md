@@ -155,6 +155,12 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       exception). v2/f2b = v2/f2b-server (the helper's 5 commits, checks/f2.py passing) + v2/calm-shared + master.
       LAUNCHING build.js [{id:'F2B', inline: true}], then my light check (the server check, test_flow, a walk of the shell on
       every page) and report. No master commits while it runs.
+      DONE: run wf_c94a5fdb-16d (551k tokens): server finished (next.py, /api/next exclude, shell.away), UI.run, welcome back,
+      UI.share, retired phrases, notification-only sw.js (the spec: nothing served offline). My part on v2/f2b: compete.py
+      trap_families only when a trap week is missing (cold /api/shell 17.7 s for five calls -> 13 ms), drill.py's Up next
+      time box, the inbox NaN guard, Up next copy, no key hints on touch, plan warm-up detail without zeros; on v2/s1 the week
+      sheet's null and its welcome line; on v2/s3 Today's Try one now -> Twin. 54 shell page loads clean. Preview b6nx39v5c.
+      ALL FRONTEND IS BUILT. Next: the user's "good" on the preview, then merges; then the I1 audit and the integration walk.
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH

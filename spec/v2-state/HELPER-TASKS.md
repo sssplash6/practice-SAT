@@ -637,6 +637,23 @@ Each is a line or two in a file you already own. Do each on the branch of the ta
 DONE: each branch's own checks/sN.py still passes. Tell the user "task 32 done".
 ```
 
+
+## Task 33 (light): Me and Results copy fixes the new pages found
+
+```
+Small fixes in files you already own; one commit each on the branch that owns the file. Server only.
+On v2/s1-server:
+1. account.shell_part: `inbox` must be the unread count (a number); it is an object, so the phone avatar badge reads "NaN".
+2. The Me feed rows: achievements by their badge name (not "Hard Right · Tier 10"); scores as "7 / 10" (not "7 of 10 right");
+   report links as /results/report/?id=... (the page reads id, the feed sends ?s=).
+3. Lever texts (the "how it's worked out" popovers) name skills by their names, not raw ids ("Practise Nonlinear functions",
+   not "Practise nonlinear_functions").
+On v2/s6-server:
+4. The owner-only 403 on a report carries `kind` (e.g. "challenge"), so a live challenge can say why it is closed.
+DONE: checks/s1.py and checks/s6.py still pass. Tell the user "task 33 done".
+Do not touch server/next.py, server/api_shell.py or server/checks/f2.py: the main session is building Up next in them.
+```
+
 ---
 
 ## For the main session
