@@ -360,6 +360,11 @@ def walk(b, base, http, sql) -> None:
     def context(L, w=1280, hgt=900):
         ctx = b.new_context(viewport={"width": w, "height": hgt}, has_touch=w < 760, is_mobile=w < 760)
         ctx.add_init_script(f"try {{ localStorage.getItem('satf.learner') || localStorage.setItem('satf.learner', {json.dumps(L)}) }} catch (e) {{}}")
+        # U18b: the browser's prompt and /sw.js only ever follow a tap; count any call a load makes
+        ctx.add_init_script("""(() => { window.__asked = 0;
+          if (window.Notification) Notification.requestPermission = () => (window.__asked++, Promise.resolve('default'));
+          if (navigator.serviceWorker) navigator.serviceWorker.register = () => (window.__asked++, Promise.reject(new Error('on load')));
+        })()""")
         return ctx
 
     def go(pg, path):
@@ -829,6 +834,51 @@ def walk(b, base, http, sql) -> None:
     print("ok  welcome-back once on a clean load; the flame without levers; the run, its between pane and rail;"
           " a twin link; palette Recent and Start today; the quick sheet full screen at 390")
 
+    # ---- /sw.js (U18b): push and notificationclick only, no fetch handler and no cache; a push
+    # shows words even when /api/push/next can't answer; a tap reuses a tab on its own page and
+    # never navigates a session away; Stop falls back to Settings › Study
+    src = http.get("/sw.js")
+    assert src.status_code == 200 and "javascript" in src.headers["content-type"], src.status_code
+    assert "'fetch'" not in src.text and "caches" not in src.text, "no fetch handler, no cache"
+    ctx = b.new_context()
+    pg = page(ctx)
+    pg.goto(base + "/help/", wait_until="networkidle")
+    assert pg.evaluate("navigator.serviceWorker.getRegistration('/').then(r => !r)"), "no page registers the worker"
+    pg.evaluate("navigator.serviceWorker.register('/sw.js').then(() => navigator.serviceWorker.ready).then(() => null)")
+    sw = ctx.service_workers[0] if ctx.service_workers else ctx.wait_for_event("serviceworker")
+    sw.evaluate("""() => {
+      const o = location.origin, log = self.__log = [];
+      const json = (body, status) => Promise.resolve(new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } }));
+      self.registration.showNotification = (t, x) => (log.push(['show', t, x.body, x.tag, x.data.url, x.actions.map(a => a.action)]), Promise.resolve());
+      self.clients.openWindow = u => (log.push(['open', u]), Promise.resolve(null));
+      self.__tab = path => { self.clients.matchAll = () => Promise.resolve([{ url: o + path,
+        focus: () => (log.push(['focus']), Promise.resolve()), navigate: u => (log.push(['nav', u]), Promise.resolve()) }]); };
+      self.__fire = (type, next, props) => {
+        self.fetch = (u, x) => (log.push(['post', new URL(u, o).pathname, JSON.parse(x.body).kind || null]), json(next, next.status || 200));
+        if (props.notification) props.notification.close = () => {};
+        let p = null;
+        self.dispatchEvent(Object.assign(new Event(type), props, { waitUntil: x => { p = x; } }));
+        return Promise.resolve(p).then(() => log.splice(0).map(r => r.map(v => typeof v === 'string' ? v.replace(o, '') : v)));
+      };
+    }""")
+    fire = lambda *a: sw.evaluate("([t, n, p]) => self.__fire(t, n, p)", list(a))
+    home = "/?next=1&from=push"
+    note = lambda kind="study", **x: {"notification": {"data": {"url": home, "kind": kind}}, **x}
+    assert fire("push", {"status": 404}, {}) == [["post", "/api/push/next", None],
+                                                ["show", "SAT Math · Up next", "Open to see what’s due now.", "study", home, ["stop"]]]
+    got = fire("push", {"title": "3 check-ins due", "text": "about 4 min", "kind": "streak"}, {})
+    assert got[1] == ["show", "3 check-ins due", "about 4 min", "streak", home, ["stop"]], got
+    sw.evaluate("self.__tab('/practice/session/?id=1')")
+    assert fire("notificationclick", {}, note()) == [["open", home]], "a session tab is left alone"
+    assert fire("notificationclick", {"status": 404}, note("streak", action="stop")) == [
+        ["post", "/api/push/stop", "streak"], ["open", "/me/settings/#study"]]
+    sw.evaluate("self.__tab('/')")
+    assert fire("notificationclick", {}, note()) == [["focus"], ["nav", home]], "a Today tab is reused"
+    assert fire("notificationclick", {}, note(action="stop")) == [["post", "/api/push/stop", "study"]]
+    ctx.close()
+    print("ok  /sw.js: no fetch handler or cache, not registered on load; a push shows words (or the feed's line),"
+          " a tap reuses only a tab on its page, Stop turns the kind off or opens Settings")
+
     # ---- every page at 1280 and 390, light and dark, a new and a seeded learner: the chrome is
     # there (or, on the runner, the test and the kit, absent), nothing scrolls sideways, the theme
     # holds, and no console errors
@@ -850,6 +900,7 @@ def walk(b, base, http, sql) -> None:
                     go(pg, url) if path not in bare else pg.goto(base + url, wait_until="networkidle")
                     tag = (L == A and "seeded" or "new", theme, w, path)
                     assert pg.evaluate("document.documentElement.scrollWidth <= innerWidth"), tag
+                    assert pg.evaluate("window.__asked") == 0, (tag, "a notification prompt or /sw.js on load")
                     chrome = pg.is_visible("#bar nav.side" if w > 760 else "#bar .pbar") and (w > 760 or pg.is_visible("#tabs"))
                     assert chrome != (path in bare), (tag, "the shell's chrome")
                     # ponytail: /test/ keeps its 41 hard-coded colours until its owner converts them (Shell 2.13)

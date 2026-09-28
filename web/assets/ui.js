@@ -37,6 +37,8 @@
                                     UI.run.on(cfg.run), .label(), .parts(), .state()
      UI.autoSheet(open) -> Promise<sheet | null>   a sheet that opens by itself (U25)
      UI.share(q, {anchor}) -> Promise<url | null>  Send to a friend: a twin by default (U28)
+     UI.notify.on(kinds) / .off() / .sub() / .ok() / .offer(time)   push on this device (U18b):
+                                    registers /sw.js and asks the browser, from a tap only
      UI.skip()                      the skip link, first on every page with a <main>
    The chrome (Shell 2-2.6, R1, U1, U25, U26):
      UI.shell(page | {page, sections, now})   the sidebar, rail and overlay, the phone top bar,
@@ -1330,6 +1332,52 @@
     });
   }
 
+  /* ------------------------------------------------------------ notify (U18b)
+     The one way to /sw.js, for Settings › Study and the "Want a nudge at 19:00?" offer right
+     after a study time is set (Plan step 3, Settings). The worker is registered and the browser
+     asked only inside on(), which only a tap calls: a page load never does. Settings' shapes:
+     POST /api/push/subscribe {endpoint, keys, kinds}, DELETE {endpoint}; satf.push.kinds and
+     satf.push.offered hold JSON. */
+  const notify = (() => {
+    const KINDS = { study: true, streak: false, contest: true };
+    const ios = () => /iPhone|iPad|iPod/.test(navigator.userAgent) && !matchMedia('(display-mode: standalone)').matches;
+    const ok = () => !ios() && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+    const b64 = t => Uint8Array.from(atob(t.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((t.length + 3) % 4)), c => c.charCodeAt(0));
+    const key = () => api('/push/key', { quiet: true }).then(r => (r && r.key) || null, () => null);   // null: push is off here
+    const json = k => { try { return JSON.parse(sget(LS(), k)); } catch (_) { return null; } };
+    async function sub() {
+      const reg = ok() && await navigator.serviceWorker.getRegistration('/').catch(() => null);
+      return reg ? reg.pushManager.getSubscription().catch(() => null) : null;
+    }
+    async function on(kinds) {                 // the prompt comes first, while the tap still counts
+      if (!ok()) throw new Error('unsupported');
+      if (await Notification.requestPermission() !== 'granted') throw Object.assign(new Error('denied'), { denied: true });
+      const k = await key();
+      if (!k) throw new Error('push off');
+      const reg = await navigator.serviceWorker.register('/sw.js');
+      await navigator.serviceWorker.ready;
+      const s = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(k) });
+      kinds = kinds || json('satf.push.kinds') || KINDS;
+      const j = s.toJSON();
+      await api('/push/subscribe', { method: 'POST', body: { endpoint: j.endpoint, keys: j.keys, kinds } });
+      sput(LS(), 'satf.push.kinds', JSON.stringify(kinds));
+      return s;
+    }
+    async function off() {
+      const s = await sub();
+      if (!s) return;
+      await api('/push/subscribe', { method: 'DELETE', body: { endpoint: s.endpoint }, quiet: true }).catch(() => null);
+      await s.unsubscribe().catch(() => null);
+    }
+    async function offer(time) {                // once ever, and only where push can work
+      if (!time || !ok() || json('satf.push.offered') || Notification.permission === 'denied' || await sub() || !await key()) return;
+      sput(LS(), 'satf.push.offered', '1');
+      const said = e => UI.toast(e && e.denied ? 'Your browser said no. Allow notifications for this site in its settings.' : 'Couldn’t turn them on here. Try again in Settings.');
+      UI.toast(`Want a nudge at ${time}?`, { ms: 8000, action: { label: 'Notify me', onClick: () => on().then(() => UI.toast('Notifications on for this device'), said) } });
+    }
+    return { ok, sub, on, off, offer };
+  })();
+
   /* ------------------------------------------------------------ skip link (Shell 2)
      The first Tab stop on every page with a <main>: "Skip to content", moving focus there. */
   function skip() {
@@ -2379,6 +2427,7 @@
     for (const [k, fn] of [['next', startNext], ['run', runStart]]) {
       if (qs.get(k) !== '1') continue;
       qs.delete(k);
+      if (qs.get('from') === 'push') qs.delete('from');       // a notification's tap (/sw.js)
       try { history.replaceState(history.state, '', location.pathname + (qs.toString() ? '?' + qs : '') + location.hash); } catch (_) {}
       whenVisible(fn);
     }
@@ -2726,7 +2775,7 @@
   Object.assign(UI, {
     learner, useLearner, freshLearner, shared: () => shared, stored: () => storable, ready,
     api, cached, whenVisible, refresh, onShell, shellData: () => shellData, me, prefs, prefRow, look,
-    keys, ROUTES, start, nextItems, skip, need, has, types, parseSet, ALIASES, boxChips, feedback, run, autoSheet, share,
+    keys, ROUTES, start, nextItems, skip, need, has, types, parseSet, ALIASES, boxChips, feedback, run, autoSheet, share, notify,
     NAV, SECTION, shell, nowStrip, sections, menuSheet, accountMenu: accountItems,
     signOut: () => (shellData && shellData.me && shellData.me.linked) || shared ? signOut() : leave(),
     h, s, svg, mark, ICON, TOPICS, TOPIC, DOMAINS, glyph, chip,
