@@ -299,7 +299,7 @@
     const n = r.module === 2 ? '' : '';
     const of = (r.modules || []).length > 1 || r.kind === 'section' || r.paper ? `Module ${r.module || 1} of 2 · ` : '';
     const count = r.asked || (r.kind === 'diagnostic' ? 20 : 22);
-    const el = h('div', { class: 'lv-row', 'data-id': r.id });
+    const el = h('div', { class: 'lv-row', 'data-id': r.id, tabindex: '-1' });
     const label = r.status === 'not_begun' ? 'Begin' : r.status === 'timed_out' ? 'Continue' : 'Resume';
     el.append(h('div', { class: 'lv-l' },
       h('p', { class: 'lv-title', text: `${r.kind_label}${r.number ? ' #' + r.number : ''}${n}` }),
@@ -529,8 +529,9 @@
         gridHost.append(h('div', { class: 'ts-empty' }, h('p', { text: 'No papers match these filters.' }), btn('Clear filters', { cls: 'btn sm', run: () => paperBar.clear() })));
         return;
       }
-      shownList.slice(0, papersAll ? shownList.length : 6).forEach(p => gridHost.append(paperCard(p)));
-      if (shownList.length > 6 && !papersAll) foot.append(btn(`Show all ${shownList.length}`, { cls: 'quiet', run: () => { papersAll = true; paint(paperBar.values()); } }));
+      // three rows of three before Show all (acceptance 34 wants the 7 launch papers listed)
+      shownList.slice(0, papersAll ? shownList.length : 9).forEach(p => gridHost.append(paperCard(p)));
+      if (shownList.length > 9 && !papersAll) foot.append(btn(`Show all ${shownList.length}`, { cls: 'quiet', run: () => { papersAll = true; paint(paperBar.values()); } }));
     };
     paperBar = UI.filterBar(barHost, filters, { url: true, store: 'satf.tests.paperFilters', label: 'Paper filters', onChange: v => paint(v) });
     paint(paperBar.values());
@@ -718,7 +719,7 @@
     const sub = [r.paper || r.kind === 'section' || r.kind === 'mock' ? (r.fixed_route ? 'fixed route' : 'adaptive') : null,
       r.timing && r.timing !== 'official' ? { 'x1.5': 'time and a half', x2: 'double time', untimed: 'untimed', 'x0.85': 'tight clock' }[r.timing] : 'official'].filter(Boolean).join(' · ');
     const when = r.started ? `${day(r.started)} · ${new Date(r.started).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: false })}` : '';
-    const mins = r.ms ? Math.round(r.ms / 60000) : null;
+    const mins = r.ms >= 30000 ? Math.round(r.ms / 60000) : null;
     el.append(h('div', { class: 'sr-l1' },
       h('span', { class: 'sr-n mono', text: r.number ? `#${r.number}` : '' }),
       h('span', { class: 'sr-d mono', text: when }),
@@ -795,6 +796,7 @@
     const who = `${r.kind_label}${r.number ? ' #' + r.number : ''}`;
     return UI.sheet({ title: `Share ${who}`, size: 'm', className: 'share-sheet', body: b => {
       const linkBox = h('div', { class: 'sh-pane' }), raceBox = h('div', { class: 'sh-pane', hidden: true });
+      b.append(h('p', { class: 'k', text: 'How' }));
       UI.seg(b, [{ value: 'link', label: 'Any time (a link)' }, { value: 'race', label: 'A race with a deadline' }], { value: 'link', label: 'How',
         onChange: v => { how = v; linkBox.hidden = how !== 'link'; raceBox.hidden = how !== 'race'; } });
       b.append(linkBox, raceBox);
@@ -803,6 +805,7 @@
       const say = () => { help.textContent = fresh ? 'The same kinds of question in the same order, with their own numbers. Answers can’t be passed around, and you still compare question by question.' : 'The same questions as yours.'; };
       const field = h('input', { class: 'field', readonly: true, 'aria-label': 'Share link', placeholder: 'Copy makes the link' });
       const reset = () => { link = null; field.value = ''; };
+      linkBox.append(h('p', { class: 'k', text: 'What they sit' }));
       UI.seg(linkBox, [{ value: 'twins', label: 'Twins' }, { value: 'exact', label: 'Exactly these questions' }], { value: 'twins', label: 'What they sit', onChange: v => { fresh = v === 'twins'; say(); reset(); } });
       say();
       linkBox.append(help);
@@ -884,13 +887,13 @@
   /* ---------------- keys (X23): J / K move, Enter starts, O options, F filters */
   function keys() {
     if (!UI.keys || !UI.keys.register) return;
-    const items = () => [...document.querySelectorAll('.ts-card, .sr-row')].filter(e => e.offsetParent);
+    const items = () => [...document.querySelectorAll('.lv-row, .ts-card, .sr-row')].filter(e => e.offsetParent);
     const move = d => { const l = items(); if (!l.length) return; const i = l.indexOf(document.activeElement); const n = l[Math.max(0, Math.min(l.length - 1, i < 0 ? 0 : i + d))]; n.focus(); n.scrollIntoView({ block: 'nearest' }); };
-    const cur = () => document.activeElement && document.activeElement.closest && document.activeElement.closest('.ts-card, .sr-row');
+    const cur = () => document.activeElement && document.activeElement.closest && document.activeElement.closest('.lv-row, .ts-card, .sr-row');
     UI.keys.register('tests', {
       J: { does: 'Next card or row', run: () => move(1) },
       K: { does: 'Previous card or row', run: () => move(-1) },
-      Enter: { does: 'Start, or resume a paused row', run: () => { const c = cur(); if (!c) return false; const b = c.querySelector('.tc-acts > :first-child, .sr-acts > a, .sr-acts > button'); if (b) b.click(); return undefined; } },
+      Enter: { does: 'Start, or resume a paused row', run: () => { const c = cur(); if (!c) return false; const b = c.querySelector('.lv-acts > :first-child, .tc-acts > :first-child, .sr-acts > a, .sr-acts > button'); if (b) b.click(); return undefined; } },
       O: { does: 'Options', run: () => { const c = cur(); const b = c && [...c.querySelectorAll('button')].find(x => x.textContent === 'Options'); if (b) b.click(); else return false; return undefined; } },
       D: { does: 'Questions & discussion (papers)', run: () => { const c = cur(); const b = c && c.querySelector('.tc-talk'); if (b) b.click(); else return false; return undefined; } },
       X: { does: 'Compare (rows)', run: () => { const c = cur(); const cb = c && c.querySelector('.sr-cmp input'); if (!cb) return false; cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); return undefined; } },
@@ -913,6 +916,7 @@
   }
   function paint() {
     if (!D) return;
+    ['#next', '#habits'].forEach(id => { $(id).hidden = false; });
     S.use(D, rows);
     try { scoreCard(); } catch (e) { console.error(e); if (UI.cardError) UI.cardError($('#score'), () => load(true), 'Couldn’t load your score.'); }
     nextCard(); cycleCard(); liveCard(); habitsCard(); kindsCard(); papersCard();
@@ -936,7 +940,7 @@
     sections();
   }
   function skeleton() {
-    ['#score', '#next', '#kinds', '#papers', '#sittings'].forEach(id => { const el = $(id); if (el && UI.skel) { el.replaceChildren(); if (id === '#kinds' || id === '#papers') { const g = h('div', { class: 'ts-grid' }); [0, 1, 2].forEach(() => UI.skel(g, 'card')); el.append(g); } else UI.skel(el, 'lines:3'); } });
+    ['#score', '#next', '#habits', '#kinds', '#papers', '#sittings'].forEach(id => { const el = $(id); if (el && UI.skel) { el.replaceChildren(); if (id === '#kinds' || id === '#papers') { const g = h('div', { class: 'ts-grid' }); [0, 1, 2].forEach(() => UI.skel(g, 'card')); el.append(g); } else UI.skel(el, 'lines:3'); } });
   }
   async function load(fresh) {
     if (!D) skeleton();
@@ -949,8 +953,9 @@
       } else { D = await api('/tests'); paint(); }
     } catch (e) {
       if (!D) {
-        ['#score', '#kinds', '#papers'].forEach(id => { const el = $(id); el.replaceChildren(); if (UI.cardError) UI.cardError(el, () => load(true), id === '#papers' ? 'Couldn’t load papers.' : 'Couldn’t load your tests.'); });
-        $('#next').replaceChildren();
+        const text = { '#score': 'Couldn’t load your score.', '#kinds': 'Couldn’t load the test kinds.', '#papers': 'Couldn’t load papers.' };
+        Object.keys(text).forEach(id => { const el = $(id); el.replaceChildren(); if (UI.cardError) UI.cardError(el, () => load(true), text[id]); });
+        ['#next', '#habits'].forEach(id => { $(id).replaceChildren(); $(id).hidden = true; });
       }
       return;
     }

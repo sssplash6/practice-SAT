@@ -469,7 +469,11 @@
           if (p.scratch !== undefined) p.scratch = p.scratch || {};
           if (S.questions[i]) putState(S.questions[i].id, p);
         },
-        mark: (i, on) => { putState(S.questions[i].id, { marked: !!on }); },
+        mark: (i, on) => {
+          putState(S.questions[i].id, { marked: !!on });
+          // Review's flags (R5, S10): the same mark in the flags table, so Review lists it
+          api(path('/flag'), { method: 'POST', quiet: true, body: { question_id: S.questions[i].id, on: !!on } }).catch(() => {});
+        },
         note: (i, text) => { putState(S.questions[i].id, { note: String(text || '').slice(0, 500) }); },
         save: (i, on) => api('/saved', { method: 'POST', body: { session: sid, question_id: S.questions[i].id, on: !!on } }),
         away: a => {
