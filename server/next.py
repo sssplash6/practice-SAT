@@ -197,7 +197,8 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, exclude=(), _plan=_UNSET
             continue
         row = _item("plan", f"plan:{task['kind']}:{task['id']}", f"Plan · {task['title']}",
                     task.get("detail") or f"{task.get('count', 0)} questions",
-                    f"Today's plan: {plan['tasks_done']} of {plan['tasks_counted']} done",
+                    (f"Today's plan: {plan['tasks_done']} of {plan['tasks_counted']} done" if plan['tasks_done']
+                     else f"Today's plan · {plan['tasks_counted']} {'task' if plan['tasks_counted'] == 1 else 'tasks'}"),
                     math.ceil(task.get("minutes") or _minutes(task.get("count") or 1, seconds)),
                     body=body if start.get("path") == "/api/drill" else None,
                     href=start.get("path") if start.get("path") != "/api/drill" else None)

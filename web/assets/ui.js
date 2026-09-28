@@ -1634,7 +1634,7 @@
     catch (e) { btn.removeAttribute('aria-busy'); if (UI.toast && !e.offline) UI.toast('Couldn’t start it. Try again.'); }
   }
   const startBtn = (it, label = 'Start', kbd) => {
-    const b = h(it.href ? 'a' : 'button', { class: 'pill sm', href: it.href || null, type: it.href ? null : 'button' }, label, kbd ? keycaps(kbd) : null);
+    const b = h(it.href ? 'a' : 'button', { class: 'pill sm', href: it.href || null, type: it.href ? null : 'button' }, label, kbd && !media('(pointer: coarse)') ? keycaps(kbd) : null);
     if (!it.href) b.addEventListener('click', () => go(b, it));
     return b;
   };
@@ -1698,7 +1698,7 @@
     UI.tooltip(el, () => {
       const t = typeof text === 'function' ? text() : text;
       if (!t) return '';
-      return kbd ? h('span', {}, t, ' ', keycaps(kbd)) : t;
+      return kbd && !media('(pointer: coarse)') ? h('span', {}, t, ' ', keycaps(kbd)) : t;
     });
   }
   function navItem(n) {
