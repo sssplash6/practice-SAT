@@ -306,10 +306,11 @@ figure.q-figure { margin: 4px 0 18px; }
 /* the split Check (P7) */
 .split-check { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .split-check .kbd { margin-left: 4px; }
-.sc-tip { margin-top: 6px; }
+/* D: Sure, Not sure, Guessing share one height and one radius; only the fill differs */
+.split-check .sc-part { height: var(--ctl); min-height: 0; padding: 0 16px; border-radius: var(--radius); font: 600 14.5px/1 var(--font); letter-spacing: 0; gap: 6px; white-space: nowrap; }
 @media (hover: none) { .split-check .kbd, .ws-bar .kbd { display: none; } }
 @media (max-width: 759px) {
-  .split-check.split { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; width: 100%; gap: 6px; }
+  .split-check.split { display: grid; grid-template-columns: repeat(3, 1fr); width: 100%; gap: 6px; }
   .split-check.split > * { min-width: 0; padding-left: 6px; padding-right: 6px; justify-content: center; }
 }
 
@@ -609,7 +610,6 @@ html.has-runner, html.has-runner body { background: var(--paper); }
 @media (hover: none) { .rn-next .rn-enter { display: none; } }
 .rn-check { display: flex; align-items: center; }
 .rn-check .split-check { flex-wrap: nowrap; }
-.rn-check .sc-tip { display: none; }
 .rn-saved { font: 500 12px var(--mono); color: var(--soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .rn-saved[data-state="offline"], .rn-saved[data-state="error"] { color: var(--ink); }
 .rn-who { font: 600 14px var(--font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }

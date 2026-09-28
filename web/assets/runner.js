@@ -1867,7 +1867,7 @@
         return;
       }
       if (!splitCtl && UI.splitCheck) {
-        splitCtl = UI.splitCheck(checkHost, { confidence: challenge ? prefs.confidence : prefs.confidence, active: o.confActive, save: endMode, onSubmit: conf => submit(conf) });
+        splitCtl = UI.splitCheck(checkHost, { confidence: challenge ? prefs.confidence : prefs.confidence, save: endMode, onSubmit: conf => submit(conf) });
       }
       const saving = endMode;
       const skipped = c.status === 'skipped';
@@ -2350,7 +2350,7 @@
     }
     function applyPref(key) {
       if (key === 'show_stopwatch' || key === 'pace_alert') paintWatch();
-      if (key === 'confidence' && splitCtl) { splitCtl.el.remove(); splitCtl.tip && splitCtl.tip.remove(); splitCtl = null; syncFoot(); }
+      if (key === 'confidence' && splitCtl) { splitCtl.el.remove(); splitCtl = null; syncFoot(); }
       if (key === 'option_reasons' && ws) ws.el.classList.toggle('why-off', prefs.option_reasons === false);
     }
     function textSize(v) {
