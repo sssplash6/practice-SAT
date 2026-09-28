@@ -157,7 +157,7 @@
   // The bank gives a plain and a LaTeX form of every option. Where they differ it is a
   // fraction or a radical, and only then is it handed to KaTeX; the plain form shows first.
   function tex(el, plain, latex) {
-    el.textContent = plain ?? '';
+    fracText(el, plain ?? '');
     if (!latex || latex === plain) return el;
     // a thousands comma is part of the number, not punctuation: 1{,}225, never "1, 225"
     latex = String(latex).replace(/(\d),(?=\d{3}(?!\d))/g, '$1{,}');
@@ -175,10 +175,70 @@
         // the punctuation after the math stays on its line
         const p = (parts[i + 1] || '').match(/^[.,;:!?)]+/);
         if (p) { parts[i + 1] = parts[i + 1].slice(p[0].length); el.append(h('span', { style: 'white-space: nowrap' }, m, p[0])); } else el.append(m);
-      } else if (part) el.append(part);
+      } else if (part) el.append(...fracNodes(part));
     });
     return el;
   }
+
+  /* ------------------------------------------------------------ fractions: stacked, in the line */
+  // The user's rule: "8/(x − 14)", "34π/5" and "(2/19)s" draw as a numerator over a bar over a denominator, in the line.
+  // Every character stays in the DOM (the slash and a group's outer brackets are only visually hidden), so textContent
+  // offsets for highlights and notes stay valid and a screen reader still reads the slash. Units and words (km/h, and/or,
+  // 5 m/s, 4.50/hour) are not fractions; neither is a/b/c.
+  const SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ';
+  const INT = '(?:\\d{1,3}(?:,\\d{3})+|\\d+)(?:\\.\\d+)?';
+  const NUM_END = new RegExp(`(?:√?${INT}[A-Za-zπθ]*|√?[A-Za-zπθ]+)[${SUP}]*$`);
+  const DEN_START = new RegExp(`^(?:√?${INT}[${SUP}]*|[A-Z]{2,3}(?![A-Za-z])|[A-Za-zπθ][${SUP}]*(?![A-Za-z]))`);
+  function fracNodes(str) {
+    str = String(str ?? '');
+    if (!str.includes('/')) return [doc.createTextNode(str)];
+    const out = [];
+    let at = 0;
+    const hid = t => h('span', { class: 'fh', text: t });
+    const back = i => { let d = 0; for (let j = i; j >= at; j--) { if (str[j] === ')') d++; else if (str[j] === '(' && !--d) return j; } return -1; };
+    const fwd = i => { let d = 0; for (let j = i; j < str.length; j++) { if (str[j] === '(') d++; else if (str[j] === ')' && !--d) return j; } return -1; };
+    const part = (t, group) => (group ? [hid('('), ...fracNodes(t.slice(1, -1)), hid(')')] : fracNodes(t));
+    for (let k = str.indexOf('/'); k > 0; k = str.indexOf('/', k + 1)) {
+      if (k < at || /[\s/]/.test(str[k - 1]) || /[\s/]/.test(str[k + 1] || ' ')) continue;
+      let a, nGroup = false;
+      if (str[k - 1] === ')') {
+        a = back(k - 1);
+        if (a < 0) continue;
+        nGroup = true;
+        // f(x)/2, 2(x + 1)/3, √(x)/2: the brackets belong to the numerator and stay
+        const pre = str.slice(at, a).match(new RegExp(`(?:${INT}|[A-Za-z√]+)$`));
+        if (pre) { a -= pre[0].length; nGroup = false; }
+      } else if (str[k - 1] === '|') {
+        a = str.lastIndexOf('|', k - 2);                                     // |x|/a
+        if (a < at) continue;
+      } else {
+        const m = str.slice(at, k).match(NUM_END);
+        if (!m) continue;
+        a = k - m[0].length;
+      }
+      let b, dGroup = false;
+      if (str[k + 1] === '(') { b = fwd(k + 1); if (b < 0) continue; b += 1; dGroup = true; }
+      else { const m = str.slice(k + 1).match(DEN_START); if (!m) continue; b = k + 1 + m[0].length; }
+      if (str[b] === '/' || str[a - 1] === '/') continue;                    // a/b/c: leave the chain
+      const num0 = str.slice(a, k), den0 = str.slice(k + 1, b);
+      if (/^[A-Za-z]+$/.test(num0) && /\d\s$/.test(str.slice(0, a))) continue;   // 5 m/s
+      // words and units with no number (km/h, lb/ft³, and/or) stay; segment ratios (BC/AB) and cd/3 are fractions
+      const word = t => /^[A-Za-z]{2,}[${SUP}]*$/.test(t), seg = t => /^[A-Z]{2,3}$/.test(t);
+      if ((word(num0) || word(den0)) && !(seg(num0) && seg(den0)) && !/\d/.test(num0 + den0)) continue;
+      if (str[a - 1] === '$') continue;                                        // $4.50/h
+      // a lone fraction in brackets, (2/19)s: the brackets go with the bar
+      let wl = '', wr = '';
+      if (!nGroup && !dGroup && str[a - 1] === '(' && str[b] === ')' && a - 1 >= at && !/[A-Za-z√\d]/.test(str[a - 2] || '')) { a -= 1; b += 1; wl = '('; wr = ')'; }
+      if (a > at) out.push(doc.createTextNode(str.slice(at, a)));
+      out.push(h('span', { class: 'frac' }, wl ? hid(wl) : null, h('span', { class: 'fn' }, part(num0, nGroup)), hid('/'),
+        h('span', { class: 'fd' }, part(den0, dGroup)), wr ? hid(wr) : null));
+      at = b;
+      k = b - 1;
+    }
+    if (at < str.length) out.push(doc.createTextNode(str.slice(at)));
+    return out;
+  }
+  const fracText = (el, str) => { el.replaceChildren(...fracNodes(str)); return el; };
 
   /* ------------------------------------------------------------ the grid-in rules */
   const num = x => /^(\d+\.?\d*|\.\d+)$/.test(x);
@@ -252,7 +312,13 @@
     if (n !== 15) bad.push(`${n} two-digit cuts, not 15`);
     const sci = sciEval.__test.filter(([src, want]) => { try { return Math.abs(sciEval(src, true, 0) - want) > 1e-9; } catch (_) { return true; } }).map(([s]) => s);
     const diff = stemDiff.__test.filter(([a, b, want]) => JSON.stringify(stemDiff(a, b).map(s => b.slice(s.start, s.end))) !== JSON.stringify(want)).map(([a]) => a);
-    return { ok: !bad.length && !sci.length && !diff.length, spr: bad, sci, diff };
+    // fractions: [text, how many stack]; the text itself never changes (highlight offsets)
+    const frac = [['10x²/(x² − 196) − 5x/(x + 14) = 8/(x − 14)', 3], ['P = (2/19)s − 1/9', 2], ['the ratio BC/AB', 1], ['|x|/a − 6', 1],
+      ['60 km/h and/or more', 0], ['at 5 m/s', 0], ['$4.50/hour', 0], ['a/b/c', 0], ['lb/ft³', 0]].filter(([t, want]) => {
+      const box = h('span', {}, fracNodes(t));
+      return box.textContent !== t || box.querySelectorAll(':scope > .frac').length !== want;
+    }).map(([t]) => t);
+    return { ok: !bad.length && !sci.length && !diff.length && !frac.length, spr: bad, sci, diff, frac };
   }
 
   const DIRECTIONS = [
@@ -329,7 +395,7 @@
     el.replaceChildren();
     const put = str => str.split(/(_{3,})/).forEach(p => {
       if (!p) return;
-      el.append(/^_{3,}$/.test(p) ? h('span', { class: 'blank', role: 'img', 'aria-label': 'blank' }, p) : doc.createTextNode(p));
+      el.append(...(/^_{3,}$/.test(p) ? [h('span', { class: 'blank', role: 'img', 'aria-label': 'blank' }, p)] : fracNodes(p)));
     });
     let at = 0;
     (spans || []).filter(s => s && s.end > s.start).sort((a, b) => a.start - b.start).forEach(s => {
@@ -2333,7 +2399,7 @@
 
   /* ------------------------------------------------------------ export */
   Object.assign(UI, {
-    workspace, question, splitCheck, questionActions, twin, twinSheet, twinInline, stemDiff, pad, calc, tex, katex, spr, readAloud, sciEval, savedToast,
+    workspace, question, splitCheck, questionActions, twin, twinSheet, twinInline, stemDiff, pad, calc, tex, katex, spr, readAloud, sciEval, savedToast, fracText, fracNodes,
     workspaceSelfTest: selfTest, qicon: icon,
   });
   if (location.pathname.startsWith('/dev/')) {
