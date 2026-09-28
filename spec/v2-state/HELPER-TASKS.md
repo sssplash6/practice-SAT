@@ -419,6 +419,8 @@ Rules as above (own files only, own port and SATF_DB, commit per part, never pus
 main build is building this section's pages right now and codes against the endpoints your spec lists, so build exactly those
 endpoints and shapes). The requirements are in spec/v2-state/briefs/S1.md (sections 2-5 and 7; the brief says pages-only for the main
 build, but its server items are yours). The branch already has the section's early server commits: continue from them.
+FIRST among them: GET /api/levers?keys= (G6 in spec/v2-upgrades/product.md): every page's "how it's worked out" popovers call
+it, including the streak button in the phone top bar, and today they all show "Couldn't load".
 DONE: checks/s1.py passes and test_flow "all good". Tell the user "S1 server done".
 ```
 
@@ -549,6 +551,20 @@ OWN ONLY: server/plan.py, server/api_plan.py, server/checks/s7.py, server/words.
 server/compete.py, server/api_compete.py, server/checks/s8.py.
 Known asks: /api/plan/preview's per_date is empty (the exam-date picker needs each date's study days, weekly pace, tag and
 Recommended); words.daily_item is missing (Today's day's questions show only the two Math slots); anything else in those files.
+ALSO READ followups/S7-hygiene.json, S9-hygiene.json, S8-hygiene.json ("fixer_report", the part for other owners). From them:
+- FIRST: server/checks/s8.py ~517-519 is date-dependent and stops test_flow: it asks compete.contest("final-" + next SAT date),
+  but compete.ensure only makes a Season Final in the week before an SAT, so on a fresh DB in other weeks (e.g. 2026-09-28)
+  it is a 404. Make the check create or pick its Final itself.
+- Words: /api/words must fill each word's `lists` from word_lists (a new list vanishes on reload); quiz_item must leave out
+  the target's family, synonyms and "Same as" words (the worksheet's Q3 has two right answers: student-facing, fix first);
+  "nearly" sample items keep the word in the text or are labelled in-context; _summary needs a "today" bucket (words due
+  today are counted under tomorrow); add "meaning" to the traps catalogue.
+- Plan: api_plan.py logs the student's own task marks under the settings-edit kind ("Changed 2026-09-28:fix"): give them
+  their own kind, say what changed ("Skipped Fix mistakes", "Moved Warm-up to Tue") and put `field` in changes.today.
+- Compete: GET /api/contest/{cid} returns owner: true and code to the owner; the join payload adds who invited, how many
+  are in, the round and topics; send `rated` (the count of rated answers); the debrief marks unreached slots itself.
+  Levels: ratings.level_of is a 7-level scale but spec/rating.md and the par rows use 10; list it for the owner of
+  ratings.py (not in your files) unless compete.py can map it.
 Do NOT change response shapes the pages already use; add fields. DONE: s7.py, s8.py, s9.py and test_flow pass. Tell the user
 "page asks done" with what you did and the list of items for other owners.
 ```
