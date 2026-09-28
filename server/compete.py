@@ -438,14 +438,17 @@ def _ensure_unlocked(at: dt.datetime | None = None, tz: int = 0) -> list[dict]:
                 dt.datetime.combine(weekend, dt.time(), dt.timezone.utc),
                 dt.datetime.combine(weekend + dt.timedelta(days=2), dt.time(12), dt.timezone.utc),
                 slots, 4200 if final_date else 2100, extra=extra)
-    themes = trap_families()
+    # the trap weeks: trap_families() builds ~16k questions on its first call in a process, so it runs only when a
+    # trap-week contest is actually missing (every cold /api/shell paid it, 17.7 s for five calls; Up next, F2B)
+    missing = []
+    for offset in (0, 7):
+        first = monday + dt.timedelta(days=offset)
+        week = f"{first.isocalendar().year}-W{first.isocalendar().week:02d}"
+        if not db.one("SELECT 1 FROM contests WHERE id=?", "trap-" + week):
+            missing.append((first, week, "trap-" + week))
+    themes = trap_families() if missing else {"families": []}
     if themes["families"]:
-        for offset in (0, 7):
-            first = monday + dt.timedelta(days=offset)
-            week = f"{first.isocalendar().year}-W{first.isocalendar().week:02d}"
-            cid = "trap-" + week
-            if db.one("SELECT 1 FROM contests WHERE id=?", cid):
-                continue
+        for first, week, cid in missing:
             theme = trap_theme(week, themes)
             slots = _trap_slots(week, theme, themes["topic_floor"])
             family = theme["family"]
