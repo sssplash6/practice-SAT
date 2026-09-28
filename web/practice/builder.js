@@ -102,7 +102,7 @@
     if (p.clock) st.timing = p.clock;
     if (p.clock_minutes) st.minutes = p.clock_minutes;
     ['tiers', 'levels', 'formats'].forEach(k => { if (Array.isArray(p[k]) && p[k].length) st[k] = p[k].slice(); });
-    ['adaptive', 'unmeasured', 'pace_alert'].forEach(k => { if (typeof p[k] === 'boolean') st[k] = p[k]; });
+    ['adaptive', 'pace_alert'].forEach(k => { if (typeof p[k] === 'boolean') st[k] = p[k]; });
     ['feedback', 'repairs', 'order', 'mix', 'confidence'].forEach(k => { if (p[k]) st[k] = p[k]; });
     if (p.pool) st.pool = p.pool === 'checks' ? 'checks' : p.pool;
     const pm = ((p.practice || {}).math) || {};
@@ -152,7 +152,6 @@
     if (!B.st.tiers.includes(d)) return false;
     const L = lv ? lv.level : t.level;
     if (L && !B.st.levels.includes(L)) return false;
-    if (lv && lv.rough && !B.st.unmeasured) return false;
     return true;
   }
   function fits(t) {
@@ -225,7 +224,6 @@
   /* ---------------------------------------------------------------- page header */
   function paintHead() {
     const b = B.bank, t = b.totals || {};
-    $('#meta').textContent = `${t.skills} skills · ${t.types} question types · unlimited questions, never repeated`;
     const pts = $('#points');
     const g = b.gains;
     pts.replaceChildren();
@@ -564,7 +562,6 @@
     const line = $('#sline');
     if (B.search.trim()) return;
     line.replaceChildren();
-    if (ready[0]) line.append(h('span', { class: 'help', text: `Enter starts: ${ready[0].title}${ready[0].meta ? ` · ${ready[0].meta}` : ''}` }));
   }
   function paintSearch(hits) {
     document.querySelectorAll('.trow').forEach(r => { r.hidden = !!hits && !hits.has(r.dataset.t); });
@@ -1021,9 +1018,6 @@
         lv.append(b);
       });
       g3.append(lv);
-      const rough = allTypes().filter(t => Object.values(t.levels || {}).some(x => x.rough)).length;
-      tip(UI.triCheck(g3, { label: `Include rough levels · ${rough}`, checked: st.unmeasured, onChange: v => { st.unmeasured = v; changed(); } }).el,
-        'A level is rough until 20 students have answered that type; ratings move with every clean first try.');
       const tmix = UI.seg(g3, [{ value: 'any', label: 'Any' }, { value: 'module1', label: 'Like module 1 (7/8/7)' }, { value: 'module2_upper', label: 'Like the harder module 2 (3/8/11)' }], { value: st.tier_mix, label: 'Mix', onChange: v => { st.tier_mix = v; changed(); } });
       tip(tmix.btns[2], 'Aiming above 580? The harder module 2 is 11 Hard of 22.');
       const ad = UI.switch(g3, { checked: st.adaptive && st.order !== 'ramp', label: 'Adaptive: step up a tier after 2 first-try rights in a skill, down after a miss', disabled: st.order === 'ramp', onChange: v => { st.adaptive = v; changed(); } });
@@ -1234,7 +1228,6 @@
     if (g('from')) st.from = g('from');
     if (g('tiers')) { st.tiers = list('tiers').filter(x => TIERS.includes(x)); st.zone = 'off'; }
     if (g('levels')) { st.levels = list('levels').flatMap(x => { const m = x.split('-').map(Number); return m.length === 2 ? LEVELS.filter(l => l >= m[0] && l <= m[1]) : [m[0]]; }).filter(l => LEVELS.includes(l)); st.zone = 'off'; }
-    if (g('unmeasured')) st.unmeasured = g('unmeasured') !== '0';
     if (g('formats')) st.formats = list('formats').filter(x => x === 'mcq' || x === 'spr');
     if (g('timing')) { const t = g('timing'); if (t.startsWith('custom')) { st.timing = 'custom'; st.minutes = +t.split(':')[1] || 16; } else st.timing = t === 'untimed' ? 'off' : t; }
     if (g('feedback')) st.feedback = g('feedback');
