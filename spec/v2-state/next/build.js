@@ -370,7 +370,8 @@ the decisions, or something another task needs now) or "followup" (anything else
 const fix = (t, defects, round) => agent(`${CONTEXT(t)}
 A verifier found defects in ${t.title}. ${typeof defects === 'string' ? `Read them from ${defects}.` : `DEFECTS: ${JSON.stringify(defects)}`}
 An earlier fixer may have been cut off part way: check the branch first and do not redo what is fixed. Fix every blocker, and
-every followup that is small, in the files you own (list any that need another owner). Fix only the listed defects: do
+every followup that is small, in the files you own (list any that need another owner). For design improvements from the hygiene
+reviewer, make them with care and taste: they are part of the job, not extras. Otherwise fix only the listed items: do
 not widen the scope, and if a fix creates new work (content to add, a pattern elsewhere), list it in your return instead of doing it. Then run the task's check file and
 test_flow; both must pass. Commit as you go, and return what you changed and which defects are left.`,
   { label: `fix ${t.id} r${round}`, phase: 'Fix', isolation: 'worktree' })
@@ -393,11 +394,22 @@ and an exam date) through the site's API. For every page of the section at 1440,
    eye-pleasing, anything a student would not understand at a glance.
 3. Decision 7: zeros and defaults on screen, facts said twice, explanatory sentences that should be tooltips, equal-weight buttons doing
    different things, long cards that should start collapsed, headers that are more than one quiet line.
-The user found these on Today by eye, after every check had passed; find more of exactly this kind: misaligned control rows; two choices
-crammed in one row; hover highlights overlapping text; a sentence where a number belongs; icons off-centre with their text; an oversized
-button repeating the header; zeros; a "Why" line under every row; a card repeating another; big empty areas; a detail box floating away
-from what it describes; a cluttered header; help paragraphs instead of one link. No feature may be removed.
-Return every finding with severity, where (page, card, selector, width, theme), what, and the exact fix.`,
+THE BAR, not a checklist: on Today the user found, by eye and after every check had passed, misaligned control rows, two choices
+crammed in one row, hover highlights overlapping text, a sentence where a number belongs, icons off-centre, an oversized button repeating
+the header, zeros, a "Why" line under every row, a card repeating another, big empty areas, a detail box floating away from what it
+describes, a cluttered header and help paragraphs. Those show the level of care expected; they are examples, not the limit. Be a
+creative, demanding product designer and go beyond them:
+- Hierarchy and the five-second test: what does a student see first, second, third? Is the one thing they should do today the most
+  obvious thing on the screen? Does the page read top to bottom in the order a student thinks?
+- Grouping and rhythm: related things together, unrelated things apart; one spacing scale; cards that feel like one family.
+- Progressive disclosure: what can start collapsed, move into a sheet, or appear only when it matters?
+- Microcopy: shorter, plainer, friendlier words; labels that say what happens when tapped; no jargon a student would not use.
+- States with character: empty states that invite the first step, loading that matches the final shape, errors that say what to do.
+- Consistency across the site: the same thing looks and behaves the same on every page (compare with Practice, already approved).
+- Comfort: contrast, reading width, touch reach on a phone, motion that is subtle, dark mode that is calm.
+- Delight within calm: small touches that make it feel premium and cared for, never noise.
+Propose improvements, not only defects: for each, say what to change and why it is better for a student. No feature may be removed.
+Return every finding with severity, where (page, card, selector, width, theme), what, and the exact change.`,
   { label: `hygiene ${t.id}`, phase: 'Verify', schema: HYG, isolation: 'worktree' })
 
 async function run(a) {
