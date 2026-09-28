@@ -199,12 +199,11 @@
     try {
       const q = await api('/qotd');
       const m = q.mine, qq = q.question || {};
-      // one header row with one way in; before an answer the question itself invites the try
+      // one header row with one way in; before an answer only its skill and difficulty (the user: no need to display the question)
       const go = quiet(m ? 'See it ›' : 'Answer ›', null, { href: `${C.href('daily')}#qotd` });
       const kids = [h('div', { class: 'card-head' }, h('span', { class: 'k', text: 'QUESTION OF THE DAY' }), h('div', { class: 'card-act' }, go))];
       if (!m) {
-        kids.push(h('p', { class: 'line qotd-stem', text: String(qq.stem || '').replace(/\s+/g, ' ').trim() }),
-          h('p', { class: 'meta', text: [qq.topic_name || (qq.topic && C.topicName(qq.topic)), C.TIER[qq.difficulty]].filter(Boolean).join(' · ') }));
+        kids.push(h('p', { class: 'meta', text: [qq.topic_name || (qq.topic && C.topicName(qq.topic)), C.TIER[qq.difficulty]].filter(Boolean).join(' · ') }));
       } else if (m.correct) kids.push(h('p', { class: 'line', text: ['Right', m.share !== undefined ? `${pct(m.share)} of ${num(m.n)} got it` : null, m.streak ? `${m.streak}-day streak` : null].filter(Boolean).join(' · ') }));
       else kids.push(h('p', { class: 'line', text: m.mistake || m.reason ? `Fell for: ${m.mistake || m.reason}` : 'Wrong' }));
       el.replaceChildren(...kids);
