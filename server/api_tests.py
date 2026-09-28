@@ -36,7 +36,7 @@ router.include_router(papers.router)
 MOCK_MODULE_SECONDS = 35 * 60
 
 # what a student is allowed to see about a question
-PUBLIC_FIELDS = ("id", "domain", "topic_name", "difficulty", "type",
+PUBLIC_FIELDS = ("id", "domain", "topic", "topic_name", "difficulty", "type",
                  "stem", "choices", "latex", "figure", "table")
 
 # filled by app.py's startup
