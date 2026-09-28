@@ -390,6 +390,7 @@
     u.search = keep.toString();
     if (o.push && was !== id) history.pushState({ tab: id }, '', u); else history.replaceState(history.state, '', u);
     if (was !== id) dropPlayer();
+    $('panel').setAttribute('aria-labelledby', `tab-${id}`);
     paintTabs();
     paintHead();
     paintFilters();
@@ -1762,6 +1763,13 @@
     const p = UI.review(host, items, {
       mode: 'pane', at, listKey: `hub.${tab}`, nKey: ['redo', 'due', 'fixed'].includes(tab) ? 'unseen' : 'miss', prefs: S.prefs, owner: true,
       axes: ['easier', 'harder'],
+      // a twin keeps your trap on offer: want is {template: regex} (the drill body, 2.6), matched against the option's norm
+      twinBody: it => {
+        const q = it.q || {};
+        const norm = it.norm && !String(it.norm).startsWith('~') ? it.norm : null;
+        return Object.assign({ templates: [q.template], count: 1, source: 'review' },
+          norm ? { want: { [q.template]: `^${String(norm).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$` } } : {});
+      },
       on: paneOn(tab, kind, kind === 'single' ? items[0]._row : null),
     });
     return p;
