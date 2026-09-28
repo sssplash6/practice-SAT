@@ -413,13 +413,13 @@ def _read_sitting(sid: str, x_learner: str | None):
     # old anonymous diagnostic is released only after its signup gate.
     who = viewer(x_learner)
     if row["learner"] and row["learner"] != who and sid != "sample-section":
-        raise HTTPException(403, {"need": "owner"})
+        raise HTTPException(403, {"need": "owner", "kind": row["kind"]})
     if not row["learner"] and not row["user_id"]:
         raise HTTPException(403, {"need": "signup"})
     if row["kind"] == "challenge" and row["day"]:
         from . import daily
         if row["day"] >= daily.today(-840) and row["learner"] != who:
-            raise HTTPException(403, {"need": "owner"})
+            raise HTTPException(403, {"need": "owner", "kind": row["kind"]})
     return row, who
 
 

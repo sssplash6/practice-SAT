@@ -5,6 +5,7 @@ The checks use fresh learner codes and never need the development database.
 
 from __future__ import annotations
 
+import datetime as dt
 import logging
 import secrets
 
@@ -49,8 +50,16 @@ def check() -> None:
         ok(client.post(f"/api/session/{sid}/answer", headers=h,
                        json={"question_id": right["id"], "answer": answer(right, True)}))
         ok(client.post(f"/api/session/{sid}/finish", headers=h))
-        ok(client.get(f"/api/session/{sid}/results"), 403)
+        assert ok(client.get(f"/api/session/{sid}/results"), 403)["detail"] == \
+            {"need": "owner", "kind": "diagnostic"}
         ok(client.get(f"/api/session/{sid}/results", headers={"X-Learner": other}), 403)
+        challenge_id = "s6-challenge-" + secrets.token_hex(6)
+        challenge_learner = "a:s6challenge" + secrets.token_hex(6)
+        db.run("INSERT INTO sessions(id,kind,learner,started,finished,day,result)"
+               " VALUES (?,?,?,?,?,?,?)", challenge_id, "challenge", challenge_learner,
+               progress.now(), progress.now(), dt.datetime.now(dt.timezone.utc).date().isoformat(), "{}")
+        assert ok(client.get(f"/api/session/{challenge_id}/results", headers={"X-Learner": other}),
+                  403)["detail"] == {"need": "owner", "kind": "challenge"}
         report = ok(client.get(f"/api/session/{sid}/results", headers=h))
         assert report["mine"] and report["summary"]["correct"] == 1
         assert report["summary"]["incorrect"] == 1
