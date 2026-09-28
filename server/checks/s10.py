@@ -14,9 +14,10 @@ from server import db, practice, progress
 from server.app import app
 
 
-def main() -> None:
+def main(check_db: bool = True) -> None:
     path = os.environ.get("SATF_DB", "")
-    assert path.endswith("/server/s10.db"), "set SATF_DB=$PWD/server/s10.db"
+    if check_db:
+        assert path.endswith("/server/s10.db"), "set SATF_DB=$PWD/server/s10.db"
     owner = "a:s10check" + secrets.token_hex(5)
     outsider = "a:s10other" + secrets.token_hex(5)
     h, other = {"X-Learner": owner}, {"X-Learner": outsider}
@@ -167,7 +168,7 @@ def main() -> None:
 
 def check(client: TestClient) -> None:
     """Entry point used by server/test_flow.py's check discovery."""
-    main()
+    main(check_db=False)
 
 
 if __name__ == "__main__":
