@@ -390,7 +390,7 @@ def hold_back(sitting: dict, item: dict) -> dict:
     out = {k: v for k, v in item.items() if k not in HELD}
     if isinstance(out.get("crowd"), dict):
         out["crowd"] = {k: v for k, v in out["crowd"].items()
-                        if k not in ("option_share", "n", "rate", "level")}
+                        if k not in ("option_share", "n", "rate", "level", "shares", "norm_share")}
     if isinstance(out.get("cause"), dict):
         ev = out["cause"].get("evidence") or {}
         out["cause"] = {**out["cause"], "evidence": {k: v for k, v in ev.items()
@@ -462,7 +462,7 @@ def _review(c: dict, second: dict, ledger: dict | None, causes: dict | None) -> 
                     history[a["template"]].append(dict(a))
     levels = drill.levels()
     out = []
-    for i in c["items"]:
+    for slot, i in enumerate(c["items"], 1):
         q, qid, st = i["q"], i["qid"], i["st"]
         key = (q.get("key"), q.get("seed"))
         a = i["attempt"]
@@ -470,6 +470,16 @@ def _review(c: dict, second: dict, ledger: dict | None, causes: dict | None) -> 
         note = notes.get(key) or {}
         status = i["status"]
         crowd = levels.get((q.get("key"), q.get("difficulty")), {})
+        crowd_data = {"n": crowd.get("n", 0), "rate": crowd.get("rate"),
+                      "median_ms_right": crowd.get("median_ms_right"),
+                      "option_share": None, "level": crowd.get("level"),
+                      "rough": crowd.get("rough", True), "level_n": crowd.get("n", 0)}
+        if row["contest"]:
+            from .api_compete import _slot_field
+            field = _slot_field(row["contest"], slot)
+            crowd_data.update({"n": field["players"], "rate": field["right"],
+                               "median_ms_right": field["median_ms"],
+                               "norm_share": field["mistakes"], "shares": field["shares"]})
         odds = c["result"].get("odds") or {}
         item = {**q, "id": qid, "n": i["n"], "module": i["module"], "address": i["address"],
                 "label": i["label"], "subject": c["subject"], "status": status,
@@ -487,7 +497,7 @@ def _review(c: dict, second: dict, ledger: dict | None, causes: dict | None) -> 
                 "second": st.get("second"), "seen": bool(st.get("seen_key")),
                 "cause": (causes or {}).get("per_q", {}).get(qid),
                 "worth": worth((ledger or {}).get("per_q", {}).get(qid, {}).get("pts")),
-                "crowd": crowd or None, "odds": odds.get(qid) if isinstance(odds, dict) else None}
+                "crowd": crowd_data, "odds": odds.get(qid) if isinstance(odds, dict) else None}
         if q.get("type") == "spr":
             item["accepted"] = scoring.accepted_forms(q["answer"]) if "answer" in q else []
             item["diagnosis"] = scoring.grid_diagnose(str(i["given"]), str(q["answer"])) \
@@ -570,6 +580,45 @@ def _report_insight(c: dict, review: list[dict], second: dict, summary: dict) ->
                            "ranked": bool(row["ranked"]), "unranked_why": row["unranked_why"]}}
 
 
+def _value(sid: str, c: dict, led: dict | None, target: int | None) -> dict:
+    if not led:
+        return {"path": None, "best_value": [], "flip_easy": None}
+    by_id = {i["qid"]: i for i in c["items"]}
+    picks = []
+    for qid, detail in led["per_q"].items():
+        i = by_id.get(qid)
+        if not i:
+            continue
+        q = i["q"]
+        budget = drill.budget_ms(q["key"], q["difficulty"]) if q.get("key") else PACE_MS
+        picks.append({"qid": qid, "topic": q.get("topic"), "tier": q.get("difficulty"),
+                      "pts": detail["pts"], "budget_ms": budget,
+                      "pts_per_minute": round(detail["pts"] * 60000 / budget, 3)})
+    best = sorted(picks, key=lambda x: (-x["pts_per_minute"], -x["pts"], x["qid"]))
+    path = None
+    if target is not None:
+        if led["mid"] >= target:
+            path = {"state": "reached", "target": target, "qids": [], "n": 0, "estimate": None}
+        elif led["all_right"]["mid"] < target:
+            path = {"state": "out_of_reach", "target": target, "qids": [], "n": None,
+                    "estimate": led["all_right"], "route": led.get("route")}
+        else:
+            chosen = []
+            for pick in sorted(picks, key=lambda x: (-x["pts"], TIER_ORDER.index(x["tier"]), x["qid"])):
+                chosen.append(pick["qid"])
+                estimate_now = estimate.rescore(sid, right=chosen)
+                if estimate_now and estimate_now["mid"] >= target:
+                    path = {"state": "reachable", "target": target, "qids": chosen,
+                            "n": len(chosen), "estimate": estimate_now}
+                    break
+    easy = [p["qid"] for p in picks if p["tier"] == "easy"]
+    if not easy:
+        easy = [p["qid"] for p in picks if p["tier"] == "medium"]
+    flip = {"tier": "easy" if any(p["tier"] == "easy" for p in picks) else "medium",
+            "count": len(easy), "estimate": estimate.rescore(sid, right=easy)} if easy else None
+    return {"path": path, "best_value": best, "flip_easy": flip}
+
+
 def report(sid: str, x_learner: str | None = None) -> dict:
     row, who = _read_sitting(sid, x_learner)
     c = core(row)
@@ -615,6 +664,11 @@ def report(sid: str, x_learner: str | None = None) -> dict:
     led = estimate.ledger(sid) if _band(result) and learner else None
     causes = progress.causes(learner, session=sid, subject=c["subject"]) if learner else None
     second = second_block(c)
+    hidden = set(second["unseen"]) if second["offered"] else set()
+    if causes and hidden:
+        causes = {**causes, "per_q": {qid: ({**v, "evidence": {k: value for k, value in
+                  (v.get("evidence") or {}).items() if k not in ("diagnosis", "struck_key", "first")}}
+                  if qid in hidden else v) for qid, v in causes.get("per_q", {}).items()}}
     review = _review(c, second, led, causes)
     domains = scoring.score([i["q"] for i in counted], c["answers"])["domains"] if counted else []
     for d in domains:
@@ -657,14 +711,19 @@ def report(sid: str, x_learner: str | None = None) -> dict:
     mistakes = []
     for (template, norm), ids in grouped.items():
         t = db.one("SELECT * FROM traps WHERE learner=? AND template=? AND norm=?", learner, template, norm)
-        mistakes.append({"template": template, "reason": norm, "label": t["label"] if t else "Incorrect",
+        unseen = bool(hidden.intersection(ids))
+        mistakes.append({"template": template, "reason": None if unseen else norm,
+                         "label": "Misconception hidden until your second look" if unseen else
+                         t["label"] if t else "Incorrect",
                          "kind": "misconception" if norm else "gridin", "topic": t["topic"] if t else None,
                          "qids": ids, "open": bool(t and not t["closed"]), "owed": t["owed"] if t else 0,
                          "closed": t["closed"] if t else None, "hits_all_time": t["hits"] if t else len(ids)})
     sequence = seqs(learner)
+    position = db.one("SELECT rowid AS n FROM sessions WHERE id=?", sid)
     same = [r for r in db.rows("SELECT id,finished,result FROM sessions WHERE learner=? AND kind=?"
-                              " AND finished<? AND abandoned IS NULL ORDER BY finished DESC,rowid DESC LIMIT 1",
-                              learner, row["kind"], row["finished"])] if learner else []
+                              " AND (finished<? OR (finished=? AND rowid<?)) AND abandoned IS NULL"
+                              " ORDER BY finished DESC,rowid DESC LIMIT 1", learner, row["kind"],
+                              row["finished"], row["finished"], position["n"])] if learner else []
     previous = None
     if same:
         p = same[0]
@@ -680,6 +739,8 @@ def report(sid: str, x_learner: str | None = None) -> dict:
     twins = db.rows("SELECT id FROM sessions WHERE learner=? AND finished IS NOT NULL"
                     " AND json_extract(cfg,'$.parent')=?", learner, sid) if learner else []
     insight = _report_insight(c, review, second, summary)
+    profile = _profile(learner)
+    value = _value(sid, c, led, profile.get("target"))
     challenge = None
     if row["kind"] == "challenge" and row["day"]:
         from . import challenge as challenge_module
@@ -699,7 +760,12 @@ def report(sid: str, x_learner: str | None = None) -> dict:
             "by_format": by_format, "mistakes": mistakes, "review": review,
             "previous": previous, "rank": rank, "ledger": led, "second": second,
             "causes": causes, "recovery": progress.recovery(learner, sid) if learner else None,
-            "profile": _profile(learner), "twins": {"n": len(twins), "right": 0},
+            "profile": profile, "twins": {"n": len(twins), "right":
+            db.one("SELECT COUNT(*) n FROM attempts WHERE learner=? AND session IN"
+                   " (SELECT id FROM sessions WHERE learner=? AND finished IS NOT NULL"
+                   " AND json_extract(cfg,'$.parent')=?) AND correct=1", learner, learner, sid)["n"]
+            if twins else 0},
+            **value,
             "total": estimate.total(learner, sid) if learner and _band(result) else None,
             "challenge": challenge, "contest": {"points": result.get("points"),
                                                   "points_parts": result.get("points_parts"),
@@ -962,9 +1028,9 @@ def _qid(c: dict, question_id: str) -> dict:
 
 
 class WhatIf(BaseModel):
-    right: list[str] = Field(default_factory=list, max_length=MAX_IDS)
-    wrong: list[str] = Field(default_factory=list, max_length=MAX_IDS)
-    drop: list[str] = Field(default_factory=list, max_length=MAX_IDS)
+    right: list[str] = Field(default_factory=list, max_length=44)
+    wrong: list[str] = Field(default_factory=list, max_length=44)
+    drop: list[str] = Field(default_factory=list, max_length=44)
 
 
 @router.post("/api/session/{sid}/whatif")
@@ -977,7 +1043,9 @@ def whatif(sid: str, body: WhatIf, x_learner: str | None = Header(default=None))
     out = estimate.rescore(sid, right=body.right, wrong=body.wrong, drop=body.drop)
     if out is None:
         raise HTTPException(409, "this sitting has no score band")
-    return out
+    led = estimate.ledger(sid)
+    return {**out, "delta": round(out["mid"] - led["mid"], 2) if led else None,
+            "note": "Module 2 is not re-routed"}
 
 
 class SecondIn(BaseModel):
@@ -1017,8 +1085,15 @@ def second_answer(sid: str, body: SecondIn, x_learner: str | None = Header(defau
         prior["seen_key"] = True
         state[body.question_id] = prior
         db.run("UPDATE sessions SET qstate=? WHERE id=?", json.dumps(state), sid)
-        progress.record(learner, sid, q, body.answer, body.ms, at, conf=body.conf,
-                        source="second", revealed=True)
+        # A blank paper question has no first attempt row. Tell progress that
+        # this is non-learning evidence, then mark the filed row as a repeat:
+        # second looks must never lift mastery or close a trap for a blank.
+        blank_first = item["attempt"] is None
+        filed = progress.record(learner, sid, q, body.answer, body.ms, at, conf=body.conf,
+                                source="second", revealed=True, hints=int(blank_first))
+        if blank_first and filed:
+            db.run("UPDATE attempts SET repeat=1,hints=0 WHERE id=? AND learner=?",
+                   filed["attempt"], learner)
     return {"correct": bool(correct), "answer": q["answer"], "reasons": q.get("reasons"),
             "rationale": q.get("rationale"), "accepted": scoring.accepted_forms(str(q["answer"]))
             if q.get("type") == "spr" else [], "cause": progress.causes(learner, session=sid)
