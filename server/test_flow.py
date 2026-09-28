@@ -208,7 +208,7 @@ def main() -> int:
         for q in pid["questions"]:
             c.post(f"/api/session/{pid['id']}/answer", json={"question_id": q["id"], "answer": 0})
         c.post(f"/api/session/{pid['id']}/finish")
-        res = c.get(f"/api/session/{pid['id']}/results")
+        res = c.get(f"/api/session/{pid['id']}/results", headers={"X-Learner": "u:check2"})
         assert res.status_code == 200, "practice results were gated behind signup"
         assert res.json()["mode"] == "practice"
         print("ok  practice guards hold, and its results need no signup")
