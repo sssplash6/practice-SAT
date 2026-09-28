@@ -555,6 +555,8 @@ ALSO READ followups/S7-hygiene.json, S9-hygiene.json, S8-hygiene.json ("fixer_re
 - FIRST: server/checks/s8.py ~517-519 is date-dependent and stops test_flow: it asks compete.contest("final-" + next SAT date),
   but compete.ensure only makes a Season Final in the week before an SAT, so on a fresh DB in other weeks (e.g. 2026-09-28)
   it is a 404. Make the check create or pick its Final itself.
+  The page shows the same gap: on 2026-09-28 Compete's season card reads "Road to Oct 3 · 6 days left" with a Season
+  Final dated Sat Sep 26 - Sun Sep 27, already past. Say what the SAT week holds instead.
 - Words: /api/words must fill each word's `lists` from word_lists (a new list vanishes on reload); quiz_item must leave out
   the target's family, synonyms and "Same as" words (the worksheet's Q3 has two right answers: student-facing, fix first);
   "nearly" sample items keep the word in the text or are labelled in-context; _summary needs a "today" bucket (words due
