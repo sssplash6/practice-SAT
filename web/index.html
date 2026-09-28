@@ -730,7 +730,8 @@
       // beside Up next. The split is the one that leaves the least empty space beside the two main columns, the gaps spread
       // over both bands rather than one large one (cards move down as well as up)
       const seq = stretch ? ['exam', 'due', 'mist', 'score', 'pace', 'chal', 'words'] : ['due', 'mist', 'exam', 'score', 'pace', 'chal', 'words'];
-      const fixed = stretch ? 3 : 2;
+      // exam morning keeps only the SAT card up there: Up next is one warm-up, so the rest may wait lower down
+      const fixed = $('today').classList.contains('examday') ? 1 : stretch ? 3 : 2;
       const Am = hOf('next') + GAP + hOf('gain'), Bm = hOf('study') + GAP + hOf('plan');
       const hs = seq.map(hOf), all = hs.reduce((a, b) => a + b + GAP, -GAP);
       let best = fixed, bestS = Infinity, bestM = Infinity, used = -GAP;
