@@ -40,7 +40,7 @@
       .finally(() => { if (b) b.removeAttribute('aria-busy'); });
   }
   function btn(label, o = {}) {
-    if (RO) return null;
+    if (RO) return document.createTextNode('');       // placed anywhere a control would be, it adds nothing
     const tag = o.href ? 'a' : 'button';
     const b = h(tag, { class: o.primary ? 'pill sm' : o.quiet ? 'quiet' : o.link ? 'link' : 'btn sm', type: o.href ? null : 'button',
       href: o.href || null, 'aria-label': o.aria || null }, label);
@@ -196,7 +196,7 @@
         ? h('span', {}, h('span', { class: 'chk', 'aria-hidden': 'true', text: '✓' }), ACC.email_masked || 'Progress saved')
         : h('span', {}, h('span', { class: 'odot', 'aria-hidden': 'true' }), 'This device only · ', h('a', { class: 'link', href: '/me/settings/#account', text: 'Save progress' })));
     }
-    fill('you', h('div', { class: 'id-top' }, avWrap, h('div', {}, nameBox, lines)), outcomes(), tiles());
+    fill('you', h('div', { class: 'id-top' }, avWrap, RO ? null : h('div', {}, nameBox, lines)), outcomes(), tiles());
     said('you', [name, st.answered ? `${N(st.answered)} answered` : null, st.streak ? `streak ${N(st.streak)}` : null].filter(Boolean).join(' · '));
   };
   function boardLine(prof, name) {
@@ -1035,6 +1035,7 @@
       S = d;
       if (window.ME_SHARED) window.ME_SHARED(d);
       CARDS.forEach(c => paint(c.id));
+      loadTypes();
     }, e => { if (window.ME_SHARED) window.ME_SHARED(null, e); });
     return;
   }
