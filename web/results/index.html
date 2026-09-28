@@ -14,180 +14,111 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <link rel="stylesheet" href="/assets/ui.css">
 <style>
-  /* Where you stand: the score over time, every skill, every sitting. */
-  .top { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
-  .card { border-radius: 14px; background: var(--tile); padding: 22px 24px; }
-  .chart svg { width: 100%; height: auto; display: block; overflow: visible; }
-  .chart .grid line { stroke: var(--mat); stroke-width: 1; }
-  .chart .grid text, .chart .xl { font: 500 10.5px var(--mono); fill: var(--soft); }
-  .chart .band { fill: var(--mat); }
-  .chart .band.last { fill: var(--wash-2); }
-  .chart .mid { fill: var(--ink); }
-  .chart .mid.last { fill: var(--amber); stroke: var(--amber-deep); stroke-width: 1; }
-  .chart .trend { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linejoin: round; }
-  .now .num { font-size: clamp(48px, 6vw, 72px); display: block; margin-top: 8px; }
-  .now .meta { display: block; margin-top: 10px; }
-  .totals { margin-top: 26px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-  .totals .num { font-size: 26px; display: block; }
-  .totals .k { display: block; margin-top: 6px; }
-
-  .block { margin-top: 44px; }
-  .block > .k { display: block; margin-bottom: 14px; }
-  .skills { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px 20px; }
-  .dcol { display: grid; gap: 6px; align-content: start; }
-  .dcol .k { margin-bottom: 4px; }
-  .sk { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 4px 10px; align-items: center; padding: 10px 12px; border-radius: 10px; background: var(--tile); text-decoration: none; color: var(--ink); }
-  .sk .glyph { width: 20px; height: 20px; }
-  .sk .nm { font: 500 13.5px var(--font); }
-  .sk .mbar { grid-column: 2; height: 2px; }
-  .sk .dots { position: absolute; }
-
-  .list { display: grid; gap: 2px; }
-  .item {
-    display: grid; grid-template-columns: 70px 110px minmax(0, 1fr) auto 20px; gap: 16px; align-items: center;
-    padding: 14px 16px; border-radius: 10px; text-decoration: none; color: var(--ink);
-    transition: background-color .16s var(--ease);
+  /* Results (spec 3.5 §2, reports.md SR21-SR24): where you stand, where the points go,
+     every sitting, then every skill. One region per idea; each keeps its frame. */
+  .rs { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+  .rs > * { grid-column: 1 / -1; min-width: 0; }
+  .rs > [hidden] { display: none; }
+  #estimate { grid-column: span 4; }
+  #overview { grid-column: span 8; }
+  .rs-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px; }
+  .rs-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 14px; border-radius: var(--radius); background: var(--tile-2); font: 500 14px var(--font); }
+  .rs-line { font: 400 15px/1.5 var(--font); color: var(--ink); text-wrap: pretty; }
+  .rs-line b, .rs-num { font-family: var(--mono); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .rs-helper { font: 400 13.5px/1.45 var(--font); color: var(--soft); text-wrap: pretty; }
+  .rs-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; }
+  .rs-info { min-height: 24px; padding: 0 6px; font: 500 14px/1 var(--font); color: var(--soft); }
+  .card-head .rs-headr { margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .card-head .rs-headr .help:empty { display: none; }
+  .rs-big { white-space: nowrap; font: 800 clamp(30px, 2.9vw, 38px)/1.05 var(--font); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+  .rs-est { display: grid; gap: 12px; align-content: start; }
+  .rs-facts { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .rs-facts li { font: 400 14px/1.4 var(--font); color: var(--ink); }
+  .rs-facts li b { font: 500 14px var(--mono); }
+  #totals .stats { --cols: 4; }
+  .rs-bars { display: grid; gap: 8px; }
+  .rs-bar { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; gap: 12px; align-items: center; font: 500 14px var(--font); }
+  .rs-bar .t { height: 10px; border-radius: 5px; background: var(--tile-2); overflow: hidden; }
+  .rs-bar .t i { display: block; height: 100%; width: calc(var(--rp) * 100%); background: var(--amber); }
+  .rs-dt { width: 100%; border-collapse: collapse; font: 500 13.5px var(--mono); }
+  .rs-dt th, .rs-dt td { padding: 10px 8px; text-align: left; border-top: 1px solid var(--line); }
+  .rs-dt thead th { border-top: 0; font: 600 12px var(--font); color: var(--soft); }
+  .rs-dt td[data-s] { background: color-mix(in srgb, var(--amber) calc(var(--s) * 38%), transparent); border-radius: 6px; }
+  .rs-dt th[scope=row] { font: 600 13.5px var(--font); }
+  .rs-list { display: grid; gap: 10px; }
+  .rs-group > h3 { font: 700 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin: 18px 0 10px; }
+  .rs-group > h3 span { text-transform: none; letter-spacing: 0; font: 500 12.5px var(--mono); margin-left: 8px; }
+  .rs-trap { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 4px 12px; padding: 12px 0; border-top: 1px solid var(--line); align-items: start; }
+  .rs-trap:first-child { border-top: 0; }
+  .rs-trap h4 { font: 600 15px/1.35 var(--font); }
+  .rs-trap .glyph { width: 20px; height: 20px; }
+  .rs-trap .st { font: 500 13px var(--font); }
+  .rs-trap .st.open::before { content: ""; display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: var(--amber); vertical-align: 1px; }
+  .rs-skills { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+  .rs-skill { display: grid; gap: 8px; align-content: start; padding: 14px; border-radius: 12px; background: var(--tile-2); border: 0; text-align: left; font: inherit; color: var(--ink); cursor: pointer; }
+  .rs-skill:hover { box-shadow: inset 0 0 0 1.5px var(--line); }
+  .rs-skill b { display: flex; align-items: center; gap: 8px; font: 600 14.5px/1.3 var(--font); }
+  .rs-skill .glyph { width: 18px; height: 18px; flex: none; }
+  .rs-skill .badge { justify-self: start; }
+  .rs-dom-h { grid-column: 1 / -1; font: 700 12px/1 var(--font); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); margin-top: 8px; }
+  .rs-cmp { position: sticky; bottom: 16px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; background: var(--ink); color: var(--on-ink); }
+  .rs-cmp[hidden] { display: none; }
+  .rs-cmp .quiet { color: var(--on-ink); }
+  .rs-sample { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+  @media (max-width: 1099px) {
+    #estimate, #overview { grid-column: 1 / -1; }
   }
-  @media (hover: hover) and (pointer: fine) { .item:hover { background: var(--tile); } }
-  .item .when { font: 500 12.5px var(--mono); color: var(--soft); }
-  .item .what { font: 600 14.5px var(--font); }
-  .item .tops { display: flex; gap: 6px; min-width: 0; overflow: hidden; }
-  .item .tops .glyph { width: 18px; height: 18px; }
-  .item .sc { font: 800 17px var(--font); letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-  .item svg.arr { width: 18px; height: 18px; color: var(--faint); }
-  .more { margin-top: 12px; }
-
-  @media (max-width: 959px) { .skills { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 759px) {
-    .top { grid-template-columns: minmax(0, 1fr); }
-    .item { grid-template-columns: 60px minmax(0, 1fr) auto 18px; }
-    .item .tops { display: none; }
+    .rs { gap: 16px; }
+    #totals .stats { --cols-phone: 2; }
+    .rs-bar { grid-template-columns: minmax(0, 1fr) auto; }
+    .rs-bar .t { grid-column: 1 / -1; order: 3; }
+    .card-head .rs-headr { flex: 1 1 100%; margin-left: 0; min-width: 0; }
+    .card-head .rs-headr .seg { max-width: 100%; overflow-x: auto; }
+    .rs-dt .old { display: none; }
+    .rs-trap { grid-template-columns: 22px minmax(0, 1fr); }
+    .rs-trap > .rs-row { grid-column: 2; }
+    .rs-cmp { bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
+  }
+  @media print {
+    .rs-cmp, .rs-sample { display: none !important; }
+    .rs { display: block; }
+    .rs > section { break-inside: avoid-page; margin-bottom: 16px; }
   }
 </style>
 </head>
 <body data-page="results">
 <header id="bar"></header>
 
-<main class="page">
-  <div class="top">
-    <section class="card chart rise" aria-label="Score over time"><div id="chart"></div></section>
-    <section class="card now rise rise-2" aria-label="Latest">
-      <span class="k" id="nowK">Math</span>
-      <span class="num" id="now">—</span>
-      <span class="meta" id="nowSub"></span>
-      <a class="quiet" id="takeTest" href="/tests/" hidden style="margin-top:14px">Take a test</a>
-      <div class="totals">
-        <div><span class="num" id="tq">0</span><span class="k">Answered</span></div>
-        <div><span class="num" id="tr">—</span><span class="k">Right</span></div>
-        <div><span class="num" id="ts">0</span><span class="k">Streak</span></div>
-      </div>
-    </section>
+<main class="page" id="main" aria-busy="true">
+  <div class="rs" id="root">
+    <header class="rs-head" id="head">
+      <h1 class="h1">Results</h1>
+      <div class="rs-row" id="headacts"></div>
+    </header>
+    <section id="sample" class="card" hidden></section>
+    <section id="estimate" class="card" aria-label="Current estimate"></section>
+    <section id="overview" class="card" aria-label="Score over time"></section>
+    <section id="gap" class="card" hidden></section>
+    <section id="totals" aria-label="Totals"></section>
+    <section id="days" class="card" hidden></section>
+    <section id="why" class="card" hidden></section>
+    <section id="split" class="card" hidden></section>
+    <section id="domtrend" class="card" hidden></section>
+    <section id="sittings" class="card"></section>
+    <section id="traps" class="card" hidden></section>
+    <section id="skills" class="card"></section>
   </div>
-
-  <section class="block rise rise-2" aria-label="Skills"><span class="k">Skills</span><div class="skills" id="skills"></div></section>
-  <section class="block rise rise-3" aria-label="Sittings"><span class="k">Sittings</span><div class="list" id="list"></div>
-    <button type="button" class="quiet more" id="more" hidden>More</button>
-  </section>
+  <div class="rs-cmp" id="cmpbar" hidden></div>
 </main>
 
 <nav id="tabs"></nav>
 <script src="/assets/ui.js"></script>
 <script src="/assets/kit.js"></script>
 <script src="/assets/charts.js"></script>
-<script>
-(() => {
-  'use strict';
-  const { api, h, s, glyph, TOPIC, TOPICS, DOMAINS, band, day, svg, ICON, $ } = UI;
-  UI.shell();
-  const NAME = { mock: 'Section', module: 'Module', diagnostic: 'Diagnostic', drill: 'Practice', challenge: 'Challenge', practice: 'Practice' };
-
-  /* ---------------------------------------------------------- the chart
-     Each sitting is its band, drawn from low to high on the 200-800 scale,
-     with its middle marked; the newest is the orange one. */
-  function chart(sittings) {
-    const host = $('#chart');
-    const pts = sittings.filter(x => x.estimate).slice(0, 12).reverse();
-    if (!pts.length) { host.replaceChildren(h('p', { class: 'empty', text: 'No scored sittings yet.' })); return; }
-    // drawn at the card's own width, so the labels stay their CSS size on a phone
-    const W = Math.max(280, Math.round(host.clientWidth) || 640), H = W < 480 ? 200 : 260, L = 38, R = 10, T = 12, B = 30;
-    const y = v => T + (H - T - B) * (1 - (v - 200) / 600);
-    const step = (W - L - R) / Math.max(pts.length, 6);
-    const x = i => L + step * (i + .5);
-    const g = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    g.setAttribute('viewBox', `0 0 ${W} ${H}`);
-    g.setAttribute('role', 'img');
-    g.setAttribute('aria-label', 'Score bands over time');
-    const grid = s('g', { class: 'grid' }, g);
-    [200, 400, 600, 800].forEach(v => {
-      s('line', { x1: L, x2: W - R, y1: y(v), y2: y(v) }, grid);
-      s('text', { x: L - 8, y: y(v) + 3.5, 'text-anchor': 'end' }, grid).textContent = v;
-    });
-    const mids = pts.map((p, i) => [x(i), y((p.estimate.low + p.estimate.high) / 2)]);
-    if (mids.length > 1) s('polyline', { class: 'trend', points: mids.map(m => m.join(',')).join(' ') }, g);
-    pts.forEach((p, i) => {
-      const last = i === pts.length - 1;
-      const bw = Math.min(26, step * .5);
-      s('rect', { class: 'band' + (last ? ' last' : ''), x: x(i) - bw / 2, width: bw, y: y(p.estimate.high),
-                  height: Math.max(2, y(p.estimate.low) - y(p.estimate.high)), rx: 5 }, g);
-      s('circle', { class: 'mid' + (last ? ' last' : ''), cx: mids[i][0], cy: mids[i][1], r: last ? 5.5 : 4 }, g);
-      // a date label is about 40px wide, so a narrow chart labels every few, the newest always
-      if ((pts.length - 1 - i) % Math.ceil(44 / step) === 0) {
-        const t = s('text', { class: 'xl', x: x(i), y: H - 8, 'text-anchor': 'middle' }, g);
-        t.textContent = day(p.finished);
-      }
-    });
-    host.replaceChildren(g);
-  }
-
-  /* ---------------------------------------------------------- the skills */
-  function skills(topics) {
-    const by = Object.fromEntries(topics.map(t => [t.topic, t]));
-    $('#skills').replaceChildren(...DOMAINS.map(([domain, short]) => h('div', { class: 'dcol' },
-      h('span', { class: 'k', text: short }),
-      TOPICS.filter(t => t.domain === domain).map(t => {
-        const b = by[t.slug] || { mastery: 0, traps: [] };
-        const fill = h('i');
-        setTimeout(() => fill.style.setProperty('--m', b.mastery.toFixed(3)), 200);
-        const row = h('a', { class: 'sk', href: '/practice/', title: `${b.answered || 0} answered` },
-          glyph(t.slug), h('span', { class: 'nm' }, t.short, b.traps.length ? h('span', { class: 'dot', style: 'margin-left:8px;vertical-align:1px' }) : null),
-          h('span', { class: 'mbar' }, fill));
-        return row;
-      }))));
-  }
-
-  /* ---------------------------------------------------------- the sittings */
-  let all = [], shown = 20;
-  function list() {
-    $('#list').replaceChildren(...all.slice(0, shown).map(x => h('a', { class: 'item', href: `/results/report/?id=${encodeURIComponent(x.id)}` },
-      h('span', { class: 'when', text: day(x.finished) }),
-      h('span', { class: 'what', text: NAME[x.kind] || 'Practice' }),
-      h('span', { class: 'tops' }, (x.topics || []).slice(0, 6).map(t => glyph(t))),
-      h('span', { class: 'sc', text: x.estimate ? band(x.estimate) : (x.asked ? `${x.right}/${x.asked}` : '—') }),
-      h('span', { html: svg(ICON.arrow, 18, 'arr') }))));
-    if (!all.length) $('#list').replaceChildren(h('p', { class: 'empty', text: 'Nothing finished yet.' }));
-    $('#more').hidden = all.length <= shown;
-  }
-  $('#more').addEventListener('click', () => { shown += 40; list(); });
-
-  (async () => {
-    const [hist, map, me] = await Promise.all([api('/history'), api('/map'), api('/me')]).catch(() => [null, null, null]);
-    if (!hist) return;
-    all = hist.sessions;
-    chart(all);
-    skills(map.topics);
-    list();
-    const scored = all.find(x => x.estimate);
-    if (scored) {
-      $('#now').textContent = band(scored.estimate);
-      $('#nowSub').textContent = `${NAME[scored.kind]} · ${day(scored.finished)}`;
-    } else { $('#takeTest').hidden = false; }
-    const total = me.days.total;
-    const right = me.days.recent.reduce((a, d) => a + d.right, 0), asked = me.days.recent.reduce((a, d) => a + d.questions, 0);
-    $('#tq').textContent = total;
-    $('#tr').textContent = asked ? `${Math.round(100 * right / asked)}%` : '—';
-    $('#ts').textContent = me.days.streak;
-  })();
-})();
-</script>
+<script src="/assets/question.js"></script>
+<script src="/assets/runner.js"></script>
+<script src="/assets/results-ui.js"></script>
+<script src="/results/page.js"></script>
 </body>
 </html>

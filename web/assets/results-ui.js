@@ -160,7 +160,7 @@ dialog.sheet.drawer { margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; wi
 
     const main = h('div', { class: 'sc-main' });
     const score = row.estimate && row.estimate.low ? rx.band(row.estimate)
-      : row.asked ? `${fmt(row.right)}/${fmt(row.asked)} · ${Math.round((row.right || 0) / row.asked * 100)}%` : '';
+      : row.asked ? `${fmt(row.right)} / ${fmt(row.asked)} · ${Math.round((row.right || 0) / row.asked * 100)}%` : '';
     const d = row.delta;
     main.append(h('div', { class: 'sc-title' },
       h('a', { href, text: kindName(row) }),
@@ -208,7 +208,7 @@ dialog.sheet.drawer { margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; wi
     if (rec && (rec.recovered || rec.open || rec.slipping)) {
       const n = (Array.isArray(rec.recovered) ? rec.recovered.length : rec.recovered) || 0;
       const of = n + ((Array.isArray(rec.open) ? rec.open.length : rec.open) || 0) + ((Array.isArray(rec.slipping) ? rec.slipping.length : rec.slipping) || 0);
-      const text = `Recovered ${fmt(n)}/${fmt(of)}${rec.points_open ? ` · ${rx.pts(rec.points_open)} open` : ''}`;
+      const text = `Recovered ${fmt(n)} / ${fmt(of)}${rec.points_open ? ` · ${rx.pts(rec.points_open)} open` : ''}`;
       side.append(h('span', { class: 'sc-ring', style: `--ring: ${of ? Math.round(n / of * 100) : 0}`, role: 'img', 'aria-label': text, title: text }, h('span', { text: `${fmt(n)}/${fmt(of)}` })));
     }
     const misses = (row.modules || []).reduce((s, m) => s + (m.wrong || []).length + (m.blank || []).length, 0) || (row.asked ? row.asked - (row.right || 0) : 0);
@@ -244,12 +244,12 @@ dialog.sheet.drawer { margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; wi
       peekEl.replaceChildren();
       const left = h('div');
       if (r.estimate && r.estimate.low && UI.gauge) UI.gauge(left, { band: r.estimate, target: r.profile && r.profile.target, subject: 'math', className: 'sm' });
-      else left.append(h('p', { class: 'sc-score', text: `${fmt(r.right)}/${fmt(r.asked)} · ${Math.round((r.right || 0) / (r.asked || 1) * 100)}%` }));
+      else left.append(h('p', { class: 'sc-score', text: `${fmt(r.right)} / ${fmt(r.asked)} · ${Math.round((r.right || 0) / (r.asked || 1) * 100)}%` }));
       const right = h('div', { class: 'sc-peek-r' });
       const L = r.ledger;
       if (L && L.by_cause && UI.stackBar) UI.stackBar(right, L.by_cause.map(c => ({ key: c.cause, label: (CAUSE[c.cause] || { label: c.cause }).label, value: c.pts, n: c.n })), { approx: true, unit: 'pts', label: 'Where the points went', legend: false });
       const doms = h('div', { class: 'sc-peek-doms' });
-      (r.domains || []).forEach(dm => UI.meter(doms, { label: dm.domain, value: dm.right, max: dm.asked, text: `${fmt(dm.right)}/${fmt(dm.asked)}` }));
+      (r.domains || []).forEach(dm => UI.meter(doms, { label: dm.domain, value: dm.right, max: dm.asked, text: `${fmt(dm.right)} / ${fmt(dm.asked)}` }));
       right.append(doms);
       const rv = r.review || [];
       const byMod = new Map();
@@ -340,32 +340,32 @@ dialog.sheet.drawer { margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; wi
     ];
     const sh = UI.sheet({ title: T.short, body, actions: acts, className: 'drawer', onClose: o.onClose });
     const q = o.share ? `?share=${encodeURIComponent(o.share)}` : '';
-    UI.api(`/skill/${encodeURIComponent(topic)}${q}`, { quiet: true }).then(fill, () => fill(o.fallback || { topic }, true));
-    function fill(s, rough) {
+    UI.api(`/skill/${encodeURIComponent(topic)}${q}`, { quiet: true }).then(fill, () => fill(o.fallback || { topic }));
+    function fill(s) {
       body.removeAttribute('aria-busy');
       body.replaceChildren();
       const answered = s.answered || 0, right = s.right || 0;
-      body.append(h('p', { class: 'meta', text: [s.domain || T.domain, rough ? 'from your map' : null].filter(Boolean).join(' · ') }));
+      body.append(h('p', { class: 'meta', text: s.domain || T.domain || '' }));
       const m = h('div');
       m.append(h('div', { class: 'skill-m' },
         h('span', { class: 'mbar', role: 'img', 'aria-label': `Mastery: ${UI.masteryWord(s.mastery, answered)}` }, h('i', { style: `--m: ${Math.max(0, Math.min(1, s.mastery || 0))}` })),
         h('span', { class: 'skill-word', text: UI.masteryWord(s.mastery, answered) })));
-      m.append(h('p', { class: 'meta', text: 'A practice gauge: recent answers, hard ones counting more.' }));
+      m.title = 'A practice gauge: recent answers, hard ones counting more.';
       body.append(m);
       body.append(h('div', { class: 'skp-row' }, h('span', { text: 'Answered' }), h('b', { text: fmt(answered) })),
         h('div', { class: 'skp-row' }, h('span', { text: 'Right' }), h('b', { text: answered ? `${fmt(right)} · ${Math.round(right / answered * 100)}%` : '—' })));
       if ((s.by_difficulty || []).length) {
         body.append(h('h3', { text: 'By difficulty' }));
         s.by_difficulty.forEach(d => body.append(h('div', { class: 'skp-row' }, h('span', {}, UI.dbars(d.difficulty)),
-          h('b', { text: d.answered ? `${fmt(d.right)}/${fmt(d.answered)} · ${Math.round(d.right / d.answered * 100)}%${d.avg_ms ? ` · avg ${UI.mmss(d.avg_ms / 1000)}` : ''}` : 'none yet' }))));
+          h('b', { text: d.answered ? `${fmt(d.right)} / ${fmt(d.answered)} · ${Math.round(d.right / d.answered * 100)}%${d.avg_ms ? ` · avg ${UI.mmss(d.avg_ms / 1000)}` : ''}` : 'none yet' }))));
       }
       if ((s.recent || []).length) {
         body.append(h('h3', { text: 'Recent run' }), h('div', { class: 'skp-run', role: 'img', 'aria-label': `Last ${s.recent.length}: ${s.recent.filter(Boolean).length} right, newest last` },
           s.recent.map(ok => h('i', { class: ok ? 'ok' : '', text: ok ? '✓' : '✕' }))));
       }
       const open = s.traps_open || [];
-      body.append(h('h3', { text: `Open mistakes · ${fmt(open.length)}` }));
       if (open.length) {
+        body.append(h('h3', { text: `Open mistakes · ${fmt(open.length)}` }));
         const ul = h('ul', { class: 'skp-list' });
         open.forEach(t => {
           const li = h('li', {}, h('b', { text: t.label }), h('span', { class: 'meta', text: `hit ${fmt(t.hits || 1)}× · ${fmt(t.owed || 2)} to close` }));
@@ -379,13 +379,13 @@ dialog.sheet.drawer { margin: 0 0 0 auto; height: 100dvh; max-height: 100dvh; wi
           ul.append(li);
         });
         body.append(ul);
-      } else body.append(h('p', { class: 'meta', text: 'None open.' }));
-      if (s.traps_closed !== undefined) body.append(h('div', { class: 'skp-row' }, h('span', { text: 'Fixed' }), h('b', { text: fmt(s.traps_closed) })));
+      }
+      if (s.traps_closed) body.append(h('div', { class: 'skp-row' }, h('span', { text: 'Fixed' }), h('b', { text: fmt(s.traps_closed) })));
       if (s.last) body.append(h('div', { class: 'skp-row' }, h('span', { text: 'Last worked' }), h('b', { text: UI.relTime(s.last) })));
       if ((s.sittings || []).length) {
         body.append(h('h3', { text: 'Sittings with this skill' }));
         const ul = h('ul', { class: 'skp-list' });
-        s.sittings.forEach(x => ul.append(h('li', {}, h('a', { href: rx.reportHref(x.id), text: `${kindName(x)} · ${UI.date(x.finished)}` }), h('span', { class: 'meta', text: `${fmt(x.right)}/${fmt(x.asked)} right` }))));
+        s.sittings.forEach(x => ul.append(h('li', {}, h('a', { href: rx.reportHref(x.id), text: `${kindName(x)} · ${UI.date(x.finished)}` }), h('span', { class: 'meta', text: `${fmt(x.right)} / ${fmt(x.asked)} right` }))));
         body.append(ul);
       }
       if (!o.share && open.length && sh.foot) {

@@ -536,8 +536,9 @@
     const g = h('div', { class: 'rp-gauge' });
     const mid = Math.round((e.low + e.high) / 2);
     const prevName = prev ? `${R.label} #${prev.seq}` : null;
-    const today = (rec.recovered || []).length ? rec.now : null;
-    gaugeApi = UI.gauge(g, { band: e, target: (R.profile || {}).target, previous: prev ? { ...prev.estimate, label: prevName } : null, today, second: s2.with || null,
+    const differs = x => x && (Math.round(x.low) !== e.low || Math.round(x.high) !== e.high) ? x : null;   // a layer that says nothing new is left out
+    const today = (rec.recovered || []).length ? differs(rec.now) : null;
+    gaugeApi = UI.gauge(g, { band: e, target: (R.profile || {}).target, previous: prev ? { ...prev.estimate, label: prevName } : null, today, second: differs(s2.with),
       subject: R.subject || 'math', sub: `${UI.SUBJECT ? UI.SUBJECT[R.subject || 'math'].label : 'Math'} · middle ${mid}`, animate: FRESH,
       caption: 'Math measured here. Reading and Writing is your own score until SAT Freshman has R&W questions.' });
     if (FRESH && gaugeApi && gaugeApi.el) gaugeApi.el.setAttribute('data-animate', '');
@@ -618,9 +619,9 @@
     const wrap = h('div', { class: 'rp-hero' });
     const left = h('div', { class: 'rp-gauge rp-count' }, h('span', { class: 'rp-big', text: sc(s.correct || 0, R.asked || 0) }), h('span', { class: 'rp-num', text: `${pc(s.correct || 0, R.asked || 0)}%` }));
     const f = h('div', { class: 'rp-facts' });
-    const repairs = IT.filter(x => x.repair).length;
+    const repairs = IT.filter(x => x.repair && x.bucket !== 'not_reached').length;
     const topics = [...new Set(IT.map(x => topicName(x.topic, x.topic_name)))].slice(0, 3);
-    f.append(h('p', { class: 'rp-line', text: [repairs ? `${n(IT.length - repairs)} asked + ${plural(repairs, 'repair')}` : null, R.ms ? `${mins(R.ms)} min` : null, topics.join(', ')].filter(Boolean).join(' · ') }));
+    f.append(h('p', { class: 'rp-line', text: [repairs ? `${n((R.asked || 0) - repairs)} asked + ${plural(repairs, 'repair')}` : null, R.ms ? `${mins(R.ms)} min` : null, topics.join(', ')].filter(Boolean).join(' · ') }));
     const opened = (R.mistakes || []).length, fixed = (R.mistakes || []).filter(m => m.closed).length;
     if (opened) f.append(h('p', { class: 'rp-line' }, h('a', { href: '#mistakes', text: plural(opened, 'mistake') + ' opened' }), fixed ? [' · ', h('a', { href: '#mistakes', text: `${n(fixed)} fixed` })] : ''));
     if (R.twins && R.twins.n) f.append(h('p', { class: 'rp-line', text: `Tried ${n(R.twins.n)} like this since · ${n(R.twins.right)} right` }));
@@ -730,7 +731,8 @@
   function drawTakeaways() {
     const el = $('takeaways');
     el.hidden = true;
-    const list = ((R.debrief || {}).takeaways || []).slice(0, 3);
+    // the misses count is the Incorrect tile's and the Fix pill's already: a takeaway never repeats it (the user's rule)
+    const list = ((R.debrief || {}).takeaways || []).filter(t => t.kind !== 'misses').slice(0, 3);
     if (!list.length || !owner) return;
     head(el, { k: 'Takeaways', title: 'What to do about this sitting' });
     const box = h('div', { class: 'rp-cards' });
@@ -762,7 +764,8 @@
       const repairs = IT.filter(x => x.repair).length;
       tiles.push({ label: 'Incorrect', value: s.incorrect, sub: openTraps ? `${n(openTraps)} still open` : '', ...filt('incorrect') });
       if (s.unanswered) tiles.push({ label: 'Unanswered', value: s.unanswered, ...filt('unanswered') });
-      if (repairs) tiles.push({ label: 'Repairs', value: repairs, sub: `${n(IT.filter(x => x.repair && x.raw === 'correct').length)} right` });
+      const repRight = IT.filter(x => x.repair && x.raw === 'correct').length;
+      if (repairs) tiles.push({ label: 'Repairs', value: repairs, sub: repRight ? `${n(repRight)} right` : '' });
       const mixed = IT.filter(x => x.raw === 'mixed').length;
       if (mixed) tiles.push({ label: 'Mixed', value: mixed, sub: 'right on a later try', ...filt('mixed') });
       if (s.ms) tiles.push({ label: 'Time', value: tm(s.ms), sub: R.clock_ms && R.timed ? `of ${tm(R.clock_ms)}` : '' });
@@ -900,7 +903,8 @@
     const el = $('value');
     el.hidden = true;
     const bv = R.best_value || [];
-    if (!scored || !R.ledger || !bv.length) return;
+    // ponytail: /whatif is owner-only on the server today (SR2 says any reader); the sample and shared views skip Best value until it opens
+    if (!scored || !R.ledger || !bv.length || !owner) return;
     const byTopic = new Map();
     bv.forEach(b => { const x = byId.get(b.qid); if (!x) return; const t = b.topic || x.topic; if (!byTopic.has(t)) byTopic.set(t, { topic: t, list: [], ms: 0 }); const g = byTopic.get(t); g.list.push(x); g.ms += b.budget_ms; });
     const groups = [...byTopic.values()];
@@ -1017,7 +1021,7 @@
     reset.id = 'rvreset';
     const row2 = h('div', { class: 'rp-row' }, fbar.el, reset);
     const row3 = h('div', { class: 'rp-row' }, h('span', { class: 'k', text: 'Colour by' }), colour.el, h('span', { class: 'k', text: 'View' }), view.el);
-    if (scored && R.ledger && owner !== null) {
+    if (scored && R.ledger && owner) {
       const wb = h('button', { type: 'button', class: 'btn sm', id: 'wibtn', 'aria-pressed': String(WI.on), 'aria-keyshortcuts': 'W', text: 'What if…' });
       wb.addEventListener('click', () => whatifMode(!WI.on));
       row3.append(wb);
@@ -1205,7 +1209,7 @@
 
   /* ------------------------------------------------------------ What if (SR2) */
   function whatifMode(on, silent) {
-    if (!scored || !R.ledger) return;
+    if (!scored || !R.ledger || !owner) return;
     WI.on = on;
     const b = $('wibtn');
     if (b) b.setAttribute('aria-pressed', String(on));

@@ -49,7 +49,7 @@
   .rp-mrow > .rp-row.acts { grid-column: 2 / -1; }
   .rp-vrow > .rp-row { justify-content: flex-start; }
   #review .cell-grid { --cell: 40px; }
-  @media (max-width: 759px) { #review .cell-grid { --cell: 44px; --cols: 7; --cell-gap: 6px; } }
+  @media (max-width: 759px) { #review .cell-grid { --cell: 44px; --cols: 7; --cell-gap: 3px; } }
 
   /* header */
   #head { display: grid; gap: 12px; }
@@ -198,7 +198,9 @@
     .rp-mods, .rp-judge { grid-template-columns: minmax(0, 1fr); }
     .rp-srow { grid-template-columns: minmax(0, 1fr) auto; }
     .rp-srow .rp-mb { grid-column: 1 / -1; }
-    .rp-bar { grid-template-columns: 110px minmax(0, 1fr) auto; }
+    .rp-bar { grid-template-columns: minmax(0, 1fr) auto; }
+    .rp-bar .t { grid-column: 1 / -1; order: 3; }
+    .card-head .rp-headr { flex: 1 1 100%; margin-left: 0; min-width: 0; }
     .rp-mrow { grid-template-columns: 22px minmax(0, 1fr); }
     .rp-mrow > .side { grid-column: 2; justify-items: start; }
   }
