@@ -73,6 +73,14 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       (w0342biml) before its re-check, (2) launch build.js `[{id:'S7',from:'hygiene'},{id:'S9',from:'hygiene'},{id:'S8',from:'hygiene'}]`
       (WORKERS = 1, the designer brief), (3) do my own creative design pass on Today from screenshots and have improvements ready.
       Merge nothing before the user previews.
+      DONE (1) (2) (3): Today hygiene stopped before its re-check (203 findings, followups/S3-hygiene.json); the S7/S9/S8
+      hygiene run is `wf_e4dc824e-f6c` (task ww2ic650f, hygiene then one fix each, no re-check per the user); my design pass
+      on Today is on v2/s3 7886b13 + d41db53 and v2/calm-shared 4b528b0, merged into prev4: the calendar folds by default
+      (satf.cal.open), the past-days strip always fills its row, the challenge card hides while it only repeats Due today's
+      row, the phone hides the hero's second streak, the first-visit Sign in is a plain button. Mid learner page 3906 -> 3239px.
+      For the user to decide: "Practise" (UK verb, sitewide) vs "Practice"; the plan builder on Today (S7's plan-ui) defaults
+      the SAT date to the nearest one (5 days out: a Mon-Sat plan ending Eve/Exam) and keeps Use this plan disabled while its
+      slider looks set.
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
