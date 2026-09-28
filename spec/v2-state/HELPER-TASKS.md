@@ -450,7 +450,9 @@ build (13 commits): continue from it, do not redo it.
 ALSO, what the Today page builder found missing (spec/v2-state/followups/S3-pages.json, "fixer_report" and the unit reports):
 seconds_per_question must default to 95 until the learner has 20+ timed answers (one 2-second answer promised "450 questions");
 an endpoint for estimate.need at any target (e.g. GET /api/today/need?target=) so the target slider's "700 ≈ N of 44 right" moves;
-the pace card must not count a module finished with 0 answers as "ran out of time". The Today page is built and waiting on these.
+the pace card must not count a module finished with 0 answers as "ran out of time". The Today page is built and waiting on these. ALSO: server/checks/s3.py line ~200 fails (`got["accepted"] and got["sat_pace_ms"]
+== 95_000`) depending on the day's grid-in (probably no other accepted answer forms that day, so `accepted` is empty): make the
+check and the server handle a grid-in with a single accepted form.
 DONE: checks/s3.py passes and test_flow "all good". Tell the user "S3 server done".
 ```
 
