@@ -105,6 +105,17 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       PREVIEW now has Tests too (the user asked): prev4 = master + v2/s3, calm-shared, s7, s9, s8, s5 (297737d); the preview
       server was restarted for the Tests server code as task bn2sg1616 (same command, port 8061, prev4.db kept; a copy of the
       db before the restart is scratchpad/prev4-backup.db).
+    - 2026-09-28: the user chose "lighter check + light hygiene review" for Tests instead of the full check (done inline, no agents).
+      A full section sat through the preview (leave and resume at Q5 kept the answer; module 1, Check your work, the break,
+      module 2, hand-in, first estimate and routing all work). FIXED: module 2 opened on Q22 (the runner's one position per
+      sitting; v2/s5 dacc618), the break screen's cut skill names (dacc618), overlapping tap areas and the loud Report / "opens
+      after you sit it" repeats (v2/s5 184964d + sitting rows), Check your work's zeros, triple clock and open entry panel
+      (v2/calm-shared 50a5441), the banner's Dismiss overlap (calm-shared), and sys.graph_solution's unreadable SVG coordinates
+      (new branch v2/bank-figfix a9561d6: satbank/figures.py coordinate_grid writes plain numbers; bank gate passes; only that
+      template's figures changed). The user's UNIVERSAL RULE (memory stacked-fractions): fractions render stacked in the line:
+      UI.fracText/fracNodes in question.js (v2/calm-shared caafe29), 754 of 761 bank texts with a slash stack, textContent
+      unchanged, in the question self-test. Preview server restarted for the bank fix: task beo07zfw1. The full Tests check is
+      still to run later (build.js [{id:'S5', from:'verify'}]) once the helper finishes Task 26.
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
