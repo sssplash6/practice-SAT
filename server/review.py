@@ -569,6 +569,15 @@ def due(learner: str, tz: int = 0, subject: str = "math", minutes: int | None = 
     for k in listed:
         t = db.one("SELECT * FROM traps WHERE id=?", k["trap"]) if k.get("trap") else None
         template = k["template"]
+        seed = k.get("seed")
+        if seed is None and k.get("saved"):
+            seed = k["saved"][1]
+        if seed is None and t:
+            seed = t["seed"]
+        if seed is None and template:
+            recent = db.one("SELECT seed FROM attempts WHERE learner=? AND template=?"
+                            " ORDER BY id DESC LIMIT 1", learner, template)
+            seed = recent["seed"] if recent else None
         topic = k.get("topic") or (practice.topic_of(template) if template else None)
         why, since = _why(learner, k, t, tz, sure, sched, warm)
         tier = None
@@ -579,7 +588,8 @@ def due(learner: str, tz: int = 0, subject: str = "math", minutes: int | None = 
         label = trap_label(t) if t else cap(skill_of(template)) if template else \
             (names[topic].name if topic in names else topic)
         items.append({
-            "key": k["key"], "kind": k["kind"], "template": template, "trap_id": k.get("trap"),
+            "key": k["key"], "kind": k["kind"], "template": template, "seed": seed,
+            "trap_id": k.get("trap"),
             "saved": k.get("saved"), "flag": k.get("flag"),
             "topic": topic, "name": names[topic].name if topic in names else None,
             "domain": names[topic].domain if topic in names else None,

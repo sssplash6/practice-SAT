@@ -45,6 +45,7 @@ def main(check_db: bool = True) -> None:
         due_h = {"X-Learner": due_owner}
         day = call("GET", "/api/review/due", headers=due_h)
         assert day["left"] == 1 and len(day["items"]) == 1
+        assert day["items"][0]["seed"] == 71
         key = day["items"][0]["key"]
         assert call("POST", "/api/review/snooze", headers=due_h, json={"key": key})["left"] == 0
         assert call("GET", "/api/review/counts", headers=due_h)["due_left"] == 0
