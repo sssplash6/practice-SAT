@@ -117,6 +117,27 @@ def _newest_report(learner: str) -> str | None:
     return None
 
 
+def _away(learner: str, d: dict, answered: int) -> dict | None:
+    """U25's welcome-back: 2 or more study days in a row with no activity before
+    today. Rest days (R13) and spare days (U16) are not study days; a learner who
+    is already back today is not away."""
+    def active(line: dict) -> bool:
+        return bool(line["questions"] or line["words"] >= 10 or line["tests"] or line["official"])
+    if not answered or active(d["recent"][-1]):
+        return None
+    missed, spare, since = 0, False, None
+    for line in reversed(d["recent"][:-1]):
+        if active(line):
+            since = line["day"]
+            break
+        spare = spare or line["spare_used"]
+        missed += not (line["rest"] or line["spare_used"])
+    if missed < 2:
+        return None
+    return {"days": missed, "since": since, "spare": spare,
+            "checks": len(progress.due_rechecks(learner, d["today"]))}
+
+
 def _device(token: str) -> dict:
     if token.startswith("d:"):
         row = db.one("SELECT method, session_only, expires FROM devices WHERE token=?", token)
@@ -206,6 +227,7 @@ def shell(learner: str, tz: int, token: str) -> dict:
         "next": [],
         "goals": [],
         "inbox": 0,
+        "away": _away(learner, d, answered),
         "registration": satdates.registration(p["exam_date"], p["prefs"].get("registered"), today),
         "device": _device(token),
         "dates": satdates.dates(today),

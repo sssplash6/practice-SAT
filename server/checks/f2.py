@@ -27,7 +27,7 @@ from server import api_shell, compete, db, next as next_actions, plan, practice
 
 KEYS = {"me", "streak", "best_streak", "today", "plan", "tested_today", "mistakes", "saved", "challenge", "resume",
         "newest_report", "report_replies", "new", "prefs", "pref_source", "stage", "next", "goals", "inbox",
-        "registration", "device", "dates", "spares", "review", "words", "answered", "has", "report"}
+        "registration", "device", "dates", "spares", "review", "words", "answered", "has", "report", "away"}
 
 
 def check(c) -> None:
@@ -247,6 +247,22 @@ def check(c) -> None:
     assert eve[0]["warmup"]["start"]["body"] == {"source": "warmup"}
     print("ok  /api/next: start, check-in priority, plan dedupe, points, chaining, mixed time box, contest,"
           " day done, saved, a failing queue, and the exam eve's rest with a warm-up")
+
+    # U25: welcome-back counts missed study days before today; rest days are not missed
+    def last_answer(L, days_ago, plan_days=None):
+        db.ensure_learner(L)
+        if plan_days:
+            db.run("UPDATE learners SET plan='p1', days=? WHERE id=?", plan_days, L)
+        at = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=days_ago)
+        db.run("INSERT INTO attempts(learner,template,seed,topic,difficulty,fmt,correct,at) VALUES (?,?,?,?,?,?,?,?)",
+               L, template, 7, "circles", "medium", "mcq", 1, at.isoformat())
+        return c.get("/api/shell", headers={"X-Learner": L, "X-Tz": "0"}).json()["away"]
+    away = last_answer("a:v2revawaythree", 3)
+    assert away["days"] == 2 and away["since"] == (now.date() - dt.timedelta(days=3)).isoformat(), away
+    assert last_answer("a:v2revawayone", 1) is None and last_answer("a:v2revawaytoday", 0) is None
+    assert c.get("/api/shell", headers={"X-Learner": "a:v2revawaynew", "X-Tz": "0"}).json()["away"] is None
+    assert last_answer("a:v2revawayrest", 3, "0000000") is None, "rest days are not missed study days"
+    print("ok  /api/shell.away: 2 missed study days, none for yesterday, today, a new learner or rest days")
 
 
 # ------------------------------------------------------------------ the browser half
