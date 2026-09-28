@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import secrets
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import RedirectResponse
@@ -14,6 +15,15 @@ from .deps import NAME_OK, now, session_or_404
 
 log = logging.getLogger("satf")
 router = APIRouter()
+
+
+def init() -> None:
+    """Pending diagnostic claims must not confer account access before email proof."""
+    db.run("""CREATE TABLE IF NOT EXISTS signup_claims (
+        token TEXT PRIMARY KEY, user_id TEXT NOT NULL, session TEXT NOT NULL,
+        created TEXT NOT NULL, expires TEXT NOT NULL
+    )""")
+    db.run("CREATE INDEX IF NOT EXISTS signup_claims_session ON signup_claims(session)")
 
 
 class Signup(BaseModel):
@@ -35,31 +45,39 @@ def signup(sid: str, body: Signup) -> dict:
 
     existing = db.one("SELECT * FROM users WHERE email=?", email)
     token = secrets.token_urlsafe(24)
-    if existing:
-        uid = existing["id"]
-        # a returning student keeps their verified state; the name may have changed
-        if existing["verified"]:
-            db.run("UPDATE users SET first=?, last=? WHERE id=?", first, last, uid)
+    created = now()
+    expires = (datetime.now(timezone.utc) + timedelta(minutes=30)).isoformat()
+    with db.transaction():
+        if existing:
+            uid = existing["id"]
+            # Never change an existing account's profile from an unproved request.
+            if not existing["verified"]:
+                db.run("UPDATE users SET token=?, token_sent=? WHERE id=?", token, created, uid)
         else:
-            db.run("UPDATE users SET first=?, last=?, token=?, token_sent=? WHERE id=?",
-                   first, last, token, now(), uid)
-    else:
-        uid = secrets.token_urlsafe(12)
-        db.run("INSERT INTO users (id, first, last, email, token, token_sent, created)"
-               " VALUES (?,?,?,?,?,?,?)", uid, first, last, email, token, now(), now())
+            uid = secrets.token_urlsafe(12)
+            db.run("INSERT INTO users (id, first, last, email, token, token_sent, created)"
+                   " VALUES (?,?,?,?,?,?,?)", uid, first, last, email, token, created, created)
+        db.run("DELETE FROM signup_claims WHERE session=?", sid)
+        db.run("INSERT INTO signup_claims (token,user_id,session,created,expires) VALUES (?,?,?,?,?)",
+               token, uid, sid, created, expires)
 
-    db.run("UPDATE sessions SET user_id=? WHERE id=?", uid, sid)
-
-    user = db.one("SELECT * FROM users WHERE id=?", uid)
-    delivery = "already-verified" if user["verified"] else mail.send(email, first, token)
-    return {"ok": True, "first": first, "verified": bool(user["verified"]), "email": delivery}
+    # The response says nothing about whether the mailbox already has an account.
+    delivery = mail.send(email, existing["first"] if existing and existing["first"] else first, token)
+    return {"ok": True, "first": first, "verified": False, "email": delivery}
 
 
 @router.get("/api/verify")
 def verify(token: str):
-    user = db.one("SELECT * FROM users WHERE token=?", token)
-    if user is None:
+    claim = db.one("SELECT * FROM signup_claims WHERE token=?", token)
+    if claim is None or claim["expires"] < now():
         return RedirectResponse("/diagnostic/verified.html?state=bad", status_code=303)
-    db.run("UPDATE users SET verified=1, token=NULL WHERE id=?", user["id"])
-    log.info("verified %s", user["email"])
+    with db.transaction():
+        claimed = db.run("DELETE FROM signup_claims WHERE token=? AND expires>=?",
+                         token, now()).rowcount
+        if not claimed:
+            return RedirectResponse("/diagnostic/verified.html?state=bad", status_code=303)
+        db.run("UPDATE users SET verified=1, token=NULL WHERE id=?", claim["user_id"])
+        db.run("UPDATE sessions SET user_id=? WHERE id=?",
+               claim["user_id"], claim["session"])
+    log.info("verified diagnostic signup %s", claim["user_id"])
     return RedirectResponse("/diagnostic/verified.html?state=ok", status_code=303)
