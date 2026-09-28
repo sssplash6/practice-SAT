@@ -32,8 +32,17 @@
     { id: 'practice', label: 'Practice' }, { id: 'display', label: 'Tools & display' }, { id: 'study', label: 'Study' },
     { id: 'account', label: 'Account & devices' }, { id: 'reports', label: 'Your reports' }, { id: 'privacy', label: 'Privacy & data' }] });
 
+  // each section's "?" opens its Help answer (U13)
+  [['practice', 'stages'], ['study', 'reminders'], ['account', 'devices'], ['reports', 'report'], ['privacy', 'data']].forEach(([id, a]) => {
+    const t = document.getElementById(`${id}-h`);
+    if (t) t.after(A.helpBtn(a, t.textContent));
+  });
+
   let P = null;
   UI.me().then(r => { P = r.profile; paintStudyPlan(); paintBoards(); }, () => {});
+  // what this deploy has switched on: mail, google (+ google_client_id), push
+  let HEALTH = null;
+  const health = () => HEALTH || (HEALTH = fetch('/api/health').then(r => r.json()).catch(() => ({})));
 
   /* ================================================================ prefs, placed by group */
   // internal or retired keys: stored by the pages that own them, never a setting
@@ -61,8 +70,9 @@
     });
     const known = new Set((listing || []).map(p => p.key));
     const rows = (host, name) => [...PLACE[name], ...(extra[name] || [])].filter(k => !listing || known.has(k)).forEach(k => {
-      UI.prefRow(host, k);
+      UI.prefRow(host, k, k === 'study_time' ? { onChange: v => { quietNote(); offerNudge(v); } } : k === 'quiet' ? { onChange: quietNote } : undefined);
       if (k === 'text') host.append(h('p', { class: 'preview-q', 'aria-hidden': 'true', text: 'If 3x + 5 = 20, what is x?' }));
+      if (k === 'quiet') host.append(quietLine);
     });
     // Practice
     const pr = $('practice');
@@ -88,8 +98,11 @@
     hosts.display = h('div'); ds.append(hosts.display); rows(hosts.display, 'display');
     // Study keeps its plan and calendar block first, then the reminders and Words
     hosts.study = h('div'); hosts.words = h('div');
-    studyBody().append(hosts.study);
+    const push = h('div');
+    studyBody().append(push, hosts.study);
     rows(hosts.study, 'study');
+    quietNote();
+    paintPush(push);
     sub(studyBody(), 'Words');
     studyBody().append(hosts.words);
     rows(hosts.words, 'words');
@@ -110,6 +123,82 @@
     if (!studyEl) { studyEl = $('study'); studyEl.replaceChildren(h('div', { id: 'study-plan' })); }
     return studyEl;
   }
+  /* ---- quiet hours never hold back the reminder the student timed (U18b) */
+  const quietLine = h('p', { class: 'help', hidden: true, style: 'margin: -4px 0 8px' });
+  function quietNote() {
+    const pr = UI.prefs.now() || {}, t = pr.study_time, q = pr.quiet;
+    const inside = t && q && q.from && q.to && (q.from < q.to ? t >= q.from && t < q.to : t >= q.from || t < q.to);
+    quietLine.textContent = inside ? `Your ${t} reminder still rings. Quiet hours only hold back extra nudges.` : '';
+    quietLine.hidden = !inside;
+  }
+
+  /* ---- Notify me on this device (U18b). It shows once /api/health says push, the server serves
+     GET /api/push/key and F2's /sw.js is there, and asks the browser only on a tap. The
+     subscription goes to POST /api/push/subscribe {endpoint, keys, kinds}, PUT {endpoint, kinds},
+     DELETE {endpoint}. */
+  const KINDS = [['study', 'Study reminders', 'At your study time, less the reminder lead.', true],
+    ['streak', 'One question keeps your streak', 'At 20:30 on a study day with nothing done yet.', false],
+    ['contest', 'A contest you joined closes soon', 'Three hours before it closes.', true]];
+  const b64 = s => Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/') + '==='.slice((s.length + 3) % 4)), c => c.charCodeAt(0));
+  async function paintPush(host) {
+    if (!(await health()).push) return;                                                   // off, or not built yet
+    let key = null;
+    try { key = (await UI.api('/push/key', { quiet: true })).key; } catch (_) { return; }
+    if (!key) return;
+    const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) && !matchMedia('(display-mode: standalone)').matches;
+    if (ios || !('serviceWorker' in navigator) || !('PushManager' in window) || !('Notification' in window)) {
+      host.append(h('div', { class: 'pref' }, h('span', { class: 'pref-k', text: 'Notify me on this device' }),
+        h('p', { class: 'help' }, ios ? 'On iPhone, notifications come from the home-screen app. ' : 'This browser can’t show notifications. ',
+          h('a', { class: 'link', href: '/help/#install', text: 'How to add it' }))));
+      return;
+    }
+    let reg = await navigator.serviceWorker.getRegistration('/').catch(() => null);
+    let subn = reg ? await reg.pushManager.getSubscription().catch(() => null) : null;
+    let kinds = ls.get('satf.push.kinds', null) || Object.fromEntries(KINDS.map(k => [k[0], k[3]]));
+    const kindsBox = h('div');
+    const note = h('p', { class: 'help', hidden: true });
+    const drawKinds = () => kindsBox.replaceChildren(...(subn ? KINDS.map(([id, label, helper]) => {
+      const ctl = h('div', { class: 'pref-ctl' });
+      UI.switch(ctl, { checked: !!kinds[id], label, onChange: async v => {
+        const next = { ...kinds, [id]: v };
+        await UI.api('/push/subscribe', { method: 'PUT', body: { endpoint: subn.endpoint, kinds: next } });
+        kinds = next; ls.set('satf.push.kinds', kinds);
+      } });
+      return h('div', { class: 'pref' }, h('span', { class: 'pref-k', text: label }), h('p', { class: 'help', text: helper }), ctl);
+    }) : []));
+    async function enable() {                                      // only ever called from a tap
+      const perm = await Notification.requestPermission();
+      if (perm !== 'granted') { note.textContent = 'Your browser said no. Allow notifications for this site in its settings, then try again.'; note.hidden = false; throw new Error('denied'); }
+      try {
+        reg = reg || await navigator.serviceWorker.register('/sw.js');
+        await navigator.serviceWorker.ready;
+        subn = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(key) });
+        const j = subn.toJSON();
+        await UI.api('/push/subscribe', { method: 'POST', body: { endpoint: j.endpoint, keys: j.keys, kinds } });
+        drawKinds();
+        UI.toast('Notifications on for this device');
+      } catch (e) {
+        subn = null; note.textContent = 'Couldn’t turn them on here. Try again, or use Add to calendar.'; note.hidden = false; throw e;
+      }
+    }
+    const main = h('div', { class: 'pref-ctl' });
+    const sw = UI.switch(main, { checked: !!subn, label: 'Notify me on this device', onChange: async on => {
+      note.hidden = true;
+      if (on) return enable();
+      if (subn) { await UI.api('/push/subscribe', { method: 'DELETE', body: { endpoint: subn.endpoint } }).catch(() => null); await subn.unsubscribe().catch(() => null); }
+      subn = null; drawKinds();
+    } });
+    host.append(h('div', { class: 'pref' }, h('span', { class: 'pref-k', text: 'Notify me on this device' }),
+      h('p', { class: 'help', text: 'A nudge that says what’s due, from this browser. Quiet hours below hold back only the extra ones.' }), main), note, kindsBox);
+    drawKinds();
+    // the one offer, right after a study time is set (U18b); never on load
+    offerNudge = time => {
+      if (subn || !time || ls.get('satf.push.offered', 0)) return;
+      ls.set('satf.push.offered', 1);
+      UI.toast(`Want a nudge at ${time}?`, { ms: 8000, action: { label: 'Notify me', onClick: () => enable().then(() => sw.set(true), () => {}) } });
+    };
+  }
+  let offerNudge = () => {};
   UI.api('/prefs').then(prefRows, () => prefRows(null));
 
   /* ================================================================ Study: the plan line and the calendar (U18a) */
@@ -207,20 +296,49 @@
 
   /* ================================================================ Account & devices (Shell 4.4, U11, U19, U20, U21, U29) */
   const acc = $('account');
-  const blocks = { boards: h('div'), email: h('div'), passkeys: h('div'), devices: h('div', { id: 'devices' }), family: h('div'), move: h('div'), out: h('div') };
+  const blocks = { boards: h('div'), google: h('div'), email: h('div'), passkeys: h('div'), devices: h('div', { id: 'devices' }), family: h('div'), move: h('div'), out: h('div') };
   acc.replaceChildren(...Object.values(blocks));
   blocks.devices.style.scrollMarginTop = '72px';
   let ACC = null, DEV = null, PK = null;
   async function loadAccount() {
     try {
       [ACC, DEV, PK] = await Promise.all([UI.api('/account'), UI.api('/devices').catch(() => null), UI.api('/passkeys').catch(() => null)]);
-      paintEmail(); paintPasskeys(); paintDevices(); paintFamily(); paintMove(); paintOut();
+      paintEmail(); paintPasskeys(); paintDevices(); paintFamily(); paintMove(); paintOut(); paintGoogle();
     } catch (e) {
       if (e && e.retired) return;
       blocks.email.replaceChildren(UI.cardError(null, loadAccount));
     }
   }
-  const ways = () => [PK && PK.items && PK.items.length ? 'passkey' : null, ACC && ACC.verified ? 'email' : null].filter(Boolean);
+  const ways = () => [PK && PK.items && PK.items.length ? 'passkey' : null, ACC && ACC.verified ? 'email' : null,
+    ACC && ACC.google ? 'Google' : null].filter(Boolean);
+
+  /* ---- Google (U19b): only when the deploy has a client ID; never on a shared computer */
+  async function paintGoogle() {
+    const b = blocks.google, hl = await health();
+    b.replaceChildren();
+    if (!hl.google || !hl.google_client_id || UI.shared()) return;
+    sub(b, 'Google');
+    const g = ACC && ACC.google;
+    if (g) {
+      b.append(h('div', { class: 'dev' }, h('span', { class: 't', text: `Google · ${g.email_masked || g.email || 'connected'}` }),
+        btn('Disconnect', { quiet: true, onClick: async () => {
+          if (ways().length <= 1 && !(await UI.confirm({ title: 'Disconnect Google?', destructive: true, confirm: 'Disconnect anyway',
+            text: 'It’s your only way to sign in. Add a passkey or an email first, or a new device can’t reach this progress.' }))) return;
+          try { await UI.api('/google', { method: 'DELETE' }); UI.toast('Google disconnected'); loadAccount(); }
+          catch (e) { UI.toast(errText(e, 'Couldn’t disconnect. Try again.')); }
+        } }),
+        g.since ? h('span', { class: 'd', text: `connected ${day(g.since)}` }) : null));
+      return;
+    }
+    const host = h('div', { style: 'min-height: 44px' });
+    b.append(h('p', { class: 'help', text: 'Save with the Google account in this browser. We keep only its email and your name, never a Google password or token.' }), host);
+    A.googleButton(host, { clientId: hl.google_client_id, onResult: async res => {
+      if (res.learner && res.learner !== UI.learner()) return A.finish(res, { method: 'google', local: await A.localAnswers() });
+      UI.useLearner(res.credential, { same: true });                // a save: this progress, its own device key now
+      A.flash('Saved with Google. Your other browsers move to their own key on their next visit.');
+      location.reload();
+    }, onError: e => UI.toast(errText(e, 'Google didn’t work here. Try a passkey or email.')) }).catch(() => b.replaceChildren());
+  }
 
   function paintBoards() {
     const b = blocks.boards, p = P;

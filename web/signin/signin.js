@@ -251,22 +251,9 @@
 
   /* ---- Continue with Google (U19b), only when the deploy has a client ID */
   function googleButton(host) {
-    const s = document.createElement('script');
-    s.src = 'https://accounts.google.com/gsi/client';
-    s.onload = async () => {
-      try {
-        const { nonce } = await UI.api('/google/nonce', { method: 'POST' });
-        google.accounts.id.initialize({ client_id: health.google_client_id, nonce, ux_mode: 'popup', use_fedcm_for_prompt: true,
-          callback: async r => {
-            try {
-              const res = await UI.api('/google', { method: 'POST', body: { credential: r.credential, nonce, carry: false, session_only: shared } });
-              await A.finish(res, { ...opts(), method: 'google' });
-            } catch (x) { UI.toast(errText(x, 'Google sign-in didn’t work. Try another way.')); }
-          } });
-        google.accounts.id.renderButton(host, { theme: 'outline', size: 'large', width: 380, text: 'continue_with' });
-      } catch (_) { host.replaceChildren(); }
-    };
-    document.head.append(s);
+    A.googleButton(host, { clientId: health.google_client_id, body: () => ({ session_only: shared }),
+      onResult: res => A.finish(res, { ...opts(), method: 'google' }),
+      onError: x => UI.toast(errText(x, 'Google sign-in didn’t work. Try another way.')) }).catch(() => host.replaceChildren());
   }
 
   start();
