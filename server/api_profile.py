@@ -70,6 +70,10 @@ def levers(learner: str, tz: int, keys: list[str]) -> dict[str, dict]:
     def pace():
         return progress.pace(learner)
 
+    def skill_name(slug: str) -> str:
+        skill = progress.topics().get(slug)
+        return skill.name if skill else slug.replace("_", " ").capitalize()
+
     def left_out() -> list[dict]:
         r = db.one("SELECT SUM(repeat=1) AS repeats,SUM(disputed=1) AS disputed,"
                    " SUM(void IS NOT NULL) AS discarded,SUM(guess=1 AND correct=1) AS guesses"
@@ -131,10 +135,10 @@ def levers(learner: str, tz: int, keys: list[str]) -> dict[str, dict]:
             result[key] = _fact(g["total"] if g else None,
                                 "Estimated Math points available if each skill reaches Strong.",
                                 [{"label": "Counted answers", "value": g["answers"] if g else 0},
-                                 {"label": "Top skill", "value": top["topic"] if top else "not measured"},
+                                 {"label": "Top skill", "value": skill_name(top["topic"]) if top else "not measured"},
                                  {"label": "Top skill points", "value": top["gain"] if top else None}],
                                 help="points", next="Reach 30 counted answers for a measured estimate" if not g else
-                                f"Practise {top['topic']} to recover about {top['gain']} points" if top else None,
+                                f"Practise {skill_name(top['topic'])} to recover about {top['gain']} points" if top else None,
                                 start={"label": "Practise top skill", "body": {"topics": [top["topic"]], "count": 8}}
                                 if top else None, excluded=left_out(), same_on=["me", "results", "plan"])
         elif key in ("band", "estimate"):
@@ -189,7 +193,7 @@ def levers(learner: str, tz: int, keys: list[str]) -> dict[str, dict]:
                          f" AND at>=? AND {progress.COUNTED}", learner, topic, since)
             n = row["n"] or 0
             result[key] = _fact(round((row["right"] or 0) / n, 3) if n else None,
-                                f"Right first tries on {topic} in the last {window} days divided by counted answers.",
+                                f"Right first tries on {skill_name(topic)} in the last {window} days divided by counted answers.",
                                 [{"label": "Right", "value": row["right"] or 0},
                                  {"label": "Counted", "value": n}],
                                 help="accuracy", next="One more clean answer lifts this rate.",

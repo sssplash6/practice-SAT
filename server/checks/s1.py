@@ -19,7 +19,7 @@ from cryptography.hazmat.primitives.asymmetric import ec, rsa, padding
 from fastapi.testclient import TestClient
 
 from server.app import app, FORMS
-from server import account, achievements, compete, db, practice
+from server import account, achievements, compete, db, practice, progress
 
 
 def check(c: TestClient) -> None:
@@ -254,6 +254,11 @@ def check(c: TestClient) -> None:
     assert summary.json()["stats"]["answered"] == 50
     assert len(summary.json()["stats"]["series"]["answered"]) == 14
     assert len(summary.json()["domains"]) == 4
+    facts = c.get("/api/levers", params={"keys": "points,accuracy:nonlinear_functions:30"},
+                  headers=profile_h).json()["levers"]
+    assert progress.topics()["nonlinear_functions"].name in facts["accuracy:nonlinear_functions:30"]["how"]
+    assert facts["points"]["inputs"][1]["value"] in facts["points"]["next"]
+    assert "_" not in facts["points"]["next"]
     print("ok  Me summary and 43 base achievement rules use the same counted attempts")
 
     feed_learner = "a:s1feed" + secrets.token_hex(5)
