@@ -233,7 +233,7 @@
   .qd-after { display: grid; gap: 8px; }
   .qd-after .line { margin: 0; }
   .qd-past { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
-  .qd-days { flex: 0 1 auto; min-width: 0; display: flex; justify-content: flex-end; gap: 6px; overflow: hidden; }
+  .qd-days { flex: 1 1 auto; min-width: 0; display: flex; justify-content: space-between; gap: 6px; overflow: hidden; }
   .qd-days .qd-day { flex: none; width: 44px; }
   .qd-days .qd-day.mon { box-shadow: inset 2px 0 0 var(--line); }
   .qd-day { display: inline-grid; justify-items: center; align-content: center; gap: 4px; min-width: 44px; min-height: 44px; padding: 5px 6px; border: 0; border-radius: 10px; background: var(--tile-2); cursor: pointer; font: 600 12px var(--font); color: var(--ink); }
@@ -869,7 +869,7 @@
     // the line itself opens how it's worked out (its ⓘ), not a second "How" button beside it
     const pv = h('span', { text: pts });
     if (UI.fact) UI.fact(pv, 'practice_delta', { label: 'Points today' });
-    det.push(h('p', {}, pv), h('div', { class: 'acts' }, link('See today in the calendar', '#study')));
+    det.push(h('p', {}, pv), h('div', { class: 'acts' }, quiet('See today in the calendar', () => showDay(today()))));
     const box = h('div', { class: 'rdet' }, det);
     box.hidden = true;
     const tg = quiet('Details', () => { box.hidden = !box.hidden; tg.textContent = box.hidden ? 'Details' : 'Hide details'; tg.setAttribute('aria-expanded', String(!box.hidden)); });
@@ -1625,14 +1625,14 @@
   function pastStrip(d) {
     // decision 7 + the user's review: Older on the left, and the strip fills its width with the most recent days (up to 30 back,
     // the same range Older opens); each tile shows its date, the weekday is in the tooltip
-    // no visible label (the tiles are dates with marks); Older is the first tile; the strip starts on the learner's first day, so a
-    // new student sees no row of empty tiles, and ends on today, the way back from a past day (the user: defaults on screen)
+    // no visible label (the tiles are dates with marks); Older is the first tile; every past day has its own questions to open,
+    // so the strip always fills the row (starting on the learner's first day left most of it empty, the user's whitespace
+    // finding again) and ends on today, the way back from a past day
     const el = h('div', { class: 'qd-past' });
     const slots = (d.slots || []).map(s => s.slot);
     const t0 = d.today || today();
     const byDay = Object.fromEntries((d.past || []).map(p => [p.day, p]));
-    const firstAns = [...(d.past || []).filter(p => Object.values(p.marks || {}).some(Boolean)).map(p => p.day), S.cal && S.cal.first_active].filter(Boolean).sort()[0] || t0;
-    const back = Math.max(0, Math.min(30, dayDiff(firstAns, t0)));
+    const back = 30;
     const days = [...Array.from({ length: back }, (_, i) => addDays(t0, -(back - i))), t0];
     const tile = day => {
       const isT = day === t0;
@@ -1655,7 +1655,7 @@
     }, { label: 'An older day' }));
     el.append(older, row);
     let shown = -1;
-    // the strip's room is the row's width less Older; the tiles and Older sit together at its right end
+    // the strip's room is the row's width less Older; the tiles spread over all of it
     const fit = () => {
       const w = el.clientWidth - 56;
       if (w <= 0) return;
@@ -2269,12 +2269,17 @@
     const kids = [fresh ? line('No study time yet. Your first answer starts your streak and fills this calendar.', 'soft') : figs.children.length ? figs : null];
     const ins = S.ins || {};
     if (ins.time_split && ins.time_split.minutes) kids.push(timeSplit(ins.time_split, ins.gains));
-    // the calendar
-    const wrap = h('div', { class: 'cal-wrap', hidden: fresh && !S.calShown });
-    if (fresh && !S.calShown) kids.push(h('div', { class: 'acts' }, quiet('Show the calendar', (e, b) => { S.calShown = true; wrap.hidden = false; b.parentNode.remove(); })));
+    // the calendar: folded by default and remembered, like the SAT card's details (decision 7: details on demand; open it
+    // made Study time the page's longest card and left a tall empty area beside Study plan); a day link opens it
+    if (S.calOpen === undefined) { S.calOpen = false; try { S.calOpen = localStorage.getItem('satf.cal.open') === '1'; } catch (e) {} }
+    const wrap = h('div', { class: 'cal-wrap', hidden: !S.calOpen });
+    const tog = h('button', { type: 'button', class: 'quiet', text: S.calOpen ? 'Hide the calendar' : 'Show the calendar', 'aria-expanded': String(S.calOpen) });
+    tog.addEventListener('click', () => {
+      S.calOpen = wrap.hidden; wrap.hidden = !S.calOpen; tog.textContent = S.calOpen ? 'Hide the calendar' : 'Show the calendar'; tog.setAttribute('aria-expanded', String(S.calOpen));
+      try { localStorage.setItem('satf.cal.open', S.calOpen ? '1' : '0'); } catch (e) {}
+    });
     const calHost = h('div', {}), detail = h('div', { class: 'day-detail', role: 'region', 'aria-label': 'Day detail' });
     wrap.append(calHost, detail);
-    kids.push(wrap);
     if (S.cal && !S.cal.failed && UI.calendar) {
       const cal = S.cal;
       // plan marks only from the plan's start (rest shields showed on weekends before the plan existed)
@@ -2304,6 +2309,7 @@
     const foot = join(d.best > (d.streak || 0) && `best streak ${d.best}`, d.spares && `${pl(d.spares, 'spare')}`,
       met > 0 && `goal met ${met} of the last ${recent.length} days`, wm && wm.of && `held ${Math.round(100 * wm.held / wm.of)}% of ${wm.of} warm-up answers this month`);
     if (foot) kids.push(h('p', { class: 'meta', style: 'margin-top:16px', text: foot }));
+    kids.push(h('div', { class: 'acts' }, tog), wrap);
     card('study', 'Study time', goalBtn, kids);
   }
   function timeSplit(ts, gains) {
@@ -2426,6 +2432,8 @@
     if (foot || (y && y.rank)) kids.push(h('p', { class: 'meta', style: 'margin-top:14px' }, foot,
       y && y.rank ? [foot ? ' · ' : '', h('a', { class: 'plain', href: `/challenge/?day=${y.day}`, text: join(`Yesterday: #${y.rank} of ${n(y.of)}`, y.right !== undefined && `${y.right}/${c.count || 10}`) })] : null));
     card('chal', 'Daily challenge', players ? h('span', { class: 'meta', text: `${n(players)} in today` }) : null, kids);
+    // decision 7: not started, nobody on the board and no streak, the card only repeats Due today's challenge row
+    $('chal').hidden = status === 'new' && !entries.length && !foot && !(y && y.rank);
   }
   // T15: once finished, the ten slots against the field, each one tap from its twin
   function chalSlots(sid) {
@@ -2586,7 +2594,7 @@
     return el;
   }
   function showDay(day) {
-    S.calDay = day;
+    S.calDay = day; S.calOpen = true;
     if (S.cal && S.cal.month && S.cal.month !== day.slice(0, 7)) { S.calMonth = day.slice(0, 7); LOADERS.calendar(); } else paintStudy();
     $('study').scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }
