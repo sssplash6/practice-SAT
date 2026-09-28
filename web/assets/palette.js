@@ -135,7 +135,8 @@
   }
 
   /* ---- rows. {label, sub, meta, icon, run(alt), subs, recent, bold} */
-  const drillRow = (label, body, o = {}) => ({ ...o, label, run: () => drill(body, { label: typeof label === 'string' ? label : o.text, sub: o.sub, act: { drill: body } }) });
+  // o.as: the Recent entry's label when the row's own leaves out its parent ("Circles · Practise · 10 questions")
+  const drillRow = (label, body, o = {}) => ({ ...o, label, run: () => drill(body, { label: o.as || (typeof label === 'string' ? label : o.text), sub: o.sub, act: { drill: body } }) });
 
   const typedCount = toks => toks.some(t => /^\d{1,3}(q|qs)?$/.test(t) && +t.replace(/\D/g, '') >= 1 && +t.replace(/\D/g, '') <= 120);
   function composed(parse, toks) {
@@ -183,9 +184,9 @@
         open ? h('span', { 'aria-label': `${open} open mistakes` }, h('i', { class: 'dot', 'aria-hidden': 'true' }), ` ${fmt(open)}`) : null);
       const body = extra => ({ topics: [t.slug], count: n, source: 'palette', ...extra });
       const subs = [
-        drillRow(`Practise · ${qn(n)}`, body(), {}),
-        drillRow('Practise hard', body({ tiers: ['hard'] }), {}),
-        open ? drillRow(`Fix mistakes (${fmt(open)})`, { pool: 'redo', topics: [t.slug], source: 'palette' }, {}) : null,
+        drillRow(`Practise · ${qn(n)}`, body(), { as: `${t.short} · Practise · ${qn(n)}` }),
+        drillRow('Practise hard', body({ tiers: ['hard'] }), { as: `${t.short} · Practise hard` }),
+        open ? drillRow(`Fix mistakes (${fmt(open)})`, { pool: 'redo', topics: [t.slug], source: 'palette' }, { as: `${t.short} · Fix mistakes (${fmt(open)})` }) : null,
         { label: 'Open stats', run: () => go(`/results/#${t.slug}`) },
       ].filter(Boolean);
       return { ...drillRow(t.short, body(), { sub: t.dshort, icon: UI.glyph(t.slug), meta }), subs };
@@ -214,9 +215,10 @@
     return best(mistakeIndex(), toks, x => x.label, n).map(m => {
       const names = [...m.topics].map(s => (UI.TOPIC[s] || {}).short || s);
       const templates = m.templates.slice(0, 120);
-      const body = { templates, want: Object.fromEntries(templates.map(t => [t, m.norm])), count: setLength() || 10, source: 'palette' };
+      const count = setLength() || 10;
+      const body = { templates, want: Object.fromEntries(templates.map(t => [t, m.norm])), count, source: 'palette' };
       return drillRow(m.label, body, { sub: `${names.slice(0, 2).join(', ')}${names.length > 2 ? ` +${names.length - 2}` : ''} · ${m.templates.length === 1 ? '1 type' : `${m.templates.length} types`}`,
-        icon: icon('review', 18), meta: 'Drill it' });
+        icon: icon('review', 18), meta: `Practise this mistake · ${count}` });
     });
   }
 
