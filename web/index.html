@@ -503,7 +503,7 @@
   function card(id, label, right, ...kids) {
     const el = $(id);
     el.setAttribute('aria-labelledby', id + '-h');
-    el.replaceChildren(head(id, label, right || []), ...kids.flat().filter(Boolean));
+    el.replaceChildren(head(id, label, right || []), ...kids.flat(3).filter(Boolean));
     return el;
   }
   const skel = (id, label, ...shapes) => card(id, label, null, shapes.map(x => UI.skel(null, x)));
@@ -688,20 +688,29 @@
     return stretch ? ['hero', 'exam', 'next', 'due', 'mist', 'qotd', 'gain', 'score', 'pace', 'study', 'plan', 'chal', 'words', 'tests']
       : ['hero', 'next', 'due', 'qotd', 'gain', 'mist', 'exam', 'score', 'pace', 'study', 'plan', 'chal', 'words', 'tests'];
   }
+  // a node moves only when it isn't already where it belongs: a move restarts its animations and drops the focus inside it
+  const ensure = (parent, nodes) => {
+    const have = [...parent.children];
+    if (nodes.length === have.length && nodes.every((e, i) => have[i] === e)) return;
+    nodes.forEach(e => parent.append(e));
+  };
   function place() {
     const grid = $('today'), stretch = grid.classList.contains('stretch');
     const col = (id, cls) => $(id) || h('div', { id, class: `td-col ${cls}` });
     if (!WIDE.matches) {
-      phoneOrder(stretch).forEach(id => grid.append($(id)));
+      ensure(grid, phoneOrder(stretch).map($));
       grid.querySelectorAll('.td-col').forEach(c => c.remove());
       return;
     }
     const aMain = col('tdAm', 'td-main'), aSide = col('tdAs', 'td-side'), bMain = col('tdBm', 'td-main'), bSide = col('tdBs', 'td-side');
-    grid.append($('hero'), aMain, aSide, $('qotd'), bMain, bSide, $('tests'));
-    aMain.append($('next'), $('gain'));
-    (stretch ? ['exam', 'due', 'mist'] : ['due', 'mist', 'exam']).forEach(id => aSide.append($(id)));
-    bMain.append($('study'), $('plan'));
-    ['score', 'pace', 'chal', 'words'].forEach(id => bSide.append($(id)));
+    ensure(grid, [$('hero'), aMain, aSide, $('qotd'), bMain, bSide, $('tests')]);
+    ensure(aMain, [$('next'), $('gain')]);
+    ensure(bMain, [$('study'), $('plan')]);
+    // the first wide paint: the usual split, until balance() has measured
+    if (!aSide.children.length && !bSide.children.length) {
+      ensure(aSide, (stretch ? ['exam', 'due', 'mist'] : ['due', 'mist', 'exam']).map($));
+      ensure(bSide, ['score', 'pace', 'chal', 'words'].map($));
+    }
     balance();
     if (window.ResizeObserver && !place.ro) {
       place.ro = new ResizeObserver(() => balance());
@@ -732,7 +741,8 @@
         const gA = Math.abs(Am - used), gB = Math.abs(Bm - rest), s = gA + gB, m = Math.max(gA, gB);
         if (s < bestS - 30 || (Math.abs(s - bestS) <= 30 && m < bestM)) { best = i + 1; bestS = s; bestM = m; }
       });
-      seq.forEach((id, i) => (i < best ? aSide : bSide).append($(id)));
+      ensure(aSide, seq.slice(0, best).map($));
+      ensure(bSide, seq.slice(best).map($));
     });
   }
   WIDE.addEventListener('change', () => place());
@@ -1728,7 +1738,7 @@
     }
     const foot = h('div', { class: 'acts' });
     if (g.top3 && g.top3.topics && g.top3.topics.length) foot.append(btn('Practise the top 3 · 15', () => drill({ topics: g.top3.topics, count: 15, adaptive: true, source: 'gain' })));
-    const body = [hd, sum, rows, foot.children.length ? foot : null];
+    const body = [hd, ...sum, rows, foot.children.length ? foot : null];
     // the SAT's eve and day: nothing to practise toward, so the list waits behind one row
     if (quietDay) card('gain', 'Points on the table', null, fold(`gain.${stageMode()}`, 'Where your points are', `about +${n(total)}`, body));
     else card('gain', 'Points on the table', null, body);
