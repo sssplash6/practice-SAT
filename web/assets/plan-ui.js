@@ -108,7 +108,7 @@
   @media (max-width: 759px) {
     .trow { grid-template-columns: 32px minmax(0, 1fr); }
     .trow-act { grid-column: 2; justify-content: flex-start; }
-    .trow-act .quiet, .trow-act .btn, .trow-act .pill, .trow-more, .trow-sub .quiet, .trow-sub .btn { min-height: var(--touch); }
+    .trow-act .quiet, .trow-act .btn, .trow-act .pill, .trow-more, .trow-sub .quiet, .trow-sub .btn, .trow-detail .quiet { min-height: var(--touch); }
     .trow-more { width: var(--touch); }
     .trow-act { margin-top: 0; }
     /* the ⋯ sits top right; the line under the row holds only Start, Review or Undo */
