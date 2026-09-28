@@ -815,12 +815,12 @@
       { label: 'See the traps', onClick: () => traps_(t) },
       { label: 'Mix it up with look-alikes', disabled: !(t.lookalikes || []).length, onClick: () => create({ subject: 'math', source: 'mixup', order: 'mixup', templates: [t.template, ...(t.lookalikes || [])].slice(0, 6), count: 8 }) },
     ], { label: t.name });
-    // what sets this type apart; the defaults (all three tiers, multiple choice, not yet tried) go unsaid
+    // what sets this type apart; the defaults (all three tiers, multiple choice, not yet tried) go unsaid; no odds and no
+    // "built from N official questions" line on the row (the user)
     const chips = [
       tiers.length < 3 ? h('span', { text: `${tiers.map(d => TIER_WORD[d]).join(' + ')} only` }) : null,
       t.formats.includes('spr') ? h('span', { text: t.formats.includes('mcq') ? 'MC + grid-in' : 'Grid-in only' }) : null,
       level ? h('span', { class: 'mono', text: level }) : null,
-      Number.isFinite(t.odds) ? h('span', { text: `your odds ~${Math.round(t.odds * 100)}%` }) : null,
       t.answered ? h('span', { text: `${t.right} of ${t.answered} right` }) : null,
       t.crowd && t.crowd.n >= 20 ? h('span', { text: `everyone ${pct(t.crowd.rate)}` }) : null,
       openBadge(traps),
@@ -829,7 +829,6 @@
       t.due ? h('span', { text: 'Due today' }) : t.next_return ? h('span', { text: `Back ${UI.date ? UI.date(t.next_return, 'short') : t.next_return}${t.k ? ` · held ${t.k}` : ''}` }) : null,
       t.fluent ? h('span', { text: `Fluent${t.best_ms ? ` · best ${mmss(t.best_ms)}` : ''}` }) : t.slow_right ? h('span', { text: `Slow: right but ${mmss(t.median_ms)} median` }) : null,
       t.desmos ? h('span', { text: 'Desmos way' }) : null,
-      t.official ? h('span', { text: `Built from ${plural(t.official, 'official question')}` }) : null,
       t.type_note ? tip(h('span', { text: '✎ your rule' }), t.type_note) : null,
     ].filter(Boolean);
     const row = h('div', { class: 'trow', 'data-t': t.template }, tb,
