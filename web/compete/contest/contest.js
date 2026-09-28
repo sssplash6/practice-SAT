@@ -74,9 +74,17 @@
     $('#grid').hidden = true;
     const go = h('button', { type: 'button', class: 'pill', text: 'Join' });
     go.addEventListener('click', () => busy(go, async () => { const r = await api('/join', { method: 'POST', body: { code } }); location.href = C.href(r.id || c.id); }));
-    $('#head').replaceChildren(h('a', { class: 'quiet ct-back', href: '/compete/', text: '‹ Compete' }), h('span', { class: 'k', text: 'PRIVATE CONTEST' }),
-      h('h1', { class: 'h1', text: c.title }), h('p', { class: 'meta', text: [c.count && `${c.count} questions`, c.closes && `closes ${C.when(c.closes)}`].filter(Boolean).join(' · ') }),
-      h('p', { class: 'line', text: 'Entrants see your board name here (Anonymous if your name is off on Me).' }), h('div', { class: 'row-act' }, go));
+    // ponytail: the join payload has title, count and closes; who invited you, who's in, the round and the
+    // skills show as soon as the server sends by, entrants_n, round/rounds and topics
+    const rounds = c.rounds || (c.spec && c.spec.repeat && c.spec.repeat.rounds);
+    const topics = [...new Set(c.topics || (c.ladder || []).map(q => q.topic))].filter(Boolean);
+    $('#head').replaceChildren(h('a', { class: 'quiet ct-back', href: '/compete/', text: '‹ Compete' }),
+      h('section', { class: 'card join-card', 'aria-label': 'Join a private contest' }, h('span', { class: 'k', text: 'PRIVATE CONTEST' }),
+        h('h1', { class: 'h1', text: c.title }),
+        h('p', { class: 'line', text: [c.round && rounds ? `Round ${c.round} of ${rounds}` : null, c.count && `${c.count} questions`, c.closes && `closes ${C.when(c.closes)}`].filter(Boolean).join(' · ') }),
+        c.by || c.entrants_n ? h('p', { class: 'meta', text: [c.by ? `Invited by ${c.by}` : null, c.entrants_n ? `${num(c.entrants_n)} friend${c.entrants_n === 1 ? '' : 's'} in` : null].filter(Boolean).join(' · ') }) : null,
+        topics.length ? h('p', { class: 'line', text: `Trains ${topics.map(C.topicName).join(', ')}` }) : null,
+        h('div', { class: 'row-act' }, go, C.info('Entrants see your board name here, or Anonymous if your name is off on Me.', 'About your name here'))));
   }
   const fetchBoard = () => api(`/contest/${enc(cid)}/board?scope=${S.scope}${S.view === 'series' ? '&view=series&sort=' + (S.sort === 'net' ? 'net' : 'points') : ''}`);
 
@@ -101,9 +109,8 @@
   function renderHead() {
     const c = S.c;
     const [kind, name] = titleParts(c);
-    const rounds = c.spec && c.spec.repeat && c.spec.repeat.rounds;
     let k = c.kind === 'daily' ? 'DAILY CHALLENGE' : kind.toUpperCase();
-    if (c.kind === 'private') k = `PRIVATE CONTEST${c.by ? ` · BY ${String(c.by).toUpperCase()}` : ''}${c.round && rounds ? ` · ROUND ${c.round} OF ${rounds}` : ''}`;
+    if (c.kind === 'private') k = `PRIVATE CONTEST${c.by ? ` · BY ${String(c.by).toUpperCase()}` : ''}`;   // the round is in the window line below
     const title = c.kind === 'daily' ? C.dayLabel(dayOf(c)) : c.kind === 'private' ? c.title : name;
     const chip = h('span', { class: 'chip-s' + (c.status === 'live' ? ' on' : ''), text: { upcoming: 'Upcoming', live: 'Live', closed: 'Closed' }[c.status] || c.status });
     const kids = [h('a', { class: 'quiet ct-back', href: '/compete/', text: '‹ Compete' }), h('span', { class: 'k', text: k }),
@@ -114,14 +121,19 @@
       const nextDay = shiftDay(day, 1);
       const next = day >= today ? h('button', { type: 'button', class: 'btn sm', disabled: true, text: `${C.dayLabel(nextDay, { weekday: false })} ›` })
         : h('a', { class: 'btn sm', href: C.href(`daily-${nextDay}`), text: `${C.dayLabel(nextDay, { weekday: false })} ›` });
-      const pick = h('input', { class: 'field', type: 'date', value: day, max: today, 'aria-label': 'Pick a day' });
-      pick.addEventListener('change', () => { if (pick.value && pick.value <= today) location.href = C.href(`daily-${pick.value}`); });
-      kids.push(h('div', { class: 'day-nav' }, prev, pick, next));
-      if (S.streak && S.streak.strip) {
-        const strip = h('div', { class: 'day-strip', role: 'list', 'aria-label': 'The last 30 days' },
-          S.streak.strip.map(x => { const a = h('a', { role: 'listitem', href: C.href(`daily-${x.day}`), 'data-s': x.state === 'made up' ? 'madeup' : x.state, 'aria-current': x.day === day ? 'page' : null,
-            'aria-label': `${C.dayLabel(x.day, { weekday: false })}: ${x.state}` }); UI.tooltip(a, `${C.dayLabel(x.day)}: ${x.state}`); return a; }));
-        kids.push(strip, h('div', { class: 'day-legend' }, h('span', {}, h('i', { class: 'sat' }), 'sat'), h('span', {}, h('i', { class: 'madeup' }), 'made up'), h('span', {}, h('i', { class: 'ghost' }), 'ghost'), h('span', {}, h('i'), 'missed')));
+      const pickIn = h('input', { class: 'pick-in', type: 'date', value: day, max: today, tabindex: '-1', 'aria-hidden': 'true' });
+      pickIn.addEventListener('change', () => { if (pickIn.value && pickIn.value <= today) location.href = C.href(`daily-${pickIn.value}`); });
+      const pick = h('button', { type: 'button', class: 'btn sm', 'aria-label': `Pick a day, now ${C.dayLabel(day, { weekday: false })}`, text: `${C.dayLabel(day, { weekday: false })} ▾` });
+      pick.addEventListener('click', () => { try { pickIn.showPicker(); } catch (_) { pickIn.focus(); pickIn.click(); } });
+      kids.push(h('div', { class: 'day-nav' }, prev, pick, next, pickIn));
+      // decision 7: the strip starts at your first sitting (no wall of grey before it); its key is in an i
+      const days = (S.streak && S.streak.strip) || [];
+      const first = days.findIndex(x => x.state !== 'missed');
+      if (first >= 0) {
+        const strip = h('div', { class: 'day-strip', role: 'list', 'aria-label': 'Your days since your first sitting' },
+          days.slice(first).map(x => { const w = C.DAY_WORD[x.state] || x.state; const a = h('a', { role: 'listitem', href: C.href(`daily-${x.day}`), 'data-s': /^made/.test(x.state) ? 'madeup' : x.state, 'aria-current': x.day === day ? 'page' : null,
+            'aria-label': `${C.dayLabel(x.day, { weekday: false })}: ${w}` }); UI.tooltip(a, `${C.dayLabel(x.day)}: ${w}`); return a; }));
+        kids.push(h('div', { class: 'ladder-row' }, strip, C.info('Orange: sat that day. Outlined with a tick: made up within 3 days, which keeps the streak. Outlined: sat late, unranked. Grey: missed.', 'About the days')));
       }
     }
     $('#head').replaceChildren(...kids);
@@ -144,10 +156,10 @@
     // decision 7: the explanations sit in one i; C17's extended-time consequence stays in the open
     const tip = [c.kind !== 'private' && t === 'official' ? 'Official time: placed on the public board.' : null,
       C.kind(c).clock === 'answer' ? 'The clock runs only while a question is open. Skipped and voided questions score 0.' : null].filter(Boolean).join(' ');
-    box.append(h('p', { class: 'line' }, `Your time: ${TIMING[t]}${clock} `, change, tip ? [' ', C.info(tip, 'About the clock')] : null),
+    box.append(...[h('p', { class: 'line' }, `Your time: ${TIMING[t]}${clock} `, change, tip ? [' ', C.info(tip, 'About the clock')] : null),
       c.kind === 'private' ? h('p', { class: 'help', text: 'Ranked with everyone in this private contest. Nobody sees your timing.' })
         : t === 'official' ? null
-        : h('p', { class: 'help', text: 'Extended time: on this board you’re placed among extended-time sittings (only you see where). Rating, Over par and Climb count you with everyone.' }));
+        : h('p', { class: 'help', text: 'Extended time: on this board you’re placed among extended-time sittings (only you see where). Rating, Over par and Climb count you with everyone.' })].filter(Boolean));
     return box;
   }
   function timingSheet(t) {
@@ -246,9 +258,10 @@
     kids.push(act);
     if (closedGhost) {
       kids.push(h('p', { class: 'help', text: 'Twin questions, same skills. You’ll see where you would have placed. It doesn’t count for rank, rating or season points.' }));
-      if (c.kind === 'daily' && dayOf(c) >= shiftDay(todayISO(), -2) && S.streak && (S.streak.strip || []).some(x => x.day === dayOf(c) && x.state === 'missed')) {
+      const keep = c.kind === 'daily' && dayOf(c) >= shiftDay(todayISO(), -2) && S.streak && (S.streak.strip || []).some(x => x.day === dayOf(c) && x.state === 'missed') ? C.streakBefore(S.streak.strip, dayOf(c)) : 0;
+      if (keep >= 1) {
         const leftH = Math.max(0, Math.round((new Date(`${shiftDay(dayOf(c), 3)}T00:00:00`) - Date.now()) / 36e5));
-        kids.push(h('p', { class: 'line', text: `Make up ${C.dayLabel(dayOf(c), { weekday: false })} · keeps your streak · ${leftH >= 24 ? `${Math.floor(leftH / 24)} day${leftH >= 48 ? 's' : ''}` : `${leftH}h`} left` }));
+        kids.push(h('p', { class: 'line', text: `Keep your ${num(keep)}-day streak: make up ${C.dayLabel(dayOf(c), { weekday: false })} · ${leftH >= 24 ? `${Math.floor(leftH / 24)} day${leftH >= 48 ? 's' : ''}` : `${leftH}h`} left` }));
       }
     } else if (c.status === 'live' && C.kind(c).clock !== 'answer') kids.push(h('p', { class: 'help', text: c.kind === 'rush' ? 'Three strikes end the run: a miss, or an answer over 1.5× its time budget.' : 'A wall clock, like the real test.' }));
     el.replaceChildren(...kids);
@@ -288,24 +301,30 @@
     if (me.ranked === false && me.why !== 'ghost') kids.push(h('p', { class: 'line' }, h('span', { class: 'chip-s', text: 'Unranked' }), ' ', WHY[me.why] || ''));
     const parts = r.points_parts || {};
     const par = r.par || {};
+    // one par on screen: the board's "Your par" row; the tile says only how far over it you came
+    const overPar = r.net !== undefined && par.base !== undefined ? stat('Over par', `${r.net >= 0 ? '+' : '−'}${num(Math.abs(r.net))}`) : null;
+    if (overPar) UI.tooltip(overPar, `Base points ${num(parts.base)} minus the base of your par, ${num(par.base)}. Pace and finish bonuses are left out on both sides.`);
+    const tv = me.clock ? mmss(me.clock.used) : r.secs !== undefined ? mmss(r.secs) : null;
+    const timeT = tv ? stat('Time', tv) : null;
+    if (timeT) UI.tooltip(timeT, C.kind(c).clock === 'wall' ? 'Time used, start to hand-in' : 'Answer clock used: only while a question was open');
+    // the rules' key terms, where they are used (the rules card folds away on the result)
+    const ptsT = stat('Points', num(r.points), parts.base !== undefined ? `${num(parts.base)} + ${num(parts.pace || 0)} pace + ${num(parts.finish || 0)} finish` : null);
+    if (C.kind(c).pace) UI.tooltip(ptsT, 'Pace bonus: +5 for each right answer within its time budget. Finish bonus: +10 for answering every question with none skipped or voided.');
     const tiles = h('div', { class: 'stats res-tiles' },
       stat('Score', `${num(r.right)}/${num(r.asked || c.count)}`),
-      stat('Points', num(r.points), parts.base !== undefined ? `${num(parts.base)} + ${num(parts.pace || 0)} pace + ${num(parts.finish || 0)} finish` : null),
-      stat(C.kind(c).clock === 'wall' ? 'Time used' : 'Answer time', me.clock ? mmss(me.clock.used) : r.secs !== undefined ? mmss(r.secs) : null),
-      r.net !== undefined && par.base !== undefined ? stat('Par', `${r.net >= 0 ? '+' : '−'}${num(Math.abs(r.net))}`, `${r.net >= 0 ? 'over' : 'under'} par · base ${num(parts.base)} vs par ${num(par.base)}`) : null,
-      r.rating_after !== undefined && r.rating_before !== undefined ? stat('Contest rating', `${r.rating_after >= r.rating_before ? '+' : '−'}${num(Math.abs(Math.round(r.rating_after - r.rating_before)))} → ${num(Math.round(r.rating_after))}`,
+      ptsT, timeT, overPar,
+      r.rating_after !== undefined && r.rating_before !== undefined ? stat('Rating', `${r.rating_after >= r.rating_before ? '+' : '−'}${num(Math.abs(Math.round(r.rating_after - r.rating_before)))} → ${num(Math.round(r.rating_after))}`,
         C.levelOf(r.rating_after) !== C.levelOf(r.rating_before) ? `Level ${C.levelOf(r.rating_before)} → ${C.levelOf(r.rating_after)}` : `Level ${C.levelOf(r.rating_after)}`) : null);
-    [...tiles.children].forEach(t => { if (!t) tiles.removeChild(t); });
     kids.push(tiles);
     const right = r.right || 0, wrong = r.wrong ?? Math.max(0, (r.asked || 0) - right - (r.skipped || 0) - (r.voided || 0));
     const brk = h('p', { class: 'line res-brk', text: `${num(right)} right${r.confirmed ? ` (${num(r.confirmed)} confirmed)` : ''} · ${num(wrong)} wrong · ${num(r.skipped || 0)} skipped · ${num(r.voided || 0)} voided` });
     if (you && you.mark === 'clean') brk.append(' ', h('span', { class: 'chip-s', text: 'Clean run' }));
     kids.push(brk);
     if (r.race) { const who = r.race.label || r.race.them_label || 'the pacer'; kids.push(h('p', { class: 'line', text: r.race.won ? `Beat ${who} by ${num(Math.abs((r.race.you || 0) - (r.race.them || 0)))} pts` : `${who.replace(/^./, x => x.toUpperCase())} by ${num(Math.abs((r.race.them || 0) - (r.race.you || 0)))} pts` })); }
-    const pars = ((S.board && S.board.pars) || []).slice().sort((a, b) => a.points - b.points);
+    const pars = parRows(S.board).fixed.slice().sort((a, b) => a.points - b.points);
     if (pars.length && r.points !== undefined && ['daily', 'weekly', 'final', 'trap', 'private'].includes(c.kind)) {
       const below = pars.filter(p => p.points <= r.points).pop(), above = pars.find(p => p.points > r.points);
-      kids.push(h('p', { class: 'meta', text: below && above ? `Between Level ${below.level} and Level ${above.level} par` : below ? `Above Level ${below.level} par` : `Below Level ${above.level} par` }));
+      kids.push(h('p', { class: 'meta', text: below && above ? `Between L${below.level} and L${above.level} par` : below ? `Above L${below.level} par` : `Below L${above.level} par` }));
     }
     if (c.status === 'live' && c.kind !== 'private' && me.why !== 'ghost') { const rl = h('p', { class: 'line', hidden: true }); kids.push(rl); rivalsToday(rl, r.points); }
     if (r.trap) {
@@ -341,30 +360,41 @@
     const topics = r.topics || [];
     if (topics.length) {
       kids.push(h('div', { class: 'sub-block' }, h('span', { class: 'k', text: 'SKILLS IN THIS SITTING' }), h('div', { class: 'topic-rows' }, topics.map(t => h('div', { class: 'topic-row' },
-        h('span', { class: 'line', text: C.topicName(t.topic) }), h('span', { class: 'meta', text: `${num(t.right)}/${num(t.asked)}` }),
+        h('span', { class: 'line', text: C.topicName(t.topic) }), h('span', { class: 'meta', text: `${num(t.right)}/${num(t.asked)} · mastery ${Math.round((t.after || 0) * 100)}%` }),
         h('span', { class: 'mbar', role: 'img', 'aria-label': `Mastery ${Math.round((t.before || 0) * 100)}% → ${Math.round((t.after || 0) * 100)}%` },
-          h('i', { style: `width:${Math.round((t.after || 0) * 100)}%` }), h('b', { style: `left:${Math.round((t.before || 0) * 100)}%` })))))));
+          h('i', { style: `--m:${Math.max(0, Math.min(1, t.after || 0))}` }), h('b', { style: `left:${Math.round((t.before || 0) * 100)}%` })))))));
     }
-    if ((r.opened || []).length || (r.closed || []).length) {
-      kids.push(h('div', { class: 'sub-block' }, h('span', { class: 'k', text: 'MISTAKES' }), h('ul', { class: 'mist' },
-        (r.opened || []).map(m => h('li', {}, h('a', { class: 'link', href: `/review/?open=trap:${m.id}`, text: m.label }))),
-        (r.closed || []).map(m => h('li', { class: 'closed', text: m.label })))));
+    // this sitting's mistakes (its skills), folded away: the debrief names each miss already
+    const here = new Set((r.questions || []).map(q => q.topic).filter(Boolean));
+    const mine = x => !x.topic || !here.size || here.has(x.topic);
+    const opened = (r.opened || []).filter(mine), closed = (r.closed || []).filter(mine);
+    if (opened.length || closed.length) {
+      kids.push(h('details', { class: 'sub-block mist-d' }, h('summary', { class: 'k', text: [`MISTAKES FROM THIS SITTING · ${opened.length} OPEN`, closed.length ? `${closed.length} CLOSED` : null].filter(Boolean).join(' · ') }),
+        h('ul', { class: 'mist' },
+          opened.map(m => h('li', {}, h('a', { class: 'link', href: `/review/?open=trap:${m.id}`, text: m.label }))),
+          closed.map(m => h('li', { class: 'closed', text: m.label })))));
     }
     // the name prompt: once, while the board shows a default handle
     if (you && /^Student [0-9A-F]{4}$/i.test(you.name || '')) kids.push(namePrompt(you.name));
     // actions
     const act = h('div', { class: 'row-act' });
-    act.append(h('button', { type: 'button', class: 'pill', text: 'See the board', onclick: () => $('#board').scrollIntoView({ behavior: 'smooth' }) }));
+    act.append(h('button', { type: 'button', class: 'pill see-board', text: 'See the board', onclick: () => $('#board').scrollIntoView({ behavior: 'smooth' }) }));
     if (['sprint', 'rush'].includes(c.kind)) {
-      const again = h('button', { type: 'button', class: 'btn', text: c.kind === 'rush' ? 'Run again' : 'Run again' });
-      again.addEventListener('click', () => busy(again, () => C.start(c.id, { kind: c.kind })));
-      act.append(again, quiet(`Race your best${r.points !== undefined ? ` · ${num(r.points)}` : ''}`, ev => busy(ev.currentTarget, () => C.start(c.id, { race: 'best', kind: c.kind }))));
+      // a new run races your best, as the lobby does for runs
+      const again = h('button', { type: 'button', class: 'btn', text: 'Run again' });
+      again.addEventListener('click', () => busy(again, () => C.start(c.id, { race: 'best', kind: c.kind })));
+      UI.tooltip(again, `Fresh questions, racing your best this week${you && you.points !== undefined ? ` · ${num(you.points)} pts` : ''}`);
+      act.append(again);
     }
-    const fieldTraps = quiet('Practice the field’s traps', ev => busy(ev.currentTarget, practiceTraps));
-    const copy = quiet('Copy result', () => UI.copyText(C.copyResult(c, { ...r, secs: me.clock ? me.clock.used : r.secs }, { rank: you && you.rank, players }, myPid())));
-    const link = quiet('Race link', () => UI.copyText(`${location.origin}${C.href(c.id, { race: myPid() })}`));
-    const friend = quiet('Challenge a friend', () => C.create({ count: [5, 10, 15, 22].includes(c.count) ? c.count : 10, topics: [...new Set((c.ladder || []).map(q => q.topic))], twin: true, sheetTitle: 'Challenge a friend' }));
-    act.append(...[fieldTraps, copy, myPid() && link, (c.kind === 'daily' || c.kind === 'private') && friend].filter(Boolean));
+    // sharing is one menu: the result, a race link, a friend's contest
+    const share = h('button', { type: 'button', class: 'quiet', 'aria-haspopup': 'menu', text: 'Share ▾' });
+    const shareItems = () => [
+      { label: 'Copy result', onClick: () => UI.copyText(C.copyResult(c, { ...r, secs: me.clock ? me.clock.used : r.secs }, { rank: you && you.rank, players }, myPid())) },
+      myPid() ? { label: 'Copy a race link', onClick: () => UI.copyText(`${location.origin}${C.href(c.id, { race: myPid() })}`) } : null,
+      c.kind === 'daily' || c.kind === 'private' ? { label: 'Challenge a friend', onClick: () => C.create({ count: [5, 10, 15, 22].includes(c.count) ? c.count : 10, topics: [...new Set((c.ladder || []).map(q => q.topic))], twin: true, sheetTitle: 'Challenge a friend' }) } : null,
+    ].filter(Boolean);
+    if (UI.menu && UI.menu.bind) UI.menu.bind(share, shareItems, { label: 'Share' }); else share.addEventListener('click', () => UI.menu(share, shareItems(), { label: 'Share' }));
+    act.append(share);
     kids.push(act);
     if (c.kind === 'final') {
       kids.push(h('div', { class: 'row-act' }, quiet('Test-day card', null, { href: `${C.href(c.id)}&card=1` })));
@@ -453,9 +483,13 @@
     const el = show('#debrief');
     UI.skel(el, 'card:3');
     try {
-      const d = await api(`/contest/${enc(cid)}/debrief`);
+      const [d] = await Promise.all([api(`/contest/${enc(cid)}/debrief`), S.review || !open() ? null : loadReviewData()]);
+      const words = C.trapWords(S.review && S.review.items);
+      const served = C.kind(S.c).runs ? new Set(((S.c.me.result || {}).questions || []).filter(q => q.status && q.status !== 'unanswered' && q.status !== 'blank').map(q => q.n)) : null;
       el.replaceChildren();
       UI.debrief(el, d, {
+        reached: served,
+        label: norm => C.trapLabel(norm, words),
         onFilter: (qids, label) => setFilter('sel', { qids, label }),
         onFix: (row, label) => fix(row, label),
         onRematch: async when => {
@@ -509,18 +543,40 @@
     const you = S.board && S.board.you;
     const gap = e => (!you || e.you || e.par || you.points === undefined || e.points === undefined ? null : `${e.points - you.points >= 0 ? '+' : '−'}${num(Math.abs(e.points - you.points))}`);
     const M = { label: 'Move', value: move, title: 'Places since yesterday' }, G = { label: 'Gap', value: gap, title: 'Their points minus yours', meta: false };
-    if (S.view === 'series') return [{ label: 'Rounds sat', value: e => e.rounds ?? e.sat }, { label: 'Points', value: pts, phone: true }, { label: 'Over par', value: net }, M];
+    // the ordering metric leads, and its header is the switch to the other one (on a phone too)
+    const P = { label: 'Points', value: pts }, N = { label: 'Over par', value: net, title: 'Base points minus the player’s par', unit: 'par' };
+    // a sortable header each (ui.css th[aria-sort]); the leading one, the only one on a phone, switches to the other
+    const sortBy = x => () => {
+      const to = (S.sort === 'net') === (x === N) ? (x === N ? 'points' : 'net') : (x === N ? 'net' : 'points');
+      const b = h('button', { type: 'button', 'aria-label': `${x.label}: order by ${to === 'net' ? 'Over par' : 'Points'}` }, x.label);
+      b.addEventListener('click', () => { S.sort = to; S.view === 'series' ? reloadBoard() : drawBoard(); });
+      UI.tooltip(b, `Order by ${to === 'net' ? 'Over par' : 'Points'}`);
+      return b;
+    };
+    const lead = (S.sort === 'net' ? N : P), rest = (S.sort === 'net' ? P : N);
+    const sw = sortBy(lead);
+    Object.assign(rest, { head: sortBy(rest) });
+    if (S.view === 'series') return [{ label: 'Rounds sat', value: e => e.rounds ?? e.sat }, { ...lead, phone: true, head: sw, sorted: true }, rest, M];
     if (c.kind === 'sprint') return [{ label: 'Best points', value: pts, phone: true }, { label: 'Right/answered', value: score }, { label: 'Runs', value: e => e.runs }, M];
     if (c.kind === 'rush') return [{ label: 'Right', value: e => num(e.right), phone: true }, { label: 'Top item', value: e => e.top_item ? (e.top === true ? 'Top' : `L${e.top_item}`) : null }, { label: 'Runs', value: e => e.runs }, M];
     if (c.kind === 'words') return [{ label: 'Score', value: e => (e.score !== undefined ? Number(e.score).toFixed(1) : null), phone: true }, { label: 'Right', value: e => e.right }, { label: 'Wrong', value: e => e.wrong }, { label: 'Runs', value: e => e.runs }, M];
     const list = [{ label: 'Score', value: score }];
     if (c.kind === 'trap') list.push({ label: 'Resisted', value: e => e.resisted });
     if (c.kind === 'final') list.push({ label: 'Band', value: e => (e.band ? `${e.band.low ?? e.band[0]}–${e.band.high ?? e.band[1]}` : null) });
-    list.push({ label: 'Points', value: pts, phone: true, par: true }, { label: 'Over par', value: net, title: 'Base points minus the player’s par', unit: 'par' },
+    list.push({ ...lead, phone: true, par: S.sort !== 'net', head: sw, sorted: true }, rest,
       { label: 'Time', value: time, title: C.kind(c).clock === 'wall' ? 'Time used, start to hand-in' : 'Answer clock used: only while a question was open' }, M, G);
     return list;
   }
-  function parsOn() { try { return localStorage.getItem('satf.pars') !== 'off'; } catch (_) { return true; } }
+  // par rows: the fixed levels, and yours from the sitting's own par (the one the lobby and Over par use)
+  const FIXED = [3, 5, 7, 9];
+  function parRows(b) {
+    const all = (b && b.pars) || [];
+    const mp = S.c && S.c.me && S.c.me.par;
+    const srv = all.find(p => !FIXED.includes(p.level));
+    const own = mp && mp.points !== undefined && mp.points !== null ? { you: true, points: mp.points, right: mp.right, rough: mp.rough } : srv ? { ...srv, you: true } : null;
+    return { fixed: all.filter(p => FIXED.includes(p.level)), own };
+  }
+  function allPars() { try { return localStorage.getItem('satf.pars') === 'all'; } catch (_) { return false; } }
   function sorted(b) {
     if (S.sort !== 'net' || S.view === 'series') return b;
     const es = [...(b.entries || [])].sort((x, y) => (y.net ?? -1e9) - (x.net ?? -1e9));
@@ -572,27 +628,58 @@
         d.h2h ? h('p', { class: 'meta', text: `This season: you ${d.h2h.you}–${d.h2h.them}` }) : null);
     } catch (err) { body.replaceChildren(h('p', { class: 'line', text: err.status === 403 ? 'Compare opens once you have both finished.' : 'Couldn’t load this.' })); }
   }
+  const SCOPES = [['all', 'Everyone'], ['near', 'Near me'], ['following', 'Following'], ['level', 'My level'], ['country', 'Country']];
+  // a scope with fewer than two students isn't offered; counts come on the first open of the menu
+  async function scopeMenu(btn) {
+    if (!S.scopeN) {
+      btn.disabled = true;
+      const rs = await Promise.all(SCOPES.map(([v]) => (v === S.scope && S.board ? Promise.resolve(S.board) : api(`/contest/${enc(cid)}/board?scope=${v}&limit=1`).catch(() => null))));
+      S.scopeN = Object.fromEntries(SCOPES.map(([v], i) => [v, rs[i] ? rs[i].players || 0 : 0]));
+      btn.disabled = false;
+    }
+    const you = S.board && S.board.you;
+    const items = SCOPES.filter(([v]) => v === 'all' || v === S.scope || (S.scopeN[v] >= 2 && (v !== 'near' || (you && you.rank)))).map(([v, l]) => ({
+      label: l, meta: S.scopeN[v] ? num(S.scopeN[v]) : null, radio: true, checked: v === S.scope,
+      onClick: () => { if (v === S.scope) return; S.scope = v; btn.firstChild.textContent = `${l} `; reloadBoard(); } }));
+    if (you && !you.country) items.push({ separator: true }, { label: 'Set a country ›', href: '/me/#boards' });
+    UI.menu(btn, items, { label: 'Who is on the board' });
+  }
+  const ICON = { list: '<path d="M5 7h14M5 12h14M5 17h14" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>',
+    grid: '<g fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4.5" y="4.5" width="6" height="6" rx="1.2"/><rect x="13.5" y="4.5" width="6" height="6" rx="1.2"/><rect x="4.5" y="13.5" width="6" height="6" rx="1.2"/><rect x="13.5" y="13.5" width="6" height="6" rx="1.2"/></g>' };
+  function viewToggle() {
+    const box = h('span', { class: 'view-tg', role: 'group', 'aria-label': 'View' });
+    [[false, 'list', 'List'], [true, 'grid', 'Grid: every answer, question by question']].forEach(([v, ic, label]) => {
+      const b = h('button', { type: 'button', 'aria-pressed': String(S.grid === v), 'aria-label': label, html: C.svg(ICON[ic], 18) });
+      b.addEventListener('click', () => { if (S.grid === v) return; S.grid = v; box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); drawBoard(); });
+      UI.tooltip(b, label);
+      box.append(b);
+    });
+    return box;
+  }
   function renderBoard() {
     const c = S.c, el = show('#board');
     const meta = h('span', { class: 'meta', id: 'board-meta' });
     const ctl = h('div', { class: 'board-ctl' });
     const host = h('div', { id: 'board-host' });
     const extra = h('div', { id: 'board-extra' });
-    el.replaceChildren(head2('board-h', 'Board', meta), ctl, extra, host);
-    if (c.series) C.under(ctl, [{ value: 'round', label: 'This round' }, { value: 'series', label: 'Series' }], { value: S.view, label: 'Board', onChange: v => { S.view = v; S.grid = false; reloadBoard(); } });
-    if (S.view !== 'series' && !['rush', 'words'].includes(c.kind)) {
-      C.under(ctl, [{ value: 'all', label: 'Everyone' }, { value: 'near', label: 'Near me' }, { value: 'following', label: 'Following' }, { value: 'level', label: 'My level' }, { value: 'country', label: 'Country' }],
-        { value: S.scope, label: 'Scope', onChange: v => { S.scope = v; reloadBoard(); } });
+    const runs = ['sprint', 'rush', 'words'].includes(c.kind);
+    el.replaceChildren(head2('board-h', 'Board', meta, open() && !runs && S.view !== 'series' ? viewToggle() : null), ctl, extra, host);
+    if (c.series) C.under(ctl, [{ value: 'round', label: 'This round' }, { value: 'series', label: 'Series' }], { value: S.view, label: 'Board', onChange: v => { S.view = v; S.grid = false; renderBoard(); } });
+    // a private board is its entrants: no scopes
+    if (S.view !== 'series' && !['rush', 'words', 'private'].includes(c.kind)) {
+      const cur = (SCOPES.find(([v]) => v === S.scope) || SCOPES[0])[1];
+      const sc = h('button', { type: 'button', class: 'btn sm', 'aria-haspopup': 'menu', 'aria-label': `Who is on the board: ${cur}` }, `${cur} `, h('span', { 'aria-hidden': 'true', text: '▾' }));
+      sc.addEventListener('click', () => scopeMenu(sc));
+      ctl.append(sc);
     }
-    if (open() && !['sprint', 'rush', 'words'].includes(c.kind) && S.view !== 'series') C.under(ctl, [{ value: false, label: 'List' }, { value: true, label: 'Grid' }], { value: S.grid, label: 'View', onChange: v => { S.grid = v; drawBoard(); } });
-    if (!['sprint', 'rush', 'words'].includes(c.kind)) {
-      C.under(ctl, [{ value: 'points', label: 'Points' }, { value: 'net', label: 'Over par' }], { value: S.sort, label: 'Order', onChange: v => { S.sort = v; S.view === 'series' ? reloadBoard() : drawBoard(); } });
-      if (UI.switch && S.view !== 'series') UI.switch(ctl, { checked: parsOn(), label: 'Pars', onChange: on => { try { localStorage.setItem('satf.pars', on ? 'on' : 'off'); } catch (_) {} drawBoard(); } });
+    if (!runs && UI.switch && S.view !== 'series') {
+      const sw = UI.switch(ctl, { checked: allPars(), label: 'All pars', onChange: on => { try { localStorage.setItem('satf.pars', on ? 'all' : 'near'); } catch (_) {} drawBoard(); } });
+      if (sw && sw.el) UI.tooltip(sw.el, 'Par rows: what a student at a level is expected to score on these questions, estimated while few have answered them. Off: your par and the next one up.');
     }
     const find = h('input', { class: 'field', type: 'search', id: 'find', placeholder: 'Find a student', 'aria-label': 'Find a student', autocomplete: 'off' });
     const findMsg = h('span', { class: 'meta', role: 'status' });
     find.addEventListener('keydown', ev => { if (ev.key === 'Enter') { ev.preventDefault(); findMsg.textContent = S.api && S.api.find(find.value) ? '' : 'No public student has that name here.'; } });
-    ctl.append(find, findMsg);
+    ctl.append(h('span', { class: 'find-box' }, find, findMsg));
     if (!S.board) { UI.skel(host, 'table:6'); reloadBoard(); } else drawBoard();
   }
   async function reloadBoard(silent) {
@@ -610,8 +697,15 @@
     const top = (b.entries || []).filter(e => e.rank === 1);
     if (top.length > 1) extra.append(h('p', { class: 'meta', text: `=1 · ${top.length} ${top[0].points === 260 ? 'perfect runs' : 'share the top'}` }));
     if (S.grid) return drawGrid(host);
-    const pars = () => (!parsOn() || S.sort !== 'points' || S.view === 'series' || S.scope !== 'all' ? [] :
-      (b.pars || []).map(p => ({ label: `${[3, 5, 7, 9].includes(p.level) ? `Level ${p.level}` : `Your level (${p.level})`} par${p.rough ? ' (estimated)' : ''} · ${num(p.right)} right`, value: p.points })));
+    // by default your par and the next one up; All pars shows every level's
+    const pars = () => {
+      if (S.sort !== 'points' || S.view === 'series' || S.scope !== 'all') return [];
+      const { fixed, own } = parRows(b);
+      const at = (b.you && b.you.points !== undefined ? b.you.points : own ? own.points : -Infinity);
+      const up = fixed.filter(p => p.points > at).sort((x, y) => x.points - y.points)[0];
+      const list = [...(own ? [own] : []), ...(allPars() ? fixed : up ? [up] : [])];
+      return list.map(p => ({ label: `${p.you ? 'Your par' : `L${p.level} par`} · ${num(p.right)} right`, value: p.points }));
+    };
     host.replaceChildren();
     S.api = UI.board(host, b, {
       label: `${c.title} board`, columns: columns(c), pars, rowMenu, onFollow: follow, youText,
@@ -645,7 +739,7 @@
       const kids = [];
       if ((g.where || []).length && S.c.kind === 'private') {
         kids.push(h('div', { class: 'sub-block' }, h('span', { class: 'k', text: 'WHERE WE WENT WRONG' }), h('ul', { class: 'mini-rows' }, g.where.slice(0, 3).map(w => h('li', {},
-          h('span', { class: 'mt', text: w.label }), h('span', { class: 'mm', text: `${num(w.fell)} of ${num(w.of)}` }),
+          h('span', { class: 'mt', text: C.trapLabel(w.norm || w.label, C.trapWords(S.review && S.review.items)) }), h('span', { class: 'mm', text: `${num(w.fell)} of ${num(w.of)}` }),
           w.you ? h('span', { class: 'ma' }, quiet('Fix it · 3', () => fix({ qid: w.qid, norm: w.norm, label: w.label }, 'Fix it · 3'))) : null)))));
       }
       kids.push(wrap);
@@ -700,13 +794,14 @@
     S.filter = v; S.sel = sel || null;
     renderReview().then(() => $('#review').scrollIntoView({ behavior: 'smooth' }));
   }
+  const stemLead = t => { const w = String(t || '').replace(/<[^>]+>/g, ' ').replace(/[$\\]/g, '').split(/\s+/).filter(Boolean); return w.length > 6 ? `${w.slice(0, 6).join(' ')}…` : w.join(' '); };
   function reviewRow(it, i, s) {
     const q = it.question, f = it.field || {};
     const mine = ((S.c.me && S.c.me.result && S.c.me.result.questions) || [])[i] || {};
     const d = h('details', { class: 'crv', id: `q${i + 1}` });
     const sum = h('summary', {},
       h('span', { class: 'q', text: `Q${i + 1}` }),
-      h('span', { class: 's' }, UI.glyph ? UI.glyph(q.topic) : null, h('span', { text: q.type_name || C.topicName(q.topic) }), UI.dbars ? UI.dbars(q.difficulty, { bare: true }) : null),
+      h('span', { class: 's' }, UI.glyph ? UI.glyph(q.topic) : null, h('span', { class: 'st', text: [q.topic_name || C.topicName(q.topic), stemLead(q.stem)].filter(Boolean).join(' · ') }), UI.dbars ? UI.dbars(q.difficulty, { bare: true }) : null),
       h('span', { class: 'mark', text: STATUS[s] || '', 'aria-label': STATUS_WORD[s] || s }),
       h('span', { class: 'm', text: [f.right !== undefined && f.players ? `field ${pct(f.right)} right` : null,
         mine.ms ? `you ${mmss(mine.ms / 1000)}` : null, f.median_ms ? `field median ${mmss(f.median_ms / 1000)}` : null].filter(Boolean).join(' · ') }));
@@ -724,14 +819,15 @@
       catch (e) { qh.append(h('p', { class: 'line', text: q.stem }), h('p', { class: 'line', text: `Answer: ${q.answer}` }), h('p', { class: 'meta', text: q.rationale || '' })); }
       // how the field answered: one bar per misconception across the twins
       const opts = [{ label: 'Right', share: f.right || 0, key: true, pick: it.correct }];
-      (f.mistakes || []).forEach(m => opts.push({ label: m.label, share: m.share, n: m.count, pick: !!mine.mistake && String(mine.mistake).toLowerCase() === String(m.norm).toLowerCase() }));
+      const words = C.trapWords([it]);
+      (f.mistakes || []).forEach(m => opts.push({ label: C.trapLabel(m.norm, words), share: m.share, n: m.count, pick: !!mine.mistake && C.normOf(mine.mistake) === String(m.norm).toLowerCase() }));
       if (f.skipped) opts.push({ label: 'Skipped / blank', share: f.skipped });
       if (f.voided) opts.push({ label: 'Voided', share: f.voided });
       const sp = h('div', {}, h('span', { class: 'k', text: f.players >= 5 ? `HOW THE FIELD ANSWERED · ${num(f.players)}` : 'HOW THE FIELD ANSWERED · ON THIS TYPE, ALL MODES' }));
       if (UI.spread) UI.spread(sp, opts, { label: 'How the field answered', noun: 'players' });
       body.append(sp);
       const act = h('div', { class: 'row-act' }, quiet('Another like this', ev => busy(ev.currentTarget, () => drill({ templates: [q.key], count: 5, source: 'result' }))));
-      if (s === 'incorrect' || s === 'skipped') act.append(quiet(s === 'skipped' ? 'Try it now' : 'Fix it · 3', () => fix({ qid: q.id, norm: mine.mistake ? String(mine.mistake).toLowerCase() : null, label: mine.mistake || q.type_name }, s === 'skipped' ? 'Try it now' : 'Fix it · 3')));
+      if (s === 'incorrect' || s === 'skipped') act.append(quiet(s === 'skipped' ? 'Try it now' : 'Fix it · 3', () => fix({ qid: q.id, norm: mine.mistake ? C.normOf(mine.mistake) : null, label: mine.mistake || q.type_name }, s === 'skipped' ? 'Try it now' : 'Fix it · 3')));
       body.append(act);
       // the Player region's keys (§2.8): B save, R report, while focus is inside this item (C24)
       const sid = S.c.me && S.c.me.session;
@@ -760,17 +856,21 @@
   async function renderTraps() {
     const el = show('#traps');
     try {
-      const d = await api(`/contest/${enc(cid)}/traps`);
+      const [d] = await Promise.all([api(`/contest/${enc(cid)}/traps`), S.review ? null : loadReviewData()]);
       S.traps = (d.traps || []).slice(0, 5);
       if (!S.traps.length) { el.hidden = true; return; }
-      const mineTraps = new Set((((S.c.me && S.c.me.result) || {}).questions || []).map(q => String(q.mistake || '').toLowerCase()).filter(Boolean));
+      const words = C.trapWords(S.review && S.review.items);
+      const mineTraps = new Set((((S.c.me && S.c.me.result) || {}).questions || []).map(q => C.normOf(q.mistake)).filter(Boolean));
       const inMine = norm => ((S.review && S.review.items) || []).some(it => ((it.field || {}).mistakes || []).some(m => m.norm === norm));
       const players = (S.c.field && S.c.field.players) || 0;
-      const ul = h('ul', { class: 'mini-rows traps-list' }, S.traps.map(t => h('li', {},
+      const named = [], other = { label: 'Other slips', fell: 0, norms: [] };
+      S.traps.forEach(t => { const label = C.trapLabel(t.norm, words); if (label === 'Other slips') { other.fell += t.fell; other.norms.push(t.norm); } else named.push({ ...t, label }); });
+      const rows = other.fell ? [...named, other] : named;
+      const ul = h('ul', { class: 'mini-rows traps-list' }, rows.map(t => h('li', {},
         h('span', { class: 'mt', text: t.label }),
         h('span', { class: 'mm', text: [players ? `${num(t.fell)} answer${t.fell === 1 ? '' : 's'} fell for it` : null,
-          !finished() ? null : mineTraps.has(String(t.norm).toLowerCase()) ? 'you too' : inMine(t.norm) ? 'you avoided it' : S.review ? 'not in your questions' : null].filter(Boolean).join(' · ') }))));
-      const go = h('button', { type: 'button', class: 'pill sm', text: `Practice these ${S.traps.length}` });
+          !finished() || t.norms ? null : mineTraps.has(String(t.norm).toLowerCase()) ? 'you too' : inMine(t.norm) ? 'you avoided it' : S.review ? 'not in your questions' : null].filter(Boolean).join(' · ') }))));
+      const go = h('button', { type: 'button', class: 'quiet', text: `Practice these ${named.length || S.traps.length}` });
       go.addEventListener('click', () => busy(go, practiceTraps));
       el.replaceChildren(head2('traps-h', 'Where the field went wrong'), ul, h('div', { class: 'row-act' }, go));
     } catch (e) { el.hidden = true; }
@@ -795,7 +895,8 @@
       if (k.twins || (c.spec && c.spec.twin)) rules.push(li('Twins:', 'your own twin questions: same types, your own numbers.'));
       rules.push(li('Ranked:', c.kind === 'sprint' ? 'every run; your best run this week counts.' : c.kind === 'private' ? 'your first sitting in the round. No rating or season points.' : 'your first sitting counts.'));
     }
-    $('#rules').replaceChildren(h('div', { class: 'card-head' }, h('h2', { class: 'h2', text: 'How it’s ranked' })), h('ul', { class: 'rules' }, rules));
+    const d = h('details', { open: finished() ? null : true }, h('summary', {}, h('h2', { class: 'h2', text: 'How it’s ranked' })), h('ul', { class: 'rules' }, rules));
+    $('#rules').replaceChildren(d);
   }
   function renderEntrants() {
     const c = S.c;
@@ -835,7 +936,8 @@
   async function renderQotd() {
     const el = show('#qotd');
     const day = dayOf(S.c);
-    el.replaceChildren(h('div', { class: 'card-head' }, h('span', { class: 'k', text: 'QUESTION OF THE DAY' })));
+    const eyebrow = h('span', { class: 'k-row' }, h('span', { class: 'k', text: 'QUESTION OF THE DAY' }));
+    el.replaceChildren(h('div', { class: 'card-head' }, eyebrow));
     const box = h('div'); el.append(box); UI.skel(box, 'lines:3');
     try {
       const d = await api(`/qotd?day=${day}`);
@@ -849,7 +951,7 @@
       } else {
         const past = day < todayISO();
         if (past) box.prepend(h('p', { class: 'help', text: 'Answer, unranked: it doesn’t count for your streak.' }));
-        else el.querySelector('.card-head').append(C.info('Today’s question; answering it here counts like on Today.', 'About the question of the day'));
+        else eyebrow.append(C.info('Today’s question; answering it here counts like on Today.', 'About the question of the day'));
         ws(qh, q, { mode: 'practice', feedback: 'instant', onCheck: async answer => {
           const r = await api('/qotd', { method: 'POST', body: { day, answer } });
           return { ...r, given: answer };
@@ -867,11 +969,12 @@
     if (me.status === 'progress') primary = h('button', { type: 'button', class: 'pill', text: 'Resume', onclick: ev => busy(ev.currentTarget, () => C.start(c.id)) });
     else if (me.status === 'finished') primary = h('button', { type: 'button', class: 'pill', text: 'See the board', onclick: () => $('#board').scrollIntoView({ behavior: 'smooth' }) });
     else if (c.status === 'live') primary = h('button', { type: 'button', class: 'pill', text: 'Start', onclick: ev => doStart(ev.currentTarget) });
-    if (!primary) { bar.hidden = true; return; }
+    if (!primary) { bar.hidden = true; document.body.classList.remove('cx-thumb'); return; }
     const jump = S.board && S.board.you ? quiet('Jump to me', () => S.api && S.api.jump()) : null;
     bar.replaceChildren(primary, ...(jump ? [jump] : []));
     bar.hidden = false;
     $('#main').classList.add('has-thumb');
+    document.body.classList.add('cx-thumb');
   }
 
   /* ------------------------------------------------------------ keys (C24) and the live poll */

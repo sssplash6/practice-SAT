@@ -81,12 +81,11 @@
     const box = $('#ctl');
     box.replaceChildren();
     const m = mOf();
-    const r1 = h('div', { class: 'row lb-long' }), r1s = h('div', { class: 'row lb-short' });
+    // the metrics: one row with full labels; on a phone it scrolls sideways and ends with its i
+    const r1 = h('div', { class: 'row lb-metrics' });
     ctl.metric = C.under(r1, METRICS.map(x => ({ value: x.value, label: x.label })), { value: S.metric, label: 'Metric', onChange: v => setMetric(v) });
-    C.under(r1s, METRICS.map(x => ({ value: x.value, label: x.short })), { value: S.metric, label: 'Metric', onChange: v => setMetric(v) });
-    // decision 7: what the metric counts sits in an i beside it
-    [r1, r1s].forEach(r => r.append(C.info(m.help, `About ${m.label}`)));
-    box.append(r1, r1s);
+    r1.append(C.info(m.help, `About ${m.label}`));
+    box.append(r1);
     if (S.metric === 'rating') {
       const r = h('div', { class: 'row' }, h('span', { class: 'meta', text: 'Sort:' }));
       C.under(r, [{ value: 'value', label: 'Rating' }, { value: 'change', label: 'Change' }], { value: S.sort, label: 'Sort', onChange: v => { S.sort = v; go(); } });
@@ -94,34 +93,43 @@
     }
     const r2 = h('div', { class: 'row' });
     const periods = PERIODS.filter(p => p.value !== '7d' || S.metric === 'right' || S.period === '7d');
-    const pc = C.under(r2, periods.map(p => ({ value: p.value, label: window.matchMedia('(max-width: 759px)').matches ? p.short : p.label })),
+    const pc = C.under(r2, periods.map(p => ({ value: p.value, label: p.label })),
       { value: S.period, label: 'Period', onChange: v => { S.period = v; S.at = ''; go(); } });
     if (NO_PERIOD[S.metric] && S.metric !== 'rating') periods.forEach(p => pc.disable(p.value, NO_PERIOD[S.metric]));
-    // the ‹ › stepper to any closed week, month or year
+    // the ‹ › stepper to any closed week, month or year, with when this one resets beside its name
     const canStep = ['week', 'month', 'year'].includes(S.period) && !['rating', 'skill', 'climb'].includes(S.metric);
+    const rs = h('span', { id: 'resets', class: 'resets' }), rsI = h('span', { id: 'resets-i' });
     if (['week', 'month', 'year', 'season'].includes(S.period) && !['rating', 'skill', 'climb'].includes(S.metric)) {
       const prev = h('button', { type: 'button', 'aria-label': 'Previous period', text: '‹', disabled: !canStep || null });
       const next = h('button', { type: 'button', 'aria-label': 'Next period', text: '›', disabled: !canStep || !S.at || null });
       prev.addEventListener('click', () => step(-1));
       next.addEventListener('click', () => step(1));
       if (S.period === 'season') UI.tooltip(prev, 'Past seasons: Your rankings › Seasons');
-      r2.append(h('span', { class: 'stepper' }, prev, h('span', { text: periodName() }), next));
-    }
-    box.append(r2);
-    const r3 = h('div', { class: 'row' });
-    const sel = (label, value, opts, onChange, disabled) => {
+      r2.append(h('span', { class: 'stepper' }, prev, h('span', { text: periodName() }), rs, next), rsI);
+    } else r2.append(rs, rsI);
+    // who is on the board: two selects on a wide screen, one Filters button and sheet on a phone.
+    // Subject waits until a second subject has a board (decision 3); a ?subject= link still applies.
+    const SCOPES = [['all', 'Everyone'], ['near', 'Near me'], ['following', 'Following'], ['level', 'My level'], ['country', 'Country'], ['exam', 'Same exam date']];
+    const domOK = ['points', 'right', 'skill'].includes(S.metric);
+    const domWhy = domOK ? null : S.metric === 'rating' ? 'Contest rating is one number; pick Skill rating to rank a domain' : 'A domain applies to Points, Questions right and Skill rating';
+    const sel = (host, label, value, opts, onChange, disabled) => {
       const s = h('select', { class: 'field', 'aria-label': label, disabled: disabled ? true : null }, opts.map(([v, l]) => h('option', { value: v, text: l, selected: v === value ? true : null })));
       s.addEventListener('change', () => onChange(s.value));
       if (disabled) UI.tooltip(s, disabled);
-      r3.append(s);
+      host.append(s);
       return s;
     };
-    sel('Scope', S.scope, [['all', 'Everyone'], ['near', 'Near me'], ['following', 'Following'], ['level', 'My level'], ['country', 'Country'], ['exam', 'Same exam date']], v => { S.scope = v; go(); });
-    const domOK = ['points', 'right', 'skill'].includes(S.metric);
-    sel('Domain', S.domain, [['', 'All domains'], ...(UI.DOMAINS || []).map(([d, s]) => [d, s])], v => { S.domain = v; go(); },
-      domOK ? null : S.metric === 'rating' ? 'Contest rating is one number; pick Skill rating to rank a domain' : 'A domain applies to Points, Questions right and Skill rating');
-    sel('Subject', S.subject, [['math', 'Math'], ['rw', 'Reading & Writing']], v => { S.subject = v; go(); });
-    box.append(r3);
+    const filters = host => {
+      sel(host, 'Scope', S.scope, SCOPES, v => { S.scope = v; go(); });
+      sel(host, 'Domain', S.domain, [['', 'All domains'], ...(UI.DOMAINS || []).map(([d, s0]) => [d, s0])], v => { S.domain = v; go(); }, domWhy);
+    };
+    const wide = h('span', { class: 'lb-filters' });
+    filters(wide);
+    const dshort = ((UI.DOMAINS || []).find(x => x[0] === S.domain) || [])[1];
+    const fb = h('button', { type: 'button', class: 'btn sm lb-fbtn', text: ['Filters', (SCOPES.find(x => x[0] === S.scope) || SCOPES[0])[1], dshort].filter(Boolean).join(' · ') });
+    fb.addEventListener('click', () => UI.sheet({ title: 'Filters', size: 's', body: b => { const g = h('div', { class: 'lb-sheet' }); filters(g); b.append(g); } }));
+    r2.append(wide, fb);
+    box.append(r2);
   }
   function setMetric(v) {
     S.metric = v; S.sort = 'value';
@@ -182,14 +190,18 @@
     return num(v);
   };
   function resetsLine(d) {
-    const el = $('#resets');
-    if (d.closed) { el.textContent = `Final standings · closed ${d.window && d.window.end ? C.dayLabel(String(d.window.end).slice(0, 10)) : ''}`.trim(); return; }
-    if (S.metric === 'climb') { el.textContent = 'Since you started: the period doesn’t apply.'; return; }
+    const el = $('#resets'), ie = $('#resets-i');
+    if (!el) return;
+    ie.replaceChildren();
+    const inStep = !!el.closest('.stepper');
+    if (d.closed) { el.textContent = `${inStep ? ' · ' : ''}final standings${d.window && d.window.end ? `, closed ${C.dayLabel(String(d.window.end).slice(0, 10))}` : ''}`; return; }
+    if (S.metric === 'climb') { el.textContent = 'Since you started'; return; }
     if (!d.resets_at || S.period === 'all') { el.textContent = ''; return; }
     const at = new Date(`${d.resets_at}T00:00:00Z`);
     const local = at.toLocaleString('en-US', { weekday: 'short', hour: 'numeric', minute: '2-digit' });
-    if (S.period === 'season') el.textContent = `${periodName()} · ends ${C.dayLabel(shift(d.resets_at, -1), { weekday: false })} · ${C.left(at.toISOString())} left`;
-    else el.replaceChildren(`Resets in ${C.left(at.toISOString())} `, C.info(`${{ week: 'Weekly', month: 'Monthly', year: 'Yearly', '7d': 'Rolling 7-day' }[S.period] || ''} boards reset ${S.period === 'week' ? 'Monday' : ''} 00:00 UTC (${local} your time).`.replace('  ', ' '), 'About resets'));
+    if (S.period === 'season') { el.textContent = ` · ends ${C.dayLabel(shift(d.resets_at, -1), { weekday: false })}, ${C.left(at.toISOString())} left`; return; }
+    el.textContent = `${inStep ? ' · ' : ''}resets in ${C.left(at.toISOString())}`;
+    ie.append(C.info(`${{ week: 'Weekly', month: 'Monthly', year: 'Yearly', '7d': 'Rolling 7-day' }[S.period] || ''} boards reset ${S.period === 'week' ? 'Monday' : ''} 00:00 UTC (${local} your time).`.replace('  ', ' '), 'About resets'));
   }
   const shift = (day, n) => { const d = new Date(`${day}T12:00:00Z`); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
   function youText(you) {
@@ -210,9 +222,9 @@
     if (S.metric !== 'rating' || S.sort !== 'value') return entries;
     const out = []; let last = null;
     entries.forEach(e => {
-      const lv = e.level ?? C.levelOf(e.value);     // the server's level, one source per fact
+      const lv = C.levelOf(e.value);     // one ladder: the level of the rating in the row (spec/rating.md)
       if (lv !== last) { out.push({ sep: `Level ${lv}` }); last = lv; }
-      out.push(e);
+      out.push({ ...e, level: lv });
     });
     return out;
   }
@@ -228,7 +240,7 @@
   }
   async function parsForEmpty() {
     if (S.pars) return S.pars;
-    try { const b = await api('/contest/daily/board?limit=1'); S.pars = b.pars || []; } catch (_) { S.pars = []; }
+    try { const b = await api('/contest/daily/board?limit=1'); S.pars = (b.pars || []).filter(p => [3, 5, 7, 9].includes(p.level)); } catch (_) { S.pars = []; }
     return S.pars;
   }
   async function draw() {
@@ -242,7 +254,7 @@
     if (S.scope !== 'near') {
       const top = (d.podium && d.podium.length ? d.podium : entries).slice(0, 3);
       // fewer than 3 players: the empty places show par rows (C6)
-      const parList = top.length < 3 && S.metric === 'points' ? [...(await parsForEmpty())].sort((a, b) => b.points - a.points).map(p => ({ label: `Level ${p.level} par`, value: p.points })) : [];
+      const parList = top.length < 3 && S.metric === 'points' ? [...(await parsForEmpty())].sort((a, b) => b.points - a.points).map(p => ({ label: `L${p.level} par`, value: p.points })) : [];
       const podPars = [0, 1, 2].map(i => (i < top.length ? null : parList[i - top.length] || null));
       UI.podium(pod, top, { value: e => fmtVal(e.value), sub: e => [e.accuracy !== undefined ? `${Math.round(e.accuracy * 100)}%` : null, e.avg_secs ? `${mmss(e.avg_secs)} avg` : null].filter(Boolean).join(' · ') || null, pars: podPars });
     }
@@ -289,7 +301,7 @@
       const empty = h('div', { class: 'card' },
         h('p', { class: 'line', text: `No ranked contests yet ${{ week: 'this week', month: 'this month', year: 'this year', season: 'this season', '7d': 'in the last 7 days', all: '' }[S.period] || ''}.`.replace(' .', '.') }),
         d.nearest_nonempty ? h('p', {}, h('a', { class: 'link', href: `?metric=${S.metric}&period=${d.nearest_nonempty.period}`, text: `${d.nearest_nonempty.label || d.nearest_nonempty.period}: ${num(d.nearest_nonempty.players)} students ›` })) : null,
-        pars.length && S.metric === 'points' ? h('ul', { class: 'mini-rows', style: 'margin-top:12px' }, [...pars].sort((a, b) => b.points - a.points).map(p => h('li', { class: 'par' }, h('span', { class: 'mt', text: `Level ${p.level} par on today’s Daily` }), h('span', { class: 'ma mono', text: num(p.points) })))) : null,
+        pars.length && S.metric === 'points' ? h('ul', { class: 'mini-rows', style: 'margin-top:12px' }, [...pars].sort((a, b) => b.points - a.points).map(p => h('li', { class: 'par' }, h('span', { class: 'mt', text: `L${p.level} par · today’s Daily` }), h('span', { class: 'ma mono', text: num(p.points) })))) : null,
         h('p', { class: 'help', text: 'Your spot appears after your first ranked contest.' }),
         h('div', { class: 'row-act' }, h('a', { class: 'pill', href: C.href('daily'), text: 'Start the challenge' })));
       host.append(empty);

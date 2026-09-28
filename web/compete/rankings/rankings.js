@@ -29,26 +29,27 @@
     const right = rows.reduce((s, r) => s + ((r.result || {}).right || 0), 0), asked = rows.reduce((s, r) => s + ((r.result || {}).asked || 0), 0);
     const bests = (me.records && me.records.bests) || {};
     const b = me.boards || {};
-    const kids = [head('summary-h', 'Performance summary')];
-    if (me.week_line && me.week_line.text && (me.week_line.daily || me.week_line.weekly)) kids.push(h('p', { class: 'line', text: me.week_line.text }));
-    kids.push(h('div', { class: 'stats sum-tiles' },
-      stat('Contest rating', me.provisional ? 'Placing' : num(Math.round(me.rating)), me.provisional ? null : `Level ${me.level}`),
-      stat('Contests played', S.total ? num(S.total) : null),
-      stat('Average score', asked ? `${Math.round(right / asked * 100)}%` : null, rows.length ? `over ${num(rows.length)} contests` : null),
-      stat('Contest accuracy', asked ? `${num(right)}/${num(asked)}` : null),
-      stat('Best Daily', bests.daily ? num(bests.daily.value) : null, bests.daily && bests.daily.at ? day(bests.daily.at) : null),
-      stat('Podiums', me.records && me.records.podiums && me.records.podiums.length ? num(me.records.podiums.length) : null, 'top 3 with 10 or more players'),
-      stat('Points this week', b.week ? num(b.week.value) : null, b.week && b.week.rank ? `#${b.week.rank}` : null),
-      stat('Season rank', b.season && b.season.rank ? `#${b.season.rank}` : null, b.season ? `${num(b.season.value)} pts` : null),
-      stat('Challenge streak', me.streak && me.streak.current ? num(me.streak.current) : null, me.streak && me.streak.best ? `best ${num(me.streak.best)}` : null),
-      stat('Peak rating', S.total && bests.peak_rating ? num(Math.round(bests.peak_rating.value)) : null)));
-    const roll = trapRollup();
-    if (roll) kids.push(roll);
-    if (!rows.length) {
-      kids.push(h('p', { class: 'help', text: 'Finish a ranked contest to fill this in.' }), h('div', { class: 'row-act' }, h('a', { class: 'pill', href: C.href('daily'), text: 'Start today’s challenge' })));
-      card('#summary', ...kids);
+    // before a first contest: one card says so; the cards that need a sitting wait (decision 7)
+    if (!rows.length && !S.total) {
+      card('#summary', head('summary-h', 'Your first contest fills this page'), h('div', { class: 'row-act' }, h('a', { class: 'pill', href: C.href('daily'), text: 'Start today’s challenge' })));
       return;
     }
+    const kids = [head('summary-h', 'Performance summary')];
+    if (me.week_line && me.week_line.text && (me.week_line.daily || me.week_line.weekly)) kids.push(h('p', { class: 'line', text: me.week_line.text }));
+    // a tile only for what no card below owns: the rating card has the rating, Records the bests
+    const pods = me.records && me.records.podiums && me.records.podiums.length;
+    const sameSeason = b.season && b.week && b.season.rank === b.week.rank && b.season.value === b.week.value;
+    const podT = stat('Podiums', pods ? num(pods) : null);
+    if (podT) UI.tooltip(podT, 'Top 3 in a contest with 10 or more players');
+    kids.push(h('div', { class: 'stats sum-tiles' },
+      stat('Contests', S.total ? num(S.total) : null),
+      stat('Accuracy', asked ? `${Math.round(right / asked * 100)}%` : null, asked ? `${num(right)}/${num(asked)} right` : null),
+      podT,
+      stat('This week', b.week ? num(b.week.value) : null, b.week && b.week.rank ? `#${b.week.rank} · points` : 'points'),
+      sameSeason ? null : stat('Season rank', b.season && b.season.rank ? `#${b.season.rank}` : null, b.season ? `${num(b.season.value)} pts` : null),
+      stat('Streak', me.streak && me.streak.current ? num(me.streak.current) : null, me.streak && me.streak.current ? `day${me.streak.current === 1 ? '' : 's'} in a row` : null)));
+    const roll = trapRollup();
+    if (roll) kids.push(roll);
     // the chart: Points or Over par per contest, a point per sitting; a point opens its row
     const chartHost = h('div', { class: 'sub-block' });
     let series = 'points', range = '30';
@@ -93,11 +94,23 @@
   /* ------------------------------------------------------------ 2. the rating card (C11) and pace (C3) */
   function renderRating() {
     const me = S.me;
+    $('#rating').hidden = !S.total;
+    if (!S.total) return;
     const lin = me.provisional ? null : C.levelIn(me.rating, false);
-    const kids = [head('rating-h', 'Rating'),
-      h('div', { class: 'rate-block sub-block' }, UI.level(me.rating, me.provisional, 48),
-        h('div', {}, h('span', { class: 'k', text: 'CONTEST RATING ' }, C.info('Contest rating moves only on ranked contest answers. Skill ratings move on every first try, in practice, tests and contests.', 'About contest rating')), h('div', { class: 'num', text: me.provisional ? 'Placing' : num(Math.round(me.rating)) }),
-          h('p', { class: 'line', text: me.provisional ? 'A level shows after 30 rated answers.' : `Level ${me.level}` })))];
+    const about = C.info('Contest rating moves only on ranked contest answers. Skill ratings move on every first try, in practice, tests and contests.', 'About contest rating');
+    const kids = [head('rating-h', 'Rating')];
+    if (me.provisional) {
+      // placing: one line with its progress (ranked contest answers until the server sends its count)
+      const n = Math.min(29, me.rated ?? S.hist.filter(r => r.ranked).reduce((a, r) => a + ((r.result || {}).asked || 0), 0));
+      const m = h('div', { class: 'sub-block' });
+      UI.meter(m, { label: 'Placing', value: n, max: 30, text: `${num(n)} of 30 answers` });
+      kids.push(h('div', { class: 'k-row' }, h('span', { class: 'k', text: 'CONTEST RATING' }), about), m);
+    } else {
+      // one ladder: the ring, the words and the ladder table all read the level from the rating
+      kids.push(h('div', { class: 'rate-block sub-block' }, UI.level(me.rating, false, 48),
+        h('div', {}, h('span', { class: 'k-row' }, h('span', { class: 'k', text: 'CONTEST RATING' }), about), h('div', { class: 'num', text: num(Math.round(me.rating)) }),
+          h('p', { class: 'line', text: `Level ${C.levelOf(me.rating)}` }))));
+    }
     if (lin) kids.push(h('p', { class: 'line mono', text: `Level ${lin.level} in +${num(lin.gap)} ≈ ${lin.rights} hard right${lin.rights === 1 ? '' : 's'} at your level` }));
     const sk = me.skills;
     if (sk && (sk.domains || []).length) {
@@ -114,13 +127,11 @@
   function renderPace() {
     // ponytail: medians from this page's history rows; switch to /api/compete/me.pace (progress.pace(only='contest')) once the server sends it
     const qs = S.hist.flatMap(r => ((r.result || {}).questions || []).filter(q => q.ms));
-    const kids = [head('pace-h', 'Pace')];
-    if (S.me.pace) kids.push(h('p', { class: 'meta', text: 'From your contest answers in the last 90 days.' }));
-    if (qs.length < 3) {
-      kids.push(h('p', { class: 'help', text: 'Median time from question shown to answer, in ranked contests. It fills in after a few timed answers.' }));
-      card('#pace', ...kids);
-      return;
-    }
+    const kids = [head('pace-h', 'Pace', C.info('Median time from question shown to answer, in ranked contests' + (S.me.pace ? ', over the last 90 days.' : '.'), 'About pace'))];
+    // decision 7: no card of help text; Pace shows once there are timed answers to show
+    $('#pace').hidden = qs.length < 3;
+    $('#pace').parentElement.hidden = $('#pace').hidden && $('#rating').hidden;
+    if (qs.length < 3) return;
     const med = a => { const s = [...a].sort((x, y) => x - y); return s.length ? s[Math.floor(s.length / 2)] : null; };
     let view = 'difficulty';
     const box = h('div', { class: 'pace-rows' });
@@ -179,17 +190,29 @@
     const sec = $('#ranks');
     sec.hidden = !periods.some(([p]) => b[p] && b[p].rank);
     if (sec.hidden) return;
-    const tbody = h('tbody', {}, h('tr', {}, h('th', { scope: 'row', text: 'Everyone' }), periods.map(([p]) => cell(b[p], null, p, 'all'))));
+    // equal neighbouring periods share one cell: "Week – All time: #3" is one fact, not four
+    const merged = (label, cells) => {
+      const out = [h('th', { scope: 'row', text: label })];
+      for (let i = 0; i < cells.length;) {
+        let j = i + 1;
+        while (j < cells.length && cells[j].textContent === cells[i].textContent) j += 1;
+        if (j - i > 1) { cells[i].colSpan = j - i; cells[i].setAttribute('aria-label', `${periods[i][1]} – ${periods[j - 1][1]}: ${cells[i].textContent}`); }
+        out.push(cells[i]); i = j;
+      }
+      return out;
+    };
+    const tbody = h('tbody', {}, h('tr', {}, merged('Everyone', periods.map(([p]) => cell(b[p], null, p, 'all')))));
     const table = h('table', { class: 'table compact' }, h('thead', {}, h('tr', {}, h('th', { scope: 'col', text: '' }), periods.map(([, l]) => h('th', { scope: 'col', text: l })))), tbody);
-    const meta = [S.me.climb ? `Climb ${signed(S.me.climb.gain ?? S.me.climb)}` : null, S.total ? `Contests played ${num(S.total)}` : null].filter(Boolean).join(' · ');
+    const meta = S.me.climb ? `Climb ${signed(S.me.climb.gain ?? S.me.climb)}` : '';
     card('#ranks', head('ranks-h', 'Your ranks'), h('div', { class: 'table-wrap' }, table), meta ? h('p', { class: 'meta', text: meta }) : null);
-    // the other scopes, one row each, filled as they arrive
+    // the other scopes, one row each, filled as they arrive; a scope of fewer than 3 isn't a ranking
     for (const [scope, label] of [['following', 'Following'], ['level', 'My level'], ['country', 'Country'], ['exam', 'Same exam date']]) {
-      const tr = h('tr', {}, h('th', { scope: 'row', text: label }), periods.map(() => h('td', { text: '…' })));
+      const tr = h('tr', { hidden: true });
       tbody.append(tr);
       Promise.all(periods.map(([p]) => api(`/leaderboard?metric=points&period=${p}&scope=${scope}&limit=1`).catch(() => null))).then(rs => {
-        if (rs.every(r => !r || !r.you || !r.you.rank)) { tr.remove(); return; }
-        tr.replaceChildren(h('th', { scope: 'row', text: label }), ...rs.map((r, i) => cell(r && r.you, r && r.players, periods[i][0], scope)));
+        if (rs.every(r => !r || !r.you || !r.you.rank) || Math.max(...rs.map(r => (r && r.players) || 0)) < 3) { tr.remove(); return; }
+        tr.replaceChildren(...merged(label, rs.map((r, i) => cell(r && r.you, r && r.players, periods[i][0], scope))));
+        tr.hidden = false;
       });
     }
   }
@@ -197,12 +220,14 @@
   /* ------------------------------------------------------------ records (C21) */
   function renderRecords() {
     const r = (S.me.records || {}).bests || {};
-    const NAME = { daily: 'Best Daily', sprint: 'Best Sprint', rush: 'Best Rush', weekly: 'Best Weekly', top_pct: 'Best top %', perfect_fast: 'Fastest perfect Daily', fastest_daily: 'Fastest perfect Daily', challenge_streak: 'Longest challenge streak', peak_rating: 'Peak rating' };
-    // a record needs a sitting behind it: no 1,000 peak or 0-day streak before the first contest
-    const tiles = Object.entries(r).filter(([k, v]) => v && v.value && (S.total || k === 'challenge_streak'))
+    const NAME = { daily: 'Best Daily', sprint: 'Best Sprint', rush: 'Best Rush', weekly: 'Best Weekly', top_pct: 'Best top %', perfect_fast: 'Fastest perfect', fastest_daily: 'Fastest perfect', challenge_streak: 'Best streak', peak_rating: 'Peak rating' };
+    // a record needs a sitting behind it, and a best shows only when it is above where you are now
+    const now = { peak_rating: S.me.rating, challenge_streak: S.me.streak && S.me.streak.current };
+    const tiles = Object.entries(r).filter(([k, v]) => v && v.value && S.total && !(now[k] !== undefined && now[k] !== null && Math.round(v.value) <= Math.round(now[k])))
       .map(([k, v]) => stat(NAME[k] || k.replace(/_/g, ' '), k === 'perfect_fast' || k === 'fastest_daily' ? mmss(v.value) : num(Math.round(v.value)), v.at ? day(v.at) : null));
     (S.me.records.podiums || []).slice(0, 4).forEach(p => tiles.push(stat(p.label || 'Podium', p.place ? `#${p.place}` : '—', p.period || null)));
-    card('#records', head('records-h', 'Records'), tiles.length ? h('div', { class: 'stats sum-tiles' }, tiles) : h('p', { class: 'help', text: 'Your bests show here: points, top %, streaks, peak rating.' }));
+    $('#records').hidden = !tiles.length;
+    if (tiles.length) card('#records', head('records-h', 'Records'), h('div', { class: 'stats sum-tiles' }, tiles));
   }
 
   /* ------------------------------------------------------------ the Trap Index (C12) */
@@ -240,15 +265,21 @@
       const r = await api('/compete/rivals');
       const list = r.rivals || [];
       if (!list.length) { card('#rivals', head('rivals-h', 'Rivals'), h('p', { class: 'help', text: 'Rivals appear when 3 students near your level have played in the last two weeks. Follow a student from any board’s row menu.' })); return; }
+      // Race is the row's one visible action; Follow or Unfollow (as the API says) sits in its menu
       const rows = list.map(x => {
         const hh = x.h2h || {};
-        const un = quiet('Unfollow', async ev => {
-          try { await api(`/follows/${enc(x.pid)}`, { method: 'DELETE' }); ev.target.closest('tr').remove(); UI.toast(`Unfollowed ${x.name}`); } catch (e) { UI.toast('Not saved. Try again.'); }
-        });
+        const more = h('button', { type: 'button', class: 'rowmenu', 'aria-label': `More for ${x.name}`, 'aria-haspopup': 'menu', html: C.svg(C.SVG.dots, 18) });
+        const setF = async on => {
+          try {
+            if (on) await api('/follows', { method: 'POST', body: { pid: x.pid } }); else await api(`/follows/${enc(x.pid)}`, { method: 'DELETE' });
+            x.following = on; UI.toast(on ? `Following ${x.name}` : `Unfollowed ${x.name}`);
+          } catch (e) { UI.toast(e.status === 409 ? 'You follow 50 students already.' : 'Not saved. Try again.'); }
+        };
+        UI.menu.bind(more, () => [{ label: x.following ? 'Unfollow' : 'Follow', onClick: () => setF(!x.following) }], { label: x.name });
         return h('tr', {}, h('td', {}, h('span', { class: 'who-l', style: 'display:flex;gap:8px;align-items:center' }, UI.level(null, false, 20, { level: x.level, ring: x.ring }), x.name)),
           h('td', { class: 'n', 'data-label': 'This season', text: hh.you || hh.them ? `${hh.you}–${hh.them}${hh.ties ? `–${hh.ties}` : ''}` : '—' }),
           h('td', { class: 'n hx-opt', text: x.last_shared ? day(x.last_shared) : '—' }),
-          h('td', { class: 'n' }, quiet('Race', null, { href: C.href('daily', { race: x.pid }) }), ' ', un));
+          h('td', { class: 'n' }, h('span', { class: 'rv-act' }, quiet('Race', null, { href: C.href('daily', { race: x.pid }) }), more)));
       });
       card('#rivals', head('rivals-h', 'Rivals'), h('div', { class: 'table-wrap' }, h('table', { class: 'table compact stack' },
         h('thead', {}, h('tr', {}, h('th', { scope: 'col', text: 'Student' }), h('th', { scope: 'col', class: 'n', text: 'This season' }), h('th', { scope: 'col', class: 'n hx-opt', text: 'Last shared' }), h('th', { scope: 'col', text: '' }))),
@@ -310,7 +341,7 @@
     } catch (e) { box.replaceChildren(); UI.cardError(box, renderChampions); }
   }
   function renderLadder() {
-    const mine = S.me.provisional ? null : S.me.level;
+    const mine = S.me.provisional ? null : C.levelOf(S.me.rating);   // the row whose range holds the rating
     const rows = Array.from({ length: 10 }, (_, i) => i + 1).map(n => h('tr', { class: n === mine ? 'you' : null },
       h('td', {}, h('span', { style: 'display:inline-flex;gap:8px;align-items:center' }, UI.level(null, false, 20, { level: n }), `Level ${n}`)),
       h('td', { class: 'n', text: C.rangeOf(n) }), h('td', { class: 'n', text: '—' }), h('td', { class: 'n', text: '—' })));
@@ -358,6 +389,7 @@
         h('th', { scope: 'col', class: [[2, 3, 4, 5, 6].includes(i) ? 'n' : '', [0, 2, 3, 4, 5, 6, 7].includes(i) ? 'hx-opt' : ''].join(' ').trim() || null, text: t })))), body)),
       h('div', { class: 'foot-links', id: 'hist-more' }));
     S.body = body;
+    el.hidden = !S.total && !S.kind && !S.followup;
     if (!S.hist.length) body.append(h('tr', {}, h('td', { colspan: 10, text: S.followup ? 'No open follow-ups.' : 'No contests yet.' })));
     drawRows();
   }
