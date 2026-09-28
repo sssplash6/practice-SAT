@@ -92,10 +92,12 @@
           };
           draw();
           b.replaceChildren(
+            // the shell's welcome-back line rides at the top when it opens this sheet for a returning student (F2's autoSheet)
+            o.welcome || '',
             h('h3', { class: 'sub-h', text: 'Last week' }),
             receipts.length ? h('ul', { class: 'gap', style: 'gap: 4px; padding-left: 18px; margin: 0' }, receipts.map(t => h('li', { text: t })))
               : h('p', { class: 'soft', text: 'Nothing last week. This week starts fresh.' }),
-            (r.new_mistakes || []).length ? h('p', { class: 'help', text: `New mistakes: ${r.new_mistakes.join(' · ')}` }) : null,
+            (r.new_mistakes || []).length ? h('p', { class: 'help', text: `New mistakes: ${r.new_mistakes.join(' · ')}` }) : '',
             h('h3', { class: 'sub-h', text: 'This week: pick up to three' }), pick, note);
         }, () => b.replaceChildren(UI.cardError(null, () => { sheet.close(); open(o); })));
       },
