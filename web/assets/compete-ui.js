@@ -297,7 +297,7 @@
     if (!p || p.base === undefined || p.base === null) return null;
     const el = h('p', { class: 'line' }, `Your par ${num(p.points ?? p.base)} · about ${num(p.right)} right`,
       f ? ` · likely #${f.lo}–#${f.hi} of ~${num(f.of)}` : '');
-    tip(el, 'What a student at your rating scores on these questions, on average, with pace and finish bonuses.' + (p.rough ? ' An estimate while you are placing or the questions are new.' : ''));
+    tip(el, 'What a student at your rating scores on these questions, on average, with pace and finish bonuses.');
     return el;
   }
   function fieldLine(c, verb = 'finished') {
