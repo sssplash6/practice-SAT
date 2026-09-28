@@ -665,7 +665,7 @@
         ? [['answered', 'Answered', t.answered], ['unanswered', 'Unanswered', t.unanswered], ['flag', 'For review', t.flag]]
         : [['answered', 'Answered', t.answered], ['unanswered', 'Unanswered', t.unanswered], ['skipped', 'Skipped', t.skipped], ['flag', 'Marked', t.flag]];
       if (o.confidence) d.push(['guess', 'Guesses', t.guess]);
-      return d;
+      return d.filter(([k, , n]) => n > 0 || k === 'answered');
     };
     const inTile = (c, k) => k === 'answered' ? answeredish(c.status) && c.status !== 'future'
       : k === 'unanswered' ? c.status === 'unanswered' || (exam && c.status === 'skipped')
@@ -678,7 +678,8 @@
     }
     function draw() {
       const t = tally(list);
-      meta.textContent = [o.meta, o.left !== null && o.left !== undefined && o.timed !== false ? `${mmssLeft(o.left)} left` : null].filter(Boolean).join(' · ');
+      // the time once: in the test window the header clock shows it (it read 34:31, 34:33 and 34:33 on one screen)
+      meta.textContent = [o.meta, !exam && o.left !== null && o.left !== undefined && o.timed !== false ? `${mmssLeft(o.left)} left` : null].filter(Boolean).join(' · ');
       tiles.style.setProperty('--cols', String(tileDefs().length));
       tiles.replaceChildren(...tileDefs().map(([k, label, n]) => {
         const b = h('button', { type: 'button', class: 'stat', 'aria-pressed': String(tileFilter === k), 'data-tile': k },
@@ -688,8 +689,8 @@
       }));
       // X5: one queue, in the order that earns most
       qrow.replaceChildren();
-      if (o.onGo) {
-        const counts = { unanswered: t.unanswered + (exam ? 0 : t.skipped), flag: t.flag, guess: t.guess };
+      const counts = { unanswered: t.unanswered + (exam ? 0 : t.skipped), flag: t.flag, guess: t.guess };
+      if (o.onGo && (counts.unanswered || counts.flag || (o.confidence && counts.guess))) {
         const kinds = [['unanswered', 'Unanswered'], ['flag', exam ? 'For review' : 'Marked']];
         if (o.confidence) kinds.push(['guess', 'Guesses']);
         const chips = h('div', { class: 'choices cyw-qchips', role: 'group', 'aria-label': 'Go through' });
@@ -737,8 +738,8 @@
         const marked = list.map((c, i) => ({ c, i })).filter(x => x.c.flag);
         if (marked.length) lines.append(line(`${marked.length} marked for review`, marked.slice(0, 12).map(x => x.i)));
       }
-      if (Number.isFinite(o.left) && o.timed !== false) {
-        const todo = queueList().length || blanks.length;
+      const todo = queueList().length || blanks.length;
+      if (Number.isFinite(o.left) && o.timed !== false && (todo || !exam)) {
         const keep = o.training ? 180 : 0;
         const per = todo ? Math.max(0, (o.left - keep) / todo) : 0;
         lines.append(h('p', { class: 'cyw-pace', text: [`${mmssLeft(o.left)} left`, keep ? `keep ${mmss(keep)} for checking` : null, todo ? `about ${per >= 60 ? mmss(per) : Math.round(per) + ' s'} for each ${blanks.length ? 'unanswered question' : 'of these'}` : null].filter(Boolean).join(' · ') }));
@@ -2130,6 +2131,7 @@
       if (view === 'review') return;
       leave('review');
       if (navPop) { try { navPop.close(); } catch (_) {} navPop = null; }
+      if (!slot.hidden && slotTab === 'spr') closeSlot();
       view = 'review';
       queue = null;
       const saving = o.queue ? o.queue.status : null;
