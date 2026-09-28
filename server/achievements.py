@@ -33,6 +33,16 @@ BASE = [
     ("perfect", "Perfect challenges", "Compete", (1, 5)),
 ]
 
+# Old Compete badge ids that R25 presents through the Shell achievement ladder.
+# This map is also the bridge used by Compete's Go actions (C23).
+FOLDED = {
+    "first-contest": ("challenge", 1), "streak-7": ("streak", 7),
+    "daily-7": ("challenge", 7), "daily-30": ("challenge", 30),
+    "perfect-ten": ("perfect", 1), "podium": ("podium", 1),
+    "solved-1000": ("answered", 1000), "consistency": ("consistency", 1),
+    "trap-hunter": ("fixed", 25),
+}
+
 
 def rules() -> list[dict]:
     out = [{"id": key, "name": name, "group": group, "rule": name,
@@ -49,7 +59,7 @@ def rules() -> list[dict]:
             if not any(x["id"] == extra["id"] for x in out):
                 out.append({"id": extra["id"], "name": extra.get("name") or extra["id"].replace("-", " ").title(),
                             "group": section.title(), "rule": extra.get("rule") or "Keep learning",
-                            "tiers": [extra.get("target", 1)]})
+                            "tiers": extra.get("tiers") or [extra.get("target", 1)]})
     out += [{"id": "words-collection", "name": "Collection complete", "group": "Words",
              "rule": "Know every word in a collection", "tiers": [1]},
             {"id": "words-review-streak", "name": "Seven review days", "group": "Words",
@@ -155,7 +165,15 @@ def _counts(learner: str, tz: int) -> tuple[dict, dict]:
     return values, {"days": days, "board": board}
 
 
-def _go(rule_id: str) -> dict:
+def _go(rule_id: str, learner: str) -> dict:
+    compete_go = deps.part("compete", "go_for")
+    if compete_go and (rule_id in {value[0] for value in FOLDED.values()} or
+                       any(x["id"] == rule_id for x in (deps.part("compete", "ACHIEVEMENTS") or []))):
+        origin = next((old for old, (new, _) in FOLDED.items() if new == rule_id), rule_id)
+        action = compete_go(origin, learner)
+        if action:
+            return {"label": action.get("label") or action.get("action") or "Open Compete",
+                    "href": action.get("href") or "/compete/"}
     if rule_id.startswith("skill:"):
         return {"label": "Practise this skill", "body": {"topics": [rule_id[6:]], "count": 8}}
     if rule_id == "explorer":
@@ -179,9 +197,23 @@ def evaluate(learner: str, tz: int = 0) -> list[dict]:
     earned = {}
     for row in rows:
         earned.setdefault(row["id"], []).append({"tier": row["tier"], "at": row["at"]})
+    cutoff = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=30)).isoformat()
+    active_sql = ("SELECT learner FROM attempts WHERE at>=? UNION "
+                  "SELECT learner FROM word_reviews WHERE at>=? UNION "
+                  "SELECT learner FROM sessions WHERE finished>=?")
+    active = db.one(f"SELECT COUNT(*) AS n FROM ({active_sql}) WHERE learner NOT LIKE 'sample:%'"
+                    " AND learner NOT LIKE 'gone:%'", cutoff, cutoff, cutoff)["n"]
+    rarity = {}
+    if active >= 50:
+        for row in db.rows(f"WITH active AS ({active_sql}) SELECT e.id,e.tier,COUNT(DISTINCT e.learner) AS n"
+                           " FROM earned e JOIN active a ON a.learner=e.learner"
+                           " WHERE e.learner NOT LIKE 'sample:%' AND e.learner NOT LIKE 'gone:%'"
+                           " GROUP BY e.id,e.tier", cutoff, cutoff, cutoff):
+            rarity[(row["id"], row["tier"])] = row["n"]
     out = []
     for rule in rules():
-        key, have = rule["id"], values.get(rule["id"], 0)
+        key = rule["id"]
+        have = max(values.get(key, 0), *(x["tier"] for x in earned.get(key, [])), 0)
         if key in ("pace-setter", "weekly-4", "level-5", "level-8", "all-rounder"):
             rule = {**rule, "tiers": [{"pace-setter": 10, "weekly-4": 4, "level-5": 5,
                                        "level-8": 8, "all-rounder": 3}[key]]}
@@ -197,9 +229,14 @@ def evaluate(learner: str, tz: int = 0) -> list[dict]:
                 earned.setdefault(key, []).append({"tier": tier, "at": at})
         got = sorted(earned.get(key, []), key=lambda x: x["tier"])
         next_tier = next((n for n in rule["tiers"] if n > have), None)
+        rare = None
+        if got and active >= 50:
+            percent = round(100 * rarity.get((key, got[-1]["tier"]), 0) / active)
+            rare = {"percent": percent, "label": f"Earned by {percent}%"}
         out.append({**rule, "icon": key.split(":")[0], "have": have,
                     "tier": got[-1]["tier"] if got else None, "next": next_tier,
-                    "earned": got, "go": _go(key) if next_tier is not None else None})
+                    "earned": got, "go": _go(key, learner) if next_tier is not None else None,
+                    "rarity": rare})
     return out
 
 

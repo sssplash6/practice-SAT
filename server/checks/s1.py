@@ -19,7 +19,7 @@ from cryptography.hazmat.primitives.asymmetric import ec, rsa, padding
 from fastapi.testclient import TestClient
 
 from server.app import app, FORMS
-from server import account, db, practice
+from server import account, achievements, compete, db, practice
 
 
 def check(c: TestClient) -> None:
@@ -233,6 +233,14 @@ def check(c: TestClient) -> None:
     answered = next(b for b in badges.json() if b["id"] == "answered")
     assert answered["have"] == 50 and answered["earned"][0]["at"] == "2026-09-01T00:00:49+00:00"
     assert len([b for b in badges.json() if b["id"].startswith("skill:")]) == 19
+    assert set(achievements.FOLDED) == {"first-contest", "streak-7", "daily-7",
+                                       "daily-30", "perfect-ten", "podium",
+                                       "solved-1000", "consistency", "trap-hunter"}
+    by_id = {b["id"]: b for b in badges.json()}
+    assert by_id["challenge"]["go"]["href"] == "/compete/"
+    assert all(by_id[rule["id"]]["go"] for rule in compete.ACHIEVEMENTS
+               if by_id[rule["id"]]["next"] is not None)
+    assert all("rarity" in b for b in badges.json())
     feed = c.get("/api/me/feed", params={"unread": 1}, headers=profile_h)
     assert any(x["kind"] == "achievements" for x in feed.json()["items"])
     assert c.post("/api/me/feed/seen", headers=profile_h).status_code == 200
