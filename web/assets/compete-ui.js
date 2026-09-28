@@ -29,7 +29,8 @@
        join(), create(prefill), reminder(), LADDER, levelOf(r), levelIn(r, provisional),
        step(gap, metric, pace), left(iso), when(iso), dayLabel(day), trapWords(items) -> Map,
        trapLabel(norm, words): "Stopped at 2b rather than dividing by 2", never the raw "#" key
-   UI.board columns: {label, value(e), phone, par, num, unit, meta, title, head() -> Node}
+   UI.board columns: {label, value(e), phone, par, num, unit, meta, title, head() -> Node, sorted}
+       head: a header button (ui.css's sortable th); sorted marks the ordering column (aria-sort)
    ========================================================================== */
 (() => {
   const UI = window.UI = window.UI || {};
@@ -78,8 +79,6 @@
 .board-t .mk svg { width: 14px; height: 14px; }
 .board-t .rowmenu { margin-left: auto; flex: none; width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; color: var(--soft); cursor: pointer; font: 700 16px/1 var(--font); letter-spacing: .05em; }
 .board-t tr { scroll-margin-top: calc(var(--bar, 64px) + 72px); scroll-margin-bottom: 24px; }
-.board-t th .sort { appearance: none; border: 0; background: none; padding: 0; font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; cursor: pointer; white-space: nowrap; }
-.board-t th .sort[aria-pressed="false"] { color: var(--faint); }
 /* the row menu shows on hover or focus where there is a mouse, always on touch */
 @media (hover: hover) and (pointer: fine) {
   .board-t .rowmenu { opacity: 0; transition: opacity .12s; }
@@ -125,7 +124,7 @@
 .debrief-act .quiet { margin: 0 -12px; }
 .debrief .sb-l { display: none; }   /* each part is named once, in the legend */
 .ladder-row { display: flex; align-items: center; gap: 10px; }
-.ladder-row > .ladder { flex: 1 1 auto; min-width: 0; }
+.ladder-row > .ladder { flex: 1 1 auto; min-width: 0; max-width: calc(var(--cols, 10) * 76px); }
 .pacer { display: grid; gap: 4px; }
 .pacer-tr { position: relative; height: 6px; border-radius: 3px; background: var(--mat); }
 .pacer-tr > i { position: absolute; inset: 0 auto 0 0; border-radius: inherit; background: var(--amber); }
@@ -275,7 +274,7 @@
   const pct = x => (x === null || x === undefined ? '—' : `${Math.round(x * 100)}%`);
   function ladder(host, c) {
     const n = (c.ladder || []).length;
-    const cells = h('div', { class: 'ladder', role: 'list', style: n > 10 ? `--cols:${Math.min(11, n)}` : null, 'aria-label': 'The questions: skill, difficulty and your chance' });
+    const cells = h('div', { class: 'ladder', role: 'list', style: n !== 10 && n ? `--cols:${Math.min(11, n)}` : null, 'aria-label': 'The questions: skill, difficulty and your chance' });
     (c.ladder || []).forEach(q => {
       const name = topicName(q.topic);
       const label = [`Q${q.slot}`, name, TIER[q.tier] || q.tier, q.format === 'spr' ? 'grid-in' : null,
@@ -476,7 +475,7 @@
       list = withPars((d.entries || []).slice());
       const cs = cols();
       thead.replaceChildren(h('tr', {}, h('th', { scope: 'col', class: 'rk', text: 'Rank' }), h('th', { scope: 'col', text: 'Student' }),
-        cs.map(c => { const th = h('th', { scope: 'col', class: (c.num !== false ? 'n' : '') + (c.phone ? '' : ' off-phone') }, c.head ? c.head() : c.label); if (c.title && !c.head) tip(th, c.title); return th; })));
+        cs.map(c => { const th = h('th', { scope: 'col', class: (c.num !== false ? 'n' : '') + (c.phone ? '' : ' off-phone'), 'aria-sort': c.sorted ? 'descending' : null }, c.head ? c.head() : c.label); if (c.title && !c.head) tip(th, c.title); return th; })));
       tbody.replaceChildren(...list.map(e => row(e, cs)));
       const rows = [...tbody.rows].filter(r => r._e);
       rows.forEach((r, i) => { r.tabIndex = i === 0 ? 0 : -1; });
@@ -671,7 +670,7 @@
     const rows = lost.filter(r => r.kind !== 'reach').sort((a, b) => (b.places || 0) - (a.places || 0) || b.pts - a.pts);
     const ul = h('ul', { class: 'debrief-rows' });
     rows.forEach(r => {
-      const what = r.kind === 'trap' || r.kind === 'slip' || r.kind === 'entry' ? `fell for ${label(r)}` : (CAUSE[r.kind] || r.kind).toLowerCase();
+      const what = r.kind === 'trap' || r.kind === 'slip' || r.kind === 'entry' ? `fell for ${String(label(r)).replace(/^./, x => x.toLowerCase())}` : (CAUSE[r.kind] || r.kind).toLowerCase();
       const text = [`Q${r.slot}`, r.topic && topicName(r.topic), TIER[r.tier], what, `−${num(r.pts)}`].filter(Boolean).join(' · ');
       // the place it buys shows only where it moves you and says something the headline doesn't
       const sub = ranked && r.places > 0 && r !== best && r.rank_if !== (best && best.rank_if) ? `right → #${r.rank_if} (+${r.places} place${r.places === 1 ? '' : 's'})` : '';

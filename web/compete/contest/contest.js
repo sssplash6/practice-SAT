@@ -109,9 +109,8 @@
   function renderHead() {
     const c = S.c;
     const [kind, name] = titleParts(c);
-    const rounds = c.spec && c.spec.repeat && c.spec.repeat.rounds;
     let k = c.kind === 'daily' ? 'DAILY CHALLENGE' : kind.toUpperCase();
-    if (c.kind === 'private') k = `PRIVATE CONTEST${c.by ? ` · BY ${String(c.by).toUpperCase()}` : ''}${c.round && rounds ? ` · ROUND ${c.round} OF ${rounds}` : ''}`;
+    if (c.kind === 'private') k = `PRIVATE CONTEST${c.by ? ` · BY ${String(c.by).toUpperCase()}` : ''}`;   // the round is in the window line below
     const title = c.kind === 'daily' ? C.dayLabel(dayOf(c)) : c.kind === 'private' ? c.title : name;
     const chip = h('span', { class: 'chip-s' + (c.status === 'live' ? ' on' : ''), text: { upcoming: 'Upcoming', live: 'Live', closed: 'Closed' }[c.status] || c.status });
     const kids = [h('a', { class: 'quiet ct-back', href: '/compete/', text: '‹ Compete' }), h('span', { class: 'k', text: k }),
@@ -377,7 +376,7 @@
     if (you && /^Student [0-9A-F]{4}$/i.test(you.name || '')) kids.push(namePrompt(you.name));
     // actions
     const act = h('div', { class: 'row-act' });
-    act.append(h('button', { type: 'button', class: 'pill', text: 'See the board', onclick: () => $('#board').scrollIntoView({ behavior: 'smooth' }) }));
+    act.append(h('button', { type: 'button', class: 'pill see-board', text: 'See the board', onclick: () => $('#board').scrollIntoView({ behavior: 'smooth' }) }));
     if (['sprint', 'rush'].includes(c.kind)) {
       // a new run races your best, as the lobby does for runs
       const again = h('button', { type: 'button', class: 'btn', text: 'Run again' });
@@ -544,22 +543,25 @@
     const M = { label: 'Move', value: move, title: 'Places since yesterday' }, G = { label: 'Gap', value: gap, title: 'Their points minus yours', meta: false };
     // the ordering metric leads, and its header is the switch to the other one (on a phone too)
     const P = { label: 'Points', value: pts }, N = { label: 'Over par', value: net, title: 'Base points minus the player’s par', unit: 'par' };
-    const sw = () => {
-      const on = S.sort === 'net' ? N : P, other = S.sort === 'net' ? P : N;
-      const b = h('button', { type: 'button', class: 'sort', 'aria-pressed': 'true', 'aria-label': `Ordered by ${on.label}. Order by ${other.label}` }, on.label, h('span', { 'aria-hidden': 'true', text: ' ⇄' }));
-      b.addEventListener('click', () => { S.sort = S.sort === 'net' ? 'points' : 'net'; S.view === 'series' ? reloadBoard() : drawBoard(); });
-      UI.tooltip(b, `Order by ${other.label}`);
+    // a sortable header each (ui.css th[aria-sort]); the leading one, the only one on a phone, switches to the other
+    const sortBy = x => () => {
+      const to = (S.sort === 'net') === (x === N) ? (x === N ? 'points' : 'net') : (x === N ? 'net' : 'points');
+      const b = h('button', { type: 'button', 'aria-label': `${x.label}: order by ${to === 'net' ? 'Over par' : 'Points'}` }, x.label);
+      b.addEventListener('click', () => { S.sort = to; S.view === 'series' ? reloadBoard() : drawBoard(); });
+      UI.tooltip(b, `Order by ${to === 'net' ? 'Over par' : 'Points'}`);
       return b;
     };
     const lead = (S.sort === 'net' ? N : P), rest = (S.sort === 'net' ? P : N);
-    if (S.view === 'series') return [{ label: 'Rounds sat', value: e => e.rounds ?? e.sat }, { ...lead, phone: true, head: sw }, rest, M];
+    const sw = sortBy(lead);
+    Object.assign(rest, { head: sortBy(rest) });
+    if (S.view === 'series') return [{ label: 'Rounds sat', value: e => e.rounds ?? e.sat }, { ...lead, phone: true, head: sw, sorted: true }, rest, M];
     if (c.kind === 'sprint') return [{ label: 'Best points', value: pts, phone: true }, { label: 'Right/answered', value: score }, { label: 'Runs', value: e => e.runs }, M];
     if (c.kind === 'rush') return [{ label: 'Right', value: e => num(e.right), phone: true }, { label: 'Top item', value: e => e.top_item ? (e.top === true ? 'Top' : `L${e.top_item}`) : null }, { label: 'Runs', value: e => e.runs }, M];
     if (c.kind === 'words') return [{ label: 'Score', value: e => (e.score !== undefined ? Number(e.score).toFixed(1) : null), phone: true }, { label: 'Right', value: e => e.right }, { label: 'Wrong', value: e => e.wrong }, { label: 'Runs', value: e => e.runs }, M];
     const list = [{ label: 'Score', value: score }];
     if (c.kind === 'trap') list.push({ label: 'Resisted', value: e => e.resisted });
     if (c.kind === 'final') list.push({ label: 'Band', value: e => (e.band ? `${e.band.low ?? e.band[0]}–${e.band.high ?? e.band[1]}` : null) });
-    list.push({ ...lead, phone: true, par: S.sort !== 'net', head: sw }, rest,
+    list.push({ ...lead, phone: true, par: S.sort !== 'net', head: sw, sorted: true }, rest,
       { label: 'Time', value: time, title: C.kind(c).clock === 'wall' ? 'Time used, start to hand-in' : 'Answer clock used: only while a question was open' }, M, G);
     return list;
   }
