@@ -9,8 +9,9 @@ from __future__ import annotations
 
 import datetime as dt
 import math
+import re
 import statistics
-from collections import Counter, defaultdict
+from collections import Counter
 
 from . import db, deps, estimate, prefs, progress
 
@@ -321,21 +322,54 @@ def resolve_drill(learner: str, body: dict) -> dict:
         raise HTTPException(422, {"field": "box", "reason": "use 5–60 minutes"})
     tz = body.get("tz", 0)
     slots = []
+    want = dict(body.get("want") or {})
+    used = set()
     for item in due(learner, tz)["items"]:
         if item["kind"] == "check" and not item.get("done") and not item.get("snoozed"):
-            slots.append({"template": item["template"], "why": "A fix is due a check-in"})
+            trap = db.one("SELECT * FROM traps WHERE id=? AND learner=?", item["trap_id"], learner)
+            if not trap:
+                continue
+            template = progress.checkin_template(trap)
+            if template in used:
+                continue
+            used.add(template)
+            slots.append({"template": template, "why": "A fix is due a check-in"})
+            if progress.named(trap["norm"]):
+                want[template] = "^" + re.escape(trap["norm"]) + "$"
         if len(slots) == 3:
             break
-    for trap in progress.open_traps(learner)[:4]:
+    wrong_total, wrong_norm, _ = _wrong(learner)
+    gains = estimate.gains(learner)
+    traps = sorted(progress.open_traps(learner), key=lambda t: (
+        -(_points(gains, t["topic"], wrong_norm[(t["template"], t["norm"])] /
+                  wrong_total[t["topic"]] if wrong_total[t["topic"]] else 0) or 0),
+        -t["hits"], t["id"]))
+    for trap in traps:
+        if trap["template"] in used:
+            continue
+        used.add(trap["template"])
         slots.append({"template": trap["template"], "why": "Fix an open mistake"})
+        if progress.named(trap["norm"]):
+            want[trap["template"]] = "^" + re.escape(trap["norm"]) + "$"
+        if sum(x["why"] == "Fix an open mistake" for x in slots) == 4:
+            break
     board = progress.board(learner)
     weak = min(board.values(), key=lambda x: (x["mastery"], x["answered"]))
     from . import practice
-    slots.extend({"template": t, "why": "Strengthen a weak skill"}
-                 for t in practice.catalogue()["by_topic"][weak["topic"]][:3])
+    for template in practice.catalogue()["by_topic"][weak["topic"]][:3]:
+        if template not in used:
+            used.add(template)
+            slots.append({"template": template, "why": "Strengthen a weak skill"})
     warm = next((v for v in board.values() if v["fading"]), None)
     if warm:
-        slots.append({"template": practice.catalogue()["by_topic"][warm["topic"]][0],
-                      "why": "Keep a strong skill warm"})
+        template = practice.catalogue()["by_topic"][warm["topic"]][0]
+        if template not in used:
+            slots.append({"template": template, "why": "Keep a strong skill warm"})
+    mixed = []
+    while slots:
+        prior = practice.topic_of(mixed[-1]["template"]) if mixed else None
+        index = next((i for i, slot in enumerate(slots)
+                      if practice.topic_of(slot["template"]) != prior), 0)
+        mixed.append(slots.pop(index))
     return {**body, "source": "next", "box": box, "count": None,
-            "order": "mixed", "segments": slots[:30]}
+            "order": "mixed", "segments": mixed[:30], "want": want}
