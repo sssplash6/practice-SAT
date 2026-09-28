@@ -857,7 +857,7 @@
     ls.set(key, '1');
     const el = h('div', { class: 'receipt' + (first ? ' rise' : ''), role: 'status' }, h('p', { class: 'k', text: 'Today’s work' }));
     // one figure line; what moved, what was fixed and the points open on Details (decision 7); the streak is the hero's
-    el.append(h('p', { class: 'rfig', text: join(`${n(r.minutes)} min`, pl(r.questions, 'question'), r.questions && `${Math.round(100 * r.right / r.questions)}% right`) }));
+    el.append(nw(join(`${n(r.minutes)} min`, pl(r.questions, 'question'), r.questions && `${Math.round(100 * r.right / r.questions)}% right`), 'rfig'));
     const det = [];
     if (r.moved && r.moved.length) det.push(h('p', { text: 'Moved: ' + r.moved.map(m => `${TOP(m.topic)} → ${m.to}`).join(' · ') }));
     if (r.fixed && r.fixed.length) det.push(h('p', { text: `Fixed: ${r.fixed[0]}${r.fixed.length > 1 ? ` (+${r.fixed.length - 1} more)` : ''}` }));
