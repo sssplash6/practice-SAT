@@ -86,7 +86,7 @@
     const hist = d.type_history || [];
     const right = hist.filter(x => x.correct).length;
     const tier = TIER[q.difficulty] || cap(q.difficulty || '');
-    const lvl = q.level ? ` · level ${q.level} of 7${q.rough ? ', rough' : ', measured'}` : ' · level not measured yet';
+    const lvl = q.level ? ` · level ${q.level} of 7` : '';
     const odds = q.odds && Number.isFinite(q.odds.you) ? ` · your odds were ${pct(q.odds.you)}` : '';
     const crowd = fb && fb.crowd;
     return {

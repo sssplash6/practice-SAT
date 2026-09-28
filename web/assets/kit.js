@@ -1922,7 +1922,6 @@
     if (s.open) side.append(h('span', { class: 'skill-open', 'aria-label': `${s.open} open mistake${s.open === 1 ? '' : 's'}` },
       h('span', { class: 'dots', 'aria-hidden': 'true' }, Array.from({ length: Math.min(3, s.open) }, () => h('i'))), h('span', { class: 'meta', text: fmtN(s.open) })));
     // the answer count is the accuracy line's ("of 6"), so the badge only says the figure is rough
-    if (s.evidence !== undefined && s.evidence < 10) side.append(h('span', { class: 'badge soft', title: `From ${fmtN(s.evidence)} answers`, text: 'rough' }));
     if (s.pts !== undefined && s.gain === undefined) side.append(pts(null, s.pts, `skill:${topic}`) || '');
     const pr = o.practise;
     if (pr) {
