@@ -771,8 +771,12 @@
     let srcCtl;
     const src = row('Questions from');
     srcCtl = under(src, [{ value: 'skills', label: 'Skills I pick' }, { value: 'my_traps', label: 'My open mistakes' }, { value: 'our_traps', label: 'Our open mistakes' }],
-      { value: 'skills', onChange: v => { f.source = v; skillsBox.hidden = v !== 'skills'; srcHelp.textContent = SRC_HELP[v]; draw(); } });
-    const SRC_HELP = { skills: '', my_traps: 'Your open mistakes’ question types, each with the same trap: beat me on the traps that catch me.', our_traps: 'From round 2: the mistakes most of you hold open. Nobody is told who holds which.' };
+      { value: 'skills', onChange: v => {
+        f.source = v; skillsBox.hidden = v === 'my_traps'; srcHelp.textContent = SRC_HELP[v];
+        // the group's mistakes come from earlier rounds, so picking it makes a series rather than being a dead option (the user)
+        if (v === 'our_traps' && f.repeat === 'once') repCtl.set('week');
+        draw(); } });
+    const SRC_HELP = { skills: '', my_traps: 'Your open mistakes’ question types, each with the same trap: beat me on the traps that catch me.', our_traps: 'A series: round 1 uses the skills below, then each round draws on the mistakes most of you hold open. Nobody is told who holds which.' };
     const srcHelp = h('p', { class: 'help' });
     src.append(srcHelp);
     form.append(src);
@@ -811,17 +815,15 @@
     const rep = row('Repeat');
     const rounds = h('input', { class: 'field', type: 'number', min: '2', max: '30', value: String(f.rounds), style: 'max-width: 120px', 'aria-label': 'Rounds', hidden: true });
     rounds.addEventListener('input', () => { f.rounds = Math.max(2, Math.min(30, parseInt(rounds.value, 10) || 2)); draw(); });
-    under(rep, [{ value: 'once', label: 'Once' }, { value: 'day', label: 'Every day' }, { value: 'week', label: 'Every week' }], { value: 'once', onChange: v => {
+    const repCtl = under(rep, [{ value: 'once', label: 'Once' }, { value: 'day', label: 'Every day' }, { value: 'week', label: 'Every week' }], { value: 'once', onChange: v => {
       f.repeat = v; rounds.hidden = v === 'once';
       if (v !== 'once') { f.rounds = v === 'day' ? 7 : 4; rounds.value = String(f.rounds); }
       openFor.hidden = v !== 'once';
-      srcCtl.disable('our_traps', v === 'once' ? 'Our open mistakes starts from round 2 of a series.' : '');
       if (v === 'once' && f.source === 'our_traps') srcCtl.set('skills');
       draw();
     } });
     rep.append(h('label', { class: 'label', text: 'Rounds', hidden: true }), rounds, h('p', { class: 'help', text: 'One code and link join every round.' }));
     form.append(rep);
-    srcCtl.disable('our_traps', 'Our open mistakes starts from round 2 of a series.');
     const radios = (name, opts, v, set) => h('div', { class: 'cx-radio' }, opts.map(([val0, label]) => {
       const r = h('input', { type: 'radio', name, value: String(val0) }); r.checked = v === val0; r.addEventListener('change', () => set(val0));
       return h('label', {}, r, h('span', { text: label }));
@@ -850,7 +852,8 @@
       const body = { count: f.count, source: f.source, twin: f.twin, reveal: f.reveal, strict: f.strict, format: f.format,
         difficulty: f.difficulty === 'all' ? ['easy', 'medium', 'hard'] : [f.difficulty] };
       if (f.title.trim()) body.title = f.title.trim();
-      if (f.source === 'skills') {
+      // round 1 of an our-mistakes series is drawn from the skills too (compete.create_contest needs them)
+      if (f.source !== 'my_traps') {
         if (!f.topics.size) { err.hidden = false; err.textContent = 'Pick at least one skill.'; return; }
         body.topics = [...f.topics];
       }
