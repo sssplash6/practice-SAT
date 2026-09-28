@@ -1639,7 +1639,9 @@
     try {
       const d = await UI.api('/drill', { method: 'POST', body });
       const w = open(`/practice/session/?id=${encodeURIComponent(d.id)}&print=1`, '_blank');
-      if (!w) location.href = `/practice/session/?id=${encodeURIComponent(d.id)}&print=1`;
+      if (!w) { location.href = `/practice/session/?id=${encodeURIComponent(d.id)}&print=1`; return; }
+      // V18: its answers go in here once the paper is done; Review's header keeps the same link while it waits
+      toast('Worksheet made. Enter its answers when you’re done.', { action: { label: 'Enter answers', href: `/review/sheet/?id=${encodeURIComponent(d.id)}` }, ms: 8000 });
       refreshSoon(false);
     } catch (e) { toast(reasonOf(e)); }
   }

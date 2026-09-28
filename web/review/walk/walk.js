@@ -53,6 +53,10 @@
   async function create() {
     const s = Q.get('session'), ids = Q.get('ids');
     const body = s ? { session: s } : ids ? { ids: ids.split(',').map(Number).filter(n => n > 0) } : { new: true };
+    if (body.new) {                                          // nothing new: say so without asking for a walk
+      const c = await UI.api('/review/counts', { quiet: true }).catch(() => null);
+      if (c && !c.new) { nothing(); return false; }
+    }
     try {
       const d = await UI.api('/review/walk', { method: 'POST', body });
       sid = d.id;
@@ -61,11 +65,12 @@
     } catch (e) {
       if (e.status === 409 && !e.offline) {
         if (s) card('No misses in this sitting.', null, [link('See its report', `/results/report/?id=${enc(s)}`, 'pill'), toReview()]);
-        else card('Nothing to walk right now.', 'New misses from a test or an end-of-set review wait here until you walk them.', [toReview()]);
+        else nothing();
       } else fail(boot, reasonOf(e));
       return false;
     }
   }
+  const nothing = () => card('Nothing to walk right now.', 'New misses from a test or an end-of-set review wait here until you walk them.', [toReview()]);
   async function readWalk() {
     try {
       const d = await UI.api(`/review/walk/${enc(sid)}`, { quiet: true });
