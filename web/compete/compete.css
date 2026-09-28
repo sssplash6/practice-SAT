@@ -39,11 +39,12 @@
 
 /* the ladder: ten cells, each a slot's skill, difficulty and your chance on it (C7) */
 .ladder { display: grid; grid-template-columns: repeat(var(--cols, 10), minmax(0, 1fr)); gap: 6px; }
-.lad { position: relative; display: grid; justify-items: center; align-content: center; gap: 4px; height: 64px; padding: 0 2px; border-radius: 10px; background: var(--paper); color: var(--ink); }
+/* number, skill, difficulty and the chance underline stack in the flow: an absolute underline ran through the bars (the user) */
+.lad { position: relative; display: grid; justify-items: center; align-content: center; gap: 6px; min-height: 72px; padding: 8px 7px 7px; border-radius: 10px; background: var(--paper); color: var(--ink); }
 .lad .n { font: 500 11px var(--mono); color: var(--soft); }
 .lad .glyph { width: 20px; height: 20px; }
 .lad .gi { position: absolute; top: 4px; right: 5px; font: 500 9px var(--mono); letter-spacing: .04em; color: var(--soft); }
-.lad .ch { position: absolute; left: 7px; right: 7px; bottom: 6px; height: 3px; border-radius: 2px; background: var(--mat); overflow: hidden; }
+.lad .ch { justify-self: stretch; height: 3px; margin-top: 2px; border-radius: 2px; background: var(--mat); overflow: hidden; }
 .lad .ch > i { display: block; height: 100%; background: var(--ink); }
 .lad .dbars { transform: scale(.85); }
 
