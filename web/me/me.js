@@ -798,10 +798,8 @@
       });
       const rest = Object.values(byTopic).filter(s => !ranked.some(x => x.topic === s.topic));
       const started = rest.filter(s => s.answered), fresh = rest.filter(s => !s.answered);
-      if (started.length) {
-        kids.push(h('p', { class: 'k', style: 'margin: 18px 0 4px', text: 'Five answers each show their points' }));
-        started.forEach(s => kids.push(...row(s)));
-      }
+      if (started.length) kids.push(h('details', { class: 'skills-rest' },
+        h('summary', { text: `${pl(started.length, 'skill')} under five answers · five answers each show their points` }), started.flatMap(s => row(s))));
       if (fresh.length) kids.push(h('details', { class: 'skills-rest' }, h('summary', { text: `${pl(fresh.length, 'skill')} not started` }),
         fresh.map(s => row(s)[0])));
       if (g.top3 && g.top3.topics && g.top3.topics.length && !RO) kids.push(h('div', { class: 'card-foot' },
@@ -869,6 +867,12 @@
     UI.legend(legend, ['unmet', 'met', 'ready'], counts);
     const total = counts.unmet + counts.met + counts.ready;
     const readyPct = Math.round((cov.readiness || 0) * 100);
+    if (!(counts.met + counts.ready)) {
+      fill('readiness', h('p', { class: 'soft' }, `Each of the ${N(total)} question types you meet fills in here.`),
+        RO ? null : h('div', { class: 'card-foot' }, btn(`Today’s set · ${setLen()}`, { primary: true, body: { source: 'coach', count: setLen() } })));
+      said('readiness', 'no question types met yet');
+      return;
+    }
     fill('readiness',
       h('p', { class: 'acts' }, fact(h('span', { class: 'big', text: `${readyPct}%` }), 'readiness', 'Test-day readiness'),
         h('span', { class: 'meta', text: `${N(counts.met + counts.ready)} of ${N(total)} question types met` })),
