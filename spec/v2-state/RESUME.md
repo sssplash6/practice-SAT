@@ -150,6 +150,11 @@ v2/satdates, v2/bank-lint, v2/f5, v2/words-content, v2/bank-lint-fix group 6 (df
       Fix ▾ spacing (v2/s10 2bd6036), and in the shared player the header level badge, the twin label and its want shape
       (calm-shared bfe0c34). Review's asks went to Task 21; Task 32 (four one-line fixes) written. Preview: bbhtv2ara.
       Frontend left: the shell's Up next (F2B, its server Task 23 not started).
+    - 2026-09-28: the user: "okay the other cant do server of up next. you handle it all". F2B now owns the server too (build.js:
+      a server unit first, then the two page units; Task 23 marked taken over; memory backend-goes-to-helper notes the
+      exception). v2/f2b = v2/f2b-server (the helper's 5 commits, checks/f2.py passing) + v2/calm-shared + master.
+      LAUNCHING build.js [{id:'F2B', inline: true}], then my light check (the server check, test_flow, a walk of the shell on
+      every page) and report. No master commits while it runs.
     - 2026-09-28: run wf_52a6cb52-1a2 DONE. S3 Today, S7 Plan, S9 Words and S8 Compete pages are built, checked and fixed on
       their branches (verified web diffs: ~2,300 / 3,400 / 3,800 / 3,500 lines); leftovers in followups/<id>-pages.json.
       PREVIEW of all four together on port 8061 (task b8vcjsxuq, worktree scratchpad/prev4, test_flow all good). MERGE EACH
