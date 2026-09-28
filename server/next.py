@@ -52,10 +52,14 @@ def due(learner: str, tz: int = 0) -> dict:
         return reader(learner, tz)
     day = _today(tz).isoformat()
     checks = progress.due_rechecks(learner, day)
-    return {"day": day, "left": len(checks), "items": [
-        {"key": f"due:check:{c['trap_id']}", "kind": "check", "trap_id": c["trap_id"],
+    snoozed = {key for key, until in (prefs.get(learner, tz).get("snooze") or {}).items()
+               if until == day}
+    items = [
+        {"key": f"due:check:{c['template']}", "kind": "check", "trap_id": c["trap_id"],
          "template": c["template"], "topic": c["topic"], "label": c["label"],
-         "due": c["due"], "done": False, "snoozed": False} for c in checks]}
+         "due": c["due"], "done": False,
+         "snoozed": f"due:check:{c['template']}" in snoozed} for c in checks]
+    return {"day": day, "left": sum(not i["snoozed"] for i in items), "items": items}
 
 
 def stage(learner: str, tz: int = 0) -> dict:
@@ -283,7 +287,8 @@ def queue(learner: str, tz: int = 0, limit: int = 6, *, _plan=_UNSET, _closing=_
         unseen = [(t, len(set(templates) - seen)) for t, templates in cat.items()]
         unseen = [(t, n) for t, n in unseen if n]
         if unseen:
-            t, n = max(unseen, key=lambda x: (x[1] * estimate.shares().get(x[0], 0), x[1]))
+            shares = estimate.shares()
+            t, n = max(unseen, key=lambda x: (x[1] * shares.get(x[0], 0), x[1]))
             rows.append(_item("untried", f"untried:untried:{t}",
                               f"{min(5, n)} new kinds of {names[t].name} question",
                               f"{n} types not met", "See a form you have not seen yet",
@@ -312,7 +317,8 @@ def resolve_drill(learner: str, body: dict) -> dict:
     """
     box = body.get("box")
     if type(box) is not int or not 5 <= box <= 60:
-        raise ValueError("box must be 5–60 minutes")
+        from fastapi import HTTPException
+        raise HTTPException(422, {"field": "box", "reason": "use 5–60 minutes"})
     tz = body.get("tz", 0)
     slots = []
     for item in due(learner, tz)["items"]:

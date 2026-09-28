@@ -164,6 +164,26 @@ def check(c) -> None:
     assert "also in today's plan" in planned[0]["reason"]
     assert next_actions.resolve_drill(learner, {"source": "next", "box": 15})["count"] is None
     assert next_actions.resolve_drill(learner, {"source": "next", "box": 15})["segments"]
+    probability = practice.catalogue()["by_topic"]["probability"][0]
+    with db.transaction():
+        for seed in range(9, 31):
+            db.run("INSERT INTO attempts(learner,template,seed,topic,difficulty,fmt,correct,at)"
+                   " VALUES (?,?,?,?,?,?,?,?)", learner, template, seed, "circles", "medium",
+                   "mcq", 1, now.isoformat())
+        for seed in range(10):
+            norm = "sample-error" if seed < 3 else "other-error"
+            db.run("INSERT INTO attempts(learner,template,seed,topic,difficulty,fmt,correct,reason,norm,at)"
+                   " VALUES (?,?,?,?,?,?,?,?,?,?)", learner, probability, seed, "probability",
+                   "medium", "mcq", 0, norm, norm, now.isoformat())
+        cursor = db.run("INSERT INTO traps(learner,template,norm,reason,label,topic,hits,owed,opened,last)"
+                        " VALUES (?,?,?,?,?,?,?,?,?,?)", learner, probability, "sample-error",
+                        "sample-error", "Sample error", "probability", 3, 2,
+                        now.isoformat(), now.isoformat())
+    with patch.object(next_actions.estimate, "gains", return_value={
+            "skills": [{"topic": "probability", "gain": 20}]}):
+        priced = next_actions.queue(learner, 0, limit=20)
+    target = next(x for x in priced if x["key"] == f"redo:redo:{cursor.lastrowid}")
+    assert target["pts"] == 6, target
     db.run("UPDATE learners SET exam_date=? WHERE id=?",
            (now.date() + dt.timedelta(days=1)).isoformat(), learner)
     assert c.get("/api/next", headers=NH).json()["items"][0]["title"].startswith("Rest")
