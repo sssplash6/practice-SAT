@@ -307,10 +307,12 @@
     const tv = me.clock ? mmss(me.clock.used) : r.secs !== undefined ? mmss(r.secs) : null;
     const timeT = tv ? stat('Time', tv) : null;
     if (timeT) UI.tooltip(timeT, C.kind(c).clock === 'wall' ? 'Time used, start to hand-in' : 'Answer clock used: only while a question was open');
+    // the rules' key terms, where they are used (the rules card folds away on the result)
+    const ptsT = stat('Points', num(r.points), parts.base !== undefined ? `${num(parts.base)} + ${num(parts.pace || 0)} pace + ${num(parts.finish || 0)} finish` : null);
+    if (C.kind(c).pace) UI.tooltip(ptsT, 'Pace bonus: +5 for each right answer within its time budget. Finish bonus: +10 for answering every question with none skipped or voided.');
     const tiles = h('div', { class: 'stats res-tiles' },
       stat('Score', `${num(r.right)}/${num(r.asked || c.count)}`),
-      stat('Points', num(r.points), parts.base !== undefined ? `${num(parts.base)} + ${num(parts.pace || 0)} pace + ${num(parts.finish || 0)} finish` : null),
-      timeT, overPar,
+      ptsT, timeT, overPar,
       r.rating_after !== undefined && r.rating_before !== undefined ? stat('Rating', `${r.rating_after >= r.rating_before ? '+' : '−'}${num(Math.abs(Math.round(r.rating_after - r.rating_before)))} → ${num(Math.round(r.rating_after))}`,
         C.levelOf(r.rating_after) !== C.levelOf(r.rating_before) ? `Level ${C.levelOf(r.rating_before)} → ${C.levelOf(r.rating_after)}` : `Level ${C.levelOf(r.rating_after)}`) : null);
     kids.push(tiles);
@@ -893,7 +895,7 @@
       if (k.twins || (c.spec && c.spec.twin)) rules.push(li('Twins:', 'your own twin questions: same types, your own numbers.'));
       rules.push(li('Ranked:', c.kind === 'sprint' ? 'every run; your best run this week counts.' : c.kind === 'private' ? 'your first sitting in the round. No rating or season points.' : 'your first sitting counts.'));
     }
-    const d = h('details', { open: !finished() || !C.rulesSeen(c.kind) ? true : null }, h('summary', {}, h('h2', { class: 'h2', text: 'How it’s ranked' })), h('ul', { class: 'rules' }, rules));
+    const d = h('details', { open: finished() ? null : true }, h('summary', {}, h('h2', { class: 'h2', text: 'How it’s ranked' })), h('ul', { class: 'rules' }, rules));
     $('#rules').replaceChildren(d);
   }
   function renderEntrants() {
