@@ -800,9 +800,6 @@
   }
   function typeRow(t) {
     const tb = tri(`Select ${t.name}`, on => { on ? B.sel.add(t.template) : B.sel.delete(t.template); markCustom(); paintSel(); preview(); });
-    const lv = Object.values(t.levels || {});
-    const level = lv.length ? lv.map(x => `L${x.level}${x.rough ? ` · rough${x.n ? ` (${x.n})` : ''}` : ''}`).join(' / ') : t.level ? `L${t.level}` : '';
-    const traps = (t.traps || []).length;
     const tiers = t.tiers || [];
     const tryB = h('button', { type: 'button', class: 'quiet', text: 'Try one ▾' });
     UI.menu.bind(tryB, () => [
@@ -815,22 +812,9 @@
       { label: 'See the traps', onClick: () => traps_(t) },
       { label: 'Mix it up with look-alikes', disabled: !(t.lookalikes || []).length, onClick: () => create({ subject: 'math', source: 'mixup', order: 'mixup', templates: [t.template, ...(t.lookalikes || [])].slice(0, 6), count: 8 }) },
     ], { label: t.name });
-    // what sets this type apart; the defaults (all three tiers, multiple choice, not yet tried) go unsaid; no odds and no
-    // "built from N official questions" line on the row (the user)
-    const chips = [
-      tiers.length < 3 ? h('span', { text: `${tiers.map(d => TIER_WORD[d]).join(' + ')} only` }) : null,
-      t.formats.includes('spr') ? h('span', { text: t.formats.includes('mcq') ? 'MC + grid-in' : 'Grid-in only' }) : null,
-      level ? h('span', { class: 'mono', text: level }) : null,
-      t.answered ? h('span', { text: `${t.right} of ${t.answered} right` }) : null,
-      t.crowd && t.crowd.n >= 20 ? h('span', { text: `everyone ${pct(t.crowd.rate)}` }) : null,
-      openBadge(traps),
-      t.marked ? h('span', { text: `Marked ${t.marked}` }) : null,
-      t.state === 'ready' ? h('span', { text: 'Ready' }) : null,
-      t.due ? h('span', { text: 'Due today' }) : t.next_return ? h('span', { text: `Back ${UI.date ? UI.date(t.next_return, 'short') : t.next_return}${t.k ? ` · held ${t.k}` : ''}` }) : null,
-      t.fluent ? h('span', { text: `Fluent${t.best_ms ? ` · best ${mmss(t.best_ms)}` : ''}` }) : t.slow_right ? h('span', { text: `Slow: right but ${mmss(t.median_ms)} median` }) : null,
-      t.desmos ? h('span', { text: 'Desmos way' }) : null,
-      t.type_note ? tip(h('span', { text: '✎ your rule' }), t.type_note) : null,
-    ].filter(Boolean);
+    // the row's one detail line is its difficulty, only when it isn't all three (the user: keep the difficulty, remove
+    // everything else: format, level, odds, record, everyone, open mistakes, marked, ready, due, fluent, Desmos, official, note)
+    const chips = [tiers.length < 3 ? h('span', { text: `${tiers.map(d => TIER_WORD[d]).join(' + ')} only` }) : null].filter(Boolean);
     const row = h('div', { class: 'trow', 'data-t': t.template }, tb,
       h('div', { class: 'tmain' }, h('span', { class: 'tname', text: t.name }), t.about ? h('span', { class: 'tabout', text: t.about }) : null,
         chips.length ? h('span', { class: 'tchips' }, chips) : null, h('span', { class: 'reason help', 'data-reason': '' })),
